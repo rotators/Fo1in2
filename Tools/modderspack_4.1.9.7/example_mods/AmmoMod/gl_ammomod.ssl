@@ -1,0 +1,63 @@
+/*
+
+Ammo INI Loader mod for Fallout 2 by NovaRain
+---------------------------------------------
+
+- modifies ammo protos with data from an INI file:
+  * AmmoGlovz.ini if DamageFormula=1 or 2 in ddraw.ini
+  * AmmoYAAM.ini if DamageFormula=5 in ddraw.ini
+  * AmmoMod.ini if not using any bulit-in damage formula
+
+Requires sfall 3.5 or higher
+
+*/
+
+#include "..\headers\define_extra.h"
+
+procedure set_ammo_mod;
+procedure start;
+procedure map_enter_p_proc;
+
+variable ammoIni;
+variable enabled;
+
+procedure set_ammo_mod begin
+   variable pid, dmg_mod, i := 1;
+
+   while (i > 0) do begin
+      pid := get_ini_setting(ammoIni + "|" + i + "|pid");
+      if (pid < 1) then break;
+      set_proto_data(pid, PROTO_AM_AC_MOD, get_ini_setting(ammoIni + "|" + i + "|ac_adjust"));
+      set_proto_data(pid, PROTO_AM_DR_MOD, get_ini_setting(ammoIni + "|" + i + "|dr_adjust"));
+
+      // dam_mult and dam_div must be positive integers
+      dmg_mod := get_ini_setting(ammoIni + "|" + i + "|dam_mult");
+      if (dmg_mod < 1) then dmg_mod := 1;
+      set_proto_data(pid, PROTO_AM_DMG_MULT, dmg_mod);
+      dmg_mod := get_ini_setting(ammoIni + "|" + i + "|dam_div");
+      if (dmg_mod < 1) then dmg_mod := 1;
+      set_proto_data(pid, PROTO_AM_DMG_DIV, dmg_mod);
+
+      i++;
+   end
+   //debug_msg("AmmoMod: " + ammoIni + " - set " + (i - 1) + " ammo protos.");
+end
+
+procedure start begin
+   if game_loaded then begin
+      ammoIni := get_ini_setting("ddraw.ini|Misc|DamageFormula");
+      if (ammoIni == 1 or ammoIni == 2) then
+         ammoIni := "AmmoGlovz.ini";
+      else if (ammoIni == 5) then
+         ammoIni := "AmmoYAAM.ini";
+      else
+         ammoIni := "AmmoMod.ini";
+
+      enabled := get_ini_setting(ammoIni + "|1|pid");
+      if (enabled > 0) then call set_ammo_mod;
+   end
+end
+
+procedure map_enter_p_proc begin
+   if (enabled > 0) then call set_ammo_mod;
+end

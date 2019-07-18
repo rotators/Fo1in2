@@ -1,0 +1,46 @@
+/*
+   Example implementation of the algorithm of how the game engine checks the Sneak skill
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\sfall\sfall.h"
+
+procedure start;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook(HOOK_SNEAK);
+   end else begin
+      variable sneakIsSuccess, time, level;
+
+      level := critter_skill_level(dude_obj, SKILL_SNEAK);
+      if (roll_vs_skill(dude_obj, SKILL_SNEAK, 0) < ROLL_SUCCESS) then begin
+         sneakIsSuccess := false;
+         time := ONE_GAME_MINUTE;
+         if (level <= 250) then
+            if (level <= 200) then
+               if (level <= 170) then
+                  if (level <= 135) then
+                     if (level <= 100) then
+                        if (level > 80) then
+                           time := 400;          // 40 secs
+                     else
+                        time := 300;             // 30 secs
+                  else
+                     time := 200;                // 20 secs
+               else
+                  time := 150;                   // 15 secs
+            else
+               time := 120;                      // 12 secs
+         else
+            time := 100;                         // 10 secs for skill level > 250
+      end
+      else begin
+         sneakIsSuccess := true;
+         time := ONE_GAME_MINUTE;
+      end
+      set_sfall_return(sneakIsSuccess);
+      set_sfall_return(time);
+   end
+end

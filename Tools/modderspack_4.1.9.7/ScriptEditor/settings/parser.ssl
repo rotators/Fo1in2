@@ -1,0 +1,3565 @@
+//
+// local_vars:
+//
+// 0 - CURRENTLY used: How many combat turns have passed.
+// 1 - 
+// 2 - 
+// 3 - 
+// 4 - Previously used for PoisonCheck
+// 5 - CURRENTLY used for endgame animation repeat prevention, Previously used for PoisonCheckCombat
+// 6 - Previously used for WarnedLoadedFromOldVersion
+// 7 - Previously used for FIXT_MainVersion
+// 8 - Previously used for FIXT_SubVersion
+// 9 - CURRENTLY used for ExaminedSelfOnce
+//
+#include "..\headers\define.h"
+
+procedure start;
+// display_msg("Days since visited: " + days_since_visited + " ");
+// CUTSCENES:{508}{}{Leaving Vault}# Man end {509}{}{Leaving Vault}# Woman ene
+procedure combat_p_proc;//		13
+procedure critter_p_proc;//		12
+procedure description_p_proc;//  3
+procedure look_at_p_proc;//		21
+procedure map_enter_p_proc;//	15
+procedure map_update_p_proc;//	 23
+procedure timed_event_p_proc;//	  22
+procedure use_skill_on_p_proc;//   8
+procedure EndGame000;
+procedure EndGame001;
+procedure EndGame002;
+procedure End_Game;
+procedure KillCheck;
+variable ShootOverseer := 0;
+variable gun_ptr := 0;
+variable GunSoundAnim := 0;
+procedure DebugEnterMsgs;// "Player has entered Map, blah blah"
+procedure Invasions;
+procedure DisplayRadsPoison;// Rads & Poison Amounts Display by Cubik2k & Wasteland Ghost (using Doctor skill)
+variable Rads;
+variable Poisonlvl;
+variable FlareLEFT;//	GVAR	TORCH_LEFT_HAND           :=0;    //  228  // Is the player holding a Flare in this slot?	// was NUM_RADIO
+variable FlareLit;
+variable FlareRIGHT;//	GVAR	TORCH_RIGHT_HAND          :=0;    //  229  // Is the player holding a Flare in this slot?	// was RADIO_MISTAKE
+variable H1;
+variable H2;
+variable HasTorch;
+variable IDH1;
+variable IDH2;
+variable PlayedSfxFLARE2;
+variable TorchDEAD;//	GVAR	TORCH_TIME_LEFT           :=0;    //  230  // Making sure Flare dies after 2 hours passed	// was CHANNEL_SLOT_DOWN
+variable SecondsFLAG;
+variable SecondsLeft;
+variable TimeFlag;
+variable Zero;
+import variable Ian_ptr;
+import variable Tycho_ptr;
+import variable Katja_ptr;
+import variable Tandi_ptr;
+procedure Cheater00;
+procedure Cheater00a;
+procedure Cheater01;
+procedure Cheater02;
+procedure Cheater03;
+procedure Cheater04;
+procedure Cheater05;
+procedure Cheater05b;
+procedure Cheater05c;
+procedure Cheater06;
+procedure Cheater06a;
+procedure Cheater06b;
+procedure Cheater06c;
+procedure Cheater06d;
+procedure Cheater06e;
+procedure Cheater07;
+procedure Cheater08;
+procedure Cheater09;
+procedure Cheater10;
+procedure Cheater11;
+procedure Cheater12;
+procedure Cheater13;
+procedure Cheater14;
+procedure Cheater15;
+procedure Cheater16;
+procedure Cheater17;
+procedure Cheater18;
+procedure Cheater19;
+procedure Cheater19a;
+procedure Cheater19b;
+procedure Cheater19c;
+procedure Cheater19d;
+procedure Cheater19e;
+procedure Cheater19f;
+procedure Cheater19g;
+procedure Cheater19h;
+procedure CheaterEnd;
+procedure FixesOFF;// disable "Bug Fixes Only" mode
+procedure FixesON;// enable "Bug Fixes Only" mode
+procedure FixesOnly;// toggle "Bug Fixes Only" mode
+procedure HardReset;// delete all items from inventory, including equipped
+procedure IDKFA;// give all keys in the game
+procedure ChangeTheClock;//used for the two procs below this one
+procedure RollBack;// subtract amount from game_time (time-travel to the past!!)
+procedure SpringForward;// add to game_time (back to the future!!)
+procedure GiveItems;//Give same items as cheat_mode proc in V13CAVE.SSL?
+procedure GiveItemsConfirm;//Yes to "give items?" query
+procedure Teleport;// to move around to different maps
+procedure TARDIS_1;
+procedure TARDIS_2;
+procedure TARDIS_3;
+procedure TARDIS_4;
+procedure TARDIS_5;
+procedure TARDIS_6;
+procedure TARDIS_7;
+procedure TARDIS_8;
+procedure TARDIS_9;
+procedure Nec1;
+procedure Nec2;
+procedure Nec3;
+procedure Nec4;
+procedure v13_1;
+procedure v13_2;
+procedure v15_1;
+procedure v15_2;
+procedure Junk1;
+procedure Junk2;
+procedure Junk3;
+procedure Bro1;
+procedure Bro2;
+procedure Bro3;
+procedure Bro4;
+procedure City;
+procedure Child1;
+procedure Child2;
+procedure Master1;
+procedure Master2;
+procedure Coast1;
+procedure Coast2;
+procedure Mountain1;
+procedure Mountain2;
+procedure Hub1;
+procedure Hub2;
+procedure Hub3;
+procedure Hub4;
+procedure Hub5;
+procedure Hub6;
+procedure Hub7;
+procedure Deathcave;
+procedure Ady1;
+procedure Ady2;
+procedure Ady3;
+procedure Ady4;
+procedure Ady5;
+procedure Ady6;
+procedure Raid1;
+procedure Raid2;
+procedure Shad1;
+procedure Shad2;
+procedure Shad3;
+procedure MB1;
+procedure MB2;
+procedure MB3;
+procedure MB4;
+procedure Glow1;
+procedure Glow2;
+procedure Glow3;
+procedure Des1;
+procedure Des2;
+procedure Des3;
+procedure DesCrv1;
+procedure DesCrv2;
+procedure DesCrv3;
+procedure DesCrv4;
+procedure MntCrv1;
+procedure MntCrv2;
+procedure MntCrv3;
+procedure MntCrv4;
+procedure ColaTruk;
+procedure Ufo;
+procedure BigFoot;
+procedure PoliceBox;
+procedure TalkCow;
+procedure UsedCar;
+procedure Slideshow;
+
+
+procedure start// "script_action ==" contents after "//" listed IN ORDER:
+begin
+//	if ((game_time - global_var(VAULT13_WATER_DAYS_COUNTER)) / 86400) >= VAULT13_WATER_NOTIFY_INTERVAL then begin
+//		set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+//		set_global_var(VAULT13_WATER_DAYS_COUNTER, game_time);
+//		display_msg(" " + VAULT13_WATER_DAYS_LEFT + " start_proc");
+//	end
+	if script_action == 21 then begin// debug msgs
+		call look_at_p_proc;
+	end
+	else begin
+		if script_action == 12 then begin// holodisks, dipped, flares, dropping explosives, levelup checks, poisontracker, Perks, necrocaravanfix
+			call critter_p_proc;
+		end
+		else begin
+			if script_action == 15 then begin
+				call map_enter_p_proc;
+			end
+			else begin
+				if script_action == 23 then begin
+					call map_update_p_proc;
+				end
+				else begin
+					if script_action == 22 then begin
+						call timed_event_p_proc;
+					end
+					else begin
+						if script_action == 13 then begin
+							call combat_p_proc;
+						end
+						else begin
+							if script_action == 3 then begin// debug dialog, new examine msgs
+								call description_p_proc;
+							end
+							else begin
+								if script_action == 8 then begin
+									call use_skill_on_p_proc;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	if (cur_map_index > 29) and (cur_map_index < 33) then begin// <---------- Put here instead of critter_proc and map_update_proc because this way it's only running once per tick
+		if (global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2) then begin
+			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+				add_timer_event(dude_obj, 0, 12);
+			end
+		end
+	end
+	else begin
+		if (cur_map_index == 17) or (cur_map_index == 18) or (cur_map_index == 33) or (cur_map_index == 34) then begin
+			if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
+				if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+					add_timer_event(dude_obj, 0, 11);
+				end
+			end
+		end
+	end
+end
+
+
+//	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC
+//	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC
+//	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC
+
+procedure combat_p_proc
+begin
+	if fixed_param == 4 then begin// beginning of combat round (including beginning of very first round)
+		if (cur_map_index > 29) and (cur_map_index < 33) then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
+			if ((global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
+				if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+					variable SecondsCombat;
+					SecondsCombat := (global_var(VATS_COUNTDOWN) - (game_time / 10));
+					if (SecondsCombat <= 0) then begin
+						set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
+						play_gmovie(3);//------ Military Base goes boom and dies, sweet!
+						metarule(13, 0);
+					end
+					else begin
+						//if (SecondsCombat % 5) then begin
+						//	while(SecondsCombat % 5) do
+						//	begin
+						//		SecondsCombat := (SecondsCombat - 1);
+						//	end
+						//end
+					//	if local_var(0) >= 1 then begin
+							display_msg(message_str(443, 100) + SecondsCombat + message_str(443, 101));//   "Time Left: XXX Seconds"
+					//	end
+					end
+				end
+			end
+		end
+		else begin
+			if (cur_map_index == 17) or (cur_map_index == 18) or (cur_map_index == 33) or (cur_map_index == 34) then begin
+				if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+					if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
+						SecondsCombat := 240 - ((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION));
+						if (((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
+							set_global_var(MASTER_BLOWN_CUTSCENE, 1);
+							play_gmovie(4);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
+							metarule(13, 0);
+						end
+						else begin
+							//if (SecondsCombat % 5) then begin
+							//	while(SecondsCombat % 5) do
+							//	begin
+							//		SecondsCombat := (SecondsCombat - 1);
+							//	end
+							//end
+						//	if local_var(0) >= 1 then begin
+								display_msg(message_str(447, 100) + SecondsCombat + message_str(447, 101));//   "Time Left: XXX Seconds"
+						//	end
+						end
+					end
+				end
+			end
+		end
+//		set_local_var(0, local_var(0) + 1);// counter to prevent display on first combat turn
+	end
+//
+//if fixed_param == 2) then begin// player lands a hit on their target
+//
+	if (get_critter_stat(dude_obj, 36) > 0) then begin// is_poisoned
+		if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
+			set_global_var(DUDE_OBJ_POISONED, 1);// tracker
+		end
+	end
+	else begin
+		if (global_var(DUDE_OBJ_POISONED) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
+			set_global_var(DUDE_OBJ_POISONED, 0);//	<< Clear the "Player Is Poisoned" tracker
+			if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
+				display_msg(message_str(766, 214));// "The poison has left your system."
+			end
+		end
+	end
+//
+// FOR FLARES:
+// can always be checking value of player slots ("if blah > 0")
+// then, check if player_has_PID205
+// if both slots are not == 205, 
+// ^ nevermind that won't work, will still run when just in inventory
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+// if NOT playing Fixes Only, give light as long as in backpack:	
+		if obj_is_carrying_obj_pid(dude_obj, 205) then begin
+			obj_set_light_level(dude_obj, 100, 8);
+		end
+		else begin
+			obj_set_light_level(dude_obj, 100, 4);
+		end
+// checks for dropping of explosives:
+		if critter_inven_obj(dude_obj, 2) > 0 then begin
+			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
+			if IDH2 == 206 then begin
+				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+				drop_obj(critter_inven_obj(dude_obj, 2));
+			end
+			else begin
+				if IDH2 == 209 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 2));
+				end
+			end
+		end
+		if critter_inven_obj(dude_obj, 1) > 0 then begin
+			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
+			if IDH1 == 206 then begin
+				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+				drop_obj(critter_inven_obj(dude_obj, 1));
+			end
+			else begin
+				if IDH1 == 209 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 1));
+				end
+			end
+		end
+	end
+	else begin
+		if critter_inven_obj(dude_obj, 2) > 0 then begin
+			//H2 := critter_inven_obj(dude_obj, 2);//	"ITEM1" (on the left)
+			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
+			if (IDH2 == 205) then begin
+				obj_set_light_level(dude_obj, 100, 8);
+			end
+			else begin
+				obj_set_light_level(dude_obj, 100, 4);
+				if IDH2 == 206 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 2));
+				end
+				else begin
+					if IDH2 == 209 then begin
+						//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+						drop_obj(critter_inven_obj(dude_obj, 2));
+					end
+				end
+			end
+		end
+		if critter_inven_obj(dude_obj, 1) > 0 then begin
+			//H1 := critter_inven_obj(dude_obj, 1);//	"ITEM2" (on the right)
+			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
+			if (IDH1 == 205) then begin
+				obj_set_light_level(dude_obj, 100, 8);
+			end
+			else begin
+				obj_set_light_level(dude_obj, 100, 4);
+				if IDH1 == 206 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 1));
+				end
+				else begin
+					if IDH1 == 209 then begin
+						//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+						drop_obj(critter_inven_obj(dude_obj, 1));
+					end
+				end
+			end
+		end
+	end
+//
+// for dynamite crash prevention - COMBAT_PROC
+//
+//	if global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index) == 2 then begin
+//		display_msg("global_var(" + (355 + cur_map_index) + ") == " + global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index) + ". (should be 2)");
+//		set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 0);
+//		display_msg("global_var(" + (355 + cur_map_index) + ") set to " + global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index) + ". (should be 0)");
+//		terminate_combat;
+//	end
+//	if (obj_is_carrying_obj_pid(dude_obj, 206) > 0) or (obj_is_carrying_obj_pid(dude_obj, 209) > 0) then begin
+//		//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+//	end
+end
+
+
+//	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC
+//	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC
+//	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC	CRITTER_P_PROC
+
+procedure critter_p_proc
+begin
+//	if (obj_is_carrying_obj_pid(dude_obj, 206) > 0) or (obj_is_carrying_obj_pid(dude_obj, 209) > 0) then begin
+//		//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+//	end
+//
+//	obj_is_carrying_obj_pid(dude_obj, #);//  Return value: number of objects with the specified PID
+//	obj_carrying_pid_obj(dude_obj, Remove_ptr#);//  Return value: a pointer to the object (ObjectPtr), if it has one who, otherwise NULL
+//
+	if cur_map_index == 43 then begin//GLOW2.MAP
+		if global_var(THE_GLOW_DISKS_REFRESH) < 3 then begin//tracker
+			if obj_is_carrying_obj_pid(dude_obj, 190) > 0 then begin// <-- FEV Disk
+				variable Remove_ptr0 := 0;
+				variable NewDisk0 := 0;
+				set_global_var(THE_GLOW_DISKS_REFRESH, global_var(THE_GLOW_DISKS_REFRESH) + 1);//tracker
+				Remove_ptr0 := obj_carrying_pid_obj(dude_obj, 190);
+				rm_obj_from_inven(dude_obj, Remove_ptr0);
+				destroy_object(Remove_ptr0);
+				NewDisk0 := create_object_sid(58, 0, 0, 347);// FEVDisk.int
+				add_obj_to_inven(dude_obj, NewDisk0);
+				set_global_var(FEVDISK_HOLODISK_POINTER, NewDisk0);
+			end
+			if obj_is_carrying_obj_pid(dude_obj, 192) > 0 then begin// <-- Alpha Experiment Disk
+				variable Remove_ptr1 := 0;
+				variable NewDisk1 := 0;
+				set_global_var(THE_GLOW_DISKS_REFRESH, global_var(THE_GLOW_DISKS_REFRESH) + 1);//tracker
+				Remove_ptr1 := obj_carrying_pid_obj(dude_obj, 192);
+				rm_obj_from_inven(dude_obj, Remove_ptr1);
+				destroy_object(Remove_ptr1);
+				NewDisk1 := create_object_sid(58, 0, 0, 345);// DiskA.int
+				add_obj_to_inven(dude_obj, NewDisk1);
+				set_global_var(DISKA_HOLODISK_POINTER, NewDisk1);
+			end
+			if obj_is_carrying_obj_pid(dude_obj, 193) > 0 then begin// <-- Delta Experiment Disk
+				variable Remove_ptr2 := 0;
+				variable NewDisk2 := 0;
+				set_global_var(THE_GLOW_DISKS_REFRESH, global_var(THE_GLOW_DISKS_REFRESH) + 1);//tracker
+				Remove_ptr2 := obj_carrying_pid_obj(dude_obj, 193);
+				rm_obj_from_inven(dude_obj, Remove_ptr2);
+				destroy_object(Remove_ptr2);
+				NewDisk2 := create_object_sid(58, 0, 0, 346);// DiskD.int
+				add_obj_to_inven(dude_obj, NewDisk2);
+				set_global_var(DISKD_HOLODISK_POINTER, NewDisk2);
+			end
+		end
+	end
+	if cur_map_index == 42 then begin//GLOW1.MAP
+		if obj_is_carrying_obj_pid(dude_obj, 164) > 0 then begin// <-- Brotherhood Disk
+			variable Remove_ptr3 := 0;
+			variable NewDisk3 := 0;
+			set_global_var(ARTIFACT_DISK_FOUND_GIVEN, 1);// ARTIFACT_DISK_FOUND_GIVEN
+			Remove_ptr3 := obj_carrying_pid_obj(dude_obj, 164);
+			rm_obj_from_inven(dude_obj, Remove_ptr3);
+			destroy_object(Remove_ptr3);
+			NewDisk3 := create_object_sid(58, 0, 0, 333);// Artifact.int
+			add_obj_to_inven(dude_obj, NewDisk3);
+			set_global_var(ARTIFACT_HOLODISK_POINTER, NewDisk3);
+		end
+	end
+	if global_var(VREE_DISK_TRACKER) == 1 then begin// VREE_DISK_TRACKER :=0;         //  310  // set to 1 when given disk, set to 2 when item created and placed in inventory.
+		variable NewDisk4 := 0;
+		set_global_var(VREE_DISK_TRACKER, 2);
+		NewDisk4 := create_object_sid(58, 0, 0, 348);// VreeDisk.int
+		add_obj_to_inven(dude_obj, NewDisk4);
+		set_global_var(VREE_AUTOPSY_POINTER, NewDisk4);// <-- VREE_AUTOPSY_POINTER // 450  // ! Fallout Fixt: Pointer used to create and destroy the tape.
+	end
+	if global_var(RECEIVED_HOLODISK_RAZOR) == 1 then begin// RECEIVED_HOLODISK_RAZOR   :=0;  //  446  Fixt: Has player gotten the disk from Razor already?
+		variable NewDisk5 := 0;
+		set_global_var(RECEIVED_HOLODISK_RAZOR, 2);
+		NewDisk5 := create_object_sid(58, 0, 0, 955);// RegDisk.int
+		add_obj_to_inven(dude_obj, NewDisk5);
+		set_global_var(RAZOR_HOLODISK_POINTER, NewDisk5);// <-- RAZOR_HOLODISK_POINTER    :=0;  //  453  Fixt: For tracking and destroying it
+	end
+	if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
+		if global_var(ARTIFACT_HOLODISK_POINTER) != 0 then begin// ARTIFACT_HOLODISK_POINTER	<--- Done!
+			if global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2 then begin// Became an Initiate
+				if global_var(ARTIFACT_HOLODISK_POINTER) > 255 then begin
+					set_global_var(ARTIFACT_DISK_FOUND_GIVEN, 3);// ARTIFACT_DISK_FOUND_GIVEN
+					if Ian_ptr > 0 then begin
+						rm_obj_from_inven(Ian_ptr, global_var(ARTIFACT_HOLODISK_POINTER));
+					end
+					if Tandi_ptr > 0 then begin
+						rm_obj_from_inven(Tandi_ptr, global_var(ARTIFACT_HOLODISK_POINTER));
+					end
+					if Tycho_ptr > 0 then begin
+						rm_obj_from_inven(Tycho_ptr, global_var(ARTIFACT_HOLODISK_POINTER));
+					end
+					if Katja_ptr > 0 then begin
+						rm_obj_from_inven(Katja_ptr, global_var(ARTIFACT_HOLODISK_POINTER));
+					end
+					rm_obj_from_inven(dude_obj, global_var(ARTIFACT_HOLODISK_POINTER));
+					destroy_object(global_var(ARTIFACT_HOLODISK_POINTER));
+					set_global_var(ARTIFACT_HOLODISK_POINTER, 0);
+					display_msg(message_str(295, 107));
+				end
+				else begin// else if invalid pointer, then clear it.
+					set_global_var(ARTIFACT_HOLODISK_POINTER, 0);
+				end
+			end
+		end
+		if global_var(FEVDISK_HOLODISK_POINTER) != 0 then begin// FEVDISK_HOLODISK_POINTER	<--- Done!
+			if global_var(FEVDISK_HOLODISK_USED) == 1 then begin// FEVDISK_HOLODISK_USED
+				if global_var(FEVDISK_HOLODISK_POINTER) > 255 then begin
+					set_global_var(FEVDISK_HOLODISK_FLAG, 2);// FEVDISK_HOLODISK_FLAG
+					if Ian_ptr > 0 then begin
+						rm_obj_from_inven(Ian_ptr, global_var(FEVDISK_HOLODISK_POINTER));
+					end
+					if Tandi_ptr > 0 then begin
+						rm_obj_from_inven(Tandi_ptr, global_var(FEVDISK_HOLODISK_POINTER));
+					end
+					if Tycho_ptr > 0 then begin
+						rm_obj_from_inven(Tycho_ptr, global_var(FEVDISK_HOLODISK_POINTER));
+					end
+					if Katja_ptr > 0 then begin
+						rm_obj_from_inven(Katja_ptr, global_var(FEVDISK_HOLODISK_POINTER));
+					end
+					rm_obj_from_inven(dude_obj, global_var(FEVDISK_HOLODISK_POINTER));
+					destroy_object(global_var(FEVDISK_HOLODISK_POINTER));
+					set_global_var(FEVDISK_HOLODISK_POINTER, 0);// This is necessary.
+					display_msg(message_str(295, 107));
+				end
+				else begin// else if invalid pointer, then clear it.
+					set_global_var(FEVDISK_HOLODISK_POINTER, 0);
+				end
+			end
+		end
+		if global_var(DISKA_HOLODISK_POINTER) != 0 then begin// DISKA_HOLODISK_POINTER	<--- Done!
+			if global_var(DISKA_HOLODISK_USED) == 1 then begin// DISKA_HOLODISK_USED
+				if global_var(DISKA_HOLODISK_POINTER) > 255 then begin
+					if Ian_ptr > 0 then begin
+						rm_obj_from_inven(Ian_ptr, global_var(DISKA_HOLODISK_POINTER));
+					end
+					if Tandi_ptr > 0 then begin
+						rm_obj_from_inven(Tandi_ptr, global_var(DISKA_HOLODISK_POINTER));
+					end
+					if Tycho_ptr > 0 then begin
+						rm_obj_from_inven(Tycho_ptr, global_var(DISKA_HOLODISK_POINTER));
+					end
+					if Katja_ptr > 0 then begin
+						rm_obj_from_inven(Katja_ptr, global_var(DISKA_HOLODISK_POINTER));
+					end
+					rm_obj_from_inven(dude_obj, global_var(DISKA_HOLODISK_POINTER));
+					destroy_object(global_var(DISKA_HOLODISK_POINTER));
+					set_global_var(DISKA_HOLODISK_POINTER, 0);// This is necessary.
+					display_msg(message_str(295, 107));
+				end
+				else begin// else if invalid pointer, then clear it.
+					set_global_var(DISKA_HOLODISK_POINTER, 0);
+				end
+			end
+		end
+		if global_var(DISKD_HOLODISK_POINTER) != 0 then begin// DISKD_HOLODISK_POINTER	<--- Done!
+			if global_var(DISKD_HOLODISK_USED) == 1 then begin// DISKD_HOLODISK_USED
+				if global_var(DISKD_HOLODISK_POINTER) > 255 then begin
+					if Ian_ptr > 0 then begin
+						rm_obj_from_inven(Ian_ptr, global_var(DISKD_HOLODISK_POINTER));
+					end
+					if Tandi_ptr > 0 then begin
+						rm_obj_from_inven(Tandi_ptr, global_var(DISKD_HOLODISK_POINTER));
+					end
+					if Tycho_ptr > 0 then begin
+						rm_obj_from_inven(Tycho_ptr, global_var(DISKD_HOLODISK_POINTER));
+					end
+					if Katja_ptr > 0 then begin
+						rm_obj_from_inven(Katja_ptr, global_var(DISKD_HOLODISK_POINTER));
+					end
+					rm_obj_from_inven(dude_obj, global_var(DISKD_HOLODISK_POINTER));
+					destroy_object(global_var(DISKD_HOLODISK_POINTER));
+					set_global_var(DISKD_HOLODISK_POINTER, 0);// This is necessary.
+					display_msg(message_str(295, 107));
+				end
+				else begin// else if invalid pointer, then clear it.
+					set_global_var(DISKD_HOLODISK_POINTER, 0);
+				end
+			end
+		end
+		if global_var(RAZOR_HOLODISK_POINTER) != 0 then begin// RAZOR_HOLODISK_POINTER    :=0;  //  453  Fixt: For tracking and destroying it
+			if global_var(REMOVE_JON_DISK_SON) == 1 then begin// REMOVE_JON_DISK_SON       :=0;  //  452  Fixt: Has he taken it from the player in the Zimmerman/Razor quest
+				if global_var(RAZOR_HOLODISK_POINTER) > 255 then begin
+					set_global_var(REMOVE_JON_DISK_SON, 2);// REMOVE_JON_DISK_SON       :=0;  //  452  Fixt: Has he taken it from the player in the Zimmerman/Razor quest
+					if Ian_ptr > 0 then begin
+						rm_obj_from_inven(Ian_ptr, global_var(RAZOR_HOLODISK_POINTER));
+					end
+					if Tandi_ptr > 0 then begin
+						rm_obj_from_inven(Tandi_ptr, global_var(RAZOR_HOLODISK_POINTER));
+					end
+					if Tycho_ptr > 0 then begin
+						rm_obj_from_inven(Tycho_ptr, global_var(RAZOR_HOLODISK_POINTER));
+					end
+					if Katja_ptr > 0 then begin
+						rm_obj_from_inven(Katja_ptr, global_var(RAZOR_HOLODISK_POINTER));
+					end
+					rm_obj_from_inven(dude_obj, global_var(RAZOR_HOLODISK_POINTER));
+					destroy_object(global_var(RAZOR_HOLODISK_POINTER));
+					set_global_var(RAZOR_HOLODISK_POINTER, 0);// Clear it too, just in case.
+					display_msg(message_str(295, 107));
+				end
+				else begin// else if invalid pointer, then clear it.
+					set_global_var(RAZOR_HOLODISK_POINTER, 0);
+				end
+			end
+		end
+		if global_var(VREE_AUTOPSY_POINTER) != 0 then begin//   VREE_AUTOPSY_POINTER // 450  // ! Fallout Fixt: Pointer used to create and destroy the tape.
+			if global_var(VREE_GIVEN_DUDE_AUTOPSY) == 2 then begin//   VREE_GIVEN_DUDE_AUTOPSY  :=0;  //  449  // Vree sets to 1, Master sets to 2, set to 5 is given to Master
+				if global_var(VREE_AUTOPSY_POINTER) > 255 then begin
+					set_global_var(VREE_GIVEN_DUDE_AUTOPSY, 5);
+					if Ian_ptr > 0 then begin
+						rm_obj_from_inven(Ian_ptr, global_var(VREE_AUTOPSY_POINTER));
+					end
+					if Tandi_ptr > 0 then begin
+						rm_obj_from_inven(Tandi_ptr, global_var(VREE_AUTOPSY_POINTER));
+					end
+					if Tycho_ptr > 0 then begin
+						rm_obj_from_inven(Tycho_ptr, global_var(VREE_AUTOPSY_POINTER));
+					end
+					if Katja_ptr > 0 then begin
+						rm_obj_from_inven(Katja_ptr, global_var(VREE_AUTOPSY_POINTER));
+					end
+					rm_obj_from_inven(dude_obj, global_var(VREE_AUTOPSY_POINTER));
+					destroy_object(global_var(VREE_AUTOPSY_POINTER));
+					set_global_var(VREE_AUTOPSY_POINTER, 0);// This is necessary.
+					display_msg(message_str(295, 107));
+				end
+				else begin// else if invalid pointer, then clear it.
+					set_global_var(global_var(VREE_AUTOPSY_POINTER), 0);
+				end
+			end
+		end
+		if global_var(GENDISK_HOLODISK_POINTER1) > 0 then begin// GENDISK_HOLODISK_POINTER1	<--- Done!
+			display_msg("GENDISK_HOLODISK_POINTER1");
+			if Ian_ptr > 0 then begin
+				rm_obj_from_inven(Ian_ptr, global_var(GENDISK_HOLODISK_POINTER1));
+			end
+			if Tandi_ptr > 0 then begin
+				rm_obj_from_inven(Tandi_ptr, global_var(GENDISK_HOLODISK_POINTER1));
+			end
+			if Tycho_ptr > 0 then begin
+				rm_obj_from_inven(Tycho_ptr, global_var(GENDISK_HOLODISK_POINTER1));
+			end
+			if Katja_ptr > 0 then begin
+				rm_obj_from_inven(Katja_ptr, global_var(GENDISK_HOLODISK_POINTER1));
+			end
+			rm_obj_from_inven(dude_obj, global_var(GENDISK_HOLODISK_POINTER1));
+			destroy_object(global_var(GENDISK_HOLODISK_POINTER1));
+			set_global_var(GENDISK_HOLODISK_POINTER1, 0);// This is necessary.
+			display_msg(message_str(295, 107));
+		end
+		if global_var(GENDISK_HOLODISK_POINTER2) > 0 then begin// GENDISK_HOLODISK_POINTER2	<--- Done!
+			display_msg("GENDISK_HOLODISK_POINTER2");
+			if Ian_ptr > 0 then begin
+				rm_obj_from_inven(Ian_ptr, global_var(GENDISK_HOLODISK_POINTER2));
+			end
+			if Tandi_ptr > 0 then begin
+				rm_obj_from_inven(Tandi_ptr, global_var(GENDISK_HOLODISK_POINTER2));
+			end
+			if Tycho_ptr > 0 then begin
+				rm_obj_from_inven(Tycho_ptr, global_var(GENDISK_HOLODISK_POINTER2));
+			end
+			if Katja_ptr > 0 then begin
+				rm_obj_from_inven(Katja_ptr, global_var(GENDISK_HOLODISK_POINTER2));
+			end
+			rm_obj_from_inven(dude_obj, global_var(GENDISK_HOLODISK_POINTER2));
+			destroy_object(global_var(GENDISK_HOLODISK_POINTER2));
+			set_global_var(GENDISK_HOLODISK_POINTER2, 0);// This is necessary.
+			display_msg(message_str(295, 107));
+		end
+		if global_var(GENDISK_HOLODISK_POINTER3) > 0 then begin// GENDISK_HOLODISK_POINTER3	<--- Done!
+			display_msg("GENDISK_HOLODISK_POINTER3");
+			if Ian_ptr > 0 then begin
+				rm_obj_from_inven(Ian_ptr, global_var(GENDISK_HOLODISK_POINTER3));
+			end
+			if Tandi_ptr > 0 then begin
+				rm_obj_from_inven(Tandi_ptr, global_var(GENDISK_HOLODISK_POINTER3));
+			end
+			if Tycho_ptr > 0 then begin
+				rm_obj_from_inven(Tycho_ptr, global_var(GENDISK_HOLODISK_POINTER3));
+			end
+			if Katja_ptr > 0 then begin
+				rm_obj_from_inven(Katja_ptr, global_var(GENDISK_HOLODISK_POINTER3));
+			end
+			rm_obj_from_inven(dude_obj, global_var(GENDISK_HOLODISK_POINTER3));
+			destroy_object(global_var(GENDISK_HOLODISK_POINTER3));
+			set_global_var(GENDISK_HOLODISK_POINTER3, 0);// This is necessary.
+			display_msg(message_str(295, 107));
+		end
+	end
+/*
+	if global_var(DISK_POINTER) != 0 then begin// PASTE GVAR_NAME HERE
+		if global_var(QUEST_FLAG) == COMPLETED then begin// PASTE GVAR_NAME HERE
+			if global_var(DISK_POINTER) > 255 then begin
+				set_global_var(DISK_FOUND, VALUE);// SET FOUND_DISK GVAR HERE, IF NEEDED
+				if Ian_ptr > 0 then begin
+					rm_obj_from_inven(Ian_ptr, global_var(DISK_POINTER));
+				end
+				if Tandi_ptr > 0 then begin
+					rm_obj_from_inven(Tandi_ptr, global_var(DISK_POINTER));
+				end
+				if Tycho_ptr > 0 then begin
+					rm_obj_from_inven(Tycho_ptr, global_var(DISK_POINTER));
+				end
+				if Katja_ptr > 0 then begin
+					rm_obj_from_inven(Katja_ptr, global_var(DISK_POINTER));
+				end
+				rm_obj_from_inven(dude_obj, global_var(DISK_POINTER));
+				destroy_object(global_var(DISK_POINTER));
+				set_global_var(DISK_POINTER, 0);// Clear it too, just in case.
+			end
+			else begin// else if invalid pointer, then clear it.
+				set_global_var(DISK_POINTER, 0);
+			end
+		end
+	end
+*/
+	if global_var(DCMUTANT_GAVE_DISK) != 3 then begin// DCMUTANT_GAVE_DISK:=0; // 477 // ! Fallout Fixt: 2 means showed disk to Rutger
+		if global_var(DCMUTANT_GAVE_DISK) == 2 then begin
+			if global_var(DCMUTANT_DISK_POINTER) > 1 then begin
+		//		destroy_object(global_var(DCMUTANT_DISK_POINTER));// DCMUTANT_DISK_POINTER     :=0;    //  451  // ! Fallout Fixt: Holds the DCMutant disk pointer
+				set_global_var(DCMUTANT_GAVE_DISK, 3);
+			end
+		end
+	end
+//
+// Player has been dipped? PLAYER IS SUPERMUTANT NOW - persisting flag
+	if global_var(PLAYER_BEEN_DIPPED) then begin
+		if critter_inven_obj(dude_obj, 0) then begin
+			if obj_pid(critter_inven_obj(dude_obj, 0)) != 254 then begin// <-- green mutant
+				variable del_ptr := 0;
+				del_ptr := critter_inven_obj(dude_obj, 0);
+				rm_obj_from_inven(dude_obj, del_ptr);
+				destroy_object(del_ptr);
+				//inven_unwield;
+				display_msg(message_str(766, 170));
+				while(obj_carrying_pid_obj(dude_obj, 254)) do begin
+					variable Remove := 0;
+					Remove := obj_carrying_pid_obj(dude_obj, 254);
+					rm_obj_from_inven(dude_obj, Remove);
+					destroy_object(Remove);
+					//inven_unwield;
+				end
+			end
+		end
+		else begin
+			variable Requip := 0;
+			//inven_unwield;
+			while(obj_carrying_pid_obj(dude_obj, 254)) do begin
+				variable Removal := 0;
+				Removal := obj_carrying_pid_obj(dude_obj, 254);
+				rm_obj_from_inven(dude_obj, Removal);
+				destroy_object(Removal);
+				//inven_unwield;
+			end
+			Requip := create_object_sid(254, 0, 0, 979);
+			add_obj_to_inven(dude_obj, Requip);
+			wield_obj_critter(dude_obj, Requip);
+		end
+	end
+// FOR FLARES:
+// can always be checking value of player slots ("if blah > 0")
+// then, check if player_has_PID205
+// if both slots are not == 205, 
+// ^ nevermind that won't work, will still run when just in inventory
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+// if NOT playing Fixes Only, give light as long as in backpack:
+		if obj_is_carrying_obj_pid(dude_obj, 205) then begin
+			obj_set_light_level(dude_obj, 100, 8);
+		end
+		else begin
+			obj_set_light_level(dude_obj, 100, 4);
+		end
+// checks for dropping of explosives:
+		if critter_inven_obj(dude_obj, 2) > 0 then begin
+			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
+			if IDH2 == 206 then begin
+				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+				drop_obj(critter_inven_obj(dude_obj, 2));
+			end
+			else begin
+				if IDH2 == 209 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 2));
+				end
+			end
+		end
+		if critter_inven_obj(dude_obj, 1) > 0 then begin
+			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
+			if IDH1 == 206 then begin
+				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+				drop_obj(critter_inven_obj(dude_obj, 1));
+			end
+			else begin
+				if IDH1 == 209 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 1));
+				end
+			end
+		end
+	end
+	else begin
+		if critter_inven_obj(dude_obj, 2) > 0 then begin
+			//H2 := critter_inven_obj(dude_obj, 2);//	"ITEM1" (on the left)
+			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
+			if (IDH2 == 205) then begin
+				obj_set_light_level(dude_obj, 100, 8);
+			end
+			else begin
+				obj_set_light_level(dude_obj, 100, 4);
+				if IDH2 == 206 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 2));
+				end
+				else begin
+					if IDH2 == 209 then begin
+						//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+						drop_obj(critter_inven_obj(dude_obj, 2));
+					end
+				end
+			end
+		end
+		if critter_inven_obj(dude_obj, 1) > 0 then begin
+			//H1 := critter_inven_obj(dude_obj, 1);//	"ITEM2" (on the right)
+			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
+			if (IDH1 == 205) then begin
+				obj_set_light_level(dude_obj, 100, 8);
+			end
+			else begin
+				obj_set_light_level(dude_obj, 100, 4);
+				if IDH1 == 206 then begin
+					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+					drop_obj(critter_inven_obj(dude_obj, 1));
+				end
+				else begin
+					if IDH1 == 209 then begin
+						//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+						drop_obj(critter_inven_obj(dude_obj, 1));
+					end
+				end
+			end
+		end
+	end
+// PLAYER JUST GOT LEVELUP
+	if get_pc_stat(1) > global_var(PLAYER_CURRENT_PLVL) then begin
+		set_global_var(PLAYER_CURRENT_PLVL, get_pc_stat(1));
+		if has_trait(2, dude_obj, 14) and (global_var(PLAYER_CURRENT_PLVL) > 1) then begin// Fix for broken Skilled Trait not giving +5 SkPoints per level
+			if global_var(SKILLED_SKP_PER_LEVEL) <= 5 then begin
+				critter_mod_skill(dude_obj, 18, 5);
+			end
+			else begin
+				critter_mod_skill(dude_obj, 18, global_var(SKILLED_SKP_PER_LEVEL));
+			end
+		end
+		if has_trait(0, dude_obj, 18) then begin// Educated (PERK)
+			if global_var(EDUCATED_BONUS_PER_LVL) <= 3 then begin
+				critter_mod_skill(dude_obj, 18, 3 * has_trait(0, dude_obj, 18));
+			end
+			else begin
+				critter_mod_skill(dude_obj, 18, global_var(EDUCATED_BONUS_PER_LVL) * has_trait(0, dude_obj, 18));
+			end
+		end
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin// if   FIXES_ONLY == 0
+			if global_var(DISPLAY_PLVL_ON_LVLUP) or global_var(DISPLAY_TITLE_ON_LVLUP) then begin// if display plvl or title on levelup == yes
+				if (global_var(PLAYER_CURRENT_PLVL) == 1) then begin// plvl 1
+					if global_var(DISPLAY_TITLE_ON_LVLUP) then begin// display title == 1
+						display_msg(message_str(766, 404) + message_str(766, (global_var(PLAYER_CURRENT_PLVL) + 404)));// "Your title is _____"
+					end
+				end
+				else begin//plvl between 2 and 21, inclusive
+					if (global_var(PLAYER_CURRENT_PLVL) <= 21) then begin
+						if (global_var(DISPLAY_PLVL_ON_LVLUP) and global_var(DISPLAY_TITLE_ON_LVLUP)) then begin// plvl and title
+							display_msg(message_str(766, 294) + global_var(PLAYER_CURRENT_PLVL) + ". " + message_str(766, 404) + message_str(766, (global_var(PLAYER_CURRENT_PLVL) + 404)));// "You are now lvl ___. Your title is ___"
+						end
+						else begin
+							if global_var(DISPLAY_TITLE_ON_LVLUP) then begin// title only
+								display_msg(message_str(766, 404) + message_str(766, (global_var(PLAYER_CURRENT_PLVL) + 404)));// "Your title is _____"
+							end
+							else begin
+								if global_var(DISPLAY_PLVL_ON_LVLUP) then begin// plvl only
+									display_msg(message_str(766, 294) + global_var(PLAYER_CURRENT_PLVL) + ".");// "You are now lvl ___"
+								end
+							end
+						end
+					end
+				end					
+			end
+// if player is level 21 and PLAYER_CAN_LVL_PAST_21 == 1
+//			if global_var(PLAYER_CAN_LVL_PAST_21) and (get_pc_stat(1) == 21) then begin
+//				set_global_var(PLAYER_CURRENT_PLVL, (global_var(PLAYER_CURRENT_PLVL) + 1));
+//				//critter_mod_skill(dude_obj, 18, blah blah usual formula here
+//				if has_trait(2, dude_obj, 14) and (global_var(PLAYER_CURRENT_PLVL) > 1) then begin// Fix for broken Skilled Trait not giving +5 SkPoints per level
+//					critter_mod_skill(dude_obj, 18, 5);
+//				end
+//				if global_var(DISPLAY_PLVL_ON_LVLUP) then begin// plvl only
+//					display_msg(message_str(766, 294) + global_var(PLAYER_CURRENT_PLVL) + ".");// "You are now lvl ___"
+//				end
+//					// Do shit here for players that want to level past 21
+//			end
+		// if FULL_HP_ON_LVLUP == 1
+			if global_var(FULL_HP_ON_LVLUP) then begin//  variable MaxHP;  MaxHP := get_critter_stat(dude_obj, 7);
+				critter_heal(dude_obj, 999);
+			end
+		end
+	end
+// "Poison has left your system"
+	if (get_critter_stat(dude_obj, 36) > 0) then begin// is_poisoned
+		if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
+			set_global_var(DUDE_OBJ_POISONED, 1);// tracker
+		end
+	end
+	else begin
+		if (global_var(DUDE_OBJ_POISONED) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
+			set_global_var(DUDE_OBJ_POISONED, 0);//	<< Clear the "Player Is Poisoned" tracker
+			if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
+				display_msg(message_str(766, 214));// "The poison has left your system."
+			end
+		end
+	end
+// Survivalist +20% to Outdoorsman per rank
+	if has_trait(0, dude_obj, 16) then begin
+		if global_var(SURVIVALIST_PLUS_20) < has_trait(0, dude_obj, 16) then begin
+			set_global_var(SURVIVALIST_PLUS_20, global_var(SURVIVALIST_PLUS_20) + 1);
+			critter_mod_skill(dude_obj, 17, 20);
+			display_msg(message_str(766, 116) + 20 + message_str(766, 134));
+		end
+	end
+// Reset for SecondsLeft display for bomb countdowns.
+//	if local_var(0) != 0 then begin
+//		set_local_var(0, 0);
+//	end
+// Necropolis Caravans bug fix (blank map teleports back to Hotel now)
+//	if cur_map_index == 57 then begin
+//		if elevation(dude_obj) == 2 then begin
+//			if global_var(CC_NECROP_ALREADY_LOADED) > 1 then begin
+//				load_map(4, 0);
+//			end
+//		end
+//	end
+end
+
+
+//	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC
+//	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC
+//	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC	LOOK_AT_P_PROC
+
+procedure look_at_p_proc
+begin
+/*
+	display_msg("AI Packet " + has_trait(1, dude_obj, 5) + " ");
+	display_msg("Team Num " + has_trait(1, dude_obj, 6) + " ");
+	display_msg("Cur Rot " + has_trait(1, dude_obj, 10) + " ");
+	display_msg("Cur Weight " + has_trait(1, dude_obj, 669) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 38) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 39) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 40) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 41) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 42) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 43) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 44) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 45) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 46) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 47) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 48) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 49) + " ");
+	display_msg(" " + get_critter_stat(dude_obj, 50) + " ");
+*/
+
+/*
+	variable count := 1;
+	while(count < 51) do
+	begin
+		set_global_var(count, 999);
+		display_msg("GVAR" + count + " is now 999.");
+		count := count + 1;
+	end
+	count := 52;
+	while(count < 640) do
+	begin
+		set_global_var(count, 999);
+		display_msg("GVAR" + count + " is now 999.");
+		count := count + 1;
+	end
+*/
+
+// --> BOTH slots == 0 if current hand empty, // but off-hand PID will be -1 (and give debug log errors)   // OFF-HAND IS ALWAYS CONTENT 0, PID -1
+	if global_var(CHEAT_DEBUG_MENU_ENABLED) or global_var(DEBUG_MODE_MESSAGES_ON) then begin
+		variable Hand_Item := 0;
+		variable Held_Item_PID := 0;
+		script_overrides;
+		debug_msg(" ");
+		display_msg("Dude: tile_num " + tile_num(dude_obj) + ", elevation " + elevation(dude_obj) + ", map " + cur_map_index);
+		debug_msg(" ");
+		if (get_critter_stat(dude_obj, 36) > 0) or (get_critter_stat(dude_obj, 37) > 0) then begin
+			display_msg("Current poison: " + get_critter_stat(dude_obj, 36) + ". " + "Current rads: " + get_critter_stat(dude_obj, 37) + ". " + "Current time: " + game_time_hour + ". ");
+		end
+/*		debug_msg(" ");
+		debug_msg("Displaying DUDE_OBJ held items, may get --obj is NULL-- msgs now.");
+		debug_msg(" ");
+		if critter_inven_obj(dude_obj, 1) > 0 then begin
+			Hand_Item := critter_inven_obj(dude_obj, 1);
+			Held_Item_PID := obj_pid(Hand_Item);
+			display_msg("inven_obj(dude_obj, 1) is " + Hand_Item + " ");
+			display_msg("inven_obj(dude_obj, 1) PID is " + Held_Item_PID + " ");
+			Held_Item_PID := 0;
+			Hand_Item := 0;
+		end
+		else begin
+			Hand_Item := critter_inven_obj(dude_obj, 1);
+			Held_Item_PID := obj_pid(Hand_Item);
+			display_msg("inven_obj(dude_obj, 1) is " + Hand_Item + " ");
+			display_msg("inven_obj(dude_obj, 1) PID is " + Held_Item_PID + " ");
+			Held_Item_PID := 0;
+			Hand_Item := 0;
+		end
+		if critter_inven_obj(dude_obj, 2) > 0 then begin
+			Hand_Item := critter_inven_obj(dude_obj, 2);
+			Held_Item_PID := obj_pid(Hand_Item);
+			display_msg("inven_obj(dude_obj, 2) is " + Hand_Item + " ");
+			display_msg("inven_obj(dude_obj, 2) PID is " + Held_Item_PID + " ");
+			Held_Item_PID := 0;
+			Hand_Item := 0;
+		end
+		else begin
+			Hand_Item := critter_inven_obj(dude_obj, 2);
+			Held_Item_PID := obj_pid(Hand_Item);
+			display_msg("inven_obj(dude_obj, 2) is " + Hand_Item + " ");
+			display_msg("inven_obj(dude_obj, 2) PID is " + Held_Item_PID + " ");
+			Held_Item_PID := 0;
+			Hand_Item := 0;
+		end
+		debug_msg(" ");
+		debug_msg("Displayed DUDE_OBJ held items, may have gotten --obj is NULL-- msgs.");
+		debug_msg(" ");
+		script_overrides;*/
+	end
+end
+
+
+//	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC
+//	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC
+//	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC	DESCRIP_P_PROC
+
+procedure description_p_proc
+begin
+	if global_var(CHEAT_DEBUG_MENU_ENABLED) != 1 then begin
+		script_overrides;
+		set_global_var(DUDE_EXAMINED_SELF_COUNT, global_var(DUDE_EXAMINED_SELF_COUNT) + 1);// local_var(9) == ExaminedDudeOnce
+		if global_var(DUDE_EXAMINED_SELF_COUNT) < 2 then begin
+			display_msg(message_str(766, 212));// "Do you like what you see?"
+		end
+		else begin
+			display_msg(message_str(766, 218));// "You must have a lot of time on your hands"
+		end
+	end
+	else begin
+		terminate_combat;
+		script_overrides;
+		debug_msg(" ");  debug_msg(" ");  debug_msg("Cheater/Debug dialog BEGINS");  debug_msg(" ");  debug_msg(" ");
+		if not(combat_is_initialized) then begin// Cheater dialog for debug, testing:
+			start_gdialog(621, dude_obj, 4, -1, -1);
+			gsay_start;
+			call Cheater00a;
+			gsay_end;
+			end_dialogue;
+		end
+		debug_msg("Cheater/Debug dialog ENDS, might have gotten empathy flag errors");  debug_msg(" ");  debug_msg(" ");
+	end
+end
+
+
+//	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC
+//	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC
+//	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC	MAP_ENTER_P_PROC
+
+procedure map_enter_p_proc
+begin
+//	variable map_explo_flag := 0;
+// Reset the Holodisk pointers to avoid crashes!
+	set_global_var(ARTIFACT_HOLODISK_POINTER, 0); // ARTIFACT
+	set_global_var(FEVDISK_HOLODISK_POINTER, 0); // FEV
+	set_global_var(DISKA_HOLODISK_POINTER, 0); // DISKA
+	set_global_var(DISKD_HOLODISK_POINTER, 0); // DISKD
+	set_global_var(GENDISK_HOLODISK_POINTER1, 0); // GENDISK_HOLODISK_POINTER1
+	set_global_var(GENDISK_HOLODISK_POINTER2, 0); // GENDISK_HOLODISK_POINTER2
+	set_global_var(GENDISK_HOLODISK_POINTER3, 0); // GENDISK_HOLODISK_POINTER3
+	set_global_var(VREE_AUTOPSY_POINTER, 0); // VREE_AUTOPSY
+// fix wrong Days Left on Fixes Only mode
+	if global_var(FIXT_BUGFIXES_ONLY) == 1 then begin
+		if global_var(VAULT13_WATER_DAYS_LEFT) > 150 then begin
+			set_global_var(VAULT13_WATER_DAYS_LEFT, 150);
+		end
+	end
+// "Player has entered map number blah blah blah"
+	if global_var(DEBUG_MODE_MESSAGES_ON) then begin// <-- Debug_Enabled
+		call DebugEnterMsgs;
+	end
+// Now calls here instead of on each map.
+	call Invasions;
+// [GOOF FIX] ...for my goof of not setting Child-killer Kills Required properly during install:
+	if global_var(CHILDKILLER_NUM_KILLS) == 0 then begin
+		set_global_var(CHILDKILLER_REPUTATION, 0);
+		set_global_var(CHILDKILLER_NUM_KILLS, 2);
+		set_global_var(CHILDKILLER_REPUTATION, 0);
+	end
+// [GOOF FIX] ...for my goof of making Garl's Father 100% of the time:
+	if global_var(MISTAKEN_ID) then begin
+		if (get_critter_stat(dude_obj, 6) < 9) or (get_critter_stat(dude_obj, 34) > 0) then begin
+			set_global_var(MISTAKEN_ID, 0);
+		end
+	end
+// For part of the crude fix of the Necropolis caravans' loading empty map elevation issue.
+//	if cur_map_index == 4 then begin
+//		set_global_var(CC_NECROP_ALREADY_LOADED, 0);
+//	end
+// "You earn 10000 experience points" since previously it only showed once Vats and Master both dead, even thuogh both give 10000xp independently
+	if (global_var(FIXT_BASE_VERSION_NUM) >= 6) and (global_var(FIXT_SUBVERSION_INSTALLED) >= 3) then begin
+		if (global_var(PLAYER_INFORMED_10K) != 1) then begin
+			if (global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2) then begin
+				if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin
+					set_global_var(PLAYER_INFORMED_10K, 1);
+					display_msg(message_str(766, 700));
+					set_global_var(PLAYER_INFORMED_10K, 1);
+				end
+			end
+			else begin
+				if (global_var(MASTER_BLOWN) == 1) then begin
+					if ((cur_map_index != 17) and (cur_map_index != 18) and (cur_map_index != 33) and (cur_map_index != 34)) then begin
+						set_global_var(PLAYER_INFORMED_10K, 1);
+						display_msg(message_str(766, 700));
+						set_global_var(PLAYER_INFORMED_10K, 1);
+					end
+				end
+			end
+		end
+	end
+// Reset dude-examine message counter, and other local vars.
+	set_global_var(DUDE_EXAMINED_SELF_COUNT, 0);
+// if April of 2175 (13 years have passed since start; lockup happens on July 18 2175)
+	if (get_month >= 4) and ((game_time / (10 * 60 * 60 * 24 * 365)) >= 13) then begin
+		game_time_advance((0 - (10 * 60 * 60 * 24 * 89)));// roll back time to January 1st.
+	end
+// Warn if from older version of Fixt:
+	if (metarule(22, 0) == 1) then begin// if Load Game is true. If going into actual dialog, CANNOT DO ON GAME LOAD, because it crashes.
+		if not(((global_var(FIXT_BASE_VERSION_NUM) == 7) and (global_var(FIXT_SUBVERSION_INSTALLED) == 1))) then begin// VERSION, SUBVERSION
+			if (global_var(FIXT_OLD_VERSION_WARNED) != 3) then begin// if FIXT_OLD_VERSION_WARNED hasn't been set
+				display_msg(message_str(766, 433));// Warning player when loading from old version
+				set_global_var(FIXT_OLD_VERSION_WARNED, 3);
+			end
+		end
+	end
+//
+// Display days left, since can't currently do this in Fallout2 engine via GUI:
+//
+//	if global_var(VAULT13_WATER_DAYS_LEFT) < 999 then begin
+//		if (global_var(VAULT13_WATER_DAYS_LEFT) - global_var(VAULT13_WATER_LAST_NOTIFY)) >= global_var(VAULT13_WATER_NOTIFY_INTERVAL) then begin
+//			display_msg(message_str(766, 900) + global_var(VAULT13_WATER_DAYS_LEFT) + message_str(766, 902));// 'PIP-Boy 2000 displays "VAULT 13 WATER: # DAYS LEFT." '
+//			set_global_var(VAULT13_WATER_LAST_NOTIFY, global_var(VAULT13_WATER_DAYS_LEFT));
+//			display_msg(" " + global_var(VAULT13_WATER_DAYS_LEFT) + " ");
+//		end
+//		if global_var(VAULT13_WATER_DAYS_LEFT) <= 0 then begin
+//			script_overrides;
+//			float_msg(dude_obj, "GAME OVER", -2);
+//			metarule(13, 0);
+//		end
+//	end
+//		if global_var(TORCH_LEFT_HAND) != 0 then begin//LIT FLARE CHECK -- "ITEM2" (on the right)
+//			HasTorch := obj_carrying_pid_obj(dude_obj, 205);
+//			rm_obj_from_inven(dude_obj, HasTorch);
+//			destroy_object(HasTorch);
+//			FlareRIGHT := create_object_sid(205, 0, 0, -1);
+//			add_obj_to_inven(dude_obj, FlareRIGHT);
+//			wield_obj_critter(dude_obj, FlareRIGHT);
+//			set_global_var(TORCH_LEFT_HAND, 0);
+//			FlareRIGHT := 0;
+//			HasTorch := 0;
+//		end
+//		if global_var(TORCH_RIGHT_HAND) != 0 then begin//LIT FLARE CHECK -- "ITEM1" (on the left)
+//			HasTorch := obj_carrying_pid_obj(dude_obj, 205);
+//			rm_obj_from_inven(dude_obj, HasTorch);
+//			destroy_object(HasTorch);
+//			FlareLEFT := create_object_sid(205, 0, 0, -1);
+//			add_obj_to_inven(dude_obj, FlareLEFT);
+//			wield_obj_critter(dude_obj, FlareLEFT);
+//			set_global_var(TORCH_RIGHT_HAND, 0);
+//			FlareLEFT := 0;
+//			HasTorch := 0;
+//		end
+//
+//
+//	if (cur_map_index == 6) then begin //  VAULT 13 - INSIDE// move out of V13 if endgame done
+//		if (global_var(GAME_CONTINUES) > 0) or (global_var(OVERSEER_KILLED) > 0) or (global_var(OVERSEER_END_SEQ) > 0) then begin// -- if you're in the Vault and have already ended the game, move to the entrance caverns
+//			gfade_out(1);
+//			load_map(35, 0);
+//			gfade_out(1);
+//			move_to(dude_obj, 18496, 0);
+//			gfade_out(1);
+//			gfade_in(1);
+//		end
+//	end
+//
+// for dynamite crash prevention - MAP_ENTER
+//
+//	if global_var(HIRED_BY_GIZMO5) == 1 then begin
+//		display_msg("global_var(" + (355 + cur_map_index) + ") == " + global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index) + ". (should be 1)");
+//		set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 2);
+//		display_msg("global_var(" + (355 + cur_map_index) + ") set to " + global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index) + ". (should be 2)");
+//		display_msg("attack command running...");
+//		attack_complex(dude_obj, 0, 0, -90, 0, 0, 0, 0);// target, called_shot, num_attacks, bonus, min_damage, max_damage, attacker_results, target_results
+//	end
+//
+//	if global_var(EXPLOSIVES_CRASH_FIX_1) == 1 then begin
+//	end
+//	if cur_map_index == global_var(EXPLOSIVES_CRASH_FIX_2) then begin
+//		set_global_var(EXPLOSIVES_CRASH_FIX_3, 2);
+//		attack_complex(dude_obj, 0, 0, -90, 0, 0, 0, 0);// target, called_shot, num_attacks, bonus, min_damage, max_damage, attacker_results, target_results
+//	end
+//	//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+end
+
+
+//	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC
+//	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC
+//	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC	MAP_UPDATE_P_PROC
+
+procedure map_update_p_proc
+begin
+	variable cmap := 0;
+	cmap := cur_map_index;
+	if (cmap == 30) or (cmap == 31) or (cmap == 32) then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
+		if ((global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
+			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+				add_timer_event(dude_obj, 0, 12);
+			end
+		end
+	end
+	else begin
+		if (cmap == 17) or (cmap == 18) or (cmap == 33) or (cmap == 34) then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
+			if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
+				if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+					add_timer_event(dude_obj, 0, 11);
+				end
+			end
+		end
+		else begin
+			if ((cmap >= 0) and (cmap <= 2)) or ((cmap >= 19) and (cmap <= 23)) or ((cmap >= 49) and (cmap <= 54)) then begin// Random Encounters, since sometimes lots of time will pass during these for things like resting, we want the Invasion timers to always be up-to-date when entering Towns after leaving a Random Encounter.
+				call Invasions;
+			end
+		end
+	end
+// Good Ending checks for The Hub
+	if (global_var(IS_HAROLD_ALIVE) == 1) and (global_var(DECKER_STATUS) == 1) then begin// Harold alive and Decker dead.
+		set_global_var(SLIDE_KIND_TO_HAROLD, 1);// QUEST_KIND_TO_HAROLD	//		display_msg("obj_dude: set_global_var(SLIDE_KIND_TO_HAROLD, 1)");
+	end
+	else begin
+		set_global_var(SLIDE_KIND_TO_HAROLD, 0);// QUEST_KIND_TO_HAROLD	//		display_msg("obj_dude: set_global_var(SLIDE_KIND_TO_HAROLD, 0)");
+	end
+// Good Ending checks for The Followers
+	if (global_var(QUEST_BONEYARD_4_FIND_SPY) >= 2) and (global_var(IS_NICOLE_ALIVE) == 1) and (global_var(FOLLOWERS_LEFT) >= 12) then begin// Spy quest finished, Nicole alive, at least half FOLSCHOL still alive.
+		set_global_var(SLIDE_TRAIN_FOLLOWERS, 1);// TRAIN_FOLLOWERS
+	end
+	else begin
+		set_global_var(SLIDE_TRAIN_FOLLOWERS, 0);// TRAIN_FOLLOWERS
+	end
+	if global_var(VAULT13_WATER_DAYS_LEFT) <= 0 then begin
+		script_overrides;
+		float_msg(dude_obj, "GAME OVER", -2);
+		metarule(13, 0);
+	end
+end
+
+
+//	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC
+//	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC
+//	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC	TIMED_EVENT_P_PROC
+
+procedure timed_event_p_proc
+begin
+	if fixed_param == 1 then begin// EndGame Mod by Corpse
+		game_ui_disable;
+	end
+	else begin
+		if fixed_param == 2 then begin// EndGame Mod by Corpse:
+			game_ui_enable;
+		end
+		else begin
+			if fixed_param == 3 then begin
+				game_ui_enable;
+				endgame_movie;
+				metarule(13, 0);
+			end
+			else begin
+//if fixed_param == 4) then begin
+//	float_msg(dude_obj, message_str(1, 500), -2);
+//	add_timer_event(dude_obj, game_ticks(15), 3);
+//end
+//else begin
+				if fixed_param == 5 then begin
+					game_ui_disable;
+					add_timer_event(dude_obj, 4, 6);
+//					add_timer_event(dude_obj, 4, 9);
+//					animate_move_obj_to_tile(map_var(0), 16890, 0);//When does this happen??
+//					add_timer_event(dude_obj, 1, 6);//was (dude_obj, 5, 6)
+//					add_timer_event(dude_obj, 1, 9);// EndGame Mod by Corpse
+				end
+				else begin
+					if fixed_param == 6 then begin
+//						game_ui_disable;
+						ShootOverseer := 0;
+						call KillCheck;
+						if (ShootOverseer == 1) then begin
+							gun_ptr := create_object_sid(8, 0, 0, -1);
+							add_obj_to_inven(dude_obj, gun_ptr);
+							if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+								wield_obj_critter(dude_obj, gun_ptr);
+							end
+//							set_global_var(OVERSEER_KILLED, 1);//  This was not set at all before. [7/1/2012] was it 2 before??	<--	EndGame Mod
+//							game_ui_enable;
+//							add_timer_event(dude_obj, 100, 7);
+							set_global_var(OVERSEER_KILLED, 2);
+							add_timer_event(dude_obj, 15, 7);//was 25
+						end
+						else begin
+							add_timer_event(dude_obj, 50, 9);//was 36
+						end
+					end
+					else begin
+						if fixed_param == 7 then begin
+							if global_var(DUDE_SHOOTS_OVERSEER) < 1 then begin
+								if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+									reg_anim_func(2, map_var(0));
+									reg_anim_func(1, 1);
+									reg_anim_animate(dude_obj, 43, -1);
+									GunSoundAnim := sfx_build_weapon_name(1, gun_ptr, 0, map_var(0));
+									reg_anim_play_sfx(dude_obj, GunSoundAnim, -1);
+									reg_anim_animate(dude_obj, 45, -1);
+									GunSoundAnim := sfx_build_char_name(map_var(0), 20, 3);
+									reg_anim_play_sfx(map_var(0), GunSoundAnim, 0);
+									reg_anim_animate(map_var(0), 20, 0);
+									reg_anim_animate(dude_obj, 44, 0);
+									reg_anim_func(3, 0);
+									add_timer_event(dude_obj, game_ticks(10), 8);
+								end
+							end
+							set_global_var(DUDE_SHOOTS_OVERSEER, 1);
+						end
+						else begin
+							if fixed_param == 8 then begin
+								game_ui_enable;
+								set_global_var(OVERSEER_END_SEQ, 7);// <-- EndGame Mod
+								add_timer_event(dude_obj, game_ticks(1), 10);
+							end
+							else begin
+								if fixed_param == 9 then begin
+									game_ui_enable;
+									set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
+									set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
+									set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
+									call EndGame000;
+								end
+								else begin
+									if fixed_param == 10 then begin
+										game_ui_enable;
+										set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
+										set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
+										set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
+										call EndGame000;
+										kill_critter_type(16777263, 1);//Overseer
+									end
+									else begin
+										if fixed_param == 11 then begin
+											if (cur_map_index == 17) or (cur_map_index == 18) or (cur_map_index == 33) or (cur_map_index == 34) then begin
+												if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+													SecondsLeft := 240 - ((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION));
+													if (((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
+														Zero := 0;
+														display_msg(message_str(447, 100) + Zero + message_str(447, 101));
+														set_global_var(MASTER_BLOWN_CUTSCENE, 1);
+														play_gmovie(4);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
+														metarule(13, 0);
+													end
+													else begin
+														if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
+															SecondsFLAG := 1;
+															display_msg(message_str(447, 100) + SecondsLeft + message_str(447, 101));
+														end
+														else begin
+															if (SecondsLeft % 5) then begin
+																SecondsFLAG := 0;
+															end
+														end
+													end
+													add_timer_event(dude_obj, 10, 11);
+												end
+											end
+										end
+										else begin
+											if fixed_param == 12 then begin
+												if (cur_map_index > 29) and (cur_map_index < 33) then begin
+													if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+														SecondsLeft := (global_var(VATS_COUNTDOWN) - (game_time / 10));
+														if (SecondsLeft <= 0) then begin
+															Zero := 0;
+															display_msg(message_str(443, 100) + Zero + message_str(443, 101));
+															set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
+															play_gmovie(3);//------ Military Base goes boom and dies, sweet!
+															metarule(13, 0);
+														end
+														else begin
+															if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
+																SecondsFLAG := 1;
+																display_msg(message_str(443, 100) + SecondsLeft + message_str(443, 101));
+															end
+															else begin
+																if (SecondsLeft % 5) then begin
+																	SecondsFLAG := 0;
+																end
+															end
+														end
+														add_timer_event(dude_obj, 10, 12);
+													end
+												end
+											end
+											else begin
+												if fixed_param == 13 then begin
+													if (global_var(UNDRBED_STARTED_TIMER) == 0) then begin// UNDRBED_STARTED_TIMER
+														if (tile_num(dude_obj) == 24692) or (tile_num(dude_obj) == 24892) or (tile_num(dude_obj) == 25092) or (tile_num(dude_obj) == 25292) or (tile_num(dude_obj) == 24492) then begin
+															set_global_var(UNDRBED_STARTED_TIMER, 1);
+															if (is_success(do_check(dude_obj, 1, 0))) then begin
+																set_global_var(UNDRBED_STARTED_TIMER, 2);
+																display_msg(message_str(151, 100));
+															end
+															if (global_var(UNDRBED_STARTED_TIMER) == 0) then begin
+																set_global_var(UNDRBED_STARTED_TIMER, 1);
+															end
+														end
+														else begin
+															add_timer_event(dude_obj, 5, 13);
+														end
+													end
+													else begin
+														if (global_var(UNDRBED_STARTED_TIMER) == 1) or (global_var(UNDRBED_STARTED_TIMER) == 2) then begin// UNDRBED_STARTED_TIMER -- PHASE2
+															if (tile_num(dude_obj) == 25287) or (tile_num(dude_obj) == 26090) then begin
+																if global_var(FIXT_BUGFIXES_ONLY) or (global_var(UNDRBED_STARTED_TIMER) == 1) then begin
+																	set_global_var(UNDRBED_STARTED_TIMER, 3);
+																	display_msg(message_str(151, 101));
+																	set_global_var(UNDRBED_STARTED_TIMER, 3);
+																end
+																else begin
+																	set_global_var(UNDRBED_STARTED_TIMER, 3);
+																	if (is_success(do_check(dude_obj, 1, 0)) and is_success(do_check(dude_obj, 6, 0))) then begin
+																		variable item := 0;
+																		variable item_ptr := 0;
+																		item := create_object_sid(224, 0, 0, -1);
+																		item_ptr := item;
+																		move_to(item_ptr, 27297, elevation(dude_obj));
+																		display_msg(message_str(151, 102));
+																	end
+																	else begin
+																		display_msg(message_str(151, 101));
+																	end
+																	set_global_var(UNDRBED_STARTED_TIMER, 3);
+																end
+															end
+															else begin
+																add_timer_event(dude_obj, 5, 13);
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure KillCheck
+begin
+// This, as in vanilla, checks if the PC is a "bad guy", and if so, you'll slaughter the Overseer when he delivers the news.
+// Was under "fixed_param == 6" in timed_event -- Now has its own code routine. [Sduibek]
+	ShootOverseer := 0;
+	if (has_trait(2, dude_obj, 8)) then begin//    Bloody Mess trait
+		ShootOverseer := 1;
+	end
+	else begin
+		if (global_var(BERSERKER_REPUTATION) == 1) then begin//   Berserker
+			ShootOverseer := 1;
+		end
+		else begin
+			if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin//    Child-Killer
+				ShootOverseer := 1;
+			end
+			else begin
+				if ((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and (global_var(NUM_GOOD_MONSTERS_KILLED) >= (2 * global_var(NUM_BAD_MONSTERS_KILLED))) then begin//    If killed at least 25 "people" (Good kills + Evil kills), AND, Evil kills is >= 2 * Good kills
+					ShootOverseer := 1;
+				end
+				else begin
+					if (global_var(PLAYER_REPUTATION_GENERAL) < -1) then begin//    General Reputation is -2 or less
+						ShootOverseer := 1;
+					end
+				end
+			end
+		end
+	end
+end
+
+
+//	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC
+//	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC
+//	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC	USE_SKILL_ON_P_PROC
+
+procedure use_skill_on_p_proc
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) and global_var(DOCTOR_SHOW_RADS_POISON) then begin
+		if (action_being_used == 7) then begin//-- DOCTOR
+			call DisplayRadsPoison;
+		end
+	end
+end
+
+procedure DisplayRadsPoison
+begin
+	Rads := get_critter_stat(dude_obj,37);//		STAT_current_rads
+	Poisonlvl := get_critter_stat(dude_obj,36);//		STAT_current_poison
+/*	if (has_trait(0, dude_obj, 0)) then begin// Awareness perk
+		if (Rads <= 0) and (Poisonlvl <= 0) then begin
+			display_msg(message_str(965, 177));
+		end
+		else begin
+			if (Rads > 0) and (Poisonlvl <= 0) then begin
+			//rads only
+				display_msg(message_str(965, 170) + Rads + message_str(965, 171) + message_str(965, 172) + Poisonlvl + message_str(965, 171),9);
+			end
+			else begin
+
+				if (Rads <= 0) and (Poisonlvl > 0) then begin
+				//poison only
+					display_msg(message_str(965, 170) + Rads + message_str(965, 171) + message_str(965, 172) + Poisonlvl + message_str(965, 171),9);
+				end
+				else begin
+					if (Rads > 0) and (Poisonlvl > 0) then begin
+					//both
+						display_msg(message_str(965, 170) + Rads + message_str(965, 171) + message_str(965, 172) + Poisonlvl + message_str(965, 171),9);
+					end
+
+
+
+
+
+
+		
+	end
+	else begin// If player doesn't have Awareness
+		if blah
+		
+	if (Rads>0) and (Rads<=75) then begin 
+		if ((Rads>75) and (Rads<=200)) then begin
+		if (Rads>200) then begin
+		if (Poisonlvl>0) and (Poisonlvl<=75) then begin 
+		float_msg(dude_obj, message_str(965, 179) + message_str(965, 180),8); 
+		end else 
+		if ((Poisonlvl>75) and (Poisonlvl<=200)) then begin
+		float_msg(dude_obj, message_str(965, 179) + message_str(965, 181),8);
+		end else 
+		if (Poisonlvl>200) then begin
+		float_msg(dude_obj, message_str(965, 179) + message_str(965, 182),8);
+		end
+		end
+
+		if ((Rads>0) and (Poisonlvl>0)) then begin
+		if (Poisonlvl>0) and (Poisonlvl<=75) then begin 
+		if (Rads>0) and (Rads<=75) then begin 
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 174) + message_str(965, 180),8); 
+		end
+		if ((Rads>75) and (Rads<=200)) then begin		
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 175) + message_str(965, 180),8);
+		end
+		if (Rads>200) then begin		
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 176) + message_str(965, 180),8);
+		end		
+		end else 
+		if ((Poisonlvl>75) and (Poisonlvl<=200)) then begin
+		if (Rads>0) and (Rads<=75) then begin 
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 174) + message_str(965, 181),8);
+		end
+		if ((Rads>75) and (Rads<=200)) then begin		
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 175) + message_str(965, 181),8);
+		end
+		if (Rads>200) then begin		
+		float_msg(dude_obj, message_str(965, 183) + message_str(965, 176) + message_str(965, 181),8);
+		end
+		end else 
+		if (Poisonlvl>200) then begin
+		if (Rads>0) and (Rads<=75) then begin 
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 174) + message_str(965, 182),8);
+		end
+		if ((Rads>75) and (Rads<=200)) then begin		
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 175) + message_str(965, 182),8);
+		end
+		if (Rads>200) then begin		
+			float_msg(dude_obj, message_str(965, 183) + message_str(965, 176) + message_str(965, 182),8);
+		end
+		end			
+		end		
+		end */
+end
+
+
+//	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG
+//	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG
+//	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG	ENDGAME MOD DIALOG
+
+//USEFUL COMMANDS:
+//	game_ui_is_disabled
+//	endgame_slideshow
+//	endgame_movie
+
+procedure EndGame000
+begin
+	game_ui_enable;
+	start_gdialog(66, dude_obj, 4, -1, -1);
+	gsay_start;
+	call EndGame001;
+	gsay_end;
+	end_dialogue;
+	game_ui_enable;
+end
+
+procedure EndGame001
+begin
+	gsay_reply(66, 5201);
+	giq_option(0, 66, 5203, EndGame002, 50);
+	giq_option(0, 66, 5202, End_Game, 50);
+end
+
+procedure EndGame002
+begin
+	set_global_var(GAME_CONTINUES, 1);
+	add_timer_event(dude_obj, 0, 2);
+//	add_timer_event(dude_obj, 1, 6);   <-- original?
+//	kill_critter(map_var(0), 1);       <-- original?
+end
+
+procedure End_Game
+begin
+	game_ui_enable;
+	add_timer_event(dude_obj, 20, 3);
+	game_ui_enable;
+//	end_dialogue;
+//	add_timer_event(dude_obj, 100, 2);
+//	endgame_movie;
+//	metarule(13, 0);
+end
+
+
+//	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE
+//	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE
+//	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE	INVASIONS UPDATE
+
+procedure Invasions
+begin
+	variable Skip := 0;
+//	if global_var(VAULT13_WATER_DAYS_LEFT) < 1 then begin// Water Chip - vanilla 150 days    //  and if global_var(CAN_PLAY_AFTER_V13_DEAD) < 2 then begin// if Game ends if dehydration triggered
+//		set_global_var(WORLDMAPLIST_VAULT_13, 0);
+//		set_global_var(TOWN_VAULT_13_MAP, 0);
+//		set_global_var(MARK_V13_1, 0);
+//		set_global_var(MARK_V13_2, 0);
+//		set_global_var(MARK_V13_3, 0);
+//		set_global_var(MARK_V13_4, 0);
+//	end
+	if global_var(VATS_BLOWN) then begin//  and if cur_map_index != 48
+		if not(global_var(VATSPOW_INVAD_MAP_CLEARED)) then begin
+			set_global_var(VATSPOW_INVAD_MAP_CLEARED, 1);
+			set_global_var(WORLDMAPLIST_MILITARYBASE, 0);
+			set_global_var(MARK_BASE_1, 0);
+			set_global_var(MARK_BASE_2, 0);
+			set_global_var(MARK_BASE_3, 0);
+			set_global_var(MARK_BASE_4, 0);
+			set_global_var(MARK_BASE_5, 0);
+		end
+	end
+	if global_var(MASTER_BLOWN) then begin//  and if cur_map_index != 47
+		if not(global_var(CATHPOW_INVAD_MAP_CLEARED)) then begin
+			set_global_var(CATHPOW_INVAD_MAP_CLEARED, 1);
+			set_global_var(WORLDMAPLIST_CHILDREN, 0);
+			set_global_var(WORLDMAPLIST_MASTERS_LAIR, 0);
+			set_global_var(TOWN_CHILDREN_1, 0);
+			set_global_var(MARK_CHILD_1, 0);
+			set_global_var(MARK_CHILD_2, 0);
+		end
+	end// GVAR 429 == HOW_INVASIONS_STOPPED?  0==Master (vanilla), 1==Master-or-Vats, 2==Both
+	if not(global_var(MASTER_BLOWN)) or not(global_var(VATS_BLOWN)) then begin// 17 == VATS_BLOWN, 18 == MASTER_BLOWN
+		if global_var(HOW_INVASIONS_STOPPED) == 0 then begin
+			if global_var(MASTER_BLOWN) then begin
+				Skip := 1;
+			end
+		end
+		else begin
+			if global_var(HOW_INVASIONS_STOPPED) == 1 then begin
+				if global_var(MASTER_BLOWN) or global_var(VATS_BLOWN) then begin
+					Skip := 1;
+				end
+			end
+			else begin
+				if global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) then begin
+					Skip := 1;
+				end
+			end
+		end
+		if not(Skip) then begin
+			variable Days := 0;
+			Days := game_time / (10 * 60 * 60 * 24);
+			if global_var(FOLLOWERS_INVADED_DATE) <= Days then begin// Followers, L.A. Boneyard - vanilla 90 days
+				set_global_var(FOLLOWERS_INVADED, 1);
+				if not(global_var(FOLLOWR_INVAD_MAP_CLEARED)) then begin
+					set_global_var(FOLLOWR_INVAD_MAP_CLEARED, 1);
+					//set_global_var(WORLDMAPLIST_BONEYARD, 0);
+					//set_global_var(MARK_LA_1, 0);
+					set_global_var(MARK_LA_2, 0);
+					set_global_var(MARK_LA_3, 0);
+					set_global_var(MARK_LA_4, 0);
+					set_global_var(MARK_LA_5, 0);
+				end
+			end
+			if global_var(NECROPOLIS_INVADED_DATE) <= Days then begin// Necropolis - vanilla 110 days (or 30 after mutants killed)
+				set_global_var(NECROPOLIS_WAS_INVADED, 1);
+				if not(global_var(NECROPL_INVAD_MAP_CLEARED)) then begin
+					set_global_var(NECROPL_INVAD_MAP_CLEARED, 1);
+					//set_global_var(WORLDMAPLIST_NECROPOLIS, 0);
+					//set_global_var(TOWN_HALL_OF_THE_DEAD, 0);
+					//set_global_var(TOWN_HOTEL_OF_DOOM, 0);
+					//set_global_var(TOWN_NECROP_VAULT, 0);
+					//set_global_var(TOWN_WATERSHED, 0);
+					//set_global_var(MARK_NECROP_1, 0);
+					set_global_var(MARK_NECROP_2, 0);
+					set_global_var(MARK_NECROP_3, 0);
+				end
+			end
+			if global_var(THE_HUB_INVADED_DATE) <= Days then begin// The Hub - vanilla 140 days
+				set_global_var(THE_HUB_WAS_INVADED, 1);
+				if not(global_var(THE_HUB_INVAD_MAP_CLEARED)) then begin
+					set_global_var(THE_HUB_INVAD_MAP_CLEARED, 1);
+					//set_global_var(WORLDMAPLIST_THE_HUB, 0);
+					//set_global_var(MARK_HUB_1, 0);
+					set_global_var(MARK_HUB_2, 0);
+					set_global_var(MARK_HUB_3, 0);
+					set_global_var(MARK_HUB_4, 0);
+					set_global_var(MARK_HUB_5, 0);
+					set_global_var(MARK_HUB_6, 0);
+				end
+			end
+			if global_var(BROTHERHOOD_INVADED_DATE) <= Days then begin// Brotherhood of Steel - vanilla 170 days
+				set_global_var(BROTHERHOOD_WAS_INVADED, 1);
+				if not(global_var(BROTHER_INVAD_MAP_CLEARED)) then begin
+					set_global_var(BROTHER_INVAD_MAP_CLEARED, 1);
+					//set_global_var(WORLDMAPLIST_BROTHERHOOD, 0);
+					//set_global_var(TOWN_BROTHERHOOD_12, 0);
+					//set_global_var(TOWN_BROTHERHOOD_34, 0);
+					//set_global_var(TOWN_BROTHERHOOD_ENTRANCE, 0);
+					//set_global_var(MARK_BROTHER_1, 0);
+					set_global_var(MARK_BROTHER_2, 0);
+					set_global_var(MARK_BROTHER_3, 0);
+					set_global_var(MARK_BROTHER_4, 0);
+					set_global_var(MARK_BROTHER_5, 0);
+				end
+			end
+			if global_var(JUNKTOWN_INVADED_DATE) <= Days then begin// Junktown - vanilla 200 days
+				set_global_var(JUNKTOWN_WAS_INVADED, 1);
+				if not(global_var(JUNKTWN_INVAD_MAP_CLEARED)) then begin
+					set_global_var(JUNKTWN_INVAD_MAP_CLEARED, 1);
+					//set_global_var(WORLDMAPLIST_JUNKTOWN, 0);
+					//set_global_var(TOWN_JUNKTOWN_CASINO, 0);
+					//set_global_var(TOWN_JUNKTOWN_ENTRANCE, 0);
+					//set_global_var(TOWN_JUNKTOWN_KILLIAN, 0);
+					//set_global_var(MARK_JUNK_1, 0);
+					set_global_var(MARK_JUNK_2, 0);
+					set_global_var(MARK_JUNK_3, 0);
+				end
+			end
+			if global_var(SHADY_SANDS_INVADED_DATE) <= Days then begin// Shady Sands - vanilla 230 days (NOW ALSO INCLUDES RAIDERS AND VAULT 15)
+				set_global_var(SHADY_SANDS_WAS_INVADED, 1);
+				if not(global_var(SHADSND_INVAD_MAP_CLEARED)) then begin
+					set_global_var(SHADSND_INVAD_MAP_CLEARED, 1);
+					//set_global_var(WORLDMAPLIST_SHADY_SANDS, 0);//  SANDS
+					//set_global_var(TOWN_CAVES, 0);//  SANDS (Caves)
+					//set_global_var(TOWN_SHADY_SANDS_EAST, 0);//  SANDS
+					//set_global_var(TOWN_SHADY_SANDS_WEST, 0);//  SANDS
+					//set_global_var(MARK_SHADY_1, 0);// SANDS
+					set_global_var(MARK_SHADY_2, 0);// SANDS
+					set_global_var(MARK_SHADY_3, 0);// SANDS
+					//set_global_var(WORLDMAPLIST_VAULT_15, 0);//  V15
+					//set_global_var(TOWN_BURIED_VAULT_MAP, 0);//  V15
+					//set_global_var(TOWN_VAULT_ENTRANCE, 0);//  V15
+					//set_global_var(MARK_V15_1, 0);// V15
+					set_global_var(MARK_V15_2, 0);// V15
+					set_global_var(MARK_V15_3, 0);// V15
+					set_global_var(MARK_V15_4, 0);// V15
+					//set_global_var(WORLDMAPLIST_RAIDERS, 0);//  RAIDERS
+					//set_global_var(MARK_RAIDERS_1, 0);// RAIDERS
+				end
+			end
+			if (global_var(CAN_PLAY_AFTER_V13_DEAD) == 0) or (global_var(CAN_PLAY_AFTER_V13_DEAD) == 2) then begin// if cannot continue game after V13 invaded
+				if global_var(VAULT_13_INVADED_DATE) <= Days then begin// Vault 13 - vanilla 500 days (if enabled)
+					set_global_var(VAULT_13_WAS_INVADED, 1);
+					if not(global_var(VAULT13_INVAD_MAP_CLEARED)) then begin
+						set_global_var(VAULT13_INVAD_MAP_CLEARED, 1);
+						set_global_var(WORLDMAPLIST_VAULT_13, 0);
+						set_global_var(TOWN_VAULT_13_MAP, 0);
+						set_global_var(MARK_V13_1, 0);
+						set_global_var(MARK_V13_2, 0);
+						set_global_var(MARK_V13_3, 0);
+						set_global_var(MARK_V13_4, 0);
+					end
+					play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+					metarule(13, 0);
+				end
+			end
+			else begin
+				if not(global_var(VAULT_13_INVAD_NUM_MOVED)) then begin// have moved gvar? (to avoid hardcoded endgame custcene)
+					set_global_var(VAULT_13_INVAD_NUM_MOVED, 1);
+					set_global_var(VAULT_13_INVAD_DAYS_LEFT, global_var(VAULT_13_INVADED_DATE));// move value, reset original
+					set_global_var(VAULT_13_INVADED_DATE, 64000);
+				end
+				if global_var(VAULT_13_INVAD_DAYS_LEFT) <= Days then begin
+					set_global_var(VAULT_13_WAS_INVADED, 1);
+					if not(global_var(VAULT13_INVAD_MAP_CLEARED)) then begin
+						set_global_var(VAULT13_INVAD_MAP_CLEARED, 1);
+						set_global_var(WORLDMAPLIST_VAULT_13, 0);
+						set_global_var(TOWN_VAULT_13_MAP, 0);
+						set_global_var(MARK_V13_1, 0);
+						set_global_var(MARK_V13_2, 0);
+						set_global_var(MARK_V13_3, 0);
+						set_global_var(MARK_V13_4, 0);
+						if not(combat_is_initialized) then begin
+							debug_msg("Started playing cutscene#7 for V13 invasion, may crash / cause issues!");
+//							game_ui_disable;
+							gfade_out(1);
+							play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+							gfade_in(1);
+//							game_ui_enable;
+							debug_msg("Done playing cutscene#7 for V13 invasion.");
+						end
+					end
+				end
+			end
+		end
+	end
+	//// ?????? when/if ?
+	//MARK_GLOW_1               :=1;    //  592
+	//MARK_GLOW_2               :=0;    //  593
+	//THE_GLOW                  :=1;    // (76)
+	//THEGLOW_INVAD_MAP_CLEARED :=0;    //  439  // ! Fallout Fixt: The Glow cleared off map once already?
+end
+
+
+//		UNUSED CODE BY SDUIBEK, KEEPING FOR REFERENCE OR/AND FUTURE IMPLEMENTATION:	 //
+//		UNUSED CODE BY SDUIBEK, KEEPING FOR REFERENCE OR/AND FUTURE IMPLEMENTATION:	 //
+//		UNUSED CODE BY SDUIBEK, KEEPING FOR REFERENCE OR/AND FUTURE IMPLEMENTATION:	 //
+//		UNUSED CODE BY SDUIBEK, KEEPING FOR REFERENCE OR/AND FUTURE IMPLEMENTATION:	 //
+//		UNUSED CODE BY SDUIBEK, KEEPING FOR REFERENCE OR/AND FUTURE IMPLEMENTATION:	 //
+
+/*
+	if (get_critter_stat(dude_obj, 35) <= 0) then begin
+		display_msg(message_str(621, 219));
+	end
+*/
+
+//Night Vision:
+/*
+	variable LVar0;//need this
+	if ((has_trait(0, dude_obj, 9)) != 0) then begin
+		if ((has_trait(0, dude_obj, 9)) == 1) then begin
+			set_light_level(set_light_level + 49);
+		end
+		else begin
+			if ((has_trait(0, dude_obj, 9)) == 2) then begin
+				set_light_level(set_light_level + 50);
+			end
+			else begin
+				if ((has_trait(0, dude_obj, 9)) == 3) then begin
+					set_light_level(set_light_level + 100);
+				end
+			end
+		end
+	end
+*/
+
+//adding msgs/effects for Addictions--
+/*
+	if global_var(IS_ALCOHOL_ADDICT) != 0 then begin
+		display_msg(""+global_var(IS_ALCOHOL_ADDICT)+"");
+	end
+*/
+
+
+//	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG
+//	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG
+//	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG
+//	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG
+//	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG	CHEATER DEBUG DIALOG
+
+procedure GiveItems
+begin
+	gsay_reply(621, 267);
+	giq_option(1, 621, 265, GiveItemsConfirm, 50);
+	giq_option(1, 621, 268, Cheater00a, 50);
+end
+
+procedure ChangeTheClock
+begin
+	gsay_reply(621, 266);
+	giq_option(1, 621, 101, RollBack, 50);
+	giq_option(1, 621, 111, SpringForward, 50);	
+	giq_option(1, 621, 125, Cheater00a, 50);
+end
+
+procedure IDKFA
+begin
+	gsay_reply(621, 122);
+	giq_option(1, 621, 123, Cheater16, 50);
+	giq_option(1, 621, 124, Cheater17, 50);
+	giq_option(1, 621, 125, Cheater00a, 50);
+end
+
+procedure Cheater16// in backpack
+begin
+	variable bag_ptr := 0;
+	variable item := 0;
+	bag_ptr := create_object_sid(90, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, bag_ptr, 1);
+	item := create_object_sid(82, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(83, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(96, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(97, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(105, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(140, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(141, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(142, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(221, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(222, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(223, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+	item := create_object_sid(231, 0, 0, -1);
+	add_mult_objs_to_inven(bag_ptr, item, 1);
+end
+
+procedure Cheater17// to inventory
+begin
+	variable item := 0;
+	item := create_object_sid(82, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(83, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(96, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(97, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(105, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(140, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(141, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(142, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(221, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(222, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(223, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(231, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+end
+
+procedure RollBack
+begin
+	TimeFlag := 1;
+	gsay_reply(621, 102);
+	giq_option(1, 621, 103, Cheater09, 50);
+	giq_option(1, 621, 104, Cheater10, 50);
+	giq_option(1, 621, 105, Cheater11, 50);
+	giq_option(1, 621, 106, Cheater12, 50);
+	giq_option(1, 621, 107, Cheater13, 50);
+	giq_option(1, 621, 108, Cheater14, 50);
+	giq_option(1, 621, 109, Cheater15, 50);
+	giq_option(1, 621, 309, Cheater18, 50);
+	giq_option(1, 621, 110, Cheater00a, 50);
+end
+
+procedure SpringForward
+begin
+	TimeFlag := 0;
+	gsay_reply(621, 112);
+	giq_option(1, 621, 113, Cheater09, 50);
+	giq_option(1, 621, 114, Cheater10, 50);
+	giq_option(1, 621, 115, Cheater11, 50);
+	giq_option(1, 621, 116, Cheater12, 50);
+	giq_option(1, 621, 117, Cheater13, 50);
+	giq_option(1, 621, 118, Cheater14, 50);
+	giq_option(1, 621, 119, Cheater15, 50);
+	giq_option(1, 621, 319, Cheater18, 50);
+	giq_option(1, 621, 120, Cheater00a, 50);
+end
+
+procedure FixesOnly
+begin
+	if (global_var(FIXT_BUGFIXES_ONLY)) then begin
+		gsay_reply(621, 208);
+		giq_option(1, 621, 209, FixesOFF, 50);
+		giq_option(1, 621, 210, Cheater00a, 50);
+	end
+	else begin
+		gsay_reply(621, 211);
+		giq_option(1, 621, 212, FixesON, 50);
+		giq_option(1, 621, 210, Cheater00a, 50);
+	end
+end
+
+procedure FixesON
+begin
+	set_global_var(FIXT_BUGFIXES_ONLY, 1);
+	call FixesOnly;
+end
+
+procedure FixesOFF
+begin
+	set_global_var(FIXT_BUGFIXES_ONLY, 0);
+	call FixesOnly;
+end
+
+procedure HardReset
+begin
+	variable KillBox_ptr := 0;
+//	variable KillBox_IAN_ptr := 0;
+//me
+	KillBox_ptr := create_object_sid(16777527, 0, 0, -1);// <-- Dead Traveler (Ghoul)  Was:  create_object_sid(165, 0, 0, -1);// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
+	move_to(KillBox_ptr, 0, 0);
+	inven_unwield;
+	inven_unwield;
+	move_obj_inven_to_obj(dude_obj, KillBox_ptr);
+	destroy_object(KillBox_ptr);
+	inven_unwield;
+//ian
+//	KillBox_IAN_ptr := create_object_sid(16777527, 0, 0, -1);
+//	move_to(KillBox_IAN_ptr, 0, 0);
+//	move_obj_inven_to_obj(Ian_ptr, KillBox_IAN_ptr);
+//	move_obj_inven_to_obj(Ian_ptr, KillBox_IAN_ptr);
+//	destroy_object(KillBox_IAN_ptr);
+end
+
+procedure TestRolls
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	variable LVar3 := 0;
+	//LVar0 := roll_vs_skill(dude_obj, 14, 0);
+	LVar0 := do_check(dude_obj, 4, -9);
+	LVar2 := is_success(LVar0);
+	/*LVar1 := how_much;
+	if LVar2 then begin
+		debug_msg("ROLL OK");
+		debug_msg("Amount above/below:  " + LVar1 + "          ");
+	end
+	else begin
+		debug_msg("ROLL UNSUCCESSFUL");
+		debug_msg("Amount above/below:  " + LVar1 + "          ");
+	end*/
+	//display_msg("roll_vs_skill(dude_obj, 14, 0) :: "+LVar0+"");
+	//display_msg("how_much :: "+LVar1+"");
+	//display_msg("do_check(dude_obj, 14, 0) :: "+LVar2+"");
+	//display_msg("how_much :: "+LVar3+"");
+	//gsay_reply(621, "Roll result: " + LVar0 + "          " + "How much: " + LVar1 + "          " + "Is success?  " + LVar2 + " ");
+	gsay_reply(621, 231);
+	giq_option(1, 621, 229, TestRolls, 50);	
+	giq_option(1, 621, 230, CheaterEnd, 50);
+end
+
+procedure Cheater00a//  MAIN MENU	 MAIN MENU 		MAIN MENU 		MAIN MENU
+begin
+//	set_global_var(VATS_BLOWN, 1);
+//	
+	gsay_reply(621, 200);
+	//giq_option(1, 621, 229), TestRolls, 50);	
+	giq_option(1, 621, 201, Cheater00, 50);
+	giq_option(1, 621, 202, Cheater06, 50);
+	giq_option(1, 621, 205, HardReset, 50);
+	giq_option(1, 621, 206, FixesOnly, 50);
+	giq_option(1, 621, 263, ChangeTheClock, 50);
+	giq_option(1, 621, 264, GiveItems, 50);
+	giq_option(1, 621, 121, IDKFA, 50);	
+	giq_option(1, 621, 280, Slideshow, 50);
+	giq_option(1, 621, 252, Teleport, 50);
+end
+
+procedure Slideshow
+begin
+	endgame_slideshow;
+end
+
+procedure Cheater00// GIVE EXPERIENCE
+begin
+	gsay_reply(621, 241);
+	giq_option(1, 621, 232, Cheater01, 50);
+	giq_option(1, 621, 233, Cheater02, 50);
+	giq_option(1, 621, 234, Cheater03, 50);
+	giq_option(1, 621, 235, Cheater04, 50);
+	giq_option(1, 621, 236, Cheater05, 50);
+	giq_option(1, 621, 237, Cheater05b, 50);
+	giq_option(1, 621, 238, Cheater05c, 50);
+	giq_option(1, 621, 239, Cheater00a, 50);
+end
+
+procedure Cheater01
+begin
+	give_exp_points(500);
+//	gsay_message(621, 240, 50);
+	call Cheater00;
+end
+
+procedure Cheater02
+begin
+	give_exp_points(1000);
+//	gsay_message(621, 240, 50);
+	call Cheater00;
+end
+
+procedure Cheater03
+begin
+	give_exp_points(5000);
+//	gsay_message(621, 240, 50);
+	call Cheater00;
+end
+
+procedure Cheater04
+begin
+	give_exp_points(10000);
+//	gsay_message(621, 240, 50);
+	call Cheater00;
+end
+
+procedure Cheater05
+begin
+	give_exp_points(50000);
+//	gsay_message(621, 240, 50);
+	call Cheater00;
+end
+
+procedure Cheater05b
+begin
+	give_exp_points(210000);
+//	gsay_message(621, 240, 50);
+//	call Cheater00;
+end
+
+procedure Cheater05c
+begin
+//	variable LVar0;
+//	pc_stat(1) := 10;
+	give_exp_points(-5000);
+//	gsay_message(621, 240, 50);
+	call Cheater00;
+end
+
+procedure Cheater06
+begin
+	gsay_reply(621, 222);
+	giq_option(1, 621, 223, Cheater06a, 50);
+	giq_option(1, 621, 224, Cheater06b, 50);
+	giq_option(1, 621, 225, Cheater06c, 50);
+	giq_option(1, 621, 226, Cheater06d, 50);
+	giq_option(1, 621, 227, Cheater06e, 50);
+	giq_option(1, 621, 203, Cheater07, 50);
+	giq_option(1, 621, 204, Cheater08, 50);
+	giq_option(1, 621, 228, Cheater00a, 50);
+	giq_option(1, 621, 242, Cheater19, 50);
+end
+
+procedure Cheater19
+begin
+	gsay_reply(621, 243);
+	giq_option(1, 621, 244, Cheater19a, 50);
+	giq_option(1, 621, 245, Cheater19b, 50);
+	giq_option(1, 621, 246, Cheater19c, 50);
+	giq_option(1, 621, 247, Cheater19d, 50);
+	giq_option(1, 621, 248, Cheater19e, 50);
+	giq_option(1, 621, 249, Cheater19f, 50);
+	giq_option(1, 621, 250, Cheater19g, 50);
+	giq_option(1, 621, 228, Cheater00a, 50);
+	giq_option(1, 621, 251, Cheater19h, 50);
+end
+
+procedure Cheater19a
+begin
+	critter_heal(dude_obj, -1);
+end
+
+procedure Cheater19b
+begin
+	critter_heal(dude_obj, -5);
+end
+
+procedure Cheater19c
+begin
+	critter_heal(dude_obj, -10);
+end
+
+procedure Cheater19d
+begin
+	critter_heal(dude_obj, -20);
+end
+
+procedure Cheater19e
+begin
+	critter_heal(dude_obj, -30);
+end
+
+procedure Cheater19f
+begin
+	critter_heal(dude_obj, -40);
+end
+
+procedure Cheater19g
+begin
+	critter_heal(dude_obj, -50);
+end
+
+procedure Cheater19h
+begin
+	critter_heal(dude_obj, -999);
+end
+
+procedure Cheater06a
+begin
+	critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
+	gsay_message(621, 221, 50);
+end
+
+procedure Cheater06b
+begin
+	critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
+	gsay_message(621, 221, 50);
+end
+
+procedure Cheater06c
+begin
+	critter_injure(dude_obj, 16);//    DAM_CRIP_ARM_LEFT     16
+	gsay_message(621, 221, 50);
+end
+
+procedure Cheater06d
+begin
+	critter_injure(dude_obj, 32);//    DAM_CRIP_ARM_RIGHT    32
+	gsay_message(621, 221, 50);
+end
+
+procedure Cheater06e
+begin
+	critter_injure(dude_obj, 64);//    DAM_BLIND             64
+	gsay_message(621, 221, 50);
+end
+
+procedure Cheater07
+begin
+	display_msg(message_str(621, 213) + get_critter_stat(dude_obj, 36) + " ");
+	poison(dude_obj, 100);
+	display_msg(message_str(621, 214)  + get_critter_stat(dude_obj, 36) + " ");
+//	gsay_message(621, 215, 50);
+	call Cheater06;
+end
+
+procedure Cheater08
+begin
+	display_msg(message_str(621, 213) + get_critter_stat(dude_obj, 37) + " ");
+	radiation_inc(dude_obj, 50);
+	display_msg(message_str(621, 214)  + get_critter_stat(dude_obj, 37) + " ");
+//	gsay_message(621, 216, 50);
+	call Cheater06;
+end
+
+procedure Cheater09
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - 10);
+	end
+	else begin
+		LVar0 := (0 + 10);
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater10
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - (10 * 60));
+	end
+	else begin
+		LVar0 := (0 + (10 * 60));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater11
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - (10 * 60 * 60));
+	end
+	else begin
+		LVar0 := (0 + (10 * 60 * 60));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater12
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - (10 * 60 * 60 * 24));
+	end
+	else begin
+		LVar0 := (0 + (10 * 60 * 60 * 24));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater13
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - (10 * 60 * 60 * 24 * 7));
+	end
+	else begin
+		LVar0 := (0 + (10 * 60 * 60 * 24 * 7));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater14
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - (10 * 60 * 60 * 24 * 30));
+	end
+	else begin
+		LVar0 := (0 + (10 * 60 * 60 * 24 * 30));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater15
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := (0 - (10 * 60 * 60 * 24 * 30 * 6));
+	end
+	else begin
+		LVar0 := (0 + (10 * 60 * 60 * 24 * 30 * 6));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure Cheater18
+begin
+	variable LVar0;
+	if TimeFlag then begin
+		LVar0 := ((0 - (10 * 60 * 60 * 24 * 365) * 13));
+	end
+	else begin
+		LVar0 := ((0 + (10 * 60 * 60 * 24 * 365) * 13));
+	end
+	game_time_advance(LVar0);
+end
+
+procedure CheaterEnd
+begin
+end
+
+procedure Teleport
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 269, TARDIS_1, 50);
+	giq_option(1, 621, 270, TARDIS_2, 50);
+	giq_option(1, 621, 271, TARDIS_3, 50);
+	giq_option(1, 621, 272, TARDIS_4, 50);
+	giq_option(1, 621, 273, TARDIS_5, 50);
+	giq_option(1, 621, 274, TARDIS_6, 50);
+	giq_option(1, 621, 275, TARDIS_7, 50);
+	giq_option(1, 621, 276, TARDIS_8, 50);
+	giq_option(1, 621, 277, TARDIS_9, 50);
+end
+
+procedure TARDIS_1
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 303, Nec1, 50);
+	giq_option(1, 621, 309, Nec2, 50);
+	giq_option(1, 621, 304, Nec3, 50);
+	giq_option(1, 621, 305, Nec4, 50);
+	giq_option(1, 621, 306, v13_1, 50);
+	giq_option(1, 621, 335, v13_2, 50);
+	giq_option(1, 621, 308, v15_1, 50);
+	giq_option(1, 621, 307, v15_2, 50);
+	giq_option(1, 621, 278, Cheater00a, 50);
+end
+
+procedure Nec1
+begin
+	load_map(3, -1);
+end
+
+procedure Nec2
+begin
+	load_map(9, -1);
+end
+
+procedure Nec3
+begin
+	load_map(4, -1);
+end
+
+procedure Nec4
+begin
+	load_map(5, -1);
+end
+
+procedure v13_1
+begin
+	load_map(6, -1);
+end
+
+procedure v13_2
+begin
+	load_map(35, -1);
+end
+
+procedure v15_1
+begin
+	load_map(8, -1);
+end
+
+procedure v15_2
+begin
+	load_map(7, -1);
+end
+
+procedure TARDIS_2
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 310, Junk1, 50);
+	giq_option(1, 621, 311, Junk2, 50);
+	giq_option(1, 621, 312, Junk3, 50);
+	giq_option(1, 621, 313, Bro1, 50);
+	giq_option(1, 621, 314, Bro2, 50);
+	giq_option(1, 621, 315, Bro3, 50);
+	giq_option(1, 621, 355, Bro4, 50);
+	giq_option(1, 621, 319, City, 50);
+	giq_option(1, 621, 278, Cheater00a, 50);
+end
+
+procedure Junk1
+begin
+	load_map(10, -1);
+end
+
+procedure Junk2
+begin
+	load_map(11, -1);
+end
+
+procedure Junk3
+begin
+	load_map(12, -1);
+end
+
+procedure Bro1
+begin
+	load_map(13, -1);
+end
+
+procedure Bro2
+begin
+	load_map(14, -1);
+end
+
+procedure Bro3
+begin
+	load_map(15, -1);
+end
+
+procedure Bro4
+begin
+	load_map(55, -1);
+end
+
+procedure City
+begin
+	load_map(19, -1);
+end
+
+procedure TARDIS_3
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 317, Child1, 50);
+	giq_option(1, 621, 318, Child2, 50);
+	giq_option(1, 621, 333, Master1, 50);
+	giq_option(1, 621, 334, Master2, 50);
+	giq_option(1, 621, 320, Coast1, 50);
+	giq_option(1, 621, 321, Coast2, 50);
+	giq_option(1, 621, 349, Mountain1, 50);
+	giq_option(1, 621, 350, Mountain2, 50);
+	giq_option(1, 621, 278, Cheater00a, 50);
+end
+
+procedure Child1
+begin
+	load_map(17, -1);
+end
+
+procedure Child2
+begin
+	load_map(18, -1);
+end
+
+procedure Master1
+begin
+	load_map(33, -1);
+end
+
+procedure Master2
+begin
+	load_map(34, -1);
+end
+
+procedure Coast1
+begin
+	load_map(20, -1);
+end
+
+procedure Coast2
+begin
+	load_map(21, -1);
+end
+
+procedure Mountain1
+begin
+	load_map(49, -1);
+end
+
+procedure Mountain2
+begin
+	load_map(50, -1);
+end
+
+procedure TARDIS_4
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 336, Hub1, 50);
+	giq_option(1, 621, 338, Hub2, 50);
+	giq_option(1, 621, 339, Hub3, 50);
+	giq_option(1, 621, 340, Hub4, 50);
+	giq_option(1, 621, 341, Hub5, 50);
+	giq_option(1, 621, 365, Hub6, 50);
+	giq_option(1, 621, 366, Hub7, 50);
+	giq_option(1, 621, 337, Deathcave, 50);
+	giq_option(1, 621, 278, Cheater00a, 50);
+end
+
+procedure Hub1
+begin
+	load_map(36, -1);
+end
+
+procedure Hub2
+begin
+	load_map(38, -1);
+end
+
+procedure Hub3
+begin
+	load_map(39, -1);
+end
+
+procedure Hub4
+begin
+	load_map(40, -1);
+end
+
+procedure Hub5
+begin
+	load_map(41, -1);
+end
+
+procedure Hub6
+begin
+	load_map(65, -1);
+end
+
+procedure Hub7
+begin
+	load_map(66, -1);
+end
+
+procedure Deathcave
+begin
+	load_map(37, -1);
+end
+
+procedure TARDIS_5
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 328, Ady1, 50);
+	giq_option(1, 621, 329, Ady2, 50);
+	giq_option(1, 621, 344, Ady3, 50);
+	giq_option(1, 621, 345, Ady4, 50);
+	giq_option(1, 621, 346, Ady5, 50);
+	giq_option(1, 621, 347, Ady6, 50);
+	giq_option(1, 621, 324, Raid1, 50);
+	giq_option(1, 621, 360, Raid2, 50);
+	giq_option(1, 621, 278, Cheater00a, 50);
+end
+
+procedure Ady1
+begin
+	load_map(28, -1);
+end
+
+procedure Ady2
+begin
+	load_map(29, -1);
+end
+
+procedure Ady3
+begin
+	load_map(44, -1);
+end
+
+procedure Ady4
+begin
+	load_map(45, -1);
+end
+
+procedure Ady5
+begin
+	load_map(46, -1);
+end
+
+procedure Ady6
+begin
+	load_map(47, -1);
+end
+
+procedure Raid1
+begin
+	load_map(24, -1);
+end
+
+procedure Raid2
+begin
+	load_map(60, -1);
+end
+
+procedure TARDIS_6
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 325, Shad1, 50);
+	giq_option(1, 621, 326, Shad2, 50);
+	giq_option(1, 621, 316, Shad3, 50);
+	giq_option(1, 621, 330, MB1, 50);
+	giq_option(1, 621, 331, MB2, 50);
+	giq_option(1, 621, 332, MB3, 50);
+	giq_option(1, 621, 348, MB4, 50);
+	giq_option(1, 621, 239, Cheater00a, 50);
+end
+
+procedure Shad1
+begin
+	load_map(25, -1);
+end
+
+procedure Shad2
+begin
+	load_map(26, -1);
+end
+
+procedure Shad3
+begin
+	load_map(16, -1);
+end
+
+procedure MB1
+begin
+	load_map(30, -1);
+end
+
+procedure MB2
+begin
+	load_map(31, -1);
+end
+
+procedure MB3
+begin
+	load_map(32, 3);
+end
+
+procedure MB4
+begin
+	load_map(48, -1);
+end
+
+procedure TARDIS_7
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 327, Glow1, 50);
+	giq_option(1, 621, 342, Glow2, 50);
+	giq_option(1, 621, 343, Glow3, 50);
+	giq_option(1, 621, 300, Des1, 50);
+	giq_option(1, 621, 301, Des2, 50);
+	giq_option(1, 621, 302, Des3, 50);
+	giq_option(1, 621, 279, Cheater00a, 50);
+end
+
+procedure Glow1
+begin
+	load_map(27, -1);
+end
+
+procedure Glow2
+begin
+	load_map(42, -1);
+end
+
+procedure Glow3
+begin
+	load_map(43, -1);
+end
+
+procedure Des1
+begin
+	load_map(0, -1);
+end
+
+procedure Des2
+begin
+	load_map(1, -1);
+end
+
+procedure Des3
+begin
+	load_map(2, -1);
+end
+
+procedure TARDIS_8
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 356, DesCrv1, 50);
+	giq_option(1, 621, 357, DesCrv2, 50);
+	giq_option(1, 621, 361, DesCrv3, 50);
+	giq_option(1, 621, 363, DesCrv4, 50);
+	giq_option(1, 621, 358, MntCrv1, 50);
+	giq_option(1, 621, 359, MntCrv2, 50);
+	giq_option(1, 621, 362, MntCrv3, 50);
+	giq_option(1, 621, 363, MntCrv4, 50);
+	giq_option(1, 621, 278, Cheater00a, 50);
+end
+
+procedure DesCrv1
+begin
+	load_map(56, -1);
+end
+
+procedure DesCrv2
+begin
+	load_map(57, -1);
+end
+
+procedure DesCrv3
+begin
+	load_map(61, -1);
+end
+
+procedure DesCrv4
+begin
+	load_map(63, -1);
+end
+
+procedure MntCrv1
+begin
+	load_map(58, -1);
+end
+
+procedure MntCrv2
+begin
+	load_map(59, -1);
+end
+
+procedure MntCrv3
+begin
+	load_map(62, -1);
+end
+
+procedure MntCrv4
+begin
+	load_map(63, -1);
+end
+
+procedure TARDIS_9
+begin
+	gsay_reply(621, 262);
+	giq_option(1, 621, 322, ColaTruk, 50);
+	giq_option(1, 621, 323, Ufo, 50);
+	giq_option(1, 621, 351, BigFoot, 50);
+	giq_option(1, 621, 352, PoliceBox, 50);
+	giq_option(1, 621, 353, TalkCow, 50);
+	giq_option(1, 621, 354, UsedCar, 50);
+	giq_option(1, 621, 279, Cheater00a, 50);
+end
+
+procedure ColaTruk
+begin
+	load_map(22, -1);
+end
+
+procedure Ufo
+begin
+	load_map(23, -1);
+end
+
+procedure BigFoot
+begin
+	load_map(51, -1);
+end
+
+procedure PoliceBox
+begin
+	load_map(52, -1);
+end
+
+procedure TalkCow
+begin
+	load_map(53, -1);
+end
+
+procedure UsedCar
+begin
+	load_map(54, -1);
+end
+
+procedure GiveItemsConfirm
+begin
+	variable item := 0;
+	item := create_object_sid(59, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(46, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(90, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(93, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(232, 0, 0, -1);// Hardened power armor
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(245, 0, 0, -1);// Alien Blaster with 100 range and 999 damage.
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(79, 0, 0, -1);// Flare
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(22, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(241, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(124, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(125, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(159, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(48, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(106, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(25, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(26, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(27, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(40, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 100);
+	item := create_object_sid(7, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 15);
+	item := create_object_sid(14, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(53, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(87, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(110, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(1, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(2, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(17, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(74, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(113, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(239, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(240, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(117, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(10, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(32, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(9, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(36, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(38, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(109, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(77, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(84, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(162, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(163, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(87, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(116, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(51, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(41, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 99999);
+	item := create_object_sid(13, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(12, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(36, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(54, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(30, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(11, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(127, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(29, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 10);
+	item := create_object_sid(85, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(30, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 10);
+	item := create_object_sid(39, 0, 0, -1);// MFC ammo
+	add_mult_objs_to_inven(dude_obj, item, 4);
+	item := create_object_sid(28, 0, 0, -1);// Gatling Laser
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(16, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(52, 0, 0, -1);// Geiger counter
+	add_mult_objs_to_inven(dude_obj, item, 1);
+end
+
+//
+//	
+//	
+//	if (local_var(3) == 0) then begin
+//		while(local_var(2) < 300) do begin
+//			display_msg("gvar " + local_var(2) + " is   " + global_var(local_var(2)) + " ");
+//			set_local_var(2, (local_var(2) + 1));
+//		end
+//		set_local_var(3, 1);
+//	end
+//
+//
+
+/*
+			if (global_var(TORCH_TIME_LEFT) == 0) then begin
+				set_global_var(TORCH_TIME_LEFT, game_time);
+			end
+			if (FlareLit == 0) then begin
+				if (PlayedSfxFLARE2 != 1) then begin
+					play_sfx("FLARE2");
+					PlayedSfxFLARE2 := 1;
+				end
+				FlareLit := 1;
+				if (global_var(TORCH_RIGHT_HAND) == 0) then begin
+					set_global_var(TORCH_RIGHT_HAND, 1);
+				end
+if (global_var(TORCH_TIME_LEFT) == 0) then begin
+	set_global_var(TORCH_TIME_LEFT, game_time);
+end
+			end
+			if (global_var(TORCH_TIME_LEFT) != 0) then begin
+				if ((game_time - global_var(TORCH_TIME_LEFT)) >= 72000) then begin//	FLARE SPENT
+					////obj_set_light_level(dude_obj, 75, 6);
+					TorchDEAD := critter_inven_obj(dude_obj, 2);
+					destroy_object(TorchDEAD);
+					set_global_var(TORCH_TIME_LEFT, 0);
+					PlayedSfxFLARE2 := 0;
+				end
+				else begin
+
+			else begin
+				if ((game_time - global_var(TORCH_TIME_LEFT)) >= 54000) then begin
+					////obj_set_light_level(dude_obj, 75, 7);
+				end
+				else begin
+					if ((game_time - global_var(TORCH_TIME_LEFT)) >= 36000) then begin
+						////obj_set_light_level(dude_obj, 80, 8);
+					end
+					else begin
+						if ((game_time - global_var(TORCH_TIME_LEFT)) >= 18000) then begin
+							////obj_set_light_level(dude_obj, 90, 9);
+						end
+						else begin
+							if ((game_time - global_var(TORCH_TIME_LEFT)) < 18000) then begin
+								////obj_set_light_level(dude_obj, 100, 8);
+							end
+						end
+					end
+				end
+			end
+*/
+
+
+
+
+		/*			if (global_var(TORCH_TIME_LEFT) == 0) then begin
+						set_global_var(TORCH_TIME_LEFT, game_time);
+				end
+				if (FlareLit == 0) then begin
+					if (PlayedSfxFLARE2 != 1) then begin
+						play_sfx("FLARE2");
+						PlayedSfxFLARE2 := 1;
+					end
+					FlareLit := 1;
+					if (global_var(TORCH_LEFT_HAND) == 0) then begin
+						set_global_var(TORCH_LEFT_HAND, 1);
+					end
+				end
+				if (global_var(TORCH_TIME_LEFT) != 0) then begin
+					if ((game_time - global_var(TORCH_TIME_LEFT)) >= 72000) then begin//	FLARE SPENT
+						////obj_set_light_level(dude_obj, 75, 6);
+						TorchDEAD := critter_inven_obj(dude_obj, 1);
+						destroy_object(TorchDEAD);
+						set_global_var(TORCH_TIME_LEFT, 0);
+						PlayedSfxFLARE2 := 0;
+					end
+					else begin
+						////obj_set_light_level(dude_obj, 100, 8);
+					end
+					else begin
+					if ((game_time - global_var(TORCH_TIME_LEFT)) >= 54000) then begin
+						////obj_set_light_level(dude_obj, 75, 7);
+					end
+					else begin
+						if ((game_time - global_var(TORCH_TIME_LEFT)) >= 36000) then begin
+							////obj_set_light_level(dude_obj, 80, 8);
+						end
+						else begin
+							if ((game_time - global_var(TORCH_TIME_LEFT)) >= 18000) then begin
+								////obj_set_light_level(dude_obj, 90, 9);
+							end
+							else begin
+								if ((game_time - global_var(TORCH_TIME_LEFT)) < 18000) then begin
+									////obj_set_light_level(dude_obj, 100, 8);
+								end
+							end
+						end
+					end
+				end
+
+				end
+		*/
+
+
+
+//	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES
+//	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES
+//	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES
+//	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES
+//	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES	"ENTER MAP" DEBUG MESSAGES
+
+procedure DebugEnterMsgs
+begin
+	variable map;
+	map := cur_map_index;
+	debug_msg(" ");
+	debug_msg("PLAYER HAS -ENTERED- MAP:  " + cur_map_index + "  AT ELEVATION  " + elevation(dude_obj) + "  AND TILE NUMBER  " + tile_num(dude_obj) + ".     ");
+	if (map == 0) then begin
+		debug_msg("Enter Map: DESERT1 ");
+	end
+	else begin
+		if (map == 1) then begin
+			debug_msg("Enter Map: DESERT2 ");
+		end
+		else begin
+			if (map == 2) then begin
+				debug_msg("Enter Map: DESERT3 ");
+			end
+			else begin
+				if (map == 3) then begin
+					debug_msg("Enter Map: HALLDED - NECROPOLIS, HALLS OF DEAD ");
+				end
+				else begin
+					if (map == 4) then begin
+						debug_msg("Enter Map: HOTEL - NECROPOLIS, HOTEL ");
+					end
+					else begin
+						if (map == 5) then begin
+							debug_msg("Enter Map: WATRSHD - NECROPOLIS, WATERSHED ");
+						end
+						else begin
+							if (map == 6) then begin
+								debug_msg("Enter Map: VAULT13 - VAULT 13, LEVELS 1/2/3");
+							end
+							else begin
+								if (map == 7) then begin
+								debug_msg("Enter Map: VAULTENT - VAULT 15, SHACK");
+								end
+								else begin
+									if (map == 8) then begin
+										debug_msg("Enter Map: VAULTBUR - VAULT 15 UNDEGROUND, LEVELS 1/2/3 ");
+									end
+									else begin
+										if (map == 9) then begin
+											debug_msg("Enter Map: VAULTNEC - NECROPOLIS, VAULT LEVEL 1/2/3");
+										end
+										else begin
+											if (map == 10) then begin
+												debug_msg("Enter Map: JUNKENT - JUNKTOWN, ENTRANCE AND DOC MORBID");
+											end
+											else begin
+												if (map == 11) then begin
+													debug_msg("Enter Map: JUNKCSNO - JUNKTOWN, CASINO");
+												end
+												else begin
+													if (map == 12) then begin
+													debug_msg("Enter Map: JUNKKILL - JUNKTOWN, KILLIAN AND SKUMPIT");
+													end
+													else begin
+														if (map == 13) then begin
+															debug_msg("Enter Map: BROHDENT - BROTHERHOOD, OUTSIDE ");
+														end
+														else begin
+															if (map == 14) then begin
+																debug_msg("Enter Map: BROHD12 - BROTHERHOOD, LEVELS 1 & 2 ");
+															end
+															else begin
+																if (map == 15) then begin
+																	debug_msg("Enter Map: BROHD34 - BROTHERHOOD, LEVELS 3 & 4");
+																end
+																else begin
+																	if (map == 16) then begin
+																	debug_msg("Enter Map: CAVES - SHADY SANDS, RADSCORPION CAVE");
+																	end
+																	else begin
+																		if (map == 17) then begin
+																		debug_msg("Enter Map: CHILDRN1 - CHILDREN'S CATHEDRAL, LEVEL 1 & 2");
+																		end
+																		else begin
+																			if (map == 18) then begin
+																				debug_msg("Enter Map: CHILDRN2 - CHILDREN'S CATHEDRAL, LEVEL 3 & 4");
+																			end
+																			else begin
+																				if (map == 19) then begin
+																					debug_msg("Enter Map: CITY1 ");
+																				end
+																				else begin
+																					if (map == 20) then begin
+																						debug_msg("Enter Map: COAST1 ");
+																					end
+																					else begin
+																						if (map == 21) then begin
+																							debug_msg("Enter Map: COAST2 ");
+																						end
+																						else begin
+																							if (map == 22) then begin
+																								debug_msg("Enter Map: COLATRUK - SPECIAL ENCOUNTER, NUKA-COLA TRUCK ");
+																							end
+																							else begin
+																								if (map == 23) then begin
+																									debug_msg("Enter Map: FSAUSER - SPECIAL ENCOUNTER, FLYING SAUCER");
+																								end
+																								else begin
+																									if (map == 24) then begin
+																										debug_msg("Enter Map: RAIDERS - KHANS ");
+																									end
+																									else begin
+																										if (map == 25) then begin
+																											debug_msg("Enter Map: SHADYE - SHADY SANDS, EAST ");
+																											end
+																										else begin
+																											if (map == 26) then begin
+																												debug_msg("Enter Map: SHADYW - SHADY SANDS, WEST ");
+																											end
+																											else begin
+																												if (map == 27) then begin
+																													debug_msg("Enter Map: GLOWENT - THE GLOW, CRATER");
+																												end
+																												else begin
+																													if (map == 28) then begin
+																														debug_msg("Enter Map: LAADYTUM - BONEYARD, ADYTUM");
+																													end
+																													else begin
+																														if (map == 29) then begin
+																															debug_msg("Enter Map: LAFOLLWR - BONEYARD, FOLLOWERS");
+																														end		
+																														else begin
+																															if (map == 30) then begin
+																																debug_msg("Enter Map: MBENT - MILITARY BASE, OUTSIDE");
+																															end
+																															else begin
+																																if (map == 31) then begin
+																																	debug_msg("Enter Map: MBSTRG12 -  MILITARY BASE, LEVELS 1 & 2");
+																																end
+																																else begin
+																																	if (map == 32) then begin
+																																		debug_msg("Enter Map: MBVATS12 - MILITARY BASE, LEVELS 3 & 4");
+																																	end
+																																	else begin
+																																		if (map == 33) then begin
+																																			debug_msg("Enter Map: MSTRLR12 - MASTER'S VAULT, LEVELS 1 & 2");
+																																		end
+																																		else begin
+																																			if (map == 34) then begin
+																																				debug_msg("Enter Map: MSTRLR34 - MASTER'S VAULT, LEVELS 3 & 4 ");
+																																			end
+																																			else begin
+																																				if (map == 35) then begin
+																																					debug_msg("Enter Map: V13ENT - VAULT 13, CAVERN ENTRANCE");
+																																				end
+																																				else begin
+																																					if (map == 36) then begin
+																																						debug_msg("Enter Map: HUBENT - THE HUB, ENTRANCE");
+																																					end
+																																					else begin
+																																						if (map == 37) then begin
+																																							debug_msg("Enter Map: DETHCLAW - THE HUB, DEATHCLAW CAVE");
+																																						end
+																																						else begin
+																																							if (map == 38) then begin
+																																								debug_msg("Enter Map: HUBDWNTN - THE HUB, DOWNTOWN ");
+																																							end
+																																							else begin
+																																								if (map == 39) then begin
+																																									debug_msg("Enter Map: HUBHEIGT - THE HUB, HEIGHTS ");
+																																								end
+																																								else begin
+																																									if (map == 40) then begin
+																																										debug_msg("Enter Map: HUBOLDTN - THE HUB, OLDTOWN ");
+																																									end
+																																									else begin
+																																										if (map == 41) then begin
+																																											debug_msg("Enter Map: HUBWATER - THE HUB, WATER MERCHANTS ");
+																																										end
+																																										else begin
+																																											if (map == 42) then begin
+																																												debug_msg("Enter Map: GLOW1 - THE GLOW, LEVELS 1/2/3 ");
+																																											end
+																																											else begin
+																																												if (map == 43) then begin
+																																													debug_msg("Enter Map: GLOW2 - THE GLOW, LEVELS 4/5/6 ");
+																																												end
+																																												else begin
+																																													if (map == 44) then begin
+																																														debug_msg("Enter Map: LABLADES - BONEYARD, BLADES");
+																																													end
+																																													else begin
+																																														if (map == 45) then begin
+																																															debug_msg("Enter Map: LARIPPER - BONEYARD, RIPPERS");
+																																														end
+																																														else begin
+																																															if (map == 46) then begin
+																																																debug_msg("Enter Map: LAGUNRUN - BONEYARD, GUN RUNNERS");
+																																															end
+																																															else begin
+																																																if (map == 47) then begin
+																																																	debug_msg("Enter Map: CHILDEAD - CHILDREN'S CATHEDRAL, DEAD ");
+																																																end
+																																																else begin
+																																																	if (map == 48) then begin
+																																																		debug_msg("Enter Map: MBDEAD - MILITARY BASE, DESTROYED");
+																																																	end
+																																																	else begin
+																																																		if (map == 49) then begin
+																																																			debug_msg("Enter Map: MOUNTN1 ");
+																																																		end
+																																																		else begin
+																																																			if (map == 50) then begin
+																																																				debug_msg("Enter Map: MOUNTN2 ");
+																																																			end
+																																																			else begin
+																																																				if (map == 51) then begin
+																																																					debug_msg("Enter Map: FOOT - SPECIAL ENCOUNTER, FOOTPRINT");
+																																																				end
+																																																				else begin
+																																																					if (map == 52) then begin
+																																																						debug_msg("Enter Map: TARDIS - SPECIAL ENCOUNTER, TARDIS PHONEBOX ");
+																																																					end
+																																																					else begin
+																																																						if (map == 53) then begin
+																																																							debug_msg("Enter Map: TALKCOW - SPECIAL ENCOUNTER, TALKING COWS");
+																																																						end
+																																																						else begin
+																																																							if (map == 54) then begin
+																																																								debug_msg("Enter Map: USEDCAR - SPECIAL ENCOUNTER, CAR SALESMAN");
+																																																							end
+																																																							else begin
+																																																								if (map == 55) then begin
+																																																									debug_msg("Enter Map: BRODEAD - BROTHERHOOD, DESTROYED");
+																																																								end
+																																																								else begin
+																																																									if (map == 56) then begin
+																																																										debug_msg("Enter Map: DESCRVN1 - CARAVAN ENCOUNTER, DESERT #1");
+																																																									end
+																																																									else begin
+																																																										if (map == 57) then begin
+																																																										debug_msg("Enter Map: DESCRVN2 - CARAVAN ENCOUNTER, DESERT #2 ");
+																																																										end
+																																																										else begin
+																																																											if (map == 58) then begin
+																																																												debug_msg("Enter Map: MNTCRVN1 - CARAVAN ENCOUNTER, MOUNTAIN #1 ");
+																																																											end
+																																																											else begin
+																																																												if (map == 59) then begin
+																																																													debug_msg("Enter Map: MNTCRVN2 - CARAVAN ENCOUNTER, MOUNTAIN #2 ");
+																																																												end
+																																																												else begin
+																																																													if (map == 60) then begin
+																																																														debug_msg("Enter Map: VIPERS ");
+																																																													end
+																																																													else begin
+																																																														if (map == 61) then begin
+																																																															debug_msg("Enter Map: DESCRVN3 - CARAVAN ENCOUNTER, DESERT #3 ");
+																																																														end
+																																																														else begin
+																																																															if (map == 62) then begin
+																																																																debug_msg("Enter Map: MNTCRVN3 - CARAVAN ENCOUNTER, MOUNTAIN #3 ");
+																																																															end
+																																																															else begin
+																																																																if (map == 63) then begin
+																																																																	debug_msg("Enter Map: DESCRVN4 - CARAVAN ENCOUNTER, DESERT #4 ");
+																																																																end
+																																																																else begin
+																																																																	if (map == 64) then begin
+																																																																		debug_msg("Enter Map: MNTCRVN4 - CARAVAN ENCOUNTER, MOUNTAIN #4 ");
+																																																																	end
+																																																																	else begin
+																																																																		if (map == 65) then begin
+																																																																			debug_msg("Enter Map: HUBMIS0 - THE HUB, IRWIN'S FARM 1");
+																																																																		end
+																																																																		else begin
+																																																																			if (map == 66) then begin
+																																																																				debug_msg("Enter Map: HUBMIS1 - THE HUB, IRWIN'S FARM 2");
+																																																																			end
+																																																																			else begin
+																																																																				debug_msg("Enter Map: WARNING - INVALID MAP INDEX NUMBER!!! ");
+																																																																			end
+																																																																		end
+																																																																	end
+																																																																end
+																																																															end
+																																																														end
+																																																													end
+																																																												end
+																																																											end
+																																																										end
+																																																									end
+																																																								end
+																																																							end
+																																																						end
+																																																					end
+																																																				end
+																																																			end
+																																																		end
+																																																	end
+																																																end
+																																															end
+																																														end
+																																													end
+																																												end
+																																											end
+																																										end
+																																									end
+																																								end
+																																							end
+																																						end
+																																					end
+																																				end
+																																			end
+																																		end
+																																	end
+																																end
+																															end
+																														end
+																													end
+																												end
+																											end
+																										end
+																									end
+																								end
+																							end
+																						end
+																					end
+																				end
+																			end
+																		end
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	debug_msg(" ");
+end
+
+
+/*
+procedure GVAR295
+begin
+	if (global_var(RANDOM_ENC_SOMETHING) == 0) then begin
+		display_msg("Script Action " + script_action + " says that GVAR 295 is " + global_var(RANDOM_ENC_SOMETHING) + " ! (RAW)  ");
+		if (1 == 1) then begin
+			variable LVar0 := 0;
+			variable LVar1 := 0;
+			LVar0 := script_action;
+			LVar1 := global_var(RANDOM_ENC_SOMETHING);
+			display_msg("Script Action " + LVar0 + " says that GVAR 295 is " + LVar1 + " ! (LVars)  ");
+		end
+	end
+end
+if script_action == 1) then begin
+	call GVAR295;
+end
+if script_action == 2) then begin
+	call GVAR295;
+end
+if script_action == 3) then begin
+	call GVAR295;
+end
+if script_action == 4) then begin
+	call GVAR295;
+end
+if script_action == 5) then begin
+	call GVAR295;
+end
+if script_action == 6) then begin
+	call GVAR295;
+end
+if script_action == 7) then begin
+	call GVAR295;
+end
+if script_action == 8) then begin
+	call GVAR295;
+end
+if script_action == 9) then begin
+		call GVAR295;
+end
+if script_action == 10) then begin
+	call GVAR295;
+end
+if script_action == 11) then begin
+	call GVAR295;
+end
+if script_action == 12) then begin
+	call GVAR295;
+end
+if script_action == 13) then begin
+	call GVAR295;
+end
+if script_action == 14) then begin
+	call GVAR295;
+end
+if script_action == 15) then begin
+	call GVAR295;
+end
+if script_action == 16) then begin
+	call GVAR295;
+end
+if script_action == 17) then begin
+	call GVAR295;
+end
+if script_action == 18) then begin
+	call GVAR295;
+end
+if script_action == 19) then begin
+	call GVAR295;
+end
+if script_action == 20) then begin
+	call GVAR295;
+end
+if script_action == 21) then begin
+	call GVAR295;
+end
+if script_action == 22) then begin
+	call GVAR295;
+end
+if script_action == 23) then begin
+	call GVAR295;
+end
+*/
+

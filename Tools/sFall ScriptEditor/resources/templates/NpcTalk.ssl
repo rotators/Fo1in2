@@ -1,0 +1,196 @@
+/*******************************************************************************
+        Name:
+        Location:
+        Description: NPC template script
+
+            Created: by sFall Script Editor
+            Updated:
+
+*******************************************************************************/
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+
+/* Script Specific Procedure Calls */
+procedure Node998;                                      // This Node is Always Combat
+procedure Node999;                                      // This Node is Always Ending
+
+// The next lines are added in by the Designer Tool.
+procedure Node000;
+
+
+/*****************************************************************
+   Local Variables which are saved.
+   All Local Variables need to be prepended by LVAR_
+*****************************************************************/
+#define LVAR_Herebefore                 (4)
+#define LVAR_Hostile                    (5)
+#define LVAR_Personal_Enemy             (6)
+#define LVAR_Caught_Thief               (7)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
+
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+
+
+/*******************************************************************
+*                           PROCEDURES                             *
+*******************************************************************/
+procedure start begin
+
+end
+
+procedure map_enter_p_proc begin
+   /*  This procedure will get called each time that the map is first entered. It will
+       set up the Team number and AI packet for this critter. This will override the
+       default from the prototype, and needs to be set in scripts. */
+
+   critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM,TEAM_);
+   critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET,AI_);
+
+end
+
+procedure critter_p_proc begin
+   /* Every heartbeat that the critter gets, this procedure will be called. Anything from
+      Movement to attacking the player on sight can be placed in here.
+      If the critter is mad at the player for any reason, it will attack and remember to attack
+      the player should the game be saved and loaded repeatedly. Additionally, if any special
+      actions need to be taken by the critter based on previous combat, the critter will remember
+      this as well. */
+
+   if ((local_var(LVAR_Hostile) > 1) and (obj_can_see_obj(self_obj, dude_obj))) then begin
+      set_local_var(LVAR_Hostile,1);
+      self_attack_dude; //Macro made by Tom to keep the critter fleeing.
+   end
+
+end
+
+procedure damage_p_proc begin
+   /* Whenever the critter takes damage of any type, this procedure will be called. Things
+      like setting ENEMY_ and LVAR_Personal_Enemy can be set here.
+      If the player causes damage to this critter, then he will instantly consider the player
+      his personal enemy. In Critter_Proc or through dialog, actions will be taken against
+      the player for his evil acts. */
+
+   if (obj_in_party(source_obj)) then begin
+       set_local_var(LVAR_Personal_Enemy, 1);
+   end
+
+end
+
+procedure pickup_p_proc begin
+   /* Any time that the player is caught stealing from this critter, Pickup_proc will be called.
+      In here, various things can happen. The most common response is instant hostility which
+      will be remembered. */
+
+   if (source_obj == dude_obj) then begin
+       set_local_var(LVAR_Hostile, 2);
+   end
+
+end
+
+procedure talk_p_proc begin
+   /*  The dialog system is setup and prepares the player to talk to this NPC. Where To Go
+       written by designers are placed in here. Additionally, Reactions are generated and
+       stored which affects player interactions. */
+
+   Evil_Critter:=0;
+   Slavery_Tolerant:=SLAVE_TOLERANT;
+   Karma_Perception:=KARMA_PERCEPTION1;
+
+   CheckKarma;
+
+   GetReaction;
+
+   start_dialogue(self_obj, neutral_fidget);
+   gSay_Start;
+      call Node000;
+   gSay_End;
+   end_dialogue;
+
+end
+
+procedure destroy_p_proc begin
+   /* This procedure gets called only on the death of this NPC. Special things like
+       incrementing the death count for reputation purposes and Enemy Counters are placed
+       in here. */
+
+   /* Increment the aligned critter counter*/
+   //inc_good_critter
+   //inc_evil_critter
+   inc_neutral_critter
+
+   /* Set global_variable for Enemy status*/
+
+end
+
+procedure look_at_p_proc begin
+   /* Look_at_p_proc gets called any time that the player passes the cursor over any object.
+       This should only hold the most cursory of glances for the player. */
+
+   script_overrides;
+   if (local_var(LVAR_Herebefore) == 0) then
+      display_mstr(100);
+   else
+   display_mstr(101);
+
+end
+
+procedure description_p_proc begin
+   /* The player will see more indepth descriptions from this procedure. They are actively
+   looking at the critter and want more information. Things like names can be added here
+   if the critter is known to the player. */
+
+   script_overrides;
+   display_mstr(102);
+
+end
+
+procedure use_skill_on_p_proc begin
+   /* Any time a skill is used on a critter this call is made. This can be to give examinations
+       for things like Doctor skill or messages for various other skills. */
+end
+
+procedure Node998 begin
+   /* Should the Player ever cause the NPC too much discomfort that he desires to attack the player,
+       this call will be made. Essentially, it stores the Hostile vaule so that the critter remembers
+       he was once hostile towards the player.*/
+
+   set_local_var(LVAR_Hostile, 2);
+
+end
+
+
+procedure Node999 begin
+   /* Anytime that there is a need for an ending to dialog, this node is to be called. It will just
+       exit from the dialog system without any reprisals from the NPC. */
+end
+
+procedure Node000 begin
+
+end
