@@ -1,0 +1,789 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure pickup_p_proc;//    script_action == 4
+procedure combat_p_proc;//    script_action == 13
+procedure map_update_p_proc;//    script_action == 23
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+
+procedure Seth01;
+procedure Seth02;
+procedure Seth03;
+procedure Seth04;
+procedure Seth05;
+procedure Seth06;
+procedure Seth07;
+procedure Seth08;
+procedure Seth08a;
+procedure Seth09;
+procedure Seth10;
+procedure Seth11;
+procedure Seth12;
+procedure Seth13;
+procedure Seth14;
+procedure Sethend;
+procedure TanSeth00;
+procedure TanSeth01;
+procedure TanSeth02;
+procedure TanSeth03;
+procedure TanSeth04;
+procedure TanSeth05;
+procedure TanSeth06;
+procedure TanSeth07;
+
+procedure travel;
+procedure no_travel;
+procedure pick_start;
+procedure sleeping;
+
+variable night_person;
+variable wake_time;
+variable sleep_time;
+variable home_tile;
+variable sleep_tile;
+variable hostile;
+variable initialized := 0;
+variable round_counter;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+procedure items_held;
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+procedure PickDeadBodyType;
+variable DeathType := 56;
+
+procedure start
+begin
+	if not(local_var(11)) then begin
+		variable LVar0;
+		set_local_var(11, 1);
+		if (obj_carrying_pid_obj(self_obj, 1) > 0) then begin
+			LVar0 := obj_carrying_pid_obj(self_obj, 1);
+			rm_obj_from_inven(self_obj, LVar0);
+			destroy_object(LVar0);
+		end
+		if (obj_carrying_pid_obj(self_obj, 74) > 0) then begin
+			LVar0 := obj_carrying_pid_obj(self_obj, 74);
+			rm_obj_from_inven(self_obj, LVar0);
+			destroy_object(LVar0);
+		end
+	end
+	if global_var(SHADY_SANDS_WAS_INVADED) then begin
+		if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+			if (local_var(10) != 1) then begin
+				set_local_var(10, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+		call combat_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 3) then begin// 21 is look_at, 3 is description (Binoculars)  
+					script_overrides;
+					display_msg(message_str(183, 100));
+				end
+				else begin
+					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+						hostile := 1;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+						else begin
+							if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+								if (local_var(6) == 0) then begin
+									set_local_var(6, 1);
+									call items_held;
+									if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+										float_msg(self_obj, message_str(183, 204), 8);
+									end
+									else begin
+										float_msg(self_obj, message_str(183, 205), 8);
+									end
+								end
+								if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+									hostile := 0;
+									attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure combat_p_proc
+begin
+	if (fixed_param == 4) then begin
+		round_counter := round_counter + 1;
+	end
+	if (round_counter > 3) then begin
+		if not(global_var(ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
+			set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if not(initialized) then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 4);
+		home_tile := 14108;
+		sleep_tile := 15925;
+		wake_time := 600;
+		sleep_time := 2100;
+		initialized := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(9) == 1) then begin
+		float_msg(self_obj, message_str(183, 320), 2);
+		hostile := 1;
+	end
+	else begin
+		if ((global_var(TANDI_HIRELING_STATUS) == 1) and (get_critter_stat(dude_obj, 4) > 3)) then begin
+			set_global_var(TANDI_TALKED_ABOUT, 1);
+			if (local_var(8) == 0) then begin
+				set_local_var(8, 1);
+				start_gdialog(183, self_obj, 4, -1, -1);
+				gsay_start;
+				call TanSeth00;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				start_gdialog(183, self_obj, 4, -1, -1);
+				gsay_start;
+				call TanSeth01;
+				gsay_end;
+				end_dialogue;
+			end
+		end
+		else begin
+			if (local_var(5) == 1) then begin
+				float_msg(self_obj, message_str(185, 166), 0);
+			end
+			else begin
+				if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
+					float_msg(self_obj, message_str(183, 101), 2);
+					hostile := 1;
+				end
+				else begin
+					start_gdialog(183, self_obj, 4, -1, -1);
+					gsay_start;
+					call pick_start;
+					gsay_end;
+					end_dialogue;
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+					if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+	end
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+			if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	set_global_var(SETH_STATUS, 3);
+end
+
+procedure travel
+begin
+	game_time_advance(game_ticks(60 * 30));
+	if ((global_var(RADSCORPION_SEED) == 0) and (global_var(RADSCORPION_SEED) != 2)) then begin
+		set_global_var(RADSCORPION_SEED, 1);
+	end
+	load_map("caves.map", 1);
+end
+
+procedure no_travel
+begin
+	if (global_var(RADSCORPION_SEED) == 2) then begin
+		gsay_message(183, 203, 50);
+	end
+	else begin
+		gsay_message(183, 128, 50);
+	end
+end
+
+procedure pick_start
+begin
+	if (global_var(SETH_STATUS) == 0) then begin
+		if (local_var(1) < 2) then begin
+			call Seth04;
+		end
+		else begin
+			call Seth05;
+		end
+	end
+	else begin
+		if (global_var(RADSCORPION_SEED) == 2) then begin
+			call BigUpReact;
+			gsay_message(183, 200, 49);
+			if (get_critter_stat(dude_obj, 4) > 3) then begin
+				call Seth07;
+			end
+		end
+		else begin
+			if (local_var(1) < 2) then begin
+				call Seth09;
+			end
+			else begin
+				call Seth07;
+			end
+		end
+	end
+end
+
+procedure Seth01
+begin
+	gsay_message(183, 101, 50);
+	hostile := 1;
+end
+
+procedure Seth02
+begin
+	gsay_message(183, 102, 50);
+	hostile := 1;
+end
+
+procedure Seth03
+begin
+	gsay_reply(183, 103);
+	set_local_var(4, 1);
+	gsay_option(183, 104, Seth13, 50);
+	gsay_option(183, 105, Seth08a, 50);
+end
+
+procedure Seth04
+begin
+	gsay_reply(183, 106);
+	set_global_var(SETH_STATUS, 1);
+	giq_option(4, 183, 107, Seth02, 50);
+	giq_option(4, 183, 108, Seth06, 50);
+	giq_option(-3, 183, 109, Seth03, 50);
+end
+
+procedure Seth05
+begin
+	gsay_reply(183, 110);
+	set_global_var(SETH_STATUS, 1);
+	giq_option(4, 183, 111, Seth06, 50);
+	giq_option(-3, 183, 112, Seth03, 50);
+end
+
+procedure Seth06
+begin
+	gsay_reply(183, 113);
+	call Seth08;
+end
+
+procedure Seth07
+begin
+	gsay_reply(183, 114);
+	call Seth08;
+end
+
+procedure Seth08
+begin
+	if (global_var(RADSCORPION_SEED) == 1) then begin
+		giq_option(4, 183, 115, Seth10, 50);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+		giq_option(4, 183, 116, Seth11, 50);
+	end
+	giq_option(4, 183, 117, Seth12, 50);
+	if ((local_var(4) == 1) and (global_var(RADSCORPION_SEED) != 2)) then begin
+		giq_option(4, 183, 118, Seth13, 50);
+		giq_option(-3, 183, 119, Seth13, 50);
+	end
+	giq_option(4, 183, 120, Seth08a, 50);
+end
+
+procedure Seth08a
+begin
+	if (local_var(7) == 0) then begin
+		set_local_var(7, 1);
+		call Seth14;
+	end
+	else begin
+		call Sethend;
+	end
+end
+
+procedure Seth09
+begin
+	gsay_reply(183, 121);
+	if (global_var(RADSCORPION_SEED) == 1) then begin
+		giq_option(4, 183, 115, Seth10, 50);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+		giq_option(4, 183, 116, Seth11, 50);
+	end
+	giq_option(4, 183, 117, Seth12, 50);
+	if (local_var(4) == 1) then begin
+		giq_option(4, 183, 118, Seth13, 50);
+		giq_option(-3, 183, 119, Seth13, 50);
+	end
+	giq_option(4, 183, 120, Seth08a, 50);
+end
+
+procedure Seth10
+begin
+	if (global_var(RADSCORPION_SEED) == 2) then begin
+		gsay_reply(183, 201);
+	end
+	else begin
+		gsay_reply(183, 122);
+	end
+	set_local_var(4, 1);
+	if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+		giq_option(4, 183, 116, Seth11, 50);
+	end
+	giq_option(4, 183, 117, Seth12, 50);
+	if (local_var(4) == 1) then begin
+		giq_option(4, 183, 118, Seth13, 50);
+		giq_option(-3, 183, 119, Seth13, 50);
+	end
+	giq_option(4, 183, 120, Seth08a, 50);
+end
+
+procedure Seth11
+begin
+	set_global_var(WORLDMAPLIST_RAIDERS, 1);
+	gsay_reply(183, 123);
+	if (global_var(RADSCORPION_SEED) == 1) then begin
+		giq_option(4, 183, 115, Seth10, 50);
+	end
+	giq_option(4, 183, 117, Seth12, 50);
+	if (local_var(4) == 1) then begin
+		giq_option(4, 183, 118, Seth13, 50);
+		giq_option(-3, 183, 119, Seth13, 50);
+	end
+	giq_option(4, 183, 120, Seth08a, 50);
+end
+
+procedure Seth12
+begin
+	gsay_reply(183, 124);
+	giq_option(4, 183, 115, Seth10, 50);
+	giq_option(4, 183, 116, Seth11, 50);
+	if (local_var(4) == 1) then begin
+		giq_option(4, 183, 118, Seth13, 50);
+		giq_option(-3, 183, 119, Seth13, 50);
+	end
+	giq_option(4, 183, 120, Seth08a, 50);
+end
+
+procedure Seth13
+begin
+	if (global_var(RADSCORPION_SEED) == 2) then begin
+		gsay_reply(183, 202);
+	end
+	else begin
+		gsay_reply(183, 125);
+	end
+	giq_option(4, 183, 126, travel, 50);
+	giq_option(4, 183, 127, no_travel, 50);
+	giq_option(-3, 183, 130, travel, 50);
+	giq_option(-3, 183, 131, no_travel, 50);
+end
+
+procedure Seth14
+begin
+	gsay_message(183, 206, 50);
+end
+
+procedure Sethend
+begin
+end
+
+procedure TanSeth00
+begin
+	gsay_reply(183, 300);
+	giq_option(4, 183, 301, TanSeth03, 50);
+	giq_option(4, 183, 302, TanSeth02, 51);
+	giq_option(4, 183, 303, TanSeth02, 50);
+	if (global_var(RADSCORPION_SEED) == 1) then begin
+		giq_option(4, 183, 304, TanSeth07, 50);
+	end
+end
+
+procedure TanSeth01
+begin
+	gsay_reply(183, 305);
+	giq_option(4, 183, 306, TanSeth06, 50);
+	giq_option(4, 183, 307, TanSeth05, 51);
+	giq_option(4, 183, 308, TanSeth06, 50);
+	if (global_var(RADSCORPION_SEED) == 1) then begin
+		giq_option(4, 183, 309, TanSeth07, 50);
+	end
+end
+
+procedure TanSeth02
+begin
+	gsay_message(183, 310, 50);
+end
+
+procedure TanSeth03
+begin
+	set_global_var(WORLDMAPLIST_RAIDERS, 1);
+	gsay_reply(183, 311);
+	giq_option(4, 183, 312, Sethend, 50);
+	giq_option(4, 183, 313, TanSeth02, 51);
+	giq_option(4, 183, 314, TanSeth04, 51);
+	giq_option(4, 183, 315, TanSeth02, 51);
+end
+
+procedure TanSeth04
+begin
+	gsay_reply(183, 316);
+	giq_option(4, 183, 317, TanSeth05, 51);
+	giq_option(4, 183, 318, Sethend, 50);
+	giq_option(4, 183, 319, TanSeth02, 51);
+end
+
+procedure TanSeth05
+begin
+	set_local_var(9, 1);
+	hostile := 1;
+	gsay_message(183, 320, 51);
+end
+
+procedure TanSeth06
+begin
+	gsay_message(183, 321, 50);
+end
+
+procedure TanSeth07
+begin
+	gsay_reply(183, 322);
+	giq_option(4, 183, 323, travel, 50);
+	giq_option(4, 183, 324, TanSeth02, 51);
+	giq_option(4, 183, 325, Sethend, 50);
+end
+
+procedure sleeping
+begin
+	if (local_var(5) == 1) then begin
+		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
+				if (tile_num(self_obj) != home_tile) then begin
+					animate_move_obj_to_tile(self_obj, home_tile, 0);
+				end
+				else begin
+					set_local_var(5, 0);
+				end
+			end
+			else begin
+				move_to(self_obj, home_tile, elevation(self_obj));
+				if (tile_num(self_obj) == home_tile) then begin
+					set_local_var(5, 0);
+				end
+			end
+		end
+	end
+	else begin
+		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					animate_move_obj_to_tile(self_obj, self_obj, 0);
+				end
+				else begin
+					set_local_var(5, 1);
+				end
+			end
+			else begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					move_to(self_obj, sleep_tile, elevation(self_obj));
+				end
+				else begin
+					set_local_var(5, 1);
+				end
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure PickDeadBodyType
+begin
+	variable LVar0 := 0;
+	LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));
+//
+	if (LVar0 <= 5) then begin// 31.5%
+		DeathType := 57;//		burnt, face down  [FLAMER]
+	end
+	else begin
+		if (LVar0 <= 10) then begin// 26%
+			DeathType := 56;//		cut in half  [LASER RIFLE, GATLING LASER]
+		end
+		else begin
+			if (LVar0 <= 14) then begin// 21%
+				DeathType := 53;//		head & arm gone - full auto  [MINIGUN]
+			end
+			else begin
+				if (LVar0 <= 16) then begin// 10.5%
+					DeathType := 63;//		face down, blood pool  (generic death, no weapon associated)
+				end
+				else begin// <--------------------	16%
+					variable LVar1 := 0;
+					LVar1 := random(0, 2);
+					if (LVar1 == 0) then begin
+						DeathType := 54;// bullet holes - full auto partial hit
+					end
+					else begin
+						if (LVar1 == 1) then begin
+							DeathType := 59;// exploded  [ROCKET LAUNCHER]
+						end
+						else begin
+							if (LVar1 == 2) then begin
+								DeathType := 60;// melted pile  [PLASMA RIFLE]
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+

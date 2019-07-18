@@ -1,0 +1,342 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+
+procedure Sammael01;
+procedure Sammael02;
+procedure Sammael03;
+procedure Sammael04;
+procedure Sammael05;
+procedure Sammael06;
+procedure Sammael07;
+procedure Sammael08;
+procedure Sammael09;
+procedure Sammael10;
+procedure Sammael11;
+procedure Sammael12;
+procedure Sammael13;
+procedure Sammael14;
+procedure Sammael15;
+
+procedure Farms01;
+procedure Farms02;
+procedure Farms03;
+procedure Farms04;
+procedure FarmsEnd;
+
+variable hostile;
+variable initialized := 0;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initialized) then begin
+		if ((global_var(BLADES_STATUS) == 9103) or (global_var(BLADES_STATUS) == 9102)) then begin
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+		end
+		else begin
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 49);
+		end
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 29);
+		initialized := 1;
+	end
+	else begin
+		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+			call critter_p_proc;
+		end
+		else begin
+			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+				call destroy_p_proc;
+			end
+			else begin
+				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+					call look_at_p_proc;
+				end
+				else begin
+					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+						call pickup_p_proc;
+					end
+					else begin
+						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+							call talk_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (tile_distance_objs(dude_obj, self_obj) > get_critter_stat(dude_obj, 1)) then begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		end
+		else begin
+			if (global_var(FOLLOWERS_INVADED) != 1) then begin
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+			end
+			else begin
+				kill_critter(self_obj, 0);
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_ADYTUM, 1);
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 49);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+		set_global_var(ENEMY_ADYTUM, 1);
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 49);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (local_var(4)) then begin
+		display_msg(message_str(254, 100));
+	end
+	else begin
+		display_msg(message_str(254, 101));
+	end
+end
+
+procedure pickup_p_proc
+begin
+	set_global_var(ENEMY_ADYTUM, 1);
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	start_gdialog(254, self_obj, 4, -1, -1);
+	gsay_start;
+	if (local_var(4)) then begin
+		call Sammael14;
+	end
+	else begin
+		call Sammael01;
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Sammael01
+begin
+	gsay_reply(254, 102);
+	giq_option(4, 254, message_str(254, 103) + proto_data(obj_pid(dude_obj), 1) + message_str(254, 104), Sammael02, 50);
+	giq_option(4, 254, 105, Sammael03, 50);
+	giq_option(-3, 254, 106, Sammael15, 50);
+end
+
+procedure Sammael02
+begin
+	set_local_var(4, 1);
+	gsay_reply(254, 107);
+	if (global_var(QUEST_BONEYARD_5_FIX_FARM) == 1) and (local_var(7) != 2) then begin
+		giq_option(4, 254, 140, Farms01, 50);
+		set_local_var(7, 2);
+	end
+	giq_option(4, 254, 108, Sammael04, 50);
+	giq_option(4, 254, 109, Sammael05, 50);
+end
+
+procedure Farms01
+begin
+	gsay_reply(254, 141);
+	giq_option(4, 254, 142, FarmsEnd, 50);
+	giq_option(4, 254, 143, Farms03, 50);
+	giq_option(4, 254, 144, Farms02, 50);
+end
+
+procedure FarmsEnd
+begin
+	gsay_message(254, 145, 50);
+end
+
+procedure Farms02
+begin
+	gsay_message(254, 146, 50);
+end
+
+procedure Farms03
+begin
+	gsay_message(254, 147, 50);
+	set_local_var(5, 1);
+end
+
+procedure Sammael03
+begin
+	gsay_message(254, 110, 50);
+end
+
+procedure Sammael04
+begin
+	gsay_reply(254, 111);
+	giq_option(4, 254, 112, Sammael06, 50);
+	giq_option(4, 254, 113, Sammael07, 50);
+	giq_option(6, 254, 114, Sammael08, 50);
+	giq_option(0, 254, 115, Sammael05, 50);
+end
+
+procedure Sammael05
+begin
+	gsay_message(254, 116, 50);
+end
+
+procedure Sammael06
+begin
+	gsay_reply(254, 117);
+	giq_option(4, 254, 118, Sammael07, 50);
+	giq_option(6, 254, 119, Sammael08, 50);
+	giq_option(4, 254, 120, Sammael05, 50);
+end
+
+procedure Sammael07
+begin
+	gsay_message(254, 121, 50);
+end
+
+procedure Sammael08
+begin
+	gsay_reply(254, 122);
+	giq_option(4, 254, 123, Sammael09, 50);
+	giq_option(4, 254, 124, Sammael10, 50);
+	giq_option(4, 254, 125, Sammael11, 50);
+	giq_option(4, 254, 126, Sammael12, 50);
+	giq_option(4, 254, 127, Sammael13, 50);
+	giq_option(4, 254, 128, Sammael05, 50);
+end
+
+procedure Sammael09
+begin
+	gsay_message(254, 129, 50);
+	call Sammael08;
+end
+
+procedure Sammael10
+begin
+	gsay_message(254, 130, 50);
+	gsay_message(254, 131, 50);
+	call Sammael08;
+end
+
+procedure Sammael11
+begin
+	gsay_message(254, 132, 50);
+	call Sammael08;
+end
+
+procedure Sammael12
+begin
+	gsay_message(254, 133, 50);
+	call Sammael08;
+end
+
+procedure Sammael13
+begin
+	gsay_message(254, 134, 50);
+	gsay_message(254, 135, 50);
+	call Sammael08;
+end
+
+procedure Sammael14
+begin
+	gsay_reply(254, 136);
+	if ((global_var(QUEST_BONEYARD_5_FIX_FARM) > 2) or obj_is_carrying_obj_pid(dude_obj, 98)) and (local_var(6) != 2) then begin
+		giq_option(4, 254, 148, Farms04, 50);
+		giq_option(4, 254, 149, Farms04, 50);
+	end
+	else begin
+		if (global_var(QUEST_BONEYARD_5_FIX_FARM) == 1) and (local_var(7) != 2) then begin
+			giq_option(4, 254, 140, Farms01, 50);
+			set_local_var(7, 2);
+		end
+		giq_option(4, 254, 137, Sammael04, 50);
+		giq_option(4, 254, 138, Sammael05, 50);
+	end
+end
+
+procedure Sammael15
+begin
+	gsay_message(254, 139, 50);
+end
+
+procedure Farms04
+begin
+	variable LVar0;
+	gsay_message(254, 150, 50);
+	set_local_var(6, 2);
+	if local_var(5) then begin
+		gsay_message(254, 151, 50);
+		LVar0 := create_object_sid(116, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, LVar0, 1);
+	end
+	else begin
+		gsay_message(254, 152, 50);
+		LVar0 := create_object_sid(41, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, LVar0, 200);
+	end
+end
+

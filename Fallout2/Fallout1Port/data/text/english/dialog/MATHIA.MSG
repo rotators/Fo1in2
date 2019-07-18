@@ -1,0 +1,36 @@
+{100}{}{You see: Mathia.}
+{101}{}{Hello, Initiate. So, you are the one who made it out of the Ancient Order alive.}
+{102}{}{Wha?}
+{103}{}{And who are you?}
+{104}{}{Sorry, I thought you were someone else. Bye.}
+{105}{}{The name is Mathia. I am officially Maxson's assistant, but I am also here to make sure no one messes with the old man.}
+{106}{}{Old man? That sounds a bit disrespectful.}
+{107}{}{What do you do as Maxson's assistant?}
+{108}{}{Good to meet you. Bye.}
+{109}{}{No, no, not at all. He's a good guy. [jokingly] Besides, I wouldn't bad mouth him while he is standing next to me.}
+{110}{}{So, what is it that you do for Maxson as his assistant.}
+{111}{}{Goodbye.}
+{112}{}{I take care of all the paper work. He could not do paper work to save his life. Also, if he clears a weapons upgrade for one of the Brothers, I process the order.}
+{113}{}{Okay, thanks for the information.}
+{114}{}{I can't believe an idiot like you is the one who made the Ancient Order run. Go figure.}
+{115}{}{Hello again Initiate. How can I help you?}
+{116}{}{Wha?}
+{117}{}{I'm sorry, I forgot your name.}
+{118}{}{Sorry, I thought you were someone else. Good day.}
+{119}{}{Alright, let's go. [She grabs you by the arm]}
+{120}{}{Uh huh.}
+{121}{}{Uh uh.}
+{122}{}{Alright, Alright. I'm moving.}
+{123}{}{Get the hell away from me. I'm not going anywhere.}
+{124}{}{Okay. Maxson has cleared a weapons upgrade for you. What would you like?}
+{125}{}{Wha?}
+{126}{}{Sniper Rifle.}
+{127}{}{Rocket Launcher.}
+{128}{}{Laser Pistol.}
+{129}{}{Power Fist.}
+{130}{}{Ripper.}
+{131}{}{There you go. Glad you are on our side Initiate.}
+{132}{}{The Elders have called a meeting. They wish you to meet them in the conference room right away.}
+{133}{}{Where is the conference room?}
+{134}{}{Okay, thank you.}
+{135}{}{It's on this floor. The northeast corner, right behind the assembly hall.}

@@ -1,0 +1,137 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure damage_p_proc;//    script_action == 14
+procedure description_p_proc;//    script_action == 3
+procedure map_enter_p_proc;//    script_action == 15
+procedure spatial_p_proc;//    script_action == 2
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure lockpicking;
+
+variable skill_test;
+variable triggered;
+
+import variable jail_door_ptr;
+
+procedure use_p_proc;//    script_action == 6
+
+
+procedure start
+begin
+	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+		call damage_p_proc;
+	end
+	else begin
+		if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+			call description_p_proc;
+		end
+		else begin
+			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+				call map_enter_p_proc;
+			end
+			else begin
+				if (script_action == 2) then begin// spatial_p_proc - Player is on or near hex of the location or object this script is using
+					call spatial_p_proc;
+				end
+				else begin
+					if (script_action == 7) then begin//<-- use_obj_on_p_proc
+						call use_obj_on_p_proc;
+					end
+					else begin
+						if (script_action == 8) then begin//<-- use_skill_on_p_proc
+							call use_skill_on_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	set_global_var(ENEMY_JUNKTOWN, 1);
+	destroy_object(self_obj);
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(789, 101));
+end
+
+procedure map_enter_p_proc
+begin
+	if (tile_num(self_obj) == 18666) then begin
+		obj_close(self_obj);
+		obj_lock(self_obj);
+		jail_door_ptr := self_obj;
+	end
+end
+
+procedure spatial_p_proc
+begin
+	if ((source_obj == dude_obj) and (triggered == 0) and (map_var(1) == 1)) then begin
+		display_msg(message_str(789, 100));
+		set_map_var(1, 0);
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 3);
+		display_msg(message_str(789, 107));
+		give_exp_points(250);
+		if (global_var(ENEMY_JUNKTOWN) == 0) then begin
+			set_global_var(ENEMY_JUNKTOWN, 1);
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+		end
+		triggered := 1;
+		destroy_object(self_obj);
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_pid(obj_being_used_with) == 84) then begin
+		skill_test := roll_vs_skill(dude_obj, 9, -20);
+		call lockpicking;
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 9) then begin//-- LOCKPICK
+		skill_test := roll_vs_skill(dude_obj, 9, 0);
+		call lockpicking;
+	end
+end
+
+procedure lockpicking
+begin
+	script_overrides;
+	set_map_var(3, map_var(3) + 1);
+	if (is_success(skill_test)) then begin
+		if (obj_is_locked(self_obj)) then begin
+			obj_unlock(self_obj);
+			display_msg(message_str(789, 103));
+		end
+		else begin
+			obj_lock(self_obj);
+			display_msg(message_str(789, 104));
+		end
+	end
+	else begin
+		if (obj_is_locked(self_obj)) then begin
+			display_msg(message_str(789, 105));
+		end
+		else begin
+			display_msg(message_str(789, 106));
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	if (obj_is_locked(self_obj)) then begin
+		script_overrides;
+		display_msg(message_str(789, 102));
+	end
+end
+

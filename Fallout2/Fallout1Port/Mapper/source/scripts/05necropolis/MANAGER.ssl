@@ -1,0 +1,486 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;
+procedure look_at_p_proc;
+procedure timeforwhat;//timed_p_proc
+procedure pre_dialogue;
+procedure talk_p_proc;//    script_action == 11
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure combat_p_proc;//    script_action == 13
+procedure combat_rads_inc;
+
+procedure ghoul00;
+procedure ghoul01;
+procedure ghoul02;
+procedure ghoul03;
+procedure ghoul04;
+procedure ghoul05;
+procedure ghoul05a;
+procedure ghoul06;
+procedure ghoul07;
+procedure ghoul08;
+procedure ghoul09;
+procedure ghoul10;
+procedure ghoul11;
+procedure ghoulend;
+procedure ghoulcbt;
+
+variable Hostile;
+variable initialized := 0;
+variable noevent;
+variable loopcount;
+variable rndRads;
+
+variable rndx;
+
+// local_var(0) HAS_TALKED_TO_PLAYER
+// local_var(1) HAS_BEEN_EXAMINED
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (not(initialized)) then begin
+		initialized := 1;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 32);//  TEAM -- was 32 in Manager.ssl, 30 in Ghoul.ssl
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 78);//  AI PACKET
+	end
+	if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+		call timeforwhat;
+	end
+	else begin
+		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+			call pre_dialogue;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				Hostile := 1;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 21) then begin// 21 is look_at, 3 is description (Binoculars)
+						call look_at_p_proc;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+						else begin
+							if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+								call combat_p_proc;
+							end
+							else begin
+								if (script_action == 3) then begin
+									call description_p_proc;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(30, 200));
+	set_local_var(1, 1);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (not(local_var(1)) and not(local_var(0))) then begin
+		display_msg(message_str(30, 100));
+	end
+	else begin
+		display_msg(message_str(30, 201));
+	end
+end
+
+procedure critter_p_proc
+begin
+	if ((global_var(NECROP_WATER_CHIP_TAKEN) != 0) and (global_var(NECROP_WATER_PUMP_FIXED) != 2)) then begin
+		variable LVar0 := 0;
+		LVar0 := random(2,5);
+		if LVar0 == 2 then begin
+			float_msg(self_obj, message_str(792, 102), 2);
+		end
+		else begin
+			if LVar0 == 3 then begin
+				float_msg(self_obj, message_str(792, 103), 2);
+			end
+			else begin
+				if LVar0 == 4 then begin
+					float_msg(self_obj, message_str(792, 104), 2);
+				end
+				else begin
+					float_msg(self_obj, message_str(792, 105), 2);
+				end
+			end
+		end
+		hostile := 1;
+	end
+	else begin
+		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			Hostile := 0;
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+		else begin
+			if ((game_time_hour >= 1900) or (game_time_hour < 600) and (tile_num(self_obj) != 22531)) then begin
+				animate_move_obj_to_tile(self_obj, 22531, 0);
+			end
+			if ((game_time_hour >= 700) and (game_time_hour < 1800) and (tile_num(self_obj) != 24730)) then begin
+				animate_move_obj_to_tile(self_obj, 24730, 0);
+			end
+			loopcount := loopcount + 1;
+			if (loopcount > 40) then begin
+				loopcount := 0;
+				if (tile_distance_objs(self_obj, dude_obj) < 7) then begin
+					if (obj_can_see_obj(self_obj, dude_obj)) then begin
+						if (noevent == 0) then begin
+							noevent := 1;
+							add_timer_event(self_obj, game_ticks(5), 0);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure timeforwhat
+begin
+	if (fixed_param == 1) then begin
+		Hostile := 1;
+	end
+	else begin
+		if (local_var(0) == 0) then begin
+			dialogue_system_enter;
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	start_gdialog(30, self_obj, 4, -1, -1);
+	gsay_start;
+	set_local_var(0, 1);
+	call ghoul00;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure pre_dialogue
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (local_var(0)) then begin
+		call ghoul08;
+	end
+	else begin
+		call talk_p_proc;
+	end
+end
+
+procedure ghoulend
+begin
+end
+
+procedure ghoulcbt
+begin
+	add_timer_event(self_obj, game_ticks(2), 1);
+end
+
+procedure ghoul00
+begin
+	gsay_reply(30, 101);
+	giq_option(6, 30, 102, ghoul01, 50);
+	giq_option(4, 30, 103, ghoul04, 50);
+	giq_option(4, 30, 118, ghoul09, 50);
+	giq_option(4, 30, 104, ghoul05, 50);
+	giq_option(-3, 30, 105, ghoulend, 50);
+end
+
+procedure ghoul01
+begin
+	gsay_reply(30, 106);
+	giq_option(6, 30, 107, ghoul02, 50);
+	giq_option(6, 30, 108, ghoul03, 50);
+end
+
+procedure ghoul02
+begin
+	gsay_message(30, 109, 50);
+end
+
+procedure ghoul03
+begin
+	gsay_message(30, 110, 50);
+end
+
+procedure ghoul04
+begin
+	gsay_message(30, 111, 50);
+end
+
+procedure ghoul05
+begin
+	gsay_reply(30, 112);
+	giq_option(4, 30, 113, ghoul07, 50);
+	giq_option(4, 30, 114, ghoul05a, 50);
+end
+
+procedure ghoul05a
+begin
+	if (is_success(do_check(dude_obj, 14, 0))) then begin
+		call ghoul06;
+	end
+	else begin
+		call ghoul07;
+	end
+end
+
+procedure ghoul06
+begin
+	gsay_message(30, 115, 50);
+end
+
+procedure ghoul07
+begin
+	gsay_message(30, 116, 50);
+	call ghoulcbt;
+end
+
+procedure ghoul08
+begin
+	float_msg(self_obj, message_str(30, 117), 7);
+	call ghoulend;
+end
+
+procedure ghoul09
+begin
+	gsay_reply(30, 119);
+	giq_option(4, 30, 120, ghoul10, 50);
+	giq_option(4, 30, 121, ghoul11, 50);
+end
+
+procedure ghoul10
+begin
+	gsay_message(30, 122, 50);
+end
+
+procedure ghoul11
+begin
+	gsay_message(30, 123, 50);
+end
+
+procedure combat_p_proc
+begin
+	if (fixed_param == 2) then begin
+		if (target_obj == dude_obj) then begin
+			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+				debug_msg("Combat Rads From Irradiated Critters BEGINS");
+			end
+			if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+				variable cont := 0;// checked to see if continue to run the code after each stage
+				variable CritterTYPE := 0;// 1 = Ghoul, 2 = Floater, 3 = Centaur, 4 = RadRat, 5 = GlowingOne
+				if global_var(HIT_GIVES_RADS_GHOULS) > 0 then begin// HIT_GIVES_RADS_GHOULS
+					if (obj_pid(self_obj) == (16777216 + 14)) or (obj_pid(self_obj) == (16777216 + 104)) or (obj_pid(self_obj) == (16777216 + 105)) or (obj_pid(self_obj) == (16777216 + 106)) or (obj_pid(self_obj) == (16777216 + 109)) or (obj_pid(self_obj) == (16777216 + 110)) or (obj_pid(self_obj) == (16777216 + 131)) or (obj_pid(self_obj) == (16777216 + 157)) or (obj_pid(self_obj) == (16777216 + 184)) then begin// 14 = Zombie Guard, 104 = Set, 105 = Garret, 106 = Zombie, 109 = Ghoul Guard, 110 = Undergrounder, 131 = Talius, 157 = Harold, 184 = Zombie
+						CritterTYPE := 1;
+						cont := 1;
+					end
+				end
+				if not(continue) then begin
+					if global_var(HIT_GIVES_MORE_RADS_GLOW) > 0 then begin// HIT_GIVES_MORE_RADS_GLOW
+						if (obj_pid(self_obj) == (16777216 + 16)) or (obj_pid(self_obj) == (16777216 + 182)) or (obj_pid(self_obj) == (16777216 + 183)) then begin// 16 = Glowing One, 182 = Glower, 183 = Mad Glowing One
+							CritterTYPE := 5;
+							cont := 1;
+						end
+					end
+				end
+				if not(continue) then begin
+					if global_var(HIT_GIVES_MORE_RADS_RATS) > 0 then begin// HIT_GIVES_MORE_RADS_RATS
+						if (obj_pid(self_obj) == (16777216 + 160)) or (obj_pid(self_obj) == (16777216 + 161)) then begin//  160, 161 = Rad Rat
+							CritterTYPE := 4;
+							cont := 1;
+						end
+					end
+				end
+				if not(continue) then begin
+					if global_var(HIT_GIVES_RADS_FLOATERS) > 0 then begin// HIT_GIVES_RADS_FLOATERS
+						if (obj_pid(self_obj) == (16777216 + 45)) or (obj_pid(self_obj) == (16777216 + 167)) then begin//  45 = Floater, 167 = Bloody Floater
+							CritterTYPE := 2;
+							cont := 1;
+						end
+					end
+				end
+				if not(continue) then begin
+					if global_var(HIT_GIVES_RADS_CENTAURS) > 0 then begin// HIT_GIVES_RADS_CENTAURS
+						if (obj_pid(self_obj) == (16777216 + 43)) or (obj_pid(self_obj) == (16777216 + 168)) then begin//  43 = Lesser Centaur, 168 = Greater Centaur
+							CritterTYPE := 3;
+							cont := 1;
+						end
+					end
+				end
+				if continue then begin
+					variable BonusRads := 0;
+					if (CritterTYPE == 5) or (CritterTYPE == 4) then begin
+						BonusRads := 1;
+					end
+					if (random(0, 3) + combat_difficulty + BonusRads) >= 3 then begin// CHANCE TO RUN = Easy: 25%, 50% if glowing/radrat - Normal: 50%, 75% if glowing - Brutal: 75%, 100% if glowing/radrat
+						variable giveRads := 1;
+						if critter_inven_obj(self_obj, 1) then begin
+							if (obj_pid(critter_inven_obj(self_obj, 1)) != 21) and (obj_pid(critter_inven_obj(self_obj, 1)) != 234) and (obj_pid(critter_inven_obj(self_obj, 1)) != 235) then begin// Brass Knuckles, Spiked Knuckles, Power Fist
+								giveRads := 0;
+							end
+						end
+						if critter_inven_obj(self_obj, 2) then begin
+							if (obj_pid(critter_inven_obj(self_obj, 2)) != 21) and (obj_pid(critter_inven_obj(self_obj, 2)) != 234) and (obj_pid(critter_inven_obj(self_obj, 2)) != 235) then begin// Brass Knuckles, Spiked Knuckles, Power Fist
+								giveRads := 0;
+							end
+						end
+						if giveRads == 1 then begin
+							variable LuckRoll := 0;
+							variable EnduranceRoll := 0;
+							LuckRoll := do_check(dude_obj, 6, 0);
+							EnduranceRoll := do_check(dude_obj, 2, 0);
+							rndRads := 0;
+							if not(is_success(LuckRoll)) and not(is_success(EnduranceRoll)) then begin
+								rndRads := random((2 + combat_difficulty + BonusRads), (3 + combat_difficulty + BonusRads));// EASY: 2-3 / 3-4 if glowing/radrat, NORMAL: 3-4 / 4-5 if glowing/radrat, BRUTAL: 4-5 / 5-6 if glowing/radrat
+							end
+							else begin
+								if not(is_success(LuckRoll)) or not(is_success(EnduranceRoll)) then begin
+									rndRads := random((1 + combat_difficulty + BonusRads), (2 + combat_difficulty + BonusRads));// EASY: 1-2 / 2-3 if glowing/radrat, NORMAL: 2-3 / 3-4 if glowing/radrat, BRUTAL: 3-4 / 4-5 if glowing/radrat
+								end
+								else begin
+									if (random(0, 5) + BonusRads) >= 5 then begin// Chance to run if both stat checks pass: 16.67%, 33% if glowing/radrat
+										rndRads := random((0 + combat_difficulty + BonusRads), (1 + combat_difficulty + BonusRads));// EASY: 0-1 / 1-2 if glowing/radrat, NORMAL: 1-2 / 2-3 if glowing/radrat, BRUTAL: 2-3 / 3-4 if glowing/radrat
+									end
+								end
+							end
+							if rndRads > 0 then begin
+								call combat_rads_inc;
+							end
+						end
+					end
+				end
+			end
+			else begin// if (BUG_FIXES_ONLY == 1)
+				if (obj_pid(self_obj) == 16777232) or (obj_pid(self_obj) == 16777376) or (obj_pid(self_obj) == 16777377) or (obj_pid(self_obj) == 16777398) or (obj_pid(self_obj) == 16777399) then begin
+					variable rndx := 0;
+					rndx := (random(1, 4) - 3);// was 1d6 - 5, is now 1d4 - 3
+					if (rndx < 0) then begin
+						rndx := 0;
+					end
+					if (rndx > 0) then begin
+						radiation_inc(dude_obj, rndx);
+						display_msg(message_str(32, 1004));
+					end
+				end
+			end
+			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+				debug_msg("Combat Rads From Irradiated Critters ENDS");
+			end
+		end
+	end
+	else begin
+		if (fixed_param == 4) then begin
+			if ((global_var(NECROP_WATER_CHIP_TAKEN) != 0) and (global_var(NECROP_WATER_PUMP_FIXED) != 2)) then begin
+				variable LVar1 := 0;
+				LVar1 := random(0,25);
+				if LVar1 == 1 then begin
+					variable LVar0 := 0;
+					LVar0 := random(2,5);
+					if LVar0 == 2 then begin
+						float_msg(self_obj, message_str(792, 102), 2);
+					end
+					else begin
+						if LVar0 == 3 then begin
+							float_msg(self_obj, message_str(792, 103), 2);
+						end
+						else begin
+							if LVar0 == 4 then begin
+								float_msg(self_obj, message_str(792, 104), 2);
+							end
+							else begin
+								float_msg(self_obj, message_str(792, 105), 2);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat_rads_inc
+begin
+	radiation_inc(dude_obj, rndRads);
+	if ((rndRads == 1) or (rndRads == 2)) then begin
+		display_msg(message_str(32, 1004));
+	end
+	else begin
+		if ((rndRads > 2) and (rndRads <= 5)) then begin
+			display_msg(message_str(32, 1005));
+		end
+		else begin
+			if ((rndRads > 5) and (rndRads < 10)) then begin
+				display_msg(message_str(32, 1006));
+			end
+		end
+	end
+end
+

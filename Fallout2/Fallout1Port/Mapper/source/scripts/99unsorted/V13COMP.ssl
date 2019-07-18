@@ -1,0 +1,161 @@
+#include "..\headers\define.h"
+
+procedure start;
+import variable vault_door_ptr;
+procedure damage_p_proc;//    script_action == 14
+procedure description_p_proc;//    script_action == 3
+procedure look_at_p_proc;
+procedure timed_event_p_proc;//	script_action == 22
+procedure use_p_proc;//    script_action == 6
+procedure Banished00;
+procedure Banished01;
+procedure Banished02;
+
+procedure start
+begin
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+					call damage_p_proc;
+				end
+				else begin
+					if (script_action == 22) then begin
+						call timed_event_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		display_msg(message_str(344, 124));
+		add_timer_event(self_obj, game_ticks(10), 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			set_global_var(VAULT13_WATER_DAYS_LEFT, 0);
+			game_ui_disable;
+			gfade_out(1);
+			play_gmovie(6);// <-- Dehydration. Vault drowns, bro! Oops, opposite of drowning actually. anti-drowns.
+			gfade_in(1);
+			game_ui_enable;
+			if global_var(CAN_PLAY_AFTER_V13_DEAD) < 2 then begin
+				metarule(13, 0);
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	script_overrides;
+	if not(local_var(1)) then begin
+		set_local_var(1, 1);
+		if is_success(roll_vs_skill(dude_obj, 11, 0)) then begin
+			set_map_var(1, 1);
+			display_msg(message_str(344, 121) + message_str(344, 116) + message_str(344, 119));
+			display_msg(message_str(766, 503) + 50 + message_str(766, 504));
+			give_exp_points(50);
+			if not(obj_is_open(vault_door_ptr)) then begin
+				use_obj(vault_door_ptr);
+			end
+		end
+		else begin
+			display_msg(message_str(344, 122) + message_str(344, 116) + message_str(344, 120));
+			set_map_var(1, 2);
+			if obj_is_open(vault_door_ptr) then begin
+				use_obj(vault_door_ptr);
+			end
+			if global_var(QUEST_VAULT13_4_WATERCHIP) != 2 then begin
+				add_timer_event(self_obj, game_ticks(10), 1);
+			end
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	if not(local_var(1)) then begin
+		script_overrides;
+		display_msg(message_str(344, 103));
+	end
+	else begin
+		script_overrides;
+		display_msg(message_str(344, 117));
+	end
+end
+
+procedure description_p_proc
+begin
+	if local_var(1) then begin
+		script_overrides;
+		display_msg(message_str(344, 118));
+	end
+end
+
+procedure use_p_proc
+begin
+	script_overrides;
+	if local_var(1) then begin
+		display_msg(message_str(344, 123));
+	end
+	else begin
+		if ((game_time / (10 * 60 * 60 * 24)) == 0) then begin
+			if (local_var(0)) then begin
+				display_msg(message_str(344, 101));
+				float_msg(self_obj, message_str(344, 102), 0);//was ", 8" in endgame mod's version
+			end
+			else begin
+				display_msg(message_str(344, 100));
+				set_local_var(0, 1);
+			end
+			play_sfx("SLDOORSO");
+		end
+		else begin
+			if (global_var(GAME_CONTINUES) == 0) then begin
+				use_obj(vault_door_ptr);
+			end
+			else begin
+				call Banished00;//Added from endgame mod by Corpse
+			end
+		end
+	end
+end
+
+procedure Banished00
+begin
+	if (global_var(OVERSEER_KILLED) == 1) then begin
+		call Banished01;
+	end
+	else begin
+		call Banished02;
+	end
+end
+
+procedure Banished01
+begin
+	display_msg(message_str(344, 101));
+	float_msg(self_obj, message_str(344, random(109, 115)), 2);
+	play_sfx("SLDOORSO");
+end
+
+procedure Banished02
+begin
+	display_msg(message_str(344, 101));
+	float_msg(self_obj, message_str(344, random(104, 108)), 8);
+	play_sfx("SLDOORSO");
+end
+

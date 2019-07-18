@@ -1,0 +1,131 @@
+variable Scenery_Creation;
+variable Scenery_Creation_Hex;
+variable Scenery_Creation_Count;
+variable Temp_Scenery_Creation_Hex;
+variable Scenery_Creation_Ptr;
+
+#include "..\headers\define.h"
+
+procedure start;
+procedure destroy_p_proc;//    script_action == 18
+procedure timed_event_p_proc;//    script_action == 22
+procedure initialize_p_proc;
+
+variable Only_Once;
+variable Home_Tile;
+variable critter_tile;
+
+
+procedure start
+begin
+	if (Only_Once == 0) then begin
+		call initialize_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if ((script_action == 11) and not(combat_is_initialized)) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+					float_msg(self_obj, message_str(962, random(100, 104)), 0);
+				end
+				else begin
+					if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+						float_msg(self_obj, message_str(962, random(105, 109)), 0);
+					end
+					else begin
+						if (cur_map_index == 4) then begin //  NECROPOLIS - HOTEL
+							float_msg(self_obj, message_str(962, random(110, 114)), 0);
+						end
+						else begin
+							if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+								float_msg(self_obj, message_str(962, random(115, 119)), 0);
+							end
+						end
+					end
+				end
+			end
+			else begin
+				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+					call timed_event_p_proc;
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						if ((((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
+							destroy_object(self_obj);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure timed_event_p_proc
+begin
+	if (((critter_state(self_obj) bwand 2) == 0) and not(combat_is_initialized)) then begin
+		critter_tile := tile_num_in_direction(Home_Tile, random(0, 5), 3);
+		reg_anim_func(2, self_obj);
+		reg_anim_func(1, 1);
+		reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
+		reg_anim_func(3, 0);
+	end
+	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
+end
+
+procedure initialize_p_proc
+begin
+	Only_Once := 1;
+	Home_Tile := tile_num(self_obj);
+	if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 12);
+/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 6);
+	end
+	else begin
+		if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 64);
+		end
+		else begin
+			if (cur_map_index == 4) then begin //  NECROPOLIS - HOTEL
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 87);
+/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 93);
+			end
+			else begin
+				if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 49);
+/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 6);
+				end
+			end
+		end
+	end
+	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
+	if (local_var(0) == 0) then begin
+		set_local_var(0, game_time / (10 * 60 * 60));
+	end
+	if (((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) then begin
+		destroy_object(self_obj);
+	end
+end
+

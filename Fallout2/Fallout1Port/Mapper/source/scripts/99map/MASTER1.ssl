@@ -1,0 +1,180 @@
+#include "..\headers\define.h"
+
+procedure start;
+
+procedure Darkness;
+procedure add_party;
+procedure update_party;
+procedure remove_party;
+
+export variable Ian_ptr;
+export variable Dog_ptr;
+export variable Tycho_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+
+export variable patient;
+export variable lets_go;
+export variable contpan;
+export variable J_Door_Ptr;
+export variable Psy_Field_Ptr;
+export variable signal_mutants;
+
+variable party_elevation;
+variable dude_start_hex;
+variable player_elevation;
+variable monstr_ptr;
+variable stuff;
+variable cur_count;
+variable prev_count;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		set_global_var(WORLDMAPLIST_MASTERS_LAIR, 2);
+		call Darkness;
+		player_elevation := elevation(dude_obj);
+		if (player_elevation == 0) then begin
+			if ((game_time_hour >= 700) and (game_time_hour < 1800) and (metarule(22, 0) == 0)) then begin
+				if (map_var(10) == 0) then begin
+					set_map_var(10, 1);
+					monstr_ptr := create_object_sid(16777259, 0, 0, 686);
+					critter_attempt_placement(monstr_ptr, 24678, 0);
+					critter_add_trait(monstr_ptr, 1, 6, 34);
+					monstr_ptr := create_object_sid(16777261, 0, 0, 686);
+					critter_attempt_placement(monstr_ptr, 25680, 0);
+					critter_add_trait(monstr_ptr, 1, 6, 34);
+					monstr_ptr := create_object_sid(16777261, 0, 0, 686);
+					critter_attempt_placement(monstr_ptr, 25276, 0);
+					critter_add_trait(monstr_ptr, 1, 6, 34);
+				end
+			end
+		end
+		if (global_var(LOAD_MAP_INDEX) == 0) then begin
+			override_map_start(136, 107, 0, 3);
+		end
+		else begin
+			if (global_var(LOAD_MAP_INDEX) == 4) then begin
+				override_map_start(98, 60, 0, 3);
+			end
+			else begin
+				if (global_var(LOAD_MAP_INDEX) == 1) then begin
+					override_map_start(94, 98, 1, 3);
+				end
+				else begin
+					override_map_start(136, 107, 0, 3);
+				end
+			end
+		end
+//		call add_party;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call Darkness;
+		//	call update_party;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+		//		kill_critter_type(16777259, 0);
+		//		kill_critter_type(16777261, 0);
+		//		call remove_party;
+			end
+		end
+	end
+end
+
+procedure Darkness
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		set_light_level(global_var(CAVES_LIGHT_LEVEL));
+	end
+	else begin
+		set_light_level(40);
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+

@@ -1,0 +1,724 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure lasher00;
+procedure lasher01;
+procedure lasher02;
+procedure lasher03;
+procedure lasher04;
+procedure lasher05;
+procedure lasher06;
+procedure lasher06a;
+procedure lasher07;
+procedure lasher07a;
+procedure lasher08;
+procedure lasher08a;
+procedure lasher09;
+procedure lasher10;
+procedure lasher10a;
+procedure lasher11;
+procedure lasher12;
+procedure lasher13;
+procedure lasher14;
+procedure lasher14a;
+procedure lasher15;
+procedure lasher16;
+procedure lasher17;
+procedure lasher17a;
+procedure lasher18;
+procedure lasher19;
+procedure lasher20_1;
+procedure lasher20_2;
+procedure lasher21;
+procedure lasher22;
+procedure lasher23;
+procedure lasher24;
+procedure lasher25;
+procedure lasher26;
+procedure lasher26a;
+procedure lasher27;
+procedure lasher28;
+procedure lasher29;
+procedure lasher30;
+procedure lasher31;
+procedure lasher32;
+procedure lasher33;
+procedure lasher34;
+procedure lasher35;
+procedure lasher36;
+procedure lasher37;
+procedure lasher38;
+procedure lasher39;
+procedure lasher40_1;
+procedure lasher40_2;
+procedure lasher41_1;
+procedure lasher41_2;
+procedure lasher42;
+procedure lasher43;
+procedure lasher44;
+procedure lasherend;
+procedure combat;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+variable Hostile;
+variable Lasher_Abuse;
+variable Only_Once := 1;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 20);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 83);
+		Only_Once := 0;
+	end
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		display_msg(message_str(384, 100));
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			Hostile := 1;
+		end
+		else begin
+			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+				if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+					if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+						set_global_var(BERSERKER_REPUTATION, 1);
+						set_global_var(CHAMPION_REPUTATION, 0);
+					end
+					if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+						set_global_var(CHAMPION_REPUTATION, 1);
+						set_global_var(BERSERKER_REPUTATION, 0);
+					end
+					set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+					if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+					end
+				end
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					if ((local_var(1) == 0) and obj_can_see_obj(self_obj, dude_obj)) then begin
+						set_local_var(1, 1);
+						dialogue_system_enter;
+					end
+					else begin
+						call items_held;
+						if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+							Hostile := 1;
+						end
+					end
+					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						Hostile := 0;
+						attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+					end
+				end
+				else begin
+					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+						script_overrides;
+						if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+							call items_held;
+							if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+								start_gdialog(384, self_obj, 4, -1, -1);
+								gsay_start;
+								call lasher04;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								start_gdialog(384, self_obj, 4, -1, -1);
+								gsay_start;
+								call lasher05;
+								gsay_end;
+								end_dialogue;
+							end
+						end
+						else begin
+							call items_held;
+							if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+								start_gdialog(384, self_obj, 4, -1, -1);
+								gsay_start;
+								call lasher06;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								if (global_var(CATHEDRAL_ENEMY) == 1) then begin
+									start_gdialog(384, self_obj, 4, -1, -1);
+									gsay_start;
+									call lasher00;
+									gsay_end;
+									end_dialogue;
+								end
+								else begin
+									if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+										start_gdialog(384, self_obj, 4, -1, -1);
+										gsay_start;
+										call lasher01;
+										gsay_end;
+										end_dialogue;
+									end
+									else begin
+										if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+											start_gdialog(384, self_obj, 4, -1, -1);
+											gsay_start;
+											call lasher02;
+											gsay_end;
+											end_dialogue;
+										end
+										else begin
+											if (local_var(0) == 1) then begin
+												start_gdialog(384, self_obj, 4, -1, -1);
+												gsay_start;
+												call lasher03;
+												gsay_end;
+												end_dialogue;
+											end
+											else begin
+												start_gdialog(384, self_obj, 4, -1, -1);
+												gsay_start;
+												call lasher07;
+												gsay_end;
+												end_dialogue;
+											end
+										end
+									end
+								end
+							end
+						end
+						set_local_var(0, 1);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure lasher00
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(384, 101);
+	end
+	else begin
+		gsay_reply(384, 102);
+	end
+	gsay_option(384, 223, lasherend, 50);
+end
+
+procedure lasher01
+begin
+	gsay_message(384, 103, 50);
+	call combat;
+end
+
+procedure lasher02
+begin
+	gsay_message(384, 104, 50);
+	call combat;
+end
+
+procedure lasher03
+begin
+	gsay_reply(384, 105);
+	gsay_option(384, 223, lasherend, 50);
+end
+
+procedure lasher04
+begin
+	gsay_reply(384, 106);
+	giq_option(7, 384, 107, lasher08, 50);
+	giq_option(4, 384, 108, lasher09, 50);
+	giq_option(4, 384, 109, lasher10, 50);
+	giq_option(4, 384, 110, lasher11, 50);
+	if (Lasher_Abuse) then begin
+		giq_option(4, 384, 111, lasher12, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 112, lasher02, 50);
+	end
+	giq_option(-3, 384, 113, lasher13, 50);
+end
+
+procedure lasher05
+begin
+	gsay_reply(384, 114);
+	giq_option(7, 384, 115, lasher14, 50);
+	giq_option(7, 384, 116, lasher15, 50);
+	if (Lasher_Abuse) then begin
+		giq_option(4, 384, 117, lasher12, 50);
+	end
+	giq_option(4, 384, 118, lasher16, 50);
+	giq_option(4, 384, 119, lasher11, 50);
+	giq_option(4, 384, 109, lasher10, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 120, lasher02, 50);
+	end
+	giq_option(-3, 384, 121, lasher13, 50);
+end
+
+procedure lasher06
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(384, 122);
+	end
+	else begin
+		gsay_reply(384, 123);
+	end
+	giq_option(7, 384, 124, lasher06a, 50);
+	giq_option(7, 384, 125, lasher15, 50);
+	if (Lasher_Abuse) then begin
+		giq_option(4, 384, 126, lasher12, 50);
+	end
+	giq_option(4, 384, 127, lasher16, 50);
+	giq_option(4, 384, 128, lasher11, 50);
+	giq_option(4, 384, 109, lasher10, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 129, lasher02, 50);
+	end
+	giq_option(-3, 384, 130, lasher13, 50);
+end
+
+procedure lasher06a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher17;
+	end
+	else begin
+		call lasher18;
+	end
+end
+
+procedure lasher07
+begin
+	gsay_reply(384, 131);
+	giq_option(7, 384, 132, lasher07a, 50);
+	if (Lasher_Abuse) then begin
+		giq_option(4, 384, 133, lasher12, 50);
+	end
+	giq_option(4, 384, 134, lasher19, 50);
+	giq_option(4, 384, 109, lasher10, 50);
+	giq_option(4, 384, 135, lasher11, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 136, lasher02, 50);
+	end
+	giq_option(-3, 384, 137, lasher13, 50);
+end
+
+procedure lasher07a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher17;
+	end
+	else begin
+		call lasher18;
+	end
+end
+
+procedure lasher08
+begin
+	gsay_reply(384, 138);
+	giq_option(7, 384, 139, lasher08a, 50);
+	if (Lasher_Abuse) then begin
+		giq_option(4, 384, 140, lasher12, 50);
+	end
+	giq_option(4, 384, 141, lasher19, 50);
+	giq_option(4, 384, 142, lasher22, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 143, lasher13, 50);
+	end
+end
+
+procedure lasher08a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher20_1;
+	end
+	else begin
+		call lasher18;
+	end
+end
+
+procedure lasher09
+begin
+	gsay_reply(384, 144);
+	gsay_option(384, 223, lasherend, 50);
+end
+
+procedure lasher10
+begin
+	gsay_reply(384, 145);
+	giq_option(7, 384, 146, lasher10a, 50);
+	if (Lasher_Abuse) then begin
+		giq_option(4, 384, 147, lasher26, 50);
+	end
+	giq_option(4, 384, 148, lasher27, 50);
+	giq_option(4, 384, 149, lasher28, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 150, lasher29, 50);
+	end
+end
+
+procedure lasher10a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher24;
+	end
+	else begin
+		call lasher25;
+	end
+end
+
+procedure lasher11
+begin
+	gsay_reply(384, 151);
+	giq_option(4, 384, 152, lasher09, 50);
+	giq_option(4, 384, 153, lasher30, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 154, lasher02, 50);
+	end
+end
+
+procedure lasher12
+begin
+	gsay_reply(384, 155);
+	giq_option(7, 384, 156, lasher31, 50);
+	giq_option(4, 384, 157, lasher30, 50);
+	giq_option(4, 384, 158, lasher02, 50);
+	giq_option(4, 384, 159, lasher32, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 160, lasher33, 50);
+	end
+end
+
+procedure lasher13
+begin
+	gsay_message(384, 161, 50);
+end
+
+procedure lasher14
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(384, 163);
+	end
+	else begin
+		gsay_reply(384, 162);
+	end
+	giq_option(7, 384, 164, lasher31, 50);
+	giq_option(4, 384, 165, lasher30, 50);
+	giq_option(4, 384, 166, lasher02, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 167, lasher33, 50);
+	end
+end
+
+procedure lasher14a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher34;
+	end
+	else begin
+		call lasher18;
+	end
+end
+
+procedure lasher15
+begin
+	gsay_reply(384, 168);
+	giq_option(7, 384, 169, lasher18, 50);
+	giq_option(4, 384, 170, lasher35, 50);
+	giq_option(4, 384, 171, lasher36, 50);
+	giq_option(4, 384, 172, lasher09, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 173, lasher37, 50);
+	end
+end
+
+procedure lasher16
+begin
+	gsay_message(384, 174, 50);
+end
+
+procedure lasher17
+begin
+	gsay_reply(384, 175);
+	if (global_var(MORPHEUS_KNOWN) == 1) then begin
+		giq_option(7, 384, 176, lasher17a, 50);
+	end
+	giq_option(4, 384, 177, lasher40_1, 50);
+	giq_option(4, 384, 178, lasher41_1, 50);
+	giq_option(4, 384, 179, lasher12, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 180, lasher35, 50);
+	end
+end
+
+procedure lasher17a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher38;
+	end
+	else begin
+		call lasher39;
+	end
+end
+
+procedure lasher18
+begin
+	gsay_message(384, 181, 50);
+end
+
+procedure lasher19
+begin
+	gsay_message(384, 182, 50);
+end
+
+procedure lasher20_1
+begin
+	gsay_message(384, message_str(384, 183) + message_str(384, 183), 50);
+end
+
+procedure lasher20_2
+begin
+end
+
+procedure lasher21
+begin
+	gsay_message(384, 186, 50);
+end
+
+procedure lasher22
+begin
+	gsay_message(384, 187, 50);
+end
+
+procedure lasher23
+begin
+	gsay_message(384, 188, 50);
+end
+
+procedure lasher24
+begin
+	variable LVar0 := 0;
+	LVar0 := create_object_sid(142, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	gsay_message(384, 189, 50);
+end
+
+procedure lasher25
+begin
+	gsay_message(384, 190, 50);
+end
+
+procedure lasher26
+begin
+	gsay_reply(384, 191);
+	giq_option(7, 384, 192, lasher26a, 50);
+	giq_option(4, 384, 193, lasher25, 50);
+	giq_option(4, 384, 194, lasher27, 50);
+	giq_option(4, 384, 195, lasher28, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 196, lasher23, 50);
+	end
+end
+
+procedure lasher26a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call lasher24;
+	end
+	else begin
+		call lasher25;
+	end
+end
+
+procedure lasher27
+begin
+	gsay_message(384, 197, 50);
+end
+
+procedure lasher28
+begin
+	variable LVar0 := 0;
+	LVar0 := create_object_sid(142, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	gsay_message(384, 198, 50);
+end
+
+procedure lasher29
+begin
+	gsay_message(384, 199, 50);
+end
+
+procedure lasher30
+begin
+	gsay_message(384, 200, 50);
+end
+
+procedure lasher31
+begin
+	gsay_message(384, 201, 50);
+end
+
+procedure lasher32
+begin
+	gsay_reply(384, 202);
+	giq_option(7, 384, 203, lasher21, 50);
+	giq_option(4, 384, 204, lasher42, 50);
+	giq_option(4, 384, 205, lasher43, 50);
+	giq_option(4, 384, 206, lasher44, 50);
+	giq_option(4, 384, 207, lasher28, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 384, 208, lasher35, 50);
+	end
+end
+
+procedure lasher33
+begin
+	if (get_critter_stat(dude_obj, 34) == 1) then begin
+		gsay_message(384, 209, 50);
+	end
+	else begin
+		gsay_message(384, 210, 50);
+	end
+end
+
+procedure lasher34
+begin
+	gsay_message(384, 211, 50);
+end
+
+procedure lasher35
+begin
+	gsay_message(384, 212, 50);
+end
+
+procedure lasher36
+begin
+	gsay_message(384, 213, 50);
+end
+
+procedure lasher37
+begin
+	gsay_message(384, 214, 50);
+end
+
+procedure lasher38
+begin
+	variable LVar0 := 0;
+	LVar0 := create_object_sid(142, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	gsay_message(384, 224, 50);
+end
+
+procedure lasher39
+begin
+	gsay_message(384, 215, 50);
+end
+
+procedure lasher40_1
+begin
+	gsay_message(384, message_str(384, 216) + message_str(384, 217), 50);
+end
+
+procedure lasher40_2
+begin
+end
+
+procedure lasher41_1
+begin
+	gsay_message(384, message_str(384, 218) + message_str(384, 219), 50);
+end
+
+procedure lasher41_2
+begin
+end
+
+procedure lasher42
+begin
+	gsay_message(384, 220, 50);
+end
+
+procedure lasher43
+begin
+	gsay_message(384, 221, 50);
+end
+
+procedure lasher44
+begin
+	gsay_message(384, 222, 50);
+end
+
+procedure lasherend
+begin
+end
+
+procedure combat
+begin
+	Hostile := 1;
+end
+
+
+

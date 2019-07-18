@@ -1,0 +1,75 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure do_stuff;
+procedure coverend;
+procedure cover00;
+procedure cover01;
+procedure cover01a;
+
+variable STRcheck;
+variable bonus;
+variable dude_tile;
+variable OPEN;
+
+procedure start
+begin
+	variable LVar0 := 0;
+	if (map_first_run) then begin
+		//display_msg("INIT COVER.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj));
+		//display_msg("Please take a screenshot now and send to Sduibek. Thanks!");
+	end
+	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+		script_overrides;
+		call do_stuff;
+	end
+end
+
+procedure do_stuff
+begin
+	OPEN := map_var(local_var(0));
+	if (OPEN == 1) then begin
+		call cover00;
+	end
+	else begin
+		call cover01;
+	end
+end
+
+procedure coverend
+begin
+end
+
+procedure cover00
+begin
+	set_map_var(local_var(0), 0);
+	display_msg(message_str(18, 100));
+	dude_tile := tile_num(dude_obj);
+end
+
+procedure cover01
+begin
+	bonus := 3 - local_var(0);
+	STRcheck := do_check(dude_obj, 0, bonus);
+	call cover01a;
+end
+
+procedure cover01a
+begin
+	if (is_success(STRcheck)) then begin
+		set_local_var(0, 0);
+		set_map_var(local_var(0), 1);
+		display_msg(message_str(18, 101));
+	end
+	else begin
+		set_local_var(0, local_var(0) + 1);
+		if (is_critical(STRcheck)) then begin
+			display_msg(message_str(18, 102));
+			critter_dmg(dude_obj, random(2, 3), 0 bwor 256);
+		end
+		else begin
+			display_msg(message_str(18, 103));
+		end
+	end
+end
+

@@ -1,0 +1,126 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure search;
+procedure skills;
+
+variable test;
+variable test1;
+variable test2;
+variable test3;
+
+
+procedure start
+begin
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		script_overrides;
+		call search;
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			script_overrides;
+			call skills;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
+					script_overrides;
+					display_msg(message_str(87, 112));
+				end
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					if (obj_pid(obj_being_used_with) == 98) then begin
+						script_overrides;
+						test2 := roll_vs_skill(dude_obj, 13, -5);
+						if (is_success(test2)) then begin
+							display_msg(message_str(87, 114));
+							rm_obj_from_inven(dude_obj, obj_being_used_with);
+							add_obj_to_inven(self_obj, obj_being_used_with);
+							set_global_var(NECROP_WATER_PUMP_FIXED, 2);
+							set_global_var(HUB_FILLER_30, 0);
+							set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+							give_exp_points(1000);
+							display_msg(message_str(87, 118));
+						end
+						else begin
+							if (is_critical(test2)) then begin
+								display_msg(message_str(87, 115));
+								game_time_advance(game_ticks(240));
+								rm_obj_from_inven(dude_obj, obj_being_used_with);
+								critter_dmg(dude_obj, 1, 0 bwor 256);
+							end
+							else begin
+								display_msg(message_str(87, 116));
+								game_time_advance(game_ticks(180));
+							end
+						end
+					end
+					else begin
+						display_msg(message_str(87, 117));
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure search
+begin
+	test := do_check(dude_obj, 4, 0);
+	if (global_var(NECROP_WATER_PUMP_FIXED) == 2) then begin
+		display_msg(message_str(87, 100));
+	end
+	else begin
+		if (is_success(test)) then begin
+			if (is_critical(test)) then begin
+				display_msg(message_str(87, 101));
+			end
+			else begin
+				display_msg(message_str(87, 102));
+			end
+		end
+		else begin
+			display_msg(message_str(87, 103));
+		end
+	end
+end
+
+procedure skills
+begin
+	test1 := roll_vs_skill(dude_obj, 12, -10);
+	test2 := roll_vs_skill(dude_obj, 13, 0);
+	test3 := roll_vs_skill(dude_obj, 12, -20);
+	if (action_being_used == 13) then begin//-- REPAIR
+		if (is_success(test2)) then begin
+			display_msg(message_str(87, 108));
+		end
+		else begin
+			if (is_critical(test2)) then begin
+				display_msg(message_str(87, 107));
+			end
+			else begin
+				display_msg(message_str(87, 109));
+			end
+		end
+	end
+	else begin
+		if (action_being_used == 12) then begin//-- SCIENCE
+			if (is_success(test3)) then begin
+				display_msg(message_str(87, 111));
+			end
+			else begin
+				if (is_critical(test3)) then begin
+					display_msg(message_str(87, 110));
+				end
+				else begin
+					display_msg(message_str(87, 112));
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(87, 113));
+		end
+	end
+end
+

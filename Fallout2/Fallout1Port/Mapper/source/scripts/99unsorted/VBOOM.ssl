@@ -1,0 +1,154 @@
+//
+// ---TRAP SCRIPT---  Sduibek
+//
+// I think this is unused.
+//
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure look_at_p_proc;//    script_action == 21
+procedure spatial_p_proc;//    script_action == 2
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure deallocate;
+procedure detonate;
+procedure plasma_death;
+
+variable initialized := 0;
+
+import variable removal_ptr;
+
+
+procedure start
+begin
+	if (map_first_run) then begin
+		display_msg("INIT VBOOM.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj) + ". Please take a screenshot now and send to Sduibek. Thanks!");
+	end
+	if not(initialized) then begin
+		initialized := 1;
+	end
+	else begin
+		if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+			call description_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 8) then begin//<-- use_skill_on_p_proc
+					call use_skill_on_p_proc;
+				end
+				else begin
+					if (script_action == 2) then begin// spatial_p_proc - Player is on or near hex of the location or object this script is using
+						call spatial_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	variable LVar0 := 0;
+	script_overrides;
+	LVar0 := message_str(611, 100);
+	if (not(local_var(0))) then begin
+		if (not(is_success(do_check(dude_obj, 1, has_trait(0, dude_obj, 0))))) then begin
+			LVar0 := message_str(611, 101);
+		end
+		else begin
+			set_local_var(0, 1);
+		end
+	end
+	display_msg(LVar0);
+end
+
+procedure look_at_p_proc
+begin
+	if (map_var(10) == 1) then begin
+		script_overrides;
+		call deallocate;
+	end
+end
+
+procedure spatial_p_proc
+begin
+	variable LVar0 := 0;
+	if (map_var(10) == 1) then begin
+		call deallocate;
+	end
+	else begin
+		if source_obj == dude_obj then begin
+			if (map_var(7) == 1) then begin
+				call detonate;
+			end
+			else begin
+				if (is_success(do_check(dude_obj, 1, has_trait(0, dude_obj, 0) - 3))) then begin
+					script_overrides;
+					LVar0 := message_str(613, 100);
+					if (is_success(roll_vs_skill(dude_obj, 11, 10))) then begin
+						LVar0 := LVar0 + message_str(613, 101);
+					end
+					set_local_var(0, 1);
+					display_msg(LVar0);
+				end
+			end
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (action_being_used == 11) then begin//-- TRAPS
+		if (local_var(0)) then begin
+			script_overrides;
+			LVar1 := roll_vs_skill(dude_obj, 11, 10);
+			if (is_success(LVar1)) then begin
+				display_msg(message_str(613, 102));
+				LVar0 := create_object_sid(26, 0, 0, -1);
+				add_obj_to_inven(dude_obj, LVar0);
+				call deallocate;
+			end
+			else begin
+				if (is_critical(LVar1)) then begin
+					display_msg(message_str(613, 103));
+					call detonate;
+				end
+				else begin
+					display_msg(message_str(613, random(104, 106)));
+				end
+			end
+		end
+	end
+end
+
+procedure deallocate
+begin
+	move_to(self_obj, 7000, 0);
+	set_map_var(10, 1);
+	removal_ptr := self_obj;
+end
+
+procedure detonate
+begin
+	variable LVar0 := 0;
+	LVar0 := random(10, 20);
+	explosion(tile_num(dude_obj), elevation(dude_obj), LVar0);
+	call deallocate;
+end
+
+procedure plasma_death
+begin
+	explosion(tile_num(dude_obj), elevation(dude_obj), 0);
+	reg_anim_func(2, dude_obj);
+	reg_anim_func(1, 1);
+	reg_anim_animate(dude_obj, 32, -1);
+	reg_anim_func(3, 0);
+	game_ui_disable;
+	add_timer_event(dude_obj, game_ticks(5), 8);
+end
+

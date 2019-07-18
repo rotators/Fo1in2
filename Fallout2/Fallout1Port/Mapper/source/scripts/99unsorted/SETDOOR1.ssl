@@ -1,0 +1,82 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure do_stuff;
+procedure do_skill;
+procedure see_stuff;
+procedure doorend;
+
+variable lockpicks;
+variable testa;
+
+
+procedure start
+begin
+	if (map_first_run) then begin
+		//display_msg("INIT SETDOOR1.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj));
+		//display_msg("Please take a screenshot now and send to Sduibek. Thanks!");
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		script_overrides;
+		call see_stuff;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			script_overrides;
+			call do_stuff;
+		end
+		else begin
+			if (script_action == 7) then begin//<-- use_obj_on_p_proc
+				lockpicks := obj_being_used_with;
+				script_overrides;
+				call do_skill;
+			end
+		end
+	end
+end
+
+procedure do_stuff
+begin
+	display_msg(message_str(94, 107));
+end
+
+procedure do_skill
+begin
+	if (has_skill(dude_obj, 9)) then begin
+		testa := roll_vs_skill(dude_obj, 9, -10);
+		if (is_success(testa)) then begin
+			display_msg(message_str(94, 100));
+			set_local_var(0, 1);
+		end
+		else begin
+			display_msg(message_str(94, 101));
+			if (is_critical(testa)) then begin
+				display_msg(message_str(94, 102));
+				rm_obj_from_inven(dude_obj, lockpicks);
+			end
+		end
+	end
+	else begin
+		display_msg(message_str(94, 103));
+	end
+end
+
+procedure see_stuff
+begin
+	if (local_var(0) == 0) then begin
+		display_msg(message_str(94, 104));
+	end
+	else begin
+		if (local_var(2) == 1) then begin
+			display_msg(message_str(94, 105));
+		end
+		else begin
+			display_msg(message_str(94, 106));
+		end
+	end
+end
+
+procedure doorend
+begin
+end
+

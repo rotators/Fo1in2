@@ -1,0 +1,158 @@
+//
+// ---TRAP SCRIPT---  Sduibek
+//
+#include "..\headers\define.h"
+
+procedure start; // VATS, Plasma Trap
+procedure boom;
+variable CritFailDmg := 0;
+variable Traps_roll := 0;
+variable XP := 0;
+// local_var(0) == Detected?
+// local_var(1) == Disarmed (1) or Triggered (2)
+// local_var(2) == #ofTimes
+
+// SCRIPT 509 (TRAPFLOR) <-- msgs are from this
+
+procedure start
+begin
+	if (script_action == 2) then begin// spatial_p_proc - Player is on or near hex of the location or object this script is using
+		if global_var(VATS_ALERT) then begin// VATS ON ALERT
+			if (source_obj == dude_obj) or party_member_obj(obj_pid(source_obj)) then begin// new check (party member)
+				set_local_var(2, local_var(2) + 1);
+				XP := 0;
+				CritFailDmg := 0;
+				Traps_roll := roll_vs_skill(dude_obj, 11, 0);
+				if not(is_success(Traps_roll)) and is_critical(Traps_roll) then begin
+					CritFailDmg := 10;
+				end
+				else begin
+					if not(local_var(0)) then begin
+						if is_success(Traps_roll) then begin
+							set_local_var(0, 1);
+							if is_critical(Traps_roll) then begin
+								XP := XP + 50;
+							end
+							else begin
+								XP := XP + 25;
+							end
+							reg_anim_func(2, dude_obj);
+							if source_obj != dude_obj then begin
+								reg_anim_func(2, source_obj);
+							end
+							display_msg(message_str(509, 101));
+							anim(dude_obj, 11, 0);
+							Traps_roll := roll_vs_skill(dude_obj, 11, 0);
+							if not(is_success(Traps_roll)) and is_critical(Traps_roll) then begin
+								CritFailDmg := 10;
+								call boom;
+							end
+							else begin
+								if is_success(Traps_roll) then begin
+									set_local_var(1, 1);
+									if is_critical(Traps_roll) then begin
+										XP := XP + 100;
+									end
+									else begin
+										XP := XP + 50;
+									end
+									display_msg(message_str(509, 107));
+								end
+								else begin
+									display_msg(message_str(509, 111));
+								end
+							end
+							if XP then begin
+								display_msg(message_str(509, 104) + XP + message_str(509, 105));
+								give_exp_points(XP);
+							end
+						end
+						else begin
+							call boom;
+						end
+					end
+					else begin
+						if not(local_var(1)) then begin
+							if local_var(2) <= 3 then begin
+								Traps_roll := roll_vs_skill(dude_obj, 11, 0);
+								reg_anim_func(2, dude_obj);
+								if source_obj != dude_obj then begin
+									reg_anim_func(2, source_obj);
+								end
+								anim(dude_obj, 11, 0);
+								if not(is_success(Traps_roll)) and is_critical(Traps_roll) then begin
+									CritFailDmg := 10;
+									call boom;
+								end
+								else begin
+									if is_success(Traps_roll) then begin
+										set_local_var(1, 1);
+										if is_critical(Traps_roll) then begin
+											XP := XP + 100;
+										end
+										else begin
+											XP := XP + 50;
+										end
+										display_msg(message_str(509, 107));
+										if XP then begin
+											display_msg(message_str(509, 104) + XP + message_str(509, 105));
+											give_exp_points(XP);
+										end
+									end
+									else begin
+										if local_var(2) < 3 then begin
+											display_msg(message_str(509, 111));
+										end
+										else begin
+											call boom;
+										end
+									end
+								end
+							end
+							else begin
+								call boom;
+							end
+						end
+					end
+				end
+				if local_var(1) then begin
+					destroy_object(self_obj);
+				end
+			end
+		end
+	end
+end
+
+procedure boom
+begin
+	if local_var(2) <= 1 then begin
+		if source_obj == dude_obj then begin
+			display_msg(message_str(509, 109));
+		end
+		else begin
+			display_msg(proto_data(obj_pid(source_obj), 1) + message_str(509, 108));
+		end
+	end
+	else begin
+		if source_obj == dude_obj then begin
+			display_msg(message_str(509, 114));
+		end
+		else begin
+			display_msg(proto_data(obj_pid(source_obj), 1) + message_str(509, 113));
+		end
+	end
+	set_local_var(1, 2);
+	if source_obj == dude_obj then begin
+		critter_dmg(dude_obj, random(20 + (difficulty_level * 5), 40 + (difficulty_level * 10)) + ), 3);
+	end
+	else begin
+		critter_dmg(source_obj, random(20 + (difficulty_level * 5), 40 + (difficulty_level * 10)) + ), 3);
+		critter_dmg(dude_obj, random(20 + (difficulty_level * 5), 40 + (difficulty_level * 10)) + ), 3);
+	end
+end
+
+//	#define DMG_normal_dam   0
+//	#define DMG_laser        1
+//	#define DMG_plasma       3
+//	#define DMG_electrical   4
+//	#define DMG_emp          5

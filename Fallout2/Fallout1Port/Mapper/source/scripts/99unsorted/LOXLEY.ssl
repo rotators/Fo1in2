@@ -1,0 +1,1208 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure talk_p_proc;//    script_action == 11
+procedure loxley00;
+procedure loxley00a;
+procedure loxley01;
+procedure loxley02;
+procedure loxley02_1;
+procedure loxley03;
+procedure loxley04;
+procedure loxley05;
+procedure loxley06;
+procedure loxley06b;
+procedure loxley07;
+procedure loxley08;
+procedure loxley09;
+procedure loxley10;
+procedure loxley11;
+procedure loxley12;
+procedure loxley12b;
+procedure loxley13;
+procedure loxley14;
+procedure loxley16;
+procedure loxley17;
+procedure loxley18;
+procedure loxley21;
+procedure loxley22;
+procedure loxley23;
+procedure loxley24;
+procedure loxley25;
+procedure loxley26;
+procedure loxley27;
+procedure loxley29;
+procedure loxley30;
+procedure loxley31;
+procedure loxley32;
+procedure loxley33;
+procedure loxley34;
+procedure loxley34_1;
+procedure loxley34_2;
+procedure loxley35;
+procedure loxley35_1;
+procedure loxley36;
+procedure loxley37;
+procedure loxley38;
+procedure loxley39;
+procedure loxley40;
+procedure loxley41;
+procedure loxley42;
+procedure loxley43;
+procedure loxley43a;
+procedure loxley44;
+procedure loxley47;
+procedure loxley48;
+procedure loxley51;
+procedure loxley53;
+procedure loxley54;
+procedure loxley55;
+procedure loxley56;
+procedure loxley57;
+procedure loxley58;
+procedure loxley59;
+procedure loxley60;
+procedure loxley61;
+procedure loxley62;
+procedure loxley90;
+procedure loxleyx;
+procedure loxleyx1;
+procedure loxleyx2;
+procedure loxleyx3;
+procedure loxleyx4;
+procedure loxley00aa;
+procedure loxley00ab;
+procedure loxley00a1;
+procedure loxley01a;
+procedure loxley01b;
+procedure loxley01c;
+procedure loxley03a;
+procedure loxley04a;
+procedure loxley07a;
+procedure loxley18a;
+procedure loxley23a;
+procedure loxley23b;
+procedure loxley23c;
+procedure loxley24a;
+procedure loxley25a;
+procedure loxley27a;
+procedure loxley44a;
+procedure loxley44b;
+procedure loxleyend;
+procedure loxley63;
+procedure loxley64;
+procedure loxley65;
+procedure loxley66;
+procedure loxley67;
+procedure loxley68;
+procedure loxley69;
+procedure loxley70;
+procedure loxley71;
+procedure loxley72;
+procedure loxley73;
+procedure loxley74;
+procedure loxley75;
+procedure loxley76;
+procedure loxley77;
+procedure loxley78;
+procedure loxley79;
+procedure loxley80;
+procedure loxley81;
+procedure loxley82;
+procedure loxley83;
+procedure loxley84;
+procedure loxley85;
+procedure loxley86;
+procedure loxley87;
+procedure loxley88;
+procedure loxley89;
+procedure loxley91;
+procedure combat;
+
+variable rndx;
+variable rndy;
+variable rndz;
+variable MALE;
+variable HOSTILE;
+variable DESTROYED;
+variable KILLEDANY;
+variable CAPTURED;
+variable ILLEGBEFORE;
+variable ILLEGAL;
+variable TRESPASS;
+variable CRIME;
+variable floatReward;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		call talk_p_proc;
+	end
+	else begin
+		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+			script_overrides;
+			display_msg(message_str(49, 100));
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				call combat;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						HOSTILE := 0;
+						attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+					end
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+						if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+							if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+								set_global_var(BERSERKER_REPUTATION, 1);
+								set_global_var(CHAMPION_REPUTATION, 0);
+							end
+							if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+								set_global_var(CHAMPION_REPUTATION, 1);
+								set_global_var(BERSERKER_REPUTATION, 0);
+							end
+							set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+							if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+								set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	set_global_var(LOXLEY_KNOWN, 1);
+	MALE := get_critter_stat(dude_obj, 34) == 0;
+	if (ILLEGAL) then begin
+		if (ILLEGBEFORE) then begin
+			start_gdialog(49, self_obj, 4, 17, 3);
+			gsay_start;
+			call loxley57;
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			if (CRIME == TRESPASS) then begin
+				start_gdialog(49, self_obj, 4, 17, 3);
+				gsay_start;
+				call loxley59;
+				gsay_end;
+				end_dialogue;
+			end
+			if (CRIME > TRESPASS) then begin
+				start_gdialog(49, self_obj, 4, 17, 3);
+				gsay_start;
+				call loxley58;
+				gsay_end;
+				end_dialogue;
+			end
+		end
+	end
+	else begin
+		if (local_var(4) == 1) then begin
+			if (global_var(STEAL_NECKLACE) == 1) then begin
+				start_gdialog(49, self_obj, 4, 17, 3);
+				gsay_start;
+				call loxley27;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				if (global_var(STEAL_NECKLACE) == 0) then begin
+					if (local_var(1) > 1) then begin
+						start_gdialog(49, self_obj, 4, 17, 3);
+						gsay_start;
+						call loxley01;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						start_gdialog(49, self_obj, 4, 17, 3);
+						gsay_start;
+						call loxley24;
+						gsay_end;
+						end_dialogue;
+					end
+				end
+				else begin
+					display_msg(message_str(49, 267));
+				end
+			end
+		end
+		else begin
+			set_local_var(4, 1);
+			if (local_var(1) > 1) then begin
+				start_gdialog(49, self_obj, 4, 17, 3);
+				gsay_start;
+				call loxley01;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				start_gdialog(49, self_obj, 4, 17, 3);
+				gsay_start;
+				call loxley24;
+				gsay_end;
+				end_dialogue;
+			end
+		end
+	end
+	if (floatReward == 1) then begin
+		floatReward := 0;
+		float_msg(self_obj, message_str(49, 268), 2);
+	end
+end
+
+procedure loxley00
+begin
+	gsay_reply(49, 101);
+	giq_option(4, 49, 102, loxley00aa, 49);
+	giq_option(4, 49, 103, loxley00ab, 51);
+end
+
+procedure loxley00a
+begin
+	gsay_reply(49, 104);
+	giq_option(4, 49, message_str(49, 105) + proto_data(obj_pid(dude_obj), 1) + message_str(49, 106), loxley02, 50);
+	giq_option(4, 49, 107, loxley00a1, 51);
+	giq_option(4, 49, 108, loxley22, 50);
+end
+
+procedure loxley01
+begin
+	if (MALE) then begin
+		gsay_reply(49, 109);
+	end
+	else begin
+		gsay_reply(49, 110);
+	end
+	giq_option(4, 49, message_str(49, 111) + proto_data(obj_pid(dude_obj), 1) + message_str(49, 112), loxley02, 50);
+	giq_option(4, 49, 113, loxley01a, 51);
+	giq_option(4, 49, 114, loxley22, 50);
+	giq_option(5, 49, 115, loxley01b, 49);
+	giq_option(4, 49, 116, loxley01c, 51);
+	giq_option(-3, 49, 117, loxley90, 50);
+end
+
+procedure loxley02
+begin
+	gsay_reply(49, 118);
+	giq_option(4, 49, 119, loxley03, 49);
+	giq_option(4, 49, 120, loxley02_1, 50);
+	giq_option(4, 49, 121, loxley18, 51);
+end
+
+procedure loxley02_1
+begin
+	if (local_var(1) > 1) then begin
+		call loxley08;
+	end
+	else begin
+		call loxley09;
+	end
+end
+
+procedure loxley03
+begin
+	gsay_reply(49, 122);
+	giq_option(4, 49, 123, loxley04, 50);
+	giq_option(4, 49, 124, loxley03a, 51);
+	giq_option(4, 49, 125, loxley17, 50);
+end
+
+procedure loxley04
+begin
+	gsay_reply(49, 126);
+	giq_option(4, 49, 127, loxley05, 50);
+	giq_option(4, 49, 128, loxley04a, 51);
+	giq_option(4, 49, 129, loxley10, 50);
+end
+
+procedure loxley05
+begin
+	gsay_reply(49, 130);
+	giq_option(4, 49, 131, loxley06, 50);
+	giq_option(4, 49, 132, loxley07, 50);
+end
+
+procedure loxley06
+begin
+	if (MALE) then begin
+		gsay_message(49, 133, 50);
+	end
+	else begin
+		gsay_message(49, 134, 50);
+	end
+	give_exp_points(900);
+	display_msg(message_str(766, 103) + 900 + message_str(766, 104));
+	set_global_var(STEAL_NECKLACE, 1);
+	call loxley06b;
+end
+
+procedure loxley06b
+begin
+	gsay_message(49, 135, 50);
+	call loxleyx;
+end
+
+procedure loxley07
+begin
+	gsay_reply(49, 136);
+	giq_option(4, 49, 137, loxley02_1, 50);
+	giq_option(4, 49, 138, loxley07a, 51);
+	giq_option(4, 49, 139, loxley03, 50);
+end
+
+procedure loxley08
+begin
+	gsay_message(49, 140, 50);
+	call loxley34;
+end
+
+procedure loxley09
+begin
+	call BigDownReact;
+	gsay_message(49, 141, 51);
+	call loxleyx1;
+end
+
+procedure loxley10
+begin
+	gsay_reply(49, 142);
+	giq_option(4, 49, 143, loxley11, 51);
+	giq_option(4, 49, 144, loxley12, 49);
+end
+
+procedure loxley11
+begin
+	call BigDownReact;
+	gsay_message(49, 145, 51);
+	call loxleyx1;
+end
+
+procedure loxley12
+begin
+	gsay_reply(49, 146);
+	giq_option(4, 49, 147, loxley12b, 50);
+	giq_option(4, 49, 148, loxley13, 51);
+end
+
+procedure loxley12b
+begin
+	gsay_message(49, 149, 50);
+	call loxley06;
+end
+
+procedure loxley13
+begin
+	call BigDownReact;
+	gsay_message(49, 150, 50);
+	call loxleyx1;
+end
+
+procedure loxley14
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	gsay_reply(49, 151);
+	giq_option(4, 49, 152, loxley05, 50);
+	giq_option(4, 49, 153, loxley07, 51);
+end
+
+procedure loxley16
+begin
+	call BigDownReact;
+	gsay_message(49, 154, 50);
+	call loxleyx1;
+end
+
+procedure loxley17
+begin
+	gsay_reply(49, 155);
+	giq_option(4, 49, 156, loxley06, 50);
+	giq_option(4, 49, 157, loxley05, 50);
+	giq_option(4, 49, 158, loxley02_1, 50);
+end
+
+procedure loxley18
+begin
+	gsay_reply(49, 159);
+	giq_option(4, 49, 160, loxley18a, 51);
+	giq_option(4, 49, 161, loxley12, 50);
+end
+
+procedure loxley21
+begin
+	gsay_reply(49, 162);
+	giq_option(4, 49, message_str(49, 163) + proto_data(obj_pid(dude_obj), 1) + message_str(49, 164), loxley02, 50);
+	giq_option(4, 49, 165, loxley10, 51);
+end
+
+procedure loxley22
+begin
+	gsay_reply(49, 166);
+	giq_option(4, 49, 167, loxley04, 50);
+	giq_option(4, 49, 168, loxley02_1, 50);
+	giq_option(4, 49, 169, loxley10, 51);
+end
+
+procedure loxley23
+begin
+	gsay_reply(49, 170);
+	giq_option(4, 49, message_str(49, 171) + proto_data(obj_pid(dude_obj), 1) + message_str(49, 172), loxley02, 50);
+	giq_option(4, 49, 173, loxley23a, 51);
+	giq_option(4, 49, 174, loxley22, 50);
+	giq_option(5, 49, 175, loxley23b, 49);
+	giq_option(4, 49, 176, loxley23c, 51);
+end
+
+procedure loxley24
+begin
+	gsay_reply(49, 177);
+	giq_option(4, 49, 178, loxley25, 51);
+	giq_option(4, 49, 179, loxley26, 50);
+	giq_option(4, 49, 180, loxley24a, 49);
+end
+
+procedure loxley25
+begin
+	gsay_reply(49, 181);
+	giq_option(4, 49, 182, loxley25a, 49);
+	giq_option(4, 49, 183, loxley26, 51);
+end
+
+procedure loxley26
+begin
+	call BigDownReact;
+	gsay_message(49, 184, 50);
+	call loxleyx1;
+end
+
+procedure loxley27
+begin
+	gsay_reply(49, 185);
+	giq_option(4, 49, 186, loxley32, 51);
+	giq_option(4, 49, 187, loxley33, 50);
+	giq_option(4, 49, 188, loxley27a, 50);
+end
+
+procedure loxley29
+begin
+	variable LVar0 := 0;
+	LVar0 := obj_carrying_pid_obj(dude_obj, 119);
+	call UpReact;
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 119)) then begin
+		rm_obj_from_inven(dude_obj, LVar0);
+		add_obj_to_inven(self_obj, LVar0);
+	end
+	give_exp_points(500);
+	display_msg(message_str(766, 103) + 500 + message_str(766, 104));
+	set_global_var(STEAL_NECKLACE, 2);
+	gsay_message(49, 189, 49);
+	call loxleyx3;
+end
+
+procedure loxley30
+begin
+	gsay_message(49, 190, 50);
+end
+
+procedure loxley31
+begin
+	gsay_message(49, 191, 51);
+	call loxleyx1;
+end
+
+procedure loxley32
+begin
+	gsay_message(49, 192, 50);
+	set_global_var(STEAL_NECKLACE, 2);
+	call loxleyx1;
+end
+
+procedure loxley33
+begin
+	gsay_message(49, 193, 51);
+	call loxleyx4;
+end
+
+procedure loxley34
+begin
+	gsay_reply(0, 0);
+	giq_option(4, 49, 194, loxley34_1, 50);
+	giq_option(4, 49, 195, loxley43, 50);
+	giq_option(4, 49, 196, loxley51, 50);
+	giq_option(4, 49, 197, loxley34_2, 50);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 49, 198, loxley55, 50);
+	end
+	giq_option(4, 667, 114, loxleyx1, 50);
+end
+
+procedure loxley34_1
+begin
+	if (global_var(MISSING_CARAVANS_STATUS) != 5) then begin
+		if (local_var(1) > 1) then begin
+			call loxley35;//gsay 199 -> 202 -> 205
+		end
+		else begin
+			call loxley40;//gsay 211 -> 214
+		end
+	end
+	else begin
+		call loxley42;
+	end
+end
+
+procedure loxley34_2
+begin
+	if (local_var(1) > 1) then begin
+		call loxley53;
+	end
+	else begin
+		call loxley54;
+	end
+end
+
+procedure loxley35
+begin
+	gsay_reply(49, 199);
+	giq_option(4, 49, 200, loxley36, 50);
+	giq_option(4, 49, 201, loxley35_1, 50);
+end
+
+procedure loxley35_1
+begin
+	if (local_var(1) > 1) then begin
+		call loxley38;
+	end
+	else begin
+		call loxley39;
+	end
+end
+
+procedure loxley36
+begin
+	gsay_reply(49, 202);
+	giq_option(4, 49, 203, loxley37, 50);
+	giq_option(4, 49, 204, loxley35_1, 50);
+end
+
+procedure loxley37
+begin
+	gsay_reply(49, 205);
+	giq_option(4, 49, 206, loxley35_1, 50);
+end
+
+procedure loxley38
+begin
+	set_local_var(6, local_var(6) + 1);
+	if (local_var(6) == 1) then begin
+		gsay_message(49, 207, 50);
+	end
+	if (local_var(6) == 2) then begin
+		gsay_message(49, 208, 50);
+	end
+	if (local_var(6) > 2) then begin
+		gsay_message(49, 209, 50);
+	end
+	call loxley34;
+end
+
+procedure loxley39
+begin
+	gsay_message(49, 210, 50);
+	call loxleyend;
+end
+
+procedure loxley40
+begin
+	gsay_reply(49, 211);
+	giq_option(4, 49, 212, loxley41, 50);
+	giq_option(4, 49, 213, loxley39, 50);
+end
+
+procedure loxley41
+begin
+	gsay_reply(49, 214);
+	giq_option(4, 49, 215, loxley39, 50);
+end
+
+procedure loxley42
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	gsay_message(49, 216, 50);
+	call loxley34;
+end
+
+procedure loxley43
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	gsay_reply(49, 217);
+	giq_option(4, 49, 218, loxley44, 50);
+	giq_option(4, 49, 219, loxley43a, 50);
+end
+
+procedure loxley43a
+begin
+	gsay_message(49, 220, 50);
+	call loxley34;
+end
+
+procedure loxley44
+begin
+	gsay_reply(49, 221);
+	giq_option(4, 49, 222, loxley44a, 51);
+	giq_option(4, 49, 223, loxley44b, 49);
+end
+
+procedure loxley47
+begin
+	gsay_message(49, 224, 51);
+	call loxleyx1;
+end
+
+procedure loxley48
+begin
+	gsay_message(49, 225, 50);
+	call loxley34;
+end
+
+procedure loxley51
+begin
+	gsay_message(49, 226, 50);
+	call loxley34;
+end
+
+procedure loxley53
+begin
+	gsay_message(49, 227, 50);
+	call loxley34;
+end
+
+procedure loxley54
+begin
+	gsay_message(49, 228, 50);
+	call loxley34;
+end
+
+procedure loxley55
+begin
+	if (local_var(1) > 1) then begin
+		gsay_message(49, 229, 50);
+	end
+	else begin
+		gsay_message(49, 230, 51);
+	end
+end
+
+procedure loxley56
+begin
+	gsay_message(49, 231, 50);
+end
+
+procedure loxley57
+begin
+	gsay_message(49, 232, 50);
+end
+
+procedure loxley58
+begin
+	gsay_message(49, 233, 50);
+end
+
+procedure loxley59
+begin
+	gsay_message(49, 234, 50);
+end
+
+procedure loxley60
+begin
+	gsay_message(49, 235, 50);
+end
+
+procedure loxley61
+begin
+	gsay_message(49, 236, 50);
+end
+
+procedure loxley62
+begin
+	gsay_message(49, 237, 50);
+end
+
+procedure loxley90
+begin
+	gsay_message(49, 265, 50);
+	call loxleyx1;
+end
+
+procedure loxleyx
+begin
+end
+
+procedure loxleyx1
+begin
+end
+
+procedure loxleyx2
+begin
+end
+
+procedure loxleyx3
+begin
+	set_map_var(3, 1);
+	floatReward := 1;
+end
+
+procedure loxleyx4
+begin
+end
+
+procedure loxley00aa
+begin
+	call UpReact;
+	call loxley00a;
+end
+
+procedure loxley00ab
+begin
+	call BigDownReact;
+	call loxley10;
+end
+
+procedure loxley00a1
+begin
+	call DownReact;
+	call loxley21;
+end
+
+procedure loxley01a
+begin
+	call DownReact;
+	call loxley21;
+end
+
+procedure loxley01b
+begin
+	call UpReact;
+	call loxley00;
+end
+
+procedure loxley01c
+begin
+	call BigDownReact;
+	call loxley00;
+end
+
+procedure loxley03a
+begin
+	call DownReact;
+	call loxley16;
+end
+
+procedure loxley04a
+begin
+	call DownReact;
+	call loxley14;
+end
+
+procedure loxley07a
+begin
+	call DownReact;
+	call loxley10;
+end
+
+procedure loxley18a
+begin
+	call DownReact;
+	call loxley10;
+end
+
+procedure loxley23a
+begin
+	call DownReact;
+	call loxley21;
+end
+
+procedure loxley23b
+begin
+	call UpReact;
+	call loxley00;
+end
+
+procedure loxley23c
+begin
+	call BigDownReact;
+	call loxley00;
+end
+
+procedure loxley24a
+begin
+	call UpReact;
+	call loxley23;
+end
+
+procedure loxley25a
+begin
+	call UpReact;
+	call loxley23;
+end
+
+procedure loxley27a
+begin
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 119)) then begin
+		call loxley29;
+	end
+	else begin
+		set_local_var(5, local_var(5) + 1);
+		if (local_var(5) == 1) then begin
+			call loxley30;
+		end
+		else begin
+			call loxley31;
+		end
+	end
+end
+
+procedure loxley44a
+begin
+	call DownReact;
+	call loxley47;
+end
+
+procedure loxley44b
+begin
+	call UpReact;
+	call loxley48;
+end
+
+procedure loxleyend
+begin
+end
+
+procedure loxley63
+begin
+	gsay_message(49, 238, 50);
+end
+
+procedure loxley64
+begin
+	gsay_message(49, 239, 50);
+end
+
+procedure loxley65
+begin
+	gsay_message(49, 240, 50);
+end
+
+procedure loxley66
+begin
+	gsay_message(49, 241, 50);
+end
+
+procedure loxley67
+begin
+	gsay_message(49, 242, 50);
+end
+
+procedure loxley68
+begin
+	gsay_message(49, 243, 50);
+end
+
+procedure loxley69
+begin
+	gsay_message(49, 244, 50);
+end
+
+procedure loxley70
+begin
+	gsay_message(49, 245, 50);
+end
+
+procedure loxley71
+begin
+	gsay_message(49, 246, 50);
+end
+
+procedure loxley72
+begin
+	gsay_message(49, 247, 50);
+end
+
+procedure loxley73
+begin
+	gsay_message(49, 248, 50);
+end
+
+procedure loxley74
+begin
+	gsay_message(49, 249, 50);
+end
+
+procedure loxley75
+begin
+	gsay_message(49, 250, 50);
+end
+
+procedure loxley76
+begin
+	gsay_message(49, 251, 50);
+end
+
+procedure loxley77
+begin
+	gsay_message(49, 252, 50);
+end
+
+procedure loxley78
+begin
+	gsay_message(49, 253, 50);
+end
+
+procedure loxley79
+begin
+	gsay_message(49, 254, 50);
+end
+
+procedure loxley80
+begin
+	gsay_message(49, 255, 50);
+end
+
+procedure loxley81
+begin
+	gsay_message(49, 256, 50);
+end
+
+procedure loxley82
+begin
+	gsay_message(49, 257, 50);
+end
+
+procedure loxley83
+begin
+	gsay_message(49, 258, 50);
+end
+
+procedure loxley84
+begin
+	gsay_message(49, 259, 50);
+end
+
+procedure loxley85
+begin
+	gsay_message(49, 260, 50);
+end
+
+procedure loxley86
+begin
+	gsay_message(49, 261, 50);
+end
+
+procedure loxley87
+begin
+	gsay_message(49, 262, 50);
+end
+
+procedure loxley88
+begin
+	gsay_message(49, 263, 50);
+end
+
+procedure loxley89
+begin
+	gsay_message(49, 264, 50);
+end
+
+procedure loxley91
+begin
+	gsay_message(49, 266, 50);
+end
+
+procedure combat
+begin
+	HOSTILE := 1;
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

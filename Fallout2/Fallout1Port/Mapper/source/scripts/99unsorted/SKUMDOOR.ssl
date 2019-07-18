@@ -1,0 +1,209 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+procedure use_p_proc;//    script_action == 6
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure description_p_proc;//    script_action == 3
+
+import variable messing_with_SkumDoor;
+import variable Neal_closing_door;
+import variable Neal_ptr;
+import variable SkumDoor_ptr;
+
+variable test;
+
+
+procedure start
+begin
+	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+		call damage_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+				call map_enter_p_proc;
+			end
+			else begin
+				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+					call use_p_proc;
+				end
+				else begin
+					if (script_action == 7) then begin//<-- use_obj_on_p_proc
+						call use_obj_on_p_proc;
+					end
+					else begin
+						if (script_action == 8) then begin//<-- use_skill_on_p_proc
+							call use_skill_on_p_proc;
+						end
+						else begin
+							if (script_action == 3) then begin
+								call description_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	messing_with_SkumDoor := 1;
+	SkumDoor_ptr := 0;
+	destroy_object(self_obj);
+end
+
+procedure destroy_p_proc
+begin
+	messing_with_SkumDoor := 1;
+	SkumDoor_ptr := 0;
+end
+
+procedure map_enter_p_proc
+begin
+	SkumDoor_ptr := self_obj;
+	if (global_var(JUNKTOWN_WAS_INVADED) != 1) then begin
+		if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
+			obj_close(self_obj);
+			obj_lock(self_obj);
+		end
+		else begin
+			obj_unlock(self_obj);
+		end
+		set_local_var(0, 0);
+	end
+	else begin
+		obj_unlock(self_obj);
+		obj_close(self_obj);
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if (global_var(JUNKTOWN_WAS_INVADED) != 1) then begin
+		if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
+			if ((local_var(0) == 0) and not(messing_with_SkumDoor)) then begin
+				obj_close(self_obj);
+				obj_lock(self_obj);
+			end
+		end
+		else begin
+			obj_unlock(self_obj);
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	if (global_var(JUNKTOWN_WAS_INVADED) != 1) then begin
+		if source_obj == dude_obj then begin
+			if (obj_is_locked(self_obj)) then begin
+				script_overrides;
+				display_msg(message_str(853, 100));
+			end
+		end
+		else begin
+			if (Neal_ptr != 0) then begin
+				if (source_obj == Neal_ptr) then begin
+					set_local_var(0, 0);
+					if (Neal_closing_door == 0) then begin
+						script_overrides;
+						obj_unlock(self_obj);
+						obj_open(self_obj);
+					end
+					else begin
+						script_overrides;
+						obj_close(self_obj);
+						obj_lock(self_obj);
+					end
+					if (messing_with_SkumDoor) then begin
+						messing_with_SkumDoor := 3;
+					end
+					else begin
+						add_timer_event(Neal_ptr, game_ticks(1), 8);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_pid(obj_being_used_with) == 84) then begin
+		if (obj_is_locked(self_obj)) then begin
+			test := roll_vs_skill(source_obj, 9, 0);
+			if (is_success(test)) then begin
+				display_msg(message_str(853, 101));
+				obj_unlock(self_obj);
+				set_local_var(0, 1);
+			end
+			else begin
+				if (is_critical(test)) then begin
+					display_msg(message_str(853, 103));
+					jam_lock(self_obj);
+				end
+				else begin
+					display_msg(message_str(853, 102));
+				end
+			end
+			if source_obj == dude_obj then begin
+				if ((game_time_hour >= 1300) and (game_time_hour < 1400)) then begin
+					messing_with_SkumDoor := 1;
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(853, 104));
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 9) then begin//-- LOCKPICK
+		script_overrides;
+		if (obj_is_locked(self_obj)) then begin
+			test := roll_vs_skill(source_obj, action_being_used, -10);
+			if (is_success(test)) then begin
+				display_msg(message_str(853, 101));
+				obj_unlock(self_obj);
+				set_local_var(0, 1);
+			end
+			else begin
+				if (is_critical(test)) then begin
+					display_msg(message_str(853, 103));
+					jam_lock(self_obj);
+				end
+				else begin
+					display_msg(message_str(853, 102));
+				end
+			end
+			if source_obj == dude_obj then begin
+				if ((game_time_hour >= 1300) and (game_time_hour < 1400)) then begin
+					messing_with_SkumDoor := 1;
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(853, 104));
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	if (local_var(0) == 0) then begin
+		display_msg(message_str(63, 104));//{104}{}{The door is locked.}
+	end
+end
+

@@ -1,0 +1,889 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure Critter_Action;//    script_action == 12
+procedure description_p_proc;//    script_action == 3
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure damage_p_proc;//    script_action == 14
+
+procedure Gizmo01;
+procedure Gizmo01_1;
+procedure Gizmo01b;
+procedure Gizmo02;
+procedure Gizmo04;
+procedure Gizmo04a;
+procedure Gizmo04_1;
+procedure Gizmo05;
+procedure Gizmo05_1;
+procedure Gizmo06;
+procedure Gizmo07;
+procedure Gizmo08;
+procedure Gizmo09;
+procedure Gizmo10;
+procedure Gizmo11;
+procedure Gizmo13;
+procedure Gizmo13_1;
+procedure Gizmo14;
+procedure Gizmo15;
+procedure Gizmo15_1;
+procedure Gizmo16;
+procedure Gizmo16a;
+procedure Gizmo17;
+procedure Gizmo18;
+procedure Gizmo19;
+procedure Gizmo20;
+procedure Gizmo21;
+procedure Gizmo22;
+procedure Gizmo23;
+procedure Gizmo24;
+procedure Gizmo25;
+procedure Gizmo26;
+procedure Gizmo27;
+procedure Gizmo28;
+procedure Gizmo29;
+procedure Gizmo30;
+procedure Gizmo32;
+procedure Gizmo33;
+procedure Gizmo34;
+procedure Gizmo35;
+procedure Gizmo36;
+procedure Gizmo37;
+procedure Gizmo38;
+procedure Gizmo39;
+procedure Gizmo42;
+procedure Gizmo43;
+procedure Gizmo44;
+procedure Gizmo45;
+procedure Gizmo47;
+procedure Gizmo48;
+procedure Gizmo19a;
+procedure Gizmox;
+procedure Gizmox1;
+procedure Gizmox2;
+procedure GizmoPay;
+procedure badmouth;
+
+variable HOSTILE;
+variable INSISTS;
+variable CRIME;
+variable stealing;
+
+import variable Killian_ptr;
+import variable Gizmo_is_angry;
+import variable show_to_door;
+import variable Gizmo_ptr;
+import variable payment;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call Critter_Action;
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			call look_at_p_proc;
+		end
+		else begin
+			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+				call description_p_proc;
+			end
+			else begin
+				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+					call destroy_p_proc;
+				end
+				else begin
+					if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+						call map_enter_p_proc;
+					end
+					else begin
+						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+							call pickup_p_proc;
+						end
+						else begin
+							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+								call talk_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Critter_Action
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		HOSTILE := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (Killian_ptr != 0) then begin
+			float_msg(self_obj, message_str(44, 220), 0);
+			attack_complex(Killian_ptr, 0, 1, 0, 0, 30000, 0, 0);
+		end
+		else begin
+			/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 57)) then begin
+				set_global_var(BUG_PLANTED, 1);
+			end
+			else begin
+				if (global_var(ENEMY_GIZMOS_GANG) == 1) then begin// - ENEMY_GIZMOS_GANG
+					if (obj_can_see_obj(self_obj, dude_obj)) then begin
+						attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+					end
+				end
+				else begin
+					if (global_var(GIZMO_TALKED_ONCE) != 1) then begin
+						if (tile_distance_objs(self_obj, dude_obj) <= 14) then begin
+							if obj_can_see_obj(dude_obj, self_obj) or obj_can_see_obj(self_obj, dude_obj) or obj_can_hear_obj(self_obj, dude_obj) then begin
+								set_global_var(GIZMO_TALKED_ONCE, 1);
+								float_msg(self_obj, message_str(44, 227), 2);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(44, 218));
+	script_overrides;
+end
+
+procedure destroy_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_GIZMOS_GANG, 1);
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	set_global_var(GIZMO_DEAD, 1);
+end
+
+procedure look_at_p_proc
+begin
+	if (local_var(10) != 1) then begin
+		set_local_var(10, 1);
+		script_overrides;
+		display_msg(message_str(44, 228));
+	end
+	else begin
+		script_overrides;
+		display_msg(message_str(44, 100));
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	variable LVar0 := 0;
+	Gizmo_ptr := self_obj;
+	if (local_var(7) == 0) then begin
+		set_local_var(7, 1000);
+	end
+	if (local_var(9) == 1) then begin
+		payment := local_var(7);
+	end
+	critter_add_trait(self_obj, 1, 6, 13);
+	critter_add_trait(self_obj, 1, 5, 60);
+	if (global_var(CAPTURE_GIZMO) == 2) then begin
+		LVar0 := create_object_sid(213, tile_num(self_obj), 0, -1);
+		kill_critter(self_obj, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	stealing := 1;
+	dialogue_system_enter;
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(8) == 1) then begin
+		float_msg(self_obj, message_str(669, 104), 2);
+	end
+	else begin
+		if (global_var(HIRED_BY_GIZMO) == 2) then begin
+			float_msg(self_obj, message_str(669, 101), 0);
+		end
+		else begin
+			start_gdialog(44, self_obj, 4, 21, 7);
+			gsay_start;
+			if (stealing) then begin
+				call Gizmo45;
+			end
+			else begin
+				if (global_var(KILLIAN_DEAD) == 1) then begin
+					call Gizmo21;
+				end
+				else begin
+					if (local_var(4) == 1) then begin
+						call Gizmo13;//  msg 140
+					end
+					else begin
+						if (local_var(4) >= 2) then begin
+							if (global_var(KILLIAN_DEAD) == 0) then begin
+								call Gizmo35;//  msg 205
+							end
+							else begin
+								call Gizmo13;//  msg 140
+							end
+						end
+						else begin
+							if ((global_var(KILLIAN_DEAD) == 1) or (global_var(HIRED_BY_KILLIAN) == 1)) then begin
+								call Gizmo21;
+							end
+							else begin
+								call Gizmo01;
+							end
+						end
+					end
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_GIZMOS_GANG, 1);// - ENEMY_GIZMOS_GANG
+	end
+end
+
+procedure Gizmo01
+begin
+	gsay_reply(44, 101);
+	giq_option(5, 44, 102, Gizmo01_1, 51);//  was 49
+	giq_option(7, 44, 103, Gizmo04, 50);
+	giq_option(4, 44, 104, Gizmo04, 50);
+	giq_option(-3, 44, 105, Gizmo01b, 51);
+end
+
+procedure Gizmo01_1
+begin
+	call DownReactLevel;// was Up
+	set_local_var(5, 1);
+	call Gizmo02;
+end
+
+procedure Gizmo01b
+begin
+	gsay_message(44, 106, 51);
+	call Gizmox2;
+end
+
+procedure Gizmo02
+begin
+	gsay_reply(44, 107);
+	giq_option(5, 44, 108, Gizmo11, 51);
+	giq_option(4, 44, 109, Gizmo04, 50);
+end
+
+procedure Gizmo04
+begin
+	gsay_reply(44, 110);
+	giq_option(4, 44, 111, Gizmo05, 50);
+	giq_option(4, 44, 112, Gizmo04_1, 51);
+end
+
+procedure Gizmo04a
+begin
+	gsay_message(44, 113, 50);
+	call Gizmo05;
+end
+
+procedure Gizmo04_1
+begin
+	set_local_var(5, local_var(5) + 1);
+	if (local_var(5) > 1) then begin
+		call Gizmo11;
+	end
+	else begin
+		call Gizmo04a;
+	end
+end
+
+procedure Gizmo05
+begin
+	gsay_reply(44, 114);
+	giq_option(7, 44, 115, Gizmo06, 50);
+	if (not(is_success(do_check(dude_obj, 6, 0)))) then begin
+		giq_option(6, 44, 116, Gizmo05_1, 51);
+	end
+	giq_option(4, 44, 117, Gizmo07, 49);
+	giq_option(4, 44, 118, Gizmo10, 50);
+	giq_option(5, 44, 119, Gizmo08, 50);
+end
+
+procedure Gizmo05_1
+begin
+	call DownReactLevel;
+	call Gizmo10;
+end
+
+procedure Gizmo06
+begin
+	gsay_reply(44, 120);
+	giq_option(7, 44, 121, Gizmo07, 49);
+	giq_option(4, 44, 122, Gizmo07, 49);
+	giq_option(6, 44, 123, badmouth, 51);
+	giq_option(5, 44, 124, Gizmo08, 50);
+	giq_option(4, 44, 125, Gizmo10, 51);
+	giq_option(4, 44, 126, Gizmo10, 50);
+end
+
+procedure Gizmo07
+begin
+	set_local_var(4, 1);
+	set_global_var(HIRED_BY_GIZMO, 1);
+	gsay_message(44, 127, 49);
+	set_global_var(GIZMO_NICE_SHOWDOOR, 1);
+	call Gizmox;
+end
+
+procedure Gizmo08
+begin
+	gsay_reply(44, 128);
+	giq_option(4, 44, 129, Gizmo07, 49);
+	giq_option(6, 44, 130, Gizmo09, 50);
+	giq_option(4, 44, 131, Gizmo10, 50);
+	giq_option(5, 44, 132, badmouth, 51);
+end
+
+procedure Gizmo09
+begin
+	set_local_var(7, 1500);
+	gsay_reply(44, 133);
+	giq_option(4, 44, 134, Gizmo07, 49);
+	giq_option(6, 44, 135, badmouth, 51);
+	giq_option(5, 44, 136, Gizmo10, 50);
+	giq_option(4, 44, 137, Gizmo10, 51);
+end
+
+procedure Gizmo10
+begin
+	gsay_message(44, 138, 51);
+	call Gizmox1;
+end
+
+procedure Gizmo11
+begin
+	gsay_message(44, 139, 51);
+	call Gizmox1;
+end
+
+procedure Gizmo13
+begin
+	set_local_var(4, local_var(4) + 1);
+	gsay_reply(44, 140);
+	giq_option(4, 44, 141, Gizmo13_1, 50);
+	giq_option(4, 44, 142, Gizmo20, 51);//	was 50
+end
+
+procedure Gizmo13_1
+begin
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 56) or (global_var(KILLIAN_DEAD) == 1)) then begin
+		call Gizmo14;
+	end
+	else begin
+		call Gizmo17;
+	end
+end
+
+procedure Gizmo14
+begin
+	gsay_reply(44, 143);
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 56)) then begin
+		gsay_option(634, 106, Gizmo15, 49);
+	end
+	else begin
+		gsay_option(634, 106, Gizmo17, 51);
+	end
+end
+
+procedure Gizmo15
+begin
+	destroy_object(obj_carrying_pid_obj(dude_obj, 56));
+	set_global_var(HIRED_BY_GIZMO, 2);
+	gsay_reply(44, 144);
+	giq_option(4, 44, 145, GizmoPay, 50);
+	giq_option(6, 44, 146, Gizmo15_1, 51);
+	giq_option(6, 44, 147, Gizmo16, 50);
+	giq_option(7, 44, 148, GizmoPay, 50);
+end
+
+procedure Gizmo15_1
+begin
+	set_local_var(5, local_var(5) + 1);
+	if (local_var(5) > 1) then begin
+		call Gizmo11;
+	end
+	else begin
+		call Gizmo16;
+	end
+end
+
+procedure Gizmo16
+begin
+	gsay_reply(44, 149);
+	giq_option(4, 44, 150, GizmoPay, 50);
+	if (not(is_success(do_check(dude_obj, 6, 0)))) then begin
+		giq_option(7, 44, 151, Gizmo16a, 51);
+	end
+	giq_option(6, 44, 152, GizmoPay, 50);
+end
+
+procedure Gizmo16a
+begin
+	call DownReactLevel;
+	call badmouth;
+end
+
+procedure Gizmo17
+begin
+	gsay_reply(44, 153);
+	giq_option(4, 44, 154, Gizmo18, 50);
+	giq_option(6, 44, 155, Gizmo19, 51);
+	giq_option(5, 44, 156, Gizmo20, 50);
+	giq_option(6, 44, 157, Gizmo20, 50);
+end
+
+procedure Gizmo18
+begin
+	if (local_var(6) > 0) then begin//	was "> 1"
+		call Gizmo11;
+	end
+	else begin
+		set_local_var(6, local_var(6) + 1);
+		/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 104) and (global_var(HIRED_BY_KILLIAN) == 1)) then begin
+			set_global_var(GOT_CONFESSION, 1);
+		end
+		gsay_message(44, 158, 50);
+		call Gizmox;
+	end
+end
+
+procedure Gizmo19
+begin
+	gsay_reply(44, 159);
+	giq_option(4, 44, 160, Gizmo20, 50);
+	if (not(is_success(do_check(dude_obj, 6, 0)))) then begin
+		giq_option(7, 44, 161, Gizmo19a, 51);
+	end
+	giq_option(5, 44, 162, Gizmo18, 50);
+	giq_option(6, 44, 163, Gizmo20, 50);
+end
+
+procedure Gizmo20
+begin
+	if (local_var(6) > 0) then begin//	was "> 1"
+		call Gizmo11;
+	end
+	else begin
+		set_local_var(6, local_var(6) + 1);
+		gsay_message(44, 164, 50);
+		call Gizmox;
+	end
+end
+
+procedure Gizmo21
+begin
+	gsay_reply(44, 165);
+	if (global_var(KILLIAN_DEAD) == 0) then begin
+		giq_option(7, 44, 166, Gizmo22, 50);
+		giq_option(4, 44, 169, Gizmo22, 50);
+	end
+	else begin
+		giq_option(4, 44, 221, Gizmo15, 49);
+	end
+	giq_option(4, 44, 167, Gizmo32, 50);
+	giq_option(6, 44, 168, Gizmo34, 51);
+	giq_option(-3, 44, 105, Gizmo01b, 51);
+end
+
+procedure Gizmo22
+begin
+	gsay_reply(44, 170);
+	if (get_critter_stat(dude_obj, 4) >= 7) then begin
+		giq_option(7, 44, 171, Gizmo23, 50);
+	end
+	else begin
+		giq_option(4, 44, 222, Gizmo23, 50);
+	end
+	giq_option(6, 44, 172, Gizmo34, 51);
+	giq_option(5, 44, 173, Gizmo33, 50);
+	giq_option(4, 44, 174, Gizmo34, 51);
+	giq_option(4, 44, 175, Gizmo32, 51);
+end
+
+procedure Gizmo23
+begin
+	gsay_reply(44, 176);
+	giq_option(7, 44, 177, Gizmo24, 49);
+	giq_option(5, 44, 178, Gizmo34, 51);
+	giq_option(4, 44, 179, Gizmo32, 50);
+	giq_option(4, 44, 223, Gizmo24, 49);
+end
+
+procedure Gizmo24
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(44, 180);
+	end
+	else begin
+		gsay_reply(44, 226);
+	end
+	giq_option(7, 44, 181, Gizmo25, 49);
+	giq_option(4, 44, 182, Gizmo32, 50);
+	giq_option(4, 44, 224, Gizmo26, 49);
+end
+
+procedure Gizmo25
+begin
+	gsay_reply(44, 183);
+	giq_option(7, 44, 184, Gizmo26, 50);
+	giq_option(4, 44, 185, Gizmo26, 50);
+end
+
+procedure Gizmo26
+begin
+	gsay_reply(44, 186);
+	giq_option(7, 44, 187, Gizmo27, 50);
+	giq_option(4, 44, 188, Gizmo30, 50);
+	giq_option(4, 44, 189, Gizmo27, 50);
+end
+
+procedure Gizmo27
+begin
+	gsay_reply(44, 190);
+	giq_option(6, 44, 191, Gizmo34, 51);
+	giq_option(6, 44, 192, Gizmo28, 50);
+	giq_option(4, 44, 225, Gizmo28, 50);
+end
+
+procedure Gizmo28
+begin
+	gsay_reply(44, 193);
+	if (global_var(HIRED_BY_KILLIAN) == 1) then begin
+		/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 104)) then begin
+			set_global_var(GOT_CONFESSION, 1);
+		end
+	end
+	giq_option(6, 44, 194, Gizmo29, 50);
+	giq_option(4, 44, 195, Gizmo29, 50);
+	giq_option(4, 44, 196, Gizmo30, 51);
+	giq_option(4, 44, 197, Gizmo30, 50);
+end
+
+procedure Gizmo29
+begin
+	set_global_var(HIRED_BY_GIZMO, 1);
+	gsay_message(44, 198, 50);
+	call Gizmox;
+end
+
+procedure Gizmo30
+begin
+	gsay_message(44, 199, 51);
+	call Gizmox1;
+end
+
+procedure Gizmo32
+begin
+	gsay_message(44, 200, 51);
+	call Gizmox2;
+end
+
+procedure Gizmo33
+begin
+	gsay_reply(44, 201);
+	giq_option(5, 44, 202, Gizmo25, 50);
+	giq_option(4, 44, 203, Gizmo32, 50);
+end
+
+procedure Gizmo34
+begin
+	gsay_message(44, 204, 50);
+	call Gizmox1;
+end
+
+procedure Gizmo35
+begin
+	gsay_message(44, 205, 51);
+	call Gizmox1;
+end
+
+procedure Gizmo36
+begin
+	gsay_message(44, 206, 50);
+end
+
+procedure Gizmo37
+begin
+	gsay_message(44, 207, 50);
+end
+
+procedure Gizmo38
+begin
+	gsay_message(44, 208, 50);
+end
+
+procedure Gizmo39
+begin
+	gsay_message(44, 209, 50);
+end
+
+procedure Gizmo42
+begin
+	gsay_message(44, 210, 50);
+end
+
+procedure Gizmo43
+begin
+	gsay_message(44, 211, 50);
+end
+
+procedure Gizmo44
+begin
+	gsay_message(44, 212, 50);
+end
+
+procedure Gizmo45
+begin
+	Gizmo_is_angry := 1;
+	set_local_var(8, 1);
+	stealing := 0;
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(44, 213, 50);
+	end
+	else begin
+		gsay_message(44, 214, 50);
+	end
+end
+
+procedure Gizmo47
+begin
+	gsay_message(44, 215, 50);
+end
+
+procedure Gizmo48
+begin
+	gsay_message(44, 216, 50);
+end
+
+procedure Gizmo19a
+begin
+	call DownReactLevel;
+	call Gizmo11;
+end
+
+procedure Gizmox
+begin
+	set_global_var(GIZMO_NICE_SHOWDOOR, 1);
+	show_to_door := 1;
+end
+
+procedure Gizmox1
+begin
+	Gizmo_is_angry := 1;
+	set_local_var(8, 1);
+end
+
+procedure Gizmox2
+begin
+	set_local_var(8, 1);
+end
+
+procedure GizmoPay
+begin
+	payment := local_var(7);
+	set_local_var(9, 1);
+end
+
+procedure badmouth
+begin
+	set_local_var(5, local_var(5) + 1);
+	if (local_var(5) > 1) then begin
+		call Gizmo11;
+	end
+	else begin
+		call Gizmo10;
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

@@ -1,0 +1,364 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_enter_p_proc;//    script_action == 15
+procedure talk_p_proc;//    script_action == 11
+procedure look_at_p_proc;//    script_action == 21
+procedure use_p_proc;//    script_action == 6
+
+procedure Dealer00;
+procedure Dealer01;
+procedure Dealer02;
+procedure Dealer03;
+procedure Dealer04;
+procedure Dealer05;
+procedure Dealer06;
+procedure Dealer07;
+procedure CheckMoney00;
+procedure CheckMoney01;
+procedure CheckMoney02;
+procedure CheckMoney03;
+procedure CheckMoney04;
+procedure DealerEnd;
+procedure GetOdds;
+
+variable Bet;
+variable Only_Once := 1;
+variable Slot_Str;
+
+//by Sduibek, for Fallout Fixt
+variable BonusCaps;
+
+
+procedure start
+begin
+	if Only_Once then begin
+		Only_Once := 0;
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 38);
+/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 50);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+			call talk_p_proc;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				call use_p_proc;
+			end
+			else begin
+				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+					call map_enter_p_proc;
+				end
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if (cur_map_index == 11) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		if ((global_var(GIZMO_DEAD) == 1) or (global_var(CAPTURE_GIZMO) == 2)) then begin
+			destroy_object(self_obj);
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	start_gdialog(697, self_obj, 4, -1, -1);
+	gsay_start;
+	call Dealer00;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(697, 169));
+end
+
+procedure use_p_proc
+begin
+	script_overrides;
+	dialogue_system_enter;
+end
+
+procedure Dealer00
+begin
+	Slot_Str := message_str(697, 202) + item_caps_total(dude_obj) + message_str(697, 203);
+	gsay_reply(697, Slot_Str);
+	giq_option(4, 697, 190, CheckMoney00, 50);
+	giq_option(4, 697, 191, CheckMoney01, 50);
+	giq_option(4, 697, 192, CheckMoney02, 50);
+	giq_option(4, 697, 193, CheckMoney03, 50);
+	giq_option(4, 697, 194, CheckMoney04, 50);
+	giq_option(4, 697, 195, DealerEnd, 50);
+	giq_option(-3, 697, 107, Dealer01, 50);
+end
+
+procedure Dealer01
+begin
+	gsay_message(697, message_str(697, 180) + message_str(697, 181), 50);
+end
+
+procedure Dealer02
+begin
+	if (BonusCaps >= 1) then begin
+		item_caps_adjust(dude_obj, BonusCaps);
+		if (BonusCaps == 1) then begin
+			gsay_reply(697, message_str(697, 205) + BonusCaps + message_str(697, 211) + " " + message_str(697, 204));
+		end
+		else begin
+			gsay_reply(697, message_str(697, 205) + BonusCaps + message_str(697, 206) + " " + message_str(697, 204));
+		end
+	end
+	else begin
+		gsay_reply(697, message_str(697, 182) + " " + message_str(697, 204));
+	end
+	item_caps_adjust(dude_obj, (Bet * -1));
+	call Dealer07;
+end
+
+procedure Dealer03
+begin
+	if (BonusCaps >= 1) then begin
+		item_caps_adjust(dude_obj, BonusCaps);
+		if (BonusCaps == 1) then begin
+			gsay_reply(697, message_str(697, 207) + BonusCaps + message_str(697, 212) + " " + message_str(697, 204));
+		end
+		else begin
+			gsay_reply(697, message_str(697, 207) + BonusCaps + message_str(697, 210) + " " + message_str(697, 204));
+		end
+	end
+	else begin
+		gsay_reply(697, message_str(697, 183) + " " + message_str(697, 204));
+	end
+	call Dealer07;
+end
+
+procedure Dealer04
+begin
+	if (BonusCaps >= 1) then begin
+		item_caps_adjust(dude_obj, BonusCaps);
+		if (BonusCaps == 1) then begin
+			gsay_reply(697, message_str(697, 208) + BonusCaps + message_str(697, 212) + " " + message_str(697, 204));
+		end
+		else begin
+			gsay_reply(697, message_str(697, 208) + BonusCaps + message_str(697, 210) + " " + message_str(697, 204));
+		end
+	end
+	else begin
+		gsay_reply(697, message_str(697, 184) + " " + message_str(697, 204));
+	end
+	item_caps_adjust(dude_obj, Bet);
+	call Dealer07;
+end
+
+procedure Dealer05
+begin
+	if (BonusCaps >= 1) then begin
+		item_caps_adjust(dude_obj, BonusCaps);
+		if (BonusCaps == 1) then begin
+			gsay_reply(697, message_str(697, 209) + BonusCaps + message_str(697, 212) + " " + message_str(697, 204));
+		end
+		else begin
+			gsay_reply(697, message_str(697, 209) + BonusCaps + message_str(697, 210) + " " + message_str(697, 204));
+		end
+	end
+	else begin
+		gsay_reply(697, message_str(697, 185) + " " + message_str(697, 204));
+	end
+	item_caps_adjust(dude_obj, (Bet * 2));
+	call Dealer07;
+end
+
+procedure Dealer06
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(697, 186, 50);
+	end
+	else begin
+		gsay_message(697, 187, 50);
+	end
+end
+
+procedure Dealer07
+begin
+	giq_option(4, 697, 114, Dealer00, 50);
+	giq_option(4, 697, 178, DealerEnd, 50);
+end
+
+procedure CheckMoney00
+begin
+	Bet := 1;
+	if (item_caps_total(dude_obj) < Bet) then begin
+		call Dealer06;
+	end
+	else begin
+		call GetOdds;
+	end
+end
+
+procedure CheckMoney01
+begin
+	Bet := 2;
+	if (item_caps_total(dude_obj) < Bet) then begin
+		call Dealer06;
+	end
+	else begin
+		call GetOdds;
+	end
+end
+
+procedure CheckMoney02
+begin
+	Bet := 3;
+	if (item_caps_total(dude_obj) < Bet) then begin
+		call Dealer06;
+	end
+	else begin
+		call GetOdds;
+	end
+end
+
+procedure CheckMoney03
+begin
+	Bet := 4;
+	if (item_caps_total(dude_obj) < Bet) then begin
+		call Dealer06;
+	end
+	else begin
+		call GetOdds;
+	end
+end
+
+procedure CheckMoney04
+begin
+	Bet := 5;
+	if (item_caps_total(dude_obj) < Bet) then begin
+		call Dealer06;
+	end
+	else begin
+		call GetOdds;
+	end
+end
+
+procedure DealerEnd
+begin
+end
+
+procedure GetOdds
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	game_time_advance(10 * 60 * Bet);
+	LVar0 := (random(0, 20) - 5);
+	LVar1 := roll_vs_skill(dude_obj, 16, (-35 + get_critter_stat(dude_obj, 6)));
+	if (is_critical(LVar1)) then begin
+		LVar2 := (random(1, 100));
+		if (LVar2 >= 95) then begin
+			LVar0 := (LVar0 - 999);
+		end
+		else begin
+			if (is_success(LVar1)) then begin
+				LVar0 := (LVar0 + 999);
+			end
+			else begin
+				LVar0 := (LVar0 - 999);
+			end
+		end
+	end
+	else begin
+		if (is_success(LVar1)) then begin
+			LVar0 := (LVar0 + 15);
+		end
+		else begin
+			LVar0 := (LVar0 - 10);
+		end
+	end
+	if (is_success(do_check(dude_obj, 6, -10))) then begin
+		BonusCaps := random(0, 6);
+	end
+	else begin
+		if (is_success(do_check(dude_obj, 6, -9))) then begin
+			BonusCaps := random(0, 5);
+		end
+		else begin
+			if (is_success(do_check(dude_obj, 6, -8))) then begin
+				BonusCaps := random(0, 5) + Bet;
+			end
+			else begin
+				if (is_success(do_check(dude_obj, 6, -7))) then begin
+					BonusCaps := random(0, 4) + Bet;
+				end
+				else begin
+					if (is_success(do_check(dude_obj, 6, -6))) then begin
+						BonusCaps := random(0, 4) + Bet;
+					end
+					else begin
+						if (is_success(do_check(dude_obj, 6, -5))) then begin
+							BonusCaps := random(0, 3) + Bet;
+						end
+						else begin
+							if (is_success(do_check(dude_obj, 6, -4))) then begin
+								BonusCaps := random(0, 3) + Bet;
+							end
+							else begin
+								if (is_success(do_check(dude_obj, 6, -3))) then begin
+									BonusCaps := random(0, 2) + Bet;
+								end
+								else begin
+									if (is_success(do_check(dude_obj, 6, -2))) then begin
+										BonusCaps := random(0, 2) + Bet;
+									end
+									else begin
+										if (is_success(do_check(dude_obj, 6, -1))) then begin
+											BonusCaps := random(-5, 0) + Bet;
+										end
+										else begin
+											if (is_success(do_check(dude_obj, 6, 0))) then begin
+												BonusCaps := random(-5, 0) + Bet;
+											end
+											else begin
+												BonusCaps := 0;
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	if (LVar0 < 10) then begin
+		call Dealer02;
+	end
+	else begin
+		if (LVar0 < 20) then begin
+			call Dealer03;
+		end
+		else begin
+			if (LVar0 < 30) then begin
+				call Dealer04;
+			end
+			else begin
+				call Dealer05;
+			end
+		end
+	end
+	gfade_in(1);
+end
+

@@ -1,0 +1,76 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure turn_field_off;
+
+import variable field_change;
+
+
+procedure start
+begin
+	display_msg("FieldGen: tile_num " + tile_num(self_obj) + ", elevation " + elevation(self_obj) + ", map " + cur_map_index);
+	if (script_action == 7) then begin//<-- use_obj_on_p_proc
+		call use_obj_on_p_proc;
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			call use_skill_on_p_proc;
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_pid(obj_being_used_with) == 75) then begin
+		script_overrides;
+		if (is_success(roll_vs_skill(dude_obj, 13, 0))) then begin
+			call turn_field_off;
+		end
+		else begin
+			display_msg(message_str(741, 100));
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 13) then begin//-- REPAIR
+		script_overrides;
+		if (is_success(roll_vs_skill(dude_obj, 13, -20))) then begin
+			call turn_field_off;
+		end
+		else begin
+			display_msg(message_str(741, 100));
+		end
+	end
+end
+
+procedure turn_field_off
+begin
+	field_change := "off";
+	display_msg(message_str(741, 101));
+	if (cur_map_index == 31) then begin //  MILITARY BASE - STRONGHOLD (LEVELS 1 AND 2)
+		if (elevation(self_obj) == 0) then begin
+			if (tile_num(self_obj) == 15581) then begin
+				use_obj(map_var(4));
+			end
+			else begin
+				if (tile_num(self_obj) == 19124) then begin
+					use_obj(map_var(5));
+				end
+				else begin
+					if (tile_num(self_obj) == 25098) then begin
+						use_obj(map_var(6));
+					end
+				end
+			end
+		end
+	end
+	else begin
+		if (cur_map_index == 32) then begin //  MILITARY BASE -  VATS  (LEVELS 3 AND 4)
+		end
+	end
+end
+

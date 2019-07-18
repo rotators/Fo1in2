@@ -1,0 +1,148 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure talk_p_proc;//    script_action == 11
+procedure critter_p_proc;//    script_action == 12
+procedure robot00;
+procedure robot01;
+procedure robot02;
+procedure robotend;
+procedure robotcbt;
+variable HOSTILE;
+variable Only_Once := 1;
+variable DISGUISED;
+variable again;
+variable rndx;
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 55);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 71);
+	end
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		call talk_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			HOSTILE := 1;
+		end
+		else begin
+			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+				call critter_p_proc;
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	set_local_var(1, local_var(1) + 1);
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+		if (metarule(16, 0) > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+			DISGUISED := 0;
+		end
+		else begin
+			DISGUISED := 1;
+		end
+	end
+	if (DISGUISED) then begin
+		if (local_var(1) < 2) then begin
+			call robot00;
+		end
+		else begin
+			call robot02;
+		end
+	end
+	else begin
+		call robot01;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		HOSTILE := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			DISGUISED := 0;
+			if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+				if (metarule(16, 0) > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+					DISGUISED := 0;
+				end
+				else begin
+					DISGUISED := 1;
+				end
+			end
+			if ((DISGUISED == 0) and (again == 0)) then begin
+				if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+					again := 1;
+					dialogue_system_enter;
+				end
+			end
+		end
+	end
+end
+
+procedure robot00
+begin
+	float_msg(self_obj, message_str(530, 100), 7);
+end
+
+procedure robot01
+begin
+	rndx := random(1, 4);
+	if (rndx == 1) then begin
+		float_msg(self_obj, message_str(530, 101), 2);
+	end
+	else begin
+		if (rndx == 2) then begin
+			float_msg(self_obj, message_str(530, 102), 2);
+		end
+		else begin
+			if (rndx == 3) then begin
+				float_msg(self_obj, message_str(530, 103), 2);
+			end
+			else begin
+				float_msg(self_obj, message_str(530, 104), 2);
+			end
+		end
+	end
+	call robotcbt;
+end
+
+procedure robot02
+begin
+	rndx := random(1, 2);
+	if rndx == 1 then begin
+		float_msg(self_obj, message_str(530, 103), 2);
+	end
+	else begin
+		float_msg(self_obj, message_str(530, 105), 2);
+	end
+	call robotcbt;
+end
+
+procedure robotend
+begin
+end
+
+procedure robotcbt
+begin
+	HOSTILE := 1;
+end
+

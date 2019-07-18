@@ -1,0 +1,1183 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure combat_p_proc;//    script_action == 13
+procedure critter_p_proc;//    script_action == 12
+procedure damage_p_proc;//    script_action == 14
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure description_p_proc;//    script_action == 3
+procedure destroy_p_proc;//    script_action == 18
+
+procedure overend;
+procedure overcbt;
+procedure over00;
+procedure over01;
+procedure over01a;
+procedure over02;
+procedure over03;
+procedure over04;
+procedure over05;
+procedure over06;
+procedure over07;
+procedure over08;
+procedure over09;
+procedure over10;
+procedure over12;
+procedure over13;
+procedure over14;
+procedure over16;
+procedure over19;
+procedure over20;
+procedure over21;
+procedure over22;
+procedure over23;
+procedure over24;
+procedure over25;
+procedure over26;
+procedure over27;
+procedure over28;
+procedure over29;
+procedure over30;
+procedure over31;
+procedure over32;
+procedure over33;
+procedure over34;
+procedure over34_1;
+procedure over37;
+procedure over38;
+procedure over38a;
+procedure over39;
+procedure over40;
+procedure over41;
+procedure over41a;
+procedure over42;
+procedure over43;
+procedure over44;
+procedure over45;
+procedure over46;
+procedure over47;
+procedure over48;
+procedure over49;
+procedure over50;
+procedure over51;
+procedure over52;
+procedure over53;
+procedure over54;
+procedure over55;
+procedure over58;
+procedure over59;
+procedure over60;
+procedure over61;
+procedure over61a;
+procedure over62;
+procedure over63;
+procedure over64;
+procedure over66;
+procedure over68;
+procedure over69;
+procedure over70;
+procedure over71;
+procedure over72;
+procedure over73;
+procedure over74;
+procedure over75;
+procedure over76;
+procedure over77;
+procedure over78;
+procedure over79;
+procedure over80;
+procedure over81;
+procedure Over81b;
+procedure Over81c;
+procedure Over81d;
+procedure Over81e;
+procedure over100;
+procedure over200;
+procedure over201;
+procedure over202;
+procedure over203;
+
+variable rndx;
+variable rndy;
+variable rndz;
+variable HOSTILE;
+variable HEREBEFORE;
+variable stealing;
+variable SEED;
+variable Visits_without_chip := 1;
+variable Visits_with_caravans := 1;
+variable Visits_master_alive := 1;
+variable Visits_with_chip := 1;
+variable Visits_vats_blown := 1;
+variable initialized := 0;
+
+import variable Ian_ptr;
+import variable vault_door_ptr;// from EndGame Mod by Corpse
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if (cur_map_index == 6) and (global_var(VAULT_13_WAS_INVADED) == 1) then begin//		<-- Vault13 and invaded
+		if (local_var(9) != 1) then begin
+			set_local_var(9, 1);//		<-- only once
+			if (metarule(22, 0) == 0) then begin//		<-- if not during a Game_Load,
+				set_obj_visibility(self_obj, 0);//		     make sure critter is visibile
+			end
+			move_to(self_obj, 21062, 2);// still doesn't line up properly with pedastal!!!!!
+			debug_msg("Vault 13 invasion, killing OVER.SSL with DeathType " + 63 + ".  ");
+			kill_critter(self_obj, 63);// otherwise get "can't match fid!" errors
+		end
+	end
+	else begin
+		if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+			if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+				if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+					if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+					if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+						variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+					set_local_var(12, 1);
+				end
+			end
+		end
+		if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+			call combat_p_proc;
+		end
+		else begin
+			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+				call critter_p_proc;
+			end
+			else begin
+				if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+					call damage_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+					else begin
+						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+							call look_at_p_proc;
+						end
+						else begin
+							if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+								call map_enter_p_proc;
+							end
+							else begin
+								if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+									call pickup_p_proc;
+								end
+								else begin
+									if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+										call talk_p_proc;
+									end
+									else begin
+										if (script_action == 8) then begin//<-- use_skill_on_p_proc
+											call use_skill_on_p_proc;
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat_p_proc
+begin
+	if (fixed_param == 4) then begin
+			variable LVar0 := 0;
+			/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 36) <= 3) then begin
+			LVar0 := create_object_sid(36, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, LVar0, 6);
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		HOSTILE := 0;
+		//attack_complex(dude_obj, 0, 1, 100, 250, 300, 0, 128);
+	end
+	else begin
+		if ((global_var(VAULT_13_HOSTILE) == 1) and (global_var(OVERSEER_END_SEQ) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+			if (local_var(8) == 0) then begin
+				dialogue_system_enter;
+			end
+		end
+		else begin
+			if (global_var(OVERSEER_END_SEQ) == 1) then begin
+				game_ui_disable;
+				animate_move_obj_to_tile(self_obj, 18690, 0);
+				set_global_var(OVERSEER_END_SEQ, 2);
+			end
+			else begin
+				if (global_var(OVERSEER_END_SEQ) == 2) then begin
+					if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) > 4)) then begin
+						animate_move_obj_to_tile(dude_obj, 19290, 0);
+					end
+					else begin
+						if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
+							game_ui_enable;
+							dialogue_system_enter;
+						end
+					end
+				end
+				else begin
+					if ((global_var(OVERSEER_END_SEQ) == 3) and (global_var(OVERSEER_KILLED) == 0)) then begin
+						animate_move_obj_to_tile(self_obj, 17290, 0);
+						set_global_var(OVERSEER_END_SEQ, 4);
+					end
+					else begin
+						if ((global_var(OVERSEER_END_SEQ) == 4) and (global_var(OVERSEER_KILLED) == 0)) then begin
+							animate_move_obj_to_tile(self_obj, 17290, 0);
+							if (tile_num(self_obj) != 17290) then begin
+								add_timer_event(vault_door_ptr, game_ticks(1), 2);
+							end
+							set_global_var(OVERSEER_END_SEQ, 5);
+							animate_move_obj_to_tile(self_obj, 15690, 0);
+						end
+						else begin
+							if ((global_var(OVERSEER_END_SEQ) == 5) and (global_var(OVERSEER_KILLED) == 0)) then begin
+								if (tile_num(self_obj) != 15690) then begin
+									set_global_var(OVERSEER_END_SEQ, 6);
+								end
+							end
+							else begin
+								if ((global_var(OVERSEER_END_SEQ) == 6) and (global_var(OVERSEER_KILLED) == 0)) then begin
+									animate_move_obj_to_tile(self_obj, 13690, 0);
+								end
+								else begin
+									if (global_var(VATS_BLOWN) and global_var(MASTER_BLOWN) and (local_var(6) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+										if (global_var(OVERSEER_END_SEQ) == 0) then begin
+											dialogue_system_enter;
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if (global_var(OVERSEER_END_SEQ) < 1) then begin
+		if source_obj == dude_obj then begin
+			set_global_var(VAULT_13_HOSTILE, 1);
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(55, 100));
+end
+
+procedure map_enter_p_proc
+begin
+	critter_add_trait(self_obj, 1, 6, 1);
+	if (global_var(OVERSEER_KILLED) == 1) then begin
+		destroy_object(self_obj);
+//		create_object_sid(33555341, 21062, 2, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	stealing := 1;
+	dialogue_system_enter;
+end
+
+procedure talk_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	start_gdialog(55, self_obj, 4, 1, 10);
+	gsay_start;
+	SEED := 0;
+	if (global_var(VATS_BLOWN) and global_var(MASTER_BLOWN) and (global_var(GAME_CONTINUES) < 1)) then begin
+		call over81;
+	end
+	else begin
+		if (global_var(VAULT_13_HOSTILE)) then begin
+			call over72;
+		end
+		else begin
+			if (stealing) then begin
+				call over71;
+			end
+			else begin
+				if (global_var(QUEST_VAULT13_4_WATERCHIP) == 0) then begin
+					/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 55)) then begin
+						call over28;
+					end
+					else begin
+						if (Visits_without_chip == 1) then begin
+							call over07;
+						end
+						else begin
+							if (Visits_without_chip == 2) then begin
+								call over12;
+							end
+							else begin
+								if (Visits_without_chip > 2) then begin
+									call over19;
+								end
+							end
+						end
+						Visits_without_chip := Visits_without_chip + 1;
+					end
+				end
+				else begin
+					if (global_var(QUEST_VAULT13_4_WATERCHIP) == 1) then begin
+						/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 55)) then begin
+							call over28;
+						end
+						else begin
+							if (Visits_with_caravans == 1) then begin
+								call over73;
+							end
+							else begin
+								if (Visits_with_caravans > 1) then begin
+									call over80;
+								end
+							end
+						end
+						Visits_with_caravans := Visits_with_caravans + 1;
+					end
+					else begin
+						if (not(global_var(VATS_BLOWN))) then begin
+							if (global_var(MASTER_BLOWN)) then begin
+								call over54;
+							end
+							else begin
+								if (Visits_master_alive == 1) then begin
+									call over42;
+								end
+								else begin
+									call over50;
+								end
+							end
+							Visits_master_alive := Visits_master_alive + 1;
+						end
+						else begin
+							if (global_var(MASTER_BLOWN)) then begin
+								call over81;
+							end
+							else begin
+								if (Visits_vats_blown == 1) then begin
+									call over62;
+								end
+								else begin
+									call over68;
+								end
+							end
+							Visits_vats_blown := Visits_vats_blown + 1;
+						end
+					end
+				end
+			end
+		end
+	end
+	gsay_end;
+	end_dialogue;
+	if (Ian_ptr != 0) then begin
+		if (local_var(7) == 0) then begin
+			float_msg(Ian_ptr, message_str(235, 171), 0);
+			set_local_var(7, 1);
+		end
+	end
+	if (local_var(4) == 1) then begin
+		LVar0 := obj_carrying_pid_obj(dude_obj, 55);
+		rm_obj_from_inven(dude_obj, LVar0);
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		gfade_out(1);
+		display_msg(message_str(55, 252));
+		give_exp_points(7500);
+		set_local_var(4, 2);
+		move_to(dude_obj, 21135, 2);
+		display_msg(message_str(163, 117));
+		gfade_in(1);
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 10) then begin//-- STEAL
+		script_overrides;
+		stealing := 1;
+		dialogue_system_enter;
+	end
+end
+
+procedure description_p_proc
+begin
+end
+
+procedure overend
+begin
+end
+
+procedure overcbt
+begin
+	HOSTILE := 1;
+end
+
+procedure over00
+begin
+	HEREBEFORE := 1;
+	gsay_message(55, 101, 50);
+	gsay_message(55, 102, 50);
+	call over01;
+end
+
+procedure over01
+begin
+	gsay_message(55, 103, 50);
+	call over04;
+end
+
+procedure over01a
+begin
+	gsay_message(55, 104, 50);
+end
+
+procedure over02
+begin
+	gsay_message(55, 105, 50);
+	call over04;
+end
+
+procedure over03
+begin
+	gsay_message(55, 106, 50);
+	call over04;
+end
+
+procedure over04
+begin
+	gsay_message(55, 107, 50);
+	gsay_message(55, 108, 50);
+	call over05;
+end
+
+procedure over05
+begin
+	gsay_message(55, 109, 50);
+	call over06;
+end
+
+procedure over06
+begin
+	set_global_var(WORLDMAPLIST_VAULT_15, 1);
+	gsay_message(55, 110, 50);
+end
+
+procedure over07
+begin
+	gsay_reply(55, 111);
+	giq_option(7, 55, 112, over10, 51);
+	giq_option(6, 55, 113, over09, 50);
+	giq_option(4, 55, 114, over08, 50);
+	giq_option(-3, 55, 115, over08, 50);
+end
+
+procedure over08
+begin
+	gsay_reply(55, 116);
+	giq_option(4, 55, 260, overend, 50);
+end
+
+procedure over09
+begin
+	gsay_reply(55, 117);
+	giq_option(4, 55, 118, over08, 50);
+end
+
+procedure over10
+begin
+	gsay_reply(55, 119);
+	giq_option(4, 55, 120, over08, 50);
+end
+
+procedure over12
+begin
+	gsay_reply(55, 121);
+	giq_option(4, 55, 122, over13, 50);
+	giq_option(5, 55, 123, over14, 50);
+	giq_option(4, 55, 124, over16, 51);
+	giq_option(-3, 55, 125, over16, 51);
+end
+
+procedure over13
+begin
+	gsay_message(55, 126, 50);
+end
+
+procedure over14
+begin
+	gsay_reply(55, 127);
+	giq_option(6, 55, 128, overend, 50);
+end
+
+procedure over16
+begin
+	gsay_message(55, 129, 50);
+end
+
+procedure over19
+begin
+	gsay_reply(55, 130);
+	giq_option(5, 55, 131, over21, 51);
+	giq_option(6, 55, 132, over22, 50);
+	giq_option(4, 55, 133, over20, 50);
+	giq_option(-3, 55, 134, over20, 50);
+end
+
+procedure over20
+begin
+	gsay_message(55, 135, 50);
+end
+
+procedure over21
+begin
+	gsay_message(55, 136, 51);
+end
+
+procedure over22
+begin
+	gsay_reply(55, 137);
+	giq_option(6, 55, 138, over23, 50);
+	if (not(local_var(5))) then begin
+		giq_option(6, 55, 139, over24, 50);
+	end
+	giq_option(6, 55, 140, over25, 50);
+end
+
+procedure over23
+begin
+	gsay_message(55, 141, 50);
+end
+
+procedure over24
+begin
+	variable LVar0 := 0;
+	set_local_var(5, 1);
+	LVar0 := create_object_sid(40, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	LVar0 := create_object_sid(40, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	LVar0 := create_object_sid(29, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	LVar0 := create_object_sid(29, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	gsay_message(55, 142, 50);
+end
+
+procedure over25
+begin
+	gsay_reply(55, 143);
+	giq_option(5, 55, 144, over26, 50);
+	giq_option(5, 55, 145, over27, 50);
+end
+
+procedure over26
+begin
+	gsay_reply(55, 146);
+	giq_option(5, 55, 147, overend, 50);
+	giq_option(6, 55, 148, overend, 50);
+end
+
+procedure over27
+begin
+	gsay_message(55, 149, 50);
+end
+
+procedure over28
+begin
+	gsay_reply(55, 150);
+	giq_option(4, 55, 151, over31, 50);
+	giq_option(6, 55, 152, over34, 50);
+	giq_option(-3, 55, 153, over37, 50);
+end
+
+procedure over29
+begin
+	gsay_message(55, 154, 50);
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 55)) then begin
+		call over31;
+	end
+	else begin
+		call over30;
+	end
+end
+
+procedure over30
+begin
+	gsay_message(55, 155, 50);
+	giq_option(4, 55, 164, over31, 50);
+	giq_option(4, 55, 165, over30, 50);
+end
+
+procedure over31
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	Visits_with_chip := Visits_with_chip + 1;
+	set_global_var(QUEST_VAULT13_4_WATERCHIP, 2);
+	if (global_var(QUEST_VAULT13_1_REBELS) != 2) then begin
+		set_global_var(QUEST_VAULT13_1_REBELS, 3);
+	end
+	if (global_var(QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
+		set_global_var(QUEST_VAULT13_5_WTR_THIEF, 3);
+	end
+	set_local_var(4, 1);
+	LVar0 := obj_carrying_pid_obj(dude_obj, 55);
+	destroy_object(LVar0);
+	LVar1 := obj_carrying_pid_obj(dude_obj, 55);
+	destroy_object(LVar1);
+	gsay_reply(55, 156);
+	giq_option(6, 55, 157, over32, 50);
+	giq_option(4, 55, 158, over33, 50);
+end
+
+procedure over32
+begin
+	gsay_reply(55, 159);
+	giq_option(4, 55, 160, overend, 50);
+end
+
+procedure over33
+begin
+	gsay_reply(55, 161);
+	giq_option(4, 55, 162, overend, 50);
+end
+
+procedure over34
+begin
+	gsay_reply(55, 163);
+	giq_option(4, 55, 164, over31, 50);
+	giq_option(4, 55, 165, over30, 50);
+end
+
+procedure over34_1
+begin
+end
+
+procedure over37
+begin
+	gsay_reply(55, 166);
+	giq_option(0, 55, 196, over38, 50);
+end
+
+procedure over38
+begin
+	gsay_reply(55, 167);
+	giq_option(0, 55, 196, over38a, 50);
+end
+
+procedure over38a
+begin
+	gsay_reply(55, 168);
+	giq_option(0, 55, 196, over39, 50);
+end
+
+procedure over39
+begin
+	gsay_reply(55, 169);
+	giq_option(0, 55, 196, over40, 50);
+end
+
+procedure over40
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	Visits_with_chip := Visits_with_chip + 1;
+	set_global_var(QUEST_VAULT13_4_WATERCHIP, 2);
+	if (global_var(QUEST_VAULT13_1_REBELS) != 2) then begin
+		set_global_var(QUEST_VAULT13_1_REBELS, 3);
+	end
+	if (global_var(QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
+		set_global_var(QUEST_VAULT13_5_WTR_THIEF, 3);
+	end
+	set_local_var(4, 1);
+	LVar0 := obj_carrying_pid_obj(dude_obj, 55);
+	destroy_object(LVar0);
+	LVar1 := obj_carrying_pid_obj(dude_obj, 55);
+	destroy_object(LVar1);
+	gsay_reply(55, 170);
+	giq_option(-3, 55, 171, over41, 50);
+	giq_option(-3, 55, 172, over41a, 50);
+end
+
+procedure over41
+begin
+	gsay_message(55, 173, 50);
+end
+
+procedure over41a
+begin
+	gsay_message(55, 174, 50);
+end
+
+procedure over42
+begin
+	set_global_var(QUEST_VAULT13_3_KILL_VATS, 1);
+	set_global_var(QUEST_VAULT13_2_MASTER, 1);
+	gsay_reply(55, 175);
+	giq_option(4, 55, 176, over43, 50);
+	giq_option(-3, 55, 177, over49, 50);
+end
+
+procedure over43
+begin
+	gsay_reply(55, 178);
+	giq_option(4, 55, 179, over44, 50);
+end
+
+procedure over44
+begin
+	gsay_reply(55, 180);
+	giq_option(4, 55, 181, over45, 50);
+	giq_option(7, 55, 182, over46, 50);
+end
+
+procedure over45
+begin
+	gsay_reply(55, 183);
+	giq_option(4, 55, 184, over47, 50);
+end
+
+procedure over46
+begin
+	gsay_reply(55, 185);
+	giq_option(6, 55, 186, over47, 50);
+end
+
+procedure over47
+begin
+	gsay_reply(55, 187);
+	giq_option(4, 55, 188, overend, 50);
+	giq_option(6, 55, 189, over48, 50);
+end
+
+procedure over48
+begin
+	gsay_message(55, 190, 50);
+end
+
+procedure over49
+begin
+	gsay_message(55, 191, 50);
+end
+
+procedure over50
+begin
+	gsay_reply(55, 192);
+	giq_option(4, 55, 193, over51, 50);
+	giq_option(6, 55, 194, over52, 50);
+	giq_option(5, 55, 195, over53, 50);
+	giq_option(-3, 55, 196, over51, 50);
+end
+
+procedure over51
+begin
+	gsay_message(55, 197, 50);
+end
+
+procedure over52
+begin
+	gsay_message(55, 198, 50);
+end
+
+procedure over53
+begin
+	gsay_message(55, 199, 50);
+end
+
+procedure over54
+begin
+	gsay_reply(55, 200);
+	giq_option(4, 55, 201, over55, 50);
+	giq_option(6, 55, 202, over55, 50);
+	giq_option(-3, 55, 203, over61, 50);
+end
+
+procedure over55
+begin
+	gsay_reply(55, 204);
+	giq_option(4, 55, 205, over60, 50);
+end
+
+procedure over58
+begin
+	gsay_message(55, 207, 50);
+end
+
+procedure over59
+begin
+	gsay_message(55, 208, 50);
+end
+
+procedure over60
+begin
+	gsay_message(55, 209, 50);
+end
+
+procedure over61
+begin
+	gsay_reply(55, 210);
+	giq_option(-3, 55, 211, over61a, 50);
+end
+
+procedure over61a
+begin
+	gsay_message(55, 212, 50);
+end
+
+procedure over62
+begin
+	gsay_reply(55, 213);
+	giq_option(4, 55, 214, over63, 50);
+	giq_option(6, 55, 215, over64, 50);
+	giq_option(-3, 55, 216, over63, 50);
+end
+
+procedure over63
+begin
+	gsay_reply(55, 217);
+	giq_option(4, 55, 218, over64, 50);
+	giq_option(-3, 55, 219, over64, 50);
+end
+
+procedure over64
+begin
+	gsay_reply(55, 220);
+	giq_option(4, 55, 221, over66, 50);
+	giq_option(-3, 55, 222, over66, 50);
+end
+
+procedure over66
+begin
+	gsay_message(55, 223, 50);
+end
+
+procedure over68
+begin
+	gsay_reply(55, 224);
+	giq_option(4, 55, 225, over69, 50);
+	giq_option(4, 55, 226, over70, 50);
+	giq_option(-3, 55, 227, over69, 50);
+end
+
+procedure over69
+begin
+	gsay_message(55, 228, 50);
+end
+
+procedure over70
+begin
+	gsay_message(55, 229, 50);
+end
+
+procedure over71
+begin
+	stealing := 0;
+	gsay_message(55, 230, 51);
+end
+
+procedure over72
+begin
+	gsay_reply(55, 231);
+	set_local_var(8, 1);
+	giq_option(4, 55, 259, overcbt, 51);
+	giq_option(-3, 55, 234, overcbt, 51);
+end
+
+procedure over73
+begin
+	gsay_reply(55, 232);
+	giq_option(4, 55, 233, over75, 50);
+	giq_option(-3, 55, 234, over74, 50);
+end
+
+procedure over74
+begin
+	gsay_message(55, 235, 50);
+end
+
+procedure over75
+begin
+	gsay_reply(55, 236);
+	giq_option(4, 55, 237, over76, 50);
+	giq_option(6, 55, 238, over77, 50);
+end
+
+procedure over76
+begin
+	gsay_message(55, 239, 50);
+end
+
+procedure over77
+begin
+	gsay_reply(55, 240);
+	giq_option(5, 55, 241, over78, 50);
+	giq_option(6, 55, 242, over79, 50);
+end
+
+procedure over78
+begin
+	gsay_message(55, 243, 50);
+end
+
+procedure over79
+begin
+	gsay_message(55, 244, 50);
+end
+
+procedure over80
+begin
+	gsay_message(55, 245, 50);
+end
+
+procedure over81
+begin
+	set_local_var(6, 1);
+	set_local_var(8, 1);
+	call TopReact;
+	gsay_reply(55, 261);
+	giq_option(0, 634, 106, Over81b, 49);
+end
+
+procedure Over81b
+begin
+	set_local_var(1, 50);
+	call LevelToReact;
+	gsay_reply(55, 262);
+	giq_option(0, 634, 106, Over81c, 51);
+end
+
+procedure Over81c
+begin
+	call BottomReact;
+	gsay_reply(55, 263);
+	giq_option(0, 634, 106, Over81d, 51);
+end
+
+procedure Over81d
+begin
+	gsay_reply(55, 264);
+	giq_option(0, 634, 106, Over81e, 51);
+end
+
+procedure Over81e
+begin
+	gsay_message(55, 265, 51);
+	set_global_var(OVERSEER_END_SEQ, 3);
+	add_timer_event(dude_obj, game_ticks(1), 5);// was 10
+end
+
+procedure over100
+begin
+	gsay_message(55, 247, 50);
+end
+
+procedure over200
+begin
+	gsay_message(55, 248, 50);
+end
+
+procedure over201
+begin
+	gsay_message(55, 249, 50);
+end
+
+procedure over202
+begin
+	gsay_message(55, 250, 50);
+end
+
+procedure over203
+begin
+	gsay_message(55, 251, 50);
+end
+
+procedure destroy_p_proc
+begin
+	if source_obj == dude_obj then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+			set_global_var(OVERSEER_KILLED, 1);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+			set_global_var(OVERSEER_KILLED, 1);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

@@ -1,0 +1,175 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure critter_p_proc;//    script_action == 12
+procedure combat_p_proc;//    script_action == 13
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure Mutant00;
+procedure Mutant01;
+procedure Mutant02;
+procedure Mutant03;
+variable Only_Once := 1;
+variable lastBabble;
+variable kill_me;
+
+
+procedure start
+begin
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 34);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 47);
+		if obj_is_carrying_obj_pid(self_obj, 196) > 0 then begin
+			variable HasDisk := 0;
+			variable NewDisk := 0;
+			HasDisk := obj_carrying_pid_obj(self_obj, 196);
+			rm_obj_from_inven(self_obj, HasDisk);
+			destroy_object(HasDisk);
+			NewDisk := create_object_sid(58, 0, 0, 641);
+			add_obj_to_inven(self_obj, NewDisk);
+			set_global_var(DCMUTANT_DISK_POINTER, NewDisk);
+		end
+		anim(self_obj, 48, 0);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+			call talk_p_proc;
+		end
+		else begin
+			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+				call critter_p_proc;
+			end
+			else begin
+				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+					call destroy_p_proc;
+				end
+				else begin
+					if (script_action == 8) then begin//<-- use_skill_on_p_proc
+						call use_skill_on_p_proc;
+					end
+					else begin
+						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+							call use_obj_on_p_proc;
+						end
+						else begin
+							if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+								call combat_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if not(local_var(5)) and (((game_time / 10) - lastBabble) >= 10) and (tile_distance_objs(self_obj, dude_obj) <= 15) then begin
+		lastBabble := game_time / 10;
+		float_msg(self_obj, message_str(848, random(111, 113)), 2);
+	end
+end
+
+procedure combat_p_proc
+begin
+	script_overrides;
+end
+
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (local_var(5) == 1) then begin
+		display_msg(message_str(848, 103));
+	end
+	else begin
+		start_gdialog(848, self_obj, 4, -1, -1);
+		gsay_start;
+		call Mutant00;
+		gsay_end;
+		end_dialogue;
+	end
+	if (kill_me == 1) then begin
+		kill_me := 0;
+		kill_critter(self_obj, 48);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	if source_obj == dude_obj then begin
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 1);
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (local_var(5) == 0) then begin
+		display_msg(message_str(848, 100));
+	end
+	else begin
+		display_msg(message_str(848, 102));
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	script_overrides;
+	dialogue_system_enter;
+end
+
+procedure use_obj_on_p_proc
+begin
+	script_overrides;
+	dialogue_system_enter;
+end
+
+procedure Mutant00
+begin
+	gsay_reply(848, 104);
+	giq_option(4, 848, 105, Mutant01, 50);
+end
+
+procedure Mutant01
+begin
+	set_global_var(MISSING_CARAVAN, 2);
+	gsay_reply(848, 106);
+	if obj_is_carrying_obj_pid(self_obj, 58) > 0 then begin
+		set_global_var(DCMUTANT_GAVE_DISK, 1);
+		rm_obj_from_inven(self_obj, global_var(DCMUTANT_DISK_POINTER));
+		add_obj_to_inven(dude_obj, global_var(DCMUTANT_DISK_POINTER));
+	end
+	giq_option(4, 848, 107, Mutant02, 50);
+end
+
+procedure Mutant02
+begin
+	gsay_reply(848, 108);
+	set_global_var(DCMUTANT_TOLD_NORTHWEST, 1);
+	giq_option(4, 848, 109, Mutant03, 50);
+end
+
+procedure Mutant03
+begin
+	set_local_var(5, 1);
+	kill_me := 1;
+	gsay_message(848, 110, 50);
+end
+

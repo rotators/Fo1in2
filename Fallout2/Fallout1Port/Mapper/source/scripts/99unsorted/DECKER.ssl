@@ -1,0 +1,649 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure PlayerQuestions;
+procedure Decker01;
+procedure Decker02;
+procedure Decker03;
+procedure Decker04;
+procedure Decker05;
+procedure Decker06;
+procedure Decker07;
+procedure Decker08;
+procedure Decker09;
+procedure Decker10;
+procedure Decker11;
+procedure Decker12;
+procedure Decker13;
+procedure Decker14;
+procedure Decker15;
+procedure Decker16;
+procedure Decker17;
+procedure Decker18;
+procedure Decker19;
+procedure Decker25;
+procedure Decker26;
+procedure Decker27;
+procedure Decker28;
+procedure Decker29;
+procedure Decker30;
+procedure Decker31;
+procedure Decker32;
+procedure Decker33;
+procedure Decker34;
+procedure Decker35;
+procedure Decker36;
+procedure DeckerEndAcceptJob1;
+procedure DeckerEndDeclineJob1;
+procedure DeckerEndAcceptJob2;
+procedure DeckerEndDeclineJob2;
+procedure DeckerEndInsult;
+procedure DeckerEndNormal;
+procedure DeckerTransport;
+
+variable hostile;
+variable Only_Once := 1;
+variable travel;
+
+import variable Kane_Ptr;
+import variable Decker_Ptr;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		Decker_Ptr := self_obj;
+		if (map_var(50) == 1) then begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		end
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 38);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 87);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (travel == 1) then begin
+		travel := 0;
+		call DeckerTransport;
+	end
+	else begin
+		if (tile_distance_objs(self_obj, dude_obj) <= 10) then begin
+			dialogue_system_enter;
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	set_global_var(DECKER_KNOWN, 1);
+	call get_reaction;
+	if ((map_var(49) == 1) or (map_var(45) != 1)) then begin
+		if (map_var(52) == 0) then begin
+			float_msg(self_obj, message_str(42, 230), 2);
+			call combat;
+		end
+		else begin
+			float_msg(self_obj, message_str(42, 231), 2);
+			call combat;
+		end
+	end
+	else begin
+		set_map_var(45, 0);
+		if (local_var(4) == 0) then begin
+			set_local_var(4, 1);
+			start_gdialog(42, self_obj, 4, 7, 3);
+			gsay_start;
+			call Decker01;
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			if (global_var(KILL_JAIN) == 2) then begin
+				start_gdialog(42, self_obj, 4, 7, 3);
+				gsay_start;
+				call Decker15;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				if (global_var(KILL_MERCHANT) == 2) then begin
+					start_gdialog(42, self_obj, 4, 7, 3);
+					gsay_start;
+					call Decker26;
+					gsay_end;
+					end_dialogue;
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	set_map_var(50, 1);
+	set_global_var(DECKER_STATUS, 1);
+	if ((map_var(49) == 1) and (map_var(50) == 1)) then begin
+		set_global_var(UNDERGROUND_STATUS, 1);
+		set_map_var(11, 1);
+		set_map_var(44, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(42, 100));
+end
+
+procedure PlayerQuestions
+begin
+	giq_option(4, 42, 144, Decker17, 50);
+	giq_option(4, 42, 145, Decker25, 50);
+	giq_option(4, 42, 146, DeckerEndNormal, 50);
+end
+
+procedure Decker01
+begin
+	gsay_reply(42, 103);
+	giq_option(4, 42, message_str(42, 104) + proto_data(obj_pid(dude_obj), 1) + message_str(42, 105), Decker02, 50);
+	giq_option(4, 42, 106, Decker13, 51);
+end
+
+procedure Decker02
+begin
+	gsay_reply(42, 107);
+	giq_option(4, 42, 108, Decker03, 50);
+	giq_option(4, 42, 109, Decker14, 50);
+end
+
+procedure Decker03
+begin
+	gsay_reply(42, 110);
+	giq_option(4, 42, 111, Decker04, 50);
+end
+
+procedure Decker04
+begin
+	gsay_reply(42, 112);
+	giq_option(4, 42, 113, Decker05, 50);
+	giq_option(4, 42, 114, Decker11, 50);
+	giq_option(4, 42, 115, Decker10, 51);
+end
+
+procedure Decker05
+begin
+	gsay_reply(42, 116);
+	giq_option(4, 42, 117, Decker06, 50);
+	giq_option(4, 42, 118, Decker10, 50);
+	giq_option(4, 42, 119, Decker06, 50);
+end
+
+procedure Decker06
+begin
+	gsay_reply(42, 120);
+	giq_option(4, 42, 121, Decker07, 50);
+end
+
+procedure Decker07
+begin
+	gsay_reply(42, 122);
+	giq_option(4, 42, 123, Decker08, 50);
+	giq_option(4, 42, 124, Decker09, 50);
+	giq_option(4, 42, 125, Decker10, 50);
+end
+
+procedure Decker08
+begin
+	gsay_message(42, 126, 50);
+	call DeckerEndAcceptJob1;
+end
+
+procedure Decker09
+begin
+	gsay_reply(42, 127);
+	giq_option(4, 42, 128, Decker08, 50);
+	giq_option(4, 42, 129, Decker10, 50);
+end
+
+procedure Decker10
+begin
+	gsay_message(42, 130, 50);
+	call DeckerEndDeclineJob1;
+end
+
+procedure Decker11
+begin
+	gsay_reply(42, 131);
+	giq_option(4, 42, 132, Decker10, 50);
+	giq_option(4, 42, 133, Decker12, 50);
+end
+
+procedure Decker12
+begin
+	gsay_message(42, 134, 50);
+	call DeckerEndAcceptJob1;
+end
+
+procedure Decker13
+begin
+	gsay_reply(42, 135);
+	giq_option(4, 42, message_str(42, 136) + proto_data(obj_pid(dude_obj), 1) + message_str(42, 137), Decker02, 50);
+	giq_option(4, 42, 138, Decker14, 50);
+end
+
+procedure Decker14
+begin
+	gsay_message(42, 139, 51);
+	call DeckerEndInsult;
+end
+
+procedure Decker15
+begin
+	gsay_reply(42, 140);
+	giq_option(4, 42, 141, Decker16, 50);
+	giq_option(4, 42, 142, DeckerEndNormal, 50);
+end
+
+procedure Decker16
+begin
+	gsay_reply(42, 143);
+	call PlayerQuestions;
+end
+
+procedure Decker17
+begin
+	gsay_reply(42, 148);
+	giq_option(4, 42, 149, Decker18, 50);
+	giq_option(4, 42, 150, Decker16, 50);
+end
+
+procedure Decker18
+begin
+	gsay_reply(42, 151);
+	giq_option(4, 42, 152, Decker19, 50);
+	giq_option(4, 42, 153, Decker16, 50);
+end
+
+procedure Decker19
+begin
+	gsay_reply(42, 154);
+	giq_option(4, 42, 155, Decker16, 50);
+end
+
+procedure Decker25
+begin
+	gsay_reply(42, 167);
+	call PlayerQuestions;
+end
+
+procedure Decker26
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(42, 232);
+	end
+	else begin
+		gsay_reply(42, 233);
+	end
+	giq_option(4, 42, 169, Decker27, 50);
+	giq_option(4, 42, 170, Decker35, 51);
+end
+
+procedure Decker27
+begin
+	gsay_reply(42, 171);
+	giq_option(4, 42, 172, Decker28, 50);
+	giq_option(4, 42, 173, Decker35, 51);
+end
+
+procedure Decker28
+begin
+	gsay_reply(42, 174);
+	giq_option(4, 42, 175, Decker29, 50);
+end
+
+procedure Decker29
+begin
+	gsay_reply(42, 176);
+	giq_option(4, 42, 177, Decker30, 50);
+	giq_option(4, 42, 178, Decker32, 51);
+end
+
+procedure Decker30
+begin
+	call UpReact;
+	gsay_reply(42, 179);
+	giq_option(4, 42, 180, Decker31, 50);
+end
+
+procedure Decker31
+begin
+	gsay_message(42, 181, 50);
+	call DeckerEndAcceptJob2;
+end
+
+procedure Decker32
+begin
+	gsay_reply(42, 182);
+	giq_option(4, 42, 183, Decker33, 50);
+	giq_option(4, 42, 184, Decker34, 50);
+end
+
+procedure Decker33
+begin
+	gsay_reply(42, 185);
+	giq_option(4, 42, 186, Decker31, 50);
+end
+
+procedure Decker34
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(42, 234, 51);
+	end
+	else begin
+		gsay_message(42, 235, 51);
+	end
+	call DeckerEndDeclineJob2;
+end
+
+procedure Decker35
+begin
+	gsay_reply(42, 188);
+	giq_option(4, 42, 189, Decker36, 50);
+	giq_option(4, 42, 190, Decker28, 50);
+end
+
+procedure Decker36
+begin
+	gsay_message(42, 191, 51);
+	call DeckerEndDeclineJob2;
+end
+
+procedure DeckerEndAcceptJob1
+begin
+	set_map_var(46, 2);
+	set_global_var(KILL_MERCHANT, 1);
+	travel := 1;
+end
+
+procedure DeckerEndDeclineJob1
+begin
+	set_map_var(46, 1);
+	set_map_var(11, 1);
+	set_global_var(KILL_MERCHANT, 0);
+	travel := 1;
+end
+
+procedure DeckerEndAcceptJob2
+begin
+	set_map_var(47, 3);
+	set_global_var(KILL_JAIN, 1);
+	travel := 1;
+end
+
+procedure DeckerEndDeclineJob2
+begin
+	set_map_var(47, 2);
+	set_map_var(11, 1);
+	set_global_var(KILL_JAIN, 0);
+	travel := 1;
+end
+
+procedure DeckerEndInsult
+begin
+	set_map_var(46, 1);
+	set_map_var(11, 1);
+	set_map_var(44, 1);
+	travel := 1;
+end
+
+procedure DeckerEndNormal
+begin
+	travel := 1;
+end
+
+procedure DeckerTransport
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	move_to(Kane_Ptr, 24336, 0);
+	move_to(dude_obj, 23736, 0);
+	anim(Kane_Ptr, 1000, rotation_to_tile(tile_num(Kane_Ptr), tile_num(dude_obj)));
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(Kane_Ptr)));
+	gfade_in(1);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

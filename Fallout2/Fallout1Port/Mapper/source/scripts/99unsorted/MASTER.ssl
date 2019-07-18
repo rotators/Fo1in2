@@ -1,0 +1,925 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure destroy_p_proc;//    script_action == 18
+procedure gameover;
+procedure giveme;
+procedure talk_p_proc;//    script_action == 11
+procedure damage_p_proc;//    script_action == 14
+procedure combat_p_proc;//    script_action == 13
+procedure map_enter_p_proc;//    script_action == 15
+procedure Critter_Action;//    script_action == 12
+procedure use_skill_on_p_proc;//    script_action == 8
+
+procedure master00;
+procedure master01;
+procedure master02;
+procedure master03;
+procedure master04;
+procedure master05;
+procedure master06;
+procedure master06_1;
+procedure master07;
+procedure master08;
+procedure master08_1;
+procedure master09;
+procedure master10;
+procedure master11;
+procedure master11_1;
+procedure master12;
+procedure master13;
+procedure master14;
+procedure master16;
+procedure master17;
+procedure master17_1;
+procedure master18;
+procedure master19;
+procedure master20;
+procedure master21;
+procedure master21_1;
+procedure master22;
+procedure master23;
+procedure master24;
+procedure master25;
+procedure master26;
+procedure master27;
+procedure master28;
+procedure master29;
+procedure master30;
+procedure master31;
+procedure master32;
+procedure master33;
+procedure master34;
+procedure master35;
+procedure master36;
+procedure master37;
+procedure master38;
+procedure master38_1;
+procedure master38_2;
+procedure master39;
+procedure master40;
+procedure master41;
+procedure master42;
+procedure master43;
+procedure master44;
+procedure master45;
+procedure master46;
+procedure master47;
+procedure master200;
+procedure master201;
+procedure master202;
+procedure master203;
+procedure mastercbt;
+procedure masterend;
+
+variable MALE;
+variable HOSTILE;
+variable DISARM;
+variable Only_Once := 1;
+variable LIEUTENANTS;
+variable everyother := 1;
+variable wimpyother := 1;
+variable so_long;
+
+import variable Master_Has_Armed;
+import variable Master_Ptr;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+variable leave;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		Master_Ptr := self_obj;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 55);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 70);
+	end
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+			call damage_p_proc;
+		end
+		else begin
+			if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+				call combat_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					if (global_var(MASTER_BLOWN) == 0) then begin
+						call talk_p_proc;
+					end
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+					else begin
+						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+							script_overrides;
+							display_msg(message_str(51, 100));
+						end
+						else begin
+							if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
+									set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
+									dialogue_system_enter;
+								end
+							end
+							else begin
+								if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+									call Critter_Action;
+								end
+								else begin
+									if (script_action == 8) then begin
+										call use_skill_on_p_proc;
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Critter_Action
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_local_var(5, 1);
+		HOSTILE := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (local_var(5)) then begin
+			if (obj_can_see_obj(self_obj, dude_obj)) then begin
+				HOSTILE := 1;
+			end
+		end
+	end
+	if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
+		if (tile_distance_objs(self_obj, dude_obj) > 10) then begin
+			set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
+			dialogue_system_enter;
+		end
+	end
+	else begin
+		if (global_var(MORPHEUS_DELIVERS_PLAYER) == 1) then begin
+		end
+		else begin
+			if (leave != 1) then begin
+				if (tile_distance_objs(self_obj, dude_obj) < 10) and (Master_Has_Armed != 1) then begin
+					dialogue_system_enter;
+				end
+			end
+		end
+	end
+end
+
+procedure gameover
+begin
+	so_long := 1;
+end
+
+procedure giveme
+begin
+	if (global_var(VREEDISK_HOLODISK_USED) == 1) or (global_var(VREE_DISK_TRACKER) == 2) or (global_var(VREE_GIVEN_DUDE_AUTOPSY) > 0) then begin// USED_DISK, DISK_REBUILT, DISK_GIVEN
+		set_global_var(VREE_GIVEN_DUDE_AUTOPSY, 2);
+		call master14;
+	end
+	else begin
+		call master13;
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_local_var(5, 1);
+		set_local_var(6, 1);
+		hostile := 1;
+		if not(combat_is_initialized) then begin
+			attack_complex(source_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+end
+
+procedure combat_p_proc
+begin
+	if (fixed_param == 4) then begin
+		variable Item := 0;
+		if (everyother == 1) then begin
+			everyother := 0;
+			if (combat_difficulty == 0) then begin
+				if (wimpyother == 1) then begin
+					wimpyother := 0;
+					set_map_var(4, 1);
+				end
+				else begin
+					wimpyother := 1;
+				end
+			end
+			else begin
+				set_map_var(4, 1);
+			end
+		end
+		else begin
+			everyother := 1;
+		end
+		if (obj_is_carrying_obj_pid(self_obj, 39) <= 2) then begin// MFC ammo
+			Item := create_object_sid(39, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, Item, 2);
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	animate_stand_obj(self_obj);
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(PREVENT_REVULSION_DAMAGE, 2);
+	set_global_var(MASTER_BLOWN, 1);
+	set_global_var(QUEST_VAULT13_2_MASTER, 2);
+	rm_timer_event(self_obj);
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 10);
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+	end
+	if (global_var(VATS_BLOWN) == 0) then begin
+		set_global_var(VATS_STATUS, 1);
+	end
+	if (global_var(COUNTDOWN_TO_DESTRUCTION) == 0) then begin
+		set_global_var(COUNTDOWN_TO_DESTRUCTION, (game_time / 10));
+		add_timer_event(dude_obj, 0, 11);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 10) then begin//-- STEAL
+		script_overrides;
+		display_msg(message_str(766, 225));
+		script_overrides;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if not(global_var(MASTER_ATTACKS)) then begin
+		if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
+			set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
+		end
+		call get_reaction;
+		start_gdialog(51, self_obj, 4, 6, 11);
+		gsay_start;
+		MALE := get_critter_stat(dude_obj, 34) == 0;
+		if (local_var(5)) then begin
+			call master203;
+		end
+		else begin
+			if (local_var(4)) then begin
+				if (global_var(BOMB_DISARMED)) then begin
+					call master46;
+				end
+				else begin
+					if (is_success(do_check(dude_obj, 3, -1))) then begin
+						call master43;
+					end
+					else begin
+						call master44;
+					end
+				end
+			end
+			else begin
+				set_local_var(4, 1);
+				call master00;
+			end
+		end
+		gsay_end;
+		end_dialogue;
+		if (so_long) then begin
+			play_gmovie(10);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops.
+			play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+			metarule(13, 0);
+		end
+	end
+end
+
+procedure master00
+begin
+	gsay_reply(51, 101);
+	giq_option(4, 51, 102, master01, 50);
+	giq_option(6, 51, 103, master04, 50);
+	giq_option(4, 51, 104, master203, 51);//<-- Combat trigger [mastercbt]
+	giq_option(5, 51, 105, master38, 50);
+	giq_option(-3, 51, 106, master42, 50);
+end
+
+procedure master01
+begin
+	gsay_reply(51, 107);
+	giq_option(4, 51, 108, master02, 50);
+	giq_option(4, 51, 109, gameover, 50);
+end
+
+procedure master02
+begin
+	gsay_reply(51, 110);
+	giq_option(4, 51, 111, master03, 51);
+	giq_option(4, 51, 112, gameover, 50);
+end
+
+procedure master03//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 113, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master04
+begin
+	gsay_reply(51, 114);
+	giq_option(6, 51, 115, master36, 50);
+	giq_option(5, 51, 116, master05, 50);
+end
+
+procedure master05
+begin
+	gsay_reply(51, 117);
+	giq_option(4, 51, 118, master06, 50);
+end
+
+procedure master06
+begin
+	gsay_reply(51, 119);
+	giq_option(6, 51, 120, master06_1, 50);
+	giq_option(4, 51, 121, master27, 51);
+end
+
+procedure master06_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call master07;
+	end
+	else begin
+		call master35;
+	end
+end
+
+procedure master07
+begin
+	gsay_reply(51, 122);
+	giq_option(7, 51, 123, master08, 50);
+	giq_option(6, 51, 124, master33, 51);
+	giq_option(5, 51, 125, master31, 50);
+end
+
+procedure master08
+begin
+	gsay_reply(51, 126);
+	giq_option(5, 51, 127, master08_1, 50);
+	giq_option(4, 51, 128, master01, 49);
+	giq_option(4, 51, 129, master203, 51);//<-- Combat trigger [mastercbt]
+end
+
+procedure master08_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -20))) then begin
+		call master09;
+	end
+	else begin
+		call master30;
+	end
+end
+
+procedure master09
+begin
+	gsay_reply(51, 130);
+	giq_option(5, 51, 131, master203, 51);//	<-- Combat trigger [mastercbt]
+	giq_option(6, 51, 132, master10, 50);
+	if (global_var(VREEDISK_HOLODISK_USED) == 1) or (global_var(VREE_DISK_TRACKER) == 2) or (global_var(VREE_GIVEN_DUDE_AUTOPSY) > 0) then begin// USED_DISK, DISK_REBUILT, DISK_GIVEN
+		giq_option(7, 51, 133, master11, 50);
+	end
+end
+
+procedure master10//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 134, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master11
+begin
+	gsay_reply(51, 135);
+	giq_option(6, 51, 136, master11_1, 50);
+	giq_option(6, 51, 137, master20, 50);
+	giq_option(4, 51, 138, master28, 50);
+end
+
+procedure master11_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call master12;
+	end
+	else begin
+		call master29;
+	end
+end
+
+procedure master12
+begin
+	gsay_reply(51, 139);
+	giq_option(6, 51, 140, giveme, 50);
+	giq_option(5, 51, 141, master26, 50);
+	giq_option(6, 51, 142, master20, 50);
+end
+
+procedure master13//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 143, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master14
+begin
+	game_time_advance(game_ticks(180));
+	gsay_reply(51, 145);
+	giq_option(5, 51, 146, master16, 50);
+	giq_option(5, 51, 147, master17, 50);
+end
+
+procedure master16//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 148, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master17
+begin
+	gsay_reply(51, 149);
+	giq_option(6, 51, 150, master17_1, 50);
+	giq_option(6, 51, 151, master18, 50);
+end
+
+procedure master17_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call master19;
+	end
+	else begin
+		call master16;
+	end
+end
+
+procedure master18//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 152, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master19
+begin
+	gsay_message(51, 153, 50);
+	set_global_var(PREVENT_REVULSION_DAMAGE, 2);
+	Master_Has_Armed := 1;
+	if (global_var(COUNTDOWN_TO_DESTRUCTION) == 0) then begin
+		set_global_var(COUNTDOWN_TO_DESTRUCTION, (game_time / 10));
+		add_timer_event(dude_obj, 0, 11);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+		set_global_var(MASTER_BLOWN, 1);
+		if (global_var(VATS_BLOWN) == 1) then begin
+			set_global_var(VATS_STATUS, 1);
+		end
+		set_global_var(QUEST_VAULT13_2_MASTER, 2);
+	end
+	set_global_var(PREVENT_REVULSION_DAMAGE, 2);
+end
+
+procedure master20
+begin
+	gsay_message(51, 154, 50);
+	call master21;
+end
+
+procedure master21
+begin
+	gsay_reply(51, 155);
+	giq_option(6, 51, 156, master25, 50);
+	giq_option(6, 51, 157, master21_1, 50);
+	giq_option(6, 51, 158, master24, 50);
+end
+
+procedure master21_1
+begin
+	if (global_var(LIEUTENANTS_DEAD) == 1) then begin
+		call master22;
+	end
+	else begin
+		call master23;
+	end
+end
+
+procedure master22//todo add extra routing----------------------
+begin
+	gsay_message(51, 159, 51);
+	call mastercbt;
+end
+
+procedure master23//todo add extra routing----------------------
+begin
+	gsay_message(51, 160, 51);
+	call mastercbt;
+end
+
+procedure master24//todo add extra routing----------------------
+begin
+	gsay_message(51, 161, 51);
+	call mastercbt;
+end
+
+procedure master25
+begin
+	gsay_reply(51, 162);
+	giq_option(6, 51, 163, master17, 50);
+	giq_option(6, 51, 164, master16, 50);
+end
+
+procedure master26
+begin
+	gsay_reply(51, 165);
+	giq_option(4, 51, 166, master203, 51);//<-- Combat trigger [mastercbt]
+	giq_option(4, 51, 167, master01, 49);
+end
+
+procedure master27
+begin
+	gsay_reply(51, 168);
+	giq_option(4, 51, 169, master203, 51);//<-- Combat trigger [mastercbt]
+	giq_option(4, 51, 170, master01, 50);
+end
+
+procedure master28//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 171, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master29//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 172, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master30
+begin
+	gsay_reply(51, 173);
+	giq_option(4, 51, 174, master203, 51);//<-- Combat trigger [mastercbt]
+	giq_option(4, 51, 175, master01, 50);
+end
+
+procedure master31
+begin
+	gsay_reply(51, 176);
+	giq_option(5, 51, 177, master32, 50);
+	giq_option(5, 51, 178, master203, 51);//<-- Combat trigger [mastercbt]
+end
+
+procedure master32
+begin
+	gsay_reply(51, 179);
+	giq_option(5, 51, 180, master203, 51);//<-- Combat trigger [mastercbt]
+	giq_option(5, 51, 181, master01, 49);
+end
+
+procedure master33
+begin
+	gsay_reply(51, 182);
+	giq_option(4, 51, 183, master34, 50);
+end
+
+procedure master34
+begin
+	gsay_reply(51, 184);
+	giq_option(4, 51, 185, master01, 50);
+	giq_option(4, 51, 186, master203, 51);//<-- Combat trigger [mastercbt]
+end
+
+procedure master35
+begin
+	gsay_reply(51, 187);
+	giq_option(4, 51, 188, master01, 50);
+	giq_option(4, 51, 189, master203, 51);//<-- Combat trigger [mastercbt]
+	giq_option(5, 51, 190, master33, 50);
+end
+
+procedure master36
+begin
+	gsay_reply(51, 191);
+	giq_option(5, 51, 192, master06, 50);
+	giq_option(5, 51, 193, master37, 51);
+end
+
+procedure master37//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 194, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master38
+begin
+	gsay_reply(51, 195);
+	giq_option(5, 51, 197, master203, 51);//	<-- Combat trigger [mastercbt]
+	if ((global_var(QUEST_BROHOOD_1_JOIN_THEM) == 1) or (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2)) then begin
+		giq_option(5, 51, 198, master38_2, 50);
+	end
+end
+
+procedure master38_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -10))) then begin
+		call master41;
+	end
+	else begin
+		call master40;
+	end
+end
+
+procedure master38_2
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call master39;
+	end
+	else begin
+		call master40;
+	end
+end
+
+procedure master39
+begin
+	leave := 1;
+	gsay_message(51, 199, 50);
+	call masterend;
+end
+
+procedure master40//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 200, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master41
+begin
+	gsay_message(51, 201, 50);
+	call masterend;
+end
+
+procedure master42//	<-- Combat trigger [mastercbt]
+begin
+//
+// STUPID CHARACTER, only response's reply.
+//
+	gsay_message(51, 202, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master43//todo add extra routing----------------------
+begin
+	gsay_message(51, 203, 51);
+	call mastercbt;
+end
+
+procedure master44
+begin
+	gsay_reply(51, 204);
+	giq_option(4, 51, 300, masterend, 50);
+	giq_option(4, 51, 205, master01, 50);
+	giq_option(4, 51, 206, master05, 51);
+end
+
+procedure master45//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 207, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master46
+begin
+	gsay_reply(51, 208);
+	giq_option(4, 51, 209, master47, 50);
+	giq_option(4, 51, 210, master203, 51);//<-- Combat trigger [mastercbt]
+end
+
+procedure master47//	<-- Combat trigger [mastercbt]
+begin
+	gsay_message(51, 211, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure master200
+begin
+	gsay_message(51, 212, 50);
+end
+
+procedure master201
+begin
+	gsay_message(51, 213, 50);
+end
+
+procedure master202
+begin
+	gsay_message(51, 214, 50);
+end
+
+procedure master203
+begin
+	gsay_message(51, 215, 51);
+	set_global_var(MASTER_ATTACKS, 1);
+	call mastercbt;
+end
+
+procedure mastercbt
+begin
+	HOSTILE := 1;
+end
+
+procedure masterend
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

@@ -1,0 +1,74 @@
+//
+// ITEM SLOT AVAILABLE	VREE.SSL	ProtoID	194	Name:	Vree's Experiment Disk
+//	Cost:	75	script:	348	VreeDisk.int   ; Holodisk w/ Vree's report
+// GVAR	166	This holodisk has been updated with medical evidence by Vree of the Brotherhood of Steel.
+
+#include "..\headers\define.h"
+
+procedure start;
+procedure NewPtr;
+
+// local_var(0) == Used (put in Pip-Boy)
+// local_var(1) == Examined (change item hoverdescrip)
+
+
+procedure start
+begin
+	if script_action == 21 then begin// 21 is look_at
+		script_overrides;
+		if (local_var(1) < 1) and (global_var(VREEDISK_HOLODISK_USED) != 1) then begin// not used or Examined yet
+			display_msg(message_str(348, 100));
+		end
+		else begin
+			display_msg(message_str(348, 104));
+		end
+	end
+	else begin
+		if script_action == 3 then begin// 3 is description (Binoculars)
+			set_local_var(1, 1);
+			display_msg(message_str(348, 103));
+		end
+		else begin
+			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				script_overrides;
+				set_local_var(1, 1);
+				if local_var(0) == 1 then begin
+					display_msg(message_str(348, 101));//Abort
+				end
+				else begin
+					set_local_var(0, 1);
+					set_global_var(VREEDISK_HOLODISK_USED, 1);
+					display_msg(message_str(348, 102));
+					display_msg(message_str(766, 103) + "135" + message_str(766, 104));// more exp, for Fallout Fixt
+					give_exp_points(135);
+				end
+			end
+		end
+	end
+	call NewPtr;
+end
+
+procedure NewPtr
+begin
+	if self_obj != 0 then begin
+		set_global_var(VREE_AUTOPSY_POINTER, self_obj);
+	end
+end
+
+//		display_msg("VREEDISK start");
+//		display_msg(" " + global_var(VREE_AUTOPSY_POINTER) + " ");
+//
+//	if global_var(VREE_GIVEN_DUDE_AUTOPSY) == 5 then begin// Disk should be destroyed already
+//		display_msg("check begins");
+//		if global_var(VREE_AUTOPSY_POINTER) > 0 then begin
+//			display_msg(" destroy_object(global_var(VREE_AUTOPSY_POINTER)) ");
+//			destroy_object(global_var(VREE_AUTOPSY_POINTER));
+//		end
+//		else begin
+//			if self_obj > 0 then begin
+//				display_msg(" destroy_object(self_obj) ");
+//				destroy_object(self_obj);
+//			end
+//		end
+//	end
+

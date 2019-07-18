@@ -1,0 +1,1431 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure damage_p_proc;//    script_action == 14
+procedure talk_p_proc;//    script_action == 11
+procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;//    script_action == 15
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+
+procedure tandi00;
+procedure tandi00_1;
+procedure tandi01;
+procedure tandi01a;
+procedure tandi02;
+procedure tandi03;
+procedure tandi04;
+procedure tandi05;
+procedure tandi06;
+procedure tandi12;
+procedure tandi13;
+procedure tandi14;
+procedure tandi15;
+procedure tandi16;
+procedure tandi20;
+procedure tandi21;
+procedure tandi22;
+procedure tandi23;
+procedure tandi24;
+procedure tandi27;
+procedure tandi28;
+procedure tandi29;
+procedure tandi30;
+procedure tandi35;
+procedure tandi36;
+procedure tandi36a;
+procedure tandi37;
+procedure tandi38;
+procedure tandi38a;
+procedure tandi38b;
+procedure tandi39;
+procedure tandi40;
+procedure tandi41;
+procedure tandi42;
+procedure tandi43;
+procedure tandi43a;
+procedure tandi43b;
+procedure tandi44;
+procedure tandi45;
+procedure tandi46;
+procedure tandi47;
+procedure tandi48;
+procedure tandi49;
+procedure tandi50;
+procedure tandi51;
+procedure tandi52;
+procedure tandi53;
+procedure tandi54;
+procedure tandi55;
+procedure tandi62;
+procedure tandi63;
+procedure tandi64;
+procedure tandi65;
+procedure tandi66;
+procedure tandi67;
+procedure tandi68;
+procedure tandi69;
+procedure tandi70;
+procedure tandi71;
+procedure tandi72;
+
+procedure tandix;
+procedure tandixx;
+procedure tandix1;
+procedure tandix2;
+procedure tandix3;
+procedure tandix4;
+procedure tandix5;
+procedure tandiend;
+
+procedure TandiSchedule;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+import variable Tandi_Ptr;
+
+variable DESTROYED;
+variable KIDNAP;
+variable ILLEGAL;
+variable ILLEGBEFORE;
+variable TRESPASS;
+variable BYE;
+variable rndx;
+variable rndy;
+variable rndz;
+variable MALE;
+variable Counter;
+variable Only_Once := 1;
+variable hostile;
+variable exit_line;
+variable critter_tile := 0;
+variable CurrentMapNum;
+variable TANDI_SELF_ID := 16777279;
+
+//---by Sduibek, for Fallout Fixt--
+procedure StepAside;
+procedure Tandi98;
+procedure Tandi99;
+procedure Tandi100;
+procedure TandiDumbChar;
+procedure TandiEndSDU;
+variable NewHex;
+
+procedure PickDeadBodyType;
+variable DeathType := 56;
+
+//variable Sex_SoundByte := 0;
+// local_var(6) == SexOnce
+// local_var(7) == ThanksOnce
+// local_var(8) == NoSex
+
+procedure TandiSex;
+procedure TandiSex1;
+procedure TandiSex2;
+procedure TandiDoesIt;
+procedure TandiSex1_end;
+procedure TandiSex2_end;
+procedure TandiSex_x;
+
+
+procedure start
+begin
+	if (global_var(SHADY_SANDS_WAS_INVADED) == 1) and (global_var(TANDI_HIRELING_STATUS) != 5) then begin
+		if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+			if (local_var(9) != 1) then begin
+				set_local_var(9, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+	else begin
+		if Only_Once then begin
+			Only_Once := 0;
+			if (cur_map_index == 25) or (cur_map_index == 26) then begin
+				/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
+			end
+			else begin
+				/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+			end
+			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 2);
+		end
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+			call map_enter_p_proc;
+		end
+		else begin
+			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+				call map_update_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+						script_overrides;
+						display_msg(message_str(57, 100));
+					end
+					else begin
+						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+							call critter_p_proc;
+						end
+						else begin
+							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+								call destroy_p_proc;
+							end
+							else begin
+								if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+									call damage_p_proc;
+								end
+								else begin
+									if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+										hostile := 1;
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		party_remove(self_obj);
+		party_remove(Tandi_ptr);
+	end
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+	end
+	set_global_var(TANDI_HIRELING_STATUS, 3);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	Tandi_ptr := 0;
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	CurrentMapNum := cur_map_index;
+	if (CurrentMapNum == 24) then begin//	RAIDERS.MAP
+		if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+			float_msg(self_obj, message_str(57, 208), 2);
+		end
+		else begin
+			call get_reaction;
+			start_gdialog(57, self_obj, 4, 9, 13);
+			gsay_start;
+			if (global_var(TANDI_HEREBEFORE_RAIDERS) == 1) then begin
+				set_global_var(TANDI_TALKED_ABOUT, 1);
+				call tandi43;
+			end
+			else begin
+				set_global_var(TANDI_HEREBEFORE_RAIDERS, 1);
+				call tandi37;
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+	else begin
+		if ((CurrentMapNum == 26) or (CurrentMapNum == 25)) then begin//	SHADY SANDS
+			call get_reaction;
+			start_gdialog(57, self_obj, 4, 9, 9);
+			gsay_start;
+			if (global_var(TANDI_HEREBEFORE_RAIDERS) == 1) then begin
+				if (global_var(TANDI_HIRELING_STATUS) == 0) then begin
+					if (get_critter_stat(dude_obj, 4) < 4) then begin
+						call tandi06;
+					end
+					else begin
+						call tandi30;
+					end
+				end
+				else begin
+					call tandi36;
+				end
+			end
+			else begin
+				set_global_var(TANDI_HEREBEFORE_RAIDERS, 1);
+				if (global_var(TANDI_HIRELING_STATUS) == 0) then begin
+					call tandi01;
+				end
+				else begin
+					call tandi36;
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			call get_reaction;
+			if ((CurrentMapNum == 0) or (CurrentMapNum == 1) or (CurrentMapNum == 2)) then begin
+				start_gdialog(57, self_obj, 4, 9, 2);//was 14, DESERT
+			end
+			else begin
+				if ((CurrentMapNum == 10) or (CurrentMapNum == 11) or (CurrentMapNum == 12)) then begin
+					start_gdialog(57, self_obj, 4, 9, 7);//JUNKTOWN
+				end
+				else begin
+					if ((CurrentMapNum == 13) or (CurrentMapNum == 14) or (CurrentMapNum == 15)) then begin
+						start_gdialog(57, self_obj, 4, 9, 5);//BROTHERHOOD
+					end
+					else begin
+						if ((CurrentMapNum == 3) or (CurrentMapNum == 4) or (CurrentMapNum == 5)) then begin
+							start_gdialog(57, self_obj, 4, 9, 4);//NECROPOLIS
+						end
+						else begin
+							if ((CurrentMapNum == 6)) then begin
+								start_gdialog(57, self_obj, 4, 9, 10);//VAULT13
+							end
+							else begin
+								if ((CurrentMapNum == 7)) then begin
+									if random(0,1) then begin
+										start_gdialog(57, self_obj, 4, 9, 2);//VAULTENT (15)
+									end
+									else begin
+										start_gdialog(57, self_obj, 4, 9, 7);//VAULTENT (15)
+									end
+								end
+								else begin
+									if ((CurrentMapNum == 8) or (CurrentMapNum == 9)) then begin
+										start_gdialog(57, self_obj, 4, 9, 10);//start_gdialog(57, self_obj, 4, 9, 16);//VAULT_DEAD, need exception for tile27000+
+									end
+									else begin
+										if ((CurrentMapNum == 16) or (CurrentMapNum == 35) or (CurrentMapNum == 37)) then begin
+											start_gdialog(57, self_obj, 4, 9, 10);//start_gdialog(57, self_obj, 4, 9, 15);//BLUE _CAVES_
+										end
+										else begin
+											start_gdialog(57, self_obj, 4, 9, 2);
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			gsay_start;
+			call Tandi98;
+			gsay_end;
+			end_dialogue;
+			float_msg(self_obj, message_str(57, random(300, 305)), -1);
+		end
+	end
+end
+
+procedure tandi00
+begin
+	giq_option(5, 57, 101, tandi15, 50);
+	giq_option(4, 57, 102, tandi00_1, 50);
+	giq_option(5, 57, 103, tandi23, 50);
+	giq_option(4, 57, 104, tandi24, 50);
+	giq_option(4, 57, 105, tandi28, 50);
+end
+
+procedure tandi00_1
+begin
+	if (global_var(RADSCORPION_SEED) == 0) then begin
+		call tandi20;
+	end
+	else begin
+		if (global_var(RADSCORPION_SEED) == 2) then begin
+			call tandi21;
+		end
+		else begin
+			call tandi22;
+		end
+	end
+end
+
+procedure tandi01
+begin
+	gsay_reply(57, 106);
+	giq_option(4, 57, message_str(57, 107) + proto_data(obj_pid(dude_obj), 1) + message_str(57, 108), tandi02, 50);
+	giq_option(4, 57, message_str(57, 109) + proto_data(obj_pid(dude_obj), 1) + message_str(57, 110), tandi01a, 51);
+	giq_option(-3, 57, 111, tandi29, 50);
+end
+
+procedure tandi01a
+begin
+	call DownReact;
+	call tandi02;
+end
+
+procedure tandi02
+begin
+	gsay_reply(57, 112);
+	giq_option(4, 57, 113, tandi03, 50);
+	giq_option(5, 57, 114, tandi14, 49);
+	giq_option(4, 57, 115, tandi04, 50);
+	giq_option(4, 57, 116, tandi14, 49);
+end
+
+procedure tandi03
+begin
+	gsay_reply(57, 117);
+	call tandi00;
+end
+
+procedure tandi04
+begin
+	gsay_reply(57, 118);
+	giq_option(5, 57, 119, tandi05, 50);
+	giq_option(5, 57, 120, tandi12, 51);
+	giq_option(4, 57, 121, tandi13, 50);
+end
+
+procedure tandi05
+begin
+	gsay_reply(57, 122);
+	giq_option(0, 57, 123, tandi03, 50);
+	giq_option(0, 57, 124, tandi28, 50);
+end
+
+procedure tandi06
+begin
+	gsay_message(57, 125, 50);
+	call tandix2;
+end
+
+procedure tandi12
+begin
+	call DownReact;
+	gsay_reply(57, 126);
+	call tandi00;
+end
+
+procedure tandi13
+begin
+	gsay_reply(57, 127);
+	giq_option(5, 57, 128, tandi05, 50);
+	giq_option(4, 57, 129, tandi03, 50);
+end
+
+procedure tandi14
+begin
+	gsay_reply(57, 130);
+	giq_option(5, 57, 131, tandi05, 50);
+	giq_option(5, 57, 132, tandi12, 51);
+	giq_option(4, 57, 133, tandi13, 50);
+end
+
+procedure tandi15
+begin
+	if (local_var(1) > 2) then begin
+		gsay_reply(57, 134);
+		if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then begin
+			set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+		end
+	end
+	else begin
+		gsay_reply(57, 135);
+	end
+	giq_option(5, 57, 136, tandi16, 50);
+end
+
+procedure tandi16
+begin
+	gsay_reply(57, 137);
+	call tandi00;
+end
+
+procedure tandi20
+begin
+	gsay_reply(57, 138);
+	call tandi00;
+end
+
+procedure tandi21
+begin
+	gsay_reply(57, 139);
+	call tandi00;
+end
+
+procedure tandi22
+begin
+	gsay_reply(57, 140);
+	call tandi00;
+end
+
+procedure tandi23
+begin
+	if (local_var(1) > 2) then begin
+		gsay_reply(57, 141);
+	end
+	else begin
+		gsay_reply(57, 142);
+	end
+	giq_option(4, 57, 143, tandi16, 50);
+	if (local_var(1) > 2) then begin
+		giq_option(4, 57, 144, tandi52, 50);
+	end
+end
+
+procedure tandi24
+begin
+	gsay_reply(57, 145);
+	giq_option(5, 57, 146, tandi05, 50);
+	giq_option(5, 57, 147, tandi12, 51);
+	giq_option(4, 57, 148, tandi13, 50);
+end
+
+procedure tandi28
+begin
+	if (BYE < 1) then begin
+		BYE := 1;
+		gsay_reply(57, 151);
+		giq_option(0, 57, 152, tandix, 50);
+	end
+	else begin
+		call tandix;
+	end
+end
+
+procedure tandi29
+begin
+	gsay_reply(57, 153);
+	call tandix2;
+end
+
+procedure tandi30
+begin
+	gsay_reply(57, 154);
+	giq_option(4, 57, 155, tandi03, 50);
+	giq_option(4, 57, 156, tandi28, 50);
+end
+
+procedure tandi35
+begin
+	gsay_message(57, 157, 50);
+	call tandix;
+end
+
+procedure tandi36
+begin
+	if not(local_var(7)) then begin
+		gsay_reply(57, 158);
+		giq_option(4, 57, 159, tandi03, 50);
+		giq_option(4, 57, 161, tandi28, 50);
+		set_local_var(7, 1);
+	end
+	else begin
+		gsay_reply(57, 154);
+		giq_option(4, 57, 159, tandi03, 50);
+		giq_option(4, 57, 156, tandi28, 50);
+	end
+
+	if not(local_var(6)) then begin
+		giq_option(6, 57, 160, tandi36a, 50);
+	end
+	else begin
+		if not(local_var(8)) then begin
+			giq_option(6, 57, 415, TandiSex2_end, 49);
+		end
+	end
+
+	giq_option(-3, 57, 162, tandi35, 50);
+end
+
+procedure tandi36a
+begin
+	if (global_var(FIXT_BUGFIXES_ONLY)) then begin
+		call BottomReact;
+		call tandi27;
+	end
+	else begin
+		if (global_var(TANDI_SEX_ENABLED) == 0) then begin
+			call BottomReact;
+			call tandi27;
+		end
+		else begin
+			if (get_critter_stat(dude_obj, 34) == 1) then begin//	FEMALE
+				if ((get_critter_stat(dude_obj, 0) >= 6) and (get_critter_stat(dude_obj, 4) >= 6)) or (get_critter_stat(dude_obj, 3) >= 7) or (get_pc_stat(1) >= 9) then begin
+					call TandiSex;
+				end
+				else begin
+					call BottomReact;
+					call tandi27;
+				end
+			end
+			else begin//    MALE
+				if ((get_critter_stat(dude_obj, 0) >= 7) and (get_critter_stat(dude_obj, 4) >= 7)) or (get_critter_stat(dude_obj, 3) >= 8) or (get_pc_stat(1) >= 10) then begin
+					call TandiSex;
+				end
+				else begin
+					call BottomReact;
+					call tandi27;
+				end
+			end
+		end
+	end
+
+/*
+  ^ (STR & INT 7 or more), OR (charisma 8 or more), OR (level 10 or more).  each is less 1 if Female
+
+get_critter_stat(dude_obj, #) :
+0	Strength
+1	Perception
+2	Endurance
+3	Charisma
+4	Intelligence
+5	Agility
+6	Luck
+*/
+end
+
+procedure TandiSex
+begin
+//	if not(local_var(6)) then begin
+	
+call TandiSex2;
+
+	/*else begin
+		variable lvar0;
+		lvar0 := random(0, 2);
+		if (lvar0 == 0) or (lvar0 == 1) then begin
+			gsay_reply(57, 401);
+			giq_option(6, 57, 407, TandiDoesIt, 50);
+		end
+		else begin
+			call TandiSex2;
+		end
+	end*/
+end
+
+procedure TandiSex1
+begin
+	gsay_reply(57, 410);
+	giq_option(6, 57, 399, TandiDoesIt, 50);
+end
+
+procedure TandiSex1_end
+begin
+	gsay_message(57, 402, 49);
+end
+
+procedure TandiSex2
+begin
+	gsay_reply(57, 400);
+	giq_option(6, 57, 404, TandiDoesIt, 50);
+	giq_option(6, 57, 405, TandiSex1, 49);
+	giq_option(6, 57, 406, TandiSex_x, 51);
+end
+
+procedure TandiSex2_end
+begin
+	gsay_reply(57, 412);
+	giq_option(6, 57, 407, TandiDoesIt, 50);
+end
+
+procedure TandiSex_x
+begin
+	set_local_var(8, 1);
+	set_local_var(6, 1);
+	gsay_message(57, 350, 50);
+end
+
+procedure TandiDoesIt
+begin
+	variable lvar0;
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+/*
+lvar0 := random(1, 2);
+while(lvar0 == Sex_SoundByte) do
+begin
+lvar0 := random(1, 2);
+end
+Sex_SoundByte := lvar0;
+if (Sex_SoundByte == 1) then begin
+play_sfx("moan8");
+end
+else begin
+play_sfx("moan6");
+end
+*/
+	gfade_in(1);
+	if not(local_var(6)) then begin
+		set_local_var(6, 1);
+	end
+	call TandiSex1_end;
+end
+
+procedure tandi27
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin//	MALE
+		gsay_message(57, 149, 51);
+	end
+	else begin			    // FEMALE
+		gsay_message(57, 150, 50);
+	end
+	call tandix2;
+end
+
+procedure tandi37
+begin
+	gsay_reply(57, 163);
+	giq_option(4, 57, message_str(57, 164) + proto_data(obj_pid(dude_obj), 1) + message_str(57, 165), tandi38, 50);
+	giq_option(5, 57, 166, tandi42, 50);
+	giq_option(-3, 57, 167, tandi43a, 50);
+end
+
+procedure tandi38
+begin
+	if (global_var(GARL_DEAD) == 1) then begin
+		call tandi38a;
+	end
+	else begin
+		call tandi38b;
+	end
+end
+
+procedure tandi38a
+begin
+	gsay_reply(57, 168);
+	giq_option(4, 57, 169, tandiend, 50);
+end
+
+procedure tandi38b
+begin
+	gsay_reply(57, 168);
+	giq_option(4, 57, 169, tandi39, 50);
+	giq_option(5, 57, 170, tandi42, 50);
+end
+
+procedure tandi39
+begin
+	gsay_reply(57, 171);
+	giq_option(4, 57, 172, tandi40, 50);
+	giq_option(5, 57, 173, tandi41, 50);
+end
+
+procedure tandi40
+begin
+	gsay_message(57, 174, 50);
+	call tandix3;
+end
+
+procedure tandi41
+begin
+	gsay_message(57, 175, 50);
+	call tandix4;
+end
+
+procedure tandi42
+begin
+	gsay_reply(57, 176);
+	giq_option(4, 57, 177, tandi40, 50);
+	giq_option(5, 57, 178, tandi41, 50);
+end
+
+procedure tandi43
+begin
+	gsay_reply(57, 179);
+	giq_option(4, 57, 180, tandi39, 50);
+	giq_option(5, 57, 181, tandi42, 50);
+	giq_option(-3, 57, 182, tandi43a, 50);
+end
+
+procedure tandi43a
+begin
+	gsay_message(57, 183, 50);
+	call tandix;
+end
+
+procedure tandi43b
+begin
+	gsay_message(57, 184, 50);
+	call tandix;
+end
+
+procedure tandi44
+begin
+	gsay_message(57, 185, 50);
+end
+
+procedure tandi45
+begin
+	gsay_message(57, 186, 50);
+end
+
+procedure tandi46
+begin
+	gsay_message(57, 187, 50);
+end
+
+procedure tandi47
+begin
+	gsay_message(57, 188, 50);
+end
+
+procedure tandi48
+begin
+	gsay_message(57, 189, 50);
+end
+
+procedure tandi49
+begin
+	gsay_message(57, 190, 50);
+end
+
+procedure tandi50
+begin
+	gsay_message(57, 191, 50);
+end
+
+procedure tandi51
+begin
+	gsay_message(57, 192, 50);
+end
+
+procedure tandi52
+begin
+	gsay_message(57, 193, 50);
+end
+
+procedure tandi53
+begin
+	gsay_message(57, 194, 50);
+	if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then begin
+		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+	end
+end
+
+procedure tandi54
+begin
+	gsay_message(57, 195, 50);
+	if (global_var(WORLDMAPLIST_THE_HUB) == 0) then begin
+		set_global_var(WORLDMAPLIST_THE_HUB, 1);
+	end
+end
+
+procedure tandi55
+begin
+	gsay_message(57, 196, 50);
+end
+
+procedure tandi62
+begin
+	gsay_message(57, 197, 50);
+end
+
+procedure tandi63
+begin
+	gsay_message(57, 198, 50);
+end
+
+procedure tandi64
+begin
+	gsay_message(57, 199, 50);
+end
+
+procedure tandi65
+begin
+	float_msg(self_obj, message_str(57, 200), 2);
+end
+
+procedure tandi66
+begin
+	float_msg(self_obj, message_str(57, 201), 2);
+	call tandix5;
+end
+
+procedure tandi67
+begin
+	gsay_message(57, 202, 51);
+end
+
+procedure tandi68
+begin
+	gsay_message(57, 203, 51);
+end
+
+procedure tandi69
+begin
+	gsay_message(57, 204, 50);
+end
+
+procedure tandi70
+begin
+	gsay_message(57, 205, 50);
+end
+
+procedure tandi71
+begin
+	gsay_message(57, 206, 50);
+end
+
+procedure tandi72
+begin
+	gsay_message(57, 207, 50);
+end
+
+procedure tandix
+begin
+end
+
+procedure tandixx
+begin
+end
+
+procedure tandix1
+begin
+end
+
+procedure tandix2
+begin
+end
+
+procedure tandix3
+begin
+	critter_add_trait(self_obj, 1, 6, 0);
+end
+
+procedure tandix4
+begin
+	critter_add_trait(self_obj, 1, 6, 0);
+end
+
+procedure tandix5
+begin
+	set_local_var(5, 1);
+	critter_add_trait(self_obj, 1, 6, 0);
+end
+
+procedure tandiend
+begin
+end
+
+procedure TandiSchedule
+begin
+	variable LVar0 := 0;
+	LVar0 := game_time_hour;
+	if (LVar0 == 600) then begin
+		animate_move_obj_to_tile(self_obj, 18709, 0);
+	end
+	else begin
+		if (LVar0 == 610) then begin
+			animate_move_obj_to_tile(self_obj, 23232, 0);
+		end
+		else begin
+			if (LVar0 == 615) then begin
+				animate_move_obj_to_tile(self_obj, 18492, 0);
+			end
+			else begin
+				if (LVar0 == 645) then begin
+					animate_move_obj_to_tile(self_obj, 13565, 0);
+				end
+				else begin
+					if (LVar0 == 650) then begin
+						animate_move_obj_to_tile(self_obj, 15683, 0);
+					end
+					else begin
+						if (LVar0 == 1000) then begin
+							animate_move_obj_to_tile(self_obj, 18709, 0);
+						end
+						else begin
+							if (LVar0 == 1200) then begin
+								animate_move_obj_to_tile(self_obj, 24678, 0);
+							end
+							else begin
+								if (LVar0 == 1300) then begin
+									animate_move_obj_to_tile(self_obj, 23232, 0);
+								end
+								else begin
+									if (LVar0 == 1305) then begin
+										animate_move_obj_to_tile(self_obj, 23701, 0);
+									end
+									else begin
+										if (LVar0 == 1600) then begin
+											animate_move_obj_to_tile(self_obj, 17279, 0);
+										end
+										else begin
+											if (LVar0 == 1900) then begin
+												animate_move_obj_to_tile(self_obj, 13565, 0);
+											end
+											else begin
+												if (LVar0 == 1905) then begin
+													animate_move_obj_to_tile(self_obj, 18709, 0);
+												end
+												else begin
+													if (LVar0 == 2100) then begin
+														animate_move_obj_to_tile(self_obj, 24678, 0);
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+end
+
+procedure map_enter_p_proc
+begin
+	if ((cur_map_index == 26) and (global_var(TANDI_HIRELING_STATUS) > 1)) then begin
+		if ((global_var(LOAD_MAP_INDEX) == 2) and (global_var(TANDI_LOCATION_TRACKER) == 3)) then begin
+			party_remove(self_obj);
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+			critter_attempt_placement(self_obj, 22086, 0);
+			set_global_var(TANDI_LOCATION_TRACKER, 4);
+		end
+		else begin
+			if (global_var(TANDI_LOCATION_TRACKER) >= 300) then begin
+				critter_attempt_placement(self_obj, 22086, 0);
+				set_global_var(TANDI_LOCATION_TRACKER, 4);
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj) and global_var(ENEMY_SHADY_SANDS) and (global_var(TANDI_LOCATION_TRACKER) != 1)) then begin
+		if (party_member_obj(TANDI_SELF_ID) != 0) then begin
+			party_remove(self_obj);
+		end
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (cur_map_index == 24) then begin //  RAIDERS - KHANS
+			if ((global_var(TANDI_HIRELING_STATUS) == 1) and (global_var(TANDI_LOCATION_TRACKER) == 1)) then begin
+				party_remove(self_obj);
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				critter_attempt_placement(self_obj, 17905, 0);
+				set_global_var(TANDI_LOCATION_TRACKER, 2);
+			end
+			else begin
+				if ((global_var(TANDI_HIRELING_STATUS) == 5) and (global_var(TANDI_LOCATION_TRACKER) == 2)) then begin
+					party_add(self_obj);
+					set_global_var(TANDI_LOCATION_TRACKER, 3);
+				end
+			end
+			if ((map_var(2) != 0) and (local_var(5) == 0)) then begin
+				set_global_var(TANDI_HIRELING_STATUS, 5);
+				set_local_var(5, 1);
+				if (party_member_obj(TANDI_SELF_ID) == 0) then begin
+					party_add(self_obj);
+				end
+			end
+		end
+		else begin
+			if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+				if (global_var(TANDI_HIRELING_STATUS) > 1) then begin
+					variable Temp_ptr := 0;
+					Temp_ptr := create_object_sid(16777527, 0, 0, -1);// <-- Dead Traveler (Ghoul)  Was:  create_object_sid(165, 0, 0, -1);// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
+					move_to(Temp_ptr, 0, 0);
+					inven_unwield;
+					move_obj_inven_to_obj(self_obj, Temp_ptr);
+					move_obj_inven_to_obj(Temp_ptr, self_obj);
+					destroy_object(Temp_ptr);
+				end
+				if ((global_var(TANDI_HIRELING_STATUS) == 1) and (global_var(TANDI_LOCATION_TRACKER) == 0)) then begin
+					party_add(self_obj);
+					if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+					set_global_var(TANDI_LOCATION_TRACKER, 1);
+				end
+				else begin
+					if ((global_var(TANDI_HIRELING_STATUS) > 1) and (global_var(TANDI_LOCATION_TRACKER) == 3) and (cur_map_index == 26)) then begin
+						party_remove(self_obj);
+						if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+						animate_move_obj_to_tile(self_obj, 16710, 1);
+						set_global_var(TANDI_LOCATION_TRACKER, 300);
+					end
+					else begin
+						if ((global_var(TANDI_LOCATION_TRACKER) == 300) and (tile_distance(tile_num(self_obj), 16710) >= 2)) then begin
+							animate_move_obj_to_tile(self_obj, 16710, 1);
+						end
+						else begin
+							if ((global_var(TANDI_LOCATION_TRACKER) == 300) and (tile_distance(tile_num(self_obj), 16710) < 2)) then begin
+								set_global_var(TANDI_LOCATION_TRACKER, 301);
+							end
+							else begin
+								if ((global_var(TANDI_LOCATION_TRACKER) == 301) and (tile_distance(tile_num(self_obj), 20706) >= 2)) then begin
+									animate_move_obj_to_tile(self_obj, 20706, 1);
+								end
+								else begin
+									if ((global_var(TANDI_LOCATION_TRACKER) == 301) and (tile_distance(tile_num(self_obj), 20706) < 2)) then begin
+										set_global_var(TANDI_LOCATION_TRACKER, 302);
+									end
+									else begin
+										if ((global_var(TANDI_LOCATION_TRACKER) == 302) and (tile_distance(tile_num(self_obj), 23698) >= 2)) then begin
+											animate_move_obj_to_tile(self_obj, 23698, 1);
+										end
+										else begin
+											if ((global_var(TANDI_LOCATION_TRACKER) == 302) and (tile_distance(tile_num(self_obj), 23698) < 2)) then begin
+												set_global_var(TANDI_LOCATION_TRACKER, 303);
+											end
+											else begin
+												if ((global_var(TANDI_LOCATION_TRACKER) == 303) and (tile_distance(tile_num(self_obj), 22086) >= 2)) then begin
+													animate_move_obj_to_tile(self_obj, 22086, 1);
+												end
+												else begin
+													if ((global_var(TANDI_LOCATION_TRACKER) == 303) and (tile_distance(tile_num(self_obj), 22086) < 2)) then begin
+														set_global_var(TANDI_LOCATION_TRACKER, 4);
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+				if (obj_can_see_obj(self_obj, dude_obj) and (party_member_obj(TANDI_SELF_ID) == 0) and hostile) then begin
+					hostile := 0;
+					attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+				end
+				if ((party_member_obj(TANDI_SELF_ID) == 0) and (global_var(TANDI_HIRELING_STATUS) != 1) and (global_var(TANDI_LOCATION_TRACKER) != 300)) then begin
+					call TandiSchedule;
+					if (random(1, 20) == 1) then begin
+						animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(self_obj), random(0, 5), random(2, 4)), 0);
+					end
+				end
+			end
+		end
+	end
+	if ((global_var(TANDI_HIRELING_STATUS) == 5) and (local_var(5) == 0)) then begin
+		set_local_var(5, 1);
+		if (party_member_obj(TANDI_SELF_ID) == 0) then begin
+			party_add(self_obj);
+		end
+	end
+	if ((party_member_obj(TANDI_SELF_ID) != 0) and (cur_map_index != 26) and (cur_map_index != 25)) then begin
+		if (tile_distance_objs(self_obj, dude_obj) >= (1.5 * 2)) then begin
+			animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(dude_obj), random(0, 5), 1), 1);
+		end
+		else begin
+			if (tile_distance_objs(self_obj, dude_obj) >= 2) then begin
+				animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(dude_obj), random(0, 5), 1), 0);
+			end
+		end
+	end
+	else begin
+		if ((global_var(TANDI_HIRELING_STATUS) > 1) and (cur_map_index == 25)) then begin
+			if (tile_num(self_obj) != 14950) then begin
+				animate_move_obj_to_tile(self_obj, 14950, 1);
+			end
+			else begin
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure StepAside
+begin
+	variable LVar0 := 0;
+	NewHex := 0;
+	LVar0 := random(0, 5);
+	LVar0 := random(0, 5);
+	LVar0 := random(0, 5);
+	if (LVar0 == 0) then begin
+		NewHex := (tile_num(self_obj) - 400);
+	end
+	if (LVar0 == 1) then begin
+		NewHex := (tile_num(self_obj) - 202);
+	end
+	if (LVar0 == 2) then begin
+		NewHex := (tile_num(self_obj) - 198);
+	end
+	if (LVar0 == 3) then begin
+		NewHex := (tile_num(self_obj) + 400);
+	end
+	if (LVar0 == 4) then begin
+		NewHex := (tile_num(self_obj) + 202);
+	end
+	if (LVar0 == 5) then begin
+		NewHex := (tile_num(self_obj) + 198);
+	end
+	script_overrides;
+	move_to(self_obj, NewHex, elevation(self_obj));
+	script_overrides;
+	float_msg(self_obj, message_str(766, random(300, 302)), 0);
+end
+
+procedure Tandi98
+begin
+	variable LVar0 := 0;
+	LVar0 := random(1, 3);
+	LVar0 := random(1, 3);
+	LVar0 := random(1, 3);
+	if (LVar0 == 1) then begin
+		gsay_reply(57, 171);//{171}{TAND_39}{Well, what's your plan?}
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			gsay_reply(57, 154);//{154}{tand_30a}{Hello again! What can I help you with now?}
+		end
+		else begin
+			gsay_reply(57, 184);//{184}{tand_43b}{This is no time to talk, we have to get out of here.}
+		end
+	end
+
+//	giq_option(4, 389, 159, TandiTactics, 49);
+//	giq_option(4, 623, 2000, TandiCombatTactics, 50);
+
+	giq_option(4, 766, 190, Tandi99, 50);
+	giq_option(4, 766, 197, Tandi100, 51);
+	giq_option(4, 623, 168, TandiEndSDU, 50);
+
+//#Sduibek: Stupid Character options for Fallout Fixt:
+	giq_option(-3, 766, 194, Tandi100, 51);
+	giq_option(-3, 623, 189, TandiDumbChar, 51);
+end
+
+procedure Tandi99
+begin
+	gsay_message(57, 137, 50);//{137}{TAND_16}{No problem. Anything else?}
+	call StepAside;
+end
+
+procedure Tandi100
+begin
+	gsay_message(57, 125, 51);//{125}{TAND_6}{Uh... I have to stand over here now. }
+	call StepAside;
+end
+
+procedure TandiDumbChar
+begin
+	gsay_message(57, 125, 51);//{125}{TAND_6}{Uh... I have to stand over here now. }
+end
+
+procedure TandiEndSDU
+begin
+	gsay_message(57, 157, 50);//{157}{TAND_35}{Uh... hey, thanks. Later.}
+end
+ 
+procedure damage_p_proc
+begin
+	if ((source_obj == dude_obj) and ((cur_map_index == 26) or (cur_map_index == 25))) then begin
+		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+	end
+end
+
+procedure PickDeadBodyType
+begin
+	variable LVar0 := 0;
+	LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));
+//
+	if (LVar0 <= 5) then begin// 31.5%
+		DeathType := 57;//		burnt, face down  [FLAMER]
+	end
+	else begin
+		if (LVar0 <= 10) then begin// 26%
+			DeathType := 56;//		cut in half  [LASER RIFLE, GATLING LASER]
+		end
+		else begin
+			if (LVar0 <= 14) then begin// 21%
+				DeathType := 53;//		head & arm gone - full auto  [MINIGUN]
+			end
+			else begin
+				if (LVar0 <= 16) then begin// 10.5%
+					DeathType := 63;//		face down, blood pool  (generic death, no weapon associated)
+				end
+				else begin// <--------------------	16%
+					variable LVar1 := 0;
+					LVar1 := random(0, 2);
+					if (LVar1 == 0) then begin
+						DeathType := 54;// bullet holes - full auto partial hit
+					end
+					else begin
+						if (LVar1 == 1) then begin
+							DeathType := 59;// exploded  [ROCKET LAUNCHER]
+						end
+						else begin
+							if (LVar1 == 2) then begin
+								DeathType := 60;// melted pile  [PLASMA RIFLE]
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+

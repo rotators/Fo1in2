@@ -1,0 +1,158 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure use_p_proc;//    script_action == 6
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure description_p_proc;//    script_action == 3
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure map_update_p_proc;//    script_action == 23
+procedure damage_p_proc;//    script_action == 14
+
+import variable Cur_Door_Ptr;
+
+
+procedure start
+begin
+	if (script_action == 3) then begin// 21 is look_at, 3 is description (Binoculars)
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Critter or Item
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 8) then begin//<-- use_skill_on_p_proc
+				call use_skill_on_p_proc;
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					call use_obj_on_p_proc;
+				end
+				else begin
+					if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+						call damage_p_proc;
+					end
+					else begin
+						if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+							call map_update_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin
+		if (local_var(0) == 0) then begin
+			obj_lock(self_obj);
+		end
+		else begin
+			obj_unlock(self_obj);
+		end
+		if ((local_var(0) == 0) and (source_obj == dude_obj)) then begin
+			script_overrides;
+			display_msg(message_str(63, 104));//{104}{}{The door is locked.}
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin
+		variable LVar0 := 0;
+		if (local_var(0) == 0) then begin
+			if (action_being_used == 9) then begin//-- LOCKPICK
+				script_overrides;
+				LVar0 := roll_vs_skill(dude_obj, 9, 0);
+				if (is_success(LVar0)) then begin
+					set_local_var(0, 1);
+					display_msg(message_str(63, 100));//{100}{}{You unlock the door.}
+					give_exp_points(25);
+					display_msg(message_str(766, 103) + "25" + message_str(766, 104));
+				end
+				else begin
+					if (is_critical(LVar0)) then begin
+						jam_lock(self_obj);
+						display_msg(message_str(63, 110));//{110}{}{The lock is beyond your ability to pick.}
+					end
+					else begin
+						display_msg(message_str(63, 103));//{103}{}{You were not able to pick the lock.}
+					end
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(63, 109));//{109}{}{The door is already unlocked.}
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin
+		if (local_var(0) == 0) then begin
+			display_msg(message_str(63, 104));//{104}{}{The door is locked.}
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin
+		variable LVar0 := 0;
+		variable LVar1 := 0;
+		LVar0 := obj_being_used_with;
+		LVar1 := roll_vs_skill(dude_obj, 9, 20);
+		if ((obj_pid(LVar0) == 84) and (local_var(0) == 0)) then begin
+			script_overrides;
+			if (is_success(LVar1)) then begin
+				set_local_var(0, 1);
+				display_msg(message_str(63, 100));//{100}{}{You unlock the door.}
+				display_msg(message_str(766, 103) + "25" + message_str(766, 104));
+				give_exp_points(25);
+			end
+			else begin
+				if (is_critical(LVar1)) then begin
+					rm_obj_from_inven(dude_obj, LVar0);
+					destroy_object(LVar0);
+					display_msg(message_str(63, 101));//{101}{}{You broke your lockpicks!}
+				end
+				else begin
+					display_msg(message_str(63, 103));//{103}{}{You were not able to pick the lock.}
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin
+		if (local_var(0) == 0) then begin
+			obj_lock(self_obj);
+		end
+		else begin
+			obj_unlock(self_obj);
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if ((cur_map_index != 30) and (cur_map_index != 31) and (cur_map_index != 32)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
+		set_local_var(1, 1);
+		destroy_object(self_obj);
+	end
+	else begin
+		if ((cur_map_index == 30) or (cur_map_index == 31) or (cur_map_index == 32)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
+			if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+				set_local_var(1, 1);
+				destroy_object(self_obj);
+			end
+		end
+	end
+end
+

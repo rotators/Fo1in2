@@ -1,0 +1,476 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure critter_p_proc;//    script_action == 12
+
+procedure rayze00;
+procedure rayze01;
+procedure rayze02;
+procedure rayze03;
+procedure rayze04;
+procedure rayze05;
+procedure rayze05a;
+procedure rayze06;
+procedure rayze07;
+procedure rayze08;
+procedure rayze09;
+procedure rayze10;
+procedure rayze10a;
+procedure rayze10b;
+procedure rayze11;
+procedure rayze12;
+procedure rayze13;
+procedure rayze14;
+procedure rayze15;
+procedure rayze16;
+procedure rayze17;
+procedure rayze18;
+procedure rayze19;
+procedure rayzeend;
+
+procedure Combat;
+procedure Start_War;
+
+import variable Scouted_Fools;
+import variable Fool_Taunt;
+import variable Crypt_Taunt;
+import variable Fool_counter;
+import variable Crypt_counter;
+import variable Is_Fool;
+import variable Is_Crypt;
+import variable Broken_Gen;
+import variable Rock_Invite;
+import variable Know_Fools;
+import variable Know_Power;
+import variable Crypt_Pointer;
+import variable Fool_Pointer;
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+
+variable This_Once;
+variable Herebefore;
+variable Hostile;
+variable Only_Once := 1;
+variable Crypt_Liar := 1;
+variable I_Am_A_Crypt;
+variable I_Am_A_Fool;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		Crypt_Pointer := self_obj;
+		I_Am_A_Crypt := 1;
+	end
+	if (Is_Crypt) then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+	end
+	else begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 1);
+	end
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		display_msg(message_str(412, 100));
+	end
+	else begin
+		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+			call critter_p_proc;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				Hostile := 1;
+			end
+			else begin
+				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+					call Start_War;
+				end
+				else begin
+					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+						if (Is_Fool) then begin
+							call rayze00;
+						end
+						else begin
+							if (Herebefore and not(Is_Crypt)) then begin
+								call rayze09;
+							end
+							else begin
+								if (Fool_counter == 0) then begin
+									call rayze18;
+								end
+								else begin
+									if (global_var(QUEST_BONEYARD_7_GANG_WAR)) then begin
+										call rayze19;
+									end
+									else begin
+										start_gdialog(412, self_obj, 4, -1, -1);
+										gsay_start;
+										if (Is_Crypt) then begin
+											call rayze10;
+										end
+										else begin
+											call rayze01;
+										end
+										gsay_end;
+										end_dialogue;
+									end
+								end
+							end
+						end
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+	rm_timer_event(self_obj);
+							Crypt_counter := Crypt_counter - 1;
+	rm_timer_event(self_obj);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure rayze00
+begin
+	float_msg(self_obj, message_str(412, 101), 0);
+	call Combat;
+end
+
+procedure rayze01
+begin
+	sayReply(0, message_str(412, 102));
+	if (Rock_Invite) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(412, 103), rayze02);
+		end
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 104), rayze07);
+	end
+	if (Know_Fools) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(412, 105), rayze14);
+		end
+	end
+	if (Know_Power) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(412, 106), rayze15);
+		end
+	end
+	sayOption("", rayzeend);
+end
+
+procedure rayze02
+begin
+	sayReply(0, message_str(412, 107));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 108), rayze03);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 109), rayze04);
+	end
+end
+
+procedure rayze03
+begin
+	sayReply(0, message_str(412, 110));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze04
+begin
+	sayReply(0, message_str(412, 111));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 112), rayze05);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 113), rayze06);
+	end
+end
+
+procedure rayze05
+begin
+	sayReply(0, message_str(412, 114));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 115), rayze05a);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 116), rayze06);
+	end
+end
+
+procedure rayze05a
+begin
+	Is_Crypt := 1;
+	Scouted_Fools := 1;
+	set_global_var(FSCOUT_1, 1);
+end
+
+procedure rayze06
+begin
+	sayReply(0, message_str(412, 117));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze07
+begin
+	sayReply(0, message_str(412, 118));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 119), rayze08);
+	end
+	sayOption("", rayze08);
+end
+
+procedure rayze08
+begin
+	sayReply(0, message_str(412, 120));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 121), rayze05);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 122), rayze06);
+	end
+end
+
+procedure rayze09
+begin
+	float_msg(self_obj, message_str(412, 123), 0);
+end
+
+procedure rayze10
+begin
+	sayReply(0, message_str(412, 124));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 125), rayze10a);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 126), rayze10b);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 127), rayze13);
+	end
+end
+
+procedure rayze10a
+begin
+	if (Scouted_Fools == 2) then begin
+		call rayze11;
+	end
+	else begin
+		if (Crypt_Liar) then begin
+			call rayze17;
+		end
+		else begin
+			call rayze16;
+		end
+	end
+end
+
+procedure rayze10b
+begin
+	if (Scouted_Fools == 2) then begin
+		call rayze12;
+	end
+	else begin
+		if (Crypt_Liar) then begin
+			call rayze17;
+		end
+		else begin
+			call rayze16;
+		end
+	end
+end
+
+procedure rayze11
+begin
+	set_global_var(QUEST_BONEYARD_7_GANG_WAR, 1);
+	sayReply(0, message_str(412, 128));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze12
+begin
+	set_global_var(QUEST_BONEYARD_7_GANG_WAR, 1);
+	sayReply(0, message_str(412, 129));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze13
+begin
+	sayReply(0, message_str(412, 130));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze14
+begin
+	sayReply(0, message_str(412, 131));
+	if (Rock_Invite) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(412, 132), rayze02);
+		end
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(412, 133), rayze07);
+	end
+	if (Know_Power) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(412, 134), rayze15);
+		end
+	end
+	sayOption("", rayzeend);
+end
+
+procedure rayze15
+begin
+	sayReply(0, message_str(412, 135));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze16
+begin
+	Crypt_Liar := 1;
+	sayReply(0, message_str(412, 142));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayze17
+begin
+	sayReply(0, message_str(412, 143));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+	call Combat;
+end
+
+procedure rayze18
+begin
+	float_msg(self_obj, message_str(412, 144), 0);
+	metarule(13, 0);
+end
+
+procedure rayze19
+begin
+	sayReply(0, message_str(412, 145));
+	sayOption(message_str(412, 136), rayzeend);
+	sayOption("", rayzeend);
+end
+
+procedure rayzeend
+begin
+end
+
+procedure Combat
+begin
+	Hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+	if (I_Am_A_Fool and Crypt_Taunt) then begin
+		Crypt_Taunt := 0;
+		if (random(1, 5) == 1) then begin
+			float_msg(self_obj, message_str(220, random(100, 113)), -1);
+		end
+	end
+	else begin
+		if (I_Am_A_Crypt and Fool_Taunt) then begin
+			Fool_Taunt := 0;
+			if (random(1, 5) == 1) then begin
+				float_msg(self_obj, message_str(220, random(200, 218)), -1);
+			end
+		end
+		else begin
+			if ((global_var(QUEST_BONEYARD_7_GANG_WAR) == 1) and (tile_num(self_obj) != 20725)) then begin
+				animate_move_obj_to_tile(self_obj, 20725, 0);
+			end
+			else begin
+				if (tile_num(self_obj) == 20725) then begin
+					add_timer_event(self_obj, game_ticks(2), 1);
+				end
+				else begin
+					if (Broken_Gen and (tile_num(self_obj) != 27504)) then begin
+						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+							This_Once := 1;
+							float_msg(self_obj, message_str(220, 300), 2);
+						end
+						set_global_var(QUEST_BONEYARD_7_GANG_WAR, 2);
+						animate_move_obj_to_tile(self_obj, 27504, 0);
+					end
+					else begin
+						if ((tile_num(self_obj) == 27504) and (global_var(QUEST_BONEYARD_7_GANG_WAR) == 2)) then begin
+							if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+							if (I_Am_A_Fool) then begin
+								Fool_counter := Fool_counter - 1;
+							end
+							else begin
+								Crypt_counter := Crypt_counter - 1;
+							end
+						end
+						else begin
+							if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+								Hostile := 0;
+								attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+							end
+							else begin
+								if (not(LVar0)) then begin
+									if (random(0, 21) == 1) then begin
+										LVar1 := tile_num_in_direction(tile_num(self_obj), random(0, 5), 2);
+										animate_move_obj_to_tile(self_obj, LVar1, 0);
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Start_War
+begin
+	if (fixed_param == 1) then begin
+		set_global_var(QUEST_BONEYARD_7_GANG_WAR, 0);
+		if (I_Am_A_Fool) then begin
+			Fool_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(100, 115)), -1);
+		end
+		else begin
+			Crypt_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(200, 218)), -1);
+		end
+		add_timer_event(self_obj, 4, 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if (I_Am_A_Fool) then begin
+				attack_complex(Crypt_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+			else begin
+				attack_complex(Fool_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+		end
+	end
+end
+

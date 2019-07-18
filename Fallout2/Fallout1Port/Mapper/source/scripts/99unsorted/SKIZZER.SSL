@@ -1,0 +1,448 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure critter_p_proc;//    script_action == 12
+
+procedure skizzer00;
+procedure skizzer01;
+procedure skizzer02;
+procedure skizzer03;
+procedure skizzerend;
+procedure skizzercombat;
+
+procedure Start_War;
+procedure weapon_check;
+
+import variable Fool_Counter;
+import variable Crypt_Counter;
+import variable is_crypt;
+import variable is_fool;
+import variable broken_gen;
+import variable Fool_Pointer;
+import variable Crypt_Pointer;
+import variable Fool_Taunt;
+import variable Crypt_Taunt;
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+
+variable HEREBEFORE;
+variable hostile;
+variable armed;
+variable known;
+variable init_teams := 0;
+variable said00;
+variable said01;
+variable said02;
+variable said03;
+variable I_Am_A_Fool;
+variable I_Am_A_Crypt;
+variable badguy;
+variable This_Once;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable reactionamt := 50;
+variable reaction_level := 2;
+variable got_reaction;
+variable exit_line;
+
+procedure items_held;
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		if (is_crypt == 1) then begin
+			call skizzer00;
+		end
+		else begin
+			if (is_fool == 1) then begin
+				call skizzer01;
+			end
+		end
+	end
+	if (not(init_teams)) then begin
+		init_teams := 1;
+		I_Am_A_Crypt := 1;
+	end
+	if (is_crypt) then begin
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+	end
+	else begin
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 1);
+	end
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		if (known == 1) then begin
+			display_msg(message_str(408, 100));
+		end
+		else begin
+			display_msg(message_str(408, 101));
+		end
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			hostile := 1;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				if (said02 == 0) then begin
+					call skizzer02;
+				end
+				else begin
+					call skizzer03;
+				end
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+						call Start_War;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+	rm_timer_event(self_obj);
+							Crypt_Counter := Crypt_Counter - 1;
+	rm_timer_event(self_obj);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure skizzer00
+begin
+	if (said00 == 0) then begin
+		float_msg(self_obj, message_str(408, 102), 0);
+		said00 := 1;
+	end
+end
+
+procedure skizzer01
+begin
+	if (said01 == 0) then begin
+		float_msg(self_obj, message_str(408, 103), 0);
+		said01 := 1;
+	end
+end
+
+procedure skizzer02
+begin
+	if (said02 == 0) then begin
+		float_msg(self_obj, message_str(408, 104), 0);
+		said02 := 1;
+	end
+end
+
+procedure skizzer03
+begin
+	if (said03 == 0) then begin
+		float_msg(self_obj, message_str(408, 106), 0);
+		said03 := 1;
+	end
+	else begin
+		display_msg(message_str(408, 109));
+	end
+end
+
+procedure skizzercombat
+begin
+	hostile := 1;
+end
+
+procedure weapon_check
+begin
+	call items_held;
+	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		armed := 1;
+	end
+	else begin
+		armed := 0;
+	end
+end
+
+procedure skizzerend
+begin
+end
+
+procedure critter_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+	if (I_Am_A_Fool and Crypt_Taunt) then begin
+		Crypt_Taunt := 0;
+		if (random(1, 5) == 1) then begin
+			float_msg(self_obj, message_str(220, random(100, 113)), -1);
+		end
+	end
+	else begin
+		if (I_Am_A_Crypt and Fool_Taunt) then begin
+			Fool_Taunt := 0;
+			if (random(1, 5) == 1) then begin
+				float_msg(self_obj, message_str(220, random(200, 218)), -1);
+			end
+		end
+		else begin
+			if ((global_var(QUEST_BONEYARD_7_GANG_WAR) == 1) and (tile_num(self_obj) != 20725)) then begin
+				animate_move_obj_to_tile(self_obj, 20725, 0);
+			end
+			else begin
+				if (tile_num(self_obj) == 20725) then begin
+					add_timer_event(self_obj, game_ticks(2), 1);
+				end
+				else begin
+					if (broken_gen and (tile_num(self_obj) != 27504)) then begin
+						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+							This_Once := 1;
+							float_msg(self_obj, message_str(220, 300), 2);
+						end
+						set_global_var(QUEST_BONEYARD_7_GANG_WAR, 2);
+						animate_move_obj_to_tile(self_obj, 27504, 0);
+					end
+					else begin
+						if ((tile_num(self_obj) == 27504) and (global_var(QUEST_BONEYARD_7_GANG_WAR) == 2)) then begin
+							if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+							if (I_Am_A_Fool) then begin
+								Fool_Counter := Fool_Counter - 1;
+							end
+							else begin
+								Crypt_Counter := Crypt_Counter - 1;
+							end
+						end
+						else begin
+							if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+								hostile := 0;
+								attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+							end
+							else begin
+								if (not(LVar0)) then begin
+									if (random(0, 21) == 1) then begin
+										LVar1 := tile_num_in_direction(tile_num(self_obj), random(0, 5), 2);
+										animate_move_obj_to_tile(self_obj, LVar1, 0);
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Start_War
+begin
+	if (fixed_param == 1) then begin
+		set_global_var(QUEST_BONEYARD_7_GANG_WAR, 0);
+		if (I_Am_A_Fool) then begin
+			Fool_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(100, 115)), -1);
+		end
+		else begin
+			Crypt_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(200, 218)), -1);
+		end
+		add_timer_event(self_obj, 4, 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if (I_Am_A_Fool) then begin
+				attack_complex(Crypt_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+			else begin
+				attack_complex(Fool_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (not(got_reaction)) then begin
+		got_reaction := 1;
+		reactionamt := reactionamt + ((get_critter_stat(dude_obj, 3) - 5) * 5);
+		if (badguy) then begin
+			reactionamt := reactionamt - global_var(PLAYER_REPUTATION_GENERAL);
+		end
+		else begin
+			reactionamt := reactionamt + global_var(PLAYER_REPUTATION_GENERAL);
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			reactionamt := reactionamt - 30;
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1)) then begin
+			reactionamt := reactionamt + 20;
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1)) then begin
+			reactionamt := reactionamt - 20;
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (reactionamt < 24) then begin
+		reaction_level := 1;
+	end
+	else begin
+		if (reactionamt < 74) then begin
+			reaction_level := 2;
+		end
+		else begin
+			reaction_level := 3;
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (reaction_level == 1) then begin
+		reactionamt := random(1, 24);
+	end
+	else begin
+		if (reaction_level == 2) then begin
+			reactionamt := random(25, 74);
+		end
+		else begin
+			reactionamt := random(75, 100);
+		end
+	end
+end
+
+procedure UpReact
+begin
+	reactionamt := reactionamt + 10;
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	reactionamt := reactionamt - 10;
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	reaction_level := 1;
+	reactionamt := 1;
+end
+
+procedure TopReact
+begin
+	reactionamt := 100;
+	reaction_level := 3;
+end
+
+procedure BigUpReact
+begin
+	reactionamt := reactionamt + 25;
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	reactionamt := reactionamt - 25;
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	reaction_level := reaction_level + 1;
+	if (reaction_level > 3) then begin
+		reaction_level := 3;
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	reaction_level := reaction_level - 1;
+	if (reaction_level < 1) then begin
+		reaction_level := 1;
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	variable LVar0 := 0;
+	LVar0 := random(1, 6);
+	if (LVar0 == 1) then begin
+		exit_line := "Thanks, bye.";
+	end
+	if (LVar0 == 2) then begin
+		exit_line := "Okay, thanks.";
+	end
+	if (LVar0 == 3) then begin
+		exit_line := "Hmm. Bye.";
+	end
+	if (LVar0 == 4) then begin
+		exit_line := "See ya.";
+	end
+	if (LVar0 == 5) then begin
+		exit_line := "Thanks.";
+	end
+	if (LVar0 == 6) then begin
+		exit_line := "Okay, bye.";
+	end
+end
+

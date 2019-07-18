@@ -1,0 +1,1272 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+
+import variable Laura_Ptr;
+import variable Red_Door_Ptr;
+
+variable rndu;
+variable MALE;
+variable HOSTILE;
+variable ILLEGAL;
+variable ILLEGALBEFORE;
+variable TRESPASS;
+variable CRIME;
+variable exit_line;
+
+///////////////////////////////////////////////////////
+// VARIABLES FROM VANILLA THAT WEREN'T/AREN'T USED:
+import variable Black_Door_Ptr;
+
+variable rndx;
+variable rndy;
+variable rndz;
+variable DESTROYED;
+variable KILLEDANY;
+variable CAPTURED;
+variable AFTERX;
+variable CHILDREN;
+///////////////////////////////////////////////////////
+
+procedure lauracbt;
+procedure laura01;
+procedure laura01a;
+procedure laura02;
+procedure laura03;
+procedure laura04;
+procedure laura09;
+procedure laura10;
+procedure laura11;
+procedure laura14;
+procedure laura15;
+procedure laura16;
+procedure laura16a;
+procedure laura21;
+procedure laura22;
+procedure laura23;
+procedure laura23_1;
+procedure laura24;
+procedure laura25;
+procedure laura26;
+procedure laura27;
+procedure laura28;
+procedure laura29;
+procedure laura30;
+procedure laura31;
+procedure laura32;
+procedure laura32a;
+procedure laura33;
+procedure laura34;
+procedure laura35;
+procedure laura36;
+procedure laura37;
+procedure laura38;
+procedure laura39;
+procedure laura40;
+procedure laura41;
+procedure laura42;
+procedure laura43;
+procedure laura44;
+procedure laura45;
+procedure laura46;
+procedure laura46_1;
+procedure laura47;
+procedure laura48;
+procedure laura49;
+procedure laura50;
+procedure laura51;
+procedure laura52;
+procedure laura53;
+procedure laura54;
+procedure laura55;
+procedure laura56;
+procedure laura57;
+procedure laura57_01;
+procedure laura58;
+procedure laura59;
+procedure laura60;
+procedure laura61;
+procedure laura62;
+procedure laura63;
+procedure laura64;
+procedure laura65;
+procedure laura67;
+procedure laura68;
+procedure laura69;
+procedure laura70;
+procedure laura71;
+procedure laura72;
+procedure laura73;
+procedure laura74;
+procedure laura75;
+procedure laura76;
+procedure laura77;
+procedure laura78;
+procedure laura79;
+procedure lauraxx;
+procedure laurax;
+procedure laurax1;
+procedure laurax2;
+procedure laurax3;
+procedure laurax4;
+procedure laurax5;
+procedure laurax6;
+procedure laurax7;
+procedure laurax8;
+procedure laura67a;
+procedure laura68a;
+procedure laura69a;
+procedure laura70a;
+procedure laura71a;
+procedure laura72a;
+procedure laura73a;
+procedure laura74a;
+procedure laura75a;
+procedure laura76a;
+procedure laura77a;
+procedure laura78a;
+procedure laura79a;
+procedure laura80;
+procedure laura80a;
+procedure laura81;
+procedure laura81a;
+procedure laura82;
+procedure laura82a;
+procedure laura83;
+procedure laura83a;
+procedure laura84;
+procedure laura84a;
+procedure laura85;
+procedure laura85a;
+procedure laura86;
+procedure laura86a;
+procedure laura87;
+procedure laura87a;
+procedure laura88;
+procedure laura88a;
+procedure lauraend;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		call talk_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+				script_overrides;
+				display_msg(message_str(48, 100));
+			end
+			else begin
+				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+					HOSTILE := 1;
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						Laura_Ptr := self_obj;
+						if (local_var(4) == 1) then begin
+							set_local_var(4, 2);
+							set_local_var(9, 1);
+							animate_move_obj_to_tile(self_obj, 14089, 0);
+						end
+						else begin
+							if ((local_var(4) == 2) and (tile_num(self_obj) != 14089)) then begin
+								animate_move_obj_to_tile(self_obj, 14089, 0);
+							end
+							else begin
+								if ((local_var(4) == 2) and (tile_num(self_obj) == 14089)) then begin
+									set_local_var(4, 3);
+									obj_unlock(Red_Door_Ptr);
+									use_obj(Red_Door_Ptr);
+									animate_move_obj_to_tile(self_obj, 12495, 0);
+								end
+								else begin
+									if ((local_var(4) == 3) and (tile_num(self_obj) != 12495)) then begin
+										animate_move_obj_to_tile(self_obj, 12495, 0);
+									end
+									else begin
+										if ((local_var(4) == 3) and (tile_num(self_obj) == 12495)) then begin
+											set_local_var(4, 4);
+											animate_move_obj_to_tile(self_obj, 12302, 0);
+										end
+										else begin
+											if (local_var(4) == 4) then begin
+												float_msg(self_obj, message_str(766, 178), 8);
+												set_local_var(4, 5);
+												set_local_var(9, 2);
+											end
+											else begin
+												if (local_var(4) == 5) then begin
+													set_local_var(4, 6);
+													animate_move_obj_to_tile(self_obj, 15099, 0);
+												end
+												else begin
+													if ((local_var(4) == 6) and (tile_num(self_obj) != 15099)) then begin
+														animate_move_obj_to_tile(self_obj, 15099, 0);
+													end
+													else begin
+														if ((local_var(4) == 6) and (tile_num(self_obj) == 15099)) then begin
+															set_local_var(4, 7);
+															animate_move_obj_to_tile(self_obj, 23301, 0);
+														end
+														else begin
+															if ((local_var(4) == 7) and (tile_num(self_obj) != 23301)) then begin
+																animate_move_obj_to_tile(self_obj, 23301, 0);
+															end
+															else begin
+																if ((local_var(4) == 7) and (tile_num(self_obj) == 23301)) then begin
+																	set_local_var(4, 8);
+																	animate_move_obj_to_tile(self_obj, 27106, 0);
+																end
+																else begin
+																	if ((local_var(4) == 8) and (tile_num(self_obj) != 27106)) then begin
+																		animate_move_obj_to_tile(self_obj, 27106, 0);
+																	end
+																	else begin
+																		if ((local_var(4) == 8) and (tile_num(self_obj) == 27106)) then begin
+																			set_local_var(4, 9);
+																			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+																		end
+																		else begin
+																			if (local_var(5) == 1) then begin
+																				set_local_var(5, 2);
+																				animate_move_obj_to_tile(self_obj, 22090, 0);
+																			end
+																			else begin
+																				if ((local_var(5) == 2) and (tile_num(self_obj) != 22090)) then begin
+																					animate_move_obj_to_tile(self_obj, 22090, 0);
+																				end
+																				else begin
+																					if ((local_var(5) == 2) and (tile_num(self_obj) == 22090)) then begin
+																						set_local_var(5, 3);
+																					end
+																					else begin
+																						if (local_var(9) == 1) then begin
+																							if ((tile_num(self_obj) == 22090) or (tile_num(self_obj) == 12495)) then begin
+																								set_local_var(9, 0);
+																							end
+																						end
+																					end
+																				end
+																			end
+																		end
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+						if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+							HOSTILE := 0;
+							attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+						end
+					end
+					else begin
+						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1)
+							HOSTILE := 1;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	call get_reaction;
+	if (local_var(9) == 1) then begin
+		float_msg(self_obj, message_str(766, 177), 8);
+	end
+	else begin
+		if (local_var(9) == 2) then begin
+			float_msg(self_obj, message_str(766, 179), 8);
+		end
+		else begin
+			start_gdialog(48, self_obj, 4, 3, 8);
+			gsay_start;
+			MALE := get_critter_stat(dude_obj, 34) == 0;
+			if (ILLEGAL) then begin
+				if (ILLEGALBEFORE) then begin
+					call laura63;
+				end
+				else begin
+					ILLEGALBEFORE := 1;
+					if (CRIME == TRESPASS) then begin
+						call laura65;
+					end
+					if (CRIME > TRESPASS) then begin
+						call laura64;
+					end
+				end
+			end
+			else begin
+				if (local_var(6)) then begin
+					if (local_var(7) == 1) then begin
+						call laura61;
+					end
+					else begin
+						if (local_var(8) == 1) then begin
+							call laura21;
+						end
+						else begin
+							call laura16;
+						end
+					end
+				end
+				else begin
+					set_local_var(6, 1);
+					call laura01;
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure lauracbt
+begin
+	HOSTILE := 1;
+end
+
+procedure laura01
+begin
+	if (MALE) then begin
+		gsay_reply(48, 102);
+	end
+	else begin
+		gsay_reply(48, 104);
+	end
+	if (global_var(SHADOW_PASSWORD) == 1) then begin
+		giq_option(4, 48, 105, laura02, 50);
+	end
+	giq_option(5, 48, 106, laura14, 50);
+	giq_option(4, 48, 107, laura15, 51);
+	giq_option(-3, 48, 108, laura01a, 50);
+end
+
+procedure laura01a
+begin
+	gsay_message(48, 110, 50);
+	call laurax;
+end
+
+procedure laura02
+begin
+	gsay_reply(48, 112);
+	if (global_var(SHADOW_PASSWORD) == 1) then begin
+		giq_option(4, 48, 113, laura03, 50);
+	end
+	giq_option(4, 48, 114, laura10, 50);
+end
+
+procedure laura03
+begin
+	gsay_reply(48, 116);
+	if (global_var(SHADOW_PASSWORD) == 1) then begin
+		giq_option(4, 48, 117, laura04, 50);
+	end
+	giq_option(4, 48, 118, laura09, 50);
+end
+
+procedure laura04
+begin
+	gsay_message(48, 120, 50);
+	set_local_var(7, 1);
+	call laurax1;
+end
+
+procedure laura09
+begin
+	gsay_reply(48, 122);
+	call laurax;
+end
+
+procedure laura10
+begin
+	gsay_reply(48, 124);
+	giq_option(4, 48, 125, laura03, 50);
+	giq_option(4, 48, 126, laura11, 50);
+end
+
+procedure laura11
+begin
+	call DownReact;
+	gsay_message(48, 128, 50);
+	call laurax;
+end
+
+procedure laura14
+begin
+	gsay_message(48, 130, 50);
+	call laurax;
+end
+
+procedure laura15
+begin
+	call DownReact;
+	gsay_message(48, 132, 50);
+	call laurax;
+end
+
+procedure laura16
+begin
+	if (local_var(1) > 1) then begin
+		gsay_reply(48, 134);
+	end
+	else begin
+		gsay_reply(48, 136);
+	end
+	if (global_var(SHADOW_PASSWORD) == 1) then begin
+		giq_option(4, 48, 137, laura02, 50);
+	end
+	giq_option(4, 48, 138, laura14, 50);
+	giq_option(4, 48, 139, laurax, 50);
+	giq_option(-3, 48, 140, laura16a, 50);
+end
+
+procedure laura16a
+begin
+	gsay_message(48, 142, 50);
+	call laurax;
+end
+
+procedure laura21
+begin
+	gsay_message(48, 144, 50);
+	giq_option(4, 48, 145, laura22, 50);
+end
+
+procedure laura22
+begin
+	gsay_message(48, 147, 50);
+	call laura23;
+end
+
+procedure laura23
+begin
+	giq_option(5, 48, 148, laura24, 50);
+	giq_option(4, 48, 149, laura33, 50);
+	giq_option(4, 48, 150, laura23_1, 50);
+	if (MALE) then begin
+		giq_option(4, 48, 151, laura60, 50);
+	end
+	giq_option(4, 48, 152, laura59, 50);
+end
+
+procedure laura23_1
+begin
+	if (global_var(COC_STATUS) == 0) then begin
+		call laura51;
+	end
+	if (global_var(COC_STATUS) == 1) then begin
+		call laura38;
+	end
+	if (global_var(COC_STATUS) == 2) then begin
+		call laura46;
+	end
+end
+
+procedure laura24
+begin
+	gsay_reply(48, 154);
+	giq_option(4, 48, 155, laura25, 50);
+end
+
+procedure laura25
+begin
+	gsay_reply(48, 157);
+	giq_option(4, 48, 158, laura26, 50);
+	giq_option(4, 48, 159, laura28, 50);
+end
+
+procedure laura26
+begin
+	gsay_reply(48, 161);
+	giq_option(4, 48, 162, laura27, 50);
+	giq_option(4, 48, 163, laura31, 50);
+end
+
+procedure laura27
+begin
+	gsay_reply(48, 165);
+	giq_option(4, 48, 166, laura28, 50);
+end
+
+procedure laura28
+begin
+	gsay_reply(48, 168);
+	giq_option(4, 48, 169, laura29, 50);
+	giq_option(4, 48, 170, laura30, 50);
+end
+
+procedure laura29
+begin
+	gsay_reply(48, 172);
+	call laurax4;
+end
+
+procedure laura30
+begin
+	rndu := random(1, 2);
+	if (rndu == 1) then begin
+		gsay_reply(48, 174);
+	end
+	if (rndu == 2) then begin
+		gsay_reply(48, 176);
+	end
+	call laura23;
+end
+
+procedure laura31
+begin
+	gsay_reply(48, 178);
+	giq_option(4, 48, 179, laura32a, 51);
+	giq_option(4, 48, 180, laura30, 50);
+end
+
+procedure laura32
+begin
+	gsay_reply(48, 182);
+	giq_option(4, 48, 183, laurax2, 51);
+	giq_option(4, 48, 184, laurax8, 50);
+	giq_option(4, 48, 185, laura30, 50);
+end
+
+procedure laura32a
+begin
+	call DownReact;
+	call laura32;
+end
+
+procedure laura33
+begin
+	gsay_reply(48, 187);
+	giq_option(4, 48, 188, laura34, 50);
+	giq_option(4, 48, 189, laura35, 50);
+end
+
+procedure laura34
+begin
+	gsay_reply(48, 191);
+	giq_option(6, 48, 192, laura36, 50);
+	giq_option(4, 48, 193, laura36, 50);
+end
+
+procedure laura35
+begin
+	gsay_reply(48, 195);
+	giq_option(6, 48, 196, laura36, 50);
+	giq_option(4, 48, 197, laura36, 50);
+end
+
+procedure laura36
+begin
+	gsay_reply(48, 199);
+	giq_option(4, 48, 200, laura37, 50);
+end
+
+procedure laura37
+begin
+	gsay_reply(48, 202);
+	giq_option(4, 48, 203, laura28, 50);
+	giq_option(4, 48, 204, laura27, 50);
+end
+
+procedure laura38
+begin
+	gsay_reply(48, 206);
+	giq_option(4, 48, 207, laura39, 50);
+	giq_option(4, 48, 208, laura43, 50);
+end
+
+procedure laura39
+begin
+	gsay_reply(48, 210);
+	giq_option(4, 48, 211, laura40, 50);
+	giq_option(4, 48, 212, laura42, 50);
+end
+
+procedure laura40
+begin
+	gsay_reply(48, 214);
+	giq_option(4, 48, 215, laura30, 50);
+	giq_option(4, 48, 216, laura41, 50);
+end
+
+procedure laura41
+begin
+	gsay_message(48, 218, 50);
+	call laurax6;
+end
+
+procedure laura42
+begin
+	gsay_reply(48, 220);
+	giq_option(4, 48, 221, laura30, 50);
+	giq_option(4, 48, 222, laura41, 50);
+end
+
+procedure laura43
+begin
+	gsay_reply(48, 224);
+	giq_option(4, 48, 225, laura44, 50);
+	giq_option(4, 48, 226, laura45, 50);
+end
+
+procedure laura44
+begin
+	gsay_reply(48, 228);
+	giq_option(4, 48, 229, laura42, 50);
+	giq_option(4, 48, 230, laura45, 50);
+end
+
+procedure laura45
+begin
+	gsay_reply(48, 232);
+	giq_option(4, 48, 233, laura37, 50);
+	giq_option(4, 48, 234, laura30, 50);
+	giq_option(4, 48, 235, laura41, 50);
+end
+
+procedure laura46
+begin
+	gsay_reply(48, 237);
+	giq_option(4, 48, 238, laura46_1, 50);
+end
+
+procedure laura46_1
+begin
+	if (global_var(FOLLOWERS_INVADED) == 1) then begin
+		call laura46;
+	end
+	if (global_var(THE_HUB_WAS_INVADED) == 1) then begin
+		call laura49;
+	end
+end
+
+procedure laura47
+begin
+	gsay_reply(48, 240);
+	giq_option(4, 48, 241, laura48, 50);
+	giq_option(4, 48, 242, laura45, 50);
+end
+
+procedure laura48
+begin
+	gsay_reply(48, 244);
+	giq_option(4, 48, 245, laura45, 50);
+end
+
+procedure laura49
+begin
+	gsay_reply(48, 247);
+	giq_option(4, 48, 248, laura50, 50);
+	giq_option(4, 48, 249, laura45, 50);
+end
+
+procedure laura50
+begin
+	gsay_reply(48, 251);
+	giq_option(4, 48, 252, laura45, 50);
+end
+
+procedure laura51
+begin
+	gsay_reply(48, 254);
+	giq_option(4, 48, 255, laura52, 50);
+	giq_option(4, 48, 256, laura55, 50);
+	giq_option(4, 48, 257, laura57, 50);
+end
+
+procedure laura52
+begin
+	gsay_reply(48, 259);
+	giq_option(4, 48, 260, laura53, 50);
+	giq_option(4, 48, 261, laura55, 50);
+end
+
+procedure laura53
+begin
+	gsay_reply(48, 263);
+	giq_option(4, 48, 264, laura54, 50);
+	giq_option(4, 48, 265, laura30, 50);
+end
+
+procedure laura54
+begin
+	gsay_reply(48, 267);
+	call laura23;
+end
+
+procedure laura55
+begin
+	gsay_reply(48, 269);
+	giq_option(4, 48, 270, laura33, 50);
+	giq_option(4, 48, 271, laura56, 50);
+end
+
+procedure laura56
+begin
+	gsay_reply(48, 273);
+	call laura23;
+end
+
+procedure laura57
+begin
+	gsay_reply(48, 275);
+	giq_option(4, 48, 276, laura57_01, 50);
+	giq_option(4, 48, 277, laura56, 50);
+	giq_option(4, 48, 278, laura55, 50);
+end
+
+procedure laura57_01
+begin
+	call DownReact;
+	if (local_var(1) > 1) then begin
+		call laura58;
+	end
+	else begin
+		call laura32;
+	end
+end
+
+procedure laura58
+begin
+	gsay_reply(48, 280);
+	giq_option(6, 48, 281, laura32, 50);
+	giq_option(4, 48, 282, laura23, 50);
+end
+
+procedure laura59
+begin
+	gsay_reply(48, 284);
+	call laurax7;
+end
+
+procedure laura60
+begin
+	gsay_reply(48, 286);
+	call laura23;
+end
+
+procedure laura61
+begin
+	if (local_var(1) > 1) then begin
+		gsay_reply(48, 288);
+	end
+	else begin
+		gsay_reply(48, 290);
+	end
+	giq_option(4, 48, 291, laura30, 50);
+	giq_option(4, 48, 292, laura41, 50);
+end
+
+procedure laura62
+begin
+	call DownReact;
+	gsay_message(48, 294, 50);
+end
+
+procedure laura63
+begin
+	call DownReact;
+	gsay_reply(48, 296);
+	giq_option(4, 48, 297, laurax2, 50);
+	giq_option(4, 48, 298, laurax5, 50);
+end
+
+procedure laura64
+begin
+	call DownReact;
+	gsay_message(48, 300, 50);
+end
+
+procedure laura65
+begin
+	call DownReact;
+	gsay_reply(48, 302);
+	giq_option(4, 48, 303, laurax2, 50);
+	giq_option(4, 48, 304, laurax5, 50);
+end
+
+procedure laura67
+begin
+	gsay_message(48, 306, 50);
+end
+
+procedure laura68
+begin
+	gsay_message(48, 309, 50);
+end
+
+procedure laura69
+begin
+	gsay_message(48, 311, 50);
+end
+
+procedure laura70
+begin
+	gsay_message(48, 313, 50);
+end
+
+procedure laura71
+begin
+	gsay_message(48, 315, 50);
+end
+
+procedure laura72
+begin
+	gsay_message(48, 317, 50);
+end
+
+procedure laura73
+begin
+	gsay_message(48, 319, 50);
+end
+
+procedure laura74
+begin
+	gsay_message(48, 321, 50);
+end
+
+procedure laura75
+begin
+	gsay_message(48, 323, 50);
+end
+
+procedure laura76
+begin
+	gsay_message(48, 325, 50);
+end
+
+procedure laura77
+begin
+	gsay_message(48, 327, 50);
+end
+
+procedure laura78
+begin
+	gsay_message(48, 329, 50);
+end
+
+procedure laura79
+begin
+	gsay_message(48, 331, 50);
+end
+
+procedure lauraxx
+begin
+end
+
+procedure laurax
+begin
+end
+
+procedure laurax1
+begin
+	set_local_var(8, 1);
+	set_local_var(5, 1);
+	set_local_var(9, 1);
+end
+
+procedure laurax2
+begin
+	add_timer_event(self_obj, 5, 1);
+end
+
+procedure laurax3
+begin
+end
+
+procedure laurax4
+begin
+	set_local_var(4, 1);
+	set_local_var(9, 1);
+end
+
+procedure laurax5
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	gfade_in(1);
+end
+
+procedure laurax6
+begin
+	set_local_var(5, 1);
+	set_local_var(9, 1);
+end
+
+procedure laurax7
+begin
+end
+
+procedure laurax8
+begin
+end
+
+procedure laura67a
+begin
+	gsay_message(48, 308, 50);
+end
+
+procedure laura68a
+begin
+	gsay_message(48, 310, 50);
+end
+
+procedure laura69a
+begin
+	gsay_message(48, 312, 50);
+end
+
+procedure laura70a
+begin
+	gsay_message(48, 314, 50);
+end
+
+procedure laura71a
+begin
+	gsay_message(48, 316, 50);
+end
+
+procedure laura72a
+begin
+	gsay_message(48, 318, 50);
+end
+
+procedure laura73a
+begin
+	gsay_message(48, 320, 50);
+end
+
+procedure laura74a
+begin
+	gsay_message(48, 322, 50);
+end
+
+procedure laura75a
+begin
+	gsay_message(48, 324, 50);
+end
+
+procedure laura76a
+begin
+	gsay_message(48, 326, 50);
+end
+
+procedure laura77a
+begin
+	gsay_message(48, 328, 50);
+end
+
+procedure laura78a
+begin
+	gsay_message(48, 330, 50);
+end
+
+procedure laura79a
+begin
+	gsay_message(48, 332, 50);
+end
+
+procedure laura80
+begin
+	gsay_message(48, 333, 50);
+end
+
+procedure laura80a
+begin
+	gsay_message(48, 334, 50);
+end
+
+procedure laura81
+begin
+	gsay_message(48, 335, 50);
+end
+
+procedure laura81a
+begin
+	gsay_message(48, 336, 50);
+end
+
+procedure laura82
+begin
+	gsay_message(48, 337, 50);
+end
+
+procedure laura82a
+begin
+	gsay_message(48, 338, 50);
+end
+
+procedure laura83
+begin
+	gsay_message(48, 339, 50);
+end
+
+procedure laura83a
+begin
+	gsay_message(48, 340, 50);
+end
+
+procedure laura84
+begin
+	gsay_message(48, 341, 50);
+end
+
+procedure laura84a
+begin
+	gsay_message(48, 342, 50);
+end
+
+procedure laura85
+begin
+	gsay_message(48, 343, 50);
+end
+
+procedure laura85a
+begin
+	gsay_message(48, 344, 50);
+end
+
+procedure laura86
+begin
+	gsay_message(48, 345, 50);
+end
+
+procedure laura86a
+begin
+	gsay_message(48, 346, 50);
+end
+
+procedure laura87
+begin
+	gsay_message(48, 347, 50);
+end
+
+procedure laura87a
+begin
+	gsay_message(48, 348, 50);
+end
+
+procedure laura88
+begin
+	gsay_message(48, 349, 50);
+end
+
+procedure laura88a
+begin
+	gsay_message(48, 350, 50);
+end
+
+procedure lauraend
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

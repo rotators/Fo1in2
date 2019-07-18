@@ -1,0 +1,1769 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+
+procedure KillianEnd;
+procedure KillianCbt;
+procedure Killian0a;
+procedure Killian01;
+procedure Killian02;
+procedure Killian03;
+procedure Killian03a;
+procedure Killian04;
+procedure Killian05;
+procedure Killian06;
+procedure Killian08;
+procedure Killian09;
+procedure Killian09a;
+procedure Killian10;
+procedure Killian11;
+procedure Killian11a;
+procedure Killian12;
+procedure Killian13;
+procedure Killian13a;
+procedure Killian13b;
+procedure Killian14;
+procedure Killian15;
+procedure Killian16;
+procedure Killian21;
+procedure Killian22;
+procedure Killian23;
+procedure Killian24;
+procedure Killian26;
+procedure Killian27;
+procedure Killian28;
+procedure Killian29;
+procedure Killian30;
+procedure Killian31;
+procedure Killian32;
+procedure Killian34;
+procedure Killian35;
+procedure Killian36;
+procedure Killian37;
+procedure Killian38;
+procedure Killian39;
+procedure Killian40;
+procedure Killian41;
+procedure Killian42;
+procedure Killian43;
+procedure Killian44;
+procedure Killian45;
+procedure Killian45a;
+procedure Killian46;
+procedure Killian47;
+procedure Killian48;
+procedure Killian49;
+procedure Killian50;
+procedure Killian51;
+procedure Killian52;
+procedure Killian53;
+procedure Killian54;
+procedure Killian55;
+procedure Killian56;
+procedure Killian57;
+procedure Killian58;
+procedure Killian59;
+procedure Killian60;
+procedure Killian61;
+procedure Killian62;
+procedure Killian63;
+procedure Killian64;
+procedure Killian65;
+procedure Killian66;
+procedure Killian67;
+procedure Killian68;
+procedure Killian71;
+procedure Killian72;
+procedure Killian73;
+procedure Killian74;
+procedure Killian75;
+procedure Killian76;
+procedure Killian88;
+procedure Killian89;
+procedure Killian90;
+procedure Killianx;
+procedure Killianx1;
+procedure Killianx2;
+procedure Killianx3;
+procedure Killianx4;
+procedure Killian00;
+procedure Killian69;
+procedure Killian70;
+procedure Killian76a;
+procedure Killian77;
+procedure Killian78;
+procedure Killian79;
+procedure Killian80;
+procedure Killian81;
+procedure Killian82;
+procedure Killian83;
+procedure Killian84;
+procedure Killian85;
+procedure Killian86;
+procedure Killian87;
+procedure Killian02a;
+procedure Killian02b;
+procedure Killian03aa;
+procedure Killian03ba;
+procedure Killian03ca;
+procedure Killian32a;
+procedure Killian63a;
+procedure Killian_barter;
+procedure Killian_give_stuff;
+procedure Killian_give_shotgun;
+procedure Killian_give_armor;
+procedure Killian_give_doctor_bag;
+procedure Killian_give_stimpaks;
+procedure soundcheck;
+procedure playback;
+procedure get_stuff_from_safe;
+procedure put_stuff_in_safe;
+procedure sleeping;
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+import variable KillSafe_ptr;
+import variable Killian_ptr;
+import variable Killian_barter_var;
+import variable Killian_store1_ptr;
+import variable Killian_store2_ptr;
+import variable Killian_store3_ptr;
+import variable assassin_seed
+import variable removal_ptr
+
+variable ILLEGAL;
+variable ILLEGBEFORE;
+variable TRESPASS;
+variable hostile;
+variable item;
+variable go_to_jail;
+variable night_person;
+variable home_tile := 26283;
+variable sleep_tile := 27896;
+variable wake_time := 650;
+variable sleep_time := 1900;
+variable exit_line;
+variable remove_dude;
+
+procedure Put_Back_On_Tables;//  Added by Sduibek for Fallout Fixt
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+					call map_enter_p_proc;
+				end
+				else begin
+					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+						call pickup_p_proc;
+					end
+					else begin
+						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+							call talk_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_JUNKTOWN) == 1) then begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			hostile := 1;
+		end
+	end
+	else begin
+		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			hostile := 0;
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+		else begin
+			if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and (tile_distance_objs(self_obj, dude_obj) < 12) and obj_can_see_obj(self_obj, dude_obj) and (cur_map_index == 12)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+				ILLEGAL := 1;
+				TRESPASS := 1;
+				dialogue_system_enter;
+			end
+			if (map_var(9) == 1) then begin
+				if ((cur_map_index == 12) and (local_var(7) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12) and obj_can_see_obj(self_obj, dude_obj)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+					set_map_var(9, 0);
+					ILLEGAL := 1;
+					TRESPASS := 1;
+					dialogue_system_enter;
+				end
+				else begin
+					ILLEGAL := 0;
+					TRESPASS := 0;
+					set_map_var(9, 0);
+				end
+			end
+			if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(2) and (cur_map_index == 12)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+				dialogue_system_enter;
+			end
+			call sleeping;
+			if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(7) == 0)) then begin
+				if (tile_num(self_obj) != home_tile) then begin
+					animate_move_obj_to_tile(self_obj, home_tile, 0);
+				end
+				else begin
+					if (has_trait(1, self_obj, 10) != 2) then begin
+						anim(self_obj, 1000, 2);
+					end
+				end
+			end
+			if (Killian_barter_var != 0) then begin
+				if ((local_var(7) == 0) and (cur_map_index == 12)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+					if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+						dialogue_system_enter;
+					end
+					else begin
+						animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(dude_obj), random(0, 5), 1), 0);
+					end
+				end
+				else begin
+					Killian_barter_var := 0;
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	variable DogTags := 0;
+	DogTags := create_object_sid(56, 0, 0, -1);
+	add_obj_to_inven(self_obj, DogTags);
+	set_global_var(KILLIAN_DEAD, 1);
+	if (global_var(KILL_KILLIAN) == 1) then begin
+		set_global_var(KILL_KILLIAN, 2);
+	end
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_JUNKTOWN, 1);
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	Killian_ptr := 0;
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(47, 100));
+end
+
+procedure map_enter_p_proc
+begin
+	remove_dude := 0;
+	Killian_ptr := self_obj;
+	if (global_var(KILLIAN_DEAD) == 1) then begin
+		destroy_object(self_obj);
+	end
+	else begin
+		if (cur_map_index == 11) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+			if (global_var(GIZMO_DEAD) == 1) then begin
+				destroy_object(self_obj);
+			end
+			else begin
+				/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+				float_msg(self_obj, message_str(47, 271), 3);
+			end
+		end
+		else begin
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 12);
+			if (not(metarule(22, 0)) and (item_caps_total(self_obj) == 0)) then begin
+				item_caps_adjust(self_obj, random(10, 150));
+			end
+			if (global_var(LARS_N_KILLIAN_ON_CASINO) == 1) then begin
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			end
+			else begin
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	ILLEGAL := 1;
+	ILLEGBEFORE := 1;
+	TRESPASS := 0;
+	dialogue_system_enter;
+end
+
+procedure talk_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_stuff_from_safe;
+	LVar0 := obj_carrying_pid_obj(self_obj, 18);//  Desert Eagle
+	rm_obj_from_inven(self_obj, LVar0);
+	LVar2 := obj_carrying_pid_obj(self_obj, 4);//  Knife
+	rm_obj_from_inven(self_obj, LVar2);
+	if ((local_var(7) == 1) and (TRESPASS == 0) and not(Killian_barter_var == -1)) then begin
+		float_msg(self_obj, message_str(185, 166), 0);
+	end
+	else begin
+		if ((global_var(GOT_CONFESSION) != 1) and (global_var(BUG_PLANTED) != 1) and (global_var(GIZMO_DEAD) == 1) and (local_var(9) == 0)) then begin
+			call Killian89;
+		end
+		else begin
+			call get_reaction;
+			if (global_var(FIXT_BUGFIXES_ONLY) == 1) or (global_var(KILLIAN_WARES_MERGED) == 0) then begin
+				if (Killian_barter_var >= 0) then begin
+					if (Killian_barter_var == 1) then begin
+						if (Killian_store1_ptr > 0) then begin
+							move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
+						end
+					end
+					else begin
+						if (Killian_barter_var == 2) then begin
+							if (Killian_store2_ptr > 0) then begin
+								move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
+							end
+						end
+						else begin
+							if (Killian_barter_var == 3) then begin
+								if (Killian_store3_ptr > 0) then begin
+									move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
+								end
+							end
+							else begin
+								move_obj_inven_to_obj(KillSafe_ptr, self_obj);
+							end
+						end
+					end
+				end
+			end
+			else begin
+				if (global_var(KILLIAN_WARES_MERGED) == 1) then begin
+					if (Killian_store1_ptr > 0) then begin
+						move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
+					end
+					if (Killian_store2_ptr > 0) then begin
+						move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
+					end
+					if (Killian_store3_ptr > 0) then begin
+						move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
+					end
+					if (KillSafe_ptr > 0) then begin
+						move_obj_inven_to_obj(KillSafe_ptr, self_obj);
+					end
+				end
+			end
+			start_gdialog(47, self_obj, 4, 10, 7);
+			gsay_start;
+			if (ILLEGAL) then begin
+				if (ILLEGBEFORE) then begin
+					call Killian30;
+				end
+				else begin
+					ILLEGBEFORE := 1;
+					if (TRESPASS) then begin
+						call Killian31;
+					end
+					else begin
+						call Killian29;
+					end
+				end
+			end
+			else begin
+				if (Killian_barter_var == -1) then begin
+					set_local_var(8, local_var(8) + 1);
+					Killian_barter_var := 0;
+					if (local_var(8) == 1) then begin
+						call Killian42;
+					end
+					else begin
+						if (local_var(8) == 2) then begin
+							call Killian43;
+						end
+						else begin
+							if (local_var(8) == 3) then begin
+								call Killian44;
+							end
+							else begin
+								call Killian30;
+							end
+						end
+					end
+				end
+				else begin
+					if (Killian_barter_var != 0) then begin
+						gsay_reply(47, 115);
+						giq_option(4, 47, 118, Killian_barter, 50);
+						giq_option(4, 47, 121, Killianx, 50);
+						giq_option(-3, 47, 110, Killian_barter, 50);
+						giq_option(-3, 47, 122, Killianx, 50);
+					end
+					else begin
+						if (map_var(2)) then begin
+							call Killian47;
+						end
+						else begin
+							if (local_var(5) == 1) then begin
+								if ((global_var(GOT_CONFESSION) == 1) or (global_var(BUG_PLANTED) == 1) and (map_var(6) == 0)) then begin
+									call Killian54;
+								end
+								else begin
+									if (local_var(1) >= 2) then begin
+										call Killian24;
+									end
+									else begin
+										call Killian26;
+									end
+								end
+							end
+							else begin
+								call Killian01;
+							end
+						end
+					end
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+	if ((map_var(5) == 1) and (local_var(7) == 0) and (global_var(HIRED_BY_GIZMO) == 0)) then begin
+		LVar1 := create_object_sid(16777528, 0, 0, 510);
+		item := create_object_sid(10, 0, 0, -1);
+		add_obj_to_inven(LVar1, item);
+		critter_add_trait(LVar1, 1, 6, 13);
+		critter_add_trait(LVar1, 1, 5, 1);
+		critter_attempt_placement(LVar1, 28283, 0);
+		set_map_var(5, 2);
+	end
+	if (map_var(6) == 1) then begin
+		set_map_var(6, 2);
+		display_msg(message_str(47, 270));
+		give_exp_points(500);
+	end
+	call Put_Back_On_Tables;// <-- Fallout Fixt
+	call put_stuff_in_safe;
+	if (Killian_barter_var >= 0) then begin
+		if (Killian_barter_var == 1) then begin
+			move_obj_inven_to_obj(self_obj, Killian_store1_ptr);
+		end
+		else begin
+			if (Killian_barter_var == 2) then begin
+				move_obj_inven_to_obj(self_obj, Killian_store2_ptr);
+			end
+			else begin
+				if (Killian_barter_var == 3) then begin
+					move_obj_inven_to_obj(self_obj, Killian_store3_ptr);
+				end
+//				else begin
+//					move_obj_inven_to_obj(self_obj, KillSafe_ptr);
+//				end
+			end
+		end
+		Killian_barter_var := 0;
+	end
+	if not(obj_carrying_pid_obj(self_obj, 18)) then begin
+		add_obj_to_inven(self_obj, LVar0);
+	end
+	else begin
+		add_obj_to_inven(KillSafe_ptr, LVar0);
+	end
+	if not(obj_carrying_pid_obj(self_obj, 4)) then begin
+		add_obj_to_inven(self_obj, LVar2);
+	end
+	else begin
+		add_obj_to_inven(KillSafe_ptr, LVar2);
+	end
+	if (go_to_jail) then begin
+		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		go_to_jail := 0;
+		load_map(10, 6);
+	end
+	if (remove_dude) then begin
+		remove_dude := 0;
+		move_to(dude_obj, 28083, elevation(self_obj));
+	end
+end
+
+procedure KillianEnd
+begin
+end
+
+procedure KillianCbt
+begin
+	hostile := 1;
+end
+
+procedure Killian0a
+begin
+	gsay_reply(47, 109);
+	gsay_option(47, 110, Killian21, 50);
+	gsay_option(47, 111, Killianx, 50);
+end
+
+procedure Killian00
+begin
+	if (local_var(4) == 0) then begin
+		giq_option(4, 47, 101, Killian02, 50);
+	end
+	giq_option(5, 47, 102, Killian11, 50);
+	giq_option(5, 47, 103, Killian22, 50);
+	giq_option(4, 47, 104, Killian21, 50);
+	giq_option(5, 47, 105, Killian13, 50);
+	if ((global_var(HIRED_BY_GIZMO) == 1) and (global_var(GIZMO_DEAD) == 0) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
+		giq_option(4, 47, 272, Killian88, 50);
+	end
+	if ((global_var(HIRED_BY_KILLIAN) == 1) and (global_var(GIZMO_DEAD) == 0) and (map_var(6) == 0)) then begin
+		giq_option(5, 47, 106, Killian23, 50);
+	end
+	giq_option(4, 47, 107, Killianx, 50);
+	giq_option(-3, 47, 108, Killian0a, 50);
+end
+
+procedure Killian01
+begin
+	set_local_var(5, 1);
+	if ((map_var(5) == 0) and (global_var(GIZMO_DEAD) == 0) and (map_var(6) == 0) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
+		set_map_var(5, 1);
+	end
+	if (local_var(1) == 3) then begin
+		if (get_critter_stat(dude_obj, 34) == 0) then begin
+			gsay_reply(47, 112);
+		end
+		else begin
+			gsay_reply(47, 113);
+		end
+	end
+	else begin
+		if (local_var(1) == 1) then begin
+			gsay_reply(47, 114);
+		end
+		else begin
+			gsay_reply(47, 115);
+		end
+	end
+	call Killian00;
+end
+
+procedure Killian02
+begin
+	set_local_var(4, 1);
+	gsay_reply(47, 123);
+	giq_option(4, 47, message_str(47, 124) + proto_data(obj_pid(dude_obj), 1) + message_str(47, 125), Killian02b, 50);
+	giq_option(4, 47, message_str(47, 126) + proto_data(obj_pid(dude_obj), 1) + message_str(47, 127), Killian03, 50);
+	giq_option(5, 47, 128, Killian02a, 51);
+end
+
+procedure Killian03
+begin
+	gsay_reply(47, 129);
+	giq_option(4, 47, 130, Killian05, 51);
+	giq_option(6, 47, 131, Killian03aa, 50);
+	giq_option(5, 47, 132, Killian03ba, 50);
+	giq_option(5, 47, 133, Killian03ca, 51);
+end
+
+procedure Killian03a
+begin
+	gsay_message(47, 134, 50);
+	call Killian08;
+end
+
+procedure Killian04
+begin
+	gsay_message(47, 135, 50);
+	call Killian00;
+end
+
+procedure Killian05
+begin
+	gsay_reply(47, 136);
+	giq_option(4, 47, 137, Killian06, 49);
+	giq_option(5, 47, 138, Killian04, 49);
+end
+
+procedure Killian06
+begin
+	gsay_reply(47, 139);
+	call Killian00;
+end
+
+procedure Killian08
+begin
+	gsay_reply(47, 140);
+	giq_option(5, 47, 141, Killian09, 50);
+	giq_option(4, 47, 142, Killian00, 50);
+end
+
+procedure Killian09
+begin
+	if (not(global_var(WORLDMAPLIST_THE_HUB))) then begin
+		set_global_var(WORLDMAPLIST_THE_HUB, 1);
+	end
+	if (not(global_var(WORLDMAPLIST_NECROPOLIS))) then begin
+		set_global_var(WORLDMAPLIST_NECROPOLIS, 1);
+	end
+	gsay_reply(47, 143);
+	giq_option(5, 47, 144, Killian10, 50);
+	giq_option(5, 47, 145, Killian09a, 51);
+	giq_option(4, 47, 146, Killianx, 50);
+end
+
+procedure Killian09a
+begin
+	call DownReactLevel;
+	call Killian04;
+end
+
+procedure Killian10
+begin
+	if (local_var(1) >= 2) then begin
+		gsay_reply(47, 147);
+	end
+	else begin
+		gsay_reply(47, 148);
+	end
+	call Killian00;
+end
+
+procedure Killian11
+begin
+	gsay_reply(47, 149);
+	giq_option(4, 47, 150, Killian12, 50);
+	giq_option(5, 47, 151, Killian13, 50);
+	giq_option(6, 47, 152, Killian08, 50);
+	giq_option(4, 47, 153, Killian11a, 50);
+end
+
+procedure Killian11a
+begin
+	gsay_reply(47, " ");
+	call Killian00;
+end
+
+procedure Killian12
+begin
+	gsay_reply(47, 154);
+	call Killian00;
+end
+
+procedure Killian13
+begin
+	gsay_reply(47, 155);
+	giq_option(4, 47, 156, Killian13b, 50);
+	giq_option(6, 47, 157, Killian13a, 51);
+end
+
+procedure Killian13a
+begin
+	call DownReactLevel;
+	call Killian14;
+end
+
+procedure Killian13b
+begin
+	gsay_reply(0, 0);
+	call Killian00;
+end
+
+procedure Killian14
+begin
+	gsay_reply(47, 158);
+	giq_option(4, 47, 159, Killian15, 50);
+	giq_option(6, 47, 160, Killian16, 51);
+end
+
+procedure Killian15
+begin
+	gsay_reply(47, 161);
+	call Killian00;
+end
+
+procedure Killian16
+begin
+	gsay_message(47, 162, 51);
+end
+
+procedure Killian21
+begin
+	gsay_reply(47, 163);
+	giq_option(0, 634, 106, Killian_barter, 50);
+end
+
+procedure Killian22
+begin
+	gsay_message(47, 164, 50);
+end
+
+procedure Killian23
+begin
+	gsay_message(47, 165, 50);
+end
+
+procedure Killian24
+begin
+	gsay_reply(47, 166);
+	call Killian00;
+end
+
+procedure Killian26
+begin
+	gsay_reply(47, 167);
+	call Killian00;
+end
+
+procedure Killian27
+begin
+	gsay_message(47, 168, 50);
+end
+
+procedure Killian28
+begin
+	gsay_reply(47, 169);
+	call Killianx1;
+end
+
+procedure Killian29
+begin
+	gsay_message(47, 170, 50);
+end
+
+procedure Killian30
+begin
+	ILLEGAL := 0;
+	ILLEGBEFORE := 0;
+	gsay_reply(47, 171);
+	call Killianx1;
+end
+
+procedure Killian31
+begin
+	ILLEGAL := 0;
+	TRESPASS := 0;
+	gsay_reply(47, 172);
+	giq_option(4, 47, 173, Killian34, 50);
+	giq_option(5, 47, 174, Killian32, 50);
+	giq_option(4, 47, 175, Killian35, 50);
+	giq_option(-3, 47, 122, Killianx2, 50);
+end
+
+procedure Killian32
+begin
+	gsay_reply(47, 176);
+	giq_option(4, 47, 177, Killian32a, 51);
+	giq_option(5, 47, 178, KillianCbt, 51);
+end
+
+procedure Killian34
+begin
+	gsay_reply(47, 179);
+	giq_option(4, 47, 180, Killianx2, 50);
+	giq_option(5, 47, 181, KillianCbt, 51);
+end
+
+procedure Killian35
+begin
+	gsay_reply(47, 182);
+	call Killianx1;
+end
+
+procedure Killian36
+begin
+	gsay_message(47, 185, 50);
+end
+
+procedure Killian37
+begin
+	gsay_message(47, 186, 50);
+end
+
+procedure Killian38
+begin
+	gsay_message(47, 187, 50);
+end
+
+procedure Killian39
+begin
+	gsay_message(47, 188, 50);
+end
+
+procedure Killian40
+begin
+	gsay_message(47, 189, 50);
+end
+
+procedure Killian41
+begin
+	gsay_message(47, 190, 50);
+end
+
+procedure Killian42
+begin
+	gsay_message(47, 191, 50);
+	call Killianx;
+end
+
+procedure Killian43
+begin
+	gsay_message(47, 192, 50);
+	call Killianx;
+end
+
+procedure Killian44
+begin
+	gsay_reply(47, 193);
+	call Killianx1;
+end
+
+procedure Killian45
+begin
+	gsay_reply(47, 194);
+	giq_option(4, 47, 195, Killian45a, 50);
+	giq_option(4, 47, 196, Killian46, 50);
+end
+
+procedure Killian45a
+begin
+	gsay_reply(47, " ");
+	call Killian00;
+end
+
+procedure Killian46
+begin
+	gsay_message(47, 197, 50);
+	call Killianx;
+end
+
+procedure Killian47
+begin
+	set_map_var(2, 0);
+	gsay_reply(47, 198);
+	giq_option(4, 47, 199, Killian48, 50);
+	giq_option(4, 47, 200, Killian50, 50);
+	giq_option(4, 47, 201, Killian90, 49);
+	giq_option(-3, 47, 110, Killian90, 49);
+	giq_option(-3, 47, 111, Killian52, 50);
+end
+
+procedure Killian48
+begin
+	gsay_reply(47, 202);
+	giq_option(4, 47, 203, Killian49, 50);
+	giq_option(4, 47, 204, Killian51, 50);
+	giq_option(6, 47, 205, Killian52, 50);
+end
+
+procedure Killian49
+begin
+	gsay_reply(47, 206);
+	giq_option(4, 47, 207, Killian50, 50);
+	giq_option(5, 47, 208, Killian51, 50);
+	giq_option(4, 47, 209, Killian52, 50);
+end
+
+procedure Killian50
+begin
+	gsay_reply(47, 210);
+	giq_option(4, 47, 211, Killian53, 50);
+	giq_option(4, 47, 212, Killian52, 50);
+	giq_option(5, 47, 213, Killian51, 50);
+end
+
+procedure Killian51
+begin
+	gsay_reply(47, 214);
+	giq_option(4, 47, 215, Killian53, 50);
+	giq_option(4, 47, 216, Killian52, 51);
+end
+
+procedure Killian52
+begin
+	set_global_var(CAPTURE_GIZMO, 2);
+	set_map_var(6, 2);
+	gsay_message(47, 217, 51);
+	set_global_var(KILLIAN_SOMETHING_0, 1);
+	call Killianx1;
+end
+
+procedure Killian53
+begin
+	gsay_message(47, 218, 50);
+	call Killianx4;
+end
+
+procedure Killian54
+begin
+	gsay_reply(47, 219);
+	giq_option(4, 47, 220, Killian55, 50);
+	giq_option(-3, 47, 111, Killian55, 50);
+	if ((global_var(BUG_PLANTED) == 1) or (global_var(GOT_CONFESSION) == 1)) then begin
+		giq_option(4, 47, 221, Killian56, 49);
+		giq_option(-3, 47, 110, Killian56, 49);
+	end
+end
+
+procedure Killian55
+begin
+	gsay_message(47, 222, 50);
+	call Killianx;
+end
+
+procedure Killian56
+begin
+	gsay_reply(47, 223);
+	if (global_var(BUG_PLANTED)) then begin
+		giq_option(4, 47, 224, Killian57, 50);
+		giq_option(-3, 47, 108, Killian57, 50);
+	end
+	if (global_var(GOT_CONFESSION)) then begin
+		giq_option(4, 47, 225, Killian58, 50);
+	end
+end
+
+procedure Killian57
+begin
+	gsay_message(47, 226, 49);
+	call soundcheck;
+end
+
+procedure Killian58
+begin
+	gsay_reply(47, 228);
+	giq_option(0, 634, 106, playback, 49);
+end
+
+procedure Killian59
+begin
+	if (map_var(6) == 0) then begin
+		set_map_var(6, 1);
+	end
+	gsay_reply(47, 230);
+	giq_option(4, 47, 231, Killian60, 50);
+	giq_option(4, 47, 232, Killian61, 50);
+	giq_option(5, 47, 233, Killian64, 50);
+	giq_option(-3, 47, 110, Killian60, 50);
+	giq_option(-3, 47, 111, Killian64, 50);
+end
+
+procedure Killian60
+begin
+	set_local_var(1, 3);
+	call LevelToReact;
+	set_global_var(CAPTURE_GIZMO, 1);
+	gsay_message(47, 234, 49);
+	call Killianx;
+end
+
+procedure Killian61
+begin
+	gsay_reply(47, 235);
+	giq_option(4, 47, 236, Killian62, 50);
+	giq_option(4, 47, 237, Killian63, 50);
+end
+
+procedure Killian62
+begin
+	set_global_var(CAPTURE_GIZMO, 1);
+	gsay_message(47, 238, 50);
+	call Killianx;
+end
+
+procedure Killian63
+begin
+	gsay_reply(47, 239);
+	giq_option(4, 47, 240, Killian62, 50);
+	giq_option(4, 47, 241, Killian63a, 51);
+end
+
+procedure Killian64
+begin
+	gsay_message(47, 242, 50);
+	call Killianx;
+end
+
+procedure Killian65
+begin
+	gsay_message(47, 243, 50);
+end
+
+procedure Killian66
+begin
+	gsay_message(47, 244, 50);
+end
+
+procedure Killian67
+begin
+	gsay_message(47, 245, 50);
+end
+
+procedure Killian68
+begin
+	gsay_message(47, 246, 50);
+end
+
+procedure Killian71
+begin
+	gsay_message(47, 249, 50);
+end
+
+procedure Killian72
+begin
+	gsay_message(47, 250, 50);
+end
+
+procedure Killian73
+begin
+	gsay_message(47, 251, 50);
+end
+
+procedure Killian74
+begin
+	gsay_message(47, 252, 50);
+end
+
+procedure Killian75
+begin
+	gsay_message(47, 253, 50);
+end
+
+procedure Killian76
+begin
+	gsay_message(47, 254, 50);
+end
+
+procedure Killian88
+begin
+	gsay_reply(47, 243);
+	giq_option(4, 47, 273, Killianx, 50);
+	giq_option(4, 47, 274, KillianCbt, 51);
+	giq_option(4, 47, 275, Killian48, 49);
+end
+
+procedure Killian89
+begin
+	set_local_var(9, 1);
+	set_map_var(2, 0);
+	float_msg(self_obj, message_str(47, 284), 0);
+end
+
+procedure Killian90
+begin
+	gsay_reply(47, 165);
+	giq_option(1, 634, 106, Killian53, 49);
+end
+
+procedure Killianx
+begin
+end
+
+procedure Killianx1
+begin
+	giq_option(4, 47, 183, Killianx3, 50);
+	giq_option(4, 47, 184, KillianCbt, 51);
+	giq_option(-3, 47, 108, KillianCbt, 51);
+end
+
+procedure Killianx2
+begin
+	if ((game_time_hour >= sleep_time) or (game_time_hour < 700)) then begin
+		remove_dude := 1;
+	end
+end
+
+procedure Killianx3
+begin
+	go_to_jail := 1;
+end
+
+procedure Killianx4
+begin
+	item := create_object_sid(57, 0, 0, -1);
+	add_obj_to_inven(dude_obj, item);
+	if (get_critter_stat(dude_obj, 4) > 3) then begin
+		item := create_object_sid(104, 0, 0, -1);
+		add_obj_to_inven(dude_obj, item);
+	end
+	set_global_var(HIRED_BY_KILLIAN, 1);
+end
+
+procedure Killian69
+begin
+	gsay_message(47, 247, 50);
+end
+
+procedure Killian70
+begin
+	gsay_message(47, 248, 50);
+end
+
+procedure Killian76a
+begin
+	gsay_message(47, 255, 50);
+end
+
+procedure Killian77
+begin
+	gsay_message(47, 256, 50);
+end
+
+procedure Killian78
+begin
+	gsay_message(47, 257, 50);
+end
+
+procedure Killian79
+begin
+	gsay_message(47, 258, 50);
+end
+
+procedure Killian80
+begin
+	gsay_message(47, 259, 50);
+end
+
+procedure Killian81
+begin
+	gsay_message(47, 260, 50);
+end
+
+procedure Killian82
+begin
+	gsay_message(47, 261, 50);
+end
+
+procedure Killian83
+begin
+	gsay_message(47, 262, 50);
+end
+
+procedure Killian84
+begin
+	gsay_message(47, 263, 50);
+end
+
+procedure Killian85
+begin
+	gsay_message(47, 264, 50);
+end
+
+procedure Killian86
+begin
+	gsay_message(47, 265, 50);
+end
+
+procedure Killian87
+begin
+	gsay_message(47, 266, 50);
+end
+
+procedure Killian02a
+begin
+	call DownReactLevel;
+	call Killian16;
+end
+
+procedure Killian02b
+begin
+	gsay_reply(0, 0);
+	call Killian00;
+end
+
+procedure Killian03aa
+begin
+	call DownReactLevel;
+	call Killian04;
+end
+
+procedure Killian03ba
+begin
+	call Killian03a;
+end
+
+procedure Killian03ca
+begin
+	call DownReactLevel;
+	call Killian16;
+end
+
+procedure Killian32a
+begin
+	call DownReactLevel;
+	call Killianx2;
+end
+
+procedure Killian63a
+begin
+	call DownReactLevel;
+	call Killian64;
+end
+
+procedure Killian_barter
+begin
+	gdialog_mod_barter(0);
+	gsay_reply(47, " ");
+	giq_option(0, 634, 108, Killianx, 50);
+end
+
+procedure Killian_give_stuff
+begin
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 104)) then begin
+		destroy_object(obj_carrying_pid_obj(dude_obj, 104));
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 57)) then begin
+		destroy_object(obj_carrying_pid_obj(dude_obj, 57));
+	end
+	giq_option(4, 47, 276, Killian_give_shotgun, 49);
+	giq_option(4, 47, 277, Killian_give_armor, 49);
+	giq_option(4, 47, 278, Killian_give_doctor_bag, 49);
+	giq_option(4, 47, 279, Killian_give_stimpaks, 49);
+	giq_option(4, 47, 280, Killian59, 49);
+	giq_option(-3, 47, 111, Killian59, 49);
+end
+
+procedure Killian_give_shotgun
+begin
+	item := create_object_sid(94, 0, 0, -1);
+	add_obj_to_inven(dude_obj, item);
+	item := create_object_sid(95, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	call Killian59;
+end
+
+procedure Killian_give_armor
+begin
+	item := create_object_sid(1, 0, 0, -1);
+	add_obj_to_inven(dude_obj, item);
+	call Killian59;
+end
+
+procedure Killian_give_doctor_bag
+begin
+	item := create_object_sid(91, 0, 0, -1);
+	add_obj_to_inven(dude_obj, item);
+	call Killian59;
+end
+
+procedure Killian_give_stimpaks
+begin
+	item := create_object_sid(40, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	call Killian59;
+end
+
+procedure soundcheck
+begin
+	gsay_reply(47, 227);
+	call Killian_give_stuff;
+end
+
+procedure playback
+begin
+	gsay_reply(47, 229);
+	call Killian_give_stuff;
+end
+
+procedure sleeping
+begin
+	if (local_var(7) == 1) then begin
+		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) >= 0)) then begin
+				if (tile_num(self_obj) != home_tile) then begin
+					animate_move_obj_to_tile(self_obj, home_tile, 0);
+				end
+				else begin
+					set_local_var(7, 0);
+				end
+			end
+			else begin
+				move_to(self_obj, home_tile, elevation(self_obj));
+				if (tile_num(self_obj) == home_tile) then begin
+					set_local_var(7, 0);
+				end
+			end
+		end
+	end
+	else begin
+		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) >= 0)) then begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					animate_move_obj_to_tile(self_obj, sleep_tile, 0);
+				end
+				else begin
+					set_local_var(7, 1);
+				end
+			end
+			else begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					move_to(self_obj, sleep_tile, elevation(self_obj));
+				end
+				else begin
+					set_local_var(7, 1);
+				end
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure get_stuff_from_safe
+begin
+	if (item_caps_total(KillSafe_ptr) != 0) then begin
+		item_caps_adjust(self_obj, item_caps_total(KillSafe_ptr));
+		item_caps_adjust(KillSafe_ptr, -item_caps_total(KillSafe_ptr));
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(KillSafe_ptr, 40) != 0) then begin// Stimpak
+		item := obj_carrying_pid_obj(KillSafe_ptr, 40);
+		rm_obj_from_inven(KillSafe_ptr, item);
+		add_obj_to_inven(self_obj, item);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(KillSafe_ptr, 31) != 0) then begin// .44 Magnum JHP
+		item := obj_carrying_pid_obj(KillSafe_ptr, 31);
+		rm_obj_from_inven(KillSafe_ptr, item);
+		add_obj_to_inven(self_obj, item);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(KillSafe_ptr, 41) != 0) then begin// Bottle Caps
+		item := obj_carrying_pid_obj(KillSafe_ptr, 41);
+		rm_obj_from_inven(KillSafe_ptr, item);
+		add_obj_to_inven(self_obj, item);
+	end
+end
+
+procedure put_stuff_in_safe
+begin
+	if (item_caps_total(self_obj) != 0) then begin
+		item_caps_adjust(KillSafe_ptr, item_caps_total(self_obj));
+		item_caps_adjust(self_obj, -item_caps_total(self_obj));
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 40) > 1) then begin// Stimpak
+		item := obj_carrying_pid_obj(self_obj, 40);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(KillSafe_ptr, item);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 31) > 1) then begin// .44 Magnum JHP
+		item := obj_carrying_pid_obj(self_obj, 31);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(KillSafe_ptr, item);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 41) > 1) then begin//  Bottle Caps
+		item := obj_carrying_pid_obj(self_obj, 41);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(KillSafe_ptr, item);
+	end
+end
+
+procedure Put_Back_On_Tables
+begin
+//
+//  Added for Fallout Fixt:
+//
+/*
+shotty 94
+shells 95
+knives 4 45 236
+spear 7
+10mm weps 8 9 29 30
+explosives 51 85
+223 FMJ 10 34
+.44 ammo 31 111
+*/
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 94) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 94);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 95) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 95);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 4) > 1) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 4);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 45) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 45);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 236) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 236);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 7) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 7);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 8) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 8);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 9) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 9);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 29) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 29);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 30) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 30);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 51) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 51);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 85) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 85);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 10) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 10);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 34) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 34);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 31) > 4) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 31);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 111) > 4) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 111);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store1_ptr, item);
+	end
+/*
+lthrj 74
+ltharm 1
+mtlarm 2
+*/
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 74) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 74);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store2_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 1) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 1);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store2_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 2) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 2);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store2_ptr, item);
+	end
+/*
+stims 40
+rope 127
+keys 83
+doc bag 91
+medkit 47
+scanner 59
+geiger 52
+fruit 71
+bag 46 93
+backpack 90
+*/
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 79) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 79);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 40) > 6) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 40);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 127) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 127);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 83) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 83);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 91) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 91);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 47) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 47);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 59) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 59);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 52) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 52);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 71) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 71);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 46) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 46);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 93) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 93);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+	/* has how many? */    while(obj_is_carrying_obj_pid(self_obj, 90) > 0) do
+	begin
+		item := obj_carrying_pid_obj(self_obj, 90);
+		rm_obj_from_inven(self_obj, item);
+		add_obj_to_inven(Killian_store3_ptr, item);
+	end
+end
+

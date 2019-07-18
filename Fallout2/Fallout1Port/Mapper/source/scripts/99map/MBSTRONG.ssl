@@ -1,0 +1,239 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure combat_p_proc;//    script_action == 13
+procedure add_party;
+procedure update_party;
+procedure remove_party;
+
+variable party_elevation;
+variable dude_start_hex;
+
+export variable Ian_ptr;
+export variable Dog_ptr;
+export variable Tycho_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+
+variable player_elevation;
+
+export variable field_change;
+export variable ignoring_dude;
+export variable radio_computer;
+export variable radio_room_attacked;
+export variable removal_ptr;
+export variable valid_target;
+export variable FieldC1a_ptr;
+export variable FieldC1b_ptr;
+export variable FieldC2a_ptr;
+export variable FieldC2b_ptr;
+export variable Field1a_Ptr;
+export variable Field2a_Ptr;
+export variable Field3a_Ptr;
+export variable Field4a_Ptr;
+export variable Field5a_Ptr;
+export variable Field6a_Ptr;
+export variable Field1b_Ptr;
+export variable Field2b_Ptr;
+
+procedure start
+begin
+	if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+		call combat_p_proc;
+	end
+	else begin
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+			set_light_level(100);
+			if (map_first_run) then begin
+				field_change := "off";
+			end
+			if (global_var(VATS_ALERT)) then begin
+				field_change := "on";
+			end
+			if (global_var(FORCE_FIELDS_OFF)) then begin
+				field_change := "off";
+			end
+			if (global_var(LOAD_MAP_INDEX) == 0) then begin
+				override_map_start(120, 75, 0, 2);
+//display_msg("gvar32=0");
+			end
+			else begin
+				if (global_var(LOAD_MAP_INDEX) == 1) then begin
+					override_map_start(120, 75, 1, 2);
+//display_msg("gvar32=1");
+				end
+				else begin
+					if (global_var(LOAD_MAP_INDEX) == 12) then begin
+						override_map_start(92, 135, 0, 5);// was (92, 135, 0, 5)
+//display_msg("gvar32=12");
+					end
+					else begin
+						override_map_start(93, 143, 0, 5);
+//display_msg("gvar32=" + global_var(LOAD_MAP_INDEX));
+					end
+				end
+			end
+			radio_room_attacked := map_var(13);
+			call add_party;
+		end
+		else begin
+			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+				set_light_level(100);
+				if (global_var(VATS_ALERT) == 0) then begin
+					if (elevation(dude_obj) == 0) then begin
+						set_global_var(MARK_BASE_2, 1);
+					end
+					else begin
+						set_global_var(MARK_BASE_3, 1);
+					end
+				end
+				else begin
+					if (map_var(24) == 0) then begin
+						display_msg(message_str(766, 186));
+						set_map_var(24, 1);
+					end
+					set_global_var(MARK_BASE_2, 0);
+					set_global_var(MARK_BASE_3, 0);
+				end
+				if (removal_ptr != 0) then begin
+					destroy_object(removal_ptr);
+					removal_ptr := 0;
+				end
+				call update_party;
+			end
+			else begin
+				if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+					call remove_party;
+				end
+			end
+		end
+	end
+end
+
+procedure combat_p_proc
+begin
+	if (global_var(DESTROY_VATS_4)) then begin
+		script_overrides;
+		set_global_var(DESTROY_VATS_4, 0);
+		set_global_var(ENTERING_VATS_HOW, 3);
+		load_map(32, 5);
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+
+procedure Invasion
+begin
+	if (global_var(MASTER_BLOWN) == 0) then begin
+		if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(NECROPOLIS_WAS_INVADED, 1);
+		end
+		if (global_var(THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(THE_HUB_WAS_INVADED, 1);
+		end
+		if (global_var(BROTHERHOOD_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(BROTHERHOOD_WAS_INVADED, 1);
+			set_global_var(MARK_BROTHER_2, 0);
+			set_global_var(MARK_BROTHER_3, 0);
+			set_global_var(MARK_BROTHER_4, 0);
+			set_global_var(MARK_BROTHER_5, 0);
+		end
+		if (global_var(JUNKTOWN_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(JUNKTOWN_WAS_INVADED, 1);
+		end
+		if (global_var(SHADY_SANDS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(SHADY_SANDS_WAS_INVADED, 1);
+		end
+		if (global_var(VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(VAULT_13_WAS_INVADED, 1);
+			play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+			metarule(13, 0);
+		end
+		if (global_var(FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(FOLLOWERS_INVADED, 1);
+		end
+	end
+end
+

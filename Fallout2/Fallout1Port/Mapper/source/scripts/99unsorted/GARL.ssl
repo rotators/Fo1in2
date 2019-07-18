@@ -1,0 +1,1194 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure destroy_p_proc;//    script_action == 18
+procedure talk_p_proc;//    script_action == 11
+procedure timed_event_p_proc;
+procedure Critter_Action;//    script_action == 12
+procedure damage_p_proc;//    script_action == 14
+import variable women_killed;
+import variable signal_women;
+import variable killing_women;
+import variable Garls_Inven_Ptr;
+import variable Cell_Door_Ptr;
+procedure garl00;
+procedure garl01;
+procedure garl01a;
+procedure garl01b;
+procedure garl01c;
+procedure garl01d;
+procedure garl02;
+procedure garl03;
+procedure garl03a;
+procedure garl04;
+procedure garl04a;
+procedure garl04b;
+procedure garl04c;
+procedure garl05;
+procedure garl06;
+procedure garl06a;
+procedure garl07;
+procedure garl08;
+procedure garl09;
+procedure garl10;
+procedure garl11;
+procedure garl12;
+procedure garl12a;
+procedure garl12b;
+procedure garl15;
+procedure garl15a;
+procedure garl16;
+procedure garl17;
+procedure garl17a;
+procedure garl18;
+procedure garl19;
+procedure garl20;
+procedure garl21;
+procedure garl22;
+procedure garl23;
+procedure garl24;
+procedure garl25;
+procedure garl26;
+procedure garl27;
+procedure garl28;
+procedure garl29;
+procedure garl30;
+procedure garl31;
+procedure garl32;
+procedure garl33;
+procedure garl34;
+procedure garl35;
+procedure garl36;
+procedure garl37;
+procedure garl37a;
+procedure garl38;
+procedure garl38a;
+procedure garl39;
+procedure garl39a;
+procedure garl40;
+procedure garl41;
+procedure garl42;
+procedure garl43;
+procedure garlx;
+procedure garlend;
+procedure first;
+procedure notfirst;
+procedure freetandi;
+procedure garlcbt;
+procedure honorcbt;
+procedure honorarea;
+procedure garlbarter;
+procedure return_to_map;
+procedure PickDeadBodyType;
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+procedure generate_party_IDs;
+variable exit_line;
+variable HOSTILE;
+variable Only_Once := 1;
+variable temp;
+variable tandi_pid_ptr;
+variable counter := 0;
+variable TANDI := 16777279;
+variable Tandi_flag;
+variable DOGMEAT := 16777338;
+variable Dogmeat_flag;
+variable IAN := 16777292;
+variable Ian_flag;
+variable TYCHO := 16777426;
+variable Tycho_flag;
+variable KATJA := 16777518;
+variable Katja_flag;
+variable DeathType := 56;
+
+procedure start
+begin
+	if global_var(SHADY_SANDS_WAS_INVADED) then begin
+		if (cur_map_index == 24) then begin //  RAIDERS - KHANS
+			if (local_var(4) != 1) then begin
+				set_local_var(4, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+	else begin
+		if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+			if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+				if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+					if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+					if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+						variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+					set_local_var(12, 1);
+				end
+			end
+		end
+		if Only_Once then begin
+			Only_Once := 0;
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 6);
+			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 22);
+		end
+		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+			call talk_p_proc;
+		end
+		else begin
+			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+				call timed_event_p_proc;
+			end
+			else begin
+				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+					script_overrides;
+					display_msg(message_str(137, 100));
+				end
+				else begin
+					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+						HOSTILE := 1;
+					end
+					else begin
+						if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+							call Critter_Action;
+						end
+						else begin
+							if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+								call damage_p_proc;
+							end
+							else begin
+								if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+									call destroy_p_proc;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		if (global_var(GARLS_FRIEND) != 1) then begin
+			dialogue_system_enter;
+		end
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			call freetandi;
+		end
+		else begin
+			if (fixed_param == 3) then begin
+				call honorarea;
+				float_msg(self_obj, message_str(137, 209), 0);
+			end
+			else begin
+				if (fixed_param == 4) then begin
+					if (local_var(18) > 0) then begin
+						if not(local_var(8)) then begin
+							call talk_p_proc;
+						end
+						call return_to_map;
+						call freetandi;
+					end
+					else begin
+						add_timer_event(self_obj, 1, 4);
+						HOSTILE := 1;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (elevation(self_obj) == 1) then begin
+		anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), tile_num(dude_obj)));
+		start_gdialog(137, self_obj, 4, -1, -1);
+		gsay_start;
+		gsay_message(137, 208, 50);
+		gsay_end;
+		end_dialogue;
+		add_timer_event(self_obj, 1, 4);
+		set_local_var(8, 1);
+	end
+	else begin
+		if (killing_women) then begin
+			call garl39a;
+		end
+		else begin
+			set_local_var(3, 1);
+			call get_reaction;
+			start_gdialog(137, self_obj, 4, -1, -1);
+			gsay_start;
+			if (women_killed > 1) then begin
+				call garl11;
+			end
+			else begin
+				if (global_var(MISTAKEN_ID)) then begin//Raiders think you are Garl's father
+					call garl01;
+				end
+				else begin
+					if (local_var(4) < 1) then begin
+						call first;
+						set_local_var(4, 1);
+					end
+					else begin
+						call notfirst;
+					end
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+	if (obj_carrying_pid_obj(dude_obj, 212)) then begin
+		rm_obj_from_inven(dude_obj, tandi_pid_ptr);
+		destroy_object(tandi_pid_ptr);
+		set_global_var(TANDI_HIRELING_STATUS, 5);
+		set_map_var(2, 2);
+		obj_unlock(Cell_Door_Ptr);
+		add_timer_event(self_obj, 1, 2);
+	end
+	else begin
+		if (obj_carrying_pid_obj(self_obj, 212)) then begin
+			rm_obj_from_inven(self_obj, tandi_pid_ptr);
+			destroy_object(tandi_pid_ptr);
+			call garl20;
+		end
+	end
+end
+
+procedure return_to_map
+begin
+	move_to(dude_obj, local_var(6), 0);
+	move_obj_inven_to_obj(Garls_Inven_Ptr, dude_obj);
+	set_global_var(TANDI_HIRELING_STATUS, 5);
+	set_map_var(2, 2);
+	obj_unlock(Cell_Door_Ptr);
+end
+
+procedure Critter_Action
+begin
+	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
+	end
+	else begin
+		if (global_var(MISTAKEN_ID)) then begin//Raiders think you are Garl's father
+			set_global_var(ENEMY_RAIDERS, 0);
+		end
+		else begin
+			if global_var(TANDI_ESCAPE) then begin
+				set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
+			end
+			if (obj_can_see_obj(self_obj, dude_obj)) then begin
+				if (global_var(RAID_LOOTING)) then begin//  "RAID_LOOTING" (are you stealing from them)
+					set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
+				end
+			end
+		end
+	end
+	if (global_var(ENEMY_RAIDERS) and obj_can_see_obj(self_obj, dude_obj)) then begin
+		HOSTILE := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		HOSTILE := 0;
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		HOSTILE := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (local_var(18) > 0) and not(combat_is_initialized) and (elevation(self_obj) == 1) and not(local_var(9)) then begin
+		set_local_var(9, 1);
+		add_timer_event(self_obj, 1, 4);
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj == dude_obj then begin
+		if (local_var(7) == 0) then begin
+			set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
+		end
+		else begin
+			set_local_var(18, 1);
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(GARL_DEAD, 1);// Is Garl dead?
+	set_global_var(TOTAL_RAIDERS, (global_var(TOTAL_RAIDERS) - 1));// Number of Raiders left
+	if (local_var(7) == 1) then begin
+		move_to(dude_obj, local_var(6), 0);
+		move_obj_inven_to_obj(Garls_Inven_Ptr, dude_obj);
+		set_global_var(TANDI_HIRELING_STATUS, 5);
+		set_map_var(2, 2);
+		obj_unlock(Cell_Door_Ptr);
+	end
+	else begin
+		if (local_var(7) == 0) then begin
+			if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+				set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
+				set_global_var(GARLS_FRIEND, 0);//GARLS_FRIEND
+			end
+		end
+	end
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+	end
+//
+// "ARMOR DESTROY ON DEATH" MOD:
+//
+	if global_var(ARMOR_DESTROY_MOD) then begin// if enabled
+		if (critter_inven_obj(self_obj, 0) > 0) then begin
+			variable slot0 := 0;
+			slot0 := critter_inven_obj(self_obj, 0);
+			rm_obj_from_inven(self_obj, slot0);
+			destroy_object(slot0);
+		end
+		else begin
+			variable HasArmor := 0;
+			HasArmor := obj_carrying_pid_obj(self_obj, 74);
+			if (HasArmor > 0) then begin
+				rm_obj_from_inven(self_obj, HasArmor);
+				destroy_object(HasArmor);
+			end
+			else begin
+				HasArmor := obj_carrying_pid_obj(self_obj, 1);
+				if (HasArmor > 0) then begin
+					rm_obj_from_inven(self_obj, HasArmor);
+					destroy_object(HasArmor);
+				end
+				else begin
+					HasArmor := obj_carrying_pid_obj(self_obj, 113);
+					if (HasArmor > 0) then begin
+						rm_obj_from_inven(self_obj, HasArmor);
+						destroy_object(HasArmor);
+					end
+					else begin
+						HasArmor := obj_carrying_pid_obj(self_obj, 2);
+						if (HasArmor > 0) then begin
+							rm_obj_from_inven(self_obj, HasArmor);
+							destroy_object(HasArmor);
+						end
+						else begin
+							HasArmor := obj_carrying_pid_obj(self_obj, 17);
+							if (HasArmor > 0) then begin
+								rm_obj_from_inven(self_obj, HasArmor);
+								destroy_object(HasArmor);
+							end
+							else begin
+								HasArmor := obj_carrying_pid_obj(self_obj, 239);
+								if (HasArmor > 0) then begin
+									rm_obj_from_inven(self_obj, HasArmor);
+									destroy_object(HasArmor);
+								end
+								else begin
+									HasArmor := obj_carrying_pid_obj(self_obj, 3);
+									if (HasArmor > 0) then begin
+										rm_obj_from_inven(self_obj, HasArmor);
+										destroy_object(HasArmor);
+									end
+									else begin
+										HasArmor := obj_carrying_pid_obj(self_obj, 232);
+										if (HasArmor > 0) then begin
+											rm_obj_from_inven(self_obj, HasArmor);
+											destroy_object(HasArmor);
+										end
+										else begin
+											HasArmor := obj_carrying_pid_obj(self_obj, 240);
+											if (HasArmor > 0) then begin
+												rm_obj_from_inven(self_obj, HasArmor);
+												destroy_object(HasArmor);
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure freetandi
+begin
+	set_global_var(TANDI_HIRELING_STATUS, 5);
+	set_map_var(2, 2);
+	obj_unlock(Cell_Door_Ptr);
+end
+
+procedure garlcbt
+begin
+	HOSTILE := 1;
+end
+
+procedure honorcbt
+begin
+	add_timer_event(self_obj, 1, 3);
+end
+
+procedure honorarea
+begin
+	variable LVar0 := 0;
+	set_local_var(6, tile_num(dude_obj));
+	set_local_var(7, 1);
+	move_to(dude_obj, 20102, 1);
+	move_to(self_obj, 20301, 1);
+	if critter_inven_obj(dude_obj, 0) then begin
+		LVar0 := critter_inven_obj(dude_obj, 0);
+	end
+	rm_obj_from_inven(dude_obj, LVar0);
+	move_obj_inven_to_obj(self_obj, Garls_Inven_Ptr);
+	move_obj_inven_to_obj(dude_obj, Garls_Inven_Ptr);
+	if (LVar0 > 0) then begin
+		add_obj_to_inven(dude_obj, LVar0);
+		wield_obj_critter(dude_obj, LVar0);
+	end
+	call generate_party_IDs;
+	if (party_member_obj(IAN) != 0) then begin
+		move_to(party_member_obj(IAN), tile_num_in_direction(tile_num(dude_obj), 0, 10), 1);
+	end
+	if (party_member_obj(KATJA) != 0) then begin
+		move_to(party_member_obj(KATJA), tile_num_in_direction(tile_num(dude_obj), 1, 10), 1);
+	end
+	if (party_member_obj(TYCHO) != 0) then begin
+		move_to(party_member_obj(TYCHO), tile_num_in_direction(tile_num(dude_obj), 2, 10), 1);
+	end
+	if (party_member_obj(DOGMEAT) != 0) then begin
+		move_to(party_member_obj(DOGMEAT), tile_num_in_direction(tile_num(dude_obj), 4, 10), 1);
+	end
+	if (party_member_obj(TANDI) != 0) then begin
+		move_to(party_member_obj(TANDI), tile_num_in_direction(tile_num(dude_obj), 5, 10), 1);
+	end
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	critter_add_trait(self_obj, 1, 6, 87);
+	critter_add_trait(self_obj, 1, 5, 43);
+	call garlcbt;
+end
+
+procedure generate_party_IDs
+begin
+	if (party_member_obj(IAN) == 0) and (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		counter := 16777529;
+		while(counter != 16777556) do begin//  to 16777555
+			if (party_member_obj(counter) != 0) then begin
+				IAN := counter;
+			end
+			counter := (counter + 1);
+		end
+	end
+	counter := 0;
+	if (party_member_obj(TYCHO) == 0) and (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		counter := 16777556;
+		while(counter != 16777583) do begin//  to 16777582
+			if (party_member_obj(counter) != 0) then begin
+				TYCHO := counter;
+			end
+			counter := (counter + 1);
+		end
+	end
+	counter := 0;
+	if (party_member_obj(KATJA) == 0) and (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		counter := 16777583;
+		while(counter != 16777610) do begin//  to 16777609
+			if (party_member_obj(counter) != 0) then begin
+				KATJA := counter;
+			end
+			counter := (counter + 1);
+		end
+	end
+end
+
+procedure first
+begin
+	if (global_var(TANDI_HIRELING_STATUS) > 1) then begin
+		call garl43;
+	end
+	else begin
+		if (global_var(TANDI_HIRELING_STATUS) > 0) then begin
+			call garl12;
+		end
+		else begin
+			call garl32;
+		end
+	end
+end
+
+procedure notfirst
+begin
+	if (global_var(TANDI_HIRELING_STATUS) > 1) then begin
+		call garl43;
+	end
+	else begin
+		if (global_var(TANDI_HIRELING_STATUS) > 0) then begin
+			call garl22;
+		end
+		else begin
+			call garl41;
+		end
+	end
+end
+
+procedure garl00
+begin
+	gsay_message(137, 101, 50);
+	call garlcbt;
+end
+
+procedure garl01
+begin
+	gsay_reply(137, 102);
+	giq_option(-3, 137, 207, garl09, 50);
+	giq_option(4, 137, 103, garl01a, 50);
+	giq_option(5, 137, 104, garl01b, 50);
+	giq_option(6, 137, 105, garl01c, 50);
+end
+
+procedure garl01a
+begin
+	call garl02;
+end
+
+procedure garl01b
+begin
+	call garl03;
+end
+
+procedure garl01c
+begin
+	call garl04;
+end
+
+procedure garl01d
+begin
+	gsay_reply(137, 106);
+	giq_option(4, 137, 107, garl02, 50);
+	giq_option(5, 137, 108, garl03, 50);
+	giq_option(6, 137, 109, garl04, 50);
+end
+
+procedure garl02
+begin
+	gsay_message(137, 110, 50);
+	set_global_var(MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
+	call garlcbt;
+end
+
+procedure garl03
+begin
+	gsay_reply(137, 111);
+	giq_option(8, 137, 112, garl03a, 50);
+end
+
+procedure garl03a
+begin
+	set_global_var(MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
+	call garlcbt;
+end
+
+procedure garl04
+begin
+	gsay_reply(137, 113);
+	giq_option(6, 137, 114, garl04a, 50);
+	giq_option(6, 137, 115, garl04b, 50);
+end
+
+procedure garl04a
+begin
+	call garl06;
+end
+
+procedure garl04b
+begin
+	call garl05;
+end
+
+procedure garl04c
+begin
+	gsay_reply(137, 116);
+	giq_option(6, 137, 117, garl06, 50);
+	giq_option(6, 137, 118, garl05, 50);
+end
+
+procedure garl05
+begin
+	gsay_message(137, 119, 50);
+	set_global_var(MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
+	call garlcbt;
+end
+
+procedure garl06
+begin
+	gsay_reply(137, 120);
+	if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+		giq_option(6, 137, 121, garl06a, 50);
+	end
+	giq_option(6, 137, 122, garl10, 50);
+	giq_option(6, 137, 123, garl10, 50);
+end
+
+procedure garl06a
+begin
+	if (is_success(do_check(dude_obj, 3, 0)) or is_success(roll_vs_skill(dude_obj, 14, 10))) then begin
+		call garl08;
+	end
+	else begin
+		call garl09;
+	end
+end
+
+procedure garl07
+begin
+	gsay_message(137, 124, 50);
+	giq_option(6, 137, 125, garl08, 50);
+end
+
+procedure garl08
+begin
+	gsay_message(137, 126, 50);
+	set_global_var(MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
+	call freetandi;
+end
+
+procedure garl09
+begin
+	gsay_message(137, 127, 50);
+	call garlcbt;
+end
+
+procedure garl10
+begin
+	gsay_message(137, 128, 50);
+	set_global_var(MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
+	call garlcbt;
+end
+
+procedure garl11
+begin
+	if (women_killed > 1) then begin
+		women_killed := 0;
+		gsay_message(137, 129, 50);
+		call garlcbt;
+	end
+end
+
+procedure garl12
+begin
+	gsay_reply(137, 130);
+	if (global_var(TANDI_TALKED_ABOUT) == 1) then begin
+		giq_option(4, 137, 131, garl12b, 50);
+		giq_option(5, 137, 133, garl15, 50);
+	end
+	else begin
+		giq_option(5, 137, 200, garl12a, 50);
+	end
+	giq_option(4, 137, 132, garlcbt, 50);
+	giq_option(-3, 137, 134, garl17, 50);
+end
+
+procedure garl12a
+begin
+	gsay_message(137, 201, 50);
+end
+
+procedure garl12b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 10)) or is_success(do_check(dude_obj, 3, 0))) then begin
+		call garl15;
+	end
+	else begin
+		call garl10;
+	end
+end
+
+procedure garl15
+begin
+	gsay_reply(137, 140);
+	if (has_skill(dude_obj, 14) >= 45) then begin
+		giq_option(6, 137, 141, garl15a, 50);
+	end
+	giq_option(6, 137, 142, garl18, 50);
+	giq_option(6, 137, 143, garl21, 50);
+	giq_option(5, 137, 203, garl28, 50);
+end
+
+procedure garl15a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 10)) or is_success(do_check(dude_obj, 3, 0))) then begin
+		call garl16;
+	end
+	else begin
+		call garl17;
+	end
+end
+
+procedure garl16
+begin
+	gsay_message(137, 145, 50);
+	call freetandi;
+end
+
+procedure garl17
+begin
+	gsay_message(137, 146, 50);
+	call garlcbt;
+end
+
+procedure garl17a
+begin
+	gsay_message(137, 204, 50);
+	call garlcbt;
+end
+
+procedure garl18
+begin
+	tandi_pid_ptr := create_object_sid(212, 0, 0, -1);
+	add_obj_to_inven(self_obj, tandi_pid_ptr);
+	gsay_message(137, 147, 50);
+	call garlbarter;
+end
+
+procedure garl19
+begin
+	float_msg(self_obj, message_str(137, 148), 2);
+	call freetandi;
+end
+
+procedure garl20
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		float_msg(self_obj, message_str(137, 149), 2);
+	end
+	else begin
+		float_msg(self_obj, message_str(137, 205), 2);
+	end
+	call garlcbt;
+end
+
+procedure garl21
+begin
+	gsay_message(137, 150, 50);
+	call garlcbt;
+end
+
+procedure garl22
+begin
+	gsay_reply(137, 151);
+	giq_option(4, 137, 152, garl23, 50);
+	giq_option(4, 137, 153, garl24, 50);
+	giq_option(-3, 137, 207, garl17, 50);
+end
+
+procedure garl23
+begin
+	gsay_message(137, 155, 50);
+end
+
+procedure garl24
+begin
+	gsay_reply(137, 156);
+	giq_option(4, 137, 157, garl25, 50);
+	giq_option(6, 137, 158, garl18, 50);
+	giq_option(6, 137, 159, garl15a, 50);
+end
+
+procedure garl25
+begin
+	gsay_reply(137, 160);
+	giq_option(4, 137, 161, garl26, 50);
+	giq_option(4, 137, 162, garl27, 50);
+end
+
+procedure garl26
+begin
+	gsay_message(137, 163, 50);
+	call garlcbt;
+end
+
+procedure garl27
+begin
+	gsay_reply(137, 164);
+	giq_option(4, 137, 165, garl26, 50);
+	giq_option(4, 137, 166, garl28, 50);
+	giq_option(6, 137, 167, garl29, 50);
+end
+
+procedure garl28
+begin
+	gsay_reply(137, 168);
+	giq_option(4, 137, 169, honorcbt, 50);
+end
+
+procedure garl29
+begin
+	gsay_reply(137, 170);
+	giq_option(4, 137, 171, garlcbt, 50);
+end
+
+procedure garl30
+begin
+	gsay_message(137, 172, 50);
+	call freetandi;
+end
+
+procedure garl31
+begin
+	gsay_message(137, 173, 50);
+end
+
+procedure garl32
+begin
+	gsay_reply(137, 174);
+	giq_option(4, 137, 175, garl33, 50);
+	giq_option(6, 137, 176, garl34, 50);
+	giq_option(-3, 137, 154, garl23, 50);
+end
+
+procedure garl33
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(137, 177, 50);
+	end
+	else begin
+		gsay_message(137, 206, 50);
+	end
+	call garlcbt;
+end
+
+procedure garl34
+begin
+	gsay_reply(137, 178);
+	giq_option(6, 137, 179, garl35, 50);
+	giq_option(6, 137, 180, garl33, 50);
+end
+
+procedure garl35
+begin
+	gsay_reply(137, 181);
+	giq_option(4, 137, 182, garl37, 50);
+	giq_option(4, 137, 183, garl36, 50);
+end
+
+procedure garl36
+begin
+	gsay_message(137, 184, 50);
+end
+
+procedure garl37
+begin
+	gsay_reply(137, 185);
+	giq_option(4, 137, 186, garl38, 50);
+	giq_option(4, 137, 187, garl37a, 50);
+end
+
+procedure garl37a
+begin
+	signal_women := 2;
+	killing_women := 1;
+	add_timer_event(self_obj, game_ticks(15), 1);
+end
+
+procedure garl38
+begin
+	women_killed := 0;
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(137, 188, 50);
+	end
+	else begin
+		gsay_message(137, 189, 50);
+	end
+	call garlcbt;
+end
+
+procedure garl38a
+begin
+	women_killed := 0;
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		float_msg(self_obj, message_str(137, 188), 2);
+	end
+	else begin
+		float_msg(self_obj, message_str(137, 189), 2);
+	end
+	call garlcbt;
+end
+
+procedure garl39
+begin
+	gsay_message(137, 190, 50);
+	call garlcbt;
+end
+
+procedure garl39a
+begin
+	killing_women := 0;
+	if (women_killed > 1) then begin
+		call garl40;
+	end
+	else begin
+		call garl38a;
+	end
+end
+
+procedure garl40
+begin
+	women_killed := 0;
+	call TopReact;
+	float_msg(self_obj, message_str(137, 191), 1);
+	temp := 500;
+	display_msg(message_str(238, 100) + temp + message_str(238, 102));
+	give_exp_points(temp);
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + -2);
+	set_global_var(GARLS_FRIEND, 1);
+end
+
+procedure garl41
+begin
+	gsay_reply(137, 192);
+	giq_option(4, 137, 193, garl23, 50);
+	giq_option(6, 137, 194, garl42, 50);
+	giq_option(-3, 137, 195, garl23, 50);
+end
+
+procedure garl42
+begin
+	gsay_message(137, 196, 50);
+end
+
+procedure garl43
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(137, 197, 50);
+	end
+	else begin
+		gsay_message(137, 198, 50);
+	end
+	call garlcbt;
+end
+
+procedure garlx
+begin
+end
+
+procedure garlend
+begin
+end
+
+procedure garlbarter
+begin
+	gdialog_mod_barter(0);
+	gsay_message(137, "", 50);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure PickDeadBodyType
+begin
+	variable LVar0 := 0;
+	LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));
+//
+	if (LVar0 <= 5) then begin// 31.5%
+		DeathType := 57;//		burnt, face down  [FLAMER]
+	end
+	else begin
+		if (LVar0 <= 10) then begin// 26%
+			DeathType := 56;//		cut in half  [LASER RIFLE, GATLING LASER]
+		end
+		else begin
+			if (LVar0 <= 14) then begin// 21%
+				DeathType := 53;//		head & arm gone - full auto  [MINIGUN]
+			end
+			else begin
+				if (LVar0 <= 16) then begin// 10.5%
+					DeathType := 63;//		face down, blood pool  (generic death, no weapon associated)
+				end
+				else begin// <--------------------	16%
+					variable LVar1 := 0;
+					LVar1 := random(0, 2);
+					if (LVar1 == 0) then begin
+						DeathType := 54;// bullet holes - full auto partial hit
+					end
+					else begin
+						if (LVar1 == 1) then begin
+							DeathType := 59;// exploded  [ROCKET LAUNCHER]
+						end
+						else begin
+							if (LVar1 == 2) then begin
+								DeathType := 60;// melted pile  [PLASMA RIFLE]
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+

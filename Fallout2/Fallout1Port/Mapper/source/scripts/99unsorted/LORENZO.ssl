@@ -1,0 +1,1091 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure timed_event_p_proc;//    script_action == 22
+procedure map_enter_p_proc;
+
+procedure Lorenzo00;
+procedure Lorenzo01;
+procedure Lorenzo02;
+procedure Lorenzo02a;
+procedure Lorenzo04;
+procedure Lorenzo05;
+procedure Lorenzo06;
+procedure Lorenzo07;
+procedure Lorenzo08;
+procedure Lorenzo09;
+procedure Lorenzo09a;
+procedure Lorenzo12;
+procedure Lorenzo13;
+procedure Lorenzo14;
+procedure Lorenzo15;
+procedure Lorenzo15a;
+procedure Lorenzo15b;
+procedure Lorenzo15c;
+procedure Lorenzo15d;
+procedure Lorenzo15e;
+procedure Lorenzo15f;
+procedure Lorenzo16;
+procedure Lorenzo16a;
+procedure Lorenzo19;
+procedure Lorenzo20;
+procedure Lorenzo21;
+procedure Lorenzo22;
+procedure Lorenzo23;
+procedure Lorenzo24;
+procedure Lorenzo25;
+procedure Lorenzo26;
+procedure Lorenzo27;
+procedure Lorenzo28;
+procedure Lorenzo29;
+procedure Lorenzo30;
+procedure Lorenzo31;
+procedure Lorenzo32;
+procedure Lorenzo33;
+procedure Lorenzo34;
+procedure Lorenzo35;
+procedure Lorenzo36;
+procedure Lorenzo37;
+procedure Lorenzo38;
+procedure Lorenzo39;
+procedure Lorenzo40;
+procedure Lorenzo41;
+
+procedure SendInsideHouse;
+procedure combat;
+
+variable hostile;
+variable Only_Once := 1;
+variable item;
+variable SetDayNight;
+variable Destination;
+variable LastMove;
+variable VaultCount;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		item := 0;
+		LastMove := 23309;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 73);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 85);
+		if (map_first_run) then begin
+			item := create_object_sid(40, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 5);
+			item := create_object_sid(29, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 5);
+			item := create_object_sid(30, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 5);
+			item := create_object_sid(87, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 1);
+			item := create_object_sid(53, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 1);
+		end
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+					else begin
+						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+							call timed_event_p_proc;
+						end
+						else begin
+							if (script_action == 15) then begin
+								call map_enter_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	variable LVar0 := 0;
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (SetDayNight == 0) then begin
+		add_timer_event(self_obj, game_ticks(random(5, 20)), 1);
+		SetDayNight := 1;
+	end
+	if (map_var(55) == 2) then begin
+		hostile := 1;
+		float_msg(self_obj, message_str(597, 247), 2);
+	end
+	else begin
+		if (map_var(55) == 1) then begin
+			set_map_var(55, 0);
+			VaultCount := VaultCount + 1;
+			float_msg(self_obj, message_str(597, 246), 2);
+			if (VaultCount >= 2) then begin
+				hostile := 1;
+				float_msg(self_obj, message_str(597, 247), 2);
+			end
+		end
+	end
+	LVar0 := tile_num(self_obj);
+	if ((LVar0 == 22312) or (LVar0 == 23106) or (LVar0 == 24106)) then begin
+		if (anim_busy(self_obj) == 0) then begin
+			if (has_trait(1, self_obj, 10) != 0) then begin
+				anim(self_obj, 1000, 0);
+			end
+		end
+	end
+	else begin
+		if (LVar0 == 21112) then begin
+			if (anim_busy(self_obj) == 0) then begin
+				if (has_trait(1, self_obj, 10) != 5) then begin
+					anim(self_obj, 1000, 5);
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if (metarule(22, 0) == 0) then begin
+		set_local_var(8, 0);
+	end
+end
+
+procedure talk_p_proc
+begin
+	variable LVar0 := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (local_var(8) == 0) then begin
+		set_local_var(8, 1);
+		if (item_caps_total(self_obj) < 1000) then begin
+			if (item_caps_total(dude_obj) < 1000) then begin
+				item_caps_adjust(self_obj, (3000 + random(1, 4) + random(1, 6) + random(1, 8) + random(1, 10) + random(1, 12) + random(1, 20) + random(1, 34) + random(1, 69)));
+			end
+			else begin
+				if (item_caps_total(dude_obj) < 2000) then begin
+					item_caps_adjust(self_obj, (2000 + random(1, 4) + random(1, 6) + random(1, 8) + random(1, 10) + random(1, 12) + random(1, 20) + random(1, 34) + random(1, 69)));
+				end
+				else begin
+					item_caps_adjust(self_obj, (1000 + random(1, 4) + random(1, 6) + random(1, 8) + random(1, 10) + random(1, 12) + random(1, 20) + random(1, 34) + random(1, 69)));
+				end
+			end
+		end
+	end
+	call get_reaction;
+	if (map_var(22) == 1) then begin
+		call Lorenzo04;
+	end
+	else begin
+		if ((map_var(22) == 0) and ((map_var(11) == 1) or (map_var(44) == 1))) then begin
+			call Lorenzo00;
+		end
+		else begin
+			if ((local_var(6) > 0) and (((game_time / (10 * 60 * 60 * 24)) - local_var(5)) > 10)) then begin
+				call Lorenzo01;
+			end
+			else begin
+				if (local_var(6) > 0) then begin
+					call Lorenzo02;
+				end
+				else begin
+					call Lorenzo05;
+				end
+			end
+		end
+	end
+//	item_caps_adjust(self_obj, -item_caps_total(self_obj));
+	item_caps_adjust(self_obj, 69);
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(597, 100));
+end
+
+procedure timed_event_p_proc
+begin
+	call SendInsideHouse;
+end
+
+procedure SendInsideHouse
+begin
+	variable LVar0 := 0;
+	Destination := 0;
+	LVar0 := random(10, 30);
+	while(Destination == 0) do begin
+		Destination := random(1, 5);
+		if (Destination == 1) then begin
+			Destination := 23309;
+		end
+		else begin
+			if (Destination == 2) then begin
+				Destination := 21112;
+			end
+			else begin
+				if (Destination == 3) then begin
+					Destination := 22312;
+				end
+				else begin
+					if (Destination == 4) then begin
+						Destination := 23106;
+					end
+					else begin
+						if (Destination == 5) then begin
+							Destination := 24104;
+						end
+					end
+				end
+			end
+		end
+		if (Destination == LastMove) then begin
+			Destination := 0;
+		end
+	end
+	LastMove := Destination;
+	reg_anim_func(2, self_obj);
+	reg_anim_func(1, 1);
+	reg_anim_obj_move_to_tile(self_obj, Destination, -1);
+	reg_anim_func(3, 0);
+	rm_timer_event(self_obj);
+	add_timer_event(self_obj, game_ticks(LVar0), 1);
+end
+
+procedure Lorenzo00
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		float_msg(self_obj, message_str(597, 101), 2);
+	end
+	else begin
+		float_msg(self_obj, message_str(597, 102), 2);
+	end
+	set_map_var(22, 1);
+	set_map_var(18, 1);
+end
+
+procedure Lorenzo01
+begin
+	variable LVar0 := 0;
+	start_gdialog(597, self_obj, 4, -1, -1);
+	gsay_start;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	gsay_reply(597, 103);
+	giq_option(4, 597, 104, Lorenzo14, 51);
+	giq_option(4, 597, 105, Lorenzo15, 51);
+	if ((local_var(6) > 0) == 1) then begin
+		giq_option(4, 597, message_str(597, 106) + LVar0 + message_str(597, 107), Lorenzo16, 50);
+	end
+	giq_option(4, 597, 108, Lorenzo15, 51);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Lorenzo02
+begin
+	variable LVar0 := 0;
+	start_gdialog(597, self_obj, 4, -1, -1);
+	gsay_start;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	gsay_reply(597, 109);
+	giq_option(4, 597, 110, Lorenzo02a, 50);
+	giq_option(4, 597, 111, Lorenzo08, 50);
+	if (local_var(6) > 0) then begin
+		giq_option(4, 597, message_str(597, 106) + LVar0 + message_str(597, 107), Lorenzo09, 50);
+	end
+	giq_option(4, 597, 112, Lorenzo12, 50);
+	giq_option(-3, 597, 113, Lorenzo13, 50);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Lorenzo02a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Lorenzo06;
+	end
+	else begin
+		call Lorenzo07;
+	end
+end
+
+procedure Lorenzo04
+begin
+	float_msg(self_obj, message_str(597, 114), 2);
+	call combat;
+end
+
+procedure Lorenzo05
+begin
+	start_gdialog(597, self_obj, 4, -1, -1);
+	gsay_start;
+	set_map_var(18, 1);
+	gsay_reply(597, 115);
+	giq_option(4, 597, 110, Lorenzo02a, 50);
+	giq_option(4, 597, 116, Lorenzo19, 50);
+	giq_option(4, 597, 117, Lorenzo20, 51);
+	giq_option(4, 597, 112, Lorenzo12, 50);
+	giq_option(-3, 597, 113, Lorenzo21, 50);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Lorenzo06
+begin
+	gsay_reply(597, 118);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 119, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 120, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 121, Lorenzo24, 50);
+	giq_option(4, 597, 122, Lorenzo25, 50);
+	giq_option(4, 597, 123, Lorenzo26, 50);
+	giq_option(4, 597, 124, Lorenzo27, 50);
+end
+
+procedure Lorenzo07
+begin
+	if (map_var(19) == 0) then begin
+		gsay_message(597, 125, 51);
+		set_map_var(19, 1);
+	end
+	else begin
+		set_map_var(22, 1);
+		gsay_message(597, 126, 51);
+	end
+end
+
+procedure Lorenzo08
+begin
+	gsay_message(597, 127, 50);
+end
+
+procedure Lorenzo09
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	if (item_caps_total(dude_obj) >= LVar0) then begin
+		item_caps_adjust(dude_obj, -1 * LVar0);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_reply(597, 128);
+		giq_option(4, 597, 130, Lorenzo09a, 50);
+		giq_option(4, 597, 131, Lorenzo19, 50);
+		giq_option(4, 597, 132, Lorenzo12, 50);
+	end
+	else begin
+		gsay_reply(597, 129);
+		giq_option(4, 597, 130, Lorenzo07, 50);
+		giq_option(4, 597, 131, Lorenzo08, 50);
+		giq_option(4, 597, 132, Lorenzo12, 50);
+	end
+end
+
+procedure Lorenzo09a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20))) then begin
+		call Lorenzo06;
+	end
+	else begin
+		call Lorenzo07;
+	end
+end
+
+procedure Lorenzo12
+begin
+	gsay_message(597, 133, 50);
+end
+
+procedure Lorenzo13
+begin
+	set_map_var(22, 1);
+	gsay_message(597, 134, 51);
+end
+
+procedure Lorenzo14
+begin
+	set_map_var(44, 1);
+	set_map_var(11, 1);
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(597, 135, 51);
+	end
+	else begin
+		gsay_message(597, 136, 51);
+	end
+	call combat;
+end
+
+procedure Lorenzo15
+begin
+	variable LVar0 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	gsay_reply(597, 248);
+	if (item_caps_total(dude_obj) < LVar0) then begin
+		giq_option(4, 597, 249, Lorenzo15a, 50);
+	end
+	else begin
+		giq_option(4, 597, 250, Lorenzo15b, 50);
+		giq_option(4, 597, message_str(597, 251) + (LVar0 * 3 / 4) + message_str(597, 252), Lorenzo15c, 50);
+		giq_option(4, 597, message_str(597, 251) + (LVar0 / 2) + message_str(597, 252), Lorenzo15d, 50);
+		giq_option(4, 597, message_str(597, 251) + (LVar0 / 4) + message_str(597, 252), Lorenzo15e, 50);
+	end
+	giq_option(4, 597, 253, Lorenzo15f, 51);
+end
+
+procedure Lorenzo15a
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	item_caps_adjust(dude_obj, -item_caps_total(dude_obj));
+	set_map_var(22, 1);
+	set_local_var(6, 0);
+	set_local_var(5, 0);
+	gsay_message(597, 254, 50);
+	gsay_message(597, 259, 51);
+end
+
+procedure Lorenzo15b
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	item_caps_adjust(dude_obj, -1 * LVar0);
+	set_map_var(22, 1);
+	set_local_var(6, 0);
+	set_local_var(5, 0);
+	gsay_message(597, 260, 51);
+end
+
+procedure Lorenzo15c
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	if (is_success(roll_vs_skill(dude_obj, 14, -20)) or is_success(do_check(dude_obj, 3, -1))) then begin
+		item_caps_adjust(dude_obj, -1 * (LVar0 * 3 / 4));
+		set_map_var(22, 1);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_message(597, message_str(597, 255) + (LVar0 * 3 / 4) + message_str(597, 256), 50);
+		gsay_message(597, 259, 51);
+	end
+	else begin
+		set_map_var(22, 1);
+		set_map_var(44, 1);
+		set_map_var(11, 1);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_message(597, 257, 51);
+		call combat;
+	end
+end
+
+procedure Lorenzo15d
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	if (is_success(roll_vs_skill(dude_obj, 14, -30)) or is_success(do_check(dude_obj, 3, -2))) then begin
+		item_caps_adjust(dude_obj, -1 * (LVar0 / 2));
+		set_map_var(22, 1);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_message(597, message_str(597, 255) + (LVar0 / 2) + message_str(597, 256), 50);
+		gsay_message(597, 259, 51);
+	end
+	else begin
+		set_map_var(22, 1);
+		set_map_var(44, 1);
+		set_map_var(11, 1);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_message(597, 257, 51);
+		call combat;
+	end
+end
+
+procedure Lorenzo15e
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	if (is_success(roll_vs_skill(dude_obj, 14, -40)) or is_success(do_check(dude_obj, 3, -3))) then begin
+		item_caps_adjust(dude_obj, -1 * (LVar0 / 4));
+		set_map_var(22, 1);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_message(597, message_str(597, 255) + (LVar0 / 4) + message_str(597, 256), 50);
+		gsay_message(597, 259, 51);
+	end
+	else begin
+		set_map_var(22, 1);
+		set_map_var(44, 1);
+		set_map_var(11, 1);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_message(597, 257, 51);
+		call combat;
+	end
+end
+
+procedure Lorenzo15f
+begin
+	set_map_var(22, 1);
+	set_map_var(44, 1);
+	set_map_var(11, 1);
+	set_local_var(6, 0);
+	set_local_var(5, 0);
+	gsay_message(597, 258, 51);
+	call combat;
+end
+
+procedure Lorenzo16
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (local_var(6) / 10 * ((game_time / (10 * 60 * 60 * 24)) - local_var(5))) + local_var(6);
+	if (item_caps_total(dude_obj) >= LVar0) then begin
+		item_caps_adjust(dude_obj, -1 * LVar0);
+		set_local_var(6, 0);
+		set_local_var(5, 0);
+		gsay_reply(597, 138);
+		giq_option(4, 597, 139, Lorenzo16a, 50);
+		giq_option(4, 597, 140, Lorenzo28, 50);
+		giq_option(4, 597, 141, Lorenzo15, 50);
+	end
+	else begin
+		gsay_message(597, 261, 51);
+		call Lorenzo15;
+	end
+end
+
+procedure Lorenzo16a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -10))) then begin
+		call Lorenzo06;
+	end
+	else begin
+		call Lorenzo07;
+	end
+end
+
+procedure Lorenzo19
+begin
+	gsay_reply(597, 143);
+	if (local_var(7) >= 800) then begin
+		giq_option(4, 597, message_str(597, 144) + message_str(597, 145) + message_str(597, 150), Lorenzo29, 50);
+	end
+	if (local_var(7) >= 600) then begin
+		giq_option(4, 597, message_str(597, 144) + message_str(597, 146) + message_str(597, 150), Lorenzo30, 50);
+	end
+	if (local_var(7) >= 400) then begin
+		giq_option(4, 597, message_str(597, 144) + message_str(597, 147) + message_str(597, 150), Lorenzo31, 50);
+	end
+	if (local_var(7) >= 200) then begin
+		giq_option(4, 597, message_str(597, 144) + message_str(597, 148) + message_str(597, 150), Lorenzo32, 50);
+	end
+	giq_option(4, 597, message_str(597, 144) + message_str(597, 149) + message_str(597, 150), Lorenzo33, 50);
+	giq_option(4, 597, 151, Lorenzo34, 50);
+end
+
+procedure Lorenzo20
+begin
+	set_map_var(44, 1);
+	set_map_var(11, 1);
+	gsay_message(597, 152, 51);
+	call combat;
+end
+
+procedure Lorenzo21
+begin
+	set_map_var(22, 1);
+	gsay_message(597, 153, 50);
+end
+
+procedure Lorenzo22
+begin
+	gsay_reply(597, 154);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 155, Lorenzo35, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 156, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 157, Lorenzo24, 50);
+	giq_option(4, 597, 158, Lorenzo25, 50);
+	giq_option(4, 597, 159, Lorenzo26, 50);
+	giq_option(4, 597, 160, Lorenzo27, 50);
+end
+
+procedure Lorenzo23
+begin
+	set_map_var(21, 1);
+	gsay_reply(597, 161);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 162, Lorenzo22, 50);
+	end
+	giq_option(4, 597, 163, Lorenzo36, 50);
+	giq_option(4, 597, 164, Lorenzo24, 50);
+	giq_option(4, 597, 165, Lorenzo25, 50);
+	giq_option(4, 597, 166, Lorenzo26, 50);
+	giq_option(4, 597, 167, Lorenzo27, 50);
+end
+
+procedure Lorenzo24
+begin
+	gsay_reply(597, 168);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 169, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 170, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 171, Lorenzo37, 50);
+	giq_option(4, 597, 172, Lorenzo25, 50);
+	giq_option(4, 597, 173, Lorenzo26, 50);
+	giq_option(4, 597, 174, Lorenzo27, 50);
+end
+
+procedure Lorenzo25
+begin
+	gsay_reply(597, 175);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 176, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 177, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 178, Lorenzo24, 50);
+	giq_option(4, 597, 179, Lorenzo38, 50);
+	giq_option(4, 597, 180, Lorenzo26, 50);
+	giq_option(4, 597, 181, Lorenzo27, 50);
+end
+
+procedure Lorenzo26
+begin
+	gsay_reply(597, 182);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 183, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 184, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 185, Lorenzo24, 50);
+	giq_option(4, 597, 186, Lorenzo25, 50);
+	giq_option(4, 597, 187, Lorenzo39, 50);
+	giq_option(4, 597, 188, Lorenzo27, 50);
+end
+
+procedure Lorenzo27
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	set_map_var(21, 1);
+	gsay_reply(597, 189);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 190, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 191, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 192, Lorenzo24, 50);
+	giq_option(4, 597, 193, Lorenzo25, 50);
+	giq_option(4, 597, 194, Lorenzo26, 50);
+	giq_option(4, 597, 195, Lorenzo40, 50);
+end
+
+procedure Lorenzo28
+begin
+	set_map_var(22, 1);
+	gsay_message(597, 196, 51);
+end
+
+procedure Lorenzo29
+begin
+	variable LVar0 := 0;
+	set_local_var(6, 1000);
+	set_local_var(5, game_time / (10 * 60 * 60 * 24));
+	item_caps_adjust(dude_obj, 1000);
+	if (local_var(7) <= 1000) then begin
+		set_local_var(7, 1000);
+	end
+	gsay_message(597, 197, 50);
+end
+
+procedure Lorenzo30
+begin
+	variable LVar0 := 0;
+	set_local_var(6, 800);
+	set_local_var(5, game_time / (10 * 60 * 60 * 24));
+	item_caps_adjust(dude_obj, 800);
+	if (local_var(7) <= 800) then begin
+		set_local_var(7, 800);
+	end
+	gsay_message(597, 198, 50);
+end
+
+procedure Lorenzo31
+begin
+	variable LVar0 := 0;
+	set_local_var(6, 600);
+	set_local_var(5, game_time / (10 * 60 * 60 * 24));
+	item_caps_adjust(dude_obj, 600);
+	if (local_var(7) <= 600) then begin
+		set_local_var(7, 600);
+	end
+	gsay_message(597, 199, 50);
+end
+
+procedure Lorenzo32
+begin
+	variable LVar0 := 0;
+	set_local_var(6, 400);
+	set_local_var(5, game_time / (10 * 60 * 60 * 24));
+	item_caps_adjust(dude_obj, 400);
+	if (local_var(7) <= 400) then begin
+		set_local_var(7, 400);
+	end
+	gsay_message(597, 200, 50);
+end
+
+procedure Lorenzo33
+begin
+	variable LVar0 := 0;
+	set_local_var(6, 200);
+	set_local_var(5, game_time / (10 * 60 * 60 * 24));
+	item_caps_adjust(dude_obj, 200);
+	if (local_var(7) <= 200) then begin
+		set_local_var(7, 200);
+	end
+	gsay_message(597, 201, 50);
+end
+
+procedure Lorenzo34
+begin
+	gsay_message(597, 202, 50);
+end
+
+procedure Lorenzo35
+begin
+	gsay_reply(597, 203);
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 204, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 205, Lorenzo24, 50);
+	giq_option(4, 597, 206, Lorenzo25, 50);
+	giq_option(4, 597, 207, Lorenzo26, 50);
+	giq_option(4, 597, 208, Lorenzo27, 50);
+	giq_option(4, 597, 209, Lorenzo41, 50);
+end
+
+procedure Lorenzo36
+begin
+	gsay_reply(597, 210);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 211, Lorenzo22, 50);
+	end
+	giq_option(4, 597, 212, Lorenzo24, 50);
+	giq_option(4, 597, 213, Lorenzo25, 50);
+	giq_option(4, 597, 214, Lorenzo26, 50);
+	giq_option(4, 597, 215, Lorenzo27, 50);
+	giq_option(4, 597, 216, Lorenzo41, 50);
+end
+
+procedure Lorenzo37
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	gsay_reply(597, 217);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 218, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 219, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 220, Lorenzo25, 50);
+	giq_option(4, 597, 221, Lorenzo26, 50);
+	giq_option(4, 597, 222, Lorenzo27, 50);
+	giq_option(4, 597, 223, Lorenzo41, 50);
+end
+
+procedure Lorenzo38
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	if (global_var(WORLDMAPLIST_BONEYARD) == 0) then begin
+		set_global_var(WORLDMAPLIST_BONEYARD, 1);
+	end
+	gsay_reply(597, 224);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 225, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 226, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 227, Lorenzo24, 50);
+	giq_option(4, 597, 228, Lorenzo26, 50);
+	giq_option(4, 597, 229, Lorenzo27, 50);
+	giq_option(4, 597, 230, Lorenzo41, 50);
+end
+
+procedure Lorenzo39
+begin
+	gsay_reply(597, 231);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 232, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 233, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 234, Lorenzo24, 50);
+	giq_option(4, 597, 235, Lorenzo25, 50);
+	giq_option(4, 597, 236, Lorenzo27, 50);
+	giq_option(4, 597, 237, Lorenzo41, 50);
+end
+
+procedure Lorenzo40
+begin
+	gsay_reply(597, 238);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 597, 239, Lorenzo22, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 597, 240, Lorenzo23, 50);
+	end
+	giq_option(4, 597, 241, Lorenzo24, 50);
+	giq_option(4, 597, 242, Lorenzo25, 50);
+	giq_option(4, 597, 243, Lorenzo26, 50);
+	giq_option(4, 597, 244, Lorenzo41, 50);
+end
+
+procedure Lorenzo41
+begin
+	gsay_message(597, 245, 50);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

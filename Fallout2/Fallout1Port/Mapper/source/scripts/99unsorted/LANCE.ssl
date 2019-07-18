@@ -1,0 +1,860 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+
+procedure Lance00;
+procedure Lance00a;
+procedure Lance01;
+procedure Lance02;
+procedure Lance03;
+procedure Lance04;
+procedure Lance04a;
+procedure Lance05;
+procedure Lance06;
+procedure Lance07;
+procedure Lance08;
+procedure Lance09;
+procedure Lance10;
+procedure Lance11;
+procedure Lance12;
+procedure Lance13;
+procedure Lance14;
+procedure Lance15;
+procedure Lance16;
+procedure Lance17;
+procedure Lance18;
+procedure Lance19;
+procedure Lance19a;
+procedure Lance20;
+procedure Lance21;
+procedure Lance22;
+procedure Lance23;
+procedure Lance24;
+procedure Lance25;
+procedure Lance26;
+procedure Lance27;
+procedure Lance28;
+procedure Lance29;
+procedure Lance30;
+procedure Lance31;
+procedure Lance31a;
+procedure Lance32;
+procedure Lance33;
+procedure Lance34;
+procedure Lance35;
+procedure Lance36;
+procedure Lance37;
+procedure Lance38;
+procedure Lance39;
+procedure Lance40;
+procedure Lance41;
+procedure Lance42;
+procedure Lance43;
+procedure Lance44;
+procedure Lance45;
+procedure Lance46;
+procedure Lance47;
+procedure Lance48;
+procedure Lance49;
+procedure Lance50;
+procedure Lance51;
+procedure Lance52;
+procedure LanceCombat;
+procedure LanceEnd;
+procedure LanceLoot;
+
+variable initialized := 0;
+variable go_to_Shady;
+variable go_to_Raiders;
+variable global_temp;
+variable dest_tile;
+variable step_tile;
+variable in_dialog;
+variable forced_node;
+variable restock_amt;
+variable restock_obj;
+variable restock_trash;
+variable removed_qty;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initialized) then begin
+		initialized := 1;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 4);
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				call pickup_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+						script_overrides;
+						if ((global_var(LANCE_STATUS) bwand 1) != 0) then begin
+							display_msg(message_str(699, 101));
+						end
+						else begin
+							display_msg(message_str(699, 100));
+						end
+						script_overrides;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if ((global_var(LANCE_STATUS) bwand 2) != 0) then begin
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 4);
+	set_global_var(LANCE_DEAD_ALREADY_SEEN, 1);
+end
+
+procedure pickup_p_proc
+begin
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 2);
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (global_var(SHADY_SANDS_WAS_INVADED)) then begin//GLOBAL_VAR_12 = Shady Sands invaded
+		if ((global_var(LANCE_STATUS) bwand 1) != 0) then begin
+			call Lance52;
+		end
+		else begin
+			start_gdialog(699, self_obj, 4, -1, -1);
+			gsay_start;
+			call Lance49;
+			gsay_end;
+			end_dialogue;
+		end
+	end
+	else begin
+		if ((global_var(LANCE_STATUS) bwand 1) != 0) then begin
+			if (local_var(1) == 1) then begin
+				call Lance02;
+			end
+			else begin
+				start_gdialog(699, self_obj, 4, -1, -1);
+				gsay_start;
+				call Lance03;
+				gsay_end;
+				end_dialogue;
+			end
+		end
+		else begin
+			if (global_var(ENEMY_SHADY_SANDS) or (global_var(PLAYER_REPUTATION_GENERAL) < -30) or (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) or (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS))) then begin
+				if ((global_var(TANDI_RESCUE) == 2) and (global_var(RADSCORPION_SEED) == 2)) then begin
+					start_gdialog(699, self_obj, 4, -1, -1);
+					gsay_start;
+					call Lance00;
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					call Lance01;
+				end
+			end
+			else begin
+				if (global_var(WORLDMAPLIST_SHADY_SANDS) < 2) then begin
+					if (local_var(1) >= 2) then begin
+						start_gdialog(699, self_obj, 4, -1, -1);
+						gsay_start;
+						call Lance04;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						call Lance05;
+					end
+				end
+				else begin
+					start_gdialog(699, self_obj, 4, -1, -1);
+					gsay_start;
+					if (local_var(1) >= 2) then begin
+						call Lance07;
+					end
+					else begin
+						call Lance06;
+					end
+					gsay_end;
+					end_dialogue;
+				end
+			end
+		end
+	end
+	if (go_to_Shady) then begin
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		gfade_out(1);
+		game_time_advance(game_ticks(86400));
+		load_map(26, 0);
+	end
+	if (go_to_Raiders) then begin
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		gfade_out(1);
+		game_time_advance(game_ticks(86400));
+		load_map(24, 0);
+	end
+end
+
+procedure Lance00
+begin
+	call BottomReact;
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 1);
+	gsay_reply(699, 102);
+	giq_option(4, 699, 103, Lance00a, 51);
+	giq_option(4, 699, 104, Lance10, 50);
+	giq_option(4, 699, 105, Lance11, 50);
+	giq_option(4, 699, 106, Lance12, 50);
+	giq_option(-3, 699, 107, Lance13, 50);
+end
+
+procedure Lance00a
+begin
+	if ((get_critter_stat(dude_obj, 0) > 7) or obj_is_carrying_obj_pid(dude_obj, 15) or obj_is_carrying_obj_pid(dude_obj, 118) or obj_is_carrying_obj_pid(dude_obj, 13) or obj_is_carrying_obj_pid(dude_obj, 12)) then begin
+		call Lance08;
+	end
+	else begin
+		call Lance09;
+	end
+end
+
+procedure Lance01
+begin
+	call BottomReact;
+	float_msg(self_obj, message_str(699, 108), 0);
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 2);
+end
+
+procedure Lance02
+begin
+	float_msg(self_obj, message_str(699, 109), 0);
+end
+
+procedure Lance03
+begin
+	gsay_reply(699, 110);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 699, 111, Lance14, 50);
+	end
+	if ((global_var(TANDI_HIRELING_STATUS) == 1) and (global_var(TANDI_RESCUE) == 1)) then begin
+		giq_option(4, 699, 112, Lance15, 50);
+	end
+	if (global_var(TANDI_RESCUE) == 2) then begin
+		giq_option(4, 699, 113, Lance16, 50);
+	end
+	giq_option(4, 699, 114, Lance17, 50);
+	giq_option(-3, 699, 115, Lance18, 50);
+end
+
+procedure Lance04
+begin
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 1);
+	gsay_reply(699, 116);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 699, 111, Lance14, 50);
+	end
+	giq_option(4, 699, 118, Lance04a, 50);
+	giq_option(4, 699, 119, Lance22, 50);
+	giq_option(4, 699, 120, Lance23, 50);
+	giq_option(-3, 699, 121, Lance24, 50);
+end
+
+procedure Lance04a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Lance19;
+	end
+	else begin
+		call Lance20;
+	end
+end
+
+procedure Lance05
+begin
+	float_msg(self_obj, message_str(699, 122), 0);
+end
+
+procedure Lance06
+begin
+	gsay_reply(699, message_str(699, 123) + proto_data(obj_pid(dude_obj), 1) + message_str(699, 124));
+	giq_option(4, 699, 125, Lance25, 50);
+	giq_option(4, 699, 113, Lance16, 50);
+	giq_option(4, 699, 127, Lance26, 50);
+	giq_option(4, 699, 128, Lance28, 50);
+	giq_option(-3, 699, 121, Lance18, 51);
+end
+
+procedure Lance07
+begin
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 1);
+	gsay_reply(699, message_str(699, 123) + proto_data(obj_pid(dude_obj), 1) + message_str(699, 130));
+	giq_option(4, 699, 131, Lance29, 50);
+	giq_option(4, 699, 113, Lance16, 50);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 699, 111, Lance14, 50);
+	end
+	giq_option(4, 699, 132, Lance00a, 51);
+	giq_option(4, 699, 133, Lance30, 50);
+	giq_option(-3, 699, 121, Lance18, 50);
+end
+
+procedure Lance08
+begin
+	gsay_reply(699, 134);
+	giq_option(0, 634, 106, LanceLoot, 51);
+end
+
+procedure Lance09
+begin
+	gsay_message(699, 135, 51);
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 2);
+end
+
+procedure Lance10
+begin
+	gsay_reply(699, 126);
+	giq_option(4, 699, 136, Lance00a, 51);
+	giq_option(4, 699, 137, Lance31, 50);
+	giq_option(4, 699, 105, Lance11, 50);
+	giq_option(4, 699, 106, Lance12, 50);
+	giq_option(4, 699, 138, LanceCombat, 51);
+end
+
+procedure Lance11
+begin
+	call BottomReact;
+	gsay_message(699, 139, 51);
+end
+
+procedure Lance12
+begin
+	gsay_message(699, 140, 51);
+end
+
+procedure Lance13
+begin
+	gsay_message(699, 141, 50);
+end
+
+procedure Lance14
+begin
+	gsay_reply(699, 142);
+	giq_option(4, 699, 143, Lance14, 50);
+	if ((global_var(TANDI_RESCUE) == 1) and (global_var(TANDI_HIRELING_STATUS) == 1)) then begin
+		giq_option(4, 699, 112, Lance15, 50);
+	end
+	if (global_var(TANDI_RESCUE) == 2) then begin
+		giq_option(4, 699, 113, Lance16, 50);
+	end
+	giq_option(4, 699, 114, Lance17, 50);
+	if (global_var(RADSCORPION_SEED) == 2) then begin
+		giq_option(4, 699, 144, Lance32, 50);
+	end
+end
+
+procedure Lance15
+begin
+	gsay_reply(699, 145);
+	giq_option(4, 699, 146, Lance33, 50);
+	giq_option(4, 699, 147, Lance34, 50);
+	giq_option(4, 699, 148, Lance35, 50);
+	giq_option(4, 699, 149, Lance36, 50);
+end
+
+procedure Lance16
+begin
+	gsay_reply(699, 150);
+	giq_option(4, 699, 151, Lance37, 50);
+	giq_option(4, 699, 152, Lance38, 50);
+	giq_option(4, 699, 144, Lance32, 50);
+	giq_option(4, 699, 153, Lance39, 50);
+end
+
+procedure Lance17
+begin
+	gsay_reply(699, 154);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 699, 111, Lance14, 50);
+	end
+	if ((global_var(TANDI_RESCUE) == 1) and (global_var(TANDI_HIRELING_STATUS) == 1)) then begin
+		giq_option(4, 699, 112, Lance15, 50);
+	end
+	if (global_var(TANDI_RESCUE) == 2) then begin
+		giq_option(4, 699, 113, Lance16, 50);
+	end
+	giq_option(4, 699, 155, Lance17, 50);
+	giq_option(4, 699, 156, Lance36, 50);
+end
+
+procedure Lance18
+begin
+	gsay_message(699, 157, 51);
+end
+
+procedure Lance19
+begin
+	gsay_reply(699, 158);
+	giq_option(4, 699, 159, Lance19a, 50);
+	giq_option(4, 699, 160, Lance42, 50);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 699, 161, Lance43, 50);
+	end
+	giq_option(4, 699, 162, Lance48, 50);
+end
+
+procedure Lance19a
+begin
+	if (get_critter_stat(dude_obj, 3) > 6) then begin
+		call Lance40;
+	end
+	else begin
+		call Lance41;
+	end
+end
+
+procedure Lance20
+begin
+	call BottomReact;
+	gsay_message(699, 163, 51);
+end
+
+procedure Lance21
+begin
+	call BottomReact;
+	gsay_message(699, 164, 51);
+end
+
+procedure Lance22
+begin
+	if (global_var(WORLDMAPLIST_JUNKTOWN) < 1) then begin
+		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+	end
+	gsay_message(699, 165, 50);
+end
+
+procedure Lance23
+begin
+	call BottomReact;
+	gsay_message(699, 166, 51);
+end
+
+procedure Lance24
+begin
+	gsay_message(699, 167, 51);
+end
+
+procedure Lance25
+begin
+	gsay_reply(699, 168);
+	giq_option(4, 699, 169, Lance44, 50);
+	giq_option(4, 699, 170, LanceCombat, 51);
+	giq_option(4, 699, 171, Lance28, 50);
+	giq_option(4, 699, 172, Lance31, 50);
+end
+
+procedure Lance26
+begin
+	gsay_reply(699, 173);
+	giq_option(4, 699, 169, Lance44, 50);
+	giq_option(4, 699, 170, Lance45, 51);
+	giq_option(4, 699, 171, Lance28, 50);
+	giq_option(4, 699, 172, Lance31, 50);
+end
+
+procedure Lance27
+begin
+	call BottomReact;
+	gsay_reply(699, 174);
+	giq_option(0, 634, 106, LanceLoot, 51);
+end
+
+procedure Lance28
+begin
+	gsay_message(699, 175, 50);
+end
+
+procedure Lance29
+begin
+	gsay_reply(699, 176);
+	giq_option(4, 699, 177, Lance46, 50);
+	giq_option(4, 699, 178, Lance47, 50);
+end
+
+procedure Lance30
+begin
+	gsay_reply(699, 179);
+	giq_option(0, 634, 106, Lance29, 50);
+end
+
+procedure Lance31
+begin
+	gsay_reply(699, 180);
+	giq_option(0, 634, 106, Lance31a, 51);
+end
+
+procedure Lance31a
+begin
+	gsay_message(699, 181, 50);
+end
+
+procedure Lance32
+begin
+	gsay_reply(699, 182);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 699, 161, Lance43, 50);
+	end
+	if ((global_var(TANDI_RESCUE) == 1) and (global_var(TANDI_HIRELING_STATUS) == 1)) then begin
+		giq_option(4, 699, 112, Lance15, 50);
+	end
+	if (global_var(TANDI_RESCUE) == 2) then begin
+		giq_option(4, 699, 113, Lance16, 50);
+	end
+	giq_option(4, 699, 114, Lance17, 50);
+	giq_option(4, 699, 183, Lance36, 50);
+end
+
+procedure Lance33
+begin
+	gsay_message(699, 184, 50);
+	go_to_Shady := 1;
+end
+
+procedure Lance34
+begin
+	gsay_message(699, 185, 50);
+	go_to_Raiders := 1;
+end
+
+procedure Lance35
+begin
+	gsay_message(699, 186, 50);
+end
+
+procedure Lance36
+begin
+	gsay_message(699, 187, 50);
+end
+
+procedure Lance37
+begin
+	gsay_message(699, 188, 50);
+	call LanceLoot;
+end
+
+procedure Lance38
+begin
+	gsay_message(699, 189, 50);
+end
+
+procedure Lance39
+begin
+	gsay_message(699, 190, 49);
+end
+
+procedure Lance40
+begin
+	gsay_message(699, 191, 50);
+	go_to_Shady := 1;
+end
+
+procedure Lance41
+begin
+	gsay_message(699, 192, 50);
+end
+
+procedure Lance42
+begin
+	gsay_message(699, 193, 50);
+end
+
+procedure Lance43
+begin
+	gsay_reply(699, 194);
+	giq_option(0, 634, 106, Lance36, 50);
+end
+
+procedure Lance44
+begin
+	gsay_message(699, 195, 50);
+end
+
+procedure Lance45
+begin
+	call BottomReact;
+	gsay_message(699, 196, 51);
+end
+
+procedure Lance46
+begin
+	gsay_message(699, 197, 50);
+	go_to_Shady := 1;
+end
+
+procedure Lance47
+begin
+	gsay_message(699, 198, 50);
+end
+
+procedure Lance48
+begin
+	gsay_message(699, 199, 50);
+end
+
+procedure Lance49
+begin
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 1);
+	gsay_reply(699, 200);
+	giq_option(4, 699, 201, Lance50, 50);
+	giq_option(4, 699, 202, Lance51, 50);
+	giq_option(4, 699, 203, Lance50, 50);
+	giq_option(4, 699, 204, Lance51, 50);
+	giq_option(-3, 699, 205, Lance51, 50);
+end
+
+procedure Lance50
+begin
+	gsay_message(699, 206, 50);
+end
+
+procedure Lance51
+begin
+	gsay_message(699, 207, 50);
+end
+
+procedure Lance52
+begin
+	float_msg(self_obj, message_str(699, 208), 0);
+end
+
+procedure LanceCombat
+begin
+	set_global_var(LANCE_STATUS, global_var(LANCE_STATUS) bwor 2);
+end
+
+procedure LanceEnd
+begin
+end
+
+procedure LanceLoot
+begin
+	metarule(43, self_obj);
+	move_obj_inven_to_obj(self_obj, dude_obj);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+
+

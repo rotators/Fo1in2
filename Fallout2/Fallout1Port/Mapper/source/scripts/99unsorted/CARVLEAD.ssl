@@ -1,0 +1,2213 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure advance_day;
+procedure damage_p_proc;//    script_action == 14
+
+procedure CarvLead00;
+procedure CarvLead01;
+procedure CarvLead02;
+procedure CarvLead03;
+procedure CarvLead04;
+procedure CarvLead05;
+procedure CarvLead06;
+procedure CarvLead07;
+procedure CarvLead09;
+procedure CarvLead10;
+procedure CarvLead11;
+procedure CarvLead12;
+
+procedure Abandoned;
+procedure Lost;
+procedure HubAbandoned;
+procedure HubLost;
+procedure CarvLead13;
+procedure CarvLead14;
+procedure create_caravan;
+procedure remove_caravan;
+procedure Junktown_Caravan;
+procedure BOS_Caravan;
+procedure Necropolis_Caravan;
+procedure LABone_Caravan;
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable Scenery_Creation;
+variable Scenery_Creation_Hex;
+variable Scenery_Creation_Count;
+variable Temp_Scenery_Creation_Hex;
+variable Scenery_Creation_Ptr;
+variable global_temp;
+variable dest_tile;
+variable step_tile;
+variable in_dialog;
+variable forced_node;
+variable restock_amt;
+variable restock_obj;
+variable restock_trash;
+variable removed_qty;
+variable hostile;
+variable Only_Once := 1;
+variable PaymentAmount;
+variable FullPayment;
+variable WaitForTwoHours;
+variable spawnDialogue;
+variable beenPaid := 1;
+variable UnloadCaravan;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			call look_at_p_proc;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				call pickup_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						call critter_p_proc;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+						else begin
+							if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+								call map_update_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (spawnDialogue == 1) then begin
+		spawnDialogue := 0;
+		set_local_var(6, game_time / (10 * 60 * 60));
+		dialogue_system_enter;
+	end
+	else begin
+		if (local_var(5) == 1) then begin
+			if ((WaitForTwoHours == 1) and (((game_time / (10 * 60 * 60)) - local_var(6)) >= 2)) then begin
+				WaitForTwoHours := 0;
+				if global_var(FADE_TIMES_INCREASED) then begin
+					gfade_out(1);
+					gfade_out(1);
+				end
+				gfade_out(1);
+				set_local_var(5, 0);
+				set_local_var(4, 0);
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+				if (cur_map_index != 36) then begin
+					call remove_caravan;
+				end
+				gfade_in(1);
+				display_msg(message_str(817, 151));
+			end
+		end
+		else begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+end
+
+procedure map_enter_p_proc
+begin
+	variable LVar0 := 0;
+	if ((cur_map_index == 28) and (global_var(FOLLOWERS_INVADED) == 1) or ((cur_map_index == 13) and (global_var(BROTHERHOOD_WAS_INVADED) == 1)) or ((cur_map_index == 4) and (global_var(NECROPOLIS_WAS_INVADED) == 1)) or ((cur_map_index == 10) and (global_var(JUNKTOWN_WAS_INVADED) == 1)) or ((cur_map_index == 36) and (global_var(THE_HUB_WAS_INVADED) == 1))) then begin //  L.A. BONEYARD ENTRANCE (ADYTUM), BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, JUNKTOWN ENTRANCE, THE HUB ENTRANCE
+		LVar0 := 1;
+	end
+	critter_add_trait(self_obj, 1, 6, 64);
+	critter_add_trait(self_obj, 1, 5, 50);
+	if (((game_time / (10 * 60 * 60)) - local_var(6)) >= 2) then begin
+		WaitForTwoHours := 0;
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		set_local_var(5, 0);
+		set_local_var(4, 0);
+		if (cur_map_index != 36) then begin
+			call remove_caravan;
+		end
+	end
+	if ((local_var(5) == 1) and (LVar0 == 0)) then begin
+		if (((game_time / (10 * 60 * 60)) - local_var(6)) < 2) then begin
+			WaitForTwoHours := 1;
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+		end
+		else begin
+			WaitForTwoHours := 0;
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			set_local_var(5, 0);
+			set_local_var(4, 0);
+			if (cur_map_index != 36) then begin
+				call remove_caravan;
+			end
+		end
+	end
+	else begin
+		if ((global_var(CRIMSON_CARAVANS_STATUS) == 2) or (global_var(CRIMSON_CARAVANS_STATUS) == 3) or ((global_var(WATER_MERCHANTS_STATUS) == 2) or (global_var(WATER_MERCHANTS_STATUS) == 3)) or ((global_var(FARGO_TRADERS_STATUS) == 2) or (global_var(FARGO_TRADERS_STATUS) == 3)) and (LVar0 == 0)) then begin
+			if (global_var(WATER_MERCHANTS_STATUS) == 2) then begin
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				PaymentAmount := 200;
+				set_local_var(9, 10);
+				FullPayment := 200;
+				if (global_var(CVAN_DRIVER) == 0) then begin
+					PaymentAmount := PaymentAmount - 50;
+				end
+				if (global_var(CVAN_GUARD) == 1) then begin
+					PaymentAmount := PaymentAmount - 25;
+				end
+				else begin
+					if (global_var(CVAN_GUARD) == 0) then begin
+						PaymentAmount := PaymentAmount - 50;
+					end
+				end
+				if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+					PaymentAmount := (PaymentAmount / 2);
+				end
+				if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
+					PaymentAmount := 0;
+				end
+				set_local_var(7, 0);
+				set_global_var(WATER_JOB, 4);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+			end
+			else begin
+				if (global_var(FARGO_TRADERS_STATUS) == 2) then begin
+					if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+					PaymentAmount := 400;
+					set_local_var(9, 20);
+					FullPayment := 400;
+					if (global_var(CVAN_DRIVER) == 0) then begin
+						PaymentAmount := PaymentAmount - 75;
+					end
+					if (global_var(CVAN_GUARD) == 1) then begin
+						PaymentAmount := PaymentAmount - 25;
+					end
+					else begin
+						if (global_var(CVAN_GUARD) == 0) then begin
+							PaymentAmount := PaymentAmount - 75;
+						end
+					end
+					if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+						PaymentAmount := (PaymentAmount / 2);
+					end
+					if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
+						PaymentAmount := 0;
+					end
+					set_local_var(7, 2);
+					set_global_var(FARGO_JOB, 4);
+					set_global_var(FARGO_TRADERS_STATUS, 0);
+					set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+					set_global_var(WATER_MERCHANTS_STATUS, 0);
+				end
+				else begin
+					if (global_var(CRIMSON_CARAVANS_STATUS) == 2) then begin
+						if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+						PaymentAmount := 600;
+						set_local_var(9, 30);
+						FullPayment := 600;
+						if (global_var(CVAN_DRIVER) == 0) then begin
+							PaymentAmount := PaymentAmount - 100;
+						end
+						if (global_var(CVAN_GUARD) == 1) then begin
+							PaymentAmount := PaymentAmount - 50;
+						end
+						else begin
+							if (global_var(CVAN_GUARD) == 0) then begin
+								PaymentAmount := PaymentAmount - 100;
+							end
+						end
+						if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+							PaymentAmount := (PaymentAmount / 2);
+						end
+						if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
+							PaymentAmount := 0;
+						end
+						set_local_var(7, 1);
+						set_global_var(CC_JOB, 4);
+						set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+						set_global_var(WATER_MERCHANTS_STATUS, 0);
+						set_global_var(FARGO_TRADERS_STATUS, 0);
+					end
+					else begin
+						if (global_var(WATER_MERCHANTS_STATUS) == 3) then begin
+							if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+							PaymentAmount := 0;
+							set_local_var(7, 3);
+							set_global_var(WATER_JOB, 3);
+							set_global_var(WATER_MERCHANTS_STATUS, 0);
+							set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+							set_global_var(FARGO_TRADERS_STATUS, 0);
+						end
+						else begin
+							if (global_var(FARGO_TRADERS_STATUS) == 3) then begin
+								if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+								PaymentAmount := 0;
+								set_local_var(7, 3);
+								set_global_var(FARGO_JOB, 3);
+								set_global_var(FARGO_TRADERS_STATUS, 0);
+								set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+								set_global_var(WATER_MERCHANTS_STATUS, 0);
+							end
+							else begin
+								if (global_var(CRIMSON_CARAVANS_STATUS) == 3) then begin
+									if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+									PaymentAmount := 600;
+									FullPayment := 600;
+									if (global_var(CVAN_DRIVER) == 0) then begin
+										PaymentAmount := PaymentAmount - 100;
+									end
+									if (global_var(CVAN_GUARD) == 1) then begin
+										PaymentAmount := PaymentAmount - 50;
+									end
+									else begin
+										if (global_var(CVAN_GUARD) == 0) then begin
+											PaymentAmount := PaymentAmount - 100;
+										end
+									end
+									if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+										PaymentAmount := (PaymentAmount / 2);
+									end
+									if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
+										PaymentAmount := 0;
+									end
+									set_local_var(7, 3);
+									set_global_var(CC_JOB, 3);
+									set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+									set_global_var(WATER_MERCHANTS_STATUS, 0);
+									set_global_var(FARGO_TRADERS_STATUS, 0);
+								end
+							end
+						end
+					end
+				end
+			end
+			set_local_var(5, 1);
+			set_local_var(4, 0);
+			WaitForTwoHours := 1;
+			spawnDialogue := 1;
+			beenPaid := 0;
+			if (cur_map_index != 36) then begin
+				call create_caravan;
+			end
+		end
+		else begin
+			if ((global_var(CRIMSON_CARAVANS_STATUS) == 5) or (global_var(WATER_MERCHANTS_STATUS) == 5) or (global_var(FARGO_TRADERS_STATUS) == 5) and (LVar0 == 0)) then begin
+				if (global_var(CRIMSON_CARAVANS_STATUS) == 5) then begin
+					set_global_var(CC_JOB, 5);
+				end
+				else begin
+					if (global_var(WATER_MERCHANTS_STATUS) == 5) then begin
+						set_global_var(WATER_JOB, 5);
+					end
+					else begin
+						if (global_var(FARGO_TRADERS_STATUS) == 5) then begin
+							set_global_var(FARGO_JOB, 5);
+						end
+					end
+				end
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				set_local_var(7, 5);
+				PaymentAmount := 0;
+				set_local_var(5, 1);
+				set_local_var(4, 0);
+				WaitForTwoHours := 0;
+				spawnDialogue := 1;
+				beenPaid := 0;
+				if (cur_map_index != 36) then begin
+					call remove_caravan;
+				end
+			end
+			else begin
+				WaitForTwoHours := 0;
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+				set_local_var(5, 0);
+				set_local_var(4, 0);
+				if (cur_map_index != 36) then begin
+					call remove_caravan;
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(7) == 4) then begin
+		float_msg(self_obj, message_str(817, random(143, 145)), 2);
+	end
+	else begin
+		if (cur_map_index == 36) then begin //    THE HUB - ENTRANCE
+		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 11);
+		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 11);
+		//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 11);
+		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 11);
+		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 11);
+		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 11);
+		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 11);
+		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 11);
+			start_gdialog(817, self_obj, 4, -1, -1);
+			gsay_start;
+			if (local_var(7) == 3) then begin
+				call HubAbandoned;
+			end
+			else begin
+				if (local_var(7) == 5) then begin
+					call HubLost;
+				end
+				else begin
+					call CarvLead09;
+				end
+			end
+			gsay_end;
+			end_dialogue;
+			if global_var(FADE_TIMES_INCREASED) then begin
+				gfade_out(1);
+				gfade_out(1);
+			end
+			gfade_out(1);
+			set_local_var(5, 0);
+			set_local_var(4, 0);
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			WaitForTwoHours := 0;
+			gfade_in(1);
+		end
+		else begin
+			if (local_var(7) == 5) then begin
+				start_gdialog(817, self_obj, 4, -1, -1);
+				gsay_start;
+				call Lost;
+				gsay_end;
+				end_dialogue;
+				if global_var(FADE_TIMES_INCREASED) then begin
+					gfade_out(1);
+					gfade_out(1);
+				end
+				gfade_out(1);
+				set_local_var(5, 0);
+				set_local_var(4, 0);
+				WaitForTwoHours := 0;
+				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+				gfade_in(1);
+			end
+			else begin
+				if (local_var(4) == 0) then begin
+					set_local_var(4, 1);
+					start_gdialog(817, self_obj, 4, -1, -1);
+					gsay_start;
+					if (local_var(7) == 3) then begin
+						set_local_var(7, 4);
+						call Abandoned;
+					end
+					else begin
+						call CarvLead00;
+					end
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					start_gdialog(817, self_obj, 4, -1, -1);
+					gsay_start;
+					call CarvLead07;
+					gsay_end;
+					end_dialogue;
+				end
+			end
+		end
+	end
+	if (UnloadCaravan == 1) then begin
+		UnloadCaravan := 0;
+		game_time_advance(60 * (60 * 10));
+		item_caps_adjust(dude_obj, local_var(9));
+		display_msg(message_str(817, 520));
+		display_msg(message_str(817, 521) + local_var(9) + message_str(817, 522));
+		set_local_var(9, 0);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if (cur_map_index != 36) then begin
+		call remove_caravan;
+	end
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(817, 100));
+end
+
+procedure advance_day
+begin
+end
+
+procedure damage_p_proc
+begin
+	if (cur_map_index == 36) then begin //    THE HUB - ENTRANCE
+		if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+			set_global_var(ENEMY_HUB, 1);
+		end
+	end
+end
+
+procedure CarvLead00
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := PaymentAmount;
+	item_caps_adjust(dude_obj, PaymentAmount);
+	if ((global_var(CVAN_DRIVER) < 1) or (global_var(CVAN_GUARD) < 2) or (global_var(CARAVAN_HOW_MANY_BRAHMIN) < 2)) then begin
+		gsay_reply(817, message_str(817, 600) + LVar0 + message_str(817, 601) + FullPayment + message_str(817, 103));
+	end
+	else begin
+		gsay_reply(817, message_str(817, 101) + LVar0 + message_str(817, 102) + FullPayment + message_str(817, 103));
+	end
+	beenPaid := 1;
+	giq_option(-3, 817, 104, CarvLead01, 50);
+	giq_option(4, 817, 105, CarvLead03, 50);
+	if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
+	//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+	//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 7);
+	//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
+	//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
+	//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
+	//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
+	//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+		giq_option(4, 817, 106, CarvLead04, 50);
+	end
+	else begin
+		if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
+		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+		//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 2);
+		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
+		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
+		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
+		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
+		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+			giq_option(4, 817, 107, CarvLead05, 50);
+		end
+		else begin
+			if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 15);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 15);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 15);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 15);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 15);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 15);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 15);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 15);
+				giq_option(4, 817, 108, CarvLead06, 50);
+			end
+		end
+	end
+	if (local_var(9) != 0) then begin
+		giq_option(4, 817, 506, CarvLead13, 50);
+		giq_option(-3, 817, 507, CarvLead13, 50);
+	end
+end
+
+procedure CarvLead01
+begin
+	gsay_reply(817, 109);
+	giq_option(-3, 817, 110, CarvLead11, 50);
+	giq_option(-3, 817, 111, CarvLead02, 50);
+	giq_option(-3, 817, 112, CarvLead12, 50);
+end
+
+procedure CarvLead02
+begin
+	gsay_message(817, 113, 50);
+end
+
+procedure CarvLead03
+begin
+	gsay_reply(817, 114);
+	giq_option(4, 817, 115, CarvLead11, 50);
+	giq_option(4, 817, 116, CarvLead12, 50);
+	if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
+	//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+	//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 7);
+	//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
+	//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
+	//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
+	//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
+	//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+		giq_option(4, 817, 117, CarvLead04, 50);
+	end
+	else begin
+		if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
+		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+		//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 2);
+		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
+		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
+		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
+		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
+		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+			giq_option(4, 817, 118, CarvLead05, 50);
+		end
+		else begin
+			if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 2);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+				giq_option(4, 817, 119, CarvLead06, 50);
+			end
+		end
+	end
+end
+
+procedure CarvLead04
+begin
+	gsay_reply(817, 120);
+	giq_option(4, 817, 121, CarvLead03, 50);
+	giq_option(4, 817, 122, CarvLead11, 50);
+end
+
+procedure CarvLead05
+begin
+	gsay_reply(817, 123);
+	giq_option(4, 817, 125, CarvLead03, 50);
+	giq_option(4, 817, 126, CarvLead11, 50);
+end
+
+procedure CarvLead06
+begin
+	gsay_reply(817, 127);
+	giq_option(4, 817, 128, CarvLead03, 50);
+	giq_option(4, 817, 129, CarvLead11, 50);
+end
+
+procedure CarvLead07
+begin
+	variable LVar0 := 0;
+	if (beenPaid == 0) then begin
+		item_caps_adjust(dude_obj, PaymentAmount);
+		//
+		// "CONTACT SDUIBEK IF YOU SEE THIS MESSAGE" fixme todo debug testing 
+		//
+		display_msg(message_str(766, 401));
+		display_msg(message_str(766, 401));
+		display_msg(message_str(766, 401));
+		display_msg(message_str(766, 401));
+		display_msg(message_str(766, 401));
+		beenPaid := 1;
+	end
+	gsay_reply(817, 130);
+	if (local_var(9) != 0) then begin
+		giq_option(4, 817, 506, CarvLead13, 50);
+		giq_option(-3, 817, 507, CarvLead13, 50);
+	end
+	giq_option(-3, 817, 131, CarvLead12, 50);
+	giq_option(-3, 817, 111, CarvLead11, 50);
+	giq_option(4, 817, 132, CarvLead11, 50);
+	giq_option(4, 817, 133, CarvLead12, 50);
+end
+
+procedure CarvLead09
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := PaymentAmount;
+	if (PaymentAmount > 0) then begin
+		item_caps_adjust(dude_obj, PaymentAmount);
+		if ((global_var(CVAN_DRIVER) < 1) or (global_var(CVAN_GUARD) < 2) or (global_var(CARAVAN_HOW_MANY_BRAHMIN) < 2)) then begin
+			gsay_reply(817, message_str(817, 600) + LVar0 + message_str(817, 603) + message_str(817, 602));
+		end
+		else begin
+			gsay_reply(817, message_str(817, 137) + LVar0 + message_str(817, 138));
+		end
+	end
+	else begin
+		gsay_reply(817, message_str(817, 604) + message_str(817, 602));
+	end
+	beenPaid := 1;
+	giq_option(-3, 817, 139, CarvLead11, 50);
+	giq_option(4, 817, 140, CarvLead11, 50);
+end
+
+procedure CarvLead10
+begin
+	variable LVar0 := 0;
+	LVar0 := random(1, 2);
+	if (LVar0 == 1) then begin
+		float_msg(self_obj, message_str(817, 141), 2);
+	end
+	else begin
+		float_msg(self_obj, message_str(817, 142), 2);
+	end
+end
+
+procedure CarvLead11
+begin
+end
+
+procedure CarvLead12
+begin
+	variable LVar0 := 0;
+	set_local_var(5, 0);
+	set_local_var(4, 0);
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+		set_global_var(COW_ANNIHILATOR_COUNT, 1);
+	end
+	else begin
+		if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0 then begin
+			set_global_var(COW_ANNIHILATOR_COUNT, 2);
+		end
+	end
+	call remove_caravan;
+	if (local_var(7) == 0) then begin
+		set_global_var(WATER_JOB, 1);
+		set_global_var(WATER_MERCHANTS_STATUS, 1);
+		if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
+		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+		//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 7);
+		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
+		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
+		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
+		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
+		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+			LVar0 := do_check(dude_obj, 6, -2);
+			if (is_success(LVar0)) then begin
+				set_global_var(WATER_MERCHANTS_STATUS, 2);
+				load_map(36, 1);
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+			end
+			else begin
+
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+				load_map(64, 3);
+
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+			end
+		end
+		else begin
+			if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 2);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+				LVar0 := do_check(dude_obj, 6, -2);
+				if (is_success(LVar0)) then begin
+					set_global_var(WATER_MERCHANTS_STATUS, 2);
+					load_map(36, 1);
+				end
+				else begin
+	
+				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+				//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+					load_map(63, 3);
+	
+				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+				//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+				end
+			end
+		end
+	end
+	else begin
+		if (local_var(7) == 1) then begin
+			set_global_var(CC_JOB, 1);
+			set_global_var(CRIMSON_CARAVANS_STATUS, 1);
+			if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+				load_map(64, 3);
+
+			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+			//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+			end
+			else begin
+				if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+	
+				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+				//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+					load_map(64, 3);
+	
+				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+				//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+				end
+				else begin
+					if (cur_map_index == 4) then begin //  NECROPOLIS - HOTEL
+		
+					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+					//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+						load_map(63, 3);
+					end
+					else begin
+						if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+
+						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 11);
+						//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 11);
+						//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 11);
+						//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 11);
+						//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 11);
+						//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 11);
+						//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 11);
+						//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 11);
+							load_map(63, 3);
+						end
+					end
+				end
+			end
+		end
+		else begin
+			if (local_var(7) == 2) then begin
+				set_global_var(FARGO_JOB, 1);
+				set_global_var(FARGO_TRADERS_STATUS, 1);
+				if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
+				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+				//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 7);
+				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
+				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
+				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
+				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
+				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+					LVar0 := do_check(dude_obj, 6, -4);
+					if (is_success(LVar0)) then begin
+						set_global_var(FARGO_TRADERS_STATUS, 2);
+						load_map(36, 1);
+					end
+					else begin
+					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+					//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+						load_map(64, 3);
+					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+					//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+					end
+				end
+				else begin
+					if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
+					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+					//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 2);
+					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
+					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
+					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
+					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
+					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+						LVar0 := do_check(dude_obj, 6, -4);
+						if (is_success(LVar0)) then begin
+							set_global_var(FARGO_TRADERS_STATUS, 2);
+							load_map(36, 1);
+						end
+						else begin
+						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+						//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+						//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+						//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+						//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+						//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+						//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+						//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+							load_map(63, 3);
+						end
+					end
+					else begin
+						if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
+						//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+						//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 7);
+						//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
+						//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
+						//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
+						//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
+						//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+							LVar0 := do_check(dude_obj, 6, -4);
+							if (is_success(LVar0)) then begin
+								set_global_var(FARGO_TRADERS_STATUS, 2);
+								load_map(36, 1);
+							end
+							else begin
+							//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
+							//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+							//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 9);
+							//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
+							//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
+							//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
+							//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
+							//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+								load_map(64, 3);
+							//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+							//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+							//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+							//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+							//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+							//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+							//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+							//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Abandoned
+begin
+//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+	gsay_message(817, 501, 51);
+//	set_global_var(CVAN_DRIVER, 1);
+//	set_global_var(CVAN_GUARD, 2);
+//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
+end
+
+procedure Lost
+begin
+//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+	gsay_message(817, 502, 51);
+//	set_global_var(CVAN_DRIVER, 1);
+//	set_global_var(CVAN_GUARD, 2);
+//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
+end
+
+procedure HubAbandoned
+begin
+//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+	gsay_message(817, 504, 51);
+//	set_global_var(CVAN_DRIVER, 1);
+//	set_global_var(CVAN_GUARD, 2);
+//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
+end
+
+procedure HubLost
+begin
+//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 1);
+//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+	gsay_message(817, 505, 51);
+//	set_global_var(CVAN_DRIVER, 1);
+//	set_global_var(CVAN_GUARD, 2);
+//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
+end
+
+procedure CarvLead13
+begin
+	gsay_reply(817, message_str(817, 508) + local_var(9) + message_str(817, 509));
+	giq_option(-3, 817, 510, CarvLead14, 50);
+	giq_option(-3, 817, 511, CarvLead11, 50);
+	giq_option(4, 817, 512, CarvLead14, 50);
+	giq_option(4, 817, 513, CarvLead11, 50);
+end
+
+procedure CarvLead14
+begin
+	UnloadCaravan := 1;
+end
+
+procedure create_caravan
+begin
+	if (local_var(8) == 0) then begin
+		set_local_var(8, 1);
+		if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+			call Junktown_Caravan;
+		end
+		else begin
+			if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+				call BOS_Caravan;
+			end
+			else begin
+				if (cur_map_index == 4) then begin //  NECROPOLIS - HOTEL
+					call Necropolis_Caravan;
+				end
+				else begin
+					if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+						call LABone_Caravan;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure remove_caravan
+begin
+	if (local_var(8) == 1) then begin
+		set_local_var(8, 0);
+		if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+			Scenery_Creation_Ptr := tile_contains_pid_obj(30707, 0, 33554961);
+			destroy_object(Scenery_Creation_Ptr);
+			Scenery_Creation_Hex := tile_num_in_direction(30707, 5, 2);
+			if (33554961 == 33554961) then begin
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554962);
+				destroy_object(Scenery_Creation_Ptr);
+			end
+			else begin
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554964);
+				destroy_object(Scenery_Creation_Ptr);
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 1) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 3) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 1) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 1) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 3) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Ptr := tile_contains_pid_obj(30502, 0, 33554963);
+			destroy_object(Scenery_Creation_Ptr);
+			Scenery_Creation_Hex := tile_num_in_direction(30502, 5, 2);
+			if (33554963 == 33554961) then begin
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554962);
+				destroy_object(Scenery_Creation_Ptr);
+			end
+			else begin
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554964);
+				destroy_object(Scenery_Creation_Ptr);
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 1) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 3) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 1) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 1) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+			Scenery_Creation_Count := 0;
+			while(Scenery_Creation_Count < 3) do begin
+				Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+				Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Count := Scenery_Creation_Count + 1;
+			end
+		end
+		else begin
+			if (cur_map_index == 13) then begin //  BROTHERHOOD - ENTRANCE
+				Scenery_Creation_Ptr := tile_contains_pid_obj(25111, 0, 33554959);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Hex := 25111;
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 2) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 2) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 2) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Ptr := tile_contains_pid_obj(25911, 0, 33554960);
+				destroy_object(Scenery_Creation_Ptr);
+				Scenery_Creation_Hex := 25911;
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 2) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 2) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 1) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+				Scenery_Creation_Count := 0;
+				while(Scenery_Creation_Count < 2) do begin
+					Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+					Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Count := Scenery_Creation_Count + 1;
+				end
+			end
+			else begin
+				if (cur_map_index == 4) then begin //  NECROPOLIS - HOTEL
+					Scenery_Creation_Ptr := tile_contains_pid_obj(26894, 1, 33554961);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Hex := tile_num_in_direction(26894, 5, 2);
+					if (33554961 == 33554961) then begin
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554962);
+						destroy_object(Scenery_Creation_Ptr);
+					end
+					else begin
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554964);
+						destroy_object(Scenery_Creation_Ptr);
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 1) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 3) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 1) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 1) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 3) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Ptr := tile_contains_pid_obj(26889, 1, 33554963);
+					destroy_object(Scenery_Creation_Ptr);
+					Scenery_Creation_Hex := tile_num_in_direction(26889, 5, 2);
+					if (33554963 == 33554961) then begin
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554962);
+						destroy_object(Scenery_Creation_Ptr);
+					end
+					else begin
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554964);
+						destroy_object(Scenery_Creation_Ptr);
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 1) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 3) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 1) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 1) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+					Scenery_Creation_Count := 0;
+					while(Scenery_Creation_Count < 3) do begin
+						Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+						Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 1, 33554499);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Count := Scenery_Creation_Count + 1;
+					end
+				end
+				else begin
+					if (cur_map_index == 28) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+						Scenery_Creation_Ptr := tile_contains_pid_obj(9723, 0, 33554959);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Hex := 9723;
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 2) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 2) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 2) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Ptr := tile_contains_pid_obj(9121, 0, 33554960);
+						destroy_object(Scenery_Creation_Ptr);
+						Scenery_Creation_Hex := 9121;
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 2) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 2) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 1) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+						Scenery_Creation_Count := 0;
+						while(Scenery_Creation_Count < 2) do begin
+							Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+							Scenery_Creation_Ptr := tile_contains_pid_obj(Scenery_Creation_Hex, 0, 33554499);
+							destroy_object(Scenery_Creation_Ptr);
+							Scenery_Creation_Count := Scenery_Creation_Count + 1;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_Caravan
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	Scenery_Creation := create_object_sid(33554961, 30707, 0, -1);
+	Scenery_Creation_Hex := tile_num_in_direction(30707, 5, 2);
+	if (33554961 == 33554961) then begin
+		Scenery_Creation := create_object_sid(33554962, Scenery_Creation_Hex, 0, -1);
+	end
+	else begin
+		Scenery_Creation := create_object_sid(33554964, Scenery_Creation_Hex, 0, -1);
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation := create_object_sid(33554963, 30502, 0, -1);
+	Scenery_Creation_Hex := tile_num_in_direction(30502, 5, 2);
+	if (33554963 == 33554961) then begin
+		Scenery_Creation := create_object_sid(33554962, Scenery_Creation_Hex, 0, -1);
+	end
+	else begin
+		Scenery_Creation := create_object_sid(33554964, Scenery_Creation_Hex, 0, -1);
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	if (global_var(CVAN_DRIVER) == 1) then begin
+		LVar0 := create_object_sid(16777233, 30511, 0, 761);
+		critter_add_trait(LVar0, 1, 6, 64);
+		critter_add_trait(LVar0, 1, 5, 1);
+		anim(LVar0, 1000, 5);
+		LVar2 := create_object_sid(94, 0, 0, -1);
+		add_obj_to_inven(LVar0, LVar2);
+		wield_obj_critter(LVar0, LVar2);
+	end
+	if (global_var(CVAN_GUARD) == 2) then begin
+		LVar1 := create_object_sid(16777420, 29504, 0, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 5);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if (global_var(CVAN_GUARD) >= 1) then begin
+		LVar1 := create_object_sid(16777420, 31505, 0, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 5);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+		LVar1 := create_object_sid(16777244, 29707, 0, 966);
+		anim(LVar1, 1000, 5);
+		add_timer_event(LVar1, 0, 10);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+		LVar1 := create_object_sid(16777244, 29502, 0, 966);
+		anim(LVar1, 1000, 5);
+		add_timer_event(LVar1, 0, 10);
+	end
+	LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
+	LVar1 := create_object_sid(16777386, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+	LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
+	LVar1 := create_object_sid(16777220, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+	LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
+	LVar1 := create_object_sid(16777248, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+end
+
+procedure BOS_Caravan
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	Scenery_Creation := create_object_sid(33554959, 25111, 0, -1);
+	Scenery_Creation_Hex := 25111;
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation := create_object_sid(33554960, 25911, 0, -1);
+	Scenery_Creation_Hex := 25911;
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	if (global_var(CVAN_DRIVER) == 1) then begin
+		LVar0 := create_object_sid(16777233, 26713, 0, 761);
+		critter_add_trait(LVar0, 1, 6, 64);
+		critter_add_trait(LVar0, 1, 5, 1);
+		anim(LVar0, 1000, 0);
+		LVar2 := create_object_sid(94, 0, 0, -1);
+		add_obj_to_inven(LVar0, LVar2);
+		wield_obj_critter(LVar0, LVar2);
+	end
+	if (global_var(CVAN_GUARD) == 2) then begin
+		LVar1 := create_object_sid(16777420, 25308, 0, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 0);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if (global_var(CVAN_GUARD) >= 1) then begin
+		LVar1 := create_object_sid(16777420, 25716, 0, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 0);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+		LVar1 := create_object_sid(16777244, 24908, 0, 966);
+		anim(LVar1, 1000, 0);
+		add_timer_event(LVar1, 0, 10);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+		LVar1 := create_object_sid(16777244, 25708, 0, 966);
+		anim(LVar1, 1000, 0);
+		add_timer_event(LVar1, 0, 10);
+	end
+	LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
+	LVar1 := create_object_sid(16777490, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+	LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
+	LVar1 := create_object_sid(16777483, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+	LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
+	LVar1 := create_object_sid(16777496, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+end
+
+procedure Necropolis_Caravan
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	Scenery_Creation := create_object_sid(33554961, 26894, 1, -1);
+	Scenery_Creation_Hex := tile_num_in_direction(26894, 5, 2);
+	if (33554961 == 33554961) then begin
+		Scenery_Creation := create_object_sid(33554962, Scenery_Creation_Hex, 1, -1);
+	end
+	else begin
+		Scenery_Creation := create_object_sid(33554964, Scenery_Creation_Hex, 1, -1);
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation := create_object_sid(33554963, 26889, 1, -1);
+	Scenery_Creation_Hex := tile_num_in_direction(26889, 5, 2);
+	if (33554963 == 33554961) then begin
+		Scenery_Creation := create_object_sid(33554962, Scenery_Creation_Hex, 1, -1);
+	end
+	else begin
+		Scenery_Creation := create_object_sid(33554964, Scenery_Creation_Hex, 1, -1);
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 3) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 1, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	if (global_var(CVAN_DRIVER) == 1) then begin
+		LVar0 := create_object_sid(16777233, 26697, 1, 761);
+		critter_add_trait(LVar0, 1, 6, 64);
+		critter_add_trait(LVar0, 1, 5, 1);
+		anim(LVar0, 1000, 5);
+		LVar2 := create_object_sid(94, 0, 0, -1);
+		add_obj_to_inven(LVar0, LVar2);
+		wield_obj_critter(LVar0, LVar2);
+	end
+	if (global_var(CVAN_GUARD) == 2) then begin
+		LVar1 := create_object_sid(16777420, 25891, 1, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 5);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if (global_var(CVAN_GUARD) >= 1) then begin
+		LVar1 := create_object_sid(16777420, 27692, 1, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 5);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+		LVar1 := create_object_sid(16777244, 25894, 1, 966);
+		anim(LVar1, 1000, 5);
+		add_timer_event(LVar1, 0, 10);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+		LVar1 := create_object_sid(16777244, 25889, 1, 966);
+		anim(LVar1, 1000, 5);
+		add_timer_event(LVar1, 0, 10);
+	end
+	LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
+	LVar1 := create_object_sid(16777322, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 1);
+	LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
+	LVar1 := create_object_sid(16777322, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 1);
+	LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
+	LVar1 := create_object_sid(16777322, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 1);
+end
+
+procedure LABone_Caravan
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	Scenery_Creation := create_object_sid(33554959, 9723, 0, -1);
+	Scenery_Creation_Hex := 9723;
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation := create_object_sid(33554960, 9121, 0, -1);
+	Scenery_Creation_Hex := 9121;
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 3, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 0, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 1) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 5, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	Scenery_Creation_Count := 0;
+	while(Scenery_Creation_Count < 2) do begin
+		Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+		Scenery_Creation := create_object_sid(33554499, Scenery_Creation_Hex, 0, -1);
+		Scenery_Creation_Count := Scenery_Creation_Count + 1;
+	end
+	if (global_var(CVAN_DRIVER) == 1) then begin
+		LVar0 := create_object_sid(16777233, 9320, 0, 761);
+		critter_add_trait(LVar0, 1, 6, 64);
+		critter_add_trait(LVar0, 1, 5, 1);
+		anim(LVar0, 1000, 0);
+		LVar2 := create_object_sid(94, 0, 0, -1);
+		add_obj_to_inven(LVar0, LVar2);
+		wield_obj_critter(LVar0, LVar2);
+	end
+	if (global_var(CVAN_GUARD) == 2) then begin
+		LVar1 := create_object_sid(16777420, 10122, 0, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 0);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if (global_var(CVAN_GUARD) >= 1) then begin
+		LVar1 := create_object_sid(16777420, 8518, 0, 761);
+		critter_add_trait(LVar1, 1, 6, 64);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 0);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+		LVar1 := create_object_sid(16777244, 9920, 0, 966);
+		anim(LVar1, 1000, 0);
+		add_timer_event(LVar1, 0, 10);
+	end
+	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+		LVar1 := create_object_sid(16777244, 9118, 0, 966);
+		anim(LVar1, 1000, 0);
+		add_timer_event(LVar1, 0, 10);
+	end
+	LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
+	LVar1 := create_object_sid(16777236, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+	LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
+	LVar1 := create_object_sid(16777246, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+	LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
+	LVar1 := create_object_sid(16777248, 0, 0, 962);
+	critter_attempt_placement(LVar1, LVar0, 0);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

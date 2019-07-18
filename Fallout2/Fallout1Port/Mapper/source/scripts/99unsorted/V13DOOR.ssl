@@ -1,0 +1,62 @@
+#include "..\headers\define.h"
+
+procedure start;
+import variable vault_door_ptr;
+procedure damage_p_proc;//    script_action == 14
+procedure map_enter_p_proc;//    script_action == 15
+procedure timed_event_p_proc;//    script_action == 22//added from Endgame Mod by Corpse
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+			call damage_p_proc;
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(343, 100));
+	script_overrides;
+end
+
+procedure map_enter_p_proc
+begin
+	vault_door_ptr := self_obj;
+	if obj_is_open(self_obj) then begin
+		if (map_var(1) == 0) or (map_var(1) == 2) then begin
+			use_obj(self_obj);
+		end
+	end
+	else begin
+		if map_var(1) == 1 then begin
+			use_obj(self_obj);
+		end
+	end
+end
+
+procedure timed_event_p_proc//added from Endgame Mod by Corpse:
+begin
+	if (fixed_param == 1) then begin
+		use_obj(self_obj);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			use_obj(self_obj);
+			add_timer_event(self_obj, game_ticks(8), 3);
+		end
+		else begin
+			if (fixed_param == 3) then begin
+				if obj_is_open(self_obj) then begin
+					use_obj(self_obj);
+				end
+			end
+		end
+	end
+end
+

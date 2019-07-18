@@ -1,0 +1,61 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure use_stuff;
+procedure pick_lock;
+
+variable unlocked;
+
+import variable MVAirlock_ptr;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		MVAirlock_ptr := self_obj;
+	end
+	else begin
+		if (script_action == 21) then begin// 21 is look_at, 3 is description (Binoculars)
+			script_overrides;
+			display_msg(message_str(427, 100));
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				call use_stuff;
+			end
+			else begin
+				if (script_action == 8) then begin//<-- use_skill_on_p_proc
+					if (obj_pid(obj_being_used_with) == 77) then begin
+						call pick_lock;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure use_stuff
+begin
+	if (not(unlocked)) then begin
+		script_overrides;
+		display_msg(message_str(427, 101));
+	end
+end
+
+procedure pick_lock
+begin
+	script_overrides;
+	if (unlocked) then begin
+		display_msg(message_str(427, 102));
+	end
+	else begin
+		if (is_success(roll_vs_skill(dude_obj, 9, -30))) then begin
+			display_msg(message_str(427, 103));
+			unlocked := 1;
+		end
+		else begin
+			display_msg(message_str(427, 104));
+		end
+	end
+end
+

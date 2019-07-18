@@ -1,0 +1,120 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure damage_p_proc;//    script_action == 14
+procedure timed_event_p_proc;//    script_action == 22
+procedure hear_check;
+procedure anger;
+procedure anger2;
+
+variable failure;
+variable bonus;
+variable Test;
+
+
+procedure start
+begin
+	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+		call damage_p_proc;
+	end
+	else begin
+		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+			call timed_event_p_proc;
+		end
+		else begin
+			if (script_action == 8) then begin//<-- use_skill_on_p_proc
+				call hear_check;
+			end
+			else begin
+				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+					call hear_check;
+				end
+				else begin
+					if (script_action == 7) then begin//<-- use_obj_on_p_proc
+						call hear_check;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	set_global_var(ENEMY_BROTHERHOOD, 1);
+	set_local_var(0, local_var(0) + 1);
+	if (local_var(0) == 3) then begin
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		set_map_var(19, 0);
+		if (not(combat_is_initialized)) then begin
+			obj_close(self_obj);
+		end
+		add_timer_event(self_obj, game_ticks(3), 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if obj_is_open(self_obj) then begin
+				obj_close(self_obj);
+				add_timer_event(self_obj, game_ticks(3), 3);
+			end
+			else begin
+				add_timer_event(self_obj, game_ticks(3), 2);
+			end
+		end
+		else begin
+			if (fixed_param == 3) then begin
+				rm_timer_event(self_obj);
+			end
+		end
+	end
+end
+
+procedure hear_check
+begin
+	bonus := -35;
+	failure := 1;
+	if ((metarule(16, 0) > 1) and (source_obj == dude_obj)) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+		set_map_var(19, 2);
+	end
+	else begin
+		if source_obj == dude_obj then begin
+			if (using_skill(dude_obj, 8)) then begin
+				Test := roll_vs_skill(dude_obj, 8, bonus);
+				if (is_success(Test)) then begin
+					failure := 0;
+				end
+				else begin
+					failure := 1;
+				end
+				if (has_skill(dude_obj, 8) < 40) then begin
+					failure := 1;
+				end
+			end
+		end
+		if (failure) then begin
+			call anger;
+		end
+	end
+	add_timer_event(self_obj, game_ticks(3), 1);
+end
+
+procedure anger
+begin
+	if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
+		set_map_var(19, 1);
+	end
+end
+
+procedure anger2
+begin
+	if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
+		set_map_var(19, 2);
+	end
+end
+

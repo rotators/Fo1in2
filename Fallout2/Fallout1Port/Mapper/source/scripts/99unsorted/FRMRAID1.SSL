@@ -1,0 +1,81 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure talk_p_proc;//    script_action == 11
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+variable Only_Once := 1;
+variable PsstTime;
+
+procedure Start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		item_caps_adjust(self_obj, (12 + get_critter_stat(dude_obj, 6)));//change to random 1-10
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 6);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 17);
+		if (local_var(4) == 0) then begin
+//							/*		set_global_var(RAIDERS_LEFT_IRWIN, global_var(RAIDERS_LEFT_IRWIN) + 1);*/
+			set_local_var(4, 1);
+		end
+		if tile_num(self_obj) == 21304 then begin
+			set_map_var(1, self_obj);
+		end
+		if tile_num(self_obj) == 21491 then begin
+			set_map_var(2, self_obj);
+		end
+		if tile_num(self_obj) == 20891 then begin
+			set_map_var(3, self_obj);
+		end
+		if tile_num(self_obj) == 19895 then begin
+			set_map_var(4, self_obj);
+		end
+		if tile_num(self_obj) == 18892 then begin
+			set_map_var(5, self_obj);
+		end
+		if tile_num(self_obj) == 17902 then begin
+			set_map_var(6, self_obj);
+		end
+		if tile_num(self_obj) == 17702 then begin
+			set_map_var(7, self_obj);
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	float_msg(self_obj, message_str(935, random(300, 303)), 0);
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		float_msg(self_obj, message_str(935, random(300, 303)), 0);
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if ((((game_time / 10) - PsstTime) >= 30) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
+		float_msg(self_obj, message_str(935, random(300, 303)), 0);
+		PsstTime := game_time / 10;
+	end
+end
+
+procedure destroy_p_proc
+begin
+//					/*	set_global_var(RAIDERS_LEFT_IRWIN, global_var(RAIDERS_LEFT_IRWIN) - 1);*/
+//					/*	if (global_var(RAIDERS_LEFT_IRWIN) == 0) then begin*/
+	//if () then begin
+	//	set_global_var(IRWIN_FARM_STATUS, 2);
+	//end
+end
+

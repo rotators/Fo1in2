@@ -1,0 +1,66 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure use_p_proc;//    script_action == 6
+
+variable initialized := 0;
+
+import variable radio_computer;
+
+
+procedure start
+begin
+	if not(initialized) then begin
+		radio_computer := self_obj;
+		initialized := 1;
+	end
+	else begin
+		if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+			call description_p_proc;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				call use_p_proc;
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	variable LVar0 := 0;
+	LVar0 := message_str(607, 100);
+	if (is_success(do_check(dude_obj, 1, has_trait(0, dude_obj, 0)))) then begin
+		if (global_var(RADIO_COMPUTER_OFF)) then begin
+			LVar0 := LVar0 + message_str(607, 101);
+		end
+		else begin
+			LVar0 := LVar0 + message_str(607, 102);
+		end
+	end
+	display_msg(LVar0);
+end
+
+procedure use_p_proc
+begin
+	if source_obj == dude_obj then begin
+		if (is_success(roll_vs_skill(dude_obj, 12, 0))) then begin
+			if (global_var(RADIO_COMPUTER_OFF)) then begin
+				display_msg(message_str(607, 103));
+				set_global_var(RADIO_COMPUTER_OFF, 0);
+			end
+			else begin
+				display_msg(message_str(607, 104));
+				set_global_var(RADIO_COMPUTER_OFF, 1);
+			end
+		end
+		else begin
+			display_msg(message_str(607, 105));
+		end
+	end
+	else begin
+		set_global_var(RADIO_COMPUTER_OFF, 1);
+	end
+end
+

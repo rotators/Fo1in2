@@ -1,0 +1,463 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure look_at_p_proc;//    script_action == 21
+procedure description_p_proc;//    script_action == 3
+procedure talk_p_proc;//    script_action == 11
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+
+procedure MacRae01;
+procedure MacRae02;
+procedure MacRae03;
+procedure MacRae04;
+procedure MacRae05;
+procedure MacRae06;
+procedure MacRae07;
+procedure MacRae08;
+procedure MacRae09;
+procedure MacRae10;
+procedure MacRae11;
+procedure MacRae12;
+procedure MacRae13;
+procedure MacRae14;
+procedure MacRae15;
+procedure MacRae16;
+procedure MacRaeEnd;
+
+variable Only_Once := 1;
+variable DisplayMessage := 100;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure Start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 47);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 27);
+		Only_Once := 0;
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (local_var(4) == 1) then begin
+		display_msg(message_str(918, 101));
+	end
+	else begin
+		display_msg(message_str(918, 100));
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	if (local_var(4) == 1) then begin
+		display_msg(message_str(918, 101));
+	end
+	else begin
+		display_msg(message_str(918, 100));
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (global_var(ENEMY_BLADES) == 1) then begin
+		float_msg(self_obj, message_str(669, random(100, 105)), 2);
+	end
+	else begin
+		if (local_var(5) == 2) then begin
+			float_msg(self_obj, message_str(918, 141), 0);
+		end
+		else begin
+			call get_reaction;
+			start_gdialog(918, self_obj, -1, -1, -1);
+			gsay_start;
+			if (global_var(BLADES_STATUS) == 2) then begin
+				call MacRae12;
+			end
+			else begin
+				if (local_var(4) == 0) then begin
+					if (get_critter_stat(dude_obj, 34) == 0) then begin
+						DisplayMessage := 102;
+					end
+					else begin
+						DisplayMessage := 103;
+					end
+					call MacRae02;
+				end
+				else begin
+					DisplayMessage := 104;
+					call MacRae02;
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_BLADES, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+		set_global_var(ENEMY_BLADES, 1);
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		if (global_var(ENEMY_BLADES) == 1) then begin
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	set_global_var(ENEMY_BLADES, 1);
+end
+
+procedure MacRae01
+begin
+	DisplayMessage := 104;
+	call MacRae02;
+end
+
+procedure MacRae02
+begin
+	gsay_reply(918, DisplayMessage);
+	if (local_var(4) == 0) then begin
+		giq_option(4, 918, 105, MacRae03, 50);
+	end
+	giq_option(4, 918, 106, MacRae11, 50);
+	giq_option(4, 918, 107, MacRaeEnd, 50);
+	giq_option(-3, 918, 141, MacRaeEnd, 50);
+end
+
+procedure MacRae03
+begin
+	gsay_reply(918, 108);
+	gsay_option(918, 109, MacRae04, 50);
+	gsay_option(918, 110, MacRae08, 50);
+	gsay_option(918, 111, MacRae09, 50);
+	gsay_option(918, 112, MacRae01, 50);
+end
+
+procedure MacRae04
+begin
+	gsay_reply(918, 113);
+	gsay_option(918, 114, MacRae05, 50);
+	gsay_option(918, 115, MacRae06, 50);
+	gsay_option(918, 116, MacRae01, 50);
+end
+
+procedure MacRae05
+begin
+	gsay_message(918, 117, 50);
+	call DownReactLevel;
+end
+
+procedure MacRae06
+begin
+	DisplayMessage := 118;
+	set_local_var(5, 1);
+	call MacRae07;
+end
+
+procedure MacRae07
+begin
+	gsay_reply(918, DisplayMessage);
+	gsay_option(918, 119, MacRae01, 50);
+	gsay_option(918, 120, MacRaeEnd, 50);
+end
+
+procedure MacRae08
+begin
+	DisplayMessage := 121;
+	call MacRae07;
+end
+
+procedure MacRae09
+begin
+	gsay_reply(918, 122);
+	gsay_option(918, 123, MacRae10, 50);
+	gsay_option(918, 124, MacRae01, 50);
+	gsay_option(918, 125, MacRaeEnd, 50);
+end
+
+procedure MacRae10
+begin
+	DisplayMessage := 126;
+	call MacRae07;
+end
+
+procedure MacRae11
+begin
+	DisplayMessage := 127;
+	call MacRae07;
+end
+
+procedure MacRae12
+begin
+	gsay_reply(918, 128);
+	if (local_var(5 == 1)) then begin
+		gsay_option(918, 129, MacRae15, 50);
+	end
+	if (local_var(4) == 1) then begin
+		gsay_option(918, 130, MacRae13, 50);
+	end
+	else begin
+		gsay_option(918, 131, MacRae16, 50);
+	end
+	gsay_option(918, 132, MacRaeEnd, 50);
+end
+
+procedure MacRae13
+begin
+	gsay_reply(918, 133);
+	gsay_option(918, 134, MacRae14, 50);
+	gsay_option(918, 135, MacRaeEnd, 50);
+end
+
+procedure MacRae14
+begin
+	gsay_reply(918, 113);
+	gsay_option(918, 136, MacRae15, 50);
+	gsay_option(918, 137, MacRaeEnd, 50);
+end
+
+procedure MacRae15
+begin
+//
+// Adds five points into Unarmed and Melee.
+// originally added to Melee Damage but the game engine cannot support that.
+// Five points should give double if one of those skills is tagged, but need to test this.
+//	--Sduibek
+//
+	variable LVar0 := 5;// Skill points to add
+	variable LVar1 := 5;// Skill points to add
+	variable LVar2 := 24;// Hours it takes to learn
+	gsay_message(918, 138, 50);
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+//	if (get_critter_stat(dude_obj, 4) >= 8) or has_trait(dude_obj, 0, #) or has_trait(dude_obj, 0, #) then begin
+	game_time_advance(game_ticks(60 * 60 * LVar2));
+//	if get_critter_stat(dude_obj, 4) <=
+	gfade_in(1);
+	critter_mod_skill(dude_obj, 3, LVar0);
+	critter_mod_skill(dude_obj, 4, LVar1);
+	display_msg(message_str(766, 116) + LVar0 + message_str(766, 120));
+	display_msg(message_str(766, 116) + LVar1 + message_str(766, 121));
+	give_exp_points(250);
+	display_msg(message_str(918, 200));
+	set_local_var(5, 2);
+	gsay_message(918, 139, 50);
+end
+
+procedure MacRae16
+begin
+	gsay_reply(918, 140);
+	gsay_option(918, 109, MacRae15, 50);
+	gsay_option(918, 137, MacRaeEnd, 50);
+end
+
+procedure MacRaeEnd
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

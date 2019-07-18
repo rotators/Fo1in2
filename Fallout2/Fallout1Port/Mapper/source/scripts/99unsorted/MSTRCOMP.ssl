@@ -1,0 +1,70 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure look_at_p_proc;//    script_action == 21
+procedure skills;
+
+variable XP;
+
+// "From this point on, you'll be attacked if you're not wearing Robes
+// or if you have any follower. If you talk your way past the two guards
+// by the vault door you gain 750 xp. You earn 1250 xp if you use Science
+// on the computer just inside and gain the location of the Military Base
+// (even if you have it). You can also get this from the computers on level 2."
+
+procedure start
+begin
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			script_overrides;
+			call skills;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				display_msg(message_str(725, 201));
+			end
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(725, 200));
+end
+
+procedure skills
+begin
+	if (action_being_used == 12) then begin//-- SCIENCE
+		if is_success(roll_vs_skill(dude_obj, 12, -50)) then begin
+			display_msg(message_str(725, 203));
+			if global_var(WORLDMAPLIST_MILITARYBASE) == 0 then begin
+				XP := 1250;
+				set_global_var(WORLDMAPLIST_MILITARYBASE, 1);
+			end
+			else begin
+				if (global_var(WORLDMAPLIST_MILITARYBASE) == 1) then begin
+					XP := 500;
+					set_global_var(WORLDMAPLIST_MILITARYBASE, 2);
+				end
+				else begin
+					XP := 50;
+				end
+			end
+			display_msg(message_str(725, 204) + XP + message_str(725, 205));
+			give_exp_points(XP);
+		end
+		else begin
+			display_msg(message_str(725, 201));
+		end
+	end
+	else begin
+		if (action_being_used == 13) then begin//-- REPAIR
+			display_msg(message_str(725, 202));
+		end
+	end
+end
+

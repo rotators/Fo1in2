@@ -1,0 +1,815 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;//    script_action == 14
+procedure look_at_p_proc;//    script_action == 21
+procedure timed_event_p_proc;//    script_action == 22
+
+
+procedure Lemmy01;
+procedure Lemmy02;
+procedure Lemmy03;
+procedure Lemmy04;
+procedure Lemmy05;
+procedure Lemmy06;
+procedure Lemmy08;
+procedure Lemmy09;
+procedure Lemmy10;
+procedure Lemmy10a;
+procedure Lemmy10b;
+procedure Lemmy10c;
+procedure Lemmy11;
+procedure Lemmy12;
+procedure Lemmy13;
+procedure Lemmy14;
+procedure Lemmy15;
+procedure Lemmy16;
+procedure Lemmy17;
+procedure Lemmy18;
+procedure Lemmy19;
+procedure Lemmy20;
+procedure Lemmy20a;
+procedure Lemmy20b;
+procedure Lemmy20c;
+procedure Lemmy20d;
+procedure Lemmy20e;
+procedure Lemmy20f;
+procedure Lemmy21;
+procedure Lemmy22;
+procedure Lemmy23;
+procedure Lemmy24;
+procedure Lemmy24a;
+procedure Lemmy24b;
+procedure Lemmy24c;
+procedure Lemmy24d;
+procedure Lemmy24e;
+procedure Lemmy24f;
+procedure Lemmy25;
+procedure Lemmy26;
+procedure Lemmy27;
+procedure LemmyEnd;
+
+procedure LemmyCombat;
+procedure SendLemmyAtDay;
+procedure combat;
+
+variable hostile;
+variable Only_Once := 1;
+variable lastPsst;
+variable Destination;
+variable LastMove;
+variable SetDayNight;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		if (local_var(7) == 0) then begin
+			set_local_var(7, 1);
+			item_caps_adjust(self_obj, 500);
+		end
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 41);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 51);
+		LastMove := 21325;
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+					else begin
+						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+							call timed_event_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	variable LVar0 := 0;
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (SetDayNight == 0) then begin
+		add_timer_event(self_obj, game_ticks(random(5, 20)), 1);
+		SetDayNight := 1;
+	end
+	if (local_var(6) == 0) then begin
+		if ((((game_time / 10) - lastPsst) >= 10) and (tile_distance_objs(self_obj, dude_obj) <= 6)) then begin
+			lastPsst := game_time / 10;
+			float_msg(self_obj, message_str(846, 101), 2);
+		end
+	end
+	LVar0 := tile_num(self_obj);
+	if ((LVar0 == 21917) or (LVar0 == 20116) or (LVar0 == 25318)) then begin
+		if (anim_busy(self_obj) == 0) then begin
+			if (has_trait(1, self_obj, 10) != 3) then begin
+				anim(self_obj, 1000, 3);
+			end
+		end
+	end
+	else begin
+		if (LVar0 == 26327) then begin
+			if (anim_busy(self_obj) == 0) then begin
+				if (has_trait(1, self_obj, 10) != 2) then begin
+					anim(self_obj, 1000, 2);
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	set_local_var(6, 1);
+	if (local_var(4) == 0) then begin
+		set_local_var(4, 1);
+		start_gdialog(846, self_obj, 4, -1, -1);
+		gsay_start;
+		call Lemmy01;
+		gsay_end;
+		end_dialogue;
+	end
+	else begin
+		if (local_var(5) == 1) then begin
+			start_gdialog(846, self_obj, 4, -1, -1);
+			gsay_start;
+			call Lemmy26;
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			start_gdialog(846, self_obj, 4, -1, -1);
+			gsay_start;
+			call Lemmy27;
+			gsay_end;
+			end_dialogue;
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(846, 100));
+end
+
+procedure timed_event_p_proc
+begin
+	call SendLemmyAtDay;
+end
+
+procedure SendLemmyAtDay
+begin
+	variable LVar0 := 0;
+	Destination := 0;
+	LVar0 := random(25, 45);
+	while(Destination == 0) do begin
+		Destination := random(1, 9);
+		if (Destination == 1) then begin
+			Destination := 25931;
+		end
+		else begin
+			if (Destination == 2) then begin
+				Destination := 25551;
+			end
+			else begin
+				if (Destination == 3) then begin
+					Destination := 21325;
+				end
+				else begin
+					if (Destination == 4) then begin
+						Destination := 21917;
+					end
+					else begin
+						if (Destination == 5) then begin
+							Destination := 18925;
+						end
+						else begin
+							if (Destination == 6) then begin
+								Destination := 23322;
+							end
+							else begin
+								if (Destination == 7) then begin
+									Destination := 26327;
+								end
+								else begin
+									if (Destination == 8) then begin
+										Destination := 20116;
+									end
+									else begin
+										if (Destination == 9) then begin
+											Destination := 25318;
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		if (Destination == LastMove) then begin
+			Destination := 0;
+		end
+	end
+	LastMove := Destination;
+	reg_anim_func(2, self_obj);
+	reg_anim_func(1, 1);
+	reg_anim_obj_move_to_tile(self_obj, Destination, -1);
+	reg_anim_func(3, 0);
+	rm_timer_event(self_obj);
+	add_timer_event(self_obj, game_ticks(LVar0), 1);
+end
+
+procedure Lemmy01
+begin
+	gsay_reply(846, 102);
+	giq_option(4, 846, 103, Lemmy03, 50);
+	giq_option(4, 846, 104, Lemmy04, 50);
+	giq_option(4, 846, 105, Lemmy05, 50);
+	giq_option(-3, 846, 106, Lemmy02, 50);
+end
+
+procedure Lemmy02
+begin
+	gsay_reply(846, 107);
+	giq_option(-3, 846, 108, LemmyEnd, 50);
+end
+
+procedure Lemmy03
+begin
+	set_local_var(5, 1);
+	gsay_message(846, 109, 50);
+end
+
+procedure Lemmy04
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(846, 110);
+	end
+	else begin
+		gsay_reply(846, 178);
+	end
+	giq_option(4, 846, 111, Lemmy06, 50);
+	giq_option(4, 846, 112, LemmyCombat, 51);
+	giq_option(5, 846, 113, Lemmy03, 50);
+end
+
+procedure Lemmy05
+begin
+	gsay_reply(846, 114);
+	if (global_var(VANCE_KNOWS_PLAYER) != 1) then begin
+		giq_option(4, 846, 116, Lemmy23, 50);
+	end
+	giq_option(4, 846, 117, Lemmy09, 50);
+	giq_option(4, 846, 118, Lemmy03, 50);
+end
+
+procedure Lemmy06
+begin
+	gsay_reply(846, 119);
+	giq_option(4, 846, 120, Lemmy05, 50);
+	giq_option(4, 846, 121, Lemmy09, 50);
+	giq_option(4, 846, 123, Lemmy08, 50);
+end
+
+procedure Lemmy08
+begin
+	gsay_message(846, 128, 50);
+end
+
+procedure Lemmy09
+begin
+	gsay_reply(846, 129);
+	call Lemmy18;
+end
+
+procedure Lemmy10
+begin
+	gsay_reply(846, 130);
+	giq_option(4, 846, 131, Lemmy10a, 50);
+	giq_option(4, 846, 132, Lemmy10b, 50);
+	giq_option(4, 846, 133, Lemmy10c, 50);
+	giq_option(4, 846, 134, Lemmy08, 50);
+end
+
+procedure Lemmy10a
+begin
+	variable LVar0 := 0;
+	if (item_caps_total(dude_obj) >= 500) then begin
+		item_caps_adjust(dude_obj, -500);
+		call Lemmy13;
+	end
+	else begin
+		call Lemmy11;
+	end
+end
+
+procedure Lemmy10b
+begin
+	variable LVar0 := 0;
+	if (is_success(do_check(dude_obj, 3, -3)) or is_success(roll_vs_skill(dude_obj, 15, -30))) then begin
+		if (item_caps_total(dude_obj) >= 400) then begin
+			item_caps_adjust(dude_obj, -400);
+			call Lemmy14;
+		end
+		else begin
+			call Lemmy11;
+		end
+	end
+	else begin
+		call Lemmy11;
+	end
+end
+
+procedure Lemmy10c
+begin
+	if (is_success(do_check(dude_obj, 0, -3))) then begin
+		call Lemmy15;
+	end
+	else begin
+		call Lemmy12;
+	end
+end
+
+procedure Lemmy11
+begin
+	gsay_message(846, 135, 50);
+end
+
+procedure Lemmy12
+begin
+	set_local_var(5, 1);
+	gsay_message(846, 136, 51);
+end
+
+procedure Lemmy13
+begin
+	gsay_message(846, 137, 50);
+	call Lemmy16;
+end
+
+procedure Lemmy14
+begin
+	gsay_message(846, 138, 50);
+	call Lemmy16;
+end
+
+procedure Lemmy15
+begin
+	gsay_message(846, 139, 50);
+	call Lemmy16;
+end
+
+procedure Lemmy16
+begin
+	gsay_reply(846, 140);
+	giq_option(4, 846, 141, Lemmy17, 50);
+	giq_option(4, 846, 142, Lemmy08, 50);
+end
+
+procedure Lemmy17
+begin
+	gsay_message(846, 143, 50);
+	call Lemmy18;
+end
+
+procedure Lemmy18
+begin
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option(4, 846, 144, Lemmy10, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 846, 145, Lemmy19, 50);
+	end
+	if (map_var(41) == 1) then begin
+		giq_option(4, 846, 146, Lemmy20, 50);
+	end
+	if (global_var(VANCE_KNOWS_PLAYER) != 1) then begin
+		giq_option(4, 846, 147, Lemmy23, 50);
+	end
+	giq_option(4, 846, 148, Lemmy08, 50);
+	giq_option(-3, 846, 106, Lemmy02, 50);
+end
+
+procedure Lemmy19
+begin
+	gsay_reply(846, 149);
+	giq_option(4, 846, 150, Lemmy17, 50);
+	giq_option(4, 846, 151, Lemmy08, 50);
+end
+
+procedure Lemmy20
+begin
+	gsay_reply(846, 152);
+	giq_option(4, 846, 153, Lemmy20a, 50);
+	giq_option(4, 846, 154, Lemmy20b, 50);
+	giq_option(4, 846, 155, Lemmy20c, 50);
+	giq_option(4, 846, 156, Lemmy08, 50);
+end
+
+procedure Lemmy20a
+begin
+	variable LVar0 := 0;
+	if (item_caps_total(dude_obj) >= 300) then begin
+		item_caps_adjust(dude_obj, -300);
+		call Lemmy20d;
+	end
+	else begin
+		call Lemmy11;
+	end
+end
+
+procedure Lemmy20b
+begin
+	variable LVar0 := 0;
+	if (is_success(do_check(dude_obj, 3, -3)) or is_success(roll_vs_skill(dude_obj, 15, -30))) then begin
+		if (item_caps_total(dude_obj) >= 240) then begin
+			item_caps_adjust(dude_obj, -240);
+			call Lemmy20e;
+		end
+		else begin
+			call Lemmy11;
+		end
+	end
+	else begin
+		call Lemmy11;
+	end
+end
+
+procedure Lemmy20c
+begin
+	if (is_success(do_check(dude_obj, 0, -3))) then begin
+		call Lemmy20f;
+	end
+	else begin
+		call Lemmy12;
+	end
+end
+
+procedure Lemmy20d
+begin
+	gsay_message(846, 137, 50);
+	call Lemmy21;
+end
+
+procedure Lemmy20e
+begin
+	gsay_message(846, 138, 50);
+	call Lemmy21;
+end
+
+procedure Lemmy20f
+begin
+	gsay_message(846, 139, 50);
+	call Lemmy21;
+end
+
+procedure Lemmy21
+begin
+	gsay_reply(846, 157);
+	giq_option(4, 846, 158, Lemmy22, 50);
+	giq_option(4, 846, 159, Lemmy17, 50);
+	giq_option(4, 846, 160, Lemmy08, 50);
+end
+
+procedure Lemmy22
+begin
+	gsay_reply(846, 161);
+	giq_option(4, 846, 162, Lemmy17, 50);
+	giq_option(4, 846, 163, LemmyCombat, 51);
+	giq_option(4, 846, 164, Lemmy08, 50);
+end
+
+procedure Lemmy23
+begin
+	gsay_reply(846, 165);
+	giq_option(4, 846, 166, Lemmy24, 50);
+	giq_option(4, 846, 167, Lemmy08, 50);
+end
+
+procedure Lemmy24
+begin
+	gsay_reply(846, 168);
+	giq_option(4, 846, 169, Lemmy24a, 50);
+	giq_option(4, 846, 170, Lemmy24b, 50);
+	giq_option(4, 846, 171, Lemmy24c, 50);
+	giq_option(4, 846, 172, Lemmy08, 50);
+end
+
+procedure Lemmy24a
+begin
+	variable LVar0 := 0;
+	if (item_caps_total(dude_obj) >= 1000) then begin
+		item_caps_adjust(dude_obj, -1000);
+		call Lemmy24d;
+	end
+	else begin
+		call Lemmy11;
+	end
+end
+
+procedure Lemmy24b
+begin
+	variable LVar0 := 0;
+	if (is_success(do_check(dude_obj, 3, -3)) or is_success(roll_vs_skill(dude_obj, 15, -30))) then begin
+		if (item_caps_total(dude_obj) >= 800) then begin
+			item_caps_adjust(dude_obj, -800);
+			call Lemmy24e;
+		end
+		else begin
+			call Lemmy11;
+		end
+	end
+	else begin
+		call Lemmy11;
+	end
+end
+
+procedure Lemmy24c
+begin
+	if (is_success(do_check(dude_obj, 0, -3))) then begin
+		call Lemmy24f;
+	end
+	else begin
+		call Lemmy12;
+	end
+end
+
+procedure Lemmy24d
+begin
+	gsay_message(846, 137, 50);
+	call Lemmy25;
+end
+
+procedure Lemmy24e
+begin
+	gsay_message(846, 138, 50);
+	call Lemmy25;
+end
+
+procedure Lemmy24f
+begin
+	gsay_message(846, 139, 50);
+	call Lemmy25;
+end
+
+procedure Lemmy25
+begin
+	set_global_var(VANCE_KNOWS_PLAYER, 1);// VANCE_KNOWS_PLAYER
+	gsay_reply(846, 173);
+	giq_option(4, 846, 174, Lemmy17, 50);
+	giq_option(4, 846, 175, Lemmy08, 50);
+end
+
+procedure Lemmy26
+begin
+	gsay_message(846, 176, 50);
+end
+
+procedure Lemmy27
+begin
+	gsay_reply(846, 177);
+	call Lemmy18;
+end
+
+procedure LemmyEnd
+begin
+end
+
+procedure LemmyCombat
+begin
+	set_local_var(5, 1);
+	call combat;
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

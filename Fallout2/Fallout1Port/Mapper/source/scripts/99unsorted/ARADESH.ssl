@@ -1,0 +1,1393 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure do_dialogue;//	procedure talk_p_proc;//    script_action == 11
+procedure map_enter_p_proc;//    script_action == 15
+procedure critter_p_proc;//    script_action == 12
+
+procedure aradeshleave;
+procedure aradeshend;
+procedure aradeshcbt;
+procedure aradesh01;
+procedure aradesh01_2;
+procedure aradesh01_3;
+procedure aradesh02;
+procedure aradesh02_2;
+procedure aradesh02_4;
+procedure aradesh02_5;
+procedure aradesh03;
+procedure aradesh04;
+procedure aradesh05;
+procedure aradesh06;
+procedure aradesh07;
+procedure aradesh08;
+procedure aradesh08a;
+procedure aradesh08b;
+procedure aradesh09;
+procedure aradesh09a;
+procedure aradesh10;
+procedure aradesh11;
+procedure aradesh11a;
+procedure aradesh11b;
+procedure aradesh12;
+procedure aradesh13;
+procedure aradesh14;
+procedure aradesh15;
+procedure aradesh16;
+procedure aradesh17;
+procedure aradesh17_2;
+procedure aradesh17_3;
+procedure aradesh18;
+procedure aradesh19;
+procedure aradesh20;
+procedure aradesh21;
+procedure aradesh22;
+procedure aradesh23;
+procedure aradesh23_2;
+procedure aradesh24;
+procedure aradesh24a;
+procedure aradesh24b;
+procedure aradesh24c;
+procedure aradesh25;
+procedure aradesh26;
+procedure aradesh27;
+procedure aradesh28;
+procedure aradesh28a;
+procedure aradesh28b;
+procedure aradesh28c;
+procedure aradesh29;
+procedure aradesh30;
+procedure aradesh30a;
+procedure aradesh30b;
+procedure aradesh31;
+procedure aradesh32;
+procedure aradesh33;
+procedure aradesh35;
+procedure aradesh36;
+procedure aradesh37;
+procedure aradesh37a;
+procedure aradesh38;
+procedure aradesh39;
+procedure aradesh39a;
+procedure aradesh39b;
+procedure aradesh39c;
+procedure aradesh40;
+procedure aradesh40a;
+procedure aradesh41;
+procedure aradesh42;
+procedure aradesh43;
+procedure aradesh44;
+procedure aradesh45;
+procedure aradesh46;
+procedure aradesh47;
+procedure aradesh48;
+procedure aradesh49;
+procedure aradesh49a;
+procedure aradesh50;
+procedure aradesh51;
+procedure aradesh52;
+procedure aradesh53;
+procedure aradesh54;
+procedure aradesh55;
+procedure aradesh56;
+procedure aradesh57;
+procedure aradesh58;
+procedure aradesh59;
+procedure aradesh60;
+procedure aradesh61;
+procedure aradesh62;
+procedure aradesh63;
+procedure aradesh64;
+procedure aradesh65;
+procedure aradesh66;
+procedure aradesh67;
+procedure aradesh68;
+procedure aradesh69;
+procedure aradesh70;
+procedure aradesh71;
+procedure aradesh72;
+procedure aradesh73;
+procedure aradeshx;
+procedure aradeshx1;
+procedure aradeshx2;
+procedure aradeshx3;
+procedure aradeshx5;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+variable TRESPASS;
+variable ILLEGAL;
+variable ILLEGBEFORE;
+variable hostile;
+variable rndx;
+variable rndy;
+variable rndz;
+variable MALE;
+variable initialized := 0;
+variable pickup_attempt;
+
+
+
+variable isGoodGuy := 1;// Fallout Fixt
+
+procedure PickDeadBodyType;// Fallout Fixt
+variable DeathType := 56;
+
+
+procedure start
+begin
+	if (local_var(11) != 1) then begin
+		variable LVar0;
+		set_local_var(11, 1);
+		LVar0 := obj_carrying_pid_obj(self_obj, 74);
+		if LVar0 then begin
+			rm_obj_from_inven(self_obj, LVar0);
+			destroy_object(LVar0);
+			LVar0 := 0;
+		end
+	end
+	if global_var(SHADY_SANDS_WAS_INVADED) then begin
+		if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+			if (local_var(6) != 1) then begin
+				set_local_var(6, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+	else begin
+		if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+			if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+				if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+					if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+					if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+						variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+					set_local_var(12, 1);
+				end
+			end
+		end
+		if (initialized == 0) then begin
+			initialized := 1;
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
+			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 6);
+		end
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+			call map_enter_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				if (local_var(9) > 2) then begin
+					display_msg(message_str(766, 170));
+					hostile := 1;
+				end
+				else begin
+					if (global_var(ENEMY_SHADY_SANDS) == 1) then begin
+						float_msg(self_obj, message_str(33, 277), 2);
+					end
+					else begin
+						call do_dialogue;
+					end
+				end
+				if (local_var(7) == 1) then begin
+					animate_move_obj_to_tile(self_obj, 32945, 0);
+				end
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+						call damage_p_proc;
+					end
+					else begin
+						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+							script_overrides;
+							display_msg(message_str(33, 100));
+						end
+						else begin
+							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+								call destroy_p_proc;
+							end
+							else begin
+								if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+									pickup_attempt := 1;
+									dialogue_system_enter;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
+			if (obj_can_see_obj(self_obj, dude_obj)) then begin
+				hostile := 1;
+				attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if (map_first_run) and not(global_var(ARADESH_REFRESH_GFX_FLAG)) then begin
+		variable Aradesh_ptr := 0;
+		variable AradeshTile := 0;
+		variable NewAradesh := 0;
+		variable SelfHeight := 0;
+		set_global_var(ARADESH_REFRESH_GFX_FLAG, 1);
+		SelfHeight := elevation(self_obj);
+		AradeshTile := tile_num(self_obj);
+		NewAradesh := create_object_sid(16777280, 0, 0, 33);
+		Aradesh_ptr := NewAradesh;
+		move_to(self_obj, 22083, SelfHeight);
+		critter_attempt_placement(Aradesh_ptr, AradeshTile, 0);
+		move_obj_inven_to_obj(self_obj, Aradesh_ptr);
+		anim(Aradesh_ptr, 1000, rotation_to_tile(AradeshTile, 22083));
+		destroy_object(self_obj);
+	end
+end
+
+procedure do_dialogue
+begin
+	variable LVar0 := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (pickup_attempt) then begin
+		pickup_attempt := 0;
+		LVar0 := random(1, 2);
+		if (LVar0 == 1) then begin
+			call aradesh45;
+		end
+		else begin
+			call aradesh46;
+		end
+	end
+	else begin
+		start_gdialog(33, self_obj, 4, 13, 9);
+		gsay_start;
+		if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+			set_local_var(4, 1);
+			if (global_var(TANDI_RESCUE) == 0) then begin
+				call aradesh39;
+			end
+			else begin
+				call aradesh37;
+			end
+		end
+		else begin
+			if (local_var(4) == 1) then begin
+				if (local_var(5) == 1) then begin
+					call aradesh46;
+				end
+				else begin
+					if ((global_var(TANDI_HIRELING_STATUS) == 2) and (local_var(8) == 0)) then begin
+						call aradesh43;
+					end
+					else begin
+						if ((global_var(RADSCORPION_SEED) == 2) and (local_var(10) == 0)) then begin
+							set_local_var(10, 1);
+							call aradesh31;
+						end
+						else begin
+							if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+								if (global_var(TANDI_RESCUE) == 0) then begin
+									call aradesh39;
+								end
+								else begin
+									call aradesh37;
+								end
+							end
+							else begin
+								if ((global_var(TANDI_HIRELING_STATUS) == 2) and (global_var(RADSCORPION_SEED) != 2)) then begin
+									call aradesh30a;
+								end
+								else begin
+									if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+										call aradesh35;
+									end
+									else begin
+										if (local_var(1) < 3) then begin
+											call aradesh18;
+										end
+										else begin
+											call aradesh17;
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			else begin
+				set_local_var(4, 1);
+				call aradesh01;
+			end
+		end
+		gsay_end;
+		end_dialogue;
+	end
+end
+
+procedure aradeshleave
+begin
+	gsay_message(33, 276, 50);
+end
+
+procedure aradeshend
+begin
+end
+
+procedure aradeshcbt
+begin
+	hostile := 1;
+end
+
+procedure aradesh01
+begin
+	if (local_var(1) >= 2) then begin
+		if (local_var(1) >= 3) then begin
+			gsay_reply(33, 101);
+		end
+		else begin
+			gsay_reply(33, 102);
+		end
+	end
+	else begin
+		gsay_reply(33, 103);
+	end
+	giq_option(5, 33, 104, aradesh02, 50);
+	giq_option(4, 33, 105, aradesh01_2, 51);
+	giq_option(4, 33, 106, aradesh10, 51);
+	giq_option(4, 33, 107, aradesh01_3, 50);
+	giq_option(4, 33, 108, aradesh14, 51);
+	giq_option(5, 33, 109, aradesh07, 51);
+	giq_option(-3, 33, 110, aradesh15, 50);
+end
+
+procedure aradesh01_2
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	if (local_var(1) >= 2) then begin
+		call aradesh05;
+	end
+	else begin
+		call aradesh06;
+	end
+end
+
+procedure aradesh01_3
+begin
+	if (local_var(1) >= 2) then begin
+		call aradesh13;
+	end
+	else begin
+		call aradesh11;
+	end
+end
+
+procedure aradesh02
+begin
+	gsay_reply(33, 111);
+	giq_option(4, 33, 112, aradesh02_2, 50);
+	giq_option(4, 33, 113, aradesh01_2, 51);
+	giq_option(5, 33, 114, aradesh02_4, 51);
+	giq_option(5, 33, 115, aradesh02_5, 50);
+end
+
+procedure aradesh02_2
+begin
+	if (local_var(1) >= 2) then begin
+		call aradesh03;
+	end
+	else begin
+		call aradesh08;
+	end
+end
+
+procedure aradesh02_4
+begin
+	if (local_var(1) >= 2) then begin
+		call aradesh09;
+	end
+	else begin
+		call aradesh06;
+	end
+end
+
+procedure aradesh02_5
+begin
+	if (local_var(1) >= 2) then begin
+		call aradesh04;
+	end
+	else begin
+		call aradesh09;
+	end
+end
+
+procedure aradesh03
+begin
+	gsay_reply(33, 116);
+	giq_option(4, 33, 117, aradesh04, 50);
+	giq_option(4, 33, 118, aradesh01_2, 51);
+	giq_option(5, 33, 119, aradesh07, 51);
+	giq_option(4, 33, 120, aradesh07, 51);
+end
+
+procedure aradesh04
+begin
+	gsay_message(33, 121, 50);
+	call aradeshend;
+end
+
+procedure aradesh05
+begin
+	gsay_reply(33, 122);
+	giq_option(5, 33, 123, aradesh06, 51);
+	giq_option(4, 33, 124, aradesh04, 50);
+	giq_option(4, 33, 125, aradesh07, 51);
+end
+
+procedure aradesh06
+begin
+	set_local_var(9, local_var(9) + 1);
+	gsay_message(33, 126, 51);
+	call aradeshx1;
+end
+
+procedure aradesh07
+begin
+	set_local_var(9, local_var(9) + 1);
+	gsay_message(33, 127, 51);
+	call aradeshx2;
+end
+
+procedure aradesh08
+begin
+	gsay_reply(33, 128);
+	giq_option(4, 33, 129, aradesh08a, 49);
+	giq_option(5, 33, 130, aradesh08b, 51);
+end
+
+procedure aradesh08a
+begin
+	if (local_var(9) > 0) then begin
+		set_local_var(9, local_var(9) - 1);
+	end
+	call UpReact;
+	call aradesh04;
+end
+
+procedure aradesh08b
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	call aradesh06;
+end
+
+procedure aradesh09
+begin
+	gsay_reply(33, 131);
+	giq_option(0, 33, 132, aradesh09a, 50);
+end
+
+procedure aradesh09a
+begin
+	gsay_message(33, 133, 50);
+	call aradeshx;
+end
+
+procedure aradesh10
+begin
+	gsay_message(33, 134, 50);
+	call aradeshx;
+end
+
+procedure aradesh11
+begin
+	gsay_reply(33, 135);
+	giq_option(4, 33, 136, aradesh12, 50);
+	giq_option(5, 33, 137, aradesh11a, 50);
+	giq_option(4, 33, 138, aradesh11b, 51);
+end
+
+procedure aradesh11a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call aradesh02;
+	end
+	else begin
+		call aradesh14;
+	end
+end
+
+procedure aradesh11b
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	call aradesh14;
+end
+
+procedure aradesh12
+begin
+	gsay_reply(33, 139);
+	giq_option(5, 33, 140, aradesh02, 50);
+	giq_option(4, 33, 141, aradesh13, 50);
+	giq_option(4, 33, 142, aradesh05, 50);
+end
+
+procedure aradesh13
+begin
+	gsay_reply(33, 143);
+	giq_option(4, 33, 160, aradesh19, 50);
+	giq_option(4, 33, 151, aradesh24c, 50);
+	giq_option(-3, 33, 156, aradesh36, 50);
+end
+
+procedure aradesh14
+begin
+	gsay_reply(33, 144);
+	giq_option(5, 33, 145, aradesh06, 51);
+	giq_option(4, 33, 146, aradesh04, 50);
+	giq_option(4, 33, 147, aradesh07, 51);
+end
+
+procedure aradesh15
+begin
+	gsay_message(33, 148, 50);
+	call aradeshx;
+end
+
+procedure aradesh16
+begin
+	if (global_var(RADSCORPION_SEED) == 0) then begin
+		call aradesh28;
+	end
+	else begin
+		if (global_var(RADSCORPION_SEED) == 1) then begin
+			call aradesh30a;
+		end
+		else begin
+			if ((global_var(RADSCORPION_SEED) == 2) and not(global_var(TANDI_HIRELING_STATUS) == 2)) then begin
+				call aradesh31;
+			end
+			else begin
+				if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+					call aradesh35;
+				end
+				else begin
+					call aradesh26;
+				end
+			end
+		end
+	end
+end
+
+procedure aradesh17
+begin
+	gsay_reply(33, 152);
+	giq_option(4, 33, 153, aradesh19, 50);
+	giq_option(4, 33, 154, aradesh17_2, 50);
+	giq_option(5, 33, 155, aradesh17_3, 51);
+	giq_option(-3, 33, 156, aradesh36, 50);
+end
+
+procedure aradesh17_2
+begin
+	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+		call aradesh44;
+	end
+	else begin
+		call aradesh20;
+	end
+end
+
+procedure aradesh17_3
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+		call aradesh27;
+	end
+	else begin
+		if (local_var(1) >= 2) then begin
+			if (local_var(1) >= 3) then begin
+				call aradesh27;
+			end
+			else begin
+				call aradesh21;
+			end
+		end
+		else begin
+			call aradesh22;
+		end
+	end
+end
+
+procedure aradesh18
+begin
+	if (local_var(1) >= 2) then begin
+		gsay_reply(33, 157);
+	end
+	else begin
+		gsay_reply(33, 158);
+	end
+	giq_option(5, 33, 159, aradesh23, 50);
+	giq_option(4, 33, 160, aradesh19, 50);
+	giq_option(4, 33, 161, aradesh17_2, 50);
+	giq_option(-3, 33, 162, aradesh36, 50);
+end
+
+procedure aradesh19
+begin
+	if (local_var(1) >= 2) then begin
+		gsay_reply(33, 163);
+	end
+	else begin
+		gsay_reply(33, 164);
+	end
+	giq_option(5, 33, 165, aradesh25, 50);
+	giq_option(4, 33, 166, aradesh16, 50);
+	giq_option(4, 33, 167, aradesh24c, 50);
+end
+
+procedure aradesh20
+begin
+	if (local_var(1) >= 3) then begin
+		gsay_message(33, 168, 50);
+	end
+	else begin
+		if (local_var(1) >= 2) then begin
+			gsay_message(33, 169, 50);
+		end
+		else begin
+			gsay_message(33, 170, 50);
+		end
+	end
+	call aradeshx;
+end
+
+procedure aradesh21
+begin
+	gsay_message(33, 171, 50);
+	call aradeshx;
+end
+
+procedure aradesh22
+begin
+	gsay_message(33, 172, 50);
+	call aradeshx1;
+end
+
+procedure aradesh23
+begin
+	if (local_var(1) >= 2) then begin
+		gsay_reply(33, 173);
+	end
+	else begin
+		gsay_reply(33, 174);
+	end
+	giq_option(4, 33, 175, aradesh23_2, 50);
+	giq_option(5, 33, 176, aradesh25, 50);
+	giq_option(4, 33, 177, aradesh17_2, 50);
+end
+
+procedure aradesh23_2
+begin
+	if (local_var(1) >= 2) then begin
+		call aradesh24;
+	end
+	else begin
+		call aradesh24b;
+	end
+end
+
+procedure aradesh24
+begin
+	gsay_reply(33, 178);
+	giq_option(0, 33, 179, aradesh24a, 50);
+end
+
+procedure aradesh24a
+begin
+	gsay_reply(33, 180);
+	giq_option(4, 33, 181, aradesh19, 50);
+	giq_option(4, 33, 182, aradesh24c, 50);
+end
+
+procedure aradesh24b
+begin
+	gsay_reply(33, 183);
+	giq_option(4, 33, 184, aradesh19, 50);
+end
+
+procedure aradesh24c
+begin
+	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+		call aradesh44;
+	end
+	else begin
+		call aradeshx;
+	end
+end
+
+procedure aradesh25
+begin
+	if (local_var(0) < 2) then begin
+		gsay_reply(33, 185);
+	end
+	else begin
+		gsay_reply(33, 186);
+	end
+	giq_option(4, 33, 187, aradesh19, 50);
+end
+
+procedure aradesh26
+begin
+	gsay_reply(33, 188);
+	giq_option(7, 33, 189, aradesh27, 50);
+	giq_option(6, 33, 190, aradesh19, 50);
+	giq_option(6, 33, 191, aradesh24c, 50);
+end
+
+procedure aradesh27
+begin
+	gsay_reply(33, 192);
+	giq_option(8, 33, 193, aradesh25, 50);
+	giq_option(5, 33, 194, aradesh16, 50);
+	giq_option(5, 33, 195, aradesh24c, 50);
+end
+
+procedure aradesh28
+begin
+	gsay_reply(33, 196);
+	giq_option(4, 33, 197, aradesh28a, 50);
+end
+
+procedure aradesh28a
+begin
+	gsay_reply(33, 198);
+	giq_option(4, 33, 199, aradesh29, 49);
+	giq_option(4, 33, 200, aradesh28b, 51);
+	giq_option(4, 33, 201, aradesh28c, 51);
+end
+
+procedure aradesh28b
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	call aradesh30;
+end
+
+procedure aradesh28c
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	call aradesh19;
+end
+
+procedure aradesh29
+begin
+	gsay_message(33, 202, 50);
+	set_global_var(RADSCORPION_SEED, 1);
+	call aradeshx;
+end
+
+procedure aradesh30
+begin
+	gsay_reply(33, 203);
+	giq_option(5, 33, 204, aradesh30b, 49);
+	giq_option(4, 33, 205, aradesh19, 50);
+end
+
+procedure aradesh30a
+begin
+	gsay_message(33, 206, 50);
+	call aradeshx;
+end
+
+procedure aradesh30b
+begin
+	if (local_var(9) > 0) then begin
+		set_local_var(9, local_var(9) - 1);
+	end
+	call UpReact;
+	call aradesh29;
+end
+
+procedure aradesh31
+begin
+	gsay_reply(33, 207);
+	giq_option(4, 33, 208, aradesh19, 50);
+	if (global_var(RADSCORPIONS_KILLED) == 2) then begin
+		giq_option(4, 33, 209, aradesh32, 50);
+	end
+end
+
+procedure aradesh32
+begin
+	gsay_reply(33, 210);
+	giq_option(4, 33, 211, aradesh19, 50);
+	giq_option(4, 33, 212, aradesh17_2, 50);
+end
+
+procedure aradesh33
+begin
+	gsay_message(33, 213, 50);
+	set_global_var(TANDI_RESCUE, 1);
+	call aradeshx;
+end
+
+procedure aradesh35
+begin
+	gsay_reply(33, 214);
+	giq_option(5, 33, 215, aradesh25, 50);
+	giq_option(4, 33, 216, aradesh16, 50);
+	giq_option(4, 33, 217, aradesh24c, 50);
+end
+
+procedure aradesh36
+begin
+	gsay_message(33, 218, 50);
+	call aradeshx;
+end
+
+procedure aradesh37
+begin
+	gsay_reply(33, 219);
+	if (global_var(TANDI_HIRELING_STATUS) == 3) then begin
+		giq_option(5, 33, 220, aradesh38, 50);
+		giq_option(4, 33, 221, aradesh37a, 50);
+		giq_option(-3, 33, 222, aradesh37a, 50);
+	end
+	else begin
+		giq_option(4, 33, 223, aradesh38, 50);
+		giq_option(5, 33, 224, aradesh19, 50);
+		giq_option(-3, 33, 225, aradesh38, 50);
+	end
+end
+
+procedure aradesh37a
+begin
+	gsay_message(33, 226, 50);
+	call aradeshx5;
+end
+
+procedure aradesh38
+begin
+	gsay_message(33, 227, 50);
+	call aradeshx;
+end
+
+procedure aradesh39
+begin
+	set_global_var(TANDI_TALKED_ABOUT, 1);
+	gsay_reply(33, 228);
+	giq_option(4, 33, 229, aradesh39a, 50);
+	giq_option(-3, 33, 230, aradesh33, 50);
+end
+
+procedure aradesh39a
+begin
+	gsay_reply(33, 231);
+	giq_option(4, 33, 232, aradesh39b, 50);
+	giq_option(4, 33, 233, aradesh41, 50);
+	giq_option(4, 33, 234, aradesh39c, 50);
+end
+
+procedure aradesh39b
+begin
+	if (local_var(9) > 0) then begin
+		set_local_var(9, local_var(9) - 1);
+	end
+	call UpReact;
+	set_global_var(TANDI_RESCUE, 1);
+	call aradesh40;
+end
+
+procedure aradesh39c
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	call aradesh42;
+end
+
+procedure aradesh40
+begin
+	variable LVar0 := 0;
+	gsay_reply(33, 235);
+	set_global_var(TANDI_RESCUE, 1);
+	LVar0 := create_object_sid(7, 0, 0, -1);
+	add_obj_to_inven(dude_obj, LVar0);
+	giq_option(4, 33, 236, aradesh40a, 50);
+end
+
+procedure aradesh40a
+begin
+	gsay_message(33, 237, 50);
+	call aradeshx;
+end
+
+procedure aradesh41
+begin
+	gsay_reply(33, 238);
+	giq_option(4, 33, 239, aradesh40, 50);
+	giq_option(4, 33, 240, aradesh42, 50);
+end
+
+procedure aradesh42
+begin
+	gsay_message(33, 241, 50);
+	call aradeshx3;
+end
+
+procedure aradesh43
+begin
+	if (local_var(8) == 0) then begin
+		set_local_var(8, 1);
+		item_caps_adjust(dude_obj, 500);
+	end
+	if (local_var(9) != 0) then begin
+		set_local_var(9, 0);
+	end
+	call TopReact;
+	set_global_var(TANDI_RESCUE, 2);
+	gsay_reply(33, 242);
+	giq_option(4, 33, 243, aradesh19, 50);
+	giq_option(4, 33, 244, aradesh44, 50);
+end
+
+procedure aradesh44
+begin
+	gsay_message(33, 245, 50);
+	call aradeshx;
+end
+
+procedure aradesh45
+begin
+	set_local_var(9, local_var(9) + 2);
+	call BigDownReact;
+	float_msg(self_obj, message_str(33, 246), 7);
+	call aradeshx;
+end
+
+procedure aradesh46
+begin
+	set_local_var(9, local_var(9) + 2);
+	call BigDownReact;
+	float_msg(self_obj, message_str(33, 247), 7);
+	call aradeshx;
+end
+
+procedure aradesh47
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	gsay_message(33, 248, 50);
+	call aradeshx;
+end
+
+procedure aradesh48
+begin
+	set_local_var(9, local_var(9) + 1);
+	call DownReact;
+	gsay_message(33, 249, 50);
+end
+
+procedure aradeshx
+begin
+end
+
+procedure aradeshx1
+begin
+	world_map;
+end
+
+procedure aradeshx2
+begin
+	world_map;
+end
+
+procedure aradeshx3
+begin
+end
+
+procedure aradeshx5
+begin
+	set_local_var(7, 1);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure aradesh49
+begin
+	gsay_message(33, 250, 50);
+end
+
+procedure aradesh49a
+begin
+	gsay_message(33, 251, 50);
+end
+
+procedure aradesh50
+begin
+	gsay_message(33, 252, 50);
+end
+
+procedure aradesh51
+begin
+	gsay_message(33, 253, 50);
+end
+
+procedure aradesh52
+begin
+	gsay_message(33, 254, 50);
+end
+
+procedure aradesh53
+begin
+	gsay_message(33, 255, 50);
+end
+
+procedure aradesh54
+begin
+	gsay_message(33, 256, 50);
+end
+
+procedure aradesh55
+begin
+	gsay_message(33, 257, 50);
+end
+
+procedure aradesh56
+begin
+	gsay_message(33, 258, 50);
+end
+
+procedure aradesh57
+begin
+	gsay_message(33, 259, 50);
+end
+
+procedure aradesh58
+begin
+	gsay_message(33, 260, 50);
+end
+
+procedure aradesh59
+begin
+	gsay_message(33, 261, 50);// This message doesn't exist. TODO
+end
+
+procedure aradesh60
+begin
+	gsay_message(33, 262, 50);
+end
+
+procedure aradesh61
+begin
+	gsay_message(33, 263, 50);
+end
+
+procedure aradesh62
+begin
+	gsay_message(33, 264, 50);
+end
+
+procedure aradesh63
+begin
+	gsay_message(33, 265, 50);
+end
+
+procedure aradesh64
+begin
+	gsay_message(33, 266, 50);
+end
+
+procedure aradesh65
+begin
+	gsay_message(33, 267, 50);
+end
+
+procedure aradesh66
+begin
+	gsay_message(33, 268, 50);
+end
+
+procedure aradesh67
+begin
+	gsay_message(33, 269, 50);
+end
+
+procedure aradesh68
+begin
+	gsay_message(33, 270, 50);
+end
+
+procedure aradesh69
+begin
+	gsay_message(33, 271, 50);
+end
+
+procedure aradesh70
+begin
+	gsay_message(33, 272, 50);
+end
+
+procedure aradesh71
+begin
+	gsay_message(33, 273, 50);
+end
+
+procedure aradesh72
+begin
+	gsay_message(33, 274, 50);
+end
+
+procedure aradesh73
+begin
+	gsay_message(33, 275, 50);
+end
+
+ 
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+ 	end
+	set_global_var(ARADESH_STATUS, 1);//ARADESH_STATUS
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+		hostile := 1;
+	end
+end
+
+procedure PickDeadBodyType
+begin
+	variable LVar0 := 0;
+	LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));
+//
+	if (LVar0 <= 5) then begin// 31.5%
+		DeathType := 57;//		burnt, face down  [FLAMER]
+	end
+	else begin
+		if (LVar0 <= 10) then begin// 26%
+			DeathType := 56;//		cut in half  [LASER RIFLE, GATLING LASER]
+		end
+		else begin
+			if (LVar0 <= 14) then begin// 21%
+				DeathType := 53;//		head & arm gone - full auto  [MINIGUN]
+			end
+			else begin
+				if (LVar0 <= 16) then begin// 10.5%
+					DeathType := 63;//		face down, blood pool  (generic death, no weapon associated)
+				end
+				else begin// <--------------------	16%
+					variable LVar1 := 0;
+					LVar1 := random(0, 2);
+					if (LVar1 == 0) then begin
+						DeathType := 54;// bullet holes - full auto partial hit
+					end
+					else begin
+						if (LVar1 == 1) then begin
+							DeathType := 59;// exploded  [ROCKET LAUNCHER]
+						end
+						else begin
+							if (LVar1 == 2) then begin
+								DeathType := 60;// melted pile  [PLASMA RIFLE]
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+

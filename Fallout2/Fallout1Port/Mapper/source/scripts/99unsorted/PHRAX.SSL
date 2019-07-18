@@ -1,0 +1,316 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure phrax00;
+procedure phrax01;
+procedure phrax02;
+procedure phrax03;
+procedure phrax04;
+procedure phrax05;
+procedure phrax06;
+procedure phrax07;
+procedure phraxend;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure Start_War;
+
+import variable Fool_Counter;
+import variable Crypt_Counter;
+import variable Use_Fridge;
+import variable Use_Generator;
+import variable Broken_Gen;
+import variable Is_Fool;
+import variable Is_Crypt;
+import variable Fool_Pointer;
+import variable Crypt_Pointer;
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+
+variable I_Am_A_Crypt := 1;
+variable I_Am_A_Fool;
+
+import variable Fool_Taunt;
+import variable Crypt_Taunt;
+
+variable Hostile;
+variable Herebefore;
+variable Can_See;
+variable Only_Once := 1;
+variable Once_Fridge;
+variable Once_Fool;
+variable Once_Generator;
+variable Do_Once := 1;
+variable This_Once;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (Do_Once) then begin
+		Phrax_Pointer := self_obj;
+		Do_Once := 0;
+	end
+	if (Is_Crypt and ((Use_Fridge < 2) or (Use_Generator < 2))) then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+	end
+	else begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 1);
+	end
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		display_msg(message_str(402, 100));
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			Hostile := 1;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				script_overrides;
+				if (Is_Fool) then begin
+					call phrax06;
+				end
+				else begin
+					if (Is_Crypt) then begin
+						call phrax05;
+					end
+					else begin
+						if (Use_Generator) then begin
+							call phrax04;
+						end
+						else begin
+							if (Use_Fridge and Can_See) then begin
+								Can_See := 1;
+								start_gdialog(402, self_obj, 4, -1, -1);
+								gsay_start;
+								call phrax00;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								call phrax07;
+							end
+						end
+					end
+				end
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					if (obj_can_see_obj(self_obj, dude_obj) and not(global_var(QUEST_BONEYARD_7_GANG_WAR))) then begin
+						if (Use_Fridge and (Once_Fridge == 0)) then begin
+							if (is_success(do_check(self_obj, 1, 0))) then begin
+								Can_See := 1;
+								Once_Fridge := 1;
+								dialogue_system_enter;
+							end
+						end
+						else begin
+							if (Use_Generator and (Once_Generator == 0)) then begin
+								if (is_success(do_check(self_obj, 1, 0))) then begin
+									Can_See := 1;
+									Once_Generator := 1;
+									dialogue_system_enter;
+								end
+							end
+							else begin
+								if (Is_Fool and (Once_Fool == 0)) then begin
+									Once_Fool := 1;
+									dialogue_system_enter;
+								end
+								else begin
+									if ((Use_Fridge > 1) or (Use_Generator > 1)) then begin
+										if (is_success(do_check(self_obj, 1, 3))) then begin
+											attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+										end
+									end
+								end
+							end
+						end
+					end
+					else begin
+						call critter_p_proc;
+					end
+				end
+				else begin
+					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+						call Start_War;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+	rm_timer_event(self_obj);
+							Crypt_Counter := Crypt_Counter - 1;
+	rm_timer_event(self_obj);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure phrax00
+begin
+	sayReply(0, message_str(402, 101));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(402, 102), phrax02);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(402, 103), phrax01);
+	end
+end
+
+procedure phrax01
+begin
+	sayReply(0, message_str(402, 104));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(402, 105), combat);
+	end
+end
+
+procedure phrax02
+begin
+	sayReply(0, message_str(402, 106));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(402, 107), phrax03);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(402, 108), phraxend);
+	end
+end
+
+procedure phrax03
+begin
+	sayReply(0, message_str(402, 109));
+	sayOption(message_str(402, 114), phraxend);
+end
+
+procedure phrax04
+begin
+	float_msg(self_obj, message_str(402, 110), 0);
+end
+
+procedure phrax05
+begin
+	float_msg(self_obj, message_str(402, 111), 0);
+end
+
+procedure phrax06
+begin
+	float_msg(self_obj, message_str(402, 112), 0);
+end
+
+procedure phrax07
+begin
+	float_msg(self_obj, message_str(402, 113), 0);
+end
+
+procedure phraxend
+begin
+end
+
+procedure combat
+begin
+	Hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+	if (I_Am_A_Fool and Crypt_Taunt) then begin
+		Crypt_Taunt := 0;
+		if (random(1, 5) == 1) then begin
+			float_msg(self_obj, message_str(220, random(100, 113)), -1);
+		end
+	end
+	else begin
+		if (I_Am_A_Crypt and Fool_Taunt) then begin
+			Fool_Taunt := 0;
+			if (random(1, 5) == 1) then begin
+				float_msg(self_obj, message_str(220, random(200, 218)), -1);
+			end
+		end
+		else begin
+			if ((global_var(QUEST_BONEYARD_7_GANG_WAR) == 1) and (tile_num(self_obj) != 20725)) then begin
+				animate_move_obj_to_tile(self_obj, 20725, 0);
+			end
+			else begin
+				if (tile_num(self_obj) == 20725) then begin
+					add_timer_event(self_obj, game_ticks(2), 1);
+				end
+				else begin
+					if (Broken_Gen and (tile_num(self_obj) != 27504)) then begin
+						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+							This_Once := 1;
+							float_msg(self_obj, message_str(220, 300), 11);
+						end
+						set_global_var(QUEST_BONEYARD_7_GANG_WAR, 2);
+						animate_move_obj_to_tile(self_obj, 27504, 0);
+					end
+					else begin
+						if ((tile_num(self_obj) == 27504) and (global_var(QUEST_BONEYARD_7_GANG_WAR) == 2)) then begin
+							if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+							if (I_Am_A_Fool) then begin
+								Fool_Counter := Fool_Counter - 1;
+							end
+							else begin
+								Crypt_Counter := Crypt_Counter - 1;
+							end
+						end
+						else begin
+							if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+								attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+							end
+							else begin
+								if (not(LVar0)) then begin
+									if (random(0, 21) == 1) then begin
+										LVar1 := tile_num_in_direction(tile_num(self_obj), random(0, 5), 2);
+										animate_move_obj_to_tile(self_obj, LVar1, 0);
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Start_War
+begin
+	if (fixed_param == 1) then begin
+		set_global_var(QUEST_BONEYARD_7_GANG_WAR, 0);
+		if (I_Am_A_Fool) then begin
+			Fool_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(100, 115)), -1);
+		end
+		else begin
+			Crypt_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(200, 218)), -1);
+		end
+		add_timer_event(self_obj, 4, 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if (I_Am_A_Fool) then begin
+				attack_complex(Crypt_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+			else begin
+				attack_complex(Fool_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+		end
+	end
+end
+

@@ -1,0 +1,54 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;//    script_action == 15
+procedure look_at_p_proc;//    script_action == 21
+
+import variable term2_ptr;
+import variable Vree_ptr;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+					if (source_obj != Vree_ptr) then begin
+						display_msg(message_str(725, 101));
+					end
+					else begin
+						float_msg(self_obj, message_str(58, random(300, 308)), 8);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	term2_ptr := self_obj;
+end
+
+procedure map_enter_p_proc
+begin
+	term2_ptr := self_obj;
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(725, 100));
+end
+

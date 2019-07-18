@@ -1,0 +1,295 @@
+#
+# Quest descriptons
+#
+#    Please leave space between the areas (like 100 or so)
+#
+
+
+#
+# Vault 13 Quests
+#
+{100}{}{Find the Water Chip.}
+{101}{}{Calm the rebel faction.}
+{102}{}{Find the Water Thief.}
+{103}{}{Destroy the Super Mutant leader.}
+{104}{}{Destroy the source of the Super Mutants.}
+{105}{}{Help the medic to synthesize Antidote.}
+{106}{}{Learn about the outside world at the library.}
+{107}{}{Gain entry to the Armory.}
+{108}{}{Gain entry back into the Vault.}
+{109}{}{Kill the Overseer.}
+{110}{}{Kill all inhabitants of Vault 13.}
+{120}{}{Find the Water Chip.}
+{130}{}{RESERVED}
+{140}{}{RESERVED}
+#
+# Vault 15 Quests
+#
+{200}{}{Search for clues and information.}
+{201}{}{Search for a Water Chip.}
+{202}{}{Find a way down the elevator shaft.}
+{203}{}{Find the hidden items.}
+{204}{}{Kill all the rats.}
+{205}{}{RESERVED}
+{206}{}{RESERVED}
+{207}{}{RESERVED}
+{208}{}{RESERVED}
+{209}{}{RESERVED}
+{210}{}{RESERVED}
+
+#
+# Shady Sands Quests
+#
+{300}{}{Talk to Katrina.}
+{301}{}{Hire Ian.}
+{302}{}{Stop the radscorpions.}
+{303}{}{Help Razlo find a cure for radscorpion venom.}
+{304}{}{Cure Jarvis of radscorpion poison.}
+{305}{}{Rescue Tandi from the Khans.}
+{306}{}{Help Shady Sands improve their crop yield.}
+{307}{}{Lead Seth and the guards to destroy the Khans.}
+
+#
+# Junktown Quests
+#
+{400}{}{Help Saul.}
+{401}{}{Kill Killian.}
+{402}{}{Rescue Sinthia.}
+{403}{}{Save Trish.}
+{404}{}{Stop Gizmo.}
+{405}{}{Bust the Skulz gang.}
+{406}{}{Join the Skulz.}
+{407}{}{Steal Neal's urn from Skum Pitt.}
+{408}{}{RESERVED}
+
+#
+# Raiders Quests
+#
+{500}{}{Join the Khans.}
+{501}{}{Destroy the Khans.}
+{502}{}{Kill the slaves.}
+{503}{}{Save the slaves.}
+{504}{}{Shame Garl by beating him in hand-to-hand combat.}
+{505}{}{Free the prisoner.}
+{506}{}{Free Tandi.}
+{507}{}{Join the Khans on a raid of Shady Sands.}
+{508}{}{Abuse the slaves.}
+{509}{}{Replace Garl as leader of the Khans.}
+
+#
+# Necropolis Quests
+#
+{600}{}{Destroy the Super Mutants at the Watershed.}
+{601}{}{Fix the Necropolis water pump.}
+{602}{}{Save the prisoner.}
+{603}{}{Retrieve the Water Chip.}
+{604}{}{Allow the Super Mutants at the Watershed to leave peacefully.}
+{605}{}{Seduce Harry.}
+{606}{}{Retrieve reward from Set for removing the Super Mutants.}
+{607}{}{Sneak into Set's Hall of The Dead.}
+{608}{}{Find an entrance into the Watershed.}
+
+#
+# The Hub Quests
+#
+{700}{}{Find and destroy the Deathclaw.}
+{701}{}{Dispose of Jain.}
+{702}{}{Dispose of merchant.}
+{703}{}{Find the missing caravans.}
+{704}{}{Steal necklace from the Merchants.}
+{705}{}{Join the Theives' Circle.}
+{706}{}{Dispose of Decker.}
+{707}{}{Send water to Vault 13.}
+{708}{}{Become a guard for the Water Merchants.}
+{709}{}{Become a guard for the Far Go Traders.}
+{710}{}{Become a guard for the Crimson Caravan.}
+
+#
+# Brotherhood of Steel Quests
+#
+{800}{}{Become an Initiate.}
+{801}{}{Rescue Initiate from the Hub.}
+{802}{}{Become a Knight.}
+{803}{}{Learn from the Library Computers.}
+{804}{}{Receive operations from Lori.}
+{805}{}{Seduce Jennifer.}
+{806}{}{Seduce Lorri.}
+{807}{}{Steal the Systolic Motivator.}
+{808}{}{Help Sophia and Michael.}
+{809}{}{Gain access to the Armory.}
+{810}{}{Find the Ruins Of The Ancient Order.}
+{811}{}{Scout the area to the North.}
+{812}{}{Get the Brotherhood to help at the Military Base.}
+{813}{}{RESERVED}
+{814}{}{RESERVED}
+{815}{}{RESERVED}
+{816}{}{RESERVED}
+{817}{}{RESERVED}
+{818}{}{RESERVED}
+
+#
+# Military Base Quests
+#
+{900}{}{Gain entry to the base.}
+{901}{}{Gain entry to the base undetected.}
+{902}{}{Trick the Mutants into leaving their guard posts.}
+{903}{}{Disable the forcefields.}
+{904}{}{Kill the Lieutenant.}
+{905}{}{Destroy the Vats.}
+
+#
+# The Glow Quests
+#
+{1000}{}{Gain entrance into the Glow.}
+{1001}{}{Disarm traps for the facility.}
+{1002}{}{Turn on power for the Glow.}
+
+#
+# L.A. Boneyard / Adytum Quests
+#
+{1100}{}{Become a Blade.}
+{1101}{}{Deliver Locket for Romero.}
+{1102}{}{Deliver package from the Gun Runners.}
+{1103}{}{Find Children spy in the Followers.}
+{1104}{}{Fix hydroponic farms in Adytum.}
+{1105}{}{Rescue Jason Zimmerman.}
+{1106}{}{Stop the Gangs from attacking Adytum.}
+{1107}{}{Kill the Mother Deathclaw.}
+{1108}{}{Convince the Gun Runners to supply to the Blades.}
+{1109}{}{RESERVED}
+{1110}{}{RESERVED}
+{1111}{}{RESERVED}
+
+#
+# Cathedral / Master's Vault Quests
+#
+{1200}{}{Gain entry into the Master's Vault.}
+{1201}{}{Convince Rae to join you against the Master.}
+{1202}{}{Kill Morpheus.}
+{1203}{}{Kill the Master.}
+{1204}{}{Set the timer for the bomb.}
+
+#
+# Caravan Run Quests
+#
+{1300}{}{Help unload the Caravan.}
+
+#
+# 
+#
+{1400}{}{RESERVED}
+{1401}{}{RESERVED}
+{1402}{}{RESERVED}
+{1403}{}{RESERVED}
+
+#
+# 
+#
+{1500}{}{RESERVED}
+{1501}{}{RESERVED}
+{1502}{}{RESERVED}
+{1503}{}{RESERVED}
+{1504}{}{RESERVED}
+{1505}{}{RESERVED}
+{1506}{}{RESERVED}
+{1507}{}{RESERVED}
+{1508}{}{RESERVED}
+{1509}{}{RESERVED}
+{1510}{}{RESERVED}
+{1511}{}{RESERVED}
+{1512}{}{RESERVED}
+{1513}{}{RESERVED}
+{1514}{}{RESERVED}
+{1515}{}{RESERVED}
+{1516}{}{RESERVED}
+
+#
+# 
+#
+{1600}{}{RESERVED}
+{1601}{}{RESERVED}
+{1602}{}{RESERVED}
+
+#
+# 
+#
+{1700}{}{RESERVED}
+
+#
+# 
+#
+{1800}{}{RESERVED}
+
+#
+# 
+#
+{1900}{}{RESERVED}
+
+#
+# 
+#
+{2000}{}{RESERVED}
+
+#
+# 
+#
+{2100}{}{RESERVED}
+
+#
+# 
+#
+{2200}{}{RESERVED}
+
+#
+# 
+#
+{2300}{}{RESERVED}
+
+#
+# 
+#
+{2400}{}{RESERVED}
+
+#
+# 
+#
+{2500}{}{RESERVED}
+
+#
+# 
+#
+{2600}{}{RESERVED}
+
+#
+# Desert Encounter Quests
+#
+{2700}{}{RESERVED}
+
+#
+# Mountain Encounter Quests
+#
+{2800}{}{RESERVED}
+
+#
+# Ruined City Encounter Quests
+#
+{2900}{}{RESERVED}
+
+#
+# Coast Encounter Quests
+#
+{3000}{}{RESERVED}
+
+#
+# 
+#
+{3100}{}{RESERVED}
+
+#
+# 
+#
+{3200}{}{RESERVED}
+{3201}{}{RESERVED}
+{3202}{}{RESERVED}
+{3203}{}{RESERVED}
+

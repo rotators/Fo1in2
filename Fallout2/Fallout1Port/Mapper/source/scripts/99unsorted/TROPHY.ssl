@@ -1,0 +1,90 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure use_p_proc;//    script_action == 6
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+
+variable item;
+
+
+procedure start
+begin
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 7) then begin//<-- use_obj_on_p_proc
+				call use_obj_on_p_proc;
+			end
+			else begin
+				if (script_action == 8) then begin//<-- use_skill_on_p_proc
+					call use_skill_on_p_proc;
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(527, 100));
+end
+
+procedure use_p_proc
+begin
+	script_overrides;
+	if (global_var(DESTROY_VATS_14) == 0) then begin
+		if ((game_time_hour >= 410) and (game_time_hour <= 1200)) then begin
+			script_overrides;
+			set_global_var(DESTROY_VATS_14, 1);
+			item := create_object_sid(112, 0, 0, -1);
+			add_obj_to_inven(source_obj, item);
+			display_msg(message_str(527, 101));
+			animate_stand_obj(self_obj);
+		end
+		else begin
+			display_msg(message_str(527, 103));
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_pid(obj_being_used_with) == 112) then begin
+		script_overrides;
+		set_global_var(DESTROY_VATS_14, 0);
+		set_map_var(4, 0);
+		animate_stand_obj(self_obj);
+		rm_obj_from_inven(source_obj, obj_being_used_with);
+		destroy_object(obj_being_used_with);
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 10) then begin//-- STEAL
+		if (global_var(DESTROY_VATS_14) == 0) then begin
+			script_overrides;
+			set_global_var(DESTROY_VATS_14, 1);
+			item := create_object_sid(112, 0, 0, -1);
+			add_obj_to_inven(source_obj, item);
+			if (is_success(roll_vs_skill(source_obj, 10, 0))) then begin
+				display_msg(message_str(527, 101));
+			end
+			else begin
+				display_msg(message_str(527, 102));
+				set_map_var(4, 1);
+			end
+			reg_anim_func(2, self_obj);
+			animate_stand_obj(self_obj);
+		end
+	end
+end
+

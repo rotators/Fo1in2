@@ -1,0 +1,692 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;//    script_action == 12
+procedure talk_p_proc;//    script_action == 11
+
+procedure Thomas00;
+
+procedure weapon_check;
+procedure give_skill;
+procedure prepare_for_combat;
+procedure do_combat;
+procedure recover_from_combat;
+procedure pick_a_student;
+procedure praise;
+procedure lesson1;
+procedure do_round;
+
+import variable Student_ptr;
+
+variable initialized := 0;
+variable armed;
+variable x;
+variable student_armed;
+variable instructor_armed;
+variable st_manuver0;
+variable st_manuver1;
+variable st_manuver2;
+variable in_manuver0;
+variable in_manuver1;
+variable in_manuver2;
+variable outcome;
+variable sequence;
+variable atk;
+variable who;
+variable fell;
+variable st_dodge;
+variable st_fall;
+variable my_knife;
+variable delay;
+variable wait2;
+variable wait3;
+variable my_hex;
+variable lesson_ptr;
+variable valid;
+variable temp;
+variable comment;
+variable phase;
+variable hostile;
+variable skill_pts;
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+				if obj_carrying_pid_obj(self_obj, 239) then begin
+					variable BroArmor := 0;
+					BroArmor := obj_carrying_pid_obj(self_obj, 239);
+					rm_obj_from_inven(dude_obj, BroArmor);
+					destroy_object(BroArmor);
+					BroArmor := 0;
+					BroArmor := create_object_sid(239, 0, 0, -1);
+					add_obj_to_inven(self_obj, BroArmor);
+					wield_obj_critter(self_obj, BroArmor);
+				end
+			end
+		end
+	end
+	if not(initialized) then begin
+		initialized := 1;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 64);
+		my_hex := tile_num(self_obj);
+		set_map_var(1, tile_num_in_direction(my_hex, 4, 1));
+		my_knife := obj_carrying_pid_obj(self_obj, 4);
+		who := local_var(1);
+		fell := local_var(2);
+		st_fall := local_var(4);
+		st_dodge := local_var(3);
+		lesson_ptr := local_var(5);
+		if (who < 1) then begin
+			who := 0;
+		end
+		if (fell < 1) then begin
+			fell := 0;
+		end
+		call prepare_for_combat;
+		Student_ptr := 0;
+		valid := 1;
+	end
+	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+		call destroy_p_proc;
+	end
+	else begin
+		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+			if (global_var(ENEMY_BROTHERHOOD) == 0) then begin
+				if ((valid == 1) and (Student_ptr != 0)) then begin
+					call do_combat;
+				end
+				else begin
+					add_timer_event(self_obj, game_ticks(5), 0);
+				end
+			end
+		end
+		else begin
+			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+				if (global_var(ENEMY_BROTHERHOOD)) then begin
+					hostile := 1;
+				end
+				if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+					hostile := 0;
+				end
+				if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+					set_global_var(ENEMY_BROTHERHOOD, 1);
+					hostile := 0;
+					attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+				end
+				if (global_var(ENEMY_BROTHERHOOD) == 0) then begin
+					call critter_p_proc;
+				end
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+			end
+		end
+	end
+end
+
+procedure weapon_check
+begin
+	if ((obj_item_subtype(critter_inven_obj(Student_ptr, 1)) == 3) or (obj_item_subtype(critter_inven_obj(Student_ptr, 2)) == 3)) then begin
+		armed := 1;
+	end
+	else begin
+		armed := 0;
+	end
+end
+
+procedure give_skill
+begin
+	set_local_var(11, local_var(11) + 1);
+	skill_pts := 1;
+	critter_mod_skill(dude_obj, 3, skill_pts);
+	display_msg(message_str(766, 116) + message_str(766, 138));
+	critter_mod_skill(dude_obj, 4, skill_pts);
+	display_msg(message_str(766, 116) + message_str(766, 139));
+end
+
+procedure prepare_for_combat
+begin
+	if (student_armed) then begin
+		st_manuver0 := 41;
+		st_manuver1 := 42;
+		st_manuver2 := 40;
+		wait3 := 0;
+	end
+	else begin
+		st_manuver0 := 16;
+		st_manuver1 := 17;
+		st_manuver2 := 13;
+		wait3 := 4;
+	end
+	if (instructor_armed) then begin
+		in_manuver0 := 41;
+		in_manuver1 := 42;
+		in_manuver2 := 40;
+		wait2 := 0;
+	end
+	else begin
+		in_manuver0 := 16;
+		in_manuver1 := 17;
+		in_manuver2 := 13;
+		wait2 := 4;
+	end
+end
+
+procedure do_combat
+begin
+	if (local_var(0) > 1) then begin
+		if (local_var(0) == 2) then begin
+			call lesson1;
+		end
+	end
+	else begin
+		if (comment) then begin
+			if (random(1, 10) < comment) then begin
+				call praise;
+			end
+			comment := 0;
+		end
+		if (fell > 0) then begin
+			call recover_from_combat;
+		end
+		else begin
+			phase := phase + 1;
+			atk := random(0, 1);
+			if (atk) then begin
+				atk := 3;
+			end
+			x := random(1, 100);
+			if (who == 0) then begin
+				if (x < 81) then begin
+					outcome := 0;
+				end
+				else begin
+					if (x < 98) then begin
+						comment := 3;
+						outcome := 1;
+					end
+					else begin
+						if (phase > 6) then begin
+							comment := 6;
+							outcome := 2;
+						end
+						else begin
+							comment := 3;
+							outcome := 1;
+						end
+					end
+				end
+			end
+			else begin
+				if (x < st_fall) then begin
+					comment := 6;
+					outcome := 2;
+				end
+				else begin
+					if (x < st_dodge) then begin
+						comment := 3;
+						outcome := 0;
+					end
+					else begin
+						comment := 4;
+						st_fall := st_fall + 2;
+						set_local_var(4, st_fall);
+						outcome := 1;
+					end
+				end
+			end
+			sequence := atk + outcome;
+			if (local_var(10)) then begin
+				call do_round;
+			end
+			else begin
+				fell := 2;
+				who := 0;
+				set_local_var(2, fell);
+				set_local_var(1, who);
+			end
+			who := 1 - who;
+			set_local_var(1, who);
+			add_timer_event(self_obj, game_ticks(2), 0);
+		end
+	end
+end
+
+procedure recover_from_combat
+begin
+	if (local_var(10) == 1) then begin
+		reg_anim_func(2, self_obj);
+		reg_anim_func(2, Student_ptr);
+		reg_anim_func(1, 1);
+		if (fell == 1) then begin
+			reg_anim_animate(Student_ptr, 0, -1);
+			reg_anim_animate(self_obj, 37, -1);
+		end
+		else begin
+			reg_anim_animate(self_obj, 0, -1);
+			reg_anim_animate(Student_ptr, 37, -1);
+		end
+		reg_anim_func(3, 0);
+	end
+	else begin
+		set_local_var(10, 1);
+	end
+	set_local_var(7, 0);
+	fell := 0;
+	set_local_var(2, fell);
+	set_local_var(0, 0);
+	set_map_var(0, 0);
+end
+
+procedure pick_a_student
+begin
+	fell := 0;
+	set_local_var(2, fell);
+	set_map_var(0, 0);
+	temp := random(1, map_var(5));
+	set_local_var(8, temp);
+	if (temp == local_var(9)) then begin
+		set_local_var(8, local_var(9) + 1);
+		if (local_var(8) > map_var(5)) then begin
+			set_local_var(8, 1);
+		end
+	end
+	set_map_var(2, local_var(8));
+	set_local_var(9, local_var(8));
+	student_armed := 0;
+	instructor_armed := 0;
+	if (instructor_armed) then begin
+		wield_obj_critter(self_obj, my_knife);
+	end
+	st_fall := random(5, 15) + 1;
+	set_local_var(4, st_fall);
+	st_dodge := random(20, 40) + 1;
+	set_local_var(3, st_dodge);
+end
+
+procedure praise
+begin
+	temp := random(0, 2);
+	if (comment == 3) then begin
+		float_msg(self_obj, message_str(633, 200 + temp), 3);
+	end
+	else begin
+		if (comment == 4) then begin
+			float_msg(self_obj, message_str(633, 203 + temp), 3);
+		end
+		else begin
+			if (comment == 6) then begin
+				if (fell == 2) then begin
+					float_msg(self_obj, message_str(633, 206 + temp), 3);
+				end
+				else begin
+					float_msg(self_obj, message_str(633, 209 + temp), 3);
+				end
+			end
+		end
+	end
+end
+
+procedure lesson1
+begin
+	delay := 4;
+	if (lesson_ptr < 6) then begin
+		float_msg(self_obj, message_str(633, 100 + lesson_ptr), 3);
+	end
+	else begin
+		if (lesson_ptr == 6) then begin
+			who := 0;
+			sequence := 0;
+			delay := 2;
+			call do_round;
+		end
+		else begin
+			if (lesson_ptr == 7) then begin
+				who := 0;
+				sequence := 0;
+				delay := 2;
+				call do_round;
+			end
+			else begin
+				if (lesson_ptr == 8) then begin
+					who := 1;
+					sequence := 1;
+					delay := 2;
+					call do_round;
+				end
+				else begin
+					if ((lesson_ptr > 8) and (lesson_ptr < 12)) then begin
+						float_msg(self_obj, message_str(633, 100 + lesson_ptr), 3);
+					end
+					else begin
+						if (lesson_ptr == 12) then begin
+							float_msg(Student_ptr, message_str(633, 112), 8);
+						end
+						else begin
+							if (lesson_ptr == 13) then begin
+								float_msg(Student_ptr, message_str(633, 113), 8);
+							end
+							else begin
+								if ((lesson_ptr > 13) and (lesson_ptr < 18)) then begin
+									if (obj_can_see_obj(dude_obj, self_obj)) then begin
+										call give_skill;
+									end
+									float_msg(self_obj, message_str(633, 100 + lesson_ptr), 3);
+								end
+								else begin
+									if (lesson_ptr == 19) then begin
+										if (obj_can_see_obj(dude_obj, self_obj)) then begin
+											call give_skill;
+										end
+										call pick_a_student;
+									end
+									else begin
+										if (lesson_ptr == 20) then begin
+											float_msg(self_obj, message_str(633, 118), 3);
+										end
+										else begin
+											if (lesson_ptr == 21) then begin
+												who := 0;
+												sequence := 0;
+												delay := 2;
+												call do_round;
+											end
+											else begin
+												if (lesson_ptr == 22) then begin
+													who := 0;
+													sequence := 0;
+													delay := 2;
+													call do_round;
+												end
+												else begin
+													if (lesson_ptr == 23) then begin
+														who := 1;
+														sequence := 0;
+														delay := 2;
+														call do_round;
+													end
+													else begin
+														if (lesson_ptr == 24) then begin
+															who := 0;
+															sequence := 0;
+															delay := 2;
+															call do_round;
+														end
+														else begin
+															if (lesson_ptr == 25) then begin
+																float_msg(self_obj, message_str(633, 119), 3);
+															end
+															else begin
+																if (lesson_ptr == 26) then begin
+																	float_msg(self_obj, message_str(633, 120), 3);
+																end
+																else begin
+																	if (lesson_ptr == 27) then begin
+																		float_msg(self_obj, message_str(633, 121), 3);
+																	end
+																	else begin
+																		if (lesson_ptr == 28) then begin
+																			float_msg(self_obj, message_str(633, 122), 3);
+																		end
+																		else begin
+																			if (lesson_ptr == 29) then begin
+																				float_msg(Student_ptr, message_str(633, 107), 8);
+																			end
+																			else begin
+																				if (lesson_ptr == 30) then begin
+																					float_msg(self_obj, message_str(633, 123), 3);
+																				end
+																				else begin
+																					if (lesson_ptr == 31) then begin
+																						float_msg(self_obj, message_str(633, 124), 3);
+																					end
+																					else begin
+																						if (lesson_ptr == 32) then begin
+																							float_msg(self_obj, message_str(633, 125), 3);
+																						end
+																						else begin
+																							if (lesson_ptr == 33) then begin
+																								float_msg(Student_ptr, message_str(633, 126), 8);
+																							end
+																							else begin
+																								if (lesson_ptr == 34) then begin
+																									float_msg(self_obj, message_str(633, 127), 3);
+																								end
+																								else begin
+																									if (lesson_ptr == 35) then begin
+																										float_msg(self_obj, message_str(633, 128), 3);
+																									end
+																									else begin
+																										if (lesson_ptr == 36) then begin
+																											float_msg(self_obj, message_str(633, 108), 3);
+																										end
+																									end
+																								end
+																							end
+																						end
+																					end
+																				end
+																			end
+																		end
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	lesson_ptr := lesson_ptr + 1;
+	set_local_var(5, lesson_ptr);
+	if (lesson_ptr > 36) then begin
+		set_local_var(0, 0);
+		set_local_var(6, 1);
+		if (local_var(11) > 4) then begin
+			display_msg(message_str(633, 300));
+			give_exp_points(500);
+		end
+	end
+	else begin
+		add_timer_event(self_obj, game_ticks(delay), 0);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure critter_p_proc
+begin
+	if (map_var(0) == 1) then begin
+		if (local_var(0) < 1) then begin
+			set_local_var(0, 1);
+			phase := 0;
+			if (obj_can_see_obj(dude_obj, self_obj)) then begin
+				if (local_var(6) != 1) then begin
+					lesson_ptr := 1;
+					set_local_var(5, lesson_ptr);
+					set_local_var(0, 2);
+				end
+			end
+			add_timer_event(self_obj, game_ticks(5), 0);
+		end
+	end
+	else begin
+		if (local_var(7) == 0) then begin
+			set_local_var(7, 1);
+			call pick_a_student;
+		end
+	end
+end
+
+procedure do_round
+begin
+	set_local_var(1, who);
+	reg_anim_func(2, self_obj);
+	reg_anim_func(2, Student_ptr);
+	reg_anim_func(1, 1);
+	if (who == 0) then begin
+		if (student_armed) then begin
+			student_armed := 0;
+		end
+		else begin
+			if (sequence == 0) then begin
+				reg_anim_animate(Student_ptr, st_manuver0, -1);
+				reg_anim_animate(self_obj, in_manuver2, wait2);
+			end
+			else begin
+				if (sequence == 1) then begin
+					reg_anim_animate(Student_ptr, st_manuver0, -1);
+					reg_anim_animate(self_obj, 14, 4);
+				end
+				else begin
+					if (sequence == 2) then begin
+						fell := 1;
+						set_local_var(2, fell);
+						reg_anim_animate(Student_ptr, st_manuver0, -1);
+						reg_anim_animate(self_obj, 20, 4);
+					end
+					else begin
+						if (sequence == 3) then begin
+							reg_anim_animate(Student_ptr, st_manuver1, -1);
+							reg_anim_animate(self_obj, in_manuver2, wait2 + 2);
+						end
+						else begin
+							if (sequence == 4) then begin
+								reg_anim_animate(Student_ptr, st_manuver1, -1);
+								reg_anim_animate(self_obj, 14, 6);
+							end
+							else begin
+								if (sequence == 5) then begin
+									fell := 1;
+									set_local_var(2, fell);
+									reg_anim_animate(Student_ptr, st_manuver1, -1);
+									reg_anim_animate(self_obj, 20, 6);
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	else begin
+		if (local_var(10) == 0) then begin
+			set_local_var(10, 1);
+			sequence := 5;
+		end
+		if (instructor_armed) then begin
+			instructor_armed := 0;
+		end
+		else begin
+			if (sequence == 0) then begin
+				reg_anim_animate(self_obj, in_manuver0, -1);
+				reg_anim_animate(Student_ptr, st_manuver2, wait3);
+			end
+			else begin
+				if (sequence == 1) then begin
+					reg_anim_animate(self_obj, in_manuver0, -1);
+					reg_anim_animate(Student_ptr, 14, 4);
+				end
+				else begin
+					if (sequence == 2) then begin
+						fell := 2;
+						set_local_var(2, fell);
+						reg_anim_animate(self_obj, in_manuver0, -1);
+						reg_anim_animate(Student_ptr, 20, 4);
+					end
+					else begin
+						if (sequence == 3) then begin
+							reg_anim_animate(self_obj, in_manuver1, -1);
+							reg_anim_animate(Student_ptr, st_manuver2, wait3 + 2);
+						end
+						else begin
+							if (sequence == 4) then begin
+								reg_anim_animate(self_obj, in_manuver1, -1);
+								reg_anim_animate(Student_ptr, 14, 6);
+							end
+							else begin
+								if (sequence == 5) then begin
+									fell := 2;
+									set_local_var(2, fell);
+									reg_anim_animate(self_obj, in_manuver1, -1);
+									reg_anim_animate(Student_ptr, 20, 6);
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	reg_anim_func(3, 0);
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call Thomas00;
+end
+
+procedure Thomas00
+begin
+	display_msg(message_str(633, 400));
+end
+

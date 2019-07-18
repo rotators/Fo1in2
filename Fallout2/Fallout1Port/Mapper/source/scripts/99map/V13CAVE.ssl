@@ -1,0 +1,1074 @@
+#include "..\headers\define.h"
+#include "..\headers\command.h"
+
+procedure start;
+export variable Dog_ptr;
+export variable Ian_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+export variable Tycho_ptr;
+export variable vault_door_ptr;
+procedure add_party;
+procedure base_inventory;
+procedure cheat_mode;
+procedure DehydrationTesting;// Fallout Fixt
+procedure endgame_part0;// Endgame Mod by Corpse
+procedure endgame_part1;
+procedure endgame_part2;
+procedure endgame_part3;
+procedure endgame_part4;// Endgame Mod by Corpse
+procedure Lighting;
+procedure LoadMapCheat;// Fallout Fixt
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_exit_p_proc;//    script_action == 16
+procedure map_update_p_proc;//    script_action == 23
+procedure NamedInven;
+procedure remove_over;// Endgame Mod by Corpse
+procedure remove_party;
+procedure TaggedInven;
+procedure update_party;
+variable endgame_running;
+variable party_elevation;
+variable item := 0;// for starting items creation
+variable NumItems := 0;// for starting items creation (Fallout Fixt)
+procedure WeaponsTesting;
+procedure GiveHolodisks;
+
+procedure start
+begin
+	if (map_first_run) then begin
+		variable Minute := 0;
+		variable Minutes := 0;
+		Minute := (10 * 60);
+		Minutes := random(21, 261);
+		game_time_advance((0 - (Minute * Minutes)));// randomize time between 3:00AM and 7:00AM to get "night sky" message.
+		set_global_var(QUEST_VAULT13_0_WATERCHIP_TRACKER, 1);
+		set_global_var(QUEST_VAULT15_1_SEARCH_FOR_CLUES, 1);
+		set_global_var(QUEST_VAULT15_2_FIND_WATER_CHIP, 1);
+		mark_area_known(0, 0, 1);
+//		mark_area_known(0, 12, 1);
+		set_global_var(VAULT13_WATER_DAYS_COUNTER, game_time);
+	end
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+				call map_exit_p_proc;
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	call Lighting;
+	if global_var(VAULT_13_WAS_INVADED) then begin
+		set_map_var(2, 1);
+	end
+	override_map_start(90, 88, 0, 2);
+	if (map_first_run) then begin
+
+		//--- Show V15 on the worldmap:
+   	mark_on_map(AREA_VAULT_15)
+
+		display_msg(message_str(207, 100));
+		if global_var(IRONMAN_MODE) == 0 then begin
+			call base_inventory;
+			call TaggedInven;
+		end
+		else begin
+			if global_var(IRONMAN_MODE) == 1 then begin
+				call base_inventory;
+			end
+			else begin
+				if global_var(IRONMAN_MODE) == 2 then begin
+					call TaggedInven;
+				end
+			end
+		end
+		if global_var(CHEAT_START_ITEMS_ENABLED) == 1 then begin
+			override_map_start(136, 129, 0, 1);
+			//call DehydrationTesting;
+			//call cheat_mode;
+			//call GiveHolodisks;
+			//call WeaponsTesting;
+		end
+		call NamedInven;
+		if (global_var(CHEAT_MAPSTART_ENABLED) == 1) then begin
+			call LoadMapCheat;
+		end
+	end
+	else begin
+		if (global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) and (endgame_running == 0)) then begin
+			call endgame_part0;//was 1 in vanilla
+		end
+		else begin
+			override_map_start(136, 129, 0, 1);
+		end
+	end
+	call add_party;
+end
+
+procedure map_update_p_proc
+begin
+	call Lighting;
+	if (global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) and (endgame_running == 0)) then begin
+		call endgame_part0;//was 1 in vanilla
+	end
+	if (endgame_running == 1) then begin
+		call endgame_part2;
+	end
+	else begin
+		if (endgame_running == 2) then begin
+			call endgame_part3;
+		end
+		else begin
+			if (endgame_running == 3) then begin
+				call endgame_part4;
+			end
+		end
+	end
+	call update_party;
+end
+
+procedure map_exit_p_proc
+begin
+	if (global_var(GAME_CONTINUES) == 1) then begin
+		call remove_over;
+	end
+	else begin
+		call remove_party;
+	end
+end
+
+procedure Lighting
+begin
+	if not(endgame_running) and (global_var(OVERSEER_END_SEQ) == 0) and (global_var(ENDGAME_MOD_STUFF) == 0) then begin
+		set_light_level(40);
+	end
+	else begin
+		set_light_level(100);
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+
+procedure endgame_part0
+begin
+	if (global_var(GAME_CONTINUES) == 0) then begin
+		call endgame_part1;
+	end
+end
+
+procedure endgame_part1
+begin
+	kill_critter_type(16777264, 0);//Cave Rats
+	set_light_level(100);
+	override_map_start(90, 96, 0, 5);
+	set_global_var(ENDGAME_MOD_STUFF, 1);
+	endgame_slideshow;//"maybe_credits" in Fo2
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+//	gfade_in(1);
+//	endgame_movie;
+	endgame_running := 2;
+end
+
+procedure endgame_part2
+begin
+	endgame_running := 2;
+end
+
+//procedure endgame_part3
+//begin
+//	variable LVar0 := 0;
+//	if ((global_var(ENDGAME_MOD_STUFF) == 0) and (map_var(0) == 0)) then begin
+//		LVar0 := create_object_sid(16777263, 0, 0, 55);
+//		set_map_var(0, LVar0);
+//		anim(LVar0, 1000, 2);
+//		critter_attempt_placement(LVar0, 18290, elevation(dude_obj));
+//		add_timer_event(dude_obj, 1, 5);
+//		endgame_running := 3;
+//	end
+//end
+
+procedure endgame_part3
+begin
+	variable LVar1 := 0;
+	if (global_var(ENDGAME_MOD_STUFF) == 0) then begin
+		LVar1 := create_object_sid(16777263, 0, 0, 55);
+		set_map_var(0, LVar1);
+		anim(LVar1, 1000, 2);
+		critter_attempt_placement(LVar1, 15690, elevation(dude_obj));
+		use_obj(vault_door_ptr);
+		set_global_var(OVERSEER_END_SEQ, 1);
+		add_timer_event(vault_door_ptr, game_ticks(5), 1);
+		endgame_running := 3;
+	end
+end
+
+procedure endgame_part4
+begin
+	if (global_var(OVERSEER_KILLED) == 1) then begin
+		if (obj_is_open(vault_door_ptr)) then begin
+			use_obj(vault_door_ptr);
+		end
+		else begin
+			if (global_var(OVERSEER_KILLED) == 2) then begin
+				if (obj_is_open(vault_door_ptr)) then begin
+					add_timer_event(vault_door_ptr, game_ticks(15), 1);
+				end
+			end
+		end
+	end
+end
+
+procedure remove_over
+begin
+//	kill_critter_type(16777263, 0);//Want corpse to stay behind
+	call remove_party;
+end
+
+procedure base_inventory
+begin
+//
+// ALSO NOTE: Ed's corpse provides 1 Knife and 1 ammo (10mm AP)
+//
+	if global_var(FIXT_BUGFIXES_ONLY) then begin// vanilla items
+		item := create_object_sid(8, 0, 0, -1);//10mm Pistol
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		if difficulty_level != 2 then begin
+			item := create_object_sid(29, 0, 0, -1);//10mm JHP
+			add_mult_objs_to_inven(dude_obj, item, 2);
+		end
+		else begin
+			item := create_object_sid(29, 0, 0, -1);//10mm JHP
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+		if difficulty_level != 2 then begin
+			item := create_object_sid(40, 0, 0, -1);//Stimpak
+			add_mult_objs_to_inven(dude_obj, item, 4);
+		end
+		else begin
+			item := create_object_sid(40, 0, 0, -1);//Stimpak
+			add_mult_objs_to_inven(dude_obj, item, 3);
+		end
+		if difficulty_level != 2 then begin
+			item := create_object_sid(79, 0, 0, -1);//Flare
+			add_mult_objs_to_inven(dude_obj, item, 2);
+		end
+		else begin
+			item := create_object_sid(79, 0, 0, -1);//Flare
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+	end
+	else begin
+		item := create_object_sid(8, 0, 0, -1);//10mm Pistol
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		NumItems := 2 - difficulty_level;
+		if NumItems then begin
+			item := create_object_sid(29, 0, 0, -1);//10mm JHP
+			add_mult_objs_to_inven(dude_obj, item, NumItems);
+			NumItems := 0;
+		end
+		NumItems := 4 - difficulty_level;
+		if NumItems then begin
+			item := create_object_sid(40, 0, 0, -1);//Stimpak
+			add_mult_objs_to_inven(dude_obj, item, NumItems);
+		end
+		NumItems := 3 - difficulty_level;
+		if NumItems then begin
+		item := create_object_sid(79, 0, 0, -1);//Flare
+			add_mult_objs_to_inven(dude_obj, item, NumItems);
+			NumItems := 0;
+		end
+		NumItems := 2 - difficulty_level;
+		if NumItems then begin
+			item := create_object_sid(126, 0, 0, -1);//Water Flask
+			add_mult_objs_to_inven(dude_obj, item, NumItems);
+			NumItems := 0;
+		end
+		if not(get_critter_stat(dude_obj, 34)) then begin
+			if global_var(MALE_PLAYER_SMOKES) then begin
+				item := create_object_sid(101, 0, 0, -1);//Lighter
+				add_mult_objs_to_inven(dude_obj, item, 1);
+			end
+		end
+	end
+end
+
+procedure TaggedInven
+begin
+	variable STR;
+	variable PER;
+	variable EDR;
+	variable CHA;
+	variable INT;
+	variable AGL;
+	variable LCK;
+	variable HasFastMet;
+	variable HasBruiser;
+	variable HasSmallFrame;
+	variable HasOneHander;
+	variable HasFinesse;
+	variable HasKamikaze;
+	variable HasHeavyH;
+	variable HasFastShot;
+	variable HasBloodyMess;
+	variable HasJinxed;
+	variable HasGoodNat;
+	variable HasChemRel;
+	variable HasChemRes;
+	variable HasNightP;
+	variable HasSkilled;
+	variable HasGifted;
+	variable GOOD_NATURED_Handicap;
+	variable GOOD_NATURED_Bonus;
+	variable SKILLED_Bonus;
+	variable GIFTED_Handicap;
+	variable DiffLevelTaggedPercent;
+	variable NumItems := 0;
+	variable AlreadyHas := 0;
+	STR := get_critter_stat(dude_obj, 0);
+	PER := get_critter_stat(dude_obj, 1);
+	EDR := get_critter_stat(dude_obj, 2);
+	CHA := get_critter_stat(dude_obj, 3);
+	INT := get_critter_stat(dude_obj, 4);
+	AGL := get_critter_stat(dude_obj, 5);
+	LCK := get_critter_stat(dude_obj, 6);
+	HasFastMet := has_trait(2, dude_obj, 0);
+	HasBruiser := has_trait(2, dude_obj, 1);
+	HasSmallFrame := has_trait(2, dude_obj, 2);
+	HasOneHander := has_trait(2, dude_obj, 3);
+	HasFinesse := has_trait(2, dude_obj, 4);
+	HasKamikaze := has_trait(2, dude_obj, 5);
+	HasHeavyH := has_trait(2, dude_obj, 6);
+	HasFastShot := has_trait(2, dude_obj, 7);
+	HasBloodyMess := has_trait(2, dude_obj, 8);
+	HasJinxed := has_trait(2, dude_obj, 9);
+	HasGoodNat := has_trait(2, dude_obj, 10);
+	HasChemRel := has_trait(2, dude_obj, 11);
+	HasChemRes := has_trait(2, dude_obj, 12);
+	HasNightP := has_trait(2, dude_obj, 13);
+	HasSkilled := has_trait(2, dude_obj, 14);
+	HasGifted := has_trait(2, dude_obj, 15);
+	GOOD_NATURED_Handicap := HasGoodNat * 10;
+	GOOD_NATURED_Bonus := HasGoodNat * 15;
+	SKILLED_Bonus := HasSkilled * 10;
+	GIFTED_Handicap := HasGifted * 10;
+	if difficulty_level < 2 then begin
+		DiffLevelTaggedPercent := 20;
+	end
+	else begin
+		DiffLevelTaggedPercent := 10;
+	end
+//
+//	0 = Small Guns
+//
+	if (has_skill(dude_obj, 0) - AGL - 35 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(29, 0, 0, -1);//10mm JHP
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(29, 0, 0, -1);//10mm JHP
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	1 = Big Guns
+//
+	if (has_skill(dude_obj, 1) - AGL - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(11, 0, 0, -1);//Flamer
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(32, 0, 0, -1);//Flamer Fuel
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	2 = Energy Weapons
+//
+	if (has_skill(dude_obj, 2) - AGL - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(16, 0, 0, -1);//Laser Pistol
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			NumItems := 2 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(38, 0, 0, -1);//Small Energy Cell
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	3 = Unarmed
+//
+	if (has_skill(dude_obj, 3) - ((AGL + STR) / 2) - 65 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(21, 0, 0, -1);//Brass Knuckles
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			NumItems := 2 - difficulty_level;
+			if NumItems then begin
+			item := create_object_sid(87, 0, 0, -1);//Buffout
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	4 = Melee Weapons
+//
+	if (has_skill(dude_obj, 4) - ((AGL + STR) / 2) - 55 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(5, 0, 0, -1);//Club
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			NumItems := 2 - difficulty_level;
+			if NumItems then begin
+			item := create_object_sid(87, 0, 0, -1);//Buffout
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	5 = Throwing
+//
+	if (has_skill(dude_obj, 5) - AGL - 40 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(45, 0, 0, -1);//Throwing Knife
+			add_mult_objs_to_inven(dude_obj, item, 2);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(45, 0, 0, -1);//Throwing Knife
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(25, 0, 0, -1);//Frag Grenade
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+			NumItems := 2 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(26, 0, 0, -1);//Plasma Grenade
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+	if difficulty_level == 0 then begin
+		DiffLevelTaggedPercent := 40;
+	end
+//
+//	6 = First aid
+//
+	if (has_skill(dude_obj, 6) - ((PER + INT) / 2) - 30 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(40, 0, 0, -1);//Stimpak
+			add_mult_objs_to_inven(dude_obj, item, 2);
+		end
+		else begin
+			item := create_object_sid(47, 0, 0, -1);//First Aid Kit
+			add_mult_objs_to_inven(dude_obj, item, 1);
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(40, 0, 0, -1);//Stimpak
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	7 = Doctor
+//
+	if (has_skill(dude_obj, 7) - ((PER + INT) / 2) - 15 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(40, 0, 0, -1);//Stimpak
+			add_mult_objs_to_inven(dude_obj, item, 2);
+		end
+		else begin
+			item := create_object_sid(91, 0, 0, -1);//Doctor's Bag
+			add_mult_objs_to_inven(dude_obj, item, 1);
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(40, 0, 0, -1);//Stimpak
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	8 = Sneak
+//
+	if (has_skill(dude_obj, 8) - AGL - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(54, 0, 0, -1);//Stealth Boy
+		add_mult_objs_to_inven(dude_obj, item, 1);
+	end
+//
+//	9 = Lockpick
+//
+	if (has_skill(dude_obj, 9) - ((PER + AGL) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			AlreadyHas := obj_carrying_pid_obj(dude_obj, 84);
+			if not(AlreadyHas) then begin
+				item := create_object_sid(84, 0, 0, -1);//Lock Picks
+				add_mult_objs_to_inven(dude_obj, item, 1);
+			end
+		end
+		else begin
+			item := create_object_sid(84, 0, 0, -1);//Lock Picks
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+	end
+//
+//	10 = Steal
+//
+	if (has_skill(dude_obj, 10) - AGL - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			AlreadyHas := obj_carrying_pid_obj(dude_obj, 84);
+			if not(AlreadyHas) then begin
+				item := create_object_sid(84, 0, 0, -1);//Lock Picks
+				add_mult_objs_to_inven(dude_obj, item, 1);
+			end
+		end
+		else begin
+			AlreadyHas := obj_carrying_pid_obj(dude_obj, 54);
+			if not(AlreadyHas) then begin
+				item := create_object_sid(54, 0, 0, -1);//Stealth Boy
+				add_mult_objs_to_inven(dude_obj, item, 1);
+			end
+			else begin
+				AlreadyHas := obj_carrying_pid_obj(dude_obj, 84);
+				if not(AlreadyHas) then begin
+					item := create_object_sid(84, 0, 0, -1);//Lock Picks
+					add_mult_objs_to_inven(dude_obj, item, 1);
+				end
+				else begin
+					item := create_object_sid(41, 0, 0, -1);//Bottle Caps
+					add_mult_objs_to_inven(dude_obj, item, 25);
+				end
+			end
+		end
+	end
+//
+//	11 = Traps
+//
+	if (has_skill(dude_obj, 11) - ((PER + AGL) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(51, 0, 0, -1);//Dynamite
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(51, 0, 0, -1);//Dynamite
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	12 = Science
+//
+	if (has_skill(dude_obj, 12) - (2 * INT) - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(53, 0, 0, -1);//Mentats
+			add_mult_objs_to_inven(dude_obj, item, 2);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(53, 0, 0, -1);//Mentats
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	13 = Repair
+//
+	if (has_skill(dude_obj, 13) - INT - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(75, 0, 0, -1);//MultiTool
+		add_mult_objs_to_inven(dude_obj, item, 1);
+	end
+//
+//	14 = Speech
+//
+	if (has_skill(dude_obj, 14) - (2 * CHA) - 25 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(53, 0, 0, -1);//Mentats
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(53, 0, 0, -1);//Mentats
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	15 = Barter
+//
+	if (has_skill(dude_obj, 15) - (2 * CHA) - 20 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(53, 0, 0, -1);//Mentats
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(53, 0, 0, -1);//Mentats
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	16 = Gambling
+//
+	if (has_skill(dude_obj, 16) - (3 * LCK) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(41, 0, 0, -1);//Bottle Caps
+			add_mult_objs_to_inven(dude_obj, item, 25);
+		end
+		else begin
+			NumItems := (75 - (difficulty_level * 25));
+			if NumItems then begin
+			item := create_object_sid(41, 0, 0, -1);//Bottle Caps
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+		end
+	end
+//
+//	17 = Outdoorsman
+//
+	if (has_skill(dude_obj, 17) - ((EDR + INT) / 2) - 5 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			item := create_object_sid(126, 0, 0, -1);//Water Flask
+			add_mult_objs_to_inven(dude_obj, item, 3);
+		end
+		else begin
+			NumItems := 3 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(126, 0, 0, -1);//Water Flask
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+			NumItems := 2 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(79, 0, 0, -1);//Flare
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+			NumItems := 1 - difficulty_level;
+			if NumItems then begin
+				item := create_object_sid(48, 0, 0, -1);//RadAway
+				add_mult_objs_to_inven(dude_obj, item, NumItems);
+				NumItems := 0;
+			end
+
+		end
+	end
+end
+
+procedure NamedInven
+begin
+	if (proto_data(obj_pid(dude_obj), 1) == "Max Stone") then begin
+		item := create_object_sid(30, 0, 0, -1);//10mm AP
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		item := create_object_sid(21, 0, 0, -1);//Brass Knuckles
+		add_mult_objs_to_inven(dude_obj, item, 1);
+	end
+	if (proto_data(obj_pid(dude_obj), 1) == "Natalia") then begin
+		item := create_object_sid(45, 0, 0, -1);//Throwing Knife
+		add_mult_objs_to_inven(dude_obj, item, 2);
+		item := create_object_sid(84, 0, 0, -1);//Lock Picks
+		add_mult_objs_to_inven(dude_obj, item, 1);
+	end
+	if (proto_data(obj_pid(dude_obj), 1) == "Albert") then begin
+		item := create_object_sid(40, 0, 0, -1);//Stimpak
+		add_mult_objs_to_inven(dude_obj, item, 1);
+		item := create_object_sid(53, 0, 0, -1);//Mentats
+		add_mult_objs_to_inven(dude_obj, item, 1);
+	end
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		if (proto_data(obj_pid(dude_obj), 1) == "Hell Razor") or (proto_data(obj_pid(dude_obj), 1) == "Angela Deth") or (proto_data(obj_pid(dude_obj), 1) == "Thrasher") or (proto_data(obj_pid(dude_obj), 1) == "Snake") or (proto_data(obj_pid(dude_obj), 1) == "Vargas") or (proto_data(obj_pid(dude_obj), 1) == "Snake Varga") or (proto_data(obj_pid(dude_obj), 1) == "Snake Vargas") then begin
+			item := create_object_sid(127, 0, 0, -1);//Rope
+			add_mult_objs_to_inven(dude_obj, item, 1);
+			item := create_object_sid(126, 0, 0, -1);//Water Flask
+			add_mult_objs_to_inven(dude_obj, item, 1);
+			item := create_object_sid(20, 0, 0, -1);//Crowbar
+			add_mult_objs_to_inven(dude_obj, item, 1);
+			item := create_object_sid(4, 0, 0, -1);//Knife
+			add_mult_objs_to_inven(dude_obj, item, 1);
+		end
+	end
+end
+
+procedure DehydrationTesting
+begin
+	item := create_object_sid(126, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(106, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(124, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(125, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+end
+
+procedure WeaponsTesting
+begin
+	item := create_object_sid(14, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 10);
+	item := create_object_sid(233, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(13, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(28, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(245, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(11, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(12, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+//
+	item := create_object_sid(232, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+end
+
+procedure GiveHolodisks
+begin
+	display_msg("With all these holodisks in inventory, will get a crash when switching maps. This can be used to see if players will get crashes too.");
+	item := create_object_sid(100, 0, 0, 361);//  RADIO!
+	add_mult_objs_to_inven(dude_obj, item, 1);
+//	item := create_object_sid(144, 0, 0, 361);//  Super Stimpak (for crash testing)
+//	add_mult_objs_to_inven(dude_obj, item, 50);
+//	item := create_object_sid(85, 0, 0, 361);//  Plastic Explosives (for crash testing)
+//	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(58, 0, 0, -1);// no script
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 295);//  GENDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 333);//  ARTIFACT
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 345);//  DISKA
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 346);//  DISKD
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 347);//  FEVDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 348);//  VREEDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 349);//  SECDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 350);//  CODEDISK -- NOT USED IN GAME!!!!!!!!!
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 534);//  DOORCODE
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 641);//  MUTDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 744);//  BROHIST
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 745);//  SOPDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 746);//  MAXDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 861);//  VALTDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 947);//  LTCODES
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 955);//  REGDISK
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(58, 0, 0, 960);// TEST.ssl
+	add_mult_objs_to_inven(dude_obj, item, 1);
+end
+
+procedure cheat_mode
+begin
+	item := create_object_sid(41, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 99999);
+/*	item := create_object_sid(254, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+//	MEATS
+	item := create_object_sid(247, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(248, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(249, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(250, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(251, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(252, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(253, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+//	item := create_object_sid(254, 0, 0, -1);
+//	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(255, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(246, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);*/
+	item := create_object_sid(5, 0, 0, -1);//sledge
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(8, 0, 0, -1);//10mm Pistol
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(30, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(59, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(46, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(90, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(93, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(232, 0, 0, -1);// Hardened power armor
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(245, 0, 0, -1);// Alien Blaster with 100 range and 999 damage.
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(39, 0, 0, -1);// MFC ammo
+	add_mult_objs_to_inven(dude_obj, item, 10);
+	item := create_object_sid(28, 0, 0, -1);// Gatling Laser
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(79, 0, 0, -1);// Flare
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(22, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(241, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(124, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(125, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(159, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(48, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(106, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(25, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(26, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(27, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(40, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 100);
+	item := create_object_sid(7, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 15);
+	item := create_object_sid(14, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 25);
+	item := create_object_sid(53, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(87, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(110, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 20);
+	item := create_object_sid(1, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(2, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(17, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(74, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(113, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	wield_obj_critter(dude_obj, item);
+	item := create_object_sid(239, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(240, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(117, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(10, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(32, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(9, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(36, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(38, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(109, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(77, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(84, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(162, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(163, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(87, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(116, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(51, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(13, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(12, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(36, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 3);
+	item := create_object_sid(54, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(11, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	item := create_object_sid(127, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(29, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 10);
+	item := create_object_sid(85, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 5);
+	item := create_object_sid(30, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 10);
+	item := create_object_sid(16, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 2);
+	item := create_object_sid(52, 0, 0, -1);// Geiger counter
+	add_mult_objs_to_inven(dude_obj, item, 1);
+end
+
+procedure LoadMapCheat
+begin
+	//load_map("MBVATS12.MAP", 1);
+	debug_msg(" ");
+	debug_msg("Map cheat upon character creation running... teleporting Player to new map...");
+	debug_msg(" ");
+	debug_msg(" ");
+	//load_map(3, 0);
+	//game_time_advance(10 * 60 * 60 * 12);//  for maps that like to start at night
+end
+
+/*
+# Necropolis:	{3}{}{HALLDED.MAP}	{4}{}{HOTEL.MAP} {5}{}{WATRSHD.MAP}	{9}{}{VAULTNEC.MAP}
+# Vault 13:		{6}{}{VAULT13.MAP}	{35}{}{V13ENT.MAP}
+# Vault 15:		{8}{}{VAULTBUR.MAP}	{7}{}{VAULTENT.MAP}
+# Junktown:		{10}{}{JUNKENT.MAP}	{11}{}{JUNKCSNO.MAP}	{12}{}{JUNKKILL.MAP}
+# Brotherhood:	{13}{}{BROHDENT.MAP}	{14}{}{BROHD12.MAP}	{15}{}{BROHD34.MAP} {55}{}{BRODEAD.MAP}
+# Shady sands:	{25}{}{SHADYE.MAP}	{26}{}{SHADYW.MAP}	{16}{}{CAVES.MAP}
+# Military Base:{30}{}{MBENT.MAP}	{31}{}{MBSTRG12.MAP}	{32}{}{MBVATS12.MAP}	{48}{}{MBDEAD.MAP}
+# Children:		{17}{}{CHILDRN1.MAP}	{18}{}{CHILDRN2.MAP}
+# MasterVault:	{33}{}{MSTRLR12.MAP}	{34}{}{MSTRLR34.MAP}
+# Boneyard:		{28}{}{LAADYTUM.MAP} {29}{}{LAFOLLWR.MAP} {45}{}{LARIPPER.MAP} {46}{}{LAGUNRUN.MAP}	{47}{}{CHILDEAD.MAP} {44}{}{LABLADES.MAP}
+# The Hub:		{36}{}{HUBENT.MAP} {37}{}{DETHCLAW.MAP} {38}{}{HUBDWNTN.MAP} {39}{}{HUBHEIGT.MAP} {40}{}{HUBOLDTN.MAP}	{41}{}{HUBWATER.MAP} {65}{}{HUBMIS0.MAP}	{66}{}{HUBMIS1.MAP}
+# Raiders:		{24}{}{RAIDERS.MAP}	{60}{}{VIPERS.MAP}
+# The Glow:		{27}{}{GLOWENT.MAP}	 {42}{}{GLOW1.MAP}	{43}{}{GLOW2.MAP}
+# Caravans:	 {56}{}{DESCRVN1.MAP} {57}{}{DESCRVN2.MAP} {58}{}{MNTCRVN1.MAP}	{59}{}{MNTCRVN2.MAP} {61}{}{DESCRVN3.MAP} {62}{}{MNTCRVN3.MAP} {63}{}{DESCRVN4.MAP}	{64}{}{MNTCRVN4.MAP}
+# Desert encs:	{0}{}{DESERT1.MAP}	{1}{}{DESERT2.MAP}	{2}{}{DESERT3.MAP}
+# Coast encs:	{20}{}{COAST1.MAP}	{21}{}{COAST2.MAP}
+# Mountain encs:{49}{}{MOUNTN1.MAP} {50}{}{MOUNTN2.MAP}
+# City encs:	{19}{}{CITY1.MAP}
+# Special encs:	{22}{}{COLATRUK.MAP} {23}{}{FSAUSER.MAP} {51}{}{FOOT.MAP} {52}{}{TARDIS.MAP} {53}{}{TALKCOW.MAP} {54}{}{USEDCAR.MAP}
+*/

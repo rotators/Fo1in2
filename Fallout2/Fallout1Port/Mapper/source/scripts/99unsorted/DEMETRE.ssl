@@ -1,0 +1,849 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure damage_p_proc;//    script_action == 14
+procedure Demetre00;
+procedure Demetre01;
+procedure Demetre02;
+procedure Demetre03;
+procedure Demetre04;
+procedure Demetre05;
+procedure Demetre06;
+procedure Demetre07;
+procedure Demetre08;
+procedure Demetre09;
+procedure Demetre10;
+procedure Demetre11;
+procedure Demetre12;
+procedure Demetre13;
+procedure Demetre14;
+procedure Demetre15;
+procedure Demetre16;
+procedure Demetre17;
+procedure Demetre17a;
+procedure Demetre17b;
+procedure Demetre18;
+procedure Demetre19;
+procedure Demetre20;
+procedure Demetre20a;
+procedure Demetre21;
+procedure Demetre22;
+procedure Demetre23;
+procedure Demetre24;
+procedure Demetre25;
+procedure Demetre26;
+procedure Demetre27;
+procedure Demetre28;
+procedure Demetre29;
+procedure Demetre30;
+procedure Demetre31;
+procedure Demetre31a;
+procedure Demetre31b;
+procedure Demetre31c;
+procedure Demetre32;
+procedure Demetre33;
+procedure Demetre33a;
+procedure Demetre34;
+procedure Demetre35;
+procedure Demetre35a;
+procedure Demetre36;
+procedure Demetre37;
+procedure Demetre38;
+procedure Demetre39;
+procedure Demetre40;
+procedure Demetre41;
+procedure Demetre42;
+procedure Demetre43;
+procedure DemetreEnd;
+
+variable hostile;
+variable Only_Once := 1;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 36);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 1);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+	set_map_var(24, 1);
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (map_var(24) == 1) then begin
+		call Demetre10;
+	end
+	else begin
+		if (map_var(25) == 1) then begin
+			if (local_var(5) == 0) then begin
+				start_gdialog(566, self_obj, 4, -1, -1);
+				gsay_start;
+				call Demetre20;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				call Demetre20;
+			end
+		end
+		else begin
+			if (global_var(CC_JOB) == 5) then begin
+				call Demetre29;
+			end
+			else begin
+				if (global_var(CC_JOB) == 3) then begin
+					call Demetre30;
+				end
+				else begin
+					if (local_var(4) == 0) then begin
+						start_gdialog(566, self_obj, 4, -1, -1);
+						gsay_start;
+						call Demetre00;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						if (map_var(26) == 0) then begin
+							start_gdialog(566, self_obj, 4, -1, -1);
+							gsay_start;
+							call Demetre27;
+							gsay_end;
+							end_dialogue;
+						end
+						else begin
+							if ((map_var(26) == 1) and (global_var(CC_JOB) != 4)) then begin
+								start_gdialog(566, self_obj, 4, -1, -1);
+								gsay_start;
+								call Demetre40;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								if ((map_var(26) == 1) and (global_var(CC_JOB) == 4)) then begin
+									start_gdialog(566, self_obj, 4, -1, -1);
+									gsay_start;
+									call Demetre28;
+									gsay_end;
+									end_dialogue;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	set_local_var(4, 1);
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	set_map_var(28, 1);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(566, 100));
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure Demetre00
+begin
+	variable LVar0 := 0;
+	LVar0 := get_critter_stat(dude_obj, 0);
+	if (LVar0 < 4) then begin
+		gsay_reply(566, message_str(566, 101) + " " + message_str(566, 102));
+	end
+	else begin
+		if ((LVar0 >= 4) and (LVar0 < 6)) then begin
+			gsay_reply(566, message_str(566, 101) + " " + message_str(566, 103));
+		end
+		else begin
+			if ((LVar0 >= 6) and (LVar0 < 8)) then begin
+				gsay_reply(566, message_str(566, 101) + " " + message_str(566, 104));
+			end
+			else begin
+				if ((LVar0 >= 8) and (LVar0 < 10)) then begin
+					gsay_reply(566, message_str(566, 101) + " " + message_str(566, 105));
+				end
+				else begin
+					gsay_reply(566, message_str(566, 101) + " " + message_str(566, 106));
+				end
+			end
+		end
+	end
+	giq_option(4, 566, 107, Demetre01, 49);
+	giq_option(4, 566, 108, Demetre01, 50);
+	giq_option(-3, 566, 109, Demetre01, 50);
+end
+
+procedure Demetre01
+begin
+	gsay_reply(566, 110);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 566, 112, Demetre13, 50);
+	end
+	else begin
+		giq_option(4, 566, 111, Demetre02, 50);
+	end
+	giq_option(4, 566, 113, Demetre12, 50);
+	if (local_var(7) == 0) then begin
+		giq_option(4, 566, 114, Demetre31a, 50);
+	end
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 566, 115, Demetre15, 50);
+	end
+	giq_option(4, 566, 116, DemetreEnd, 50);
+	giq_option(-3, 566, 117, Demetre21, 50);
+end
+
+procedure Demetre02
+begin
+	gsay_reply(566, 118);
+	giq_option(4, 566, 119, Demetre03, 50);
+	giq_option(4, 566, 120, Demetre05, 50);
+	giq_option(4, 566, 121, Demetre09, 50);
+	giq_option(4, 566, 122, Demetre04, 50);
+end
+
+procedure Demetre03
+begin
+	set_map_var(26, 1);
+	gsay_message(566, 123, 50);
+end
+
+procedure Demetre04
+begin
+	gsay_message(566, 124, 50);
+end
+
+procedure Demetre05
+begin
+	gsay_reply(566, 125);
+	giq_option(4, 566, 126, Demetre08, 50);
+	giq_option(4, 566, 127, Demetre07, 50);
+	giq_option(4, 566, 128, Demetre06, 50);
+	giq_option(4, 566, 129, Demetre07, 50);
+end
+
+procedure Demetre06
+begin
+	set_map_var(26, 1);
+	gsay_message(566, 130, 50);
+end
+
+procedure Demetre07
+begin
+	set_map_var(26, 1);
+	gsay_message(566, 131, 50);
+end
+
+procedure Demetre08
+begin
+	gsay_message(566, 132, 50);
+end
+
+procedure Demetre09
+begin
+	gsay_reply(566, 133);
+	giq_option(4, 566, 134, DemetreEnd, 50);
+	giq_option(4, 566, 135, Demetre11, 50);
+end
+
+procedure Demetre10
+begin
+	float_msg(self_obj, message_str(566, random(136, 138)), 2);
+end
+
+procedure Demetre11
+begin
+	set_map_var(26, 1);
+	gsay_message(566, 139, 50);
+end
+
+procedure Demetre12
+begin
+	gsay_message(566, 140, 50);
+end
+
+procedure Demetre13
+begin
+	set_map_var(26, 1);
+	gsay_message(566, 141, 50);
+end
+
+procedure Demetre14
+begin
+	gsay_reply(566, 142);
+	giq_option(4, 566, 143, Demetre02, 50);
+	giq_option(4, 566, 144, Demetre12, 50);
+end
+
+procedure Demetre15
+begin
+	gsay_reply(566, 145);
+	giq_option(5, 566, 146, Demetre16, 50);
+	if ((map_var(4) == 1) and (global_var(MISSING_CARAVAN) == 1)) then begin
+		giq_option(4, 566, 147, Demetre17, 50);
+	end
+	giq_option(4, 566, 148, DemetreEnd, 50);
+end
+
+procedure Demetre16
+begin
+	gsay_reply(566, 149);
+	giq_option(4, 566, 150, Demetre02, 50);
+	if ((map_var(4) == 1) and (global_var(MISSING_CARAVAN) == 1)) then begin
+		giq_option(4, 566, 151, Demetre17, 50);
+	end
+	giq_option(4, 566, 152, DemetreEnd, 50);
+end
+
+procedure Demetre17
+begin
+	gsay_reply(566, 153);
+	giq_option(7, 566, 154, Demetre18, 50);
+	giq_option(4, 566, 155, Demetre17a, 50);
+	giq_option(4, 566, 156, Demetre17b, 51);
+end
+
+procedure Demetre17a
+begin
+	if (global_var(KILL_DEATHCLAW) == 2) then begin
+		call DemetreEnd;
+	end
+	else begin
+		call Demetre19;
+	end
+end
+
+procedure Demetre17b
+begin
+	call BigDownReact;
+	call DemetreEnd;
+end
+
+procedure Demetre18
+begin
+	gsay_reply(566, 157);
+	giq_option(4, 566, 158, Demetre17a, 50);
+end
+
+procedure Demetre19
+begin
+	gsay_message(566, 159, 50);
+end
+
+procedure Demetre20
+begin
+	if (local_var(5) == 0) then begin
+		set_local_var(5, 1);
+		gsay_reply(566, 160);
+		giq_option(4, 566, 161, DemetreEnd, 51);
+		giq_option(4, 566, 162, Demetre25, 51);
+		giq_option(4, 566, 163, Demetre20a, 51);
+		giq_option(-3, 566, 164, Demetre22, 51);
+	end
+	else begin
+		if (local_var(5) <= 5) then begin
+			float_msg(self_obj, message_str(566, 164 + local_var(5)), 2);
+			set_local_var(5, local_var(5) + 1);
+		end
+		else begin
+			display_msg(message_str(566, 170));
+		end
+	end
+end
+
+procedure Demetre20a
+begin
+	if (is_success(do_check(dude_obj, 3, -5))) then begin
+		call Demetre24;
+	end
+	else begin
+		call Demetre23;
+	end
+end
+
+procedure Demetre21
+begin
+	gsay_reply(566, 171);
+	giq_option(-3, 566, 172, DemetreEnd, 50);
+	giq_option(-3, 566, 173, DemetreEnd, 50);
+end
+
+procedure Demetre22
+begin
+	gsay_message(566, 174, 51);
+end
+
+procedure Demetre23
+begin
+	gsay_message(566, 175, 51);
+end
+
+procedure Demetre24
+begin
+	gsay_message(566, 176, 50);
+end
+
+procedure Demetre25
+begin
+	gsay_message(566, 177, 51);
+end
+
+procedure Demetre26
+begin
+end
+
+procedure Demetre27
+begin
+	gsay_reply(566, 184);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 566, 186, Demetre13, 50);
+	end
+	else begin
+		giq_option(4, 566, 185, Demetre02, 50);
+	end
+	giq_option(4, 566, 187, Demetre12, 50);
+	if (local_var(7) == 0) then begin
+		giq_option(4, 566, 188, Demetre31a, 50);
+	end
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 566, 189, Demetre15, 50);
+	end
+	giq_option(4, 566, 190, DemetreEnd, 50);
+	giq_option(-3, 566, 191, Demetre21, 50);
+end
+
+procedure Demetre28
+begin
+	gsay_reply(566, 192);
+	giq_option(4, 566, 193, Demetre33, 50);
+	if (local_var(7) == 0) then begin
+		giq_option(4, 566, 194, Demetre31a, 50);
+	end
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 566, 195, Demetre15, 50);
+	end
+	giq_option(4, 566, 196, Demetre39, 50);
+	giq_option(4, 566, 197, DemetreEnd, 50);
+end
+
+procedure Demetre29
+begin
+	float_msg(self_obj, message_str(566, 198), 2);
+	set_map_var(25, 1);
+end
+
+procedure Demetre30
+begin
+	float_msg(self_obj, message_str(566, 199), 2);
+	set_map_var(25, 1);
+end
+
+procedure Demetre31
+begin
+	if (local_var(1) == 1) then begin
+		float_msg(self_obj, message_str(566, 201), 2);
+	end
+	else begin
+		gsay_reply(566, 200);
+		if (local_var(7) == 0) then begin
+			giq_option(4, 566, 202, Demetre31a, 50);
+		end
+		if (global_var(MISSING_CARAVAN) == 1) then begin
+			giq_option(4, 566, 203, Demetre15, 50);
+		end
+		if (local_var(8) == 0) then begin
+			giq_option(4, 566, 204, Demetre31b, 51);
+		end
+		else begin
+			giq_option(4, 566, 205, Demetre31c, 51);
+		end
+		giq_option(4, 566, 206, DemetreEnd, 50);
+		giq_option(-3, 566, 207, Demetre21, 50);
+	end
+end
+
+procedure Demetre31a
+begin
+	set_local_var(7, 1);
+	call Demetre14;
+end
+
+procedure Demetre31b
+begin
+	set_local_var(8, 1);
+	call DownReact;
+	call Demetre32;
+end
+
+procedure Demetre31c
+begin
+	set_map_var(25, 1);
+	call DemetreEnd;
+end
+
+procedure Demetre32
+begin
+	gsay_message(566, 208, 51);
+end
+
+procedure Demetre33
+begin
+	if (local_var(9) == 0) then begin
+		set_local_var(9, 1);
+		gsay_reply(566, 209);
+		giq_option(4, 566, 211, Demetre34, 50);
+		giq_option(4, 566, 212, Demetre33a, 51);
+		giq_option(4, 566, 213, DemetreEnd, 50);
+	end
+	else begin
+		gsay_message(566, 210, 50);
+	end
+end
+
+procedure Demetre33a
+begin
+	set_map_var(25, 1);
+	set_map_var(24, 1);
+	call Demetre35;
+end
+
+procedure Demetre34
+begin
+	gsay_reply(566, 214);
+	giq_option(4, 566, 215, Demetre37, 51);
+	giq_option(4, 566, 216, DemetreEnd, 50);
+end
+
+procedure Demetre35
+begin
+	gsay_reply(566, 217);
+	giq_option(4, 566, 218, Demetre36, 51);
+	giq_option(4, 566, 219, Demetre35a, 51);
+end
+
+procedure Demetre35a
+begin
+	set_map_var(24, 1);
+	call combat;
+end
+
+procedure Demetre36
+begin
+	set_map_var(25, 1);
+	gsay_message(566, 220, 51);
+end
+
+procedure Demetre37
+begin
+	gsay_reply(566, 221);
+	giq_option(4, 566, 222, combat, 51);
+	giq_option(4, 566, 223, Demetre38, 50);
+	giq_option(4, 566, 224, DemetreEnd, 50);
+end
+
+procedure Demetre38
+begin
+	gsay_reply(566, 225);
+	giq_option(4, 566, 226, DemetreEnd, 50);
+	giq_option(4, 566, 227, combat, 51);
+end
+
+procedure Demetre39
+begin
+	gsay_message(566, 228, 50);
+end
+
+procedure Demetre40
+begin
+	gsay_reply(566, 229);
+	giq_option(4, 566, 230, Demetre41, 50);
+	giq_option(4, 566, 231, Demetre43, 50);
+	if (local_var(7) == 0) then begin
+		giq_option(4, 566, 232, Demetre31a, 50);
+	end
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 566, 233, Demetre15, 50);
+	end
+	giq_option(4, 566, 234, DemetreEnd, 50);
+	giq_option(-3, 566, 235, Demetre21, 50);
+	giq_option(-3, 566, 236, Demetre42, 50);
+end
+
+procedure Demetre41
+begin
+	variable LVar0 := 0;
+	if (local_var(10) == 0) then begin
+		LVar0 := create_object_sid(25, 0, 0, -1);
+		add_obj_to_inven(dude_obj, LVar0);
+		set_local_var(10, 1);
+		gsay_message(566, 237, 50);
+	end
+	else begin
+		gsay_message(566, 238, 50);
+	end
+end
+
+procedure Demetre42
+begin
+	gsay_message(566, 239, 50);
+end
+
+procedure Demetre43
+begin
+	gsay_message(566, 240, 50);
+end
+
+procedure DemetreEnd
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+
+

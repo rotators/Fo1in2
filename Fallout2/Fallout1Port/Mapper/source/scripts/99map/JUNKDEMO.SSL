@@ -1,0 +1,129 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure Lighting;
+
+export variable Is_Fool;
+export variable Is_Crypt;
+export variable Broken_Gen;
+export variable Hiding_Bush;
+export variable Use_Fridge;
+export variable Use_Generator;
+export variable Dog_Is_Angry := 1;
+export variable Phil_Approaches;
+export variable Growling;
+export variable Smartass;
+export variable Smartass2;
+export variable Know_Fools;
+export variable Know_Crypts;
+export variable Know_Power;
+export variable Rock_Invite;
+export variable Skippy_Talk;
+export variable Crypt_Pointer;
+export variable Fool_Pointer;
+export variable Phrax_Pointer;
+export variable Rock_Pointer;
+export variable Fool_Taunt;
+export variable Crypt_Taunt;
+export variable Scouted_Crypts;
+export variable Scouted_Fools;
+export variable Mad_Cow;
+export variable Fool_counter := 4;
+export variable Crypt_counter := 8;
+
+variable new_obj;
+variable Time;
+
+procedure Darkness;
+procedure Invasion;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call Lighting;
+		new_obj := create_object_sid(9, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		new_obj := create_object_sid(1, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		new_obj := create_object_sid(30, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		new_obj := create_object_sid(30, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		new_obj := create_object_sid(40, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		new_obj := create_object_sid(40, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		new_obj := create_object_sid(79, 0, 0, -1);
+		add_obj_to_inven(dude_obj, new_obj);
+		override_map_start(106, 136, 0, 5);
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call Lighting;
+			if (Broken_Gen) then begin
+				add_timer_event(dude_obj, game_ticks(30), 1);
+			end
+			else begin
+				if ((Fool_counter <= 1) and (Crypt_counter <= 1)) then begin
+					add_timer_event(dude_obj, game_ticks(30), 2);
+				end
+			end
+		end
+	end
+end
+
+procedure Lighting
+begin
+	variable LVar0 := 0;
+	LVar0 := game_time_hour;
+	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
+		set_light_level(LVar0 - 600 + 40);
+	end
+	else begin
+		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
+			set_light_level(100);
+		end
+		else begin
+			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
+				set_light_level(100 - (LVar0 - 1800));
+			end
+			else begin
+				set_light_level(40);
+			end
+		end
+	end
+end
+
+procedure Darkness
+begin
+	set_light_level(40);
+end
+
+procedure Invasion
+begin
+	if (not(global_var(MASTER_BLOWN) == 2)) then begin
+		if (global_var(NECROPOLIS_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(NECROPOLIS_WAS_INVADED, 1);
+		end
+		if (global_var(THE_HUB_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(THE_HUB_WAS_INVADED, 1);
+		end
+		if (global_var(BROTHERHOOD_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(BROTHERHOOD_WAS_INVADED, 1);
+		end
+		if (global_var(JUNKTOWN_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(JUNKTOWN_WAS_INVADED, 1);
+		end
+		if (global_var(SHADY_SANDS_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(SHADY_SANDS_WAS_INVADED, 1);
+		end
+		if (global_var(VAULT_13_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(VAULT_13_WAS_INVADED, 1);
+		end
+		if (global_var(FOLLOWERS_INVADED_DATE) > (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(FOLLOWERS_INVADED, 1);
+		end
+	end
+end
+

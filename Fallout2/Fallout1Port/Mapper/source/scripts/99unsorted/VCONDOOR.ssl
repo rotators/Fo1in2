@@ -1,0 +1,110 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure map_enter_p_proc;//    script_action == 15
+procedure use_p_proc;//    script_action == 6
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+
+variable test;
+
+
+procedure start
+begin
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+			call map_enter_p_proc;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				call use_p_proc;
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					call use_obj_on_p_proc;
+				end
+				else begin
+					if (script_action == 8) then begin//<-- use_skill_on_p_proc
+						call use_skill_on_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(363, 100));
+end
+
+procedure map_enter_p_proc
+begin
+	obj_lock(self_obj);
+end
+
+procedure use_p_proc
+begin
+	if (obj_is_locked(self_obj)) then begin
+		script_overrides;
+		display_msg(message_str(363, 101));
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_being_used_with == 77) then begin
+		script_overrides;
+		if (not(obj_is_locked(self_obj))) then begin
+			display_msg(message_str(363, 104));
+		end
+		else begin
+			test := roll_vs_skill(dude_obj, 9, 0);
+			if (is_success(test)) then begin
+				display_msg(message_str(363, 102));
+				obj_unlock(self_obj);
+			end
+			else begin
+				if (is_critical(test)) then begin
+					display_msg(message_str(363, 103));
+					jam_lock(self_obj);
+				end
+				else begin
+					display_msg(message_str(363, 106));
+				end
+			end
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 9) then begin//-- LOCKPICK
+		script_overrides;
+		if (not(obj_is_locked(self_obj))) then begin
+			display_msg(message_str(363, 104));
+		end
+		else begin
+			test := roll_vs_skill(source_obj, action_being_used, -20);
+			if (is_success(test)) then begin
+				display_msg(message_str(363, 102));
+				obj_unlock(self_obj);
+			end
+			else begin
+				if (is_critical(test)) then begin
+					display_msg(message_str(363, 103));
+					jam_lock(self_obj);
+				end
+				else begin
+					display_msg(message_str(363, 105));
+				end
+			end
+		end
+	end
+end
+

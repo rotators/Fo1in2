@@ -1,0 +1,226 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure look_at_p_proc;//    script_action == 21
+procedure damage_p_proc;//    script_action == 14
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure node01;
+procedure node02;
+procedure node03;
+procedure node04;
+procedure node05;
+procedure node06;
+procedure node07;
+procedure node08;
+procedure node09;
+procedure node11;
+procedure node12;
+procedure node_exit;
+
+variable initialized := 0;
+variable hostile;
+variable weaponPtr;
+
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initialized) then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 65);
+		anim(self_obj, 1000, 2);
+		if (local_var(0) == 0) then begin
+			set_local_var(0, 1);
+			weaponPtr := create_object_sid(28, 0, 0, -1);
+			add_obj_to_inven(self_obj, weaponPtr);
+			wield_obj_critter(self_obj, weaponPtr);
+			add_obj_to_inven(self_obj, create_object_sid(39, 0, 0, -1));
+		end
+		initialized := 1;
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+			call damage_p_proc;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				call pickup_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						call critter_p_proc;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(324, 100));
+end
+
+procedure damage_p_proc
+begin
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (local_var(1) == 0) then begin
+		set_local_var(1, 1);
+		start_gdialog(324, self_obj, 4, -1, -1);
+		gsay_start;
+		if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+			call node01;
+		end
+		else begin
+			call node09;
+		end
+		gsay_end;
+		end_dialogue;
+	end
+	else begin
+		display_msg(message_str(324, 150));
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure node01
+begin
+	gsay_reply(324, 101);
+	giq_option(-3, 324, message_str(324, 102) + proto_data(obj_pid(dude_obj), 1) + message_str(324, 103), node02, 50);
+	giq_option(4, 324, message_str(324, 104) + proto_data(obj_pid(dude_obj), 1) + message_str(324, 105), node04, 50);
+	giq_option(4, 324, 106, node12, 50);
+end
+
+procedure node02
+begin
+	gsay_reply(324, message_str(324, 107) + proto_data(obj_pid(dude_obj), 1) + message_str(324, 108));
+	giq_option(-3, 324, 109, node03, 50);
+end
+
+procedure node03
+begin
+	gsay_reply(324, 110);
+	giq_option(-3, 324, 111, node_exit, 50);
+end
+
+procedure node04
+begin
+	gsay_reply(324, 112);
+	giq_option(4, 324, 113, node05, 50);
+end
+
+procedure node05
+begin
+	gsay_reply(324, 114);
+	giq_option(4, 324, 115, node06, 50);
+	giq_option(4, 324, 116, node07, 50);
+end
+
+procedure node06
+begin
+	gsay_reply(324, 117);
+	giq_option(4, 324, 118, node_exit, 50);
+	giq_option(4, 324, 119, node07, 50);
+end
+
+procedure node07
+begin
+	gsay_reply(324, 120);
+	if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+		giq_option(4, 324, 121, node08, 50);
+	end
+	else begin
+		giq_option(4, 324, 121, node11, 50);
+	end
+end
+
+procedure node08
+begin
+	gsay_message(324, message_str(324, 122) + proto_data(obj_pid(dude_obj), 1) + message_str(324, 123), 50);
+end
+
+procedure node09
+begin
+	gsay_reply(324, message_str(324, 124) + proto_data(obj_pid(dude_obj), 1) + message_str(324, 125));
+	giq_option(-3, 324, 126, node02, 50);
+	giq_option(4, 324, 127, node04, 50);
+end
+
+procedure node11
+begin
+	gsay_reply(324, message_str(324, 130) + proto_data(obj_pid(dude_obj), 1) + message_str(324, 131));
+	giq_option(4, 324, 132, node_exit, 50);
+end
+
+procedure node12
+begin
+	gsay_message(324, 133, 50);
+end
+
+procedure node_exit
+begin
+end
+

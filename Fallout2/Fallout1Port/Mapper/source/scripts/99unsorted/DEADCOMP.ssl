@@ -1,0 +1,329 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure use_p_proc;//    script_action == 6
+procedure use_skill_on_p_proc;//    script_action == 8
+
+procedure NecroDemoCompEgg00;
+procedure NecroDemoCompEgg01;
+procedure NecroDemoCompEgg02;
+procedure NecroDemoCompEgg03;
+procedure NecroDemoCompEgg04;
+procedure NecroDemoCompEgg05;
+//procedure NecroDemoCompEgg06;
+//procedure NecroDemoCompEgg07;
+//procedure NecroDemoCompEgg08;
+//procedure NecroDemoCompEgg09;
+//procedure NecroDemoCompEgg10;
+//procedure NecroDemoCompEgg11;
+//procedure NecroDemoCompEgg12;
+//procedure NecroDemoCompEgg13;
+//procedure NecroDemoCompEgg14;
+//procedure NecroDemoCompEgg15;
+//procedure NecroDemoCompEgg16;
+//procedure NecroDemoCompEgg17;
+//procedure NecroDemoCompEgg18;
+//procedure NecroDemoCompEgg19;
+procedure PlayGame;
+procedure PlayDemo;
+procedure CLS;
+
+variable Damage;
+variable DisplayLine;
+
+//	local_var(4) == Comp_Fixed
+//	local_var(5) == EXP_Earned
+//	local_var(6) == DemoExp
+//	local_var(7) == played_before
+//	local_var(8) == PreviousDisplayedLine
+//	local_var(9) == Heard500
+//	local_var(10) == Heard501
+//	local_var(11) == Heard502
+//		  12 is reserved, do not use
+//	local_var(13) == SeenAllMsgs
+//	local_var(14) == SeenDemo400
+//	local_var(15) == SeenDemo401
+//  local_var(16) == Heard503
+
+
+procedure start
+begin
+	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			call use_p_proc;
+		end
+		else begin
+			script_overrides;
+			display_msg(message_str(62, 103));
+			script_overrides;
+		end
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+				call use_skill_on_p_proc;
+			end
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	if (local_var(4) == 1) and not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		script_overrides;
+		start_gdialog(62, self_obj, 4, -1, -1);
+		gsay_start;
+		call NecroDemoCompEgg00;
+		gsay_end;
+		end_dialogue;
+	end
+	else begin
+		script_overrides;
+		display_msg(message_str(62, 103));
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 13) then begin//-- REPAIR
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			if (is_success(roll_vs_skill(dude_obj, 13, -30))) then begin
+				if (local_var(4) != 1) then begin
+					script_overrides;
+					display_msg(message_str(62, 101));
+					set_local_var(4, 1);
+				end
+			end
+			else begin
+				script_overrides;
+				display_msg(message_str(62, 104));
+				Damage := random(1, 6);
+				critter_heal(dude_obj, -Damage);
+			end
+		end
+	end
+	if (action_being_used == 12) then begin//-- SCIENCE
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			if (is_success(roll_vs_skill(dude_obj, 12, -30))) then begin
+				script_overrides;
+				if (local_var(4) == 1) then begin
+					script_overrides;
+					start_gdialog(62, self_obj, 4, -1, -1);
+					gsay_start;
+					call NecroDemoCompEgg00;
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					display_msg(message_str(62, 102));
+				end
+			end
+		end
+	end
+end
+
+procedure NecroDemoCompEgg00
+begin
+	gsay_reply(62, 105);
+	if (get_critter_stat(dude_obj, 4) == 4) or (get_critter_stat(dude_obj, 4) == 5) then begin
+		giq_option(4, 62, 130, CLS, 50);
+	end
+	giq_option(-3, 62, 140, NecroDemoCompEgg01, 50);
+	giq_option(6, 62, 106, NecroDemoCompEgg01, 50);
+	giq_option(6, 62, 107, CLS, 50);
+end
+
+procedure NecroDemoCompEgg01
+begin
+	gsay_reply(62, message_str(62, 108) + message_str(62, 111));
+	giq_option(6, 62, 109, NecroDemoCompEgg02, 50);
+	giq_option(6, 62, 107, CLS, 50);
+end
+
+procedure NecroDemoCompEgg02
+begin
+	gsay_reply(62, 114);
+	giq_option(6, 62, 106, NecroDemoCompEgg03, 50);
+	giq_option(6, 62, 107, CLS, 50);
+end
+
+procedure NecroDemoCompEgg03
+begin
+	gsay_reply(62, message_str(62, 115) + message_str(62, 120));
+	giq_option(6, 62, 113, NecroDemoCompEgg04, 50);
+	giq_option(6, 62, 126, NecroDemoCompEgg05, 50);
+	giq_option(6, 62, 107, CLS, 50);
+end
+
+procedure NecroDemoCompEgg04
+begin
+	gsay_reply(62, 117);
+	giq_option(6, 62, 116, PlayGame, 50);
+end
+
+procedure NecroDemoCompEgg05
+begin
+	gsay_reply(62, 117);
+	giq_option(6, 62, 116, PlayDemo, 50);
+end
+
+procedure PlayGame
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	DisplayLine := random(500, 503);
+	if ((local_var(9) == 1) and (local_var(10) == 1) and (local_var(11) == 1) and (local_var(16) == 1)) then begin
+	end
+	else begin
+		while(((DisplayLine == 500) and (local_var(9) == 1)) or ((DisplayLine == 501) and (local_var(10) == 1)) or ((DisplayLine == 502) and (local_var(11) == 1)) or ((DisplayLine == 503) and (local_var(16) == 1))) do
+		begin
+			if (DisplayLine == 503) then begin
+				if (local_var(16) == 1) then begin
+					DisplayLine := random(500, 502);
+				end
+			end
+			else begin
+				if (DisplayLine == 500) then begin
+					if (local_var(9) == 1) then begin
+						DisplayLine := random(501, 503);
+					end
+				end
+				else begin
+					if (DisplayLine == 501) then begin
+						if (local_var(10) == 1) then begin
+							DisplayLine := random(502, 503);
+						end
+					end
+					else begin
+						if (DisplayLine == 502) then begin
+							if (local_var(11) == 1) then begin
+								if random(0, 2) then begin
+									DisplayLine := 503;
+								end
+								else begin
+									DisplayLine := random(500, 501);
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		if (local_var(5) == 0) then begin
+			set_local_var(5, 1);
+			give_exp_points(100);
+			display_msg(message_str(62, 119));
+			if (DisplayLine == 500) then begin
+				set_local_var(9, 1);
+			end
+			else begin
+				if (DisplayLine == 501) then begin
+					set_local_var(10, 1);
+				end
+				else begin
+					if (DisplayLine == 502) then begin
+						set_local_var(11, 1);
+					end
+					else begin
+						if (DisplayLine == 503) then begin
+								set_local_var(16, 1);
+						end
+					end
+				end
+			end
+		end
+		else begin
+			if ((DisplayLine == 500) and (local_var(9) == 0)) then begin
+				set_local_var(9, 1);
+				give_exp_points(25);
+				display_msg(message_str(62, 152));
+			end
+			else begin
+				if ((DisplayLine == 501) and (local_var(10) == 0)) then begin
+					set_local_var(10, 1);
+					give_exp_points(25);
+					display_msg(message_str(62, 152));
+				end
+				else begin
+					if ((DisplayLine == 502) and (local_var(11) == 0)) then begin
+						set_local_var(11, 1);
+						give_exp_points(25);
+						display_msg(message_str(62, 152));
+					end
+					else begin
+						if ((DisplayLine == 503) and (local_var(16) == 0)) then begin
+							set_local_var(16, 1);
+							give_exp_points(25);
+							display_msg(message_str(62, 152));
+						end
+					end
+				end
+			end
+		end
+	end
+	gfade_in(1);
+	gsay_reply(62, DisplayLine);
+	if (local_var(7) == 0) then begin
+		set_local_var(7, 1);
+		giq_option(6, 62, 110, CLS, 50);
+	end
+	else begin
+		giq_option(6, 62, 121, CLS, 50);
+	end
+end
+
+procedure PlayDemo
+begin
+	variable LVar0;
+	LVar0 := random(400, 401);
+	if (local_var(14) and local_var(15)) then begin
+	end
+	else begin
+		if (LVar0 == 400) then begin
+			if local_var(14) then begin
+				LVar0 := 401;
+				set_local_var(15, 1);
+			end
+			else begin
+				set_local_var(14, 1);
+			end
+		end
+		else begin
+			if (LVar0 == 401) then begin
+				if local_var(15) then begin
+					LVar0 := 400;
+					set_local_var(14, 1);
+				end
+				else begin
+					set_local_var(15, 1);
+				end
+			end
+		end
+	end
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	gfade_in(1);
+	gsay_reply(62, LVar0);
+	if (local_var(6) == 0) then begin
+		set_local_var(6, 1);
+		give_exp_points(25);
+		display_msg(message_str(62, 155));
+	end
+	if (local_var(7) == 0) then begin
+		giq_option(6, 62, 153, CLS, 50);
+	end
+	else begin
+		giq_option(6, 62, 154, CLS, 50);
+	end
+end
+
+procedure CLS
+begin
+end
+

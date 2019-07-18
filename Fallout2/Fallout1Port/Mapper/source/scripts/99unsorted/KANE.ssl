@@ -1,0 +1,1688 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+
+procedure Kane00;
+procedure Kane01;
+procedure Kane02;
+procedure Kane03;
+procedure Kane04;
+procedure Kane05;
+procedure Kane06;
+procedure Kane07;
+procedure Kane08;
+procedure Kane09;
+procedure Kane10;
+procedure Kane11;
+procedure Kane12;
+procedure Kane13;
+procedure Kane14;
+procedure Kane15;
+procedure Kane16;
+procedure Kane17;
+procedure Kane18;
+procedure Kane19;
+procedure Kane29;
+procedure Kane30;
+procedure Kane31;
+procedure Kane32;
+procedure Kane33;
+procedure Kane34;
+procedure Kane35;
+procedure Kane36;
+procedure Kane36a;
+procedure Kane37;
+procedure Kane38;
+procedure Kane39;
+procedure Kane40;
+procedure Kane41;
+procedure Kane41a;
+procedure Kane42;
+procedure Kane43;
+procedure Kane44;
+procedure Kane45;
+procedure Kane46;
+procedure Kane47;
+procedure Kane47a;
+procedure Kane48;
+procedure Kane49;
+procedure Kane50;
+procedure Kane51;
+procedure Kane52;
+procedure Kane53;
+procedure Kane54;
+procedure Kane55;
+procedure Kane56;
+procedure Kane57;
+procedure Kane58;
+procedure Kane59;
+procedure Kane60;
+procedure Kane61;
+procedure Kane62;
+procedure Kane63;
+procedure Kane71;
+procedure Kane72;
+procedure Kane73;
+procedure Kane74;
+procedure Kane75;
+procedure Kane75a;
+procedure Kane76;
+procedure Kane77;
+procedure Kane78;
+procedure Kane79;
+procedure Kane80;
+procedure Kane81;
+procedure Kane82;
+procedure Kane83;
+procedure Kane84;
+procedure Kane85;
+procedure Kane86;
+procedure Kane87;
+procedure Kane88;
+procedure Kane89;
+procedure Kane90;
+procedure Kane91;
+procedure Kane92;
+procedure Kane93;
+procedure Kane93a;
+procedure Kane94;
+procedure Kane95;
+procedure Kane96;
+procedure Kane97;
+procedure Kane98;
+procedure Kane99;
+procedure Kane100;
+procedure Kane101;
+procedure Kane102;
+procedure Kane103;
+procedure Kane104;
+procedure Kane105;
+procedure Kane106;
+procedure Kane131;
+procedure Kane132;
+procedure Kane133;
+procedure Kane134;
+procedure Kane135;
+procedure Kane136;
+procedure Kane137;
+procedure Kane138;
+procedure Kane139;
+procedure Kane140;
+procedure Kane146;
+procedure Kane147;
+procedure Kane148;
+procedure Kane149;
+procedure Kane150;
+procedure Kane151;
+procedure Kane152;
+procedure Kane153;
+procedure Kane154;
+procedure Kane155;
+procedure KaneEnd;
+procedure KaneEndHostile;
+procedure KaneEndNotAcceptedOrDeclined;
+procedure KaneEndDeclined;
+procedure KaneEndAnnoyed;
+procedure KaneEndTakeHike;
+procedure KaneEndRefuses;
+procedure KaneTravel;
+procedure GoToDecker;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+variable hostile;
+variable Only_Once := 1;
+variable travel;
+
+import variable Kane_Ptr;
+import variable Decker_Ptr;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		Kane_Ptr := self_obj;
+		if (map_var(49) == 1) then begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		end
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 38);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 88);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (map_var(51) == 1) then begin
+		dialogue_system_enter;
+	end
+	if (travel == 1) then begin
+		travel := 0;
+		call GoToDecker;
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (map_var(51) == 1) then begin
+		set_map_var(51, 0);
+		float_msg(self_obj, message_str(594, 300), 2);
+	end
+	else begin
+		if ((map_var(11) == 1) or (map_var(44) == 1) or (map_var(45) == 4) or (map_var(45) == 5) or (map_var(46) == 1) or (map_var(47) == 2)) then begin
+			call Kane10;
+		end
+		else begin
+			call items_held;
+			if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+				if (local_var(6) == 0) then begin
+					set_local_var(6, 1);
+					call Kane61;
+				end
+				else begin
+					if (local_var(6) == 1) then begin
+						set_local_var(6, 2);
+						call Kane62;
+					end
+					else begin
+						call Kane63;
+					end
+				end
+			end
+			else begin
+				if (local_var(4) == 0) then begin
+					set_local_var(4, 1);
+					if (((global_var(KILLIAN_DEAD) == 0) and (global_var(GIZMO_DEAD) == 0)) == 1) then begin
+						if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+							start_gdialog(594, self_obj, 4, -1, -1);
+							gsay_start;
+							call Kane11;
+							gsay_end;
+							end_dialogue;
+						end
+						else begin
+							if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+								start_gdialog(594, self_obj, 4, -1, -1);
+								gsay_start;
+								call Kane15;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								start_gdialog(594, self_obj, 4, -1, -1);
+								gsay_start;
+								call Kane60;
+								gsay_end;
+								end_dialogue;
+							end
+						end
+					end
+					else begin
+						if (((global_var(KILLIAN_DEAD) == 1) == 1) and ((global_var(GIZMO_DEAD) == 1) == 0)) then begin
+							start_gdialog(594, self_obj, 4, -1, -1);
+							gsay_start;
+							call Kane12;
+							gsay_end;
+							end_dialogue;
+						end
+						else begin
+							if (((global_var(GIZMO_DEAD) == 1) == 1) and ((global_var(KILLIAN_DEAD) == 1) == 0)) then begin
+								start_gdialog(594, self_obj, 4, -1, -1);
+								gsay_start;
+								call Kane13;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								if (((global_var(KILLIAN_DEAD) == 1) and (global_var(GIZMO_DEAD) == 1)) == 1) then begin
+									start_gdialog(594, self_obj, 4, -1, -1);
+									gsay_start;
+									call Kane14;
+									gsay_end;
+									end_dialogue;
+								end
+								else begin
+									start_gdialog(594, self_obj, 4, -1, -1);
+									gsay_start;
+									call Kane60;
+									gsay_end;
+									end_dialogue;
+								end
+							end
+						end
+					end
+				end
+				else begin
+					if ((map_var(44) == 1) or (map_var(11) == 1)) then begin
+						call Kane10;
+					end
+					else begin
+						if (map_var(45) == 2) then begin
+							start_gdialog(594, self_obj, 4, -1, -1);
+							gsay_start;
+							call Kane93;
+							gsay_end;
+							end_dialogue;
+						end
+						else begin
+							if (map_var(45) == 5) then begin
+								start_gdialog(594, self_obj, 4, -1, -1);
+								gsay_start;
+								call Kane100;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								if (map_var(45) == 4) then begin
+									start_gdialog(594, self_obj, 4, -1, -1);
+									gsay_start;
+									call Kane106;
+									gsay_end;
+									end_dialogue;
+								end
+								else begin
+									if ((global_var(KILL_MERCHANT) != 2) and (local_var(7) == 0)) then begin
+										if (map_var(46) == 0) then begin
+											start_gdialog(594, self_obj, 4, -1, -1);
+											gsay_start;
+											call Kane60;
+											gsay_end;
+											end_dialogue;
+										end
+										else begin
+											if (map_var(46) == 1) then begin
+												start_gdialog(594, self_obj, 4, -1, -1);
+												gsay_start;
+												call Kane10;
+												gsay_end;
+												end_dialogue;
+											end
+											else begin
+												if (map_var(46) == 2) then begin
+													if (global_var(KILL_MERCHANT) == 5) then begin
+														start_gdialog(594, self_obj, 4, -1, -1);
+														gsay_start;
+														call Kane153;
+														gsay_end;
+														end_dialogue;
+													end
+													else begin
+														start_gdialog(594, self_obj, 4, -1, -1);
+														gsay_start;
+														call Kane86;
+														gsay_end;
+														end_dialogue;
+													end
+												end
+												else begin
+													if (map_var(46) == 4) then begin
+														if (global_var(KILL_MERCHANT) == 5) then begin
+															start_gdialog(594, self_obj, 4, -1, -1);
+															gsay_start;
+															call Kane153;
+															gsay_end;
+															end_dialogue;
+														end
+														else begin
+															start_gdialog(594, self_obj, 4, -1, -1);
+															gsay_start;
+															call Kane135;
+															gsay_end;
+															end_dialogue;
+														end
+													end
+												end
+											end
+										end
+									end
+									else begin
+										if ((global_var(KILL_MERCHANT) == 2) and (local_var(7) == 0)) then begin
+											if (map_var(46) == 0) then begin
+												start_gdialog(594, self_obj, 4, -1, -1);
+												gsay_start;
+												call Kane71;
+												gsay_end;
+												end_dialogue;
+											end
+											else begin
+												if (map_var(46) == 1) then begin
+													start_gdialog(594, self_obj, 4, -1, -1);
+													gsay_start;
+													call Kane79;
+													gsay_end;
+													end_dialogue;
+												end
+												else begin
+													if (map_var(46) == 2) then begin
+														start_gdialog(594, self_obj, 4, -1, -1);
+														gsay_start;
+														call Kane89;
+														gsay_end;
+														end_dialogue;
+													end
+													else begin
+														if (map_var(46) == 4) then begin
+															start_gdialog(594, self_obj, 4, -1, -1);
+															gsay_start;
+															call Kane87;
+															gsay_end;
+															end_dialogue;
+														end
+													end
+												end
+											end
+										end
+										else begin
+											if ((global_var(KILL_JAIN) != 2) and (local_var(7) == 112)) then begin
+												if (map_var(47) == 0) then begin
+													start_gdialog(594, self_obj, 4, -1, -1);
+													gsay_start;
+													call Kane134;
+													gsay_end;
+													end_dialogue;
+												end
+												else begin
+													if (map_var(47) == 2) then begin
+														start_gdialog(594, self_obj, 4, -1, -1);
+														gsay_start;
+														call Kane10;
+														gsay_end;
+														end_dialogue;
+													end
+													else begin
+														if (map_var(47) == 3) then begin
+															start_gdialog(594, self_obj, 4, -1, -1);
+															gsay_start;
+															call Kane91;
+															gsay_end;
+															end_dialogue;
+														end
+														else begin
+															if (map_var(47) == 5) then begin
+																start_gdialog(594, self_obj, 4, -1, -1);
+																gsay_start;
+																call Kane135;
+																gsay_end;
+																end_dialogue;
+															end
+														end
+													end
+												end
+											end
+											else begin
+												if ((global_var(KILL_JAIN) == 2) and (local_var(7) == 112)) then begin
+													if (map_var(47) == 0) then begin
+														start_gdialog(594, self_obj, 4, -1, -1);
+														gsay_start;
+														call Kane80;
+														gsay_end;
+														end_dialogue;
+													end
+													else begin
+														if (map_var(47) == 2) then begin
+															start_gdialog(594, self_obj, 4, -1, -1);
+															gsay_start;
+															call Kane79;
+															gsay_end;
+															end_dialogue;
+														end
+														else begin
+															if (map_var(47) == 3) then begin
+																start_gdialog(594, self_obj, 4, -1, -1);
+																gsay_start;
+																call Kane90;
+																gsay_end;
+																end_dialogue;
+															end
+															else begin
+																if (map_var(47) == 5) then begin
+																	start_gdialog(594, self_obj, 4, -1, -1);
+																	gsay_start;
+																	call Kane92;
+																	gsay_end;
+																	end_dialogue;
+																end
+																else begin
+																	if (map_var(47) == 6) then begin
+																		start_gdialog(594, self_obj, 4, -1, -1);
+																		gsay_start;
+																		call Kane134;
+																		gsay_end;
+																		end_dialogue;
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	set_map_var(49, 1);
+	if ((map_var(49) == 1) and (map_var(50) == 1)) then begin
+		set_global_var(UNDERGROUND_STATUS, 1);
+		set_map_var(11, 1);
+		set_map_var(44, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(594, 100));
+end
+
+procedure Kane00
+begin
+	giq_option(4, 594, 101, Kane02, 50);
+	giq_option(4, 594, 102, Kane04, 51);
+	giq_option(4, 594, 104, Kane07, 50);
+	giq_option(4, 594, 105, KaneEndDeclined, 50);
+	giq_option(-3, 594, 106, Kane01, 50);
+end
+
+procedure Kane01
+begin
+	gsay_message(594, 107, 50);
+	call KaneEndRefuses;
+end
+
+procedure Kane02
+begin
+	gsay_reply(594, 108);
+	giq_option(4, 594, 109, Kane03, 50);
+	giq_option(4, 594, 110, Kane06, 50);
+	giq_option(6, 594, 111, Kane09, 50);
+	giq_option(4, 594, 112, Kane08, 50);
+end
+
+procedure Kane03
+begin
+	gsay_message(594, 113, 50);
+	call KaneTravel;
+end
+
+procedure Kane04
+begin
+	gsay_reply(594, 114);
+	giq_option(4, 594, 115, Kane02, 50);
+	giq_option(4, 594, 116, Kane05, 51);
+end
+
+procedure Kane05
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(594, 117);
+	end
+	else begin
+		gsay_reply(594, 118);
+	end
+	giq_option(4, 594, 119, KaneEndHostile, 51);
+	giq_option(4, 594, 120, Kane02, 50);
+	giq_option(4, 594, 121, KaneEndNotAcceptedOrDeclined, 50);
+end
+
+procedure Kane06
+begin
+	gsay_message(594, 123, 50);
+	call KaneEndNotAcceptedOrDeclined;
+end
+
+procedure Kane07
+begin
+	gsay_message(594, 124, 50);
+	call KaneEndNotAcceptedOrDeclined;
+end
+
+procedure Kane08
+begin
+	gsay_reply(594, 125);
+	giq_option(4, 594, 126, Kane03, 50);
+	giq_option(4, 594, 127, KaneEndDeclined, 50);
+	giq_option(4, 594, 128, Kane06, 50);
+end
+
+procedure Kane09
+begin
+	gsay_reply(594, 129);
+	giq_option(4, 594, 130, KaneTravel, 50);
+	giq_option(4, 594, 131, KaneEndDeclined, 50);
+	giq_option(4, 594, 132, Kane06, 50);
+end
+
+procedure Kane10
+begin
+	if (local_var(5) < 3) then begin
+		set_local_var(5, local_var(5) + 1);
+		float_msg(self_obj, message_str(594, random(133, 136)), 2);
+	end
+	else begin
+		set_map_var(11, 1);
+		set_map_var(45, 4);
+		set_map_var(44, 1);
+		float_msg(self_obj, message_str(594, 137), 2);
+		call combat;
+	end
+end
+
+procedure Kane11
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(594, 138);
+	end
+	else begin
+		gsay_reply(594, 139);
+	end
+	call Kane00;
+end
+
+procedure Kane12
+begin
+	gsay_reply(594, 140);
+	call Kane00;
+end
+
+procedure Kane13
+begin
+	gsay_reply(594, 141);
+	call Kane00;
+end
+
+procedure Kane14
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(594, 143);
+	end
+	else begin
+		gsay_reply(594, 142);
+	end
+	call Kane00;
+end
+
+procedure Kane15
+begin
+	gsay_reply(594, 144);
+	call Kane16;
+end
+
+procedure Kane16
+begin
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option(4, 594, 145, Kane17, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		giq_option(4, 594, 146, Kane36, 50);
+	end
+	else begin
+		giq_option(4, 594, 147, Kane32, 50);
+	end
+	giq_option(4, 594, 151, Kane29, 50);
+	giq_option(4, 594, 152, KaneEndNotAcceptedOrDeclined, 50);
+	giq_option(-3, 594, 154, Kane01, 50);
+	giq_option(-3, 594, 155, Kane01, 50);
+end
+
+procedure Kane17
+begin
+	gsay_reply(594, 156);
+	giq_option(6, 594, 157, Kane18, 50);
+	giq_option(4, 594, 158, Kane19, 50);
+	giq_option(4, 594, 159, Kane16, 50);
+	giq_option(4, 594, 160, KaneEndNotAcceptedOrDeclined, 50);
+end
+
+procedure Kane18
+begin
+	gsay_reply(594, 161);
+	call Kane16;
+end
+
+procedure Kane19
+begin
+	gsay_reply(594, 162);
+	call Kane16;
+end
+
+procedure Kane29
+begin
+	gsay_reply(594, 200);
+	giq_option(4, 594, 201, Kane59, 50);
+	giq_option(4, 594, 202, Kane31, 50);
+	giq_option(4, 594, 203, Kane30, 50);
+end
+
+procedure Kane30
+begin
+	gsay_reply(594, 204);
+	call Kane16;
+end
+
+procedure Kane31
+begin
+	gsay_message(594, 205, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane32
+begin
+	gsay_reply(594, 206);
+	giq_option(4, 594, 207, Kane33, 51);
+	giq_option(4, 594, 208, Kane35, 50);
+end
+
+procedure Kane33
+begin
+	gsay_reply(594, 209);
+	giq_option(4, 594, 210, Kane34, 51);
+	giq_option(4, 594, 211, Kane35, 50);
+end
+
+procedure Kane34
+begin
+	gsay_message(594, 212, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane35
+begin
+	gsay_reply(594, 213);
+	call Kane16;
+end
+
+procedure Kane36
+begin
+	gsay_reply(594, 214);
+	giq_option(4, 594, 215, Kane41, 50);
+	giq_option(4, 594, 216, Kane39, 50);
+	giq_option(4, 594, 217, Kane36a, 50);
+end
+
+procedure Kane36a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -15))) then begin
+		call Kane37;
+	end
+	else begin
+		call Kane38;
+	end
+end
+
+procedure Kane37
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(594, 218, 50);
+	end
+	else begin
+		gsay_message(594, 219, 50);
+	end
+	call KaneTravel;
+end
+
+procedure Kane38
+begin
+	gsay_message(594, 220, 51);
+	call KaneEndTakeHike;
+end
+
+procedure Kane39
+begin
+	gsay_reply(594, 221);
+	giq_option(4, 594, 222, Kane41, 50);
+	giq_option(4, 594, 223, Kane40, 50);
+end
+
+procedure Kane40
+begin
+	gsay_message(594, 224, 50);
+	call KaneEndAnnoyed;
+end
+
+procedure Kane41
+begin
+	gsay_reply(594, 225);
+	if (map_var(33) == 1) then begin
+		giq_option(4, 594, 226, Kane42, 50);
+	end
+	if (map_var(18) == 1) then begin
+		giq_option(4, 594, 227, Kane41a, 50);
+	end
+	if (global_var(LOXLEY_KNOWN) == 1) then begin
+		giq_option(4, 594, 228, Kane47, 50);
+	end
+	giq_option(4, 594, 229, Kane45, 50);
+	giq_option(4, 594, 230, Kane44, 50);
+end
+
+procedure Kane41a
+begin
+	if (map_var(21) == 1) then begin
+		call Kane57;
+	end
+	else begin
+		if (is_success(roll_vs_skill(dude_obj, 14, -15))) then begin
+			call Kane57;
+		end
+		else begin
+			call Kane58;
+		end
+	end
+end
+
+procedure Kane42
+begin
+	gsay_reply(594, 231);
+	giq_option(4, 594, 232, Kane43, 50);
+	giq_option(4, 594, 233, Kane46, 50);
+end
+
+procedure Kane43
+begin
+	gsay_message(594, 234, 51);
+	call KaneEndAnnoyed;
+end
+
+procedure Kane44
+begin
+	gsay_message(594, 235, 51);
+	call KaneEndAnnoyed;
+end
+
+procedure Kane45
+begin
+	gsay_message(594, 236, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane46
+begin
+	gsay_message(594, 237, 50);
+	call KaneEndAnnoyed;
+end
+
+procedure Kane47
+begin
+	gsay_reply(594, 238);
+	giq_option(4, 594, 239, Kane47a, 50);
+	giq_option(4, 594, 240, Kane49, 50);
+	giq_option(4, 594, 241, KaneEndRefuses, 51);
+	giq_option(4, 594, 242, Kane48, 50);
+end
+
+procedure Kane47a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Kane50;
+	end
+	else begin
+		call Kane53;
+	end
+end
+
+procedure Kane48
+begin
+	gsay_message(594, 243, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane49
+begin
+	gsay_message(594, 244, 50);
+	call KaneTravel;
+end
+
+procedure Kane50
+begin
+	gsay_reply(594, 245);
+	giq_option(4, 594, 246, Kane51, 50);
+	giq_option(4, 594, 247, Kane52, 50);
+end
+
+procedure Kane51
+begin
+	gsay_message(594, 248, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane52
+begin
+	gsay_message(594, 249, 50);
+	call KaneTravel;
+end
+
+procedure Kane53
+begin
+	gsay_reply(594, 250);
+	giq_option(4, 594, 251, Kane55, 50);
+	giq_option(4, 594, 252, Kane54, 50);
+	giq_option(4, 594, 253, Kane56, 50);
+	giq_option(4, 594, 254, Kane54, 50);
+end
+
+procedure Kane54
+begin
+	gsay_message(594, 255, 50);
+	call KaneEndAnnoyed;
+end
+
+procedure Kane55
+begin
+	gsay_message(594, 256, 50);
+	call KaneEndAnnoyed;
+end
+
+procedure Kane56
+begin
+	gsay_message(594, 257, 50);
+	call KaneTravel;
+end
+
+procedure Kane57
+begin
+	gsay_message(594, 258, 50);
+	call KaneTravel;
+end
+
+procedure Kane58
+begin
+	gsay_message(594, 259, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane59
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(594, 260, 49);
+	end
+	else begin
+		gsay_message(594, 261, 49);
+	end
+	call KaneEndNotAcceptedOrDeclined;
+end
+
+procedure Kane60
+begin
+	gsay_reply(594, 262);
+	call Kane16;
+end
+
+procedure Kane61
+begin
+	float_msg(self_obj, message_str(594, 263), 2);
+end
+
+procedure Kane62
+begin
+	float_msg(self_obj, message_str(594, 264), 2);
+end
+
+procedure Kane63
+begin
+	float_msg(self_obj, message_str(594, 265), 2);
+end
+
+procedure Kane71
+begin
+	set_map_var(46, 6);
+	gsay_reply(594, 278);
+	call Kane72;
+end
+
+procedure Kane72
+begin
+	giq_option(4, 594, 279, Kane73, 51);
+	giq_option(4, 594, 280, Kane74, 51);
+	giq_option(4, 594, 281, Kane78, 51);
+end
+
+procedure Kane73
+begin
+	gsay_message(594, 282, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane74
+begin
+	gsay_message(594, 283, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane75
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	set_map_var(46, 5);
+	give_exp_points(300);
+	display_msg(message_str(766, 103) + 300 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+	item_caps_adjust(dude_obj, 1500);
+	gsay_reply(594, 284);
+	giq_option(4, 594, 285, Kane75a, 51);
+	giq_option(4, 594, 286, Kane76, 50);
+	giq_option(4, 594, 287, Kane77, 51);
+	giq_option(-3, 594, 288, Kane78, 51);
+end
+
+procedure Kane75a
+begin
+	set_map_var(47, 6);
+	call KaneEndRefuses;
+end
+
+procedure Kane76
+begin
+	gsay_message(594, 289, 50);
+	call KaneTravel;
+end
+
+procedure Kane77
+begin
+	gsay_message(594, 290, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane78
+begin
+	gsay_message(594, 291, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane79
+begin
+	set_map_var(46, 6);
+	gsay_message(594, 292, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane80
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	give_exp_points(350);
+	display_msg(message_str(766, 103) + 350 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+	item_caps_adjust(dude_obj, 1000);
+	set_map_var(47, 7);
+	gsay_reply(594, 293);
+	call Kane81;
+end
+
+procedure Kane81
+begin
+	giq_option(4, 594, 294, Kane82, 51);
+	giq_option(4, 594, 295, Kane83, 51);
+	giq_option(-3, 594, 296, Kane84, 51);
+end
+
+procedure Kane82
+begin
+	gsay_message(594, 297, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane83
+begin
+	gsay_message(594, 298, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane84
+begin
+	gsay_message(594, 299, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane85
+begin
+	float_msg(self_obj, message_str(594, 300), 2);
+end
+
+procedure Kane86
+begin
+	variable LVar0 := 0;
+	set_map_var(46, 4);
+	set_global_var(MARK_HUB_4, 1);
+	item_caps_adjust(dude_obj, 500);
+	gsay_message(594, 301, 50);
+end
+
+procedure Kane87
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, 2500);
+	give_exp_points(600);
+	display_msg(message_str(766, 103) + 600 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 2);
+	set_map_var(46, 5);
+	set_local_var(7, 112);
+	gsay_message(594, 302, 50);
+end
+
+procedure Kane88
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, 3500);
+	give_exp_points(600);
+	display_msg(message_str(766, 103) + 600 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 2);
+	set_map_var(46, 5);
+	set_map_var(47, 5);
+	set_local_var(7, 112);
+	set_global_var(KILL_JAIN, 1);
+	gsay_message(594, 303, 50);
+end
+
+procedure Kane89
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, 3000);
+	give_exp_points(600);
+	display_msg(message_str(766, 103) + 600 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 2);
+	set_map_var(46, 5);
+	set_local_var(7, 112);
+	gsay_message(594, 304, 50);
+end
+
+procedure Kane90
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, 5000);
+	give_exp_points(700);
+	display_msg(message_str(766, 103) + 700 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 2);
+	set_map_var(47, 6);
+	gsay_message(594, 305, 50);
+	gsay_message(594, 306, 50);
+end
+
+procedure Kane91
+begin
+	variable LVar0 := 0;
+	set_global_var(MARK_HUB_6, 1);
+	item_caps_adjust(dude_obj, 1000);
+	set_map_var(47, 5);
+	gsay_message(594, 308, 50);
+end
+
+procedure Kane92
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, 4000);
+	give_exp_points(700);
+	display_msg(message_str(766, 103) + 700 + message_str(766, 104));
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 2);
+	set_map_var(47, 6);
+	gsay_message(594, 309, 50);
+end
+
+procedure Kane93
+begin
+	gsay_reply(594, 310);
+	giq_option(4, 594, 311, Kane95, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 594, 312, Kane148, 51);
+	end
+	giq_option(4, 594, 313, Kane93a, 50);
+	giq_option(4, 594, 314, Kane149, 51);
+	giq_option(-3, 594, 315, Kane94, 50);
+	giq_option(-3, 594, 316, Kane94, 50);
+end
+
+procedure Kane93a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Kane151;
+	end
+	else begin
+		call Kane152;
+	end
+end
+
+procedure Kane94
+begin
+	gsay_message(594, 317, 50);
+	call KaneEndRefuses;
+end
+
+procedure Kane95
+begin
+	gsay_reply(594, 318);
+	giq_option(4, 594, 319, Kane98, 51);
+	giq_option(4, 594, 320, Kane99, 51);
+	giq_option(4, 594, 321, Kane97, 51);
+	giq_option(4, 594, 322, Kane98, 51);
+	if (map_var(48) == 1) then begin
+		giq_option(4, 594, 323, Kane96, 51);
+	end
+end
+
+procedure Kane96
+begin
+	gsay_message(594, 324, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane97
+begin
+	gsay_message(594, 325, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane98
+begin
+	gsay_message(594, 326, 51);
+	call KaneEndRefuses;
+end
+
+procedure Kane99
+begin
+	gsay_message(594, 327, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane100
+begin
+	gsay_reply(594, 328);
+	giq_option(4, 594, 330, Kane103, 51);
+	giq_option(4, 594, 331, Kane102, 50);
+	giq_option(4, 594, 332, Kane104, 51);
+	giq_option(4, 594, 333, Kane105, 50);
+	giq_option(4, 594, 334, Kane101, 50);
+end
+
+procedure Kane101
+begin
+	gsay_message(594, 335, 50);
+	call KaneEnd;
+end
+
+procedure Kane102
+begin
+	gsay_message(594, 336, 50);
+	call KaneTravel;
+end
+
+procedure Kane103
+begin
+	gsay_message(594, 337, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane104
+begin
+	gsay_message(594, 338, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane105
+begin
+	gsay_message(594, 339, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane106
+begin
+	gsay_reply(594, 340);
+	if (map_var(21) == 1) then begin
+		giq_option(4, 594, 341, Kane57, 50);
+	end
+	else begin
+		giq_option(4, 594, 343, Kane132, 50);
+	end
+	giq_option(4, 594, 344, KaneEnd, 50);
+	giq_option(-3, 594, 345, Kane101, 50);
+end
+
+procedure Kane131
+begin
+	gsay_message(594, random(403, 407), 50);
+	call KaneTravel;
+end
+
+procedure Kane132
+begin
+	gsay_message(594, 408, 50);
+	call KaneEndTakeHike;
+end
+
+procedure Kane133
+begin
+	giq_option(4, 594, 409, Kane131, 50);
+	giq_option(4, 594, 411, KaneEnd, 50);
+	giq_option(-3, 594, 412, Kane101, 50);
+end
+
+procedure Kane134
+begin
+	gsay_reply(594, 413);
+	call Kane133;
+end
+
+procedure Kane135
+begin
+	gsay_message(594, 415, 51);
+end
+
+procedure Kane136
+begin
+	gsay_message(594, 417, 51);
+end
+
+procedure Kane137
+begin
+	gsay_message(594, 418, 51);
+end
+
+procedure Kane138
+begin
+	gsay_reply(594, 420);
+	giq_option(4, 594, 423, Kane139, 50);
+	giq_option(4, 594, 424, KaneEnd, 50);
+	giq_option(-3, 594, 425, KaneEnd, 50);
+end
+
+procedure Kane139
+begin
+	gsay_reply(594, 426);
+	giq_option(4, 594, 427, Kane140, 50);
+	giq_option(4, 594, 428, KaneEndHostile, 50);
+end
+
+procedure Kane140
+begin
+	gsay_message(594, 429, 50);
+end
+
+procedure Kane146
+begin
+	float_msg(self_obj, message_str(594, 449), 2);
+end
+
+procedure Kane147
+begin
+	float_msg(self_obj, message_str(594, 451), 2);
+end
+
+procedure Kane148
+begin
+	gsay_message(594, 453, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane149
+begin
+	gsay_message(594, 454, 51);
+	call KaneEndHostile;
+end
+
+procedure Kane150
+begin
+	display_msg(message_str(594, 455));
+end
+
+procedure Kane151
+begin
+	gsay_message(594, 456, 50);
+	call KaneTravel;
+end
+
+procedure Kane152
+begin
+	gsay_message(594, 457, 50);
+	call KaneEndRefuses;
+end
+
+procedure Kane153
+begin
+	gsay_reply(594, 458);
+	giq_option(4, 594, 459, Kane154, 50);
+	giq_option(-3, 594, 460, Kane154, 50);
+end
+
+procedure Kane154
+begin
+	gsay_reply(594, 461);
+	giq_option(4, 594, 462, Kane155, 50);
+	giq_option(-3, 594, 463, Kane155, 50);
+end
+
+procedure Kane155
+begin
+	gsay_message(594, 464, 51);
+	call KaneEndHostile;
+end
+
+procedure KaneEnd
+begin
+end
+
+procedure KaneEndHostile
+begin
+	set_map_var(11, 1);
+	set_map_var(44, 1);
+	set_map_var(45, 4);
+end
+
+procedure KaneEndNotAcceptedOrDeclined
+begin
+	set_map_var(45, 3);
+end
+
+procedure KaneEndDeclined
+begin
+	set_map_var(45, 2);
+end
+
+procedure KaneEndAnnoyed
+begin
+	set_map_var(45, 6);
+end
+
+procedure KaneEndTakeHike
+begin
+	set_map_var(45, 5);
+end
+
+procedure KaneEndRefuses
+begin
+	set_map_var(45, 4);
+	set_map_var(11, 1);
+end
+
+procedure KaneTravel
+begin
+	travel := 1;
+end
+
+procedure GoToDecker
+begin
+	set_map_var(45, 1);
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	move_to(self_obj, 22526, 1);
+	anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), tile_num(Decker_Ptr)));
+	move_to(dude_obj, 23722, 1);
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(Decker_Ptr)));
+	gfade_in(1);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+
+

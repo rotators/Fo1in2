@@ -1,0 +1,155 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure skills;
+procedure armit;
+procedure disarmit;
+procedure reset;
+import variable Key_Used;
+import variable Skill_Used;
+import variable Master_Has_Armed;
+import variable Bomb_Armed;
+variable test;
+variable test1;
+variable test2;
+variable my_iq;
+variable my_pe;
+variable lockmod;
+
+procedure start
+begin
+	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+		set_map_var(5, 1);
+		script_overrides;
+		display_msg(message_str(448, 100));
+		my_iq := get_critter_stat(dude_obj, 4);
+		my_pe := get_critter_stat(dude_obj, 1);
+		if (my_iq < my_pe) then begin
+			test := do_check(dude_obj, 4, 0);
+		end
+		else begin
+			test := do_check(dude_obj, 1, 0);
+		end
+		if (is_success(test)) then begin
+			display_msg(message_str(448, 101));
+		end
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			set_map_var(5, 1);
+			script_overrides;
+			call skills;
+		end
+		else begin
+			if (script_action == 7) then begin//<-- use_obj_on_p_proc
+				set_map_var(5, 1);
+				if (obj_pid(obj_being_used_with) == 105) then begin
+					script_overrides;
+					if (Bomb_Armed == 1) then begin
+						if (Master_Has_Armed == 1) then begin
+							display_msg(message_str(448, 105));
+						end
+						else begin
+							call disarmit;
+						end
+					end
+					else begin
+						call armit;
+					end
+				end
+				else begin
+					if (obj_pid(obj_being_used_with) == 77) then begin
+						lockmod := 40;
+					end
+					else begin
+						display_msg(message_str(448, 105));
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure skills
+begin
+	if (Bomb_Armed == 1) then begin
+		display_msg(message_str(448, 105));
+	end
+	else begin
+		if (action_being_used == 12) then begin//-- SCIENCE
+			if (has_skill(dude_obj, 12) < 70) then begin
+				display_msg(message_str(448, 112));
+			end
+			else begin
+				test := roll_vs_skill(dude_obj, 12, -40);
+				if (is_success(test)) then begin
+					call armit;
+				end
+				else begin
+					display_msg(message_str(448, 112));
+				end
+			end
+		end
+		else begin
+			if (action_being_used == 9) then begin//-- LOCKPICK
+				if (has_skill(dude_obj, 9) < 70) then begin
+					display_msg(message_str(448, 112));
+				end
+				else begin
+					test := roll_vs_skill(dude_obj, 9, lockmod - 60);
+					if (is_success(test)) then begin
+						call armit;
+					end
+					else begin
+						display_msg(message_str(448, 112));
+					end
+				end
+			end
+			else begin
+				if (action_being_used == 11) then begin//-- TRAPS
+					display_msg(message_str(448, 111));
+				end
+				else begin
+					if (action_being_used == 13) then begin//-- REPAIR
+						display_msg(message_str(448, 110));
+					end
+					else begin
+						display_msg(message_str(448, 105));
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure armit
+begin
+	display_msg(message_str(448, 102));
+	if (global_var(COUNTDOWN_TO_DESTRUCTION) == 0) then begin
+		set_global_var(COUNTDOWN_TO_DESTRUCTION, (game_time / 10));
+		add_timer_event(dude_obj, 0, 11);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+	end
+	set_global_var(MASTER_BLOWN, 1);
+	if (global_var(VATS_BLOWN) == 0) then begin
+		set_global_var(VATS_STATUS, 1);
+	end
+end
+
+procedure disarmit
+begin
+	if ((((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION)) > 30) or (Skill_Used == 1)) then begin
+		call reset;
+	end
+	else begin
+		Key_Used := 1;
+		display_msg(message_str(448, 105));
+	end
+end
+
+procedure reset
+begin
+	display_msg(message_str(448, 103));
+	set_global_var(COUNTDOWN_TO_DESTRUCTION, 0);
+	set_global_var(MASTER_BLOWN, 0);
+end
+

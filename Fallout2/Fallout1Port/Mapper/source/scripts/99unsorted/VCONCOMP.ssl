@@ -1,0 +1,653 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure damage_p_proc;//    script_action == 14
+procedure description_p_proc;//    script_action == 3
+procedure look_at_p_proc;//    script_action == 21
+procedure talk_p_proc;//    script_action == 11
+procedure use_p_proc;//    script_action == 6
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+
+procedure VConComp00;
+procedure VConComp01;
+procedure VConComp01a;
+procedure VConComp02;
+procedure VConComp02a;
+procedure VConComp03;
+procedure VConComp04;
+procedure VConComp05;
+procedure VConComp06;
+procedure VConComp07;
+procedure VConComp08;
+procedure VConComp09;
+procedure VConComp10;
+procedure VConComp11;
+procedure VConComp12;
+procedure VConComp12a;
+procedure VConComp13;
+procedure VConComp13a;
+procedure VConComp14;
+procedure VConComp15;
+procedure VConComp16;
+procedure VConComp17;
+procedure VConComp17a;
+procedure VConComp17b;
+procedure VConComp18;
+procedure VConComp18a;
+procedure VConComp19;
+procedure VConComp19a;
+procedure VConComp20;
+procedure VConComp21;
+procedure VConComp22;
+procedure VConComp23;
+procedure VConComp24;
+procedure VConComp25;
+procedure VConComp26;
+procedure VConComp27;
+procedure VConComp28;
+procedure VConComp29;
+procedure VConComp30;
+procedure VConComp31;
+procedure VConComp32;
+procedure VConComp33;// added by Sduibek
+procedure VConComp34;// added by Sduibek
+procedure VConComp35;// added by Sduibek
+procedure VConComp36;// added by Sduibek
+procedure VConComp37;// added by Sduibek
+procedure VConCompEnd;
+procedure VatsGoBoom_SETVARS;// added by Sduibek
+procedure Update_Invasion;
+
+
+procedure start
+begin
+	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+		call damage_p_proc;
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			call look_at_p_proc;
+		end
+		else begin
+			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+				call description_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+						call use_p_proc;
+					end
+					else begin
+						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+							call use_obj_on_p_proc;
+						end
+						else begin
+							if (script_action == 8) then begin//<-- use_skill_on_p_proc
+								call use_skill_on_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if (global_var(VATS_BLOWN) == 0) then begin// VATS_BLOWN                :=0;    // (17)  // Have the Vats been destroyed? :=0;
+		set_global_var(VATS_COUNTDOWN, ((game_time / 10) + 120));//		 VATS_COUNTDOWN            :=0;    // (147)
+		call VatsGoBoom_SETVARS;
+		call Update_Invasion;
+		display_msg(message_str(371, 179));
+	end
+	else begin
+		display_msg(message_str(371, 189));
+	end
+end
+
+procedure VatsGoBoom_SETVARS
+begin
+	add_timer_event(dude_obj, 0, 12);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 5);// Reputation plus five (5)
+	set_global_var(VATS_BLOWN, 1);//   "VATS_BLOWN"
+	set_global_var(QUEST_VAULT13_3_KILL_VATS, 2);//   "DESTROY_MASTER_4"
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(371, 200));
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(371, 100));
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (global_var(VATS_COUNTDOWN) == 0) then begin
+		if (local_var(0) == 1) and not(local_var(2)) then begin
+			start_gdialog(371, self_obj, 4, -1, -1);
+			gsay_start;
+			call VConComp01;
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			start_gdialog(371, self_obj, 4, -1, -1);
+			gsay_start;
+			call VConComp00;
+			gsay_end;
+			end_dialogue;
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	script_overrides;
+	if (local_var(0) == 0) then begin
+		display_msg(message_str(371, 177));
+	end
+	else begin
+		dialogue_system_enter;
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_pid(obj_being_used_with) == 221) then begin
+		if (local_var(0) == 0) then begin
+			script_overrides;
+			display_msg(message_str(371, 180));
+			set_local_var(0, 1);
+//			dialogue_system_enter;
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 12) then begin//-- SCIENCE
+		script_overrides;
+		if (is_success(roll_vs_skill(dude_obj, 12, 0))) then begin
+			set_local_var(0, 1);
+			display_msg(message_str(371, 176));
+		end
+		else begin
+			display_msg(message_str(371, 178));
+		end
+		game_time_advance(game_ticks(300));
+	end
+end
+
+procedure VConComp00
+begin
+	play_sfx("SLDOORSO");
+	gsay_message(371, 101, 51);
+end
+
+procedure VConComp01
+begin
+	play_sfx("SLDOORSO");
+	gsay_reply(371, 102);
+	giq_option(1, 371, 203, VConComp01a, 49);
+end
+
+/////////////////////////////////////// MAIN MENU //////////////////////////////////////////////
+
+procedure VConComp01a// main menu
+begin
+	gsay_reply(371, 140);
+	giq_option(4, 371, 103, VConComp02, 50);
+	giq_option(4, 371, 104, VConComp11, 50);
+	if global_var(FIXT_BUGFIXES_ONLY) then begin
+		giq_option(4, 371, 106, VConComp05, 50);//set base to alert status
+	end
+	else begin
+		giq_option(4, 371, 105, VConComp16, 50);//medical uplink
+		giq_option(4, 371, 106, VConComp05, 50);//SAME AS ABOVE
+		giq_option(4, 371, 182, VConComp35, 50);//set base to alert status, disable console
+		if (has_skill(dude_obj, 12) >= 75) then begin
+			giq_option(8, 371, 201, VConComp32, 50);//disable alarms
+		end
+	end
+	giq_option(1, 371, 181, VConCompEnd, 50);
+end
+
+///////////////////////////////// ENCRYPTED BOMB CODES /////////////////////////////////////////
+
+procedure VConComp02// encryped bomb codes
+begin
+	if global_var(FIXT_BUGFIXES_ONLY) then begin
+		gsay_reply(371, 140);
+		giq_option(4, 371, 107, VConComp03, 50);// silent, 1 min (SAME AS BELOW)
+		giq_option(4, 371, 108, VConComp04, 50);// loud, 30 sec (SAME AS BELOW)
+		giq_option(4, 371, 109, VConComp05, 50);// alert
+		giq_option(4, 371, 110, VConComp06, 50);// silent, 3 min
+		giq_option(4, 371, 111, VConComp07, 50);// loud, 3 min (SAME AS BELOW)
+		giq_option(4, 371, 112, VConComp08, 50);// instant - bad idea  (SAME AS BELOW)
+		giq_option(5, 371, 113, VConComp02a, 50);
+		giq_option(1, 371, 204, VConComp01a, 50);
+	end
+	else begin
+		gsay_reply(371, 140);
+		giq_option(4, 371, 107, VConComp03, 50);// silent, 1 min (SAME AS ABOVE)
+		giq_option(4, 371, 108, VConComp04, 50);// loud, 30 sec (SAME AS ABOVE)
+		giq_option(4, 371, 185, VConComp35, 50);// alert & lockout console
+		giq_option(4, 371, 110, VConComp36, 50);// silent, 5 min
+		giq_option(4, 371, 111, VConComp07, 50);// loud, 3 min (SAME AS ABOVE)
+//		giq_option(4, 371, 186, VConComp37, 50);// loud, 1 min
+		giq_option(4, 371, 112, VConComp08, 50);// instant -bad idea  (SAME AS ABOVE)
+		giq_option(6, 371, 113, VConComp02a, 50);// int required 6 instead of 5
+		giq_option(1, 371, 204, VConComp01a, 50);
+	end
+end
+
+////////////////////////////////// HACKED BOMB CODES ///////////////////////////////////////////
+
+procedure VConComp09//  hacked bomb codes
+begin
+	gsay_reply(371, 120);
+	if global_var(FIXT_BUGFIXES_ONLY) then begin
+		giq_option(4, 371, 121, VConComp03, 50);// silent, 1 min
+		giq_option(4, 371, 122, VConComp04, 50);// loud, 30 sec
+		giq_option(4, 371, 123, VConComp05, 50);// alert
+		giq_option(4, 371, 124, VConComp06, 50);// silent, 3 min
+		giq_option(4, 371, 125, VConComp07, 50);// loud, 3 min
+		giq_option(4, 371, 126, VConComp08, 50);// instant - bad idea  (SAME AS BELOW)
+	end
+	else begin
+		giq_option(4, 371, 121, VConComp03, 50);// silent, 1 min
+		giq_option(4, 371, 187, VConComp37, 50);// loud, 1 min
+		giq_option(4, 371, 183, VConComp35, 50);// alert & lockout console
+		giq_option(4, 371, 184, VConComp36, 50);// silent, 5 min
+		giq_option(4, 371, 125, VConComp07, 50);// loud, 3 min
+		giq_option(4, 371, 126, VConComp08, 50);// instant -bad idea  (SAME AS ABOVE)
+		if (has_skill(dude_obj, 12) >= 50) then begin
+			giq_option(7, 371, 304, VConComp34, 50);// 10 min, silent	(entry added by Sduibek)
+		end
+		giq_option(4, 371, 301, VConComp33, 50);// 5 min	(entry added by Sduibek)
+	end
+	giq_option(1, 371, 208, VConComp01a, 50);//exit
+end
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+procedure VConComp32
+begin
+	set_global_var(VATS_ALERT, 0);//	disable "VATS_ALARM_ALERT" (disable it)
+	gsay_message(371, 205, 50);
+end
+
+procedure VConComp33
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 300);
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 302, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp34
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 600);
+	gsay_message(371, 305, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp37
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 60);
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 188, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp02a
+begin
+	if is_success(roll_vs_skill(dude_obj, 12, -20)) or (global_var(CALM_REBELS_1) > 0) then begin// roll was -10
+		call VConComp09;
+	end
+	else begin
+		call VConComp10;
+	end
+end
+
+procedure VConComp03
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 60);
+	gsay_message(371, 114, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp04
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 30);
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 115, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp05
+begin
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 116, 50);
+end
+
+procedure VConComp35
+begin
+	set_local_var(2, 1);//	<-- lock out console
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 206, 50);
+end
+
+procedure VConComp06
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 180);
+	gsay_message(371, 117, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp36
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 300);
+	gsay_message(371, 117, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp07
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10) + 180);
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 118, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp08
+begin
+	set_global_var(VATS_COUNTDOWN, (game_time / 10));// plus nothing because it's instant boom
+	set_global_var(VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	gsay_message(371, 119, 50);
+	call VatsGoBoom_SETVARS;
+end
+
+procedure VConComp10
+begin
+	if (local_var(1) == 1) then begin
+		set_global_var(VATS_ALERT, 1);
+	end
+	else begin
+		set_local_var(1, 1);
+	end
+	gsay_message(371, 127, 51);
+end
+
+procedure VConComp11
+begin
+	gsay_reply(371, 128);
+	giq_option(4, 371, 129, VConComp12, 50);
+	giq_option(4, 371, 130, VConComp14, 50);
+	giq_option(4, 371, 131, VConComp13, 50);
+	giq_option(4, 371, 132, VConComp14, 50);
+	giq_option(1, 371, 204, VConComp01a, 50);
+end
+
+procedure VConComp12
+begin
+	gsay_reply(371, 133);
+	giq_option(4, 371, 134, VConComp12a, 50);
+	giq_option(4, 371, 135, VConComp11, 50);
+end
+
+procedure VConComp12a
+begin
+	if global_var(HOLODISK_VATS_GREY) != 1 then begin
+		set_global_var(HOLODISK_VATS_GREY, 1);
+		gsay_reply(371, 202);
+		giq_option(4, 371, 203, VConComp15, 50);
+	end
+	else begin
+		gsay_reply(371, 207);
+		giq_option(4, 371, 203, VConComp15, 50);
+	end
+end
+
+procedure VConComp13
+begin
+	gsay_reply(371, 136);
+	giq_option(4, 371, 137, VConComp13a, 50);
+	giq_option(4, 371, 135, VConComp11, 50);
+end
+
+procedure VConComp13a
+begin
+	if global_var(HOLODISK_VATS_MAXSON) != 1 then begin
+		set_global_var(HOLODISK_VATS_MAXSON, 1);
+		gsay_reply(371, 202);
+		giq_option(4, 371, 203, VConComp15, 50);
+	end
+	else begin
+		gsay_reply(371, 207);
+		giq_option(4, 371, 203, VConComp15, 50);
+	end
+end
+
+procedure VConComp14
+begin
+	gsay_reply(371, 139);
+	giq_option(1, 371, 203, VConComp01a, 50);
+end
+
+procedure VConComp15
+begin
+	call VConComp01a;
+end
+
+procedure VConComp16
+begin
+	gsay_reply(371, 141);
+	giq_option(6, 371, 142, VConComp17, 50);
+	giq_option(4, 371, 138, VConComp15, 50);
+end
+
+procedure VConComp17
+begin
+	gsay_reply(371, 143);
+	giq_option(4, 634, 104, VConCompEnd, 50);
+	giq_option(6, 371, 144, VConComp17a, 50);
+	giq_option(6, 371, 145, VConComp17b, 50);
+end
+
+procedure VConComp17a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 12, 0))) then begin
+		call VConComp18;
+	end
+	else begin
+		call VConComp20;
+	end
+end
+
+procedure VConComp17b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 7, 0))) then begin
+		call VConComp18;
+	end
+	else begin
+		call VConComp20;
+	end
+end
+
+procedure VConComp18
+begin
+	gsay_reply(371, 146);
+	call VConComp18a;
+end
+
+procedure VConComp18a
+begin
+	giq_option(6, 371, 147, VConComp19, 50);
+	giq_option(6, 371, 148, VConComp19, 50);
+	giq_option(7, 371, 149, VConComp19, 50);
+	giq_option(1, 371, 150, VConCompEnd, 50);
+end
+
+procedure VConComp19
+begin
+	gsay_reply(371, 151);
+	giq_option(6, 371, 152, VConComp20, 50);
+	giq_option(6, 371, 153, VConComp21, 50);
+	giq_option(6, 371, 154, VConComp20, 50);
+	giq_option(7, 371, 155, VConComp19a, 50);
+end
+
+procedure VConComp19a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 12, -10))) then begin
+		call VConComp21;
+	end
+	else begin
+		call VConComp20;
+	end
+end
+
+procedure VConComp20
+begin
+	gsay_reply(371, 156);
+	call VConComp18a;
+end
+
+procedure VConComp21
+begin
+	gsay_reply(371, 157);
+	giq_option(6, 371, 158, VConComp27, 50);
+	giq_option(7, 371, 159, VConComp30, 50);
+	giq_option(4, 371, 150, VConCompEnd, 50);
+end
+
+procedure VConComp22
+begin
+	gsay_reply(371, 160);
+	giq_option(4, 371, 161, VConComp23, 50);
+	giq_option(4, 371, 162, VConComp24, 50);
+	giq_option(4, 371, 163, VConComp25, 50);
+	giq_option(4, 371, 164, VConComp26, 50);
+end
+
+procedure VConComp23
+begin
+	gsay_reply(371, 165);
+	giq_option(4, 371, 166, VConComp22, 50);
+	giq_option(4, 371, 138, VConComp18, 50);
+end
+
+procedure VConComp24
+begin
+	gsay_reply(371, 167);
+	giq_option(4, 371, 166, VConComp22, 50);
+	giq_option(4, 371, 138, VConComp18, 50);
+end
+
+procedure VConComp25
+begin
+	gsay_reply(371, 168);
+	giq_option(4, 371, 166, VConComp22, 50);
+	giq_option(4, 371, 138, VConComp18, 50);
+end
+
+procedure VConComp26
+begin
+	gsay_reply(371, 169);
+	giq_option(4, 371, 166, VConComp22, 50);
+	giq_option(4, 371, 138, VConComp18, 50);
+end
+
+procedure VConComp27
+begin
+	gsay_reply(371, 170);
+	giq_option(4, 371, 172, VConComp28, 50);
+	giq_option(4, 371, 173, VConComp29, 50);
+end
+
+procedure VConComp28
+begin
+	gsay_reply(371, 171);
+	giq_option(4, 371, 138, VConComp01a, 50);
+	giq_option(4, 371, 150, VConCompEnd, 50);
+end
+
+procedure VConComp29
+begin
+	gsay_reply(371, 146);
+	call VConComp18a;
+end
+
+procedure VConComp30
+begin
+	gsay_reply(371, 174);
+	giq_option(4, 371, 172, VConComp31, 50);
+	giq_option(4, 371, 173, VConComp29, 50);
+end
+
+procedure VConComp31
+begin
+	gsay_reply(371, 175);
+	giq_option(4, 371, 138, VConComp01a, 50);
+	giq_option(4, 371, 150, VConCompEnd, 50);
+end
+
+procedure VConCompEnd
+begin
+end
+
+procedure Update_Invasion
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	variable LVar3 := 0;
+	variable LVar4 := 0;
+	variable LVar5 := 0;
+	variable LVar6 := 0;
+//	
+// current DaysLeft value minus current # of days passed (gametime)
+// divide that by 2
+// 
+	LVar0 := (global_var(THE_HUB_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	LVar1 := (global_var(BROTHERHOOD_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	LVar2 := (global_var(JUNKTOWN_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	LVar3 := (global_var(SHADY_SANDS_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	LVar4 := (global_var(VAULT_13_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	LVar5 := (global_var(FOLLOWERS_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	LVar6 := (global_var(NECROPOLIS_INVADED_DATE) - (game_time / (10 * 60 * 60 * 24))) / 2;
+	if (LVar0 > 0) then begin
+		set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - LVar0);
+	end
+	if (LVar1 > 0) then begin
+		set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - LVar1);
+	end
+	if (LVar2 > 0) then begin
+		set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - LVar2);
+	end
+	if (LVar3 > 0) then begin
+		set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - LVar3);
+	end
+	if (LVar4 > 0) then begin
+		set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - LVar4);
+	end
+	if (LVar5 > 0) then begin
+		set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - LVar5);
+	end
+	if (LVar6 > 0) then begin
+		set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - LVar6);
+	end
+end
+
