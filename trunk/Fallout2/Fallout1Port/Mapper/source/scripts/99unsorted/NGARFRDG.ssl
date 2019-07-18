@@ -1,0 +1,134 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure Initialize_Fridge;
+procedure Looting_Fridge;
+procedure Open_Fridge;
+procedure pick_lock;
+procedure map_update_p_proc;//    script_action == 23
+
+import variable Garret_ptr;
+import variable Fridge_ptr;
+
+variable last_user;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call Initialize_Fridge;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				call Looting_Fridge;
+			end
+			else begin
+				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+					call Open_Fridge;
+				end
+				else begin
+					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+						float_msg(Garret_ptr, message_str(420, 105), 0);
+					end
+					else begin
+						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+							if (obj_pid(obj_being_used_with) == 84) then begin
+								call pick_lock;
+							end
+						end
+						else begin
+							if (script_action == 8) then begin//<-- use_skill_on_p_proc
+								if (action_being_used == 9) then begin//-- LOCKPICK
+									call pick_lock;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Initialize_Fridge
+begin
+	Fridge_ptr := self_obj;
+end
+
+procedure Looting_Fridge
+begin
+	if (source_obj != Garret_ptr) then begin
+		if (local_var(0) == 0) then begin
+			script_overrides;
+		end
+		else begin
+			if (local_var(1) == 0) then begin
+				script_overrides;
+			end
+		end
+	end
+end
+
+procedure Open_Fridge
+begin
+	last_user := source_obj;
+	if (source_obj == Garret_ptr) then begin
+		if (local_var(1) == 0) then begin
+			set_local_var(0, 1);
+			set_local_var(1, 1);
+		end
+		else begin
+			if (last_user == Garret_ptr) then begin
+				set_local_var(1, 0);
+				set_local_var(0, 0);
+			end
+			else begin
+				script_overrides;
+				float_msg(Garret_ptr, message_str(420, 104), 0);
+			end
+		end
+	end
+	else begin
+		if (local_var(0) == 0) then begin
+			script_overrides;
+			display_msg(message_str(420, 100));
+		end
+		else begin
+			if (local_var(1)) then begin
+				set_local_var(1, 0);
+			end
+			else begin
+				set_local_var(1, 1);
+			end
+		end
+	end
+end
+
+procedure pick_lock
+begin
+	script_overrides;
+	if (local_var(0)) then begin
+		display_msg(message_str(420, 101));
+	end
+	else begin
+		if (is_success(roll_vs_skill(dude_obj, 9, 0))) then begin
+			display_msg(message_str(420, 102));
+			set_local_var(0, 1);
+			display_msg(message_str(766, 103) + "25" + message_str(766, 104));
+			give_exp_points(25);
+		end
+		else begin
+			display_msg(message_str(420, 103));
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	Fridge_ptr := self_obj;
+end
+

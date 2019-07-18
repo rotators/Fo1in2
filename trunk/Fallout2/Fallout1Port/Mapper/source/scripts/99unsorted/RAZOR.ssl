@@ -1,0 +1,818 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure look_at_p_proc;//    script_action == 21
+procedure description_p_proc;//    script_action == 3
+procedure talk_p_proc;//    script_action == 11
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure map_update_p_proc;//    script_action == 23
+procedure Razor01;
+procedure Razor02;
+procedure Razor03;
+procedure Razor04;
+procedure Razor04a;
+procedure Razor05;
+procedure Razor06;
+procedure Razor07;
+procedure Razor08;
+procedure Razor09;
+procedure Razor10;
+procedure Razor11;
+procedure Razor12;
+procedure Razor13;
+procedure Razor14;
+procedure Razor15;
+procedure Razor16;
+procedure Razor17;
+procedure Razor18;
+procedure Razor19;
+procedure Razor20;
+procedure Razor21;
+procedure Razor22;
+procedure Razor22a;
+procedure Razor23;
+procedure Razor24;
+procedure Razor25;
+procedure Razor26;
+procedure Razor27;
+procedure Razor28;
+procedure Razor29;
+procedure Razor30;
+procedure Razor31;
+procedure Razor32;
+procedure Razor33;
+procedure Razor34;
+procedure Razor35;
+procedure Razor36;
+procedure Razor37;
+procedure Razor38;
+procedure Razor41;
+procedure Razor42;
+procedure Razor43;
+procedure Razor44;
+procedure Razor45;
+procedure Razor46;
+procedure Razor46a;
+procedure Razor47;
+procedure Razor47a;
+procedure Razor48;
+procedure RazorFin;
+procedure RazorReg;
+procedure RazorEnd;
+procedure RemoveBlades;
+procedure fix00;
+
+import variable RazorPtr;
+
+variable Only_Once := 1;
+variable DisplayMessage := 100;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure Start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 47);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 27);
+		RazorPtr := self_obj;
+		if (global_var(ADYTUM_RAZOR_SOMETHING_1) == 1) then begin
+			set_local_var(4, 1);
+		end
+		Only_Once := 0;
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (local_var(4) == 1) then begin
+		display_msg(message_str(278, 220));
+	end
+	else begin
+		display_msg(message_str(278, 221));
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	if (local_var(4) == 1) then begin
+		display_msg(message_str(278, 220));
+	end
+	else begin
+		display_msg(message_str(278, 221));
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (global_var(ENEMY_BLADES) == 1) then begin
+		float_msg(self_obj, message_str(669, random(100, 105)), 2);
+	end
+	else begin
+		if ((global_var(BLADES_STATUS) == 2) and (local_var(6) == 1)) then begin
+			float_msg(self_obj, message_str(278, random(215, 217)), 0);
+		end
+		else begin
+			if ((local_var(4) == 1) and (get_critter_stat(dude_obj, 4) < 4)) then begin
+				float_msg(self_obj, message_str(278, 222), 0);
+			end
+			else begin
+				call get_reaction;
+				start_gdialog(278, self_obj, -1, -1, -1);
+				gsay_start;
+				if (global_var(BLADES_STATUS) == 2) then begin
+					if (global_var(ADYTUM_RAZOR_SOMETHING_0) == 1) then begin
+						if (global_var(ADYTUM_RAZOR_SOMETHING_2) == 1) then begin
+							call Razor45;
+						end
+						else begin
+							if (local_var(4) == 0) then begin
+								call Razor42;
+							end
+							else begin
+								call Razor48;
+							end
+						end
+					end
+					else begin
+						call RazorFin;
+					end
+					set_local_var(6, 1);
+				end
+				else begin
+					if (global_var(GUN_RUNNERS_STATUS) == 9202) then begin
+						call Razor33;
+					end
+					else begin
+						if (global_var(ZIMMERMAN_STATUS) == 9001) then begin
+							call Razor20;
+						end
+						else begin
+							if global_var(RECEIVED_HOLODISK_RAZOR) and (global_var(WATER_CHIP_8) != 2) then begin
+								call Razor26;
+							end
+							else begin
+								if (global_var(ZIMMERMAN_STATUS) == 9003) then begin
+									call Razor30;
+								end
+								else begin
+									if (global_var(ADYTUM_RAZOR_SOMETHING_2) == 1) then begin
+										call Razor46;
+									end
+									else begin
+										if (global_var(ZIMMERMAN_STATUS) == 0) then begin
+											call Razor01;
+										end
+										else begin
+											if (global_var(DUDE_ENEMY_BLADES) == 1) then begin
+												call Razor37;
+											end
+											else begin
+												call fix00;
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+				gsay_end;
+				end_dialogue;
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_BLADES, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+		set_global_var(ENEMY_BLADES, 1);
+	end
+	set_global_var(ZIMMERMAN_STATUS, 9002);
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ADYTUM_RAZOR_SOMETHING_1) == 1) then begin
+		set_local_var(4, 1);
+	end
+	if (local_var(5) == 1) then begin
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		set_local_var(5, 0);
+		set_global_var(ENEMY_BLADES, 1);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	set_global_var(ENEMY_BLADES, 1);
+end
+
+procedure map_update_p_proc
+begin
+	if (global_var(ADYTUM_RAZOR_SOMETHING_1) == 1) then begin
+		set_local_var(4, 1);
+	end
+end
+
+procedure Razor01
+begin
+	gsay_reply(278, 100);
+	giq_option(4, 278, 101, Razor02, 50);
+	giq_option(4, 278, 102, Razor03, 50);
+	giq_option(4, 278, 103, RazorEnd, 50);
+	giq_option(-3, 278, 104, Razor41, 50);
+end
+
+procedure Razor02
+begin
+	gsay_reply(278, 105);
+	gsay_option(278, 106, Razor03, 50);
+	gsay_option(278, 107, Razor04, 50);
+	gsay_option(278, message_str(278, 108) + proto_data(obj_pid(dude_obj), 1) + ".", Razor05, 50);
+	gsay_option(278, 109, RazorEnd, 50);
+	set_local_var(4, 1);
+end
+
+procedure Razor03
+begin
+	gsay_reply(278, 110);
+	gsay_option(278, 111, Razor06, 50);
+	gsay_option(278, 112, Razor07, 50);
+	gsay_option(278, 113, RazorEnd, 50);
+end
+
+procedure Razor04
+begin
+	gsay_reply(278, 114);
+	gsay_option(278, 115, Razor09, 50);
+	gsay_option(278, 116, Razor04a, 50);
+	gsay_option(278, 238, RazorReg, 50);
+	gsay_option(278, 117, RazorEnd, 50);
+end
+
+procedure Razor04a
+begin
+	call BottomReact;
+end
+
+procedure Razor05
+begin
+	gsay_reply(278, 118);
+	gsay_option(278, 119, Razor08, 50);
+	gsay_option(278, 120, Razor08, 50);
+	gsay_option(278, 121, RazorEnd, 50);
+end
+
+procedure Razor06
+begin
+	gsay_reply(278, 122);
+	gsay_option(278, 123, Razor09, 50);
+	gsay_option(278, 124, Razor10, 50);
+	gsay_option(278, 125, Razor19, 50);
+	gsay_option(278, 126, RazorEnd, 50);
+end
+
+procedure Razor07
+begin
+	gsay_reply(278, 127);
+	gsay_option(278, 128, Razor09, 50);
+	gsay_option(278, 129, Razor19, 50);
+	gsay_option(278, 130, Razor19, 50);
+end
+
+procedure Razor08
+begin
+	gsay_reply(278, 131);
+	gsay_option(278, 132, Razor04, 50);
+	gsay_option(278, 133, Razor03, 50);
+end
+
+procedure Razor09
+begin
+	gsay_reply(278, 134);
+	gsay_option(278, 135, Razor11, 50);
+	gsay_option(278, 136, RazorEnd, 50);
+	set_global_var(BLADES_STATUS, 9101);
+end
+
+procedure Razor10
+begin
+	gsay_reply(278, 137);
+	gsay_option(278, 138, Razor12, 50);
+	gsay_option(278, 139, Razor14, 50);
+	gsay_option(278, 238, RazorReg, 50);
+end
+
+procedure Razor11
+begin
+	gsay_reply(278, 140);
+	gsay_option(278, 141, Razor18, 50);
+	gsay_option(278, 238, RazorReg, 50);
+	gsay_option(278, 142, RazorEnd, 50);
+end
+
+procedure Razor12
+begin
+	gsay_reply(278, 143);
+	gsay_option(278, 144, Razor13, 50);
+	gsay_option(278, 145, RazorEnd, 50);
+end
+
+procedure Razor13
+begin
+	gsay_reply(278, 146);
+	gsay_option(278, 147, Razor14, 50);
+end
+
+procedure Razor14
+begin
+	gsay_reply(278, 148);
+	gsay_option(278, 149, Razor15, 50);
+	gsay_option(278, 150, Razor09, 50);
+end
+
+procedure Razor15
+begin
+	gsay_reply(278, 151);
+	gsay_option(278, 152, Razor27, 50);
+	gsay_option(278, 153, Razor17, 50);
+end
+
+procedure Razor16
+begin
+	gsay_reply(278, 154);
+	gsay_option(278, 155, RazorEnd, 50);
+	if not(global_var(RECEIVED_HOLODISK_RAZOR)) then begin
+		set_global_var(RECEIVED_HOLODISK_RAZOR, 1);
+	end
+	set_map_var(1, 1);
+end
+
+procedure Razor17
+begin
+	gsay_reply(278, 156);
+	gsay_option(278, 157, RazorEnd, 50);
+end
+
+procedure Razor18
+begin
+	gsay_reply(278, 158);
+	gsay_option(278, 159, RazorEnd, 50);
+	set_global_var(BLADES_STATUS, 9101);
+end
+
+procedure Razor19
+begin
+	gsay_reply(278, 160);
+	gsay_option(278, 161, RazorEnd, 50);
+end
+
+procedure Razor20
+begin
+	gsay_reply(278, 162);
+	giq_option(4, 278, 163, Razor21, 50);
+	giq_option(4, 278, 164, RazorEnd, 50);
+	giq_option(-3, 278, 165, Razor41, 50);
+end
+
+procedure Razor21
+begin
+	gsay_reply(278, 166);
+	gsay_option(278, 167, Razor22, 50);
+	gsay_option(278, 168, Razor07, 50);
+	gsay_option(278, 169, RazorEnd, 50);
+end
+
+procedure Razor22
+begin
+	gsay_reply(278, 170);
+	gsay_option(278, 171, Razor22a, 50);
+	gsay_option(278, 172, Razor23, 50);
+end
+
+procedure Razor22a
+begin
+	set_local_var(5, 1);
+end
+
+procedure Razor23
+begin
+	gsay_reply(278, 173);
+	gsay_option(278, 174, Razor22a, 50);
+	gsay_option(278, 175, Razor24, 50);
+end
+
+procedure Razor24
+begin
+	gsay_reply(278, 176);
+	gsay_option(278, 177, Razor22a, 50);
+	gsay_option(278, 178, Razor25, 50);
+end
+
+procedure Razor25
+begin
+	gsay_reply(278, 179);
+	gsay_option(278, 180, Razor13, 50);
+end
+
+procedure Razor26
+begin
+	gsay_reply(278, 181);
+	giq_option(4, 278, 182, Razor29, 50);
+	giq_option(-3, 278, 183, Razor41, 50);
+end
+
+procedure Razor27
+begin
+	gsay_reply(278, 184);
+	gsay_option(278, 185, Razor28, 50);
+	gsay_option(278, 238, RazorReg, 50);
+	gsay_option(278, 186, RazorEnd, 50);
+end
+
+procedure Razor28
+begin
+	gsay_reply(278, 187);
+	gsay_option(278, 188, Razor16, 50);
+	set_global_var(BLADES_STATUS, 9101);
+end
+
+procedure Razor29
+begin
+	gsay_message(278, 189, 50);
+end
+
+procedure Razor30
+begin
+	gsay_reply(278, 190);
+	giq_option(4, 278, 191, Razor31, 50);
+	giq_option(-3, 278, 192, Razor41, 50);
+end
+
+procedure Razor31
+begin
+	gsay_reply(278, 193);
+	gsay_option(278, 194, Razor32, 50);
+	gsay_option(278, 195, Razor19, 50);
+end
+
+procedure Razor32
+begin
+	gsay_message(278, 196, 50);
+	set_global_var(BLADES_STATUS, 9101);
+end
+
+procedure Razor33
+begin
+	gsay_reply(278, 197);
+	giq_option(4, 278, 198, Razor34, 50);
+	giq_option(4, 278, 199, Razor35, 50);
+	if (global_var(ZIMMERMAN_STATUS) != 9003) then begin
+		giq_option(4, 278, 201, Razor36, 50);
+	end
+	giq_option(-3, 278, 200, Razor41, 50);
+end
+
+procedure Razor34
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	game_time_advance(game_ticks(10 * 60 * 60 * 8));
+	set_global_var(BLADES_STATUS, 9104);
+	call TopReact;
+	gfade_in(1);
+	gsay_message(278, 202, 50);
+end
+
+procedure Razor35
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	game_time_advance(game_ticks(10 * 60 * 60 * 24));
+	set_global_var(BLADES_STATUS, 9103);
+	call TopReact;
+	gfade_in(1);
+	gsay_message(278, 203, 50);
+	load_map("laadytum.map", 1);
+end
+
+procedure Razor36
+begin
+	gsay_message(278, 204, 50);
+	set_global_var(BLADES_STATUS, 9102);
+end
+
+procedure Razor37
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(278, message_str(278, 240) + " " + message_str(278, 205));
+	end
+	else begin
+		gsay_reply(278, message_str(278, 241) + " " + message_str(278, 205));
+	end
+	giq_option(4, 278, 206, RazorEnd, 50);
+	giq_option(4, 278, 207, RazorEnd, 50);
+	if global_var(RECEIVED_HOLODISK_RAZOR) then begin
+		giq_option(4, 278, 208, Razor38, 50);
+	end
+	giq_option(4, 278, 209, Razor22a, 50);
+	giq_option(-3, 278, 210, Razor41, 50);
+end
+
+procedure Razor38
+begin
+	gsay_message(278, 211, 50);
+end
+
+procedure Razor41
+begin
+	gsay_message(278, 218, 50);
+end
+
+procedure Razor42
+begin
+	gsay_reply(278, 224);
+	giq_option(4, 278, 225, Razor43, 50);
+	giq_option(-3, 278, 226, Razor41, 50);
+end
+
+procedure Razor43
+begin
+	gsay_reply(278, 227);
+	gsay_option(278, 228, Razor44, 50);
+end
+
+procedure Razor44
+begin
+	gsay_message(278, 229, 50);
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
+	display_msg(message_str(766, 103) + 500 + message_str(766, 104));
+	give_exp_points(500);
+end
+
+procedure Razor45
+begin
+	gsay_message(278, 230, 50);
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
+	display_msg(message_str(766, 103) + 500 + message_str(766, 104));
+	give_exp_points(500);
+end
+
+procedure Razor46
+begin
+	gsay_reply(278, 231);
+	gsay_option(278, 232, Razor46a, 50);
+	gsay_option(278, 233, Razor47, 50);
+end
+
+procedure Razor46a
+begin
+	gsay_message(278, 215, 50);
+end
+
+procedure Razor47
+begin
+	gsay_reply(278, 234);
+	gsay_option(278, 235, Razor47a, 50);
+	gsay_option(278, 236, RazorEnd, 50);
+end
+
+procedure Razor47a
+begin
+	gsay_message(278, 215, 50);
+	set_global_var(BLADES_STATUS, 9101);
+end
+
+procedure Razor48
+begin
+	gsay_message(278, 237, 50);
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
+	display_msg(message_str(766, 103) + 500 + message_str(766, 104));
+	give_exp_points(500);
+end
+
+procedure RazorFin
+begin
+	gsay_message(278, 223, 50);
+end
+
+procedure RazorReg
+begin
+	gsay_message(278, 239, 50);
+	set_global_var(ADYTUM_RAZOR_SOMETHING_2, 1);
+end
+
+procedure RazorEnd
+begin
+end
+
+procedure RemoveBlades
+begin
+end
+
+procedure fix00
+begin
+	gsay_message(278, 222, 50);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

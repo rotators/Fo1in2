@@ -1,0 +1,260 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure blast_party;
+procedure generate_party_IDs;
+import variable Ian_ptr;
+import variable Dog_ptr;
+import variable Tycho_ptr;
+import variable Katja_ptr;
+import variable Tandi_ptr;
+variable ego_blast;
+variable mult := 1;
+variable per;
+variable PICK;
+variable temp;
+variable test;
+variable counter := 0;
+variable TANDI := 16777279;
+variable Tandi_flag;
+variable DOGMEAT := 16777338;
+variable Dogmeat_flag;
+variable IAN := 16777292;
+variable Ian_flag;
+variable TYCHO := 16777426;
+variable Tycho_flag;
+variable KATJA := 16777518;
+variable Katja_flag;
+
+procedure start
+begin
+	if (script_action == 2) then begin// spatial_p_proc - Player is on or near hex of the location or object this script is using
+		if source_obj == dude_obj then begin
+			if global_var(PREVENT_REVULSION_DAMAGE) != 2 then begin
+				per := get_critter_stat(dude_obj, 1);
+				if (local_var(0) <= map_var(2)) then begin
+					set_local_var(0, map_var(2) + 1);
+					test := per + map_var(0);
+					if (random(1, 10) < test) then begin
+						PICK := map_var(0);
+						if (obj_carrying_pid_obj(dude_obj, 123)) then begin
+							if (map_var(1)) then begin
+								set_map_var(1, 0);
+								display_msg(message_str(740, 107));
+							end
+						end
+						else begin
+							if (PICK == 0) then begin
+								display_msg(message_str(740, 100));
+								set_map_var(1, 1);
+								set_map_var(0, map_var(0) + 1);
+							end
+							else begin
+								if (PICK == 1) then begin
+									if (has_trait(0, dude_obj, 27)) then begin
+										ego_blast := 0;
+									end
+									else begin
+										display_msg(message_str(740, 101));
+										ego_blast := random(1, per);
+										critter_dmg(dude_obj, ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+									end
+									set_map_var(0, map_var(0) + 1);
+									mult := 1;
+									call blast_party;
+								end
+								else begin
+									if (PICK == 2) then begin
+										if (has_trait(0, dude_obj, 27)) then begin
+											ego_blast := 0;
+										end
+										else begin
+											display_msg(message_str(740, 102));
+											ego_blast := random(1, per) + random(1, per);
+											critter_dmg(dude_obj, ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+										end
+										set_map_var(0, map_var(0) + 1);
+										mult := 2;
+										call blast_party;
+									end
+									else begin
+										if (PICK == 3) then begin
+											if (has_trait(0, dude_obj, 27)) then begin
+												ego_blast := 0;
+											end
+											else begin
+												display_msg(message_str(740, 103));
+												ego_blast := random(1, per) + random(1, per) + random(1, per);
+												critter_dmg(dude_obj, ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+											end
+											set_map_var(0, map_var(0) + 1);
+											mult := 3;
+											call blast_party;
+										end
+										else begin
+											if (PICK == 4) then begin
+												if (has_trait(0, dude_obj, 27)) then begin
+													ego_blast := 0;
+												end
+												else begin
+													display_msg(message_str(740, 104));
+													ego_blast := random(1, per) + random(1, per) + random(1, per);
+													critter_dmg(dude_obj, ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+													critter_injure(dude_obj, 64);//    DAM_BLIND         64
+													temp := get_critter_stat(dude_obj, 1);
+													set_critter_stat(dude_obj, 1, -1);
+													display_msg(message_str(740, 250));
+												end
+												set_map_var(0, map_var(0) + 1);
+												mult := 3;
+												call blast_party;
+											end
+											else begin
+												if (PICK == 5) then begin
+													if (has_trait(0, dude_obj, 27)) then begin
+														ego_blast := 0;
+													end
+													else begin
+														display_msg(message_str(740, 105));
+														ego_blast := 1;
+														if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+															ego_blast := ego_blast + 15;
+														end
+														if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+															ego_blast := ego_blast + 20;
+														end
+														critter_dmg(dude_obj, ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+														temp := get_critter_stat(dude_obj, 4);
+														set_critter_stat(dude_obj, 4, -1);
+														display_msg(message_str(740, 251));
+													end
+													set_map_var(0, map_var(0) + 1);
+													mult := 4;
+													call blast_party;
+												end
+												else begin
+													if (PICK == 6) then begin
+														if (has_trait(0, dude_obj, 27)) then begin
+															ego_blast := 0;
+														end
+														else begin
+															display_msg(message_str(740, 106));
+															temp := get_critter_stat(dude_obj, 1);
+															set_critter_stat(dude_obj, 1, -1);
+															temp := get_critter_stat(dude_obj, 4);
+															set_critter_stat(dude_obj, 4, -1);
+															display_msg(message_str(740, 250));
+															display_msg(message_str(740, 251));
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure blast_party
+begin
+	call generate_party_IDs;
+	ego_blast := 1;
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		ego_blast := ego_blast + 7;
+	end
+	if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+		ego_blast := ego_blast + 10;
+	end
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin// IAN
+		if (mult < 4) then begin
+			per := get_critter_stat(party_member_obj(IAN), 1);
+			ego_blast := random(1, per);
+			if (mult > 1) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+			if (mult > 2) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+		end
+		critter_dmg(party_member_obj(IAN), ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin// TYCHO
+		if (mult < 4) then begin
+			per := get_critter_stat(party_member_obj(TYCHO), 1);
+			ego_blast := random(1, per);
+			if (mult > 1) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+			if (mult > 2) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+		end
+		critter_dmg(party_member_obj(TYCHO), ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin// KATJA
+		if (mult < 4) then begin
+			per := get_critter_stat(party_member_obj(KATJA), 1);
+			ego_blast := random(1, per);
+			if (mult > 1) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+			if (mult > 2) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+		end
+		critter_dmg(party_member_obj(KATJA), ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin// TANDI
+		if (mult < 4) then begin
+			per := get_critter_stat(party_member_obj(TANDI), 1);// TANDI
+			ego_blast := random(1, per);
+			if (mult > 1) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+			if (mult > 2) then begin
+				ego_blast := ego_blast + random(1, per);
+			end
+		end
+		critter_dmg(party_member_obj(TANDI), ego_blast, 0 bwor 256);//    DMG_BYPASS_ARMOR  (256)// TANDI
+	end
+end
+
+procedure generate_party_IDs
+begin
+	if (party_member_obj(IAN) == 0) and (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		counter := 16777529;
+		while(counter != 16777556) do begin//  to 16777555
+			if (party_member_obj(counter) != 0) then begin
+				IAN := counter;
+			end
+			counter := (counter + 1);
+		end
+	end
+	counter := 0;
+	if (party_member_obj(TYCHO) == 0) and (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		counter := 16777556;
+		while(counter != 16777583) do begin//  to 16777582
+			if (party_member_obj(counter) != 0) then begin
+				TYCHO := counter;
+			end
+			counter := (counter + 1);
+		end
+	end
+	counter := 0;
+	if (party_member_obj(KATJA) == 0) and (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		counter := 16777583;
+		while(counter != 16777610) do begin//  to 16777609
+			if (party_member_obj(counter) != 0) then begin
+				KATJA := counter;
+			end
+			counter := (counter + 1);
+		end
+	end
+end
+

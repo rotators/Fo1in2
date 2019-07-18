@@ -1,0 +1,55 @@
+#
+#
+# Text labels and messages used in LOADSAVE.C
+#
+# (These MUST match "text message" enumeration on the top of LOADSAVE.C)
+#
+
+# System
+{100}{}{LOAD GAME}              # Titles
+{101}{}{PICK A QUICK LOAD SLOT}
+{102}{}{SAVE GAME}
+{103}{}{PICK A QUICK SAVE SLOT}
+{104}{}{DONE}
+{105}{}{CANCEL}
+{106}{}{Error loading save game list!} # Line 1
+{107}{}{Save game directory:}    # Line 2
+{108}{}{Doesn't exist or is corrupted.} # Line 3
+{109}{}{SAVE GAME}
+{110}{}{LOAD GAME}
+{111}{}{- EMPTY -}
+{112}{}{- CORRUPT SAVE  FILE -}
+{113}{}{- OLD VERSION -}
+{114}{}{Empty.}
+{115}{}{Error!}
+{116}{}{Old version.}
+{117}{}{JAN}                            # Months
+{118}{}{FEB}
+{119}{}{MAR}
+{120}{}{APR}
+{121}{}{MAY}
+{122}{}{JUN}
+{123}{}{JUL}
+{124}{}{AUG}
+{125}{}{SEP}
+{126}{}{OCT}
+{127}{}{NOV}
+{128}{}{DEC}
+{129}{}{Level}
+{130}{}{DESCRIPTION}
+{131}{}{Save game already exists, overwrite?}
+{132}{}{Error saving game!}             # Line 1
+{133}{}{Unable to save game.}           # Line 2
+{134}{}{Error loading game!}            # Line 1
+{135}{}{Unable to load game.}           # Line 2
+{136}{}{Save game file is an older version.}
+{137}{}{Map}
+
+{140}{}{Game Saved.}
+{141}{}{Game Loaded.}
+#
+# Demo versions only
+#
+{200}{}{Sorry you can't save or load} # 1
+{201}{}{in the demo version.}         # 2
+

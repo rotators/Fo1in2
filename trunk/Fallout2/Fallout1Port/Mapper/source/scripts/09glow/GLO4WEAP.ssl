@@ -1,0 +1,183 @@
+//
+// ---TRAP SCRIPT---  Sduibek
+//
+// SCRIPT IS NOT USED :(
+//
+#include "..\headers\define.h"
+
+procedure start;
+procedure Traps;
+procedure Sciences;
+procedure Picklocks;
+procedure Using_Door;
+
+variable Shocked;
+
+
+procedure start
+begin
+	if (global_var(WEAPON_LOCKER) == 2) then begin
+		set_local_var(1, 1);
+	end
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		display_msg(message_str(321, 100));
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			if (global_var(WEAPON_LOCKER) != 2) then begin
+				set_global_var(WEAPON_LOCKER, 1);
+			end
+			call Using_Door;
+		end
+		else begin
+			if (script_action == 8) then begin//<-- use_skill_on_p_proc
+				if (global_var(WEAPON_LOCKER) != 2) then begin
+					set_global_var(WEAPON_LOCKER, 1);
+				end
+				if (action_being_used == 9) then begin//-- LOCKPICK
+					call Picklocks;
+				end
+				else begin
+					if (action_being_used == 11) then begin//-- TRAPS
+						call Traps;
+					end
+					else begin
+						if (action_being_used == 12) then begin//-- SCIENCE
+							call Sciences;
+						end
+						else begin
+							display_msg(message_str(321, 101));
+						end
+					end
+				end
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					if (global_var(WEAPON_LOCKER) != 2) then begin
+						set_global_var(WEAPON_LOCKER, 1);
+					end
+					if (obj_pid(obj_being_used_with) == 96) then begin
+						if (local_var(1) == 0) then begin
+							script_overrides;
+							Shocked := random(3, 7);
+							critter_dmg(dude_obj, Shocked, 0);
+							display_msg(message_str(321, 102) + Shocked + message_str(321, 103));
+							set_local_var(0, local_var(0) + 1);
+						end
+						else begin
+							if (local_var(2) == 0) then begin
+								script_overrides;
+								set_local_var(2, 1);
+								display_msg(message_str(321, 104));
+							end
+						end
+					end
+					else begin
+						display_msg(message_str(321, 105));
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Traps
+begin
+	if (local_var(1) == 0) then begin
+		if (is_success(roll_vs_skill(dude_obj, 11, 0))) then begin
+			set_local_var(1, 1);
+			display_msg(message_str(321, 113));
+		end
+		else begin
+			set_local_var(0, 5);
+			Shocked := random(2, local_var(0));
+			critter_dmg(dude_obj, Shocked, 0);
+			display_msg(message_str(321, 114) + Shocked + message_str(321, 115));
+			set_local_var(0, local_var(0) + 1);
+		end
+	end
+	else begin
+		display_msg(message_str(321, 116));
+	end
+end
+
+procedure Sciences
+begin
+	if (local_var(1) == 0) then begin
+		if (is_success(roll_vs_skill(dude_obj, 12, 0))) then begin
+			set_local_var(1, 1);
+			display_msg(message_str(321, 117));
+		end
+		else begin
+			set_local_var(0, 5);
+			Shocked := random(2, local_var(0));
+			critter_dmg(dude_obj, Shocked, 0);
+			display_msg(message_str(321, 118) + Shocked + message_str(321, 119));
+			set_local_var(0, local_var(0) + 1);
+		end
+	end
+	else begin
+		display_msg(message_str(321, 120));
+	end
+end
+
+procedure Picklocks
+begin
+	if (local_var(1) == 0) then begin
+		if (local_var(0) > 2) then begin
+			Shocked := random(2, local_var(0));
+			critter_dmg(dude_obj, Shocked, 0);
+			display_msg(message_str(321, 121) + Shocked + message_str(321, 122));
+			set_local_var(0, local_var(0) + 1);
+		end
+		else begin
+			set_local_var(0, local_var(0) + 1);
+			display_msg(message_str(321, 123));
+		end
+	end
+	else begin
+		if (is_success(roll_vs_skill(dude_obj, 9, 0))) then begin
+			set_local_var(2, 1);
+			display_msg(message_str(321, 124));
+		end
+		else begin
+			display_msg(message_str(321, 125));
+		end
+	end
+end
+
+procedure Using_Door
+begin
+	if (local_var(1) == 0) then begin
+		script_overrides;
+		if (local_var(0) > 2) then begin
+			Shocked := random(2, local_var(0));
+			critter_dmg(dude_obj, Shocked, 0);
+			display_msg(message_str(321, 106) + Shocked + message_str(321, 107));
+			set_local_var(0, local_var(0) + 1);
+		end
+		else begin
+			set_local_var(0, local_var(0) + 1);
+			display_msg(message_str(321, 108));
+		end
+	end
+	else begin
+		if (local_var(2) == 0) then begin
+			script_overrides;
+			display_msg(message_str(321, 109));
+			if (is_success(do_check(dude_obj, 1, 0))) then begin
+				display_msg(message_str(321, 110));
+			end
+			else begin
+				if (is_success(roll_vs_skill(dude_obj, 11, 0))) then begin
+					display_msg(message_str(321, 111));
+				end
+				else begin
+					display_msg(message_str(321, 112));
+				end
+			end
+		end
+	end
+end
+

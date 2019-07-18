@@ -1,0 +1,140 @@
+/**
+
+   Item Highlight mod.
+
+   Previously was part of sfall itself, now a separate mod.
+   Features:
+   - highlighting items, containers (optional) and lootable corpses (optional) on the ground
+   - configurable hotkey is used to trigger highlight
+   - only objects in direct line-of-sight of player are highlighted (optional)
+   - motion scanner is required to enable highlight (optional)
+   - motion scanner charges are decreased on each use (optional)
+
+   NOTE: this script requires compiler from sfall modderspack with -s option
+   (short circuit evaluation)
+
+   version 1.1
+
+**/
+
+#include "..\headers\Sfall\main.h"
+//#include "..\..\..\!SRC\headers\define.h"
+
+#define CRITTER_IS_DEAD    (1)
+#define PID_MOTION_SENSOR  (59)
+#define NO_HIGHLIGHT(obj)  (get_flags(obj) bwand FLAG_NOHIGHLIGHT)
+#define NO_STEAL(obj)      (get_proto_data(obj_pid(obj), PROTO_CR_FLAGS) bwand CFLG_NOSTEAL)
+
+variable configSection := "Highlighting";
+variable highlightKey;
+variable isHighlight;
+variable alsoContainer;
+variable alsoCorpse;
+variable checkLOS;
+variable outlineColor;
+variable motionScanner;
+variable highlightFailMsg1;
+variable highlightFailMsg2;
+
+procedure ToggleHighlightObject(variable obj, variable enable) begin
+   if obj and (not enable or not checkLOS or not obj_blocking_line(dude_obj, tile_num(obj), BLOCKING_TYPE_SHOOT)) then begin
+      if (alsoContainer and obj_item_subtype(obj) == item_type_container) or (not NO_HIGHLIGHT(obj)) then begin
+         if (enable) then set_outline(obj, outlineColor);
+         else set_outline(obj, 0);
+      end
+   end
+end
+
+procedure ToggleHighlight(variable enable) begin
+   variable obj;
+   foreach obj in list_as_array(LIST_GROUNDITEMS) begin
+      if obj != outlined_object then begin
+         call ToggleHighlightObject(obj, enable);
+      end
+   end
+   if (alsoCorpse) then begin
+      foreach obj in list_as_array(LIST_CRITTERS) begin
+         if critter_state(obj) == CRITTER_IS_DEAD and not NO_STEAL(obj) then begin
+            call ToggleHighlightObject(obj, enable);
+         end
+      end
+   end
+   tile_refresh_display;
+end
+
+procedure KeyPressHandler begin
+   variable pressed := get_sfall_arg,
+            scanCode := get_sfall_arg,
+            scanner, charges;
+
+   if scanCode == highlightKey and not(get_game_mode bwand (INTFACELOOT bwor BARTER)) then begin
+      if pressed then begin
+         isHighlight := true;
+         if motionScanner then begin
+            scanner := obj_carrying_pid_obj(dude_obj, PID_MOTION_SENSOR);
+            if scanner then begin
+               if motionScanner >= 2 then begin
+                  charges := get_weapon_ammo_count(scanner);
+                  if charges > 0 then begin
+                     set_weapon_ammo_count(scanner, charges - 1);
+                     intface_redraw;
+                     call ToggleHighlight(true);
+                  end else begin
+                     display_msg(highlightFailMsg2);
+                  end
+               end else begin
+                  call ToggleHighlight(true);
+               end
+            end else begin
+               display_msg(highlightFailMsg1);
+            end
+         end else begin
+            call ToggleHighlight(true);
+         end
+      end else begin
+         isHighlight := false;
+         call ToggleHighlight(false);
+      end
+   end
+end
+
+procedure CombatTurnHandler begin
+   if isHighlight then begin
+      isHighlight := false;
+      call ToggleHighlight(false);
+   end
+end
+
+procedure GameModeChangeHandler begin
+   if isHighlight and (get_game_mode bwand (INTFACELOOT bwor BARTER)) then begin
+      isHighlight := false;
+      call ToggleHighlight(false);
+   end
+end
+
+procedure InventoryMoveHandler begin
+   // remove item outline when player picks up the item
+   if (isHighlight and get_sfall_arg == 7) then set_outline(get_sfall_arg, 0);
+end
+
+procedure start begin
+   if game_loaded and (sfall_ver_major >= 4) then begin
+      call InitConfigs;
+
+      highlightKey := GetConfig(configSection, "Key", 0);
+      alsoContainer := GetConfig(configSection, "Containers", 0);
+      alsoCorpse := GetConfig(configSection, "Corpses", 0);
+      checkLOS := GetConfig(configSection, "CheckLOS", 0);
+      outlineColor := GetConfig(configSection, "OutlineColor", 16);
+      if (outlineColor < 1) then outlineColor := 64;
+      motionScanner := GetConfig(configSection, "MotionScanner", 0);
+
+      highlightFailMsg1 := Translate("HighlightFail1", "You aren't carrying a motion sensor.");
+      highlightFailMsg2 := Translate("HighlightFail2", "Your motion sensor is out of charge.");
+
+      register_hook_proc(HOOK_KEYPRESS, KeyPressHandler);
+      register_hook_proc(HOOK_COMBATTURN, CombatTurnHandler);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChangeHandler);
+      register_hook_proc(HOOK_INVENTORYMOVE, InventoryMoveHandler);
+   end
+end

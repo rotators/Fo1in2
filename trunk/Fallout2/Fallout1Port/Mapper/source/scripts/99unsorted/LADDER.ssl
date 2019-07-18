@@ -1,0 +1,89 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure do_stuff;
+procedure ladderend;
+procedure ladder00;
+procedure ladder01;
+procedure ladder01a;
+
+variable testa;
+variable testb;
+variable bonus;
+variable damage;
+variable manhole_open;
+
+
+procedure start
+begin
+	if (map_first_run) then begin
+		//display_msg("INIT LADDER.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj));
+		//display_msg("Please take a screenshot now and send to Sduibek. Thanks!");
+	end
+	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+		call do_stuff;
+	end
+end
+
+procedure do_stuff
+begin
+	script_overrides;
+	manhole_open := map_var(local_var(0));
+	if (manhole_open) then begin
+		call ladder00;
+	end
+	else begin
+		call ladder01;
+	end
+end
+
+procedure ladderend
+begin
+end
+
+procedure ladder00
+begin
+	if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+		script_overrides;
+		move_to(dude_obj, local_var(1), local_var(2));
+	end
+end
+
+procedure ladder01
+begin
+	bonus := 1 - local_var(0);
+	testa := do_check(dude_obj, 0, bonus);
+	call ladder01a;
+end
+
+procedure ladder01a
+begin
+	script_overrides;
+	if (is_success(testa)) then begin
+		set_local_var(0, 0);
+		display_msg(message_str(20, 100));
+		call ladder00;
+	end
+	else begin
+		set_local_var(0, local_var(0) + 1);
+		if (is_critical(testa)) then begin
+			display_msg(message_str(20, 101));
+			damage := random(1, 6) - 4;
+			if (damage < 1) then begin
+				damage := 1;
+			end
+			critter_dmg(dude_obj, damage, 0 bwor 256);
+		end
+		else begin
+			display_msg(message_str(20, 102));
+			testb := do_check(dude_obj, 5, 0);
+			if (is_success(testb)) then begin
+				display_msg(message_str(20, 103));
+			end
+			else begin
+				display_msg(message_str(20, 104));
+			end
+		end
+	end
+end
+

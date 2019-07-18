@@ -1,0 +1,48 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure use_stuff;
+
+variable open;
+variable unlocked;
+
+
+procedure start
+begin
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		display_msg(message_str(428, 100));
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			call use_stuff;
+		end
+	end
+end
+
+procedure use_stuff
+begin
+	script_overrides;
+	if (not(unlocked)) then begin
+		display_msg(message_str(428, 101));
+		if (is_success(roll_vs_skill(dude_obj, 11, 0)) or is_success(roll_vs_skill(dude_obj, 9, 0))) then begin
+			display_msg(message_str(429, 100));
+			unlocked := 1;
+		end
+	end
+	else begin
+		display_msg(message_str(429, 101));
+		if (is_success(do_check(dude_obj, 1, 0))) then begin
+			display_msg(message_str(429, 102));
+		end
+		if (open) then begin
+			animate_stand_reverse_obj(self_obj);
+			open := 0;
+		end
+		else begin
+			animate_stand_obj(self_obj);
+			open := 1;
+		end
+	end
+end
+

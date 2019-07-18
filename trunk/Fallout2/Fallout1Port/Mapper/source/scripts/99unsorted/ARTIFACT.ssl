@@ -1,0 +1,78 @@
+//
+// ---HOLODISK SCRIPT---  Sduibek
+//
+// KEEP ORIGINAL ITEM	rebuild via critter_p_proc - DONE.
+// ProtoID	164	Name:	Brotherhood Disk	Cost:	70   
+// script:	333	Artifact.int   ; the artifact the Brotherhood sends you to find.
+// GVAR	161	"Ancient Brotherhood Disk" - A holodisk with information about the Brotherhood of Steel.
+
+#include "..\headers\define.h"
+
+procedure start;
+procedure NewPtr;
+
+// local_var(0) == Used (put in Pip-Boy)
+// local_var(1) == Examined (change item hoverdescrip)
+
+
+procedure start
+begin
+	if script_action == 21 then begin// 21 is look_at
+		script_overrides;
+		if (local_var(1) < 1) and (global_var(ARTIFACT_HOLODISK_USED) != 1) then begin// not used or Examined yet
+			display_msg(message_str(333, 100));
+		end
+		else begin
+			display_msg(message_str(333, 104));
+		end
+	end
+	else begin
+		if script_action == 3 then begin// 3 is description (Binoculars)
+			set_local_var(1, 1);
+			display_msg(message_str(333, 103));
+		end
+		else begin
+			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				script_overrides;
+				set_local_var(1, 1);
+				if local_var(0) == 1 then begin
+					display_msg(message_str(333, 101));//Abort
+				end
+				else begin
+					set_local_var(0, 1);
+					set_global_var(ARTIFACT_HOLODISK_USED, 1);
+					display_msg(message_str(333, 102));//Downloaded OK
+					display_msg(message_str(766, 103) + "250" + message_str(766, 104));// more exp, for Fallout Fixt
+					give_exp_points(250);
+				end
+			end
+		end
+	end
+	call NewPtr;
+end
+
+procedure NewPtr
+begin
+	if self_obj != 0 then begin
+		if (cur_map_index != 42) and (cur_map_index != 43) then begin
+			set_global_var(ARTIFACT_HOLODISK_POINTER, self_obj);
+		end
+	end
+end
+
+
+//	if script_action == 1 then begin// start_proc
+//		call NewPtr;
+//	end
+//	else begin
+//				else begin
+//					if script_action == 4 then begin//pickup
+//						call NewPtr;
+//					end
+//					else begin
+//						if script_action == 5 then begin//drop
+//							call NewPtr;
+//						end
+//					end
+//				end
+//			end

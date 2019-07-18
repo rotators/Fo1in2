@@ -1,0 +1,411 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure lighting;
+procedure Kill_Neal;
+
+variable HEREBEFORE;
+variable time;
+variable item;
+
+export variable Killian_ptr;
+export variable Gizmo_ptr;
+export variable growling;
+export variable dog_is_angry := 1;
+export variable smartass;
+export variable smartass2;
+export variable Phil_approaches;
+export variable KillSafe_ptr;
+export variable assassin_seed;
+export variable helped_Killian;
+export variable Killian_barter_var;
+export variable Killian_store1_ptr;
+export variable Killian_store2_ptr;
+export variable Killian_store3_ptr;
+export variable weapon_checked;
+export variable sneak_checked;
+export variable times_caught_sneaking;
+export variable Gizmo_is_angry;
+export variable show_to_door;
+export variable removal_ptr;
+export variable payment;
+export variable messing_with_SkumDoor;
+export variable Neal_closing_door;
+export variable Neal_ptr;
+export variable Skul_target;
+export variable SkumDoor_ptr;
+export variable Trish_ptr;
+export variable challenger_ptr;
+export variable fight;
+export variable Saul_loses;
+export variable Saul_wins;
+export variable shot_challenger;
+
+procedure add_party;
+procedure update_party;
+procedure remove_party;
+
+variable party_elevation;
+variable dude_start_hex;
+
+export variable Ian_ptr;
+export variable Dog_ptr;
+export variable Tycho_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+
+procedure Darkness;
+procedure Invasion;
+
+variable invaderPtr;
+
+
+procedure start
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if ((script_action == 16) and (global_var(BUST_SKULZ) == 2) and (global_var(LARS_N_KILLIAN_ON_CASINO) == 1)) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+		set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+	end
+	else begin
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		//	if (map_first_run) then begin
+		//		variable Critter := 0;
+		//		Critter := create_object_sid(16777220, 0, 0, 247);  // here would be Bob, Hernandez, Vasquez
+		//		critter_attempt_placement(Critter, 21113, 0);
+		//	end
+			set_global_var(MARK_JUNK_3, 1);
+			call lighting;
+			if ((global_var(JUNKTOWN_WAS_INVADED) == 1) and (metarule(22, 0) == 0) and (map_var(11) == 0)) then begin
+				set_map_var(11, 1);
+				kill_critter_type(16777216 + 170, 1);
+				kill_critter_type(16777216 + 24, 1);
+				kill_critter_type(16777216 + 20, 1);
+				kill_critter_type(16777216 + 99, 0);
+				kill_critter_type(16777216 + 89, 0);
+				kill_critter_type(16777216 + 100, 0);
+				kill_critter_type(16777216 + 40, 1);
+				kill_critter_type(16777216 + 94, 1);
+				kill_critter_type(16777216 + 18, 1);
+				kill_critter_type(16777216 + 32, 1);
+				kill_critter_type(16777216 + 4, 1);
+				kill_critter_type(16777216 + 3, 1);
+				kill_critter_type(16777216 + 2, 1);
+				kill_critter_type(16777216 + 81, 1);
+				kill_critter_type(16777216 + 49, 1);
+				if (global_var(DOGMEAT_HIRELING_STATUS) != 1) then begin
+					kill_critter_type(16777216 + 122, 1);
+				end
+				if (global_var(TYCHO_HIRELING_STATUS) != 2) then begin
+					kill_critter_type(16777216 + 210, 1);
+				end
+				invaderPtr := create_object_sid(16777404, 0, 0, 912);
+				critter_add_trait(invaderPtr, 1, 5, 48);
+				critter_attempt_placement(invaderPtr, 24092, 0);
+				invaderPtr := create_object_sid(16777404, 0, 0, 912);
+				critter_add_trait(invaderPtr, 1, 5, 48);
+				critter_attempt_placement(invaderPtr, 22878, 0);
+			end
+			if (global_var(LOAD_MAP_INDEX) == 1) then begin
+				override_map_start(99, 94, 0, 3);
+			end
+			else begin
+				if ((global_var(LOAD_MAP_INDEX) == 4) and (metarule(22, 0) == 0)) then begin
+					gfade_in(1);
+					override_map_start(120, 87, 0, 5);
+					if (global_var(KILLIAN_DEAD) != 1) then begin
+						LVar0 := create_object_sid(16777295, 0, 0, 47);
+						critter_add_trait(LVar0, 1, 6, 0);
+						item := create_object_sid(18, 0, 0, -1);
+						critter_attempt_placement(LVar0, 17522, 0);
+						add_obj_to_inven(LVar0, item);
+					end
+					if (global_var(LARS_DEAD) != 1) then begin
+						LVar1 := create_object_sid(16777296, 0, 0, 518);
+						critter_add_trait(LVar1, 1, 6, 0);
+						item := create_object_sid(94, 0, 0, -1);
+						critter_attempt_placement(LVar1, 17323, 0);
+						add_obj_to_inven(LVar1, item);
+						item := create_object_sid(95, 0, 0, -1);
+						add_obj_to_inven(LVar1, item);
+						item := create_object_sid(100, 0, 0, -1);
+						add_obj_to_inven(LVar1, item);
+					end
+				end
+				else begin
+					if ((global_var(LOAD_MAP_INDEX) == 7) and (metarule(22, 0) == 0) and (map_var(2) == 0)) then begin
+						call Kill_Neal;
+					end
+					else begin
+						override_map_start(99, 94, 0, 5);
+					end
+				end
+			end
+			if ((global_var(DESTROY_VATS_11) != 0) and (Neal_ptr != 0)) then begin
+				if ((global_var(DESTROY_VATS_11) < (game_time / (10 * 60 * 60 * 24))) and (metarule(22, 0) == 0)) then begin
+					kill_critter(Neal_ptr, 49);
+				end
+			end
+			call add_party;
+		end
+		else begin
+			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+				call lighting;
+				if (metarule(22, 0) == 0) then begin
+					if ((global_var(GIZMO_DEAD) == 1) and (map_var(3) == 0) and (combat_is_initialized == 0) and (global_var(KILLIAN_SOMETHING_0) == 0)) then begin
+						display_msg(message_str(44, 217));
+						give_exp_points(600);
+						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
+						set_map_var(3, 1);
+						if (global_var(LOAD_MAP_INDEX) == 4) then begin
+							set_global_var(CAPTURE_GIZMO, 2);
+							set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+							load_map(10, 5);
+						end
+					end
+					if ((map_var(2) == 1) and (combat_is_initialized == 0)) then begin
+						if (map_var(0) <= 0) then begin
+							set_global_var(BUST_SKULZ, 2);
+							set_map_var(2, 2);
+							set_global_var(DESTROY_VATS_11, 0);
+							display_msg(message_str(518, 154));
+							set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+							give_exp_points(300);
+							set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+						end
+						else begin
+							if ((map_var(1) <= 0) and (global_var(IS_NEAL_DEAD) == 1)) then begin
+								set_global_var(DESTROY_VATS_13, 2);
+								set_map_var(2, 2);
+								display_msg(message_str(385, 164));
+								give_exp_points(300);
+								set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+								if (global_var(ENEMY_JUNKTOWN) == 0) then begin
+									set_global_var(ENEMY_JUNKTOWN, 1);
+									set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+								end
+							end
+						end
+					end
+					if ((global_var(DESTROY_VATS_11) != 0) and (Neal_ptr != 0)) then begin
+						if (global_var(DESTROY_VATS_11) < (game_time / (10 * 60 * 60 * 24))) then begin
+							kill_critter(Neal_ptr, 49);
+						end
+					end
+					if (removal_ptr != 0) then begin
+						destroy_object(removal_ptr);
+						removal_ptr := 0;
+					end
+				end
+				call update_party;
+			end
+			else begin
+				if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+					if (challenger_ptr != 0) then begin
+						destroy_object(challenger_ptr);
+					end
+					fight := 0;
+					Saul_wins := 0;
+					Saul_loses := 0;
+					call remove_party;
+				end
+			end
+		end
+	end
+end
+
+procedure lighting
+begin
+	variable LVar0 := 0;
+	LVar0 := game_time_hour;
+	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
+		set_light_level(LVar0 - 600 + 40);
+	end
+	else begin
+		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
+			set_light_level(100);
+		end
+		else begin
+			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
+				set_light_level(100 - (LVar0 - 1800));
+			end
+			else begin
+				set_light_level(40);
+			end
+		end
+	end
+end
+
+procedure Kill_Neal
+begin
+	variable LVar0 := 0;
+	override_map_start(81, 103, 0, 5);
+	set_map_var(2, 1);
+	LVar0 := create_object_sid(16777318, 20277, 0, 385);
+	item := create_object_sid(8, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	item := create_object_sid(74, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	item := create_object_sid(4, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	LVar0 := create_object_sid(16777240, 20476, 0, 390);
+	item := create_object_sid(8, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	item := create_object_sid(4, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	LVar0 := create_object_sid(16777315, 20279, 0, 390);
+	item := create_object_sid(4, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	LVar0 := create_object_sid(16777315, 20482, 0, 390);
+	item := create_object_sid(4, 0, 0, -1);
+	add_obj_to_inven(LVar0, item);
+	set_map_var(0, 4);
+	if (global_var(DESTROY_VATS_15) == 1) then begin
+		set_map_var(1, 4);
+		LVar0 := create_object_sid(16777218, 22083, 0, 37);
+		item := create_object_sid(8, 0, 0, -1);
+		add_obj_to_inven(LVar0, item);
+		add_timer_event(LVar0, game_ticks(2), 4);
+		LVar0 := create_object_sid(16777218, 22485, 0, 37);
+		item := create_object_sid(8, 0, 0, -1);
+		add_obj_to_inven(LVar0, item);
+		LVar0 := create_object_sid(16777218, 21082, 0, 37);
+		item := create_object_sid(7, 0, 0, -1);
+		add_obj_to_inven(LVar0, item);
+		LVar0 := create_object_sid(16777218, 22885, 0, 37);
+		item := create_object_sid(7, 0, 0, -1);
+		add_obj_to_inven(LVar0, item);
+	end
+	game_time_advance(game_ticks(60 * (60 - (game_time_hour % 100))));
+	if (game_time_hour != 300) then begin
+		if (game_time_hour < 300) then begin
+			game_time_advance(game_ticks(36 * (300 - game_time_hour)));
+		end
+		else begin
+			game_time_advance(game_ticks(36 * (2700 - game_time_hour)));
+		end
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+
+procedure Darkness
+begin
+	set_light_level(40);
+end
+
+procedure Invasion
+begin
+	if (global_var(MASTER_BLOWN) == 0) then begin
+		if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(NECROPOLIS_WAS_INVADED, 1);
+		end
+		if (global_var(THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(THE_HUB_WAS_INVADED, 1);
+		end
+		if (global_var(BROTHERHOOD_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(BROTHERHOOD_WAS_INVADED, 1);
+			set_global_var(MARK_BROTHER_2, 0);
+			set_global_var(MARK_BROTHER_3, 0);
+			set_global_var(MARK_BROTHER_4, 0);
+			set_global_var(MARK_BROTHER_5, 0);
+		end
+		if (global_var(JUNKTOWN_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(JUNKTOWN_WAS_INVADED, 1);
+		end
+		if (global_var(SHADY_SANDS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(SHADY_SANDS_WAS_INVADED, 1);
+		end
+		if (global_var(VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(VAULT_13_WAS_INVADED, 1);
+			play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+			metarule(13, 0);
+		end
+		if (global_var(FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(FOLLOWERS_INVADED, 1);
+		end
+	end
+end
+

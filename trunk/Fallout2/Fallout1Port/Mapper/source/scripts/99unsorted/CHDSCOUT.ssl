@@ -1,0 +1,474 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure talk_p_proc;//    script_action == 11
+procedure timed_event_p_proc;//    script_action == 22
+
+procedure ChdScout0;
+procedure ChdScout1;
+procedure ChdScout2;
+procedure ChdScout3;
+procedure ChdScout4;
+procedure ChdScout5;
+procedure ChdScout6;
+procedure ChdScout7;
+procedure ChdScout8;
+procedure ChdScout9;
+procedure ChdScout10;
+procedure ChdScout11;
+procedure ChdScout12;
+procedure ChdScout13;
+procedure ChdScout14;
+procedure ChdScout15;
+procedure ChdScout16;
+procedure ChdScout17;
+procedure ChdScout17a;
+procedure ChdScout18;
+procedure ChdScout19;
+procedure ChdScout20;
+procedure ChdScout21;
+procedure ChdScout22;
+procedure ChdScout23;
+procedure ChdScout24;
+procedure ChdScout25;
+procedure ChdScout26;
+procedure ChdScout27;
+procedure ChdScout28;
+procedure ChdScout29;
+procedure ChdScout30;
+procedure ChdScout31;
+procedure ChdScout32;
+procedure ChdScout33;
+procedure ChdScout34;
+procedure ChdScout35;
+procedure ChdScoutend;
+procedure combat;
+procedure to_orfeo;
+
+import variable Orfeo_ptr;
+
+variable HOSTILE;
+variable initialized := 0;
+variable in_timed_event;
+variable weaponPtr;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (not(initialized)) then begin
+		initialized := 1;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 20);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 67);
+		anim(self_obj, 1000, random(0, 5));
+		if (local_var(1) == 0) then begin
+			set_local_var(1, 1);
+			weaponPtr := create_object_sid(9, 0, 0, -1);
+			add_obj_to_inven(self_obj, weaponPtr);
+			wield_obj_critter(self_obj, weaponPtr);
+			add_obj_to_inven(self_obj, create_object_sid(29, 0, 0, -1));
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+						call timed_event_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_FOLL_INVADERS)) then begin
+		HOSTILE := 1;
+	end
+	if (HOSTILE and obj_can_see_obj(self_obj, dude_obj)) then begin
+		HOSTILE := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (not(in_timed_event)) then begin
+			in_timed_event := 1;
+			add_timer_event(self_obj, game_ticks(random(6, 10)), random(1, 3));
+		end
+		if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 6)) then begin
+			if (local_var(0) == 0) then begin
+				dialogue_system_enter;
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_FOLL_INVADERS, 1);
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(276, 100));
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	start_gdialog(276, self_obj, 4, -1, -1);
+	gsay_start;
+	if (local_var(0)) then begin
+		call ChdScout35;
+	end
+	else begin
+		set_local_var(0, 1);
+		call ChdScout0;
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		anim(self_obj, 1000, random(0, 5));
+	end
+	else begin
+		animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(self_obj), random(0, 5), random(1, 3)), 0);
+	end
+	in_timed_event := 0;
+end
+
+procedure ChdScout0
+begin
+	gsay_reply(276, 101);
+	giq_option(-3, 276, 102, ChdScout1, 50);
+	giq_option(4, 276, 103, ChdScout13, 50);
+	giq_option(4, 276, 104, ChdScout25, 50);
+	giq_option(6, 276, 105, ChdScout26, 50);
+	giq_option(6, 276, 106, ChdScout27, 50);
+end
+
+procedure ChdScout1
+begin
+	gsay_reply(276, 107);
+	giq_option(-3, 276, 108, ChdScout2, 50);
+	giq_option(-3, 276, 109, combat, 50);
+	giq_option(-3, 276, 110, ChdScout9, 50);
+end
+
+procedure ChdScout2
+begin
+	gsay_reply(276, 111);
+	giq_option(-3, 276, 112, combat, 50);
+	giq_option(-3, 276, 113, ChdScout3, 50);
+	giq_option(-3, 276, 114, ChdScout4, 50);
+end
+
+procedure ChdScout3
+begin
+	gsay_message(276, 115, 50);
+end
+
+procedure ChdScout4
+begin
+	gsay_reply(276, 116);
+	giq_option(-3, 276, 117, ChdScout5, 50);
+	giq_option(-3, 276, 118, combat, 50);
+	giq_option(-3, 276, 119, ChdScout6, 50);
+end
+
+procedure ChdScout5
+begin
+	gsay_message(276, 120, 50);
+end
+
+procedure ChdScout6
+begin
+	gsay_reply(276, 121);
+	giq_option(-3, 276, 122, ChdScout7, 50);
+	giq_option(-3, 276, 123, ChdScout5, 50);
+	giq_option(-3, 276, 124, ChdScout8, 50);
+end
+
+procedure ChdScout7
+begin
+	gsay_message(276, 125, 50);
+end
+
+procedure ChdScout8
+begin
+	gsay_message(276, 126, 50);
+end
+
+procedure ChdScout9
+begin
+	gsay_reply(276, 127);
+	giq_option(-3, 276, 128, ChdScout10, 50);
+	giq_option(-3, 276, 129, ChdScout12, 50);
+	giq_option(-3, 276, 130, ChdScoutend, 50);
+end
+
+procedure ChdScout10
+begin
+	gsay_reply(276, 131);
+	giq_option(-3, 276, 132, ChdScout11, 50);
+	giq_option(-3, 276, 133, ChdScoutend, 50);
+end
+
+procedure ChdScout11
+begin
+	gsay_message(276, 134, 50);
+end
+
+procedure ChdScout12
+begin
+	gsay_reply(276, 135);
+	giq_option(-3, 276, 136, ChdScoutend, 50);
+end
+
+procedure ChdScout13
+begin
+	gsay_reply(276, 137);
+	giq_option(4, 276, 138, ChdScout14, 50);
+	giq_option(4, 276, 139, ChdScout15, 50);
+	giq_option(4, 276, message_str(276, 140) + proto_data(obj_pid(dude_obj), 1) + message_str(276, 141), ChdScout22, 50);
+	giq_option(4, 276, 142, ChdScout24, 50);
+	giq_option(4, 276, 143, combat, 50);
+end
+
+procedure ChdScout14
+begin
+	gsay_message(276, 144, 50);
+	call to_orfeo;
+end
+
+procedure ChdScout15
+begin
+	gsay_reply(276, 145);
+	giq_option(4, 276, 146, ChdScout16, 50);
+	giq_option(4, 276, 147, ChdScout17, 50);
+end
+
+procedure ChdScout16
+begin
+	gsay_message(276, 148, 50);
+	call to_orfeo;
+end
+
+procedure ChdScout17
+begin
+	gsay_reply(276, 149);
+	giq_option(4, 276, message_str(276, 150) + proto_data(obj_pid(dude_obj), 1) + message_str(276, 151), ChdScout17a, 50);
+	giq_option(4, 276, 152, ChdScout20, 50);
+	giq_option(4, 276, 153, combat, 50);
+end
+
+procedure ChdScout17a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call ChdScout18;
+	end
+	else begin
+		call ChdScout19;
+	end
+end
+
+procedure ChdScout18
+begin
+	gsay_message(276, 154, 50);
+end
+
+procedure ChdScout19
+begin
+	gsay_message(276, 155, 50);
+	call combat;
+end
+
+procedure ChdScout20
+begin
+	gsay_reply(276, 156);
+	giq_option(4, 276, message_str(276, 157) + proto_data(obj_pid(dude_obj), 1) + message_str(276, 158), ChdScout21, 50);
+	giq_option(4, 276, 159, combat, 50);
+end
+
+procedure ChdScout21
+begin
+	gsay_message(276, 160, 50);
+	call ChdScout17a;
+end
+
+procedure ChdScout22
+begin
+	gsay_reply(276, message_str(276, 161) + proto_data(obj_pid(dude_obj), 1) + message_str(276, 162));
+	giq_option(4, 276, 163, ChdScout23, 50);
+	giq_option(4, 276, 164, ChdScout23, 50);
+	giq_option(4, 276, 165, combat, 50);
+end
+
+procedure ChdScout23
+begin
+	gsay_message(276, 166, 50);
+	call combat;
+end
+
+procedure ChdScout24
+begin
+	gsay_message(276, 167, 50);
+	call combat;
+end
+
+procedure ChdScout25
+begin
+	gsay_reply(276, 168);
+	giq_option(4, 276, 169, ChdScout14, 50);
+	giq_option(4, 276, 170, ChdScout15, 50);
+	giq_option(4, 276, message_str(276, 171) + proto_data(obj_pid(dude_obj), 1) + message_str(276, 172), ChdScout22, 50);
+	giq_option(4, 276, 173, ChdScout24, 50);
+	giq_option(4, 276, 174, combat, 50);
+end
+
+procedure ChdScout26
+begin
+	gsay_message(276, 175, 50);
+	call combat;
+end
+
+procedure ChdScout27
+begin
+	gsay_reply(276, 176);
+	giq_option(6, 276, 177, ChdScout28, 50);
+	giq_option(6, 276, 178, ChdScout29, 50);
+	giq_option(6, 276, 179, ChdScout30, 50);
+	giq_option(6, 276, 180, ChdScout34, 50);
+end
+
+procedure ChdScout28
+begin
+	gsay_message(276, 181, 50);
+end
+
+procedure ChdScout29
+begin
+	gsay_message(276, 182, 50);
+end
+
+procedure ChdScout30
+begin
+	gsay_reply(276, 183);
+	giq_option(6, 276, 184, ChdScout31, 50);
+	giq_option(6, 276, 185, ChdScout32, 50);
+	giq_option(6, 276, 186, combat, 50);
+end
+
+procedure ChdScout31
+begin
+	gsay_message(276, 187, 50);
+	call to_orfeo;
+end
+
+procedure ChdScout32
+begin
+	gsay_reply(276, 188);
+	giq_option(6, 276, 189, ChdScout33, 50);
+	giq_option(6, 276, 190, ChdScout33, 50);
+	giq_option(6, 276, 191, combat, 50);
+end
+
+procedure ChdScout33
+begin
+	gsay_reply(276, 192);
+	giq_option(6, 276, 193, ChdScoutend, 50);
+	giq_option(6, 276, 194, combat, 50);
+end
+
+procedure ChdScout34
+begin
+	gsay_message(276, 195, 50);
+	call combat;
+end
+
+procedure ChdScout35
+begin
+	gsay_message(276, 196, 50);
+	call combat;
+end
+
+procedure ChdScoutend
+begin
+end
+
+procedure combat
+begin
+	HOSTILE := 1;
+end
+
+procedure to_orfeo
+begin
+	load_map("lafollwr.map", 11);
+end
+

@@ -1,0 +1,530 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure timed_event_p_proc;//    script_action == 22
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+
+procedure Vinnie01;
+procedure Vinnie01a;
+procedure Vinnie02;
+procedure Vinnie03;
+procedure Vinnie04;
+procedure Vinnie05;
+procedure Vinnie06;
+procedure Vinnie07;
+procedure Vinnie08;
+procedure Vinnie09;
+procedure Vinnie10;
+procedure Vinnie14;
+procedure Vinnie14a;
+procedure Vinnie15;
+procedure Vinnie15a;
+procedure Vinnie16;
+procedure Vinnie17;
+procedure Vinnie18;
+procedure Vinnie19;
+procedure Vinnie20;
+procedure Vinnie21;
+procedure Vinnie22;
+procedure Vinnie23;
+procedure Vinnie24;
+procedure Vinnie25;
+procedure VinnieEnd;
+
+procedure VinnieCombat;
+procedure VinnieKillNeal;
+procedure set_sleep_time;
+procedure sleeping;
+
+import variable Neal_ptr;
+import variable removal_ptr;
+
+variable hostile;
+variable line160flag;
+variable line162flag;
+variable Vinnie_kill_Neal;
+variable moving_disabled;
+variable sleeping_disabled;
+variable sleep_time;
+variable wake_time;
+variable night_person;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+				call map_enter_p_proc;
+			end
+			else begin
+				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+					call look_at_p_proc;
+				end
+				else begin
+					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+						call pickup_p_proc;
+					end
+					else begin
+						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+							call talk_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		game_ui_enable;
+		if (map_var(1) != 0) then begin
+			set_global_var(DUDE_ENEMY_SKULZ, 1);
+			float_msg(self_obj, message_str(385, 162), 2);
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+		else begin
+			attack_complex(Neal_ptr, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(DUDE_ENEMY_SKULZ) == 1) then begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (cur_map_index == 11) and (line160flag == 0) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+			float_msg(self_obj, message_str(385, 160), 2);
+			game_ui_disable;
+			add_timer_event(self_obj, game_ticks(2), 1);
+			line160flag := 1;
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	if (cur_map_index == 11) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		set_map_var(0, (map_var(0) - 1));
+	end
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(DUDE_ENEMY_SKULZ, 1);
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (local_var(0)) then begin
+		display_msg(message_str(385, 100));
+	end
+	else begin
+		display_msg(message_str(385, 101));
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	call set_sleep_time;
+	critter_add_trait(self_obj, 1, 6, 14);
+	critter_add_trait(self_obj, 1, 5, 59);
+	if ((global_var(BUST_SKULZ) == 2) or ((cur_map_index == 11) and (global_var(IS_NEAL_DEAD) == 1))) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		move_to(self_obj, 7000, 0);
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		removal_ptr := self_obj;
+	end
+end
+
+procedure pickup_p_proc
+begin
+	hostile := 1;
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (global_var(DESTROY_VATS_13) == 2) then begin
+		float_msg(self_obj, message_str(385, 171), 4);
+	end
+	else begin
+		if (global_var(IS_NEAL_DEAD) == 1) then begin
+			float_msg(self_obj, message_str(385, 170), 2);
+		end
+		else begin
+			start_gdialog(385, self_obj, 4, -1, -1);
+			gsay_start;
+			if (global_var(DESTROY_VATS_13) == 1) then begin
+				call Vinnie24;
+			end
+			else begin
+				if (local_var(2) == 1) then begin
+					call Vinnie19;
+				end
+				else begin
+					if (local_var(0) == 1) then begin
+						call Vinnie10;
+					end
+					else begin
+						call Vinnie01;
+					end
+				end
+			end
+			gsay_end;
+			end_dialogue;
+		end
+	end
+	if (local_var(1) == 1) then begin
+		display_msg(message_str(385, 163));
+		give_exp_points(400);
+		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		set_local_var(1, 2);
+		if (global_var(IS_NEAL_DEAD) == 0) then begin
+			set_global_var(DESTROY_VATS_11, (game_time / (10 * 60 * 60 * 24)) + 2);
+		end
+	end
+	if (Vinnie_kill_Neal) then begin
+		Vinnie_kill_Neal := 0;
+		load_map(11, 7);
+	end
+	if ((global_var(DESTROY_VATS_11) > (game_time / (10 * 60 * 60 * 24))) and (global_var(IS_NEAL_DEAD) == 0)) then begin
+		float_msg(self_obj, message_str(385, 159), 4);
+	end
+end
+
+procedure Vinnie01
+begin
+	set_local_var(0, 1);
+	gsay_reply(385, 103);
+	giq_option(4, 385, 104, Vinnie02, 50);
+	giq_option(4, 385, 105, Vinnie03, 50);
+	if (global_var(DESTROY_VATS_10) == 1) then begin
+		giq_option(4, 385, 102, Vinnie01a, 50);
+	end
+	giq_option(-3, 385, 106, Vinnie04, 50);
+end
+
+procedure Vinnie01a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Vinnie14;
+	end
+	else begin
+		call Vinnie15;
+	end
+end
+
+procedure Vinnie02
+begin
+	gsay_message(385, 107, 51);
+end
+
+procedure Vinnie03
+begin
+	gsay_reply(385, 108);
+	giq_option(4, 385, 109, VinnieEnd, 50);
+	giq_option(4, 385, 110, Vinnie06, 50);
+	giq_option(6, 385, 111, Vinnie05, 50);
+end
+
+procedure Vinnie04
+begin
+	gsay_message(385, 112, 50);
+end
+
+procedure Vinnie05
+begin
+	gsay_reply(385, 113);
+	giq_option(4, 385, 114, VinnieEnd, 50);
+	giq_option(6, 385, 115, Vinnie07, 50);
+end
+
+procedure Vinnie06
+begin
+	gsay_message(385, 116, 51);
+	call VinnieCombat;
+end
+
+procedure Vinnie07
+begin
+	gsay_reply(385, 117);
+	giq_option(4, 385, 118, VinnieEnd, 50);
+	giq_option(6, 385, 119, Vinnie08, 50);
+end
+
+procedure Vinnie08
+begin
+	gsay_reply(385, 120);
+	giq_option(4, 385, 121, VinnieEnd, 50);
+	if (global_var(HIRED_BY_GIZMO)) then begin
+		giq_option(6, 385, 122, Vinnie09, 50);
+	end
+end
+
+procedure Vinnie09
+begin
+	gsay_message(385, 123, 50);
+end
+
+procedure Vinnie10
+begin
+	gsay_reply(385, 126);
+	giq_option(4, 385, 127, VinnieEnd, 50);
+	if (global_var(DESTROY_VATS_10) == 1) then begin
+		giq_option(4, 385, 102, Vinnie01a, 50);
+	end
+end
+
+procedure Vinnie14
+begin
+	gsay_reply(385, 131);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 385, 132, VinnieCombat, 51);
+	end
+	giq_option(4, 385, 133, Vinnie16, 50);
+	giq_option(4, 385, 134, Vinnie14a, 50);
+end
+
+procedure Vinnie14a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Vinnie16;
+	end
+	else begin
+		call Vinnie15;
+	end
+end
+
+procedure Vinnie15
+begin
+	gsay_reply(385, 135);
+	giq_option(4, 385, 136, Vinnie15a, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 385, 137, VinnieCombat, 51);
+	end
+	giq_option(4, 385, 138, VinnieEnd, 50);
+	giq_option(4, 385, 139, Vinnie03, 50);
+end
+
+procedure Vinnie15a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Vinnie16;
+	end
+	else begin
+		call Vinnie04;
+	end
+end
+
+procedure Vinnie16
+begin
+	gsay_reply(385, 140);
+	if (global_var(IS_NEAL_DEAD) == 1) then begin
+		giq_option(4, 385, 145, Vinnie22, 49);
+	end
+	else begin
+		if (global_var(DESTROY_VATS_14) == 1) then begin
+			giq_option(4, 385, 144, Vinnie19, 49);
+		end
+		else begin
+			giq_option(4, 385, 141, Vinnie17, 50);
+		end
+	end
+	giq_option(4, 385, 142, Vinnie18, 51);
+	giq_option(4, 385, 143, Vinnie04, 51);
+end
+
+procedure Vinnie17
+begin
+	set_local_var(2, 1);
+	gsay_message(385, 146, 49);
+end
+
+procedure Vinnie18
+begin
+	gsay_message(385, 147, 51);
+end
+
+procedure Vinnie19
+begin
+	gsay_reply(385, 148);
+	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, 112)) then begin
+		giq_option(4, 385, 149, Vinnie20, 49);
+	end
+	else begin
+		giq_option(4, 385, 150, Vinnie21, 51);
+	end
+	if (global_var(IS_NEAL_DEAD) == 1) then begin
+		giq_option(4, 385, 151, Vinnie22, 49);
+	end
+end
+
+procedure Vinnie20
+begin
+	set_local_var(2, 0);
+	if (local_var(1) == 0) then begin
+		set_local_var(1, 1);
+	end
+	if (global_var(IS_NEAL_DEAD) == 1) then begin
+		call Vinnie22;
+	end
+	else begin
+		set_global_var(DESTROY_VATS_11, (game_time / (10 * 60 * 60 * 24)) + 2);
+		gsay_reply(385, 152);
+		giq_option(4, 385, 153, Vinnie06, 51);
+		giq_option(4, 385, 154, VinnieKillNeal, 49);
+		giq_option(5, 385, 155, Vinnie23, 50);
+	end
+end
+
+procedure Vinnie21
+begin
+	gsay_message(385, 156, 51);
+end
+
+procedure Vinnie22
+begin
+	set_local_var(2, 0);
+	set_global_var(DESTROY_VATS_13, 2);
+	gsay_message(385, 157, 49);
+end
+
+procedure Vinnie23
+begin
+	set_global_var(DESTROY_VATS_13, 1);
+	gsay_message(385, 158, 50);
+end
+
+procedure Vinnie24
+begin
+	gsay_reply(385, 165);
+	giq_option(4, 385, 166, VinnieKillNeal, 49);
+	giq_option(4, 385, 167, Vinnie23, 50);
+	giq_option(4, 385, 168, Vinnie25, 51);
+end
+
+procedure Vinnie25
+begin
+	gsay_message(385, 169, 51);
+	call VinnieCombat;
+end
+
+procedure VinnieEnd
+begin
+end
+
+procedure VinnieCombat
+begin
+	hostile := 1;
+end
+
+procedure VinnieKillNeal
+begin
+	set_global_var(DESTROY_VATS_13, 2);
+	Vinnie_kill_Neal := 1;
+end
+
+procedure set_sleep_time
+begin
+	if (cur_map_index == 12) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+		sleep_time := random(2200, 2215);
+		wake_time := random(800, 815);
+	end
+	else begin
+		if (cur_map_index == 11) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+			sleep_time := 300;
+			wake_time := 1600;
+			night_person := 1;
+		end
+		else begin
+			if (cur_map_index == 10) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+				sleep_time := 2200;
+				wake_time := 1000;
+			end
+		end
+	end
+end
+
+procedure sleeping
+begin
+	if (local_var(4) == 1) then begin
+		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
+				set_local_var(4, 0);
+			end
+		end
+	end
+	else begin
+		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
+				set_local_var(4, 1);
+			end
+		end
+	end
+end
+

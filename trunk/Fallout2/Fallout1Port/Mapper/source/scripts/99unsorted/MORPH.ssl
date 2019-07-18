@@ -1,0 +1,1038 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure damage_p_proc;//    script_action == 14
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+
+procedure morphend;
+procedure morphcbt;
+procedure morph02;
+procedure morph02a;
+procedure morph02_1;
+procedure morph02_2;
+procedure morph02_3;
+procedure morph03;
+procedure morph03_1;
+procedure morph03_2;
+procedure morph04;
+procedure morph04a;
+procedure morph05;
+procedure morph06;
+procedure morph07;
+procedure morph07_1;
+procedure morph08;
+procedure morph09;
+procedure morph10;
+procedure morph10_1;
+procedure morph11;
+procedure morph12;
+procedure morph13;
+procedure morph14;
+procedure morph15;
+procedure morph16;
+procedure morph17;
+procedure morph18;
+procedure morph18_1;
+procedure morph18_2;
+procedure morph19;
+procedure morph20;
+procedure morph21;
+procedure morph23;
+procedure morph24;
+procedure morph26;
+procedure morph27;
+procedure morph27_1;
+procedure morph28;
+procedure morph29;
+procedure morph30;
+procedure morph31;
+procedure morph32;
+procedure morph33;
+procedure morph33_1;
+procedure morph34;
+procedure morph35;
+procedure morph36;
+procedure morph37;
+procedure morph38;
+procedure morph39;
+procedure morph39_1;
+procedure morph40;
+procedure morph41;
+procedure morph42;
+procedure morph42a;
+procedure morph42a_1;
+procedure morph42b;
+procedure morph42c;
+procedure morph45;
+procedure morph46;
+procedure morph47;
+procedure morph48;
+procedure morph49;
+procedure morph50;
+procedure morph51;
+procedure morph52;
+procedure morph53;
+procedure morph54;
+procedure morph55;
+procedure morph56;
+procedure morph57;
+procedure morph58;
+procedure morph59;
+procedure morph60;
+procedure morph61;
+procedure morph62;
+procedure morph63;
+procedure morph64;
+procedure morph65;
+procedure morphx;
+procedure morphx2;
+procedure morphx4;
+procedure morph66;
+procedure morph05a;
+procedure morph08a;
+procedure morph32a;
+procedure morph39a;
+procedure morph05b;
+
+import variable Master_Ptr;
+
+variable MALE;
+variable ONTHEJOB;
+variable DESTROYED;
+variable LIED;
+variable ONCEBEFORE;
+variable TRESPASS;
+variable Signal_wait;
+variable deliver_player;
+variable Only_Once := 1;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		if (cur_map_index == 18) then begin //  CATHEDRAL - LEVEL 2 AND HIGHER
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 20);
+		end
+		else begin
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 55);
+		end
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 82);
+	end
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		call talk_p_proc;
+	end
+	else begin
+		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+			script_overrides;
+			display_msg(message_str(53, 100));
+		end
+		else begin
+			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+				if (fixed_param == 1) then begin
+					if (obj_can_see_obj(self_obj, dude_obj)) then begin
+						dialogue_system_enter;
+					end
+					else begin
+						Signal_wait := 0;
+					end
+				end
+				else begin
+					if ((fixed_param == 2) and not(combat_is_initialized)) then begin
+						if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+					end
+				end
+			end
+			else begin
+				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+					call destroy_p_proc;
+				end
+				else begin
+					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+						set_local_var(5, 2);
+					end
+					else begin
+						if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+							call damage_p_proc;
+						end
+						else begin
+							if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 200) then begin
+									destroy_object(self_obj);
+								end
+								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 3) then begin
+									if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+								end
+								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 1) then begin
+									set_global_var(MORPHEUS_DELIVERS_PLAYER, 2);
+									add_timer_event(Master_Ptr, game_ticks(5), 1);
+									add_timer_event(self_obj, game_ticks(5), 2);
+									dialogue_system_enter;
+								end
+								if (local_var(5) == 2) then begin
+									set_local_var(5, 1);
+									attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+								end
+								if (tile_num(self_obj) == 23457) then begin
+									if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	MALE := get_critter_stat(dude_obj, 34) == 0;
+	if (local_var(5) != 0) then begin
+		float_msg(self_obj, message_str(766, 172), 2);
+		call morphcbt;
+	end
+	else begin
+		if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
+			call morph66;
+			animate_move_obj_to_tile(self_obj, 23457, 0);
+		end
+		else begin
+			if (Signal_wait) then begin
+				Signal_wait := 0;
+				call morph04a;
+			end
+			else begin
+				if (cur_map_index == 17) then begin //  CATHEDRAL - OUTSIDE AND GROUND FLOOR
+					start_gdialog(53, self_obj, 4, 2, 8);
+					gsay_start;
+					call morph28;
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					if (global_var(MORPHEUS_DELIVERS_PLAYER) == 3) then begin
+						float_msg(self_obj, message_str(766, 171), 2);
+					end
+					else begin
+						start_gdialog(53, self_obj, 4, 2, 8);
+						gsay_start;
+						call morph02;
+						gsay_end;
+						end_dialogue;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure morphend
+begin
+end
+
+procedure morphcbt
+begin
+	set_local_var(5, 2);
+end
+
+procedure morph02
+begin
+	gsay_reply(53, 101);
+	giq_option(4, 53, 102, morph02_1, 50);
+	giq_option(5, 53, 103, morph02_3, 50);
+	giq_option(4, 53, message_str(53, 104) + proto_data(obj_pid(dude_obj), 1) + message_str(53, 105), morph27, 50);
+	giq_option(4, 53, 106, morph06, 51);
+	giq_option(-3, 53, 107, morph02a, 50);
+end
+
+procedure morph02a
+begin
+	gsay_message(53, 108, 51);
+	call morphcbt;
+end
+
+procedure morph02_1
+begin
+	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+		call morph02_2;
+	end
+	else begin
+		call morph06;
+	end
+end
+
+procedure morph02_2
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call morph03;
+	end
+	else begin
+		call morph06;
+	end
+end
+
+procedure morph02_3
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call morph07;
+	end
+	else begin
+		call morph26;
+	end
+end
+
+procedure morph03
+begin
+	gsay_reply(53, 109);
+	giq_option(4, 53, 110, morph03_1, 50);
+	giq_option(5, 53, 111, morph03_2, 50);
+	giq_option(4, 53, 112, morph23, 50);
+	giq_option(4, 53, 113, morph24, 51);
+	giq_option(4, 53, 114, morph06, 50);
+end
+
+procedure morph03_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call morph04;
+	end
+	else begin
+		call morph05;
+	end
+end
+
+procedure morph03_2
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -20))) then begin
+		call morph04;
+	end
+	else begin
+		call morph05;
+	end
+end
+
+procedure morph04
+begin
+	gsay_message(53, 115, 50);
+	call morphx;
+end
+
+procedure morph04a
+begin
+	float_msg(self_obj, message_str(53, 116), 7);
+	call morphcbt;
+end
+
+procedure morph05
+begin
+	gsay_reply(53, 117);
+	giq_option(4, 53, 118, morph05a, 51);
+	giq_option(4, 53, 119, morph05b, 50);
+	giq_option(4, 53, 120, morph06, 51);
+end
+
+procedure morph06
+begin
+	gsay_message(53, 121, 51);
+	call morphcbt;
+end
+
+procedure morph07
+begin
+	gsay_reply(53, 122);
+	giq_option(4, 53, 123, morph08, 50);
+	giq_option(4, 53, 124, morph16, 50);
+	giq_option(6, 53, 125, morph07_1, 50);
+end
+
+procedure morph07_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call morph20;
+	end
+	else begin
+		call morph21;
+	end
+end
+
+procedure morph08
+begin
+	gsay_reply(53, 126);
+	giq_option(5, 53, 127, morph08a, 50);
+	giq_option(4, 53, 128, morph12, 50);
+	giq_option(5, 53, 129, morph14, 50);
+end
+
+procedure morph09
+begin
+	gsay_reply(53, 130);
+	giq_option(5, 53, 131, morph10, 50);
+	giq_option(5, 53, 132, morph10, 50);
+	giq_option(4, 53, 133, morph06, 51);
+	giq_option(4, 53, 134, morph11, 51);
+end
+
+procedure morph10
+begin
+	gsay_reply(53, 135);
+	giq_option(4, 53, 136, morph11, 51);
+	giq_option(4, 53, 137, morph12, 50);
+	giq_option(4, 53, 138, morph10_1, 50);
+end
+
+procedure morph10_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		set_local_var(1, 2);
+		call morph13;
+	end
+	else begin
+		call morph11;
+	end
+end
+
+procedure morph11
+begin
+	gsay_message(53, 139, 51);
+	call morphcbt;
+end
+
+procedure morph12
+begin
+	gsay_reply(53, 140);
+	giq_option(4, 53, 141, morphx2, 50);
+	giq_option(4, 53, 142, morphcbt, 51);
+end
+
+procedure morph13
+begin
+	gsay_message(53, 143, 50);
+	call morphx2;
+end
+
+procedure morph14
+begin
+	gsay_reply(53, 144);
+	giq_option(4, 53, 145, morph12, 50);
+	giq_option(4, 53, 146, morph11, 51);
+	giq_option(4, 53, 147, morph15, 51);
+end
+
+procedure morph15
+begin
+	gsay_message(53, 148, 51);
+	call morphcbt;
+end
+
+procedure morph16
+begin
+	gsay_reply(53, 149);
+	giq_option(4, 53, 150, morph17, 50);
+	giq_option(4, 53, 151, morph17, 50);
+end
+
+procedure morph17
+begin
+	gsay_reply(53, 152);
+	giq_option(4, 53, 153, morph18, 50);
+	giq_option(4, 53, 154, morph18, 50);
+end
+
+procedure morph18
+begin
+	gsay_reply(53, 155);
+	giq_option(4, 53, 156, morph18_1, 50);
+	giq_option(4, 53, 157, morph18_2, 50);
+end
+
+procedure morph18_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -5))) then begin
+		call morph19;
+	end
+	else begin
+		call morph15;
+	end
+end
+
+procedure morph18_2
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -15))) then begin
+		call morph12;
+	end
+	else begin
+		call morph15;
+	end
+end
+
+procedure morph19
+begin
+	gsay_reply(53, 158);
+	giq_option(4, 53, 159, morphcbt, 51);
+	giq_option(4, 53, 160, morphx2, 50);
+end
+
+procedure morph20
+begin
+	gsay_message(53, 161, 51);
+	call morphcbt;
+end
+
+procedure morph21
+begin
+	gsay_reply(53, 162);
+	giq_option(4, 53, 163, morph08, 50);
+	giq_option(4, 53, 164, morph16, 50);
+end
+
+procedure morph23
+begin
+	gsay_reply(53, 165);
+	giq_option(4, 53, 166, morph12, 50);
+	giq_option(4, 53, 167, morph16, 50);
+	giq_option(4, 53, 168, morph11, 51);
+	giq_option(4, 53, 169, morph15, 51);
+end
+
+procedure morph24
+begin
+	gsay_reply(53, 170);
+	giq_option(4, 53, 171, morphcbt, 51);
+	giq_option(7, 53, 172, morphcbt, 51);
+	giq_option(4, 53, 173, morphcbt, 51);
+end
+
+procedure morph26
+begin
+	gsay_reply(53, 174);
+	giq_option(4, 53, 175, morph12, 50);
+	giq_option(5, 53, 176, morph16, 50);
+	giq_option(4, 53, 177, morph11, 51);
+	giq_option(4, 53, 178, morph15, 51);
+end
+
+procedure morph27
+begin
+	gsay_reply(53, 179);
+	giq_option(4, 53, 180, morph02_1, 50);
+	giq_option(4, 53, 181, morph27_1, 50);
+end
+
+procedure morph27_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -20))) then begin
+		call morph07;
+	end
+	else begin
+		call morph06;
+	end
+end
+
+procedure morph28
+begin
+	gsay_reply(53, 182);
+	giq_option(5, 53, 183, morph29, 50);
+	giq_option(4, 53, 184, morphend, 50);
+	giq_option(-3, 53, 185, morph42c, 50);
+end
+
+procedure morph29
+begin
+	gsay_reply(53, 186);
+	giq_option(4, 53, 187, morph30, 50);
+	giq_option(4, 53, 188, morphend, 50);
+end
+
+procedure morph30
+begin
+	gsay_reply(0, 0);
+	giq_option(4, 53, 189, morph31, 50);
+	giq_option(4, 53, 190, morphend, 50);
+	giq_option(4, 53, 191, morph42a, 50);
+end
+
+procedure morph31
+begin
+	gsay_reply(53, 192);
+	giq_option(4, 53, 193, morph32, 50);
+	giq_option(4, 53, 194, morph39, 50);
+end
+
+procedure morph32
+begin
+	gsay_reply(53, 195);
+	giq_option(4, 53, 196, morph32a, 51);
+	giq_option(4, 53, 197, morph38, 50);
+end
+
+procedure morph33
+begin
+	gsay_reply(53, 198);
+	giq_option(4, 53, 199, morph34, 50);
+	giq_option(4, 53, 200, morph33_1, 50);
+end
+
+procedure morph33_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -5))) then begin
+		call morph35;
+	end
+	else begin
+		call morph37;
+	end
+end
+
+procedure morph34
+begin
+	gsay_message(53, 201, 50);
+	call morphx4;
+end
+
+procedure morph35
+begin
+	gsay_reply(53, 202);
+	giq_option(4, 53, 203, morph36, 50);
+	giq_option(4, 53, 204, morphend, 50);
+end
+
+procedure morph36
+begin
+	gsay_message(53, 205, 50);
+	call morph30;
+end
+
+procedure morph37
+begin
+	gsay_message(53, 206, 49);
+	call morphx4;
+end
+
+procedure morph38
+begin
+	gsay_reply(53, 207);
+	giq_option(4, 53, 208, morph36, 50);
+	giq_option(4, 53, 209, morphend, 50);
+end
+
+procedure morph39
+begin
+	gsay_reply(53, 210);
+	giq_option(4, 53, 211, morph39a, 51);
+	giq_option(4, 53, 212, morph39_1, 50);
+end
+
+procedure morph39_1
+begin
+end
+
+procedure morph40
+begin
+	gsay_message(53, 213, 50);
+	call morph30;
+end
+
+procedure morph41
+begin
+	gsay_reply(53, 214);
+	giq_option(4, 53, 215, morph30, 50);
+	giq_option(4, 53, 216, morphend, 50);
+end
+
+procedure morph42
+begin
+	gsay_reply(53, 217);
+	giq_option(4, 53, 218, morph36, 50);
+	giq_option(4, 53, 219, morphend, 50);
+end
+
+procedure morph42a
+begin
+	gsay_reply(53, 220);
+	giq_option(4, 53, 221, morph42a_1, 50);
+end
+
+procedure morph42a_1
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call morph42b;
+	end
+	else begin
+		call morph42c;
+	end
+end
+
+procedure morph42b
+begin
+	gsay_message(53, 222, 50);
+	call morphx2;
+end
+
+procedure morph42c
+begin
+	gsay_message(53, 223, 50);
+	call morphx4;
+end
+
+procedure morph45
+begin
+	gsay_message(53, 224, 50);
+end
+
+procedure morph46
+begin
+	gsay_message(53, 225, 50);
+end
+
+procedure morph47
+begin
+	gsay_message(53, 226, 50);
+end
+
+procedure morph48
+begin
+	gsay_message(53, 227, 50);
+end
+
+procedure morph49
+begin
+	gsay_message(53, 228, 50);
+end
+
+procedure morph50
+begin
+	gsay_message(53, 229, 50);
+end
+
+procedure morph51
+begin
+	gsay_message(53, 230, 50);
+end
+
+procedure morph52
+begin
+	gsay_message(53, 231, 50);
+end
+
+procedure morph53
+begin
+	gsay_message(53, 232, 50);
+end
+
+procedure morph54
+begin
+	gsay_message(53, 233, 50);
+end
+
+procedure morph55
+begin
+	gsay_message(53, 234, 50);
+end
+
+procedure morph56
+begin
+	gsay_message(53, 235, 50);
+end
+
+procedure morph57
+begin
+	gsay_message(53, 236, 50);
+end
+
+procedure morph58
+begin
+	gsay_message(53, 237, 50);
+end
+
+procedure morph59
+begin
+	gsay_message(53, 238, 50);
+end
+
+procedure morph60
+begin
+	gsay_message(53, 239, 50);
+end
+
+procedure morph61
+begin
+	gsay_message(53, 240, 50);
+end
+
+procedure morph62
+begin
+	gsay_message(53, 241, 50);
+end
+
+procedure morph63
+begin
+	gsay_message(53, 242, 50);
+end
+
+procedure morph64
+begin
+	gsay_message(53, 243, 50);
+end
+
+procedure morph65
+begin
+	gsay_message(53, 244, 50);
+end
+
+procedure morphx
+begin
+	Signal_wait := 1;
+	add_timer_event(self_obj, game_ticks(15), 1);
+end
+
+procedure morphx2
+begin
+	deliver_player := 1;
+	set_global_var(MORPHEUS_DELIVERS_PLAYER, 100);
+	set_global_var(PREVENT_REVULSION_DAMAGE, 1);
+	load_map("mstrlr34.map", 12);
+end
+
+procedure morphx4
+begin
+end
+
+procedure morph66
+begin
+	float_msg(self_obj, message_str(53, 245), 2);
+end
+
+procedure morph05a
+begin
+	call DownReact;
+	call morph06;
+end
+
+procedure morph08a
+begin
+	call DownReact;
+	call morph09;
+end
+
+procedure morph32a
+begin
+	call DownReact;
+	call morph33;
+end
+
+procedure morph39a
+begin
+	call DownReact;
+	call morph33;
+end
+
+procedure morph05b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call morph07;
+	end
+	else begin
+		call morph26;
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+ 
+procedure damage_p_proc
+begin
+set_local_var(5, 1); 
+end
+
+procedure destroy_p_proc
+begin
+	display_msg(message_str(53, 500));
+	give_exp_points(1000);
+	set_global_var(MORPHEUS_DELIVERS_PLAYER, 200);
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+	rm_timer_event(self_obj);
+end
+

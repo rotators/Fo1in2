@@ -1,0 +1,65 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_enter_p_proc;//    script_action == 15
+//procedure map_update_p_proc;//    script_action == 23
+procedure use_p_proc;//    script_action == 6
+procedure use_skill_on_p_proc;//    script_action == 8
+
+import variable BitsBob_Dialog_Ptr;
+import variable BitsBob_Ptr;
+import variable BitsBob_Stand_Ptr;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 8) then begin//<-- use_skill_on_p_proc
+				call use_skill_on_p_proc;
+			end
+//			else begin
+//				if (script_action == 23) then begin
+//					call map_update_p_proc;
+//				end
+//			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	BitsBob_Stand_Ptr := self_obj;
+//	if not(global_var(BITS_BOB_IN_JAIL)) then begin
+		BitsBob_Dialog_Ptr := 0;
+//	end
+end
+
+//procedure map_update_p_proc
+//begin
+//end
+
+procedure use_p_proc
+begin
+	if not(global_var(BITS_BOB_IN_JAIL)) then begin
+		script_overrides;
+		BitsBob_Dialog_Ptr := 1;
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 10) then begin//-- STEAL
+		if not(global_var(BITS_BOB_IN_JAIL)) then begin
+			script_overrides;
+			BitsBob_Dialog_Ptr := 1;
+		end
+	end
+end
+

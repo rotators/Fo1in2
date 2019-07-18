@@ -1,0 +1,627 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+
+procedure ChildEnd;
+procedure child_heal;
+procedure child_pois;
+procedure Child00;
+procedure Child01;
+procedure Child02;
+procedure Child03;
+procedure Child04;
+procedure Child04a;
+procedure Child05;
+procedure Child05a;
+procedure Child05b;
+procedure Child06;
+procedure Child07;
+procedure Child08;
+procedure Child09;
+procedure Child09a;
+procedure Child10;
+procedure Child11;
+procedure Child12;
+procedure Child13;
+procedure Child14;
+procedure Child15;
+procedure Child16;
+procedure Child17;
+procedure flee_dude;
+procedure sleeping;
+
+variable night_person;
+variable wake_time;
+variable sleep_time;
+variable home_tile;
+variable sleep_tile;
+variable initialized := 0;
+variable scared;
+variable cost;
+variable hp_injured;
+variable healing_cost;
+variable poison_cost;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+				call map_enter_p_proc;
+			end
+			else begin
+				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+					call pickup_p_proc;
+				end
+				else begin
+					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+						call talk_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (scared and (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(4) == 0)) then begin
+		call flee_dude;
+	end
+	else begin
+		call sleeping;
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if (global_var(JUNKTOWN_WAS_INVADED) == 1) then begin
+		destroy_object(self_obj);
+	end
+	wake_time := 700;
+	sleep_time := 1900;
+	critter_add_trait(self_obj, 1, 6, 20);
+	if (local_var(6) == 0) then begin
+		set_local_var(6, tile_num(self_obj));
+	end
+	home_tile := local_var(6);
+	sleep_tile := 15275;
+	if ((game_time / (10 * 60 * 60 * 24)) < 80) then begin
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	end
+	else begin
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if ((game_time / (10 * 60 * 60 * 24)) < 80) then begin
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	end
+	else begin
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+	end
+end
+
+procedure pickup_p_proc
+begin
+	scared := 1;
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (scared) then begin
+		float_msg(self_obj, message_str(108, 145), 2);
+	end
+	else begin
+		if (local_var(5) == 0) then begin
+			start_gdialog(108, self_obj, 4, -1, -1);
+			gsay_start;
+			call Child00;
+			gsay_end;
+			end_dialogue;
+		end
+	end
+end
+
+procedure ChildEnd
+begin
+end
+
+procedure child_heal
+begin
+	game_time_advance(game_ticks(600 * hp_injured));
+	critter_heal(dude_obj, hp_injured);
+	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+end
+
+procedure child_pois
+begin
+	if (get_critter_stat(dude_obj, 36) != 0) then begin
+		game_time_advance(game_ticks(1800));
+	end
+	poison(dude_obj, -get_critter_stat(dude_obj, 36));
+end
+
+procedure Child00
+begin
+	gsay_reply(108, 100);
+	giq_option(4, 108, 101, Child04, 50);
+	giq_option(5, 108, 102, Child11, 50);
+	if ((map_var(2) == 1) and (local_var(7) == 0)) then begin
+		giq_option(5, 108, 103, Child15, 50);
+	end
+	giq_option(-3, 108, 104, Child01, 50);
+end
+
+procedure Child01
+begin
+	gsay_message(108, 105, 50);
+	if (get_critter_stat(dude_obj, 35) < get_critter_stat(dude_obj, 7)) then begin
+		call child_heal;
+		call Child03;
+	end
+	else begin
+		call Child02;
+	end
+end
+
+procedure Child02
+begin
+	gsay_message(108, 106, 50);
+end
+
+procedure Child03
+begin
+	critter_heal(dude_obj, get_critter_stat(dude_obj, 7));
+	poison(dude_obj, -get_critter_stat(dude_obj, 36));
+	gsay_message(108, 107, 50);
+end
+
+procedure Child04
+begin
+	if (local_var(1) == 3) then begin
+		healing_cost := 5;
+		poison_cost := 12;
+	end
+	else begin
+		if (local_var(1) == 1) then begin
+			healing_cost := 20;
+			poison_cost := 50;
+		end
+		else begin
+			healing_cost := 10;
+			poison_cost := 25;
+		end
+	end
+	hp_injured := get_critter_stat(dude_obj, 7) - get_critter_stat(dude_obj, 35);
+	cost := hp_injured * healing_cost;
+	if (get_critter_stat(dude_obj, 36) != 0) then begin
+		cost := cost + poison_cost;
+	end
+	if (hp_injured > 0) then begin
+		gsay_message(108, 108, 50);
+	end
+	if (get_critter_stat(dude_obj, 36) != 0) then begin
+		gsay_message(108, 109, 50);
+	end
+	if (get_critter_stat(dude_obj, 37) > 50) then begin
+		gsay_message(108, 110, 50);
+	end
+	if (cost > 0) then begin
+		gsay_reply(108, message_str(108, 111) + cost + message_str(108, 112));
+		giq_option(4, 108, 113, Child04a, 50);
+		giq_option(4, 108, 114, ChildEnd, 50);
+		giq_option(4, 108, 115, Child09, 50);
+		giq_option(4, 108, message_str(108, 116) + (cost * 0.75000) + message_str(108, 117), Child05, 50);
+	end
+	else begin
+		gsay_message(108, 146, 50);
+	end
+end
+
+procedure Child04a
+begin
+	if (cost > item_caps_total(dude_obj)) then begin
+		call Child08;
+	end
+	else begin
+		call Child06;
+	end
+end
+
+procedure Child05
+begin
+	gsay_reply(108, 118);
+	giq_option(4, 108, 119, Child05a, 50);
+	giq_option(4, 108, 120, Child05b, 51);
+end
+
+procedure Child05a
+begin
+	if (cost > item_caps_total(dude_obj)) then begin
+		call Child08;
+	end
+	else begin
+		call Child06;
+	end
+end
+
+procedure Child05b
+begin
+	set_local_var(5, 1);
+	call ChildEnd;
+end
+
+procedure Child06
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(108, 121);
+	end
+	else begin
+		gsay_reply(108, 122);
+	end
+	giq_option(0, 634, 106, Child07, 50);
+end
+
+procedure Child07
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	item_caps_adjust(dude_obj, -cost);
+	call child_heal;
+	call child_pois;
+	gfade_in(1);
+	gsay_message(108, 123, 50);
+end
+
+procedure Child08
+begin
+	if (item_caps_total(dude_obj) > 0) then begin
+		cost := item_caps_total(dude_obj);
+	end
+	gsay_reply(108, 124);
+	if (item_caps_total(dude_obj) > 0) then begin
+		giq_option(4, 108, 125, Child06, 50);
+	end
+	giq_option(4, 108, 129, ChildEnd, 50);
+end
+
+procedure Child09
+begin
+	if (item_caps_total(dude_obj) > 0) then begin
+		cost := item_caps_total(dude_obj);
+	end
+	gsay_reply(108, 127);
+	if (item_caps_total(dude_obj) > 0) then begin
+		giq_option(4, 108, 128, Child09a, 50);
+	end
+	giq_option(4, 108, 129, ChildEnd, 50);
+end
+
+procedure Child09a
+begin
+	if (cost > item_caps_total(dude_obj)) then begin
+		call Child06;
+	end
+	else begin
+		call Child10;
+	end
+end
+
+procedure Child10
+begin
+	gsay_reply(108, 130);
+	giq_option(0, 634, 106, Child06, 50);
+end
+
+procedure Child11
+begin
+	gsay_reply(108, 131);
+	giq_option(4, 108, 132, ChildEnd, 50);
+	giq_option(4, 108, 133, Child12, 50);
+end
+
+procedure Child12
+begin
+	gsay_reply(108, 134);
+	giq_option(4, 108, 135, Child14, 50);
+	giq_option(4, 108, 136, Child13, 50);
+end
+
+procedure Child13
+begin
+	gsay_message(108, 137, 51);
+end
+
+procedure Child14
+begin
+	gsay_reply(108, 138);
+	giq_option(4, 108, 139, ChildEnd, 50);
+end
+
+procedure Child15
+begin
+	set_local_var(7, 1);
+	gsay_reply(108, 140);
+	giq_option(5, 108, 141, Child16, 50);
+	giq_option(5, 108, 142, ChildEnd, 50);
+end
+
+procedure Child16
+begin
+	gsay_reply(108, 143);
+	giq_option(5, 108, 144, ChildEnd, 50);
+end
+
+procedure Child17
+begin
+	scared := 1;
+	gsay_message(108, 145, 51);
+end
+
+procedure flee_dude
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	while(LVar1 < 5) do begin
+		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
+			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
+			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
+		end
+		LVar1 := LVar1 + 1;
+	end
+	animate_move_obj_to_tile(self_obj, LVar0, 1);
+end
+
+procedure sleeping
+begin
+	if (local_var(4) == 1) then begin
+		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
+				if (tile_num(self_obj) != home_tile) then begin
+					animate_move_obj_to_tile(self_obj, home_tile, 0);
+				end
+				else begin
+					set_local_var(4, 0);
+				end
+			end
+			else begin
+				move_to(self_obj, home_tile, elevation(self_obj));
+				if (tile_num(self_obj) == home_tile) then begin
+					set_local_var(4, 0);
+				end
+			end
+		end
+	end
+	else begin
+		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					animate_move_obj_to_tile(self_obj, sleep_tile, 0);
+				end
+				else begin
+					set_local_var(4, 1);
+				end
+			end
+			else begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					move_to(self_obj, sleep_tile, elevation(self_obj));
+				end
+				else begin
+					set_local_var(4, 1);
+				end
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+
+

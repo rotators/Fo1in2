@@ -1,0 +1,1234 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure talk_p_proc;//    script_action == 11
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure combat_p_proc;//    script_action == 13
+
+procedure Tycho01;
+procedure Tycho02;
+procedure Tycho03;
+procedure Tycho04;
+procedure Tycho05;
+procedure Tycho06;
+procedure Tycho07;
+procedure Tycho08;
+procedure Tycho09;
+procedure Tycho10;
+procedure Tycho11;
+procedure Tycho12;
+procedure Tycho13;
+procedure Tycho14;
+procedure Tycho15;
+procedure Tycho16;
+procedure Tycho17;
+procedure Tycho18;
+procedure Tycho19;
+procedure Tycho20;
+procedure Tycho21;
+procedure Tycho22;
+procedure Tycho23;
+procedure Tycho24;
+procedure Tycho25;
+procedure Tycho26;
+procedure Tycho27;
+procedure Tycho28;
+procedure Tycho30;
+procedure Tycho31;
+procedure Tycho32;
+procedure follow_player;
+procedure TychoEnd;
+procedure TychoCombat;
+procedure TychoJoins;
+procedure TychoTactics;
+procedure TychoClose;
+procedure TychoModerate;
+procedure TychoFar;
+procedure sleeping;
+
+variable night_person;
+variable wake_time;
+variable sleep_time;
+variable home_tile;
+variable sleep_tile;
+variable hostile;
+variable item;
+variable cola2_ptr;
+variable dest_tile;
+variable exit_line;
+variable tmp;
+variable armor_ptr;
+variable armor_pid;
+variable new_proto;
+variable bestweapon_flag;
+variable armor_flag;
+variable NewHex;
+
+import variable Tycho_ptr;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+procedure TychoCombatTactics;
+procedure TychoBestWeapon;
+procedure TychoArmor;
+procedure TychoSniper;
+procedure TychoNearCombat;
+procedure TychoFreeCombat;
+procedure StepAside;
+procedure get_armor_ptr;
+procedure get_proto(variable arg0);
+//
+// Fallout Fixt:
+//
+procedure PlayerTraitor;
+procedure TEAMX_DISTANCE;
+procedure SDUIBEK_DISTANCE;
+procedure TychoClose_SDUIBEK;
+procedure TychoModerate_SDUIBEK;
+procedure TychoFar_SDUIBEK;
+
+
+procedure start
+begin
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+					call map_enter_p_proc;
+				end
+				else begin
+					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+						call talk_p_proc;
+					end
+					else begin
+						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+							call use_obj_on_p_proc;
+						end
+						else begin
+							if (script_action == 13) then begin//<-- combat_p_proc , basically does COMBAT_IS_INITIALIZED == 1
+								call combat_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat_p_proc// Fallout Fixt to prevent Tycho from slaughtering his homies
+begin
+/*
+who (ObjectPtr)
+called_shot (int)
+num_attacks (int)
+bonus (int)
+min_damage (int)
+max_damage (int)
+attacker_results (int)
+target_results (int)
+*/
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		if (global_var(DUDE_ENEMY_JUNK_CITIZEN) > 0) or (global_var(DUDE_ENEMY_JUNK_BOXER) > 0) or (global_var(ENEMY_JUNKTOWN) > 0) then begin
+			if (fixed_param == 4) then begin
+				attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack_setup(self_obj, dude_obj);
+				party_remove(self_obj);
+				call PlayerTraitor;
+			end
+			if (fixed_param == 2) then begin
+				attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack_setup(self_obj, dude_obj);
+				party_remove(self_obj);
+			end
+			attack_setup(self_obj, dude_obj);
+			attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+			attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+			party_remove(self_obj);
+		end
+	end
+end
+
+procedure PlayerTraitor// Messages when attacking player (for player killing Junktown citizens)
+begin
+	variable LVar0 := 0;
+	LVar0 := random(0, 5);
+	if LVar0 == 0 then begin
+		float_msg(self_obj, message_str(389, 175), 2);
+	end
+	else begin
+		if LVar0 == 1 then begin
+			float_msg(self_obj, message_str(389, 176), 2);
+		end
+		else begin
+			if LVar0 == 2 then begin
+				float_msg(self_obj, message_str(389, 177), 2);
+			end
+			else begin
+				if LVar0 == 3 then begin
+					float_msg(self_obj, message_str(389, 178), 2);
+				end
+				else begin
+					if LVar0 == 4 then begin
+						float_msg(self_obj, message_str(389, 179), 2);
+					end
+					else begin
+						float_msg(self_obj, message_str(389, 180), 2);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		if (global_var(DUDE_ENEMY_JUNK_CITIZEN) > 0) or (global_var(DUDE_ENEMY_JUNK_BOXER) > 0) or (global_var(ENEMY_JUNKTOWN) > 0) then begin// Fallout Fixt to prevent Tycho from slaughtering his homies
+			party_remove(self_obj);
+			if (obj_can_see_obj(self_obj, dude_obj) or obj_can_hear_obj(self_obj, dude_obj)) then begin
+				attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);//	attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+				attack_setup(self_obj, dude_obj);
+				attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+			end
+		end
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);//	attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (global_var(TYCHO_HIRELING_STATUS) < 2) then begin
+			call sleeping;
+		end
+		else begin
+			if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+				call follow_player;
+				if (global_var(TYCHO_LEVEL) < 2) then begin
+					if ((get_pc_stat(1) - global_var(TYCHO_DUDE_LAST_LEVEL)) > 3) then begin
+						set_global_var(TYCHO_LEVEL_COUNTER, global_var(TYCHO_LEVEL_COUNTER) + (get_pc_stat(1) - global_var(TYCHO_DUDE_LAST_LEVEL)));
+						set_global_var(TYCHO_DUDE_LAST_LEVEL, get_pc_stat(1));
+					end
+					if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+						if (global_var(TYCHO_LEVEL_COUNTER) > 3) then begin
+							set_global_var(TYCHO_LEVEL_COUNTER, 0);
+							set_global_var(TYCHO_LEVEL, global_var(TYCHO_LEVEL) + 1);
+							armor_ptr := critter_inven_obj(self_obj, 0);
+							armor_pid := obj_pid(armor_ptr);
+							new_proto := get_proto(armor_ptr);
+							tmp := create_object_sid(new_proto, tile_num(self_obj), elevation(self_obj), 389);
+							anim(tmp, 1000, has_trait(1, self_obj, 10));
+							inven_unwield;
+							move_obj_inven_to_obj(self_obj, tmp);
+							armor_ptr := obj_carrying_pid_obj(tmp, armor_pid);
+							if (armor_ptr) then begin
+								wield_obj_critter(tmp, armor_ptr);
+							end
+							party_remove(self_obj);
+							party_add(tmp);
+							critter_add_trait(tmp, 1, 6, 0);
+							display_msg(message_str(766, 191) + (global_var(TYCHO_LEVEL) + 1) + ".");
+							float_msg(tmp, message_str(389, 1999), 12);
+							Tycho_ptr := tmp;
+							move_to(self_obj, 0, 0);
+							destroy_object(self_obj);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(TYCHO_HIRELING_STATUS, 3);
+	party_remove(self_obj);
+	party_remove(Tycho_ptr);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (cur_map_index == 10) or (cur_map_index == 11) or (cur_map_index == 12) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+			set_global_var(DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
+			set_global_var(ENEMY_JUNKTOWN, 1);
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+		end
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	Tycho_ptr := 0;
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+// If not in party and haven't had introductions, display "dusty trenchcoat and gasmask" description
+	if (global_var(TYCHO_HIRELING_STATUS) == 0) then begin
+		display_msg(message_str(389, 100));
+	end
+	else begin
+// if have had introductions or was in party but was asked to leave, display "Tycho"
+		if ((global_var(TYCHO_HIRELING_STATUS) == 1) or (global_var(TYCHO_HIRELING_STATUS) == 3)) then begin
+			display_msg(message_str(389, 101));
+		end
+		else begin
+// if is currently in party, display "Tycho" and what type of armor currently worn.
+			if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+				variable LVar0 := 0;
+				variable LVar1 := 0;
+				LVar0 := critter_inven_obj(self_obj, 0);
+				LVar1 := obj_pid(LVar0);
+				if (LVar1) then begin
+					if (LVar1 == 1) then begin// ( 1 = Leather )
+						display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 189));
+					end
+					else begin
+						if (LVar1 == 2) then begin// ( 2 = Metal )
+							display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 188));
+						end
+						else begin
+							if (LVar1 == 3) then begin// ( 3 = Power )
+								display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 204));
+							end
+							else begin
+								if (LVar1 == 17) then begin// ( 17 = Combat )
+									display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 205));
+								end
+								else begin
+									if (LVar1 == 74) then begin// ( 74 = Jacket )
+										display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 206));
+									end
+									else begin
+										if (LVar1 == 113) then begin// ( 113 = Robes )
+											display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 207));
+										end
+										else begin
+											if (LVar1 == 232) then begin// ( 232 = Hardened Power )
+												display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 208));
+											end
+											else begin
+												if (LVar1 == 239) then begin// ( 239 = Brotherhood )
+													display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 209));
+												end
+												else begin
+													if (LVar1 == 240) then begin// ( 240 = Tesla )
+														display_msg(message_str(389, 181) + message_str(766, 198) + message_str(766, 210));
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	script_overrides;
+end
+
+procedure map_enter_p_proc
+begin
+	Tycho_ptr := self_obj;
+	sleep_time := 2200;
+	wake_time := 1600;
+	home_tile := 19690;
+	sleep_tile := 7000;
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 106) >= 2) then begin
+		cola2_ptr := obj_carrying_pid_obj(self_obj, 106);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+	end
+	else begin
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 16);
+	end
+	if ((has_trait(1, self_obj, 5) != 90) and (has_trait(1, self_obj, 5) != 95) and (has_trait(1, self_obj, 5) != 96)) then begin
+/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 90);
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if ((global_var(DUDE_ENEMY_JUNK_CITIZEN) > 0) or (global_var(DUDE_ENEMY_JUNK_BOXER) > 0) or (global_var(ENEMY_JUNKTOWN) > 0)) then begin
+		float_msg(self_obj, message_str(389, 180), 2);
+		call TychoCombat;
+	end
+	else begin
+		start_gdialog(389, self_obj, 4, -1, -1);
+		if (global_var(TYCHO_HIRELING_STATUS) == 2) or (global_var(TYCHO_HIRELING_STATUS) == 3) then begin
+			gdialog_set_barter_mod(255);
+		end
+		gsay_start;
+		if (global_var(TYCHO_HIRELING_STATUS) == 3) then begin
+			call Tycho28;
+		end
+		else begin
+			if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+				call Tycho22;
+			end
+			else begin
+				if (global_var(TYCHO_HIRELING_STATUS) == 0) then begin
+					call Tycho01;
+				end
+				else begin
+					if ((global_var(HIRED_BY_GIZMO) == 1) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
+						call Tycho19;
+					end
+					else begin
+						if (local_var(1) < 2) then begin
+							call Tycho14;
+						end
+						else begin
+							call Tycho15;
+						end
+					end
+				end
+			end
+		end
+		gsay_end;
+		end_dialogue;
+		if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+			if (global_var(DESTROY_MASTER_10) == 0) then begin
+				display_msg(message_str(389, 173));
+				give_exp_points(300);
+				set_global_var(DESTROY_MASTER_10, 1);
+			end
+		end
+		if (bestweapon_flag == 1) then begin
+			bestweapon_flag := 0;
+			inven_unwield;
+		end
+		if (armor_flag == 1) then begin
+			armor_flag := 0;
+			new_proto := get_proto(armor_ptr);
+			if (new_proto) then begin
+				tmp := create_object_sid(new_proto, tile_num(self_obj), elevation(self_obj), 389);
+				anim(tmp, 1000, has_trait(1, self_obj, 10));
+				inven_unwield;
+				move_obj_inven_to_obj(self_obj, tmp);
+				wield_obj_critter(tmp, armor_ptr);
+				party_remove(self_obj);
+				party_add(tmp);
+				critter_add_trait(tmp, 1, 6, 0);
+				Tycho_ptr := tmp;
+				move_to(self_obj, 0, 0);
+				destroy_object(self_obj);
+			end
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		item := obj_pid(obj_being_used_with);
+		if ((item != 40) and (item != 71) and (item != 81) and (item != 103) and (item != 144)) then begin
+			script_overrides;
+			if (obj_item_subtype(obj_being_used_with) != 3) then begin
+				rm_obj_from_inven(dude_obj, obj_being_used_with);
+				add_obj_to_inven(self_obj, obj_being_used_with);
+			end
+			else begin
+				if ((item == 8) or (item == 18) or (item == 143) or (item == 10) or (item == 94) or (item == 7) or (item == 21) or (item == 234) or (item == 235) or (item == 24) or (item == 16) or (item == 120) or (item == 242)) then begin
+					rm_obj_from_inven(dude_obj, obj_being_used_with);
+					add_obj_to_inven(self_obj, obj_being_used_with);
+					float_msg(self_obj, message_str(766, 215), 12);
+				end
+				else begin
+					float_msg(self_obj, message_str(634, 109), 12);
+				end
+			end
+		end
+	end
+end
+
+procedure Tycho01
+begin
+	gsay_reply(389, 102);
+	giq_option(4, 389, 103, TychoEnd, 50);
+	giq_option(4, 389, 104, Tycho02, 50);
+	giq_option(-3, 389, 105, Tycho03, 50);
+end
+
+procedure Tycho02
+begin
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, obj_pid(cola2_ptr))) then begin
+		rm_obj_from_inven(self_obj, cola2_ptr);
+		add_obj_to_inven(dude_obj, cola2_ptr);
+	end
+	gsay_reply(389, 106);
+	giq_option(4, 389, 107, Tycho04, 50);
+end
+
+procedure Tycho03
+begin
+	gsay_message(389, 108, 50);
+end
+
+procedure Tycho04
+begin
+	set_global_var(TYCHO_HIRELING_STATUS, 1);
+	gsay_reply(389, 109);
+	giq_option(4, 389, 110, Tycho05, 50);
+	giq_option(6, 389, 111, Tycho06, 50);
+end
+
+procedure Tycho05
+begin
+	gsay_reply(389, 112);
+	giq_option(4, 389, 113, Tycho07, 50);
+	giq_option(6, 389, 114, Tycho08, 50);
+end
+
+procedure Tycho06
+begin
+	gsay_reply(389, 115);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 116, Tycho11, 50);
+	end
+	giq_option(6, 389, 117, Tycho09, 50);
+end
+
+procedure Tycho07
+begin
+	gsay_reply(389, 118);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 119, Tycho11, 50);
+	end
+	else begin
+		call Goodbyes;
+		giq_option(4, 389, exit_line, TychoEnd, 50);
+	end
+end
+
+procedure Tycho08
+begin
+	gsay_reply(389, 120);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 121, Tycho11, 50);
+	end
+	else begin
+		call Goodbyes;
+		giq_option(4, 389, exit_line, TychoEnd, 50);
+	end
+end
+
+procedure Tycho09
+begin
+	gsay_reply(389, 122);
+	giq_option(4, 389, 123, Tycho10, 50);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 116, Tycho11, 50);
+	end
+end
+
+procedure Tycho10
+begin
+	gsay_reply(389, 124);
+	giq_option(4, 389, 125, Tycho17, 50);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 126, Tycho11, 50);
+	end
+end
+
+procedure Tycho11
+begin
+	set_local_var(5, 1);
+	gsay_reply(389, 127);
+	giq_option(4, 389, message_str(389, 128) + proto_data(obj_pid(dude_obj), 1) + message_str(389, 129), Tycho12, 50);
+	giq_option(4, 389, 130, Tycho13, 50);
+end
+
+procedure Tycho12
+begin
+	call UpReact;
+	gsay_message(389, 131, 50);
+end
+
+procedure Tycho13
+begin
+	call DownReact;
+	gsay_reply(389, 132);
+	giq_option(4, 389, 133, TychoCombat, 50);
+	giq_option(4, 389, 134, TychoEnd, 50);
+end
+
+procedure Tycho14
+begin
+	gsay_reply(389, 135);
+	giq_option(4, 389, 136, Tycho13, 50);
+	giq_option(4, 389, 137, Tycho08, 50);
+	giq_option(4, 389, 138, Tycho16, 50);
+end
+
+procedure Tycho15
+begin
+	gsay_reply(389, 139);
+	giq_option(4, 389, 137, Tycho08, 50);
+	giq_option(4, 389, 138, Tycho16, 50);
+	if (global_var(HIRED_BY_KILLIAN)) then begin
+		giq_option(4, 389, 140, Tycho18, 50);
+	end
+end
+
+procedure Tycho16
+begin
+	gsay_reply(389, 141);
+	call Goodbyes;
+	giq_option(4, 389, exit_line, TychoEnd, 50);
+end
+
+procedure Tycho17
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	critter_mod_skill(dude_obj, 17, 5);
+	game_time_advance(game_ticks(120));
+	gsay_reply(389, 142);
+	gfade_in(1);
+	call Goodbyes;
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, exit_line, Tycho11, 50);
+	end
+	else begin
+		giq_option(4, 389, exit_line, TychoEnd, 50);
+	end
+	display_msg(message_str(766, 116) + 5 + message_str(766, 134));
+end
+
+procedure Tycho18
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(389, 168, 49);
+	end
+	else begin
+		gsay_message(389, 169, 49);
+	end
+	call TychoJoins;
+end
+
+procedure Tycho19
+begin
+	gsay_reply(389, 144);
+	giq_option(4, 389, 145, Tycho20, 50);
+	giq_option(4, 389, 146, Tycho21, 50);
+	giq_option(-3, 389, 105, TychoEnd, 50);
+end
+
+procedure Tycho20
+begin
+	gsay_message(389, 147, 50);
+end
+
+procedure Tycho21
+begin
+	call DownReact;
+	gsay_message(389, 148, 50);
+end
+
+procedure Tycho22
+begin
+	gsay_reply(389, 149);
+	if (cur_map_index == 51) then begin
+		giq_option(4, 389, 150, Tycho23, 49);
+	end
+	if (cur_map_index == 27) then begin //  THE GLOW - ENTRANCE (CRATER)
+		giq_option(4, 389, 150, Tycho25, 49);
+	end
+	if (cur_map_index == 37) then begin//  THE HUB - DEATHCLAW CAVE
+		giq_option(4, 389, 150, Tycho26, 49);
+	end
+	if (cur_map_index == 3) then begin //  NECROPOLIS - HALLS OF THE DEAD
+		giq_option(4, 389, 150, Tycho30, 49);
+	end
+	if (cur_map_index == 31) then begin //  MILITARY BASE - STRONGHOLD (LEVELS 1 AND 2)
+		giq_option(4, 389, 150, Tycho31, 49);
+	end
+	if (cur_map_index == 32) then begin //  MILITARY BASE -  VATS  (LEVELS 3 AND 4)
+		giq_option(4, 389, 150, Tycho32, 49);
+	end
+	giq_option(4, 389, 151, Tycho24, 49);
+	giq_option(4, 389, 164, Tycho27, 49);
+	giq_option(4, 389, 159, TychoTactics, 50);
+	giq_option(4, 389, 2000, TychoCombatTactics, 50);
+	giq_option(4, 766, 190, StepAside, 50);
+	giq_option(4, 766, 197, StepAside, 51);
+	giq_option(4, 389, 166, TychoEnd, 50);
+	giq_option(-3, 766, 195, Tycho24, 50);
+	giq_option(-3, 766, 194, StepAside, 50);
+	giq_option(-3, 817, 139, TychoEnd, 50);
+end
+
+procedure Tycho23
+begin
+	gsay_message(389, 152, 49);
+	call Tycho22;
+end
+
+procedure Tycho24
+begin
+	party_remove(self_obj);
+	set_global_var(TYCHO_HIRELING_STATUS, 3);
+	gsay_message(389, 153, 49);
+end
+
+procedure Tycho25
+begin
+	gsay_message(389, 154, 49);
+	call Tycho22;
+end
+
+procedure Tycho26
+begin
+	gsay_message(389, 155, 49);
+	call Tycho22;
+end
+
+procedure Tycho27
+begin
+	gsay_message(389, 165, 49);
+	call Tycho22;
+end
+
+procedure Tycho28
+begin
+	gsay_reply(389, 170);
+	giq_option(4, 389, 171, TychoJoins, 49);
+	giq_option(4, 389, 172, TychoEnd, 50);
+	giq_option(-3, 389, 174, TychoJoins, 49);
+	giq_option(-3, 389, 105, TychoEnd, 50);
+end
+
+procedure Tycho30
+begin
+	gsay_message(389, 158, 49);
+	call Tycho22;
+end
+
+procedure Tycho31
+begin
+	gsay_message(389, 157, 49);
+	call Tycho22;
+end
+
+procedure Tycho32
+begin
+	gsay_message(389, 156, 49);
+	call Tycho22;
+end
+
+procedure follow_player
+begin
+	if (tile_distance_objs(self_obj, dude_obj) > global_var(TYCHO_DISTANCE_VAL)) then begin
+		if (anim_busy(self_obj) == 0) then begin
+			dest_tile := tile_num_in_direction(tile_num_in_direction(tile_num(dude_obj), rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)), global_var(TYCHO_DISTANCE_VAL)), random(0, 5), random(0, 2));
+			if (local_var(6) or local_var(7) or local_var(8)) then begin
+				call SDUIBEK_DISTANCE;
+			end
+			else begin
+				call TEAMX_DISTANCE;
+			end
+		end
+	end
+end
+
+procedure SDUIBEK_DISTANCE
+begin
+	if (tile_distance_objs(self_obj, dude_obj) >= (2 * global_var(TYCHO_DISTANCE_VAL))) then begin// was 1.5
+		animate_move_obj_to_tile(self_obj, dest_tile, 1 bwor 16);
+	end
+end
+
+procedure TEAMX_DISTANCE
+begin
+	if (tile_distance_objs(self_obj, dude_obj) > (2 * global_var(TYCHO_DISTANCE_VAL))) then begin
+		animate_move_obj_to_tile(self_obj, dest_tile, 1 bwor 16);
+	end
+	else begin
+		animate_move_obj_to_tile(self_obj, dest_tile, 0 bwor 16);
+	end
+end
+
+procedure TychoEnd
+begin
+end
+
+procedure TychoCombat
+begin
+	hostile := 1;
+end
+
+procedure TychoJoins
+begin
+	set_global_var(TYCHO_HIRELING_STATUS, 2);
+	set_global_var(TYCHO_DISTANCE_VAL, 4);
+	set_global_var(TYCHO_DUDE_LAST_LEVEL, get_pc_stat(1));
+	critter_add_trait(self_obj, 1, 6, 0);
+	party_add(self_obj);
+end
+
+procedure TychoTactics
+begin
+	gsay_reply(389, 160);
+	giq_option(4, 389, message_str(389, 161) + message_str(766, 216), TychoClose, 50);
+	giq_option(4, 389, message_str(389, 161) + message_str(766, 217), TychoClose_SDUIBEK, 50);
+	giq_option(4, 389, message_str(389, 162) + message_str(766, 216), TychoModerate, 50);
+	giq_option(4, 389, message_str(389, 162) + message_str(766, 217), TychoModerate_SDUIBEK, 50);
+	giq_option(4, 389, message_str(389, 163) + message_str(766, 216), TychoFar, 50);
+	giq_option(4, 389, message_str(389, 163) + message_str(766, 217), TychoFar_SDUIBEK, 50);
+end
+
+procedure TychoClose
+begin
+	set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 2);
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoModerate
+begin
+	set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 4);
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoFar
+begin
+	set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 6);
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoClose_SDUIBEK
+begin
+	set_local_var(6, 1);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 2);
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoModerate_SDUIBEK
+begin
+	set_local_var(6, 0);
+	set_local_var(7, 1);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 4);
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoFar_SDUIBEK
+begin
+	set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 1);
+	set_global_var(TYCHO_DISTANCE_VAL, 6);
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure sleeping
+begin
+	if (local_var(4) == 1) then begin
+		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
+				if (tile_num(self_obj) != home_tile) then begin
+					animate_move_obj_to_tile(self_obj, home_tile, 0);
+				end
+				else begin
+					set_local_var(4, 0);
+				end
+			end
+			else begin
+				move_to(self_obj, home_tile, elevation(self_obj));
+				if (tile_num(self_obj) == home_tile) then begin
+					set_local_var(4, 0);
+				end
+			end
+		end
+	end
+	else begin
+		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					animate_move_obj_to_tile(self_obj, self_obj, 0);
+				end
+				else begin
+					set_local_var(4, 1);
+				end
+			end
+			else begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					move_to(self_obj, sleep_tile, elevation(self_obj));
+				end
+				else begin
+					set_local_var(4, 1);
+				end
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure TychoCombatTactics
+begin
+	armor_ptr := get_armor_ptr;
+	gsay_reply(389, 2001);
+	giq_option(4, 389, 2010, TychoBestWeapon, 49);
+	if (armor_ptr) then begin
+		giq_option(4, 389, 2011, TychoArmor, 49);
+	end
+	giq_option(4, 389, 2012, TychoSniper, 49);
+	giq_option(4, 389, 2013, TychoNearCombat, 49);
+	giq_option(4, 389, 2014, TychoFreeCombat, 49);
+	giq_option(4, 389, 2015, Tycho22, 49);
+end
+
+procedure TychoBestWeapon
+begin
+	gsay_message(389, 2100, 49);
+	bestweapon_flag := 1;
+	call TychoCombatTactics;
+end
+
+procedure TychoArmor
+begin
+	gsay_message(389, 2100, 49);
+	armor_flag := 1;
+	call TychoCombatTactics;
+end
+
+procedure TychoSniper
+begin
+	gsay_message(389, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 95);
+	call TychoCombatTactics;
+end
+
+procedure TychoNearCombat
+begin
+	gsay_message(389, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 96);
+	call TychoCombatTactics;
+end
+
+procedure TychoFreeCombat
+begin
+	gsay_message(389, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 90);
+	call TychoCombatTactics;
+end
+
+procedure StepAside
+begin
+	variable LVar0 := 0;
+	NewHex := 0;
+	LVar0 := random(0, 5);
+	LVar0 := random(0, 5);
+	LVar0 := random(0, 5);
+	if (LVar0 == 0) then begin
+		NewHex := tile_num(self_obj) - 400;
+	end
+	if (LVar0 == 1) then begin
+		NewHex := tile_num(self_obj) - 202;
+	end
+	if (LVar0 == 2) then begin
+		NewHex := tile_num(self_obj) - 198;
+	end
+	if (LVar0 == 3) then begin
+		NewHex := tile_num(self_obj) + 400;
+	end
+	if (LVar0 == 4) then begin
+		NewHex := tile_num(self_obj) + 202;
+	end
+	if (LVar0 == 5) then begin
+		NewHex := tile_num(self_obj) + 198;
+	end
+	script_overrides;
+	move_to(self_obj, NewHex, elevation(self_obj));
+	script_overrides;
+	float_msg(self_obj, message_str(766, random(300, 302)), 12);
+end
+
+procedure get_armor_ptr
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar1 := obj_pid(critter_inven_obj(self_obj, 0));
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 74) and (LVar1 != 74)) then begin//  JACKET
+		LVar0 := obj_carrying_pid_obj(self_obj, 74);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 1) and (LVar1 != 1)) then begin//  LEATHER
+		LVar0 := obj_carrying_pid_obj(self_obj, 1);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 113) and (LVar1 != 113)) then begin//  ROBES
+		LVar0 := obj_carrying_pid_obj(self_obj, 113);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 2) and (LVar1 != 2)) then begin//  METAL
+		LVar0 := obj_carrying_pid_obj(self_obj, 2);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 240) and (LVar1 != 240)) then begin//  TESLA
+		LVar0 := obj_carrying_pid_obj(self_obj, 240);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 17) and (LVar1 != 17)) then begin//  COMBAT
+		LVar0 := obj_carrying_pid_obj(self_obj, 17);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 239) and (LVar1 != 239)) then begin//  BROTHERHOOD
+		LVar0 := obj_carrying_pid_obj(self_obj, 239);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 3) and (LVar1 != 3)) then begin//  POWER
+		LVar0 := obj_carrying_pid_obj(self_obj, 3);
+	end
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 232) and (LVar1 != 232)) then begin//  HARDENED POWER
+		LVar0 := obj_carrying_pid_obj(self_obj, 232);
+	end
+	return LVar0;
+end
+
+procedure get_proto(variable arg0)
+begin
+	variable LVar1 := 0;
+	if (obj_pid(arg0) == 74) then begin
+		LVar1 := 16777556 + (9 * global_var(TYCHO_LEVEL));
+	end
+	else begin
+		if (obj_pid(arg0) == 1) then begin
+			LVar1 := 16777557 + (9 * global_var(TYCHO_LEVEL));
+		end
+		else begin
+			if (obj_pid(arg0) == 113) then begin
+				LVar1 := 16777558 + (9 * global_var(TYCHO_LEVEL));
+			end
+			else begin
+				if (obj_pid(arg0) == 2) then begin
+					LVar1 := 16777559 + (9 * global_var(TYCHO_LEVEL));
+				end
+				else begin
+					if (obj_pid(arg0) == 17) then begin
+						LVar1 := 16777560 + (9 * global_var(TYCHO_LEVEL));
+					end
+					else begin
+						if (obj_pid(arg0) == 240) then begin
+							LVar1 := 16777561 + (9 * global_var(TYCHO_LEVEL));
+						end
+						else begin
+							if (obj_pid(arg0) == 239) then begin
+								LVar1 := 16777562 + (9 * global_var(TYCHO_LEVEL));
+							end
+							else begin
+								if (obj_pid(arg0) == 3) then begin
+									LVar1 := 16777563 + (9 * global_var(TYCHO_LEVEL));
+								end
+								else begin
+									if (obj_pid(arg0) == 232) then begin
+										LVar1 := 16777564 + (9 * global_var(TYCHO_LEVEL));
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	return LVar1;
+end
+

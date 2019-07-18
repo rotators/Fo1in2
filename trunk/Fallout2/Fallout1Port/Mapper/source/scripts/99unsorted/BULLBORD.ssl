@@ -1,0 +1,74 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure use_p_proc;//    script_action == 6
+procedure look_at_p_proc;//    script_action == 21
+procedure talk_p_proc;//    script_action == 11
+procedure bull01;
+procedure bull02;
+procedure bull03;
+procedure bull04;
+
+
+procedure start
+begin
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	dialogue_system_enter;
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(839, 100));
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	set_map_var(43, 1);
+	start_gdialog(839, self_obj, 4, -1, -1);
+	gsay_start;
+	call bull01;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure bull01
+begin
+	gsay_reply(839, 101);
+	giq_option(0, 839, 105, bull02, 50);
+end
+
+procedure bull02
+begin
+	gsay_reply(839, 102);
+	giq_option(0, 839, 105, bull03, 50);
+end
+
+procedure bull03
+begin
+	gsay_reply(839, 103);
+	giq_option(0, 839, 105, bull04, 50);
+end
+
+procedure bull04
+begin
+	gsay_message(839, 104, 50);
+end
+

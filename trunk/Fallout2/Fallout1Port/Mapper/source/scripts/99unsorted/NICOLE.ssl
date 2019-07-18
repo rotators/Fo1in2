@@ -1,0 +1,726 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure look_at_p_proc;//    script_action == 21
+procedure description_p_proc;//    script_action == 3
+procedure talk_p_proc;//    script_action == 11
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure Nicole00;
+procedure Nicole01;
+procedure Nicole02;
+procedure Nicole04;
+procedure Nicole05;
+procedure Nicole06;
+procedure Nicole07;
+procedure Nicole08;
+procedure Nicole08a;
+procedure Nicole09;
+procedure Nicole10;
+procedure Nicole11;
+procedure Nicole12;
+procedure Nicole13;
+procedure Nicole14;
+procedure Nicole15;
+procedure Nicole16;
+procedure Nicole17;
+procedure Nicole18;
+procedure Nicole19;
+procedure Nicole20;
+procedure Nicole21;
+procedure Nicole21a;
+procedure Nicole25;
+procedure Nicole26;
+procedure Nicole27;
+procedure Nicole28;
+procedure Nicole29;
+procedure Nicole30;
+procedure Nicole31;
+procedure Nicole32;
+procedure Nicole33;
+procedure Nicole34;
+procedure Nicole35;
+procedure Nicole36;
+procedure Nicole37;
+procedure Nicole39;
+procedure Nicole41;
+procedure Nicole50;
+procedure Nicole51;
+procedure Nicole52;
+procedure Nicole53;
+procedure Nicole54;
+procedure Nicole55;
+procedure Nicole78;
+procedure NicoleMore;
+procedure NicoleShowOut;
+procedure NicoleEnd;
+
+variable Only_Once := 1;
+variable DisplayMessage := 100;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure Start
+begin
+	if self_obj != 0 then begin
+		set_global_var(IS_NICOLE_ALIVE, 1);
+	end
+	else begin
+		set_global_var(IS_NICOLE_ALIVE, 0);
+	end
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		if (not(metarule(22, 0)) and (obj_is_carrying_obj_pid(self_obj, 41) == 0)) then begin
+			item_caps_adjust(self_obj, random(50, 150));
+		end
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 46);
+		Only_Once := 0;
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(54, 100));
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(54, 100));
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	if (global_var(ENEMY_FOLLOWERS) == 1) then begin
+		float_msg(self_obj, message_str(669, random(100, 104)), 2);
+	end
+	else begin
+		if ((local_var(4) == 1) and (get_critter_stat(dude_obj, 4) < 4)) then begin
+			float_msg(self_obj, message_str(54, 286), 0);
+		end
+		else begin
+			if (local_var(2) == 0) then begin
+				set_local_var(2, 1);
+				set_local_var(1, 3);
+				call LevelToReact;
+			end
+			start_gdialog(54, self_obj, 4, 19, 12);
+			gsay_start;
+			if (local_var(4) == 0) then begin
+				call Nicole01;
+			end
+			else begin
+				DisplayMessage := 132;
+				call Nicole00;
+			end
+			gsay_end;
+			end_dialogue;
+			if (local_var(5) == 1) then begin
+				gfade_in(1);
+				set_local_var(5, 0);
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_FOLLOWERS, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(IS_NICOLE_ALIVE, 0);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+		set_global_var(ENEMY_FOLLOWERS, 1);
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		if (global_var(ENEMY_FOLLOWERS) == 1) then begin
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	set_global_var(ENEMY_FOLLOWERS, 1);
+end
+
+procedure Nicole00
+begin
+	gsay_reply(54, DisplayMessage);
+	gsay_option(54, 101, Nicole29, 50);
+	gsay_option(54, 102, Nicole02, 50);
+	if (global_var(MASTER_BLOWN) == 0) then begin
+		giq_option(4, 54, 319, Nicole50, 50);
+	end
+	gsay_option(54, 131, Nicole14, 50);
+end
+
+procedure Nicole01
+begin
+	gsay_reply(54, 105);
+	giq_option(4, 54, 106, Nicole02, 50);
+	giq_option(4, 54, 107, Nicole11, 51);
+	giq_option(4, 54, 108, Nicole09, 50);
+	giq_option(4, 54, 109, Nicole15, 50);
+	giq_option(-3, 54, 110, Nicole78, 50);
+	set_local_var(4, 1);
+end
+
+procedure Nicole02
+begin
+	gsay_reply(54, 111);
+	gsay_option(54, 112, Nicole04, 50);
+end
+
+procedure Nicole04
+begin
+	gsay_reply(54, 113);
+	gsay_option(54, 114, Nicole05, 50);
+	gsay_option(54, 115, Nicole11, 51);
+end
+
+procedure Nicole05
+begin
+	gsay_reply(54, 116);
+	gsay_option(54, 117, Nicole06, 50);
+end
+
+procedure Nicole06
+begin
+	gsay_reply(54, 118);
+	gsay_option(54, 119, Nicole07, 50);
+	gsay_option(54, 123, Nicole08, 50);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 121, Nicole08a, 50);
+	end
+	else begin
+		gsay_option(54, 121, Nicole11, 51);
+	end
+end
+
+procedure Nicole07
+begin
+	gsay_reply(54, 122);
+	gsay_option(54, 123, Nicole08, 50);
+	gsay_option(54, 124, Nicole28, 50);
+	gsay_option(54, 125, Nicole19, 49);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 126, Nicole08a, 50);
+	end
+	else begin
+		gsay_option(54, 126, Nicole11, 51);
+	end
+end
+
+procedure Nicole08
+begin
+	gsay_message(54, 127, 50);
+	DisplayMessage := 129;
+	call NicoleMore;
+end
+
+procedure Nicole08a
+begin
+	gsay_message(54, 128, 50);
+	DisplayMessage := 129;
+	call NicoleMore;
+end
+
+procedure Nicole09
+begin
+	DisplayMessage := 132;
+	call Nicole00;
+end
+
+procedure Nicole10
+begin
+	gsay_message(54, 133, 50);
+	call NicoleShowOut;
+end
+
+procedure Nicole11
+begin
+	call DownReactLevel;
+	gsay_reply(54, 134);
+	gsay_option(54, 135, Nicole12, 50);
+	gsay_option(54, 136, Nicole13, 50);
+end
+
+procedure Nicole12
+begin
+	call BottomReact;
+	gsay_message(54, 137, 50);
+	call NicoleShowOut;
+end
+
+procedure Nicole13
+begin
+	DisplayMessage := 138;
+	call NicoleMore;
+end
+
+procedure Nicole14
+begin
+	gsay_message(54, 141, 50);
+end
+
+procedure Nicole15
+begin
+	gsay_reply(54, 142);
+	gsay_option(54, 143, Nicole16, 50);
+end
+
+procedure Nicole16
+begin
+	gsay_reply(54, 144);
+	gsay_option(54, 145, Nicole17, 50);
+	gsay_option(54, 146, Nicole25, 50);
+end
+
+procedure Nicole17
+begin
+	gsay_reply(54, 147);
+	gsay_option(54, 148, Nicole07, 50);
+	gsay_option(54, 149, Nicole18, 50);
+end
+
+procedure Nicole18
+begin
+	gsay_reply(54, 151);
+	gsay_option(54, 152, Nicole19, 49);
+	gsay_option(54, 153, Nicole20, 50);
+end
+
+procedure Nicole19
+begin
+	DisplayMessage := 154;
+	call NicoleMore;
+end
+
+procedure Nicole20
+begin
+	gsay_reply(54, 157);
+	gsay_option(54, 158, Nicole21, 50);
+	gsay_option(54, 159, Nicole21a, 51);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 160, Nicole09, 50);
+	end
+	else begin
+		gsay_option(54, 160, Nicole10, 51);
+	end
+	gsay_option(54, 164, Nicole14, 50);
+end
+
+procedure Nicole21
+begin
+	gsay_reply(54, 161);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 163, Nicole09, 50);
+	end
+	else begin
+		gsay_option(54, 163, Nicole10, 51);
+	end
+	gsay_option(54, 164, Nicole14, 50);
+end
+
+procedure Nicole21a
+begin
+	gsay_reply(54, 162);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 163, Nicole09, 50);
+	end
+	else begin
+		gsay_option(54, 163, Nicole10, 51);
+	end
+	gsay_option(54, 164, Nicole14, 50);
+end
+
+procedure Nicole25
+begin
+	gsay_reply(54, 175);
+	gsay_option(54, 176, Nicole26, 50);
+	gsay_option(54, 177, Nicole11, 50);
+	gsay_option(54, 178, Nicole27, 50);
+end
+
+procedure Nicole26
+begin
+	DisplayMessage := 179;
+	call NicoleMore;
+end
+
+procedure Nicole27
+begin
+	DisplayMessage := 182;
+	call NicoleMore;
+end
+
+procedure Nicole28
+begin
+	gsay_reply(54, 185);
+	gsay_option(54, 186, Nicole19, 49);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 187, Nicole09, 50);
+	end
+	else begin
+		gsay_option(54, 187, Nicole10, 51);
+	end
+	gsay_option(54, 188, Nicole14, 50);
+end
+
+procedure Nicole29
+begin
+	gsay_reply(54, 189);
+	gsay_option(54, 190, Nicole30, 50);
+	gsay_option(54, 191, Nicole31, 50);
+	gsay_option(54, 192, Nicole04, 50);
+end
+
+procedure Nicole30
+begin
+	gsay_reply(54, 193);
+	gsay_option(54, 194, Nicole31, 50);
+	gsay_option(54, 195, Nicole36, 50);
+end
+
+procedure Nicole31
+begin
+	gsay_reply(54, 196);
+	gsay_option(54, 197, Nicole39, 50);
+	gsay_option(54, 198, Nicole11, 50);
+	gsay_option(54, 199, Nicole32, 50);
+	gsay_option(54, 195, Nicole36, 50);
+end
+
+procedure Nicole32
+begin
+	gsay_reply(54, 201);
+	gsay_option(54, 202, Nicole33, 50);
+	gsay_option(54, 195, Nicole36, 50);
+end
+
+procedure Nicole33
+begin
+	gsay_reply(54, 204);
+	gsay_option(54, 205, Nicole11, 50);
+	gsay_option(54, 206, Nicole34, 50);
+	gsay_option(54, 207, Nicole36, 50);
+end
+
+procedure Nicole34
+begin
+	gsay_reply(54, 208);
+	gsay_option(54, 209, Nicole36, 50);
+	gsay_option(54, 210, Nicole35, 50);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 211, Nicole09, 50);
+	end
+	else begin
+		gsay_option(54, 211, Nicole10, 51);
+	end
+	gsay_option(54, 212, Nicole14, 50);
+end
+
+procedure Nicole35
+begin
+	gsay_message(54, 213, 50);
+	call DownReactLevel;
+end
+
+procedure Nicole36
+begin
+	gsay_reply(54, 214);
+	gsay_option(54, 215, Nicole37, 50);
+	gsay_option(54, 216, Nicole41, 50);
+end
+
+procedure Nicole37
+begin
+	gsay_reply(54, 217);
+	gsay_option(54, 218, Nicole39, 50);
+	gsay_option(54, 219, Nicole41, 50);
+end
+
+procedure Nicole39
+begin
+	DisplayMessage := 220;
+	call TopReact;
+	call NicoleMore;
+end
+
+procedure Nicole41
+begin
+	gsay_reply(54, 223);
+	gsay_option(54, 224, Nicole00, 50);
+	gsay_option(54, 225, NicoleEnd, 50);
+end
+
+procedure Nicole50
+begin
+	DisplayMessage := 132;
+	gsay_reply(54, 307);
+	gsay_option(54, 320, Nicole51, 50);
+	gsay_option(54, 321, Nicole00, 50);
+end
+
+procedure Nicole51
+begin
+	gsay_reply(54, DisplayMessage);
+	gsay_option(54, 322, Nicole52, 50);
+	gsay_option(54, 323, Nicole53, 50);
+	gsay_option(54, 324, Nicole54, 50);
+	gsay_option(54, 321, Nicole00, 50);
+	gsay_option(54, 326, Nicole14, 50);
+end
+
+procedure Nicole52
+begin
+	DisplayMessage := 299;
+	call Nicole51;
+end
+
+procedure Nicole53
+begin
+	DisplayMessage := 185;
+	call Nicole51;
+end
+
+procedure Nicole54
+begin
+	gsay_reply(54, 251);
+	gsay_option(54, 325, Nicole55, 50);
+	set_global_var(FOLLOWER_MACHO_HELP, 1);
+end
+
+procedure Nicole55
+begin
+	set_global_var(SHADOW_PASSWORD, 1);
+	gsay_message(54, 254, 50);
+end
+
+procedure Nicole78
+begin
+	gsay_message(54, 291, 50);
+end
+
+procedure NicoleMore
+begin
+	gsay_reply(54, DisplayMessage);
+	if (local_var(1) >= 2) then begin
+		gsay_option(54, 155, Nicole09, 50);
+	end
+	else begin
+		gsay_option(54, 155, Nicole10, 51);
+	end
+	gsay_option(54, 131, Nicole14, 50);
+end
+
+procedure NicoleShowOut
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	move_to(dude_obj, 23883, 0);
+	set_local_var(5, 1);
+end
+
+procedure NicoleEnd
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+
+

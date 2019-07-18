@@ -1,0 +1,1022 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure RecalcDate;
+procedure RecalcDateString;
+procedure damage_p_proc;//    script_action == 14
+procedure FGTDriver00;
+procedure FGTDriver01;
+procedure FGTDriver02;
+procedure FGTDriver03;
+procedure FGTDriver04;
+procedure FGTDriver04a;
+procedure FGTDriver05;
+procedure FGTDriver06;
+procedure FGTDriver07;
+procedure FGTDriver08;
+procedure FGTDriver10;
+procedure FGTDriver10a;
+procedure FGTDriver11;
+procedure FGTDriver12;
+procedure FGTDriver13;
+procedure FGTDriver14;
+procedure FGTDriver15;
+procedure FGTDriver17;
+procedure FGTDriver18;
+procedure FGTDriver19;
+procedure FGTDriver20;
+procedure FGTDriver21a;
+procedure FGTDriver21b;
+procedure FGTDriver21c;
+procedure FGTDriver27;
+procedure FGTDriver28;
+procedure FGTDriver29;
+procedure FGTDriver30;
+procedure FGTDriver31;
+procedure FGTDriver32;
+procedure FGTDriver33;
+procedure FGTDriver34;
+procedure FGTDriver35;
+procedure FGTDriver37;
+procedure FGTDriver38;
+procedure FGTDriver39;
+procedure FGTDriver40;
+procedure FGTDriver41;
+procedure FGTDriver42;
+procedure FGTDriverEnd;
+
+variable hostile;
+variable Only_Once := 1;
+variable DayString := "None";
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 37);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 50);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	call FGTDriver10;
+end
+
+procedure talk_p_proc
+begin
+	variable LVar0 := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(10) == 1) then begin
+		if (local_var(7) < (game_time / (10 * 60 * 60 * 24 * 365))) then begin
+			set_local_var(10, 0);
+		end
+		else begin
+			if ((local_var(6) < get_month) or (local_var(6) == 12) and (get_month == 1) and ((local_var(6) != 1) or (get_month != 12))) then begin
+				set_local_var(10, 0);
+			end
+			else begin
+				if ((local_var(5) < get_day) and ((local_var(6) != 1) or (get_month != 12))) then begin
+					set_local_var(10, 0);
+				end
+			end
+		end
+	end
+	call RecalcDate;
+	LVar0 := local_var(5);
+	if (local_var(8) > 0) then begin
+		call FGTDriver14;
+	end
+	else begin
+		if (map_var(35) == 1) then begin
+			call FGTDriver15;
+		end
+		else begin
+			if (global_var(FARGO_JOB) == 3) then begin
+				call BottomReact;
+				start_gdialog(849, self_obj, 4, -1, -1);
+				gsay_start;
+				call FGTDriver37;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				if (global_var(FARGO_JOB) == 5) then begin
+					start_gdialog(849, self_obj, 4, -1, -1);
+					gsay_start;
+					call FGTDriver19;
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					if (global_var(FARGO_JOB) == 4) then begin
+						call TopReact;
+						start_gdialog(849, self_obj, 4, -1, -1);
+						gsay_start;
+						call FGTDriver27;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						if (map_var(36) == 0) then begin
+							call FGTDriver00;
+						end
+						else begin
+							if ((map_var(36) == 1) and (local_var(10) == 0)) then begin
+								start_gdialog(849, self_obj, 4, -1, -1);
+								gsay_start;
+								if (local_var(9) == 0) then begin
+									call FGTDriver01;
+								end
+								else begin
+									call FGTDriver03;
+								end
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								if ((local_var(10) == 1) and (LVar0 == get_day)) then begin
+									start_gdialog(849, self_obj, 4, -1, -1);
+									gsay_start;
+									call FGTDriver28;
+									gsay_end;
+									end_dialogue;
+								end
+								else begin
+									if ((local_var(10) == 1) and (LVar0 != get_day)) then begin
+										start_gdialog(849, self_obj, 4, -1, -1);
+										gsay_start;
+										call FGTDriver29;
+										gsay_end;
+										end_dialogue;
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	set_local_var(4, 1);
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(849, 100));
+end
+
+procedure RecalcDate
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := get_day;
+	if ((LVar0 >= 1) and (LVar0 <= 8)) then begin
+		LVar0 := 8;
+		LVar1 := get_month;
+		LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+	end
+	else begin
+		if ((LVar0 > 8) and (LVar0 <= 18)) then begin
+			LVar0 := 18;
+			LVar1 := get_month;
+			LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+		end
+		else begin
+			if ((LVar0 > 18) and (LVar0 <= 28)) then begin
+				LVar0 := 28;
+				LVar1 := get_month;
+				LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+			end
+			else begin
+				if (LVar0 > 28) then begin
+					LVar0 := 8;
+					LVar1 := get_month;
+					if (LVar1 == 12) then begin
+						LVar1 := 1;
+						LVar2 := (game_time / (10 * 60 * 60 * 24 * 365)) + 1;
+					end
+					else begin
+						LVar1 := LVar1 + 1;
+						LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+					end
+				end
+			end
+		end
+	end
+	set_local_var(5, LVar0);
+	set_local_var(6, LVar1);
+	set_local_var(7, LVar2);
+end
+
+procedure RecalcDateString
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	call RecalcDate;
+	LVar0 := local_var(6);
+	LVar1 := local_var(5);
+	if (LVar0 == 1) then begin
+		DayString := message_str(849, 204);
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			DayString := message_str(849, 205);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				DayString := message_str(849, 206);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					DayString := message_str(849, 207);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						DayString := message_str(849, 208);
+					end
+					else begin
+						if (LVar0 == 6) then begin
+							DayString := message_str(849, 209);
+						end
+						else begin
+							if (LVar0 == 7) then begin
+								DayString := message_str(849, 210);
+							end
+							else begin
+								if (LVar0 == 8) then begin
+									DayString := message_str(849, 211);
+								end
+								else begin
+									if (LVar0 == 9) then begin
+										DayString := message_str(849, 212);
+									end
+									else begin
+										if (LVar0 == 10) then begin
+											DayString := message_str(849, 213);
+										end
+										else begin
+											if (LVar0 == 11) then begin
+												DayString := message_str(849, 214);
+											end
+											else begin
+												if (LVar0 == 12) then begin
+													DayString := message_str(849, 215);
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	if (LVar1 == 8) then begin
+		DayString := DayString + message_str(849, 197);
+	end
+	else begin
+		if (LVar1 == 18) then begin
+			DayString := DayString + message_str(849, 198);
+		end
+		else begin
+			if (LVar1 == 28) then begin
+				DayString := DayString + message_str(849, 199);
+			end
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure FGTDriver00
+begin
+	if (local_var(4) == 0) then begin
+		float_msg(self_obj, message_str(849, 101), 2);
+		set_local_var(4, 1);
+	end
+	else begin
+		float_msg(self_obj, message_str(849, 102), 2);
+	end
+end
+
+procedure FGTDriver01
+begin
+	if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then begin
+		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+	end
+	if (global_var(WORLDMAPLIST_BONEYARD) == 0) then begin
+		set_global_var(WORLDMAPLIST_BONEYARD, 1);
+	end
+	if (global_var(WORLDMAPLIST_BROTHERHOOD) == 0) then begin
+		set_global_var(WORLDMAPLIST_BROTHERHOOD, 1);
+	end
+	if (global_var(FOLLOWERS_INVADED) == 0) then begin
+		gsay_reply(849, 103);
+	end
+	else begin
+		gsay_reply(849, 300);
+	end
+	giq_option(4, 849, 104, FGTDriver02, 50);
+	giq_option(-3, 849, 105, FGTDriver02, 50);
+end
+
+procedure FGTDriver02
+begin
+	variable LVar0 := 0;
+	call RecalcDateString;
+	LVar0 := local_var(5);
+	if (LVar0 == get_day) then begin
+		gsay_reply(849, message_str(849, 106) + message_str(849, 107));
+	end
+	else begin
+		gsay_reply(849, message_str(849, 106) + message_str(849, 108) + DayString + message_str(849, 111));
+	end
+	call FGTDriver04;
+end
+
+procedure FGTDriver03
+begin
+	variable LVar0 := 0;
+	if (local_var(1) != 1) then begin
+		call RecalcDateString;
+		LVar0 := local_var(5);
+		if (LVar0 == get_day) then begin
+			gsay_reply(849, message_str(849, 107));
+		end
+		else begin
+			gsay_reply(849, message_str(849, 108) + DayString + message_str(849, 111));
+		end
+		call FGTDriver04;
+	end
+	else begin
+		gsay_reply(849, 112);
+		call FGTDriver04;
+	end
+end
+
+procedure FGTDriver04
+begin
+	giq_option(4, 849, 113, FGTDriver04a, 50);
+	giq_option(4, 849, 114, FGTDriver05, 50);
+	giq_option(4, 849, 115, FGTDriver06, 50);
+	giq_option(-3, 849, 116, FGTDriver07, 50);
+	giq_option(-3, 849, 117, FGTDriver07, 50);
+end
+
+procedure FGTDriver04a
+begin
+	variable LVar0 := 0;
+	set_local_var(10, 1);
+	call RecalcDate;
+	LVar0 := local_var(5);
+	if (LVar0 == get_day) then begin
+		call FGTDriver17;
+	end
+	else begin
+		call FGTDriver18;
+	end
+end
+
+procedure FGTDriver05
+begin
+	set_local_var(10, 0);
+	gsay_message(849, 118, 50);
+end
+
+procedure FGTDriver06
+begin
+	set_local_var(10, 0);
+	gsay_message(849, 120, 50);
+end
+
+procedure FGTDriver07
+begin
+	gsay_message(849, 121, 50);
+end
+
+procedure FGTDriver08
+begin
+	gsay_message(849, 123, 50);
+end
+
+procedure FGTDriver10
+begin
+	if (local_var(8) == 0) then begin
+		set_local_var(8, 1);
+		set_map_var(35, 1);
+		set_map_var(10, 0);
+		gsay_reply(849, 125);
+		giq_option(4, 849, 126, FGTDriver08, 50);
+		giq_option(4, 849, 127, FGTDriver10a, 50);
+		giq_option(4, 849, 128, FGTDriver31, 51);
+		giq_option(-3, 849, 130, FGTDriver31, 51);
+	end
+	else begin
+		gsay_message(849, 131, 51);
+		call combat;
+	end
+end
+
+procedure FGTDriver10a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20)) == 1) then begin
+		call FGTDriver11;
+	end
+	else begin
+		call FGTDriver12;
+	end
+end
+
+procedure FGTDriver11
+begin
+	set_map_var(36, 0);
+	set_map_var(35, 1);
+	set_map_var(10, 0);
+	gsay_message(849, 132, 50);
+end
+
+procedure FGTDriver12
+begin
+	gsay_message(849, 133, 51);
+	call combat;
+end
+
+procedure FGTDriver13
+begin
+	float_msg(self_obj, message_str(849, 137), 2);
+end
+
+procedure FGTDriver14
+begin
+	if (local_var(8) > 0) then begin
+		float_msg(self_obj, message_str(849, 138), 2);
+	end
+	else begin
+		float_msg(self_obj, message_str(849, 139), 2);
+		call FGTDriver31;
+	end
+end
+
+procedure FGTDriver15
+begin
+	variable LVar0 := 0;
+	LVar0 := random(1, 4);
+	if (LVar0 == 1) then begin
+		float_msg(self_obj, message_str(849, 140), 2);
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			float_msg(self_obj, message_str(849, 141), 2);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				float_msg(self_obj, message_str(849, 142), 2);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					float_msg(self_obj, message_str(849, 143), 2);
+				end
+			end
+		end
+	end
+end
+
+procedure FGTDriver17
+begin
+	gsay_reply(849, 145);
+	call FGTDriver33;
+	call FGTDriver20;
+end
+
+procedure FGTDriver18
+begin
+	call RecalcDateString;
+	gsay_reply(849, message_str(849, 146) + DayString + message_str(849, 153));
+	giq_option(4, 849, 154, FGTDriver30, 50);
+	giq_option(4, 849, 155, FGTDriver34, 50);
+end
+
+procedure FGTDriver19
+begin
+	set_map_var(35, 1);
+	set_map_var(10, 0);
+	set_global_var(FARGO_JOB, 6);
+	gsay_message(849, 156, 51);
+end
+
+procedure FGTDriver20
+begin
+	giq_option(4, 849, 157, FGTDriver21a, 50);
+	if (global_var(FOLLOWERS_INVADED) == 0) then begin
+		giq_option(4, 849, 158, FGTDriver21b, 50);
+	end
+	giq_option(4, 849, 152, FGTDriver21c, 50);
+	giq_option(4, 849, 159, FGTDriver34, 50);
+end
+
+procedure FGTDriver21a
+begin
+	variable LVar0 := 0;
+	set_global_var(FARGO_TRADERS_STATUS, 1);
+	LVar0 := random(1, 7);
+	if (LVar0 == 1) then begin
+		gsay_message(849, 160, 50);
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			gsay_message(849, 161, 50);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				gsay_message(849, 162, 50);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					gsay_message(849, 163, 50);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						gsay_message(849, 167, 50);
+					end
+					else begin
+						if (LVar0 == 6) then begin
+							gsay_message(849, 168, 50);
+						end
+						else begin
+							if (LVar0 == 7) then begin
+								gsay_message(849, 169, 50);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := do_check(dude_obj, 6, -4);
+	if (is_success(LVar0)) then begin
+		set_global_var(FARGO_TRADERS_STATUS, 2);
+		set_global_var(CVAN_DRIVER, 1);
+		set_global_var(CVAN_GUARD, 2);
+		load_map(10, 1);
+	end
+	else begin
+		load_map(58, 3);
+	end
+end
+
+procedure FGTDriver21b
+begin
+	variable LVar0 := 0;
+	set_global_var(FARGO_TRADERS_STATUS, 1);
+	LVar0 := random(1, 7);
+	if (LVar0 == 1) then begin
+		gsay_message(849, 160, 50);
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			gsay_message(849, 161, 50);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				gsay_message(849, 162, 50);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					gsay_message(849, 163, 50);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						gsay_message(849, 164, 50);
+					end
+					else begin
+						if (LVar0 == 6) then begin
+							gsay_message(849, 165, 50);
+						end
+						else begin
+							if (LVar0 == 7) then begin
+								gsay_message(849, 166, 50);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := do_check(dude_obj, 6, -4);
+	if (is_success(LVar0)) then begin
+		set_global_var(FARGO_TRADERS_STATUS, 2);
+		set_global_var(CVAN_DRIVER, 1);
+		set_global_var(CVAN_GUARD, 2);
+		load_map(28, 1);
+	end
+	else begin
+		load_map(56, 3);
+	end
+end
+
+procedure FGTDriver21c
+begin
+	variable LVar0 := 0;
+	set_global_var(FARGO_TRADERS_STATUS, 1);
+	LVar0 := random(1, 8);
+	if (LVar0 == 1) then begin
+		gsay_message(849, 160, 50);
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			gsay_message(849, 161, 50);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				gsay_message(849, 162, 50);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					gsay_message(849, 163, 50);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						gsay_message(849, 216, 50);
+					end
+					else begin
+						if (LVar0 == 6) then begin
+							gsay_message(849, 217, 50);
+						end
+						else begin
+							if (LVar0 == 7) then begin
+								gsay_message(849, 218, 50);
+							end
+							else begin
+								if (LVar0 == 8) then begin
+									gsay_message(849, 219, 50);
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := do_check(dude_obj, 6, -4);
+	if (is_success(LVar0)) then begin
+		set_global_var(FARGO_TRADERS_STATUS, 2);
+		set_global_var(CVAN_DRIVER, 1);
+		set_global_var(CVAN_GUARD, 2);
+		load_map(13, 1);
+	end
+	else begin
+		load_map(59, 3);
+	end
+end
+
+procedure FGTDriver27
+begin
+	gsay_reply(849, 185);
+	giq_option(4, 849, 186, FGTDriver04a, 50);
+	giq_option(4, 849, 187, FGTDriver05, 50);
+	giq_option(4, 849, 188, FGTDriver06, 50);
+	giq_option(-3, 849, 189, FGTDriver07, 50);
+	giq_option(-3, 849, 190, FGTDriver07, 50);
+end
+
+procedure FGTDriver28
+begin
+	gsay_reply(849, 191);
+	giq_option(4, 849, 192, FGTDriver17, 50);
+	giq_option(4, 849, 193, FGTDriver35, 50);
+	giq_option(-3, 849, 194, FGTDriver07, 50);
+end
+
+procedure FGTDriver29
+begin
+	variable LVar0 := 0;
+	call RecalcDateString;
+	LVar0 := local_var(5);
+	gsay_message(849, message_str(849, 196) + DayString + message_str(849, 203) + message_str(849, 195), 50);
+end
+
+procedure FGTDriver30
+begin
+	set_local_var(10, 1);
+end
+
+procedure FGTDriver31
+begin
+	call combat;
+end
+
+procedure FGTDriver32
+begin
+end
+
+procedure FGTDriver33
+begin
+	variable LVar0 := 0;
+	set_local_var(10, 0);
+	set_global_var(FARGO_JOB, 1);
+	LVar0 := local_var(9);
+	set_local_var(9, LVar0 + 1);
+end
+
+procedure FGTDriver34
+begin
+	set_local_var(10, 0);
+end
+
+procedure FGTDriver35
+begin
+end
+
+procedure FGTDriver37
+begin
+	set_map_var(35, 1);
+	set_map_var(10, 0);
+	set_global_var(FARGO_JOB, 6);
+	gsay_reply(849, 170);
+	giq_option(4, 849, 171, FGTDriver38, 50);
+	giq_option(4, 849, 172, FGTDriverEnd, 50);
+	giq_option(4, 849, 173, FGTDriver39, 50);
+	giq_option(-3, 849, 174, FGTDriver40, 50);
+	giq_option(-3, 849, 175, FGTDriverEnd, 50);
+end
+
+procedure FGTDriver38
+begin
+	gsay_reply(849, 177);
+	giq_option(4, 849, 178, FGTDriverEnd, 50);
+	giq_option(4, 849, 179, combat, 51);
+	giq_option(4, 849, 180, FGTDriver41, 50);
+	giq_option(4, 849, 181, FGTDriver42, 50);
+end
+
+procedure FGTDriver39
+begin
+	gsay_message(849, 176, 50);
+end
+
+procedure FGTDriver40
+begin
+	gsay_message(849, 182, 50);
+end
+
+procedure FGTDriver41
+begin
+	gsay_message(849, 183, 50);
+end
+
+procedure FGTDriver42
+begin
+	set_map_var(35, 0);
+	set_map_var(10, 1);
+	set_global_var(FARGO_JOB, 1);
+	gsay_message(849, 184, 50);
+end
+
+procedure FGTDriverEnd
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+
+

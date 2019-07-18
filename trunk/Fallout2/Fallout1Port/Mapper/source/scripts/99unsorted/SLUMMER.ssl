@@ -1,0 +1,1250 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure talk_p_proc;//    script_action == 11
+procedure social_skills;
+procedure slummer00;
+procedure slummer01;
+procedure slummer02;
+procedure slummer03;
+procedure slummer03a;
+procedure slummer04;
+procedure slummer04a;
+procedure slummer05;
+procedure slummer06;
+procedure slummer07;
+procedure slummer07a;
+procedure slummer08;
+procedure slummer09;
+procedure slummer10;
+procedure slummer10a;
+procedure slummer11;
+procedure slummer12;
+procedure slummer13;
+procedure slummer13a;
+procedure slummer13b;
+procedure slummer13c;
+procedure slummer14;
+procedure slummer15;
+procedure slummer16;
+procedure slummer17;
+procedure slummer17a;
+procedure slummer18;
+procedure slummer19;
+procedure slummer19a;
+procedure slummer20;
+procedure slummer21;
+procedure slummer21a;
+procedure slummer22;
+procedure slummer23;
+procedure slummer24;
+procedure slummer25;
+procedure slummer25a;
+procedure slummer26;
+procedure slummer26a;
+procedure slummer27;
+procedure slummer28;
+procedure slummer29;
+procedure slummer30;
+procedure slummer31;
+procedure slummer32;
+procedure slummer33;
+procedure slummer34;
+procedure slummer35;
+procedure slummer36;
+procedure slummer36a;
+procedure slummer36b;
+procedure slummer37;
+procedure slummer38a;
+procedure slummer38;
+procedure slummer39;
+procedure slummer40;
+procedure slummer41;
+procedure slummer42;
+procedure slummer43;
+procedure slummer44;
+procedure slummer45;
+procedure slummer46;
+procedure slummer47;
+procedure slummer48;
+procedure slummer49;
+procedure slummer50;
+procedure slummer51;
+procedure slummer51a;
+procedure slummer52;
+procedure slummer52a;
+procedure slummer53;
+procedure slummer54;
+procedure slummer54a;
+procedure slummer55;
+procedure slummer56;
+procedure slummer57;
+procedure slummer58;
+procedure slummer59;
+procedure slummer60;
+procedure slummer61;
+procedure slummer62;
+procedure slummer63;
+procedure slummer64;
+procedure slummer65;
+procedure slummer65a;
+procedure slummer66;
+procedure slummer67;
+procedure slummerdone;
+procedure slummerend;
+procedure slummercombat;
+procedure weapon_check;
+
+variable hostile;
+variable armed;
+variable LASHERKNOWN;
+variable Only_Once := 1;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 20);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 69);
+	end
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		call talk_p_proc;
+	end
+	else begin
+		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+			script_overrides;
+			display_msg(message_str(391, 100));
+		end
+		else begin
+			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+				if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+					if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+						set_global_var(BERSERKER_REPUTATION, 1);
+						set_global_var(CHAMPION_REPUTATION, 0);
+					end
+					if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+						set_global_var(CHAMPION_REPUTATION, 1);
+						set_global_var(BERSERKER_REPUTATION, 0);
+					end
+					set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+					if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+					end
+				end
+			end
+			else begin
+				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+					hostile := 1;
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+							hostile := 0;
+							attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	call weapon_check;
+	start_gdialog(-1, self_obj, 4, -1, -1);
+	gsay_start;
+	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+		if (local_var(4) == 0) then begin
+			if (armed == 1) then begin
+				call slummer02;
+			end
+			else begin
+				call slummer03;
+			end
+		end
+		else begin
+			set_local_var(4, 1);
+			call slummer01;
+		end
+	end
+	else begin
+		set_local_var(4, 1);
+		if (global_var(CATHEDRAL_ENEMY) == 1) then begin
+			call slummer00;
+		end
+		else begin
+			if (armed == 1) then begin
+				if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+					call slummer04;
+				end
+				else begin
+					if ((global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) or (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1)))) then begin
+						call slummer06;
+					end
+					else begin
+						call slummer05;
+					end
+				end
+			end
+			else begin
+				if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+					call slummer07;
+				end
+				else begin
+					if ((global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) or (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1)))) then begin
+						call slummer09;
+					end
+					else begin
+						call slummer08;
+					end
+				end
+			end
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure social_skills
+begin
+	script_overrides;
+	call get_reaction;
+	call talk_p_proc;
+end
+
+procedure slummer00
+begin
+	gsay_message(391, 101, 50);
+end
+
+procedure slummer01
+begin
+	gsay_message(391, 102, 50);
+end
+
+procedure slummer02
+begin
+	gsay_reply(391, 103);
+	giq_option(7, 391, 104, slummer10, 50);
+	giq_option(7, 391, 105, slummer11, 50);
+	giq_option(4, 391, 106, slummer13, 50);
+	giq_option(4, 391, 107, slummer15, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 108, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 109, slummer18, 50);
+	end
+	giq_option(-3, 391, 110, slummer14, 50);
+end
+
+procedure slummer03
+begin
+	gsay_reply(391, 111);
+	giq_option(7, 391, 112, slummer03a, 50);
+	giq_option(7, 391, 113, slummer20, 50);
+	giq_option(4, 391, 114, slummer21, 50);
+	giq_option(4, 391, 115, slummer22, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 116, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 117, slummer17, 50);
+	end
+	giq_option(-3, 391, 118, slummer23, 50);
+end
+
+procedure slummer03a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer19;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer04
+begin
+	gsay_reply(391, 119);
+	giq_option(7, 391, 120, slummer04a, 50);
+	giq_option(7, 391, 121, slummer20, 50);
+	giq_option(4, 391, 122, slummer26, 50);
+	giq_option(4, 391, 123, slummer27, 50);
+	giq_option(4, 391, 124, slummer15, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 125, slummer16, 50);
+	end
+	giq_option(-3, 391, 126, slummer28, 50);
+end
+
+procedure slummer04a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20))) then begin
+		call slummer25;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer05
+begin
+	gsay_reply(391, 127);
+	giq_option(7, 391, 128, slummer29, 50);
+	giq_option(4, 391, 129, slummer30, 50);
+	giq_option(4, 391, 130, slummer31, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 131, slummer16, 50);
+	end
+	giq_option(-3, 391, 132, slummer28, 50);
+end
+
+procedure slummer06
+begin
+	gsay_reply(391, 133);
+	giq_option(7, 391, 134, slummer29, 50);
+	giq_option(4, 391, 135, slummer32, 50);
+	giq_option(4, 391, 136, slummer31, 50);
+	giq_option(4, 391, 137, slummer34, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 138, slummer34, 50);
+	end
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 139, slummer16, 50);
+	end
+	giq_option(-3, 391, 140, slummer28, 50);
+end
+
+procedure slummer07
+begin
+	gsay_reply(391, 141);
+	giq_option(7, 391, 142, slummer07a, 50);
+	giq_option(7, 391, 143, slummer20, 50);
+	giq_option(4, 391, 144, slummer33, 50);
+	giq_option(4, 391, 145, slummer16, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 146, slummer16, 50);
+	end
+	giq_option(-3, 391, 147, slummer35, 50);
+end
+
+procedure slummer07a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer29;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer08
+begin
+	gsay_reply(391, 148);
+	giq_option(7, 391, 149, slummer07a, 50);
+	giq_option(7, 391, 150, slummer20, 50);
+	giq_option(4, 391, 151, slummer36, 50);
+	giq_option(4, 391, 152, slummer37, 50);
+	giq_option(4, 391, 153, slummer15, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 154, slummer16, 50);
+	end
+	giq_option(-3, 391, 155, slummer35, 50);
+end
+
+procedure slummer09
+begin
+	gsay_message(391, 156, 50);
+end
+
+procedure slummer10
+begin
+	gsay_reply(391, 157);
+	giq_option(7, 391, 158, slummer10a, 50);
+	giq_option(7, 391, 159, slummer20, 50);
+	giq_option(4, 391, 160, slummer36, 50);
+	giq_option(4, 391, 161, slummer37, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 162, slummer16, 50);
+	end
+end
+
+procedure slummer10a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer38;
+	end
+	else begin
+		call slummer61;
+	end
+end
+
+procedure slummer11
+begin
+	LASHERKNOWN := 1;
+	gsay_message(391, 163, 50);
+end
+
+procedure slummer12
+begin
+end
+
+procedure slummer13
+begin
+	gsay_reply(391, 165);
+	giq_option(7, 391, 166, slummer13a, 50);
+	giq_option(7, 391, 167, slummer13b, 50);
+	giq_option(4, 391, 168, slummer13c, 50);
+	giq_option(4, 391, 169, slummer43, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 170, slummercombat, 50);
+	end
+end
+
+procedure slummer13a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -20))) then begin
+		call slummer42;
+	end
+	else begin
+		call slummer43;
+	end
+end
+
+procedure slummer13b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -20))) then begin
+		call slummer39;
+	end
+	else begin
+		call slummer43;
+	end
+end
+
+procedure slummer13c
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer14;
+	end
+	else begin
+		call slummer43;
+	end
+end
+
+procedure slummer14
+begin
+	gsay_message(391, 171, 50);
+end
+
+procedure slummer15
+begin
+	gsay_message(391, 172, 50);
+end
+
+procedure slummer16
+begin
+	gsay_reply(391, 173);
+	giq_option(7, 391, 174, slummer44, 50);
+	giq_option(4, 391, 175, slummer45, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 176, slummercombat, 50);
+	end
+end
+
+procedure slummer17
+begin
+	gsay_reply(391, 177);
+	giq_option(7, 391, 178, slummer17a, 50);
+	giq_option(4, 391, 179, slummerend, 50);
+	giq_option(4, 391, 180, slummercombat, 50);
+end
+
+procedure slummer17a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -30))) then begin
+		call slummer46;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer18
+begin
+	gsay_message(391, 181, 50);
+end
+
+procedure slummer19
+begin
+	gsay_reply(391, 182);
+	giq_option(7, 391, 183, slummer19a, 50);
+	giq_option(7, 391, 184, slummer47, 50);
+	giq_option(4, 391, 185, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 186, slummer44, 50);
+	end
+end
+
+procedure slummer19a
+begin
+	call slummer49;
+end
+
+procedure slummer20
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	gsay_reply(391, 187);
+	giq_option(7, 391, 188, slummer47, 50);
+	giq_option(4, 391, 189, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 190, slummer44, 50);
+	end
+end
+
+procedure slummer21
+begin
+	gsay_reply(391, 191);
+	giq_option(7, 391, 192, slummer21a, 50);
+	giq_option(7, 391, 193, slummer11, 50);
+	giq_option(4, 391, 194, slummer20, 50);
+	giq_option(4, 391, 195, slummer15, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 196, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 197, slummercombat, 50);
+	end
+end
+
+procedure slummer21a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer25;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer22
+begin
+	LASHERKNOWN := 1;
+	gsay_reply(391, 198);
+	giq_option(7, 391, 199, slummer50, 50);
+	giq_option(7, 391, 200, slummer49, 50);
+	giq_option(4, 391, 201, slummer33, 50);
+	giq_option(4, 391, 202, slummer20, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 203, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 204, slummer44, 50);
+	end
+end
+
+procedure slummer23
+begin
+	gsay_message(391, 205, 50);
+end
+
+procedure slummer24
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	gsay_message(391, 206, 50);
+end
+
+procedure slummer25
+begin
+	gsay_reply(391, 207);
+	giq_option(7, 391, 208, slummer25a, 50);
+	giq_option(7, 391, 209, slummer52, 50);
+	giq_option(4, 391, 210, slummer33, 50);
+	giq_option(4, 391, 211, slummer54, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 212, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 213, slummer24, 50);
+	end
+end
+
+procedure slummer25a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer51;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer26
+begin
+	gsay_reply(391, 214);
+	giq_option(7, 391, 215, slummer26a, 50);
+	giq_option(7, 391, 216, slummer33, 50);
+	giq_option(4, 391, 217, slummer55, 50);
+	giq_option(4, 391, 218, slummer54, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 219, slummer24, 50);
+	end
+end
+
+procedure slummer26a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer51;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer27
+begin
+	gsay_reply(391, 220);
+	giq_option(7, 391, 221, slummer56, 50);
+	giq_option(4, 391, 222, slummer44, 50);
+	giq_option(4, 391, 223, slummer57, 50);
+	giq_option(4, 391, 224, slummer54, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 225, slummer16, 50);
+	end
+end
+
+procedure slummer28
+begin
+	gsay_reply(391, 226);
+	giq_option(-3, 391, 227, slummer44, 50);
+	giq_option(-3, 391, 228, slummer49, 50);
+end
+
+procedure slummer29
+begin
+	gsay_reply(391, 229);
+	giq_option(7, 391, 230, slummer58, 50);
+	giq_option(7, 391, 231, slummer59, 50);
+	giq_option(4, 391, 232, slummer01, 50);
+	giq_option(4, 391, 233, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 234, slummercombat, 50);
+	end
+end
+
+procedure slummer30
+begin
+	gsay_message(391, 235, 50);
+end
+
+procedure slummer31
+begin
+	gsay_reply(391, 236);
+	giq_option(7, 391, 237, slummer52, 50);
+	giq_option(7, 391, 238, slummer44, 50);
+	giq_option(4, 391, 239, slummer18, 50);
+	giq_option(4, 391, 240, slummer20, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 241, slummer24, 50);
+	end
+end
+
+procedure slummer32
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	LASHERKNOWN := 1;
+	gsay_message(391, 242, 50);
+end
+
+procedure slummer33
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	gsay_reply(391, 243);
+	giq_option(7, 391, 244, slummer47, 50);
+	giq_option(4, 391, 245, slummer44, 50);
+	giq_option(4, 391, 246, slummer45, 50);
+end
+
+procedure slummer34
+begin
+	gsay_reply(391, 247);
+	giq_option(7, 391, 248, slummer43, 50);
+	giq_option(4, 391, 249, slummer60, 50);
+	giq_option(4, 391, 250, slummer43, 50);
+	giq_option(4, 391, 251, slummercombat, 50);
+end
+
+procedure slummer35
+begin
+	gsay_message(391, 252, 50);
+end
+
+procedure slummer36
+begin
+	gsay_reply(391, 253);
+	giq_option(4, 391, 254, slummer18, 50);
+	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+		giq_option(7, 391, 255, slummer36a, 50);
+		giq_option(4, 391, 256, slummer52, 50);
+	end
+	else begin
+		giq_option(7, 391, 257, slummer36b, 50);
+		giq_option(4, 391, 258, slummer20, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 259, slummer24, 50);
+	end
+end
+
+procedure slummer36a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer29;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer36b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer26;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer37
+begin
+	gsay_message(391, 260, 50);
+end
+
+procedure slummer38a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer52;
+	end
+	else begin
+		call slummer52;
+	end
+end
+
+procedure slummer38
+begin
+	gsay_reply(391, 261);
+	giq_option(7, 391, 262, slummer38a, 50);
+	giq_option(4, 391, 263, slummer01, 50);
+	giq_option(4, 391, 264, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 265, slummercombat, 50);
+	end
+end
+
+procedure slummer39
+begin
+	gsay_message(391, 266, 50);
+end
+
+procedure slummer40
+begin
+	gsay_message(391, 267, 50);
+end
+
+procedure slummer41
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	gsay_message(391, 268, 50);
+end
+
+procedure slummer42
+begin
+	gsay_reply(391, 269);
+	giq_option(4, 391, 270, slummer44, 50);
+	giq_option(4, 391, 271, slummer50, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 272, slummer49, 50);
+	end
+	giq_option(-3, 391, 273, slummer48, 50);
+end
+
+procedure slummer43
+begin
+	gsay_message(391, 274, 51);
+	call slummercombat;
+end
+
+procedure slummer44
+begin
+	gsay_message(391, 275, 50);
+end
+
+procedure slummer45
+begin
+	gsay_message(391, 276, 50);
+end
+
+procedure slummer46
+begin
+	gsay_reply(391, 277);
+	giq_option(7, 391, 278, slummer61, 50);
+	giq_option(4, 391, 279, slummer41, 50);
+	giq_option(4, 391, 280, slummer44, 50);
+	giq_option(4, 391, 281, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 282, slummer44, 50);
+	end
+end
+
+procedure slummer47
+begin
+	gsay_message(391, 283, 50);
+end
+
+procedure slummer48
+begin
+	gsay_message(391, 284, 50);
+end
+
+procedure slummer49
+begin
+	gsay_message(391, 285, 50);
+end
+
+procedure slummer50
+begin
+	gsay_message(391, 286, 50);
+end
+
+procedure slummer51
+begin
+	gsay_reply(391, 287);
+	giq_option(7, 391, 288, slummer51a, 50);
+	giq_option(7, 391, 289, slummer63, 50);
+	giq_option(4, 391, 290, slummer64, 50);
+	giq_option(4, 391, 291, slummer54, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 292, slummer24, 50);
+	end
+end
+
+procedure slummer51a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer62;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer52
+begin
+	gsay_reply(391, 293);
+	giq_option(7, 391, 294, slummer52a, 50);
+	giq_option(7, 391, 295, slummer53, 50);
+	giq_option(4, 391, 296, slummer41, 50);
+	giq_option(4, 391, 297, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 298, slummercombat, 50);
+	end
+end
+
+procedure slummer52a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer65;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer53
+begin
+	set_global_var(MORPHEUS_KNOWN, 1);
+	gsay_message(391, 299, 50);
+end
+
+procedure slummer54
+begin
+	gsay_reply(391, 300);
+	giq_option(7, 391, 301, slummer54a, 50);
+	giq_option(4, 391, 302, slummer44, 50);
+	giq_option(4, 391, 303, slummer44, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 304, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 305, slummercombat, 50);
+	end
+end
+
+procedure slummer54a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer51;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer55
+begin
+	gsay_reply(391, 306);
+	giq_option(7, 391, 307, slummer66, 50);
+	giq_option(7, 391, 308, slummer66, 50);
+	giq_option(4, 391, 309, slummer44, 50);
+	giq_option(4, 391, 310, slummer41, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 311, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 312, slummercombat, 50);
+	end
+end
+
+procedure slummer56
+begin
+	gsay_reply(391, 313);
+	giq_option(7, 391, 314, slummer33, 50);
+	giq_option(7, 391, 315, slummer54, 50);
+	giq_option(4, 391, 316, slummer41, 50);
+	giq_option(4, 391, 317, slummer44, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 318, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 319, slummer45, 50);
+	end
+end
+
+procedure slummer57
+begin
+	gsay_message(391, 320, 50);
+end
+
+procedure slummer58
+begin
+	gsay_message(391, 321, 50);
+end
+
+procedure slummer59
+begin
+	gsay_message(391, 322, 50);
+end
+
+procedure slummer60
+begin
+	gsay_reply(391, 323);
+	giq_option(4, 391, 324, slummerdone, 50);
+	giq_option(4, 391, 325, slummer40, 50);
+	giq_option(4, 391, 326, slummercombat, 50);
+end
+
+procedure slummer61
+begin
+	gsay_message(391, 327, 50);
+end
+
+procedure slummer62
+begin
+	gsay_reply(391, 328);
+	giq_option(7, 391, 329, slummer58, 50);
+	giq_option(7, 391, 330, slummer59, 50);
+	giq_option(4, 391, 331, slummer01, 50);
+	giq_option(4, 391, 332, slummer44, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 333, slummercombat, 50);
+	end
+end
+
+procedure slummer63
+begin
+	gsay_reply(391, 334);
+	giq_option(7, 391, 335, slummer67, 50);
+	giq_option(4, 391, 336, slummer41, 50);
+	giq_option(4, 391, 337, slummer44, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 338, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 339, slummer35, 50);
+	end
+end
+
+procedure slummer64
+begin
+	gsay_message(391, 340, 50);
+end
+
+procedure slummer65
+begin
+	gsay_reply(391, 341);
+	giq_option(7, 391, 342, slummer65a, 50);
+	giq_option(4, 391, 343, slummer41, 50);
+	giq_option(4, 391, 344, slummer44, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 391, 345, slummer16, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 391, 346, slummer35, 50);
+	end
+end
+
+procedure slummer65a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call slummer49;
+	end
+	else begin
+		call slummer49;
+	end
+end
+
+procedure slummer66
+begin
+	gsay_message(391, 347, 50);
+end
+
+procedure slummer67
+begin
+	gsay_message(391, 348, 50);
+end
+
+procedure slummerdone
+begin
+	gsay_option(391, 349, slummerend, 50);
+end
+
+procedure slummerend
+begin
+end
+
+procedure slummercombat
+begin
+	set_global_var(CATHEDRAL_ENEMY, 1);
+	hostile := 1;
+end
+
+procedure weapon_check
+begin
+	call items_held;
+	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		armed := 1;
+	end
+	else begin
+		armed := 0;
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

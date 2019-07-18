@@ -1,0 +1,91 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure spatial_p_proc;//    script_action == 2
+procedure talk_p_proc;//    script_action == 11
+procedure CrashRm01;
+procedure CrashRm02;
+procedure CrashRmEnd;
+
+variable item;
+
+import variable JTRaider_ptr;
+import variable Sinthia_ptr;
+
+
+procedure start
+begin
+	if (script_action == 2) then begin// spatial_p_proc - Player is on or near hex of the location or object this script is using
+		call spatial_p_proc;
+	end
+	else begin
+		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+			call talk_p_proc;
+		end
+	end
+end
+
+procedure spatial_p_proc
+begin
+	if ((source_obj == dude_obj) and (global_var(RENT_TIME) > (game_time / (10 * 60 * 60 * 24)))) then begin
+		dialogue_system_enter;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	start_gdialog(807, self_obj, 4, -1, -1);
+	gsay_start;
+	gsay_reply(807, 100);
+	giq_option(0, 807, 101, CrashRm01, 50);
+	giq_option(0, 807, 102, CrashRmEnd, 50);
+	gsay_end;
+	end_dialogue;
+	if (local_var(0) == 1) then begin
+		call CrashRm02;
+	end
+end
+
+procedure CrashRm01
+begin
+	set_local_var(0, 1);
+end
+
+procedure CrashRm02
+begin
+	set_local_var(0, 0);
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	game_time_advance(game_ticks(60 * (60 - (game_time_hour % 100))));
+	if (game_time_hour < 1000) then begin
+		game_time_advance(game_ticks(36 * (1000 - game_time_hour)));
+	end
+	else begin
+		game_time_advance(game_ticks(36 * (3400 - game_time_hour)));
+	end
+	critter_heal(dude_obj, random(10, 15));
+	display_msg(message_str(807, 103));
+	if ((map_var(3) == 0) and (map_var(0) != 2)) then begin
+		JTRaider_ptr := create_object_sid(16777291, 17484, 0, 337);
+		move_to(Sinthia_ptr, 17485, 0);
+		anim(JTRaider_ptr, 1000, 3);
+		anim(Sinthia_ptr, 1000, 3);
+		item := create_object_sid(8, 0, 0, -1);
+		add_obj_to_inven(JTRaider_ptr, item);
+		wield_obj_critter(JTRaider_ptr, item);
+		item := create_object_sid(1, 0, 0, -1);
+		add_obj_to_inven(JTRaider_ptr, item);
+		wield_obj_critter(JTRaider_ptr, item);
+		set_map_var(3, 1);
+	end
+	gfade_in(1);
+end
+
+procedure CrashRmEnd
+begin
+end
+

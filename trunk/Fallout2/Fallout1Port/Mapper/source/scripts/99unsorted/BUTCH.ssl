@@ -1,0 +1,1159 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;//    script_action == 14
+procedure look_at_p_proc;//    script_action == 21
+procedure Butch00a;
+procedure Butch00;
+procedure Butch01;
+procedure Butch02;
+procedure Butch03;
+procedure Butch04;
+procedure Butch05;
+procedure Butch06;
+procedure Butch08;
+procedure Butch09;
+procedure Butch10;
+procedure Butch11;
+procedure Butch12;
+procedure Butch12a;
+procedure Butch13;
+procedure Butch13a;
+procedure Butch14;
+procedure Butch15;
+procedure Butch16;
+procedure Butch17;
+procedure Butch18;
+procedure Butch19;
+procedure Butch19a;
+procedure Butch20;
+procedure Butch21;
+procedure Butch22;
+procedure Butch23;
+procedure Butch23a;
+procedure Butch24;
+procedure Butch25;
+procedure Butch26;
+procedure Butch27;
+procedure Butch27a;
+procedure Butch28;
+procedure Butch29;
+procedure Butch30;
+procedure Butch30a;
+procedure Butch31;
+procedure Butch32;
+procedure Butch33;
+procedure Butch34;
+procedure Butch35;
+procedure Butch35a;
+procedure Butch36;
+procedure Butch37;
+procedure Butch38;
+procedure Butch39;
+procedure Butch40;
+procedure Butch41;
+procedure Butch42;
+procedure Butch43;
+procedure Butch44;
+procedure Butch45;
+procedure Butch46;
+procedure Butch47;
+procedure Butch49;
+procedure Butch50;
+procedure Butch51;
+procedure Butch51a;
+procedure Butch52;
+procedure Butch53;
+procedure Butch53a;
+procedure Butch54;
+procedure Butch54a;
+procedure Butch55;
+procedure Butch56;
+procedure Butch57;
+procedure Butch58;
+procedure Butch59;
+procedure Butch60;
+procedure Butch61;
+procedure Butch62;
+procedure Butch63;
+procedure Butch64;
+procedure Butch65;
+procedure Butch66;
+procedure Butch67;
+procedure Butch68;
+procedure Butch69;
+procedure Butch70;
+procedure Butch71;
+procedure Butch72;
+procedure Butch73;
+procedure ButchX2;
+procedure ButchX3;
+procedure ButchEnd;
+procedure ButchEndAccept;
+procedure ButchEndTransport;
+
+variable hostile;
+variable Only_Once := 1;
+variable TossOut;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 36);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 50);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (map_var(40) == 1) then begin
+		float_msg(self_obj, message_str(39, 328), 2);
+	end
+	else begin
+		if (map_var(41) == 2) then begin
+			float_msg(self_obj, message_str(39, 325), 2);
+		end
+		else begin
+			if (get_critter_stat(dude_obj, 4) < 4) then begin
+				float_msg(dude_obj, message_str(39, 330), 3);
+				float_msg(self_obj, message_str(39, 331), 2);
+			end
+			else begin
+				if ((local_var(4) == 0) and (map_var(34) == 1)) then begin
+					set_local_var(4, 1);
+					start_gdialog(39, self_obj, 4, 8, 3);
+					gsay_start;
+					call Butch01;
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					if ((local_var(4) == 0) and (map_var(34) == 0)) then begin
+						float_msg(self_obj, message_str(39, 324), 2);
+					end
+					else begin
+						if (map_var(41) == 3) then begin
+							start_gdialog(39, self_obj, 4, 8, 3);
+							gsay_start;
+							call Butch73;
+							gsay_end;
+							end_dialogue;
+						end
+						else begin
+							if ((local_var(5) == 1) or (map_var(41) == 4)) then begin
+								start_gdialog(39, self_obj, 4, 8, 3);
+								gsay_start;
+								call Butch60;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								if (map_var(56) == 1) then begin
+									start_gdialog(39, self_obj, 4, 8, 3);
+									gsay_start;
+									call Butch59;
+									gsay_end;
+									end_dialogue;
+								end
+								else begin
+									if (global_var(MISSING_CARAVANS_STATUS) == 5) then begin
+										start_gdialog(39, self_obj, 4, 8, 3);
+										gsay_start;
+										call Butch37;
+										gsay_end;
+										end_dialogue;
+									end
+									else begin
+										start_gdialog(39, self_obj, 4, 8, 3);
+										gsay_start;
+										call Butch01;
+										gsay_end;
+										end_dialogue;
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	if (TossOut == 1) then begin
+		TossOut := 0;
+		call ButchEndTransport;
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(39, 100));
+end
+
+procedure Butch00a
+begin
+	if (local_var(1) >= 2) then begin
+		call Butch34;
+	end
+	else begin
+		call Butch36;
+	end
+end
+
+procedure Butch00
+begin
+	giq_option(4, 39, 101, Butch23, 50);
+	giq_option(4, 39, 102, Butch10, 50);
+	giq_option(4, 39, 103, Butch00a, 50);
+	giq_option(4, 39, 104, Butch27, 50);
+	giq_option(4, 39, 105, ButchEnd, 50);
+end
+
+procedure Butch01
+begin
+	gsay_reply(39, 106);
+	giq_option(4, 39, 107, Butch02, 50);
+	giq_option(4, 39, 108, ButchEnd, 50);
+end
+
+procedure Butch02
+begin
+	gsay_reply(39, 109);
+	giq_option(4, 39, 110, Butch03, 50);
+	giq_option(4, 39, 111, Butch08, 50);
+	giq_option(4, 39, 112, Butch08, 50);
+end
+
+procedure Butch03
+begin
+	call UpReactLevel;
+	gsay_reply(39, 113);
+	giq_option(4, 39, 114, Butch04, 50);
+	giq_option(4, 39, 115, ButchEndAccept, 50);
+end
+
+procedure Butch04
+begin
+	gsay_reply(39, 116);
+	giq_option(4, 39, 117, Butch05, 50);
+	giq_option(4, 39, 118, Butch08, 50);
+	giq_option(4, 39, 119, ButchEndAccept, 50);
+end
+
+procedure Butch05
+begin
+	gsay_reply(39, 120);
+	giq_option(4, 39, 121, Butch06, 50);
+	giq_option(4, 39, 122, ButchEndAccept, 50);
+end
+
+procedure Butch06
+begin
+	gsay_reply(39, message_str(39, 123) + message_str(39, 124));
+	giq_option(4, 39, 125, Butch08, 50);
+	giq_option(4, 39, 127, Butch05, 50);
+	giq_option(4, 39, 128, Butch21, 51);
+	giq_option(4, 39, 129, Butch11, 50);
+end
+
+procedure Butch08
+begin
+	gsay_reply(39, 133);
+	giq_option(4, 39, 134, Butch09, 50);
+	giq_option(4, 39, 135, Butch19, 51);
+end
+
+procedure Butch09
+begin
+	gsay_reply(39, 136);
+	giq_option(4, 39, 137, Butch12, 50);
+	giq_option(4, 39, 138, Butch16, 50);
+	giq_option(4, 39, 139, Butch18, 50);
+end
+
+procedure Butch10
+begin
+	gsay_reply(39, 140);
+	giq_option(4, 39, 141, Butch12, 50);
+end
+
+procedure Butch11
+begin
+	gsay_message(39, 142, 50);
+end
+
+procedure Butch12
+begin
+	gsay_reply(39, 143);
+	giq_option(4, 39, 144, Butch12a, 50);
+	giq_option(4, 39, 145, ButchEndAccept, 50);
+end
+
+procedure Butch12a
+begin
+	call Butch13;
+end
+
+procedure Butch13
+begin
+	set_map_var(8, 1);
+	set_global_var(MISSING_CARAVANS_STATUS, 1);
+	gsay_reply(39, 146);
+	giq_option(4, 39, 147, Butch14, 51);
+	giq_option(4, 39, 148, Butch17, 50);
+	giq_option(4, 39, 149, Butch13a, 50);
+end
+
+procedure Butch13a
+begin
+	set_map_var(33, 1);
+	gsay_reply(39, 150);
+	giq_option(4, 39, 151, Butch15, 51);
+	giq_option(4, 39, 152, Butch16, 50);
+	giq_option(4, 39, 153, Butch17, 50);
+end
+
+procedure Butch14
+begin
+	call DownReactLevel;
+	set_map_var(33, 1);
+	gsay_reply(39, 154);
+	giq_option(4, 39, 155, Butch15, 51);
+	giq_option(4, 39, 156, Butch16, 50);
+	giq_option(4, 39, 157, Butch17, 50);
+end
+
+procedure Butch15
+begin
+	set_map_var(40, 1);
+	set_map_var(35, 1);
+	set_map_var(10, 0);
+	TossOut := 1;
+	gsay_message(39, 158, 50);
+end
+
+procedure Butch16
+begin
+	set_map_var(41, 1);
+	set_global_var(MISSING_CARAVAN, 1);
+	set_map_var(10, 1);
+	gsay_message(39, 159, 50);
+	call ButchX3;
+end
+
+procedure Butch17
+begin
+	gsay_reply(39, 160);
+	call Butch00;
+end
+
+procedure Butch18
+begin
+	set_map_var(41, 2);
+	set_global_var(MISSING_CARAVAN, 0);
+	gsay_message(39, 161, 50);
+end
+
+procedure Butch19
+begin
+	gsay_reply(39, 162);
+	giq_option(4, 39, 163, Butch15, 51);
+	giq_option(4, 39, 164, Butch19a, 50);
+end
+
+procedure Butch19a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Butch09;
+	end
+	else begin
+		call Butch20;
+	end
+end
+
+procedure Butch20
+begin
+	call DownReactLevel;
+	gsay_reply(39, 165);
+	giq_option(4, 39, 166, Butch16, 50);
+	giq_option(4, 39, 167, Butch18, 50);
+end
+
+procedure Butch21
+begin
+	call DownReactLevel;
+	gsay_reply(39, 168);
+	giq_option(4, 39, 169, Butch15, 51);
+	giq_option(4, 39, 170, Butch08, 50);
+end
+
+procedure Butch22
+begin
+	gsay_message(39, 171, 50);
+end
+
+procedure Butch23
+begin
+	gsay_reply(39, 172);
+	giq_option(4, 39, 173, Butch23a, 50);
+	giq_option(4, 39, 174, Butch23a, 50);
+	giq_option(4, 39, 175, Butch17, 50);
+end
+
+procedure Butch23a
+begin
+	variable LVar0 := 0;
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		LVar0 := 0;
+	end
+	else begin
+		LVar0 := 20;
+	end
+	if (is_success(roll_vs_skill(dude_obj, 14, LVar0))) then begin
+		call Butch24;
+	end
+	else begin
+		call Butch26;
+	end
+end
+
+procedure Butch24
+begin
+	gsay_reply(39, 176);
+	giq_option(4, 39, 177, Butch25, 50);
+	call Butch00;
+end
+
+procedure Butch25
+begin
+	gsay_message(39, 179, 50);
+	call Butch00;
+end
+
+procedure Butch26
+begin
+	gsay_reply(39, 180);
+	giq_option(4, 39, 181, Butch24, 50);
+	call Butch00;
+end
+
+procedure Butch27
+begin
+	gsay_reply(39, 183);
+	giq_option(4, 39, 184, Butch28, 50);
+	giq_option(4, 39, 185, Butch27a, 50);
+end
+
+procedure Butch27a
+begin
+	if (local_var(1) >= 2) then begin
+		call Butch29;
+	end
+	else begin
+		call Butch30;
+	end
+end
+
+procedure Butch28
+begin
+	gsay_reply(39, 186);
+	call Butch00;
+end
+
+procedure Butch29
+begin
+	gsay_reply(39, 187);
+	giq_option(4, 39, 188, Butch32, 50);
+	call Butch00;
+end
+
+procedure Butch30
+begin
+	gsay_reply(39, 190);
+	giq_option(4, 39, 191, Butch30a, 51);
+	call Butch00;
+end
+
+procedure Butch30a
+begin
+	if (local_var(1) >= 2) then begin
+		call DownReactLevel;
+		call Butch31;
+	end
+	else begin
+		call Butch15;
+	end
+end
+
+procedure Butch31
+begin
+	gsay_reply(39, 193);
+	giq_option(4, 39, 194, Butch15, 51);
+	giq_option(4, 39, 195, Butch17, 50);
+end
+
+procedure Butch32
+begin
+	gsay_reply(39, 196);
+	call Butch00;
+end
+
+procedure Butch33
+begin
+	gsay_reply(39, 199);
+	call Butch00;
+end
+
+procedure Butch34
+begin
+	if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then begin
+		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+	end
+	if (global_var(WORLDMAPLIST_BROTHERHOOD) == 0) then begin
+		set_global_var(WORLDMAPLIST_BROTHERHOOD, 1);
+	end
+	if (global_var(WORLDMAPLIST_BONEYARD) == 0) then begin
+		set_global_var(WORLDMAPLIST_BONEYARD, 1);
+	end
+	gsay_reply(39, 201);
+	giq_option(4, 39, 202, Butch35, 50);
+	call Butch00;
+end
+
+procedure Butch35
+begin
+	if (global_var(WORLDMAPLIST_NECROPOLIS) == 0) then begin
+		set_global_var(WORLDMAPLIST_NECROPOLIS, 1);
+	end
+	gsay_reply(39, 204);
+	giq_option(4, 39, 205, Butch35a, 50);
+end
+
+procedure Butch35a
+begin
+	gsay_reply(39, 206);
+	call Butch00;
+end
+
+procedure Butch36
+begin
+	gsay_reply(39, 208);
+	giq_option(4, 39, 209, Butch30a, 51);
+	call Butch00;
+end
+
+procedure Butch37
+begin
+	gsay_reply(39, 211);//  {211}{BUTCH37}{Well, what do you have?}
+	if (global_var(WORLDMAPLIST_MILITARYBASE) > 0) or (global_var(DCMUTANT_GAVE_DISK) > 0) or (global_var(HOLODISK_MUTANT) == 1) or (global_var(DCMUTANT_TOLD_NORTHWEST) == 1) or global_var(DCMUTANT_DISK_POINTER) then begin// BEEN_TO_MB_ENTRANCE, RECEIVED_DCMUTANT_DISK, USED_DCMUTANT_DISK, DCMUTANT_TOLD_NORTHWEST, DCMUTANT_DISK_BUILT
+		giq_option(4, 39, 212, Butch38, 50);//  {212}{}{Well, I found out who's taking the caravans.}
+	end
+	if (global_var(MISSING_CARAVANS_STATUS) == 5) then begin
+		giq_option(4, 39, 213, Butch53, 50);//  {213}{}{Well, I know it wasn't the Deathclaw who took the caravans.}
+	end
+	giq_option(4, 39, 214, ButchEnd, 50);// {214}{}{Nothing right now. Goodbye.}
+end
+
+procedure Butch38
+begin
+	gsay_reply(39, 215);// {215}{BUTCH38}{Really? Who?}
+	giq_option(4, 39, 216, Butch39, 50);// {216}{}{It's these big mutant guys.}
+	giq_option(4, 39, 217, Butch51, 50);// {217}{}{Rats! BIG rats with BIG teeth...}
+end
+
+procedure Butch39
+begin
+	set_map_var(42, 2);
+	gsay_reply(39, 218);// {218}{BUTCH39}{Wha... what would mutants want with our caravans?}
+	if (global_var(HOLODISK_MUTANT) == 1) or (global_var(DCMUTANT_TOLD_NORTHWEST) == 1) then begin// USED_DCMUTANT_DISK, DCMUTANT_TOLD_NORTHWEST
+		giq_option(4, 39, 219, Butch40, 50);// {219}{}{I don't know, but they seem to be taking the humans prisoner.}
+	end
+	giq_option(4, 39, 220, Butch46, 50);// {220}{}{I don't know for sure, but it's mutants, not the Deathclaw.}
+end
+
+procedure Butch40
+begin
+	gsay_reply(39, 221);//  {221}{BUTCH40}{What, do I look a crate shy of a load? Did you even see the Deathclaw?}
+	giq_option(4, 39, 222, Butch41, 50);//  {222}{}{Been there, saw that, killed it.}
+	giq_option(4, 39, 223, Butch46, 50);//  {223}{}{I'm telling you that it wasn't the Deathclaw.}
+end
+
+procedure Butch41
+begin
+	gsay_reply(39, 224);//  {224}{BUTCH41}{You... you killed it? Well... I uh... um... uh, where did these mutants come from?}
+	if global_var(WORLDMAPLIST_MILITARYBASE) == 2 then begin
+		if global_var(HOLODISK_MUTANT) == 1 then begin
+			giq_option(4, 39, 332, Butch43, 50);//  "THE MASTER" response
+		end
+		else begin
+			giq_option(4, 39, 333, Butch42, 50);//  "AN OUTPOST" response
+		end
+	end
+	else begin
+		if global_var(WORLDMAPLIST_MILITARYBASE) == 1 then begin
+			if global_var(HOLODISK_MUTANT) == 1 then begin
+				giq_option(4, 39, 334, Butch43, 50);//  "THE MASTER" response
+			end
+			else begin
+				giq_option(4, 39, 335, Butch42, 50);//  "AN OUTPOST" response
+			end
+		end
+		else begin
+			if global_var(DCMUTANT_TOLD_NORTHWEST) == 1 then begin
+				if global_var(HOLODISK_MUTANT) == 1 then begin
+					giq_option(4, 39, 336, Butch43, 50);//  "THE MASTER" response
+				end
+				else begin
+					giq_option(4, 39, 337, Butch42, 50);//  "AN OUTPOST" response
+				end
+			end
+			else begin
+				if global_var(HOLODISK_MUTANT) == 1 then begin
+					giq_option(4, 39, 338, Butch43, 50);//  "THE MASTER" response
+				end
+				else begin
+					giq_option(4, 39, 339, Butch43, 50);//  "THE MASTER" response
+					giq_option(4, 39, 340, Butch43, 50);//  "THE MASTER" response
+				end
+			end
+		end
+	end
+end
+
+procedure Butch42
+begin
+	set_map_var(41, 3);
+	set_global_var(MISSING_CARAVAN, 2);
+	gsay_message(39, 227, 50);//  {227}{BUTCH42}{An outpost? Well... um... well uh. I'll have to talk to the Committee. Yeah... yeah, they'll know what to do. Done and done. Get out, 'cause I got stuff to do... okay?}
+	call ButchX2;
+end
+
+procedure Butch43
+begin
+	gsay_reply(39, 228);//  {228}{BUTCH43}{The Master? H-He's more of a myth than the Deathclaw. You... you don't think he's real, do you?}
+	giq_option(4, 39, 229, Butch44, 50);//  {229}{}{I'm not sure. But I intend to find out.}
+	giq_option(4, 39, 230, Butch45, 50);//  {230}{}{Yep, I've seen him! And he's coming to get you!}
+end
+
+procedure Butch44
+begin
+	set_map_var(41, 3);
+	set_global_var(MISSING_CARAVAN, 2);
+	gsay_message(39, 231, 50);//  {231}{BUTCH44}{Yeah, done and... yeah, you do that! Uh, I need to talk to the Committee. They'll know what to do. N-N-Now get out! I've got a lot to do... okay?}
+	call ButchX2;
+end
+
+procedure Butch45
+begin
+	set_map_var(41, 3);
+	set_global_var(MISSING_CARAVAN, 2);
+	gsay_message(39, 232, 50);//  {232}{BUTCH45}{What?! Well... well... I'm not afraid! Rutger! I got guns! Rutger!}
+	call ButchX2;
+end
+
+procedure Butch46
+begin
+	gsay_reply(39, 233);// {233}{BUTCH46}{Alright, so it wasn't the Deathclaw. But what would the mutants in Old Town want with our caravans? Unless it's some kind of conspiracy.}
+	if global_var(WORLDMAPLIST_MILITARYBASE) == 2 then begin
+		if global_var(HOLODISK_MUTANT) == 1 then begin
+			giq_option(4, 39, 341, Butch43, 50);//  "THE MASTER" response
+		end
+		else begin
+			giq_option(4, 39, 342, Butch42, 50);//  "AN OUTPOST" response
+		end
+	end
+	else begin
+		if global_var(WORLDMAPLIST_MILITARYBASE) == 1 then begin
+			if global_var(HOLODISK_MUTANT) == 1 then begin
+				giq_option(4, 39, 343, Butch43, 50);//  "THE MASTER" response
+			end
+			else begin
+				giq_option(4, 39, 344, Butch42, 50);//  "AN OUTPOST" response
+			end
+		end
+		else begin
+			if global_var(DCMUTANT_TOLD_NORTHWEST) == 1 then begin
+				if global_var(HOLODISK_MUTANT) == 1 then begin
+					giq_option(4, 39, 345, Butch43, 50);//  "THE MASTER" response
+				end
+				else begin
+					giq_option(4, 39, 346, Butch42, 50);//  "AN OUTPOST" response
+				end
+			end
+			else begin
+				if global_var(HOLODISK_MUTANT) == 1 then begin
+					giq_option(4, 39, 347, Butch43, 50);//  "THE MASTER" response
+				end
+				else begin
+					giq_option(4, 39, 348, Butch43, 50);//  "THE MASTER" response
+					giq_option(4, 39, 349, Butch43, 50);//  "THE MASTER" response
+				end
+			end
+		end
+	end
+	giq_option(4, 39, 234, Butch42, 50);// {234}{}{No, no, no, you pinhead. These mutants are big and green and they have an army in the mountains to the north.}
+	giq_option(4, 39, 235, Butch47, 50);// {235}{}{You really are stupid, aren't you? You're not listening!}
+end
+
+procedure Butch47
+begin
+	set_map_var(41, 3);
+	set_global_var(MISSING_CARAVAN, 2);
+	gsay_message(39, 236, 50);// {236}{BUTCH47}{What? Get out! I need to tell the Committee about this. Go on, get out!}
+	call ButchX2;
+end
+
+procedure Butch49
+begin
+	gsay_message(39, 241, 50);// {241}{BUTCH49}{I don't have time for this. Get out, and don't come back until you find something useful!}
+	call ButchX3;
+end
+
+procedure Butch50
+begin
+	gsay_reply(39, 242);// {242}{BUTCH50}{Well then, what is it?}
+	giq_option(4, 39, 243, Butch39, 50);// {243}{}{Actually, it IS these big mutant guys...}
+	giq_option(4, 39, 244, Butch49, 50);// {244}{}{Rats, I tell you! Big, hairy...}
+end
+
+procedure Butch51
+begin
+	gsay_reply(39, 245);// {245}{BUTCH51}{Rats? You've got to be kidding me.}
+	giq_option(4, 39, 246, Butch51a, 50);// {246}{}{No, really. BIG rats!}
+	giq_option(4, 39, 247, Butch50, 50);// {247}{}{You're right. I was just kidding.}
+end
+
+procedure Butch51a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Butch52;
+	end
+	else begin
+		call Butch49;
+	end
+end
+
+procedure Butch52
+begin
+	set_map_var(41, 3);
+	set_global_var(MISSING_CARAVAN, 2);
+	set_map_var(42, 1);
+	gsay_message(39, 248, 50);// {248}{BUTCH52}{Well... okay. I'll tell the Committee, but I don't think they'll believe it. Although I have seen mighty big rats around...}
+	call ButchX2;
+end
+
+procedure Butch53
+begin
+	gsay_reply(39, 249);// {249}{BUTCH53}{How do you know? Did you see the Deathclaw?}
+	giq_option(4, 39, 250, Butch54, 50);// {250}{}{Been there, saw that, killed it.}
+	giq_option(4, 39, 251, Butch53a, 50);// {251}{}{Just trust me. I know.}
+end
+
+procedure Butch53a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Butch54a;
+	end
+	else begin
+		call Butch58;
+	end
+end
+
+procedure Butch54
+begin
+	gsay_reply(39, 252);// {252}{BUTCH54}{You... you killed it?}
+	giq_option(4, 39, 253, Butch54a, 50);// {253}{}{Yep, sure did.}
+end
+
+procedure Butch54a
+begin
+	gsay_reply(39, 254);// {254}{BUTCH54a}{Well then, then who's stealing my caravans?}
+	giq_option(4, 39, 255, Butch55, 50);// {255}{}{I don't know yet, but I'll find out.}
+	giq_option(4, 39, 216, Butch39, 50);// {216}{}{It's these big mutant guys.}
+	giq_option(4, 39, 217, Butch51, 50);// {217}{}{Rats! BIG rats with BIG teeth...}
+	giq_option(4, 39, 256, Butch56, 50);// {256}{}{Ralph did it.}
+end
+
+procedure Butch55
+begin
+	gsay_message(39, 257, 50);// {257}{BUTCH55}{Uhh, do that. And come back and tell me... okay?}
+	call ButchX3;
+end
+
+procedure Butch56
+begin
+	gsay_reply(39, 258);// {258}{BUTCH56}{Who the hell's Ralph?}
+	giq_option(4, 39, 259, Butch55, 50);// {259}{}{Nevermind. I'll get more info on the caravan problem.}
+	giq_option(4, 39, 260, Butch57, 50);// {260}{}{He's coming for your soul!}
+end
+
+procedure Butch57
+begin
+	gsay_message(39, 261, 50);// {261}{BUTCH57}{Hey! You're making fun of me, aren't you? Rutger, show this jerk the street! And don't come back without some real information!}
+	call ButchX3;
+end
+
+procedure Butch58
+begin
+	gsay_message(39, 262, 50);// {262}{BUTCH58}{Yeah, right. Like I'd believe that. Get out until you can find me something useful.}
+	call ButchX3;
+end
+
+procedure Butch59
+begin
+	gsay_reply(39, 263);//  {263}{BUTCH59}{Well, whatta'ya got for me?}
+	if (global_var(WORLDMAPLIST_MILITARYBASE) > 0) or (global_var(DCMUTANT_GAVE_DISK) > 0) or (global_var(HOLODISK_MUTANT) == 1) or (global_var(DCMUTANT_TOLD_NORTHWEST) == 1) or global_var(DCMUTANT_DISK_POINTER) then begin// BEEN_TO_MB_ENTRANCE, RECEIVED_DCMUTANT_DISK, USED_DCMUTANT_DISK, DCMUTANT_TOLD_NORTHWEST, DCMUTANT_DISK_BUILT
+		giq_option(4, 39, 264, Butch40, 50);//  {264}{}{It was mutants.}
+	end
+	if (global_var(MISSING_CARAVANS_STATUS) == 5) then begin
+		giq_option(4, 39, 265, Butch54a, 50);//  {265}{}{Well, I know it wasn't the Deathclaw who took the caravans.}
+	end
+	giq_option(4, 39, 327, Butch67, 50);//  {327}{}{What was I supposed to do again?}
+	giq_option(4, 39, 329, Butch49, 50);//  {329}{}{Nothing yet.}
+end
+
+procedure Butch60
+begin
+	gsay_message(39, 266, 50);
+	call ButchX2;
+end
+
+procedure Butch61
+begin
+end
+
+procedure Butch62
+begin
+end
+
+procedure Butch63
+begin
+end
+
+procedure Butch64
+begin
+end
+
+procedure Butch65
+begin
+end
+
+procedure Butch66
+begin
+end
+
+procedure Butch67
+begin
+	gsay_message(39, 274, 50);
+	call ButchEnd;
+end
+
+procedure Butch68
+begin
+	gsay_message(39, 276, 50);
+	call ButchEnd;
+end
+
+procedure Butch69
+begin
+end
+
+procedure Butch70
+begin
+end
+
+procedure Butch71
+begin
+end
+
+procedure Butch72
+begin
+end
+
+procedure Butch73
+begin
+	gsay_reply(39, 160);
+	giq_option(4, 39, 326, Butch68, 50);
+end
+
+procedure ButchX2
+begin
+	set_local_var(5, 1);
+	set_map_var(56, 0);
+end
+
+procedure ButchX3
+begin
+	set_local_var(5, 0);
+	set_map_var(56, 1);
+end
+
+procedure ButchEnd
+begin
+end
+
+procedure ButchEndAccept
+begin
+	set_map_var(41, 1);
+	set_global_var(MISSING_CARAVAN, 1);
+	set_map_var(10, 1);
+end
+
+procedure ButchEndTransport
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	move_to(dude_obj, 18664, 0);
+	gfade_in(1);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

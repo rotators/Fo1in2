@@ -1,0 +1,182 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure use_p_proc;//    script_action == 6
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure safe_bonus;
+
+variable item;
+variable test;
+
+import variable KillSafe_ptr;
+
+
+procedure start
+begin
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			call look_at_p_proc;
+		end
+		else begin
+			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+				call map_enter_p_proc;
+			end
+			else begin
+				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+					call pickup_p_proc;
+				end
+				else begin
+					if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+						call use_p_proc;
+					end
+					else begin
+						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+							call use_obj_on_p_proc;
+						end
+						else begin
+							if (script_action == 8) then begin//<-- use_skill_on_p_proc
+								call use_skill_on_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	if (obj_is_locked(self_obj)) then begin
+		display_msg(message_str(340, 105));
+	end
+	else begin
+		display_msg(message_str(340, 101));
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(340, 100));
+end
+
+procedure map_enter_p_proc
+begin
+	KillSafe_ptr := self_obj;
+	obj_close(self_obj);
+	obj_lock(self_obj);
+	if (local_var(0) == 0) then begin
+		if (random(0, 3) == 3) then begin
+			item := create_object_sid(40, 0, 0, -1);
+			add_obj_to_inven(self_obj, item);
+		end
+		if (random(0, 3) == 3) then begin
+			item := create_object_sid(31, 0, 0, -1);
+			add_obj_to_inven(self_obj, item);
+		end
+		if (random(0, 3) == 3) then begin
+			item := create_object_sid(30, 0, 0, -1);
+			add_obj_to_inven(self_obj, item);
+		end
+		if (random(0, 3) == 3) then begin
+			item := create_object_sid(34, 0, 0, -1);
+			add_obj_to_inven(self_obj, item);
+		end
+		if (random(0, 3) == 3) then begin
+			item := create_object_sid(4, 0, 0, -1);
+			add_obj_to_inven(self_obj, item);
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if (obj_is_locked(self_obj)) then begin
+		script_overrides;
+	end
+end
+
+procedure use_p_proc
+begin
+	if (obj_is_locked(self_obj)) then begin
+		script_overrides;
+		display_msg(message_str(340, 105));
+		set_map_var(9, 1);
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	if (obj_pid(obj_being_used_with) == 84) then begin
+		script_overrides;
+		set_map_var(9, 1);
+		if (not(obj_is_locked(self_obj))) then begin
+			display_msg(message_str(340, 101));
+		end
+		else begin
+			test := roll_vs_skill(dude_obj, 9, -10);
+			if (is_success(test)) then begin
+				obj_unlock(self_obj);
+				display_msg(message_str(340, 103));
+				call safe_bonus;
+			end
+			else begin
+				if (is_critical(test)) then begin
+					jam_lock(self_obj);
+					display_msg(message_str(340, 107));
+				end
+				else begin
+					display_msg(message_str(340, 104));
+				end
+			end
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 9) then begin//-- LOCKPICK
+		script_overrides;
+		set_map_var(9, 1);
+		if (not(obj_is_locked(self_obj))) then begin
+			display_msg(message_str(340, 101));
+		end
+		else begin
+			test := roll_vs_skill(dude_obj, 9, -30);
+			if (is_success(test)) then begin
+				obj_unlock(self_obj);
+				display_msg(message_str(340, 103));
+				call safe_bonus;
+			end
+			else begin
+				if (is_critical(test)) then begin
+					jam_lock(self_obj);
+					display_msg(message_str(340, 107));
+				end
+				else begin
+					display_msg(message_str(340, 104));
+				end
+			end
+		end
+	end
+end
+
+procedure safe_bonus
+begin
+	if (local_var(0) == 0) then begin
+		display_msg(message_str(340, 106));
+		set_local_var(0, 1);
+		give_exp_points(500);
+	end
+end
+

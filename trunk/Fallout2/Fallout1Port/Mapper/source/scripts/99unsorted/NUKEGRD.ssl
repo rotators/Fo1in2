@@ -1,0 +1,728 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure damage_p_proc;//    script_action == 14
+procedure pre_dialogue;//    script_action == 11
+procedure talk_p_proc;//    called by pre_dialogue
+procedure critter_p_proc;
+procedure destroy_p_proc;
+
+procedure NukeGuard00;
+procedure NukeGuard01;
+procedure NukeGuard02;
+procedure NukeGuard03;
+procedure NukeGuard03a;
+procedure NukeGuard04;
+procedure NukeGuard05;
+procedure NukeGuard05a;
+procedure NukeGuard05b;
+procedure NukeGuard06;
+procedure NukeGuard07;
+procedure NukeGuard08;
+procedure NukeGuard08a;
+procedure NukeGuard08b;
+procedure NukeGuard09;
+procedure NukeGuard10;
+procedure NukeGuard11;
+procedure NukeGuard11a;
+procedure NukeGuard12;
+procedure NukeGuard13;
+procedure NukeGuard13a;
+procedure NukeGuard13b;
+procedure NukeGuard14;
+procedure NukeGuard15;
+procedure NukeGuard21;
+procedure NukeGuard22;
+procedure NukeGuard23;
+procedure NukeGuard23a;
+procedure NukeGuard24;
+procedure NukeGuard24a;
+procedure NukeGuard25;
+procedure NukeGuard26;
+procedure NukeGuardend;
+procedure NukeGuardcbt;
+
+variable HOSTILE;
+variable Only_Once := 1;
+variable DISGUISED;
+variable again;
+variable Weapons;
+variable rndx;
+
+procedure items_held;
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 34);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 48);
+	end
+	if (local_var(6) == 0) then begin
+		variable HasItem := 0;
+		variable item := 0;
+		set_local_var(6, 1);
+		item := create_object_sid(38, 0, 0, -1);//small energy cell
+		add_mult_objs_to_inven(self_obj, item, 1);
+		item := create_object_sid(39, 0, 0, -1);//microfusion cell
+		add_mult_objs_to_inven(self_obj, item, 1);
+		item := create_object_sid(100, 0, 0, -1);//Radio
+		add_mult_objs_to_inven(self_obj, item, 1);
+		item := create_object_sid(41, 0, 0, -1);//caps
+		add_mult_objs_to_inven(self_obj, item, (random(1, 6) * (get_critter_stat(dude_obj, 6) - 1)));
+		HasItem := obj_carrying_pid_obj(self_obj, 28);//gatling laser
+		if (HasItem) then begin
+			item := create_object_sid(235, 0, 0, -1);//powerfist
+			add_mult_objs_to_inven(self_obj, item, 1);
+		end
+		else begin
+			item := create_object_sid(233, 0, 0, -1);//turbo plasma rifle
+			add_mult_objs_to_inven(self_obj, item, 1);
+			wield_obj_critter(self_obj, item);
+		end
+		set_local_var(6, 1);
+	end
+	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+		call damage_p_proc;
+	end
+	else begin
+		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+			call pre_dialogue;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				HOSTILE := 1;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+						script_overrides;
+						display_msg(message_str(525, 200));
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		if (map_var(5)) then begin
+			HOSTILE := 1;
+		end
+		else begin
+			call items_held;
+			if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+				if (Weapons == 0) then begin
+					Weapons := 1;
+					if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+						dialogue_system_enter;
+					end
+				end
+			end
+			DISGUISED := 0;
+			if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+				if (metarule(16, 0) > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+					DISGUISED := 0;
+				end
+				else begin
+					DISGUISED := 1;
+				end
+			end
+			if ((DISGUISED == 0) and (again == 0)) then begin
+				if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+					again := 1;
+					dialogue_system_enter;
+				end
+			end
+		end
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		HOSTILE := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure damage_p_proc
+begin
+	if (global_var(MUTANTS_ENEMY_UNSURE) == 0) then begin
+		set_global_var(MUTANTS_ENEMY_UNSURE, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	set_local_var(3, 1);
+	call get_reaction;
+	start_gdialog(525, self_obj, 4, -1, -1);
+	gsay_start;
+	if (Weapons == 1) then begin
+		call NukeGuard01;
+	end
+	else begin
+		if (local_var(4)) then begin
+			call NukeGuard13;
+		end
+		else begin
+			set_local_var(4, 1);
+			call NukeGuard05;
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure pre_dialogue
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	DISGUISED := 0;
+	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+		if (metarule(16, 0) > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+			DISGUISED := 0;
+		end
+		else begin
+			DISGUISED := 1;
+		end
+	end
+	if (Weapons == 1) then begin
+		if (DISGUISED) then begin
+			call talk_p_proc;
+		end
+		else begin
+			call NukeGuard00;
+		end
+	end
+	else begin
+		if (DISGUISED) then begin
+			call talk_p_proc;
+		end
+		else begin
+			call NukeGuard00;
+		end
+	end
+end
+
+procedure NukeGuard00
+begin
+	rndx := random(1, 4);
+	if (rndx == 1) then begin
+		float_msg(self_obj, message_str(524, 100), 2);
+	end
+	else begin
+		if (rndx == 2) then begin
+			float_msg(self_obj, message_str(524, 101), 2);
+		end
+		else begin
+			if (rndx == 3) then begin
+				float_msg(self_obj, message_str(524, 102), 2);
+			end
+			else begin
+				if (rndx == 4) then begin
+					float_msg(self_obj, message_str(524, 103), 2);
+				end
+			end
+		end
+	end
+	call NukeGuardcbt;
+end
+
+procedure NukeGuard01
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(525, 107);
+	end
+	else begin
+		gsay_reply(525, 108);
+	end
+	giq_option(4, 525, 110, NukeGuard02, 51);
+	giq_option(6, 525, 111, NukeGuard03, 50);
+	giq_option(9, 525, 112, NukeGuard04, 50);
+	giq_option(-3, 525, 109, NukeGuard02, 51);
+end
+
+procedure NukeGuard02
+begin
+	gsay_message(525, 113, 51);
+	call NukeGuardcbt;
+end
+
+procedure NukeGuard03
+begin
+	gsay_reply(525, 114);
+	giq_option(6, 525, 115, NukeGuard03a, 50);
+	giq_option(6, 525, 116, NukeGuardcbt, 51);
+end
+
+procedure NukeGuard03a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call NukeGuard04;
+	end
+	else begin
+		call NukeGuard02;
+	end
+end
+
+procedure NukeGuard04
+begin
+	gsay_message(525, 117, 50);
+	set_local_var(5, 1);
+end
+
+procedure NukeGuard05
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(525, 118);
+	end
+	else begin
+		gsay_reply(525, 119);
+	end
+	giq_option(4, 525, 121, NukeGuard05a, 50);
+	giq_option(6, 525, 122, NukeGuard05b, 50);
+	giq_option(6, 525, 201, NukeGuard21, 50);
+	giq_option(-3, 525, 109, NukeGuard06, 50);
+end
+
+procedure NukeGuard05a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call NukeGuard08;
+	end
+	else begin
+		call NukeGuard07;
+	end
+end
+
+procedure NukeGuard05b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call NukeGuard10;
+	end
+	else begin
+		call NukeGuard11;
+	end
+end
+
+procedure NukeGuard06
+begin
+	gsay_message(525, 123, 50);
+	set_local_var(5, 1);
+end
+
+procedure NukeGuard07
+begin
+	gsay_message(525, 124, 51);
+	call NukeGuardcbt;
+end
+
+procedure NukeGuard08
+begin
+	gsay_reply(525, 125);
+	giq_option(4, 525, 126, NukeGuard08a, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 525, 127, NukeGuardcbt, 51);
+	end
+	giq_option(7, 525, 128, NukeGuard08b, 50);
+end
+
+procedure NukeGuard08a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call NukeGuard04;
+	end
+	else begin
+		call NukeGuard07;
+	end
+end
+
+procedure NukeGuard08b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20))) then begin
+		call NukeGuard04;
+	end
+	else begin
+		call NukeGuard09;
+	end
+end
+
+procedure NukeGuard09
+begin
+	gsay_message(525, 129, 51);
+	call NukeGuardcbt;
+end
+
+procedure NukeGuard10
+begin
+	gsay_message(525, 130, 50);
+	set_local_var(5, 1);
+end
+
+procedure NukeGuard11
+begin
+	gsay_reply(525, 131);
+	giq_option(6, 525, 132, NukeGuard11a, 50);
+	giq_option(6, 525, 133, NukeGuardcbt, 51);
+end
+
+procedure NukeGuard11a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call NukeGuard12;
+	end
+	else begin
+		call NukeGuard09;
+	end
+end
+
+procedure NukeGuard12
+begin
+	gsay_message(525, 134, 50);
+	set_local_var(5, 1);
+end
+
+procedure NukeGuard13
+begin
+	gsay_reply(525, 135);
+	giq_option(4, 525, 137, NukeGuardcbt, 51);
+	giq_option(4, 525, 138, NukeGuard13a, 50);
+	giq_option(6, 525, 139, NukeGuard13b, 50);
+	giq_option(6, 525, 201, NukeGuard21, 50);
+	giq_option(-3, 525, 136, NukeGuard14, 51);
+end
+
+procedure NukeGuard13a
+begin
+	if (is_success(do_check(dude_obj, 6, 0))) then begin
+		call NukeGuard12;
+	end
+	else begin
+		call NukeGuard09;
+	end
+end
+
+procedure NukeGuard13b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20))) then begin
+		call NukeGuard10;
+	end
+	else begin
+		call NukeGuard11;
+	end
+end
+
+procedure NukeGuard14
+begin
+	gsay_message(525, 140, 51);
+	call NukeGuardcbt;
+end
+
+procedure NukeGuard15
+begin
+	rndx := random(1, 2);
+	if (rndx == 1) then begin
+		gsay_message(525, 141, 50);
+	end
+	else begin
+		if (rndx == 2) then begin
+			gsay_message(525, 142, 50);
+		end
+	end
+end
+
+procedure NukeGuard21
+begin
+	gsay_reply(525, 202);
+	giq_option(6, 525, 203, NukeGuard22, 50);
+	giq_option(6, 525, 204, NukeGuard23, 50);
+end
+
+procedure NukeGuard22
+begin
+	gsay_message(525, 205, 50);
+end
+
+procedure NukeGuard23
+begin
+	gsay_reply(525, 206);
+	giq_option(6, 525, 207, NukeGuard22, 50);
+	giq_option(6, 525, 208, NukeGuard23a, 50);
+end
+
+procedure NukeGuard23a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -25))) then begin
+		call NukeGuard24;
+	end
+	else begin
+		call NukeGuard26;
+	end
+end
+
+procedure NukeGuard24
+begin
+	gsay_reply(525, 209);
+	giq_option(6, 525, 210, NukeGuard22, 50);
+	giq_option(7, 525, 211, NukeGuard24a, 50);
+end
+
+procedure NukeGuard24a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -25))) then begin
+		call NukeGuard25;
+	end
+	else begin
+		call NukeGuard26;
+	end
+end
+
+procedure NukeGuard25
+begin
+	gsay_reply(525, 212);
+	giq_option(6, 525, 213, NukeGuard22, 50);
+end
+
+procedure NukeGuard26
+begin
+	gsay_message(525, 214, 51);
+	call NukeGuardcbt;
+end
+
+procedure NukeGuardend
+begin
+end
+
+procedure NukeGuardcbt
+begin
+	HOSTILE := 1;
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

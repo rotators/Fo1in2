@@ -1,0 +1,71 @@
+//
+// ---HOLODISK SCRIPT---  Sduibek
+//
+// Vanilla was already ItemPRO 58, no rebuild necessary, LT.SSL
+// ProtoID	58	Name:	Holodisk	Cost:	40
+// script:	947	LtCodes.int    ; Codes the Lt is holding
+// GVAR	298	no contents for this
+//////////////////////////////////////////////////////////////////////
+// MESSAGE FILE:	350	CodeDisk.msg
+
+#include "..\headers\define.h"
+
+procedure start;
+procedure NewPtr;
+
+// local_var(0) == Used (put in Pip-Boy)
+// local_var(1) == Examined (change item hoverdescrip)
+
+procedure start
+begin
+	if script_action == 1 then begin// start_proc
+		call NewPtr;
+	end
+	else begin
+		if script_action == 21 then begin// 21 is look_at
+			script_overrides;
+			display_msg(message_str(350, 103));// "You see an encryption decoder disk."
+			call NewPtr;
+		end
+		else begin
+			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				script_overrides;
+				set_local_var(1, 1);
+				if local_var(0) == 1 then begin
+					display_msg(message_str(350, 101));//Abort
+				end
+				else begin
+					set_local_var(0, 1);
+					set_global_var(CALM_REBELS_1, 1);
+					display_msg(message_str(350, 102));//Downloaded OK
+					display_msg(message_str(766, 103) + "90" + message_str(766, 104));// more exp, for Fallout Fixt
+					give_exp_points(90);
+				end
+				call NewPtr;
+			end
+			else begin
+				if script_action == 3 then begin// 3 is description (Binoculars)
+					set_local_var(1, 1);
+					display_msg(message_str(350, 105));
+					call NewPtr;
+				end
+				else begin
+					if script_action == 4 then begin//pickup
+						call NewPtr;
+					end
+					else begin
+						if script_action == 5 then begin//drop
+							call NewPtr;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure NewPtr
+begin
+	set_global_var(LTCODES_HOLODISK_POINTER, self_obj);
+end
+

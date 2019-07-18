@@ -1,0 +1,207 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure Lighting;
+procedure add_party;
+procedure update_party;
+procedure remove_party;
+
+export variable women_killed;
+export variable signal_women;
+export variable killing_women;
+export variable Garls_Inven_Ptr;
+export variable Cell_Door_Ptr;
+
+export variable Ian_ptr;
+export variable Dog_ptr;
+export variable Tycho_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+
+variable ExpReward;
+variable party_elevation;
+variable dude_start_hex;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call Lighting;
+		set_global_var(WORLDMAPLIST_RAIDERS, 2);//Raiders has been visited
+		set_global_var(MARK_RAIDERS_1, 1);//Raiders has been marked on worldmap		
+		override_map_start(96, 133, 0, 5);
+		if (map_first_run) then begin
+			display_msg(message_str(194, 103));
+			if (get_critter_stat(dude_obj, 34) == 0) then begin
+				if ((get_critter_stat(dude_obj, 6) > 8) and random(0, 1)) then begin
+					set_global_var(MISTAKEN_ID, 1);//Raiders think you are Garl's father
+				end
+			end
+		end
+		if (metarule(22, 0) == 0) then begin
+			if (((global_var(GARL_DEAD) == 1) and (global_var(TOTAL_RAIDERS) <= 12)) or (global_var(TOTAL_RAIDERS) <= 6)) then begin//GARL_DEAD, RAIDERS_LEFT
+				kill_critter_type(16777254, 0);
+				kill_critter_type(16777235, 0);
+				kill_critter_type(16777233, 0);
+				kill_critter_type(16777248, 0);
+				kill_critter_type(16777249, 0);
+				kill_critter_type(16777243, 0);
+				kill_critter_type(16777236, 0);
+				kill_critter_type(16777247, 0);
+				kill_critter_type(16777238, 0);
+				kill_critter_type(16777253, 0);
+				kill_critter_type(16777218, 0);
+				kill_critter_type(16777248, 0);
+			end
+		end
+		call add_party;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call Lighting;
+			call update_party;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+				if ((global_var(TANDI_HIRELING_STATUS) == 5) and (map_var(1) != 1)) then begin
+					set_map_var(1, 1);
+					set_global_var(TANDI_HIRELING_STATUS, 5);
+					set_global_var(TANDI_RESCUE, 2);
+					ExpReward := (16 - global_var(TOTAL_RAIDERS)) * 50;
+					if (ExpReward < 500) then begin
+						ExpReward := 500 - ExpReward;
+						display_msg(message_str(238, 100) + ExpReward + message_str(238, 101));
+						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+						give_exp_points(ExpReward);
+					end
+					else begin
+						ExpReward := 0;
+						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+						display_msg(message_str(238, 100) + ExpReward + message_str(238, 101));
+					end
+				end
+				if (((global_var(GARL_DEAD) == 1) and (global_var(TOTAL_RAIDERS) <= 8)) or (global_var(TOTAL_RAIDERS) <= 4)) then begin//GARL_DEAD, RAIDERS_LEFT
+					kill_critter_type(16777254, 0);
+					kill_critter_type(16777235, 0);
+					kill_critter_type(16777233, 0);
+					kill_critter_type(16777248, 0);
+					kill_critter_type(16777249, 0);
+					kill_critter_type(16777243, 0);
+					kill_critter_type(16777236, 0);
+					kill_critter_type(16777247, 0);
+					kill_critter_type(16777238, 0);
+					kill_critter_type(16777253, 0);
+					kill_critter_type(16777218, 0);
+				end
+				call remove_party;
+			end
+		end
+	end
+end
+
+procedure Lighting
+begin
+	variable LVar0 := 0;
+	LVar0 := game_time_hour;
+	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
+		set_light_level(LVar0 - 600 + 40);
+	end
+	else begin
+		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
+			set_light_level(100);
+		end
+		else begin
+			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
+				set_light_level(100 - (LVar0 - 1800));
+			end
+			else begin
+				set_light_level(40);
+			end
+		end
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+

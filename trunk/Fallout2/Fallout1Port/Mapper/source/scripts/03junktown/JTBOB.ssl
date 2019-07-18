@@ -1,0 +1,322 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure talk_p_proc;//    script_action == 11
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+
+procedure bob0;
+procedure bob1;
+procedure bob2;
+procedure bob3;
+procedure bob4;
+procedure bob5;
+procedure bob6;
+procedure bob7;
+procedure bob8;
+procedure bob9;
+procedure bob10;
+procedure bob11;
+procedure bob12;
+procedure bob13;
+procedure bob14;
+procedure bob15;
+procedure bob16;
+procedure bobend;
+procedure combat;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+variable Herebefore;
+variable Days;
+variable Met_Casino;
+variable Has_Weapon;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+		script_overrides;
+		display_msg(message_str(341, 100));
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+					if (((game_time / (10 * 60 * 60 * 24)) - Days) >= 7) then begin
+						kill_critter(self_obj, 0);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call items_held;
+	if (Has_Weapon == 0) and (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		Has_Weapon := 1;
+		start_gdialog(341, self_obj, 4, -1, -1);
+		gsay_start;
+		call bob0;
+		gsay_end;
+		end_dialogue;
+	end
+	else begin
+		if (Met_Casino) then begin
+			call bob9;
+		end
+		else begin
+			if (Herebefore) then begin
+				start_gdialog(341, self_obj, 4, -1, -1);
+				gsay_start;
+				call bob13;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				Herebefore := 1;
+				Days := game_time / (10 * 60 * 60 * 24);
+				start_gdialog(341, self_obj, 4, -1, -1);
+				gsay_start;
+				call bob10;
+				gsay_end;
+				end_dialogue;
+			end
+		end
+	end
+end
+
+procedure bob0
+begin
+	gsay_reply(341, 101);
+	giq_option(-3, 341, 102, bob1, 50);
+	giq_option(4, 341, 103, bob2, 50);
+	giq_option(4, 341, 104, bob3, 50);
+	giq_option(5, 341, 105, bob3, 50);
+end
+
+procedure bob1
+begin
+	gsay_message(341, 106, 50);
+end
+
+procedure bob2
+begin
+	gsay_message(341, 107, 50);
+end
+
+procedure bob3
+begin
+	gsay_reply(341, 108);
+	giq_option(4, 341, 109, bob4, 50);
+	giq_option(6, 341, 110, bob5, 50);
+end
+
+procedure bob4
+begin
+	call items_held;
+	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		gsay_message(341, message_str(341, 111) + obj_pid(critter_inven_obj(dude_obj, 1)) + message_str(341, 112), 50);
+	end
+	else begin
+		gsay_message(341, message_str(341, 113) + obj_pid(critter_inven_obj(dude_obj, 2)) + message_str(341, 114), 50);
+	end
+end
+
+procedure bob5
+begin
+	gsay_reply(341, 115);
+	giq_option(6, 341, 116, bob6, 50);
+	giq_option(6, 341, 117, bob7, 50);
+	giq_option(6, 341, 118, bob8, 50);
+	giq_option(6, 341, 119, bobend, 50);
+end
+
+procedure bob6
+begin
+	gsay_reply(341, 120);
+	giq_option(6, 341, 121, bob7, 50);
+	giq_option(6, 341, 122, bob8, 50);
+	giq_option(6, 341, 123, bobend, 50);
+end
+
+procedure bob7
+begin
+	gsay_reply(341, 124);
+	giq_option(6, 341, 125, bob6, 50);
+	giq_option(6, 341, 126, bob8, 50);
+	giq_option(6, 341, 127, bobend, 50);
+end
+
+procedure bob8
+begin
+	gsay_reply(341, 128);
+	giq_option(6, 341, 129, bob6, 50);
+	giq_option(6, 341, 130, bob7, 50);
+	giq_option(6, 341, 131, bobend, 50);
+end
+
+procedure bob9
+begin
+	float_msg(self_obj, message_str(341, 132), 0);
+end
+
+procedure bob10
+begin
+	gsay_reply(341, 133);
+	giq_option(-3, 341, 134, bob1, 50);
+	giq_option(4, 341, 135, bob2, 50);
+	giq_option(4, 341, 136, bob11, 50);
+	giq_option(5, 341, 137, bob5, 50);
+end
+
+procedure bob11
+begin
+	gsay_reply(341, 138);
+	giq_option(4, 341, 139, bobend, 50);
+	giq_option(6, 341, 140, bob12, 50);
+end
+
+procedure bob12
+begin
+	gsay_reply(341, 141);
+	giq_option(6, 341, 142, bob6, 50);
+	giq_option(6, 341, 143, bob7, 50);
+	giq_option(6, 341, 144, bob8, 50);
+	giq_option(6, 341, 145, bobend, 50);
+end
+
+procedure bob13
+begin
+	gsay_reply(341, 146);
+	giq_option(-3, 341, 147, bob1, 50);
+	giq_option(4, 341, 148, bob14, 50);
+	giq_option(4, 341, 149, bob15, 50);
+	giq_option(6, 341, 150, bob16, 50);
+end
+
+procedure bob14
+begin
+	gsay_message(341, 151, 50);
+end
+
+procedure bob15
+begin
+	gsay_message(341, 152, 50);
+end
+
+procedure bob16
+begin
+	gsay_reply(341, 153);
+	giq_option(6, 341, 154, bob6, 50);
+	giq_option(6, 341, 155, bob7, 50);
+	giq_option(6, 341, 156, bob8, 50);
+	giq_option(6, 341, 157, bobend, 50);
+end
+
+procedure bobend
+begin
+end
+
+procedure combat
+begin
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_JUNKTOWN, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_JUNKTOWN, 1);
+	end
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+

@@ -1,0 +1,669 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+
+procedure FishrMan00;
+procedure FishrMan01;
+procedure FishrMan02;
+procedure FishrMan03;
+procedure FishrMan03a;
+procedure FishrMan04;
+procedure FishrMan04a;
+procedure FishrMan04b;
+procedure FishrMan05;
+procedure FishrMan05a;
+procedure FishrMan06;
+procedure FishrMan07;
+procedure FishrMan07a;
+procedure FishrMan08;
+procedure FishrMan08a;
+procedure FishrMan09;
+procedure FishrMan09a;
+procedure FishrMan10;
+procedure FishrMan11;
+procedure FishrMan12;
+procedure FishrMan12a;
+procedure FishrMan13;
+procedure FishrMan14;
+procedure FishrMan15;
+procedure FishrMan15a;
+procedure FishrMan16;
+procedure FishrMan17;
+procedure FishrMan18;
+procedure FishrMan19;
+procedure FishrMan20;
+procedure FishrMan21;
+procedure FishrMan22;
+procedure FishrMan23;
+procedure FishrMan24;
+procedure FishrMan25;
+procedure FishrManBarter;
+procedure FishrManCombat;
+procedure FishrManEnd;
+procedure FishrManEnd1;
+procedure FishrManEnd2;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+export variable dude_enemy;
+
+variable hostile;
+variable initialized := 0;
+variable known;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initialized) then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 6);
+		hostile := global_var(AGGRO_FLAG_RND_ENC_unsure);
+		initialized := 1;
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+			call damage_p_proc;
+		end
+		else begin
+			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+				call destroy_p_proc;
+			end
+			else begin
+				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+					call look_at_p_proc;
+				end
+				else begin
+					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+						call talk_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (dude_enemy) then begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			hostile := 1;
+			set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		dude_enemy := 1;
+		set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(644, 100));
+end
+
+procedure pickup_p_proc
+begin
+	dude_enemy := 1;
+	hostile := 1;
+	set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
+end
+
+procedure talk_p_proc
+begin
+	variable LVar0 := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (dude_enemy) then begin
+		LVar0 := random(100, 102);
+		float_msg(self_obj, message_str(669, LVar0), 0);
+	end
+	else begin
+		if ((local_var(1) < 2) or (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) or (global_var(PLAYER_REPUTATION_GENERAL) < -30)) then begin
+			call FishrMan00;
+		end
+		else begin
+			call items_held;
+			if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+				call FishrMan25;
+			end
+			else begin
+				start_gdialog(644, self_obj, 4, -1, -1);
+				gsay_start;
+				if (known) then begin
+					call FishrMan03;
+				end
+				else begin
+					if (global_var(PLAYER_REPUTATION_GENERAL) >= 30) then begin
+						call FishrMan02;
+					end
+					else begin
+						call FishrMan01;
+					end
+				end
+				gsay_end;
+				end_dialogue;
+			end
+		end
+	end
+end
+
+procedure FishrMan00
+begin
+	float_msg(self_obj, message_str(644, 101 + (get_critter_stat(dude_obj, 34) == 1)), 0);
+end
+
+procedure FishrMan01
+begin
+	known := 1;
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(644, 103);
+	end
+	else begin
+		gsay_reply(644, 104);
+	end
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 644, 105, FishrMan04, 50);
+	end
+	giq_option(7, 644, 106, FishrMan05, 50);
+	giq_option(4, 644, 107, FishrMan06, 50);
+	giq_option(4, 644, 108, FishrMan07, 50);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 644, 109, FishrMan08, 51);
+	end
+	giq_option(-3, 644, 110, FishrMan09, 50);
+end
+
+procedure FishrMan02
+begin
+	known := 1;
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(644, 111);
+	end
+	else begin
+		gsay_reply(644, 112);
+	end
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 644, 105, FishrMan04, 50);
+	end
+	giq_option(7, 644, 106, FishrMan05, 50);
+	giq_option(4, 644, 108, FishrMan07, 50);
+	giq_option(4, 644, 113, FishrMan13, 50);
+	giq_option(-3, 644, 110, FishrMan14, 50);
+end
+
+procedure FishrMan03
+begin
+	gsay_reply(644, 114);
+	giq_option(4, 644, 115, FishrMan15, 51);
+	giq_option(4, 644, 116, FishrMan16, 50);
+	giq_option(4, 644, 117, FishrMan03a, 50);
+	giq_option(-3, 644, 110, FishrMan19, 50);
+end
+
+procedure FishrMan03a
+begin
+	if (get_critter_stat(dude_obj, 3) >= 6) then begin
+		call FishrMan17;
+	end
+	else begin
+		call FishrMan18;
+	end
+end
+
+procedure FishrMan04
+begin
+	gsay_reply(644, 118);
+	giq_option(0, 634, 106, FishrMan04a, 50);
+end
+
+procedure FishrMan04a
+begin
+	gsay_reply(644, 119);
+	giq_option(0, 634, 106, FishrMan04b, 50);
+end
+
+procedure FishrMan04b
+begin
+	gsay_reply(644, 120);
+	giq_option(0, 634, 106, FishrManEnd1, 50);
+end
+
+procedure FishrMan05
+begin
+	gsay_reply(644, 122);
+	giq_option(0, 634, 106, FishrMan05a, 50);
+end
+
+procedure FishrMan05a
+begin
+	gsay_reply(644, 123);
+	giq_option(0, 634, 106, FishrManEnd1, 50);
+end
+
+procedure FishrMan06
+begin
+	gsay_reply(644, 124);
+	giq_option(0, 634, 106, FishrManEnd1, 50);
+end
+
+procedure FishrMan07
+begin
+	gsay_reply(644, 125);
+	giq_option(0, 634, 106, FishrMan07a, 50);
+end
+
+procedure FishrMan07a
+begin
+	gsay_reply(644, 126);
+	giq_option(0, 634, 106, FishrManEnd1, 50);
+end
+
+procedure FishrMan08
+begin
+	call DownReactLevel;
+	call DownReactLevel;
+	gsay_reply(644, 127);
+	giq_option(4, 644, 128, FishrMan08a, 51);
+	giq_option(4, 644, 129, FishrManCombat, 51);
+	giq_option(4, 644, 130, FishrMan22, 50);
+end
+
+procedure FishrMan08a
+begin
+	if ((get_critter_stat(dude_obj, 0) >= 8) or obj_is_carrying_obj_pid(dude_obj, 11) or obj_is_carrying_obj_pid(dude_obj, 12) or obj_is_carrying_obj_pid(dude_obj, 13) or obj_is_carrying_obj_pid(dude_obj, 118) or obj_is_carrying_obj_pid(dude_obj, 15)) then begin
+		call FishrMan20;
+	end
+	else begin
+		call FishrMan21;
+	end
+end
+
+procedure FishrMan09
+begin
+	gsay_reply(644, 131 + (get_critter_stat(dude_obj, 34) == 1));
+	giq_option(0, 634, 106, FishrMan09a, 50);
+end
+
+procedure FishrMan09a
+begin
+	variable LVar0 := 0;
+	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, 109)) then begin
+		LVar0 := obj_carrying_pid_obj(self_obj, 109);
+		rm_obj_from_inven(self_obj, LVar0);
+		add_obj_to_inven(dude_obj, LVar0);
+		gsay_message(644, 133, 50);
+	end
+	else begin
+		gsay_message(644, 134, 50);
+	end
+end
+
+procedure FishrMan10
+begin
+	gsay_reply(644, 135);
+	giq_option(0, 634, 106, FishrManEnd2, 50);
+end
+
+procedure FishrMan11
+begin
+	gsay_reply(644, 137);
+	giq_option(0, 634, 106, FishrManEnd2, 50);
+end
+
+procedure FishrMan12
+begin
+	gsay_reply(644, 138);
+	giq_option(0, 634, 106, FishrMan12a, 50);
+end
+
+procedure FishrMan12a
+begin
+	gsay_reply(644, 139);
+	giq_option(0, 634, 106, FishrManEnd2, 50);
+end
+
+procedure FishrMan13
+begin
+	gsay_reply(644, 140);
+	call FishrManBarter;
+end
+
+procedure FishrMan14
+begin
+	gsay_reply(644, 141);
+	giq_option(0, 634, 106, FishrManEnd2, 50);
+end
+
+procedure FishrMan15
+begin
+	gsay_reply(644, 142);
+	giq_option(0, 634, 106, FishrMan15a, 50);
+end
+
+procedure FishrMan15a
+begin
+	gsay_message(644, 143, 50);
+end
+
+procedure FishrMan16
+begin
+	gsay_message(644, 144, 50);
+end
+
+procedure FishrMan17
+begin
+	gsay_reply(644, 145);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 1) and (obj_is_carrying_obj_pid(dude_obj, 55) == 0)) then begin
+		giq_option(4, 644, 146, FishrMan04, 50);
+	end
+	giq_option(4, 644, 147, FishrMan11, 50);
+	giq_option(4, 644, 148, FishrMan23, 50);
+	giq_option(4, 644, 149, FishrMan24, 50);
+	giq_option(4, 644, 108, FishrMan07, 50);
+end
+
+procedure FishrMan18
+begin
+	gsay_message(644, 150, 50);
+end
+
+procedure FishrMan19
+begin
+	gsay_message(644, 151, 50);
+end
+
+procedure FishrMan20
+begin
+	gsay_reply(644, 152);
+	call FishrManBarter;
+end
+
+procedure FishrMan21
+begin
+	gsay_message(644, 153, 51);
+	call FishrManCombat;
+end
+
+procedure FishrMan22
+begin
+	gsay_message(644, 154, 51);
+end
+
+procedure FishrMan23
+begin
+	gsay_message(644, 155, 50);
+end
+
+procedure FishrMan24
+begin
+	gsay_message(644, 156, 50);
+end
+
+procedure FishrMan25
+begin
+	float_msg(self_obj, message_str(644, 157), 0);
+end
+
+procedure FishrManBarter
+begin
+	gdialog_mod_barter(0);
+	giq_option(0, 634, 100, FishrManEnd, 50);
+end
+
+procedure FishrManCombat
+begin
+	hostile := 1;
+	set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
+end
+
+procedure FishrManEnd
+begin
+end
+
+procedure FishrManEnd1
+begin
+	gsay_message(644, 121, 50);
+end
+
+procedure FishrManEnd2
+begin
+	gsay_message(644, 136, 50);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

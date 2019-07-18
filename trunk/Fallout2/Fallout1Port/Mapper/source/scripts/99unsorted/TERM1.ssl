@@ -1,0 +1,87 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;//    script_action == 15
+procedure use_term;
+procedure look_at_p_proc;//    script_action == 21
+
+import variable term1_ptr;
+import variable Vree_ptr;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+					call use_term;
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	term1_ptr := self_obj;
+end
+
+procedure map_enter_p_proc
+begin
+	term1_ptr := self_obj;
+end
+
+procedure use_term
+begin
+	if ((source_obj == Vree_ptr) and (local_var(0) == 0)) then begin
+		set_local_var(0, 1);
+		float_msg(self_obj, message_str(58, 133), 8);
+		rm_timer_event(Vree_ptr);
+		add_timer_event(Vree_ptr, 0, 3);
+	end
+	else begin
+		if source_obj == dude_obj then begin
+			if (local_var(0) == 0) then begin
+				display_msg(message_str(725, 101));
+			end
+			else begin
+				if (local_var(0) == 1) then begin
+					if global_var(FADE_TIMES_INCREASED) then begin
+						gfade_out(1);
+						gfade_out(1);
+					end
+					gfade_out(1);
+					critter_mod_skill(dude_obj, 12, 15);
+					set_local_var(0, 2);
+					game_time_advance(game_ticks(6 * 60 * 60 * 10));
+					gfade_in(1);
+					display_msg(message_str(766, 116) + 15 + message_str(766, 129));
+					display_msg(message_str(725, 102));
+				end
+				else begin
+					if (local_var(0) == 2) then begin
+						display_msg(message_str(725, 103));
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(725, 100));
+end
+

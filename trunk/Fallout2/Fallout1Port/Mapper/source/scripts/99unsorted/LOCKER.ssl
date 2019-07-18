@@ -1,0 +1,186 @@
+#include "..\headers\define.h"
+
+procedure start;
+//procedure look_at_p_proc;//    script_action == 21
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure damage_p_proc;//    script_action == 14
+procedure description_p_proc;//    script_action == 3
+procedure update_status;
+procedure attempt_open;
+variable RollvsLockpick := 0;
+// local_var 0 == IS UNLOCKED? is container unlocked?  [0 = Locked, 1 = Unlocked]
+// local_var 1 == was container unlocked by explosives?
+
+procedure start
+begin
+//	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+//		call look_at_p_proc;
+//	end
+//	else begin
+		if (script_action == 15) or (script_action == 23) then begin//map_enter_p_proc or map_update_p_proc
+			call update_status;
+		end
+		else begin
+			if (script_action == 6) or (script_action == 4) then begin//use_p_proc or pickup_p_proc
+				call attempt_open;
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					call use_obj_on_p_proc;
+				end
+				else begin
+					if (script_action == 8) then begin//<-- use_skill_on_p_proc
+						call use_skill_on_p_proc;
+					end
+					else begin
+						if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+							call damage_p_proc;
+						end
+						else begin
+							if (script_action == 3) then begin
+								call description_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+//	end
+end
+
+procedure update_status
+begin
+	if (local_var(1) == 1) then begin// container was unlocked with explosives
+		set_local_var(0, 1);
+	end
+	if (local_var(0) == 0) then begin
+		obj_lock(self_obj);
+	end
+	else begin
+		obj_unlock(self_obj);
+	end
+end
+
+procedure attempt_open
+begin
+	call update_status;
+	if (obj_is_locked(self_obj)) then begin
+		script_overrides;
+		display_msg(message_str(954, 100));
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 9) then begin//-- LOCKPICK
+		script_overrides;
+		RollvsLockpick := roll_vs_skill(source_obj, 9, 0);
+		if (obj_is_locked(self_obj)) then begin
+			if (is_success(RollvsLockpick)) then begin
+				set_local_var(0, 1);
+				obj_unlock(self_obj);
+				if (is_critical(RollvsLockpick)) then begin
+					display_msg(message_str(954, 106));
+					display_msg(message_str(766, 103) + "50" + message_str(766, 104));
+					give_exp_points(50);
+				end
+				else begin
+					display_msg(message_str(954, 101));
+					display_msg(message_str(766, 103) + "25" + message_str(766, 104));
+					give_exp_points(25);
+				end
+			end
+			else begin
+				if (is_critical(RollvsLockpick)) then begin
+					display_msg(message_str(954, 102));
+					jam_lock(self_obj);
+				end
+				else begin
+					display_msg(message_str(954, 103));
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(954, 104));
+		end
+	end
+	else begin
+		if (action_being_used == 10) then begin//-- STEAL
+			call attempt_open;
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	variable ItemUsed := 0;
+	ItemUsed := obj_being_used_with;
+	if (obj_pid(ItemUsed) == 84) then begin
+		script_overrides;
+		RollvsLockpick := roll_vs_skill(source_obj, 9, 20);
+		if (obj_is_locked(self_obj)) then begin
+			if (is_success(RollvsLockpick)) then begin
+				set_local_var(0, 1);
+				obj_unlock(self_obj);
+				if (is_critical(RollvsLockpick)) then begin
+					display_msg(message_str(954, 106));
+					display_msg(message_str(766, 103) + "50" + message_str(766, 104));
+					give_exp_points(50);
+				end
+				else begin
+					display_msg(message_str(954, 101));
+					display_msg(message_str(766, 103) + "25" + message_str(766, 104));
+					give_exp_points(25);
+				end
+			end
+			else begin
+				if (is_critical(RollvsLockpick)) then begin
+					display_msg(message_str(954, 102));
+					display_msg(message_str(954, 105));
+					jam_lock(self_obj);
+					rm_obj_from_inven(source_obj, ItemUsed);
+					destroy_object(ItemUsed);
+				end
+				else begin
+					display_msg(message_str(954, 103));
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(954, 104));
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		if (global_var(EXPLOSIVES_RUIN_LOCKERS) == 1) then begin
+			script_overrides;
+			if (metarule(22, 0) == 0) then begin
+				set_obj_visibility(self_obj, 1);
+			end
+			destroy_object(self_obj);
+			display_msg(message_str(954, 112));
+			script_overrides;
+		end
+		else begin
+			script_overrides;
+			set_local_var(1, 1);
+			set_local_var(0, 1);
+			display_msg(message_str(954, 111));
+			display_msg(message_str(766, 103) + "10" + message_str(766, 104));
+			give_exp_points(10);
+			script_overrides;
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	if (obj_is_locked(self_obj)) then begin
+		display_msg(message_str(954, 100));
+	end
+end
+

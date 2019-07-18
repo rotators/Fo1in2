@@ -1,0 +1,404 @@
+	#	include <define.h>
+
+procedure start;
+procedure destroy_p_proc;//    script_action == 18
+procedure talk_p_proc;
+
+procedure Francis04;
+procedure Francis05;
+procedure Francis06;
+procedure Francis07_1;
+procedure Francis07_2;
+procedure Francis08_1;
+procedure Francis08_2;
+procedure Francis09_1;
+procedure Francis09_2;
+procedure Francis10_1;
+procedure Francis10_2;
+procedure Francis11_1;
+procedure Francis11_2;
+procedure Francis12_1;
+procedure Francis12_2;
+procedure Francis13;
+procedure Francis14;
+procedure Francis15_1;
+procedure Francis15_2;
+procedure Francis15_3;
+procedure Francis16;
+procedure Francis17_1;
+procedure Francis17_2;
+procedure Francis18;
+procedure Francis19;
+procedure Francis20;
+procedure Francis21_1;
+procedure Francis21_2;
+procedure Francis22;
+procedure FrancisEnd;
+procedure Combat;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+variable Hostile;
+variable Only_Once := 1;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 20);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 67);
+		Only_Once := 0;
+	end
+	if (script_action == 21) then begin// look_at_p_proc
+		script_overrides;
+		display_msg(message_str(399, 100));
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			Hostile := 1;
+		end
+		else begin
+			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+				if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+					Hostile := 0;
+					attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+				end
+			end
+			else begin
+				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+					call destroy_p_proc;
+				end
+				else begin
+					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+						call talk_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure talk_p_proc
+begin
+	script_overrides;
+	if (global_var(CATHEDRAL_ENEMY) == 1) then begin
+		float_msg(self_obj, message_str(399, 101), 0);
+	end
+	else begin
+		if (local_var(0) == 1) then begin
+			float_msg(self_obj, message_str(399, 102), 0);
+		end
+		else begin
+			call items_held;
+			if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+				float_msg(self_obj, message_str(399, 103), 0);
+			end
+			else begin
+				if (not(obj_pid(critter_inven_obj(dude_obj, 0)) == 113) and (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1)) or (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)))) then begin
+					float_msg(self_obj, message_str(399, 104), 0);
+				end
+				else begin
+					start_gdialog(399, self_obj, 4, -1, -1);
+					gsay_start;
+					if (not(obj_pid(critter_inven_obj(dude_obj, 0)) == 113)) then begin
+						call Francis04;
+					end
+					else begin
+						if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == 113) then begin
+							call Francis05;
+						end
+						else begin
+							call Francis06;
+						end
+					end
+					gsay_end;
+					end_dialogue;
+					set_local_var(0, 1);
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		end
+	end
+end
+
+procedure Francis04
+begin
+	gsay_reply(399, 105);
+	giq_option(7, 399, 106, Francis07_1, 50);
+	giq_option(7, 399, 107, Francis08_1, 50);
+	giq_option(4, 399, 108, Francis09_1, 50);
+	giq_option(4, 399, 109, Francis10_1, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 399, 110, Francis11_1, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 399, 111, Francis12_1, 50);
+	end
+	giq_option(-3, 399, 112, Francis13, 50);
+end
+
+procedure Francis05
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(399, 113);
+	end
+	else begin
+		gsay_reply(399, 114);
+	end
+	giq_option(7, 399, 115, Francis14, 50);
+	giq_option(7, 399, 116, Francis15_1, 50);
+	giq_option(4, 399, 117, Francis16, 50);
+	giq_option(4, 399, 118, Francis17_1, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 399, 119, Francis18, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 399, 120, Francis19, 50);
+	end
+	giq_option(-3, 399, 121, Francis20, 50);
+end
+
+procedure Francis06
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(399, 160);
+	end
+	else begin
+		gsay_reply(399, 161);
+	end
+	giq_option(7, 399, 122, Francis21_1, 50);
+	giq_option(7, 399, 123, Francis15_1, 50);
+	giq_option(4, 399, 124, Francis09_1, 50);
+	giq_option(4, 399, 125, Francis22, 50);
+	if (global_var(IS_ALCOHOL_ADDICT) == 1) then begin
+		giq_option(4, 399, 126, Francis11_1, 50);
+	end
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 399, 127, Francis12_1, 50);
+	end
+	giq_option(-3, 399, 128, Francis13, 50);
+end
+
+procedure Francis07_1
+begin
+	gsay_message(399, message_str(399, 129) + message_str(399, 130), 50);
+end
+
+procedure Francis07_2
+begin
+end
+
+procedure Francis08_1
+begin
+	gsay_message(399, message_str(399, 131) + message_str(399, 132), 50);
+end
+
+procedure Francis08_2
+begin
+end
+
+procedure Francis09_1
+begin
+	gsay_message(399, message_str(399, 133) + message_str(399, 134), 50);
+end
+
+procedure Francis09_2
+begin
+	gsay_message(399, message_str(399, 134), 50);
+end
+
+procedure Francis10_1
+begin
+	gsay_message(399, message_str(399, 135) + message_str(399, 136), 50);
+end
+
+procedure Francis10_2
+begin
+end
+
+procedure Francis11_1
+begin
+	gsay_message(399, message_str(399, 137) + message_str(399, 138), 50);
+end
+
+procedure Francis11_2
+begin
+end
+
+procedure Francis12_1
+begin
+	gsay_message(399, message_str(399, 139) + message_str(399, 140), 50);
+end
+
+procedure Francis12_2
+begin
+end
+
+procedure Francis13
+begin
+	gsay_message(399, message_str(399, 141), 50);
+end
+
+procedure Francis14
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(399, 142, 50);
+	end
+	else begin
+		gsay_message(399, 143, 50);
+	end
+end
+
+procedure Francis15_1
+begin
+	gsay_message(399, message_str(399, 144) + message_str(399, 145) + message_str(399, 146), 50);
+end
+
+procedure Francis15_2
+begin
+end
+
+procedure Francis15_3
+begin
+end
+
+procedure Francis16
+begin
+	gsay_message(399, 147, 50);
+end
+
+procedure Francis17_1
+begin
+	gsay_message(399, message_str(399, 148) + message_str(399, 149), 50);
+end
+
+procedure Francis17_2
+begin
+end
+
+procedure Francis18
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(399, 150, 50);
+	end
+	else begin
+		gsay_message(399, 151, 50);
+	end
+end
+
+procedure Francis19
+begin
+	gsay_message(399, 152, 50);
+end
+
+procedure Francis20
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(399, 153, 50);
+	end
+	else begin
+		gsay_message(399, 154, 50);
+	end
+end
+
+procedure Francis21_1
+begin
+	gsay_message(399, message_str(399, 155) + message_str(399, 156), 50);
+end
+
+procedure Francis21_2
+begin
+end
+
+procedure Francis22
+begin
+	gsay_message(399, 157, 50);
+end
+
+procedure FrancisEnd
+begin
+end
+
+procedure Combat
+begin
+	Hostile := 1;
+end
+

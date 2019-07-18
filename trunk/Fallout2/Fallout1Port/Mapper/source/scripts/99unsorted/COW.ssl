@@ -1,0 +1,279 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure talk_p_proc;//    script_action == 11
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure timed_event_p_proc;//    script_action == 22
+procedure description_p_proc;//    script_action == 3
+procedure destroy_p_proc;
+procedure damage_p_proc;
+procedure critter_p_proc;
+
+variable initialized := 0;
+variable moo_counter;
+variable critter_tile;
+variable hostile := 0;
+
+////////////////////////////////////////
+//	COW SCRIPTS
+////////////////////////////////////////
+
+//	cow		5
+//	BRAHMIN		34	<-- USE THIS ONE FOR DIALOG
+//	carcow		966
+
+////////////////////////////////////////
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initialized) then begin
+		initialized := 1;
+		if elevation(self_obj) == elevation(dude_obj) then begin
+			if global_var(COW_ANNIHILATOR_COUNT) and (global_var(CARAVAN_HOW_MANY_BRAHMIN) < 2) then begin
+//				display_msg("428 is " + global_var(COW_ANNIHILATOR_COUNT) + " ");
+				set_global_var(COW_ANNIHILATOR_COUNT, (global_var(COW_ANNIHILATOR_COUNT) - 1));
+				destroy_object(self_obj);
+			end
+		end
+		if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+//			//display_msg("INIT COW.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj));
+		end
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 3);
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 4);
+		if (cur_map_index != 56) and (cur_map_index != 57) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 61) and (cur_map_index != 62) and (cur_map_index != 63) and (cur_map_index != 64) then begin
+			add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
+		end
+	end
+	if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+		call timed_event_p_proc;
+	end
+	else begin
+		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+			call critter_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					call use_obj_on_p_proc;
+				end
+				else begin
+					if (script_action == 8) then begin//<-- use_skill_on_p_proc
+						call use_skill_on_p_proc;
+					end
+					else begin
+						if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+							call description_p_proc;
+						end
+						else begin
+							if (script_action == 18) then begin
+								call destroy_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if has_trait(0, dude_obj, 44) then begin
+			if global_var(ANIMAL_FRIEND_JOIN_TEAM) then begin
+		//		if (cur_map_index != 56) and (cur_map_index != 57) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 61) and (cur_map_index != 62) and (cur_map_index != 63) and (cur_map_index != 64) then begin
+					party_add(self_obj);
+					critter_add_trait(self_obj, 1, 6, 0);/* TEAM_NUM */  
+		//		end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	if (cur_map_index == 53) then begin //  TALKING COWS ENCOUNTER
+		moo_counter := moo_counter + 1;
+		if (moo_counter > 2) then begin
+			moo_counter := 0;
+		end
+		if (moo_counter == 1) then begin
+			float_msg(self_obj, message_str(34, 111), 0);
+		end
+		else begin
+			float_msg(self_obj, message_str(34, random(109, 110)), 0);
+		end
+	end
+	else begin
+		anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+		display_msg(message_str(34, random(102, 105)));
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	variable LVar0 := 0;
+	if ((obj_pid(obj_being_used_with) == 124) or (obj_pid(obj_being_used_with) == 125)) then begin
+		script_overrides;
+		LVar0 := obj_being_used_with;
+		rm_obj_from_inven(source_obj, obj_being_used_with);
+		destroy_object(LVar0);
+		play_sfx("MABROMAQ");
+		reg_anim_func(2, self_obj);
+		reg_anim_func(1, 1);
+		reg_anim_animate(self_obj, 14, -1);
+		reg_anim_animate(self_obj, 20, 5);
+		reg_anim_animate(self_obj, 48, -1);
+		reg_anim_func(3, 0);
+		critter_injure(self_obj, 2);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
+		critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
+		critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 12) then begin//-- SCIENCE
+		script_overrides;
+		if (cur_map_index == 53) then begin //  TALKING COWS ENCOUNTER
+			if (is_success(roll_vs_skill(dude_obj, action_being_used, 0))) then begin
+				display_msg(message_str(34, 108));
+			end
+			else begin
+				display_msg(message_str(34, 107));
+			end
+		end
+		else begin
+			display_msg(message_str(34, 101));
+		end
+	end
+	else begin
+		if (action_being_used == 10) then begin//-- STEAL
+			script_overrides;
+			display_msg(message_str(766, 211));
+			script_overrides;
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	if (cur_map_index != 56) and (cur_map_index != 57) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 61) and (cur_map_index != 62) and (cur_map_index != 63) and (cur_map_index != 64) then begin
+		if (((critter_state(self_obj) bwand 2) == 0) and not(combat_is_initialized)) then begin
+			critter_tile := tile_num_in_direction(tile_num(self_obj), random(0, 5), 3);
+			reg_anim_func(2, self_obj);
+			reg_anim_func(1, 1);
+			reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
+			reg_anim_func(3, 0);
+		end
+	end
+	if (cur_map_index == 53) then begin //  TALKING COWS ENCOUNTER
+		if (random(0, 1)) then begin
+			call talk_p_proc;
+		end
+	end
+	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	if (cur_map_index == 53) then begin //  TALKING COWS ENCOUNTER
+		display_msg(message_str(34, 106));
+	end
+	else begin
+		display_msg(message_str(34, 100));
+	end
+	script_overrides;
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+	if (cur_map_index == 56) or (cur_map_index == 57) or (cur_map_index == 58) or (cur_map_index == 59) or (cur_map_index == 61) or (cur_map_index == 62) or (cur_map_index == 63) or (cur_map_index == 64) then begin //  ANY CARAVAN ENCOUNTER MAPS
+		if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+			set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 1);
+		end
+		else begin
+			if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+				set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 0);
+			end
+		end
+	end
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (cur_map_index == 36) or (cur_map_index == 38) or (cur_map_index == 39) or (cur_map_index == 40) or (cur_map_index == 41) or (cur_map_index == 65) then begin //  THE HUB - ANY MAPS
+			set_global_var(ENEMY_HUB, 1);
+		end
+		else begin
+			if (cur_map_index == 10) or (cur_map_index == 11) or (cur_map_index == 12) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+				set_global_var(ENEMY_JUNKTOWN, 1);
+			end
+			else begin
+				if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+					set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+				end
+			end
+		end
+	end
+	if source_obj == dude_obj then begin
+		if (cur_map_index == 56) or (cur_map_index == 57) or (cur_map_index == 58) or (cur_map_index == 59) or (cur_map_index == 61) or (cur_map_index == 62) or (cur_map_index == 63) or (cur_map_index == 64) then begin //  ANY CARAVAN ENCOUNTER MAPS
+			set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+				set_global_var(BERSERKER_REPUTATION, 1);
+				set_global_var(CHAMPION_REPUTATION, 0);
+			end
+			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+				set_global_var(CHAMPION_REPUTATION, 1);
+				set_global_var(BERSERKER_REPUTATION, 0);
+			end
+			if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+				set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+			end
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (cur_map_index == 36) or (cur_map_index == 38) or (cur_map_index == 39) or (cur_map_index == 40) or (cur_map_index == 41) or (cur_map_index == 65) then begin //  THE HUB - ANY MAPS
+			set_global_var(ENEMY_HUB, 1);
+		end
+		else begin
+			if (cur_map_index == 10) or (cur_map_index == 11) or (cur_map_index == 12) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+				set_global_var(ENEMY_JUNKTOWN, 1);
+			end
+			else begin
+				if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+					set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+				end
+			end
+		end
+		if (cur_map_index != 56) and (cur_map_index != 57) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 61) and (cur_map_index != 62) and (cur_map_index != 63) and (cur_map_index != 64) then begin
+			party_remove(self_obj);
+			critter_add_trait(self_obj, 1, 6, 4);/* TEAM_NUM */  
+			hostile := 1;
+		end
+	end
+end
+

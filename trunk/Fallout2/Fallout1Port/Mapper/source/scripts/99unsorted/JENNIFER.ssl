@@ -1,0 +1,953 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+
+procedure Jennifer00;
+procedure Jennifer01;
+procedure Jennifer01a;
+procedure Jennifer01b;
+procedure Jennifer02;
+procedure Jennifer05;
+procedure Jennifer07;
+procedure Jennifer08;
+procedure Jennifer11;
+procedure Jennifer13;
+procedure Jennifer14;
+procedure Jennifer15;
+procedure Jennifer16;
+procedure Jennifer17;
+procedure Jennifer18;
+procedure Jennifer19;
+procedure Jennifer20;
+procedure Jennifer21;
+procedure Jennifer22;
+procedure Jennifer23;
+procedure Jennifer25;
+procedure Jennifer26;
+procedure Jennifer27;
+procedure Jennifer28;
+procedure Jennifer29;
+procedure Jennifer30;
+procedure Jennifer31;
+procedure JenniferCharm;
+procedure JenniferEnd;
+procedure JenniferRandom1;
+procedure JenniferRandom2;
+procedure JenniferRandom3;
+procedure JenniferBackground1;
+procedure combat;
+procedure weapon_check;
+procedure items_held;
+
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+variable known;
+variable armed;
+variable warned;
+variable first_time := 1;
+variable last_seen;
+variable flag1;
+variable flag2;
+variable line2flag;
+variable line5flag;
+variable line14flag;
+variable hostile;
+variable Only_Once := 1;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 65);
+		Only_Once := 0;
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (not(first_time)) then begin
+		if (local_var(0) < 2) then begin
+			call JenniferRandom3;
+		end
+		else begin
+			call JenniferRandom2;
+		end
+	end
+	else begin
+		first_time := 0;
+		start_gdialog(-1, self_obj, 4, -1, -1);
+		gsay_start;
+		call Jennifer01;
+		gsay_end;
+		end_dialogue;
+	end
+end
+
+procedure weapon_check
+begin
+	call items_held;
+	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		armed := 1;
+	end
+	else begin
+		armed := 0;
+	end
+end
+
+procedure Jennifer00
+begin
+	warned := 1;
+	float_msg(self_obj, message_str(462, 102), 0);
+	float_msg(self_obj, message_str(462, 103), 0);
+end
+
+procedure Jennifer01
+begin
+	gsay_reply(462, 104);
+	if (get_critter_stat(dude_obj, 34) == 1) then begin
+		giq_option(5, 462, 105, Jennifer14, 50);
+	end
+	else begin
+		giq_option(5, 462, 106, JenniferCharm, 50);
+		giq_option(-3, 462, 107, Jennifer11, 50);
+	end
+	giq_option(5, 462, 108, Jennifer01a, 49);
+	giq_option(4, 462, 109, Jennifer01b, 51);
+	giq_option(4, 462, 110, Jennifer02, 50);
+	giq_option(-3, 462, 111, Jennifer13, 50);
+end
+
+procedure Jennifer01a
+begin
+	call UpReact;
+	call Jennifer02;
+end
+
+procedure Jennifer01b
+begin
+	call BigDownReact;
+	call Jennifer20;
+end
+
+procedure Jennifer02
+begin
+	line2flag := 1;
+	gsay_message(462, 112, 50);
+	gsay_reply(462, 113);
+	giq_option(5, 462, 114, UpReact, 50);
+	if (not(line5flag)) then begin
+		giq_option(4, 462, 115, Jennifer05, 50);
+	end
+	call Goodbyes;
+	giq_option(4, 0, exit_line, JenniferEnd, 50);
+end
+
+procedure Jennifer05
+begin
+	line5flag := 1;
+	gsay_message(462, 116, 50);
+	call Jennifer07;
+end
+
+procedure Jennifer07
+begin
+	gsay_reply(462, 117);
+	giq_option(4, 462, 118, UpReact, 49);
+	giq_option(4, 462, 119, Jennifer08, 50);
+	giq_option(4, 462, 120, DownReact, 51);
+end
+
+procedure Jennifer08
+begin
+	gsay_reply(462, 121);
+	giq_option(5, 462, 122, UpReact, 50);
+	giq_option(6, 462, 123, Jennifer29, 50);
+	if (get_critter_stat(dude_obj, 34) == 1) then begin
+		if (not(line14flag)) then begin
+			giq_option(5, 462, 124, Jennifer14, 50);
+		end
+	end
+	else begin
+		if (not(flag1) and not(flag2) and (get_critter_stat(dude_obj, 34) == 0)) then begin
+			giq_option(5, 462, 125, JenniferCharm, 50);
+		end
+	end
+	giq_option(4, 462, 126, JenniferEnd, 50);
+end
+
+procedure Jennifer11
+begin
+	gsay_reply(462, 127);
+	giq_option(-3, 462, 128, Jennifer13, 50);
+end
+
+procedure Jennifer13
+begin
+	gsay_message(462, 129, 50);
+end
+
+procedure Jennifer14
+begin
+	line14flag := 1;
+	call TopReact;
+	gsay_message(462, 130, 50);
+	gsay_reply(462, 131);
+	giq_option(8, 462, 132, Jennifer16, 50);
+	giq_option(4, 462, 133, Jennifer15, 50);
+	giq_option(4, 462, 134, Jennifer17, 50);
+end
+
+procedure Jennifer15
+begin
+	gsay_reply(462, 135);
+	giq_option(4, 462, 136, Jennifer17, 50);
+	giq_option(4, 462, 137, Jennifer17, 50);
+end
+
+procedure Jennifer16
+begin
+	gsay_reply(462, 138);
+	giq_option(8, 462, 139, Jennifer18, 50);
+	giq_option(4, 462, 140, Jennifer17, 50);
+end
+
+procedure Jennifer17
+begin
+	gsay_reply(462, 141);
+	if (not(line2flag)) then begin
+		giq_option(4, 462, 142, Jennifer02, 50);
+	end
+	if (not(line5flag)) then begin
+		giq_option(4, 462, 143, Jennifer05, 50);
+	end
+	giq_option(4, 462, 144, JenniferEnd, 50);
+end
+
+procedure Jennifer18
+begin
+	gsay_message(462, 145, 50);
+	gsay_reply(462, 146);
+	giq_option(4, 462, 147, Jennifer19, 50);
+	call Goodbyes;
+	giq_option(4, 0, exit_line, JenniferEnd, 50);
+end
+
+procedure Jennifer19
+begin
+	gsay_message(462, 148, 50);
+	gsay_reply(462, 149);
+	call Goodbyes;
+	giq_option(4, 0, exit_line, JenniferEnd, 50);
+end
+
+procedure Jennifer20
+begin
+	gsay_reply(462, 150);
+	giq_option(5, 462, 151, BottomReact, 51);
+	giq_option(4, 462, 152, UpReact, 49);
+	giq_option(4, 462, 153, DownReact, 51);
+end
+
+procedure Jennifer21
+begin
+	gsay_reply(462, 154);
+	giq_option(4, 462, 155, Jennifer22, 50);
+	giq_option(4, 462, 156, JenniferEnd, 50);
+end
+
+procedure Jennifer22
+begin
+	gsay_message(462, 157, 50);
+end
+
+procedure Jennifer23
+begin
+	call TopReact;
+	flag1 := 1;
+	flag2 := 0;
+	last_seen := game_time;
+	gsay_message(462, 163, 49);
+	gsay_reply(462, 164);
+	if (line2flag == 0) then begin
+		giq_option(4, 462, 165, Jennifer02, 50);
+	end
+	if (line5flag == 0) then begin
+		giq_option(4, 462, 166, Jennifer05, 50);
+	end
+	giq_option(4, 462, 167, JenniferEnd, 50);
+	giq_option(4, 462, 168, JenniferEnd, 50);
+end
+
+procedure Jennifer25
+begin
+	flag1 := 0;
+	flag2 := 1;
+	gsay_message(462, 163, 50);
+	gsay_reply(462, 164);
+	if (not(line2flag)) then begin
+		giq_option(4, 462, 165, Jennifer02, 50);
+	end
+	if (not(line5flag)) then begin
+		giq_option(4, 462, 166, Jennifer05, 50);
+	end
+	giq_option(4, 462, 167, JenniferEnd, 50);
+	giq_option(4, 462, 168, JenniferEnd, 50);
+end
+
+procedure Jennifer26
+begin
+	gsay_reply(462, 169);
+	giq_option(4, 462, 170, BigDownReact, 51);
+	giq_option(4, 462, 171, Jennifer27, 50);
+	giq_option(4, 462, 172, JenniferEnd, 50);
+end
+
+procedure Jennifer27
+begin
+	gsay_reply(462, 173);
+	if (not(line2flag)) then begin
+		giq_option(4, 462, 174, Jennifer02, 50);
+	end
+	if (not(line5flag)) then begin
+		giq_option(4, 462, 175, Jennifer05, 50);
+	end
+	giq_option(4, 462, 176, JenniferEnd, 50);
+end
+
+procedure Jennifer28
+begin
+	gsay_reply(462, 177);
+	giq_option(4, 462, 178, Jennifer27, 50);
+	giq_option(4, 462, 179, Jennifer27, 51);
+	giq_option(4, 462, 180, JenniferEnd, 50);
+end
+
+procedure Jennifer29
+begin
+	gsay_reply(462, 181);
+	giq_option(4, 462, 182, Jennifer30, 50);
+	giq_option(4, 462, 183, BottomReact, 51);
+end
+
+procedure Jennifer30
+begin
+	gsay_message(462, 184, 50);
+	gsay_message(462, 185, 50);
+	gsay_reply(462, 186);
+	giq_option(7, 462, 187, Jennifer31, 50);
+	giq_option(4, 462, 188, UpReact, 49);
+	giq_option(4, 462, 189, DownReact, 51);
+	if (not(line2flag)) then begin
+		giq_option(4, 462, 190, Jennifer02, 50);
+	end
+end
+
+procedure Jennifer31
+begin
+	gsay_reply(462, 191);
+	giq_option(4, 462, 192, JenniferEnd, 50);
+	giq_option(4, 462, 193, DownReact, 51);
+	if (not(line2flag)) then begin
+		giq_option(4, 462, 194, Jennifer02, 50);
+	end
+end
+
+procedure JenniferCharm
+begin
+	variable LVar0 := 0;
+	LVar0 := do_check(dude_obj, 3, 0);
+	if (is_success(LVar0)) then begin
+		if (is_critical(LVar0)) then begin
+			call BigUpReact;
+			flag1 := 1;
+			call Jennifer23;
+		end
+		else begin
+			call Jennifer25;
+		end
+	end
+	else begin
+		if (is_critical(LVar0)) then begin
+			call Jennifer28;
+		end
+		else begin
+			call Jennifer26;
+		end
+	end
+end
+
+procedure JenniferEnd
+begin
+end
+
+procedure JenniferRandom1
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (not(LVar0)) then begin
+		LVar0 := random(1, 10);
+	end
+	if ((game_time_hour > 800) and (game_time_hour < 1700)) then begin
+		if (LVar0 > 10) then begin
+			LVar0 := 1;
+		end
+		LVar1 := message_str(462, 195);
+		if (LVar0 == 2) then begin
+			LVar1 := message_str(462, 196);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				LVar1 := message_str(462, 197);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					LVar1 := message_str(462, 198);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						LVar1 := message_str(462, 199);
+					end
+					else begin
+						if (LVar0 == 6) then begin
+							LVar1 := message_str(462, 200);
+						end
+						else begin
+							if (LVar0 == 7) then begin
+								LVar1 := message_str(462, 201);
+							end
+							else begin
+								if ((last_seen - game_time) > 86400) then begin
+									if (LVar0 == 8) then begin
+										LVar1 := message_str(462, 202);
+									end
+									if (LVar0 == 9) then begin
+										LVar1 := message_str(462, 203);
+									end
+									if (LVar0 == 10) then begin
+										LVar1 := message_str(462, 204);
+									end
+								end
+								else begin
+									LVar0 := 1;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	else begin
+		if (LVar0 > 6) then begin
+			LVar0 := 1;
+		end
+		LVar1 := message_str(462, 205);
+		if (LVar0 == 2) then begin
+			LVar1 := message_str(462, 206);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				LVar1 := message_str(462, 207);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					LVar1 := message_str(462, 208);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						LVar1 := message_str(462, 209);
+					end
+					else begin
+						if (LVar0 == 6) then begin
+							LVar1 := message_str(462, 210);
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := LVar0 + 1;
+	last_seen := game_time;
+	float_msg(self_obj, LVar1, 0);
+end
+
+procedure JenniferRandom2
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (not(LVar0)) then begin
+		LVar0 := random(1, 5);
+	end
+	if (LVar0 > 5) then begin
+		LVar0 := 1;
+	end
+	LVar1 := message_str(462, 211);
+	if (LVar0 == 2) then begin
+		LVar1 := message_str(462, 212) + proto_data(obj_pid(dude_obj), 1) + message_str(462, 213);
+	end
+	else begin
+		if (LVar0 == 3) then begin
+			LVar1 := message_str(462, 214);
+		end
+		else begin
+			if (LVar0 == 4) then begin
+				LVar1 := message_str(462, 215) + proto_data(obj_pid(dude_obj), 1) + message_str(462, 216);
+			end
+			else begin
+				if (LVar0 == 5) then begin
+					LVar1 := message_str(462, 217);
+				end
+			end
+		end
+	end
+	LVar0 := LVar0 + 1;
+	float_msg(self_obj, LVar1, 0);
+end
+
+procedure JenniferRandom3
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (not(LVar0)) then begin
+		LVar0 := random(1, 8);
+	end
+	if (LVar0 > 8) then begin
+		LVar0 := 1;
+	end
+	LVar1 := message_str(462, 218);
+	if (LVar0 == 2) then begin
+		LVar1 := message_str(462, 219);
+	end
+	else begin
+		if (LVar0 == 3) then begin
+			LVar1 := message_str(462, 220);
+		end
+		else begin
+			if (LVar0 == 4) then begin
+				LVar1 := message_str(462, 221);
+			end
+			else begin
+				if (LVar0 == 5) then begin
+					LVar1 := message_str(462, 222);
+				end
+				else begin
+					if (LVar0 == 6) then begin
+						LVar1 := message_str(462, 223);
+					end
+					else begin
+						if (LVar0 == 7) then begin
+							LVar1 := message_str(462, 224);
+						end
+						else begin
+							if (LVar0 == 8) then begin
+								LVar1 := message_str(462, 225);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := LVar0 + 1;
+	float_msg(self_obj, LVar1, 0);
+end
+
+procedure JenniferBackground1
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (not(LVar0)) then begin
+		LVar0 := random(1, 11);
+	end
+	if ((game_time_hour > 800) and (game_time_hour < 1700)) then begin
+		if (LVar0 > 11) then begin
+			LVar0 := 1;
+		end
+		if (LVar0 == 1) then begin
+			LVar1 := message_str(462, 226);
+		end
+		else begin
+			if (LVar0 == 2) then begin
+				LVar1 := message_str(462, 227);
+			end
+			else begin
+				if (LVar0 == 3) then begin
+					LVar1 := proto_data(obj_pid(dude_obj), 1) + message_str(462, 228);
+				end
+				else begin
+					if (LVar0 == 4) then begin
+						LVar1 := message_str(462, 229);
+					end
+					else begin
+						if (LVar0 == 5) then begin
+							LVar1 := message_str(462, 230);
+						end
+						else begin
+							if (LVar0 == 6) then begin
+								LVar1 := message_str(462, 231);
+							end
+							else begin
+								if (LVar0 == 7) then begin
+									LVar1 := message_str(462, 232);
+								end
+								else begin
+									if (LVar0 == 8) then begin
+										LVar1 := message_str(462, 233);
+									end
+									else begin
+										if (LVar0 == 9) then begin
+											LVar1 := message_str(462, 234);
+										end
+										else begin
+											if (LVar0 == 10) then begin
+												LVar1 := message_str(462, 235);
+											end
+											else begin
+												if (LVar0 == 11) then begin
+													LVar1 := message_str(462, 236);
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	else begin
+		if (LVar0 == 1) then begin
+			LVar1 := message_str(462, 237);
+		end
+		else begin
+			if (LVar0 == 2) then begin
+				LVar1 := message_str(462, 238);
+			end
+			else begin
+				if (LVar0 == 3) then begin
+					LVar1 := message_str(462, 239);
+				end
+				else begin
+					if (LVar0 == 4) then begin
+						LVar1 := message_str(462, 240);
+					end
+					else begin
+						if (LVar0 == 5) then begin
+							LVar1 := message_str(462, 241);
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := LVar0 + 1;
+	float_msg(self_obj, LVar1, 0);
+	last_seen := game_time;
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		hostile := 0;
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (warned == 0) then begin
+			if (obj_can_see_obj(self_obj, dude_obj)) then begin
+				if (armed == 0) then begin
+					call weapon_check;
+				end
+				if (armed) then begin
+					call Jennifer00;
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure destroy_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+	end
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (known) then begin
+		display_msg(message_str(462, 100));
+	end
+	else begin
+		display_msg(message_str(462, 101));
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

@@ -1,0 +1,978 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure talk_p_proc;//    script_action == 11
+
+procedure Talus00;
+procedure Talus01;
+procedure Talus02;
+procedure Talus05;
+procedure Talus06;
+procedure Talus07;
+procedure Talus08;
+procedure Talus09;
+procedure Talus10;
+procedure Talus11;
+procedure Talus12;
+procedure Talus13;
+procedure Talus14;
+procedure Talus14a;
+procedure Talus15;
+procedure Talus16;
+procedure Talus17;
+procedure Talus18;
+procedure Talus19;
+procedure Talus20;
+procedure Talus21;
+procedure Talus22;
+procedure Talus23;
+procedure Talus24;
+procedure Talus25;
+procedure Talus26;
+procedure Talus27;
+procedure Talus28;
+procedure Talus29;
+procedure Talus30;
+procedure Talus31;
+procedure Talus31a;
+procedure Talus32;
+procedure Talus33;
+procedure Talus34;
+procedure Talus35;
+procedure Talus36;
+procedure Talus37;
+procedure Talus38;
+procedure Talus39;
+procedure Talus40;
+procedure Talus41;
+procedure Talus42;
+procedure Talus43;
+procedure Talus44;
+procedure Talus45;
+procedure Talus46;
+procedure Talus47;
+procedure Talus49;
+procedure Talus50;
+procedure Talus51;
+procedure Talus51a;
+procedure Talus51b;
+procedure Talus51c;
+procedure Talus51d;
+procedure Talus53;
+procedure Talus54;
+procedure Talus55;
+procedure TalusEnd;
+
+procedure weapon_check;
+procedure set_requisition;
+procedure TalusBackground;
+procedure TalusAmmo;
+
+variable armed;
+variable temp;
+variable flag1;
+variable flag5;
+variable who_vree;
+variable who_rhombus;
+variable who_maxson;
+variable line16flag;
+variable Only_Once := 1;
+variable Hostile;
+variable drugs;
+variable awardex;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+procedure items_held;
+variable RightHand := 0;
+variable LeftHand := 0;
+variable PIDright := 0;
+variable PIDleft := 0;
+variable SubtypeWEP := 0;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 65);
+		add_timer_event(self_obj, game_ticks(30), 2);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+					if (global_var(ENEMY_BROTHERHOOD) == 0) then begin
+						call TalusBackground;
+					end
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						call critter_p_proc;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure items_held
+begin
+	SubtypeWEP := 0;
+	if critter_inven_obj(dude_obj, 1) then begin
+		RightHand := critter_inven_obj(dude_obj, 1);
+		PIDright := obj_pid(RightHand);
+		if obj_item_subtype(RightHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		RightHand := 0;
+		PIDright := 0;
+	end
+	if critter_inven_obj(dude_obj, 2) then begin
+		LeftHand := critter_inven_obj(dude_obj, 2);
+		PIDleft := obj_pid(LeftHand);
+		if obj_item_subtype(LeftHand) == 3 then begin
+			SubtypeWEP := 1;
+		end
+	end
+	else begin
+		LeftHand := 0;
+		PIDleft := 0;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		Hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		Hostile := 0;
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		Hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		Hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(7) == 0) then begin
+		if (local_var(1) == 1) then begin
+			set_local_var(1, 2);
+			call LevelToReact;
+		end
+	end
+	start_gdialog(318, self_obj, 4, -1, -1);
+	gsay_start;
+	call weapon_check;
+	if (armed) then begin
+		if (local_var(6) == 0) then begin
+			call Talus11;
+		end
+		else begin
+			if (local_var(6) == 1) then begin
+				call Talus12;
+			end
+			else begin
+				call Talus13;
+			end
+		end
+	end
+	else begin
+		if ((global_var(QUEST_BROHOOD_2_FIND_LOST) == 2) and (local_var(8) == 0)) then begin
+			if (local_var(7) == 0) then begin
+				call Talus49;
+			end
+			else begin
+				call Talus47;
+			end
+		end
+		else begin
+			if (local_var(7) == 0) then begin
+				call Talus00;
+			end
+			else begin
+				if (local_var(1) == 1) then begin
+					call Talus22;
+				end
+				else begin
+					call Talus14;
+				end
+			end
+		end
+	end
+	set_local_var(7, 1);
+	gsay_end;
+	end_dialogue;
+	if (awardex) then begin
+		awardex := 0;
+		temp := 1500;
+		display_msg(message_str(318, 408) + temp + message_str(318, 409));
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		give_exp_points(temp);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(318, 100));
+end
+
+procedure weapon_check
+begin
+	call items_held;
+	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		armed := 1;
+	end
+	else begin
+		armed := 0;
+	end
+end
+
+procedure set_requisition
+begin
+	set_global_var(BROTHERHOOD_WEEKLY_AMMO, game_time);
+	set_local_var(5, 1);
+	set_map_var(17, 1);
+	set_map_var(9, (map_var(9) + 4));
+	set_map_var(14, 1);
+	set_map_var(10, 3);
+end
+
+procedure Talus00
+begin
+	gsay_reply(318, 101);
+	giq_option(8, 318, 102, Talus01, 50);
+	giq_option(4, 318, 103, Talus02, 50);
+	if (local_var(5) == 0) then begin
+		giq_option(4, 318, 104, Talus07, 50);
+	end
+	giq_option(4, 318, 401, Talus28, 50);
+	giq_option(4, 318, 402, Talus28, 50);
+	giq_option(-3, 318, 105, TalusEnd, 50);
+end
+
+procedure Talus01
+begin
+	gsay_reply(318, 106);
+	giq_option(4, 318, 107, Talus05, 50);
+	call Goodbyes;
+	giq_option(4, 0, exit_line, TalusEnd, 50);
+end
+
+procedure Talus02
+begin
+	gsay_reply(318, 108);
+	giq_option(4, 318, 107, Talus05, 50);
+	call Goodbyes;
+	giq_option(4, 0, exit_line, TalusEnd, 50);
+end
+
+procedure Talus05
+begin
+	gsay_reply(318, 110);
+	giq_option(7, 318, 111, Talus06, 50);
+	if (local_var(5) == 0) then begin
+		giq_option(4, 318, 112, Talus07, 50);
+	end
+	giq_option(4, 318, 401, Talus28, 50);
+	giq_option(4, 318, 402, Talus28, 50);
+	call Goodbyes;
+	giq_option(4, 0, exit_line, TalusEnd, 50);
+end
+
+procedure Talus06
+begin
+	gsay_reply(318, 113);
+	giq_option(4, 318, 115, TalusEnd, 50);
+	if (local_var(5) == 0) then begin
+		giq_option(4, 318, 112, Talus07, 50);
+	end
+end
+
+procedure Talus07
+begin
+	gsay_reply(318, 116);
+	call set_requisition;
+	giq_option(4, 318, 118, Talus08, 50);
+	giq_option(4, 318, 119, Talus42, 51);
+	giq_option(4, 318, 159, TalusEnd, 50);
+end
+
+procedure Talus08
+begin
+	gsay_reply(318, 406);
+	if (global_var(QUEST_BROHOOD_2_FIND_LOST) != 2) then begin
+		giq_option(4, 318, 109, Talus32, 50);
+	end
+	giq_option(4, 318, 121, Talus09, 51);
+	giq_option(4, 318, 193, TalusEnd, 50);
+end
+
+procedure Talus09
+begin
+	set_local_var(11, 1);
+	call DownReact;
+	gsay_message(318, 122, 51);
+end
+
+procedure Talus10
+begin
+	gsay_message(318, 123, 50);
+	gsay_message(318, 124, 50);
+	gsay_reply(318, 125);
+	giq_option(4, 318, 126, TalusEnd, 50);
+end
+
+procedure Talus11
+begin
+	gsay_message(318, 127, 50);
+	set_local_var(6, local_var(6) + 1);
+end
+
+procedure Talus12
+begin
+	gsay_message(318, 128, 50);
+	set_local_var(6, local_var(6) + 1);
+end
+
+procedure Talus13
+begin
+	gsay_message(318, 129, 51);
+end
+
+procedure Talus14
+begin
+	gsay_reply(318, message_str(318, 130) + proto_data(obj_pid(dude_obj), 1) + message_str(318, 131));
+	if (not(line16flag)) then begin
+		giq_option(5, 318, 132, Talus16, 50);
+	end
+	else begin
+		giq_option(5, 318, 133, Talus17, 50);
+	end
+	if (local_var(5) == 0) then begin
+		giq_option(4, 318, 134, Talus15, 50);
+	end
+	else begin
+		giq_option(4, 318, 135, TalusAmmo, 50);
+	end
+	if (local_var(11) == 1) then begin
+		giq_option(4, 318, 403, Talus44, 51);
+	end
+	giq_option(4, 318, 404, Talus29, 50);
+	giq_option(4, 318, 136, TalusEnd, 50);
+	giq_option(-3, 318, 105, TalusEnd, 50);
+end
+
+procedure Talus14a
+begin
+	call Talus34;
+end
+
+procedure Talus15
+begin
+	gsay_message(318, 137, 50);
+	gsay_reply(318, 138);
+	call set_requisition;
+	giq_option(4, 318, 118, Talus08, 50);
+end
+
+procedure Talus16
+begin
+	line16flag := 1;
+	gsay_message(318, 141, 50);
+	call Talus18;
+end
+
+procedure Talus17
+begin
+	gsay_message(318, 142, 50);
+	call Talus18;
+end
+
+procedure Talus18
+begin
+	gsay_reply(318, 143);
+	giq_option(4, 318, 144, Talus19, 50);
+	giq_option(4, 318, 145, Talus20, 50);
+	giq_option(4, 318, 146, Talus21, 50);
+end
+
+procedure Talus19
+begin
+	who_rhombus := 1;
+	gsay_message(318, 147, 50);
+	gsay_reply(318, 148);
+	if (who_vree == 0) then begin
+		giq_option(4, 318, 145, Talus20, 50);
+	end
+	if (who_maxson == 0) then begin
+		giq_option(4, 318, 146, Talus21, 50);
+	end
+	giq_option(4, 318, 151, TalusEnd, 50);
+end
+
+procedure Talus20
+begin
+	who_vree := 1;
+	gsay_message(318, 152, 50);
+	gsay_reply(318, 153);
+	if (who_rhombus == 0) then begin
+		giq_option(4, 318, 144, Talus19, 50);
+	end
+	if (who_maxson == 0) then begin
+		giq_option(4, 318, 146, Talus21, 50);
+	end
+	giq_option(4, 318, 156, TalusEnd, 50);
+end
+
+procedure Talus21
+begin
+	who_maxson := 1;
+	gsay_reply(318, 157);
+	if (who_rhombus == 0) then begin
+		giq_option(4, 318, 144, Talus19, 50);
+	end
+	if (who_vree == 0) then begin
+		giq_option(4, 318, 145, Talus20, 50);
+	end
+	giq_option(4, 318, 160, TalusEnd, 50);
+end
+
+procedure Talus22
+begin
+	gsay_reply(318, 161);
+	giq_option(4, 318, 162, DownReact, 51);
+	giq_option(4, 318, 163, TalusEnd, 50);
+	if (local_var(5) == 1) then begin
+		giq_option(4, 318, 135, TalusAmmo, 50);
+	end
+	giq_option(-3, 318, 164, Talus24, 51);
+	giq_option(-3, 318, 165, TalusEnd, 50);
+end
+
+procedure Talus23
+begin
+	gsay_message(318, 166, 51);
+	call DownReact;
+end
+
+procedure Talus24
+begin
+	gsay_message(318, 167, 51);
+	call DownReact;
+end
+
+procedure Talus25
+begin
+	gsay_message(318, 168, 50);
+	set_map_var(17, 1);
+	temp := map_var(9) + 3;
+	set_map_var(9, temp);
+	temp := map_var(10) + 3;
+	set_map_var(10, temp);
+end
+
+procedure Talus26
+begin
+	gsay_message(318, 169, 50);
+end
+
+procedure Talus27
+begin
+	gsay_message(318, 170, 50);
+end
+
+procedure Talus28
+begin
+	gsay_reply(318, 149);
+	giq_option(4, 318, 102, Talus02, 50);
+	giq_option(4, 318, 103, Talus07, 50);
+	giq_option(4, 318, 150, TalusEnd, 50);
+end
+
+procedure Talus29
+begin
+	if (local_var(10) == 0) then begin
+		set_local_var(10, 1);
+		gsay_message(318, 154, 50);
+	end
+	else begin
+		gsay_message(318, 155, 50);
+	end
+end
+
+procedure Talus30
+begin
+	call BottomReact;
+	gsay_reply(318, 171);
+	giq_option(4, 318, 172, Talus37, 51);
+	giq_option(4, 318, 173, Talus38, 50);
+	giq_option(4, 318, 174, TalusEnd, 51);
+end
+
+procedure Talus31
+begin
+	gsay_reply(318, 175);
+	giq_option(4, 318, 176, Talus35, 50);
+	giq_option(4, 318, 177, BigDownReact, 51);
+	giq_option(4, 318, 178, Talus31a, 50);
+end
+
+procedure Talus31a
+begin
+	if (local_var(9) == 0) then begin
+		call Talus39;
+	end
+	else begin
+		call TalusEnd;
+	end
+end
+
+procedure Talus32
+begin
+	gsay_reply(318, 158);
+	giq_option(4, 318, 176, Talus35, 50);
+	giq_option(4, 318, 177, BigDownReact, 51);
+	giq_option(4, 318, 178, Talus31a, 49);
+end
+
+procedure Talus33
+begin
+	gsay_reply(318, 179);
+	giq_option(4, 318, 176, Talus35, 50);
+	giq_option(4, 318, 177, BigDownReact, 51);
+	giq_option(4, 318, 178, Talus31a, 49);
+end
+
+procedure Talus34
+begin
+	gsay_message(318, 180, 51);
+end
+
+procedure Talus35
+begin
+	set_global_var(QUEST_BROHOOD_2_FIND_LOST, 1);
+	gsay_reply(318, 181);
+	giq_option(4, 318, 182, Talus31a, 49);
+	giq_option(4, 318, 183, Talus46, 50);
+end
+
+procedure Talus36
+begin
+	gsay_message(318, 184, 51);
+end
+
+procedure Talus37
+begin
+	gsay_message(318, 185, 51);
+end
+
+procedure Talus38
+begin
+	gsay_message(318, 186, 51);
+end
+
+procedure Talus39
+begin
+	gsay_message(318, 187, 49);
+end
+
+procedure Talus40
+begin
+	gsay_reply(318, 191);
+	giq_option(4, 318, 193, TalusEnd, 50);
+end
+
+procedure Talus41
+begin
+	gsay_message(318, 194, 50);
+end
+
+procedure Talus42
+begin
+	call DownReact;
+	gsay_message(318, 195, 51);
+end
+
+procedure Talus43
+begin
+	gsay_reply(318, 196);
+	giq_option(4, 318, 192, Talus41, 50);
+	giq_option(4, 318, 193, TalusEnd, 50);
+end
+
+procedure Talus44
+begin
+	call DownReact;
+	gsay_message(318, 198, 51);
+end
+
+procedure Talus45
+begin
+	call BigDownReact;
+	gsay_message(318, 199, 51);
+end
+
+procedure Talus46
+begin
+	gsay_message(318, 200, 50);
+end
+
+procedure Talus47
+begin
+	gsay_reply(318, message_str(318, 201) + proto_data(obj_pid(dude_obj), 1) + message_str(318, 202));
+	giq_option(4, 318, 205, Talus51, 50);
+	giq_option(-3, 318, 206, Talus50, 50);
+end
+
+procedure Talus49
+begin
+	gsay_reply(318, 207);
+	giq_option(4, 318, 205, Talus51, 50);
+	giq_option(-3, 318, 206, Talus50, 50);
+end
+
+procedure Talus50
+begin
+	gsay_message(318, 209, 50);
+end
+
+procedure Talus51
+begin
+	gsay_reply(318, 210);
+	giq_option(4, 318, 212, Talus51a, 50);
+	giq_option(4, 318, 213, Talus51b, 50);
+	giq_option(4, 318, 214, Talus51c, 50);
+	if (global_var(PLAYER_REPUTATION_GENERAL) > 15) then begin
+		giq_option(4, 318, 407, Talus51d, 50);
+	end
+	giq_option(4, 318, 215, TalusEnd, 50);
+end
+
+procedure Talus51a
+begin
+	set_map_var(9, map_var(9) + 1);
+	set_map_var(12, 1);
+	call Talus53;
+end
+
+procedure Talus51b
+begin
+	set_map_var(9, map_var(9) + 1);
+	set_map_var(13, 1);
+	call Talus53;
+end
+
+procedure Talus51c
+begin
+	set_map_var(9, map_var(9) + 1);
+	set_map_var(20, 1);
+	call Talus53;
+end
+
+procedure Talus51d
+begin
+	set_map_var(9, map_var(9) + 1);
+	set_map_var(15, 1);
+	call Talus53;
+end
+
+procedure Talus53
+begin
+	set_local_var(8, 1);
+	awardex := 1;
+	gsay_message(318, 216, 50);
+end
+
+procedure Talus54
+begin
+	set_local_var(9, 1);
+	set_map_var(9, map_var(9) + 1);
+	set_map_var(15, 1);
+	gsay_message(318, message_str(318, 201) + proto_data(obj_pid(dude_obj), 1) + message_str(318, 217), 50);
+end
+
+procedure Talus55
+begin
+	set_local_var(9, 1);
+	gsay_message(318, 218, 50);
+end
+
+procedure TalusBackground
+begin
+	variable LVar0 := 0;
+	LVar0 := random(1, 5);
+	if (LVar0 == 1) then begin
+		LVar0 := message_str(318, 219);
+	end
+	else begin
+		if (LVar0 == 2) then begin
+			LVar0 := message_str(318, 220);
+		end
+		else begin
+			if (LVar0 == 3) then begin
+				LVar0 := message_str(318, 221);
+			end
+			else begin
+				if (LVar0 == 4) then begin
+					LVar0 := message_str(318, 222);
+				end
+				else begin
+					if (LVar0 == 5) then begin
+						LVar0 := message_str(318, 223);
+					end
+				end
+			end
+		end
+	end
+	float_msg(self_obj, LVar0, 0);
+	add_timer_event(self_obj, game_ticks(180), 2);
+end
+
+procedure TalusAmmo
+begin
+	if ((map_var(17) > 0) and (((game_time / 10 / 60 / 60 / 24) - (global_var(BROTHERHOOD_WEEKLY_AMMO) / 10 / 60 / 60 / 24)) < 7)) then begin
+		call Talus27;
+	end
+	else begin
+		if (((game_time / 10 / 60 / 60 / 24) - (global_var(BROTHERHOOD_WEEKLY_AMMO) / 10 / 60 / 60 / 24)) >= 7) then begin
+			set_global_var(BROTHERHOOD_WEEKLY_AMMO, game_time);
+			call Talus25;
+		end
+		else begin
+			if (((game_time / 10 / 60 / 60 / 24) - (global_var(BROTHERHOOD_WEEKLY_AMMO) / 10 / 60 / 60 / 24)) < 7) then begin
+				call Talus27;
+			end
+		end
+	end
+end
+
+procedure TalusEnd
+begin
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

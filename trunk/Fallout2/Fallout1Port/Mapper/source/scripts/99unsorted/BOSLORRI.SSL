@@ -1,0 +1,1170 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure map_enter_p_proc;//    script_action == 15
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+
+procedure BoS_Lorri00;
+procedure BoS_Lorri01;
+procedure BoS_Lorri02;
+procedure BoS_Lorri03;
+procedure BoS_Lorri04;
+procedure BoS_Lorri05;
+procedure BoS_Lorri06;
+procedure BoS_Lorri07;
+procedure BoS_Lorri08;
+procedure BoS_Lorri09;
+procedure BoS_Lorri10;
+procedure BoS_Lorri11;
+procedure BoS_Lorri12;
+procedure BoS_Lorri13;
+procedure BoS_Lorri14;
+procedure BoS_Lorri15;
+procedure BoS_Lorri16;
+procedure BoS_Lorri17;
+procedure BoS_Lorri18;
+procedure BoS_Lorri19;
+procedure BoS_Lorri20;
+procedure BoS_Lorri21;
+procedure BoS_Lorri22;
+procedure BoS_Lorri23;
+procedure BoS_Lorri24;
+procedure BoS_Lorri25;
+procedure BoS_Lorri26;
+procedure BoS_Lorriend;
+
+procedure Dumb02;
+procedure Dumb03;
+procedure Dumb04;
+procedure Dumb05;
+procedure Dumb06;
+procedure Dumb06a;
+procedure raisiq;
+procedure sorry;
+
+variable hostile;
+variable Only_Once := 1;
+variable Heal_amount;
+variable cost;
+variable money;
+variable temp;
+variable rad_level;
+variable bag_ptr := 0;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+procedure Sex01;
+procedure Sex02;
+procedure Sex03kis;
+procedure Sex04kis;
+procedure Sex03ask;
+procedure Sex04ask;
+procedure Sex05ask;
+procedure SexEnd01;
+procedure SexAgain;
+procedure SexInterim;
+
+variable exit_line;
+
+variable INTcost;
+//variable Sex_SoundByte := 0;
+
+//	local_var(4) == been told about operations
+//	local_var(5) == exchanged names
+//	local_var(6) == # of times have talked to Lori
+//	local_var(7) == TimesOpSTR
+//	local_var(8) == TimesOpPER
+//	local_var(9) == TimesOpENDUR
+//	local_var(10) == TimesOpCHA
+//	local_var(11) == TimesOpINT
+//		12 is reserved, do not use
+//	local_var(13) == OpDumb
+//	local_var(14) == BackLine
+//	local_var(15) == had sex once already
+//  local_var(16) == TimesOpAGL
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+					else begin
+						if (script_action == 15) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call map_enter_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 63);
+		Only_Once := 0;
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if not(local_var(5)) then begin
+		display_msg(message_str(675, 100));
+	end
+	else begin
+		display_msg(message_str(675, 101));
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_BROTHERHOOD)) then begin//	ENEMY_BROTHERHOOD  
+		hostile := 1;
+	end
+	else begin
+		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			set_global_var(ENEMY_BROTHERHOOD, 1);//	ENEMY_BROTHERHOOD  
+			hostile := 0;
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		hostile := 0;
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	Heal_amount := get_critter_stat(dude_obj, 7) - get_critter_stat(dude_obj, 35);
+	call get_reaction;
+	start_gdialog(675, self_obj, 4, -1, -1);
+	gsay_start;
+	call BoS_Lorri00;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);//	ENEMY_BROTHERHOOD
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure BoS_Lorri00
+begin
+	if (local_var(6) < 5) then begin
+		set_local_var(6, (local_var(6) + 1));
+	end
+	if local_var(5) then begin
+		gsay_reply(675, 158);
+	end
+	else begin
+		if (local_var(6) >= 2) then begin
+			gsay_reply(675, 158);
+			giq_option(4, 675, 124, BoS_Lorri23, 50);
+		end
+		else begin
+			gsay_reply(675, 102);
+			giq_option(4, 675, 124, BoS_Lorri23, 50);
+		end
+	end
+	if (local_var(15) and not(global_var(FIXT_BUGFIXES_ONLY)) and global_var(BOS_LORRI_SEX_ENABLED) and local_var(5)) then begin
+		giq_option(4, 675, 314, SexAgain, 49);
+	end
+	if (Heal_amount > 0) then begin
+		giq_option(4, 675, 103, BoS_Lorri04, 50);//	hurt HP
+	end
+	if (get_critter_stat(dude_obj, 37) != 0) then begin
+		giq_option(4, 675, 104, BoS_Lorri05, 50);//	irradiated
+	end
+	if (get_critter_stat(dude_obj, 36) != 0) then begin//  (get_poison(dude_obj) != 0)  gives an error
+		giq_option(4, 675, 140, BoS_Lorri21, 50);//	poisoned
+	end
+	if (local_var(4) == 0) then begin
+		giq_option(4, 675, 105, BoS_Lorri07, 50);//	operations
+	end
+	else begin
+		giq_option(4, 675, 106, BoS_Lorri09, 50);//	operations again
+	end
+	if (local_var(13) == 1) or (local_var(11) != 0) then begin
+		giq_option(-3, 675, 107, BoS_Lorri01, 50);//	"you fix?"
+	end
+	else begin
+		giq_option(-3, 675, 107, Dumb02, 50);//	"you fix?"
+	end
+end
+
+procedure BoS_Lorri23
+begin
+	gsay_reply(675, 125);
+	set_local_var(5, 1);
+	giq_option(4, 675, message_str(675, 151) + proto_data(obj_pid(dude_obj), 1) + message_str(675, 152), BoS_Lorri24, 50);
+end
+
+procedure BoS_Lorri24
+begin
+	gsay_reply(675, message_str(675, 138) + proto_data(obj_pid(dude_obj), 1) + message_str(675, 152) + message_str(675, 142));
+	if (local_var(15) and not(global_var(FIXT_BUGFIXES_ONLY)) and global_var(BOS_LORRI_SEX_ENABLED) and local_var(5)) then begin
+		giq_option(4, 675, 314, SexAgain, 49);
+	end
+	if (Heal_amount > 0) then begin
+		giq_option(4, 675, 103, BoS_Lorri04, 50);//	hurt HP
+	end
+	if (get_critter_stat(dude_obj, 37) != 0) then begin
+		giq_option(4, 675, 104, BoS_Lorri05, 50);//	irradiated
+	end
+	if (get_critter_stat(dude_obj, 36) != 0) then begin//  (get_poison(dude_obj) != 0)  gives an error
+		giq_option(4, 675, 140, BoS_Lorri21, 50);//	poisoned
+	end
+	if (local_var(4) == 0) then begin
+		giq_option(4, 675, 105, BoS_Lorri07, 50);//	operations
+	end
+	else begin
+		giq_option(4, 675, 106, BoS_Lorri09, 50);//	operations again
+	end
+	if (local_var(13) == 1) or (local_var(11) != 0) then begin
+		giq_option(-3, 675, 107, BoS_Lorri01, 50);//	"you fix?"
+	end
+	else begin
+		giq_option(-3, 675, 107, Dumb02, 50);//	"you fix?"
+	end
+end
+
+procedure BoS_Lorri01
+begin
+	gsay_message(675, 108, 50);
+	if (Heal_amount > 0) then begin
+		call BoS_Lorri02;
+	end
+	else begin
+		call BoS_Lorri03;
+	end
+end
+
+procedure BoS_Lorri02
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	critter_heal(dude_obj, Heal_amount);
+	gfade_in(1);
+	gsay_message(675, 109, 50);
+end
+
+procedure BoS_Lorri03
+begin
+	gsay_message(675, 110, 50);
+end
+
+procedure BoS_Lorri04
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	critter_heal(dude_obj, Heal_amount);
+	gfade_in(1);
+	gsay_message(675, random(112, 116), 50);
+end
+
+procedure BoS_Lorri05
+begin
+	gsay_message(675, 117, 50);
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	rad_level := get_critter_stat(dude_obj, 37);
+	radiation_dec(dude_obj, rad_level);
+//set_critter_stat(dude_obj, 37, 0);
+	game_time_advance(game_ticks(86400));
+	gfade_in(1);
+	gsay_message(675, 146, 50);
+end
+
+procedure BoS_Lorri06
+begin
+	gsay_message(675, 118, 50);
+end
+
+procedure BoS_Lorri07
+begin
+	gsay_reply(675, 119);
+	giq_option(4, 675, 120, BoS_Lorri08, 50);
+	giq_option(4, 675, 121, BoS_Lorriend, 50);
+end
+
+procedure BoS_Lorri08
+begin
+	set_local_var(4, 1);
+	if global_var(FIXT_BUGFIXES_ONLY) or not(global_var(BOS_LORRI_CHA_ENABLED)) then begin
+		gsay_reply(675, 222);
+	end
+	else begin
+		gsay_reply(675, 122);
+	end
+	call BoS_Lorri10;
+end
+
+procedure BoS_Lorri09
+begin
+	gsay_reply(675, 126);
+	call BoS_Lorri10;
+end
+
+procedure BoS_Lorri17
+begin
+	gsay_reply(675, 153);
+	call BoS_Lorri10;
+end
+
+procedure BoS_Lorri10
+begin
+	variable TotalOpsAllowed;
+	TotalOpsAllowed	:= global_var(BOS_LORRI_NUM_OPS_ALLOWED);
+
+	if (local_var(7) < TotalOpsAllowed) then begin
+		giq_option(4, 675, 127, BoS_Lorri11, 50);//  STRENGTH
+	end
+	if (local_var(8) < TotalOpsAllowed) then begin
+		giq_option(4, 675, 128, BoS_Lorri12, 50);//  PERCEPTION
+	end
+	if (local_var(9) < TotalOpsAllowed) then begin
+		giq_option(4, 675, 129, BoS_Lorri13, 50);//  ENDURANCE
+	end
+	
+	if (not(global_var(FIXT_BUGFIXES_ONLY)) and global_var(BOS_LORRI_CHA_ENABLED)) then begin
+		if (local_var(10) < TotalOpsAllowed) then begin
+			giq_option(4, 675, 123, BoS_Lorri25, 50);//  CHARISMA
+		end
+	end
+	
+	if (local_var(11) < TotalOpsAllowed) then begin
+		giq_option(4, 675, 130, BoS_Lorri14, 50);//  INTELLIGENCE
+	end
+	if (local_var(16) < TotalOpsAllowed) then begin
+		giq_option(4, 675, 131, BoS_Lorri15, 50);//  AGILITY
+	end
+	giq_option(4, 675, 132, BoS_Lorriend, 50);
+end
+
+procedure BoS_Lorri11//		STRENGTH
+begin
+	variable STRcheck := 0;
+	STRcheck := get_critter_stat(dude_obj, 0);
+	if (STRcheck > 9) then begin
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorCheck := 0;
+			ArmorCheck := critter_inven_obj(dude_obj, 0);//  if (ArmorCheck == 139099868) or (ArmorCheck == 43082196) then begin
+			if (obj_pid(ArmorCheck) == 3) or (obj_pid(ArmorCheck) == 232) then begin
+				gsay_message(675, 150, 50);
+			end
+			else begin
+				call sorry;//  Stat already at 10
+			end
+		end
+		else begin
+			call sorry;//  Stat already at 10
+		end
+	end
+	else begin
+		cost := 2000 + (2000 * local_var(7));
+		gsay_reply(675, message_str(675, 133) + cost + message_str(675, 233));
+		giq_option(4, 675, 135, BoS_Lorri18, 50);
+		giq_option(4, 675, 136, BoS_Lorri17, 50);
+	end
+end
+
+procedure BoS_Lorri18//		STRENGTH
+begin
+	if (item_caps_total(dude_obj) >= cost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+//
+//  TeamX code:
+//
+//		if ArmorMove > 0 then begin
+//			bag_ptr := create_object_sid(16777262, 0, 0, 860);
+//			move_to(bag_ptr, 0, 0);
+//			move_obj_inven_to_obj(dude_obj, bag_ptr);
+//			move_obj_inven_to_obj(bag_ptr, dude_obj);
+//			destroy_object(bag_ptr);
+//		end
+//
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorMove := 0;
+			ArmorMove := critter_inven_obj(dude_obj, 0);
+			rm_obj_from_inven(dude_obj, ArmorMove);
+			add_obj_to_inven(dude_obj, ArmorMove);
+		end
+		set_local_var(7, (local_var(7) + 1));
+		if (item_caps_total(dude_obj) >= cost) then begin
+			item_caps_adjust(dude_obj, -cost);
+		end
+		gsay_message(675, 154, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(3 * 604800));//	3 weeks
+		temp := get_critter_stat(dude_obj, 0);//	STRENGTH
+		set_critter_stat(dude_obj, 0, 1);//		 + 1
+		display_msg(message_str(766, 161));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 156);
+		giq_option(4, 675, 182, BoS_Lorriend, 49);
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure BoS_Lorri12//		PERCEPTION
+begin
+	temp := get_critter_stat(dude_obj, 1);
+	if (temp > 9) then begin
+		call sorry;//  Stat already at 10
+	end
+	else begin
+		cost := 4000 + (4000 * local_var(8));
+		gsay_reply(675, message_str(675, 137) + cost + message_str(675, 237));
+		giq_option(4, 675, 135, BoS_Lorri19, 50);
+		giq_option(4, 675, 136, BoS_Lorri17, 50);
+	end
+end
+
+procedure BoS_Lorri19//		PERCEPTION
+begin
+	if (item_caps_total(dude_obj) >= cost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorMove := 0;
+			ArmorMove := critter_inven_obj(dude_obj, 0);
+			rm_obj_from_inven(dude_obj, ArmorMove);
+			add_obj_to_inven(dude_obj, ArmorMove);
+		end
+		set_local_var(8, (local_var(8) + 1));
+		if (item_caps_total(dude_obj) >= cost) then begin
+			item_caps_adjust(dude_obj, -cost);
+		end
+		gsay_message(675, 159, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(604800));//	1 week
+		temp := get_critter_stat(dude_obj, 1);//	PERCEPTION
+		set_critter_stat(dude_obj, 1, 1);//		 + 1
+		display_msg(message_str(766, 162));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 161);
+		giq_option(4, 675, 182, BoS_Lorriend, 49);
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure BoS_Lorri13//		ENDURANCE
+begin
+	temp := get_critter_stat(dude_obj, 2);
+	if (temp > 9) then begin
+		call sorry;//  Stat already at 10
+	end
+	else begin
+		cost := 3000 + (3000 * local_var(9));
+		gsay_reply(675, message_str(675, 139) + cost + message_str(675, 239));
+		giq_option(4, 675, 135, BoS_Lorri20, 50);
+		giq_option(4, 675, 136, BoS_Lorri17, 50);
+	end
+end
+
+procedure BoS_Lorri20//		ENDURANCE
+begin
+	if (item_caps_total(dude_obj) >= cost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorMove := 0;
+			ArmorMove := critter_inven_obj(dude_obj, 0);
+			rm_obj_from_inven(dude_obj, ArmorMove);
+			add_obj_to_inven(dude_obj, ArmorMove);
+		end
+		set_local_var(9, (local_var(9) + 1));
+		if (item_caps_total(dude_obj) >= cost) then begin
+			item_caps_adjust(dude_obj, -cost);
+		end
+		gsay_message(675, 164, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(604800));//	1 week
+		temp := get_critter_stat(dude_obj, 2);//	ENDURANCE
+		set_critter_stat(dude_obj, 2, 1);//		 + 1
+		display_msg(message_str(766, 163));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 166);
+		giq_option(4, 675, 182, BoS_Lorriend, 49);
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure BoS_Lorri25//		CHARISMA
+begin
+	temp := get_critter_stat(dude_obj, 3);
+	if (temp > 9) then begin
+		call sorry;//  Stat already at 10
+	end
+	else begin
+		cost := 3500 + (3500 * local_var(10));
+		gsay_reply(675, message_str(675, 145) + cost + message_str(675, 245));
+		giq_option(4, 675, 135, BoS_Lorri26, 50);
+		giq_option(4, 675, 136, BoS_Lorri17, 50);
+	end
+end
+
+procedure BoS_Lorri26//		CHARISMA
+begin
+	if (item_caps_total(dude_obj) >= cost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorMove := 0;
+			ArmorMove := critter_inven_obj(dude_obj, 0);
+			rm_obj_from_inven(dude_obj, ArmorMove);
+			add_obj_to_inven(dude_obj, ArmorMove);
+		end
+		set_local_var(10, (local_var(10) + 1));
+		if (item_caps_total(dude_obj) >= cost) then begin
+			item_caps_adjust(dude_obj, -cost);
+		end
+		gsay_message(675, 180, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(3 * 604800));//	3 weeks
+		temp := get_critter_stat(dude_obj, 3);//	CHARISMA
+		set_critter_stat(dude_obj, 3, 1);//		 + 1
+		display_msg(message_str(766, 164));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 181);
+		giq_option(4, 675, 182, BoS_Lorriend, 49);
+		if not(global_var(FIXT_BUGFIXES_ONLY)) and global_var(BOS_LORRI_SEX_ENABLED) and not(local_var(15)) then begin
+			giq_option(4, 675, 185, Sex01, 49);
+		end
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure BoS_Lorri14//		INTELLIGENCE
+begin
+	temp := get_critter_stat(dude_obj, 4);
+	if (temp > 9) then begin
+		call sorry;//  Stat already at 10
+	end
+	else begin
+		cost := 6000 + (6000 * local_var(11));
+		gsay_reply(675, message_str(675, 141) + cost + message_str(675, 241));
+		giq_option(4, 675, 135, raisiq, 50);
+		giq_option(4, 675, 136, BoS_Lorri17, 50);
+	end
+end
+
+procedure raisiq//		INTELLIGENCE
+begin
+	if (item_caps_total(dude_obj) >= cost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorMove := 0;
+			ArmorMove := critter_inven_obj(dude_obj, 0);
+			rm_obj_from_inven(dude_obj, ArmorMove);
+			add_obj_to_inven(dude_obj, ArmorMove);
+		end
+		set_local_var(11, (local_var(11) + 1));
+		if (item_caps_total(dude_obj) >= cost) then begin
+			item_caps_adjust(dude_obj, -cost);
+		end
+		gsay_message(675, 168, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(3 * 604800));//	3 weeks
+		temp := get_critter_stat(dude_obj, 4);//	INTELLIGENCE
+		set_critter_stat(dude_obj, 4, 1);//		 + 1
+		display_msg(message_str(766, 165));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 170);
+		giq_option(4, 675, 182, BoS_Lorriend, 49);
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure BoS_Lorri15//		AGILITY
+begin
+	temp := get_critter_stat(dude_obj, 5);
+	if (temp > 9) then begin
+		call sorry;//  Stat already at 10
+	end
+	else begin
+		cost := 5000 + (5000 * local_var(16));
+		gsay_reply(675, message_str(675, 143) + cost + message_str(675, 243));
+		giq_option(4, 675, 135, BoS_Lorri22, 50);
+		giq_option(4, 675, 136, BoS_Lorri17, 50);
+	end
+end
+
+procedure BoS_Lorri22//		AGILITY
+begin
+	if (item_caps_total(dude_obj) >= cost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+		if critter_inven_obj(dude_obj, 0) > 0 then begin
+			variable ArmorMove := 0;
+			ArmorMove := critter_inven_obj(dude_obj, 0);
+			rm_obj_from_inven(dude_obj, ArmorMove);
+			add_obj_to_inven(dude_obj, ArmorMove);
+		end
+		set_local_var(16, (local_var(16) + 1));
+		if (item_caps_total(dude_obj) >= cost) then begin
+			item_caps_adjust(dude_obj, -cost);
+		end
+		gsay_message(675, 174, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(3 * 604800));//	3 weeks
+		temp := get_critter_stat(dude_obj, 5);//	AGILITY
+		set_critter_stat(dude_obj, 5, 1);//		 + 1
+		display_msg(message_str(766, 166));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 176);
+		giq_option(5, 675, 182, BoS_Lorriend, 49);
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure BoS_Lorri16//	NOT ENOUGH MONEY
+begin
+	gsay_message(675, random(147, 149), 50);
+end
+
+procedure BoS_Lorri21// Poison detox
+begin
+	gsay_message(675, 504, 50);
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	poison(dude_obj, -get_critter_stat(dude_obj, 36));
+	gfade_out(1);
+	game_time_advance(game_ticks(3600));
+	gfade_in(1);
+	gsay_message(675, random(112, 116), 50);
+end
+
+procedure Dumb02
+begin
+	gsay_reply(675, 400);
+	if (local_var(11) == 0) then begin
+		giq_option(-3, 675, 401, Dumb04, 50);
+	end
+	giq_option(-3, 675, 402, Dumb03, 50);
+end
+
+procedure Dumb03
+begin
+	gsay_reply(675, 403);
+	if (Heal_amount != 0) then begin
+		giq_option(-3, 675, 404, Dumb06a, 50);
+	end
+	if get_critter_stat(dude_obj, 37) then begin
+		giq_option(-3, 675, 405, BoS_Lorri05, 50);
+	end
+	if get_critter_stat(dude_obj, 36) then begin
+		giq_option(-3, 675, 155, BoS_Lorri21, 50);
+	end
+	giq_option(-3, 675, 406, BoS_Lorriend, 50);
+end
+
+procedure Dumb04
+begin
+	INTcost := (6000 + (6000 * local_var(11))) / 2;
+	if (item_caps_total(dude_obj) >= INTcost) or ((game_time / (10 * 60 * 60 * 24 * 365)) >= 10) then begin
+		set_local_var(13, 1);
+		set_local_var(11, 1);
+		if (item_caps_total(dude_obj) >= INTcost) then begin
+			item_caps_adjust(dude_obj, -INTcost);
+		end
+		gsay_message(675, 168, 50);
+		gfade_out(1);
+		gsay_end;
+		end_dialogue;
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		if global_var(LONG_FADES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+			gfade_out(1);
+		end
+		game_time_advance(game_ticks(604800));//	1 week
+		temp := get_critter_stat(dude_obj, 4);//	INTELLIGENCE
+		set_critter_stat(dude_obj, 4, 1);//		 + 1
+		display_msg(message_str(766, 165));
+		start_gdialog(675, self_obj, 4, -1, -1);
+		gsay_start;
+		gfade_in(1);
+		gsay_reply(675, 407);
+		giq_option(4, 675, 409, Dumb06, 50);
+		giq_option(-3, 675, 408, Dumb05, 50);
+	end
+	else begin
+		call BoS_Lorri16;
+	end
+end
+
+procedure Dumb05
+begin
+	gsay_message(675, 410, 50);
+end
+
+procedure Dumb06
+begin
+	gsay_reply(675, 411);
+	giq_option(4, 675, 412, BoS_Lorriend, 50);
+end
+
+procedure Dumb06a
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	critter_heal(dude_obj, Heal_amount);
+	gfade_in(1);
+	gsay_message(675, 413, 50);
+end
+
+procedure BoS_Lorriend
+begin
+end
+
+procedure sorry
+begin
+	gsay_message(675, 500, 50);
+end
+
+procedure Sex01
+begin
+	if (get_critter_stat(dude_obj, 3) < 5) then begin
+		gsay_message(675, 301, 50);
+	end
+	else begin
+		if (get_critter_stat(dude_obj, 3) < 8) then begin
+			gsay_message(675, 300, 50);
+		end
+		else begin
+			if (get_critter_stat(dude_obj, 3) >= 8) or (has_skill(dude_obj, 14) >= 80) then begin
+				gsay_reply(675, 302);
+				giq_option(6, 675, 303, Sex02, 49);
+				giq_option(4, 675, 304, BoS_Lorriend, 50);
+			end
+		end
+	end
+end
+
+procedure Sex02
+begin
+	gsay_reply(675, 305);
+	giq_option(5, 675, 306, SexEnd01, 50);
+	if (global_var(BOS_LORRI_SEX_ENABLED) == 1) then begin
+		giq_option(4, 675, 308, Sex03kis, 50);
+		giq_option(6, 675, 307, Sex03ask, 50);
+	end
+	else begin
+		giq_option(6, 675, 307, SexEnd01, 50);
+	end
+end
+
+procedure Sex03kis
+begin
+	gsay_reply(675, 316);
+	giq_option(4, 675, 144, Sex04kis, 50);
+end
+
+procedure Sex04kis
+begin
+	call SexInterim;
+	gsay_message(675, 312, 49);
+	set_local_var(15, 1);
+end
+
+procedure SexInterim
+begin
+	variable lvar0;
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+/*
+	lvar0 := random(1, 3);
+	while(lvar0 == Sex_SoundByte) do
+	begin
+		lvar0 := random(1, 3);
+	end
+	Sex_SoundByte := lvar0;
+	if (Sex_SoundByte == 1) then begin
+		play_sfx("moan1");
+	end
+	else begin
+		if (Sex_SoundByte == 2) then begin
+			play_sfx("moan2");
+		end
+		else begin
+			play_sfx("moan3");
+		end	
+	end
+*/
+	gfade_in(1);
+end
+
+procedure Sex03ask
+begin
+	gsay_reply(675, 310);
+	giq_option(4, 675, 144, Sex04ask, 50);
+end
+
+procedure Sex04ask
+begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+	gfade_in(1);
+	gsay_reply(675, 311);
+	giq_option(4, 675, 144, Sex05ask, 50);
+end
+
+procedure Sex05ask
+begin
+	call SexInterim;
+	if (get_critter_stat(dude_obj, 0) > 6) or (get_critter_stat(dude_obj, 2) > 6) then begin// STR or END
+		gsay_reply(675, 313);
+		giq_option(4, 675, 315, BoS_Lorriend, 49);
+	end
+	else begin
+		gsay_message(675, 312, 49);
+	end
+	set_local_var(15, 1);
+end
+
+procedure SexEnd01
+begin
+	gsay_message(675, 309, 50);
+end
+
+procedure SexAgain
+begin
+	variable LVar0;
+	LVar0 := random(317, 319);
+	while(LVar0 == local_var(14)) do
+	begin
+		LVar0 := random(317, 319);
+	end
+	set_local_var(14, LVar0);
+	gsay_message(675, message_str(675, local_var(14)), 49);
+	call SexInterim;
+	gsay_message(675, 312, 49);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin//		PLAYER_REPUTATION
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

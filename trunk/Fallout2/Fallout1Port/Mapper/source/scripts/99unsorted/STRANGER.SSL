@@ -1,0 +1,269 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure combat_p_proc;//    script_action == 13
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure removeitem;
+variable initialized := 0;
+variable item := 0;
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initialized) and (map_first_run) then begin
+		initialized := 1;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 92);
+		item := obj_carrying_pid_obj(self_obj, 113);
+		call removeitem;
+		item := create_object_sid(40, 0, 0, -1);// stimpaks
+		add_mult_objs_to_inven(self_obj, item, 2);
+		if ((cur_map_index != 20) and (cur_map_index != 21)) then begin// if not on Coast...
+			item := create_object_sid(7, 0, 0, -1);// give spear
+			add_obj_to_inven(self_obj, item);
+		end
+		else begin
+			if (global_var(MYST_STRANGER_ITEM) == 68) then begin//if coast and code is 68, give 10mm pistol and sledge
+				item := create_object_sid(6, 0, 0, -1);
+				add_mult_objs_to_inven(self_obj, item, 1);
+				item := create_object_sid(8, 0, 0, -1);
+				add_mult_objs_to_inven(self_obj, item, 1);
+			end
+		end
+// add ammo to Stranger's inventory, if Bug_Fixes_Only is DISABLED:
+// (because giving him ammo isn't necessarily a "fix", you could argue he was given low ammo on purpose)
+//
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			if (global_var(MYST_STRANGER_ITEM) == 8) then begin
+				item := create_object_sid(29, 0, 0, -1);
+				add_mult_objs_to_inven(self_obj, item, 1);
+			end
+			else begin
+				if (global_var(MYST_STRANGER_ITEM) == 9) then begin
+					item := create_object_sid(29, 0, 0, -1);
+					add_mult_objs_to_inven(self_obj, item, 3);
+				end
+				else begin
+					if (global_var(MYST_STRANGER_ITEM) == 10) then begin
+						item := create_object_sid(34, 0, 0, -1);
+						add_mult_objs_to_inven(self_obj, item, 1);
+					end
+					else begin
+						if (global_var(MYST_STRANGER_ITEM) == 12) then begin// Minigun
+							if ((cur_map_index != 20) and (cur_map_index != 21)) then begin// if not on Coast...
+								item := create_object_sid(35, 0, 0, -1);
+								add_mult_objs_to_inven(self_obj, item, 3);
+							end
+						end
+						else begin
+							if (global_var(MYST_STRANGER_ITEM) == 15) then begin
+								item := create_object_sid(39, 0, 0, -1);
+								add_mult_objs_to_inven(self_obj, item, 1);
+							end
+							else begin
+								if (global_var(MYST_STRANGER_ITEM) == 23) then begin
+									item := create_object_sid(35, 0, 0, -1);
+									add_mult_objs_to_inven(self_obj, item, 1);
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		item_caps_adjust(self_obj, random(7, 30) * (has_trait(0, dude_obj, 20) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+		item := create_object_sid(global_var(MYST_STRANGER_ITEM), 0, 0, -1);// weapon
+		add_obj_to_inven(self_obj, item);
+// Stranger equips weapon and displays equip animation
+		reg_anim_func(2, self_obj);
+		reg_anim_func(1, 1);
+		wield_obj_critter(self_obj, item);
+		reg_anim_func(3, 0);
+		float_msg(self_obj, message_str(856, 100), 0);// float_msg(self_obj, message_str(856, 101), 6);
+	end
+	if (script_action == 15) then begin
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 12) then begin
+			call critter_p_proc;
+		end
+		else begin
+			if (script_action == 13) then begin
+				call combat_p_proc;
+			end
+			else begin
+				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+					call destroy_p_proc;
+				end
+				else begin
+					if (script_action == 4) then begin
+						call pickup_p_proc;
+					end
+					else begin
+						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+							call talk_p_proc;
+						end
+						else begin
+							if (script_action == 8) then begin//<-- use_skill_on_p_proc
+								call use_skill_on_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if (initialized == 1) then begin
+		variable ArmorSlot := 0;
+		ArmorSlot := critter_inven_obj(self_obj, 0);
+		if not(ArmorSlot) then begin
+			item := create_object_sid(74, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 1);
+			wield_obj_critter(self_obj, item);
+			item := 0;
+		end
+	end
+end
+
+procedure removeitem
+begin
+	if item then begin
+		rm_obj_from_inven(self_obj, item);
+		destroy_object(item);
+	end
+	item := 0;
+end
+
+procedure destroy_p_proc
+begin
+	item := obj_carrying_pid_obj(self_obj, 1);// Leather Armor
+	call removeitem;
+	item := obj_carrying_pid_obj(self_obj, 2);// Metal Armor
+	call removeitem;
+	item := obj_carrying_pid_obj(self_obj, 3);// Power Armor
+	call removeitem;
+	item := obj_carrying_pid_obj(self_obj, 17);// Combat Armor
+	call removeitem;
+	item := obj_carrying_pid_obj(self_obj, 68);// Dresser
+	call removeitem;
+	item := obj_carrying_pid_obj(self_obj, 113);// Robes
+	call removeitem;
+	if global_var(MYST_STRANGER_RESPAWNS) then begin
+		item := obj_carrying_pid_obj(self_obj, 6);// Sledgehammer
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 7);// Spear
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 8);// 10mm Pistol
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 9);// 10mm SMG
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 10);// Hunting Rifle
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 12);// Minigun
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 15);// Plasma Rifle
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 23);// Assault Rifle
+		call removeitem;
+		item := obj_carrying_pid_obj(self_obj, 116);// Ripper
+		call removeitem;
+	end
+// if killed by player or Bug_Fixes_Only enabled or Stranger_Respawns disabled, set flag to prevent him showing up again
+	if source_obj == dude_obj then begin
+		set_global_var(MYST_STRANGER_DEAD, 1);
+	end
+	else begin
+		if global_var(FIXT_BUGFIXES_ONLY) then begin
+			set_global_var(MYST_STRANGER_DEAD, 1);
+		end
+		else begin
+			if not(global_var(MYST_STRANGER_RESPAWNS)) then begin
+				set_global_var(MYST_STRANGER_DEAD, 1);
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	float_msg(self_obj, message_str(856, 103), 6);
+end
+
+procedure combat_p_proc
+begin
+//	set_local_var(0, 1);// once combat ends, Stranger leaves map
+end
+
+procedure critter_p_proc
+begin
+// once combat ends, Stranger leaves map
+	if not(local_var(2)) then begin
+		if ((local_var(0) == 1) or (local_var(1) == 2)) then begin
+			if (obj_on_screen(self_obj)) then begin
+				if (not(anim_busy(self_obj))) then begin
+// if on a Mountains map, instead of running from player, run to specific hex. Because the "run in opposite direction of player" doesn't work on those maps, Stranger just stands around.
+					if (cur_map_index != 49) and (cur_map_index != 50) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 62) and (cur_map_index != 64) then begin
+						animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(self_obj), rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)), 5), 1);
+					end
+					else begin
+						if (tile_num(self_obj) != 17061) and (tile_num(self_obj) != 18919) then begin
+							if (random(0, 1)) then begin
+								animate_move_obj_to_tile(self_obj, 17061, 1);
+							end
+							else begin
+								animate_move_obj_to_tile(self_obj, 18919, 1);
+							end
+						end
+						else begin
+							set_local_var(2, 1);
+							if (metarule(22, 0) == 0) then begin
+								set_obj_visibility(self_obj, 1);
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+// if caught stealing, Stranger leaves map
+	if source_obj == dude_obj then begin
+		script_overrides;
+		set_local_var(1, 2);
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+// if stealing, Stranger leaves map
+	if (action_being_used == 10) then begin//-- STEAL
+		if source_obj == dude_obj then begin
+			script_overrides;
+			set_local_var(1, 2);
+		end
+	end
+end
+

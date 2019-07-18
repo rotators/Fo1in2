@@ -1,0 +1,2228 @@
+//
+// CARAVAN ENCOUNTER, ON WAY TO DESTINATION
+//
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_exit_p_proc;//    script_action == 16
+procedure Lighting;
+procedure Junktown_CC_1;
+procedure Junktown_CC_2;
+procedure Junktown_CC_3;
+procedure Junktown_FGT_1;
+procedure Junktown_FGT_2;
+procedure Junktown_FGT_3;
+procedure Junktown_WM_1;
+procedure Junktown_WM_2;
+procedure Boneyard_CC_1;
+procedure Boneyard_CC_2;
+procedure Boneyard_CC_3;
+procedure Boneyard_FGT_1;
+procedure Boneyard_FGT_2;
+procedure Boneyard_FGT_3;
+procedure Boneyard_WM_1;
+procedure Boneyard_WM_2;
+procedure Brotherhood_CC_1;
+procedure Brotherhood_CC_2;
+procedure Brotherhood_CC_3;
+procedure Brotherhood_FGT_1;
+procedure Brotherhood_FGT_2;
+procedure Brotherhood_FGT_3;
+procedure Necrop_CC_1;
+procedure Necrop_CC_2;
+procedure Necrop_CC_3;
+procedure Small_Ghoul;
+procedure Medium_Ghoul;
+procedure Large_Ghoul;
+procedure Huge_Ghoul;
+procedure Small_Merc;
+procedure Medium_Merc;
+procedure Large_Merc;
+procedure Huge_Merc;
+procedure Small_Mutant;
+procedure Medium_Mutant;
+procedure Large_Mantis;
+procedure Huge_Mantis;
+procedure Small_Spawn;
+procedure Party_Pack;
+procedure Monster_Pack;
+procedure Dice_Total;
+procedure Cycle;
+procedure Place_Caravan;
+procedure Place_Stranger;
+procedure Mutant_Stuff;
+procedure Ghoul_Stuff;
+procedure Human_Stuff;
+
+variable Dice_Roll;
+variable Critter_Rotation;
+variable Total_Rotation;
+variable Critter_Tile;
+variable Inner_Circle;
+variable Outer_Circle;
+variable Players_Elevation;
+variable Entering_Map;
+variable Ghoul_Merc;
+variable Mutant_Merc;
+variable Human_Merc;
+
+procedure add_party;
+procedure update_party;
+procedure remove_party;
+
+variable party_elevation;
+variable dude_start_hex;
+
+export variable Ian_ptr;
+export variable Dog_ptr;
+export variable Tycho_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+
+procedure Invasion;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update
+			call Lighting;
+			call update_party;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+				call map_exit_p_proc;
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	call Lighting;
+	Outer_Circle := random(4, 9) + 4;
+	Inner_Circle := Outer_Circle - 4;
+	if (map_first_run) then begin
+		set_global_var(CC_NECROP_ALREADY_LOADED, (global_var(CC_NECROP_ALREADY_LOADED) + 1));
+		if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+			debug_msg(" ");
+			debug_msg(" ");
+			debug_msg(" ");
+			display_msg("Enter Map: CARAVAN ENCOUNTER, EN ROUTE TO DESTINATION");
+			debug_msg(" ");
+			debug_msg(" ");
+		end
+		if global_var(CC_NECROP_ALREADY_LOADED) < 2 then begin
+			if (global_var(CRIMSON_CARAVANS_STATUS) > 1) then begin
+				set_global_var(CRIMSON_CARAVANS_STATUS, 1);
+			end
+			else begin
+				if (global_var(WATER_MERCHANTS_STATUS) > 1) then begin
+					set_global_var(WATER_MERCHANTS_STATUS, 1);
+				end
+				else begin
+					if (global_var(FARGO_TRADERS_STATUS) > 1) then begin
+						set_global_var(FARGO_TRADERS_STATUS, 1);
+					end
+				end
+			end
+			set_map_var(0, 0);
+			set_global_var(CVAN_DRIVER, 1);// Cvan_driver left
+			set_global_var(CVAN_GUARD, 2);// Cvan_guards left
+			set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);// Brahmin left
+			call Place_Caravan;
+			if (global_var(CRIMSON_CARAVANS_STATUS) == 1) then begin
+				if (cur_map_index == 56) then begin //  DESERT CARAVAN 1
+					if (global_var(LOAD_MAP_INDEX) == 1) then begin
+						call Boneyard_CC_1;
+					end
+					else begin
+						if (global_var(LOAD_MAP_INDEX) == 2) then begin
+							call Boneyard_CC_2;
+						end
+						else begin
+							call Boneyard_CC_3;
+						end
+					end
+				end
+				else begin
+					if (cur_map_index == 57) then begin //  DESERT CARAVAN 2
+						variable LVar5 := 0;
+						LVar5 := random(0, 2);
+						if tile_num(dude_obj) == 20683 then begin
+							move_to(dude_obj, 18098, elevation(dude_obj));
+						end
+						if (LVar5 == 2) then begin
+							call Necrop_CC_1;
+						end
+						else begin
+							if (LVar5 == 1) then begin
+								call Necrop_CC_2;
+							end
+							else begin
+								call Necrop_CC_3;
+							end
+						end
+						if tile_num(dude_obj) == 20683 then begin
+							move_to(dude_obj, 18098, elevation(dude_obj));
+						end
+					end
+					else begin
+						if (cur_map_index == 58) then begin //  MOUNTAIN CARAVAN 1
+							if (global_var(LOAD_MAP_INDEX) == 1) then begin
+								call Junktown_CC_1;
+							end
+							else begin
+								if (global_var(LOAD_MAP_INDEX) == 2) then begin
+									call Junktown_CC_2;
+								end
+								else begin
+									call Junktown_CC_3;
+								end
+							end
+						end
+						else begin
+							if (global_var(LOAD_MAP_INDEX) == 1) then begin
+								call Brotherhood_CC_1;
+							end
+							else begin
+								if (global_var(LOAD_MAP_INDEX) == 2) then begin
+									call Brotherhood_CC_2;
+								end
+								else begin
+									call Brotherhood_CC_3;
+								end
+							end
+						end
+					end
+				end
+			end
+			else begin
+				if (global_var(WATER_MERCHANTS_STATUS) == 1) then begin
+					if (cur_map_index == 56) then begin //  DESERT CARAVAN 1
+						if (global_var(LOAD_MAP_INDEX) == 1) then begin
+							call Boneyard_WM_1;
+						end
+						else begin
+							call Boneyard_WM_2;
+						end
+					end
+					else begin
+						if (global_var(LOAD_MAP_INDEX) == 1) then begin
+							call Junktown_WM_1;
+						end
+						else begin
+							call Junktown_WM_2;
+						end
+					end
+				end
+				else begin
+					if (cur_map_index == 56) then begin //  DESERT CARAVAN 1
+						if (global_var(LOAD_MAP_INDEX) == 1) then begin
+							call Boneyard_FGT_1;
+						end
+						else begin
+							if (global_var(LOAD_MAP_INDEX) == 2) then begin
+								call Boneyard_FGT_2;
+							end
+							else begin
+								call Boneyard_FGT_3;
+							end
+						end
+					end
+					else begin
+						if (cur_map_index == 58) then begin //  MOUNTAIN CARAVAN 1
+							if (global_var(LOAD_MAP_INDEX) == 1) then begin
+								call Junktown_FGT_1;
+							end
+							else begin
+								if (global_var(LOAD_MAP_INDEX) == 2) then begin
+									call Junktown_FGT_2;
+								end
+								else begin
+									call Junktown_FGT_3;
+								end
+							end
+						end
+						else begin
+							if (global_var(LOAD_MAP_INDEX) == 1) then begin
+								call Brotherhood_FGT_1;
+							end
+							else begin
+								if (global_var(LOAD_MAP_INDEX) == 2) then begin
+									call Brotherhood_FGT_2;
+								end
+								else begin
+									call Brotherhood_FGT_3;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	call add_party;
+end
+
+procedure map_exit_p_proc
+begin
+	call remove_party;
+	if global_var(CC_NECROP_ALREADY_LOADED) < 2 then begin
+		if (map_var(0) == 0) then begin
+			if global_var(CARAVAN_HOW_MANY_BRAHMIN) > 0 then begin
+				if (global_var(CRIMSON_CARAVANS_STATUS) == 1) then begin
+					set_global_var(CRIMSON_CARAVANS_STATUS, 2);
+				end
+				else begin
+					if (global_var(WATER_MERCHANTS_STATUS) == 1) then begin
+						set_global_var(WATER_MERCHANTS_STATUS, 2);
+					end
+					else begin
+						if (global_var(FARGO_TRADERS_STATUS) == 1) then begin
+							set_global_var(FARGO_TRADERS_STATUS, 2);
+						end
+					end
+				end
+			end
+			else begin
+				if (global_var(CRIMSON_CARAVANS_STATUS) == 1) then begin
+					set_global_var(CRIMSON_CARAVANS_STATUS, 5);
+				end
+				else begin
+					if (global_var(WATER_MERCHANTS_STATUS) == 1) then begin
+						set_global_var(WATER_MERCHANTS_STATUS, 5);
+					end
+					else begin
+						if (global_var(FARGO_TRADERS_STATUS) == 1) then begin
+							set_global_var(FARGO_TRADERS_STATUS, 5);
+						end
+					end
+				end
+			end
+		end
+		else begin
+			if (global_var(CVAN_DRIVER) or global_var(CVAN_GUARD)) and (global_var(CARAVAN_HOW_MANY_BRAHMIN) > 0) then begin
+				if (global_var(CRIMSON_CARAVANS_STATUS) == 1) then begin
+					set_global_var(CRIMSON_CARAVANS_STATUS, 3);
+				end
+				else begin
+					if (global_var(WATER_MERCHANTS_STATUS) == 1) then begin
+						set_global_var(WATER_MERCHANTS_STATUS, 3);
+					end
+					else begin
+						if (global_var(FARGO_TRADERS_STATUS) == 1) then begin
+							set_global_var(FARGO_TRADERS_STATUS, 3);
+						end
+					end
+				end
+			end
+			else begin
+				if (global_var(CRIMSON_CARAVANS_STATUS) == 1) then begin
+					set_global_var(CRIMSON_CARAVANS_STATUS, 5);
+				end
+				else begin
+					if (global_var(WATER_MERCHANTS_STATUS) == 1) then begin
+						set_global_var(WATER_MERCHANTS_STATUS, 5);
+					end
+					else begin
+						if (global_var(FARGO_TRADERS_STATUS) == 1) then begin
+							set_global_var(FARGO_TRADERS_STATUS, 5);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Lighting
+begin
+	variable LVar0 := 0;
+	LVar0 := game_time_hour;
+	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
+		set_light_level(LVar0 - 600 + 40);
+	end
+	else begin
+		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
+			set_light_level(100);
+		end
+		else begin
+			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
+				set_light_level(100 - (LVar0 - 1800));
+			end
+			else begin
+				set_light_level(40);
+			end
+		end
+	end
+end
+
+procedure Junktown_CC_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Monster_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Mantis;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Large_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Huge_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Medium_Merc;
+						end
+						else begin
+							call Small_Spawn;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_CC_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Small_Mutant;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Mantis;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Medium_Merc;
+						end
+						else begin
+							call Small_Ghoul;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_CC_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Monster_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Small_Spawn;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_FGT_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Small_Ghoul;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Medium_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Mantis;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Small_Merc;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_FGT_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Small_Ghoul;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Party_Pack;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Large_Mantis;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Huge_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Small_Merc;
+						end
+						else begin
+							call Small_Ghoul;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_FGT_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Monster_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Medium_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Small_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Huge_Mantis;
+						end
+						else begin
+							call Huge_Merc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_WM_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Huge_Mantis;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Small_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Medium_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Small_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Large_Merc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Junktown_WM_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Large_Merc;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Medium_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Large_Mantis;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Medium_Merc;
+						end
+						else begin
+							call Huge_Mantis;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_CC_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Small_Spawn;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Huge_Mantis;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Large_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Small_Mutant;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_CC_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Party_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Medium_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Huge_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Mantis;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Medium_Merc;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_CC_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Party_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Huge_Mantis;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Medium_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Huge_Merc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_FGT_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Huge_Mantis;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_FGT_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Large_Merc;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Small_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Huge_Mantis;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_FGT_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Party_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Mantis;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Large_Merc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_WM_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Large_Merc;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Medium_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Small_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Medium_Merc;
+						end
+						else begin
+							call Large_Mantis;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Boneyard_WM_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Large_Merc;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Medium_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Small_Merc;
+						end
+						else begin
+							call Large_Mantis;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Brotherhood_CC_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Huge_Mantis;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Small_Spawn;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Party_Pack;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Monster_Pack;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Medium_Ghoul;
+						end
+						else begin
+							call Medium_Mutant;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Brotherhood_CC_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Monster_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Huge_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Party_Pack;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Huge_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Small_Spawn;
+						end
+						else begin
+							call Small_Mutant;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Brotherhood_CC_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Party_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Huge_Mantis;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Large_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Huge_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Small_Merc;
+						end
+						else begin
+							call Monster_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Brotherhood_FGT_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Monster_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Huge_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Mantis;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Medium_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Mantis;
+						end
+						else begin
+							call Small_Mutant;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Brotherhood_FGT_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Small_Mutant;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Small_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Large_Mantis;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Medium_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Huge_Merc;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Huge_Mantis;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Brotherhood_FGT_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Monster_Pack;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Small_Mutant;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Medium_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Large_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Huge_Merc;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Necrop_CC_1
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Huge_Ghoul;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Large_Merc;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Party_Pack;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Small_Ghoul;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Huge_Mantis;
+						end
+						else begin
+							call Large_Ghoul;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Necrop_CC_2
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Huge_Mantis;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Small_Ghoul;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Large_Merc;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Large_Ghoul;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Huge_Ghoul;
+						end
+						else begin
+							call Party_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Necrop_CC_3
+begin
+	call Dice_Total;
+	if (Dice_Roll == 3) then begin
+		call Huge_Ghoul;
+	end
+	else begin
+		if ((Dice_Roll > 3) and (Dice_Roll < 7)) then begin
+			call Medium_Ghoul;
+		end
+		else begin
+			if ((Dice_Roll > 6) and (Dice_Roll < 10)) then begin
+				call Small_Ghoul;
+			end
+			else begin
+				if ((Dice_Roll > 9) and (Dice_Roll < 13)) then begin
+					call Huge_Merc;
+				end
+				else begin
+					if ((Dice_Roll > 12) and (Dice_Roll < 16)) then begin
+						call Huge_Mantis;
+					end
+					else begin
+						if ((Dice_Roll > 15) and (Dice_Roll < 18)) then begin
+							call Large_Ghoul;
+						end
+						else begin
+							call Monster_Pack;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Small_Ghoul
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(1, 3);
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle));
+		Ghoul_Merc := create_object_sid(16777401, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Critter_Rotation == 0) then begin
+			anim(Ghoul_Merc, 1000, 3);
+		end
+		else begin
+			if (Critter_Rotation == 1) then begin
+				anim(Ghoul_Merc, 1000, 4);
+			end
+			else begin
+				anim(Ghoul_Merc, 1000, 5);
+			end
+		end
+		call Ghoul_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Medium_Ghoul
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(4, 6);
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Ghoul_Merc := create_object_sid(16777401, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(Ghoul_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Ghoul_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Ghoul_Merc, 1000, 5);
+				end
+				else begin
+					anim(Ghoul_Merc, 1000, 3);
+				end
+			end
+		end
+		call Ghoul_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Large_Ghoul
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(7, 9);
+	Outer_Circle := random(6, 12) + 4;
+	Inner_Circle := Outer_Circle - 4;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Ghoul_Merc := create_object_sid(16777401, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(Ghoul_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Ghoul_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Ghoul_Merc, 1000, 5);
+				end
+				else begin
+					anim(Ghoul_Merc, 1000, 3);
+				end
+			end
+		end
+		call Ghoul_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Huge_Ghoul
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(10, 13);
+	Outer_Circle := random(8, 16) + 4;
+	Inner_Circle := Outer_Circle - 6;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Ghoul_Merc := create_object_sid(16777401, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(Ghoul_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Ghoul_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Ghoul_Merc, 1000, 5);
+				end
+				else begin
+					anim(Ghoul_Merc, 1000, 3);
+				end
+			end
+		end
+		call Ghoul_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Small_Merc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(2, 4);
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle));
+		if (random(0, 1)) then begin
+			Human_Merc := create_object_sid(16777446, Critter_Tile, elevation(dude_obj), 763);
+			set_map_var(0, map_var(0) + 1);
+		end
+		else begin
+			Human_Merc := create_object_sid(16777440, Critter_Tile, elevation(dude_obj), 763);
+			set_map_var(0, map_var(0) + 1);
+		end
+		if (Critter_Rotation == 0) then begin
+			anim(Human_Merc, 1000, 3);
+		end
+		else begin
+			if (Critter_Rotation == 1) then begin
+				anim(Human_Merc, 1000, 4);
+			end
+			else begin
+				anim(Human_Merc, 1000, 5);
+			end
+		end
+		call Human_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Medium_Merc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := random((4 + (combat_difficulty - 1)), (5 + combat_difficulty));
+	Outer_Circle := random(5, 10) + 2;
+	Inner_Circle := Outer_Circle - 4;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		LVar2 := random(1, 4);
+		if (LVar2 == 1) then begin
+			Human_Merc := create_object_sid(16777446, Critter_Tile, elevation(dude_obj), 763);
+			set_map_var(0, map_var(0) + 1);
+		end
+		else begin
+			if (LVar2 == 2) then begin
+				Human_Merc := create_object_sid(16777440, Critter_Tile, elevation(dude_obj), 763);
+				set_map_var(0, map_var(0) + 1);
+			end
+			else begin
+				if (LVar2 == 3) then begin
+					Human_Merc := create_object_sid(16777473, Critter_Tile, elevation(dude_obj), 763);
+					set_map_var(0, map_var(0) + 1);
+				end
+				else begin
+					Human_Merc := create_object_sid(16777478, Critter_Tile, elevation(dude_obj), 763);
+					set_map_var(0, map_var(0) + 1);
+				end
+			end
+		end
+		if (Total_Rotation == 0) then begin
+			anim(Human_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Human_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Human_Merc, 1000, 5);
+				end
+				else begin
+					anim(Human_Merc, 1000, 3);
+				end
+			end
+		end
+		call Human_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Large_Merc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := random((4 + (combat_difficulty * 2)), (7 + (combat_difficulty * 2)));
+	Outer_Circle := random(6, 10) + 6;
+	Inner_Circle := Outer_Circle - 6;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 3);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		LVar2 := random(1, 4);
+		if (LVar2 == 1) then begin
+			Human_Merc := create_object_sid(16777446, Critter_Tile, elevation(dude_obj), 763);
+			set_map_var(0, map_var(0) + 1);
+		end
+		else begin
+			if (LVar2 == 2) then begin
+				Human_Merc := create_object_sid(16777440, Critter_Tile, elevation(dude_obj), 763);
+				set_map_var(0, map_var(0) + 1);
+			end
+			else begin
+				if (LVar2 == 3) then begin
+					Human_Merc := create_object_sid(16777473, Critter_Tile, elevation(dude_obj), 763);
+					set_map_var(0, map_var(0) + 1);
+				end
+				else begin
+					Human_Merc := create_object_sid(16777478, Critter_Tile, elevation(dude_obj), 763);
+					set_map_var(0, map_var(0) + 1);
+				end
+			end
+		end
+		if (Total_Rotation == 0) then begin
+			anim(Human_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Human_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Human_Merc, 1000, 5);
+				end
+				else begin
+					anim(Human_Merc, 1000, 3);
+				end
+			end
+		end
+		call Human_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Huge_Merc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := random((4 + (combat_difficulty * 2)), (7 + (combat_difficulty * 2)));
+	Outer_Circle := random(10, 16) + 2;
+	Inner_Circle := Outer_Circle - 8;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 4);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 4);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 4);
+		Critter_Rotation := random(0, 3);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 4);
+		LVar2 := random(1, 4);
+		if (LVar2 == 1) then begin
+			Human_Merc := create_object_sid(16777446, Critter_Tile, elevation(dude_obj), 763);
+			set_map_var(0, map_var(0) + 1);
+		end
+		else begin
+			if (LVar2 == 2) then begin
+				Human_Merc := create_object_sid(16777440, Critter_Tile, elevation(dude_obj), 763);
+				set_map_var(0, map_var(0) + 1);
+			end
+			else begin
+				if (LVar2 == 3) then begin
+					Human_Merc := create_object_sid(16777473, Critter_Tile, elevation(dude_obj), 763);
+					set_map_var(0, map_var(0) + 1);
+				end
+				else begin
+					Human_Merc := create_object_sid(16777478, Critter_Tile, elevation(dude_obj), 763);
+					set_map_var(0, map_var(0) + 1);
+				end
+			end
+		end
+		if (Total_Rotation == 0) then begin
+			anim(Human_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Human_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Human_Merc, 1000, 5);
+				end
+				else begin
+					anim(Human_Merc, 1000, 3);
+				end
+			end
+		end
+		call Human_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Small_Mutant
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(1, 2);
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle));
+		Mutant_Merc := create_object_sid(16777403, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Critter_Rotation == 0) then begin
+			anim(Mutant_Merc, 1000, 3);
+		end
+		else begin
+			if (Critter_Rotation == 1) then begin
+				anim(Mutant_Merc, 1000, 4);
+			end
+			else begin
+				anim(Mutant_Merc, 1000, 5);
+			end
+		end
+		call Mutant_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Medium_Mutant
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (combat_difficulty == 2) then begin
+		LVar0 := random(3, 5);
+	end
+	else begin
+		LVar0 := random(2, 4);
+	end
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Mutant_Merc := create_object_sid(16777403, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(Mutant_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Mutant_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Mutant_Merc, 1000, 5);
+				end
+				else begin
+					anim(Mutant_Merc, 1000, 3);
+				end
+			end
+		end
+		call Mutant_Stuff;
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Large_Mantis
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := random((5 + (combat_difficulty * 2)), (8 + (combat_difficulty * 2)));
+	Outer_Circle := random(8, 16) + 2;
+	Inner_Circle := Outer_Circle - 6;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		LVar2 := create_object_sid(16777392, Critter_Tile, elevation(dude_obj), 762);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(LVar2, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(LVar2, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(LVar2, 1000, 5);
+				end
+				else begin
+					anim(LVar2, 1000, 3);
+				end
+			end
+		end
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Huge_Mantis
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := random((6 + (combat_difficulty * 3)), (10 + (combat_difficulty * 2)));
+	Outer_Circle := random(8, 16) + 2;
+	Inner_Circle := Outer_Circle - 6;
+	while(LVar1 < LVar0) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		LVar2 := create_object_sid(16777392, Critter_Tile, elevation(dude_obj), 762);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(LVar2, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(LVar2, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(LVar2, 1000, 5);
+				end
+				else begin
+					anim(LVar2, 1000, 3);
+				end
+			end
+		end
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Small_Spawn
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := random(1, 2);
+	while(LVar1 < LVar0) do begin
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), random(0, 2), random(Inner_Circle, Outer_Circle));
+		LVar2 := create_object_sid(16777381, Critter_Tile, elevation(dude_obj), 762);
+		set_map_var(0, map_var(0) + 1);
+		anim(LVar2, 1000, 3);
+		LVar1 := LVar1 + 1;
+	end
+end
+
+procedure Party_Pack
+begin
+	call Large_Merc;
+	call Medium_Ghoul;
+end
+
+procedure Monster_Pack
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	variable LVar3 := 0;
+	Outer_Circle := random(4, 9) + 4;
+	Inner_Circle := Outer_Circle - 4;
+	Critter_Tile := tile_num_in_direction(tile_num(dude_obj), random(0, 2), random(Inner_Circle, Outer_Circle));
+	LVar0 := create_object_sid(16777381, Critter_Tile, elevation(dude_obj), 762);
+	set_map_var(0, map_var(0) + 1);
+	anim(LVar0, 1000, 3);
+	if (combat_difficulty == 2) then begin
+		LVar3 := random(4, 7);
+	end
+	else begin
+		LVar3 := random(3, (5 + combat_difficulty));
+	end
+	while(LVar2 < LVar3) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+		LVar1 := create_object_sid(16777392, Critter_Tile, elevation(dude_obj), 762);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(LVar1, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(LVar1, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(LVar1, 1000, 5);
+				end
+				else begin
+					anim(LVar1, 1000, 3);
+				end
+			end
+		end
+		LVar2 := LVar2 + 1;
+	end
+	LVar2 := 0;
+	if (combat_difficulty == 2) then begin
+		LVar3 := random(3, 5);
+	end
+	else begin
+		LVar3 := random(2, 4);
+	end
+	while(LVar2 < LVar3) do begin
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Critter_Rotation;
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Critter_Rotation := random(0, 2);
+		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
+		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+		Ghoul_Merc := create_object_sid(16777401, Critter_Tile, elevation(dude_obj), 763);
+		set_map_var(0, map_var(0) + 1);
+		if (Total_Rotation == 0) then begin
+			anim(Ghoul_Merc, 1000, 3);
+		end
+		else begin
+			if (Total_Rotation == 1) then begin
+				anim(Ghoul_Merc, 1000, 4);
+			end
+			else begin
+				if (Total_Rotation == 2) then begin
+					anim(Ghoul_Merc, 1000, 5);
+				end
+				else begin
+					anim(Ghoul_Merc, 1000, 3);
+				end
+			end
+		end
+		call Ghoul_Stuff;
+		LVar2 := LVar2 + 1;
+	end
+end
+
+procedure Dice_Total
+begin
+	Dice_Roll := (random(1, 6) + random(1, 6) + random(1, 6));
+end
+
+procedure Cycle
+begin
+	if (Critter_Rotation > 5) then begin
+		Critter_Rotation := Critter_Rotation % 6;
+	end
+	else begin
+		if (Critter_Rotation < 0) then begin
+			while(Critter_Rotation < 0) do begin
+				Critter_Rotation := Critter_Rotation + 6;
+			end
+		end
+	end
+end
+
+procedure Place_Caravan
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	if (global_var(LOAD_MAP_INDEX) == 1) then begin
+		if (cur_map_index == 58) or (cur_map_index == 59) then begin //  MOUNTAIN CARAVAN 1 OR 2
+			override_map_start(85, 95, 0, 1);
+		end
+		else begin
+			override_map_start(83, 103, 0, 1);
+		end
+		Players_Elevation := 0;
+	end
+	else begin
+		if (global_var(LOAD_MAP_INDEX) == 2) then begin
+			if (cur_map_index == 58) or (cur_map_index == 59) then begin //  MOUNTAIN CARAVAN 1 OR 2
+				override_map_start(85, 95, 1, 1);
+			end
+			else begin
+				override_map_start(83, 103, 1, 1);
+			end
+			Players_Elevation := 1;
+		end
+		else begin
+			if (cur_map_index == 58) or (cur_map_index == 59) then begin //  MOUNTAIN CARAVAN 1 OR 2
+				override_map_start(85, 95, 2, 1);
+			end
+			else begin
+				override_map_start(93, 84, 1, 1);
+			end
+			Players_Elevation := 2;
+		end
+	end
+	if (global_var(CVAN_DRIVER) == 1) then begin
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), 4, 6);
+		LVar0 := create_object_sid(16777233, Critter_Tile, elevation(dude_obj), 761);
+		critter_add_trait(LVar0, 1, 6, 0);
+		critter_add_trait(LVar0, 1, 5, 1);
+		anim(LVar0, 1000, 1);
+		LVar2 := create_object_sid(94, 0, 0, -1);
+		add_obj_to_inven(LVar0, LVar2);
+		wield_obj_critter(LVar0, LVar2);
+	end
+	if (global_var(CVAN_GUARD) == 2) then begin
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), 5, 4);
+		LVar1 := create_object_sid(16777420, Critter_Tile, elevation(dude_obj), 761);
+		critter_add_trait(LVar1, 1, 6, 0);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 1);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if (global_var(CVAN_GUARD) >= 1) then begin
+		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), 3, 4);
+		LVar1 := create_object_sid(16777420, Critter_Tile, elevation(dude_obj), 761);
+		critter_add_trait(LVar1, 1, 6, 0);
+		critter_add_trait(LVar1, 1, 5, 1);
+		anim(LVar1, 1000, 1);
+		LVar2 := create_object_sid(18, 0, 0, -1);
+		add_obj_to_inven(LVar1, LVar2);
+		wield_obj_critter(LVar1, LVar2);
+	end
+	if (has_trait(0, dude_obj, 46)) then begin
+		call Place_Stranger;
+	end
+end
+
+procedure Place_Stranger
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	Critter_Tile := tile_num_in_direction(tile_num(dude_obj), 5, 2);
+	LVar0 := create_object_sid(16777520, Critter_Tile, elevation(dude_obj), 761);
+	critter_add_trait(LVar0, 1, 6, 0);
+	critter_add_trait(LVar0, 1, 5, 92);
+	LVar1 := create_object_sid(23, 0, 0, -1);
+	add_obj_to_inven(LVar0, LVar1);
+	wield_obj_critter(LVar0, LVar1);
+	LVar1 := create_object_sid(36, 0, 0, -1);
+	if (has_trait(0, dude_obj, 40)) then begin
+		add_mult_objs_to_inven(LVar0, LVar1, 10);
+	end
+	else begin
+		add_mult_objs_to_inven(LVar0, LVar1, 5);
+	end
+end
+
+procedure Mutant_Stuff
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := random(1, 5);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(11, 0, 0, -1);
+		add_obj_to_inven(Mutant_Merc, LVar1);
+		wield_obj_critter(Mutant_Merc, LVar1);
+	end
+	LVar0 := random(1, 3);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(40, 0, 0, -1);
+		add_mult_objs_to_inven(Mutant_Merc, LVar1, random(1, 3));
+	end
+	LVar0 := random(1, 2);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(234, 0, 0, -1);
+		add_obj_to_inven(Mutant_Merc, LVar1);
+		wield_obj_critter(Mutant_Merc, LVar1);
+	end
+	LVar0 := random(1, 5);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(144, 0, 0, -1);
+		add_mult_objs_to_inven(Mutant_Merc, LVar1, random(1, 2));
+	end
+	LVar0 := random(1, 10);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(59, 0, 0, -1);
+		add_obj_to_inven(Mutant_Merc, LVar1);
+	end
+	LVar0 := random(1, 10);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(52, 0, 0, -1);
+		add_obj_to_inven(Mutant_Merc, LVar1);
+	end
+end
+
+procedure Ghoul_Stuff
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar2 := create_object_sid(41, 0, 0, -1);
+	add_mult_objs_to_inven(Ghoul_Merc, LVar2, random(1, 10) * (has_trait(0, dude_obj, 20) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	LVar0 := random(1, 4);
+	if ((LVar0 == 1) or (LVar0 == 2)) then begin
+		LVar1 := create_object_sid(4, 0, 0, -1);
+		add_obj_to_inven(Ghoul_Merc, LVar1);
+		wield_obj_critter(Ghoul_Merc, LVar1);
+	end
+	else begin
+		if (LVar0 == 3) then begin
+			LVar1 := create_object_sid(7, 0, 0, -1);
+			add_obj_to_inven(Ghoul_Merc, LVar1);
+			wield_obj_critter(Ghoul_Merc, LVar1);
+		end
+	end
+	LVar0 := random(1, 4);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(71, 0, 0, -1);
+		add_mult_objs_to_inven(Ghoul_Merc, LVar1, random(1, 2));
+	end
+end
+
+procedure Human_Stuff
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar2 := create_object_sid(41, 0, 0, -1);
+	add_mult_objs_to_inven(Human_Merc, LVar2, random(4, 20) * (has_trait(0, dude_obj, 20) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	LVar0 := random(1, 10);
+	if (LVar0 <= 3) then begin
+		LVar1 := create_object_sid(7, 0, 0, -1);
+		add_obj_to_inven(Human_Merc, LVar1);
+		wield_obj_critter(Human_Merc, LVar1);
+	end
+	else begin
+		if ((LVar0 > 3) and (LVar0 <= 5)) then begin
+			LVar1 := create_object_sid(236, 0, 0, -1);
+			add_obj_to_inven(Human_Merc, LVar1);
+			wield_obj_critter(Human_Merc, LVar1);
+		end
+		else begin
+			if ((LVar0 > 5) and (LVar0 <= 7)) then begin
+				LVar1 := create_object_sid(8, 0, 0, -1);
+				add_obj_to_inven(Human_Merc, LVar1);
+				wield_obj_critter(Human_Merc, LVar1);
+				LVar1 := create_object_sid(30, 0, 0, -1);
+				if (has_trait(0, dude_obj, 40)) then begin
+					add_mult_objs_to_inven(Human_Merc, LVar1, random(2, 4));
+				end
+				else begin
+					add_mult_objs_to_inven(Human_Merc, LVar1, random(1, 2));
+				end
+			end
+			else begin
+				if ((LVar0 > 7) and (LVar0 <= 9)) then begin
+					LVar1 := create_object_sid(18, 0, 0, -1);
+					add_obj_to_inven(Human_Merc, LVar1);
+					wield_obj_critter(Human_Merc, LVar1);
+					LVar1 := create_object_sid(111, 0, 0, -1);
+					if (has_trait(0, dude_obj, 40)) then begin
+						add_mult_objs_to_inven(Human_Merc, LVar1, random(2, 4));
+					end
+					else begin
+						add_mult_objs_to_inven(Human_Merc, LVar1, random(0, 2));
+					end
+				end
+				else begin
+					LVar1 := create_object_sid(10, 0, 0, -1);
+					add_obj_to_inven(Human_Merc, LVar1);
+					wield_obj_critter(Human_Merc, LVar1);
+					LVar1 := create_object_sid(34, 0, 0, -1);
+					if (has_trait(0, dude_obj, 40)) then begin
+						add_mult_objs_to_inven(Human_Merc, LVar1, random(1, 2));
+					end
+					else begin
+						add_mult_objs_to_inven(Human_Merc, LVar1, random(0, 1));
+					end
+				end
+			end
+		end
+	end
+	LVar0 := random(1, 3);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(40, 0, 0, -1);
+		add_mult_objs_to_inven(Human_Merc, LVar1, random(1, 2));
+	end
+	LVar0 := random(1, 10);
+	if (LVar0 == 1) then begin
+		LVar1 := create_object_sid(47, 0, 0, -1);
+		add_obj_to_inven(Human_Merc, LVar1);
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+
+procedure Invasion
+begin
+	if (global_var(MASTER_BLOWN) == 0) then begin
+		if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(NECROPOLIS_WAS_INVADED, 1);
+		end
+		if (global_var(THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(THE_HUB_WAS_INVADED, 1);
+		end
+		if (global_var(BROTHERHOOD_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(BROTHERHOOD_WAS_INVADED, 1);
+			set_global_var(MARK_BROTHER_2, 0);
+			set_global_var(MARK_BROTHER_3, 0);
+			set_global_var(MARK_BROTHER_4, 0);
+			set_global_var(MARK_BROTHER_5, 0);
+		end
+		if (global_var(JUNKTOWN_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(JUNKTOWN_WAS_INVADED, 1);
+		end
+		if (global_var(SHADY_SANDS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(SHADY_SANDS_WAS_INVADED, 1);
+		end
+		if (global_var(VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(VAULT_13_WAS_INVADED, 1);
+			play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+			metarule(13, 0);
+		end
+		if (global_var(FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(FOLLOWERS_INVADED, 1);
+		end
+	end
+end
+

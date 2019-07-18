@@ -1,0 +1,257 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure Darkness;
+procedure add_party;
+procedure update_party;
+procedure remove_party;
+
+export variable Ian_ptr;
+export variable Dog_ptr;
+export variable Tycho_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+export variable Skill_Used;
+export variable Key_Used;
+export variable Master_Has_Armed;
+export variable Bomb_Armed;
+export variable Master_ptr;
+export variable signal_mutants;
+export variable Master_Has_Activated;
+
+variable party_elevation;
+variable dude_start_hex;
+variable player_elevation;
+variable mutan1_ptr;
+variable mutan2_ptr;
+variable mutan_ptr;
+variable stuff;
+variable cur_count;
+variable prev_count;
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call Darkness;
+		player_elevation := elevation(dude_obj);
+		if (map_first_run) then begin
+			kill_critter_type(16777216 + 77, 0);// Mk II
+			kill_critter_type(16777216 + 306, 0);// Mk I
+		end
+		if (map_first_run) and (player_elevation == 0) then begin
+			variable Critter := 0;
+			Critter := create_object_sid(16777216 + 77, 0, 0, 530);
+			critter_attempt_placement(Critter, 12653, player_elevation);
+			anim(Critter, 1000, 3);
+			Critter := create_object_sid(16777216 + 77, 0, 0, 530);
+			critter_attempt_placement(Critter, 12665, player_elevation);
+			anim(Critter, 1000, 1);
+			Critter := create_object_sid(16777216 + 77, 0, 0, 530);
+			critter_attempt_placement(Critter, 18490, player_elevation);
+			anim(Critter, 1000, 3);
+			Critter := create_object_sid(16777216 + 77, 0, 0, 530);
+			critter_attempt_placement(Critter, 19290, player_elevation);
+			anim(Critter, 1000, 4);
+			Critter := create_object_sid(16777216 + 77, 0, 0, 530);
+			critter_attempt_placement(Critter, 19905, player_elevation);
+			anim(Critter, 1000, 5);
+			Critter := create_object_sid(16777216 + 77, 0, 0, 530);
+			critter_attempt_placement(Critter, 17690, player_elevation);
+			anim(Critter, 1000, 3);
+		end
+		if (player_elevation == 0) then begin
+			if ((game_time_hour >= 700) and (game_time_hour < 1800) and (metarule(22, 0) == 0)) then begin
+				if (map_var(10) == 0) then begin
+					set_map_var(10, 1);
+					mutan_ptr := create_object_sid(16777408, 0, 0, 524);
+					critter_attempt_placement(mutan_ptr, 20532, 0);
+					critter_add_trait(mutan_ptr, 1, 6, 34);
+					stuff := create_object_sid(15, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(39, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(40, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					mutan_ptr := create_object_sid(16777408, 0, 0, 524);
+					critter_attempt_placement(mutan_ptr, 19337, 0);
+					critter_add_trait(mutan_ptr, 1, 6, 34);
+					stuff := create_object_sid(28, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(39, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(40, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					mutan_ptr := create_object_sid(16777408, 0, 0, 524);
+					critter_attempt_placement(mutan_ptr, 18740, 0);
+					critter_add_trait(mutan_ptr, 1, 6, 34);
+					stuff := create_object_sid(28, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(39, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(40, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					mutan_ptr := create_object_sid(16777408, 0, 0, 524);
+					critter_attempt_placement(mutan_ptr, 21339, 0);
+					critter_add_trait(mutan_ptr, 1, 6, 34);
+					stuff := create_object_sid(28, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(39, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+					stuff := create_object_sid(40, 0, 0, -1);
+					add_obj_to_inven(mutan_ptr, stuff);
+				end
+			end
+		end
+		if (global_var(LOAD_MAP_INDEX) == 2) then begin
+			override_map_start(112, 84, 0, 3);
+		end
+		else begin
+			if (global_var(LOAD_MAP_INDEX) == 3) then begin
+				override_map_start(140, 78, 1, 4);
+			end
+			else begin
+				if (global_var(LOAD_MAP_INDEX) == 5) then begin
+					override_map_start(140, 78, 0, 4);
+				end
+				else begin
+					if (global_var(LOAD_MAP_INDEX) == 12) then begin
+						override_map_start(55, 68, 0, 5);
+						if ((metarule(22, 0) == 0) and (global_var(MORPHEUS_DELIVERS_PLAYER) == 100)) then begin
+							set_global_var(MORPHEUS_DELIVERS_PLAYER, 1);
+							create_object_sid(16777363, 13854, 0, 53);
+							mutan_ptr := create_object_sid(16777409, 0, 0, 524);
+							critter_attempt_placement(mutan_ptr, 15468, 0);
+							critter_add_trait(mutan_ptr, 1, 6, 55);
+							stuff := create_object_sid(15, 0, 0, -1);
+							add_obj_to_inven(mutan_ptr, stuff);
+							stuff := create_object_sid(39, 0, 0, -1);
+							add_obj_to_inven(mutan_ptr, stuff);
+							stuff := create_object_sid(40, 0, 0, -1);
+							add_obj_to_inven(mutan_ptr, stuff);
+							mutan_ptr := create_object_sid(16777409, 0, 0, 524);
+							critter_attempt_placement(mutan_ptr, 15450, 0);
+							critter_add_trait(mutan_ptr, 1, 6, 55);
+							stuff := create_object_sid(15, 0, 0, -1);
+							add_obj_to_inven(mutan_ptr, stuff);
+							stuff := create_object_sid(39, 0, 0, -1);
+							add_obj_to_inven(mutan_ptr, stuff);
+							stuff := create_object_sid(40, 0, 0, -1);
+							add_obj_to_inven(mutan_ptr, stuff);
+						end
+					end
+					else begin
+						override_map_start(112, 84, 0, 3);
+					end
+				end
+			end
+		end
+		call add_party;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call Darkness;
+			call update_party;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+//				kill_critter_type(16777408, 0);
+				call remove_party;
+			end
+		end
+	end
+end
+
+procedure Darkness
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		set_light_level(global_var(CAVES_LIGHT_LEVEL));
+	end
+	else begin
+		set_light_level(40);
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+

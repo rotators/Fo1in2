@@ -1,0 +1,73 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure use_p_proc;//    script_action == 6
+
+variable rndx;
+variable bonus;
+variable test;
+variable money;
+
+
+procedure start
+begin
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+			call map_enter_p_proc;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				call use_p_proc;
+			end
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(354, 100));
+end
+
+procedure map_enter_p_proc
+begin
+	if (global_var(GIZMO_DEAD) == 1) then begin
+		destroy_object(self_obj);
+	end
+end
+
+procedure use_p_proc
+begin
+	script_overrides;
+	if (item_caps_total(dude_obj) < 10) then begin
+		display_msg(message_str(354, 108));
+	end
+	else begin
+		display_msg(message_str(354, 101));
+		item_caps_adjust(dude_obj, -10);
+		bonus := random(1, 50) - random(1, 50);
+		test := roll_vs_skill(dude_obj, 16, bonus);
+		if (is_success(test)) then begin
+			if (is_critical(test)) then begin
+				rndx := random(15, 30);
+				float_msg(self_obj, message_str(354, 102), 0);
+				display_msg(message_str(354, 103) + rndx + message_str(354, 104));
+			end
+			else begin
+				float_msg(self_obj, message_str(354, 105), 0);
+				display_msg(message_str(354, 106));
+				rndx := 15;
+			end
+			item_caps_adjust(dude_obj, rndx);
+		end
+		else begin
+			display_msg(message_str(354, 107));
+		end
+	end
+end
+

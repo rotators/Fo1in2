@@ -1,0 +1,6 @@
+del *.int
+IF ERRORLEVEL 1 PAUSE
+del *.i
+IF ERRORLEVEL 1 PAUSE
+del compile.log
+IF ERRORLEVEL 1 PAUSE

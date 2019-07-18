@@ -1,0 +1,130 @@
+//
+// ---TRAP SCRIPT---  Sduibek
+//
+// SCRIPT IS NOT USED :(
+//
+#include "..\headers\define.h"
+
+procedure start;
+procedure open_door;
+procedure pick_lock;
+procedure disarm_electronics;
+procedure arm_doors;
+procedure shock;
+
+variable skill_roll;
+
+
+procedure start
+begin
+	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+		call open_door;
+	end
+	else begin
+		if (script_action == 7) then begin//<-- use_obj_on_p_proc
+			call pick_lock;
+		end
+		else begin
+			if (script_action == 8) then begin//<-- use_skill_on_p_proc
+				call disarm_electronics;
+			end
+		end
+	end
+end
+
+procedure open_door
+begin
+	if (local_var(3) == 1) then begin
+		script_overrides;
+		call shock;
+	end
+	else begin
+		if (local_var(0) == 0) then begin
+			call arm_doors;
+		end
+		else begin
+			if (local_var(1) == 0) then begin
+				script_overrides;
+				display_msg(message_str(503, 105));
+			end
+		end
+	end
+end
+
+procedure pick_lock
+begin
+	script_overrides;
+	if (local_var(3) == 0) then begin
+		call shock;
+	end
+	else begin
+		if (local_var(0) == 0) then begin
+			call arm_doors;
+		end
+		else begin
+			if (obj_being_used_with == 84) then begin
+				skill_roll := roll_vs_skill(dude_obj, 9, 0);
+			end
+			else begin
+				skill_roll := roll_vs_skill(dude_obj, 9, 3);
+			end
+			if (local_var(1) == 1) then begin
+				display_msg(message_str(503, 100));
+			end
+			else begin
+				if (is_success(skill_roll)) then begin
+					display_msg(message_str(503, 101));
+					set_local_var(1, 1);
+				end
+				else begin
+					display_msg(message_str(503, 102));
+				end
+			end
+		end
+	end
+end
+
+procedure disarm_electronics
+begin
+	if ((action_being_used != 12) and (action_being_used != 11)) then begin//-- NOT TRAPS, *AND* NOT SCIENCE
+		if (local_var(3) == 1) then begin
+			call shock;
+		end
+		else begin
+			call arm_doors;
+		end
+	end
+	else begin
+		if (local_var(0) == 1) then begin
+			display_msg(message_str(503, 106));
+		end
+		else begin
+			if (is_success(roll_vs_skill(dude_obj, action_being_used, 0))) then begin
+				display_msg(message_str(503, 107));
+				set_local_var(3, 0);
+				set_local_var(0, 1);
+			end
+			else begin
+				if (local_var(3) == 1) then begin
+					call shock;
+				end
+				else begin
+					call arm_doors;
+				end
+			end
+		end
+	end
+end
+
+procedure arm_doors
+begin
+	display_msg(message_str(503, 104));
+	set_local_var(3, 1);
+end
+
+procedure shock
+begin
+	display_msg(message_str(503, 103));
+	critter_dmg(dude_obj, 1, 0);
+end
+

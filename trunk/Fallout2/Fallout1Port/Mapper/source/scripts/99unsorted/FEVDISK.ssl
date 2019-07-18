@@ -1,0 +1,63 @@
+//
+// ---HOLODISK SCRIPT---  Sduibek
+//
+// KEEP ORIGINAL ITEM	rebuild via critter_p_proc - DONE.
+// ProtoID	190	Name:	FEV Disk	Cost:	200
+// script:	347	FEVDisk.int    ; Holodisk w/ FEV Experiment in the Glow
+// GVAR	162	"A holodisk containing medical information."
+
+#include "..\headers\define.h"
+
+procedure start;
+procedure NewPtr;
+
+// local_var(0) == Used (put in Pip-Boy)
+// local_var(1) == Examined (change item hoverdescrip)
+
+
+procedure start
+begin
+	if script_action == 21 then begin// 21 is look_at
+		script_overrides;
+		if (local_var(1) < 1) and (global_var(FEVDISK_HOLODISK_USED) != 1) then begin// not used or Examined yet
+			display_msg(message_str(347, 100));
+		end
+		else begin
+			display_msg(message_str(347, 104));
+		end
+	end
+	else begin
+		if script_action == 3 then begin// 3 is description (Binoculars)
+			set_local_var(1, 1);
+			display_msg(message_str(347, 103));
+		end
+		else begin
+			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				script_overrides;
+				set_local_var(1, 1);
+				if local_var(0) == 1 then begin
+					display_msg(message_str(347, 101));//Abort
+				end
+				else begin
+					set_local_var(0, 1);
+					set_global_var(FEVDISK_HOLODISK_USED, 1);
+					set_global_var(FEVDISK_HOLODISK_FLAG, 1);// Flag for destroying disk later.
+					display_msg(message_str(347, 102));//Downloaded OK
+					display_msg(message_str(766, 103) + "200" + message_str(766, 104));// more exp, for Fallout Fixt
+					give_exp_points(200);
+				end
+			end
+		end
+	end
+	call NewPtr;
+end
+
+procedure NewPtr
+begin
+	if self_obj != 0 then begin
+		if (cur_map_index != 42) and (cur_map_index != 43) then begin
+			set_global_var(FEVDISK_HOLODISK_POINTER, self_obj);
+		end
+	end
+end
+

@@ -1,0 +1,47 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure computer00;
+
+variable test;
+
+procedure start
+begin
+	if (map_first_run) then begin
+		//display_msg("INIT COMPUTER.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj));
+		//display_msg("Please take a screenshot now and send to Sduibek. Thanks!");
+	end
+	if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+		script_overrides;
+		call computer00;
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			script_overrides;
+			display_msg(message_str(23, 100));
+		end
+	end
+end
+
+procedure computer00
+begin
+	if (has_skill(dude_obj, 12) > has_skill(dude_obj, 13)) then begin
+		test := roll_vs_skill(dude_obj, 12, 0);
+	end
+	else begin
+		test := roll_vs_skill(dude_obj, 13, 0);
+	end
+	if (is_success(test)) then begin
+		display_msg(message_str(23, 101));
+		if (is_critical(test)) then begin
+			display_msg(message_str(23, 102));
+		end
+	end
+	else begin
+		display_msg(message_str(23, 103));
+		if (is_critical(test)) then begin
+			display_msg(message_str(23, 104));
+			critter_dmg(dude_obj, random(1, 3), 0 bwor 256);
+		end
+	end
+end

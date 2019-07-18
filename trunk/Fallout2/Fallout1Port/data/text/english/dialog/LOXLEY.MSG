@@ -1,0 +1,262 @@
+{100}{}{You see: Loxley, leader of the Thieves' Circle.}
+{101}{LOX_0}{It's a little gift from me Da and Mum. Actually, a few generations before that. Do you like it?}
+{102}{}{It suits you.}
+{103}{}{No, it hurts my ears.}
+{104}{LOX_0A}{Why, thank you. Have to work a bit to keep it with so little refinement about, don't you know. But enough of that. Loxley's the name. And yours is?}
+{105}{}{I'm }
+{106}{}{.}
+{107}{}{What's it to you?}
+{108}{}{What is this place?}
+{110}{LOX_1F}{Bloody impressive making it through the defenses like that! What's your name, luv?}
+{109}{LOX_1M}{Bloody fine job making it through the defenses, mate! I'm rather impressed. Toss me your name!}
+{111}{}{I'm }
+{112}{}{.}
+{113}{}{What's it to you?}
+{114}{}{What is this place?}
+
+# TRANSLATION NOTE: The following line is the player addressing Loxley (who is male).
+# "You got" means "You have"
+{115}{}{You got a real interesting accent, my friend.}
+
+{116}{}{You talk like an idiot.}
+{117}{}{Nuhhh?}
+{118}{LOX_2F}{Quite pleased to make your acquaintance actually... for now. Let's get the other bit of politeness taken care of, shall we? What the bloody, bloody, bloody hell are you doing here?}
+{119}{}{I want to join the Circle.}
+{120}{}{I need to ask you a few things.}
+{121}{}{I'm taking you all off to jail.}
+{122}{LOX_3}{Oh, how nice. A joiner. Well, you've worked hard enough for a look-see. But if you really want to join, then you'll have to take the Second Test.}
+{123}{}{What's that?}
+{124}{}{Sounds scary... How about I pass?}
+{125}{}{Uh... what was the first test?}
+{126}{LOX_4}{Quite simple, really. You prove yourself as a thief. Succeed, and the world is yours! If not, then you'll never see us again. Except if you come looking. And if you don't understand, that last bit is a threat.}
+{127}{}{What's the test?}
+{128}{}{Do you mean you'll move this whole place if I fail, or try to kill me?}
+{129}{}{Are you threatening me?}
+{130}{LOX_5}{It's so, so simple. In the Heights you'll find Daren Hightower's home all plump and ripe for the picking. Are you ready for life! Do you accept the challenge?}
+{131}{}{I'm ready!}
+{132}{}{Hell, no!}
+{134}{LOX_6F}{That's the spirit, luv!}
+{133}{LOX_6M}{That's the spirit, mate!}
+{135}{LOX_6B}{Just talk to Jasmine in the room outside this chamber. She'll give you details, a map, and a few little goodies to help you on your way. But remember, if you even think about ratting us out to the cops, we'll be a memory before they arrive. But enough gloom. Cheerio, good luck, and ta-ta!}
+{136}{LOX_7}{Well, then why the bloody hell are you here? Sightseeing? The ambiance? My handsome face?}
+{137}{}{No, I came to ask you a few questions.}
+{138}{}{Certainly not the face.}
+{139}{}{You're right, I'd like to join the Circle.}
+{140}{LOX_8}{That's it? A few questions! Well, you're either incredibly brave or a total moron. Ask away, ask away! ...and then we'll show you to the door, shall we?}
+{141}{LOX_9}{You must be joking! You think I'd fall for a line like that! Get out, you commoner!}
+{142}{LOX_10}{Oh, quite the little attitude! But, we're all friends here, aren't we?}
+{143}{}{I don't see why.}
+{144}{}{You're right. I'm sorry.}
+{145}{LOX_11}{Ohhh, broken heart. Our chance for camaraderie lost. [sigh] Jasmine, show this little sod the door.}
+{146}{LOX_12}{Ooh, a little back and forth. I like someone who plays the edge. I think you'll be a great addition to our merry little band. What say you?}
+{147}{}{Okay!}
+{148}{}{I say you're a total lunatic.}
+{149}{lox_12b}{Okay!}
+{150}{LOX_13}{Oh, bosh and bother. Well, quite sorry to hear that, actually. You would've made a fine thief. But the Circle's not for the terminally stupid. So, Jasmine, show our guest the door, please.}
+{151}{LOX_14}{Oh, what do you take me for? If you want cold-blooded murder, talk to Decker and his lot. If you fail, which seems much more likely at this point, we will simply disappear. Now then, care to try or not?}
+{152}{}{Sure.}
+{153}{}{Not.}
+{154}{LOX_16}{Oh, no. I'm so afraid. Life is so hard. Loxley, I'd rather be a coward for all of my life than to have a single moment of triumph. Ah, just another wanker, aren't you. Out!}
+{155}{LOX_17}{Haven't figured it out yet, have we? The First Test was just getting here! That's the only reason I'm considering you.}
+{156}{}{Okay, I'll do whatever you want!!}
+{157}{}{What's the next test?}
+{158}{}{Well, all I need to do is ask you a few questions.}
+{159}{LOX_18}{Ha ha ha. Ooh, that's quite amusing. Take us to jail, will you? And how, may I ask, do you plan this feat?}
+{160}{}{Just come along quietly and no one will get hurt.}
+{161}{}{Well, maybe I'll let you off this time.}
+{162}{LOX_21}{What's it to me? It's simple, really. Tell me your name, or we show you the door.}
+{163}{}{Okay. I'm }
+{164}{}{.}
+{165}{}{How about I show you my boot?}
+{166}{LOX_22}{This is the famous Thieves' Circle! I thought you would've known this, seeing as how you made it through all the defenses and whatnot. But no matter. You're quite promising, and the Circle could use someone like you.}
+{167}{}{Okay, what do I have to do?}
+{168}{}{No thanks. I would like to ask you some questions, though.}
+{169}{}{Not a chance.}
+{170}{LOX_23}{Well, you made it through my defenses so you certainly have skills. What's your name?}
+{171}{}{I'm }
+{172}{}{.}
+{173}{}{What's it to you?}
+{174}{}{What is this place?}
+
+# TRANSLATION NOTE: The following line is the player addressing Loxley (who is male).
+{175}{}{You got a real interesting accent, my friend.}
+
+{176}{}{You talk like an idiot.}
+{177}{LOX_24}{What the hell do you want?}
+{178}{}{What did I do? Why so hostile?}
+{179}{}{To be away from you.}
+
+# TRANSLATION NOTE: The following line is the player addressing Loxley (who is male).
+{180}{}{Hey, I'm on your side. I'm here as a friend.}
+
+{181}{LOX_25}{I don't like you. Don't know why, don't care.}
+{182}{}{Give me a chance!}
+{183}{}{Well, you're just an idiot then, aren't you?}
+{184}{LOX_26}{Thanks for such a lovely moment. Jasmine, show our guest out.}
+{185}{LOX_27}{Oh, how nice to see you again. Do you have a little something for me?}
+{186}{}{My resignation. I decided not to take your stupid test.}
+{187}{}{I didn't get it yet.}
+{188}{}{Here's the necklace... }
+{189}{LOX_29}{Ha! Ha! Well, done! Congratulations. You're now a member of the world famous Thieves' Circle. Let's get Jasmine over here, and throw a topper, shall we?}
+{190}{LOX_30}{Oh, how funny. I really must tell you, though, that I don't care much for this kind of a joke. Kind of a chuckle. Kind of a put-one-over-on-the-old-Loxley thing huh? Tell you what. One more chance. Bring the necklace here.}
+{191}{LOX_31}{You're really just a complete pain in the ass, aren't you?}
+{192}{LOX_32}{Stupid! Oh. I'm so disappointed you feel this way. Ah, well, our little Circle will just have to carry on without your scintillating presence. So sad. Jasmine, the door for our guest. And no return privileges, hmm?}
+{193}{LOX_33}{Then what the bloody, bloody hell are you doing here? Shoo! Go away. Only this time come back with the necklace.}
+{194}{}{Anything interesting going on around here?}
+{195}{}{Tell me about the Hub.}
+{196}{}{Heard any good rumors lately?}
+{197}{}{Tell me more about the Circle.}
+{198}{}{I'm looking for the missing caravans. Any suggestions?}
+{199}{LOX_35}{Well, the whole bloody town's in an uproar, what with the missing caravans and all. Something of a pain. Cuts into the Circle's business, don't you know?}
+{200}{}{Do you know who might be responsible?}
+{201}{}{Thanks. Can I ask you some more questions?}
+{202}{LOX_36}{I don't know, but I hope they find out soon. People are edgy and it makes our job a bit more sticky, say what? Not to mention all the superstitious nonsense floating about.}
+{203}{}{What kind of nonsense?}
+{204}{}{Thanks. Can I ask you some more questions?}
+{205}{LOX_37}{Oh, some bosh and bother that the Deathclaw grabbed the caravans, and brought them up to its lair for an afternoon tea.}
+{206}{}{Sounds yummy. Can I ask you a few more questions?}
+{207}{LOX_38A}{Oh, absolutely. We're all friends here.}
+{208}{lox_38b}{[Sigh] Why not?}
+{209}{LOX_38C}{Ask away, ask away.}
+{210}{LOX_39}{No, actually. You had one. Consider yourself lucky. Goodbye, ta-ta.}
+{211}{lox_40}{Nothing you'd be interested in.}
+{212}{}{Try me.}
+{213}{}{Okay, thanks. Can I ask you a few more questions?}
+{214}{LOX_41}{Oh nothing. Just the whole damn town's been up in arms with all the missing caravans. That's all.}
+{215}{}{Gee, thanks. Can I ask you a few more questions?}
+{216}{LOX_42}{Oh, just the usual. The merchant caravans get fat off the poor, while that villain Decker plays off everyone.}
+{217}{LOX_43}{Well, you've got the usual numbers of shops and things. Mix in some Children of the Cathedral nut cases. Add a dollop of Decker and his Underground making life hard for us all. Top it with a sprinkle of greedy merchants and that will just about cover it.}
+{218}{}{Merchants are pretty much scum, huh?}
+{219}{}{Sounds like you're a real Decker supporter.}
+{220}{LOX_43A}{Next question, please.}
+{221}{LOX_44}{Too right! That's why the Circle was formed, you see. You got all those rich buggers, feeding off the poor. And those poor are just waiting for a hero. Because of the help we give them, they practically bow at our feet.}
+{222}{}{What's wrong with making money?}
+{223}{}{Just like Robin Hood.}
+{224}{LOX_47}{What's the harm?! You little... well, I was wrong about you, wasn't I? Jasmine, show this merchant's boot licker the door!}
+{225}{LOX_48}{You know the story! I knew there was something special about you. Ah, me granddad told that one a long time ago. Now there was a thief! But enough of that. Anything else you need to ask?}
+{226}{LOX_51}{Other than the missing caravans, not much. Oh, wait. One of my lads came back yesterday all a-glow with a touch of radiation poisoning. Nasty business. Probably tip-toed a bit too close to the old Hot Spot.}
+{227}{LOX_53}{We steal from the rich, plain and simple. We give about, oh, ten to twenty percent to the poor folks over in Old Town. The Circle keeps twenty, which leaves the rest for the thief. Not a bad deal all round.}
+{228}{LOX_54}{We're a bunch of crooks! What did you think we were, a bunch of cooks?}
+{229}{LOX_55A}{You could check with the merchants, although your time would be better spent sizing them up for some night removal work. While I think it's absolute bunk, ask around about the Deathclaw. Or even follow a caravan out, if you've totally lost your mind.}
+{230}{LOX_55B}{Well, how the bloody hell should I know? Do I look like a merchant?}
+{231}{LOX_56}{Couple of ground rules. One, don't ever get caught, and two, never, ever steal from the Circle. Put it down.}
+{232}{LOX_57}{You just don't have the hang of this, do you? Jasmine, the door for our foolish friend and don't let me see that face again.}
+{233}{LOX_58}{I don't think you quite understand. Save it for the merchants, yes?}
+{234}{LOX_59}{What the bloody hell are you doing in here? Get out!}
+{235}{LOX_60}{You see, it's like I said...}
+{236}{LOX_61}{Well, as I said...}
+{237}{LOX_62}{Are you just thick? I told you...}
+{238}{LOX_63}{Which are you, deaf or stupid? Like I said...}
+{239}{LOX_64}{It's no fun repeating myself.}
+{240}{LOX_65}{Ugh! It's no use. Obviously no amount of pounding can possibly get that information into your thick skull.}
+{241}{LOX_66}{No. Decker's a slick one. He's got the whole town in his pocket, he does. He gives his 'protection' to the merchants, all the while pitting them against each other. Not someone you want to mess with, but he can usually be found in the Maltese Falcon.}
+{242}{LOX_67}{He's a gun dealer up in the north part of Old Town. Damn dangerous bloke, some of his hardware's a bit too lethal.}
+{243}{LOX_68}{Not too fond of us actually.}
+{244}{LOX_69}{Harold? He's a good enough sort, for being a ghoul an all. Lives on the south side.}
+{245}{LOX_70}{Decker's right hand man, definitely not one to mess with. You can usually find him at the Maltese Falcon.}
+{246}{LOX_71}{Them. Sitting high and mighty in their Water Tower south of downtown, charging all us decent folks for any drop of water that springs from the ground. They should all be bloody shot, they should.}
+{247}{LOX_72}{They have a little general shop downtown. Can't trust'em, though. Hiding in their bloody warehouse most of the time. They do sell some mean drugs and medkits, though. A lot cheaper than the stupid Children of the Cathedral, I can tell you that.}
+{248}{LOX_73}{The closest thing to decent of all the three caravans. Only missed it by a few miles.}
+{249}{LOX_74}{Criminals. Absolute criminals. They're squeezing the life out of the town. The Far Go Traders, the Crimson Caravan, and the worst of the bunch, the Water Merchants. You can have the lot.}
+{250}{lox_75}{It's down in the middle of town.}
+{251}{LOX_76}{Not much to tell, really. Nighttime, scare your children stories about a beastie living up north and feeding on the flesh of bad little children everywhere.}
+{252}{LOX_77}{Seems like every day another one turns up missing. People are afraid to leave town without protection. Some even blame it on the Deathclaw.}
+{253}{LOX_78}{About three years ago, one of the merchants went way down south looking for other towns. He came back all hair and teeth falling out, babbling about some huge span of radiation. Who knows, maybe something special down there before the war.}
+{254}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
+{255}{LOX_80}{Fancy buildings. Bought with the blood of the poor.}
+{256}{LOX_81}{You can always find Bob in the direct center of the Merchant's Market. He'll probably be selling those Iguana Bits of his 'til he keels over dead.}
+{257}{LOX_82}{Now there's a scary bunch. They strut around all day talking about their Night God, as if he's the next best thing since merchant pockets with holes. They can heal you up pretty cheap. I'll give'em that. You can find'em in that hospital of theirs downtown.}
+{258}{LOX_83}{Oh, another bunch of wackos. They sit up in their big black fortress to the north, just waiting for another war.}
+{259}{LOX_84}{Need to be a bit careful there. The Rippers and the Blades like to carve you up just for fun. While the town there, Adytum, just tries to stay alive. If you find yourself traipsing around there and happen on the Blades, make sure to say cheers to Razor for me. Thinking of her brings back memories, it does.}
+{260}{LOX_85}{They're the scrapheads down in the Boneyard. They've been fighting for years, and they don't even know what for anymore. Bloody stupid it is.}
+{261}{LOX_86}{Oh, what a woman! She used to be a thief here, until she decided to move down south to the Boneyard. Last I heard she joined up with the Blades. Ah, well, brains weren't her strongest part.}
+{262}{LOX_87}{Hmm, I haven't the foggiest.}
+{263}{LOX_88}{I really don't know.}
+{264}{LOX_89}{Hmm. Haven't a clue actually.}
+{265}{LOX_90}{Well, [derisive sound], how did a total moron, such as yourself, get past my defenses? Sorry, no idiot savants allowed, we like good conversation here. Jasmine, show our drooling friend the door please.}
+{266}{LOX_91}{Talk to Jasmine and she'll fill you in on the details.}
+{267}{}{Loxley looks too busy to talk.}
+{268}{}{Jasmine will give you your reward.}
+
+
+# Loxley Tell-Me-Abouts generic responses
+{980}{LOX_87}{Hmm, I haven't the foggiest.}
+{981}{LOX_88}{I really don't know.}
+{982}{LOX_89}{Hmm. Haven't a clue actually.}
+{983}{LOX_90}{Well, [derisive sound], how did a total moron, such as yourself, get past my defenses? Sorry, no idiot savants allowed, we like good conversation here. Jasmine, show our drooling friend the door please.}
+
+
+#
+# Loxley Tell-Me-Abouts
+#
+
+{1000}{}{Decker}
+{1001}{}{Jacob}
+{1002}{}{Police}
+{1003}{}{Harold}
+{1004}{}{Kane}
+{1006}{}{Crimson}
+{1007}{}{Traders}
+{1008}{}{Caravans}
+{1009}{}{Market}
+{1010}{}{Claw}
+{1011}{}{Missing}
+{1012}{}{Hot}
+{1013}{}{Town}
+{1014}{}{Heights}
+{1015}{}{Bob's}
+{1016}{}{Cathedral}
+{1017}{}{Brotherhood}
+{1018}{}{Angel's}
+{1019}{}{Blades}
+{1020}{}{Razor}
+{1021}{}{Merchants}
+{1022}{}{Spot}
+{1023}{}{Iguana}
+{1024}{}{Bits}
+{1025}{}{Bobs}
+{1026}{}{Steel}
+{1027}{}{Angels}
+{1028}{}{Boneyard}
+{1029}{}{Caravan}
+{1030}{}{Death}
+{1031}{}{Deathclaw}
+{1032}{}{Glow}
+{1033}{}{Old Town}
+{1034}{}{Old}
+
+{1100}{LOX_66}{No. Decker's a slick one. He's got the whole town in his pocket, he does. He gives his 'protection' to the merchants, all the while pitting them against each other. Not someone you want to mess with, but he can usually be found in the Maltese Falcon.}
+{1101}{LOX_67}{He's a gun dealer up in the north part of Old Town. Damn dangerous bloke, some of his hardware's a bit too lethal.}
+{1102}{LOX_68}{Not too fond of us actually.}
+{1103}{LOX_69}{Harold? He's a good enough sort, for being a ghoul an all. Lives on the south side.}
+{1104}{LOX_70}{Decker's right hand man, definitely not one to mess with. You can usually find him at the Maltese Falcon.}
+{1106}{LOX_72}{They have a little general shop downtown. Can't trust'em, though. Hiding in their bloody warehouse most of the time. They do sell some mean drugs and medkits, though. A lot cheaper than the stupid Children of the Cathedral, I can tell you that.}
+{1107}{LOX_73}{The closest thing to decent of all the three caravans. Only missed it by a few miles.}
+{1108}{LOX_74}{Criminals. Absolute criminals. They're squeezing the life out of the town. The Far Go Traders, the Crimson Caravan, and the worst of the bunch, the Water Merchants. You can have the lot.}
+{1109}{lox_75}{It's down in the middle of town.}
+{1110}{LOX_76}{Not much to tell, really. Nighttime, scare your children stories about a beastie living up north and feeding on the flesh of bad little children everywhere.}
+{1111}{LOX_77}{Seems like every day another one turns up missing. People are afraid to leave town without protection. Some even blame it on the Deathclaw.}
+{1112}{LOX_78}{About three years ago, one of the merchants went way down south looking for other towns. He came back all hair and teeth falling out, babbling about some huge span of radiation. Who knows, maybe something special down there before the war.}
+{1113}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
+{1114}{LOX_80}{Fancy buildings. Bought with the blood of the poor.}
+{1115}{LOX_81}{You can always find Bob in the direct center of the Merchant's Market. He'll probably be selling those Iguana Bits of his 'til he keels over dead.}
+{1116}{LOX_82}{Now there's a scary bunch. They strut around all day talking about their Night God, as if he's the next best thing since merchant pockets with holes. They can heal you up pretty cheap. I'll give'em that. You can find'em in that hospital of theirs downtown.}
+{1117}{LOX_83}{Oh, another bunch of wackos. They sit up in their big black fortress to the north, just waiting for another war.}
+{1118}{LOX_84}{Need to be a bit careful there. The Rippers and the Blades like to carve you up just for fun. While the town there, Adytum, just tries to stay alive. If you find yourself traipsing around there and happen on the Blades, make sure to say cheers to Razor for me. Thinking of her brings back memories, it does.}
+{1119}{LOX_85}{They're the scrapheads down in the Boneyard. They've been fighting for years, and they don't even know what for anymore. Bloody stupid it is.}
+{1120}{LOX_86}{Oh, what a woman! She used to be a thief here, until she decided to move down south to the Boneyard. Last I heard she joined up with the Blades. Ah, well, brains weren't her strongest part.}
+{1121}{LOX_71}{Them. Sitting high and mighty in their Water Tower south of downtown, charging all us decent folks for any drop of water that springs from the ground. They should all be bloody shot, they should.}
+{1122}{LOX_78}{About three years ago, one of the merchants went way down south looking for other towns. He came back all hair and teeth falling out, babbling about some huge span of radiation. Who knows, maybe something special down there before the war.}
+{1123}{LOX_81}{You can always find Bob in the direct center of the Merchant's Market. He'll probably be selling those Iguana Bits of his 'til he keels over dead.}
+{1124}{LOX_81}{You can always find Bob in the direct center of the Merchant's Market. He'll probably be selling those Iguana Bits of his 'til he keels over dead.}
+{1125}{LOX_81}{You can always find Bob in the direct center of the Merchant's Market. He'll probably be selling those Iguana Bits of his 'til he keels over dead.}
+{1126}{LOX_83}{Oh, another bunch of wackos. They sit up in their big black fortress to the north, just waiting for another war.}
+{1127}{LOX_84}{Need to be a bit careful there. The Rippers and the Blades like to carve you up just for fun. While the town there, Adytum, just tries to stay alive. If you find yourself traipsing around there and happen on the Blades, make sure to say cheers to Razor for me. Thinking of her brings back memories, it does.}
+{1128}{LOX_84}{Need to be a bit careful there. The Rippers and the Blades like to carve you up just for fun. While the town there, Adytum, just tries to stay alive. If you find yourself traipsing around there and happen on the Blades, make sure to say cheers to Razor for me. Thinking of her brings back memories, it does.}
+{1129}{LOX_74}{Criminals. Absolute criminals. They're squeezing the life out of the town. The Far Go Traders, the Crimson Caravan, and the worst of the bunch, the Water Merchants. You can have the lot.}
+{1130}{LOX_76}{Not much to tell, really. Nighttime, scare your children stories about a beastie living up north and feeding on the flesh of bad little children everywhere.}
+{1131}{LOX_76}{Not much to tell, really. Nighttime, scare your children stories about a beastie living up north and feeding on the flesh of bad little children everywhere.}
+{1132}{LOX_78}{About three years ago, one of the merchants went way down south looking for other towns. He came back all hair and teeth falling out, babbling about some huge span of radiation. Who knows, maybe something special down there before the war.}
+{1133}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
+{1134}{LOX_79}{Most of the poor who work for the merchants live here, in buildings so thin they don't block the sun. Meanwhile, those rich bastards are comfortable in their nice homes over in the Heights. Makes me ill.}
+

@@ -1,0 +1,1110 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;//    script_action == 14
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+
+procedure BobStandardQuestions;
+procedure BobBlackmailQuestions;
+procedure BBQa;
+procedure Bob00;
+procedure Bob01;
+procedure Bob01a;
+procedure Bob02;
+procedure Bob03;
+procedure Bob04;
+procedure Bob05;
+procedure Bob06;
+procedure Bob07;
+procedure Bob08;
+procedure Bob09;
+procedure Bob09a;
+procedure Bob09b;
+procedure Bob09c;
+procedure Bob09d;
+procedure Bob10;
+procedure Bob11;
+procedure Bob12;
+procedure Bob13;
+procedure Bob14;
+procedure Bob15;
+procedure Bob16;
+procedure Bob18;
+procedure Bob19;
+procedure Bob20;
+procedure Bob20a;
+procedure Bob21;
+procedure Bob22;
+procedure Bob23;
+procedure Bob25;
+procedure Bob27;
+procedure Bob28;
+procedure Bob30;
+procedure Bob31;
+procedure Bob32;
+procedure Bob33;
+procedure Bob34;
+procedure Bob35;
+procedure Bob36;
+procedure Bob38;
+procedure Bob39;
+procedure Bob42;
+procedure Bob43;
+procedure Bob44;
+procedure Bob44a;
+procedure Bob44b;
+procedure Bob44c;
+procedure Bob44d;
+procedure Bob44e;
+procedure Bob45;
+procedure Bob46;
+procedure Bob47;
+procedure Bob48;
+procedure Bob49;
+procedure Bob50;
+procedure Bob51;
+procedure BobEnd;
+procedure BobCombat;
+/*
+dialogs for Fallout Fixt:
+*/
+procedure Bob11a;
+procedure Bob51;
+procedure Bob52;
+procedure Bob53;
+procedure Bob54;
+procedure Bob55;
+procedure BobInJail01;
+procedure BobInJail02;
+procedure BobInJail03;
+
+variable hostile;
+variable Only_Once := 1;
+variable ToldRumor1;
+variable ToldRumor2;
+variable ToldRumor3;
+variable ToldRumor4;
+variable ToldRumor5;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+import variable BitsBob_Ptr;
+import variable BitsBob_Dialog_Ptr;
+import variable BitsBob_Stand_Ptr;
+
+procedure start
+begin
+	if self_obj != 0 then begin
+		set_global_var(IS_BITS_BOB_ALIVE, 1);
+//		display_msg("BitsBob exist: self_obj!=0, set_global_var(IS_BITS_BOB_ALIVE, 1)");
+	end
+	else begin
+		set_global_var(IS_BITS_BOB_ALIVE, 0);
+//		display_msg("BitsBob dead: self_obj==0, set_global_var(IS_BITS_BOB_ALIVE, 0)");
+	end
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 19);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 50);
+		Only_Once := 0;
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			call look_at_p_proc;
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				call pickup_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+						call critter_p_proc;
+					end
+					else begin
+						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+							call destroy_p_proc;
+						end
+						else begin
+							if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+								call map_enter_p_proc;
+							end
+							else begin
+								if (script_action == 23) then begin
+									call map_update_p_proc;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if (global_var(BITS_BOB_REPORTED) and global_var(BITS_BOB_GOES_TO_JAIL) and not(global_var(FIXT_BUGFIXES_ONLY)) and not(global_var(BITS_BOB_IN_JAIL))) then begin
+		move_to(self_obj, 23065, elevation(self_obj));
+		anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), 22662));
+		inven_unwield;
+		move_obj_inven_to_obj(self_obj, BitsBob_Stand_Ptr);
+		set_global_var(BITS_BOB_IN_JAIL, 1);
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	if (BitsBob_Dialog_Ptr) then begin
+		call talk_p_proc;
+		BitsBob_Dialog_Ptr := 0;
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (global_var(BITS_BOB_REPORTED) != 0) then begin
+		if global_var(BITS_BOB_IN_JAIL) then begin
+			if not(local_var(8)) then begin
+				start_gdialog(891, self_obj, 4, -1, -1);
+				gsay_start;
+				call BobInJail01;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				float_msg(self_obj, message_str(891, 260), 7);
+			end
+		end
+		else begin
+			start_gdialog(891, self_obj, 4, -1, -1);
+			gsay_start;
+			call Bob05;
+			gsay_end;
+			end_dialogue;
+		end
+	end
+	else begin
+		if (local_var(5) == 0) then begin
+			if (local_var(1) == 1) then begin
+				start_gdialog(891, self_obj, 4, -1, -1);
+				gsay_start;
+				call Bob04;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				start_gdialog(891, self_obj, 4, -1, -1);
+				gsay_start;
+				call Bob05;
+				gsay_end;
+				end_dialogue;
+			end
+		end
+		else begin
+			if (local_var(5) == 1) then begin
+				if (local_var(6) <= (game_time / (10 * 60 * 60 * 24))) then begin
+					if (do_check(dude_obj, 0, 0) or do_check(dude_obj, 3, 0)) then begin
+						start_gdialog(891, self_obj, 4, -1, -1);
+						gsay_start;
+						call Bob00;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						start_gdialog(891, self_obj, 4, -1, -1);
+						gsay_start;
+						call Bob01;
+						gsay_end;
+						end_dialogue;
+					end
+				end
+				else begin
+					start_gdialog(891, self_obj, 4, -1, -1);
+					gsay_start;
+					call Bob02;
+					gsay_end;
+					end_dialogue;
+				end
+			end
+			else begin
+				call Bob03;
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(IS_BITS_BOB_ALIVE, 0);
+//	display_msg("BitsBob killed, set_global_var(IS_BITS_BOB_ALIVE, 0)");
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	BitsBob_Ptr := 0;
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(891, 100));
+end
+
+procedure map_enter_p_proc
+begin
+	BitsBob_Ptr := self_obj;
+end
+
+procedure BobStandardQuestions
+begin
+	giq_option(4, 891, 231, Bob11, 50);
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option(4, 891, 232, Bob18, 50);
+	end
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		if (global_var(DECKER_STATUS) != 0) then begin
+			giq_option(4, 891, 233, Bob23, 50);
+		end
+		else begin
+			giq_option(4, 891, 233, Bob19, 50);
+		end
+	end
+	if ((global_var(GRETCH_PRIMECUTS) == 1) and (global_var(BITS_BOB_REPORTED) == 0)) then begin
+		giq_option(4, 891, 234, Bob20, 50);
+	end
+	if (global_var(MISSING_CARAVAN) == 1) then begin
+		giq_option(4, 891, 235, Bob21, 50);
+	end
+	giq_option(4, 891, 237, Bob25, 50);
+	if (global_var(BITS_BOB_REPORTED) != 0) then begin
+		giq_option(4, 891, 251, Bob55, 51);
+	end
+	giq_option(4, 891, 240, BobEnd, 50);
+	giq_option(-3, 891, 238, Bob11, 50);
+	giq_option(-3, 891, 241, BobEnd, 50);
+end
+
+procedure BobInJail01
+begin
+	gsay_reply(891, 252);
+	giq_option(4, 891, 253, BobInJail02, 51);
+	giq_option(4, 891, 254, BobInJail02, 51);
+end
+
+procedure BobInJail02
+begin
+	gsay_reply(891, 255);
+	giq_option(4, 891, 256, BobInJail03, 51);
+	giq_option(4, 891, 257, BobInJail03, 51);
+	giq_option(4, 891, 258, BobInJail03, 51);
+end
+
+procedure BobInJail03
+begin
+	gsay_message(891, 259, 51);
+	set_local_var(8, 1);
+end
+
+procedure BobBlackmailQuestions
+begin
+	giq_option(4, 891, 102, BBQa, 50);
+	giq_option(4, 891, 103, Bob06, 51);
+	giq_option(4, 891, 104, Bob07, 50);
+	if (global_var(DECKER_KNOWN) == 1) then begin
+		if (global_var(DECKER_STATUS) != 0) then begin
+			giq_option(4, 891, 233, Bob23, 50);
+		end
+		else begin
+			giq_option(4, 891, 233, Bob08, 50);
+		end
+	end
+	giq_option(4, 891, 106, Bob10, 50);
+	giq_option(4, 891, 240, BobEnd, 50);
+end
+
+procedure BBQa
+begin
+	if (local_var(7) < 1000) then begin
+		if (is_success(roll_vs_skill(dude_obj, 14, -15))) then begin
+			call Bob09;
+		end
+		else begin
+			call Bob13;
+		end
+	end
+	else begin
+		gsay_reply(891, message_str(891, 119) + " " + message_str(891, 242));
+		giq_option(4, 891, 109, Bob14, 50);
+		giq_option(4, 891, 110, Bob52, 50);
+		giq_option(4, 891, 111, Bob51, 50);
+		giq_option(4, 891, 113, Bob53, 50);
+		giq_option(6, 891, 156, Bob54, 50);
+		giq_option(4, 891, 114, Bob06, 50);
+	end
+end
+
+procedure Bob00
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, local_var(7));
+	set_local_var(6, (game_time / (10 * 60 * 60 * 24)) + 5);
+	gsay_reply(891, 101);
+	call BobBlackmailQuestions;
+end
+
+procedure Bob01
+begin
+	gsay_reply(891, 108);
+	giq_option(6, 891, 109, Bob01a, 50);
+	giq_option(4, 891, 110, Bob01a, 50);
+	giq_option(4, 891, 111, Bob14, 50);
+	giq_option(4, 891, 112, Bob15, 50);
+	giq_option(4, 891, 113, Bob16, 50);
+	giq_option(4, 891, 114, BobCombat, 50);
+end
+
+procedure Bob01a
+begin
+	if (local_var(7) > 250) then begin
+		call Bob13;
+	end
+	else begin
+		if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+			call Bob12;
+		end
+		else begin
+			call Bob13;
+		end
+	end
+end
+
+procedure Bob02
+begin
+	gsay_reply(891, 115);
+	call BobBlackmailQuestions;
+end
+
+procedure Bob03
+begin
+	float_msg(self_obj, message_str(891, 116), 2);
+end
+
+procedure Bob04
+begin
+	gsay_reply(891, 117);
+	giq_option(4, 891, 236, Bob22, 50);
+	call BobStandardQuestions;
+end
+
+procedure Bob05
+begin
+	gsay_reply(891, 118);
+	call BobStandardQuestions;
+end
+
+procedure Bob06
+begin
+	gsay_message(891, 119, 51);
+	call BobCombat;
+end
+
+procedure Bob07
+begin
+	set_local_var(5, 3);
+	gsay_message(891, 120, 50);
+end
+
+procedure Bob08
+begin
+	gsay_reply(891, 121);
+	giq_option(4, 891, 106, Bob10, 50);
+	giq_option(4, 891, 107, Bob11, 50);
+end
+
+procedure Bob09
+begin
+	gsay_reply(891, 122);
+	giq_option(4, 891, message_str(891, 123) + (local_var(7) + 25) + message_str(891, 124), Bob09a, 50);
+	giq_option(4, 891, message_str(891, 123) + (local_var(7) + 50) + message_str(891, 124), Bob09b, 50);
+	giq_option(4, 891, message_str(891, 123) + (local_var(7) + 75) + message_str(891, 124), Bob09c, 50);
+	giq_option(4, 891, message_str(891, 123) + (local_var(7) + 100) + message_str(891, 124), Bob09d, 50);
+end
+
+procedure Bob09a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0)) or is_success(do_check(dude_obj, 3, 0))) then begin
+		set_local_var(7, local_var(7) + 25);
+		call Bob46;
+	end
+	else begin
+		call Bob47;
+	end
+end
+
+procedure Bob09b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -15)) or is_success(do_check(dude_obj, 3, -1))) then begin
+		set_local_var(7, local_var(7) + 50);
+		call Bob46;
+	end
+	else begin
+		call Bob47;
+	end
+end
+
+procedure Bob09c
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -30)) or is_success(do_check(dude_obj, 3, -3))) then begin
+		set_local_var(7, local_var(7) + 75);
+		call Bob46;
+	end
+	else begin
+		call Bob47;
+	end
+end
+
+procedure Bob09d
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -60)) or is_success(do_check(dude_obj, 3, -6))) then begin
+		set_local_var(7, local_var(7) + 100);
+		call Bob46;
+	end
+	else begin
+		call Bob47;
+	end
+end
+
+procedure Bob10
+begin
+	gsay_message(891, 125, 50);
+end
+
+procedure Bob11
+begin
+	if not(global_var(BITS_BOB_REPORTED)) then begin
+		gsay_reply(891, 142);//{142}{}{Sure. We got whole iguana on a stick for twenty caps, and our prime select pieces for eight caps.}
+		giq_option(4, 891, 129, Bob27, 50);
+		giq_option(4, 891, 131, Bob28, 50);
+	end
+	else begin
+		gsay_reply(891, 140);//{140}{}{Sure. All I got is the whole iguanas at the moment. 30 caps each. You won't find a better roasted iguana in the wastes, I guarantee it!}
+		giq_option(4, 891, 143, Bob27, 50);
+		giq_option(4, 891, 243, Bob11a, 51);
+	end
+	giq_option(4, 891, 130, Bob30, 50);
+	giq_option(-3, 891, 203, Bob27, 50);
+	if not(global_var(BITS_BOB_REPORTED)) then begin
+		giq_option(-3, 891, 204, Bob28, 50);
+	end
+	giq_option(-3, 891, 133, Bob30, 50);
+end
+
+procedure Bob11a
+begin
+	gsay_reply(891, 244);
+	giq_option(4, 891, 247, Bob27, 50);
+	giq_option(4, 891, 246, BobEnd, 51);
+end
+
+procedure Bob12
+begin
+	variable LVar0 := 0;
+	item_caps_adjust(dude_obj, local_var(7));
+	set_local_var(6, (game_time / (10 * 60 * 60 * 24)) + 5);
+	gsay_message(891, 134, 51);
+end
+
+procedure Bob13
+begin
+	set_local_var(5, 2);
+	gsay_message(891, 135, 51);
+end
+
+procedure Bob14
+begin
+	set_local_var(5, 2);
+	gsay_message(891, 136, 51);
+end
+
+procedure Bob15
+begin
+	set_local_var(5, 2);
+	gsay_message(891, 137, 51);
+end
+
+procedure Bob16
+begin
+	set_local_var(5, 2);
+	gsay_message(891, 138, 51);
+end
+
+procedure Bob18
+begin
+	gsay_reply(891, 148);
+	giq_option(4, 891, 149, Bob32, 50);
+	call BobStandardQuestions;
+end
+
+procedure Bob19
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	gsay_reply(891, 150);
+	giq_option(4, 891, 152, Bob33, 50);
+	call BobStandardQuestions;
+end
+
+procedure Bob20
+begin
+	gsay_reply(891, 153);
+	giq_option(4, 891, 154, Bob20a, 50);
+	giq_option(4, 891, 155, Bob34, 50);
+	giq_option(4, 891, 156, Bob35, 50);
+	giq_option(4, 891, 157, Bob36, 50);
+end
+
+procedure Bob20a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20))) then begin
+		call Bob36;
+	end
+	else begin
+		call Bob34;
+	end
+end
+
+procedure Bob21
+begin
+	gsay_reply(891, 239);
+	call BobStandardQuestions;
+end
+
+procedure Bob22
+begin
+	gsay_reply(891, 158);
+	call BobStandardQuestions;
+end
+
+procedure Bob23
+begin
+	gsay_reply(891, 159);
+	call BobStandardQuestions;
+end
+
+procedure Bob25
+begin
+	if ((global_var(DECKER_STATUS) != 0) and (ToldRumor1 == 0)) then begin
+		ToldRumor1 := 1;
+		set_global_var(DECKER_KNOWN, 1);
+		gsay_message(891, 160, 50);
+	end
+	else begin
+		if ((global_var(GREENE_DEAD) == 1) and (ToldRumor2 == 0)) then begin
+			ToldRumor2 := 1;
+			gsay_message(891, 161, 50);
+		end
+		else begin
+			if ((global_var(KILL_MERCHANT) == 2) and (ToldRumor3 == 0)) then begin
+				ToldRumor3 := 1;
+				gsay_message(891, 162, 50);
+			end
+			else begin
+				if ((global_var(STEAL_NECKLACE) == 2) and (ToldRumor4 == 0)) then begin
+					ToldRumor4 := 1;
+					gsay_message(891, 163, 50);
+				end
+				else begin
+					if ((global_var(KILL_JAIN) == 2) and (ToldRumor5 == 0)) then begin
+						ToldRumor5 := 1;
+						gsay_message(891, 164, 50);
+					end
+					else begin
+						gsay_message(891, 165, 50);
+					end
+				end
+			end
+		end
+	end
+	gsay_message(891, 166, 50);
+	call BobStandardQuestions;
+end
+
+procedure Bob27
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if not(global_var(BITS_BOB_REPORTED)) then begin
+		if (item_caps_total(dude_obj) < 20) then begin
+			gsay_message(891, 169, 50);
+		end
+		else begin
+			item_caps_adjust(dude_obj, -20);
+			LVar0 := create_object_sid(81, 0, 0, -1);
+			add_obj_to_inven(dude_obj, LVar0);
+			gsay_message(891, 170, 50);
+		end
+	end
+	else begin
+		if (item_caps_total(dude_obj) < 30) then begin
+			gsay_message(891, 169, 50);
+		end
+		else begin
+			item_caps_adjust(dude_obj, -30);
+			LVar0 := create_object_sid(81, 0, 0, -1);
+			add_obj_to_inven(dude_obj, LVar0);
+			gsay_message(891, 170, 50);
+		end
+	end
+	call BobStandardQuestions;
+end
+
+procedure Bob28
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (item_caps_total(dude_obj) < 8) then begin
+		gsay_message(891, 173, 50);
+	end
+	else begin
+		item_caps_adjust(dude_obj, -8);
+		LVar0 := create_object_sid(103, 0, 0, -1);
+		add_obj_to_inven(dude_obj, LVar0);
+		if ((local_var(5) > 0) and (global_var(BITS_BOB_REPORTED) == 0)) then begin
+			gsay_message(891, 171, 50);
+			giq_option(4, 891, 172, Bob38, 50);
+		end
+		else begin
+			gsay_message(891, 174, 50);
+		end
+	end
+	call BobStandardQuestions;
+end
+
+procedure Bob30
+begin
+	gsay_reply(891, 175);
+	giq_option(4, 891, 119, BobEnd, 50);
+	giq_option(4, 891, 246, BobEnd, 50);
+end
+
+procedure Bob31
+begin
+	gsay_reply(891, 176);
+	giq_option(4, 891, 177, Bob42, 50);
+	giq_option(4, 891, 178, Bob43, 50);
+	giq_option(4, 891, 179, Bob44, 50);
+end
+
+procedure Bob32
+begin
+	gsay_reply(891, 180);
+	call BobStandardQuestions;
+end
+
+procedure Bob33
+begin
+	set_global_var(DECKER_KNOWN, 1);
+	gsay_reply(891, 182);
+	call BobStandardQuestions;
+end
+
+procedure Bob34
+begin
+	set_local_var(5, 2);
+	gsay_message(891, 183, 51);
+end
+
+procedure Bob35
+begin
+	gsay_reply(891, 184);
+	giq_option(4, 891, 185, Bob42, 50);
+	giq_option(4, 891, 186, Bob43, 50);
+	giq_option(4, 891, 187, Bob44, 50);
+end
+
+procedure Bob36
+begin
+	gsay_reply(891, 188);
+	giq_option(4, 891, 189, Bob42, 50);
+	giq_option(4, 891, 190, Bob43, 50);
+	giq_option(4, 891, 191, Bob44, 50);
+end
+
+procedure Bob38
+begin
+	gsay_message(891, 194, 51);
+end
+
+procedure Bob39
+begin
+	gsay_message(891, 195, 50);
+end
+
+procedure Bob42
+begin
+	gsay_message(891, 207, 50);
+end
+
+procedure Bob43
+begin
+	gsay_reply(891, 208);
+	giq_option(4, 891, 209, BobCombat, 50);
+	giq_option(4, 891, 210, Bob45, 50);
+	giq_option(4, 891, 211, Bob44, 50);
+end
+
+procedure Bob44
+begin
+	gsay_reply(891, 212);
+	giq_option(4, 891, message_str(891, 213) + message_str(891, 214) + message_str(891, 219), Bob44a, 50);
+	giq_option(4, 891, message_str(891, 213) + message_str(891, 215) + message_str(891, 219), Bob44b, 50);
+	giq_option(4, 891, message_str(891, 213) + message_str(891, 216) + message_str(891, 219), Bob44c, 50);
+	giq_option(4, 891, message_str(891, 213) + message_str(891, 217) + message_str(891, 219), Bob44d, 50);
+	giq_option(4, 891, message_str(891, 213) + message_str(891, 218) + message_str(891, 219), Bob44e, 50);
+	giq_option(4, 891, 220, Bob48, 50);
+end
+
+procedure Bob44a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 20)) or is_success(do_check(dude_obj, 3, 2))) then begin
+		set_local_var(7, 50);
+		call Bob46;
+	end
+	else begin
+		call Bob13;
+	end
+end
+
+procedure Bob44b
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0)) or is_success(do_check(dude_obj, 3, 0))) then begin
+		set_local_var(7, 75);
+		call Bob46;
+	end
+	else begin
+		call Bob13;
+	end
+end
+
+procedure Bob44c
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -10)) or is_success(do_check(dude_obj, 3, -1))) then begin
+		set_local_var(7, 100);
+		call Bob46;
+	end
+	else begin
+		call Bob13;
+	end
+end
+
+procedure Bob44d
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -30)) or is_success(do_check(dude_obj, 3, -3))) then begin
+		set_local_var(7, 150);
+		call Bob46;
+	end
+	else begin
+		call Bob13;
+	end
+end
+
+procedure Bob44e
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, -60)) or is_success(do_check(dude_obj, 3, -6))) then begin
+		set_local_var(7, 200);
+		call Bob46;
+	end
+	else begin
+		call Bob13;
+	end
+end
+
+procedure Bob45
+begin
+	gsay_message(891, 221, 51);
+end
+
+procedure Bob46
+begin
+	if (local_var(9) != 2) then begin
+		give_exp_points(500);
+		display_msg(message_str(766, 103) + 500 + message_str(891, 250));
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 3);
+		set_local_var(9, 2);
+	end
+	set_local_var(5, 1);
+	set_local_var(6, (game_time / (10 * 60 * 60 * 24)) + 5);
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 2);
+	gsay_message(891, message_str(891, 222) + local_var(7) + message_str(891, 223), 50);
+end
+
+procedure Bob47
+begin
+	gsay_reply(891, 224);
+	giq_option(4, 891, 225, Bob49, 50);
+	giq_option(4, 891, 226, Bob50, 50);
+	giq_option(4, 891, 227, Bob13, 50);
+end
+
+procedure Bob48
+begin
+	gsay_message(891, 228, 51);
+end
+
+procedure Bob49
+begin
+	gsay_message(891, 229, 51);
+end
+
+procedure Bob50
+begin
+	gsay_message(891, 230, 50);
+end
+
+procedure BobEnd
+begin
+end
+
+procedure BobCombat
+begin
+	call combat;
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+
+procedure Bob51
+begin
+	gsay_message(891, 119, 51);
+end
+
+procedure Bob52
+begin
+	gsay_message(891, 172, 51);
+end
+
+procedure Bob53
+begin
+	gsay_message(891, 151, 50);
+end
+
+procedure Bob54
+begin
+	gsay_reply(891, 184);
+	giq_option(4, 891, 185, Bob42, 50);
+	giq_option(4, 891, 186, Bob45, 50);
+	giq_option(4, 891, 190, Bob45, 50);
+end
+
+procedure Bob55
+begin
+	gsay_message(891, 245, 51);
+end
+

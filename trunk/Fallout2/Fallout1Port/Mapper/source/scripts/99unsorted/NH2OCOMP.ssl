@@ -1,0 +1,147 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure search;
+procedure removal;
+procedure skills;
+
+variable test;
+variable test1;
+variable test2;
+variable test3;
+variable temp;
+variable bonus := 20;
+variable Character_Point;
+
+
+procedure start
+begin
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		script_overrides;
+		display_msg(message_str(86, 112));
+	end
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		script_overrides;
+		if (tile_distance_objs(self_obj, dude_obj) < 2) then begin
+			call search;
+		end
+		else begin
+			display_msg(message_str(86, 107));
+		end
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			script_overrides;
+			call removal;
+		end
+		else begin
+			if (script_action == 8) then begin//<-- use_skill_on_p_proc
+				script_overrides;
+				if (action_being_used == 13) then begin//-- REPAIR
+					call removal;
+				end
+				else begin
+					call skills;
+				end
+			end
+			else begin
+				if (script_action == 7) then begin//<-- use_obj_on_p_proc
+					if (obj_pid(obj_being_used_with) == 55) then begin
+						script_overrides;
+						display_msg(message_str(86, 110));
+						rm_obj_from_inven(dude_obj, obj_being_used_with);
+						add_obj_to_inven(self_obj, obj_being_used_with);
+						set_global_var(NECROP_WATER_CHIP_TAKEN, 0);
+						set_global_var(QUEST_VAULT13_4_WATERCHIP, 0);
+					end
+					else begin
+						display_msg(message_str(86, 111));
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure search
+begin
+	test := do_check(dude_obj, 1, 0);
+	if (global_var(NECROP_WATER_CHIP_TAKEN)) then begin
+		display_msg(message_str(86, 100));
+	end
+	else begin
+		if (is_success(test)) then begin
+			display_msg(message_str(86, 101));
+			set_local_var(1, 1);
+		end
+		else begin
+			game_time_advance(game_ticks(1200));
+			display_msg(message_str(86, 102));
+			set_local_var(1, 1);
+		end
+	end
+end
+
+procedure removal
+begin
+	test := do_check(dude_obj, 4, 0);
+	test1 := do_check(dude_obj, 5, 0);
+	test2 := roll_vs_skill(dude_obj, 13, bonus);
+	if (global_var(NECROP_WATER_CHIP_TAKEN) == 1) then begin
+		display_msg(message_str(86, 103));
+	end
+	else begin
+		if (is_success(test) or is_success(test1) or is_success(test2)) then begin
+			if (global_var(NECROP_WATER_PUMP_FIXED) == 2) then begin
+				display_msg(message_str(86, 117));
+			end
+			else begin
+				display_msg(message_str(86, 104));
+			end
+			add_obj_to_inven(dude_obj, create_object_sid(55, 0, 0, -1));
+			set_global_var(NECROP_WATER_CHIP_TAKEN, 1);
+			set_global_var(TIME_CHIP_GONE, game_time / (10 * 60 * 60 * 24));
+			if (local_var(2) < 1) then begin
+				set_local_var(2, 1);
+				temp := 2500 - (global_var(SUPER_MUTANTS_KILLED) * 250);
+				set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
+				give_exp_points(temp);
+				display_msg(message_str(86, 113) + temp + message_str(86, 114));
+			end
+			Character_Point := Character_Point + 1;
+		end
+		else begin
+			if (is_critical(test) or is_critical(test1) or is_critical(test2)) then begin
+				game_time_advance(game_ticks(3600));
+				display_msg(message_str(86, 105));
+			end
+			else begin
+				display_msg(message_str(86, 106));
+				game_time_advance(game_ticks(1800));
+			end
+		end
+	end
+end
+
+procedure skills
+begin
+	if (action_being_used == 12) then begin//-- SCIENCE
+		if (global_var(NECROP_WATER_CHIP_TAKEN)) then begin
+			display_msg(message_str(86, 116));
+		end
+		else begin
+			test := roll_vs_skill(dude_obj, 12, 20);
+			if (is_success(test)) then begin
+				bonus := 40;
+				display_msg(message_str(86, 115));
+			end
+			else begin
+				display_msg(message_str(86, 109));
+			end
+		end
+	end
+	else begin
+		display_msg(message_str(86, 109));
+	end
+end
+

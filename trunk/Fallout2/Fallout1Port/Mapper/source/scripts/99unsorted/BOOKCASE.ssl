@@ -1,0 +1,101 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure use_p_proc;//    script_action == 6
+procedure pickup_p_proc;//    script_action == 4
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure secret;
+
+import variable J_Door_Ptr;
+
+variable Door_Test;
+
+
+procedure start
+begin
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 8) then begin//<-- use_skill_on_p_proc
+			call use_skill_on_p_proc;
+		end
+		else begin
+			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				call use_p_proc;
+			end
+			else begin
+				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+					call pickup_p_proc;
+				end
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(810, 200));
+end
+
+procedure use_p_proc
+begin
+	script_overrides;
+	if ((local_var(0) == 1) or (Door_Test == 1)) then begin
+		display_msg(message_str(810, 104));
+		use_obj(J_Door_Ptr);
+	end
+	else begin
+		display_msg(message_str(810, 101));
+	end
+end
+
+procedure pickup_p_proc
+begin
+	script_overrides;
+end
+
+procedure use_skill_on_p_proc
+begin
+	if ((local_var(0) == 0) and (Door_Test == 0)) then begin
+		if (action_being_used == 9) then begin//-- LOCKPICK
+			script_overrides;
+			if (is_success(roll_vs_skill(dude_obj, 9, 0))) then begin
+				set_local_var(0, 1);
+				Door_Test := 1;
+				display_msg(message_str(810, 102));
+			end
+			else begin
+				display_msg(message_str(810, 105));
+			end
+		end
+		else begin
+			if (action_being_used == 11) then begin//-- TRAPS//-- TRAPS
+				script_overrides;
+				if (is_success(roll_vs_skill(dude_obj, 11, 0))) then begin
+					set_local_var(0, 1);
+					Door_Test := 1;
+					display_msg(message_str(810, 102));
+				end
+				else begin
+					display_msg(message_str(810, 105));
+				end
+			end
+			else begin
+				display_msg(message_str(810, 103));
+			end
+		end
+	end
+	else begin
+		display_msg(message_str(810, 103));
+	end
+end
+
+procedure secret
+begin
+	set_local_var(0, 1);
+	display_msg(message_str(810, 102));
+end
+

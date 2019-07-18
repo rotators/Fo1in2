@@ -1,0 +1,295 @@
+#include "..\headers\define.h"
+
+procedure start;
+export variable Beth_Box_Ptr;
+export variable Beth_Ptr;
+export variable BitsBob_Dialog_Ptr;
+export variable BitsBob_Ptr;
+export variable BitsBob_Stand_Ptr;
+export variable Decker_Ptr;
+export variable Dog_ptr;
+export variable Fry_Stub_Ptr;
+export variable Guido_Ptr;
+export variable Ian_ptr;
+export variable Justin_Ptr;
+export variable Kane_Ptr;
+export variable Katja_ptr;
+export variable Leon_Ptr;
+export variable Lorenzo_Safe_Ptr;
+export variable Mitch_Box_Ptr;
+export variable Richie_Ptr;
+export variable Sid_Ptr;
+export variable Staple_Box_Ptr;
+export variable Tandi_ptr;
+export variable Tycho_ptr;
+export variable Vault_Ptr;
+procedure add_party;
+procedure Darkness;
+procedure Invasion;
+procedure Lighting;
+procedure remove_party;
+procedure update_party;
+procedure map_exit_p_proc;
+variable dude_start_hex;
+variable party_elevation;
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		set_global_var(MARK_HUB_2, 1);
+		if (elevation(dude_obj) == 1) then begin
+			call Darkness;
+		end
+		else begin
+			call Lighting;
+		end
+		if (global_var(LOAD_MAP_INDEX) == 3) then begin
+			override_map_start(99, 59, 0, 2);
+		end
+		if (global_var(THE_HUB_WAS_INVADED) == 1) and (map_var(57) == 0) then begin
+			if (metarule(22, 0) == 0) then begin
+				variable invaderPtr;
+				set_map_var(57, 1);
+				kill_critter_type(16777216 + 240, 1);
+				kill_critter_type(16777216 + 243, 1);
+				kill_critter_type(16777216 + 153, 1);
+				kill_critter_type(16777216 + 113, 0);
+				kill_critter_type(16777216 + 231, 1);
+				kill_critter_type(16777216 + 116, 1);
+				kill_critter_type(16777216 + 115, 1);
+				kill_critter_type(16777216 + 225, 1);
+				kill_critter_type(16777216 + 32, 1);
+				kill_critter_type(16777216 + 86, 1);
+				kill_critter_type(16777216 + 31, 1);
+				kill_critter_type(16777216 + 84, 1);
+				kill_critter_type(16777216 + 85, 1);
+				kill_critter_type(16777216 + 92, 1);
+				kill_critter_type(16777216 + 82, 1);
+				kill_critter_type(16777216 + 114, 1);
+				kill_critter_type(16777216 + 97, 1);
+				kill_critter_type(16777216 + 120, 1);
+				kill_critter_type(16777216 + 258, 1);
+				kill_critter_type(16777216 + 195, 1);
+				kill_critter_type(16777216 + 88, 1);
+				kill_critter_type(16777216 + 154, 1);
+				kill_critter_type(16777216 + 117, 1);
+				kill_critter_type(16777216 + 194, 1);
+				kill_critter_type(16777216 + 217, 1);
+				kill_critter_type(16777216 + 170, 1);
+				kill_critter_type(16777216 + 112, 1);
+				kill_critter_type(16777216 + 237, 1);
+				kill_critter_type(16777216 + 132, 1);
+				kill_critter_type(16777216 + 66, 1);
+				kill_critter_type(16777216 + 4, 1);
+				invaderPtr := create_object_sid(16777404, 0, 0, 912);
+				critter_add_trait(invaderPtr, 1, 5, 48);
+				critter_attempt_placement(invaderPtr, 16294, 0);
+				invaderPtr := create_object_sid(16777404, 0, 0, 912);
+				critter_add_trait(invaderPtr, 1, 5, 48);
+				critter_attempt_placement(invaderPtr, 20723, 0);
+				invaderPtr := create_object_sid(16777404, 0, 0, 912);
+				critter_add_trait(invaderPtr, 1, 5, 48);
+				critter_attempt_placement(invaderPtr, 27080, 0);
+				invaderPtr := create_object_sid(16777404, 0, 0, 912);
+				critter_add_trait(invaderPtr, 1, 5, 48);
+				critter_attempt_placement(invaderPtr, 19658, 0);
+			end
+		end
+		call add_party;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			if (elevation(dude_obj) == 1) then begin
+				call Darkness;
+			end
+			else begin
+				call Lighting;
+			end
+			if ((combat_is_initialized == 0) and (global_var(UNDERGROUND_STATUS) == 1) and (map_var(52) == 1) and (metarule(22, 0) == 0)) then begin
+				set_map_var(52, 0);
+				set_map_var(53, 1);
+				if global_var(FADE_TIMES_INCREASED) then begin
+					gfade_out(1);
+					gfade_out(1);
+				end
+				gfade_out(1);
+				if (metarule(22, 0) == 0) then begin	set_obj_visibility(Fry_Stub_Ptr, 1);	end
+				if (global_var(GREENE_DEAD) != 1) then begin
+					move_to(Justin_Ptr, 24064, 0);
+					critter_add_trait(Justin_Ptr, 1, 6, 67);
+				end
+				move_to(dude_obj, 24267, 0);
+				if (global_var(GREENE_DEAD) != 1) then begin
+					anim(Justin_Ptr, 1000, rotation_to_tile(tile_num(Justin_Ptr), tile_num(dude_obj)));
+					anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(Justin_Ptr)));
+				end
+				gfade_in(1);
+			end
+			call update_party;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+				call map_exit_p_proc;
+			end
+		end
+	end
+end
+
+procedure map_exit_p_proc
+begin
+	if map_var(58) == 1 then begin
+		set_map_var(58, 0);
+		game_time_advance((0 - (10 * 60 * 60 * 24 * 6)));
+	end
+	call remove_party;
+end
+
+procedure Lighting
+begin
+	variable LVar0 := 0;
+	LVar0 := game_time_hour;
+	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
+		set_light_level(LVar0 - 600 + 40);
+	end
+	else begin
+		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
+			set_light_level(100);
+		end
+		else begin
+			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
+				set_light_level(100 - (LVar0 - 1800));
+			end
+			else begin
+				set_light_level(40);
+			end
+		end
+	end
+end
+
+procedure Darkness
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		set_light_level(global_var(CAVES_LIGHT_LEVEL));
+	end
+	else begin
+		set_light_level(40);
+	end
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+
+procedure Invasion
+begin
+	if (global_var(MASTER_BLOWN) == 0) then begin
+		if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(NECROPOLIS_WAS_INVADED, 1);
+		end
+		if (global_var(THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(THE_HUB_WAS_INVADED, 1);
+		end
+		if (global_var(BROTHERHOOD_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(BROTHERHOOD_WAS_INVADED, 1);
+			set_global_var(MARK_BROTHER_2, 0);
+			set_global_var(MARK_BROTHER_3, 0);
+			set_global_var(MARK_BROTHER_4, 0);
+			set_global_var(MARK_BROTHER_5, 0);
+		end
+		if (global_var(JUNKTOWN_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(JUNKTOWN_WAS_INVADED, 1);
+		end
+		if (global_var(SHADY_SANDS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(SHADY_SANDS_WAS_INVADED, 1);
+		end
+		if (global_var(VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(VAULT_13_WAS_INVADED, 1);
+			play_gmovie(7);//------ Vault 13 is invaded by mutants and killed. You lose.
+			metarule(13, 0);
+		end
+		if (global_var(FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin
+			set_global_var(FOLLOWERS_INVADED, 1);
+		end
+	end
+end
+

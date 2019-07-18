@@ -1,0 +1,457 @@
+#include "..\headers\define.h"
+
+procedure start;
+export variable Dog_ptr;
+export variable Ian_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+export variable Tycho_ptr;
+export variable armory_access;
+export variable getting_ration;
+export variable Officer_ptr;
+export variable recipient;
+export variable removal_ptr;
+export variable revolting;
+export variable SecDoor_ptr;
+export variable traitor;
+export variable VaultBox_ptr;
+export variable WtrGrd_ptr;
+export variable WtrThief_ptr;
+procedure add_party;
+procedure map_enter_p_proc;
+procedure map_exit_p_proc;
+procedure map_update_p_proc;//    script_action == 23
+procedure Make_Critter;
+procedure remove_party;
+procedure update_party;
+variable gear;
+variable party_elevation;
+
+variable kind := 0;
+variable id := 0;
+variable script := 0;
+variable Critter := 0;
+variable rndx := 0;
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+		else begin
+			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
+				call map_exit_p_proc;
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	set_light_level(100);
+	if (map_first_run) then begin
+		set_global_var(QUEST_VAULT13_7_LEARN_AT_LIBRARY, 1);
+	end
+	if (global_var(LOAD_MAP_INDEX) == 1) then begin
+		override_map_start(104, 70, 0, 2);
+	end
+	else begin
+		if (global_var(LOAD_MAP_INDEX) == 2) then begin
+			override_map_start(104, 112, 1, 2);
+		end
+		else begin
+			if (global_var(LOAD_MAP_INDEX) == 3) then begin
+				override_map_start(112, 86, 2, 2);
+			end
+			else begin
+				override_map_start(96, 82, 0, 5);
+			end
+		end
+	end
+	if (global_var(VAULT_13_WAS_INVADED) == 1) and (map_var(6) == 0) then begin//		<-- Vault13 invaded
+		if (cur_map_index == 6) or (cur_map_index == 35) then begin //  VAULT 13 - ANY MAPS
+			set_map_var(6, 1);// <-- invaded flag
+		end
+	end
+	if (map_first_run) and (map_var(4) == 0) then begin
+		set_map_var(4, 1);
+		if (get_critter_stat(dude_obj, 34) == 0) then begin
+			Officer_ptr := create_object_sid(16777271, 22093, 2, 178);
+		end
+		else begin
+			Officer_ptr := create_object_sid(16777272, 22093, 2, 178);
+		end
+		gear := create_object_sid(8, 0, 0, -1);// 10mm Pistol
+		add_obj_to_inven(Officer_ptr, gear);
+		wield_obj_critter(Officer_ptr, gear);
+		gear := create_object_sid(29, 0, 0, -1);// 10mm JHP
+		add_obj_to_inven(Officer_ptr, gear);
+		gear := create_object_sid(40, 0, 0, -1);// Stimpak
+		add_obj_to_inven(Officer_ptr, gear);
+		critter_attempt_placement(Officer_ptr, 22093, 2);
+		anim(Officer_ptr, 1000, 2);
+		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 15077, 0);
+			anim(Critter, 1000, 3);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 15875, 0);
+			anim(Critter, 1000, 0);
+			kind := 2;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 14102, 0);
+			anim(Critter, 1000, 2);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 15110, 0);
+			anim(Critter, 1000, 1);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 15508, 0);
+			anim(Critter, 1000, 4);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17506, 1);
+			anim(Critter, 1000, 0);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17301, 1);
+			anim(Critter, 1000, 2);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 22701, 1);
+			anim(Critter, 1000, 5);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 19889, 1);
+			anim(Critter, 1000, 1);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 22925, 1);
+			anim(Critter, 1000, 0);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 19718, 1);
+			anim(Critter, 1000, 1);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 20507, 1);
+			anim(Critter, 1000, 3);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17933, 2);
+			anim(Critter, 1000, 5);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 18536, 2);
+			anim(Critter, 1000, 4);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 21534, 2);
+			anim(Critter, 1000, 2);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 20345, 2);
+			anim(Critter, 1000, 5);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17525, 2);
+			anim(Critter, 1000, 4);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 18329, 2);
+			anim(Critter, 1000, 0);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 19318, 2);
+			anim(Critter, 1000, 1);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 21319, 2);
+			anim(Critter, 1000, 5);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17906, 2);
+			anim(Critter, 1000, 0);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17502, 2);
+			anim(Critter, 1000, 3);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17696, 2);
+			anim(Critter, 1000, 5);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17700, 2);
+			anim(Critter, 1000, 5);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 17693, 2);
+			anim(Critter, 1000, 2);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 18292, 2);
+			anim(Critter, 1000, 5);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 19295, 2);
+			anim(Critter, 1000, 3);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 18890, 2);
+			anim(Critter, 1000, 0);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 21886, 2);
+			anim(Critter, 1000, 2);
+			kind := 2;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 22691, 2);
+			anim(Critter, 1000, 1);
+			kind := 2;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 22487, 2);
+			anim(Critter, 1000, 3);
+			kind := 2;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 23892, 2);
+			anim(Critter, 1000, 2);
+			kind := 2;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 24492, 2);
+			anim(Critter, 1000, 5);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 25484, 2);
+			anim(Critter, 1000, 0);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 25669, 2);
+			anim(Critter, 1000, 1);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 26073, 2);
+			anim(Critter, 1000, 3);
+			kind := 0;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 27078, 2);
+			anim(Critter, 1000, 5);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 27269, 2);
+			anim(Critter, 1000, 0);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 24079, 2);
+			anim(Critter, 1000, 5);
+			kind := 1;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 21668, 2);
+			anim(Critter, 1000, 0);
+			kind := 2;
+			call Make_Critter;
+			critter_attempt_placement(Critter, 21860, 2);
+			anim(Critter, 1000, 2);
+		end
+		set_map_var(4, 1);
+	end
+	armory_access := map_var(1);
+	revolting := map_var(2);
+	traitor := map_var(3);
+	call add_party;
+end
+
+procedure map_update_p_proc
+begin
+	set_light_level(100);
+	if (removal_ptr != 0) then begin
+		destroy_object(removal_ptr);
+		removal_ptr := 0;
+	end
+	call update_party;
+end
+
+procedure map_exit_p_proc
+begin
+	if (global_var(QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
+		if (WtrThief_ptr) then begin
+			destroy_object(WtrThief_ptr);
+		end
+	end
+	set_map_var(1, armory_access);
+	set_map_var(2, revolting);
+	set_map_var(3, traitor);
+	call remove_party;
+end
+
+procedure add_party
+begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
+
+procedure update_party
+begin
+	if party_elevation != elevation(dude_obj) then begin
+		party_elevation := elevation(dude_obj);
+		if global_var(IAN_HIRELING_STATUS) == 2 then begin
+			if Ian_ptr != 0 then begin
+				move_to(Ian_ptr, tile_num_in_direction(tile_num(dude_obj), 1, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(DOGMEAT_HIRELING_STATUS) then begin
+			if Dog_ptr != 0 then begin
+				move_to(Dog_ptr, tile_num_in_direction(tile_num(dude_obj), 0, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+			if Tycho_ptr != 0 then begin
+				move_to(Tycho_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 2), elevation(dude_obj));
+			end
+		end
+		if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+			if Katja_ptr != 0 then begin
+				move_to(Katja_ptr, tile_num_in_direction(tile_num(dude_obj), 3, 1), elevation(dude_obj));
+			end
+		end
+		if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+			if Tandi_ptr != 0 then begin
+				move_to(Tandi_ptr, tile_num_in_direction(tile_num(dude_obj), 4, 1), elevation(dude_obj));
+			end
+		end
+	end
+end
+
+procedure remove_party
+begin
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+	end
+	if (global_var(DOGMEAT_HIRELING_STATUS)) then begin
+		set_global_var(DOGMEAT_HIRELING_STATUS, 1);
+	end
+	if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+	end
+	if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+		set_global_var(KATJA_HIRELING_STATUS, 2);
+	end
+	if (global_var(TANDI_HIRELING_STATUS) == 5) then begin
+	end
+end
+
+procedure Make_Critter
+begin
+	if not(kind) then begin// DWELLERS DWELLERS
+		rndx := random(0, 5);
+		if rndx == 0 then begin
+			id := 16777216 + 1;//	white male
+		end
+		else begin
+			if rndx == 1 then begin
+				id := 16777216 + 6;//	white female
+			end
+			else begin
+				if rndx == 2 then begin
+					id := 16777216 + 26;//	black male
+				end
+				else begin
+					if rndx == 3 then begin
+						id := 16777216 + 34;//	white male
+					end
+					else begin
+						if rndx == 4 then begin
+							id := 16777216 + 35;//	redhead female
+						end
+						else begin
+							id := 16777216 + 206;//   white male
+						end
+					end
+				end
+			end
+		end
+	end
+	else begin// TECHNICIANS TECHNICIANS
+		if kind == 1 then begin
+			rndx := random(0, 3);
+			if rndx == 0 then begin
+				id := 16777216 + 53;//	white female
+			end
+			else begin
+				if rndx == 1 then begin
+					id := 16777216 + 52;//	black male
+				end
+				else begin
+					if rndx == 2 then begin
+						id := 16777216 + 58;//	redhead female
+					end
+					else begin
+						id := 16777216 + 54;//	white male
+					end
+				end
+			end
+		end
+		else begin// GUARDS GUARDS GUARDS
+			rndx := random(0, 3);
+			if rndx == 0 then begin
+				id := 16777216 + 55;//	white female
+			end
+			else begin
+				if rndx == 1 then begin
+					id := 16777216 + 56;//	white male
+				end
+				else begin
+					if rndx == 2 then begin
+						id := 16777216 + 57;//	black male
+					end
+					else begin
+						id := 16777216 + 198;//	redhead female
+					end
+				end
+			end
+		end
+	end
+	if random(0, 1) then begin
+		script := 185;//  GENVAULT
+	end
+	else begin
+		script := 130;//  VALTCTZN
+	end
+	Critter := create_object_sid(id, 0, 0, script);
+end
+

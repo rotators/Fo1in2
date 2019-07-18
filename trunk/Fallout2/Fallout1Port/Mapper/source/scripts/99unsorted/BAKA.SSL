@@ -1,0 +1,831 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure destroy_p_proc;//    script_action == 18
+procedure talk_p_proc;//    script_action == 11
+procedure baka00;
+procedure baka00a;
+procedure baka00b;
+procedure baka01;
+procedure baka01_1;
+procedure baka02;
+procedure baka02a;
+procedure baka03;
+procedure baka04;
+procedure baka05;
+procedure baka06;
+procedure baka07;
+procedure baka07a;
+procedure baka08;
+procedure baka08_1;
+procedure baka09;
+procedure baka10;
+procedure baka11;
+procedure baka12;
+procedure baka13;
+procedure baka14;
+procedure baka15;
+procedure baka16;
+procedure baka17;
+procedure baka17a;
+procedure baka18;
+procedure baka19;
+procedure baka20;
+procedure baka21;
+procedure baka22;
+procedure baka23;
+procedure baka24;
+procedure baka25;
+procedure baka25_1;
+procedure baka25a;
+procedure baka26;
+procedure baka27;
+procedure baka28;
+procedure baka29;
+procedure baka30;
+procedure baka26a;
+procedure bakacombat;
+procedure bakadone;
+procedure bakaend;
+procedure critter_p_proc;//    script_action == 12
+procedure Start_War;
+
+variable HEREBEFORE;
+variable Only_Once := 1;
+variable visit;
+variable hostile;
+
+import variable Scouted_Crypts;
+import variable is_crypt;
+import variable is_fool;
+import variable broken_gen;
+import variable skippy_talk;
+import variable know_power;
+import variable know_fools;
+import variable know_crypts;
+import variable Crypt_Pointer;
+import variable Fool_Pointer;
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+
+variable I_Am_A_Fool;
+variable I_Am_A_Crypt;
+
+import variable Fool_Taunt;
+import variable Crypt_Taunt;
+import variable Fool_Counter;
+import variable Crypt_Counter;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable reactionamt := 50;
+variable reaction_level := 2;
+variable got_reaction;
+variable badguy;
+variable exit_line;
+variable This_Once;
+
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (is_fool) then begin
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
+	end
+	else begin
+/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		Fool_Pointer := self_obj;
+		I_Am_A_Fool := 1;
+	end
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		if (Crypt_Counter == 0) then begin
+			float_msg(self_obj, message_str(414, 172), 0);
+			metarule(13, 0);
+		end
+		else begin
+			call talk_p_proc;
+		end
+	end
+	else begin
+		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+			script_overrides;
+			if (know_fools == 1) then begin
+				display_msg(message_str(414, 100));
+			end
+			else begin
+				display_msg(message_str(414, 101));
+			end
+		end
+		else begin
+			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+				hostile := 1;
+			end
+			else begin
+				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+					if (fixed_param == 1) then begin
+						call Start_War;
+					end
+					else begin
+						if (obj_can_see_obj(self_obj, dude_obj)) then begin
+							hostile := 1;
+						end
+					end
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+	rm_timer_event(self_obj);
+						Fool_Counter := Fool_Counter - 1;
+	rm_timer_event(self_obj);
+					end
+					else begin
+						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+							call critter_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	start_gdialog(414, self_obj, 4, -1, -1);
+	gsay_start;
+	if (is_crypt == 1) then begin
+		call baka00;
+	end
+	else begin
+		if (is_fool == 1) then begin
+			if (visit == 0) then begin
+				call baka22;
+			end
+			else begin
+				call baka26;
+			end
+		end
+		else begin
+			if (HEREBEFORE == 0) then begin
+				call baka06;
+			end
+			else begin
+				call baka12;
+			end
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure baka00
+begin
+	sayReply(0, message_str(414, 102));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 103), baka00a);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 104), baka03);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 105), baka00b);
+	end
+end
+
+procedure baka00a
+begin
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call baka02;
+	end
+	else begin
+		call baka01;
+	end
+end
+
+procedure baka00b
+begin
+	add_timer_event(self_obj, game_ticks(20), 2);
+end
+
+procedure baka01
+begin
+	sayReply(0, message_str(414, 106));
+	sayOption(message_str(414, 164), baka01_1);
+	sayOption("", bakadone);
+end
+
+procedure baka01_1
+begin
+	sayMessage(0, message_str(414, 174));
+	sayOption("", bakadone);
+	call bakacombat;
+end
+
+procedure baka02
+begin
+	sayReply(0, message_str(414, 107));
+	sayOption(message_str(414, 164), baka02a);
+	sayOption("", bakadone);
+end
+
+procedure baka02a
+begin
+	sayReply(0, message_str(414, 172));
+	is_fool := 1;
+	is_crypt := 0;
+	call bakadone;
+	sayOption("", bakadone);
+end
+
+procedure baka03
+begin
+	sayReply(0, message_str(414, 108));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 109), bakacombat);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 110), baka05);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 111), baka04);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 0) then begin
+		sayOption("", bakaend);
+	end
+end
+
+procedure baka04
+begin
+	sayReply(0, message_str(414, 112));
+	if (get_critter_stat(dude_obj, 4) >= 0) then begin
+		sayOption(message_str(414, 163), bakacombat);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 0) then begin
+		sayOption("", bakacombat);
+	end
+end
+
+procedure baka05
+begin
+	sayReply(0, message_str(414, 113));
+	if (get_critter_stat(dude_obj, 4) >= 0) then begin
+		sayOption(message_str(414, 163), bakacombat);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 0) then begin
+		sayOption("", bakacombat);
+	end
+end
+
+procedure baka06
+begin
+	know_fools := 1;
+	sayReply(0, message_str(414, 114));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 115), baka07);
+	end
+	if (know_crypts == 1) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(414, 116), baka08);
+		end
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 117), baka09);
+	end
+end
+
+procedure baka07
+begin
+	sayReply(0, message_str(414, 118));
+	sayOption(message_str(414, 164), baka07a);
+	sayOption(message_str(414, 171), bakaend);
+	sayOption("", baka07a);
+end
+
+procedure baka07a
+begin
+	sayReply(0, message_str(414, 172));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 119), baka08);
+	end
+	sayOption(message_str(414, 171), bakaend);
+end
+
+procedure baka08
+begin
+	sayReply(0, message_str(414, 120));
+	sayOption(message_str(414, 164), baka08_1);
+	sayOption("", bakadone);
+end
+
+procedure baka08_1
+begin
+	sayReply(0, message_str(414, 175));
+	is_fool := 1;
+	call bakadone;
+	sayOption("", bakadone);
+end
+
+procedure baka09
+begin
+	sayReply(0, message_str(414, 121));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 122), baka10);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 123), baka11);
+	end
+end
+
+procedure baka10
+begin
+	sayReply(0, message_str(414, 124));
+	call bakadone;
+	call bakacombat;
+end
+
+procedure baka11
+begin
+	sayReply(0, message_str(414, 125));
+	call bakadone;
+end
+
+procedure baka12
+begin
+	sayReply(0, message_str(414, 126));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 127), baka13);
+	end
+	if (know_power == 1) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(414, 128), baka17);
+		end
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 168), bakaend);
+	end
+	sayOption("", bakaend);
+end
+
+procedure baka13
+begin
+	sayReply(0, message_str(414, 129));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 130), baka14);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 131), baka15);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 132), baka16);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 170), bakaend);
+	end
+end
+
+procedure baka14
+begin
+	sayReply(0, message_str(414, 133));
+	is_fool := 1;
+	call bakadone;
+end
+
+procedure baka15
+begin
+	sayMessage(0, message_str(414, 134));
+	call bakacombat;
+end
+
+procedure baka16
+begin
+	sayReply(0, message_str(414, 135));
+	skippy_talk := 1;
+	call bakadone;
+end
+
+procedure baka17
+begin
+	sayReply(0, message_str(414, 136));
+	sayOption(message_str(414, 164), baka17a);
+	sayOption("", baka17a);
+end
+
+procedure baka17a
+begin
+	sayReply(0, message_str(414, 176));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 137), baka18);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 138), bakaend);
+	end
+end
+
+procedure baka18
+begin
+	sayReply(0, message_str(414, 139));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 140), baka19);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 141), bakaend);
+	end
+end
+
+procedure baka19
+begin
+	sayReply(0, message_str(414, 142));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 143), baka20);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 144), baka21);
+	end
+end
+
+procedure baka20
+begin
+	sayReply(0, message_str(414, 145));
+	is_fool := 1;
+	call bakadone;
+end
+
+procedure baka21
+begin
+	sayReply(0, message_str(414, 146));
+	call bakadone;
+	call bakacombat;
+end
+
+procedure baka22
+begin
+	visit := 1;
+	sayReply(0, message_str(414, 147));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 148), baka23);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 149), baka24);
+	end
+	if (obj_pid(critter_inven_obj(dude_obj, 0)) == 2) then begin
+		if (get_critter_stat(dude_obj, 4) >= 4) then begin
+			sayOption(message_str(414, 150), baka29);
+		end
+	end
+end
+
+procedure baka23
+begin
+	sayReply(0, message_str(414, 151));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 152), baka24);
+	end
+	sayOption("", bakaend);
+end
+
+procedure baka24
+begin
+	know_power := 1;
+	sayReply(0, message_str(414, 153));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 154), baka25);
+	end
+	sayOption("", bakaend);
+end
+
+procedure baka25
+begin
+	sayReply(0, message_str(414, 155));
+	sayOption(message_str(414, 164), baka25_1);
+	sayOption("", baka25_1);
+end
+
+procedure baka25_1
+begin
+	sayReply(0, message_str(414, 177));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 156), baka25a);
+	end
+	sayOption("", baka25a);
+end
+
+procedure baka25a
+begin
+	Scouted_Crypts := 1;
+	set_global_var(CSCOUT_1, 1);
+end
+
+procedure baka26
+begin
+	sayReply(0, message_str(414, 157));
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 158), baka26a);
+	end
+	if (get_critter_stat(dude_obj, 4) >= 4) then begin
+		sayOption(message_str(414, 159), baka27);
+	end
+end
+
+procedure baka27
+begin
+	sayReply(0, message_str(414, 160));
+	call bakadone;
+end
+
+procedure baka28
+begin
+	sayReply(0, message_str(414, 161));
+	set_global_var(QUEST_BONEYARD_7_GANG_WAR, 1);
+	call bakadone;
+end
+
+procedure baka29
+begin
+	sayReply(0, message_str(414, 162));
+	call bakadone;
+end
+
+procedure baka30
+begin
+	sayReply(0, message_str(414, 169));
+	call bakadone;
+end
+
+procedure baka26a
+begin
+	if (Scouted_Crypts == 2) then begin
+		call baka28;
+	end
+	else begin
+		call baka30;
+	end
+end
+
+procedure bakacombat
+begin
+	hostile := 1;
+end
+
+procedure bakadone
+begin
+	sayOption(message_str(414, 163), bakaend);
+	sayOption("", bakaend);
+end
+
+procedure bakaend
+begin
+end
+
+procedure critter_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+	if (I_Am_A_Fool and Crypt_Taunt) then begin
+		Crypt_Taunt := 0;
+		if (random(1, 5) == 1) then begin
+			float_msg(self_obj, message_str(220, random(100, 113)), -1);
+		end
+	end
+	else begin
+		if (I_Am_A_Crypt and Fool_Taunt) then begin
+			Fool_Taunt := 0;
+			if (random(1, 5) == 1) then begin
+				float_msg(self_obj, message_str(220, random(200, 218)), -1);
+			end
+		end
+		else begin
+			if ((global_var(QUEST_BONEYARD_7_GANG_WAR) == 1) and (tile_num(self_obj) != 20725)) then begin
+				animate_move_obj_to_tile(self_obj, 20725, 0);
+			end
+			else begin
+				if (tile_num(self_obj) == 20725) then begin
+					add_timer_event(self_obj, game_ticks(2), 1);
+				end
+				else begin
+					if (broken_gen and (tile_num(self_obj) != 27504)) then begin
+						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+							This_Once := 1;
+							float_msg(self_obj, message_str(220, 300), 11);
+						end
+						set_global_var(QUEST_BONEYARD_7_GANG_WAR, 2);
+						animate_move_obj_to_tile(self_obj, 27504, 0);
+					end
+					else begin
+						if ((tile_num(self_obj) == 27504) and (global_var(QUEST_BONEYARD_7_GANG_WAR) == 2)) then begin
+							if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+							if (I_Am_A_Fool) then begin
+								Fool_Counter := Fool_Counter - 1;
+							end
+							else begin
+								Crypt_Counter := Crypt_Counter - 1;
+							end
+						end
+						else begin
+							if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+								attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+							end
+							else begin
+								if (not(LVar0)) then begin
+									if (random(0, 21) == 1) then begin
+										LVar1 := tile_num_in_direction(tile_num(self_obj), random(0, 5), 2);
+										animate_move_obj_to_tile(self_obj, LVar1, 0);
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Start_War
+begin
+	if (fixed_param == 1) then begin
+		set_global_var(QUEST_BONEYARD_7_GANG_WAR, 0);
+		if (I_Am_A_Fool) then begin
+			Fool_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(100, 115)), -1);
+		end
+		else begin
+			Crypt_Taunt := 1;
+			float_msg(self_obj, message_str(220, random(200, 218)), -1);
+		end
+		add_timer_event(self_obj, 4, 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if (I_Am_A_Fool) then begin
+				attack_complex(Crypt_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+			else begin
+				attack_complex(Fool_Pointer, 0, 1, 0, 0, 30000, 0, 0);
+			end
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (not(got_reaction)) then begin
+		got_reaction := 1;
+		reactionamt := reactionamt + ((get_critter_stat(dude_obj, 3) - 5) * 5);
+		if (badguy) then begin
+			reactionamt := reactionamt - global_var(PLAYER_REPUTATION_GENERAL);
+		end
+		else begin
+			reactionamt := reactionamt + global_var(PLAYER_REPUTATION_GENERAL);
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			reactionamt := reactionamt - 30;
+		end
+		if ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1)) then begin
+			reactionamt := reactionamt + 20;
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1)) then begin
+			reactionamt := reactionamt - 20;
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (reactionamt < 24) then begin
+		reaction_level := 1;
+	end
+	else begin
+		if (reactionamt < 74) then begin
+			reaction_level := 2;
+		end
+		else begin
+			reaction_level := 3;
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (reaction_level == 1) then begin
+		reactionamt := random(1, 24);
+	end
+	else begin
+		if (reaction_level == 2) then begin
+			reactionamt := random(25, 74);
+		end
+		else begin
+			reactionamt := random(75, 100);
+		end
+	end
+end
+
+procedure UpReact
+begin
+	reactionamt := reactionamt + 10;
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	reactionamt := reactionamt - 10;
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	reaction_level := 1;
+	reactionamt := 1;
+end
+
+procedure TopReact
+begin
+	reactionamt := 100;
+	reaction_level := 3;
+end
+
+procedure BigUpReact
+begin
+	reactionamt := reactionamt + 25;
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	reactionamt := reactionamt - 25;
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	reaction_level := reaction_level + 1;
+	if (reaction_level > 3) then begin
+		reaction_level := 3;
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	reaction_level := reaction_level - 1;
+	if (reaction_level < 1) then begin
+		reaction_level := 1;
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	variable LVar0 := 0;
+	LVar0 := random(1, 6);
+	if (LVar0 == 1) then begin
+		exit_line := "Thanks, bye.";
+	end
+	if (LVar0 == 2) then begin
+		exit_line := "Okay, thanks.";
+	end
+	if (LVar0 == 3) then begin
+		exit_line := "Hmm. Bye.";
+	end
+	if (LVar0 == 4) then begin
+		exit_line := "See ya.";
+	end
+	if (LVar0 == 5) then begin
+		exit_line := "Thanks.";
+	end
+	if (LVar0 == 6) then begin
+		exit_line := "Okay, bye.";
+	end
+end
+
+ 
+procedure destroy_p_proc
+begin
+ 
+end

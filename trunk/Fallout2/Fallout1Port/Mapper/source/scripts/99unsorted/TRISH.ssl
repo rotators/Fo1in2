@@ -1,0 +1,762 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+procedure talk_p_proc;//    script_action == 11
+procedure Trish0;
+procedure Trish1;
+procedure Trish2;
+procedure Trish3;
+procedure Trish4;
+procedure Trish5;
+procedure Trish6;
+procedure Trish6a;
+procedure Trish7;
+procedure Trish8;
+procedure Trish9;
+procedure Trish10;
+procedure Trish11;
+procedure Trish12;
+procedure Trish13;
+procedure Trish14;
+procedure Trish15;
+procedure Trish16;
+procedure Trish17;
+procedure Trish18;
+procedure Trish19;
+procedure Trish20;
+procedure Trish21;
+procedure Trish22;
+procedure Trish23;
+procedure Trish24;
+procedure Trish25;
+procedure Trish26;
+procedure Trish27;
+procedure Trish28;
+procedure Trish29;
+procedure TrishEnd;
+procedure TrishCola;
+procedure TrishBeer;
+procedure TrishBooze;
+procedure sleeping;
+
+variable night_person;
+variable wake_time;
+variable sleep_time;
+variable home_tile;
+variable sleep_tile;
+variable initialized := 0;
+
+import variable Trish_ptr;
+
+variable item;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+					call map_enter_p_proc;
+				end
+				else begin
+					if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+						call map_update_p_proc;
+					end
+					else begin
+						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+							call talk_p_proc;
+						end
+						else begin
+							if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+								dialogue_system_enter;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(TRISH_STATUS) bwand 64) then begin
+		destroy_object(self_obj);
+	end
+	else begin
+		call sleeping;
+	end
+	if (cur_map_index == 11) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			if ((map_var(0) == 1) and (map_var(1) == 1) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+				dialogue_system_enter;
+			end
+		end
+		if (tile_num(self_obj) != home_tile) then begin
+			if ((global_var(DESTROY_VATS_10) == 0) or (global_var(BUST_SKULZ) == 2)) then begin
+				animate_move_obj_to_tile(self_obj, home_tile, 0);
+			end
+		end
+	end
+	else begin
+		if (tile_num(self_obj) != home_tile) then begin
+			animate_move_obj_to_tile(self_obj, home_tile, 0);
+		end
+	end
+	if (global_var(DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_JUNKTOWN, 1);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
+		set_global_var(ENEMY_JUNKTOWN, 1);
+	end
+	if source_obj == dude_obj then begin
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+	set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 64);
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if ((global_var(TRISH_STATUS) bwand 1) or (global_var(TRISH_STATUS) bwand 4)) then begin
+		display_msg(message_str(342, 100));
+	end
+	else begin
+		display_msg(message_str(342, 167));
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	Trish_ptr := self_obj;
+	critter_add_trait(self_obj, 1, 6, 16);
+	if (cur_map_index == 11) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		home_tile := 20083;
+		sleep_time := 330;
+		wake_time := 1300;
+	end
+	else begin
+		home_tile := 16297;
+		sleep_time := 1300;
+		wake_time := 330;
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if (global_var(TRISH_STATUS) bwand 64) then begin
+		destroy_object(self_obj);
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(4)) then begin
+		float_msg(self_obj, message_str(342, 151), 0);
+	end
+	else begin
+		if (cur_map_index == 12) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+			if ((global_var(SAUL_STATUS) == 3) and not(local_var(7))) then begin
+				call Trish17;
+			end
+			else begin
+				if ((global_var(SAUL_STATUS) == 2) and not(local_var(5)) and not(global_var(TRISH_STATUS) bwand 8)) then begin
+					call Trish3;
+				end
+				else begin
+					if ((global_var(TRISH_STATUS) bwand 32) and not(local_var(6))) then begin
+						call Trish16;
+					end
+					else begin
+						if (not((global_var(TRISH_STATUS) bwand 1) or (global_var(TRISH_STATUS) bwand 4))) then begin
+							call Trish0;
+						end
+						else begin
+							if ((global_var(TRISH_STATUS) bwand 4) and not(global_var(TRISH_STATUS) bwand 1)) then begin
+								call Trish11;
+							end
+							else begin
+								call Trish15;
+							end
+						end
+					end
+				end
+			end
+		end
+		else begin
+			if ((game_time_hour >= 1300) and (game_time_hour < 1600)) then begin
+				float_msg(self_obj, message_str(342, 152), 0);
+			end
+			else begin
+				call Trish25;
+			end
+		end
+	end
+	if (not(global_var(TRISH_STATUS) bwand 32) and (global_var(TRISH_STATUS) bwand 8) and (global_var(TRISH_STATUS) bwand 16)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 32);
+		display_msg(message_str(342, 173));
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
+		give_exp_points(250);
+	end
+end
+
+procedure Trish0
+begin
+	start_gdialog(342, self_obj, 4, -1, -1);
+	gsay_start;
+	if (not(global_var(TRISH_STATUS) bwand 1)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 1);
+	end
+	gsay_reply(342, 101);
+	giq_option(-3, 342, 102, Trish1, 50);
+	giq_option(4, 342, 103, Trish2, 50);
+	giq_option(4, 342, 104, TrishEnd, 50);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Trish1
+begin
+	gsay_message(342, 105, 50);
+end
+
+procedure Trish2
+begin
+	gsay_message(342, 106, 50);
+end
+
+procedure Trish3
+begin
+	start_gdialog(342, self_obj, 4, -1, -1);
+	gsay_start;
+	if (not(global_var(TRISH_STATUS) bwand 1)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 1);
+	end
+	set_local_var(5, 1);
+	gsay_reply(342, 107);
+	giq_option(-3, 342, 108, Trish1, 50);
+	giq_option(4, 342, 109, Trish2, 50);
+	giq_option(5, 342, 110, Trish4, 50);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Trish4
+begin
+	if (local_var(5) == 0) then begin
+		set_local_var(5, 1);
+	end
+	gsay_reply(342, 111);
+	giq_option(5, 342, 112, Trish5, 50);
+	giq_option(5, 342, 113, Trish6, 50);
+end
+
+procedure Trish5
+begin
+	gsay_reply(342, 114);
+	giq_option(5, 342, 115, Trish9, 50);
+	giq_option(7, 342, 116, Trish10, 50);
+end
+
+procedure Trish6
+begin
+	gsay_reply(342, 117);
+	giq_option(5, 342, 118, Trish6a, 51);
+	giq_option(5, 342, 119, Trish7, 50);
+	giq_option(6, 342, 169, Trish8, 50);
+end
+
+procedure Trish6a
+begin
+	call DownReact;
+	call Trish7;
+end
+
+procedure Trish7
+begin
+	gsay_message(342, 120, 50);
+end
+
+procedure Trish8
+begin
+	variable LVar0 := 0;
+	LVar0 := message_str(342, 121);
+	if (not(global_var(GIZMO_DEAD))) then begin
+		LVar0 := LVar0 + " " + message_str(342, 168);
+	end
+	gsay_message(342, LVar0, 49);
+	if (not(global_var(TRISH_STATUS) bwand 8)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 8);
+	end
+end
+
+procedure Trish9
+begin
+	gsay_reply(342, 122);
+	giq_option(5, 342, 123, Trish8, 50);
+	giq_option(5, 342, 124, Trish7, 50);
+end
+
+procedure Trish10
+begin
+	gsay_reply(342, 125);
+	giq_option(5, 342, 126, Trish8, 50);
+end
+
+procedure Trish11
+begin
+	if (not(global_var(TRISH_STATUS) bwand 1)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 1);
+	end
+	start_gdialog(342, self_obj, 4, -1, -1);
+	gsay_start;
+	gsay_reply(342, 127);
+	giq_option(-3, 342, 128, Trish7, 50);
+	giq_option(4, 342, 129, Trish12, 51);
+	giq_option(5, 342, 130, Trish13, 50);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Trish12
+begin
+	call DownReact;
+	gsay_message(342, 131, 50);
+end
+
+procedure Trish13
+begin
+	gsay_reply(342, 132);
+	giq_option(5, 342, 133, TrishEnd, 50);
+end
+
+procedure Trish14
+begin
+	float_msg(self_obj, message_str(342, random(134, 136)), 0);
+end
+
+procedure Trish15
+begin
+	float_msg(self_obj, message_str(342, 137), 0);
+end
+
+procedure Trish16
+begin
+	if (not(global_var(TRISH_STATUS) bwand 1)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 1);
+	end
+	set_local_var(6, 1);
+	float_msg(self_obj, message_str(342, 138), 0);
+end
+
+procedure Trish17
+begin
+	if (not(global_var(TRISH_STATUS) bwand 1)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 1);
+	end
+	set_local_var(7, 1);
+	float_msg(self_obj, message_str(342, 139), 0);
+end
+
+procedure Trish18
+begin
+	set_local_var(8, 1);
+	gsay_reply(342, 140);
+	giq_option(-3, 342, 141, TrishEnd, 50);
+	giq_option(4, 342, 142, TrishEnd, 50);
+	giq_option(6, 342, 143, Trish19, 50);
+end
+
+procedure Trish19
+begin
+	gsay_reply(342, 144);
+	giq_option(6, 342, 145, Trish20, 50);
+	if (not(global_var(GIZMO_STATUS) == 3)) then begin
+		giq_option(6, 342, 146, Trish21, 50);
+	end
+	if ((local_var(13) == 0) and (global_var(TRISH_STATUS) bwand 2) and not(global_var(TRISH_STATUS) bwand 32) and (global_var(SAUL_STATUS) != 3)) then begin
+		giq_option(6, 342, 147, Trish22, 50);
+	end
+	giq_option(6, 342, 148, TrishEnd, 50);
+end
+
+procedure Trish20
+begin
+	set_local_var(10, 1);
+	gsay_reply(342, 149);
+	call Trish24;
+end
+
+procedure Trish21
+begin
+	variable LVar0 := 0;
+	set_local_var(11, 1);
+	LVar0 := message_str(342, 154);
+	if (not(global_var(KILLIAN_DEAD))) then begin
+		LVar0 := LVar0 + message_str(342, 155);
+	end
+	gsay_reply(342, LVar0);
+	call Trish24;
+end
+
+procedure Trish22
+begin
+	set_local_var(13, 1);
+	gsay_reply(342, 158);
+	call Trish24;
+end
+
+procedure Trish23
+begin
+	if (global_var(GIZMO_STATUS) == 3) then begin
+		gsay_reply(342, 162);
+	end
+	else begin
+		gsay_reply(342, 163);
+	end
+	call Trish24;
+end
+
+procedure Trish24
+begin
+	if (not(local_var(10))) then begin
+		giq_option(6, 342, 145, Trish20, 50);
+	end
+	if (not(local_var(11))) then begin
+		if (not(global_var(GIZMO_DEAD))) then begin
+			giq_option(6, 342, 146, Trish21, 50);
+		end
+	end
+	if ((local_var(13) == 0) and (global_var(TRISH_STATUS) bwand 2) and not(global_var(TRISH_STATUS) bwand 32) and (global_var(SAUL_STATUS) != 3)) then begin
+		giq_option(6, 342, 147, Trish22, 50);
+	end
+	giq_option(6, 342, 148, TrishEnd, 50);
+end
+
+procedure Trish25
+begin
+	start_gdialog(342, self_obj, 4, -1, -1);
+	gsay_start;
+	if (not(global_var(TRISH_STATUS) bwand 4)) then begin
+		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 4);
+	end
+	gsay_reply(342, 156);
+	giq_option(4, 342, 157, Trish26, 50);
+	giq_option(6, 342, 159, Trish27, 50);
+	if ((global_var(SAUL_STATUS) == 2) and not(local_var(5)) and not(global_var(TRISH_STATUS) bwand 8)) then begin
+		giq_option(5, 342, 110, Trish4, 50);
+	end
+	giq_option(4, 342, 153, TrishEnd, 50);
+	giq_option(-3, 342, 170, Trish28, 50);
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Trish26
+begin
+	gsay_reply(342, 161);
+	giq_option(4, 342, 164, TrishCola, 50);
+	giq_option(4, 342, 165, TrishBeer, 50);
+	giq_option(4, 342, 166, TrishBooze, 50);
+	giq_option(4, 342, 153, TrishEnd, 50);
+end
+
+procedure Trish27
+begin
+	if (local_var(1) < 2) then begin
+		gsay_message(342, 160, 51);
+	end
+	else begin
+		call Trish19;
+	end
+end
+
+procedure Trish28
+begin
+	gsay_message(342, 171, 50);
+end
+
+procedure Trish29
+begin
+	float_msg(self_obj, message_str(342, 140), 0);
+	display_msg(message_str(342, 172));
+	give_exp_points(300);
+	call BigUpReact;
+	set_map_var(1, 0);
+	set_map_var(0, 0);
+end
+
+procedure TrishEnd
+begin
+end
+
+procedure TrishCola
+begin
+	if (item_caps_total(dude_obj) >= 3) then begin
+		item_caps_adjust(dude_obj, -3);
+		item := create_object_sid(106, 0, 0, -1);
+		add_obj_to_inven(dude_obj, item);
+		gsay_message(342, 174, 50);
+	end
+end
+
+procedure TrishBeer
+begin
+	if (item_caps_total(dude_obj) >= 5) then begin
+		item_caps_adjust(dude_obj, -5);
+		item := create_object_sid(124, 0, 0, -1);
+		add_obj_to_inven(dude_obj, item);
+		gsay_message(342, 174, 50);
+	end
+end
+
+procedure TrishBooze
+begin
+	if (item_caps_total(dude_obj) >= 20) then begin
+		item_caps_adjust(dude_obj, -20);
+		item := create_object_sid(125, 0, 0, -1);
+		add_obj_to_inven(dude_obj, item);
+		gsay_message(342, 174, 50);
+	end
+end
+
+procedure sleeping
+begin
+	if (sleep_time > wake_time) then begin
+		if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time)) then begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+			set_local_var(4, 0);
+		end
+		else begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			set_local_var(4, 1);
+		end
+	end
+	else begin
+		if ((game_time_hour >= sleep_time) and (game_time_hour < wake_time)) then begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			set_local_var(4, 1);
+		end
+		else begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+			set_local_var(4, 0);
+		end
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

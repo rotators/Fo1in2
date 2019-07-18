@@ -1,0 +1,467 @@
+//
+// ---TRAP SCRIPT---  Sduibek
+//
+#include "..\headers\define.h"
+
+procedure start;
+procedure look_at_p_proc;//    script_action == 21
+procedure description_p_proc;//    script_action == 3
+procedure use_p_proc;//    script_action == 6
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+procedure damage_p_proc;//    script_action == 14
+procedure Locked_And_Trapped;
+procedure Door_Locked;
+procedure Door_Trapped;
+variable Damage := 0;
+
+variable Set_Off_Trap;
+
+procedure start
+begin
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+			call description_p_proc;
+		end
+		else begin
+			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+				call map_update_p_proc;
+			end
+			else begin
+				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+					call map_enter_p_proc;
+				end
+				else begin
+					if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+						call use_p_proc;
+					end
+					else begin
+						if (script_action == 8) then begin//<-- use_skill_on_p_proc
+							call use_skill_on_p_proc;
+						end
+						else begin
+							if (script_action == 7) then begin//<-- use_obj_on_p_proc
+								call use_obj_on_p_proc;
+							end
+							else begin
+								if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+									call damage_p_proc;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (is_success(do_check(dude_obj, 1, 0))) then begin
+		display_msg(message_str(911, 101));
+	end
+	else begin
+		display_msg(message_str(911, 100));
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	if ((local_var(1) == 0) and (local_var(0) == 0)) then begin
+		call Locked_And_Trapped;
+	end
+	else begin
+		if (local_var(0) == 0) then begin
+			call Door_Trapped;
+		end
+		else begin
+			if (local_var(1) == 0) then begin
+				call Door_Locked;
+			end
+			else begin
+				display_msg(message_str(911, 102));
+			end
+		end
+	end
+end
+
+procedure use_p_proc
+begin
+	variable LVar0 := 0;
+	LVar0 := roll_vs_skill(source_obj, 11, 0);
+	if ((local_var(1) == 0) and (local_var(0) == 0)) then begin
+		script_overrides;
+		if (is_success(LVar0)) then begin
+			reg_anim_func(2, source_obj);
+			if source_obj == dude_obj then begin
+				display_msg(message_str(911, 106));
+			end
+			else begin
+				display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+			end
+		end
+		else begin
+			display_msg(message_str(911, 104));
+			Set_Off_Trap := 1;
+			Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+			play_sfx("WHN1XXX1");
+			critter_dmg(source_obj, Damage, 6);
+//			explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+			set_local_var(0, 1);
+			set_local_var(2, local_var(2) + 1);
+			display_msg(message_str(911, 103));
+		end
+	end
+	else begin
+		if (local_var(0) == 0) then begin
+			if (is_success(LVar0)) then begin
+				script_overrides;
+				reg_anim_func(2, source_obj);
+				if source_obj == dude_obj then begin
+					display_msg(message_str(911, 106));
+				end
+				else begin
+					display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+				end
+			end
+			else begin
+				display_msg(message_str(911, 104));
+				Set_Off_Trap := 1;
+				Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+				play_sfx("WHN1XXX1");
+				critter_dmg(source_obj, Damage, 6);
+//				explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+				set_local_var(0, 1);
+				set_local_var(2, local_var(2) + 1);
+			end
+		end
+		else begin
+			if (local_var(1) == 0) then begin
+				script_overrides;
+				display_msg(message_str(911, 103));
+			end
+		end
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	variable LVar0 := 0;
+	if ((action_being_used == 11) and (local_var(0) == 0)) then begin//-- TRAPS
+		script_overrides;
+		LVar0 := roll_vs_skill(source_obj, action_being_used, 0);
+		if (is_success(LVar0)) then begin
+			reg_anim_func(2, source_obj);
+			if source_obj == dude_obj then begin
+				display_msg(message_str(911, 106));
+				set_local_var(0, 1);
+				display_msg(message_str(766, 103) + "50" + message_str(766, 104));
+				give_exp_points(50);
+			end
+			else begin
+				display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+			end
+		end
+		else begin
+			display_msg(message_str(911, 104));
+			Set_Off_Trap := 1;
+			Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+			play_sfx("WHN1XXX1");
+			critter_dmg(source_obj, Damage, 6);
+//			explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+			set_local_var(0, 1);
+			set_local_var(2, local_var(2) + 1);
+		end
+	end
+	else begin
+		if ((action_being_used == 9) and (local_var(1) == 0)) then begin//-- LOCKPICK
+			script_overrides;
+			LVar0 := roll_vs_skill(source_obj, action_being_used, -20);
+			if (is_success(LVar0)) then begin
+				set_local_var(1, 1);
+				display_msg(message_str(911, 111));
+				obj_unlock(self_obj);
+				display_msg(message_str(766, 103) + "50" + message_str(766, 104));
+				give_exp_points(50);
+			end
+			else begin
+				if (is_critical(LVar0)) then begin
+					jam_lock(self_obj);
+					display_msg(message_str(911, 112));
+				end
+				else begin
+					display_msg(message_str(911, 110));
+				end
+			end
+		end
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	LVar0 := obj_pid(obj_being_used_with);
+	LVar1 := roll_vs_skill(source_obj, 11, 0);
+	LVar2 := roll_vs_skill(source_obj, 9, 0);
+	if (LVar0 == 84) then begin
+		if ((local_var(1) == 0) and (local_var(0) == 0)) then begin
+			script_overrides;
+			if (is_success(LVar1)) then begin
+				reg_anim_func(2, source_obj);
+				if source_obj == dude_obj then begin
+					display_msg(message_str(911, 106));
+				end
+				else begin
+					display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+				end
+			end
+			else begin
+				display_msg(message_str(911, 104));
+				Set_Off_Trap := 1;
+				Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+				play_sfx("WHN1XXX1");
+				critter_dmg(source_obj, Damage, 6);
+//				explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+				set_local_var(0, 1);
+				set_local_var(2, local_var(2) + 1);
+			end
+			display_msg(message_str(911, 108));
+		end
+		else begin
+			if (local_var(0) == 0) then begin
+				script_overrides;
+				if (is_success(LVar1)) then begin
+					reg_anim_func(2, source_obj);
+					if source_obj == dude_obj then begin
+						display_msg(message_str(911, 106));
+					end
+					else begin
+						display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+					end
+				end
+				else begin
+					display_msg(message_str(911, 104));
+					Set_Off_Trap := 1;
+					Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+					play_sfx("WHN1XXX1");
+					critter_dmg(source_obj, Damage, 6);
+//					explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+					set_local_var(0, 1);
+					set_local_var(2, local_var(2) + 1);
+				end
+				display_msg(message_str(911, 108));
+			end
+			else begin
+				if (local_var(1) == 0) then begin
+					script_overrides;
+					if (is_success(LVar2)) then begin
+						set_local_var(1, 1);
+						display_msg(message_str(911, 111));
+						display_msg(message_str(766, 103) + "50" + message_str(766, 104));
+						give_exp_points(50);
+						obj_unlock(self_obj);
+					end
+					else begin
+						if (is_critical(LVar2)) then begin
+							rm_obj_from_inven(dude_obj, LVar0);
+							destroy_object(LVar0);
+							jam_lock(self_obj);
+							display_msg(message_str(911, 109));
+						end
+						else begin
+							display_msg(message_str(911, 110));
+						end
+					end
+				end
+			end
+		end
+	end
+	else begin
+		script_overrides;
+		LVar1 := roll_vs_skill(source_obj, 11, 0);
+		if ((local_var(1) == 0) and (local_var(0) == 0)) then begin
+			script_overrides;
+			if (is_success(LVar1)) then begin
+				reg_anim_func(2, source_obj);
+				if source_obj == dude_obj then begin
+					display_msg(message_str(911, 106));
+				end
+				else begin
+					display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+				end
+			end
+			else begin
+				display_msg(message_str(911, 104));
+				Set_Off_Trap := 1;
+				Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+				play_sfx("WHN1XXX1");
+				critter_dmg(source_obj, Damage, 6);
+//				explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+				set_local_var(0, 1);
+				set_local_var(2, local_var(2) + 1);
+			end
+		end
+		else begin
+			if (local_var(0) == 0) then begin
+				if (is_success(LVar1)) then begin
+					reg_anim_func(2, source_obj);
+					if source_obj == dude_obj then begin
+						display_msg(message_str(911, 106));
+					end
+					else begin
+						display_msg(proto_data(obj_pid(source_obj), 1) + message_str(911, 105));
+					end
+				end
+				else begin
+					display_msg(message_str(911, 104));
+					Set_Off_Trap := 1;
+					Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+					play_sfx("WHN1XXX1");
+					critter_dmg(source_obj, Damage, 6);
+//					explosion(tile_num(source_obj), elevation(self_obj), random(10, 30));
+					set_local_var(0, 1);
+					set_local_var(2, local_var(2) + 1);
+				end
+			end
+			else begin
+				if (local_var(1) == 0) then begin
+					script_overrides;
+					display_msg(message_str(911, 107));
+				end
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	if (local_var(1) == 0) then begin
+		obj_lock(self_obj);
+	end
+	else begin
+		obj_unlock(self_obj);
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if (local_var(1) == 0) then begin
+		obj_lock(self_obj);
+	end
+	else begin
+		obj_unlock(self_obj);
+	end
+end
+
+procedure damage_p_proc
+begin
+	set_local_var(2, local_var(2) + 1);
+	if (Set_Off_Trap == 0) then begin
+		display_msg(message_str(911, 104));
+		explosion(tile_num(self_obj), elevation(self_obj), 80);
+		set_local_var(0, 1);
+		Set_Off_Trap := 1;
+	end
+	if (local_var(2) > 1) then begin
+		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	end
+end
+
+procedure Locked_And_Trapped
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := roll_vs_skill(dude_obj, 11, 0);
+	LVar1 := roll_vs_skill(dude_obj, 9, 0);
+	if (is_success(LVar0)) then begin
+		if (is_critical(LVar0)) then begin
+			if (is_success(LVar1)) then begin
+				display_msg(message_str(911, 113));
+			end
+			else begin
+				if (is_critical(LVar1)) then begin
+					display_msg(message_str(911, 114));
+				end
+			end
+		end
+		else begin
+			if (is_success(LVar1)) then begin
+				display_msg(message_str(911, 115));
+			end
+			else begin
+				if (is_critical(LVar1)) then begin
+					display_msg(message_str(911, 116));
+				end
+			end
+		end
+	end
+	else begin
+		if (is_critical(LVar0)) then begin
+			if (is_success(LVar1)) then begin
+				display_msg(message_str(911, 117));
+			end
+			else begin
+				if (is_critical(LVar1)) then begin
+					display_msg(message_str(911, 118));
+				end
+			end
+		end
+		else begin
+			if (is_success(LVar1)) then begin
+				display_msg(message_str(911, 117));
+			end
+			else begin
+				if (is_critical(LVar1)) then begin
+					display_msg(message_str(911, 118));
+				end
+			end
+		end
+	end
+end
+
+procedure Door_Locked
+begin
+	variable LVar0 := 0;
+	LVar0 := roll_vs_skill(dude_obj, 9, 0);
+	if (is_success(LVar0)) then begin
+		display_msg(message_str(911, 117));
+	end
+	else begin
+		if (is_critical(LVar0)) then begin
+			display_msg(message_str(911, 117));
+		end
+	end
+end
+
+procedure Door_Trapped
+begin
+	variable LVar0 := 0;
+	LVar0 := roll_vs_skill(dude_obj, 11, 0);
+	if (is_success(LVar0)) then begin
+		if (is_critical(LVar0)) then begin
+			display_msg(message_str(911, 114));
+		end
+		else begin
+			display_msg(message_str(911, 116));
+		end
+	end
+	else begin
+		if (is_critical(LVar0)) then begin
+			display_msg(message_str(911, 118));
+		end
+		else begin
+			display_msg(message_str(911, 118));
+		end
+	end
+end
+

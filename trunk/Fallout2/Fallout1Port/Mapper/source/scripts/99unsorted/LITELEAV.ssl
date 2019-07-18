@@ -1,0 +1,50 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+procedure lighting;
+
+
+procedure start
+begin
+	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+		call map_enter_p_proc;
+	end
+	else begin
+		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+			call map_update_p_proc;
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+	call lighting;
+end
+
+procedure map_update_p_proc
+begin
+	call lighting;
+end
+
+procedure lighting
+begin
+	if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin
+		obj_set_light_level(self_obj, game_time_hour - 600 + 40, 8);
+	end
+	else begin
+		if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin
+			obj_set_light_level(self_obj, 100 - (game_time_hour - 1800), 8);
+		end
+		else begin
+			if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin
+				obj_set_light_level(self_obj, 100, 8);
+			end
+			else begin
+				obj_set_light_level(self_obj, 40, 8);
+			end
+		end
+	end
+end
+

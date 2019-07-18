@@ -1,0 +1,1332 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure combat;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;//    script_action == 14
+procedure look_at_p_proc;//    script_action == 21
+procedure Rutger00;
+procedure Rutger00a;
+procedure Rutger00b;
+procedure Rutger01;
+procedure Rutger02;
+procedure Rutger03;
+procedure Rutger04;
+procedure Rutger05;
+procedure Rutger06;
+procedure Rutger07;
+procedure Rutger08;
+procedure Rutger09;
+procedure Rutger10;
+procedure Rutger11;
+procedure Rutger11a;
+procedure Rutger12;
+procedure Rutger13;
+procedure Rutger14;
+procedure Rutger15;
+procedure Rutger16;
+procedure Rutger17;
+procedure Rutger17a;
+procedure Rutger18;
+procedure Rutger19;
+procedure Rutger20;
+procedure Rutger21;
+procedure Rutger22;
+procedure Rutger22a;
+procedure Rutger23;
+procedure Rutger24;
+procedure Rutger25;
+procedure Rutger26;
+procedure Rutger27;
+procedure Rutger28;
+procedure Rutger29;
+procedure Rutger29a;
+procedure Rutger29b;
+procedure Rutger30;
+procedure Rutger31;
+procedure Rutger32;
+procedure Rutger33;
+procedure Rutger34;
+procedure Rutger35;
+procedure Rutger36;
+procedure Rutger37;
+procedure Rutger38;
+procedure Rutger39;
+procedure Rutger39a;
+procedure Rutger40;
+procedure Rutger40a;
+procedure Rutger40b;
+procedure Rutger41;
+procedure Rutger42;
+procedure Rutger43;
+procedure Rutger44;
+procedure Rutger45;
+procedure Rutger46;
+procedure Rutger47;
+procedure Rutger48;
+procedure Rutger49;
+procedure Rutger50;
+procedure Rutger51;
+procedure Rutger52;
+procedure Rutger53;
+procedure Rutger54;
+procedure Rutger55;
+procedure Rutger55a;
+procedure Rutger56;
+procedure Rutger56a;
+procedure Rutger57;
+procedure Rutger58;
+procedure Rutger59;
+procedure Rutger60;
+procedure Rutger61;
+procedure Rutger62;
+procedure Rutger63;
+procedure Rutger64;
+procedure Rutger65;
+procedure Rutger67;
+procedure Rutger68;
+procedure Rutger69;
+procedure Rutger70;
+procedure Rutger71;
+procedure Rutger72;
+procedure Rutger73;
+procedure Rutger74;
+procedure Rutger75;
+procedure Rutger76;
+procedure RutgerEnd;
+procedure RutgerEndBad;
+procedure RutgerAbandoned;
+procedure RutgerLost;
+
+variable hostile;
+variable Only_Once := 1;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 36);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 17);
+	end
+	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+		call look_at_p_proc;
+	end
+	else begin
+		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			call pickup_p_proc;
+		end
+		else begin
+			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+				call talk_p_proc;
+			end
+			else begin
+				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+					call critter_p_proc;
+				end
+				else begin
+					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+						call destroy_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat
+begin
+	hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (get_critter_stat(dude_obj, 4) < 4) then begin
+		float_msg(dude_obj, message_str(401, 314), 3);
+		float_msg(self_obj, message_str(401, 315), 2);
+	end
+	else begin
+		if ((global_var(MASTER_BLOWN) == 1) and (global_var(VATS_BLOWN) != 1) and (local_var(8) == 0)) then begin
+			set_local_var(8, 1);
+			set_local_var(4, 1);
+			start_gdialog(401, self_obj, 4, -1, -1);
+			gsay_start;
+			call Rutger55;
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			if ((global_var(MASTER_BLOWN) != 1) and (global_var(VATS_BLOWN) == 1) and (local_var(8) == 0)) then begin
+				set_local_var(8, 1);
+				set_local_var(4, 1);
+				start_gdialog(401, self_obj, 4, -1, -1);
+				gsay_start;
+				call Rutger58;
+				gsay_end;
+				end_dialogue;
+			end
+			else begin
+				if ((map_var(40) == 1) or (map_var(35) == 1)) then begin
+					set_local_var(4, 1);
+					start_gdialog(401, self_obj, 4, -1, -1);
+					gsay_start;
+					call Rutger74;
+					gsay_end;
+					end_dialogue;
+				end
+				else begin
+					if (local_var(4) == 0) then begin
+						set_local_var(4, 1);
+						start_gdialog(401, self_obj, 4, -1, -1);
+						gsay_start;
+						call Rutger00;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						if (map_var(34) == 0) then begin
+							if (local_var(1) >= 2) then begin
+								start_gdialog(401, self_obj, 4, -1, -1);
+								gsay_start;
+								call Rutger73;
+								gsay_end;
+								end_dialogue;
+							end
+							else begin
+								start_gdialog(401, self_obj, 4, -1, -1);
+								gsay_start;
+								call Rutger74;
+								gsay_end;
+								end_dialogue;
+							end
+						end
+						else begin
+							if ((map_var(34) == 1) and (map_var(41) == 0)) then begin
+								call Rutger21;
+							end
+							else begin
+								if (map_var(41) == 3) then begin
+									start_gdialog(401, self_obj, 4, -1, -1);
+									gsay_start;
+									call Rutger54;
+									gsay_end;
+									end_dialogue;
+								end
+								else begin
+									if (map_var(41) == 4) then begin
+										start_gdialog(401, self_obj, 4, -1, -1);
+										gsay_start;
+										call Rutger56;
+										gsay_end;
+										end_dialogue;
+									end
+									else begin
+										if (local_var(6) == 0) then begin
+											if (map_var(41) == 2) then begin
+												start_gdialog(401, self_obj, 4, -1, -1);
+												gsay_start;
+												call Rutger17;
+												gsay_end;
+												end_dialogue;
+											end
+											else begin
+												if (map_var(41) == 1) then begin
+													start_gdialog(401, self_obj, 4, -1, -1);
+													gsay_start;
+													call Rutger25;
+													gsay_end;
+													end_dialogue;
+												end
+												else begin
+													if (map_var(41) == 0) then begin
+														call Rutger21;
+													end
+												end
+											end
+										end
+										else begin
+											if ((local_var(6) == 1) and (map_var(41) == 1)) then begin
+												start_gdialog(401, self_obj, 4, -1, -1);
+												gsay_start;
+												call Rutger22;
+												gsay_end;
+												end_dialogue;
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(401, 100));
+end
+
+procedure Rutger00
+begin
+	gsay_reply(401, 101);
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option(4, 401, 102, Rutger03, 50);
+	end
+	if (map_var(43) == 1) then begin
+		giq_option(4, 401, 103, Rutger00a, 50);
+	end
+	else begin
+		giq_option(4, 401, 104, Rutger00a, 50);
+	end
+	giq_option(4, 401, 105, Rutger07, 50);
+	giq_option(4, 401, 106, RutgerEnd, 50);
+	giq_option(-3, 401, 107, Rutger00b, 50);
+end
+
+procedure Rutger00a
+begin
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		call Rutger10;
+	end
+	else begin
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			call Rutger11;
+		end
+		else begin
+			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+				call Rutger15;
+			end
+			else begin
+				if ((map_var(35) == 1) or (map_var(40) == 1)) then begin
+					call Rutger75;
+				end
+				else begin
+					call Rutger16;
+				end
+			end
+		end
+	end
+end
+
+procedure Rutger00b
+begin
+	if (get_critter_stat(dude_obj, 0) <= 6) then begin
+		call Rutger01;
+	end
+	else begin
+		call Rutger02;
+	end
+end
+
+procedure Rutger01
+begin
+	gsay_message(401, 108, 51);
+end
+
+procedure Rutger02
+begin
+	gsay_message(401, 109, 50);
+end
+
+procedure Rutger03
+begin
+	gsay_reply(401, 110);
+	if (global_var(WORLDMAPLIST_JUNKTOWN) > 0) then begin
+		giq_option(4, 401, 111, Rutger04, 50);
+	end
+	else begin
+		giq_option(4, 401, 112, Rutger04, 50);
+	end
+	giq_option(4, 401, 113, RutgerEnd, 50);
+end
+
+procedure Rutger04
+begin
+	gsay_reply(401, 114);
+	giq_option(4, 401, 115, Rutger05, 50);
+	if (map_var(43) == 1) then begin
+		giq_option(4, 401, 116, Rutger00a, 50);
+	end
+	else begin
+		giq_option(4, 401, 117, Rutger00a, 50);
+	end
+	giq_option(4, 401, 118, RutgerEnd, 50);
+end
+
+procedure Rutger05
+begin
+	gsay_reply(401, 119);
+	giq_option(4, 401, 120, Rutger06, 50);
+	giq_option(4, 401, 121, RutgerEnd, 50);
+end
+
+procedure Rutger06
+begin
+	gsay_reply(401, 122);
+	giq_option(4, 401, 123, Rutger07, 50);
+	giq_option(4, 401, 124, RutgerEnd, 50);
+end
+
+procedure Rutger07
+begin
+	if (local_var(5) == 0) then begin
+		set_local_var(5, 1);
+		gsay_reply(401, 125);
+	end
+	else begin
+		gsay_reply(401, 126);
+	end
+	giq_option(4, 401, 127, Rutger08, 50);
+	giq_option(4, 401, 128, RutgerEnd, 50);
+	if (map_var(43) == 1) then begin
+		giq_option(4, 401, 129, Rutger00a, 50);
+	end
+	else begin
+		giq_option(4, 401, 130, Rutger00a, 50);
+	end
+end
+
+procedure Rutger08
+begin
+	gsay_reply(401, 131);
+	giq_option(4, 401, 132, Rutger09, 50);
+	giq_option(4, 401, 133, RutgerEnd, 50);
+end
+
+procedure Rutger09
+begin
+	gsay_reply(401, 134);
+	giq_option(4, 401, 135, RutgerEndBad, 50);
+	giq_option(4, 401, 136, RutgerEnd, 50);
+	if (map_var(43) == 1) then begin
+		giq_option(4, 401, 129, Rutger00a, 50);
+	end
+	else begin
+		giq_option(4, 401, 130, Rutger00a, 50);
+	end
+end
+
+procedure Rutger10
+begin
+	set_map_var(34, 1);
+	gsay_message(401, 139, 50);
+end
+
+procedure Rutger11
+begin
+	gsay_reply(401, 140);
+	giq_option(4, 401, 141, Rutger11a, 50);
+	giq_option(4, 401, 142, Rutger14, 50);
+end
+
+procedure Rutger11a
+begin
+	if (is_success(do_check(dude_obj, 3, -1))) then begin
+		call Rutger12;
+	end
+	else begin
+		call Rutger13;
+	end
+end
+
+procedure Rutger12
+begin
+	set_map_var(34, 1);
+	gsay_message(401, 143, 50);
+end
+
+procedure Rutger13
+begin
+	set_map_var(34, 1);
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(401, 144, 51);
+	end
+	else begin
+		gsay_message(401, 145, 51);
+	end
+end
+
+procedure Rutger14
+begin
+	set_map_var(34, 1);
+	gsay_message(401, 146, 50);
+end
+
+procedure Rutger15
+begin
+	set_map_var(34, 1);
+	gsay_message(401, 147, 50);
+end
+
+procedure Rutger16
+begin
+	set_map_var(34, 1);
+	gsay_message(401, 148, 50);
+end
+
+procedure Rutger17
+begin
+	gsay_reply(401, 149);
+	giq_option(4, 401, 150, RutgerEndBad, 50);
+	giq_option(4, 401, 151, Rutger17a, 50);
+	giq_option(4, 401, 152, RutgerEnd, 50);
+	giq_option(-3, 401, 153, Rutger18, 50);
+end
+
+procedure Rutger17a
+begin
+	if (is_success(do_check(dude_obj, 3, 1))) then begin
+		call Rutger19;
+	end
+	else begin
+		call Rutger20;
+	end
+end
+
+procedure Rutger18
+begin
+	gsay_message(401, 154, 51);
+end
+
+procedure Rutger19
+begin
+	set_map_var(41, 1);
+	set_global_var(MISSING_CARAVAN, 1);
+	set_map_var(10, 1);
+	set_map_var(56, 1);
+	gsay_message(401, 155, 50);
+	call Rutger25;
+end
+
+procedure Rutger20
+begin
+	set_map_var(35, 1);
+	set_map_var(40, 1);
+	set_map_var(10, 0);
+	call BottomReact;
+	gsay_message(401, 156, 51);
+end
+
+procedure Rutger21
+begin
+	float_msg(self_obj, message_str(401, 157), 2);
+end
+
+procedure Rutger22
+begin
+	gsay_reply(401, 159);
+	if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) or (global_var(DCMUTANT_GAVE_DISK) > 0) or (global_var(HOLODISK_MUTANT) == 1) then begin// BEEN_TO_MB_ENTRANCE, RECEIVED_DCMUTANT_DISK, USED_DCMUTANT_DISK
+		giq_option(4, 401, 312, Rutger76, 50);
+	end
+	else begin
+		giq_option(4, 401, 160, Rutger23, 50);
+	end
+	giq_option(4, 401, 161, Rutger26, 50);
+	if (map_var(35) == 0) then begin
+		giq_option(4, 401, 162, Rutger22a, 50);
+	end
+	giq_option(4, 401, 163, RutgerEnd, 50);
+	giq_option(-3, 401, 164, Rutger24, 50);
+end
+
+procedure Rutger22a
+begin
+	if ((map_var(41) != 3) and (map_var(41) != 4)) then begin
+		call Rutger63;
+	end
+	else begin
+		if (map_var(36) == 1) then begin
+			call Rutger71;
+		end
+	end
+end
+
+procedure Rutger23
+begin
+	gsay_message(401, 165, 50);
+end
+
+procedure Rutger24
+begin
+	gsay_message(401, 166, 51);
+end
+
+procedure Rutger25
+begin
+	set_local_var(6, 1);
+	set_global_var(MISSING_CARAVANS_STATUS, 1);
+	set_map_var(33, 1);
+	gsay_reply(401, 167);
+	call Rutger29;
+end
+
+procedure Rutger26
+begin
+	gsay_message(401, 168, 50);
+	call Rutger25;
+end
+
+procedure Rutger27
+begin
+	gsay_reply(401, 169);
+	giq_option(4, 401, 170, Rutger28, 50);
+	giq_option(4, 401, 171, Rutger30, 50);
+end
+
+procedure Rutger28
+begin
+	gsay_reply(401, 172);
+	call Rutger29;
+end
+
+procedure Rutger29
+begin
+	if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+		giq_option(4, 401, 173, Rutger29a, 50);
+	end
+	else begin
+		giq_option(4, 401, 174, Rutger29b, 50);
+	end
+	if (map_var(8) == 1) then begin
+		giq_option(4, 401, 175, Rutger38, 50);
+	end
+	giq_option(4, 401, 176, Rutger37, 50);
+	giq_option(4, 401, 177, RutgerEnd, 50);
+end
+
+procedure Rutger29a
+begin
+	if (obj_pid(critter_inven_obj(dude_obj, 0)) == 3) then begin
+		call Rutger27;
+	end
+	else begin
+		call Rutger31;
+	end
+end
+
+procedure Rutger29b
+begin
+	if (obj_pid(critter_inven_obj(dude_obj, 0)) == 3) then begin
+		call Rutger32;
+	end
+	else begin
+		call Rutger33;
+	end
+end
+
+procedure Rutger30
+begin
+	gsay_reply(401, 178);
+	call Rutger29;
+end
+
+procedure Rutger31
+begin
+	gsay_reply(401, 179);
+	call Rutger29;
+end
+
+procedure Rutger32
+begin
+	gsay_reply(401, 180);
+	call Rutger29;
+end
+
+procedure Rutger33
+begin
+	gsay_reply(401, 181);
+	giq_option(4, 401, 182, Rutger34, 50);
+	giq_option(4, 401, 183, Rutger35, 50);
+	giq_option(4, 401, 184, Rutger36, 50);
+end
+
+procedure Rutger34
+begin
+	gsay_reply(401, 185);
+	call Rutger29;
+end
+
+procedure Rutger35
+begin
+	gsay_reply(401, 186);
+	call Rutger29;
+end
+
+procedure Rutger36
+begin
+	gsay_reply(401, 187);
+	call Rutger29;
+end
+
+procedure Rutger37
+begin
+	set_map_var(10, 1);
+	gsay_reply(401, 188);
+	call Rutger29;
+end
+
+procedure Rutger38
+begin
+	gsay_reply(401, 189);
+	call Rutger29;
+end
+
+procedure Rutger39
+begin
+	gsay_reply(401, 190);
+	giq_option(4, 401, 191, Rutger39a, 50);
+	giq_option(4, 401, 192, RutgerEnd, 50);
+	giq_option(-3, 401, 193, Rutger24, 50);
+	giq_option(-3, 401, 194, Rutger24, 50);
+end
+
+procedure Rutger39a
+begin
+	if (map_var(42) == 16777267) then begin
+		call Rutger49;
+	end
+	else begin
+		if (map_var(42) == 1) then begin
+			call Rutger50;
+		end
+		else begin
+			if (map_var(42) == 2) then begin
+				call Rutger51;
+			end
+			else begin
+				call Rutger40;
+			end
+		end
+	end
+end
+
+procedure Rutger40
+begin
+	gsay_reply(401, 195);
+	giq_option(4, 401, 196, Rutger40a, 50);
+	giq_option(4, 401, 197, Rutger47, 50);
+	giq_option(4, 401, 198, Rutger40b, 50);
+	giq_option(4, 401, 199, Rutger41, 50);
+end
+
+procedure Rutger40a
+begin
+	if (is_success(do_check(dude_obj, 3, 1))) then begin
+		call Rutger42;
+	end
+	else begin
+		call Rutger44;
+	end
+end
+
+procedure Rutger40b
+begin
+	if (is_success(do_check(dude_obj, 3, -2))) then begin
+		call Rutger45;
+	end
+	else begin
+		call Rutger46;
+	end
+end
+
+procedure Rutger41
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_message(401, 200, 51);
+	end
+	else begin
+		gsay_message(401, 201, 51);
+	end
+end
+
+procedure Rutger42
+begin
+	gsay_reply(401, 202);
+	giq_option(4, 401, 203, Rutger43, 50);
+	giq_option(4, 401, 204, Rutger47, 50);
+	giq_option(4, 401, 205, RutgerEnd, 50);
+end
+
+procedure Rutger43
+begin
+	gsay_message(401, 206, 50);
+end
+
+procedure Rutger44
+begin
+	gsay_message(401, 207, 51);
+end
+
+procedure Rutger45
+begin
+	gsay_reply(401, 208);
+	giq_option(4, 401, 209, Rutger47, 50);
+	giq_option(4, 401, 210, Rutger44, 50);
+end
+
+procedure Rutger46
+begin
+	gsay_message(401, 211, 51);
+end
+
+procedure Rutger47
+begin
+	gsay_reply(401, 212);
+	if (global_var(DCMUTANT_GAVE_DISK) > 0) or (global_var(HOLODISK_MUTANT) == 1) then begin// RECEIVED_DCMUTANT_DISK, USED_DCMUTANT_DISK
+		if (global_var(KILL_DEATHCLAW) == 2) then begin
+			giq_option(4, 401, 213, Rutger48, 50);
+		end
+		else begin
+			giq_option(4, 401, 214, Rutger48, 50);
+		end
+	end
+	else begin
+		giq_option(4, 401, 215, RutgerEnd, 50);
+	end
+	giq_option(4, 401, 216, RutgerEnd, 50);
+	giq_option(4, 401, 217, RutgerEnd, 50);
+end
+
+procedure Rutger48
+begin
+	call TopReact;
+	item_caps_adjust(dude_obj, 800);
+	set_map_var(42, 2);
+	set_map_var(36, 1);
+	set_map_var(35, 0);
+	set_map_var(40, 0);
+	set_map_var(10, 1);
+	set_map_var(41, 4);
+	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 5);// Reputation
+	set_global_var(DCMUTANT_GAVE_DISK, 2);// Flag to indicate removal of the holodisk from player (destroy_object)
+	display_msg(message_str(766, 103) + 1000 + message_str(766, 104));
+	give_exp_points(1000);
+	gsay_message(401, 218, 49);
+end
+
+procedure Rutger49
+begin
+	gsay_reply(401, 219);
+	giq_option(4, 401, 220, Rutger40a, 50);
+	giq_option(4, 401, 221, Rutger47, 50);
+	giq_option(4, 401, 222, Rutger40b, 50);
+	giq_option(4, 401, 223, Rutger41, 50);
+end
+
+procedure Rutger50
+begin
+	gsay_reply(401, 224);
+	giq_option(4, 401, 225, Rutger40a, 50);
+	giq_option(4, 401, 226, Rutger47, 50);
+	giq_option(4, 401, 227, Rutger40b, 50);
+	giq_option(4, 401, 228, Rutger41, 50);
+end
+
+procedure Rutger51
+begin
+	gsay_reply(401, 229);
+	if (global_var(DCMUTANT_GAVE_DISK) > 0) or (global_var(HOLODISK_MUTANT) == 1) then begin// RECEIVED_DCMUTANT_DISK, USED_DCMUTANT_DISK
+		if (global_var(KILL_DEATHCLAW) == 2) then begin
+			giq_option(4, 401, 230, Rutger48, 50);
+		end
+		else begin
+			giq_option(4, 401, 231, Rutger48, 50);
+		end
+	end
+	else begin
+		giq_option(4, 401, 232, RutgerEnd, 50);
+	end
+	giq_option(4, 401, 233, RutgerEnd, 50);
+end
+
+procedure Rutger52
+begin
+	gsay_reply(401, 234);
+	if (global_var(DCMUTANT_GAVE_DISK) > 0) or (global_var(HOLODISK_MUTANT) == 1) then begin// RECEIVED_DCMUTANT_DISK, USED_DCMUTANT_DISK
+		giq_option(4, 401, 235, Rutger48, 50);
+	end
+	else begin
+		if (global_var(KILL_DEATHCLAW) == 2) then begin
+			giq_option(4, 401, 236, Rutger53, 50);
+		end
+	end
+	giq_option(4, 401, 237, RutgerEnd, 50);
+	giq_option(-3, 401, 238, Rutger24, 50);
+end
+
+procedure Rutger53
+begin
+	gsay_message(401, 239, 50);
+end
+
+procedure Rutger54
+begin
+	gsay_reply(401, 240);
+	giq_option(4, 401, 241, Rutger39a, 50);
+	giq_option(4, 401, 242, RutgerEnd, 50);
+end
+
+procedure Rutger55
+begin
+	gsay_reply(401, 243);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 401, 244, Rutger59, 50);
+	end
+	else begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			giq_option(4, 401, 245, Rutger59, 50);
+		end
+		else begin
+			giq_option(4, 401, 246, Rutger59, 50);
+		end
+	end
+	giq_option(4, 401, 247, Rutger55a, 50);
+	giq_option(4, 401, 248, RutgerEnd, 50);
+	giq_option(-3, 401, 249, RutgerEnd, 50);
+end
+
+procedure Rutger55a
+begin
+	if ((map_var(40) == 1) or (map_var(35) == 1)) then begin
+		call Rutger67;
+	end
+	else begin
+		if (global_var(FARGO_JOB) == 5) then begin
+			call RutgerLost;
+		end
+		else begin
+			if (global_var(FARGO_JOB) == 3) then begin
+				call RutgerAbandoned;
+			end
+			else begin
+				if (map_var(36) == 1) then begin
+					call Rutger71;
+				end
+				else begin
+					call Rutger62;
+				end
+			end
+		end
+	end
+end
+
+procedure Rutger56
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(401, 250);
+	end
+	else begin
+		if (get_critter_stat(dude_obj, 3) >= 7) then begin
+			gsay_reply(401, 252);
+		end
+		else begin
+			gsay_reply(401, 253);
+		end
+	end
+	giq_option(4, 401, 254, Rutger55a, 50);
+	giq_option(4, 401, 255, Rutger56a, 50);
+	giq_option(-3, 401, 256, Rutger24, 50);
+end
+
+procedure Rutger56a
+begin
+	if ((global_var(MASTER_BLOWN) == 1) or (global_var(VATS_BLOWN) == 1)) then begin
+		call Rutger57;
+	end
+	else begin
+		call Rutger61;
+	end
+end
+
+procedure Rutger57
+begin
+	gsay_message(401, 257, 49);
+end
+
+procedure Rutger58
+begin
+	gsay_reply(401, 258);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		giq_option(4, 401, 259, Rutger60, 50);
+	end
+	else begin
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			giq_option(4, 401, 260, Rutger60, 50);
+			giq_option(4, 401, 261, Rutger60, 50);
+		end
+		else begin
+			giq_option(4, 401, 262, Rutger61, 50);
+		end
+	end
+	giq_option(4, 401, 263, Rutger55a, 50);
+	giq_option(4, 401, 248, RutgerEnd, 50);
+	giq_option(-3, 401, 264, RutgerEnd, 50);
+end
+
+procedure Rutger59
+begin
+	gsay_message(401, 265, 50);
+end
+
+procedure Rutger60
+begin
+	gsay_message(401, 266, 50);
+end
+
+procedure Rutger61
+begin
+	gsay_message(401, 267, 50);
+end
+
+procedure Rutger62
+begin
+	gsay_reply(401, 268);
+	giq_option(4, 401, 269, Rutger65, 50);
+	giq_option(4, 401, 270, Rutger64, 50);
+end
+
+procedure Rutger63
+begin
+	gsay_reply(401, 271);
+	giq_option(4, 401, 272, Rutger68, 50);
+	giq_option(4, 401, 273, Rutger70, 50);
+	giq_option(4, 401, 274, RutgerEnd, 50);
+end
+
+procedure Rutger64
+begin
+	gsay_message(401, 275, 50);
+end
+
+procedure Rutger65
+begin
+	set_map_var(36, 1);
+	gsay_message(401, 276, 50);
+end
+
+procedure Rutger67
+begin
+	if (local_var(7) == 0) then begin
+		set_local_var(7, 1);
+		gsay_message(401, 279, 50);
+	end
+	gsay_message(401, 280, 50);
+end
+
+procedure Rutger68
+begin
+	gsay_reply(401, 281);
+	giq_option(4, 401, 282, Rutger72, 50);
+	giq_option(4, 401, 283, Rutger69, 50);
+	giq_option(4, 401, 284, Rutger70, 50);
+end
+
+procedure Rutger69
+begin
+	gsay_message(401, 285, 50);
+end
+
+procedure Rutger70
+begin
+	set_map_var(36, 1);
+	gsay_message(401, 286, 50);
+end
+
+procedure Rutger71
+begin
+	set_map_var(36, 1);
+	gsay_message(401, 287, 50);
+end
+
+procedure Rutger72
+begin
+	gsay_reply(401, 289);
+	giq_option(4, 401, 290, RutgerEnd, 50);
+	giq_option(4, 401, 291, Rutger70, 50);
+end
+
+procedure Rutger73
+begin
+	gsay_reply(401, 292);
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option(4, 401, 294, Rutger03, 50);
+	end
+	if (map_var(43) == 1) then begin
+		giq_option(4, 401, 295, Rutger00a, 50);
+	end
+	else begin
+		giq_option(4, 401, 296, Rutger00a, 50);
+	end
+	giq_option(4, 401, 297, Rutger07, 50);
+	giq_option(4, 401, 298, RutgerEnd, 50);
+	giq_option(-3, 401, 299, Rutger00b, 50);
+end
+
+procedure Rutger74
+begin
+	gsay_reply(401, random(300, 303));
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option(4, 401, 305, Rutger03, 50);
+	end
+	if (map_var(43) == 1) then begin
+		giq_option(4, 401, 306, Rutger00a, 50);
+	end
+	else begin
+		giq_option(4, 401, 307, Rutger00a, 50);
+	end
+	giq_option(4, 401, 308, Rutger07, 50);
+	giq_option(4, 401, 309, RutgerEnd, 50);
+	giq_option(-3, 401, 310, Rutger00b, 50);
+end
+
+procedure Rutger75
+begin
+	gsay_message(401, 311, 50);
+end
+
+procedure Rutger76
+begin
+	gsay_message(401, 313, 50);
+end
+
+procedure RutgerEnd
+begin
+end
+
+procedure RutgerEndBad
+begin
+	call DownReactLevel;
+end
+
+procedure RutgerAbandoned
+begin
+	gsay_message(401, 277, 50);
+end
+
+procedure RutgerLost
+begin
+	set_map_var(35, 1);
+	set_map_var(10, 0);
+	set_global_var(FARGO_JOB, 6);
+	gsay_message(401, 279, 50);
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(634, random(100, 105));
+end
+

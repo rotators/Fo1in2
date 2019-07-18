@@ -1,0 +1,122 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure map_enter_p_proc;//    script_action == 15
+procedure map_update_p_proc;//    script_action == 23
+procedure Defines;
+procedure Restock;
+
+import variable Staple_Box_Ptr;    //Footlocker that's holding her Barter stuff
+
+variable BigBookOfScience;
+variable DeansElectronics;
+variable FirstAidBook;
+variable ScoutHandbook;
+variable GunsAndBullets;
+variable ChemistryJournals;
+
+variable NumBooks;
+variable Min;
+variable Max;
+
+variable OnlyOnce := 0;
+
+//	STAPLE_INIT_NUM_BOOKS := global_var(STAPLE_INIT_NUM_BOOKS);    // (46)  // ! Fallout Fixt: CHOSEN BY PLAYER - How many of each book does Mrs Stapleton start with? (vanilla = 5)
+//	STAPLE_BOOKS_RESPAWN_MIN := global_var(STAPLE_BOOKS_RESPAWN_MIN); // (47)  // ! Fallout Fixt: CHOSEN BY PLAYER - Seed for what's the minimum number of books she respawns every gvar549 weeks? (vanilla = 5)
+//	STAPLE_BOOKS_RESPAWN_MAX := global_var(STAPLE_BOOKS_RESPAWN_MAX); // (48)  // ! Fallout Fixt: CHOSEN BY PLAYER - Seed for maximum number of books she respawns every gvar549 weeks? (vanilla = 5)
+//	STAPLE_DIFFICULTY_BASED := global_var(STAPLE_DIFFICULTY_BASED);  // (49)  // ! Fallout Fixt: CHOSEN BY PLAYER - Does the number of books spawned for Mrs Stapleton vary based on difficulty played?
+//	STAPLE_RESTOCK_WEEKS := global_var(STAPLE_RESTOCK_WEEKS);    //  549  // ! Fallout Fixt: CHOSEN BY PLAYER - How many weeks between Mrs Stapleton books-&-caps restocks? (1 to 6 maybe?)
+
+procedure start
+begin
+	Staple_Box_Ptr := self_obj;
+	if ((map_first_run) and (OnlyOnce == 0) and (metarule(22, 0) == 0)) then begin    // Generate initial inventory, and initial value for next spawn time
+		OnlyOnce := 1;
+		set_global_var(STAPLE_RESTOCK_GAMETIME, game_time);
+		call Defines;
+		item_caps_adjust(self_obj, 500);
+		add_mult_objs_to_inven(self_obj, BigBookOfScience, global_var(STAPLE_INIT_NUM_BOOKS));
+		add_mult_objs_to_inven(self_obj, DeansElectronics, global_var(STAPLE_INIT_NUM_BOOKS));
+		add_mult_objs_to_inven(self_obj, FirstAidBook, global_var(STAPLE_INIT_NUM_BOOKS));
+		add_mult_objs_to_inven(self_obj, ScoutHandbook, global_var(STAPLE_INIT_NUM_BOOKS));
+		add_mult_objs_to_inven(self_obj, GunsAndBullets, global_var(STAPLE_INIT_NUM_BOOKS));
+	end
+	else begin
+		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+			call map_enter_p_proc;
+		end
+		else begin
+			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+				call map_update_p_proc;
+			end
+		end
+	end
+end
+
+procedure map_enter_p_proc
+begin
+//	variable LVar0;
+//	variable LVar1;
+//	variable LVar2;
+//	LVar0 := game_time;
+//	LVar1 := global_var(STAPLE_RESTOCK_GAMETIME);
+//	LVar2 := (global_var(STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10);
+//	display_msg("CURRENT TIME: " + LVar0 + " ");
+//	display_msg("GVAR636 TIME: " + LVar1 + " ");
+//	display_msg("CURRENT - GVAR636: " + (LVar0 - LVar1) + " ");
+//	display_msg("RESTOCK EVERY: " + LVar2 + " ");
+//
+	Staple_Box_Ptr := self_obj;
+	if ((game_time - global_var(STAPLE_RESTOCK_GAMETIME)) > (global_var(STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10)) and (metarule(22, 0) == 0) and not(metarule(14, 0)) then begin//    <--Time for new stuff!
+		call Defines;
+		call Restock;
+		set_global_var(STAPLE_RESTOCK_GAMETIME, game_time);//	Reset "time until next spawn" counter
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if ((game_time - global_var(STAPLE_RESTOCK_GAMETIME)) > (global_var(STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10)) and (metarule(22, 0) == 0) and not(metarule(14, 0)) then begin//    <--Time for new stuff!
+		call Defines;
+		call Restock;
+		set_global_var(STAPLE_RESTOCK_GAMETIME, game_time);//	Reset "time until next spawn" counter
+	end
+end
+
+procedure Defines
+begin
+	BigBookOfScience := create_object_sid(73, 0, 0, -1);
+	DeansElectronics := create_object_sid(76, 0, 0, -1);
+	FirstAidBook := create_object_sid(80, 0, 0, -1);
+	ScoutHandbook := create_object_sid(86, 0, 0, -1);
+	GunsAndBullets := create_object_sid(102, 0, 0, -1);
+	ChemistryJournals := create_object_sid(237, 0, 0, -1);
+//
+	Min := (global_var(STAPLE_BOOKS_RESPAWN_MIN) - (global_var(STAPLE_DIFFICULTY_BASED) * difficulty_level));
+	if (Min < 0) then begin
+		Min := 0;
+	end
+	Max := (global_var(STAPLE_BOOKS_RESPAWN_MAX) - (global_var(STAPLE_DIFFICULTY_BASED) * difficulty_level));
+	if (Max < 1) then begin
+		Max := 1;
+	end
+	if (Max < Min) then begin
+		Max := Min;
+	end
+end
+
+procedure Restock
+begin
+	item_caps_adjust(self_obj, (500 + ((random(1, 6) * get_critter_stat(dude_obj, 6)) - 30)));//    Stat=LUCK
+	NumBooks := random(Min, Max);
+	add_mult_objs_to_inven(self_obj, BigBookOfScience, NumBooks);
+	NumBooks := random(Min, Max);
+	add_mult_objs_to_inven(self_obj, DeansElectronics, NumBooks);
+	NumBooks := random(Min, Max);
+	add_mult_objs_to_inven(self_obj, FirstAidBook, NumBooks);
+	NumBooks := random(Min, Max);
+	add_mult_objs_to_inven(self_obj, ScoutHandbook, NumBooks);
+	NumBooks := random(Min, Max);
+	add_mult_objs_to_inven(self_obj, GunsAndBullets, NumBooks);
+end
+
