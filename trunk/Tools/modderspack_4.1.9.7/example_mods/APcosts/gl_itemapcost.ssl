@@ -1,0 +1,77 @@
+/*  
+
+AP costs mod for fallout 2 by phobos2077
+----------------------------------------
+
+- increases AP cost of using all non-weapon items from main interface to 4
+- AP are reduced even when using items (eg. stimpaks) from the inventory
+
+Requires sfall 3.5 or higher
+
+*/
+
+
+#include "..\headers\define.h"
+#include "sfall.h"
+#include "define_extra.h"
+
+#define ITEM_USE_COST   (4)
+
+variable last_used_item;
+
+procedure item_by_attack_type(variable critter, variable type) begin
+   variable slot;
+   if (type > 3 and type != ATKTYPE_LWEP_RELOAD and type != ATKTYPE_RWEP_RELOAD) then
+      return 0;
+   if (type < 2 or type == ATKTYPE_LWEP_RELOAD) then
+      slot := INVEN_TYPE_LEFT_HAND;
+   else
+      slot := INVEN_TYPE_RIGHT_HAND;
+   return critter_inven_obj(critter, slot);
+end
+
+procedure apcost_handler begin
+   variable args := get_sfall_args, item;
+   item := item_by_attack_type(args[0], args[1]);
+   if (obj_item_subtype(item) != item_type_weapon) then begin
+      set_sfall_return(ITEM_USE_COST);
+      last_used_item := item;
+   end
+end
+
+procedure useobjon_handler begin
+   variable target, critter, item, ap, cost;
+   target := get_sfall_arg;
+   critter := get_sfall_arg;
+   item := get_sfall_arg;
+   
+   if (combat_is_initialized) then begin
+      if (get_game_mode bwand INVENTORY) then
+         cost := ITEM_USE_COST; 
+      else if (last_used_item != item) then
+         cost := ITEM_USE_COST - 2;
+      else
+         cost := 0;
+      if (cost > 0) then begin
+         ap := get_critter_current_ap(critter);
+         if (ap >= ITEM_USE_COST) then begin
+            set_critter_current_ap(critter, ap - cost);
+         end else begin
+            if (cost < ITEM_USE_COST) then
+               set_critter_current_ap(critter, ap + ITEM_USE_COST - cost);
+            set_sfall_return(0);
+         end
+      end
+   end
+   last_used_item := 0;
+end
+
+procedure start begin
+   if game_loaded then begin
+      // if you only want to reduce AP when using stuff from inventory by 2, 
+      // comment out following line and change ITEM_USE_COST to 2
+      register_hook_proc(HOOK_CALCAPCOST, apcost_handler);
+      register_hook_proc(HOOK_USEOBJON, useobjon_handler);
+   end
+end
+

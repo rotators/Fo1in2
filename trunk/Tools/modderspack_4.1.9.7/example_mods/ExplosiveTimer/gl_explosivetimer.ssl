@@ -1,0 +1,44 @@
+/*
+   Example implementation of the algorithm of how the game engine sets the explosive timer.
+*/
+
+#include "..\..\scripting_docs\headers\sfall.h"
+#include "..\..\scripting_docs\headers\define_lite.h"
+
+// from CONDTION.H
+#define ROLL_CRITICAL_FAILURE (0)
+#define ROLL_FAILURE          (1)
+#define ROLL_SUCCESS          (2)
+#define ROLL_CRITICAL_SUCCESS (3)
+
+procedure start;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook(HOOK_EXPLOSIVETIMER);
+   end else begin
+      variable
+         time   := get_sfall_arg,
+         result := ROLL_CRITICAL_FAILURE;
+
+      if has_trait(TRAIT_PERK, dude_obj, PERK_demolition_expert_perk) then
+         result := ROLL_SUCCESS;
+      else begin
+         result := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
+      end
+
+      if (result) then begin
+         if (result == ROLL_FAILURE) then
+            time /= 2;
+         else begin // success or critical success
+            result := ROLL_SUCCESS;
+         end
+      end else begin  // critical failure
+         time := 0;
+         result := ROLL_FAILURE;
+      end
+
+      set_sfall_return(time);
+      set_sfall_return(result);  // failure/success
+   end
+end

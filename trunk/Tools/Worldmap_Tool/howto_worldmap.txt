@@ -1,0 +1,246 @@
+			The format of worldmap.txt file.
+			^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Tiles
+^^^^^
+
+The tile section is located at the bottom of the Worldmap.txt file.
+
+Rather than one huge world map, Fallout 2 splits up the world map into 20 
+sub-tiles. Each each of these tiles consists of 42 squares (as seen when 
+travelling) arranged 7 wide by 6 high (7x6).  This makes for a total of over 
+840 individual squares on the Fallout 2 map.
+
+Here is how a tile section is set up:
+
+; Begin Tile section excerpt:
+
+; [Tile #] determines the worldmap tile you are specifying parameters for.
+
+[Tile 1]
+
+; art_idx - Denotes the map graphic's file index number
+
+art_idx=340
+
+; encounter_difficulty - How hard the encounters are considered.  Probably used
+;   for the different difficulty settings in the game.
+
+encounter_difficulty=0
+
+; Tile encounter table.
+
+0_0=Mountain,No_Fill,Uncommon,Uncommon,Uncommon,Kla_M
+0_1=Desert,No_Fill,Uncommon,Uncommon,Uncommon,Kla_D
+0_2=Mountain,No_Fill,Rare,Rare,Rare,Kla_M
+0_3=Mountain,No_Fill,Uncommon,Uncommon,Uncommon,Kla_M
+0_4=Desert,No_Fill,Uncommon,Uncommon,Uncommon,Kla_D
+0_5=Desert,No_Fill,Uncommon,Uncommon,Uncommon,Den_D
+
+; End tile excerpt
+
+
+Tile encounter table
+^^^^^^^^^^^^^^^^^^^^
+
+What each section means:
+
+#_# - Tile location (x,y), this starts at zero, not 1. (0,0) is located in the 
+      upper left corner.
+
+Terrain - Determines what kind of terrain the encounter contains. Available values:
+      Mountain, Desert, City, Ocean.
+
+Fill_W/No_Fill - Fill_W extends the map vision all the way to the left of the world map
+      over the ocean when the particular square is entered.  No_Fill is like a normal 
+      map square; it only reveals the current square and a greyed vision of the squares
+      around it.
+
+Freq_Morning, Freq_Noon, Freq_Evening - Determines the frequency of this encounter 
+      at the corresponding time of day. Available values: Forced (100% chance), 
+      Frequent (38%), Common (22%), Uncommon (12%), Rare (4%), None (0%).
+
+Type - Determines what encounter is actually used.  See below for more info on types.
+
+
+Types/Encounter Table
+^^^^^^^^^^^^^^^^^^^^^
+
+The worldmap.txt file contains 76 default encounter types.  Here's an example of one:
+
+; Begin Encounter Table excerpt:
+
+; [Encounter Table #] denotes the encounter's number (starts at 0).
+
+[Encounter Table #]
+
+; lookup_name - This is the name used to reference the encounters in the Tile sections
+; maps - Lists of all the maps used within that encounters.
+
+lookup_name=V15_D maps=Desert Encounter 1, Desert Encounter 2, Desert Encounter 3
+
+; enc_##.. - A table of encounter parameters for encounters.
+
+enc_00=Chance:3%,Enc:(5-9) NCR_Masters_Army FIGHTING (8-12) Wild2_Mutated_Molerats
+enc_01=Chance:2%,Counter:1,Special,Map:Special Toxic Encounter,Enc:Special1, If(Player(Level) > 5) And If(Global(607) < 1)
+
+; How enc_##s work:
+;
+; Example #1 (in the above encounters, that would be the first one)
+;
+; enc_00 - The encounter's label.
+; Chance:3% - % chance that this encounter will be selected from the table.
+; Enc:(5-9) NCR_Masters_Army FIGHTING (8-12) Wild2_Mutated_Molerats - This sets up an encounter
+;       between two groups.  The (#-#) denotes the minimum and maximum number of creatures the
+;       group receives, then comes the type of group, followed by the type/action word for
+;       encounter, and then the second group's specs.
+
+;       The possible types for the first group are listed in the specific encounter group types
+;       (as will be explained later on).  The possible actions for the type of encounter can be
+;       FIGHTING or AMBUSH or nothing.  FIGHTING will place the player in the middle of a battle
+;       between two groups.  AMBUSH is used when you want a group to attack the player itself.
+;
+;       The second group (right of the action word) can either be another encounter group type
+;       or "Player" in which case the player will be attacked.
+;
+;       There can also be more than one group on the same side or just appearing.  Just place an 
+;       AND between the two "(#-#) Group_Type"s.  Example:
+;
+;       enc_02=Chance:7%,Enc:(2-4) DMRV_Robbers AND (2-4) DMRV_Highwaymen AMBUSH Player
+
+; The second encounter example is for special encounters like the Pariah, Unwashed Villagers killing
+; a spammer, the Tin Man, etc.
+; 
+; enc_01 - The encounter's label.
+; Chance:2% - % chance that this encounter will be selected from the table.
+; Counter:1 - Unknown, all of them use 1.
+; Special,Map:Special Toxic Encounter - The special encounter's town name (which encounter to use).
+; Enc:Special1,If(Player(Level) > 5) And If(Global(607) < 1) - These are the conditions necessary
+;       for the encounter to occur.  There can be any number of these If statements.  They must be
+;       connected by "And"s however.  The first parameter is pretty obvious, it checks to see if the
+;       player's level is of the right number.  Multiple If(Player(Level) > #) can be used to 
+;       isolate only a specific age range to have an encounter occur.  The If(Global(607) < 1)
+;       checks the value of a certain global variable.  For a full list of what each Global
+;       value means, look in vault13.gam.  Usually at least one of the If(Global(#) < #)s refer to
+;       whether the encounter has been encountered already.
+;
+; Non-special encounters may also have If statements to determine whether the the encounter occurs.
+; This is used in the Morton Brother encounters as well as bounty hunters.  Here's an example:
+;
+; enc_11=Chance:15%,Enc:(2-5) Bounty_Hunter_High AMBUSH Player, If(Global(0) < -500) And If(Player(Level) > 18)
+
+; End Encounter Table excerpt
+
+Encounter Groups
+^^^^^^^^^^^^^^^^
+These are the groups the encounter tables use to determine what creatures and/or items appear with
+that group.
+
+; Begin Encounter Group excerpt:
+
+[Encounter: ARRO_Hunting_Party]
+type_00=pid:16777418, Item:280(wielded), Item:(0-10)41, Script:484
+type_01=ratio:60%, pid:16777418, Item:7(wielded), Item:(0-10)41, Script:484
+type_02=ratio:40%, pid:16777419, Item:7(wielded), Item:(0-10)41, Script:484
+type_03=Dead, pid:16777296, Distance:7                         
+position=wedge, spacing:2
+
+; End Encounter Group excerpt
+
+Here is the description of the different parts of a type_## entry extracted directly from the
+worldmap.txt file itself:
+
+; Type Subinfo:
+;-------------
+; Ratio:#% determines frequency of occurrence
+; pid:<#> determines what this critter's pid is
+; pid:<string> looks up the pid # from the string
+; Script:<#> overrides the default script with a new one
+; Dead means that the critter starts out in a dead state
+; Item:<#> gives an item of a given pid #
+; Item:<string> dictates an item (from a lookup table) that this critter has
+; Item:(#)<string> the # dictates quantity of the item, possibly a range
+; Item:(<string>) -- give a whole *list* of items
+; If:<something> -- conditionals, allows <,>,<=,>=,==,& as well as tests
+;    on Player(<stat/attribute/skill/etc.>), Enctr(Num_Critters),
+;    Time, Global(<variable index>), Rand(Chance%)
+; Distance:# -- Forces the distance for a particular critter (if possible)
+; <type_#>(TileNum) -- Forces this object to appear at the same tile # as
+;    the object listed at <type_#> (this means the last one if there were
+;    multiples of that type).
+; TileNum:# -- Forces this object to appear at a given tile #
+; Spatial:<string> -- attaches a spatial script to the map
+
+Positions determine how far away and of what shape the group assumes when encountered.
+
+Example:
+
+; Begin Position excerpt
+
+position=straight_line, spacing:1
+
+; End Position excerpt
+
+The first value determines the shape.  This can be one of the following:
+
+straight_line - A straight line of creatures.
+double_line - Two rows of creatures.
+huddle - A cluster of creatures pointing inward.
+cone - (I believe) a triangular shape with the point away from the player.
+wedge - (I believe) a triangular shape with the point facing the player.
+Surrounding - Surrounds the player.
+
+
+The default position is "position=Surrounding, Spacing:5"
+
+
+PIDs are object IDs. The rules are as follows when concerning them:
+
+01 00 XX XX - for critters.
+00 00 XX XX - for items.
+
+Both use hexidecimal numbers (0123456789ABCDEF).
+
+Here are some known PIDs and scripts extracted from the worldmap.txt:
+
+;pid0000=16777219,Male      ;Good Raider
+;pid0001=16777220,Female    ;Average Raider
+;pid0002=16777221,Scorp     ;Raider Leader
+;pid0003=16777222,Big Scorp ;Peasant
+;pid0003=16777223,Claw
+;pid0003=16777224,Big Claw
+;pid0003=16777225,Dog
+;pid0003=16777226,Brahmin
+;pid0003=16777227,Rat
+;pid0003=16777228,Mantis
+;pid0004=71,Mutated Fruit
+;pid = 16777296         Small Silver Gecko
+;pid = 16777297         Tough Silver Gecko
+;pid = 16777299         Golden Gecko
+;pid = 16777302         Tough Golden Gecko
+;pid = 16777221         Small Radscorpion
+;pid = 16777222         Large Radscorpion
+;pid = 16777227         Regular Rat
+;pid = 16777232         Spore Plant
+;pid = 16777328         Regular Pig Rat
+;pid = 16777329         Tough Pig Rat
+;pid = 16777326         Molerat
+;pid = 16777327         Greater Molerat
+;pid = 16777277         Master Merchant Female
+;pid = 16777272         Bad Merchant Male
+;pid = 16777219         Primitive Male
+;pid = 16777220         Primitive Female
+;pid = 271              Broc Flower
+;pid = 272              Xander Root
+;pid = 365              Plant Spike
+
+
+Any changes will influence the game. This is the only map related file from
+data\data\ dir which can be read from hard drive also, not only from master.dat.
+
+____________________________________________________________________________
+This document was written by Tarantul (Tarantul@p42.f523.n50.z2.fidonet.org),
+member of TeamX R&D group (http://www.fallout.ru/teamx/en/)
+Translated by Dr.W95(dr_w95@mail.ru)
+Additional information and translation revision by Xotor (xotor@hotmail.com)

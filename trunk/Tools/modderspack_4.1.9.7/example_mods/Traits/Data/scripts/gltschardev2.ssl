@@ -1,0 +1,146 @@
+procedure start;
+
+#define dude_level (get_pc_stat(1))
+
+//perks
+#define Steadfast "Steadfast"		//ts_chp00
+#define Grappler "Grappler"		//ts_chp01
+#define HawkEyed "Hawk eyed"		//ts_chp02
+#define PerfectAim "Perfect aim"	//ts_chp03
+#define Teacher "Teacher"		//ts_chp04
+
+procedure LevelChange begin
+	//display_msg("Level change");
+	if(dude_level>=3 and has_fake_perk(Steadfast)==0 and get_pc_base_stat(2) >= 5) then begin
+		//display_msg("Steadfast available");
+		set_selectable_perk(Steadfast, 1, 1, "You stand where you like, and even a rocket to the face isn't going to move you.");
+	end else begin
+		set_selectable_perk(Steadfast, 0, 1, "");
+	end
+	if(dude_level>=12 and has_fake_perk(Grappler)==0 and get_pc_base_stat(5) >= 6) then begin
+		//display_msg("Grappler available");
+		set_selectable_perk(Grappler, 1, 1, "You like to fight up close and personal. Enemies will not be pushed away from you when you fight with your fists.");
+	end else begin
+		set_selectable_perk(Grappler, 0, 1, "");
+	end
+	if(dude_level>=6 and has_fake_perk(HawkEyed)==0 and get_pc_base_stat(1) >= 7) then begin
+		//display_msg("Hawk Eyed available");
+		set_selectable_perk(HawkEyed, 1, 1, "You watch your property like a hawk. Other critters will be unable to steal from you.");
+	end else begin
+		set_selectable_perk(HawkEyed, 0, 1, "");
+	end
+	if(dude_level>=18 and has_fake_perk(PerfectAim)==0 and get_pc_base_stat(6) >= 6 and get_pc_base_stat(1) >= 6) then begin
+		//display_msg("Perfect aim available");
+		set_selectable_perk(PerfectAim, 1, 1, "Combat has become second nature to you. You now make less unforced mistakes than the less experienced wanderers of the wastes.");
+	end else begin
+		set_selectable_perk(PerfectAim, 0, 1, "");
+	end
+	if(dude_level>=9 and has_fake_perk(Teacher)==0 and get_pc_base_stat(4) >= 7) then begin
+		//display_msg("Teacher available");
+		set_selectable_perk(Teacher, 1, 1, "Passing on your experiences to your companions will no doubt prove useful. All npcs in your party gain a level.");
+	end else begin
+		set_selectable_perk(Teacher, 0, 1, "");
+	end
+end
+
+procedure PickedPerk begin
+	//display_msg("Picked perk");
+	if(has_fake_perk(Steadfast)==1 and get_sfall_global_int("ts_chp00")==0) then begin
+		//display_msg("Steadfast applied");
+		set_sfall_global("ts_chp00", 1);
+		set_target_knockback(dude_obj, 0, 0);
+	end
+	if(has_fake_perk(Grappler)==1 and get_sfall_global_int("ts_chp01")==0) then begin
+		//display_msg("Grappler applied");
+		set_sfall_global("ts_chp01", 1);
+	end
+	if(has_fake_perk(HawkEyed)==1 and get_sfall_global_int("ts_chp02")==0) then begin
+		//display_msg("HawkEyed applied");
+		set_sfall_global("ts_chp02", 1);
+		set_base_pickpocket_mod(5, -5);
+		set_critter_pickpocket_mod(dude_obj, 95, 0);
+	end
+	if(has_fake_perk(PerfectAim)==1 and get_sfall_global_int("ts_chp03")==0) then begin
+		set_sfall_global("ts_chp03", 1);
+		set_critter_hit_chance_mod(dude_obj, 98, 0);
+	end
+	if(has_fake_perk(Teacher)==1 and get_sfall_global_int("ts_chp04")==0) then begin
+		set_sfall_global("ts_chp04", 1);
+		inc_npc_level("Vic");
+		inc_npc_level("Myron");
+		inc_npc_level("Marcus");
+		inc_npc_level("MacRae");
+		inc_npc_level("Sulik");
+		inc_npc_level("Lenny");
+		inc_npc_level("Cyberdog");
+		inc_npc_level("Doc");
+		inc_npc_level("Goris");
+		inc_npc_level("Robobrain");
+		inc_npc_level("K9");
+	end
+	call LevelChange;
+end
+
+procedure PerksRepeat begin
+	if(get_sfall_global_int("ts_chp01")==1) then begin
+		if((active_hand==0 or critter_inven_obj(dude_obj, 1)==0) and (active_hand==1 or critter_inven_obj(dude_obj, 2)==0)) then begin
+			set_target_knockback(dude_obj, 0, 0);
+		end else begin
+			remove_target_knockback(dude_obj);
+		end
+	end
+end
+
+procedure SetupPerks begin
+	if(get_sfall_global_int("ts_chp00")==1) then begin
+		set_target_knockback(dude_obj, 0, 0);
+	end
+	if(get_sfall_global_int("ts_chp02")==1) then begin
+		set_base_pickpocket_mod(0, 0);
+		set_critter_pickpocket_mod(dude_obj, 95, 0);
+	end
+	if(get_sfall_global_int("ts_chp03")==1) then begin
+		set_critter_hit_chance_mod(dude_obj, 98, 0);
+	end
+end
+
+procedure start begin
+	variable mode;
+	mode:=get_sfall_global_int("ts_trt00");
+	//mode:=1;
+	if (game_loaded) then begin
+		if(mode!=-1) then begin
+			call SetupPerks;
+			set_swiftlearner_mod(25);
+			apply_heaveho_fix;
+			set_pyromaniac_mod(10);
+			set_perk_stat_mag(11, 40);
+			set_perk_stat_mag(30, 40);
+			set_perk_desc(11, "You are better able to avoid radiation and the bad effects radiation causes.  Each level of this Perk improves your Radiation Resistance by 40%");
+			set_perk_desc(30, "Yum! Tastes like chicken. For each level of this Perk, you gain +40% to your Poison Resistance.");
+			set_perk_desc(35, "Each level of the Heave Ho! Perk gives you an additional +2 to Strength for purposes of determining range with thrown weapons only.");
+			set_perk_desc(50, "You are indeed a Swift Learner with this Perk, as each level gives you an additional +20% bonus whenever you earn experience points.  This is best taken early.");
+			set_global_script_repeat(100);
+		end
+		return;
+	end
+	if(mode!=1) then begin
+		if(mode==-1) then begin
+			set_global_script_repeat(0);
+		end
+		return;
+	end
+	mode:=get_sfall_global_int("ts_trt02");
+	if(mode!=dude_level) then begin
+		call LevelChange;
+		set_sfall_global("ts_trt02", dude_level);
+	end
+	mode:=get_sfall_global_int("ts_trt01");
+	if(mode!=get_perk_owed) then begin
+		if(mode>get_perk_owed) then begin
+			call PickedPerk;
+		end
+		set_sfall_global("ts_trt01", get_perk_owed);
+	end
+	call PerksRepeat;
+end
