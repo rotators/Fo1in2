@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_IAN
+
+#include "..\headers\command.h"
+
 procedure start;
 procedure critter_p_proc;//    script_action == 12
 procedure description_p_proc;//    script_action == 3
@@ -9,6 +13,8 @@ procedure map_enter_p_proc;//    script_action == 15
 procedure pickup_p_proc;//    script_action == 4
 procedure talk_p_proc;//    script_action == 11
 procedure use_obj_on_p_proc;//    script_action == 7
+procedure push_p_proc;
+
 procedure join_party;
 procedure hire_Ian;
 
@@ -52,7 +58,7 @@ procedure IanSniper;
 procedure IanNearCombat;
 procedure IanFreeCombat;
 
-variable hostile;
+variable tmp_hostile;
 variable item;
 variable line151flag;
 variable line152flag;
@@ -68,7 +74,7 @@ variable line167flag;
 variable line170flag;
 variable line172flag;
 
-variable dest_tile;
+//variable dest_tile;
 variable bestweapon_flag;
 variable armor_flag;
 variable exit_line;
@@ -109,6 +115,20 @@ procedure IanFar_SDUIBEK;
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
+// Added by Lexx
+#define float_ian(x)    float_msg(self_obj, message_str(SCRIPT_GENCHAT,x), FLOAT_MSG_NORMAL)
+#define Ian_In_Party    (global_var(IAN_HIRELING_STATUS) == 2)
+variable k;
+
+procedure push_p_proc begin
+   if (Ian_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      k:=300+random(0,2);
+      float_ian(k);
+   end
+end
 
 procedure start
 begin
@@ -165,8 +185,8 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 	else begin
@@ -227,7 +247,7 @@ begin
 //
 //BEGIN WEAPON DROP MOD CODE
 //--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
 // MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
 //
 	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
@@ -370,7 +390,7 @@ end
 procedure pickup_p_proc
 begin
 	if (global_var(IAN_HIRELING_STATUS) < 2) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 	else begin
 		script_overrides;
@@ -412,7 +432,7 @@ begin
 	if ((global_var(IAN_HIRELING_STATUS) == 2) and (global_var(DESTROY_MASTER_9) == 0)) then begin
 		set_global_var(DESTROY_MASTER_9, 1);
 		display_msg(message_str(235, 169));
-		give_exp_points(100);
+		give_exp_points(EXP_HIRED_IAN);
 	end
 	if (bestweapon_flag == 1) then begin
 		bestweapon_flag := 0;
@@ -587,7 +607,7 @@ end
 
 procedure Ian14
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 	gsay_message(235, 141, 51);
 end
 
@@ -599,11 +619,11 @@ begin
 	giq_option(4, 235, 173, Ian20, 50);
 	giq_option(4, 235, 2000, IanCombatTactics, 50);
 	giq_option(4, 389, 159, IanTactics, 50);
-	giq_option(4, 766, 190, StepAside, 50);
-	giq_option(4, 766, 197, StepAside, 51);
+	//giq_option(4, 766, 190, StepAside, 50);
+	//giq_option(4, 766, 197, StepAside, 51);
 	giq_option(4, 235, 144, IanEnd, 50);
-	giq_option(-3, 766, 195, Ian16, 50);
-	giq_option(-3, 766, 194, StepAside, 50);
+	//giq_option(-3, 766, 195, Ian16, 50);
+	//giq_option(-3, 766, 194, StepAside, 50);
 	giq_option(-3, 817, 139, IanEnd, 50);
 end
 
@@ -710,7 +730,7 @@ end
 
 procedure IanCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure SDUIBEK_DISTANCE

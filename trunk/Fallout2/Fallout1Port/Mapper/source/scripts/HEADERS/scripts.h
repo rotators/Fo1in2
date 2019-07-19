@@ -986,4 +986,11 @@
 #define SCRIPT_FARMRAD6  (977)
 #define SCRIPT_FARMRAD7  (978)
 
+// Stuff from scripts.lst
+#define SCRIPT_GRNMTARM  (979)
+//#define SCRIPT_MYSTSTRN  (980)
+
+//Lexx
+#define SCRIPT_CHEATBOX  (981)
+
 #endif // SCRIPTS_H

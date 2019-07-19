@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_CITIZEN
+
+#include "..\headers\command.h"
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat_p_proc;//    script_action == 13
 procedure critter_p_proc;//    script_action == 12
@@ -10,6 +14,7 @@ procedure look_at_p_proc;//    script_action == 21
 procedure pickup_p_proc;//    script_action == 4
 procedure talk_p_proc;//    script_action == 11
 procedure timed_event_p_proc;//    script_action == 22
+procedure push_p_proc;
 
 procedure Citizen01;
 procedure Citizen02;
@@ -33,7 +38,7 @@ procedure DownReactLevel;
 procedure Goodbyes;
 variable exit_line;
 
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable round_counter;
 variable DisplayMessage := 100;
@@ -43,6 +48,8 @@ variable PsstTime;
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
+procedure push_p_proc begin
+end
 
 procedure start
 begin
@@ -123,7 +130,7 @@ begin
 	if (fixed_param == 4) then begin
 		round_counter := round_counter + 1;
 		if (round_counter > 3) then begin
-			if not(global_var(ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
+			if not(global_var(ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
 				set_global_var(ENEMY_SHADY_SANDS, 1);//  Set ENEMY_SHADY_SANDS to True
 				set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
 			end
@@ -134,8 +141,8 @@ end
 procedure critter_p_proc
 begin
 	variable LVar0 := 0;
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 1;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 1;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 	else begin
@@ -173,7 +180,7 @@ begin
 //
 //BEGIN WEAPON DROP MOD CODE
 //--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
 // MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
 //
 	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
@@ -218,7 +225,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
