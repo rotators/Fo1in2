@@ -1,0 +1,217 @@
+#include "..\headers\define.h"
+
+procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure critter_p_proc;//    script_action == 12
+procedure damage_p_proc;//    script_action == 14
+procedure timed_event_p_proc;//    script_action == 22
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure destroy_p_proc;//    script_action == 18
+procedure talk_p_proc;//    script_action == 11
+procedure generate_meats;
+
+variable initial :=  0;
+variable hostile := 0;
+
+//  All rats in Vault 15, all levels
+//  All rats in Vault 13 cave entrance
+//  All rats in Necroplois SEWERS
+//  All rats in Desert encounters
+/////////////////////////////////////////////////
+//-PIG-
+//		78 == pig rat		16777294
+//		177 == Mean pig rat	16777393
+//		397 == Rabid pig rat	16777613
+//-MOLE-
+//		162 == lesser mole rat	16777378
+//		10 == Greater mole rat	16777226
+//		398 == Rabid mole rat	16777614
+//-RAT-
+//		48 == cave rat		16777264
+//		159 == Tough rat	16777375
+//		160 == Irradiated rat	16777376
+//		161 == Tough Irradiated rat	16777377
+//		399 == Rabid rat	16777615
+//		400 == Rabid Irradiated rat	16777616
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initial) then begin
+		initial :=  1;
+		if (obj_pid(self_obj) == 16777378) or (obj_pid(self_obj) == 16777226) or (obj_pid(self_obj) == 16777614) then begin// MOLE
+			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 13);// Mole Rats
+		end
+		else begin
+			if (obj_pid(self_obj) == 16777264) or (obj_pid(self_obj) == 16777375) or (obj_pid(self_obj) == 16777376) or (obj_pid(self_obj) == 16777377) or (obj_pid(self_obj) == 16777615) or (obj_pid(self_obj) == 16777616) then begin// RAT
+				/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 12);// Rats
+			end
+			else begin
+				if (obj_pid(self_obj) == 16777294) or (obj_pid(self_obj) == 16777393) or (obj_pid(self_obj) == 16777613) then begin// PIG
+					/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 44);// Pig Rats
+				end
+			end
+		end
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 9);
+		add_timer_event(self_obj, random(30, 50), 0);//game_ticks(random(1, 5)), 0);
+		call generate_meats;
+		if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+			debug_msg("WANRATS m" + cur_map_index + " e" + elevation(self_obj) + " " + tile_num(self_obj));
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+			call timed_event_p_proc;
+		end
+		else begin
+			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+				call damage_p_proc;
+			end
+			else begin
+				if (script_action == 18) then begin
+					call destroy_p_proc;
+				end
+				else begin
+					if (script_action == 8) then begin//<-- use_skill_on_p_proc
+						call use_skill_on_p_proc;
+					end
+					else begin
+						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+							call talk_p_proc;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (cur_map_index == 6) or (cur_map_index == 35) then begin //  VAULT 13 - ANY MAPS
+		if global_var(VAULT_13_WAS_INVADED) or map_var(2) then begin
+			if (local_var(9) != 1) then begin
+				set_local_var(9, 1);//		<-- only once
+				if (metarule(22, 0) == 0) then begin//		<-- if not during a Game_Load,
+					set_obj_visibility(self_obj, 0);//		     make sure critter is visibile
+				end
+				debug_msg("Vault 13 invasion, killing WANRATS.SSL with DeathType " + 59 + ".  ");
+				kill_critter(self_obj, 59);
+			end
+		end
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (has_trait(0, dude_obj, 44) == 0) then begin
+			if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, 1) * 2)) then begin
+				hostile := 1;
+				attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+			end
+		end
+		else begin
+			if global_var(ANIMAL_FRIEND_JOIN_TEAM) then begin
+				party_add(self_obj);
+				critter_add_trait(self_obj, 1, 6, 0);/* TEAM_NUM */  
+			end
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(self_obj), random(0, 5), random(1, 3)), 0);
+	add_timer_event(self_obj, random(30, 50), 0);//game_ticks(random(1, 5)), 0);
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 10) then begin//-- STEAL
+		script_overrides;
+		display_msg(message_str(766, 211));
+		script_overrides;
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		party_remove(self_obj);
+		critter_add_trait(self_obj, 1, 6, 9);/* TEAM_NUM */  
+		hostile := 1;
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+	rm_timer_event(self_obj);
+end
+
+procedure talk_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(766, 800));
+	script_overrides;
+end
+
+procedure generate_meats
+begin
+	if not(global_var(FIXT_BUGFIXES_ONLY)) and global_var(PLAYER_LOOTS_MEAT_BODIES) then begin
+		variable num := 0;
+		variable counter := 0;
+		variable Outdoors := 0;
+		variable Cap := 0;
+		if (obj_pid(self_obj) == 16777378) or (obj_pid(self_obj) == 16777226) or (obj_pid(self_obj) == 16777614) then begin// MOLE
+			num := random(1, 3);
+		end
+		else begin
+			if (obj_pid(self_obj) == 16777294) or (obj_pid(self_obj) == 16777393) or (obj_pid(self_obj) == 16777613) then begin// PIG
+				num := random(1, 2);
+			end
+			else begin
+				num := 1;
+			end
+		end
+		counter := num;
+		while(counter != 0) do begin
+			Outdoors := roll_vs_skill(dude_obj, 17, (has_trait(0, dude_obj, 16) * 20) - (get_pc_stat(1) * 3));// Survivalist PERK gets +20%/eachlvl - 3*plvl
+			Cap := random(1, 100);
+			if is_critical(Outdoors) or (Cap > 95) then begin
+				if is_success(Outdoors) then begin
+					if is_critical(Outdoors) then begin
+						num := num + 2;
+					end
+				end
+				else begin
+					num := 0;
+				end
+			end
+			else begin
+				if not(is_success(Outdoors)) then begin
+					num := num - 1;
+				end
+			end
+			counter := counter - 1;
+		end
+		if num > 0 then begin
+			variable item := 0;
+			item := create_object_sid(247, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, num);
+		end
+	end
+end
+

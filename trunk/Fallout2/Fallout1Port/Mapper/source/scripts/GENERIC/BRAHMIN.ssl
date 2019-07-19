@@ -1,0 +1,289 @@
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_BRAHMIN
+
+#include "..\headers\command.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure talk_p_proc;//    script_action == 11
+procedure timed_event_p_proc;//    script_action == 22
+procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;//    script_action == 8
+procedure damage_p_proc;//    script_action == 14
+procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;
+procedure push_p_proc;
+
+procedure PickDeadBodyType;
+
+variable critter_tile;
+variable initial :=  0;
+variable temp_hostile := 0;
+variable DeathType := 56;
+variable SrcObj := 0;
+variable SrcIsParty := 0;
+
+#define TIMER_STAND_UP 4
+
+////////////////////////////////////////
+//	COW SCRIPTS
+////////////////////////////////////////
+
+//	cow		5
+//	BRAHMIN		34	<-- USE THIS ONE FOR DIALOG
+//	carcow		966
+
+////////////////////////////////////////
+
+procedure start
+begin
+	if global_var(SHADY_SANDS_WAS_INVADED) then begin
+		if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+			if (local_var(4) != 1) then begin
+				set_local_var(4, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+	else begin
+		if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+			if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+				if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+					if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+					if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+						variable A; if obj_carrying_pid_obj(self_obj, 17) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, 17); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 2) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, 2); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 1) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, 1); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 74) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, 74); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, 113) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, 113); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+					set_local_var(12, 1);
+				end
+			end
+		end
+		if not(initial) then begin
+			initial :=  1;
+			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+				//display_msg("INIT BRAHMIN.SSL at map number " + cur_map_index + " and elevation " + elevation(self_obj));
+			end
+			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 3);
+			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 4);
+			if (cur_map_index != 56) and (cur_map_index != 57) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 61) and (cur_map_index != 62) and (cur_map_index != 63) and (cur_map_index != 64) then begin
+				add_timer_event(self_obj, game_ticks(random(2, 10)), 1);
+			end
+		end
+		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+			call critter_p_proc;
+		end
+		else begin
+			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+				call description_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+						call timed_event_p_proc;
+					end
+					else begin
+						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+							call use_obj_on_p_proc;
+						end
+						else begin
+							if (script_action == 8) then begin//<-- use_skill_on_p_proc
+								call use_skill_on_p_proc;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure push_p_proc begin
+   if (obj_in_party(source_obj)) then begin
+      if (stat_success(source_obj, STAT_st, 0)) then begin
+         if ((critter_state(self_obj) bwand DAM_KNOCKED_DOWN) == FALSE) then begin
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
+               reg_anim_animate(self_obj,ANIM_hit_from_front,-1);
+               reg_anim_animate(self_obj,ANIM_fall_back,5);
+               reg_anim_animate(self_obj,ANIM_fall_back_sf,-1);
+            reg_anim_end();
+            critter_injure(self_obj,DAM_KNOCKED_DOWN);
+            add_timer_event(self_obj, game_ticks(Random(10, 30)), TIMER_STAND_UP);
+            debug_msg("ZCBRAHMN: ahh Cow TIPPED you get +10 Hick Experience Points.");
+         end
+      end
+   end
+end
+
+procedure critter_p_proc
+begin
+	if (temp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		temp_hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if has_trait(0, dude_obj, 44) then begin
+			if global_var(ANIMAL_FRIEND_JOIN_TEAM) then begin
+				party_add(self_obj);
+				critter_add_trait(self_obj, 1, 6, 0);/* TEAM_NUM */
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	display_msg(message_str(34, 100));
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	display_msg(message_str(34, random(102, 105)));
+end
+
+procedure timed_event_p_proc
+begin
+	if (cur_map_index != 56) and (cur_map_index != 57) and (cur_map_index != 58) and (cur_map_index != 59) and (cur_map_index != 61) and (cur_map_index != 62) and (cur_map_index != 63) and (cur_map_index != 64) then begin
+	 	if (((critter_state(self_obj) bwand 2) == 0) and not(combat_is_initialized) and (anim_busy(self_obj) == 0)) then begin
+			critter_tile := tile_num_in_direction(tile_num(self_obj), random(0, 5), 3);
+			reg_anim_func(2, self_obj);
+			reg_anim_func(1, 1);
+			reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
+			reg_anim_func(3, 0);
+      end
+      else if (fixed_param == TIMER_STAND_UP) then begin
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+         reg_anim_animate_reverse(self_obj, ANIM_fall_back, -1);
+         reg_anim_end();
+         critter_uninjure(self_obj, DAM_KNOCKED_DOWN);
+      end
+		add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	variable LVar0 := 0;
+	if ((obj_pid(obj_being_used_with) == 124) or (obj_pid(obj_being_used_with) == 125)) then begin
+		script_overrides;
+		LVar0 := obj_being_used_with;
+		rm_obj_from_inven(source_obj, obj_being_used_with);
+		destroy_object(LVar0);
+		play_sfx("MABROMAQ");
+		reg_anim_func(2, self_obj);
+		reg_anim_func(1, 1);
+		reg_anim_animate(self_obj, 14, -1);
+		reg_anim_animate(self_obj, 20, 5);
+		reg_anim_animate(self_obj, 48, -1);
+		reg_anim_func(3, 0);
+		critter_injure(self_obj, 2);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
+		critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
+		critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
+	end
+end
+
+procedure use_skill_on_p_proc
+begin
+	if (action_being_used == 12) then begin//-- SCIENCE
+		script_overrides;
+		display_msg(message_str(34, 101));
+	end
+	else begin
+		if (action_being_used == 10) then begin//-- STEAL
+			script_overrides;
+			display_msg(message_str(766, 211));
+			script_overrides;
+		end
+	end
+end
+
+procedure damage_p_proc
+begin
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (cur_map_index == 36) or (cur_map_index == 38) or (cur_map_index == 39) or (cur_map_index == 40) or (cur_map_index == 41) or (cur_map_index == 65) then begin //  THE HUB - ANY MAPS
+			set_global_var(ENEMY_HUB, 1);
+		end
+		else begin
+			if (cur_map_index == 10) or (cur_map_index == 11) or (cur_map_index == 12) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+				set_global_var(ENEMY_JUNKTOWN, 1);
+			end
+			else begin
+				if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+					set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+				end
+			end
+		end
+		party_remove(self_obj);
+		critter_add_trait(self_obj, 1, 6, 4);/* TEAM_NUM */
+		temp_hostile := 1;
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (cur_map_index == 36) or (cur_map_index == 38) or (cur_map_index == 39) or (cur_map_index == 40) or (cur_map_index == 41) or (cur_map_index == 65) then begin //  THE HUB - ANY MAPS
+			set_global_var(ENEMY_HUB, 1);
+		end
+		else begin
+			if (cur_map_index == 10) or (cur_map_index == 11) or (cur_map_index == 12) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+				set_global_var(ENEMY_JUNKTOWN, 1);
+			end
+			else begin
+				if (cur_map_index == 25) or (cur_map_index == 26) then begin //  SHADY SANDS - EAST OR WEST
+					set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+				end
+			end
+		end
+	end
+	rm_timer_event(self_obj);
+end
+
+procedure PickDeadBodyType
+begin
+	variable LVar0 := 0;
+	LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));
+//
+	if (LVar0 <= 5) then begin// 31.5%
+		DeathType := 57;//		burnt, face down  [FLAMER]
+	end
+	else begin
+		if (LVar0 <= 10) then begin// 26%
+			DeathType := 56;//		cut in half  [LASER RIFLE, GATLING LASER]
+		end
+		else begin
+			if (LVar0 <= 14) then begin// 21%
+				DeathType := 53;//		head & arm gone - full auto  [MINIGUN]
+			end
+			else begin
+				if (LVar0 <= 16) then begin// 10.5%
+					DeathType := 63;//		face down, blood pool  (generic death, no weapon associated)
+				end
+				else begin// <--------------------	16%
+					variable LVar1 := 0;
+					LVar1 := random(0, 2);
+					if (LVar1 == 0) then begin
+						DeathType := 54;// bullet holes - full auto partial hit
+					end
+					else begin
+						if (LVar1 == 1) then begin
+							DeathType := 59;// exploded  [ROCKET LAUNCHER]
+						end
+						else begin
+							if (LVar1 == 2) then begin
+								DeathType := 60;// melted pile  [PLASMA RIFLE]
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
