@@ -773,7 +773,7 @@ variable tmp_hidden;
          end
 
 procedure checkPartyMembersNearDoor begin
-   CHECKMEMBERNEARDOOR(Vic_In_Party, Vic_Ptr)
+   /*CHECKMEMBERNEARDOOR(Vic_In_Party, Vic_Ptr)
    CHECKMEMBERNEARDOOR(Myron_In_Party, Myron_Ptr)
    CHECKMEMBERNEARDOOR(Marcus_In_Party, Marcus_Ptr)
    CHECKMEMBERNEARDOOR(MacRae_In_Party, MacRae_Ptr)
@@ -792,7 +792,7 @@ procedure checkPartyMembersNearDoor begin
    CHECKMEMBERNEARDOOR(Jonny_In_Party, Jonny_Ptr)
    CHECKMEMBERNEARDOOR(Lloyd_In_Party, Lloyd_Ptr)
    CHECKMEMBERNEARDOOR(Dogmeat_In_Party, Dogmeat_Ptr)
-   CHECKMEMBERNEARDOOR(Pariah_Dog_In_Party, Pariah_Dog_Ptr)
+   CHECKMEMBERNEARDOOR(Pariah_Dog_In_Party, Pariah_Dog_Ptr)*/
    return 0;
 end
 

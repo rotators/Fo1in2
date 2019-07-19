@@ -1,0 +1,63 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure description_p_proc;//    script_action == 3
+procedure use_p_proc;//    script_action == 6
+procedure use_obj_on_p_proc;//    script_action == 7
+
+
+procedure start
+begin
+	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+		call description_p_proc;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 7) then begin//<-- use_obj_on_p_proc
+				call use_obj_on_p_proc;
+			end
+		end
+	end
+end
+
+procedure description_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(786, 104));
+end
+
+procedure use_p_proc
+begin
+	if (obj_pid(self_obj) == 33555334) then begin
+		if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+			script_overrides;
+			move_to(dude_obj, 23118, 1);
+		end
+	end
+	else begin
+		display_msg(message_str(786, 104));
+	end
+end
+
+procedure use_obj_on_p_proc
+begin
+	variable LVar0 := 0;
+	if (obj_pid(obj_being_used_with) == 127) then begin
+		script_overrides;
+		if (obj_pid(self_obj) != 33555334) then begin
+			set_local_var(0, 1);
+			rm_obj_from_inven(dude_obj, obj_being_used_with);
+			LVar0 := create_object_sid(33555334, tile_num(self_obj), elevation(self_obj), SCRIPT_BVELV1W);
+			display_msg(message_str(786, 105));
+			destroy_object(obj_being_used_with);
+			destroy_object(self_obj);
+		end
+		else begin
+			display_msg(message_str(786, 106));
+		end
+	end
+end
+
