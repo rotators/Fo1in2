@@ -15,41 +15,64 @@ procedure start;
 
 procedure KeyPressHandler;
 procedure show_note;
+procedure show_days;
+procedure delete_all;
+
+#define Scr_Width      get_ini_setting("f2_res.ini|MAIN|SCR_WIDTH")
+#define Scr_Heigh      get_ini_setting("f2_res.ini|MAIN|SCR_HEIGHT")
+
+#define get_wdays      global_var(VAULT13_WATER_DAYS_LEFT)
 
 procedure start begin
-   if game_loaded then begin
-     register_hook_proc(HOOK_KEYPRESS, KeyPressHandler);
+
+	if (game_loaded) then begin
+		set_global_script_repeat(5);
+		set_global_script_type(1);
    end
-end
 
-procedure KeyPressHandler begin
-   variable
-     event := get_sfall_arg,
-     keyDX := get_sfall_arg,
-     tmp;
-
-	if (get_game_mode == PIPBOY) then begin
-      call show_note;
+   // Show the pipboy note if the remaining water timer is > 0 days:
+	if ((get_game_mode == PIPBOY) and (get_wdays > 0)) then begin
+      if (get_sfall_global_int("opennote") != 1) then begin
+	      set_sfall_global("opennote", 1);
+         call show_note;
+      end
+      //display_msg("pipboy open!");
    end
    else begin
-      DeleteWin("win_note");
+      if (get_sfall_global_int("opennote") != 0) then begin
+         set_sfall_global("opennote", 0);
+         call delete_all;
+      end
+      //display_msg("pipboy closed!");
+   end
+
+   if (game_time > get_sfall_global_int("lastchek")) then begin
+      //set_local_var(LVAR_Last_WaterCheck,game_time + ONE_GAME_DAY);
+      set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
+      set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
    end
 end
 
-/*
-   The water days counter GVAR is: VAULT13_WATER_DAYS_LEFT
-*/
-
 procedure show_note begin
-variable tmp := 0;
-
-   if (tmp == 0) then begin
-      tmp := 1;
-
-      //CreateWin("win_sleep", ((Scr_Width/2)-164), ((Scr_Heigh/2)-249), 330, 395);
-      CreateWin("win_note", ((1280/2)-288), ((720/2)-207), 148, 227);
+      create_win("win_note", ((Scr_Width/2)-288), ((Scr_Heigh/2)-207), 148, 227);
       SelectWin("win_note");
       Display("PCX/pip2.pcx");
       ShowWin;
+
+      call show_days;
+end
+
+procedure show_days begin
+   // We only have 250 images, so bigger than that can't be shown:
+   if (get_wdays <= 250) then begin
+      create_win("win_days", ((Scr_Width/2)-255), ((Scr_Heigh/2)-110), 40, 19);
+      SelectWin("win_days");
+      Display("PCX/days/"+ (get_wdays + 1) +".pcx");
+      ShowWin;
    end
+end
+
+procedure delete_all begin
+   DeleteWin("win_note");
+   DeleteWin("win_days");
 end

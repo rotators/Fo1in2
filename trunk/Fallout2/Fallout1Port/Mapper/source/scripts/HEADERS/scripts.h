@@ -992,5 +992,6 @@
 
 //Lexx
 #define SCRIPT_CHEATBOX  (981)
+#define SCRIPT_NIF2HINT  (982)  // niF2Hint.int    ; New Reno Fallout 2 Hintbook
 
 #endif // SCRIPTS_H
