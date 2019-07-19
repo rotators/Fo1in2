@@ -40,7 +40,7 @@
 #define PID_LEATHER_JACKET_MAN 			(16777233)
 #define PID_PEASANT_BLACK 				(16777234)
 #define PID_LEATHER_JACKET_WOMAN 		(16777235)
-#define PID_PEASANT_GREEn 				(16777236)
+#define PID_PEASANT_GREEN 				(16777236)
 #define PID_COMBAT_ARMOR_MALE 			(16777237)
 #define PID_TOWNSWOMAN_METAL 			(16777238)
 #define PID_LOU 						(16777239)
@@ -286,21 +286,26 @@
 #define PID_ (16777479)
 #define PID_ (16777480)
 #define PID_ (16777481)
-#define PID_ (16777482)
-#define PID_ (16777483)
+#define PID_ (16777482)*/
+#define PID_JOURNEYMAN_KNIGHT			(16777483)
+/*
 #define PID_ (16777484)
 #define PID_ (16777485)
 #define PID_ (16777486)
 #define PID_ (16777487)
 #define PID_ (16777488)
-#define PID_ (16777489)
-#define PID_ (16777490)
+#define PID_ (16777489)*/
+
+#define PID_JUNIOR_PALADIN 				(16777490)
+
+/*
 #define PID_ (16777491)
 #define PID_ (16777492)
 #define PID_ (16777493)
 #define PID_ (16777494)
-#define PID_ (16777495)
-#define PID_ (16777496)
+#define PID_ (16777495)*/
+#define PID_INITIATE_SCRIBE 			(16777496)
+/*
 #define PID_ (16777497)
 #define PID_ (16777498)
 #define PID_ (16777499)
