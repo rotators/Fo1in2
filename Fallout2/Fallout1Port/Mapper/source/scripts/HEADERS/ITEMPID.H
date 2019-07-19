@@ -164,13 +164,9 @@
 #define PID_PLASMA_PISTOL_EXT_CART          (406)
 #define PID_MEGA_POWER_FIST                 (407)
 #define PID_HOLY_HAND_GRENADE               (421) //Special don't use this
-#define PID_FLAME_BREATH                    (427)
-#define PID_RING_BOXING_GLOVES              (496)
-#define PID_RING_PLATED_BOXING_GLOVES       (497)
 #define PID_FN_FAL_HPFA                     (500)
 //#define PID_BLOW_UP_DOLL                    (508)
 //#define PID_POPPED_BLOW_UP_DOLL             (509)
-#define PID_TYPHON_TREASURE                 (519)
 
 // NOTE: any new weapons that need ammo of any sort need to be placed in the arm_obj macro in COMMANDS.H
 //       if you're not gonna do it, please put the pid definition after the comments so that we know to add it
@@ -378,7 +374,6 @@
 #define PID_BOX_OF_NOODLES                  (226)
 #define PID_FROZEN_DINNER                   (227)
 #define PID_MOTIVATOR                       (229)
-#define PID_JAIL_KEY                        (456)
 
 #define PID_ANNA_GOLD_LOCKET                (252)
 #define PID_CAR_FUEL_CELL_CONTROLLER        (253)
@@ -454,7 +449,6 @@
 #define PID_POISON_TANK                     (418)     // DO NOT USE THIS IN YOUR SCRIPTS, THIS IS SPECIAL CASE
 #define PID_MINE_PART                       (419)     // DO NOT USE THIS IN YOUR SCRIPTS, THIS IS SPECIAL CASE
 #define PID_MORNING_STAR_MINE               (420)
-#define PID_HOLY_HAND_GRENADE               (421)
 #define PID_EXCAVATOR_CHIP                  (422)
 #define PID_GOLD_NUGGET                     (423)
 #define PID_STONE_HEAD                      (425)
@@ -498,12 +492,10 @@
 #define PID_EXPERIMENT_HOLODISK             (464)
 #define PID_MEDICAL_HOLODISK                (465)
 #define PID_PASSWORD_HOLODISK               (466)
-#define PID_JESSE_CONTAINER                 (467)   // RESERVED
 #define PID_SMITTY_MEAL                     (468)
 #define PID_ROT_GUT                         (469)
 #define PID_BALL_GAG                        (470)
 #define PID_BECKY_BOOK                      (471)
-#define PID_NAV_COMPUTER_PARTS              (479)
 #define PID_ELRON_MEMBER_HOLO               (472)
 #define PID_MUTATED_TOE                     (473)
 #define PID_DAISIES                         (474)
@@ -531,10 +523,6 @@
 #define PID_SPECIAL_PLATED_BOXING_GLOVES    (497) // NO YOU CANNOT USE THIS, NO I SAID
 #define PID_GUN_TURRET_WEAPON               (498)
 #define PID_DERMAL_PIP_BOY_DISK             (499) // AGAIN, VERY SPECIAL, NOT FOR YOU
-#define PID_MEM_CHIP_BLUE                   (503)
-#define PID_MEM_CHIP_GREEN                  (504)
-#define PID_MEM_CHIP_RED                    (505)
-#define PID_MEM_CHIP_YELLOW                 (506)
 //#define PID_FN_FAL_HPFA                     (507)
 #define PID_WALL_SAFE                       (501)
 #define PID_FLOOR_SAFE                      (502)

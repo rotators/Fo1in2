@@ -11,7 +11,7 @@
 //#include "..\headers\RepPoint.h"
 //#include "..\headers\AIPacket.h"
 #include "..\headers\ExpPoint.h"
-//#include "..\headers\ScenePid.h"
+#include "..\headers\ScenePid.h"
 #include "..\headers\Maps.h"
 //#include "..\headers\animcomd.h"
 #include "..\headers\CritrPid.h"
