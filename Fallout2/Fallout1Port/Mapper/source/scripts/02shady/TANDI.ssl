@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_TANDI
+
+#include "..\headers\command.h"
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure damage_p_proc;//    script_action == 14
 procedure talk_p_proc;//    script_action == 11
@@ -7,6 +11,7 @@ procedure map_update_p_proc;//    script_action == 23
 procedure map_enter_p_proc;//    script_action == 15
 procedure critter_p_proc;//    script_action == 12
 procedure destroy_p_proc;//    script_action == 18
+procedure push_p_proc;
 
 procedure tandi00;
 procedure tandi00_1;
@@ -107,7 +112,7 @@ variable rndz;
 variable MALE;
 variable Counter;
 variable Only_Once := 1;
-variable hostile;
+variable tmp_hostile;
 variable exit_line;
 variable critter_tile := 0;
 variable CurrentMapNum;
@@ -138,6 +143,9 @@ procedure TandiSex1_end;
 procedure TandiSex2_end;
 procedure TandiSex_x;
 
+
+procedure push_p_proc begin
+end
 
 procedure start
 begin
@@ -191,7 +199,7 @@ begin
 								end
 								else begin
 									if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-										hostile := 1;
+										tmp_hostile := 1;
 									end
 								end
 							end
@@ -216,7 +224,7 @@ begin
 //
 //BEGIN WEAPON DROP MOD CODE
 //--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
 // MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
 //
 	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
@@ -622,7 +630,7 @@ end
 procedure TandiSex
 begin
 //	if not(local_var(6)) then begin
-	
+
 call TandiSex2;
 
 	/*else begin
@@ -1130,8 +1138,8 @@ begin
 						end
 					end
 				end
-				if (obj_can_see_obj(self_obj, dude_obj) and (party_member_obj(TANDI_SELF_ID) == 0) and hostile) then begin
-					hostile := 0;
+				if (obj_can_see_obj(self_obj, dude_obj) and (party_member_obj(TANDI_SELF_ID) == 0) and tmp_hostile) then begin
+					tmp_hostile := 0;
 					attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 				end
 				if ((party_member_obj(TANDI_SELF_ID) == 0) and (global_var(TANDI_HIRELING_STATUS) != 1) and (global_var(TANDI_LOCATION_TRACKER) != 300)) then begin
@@ -1379,7 +1387,7 @@ procedure TandiEndSDU
 begin
 	gsay_message(57, 157, 50);//{157}{TAND_35}{Uh... hey, thanks. Later.}
 end
- 
+
 procedure damage_p_proc
 begin
 	if ((source_obj == dude_obj) and ((cur_map_index == 26) or (cur_map_index == 25))) then begin

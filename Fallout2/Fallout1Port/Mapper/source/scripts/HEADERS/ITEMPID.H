@@ -313,7 +313,7 @@
 
 #define PID_DYNAMITE                        (51)
 #define PID_GEIGER_COUNTER                  (52)
-///#define PID_STEALTH_BOY                     (54)  // Disabled FO2 7/22/98 JLR
+#define PID_STEALTH_BOY                     (54)  // Disabled FO2 7/22/98 JLR
 #define PID_MOTION_SENSOR                   (59)
 #define PID_MULTI_TOOL                      (75)
 #define PID_ELECTRONIC_LOCKPICKS            (77)

@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_ARADESH
+
+#include "..\headers\command.h"
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure damage_p_proc;//    script_action == 14
 procedure destroy_p_proc;//    script_action == 18
@@ -132,7 +136,7 @@ variable exit_line;
 variable TRESPASS;
 variable ILLEGAL;
 variable ILLEGBEFORE;
-variable hostile;
+variable tmp_hostile;
 variable rndx;
 variable rndy;
 variable rndz;
@@ -180,7 +184,7 @@ begin
 				end
 			end
 		end
-		if (initial :=  == 0) then begin
+		if (initial  ==  0) then begin
 			initial :=  1;
 			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
 			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 6);
@@ -192,7 +196,7 @@ begin
 			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
 				if (local_var(9) > 2) then begin
 					display_msg(message_str(766, 170));
-					hostile := 1;
+					tmp_hostile := 1;
 				end
 				else begin
 					if (global_var(ENEMY_SHADY_SANDS) == 1) then begin
@@ -239,14 +243,14 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 	else begin
-		if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
+		if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
 			if (obj_can_see_obj(self_obj, dude_obj)) then begin
-				hostile := 1;
+				tmp_hostile := 1;
 				attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 			end
 		end
@@ -255,6 +259,9 @@ end
 
 procedure map_enter_p_proc
 begin
+   // Workaround:
+   art_change_fid_num(self_obj, FID_NAROBE);
+
 	if (map_first_run) and not(global_var(ARADESH_REFRESH_GFX_FLAG)) then begin
 		variable Aradesh_ptr := 0;
 		variable AradeshTile := 0;
@@ -366,7 +373,7 @@ end
 
 procedure aradeshcbt
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure aradesh01
@@ -1300,13 +1307,13 @@ begin
 	gsay_message(33, 275, 50);
 end
 
- 
+
 procedure destroy_p_proc
 begin
 //
 //BEGIN WEAPON DROP MOD CODE
 //--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
 // MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
 //
 	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
@@ -1345,7 +1352,7 @@ procedure damage_p_proc
 begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
