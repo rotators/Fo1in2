@@ -556,6 +556,7 @@
 #define PID_DELTA_EXPERIMENT_HOLODISK		(193)
 #define PID_BOS_HOLODISK					(164)
 #define PID_MUTANT_TRANSMISSION_HOLODISK 	(196)
+#define PID_MBASE_SEC_CODE					(231)
 
 /******************************************************************
 ***************       Active Items                  ***************
