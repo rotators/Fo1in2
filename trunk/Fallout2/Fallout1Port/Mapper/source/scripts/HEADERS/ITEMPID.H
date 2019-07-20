@@ -259,6 +259,7 @@
 #define PID_WALL_LOCKER_CLEAN_RIGHT         (137)
 #define PID_WALL_LOCKER_RUSTY_LEFT          (138)
 #define PID_WALL_LOCKER_RUSTY_RIGHT         (139)
+#define PID_IGUANA_STAND	                (165)
 #define PID_CONTAINER_WOOD_CRATE            (180)
 #define PID_VAULT_DWELLER_BONES             (211)
 #define PID_SMALL_POT                       (243)
@@ -284,7 +285,6 @@
 #define PID_LF_GRAVESITE_3                  (376)
 
 #define PID_HIDDEN_CONTAINER                (467)  // Code item  JLR
-
 
 /******************************************************************
 ***************       Books                         ***************
