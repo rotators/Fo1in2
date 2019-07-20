@@ -81,18 +81,18 @@
 
 // Movie number defines //
 // Commented out movies are done in the C-engine.  JLR
-//#define INTERPLAY_LOGO_MOVIE_PC 0 //   "iplogo.mve",  // Interplay logo.
-//#define INTRO_MOVIE             1 //   "intro.mve",   // Intro.
-//#define ELDER_MOVIE             2 //   "elder.mve",
-#define VSUIT_MOVIE             3 //   "vsuit.mve",
-#define AFAILED_MOVIE           4 //   "afailed.mve",
-#define ADESTROY_MOVIE          5 //   "adestroy.mve",
-#define CAR_MOVIE               6 //   "car.mve",
-#define CARTUCCI_MOVIE          7 //   "cartucci.mve",
-#define DETHCLAW_MOVIE          8 //   "dethclaw.mve",
-#define TANKER_MOVIE            9 //   "tanker.mve",
-#define ENCLAVE_MOVIE          10 //   "enclave.mve",
-#define DERRICK_MOVIE          11 //   "derrick.mve"
+//#define INTERPLAY_LOGO_MOVIE_PC 	0 //   "iplogo.mve",  // Interplay logo.
+//#define INTRO_MOVIE             	1 //   "intro.mve",   // Intro.
+//#define OVERSEER_MOVIE			2 // ovrintro.mve	
+#define VATSEXPLODE_MOVIE			3 // vexpld.mve	
+#define CATHEXPLODE_MOVIE			4 // cathexp.mve	
+#define DIPEDV_MOVIE				5 // dipedv.mve	
+#define OVERRUN_MOVIE				6 // ovrrun.mve	
+#define WALKM_MOVIE					10 // walkm.mve	
+#define WALKW_MOVIE					11 // walkw.mve	
+#define BOIL1_MOVIE					12 // boil1.mve		// in-engine
+#define BOIL2_MOVIE					13 // boil2.mve		// in-engine
+#define BOIL3_MOVIE					14 // boil3.mve		// obj_dude script
 
 // float_msg defines //
 #define FLOAT_MSG_WARNING    (-2)
