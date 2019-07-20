@@ -132,6 +132,6 @@
 #define FID_MADETH (16777341)
 #define FID_MAGUNN (16777342)
 #define FID_MABOS2 (16777343)
-
+#define FID_NFCHLD (16777344)
 
 #endif // ARTFID_H
