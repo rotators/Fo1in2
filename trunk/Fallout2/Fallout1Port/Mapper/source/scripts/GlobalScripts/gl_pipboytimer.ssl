@@ -40,48 +40,36 @@ procedure start begin
    	      set_sfall_global("opennote", 1);
             call show_note;
          end
-         //display_msg("pipboy open!");
       end
       else begin
          if (get_sfall_global_int("opennote") != 0) then begin
             set_sfall_global("opennote", 0);
             call delete_all;
          end
-         //display_msg("pipboy closed!");
       end
 
       if (game_time > get_sfall_global_int("lastchek")) then begin
-         //set_local_var(LVAR_Last_WaterCheck,game_time + ONE_GAME_DAY);
          set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
-         set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
 
          if (get_game_mode == PIPBOY) then begin
             DeleteWin("win_days");
             call show_days;
          end
+
+         // Game over if the timer has run out:
+         //display_msg("days left: " + get_wdays);
+         if (get_wdays <= 0) then begin
+      		play_gmovie(BOIL3_MOVIE);
+      		signal_end_game;
+      	end
+
+         set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
       end
-
-      // Game over if the timer has run out:
-      /*display_msg("days left: " + get_wdays);
-      if (get_wdays <= 149) then begin
-   		//script_overrides;
-
-   		display_msg("GAME OVER!");
-
-   		play_gmovie(BOIL3_MOVIE);
-   		//float_msg(dude_obj, "GAME OVER", -2);
-   		metarule(13, 0);
-   	end*/
 
    end
 end
 
 procedure show_note begin
-      /*create_win("win_note", ((Scr_Width/2)-288), ((Scr_Heigh/2)-207), 148, 227);
-      SelectWin("win_note");
-      Display("PCX/pip2.pcx");
-      ShowWin;*/
-
       create_win("win_note_top", ((Scr_Width/2)-288), ((Scr_Heigh/2)-207), 148, 97);
       SelectWin("win_note_top");
       Display("PCX/pip2_top.pcx");
@@ -121,8 +109,6 @@ procedure show_days begin
 end
 
 procedure delete_all begin
-   //DeleteWin("win_note");
-
    DeleteWin("win_note_top");
    DeleteWin("win_note_bottom");
    DeleteWin("win_note_daysbg");
