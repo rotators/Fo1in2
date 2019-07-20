@@ -7,23 +7,44 @@ import variable Use_Manhole_Bottom;
 
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_NHUP2DN2
+
+#include "..\headers\command.h"
+#include "..\headers\MAPNECRO.h"
+
+/* Standard Script Procedures */
 procedure start;
+procedure use_p_proc;
+procedure timed_event_p_proc;
 
+procedure move_elevation;
 
-procedure start
-begin
-	if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			script_overrides;
-			add_timer_event(self_obj, 2, 1);
-			Use_Manhole_Middle := 1;
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				script_overrides;
-				move_to(dude_obj, 19139, 0);
-			end
-		end
-	end
+#define EVENT_USE    (1)
+
+variable Cover_Ptr;
+variable cover_state;
+
+procedure start begin
+	/*if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+	end*/
 end
 
+procedure use_p_proc begin
+	Cover_Ptr:=tile_contains_pid_obj(self_tile,self_elevation,PID_SEWER_COVER);
+
+   // Can't use the manhole if the cover is still closed!
+	check_manhole
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_USE) then begin
+		script_overrides;
+		move_to(dude_obj, 19139, 0);
+   end
+end
+
+procedure move_elevation begin
+	script_overrides;
+	add_timer_event(self_obj, 2, 1);
+	Use_Manhole_Middle := 1;
+end

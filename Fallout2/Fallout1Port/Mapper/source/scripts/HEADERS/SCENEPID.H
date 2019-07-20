@@ -176,6 +176,9 @@ variable Scenery_Creation_Ptr;
 #define PID_SLOT_FACING_2                   (33554898)
 #define PID_SLOT_FACING_3                   (33554897)
 
+// Sewer hole cover / door
+#define PID_SEWER_COVER						(33554576)
+
 // New Fallout 1:
 #define PID_BEAM_1 							(33554999)
 #define PID_BEAM_2 							(33555000)
