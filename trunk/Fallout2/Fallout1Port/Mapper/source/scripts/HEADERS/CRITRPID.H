@@ -276,13 +276,15 @@
 #define PID_ (16777469)
 #define PID_ (16777470)
 #define PID_ (16777471)
-#define PID_ (16777472)
-#define PID_ (16777473)
+#define PID_ (16777472)*/
+#define PID_MERC_FEMALE_METAL 			(16777473)
+/*
 #define PID_ (16777474)
 #define PID_ (16777475)
 #define PID_ (16777476)
-#define PID_ (16777477)
-#define PID_ (16777478)
+#define PID_ (16777477)*/
+#define PID_MALE_GUARD_CA 				(16777478)
+/*
 #define PID_ (16777479)
 #define PID_ (16777480)
 #define PID_ (16777481)
