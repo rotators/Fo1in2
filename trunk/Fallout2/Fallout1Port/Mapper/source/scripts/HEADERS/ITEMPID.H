@@ -549,6 +549,14 @@
 #define PID_SURVEY_MAP                      (523)
 #define PID_BRIDGEKEEPERS_ROBE              (524)
 
+// New Fo1:
+#define PID_DRESSER 						(68)
+#define PID_FEV_HOLODISK					(190)
+#define PID_ALPHA_EXPERIMENT_HOLODISK		(192)
+#define PID_DELTA_EXPERIMENT_HOLODISK		(193)
+#define PID_BOS_HOLODISK					(164)
+#define PID_MUTANT_TRANSMISSION_HOLODISK 	(196)
+
 /******************************************************************
 ***************       Active Items                  ***************
 ******************************************************************/
