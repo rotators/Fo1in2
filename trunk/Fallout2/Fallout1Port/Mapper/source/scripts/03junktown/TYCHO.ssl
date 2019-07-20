@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_TYCHO
+
+#include "..\headers\command.h"
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
 procedure destroy_p_proc;//    script_action == 18
@@ -8,6 +12,7 @@ procedure map_enter_p_proc;//    script_action == 15
 procedure talk_p_proc;//    script_action == 11
 procedure use_obj_on_p_proc;//    script_action == 7
 procedure combat_p_proc;//    script_action == 13
+procedure push_p_proc;
 
 procedure Tycho01;
 procedure Tycho02;
@@ -55,10 +60,10 @@ variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
-variable hostile;
+variable tmp_hostile;
 variable item;
 variable cola2_ptr;
-variable dest_tile;
+//variable dest_tile;
 variable exit_line;
 variable tmp;
 variable armor_ptr;
@@ -102,6 +107,20 @@ procedure TychoClose_SDUIBEK;
 procedure TychoModerate_SDUIBEK;
 procedure TychoFar_SDUIBEK;
 
+// Added by Lexx
+#define float_tycho(x)    float_msg(self_obj, message_str(SCRIPT_GENCHAT,x), FLOAT_MSG_NORMAL)
+#define Tycho_In_Party    (global_var(TYCHO_HIRELING_STATUS) == 2)
+variable k;
+
+procedure push_p_proc begin
+   if (Tycho_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      k:=300+random(0,2);
+      float_tycho(k);
+   end
+end
 
 procedure start
 begin
@@ -219,8 +238,8 @@ begin
 			end
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);//	attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 	else begin
@@ -274,7 +293,7 @@ begin
 //
 //BEGIN WEAPON DROP MOD CODE
 //--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
 // MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
 //
 	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
@@ -402,6 +421,10 @@ begin
 	if ((has_trait(1, self_obj, 5) != 90) and (has_trait(1, self_obj, 5) != 95) and (has_trait(1, self_obj, 5) != 96)) then begin
 /* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 90);
 	end
+
+
+	// Workaround for invisible proto in the map:
+   art_change_fid_num(self_obj, FID_NMLTHR);
 end
 
 procedure talk_p_proc
@@ -713,11 +736,11 @@ begin
 	giq_option(4, 389, 164, Tycho27, 49);
 	giq_option(4, 389, 159, TychoTactics, 50);
 	giq_option(4, 389, 2000, TychoCombatTactics, 50);
-	giq_option(4, 766, 190, StepAside, 50);
-	giq_option(4, 766, 197, StepAside, 51);
+	//giq_option(4, 766, 190, StepAside, 50);
+	//giq_option(4, 766, 197, StepAside, 51);
 	giq_option(4, 389, 166, TychoEnd, 50);
-	giq_option(-3, 766, 195, Tycho24, 50);
-	giq_option(-3, 766, 194, StepAside, 50);
+	//giq_option(-3, 766, 195, Tycho24, 50);
+	//giq_option(-3, 766, 194, StepAside, 50);
 	giq_option(-3, 817, 139, TychoEnd, 50);
 end
 
@@ -817,7 +840,7 @@ end
 
 procedure TychoCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure TychoJoins
