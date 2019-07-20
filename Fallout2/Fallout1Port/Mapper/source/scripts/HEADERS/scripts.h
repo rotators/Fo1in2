@@ -21,7 +21,7 @@
 #define SCRIPT_SSWELL    (14)  //  sswell.int     ; Shady Sands well
 #define SCRIPT_SET       (15)  //  set.int        ; Set, the leader of Necropolis
 #define SCRIPT_HARRY     (16)  //  harry.int      ; Harry the Super mutant
-//#define SCRIPT_STIMPACK  (17)  //  stimpack.int   ; Stimpack script to heal players when used
+#define SCRIPT_STIMPACK  (17)  //  stimpack.int   ; Stimpack script to heal players when used
 #define SCRIPT_COVER     (18)  //  cover.int      ; A cover for the Manhole
 #define SCRIPT_MANHOLE   (19)  //  manhole.int    ; A manhole that leads to the Necropolis Sewers
 #define SCRIPT_LADDER    (20)  //  ladder.int     ; Ladder leading down to the Necropolis Sewers
@@ -36,7 +36,7 @@
 #define SCRIPT_1LADDER1  (29)  //  1ladder1.int   ; Ladder for the Manhole in Necropolis (?)                                     
 #define SCRIPT_GHOUL     (30)  //  ghoul.int      ; Ghoul manager of the Necropolis hotel
 #define SCRIPT_ALPHHOTL  (31)  //  alphhotl.int   ; Map Script for Pre-Alpha demo                                                
-//#define SCRIPT_GENGHOUL  (32)  //  genghoul.int   ; Generic Ghoul from Necropolis
+#define SCRIPT_GENGHOUL  (32)  //  genghoul.int   ; Generic Ghoul from Necropolis
 #define SCRIPT_ARADESH   (33)  //  Aradesh.int    ; Aradesh NPC from Shady Sands
 #define SCRIPT_BRAHMIN   (34)  //  Brahmin.int    ; Brahmin (cows) from Junktown who just stand there
 #define SCRIPT_COUGAR    (35)  //  Cougar.int     ; Doc Morbid's Assistant, Cougar, from Junktown
@@ -47,7 +47,7 @@
 #define SCRIPT_CABBOT    (40)  //  Cabbot.int     ; Cabbot, the initiate from the Brotherhood of Steel
 #define SCRIPT_CHILDMEM  (41)  //  Childmem.int   ; Children of the Cathedral member                                             
 #define SCRIPT_DECKER    (42)  //  Decker.int     ; Decker, the head of the Hub Underground
-//#define SCRIPT_ELDER     (43)  //  Elder.int      ; The Elder of Shady Sands
+#define SCRIPT_ELDER     (43)  //  Elder.int      ; The Elder of Shady Sands
 #define SCRIPT_GIZMO     (44)  //  Gizmo.int      ; Gizmo, the casino owner in Junktown
 #define SCRIPT_HAROLD    (45)  //  Harold.int     ; Harold, the old mutant from the Hub
 #define SCRIPT_JAIN      (46)  //  Jain.int       ; Jain, Priestess of the Children of the Cathedral
@@ -77,19 +77,19 @@
 #define SCRIPT_GHDORGRD  (70)  //  GhDorGrd.int    ; Ghoul Door Guard.                                                           
 #define SCRIPT_GHGENDED  (71)  //  GhGenDed.int    ; Generic dead ghouls for Necropolis.                                         
 #define SCRIPT_GHGUARD   (72)  //  GhGuard.int     ; Ghoul guard for Set.
-//#define SCRIPT_GHOUL     (73)  //  Ghoul.int       ; The ghoul manager of the Necropolis hotel.
+#define SCRIPT_GHOUL     (73)  //  Ghoul.int       ; The ghoul manager of the Necropolis hotel.
 #define SCRIPT_GHREFUGE  (74)  //  GhRefuge.int    ; Ghoul Refugee hiding the the Zombie hideout                                 
 #define SCRIPT_GHZERO    (75)  //  GhZero.int      ; A ghoul guard
 #define SCRIPT_GLOWONE   (76)  //  GlowOne.int     ; Glowing Ones that are caged by Set.
 #define SCRIPT_GROUNDR   (77)  //  Groundr.int     ; Necropolis Undergrounders
-//#define SCRIPT_GUARD     (78)  //  Guard.int       ; Guard from Shady Sands
-//#define SCRIPT_HARRY     (79)  //  Harry.int       ; Harry the Super mutant with many lines
+#define SCRIPT_GUARD     (78)  //  Guard.int       ; Guard from Shady Sands
+#define SCRIPT_HARRY     (79)  //  Harry.int       ; Harry the Super mutant with many lines
 #define SCRIPT_LARRY     (80)  //  Larry.int       ; Larry the Super Mutant
 #define SCRIPT_LEADER    (81)  //  Leader.int      ; The ghoul leader in Necropolis (Ganger?)
 #define SCRIPT_MANAGER   (82)  //  Manager.int     ; The Ghoul hotel manager
 #define SCRIPT_MANGLED   (83)  //  Mangled.int     ; Some mangled bodies in Necropolis.
 #define SCRIPT_MEANDER   (84)  //  Meander.int     ; Some meandering ghouls
-//#define SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; The invisible mutants.
+#define SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; The invisible mutants.
 #define SCRIPT_NH2OCOMP  (86)  //  NH2OComp.int    ; Necropolis Water Computer                                                   
 #define SCRIPT_NH2OPUMP  (87)  //  NH2OPump.int    ; Necropolis Water Pump                                                       
 #define SCRIPT_ODDWALL   (88)  //  OddWall.int     ; There is something odd about this wall in Necropolis
@@ -202,7 +202,7 @@
 #define SCRIPT_MEDLAB    (195)  //  MEDLAB.int       ; medlab in front of the buried vault
 #define SCRIPT_SHACK     (196)  //  Shack.int       ; Shack above the buried vault
 #define SCRIPT_SETH2     (197)  //  Seth2.int       ; Seth from Rad Scorpion Caves to transport to Shady Sands
-//#define SCRIPT_SCRIBEA   (198)  //  scribeA.int       ; Scribe from the brotherhood
+#define SCRIPT_SCRIBEA   (198)  //  scribeA.int       ; Scribe from the brotherhood
 #define SCRIPT_VAULT13   (199)  //  Vault13.int     ; Map Script for Vault 13
 #define SCRIPT_BVELV1W   (200)  //  BVElv1W.int     ; Buried Vault Elevator. Level 1 West --> Level 2 East
 #define SCRIPT_BVELV2E   (201)  //  BVElv2E.int     ; Buried Vault Elevator. Level 2 East --> Level 1 West
@@ -294,7 +294,7 @@
 #define SCRIPT_BROHD34   (287)  //  Brohd34.int     ; Map Script for Brotherhood of Steel (level 3,4)
 #define SCRIPT_JON       (288)  //  Jon.int         ; John Zimmerman from the Adytum
 #define SCRIPT_RIPPPRIS  (289)  //  RippPris.int    ; Ripper Prisoner in the Boneyard                                             
-//#define SCRIPT_SCRIBEB   (290)  //  ScribeB.int       ; Another scribe from the brotherhood
+#define SCRIPT_SCRIBEB   (290)  //  ScribeB.int       ; Another scribe from the brotherhood
 #define SCRIPT_BVLAD     (291)  //  BVLad.int       ; Buried Vault Ladder which leads to the Surface
 #define SCRIPT_CHARBODY  (292)  //  CharBody.int    ; A charred body in the Glow                                                  
 #define SCRIPT_BONEBODY  (293)  //  BoneBody.int    ; dry bones from a body in the Glow                                           
@@ -405,7 +405,7 @@
 #define SCRIPT_CHANTER   (398)  //  Chanter.int     ; Generic Chanter 1 from the Children
 #define SCRIPT_FRANCIS   (399)  //  Francis.int     ; Sister Francis from the Children
 #define SCRIPT_DOCWU     (400)  //  DocWu.int       ; foul-mouthed doc from the Children
-//#define SCRIPT_RUTGER    (401)  //  Rutger.int      ; second in command of the Far Go Traders
+#define SCRIPT_RUTGER    (401)  //  Rutger.int      ; second in command of the Far Go Traders
 #define SCRIPT_PHRAX     (402)  //  Phrax.int       ; From the Demo, guard for the Crypts.
 #define SCRIPT_DEMOGEN   (403)  //  DemoGen.int     ; Generator for the demo
 #define SCRIPT_DEMOCRYP  (404)  //  DemoCryp.int    ; generic Crypt ganger member for the demo                                    
@@ -496,7 +496,7 @@
 #define SCRIPT_DETHCAVE  (489)  //  DethCave.int    ; Map Script for Deathclaw Cave                                               
 #define SCRIPT_DRWHOMAP  (490)  //  DrWhoMap.int    ; Map Script for Dr. Who special encounter                                    
 #define SCRIPT_LGFTPRNT  (491)  //  LgFtPrnt.int    ; Map Script for Large Foot Print special encounter                           
-//#define SCRIPT_USEDCAR   (492)  //  UsedCar.int     ; Map Script for Used Car Salesman special encounter
+#define SCRIPT_USEDCAR   (492)  //  UsedCar.int     ; Map Script for Used Car Salesman special encounter
 #define SCRIPT_TALKCOWS  (493)  //  TalkCows.int    ; Map Script for Talking Cows special encounter                               
 #define SCRIPT_JTUP2DN   (494)  //  JTUp2Dn.int     ; Getting from Garage to Morbid's Lab
 #define SCRIPT_JTDN2UP   (495)  //  JTDn2Up.int     ; getting from Morbid's lab to Garage
@@ -505,7 +505,7 @@
 #define SCRIPT_CHOCDOOR  (498)  //  ChocDoor.int    ; Door to get out of the Children of the Cathedral                            
 #define SCRIPT_DANE      (499)  //  Dane.int        ; psycho person who knows too much
 #define SCRIPT_JONATHAN  (500)  //  Jonathan.int    ; someone from the Brotherhood                                                
-//#define SCRIPT_STUDENT   (501)  //  Student.int     ; student who is learning combat in the brotherhood
+#define SCRIPT_STUDENT   (501)  //  Student.int     ; student who is learning combat in the brotherhood
 #define SCRIPT_CATH2MV   (502)  //  Cath2MV.int     ; spacial to take you from the Cathedral to the Master's Lair
 #define SCRIPT_GLO4SUPL  (503)  //  Glo4Supl.int    ; level 4 of the Glow, Supply Room                                            
 #define SCRIPT_HALL2MTL  (504)  //  Hall2Mtl.int    ; spatial script to take you from the Hall of the Dead to Motel sewers        
@@ -709,7 +709,7 @@
 #define SCRIPT_PALSCOUT  (702)  //  PalScout.int    ; Random Paladin scouts.                                                      
 #define SCRIPT_TRENT     (703)  //  Trent.int       ; Survivor of a Deathclaw attack.
 #define SCRIPT_HDEALER   (704)  //  HDealer.int     ; dealer in the falcon for craps
-//#define SCRIPT_HSLOTS    (705)  //  HSlots.int      ; slot machines in the Hub
+#define SCRIPT_HSLOTS    (705)  //  HSlots.int      ; slot machines in the Hub
 #define SCRIPT_HRNDBAR   (706)  //  HRndBar.int     ; Random dialog in the bar of the HUb
 #define SCRIPT_HGENGAMB  (707)  //  HGenGamb.int    ; generic gamblers in the hub                                                 
 #define SCRIPT_HHOOKER   (708)  //  HHooker.int     ; Hooker in the Falcon
@@ -747,7 +747,7 @@
 #define SCRIPT_REVULSE   (740)  //  Revulse.int     ; Corridor of revulsion
 #define SCRIPT_FIELDGEN  (741)  //  fieldgen.int    ; field generator in the military base                                        
 #define SCRIPT_ELEVCON   (742)  //  ElevCon.int     ; Elevator Control for the Force Fields to the Nuke Bomb
-//#define SCRIPT_DOGMEAT   (743)  //  Dogmeat.int     ; Bomb to blow up the Followers from the Gunrunners
+#define SCRIPT_DOGMEAT   (743)  //  Dogmeat.int     ; Bomb to blow up the Followers from the Gunrunners
 #define SCRIPT_BROHIST   (744)  //  BroHist.int     ; Holodisk for the Brotherhood history
 #define SCRIPT_SOPDISK   (745)  //  SopDisk.int     ; Sophia's History disk of the Brotherhood
 #define SCRIPT_MAXDISK   (746)  //  MaxDisk.int     ; Maxson's Version of the history of the Brotherhood
