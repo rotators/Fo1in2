@@ -21,35 +21,45 @@ procedure delete_all;
 #define Scr_Width      get_ini_setting("f2_res.ini|MAIN|SCR_WIDTH")
 #define Scr_Heigh      get_ini_setting("f2_res.ini|MAIN|SCR_HEIGHT")
 
-#define get_wdays      global_var(VAULT13_WATER_DAYS_LEFT)
+#define timer_active    (global_var(QUEST_VAULT13_4_WATERCHIP) < 2)
+#define get_wdays       global_var(VAULT13_WATER_DAYS_LEFT)
 
 procedure start begin
 
-	if (game_loaded) then begin
-		set_global_script_repeat(5);
-		set_global_script_type(1);
-   end
-
-   // Show the pipboy note if the remaining water timer is > 0 days:
-	if ((get_game_mode == PIPBOY) and (get_wdays > 0)) then begin
-      if (get_sfall_global_int("opennote") != 1) then begin
-	      set_sfall_global("opennote", 1);
-         call show_note;
+   if (timer_active) then begin
+      
+   	if (game_loaded) then begin
+   		set_global_script_repeat(5);
+   		set_global_script_type(1);
       end
-      //display_msg("pipboy open!");
-   end
-   else begin
-      if (get_sfall_global_int("opennote") != 0) then begin
-         set_sfall_global("opennote", 0);
-         call delete_all;
+   
+      // Show the pipboy note if the remaining water timer is > 0 days:
+   	if ((get_game_mode == PIPBOY) and (get_wdays > 0)) then begin
+         if (get_sfall_global_int("opennote") != 1) then begin
+   	      set_sfall_global("opennote", 1);
+            call show_note;
+         end
+         //display_msg("pipboy open!");
       end
-      //display_msg("pipboy closed!");
-   end
+      else begin
+         if (get_sfall_global_int("opennote") != 0) then begin
+            set_sfall_global("opennote", 0);
+            call delete_all;
+         end
+         //display_msg("pipboy closed!");
+      end
 
-   if (game_time > get_sfall_global_int("lastchek")) then begin
-      //set_local_var(LVAR_Last_WaterCheck,game_time + ONE_GAME_DAY);
-      set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
-      set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+      if (game_time > get_sfall_global_int("lastchek")) then begin
+         //set_local_var(LVAR_Last_WaterCheck,game_time + ONE_GAME_DAY);
+         set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
+         set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
+
+         if (get_game_mode == PIPBOY) then begin
+            DeleteWin("win_days");
+            call show_days;
+         end
+      end
+
    end
 end
 
