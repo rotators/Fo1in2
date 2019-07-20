@@ -18,6 +18,11 @@
 #define AREA_BONEYARD             (10)
 #define AREA_CATHEDRAL            (11)
 
+#define AREA_RND_DESERT           (49)
+#define AREA_RND_MOUNTAIN         (50)
+#define AREA_RND_CITY             (51)
+#define AREA_RND_COAST            (52)
+
 /*******************************************************************************
                          Индекс текущего города
 *******************************************************************************/
@@ -104,6 +109,11 @@
 #define MAP_DESCRVN4 (62)
 #define MAP_MNTCRVN4 (63)
 #define MAP_DESERT1  (64)
+
+#define MAP_RNDDESER (67)
+#define MAP_RNDMOUNT (68)
+#define MAP_RNDCITY  (69)
+#define MAP_RNDCOAST (70)
 
 /*******************************************************************************
                           Имена карт (строковые)

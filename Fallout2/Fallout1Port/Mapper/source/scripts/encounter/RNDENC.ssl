@@ -1,0 +1,429 @@
+/*
+
+	Random encounter map script
+
+	This script is attached to desert0 and will load another encounter map on enter.
+	We are using this workaround to allow different map types based on where the player
+	currently is on the worldmap: Desert, Mountain, City, Coast.
+
+*/
+
+#include "..\headers\define.h"
+//#include "..\headers\modMain.h"
+#include "..\headers\updatmap.h"
+
+#define NAME                    SCRIPT_RNDENC
+
+#include "..\headers\command.h"
+
+#define city1(x,y) 						((x >= 259) and (x <= 294) and (y >= 345) and (y <= 375))
+#define city2(x,y) 						((x >= 763) and (x <= 794) and (y >= 1129) and (y <= 1169))
+
+
+#define mountain1(x,y) 					((x >= 553) and (x <= 597) and (y >= 505) and (y <= 765))
+#define mountain2(x,y) 					((x >= 700) and (x <= 750) and (y >= 552) and (y <= 740))
+
+
+#define mixed1(x,y) 						((x >= 392) and (x <= 1399) and (y >= 1299) and (y <= 1499))
+#define mixed2(x,y) 						((x >= 1131) and (x <= 1399) and (y >= 854) and (y <= 1299))
+
+
+#define sand1(x,y) 						((x >= 422) and (x <= 586) and (y >= 1002) and (y <= 1089))
+#define sand2(x,y) 						((x >= 676) and (x <= 747) and (y >= 887) and (y <= 1057))
+
+#define coast1(x,y) 						((x >= 422) and (x <= 586) and (y >= 1002) and (y <= 1089))
+#define coast2(x,y) 						((x >= 676) and (x <= 747) and (y >= 887) and (y <= 1057))
+
+
+#define WM_In_Sand(x,y) 				(sand1(x,y) or sand2(x,y))
+
+#define WM_In_City(x,y) 				(city1(x,y) or city2(x,y))
+
+#define WM_In_Mixed(x,y) 				(mixed1(x,y) or mixed2(x,y))
+
+#define WM_In_Mountains(x,y) 			(mountain1(x,y) or mountain2(x,y))
+
+#define WM_In_Coast(x,y) 				(coast1(x,y) or coast2(x,y))
+
+#define set_new_wm_pos 					wm_area_set_pos(AREA_RND_CITY, worldmap_xpos, worldmap_ypos); 		\
+												wm_area_set_pos(AREA_RND_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
+												wm_area_set_pos(AREA_RND_DESERT, worldmap_xpos, worldmap_ypos); 	\
+												wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
+procedure start;
+procedure timed_event_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
+
+procedure load_city;
+procedure load_mountains;
+procedure load_desert;
+procedure load_coast;
+
+procedure Initial_Inven;
+procedure Setup_City;
+procedure CreateSceneryClutter;
+
+procedure add_party;
+
+variable scenery_pid;
+variable scenery_tile;
+variable a:=0;
+variable iter:=0;
+variable temp_pid;
+
+variable iter2:=0;
+variable iter_cluster:=0;
+variable rnd_tile:=0;
+
+export variable Dog_ptr;
+export variable Ian_ptr;
+export variable Katja_ptr;
+export variable Tandi_ptr;
+export variable Tycho_ptr;
+
+variable map;
+
+procedure start begin
+end
+
+procedure map_exit_p_proc begin
+   if (cur_map_index == MAP_DESERT0) then begin
+      set_new_wm_pos;
+   end
+
+   /*if ((map_first_run) and (global_var(GVAR_PLAYER_GOT_CAR) != 0) and ((car_current_town == AREA_RND_DESERT) or (car_current_town == AREA_SHADOW_MAPS)
+        or (car_current_town == AREA_EPA) or (car_current_town == AREA_ABBEY) or (car_current_town == AREA_PRIMITIVE_TRIBE) or
+        (car_current_town == AREA_RND_CITY))) then begin
+
+       car_give_to_party;
+   end*/
+
+end
+
+procedure timed_event_p_proc begin
+   if (cur_map_index == MAP_DESERT0) then begin
+   	if (fixed_param == 1) then begin
+   		set_new_wm_pos;
+
+      	// In City:
+   		if (WM_In_City(worldmap_xpos,worldmap_ypos)) then begin
+   			call load_city;
+   		end
+
+   		// In Mountains and Desert
+   		else if (WM_In_Mixed(worldmap_xpos,worldmap_ypos)) then begin
+   			if (random(0,10) >= 4) then
+   				call load_desert;
+   			else
+   				call load_mountains;
+   		end
+
+   		// In Mountains:
+   		else if (WM_In_Mountains(worldmap_xpos,worldmap_ypos)) then begin
+   			call load_mountains;
+   		end
+
+   		// In Coast:
+   		else if (WM_In_Coast(worldmap_xpos,worldmap_ypos)) then begin
+   			call load_coast;
+   		end
+
+   		// In Desert:
+   		else begin
+   			call load_desert;
+   		end
+
+   	end
+   end
+end
+
+procedure load_city begin
+	map := random(1,8);
+
+   load_map(MAP_RNDCITY, 0);
+	/*if map == 1 then
+		load_map(MAP_RND_CITY1, 0);
+	else if map == 2 then
+		load_map(MAP_RND_CITY_2, 0);
+	else if map == 3 then
+		load_map(MAP_RND_CITY_3, 0);
+	else if map == 4 then
+		load_map(MAP_RND_CITY_4, 0);
+	else if map == 5 then
+		load_map(MAP_RND_CITY_5, 0);
+	else if map == 6 then
+		load_map(MAP_RND_CITY_6, 0);
+	else if map == 7 then
+		load_map(MAP_RND_CITY_7, 0);
+	else if map == 8 then
+		load_map(MAP_RND_CITY_8, 0);*/
+end
+
+procedure load_mountains begin
+
+   load_map(MAP_RNDMOUNT, 0);
+
+	// Real mountains:
+	/*if (random(1,10) > 4) then begin
+		map := random(1,3);
+		if map == 1 then
+			load_map(MAP_RND_MOUNTAIN1, 0);
+		else if map == 2 then
+			load_map(MAP_RND_MOUNTAIN2, 0);
+		else if map == 3 then
+			load_map(MAP_RND_MOUNTAIN_3, 0);
+	end
+	// Forrest:
+	else begin
+		map := random(4,7);
+		if map == 4 then
+			load_map(MAP_RND_DESERT5, 0);
+		else if map == 5 then
+			load_map(MAP_RND_DESERT6, 0);
+		else if map == 6 then
+			load_map(MAP_RND_DESERT7, 0);
+		else if map == 7 then
+			load_map(MAP_RND_DESERT_8, 0);
+	end*/
+
+	// This shit is buggy in here:
+	/*else if map == 4 then
+		load_map(MAP_RND_MOUNTAIN_4, 0);
+	else if map == 5 then
+		load_map(MAP_RND_MOUNTAIN_5, 0);
+	else if map == 6 then
+		load_map(MAP_RND_MOUNTAIN_6, 0);*/
+end
+
+procedure load_desert begin
+	map := random(2,4);
+
+   load_map(MAP_RNDDESER, 0);
+
+	/*if map == 2 then
+		load_map(MAP_RND_DESERT_2, 0);
+	else if map == 3 then
+		load_map(MAP_RND_DESERT_3, 0);
+	else if map == 4 then
+		load_map(MAP_RND_DESERT4, 0);
+	else if map == 5 and (WM_In_Sand(worldmap_xpos,worldmap_ypos)) then
+		load_map(MAP_RND_DESERT_10, 0);
+*/
+	// Forrest maps:
+	/*
+	else if map == 5 then
+		load_map(MAP_RND_DESERT5, 0);
+	else if map == 6 then
+		load_map(MAP_RND_DESERT6, 0);
+	else if map == 7 then
+		load_map(MAP_RND_DESERT7, 0);
+	else if map == 8 then
+		load_map(MAP_RND_DESERT_8, 0);
+	else if map == 9 then
+		load_map(MAP_RND_DESERT_9, 0);
+	else if map == 10 then
+		load_map(MAP_RND_DESERT_10, 0);
+	*/
+end
+
+procedure load_coast begin
+   load_map(MAP_RNDCOAST, 0);
+end
+
+procedure map_enter_p_proc begin
+   variable map := random(1,3);
+   variable Critter;
+   variable Critter_Tile;
+
+   if (cur_map_index == MAP_DESERT0) then begin
+   	set_new_wm_pos;
+   	//debug("THAT map");
+   	add_timer_event(self_obj, game_ticks(0), 1);
+   end
+
+   set_map_exit_tiles(0,0);
+   Lighting;
+
+   if (cur_map_index == MAP_RNDDESER) then
+   	call CreateSceneryClutter;
+
+   call add_party;
+end
+
+procedure map_update_p_proc begin
+   if (cur_map_index == MAP_DESERT0) then begin
+	   add_timer_event(self_obj, game_ticks(0), 1);
+	end
+
+   Lighting;
+end
+
+procedure Setup_City begin
+   /*if (cur_map_index == MAP_RND_CITY1) then begin
+       Create_Car(CAR_RND_CITY1_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_2) then begin
+       Create_Car(CAR_RND_CITY2_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_3) then begin
+       Create_Car(CAR_RND_CITY3_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_4) then begin
+       Create_Car(CAR_RND_CITY4_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_5) then begin
+       Create_Car(CAR_RND_CITY5_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_6) then begin
+       Create_Car(CAR_RND_CITY6_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_7) then begin
+       Create_Car(CAR_RND_CITY7_HEX,CAR_RANDOM_DESERT_ELEV)
+   end
+   else if (cur_map_index == MAP_RND_CITY_8) then begin
+       Create_Car(CAR_RND_CITY8_HEX,CAR_RANDOM_DESERT_ELEV)
+   end*/
+end
+
+procedure Initial_Inven begin
+end
+
+
+procedure CreateSceneryClutter begin
+	/*
+	// This is the area in which no scenery will be placed:
+	//if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	create_object(33554433,19904,0);
+	create_object(33554437,19698,0);
+	create_object(33554439,21104,0);
+	create_object(33554471,20898,0);
+	*/
+
+// Generate desert scenery - scrub grass
+   iter:=0;
+   while iter<50 do
+   begin
+      iter:=iter+1;
+		a:=random(7000,30000);
+      scenery_pid:=random(33554534,33554537);
+		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	   	begin
+            create_object(scenery_pid,a,0);
+         end
+      end
+   end
+
+// generate desert scenery - remains / dead animals, etc.
+   iter:=0;
+   while iter<3 do
+   begin
+      iter:=iter+1;
+		a:=random(7000,30000);
+      scenery_pid:=random(33554517,33554518); // ashes, dead animals //kosci i zw?oki zwierz?cia i bramina
+		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	   	begin
+            create_object(scenery_pid,a,0);
+         end
+      end
+   end
+
+// Generation of desert scenery - tires, grass, smog, barrels desert elements
+   iter:=0;
+   while iter<8 do
+   begin
+      iter:=iter+1;
+		a:=random(7000,30000);
+      scenery_pid:=random(33554533,33554559);
+		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	   	begin
+            create_object(scenery_pid,a,0);
+            create_object(PID_BLOCKING_HEX,a,0); //create a blocker on the same hex
+         end
+      end
+   end
+
+// Generating desert scenery - piles of cool rocks in the desert
+   iter:=0;
+   while iter<8 do
+   begin
+      iter:=iter+1;
+		a:=random(8000,29000);
+      scenery_pid:=random(33554524,33554525);
+		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	   	begin
+            create_object(scenery_pid,a,0); // generuje sceneri?
+         end
+      end
+   end
+
+/*
+// Generation of desert scenery - dry trees without thick branches
+   iter:=0;
+   while iter<10 do
+   begin
+      iter:=iter+1;
+		a:=random(8000,29000);
+      scenery_pid:=random(33554748,33554750);
+		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	   	begin
+            create_object(scenery_pid,a,0); // generuje sceneri?
+         end
+      end
+   end
+*/
+
+// Generation of desert scenery - stone plains just in the desert near the mountains
+   iter:=0;
+   while iter<5 do
+   begin
+      iter:=iter+1;
+		a:=random(7000,30000);
+      scenery_pid:=random(33556497,33556499);
+		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+	   	begin
+            create_object(scenery_pid,a,0);
+         end
+      end
+   end
+
+end
+
+procedure add_party begin
+	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
+		if Tandi_ptr != 0 then begin
+			critter_add_trait(Tandi_ptr, 1, 6, 0);
+			party_add(Tandi_ptr);
+		end
+	end
+	if global_var(IAN_HIRELING_STATUS) == 2 then begin
+		if Ian_ptr != 0 then begin
+			critter_add_trait(Ian_ptr, 1, 6, 0);
+			party_add(Ian_ptr);
+		end
+	end
+	if global_var(DOGMEAT_HIRELING_STATUS) then begin
+		if Dog_ptr != 0 then begin
+			critter_add_trait(Dog_ptr, 1, 6, 0);
+			party_add(Dog_ptr);
+		end
+	end
+	if global_var(TYCHO_HIRELING_STATUS) == 2 then begin
+		if Tycho_ptr != 0 then begin
+			critter_add_trait(Tycho_ptr, 1, 6, 0);
+			party_add(Tycho_ptr);
+		end
+	end
+	if global_var(KATJA_HIRELING_STATUS) == 2 then begin
+		if Katja_ptr != 0 then begin
+			critter_add_trait(Katja_ptr, 1, 6, 0);
+			party_add(Katja_ptr);
+		end
+	end
+end
