@@ -25,6 +25,9 @@
 #define LOAD_MAP_INDEX							(27)	// was 32  (1032) in Fallout 1
 #define RUNNING_BURNING_GUY						(28)	// was 603 (1603) in Fallout 1
 
+#define GVAR_MAP_EXIT_TILE                  	(46)
+#define GVAR_MAP_NEXT_TILE                  	(67)
+
 // Holodisks - VANILLA, DON'T USE (probably)
 #define GVAR_HOLODISK_SIERRA_EVACUATION			(164)	// maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_SIERRA_MED_LOG			(165)	// maybe hard-coded, maybe not?
