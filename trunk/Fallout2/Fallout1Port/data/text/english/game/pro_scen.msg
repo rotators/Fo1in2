@@ -856,7 +856,7 @@
 {44801}{}{A security door. Looks heavily armored.}
 {44900}{}{Nuclear Warhead}
 {45000}{}{Well}
-{45001}{}{A typical well found in the wasteland.}
+{45001}{}{As much as you try, you cannot think of a way of moving this well to the vault.}
 {45100}{}{Craps Table}
 {45101}{}{This is a gambling table.}
 {45200}{}{Craps Table}
@@ -2763,3 +2763,19 @@
 {184900}{}{Computer Console}
 {185000}{}{Viewport Shutters}
 {185100}{}{Steam}
+{185100}{}{Vats}
+{185101}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185200}{}{Vats}
+{185201}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185300}{}{Vats}
+{185301}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185400}{}{Vats}
+{185401}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185500}{}{Vats}
+{185501}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185600}{}{Vats}
+{185601}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185700}{}{Vats}
+{185701}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185800}{}{Vats}
+{185801}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
