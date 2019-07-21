@@ -19,6 +19,9 @@
 #include "..\headers\Party.h"
 //#include "..\headers\Reaction.h"
 
+#include "..\headers\fo1.h"
+
+
 // script.h: Script Procedure Types //
 #define no_proc           (0)
 #define start_proc        (1)
