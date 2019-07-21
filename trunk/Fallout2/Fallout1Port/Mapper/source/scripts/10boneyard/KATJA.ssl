@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_KATJA
+
+#include "..\headers\command.h"
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
 procedure destroy_p_proc;//    script_action == 18
@@ -7,6 +11,7 @@ procedure map_enter_p_proc;//    script_action == 15
 procedure use_obj_on_p_proc;//    script_action == 7
 procedure talk_p_proc;//    script_action == 11
 procedure look_at_p_proc;//    script_action == 21
+procedure push_p_proc;
 
 procedure Katja01;
 procedure Katja02;
@@ -56,10 +61,10 @@ procedure get_armor_ptr;
 procedure get_proto(variable arg0);
 procedure StepAside;
 
-variable hostile;
+variable tmp_hostile;
 variable item;
 variable lock;
-variable dest_tile;
+//variable dest_tile;
 variable line173flag;
 variable line174flag;
 variable line176flag;
@@ -86,6 +91,20 @@ procedure KatjaClose_SDUIBEK;
 procedure KatjaModerate_SDUIBEK;
 procedure KatjaFar_SDUIBEK;
 
+// Added by Lexx
+#define float_katja(x)    float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define Katja_In_Party    (global_var(KATJA_HIRELING_STATUS) == 2)
+variable k;
+
+procedure push_p_proc begin
+   if (Katja_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      k:=300+random(0,2);
+      float_katja(k);
+   end
+end
 
 procedure start
 begin
@@ -121,8 +140,8 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 	else begin
@@ -172,7 +191,7 @@ begin
 //
 //BEGIN WEAPON DROP MOD CODE
 //--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
 // MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
 //
 	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
@@ -456,7 +475,7 @@ begin
 	set_global_var(KATYA_DUDE_LAST_LEVEL, get_pc_stat(1));
 	party_add(self_obj);
 	critter_add_trait(self_obj, 1, 6, 0);
-	if (global_var(KATJA_HIRELING_STATUS) == 0) then begin 
+	if (global_var(KATJA_HIRELING_STATUS) == 0) then begin
 		set_global_var(KATJA_HIRELING_STATUS, 2);
 		gsay_message(623, 2200, 50);
 	end
