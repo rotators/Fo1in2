@@ -1,13 +1,12 @@
 #include "..\headers\define.h"
 
 procedure start;
+procedure critter_p_proc;//    script_action == 12
 procedure destroy_p_proc;
-procedure critter_p_proc;
-procedure timed_event_p_proc;
+procedure talk_p_proc;//    script_action == 11
 
 variable Hostile;
-variable init_teams := 0;
-variable Times;
+variable Only_Once := 1;
 
 
 
@@ -23,87 +22,69 @@ begin
 			end
 		end
 	end
-	if (not(init_teams)) then begin
-		init_teams := 1;
-		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 34);
+	if (Only_Once == 1) then begin
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 65);
+		Only_Once := 0;
 	end
-	if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-		Hostile := 1;
+	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+		call destroy_p_proc;
 	end
 	else begin
 		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
 			call critter_p_proc;
 		end
 		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				call timed_event_p_proc;
+			if (script_action == 11) then begin
+				call talk_p_proc;
 			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					script_overrides;
-					display_msg(message_str(SCRIPT_MUTANT5, 100));
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure timed_event_p_proc
-begin
-	if (fixed_param == 1) then begin
-		animate_move_obj_to_tile(self_obj, 10917, 0);
-		add_timer_event(self_obj, game_ticks(60), 2);
-	end
-	else begin
-		if (fixed_param == 2) then begin
-			animate_move_obj_to_tile(self_obj, 16929, 0);
-			add_timer_event(self_obj, game_ticks(60), 1);
-		end
-	end
-end
-
-procedure critter_p_proc
-begin
-	if (global_var(NECROPOLIS_WAS_INVADED) == 0) then begin
-		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-	end
-	else begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			Hostile := 0;
-			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
-		end
-		if ((tile_num(self_obj) != 16929) and (Times == 0)) then begin
-			Times := 1;
-			animate_move_obj_to_tile(self_obj, 16929, 0);
-			add_timer_event(self_obj, game_ticks(60), 1);
 		end
 	end
 end
 
 procedure destroy_p_proc
 begin
-	set_global_var(SUPER_MUTANTS_KILLED, (global_var(SUPER_MUTANTS_KILLED) + 1));
-	rm_timer_event(self_obj);
 
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+end
+
+procedure critter_p_proc
+begin
+	if (map_var(18) != 0) then begin
+		if (map_var(18) > 2) then begin
+			Hostile := 1;
 		end
 	end
-	rm_timer_event(self_obj);
+//	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+//		Hostile := 1;
+//	end
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		Hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		Hostile := 0;
+	end
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		Hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+end
+
+procedure talk_p_proc
+begin
+	variable Line := 0;
+	variable Msg := 0;
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	Line := random(601, 607);
+	if (get_critter_stat(dude_obj, 34) == 0) and (Line == 607) then begin
+		Line := 606;
+	end
+	else begin
+		if (get_critter_stat(dude_obj, 34) == 1) and (Line == 606) then begin
+			Line := 607;
+		end
+	end
+	Msg := message_str(SCRIPT_GENCHAT, Line);
+	float_msg(self_obj, Msg, 0);
 end
 

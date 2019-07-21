@@ -45,15 +45,12 @@ procedure Maxson31;
 procedure Maxson32;
 procedure Maxson33;
 procedure Maxson34;
-procedure Maxson35;
 procedure MaxsonEnd;
 procedure Remove_Player;
 
 variable hostile;
 variable Only_Once := 1;
 variable Denounce_Player;
-variable Asked_For_1000;
-variable temp;
 
 procedure get_reaction;
 procedure ReactToLevel;
@@ -69,9 +66,6 @@ procedure DownReactLevel;
 procedure Goodbyes;
 
 variable exit_line;
-
-procedure MaxsonAccept;
-
 
 
 
@@ -91,6 +85,10 @@ begin
 		Only_Once := 0;
 		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
 		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 80);
+		if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+			display_msg("INIT_MAXSON2.SSL - please tell Sduibek when and where you saw this message. Thank you!");
+			debug_msg("INIT_MAXSON2.SSL - please tell Sduibek when and where you saw this message. Thank you!");
+		end
 	end
 	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
 		call look_at_p_proc;
@@ -155,28 +153,23 @@ begin
 	end
 	else begin
 		if (local_var(5) == 1) then begin
-			call Maxson24;
+			call Maxson22;
 		end
 		else begin
-			if (local_var(9) == 1) then begin
-				call Maxson22;
+			if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) then begin
+				call Maxson20;
 			end
 			else begin
-				if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) then begin
-					call Maxson20;
+				if (local_var(4) == 0) then begin
+					set_local_var(4, 1);
+					call Maxson01;
 				end
 				else begin
-					if (local_var(4) == 0) then begin
-						set_local_var(4, 1);
-						call Maxson01;
+					if (local_var(1) == 1) then begin
+						call Maxson21;
 					end
 					else begin
-						if (local_var(1) == 1) then begin
-							call Maxson21;
-						end
-						else begin
-							call Maxson19;
-						end
+						call Maxson19;
 					end
 				end
 			end
@@ -184,13 +177,6 @@ begin
 	end
 	gsay_end;
 	end_dialogue;
-	if (local_var(8) == 1) then begin
-		set_local_var(8, 2);
-		set_global_var(SCOUTED_NORTH_BRO, 1);
-		temp := 1500;
-		display_msg(message_str(SCRIPT_MAXSON, 351) + temp + message_str(SCRIPT_MAXSON, 352));
-		give_exp_points(temp);
-	end
 	if (Denounce_Player == 1) then begin
 		call Remove_Player;
 	end
@@ -198,24 +184,7 @@ end
 
 procedure destroy_p_proc
 begin
-//
-//BEGIN WEAPON DROP MOD CODE
-//--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
-// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
-//
-	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
-		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
-		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
-		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
-			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
-			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
-			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
-			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
-		end
-	end
-//END WEAPON DROP MOD CODE
-//
+
 	set_global_var(ENEMY_BROTHERHOOD, 1);
 	rm_timer_event(self_obj);
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
@@ -228,7 +197,7 @@ begin
 			set_global_var(BERSERKER_REPUTATION, 0);
 		end
 		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
+		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 5) == 0) then begin
 			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
 		end
 	end
@@ -244,10 +213,10 @@ procedure Maxson01
 begin
 	gsay_reply(52, 106);
 	giq_option(-3, 52, 333, Maxson32, 50);
-	if ((global_var(MISSING_CARAVAN) == 2) and (local_var(9) == 0)) then begin
+	if (global_var(MISSING_CARAVAN) == 2) then begin
 		giq_option(4, 52, 300, Maxson14, 50);
 	end
-	if ((global_var(MISSING_CARAVAN) == 1) and (local_var(9) == 0)) then begin
+	if (global_var(MISSING_CARAVAN) == 1) then begin
 		giq_option(4, 52, 301, Maxson06, 50);
 	end
 	giq_option(4, 52, 349, Maxson27, 50);
@@ -266,7 +235,6 @@ end
 procedure Maxson02a
 begin
 	if (is_success(roll_vs_skill(dude_obj, 15, 0))) then begin
-		Asked_For_1000 := 1;
 		call Maxson09;
 	end
 	else begin
@@ -280,7 +248,6 @@ end
 
 procedure Maxson04
 begin
-	set_local_var(9, 1);
 	gsay_reply(52, 133);
 	giq_option(4, 52, 306, Maxson04a, 50);
 	giq_option(4, 52, 307, Maxson27, 50);
@@ -289,7 +256,6 @@ end
 
 procedure Maxson04a
 begin
-	set_local_var(9, 1);
 	set_map_var(20, 1);
 	call Maxson05;
 end
@@ -309,12 +275,7 @@ end
 
 procedure Maxson07
 begin
-	if (get_critter_stat(dude_obj, 34) == 0) then begin
-		gsay_reply(52, 355);
-	end
-	else begin
-		gsay_reply(52, 356);
-	end
+	gsay_reply(52, 128);
 	giq_option(4, 52, 312, Maxson14, 50);
 	giq_option(4, 52, 313, Maxson13, 50);
 end
@@ -330,11 +291,10 @@ end
 procedure Maxson08a
 begin
 	if (is_success(roll_vs_skill(dude_obj, 15, -20))) then begin
-		Asked_For_1000 := 1;
-		call Maxson09;
+		call Maxson04;
 	end
 	else begin
-		call Maxson12;
+		call Maxson10;
 	end
 end
 
@@ -343,7 +303,7 @@ begin
 	gsay_reply(52, 223);
 	giq_option(4, 52, 317, Maxson09a, 51);
 	giq_option(4, 52, 318, Maxson18, 50);
-	giq_option(4, 52, 319, MaxsonAccept, 50);
+	giq_option(4, 52, 319, MaxsonEnd, 50);
 end
 
 procedure Maxson09a
@@ -358,13 +318,6 @@ end
 
 procedure Maxson10
 begin
-	set_local_var(9, 1);
-	if (Asked_For_1000) then begin
-		item_caps_adjust(dude_obj, 1000);
-	end
-	else begin
-		item_caps_adjust(dude_obj, 500);
-	end
 	call DownReact;
 	gsay_reply(52, 226);
 	giq_option(4, 52, 320, MaxsonEnd, 51);
@@ -424,10 +377,8 @@ procedure Maxson19
 begin
 	gsay_reply(52, 201);
 	giq_option(-3, 52, 333, Maxson32, 50);
-	if ((global_var(MISSING_CARAVAN) == 2) and (local_var(9) == 0)) then begin
-		giq_option(4, 52, 329, Maxson14, 50);
-	end
-	if ((global_var(MISSING_CARAVAN) == 1) and (local_var(9) == 0)) then begin
+	giq_option(4, 52, 329, Maxson14, 50);
+	if (global_var(MISSING_CARAVAN) == 1) then begin
 		giq_option(4, 52, 330, Maxson06, 50);
 	end
 	giq_option(4, 52, 332, Maxson27, 50);
@@ -438,9 +389,7 @@ procedure Maxson20
 begin
 	gsay_reply(52, 193);
 	giq_option(-3, 52, 333, Maxson32, 50);
-	if (local_var(7) == 0) then begin
-		giq_option(4, 52, 334, Maxson22, 50);
-	end
+	giq_option(4, 52, 334, Maxson22, 50);
 	giq_option(4, 52, 335, Maxson27, 50);
 	giq_option(4, 52, 336, Maxson18, 50);
 end
@@ -456,34 +405,22 @@ end
 
 procedure Maxson22
 begin
-	temp := local_var(7);
 	gsay_reply(52, 205);
-	if ((temp == 0) and (global_var(VATS_BLOWN) == 1)) then begin
-		giq_option(4, 52, 400, Maxson35, 50);
+	if (global_var(WORLDMAPLIST_MILITARYBASE) != 2) then begin
+		giq_option(4, 52, 337, Maxson18, 50);
 	end
 	else begin
-		if ((temp == 0) and (global_var(WORLDMAPLIST_MILITARYBASE) != 2)) then begin
-			giq_option(4, 52, 337, Maxson18, 50);
+		if (global_var(MASTER_BLOWN) == 1) then begin
+			giq_option(4, 52, 338, Maxson23, 50);
 		end
 		else begin
-			if ((temp == 0) and (global_var(WORLDMAPLIST_MILITARYBASE) == 2) and (global_var(WORLDMAPLIST_MASTERS_LAIR) == 2)) then begin
-				giq_option(4, 52, 339, Maxson23, 50);
-			end
-			else begin
-				if ((temp == 0) and (global_var(WORLDMAPLIST_MILITARYBASE) == 2) and (global_var(WORLDMAPLIST_MASTERS_LAIR) != 2)) then begin
-					giq_option(4, 52, 338, Maxson23, 50);
-				end
-			end
+			giq_option(4, 52, 339, Maxson06, 50);
 		end
 	end
-	giq_option(4, 52, 335, Maxson27, 50);
-	giq_option(4, 52, 336, Maxson18, 50);
 end
 
 procedure Maxson23
 begin
-	set_local_var(7, 1);
-	set_local_var(8, 1);
 	gsay_reply(52, 213);
 	giq_option(4, 52, 340, Maxson24, 50);
 end
@@ -493,12 +430,11 @@ begin
 	set_local_var(5, 1);
 	gsay_reply(52, 219);
 	giq_option(4, 52, 341, Maxson25, 50);
-	giq_option(4, 52, 342, MaxsonEnd, 50);
+	giq_option(4, 52, 342, Maxson33, 50);
 end
 
 procedure Maxson25
 begin
-	set_local_var(5, 0);
 	set_map_var(19, 1);
 	gsay_message(52, 221, 50);
 end
@@ -555,40 +491,23 @@ end
 
 procedure Maxson32
 begin
-	gsay_message(52, 275, 50);
+	gsay_reply(52, 275);
+	giq_option(4, 52, 349, Maxson27, 50);
+	giq_option(4, 52, 350, Maxson18, 50);
 end
 
 procedure Maxson33
 begin
-	if (get_critter_stat(dude_obj, 34) == 0) then begin
-		gsay_reply(52, 357);
-	end
-	else begin
-		gsay_reply(52, 358);
-	end
+	gsay_reply(52, 156);
 	giq_option(4, 52, 349, Maxson27, 50);
 	giq_option(4, 52, 350, Maxson18, 50);
 end
 
 procedure Maxson34
 begin
-	if (get_critter_stat(dude_obj, 34) == 0) then begin
-		gsay_reply(52, 359);
-	end
-	else begin
-		gsay_reply(52, 360);
-	end
+	gsay_reply(52, 193);
 	giq_option(4, 52, 349, Maxson27, 50);
 	giq_option(4, 52, 350, Maxson18, 50);
-end
-
-procedure Maxson35
-begin
-	set_local_var(7, 1);
-	set_local_var(8, 1);
-	gsay_reply(52, 133);
-	giq_option(4, 52, 335, Maxson27, 50);
-	giq_option(4, 52, 336, Maxson18, 50);
 end
 
 procedure MaxsonEnd
@@ -602,7 +521,7 @@ begin
 	set_global_var(MARK_BROTHER_3, 0);
 	set_global_var(MARK_BROTHER_4, 0);
 	set_global_var(MARK_BROTHER_5, 0);
-	load_map(13, 1);
+	world_map;
 end
 
 procedure get_reaction
@@ -729,11 +648,6 @@ end
 procedure Goodbyes
 begin
 	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-end
-
-procedure MaxsonAccept
-begin
-	set_local_var(9, 1);
 end
 
 
