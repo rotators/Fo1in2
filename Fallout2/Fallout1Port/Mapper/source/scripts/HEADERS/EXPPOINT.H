@@ -165,6 +165,7 @@
 // Necropolis
 
 // Glow
+#define EXP_REPAIR_GENERATOR 					(1000)
 
 // BOS
 
