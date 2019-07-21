@@ -47,7 +47,7 @@
 #define SCRIPT_CABBOT    (40)  //  Cabbot.int     ; Cabbot, the initiate from the Brotherhood of Steel
 #define SCRIPT_CHILDMEM  (41)  //  Childmem.int   ; Children of the Cathedral member                                             
 #define SCRIPT_DECKER    (42)  //  Decker.int     ; Decker, the head of the Hub Underground
-#define SCRIPT_ELDER     (43)  //  Elder.int      ; The Elder of Shady Sands
+#define SCRIPT_ELDER     (43)  //  Elder.int      ; scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_GIZMO     (44)  //  Gizmo.int      ; Gizmo, the casino owner in Junktown
 #define SCRIPT_HAROLD    (45)  //  Harold.int     ; Harold, the old mutant from the Hub
 #define SCRIPT_JAIN      (46)  //  Jain.int       ; Jain, Priestess of the Children of the Cathedral
@@ -71,25 +71,25 @@
 #define SCRIPT_GANGER    (64)  //  Ganger.int      ; I'm afraid of all these Ganger ghouls.
 #define SCRIPT_GARY      (65)  //  Gary.int        ; Uh oh. It's Gary the Super Mutant
 #define SCRIPT_GENERIC   (66)  //  Generic.int     ; Hey Mom! Look at the generic Ghouls
-#define SCRIPT_GENGHOUL  (67)  //  GenGhoul.int    ; Hey Mom! Look at the generic Ghouls                                         
+#define SCRIPT_GENGHOUL  (67)  //  GenGhoul.int    ; scripts.lst - DONOTUSE wtf??????                          
 #define SCRIPT_GENGLOW1  (68)  //  GenGlow1.int    ; It's a Generic Glowing One                                                  
 #define SCRIPT_GHDEAD    (69)  //  GhDead.int      ; It's a dead ghoul that we see here.
 #define SCRIPT_GHDORGRD  (70)  //  GhDorGrd.int    ; Ghoul Door Guard.                                                           
 #define SCRIPT_GHGENDED  (71)  //  GhGenDed.int    ; Generic dead ghouls for Necropolis.                                         
 #define SCRIPT_GHGUARD   (72)  //  GhGuard.int     ; Ghoul guard for Set.
-#define SCRIPT_GHOUL     (73)  //  Ghoul.int       ; The ghoul manager of the Necropolis hotel.
+#define SCRIPT_GHOUL     (73)  //  Ghoul.int       ; scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_GHREFUGE  (74)  //  GhRefuge.int    ; Ghoul Refugee hiding the the Zombie hideout                                 
 #define SCRIPT_GHZERO    (75)  //  GhZero.int      ; A ghoul guard
 #define SCRIPT_GLOWONE   (76)  //  GlowOne.int     ; Glowing Ones that are caged by Set.
 #define SCRIPT_GROUNDR   (77)  //  Groundr.int     ; Necropolis Undergrounders
-#define SCRIPT_GUARD     (78)  //  Guard.int       ; Guard from Shady Sands
-#define SCRIPT_HARRY     (79)  //  Harry.int       ; Harry the Super mutant with many lines
+#define SCRIPT_GUARD     (78)  //  Guard.int       ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_HARRY     (79)  //  Harry.int       ; scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_LARRY     (80)  //  Larry.int       ; Larry the Super Mutant
 #define SCRIPT_LEADER    (81)  //  Leader.int      ; The ghoul leader in Necropolis (Ganger?)
-#define SCRIPT_MANAGER   (82)  //  Manager.int     ; The Ghoul hotel manager
+#define SCRIPT_MANAGER   (82)  //  Manager.int     ; scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_MANGLED   (83)  //  Mangled.int     ; Some mangled bodies in Necropolis.
 #define SCRIPT_MEANDER   (84)  //  Meander.int     ; Some meandering ghouls
-#define SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; The invisible mutants.
+#define SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_NH2OCOMP  (86)  //  NH2OComp.int    ; Necropolis Water Computer                                                   
 #define SCRIPT_NH2OPUMP  (87)  //  NH2OPump.int    ; Necropolis Water Pump                                                       
 #define SCRIPT_ODDWALL   (88)  //  OddWall.int     ; There is something odd about this wall in Necropolis
@@ -102,7 +102,7 @@
 #define SCRIPT_SETGUARD  (95)  //  SetGuard.int    ; Guards to protect Set from Harm.                                            
 #define SCRIPT_SETSCTDR  (96)  //  SetSctDr.int    ; Set's Secret Door.                                                          
 #define SCRIPT_SMELL     (97)  //  Smell.int       ; It's an odd smell in Necropolis (must be ghouls?)
-#define SCRIPT_STIMPACK  (98)  //  StimPack.int    ; A stim pack to heal you                                                     
+#define SCRIPT_STIMPACK  (98)  //  StimPack.int    ; scripts.lst - DONOTUSE wtf??????                                              
 #define SCRIPT_STOREROM  (99)  //  StoreRom.int    ; Spacial script for the Necropolis store room                                
 #define SCRIPT_SUPER     (100)  //  Super.int       ; Super Mutants from the city Necropolis
 #define SCRIPT_TERRY     (101)  //  Terry.int       ; Terry the Super Mutant (fly away)
@@ -257,7 +257,7 @@
 #define SCRIPT_SMITTY    (250)  //  Smitty.int      ; Adytum's blacksmith
 #define SCRIPT_ADYTOWNR  (251)  //  Adytownr.int    ; Generic script for an Adytowner                                             
 #define SCRIPT_REGULATR  (252)  //  Regulatr.int    ; Generic Regulator, guard of Adytown                               
-#define SCRIPT_LORRI     (253)  //  Lorri.int       ;from the Brotherhood
+#define SCRIPT_LORRI     (253)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_SAMMAEL   (254)  //  Sammael.int     ; Scav from Adytum
 #define SCRIPT_CALEB     (255)  //  Caleb.int       ; Head of the Regulators from Adytum
 #define SCRIPT_TAYLOR    (256)  //  Taylor.int      ; Shop keeper/trader from Adytum
@@ -326,8 +326,8 @@
 #define SCRIPT_SOPHIA    (319)  //  Sophia.int      ; Sophia, an instructor for the Brotherhood
 #define SCRIPT_MICHAEL   (320)  //  Michael.int     ; Distributes weapons to initiates.
 #define SCRIPT_GLO4WEAP  (321)  //  Glo4Weap.int    ; Weapon depot on level 4 of the Glow                                         
-#define SCRIPT_SCRIBEA   (322)  //  ScribeA.int     ; Scribe in the main computer room
-#define SCRIPT_SCRIBEB   (323)  //  ScribeB.int     ; Generic Scribe
+#define SCRIPT_SCRIBEA   (322)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_SCRIBEB   (323)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_SENTRY    (324)  //  Sentry.int      ; Paladin guard after invasion
 #define SCRIPT_PALADINA  (325)  //  PaladinA.int    ; Paladin in the Hall of the Brotherhood.                                     
 #define SCRIPT_PALADINB  (326)  //  PaladinB.int    ; Paladin in the Guard room                                                   
@@ -572,7 +572,7 @@
 #define SCRIPT_DECKGRD   (565)  //  deckgrd.int     ; One of Decker's Guards
 #define SCRIPT_DEMETRE   (566)  //  demetre.int     ; Demetre, head of the Crimson Caravans
 #define SCRIPT_FRY       (567)  //  fry.int         ; Deputy Fry of the Hub Police
-#define SCRIPT_DOGMEAT   (568)  //  dogmeat.int     ; Dogmeat, dog who is friends w/ jacob
+#define SCRIPT_DOGMEAT   (568)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_ELECDOOR  (569)  //  elecdoor.int    ; Electronic lock on a door in the Hub                                        
 #define SCRIPT_ELECTRAP  (570)  //  electrap.int    ; Electronic Trap in the Thieves' Circle                                      
 #define SCRIPT_FEMFARMR  (571)  //  femfarmr.int    ; Female Farmer for the Hub                                                   
@@ -605,7 +605,7 @@
 #define SCRIPT_MSTMERCH  (598)  //  mstmerch.int    ; Master Merchant from the hub                                                
 #define SCRIPT_RICHIE    (599)  //  richie.int      ; Richie, guards a safe in the Hub
 #define SCRIPT_RUFUS     (600)  //  rufus.int       ; Rufus, cyber hack in the Hub
-#define SCRIPT_RUTGER    (601)  //  rutger.int      ; Rutger, second in command of the Far Go Traders
+#define SCRIPT_RUTGER    (601)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_SID       (602)  //  sid.int         ; Sid, annoying little twit who helps Beth
 #define SCRIPT_THORNDYK  (603)  //  thorndyk.int    ; Thorndyke, Dr. in the Children in the Hub                                   
 #define SCRIPT_TROY      (604)  //  troy.int        ; Troy, a super mutant in the Hub
@@ -636,7 +636,7 @@
 #define SCRIPT_HDTUP2DN  (629)  //  HDtUp2Dn.int    ; Hub, Downtown, ladder going up to down                                      
 #define SCRIPT_HDTVAULT  (630)  //  HDtVault.int    ; Vault to FLC in the Hub                                           
 #define SCRIPT_MRHANDYC  (631)  //  MrHandyC.int    ; Mr. Handy for cleaning up the Vats.                                         
-#define SCRIPT_STUDENT   (632)  //  Student.int     ; The Students being trained in the Brotherhood
+#define SCRIPT_STUDENT   (632)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_THOMAS    (633)  //  Thomas.int      ; trainer in the Brotherhood
 #define SCRIPT_MODREACT  (634)  //  ModReact.int    ; DO NOT ATTACH TO ANYTHING. JUST IN TO MAKE THINGS COMPILE                   
 #define SCRIPT_ADY2FARM  (635)  //  Ady2Farm.int    ; Moves dude from Adytum to hydroponic farms                                  
@@ -662,7 +662,7 @@
 #define SCRIPT_THFD2U    (655)  //  ThfD2U.int      ; ladder to go from cellar to ground of the Thieves' Circle
 #define SCRIPT_MVNEWS    (656)  //  MVNews.int      ; Newspaper machine in the Master's Vault
 #define SCRIPT_DEALER    (657)  //  Dealer.int      ; Insane used car dealer.
-#define SCRIPT_USEDCAR   (658)  //  UsedCar.int     ; Map script for the used car lot.
+#define SCRIPT_USEDCAR   (658)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_BRODEAD   (659)  //  BroDead.int     ; Map script for Brotherhood of Steel, destroyed version.
 #define SCRIPT_CHILDEAD  (660)  //  ChilDead.int    ; Map script for Cathedral, destroyed version.                                
 #define SCRIPT_MBDEAD    (661)  //  MBDead.int      ; Map script for Military Base, destroyed version.
@@ -705,7 +705,7 @@
 #define SCRIPT_MERCH1    (698)  //  Merch1.int      ; Merchant from the Hub
 #define SCRIPT_LANCE     (699)  //  Lance.int       ; Shady Sands guard on long patrol.
 #define SCRIPT_LONERAID  (700)  //  LoneRaid.int    ; Lone Raider trying to get to camp.                                          
-#define SCRIPT_RNDMERCH  (701)  //  RndMerch.int    ; Random Hub merchants.                                                       
+#define SCRIPT_RNDMERCH  (701)  //  scripts.lst - DONOTUSE wtf??????                                                    
 #define SCRIPT_PALSCOUT  (702)  //  PalScout.int    ; Random Paladin scouts.                                                      
 #define SCRIPT_TRENT     (703)  //  Trent.int       ; Survivor of a Deathclaw attack.
 #define SCRIPT_HDEALER   (704)  //  HDealer.int     ; dealer in the falcon for craps
@@ -724,7 +724,7 @@
 #define SCRIPT_GENSCRIB  (717)  //  Genscrib.int    ; Scribe in Brotherhood                                                       
 #define SCRIPT_GENKNIGH  (718)  //  Genknigh.int    ; Knight in Brotherhood                                                       
 #define SCRIPT_GENPALAD  (719)  //  Genpalad.int    ; Paladin in Brotherhood                                                      
-#define SCRIPT_HSLOTS    (720)  //  Hslots.int      ; Slot machines in the Hub
+#define SCRIPT_HSLOTS    (720)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_RIPUP2DN  (721)  //  RipUp2Dn.int    ; Stairs up from the Rippers' cellar.                                         
 #define SCRIPT_RIPDN2UP  (722)  //  RipDn2Up.int    ; Stairs down from the Rippers' hideout.                                      
 #define SCRIPT_RD1SCRB1  (723)  //  Rd1Scrb1.int    ; Random Scribe from the Brotherhood                                          
@@ -747,7 +747,7 @@
 #define SCRIPT_REVULSE   (740)  //  Revulse.int     ; Corridor of revulsion
 #define SCRIPT_FIELDGEN  (741)  //  fieldgen.int    ; field generator in the military base                                        
 #define SCRIPT_ELEVCON   (742)  //  ElevCon.int     ; Elevator Control for the Force Fields to the Nuke Bomb
-#define SCRIPT_DOGMEAT   (743)  //  Dogmeat.int     ; Bomb to blow up the Followers from the Gunrunners
+#define SCRIPT_DOGMEAT   (743)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_BROHIST   (744)  //  BroHist.int     ; Holodisk for the Brotherhood history
 #define SCRIPT_SOPDISK   (745)  //  SopDisk.int     ; Sophia's History disk of the Brotherhood
 #define SCRIPT_MAXDISK   (746)  //  MaxDisk.int     ; Maxson's Version of the history of the Brotherhood
@@ -949,7 +949,7 @@
 #define SCRIPT_HIGHELD   (942)  //  HighEld.int     ; Elders for the Brotherhood
 #define SCRIPT_MOLERAT2  (943)  //  MoleRat2.int    ; Another stupid molerat                                                      
 #define SCRIPT_BROELD    (944)  //  BroEld.int      ; Brotherhood elder (generic)
-#define SCRIPT_RNDECSPL  (945)  //  Rndecspl.int    ; Another random encounter script                                             
+#define SCRIPT_RNDECSPL  (945)  //  scripts.lst - DONOTUSE wtf??????                                             
 #define SCRIPT_ICECHEST  (946)  //  IceChest.int    ; box where Garl can place player's stuff                           
 #define SCRIPT_LTCODES   (947)  //  LtCodes.int     ; Codes the Lt is holding
 #define SCRIPT_PRISFELD  (948)  //  PrisFeld.int    ; prisoner force field in the master's lair                         
@@ -957,7 +957,7 @@
 #define SCRIPT_KENNY     (950)  //  Kenny.int       ; They killed Kenny!
 #define SCRIPT_SUPLYGRD  (951)  //  SuplyGrd.int    ; supply guards for 1st level brotherhood                                     
 #define SCRIPT_HUBMIS1   (952)  //  HubMis1.int     ; map script for HubMis1.map
-#define SCRIPT_RNDECGEN  (953)  //  RndEcGen.int    ; Generic Random encounter monsters                                           
+#define SCRIPT_RNDECGEN  (953)  //  scripts.lst - DONOTUSE wtf??????                           
 #define SCRIPT_GENLOCK   (954)  //  GenLock.int     ; generic foot locker which is locked
 #define SCRIPT_REGDISK   (955)  //  RegDisk.int     ; Rugulator holodisk
 #define SCRIPT_HUBPRIS   (956)  //  HubPris.int     ; Prisoner in the Hub

@@ -328,7 +328,7 @@
 #define obj_is_visible_flag(WHO)  has_trait(TRAIT_OBJECT,WHO,OBJECT_VISIBILITY)
 // Trait Types
 #define TRAIT_fast_metabolism  (0)
-#define TRAIT_bruiser          (1)	// SD 3, Red Scare; TRAIT_bruiser
+#define TRAIT_gifted           (1)
 #define TRAIT_small_frame      (2)
 #define TRAIT_one_hander       (3)
 #define TRAIT_finesse          (4)
@@ -340,28 +340,10 @@
 #define TRAIT_good_natured    (10)
 #define TRAIT_drug_addict     (11)
 #define TRAIT_drug_resistant  (12)
-#define TRAIT_sex_appeal      (13)	// SD 3, Wild Child
+#define TRAIT_sex_appeal      (13) // Deprecated Fo2 stuff
+#define TRAIT_night_person    (13)
 #define TRAIT_skilled         (14)
-#define TRAIT_gifted          (15)	// SD 3, TRAIT_gifted
-
-// SD 3 Backup:
-/*// Trait Types
-#define TRAIT_fast_metabolism  (0)
-#define TRAIT_gifted           (1)	// SD 3, Red Scare; TRAIT_bruiser
-#define TRAIT_small_frame      (2)
-#define TRAIT_one_hander       (3)
-#define TRAIT_finesse          (4)
-#define TRAIT_kamikaze         (5)
-#define TRAIT_heavy_handed     (6)
-#define TRAIT_fast_shot        (7)
-#define TRAIT_bloody_mess      (8)
-#define TRAIT_jinxed           (9)
-#define TRAIT_good_natured    (10)
-#define TRAIT_drug_addict     (11)
-#define TRAIT_drug_resistant  (12)
-#define TRAIT_sex_appeal      (13)	// SD 3, Wild Child
-#define TRAIT_skilled         (14)
-#define TRAIT_bruiser         (15)	// SD 3, TRAIT_gifted */
+#define TRAIT_bruiser         (15)
 
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
