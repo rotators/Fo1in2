@@ -4,37 +4,9 @@ procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat;
 procedure critter_p_proc;//    script_action == 12
 procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
 procedure destroy_p_proc;//    script_action == 18
 procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure thomasend;
-procedure thomas00;
-procedure thomas01;
-procedure thomas02;
-procedure thomas03;
-procedure thomas04;
-procedure thomas05;
-procedure thomas06;
-procedure thomas07;
-procedure thomas08;
-procedure thomas09;
-procedure thomas10;
-procedure thomas11;
-procedure thomas12;
-procedure thomas13;
-procedure thomas14;
-procedure thomas15;
-procedure thomas16;
-procedure thomas17;
-procedure thomas18;
-procedure thomas19;
-procedure thomas20;
-procedure thomas21;
-procedure thomas22;
-
-variable hostile;
-variable Only_Once := 1;
-
 procedure get_reaction;
 procedure ReactToLevel;
 procedure LevelToReact;
@@ -49,6 +21,10 @@ procedure DownReactLevel;
 procedure Goodbyes;
 
 variable exit_line;
+variable hostile;
+variable Pick;
+variable Only_Once := 1;
+variable message;
 
 
 
@@ -61,22 +37,13 @@ begin
 				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
 					variable A; if obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
 				set_local_var(12, 1);
-				if obj_carrying_pid_obj(self_obj, PID_BROTHERHOOD_COMBAT_ARMOR) then begin
-					variable BroArmor := 0;
-					BroArmor := obj_carrying_pid_obj(self_obj, PID_BROTHERHOOD_COMBAT_ARMOR);
-					rm_obj_from_inven(dude_obj, BroArmor);
-					destroy_object(BroArmor);
-					BroArmor := 0;
-					BroArmor := create_object_sid(PID_BROTHERHOOD_COMBAT_ARMOR, 0, 0, -1);
-					add_obj_to_inven(self_obj, BroArmor);
-					wield_obj_critter(self_obj, BroArmor);
-				end
 			end
 		end
 	end
 	if Only_Once then begin
+		Only_Once := 0;
 		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
-		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 64);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 65);
 	end
 	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
 		call look_at_p_proc;
@@ -110,6 +77,18 @@ end
 
 procedure critter_p_proc
 begin
+	if (map_var(18) != 0) then begin
+		if (map_var(18) != local_var(5)) then begin
+			set_local_var(5, map_var(18));
+			if (map_var(18) > 2) then begin
+				float_msg(self_obj, message_str(SCRIPT_HALLGRD, 201), 3);
+				hostile := 1;
+			end
+			else begin
+				float_msg(self_obj, message_str(SCRIPT_HALLGRD, 200), 3);
+			end
+		end
+	end
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
 		hostile := 1;
 	end
@@ -133,60 +112,56 @@ end
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
-	start_gdialog(685, self_obj, 4, -1, -1);
-	gsay_start;
-	if (local_var(4) != 1) then begin
-		set_local_var(4, 1);
-		if (local_var(1) == 1) then begin
-			call thomas01;
-		end
-		else begin
-			call thomas00;
-		end
+	Pick := random(1, 9);
+	if (Pick == 1) then begin
+		message := message_str(SCRIPT_HALLGRD, 101);
 	end
 	else begin
-		if (local_var(1) == 1) then begin
-			if (local_var(6) != 0) then begin
-				call thomas09;
-			end
-			else begin
-				call thomas08;
-			end
+		if (Pick == 2) then begin
+			message := message_str(SCRIPT_HALLGRD, 102);
 		end
 		else begin
-			if (local_var(6) != 0) then begin
-				call thomas20;
+			if (Pick == 3) then begin
+				message := message_str(SCRIPT_HALLGRD, 103);
 			end
 			else begin
-				call thomas19;
+				if (Pick == 4) then begin
+					message := message_str(SCRIPT_HALLGRD, 104);
+				end
+				else begin
+					if (Pick == 5) then begin
+						message := message_str(SCRIPT_HALLGRD, 105);
+					end
+					else begin
+						if (Pick == 6) then begin
+							message := message_str(SCRIPT_HALLGRD, 106);
+						end
+						else begin
+							if (Pick == 7) then begin
+								message := message_str(SCRIPT_HALLGRD, 107);
+							end
+							else begin
+								if (Pick == 8) then begin
+									message := message_str(SCRIPT_HALLGRD, 108);
+								end
+								else begin
+									if (Pick == 9) then begin
+										message := message_str(SCRIPT_HALLGRD, 110) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_HALLGRD, 111);
+									end
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 	end
-	gsay_end;
-	end_dialogue;
+	float_msg(self_obj, message, 0);
 end
 
 procedure destroy_p_proc
 begin
-//
-//BEGIN WEAPON DROP MOD CODE
-//--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
-// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
-//
-	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
-		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
-		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
-		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
-			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
-			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
-			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
-			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
-		end
-	end
-//END WEAPON DROP MOD CODE
-//
+
 	set_global_var(ENEMY_BROTHERHOOD, 1);
 	rm_timer_event(self_obj);
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
@@ -208,216 +183,7 @@ end
 procedure look_at_p_proc
 begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_THOMAS2, 100));
-end
-
-procedure thomasend
-begin
-end
-
-procedure thomas00
-begin
-	gsay_reply(685, 101);
-	giq_option(4, 685, 102, thomas05, 50);
-	giq_option(4, 685, 103, thomas06, 50);
-	giq_option(4, 685, 104, thomas04, 50);
-	giq_option(4, 685, 105, thomasend, 50);
-	giq_option(-3, 685, 106, thomas02, 50);
-end
-
-procedure thomas01
-begin
-	gsay_reply(685, 108);
-	giq_option(4, 685, 102, thomas05, 50);
-	giq_option(4, 685, 103, thomas06, 50);
-	giq_option(4, 685, 104, thomas04, 50);
-	giq_option(4, 685, 105, thomasend, 50);
-	giq_option(-3, 685, 106, thomas02, 50);
-end
-
-procedure thomas02
-begin
-	gsay_message(685, 109, 51);
-end
-
-procedure thomas03
-begin
-	gsay_message(685, 110, 51);
-end
-
-procedure thomas04
-begin
-	gsay_message(685, message_str(SCRIPT_THOMAS2, 111) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_THOMAS2, 112), 51);
-end
-
-procedure thomas05
-begin
-	gsay_message(685, 113, 50);
-end
-
-procedure thomas06
-begin
-	if (get_critter_stat(dude_obj, 34) == 0) then begin
-		gsay_reply(685, 114);
-	end
-	else begin
-		gsay_reply(685, 115);
-	end
-	call thomas10;
-end
-
-procedure thomas07
-begin
-	gsay_reply(685, 125);
-	call thomas10;
-end
-
-procedure thomas08
-begin
-	if (local_var(5) != 0) then begin
-		set_local_var(5, 1);
-		gsay_reply(685, 126);
-	end
-	else begin
-		gsay_reply(685, 127);
-	end
-	call thomas10;
-end
-
-procedure thomas09
-begin
-	gsay_reply(685, 125);
-	giq_option(4, 685, 102, thomas05, 50);
-	giq_option(4, 685, 103, thomas06, 50);
-	giq_option(4, 685, 104, thomas04, 50);
-	giq_option(4, 685, 105, thomas21, 50);
-	giq_option(-3, 685, 107, thomas02, 50);
-end
-
-procedure thomas10
-begin
-	giq_option(4, 685, 118, thomas11, 50);
-	giq_option(4, 685, 119, thomas12, 50);
-	giq_option(4, 685, 120, thomas13, 50);
-	giq_option(4, 685, 121, thomas14, 50);
-	giq_option(4, 685, 122, thomas15, 50);
-	giq_option(4, 685, 123, thomas16, 50);
-	giq_option(4, 685, 124, thomas17, 50);
-	giq_option(-3, 685, 106, thomas02, 50);
-end
-
-procedure thomas11
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-	gfade_in(1);
-	display_msg(message_str(SCRIPT_THOMAS2, 130));
-	set_local_var(6, 1);
-end
-
-procedure thomas12
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-	gfade_in(1);
-	display_msg(message_str(SCRIPT_THOMAS2, 132));
-	set_local_var(6, 1);
-end
-
-procedure thomas13
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-	gfade_in(1);
-	display_msg(message_str(SCRIPT_THOMAS2, 134));
-	set_local_var(6, 1);
-end
-
-procedure thomas14
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-	gfade_in(1);
-	display_msg(message_str(SCRIPT_THOMAS2, 135));
-	set_local_var(6, 1);
-end
-
-procedure thomas15
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-	gfade_in(1);
-	display_msg(message_str(SCRIPT_THOMAS2, 136));
-	set_local_var(6, 1);
-end
-
-procedure thomas16
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-	gfade_in(1);
-	display_msg(message_str(SCRIPT_THOMAS2, 137));
-	set_local_var(6, 1);
-end
-
-procedure thomas17
-begin
-	gsay_message(685, 138, 50);
-end
-
-procedure thomas18
-begin
-	gsay_message(685, 139, 51);
-end
-
-procedure thomas19
-begin
-	if (local_var(5) != 0) then begin
-		set_local_var(5, 1);
-		gsay_reply(685, 140);
-	end
-	else begin
-		gsay_reply(685, 127);
-	end
-	call thomas10;
-end
-
-procedure thomas20
-begin
-	gsay_reply(685, 140);
-	giq_option(4, 685, 102, thomas03, 50);
-	giq_option(4, 685, 103, thomas07, 50);
-	giq_option(4, 685, 104, thomas04, 50);
-	giq_option(4, 685, 105, thomas22, 50);
-	giq_option(-3, 685, 107, thomas02, 50);
-end
-
-procedure thomas21
-begin
-	gsay_message(685, 142, 50);
-end
-
-procedure thomas22
-begin
-	gsay_message(685, 143, 51);
+	display_msg(message_str(SCRIPT_HALLGRD, 100));
 end
 
 procedure get_reaction

@@ -7,20 +7,40 @@ procedure pickup_p_proc;//    script_action == 4
 procedure talk_p_proc;//    script_action == 11
 procedure destroy_p_proc;//    script_action == 18
 procedure look_at_p_proc;//    script_action == 21
-procedure BoS_RoomMate00;
-procedure BoS_RoomMate01;
-procedure BoS_RoomMate02;
-procedure BoS_RoomMate03;
-procedure BoS_RoomMate04;
-procedure BoS_RoomMate05;
-procedure BoS_RoomMate06;
-procedure BoS_RoomMate07;
-procedure BoS_RoomMateend;
-procedure dialog_end;
+procedure Meeting01;
+procedure Meeting02;
+procedure Meeting02a;
+procedure Meeting03;
+procedure Meeting04;
+procedure Meeting05;
+procedure Meeting05a;
+procedure Meeting06;
+procedure Meeting07;
+procedure Meeting08;
+procedure Meeting09;
+procedure Meeting10;
+procedure Meeting11;
+procedure Meeting12;
+procedure Meeting13;
+procedure Elder01;
+procedure Elder02;
+procedure Elder03;
+procedure Elder04;
+procedure Elder05;
+procedure Elder06;
+procedure Elder07;
+procedure Elder07a;
+procedure Elder08;
+procedure Elder09;
+procedure Elder10;
+procedure Elder11;
+procedure Elder12;
+procedure ElderEnd;
 
 variable hostile;
 variable Only_Once := 1;
-variable heal;
+variable awardex;
+variable temp;
 
 procedure get_reaction;
 procedure ReactToLevel;
@@ -38,6 +58,7 @@ procedure Goodbyes;
 variable exit_line;
 
 
+
 procedure start
 begin
 	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
@@ -53,7 +74,7 @@ begin
 	if Only_Once then begin
 		Only_Once := 0;
 		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 44);
-		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 62);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 80);
 	end
 	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
 		call look_at_p_proc;
@@ -87,6 +108,11 @@ end
 
 procedure critter_p_proc
 begin
+	if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 3)) then begin
+		if ((map_var(19) == 1) and (local_var(5) == 0)) then begin
+			dialogue_system_enter;
+		end
+	end
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
 		hostile := 1;
 	end
@@ -110,41 +136,64 @@ end
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	if (local_var(4) > 0) then begin
-		call BoS_RoomMate07;
-	end
-	else begin
-		start_gdialog(691, self_obj, 4, -1, -1);
+	call get_reaction;
+	if (global_var(VATS_BLOWN) == 1) then begin
+		start_gdialog(942, self_obj, 4, -1, -1);
 		gsay_start;
-		set_local_var(4, 1);
-		call BoS_RoomMate00;
+		call Elder10;
 		gsay_end;
 		end_dialogue;
+	end
+	else begin
+		if ((map_var(19) == 1) and (local_var(5) == 0)) then begin
+			set_local_var(5, 1);
+			start_gdialog(942, self_obj, 4, -1, -1);
+			gsay_start;
+			call Meeting01;
+			gsay_end;
+			end_dialogue;
+		end
+		else begin
+			if (local_var(1) == 1) then begin
+				call Elder12;
+			end
+			else begin
+				if (local_var(5) == 1) then begin
+					float_msg(self_obj, message_str(SCRIPT_HIGHELD, 165), 2);
+				end
+				else begin
+					if (local_var(4) == 0) then begin
+						set_local_var(4, 1);
+						start_gdialog(942, self_obj, 4, -1, -1);
+						gsay_start;
+						call Elder01;
+						gsay_end;
+						end_dialogue;
+					end
+					else begin
+						start_gdialog(942, self_obj, 4, -1, -1);
+						gsay_start;
+						call Elder04;
+						gsay_end;
+						end_dialogue;
+					end
+				end
+			end
+		end
+	end
+	if (awardex) then begin
+		if (local_var(6) == 0) then begin
+			set_local_var(6, 1);
+			temp := 1500;
+			display_msg(message_str(SCRIPT_HIGHELD, 166) + temp + message_str(SCRIPT_HIGHELD, 167));
+			give_exp_points(temp);
+		end
 	end
 end
 
 procedure destroy_p_proc
 begin
-//
-//BEGIN WEAPON DROP MOD CODE
-//--original code and mod by:--
-// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and 
-// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
-//
-	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
-		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
-		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
-		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
-			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
-			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
-			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
-			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
-		end
-	end
-//END WEAPON DROP MOD CODE
-//
-	set_global_var(ENEMY_BROTHERHOOD, 1);
-	rm_timer_event(self_obj);
+
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
 			set_global_var(BERSERKER_REPUTATION, 1);
@@ -164,66 +213,206 @@ end
 procedure look_at_p_proc
 begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_RD1INIT, 100));
+	display_msg(message_str(SCRIPT_HIGHELD, 100));
 end
 
-procedure BoS_RoomMate00
+procedure Meeting01
 begin
-	gsay_reply(691, message_str(SCRIPT_RD1INIT, 103) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_RD1INIT, 104));
-	giq_option(4, 691, 105, BoS_RoomMate03, 50);
-	giq_option(4, 691, 106, BoS_RoomMate01, 50);
-	giq_option(4, 691, 107, BoS_RoomMate02, 50);
-	giq_option(-3, 691, 108, BoS_RoomMate04, 50);
+	gsay_reply(942, message_str(SCRIPT_HIGHELD, 134) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_HIGHELD, 135) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_HIGHELD, 136));
+	giq_option(4, 942, 137, Meeting02, 50);
+	giq_option(-3, 942, 138, Meeting13, 51);
 end
 
-procedure BoS_RoomMate01
+procedure Meeting02
 begin
-	gsay_reply(691, 109);
-	giq_option(4, 691, 110, BoS_RoomMate06, 50);
-	giq_option(4, 691, 111, BoS_RoomMate05, 50);
+	gsay_reply(942, 139);
+	giq_option(6, 942, 140, Meeting02a, 50);
+	giq_option(4, 942, 141, Meeting04, 50);
 end
 
-procedure BoS_RoomMate02
+procedure Meeting02a
 begin
-	gsay_reply(691, 112);
-	giq_option(4, 691, 110, BoS_RoomMate06, 50);
-	giq_option(4, 691, 111, BoS_RoomMate05, 50);
+	if (global_var(VREEDISK_HOLODISK_USED) == 1) or (global_var(VREE_DISK_TRACKER) == 2) or (global_var(VREE_GIVEN_DUDE_AUTOPSY) > 0) then begin// USED_DISK, DISK_REBUILT, DISK_GIVEN
+		call Meeting03;
+	end
+	else begin
+		call Meeting04;
+	end
 end
 
-procedure BoS_RoomMate03
+procedure Meeting03
 begin
-	gsay_reply(691, 113);
-	giq_option(4, 691, 114, BoS_RoomMate04, 50);
+	gsay_reply(942, 142);
+	giq_option(6, 942, 143, Meeting04, 50);
 end
 
-procedure BoS_RoomMate04
+procedure Meeting04
 begin
-	gsay_message(691, 115, 50);
-	call dialog_end;
+	gsay_reply(942, 144);
+	giq_option(4, 942, 145, Meeting05, 50);
+	giq_option(-3, 942, 138, Meeting13, 51);
 end
 
-procedure BoS_RoomMate05
+procedure Meeting05
 begin
-	gsay_message(691, 116, 50);
-	call dialog_end;
+	gsay_reply(942, 146);
+	if (global_var(NECROPOLIS_WAS_INVADED) == 1) then begin
+		giq_option(4, 942, 147, Meeting06, 50);
+	end
+	giq_option(4, 942, 148, Meeting05a, 50);
 end
 
-procedure BoS_RoomMate06
+procedure Meeting05a
 begin
-	gsay_message(691, 117, 50);
-	call dialog_end;
+	if (is_success(roll_vs_skill(dude_obj, 14, 0))) then begin
+		call Meeting06;
+	end
+	else begin
+		call Meeting07;
+	end
 end
 
-procedure BoS_RoomMate07
+procedure Meeting06
 begin
-	float_msg(self_obj, message_str(SCRIPT_RD1INIT, random(118, 125)), 2);
+	gsay_reply(942, 149);
+	giq_option(4, 942, 150, Meeting08, 50);
 end
 
-procedure BoS_RoomMateend
+procedure Meeting07
 begin
+	gsay_reply(942, 151);
+	giq_option(4, 942, message_str(SCRIPT_HIGHELD, 152) + message_str(SCRIPT_HIGHELD, 153), Meeting08, 50);
 end
 
-procedure dialog_end
+procedure Meeting08
+begin
+	gsay_reply(942, 154);
+	giq_option(4, 942, 155, Meeting09, 50);
+	if ((global_var(WORLDMAPLIST_MASTERS_LAIR) == 2) and (global_var(MASTER_BLOWN) == 0)) then begin
+		giq_option(4, 942, 156, Meeting10, 50);
+	end
+end
+
+procedure Meeting09
+begin
+	awardex := 1;
+	set_global_var(BROTHERHOOD_SEND_HELP, 2);
+	gsay_message(942, 157, 50);
+end
+
+procedure Meeting10
+begin
+	gsay_reply(942, message_str(SCRIPT_HIGHELD, 158) + message_str(SCRIPT_HIGHELD, 159));
+	giq_option(4, 942, 160, Meeting09, 50);
+	giq_option(4, 942, 161, Meeting11, 50);
+	giq_option(-3, 942, 138, Meeting13, 51);
+end
+
+procedure Meeting11
+begin
+	awardex := 1;
+	set_global_var(BROTHERHOOD_SEND_HELP, 1);
+	gsay_message(942, 162, 50);
+end
+
+procedure Meeting12
+begin
+	set_global_var(BROTHERHOOD_SEND_HELP, 2);
+end
+
+procedure Meeting13
+begin
+	gsay_message(942, 164, 51);
+end
+
+procedure Elder01
+begin
+	gsay_reply(942, 101);
+	giq_option(4, 942, 102, Elder02, 50);
+	giq_option(4, 942, 103, Elder08, 50);
+	giq_option(-3, 942, 104, Elder11, 51);
+end
+
+procedure Elder02
+begin
+	gsay_reply(942, message_str(SCRIPT_HIGHELD, 105) + message_str(SCRIPT_HIGHELD, 106) + message_str(SCRIPT_HIGHELD, 107));
+	giq_option(4, 942, 108, Elder03, 50);
+	giq_option(4, 942, 109, Elder09, 50);
+	if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) then begin
+		giq_option(4, 942, 110, Elder07, 50);
+	end
+end
+
+procedure Elder03
+begin
+	gsay_reply(942, 111);
+	giq_option(4, 942, 112, ElderEnd, 50);
+end
+
+procedure Elder04
+begin
+	gsay_reply(942, 113);
+	if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) then begin
+		giq_option(4, 942, 114, Elder05, 50);
+	end
+	else begin
+		giq_option(4, 942, 115, Elder06, 50);
+	end
+end
+
+procedure Elder05
+begin
+	gsay_reply(942, 116);
+	giq_option(4, 942, 117, Elder07, 50);
+end
+
+procedure Elder06
+begin
+	gsay_reply(942, 118);
+	giq_option(4, 942, 119, ElderEnd, 50);
+end
+
+procedure Elder07
+begin
+	gsay_reply(942, 120);
+	giq_option(4, 942, 121, ElderEnd, 50);
+end
+
+procedure Elder07a
+begin
+	set_local_var(1, 1);
+end
+
+procedure Elder08
+begin
+	gsay_reply(942, 122);
+	giq_option(4, 942, 123, Elder02, 50);
+	giq_option(4, 942, 124, Elder07a, 51);
+	giq_option(4, 942, 125, Elder07a, 51);
+end
+
+procedure Elder09
+begin
+	gsay_reply(942, 126);
+	giq_option(4, 942, 127, ElderEnd, 50);
+end
+
+procedure Elder10
+begin
+	gsay_message(942, 128, 50);
+end
+
+procedure Elder11
+begin
+	gsay_message(942, 130, 51);
+end
+
+procedure Elder12
+begin
+	float_msg(self_obj, message_str(SCRIPT_HIGHELD, random(131, 133)), 2);
+end
+
+procedure ElderEnd
 begin
 end
 
@@ -352,4 +541,6 @@ procedure Goodbyes
 begin
 	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 end
+
+
 
