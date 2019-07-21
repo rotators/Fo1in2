@@ -1,0 +1,101 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure timed_event_p_proc;//    script_action == 22
+procedure use_p_proc;//    script_action == 6
+procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;//    script_action == 15
+procedure turn_field_off;
+procedure turn_field_on;
+procedure toggle_field;
+
+variable initial :=  0;
+
+import variable field_change;
+import variable FieldH_Ptr;
+
+
+procedure start
+begin
+	if (not(initial)) then begin
+		FieldH_Ptr := self_obj;
+		set_local_var(1, tile_num(self_obj));
+		call use_p_proc;
+		initial :=  1;
+	end
+	else begin
+		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+			call use_p_proc;
+		end
+		else begin
+			if (script_action == 15) then begin
+				call map_enter_p_proc;
+			end
+			else begin
+				if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+					call map_update_p_proc;
+				end
+			end
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	call use_p_proc;
+end
+
+procedure use_p_proc
+begin
+	if (global_var(FORCE_FIELDS_OFF)) then begin
+		field_change := "off";
+	end
+	if (source_obj != dude_obj) then begin
+		if (field_change == "toggle") then begin
+			call toggle_field;
+		end
+		else begin
+			if (field_change == "off") then begin
+				call turn_field_off;
+			end
+			else begin
+				if (field_change == "on") then begin
+					call turn_field_on;
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	FieldH_Ptr := self_obj;
+end
+
+procedure map_enter_p_proc
+begin
+	FieldH_Ptr := self_obj;
+end
+
+procedure turn_field_off
+begin
+	if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	set_local_var(0, 1);
+end
+
+procedure turn_field_on
+begin
+	if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+	set_local_var(0, 0);
+end
+
+procedure toggle_field
+begin
+	if (local_var(0)) then begin
+		call turn_field_on;
+	end
+	else begin
+		call turn_field_off;
+	end
+end
+

@@ -1,0 +1,1059 @@
+#include "..\headers\define.h"
+
+procedure start;
+procedure combat_p_proc;//    script_action == 13
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure talk_p_proc;//    script_action == 11
+procedure timed_event_p_proc;//    script_action == 22
+
+procedure Ltcbt;
+procedure Lt01;
+procedure Lt01a;
+procedure Lt01b;
+procedure Lt02;
+procedure Lt03;
+procedure Lt04;
+procedure Lt05;
+procedure Lt06;
+procedure Lt07;
+procedure Lt08;
+procedure Lt08a;
+procedure Lt09;
+procedure Lt10;
+procedure Lt11;
+procedure Lt12;
+procedure Lt13;
+procedure Lt14;
+procedure Lt15;
+procedure Lt16;
+procedure Lt17;
+procedure Lt18;
+procedure Lt18a;
+procedure Lt19;
+procedure Lt20;
+procedure Lt21;
+procedure Lt22;
+procedure Lt23;
+procedure Lt24;
+procedure Lt25;
+procedure Lt26;
+procedure Lt27;
+procedure Lt28;
+procedure Lt29;
+procedure Lt30;
+procedure Lt31;
+procedure Lt32;
+procedure Lt33;
+procedure Lt34;
+procedure Lt35;
+procedure Lt35a;
+procedure Lt36;
+procedure Lt37;
+procedure Lt37b;
+procedure Lt38;
+procedure Lt39;
+procedure Lt39a;
+procedure Lt39b;
+procedure Lt40;
+procedure Lt40a;
+procedure Lt40_5;
+procedure Lt41;
+procedure Lt42;
+procedure Lt43;
+procedure Lt44;
+procedure Lt45;
+procedure Lt46;
+procedure Lt48;
+
+// Lt 49 is free
+
+procedure Lt50;
+procedure Lt51;
+procedure Lt52;
+procedure Lt53;
+procedure Lt54;
+procedure Lt55;
+procedure Lt56;
+procedure Lt57;
+procedure Lt58;
+procedure Lt59;
+procedure Lt60;
+procedure Lt61;
+procedure Lt62;
+procedure Lt63;
+procedure Lt64;
+procedure Lt65;
+procedure Lt66;
+procedure Ltx1;
+procedure Ltx2;
+procedure Ltx3;
+procedure Ltx4;
+procedure Ltx6;
+
+procedure Torture;
+
+import variable Lt_ptr;
+import variable VWeapLocker_ptr;
+
+variable rndx;
+variable rndy;
+variable rndz;
+variable hostile;
+variable HEREBEFORE;
+variable go_to_cell;
+variable DESTROYED;
+variable KILLEDANY;
+variable initial :=  0;
+variable hit_dude;
+variable torture_setting;
+variable End_The_Game;
+
+procedure get_reaction;
+procedure ReactToLevel;
+procedure LevelToReact;
+procedure UpReact;
+procedure DownReact;
+procedure BottomReact;
+procedure TopReact;
+procedure BigUpReact;
+procedure BigDownReact;
+procedure UpReactLevel;
+procedure DownReactLevel;
+procedure Goodbyes;
+variable exit_line;
+
+
+
+procedure start
+begin
+	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
+		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
+			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
+				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, 46) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 90) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, 93) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
+					variable A; if obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
+				set_local_var(12, 1);
+			end
+		end
+	end
+	if not(initial) then begin
+		initial :=  1;
+		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 34);
+		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 49);
+		Lt_ptr := self_obj;
+		if (local_var(6) == 0) then begin
+			variable LVar0 := 0;
+			LVar0 := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_LTCODES);
+			add_obj_to_inven(self_obj, LVar0);
+			LVar0 := create_object_sid(PID_SECURITY_CARD, 0, 0, -1);
+			add_obj_to_inven(self_obj, LVar0);
+			set_local_var(6, 1);
+		end
+	end
+	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+		call critter_p_proc;
+	end
+	else begin
+		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+			call destroy_p_proc;
+		end
+		else begin
+			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+				call look_at_p_proc;
+			end
+			else begin
+				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+					call talk_p_proc;
+				end
+				else begin
+					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+						call timed_event_p_proc;
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure combat_p_proc
+begin
+	if (fixed_param == 2) then begin
+		if (global_var(DESTROY_VATS_4)) then begin
+			if (random(0, 3) == 3) then begin
+				critter_injure(dude_obj, 1);//    DAM_KNOCKED_OUT      1    <-- DOES NOT WORK!!!
+			end
+		end
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		hostile := 0;
+		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	end
+	else begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			if (torture_setting > 0) then begin
+				if (hit_dude == 0) then begin
+					call Torture;
+				end
+			end
+			else begin
+				if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+					if (not(global_var(DESTROY_VATS_4))) then begin
+						if (not(local_var(4))) then begin
+							dialogue_system_enter;
+						end
+						else begin
+							if (not(local_var(5))) then begin
+								dialogue_system_enter;
+							end
+						end
+					end
+					else begin
+						hostile := 1;
+					end
+				end
+			end
+		end
+		else begin
+			if ((global_var(ENTERING_VATS_HOW) != 0) and (local_var(7) != 2)) then begin
+				set_global_var(VATS_ALERT, 1);
+				hostile := 1;
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(LIEUTENANTS_DEAD, 1);// Lt dead
+	rm_timer_event(self_obj);
+//
+//BEGIN WEAPON DROP MOD CODE
+//--original code and mod by:--
+// Josan12 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=18843) and
+// MIB88 (http://www.nma-fallout.com/forum/profile.php?mode=viewprofile&u=4464)
+//
+	if global_var(WEAPONDROP_MOD_STATUS) and not(global_var(FIXT_BUGFIXES_ONLY)) and (critter_inven_obj(self_obj, 1) or critter_inven_obj(self_obj, 2)) then begin// only run if Weapon Drop is enabled, AND Fixes Only is disabled, AND actually holding something
+		variable item1 := 0;  variable item2 := 0;  variable armor := 0;  variable item1PID := 0;  variable item2PID := 0;  variable armorPID := 0;  variable drophex := 0;  if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop BEGINS");  end
+		if (critter_inven_obj(self_obj, 1) > 0) then begin  item1 := critter_inven_obj(self_obj, 1);  end    if (critter_inven_obj(self_obj, 2) > 0) then begin  item2 := critter_inven_obj(self_obj, 2);  end    if (critter_inven_obj(self_obj, 0) > 0) then begin  armor := critter_inven_obj(self_obj, 0);  end    if item1 then begin  item1PID := obj_pid(item1);  end    if item2 then begin  item2PID := obj_pid(item2);  end    if armor then begin  armorPID := obj_pid(armor);  end    drophex := tile_num_in_direction(tile_num(self_obj), random(0, 5), random(global_var(WEAPONDROP_MOD_MINIMUM), global_var(WEAPONDROP_MOD_MAXIMUM)));
+		if (item1PID != 19) and (item1PID != 21) and (item1PID != 79) and (item1PID != 205) and (item1PID != 234) and (item1PID != 235) and (item1PID != 244) and (item2PID != 19) and (item2PID != 21) and (item2PID != 79) and (item2PID != 205) and (item2PID != 234) and (item2PID != 235) and (item2PID != 244) then begin//Don't drop if:  Rock (19), Brass Knuckles (21), Flare (79), Lit Flare (205), Spiked Knuckles (234), Power Fist (235), or Gold Nugget (244)
+			if (item1 > 0) then begin if (obj_item_subtype(item1) == 3) then begin
+			rm_obj_from_inven(self_obj, item1);  move_to(item1, drophex, elevation(self_obj));  end  end
+			if (item2 > 0) then begin if (obj_item_subtype(item2) == 3) then begin
+			rm_obj_from_inven(self_obj, item2);  move_to(item2, drophex, elevation(self_obj));  end  end    if global_var(DEBUG_MODE_MESSAGES_ON) then begin  debug_msg("Weapon Drop ENDS");  end
+		end
+	end
+//END WEAPON DROP MOD CODE
+//
+	if source_obj == dude_obj then begin
+		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_global_var(BERSERKER_REPUTATION, 1);
+			set_global_var(CHAMPION_REPUTATION, 0);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_global_var(CHAMPION_REPUTATION, 1);
+			set_global_var(BERSERKER_REPUTATION, 0);
+		end
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
+	end
+	rm_timer_event(self_obj);
+	Lt_ptr := 0;
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_LT, 100));
+end
+
+procedure talk_p_proc
+begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+	call get_reaction;
+	if (local_var(7) == 0) then begin
+		start_gdialog(50, self_obj, 4, 11, BACKGROUND_MILITARYBS);
+		gsay_start;
+		if (torture_setting == 2) then begin
+			call Lt36;
+			torture_setting := 3;
+		end
+		else begin
+			if (torture_setting == 3) then begin
+				call Lt37b;
+				torture_setting := 4;
+			end
+			else begin
+				if (torture_setting == 4) then begin
+					call Lt38;
+					torture_setting := 5;
+				end
+				else begin
+					if (global_var(ENTERING_VATS_HOW) == 1) then begin
+						call Lt01;
+					end
+					else begin
+						if (global_var(ENTERING_VATS_HOW) == 2) then begin
+							call Lt41;
+						end
+						else begin
+							if (global_var(ENTERING_VATS_HOW) == 3) then begin
+								call Lt46;
+							end
+							else begin
+								call Lt45;
+							end
+						end
+					end
+				end
+			end
+		end
+		gsay_end;
+		end_dialogue;
+	end
+	else begin
+		float_msg(self_obj, message_str(SCRIPT_LT, 236), 2);
+		hostile := 1;
+	end
+	if (local_var(7) == 1) then begin
+		set_local_var(7, 2);
+		if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		gfade_out(1);
+		move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
+		move_to(dude_obj, 25543, 0);
+		critter_injure(dude_obj, 2);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
+		reg_anim_func(2, dude_obj);
+		reg_anim_func(1, 1);
+		reg_anim_animate(dude_obj, 48, -1);
+		reg_anim_animate(dude_obj, 37, -1);
+		reg_anim_func(3, 0);
+		gfade_in(1);
+	end
+//
+	if (End_The_Game == 1) then begin
+		move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
+		debug_msg("Started playing cutscene#10 and #7 for Dipping and V13 invasion, may crash / cause issues!");
+		gfade_out(1);
+		move_to(dude_obj, 12527, 1);// was 12528
+		anim(dude_obj, 1000, 5);
+		move_to(self_obj, 12326, 1);// was 12528
+		anim(self_obj, 1000, 5);
+		gfade_in(1);
+		anim(self_obj, 11, 0);
+		play_gmovie(DIPEDV_MOVIE);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops.
+		move_to(dude_obj, 25543, 0);
+		play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
+		gfade_out(1);
+		play_sfx("Traitor");
+		add_timer_event(self_obj, game_ticks(35), 3);
+		debug_msg("Done playing cutscene#10 and #7 for Dipping and V13 invasion.");
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		if (torture_setting == 1) then begin
+			critter_dmg(dude_obj, get_critter_stat(dude_obj, 35) / 3, 0);
+		end
+		else begin
+			if (torture_setting == 2) then begin
+				critter_dmg(dude_obj, get_critter_stat(dude_obj, 35) / 2, 0);
+			end
+			else begin
+				if (torture_setting == 3) then begin
+					critter_dmg(dude_obj, get_critter_stat(dude_obj, 35) - 1, 0);
+				end
+			end
+		end
+		anim(dude_obj, 37, 0);
+		torture_setting := torture_setting + 1;
+		add_timer_event(self_obj, game_ticks(3), 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			hit_dude := 0;
+			game_ui_enable;
+			dialogue_system_enter;
+		end
+		else begin
+			if (fixed_param == 3) then begin
+				metarule(13, 0);
+				gfade_in(1);
+			end
+		end
+	end
+end
+
+procedure Ltcbt
+begin
+	hostile := 1;
+end
+
+procedure Lt01
+begin
+	gsay_reply(50, 101);
+	giq_option(4, 50, 102, Lt02, 50);
+	giq_option(4, 50, 103, Lt01a, 50);
+	giq_option(5, 50, 104, Lt03, 50);
+	giq_option(-3, 50, 105, Lt48, 50);
+end
+
+procedure Lt01a
+begin
+	gsay_reply(50, 106);
+	giq_option(4, 50, 107, Lt35, 50);
+	giq_option(4, 50, 108, Lt03, 50);
+	giq_option(4, 50, 109, Lt01b, 49);
+end
+
+procedure Lt01b
+begin
+	gsay_message(50, 110, 50);
+	call Ltx3;
+end
+
+procedure Lt02
+begin
+	gsay_reply(50, 111);
+	giq_option(4, 50, 112, Lt35a, 50);
+	giq_option(4, 50, 113, Lt03, 50);
+	giq_option(4, 50, 114, Lt35, 50);
+	giq_option(4, 50, 115, Lt40, 50);
+end
+
+procedure Lt03
+begin
+	gsay_reply(50, 116);
+	giq_option(4, 50, 117, Lt04, 50);
+	giq_option(4, 50, 118, Lt04, 50);
+	giq_option(4, 50, 119, Lt05, 50);
+end
+
+procedure Lt04
+begin
+	gsay_reply(50, 120);
+	giq_option(4, 50, 121, Lt05, 50);
+	giq_option(4, 50, 122, Lt35, 50);
+	giq_option(5, 50, 123, Lt35a, 50);
+end
+
+procedure Lt05
+begin
+	gsay_message(50, 124, 50);
+	call Lt06;
+end
+
+procedure Lt06
+begin
+	giq_option(5, 50, 125, Lt07, 50);
+	giq_option(6, 50, 126, Lt20, 50);
+	giq_option(4, 50, 127, Lt27, 50);
+	giq_option(4, 50, 128, Lt34, 50);
+end
+
+procedure Lt07
+begin
+	gsay_reply(50, 129);
+	giq_option(5, 50, 130, Lt10, 50);
+	giq_option(5, 50, 131, Lt08, 50);
+	giq_option(4, 50, 132, Lt20, 50);
+end
+
+procedure Lt08
+begin
+	gsay_reply(50, 133);
+	giq_option(4, 50, 134, Lt08a, 50);
+end
+
+procedure Lt08a
+begin
+	gsay_message(50, 135, 50);
+	call Lt06;
+end
+
+procedure Lt09
+begin
+	gsay_message(50, 136, 50);
+	call Lt06;
+end
+
+procedure Lt10
+begin
+	gsay_reply(50, 137);
+	giq_option(4, 50, 138, Lt11, 50);
+end
+
+procedure Lt11
+begin
+	gsay_reply(50, 139);
+	giq_option(4, 50, 140, Lt12, 50);
+	giq_option(6, 50, 141, Lt14, 50);
+	giq_option(6, 50, 142, Lt13, 50);
+end
+
+procedure Lt12
+begin
+	gsay_reply(50, 143);
+	giq_option(6, 50, 144, Lt13, 50);
+	giq_option(4, 50, 145, Lt19, 50);
+end
+
+procedure Lt13
+begin
+	gsay_reply(50, 146);
+	giq_option(6, 50, 147, Lt14, 50);
+	giq_option(5, 50, 148, Lt18a, 51);
+end
+
+procedure Lt14
+begin
+	gsay_reply(50, 149);
+	giq_option(6, 50, 150, Lt15, 50);
+end
+
+procedure Lt15
+begin
+	gsay_reply(50, 151);
+	giq_option(6, 50, 152, Lt16, 50);
+end
+
+procedure Lt16
+begin
+	gsay_reply(50, 153);
+	giq_option(6, 50, 154, Lt17, 50);
+end
+
+procedure Lt17
+begin
+	gsay_reply(50, 155);
+	giq_option(6, 50, 156, Lt09, 50);
+	giq_option(6, 50, 157, Lt18a, 51);
+end
+
+procedure Lt18
+begin
+	gsay_reply(50, 158);
+	giq_option(6, 50, 159, Lt35, 51);
+	giq_option(6, 50, 160, Lt09, 50);
+end
+
+procedure Lt18a
+begin
+	call DownReact;
+	call Lt18;
+end
+
+procedure Lt19
+begin
+	gsay_reply(50, 161);
+	giq_option(4, 50, 162, Lt18, 50);
+	giq_option(4, 50, 163, Lt14, 50);
+end
+
+procedure Lt20
+begin
+	gsay_reply(50, 164);
+	giq_option(6, 50, 165, Lt21, 50);
+	giq_option(4, 50, 166, Lt10, 50);
+end
+
+procedure Lt21
+begin
+	gsay_reply(50, 167);
+	giq_option(6, 50, 168, Lt22, 50);
+	giq_option(6, 50, 169, Lt29, 50);
+end
+
+procedure Lt22
+begin
+	gsay_reply(50, 170);
+	giq_option(6, 50, 171, Lt23, 50);
+	giq_option(6, 50, 172, Lt26, 50);
+end
+
+procedure Lt23
+begin
+	gsay_reply(50, 173);
+	giq_option(6, 50, 174, Lt24, 50);
+	giq_option(6, 50, 175, Lt25, 50);
+end
+
+procedure Lt24
+begin
+	gsay_reply(50, 176);
+	giq_option(6, 50, 177, Lt18a, 51);
+	giq_option(6, 50, 178, Lt09, 50);
+end
+
+procedure Lt25
+begin
+	gsay_reply(50, 179);
+	giq_option(4, 50, 180, Lt18, 50);
+	giq_option(6, 50, 181, Lt28, 50);
+end
+
+procedure Lt26
+begin
+	gsay_reply(50, 182);
+	giq_option(5, 50, 183, Lt27, 50);
+	giq_option(6, 50, 184, Lt28, 50);
+end
+
+procedure Lt27
+begin
+	gsay_reply(50, 185);
+	giq_option(4, 50, 186, Lt35, 50);
+	giq_option(6, 50, 187, Lt08a, 50);
+	giq_option(6, 50, 188, Lt30, 50);
+end
+
+procedure Lt28
+begin
+	gsay_reply(50, 189);
+	call Lt06;
+end
+
+procedure Lt29
+begin
+	gsay_reply(50, 190);
+	giq_option(4, 50, 191, Lt22, 50);
+	giq_option(4, 50, 192, Lt28, 50);
+	giq_option(4, 50, 193, Lt23, 50);
+end
+
+procedure Lt30
+begin
+	gsay_reply(50, 194);
+	giq_option(6, 50, 195, Lt31, 50);
+	giq_option(7, 50, 196, Lt33, 50);
+end
+
+procedure Lt31
+begin
+	gsay_reply(50, 197);
+	giq_option(6, 50, 198, Lt32, 50);
+end
+
+procedure Lt32
+begin
+	gsay_reply(50, 199);
+	giq_option(6, 50, 200, Lt35, 51);
+	giq_option(6, 50, 201, Lt28, 50);
+end
+
+procedure Lt33
+begin
+	gsay_reply(50, 202);
+	giq_option(6, 50, 203, Lt35, 51);
+	giq_option(6, 50, 204, Lt08a, 50);
+end
+
+procedure Lt34
+begin
+	gsay_reply(50, 205);
+	giq_option(4, 50, 206, Lt35, 51);
+end
+
+procedure Lt35
+begin
+	gsay_message(50, 207, 51);
+	torture_setting := 1;
+end
+
+procedure Lt35a
+begin
+	gsay_message(50, 208, 50);
+	torture_setting := 1;
+end
+
+procedure Lt36
+begin
+	gsay_reply(50, 209);
+	giq_option(4, 50, 210, Lt37, 51);
+	giq_option(4, 50, 211, Lt40, 49);
+end
+
+procedure Lt37
+begin
+	gsay_message(50, 212, 49);
+	torture_setting := 2;
+end
+
+procedure Lt37b
+begin
+	gsay_reply(50, 213);
+	giq_option(4, 50, 214, Ltx1, 51);
+	giq_option(4, 50, 215, Lt40, 49);
+end
+
+procedure Lt38
+begin
+	gsay_reply(50, 216);
+	giq_option(4, 50, 217, Lt39, 50);
+	giq_option(4, 50, 218, Lt40, 50);
+end
+
+procedure Lt39
+begin
+	if (get_critter_stat(dude_obj, 34) == 0) then begin
+		gsay_reply(50, 272);
+	end
+	else begin
+		gsay_reply(50, 271);
+	end
+	giq_option(6, 50, 220, Lt39a, 50);
+	giq_option(4, 766, 111, Ltx2, 51);
+end
+
+procedure Lt39a
+begin
+	gsay_reply(50, 221);
+	giq_option(7, 50, 222, Lt39b, 50);
+	giq_option(6, 50, 223, Ltx2, 51);
+end
+
+procedure Lt39b
+begin
+	gsay_reply(50, 224);
+	giq_option(7, 50, 225, Lt40, 49);
+	giq_option(7, 50, 226, Ltx2, 51);
+end
+
+procedure Lt40
+begin
+	gsay_reply(50, 227);
+	giq_option(4, 50, 228, Ltx3, 49);
+	giq_option(4, 50, 229, Lt35, 50);
+	giq_option(5, 50, 230, Lt09, 50);
+end
+
+procedure Lt40a
+begin
+	call Lt40;
+end
+
+procedure Lt41
+begin
+	gsay_reply(50, 235);
+	giq_option(4, 50, 236, Lt42, 51);
+	giq_option(5, 50, 237, Lt43, 50);
+	giq_option(-3, 50, 238, Lt48, 50);
+end
+
+procedure Lt42
+begin
+	gsay_reply(50, 239);
+	giq_option(6, 50, 240, Lt43, 50);
+	giq_option(4, 50, 241, Lt44, 50);
+end
+
+procedure Lt43
+begin
+	gsay_reply(50, 242);
+	giq_option(4, 50, 243, Lt35, 50);
+	giq_option(5, 50, 244, Lt03, 50);
+end
+
+procedure Lt44
+begin
+	gsay_reply(50, 245);
+	giq_option(4, 50, 246, Lt35, 50);
+	giq_option(4, 50, 247, Lt03, 50);
+end
+
+procedure Lt45
+begin
+	set_global_var(ENTERING_VATS_HOW, 3);
+	set_local_var(4, 1);
+	if (get_critter_stat(dude_obj, 34) == 1) then begin
+		gsay_message(50, 248, 50);
+	end
+	else begin
+		gsay_message(50, 270, 50);
+	end
+	call Ltx4;
+end
+
+procedure Lt46
+begin
+	set_local_var(5, 1);
+	gsay_reply(50, 249);
+	giq_option(4, 50, 251, Lt43, 50);
+end
+
+procedure Lt48
+begin
+	gsay_message(50, 252, 50);
+	call Ltx2;
+end
+
+procedure Ltx1
+begin
+	torture_setting := 3;
+end
+
+procedure Ltx2
+begin
+	torture_setting := 0;
+	set_local_var(7, 1);
+end
+
+procedure Ltx3
+begin
+	End_The_Game := 1;
+end
+
+procedure Ltx4
+begin
+	set_global_var(DESTROY_VATS_4, 1);
+end
+
+procedure Ltx6
+begin
+	torture_setting := 0;
+	set_local_var(7, 1);
+end
+
+procedure Torture
+begin
+	if (tile_num(self_obj) != tile_num_in_direction(tile_num(dude_obj), 1, 1)) then begin
+		animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(dude_obj), 1, 1), 0);
+	end
+	else begin
+		game_ui_disable;
+		anim(self_obj, 1000, 4);
+		anim(self_obj, 16, 0);
+		anim(dude_obj, 20, 0);
+		add_timer_event(self_obj, game_ticks(torture_setting), 1);
+		hit_dude := 1;
+	end
+end
+
+procedure get_reaction
+begin
+	if (local_var(2) == 0) then begin
+		set_local_var(0, 50);
+		set_local_var(1, 2);
+		set_local_var(2, 1);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
+		if (has_trait(0, dude_obj, 39)) then begin
+			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		else begin
+			if (local_var(3) == 1) then begin
+				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
+			end
+			else begin
+				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
+			end
+		end
+		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			set_local_var(0, local_var(0) - 30);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) + 20);
+		end
+		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+			set_local_var(0, local_var(0) - 20);
+		end
+		call ReactToLevel;
+	end
+end
+
+procedure ReactToLevel
+begin
+	if (local_var(0) <= 25) then begin
+		set_local_var(1, 1);
+	end
+	else begin
+		if (local_var(0) <= 75) then begin
+			set_local_var(1, 2);
+		end
+		else begin
+			set_local_var(1, 3);
+		end
+	end
+end
+
+procedure LevelToReact
+begin
+	if (local_var(1) == 1) then begin
+		set_local_var(0, random(1, 25));
+	end
+	else begin
+		if (local_var(1) == 2) then begin
+			set_local_var(0, random(26, 75));
+		end
+		else begin
+			set_local_var(0, random(76, 100));
+		end
+	end
+end
+
+procedure UpReact
+begin
+	set_local_var(0, local_var(0) + 10);
+	call ReactToLevel;
+end
+
+procedure DownReact
+begin
+	set_local_var(0, local_var(0) - 10);
+	call ReactToLevel;
+end
+
+procedure BottomReact
+begin
+	set_local_var(1, 1);
+	set_local_var(0, 1);
+end
+
+procedure TopReact
+begin
+	set_local_var(0, 100);
+	set_local_var(1, 3);
+end
+
+procedure BigUpReact
+begin
+	set_local_var(0, local_var(0) + 25);
+	call ReactToLevel;
+end
+
+procedure BigDownReact
+begin
+	set_local_var(0, local_var(0) - 25);
+	call ReactToLevel;
+end
+
+procedure UpReactLevel
+begin
+	set_local_var(1, local_var(1) + 1);
+	if (local_var(1) > 3) then begin
+		set_local_var(1, 3);
+	end
+	call LevelToReact;
+end
+
+procedure DownReactLevel
+begin
+	set_local_var(1, local_var(1) - 1);
+	if (local_var(1) < 1) then begin
+		set_local_var(1, 1);
+	end
+	call LevelToReact;
+end
+
+procedure Goodbyes
+begin
+	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
+end
+
+procedure Lt40_5
+begin
+	gsay_reply(50, 231);
+	giq_option(4, 50, 232, Ltx3, 49);
+	giq_option(4, 50, 233, Ltx2, 51);
+	giq_option(5, 50, 234, Lt09, 50);
+end
+
+procedure Lt50
+begin
+	gsay_message(50, 253, 50);
+end
+
+procedure Lt51
+begin
+	gsay_message(50, 254, 50);
+end
+
+procedure Lt52
+begin
+	gsay_message(50, 255, 50);
+end
+
+procedure Lt53
+begin
+	gsay_message(50, 256, 50);
+end
+
+procedure Lt54
+begin
+	gsay_message(50, 257, 50);
+end
+
+procedure Lt55
+begin
+	gsay_message(50, 258, 50);
+end
+
+procedure Lt56
+begin
+	gsay_message(50, 259, 50);
+end
+
+procedure Lt57
+begin
+	gsay_message(50, 260, 50);
+end
+
+procedure Lt58
+begin
+	gsay_message(50, 261, 50);
+end
+
+procedure Lt59
+begin
+	gsay_message(50, 262, 50);
+end
+
+procedure Lt60
+begin
+	gsay_message(50, 263, 50);
+end
+
+procedure Lt61
+begin
+	gsay_message(50, 264, 50);
+end
+
+procedure Lt62
+begin
+	gsay_message(50, 265, 50);
+end
+
+procedure Lt63
+begin
+	gsay_message(50, 266, 50);
+end
+
+procedure Lt64
+begin
+	gsay_message(50, 267, 50);
+end
+
+procedure Lt65
+begin
+	gsay_message(50, 268, 50);
+end
+
+procedure Lt66
+begin
+	gsay_message(50, 269, 50);
+end
+

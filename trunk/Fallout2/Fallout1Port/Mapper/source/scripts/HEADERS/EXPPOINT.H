@@ -170,6 +170,8 @@
 // BOS
 
 // Mariposa
+#define EXP_TRICKING_MUTANTS					(1500)
+#define EXP_SNEAK_SUCCESS 						(2000)
 
 /***************************************************
      Giving Experience Points
