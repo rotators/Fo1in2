@@ -9,95 +9,120 @@
 #include "..\headers\define.h"
 #include "..\headers\Sfall\sfall.h"
 
-/* Standard Script Procedures */
-procedure start;
+// some consts
 
-procedure set_wm_pos;
-/*
-#define wm_area0 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area1 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area2 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area3 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area4 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area5 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area6 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area7 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area8 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area9 			 	((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area10 			((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area11 			((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area12 			((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area13 			((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-#define wm_area14 			((worldmap_xpos >= 587) and (worldmap_xpos <= 717) and (worldmap_ypos >= 1240) and (worldmap_ypos <= 1392))
-*/
+#define TILE_COUNT      (20)
+#define TILE_COUNT_X    (get_ini_setting("data\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles"))
+#define TILE_COUNT_Y    (TILE_COUNT / TILE_COUNT_X)
+#define TILE_ZONES_X    (7)
+#define TILE_ZONES_Y    (6)
+//
+// worldmap zones table
+//
+// zone := GetZoneInfo(zx,zy)
+// zone := GetCurrentZoneInfo()
+//
+// zx := zone["zx"];
+// zy := zone["zy"];
+// terrain := zone["terrain"];
+// table := zone["table"]
+//
+#define ZONE_SIZE       (50)
+#define ZONE_COUNT_X    (TILE_COUNT_X * TILE_ZONES_X)
+#define ZONE_COUNT_Y    (TILE_COUNT_Y * TILE_ZONES_Y)
+#define ZONE_IDX(zx,zy) (zx * ZONE_COUNT_X + zy)
 
-variable test;
+// forward declarations
+procedure SetWorldTerrain;
+
+variable ZONES;
+
+procedure GetZone(variable zx, variable zy)
+begin
+   return ZONES[zx][zy];
+end
+
+procedure GetCurrentZone
+begin
+   return GetZone( worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE );
+end
+
+// read WORLDMAP.TXT and convert parts of config to array[][]
+// TODO it should be called earlier
+procedure ReadWorldmapTxt
+begin
+    variable forTile, forX, forY;
+    variable tileCountX := TILE_COUNT_X;
+
+    if( ZONES == 0 ) then
+    begin
+        // no idea how to create 2d array properly
+        variable x;
+        ZONES := create_array( ZONE_COUNT_X, 0 );
+        for( x := 0; x < ZONE_COUNT_Y; x++ )
+        begin
+            ZONES[x] := create_array( ZONE_COUNT_Y, 0 );
+        end
+    end
+
+    for( forTile := 0; forTile < TILE_COUNT; forTile++ )
+    begin
+        for( forX := 0; forX < TILE_ZONES_X; forX++ )
+        begin
+            for( forY := 0; forY < TILE_ZONES_Y; forY++ )
+            begin
+                variable zx := (forTile % tileCountX) * TILE_ZONES_X + forX;
+                variable zy := (forTile / tileCountX) * TILE_ZONES_Y + forY;
+                variable line := get_ini_string( "data\\data\\WORLDMAP.TXT|Tile " + forTile + "|" + forX + "_" + forY );
+                // TODO? strip trailing comments, if any
+                variable cfg := string_split( line, "," );
+                variable zone := create_array(-1, 2);
+
+                zone["zx"] := zx;
+                zone["zy"] := zy;
+                zone["terrain"] := cfg[0];
+                zone["table"]   := cfg[5];
+
+                // debug
+                zone["tile"]   := forTile;
+                zone["tile_x"] := forX;
+                zone["tile_y"] := forY;
+
+                ZONES[zx][zy] := zone;
+            end
+        end
+    end
+end
 
 procedure start begin
 	if (game_loaded) then begin
 		set_global_script_repeat(5);
 		set_global_script_type(1);
+		call ReadWorldmapTxt;
+		call SetWorldTerrain;
    end
 
 	if (get_game_mode == WORLDMAP) then begin
-		call set_wm_pos;
-
-		//test := GetZoneInfo(zx,zy)
-		display_msg( "zone: " + test);
+		call SetWorldTerrain;
 	end
 end
 
-procedure set_wm_pos begin
-variable wm_pos;
-/*
-	if wm_area0 then begin
-		wm_pos := 0;
-	end
-	else if wm_area1 then begin
-		wm_pos := 1;
-	end
-	else if wm_area2 then begin
-		wm_pos := 2;
-	end
-	else if wm_area3 then begin
-		wm_pos := 3;
-	end
-	else if wm_area4 then begin
-		wm_pos := 4;
-	end
-	else if wm_area5 then begin
-		wm_pos := 5;
-	end
-	else if wm_area6 then begin
-		wm_pos := 6;
-	end
-	else if wm_area7 then begin
-		wm_pos := 7;
-	end
-	else if wm_area8 then begin
-		wm_pos := 8;
-	end
-	else if wm_area9 then begin
-		wm_pos := 9;
-	end
-	else if wm_area10 then begin
-		wm_pos := 10;
-	end
-	else if wm_area11 then begin
-		wm_pos := 11;
-	end
-	else if wm_area12 then begin
-		wm_pos := 12;
-	end
-	else if wm_area13 then begin
-		wm_pos := 13;
-	end
-	else if wm_area14 then begin
-		wm_pos := 14;
-	end
-	else begin
-		wm_pos := 0;
-	end
+variable prevTerrain := "";
+variable prevTable := -1;
+procedure SetWorldTerrain
+begin
+    variable zone := GetCurrentZone();
+    variable terrain := zone["terrain"], table := atoi( zone["table"] ); // if table is not a number, we're in trouble
 
-	set_global_var(WORLD_TERRAIN, wm_pos);*/
+    if( prevTerrain != terrain or prevTable != table ) then
+    begin
+        if( not (prevTerrain == "" and prevTable == -1) ) then
+            display_msg( "exit " + prevTerrain + prevTable);
+
+        display_msg( "enter " + terrain + table + " : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "," + zone["tile_y"] + ">");
+        prevTerrain := terrain;
+        prevTable := table;
+    end
+
+    set_global_var(WORLD_TERRAIN, table );
 end
