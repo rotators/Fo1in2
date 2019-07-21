@@ -1,51 +1,37 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+
 #include "..\headers\define.h"
+#define NAME                    SCRIPT_ANIMFVR
+#include "..\headers\command.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure start_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure combat_p_proc;
 
-
-procedure start
-begin
-	if (script_action == 1) then begin
-		call start_p_proc;
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call map_update_p_proc;
-		end
-		else begin
-			if (script_action == 15) then begin//map_enter_p_proc (or "map_start_p_proc") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-				call map_enter_p_proc;
-			end
-		end
-	end
-	reg_anim_func(1, 1);
-	reg_anim_animate_forever(self_obj, 0);
-	reg_anim_func(3, 0);
+procedure start begin
+	call map_update_p_proc;
 end
 
-procedure map_enter_p_proc
-begin
-	reg_anim_func(1, 1);
-	reg_anim_animate_forever(self_obj, 0);
-	reg_anim_func(3, 0);
+procedure map_enter_p_proc begin
+	reg_anim_clear(self_obj);
+	//reg_anim_combat_check(0); <- This will kill all combat in this map. :>
+	reg_anim_begin();
+	reg_anim_animate_forever(self_obj, ANIM_stand);
+	reg_anim_end();
 end
 
-procedure map_update_p_proc
-begin
-	if (combat_is_initialized == 0) then begin
-		reg_anim_func(1, 1);
-		reg_anim_animate_forever(self_obj, 0);
-		reg_anim_func(3, 0);
-	end
+procedure map_update_p_proc begin
+	reg_anim_clear(self_obj);
+	//reg_anim_combat_check(0); <- This will kill all combat in this map. :>
+	reg_anim_begin();
+	reg_anim_animate_forever(self_obj, ANIM_stand);
+	reg_anim_end();
 end
 
-procedure start_p_proc
-begin
-	reg_anim_func(1, 1);
-	reg_anim_animate_forever(self_obj, 0);
-	reg_anim_func(3, 0);
+procedure combat_p_proc begin
+	//call map_update_p_proc;
 end
-
