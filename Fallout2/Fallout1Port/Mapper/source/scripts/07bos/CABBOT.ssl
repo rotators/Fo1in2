@@ -1,5 +1,9 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_CABBOT
+
+#include "..\headers\command.h"
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure talk_p_proc;//    script_action == 11
 procedure damage_p_proc;//    script_action == 14
@@ -88,13 +92,15 @@ procedure cabbotend;
 procedure cabbotopen;
 procedure combat;
 
+procedure cheat_1;
+
 import variable Door_ptr;
 import variable Cabbot_Ptr;
 
 variable VATS;
 variable MALE;
 variable SEXY;
-variable HOSTILE;
+variable tmp_hostile;
 variable ILLEGAL;
 variable Only_Once := 1;
 variable temp;
@@ -177,6 +183,17 @@ begin
 	giq_option(4, 40, 107, cabbot10, 50);
 	giq_option(4, 40, 102, cabbot02, 50);
 	giq_option(-3, 40, 104, cabbot46, 50);
+
+	if (debug_mode) then begin
+		NOption("*** Cheat: Let me in! ***",cheat_1,004);
+	end
+end
+
+procedure cheat_1 begin
+	set_global_var(ARTIFACT_DISK_FOUND_GIVEN, 2);
+	set_global_var(QUEST_BROHOOD_1_JOIN_THEM, 2);
+	call TopReact;
+	call cabbot27;
 end
 
 procedure cabbot02
@@ -725,7 +742,7 @@ end
 
 procedure combat
 begin
-	HOSTILE := 1;
+	tmp_hostile := 1;
 end
 
 procedure damage_p_proc
@@ -739,17 +756,17 @@ begin
 		set_local_var(7, 2);
 		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
 		display_msg(message_str(SCRIPT_CABBOT, 232));
-		give_exp_points(2000);
+		give_exp_points(EXP_BECOME_INITITAT);
 	end
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
-		HOSTILE := 1;
+		tmp_hostile := 1;
 	end
 	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
-		HOSTILE := 0;
+		tmp_hostile := 0;
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		set_global_var(ENEMY_BROTHERHOOD, 1);
-		HOSTILE := 0;
+		tmp_hostile := 0;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 	else begin
@@ -775,7 +792,7 @@ end
 procedure pickup_p_proc
 begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		HOSTILE := 1;
+		tmp_hostile := 1;
 	end
 end
 
@@ -787,7 +804,7 @@ begin
 	end
 	else begin
 		call get_reaction;
-		start_gdialog(40, self_obj, 4, 16, 5);
+		start_gdialog(40, self_obj, 4, 16, BACKGROUND_BHOOD);
 		gsay_start;
 		if (local_var(4) == 1) then begin
 			if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 1) then begin
