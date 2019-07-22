@@ -18,6 +18,7 @@ my $scripts_path = "../Fallout2/Fallout1Port/Mapper/source/scripts";
 my %functions;
 my %defines;
 my @files;
+my $readOnly = 0;
 
 sub AddFunction
 {
@@ -93,20 +94,27 @@ sub FindFiles
 	}
 }
 
+# check arguments
+$readOnly = lc(shift( @ARGV ));
+$readOnly = $readOnly eq 'ro' || $readOnly eq 'read' || $readOnly eq 'readonly' || $readOnly eq 'read-only';
+
+# configure functions to change
 AddFunction( 'create_object_sid', 'ANY_PID', '?', '?', 'SID' );
 AddFunction( 'message_str', 'SID', '?' );
 AddFunction( 'obj_carrying_pid_obj', '?', 'ITEM_PID' );
 
+# read defines from headers
 print( "Reading defines...\n" );
 $defines{pid}{critter} = ReadDefines( "HEADERS/CRITRPID.H", 'PID' );
 $defines{pid}{scenery} = ReadDefines( "HEADERS/SCENEPID.H", 'PID' );
 $defines{pid}{item} = ReadDefines( "HEADERS/ITEMPID.H", 'PID' );
 $defines{sid} = ReadDefines( "HEADERS/scripts.h",  'SCRIPT' );
 
+# seach for script files
 print( "Finding scripts...\n" );
 find({ wanted => \&FindFiles, no_chdir => 1 }, $scripts_path );
 
-print( "Processing scripts...\n" );
+printf( "Processing scripts%s...\n", $readOnly ? " (read only)" : "" );
 foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 {
 	my $filename = $filename_long;
@@ -170,7 +178,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				)
 			}x;
 
-			my @function_matches = $line =~ /${re}/g; #/(${function_name}\(.*\))/g;
+			my @function_matches = $line =~ /${re}/g;
 			next if( !scalar( @function_matches ));
 
 			foreach my $function_match( @function_matches )
@@ -218,7 +226,8 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				)
 				(?: ,\s* | $)
 				/xg;
-				pop( @args );
+				pop( @args ); # last element is always empty for some reason
+
 				my @args_old = @args;
 				# printf( "DEBUG args [%s] -> [%s] -> [%s]\n", $function_match, $function_arguments, join( "],[", @args ));
 
@@ -377,8 +386,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		$content .= sprintf( "%s\r\n", $line );
 	}
 
-	# the big switch; uncomment to disable writing to file
-	# $update_file = 0;
+	$update_file = 0 if( $readOnly );
 
 	if( $update_file && open( my $file, ">", $filename_long ))
 	{
