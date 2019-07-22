@@ -4,7 +4,11 @@
 	
 */
 
+#define debug_mode				(global_var(DEBUG_MODE_MESSAGES_ON) == 1)
+#define debug(x)				if debug_mode then display_msg(x)
 
+//==============================================================
+// Invasion related:
 #define check_invasion		if (global_var(MASTER_BLOWN) == 0) then begin \
 								if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
 									set_global_var(NECROPOLIS_WAS_INVADED, 1); \
@@ -34,7 +38,10 @@
 									set_global_var(FOLLOWERS_INVADED, 1); \
 								end \
 							end
-							
+
+//==============================================================		
+// Party related: 
+// TODO: Replace with Fo2 party management!					
 #define set_remove_party 		if (global_var(IAN_HIRELING_STATUS) == 2) then begin \
 									set_global_var(IAN_HIRELING_STATUS, 2); \
 								end \
