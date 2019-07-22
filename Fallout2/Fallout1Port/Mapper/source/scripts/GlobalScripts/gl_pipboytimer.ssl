@@ -3,7 +3,8 @@
    Adds Fallout 1 water chip note to the pipboy screen.
    Also other shit related to the counter
 
-	TODO: Rework how the time gets calculated. Current version is utter shit.
+	TODO: Rework how the time gets calculated.
+	The current version doesn't start at 00:00 but whenever the player has started the game (e.g. 03:00,...).
 
 */
 
@@ -26,6 +27,8 @@ procedure delete_all;
 
 #define timer_active    ((global_var(QUEST_VAULT13_4_WATERCHIP) < 2) and (global_var(VAULT13_WATER_DAYS_LEFT) > 0))
 
+variable lastDay;
+
 procedure start begin
 
    if (timer_active) then begin
@@ -40,6 +43,8 @@ procedure start begin
          if (get_sfall_global_int("opennote") != 1) then begin
    	      set_sfall_global("opennote", 1);
             call show_note;
+
+            lastDay := get_water_days_left;
          end
       end
       else begin
@@ -49,7 +54,19 @@ procedure start begin
          end
       end
 
-      if (game_time > get_sfall_global_int("lastchek")) then begin
+		lastDay := get_water_days_left;
+
+		/*if (get_game_mode == PIPBOY) then begin
+			//debug("last day: " + lastDay);
+			if (lastDay < get_water_days_left) then begin
+				lastDay := get_water_days_left;
+				//debug("new day: " + lastDay);
+            DeleteWin("win_days");
+            call show_days;
+         end
+		end*/
+
+		if (game_time > get_sfall_global_int("lastchek")) then begin
          set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
 
          if (get_game_mode == PIPBOY) then begin
@@ -57,13 +74,15 @@ procedure start begin
             call show_days;
          end
 
-         // Game over if the timer has run out:
-			//debug("water days left: " + get_water_days_left);
-         if (get_water_days_left <= 0) then begin
-      		play_gmovie(BOIL3_MOVIE);
-      		signal_end_game;
-      	end
+
       end
+
+		// Game over if the timer has run out:
+		//debug("water days left: " + get_water_days_left);
+		if (get_water_days_left <= 0) then begin
+			play_gmovie(BOIL3_MOVIE);
+			signal_end_game;
+		end
 
    end
 end
@@ -101,6 +120,8 @@ procedure show_days begin
 variable test := (global_var(VAULT13_WATER_DAYS_LEFT) - (GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24)));
 
    // We only have 250 images, so bigger than that can't be shown:
+   // YES I KNOW THESE ARE 250 IMAGES, BUT IF YOU WANT IT TO LOOK EXACTLY
+   // THE SAME AS IN FALLOUT 1, IT IS A NECESSARY THING TO DO. Sue me.
    if (get_water_days_left <= 250) then begin
       create_win("win_days", ((Scr_Width/2)-253), ((Scr_Heigh/2)-110), 40, 19);
       SelectWin("win_days");
