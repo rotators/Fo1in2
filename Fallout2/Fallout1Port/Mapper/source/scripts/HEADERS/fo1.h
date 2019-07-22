@@ -7,6 +7,14 @@
 #include "debug.h"
 
 //==============================================================
+// Water Timer related:
+#define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
+
+#define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
+//#define get_days_passed				(global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
+//#define get_days_since_start 		
+
+//==============================================================
 // Invasion related:
 #define check_invasion		if (global_var(MASTER_BLOWN) == 0) then begin \
 								if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
