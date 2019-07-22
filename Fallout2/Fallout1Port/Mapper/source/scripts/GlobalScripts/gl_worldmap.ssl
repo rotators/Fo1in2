@@ -5,54 +5,59 @@
 */
 
 /* Include Files */
-#include "..\headers\command.h"
-#include "..\headers\define.h"
-#include "..\headers\Sfall\sfall.h"
+#include "../headers/sfall/sfall.h"
+#include "../headers/sfall/define_lite.h"
+#include "../headers/debug.h"
 
 // some consts
 
-#define TILE_COUNT      (20)
-#define TILE_COUNT_X    (get_ini_setting("data\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles"))
-#define TILE_COUNT_Y    (TILE_COUNT / TILE_COUNT_X)
-#define TILE_ZONES_X    (7)
-#define TILE_ZONES_Y    (6)
+#define  TILE_COUNT      (20)
+variable TILE_COUNT_X := 0;
+#define  TILE_COUNT_Y    (TILE_COUNT / TILE_COUNT_X)
+#define  TILE_ZONES_X    (7)
+#define  TILE_ZONES_Y    (6)
+
+#define ZONE_SIZE        (50)
+#define ZONE_COUNT_X     (TILE_COUNT_X * TILE_ZONES_X)
+#define ZONE_COUNT_Y     (TILE_COUNT_Y * TILE_ZONES_Y)
+
 //
 // worldmap zones table
 //
-// zone := GetZoneInfo(zx,zy)
-// zone := GetCurrentZoneInfo()
+// zone := GetZoneInfo( zx, zy );
+// zone := GetCurrentZoneInfo();
 //
-// zx := zone["zx"];
-// zy := zone["zy"];
-// terrain := zone["terrain"];
-// table := zone["table"]
+// zx := zone["zx"];           // zone X coordinates (top-left is 0,0)
+// zy := zone["zy"];           // zone Y coordinates (top-left is 0,0)
+// terrain := zone["terrain"]; // zone terrain; copy of 1st element of [Tile T]->X_Y
+// table := zone["table"];     // zone table; copy of 6th (last) element of [Tile T]->X_Y
 //
-#define ZONE_SIZE       (50)
-#define ZONE_COUNT_X    (TILE_COUNT_X * TILE_ZONES_X)
-#define ZONE_COUNT_Y    (TILE_COUNT_Y * TILE_ZONES_Y)
-#define ZONE_IDX(zx,zy) (zx * ZONE_COUNT_X + zy)
-
-// forward declarations
-procedure SetWorldTerrain;
+// debug info
+// tile := zone["tile"];     // T from [Tile T]->X_Y
+// tile_x := zone["tile_x"]; // X from [Tile T]->X_Y
+// tile_y := zone["tile_y"]; // Y from [Tile T]->X_Y
+//
 
 variable ZONES;
 
 procedure GetZone(variable zx, variable zy)
 begin
-   return ZONES[zx][zy];
+    return ZONES[zx][zy];
 end
 
 procedure GetCurrentZone
 begin
-   return GetZone( worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE );
+    return GetZone( worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE );
 end
 
-// read WORLDMAP.TXT and convert parts of config to array[][]
+// read [Tile*] sections of WORLDMAP.TXT and save parts of info in ZONES[][]
 // TODO it should be called earlier
 procedure ReadWorldmapTxt
 begin
     variable forTile, forX, forY;
-    variable tileCountX := TILE_COUNT_X;
+
+    // must be set before using some TILE_/ZONE_ macros
+    TILE_COUNT_X := get_ini_setting( "data\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles" );
 
     if( ZONES == 0 ) then
     begin
@@ -71,8 +76,8 @@ begin
         begin
             for( forY := 0; forY < TILE_ZONES_Y; forY++ )
             begin
-                variable zx := (forTile % tileCountX) * TILE_ZONES_X + forX;
-                variable zy := (forTile / tileCountX) * TILE_ZONES_Y + forY;
+                variable zx := (forTile % TILE_COUNT_X) * TILE_ZONES_X + forX;
+                variable zy := (forTile / TILE_COUNT_X) * TILE_ZONES_Y + forY;
                 variable line := get_ini_string( "data\\data\\WORLDMAP.TXT|Tile " + forTile + "|" + forX + "_" + forY );
                 // TODO? strip trailing comments, if any
                 variable cfg := string_split( line, "," );
@@ -83,7 +88,7 @@ begin
                 zone["terrain"] := cfg[0];
                 zone["table"]   := cfg[5];
 
-                // debug
+                // debug info
                 zone["tile"]   := forTile;
                 zone["tile_x"] := forX;
                 zone["tile_y"] := forY;
@@ -94,22 +99,9 @@ begin
     end
 end
 
-procedure start begin
-	if (game_loaded) then begin
-		set_global_script_repeat(5);
-		set_global_script_type(1);
-		call ReadWorldmapTxt;
-		call SetWorldTerrain;
-   end
-
-	if (get_game_mode == WORLDMAP) then begin
-		call SetWorldTerrain;
-	end
-end
-
 variable prevTerrain := "";
 variable prevTable := -1;
-procedure SetWorldTerrain
+procedure SetWorldmapInfo
 begin
     variable zone := GetCurrentZone();
     variable terrain := zone["terrain"], table := atoi( zone["table"] ); // if table is not a number, we're in trouble
@@ -125,4 +117,18 @@ begin
     end
 
     set_global_var(WORLD_TERRAIN, table );
+end
+
+procedure start begin
+    if( game_loaded ) then
+    begin
+        set_global_script_repeat(5);
+        set_global_script_type(1);
+
+        call ReadWorldmapTxt;
+        call SetWorldmapInfo;
+    end
+
+    if( get_game_mode == WORLDMAP ) then
+        call SetWorldmapInfo;
 end

@@ -1,11 +1,10 @@
 /*
 
 	Generic Fo1 defines
-	
+
 */
 
-#define debug_mode				(global_var(DEBUG_MODE_MESSAGES_ON) == 1)
-#define debug(x)				if debug_mode then display_msg(x)
+#include "debug.h"
 
 //==============================================================
 // Invasion related:
@@ -39,9 +38,9 @@
 								end \
 							end
 
-//==============================================================		
-// Party related: 
-// TODO: Replace with Fo2 party management!					
+//==============================================================
+// Party related:
+// TODO: Replace with Fo2 party management!
 #define set_remove_party 		if (global_var(IAN_HIRELING_STATUS) == 2) then begin \
 									set_global_var(IAN_HIRELING_STATUS, 2); \
 								end \
@@ -56,7 +55,7 @@
 								end \
 								if (global_var(TANDI_HIRELING_STATUS) == 5) then begin \
 								end
-								
+
 #define set_add_party			if global_var(TANDI_HIRELING_STATUS) == 5 then begin \
 									if Tandi_ptr != 0 then begin \
 										critter_add_trait(Tandi_ptr, 1, 6, 0); \
@@ -87,7 +86,7 @@
 										party_add(Katja_ptr); \
 									end \
 								end
-							
+
 #define set_update_party 		if party_elevation != elevation(dude_obj) then begin \
 									party_elevation := elevation(dude_obj); \
 									if global_var(IAN_HIRELING_STATUS) == 2 then begin \
