@@ -747,7 +747,7 @@
 #define SCRIPT_REVULSE   (740)  //  Revulse.int     ; Corridor of revulsion
 #define SCRIPT_FIELDGEN  (741)  //  fieldgen.int    ; field generator in the military base                                        
 #define SCRIPT_ELEVCON   (742)  //  ElevCon.int     ; Elevator Control for the Force Fields to the Nuke Bomb
-#define SCRIPT_DEPRECATED_5 (744) //SCRIPT_DOGMEAT   (743)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_DEPRECATED_5 (743) //SCRIPT_DOGMEAT   (743)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_BROHIST   (744)  //  BroHist.int     ; Holodisk for the Brotherhood history
 #define SCRIPT_SOPDISK   (745)  //  SopDisk.int     ; Sophia's History disk of the Brotherhood
 #define SCRIPT_MAXDISK   (746)  //  MaxDisk.int     ; Maxson's Version of the history of the Brotherhood
