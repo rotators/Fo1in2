@@ -1,0 +1,1762 @@
+/*
+   Script: Vennor
+   Description: gldbg - a debugging and quality assurance tool.
+      Despite my efforts to write good code, SSL's just not suited to creating an elegant GUI with lots
+      of buttons and labels. Since procedure reference passing is some kind of special case only
+      available for engine functions, they cannot be passed as script procedure arguments which is why
+      doing GUI is a lot harder than it could be. Moreover, it's impossible for buttons to execute
+      callback procedures with parameters, so each button has to have its own specialized procedure.
+      Writing them by hand would be painful enough, so I decided to generate them with the
+      C preprocessor. This made me use the tokenize operator to generate procedures with unique names
+      for each button and also made the tokenize operator necessary for adding the procedures
+      as button callbacks. Since preprocessor loops are not an easy thing to achieve, it's necessary
+      to implement and add all procedures with its own macro use. No loops.
+      
+      It would have been *a lot* easier if the engine GUI functions would take procedure names in a
+      string format instead of procedure refences.
+      
+      Taking this into consideration, I hereby call this code as unmaintainable and hope nobody will
+      ever have the need to change or fix it.
+*/
+
+// @TODO Add fake perks.
+// @TODO Support for integers larger that 6 digits on variable page.
+
+// @DONE Negative variable values.
+// @DONE Variable names.
+
+//# Includes #/////////////////////////////////////////////////////////////////////////////////////////
+
+#include "..\headers\command.h"
+#include "..\headers\define.h"
+#include "..\headers\Sfall\sfall.h"
+#include "..\headers\MR\General\Gui.h"
+#include "..\headers\MR\General\Math.h"
+
+//# Procedure Declarations #///////////////////////////////////////////////////////////////////////////
+
+procedure start;
+procedure create_open_window;
+procedure create_main_window;
+procedure open_main_window;
+procedure close_main_window;
+procedure clear_workspace;
+procedure display_main_window;
+procedure draw_page_0;
+procedure draw_page_1;
+procedure draw_page_2;
+procedure draw_page_3;
+procedure draw_page_4;
+procedure get_page_description(variable Number);
+procedure display_previous_page;
+procedure display_next_page;
+   
+//# Macros #///////////////////////////////////////////////////////////////////////////////////////////
+
+#define Implement_Open_Page_Proc(Page_Number) \
+   procedure open_page_##Page_Number \
+   begin \
+      Current_Page_Number := Page_Number; \
+      call open_main_window; \
+   end
+
+//# Constants #////////////////////////////////////////////////////////////////////////////////////////
+
+#define C_WN_Open "gldbg_w_open"
+#define C_WN_Main "gldbg_w_main"
+
+#define C_BN_Open "gldbg_b_open"
+#define C_BN_Close "gldbg_b_close"
+#define C_BN_Return "gldbg_b_return"
+#define C_BN_Page_Left "gldbg_b_pleft"
+#define C_BN_Page_Right "gldbg_b_pright"
+
+#define C_Page_Count (4)
+#define C_Main_X ((get_screen_width - C_Main_Width) / 2)
+#define C_Main_Y (((get_screen_height - 100) - C_Main_Height) / 2)
+#define C_Main_Width (500)
+#define C_Main_Height (400)
+#define C_Header_X (0)
+#define C_Header_Y (0)
+#define C_Header_Width C_Main_Width
+#define C_Header_Height (40)
+#define C_Footer_X (0)
+#define C_Footer_Y (C_Main_Height - 40)
+#define C_Footer_Width C_Main_Width
+#define C_Footer_Height (40)
+#define C_Workspace_X (0)
+#define C_Workspace_Y (C_Header_Height + 1)
+#define C_Workspace_Width C_Main_Width
+#define C_Workspace_Height (C_Main_Height - C_Header_Height - C_Footer_Height - 2)
+
+//# Non-Persistent Variables #/////////////////////////////////////////////////////////////////////////
+
+variable Current_Page_Number;
+
+//# Engine Procedures #////////////////////////////////////////////////////////////////////////////////
+
+procedure start
+begin
+   if (game_loaded) then
+   begin
+   	set_global_script_type(0);
+	   call create_open_window;
+   end
+end
+
+//# Custom Procedures #////////////////////////////////////////////////////////////////////////////////
+
+Implement_Open_Page_Proc(0)
+Implement_Open_Page_Proc(1)
+Implement_Open_Page_Proc(2)
+Implement_Open_Page_Proc(3)
+
+procedure create_open_window begin
+
+	if debug_mode then begin
+	
+   GUI_Create_Window(C_WN_Open, 0, 0, 160 * C_Page_Count, 20)
+
+   GUI_Create_Button(C_WN_Open, C_BN_Open + 0, 0, 0, 160, 20, get_page_description(0))
+   GUI_Create_Button(C_WN_Open, C_BN_Open + 1, 160 * 1, 0, 160, 20, get_page_description(1))
+   GUI_Create_Button(C_WN_Open, C_BN_Open + 2, 160 * 2, 0, 160, 20, get_page_description(2))
+   GUI_Create_Button(C_WN_Open, C_BN_Open + 3, 160 * 3, 0, 160, 20, get_page_description(3))
+   
+   GUI_Set_Button_Release_Proc(C_BN_Open + 0, open_page_0)
+   GUI_Set_Button_Release_Proc(C_BN_Open + 1, open_page_1)
+   GUI_Set_Button_Release_Proc(C_BN_Open + 2, open_page_2)
+   GUI_Set_Button_Release_Proc(C_BN_Open + 3, open_page_3)
+   
+	GUI_Show_Window(C_WN_Open)
+	
+	end
+end
+
+procedure create_main_window
+begin
+   call display_main_window;
+end
+
+procedure open_main_window
+begin
+   reg_anim_clear(dude_obj);
+   GUI_Delete_Window(C_WN_Open)
+   stop_game;
+   game_ui_disable;
+   GUI_Set_Cursor("pcx\\cursor.pcx")
+   call create_main_window;
+end
+
+procedure close_main_window
+begin
+   GUI_Delete_Window(C_WN_Main)
+   call create_open_window;
+   game_ui_enable;
+	resume_game;
+end
+
+procedure clear_workspace
+begin
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X, C_Workspace_Y, C_Workspace_Width, C_Workspace_Height, 0.6, 0.6, 0.6)
+end
+
+procedure display_main_window
+begin
+   GUI_Create_Window(C_WN_Main, C_Main_X, C_Main_Y, C_Main_Width, C_Main_Height)
+
+   // Background
+   GUI_Fill_Rect(C_WN_Main, C_Header_X, C_Header_Y, C_Header_Width, C_Header_Height, 0.7, 0.7, 0.7)
+   GUI_Fill_Rect(C_WN_Main, C_Footer_X, C_Footer_Y, C_Footer_Width, C_Footer_Height, 0.7, 0.7, 0.7)
+   call clear_workspace;
+
+   // Close button
+   GUI_Create_Button(C_WN_Main, C_BN_Close, C_Main_Width - 85, C_Main_Height - 30, 75, 20, "Close")
+   GUI_Set_Button_Release_Proc(C_BN_Close, close_main_window)
+   
+   // Page header
+   GUI_Create_Label(C_WN_Main, "Page " + (Current_Page_Number + 1) + "/" + C_Page_Count, (C_Main_Width / 2) - 75, 10, 150, 20, GUI_Label_Indent_Center)
+   GUI_Create_Label(C_WN_Main, get_page_description(Current_Page_Number), (C_Main_Width / 2) - 75, 20, 150, 20, GUI_Label_Indent_Center)
+
+   // Page change buttons
+   GUI_Create_Button(C_WN_Main, C_BN_Page_Left, (C_Main_Width / 2) - 120, 10, 20, 20, "<<")
+   GUI_Set_Button_Release_Proc(C_BN_Page_Left, display_previous_page)
+   GUI_Create_Button(C_WN_Main, C_BN_Page_Right, (C_Main_Width / 2) + 100, 10, 20, 20, ">>")
+   GUI_Set_Button_Release_Proc(C_BN_Page_Right, display_next_page)
+   
+   switch (Current_Page_Number)
+   begin
+      case 0: call draw_page_0;
+      case 1: call draw_page_1;
+      case 2: call draw_page_2;
+      case 3: call draw_page_3;
+      default: call draw_page_0;
+   end
+   
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure get_page_description(variable Number)
+begin
+   switch (Number)
+   begin
+      case 0: return "SPECIAL & Skills";
+      case 1: return "Traits & Perks";
+      case 2: return "Items";
+      case 3: return "Variables";
+      default: return "No such page";
+   end
+end
+
+procedure display_previous_page
+begin
+   if (Current_Page_Number > 0) then
+      Current_Page_Number--;
+   else
+      Current_Page_Number := C_Page_Count - 1;
+   
+   GUI_Delete_Window(C_WN_Main)
+   call display_main_window;
+end
+
+procedure display_next_page
+begin
+   if (Current_Page_Number < C_Page_Count - 1) then
+      Current_Page_Number++;
+   else
+      Current_Page_Number := 0;
+      
+   GUI_Delete_Window(C_WN_Main)
+   call display_main_window;
+end
+
+//# Page 0 - SPECIAL & Skills #////////////////////////////////////////////////////////////////////////
+
+#define Implement_Stat_Inc_And_Dec_Proc(Stat_Index) \
+   procedure page_0_inc1_special_##Stat_Index \
+   begin \
+      if (get_critter_stat(dude_obj, Stat_Index) < 10) then \
+         begin \
+         set_critter_stat(dude_obj, Stat_Index, 1); \
+         call clear_workspace; \
+         call draw_page_0_background; \
+         call draw_page_0_labels; \
+         GUI_Show_Window(C_WN_Main) \
+      end \
+   end \
+   procedure page_0_dec1_special_##Stat_Index \
+   begin \
+      set_critter_stat(dude_obj, Stat_Index, -1); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Implement_Skill_Inc_And_Dec_Proc(Skill_Index) \
+   procedure page_0_inc1_skill_##Skill_Index \
+   begin \
+      if (is_skill_tagged(Skill_Index)) then \
+         critter_mod_skill(dude_obj, Skill_Index, 2); \
+      else \
+         critter_mod_skill(dude_obj, Skill_Index, 1); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_0_inc10_skill_##Skill_Index \
+   begin \
+      critter_mod_skill(dude_obj, Skill_Index, 10); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_0_inc100_skill_##Skill_Index \
+   begin \
+      critter_mod_skill(dude_obj, Skill_Index, 100); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_0_dec1_skill_##Skill_Index \
+   begin \
+      if (is_skill_tagged(Skill_Index)) then \
+         critter_mod_skill(dude_obj, Skill_Index, -2); \
+      else \
+         critter_mod_skill(dude_obj, Skill_Index, -1); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_0_dec10_skill_##Skill_Index \
+   begin \
+      critter_mod_skill(dude_obj, Skill_Index, -10); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_0_dec100_skill_##Skill_Index \
+   begin \
+      critter_mod_skill(dude_obj, Skill_Index, -100); \
+      call clear_workspace; \
+      call draw_page_0_background; \
+      call draw_page_0_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Add_Stat_Buttons_Inc_And_Dec_Proc(Stat_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Inc1_SPECIAL + Stat_Index, page_0_inc1_special_##Stat_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Dec1_SPECIAL + Stat_Index, page_0_dec1_special_##Stat_Index)
+
+#define Add_Skill_Buttons_Inc_And_Dec_Proc(Skill_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Inc1_Skill + Skill_Index, page_0_inc1_skill_##Skill_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Inc10_Skill + Skill_Index, page_0_inc10_skill_##Skill_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Inc100_Skill + Skill_Index, page_0_inc100_skill_##Skill_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Dec1_Skill + Skill_Index, page_0_dec1_skill_##Skill_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Dec10_Skill + Skill_Index, page_0_dec10_skill_##Skill_Index) \
+   GUI_Set_Button_Release_Proc(C_BN_P0_Dec100_Skill + Skill_Index, page_0_dec100_skill_##Skill_Index)
+
+#define C_BN_P0_Dec1_SPECIAL "gldbg_b_p0_d1_sp"
+#define C_BN_P0_Inc1_SPECIAL "gldbg_b_p0_i1_sp"
+#define C_BN_P0_Dec1_Skill "gldbg_b_p0_d1_sk"
+#define C_BN_P0_Dec10_Skill "gldbg_b_p0_d10_sk"
+#define C_BN_P0_Dec100_Skill "gldbg_b_p0_d100_sk"
+#define C_BN_P0_Inc1_Skill "gldbg_b_p0_i1_sk"
+#define C_BN_P0_Inc10_Skill "gldbg_b_p0_i10_sk"
+#define C_BN_P0_Inc100_Skill "gldbg_b_p0_i100_sk"
+
+procedure draw_page_0;
+procedure draw_page_0_buttons;
+procedure draw_page_0_background;
+procedure draw_page_0_labels;
+
+Implement_Stat_Inc_And_Dec_Proc(0)
+Implement_Stat_Inc_And_Dec_Proc(1)
+Implement_Stat_Inc_And_Dec_Proc(2)
+Implement_Stat_Inc_And_Dec_Proc(3)
+Implement_Stat_Inc_And_Dec_Proc(4)
+Implement_Stat_Inc_And_Dec_Proc(5)
+Implement_Stat_Inc_And_Dec_Proc(6)
+
+Implement_Skill_Inc_And_Dec_Proc(0)
+Implement_Skill_Inc_And_Dec_Proc(1)
+Implement_Skill_Inc_And_Dec_Proc(2)
+Implement_Skill_Inc_And_Dec_Proc(3)
+Implement_Skill_Inc_And_Dec_Proc(4)
+Implement_Skill_Inc_And_Dec_Proc(5)
+Implement_Skill_Inc_And_Dec_Proc(6)
+Implement_Skill_Inc_And_Dec_Proc(7)
+Implement_Skill_Inc_And_Dec_Proc(8)
+Implement_Skill_Inc_And_Dec_Proc(9)
+Implement_Skill_Inc_And_Dec_Proc(10)
+Implement_Skill_Inc_And_Dec_Proc(11)
+Implement_Skill_Inc_And_Dec_Proc(12)
+Implement_Skill_Inc_And_Dec_Proc(13)
+Implement_Skill_Inc_And_Dec_Proc(14)
+Implement_Skill_Inc_And_Dec_Proc(15)
+Implement_Skill_Inc_And_Dec_Proc(16)
+Implement_Skill_Inc_And_Dec_Proc(17)
+
+procedure draw_page_0
+begin
+   call draw_page_0_buttons;
+   call draw_page_0_background;
+   call draw_page_0_labels;
+end
+
+procedure draw_page_0_buttons
+begin
+   variable i;
+   variable Lowest_Change_Value := "1";
+   
+   // Stat buttons
+   for (i := 0; i < 7; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Dec1_SPECIAL + i, C_Workspace_X + 109, C_Workspace_Y + 10 + 5 + (16 * i), 16, 16, "-")
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Inc1_SPECIAL + i, C_Workspace_X + 149, C_Workspace_Y + 10 + 5 + (16 * i), 16, 16, "+")
+   end
+
+   Add_Stat_Buttons_Inc_And_Dec_Proc(0)
+   Add_Stat_Buttons_Inc_And_Dec_Proc(1)
+   Add_Stat_Buttons_Inc_And_Dec_Proc(2)
+   Add_Stat_Buttons_Inc_And_Dec_Proc(3)
+   Add_Stat_Buttons_Inc_And_Dec_Proc(4)
+   Add_Stat_Buttons_Inc_And_Dec_Proc(5)
+   Add_Stat_Buttons_Inc_And_Dec_Proc(6)
+   
+   // Skill buttons
+   for (i := 0; i < 18; i++)
+   begin
+      if (is_skill_tagged(i)) then
+         Lowest_Change_Value := "2";
+      else
+         Lowest_Change_Value := "1";
+      
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Dec1_Skill + i,   C_Workspace_X + C_Workspace_Width - 10 - 16 - 16 - 24 - 32 - 40 - 5, C_Workspace_Y + 10 + 5 + (16 * i), 16, 16, "-" + Lowest_Change_Value)
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Dec10_Skill + i,  C_Workspace_X + C_Workspace_Width - 10 - 16 - 16 - 24 - 24 - 32 - 40 - 5, C_Workspace_Y + 10 + 5 + (16 * i), 24, 16, "-10")
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Dec100_Skill + i, C_Workspace_X + C_Workspace_Width - 10 - 16 - 16 - 24 - 24 - 32 - 32 - 40 - 5, C_Workspace_Y + 10 + 5 + (16 * i), 32, 16, "-100")
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Inc1_Skill + i,   C_Workspace_X + C_Workspace_Width - 10 - 16 - 24 - 32 - 5, C_Workspace_Y + 10 + 5 + (16 * i), 16, 16, "+" + Lowest_Change_Value)
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Inc10_Skill + i,  C_Workspace_X + C_Workspace_Width - 10 - 24 - 32 - 5, C_Workspace_Y + 10 + 5 + (16 * i), 24, 16, "+10")
+      GUI_Create_Button(C_WN_Main, C_BN_P0_Inc100_Skill + i, C_Workspace_X + C_Workspace_Width - 10 - 32 - 5, C_Workspace_Y + 10 + 5 + (16 * i), 32, 16, "+100")
+   end
+   
+   Add_Skill_Buttons_Inc_And_Dec_Proc(0)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(1)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(2)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(3)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(4)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(5)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(6)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(7)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(8)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(9)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(10)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(11)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(12)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(13)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(14)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(15)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(16)
+   Add_Skill_Buttons_Inc_And_Dec_Proc(17)
+end
+
+procedure draw_page_0_background
+begin
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 10, C_Workspace_Y + 10, 160, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 11, C_Workspace_Y + 11, 158, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+   
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 180, C_Workspace_Y + 10, C_Workspace_Width - 10 - 10 - 170, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 181, C_Workspace_Y + 11, C_Workspace_Width - 10 - 10 - 172, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+end
+
+procedure draw_page_0_labels
+begin
+   variable i;
+   
+   // Stat names and values
+   for (i := 0; i < 7; i++)
+   begin
+      GUI_Create_Label(C_WN_Main, mstr_stat(100 + i), C_Workspace_X + 15, C_Workspace_Y + 12 + 5 + (16 * i), 86, 16, GUI_Label_Indent_Right)
+      GUI_Create_Label(C_WN_Main, "" + get_critter_stat(dude_obj, i), C_Workspace_X + 120 + 6, C_Workspace_Y + 12 + 5 + (16 * i), 24, 16, GUI_Label_Indent_Center)
+   end
+   
+   // Skill names and values
+   for (i := 0; i < 18; i++)
+   begin
+      if (is_skill_tagged(i)) then
+      begin
+         GUI_Create_Label_Ex(C_WN_Main, mstr_skill(100 +i), C_Workspace_X + C_Workspace_Width - 10 - 16 - 16 - 24 - 24 - 32 - 32 - 110 - 40 - 5, C_Workspace_Y + 12 + 5 + (16 * i), 100, 16, GUI_Label_Indent_Right, 0.0, 1.0, 0.0)
+         GUI_Create_Label_Ex(C_WN_Main, "" + has_skill(dude_obj, i), C_Workspace_X + C_Workspace_Width - 10 - 16 - 24 - 32 - 40 - 5, C_Workspace_Y + 12 + 5 + (16 * i), 40, 16, GUI_Label_Indent_Center, 0.0, 1.0, 0.0)
+      end else
+      begin
+         GUI_Create_Label(C_WN_Main, mstr_skill(100 +i), C_Workspace_X + C_Workspace_Width - 10 - 16 - 16 - 24 - 24 - 32 - 32 - 110 - 40 - 5, C_Workspace_Y + 12 + 5 + (16 * i), 100, 16, GUI_Label_Indent_Right)
+         GUI_Create_Label(C_WN_Main, "" + has_skill(dude_obj, i), C_Workspace_X + C_Workspace_Width - 10 - 16 - 24 - 32 - 40 - 5, C_Workspace_Y + 12 + 5 + (16 * i), 40, 16, GUI_Label_Indent_Center)
+      end
+   end
+end
+
+//# Page 1 - Traits & Perks #//////////////////////////////////////////////////////////////////////////
+
+#define Implement_Trait_Add_And_Rem_Proc(Trait_Index) \
+   procedure page_1_add_trait_##Trait_Index \
+   begin \
+      critter_add_trait(dude_obj, TRAIT_TRAIT, Trait_Index, 1); \
+      call clear_workspace; \
+      call draw_page_1_background; \
+      call draw_page_1_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_1_rem_trait_##Trait_Index \
+   begin \
+      critter_rm_trait(dude_obj, TRAIT_TRAIT, Trait_Index, 1); \
+      call clear_workspace; \
+      call draw_page_1_background; \
+      call draw_page_1_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Implement_Perk_Add_And_Rem_Proc(Perk_Index) \
+   procedure page_1_add_perk_##Perk_Index \
+   begin \
+      critter_add_trait(dude_obj, TRAIT_PERK, Perk_Index, 1); \
+      call clear_workspace; \
+      call draw_page_1_background; \
+      call draw_page_1_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_1_rem_perk_##Perk_Index \
+   begin \
+      critter_rm_trait(dude_obj, TRAIT_PERK, Perk_Index, 1); \
+      call clear_workspace; \
+      call draw_page_1_background; \
+      call draw_page_1_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Add_Trait_Buttons_Add_And_Rem_Proc(Trait_Index) \
+   if (has_trait(TRAIT_TRAIT, dude_obj, Trait_Index)) then \
+      GUI_Set_Button_Release_Proc(C_BN_P1_Rem_Trait + Trait_Index, page_1_rem_trait_##Trait_Index) \
+   else \
+      GUI_Set_Button_Release_Proc(C_BN_P1_Add_Trait + Trait_Index, page_1_add_trait_##Trait_Index)
+
+#define Add_Perk_Buttons_Add_And_Rem_Proc(Perk_Index) \
+   if (is_perk_available(Perk_Index)) then \
+   begin \
+      GUI_Set_Button_Release_Proc(C_BN_P1_Rem_Perk + Perk_Index, page_1_rem_perk_##Perk_Index) \
+      GUI_Set_Button_Release_Proc(C_BN_P1_Add_Perk + Perk_Index, page_1_add_perk_##Perk_Index) \
+   end
+
+#define C_BN_P1_Add_Trait "gldbg_b_p1_a_t"
+#define C_BN_P1_Rem_Trait "gldbg_b_p1_r_t"
+#define C_BN_P1_Add_Perk "gldbg_b_p1_a_p"
+#define C_BN_P1_Rem_Perk "gldbg_b_p1_r_p"
+#define C_BN_P1_Previous_Perk_Page "gldbg_b_p1_ppp"
+#define C_BN_P1_Next_Perk_Page "gldbg_b_p1_npp"
+#define C_BN_P1_Rem_All_Perks "gldbg_b_p1_rap"
+
+procedure draw_page_1;
+procedure draw_page_1_buttons;
+procedure draw_page_1_background;
+procedure draw_page_1_labels;
+procedure page_1_add_perk_buttons_proc(variable Begin_Perk_Index);
+procedure is_perk_available(variable Perk_Index);
+
+variable Current_Perk_Page_Number;
+
+Implement_Trait_Add_And_Rem_Proc(0)
+Implement_Trait_Add_And_Rem_Proc(1)
+Implement_Trait_Add_And_Rem_Proc(2)
+Implement_Trait_Add_And_Rem_Proc(3)
+Implement_Trait_Add_And_Rem_Proc(4)
+Implement_Trait_Add_And_Rem_Proc(5)
+Implement_Trait_Add_And_Rem_Proc(6)
+Implement_Trait_Add_And_Rem_Proc(7)
+Implement_Trait_Add_And_Rem_Proc(8)
+Implement_Trait_Add_And_Rem_Proc(9)
+Implement_Trait_Add_And_Rem_Proc(10)
+Implement_Trait_Add_And_Rem_Proc(11)
+Implement_Trait_Add_And_Rem_Proc(12)
+Implement_Trait_Add_And_Rem_Proc(13)
+Implement_Trait_Add_And_Rem_Proc(14)
+Implement_Trait_Add_And_Rem_Proc(15)
+
+Implement_Perk_Add_And_Rem_Proc(0)
+Implement_Perk_Add_And_Rem_Proc(1)
+Implement_Perk_Add_And_Rem_Proc(2)
+Implement_Perk_Add_And_Rem_Proc(3)
+Implement_Perk_Add_And_Rem_Proc(4)
+Implement_Perk_Add_And_Rem_Proc(5)
+Implement_Perk_Add_And_Rem_Proc(6)
+Implement_Perk_Add_And_Rem_Proc(7)
+Implement_Perk_Add_And_Rem_Proc(8)
+Implement_Perk_Add_And_Rem_Proc(9)
+Implement_Perk_Add_And_Rem_Proc(10)
+Implement_Perk_Add_And_Rem_Proc(11)
+Implement_Perk_Add_And_Rem_Proc(12)
+Implement_Perk_Add_And_Rem_Proc(13)
+Implement_Perk_Add_And_Rem_Proc(14)
+Implement_Perk_Add_And_Rem_Proc(15)
+Implement_Perk_Add_And_Rem_Proc(16)
+Implement_Perk_Add_And_Rem_Proc(17)
+Implement_Perk_Add_And_Rem_Proc(18)
+Implement_Perk_Add_And_Rem_Proc(19)
+Implement_Perk_Add_And_Rem_Proc(20)
+Implement_Perk_Add_And_Rem_Proc(21)
+Implement_Perk_Add_And_Rem_Proc(22)
+Implement_Perk_Add_And_Rem_Proc(23)
+Implement_Perk_Add_And_Rem_Proc(24)
+Implement_Perk_Add_And_Rem_Proc(25)
+Implement_Perk_Add_And_Rem_Proc(26)
+Implement_Perk_Add_And_Rem_Proc(27)
+Implement_Perk_Add_And_Rem_Proc(28)
+Implement_Perk_Add_And_Rem_Proc(29)
+Implement_Perk_Add_And_Rem_Proc(30)
+Implement_Perk_Add_And_Rem_Proc(31)
+Implement_Perk_Add_And_Rem_Proc(32)
+Implement_Perk_Add_And_Rem_Proc(33)
+Implement_Perk_Add_And_Rem_Proc(34)
+Implement_Perk_Add_And_Rem_Proc(35)
+Implement_Perk_Add_And_Rem_Proc(36)
+Implement_Perk_Add_And_Rem_Proc(37)
+Implement_Perk_Add_And_Rem_Proc(38)
+Implement_Perk_Add_And_Rem_Proc(39)
+Implement_Perk_Add_And_Rem_Proc(40)
+Implement_Perk_Add_And_Rem_Proc(41)
+Implement_Perk_Add_And_Rem_Proc(42)
+Implement_Perk_Add_And_Rem_Proc(43)
+Implement_Perk_Add_And_Rem_Proc(44)
+Implement_Perk_Add_And_Rem_Proc(45)
+Implement_Perk_Add_And_Rem_Proc(46)
+Implement_Perk_Add_And_Rem_Proc(47)
+Implement_Perk_Add_And_Rem_Proc(48)
+Implement_Perk_Add_And_Rem_Proc(49)
+Implement_Perk_Add_And_Rem_Proc(50)
+Implement_Perk_Add_And_Rem_Proc(51)
+Implement_Perk_Add_And_Rem_Proc(52)
+Implement_Perk_Add_And_Rem_Proc(53)
+Implement_Perk_Add_And_Rem_Proc(54)
+Implement_Perk_Add_And_Rem_Proc(55)
+Implement_Perk_Add_And_Rem_Proc(56)
+Implement_Perk_Add_And_Rem_Proc(57)
+Implement_Perk_Add_And_Rem_Proc(58)
+Implement_Perk_Add_And_Rem_Proc(59)
+Implement_Perk_Add_And_Rem_Proc(60)
+Implement_Perk_Add_And_Rem_Proc(61)
+Implement_Perk_Add_And_Rem_Proc(62)
+Implement_Perk_Add_And_Rem_Proc(63)
+Implement_Perk_Add_And_Rem_Proc(64)
+Implement_Perk_Add_And_Rem_Proc(65)
+Implement_Perk_Add_And_Rem_Proc(66)
+Implement_Perk_Add_And_Rem_Proc(67)
+Implement_Perk_Add_And_Rem_Proc(68)
+Implement_Perk_Add_And_Rem_Proc(69)
+Implement_Perk_Add_And_Rem_Proc(70)
+Implement_Perk_Add_And_Rem_Proc(71)
+Implement_Perk_Add_And_Rem_Proc(72)
+Implement_Perk_Add_And_Rem_Proc(73)
+Implement_Perk_Add_And_Rem_Proc(74)
+Implement_Perk_Add_And_Rem_Proc(75)
+Implement_Perk_Add_And_Rem_Proc(76)
+Implement_Perk_Add_And_Rem_Proc(77)
+Implement_Perk_Add_And_Rem_Proc(78)
+Implement_Perk_Add_And_Rem_Proc(79)
+Implement_Perk_Add_And_Rem_Proc(80)
+Implement_Perk_Add_And_Rem_Proc(81)
+Implement_Perk_Add_And_Rem_Proc(82)
+Implement_Perk_Add_And_Rem_Proc(83)
+Implement_Perk_Add_And_Rem_Proc(84)
+Implement_Perk_Add_And_Rem_Proc(85)
+Implement_Perk_Add_And_Rem_Proc(86)
+Implement_Perk_Add_And_Rem_Proc(87)
+Implement_Perk_Add_And_Rem_Proc(88)
+Implement_Perk_Add_And_Rem_Proc(89)
+Implement_Perk_Add_And_Rem_Proc(90)
+Implement_Perk_Add_And_Rem_Proc(91)
+Implement_Perk_Add_And_Rem_Proc(92)
+Implement_Perk_Add_And_Rem_Proc(93)
+Implement_Perk_Add_And_Rem_Proc(94)
+Implement_Perk_Add_And_Rem_Proc(95)
+Implement_Perk_Add_And_Rem_Proc(96)
+Implement_Perk_Add_And_Rem_Proc(97)
+Implement_Perk_Add_And_Rem_Proc(98)
+Implement_Perk_Add_And_Rem_Proc(99)
+Implement_Perk_Add_And_Rem_Proc(100)
+Implement_Perk_Add_And_Rem_Proc(101)
+Implement_Perk_Add_And_Rem_Proc(102)
+Implement_Perk_Add_And_Rem_Proc(103)
+Implement_Perk_Add_And_Rem_Proc(104)
+Implement_Perk_Add_And_Rem_Proc(105)
+Implement_Perk_Add_And_Rem_Proc(106)
+Implement_Perk_Add_And_Rem_Proc(107)
+Implement_Perk_Add_And_Rem_Proc(108)
+Implement_Perk_Add_And_Rem_Proc(109)
+Implement_Perk_Add_And_Rem_Proc(110)
+Implement_Perk_Add_And_Rem_Proc(111)
+Implement_Perk_Add_And_Rem_Proc(112)
+Implement_Perk_Add_And_Rem_Proc(113)
+Implement_Perk_Add_And_Rem_Proc(114)
+Implement_Perk_Add_And_Rem_Proc(115)
+Implement_Perk_Add_And_Rem_Proc(116)
+Implement_Perk_Add_And_Rem_Proc(117)
+Implement_Perk_Add_And_Rem_Proc(118)
+
+procedure page_1_rem_all_perks
+begin
+   variable i;
+   
+   for (i := 0; i < 118; i++)
+   begin
+      if (is_perk_available(i)) then
+         critter_rm_trait(dude_obj, TRAIT_PERK, i, 1);
+   end
+   
+   call clear_workspace;
+   call draw_page_1_background;
+   call draw_page_1_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure page_1_previous_perk_page
+begin
+   variable i;
+   variable Begin_Perk_Index;
+   variable End_Perk_Index;
+   variable Current_Perk_Row_Number;
+
+   if (Current_Perk_Page_Number > 0) then
+   begin
+      Begin_Perk_Index := 16 * Current_Perk_Page_Number;
+      End_Perk_Index := min(Begin_Perk_Index + 16, 119);
+   
+      for (i := Begin_Perk_Index; i < End_Perk_Index; i++)
+      begin
+         if (is_perk_available(i)) then
+         begin
+            GUI_Delete_Button(C_BN_P1_Add_Perk + i)
+            GUI_Delete_Button(C_BN_P1_Rem_Perk + i)
+         end
+         
+         Current_Perk_Row_Number++;
+      end
+   
+      Current_Perk_Page_Number--;
+      
+      Begin_Perk_Index := 16 * Current_Perk_Page_Number;
+      End_Perk_Index := min(Begin_Perk_Index + 16, 119);
+      Current_Perk_Row_Number := 0;
+      
+      for (i := Begin_Perk_Index; i < End_Perk_Index; i++)
+      begin
+         if (is_perk_available(i)) then
+         begin
+            GUI_Create_Button(C_WN_Main, C_BN_P1_Add_Perk + i, C_Workspace_Width - 15 - 16, C_Workspace_Y + 15 + (16 * Current_Perk_Row_Number), 16, 16, "+")
+            GUI_Create_Button(C_WN_Main, C_BN_P1_Rem_Perk + i, C_Workspace_Width - 15 - 16 - 16 - 24, C_Workspace_Y + 15 + (16 * Current_Perk_Row_Number), 16, 16, "-")
+         end
+         
+         Current_Perk_Row_Number++;
+      end
+      
+      call page_1_add_perk_buttons_proc(Begin_Perk_Index);
+   end
+      
+   call clear_workspace;
+   call draw_page_1_background;
+   call draw_page_1_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure page_1_next_perk_page
+begin
+   variable i;
+   variable Begin_Perk_Index;
+   variable End_Perk_Index;
+   variable Current_Perk_Row_Number;
+
+   if (Current_Perk_Page_Number < 7) then
+   begin
+      Begin_Perk_Index := 16 * Current_Perk_Page_Number;
+      End_Perk_Index := min(Begin_Perk_Index + 16, 119);
+   
+      for (i := Begin_Perk_Index; i < End_Perk_Index; i++)
+      begin
+         if (is_perk_available(i)) then
+         begin
+            GUI_Delete_Button(C_BN_P1_Add_Perk + i)
+            GUI_Delete_Button(C_BN_P1_Rem_Perk + i)
+         end
+         
+         Current_Perk_Row_Number++;
+      end
+   
+      Current_Perk_Page_Number++;
+      
+      Begin_Perk_Index := 16 * Current_Perk_Page_Number;
+      End_Perk_Index := min(Begin_Perk_Index + 16, 119);
+      Current_Perk_Row_Number := 0;
+      
+      for (i := Begin_Perk_Index; i < End_Perk_Index; i++)
+      begin
+         if (is_perk_available(i)) then
+         begin
+            GUI_Create_Button(C_WN_Main, C_BN_P1_Add_Perk + i, C_Workspace_Width - 15 - 16, C_Workspace_Y + 15 + (16 * Current_Perk_Row_Number), 16, 16, "+")
+            GUI_Create_Button(C_WN_Main, C_BN_P1_Rem_Perk + i, C_Workspace_Width - 15 - 16 - 16 - 24, C_Workspace_Y + 15 + (16 * Current_Perk_Row_Number), 16, 16, "-")
+         end
+         
+         Current_Perk_Row_Number++;
+      end
+      
+      call page_1_add_perk_buttons_proc(Begin_Perk_Index);
+   end
+      
+   call clear_workspace;
+   call draw_page_1_background;
+   call draw_page_1_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure draw_page_1
+begin
+   call draw_page_1_buttons;
+   call draw_page_1_background;
+   call draw_page_1_labels;
+end
+
+procedure draw_page_1_buttons
+begin
+   variable i;
+   variable Begin_Perk_Index;
+   variable End_Perk_Index;
+   variable Current_Perk_Row_Number;
+   
+   // Trait add and remove buttons
+   for (i := 0; i < 16; i++)
+   begin
+      if (has_trait(TRAIT_TRAIT, dude_obj, i)) then
+         GUI_Create_Button(C_WN_Main, C_BN_P1_Rem_Trait + i, (C_Workspace_Width / 2) - 10 - 16 - 16 - 65, C_Workspace_Y + 15 + (16 * i), 16, 16, "-")
+      else
+         GUI_Create_Button(C_WN_Main, C_BN_P1_Add_Trait + i, (C_Workspace_Width / 2) - 10 - 16 - 65, C_Workspace_Y + 15 + (16 * i), 16, 16, "+")
+   end
+   
+   Add_Trait_Buttons_Add_And_Rem_Proc(0)
+   Add_Trait_Buttons_Add_And_Rem_Proc(1)
+   Add_Trait_Buttons_Add_And_Rem_Proc(2)
+   Add_Trait_Buttons_Add_And_Rem_Proc(3)
+   Add_Trait_Buttons_Add_And_Rem_Proc(4)
+   Add_Trait_Buttons_Add_And_Rem_Proc(5)
+   Add_Trait_Buttons_Add_And_Rem_Proc(6)
+   Add_Trait_Buttons_Add_And_Rem_Proc(7)
+   Add_Trait_Buttons_Add_And_Rem_Proc(8)
+   Add_Trait_Buttons_Add_And_Rem_Proc(9)
+   Add_Trait_Buttons_Add_And_Rem_Proc(10)
+   Add_Trait_Buttons_Add_And_Rem_Proc(11)
+   Add_Trait_Buttons_Add_And_Rem_Proc(12)
+   Add_Trait_Buttons_Add_And_Rem_Proc(13)
+   Add_Trait_Buttons_Add_And_Rem_Proc(14)
+   Add_Trait_Buttons_Add_And_Rem_Proc(15)
+   
+   // Perk add and remove buttons
+   Begin_Perk_Index := 16 * Current_Perk_Page_Number;
+   End_Perk_Index := min(Begin_Perk_Index + 16, 119);
+   
+   for (i := Begin_Perk_Index; i < End_Perk_Index; i++)
+   begin
+      if (is_perk_available(i)) then
+      begin
+         GUI_Create_Button(C_WN_Main, C_BN_P1_Add_Perk + i, C_Workspace_Width - 15 - 16, C_Workspace_Y + 15 + (16 * Current_Perk_Row_Number), 16, 16, "+")
+         GUI_Create_Button(C_WN_Main, C_BN_P1_Rem_Perk + i, C_Workspace_Width - 15 - 16 - 16 - 24, C_Workspace_Y + 15 + (16 * Current_Perk_Row_Number), 16, 16, "-")
+      end
+      
+      Current_Perk_Row_Number++;
+   end
+   
+   call page_1_add_perk_buttons_proc(Begin_Perk_Index);
+   
+   // Perk page change buttons
+   GUI_Create_Button(C_WN_Main, C_BN_P1_Previous_Perk_Page, (C_Workspace_Width / 2) + 10, C_Workspace_Y + C_Workspace_Height - 15 - 20, 20, 20, "<<")
+   GUI_Create_Button(C_WN_Main, C_BN_P1_Next_Perk_Page, C_Workspace_Width - 15 - 20, C_Workspace_Y + C_Workspace_Height - 15 - 20, 20, 20, ">>")
+   GUI_Set_Button_Release_Proc(C_BN_P1_Previous_Perk_Page, page_1_previous_perk_page)
+   GUI_Set_Button_Release_Proc(C_BN_P1_Next_Perk_Page, page_1_next_perk_page)
+   
+   // Remove all perks button
+   GUI_Create_Button(C_WN_Main, C_BN_P1_Rem_All_Perks, (C_Workspace_Width / 2) + 10 + 20 + 55, C_Workspace_Y + C_Workspace_Height - 15 - 20, 75, 20, "Remove all")
+   GUI_Set_Button_Release_Proc(C_BN_P1_Rem_All_Perks, page_1_rem_all_perks)
+end
+
+procedure draw_page_1_background
+begin
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 10, C_Workspace_Y + 10, (C_Workspace_Width / 2) - 15 - 65, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 11, C_Workspace_Y + 11, (C_Workspace_Width / 2) - 17 - 65, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+   
+   GUI_Fill_Rect(C_WN_Main, (C_Workspace_Width / 2) + 5 - 65, C_Workspace_Y + 10, (C_Workspace_Width / 2) - 15 + 65, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, (C_Workspace_Width / 2) + 6 - 65, C_Workspace_Y + 11, (C_Workspace_Width / 2) - 17 + 65, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+end
+
+procedure draw_page_1_labels
+begin
+   variable i;
+   variable Begin_Perk_Index;
+   variable End_Perk_Index;
+   variable Current_Perk_Count;
+   variable Current_Perk_Row_Number;
+   
+   // Trait names
+   for (i := 0; i < 16; i++)
+   begin
+      if (has_trait(TRAIT_TRAIT, dude_obj, i)) then
+      begin
+         GUI_Create_Label_Ex(C_WN_Main, mstr_trait(100 + i), C_Workspace_X + 15, C_Workspace_Y + 17 + (16 * i), 120, 10, GUI_Label_Indent_Right, 0.0, 1.0, 0.0)
+      end else
+      begin
+         GUI_Create_Label(C_WN_Main, mstr_trait(100 + i), C_Workspace_X + 15, C_Workspace_Y + 17 + (16 * i), 120, 10, GUI_Label_Indent_Right)
+      end
+   end
+   
+   // Perk names and values
+   Begin_Perk_Index := 16 * Current_Perk_Page_Number;
+   End_Perk_Index := min(Begin_Perk_Index + 16, 119);
+   
+   for (i := Begin_Perk_Index; i < End_Perk_Index; i++)
+   begin
+      if (is_perk_available(i)) then
+      begin
+         Current_Perk_Count := has_trait(TRAIT_PERK, dude_obj, i);
+
+         if (Current_Perk_Count > 0) then
+         begin
+            GUI_Create_Label_Ex(C_WN_Main, mstr_perk(101 + i), (C_Workspace_Width / 2) + 10 - 65, C_Workspace_Y + 17 + (16 * Current_Perk_Row_Number), 160 + 65, 10, GUI_Label_Indent_Right, 0.0, 1.0, 0.0)
+            GUI_Create_Label_Ex(C_WN_Main, "" + Current_Perk_Count, (C_Workspace_Width / 2) + 10 + 170 + 16, C_Workspace_Y + 17 + (16 * Current_Perk_Row_Number), 24, 10, GUI_Label_Indent_Center, 0.0, 1.0, 0.0)
+         end else
+         begin
+            GUI_Create_Label(C_WN_Main, mstr_perk(101 + i), (C_Workspace_Width / 2) + 10 - 65, C_Workspace_Y + 17 + (16 * Current_Perk_Row_Number), 160 + 65, 10, GUI_Label_Indent_Right)
+            GUI_Create_Label(C_WN_Main, "0", (C_Workspace_Width / 2) + 10 + 170 + 16, C_Workspace_Y + 17 + (16 * Current_Perk_Row_Number), 24, 10, GUI_Label_Indent_Center)
+         end
+      end else
+      begin
+         GUI_Create_Label_Ex(C_WN_Main, "Unavailable", (C_Workspace_Width / 2) + 10 - 65, C_Workspace_Y + 17 + (16 * Current_Perk_Row_Number), 160 + 65, 10, GUI_Label_Indent_Right, 1.0, 0.0, 0.0)
+      end
+      
+      Current_Perk_Row_Number++;
+   end
+end
+
+procedure page_1_add_perk_buttons_proc(variable Begin_Perk_Index)
+begin
+if (Begin_Perk_Index == 0) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(0)
+      Add_Perk_Buttons_Add_And_Rem_Proc(1)
+      Add_Perk_Buttons_Add_And_Rem_Proc(2)
+      Add_Perk_Buttons_Add_And_Rem_Proc(3)
+      Add_Perk_Buttons_Add_And_Rem_Proc(4)
+      Add_Perk_Buttons_Add_And_Rem_Proc(5)
+      Add_Perk_Buttons_Add_And_Rem_Proc(6)
+      Add_Perk_Buttons_Add_And_Rem_Proc(7)
+      Add_Perk_Buttons_Add_And_Rem_Proc(8)
+      Add_Perk_Buttons_Add_And_Rem_Proc(9)
+      Add_Perk_Buttons_Add_And_Rem_Proc(10)
+      Add_Perk_Buttons_Add_And_Rem_Proc(11)
+      Add_Perk_Buttons_Add_And_Rem_Proc(12)
+      Add_Perk_Buttons_Add_And_Rem_Proc(13)
+      Add_Perk_Buttons_Add_And_Rem_Proc(14)
+      Add_Perk_Buttons_Add_And_Rem_Proc(15)
+   end else if (Begin_Perk_Index == 16) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(16)
+      Add_Perk_Buttons_Add_And_Rem_Proc(17)
+      Add_Perk_Buttons_Add_And_Rem_Proc(18)
+      Add_Perk_Buttons_Add_And_Rem_Proc(19)
+      Add_Perk_Buttons_Add_And_Rem_Proc(20)
+      Add_Perk_Buttons_Add_And_Rem_Proc(21)
+      Add_Perk_Buttons_Add_And_Rem_Proc(22)
+      Add_Perk_Buttons_Add_And_Rem_Proc(23)
+      Add_Perk_Buttons_Add_And_Rem_Proc(24)
+      Add_Perk_Buttons_Add_And_Rem_Proc(25)
+      Add_Perk_Buttons_Add_And_Rem_Proc(26)
+      Add_Perk_Buttons_Add_And_Rem_Proc(27)
+      Add_Perk_Buttons_Add_And_Rem_Proc(28)
+      Add_Perk_Buttons_Add_And_Rem_Proc(29)
+      Add_Perk_Buttons_Add_And_Rem_Proc(30)
+      Add_Perk_Buttons_Add_And_Rem_Proc(31)
+   end else if (Begin_Perk_Index == 32) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(32)
+      Add_Perk_Buttons_Add_And_Rem_Proc(33)
+      Add_Perk_Buttons_Add_And_Rem_Proc(34)
+      Add_Perk_Buttons_Add_And_Rem_Proc(35)
+      Add_Perk_Buttons_Add_And_Rem_Proc(36)
+      Add_Perk_Buttons_Add_And_Rem_Proc(37)
+      Add_Perk_Buttons_Add_And_Rem_Proc(38)
+      Add_Perk_Buttons_Add_And_Rem_Proc(39)
+      Add_Perk_Buttons_Add_And_Rem_Proc(40)
+      Add_Perk_Buttons_Add_And_Rem_Proc(41)
+      Add_Perk_Buttons_Add_And_Rem_Proc(42)
+      Add_Perk_Buttons_Add_And_Rem_Proc(43)
+      Add_Perk_Buttons_Add_And_Rem_Proc(44)
+      Add_Perk_Buttons_Add_And_Rem_Proc(45)
+      Add_Perk_Buttons_Add_And_Rem_Proc(46)
+      Add_Perk_Buttons_Add_And_Rem_Proc(47)
+   end else if (Begin_Perk_Index == 48) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(48)
+      Add_Perk_Buttons_Add_And_Rem_Proc(49)
+      Add_Perk_Buttons_Add_And_Rem_Proc(50)
+      Add_Perk_Buttons_Add_And_Rem_Proc(51)
+      Add_Perk_Buttons_Add_And_Rem_Proc(52)
+      Add_Perk_Buttons_Add_And_Rem_Proc(53)
+      Add_Perk_Buttons_Add_And_Rem_Proc(54)
+      Add_Perk_Buttons_Add_And_Rem_Proc(55)
+      Add_Perk_Buttons_Add_And_Rem_Proc(56)
+      Add_Perk_Buttons_Add_And_Rem_Proc(57)
+      Add_Perk_Buttons_Add_And_Rem_Proc(58)
+      Add_Perk_Buttons_Add_And_Rem_Proc(59)
+      Add_Perk_Buttons_Add_And_Rem_Proc(60)
+      Add_Perk_Buttons_Add_And_Rem_Proc(61)
+      Add_Perk_Buttons_Add_And_Rem_Proc(62)
+      Add_Perk_Buttons_Add_And_Rem_Proc(63)
+   end else if (Begin_Perk_Index == 64) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(64)
+      Add_Perk_Buttons_Add_And_Rem_Proc(65)
+      Add_Perk_Buttons_Add_And_Rem_Proc(66)
+      Add_Perk_Buttons_Add_And_Rem_Proc(67)
+      Add_Perk_Buttons_Add_And_Rem_Proc(68)
+      Add_Perk_Buttons_Add_And_Rem_Proc(69)
+      Add_Perk_Buttons_Add_And_Rem_Proc(70)
+      Add_Perk_Buttons_Add_And_Rem_Proc(71)
+      Add_Perk_Buttons_Add_And_Rem_Proc(72)
+      Add_Perk_Buttons_Add_And_Rem_Proc(73)
+      Add_Perk_Buttons_Add_And_Rem_Proc(74)
+      Add_Perk_Buttons_Add_And_Rem_Proc(75)
+      Add_Perk_Buttons_Add_And_Rem_Proc(76)
+      Add_Perk_Buttons_Add_And_Rem_Proc(77)
+      Add_Perk_Buttons_Add_And_Rem_Proc(78)
+      Add_Perk_Buttons_Add_And_Rem_Proc(79)
+   end else if (Begin_Perk_Index == 80) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(80)
+      Add_Perk_Buttons_Add_And_Rem_Proc(81)
+      Add_Perk_Buttons_Add_And_Rem_Proc(82)
+      Add_Perk_Buttons_Add_And_Rem_Proc(83)
+      Add_Perk_Buttons_Add_And_Rem_Proc(84)
+      Add_Perk_Buttons_Add_And_Rem_Proc(85)
+      Add_Perk_Buttons_Add_And_Rem_Proc(86)
+      Add_Perk_Buttons_Add_And_Rem_Proc(87)
+      Add_Perk_Buttons_Add_And_Rem_Proc(88)
+      Add_Perk_Buttons_Add_And_Rem_Proc(89)
+      Add_Perk_Buttons_Add_And_Rem_Proc(90)
+      Add_Perk_Buttons_Add_And_Rem_Proc(91)
+      Add_Perk_Buttons_Add_And_Rem_Proc(92)
+      Add_Perk_Buttons_Add_And_Rem_Proc(93)
+      Add_Perk_Buttons_Add_And_Rem_Proc(94)
+      Add_Perk_Buttons_Add_And_Rem_Proc(95)
+   end else if (Begin_Perk_Index == 96) then
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(96)
+      Add_Perk_Buttons_Add_And_Rem_Proc(97)
+      Add_Perk_Buttons_Add_And_Rem_Proc(98)
+      Add_Perk_Buttons_Add_And_Rem_Proc(99)
+      Add_Perk_Buttons_Add_And_Rem_Proc(100)
+      Add_Perk_Buttons_Add_And_Rem_Proc(101)
+      Add_Perk_Buttons_Add_And_Rem_Proc(102)
+      Add_Perk_Buttons_Add_And_Rem_Proc(103)
+      Add_Perk_Buttons_Add_And_Rem_Proc(104)
+      Add_Perk_Buttons_Add_And_Rem_Proc(105)
+      Add_Perk_Buttons_Add_And_Rem_Proc(106)
+      Add_Perk_Buttons_Add_And_Rem_Proc(107)
+      Add_Perk_Buttons_Add_And_Rem_Proc(108)
+      Add_Perk_Buttons_Add_And_Rem_Proc(109)
+      Add_Perk_Buttons_Add_And_Rem_Proc(110)
+      Add_Perk_Buttons_Add_And_Rem_Proc(111)
+   end else
+   begin
+      Add_Perk_Buttons_Add_And_Rem_Proc(112)
+      Add_Perk_Buttons_Add_And_Rem_Proc(113)
+      Add_Perk_Buttons_Add_And_Rem_Proc(114)
+      Add_Perk_Buttons_Add_And_Rem_Proc(115)
+      Add_Perk_Buttons_Add_And_Rem_Proc(116)
+      Add_Perk_Buttons_Add_And_Rem_Proc(117)
+      Add_Perk_Buttons_Add_And_Rem_Proc(118)
+   end
+end
+
+procedure is_perk_available(variable Perk_Index)
+begin
+   if (Perk_Index < 0
+      or Perk_Index > 118) then
+      return false;
+
+   if (Perk_Index > 52
+      and Perk_Index < 73) then
+      return false;
+
+   if (Perk_Index > 111
+      and Perk_Index < 116) then
+      return false;
+
+   switch (Perk_Index)
+   begin
+      case 27: return false;
+      case 36: return false;
+      case 40: return false;
+      case 42: return false;
+      case 44: return false;
+      case 118: return false;
+   end
+
+   return true;
+end
+
+//# Page 2 - Items #///////////////////////////////////////////////////////////////////////////////////
+
+#define Implement_Item_Id_Inc_And_Dec_Proc(Change_Value) \
+   procedure page_2_item_id_inc##Change_Value \
+   begin \
+      Current_Item_Id := min(Current_Item_Id + Change_Value, 9999); \
+      call clear_workspace; \
+      call draw_page_2_background; \
+      call draw_page_2_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_2_item_id_dec##Change_Value \
+   begin \
+      Current_Item_Id := max(Current_Item_Id - Change_Value, 1); \
+      call clear_workspace; \
+      call draw_page_2_background; \
+      call draw_page_2_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Implement_Item_Count_Inc_And_Dec_Proc(Change_Value) \
+   procedure page_2_item_count_inc##Change_Value \
+   begin \
+      Current_Item_Count := min(Current_Item_Count + Change_Value, 9999); \
+      call clear_workspace; \
+      call draw_page_2_background; \
+      call draw_page_2_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_2_item_count_dec##Change_Value \
+   begin \
+      Current_Item_Count := max(Current_Item_Count - Change_Value, 1); \
+      call clear_workspace; \
+      call draw_page_2_background; \
+      call draw_page_2_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define C_BN_P2_Item_IDU "gldbg_b_p2_i_idu"
+#define C_BN_P2_Item_IDD "gldbg_b_p2_i_idd"
+#define C_BN_P2_Item_CDU "gldbg_b_p2_i_cdu"
+#define C_BN_P2_Item_CDD "gldbg_b_p2_i_cdd"
+#define C_BN_P2_Item_Create_Ground "gldbg_b_p2_i_cg"
+#define C_BN_P2_Item_Create_Inventory "gldbg_b_p2_i_ci"
+
+procedure draw_page_2_buttons;
+procedure draw_page_2_background;
+procedure draw_page_2_labels;
+
+variable Current_Item_Id;
+variable Current_Item_Count;
+
+Implement_Item_Id_Inc_And_Dec_Proc(1)
+Implement_Item_Id_Inc_And_Dec_Proc(10)
+Implement_Item_Id_Inc_And_Dec_Proc(100)
+Implement_Item_Id_Inc_And_Dec_Proc(1000)
+
+Implement_Item_Count_Inc_And_Dec_Proc(1)
+Implement_Item_Count_Inc_And_Dec_Proc(10)
+Implement_Item_Count_Inc_And_Dec_Proc(100)
+Implement_Item_Count_Inc_And_Dec_Proc(1000)
+
+procedure page_2_create_item_on_the_ground
+begin
+   variable i;
+   
+   for (i := 0; i < Current_Item_Count; i++)
+   begin
+      create_object(Current_Item_Id, tile_num(dude_obj), elevation(dude_obj));
+   end
+end
+
+procedure page_2_create_item_in_the_inventory
+begin
+   add_mult_objs_to_inven(dude_obj, create_object(Current_Item_Id, tile_num(dude_obj), elevation(dude_obj)), Current_Item_Count);
+end
+
+procedure draw_page_2
+begin
+   if (Current_Item_Id == 0) then
+      Current_Item_Id := 1;
+
+   if (Current_Item_Count == 0) then
+      Current_Item_Count := 1;
+
+   call draw_page_2_buttons;
+   call draw_page_2_background;
+   call draw_page_2_labels;
+end
+
+procedure draw_page_2_buttons
+begin
+   variable i;
+   
+   // Item id buttons
+   for (i := 0; i < 4; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P2_Item_IDU + i, C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15, 20, 20, "+")
+      GUI_Create_Button(C_WN_Main, C_BN_P2_Item_IDD + i, C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 65, 20, 20, "-")
+   end
+   
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDU + 0, page_2_item_id_inc1000)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDU + 1, page_2_item_id_inc100)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDU + 2, page_2_item_id_inc10)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDU + 3, page_2_item_id_inc1)
+   
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDD + 0, page_2_item_id_dec1000)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDD + 1, page_2_item_id_dec100)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDD + 2, page_2_item_id_dec10)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_IDD + 3, page_2_item_id_dec1)
+   
+   // Item count buttons
+   for (i := 0; i < 4; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P2_Item_CDU + i, C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15 + 100, 20, 20, "+")
+      GUI_Create_Button(C_WN_Main, C_BN_P2_Item_CDD + i, C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 65 + 100, 20, 20, "-")
+   end
+   
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDU + 0, page_2_item_count_inc1000)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDU + 1, page_2_item_count_inc100)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDU + 2, page_2_item_count_inc10)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDU + 3, page_2_item_count_inc1)
+   
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDD + 0, page_2_item_count_dec1000)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDD + 1, page_2_item_count_dec100)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDD + 2, page_2_item_count_dec10)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_CDD + 3, page_2_item_count_dec1)
+   
+   // Item Create and Create in inventory buttons
+   GUI_Create_Button(C_WN_Main, C_BN_P2_Item_Create_Ground, C_Workspace_X + 40, C_Workspace_Y + C_Workspace_Height - 60, 175, 20, "Create on the ground")
+   GUI_Create_Button(C_WN_Main, C_BN_P2_Item_Create_Inventory, C_Workspace_X + 40, C_Workspace_Y + C_Workspace_Height - 35, 175, 20, "Create in the inventory")
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_Create_Ground, page_2_create_item_on_the_ground)
+   GUI_Set_Button_Release_Proc(C_BN_P2_Item_Create_Inventory, page_2_create_item_in_the_inventory)
+end
+
+procedure draw_page_2_background
+begin
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 10, C_Workspace_Y + 10, (C_Workspace_Width / 2) - 15, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 11, C_Workspace_Y + 11, (C_Workspace_Width / 2) - 17, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+   
+   GUI_Fill_Rect(C_WN_Main, (C_Workspace_Width / 2) + 5, C_Workspace_Y + 10, (C_Workspace_Width / 2) - 15, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, (C_Workspace_Width / 2) + 6, C_Workspace_Y + 11, (C_Workspace_Width / 2) - 17, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+   
+   // Item id border
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 130, C_Workspace_Y + 15 + 20 + 10 - 4, 95, 18, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 130 + 1, C_Workspace_Y + 15 + 20 + 10 - 3, 93, 16, 0.5, 0.5, 0.5)
+   
+   // Item count border
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 130, C_Workspace_Y + 15 + 20 + 10 - 4 + 100, 95, 18, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 130 + 1, C_Workspace_Y + 15 + 20 + 10 - 3 + 100, 93, 16, 0.5, 0.5, 0.5)
+end
+
+procedure draw_page_2_labels
+begin
+   variable i;
+   variable Item_Part;
+   variable Item_Name;
+   variable Is_Current_Item_Id_Available;
+   
+   Item_Name := mstr_pro_item(Current_Item_Id * 100);
+   Is_Current_Item_Id_Available := Item_Name != "Error";
+
+   // Item Id and Count labels
+   GUI_Create_Label(C_WN_Main, "Id", C_Workspace_X + 15 + 50, C_Workspace_Y + 45, 70, 10, GUI_Label_Indent_Right)
+   GUI_Create_Label(C_WN_Main, "Count", C_Workspace_X + 15 + 50, C_Workspace_Y + 45 + 100, 70, 10, GUI_Label_Indent_Right)
+
+   // Item id number labels
+   Item_Part := 1000;
+   
+   for (i := 0; i < 4; i++)
+   begin   
+      if (Current_Item_Id < Item_Part) then
+      begin
+         GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_Item_Id / Item_Part) % 10), C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15 + 20 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+      end else
+      begin
+         if (Is_Current_Item_Id_Available) then
+            GUI_Create_Label(C_WN_Main, "" + (floor(Current_Item_Id / Item_Part) % 10), C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15+ 20 + 10, 20, 10, GUI_Label_Indent_Center)
+         else
+            GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_Item_Id / Item_Part) % 10), C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15 + 20 + 10, 20, 10, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+      end
+      
+      Item_Part := Item_Part / 10;
+   end
+   
+   // Item count labels
+   Item_Part := 1000;
+   
+   for (i := 0; i < 4; i++)
+   begin
+      if (Current_Item_Count < Item_Part) then
+         GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_Item_Count / Item_Part) % 10), C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15 + 20 + 10 + 100, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+      else
+         GUI_Create_Label(C_WN_Main, "" + (floor(Current_Item_Count / Item_Part) % 10), C_Workspace_X + 15 + 130 + (i * 25), C_Workspace_Y + 15 + 20 + 10 + 100, 20, 10, GUI_Label_Indent_Center)
+      
+      Item_Part := Item_Part / 10;
+   end
+
+   // Item name label
+   GUI_Create_Label(C_WN_Main, Item_Name, C_Workspace_X + (C_Workspace_Width / 2) + 12, C_Workspace_Y + 17, (C_Workspace_Width / 2) - 29, 10, GUI_Label_Indent_Left)
+   
+   // Item description label
+   GUI_Create_Label(C_WN_Main, mstr_pro_item((Current_Item_Id * 100) + 1), C_Workspace_X + (C_Workspace_Width / 2) + 12, C_Workspace_Y + 52, (C_Workspace_Width / 2) - 29, 200, GUI_Label_Indent_Left)
+   
+   // Item availability status
+   if (not Is_Current_Item_Id_Available) then
+      GUI_Create_Label_Ex(C_WN_Main, "An item with the current id doesn't exist or wasn't described in the pro_item.msg file ", C_Workspace_X + 15, C_Workspace_Y + C_Workspace_Height - 100, (C_Workspace_Width / 2) - 25, 30, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+end
+
+//# Page 3 - Variables #///////////////////////////////////////////////////////////////////////////////
+
+#define Implement_GVAR_Number_Inc_And_Dec_Proc(Change_Value) \
+   procedure page_3_gvar_number_inc##Change_Value \
+   begin \
+      Current_GVAR_Number := min(Current_GVAR_Number + Change_Value, 999999); \
+      Current_GVAR_Value := global_var(Current_GVAR_Number); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_3_gvar_number_dec##Change_Value \
+   begin \
+      Current_GVAR_Number := max(Current_GVAR_Number - Change_Value, 0); \
+      Current_GVAR_Value := global_var(Current_GVAR_Number); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Implement_GVAR_Value_Inc_And_Dec_Proc(Change_Value) \
+   procedure page_3_gvar_value_inc##Change_Value \
+   begin \
+      Current_GVAR_Value := min(Current_GVAR_Value + Change_Value, 999999); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_3_gvar_value_dec##Change_Value \
+   begin \
+      Current_GVAR_Value := max(Current_GVAR_Value - Change_Value, -999999); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Implement_MVAR_Number_Inc_And_Dec_Proc(Change_Value) \
+   procedure page_3_mvar_number_inc##Change_Value \
+   begin \
+      Current_MVAR_Number := min(Current_MVAR_Number + Change_Value, 999999); \
+      Current_MVAR_Value := map_var(Current_MVAR_Number); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_3_mvar_number_dec##Change_Value \
+   begin \
+      Current_MVAR_Number := max(Current_MVAR_Number - Change_Value, 0); \
+      Current_MVAR_Value := map_var(Current_MVAR_Number); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define Implement_MVAR_Value_Inc_And_Dec_Proc(Change_Value) \
+   procedure page_3_mvar_value_inc##Change_Value \
+   begin \
+      Current_MVAR_Value := min(Current_MVAR_Value + Change_Value, 999999); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end \
+   procedure page_3_mvar_value_dec##Change_Value \
+   begin \
+      Current_MVAR_Value := max(Current_MVAR_Value - Change_Value, -999999); \
+      call clear_workspace; \
+      call draw_page_3_background; \
+      call draw_page_3_labels; \
+      GUI_Show_Window(C_WN_Main) \
+   end
+
+#define C_BN_P3_GVAR_NDU "gldbg_b_p3_g_ndu"
+#define C_BN_P3_GVAR_NDD "gldbg_b_p3_g_ndd"
+#define C_BN_P3_GVAR_VDU "gldbg_b_p3_g_vdu"
+#define C_BN_P3_GVAR_VDD "gldbg_b_p3_g_vdd"
+#define C_BN_P3_GVAR_Get "gldbg_b_p3_g_g"
+#define C_BN_P3_GVAR_Set "gldbg_b_p3_g_s"
+#define C_BN_P3_MVAR_NDU "gldbg_b_p3_m_ndu"
+#define C_BN_P3_MVAR_NDD "gldbg_b_p3_m_ndd"
+#define C_BN_P3_MVAR_VDU "gldbg_b_p3_m_vdu"
+#define C_BN_P3_MVAR_VDD "gldbg_b_p3_m_vdd"
+#define C_BN_P3_MVAR_Get "gldbg_b_p3_m_g"
+#define C_BN_P3_MVAR_Set "gldbg_b_p3_m_s"
+
+procedure draw_page_3_buttons;
+procedure draw_page_3_background;
+procedure draw_page_3_labels;
+procedure is_gvar_registered(variable Number);
+procedure is_mvar_registered(variable Number);
+
+variable Current_GVAR_Number;
+variable Current_GVAR_Value;
+variable Current_MVAR_Number;
+variable Current_MVAR_Value;
+variable Is_Current_GVAR_Registered;
+variable Is_Current_MVAR_Registered;
+
+Implement_GVAR_Number_Inc_And_Dec_Proc(1)
+Implement_GVAR_Number_Inc_And_Dec_Proc(10)
+Implement_GVAR_Number_Inc_And_Dec_Proc(100)
+Implement_GVAR_Number_Inc_And_Dec_Proc(1000)
+Implement_GVAR_Number_Inc_And_Dec_Proc(10000)
+Implement_GVAR_Number_Inc_And_Dec_Proc(100000)
+
+Implement_GVAR_Value_Inc_And_Dec_Proc(1)
+Implement_GVAR_Value_Inc_And_Dec_Proc(10)
+Implement_GVAR_Value_Inc_And_Dec_Proc(100)
+Implement_GVAR_Value_Inc_And_Dec_Proc(1000)
+Implement_GVAR_Value_Inc_And_Dec_Proc(10000)
+Implement_GVAR_Value_Inc_And_Dec_Proc(100000)
+
+Implement_MVAR_Number_Inc_And_Dec_Proc(1)
+Implement_MVAR_Number_Inc_And_Dec_Proc(10)
+Implement_MVAR_Number_Inc_And_Dec_Proc(100)
+Implement_MVAR_Number_Inc_And_Dec_Proc(1000)
+Implement_MVAR_Number_Inc_And_Dec_Proc(10000)
+Implement_MVAR_Number_Inc_And_Dec_Proc(100000)
+
+Implement_MVAR_Value_Inc_And_Dec_Proc(1)
+Implement_MVAR_Value_Inc_And_Dec_Proc(10)
+Implement_MVAR_Value_Inc_And_Dec_Proc(100)
+Implement_MVAR_Value_Inc_And_Dec_Proc(1000)
+Implement_MVAR_Value_Inc_And_Dec_Proc(10000)
+Implement_MVAR_Value_Inc_And_Dec_Proc(100000)
+
+procedure page_3_gvar_get
+begin
+   Current_GVAR_Value := global_var(Current_GVAR_Number);
+   call clear_workspace;
+   call draw_page_3_background;
+   call draw_page_3_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure page_3_gvar_set
+begin
+   set_global_var(Current_GVAR_Number, Current_GVAR_Value);
+   call clear_workspace;
+   call draw_page_3_background;
+   call draw_page_3_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure page_3_mvar_get
+begin
+   Current_MVAR_Value := map_var(Current_MVAR_Number);
+   call clear_workspace;
+   call draw_page_3_background;
+   call draw_page_3_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure page_3_mvar_set
+begin
+   set_map_var(Current_MVAR_Number, Current_MVAR_Value);
+   call clear_workspace;
+   call draw_page_3_background;
+   call draw_page_3_labels;
+   GUI_Show_Window(C_WN_Main)
+end
+
+procedure draw_page_3
+begin
+   Current_GVAR_Value := global_var(Current_GVAR_Number);
+   Current_MVAR_Value := map_var(Current_MVAR_Number);
+
+   call draw_page_3_buttons;
+   call draw_page_3_background;
+   call draw_page_3_labels;
+end
+
+procedure draw_page_3_buttons
+begin
+   variable i;
+   
+   // GVAR number buttons
+   for (i := 0; i < 6; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P3_GVAR_NDU + i, C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 10, 20, 20, "+")
+      GUI_Create_Button(C_WN_Main, C_BN_P3_GVAR_NDD + i, C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 65 + 40 + 10, 20, 20, "-")
+   end
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDU + 0, page_3_gvar_number_inc100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDU + 1, page_3_gvar_number_inc10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDU + 2, page_3_gvar_number_inc1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDU + 3, page_3_gvar_number_inc100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDU + 4, page_3_gvar_number_inc10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDU + 5, page_3_gvar_number_inc1)
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDD + 0, page_3_gvar_number_dec100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDD + 1, page_3_gvar_number_dec10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDD + 2, page_3_gvar_number_dec1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDD + 3, page_3_gvar_number_dec100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDD + 4, page_3_gvar_number_dec10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_NDD + 5, page_3_gvar_number_dec1)
+   
+   // GVAR value buttons   
+   for (i := 0; i < 6; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P3_GVAR_VDU + i, C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 100 + 10, 20, 20, "+")
+      GUI_Create_Button(C_WN_Main, C_BN_P3_GVAR_VDD + i, C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 65 + 40 + 100 + 10, 20, 20, "-")
+   end
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDU + 0, page_3_gvar_value_inc100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDU + 1, page_3_gvar_value_inc10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDU + 2, page_3_gvar_value_inc1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDU + 3, page_3_gvar_value_inc100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDU + 4, page_3_gvar_value_inc10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDU + 5, page_3_gvar_value_inc1)
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDD + 0, page_3_gvar_value_dec100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDD + 1, page_3_gvar_value_dec10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDD + 2, page_3_gvar_value_dec1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDD + 3, page_3_gvar_value_dec100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDD + 4, page_3_gvar_value_dec10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_VDD + 5, page_3_gvar_value_dec1)
+   
+   // GVAR Get and Set buttons
+   GUI_Create_Button(C_WN_Main, C_BN_P3_GVAR_Get, C_Workspace_X + 15, C_Workspace_Y + C_Workspace_Height - 35, 75, 20, "Get")
+   GUI_Create_Button(C_WN_Main, C_BN_P3_GVAR_Set, C_Workspace_X + (C_Workspace_Width / 2) - 85, C_Workspace_Y + C_Workspace_Height - 35, 75, 20, "Set")
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_Get, page_3_gvar_get)
+   GUI_Set_Button_Release_Proc(C_BN_P3_GVAR_Set, page_3_gvar_set)
+   
+   // MVAR number buttons
+   for (i := 0; i < 6; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P3_MVAR_NDU + i, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 10, 20, 20, "+")
+      GUI_Create_Button(C_WN_Main, C_BN_P3_MVAR_NDD + i, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 65 + 40 + 10, 20, 20, "-")
+   end
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDU + 0, page_3_mvar_number_inc100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDU + 1, page_3_mvar_number_inc10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDU + 2, page_3_mvar_number_inc1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDU + 3, page_3_mvar_number_inc100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDU + 4, page_3_mvar_number_inc10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDU + 5, page_3_mvar_number_inc1)
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDD + 0, page_3_mvar_number_dec100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDD + 1, page_3_mvar_number_dec10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDD + 2, page_3_mvar_number_dec1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDD + 3, page_3_mvar_number_dec100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDD + 4, page_3_mvar_number_dec10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_NDD + 5, page_3_mvar_number_dec1)
+   
+   // MVAR value buttons   
+   for (i := 0; i < 6; i++)
+   begin
+      GUI_Create_Button(C_WN_Main, C_BN_P3_MVAR_VDU + i, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 100 + 10, 20, 20, "+")
+      GUI_Create_Button(C_WN_Main, C_BN_P3_MVAR_VDD + i, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 65 + 40 + 100 + 10, 20, 20, "-")
+   end
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDU + 0, page_3_mvar_value_inc100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDU + 1, page_3_mvar_value_inc10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDU + 2, page_3_mvar_value_inc1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDU + 3, page_3_mvar_value_inc100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDU + 4, page_3_mvar_value_inc10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDU + 5, page_3_mvar_value_inc1)
+   
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDD + 0, page_3_mvar_value_dec100000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDD + 1, page_3_mvar_value_dec10000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDD + 2, page_3_mvar_value_dec1000)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDD + 3, page_3_mvar_value_dec100)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDD + 4, page_3_mvar_value_dec10)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_VDD + 5, page_3_mvar_value_dec1)
+   
+   // MVAR Get and Set buttons
+   GUI_Create_Button(C_WN_Main, C_BN_P3_MVAR_Get, C_Workspace_X + (C_Workspace_Width / 2) + 10, C_Workspace_Y + C_Workspace_Height - 35, 75, 20, "Get")
+   GUI_Create_Button(C_WN_Main, C_BN_P3_MVAR_Set, C_Workspace_X + C_Workspace_Width - 90, C_Workspace_Y + C_Workspace_Height - 35, 75, 20, "Set")
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_Get, page_3_mvar_get)
+   GUI_Set_Button_Release_Proc(C_BN_P3_MVAR_Set, page_3_mvar_set)
+end
+
+procedure draw_page_3_background
+begin
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 10, C_Workspace_Y + 10, (C_Workspace_Width / 2) - 15, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 11, C_Workspace_Y + 11, (C_Workspace_Width / 2) - 17, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+   
+   GUI_Fill_Rect(C_WN_Main, (C_Workspace_Width / 2) + 5, C_Workspace_Y + 10, (C_Workspace_Width / 2) - 15, C_Workspace_Height - 20, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, (C_Workspace_Width / 2) + 6, C_Workspace_Y + 11, (C_Workspace_Width / 2) - 17, C_Workspace_Height - 22, 0.5, 0.5, 0.5)
+   
+   // GVAR number border
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 80, C_Workspace_Y + 15 + 40 + 20 + 10 - 4 + 10, 145, 18, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 80 + 1, C_Workspace_Y + 15 + 40 + 20 + 10 - 3 + 10, 143, 16, 0.5, 0.5, 0.5)
+   
+   // GVAR value border
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 80 - 25, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 - 4 + 10, 170, 18, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + 15 + 80 - 24, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 - 3 + 10, 168, 16, 0.5, 0.5, 0.5)
+   
+   // MVAR number border
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 - 5, C_Workspace_Y + 15 + 40 + 20 + 10 - 4 + 10, 145, 18, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 - 4, C_Workspace_Y + 15 + 40 + 20 + 10 - 3 + 10, 143, 16, 0.5, 0.5, 0.5)
+   
+   // MVAR value border
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 - 30, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 - 4 + 10, 170, 18, 0.0, 0.0, 0.0)
+   GUI_Fill_Rect(C_WN_Main, C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 - 29, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 - 3 + 10, 168, 16, 0.5, 0.5, 0.5)
+end
+
+procedure draw_page_3_labels
+begin
+   variable i;
+   variable GVAR_Part;
+   variable MVAR_Part;
+   variable Is_Character_Grayed_Out;
+   variable GVAR_Value_Sign;
+   variable MVAR_Value_Sign;
+   variable GVAR_Name;
+   variable MVAR_Name;
+   
+   Is_Current_GVAR_Registered := is_gvar_registered(Current_GVAR_Number);
+   Is_Current_MVAR_Registered := is_mvar_registered(Current_MVAR_Number);
+   
+   // GVAR and MVAR labels
+   GUI_Create_Label(C_WN_Main, "Global variables", C_Workspace_X + 15, C_Workspace_Y + 15, (C_Workspace_Width / 2) - 25, 10, GUI_Label_Indent_Center)
+   GUI_Create_Label(C_WN_Main, "Map variables", C_Workspace_X + (C_Workspace_Width / 2) + 10, C_Workspace_Y + 15, (C_Workspace_Width / 2) - 25, 10, GUI_Label_Indent_Center)
+   
+   // GVAR and MVAR names
+   GVAR_Name := mstr_gvar(Current_GVAR_Number);
+   MVAR_Name := mstr_mvar(cur_map_index * 1000 + Current_MVAR_Number);
+   
+   if (not Is_Current_GVAR_Registered
+      or GVAR_Name == 0) then
+      GUI_Create_Label_Ex(C_WN_Main, "Missing name", C_Workspace_X + 15, C_Workspace_Y + 25 + 10, (C_Workspace_Width / 2) - 25, 25, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+   else
+      GUI_Create_Label(C_WN_Main, GVAR_Name, C_Workspace_X + 15, C_Workspace_Y + 25 + 10, (C_Workspace_Width / 2) - 25, 25, GUI_Label_Indent_Center)
+
+   if (not Is_Current_MVAR_Registered
+      or MVAR_Name == 0) then
+      GUI_Create_Label_Ex(C_WN_Main, "Missing name", C_Workspace_X + (C_Workspace_Width / 2) + 10, C_Workspace_Y + 25 + 10, (C_Workspace_Width / 2) - 25, 25, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+   else
+      GUI_Create_Label(C_WN_Main, MVAR_Name, C_Workspace_X + (C_Workspace_Width / 2) + 10, C_Workspace_Y + 25 + 10, (C_Workspace_Width / 2) - 25, 25, GUI_Label_Indent_Center)
+   
+   // GVAR Number and Value labels
+   GUI_Create_Label(C_WN_Main, "Number", C_Workspace_X + 15, C_Workspace_Y + 45 + 40 + 10, 50, 10, GUI_Label_Indent_Right)
+   GUI_Create_Label(C_WN_Main, "Value", C_Workspace_X + 15, C_Workspace_Y + 45 + 40 + 100 + 10, 50, 10, GUI_Label_Indent_Right)
+   
+   // GVAR number labels
+   GVAR_Part := 100000;
+   
+   for (i := 0; i < 6; i++)
+   begin   
+      if (Current_GVAR_Number < GVAR_Part) then
+      begin
+         GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_GVAR_Number / GVAR_Part) % 10), C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 20 + 10 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+      end else
+      begin
+         if (Is_Current_GVAR_Registered) then
+            GUI_Create_Label(C_WN_Main, "" + (floor(Current_GVAR_Number / GVAR_Part) % 10), C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 20 + 10 + 10, 20, 10, GUI_Label_Indent_Center)
+         else
+            GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_GVAR_Number / GVAR_Part) % 10), C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 20 + 10 + 10, 20, 10, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+      end
+      
+      GVAR_Part := GVAR_Part / 10;
+   end
+      
+   // GVAR value labels
+   GVAR_Part := 100000;
+   
+   if (Current_GVAR_Value < 0) then
+   begin
+      GVAR_Value_Sign := -1;
+      GUI_Create_Label(C_WN_Main, "-", C_Workspace_X + 15 + 80 - 25, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center)
+   end else
+   begin
+      GVAR_Value_Sign := 1;
+      GUI_Create_Label_Ex(C_WN_Main, "-", C_Workspace_X + 15 + 80 - 25, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+   end
+      
+   for (i := 0; i < 6; i++)
+   begin
+      if (Current_GVAR_Value < 0) then
+         Is_Character_Grayed_Out := Current_GVAR_Value > -GVAR_Part;
+      else
+         Is_Character_Grayed_Out := Current_GVAR_Value < GVAR_Part;
+   
+      if (Is_Character_Grayed_Out) then
+         GUI_Create_Label_Ex(C_WN_Main, "" + (floor((Current_GVAR_Value * GVAR_Value_Sign) / GVAR_Part) % 10), C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+      else
+         GUI_Create_Label(C_WN_Main, "" + (floor((Current_GVAR_Value * GVAR_Value_Sign) / GVAR_Part) % 10), C_Workspace_X + 15 + 80 + (i * 25), C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center)
+      
+      GVAR_Part := GVAR_Part / 10;
+   end
+   
+   // GVAR registration status
+   if (not Is_Current_GVAR_Registered) then
+      GUI_Create_Label_Ex(C_WN_Main, "Current global variable is not registered", C_Workspace_X + 15, C_Workspace_Y + C_Workspace_Height - 65, (C_Workspace_Width / 2) - 25, 30, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+
+   // MVAR Number and Value labels
+   GUI_Create_Label(C_WN_Main, "Number", C_Workspace_X + (C_Workspace_Width / 2) + 15 - 5, C_Workspace_Y + 45 + 40 + 10, 50, 10, GUI_Label_Indent_Right)
+   GUI_Create_Label(C_WN_Main, "Value", C_Workspace_X + (C_Workspace_Width / 2) + 15 - 5, C_Workspace_Y + 45 + 40 + 100 + 10, 50, 10, GUI_Label_Indent_Right)
+
+   // MVAR number labels
+   MVAR_Part := 100000;
+   
+   for (i := 0; i < 6; i++)
+   begin   
+      if (Current_MVAR_Number < MVAR_Part) then
+      begin
+         GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_MVAR_Number / MVAR_Part) % 10), C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 20 + 10 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+      end else
+      begin
+         if (Is_Current_MVAR_Registered) then
+            GUI_Create_Label(C_WN_Main, "" + (floor(Current_MVAR_Number / MVAR_Part) % 10), C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 20 + 10 + 10, 20, 10, GUI_Label_Indent_Center)
+         else
+            GUI_Create_Label_Ex(C_WN_Main, "" + (floor(Current_MVAR_Number / MVAR_Part) % 10), C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 20 + 10 + 10, 20, 10, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+      end
+      
+      MVAR_Part := MVAR_Part / 10;
+   end
+   
+   // MVAR value labels
+   MVAR_Part := 100000;
+   
+   if (Current_MVAR_Value < 0) then
+   begin
+      MVAR_Value_Sign := -1;
+      GUI_Create_Label(C_WN_Main, "-", C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 - 30, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center)
+   end else
+   begin
+      MVAR_Value_Sign := 1;
+      GUI_Create_Label_Ex(C_WN_Main, "-", C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 - 30, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+   end
+   
+   for (i := 0; i < 6; i++)
+   begin
+      if (Current_MVAR_Value < 0) then
+         Is_Character_Grayed_Out := Current_MVAR_Value > -MVAR_Part;
+      else
+         Is_Character_Grayed_Out := Current_MVAR_Value < MVAR_Part;
+   
+      if (Is_Character_Grayed_Out) then
+         GUI_Create_Label_Ex(C_WN_Main, "" + (floor((Current_MVAR_Value * MVAR_Value_Sign) / MVAR_Part) % 10), C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center, 0.45, 0.45, 0.45)
+      else
+         GUI_Create_Label(C_WN_Main, "" + (floor((Current_MVAR_Value * MVAR_Value_Sign) / MVAR_Part) % 10), C_Workspace_X + (C_Workspace_Width / 2) + 15 + 80 + (i * 25) - 5, C_Workspace_Y + 15 + 40 + 20 + 10 + 100 + 10, 20, 10, GUI_Label_Indent_Center)
+      
+      MVAR_Part := MVAR_Part / 10;
+   end
+   
+   // MVAR registration status
+   if (not Is_Current_MVAR_Registered) then
+      GUI_Create_Label_Ex(C_WN_Main, "Current map variable is not registered", C_Workspace_X + (C_Workspace_Width / 2) + 10, C_Workspace_Y + C_Workspace_Height - 65, (C_Workspace_Width / 2) - 25, 30, GUI_Label_Indent_Center, 1.0, 0.0, 0.0)
+end
+
+procedure is_gvar_registered(variable Number)
+begin
+   variable Original_Value := global_var(Number);
+   set_global_var(Number, 0);
+   set_global_var(Number, 1);
+   
+   if (global_var(Number) == 0) then
+      return false;
+      
+   set_global_var(Number, Original_Value);
+   
+   return true;
+end
+
+procedure is_mvar_registered(variable Number)
+begin
+   variable Original_Value := map_var(Number);
+   set_map_var(Number, 0);
+   set_map_var(Number, 1);
+   
+   if (map_var(Number) == 0) then
+      return false;
+      
+   set_map_var(Number, Original_Value);
+   
+   return true;
+end
+
+//# Page 4 - Critters #////////////////////////////////////////////////////////////////////////////////
+
+// AddKey('1', handle_0_proc);
+// Critter spawning: critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_ARROYO);
