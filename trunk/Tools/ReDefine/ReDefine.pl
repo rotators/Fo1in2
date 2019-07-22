@@ -10,15 +10,50 @@
 use strict;
 use warnings;
 
-#use Data::Dumper;
+use Data::Dumper;
 use File::Find;
 
-my $scripts_path = "../Fallout2/Fallout1Port/Mapper/source/scripts";
-
-my %functions;
+my %summary;
 my %defines;
+my %functions;
+my %variables;
+my $scripts_path = "../../Fallout2/Fallout1Port/Mapper/source/scripts";
 my @files;
 my $readOnly = 0;
+
+unlink( "ReDefine.WARNING.log" ) if( -e "ReDefine.WARNING.log" );
+sub WARNING
+{
+	my( $text, @args ) = @_;
+
+	$text = sprintf( $text, @args ) if( scalar( @args ));
+
+	return if( !length( $text ));
+
+	$text = sprintf( "WARNING %s\n", $text );
+
+	print( $text );
+	if( open( my $file, ">>", "ReDefine.WARNING.log" ))
+	{
+		print( $file $text );
+		close( $file );
+	}
+}
+
+sub AddVariable
+{
+	my( $name, $type ) = @_;
+
+	$name = lc( $name );
+	$variables{names}{$name} = $type;
+}
+
+sub AddVariableGuess
+{
+	my( @types ) = @_;
+
+	$variables{guess} = [ @types ];
+}
 
 sub AddFunction
 {
@@ -46,14 +81,17 @@ sub ReadDefines
 	}
 	else
 	{
-		die( "Cannot open '$filename'" );
+		die( "Cannot open '[$scripts_path]/$filename'" );
 	}
 	
 	die( "'[$scripts_path]/$filename' is empty(?)" ) if( !length( $content ));
 
+	my $line_number = 0;
 	my @lines = split( /\n/, $content );
 	foreach my $line( @lines )
 	{
+		$line_number++;
+
 		# meh
 		$line =~ s!\n!!g;
 		$line =~ s!\r!!g;
@@ -73,7 +111,7 @@ sub ReadDefines
 			# human detection
 			if( exists($result{$value}) )
 			{
-				printf( "WARNING value<%d> already used by macro<%s>, current macro<%s> ignored\n", $value, $result{$value}, $name );
+				WARNING( "value<%d> already used by macro<%s>, current macro<%s> ignored : file<%s:%d>", $value, $result{$value}, $name, $filename, $line_number );
 				next;
 			}
 
@@ -95,8 +133,16 @@ sub FindFiles
 }
 
 # check arguments
-$readOnly = lc(shift( @ARGV ));
-$readOnly = $readOnly eq 'ro' || $readOnly eq 'read' || $readOnly eq 'readonly' || $readOnly eq 'read-only';
+if( scalar( @ARGV ))
+{
+	$readOnly = lc(shift( @ARGV ));
+	$readOnly = $readOnly eq 'ro' || $readOnly eq 'read' || $readOnly eq 'readonly' || $readOnly eq 'read-only';
+}
+
+# configure variables to change
+AddVariable( 'critter_script', 'SID' );
+AddVariable( 'critter_type', 'CRITTER_PID' );
+AddVariableGuess( 'CRITTER_PID', 'SCENERY_PID' );
 
 # configure functions to change
 AddFunction( 'create_object_sid', 'ANY_PID', '?', '?', 'SID' );
@@ -117,6 +163,8 @@ find({ wanted => \&FindFiles, no_chdir => 1 }, $scripts_path );
 printf( "Processing scripts%s...\n", $readOnly ? " (read only)" : "" );
 foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 {
+	$summary{files}++;
+
 	my $filename = $filename_long;
 	$filename =~ s!^${scripts_path}/!!;
 	my $content;
@@ -128,7 +176,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 	}
 	else
 	{
-		printf( "WARNING cannot open '$filename_long'\n" );
+		WARNING( "cannot open '%s'", $filename_long );
 		next;
 	}
 
@@ -140,6 +188,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 
 	foreach my $line( @lines )
 	{
+		$summary{lines}++;
 		$line_number++;
 
 		my $line_info = sprintf( "file<%s:%s>", $filename, $line_number );
@@ -156,9 +205,139 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		}
 
 		# save original line; 
-		my( $line_old, $line_prev ) = ( $line );
+		my $line_old = $line;
 
-		$line_prev = $line;
+		# search for variables
+		my @variable_matches = $line =~ /[A-Za-z0-9_]+[\t\ ]*\:\=[\t\ ]*[0-9]+\;/g;
+		foreach my $variable_match( @variable_matches )
+		{
+			my( $variable_name, $variable_value ) = $variable_match =~ /([A-Za-z0-9_]+)[\t\ ]*\:\=[\t\ ]*([0-9]+)/;
+			#printf( "DEBUG VAR [%s] -> [%s]=[%s]: %s\n", $variable_match, $variable_name, $variable_value, $line_info );
+
+			my $var = lc( $variable_name );
+
+			if( exists( $variables{names}{$var} ))
+			{
+				my $val = int( $variable_value );
+				my $val_type = $variables{names}{$var};
+
+				# prepare warning messages
+				my $line_short = $line;
+				$line_short =~ s!^[\t\ ]*!!;
+				$line_short =~ s![\t\ ]*$!!;
+				my $warning_unknown = sprintf( "unknown %s<%d> : %s =LINE= %s", $val_type, $val, $line_info, $line_short );
+
+				# replace value with connected defines
+				# duplicated in functions check
+				if( $val_type eq 'CRITTER_PID' )
+				{
+					if( exists( $defines{pid}{critter}{$val} ))
+					{
+						$val = $defines{pid}{critter}{$val};
+					}
+					else
+					{
+						WARNING( $warning_unknown );
+						$summary{unknown}{$val_type}{$val}++;
+					}
+				}
+				elsif( $val_type eq 'SCENERY_PID' )
+				{
+					if( exists( $defines{pid}{scenery}{$val} ))
+					{
+						$val = $defines{pid}{scenery}{$val};
+					}
+					else
+					{
+						WARNING( $warning_unknown );
+						$summary{unknown}{$val_type}{$val}++;
+					}
+				}
+				elsif( $val_type eq 'ITEM_PID' )
+				{
+					if( exists( $defines{pid}{item}{$val} ))
+					{
+						$val = $defines{pid}{item}{$val};
+					}
+					else
+					{
+						WARNING( $warning_unknown );
+						$summary{unknown}{$val_type}{$val}++;
+					}
+				}
+				elsif( $val_type eq 'ANY_PID' )
+				{
+					if( exists( $defines{pid}{critter}{$val} ))
+					{
+						$val = $defines{pid}{critter}{$val};
+					}
+					elsif( exists( $defines{pid}{scenery}{$val} ))
+					{
+						$val = $defines{pid}{scenery}{$val};
+					}
+					elsif( exists( $defines{pid}{item}{$val} ))
+					{
+						$val = $defines{pid}{item}{$val};
+					}
+					else
+					{
+						WARNING( $warning_unknown );
+						$summary{unknown}{$val_type}{$val}++;
+					}
+				}
+				elsif( $val_type eq 'SID' )
+				{
+					if( $val < 1 )
+					{
+						# ignore
+					}
+					elsif( exists( $defines{sid}{$val} ))
+					{
+						$val = $defines{sid}{$val};
+					}
+					else
+					{
+						WARNING( $warning_unknown );
+						$summary{unknown}{$val_type}{$val}++;
+					}
+				}
+				else
+				{
+					WARNING( "unknown value type<%s>", $val_type );
+				}
+
+				if( $variable_value ne $val )
+				{
+					my $update = sprintf( "%s := %s;", $variable_name, $val );
+					$line =~ s!$variable_match!$update!g;
+				}
+				
+			}
+			elsif( exists( $variables{guess} ))
+			{
+				foreach my $val_type( @{ $variables{guess} } )
+				{
+					my $val = int( $variable_value );
+
+					if( $val_type eq 'CRITTER_PID' && exists( $defines{pid}{critter}{$val} ))
+					{
+						$val = $defines{pid}{critter}{$val};
+					}
+					elsif( $val_type eq 'SCENERY_PID' && exists( $defines{pid}{scenery}{$val} ))
+					{
+						$val = $defines{pid}{scenery}{$val};
+					}
+
+					if( $variable_value ne $val )
+					{
+						my $update = sprintf( "%s := %s;", $variable_name, $val );
+						$line =~ s!$variable_match!$update!g;
+					}
+				}
+			}
+		}
+
+		# search for functions
 		foreach my $function_name ( sort{$a cmp $b} keys( %functions ))
 		{
 			my $re = qr{
@@ -188,9 +367,9 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 
 				if( $function_match !~ /\)$/ )
 				{
-					printf( "WARNING invalid match<%s> : %s\n", $function_match, $line_info );
-					printf( "WARNING matches: [%s]\n", join( "],[", @function_matches ));
-					printf( "WARNING CONTENT %s\n", $line );
+					WARNING( "invalid match<%s> : %s", $function_match, $line_info );
+					WARNING( "matches: [%s]", join( "],[", @function_matches ));
+					WARNING( "CONTENT %s", $line );
 					next;
 				}
 
@@ -242,11 +421,11 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					# detect incorrect splitting of argmuents
 					if( !exists( $functions{$function_name}{args}{$idx+1} ))
 					{
-							printf( "WARNING invalid number of arguments? : %s argument<%d>\n", $line_info, $idx + 1 );
-							printf( "WARNING ORIGINAL : function<%s> arguments<[%s]>\n", $function_name, join( "] [", @args_old ));
-							printf( "WARNING GUESSED  : function<%s> arguments<[%s]>\n", $function_name, join( "] [", @args ));
-							printf( "WARNING CONTENT  : %s\n", $line_old );
-							printf( "WARNING END\n" );
+							WARNING( "invalid number of arguments? : %s argument<%d>", $line_info, $idx + 1 );
+							WARNING( "ORIGINAL : function<%s> arguments<[%s]>", $function_name, join( "] [", @args_old ));
+							WARNING( "GUESSED  : function<%s> arguments<[%s]>", $function_name, join( "] [", @args ));
+							WARNING( "CONTENT  : %s", $line_old );
+							WARNING( "END" );
 							next;
 					}
 					
@@ -263,12 +442,14 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					}
 					$arg = int($arg);
 
-					# save short version of full line, for warnings
+					# prepare warning message
 					my $line_short = $line;
 					$line_short =~ s!^[\t\ ]*!!;
 					$line_short =~ s![\t\ ]*$!!;
+					my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $arg, $line_info, $idx + 1, $line_short );
 
 					# replace argument with connected defines
+					# duplicated in variables check
 					if( $arg_type eq 'CRITTER_PID' )
 					{
 						if( exists( $defines{pid}{critter}{$arg} ))
@@ -277,7 +458,8 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 						}
 						else
 						{
-							printf( "WARNING unknown CRITTER_PID<%d> : %s argument<%d> =LINE= %s\n", $arg, $line_info, $idx + 1, $line_short );
+							WARNING( $warning_unknown );
+							$summary{unknown}{$arg_type}{$arg}++;
 						}
 					}
 					elsif( $arg_type eq 'SCENERY_PID' )
@@ -288,7 +470,8 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 						}
 						else
 						{
-							printf( "WARNING unknown SCENERY_PID<%d> : %s argument<%d> =LINE= %s\n", $arg, $line_info, $idx + 1, $line_short );
+							WARNING( $warning_unknown );
+							$summary{unknown}{$arg_type}{$arg}++;
 						}
 					}
 					elsif( $arg_type eq 'ITEM_PID' )
@@ -299,7 +482,8 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 						}
 						else
 						{
-							printf( "WARNING unknown ITEM_PID<%d> : %s line<%d> argument<%d> =LINE= %s\n", $arg, $line_info, $idx + 1, $line_short );
+							WARNING( $warning_unknown );
+							$summary{unknown}{$arg_type}{$arg}++;
 						}
 					}
 					elsif( $arg_type eq 'ANY_PID' )
@@ -318,7 +502,8 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 						}
 						else
 						{
-							printf( "WARNING unknown ANY_PID<%d> : %s argument<%d> =LINE= %s\n", $arg, $line_info, $idx + 1, $line_short );
+							WARNING( $warning_unknown );
+							$summary{unknown}{$arg_type}{$arg}++;
 						}
 					}
 					elsif( $arg_type eq 'SID' )
@@ -333,12 +518,13 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 						}
 						else
 						{
-							printf( "WARNING unknown SID<%d> : %s argument<%d> =LINE= %s\n", $arg, $line_info, $idx + 1, $line_short );
+							WARNING( $warning_unknown );
+							$summary{unknown}{$arg_type}{$arg}++;
 						}
 					}
 					else
 					{
-						printf( "WARNING unknown argument type<%s>\n", $arg_type );
+						WARNING( "unknown argument type<%s>", $arg_type );
 					}
 
 					#printf( "DEBUG argument<%d> = %s\n", $idx + 1, $arg );
@@ -392,5 +578,17 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 	{
 		print( $file $content );
 		close( $file );
+	}
+}
+
+printf( "Processed %d line%s in %d files\n", $summary{lines} || 0, $summary{lines} || 0 != 1 ? "s" : "" , $summary{files} || 0 );
+
+foreach my $type( sort{$a cmp $b} keys( %{ $summary{unknown} } ))
+{
+	WARNING( " " );
+	WARNING( "UNKNOWN %s:", $type );
+	foreach my $value( sort{int($a) <=> int($b)} keys( %{ $summary{unknown}{$type} } ))
+	{
+		WARNING( "  %s (%d hit%s)", $value, $summary{unknown}{$type}{$value}, $summary{unknown}{$type}{$value} != 1 ? "s" : "" );
 	}
 }
