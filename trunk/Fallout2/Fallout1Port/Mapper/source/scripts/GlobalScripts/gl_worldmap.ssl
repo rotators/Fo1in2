@@ -9,6 +9,8 @@
 #include "../headers/sfall/define_lite.h"
 #include "../headers/debug.h"
 
+#include "../GlobalScripts/gl_worldmap.h"
+
 // some consts
 
 #define  TILE_COUNT      (20)
@@ -104,14 +106,25 @@ variable prevTable := -1;
 procedure SetWorldmapInfo
 begin
     variable zone := GetCurrentZone();
-    variable terrain := zone["terrain"], table := atoi( zone["table"] ); // if table is not a number, we're in trouble
+    variable terrain := WM_TERRAIN_UNKNOWN, table := atoi( zone["table"] ); // if table is not a number, we're in trouble
 
+    // get terrain type from string
+    switch( zone["terrain"] )
+    begin
+        case "City":     terrain := WM_TERRAIN_CITY;
+        case "Desert":   terrain := WM_TERRAIN_DESERT;
+        case "Mountain": terrain := WM_TERRAIN_MOUNTAIN;
+        case "Ocean":    terrain := WM_TERRAIN_OCEAN;
+        default:         display_msg( "BUG BUG BUG : unknown terrain<" + terrain + ">" );
+    end
+
+    // debug; spam during changing zone type
     if( prevTerrain != terrain or prevTable != table ) then
     begin
         if( not (prevTerrain == "" and prevTable == -1) ) then
             debug( "exit " + prevTerrain + prevTable);
 
-        debug( "enter " + terrain + table + " : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "," + zone["tile_y"] + ">");
+        debug( "enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "," + zone["tile_y"] + ">");
         prevTerrain := terrain;
         prevTable := table;
     end
