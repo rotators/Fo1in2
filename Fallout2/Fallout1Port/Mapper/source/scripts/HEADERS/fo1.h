@@ -9,10 +9,7 @@
 //==============================================================
 // Water Timer related:
 #define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
-
 #define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
-//#define get_days_passed				(global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
-//#define get_days_since_start 		
 
 //==============================================================
 // Invasion related:
