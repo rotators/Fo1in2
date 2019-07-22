@@ -4093,4 +4093,6 @@
 #define GVAR_TOWN_REP_BONEYARD					(5011)
 #define GVAR_TOWN_REP_CATHEDRAL					(5012)
 
+#define WORLD_TERRAIN_TYPE						(5013)
+
 #endif // _GLOBAL_H_DEFINED

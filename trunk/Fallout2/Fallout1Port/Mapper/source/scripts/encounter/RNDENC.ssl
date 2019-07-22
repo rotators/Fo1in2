@@ -9,46 +9,13 @@
 */
 
 #include "..\headers\define.h"
-//#include "..\headers\modMain.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\gl_worldmap.h"
 
 #define NAME                    SCRIPT_RNDENC
 
 #include "..\headers\command.h"
 
-#define city1(x,y) 						((x >= 259) and (x <= 294) and (y >= 345) and (y <= 375))
-#define city2(x,y) 						((x >= 763) and (x <= 794) and (y >= 1129) and (y <= 1169))
-
-
-#define mountain1(x,y) 					((x >= 553) and (x <= 597) and (y >= 505) and (y <= 765))
-#define mountain2(x,y) 					((x >= 700) and (x <= 750) and (y >= 552) and (y <= 740))
-
-
-#define mixed1(x,y) 						((x >= 392) and (x <= 1399) and (y >= 1299) and (y <= 1499))
-#define mixed2(x,y) 						((x >= 1131) and (x <= 1399) and (y >= 854) and (y <= 1299))
-
-
-#define sand1(x,y) 						((x >= 422) and (x <= 586) and (y >= 1002) and (y <= 1089))
-#define sand2(x,y) 						((x >= 676) and (x <= 747) and (y >= 887) and (y <= 1057))
-
-#define coast1(x,y) 						((x >= 422) and (x <= 586) and (y >= 1002) and (y <= 1089))
-#define coast2(x,y) 						((x >= 676) and (x <= 747) and (y >= 887) and (y <= 1057))
-
-
-#define WM_In_Sand(x,y) 				(sand1(x,y) or sand2(x,y))
-
-#define WM_In_City(x,y) 				(city1(x,y) or city2(x,y))
-
-#define WM_In_Mixed(x,y) 				(mixed1(x,y) or mixed2(x,y))
-
-#define WM_In_Mountains(x,y) 			(mountain1(x,y) or mountain2(x,y))
-
-#define WM_In_Coast(x,y) 				(coast1(x,y) or coast2(x,y))
-
-#define set_new_wm_pos 					wm_area_set_pos(AREA_RND_CITY, worldmap_xpos, worldmap_ypos); 		\
-												wm_area_set_pos(AREA_RND_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
-												wm_area_set_pos(AREA_RND_DESERT, worldmap_xpos, worldmap_ypos); 	\
-												wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
 procedure start;
 procedure timed_event_p_proc;
 procedure map_enter_p_proc;
@@ -84,6 +51,11 @@ export variable Tycho_ptr;
 
 variable map;
 
+#define set_new_wm_pos 						wm_area_set_pos(AREA_RND_CITY, worldmap_xpos, worldmap_ypos); 		\
+													wm_area_set_pos(AREA_RND_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
+													wm_area_set_pos(AREA_RND_DESERT, worldmap_xpos, worldmap_ypos); 	\
+													wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
+
 procedure start begin
 end
 
@@ -91,50 +63,42 @@ procedure map_exit_p_proc begin
    if (cur_map_index == MAP_DESERT0) then begin
       set_new_wm_pos;
    end
-
-   /*if ((map_first_run) and (global_var(GVAR_PLAYER_GOT_CAR) != 0) and ((car_current_town == AREA_RND_DESERT) or (car_current_town == AREA_SHADOW_MAPS)
-        or (car_current_town == AREA_EPA) or (car_current_town == AREA_ABBEY) or (car_current_town == AREA_PRIMITIVE_TRIBE) or
-        (car_current_town == AREA_RND_CITY))) then begin
-
-       car_give_to_party;
-   end*/
-
 end
 
 procedure timed_event_p_proc begin
    if (cur_map_index == MAP_DESERT0) then begin
+
    	if (fixed_param == 1) then begin
    		set_new_wm_pos;
 
-      	// In City:
-   		if (WM_In_City(worldmap_xpos,worldmap_ypos)) then begin
-   			call load_city;
-   		end
-
-   		// In Mountains and Desert
-   		else if (WM_In_Mixed(worldmap_xpos,worldmap_ypos)) then begin
-   			if (random(0,10) >= 4) then
-   				call load_desert;
-   			else
-   				call load_mountains;
-   		end
+			// In Desert:
+			if (is_terrain_desert) then begin
+				call load_desert;
+			end
 
    		// In Mountains:
-   		else if (WM_In_Mountains(worldmap_xpos,worldmap_ypos)) then begin
+   		else if (is_terrain_mountain) then begin
    			call load_mountains;
    		end
 
+      	// In City:
+   		else if (is_terrain_city) then begin
+   			call load_city;
+			end
+
    		// In Coast:
-   		else if (WM_In_Coast(worldmap_xpos,worldmap_ypos)) then begin
+   		else if (is_terrain_ocean) then begin
    			call load_coast;
    		end
 
-   		// In Desert:
+   		// Other:
    		else begin
-   			call load_desert;
+   			debug("!!!BIG BUG!!!");
    		end
 
+			debug("Loading terrain: " + global_var("WORLD_TERRAIN_TYPE"));
    	end
+
    end
 end
 
