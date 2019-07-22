@@ -168,6 +168,7 @@
 #define EXP_REPAIR_GENERATOR 					(1000)
 
 // BOS
+#define EXP_BECOME_INITITAT						(2000)
 
 // Mariposa
 #define EXP_TRICKING_MUTANTS					(1500)
