@@ -559,13 +559,25 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 			}
 		}
 
-		# detect line change
+		# detect line change, ignore meaningless changes
 		if( $line ne $line_old )
 		{
-			printf( "@@ %s:%d\n", $filename, $line_number );
-			printf( "<- %s\n", $line_old );
-			printf( "-> %s\n", $line );
-			$update_file = 1;
+			my( $line_pre, $line_post ) = ( $line_old, $line );
+			$line_pre  =~ s![\t\ ]+!!g;
+			$line_post =~ s![\t\ ]+!!g;
+
+			if( $line_pre ne $line_post )
+			{
+				printf( "@@ %s:%d\n", $filename, $line_number );
+				printf( "<- %s\n", $line_old );
+				printf( "-> %s\n", $line );
+				$update_file = 1;
+			}
+			else
+			{
+				# restore original version
+				$line = $line_old;
+			}
 		}
 
 		# we did it, rotators!
