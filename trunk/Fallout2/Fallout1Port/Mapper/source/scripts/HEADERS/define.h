@@ -8,7 +8,7 @@
 #include "..\headers\scripts.h"
 #include "..\headers\teams.h"
 //#include "..\headers\Condtion.h"
-//#include "..\headers\RepPoint.h"
+#include "..\headers\RepPoint.h"
 //#include "..\headers\AIPacket.h"
 #include "..\headers\ExpPoint.h"
 #include "..\headers\ScenePid.h"
