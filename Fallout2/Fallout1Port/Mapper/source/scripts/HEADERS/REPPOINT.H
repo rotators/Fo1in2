@@ -276,6 +276,7 @@
 **************************************************************************/
 
 
+// Fallout 2 default
 #define REP_ENEMY_ARROYO                        (global_var(GVAR_ENEMY_ARROYO) == 1)
 #define REP_ENEMY_DEN                           (global_var(GVAR_ENEMY_DEN) == 1)
 #define REP_ENEMY_KLAMATH                       (global_var(GVAR_ENEMY_KLAMATH) == 1)
@@ -463,6 +464,33 @@
  These will need to be defined as:
     REP_BONUS_seed
 **************************************************************************/
+
+
+// Vault 13
+
+// Vault 15
+
+// Shady Sands
+
+// Raiders
+
+// Junktown
+
+// Hub
+
+// Boneyard
+
+// Necropolis
+#define REP_BONUS_WATERCHIP_TAKEN              (3)
+#define REP_BONUS_WATER_PUMP_FIXED             (1)
+
+// Glow
+
+// BOS
+
+
+// Mariposa
+
 
 
 // Arroyo

@@ -163,6 +163,8 @@
 // Boneyard
 
 // Necropolis
+#define EXP_WATER_CHIP_TAKEN 					(2500)
+#define EXP_WATER_PUMP_FIXED					(1000)
 
 // Glow
 #define EXP_REPAIR_GENERATOR 					(1000)
