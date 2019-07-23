@@ -36,7 +36,7 @@
 								if (global_var(VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
 									set_global_var(VAULT_13_WAS_INVADED, 1); \
 									play_gmovie(OVERRUN_MOVIE); /*//------ Vault 13 is invaded by mutants and killed. You lose. -- was 7 before*/  \
-									metarule(13, 0); \
+									signal_end_game; \
 								end \
 								if (global_var(FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
 									set_global_var(FOLLOWERS_INVADED, 1); \
