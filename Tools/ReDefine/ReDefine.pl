@@ -189,9 +189,9 @@ sub GetDefine
 		{
 			foreach my $any_type( "CRITTER_PID", "ITEM_PID", "SCENERY_PID" )
 			{
-				if( exists( $defines{$type}{$value} ))
+				if( exists( $defines{$any_type}{$value} ))
 				{
-					return $defines{$type}{$value};
+					return $defines{$any_type}{$value};
 				}
 			}
 		}
@@ -227,7 +227,7 @@ sub AddVariableAssign
 	$name = lc( $name );
 	$variables{names}{$name} = $type;
 
-	LOG( "Added variable assign: %s", $name );
+	LOG( "Added variable assign: %s := %s", $name, $type );
 }
 
 sub AddVariableGuess
@@ -265,7 +265,7 @@ sub AddFunction
 		$functions{$name}{args}{$arg_number} = $type;
 	}
 
-	LOG( "Added function: %s()", $name );
+	LOG( "Added function: %s( %s )", $name, join( ", ", @types ));
 }
 
 sub AddRaw
@@ -695,7 +695,7 @@ LOG( "Processed %d line%s in %d files\n", $summary{lines} || 0, $summary{lines} 
 foreach my $type( sort{$a cmp $b} keys( %{ $summary{unknown} } ))
 {
 	WARNING( " " );
-	WARNING( "UNKNOWN %s:", $type );
+	WARNING( "Unknown '%s' value%s:", $type, scalar( keys( %{ $summary{unknown}{$type} } )) != 1 ? "s" : "" );
 	foreach my $value( sort{int($a) <=> int($b)} keys( %{ $summary{unknown}{$type} } ))
 	{
 		WARNING( "  %s (%d hit%s)", $value, $summary{unknown}{$type}{$value}, $summary{unknown}{$type}{$value} != 1 ? "s" : "" );
