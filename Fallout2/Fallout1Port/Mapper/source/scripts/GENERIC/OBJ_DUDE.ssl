@@ -183,56 +183,12 @@ procedure TalkCow;
 procedure UsedCar;
 procedure Slideshow;
 
-
-#define LVAR_Last_WaterCheck    (10)
-
 procedure start begin
 	// Save the start date to check the water counter / days remaining, etc:
 	if (global_var(VAULT13_WATER_DAYS_COUNTER) <= 0) then begin
 		set_global_var(VAULT13_WATER_DAYS_COUNTER, 864000);
 	end
 
-
-
-	// "script_action ==" contents after "//" listed IN ORDER:
-	if script_action == 21 then begin// debug msgs
-		call look_at_p_proc;
-	end
-	else begin
-		if script_action == 12 then begin// holodisks, dipped, flares, dropping explosives, levelup checks, poisontracker, Perks, necrocaravanfix
-			call critter_p_proc;
-		end
-		else begin
-			if script_action == 15 then begin
-				call map_enter_p_proc;
-			end
-			else begin
-				if script_action == 23 then begin
-					call map_update_p_proc;
-				end
-				else begin
-					if script_action == 22 then begin
-						call timed_event_p_proc;
-					end
-					else begin
-						if script_action == 13 then begin
-							call combat_p_proc;
-						end
-						else begin
-							if script_action == 3 then begin// debug dialog, new examine msgs
-								call description_p_proc;
-							end
-							else begin
-								if script_action == 8 then begin
-									call use_skill_on_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 	if (cur_map_index > 29) and (cur_map_index < 33) then begin// <---------- Put here instead of critter_proc and map_update_proc because this way it's only running once per tick
 		if (global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2) then begin
 			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
@@ -251,13 +207,7 @@ procedure start begin
 	end
 end
 
-
-//	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC
-//	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC
-//	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC	COMBAT_P_PROC
-
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if fixed_param == 4 then begin// beginning of combat round (including beginning of very first round)
 		if (cur_map_index > 29) and (cur_map_index < 33) then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
 			if ((global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
@@ -267,7 +217,7 @@ begin
 					if (SecondsCombat <= 0) then begin
 						set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
 						play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
-						metarule(13, 0);
+						signal_end_game;
 					end
 					else begin
 						//if (SecondsCombat % 5) then begin
@@ -291,7 +241,7 @@ begin
 						if (((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
 							set_global_var(MASTER_BLOWN_CUTSCENE, 1);
 							play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
-							metarule(13, 0);
+							signal_end_game;
 						end
 						else begin
 							//if (SecondsCombat % 5) then begin
@@ -1311,7 +1261,7 @@ begin
 			if fixed_param == 3 then begin
 				game_ui_enable;
 				endgame_movie;
-				metarule(13, 0);
+				signal_end_game;
 			end
 			else begin
 //if fixed_param == 4) then begin
@@ -1401,7 +1351,7 @@ begin
 														display_msg(message_str(SCRIPT_MASTER2, 100) + Zero + message_str(SCRIPT_MASTER2, 101));
 														set_global_var(MASTER_BLOWN_CUTSCENE, 1);
 														play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
-														metarule(13, 0);
+														signal_end_game;
 													end
 													else begin
 														if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
@@ -1428,7 +1378,7 @@ begin
 															display_msg(message_str(SCRIPT_MBENT, 100) + Zero + message_str(SCRIPT_MBENT, 101));
 															set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
 															play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
-															metarule(13, 0);
+															signal_end_game;
 														end
 														else begin
 															if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
@@ -1843,7 +1793,7 @@ begin
 						set_global_var(MARK_V13_4, 0);
 					end
 					play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
-					metarule(13, 0);
+					signal_end_game;
 				end
 			end
 			else begin
