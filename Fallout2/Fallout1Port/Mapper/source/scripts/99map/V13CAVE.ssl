@@ -1,13 +1,17 @@
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 
-procedure start;
 export variable Dog_ptr;
 export variable Ian_ptr;
 export variable Katja_ptr;
 export variable Tandi_ptr;
 export variable Tycho_ptr;
 export variable vault_door_ptr;
+
+procedure start;
+
+procedure Endgame_Info;
+
 procedure add_party;
 procedure base_inventory;
 procedure cheat_mode;
@@ -93,10 +97,6 @@ procedure map_enter_p_proc begin
 		end
 		if global_var(CHEAT_START_ITEMS_ENABLED) == 1 then begin
 			override_map_start(136, 129, 0, 1);
-			//call DehydrationTesting;
-			//call cheat_mode;
-			//call GiveHolodisks;
-			//call WeaponsTesting;
 		end
 		call NamedInven;
 		if (global_var(CHEAT_MAPSTART_ENABLED) == 1) then begin
@@ -114,8 +114,7 @@ procedure map_enter_p_proc begin
 	call add_party;
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	call Lighting;
 	if (global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) and (endgame_running == 0)) then begin
 		call endgame_part0;//was 1 in vanilla
@@ -138,12 +137,12 @@ end
 
 procedure map_exit_p_proc
 begin
-	if (global_var(GAME_CONTINUES) == 1) then begin
-		call remove_over;
-	end
-	else begin
+	//if (global_var(GAME_CONTINUES) == 1) then begin
+	//	call remove_over;
+	//end
+	//else begin
 		call remove_party;
-	end
+	//end
 end
 
 procedure Lighting
@@ -168,15 +167,16 @@ procedure remove_party begin
 	set_remove_party
 end
 
-procedure endgame_part0
-begin
+procedure endgame_part0 begin
 	if (global_var(GAME_CONTINUES) == 0) then begin
 		call endgame_part1;
 	end
 end
 
-procedure endgame_part1
-begin
+procedure endgame_part1 begin
+	// Setup endgame slides:
+	call Endgame_Info;
+
 	kill_critter_type(16777264, 0);//Cave Rats
 	set_light_level(100);
 	override_map_start(90, 96, 0, 5);
@@ -192,12 +192,7 @@ begin
 	endgame_running := 2;
 end
 
-procedure endgame_part2
-begin
-	/*if (dude_is_male) then
-		play_gmovie(WALKM_MOVIE);
-	else
-		play_gmovie(WALKW_MOVIE*/);
+procedure endgame_part2 begin
 	endgame_running := 2;
 end
 
@@ -243,6 +238,7 @@ begin
 			end
 		end
 	end
+
 end
 
 procedure remove_over
@@ -319,65 +315,19 @@ begin
 	end
 end
 
-procedure TaggedInven
-begin
-	variable STR;
-	variable PER;
-	variable EDR;
-	variable CHA;
-	variable INT;
-	variable AGL;
-	variable LCK;
-	variable HasFastMet;
-	variable HasBruiser;
-	variable HasSmallFrame;
-	variable HasOneHander;
-	variable HasFinesse;
-	variable HasKamikaze;
-	variable HasHeavyH;
-	variable HasFastShot;
-	variable HasBloodyMess;
-	variable HasJinxed;
-	variable HasGoodNat;
-	variable HasChemRel;
-	variable HasChemRes;
-	variable HasNightP;
-	variable HasSkilled;
-	variable HasGifted;
-	variable GOOD_NATURED_Handicap;
-	variable GOOD_NATURED_Bonus;
-	variable SKILLED_Bonus;
-	variable GIFTED_Handicap;
-	variable DiffLevelTaggedPercent;
-	variable NumItems := 0;
-	variable AlreadyHas := 0;
-	STR := get_critter_stat(dude_obj, 0);
-	PER := get_critter_stat(dude_obj, 1);
-	EDR := get_critter_stat(dude_obj, 2);
-	CHA := get_critter_stat(dude_obj, 3);
-	INT := get_critter_stat(dude_obj, 4);
-	AGL := get_critter_stat(dude_obj, 5);
-	LCK := get_critter_stat(dude_obj, 6);
-	HasFastMet := has_trait(2, dude_obj, 0);
-	HasBruiser := has_trait(2, dude_obj, 1);
-	HasSmallFrame := has_trait(2, dude_obj, 2);
-	HasOneHander := has_trait(2, dude_obj, 3);
-	HasFinesse := has_trait(2, dude_obj, 4);
-	HasKamikaze := has_trait(2, dude_obj, 5);
-	HasHeavyH := has_trait(2, dude_obj, 6);
-	HasFastShot := has_trait(2, dude_obj, 7);
-	HasBloodyMess := has_trait(2, dude_obj, 8);
-	HasJinxed := has_trait(2, dude_obj, 9);
-	HasGoodNat := has_trait(2, dude_obj, 10);
-	HasChemRel := has_trait(2, dude_obj, 11);
-	HasChemRes := has_trait(2, dude_obj, 12);
-	HasNightP := has_trait(2, dude_obj, 13);
-	HasSkilled := has_trait(2, dude_obj, 14);
-	HasGifted := has_trait(2, dude_obj, 15);
-	GOOD_NATURED_Handicap := HasGoodNat * 10;
-	GOOD_NATURED_Bonus := HasGoodNat * 15;
-	SKILLED_Bonus := HasSkilled * 10;
-	GIFTED_Handicap := HasGifted * 10;
+procedure TaggedInven begin
+variable
+	HasGifted := has_trait(2, dude_obj, TRAIT_gifted),
+	GIFTED_Handicap := HasGifted * 10,
+	HasSkilled := has_trait(2, dude_obj, TRAIT_skilled),
+	SKILLED_Bonus := HasSkilled * 10,
+	HasGoodNat := has_trait(2, dude_obj, TRAIT_good_natured),
+	GOOD_NATURED_Handicap := HasGoodNat * TRAIT_good_natured,
+	GOOD_NATURED_Bonus := HasGoodNat * TRAIT_good_natured,
+	AlreadyHas := 0,
+	NumItems := 0,
+	DiffLevelTaggedPercent;
+
 	if difficulty_level < 2 then begin
 		DiffLevelTaggedPercent := 20;
 	end
@@ -387,7 +337,7 @@ begin
 //
 //	0 = Small Guns
 //
-	if (has_skill(dude_obj, 0) - AGL - 35 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 0) - dude_agility - 35 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
 			item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
 			add_mult_objs_to_inven(dude_obj, item, 1);
@@ -404,7 +354,7 @@ begin
 //
 //	1 = Big Guns
 //
-	if (has_skill(dude_obj, 1) - AGL - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 1) - dude_agility - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		item := create_object_sid(PID_FLAMER, 0, 0, -1);//Flamer
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
@@ -419,7 +369,7 @@ begin
 //
 //	2 = Energy Weapons
 //
-	if (has_skill(dude_obj, 2) - AGL - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 2) - dude_agility - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		item := create_object_sid(PID_LASER_PISTOL, 0, 0, -1);//Laser Pistol
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
@@ -434,7 +384,7 @@ begin
 //
 //	3 = Unarmed
 //
-	if (has_skill(dude_obj, 3) - ((AGL + STR) / 2) - 65 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 3) - ((dude_agility + dude_strength) / 2) - 65 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		item := create_object_sid(PID_BRASS_KNUCKLES, 0, 0, -1);//Brass Knuckles
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
@@ -449,7 +399,7 @@ begin
 //
 //	4 = Melee Weapons
 //
-	if (has_skill(dude_obj, 4) - ((AGL + STR) / 2) - 55 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 4) - ((dude_agility + dude_strength) / 2) - 55 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		item := create_object_sid(PID_CLUB, 0, 0, -1);//Club
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
@@ -464,7 +414,7 @@ begin
 //
 //	5 = Throwing
 //
-	if (has_skill(dude_obj, 5) - AGL - 40 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 5) - dude_agility - 40 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
 			item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);//Throwing Knife
 			add_mult_objs_to_inven(dude_obj, item, 2);
@@ -496,17 +446,17 @@ begin
 //
 //	6 = First aid
 //
-	if (has_skill(dude_obj, 6) - ((PER + INT) / 2) - 30 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 6) - ((dude_perception + dude_iq) / 2) - 30 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
+			item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
-			item := create_object_sid(PID_FIRST_AID_KIT, 0, 0, -1);//First Aid Kit
+			item := create_object_sid(PID_FIRST_AID_KIT, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
+				item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -515,17 +465,17 @@ begin
 //
 //	7 = Doctor
 //
-	if (has_skill(dude_obj, 7) - ((PER + INT) / 2) - 15 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 7) - ((dude_perception + dude_iq) / 2) - 15 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
+			item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
-			item := create_object_sid(PID_DOCTORS_BAG, 0, 0, -1);//Doctor's Bag
+			item := create_object_sid(PID_DOCTORS_BAG, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
+				item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -534,51 +484,51 @@ begin
 //
 //	8 = Sneak
 //
-	if (has_skill(dude_obj, 8) - AGL - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);//Stealth Boy
+	if (has_skill(dude_obj, 8) - dude_agility - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
 //
 //	9 = Lockpick
 //
-	if (has_skill(dude_obj, 9) - ((PER + AGL) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 9) - ((dude_perception + dude_agility) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
 			AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_LOCKPICKS);
 			if not(AlreadyHas) then begin
-				item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);//Lock Picks
+				item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, 1);
 			end
 		end
 		else begin
-			item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);//Lock Picks
+			item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 	end
 //
 //	10 = Steal
 //
-	if (has_skill(dude_obj, 10) - AGL - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 10) - dude_agility - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
 			AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_LOCKPICKS);
 			if not(AlreadyHas) then begin
-				item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);//Lock Picks
+				item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, 1);
 			end
 		end
 		else begin
 			AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_STEALTH_BOY);
 			if not(AlreadyHas) then begin
-				item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);//Stealth Boy
+				item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, 1);
 			end
 			else begin
 				AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_LOCKPICKS);
 				if not(AlreadyHas) then begin
-					item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);//Lock Picks
+					item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 					add_mult_objs_to_inven(dude_obj, item, 1);
 				end
 				else begin
-					item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);//Bottle Caps
+					item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 					add_mult_objs_to_inven(dude_obj, item, 25);
 				end
 			end
@@ -587,15 +537,15 @@ begin
 //
 //	11 = Traps
 //
-	if (has_skill(dude_obj, 11) - ((PER + AGL) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 11) - ((dude_perception + dude_agility) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_DYNAMITE, 0, 0, -1);//Dynamite
+			item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_DYNAMITE, 0, 0, -1);//Dynamite
+				item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -604,15 +554,15 @@ begin
 //
 //	12 = Science
 //
-	if (has_skill(dude_obj, 12) - (2 * INT) - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 12) - (2 * dude_iq) - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+			item := create_object_sid(PID_MENTATS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+				item := create_object_sid(PID_MENTATS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -621,22 +571,22 @@ begin
 //
 //	13 = Repair
 //
-	if (has_skill(dude_obj, 13) - INT - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_MULTI_TOOL, 0, 0, -1);//MultiTool
+	if (has_skill(dude_obj, 13) - dude_iq - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+		item := create_object_sid(PID_MULTI_TOOL, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
 //
 //	14 = Speech
 //
-	if (has_skill(dude_obj, 14) - (2 * CHA) - 25 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 14) - (2 * dude_charisma) - 25 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+			item := create_object_sid(PID_MENTATS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+				item := create_object_sid(PID_MENTATS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -645,15 +595,15 @@ begin
 //
 //	15 = Barter
 //
-	if (has_skill(dude_obj, 15) - (2 * CHA) - 20 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 15) - (2 * dude_charisma) - 20 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+			item := create_object_sid(PID_MENTATS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+				item := create_object_sid(PID_MENTATS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -662,15 +612,15 @@ begin
 //
 //	16 = Gambling
 //
-	if (has_skill(dude_obj, 16) - (3 * LCK) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 16) - (3 * dude_luck) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);//Bottle Caps
+			item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 25);
 		end
 		else begin
 			NumItems := (75 - (difficulty_level * 25));
 			if NumItems then begin
-			item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);//Bottle Caps
+			item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -679,27 +629,27 @@ begin
 //
 //	17 = Outdoorsman
 //
-	if (has_skill(dude_obj, 17) - ((EDR + INT) / 2) - 5 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
+	if (has_skill(dude_obj, 17) - ((dude_endurance + dude_iq) / 2) - 5 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);//Water Flask
+			item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 3);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);//Water Flask
+				item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
 			NumItems := 2 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_FLARE, 0, 0, -1);//Flare
+				item := create_object_sid(PID_FLARE, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
 			NumItems := 1 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_RADAWAY, 0, 0, -1);//RadAway
+				item := create_object_sid(PID_RADAWAY, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -827,27 +777,6 @@ begin
 	item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 	add_mult_objs_to_inven(dude_obj, item, 99999);
 /*	item := create_object_sid(PID_CAR_FUEL_INJECTION, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-//	MEATS
-	item := create_object_sid(PID_RIGHT_ARROYO_BOOKCASE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_OLIVE_POT, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_FLOWER_POT, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_HUMAN_BONES, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_ANNA_BONES, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_ANNA_GOLD_LOCKET, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_CAR_FUEL_CELL_CONTROLLER, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-//	item := create_object_sid(254, 0, 0, -1);
-//	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_DAY_PASS, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_LEFT_ARROYO_BOOKCASE, 0, 0, -1);
 	add_mult_objs_to_inven(dude_obj, item, 1);*/
 	item := create_object_sid(PID_CLUB, 0, 0, -1);//sledge
 	add_mult_objs_to_inven(dude_obj, item, 1);
@@ -983,24 +912,83 @@ begin
 	//game_time_advance(10 * 60 * 60 * 12);//  for maps that like to start at night
 end
 
-/*
-# Necropolis:	{3}{}{HALLDED.MAP}	{4}{}{HOTEL.MAP} {5}{}{WATRSHD.MAP}	{9}{}{VAULTNEC.MAP}
-# Vault 13:		{6}{}{VAULT13.MAP}	{35}{}{V13ENT.MAP}
-# Vault 15:		{8}{}{VAULTBUR.MAP}	{7}{}{VAULTENT.MAP}
-# Junktown:		{10}{}{JUNKENT.MAP}	{11}{}{JUNKCSNO.MAP}	{12}{}{JUNKKILL.MAP}
-# Brotherhood:	{13}{}{BROHDENT.MAP}	{14}{}{BROHD12.MAP}	{15}{}{BROHD34.MAP} {55}{}{BRODEAD.MAP}
-# Shady sands:	{25}{}{SHADYE.MAP}	{26}{}{SHADYW.MAP}	{16}{}{CAVES.MAP}
-# Military Base:{30}{}{MBENT.MAP}	{31}{}{MBSTRG12.MAP}	{32}{}{MBVATS12.MAP}	{48}{}{MBDEAD.MAP}
-# Children:		{17}{}{CHILDRN1.MAP}	{18}{}{CHILDRN2.MAP}
-# MasterVault:	{33}{}{MSTRLR12.MAP}	{34}{}{MSTRLR34.MAP}
-# Boneyard:		{28}{}{LAADYTUM.MAP} {29}{}{LAFOLLWR.MAP} {45}{}{LARIPPER.MAP} {46}{}{LAGUNRUN.MAP}	{47}{}{CHILDEAD.MAP} {44}{}{LABLADES.MAP}
-# The Hub:		{36}{}{HUBENT.MAP} {37}{}{DETHCLAW.MAP} {38}{}{HUBDWNTN.MAP} {39}{}{HUBHEIGT.MAP} {40}{}{HUBOLDTN.MAP}	{41}{}{HUBWATER.MAP} {65}{}{HUBMIS0.MAP}	{66}{}{HUBMIS1.MAP}
-# Raiders:		{24}{}{RAIDERS.MAP}	{60}{}{VIPERS.MAP}
-# The Glow:		{27}{}{GLOWENT.MAP}	 {42}{}{GLOW1.MAP}	{43}{}{GLOW2.MAP}
-# Caravans:	 {56}{}{DESCRVN1.MAP} {57}{}{DESCRVN2.MAP} {58}{}{MNTCRVN1.MAP}	{59}{}{MNTCRVN2.MAP} {61}{}{DESCRVN3.MAP} {62}{}{MNTCRVN3.MAP} {63}{}{DESCRVN4.MAP}	{64}{}{MNTCRVN4.MAP}
-# Desert encs:	{0}{}{DESERT1.MAP}	{1}{}{DESERT2.MAP}	{2}{}{DESERT3.MAP}
-# Coast encs:	{20}{}{COAST1.MAP}	{21}{}{COAST2.MAP}
-# Mountain encs:{49}{}{MOUNTN1.MAP} {50}{}{MOUNTN2.MAP}
-# City encs:	{19}{}{CITY1.MAP}
-# Special encs:	{22}{}{COLATRUK.MAP} {23}{}{FSAUSER.MAP} {51}{}{FOOT.MAP} {52}{}{TARDIS.MAP} {53}{}{TALKCOW.MAP} {54}{}{USEDCAR.MAP}
-*/
+procedure Endgame_Info begin
+// Start
+	if (global_var(GVAR_ENDGAME_MOVIE_MUTANTS) == 0) then
+		set_end_Master;
+
+// Necropolis
+	if necropolis_invaded then
+		set_end_necropolis_invaded;
+	else if necropolis_wpump_fixed then
+		set_end_necropolis_survived;
+	else
+		set_end_necropolis_dehydrated;
+
+// Boneyard  -- check obj_dude script!! has code!!
+	if boneyard_visible_on_map then begin
+		if followers_trained then
+			set_end_foa_trained;
+		else
+			set_end_foa_invaded;
+	end
+
+// Shady Sands
+	if shady_sands_visible_on_map then begin
+		if shady_invaded then
+			set_end_shady_invaded;
+		else if is_tandi_alive and is_aradesh_alive then
+			set_end_shady_good;
+		else if is_aradesh_alive then
+			set_end_shady_tandi_dead;
+		else if is_tandi_alive then
+			set_end_shady_aradesh_dead;
+		else
+			set_end_shady_bad;
+	end
+
+// Junktown
+	if junktown_visible_on_map then begin
+		if junktown_invaded or (not(is_killian_alive) and (not(is_gizmo_alive))) then
+			set_end_junktown_invaded;
+		else if is_killian_alive then
+			set_end_junktown_killian;
+		else
+			set_end_junktown_gizmo;
+	end
+
+// Brotherhood of Steel
+	if brotherhood_visible_on_map then begin
+		if is_rhombus_alive then
+			set_end_bos_good;
+		else
+			set_end_bos_bad;
+	end
+
+	// Hub -- check obj_dude script!! has code!!
+	if hub_visible_on_map then begin
+		if ( (global_var(IS_HAROLD_ALIVE) == 1) and (global_var(DECKER_STATUS) == 1) ) then
+			set_end_hub_good;
+		else
+			set_end_hub_bad;
+	end
+
+// Raiers
+	if raiders_visible_on_map then begin
+
+		if ( (get_raiders_alive <= 3) or ( (not(is_garl_alive)) and (get_raiders_alive <= 8) ) ) then
+			set_end_raiders_dead;
+		else if (get_raiders_alive < 16) then
+			set_end_raiders_hurt;
+		else
+			set_end_raiders_alive;
+	end
+	else begin
+		set_end_raiders_alive;
+	end
+
+// Vault Dweller
+	set_end_ending_vd;
+end
+
+

@@ -13,6 +13,14 @@
 
 //==============================================================
 // Invasion related:
+
+#define hub_invaded							(global_var(THE_HUB_WAS_INVADED) == 1)
+#define bos_invaded							(global_var(BROTHERHOOD_WAS_INVADED) == 1)
+#define boneyard_invaded					(global_var(FOLLOWERS_INVADED) == 1)
+#define necropolis_invaded 					(global_var(NECROPOLIS_WAS_INVADED) == 1)
+#define shady_invaded 						(global_var(SHADY_SANDS_WAS_INVADED) == 1)
+#define junktown_invaded 					(global_var(JUNKTOWN_WAS_INVADED) == 1)
+
 #define check_invasion		if (global_var(MASTER_BLOWN) == 0) then begin \
 								if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
 									set_global_var(NECROPOLIS_WAS_INVADED, 1); \
@@ -120,3 +128,52 @@
 										end \
 									end \
 								end
+
+//==============================================================
+// Quests
+#define necropolis_wpump_fixed				(global_var(NECROP_WATER_PUMP_FIXED) == 2)
+#define followers_trained 					(global_var(SLIDE_TRAIN_FOLLOWERS) == 1)
+
+#define get_raiders_alive 					global_var(TOTAL_RAIDERS)
+
+#define is_tandi_alive 						(global_var(TANDI_HIRELING_STATUS) < 3) 
+#define is_aradesh_alive 					(global_var(ARADESH_STATUS) == 0) 
+#define is_killian_alive 					(global_var(KILLIAN_DEAD) == 0) 
+#define is_gizmo_alive 						(global_var(GIZMO_DEAD) == 0) 
+#define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
+#define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
+
+//==============================================================
+// Endgame slideshow
+#define set_end_Master 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,1)
+#define set_end_Vats 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,2)
+
+#define set_end_necropolis_dehydrated 		set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,1)
+#define set_end_necropolis_survived 		set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,2)
+#define set_end_necropolis_invaded			set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,3)
+
+#define set_end_foa_trained 				set_global_var(GVAR_ENDGAME_MOVIE_BONEYARD,1)
+#define set_end_foa_invaded 				set_global_var(GVAR_ENDGAME_MOVIE_BONEYARD,2)
+
+#define set_end_shady_good					set_global_var(GVAR_ENDGAME_MOVIE_SHADY,1)
+#define set_end_shady_tandi_dead			set_global_var(GVAR_ENDGAME_MOVIE_SHADY,2)
+#define set_end_shady_aradesh_dead			set_global_var(GVAR_ENDGAME_MOVIE_SHADY,3)
+#define set_end_shady_bad					set_global_var(GVAR_ENDGAME_MOVIE_SHADY,4)
+#define set_end_shady_invaded				set_global_var(GVAR_ENDGAME_MOVIE_SHADY,5)
+
+#define set_end_junktown_killian			set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,1)
+#define set_end_junktown_gizmo				set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,2)
+#define set_end_junktown_invaded			set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,3)
+
+#define set_end_bos_good					set_global_var(GVAR_ENDGAME_MOVIE_BOS,1)
+#define set_end_bos_bad						set_global_var(GVAR_ENDGAME_MOVIE_BOS,2)
+#define set_end_bos_invaded					set_global_var(GVAR_ENDGAME_MOVIE_BOS,3)
+
+#define set_end_hub_good					set_global_var(GVAR_ENDGAME_MOVIE_HUB,1)
+#define set_end_hub_bad						set_global_var(GVAR_ENDGAME_MOVIE_HUB,2)
+
+#define set_end_raiders_dead				set_global_var(GVAR_ENDGAME_MOVIE_KHANS,1)
+#define set_end_raiders_hurt				set_global_var(GVAR_ENDGAME_MOVIE_KHANS,2)
+#define set_end_raiders_alive				set_global_var(GVAR_ENDGAME_MOVIE_KHANS,3)
+
+#define set_end_ending_vd 					set_global_var(GVAR_ENDGAME_MOVIE_VD,1)
