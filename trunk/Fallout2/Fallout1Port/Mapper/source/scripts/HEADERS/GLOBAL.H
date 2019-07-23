@@ -42,17 +42,18 @@
 #define GVAR_ADDICT_TRAGIC						(295)	// maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET							(296)	// maybe hard-coded, maybe not?
 
-// Endgame slideshow - VANILLA, DON'T USE (probably)
-#define GVAR_ENDGAME_MOVIE_ARROYO				(408)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_MODOC				(409)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_DEN					(410)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_VAULT_CITY			(411)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_RENO					(412)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_RENO_ADD1			(413)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_RENO_ADD2			(414)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_RENO_ADD3			(415)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_RENO_ADD4			(416)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_GECKO				(417)	// maybe hard-coded, maybe not?
+// Endgame slideshow
+#define GVAR_ENDGAME_MOVIE_DESERT				(408)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_MUTANTS				(409)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_NECROPOLIS			(410)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_BONEYARD				(411)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_SHADY				(412)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_JUNKTOWN				(413)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_BOS					(414)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_HUB					(415)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_KHANS				(416)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_VD					(417)	// maybe hard-coded, maybe not?
+
 #define GVAR_ENDGAME_MOVIE_REDDING				(418)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_BROKEN_HILLS			(419)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_NCR					(420)	// maybe hard-coded, maybe not?
