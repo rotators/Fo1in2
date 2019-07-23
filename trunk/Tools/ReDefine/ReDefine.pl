@@ -15,10 +15,13 @@ use File::Find;
 
 my %summary;
 my %defines;
-my %functions;
-my %variables;
-my $scripts_path = "../../Fallout2/Fallout1Port/Mapper/source/scripts";
+
 my @files;
+my %variables;
+my %functions;
+my %raw;
+
+my $scripts_path = "../../Fallout2/Fallout1Port/Mapper/source/scripts";
 my $readOnly = 0;
 
 unlink( "ReDefine.WARNING.log" ) if( -e "ReDefine.WARNING.log" );
@@ -40,38 +43,12 @@ sub WARNING
 	}
 }
 
-sub AddVariable
-{
-	my( $name, $type ) = @_;
-
-	$name = lc( $name );
-	$variables{names}{$name} = $type;
-}
-
-sub AddVariableGuess
-{
-	my( @types ) = @_;
-
-	$variables{guess} = [ @types ];
-}
-
-sub AddFunction
-{
-	my( $name, @args ) = @_;
-
-	my $argnum = 0;
-	foreach my $arg ( @args )
-	{
-		$argnum++;
-		$functions{$name}{args}{$argnum} = $arg;
-	}
-}
+#
 
 sub ReadDefines
 {
-	my( $filename, $prefix ) = @_;
+	my( $type, $filename, $prefix ) = @_;
 	my $content = undef;
-	my %result;
 
 	if( open( my $file, "<", sprintf( "%s/%s", $scripts_path, $filename )))
 	{
@@ -109,17 +86,143 @@ sub ReadDefines
 			my $value = int($2);
 
 			# human detection
-			if( exists($result{$value}) )
+			if( exists($defines{$type}{$value}) )
 			{
-				WARNING( "value<%d> already used by macro<%s>, current macro<%s> ignored : file<%s:%d>", $value, $result{$value}, $name, $filename, $line_number );
+				WARNING( "value<%d> already used by macro<%s>, current macro<%s> ignored : file<%s:%d>", $value, $defines{$type}{$value}, $name, $filename, $line_number );
 				next;
 			}
 
-			$result{$value} = $name;
+			$defines{$type}{$value} = $name;
 		}
 	}
-	
-	return \%result;
+}
+
+sub IsDefineType
+{
+	my( $type ) = @_;
+
+	# fatal error for now
+	die( "ERROR IsDefineType : type is undef" ) if( !defined( $type ) || !length( $type ));
+
+	# virtual types
+	return 1 if( $type eq "?" );
+	return 1 if( $type eq "ANY_PID" );
+
+	# regular types
+	return 1 if( exists( $defines{$type} ));
+
+	return 0;
+}
+
+sub IsDefine
+{
+	my( $type, $value ) = @_;
+
+	return 0 if( !IsDefineType( $type ));
+
+	# ANY_PID = CRITTER_PID || ITEM_PID || SCENERY_PID
+	return 1 if( $type eq "ANY_PID" && ( exists( $defines{CRITTER_PID}{$value} ) || exists( $defines{ITEM_PID}{$value} ) || exists( $defines{SCENERY_PID}{$value} )));
+
+	# SID < 1 ignored for readibility
+	return 1 if( $type eq "SID" && $value < 1 );
+
+	# regular defines
+	return 1 if( exists( $defines{$type}{$value} ));
+
+	return 0;
+}
+
+sub GetDefine
+{
+	my( $type, $value, $warning ) = @_;
+
+	# used for unknown arguments for function checks
+	return $value if( $type eq "?" );
+
+	if( IsDefine( $type, $value ))
+	{
+		if( $type eq "ANY_PID" )
+		{
+			foreach my $any_type( "CRITTER_PID", "ITEM_PID", "SCENERY_PID" )
+			{
+				if( exists( $defines{$type}{$value} ))
+				{
+					return $defines{$type}{$value};
+				}
+			}
+		}
+		elsif( $type eq "SID" && $value < 1 )
+		{
+			return $value;
+		}
+
+		# regular defines
+		return $defines{$type}{$value};
+	}
+
+	# for quick lookup, do not emit warning if message isn't set
+	if( defined( $warning ))
+	{
+		WARNING( $warning );
+		$summary{unknown}{$type}{$value}++;
+	}
+
+	return $value;
+}
+
+sub AddVariable
+{
+	my( $name, $type ) = @_;
+
+	if( !IsDefineType( $type ))
+	{
+		WARNING( "AddVariable : unknown define type<%s> : variable<%s>", $type, $name );
+		return;
+	}
+
+	$name = lc( $name );
+	$variables{names}{$name} = $type;
+}
+
+sub AddVariableGuess
+{
+	my( @types ) = @_;
+
+	foreach my $type( @types )
+	{
+		if( !IsDefineType( $type ))
+		{
+			WARNING( "AddVariableGuess : unknown define type<%s>", $type );
+			return;
+		}
+	}
+
+	$variables{guess} = [ @types ];
+}
+
+sub AddFunction
+{
+	my( $name, @types ) = @_;
+
+	my $arg_number = 0;
+	foreach my $type( @types )
+	{
+		if( !IsDefineType( $type ))
+		{
+			WARNING( "AddFunction : unknown define type<%s> : function<%s>", $type, $name );
+			return;
+		}
+
+		$arg_number++;
+		$functions{$name}{args}{$arg_number} = $type;
+	}
+}
+
+sub AddRaw
+{
+	my( $from, $to ) = @_;
+
+	$raw{$from} = $to;
 }
 
 sub FindFiles
@@ -139,22 +242,30 @@ if( scalar( @ARGV ))
 	$readOnly = $readOnly eq 'ro' || $readOnly eq 'read' || $readOnly eq 'readonly' || $readOnly eq 'read-only';
 }
 
-# configure variables to change
-AddVariable( 'critter_script', 'SID' );
-AddVariable( 'critter_type', 'CRITTER_PID' );
-AddVariableGuess( 'CRITTER_PID', 'SCENERY_PID' );
-
-# configure functions to change
-AddFunction( 'create_object_sid', 'ANY_PID', '?', '?', 'SID' );
-AddFunction( 'message_str', 'SID', '?' );
-AddFunction( 'obj_carrying_pid_obj', '?', 'ITEM_PID' );
-
 # read defines from headers
 print( "Reading defines...\n" );
-$defines{pid}{critter} = ReadDefines( "HEADERS/CRITRPID.H", 'PID' );
-$defines{pid}{scenery} = ReadDefines( "HEADERS/SCENEPID.H", 'PID' );
-$defines{pid}{item} = ReadDefines( "HEADERS/ITEMPID.H", 'PID' );
-$defines{sid} = ReadDefines( "HEADERS/scripts.h",  'SCRIPT' );
+ReadDefines( "CRITTER_PID", "HEADERS/CRITRPID.H", "PID" );
+ReadDefines( "FID",         "HEADERS/ARTFID.H",   "FID" );
+ReadDefines( "ITEM_PID",    "HEADERS/ITEMPID.H",  "PID" );
+ReadDefines( "SCENERY_PID", "HEADERS/SCENEPID.H", "PID" );
+ReadDefines( "SID",         "HEADERS/scripts.h",  "SCRIPT" );
+ReadDefines( "SKILL",       "HEADERS/define.h",   "SKILL" );
+
+# configure variables to change
+AddVariable( "critter_script", "SID" );
+AddVariable( "critter_type", "CRITTER_PID" );
+AddVariableGuess( "SCENERY_PID" );
+
+# configure functions to change
+AddFunction( "art_change_fid_num", "?","FID" );
+AddFunction( "create_object_sid", "ANY_PID", "?", "?", "SID" );
+AddFunction( "has_skill", "?", "SKILL" );
+AddFunction( "kill_critter_type", "CRITTER_PID", "?" );
+AddFunction( "message_str", "SID", "?" );
+AddFunction( "obj_carrying_pid_obj", "?", "ITEM_PID" );
+AddFunction( "obj_is_carrying_obj_pid", "?", "ITEM_PID" );
+
+AddRaw( "SKILL_CONVERSANT", "SKILL_SPEECH" );
 
 # seach for script files
 print( "Finding scripts...\n" );
@@ -228,83 +339,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				my $warning_unknown = sprintf( "unknown %s<%d> : %s =LINE= %s", $val_type, $val, $line_info, $line_short );
 
 				# replace value with connected defines
-				# duplicated in functions check
-				if( $val_type eq 'CRITTER_PID' )
-				{
-					if( exists( $defines{pid}{critter}{$val} ))
-					{
-						$val = $defines{pid}{critter}{$val};
-					}
-					else
-					{
-						WARNING( $warning_unknown );
-						$summary{unknown}{$val_type}{$val}++;
-					}
-				}
-				elsif( $val_type eq 'SCENERY_PID' )
-				{
-					if( exists( $defines{pid}{scenery}{$val} ))
-					{
-						$val = $defines{pid}{scenery}{$val};
-					}
-					else
-					{
-						WARNING( $warning_unknown );
-						$summary{unknown}{$val_type}{$val}++;
-					}
-				}
-				elsif( $val_type eq 'ITEM_PID' )
-				{
-					if( exists( $defines{pid}{item}{$val} ))
-					{
-						$val = $defines{pid}{item}{$val};
-					}
-					else
-					{
-						WARNING( $warning_unknown );
-						$summary{unknown}{$val_type}{$val}++;
-					}
-				}
-				elsif( $val_type eq 'ANY_PID' )
-				{
-					if( exists( $defines{pid}{critter}{$val} ))
-					{
-						$val = $defines{pid}{critter}{$val};
-					}
-					elsif( exists( $defines{pid}{scenery}{$val} ))
-					{
-						$val = $defines{pid}{scenery}{$val};
-					}
-					elsif( exists( $defines{pid}{item}{$val} ))
-					{
-						$val = $defines{pid}{item}{$val};
-					}
-					else
-					{
-						WARNING( $warning_unknown );
-						$summary{unknown}{$val_type}{$val}++;
-					}
-				}
-				elsif( $val_type eq 'SID' )
-				{
-					if( $val < 1 )
-					{
-						# ignore
-					}
-					elsif( exists( $defines{sid}{$val} ))
-					{
-						$val = $defines{sid}{$val};
-					}
-					else
-					{
-						WARNING( $warning_unknown );
-						$summary{unknown}{$val_type}{$val}++;
-					}
-				}
-				else
-				{
-					WARNING( "unknown value type<%s>", $val_type );
-				}
+				$val = GetDefine( $val_type, $val, $warning_unknown );
 
 				if( $variable_value ne $val )
 				{
@@ -319,14 +354,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				{
 					my $val = int( $variable_value );
 
-					if( $val_type eq 'CRITTER_PID' && exists( $defines{pid}{critter}{$val} ))
-					{
-						$val = $defines{pid}{critter}{$val};
-					}
-					elsif( $val_type eq 'SCENERY_PID' && exists( $defines{pid}{scenery}{$val} ))
-					{
-						$val = $defines{pid}{scenery}{$val};
-					}
+					$val = GetDefine( $val_type, $val, undef );
 
 					if( $variable_value ne $val )
 					{
@@ -449,86 +477,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $arg, $line_info, $idx + 1, $line_short );
 
 					# replace argument with connected defines
-					# duplicated in variables check
-					if( $arg_type eq 'CRITTER_PID' )
-					{
-						if( exists( $defines{pid}{critter}{$arg} ))
-						{
-							$arg = $defines{pid}{critter}{$arg};
-						}
-						else
-						{
-							WARNING( $warning_unknown );
-							$summary{unknown}{$arg_type}{$arg}++;
-						}
-					}
-					elsif( $arg_type eq 'SCENERY_PID' )
-					{
-						if( exists( $defines{pid}{scenery}{$arg} ))
-						{
-							$arg = $defines{pid}{scenery}{$arg};
-						}
-						else
-						{
-							WARNING( $warning_unknown );
-							$summary{unknown}{$arg_type}{$arg}++;
-						}
-					}
-					elsif( $arg_type eq 'ITEM_PID' )
-					{
-						if( exists( $defines{pid}{item}{$arg} ))
-						{
-							$arg = $defines{pid}{item}{$arg};
-						}
-						else
-						{
-							WARNING( $warning_unknown );
-							$summary{unknown}{$arg_type}{$arg}++;
-						}
-					}
-					elsif( $arg_type eq 'ANY_PID' )
-					{
-						if( exists( $defines{pid}{critter}{$arg} ))
-						{
-							$arg = $defines{pid}{critter}{$arg};
-						}
-						elsif( exists( $defines{pid}{scenery}{$arg} ))
-						{
-							$arg = $defines{pid}{scenery}{$arg};
-						}
-						elsif( exists( $defines{pid}{item}{$arg} ))
-						{
-							$arg = $defines{pid}{item}{$arg};
-						}
-						else
-						{
-							WARNING( $warning_unknown );
-							$summary{unknown}{$arg_type}{$arg}++;
-						}
-					}
-					elsif( $arg_type eq 'SID' )
-					{
-						if( $arg < 1 )
-						{
-							# ignore
-						}
-						elsif( exists( $defines{sid}{$arg} ))
-						{
-							$arg = $defines{sid}{$arg};
-						}
-						else
-						{
-							WARNING( $warning_unknown );
-							$summary{unknown}{$arg_type}{$arg}++;
-						}
-					}
-					else
-					{
-						WARNING( "unknown argument type<%s>", $arg_type );
-					}
-
-					#printf( "DEBUG argument<%d> = %s\n", $idx + 1, $arg );
-					$args[$idx] = $arg;
+					$args[$idx] = GetDefine( $arg_type, $arg, $warning_unknown );
 				}
 
 				# rebuild line
@@ -557,6 +506,12 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					$line =~ s/${original}/${update}/g;
 				}
 			}
+		}
+
+		# search for raw text
+		foreach my $from( keys( %raw ))
+		{
+			$line =~ s!$from!$raw{$from}!g;
 		}
 
 		# detect line change, ignore meaningless changes
