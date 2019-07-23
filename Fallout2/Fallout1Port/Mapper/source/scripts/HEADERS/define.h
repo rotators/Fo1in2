@@ -426,7 +426,7 @@
 #define SKILL_TRAPS                         (11)
 #define SKILL_SCIENCE                       (12)
 #define SKILL_REPAIR                        (13)
-#define SKILL_CONVERSANT                    (14)
+#define SKILL_SPEECH                        (14)
 #define SKILL_BARTER                        (15)
 #define SKILL_GAMBLING                      (16)
 #define SKILL_OUTDOORSMAN                   (17)
