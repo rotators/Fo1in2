@@ -1,23 +1,50 @@
+// damages critters in the goo
+
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_MOATCHEK
+
+#include "..\headers\command.h"
+
 procedure start;
-procedure spatial_p_proc;//    script_action == 2
+procedure spatial_p_proc;
+procedure pain;
+
+variable my_boots;
+variable worn;
+variable k;
+variable mutate:=0;
 
 variable Damage := 0;
 variable CurrentHP := 0;
 
-procedure start
-begin
-	if (script_action == 2) then begin// spatial_p_proc - Player is on or near hex of the location or object this script is using
-		call spatial_p_proc;
-	end
+procedure start begin
 end
 
-procedure spatial_p_proc
-begin
+procedure spatial_p_proc begin
+	my_boots:=0;
+	worn:=0;
+
+	//dont need to be carrying boots in hand
+	if (obj_carrying_pid_obj(source_obj, PID_RUBBER_BOOTS)) then begin
+	  //if carrying boots ..do boot damage
+	 //debug_msg("NPC Code");
+	  k := random(1,100);
+	  if (k < 10) then begin // chance to melt
+	     my_boots := obj_carrying_pid_obj(source_obj, PID_RUBBER_BOOTS);
+	     rm_obj_from_inven(source_obj, my_boots);
+	     destroy_object(my_boots);
+	     if (source_obj == dude_obj) then
+	        display_msg(mstr(130));
+	  end
+	end
+	else begin
+		call pain;
+	end
+
 // Damage Type 3 == Plasma
 //
-	if source_obj == dude_obj then begin
+/*	if source_obj == dude_obj then begin
 		radiation_inc(dude_obj, 100);
 		Damage := random(5, 30) + (difficulty_level * 10);
 		CurrentHP := get_critter_stat(dude_obj, 35);
@@ -35,6 +62,59 @@ begin
 		else begin
 			critter_dmg(source_obj, random(15, 40), 3);
 		end
+	end*/
+end
+
+procedure pain begin
+   if (critter_inven_obj(source_obj,INVEN_TYPE_WORN) != 0) then
+      worn := obj_pid(critter_inven_obj(source_obj,INVEN_TYPE_WORN));
+
+	if (worn != PID_POWERED_ARMOR) then begin
+
+		if source_obj == dude_obj then begin
+			radiation_inc(dude_obj, 100);
+			Damage := random(5, 30) + (difficulty_level * 10);
+			CurrentHP := get_critter_stat(dude_obj, 35);
+
+			if Damage >= CurrentHP then begin
+				critter_dmg(dude_obj, Damage, 3);// doesn't NO_ANIMATE, so that you can melt properly
+			end
+			else begin
+				critter_dmg(dude_obj, Damage, 3 bwor 512);// NO_ANIMATE
+			end
+
+		end
+		else begin
+
+			if party_member_obj(obj_pid(source_obj)) then begin
+				critter_dmg(source_obj, random(10, 20), 3);
+			end
+			else begin
+				critter_dmg(source_obj, random(15, 40), 3);
+			end
+
+		end
+
+
+
+   	// TODO: Fallout 2 code. Maybe add mutating toe one day?
+		//if not wearing powered armor then do damage
+		//debug_msg("It hurts!");
+		/*if ( (source_obj == dude_obj) and (global_var(GVAR_MUTATE_STAGE) < 1) ) then begin
+		  mutate:=global_var(GVAR_MUTATE);
+		  mutate:=mutate+2;
+		  set_global_var(GVAR_MUTATE,mutate);
+		  if (mutate > 29) then begin
+		     set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS); //store the time
+		     set_global_var(GVAR_MUTATE_STAGE,1);
+		     display_msg(mstr(150));
+		  end
+		  else if (mutate > 14) then
+		     display_msg(mstr(140));
+		  else
+		     display_msg(mstr(110));
+		end
+		critter_dmg(source_obj, 2, DMG_plasma);*/
 	end
 end
 
