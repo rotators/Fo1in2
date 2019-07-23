@@ -21,8 +21,29 @@ my %variables;
 my %functions;
 my %raw;
 
-my $scripts_path = "../../Fallout2/Fallout1Port/Mapper/source/scripts";
+my $scripts_dir = "../../Fallout2/Fallout1Port/Mapper/source/scripts";
 my $readOnly = 0;
+
+my $debug = 1;
+unlink( "ReDefine.DEBUG.log" ) if( -e "ReDefine.DEBUG.log" );
+sub DEBUG
+{
+	my( $text, @args ) = @_;
+
+	$text = sprintf( $text, @args ) if( scalar( @args ));
+
+	return if( !length( $text ));
+
+	$text = sprintf( "DEBUG %s\n", $text );
+
+	print( $text ) if( $debug );
+
+	if( open( my $file, ">>", "ReDefine.DEBUG.log" ))
+	{
+		print( $file $text );
+		close( $file );
+	}
+}
 
 unlink( "ReDefine.WARNING.log" ) if( -e "ReDefine.WARNING.log" );
 sub WARNING
@@ -43,6 +64,25 @@ sub WARNING
 	}
 }
 
+unlink( "ReDefine.log" ) if( -e "ReDefine.log" );
+sub LOG
+{
+	my( $text, @args ) = @_;
+
+	$text = sprintf( $text, @args ) if( scalar( @args ));
+
+	return if( !length( $text ));
+
+	$text = sprintf( "%s\n", $text );
+
+	print( $text );
+	if( open( my $file, ">>", "ReDefine.log" ))
+	{
+		print( $file $text );
+		close( $file );
+	}
+}
+
 #
 
 sub ReadDefines
@@ -50,7 +90,7 @@ sub ReadDefines
 	my( $type, $filename, $prefix ) = @_;
 	my $content = undef;
 
-	if( open( my $file, "<", sprintf( "%s/%s", $scripts_path, $filename )))
+	if( open( my $file, "<", sprintf( "%s/%s", $scripts_dir, $filename )))
 	{
 		local $/;
 		$content = <$file>;
@@ -58,10 +98,10 @@ sub ReadDefines
 	}
 	else
 	{
-		die( "Cannot open '[$scripts_path]/$filename'" );
+		die( "Cannot open '[$scripts_dir]/$filename'" );
 	}
 	
-	die( "'[$scripts_path]/$filename' is empty(?)" ) if( !length( $content ));
+	die( "'[$scripts_dir]/$filename' is empty(?)" ) if( !length( $content ));
 
 	my $line_number = 0;
 	my @lines = split( /\n/, $content );
@@ -80,7 +120,8 @@ sub ReadDefines
 		next if( $line =~ /^\[\t\ ]*\/\// );
 
 		# find macros with given prefix
-		if( $line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Z0-9_]+)[\t\ ]+\(([0-9]+)\)/ )
+		if( $line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Z0-9_]+)[\t\ ]+\(([0-9]+)\)/ ||
+			$line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Z0-9_]+)[\t\ ]+([0-9]+)/ )
 		{
 			my $name  = $1;
 			my $value = int($2);
@@ -95,6 +136,9 @@ sub ReadDefines
 			$defines{$type}{$value} = $name;
 		}
 	}
+
+	my $count = scalar( keys( %{ $defines{$type} } ));
+	LOG( "Reading %s... found %d define%s with '%s' prefix", $filename, $count, $count != 1 ? "s" : "", $prefix );
 }
 
 sub IsDefineType
@@ -170,18 +214,20 @@ sub GetDefine
 	return $value;
 }
 
-sub AddVariable
+sub AddVariableAssign
 {
 	my( $name, $type ) = @_;
 
 	if( !IsDefineType( $type ))
 	{
-		WARNING( "AddVariable : unknown define type<%s> : variable<%s>", $type, $name );
+		WARNING( "AddVariablessign: unknown define type<%s> : variable<%s>", $type, $name );
 		return;
 	}
 
 	$name = lc( $name );
 	$variables{names}{$name} = $type;
+
+	LOG( "Added variable assign: %s", $name );
 }
 
 sub AddVariableGuess
@@ -198,6 +244,8 @@ sub AddVariableGuess
 	}
 
 	$variables{guess} = [ @types ];
+
+	LOG( "Added variable guessing: %s", join( " ", @types ));
 }
 
 sub AddFunction
@@ -216,6 +264,8 @@ sub AddFunction
 		$arg_number++;
 		$functions{$name}{args}{$arg_number} = $type;
 	}
+
+	LOG( "Added function: %s()", $name );
 }
 
 sub AddRaw
@@ -223,6 +273,120 @@ sub AddRaw
 	my( $from, $to ) = @_;
 
 	$raw{$from} = $to;
+
+	LOG( "Added raw: %s", $from );
+}
+
+sub ReadConfig
+{
+	my $content;
+
+	if( open( my $file, "<", "ReDefine.cfg" ))
+	{
+		local $/;
+		$content = <$file>;
+		close( $file );
+	}
+	else
+	{
+		die( "Cannot open 'ReDefine.cfg'" );
+	}
+
+	my @lines = split( /\n/, $content );
+	my $section;
+	foreach my $line( @lines )
+	{
+		# meh
+		$line =~ s!\n!!g;
+		$line =~ s!\r!!g;
+
+		my $known = 1;
+
+		# skip empty lines and comments
+		if( !length( $line ) || $line =~ /^[\t\ ]*$/ || $line =~ /^[\t\ ]*[\;\#]/ )
+		{
+			next;
+		}
+		# detect section
+		elsif( $line =~ /^\[([A-Za-z0-9]+)\]$/ )
+		{
+			$section = $1;
+			next;
+		}
+		# detect variable = value
+		elsif( defined( $section ) && length( $section ) && $line =~ /[\t\ ]*(.+?)[\t\ ]*\=[\t\ ]*(.+?)[\t\ ]*$/ )
+		{
+			my( $variable, $value ) = ( $1, $2 );
+			my @values = split( /[\t\ ]+/, $value );
+			my $count = scalar( @values );
+			my $bad_count = sprintf( "[%s]->%s : invalid number of values, skipped", $section, $variable );
+
+			if( $section eq "ReDefine" )
+			{
+				if( $variable eq "ScriptsDir" && length( $variable ))
+				{
+					LOG( "ScriptsDir = %s", $value );
+					$scripts_dir = $value;
+				}
+			}
+			elsif( $section eq "Defines" )
+			{
+				if( $count != 2 )
+				{
+					WARNING( $bad_count );
+				}
+				else
+				{
+					ReadDefines( $variable, $values[0], $values[1] );
+				}
+			}
+			elsif( $section eq "VariableAssign" )
+			{
+				if( $count != 1 )
+				{
+					WARNING( $bad_count );
+				}
+				else
+				{
+					AddVariableAssign( $variable, $value );
+				}
+			}
+			elsif( $section eq "VariableGuess" && $variable eq "VariableGuess" )
+			{
+				AddVariableGuess( @values ) if( $count );
+			}
+			elsif( $section eq "Functions" )
+			{
+				if( $count < 1 )
+				{
+					WARNING( $bad_count );
+				}
+				else
+				{
+					AddFunction( $variable, @values );
+				}
+			}
+			elsif( $section eq "Raw" )
+			{
+				if( $count < 1 )
+				{
+					WARNING( $bad_count );
+				}
+				else
+				{
+					AddRaw( $variable, $value );
+				}
+			}
+			else
+			{
+				$known = 0;
+			}
+
+			next if( $known );
+		}
+
+		WARNING( "unknown or invalid config line<%s>", $line );
+	}
 }
 
 sub FindFiles
@@ -242,42 +406,20 @@ if( scalar( @ARGV ))
 	$readOnly = $readOnly eq 'ro' || $readOnly eq 'read' || $readOnly eq 'readonly' || $readOnly eq 'read-only';
 }
 
-# read defines from headers
-print( "Reading defines...\n" );
-ReadDefines( "CRITTER_PID", "HEADERS/CRITRPID.H", "PID" );
-ReadDefines( "FID",         "HEADERS/ARTFID.H",   "FID" );
-ReadDefines( "ITEM_PID",    "HEADERS/ITEMPID.H",  "PID" );
-ReadDefines( "SCENERY_PID", "HEADERS/SCENEPID.H", "PID" );
-ReadDefines( "SID",         "HEADERS/scripts.h",  "SCRIPT" );
-ReadDefines( "SKILL",       "HEADERS/define.h",   "SKILL" );
-
-# configure variables to change
-AddVariable( "critter_script", "SID" );
-AddVariable( "critter_type", "CRITTER_PID" );
-AddVariableGuess( "SCENERY_PID" );
-
-# configure functions to change
-AddFunction( "art_change_fid_num", "?","FID" );
-AddFunction( "create_object_sid", "ANY_PID", "?", "?", "SID" );
-AddFunction( "has_skill", "?", "SKILL" );
-AddFunction( "kill_critter_type", "CRITTER_PID", "?" );
-AddFunction( "message_str", "SID", "?" );
-AddFunction( "obj_carrying_pid_obj", "?", "ITEM_PID" );
-AddFunction( "obj_is_carrying_obj_pid", "?", "ITEM_PID" );
-
-AddRaw( "SKILL_CONVERSANT", "SKILL_SPEECH" );
+# read configuration
+ReadConfig( "ReDefine.cfg" );
 
 # seach for script files
-print( "Finding scripts...\n" );
-find({ wanted => \&FindFiles, no_chdir => 1 }, $scripts_path );
+LOG( "Finding scripts..." );
+find({ wanted => \&FindFiles, no_chdir => 1 }, $scripts_dir );
 
-printf( "Processing scripts%s...\n", $readOnly ? " (read only)" : "" );
+LOG( "Processing scripts%s...", $readOnly ? " (read only)" : "" );
 foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 {
 	$summary{files}++;
 
 	my $filename = $filename_long;
-	$filename =~ s!^${scripts_path}/!!;
+	$filename =~ s!^${scripts_dir}/!!;
 	my $content;
 	if( open( my $file, "<", $filename_long ))
 	{
@@ -323,7 +465,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		foreach my $variable_match( @variable_matches )
 		{
 			my( $variable_name, $variable_value ) = $variable_match =~ /([A-Za-z0-9_]+)[\t\ ]*\:\=[\t\ ]*([0-9]+)/;
-			#printf( "DEBUG VAR [%s] -> [%s]=[%s]: %s\n", $variable_match, $variable_name, $variable_value, $line_info );
+			#DEBUG( "VAR [%s] -> [%s]=[%s]: %s", $variable_match, $variable_name, $variable_value, $line_info );
 
 			my $var = lc( $variable_name );
 
@@ -406,15 +548,15 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				# old sanity check
 				if( !$function_name || !$function_open || !$function_arguments || !$function_close )
 				{
-					printf( "?? [%s] -> [%s]+[%s]+[%s]+[%s]\n",
+					LOG( "?? [%s] -> [%s]+[%s]+[%s]+[%s]",
 						$function_match || 'undef',
 						$function_name || 'undef',
 						$function_open || 'undef',
 						$function_arguments || 'undef',
 						$function_close || 'undef' );
-					printf( "?> %s\n", $line_info );
-					printf( "?> %s\n", $line_old );
-					printf( "?> %s\n", $line );
+					LOG( "?> %s", $line_info );
+					LOG( "?> %s", $line_old );
+					LOG( "?> %s", $line );
 					exit;
 				}
 
@@ -436,7 +578,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				pop( @args ); # last element is always empty for some reason
 
 				my @args_old = @args;
-				# printf( "DEBUG args [%s] -> [%s] -> [%s]\n", $function_match, $function_arguments, join( "],[", @args ));
+				#DEBUG( "args [%s] -> [%s] -> [%s]", $function_match, $function_arguments, join( "],[", @args ));
 
 				# process arguments
 				my( $arg_count, $idx ) = ( scalar( @args ), 0 );
@@ -465,7 +607,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					# skip non-numeric arguments
 					if( $arg !~ /^[0-9]+$/ )
 					{
-						#printf( "DEBUG skipped argument<%d> value<%s>\n", $idx + 1, $arg );
+						#DEBUG( "skipped argument<%d> value<%s>\n", $idx + 1, $arg );
 						next;
 					}
 					$arg = int($arg);
@@ -495,7 +637,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				my $original = $function_match;
 				if( $original ne $update )
 				{
-					# printf( "DEBUG update [%s] -> [%s]\n", $original, $update );
+					#DEBUG( "update [%s] -> [%s]", $original, $update );
 
 					# primitive sanitization, most likely needs updates still
 					$original =~ s!\(!\\\(!g;
@@ -523,9 +665,9 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 
 			if( $line_pre ne $line_post )
 			{
-				printf( "@@ %s:%d\n", $filename, $line_number );
-				printf( "<- %s\n", $line_old );
-				printf( "-> %s\n", $line );
+				LOG( "@@ %s:%d", $filename, $line_number );
+				LOG( "<- %s", $line_old );
+				LOG( "-> %s", $line );
 				$update_file = 1;
 			}
 			else
@@ -548,7 +690,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 	}
 }
 
-printf( "Processed %d line%s in %d files\n", $summary{lines} || 0, $summary{lines} || 0 != 1 ? "s" : "" , $summary{files} || 0 );
+LOG( "Processed %d line%s in %d files\n", $summary{lines} || 0, $summary{lines} || 0 != 1 ? "s" : "" , $summary{files} || 0 );
 
 foreach my $type( sort{$a cmp $b} keys( %{ $summary{unknown} } ))
 {
