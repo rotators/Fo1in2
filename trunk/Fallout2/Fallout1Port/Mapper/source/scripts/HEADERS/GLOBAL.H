@@ -94,6 +94,7 @@
 #define GVAR_HOLODISK_ENCLAVE_ATOMIC			(577)	// maybe hard-coded, maybe not?	
 
 // Fallout 1 and Fallout Fixt
+#define GVAR_TRACK_RADIATION_DEATH				(999)
 #define FIXT_BUGFIXES_ONLY						(1000)
 #define AGATHA_IS_ENABLED						(1001)
 #define SHADYSANDS_RADSCORPS_LEFT				(1002)
