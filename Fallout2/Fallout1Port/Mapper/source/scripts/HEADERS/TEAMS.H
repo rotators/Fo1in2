@@ -12,6 +12,7 @@
 //#define TEAM_									(4)
 //#define TEAM_									(5)
 
+#define TEAM_HUB_MUTANTS						(41)
 #define TEAM_BOS 								(44)
 
 #endif // TEAMS_H

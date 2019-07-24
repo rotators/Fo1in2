@@ -1,8 +1,21 @@
+/*
+
+	Hub - Harold
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
+
+#define NAME                    SCRIPT_HAROLD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat_p_proc;//    script_action == 13
-procedure combat;
 procedure critter_p_proc;//    script_action == 12
 procedure pickup_p_proc;//    script_action == 4
 procedure talk_p_proc;//    script_action == 11
@@ -81,22 +94,9 @@ procedure Harold56;
 procedure Harold57;
 procedure HaroldEnd;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable rndz;
-
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
 
 variable exit_line;
 
@@ -114,60 +114,20 @@ begin
 		set_global_var(IS_HAROLD_ALIVE, 0);
 //		display_msg("Harold dead: self_obj==0, set_global_var(IS_HAROLD_ALIVE, 0)");
 	end
-	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
-		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
-			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
-				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
-				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
-					variable A; if obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
-				set_local_var(12, 1);
-			end
-		end
-	end
+
+	fixt_critter_healing
+
 	if Only_Once then begin
 		Only_Once := 0;
-		/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 41);
-		/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 53);
+		critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_HUB_MUTANTS);
+		critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_HUB_MUTANTS);
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<----caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						 if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-							call combat_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure combat
-begin
-	hostile := 1;
 end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
 	end
 end
@@ -175,25 +135,25 @@ end
 procedure pickup_p_proc
 begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+	GetReaction;
 	if (local_var(4) == 0) then begin
 		if (local_var(1) > 1) then begin
 			set_local_var(4, 1);
-			start_gdialog(45, self_obj, 4, 14, 3);
+			start_gdialog(NAME, self_obj, 4, HEAD_HAROLD, BACKGROUND_HUB);
 			gsay_start;
 			call Harold00;
 			gsay_end;
 			end_dialogue;
 		end
 		else begin
-			start_gdialog(45, self_obj, 4, 14, 3);
+			start_gdialog(NAME, self_obj, 4, HEAD_HAROLD, BACKGROUND_HUB);
 			gsay_start;
 			call Harold39;
 			gsay_end;
@@ -203,14 +163,14 @@ begin
 	else begin
 		if (local_var(1) > 1) then begin
 			set_local_var(4, 1);
-			start_gdialog(45, self_obj, 4, 14, 3);
+			start_gdialog(NAME, self_obj, 4, HEAD_HAROLD, BACKGROUND_HUB);
 			gsay_start;
 			call Harold41;
 			gsay_end;
 			end_dialogue;
 		end
 		else begin
-			start_gdialog(45, self_obj, 4, 14, 3);
+			start_gdialog(NAME, self_obj, 4, HEAD_HAROLD, BACKGROUND_HUB);
 			gsay_start;
 			call Harold55;
 			gsay_end;
@@ -519,6 +479,7 @@ begin
 		giq_option(4, 45, 185, Harold26b, 50);
 	end
 	else begin
+		set_global_var(SLIDE_KIND_TO_HAROLD,1); // TODO: Check if this is correct here!
 		gsay_message(45, 184, 50);
 	end
 end
@@ -585,7 +546,7 @@ end
 
 procedure Harold37
 begin
-	call BigDownReact;
+	BigDownReact;
 	gsay_message(45, 208, 51);
 end
 
@@ -664,7 +625,7 @@ end
 
 procedure Harold42
 begin
-	call DownReact;
+	DownReact;
 	gsay_message(45, 222, 51);
 end
 
@@ -778,134 +739,7 @@ procedure HaroldEnd
 begin
 end
 
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-end
- 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 2) then begin
 		if (target_obj == dude_obj) then begin
 			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
@@ -1032,3 +866,4 @@ begin
 		end
 	end
 end
+
