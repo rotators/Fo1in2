@@ -1,15 +1,26 @@
+/*
+
+	Shady Sands - Aradesh
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
 
 #define NAME                    SCRIPT_ARADESH
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
 
 #include "..\headers\command.h"
+#include "..\headers\ModReact.h"
 
+/* Standard Script Procedures */
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure do_dialogue;//	procedure talk_p_proc;//    script_action == 11
-procedure map_enter_p_proc;//    script_action == 15
-procedure critter_p_proc;//    script_action == 12
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure do_dialogue;
+procedure map_enter_p_proc;
+procedure critter_p_proc;
 
 procedure aradeshleave;
 procedure aradeshend;
@@ -119,18 +130,6 @@ procedure aradeshx2;
 procedure aradeshx3;
 procedure aradeshx5;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
 variable exit_line;
 
 variable TRESPASS;
@@ -144,16 +143,13 @@ variable MALE;
 variable initial :=  0;
 variable pickup_attempt;
 
-
-
 variable isGoodGuy := 1;// Fallout Fixt
 
 procedure PickDeadBodyType;// Fallout Fixt
 variable DeathType := 56;
 
 
-procedure start
-begin
+procedure start begin
 	if (local_var(11) != 1) then begin
 		variable LVar0;
 		set_local_var(11, 1);
@@ -174,71 +170,13 @@ begin
 		end
 	end
 	else begin
-		if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
-			if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
-				if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
-					if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
-					if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
-						variable A; if obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
-					set_local_var(12, 1);
-				end
-			end
-		end
-		if (initial  ==  0) then begin
-			initial :=  1;
-			/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
-			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 6);
-		end
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				if (local_var(9) > 2) then begin
-					display_msg(message_str(SCRIPT_GENCHAT, 170));
-					tmp_hostile := 1;
-				end
-				else begin
-					if (global_var(ENEMY_SHADY_SANDS) == 1) then begin
-						float_msg(self_obj, message_str(SCRIPT_ARADESH, 277), 2);
-					end
-					else begin
-						call do_dialogue;
-					end
-				end
-				if (local_var(7) == 1) then begin
-					animate_move_obj_to_tile(self_obj, 32945, 0);
-				end
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-						call damage_p_proc;
-					end
-					else begin
-						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-							script_overrides;
-							display_msg(message_str(SCRIPT_ARADESH, 100));
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-								call destroy_p_proc;
-							end
-							else begin
-								if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-									pickup_attempt := 1;
-									dialogue_system_enter;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+		fixt_critter_healing
 	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_ARADESH, 100));
 end
 
 procedure critter_p_proc
@@ -257,34 +195,42 @@ begin
 	end
 end
 
-procedure map_enter_p_proc begin
-   // Workaround:
-   //art_change_fid_num(self_obj, FID_NAROBE);
-
-   // Removed this code, because the critter fid isn't pretty enough for Aradesh. Keep it clean and old-skool.
-	/*if (map_first_run) and not(global_var(ARADESH_REFRESH_GFX_FLAG)) then begin
-		variable Aradesh_ptr := 0;
-		variable AradeshTile := 0;
-		variable NewAradesh := 0;
-		variable SelfHeight := 0;
-		set_global_var(ARADESH_REFRESH_GFX_FLAG, 1);
-		SelfHeight := elevation(self_obj);
-		AradeshTile := tile_num(self_obj);
-		NewAradesh := create_object_sid(PID_ARADESH, 0, 0, SCRIPT_ARADESH);
-		Aradesh_ptr := NewAradesh;
-		move_to(self_obj, 22083, SelfHeight);
-		critter_attempt_placement(Aradesh_ptr, AradeshTile, 0);
-		move_obj_inven_to_obj(self_obj, Aradesh_ptr);
-		anim(Aradesh_ptr, 1000, rotation_to_tile(AradeshTile, 22083));
-		destroy_object(self_obj);
-	end*/
+procedure talk_p_proc begin
+	if (local_var(9) > 2) then begin
+		display_msg(message_str(SCRIPT_GENCHAT, 170));
+		tmp_hostile := 1;
+	end
+	else begin
+		if (global_var(ENEMY_SHADY_SANDS) == 1) then begin
+			float_msg(self_obj, message_str(SCRIPT_ARADESH, 277), 2);
+		end
+		else begin
+			call do_dialogue;
+		end
+	end
+	if (local_var(7) == 1) then begin
+		animate_move_obj_to_tile(self_obj, 32945, 0);
+	end
 end
 
-procedure do_dialogue
-begin
+procedure map_enter_p_proc begin
+   if (map_first_run) then begin
+		critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_SHADY_SANDS);
+		critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_PEASANT);
+   end
+end
+
+procedure pickup_p_proc begin
+	pickup_attempt := 1;
+	dialogue_system_enter;
+end
+
+procedure do_dialogue begin
 	variable LVar0 := 0;
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+
+	GetReaction;
+
 	if (pickup_attempt) then begin
 		pickup_attempt := 0;
 		LVar0 := random(1, 2);
@@ -296,7 +242,7 @@ begin
 		end
 	end
 	else begin
-		start_gdialog(33, self_obj, 4, 13, 9);
+		start_gdialog(NAME, self_obj, 4, HEAD_ARADESH, BACKGROUND_SHADY);
 		gsay_start;
 		if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
 			set_local_var(4, 1);
@@ -401,7 +347,7 @@ end
 procedure aradesh01_2
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	if (local_var(1) >= 2) then begin
 		call aradesh05;
 	end
@@ -508,14 +454,14 @@ begin
 	if (local_var(9) > 0) then begin
 		set_local_var(9, local_var(9) - 1);
 	end
-	call UpReact;
+	UpReact;
 	call aradesh04;
 end
 
 procedure aradesh08b
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	call aradesh06;
 end
 
@@ -558,7 +504,7 @@ end
 procedure aradesh11b
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	call aradesh14;
 end
 
@@ -639,7 +585,7 @@ end
 procedure aradesh17_3
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
 		call aradesh27;
 	end
@@ -809,14 +755,14 @@ end
 procedure aradesh28b
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	call aradesh30;
 end
 
 procedure aradesh28c
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	call aradesh19;
 end
 
@@ -845,7 +791,7 @@ begin
 	if (local_var(9) > 0) then begin
 		set_local_var(9, local_var(9) - 1);
 	end
-	call UpReact;
+	UpReact;
 	call aradesh29;
 end
 
@@ -934,7 +880,7 @@ begin
 	if (local_var(9) > 0) then begin
 		set_local_var(9, local_var(9) - 1);
 	end
-	call UpReact;
+	UpReact;
 	set_global_var(TANDI_RESCUE, 1);
 	call aradesh40;
 end
@@ -942,28 +888,26 @@ end
 procedure aradesh39c
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	call aradesh42;
 end
 
-procedure aradesh40
-begin
-	variable LVar0 := 0;
+procedure aradesh40 begin
+variable item;
+
 	gsay_reply(33, 235);
 	set_global_var(TANDI_RESCUE, 1);
-	LVar0 := create_object_sid(PID_SPEAR, 0, 0, -1);
-	add_obj_to_inven(dude_obj, LVar0);
+	item := create_object_sid(PID_SPEAR, 0, 0, -1);
+	add_obj_to_inven(dude_obj, item);
 	giq_option(4, 33, 236, aradesh40a, 50);
 end
 
-procedure aradesh40a
-begin
+procedure aradesh40a begin
 	gsay_message(33, 237, 50);
 	call aradeshx;
 end
 
-procedure aradesh41
-begin
+procedure aradesh41 begin
 	gsay_reply(33, 238);
 	giq_option(4, 33, 239, aradesh40, 50);
 	giq_option(4, 33, 240, aradesh42, 50);
@@ -975,8 +919,7 @@ begin
 	call aradeshx3;
 end
 
-procedure aradesh43
-begin
+procedure aradesh43 begin
 	if (local_var(8) == 0) then begin
 		set_local_var(8, 1);
 		item_caps_adjust(dude_obj, 500);
@@ -984,7 +927,7 @@ begin
 	if (local_var(9) != 0) then begin
 		set_local_var(9, 0);
 	end
-	call TopReact;
+	TopReact;
 	set_global_var(TANDI_RESCUE, 2);
 	gsay_reply(33, 242);
 	giq_option(4, 33, 243, aradesh19, 50);
@@ -1000,7 +943,7 @@ end
 procedure aradesh45
 begin
 	set_local_var(9, local_var(9) + 2);
-	call BigDownReact;
+	BigDownReact;
 	float_msg(self_obj, message_str(SCRIPT_ARADESH, 246), 7);
 	call aradeshx;
 end
@@ -1008,7 +951,7 @@ end
 procedure aradesh46
 begin
 	set_local_var(9, local_var(9) + 2);
-	call BigDownReact;
+	BigDownReact;
 	float_msg(self_obj, message_str(SCRIPT_ARADESH, 247), 7);
 	call aradeshx;
 end
@@ -1016,7 +959,7 @@ end
 procedure aradesh47
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	gsay_message(33, 248, 50);
 	call aradeshx;
 end
@@ -1024,7 +967,7 @@ end
 procedure aradesh48
 begin
 	set_local_var(9, local_var(9) + 1);
-	call DownReact;
+	DownReact;
 	gsay_message(33, 249, 50);
 end
 
@@ -1049,132 +992,6 @@ end
 procedure aradeshx5
 begin
 	set_local_var(7, 1);
-end
-
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 end
 
 procedure aradesh49
@@ -1308,31 +1125,15 @@ begin
 end
 
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
 	end
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
- 	end
+	inc_good_critter
 	set_global_var(ARADESH_STATUS, 1);//ARADESH_STATUS
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
 		tmp_hostile := 1;
