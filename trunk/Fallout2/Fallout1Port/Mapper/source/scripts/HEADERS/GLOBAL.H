@@ -21,6 +21,17 @@
 #define GVAR_BAD_MONSTER						(4)
 #define GVAR_GOOD_MONSTER						(5)
 
+// Karma Titles Fo2
+#define GVAR_KARMA_HOLY_WARRIOR             (37)
+#define GVAR_KARMA_GUARDIAN_OF_THE_WASTES   (38)
+#define GVAR_KARMA_SHIELD_OF_HOPE           (39)
+#define GVAR_KARMA_DEFENDER                 (40)
+#define GVAR_KARMA_WANDERER                 (41)
+#define GVAR_KARMA_BETRAYER                 (42)
+#define GVAR_KARMA_SWORD_OF_DESPAIR         (43)
+#define GVAR_KARMA_SCOURGE_OF_THE_WASTES    (44)
+#define GVAR_KARMA_DEMON_SPAWN              (45)
+
 // Addictions - HARDCODED TO THESE GVAR SLOTS
 #define IS_NUKA_COLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
 #define IS_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
@@ -50,7 +61,7 @@
 #define GVAR_ADDICT_TRAGIC						(295)	// maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET							(296)	// maybe hard-coded, maybe not?
 
-// Endgame slideshow
+// Endgame slideshow Fo1
 #define GVAR_ENDGAME_MOVIE_DESERT				(408)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_MUTANTS				(409)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_NECROPOLIS			(410)	// maybe hard-coded, maybe not?
@@ -62,6 +73,7 @@
 #define GVAR_ENDGAME_MOVIE_KHANS				(416)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_VD					(417)	// maybe hard-coded, maybe not?
 
+// Endgame slideshow Fo2
 #define GVAR_ENDGAME_MOVIE_REDDING				(418)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_BROKEN_HILLS			(419)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_NCR					(420)	// maybe hard-coded, maybe not?

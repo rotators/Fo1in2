@@ -5,6 +5,13 @@
                                 Номера команд
 *******************************************************************************/
 
-#define TEAM_
+#define TEAM_PLAYER                             (0)
+#define TEAM_VAULT13							(1)
+//#define TEAM_									(2)
+//#define TEAM_									(3)
+//#define TEAM_									(4)
+//#define TEAM_									(5)
+
+#define TEAM_BOS 								(44)
 
 #endif // TEAMS_H
