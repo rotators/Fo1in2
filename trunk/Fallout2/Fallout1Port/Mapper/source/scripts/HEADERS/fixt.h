@@ -13,15 +13,6 @@
 													if get_critter_stat(self_obj, 7) > 0 then begin  \
 														critter_heal(self_obj, 999);  \
 													end  \
-													if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin \
-														display_msg("S-bag " + proto_data(obj_pid(self_obj), 1));  \
-													end   \
-													if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin  \
-														display_msg("Pack " + proto_data(obj_pid(self_obj), 1));  \
-													end   \
-													if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin  \
-														display_msg("M-bag " + proto_data(obj_pid(self_obj), 1));  \
-													end \
 													if global_var(ARMOR_EQUIP_MOD) then begin  \
 														if critter_inven_obj(self_obj, 0) <= 0 then begin \
 															/* Equip held armor if not currently wearing any.*/ \
