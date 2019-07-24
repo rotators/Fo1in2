@@ -20,6 +20,7 @@
 //#include "..\headers\Reaction.h"
 
 #include "..\headers\fo1.h"
+#include "..\headers\fixt.h"
 
 
 // script.h: Script Procedure Types //
