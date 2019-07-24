@@ -389,6 +389,10 @@ sub ReadConfig
 				{
 					AddVariableGuess( @values ) if( $count );
 				}
+				else
+				{
+					$known = 0;
+				}
 			}
 			elsif( substr( $section, 0, 8 ) eq "Variable" )
 			{
@@ -480,6 +484,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		local $/;
 		$content = <$file>;
 		close( $file );
+		$content =~ s!\r!!g;
 	}
 	else
 	{
@@ -502,7 +507,6 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 
 		# meh
 		$line =~ s!\n!!g;
-		$line =~ s!\r!!g;
 
 		# skip fully commented
 		if( $line =~ /^[\t\ ]*\/\// )
@@ -574,6 +578,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		# search for functions
 		foreach my $function_name ( sort{$a cmp $b} keys( %functions ))
 		{
+			# this is an unsanctioned use of magical energy
 			my $re = qr{
 				(
 					${function_name}
@@ -652,7 +657,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					my $arg_old = $arg;
 					my $arg_type;
 
-					# detect incorrect splitting of argmuents
+					# detect incorrect splitting of arguments
 					if( !exists( $functions{$function_name}{args}{$idx+1} ))
 					{
 							WARNING( "invalid number of arguments? : %s argument<%d>", $line_info, $idx + 1 );
@@ -671,7 +676,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					# skip non-numeric arguments
 					if( $arg !~ /^[0-9]+$/ )
 					{
-						#DEBUG( "skipped argument<%d> value<%s>\n", $idx + 1, $arg );
+						#DEBUG( "skipped argument<%d> value<%s>", $idx + 1, $arg );
 						next;
 					}
 					$arg = int($arg);
