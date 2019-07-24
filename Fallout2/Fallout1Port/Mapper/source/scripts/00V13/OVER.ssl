@@ -1,16 +1,28 @@
+/*
+
+	Vault 13 Overseer
+
+*/
+
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_OVER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_V13)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
 procedure start;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
 
 procedure overend;
 procedure overcbt;
@@ -101,13 +113,9 @@ procedure over201;
 procedure over202;
 procedure over203;
 
-variable rndx;
-variable rndy;
-variable rndz;
-variable HOSTILE;
+variable tmp_hostile;
 variable HEREBEFORE;
 variable stealing;
-variable SEED;
 variable Visits_without_chip := 1;
 variable Visits_with_caravans := 1;
 variable Visits_master_alive := 1;
@@ -118,27 +126,16 @@ variable initial :=  0;
 import variable Ian_ptr;
 import variable vault_door_ptr;// from EndGame Mod by Corpse
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
 variable exit_line;
 
+#define EVENT_GET_AMMO 		(4)
 #define EVENT_END_SEQ 		(5)
 
 
-procedure start
-begin
-	if (cur_map_index == MAP_VAULT13) and (global_var(VAULT_13_WAS_INVADED) == 1) then begin//		<-- Vault13 and invaded
+procedure start begin
+	// V13 has been invaded:
+	if (cur_map_index == MAP_VAULT13) and (global_var(VAULT_13_WAS_INVADED) == 1) then begin
+
 		if (local_var(9) != 1) then begin
 			set_local_var(9, 1);//		<-- only once
 			if (metarule(22, 0) == 0) then begin//		<-- if not during a Game_Load,
@@ -148,8 +145,10 @@ begin
 			debug_msg("Vault 13 invasion, killing OVER.SSL with DeathType " + 63 + ".  ");
 			kill_critter(self_obj, 63);// otherwise get "can't match fid!" errors
 		end
+
 	end
 	else begin
+
 		if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
 			if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
 				if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
@@ -160,67 +159,26 @@ begin
 				end
 			end
 		end
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-					call damage_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-							call look_at_p_proc;
-						end
-						else begin
-							if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-								call map_enter_p_proc;
-							end
-							else begin
-								if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-									call pickup_p_proc;
-								end
-								else begin
-									if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-										call talk_p_proc;
-									end
-									else begin
-										if (script_action == 8) then begin//<-- use_skill_on_p_proc
-											call use_skill_on_p_proc;
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+
 	end
 end
 
-procedure combat_p_proc
-begin
-	if (fixed_param == 4) then begin
+procedure combat_p_proc begin
+
+	if (fixed_param == EVENT_GET_AMMO) then begin
 			variable LVar0 := 0;
-			/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_5MM_AP) <= 3) then begin
+			if (obj_is_carrying_obj_pid(self_obj, PID_5MM_AP) <= 3) then begin
 			LVar0 := create_object_sid(PID_5MM_AP, 0, 0, -1);
 			add_mult_objs_to_inven(self_obj, LVar0, 6);
 		end
 	end
+
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		HOSTILE := 0;
+procedure critter_p_proc begin
+
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		//attack_complex(dude_obj, 0, 1, 100, 250, 300, 0, 128);
 	end
 	else begin
@@ -311,25 +269,25 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	stealing := 1;
 	dialogue_system_enter;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+
+	GetReaction;
+
 	start_gdialog(55, self_obj, 4, 1, 10);
 	gsay_start;
-	SEED := 0;
 	if (global_var(VATS_BLOWN) and global_var(MASTER_BLOWN) and (global_var(GAME_CONTINUES) < 1)) then begin
 		call over81;
 	end
 	else begin
+
 		if (global_var(VAULT_13_HOSTILE)) then begin
 			call over72;
 		end
@@ -338,6 +296,7 @@ begin
 				call over71;
 			end
 			else begin
+
 				if (global_var(QUEST_VAULT13_4_WATERCHIP) == 0) then begin
 					/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
 						call over28;
@@ -358,8 +317,10 @@ begin
 						end
 						Visits_without_chip := Visits_without_chip + 1;
 					end
+
 				end
 				else begin
+
 					if (global_var(QUEST_VAULT13_4_WATERCHIP) == 1) then begin
 						/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
 							call over28;
@@ -375,8 +336,10 @@ begin
 							end
 						end
 						Visits_with_caravans := Visits_with_caravans + 1;
+
 					end
 					else begin
+
 						if (not(global_var(VATS_BLOWN))) then begin
 							if (global_var(MASTER_BLOWN)) then begin
 								call over54;
@@ -405,10 +368,12 @@ begin
 							end
 							Visits_vats_blown := Visits_vats_blown + 1;
 						end
+
 					end
 				end
 			end
 		end
+
 	end
 	gsay_end;
 	end_dialogue;
@@ -454,7 +419,7 @@ end
 
 procedure overcbt
 begin
-	HOSTILE := 1;
+	tmp_hostile := 1;
 end
 
 procedure over00
@@ -653,8 +618,7 @@ begin
 	giq_option(4, 55, 165, over30, 50);
 end
 
-procedure over31
-begin
+procedure over31 begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	Visits_with_chip := Visits_with_chip + 1;
@@ -978,7 +942,7 @@ procedure over81
 begin
 	set_local_var(6, 1);
 	set_local_var(8, 1);
-	call TopReact;
+	TopReact;
 	gsay_reply(55, 261);
 	giq_option(0, 634, 106, Over81b, 49);
 end
@@ -986,14 +950,14 @@ end
 procedure Over81b
 begin
 	set_local_var(1, 50);
-	call LevelToReact;
+	ReactToLevel;
 	gsay_reply(55, 262);
 	giq_option(0, 634, 106, Over81c, 51);
 end
 
 procedure Over81c
 begin
-	call BottomReact;
+	BottomReact;
 	gsay_reply(55, 263);
 	giq_option(0, 634, 106, Over81d, 51);
 end
@@ -1055,130 +1019,3 @@ begin
 		end
 	end
 end
-
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-end
-

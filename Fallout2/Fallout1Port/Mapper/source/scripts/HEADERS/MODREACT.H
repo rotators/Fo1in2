@@ -286,6 +286,9 @@ variable reaction_bonus_karma:=0;
                                         LevelToReact
 
 // Generates initial reaction.
+
+// Fallout 2:
+/*
 #define GetReaction                     if (local_var(LVAR_got_reaction) == 0) then begin                                       \
                                             set_local_var(LVAR_got_reaction,1);                                                 \
                                             set_local_var(LVAR_base_reaction,REACTION_BONUS_CHARISMA);                          \
@@ -383,8 +386,9 @@ variable reaction_bonus_karma:=0;
                                        debug_msg("Childkiller Reaction == "+Static_Reaction);                                   \
                                        set_local_var(LVAR_reaction,(local_var(LVAR_base_reaction) + Static_Reaction));          \
                                        debug_msg("Initial Reaction == "+local_var(LVAR_reaction))
-
-/*
+*/
+			   
+// Fallout 1:
 #define GetReaction                     if (local_var(LVAR_got_reaction) == 0) then begin                                       \
                                             set_local_var(LVAR_got_reaction,1);                                                 \
                                             set_local_var(LVAR_base_reaction,REACTION_NEUTRAL);                                      \
@@ -416,7 +420,7 @@ variable reaction_bonus_karma:=0;
                                         end                                                                                     \
                                         ReactToLevel
 
-*/
+
 
 #undef check_barterable
 #define check_barterable
