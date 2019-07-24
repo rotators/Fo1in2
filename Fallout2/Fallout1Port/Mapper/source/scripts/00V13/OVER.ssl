@@ -4,6 +4,7 @@
 
 */
 
+/* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\MAPV13CAVE.h"
 
@@ -13,6 +14,7 @@
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
 
+/* Standard Script Procedures */
 procedure start;
 procedure combat_p_proc;
 procedure critter_p_proc;
@@ -114,31 +116,61 @@ procedure over201;
 procedure over202;
 procedure over203;
 
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+#define LVAR_WaterChipReturned 					(4)
+#define LVAR_GiveMoreItems          			(5)
+#define LVAR_Endgame             				(6)
+#define LVAR_IanFloat        			       	(7)
+#define LVAR_Hostile 								(8)
+#define LVAR_OnlyOnce								(9)
+#define LVAR_Herebefore                 		(10)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
+import variable Ian_ptr;
+import variable vault_door_ptr;// from EndGame Mod by Corpse
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
 variable tmp_hostile;
-variable HEREBEFORE;
 variable stealing;
 variable Visits_without_chip := 1;
 variable Visits_with_caravans := 1;
 variable Visits_master_alive := 1;
 variable Visits_with_chip := 1;
 variable Visits_vats_blown := 1;
-variable initial :=  0;
 
-import variable Ian_ptr;
-import variable vault_door_ptr;// from EndGame Mod by Corpse
 
 variable exit_line;
+variable item;
 
 #define EVENT_GET_AMMO 		(4)
 #define EVENT_END_SEQ 		(5)
 
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+
+/*******************************************************************
+   The start procedure is the first procedure called when the map is
+   first entered. Any initial information that needs to be set up
+   should be placed in here.
+*******************************************************************/
 
 procedure start begin
 	// V13 has been invaded:
 	if (cur_map_index == MAP_VAULT13) and (global_var(VAULT_13_WAS_INVADED) == 1) then begin
 
-		if (local_var(9) != 1) then begin
-			set_local_var(9, 1);//		<-- only once
+		if (local_var(LVAR_OnlyOnce) != 1) then begin
+			set_local_var(LVAR_OnlyOnce, 1);//		<-- only once
 			if (metarule(22, 0) == 0) then begin//		<-- if not during a Game_Load,
 				set_obj_visibility(self_obj, 0);//		     make sure critter is visibile
 			end
@@ -156,10 +188,9 @@ end
 procedure combat_p_proc begin
 
 	if (fixed_param == EVENT_GET_AMMO) then begin
-			variable LVar0 := 0;
-			if (obj_is_carrying_obj_pid(self_obj, PID_5MM_AP) <= 3) then begin
-			LVar0 := create_object_sid(PID_5MM_AP, 0, 0, -1);
-			add_mult_objs_to_inven(self_obj, LVar0, 6);
+		if (obj_is_carrying_obj_pid(self_obj, PID_5MM_AP) <= 3) then begin
+			item := create_object_sid(PID_5MM_AP, 0, 0, -1);
+			add_mult_objs_to_inven(self_obj, item, 6);
 		end
 	end
 
@@ -173,70 +204,56 @@ procedure critter_p_proc begin
 	end
 	else begin
 		if ((global_var(VAULT_13_HOSTILE) == 1) and (global_var(OVERSEER_END_SEQ) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-			if (local_var(8) == 0) then begin
+			if (local_var(LVAR_Hostile) == 0) then begin
 				dialogue_system_enter;
 			end
 		end
-		else begin
-			if (global_var(OVERSEER_END_SEQ) == 1) then begin
-				game_ui_disable;
-				animate_move_obj_to_tile(self_obj, 18690, 0);
-				set_global_var(OVERSEER_END_SEQ, 2);
+		else if (global_var(OVERSEER_END_SEQ) == 1) then begin
+			game_ui_disable;
+			animate_move_obj_to_tile(self_obj, 18690, 0);
+			set_global_var(OVERSEER_END_SEQ, 2);
+		end
+		else if (global_var(OVERSEER_END_SEQ) == 2) then begin
+			if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) > 4)) then begin
+				animate_move_obj_to_tile(dude_obj, 19290, 0);
 			end
 			else begin
-				if (global_var(OVERSEER_END_SEQ) == 2) then begin
-					if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) > 4)) then begin
-						animate_move_obj_to_tile(dude_obj, 19290, 0);
-					end
-					else begin
-						if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
-							game_ui_enable;
-							dialogue_system_enter;
-						end
-					end
-				end
-				else begin
-					if ((global_var(OVERSEER_END_SEQ) == 3) and (global_var(OVERSEER_KILLED) == 0)) then begin
-						animate_move_obj_to_tile(self_obj, 17290, 0);
-						set_global_var(OVERSEER_END_SEQ, 4);
-					end
-					else begin
-						if ((global_var(OVERSEER_END_SEQ) == 4) and (global_var(OVERSEER_KILLED) == 0)) then begin
-							animate_move_obj_to_tile(self_obj, 17290, 0);
-							if (tile_num(self_obj) != 17290) then begin
-								add_timer_event(vault_door_ptr, game_ticks(1), 2);
-							end
-							set_global_var(OVERSEER_END_SEQ, 5);
-							animate_move_obj_to_tile(self_obj, 15690, 0);
-						end
-						else begin
-							if ((global_var(OVERSEER_END_SEQ) == 5) and (global_var(OVERSEER_KILLED) == 0)) then begin
-								if (tile_num(self_obj) != 15690) then begin
-									set_global_var(OVERSEER_END_SEQ, 6);
-								end
-							end
-							else begin
-								if ((global_var(OVERSEER_END_SEQ) == 6) and (global_var(OVERSEER_KILLED) == 0)) then begin
-									animate_move_obj_to_tile(self_obj, 13690, 0);
-								end
-								else begin
-									if (global_var(VATS_BLOWN) and global_var(MASTER_BLOWN) and (local_var(6) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-										if (global_var(OVERSEER_END_SEQ) == 0) then begin
-											dialogue_system_enter;
-										end
-									end
-								end
-							end
-						end
-					end
+				if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
+					game_ui_enable;
+					dialogue_system_enter;
 				end
 			end
 		end
+		else if ((global_var(OVERSEER_END_SEQ) == 3) and (global_var(OVERSEER_KILLED) == 0)) then begin
+			animate_move_obj_to_tile(self_obj, 17290, 0);
+			set_global_var(OVERSEER_END_SEQ, 4);
+		end
+		else if ((global_var(OVERSEER_END_SEQ) == 4) and (global_var(OVERSEER_KILLED) == 0)) then begin
+			animate_move_obj_to_tile(self_obj, 17290, 0);
+			if (tile_num(self_obj) != 17290) then begin
+				add_timer_event(vault_door_ptr, game_ticks(1), 2);
+			end
+			set_global_var(OVERSEER_END_SEQ, 5);
+			animate_move_obj_to_tile(self_obj, 15690, 0);
+		end
+		else if ((global_var(OVERSEER_END_SEQ) == 5) and (global_var(OVERSEER_KILLED) == 0)) then begin
+			if (tile_num(self_obj) != 15690) then begin
+				set_global_var(OVERSEER_END_SEQ, 6);
+			end
+		end
+		else if ((global_var(OVERSEER_END_SEQ) == 6) and (global_var(OVERSEER_KILLED) == 0)) then begin
+			animate_move_obj_to_tile(self_obj, 13690, 0);
+		end
+		else if (global_var(VATS_BLOWN) and global_var(MASTER_BLOWN) and (local_var(LVAR_Endgame) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+			if (global_var(OVERSEER_END_SEQ) == 0) then begin
+				dialogue_system_enter;
+			end
+		end
 	end
+
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (global_var(OVERSEER_END_SEQ) < 1) then begin
 		if source_obj == dude_obj then begin
 			set_global_var(VAULT_13_HOSTILE, 1);
@@ -244,18 +261,15 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_OVER, 100));
 end
 
-procedure map_enter_p_proc
-begin
-	critter_add_trait(self_obj, 1, 6, 1);
+procedure map_enter_p_proc begin
+	critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_VAULT13);
 	if (global_var(OVERSEER_KILLED) == 1) then begin
 		destroy_object(self_obj);
-//		create_object_sid(33555341, 21062, 2, 0);
 	end
 end
 
@@ -281,101 +295,83 @@ procedure talk_p_proc begin
 		if (global_var(VAULT_13_HOSTILE)) then begin
 			call over72;
 		end
-		else begin
-			if (stealing) then begin
+		else if (stealing) then begin
 				call over71;
+		end
+		else if (global_var(QUEST_VAULT13_4_WATERCHIP) == 0) then begin
+			/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
+				call over28;
 			end
 			else begin
-
-				if (global_var(QUEST_VAULT13_4_WATERCHIP) == 0) then begin
-					/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
-						call over28;
-					end
-					else begin
-						if (Visits_without_chip == 1) then begin
-							call over07;
-						end
-						else begin
-							if (Visits_without_chip == 2) then begin
-								call over12;
-							end
-							else begin
-								if (Visits_without_chip > 2) then begin
-									call over19;
-								end
-							end
-						end
-						Visits_without_chip := Visits_without_chip + 1;
-					end
-
+				if (Visits_without_chip == 1) then begin
+					call over07;
 				end
-				else begin
+				else if (Visits_without_chip == 2) then begin
+					call over12;
+				end
+				else if (Visits_without_chip > 2) then begin
+					call over19;
+				end
+				Visits_without_chip := Visits_without_chip + 1;
+			end
 
-					if (global_var(QUEST_VAULT13_4_WATERCHIP) == 1) then begin
-						/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
-							call over28;
-						end
-						else begin
-							if (Visits_with_caravans == 1) then begin
-								call over73;
-							end
-							else begin
-								if (Visits_with_caravans > 1) then begin
-									call over80;
-								end
-							end
-						end
-						Visits_with_caravans := Visits_with_caravans + 1;
-
-					end
-					else begin
-
-						if (not(global_var(VATS_BLOWN))) then begin
-							if (global_var(MASTER_BLOWN)) then begin
-								call over54;
-							end
-							else begin
-								if (Visits_master_alive == 1) then begin
-									call over42;
-								end
-								else begin
-									call over50;
-								end
-							end
-							Visits_master_alive := Visits_master_alive + 1;
-						end
-						else begin
-							if (global_var(MASTER_BLOWN)) then begin
-								call over81;
-							end
-							else begin
-								if (Visits_vats_blown == 1) then begin
-									call over62;
-								end
-								else begin
-									call over68;
-								end
-							end
-							Visits_vats_blown := Visits_vats_blown + 1;
-						end
-
-					end
+		end
+		else if (global_var(QUEST_VAULT13_4_WATERCHIP) == 1) then begin
+			if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
+				call over28;
+			end
+			else begin
+				if (Visits_with_caravans == 1) then begin
+					call over73;
+				end
+				else if (Visits_with_caravans > 1) then begin
+					call over80;
 				end
 			end
-		end
+			Visits_with_caravans := Visits_with_caravans + 1;
 
+		end
+		else begin
+
+			if (not(global_var(VATS_BLOWN))) then begin
+				if (global_var(MASTER_BLOWN)) then begin
+					call over54;
+				end
+				else begin
+					if (Visits_master_alive == 1) then begin
+						call over42;
+					end
+					else begin
+						call over50;
+					end
+				end
+				Visits_master_alive := Visits_master_alive + 1;
+			end
+			else if (global_var(MASTER_BLOWN)) then begin
+				call over81;
+			end
+			else if (Visits_vats_blown == 1) then begin
+				call over62;
+			end
+			else begin
+				call over68;
+			end
+			Visits_vats_blown := Visits_vats_blown + 1;
+		end
 	end
+
 	gsay_end;
 	end_dialogue;
+
 	if (Ian_ptr != 0) then begin
-		if (local_var(7) == 0) then begin
+		if (local_var(LVAR_IanFloat) == 0) then begin
 			float_msg(Ian_ptr, message_str(SCRIPT_IAN, 171), 0);
-			set_local_var(7, 1);
+			set_local_var(LVAR_IanFloat, 1);
 		end
 	end
-	if (local_var(4) == 1) then begin
-		LVar0 := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
-		rm_obj_from_inven(dude_obj, LVar0);
+	if (local_var(LVAR_Herebefore) == 1) then begin
+		item := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
+		rm_obj_from_inven(dude_obj, item);
 		if global_var(FADE_TIMES_INCREASED) then begin
 			gfade_out(1);
 			gfade_out(1);
@@ -383,7 +379,7 @@ procedure talk_p_proc begin
 		gfade_out(1);
 		display_msg(message_str(SCRIPT_OVER, 252));
 		give_exp_points(EXP_RETURN_WATERCHIP);
-		set_local_var(4, 2);
+		set_local_var(LVAR_WaterChipReturned, 2);
 		move_to(dude_obj, 21135, 2);
 		display_msg(message_str(SCRIPT_WTRGRD, 117));
 		gfade_in(1);
@@ -414,7 +410,7 @@ end
 
 procedure over00
 begin
-	HEREBEFORE := 1;
+	set_local_var(LVAR_Herebefore,1);
 	gsay_message(55, 101, 50);
 	gsay_message(55, 102, 50);
 	call over01;
@@ -537,7 +533,7 @@ procedure over22
 begin
 	gsay_reply(55, 137);
 	giq_option(6, 55, 138, over23, 50);
-	if (not(local_var(5))) then begin
+	if (not(local_var(LVAR_GiveMoreItems))) then begin
 		giq_option(6, 55, 139, over24, 50);
 	end
 	giq_option(6, 55, 140, over25, 50);
@@ -551,7 +547,7 @@ end
 procedure over24
 begin
 	variable LVar0 := 0;
-	set_local_var(5, 1);
+	set_local_var(LVAR_GiveMoreItems, 1);
 	LVar0 := create_object_sid(PID_STIMPAK, 0, 0, -1);
 	add_obj_to_inven(dude_obj, LVar0);
 	LVar0 := create_object_sid(PID_STIMPAK, 0, 0, -1);
@@ -593,7 +589,7 @@ end
 procedure over29
 begin
 	gsay_message(55, 154, 50);
-	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
+	if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
 		call over31;
 	end
 	else begin
@@ -619,7 +615,7 @@ procedure over31 begin
 	if (global_var(QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
 		set_global_var(QUEST_VAULT13_5_WTR_THIEF, 3);
 	end
-	set_local_var(4, 1);
+	set_local_var(LVAR_WaterChipReturned, 1);
 	LVar0 := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
 	destroy_object(LVar0);
 	LVar1 := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
@@ -676,10 +672,7 @@ begin
 	giq_option(0, 55, 196, over40, 50);
 end
 
-procedure over40
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
+procedure over40 begin
 	Visits_with_chip := Visits_with_chip + 1;
 	set_global_var(QUEST_VAULT13_4_WATERCHIP, 2);
 	if (global_var(QUEST_VAULT13_1_REBELS) != 2) then begin
@@ -688,11 +681,11 @@ begin
 	if (global_var(QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
 		set_global_var(QUEST_VAULT13_5_WTR_THIEF, 3);
 	end
-	set_local_var(4, 1);
-	LVar0 := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
-	destroy_object(LVar0);
-	LVar1 := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
-	destroy_object(LVar1);
+	set_local_var(LVAR_WaterChipReturned , 1);
+	item := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
+	destroy_object(item);
+	item := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
+	destroy_object(item);
 	gsay_reply(55, 170);
 	giq_option(-3, 55, 171, over41, 50);
 	giq_option(-3, 55, 172, over41a, 50);
@@ -877,7 +870,7 @@ end
 procedure over72
 begin
 	gsay_reply(55, 231);
-	set_local_var(8, 1);
+	set_local_var(LVAR_Hostile, 1);
 	giq_option(4, 55, 259, overcbt, 51);
 	giq_option(-3, 55, 234, overcbt, 51);
 end
@@ -930,8 +923,8 @@ end
 
 procedure over81
 begin
-	set_local_var(6, 1);
-	set_local_var(8, 1);
+	set_local_var(LVAR_Endgame, 1);
+	set_local_var(LVAR_Hostile, 1);
 	TopReact;
 	gsay_reply(55, 261);
 	giq_option(0, 634, 106, Over81b, 49);
@@ -990,22 +983,6 @@ begin
 	gsay_message(55, 251, 50);
 end
 
-procedure destroy_p_proc
-begin
-	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-			set_global_var(OVERSEER_KILLED, 1);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-			set_global_var(OVERSEER_KILLED, 1);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+procedure destroy_p_proc begin
+	inc_good_critter
 end

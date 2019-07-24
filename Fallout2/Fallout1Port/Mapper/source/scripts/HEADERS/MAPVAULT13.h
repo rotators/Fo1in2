@@ -1,11 +1,11 @@
 /*
 
 	Necropolis header
-	
+
 */
 
-#ifndef MAPV13CAVE_H
-#define MAPV13CAVE_H
+#ifndef MAPVAULT13_H
+#define MAPVAULT13_H
 
 /************************************************
     Generic Defines
@@ -21,4 +21,4 @@
 // All Map Vars need to start w/ MVAR_
 
 
-#endif // MAPV13CAVE_H
+#endif // MAPVAULT13_H
