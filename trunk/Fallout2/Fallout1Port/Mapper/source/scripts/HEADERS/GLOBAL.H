@@ -13,6 +13,14 @@
 #define NUM_BAD_MONSTERS_KILLED					(4)		// was 160 (1160) in Fallout 1
 #define NUM_GOOD_MONSTERS_KILLED				(5)		// was 159 (1159) in Fallout 1
 
+// Fo2 defines: Remove old Fo1 names at some point
+#define GVAR_PLAYER_REPUTATION 					(0)
+#define GVAR_CHILDKILLER_REPUTATION				(1)
+#define GVAR_CHAMPION_REPUTATION 				(2)
+#define GVAR_BERSERKER_REPUTATION				(3)
+#define GVAR_BAD_MONSTER						(4)
+#define GVAR_GOOD_MONSTER						(5)
+
 // Addictions - HARDCODED TO THESE GVAR SLOTS
 #define IS_NUKA_COLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
 #define IS_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
