@@ -1,41 +1,19 @@
 #include "..\headers\define.h"
 
 procedure start;
-import variable vault_door_ptr;
-procedure damage_p_proc;//    script_action == 14
-procedure description_p_proc;//    script_action == 3
+procedure damage_p_proc;
+procedure description_p_proc;
 procedure look_at_p_proc;
-procedure timed_event_p_proc;//	script_action == 22
-procedure use_p_proc;//    script_action == 6
+procedure timed_event_p_proc;
+procedure use_p_proc;
+
 procedure Banished00;
 procedure Banished01;
 procedure Banished02;
 
-procedure start
-begin
-	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-		call description_p_proc;
-	end
-	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			call use_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-					call damage_p_proc;
-				end
-				else begin
-					if (script_action == 22) then begin
-						call timed_event_p_proc;
-					end
-				end
-			end
-		end
-	end
+import variable vault_door_ptr;
+
+procedure start begin
 end
 
 procedure timed_event_p_proc
@@ -44,23 +22,25 @@ begin
 		display_msg(message_str(SCRIPT_V13COMP, 124));
 		add_timer_event(self_obj, game_ticks(10), 2);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			set_global_var(VAULT13_WATER_DAYS_LEFT, 0);
-			game_ui_disable;
-			gfade_out(1);
-			play_gmovie(BOIL3_MOVIE);// <-- Dehydration. Vault drowns, bro! Oops, opposite of drowning actually. anti-drowns. -- was 6 before
-			gfade_in(1);
-			game_ui_enable;
-			if global_var(CAN_PLAY_AFTER_V13_DEAD) < 2 then begin
-				signal_end_game;
-			end
+	else if (fixed_param == 2) then begin
+
+		set_global_var(VAULT13_WATER_DAYS_LEFT, 0);
+		game_ui_disable;
+
+		gfade_out(1);
+		play_gmovie(BOIL3_MOVIE);// <-- Dehydration. Vault drowns, bro! Oops, opposite of drowning actually. anti-drowns. -- was 6 before
+		gfade_in(1);
+
+		game_ui_enable;
+
+		if global_var(CAN_PLAY_AFTER_V13_DEAD) < 2 then begin
+			signal_end_game;
 		end
+
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	script_overrides;
 	if not(local_var(1)) then begin
 		set_local_var(1, 1);
@@ -86,8 +66,7 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	if not(local_var(1)) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_V13COMP, 103));
@@ -98,17 +77,16 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if local_var(1) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_V13COMP, 118));
 	end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	script_overrides;
+
 	if local_var(1) then begin
 		display_msg(message_str(SCRIPT_V13COMP, 123));
 	end
@@ -133,6 +111,7 @@ begin
 			end
 		end
 	end
+
 end
 
 procedure Banished00
