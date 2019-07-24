@@ -78,7 +78,7 @@ begin
 	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
 		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
 			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
-				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if get_critter_stat(self_obj, STAT_max_hp) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
 				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
 					variable A; if obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
 				set_local_var(12, 1);
@@ -157,19 +157,19 @@ begin
 	else begin
 		start_gdialog(708, self_obj, 4, -1, -1);
 		gsay_start;
-		set_local_var(4, (random(200, 209) + (get_critter_stat(dude_obj, 34) * 10)));// add 10 if player is female
+		set_local_var(4, (random(200, 209) + (get_critter_stat(dude_obj, STAT_gender) * 10)));// add 10 if player is female
 		call hooker00;
 		gsay_end;
 		end_dialogue;
 		if FloatWhenDone then begin
-			FloatMsg := (random(206, 209) + (get_critter_stat(dude_obj, 34) * 10));
+			FloatMsg := (random(206, 209) + (get_critter_stat(dude_obj, STAT_gender) * 10));
 			while(FloatMsg == local_var(4)) do
 			begin
-				FloatMsg := (random(206, 209) + (get_critter_stat(dude_obj, 34) * 10));
+				FloatMsg := (random(206, 209) + (get_critter_stat(dude_obj, STAT_gender) * 10));
 			end
 			float_msg(self_obj, message_str(SCRIPT_HHOOKER, FloatMsg), 2);
 		end
-		if (get_critter_stat(dude_obj, 4) <= 3) then begin
+		if (get_critter_stat(dude_obj, STAT_iq) <= 3) then begin
 			float_msg(self_obj, message_str(SCRIPT_HHOOKER, 262), 2);
 		end
 	end
@@ -242,7 +242,7 @@ begin
 		gfade_out(1);
 	end
 	gfade_out(1);
-	game_time_advance(random(1, ((10 * 60 * 2 * get_critter_stat(dude_obj, 0)) + (10 * 60 * 7 * get_critter_stat(dude_obj, 2)))));// random between 1 minute and (2*STR)+(7*END)
+	game_time_advance(random(1, ((10 * 60 * 2 * get_critter_stat(dude_obj, STAT_st)) + (10 * 60 * 7 * get_critter_stat(dude_obj, STAT_en)))));// random between 1 minute and (2*STR)+(7*END)
 	gfade_in(1);
 	gsay_reply(708, 261);
 	giq_option(-3, 708, 265, enddialog, 51);
@@ -272,12 +272,12 @@ procedure hooker02// just player
 begin
 //Charisma
 	AskedHowMuch := 1;
-	if (get_critter_stat(dude_obj, 3) < 4) then begin
+	if (get_critter_stat(dude_obj, STAT_ch) < 4) then begin
 		set_local_var(5, 30);
 		gsay_reply(708, message_str(SCRIPT_HHOOKER, 247) + local_var(5) + message_str(SCRIPT_HHOOKER, 300));
 	end
 	else begin
-		if (get_critter_stat(dude_obj, 3) > 7) then begin
+		if (get_critter_stat(dude_obj, STAT_ch) > 7) then begin
 			set_local_var(5, 10);
 			gsay_reply(708, message_str(SCRIPT_HHOOKER, 248) + local_var(5) + message_str(SCRIPT_HHOOKER, 300));
 		end
@@ -298,12 +298,12 @@ end
 procedure hooker03// group action
 begin
 //Charisma
-	if (get_critter_stat(dude_obj, 3) < 4) then begin
+	if (get_critter_stat(dude_obj, STAT_ch) < 4) then begin
 		set_local_var(5, 125);
 		gsay_reply(708, message_str(SCRIPT_HHOOKER, 247) + local_var(5) + message_str(SCRIPT_HHOOKER, 300));
 	end
 	else begin
-		if (get_critter_stat(dude_obj, 3) > 7) then begin
+		if (get_critter_stat(dude_obj, STAT_ch) > 7) then begin
 			set_local_var(5, 75);
 			gsay_reply(708, message_str(SCRIPT_HHOOKER, 248) + local_var(5) + message_str(SCRIPT_HHOOKER, 300));
 		end
@@ -324,12 +324,12 @@ end
 procedure hooker04// just player, didn't start by asking "How much?"
 begin
 //Charisma
-	if (get_critter_stat(dude_obj, 3) < 4) then begin
+	if (get_critter_stat(dude_obj, STAT_ch) < 4) then begin
 		set_local_var(5, 30);
 		gsay_reply(708, message_str(SCRIPT_HHOOKER, 247) + local_var(5) + message_str(SCRIPT_HHOOKER, 300));
 	end
 	else begin
-		if (get_critter_stat(dude_obj, 3) > 7) then begin
+		if (get_critter_stat(dude_obj, STAT_ch) > 7) then begin
 			set_local_var(5, 10);
 			gsay_reply(708, message_str(SCRIPT_HHOOKER, 248) + local_var(5) + message_str(SCRIPT_HHOOKER, 300));
 		end
@@ -380,7 +380,7 @@ begin
 		gfade_out(1);
 	end
 	gfade_out(1);
-	game_time_advance(random(1, ((10 * 60 * 2 * get_critter_stat(dude_obj, 0)) + (10 * 60 * 7 * get_critter_stat(dude_obj, 2)))));// random between 1 minute and (2*STR)+(7*END)
+	game_time_advance(random(1, ((10 * 60 * 2 * get_critter_stat(dude_obj, STAT_st)) + (10 * 60 * 7 * get_critter_stat(dude_obj, STAT_en)))));// random between 1 minute and (2*STR)+(7*END)
 	gfade_in(1);
 	if local_var(6) then begin// does she know player
 		gsay_reply(708, 256);
@@ -401,7 +401,7 @@ begin
 		gfade_out(1);
 	end
 	gfade_out(1);
-	game_time_advance(random(1, (((10 * 60 * 2 * get_critter_stat(dude_obj, 0)) + (10 * 60 * 7 * get_critter_stat(dude_obj, 2))) * 2)));// random between 1 minute and (2*STR)+(7*END), times 2 for being a group
+	game_time_advance(random(1, (((10 * 60 * 2 * get_critter_stat(dude_obj, STAT_st)) + (10 * 60 * 7 * get_critter_stat(dude_obj, STAT_en))) * 2)));// random between 1 minute and (2*STR)+(7*END), times 2 for being a group
 	gfade_in(1);
 	if local_var(6) then begin// does she know player
 		gsay_reply(708, 256);
@@ -486,7 +486,7 @@ begin
 		set_local_var(0, 50);
 		set_local_var(1, 2);
 		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
 		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
 		if (has_trait(0, dude_obj, 39)) then begin
 			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
@@ -605,4 +605,3 @@ procedure Goodbyes
 begin
 	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 end
-

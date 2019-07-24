@@ -77,8 +77,8 @@ begin
 				while(Encounter_Num == 0) do begin
 					Encounter_Num := (random(0, 8) + random(0, 8) + random(0, 8));// vanilla was 3d6, mine is 3d9
 					if global_var(FIXT_BUGFIXES_ONLY) or (global_var(RANDOM_ENC_IGNORE_LUCK) == 0) then begin//if NOT set to ignore Luck in factoring EncNum
-						if (get_critter_stat(dude_obj, 6) < 4) or (get_critter_stat(dude_obj, 6) > 7) then begin
-							if (get_critter_stat(dude_obj, 6) == 10) then begin
+						if (get_critter_stat(dude_obj, STAT_lu) < 4) or (get_critter_stat(dude_obj, STAT_lu) > 7) then begin
+							if (get_critter_stat(dude_obj, STAT_lu) == 10) then begin
 								if (difficulty_level == 2) then begin
 									Encounter_Num := (Encounter_Num + 1);
 								end
@@ -94,7 +94,7 @@ begin
 								end
 							end
 							else begin
-								if (get_critter_stat(dude_obj, 6) == 9) then begin
+								if (get_critter_stat(dude_obj, STAT_lu) == 9) then begin
 									if (difficulty_level == 2) or (difficulty_level == 1) then begin
 										Encounter_Num := (Encounter_Num + 1);
 									end
@@ -105,19 +105,19 @@ begin
 									end
 								end
 								else begin
-									if (get_critter_stat(dude_obj, 6) == 8) then begin
+									if (get_critter_stat(dude_obj, STAT_lu) == 8) then begin
 										if (difficulty_level == 1) or (difficulty_level == 0) then begin
 											Encounter_Num := (Encounter_Num + 1);
 										end
 									end
 									else begin
-										if (get_critter_stat(dude_obj, 6) == 3) then begin
+										if (get_critter_stat(dude_obj, STAT_lu) == 3) then begin
 											if (difficulty_level == 2) or (difficulty_level == 1) then begin
 												Encounter_Num := (Encounter_Num - 1);
 											end
 										end
 										else begin
-											if (get_critter_stat(dude_obj, 6) == 2) then begin
+											if (get_critter_stat(dude_obj, STAT_lu) == 2) then begin
 												if (difficulty_level == 1) or (difficulty_level == 0) then begin
 													Encounter_Num := (Encounter_Num - 1);
 												end
@@ -128,7 +128,7 @@ begin
 												end
 											end
 											else begin
-												if (get_critter_stat(dude_obj, 6) == 1) then begin
+												if (get_critter_stat(dude_obj, STAT_lu) == 1) then begin
 													if (difficulty_level == 2) then begin
 														Encounter_Num := (Encounter_Num - 3);
 													end
@@ -345,7 +345,7 @@ procedure stranger
 begin
 	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 		if global_var(MYST_STRANGER_LUCK_BASED) then begin
-			if (has_trait(0, dude_obj, 46) and (global_var(MYST_STRANGER_DEAD) == 0) and (random(1, 10) < (get_critter_stat(dude_obj, 6) - 1))) then begin
+			if (has_trait(0, dude_obj, 46) and (global_var(MYST_STRANGER_DEAD) == 0) and (random(1, 10) < (get_critter_stat(dude_obj, STAT_lu) - 1))) then begin
 				Critter_type := PID_MYSTERIOUS_STRANGER;
 				Critter_script := SCRIPT_MYSTSTRN;
 				Critter_direction := random(0, 1);
@@ -651,7 +651,7 @@ begin
 		wield_obj_critter(Critter, Item);
 		Item := create_object_sid(PID_STIMPAK, 0, 0, -1);// stimpak
 		add_mult_objs_to_inven(Critter, Item, 2);
-		item_caps_adjust(Critter, random(1, get_critter_stat(dude_obj, 6)));
+		item_caps_adjust(Critter, random(1, get_critter_stat(dude_obj, STAT_lu)));
 	end
 //
 // Pistol extra
@@ -720,7 +720,7 @@ begin
 		wield_obj_critter(Critter, Item);
 		Item := create_object_sid(PID_STIMPAK, 0, 0, -1);// stimpak
 		add_mult_objs_to_inven(Critter, Item, 1);
-		item_caps_adjust(Critter, random(1, get_critter_stat(dude_obj, 6)));
+		item_caps_adjust(Critter, random(1, get_critter_stat(dude_obj, STAT_lu)));
 	end
 //
 // Longrange extra
@@ -755,7 +755,7 @@ begin
 		wield_obj_critter(Critter, Item);
 		Item := create_object_sid(PID_STIMPAK, 0, 0, -1);// stimpak
 		add_mult_objs_to_inven(Critter, Item, 1);
-		item_caps_adjust(Critter, random(1, get_critter_stat(dude_obj, 6)));
+		item_caps_adjust(Critter, random(1, get_critter_stat(dude_obj, STAT_lu)));
 	end
 	call stranger;
 end
@@ -766,8 +766,8 @@ begin
 	variable Luck_roll := 0;
 	variable Per_roll := 0;
 
-	Per_roll := random(0, ((get_critter_stat(dude_obj, 1) - 5) * 3));// random min0 to max(-12% to +15%)
-	Luck_roll := random(0, (get_critter_stat(dude_obj, 6) - 5));// random min0 to max(-4% to +5%)
+	Per_roll := random(0, ((get_critter_stat(dude_obj, STAT_pe) - 5) * 3));// random min0 to max(-12% to +15%)
+	Luck_roll := random(0, (get_critter_stat(dude_obj, STAT_lu) - 5));// random min0 to max(-4% to +5%)
 
 	RollModifier := Per_roll + Luck_roll + (has_trait(0, dude_obj, 43) * 25) + (has_trait(0, dude_obj, 45) * 50);
 
@@ -816,8 +816,8 @@ begin
 	if map_var(0) != 0 then begin
 		display_msg(message_str(SCRIPT_RNDCOAST, 100));
 		set_global_var(MYST_STRANGER_ITEM, 12);
-		Outer_ring := (get_critter_stat(dude_obj, 1) / 3) + 7;
-		Inner_ring := (get_critter_stat(dude_obj, 1) / 3) + 4;
+		Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 7;
+		Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
 		Tot_Critter_A := random(3, 5);
 		if (restrict_range) then begin
 			group_angle := random(0, 1);
@@ -1510,4 +1510,3 @@ end
 procedure remove_party begin
 	set_remove_party
 end
-

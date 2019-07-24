@@ -87,13 +87,13 @@
 // Commented out movies are done in the C-engine.  JLR
 //#define INTERPLAY_LOGO_MOVIE_PC 	0 //   "iplogo.mve",  // Interplay logo.
 //#define INTRO_MOVIE             	1 //   "intro.mve",   // Intro.
-//#define OVERSEER_MOVIE			2 // ovrintro.mve	
-#define VATSEXPLODE_MOVIE			3 // vexpld.mve	
-#define CATHEXPLODE_MOVIE			4 // cathexp.mve	
-#define DIPEDV_MOVIE				5 // dipedv.mve	
-#define OVERRUN_MOVIE				6 // ovrrun.mve	
-#define WALKM_MOVIE					10 // walkm.mve	
-#define WALKW_MOVIE					11 // walkw.mve	
+//#define OVERSEER_MOVIE			2 // ovrintro.mve
+#define VATSEXPLODE_MOVIE			3 // vexpld.mve
+#define CATHEXPLODE_MOVIE			4 // cathexp.mve
+#define DIPEDV_MOVIE				5 // dipedv.mve
+#define OVERRUN_MOVIE				6 // ovrrun.mve
+#define WALKM_MOVIE					10 // walkm.mve
+#define WALKW_MOVIE					11 // walkw.mve
 #define BOIL1_MOVIE					12 // boil1.mve		// in-engine
 #define BOIL2_MOVIE					13 // boil2.mve		// in-engine
 #define BOIL3_MOVIE					14 // boil3.mve		// obj_dude script
@@ -370,7 +370,6 @@
 ///  strength, perception, endurance, charisma, intelligence, agility,
 ///  luck,   // luck MUST be the last basic stat
 // derived stats
-#define STAT_max_hit_points     (7)
 #define STAT_max_move_points    (8)
 #define STAT_ac                 (9)
 ///#define STAT_unarmed_dmg        (10)
