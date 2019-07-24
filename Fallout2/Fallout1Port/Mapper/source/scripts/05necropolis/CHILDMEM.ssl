@@ -64,7 +64,7 @@ begin
 	if local_var(12) != 1 then begin// Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.
 		if (map_first_run) then begin// Fallout Fixt lvar12 - first visit to map?
 			if metarule(22, 0) == 0 then begin// Fallout Fixt lvar12 - Not currently loading a save?
-				if get_critter_stat(self_obj, 7) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
+				if get_critter_stat(self_obj, STAT_max_hp) > 0 then begin critter_heal(self_obj, 999); end//    if obj_is_carrying_obj_pid(self_obj, PID_BAG) > 0 then begin display_msg("S-bag " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BACKPACK) > 0 then begin display_msg("Pack " + proto_data(obj_pid(self_obj), 1)); end  if obj_is_carrying_obj_pid(self_obj, PID_BROWN_BAG) > 0 then begin display_msg("M-bag " + proto_data(obj_pid(self_obj), 1)); end
 				if global_var(ARMOR_EQUIP_MOD) then begin if critter_inven_obj(self_obj, 0) <= 0 then begin// Equip held armor if not currently wearing any.
 					variable A; if obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING COMBAT ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_COMBAT_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING METAL ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_METAL_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER ARMOR..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_ARMOR); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING LEATHER JACKET..."); A := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end else begin if obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE) then begin debug_msg("Fallout Fixt - Warning: CRITTER " + obj_pid(self_obj) + " HAD ARMOR BUT EMPTY ARMOR SLOT. EQUIPPING ROBES..."); A := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE); rm_obj_from_inven(self_obj, A); add_obj_to_inven(self_obj, A); wield_obj_critter(self_obj, A); end end end end end end end
 				set_local_var(12, 1);
@@ -120,9 +120,9 @@ end
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	max_hp := get_critter_stat(dude_obj, 7);
-	current_hp := get_critter_stat(dude_obj, 35);
-	RADCOUNT := get_critter_stat(dude_obj, 37);
+	max_hp := get_critter_stat(dude_obj, STAT_max_hp);
+	current_hp := get_critter_stat(dude_obj, STAT_current_hp);
+	RADCOUNT := get_critter_stat(dude_obj, STAT_current_rad);
 	call get_reaction;
 	start_gdialog(41, self_obj, 4, -1, -1);
 	gsay_start;
@@ -133,9 +133,9 @@ end
 
 procedure pre_dialogue
 begin
-	max_hp := get_critter_stat(dude_obj, 7);
-	current_hp := get_critter_stat(dude_obj, 35);
-	RADCOUNT := get_critter_stat(dude_obj, 37);
+	max_hp := get_critter_stat(dude_obj, STAT_max_hp);
+	current_hp := get_critter_stat(dude_obj, STAT_current_hp);
+	RADCOUNT := get_critter_stat(dude_obj, STAT_current_rad);
 	if (local_var(4)) then begin
 		call child16;
 	end
@@ -170,7 +170,7 @@ end
 procedure child_pois
 begin
 	game_time_advance(game_ticks(1800));
-	cur_pois := get_critter_stat(dude_obj, 36);
+	cur_pois := get_critter_stat(dude_obj, STAT_current_poison);
 	poison(dude_obj, -cur_pois);
 	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
 end
@@ -236,13 +236,13 @@ begin
 	else begin
 		gsay_message(41, 109, 50);
 	end
-	if (get_critter_stat(dude_obj, 36) != 0) then begin
+	if (get_critter_stat(dude_obj, STAT_current_poison) != 0) then begin
 		gsay_message(41, 110, 50);
 	end
 	if (RADCOUNT > 50) then begin
 		gsay_message(41, 111, 50);
 	end
-	if ((hp_injured > 0) or (get_critter_stat(dude_obj, 36) != 0)) then begin
+	if ((hp_injured > 0) or (get_critter_stat(dude_obj, STAT_current_poison) != 0)) then begin
 		gsay_reply(41, message_str(SCRIPT_CHILDMEM, 113) + cost + message_str(SCRIPT_CHILDMEM, 114));
 		giq_option(3, 41, 115, child04a, 50);
 		giq_option(3, 41, 116, childend, 50);
@@ -276,7 +276,7 @@ end
 
 procedure child06
 begin
-	if (get_critter_stat(dude_obj, 34) == 0) then begin
+	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_message(41, 123, 50);
 	end
 	else begin
@@ -292,7 +292,7 @@ begin
 	if (hp_injured > 0) then begin
 		call child_heal;
 	end
-	if (get_critter_stat(dude_obj, 36) != 0) then begin
+	if (get_critter_stat(dude_obj, STAT_current_poison) != 0) then begin
 		call child_pois;
 	end
 	call child07;
@@ -386,7 +386,7 @@ begin
 		set_local_var(0, 50);
 		set_local_var(1, 2);
 		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, 3)) - 25);
+		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
 		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
 		if (has_trait(0, dude_obj, 39)) then begin
 			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
@@ -530,4 +530,3 @@ begin
 		end
 	end
 end
-

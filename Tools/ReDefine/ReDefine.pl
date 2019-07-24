@@ -226,12 +226,13 @@ sub GetOp
 
 	return ":=" if( $op_name eq "assign" );
 	return "==" if( $op_name eq "equals" );
-	return "+"  if( $op_name eq "add" );
 	return "!=" if( $op_name eq "notequals" );
 	return "<"  if( $op_name eq "lower" );
 	return "<=" if( $op_name eq "lowerequals" );
 	return ">"  if( $op_name eq "greater" );
 	return ">=" if( $op_name eq "greaterequals" );
+	return "+"  if( $op_name eq "add" );
+	return "+=" if( $op_name eq "addequals" );
 
 	return undef;
 }
@@ -242,12 +243,13 @@ sub GetOpName
 
 	return "assign"        if( $op eq ":=" );
 	return "equals"        if( $op eq "==" );
-	return "add"           if( $op eq "+" );
 	return "notequals"     if( $op eq "!=" );
 	return "lower"         if( $op eq "<" );
 	return "lowerequals"   if( $op eq "<=" );
 	return "greater"       if( $op eq ">" );
 	return "greaterequals" if( $op eq ">=" );
+	return "add"           if( $op eq "+" );
+	return "addequals"     if( $op eq "+=" );
 
 	return undef;
 }
