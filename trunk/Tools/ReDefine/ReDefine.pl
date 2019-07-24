@@ -710,7 +710,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					my $line_short = $line;
 					$line_short =~ s!^[\t\ ]*!!;
 					$line_short =~ s![\t\ ]*$!!;
-					my $warning_unknown = sprintf( "unknown %s<%d> : %s =>LINE<= %s", $val_type, $val, $line_info, $line_short );
+					my $warning_unknown = sprintf( "unknown %s<%d> : %s =LINE= %s", $val_type, $val, $line_info, $line_short );
 
 					$val = GetDefine( $val_type, $val, $warning_unknown );
 					if( $val ne $function_right )
