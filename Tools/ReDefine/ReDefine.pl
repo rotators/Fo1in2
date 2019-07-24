@@ -138,7 +138,7 @@ sub ReadDefines
 	}
 
 	my $count = scalar( keys( %{ $defines{$type} } ));
-	LOG( "Reading %s... found %d define%s with '%s' prefix", $filename, $count, $count != 1 ? "s" : "", $prefix );
+	LOG( "Reading %s... %d '%s' define%s", $filename, $count, $prefix, $count != 1 ? "s" : "" );
 }
 
 sub IsDefineType
@@ -214,20 +214,59 @@ sub GetDefine
 	return $value;
 }
 
-sub AddVariableAssign
+sub GetOp
 {
-	my( $name, $type ) = @_;
+	my( $op_name ) = @_;
 
-	if( !IsDefineType( $type ))
+	$op_name = lc( $op_name );
+
+	return ":=" if( $op_name eq "assign" );
+	return "==" if( $op_name eq "equals" );
+	return "+"  if( $op_name eq "add" );
+	return "!=" if( $op_name eq "notequals" );
+	return "<"  if( $op_name eq "lower" );
+	return "<=" if( $op_name eq "lowerequals" );
+	return ">"  if( $op_name eq "greater" );
+	return ">=" if( $op_name eq "greaterequals" );
+
+	return undef;
+}
+
+sub GetOpName
+{
+	my( $op ) = @_;
+
+	return "assign"        if( $op eq ":=" );
+	return "equals"        if( $op eq "==" );
+	return "add"           if( $op eq "+" );
+	return "notequals"     if( $op eq "!=" );
+	return "lower"         if( $op eq "<" );
+	return "lowerequals"   if( $op eq "<=" );
+	return "greater"       if( $op eq ">" );
+	return "greaterequals" if( $op eq ">=" );
+
+	return undef;
+}
+
+sub AddVariable
+{
+	my( $name, $op_name, $type ) = @_;
+	my $op = GetOp( $op_name );
+
+	if( !defined( $op ))
 	{
-		WARNING( "AddVariablessign: unknown define type<%s> : variable<%s>", $type, $name );
+		WARNING( "AddVariable: unknown op<%s> : variable<%s>", $op_name, $name );
+	}
+	elsif( !IsDefineType( $type ))
+	{
+		WARNING( "AddVariable: unknown define type<%s> : variable<%s> op_name<%s>", $type, $name, $op_name );
 		return;
 	}
 
 	$name = lc( $name );
-	$variables{names}{$name} = $type;
+	$variables{$op_name}{$name} = $type;
 
-	LOG( "Added variable assign: %s := %s", $name, $type );
+	LOG( "Added variable %s: %s %s %s", $op_name, $name, $op, $type );
 }
 
 sub AddVariableGuess
@@ -321,7 +360,11 @@ sub ReadConfig
 			my $count = scalar( @values );
 			my $bad_count = sprintf( "[%s]->%s : invalid number of values, skipped", $section, $variable );
 
-			if( $section eq "ReDefine" )
+			if( !$count )
+			{
+				WARNING( $bad_count );
+			}
+			elsif( $section eq "ReDefine" )
 			{
 				if( $variable eq "ScriptsDir" && length( $variable ))
 				{
@@ -340,7 +383,14 @@ sub ReadConfig
 					ReadDefines( $variable, $values[0], $values[1] );
 				}
 			}
-			elsif( $section eq "VariableAssign" )
+			elsif( $section eq "VariableGuess" )
+			{
+				if( $variable eq "VariableGuess" )
+				{
+					AddVariableGuess( @values ) if( $count );
+				}
+			}
+			elsif( substr( $section, 0, 8 ) eq "Variable" )
 			{
 				if( $count != 1 )
 				{
@@ -348,14 +398,18 @@ sub ReadConfig
 				}
 				else
 				{
-					AddVariableAssign( $variable, $value );
+					my $op_name = lc( substr( $section, 8 ));
+					if( defined( GetOp( $op_name )))
+					{
+						AddVariable( $variable, $op_name, $value );
+					}
+					else
+					{
+						$known = 0;
+					}
 				}
 			}
-			elsif( $section eq "VariableGuess" && $variable eq "VariableGuess" )
-			{
-				AddVariableGuess( @values ) if( $count );
-			}
-			elsif( $section eq "Functions" )
+			elsif( $section eq "Function" )
 			{
 				if( $count < 1 )
 				{
@@ -461,18 +515,28 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		my $line_old = $line;
 
 		# search for variables
-		my @variable_matches = $line =~ /[A-Za-z0-9_]+[\t\ ]*\:\=[\t\ ]*[0-9]+\;/g;
+		my @variable_matches = $line =~ /[A-Za-z0-9_]+[\t\ ]*[\:\=\!\<\>\+]+[\t\ ]*[0-9]+/g;
 		foreach my $variable_match( @variable_matches )
 		{
-			my( $variable_name, $variable_value ) = $variable_match =~ /([A-Za-z0-9_]+)[\t\ ]*\:\=[\t\ ]*([0-9]+)/;
-			#DEBUG( "VAR [%s] -> [%s]=[%s]: %s", $variable_match, $variable_name, $variable_value, $line_info );
+			my( $variable_name, $variable_op, $variable_value ) = $variable_match =~ /([A-Za-z0-9_]+)[\t\ ]*(.+?)[\t\ ]*([0-9]+)/;
+
+			my $variable_op_name = GetOpName( $variable_op );
+
+			if( !defined( $variable_op_name ))
+			{
+				if( $variable_op ne ":" && $variable_op ne "=" ) # comments
+				{
+					DEBUG( "op [%s] -> [%s] [%s] [%s]: %s", $variable_match, $variable_name, $variable_op, $variable_value, $line_info );
+				}
+				next;
+			}
 
 			my $var = lc( $variable_name );
 
-			if( exists( $variables{names}{$var} ))
+			if( exists( $variables{$variable_op_name} ) && exists( $variables{$variable_op_name}{$var} ))
 			{
 				my $val = int( $variable_value );
-				my $val_type = $variables{names}{$var};
+				my $val_type = $variables{$variable_op_name}{$var};
 
 				# prepare warning messages
 				my $line_short = $line;
@@ -485,7 +549,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 
 				if( $variable_value ne $val )
 				{
-					my $update = sprintf( "%s := %s;", $variable_name, $val );
+					my $update = sprintf( "%s %s %s", $variable_name, $variable_op, $val );
 					$line =~ s!$variable_match!$update!g;
 				}
 				
@@ -500,7 +564,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 
 					if( $variable_value ne $val )
 					{
-						my $update = sprintf( "%s := %s;", $variable_name, $val );
+						my $update = sprintf( "%s := %s", $variable_name, $val );
 						$line =~ s!$variable_match!$update!g;
 					}
 				}
