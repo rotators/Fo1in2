@@ -1,16 +1,26 @@
+/*
+
+	Shady Sands - Tandi
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
 
 #define NAME                    SCRIPT_TANDI
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
 
 #include "..\headers\command.h"
+#include "..\headers\ModReact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure damage_p_proc;//    script_action == 14
-procedure talk_p_proc;//    script_action == 11
-procedure map_update_p_proc;//    script_action == 23
-procedure map_enter_p_proc;//    script_action == 15
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;
+procedure talk_p_proc;
+procedure map_update_p_proc;
+procedure map_enter_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
 procedure push_p_proc;
 
 procedure tandi00;
@@ -85,47 +95,20 @@ procedure tandiend;
 
 procedure TandiSchedule;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
 import variable Tandi_Ptr;
 
-variable DESTROYED;
-variable KIDNAP;
-variable ILLEGAL;
-variable ILLEGBEFORE;
-variable TRESPASS;
 variable BYE;
-variable rndx;
-variable rndy;
-variable rndz;
-variable MALE;
-variable Counter;
 variable Only_Once := 1;
 variable tmp_hostile;
-variable exit_line;
-variable critter_tile := 0;
 variable CurrentMapNum;
 variable TANDI_SELF_ID := PID_TANDI;
 
 //---by Sduibek, for Fallout Fixt--
-procedure StepAside;
 procedure Tandi98;
 procedure Tandi99;
 procedure Tandi100;
 procedure TandiDumbChar;
 procedure TandiEndSDU;
-variable NewHex;
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
@@ -147,8 +130,8 @@ procedure TandiSex_x;
 procedure push_p_proc begin
 end
 
-procedure start
-begin
+procedure start begin
+
 	if (global_var(SHADY_SANDS_WAS_INVADED) == 1) and (global_var(TANDI_HIRELING_STATUS) != 5) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(9) != 1) then begin
@@ -158,61 +141,24 @@ begin
 			end
 		end
 	end
-	else begin
-		if Only_Once then begin
-			Only_Once := 0;
-			if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin
-				/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 2);
-			end
-			else begin
-				/* TEAM_NUM */  critter_add_trait(self_obj, 1, 6, 0);
-			end
-			/* AI_PACKET */  critter_add_trait(self_obj, 1, 5, 2);
-		end
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				call map_update_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-						script_overrides;
-						display_msg(message_str(SCRIPT_TANDI, 100));
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-								call destroy_p_proc;
-							end
-							else begin
-								if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-									call damage_p_proc;
-								end
-								else begin
-									if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-										tmp_hostile := 1;
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+
 end
 
-procedure destroy_p_proc
-begin
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_TANDI, 100));
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_TANDI, 100));
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure destroy_p_proc begin
 	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
 		party_remove(self_obj);
 		party_remove(Tandi_ptr);
@@ -222,25 +168,11 @@ begin
 	end
 	set_global_var(TANDI_HIRELING_STATUS, 3);
 
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 	Tandi_ptr := 0;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
 	CurrentMapNum := cur_map_index;
 	if (CurrentMapNum == 24) then begin//	RAIDERS.MAP
@@ -248,8 +180,8 @@ begin
 			float_msg(self_obj, message_str(SCRIPT_TANDI, 208), 2);
 		end
 		else begin
-			call get_reaction;
-			start_gdialog(57, self_obj, 4, 9, 13);
+			GetReaction;
+			start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_RAIDERS);
 			gsay_start;
 			if (global_var(TANDI_HEREBEFORE_RAIDERS) == 1) then begin
 				set_global_var(TANDI_TALKED_ABOUT, 1);
@@ -265,8 +197,8 @@ begin
 	end
 	else begin
 		if ((CurrentMapNum == 26) or (CurrentMapNum == 25)) then begin//	SHADY SANDS
-			call get_reaction;
-			start_gdialog(57, self_obj, 4, 9, 9);
+			GetReaction;
+			start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_SHADY);
 			gsay_start;
 			if (global_var(TANDI_HEREBEFORE_RAIDERS) == 1) then begin
 				if (global_var(TANDI_HIRELING_STATUS) == 0) then begin
@@ -294,45 +226,45 @@ begin
 			end_dialogue;
 		end
 		else begin
-			call get_reaction;
+			GetReaction;
 			if ((CurrentMapNum == 0) or (CurrentMapNum == 1) or (CurrentMapNum == 2)) then begin
-				start_gdialog(57, self_obj, 4, 9, 2);//was 14, DESERT
+				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//was 14, DESERT
 			end
 			else begin
 				if ((CurrentMapNum == 10) or (CurrentMapNum == 11) or (CurrentMapNum == 12)) then begin
-					start_gdialog(57, self_obj, 4, 9, 7);//JUNKTOWN
+					start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);//JUNKTOWN
 				end
 				else begin
 					if ((CurrentMapNum == 13) or (CurrentMapNum == 14) or (CurrentMapNum == 15)) then begin
-						start_gdialog(57, self_obj, 4, 9, 5);//BROTHERHOOD
+						start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_BHOOD);//BROTHERHOOD
 					end
 					else begin
 						if ((CurrentMapNum == 3) or (CurrentMapNum == 4) or (CurrentMapNum == 5)) then begin
-							start_gdialog(57, self_obj, 4, 9, 4);//NECROPOLIS
+							start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_NECROPOLIS);//NECROPOLIS
 						end
 						else begin
 							if ((CurrentMapNum == 6)) then begin
-								start_gdialog(57, self_obj, 4, 9, 10);//VAULT13
+								start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//VAULT13
 							end
 							else begin
 								if ((CurrentMapNum == 7)) then begin
 									if random(0,1) then begin
-										start_gdialog(57, self_obj, 4, 9, 2);//VAULTENT (15)
+										start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//VAULTENT (15)
 									end
 									else begin
-										start_gdialog(57, self_obj, 4, 9, 7);//VAULTENT (15)
+										start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);//VAULTENT (15)
 									end
 								end
 								else begin
 									if ((CurrentMapNum == 8) or (CurrentMapNum == 9)) then begin
-										start_gdialog(57, self_obj, 4, 9, 10);//start_gdialog(57, self_obj, 4, 9, 16);//VAULT_DEAD, need exception for tile27000+
+										start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//start_gdialog(57, self_obj, 4, 9, 16);//VAULT_DEAD, need exception for tile27000+
 									end
 									else begin
 										if ((CurrentMapNum == 16) or (CurrentMapNum == 35) or (CurrentMapNum == 37)) then begin
-											start_gdialog(57, self_obj, 4, 9, 10);//start_gdialog(57, self_obj, 4, 9, 15);//BLUE _CAVES_
+											start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//start_gdialog(57, self_obj, 4, 9, 15);//BLUE _CAVES_
 										end
 										else begin
-											start_gdialog(57, self_obj, 4, 9, 2);
+											start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);
 										end
 									end
 								end
@@ -384,7 +316,7 @@ end
 
 procedure tandi01a
 begin
-	call DownReact;
+	DownReact;
 	call tandi02;
 end
 
@@ -426,7 +358,7 @@ end
 
 procedure tandi12
 begin
-	call DownReact;
+	DownReact;
 	gsay_reply(57, 126);
 	call tandi00;
 end
@@ -566,12 +498,12 @@ end
 procedure tandi36a
 begin
 	if (global_var(FIXT_BUGFIXES_ONLY)) then begin
-		call BottomReact;
+		BottomReact;
 		call tandi27;
 	end
 	else begin
 		if (global_var(TANDI_SEX_ENABLED) == 0) then begin
-			call BottomReact;
+			BottomReact;
 			call tandi27;
 		end
 		else begin
@@ -580,7 +512,7 @@ begin
 					call TandiSex;
 				end
 				else begin
-					call BottomReact;
+					BottomReact;
 					call tandi27;
 				end
 			end
@@ -589,7 +521,7 @@ begin
 					call TandiSex;
 				end
 				else begin
-					call BottomReact;
+					BottomReact;
 					call tandi27;
 				end
 			end
@@ -916,92 +848,65 @@ procedure tandix2
 begin
 end
 
-procedure tandix3
-begin
-	critter_add_trait(self_obj, 1, 6, 0);
+procedure tandix3 begin
+	critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_PLAYER);
 end
 
-procedure tandix4
-begin
-	critter_add_trait(self_obj, 1, 6, 0);
+procedure tandix4 begin
+	critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_PLAYER);
 end
 
 procedure tandix5
 begin
 	set_local_var(5, 1);
-	critter_add_trait(self_obj, 1, 6, 0);
+	critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_PLAYER);
 end
 
-procedure tandiend
-begin
+procedure tandiend begin
 end
 
 procedure TandiSchedule
 begin
-	variable LVar0 := 0;
-	LVar0 := game_time_hour;
-	if (LVar0 == 600) then begin
+	variable getTime := 0;
+	getTime := game_time_hour;
+	if (getTime == 600) then begin
 		animate_move_obj_to_tile(self_obj, 18709, 0);
 	end
-	else begin
-		if (LVar0 == 610) then begin
-			animate_move_obj_to_tile(self_obj, 23232, 0);
-		end
-		else begin
-			if (LVar0 == 615) then begin
-				animate_move_obj_to_tile(self_obj, 18492, 0);
-			end
-			else begin
-				if (LVar0 == 645) then begin
-					animate_move_obj_to_tile(self_obj, 13565, 0);
-				end
-				else begin
-					if (LVar0 == 650) then begin
-						animate_move_obj_to_tile(self_obj, 15683, 0);
-					end
-					else begin
-						if (LVar0 == 1000) then begin
-							animate_move_obj_to_tile(self_obj, 18709, 0);
-						end
-						else begin
-							if (LVar0 == 1200) then begin
-								animate_move_obj_to_tile(self_obj, 24678, 0);
-							end
-							else begin
-								if (LVar0 == 1300) then begin
-									animate_move_obj_to_tile(self_obj, 23232, 0);
-								end
-								else begin
-									if (LVar0 == 1305) then begin
-										animate_move_obj_to_tile(self_obj, 23701, 0);
-									end
-									else begin
-										if (LVar0 == 1600) then begin
-											animate_move_obj_to_tile(self_obj, 17279, 0);
-										end
-										else begin
-											if (LVar0 == 1900) then begin
-												animate_move_obj_to_tile(self_obj, 13565, 0);
-											end
-											else begin
-												if (LVar0 == 1905) then begin
-													animate_move_obj_to_tile(self_obj, 18709, 0);
-												end
-												else begin
-													if (LVar0 == 2100) then begin
-														animate_move_obj_to_tile(self_obj, 24678, 0);
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (getTime == 610) then begin
+		animate_move_obj_to_tile(self_obj, 23232, 0);
+	end
+	else if (getTime == 615) then begin
+		animate_move_obj_to_tile(self_obj, 18492, 0);
+	end
+	else if (getTime == 645) then begin
+		animate_move_obj_to_tile(self_obj, 13565, 0);
+	end
+	else if (getTime == 650) then begin
+		animate_move_obj_to_tile(self_obj, 15683, 0);
+	end
+	else if (getTime == 1000) then begin
+		animate_move_obj_to_tile(self_obj, 18709, 0);
+	end
+	else if (getTime == 1200) then begin
+		animate_move_obj_to_tile(self_obj, 24678, 0);
+	end
+	else if (getTime == 1300) then begin
+		animate_move_obj_to_tile(self_obj, 23232, 0);
+	end
+	else if (getTime == 1305) then begin
+		animate_move_obj_to_tile(self_obj, 23701, 0);
+	end
+	else if (getTime == 1600) then begin
+		animate_move_obj_to_tile(self_obj, 17279, 0);
+	end
+	else if (getTime == 1900) then begin
+		animate_move_obj_to_tile(self_obj, 13565, 0);
+	end
+	else if (getTime == 1905) then begin
+		animate_move_obj_to_tile(self_obj, 18709, 0);
+	end
+	else if (getTime == 2100) then begin
+		animate_move_obj_to_tile(self_obj, 24678, 0);
 	end
 end
 
@@ -1009,8 +914,18 @@ procedure map_update_p_proc
 begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
+
+	if (map_first_run) then begin
+			if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin
+				critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_SHADY_SANDS);
+			end
+			else begin
+				critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_PLAYER);
+			end
+			critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_CAREFUL);
+	end
+
 	if ((cur_map_index == MAP_SHADYW) and (global_var(TANDI_HIRELING_STATUS) > 1)) then begin
 		if ((global_var(LOAD_MAP_INDEX) == 2) and (global_var(TANDI_LOCATION_TRACKER) == 3)) then begin
 			party_remove(self_obj);
@@ -1025,6 +940,7 @@ begin
 			end
 		end
 	end
+
 end
 
 procedure critter_p_proc
@@ -1179,128 +1095,8 @@ begin
 		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
 			set_local_var(0, local_var(0) - 20);
 		end
-		call ReactToLevel;
+		ReactToLevel;
 	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-end
-
-procedure StepAside
-begin
-	variable LVar0 := 0;
-	NewHex := 0;
-	LVar0 := random(0, 5);
-	LVar0 := random(0, 5);
-	LVar0 := random(0, 5);
-	if (LVar0 == 0) then begin
-		NewHex := (tile_num(self_obj) - 400);
-	end
-	if (LVar0 == 1) then begin
-		NewHex := (tile_num(self_obj) - 202);
-	end
-	if (LVar0 == 2) then begin
-		NewHex := (tile_num(self_obj) - 198);
-	end
-	if (LVar0 == 3) then begin
-		NewHex := (tile_num(self_obj) + 400);
-	end
-	if (LVar0 == 4) then begin
-		NewHex := (tile_num(self_obj) + 202);
-	end
-	if (LVar0 == 5) then begin
-		NewHex := (tile_num(self_obj) + 198);
-	end
-	script_overrides;
-	move_to(self_obj, NewHex, elevation(self_obj));
-	script_overrides;
-	float_msg(self_obj, message_str(SCRIPT_GENCHAT, random(300, 302)), 0);
 end
 
 procedure Tandi98
@@ -1336,13 +1132,13 @@ end
 procedure Tandi99
 begin
 	gsay_message(57, 137, 50);//{137}{TAND_16}{No problem. Anything else?}
-	call StepAside;
+	//call StepAside;
 end
 
 procedure Tandi100
 begin
 	gsay_message(57, 125, 51);//{125}{TAND_6}{Uh... I have to stand over here now. }
-	call StepAside;
+	//call StepAside;
 end
 
 procedure TandiDumbChar

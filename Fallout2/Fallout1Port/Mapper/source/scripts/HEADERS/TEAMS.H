@@ -7,7 +7,7 @@
 
 #define TEAM_PLAYER                             (0)
 #define TEAM_VAULT13							(1)
-//#define TEAM_									(2)
+#define TEAM_SHADY_SANDS						(2)
 //#define TEAM_									(3)
 //#define TEAM_									(4)
 //#define TEAM_									(5)

@@ -133,21 +133,29 @@
 //#define bad_phonemes       (11)
 
 // Head defines //
-#define HEAD_MARCUS         (1)     //marcus -- Party Member (found in Broken Hills)
-#define HEAD_MYRON          (2)     //Myron -- Party Member (found in New Reno)
-#define HEAD_ELDER          (3)     // Elder -- (found in Arroyo)
-#define HEAD_LYNETTE        (4)     // Lynette -- fount in Vault City
-#define HEAD_HAROLD         (5)     // HAROLD -- found in Gecko
-#define HEAD_TANDI          (6)     //  Tandi -- Leader of the NCR
-#define HEAD_COM_OFFICER    (7)     // Com Officer in Gecko
-#define HEAD_SULIK          (8)     // Sulik -- Party Member (found in Klamath)
-#define HEAD_PRESIDENT      (9)     // President of the Enclave
-#define HEAD_HAKUNIN        (10)    // Hakunin -- Found in Arroyo
-#define HEAD_BOSS           (11)
-#define HEAD_DYING_HAKUNIN  (12)
-#define HEAD_NOAH           (13)
-#define HEAD_LORRY          (14)
-#define HEAD_OBS         	(15)
+// Fallout 1
+#define HEAD_OVERSEER     (1)
+#define HEAD_MORPHEUS     (2)
+#define HEAD_LAURA        (3)
+#define HEAD_VREE         (4)
+#define HEAD_HARRY        (5)
+#define HEAD_MASTER       (6)
+#define HEAD_DECKER       (7)
+#define HEAD_BUTCH        (8)
+#define HEAD_TANDI        (9)
+#define HEAD_KILLIAN      (10)
+#define HEAD_LIEUTENANT   (11)
+#define HEAD_MAXSON       (12)
+#define HEAD_ARADESH      (13)
+#define HEAD_HAROLD       (14)
+#define HEAD_SET          (15)
+#define HEAD_CABBOT       (16)
+#define HEAD_LOXLEY       (17)
+#define HEAD_JAIN         (18)
+#define HEAD_NICOLE       (19)
+#define HEAD_RHOMBUS      (20)
+#define HEAD_GIZMO        (21)
+
 /*
 #define HEAD_OVERSEER    (1)  //ovrsr  -- vault
 */
