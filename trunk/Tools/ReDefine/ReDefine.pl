@@ -124,8 +124,8 @@ sub ReadDefines
 		next if( $line =~ /^\[\t\ ]*\/\// );
 
 		# find macros with given prefix
-		if( $line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Z0-9_]+)[\t\ ]+\(([0-9]+)\)/ ||
-			$line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Z0-9_]+)[\t\ ]+([0-9]+)/ )
+		if( $line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Za-z0-9_]+)[\t\ ]+\(([0-9]+)\)/ ||
+			$line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Za-z0-9_]+)[\t\ ]+([0-9]+)/ )
 		{
 			my $name  = $1;
 			my $value = int($2);
@@ -649,30 +649,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 				next if( $function_match !~ /^$function_name\(/ );
 				next if( $function_match !~ /\)$/ );
 
-				if( $function_match !~ /\)$/ )
-				{
-					WARNING( "invalid match<%s> : %s", $function_match, $line_info );
-					WARNING( "matches: [%s]", join( "],[", @function_matches ));
-					WARNING( "CONTENT %s", $line );
-					next;
-				}
-
 				my( undef, $function_open, $function_arguments, $function_close ) = $function_match =~ m/^([A-Za-z0-9_]+)(\([\t ]*)(.+)([\t\ ]*\)[\t\ ]*)$/;
-
-				# old sanity check
-				if( !$function_name || !$function_open || !$function_arguments || !$function_close )
-				{
-					LOG( "?? [%s] -> [%s]+[%s]+[%s]+[%s]",
-						$function_match || 'undef',
-						$function_name || 'undef',
-						$function_open || 'undef',
-						$function_arguments || 'undef',
-						$function_close || 'undef' );
-					LOG( "?> %s", $line_info );
-					LOG( "?> %s", $line_old );
-					LOG( "?> %s", $line );
-					exit;
-				}
 
 				# process return value operations
 				my $function_match_re = $function_match;
