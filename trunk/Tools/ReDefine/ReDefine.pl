@@ -21,22 +21,26 @@ my %variables;
 my %functions;
 my %raw;
 
-my $scripts_dir = "../../Fallout2/Fallout1Port/Mapper/source/scripts";
+my $scripts_dir;
 my $readOnly = 0;
 
-my $debug = 1;
+# 0 - do nothing
+# 1 - save to file
+# 2 - save to file and print to screen
+my $debug = 2;
 unlink( "ReDefine.DEBUG.log" ) if( -e "ReDefine.DEBUG.log" );
 sub DEBUG
 {
 	my( $text, @args ) = @_;
 
+	return if( !$debug );
 	$text = sprintf( $text, @args ) if( scalar( @args ));
 
 	return if( !length( $text ));
 
 	$text = sprintf( "DEBUG %s\n", $text );
 
-	print( $text ) if( $debug );
+	print( $text ) if( $debug >= 2 );
 
 	if( open( my $file, ">>", "ReDefine.DEBUG.log" ))
 	{
@@ -684,7 +688,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					my( $f, $function_left, $function_op, $function_right ) = $function_op_match =~/(^|.)(${function_match_re})[\t\ ]*([\:\=\!\<\>\+]+)[\t\ ]*([0-9]+)/;
 					my $function_op_name = GetOpName( $function_op );
 
-					DEBUG( "FUNC? %s -> (%s) [%s] [%s] [%s] %s", $function_op_match, $f, $function_left, $function_op, $function_right, $line_info );
+					#DEBUG( "FUNC? %s -> (%s) [%s] [%s] [%s] %s", $function_op_match, $f, $function_left, $function_op, $function_right, $line_info );
 
 					# extra caution
 					if( $f =~ /[A-Za-z0-9_]/ )
@@ -697,8 +701,8 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					{
 						next;
 					}
-					DEBUG( "FUNC! %s -> (%s) [%s] [%s] [%s] %s", $function_op_match, $f, $function_left, $function_op, $function_right, $line_info );
-
+					
+					#DEBUG( "FUNC! %s -> (%s) [%s] [%s] [%s] %s", $function_op_match, $f, $function_left, $function_op, $function_right, $line_info );
 					my $val_type = $functions{$function_name}{$function_op_name};
 					my $val = int( $function_right );
 
