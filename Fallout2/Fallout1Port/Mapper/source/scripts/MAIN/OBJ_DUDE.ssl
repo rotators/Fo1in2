@@ -27,10 +27,6 @@ procedure map_update_p_proc;
 procedure timed_event_p_proc;
 procedure use_skill_on_p_proc;
 
-procedure EndGame000;
-procedure EndGame001;
-procedure EndGame002;
-procedure End_Game;
 procedure KillCheck;
 variable ShootOverseer := 0;
 variable gun_ptr := 0;
@@ -181,8 +177,18 @@ procedure TalkCow;
 procedure UsedCar;
 procedure Slideshow;
 
+#define EVENT_END_GAME 						(3)
+#define EVENT_TIMEOUT 						(5)
+#define EVENT_SHOOT_OVERSEER 				(6)
+#define EVENT_SHOOT_OVERSEER_AUTO 		(7)
+//#define EVENT_??? 							(8)
+#define EVENT_ALLOW_PLAYER_CONTROL 		(9)
+#define EVENT_SHOOT_OVERSEER_KILLED 	(10)
 #define EVENT_COUNTDOWN_MASTER 			(11)
 #define EVENT_COUNTDOWN_VATS 				(12)
+
+#define in_mariposa 			((cmap == MAP_MBENT) or (cmap == MAP_MBSTRG12) or (cmap == MAP_MBVATS12))
+#define in_cathedral 		((cmap == MAP_CHILDRN1) or (cmap == MAP_CHILDRN2) or (cmap == MAP_MSTRLR12) or (cmap == MAP_MSTRLR34))
 
 procedure start begin
 	// Save the start date to check the water counter / days remaining, etc:
@@ -221,7 +227,7 @@ procedure combat_p_proc begin
 						signal_end_game;
 					end
 					else begin
-							display_msg(message_str(SCRIPT_MBENT, 100) + SecondsCombat + message_str(SCRIPT_MBENT, 101));//   "Time Left: XXX Seconds"
+						display_msg(message_str(SCRIPT_MBENT, 100) + SecondsCombat + message_str(SCRIPT_MBENT, 101));//   "Time Left: XXX Seconds"
 					end
 				end
 			end
@@ -237,7 +243,7 @@ procedure combat_p_proc begin
 							signal_end_game;
 						end
 						else begin
-								display_msg(message_str(SCRIPT_MASTER2, 100) + SecondsCombat + message_str(SCRIPT_MASTER2, 101));//   "Time Left: XXX Seconds"
+							display_msg(message_str(SCRIPT_MASTER2, 100) + SecondsCombat + message_str(SCRIPT_MASTER2, 101));//   "Time Left: XXX Seconds"
 						end
 					end
 				end
@@ -720,20 +726,16 @@ procedure critter_p_proc begin
 			set_global_var(DUDE_OBJ_POISONED, 1);// tracker
 		end
 	end
-	else begin
-		if (global_var(DUDE_OBJ_POISONED) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
-			set_global_var(DUDE_OBJ_POISONED, 0);//	<< Clear the "Player Is Poisoned" tracker
-			if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
-				display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
-			end
+	else if (global_var(DUDE_OBJ_POISONED) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
+		set_global_var(DUDE_OBJ_POISONED, 0);//	<< Clear the "Player Is Poisoned" tracker
+		if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
+			display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
 		end
 	end
 
 end
 
-procedure look_at_p_proc
-begin
-
+procedure look_at_p_proc begin
 	if global_var(CHEAT_DEBUG_MENU_ENABLED) or global_var(DEBUG_MODE_MESSAGES_ON) then begin
 		variable Hand_Item := 0;
 		variable Held_Item_PID := 0;
@@ -742,7 +744,6 @@ begin
 		if (get_critter_stat(dude_obj, 36) > 0) or (get_critter_stat(dude_obj, 37) > 0) then begin
 			display_msg("Current poison: " + get_critter_stat(dude_obj, 36) + ". " + "Current rads: " + get_critter_stat(dude_obj, 37) + ". " + "Current time: " + game_time_hour + ". ");
 		end
-
 	end
 end
 
@@ -758,8 +759,7 @@ procedure description_p_proc begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 //	variable map_explo_flag := 0;
 // Reset the Holodisk pointers to avoid crashes!
 	set_global_var(ARTIFACT_HOLODISK_POINTER, 0); // ARTIFACT
@@ -808,74 +808,66 @@ begin
 					set_global_var(PLAYER_INFORMED_10K, 1);
 				end
 			end
-			else begin
-				if (global_var(MASTER_BLOWN) == 1) then begin
-					if ((cur_map_index != MAP_CHILDRN1) and (cur_map_index != MAP_CHILDRN2) and (cur_map_index != MAP_MSTRLR12) and (cur_map_index != MAP_MSTRLR34)) then begin
-						set_global_var(PLAYER_INFORMED_10K, 1);
-						display_msg(message_str(SCRIPT_GENCHAT, 700));
-						set_global_var(PLAYER_INFORMED_10K, 1);
-					end
+			else if (global_var(MASTER_BLOWN) == 1) then begin
+				if ((cur_map_index != MAP_CHILDRN1) and (cur_map_index != MAP_CHILDRN2) and (cur_map_index != MAP_MSTRLR12) and (cur_map_index != MAP_MSTRLR34)) then begin
+					set_global_var(PLAYER_INFORMED_10K, 1);
+					display_msg(message_str(SCRIPT_GENCHAT, 700));
+					set_global_var(PLAYER_INFORMED_10K, 1);
 				end
 			end
 		end
 	end
 
+// TODO: Either put this into Sfall or think of something else entirely
 // Warn if from older version of Fixt:
-	if (metarule(22, 0) == 1) then begin// if Load Game is true. If going into actual dialog, CANNOT DO ON GAME LOAD, because it crashes.
+/*	if (metarule(22, 0) == 1) then begin// if Load Game is true. If going into actual dialog, CANNOT DO ON GAME LOAD, because it crashes.
 		if not(((global_var(FIXT_BASE_VERSION_NUM) == 7) and (global_var(FIXT_SUBVERSION_INSTALLED) == 1))) then begin// VERSION, SUBVERSION
 			if (global_var(FIXT_OLD_VERSION_WARNED) != 3) then begin// if FIXT_OLD_VERSION_WARNED hasn't been set
 				display_msg(message_str(SCRIPT_GENCHAT, 433));// Warning player when loading from old version
 				set_global_var(FIXT_OLD_VERSION_WARNED, 3);
 			end
 		end
-	end
+	end*/
 end
 
 procedure map_update_p_proc begin
 	variable cmap := 0;
 	cmap := cur_map_index;
 
-	if (cmap == 30) or (cmap == 31) or (cmap == 32) then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
+	if in_mariposa then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
 		if ((global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
 			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
-				add_timer_event(dude_obj, 0, 12);
+				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
 			end
 		end
 	end
-	else begin
-		if (cmap == 17) or (cmap == 18) or (cmap == 33) or (cmap == 34) then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
-			if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
-				if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
-					add_timer_event(dude_obj, 0, 11);
-				end
+	else if in_cathedral then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
+		if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
+			if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
 			end
 		end
-		else begin
-			if ((cmap >= 0) and (cmap <= 2)) or ((cmap >= 19) and (cmap <= 23)) or ((cmap >= 49) and (cmap <= 54)) then begin// Random Encounters, since sometimes lots of time will pass during these for things like resting, we want the Invasion timers to always be up-to-date when entering Towns after leaving a Random Encounter.
-				call Invasions;
-			end
-		end
+	end
+	else if ((cmap >= 0) and (cmap <= 2)) or ((cmap >= 19) and (cmap <= 23)) or ((cmap >= 49) and (cmap <= 54)) then begin// Random Encounters, since sometimes lots of time will pass during these for things like resting, we want the Invasion timers to always be up-to-date when entering Towns after leaving a Random Encounter.
+		call Invasions;
 	end
 
 end
 
 procedure timed_event_p_proc begin
-	if fixed_param == 1 then begin// EndGame Mod by Corpse
-		game_ui_disable;
-	end
-	else if fixed_param == 2 then begin// EndGame Mod by Corpse:
+	if fixed_param == EVENT_END_GAME then begin
+		debug("EVENT_END_GAME");
 		game_ui_enable;
+
+		set_story_finished;
 	end
-	else if fixed_param == 3 then begin
-		game_ui_enable;
-		endgame_movie;
-		signal_end_game;
-	end
-	else if fixed_param == 5 then begin
+	else if fixed_param == EVENT_TIMEOUT then begin
+		debug("EVENT_TIMEOUT");
 		game_ui_disable;
-		add_timer_event(dude_obj, 4, 6);
+		add_timer_event(dude_obj, 4, EVENT_SHOOT_OVERSEER);
 	end
-	else if fixed_param == 6 then begin
+	else if fixed_param == EVENT_SHOOT_OVERSEER then begin
+		debug("EVENT_SHOOT_OVERSEER");
 		ShootOverseer := 0;
 		call KillCheck;
 
@@ -888,51 +880,68 @@ procedure timed_event_p_proc begin
 			end
 
 			set_global_var(OVERSEER_KILLED, 2);
-			add_timer_event(dude_obj, 15, 7);//was 25
+			add_timer_event(dude_obj, 15, EVENT_SHOOT_OVERSEER_AUTO);//was 25
 		end
 		else begin
-			add_timer_event(dude_obj, 50, 9);//was 36
+			add_timer_event(dude_obj, 36, EVENT_ALLOW_PLAYER_CONTROL);//was 36
 		end
 	end
-	else if fixed_param == 7 then begin
+	else if fixed_param == EVENT_SHOOT_OVERSEER_AUTO then begin
+		debug("EVENT_SHOOT_OVERSEER_AUTO");
 		if global_var(DUDE_SHOOTS_OVERSEER) < 1 then begin
 			if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
 				reg_anim_func(2, map_var(0));
 				reg_anim_func(1, 1);
 				reg_anim_animate(dude_obj, 43, -1);
+
 				GunSoundAnim := sfx_build_weapon_name(1, gun_ptr, 0, map_var(0));
+
 				reg_anim_play_sfx(dude_obj, GunSoundAnim, -1);
 				reg_anim_animate(dude_obj, 45, -1);
+
 				GunSoundAnim := sfx_build_char_name(map_var(0), 20, 3);
+
 				reg_anim_play_sfx(map_var(0), GunSoundAnim, 0);
 				reg_anim_animate(map_var(0), 20, 0);
 				reg_anim_animate(dude_obj, 44, 0);
 				reg_anim_func(3, 0);
+
 				add_timer_event(dude_obj, game_ticks(10), 8);
 			end
 		end
 		set_global_var(DUDE_SHOOTS_OVERSEER, 1);
 	end
 	else if fixed_param == 8 then begin
+		debug("fixed_param 8");
 		game_ui_enable;
 		set_global_var(OVERSEER_END_SEQ, 7);// <-- EndGame Mod
-		add_timer_event(dude_obj, game_ticks(1), 10);
+		add_timer_event(dude_obj, game_ticks(1), EVENT_SHOOT_OVERSEER_KILLED);
 	end
-	else if fixed_param == 9 then begin
+	else if fixed_param == EVENT_ALLOW_PLAYER_CONTROL then begin
+		debug("EVENT_ALLOW_PLAYER_CONTROL");
+		set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
+		set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
+		set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
+
+		//game_ui_enable;
+		add_timer_event(dude_obj, 0, EVENT_END_GAME);
+		//game_ui_enable;
+
+	end
+	else if fixed_param == EVENT_SHOOT_OVERSEER_KILLED then begin
+		debug("EVENT_SHOOT_OVERSEER_KILLED");
 		game_ui_enable;
 		set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
 		set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
 		set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
-		//call EndGame000;
-	end
-	else if fixed_param == 10 then begin
-		game_ui_enable;
-		set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
-		set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
-		set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
-		//call EndGame000;
 		kill_critter_type(PID_OVERSEER, 1);//Overseer
+
+		set_story_finished;
 	end
+
+/*******************************************************************
+   Run the Mariposa and Cathedral bomb countdown
+*******************************************************************/
 	else if fixed_param == EVENT_COUNTDOWN_MASTER then begin
 		if (cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34) then begin
 			if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
@@ -1028,10 +1037,10 @@ procedure timed_event_p_proc begin
 			end
 		end
 	end
+
 end
 
-procedure KillCheck
-begin
+procedure KillCheck begin
 // This, as in vanilla, checks if the PC is a "bad guy", and if so, you'll slaughter the Overseer when he delivers the news.
 // Was under "fixed_param == 6" in timed_event -- Now has its own code routine. [Sduibek]
 	ShootOverseer := 0;
@@ -1065,48 +1074,6 @@ end
 procedure DisplayRadsPoison begin
 	Rads := get_critter_stat(dude_obj,37);//		STAT_current_rads
 	Poisonlvl := get_critter_stat(dude_obj,36);//		STAT_current_poison
-end
-
-//USEFUL COMMANDS:
-//	game_ui_is_disabled
-//	endgame_slideshow
-//	endgame_movie
-
-procedure EndGame000
-begin
-	game_ui_enable;
-	start_gdialog(66, dude_obj, 4, -1, -1);
-	gsay_start;
-	call EndGame001;
-	gsay_end;
-	end_dialogue;
-	game_ui_enable;
-end
-
-procedure EndGame001
-begin
-	gsay_reply(66, 5201);
-	giq_option(0, 66, 5203, EndGame002, 50);
-	giq_option(0, 66, 5202, End_Game, 50);
-end
-
-procedure EndGame002
-begin
-	set_global_var(GAME_CONTINUES, 1);
-	add_timer_event(dude_obj, 0, 2);
-//	add_timer_event(dude_obj, 1, 6);   <-- original?
-//	kill_critter(map_var(0), 1);       <-- original?
-end
-
-procedure End_Game
-begin
-	game_ui_enable;
-	add_timer_event(dude_obj, 20, 3);
-	game_ui_enable;
-//	end_dialogue;
-//	add_timer_event(dude_obj, 100, 2);
-//	endgame_movie;
-//	metarule(13, 0);
 end
 
 procedure Invasions begin

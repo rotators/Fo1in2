@@ -1,6 +1,6 @@
 #include "..\headers\define.h"
 #include "..\headers\command.h"
-#include "..\headers\MAPVAULT13.h"
+#include "..\headers\MAPV13ENT.h"
 
 export variable Dog_ptr;
 export variable Ian_ptr;
@@ -10,11 +10,12 @@ export variable Tycho_ptr;
 export variable vault_door_ptr;
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_exit_p_proc;//    script_action == 16
-procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;
+procedure map_exit_p_proc;
+procedure map_update_p_proc;
+procedure timed_event_p_proc;
 
-procedure Endgame_Info;
+procedure Endgame_Slides;
 
 procedure add_party;
 procedure base_inventory;
@@ -26,7 +27,6 @@ procedure endgame_part2;
 procedure endgame_part3;
 procedure endgame_part4;// Endgame Mod by Corpse
 procedure Lighting;
-procedure LoadMapCheat;// Fallout Fixt
 procedure NamedInven;
 procedure remove_over;// Endgame Mod by Corpse
 procedure remove_party;
@@ -37,6 +37,9 @@ variable endgame_running;
 variable party_elevation;
 variable item := 0;// for starting items creation
 variable NumItems := 0;// for starting items creation (Fallout Fixt)
+
+#define EVENT_END_1 		(1)
+#define EVENT_END_2 		(2)
 
 procedure start begin
 end
@@ -81,16 +84,13 @@ procedure map_enter_p_proc begin
 			override_map_start(136, 129, 0, 1);
 		end
 		call NamedInven;
-		if (global_var(CHEAT_MAPSTART_ENABLED) == 1) then begin
-			call LoadMapCheat;
-		end
-
 	end
 
 	// Check if we should run the endgame scene:
 	else begin
-		if (global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) and (endgame_running == 0)) then begin
-			call endgame_part0;//was 1 in vanilla
+		if ( (global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) and (endgame_running == 0)) and (not(is_story_finished)) ) then begin
+			//call endgame_part0;//was 1 in vanilla
+			call Endgame_Slides;
 		end
 		else begin
 			override_map_start(136, 129, 0, 1);
@@ -101,40 +101,62 @@ end
 
 procedure map_update_p_proc begin
 	call Lighting;
-	if (global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) and (endgame_running == 0)) then begin
-		call endgame_part0;//was 1 in vanilla
-	end
-	if (endgame_running == 1) then begin
-		call endgame_part2;
-	end
-	else begin
-		if (endgame_running == 2) then begin
-			call endgame_part3;
-		end
-		else begin
-			if (endgame_running == 3) then begin
-				call endgame_part4;
-			end
-		end
-	end
 	call update_party;
 end
 
 procedure map_exit_p_proc begin
-	//if (global_var(GAME_CONTINUES) == 1) then begin
-	//	call remove_over;
-	//end
-	//else begin
-		call remove_party;
-	//end
+	call remove_party;
+end
+
+procedure timed_event_p_proc begin
+variable Critter;
+
+	if (fixed_param == EVENT_END_1) then begin
+		debug("EG Scene 1 - Setup");
+
+		kill_critter_type(PID_RAT_CAVE, 0);
+
+		set_light_level(100);
+		override_map_start(90, 96, 0, 5);
+
+		gfade_out(1);
+		endgame_slideshow;
+		/*if global_var(FADE_TIMES_INCREASED) then begin
+			gfade_out(1);
+			gfade_out(1);
+		end
+		gfade_out(1);*/
+
+		endgame_running := 2;
+		add_timer_event(self_obj, game_ticks(0), EVENT_END_2);
+	end
+	else if (fixed_param == EVENT_END_2) then begin
+		debug("EG Scene 2 - Overseer approaching");
+
+		// Create the Overseer while the ending slides are running:
+		Critter := create_object_sid(PID_OVERSEER, 0, 0, SCRIPT_OVER);
+		set_map_var(0, Critter);
+		anim(Critter, 1000, 2);
+
+		// Move to the vault door and use it:
+		critter_attempt_placement(Critter, 15690, elevation(dude_obj));
+		use_obj(vault_door_ptr);
+
+		set_global_var(OVERSEER_END_SEQ, 1);
+		add_timer_event(vault_door_ptr, game_ticks(5), 1);
+		endgame_running := 3;
+	end
 end
 
 procedure Lighting begin
-	if not(endgame_running) and (global_var(OVERSEER_END_SEQ) == 0) and (global_var(ENDGAME_MOD_STUFF) == 0) then begin
+	if not(endgame_running) and (global_var(OVERSEER_END_SEQ) == 0) and (not(is_story_finished)) then begin
 		set_light_level(40);
 	end
 	else begin
-		set_light_level(100);
+		if is_story_finished then
+			set_light_level(40);
+		else
+			set_light_level(100);
 	end
 end
 
@@ -148,78 +170,6 @@ end
 
 procedure remove_party begin
 	set_remove_party
-end
-
-procedure endgame_part0 begin
-	if (global_var(GAME_CONTINUES) == 0) then begin
-		call endgame_part1;
-	end
-end
-
-procedure endgame_part1 begin
-	// Setup endgame slides:
-	call Endgame_Info;
-
-	kill_critter_type(PID_RAT_CAVE, 0);//Cave Rats
-	set_light_level(100);
-	override_map_start(90, 96, 0, 5);
-	set_global_var(ENDGAME_MOD_STUFF, 1);
-	endgame_slideshow;//"maybe_credits" in Fo2
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
-	gfade_out(1);
-//	gfade_in(1);
-//	endgame_movie;
-	endgame_running := 2;
-end
-
-procedure endgame_part2 begin
-	endgame_running := 2;
-end
-
-//procedure endgame_part3
-//begin
-//	variable LVar0 := 0;
-//	if ((global_var(ENDGAME_MOD_STUFF) == 0) and (map_var(0) == 0)) then begin
-//		LVar0 := create_object_sid(16777263, 0, 0, 55);
-//		set_map_var(0, LVar0);
-//		anim(LVar0, 1000, 2);
-//		critter_attempt_placement(LVar0, 18290, elevation(dude_obj));
-//		add_timer_event(dude_obj, 1, 5);
-//		endgame_running := 3;
-//	end
-//end
-
-procedure endgame_part3 begin
-	variable LVar1 := 0;
-	if (global_var(ENDGAME_MOD_STUFF) == 0) then begin
-		LVar1 := create_object_sid(PID_OVERSEER, 0, 0, SCRIPT_OVER);
-		set_map_var(0, LVar1);
-		anim(LVar1, 1000, 2);
-		critter_attempt_placement(LVar1, 15690, elevation(dude_obj));
-		use_obj(vault_door_ptr);
-		set_global_var(OVERSEER_END_SEQ, 1);
-		add_timer_event(vault_door_ptr, game_ticks(5), 1);
-		endgame_running := 3;
-	end
-end
-
-procedure endgame_part4 begin
-	if (global_var(OVERSEER_KILLED) == 1) then begin
-		if (obj_is_open(vault_door_ptr)) then begin
-			use_obj(vault_door_ptr);
-		end
-		else begin
-			if (global_var(OVERSEER_KILLED) == 2) then begin
-				if (obj_is_open(vault_door_ptr)) then begin
-					add_timer_event(vault_door_ptr, game_ticks(15), 1);
-				end
-			end
-		end
-	end
-
 end
 
 procedure remove_over begin
@@ -800,19 +750,12 @@ begin
 	add_mult_objs_to_inven(dude_obj, item, 1);
 end
 
-procedure LoadMapCheat
-begin
-	//load_map("MBVATS12.MAP", 1);
-	debug_msg(" ");
-	debug_msg("Map cheat upon character creation running... teleporting Player to new map...");
-	debug_msg(" ");
-	debug_msg(" ");
-	//load_map(3, 0);
-	//game_time_advance(10 * 60 * 60 * 12);//  for maps that like to start at night
-end
-
-procedure Endgame_Info begin
+/*******************************************************************
+   Set the outcome of the endgame slides.
+*******************************************************************/
+procedure Endgame_Slides begin
 // Start
+	// TODO: Add "Vats destroyed"-slide.
 	if (global_var(GVAR_ENDGAME_MOVIE_MUTANTS) == 0) then
 		set_end_Master;
 
@@ -888,6 +831,11 @@ procedure Endgame_Info begin
 
 // Vault Dweller
 	set_end_ending_vd;
+
+	add_timer_event(self_obj, game_ticks(0), EVENT_END_1);
 end
+
+
+
 
 

@@ -7,6 +7,20 @@
 #include "debug.h"
 
 //==============================================================
+// Generic:
+#define set_story_finished 		 		set_global_var(GAME_CONTINUES,100); \
+										if (dude_is_male) then \
+											play_gmovie(WALKM_MOVIE); \
+										else \
+											play_gmovie(WALKW_MOVIE); \
+										endgame_movie; \
+										gfade_out(1); \
+										world_map; \
+										gfade_in(1)
+										
+#define is_story_finished				(global_var(GAME_CONTINUES) > 0)
+
+//==============================================================
 // Water Timer related:
 #define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
 #define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
