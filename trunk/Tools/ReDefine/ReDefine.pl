@@ -259,7 +259,7 @@ sub AddVariable
 	}
 	elsif( !IsDefineType( $type ))
 	{
-		WARNING( "AddVariable: unknown define type<%s> : variable<%s> op_name<%s>", $type, $name, $op_name );
+		WARNING( "AddVariable: unknown define type<%s> : variable<%s> op<%s>", $type, $name, $op_name );
 		return;
 	}
 
@@ -305,6 +305,27 @@ sub AddFunction
 	}
 
 	LOG( "Added function: %s( %s )", $name, join( ", ", @types ));
+}
+
+sub AddFunctionOp
+{
+	my( $name, $op_name, $type ) = @_;
+	my $op = GetOp( $op_name );
+
+	if( !defined( $op ))
+	{
+		WARNING( "AddFuctionOp: unknown op<%s> : function<%s>", $op_name, $name );
+	}
+	elsif( !IsDefineType( $type ))
+	{
+		WARNING( "AddFuctionOp: unknown define type<%s> : function<%s> op<%s>", $type, $name, $op_name );
+		return;
+	}
+
+	$name = lc( $name );
+	$functions{$name}{$op_name} = $type;
+
+	LOG( "Added function %s: %s(...) %s %s", $op_name, $name, $op, $type );
 }
 
 sub AddRaw
@@ -422,6 +443,25 @@ sub ReadConfig
 				else
 				{
 					AddFunction( $variable, @values );
+				}
+			}
+			elsif( substr( $section, 0, 8 ) eq "Function" )
+			{
+				if( $count != 1 )
+				{
+					WARNING( $bad_count );
+				}
+				else
+				{
+					my $op_name = lc( substr( $section, 8 ));
+					if( defined( GetOp( $op_name )))
+					{
+						AddFunctionOp( $variable, $op_name, $value );
+					}
+					else
+					{
+						$known = 0;
+					}
 				}
 			}
 			elsif( $section eq "Raw" )
@@ -578,6 +618,7 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 		# search for functions
 		foreach my $function_name ( sort{$a cmp $b} keys( %functions ))
 		{
+			# extract functions
 			# this is an unsanctioned use of magical energy
 			my $re = qr{
 				(
@@ -629,92 +670,148 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 					exit;
 				}
 
-				# extract arguments
-				my @args;
-				push( @args, $1 ) while $function_arguments =~ /
-				(
-					(?:
-						[^(),]+ |
-						(
-							\(
-								(?: [^()]+ | (?2) )*
-							\)
-						)
-					)*
-				)
-				(?: ,\s* | $)
-				/xg;
-				pop( @args ); # last element is always empty for some reason
+				# process return value operations
+				my $function_match_re = $function_match;
+				$function_match_re =~ s!\(!\\\(!g;
+				$function_match_re =~ s!\)!\\\)!g;
+				$function_match_re =~ s!\+!\\\+!g;
+				$function_match_re =~ s!\*!\\\*!g;
 
-				my @args_old = @args;
-				#DEBUG( "args [%s] -> [%s] -> [%s]", $function_match, $function_arguments, join( "],[", @args ));
-
-				# process arguments
-				my( $arg_count, $idx ) = ( scalar( @args ), 0 );
-				for( $idx = 0; $idx < $arg_count; $idx++ )
+				# need extra caution here to not catch my_func() when looking for func()
+				my @function_op_matches = $line =~ /(?:^|.)${function_match_re}[\t\ ]*[\:\=\!\<\>\+]+[\t\ ]*[0-9]+/g;
+				foreach my $function_op_match( @function_op_matches )
 				{
-					my $arg = $args[$idx];
-					my $arg_old = $arg;
-					my $arg_type;
+					my( $f, $function_left, $function_op, $function_right ) = $function_op_match =~/(^|.)(${function_match_re})[\t\ ]*([\:\=\!\<\>\+]+)[\t\ ]*([0-9]+)/;
+					my $function_op_name = GetOpName( $function_op );
 
-					# detect incorrect splitting of arguments
-					if( !exists( $functions{$function_name}{args}{$idx+1} ))
+					DEBUG( "FUNC? %s -> (%s) [%s] [%s] [%s] %s", $function_op_match, $f, $function_left, $function_op, $function_right, $line_info );
+
+					# extra caution
+					if( $f =~ /[A-Za-z0-9_]/ )
 					{
-							WARNING( "invalid number of arguments? : %s argument<%d>", $line_info, $idx + 1 );
-							WARNING( "ORIGINAL : function<%s> arguments<[%s]>", $function_name, join( "] [", @args_old ));
-							WARNING( "GUESSED  : function<%s> arguments<[%s]>", $function_name, join( "] [", @args ));
-							WARNING( "CONTENT  : %s", $line_old );
-							WARNING( "END" );
-							next;
-					}
-					
-					$arg_type = $functions{$function_name}{args}{$idx+1};
-
-					# skip unknown arguments
-					next if( $arg_type eq '?' );
-
-					# skip non-numeric arguments
-					if( $arg !~ /^[0-9]+$/ )
-					{
-						#DEBUG( "skipped argument<%d> value<%s>", $idx + 1, $arg );
+						#DEBUG( "SABOTAGE!!! %s", $line );
 						next;
 					}
-					$arg = int($arg);
+
+					if( !defined( $functions{$function_name}{$function_op_name} ))
+					{
+						next;
+					}
+					DEBUG( "FUNC! %s -> (%s) [%s] [%s] [%s] %s", $function_op_match, $f, $function_left, $function_op, $function_right, $line_info );
+
+					my $val_type = $functions{$function_name}{$function_op_name};
+					my $val = int( $function_right );
 
 					# prepare warning message
 					my $line_short = $line;
 					$line_short =~ s!^[\t\ ]*!!;
 					$line_short =~ s![\t\ ]*$!!;
-					my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $arg, $line_info, $idx + 1, $line_short );
+					my $warning_unknown = sprintf( "unknown %s<%d> : %s =>LINE<= %s", $val_type, $val, $line_info, $line_short );
 
-					# replace argument with connected defines
-					$args[$idx] = GetDefine( $arg_type, $arg, $warning_unknown );
-				}
-
-				# rebuild line
-				my $update = sprintf( "%s%s", $function_name, $function_open );
-				for( $idx = 0; $idx < $arg_count; $idx++ )
-				{
-					$update .= $args[$idx];
-					if( $idx != $arg_count - 1 )
+					$val = GetDefine( $val_type, $val, $warning_unknown );
+					if( $val ne $function_right )
 					{
-						$update .= ", ";
+						my $original = sprintf( "%s", $function_op_match );
+						$original =~ s!\(!\\\(!g;
+						$original =~ s!\)!\\\)!g;
+						$original =~ s!\+!\\\+!g;
+						$original =~ s!\*!\\\*!g;
+
+						my $update = sprintf( "%s%s %s %s", $f, $function_left, $function_op, $val );
+						$line =~ s!${original}!${update}!g;
 					}
 				}
-				$update .= $function_close;
 
-				my $original = $function_match;
-				if( $original ne $update )
+				if( exists( $functions{$function_name}{args} ))
 				{
-					#DEBUG( "update [%s] -> [%s]", $original, $update );
+					# extract arguments
+					# this is an unsanctioned use of magical energy
+					my @args;
+					push( @args, $1 ) while $function_arguments =~ /
+					(
+						(?:
+							[^(),]+ |
+							(
+								\(
+									(?: [^()]+ | (?2) )*
+								\)
+							)
+						)*
+					)
+					(?: ,\s* | $)
+					/xg;
+					pop( @args ); # last element is always empty for some reason
 
-					# primitive sanitization, most likely needs updates still
-					$original =~ s!\(!\\\(!g;
-					$original =~ s!\)!\\\)!g;
-					$original =~ s!\+!\\\+!g;
-					$original =~ s!\*!\\\*!g;
+					my @args_old = @args;
+					#DEBUG( "args [%s] -> [%s] -> [%s]", $function_match, $function_arguments, join( "],[", @args ));
 
-					$line =~ s/${original}/${update}/g;
+					# process arguments
+					my( $arg_count, $idx ) = ( scalar( @args ), 0 );
+					for( $idx = 0; $idx < $arg_count; $idx++ )
+					{
+						my $arg = $args[$idx];
+						my $arg_old = $arg;
+						my $arg_type;
+
+						# detect incorrect splitting of arguments
+						if( !exists( $functions{$function_name}{args}{$idx+1} ))
+						{
+								WARNING( "invalid number of arguments? : %s argument<%d>", $line_info, $idx + 1 );
+								WARNING( "ORIGINAL : function<%s> arguments<[%s]>", $function_name, join( "] [", @args_old ));
+								WARNING( "GUESSED  : function<%s> arguments<[%s]>", $function_name, join( "] [", @args ));
+								WARNING( "CONTENT  : %s", $line_old );
+								WARNING( "END" );
+								next;
+						}
+						
+						$arg_type = $functions{$function_name}{args}{$idx+1};
+
+						# skip unknown arguments
+						next if( $arg_type eq '?' );
+
+						# skip non-numeric arguments
+						if( $arg !~ /^[0-9]+$/ )
+						{
+							#DEBUG( "skipped argument<%d> value<%s>", $idx + 1, $arg );
+							next;
+						}
+						$arg = int($arg);
+
+						# prepare warning message
+						my $line_short = $line;
+						$line_short =~ s!^[\t\ ]*!!;
+						$line_short =~ s![\t\ ]*$!!;
+						my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $arg, $line_info, $idx + 1, $line_short );
+
+						# replace argument with connected defines
+						$args[$idx] = GetDefine( $arg_type, $arg, $warning_unknown );
+					}
+
+					# rebuild line
+					my $update = sprintf( "%s%s", $function_name, $function_open );
+					for( $idx = 0; $idx < $arg_count; $idx++ )
+					{
+						$update .= $args[$idx];
+						if( $idx != $arg_count - 1 )
+						{
+							$update .= ", ";
+						}
+					}
+					$update .= $function_close;
+
+					my $original = $function_match;
+					if( $original ne $update )
+					{
+						#DEBUG( "update [%s] -> [%s]", $original, $update );
+
+						# primitive sanitization, most likely needs updates still
+						$original =~ s!\(!\\\(!g;
+						$original =~ s!\)!\\\)!g;
+						$original =~ s!\+!\\\+!g;
+						$original =~ s!\*!\\\*!g;
+
+						$line =~ s/${original}/${update}/g;
+					}
 				}
 			}
 		}
