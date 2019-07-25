@@ -2,10 +2,11 @@
 #
 ### ReDefine
 #
-# Updates .ssl scripts, replacing raw values with defines for specific functions
+# Updates .ssl scripts, replacing raw values with defines for specific variables and functions
 #
 # Wipe/Rotators
 #
+###
 
 use strict;
 use warnings;
@@ -91,21 +92,68 @@ sub LOG
 
 sub ReadDefines
 {
-	my( $type, $filename, $prefix ) = @_;
-	my $content = undef;
+	my( $type, $filename, $prefix, $group ) = @_;
+	my $content;
+
+	# validate arguments
+
+	if( !defined( $type ) || !length( $type ))
+	{
+		WARNING( "ReadDefines(): missing type name" );
+		return;
+	}
+	elsif( !defined( $filename ) || !length( $filename ))
+	{
+		WARNING( "ReadDefines(): missing filename : type<%s>", $type );
+		return;
+	}
+	elsif( !defined( $prefix ) || !length( $prefix ))
+	{
+		WARNING( "ReadDefines(): missing prefix : type<%s> filename<%s>", $type, $filename );
+		return;
+	}
+	elsif( defined( $group ) && !length( $group ))
+	{
+		WARNING( "ReadDefines(): missing group name : type<%s> filename<%s> prefix<%s>", $type, $filename, $prefix );
+		return;
+	}
+
+	# validate type name
+
+	if( exists( $defines{regular} ) && exists( $defines{regular}{$type} ))
+	{
+		WARNING( "ReDefines() type<%s> already in use", $type );
+		return;
+	}
+	elsif( exists( $defines{virtual} ) && exists( $defines{virtual}{$type} ))
+	{
+		WARNING( "ReDefines() type<%s> already in use", $type );
+		return;
+	}
+
+	# read file
 
 	if( open( my $file, "<", sprintf( "%s/%s", $scripts_dir, $filename )))
 	{
 		local $/;
 		$content = <$file>;
 		close( $file );
+		$content =~ s!\r!!g;
 	}
 	else
 	{
-		die( "Cannot open '[$scripts_dir]/$filename'" );
+		WARNING( "ReadDefines(): cannot open : [%s]/%s", $scripts_dir, $filename );
+		return;
 	}
+
+	if( !length( $content ))
+	{
 	
-	die( "'[$scripts_dir]/$filename' is empty(?)" ) if( !length( $content ));
+		WARNING( "ReadDefines(): empty file : [%s]/%s", $scripts_dir, $filename );
+		return;
+	}
+
+	# store defines
 
 	my $line_number = 0;
 	my @lines = split( /\n/, $content );
@@ -115,7 +163,6 @@ sub ReadDefines
 
 		# meh
 		$line =~ s!\n!!g;
-		$line =~ s!\r!!g;
 
 		# skip empty lines
 		next if( !length( $line ));
@@ -128,36 +175,44 @@ sub ReadDefines
 			$line =~ /^[\t\ ]*\#define[\t\ ]+(${prefix}_[A-Za-z0-9_]+)[\t\ ]+([0-9]+)/ )
 		{
 			my $name  = $1;
-			my $value = int($2);
+			my $value = int( $2 );
 
 			# human detection
-			if( exists($defines{$type}{$value}) )
+			if( exists( $defines{regular} ) && exists( $defines{regular}{$type} ) && exists( $defines{regular}{$type}{$value} ))
 			{
-				WARNING( "value<%d> already used by macro<%s>, current macro<%s> ignored : file<%s:%d>", $value, $defines{$type}{$value}, $name, $filename, $line_number );
+				WARNING( "value<%d> already used by define<%s>, current define<%s> ignored : fileline<%s:%d>", $value, $defines{regular}{$type}{$value}, $name, $filename, $line_number );
 				next;
 			}
 
-			$defines{$type}{$value} = $name;
+			$defines{regular}{$type}{$value} = $name;
+
+			if( defined( $group ))
+			{
+				push( @{ $defines{virtual}{$group} }, $type );
+			}
 		}
 	}
 
-	my $count = scalar( keys( %{ $defines{$type} } ));
-	LOG( "Reading %s... %d '%s' define%s", $filename, $count, $prefix, $count != 1 ? "s" : "" );
+	my $count = scalar( keys( %{ $defines{regular}{$type} } ));
+	LOG( "Reading %s... %d %s define%s%s", $filename, $count, $prefix, $count != 1 ? "s" : "", defined( $group ) ? sprintf( " -> %s", $group ) : "" );
 }
 
 sub IsDefineType
 {
 	my( $type ) = @_;
 
-	# fatal error for now
-	die( "ERROR IsDefineType : type is undef" ) if( !defined( $type ) || !length( $type ));
+	if( !defined( $type ) || !length( $type ))
+	{
+		WARNING( "IsDefineType(): missing type" );
+		return 0;
+	}
 
 	# virtual types
 	return 1 if( $type eq "?" );
-	return 1 if( $type eq "ANY_PID" );
+	return 1 if( exists( $defines{virtual} ) && exists( $defines{virtual}{$type} ));
 
 	# regular types
-	return 1 if( exists( $defines{$type} ));
+	return 1 if( exists( $defines{regular} ) && exists( $defines{regular}{$type} ));
 
 	return 0;
 }
@@ -168,14 +223,19 @@ sub IsDefine
 
 	return 0 if( !IsDefineType( $type ));
 
-	# ANY_PID = CRITTER_PID || ITEM_PID || SCENERY_PID
-	return 1 if( $type eq "ANY_PID" && ( exists( $defines{CRITTER_PID}{$value} ) || exists( $defines{ITEM_PID}{$value} ) || exists( $defines{SCENERY_PID}{$value} )));
+	if( exists( $defines{virtual} ) && exists( $defines{virtual}{$type} ))
+	{
+		foreach my $real_type( @{ $defines{virtual}{$type} } )
+		{
+			return 1 if( exists( $defines{regular} ) && exists( $defines{regular}{$real_type} ) && exists( $defines{regular}{$real_type}{$value} ));
+		}
+	}
 
 	# SID < 1 ignored for readibility
 	return 1 if( $type eq "SID" && $value < 1 );
 
 	# regular defines
-	return 1 if( exists( $defines{$type}{$value} ));
+	return 1 if( exists( $defines{regular} ) && exists( $defines{regular}{$type} ) && exists( $defines{regular}{$type}{$value} ));
 
 	return 0;
 }
@@ -189,13 +249,13 @@ sub GetDefine
 
 	if( IsDefine( $type, $value ))
 	{
-		if( $type eq "ANY_PID" )
+		if( exists( $defines{virtual} ) && exists( $defines{virtual}{$type} ))
 		{
-			foreach my $any_type( "CRITTER_PID", "ITEM_PID", "SCENERY_PID" )
+			foreach my $regular( @{ $defines{virtual}{$type} } )
 			{
-				if( exists( $defines{$any_type}{$value} ))
+				if( exists( $defines{regular} ) && exists( $defines{regular}{$regular} ) && exists( $defines{regular}{$regular}{$value} ))
 				{
-					return $defines{$any_type}{$value};
+					return $defines{regular}{$regular}{$value};
 				}
 			}
 		}
@@ -205,7 +265,7 @@ sub GetDefine
 		}
 
 		# regular defines
-		return $defines{$type}{$value};
+		return $defines{regular}{$type}{$value};
 	}
 
 	# for quick lookup, do not emit warning if message isn't set
@@ -261,11 +321,11 @@ sub AddVariable
 
 	if( !defined( $op ))
 	{
-		WARNING( "AddVariable: unknown op<%s> : variable<%s>", $op_name, $name );
+		WARNING( "AddVariable(): unknown op<%s> : variable<%s>", $op_name, $name );
 	}
 	elsif( !IsDefineType( $type ))
 	{
-		WARNING( "AddVariable: unknown define type<%s> : variable<%s> op<%s>", $type, $name, $op_name );
+		WARNING( "AddVariable(): unknown type<%s> : variable<%s> op<%s>", $type, $name, $op_name );
 		return;
 	}
 
@@ -401,13 +461,13 @@ sub ReadConfig
 			}
 			elsif( $section eq "Defines" )
 			{
-				if( $count != 2 )
+				if( $count < 2 || $count > 3 )
 				{
 					WARNING( $bad_count );
 				}
 				else
 				{
-					ReadDefines( $variable, $values[0], $values[1] );
+					ReadDefines( $variable, @values );
 				}
 			}
 			elsif( $section eq "VariableGuess" )
