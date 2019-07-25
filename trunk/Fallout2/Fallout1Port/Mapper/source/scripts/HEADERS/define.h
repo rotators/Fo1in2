@@ -251,7 +251,7 @@
 #define PERK_explorer            (41)
 ///#define PERK_flower_child        (42)  -- Disabled FO2
 #define PERK_pathfinder          (43)
-///#define PERK_animal_friend       (44)  -- Disabled FO2
+#define PERK_animal_friend       (44) // -- Disabled FO2
 #define PERK_scout               (45)
 #define PERK_mysterious_stranger (46)
 #define PERK_ranger              (47)

@@ -1,24 +1,11 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
-*/
 
+*/
 #ifndef CRITRPID_H
 #define CRITRPID_H
 
 /******************************************************************
-   File Name: CritrPid.H
-
-
-   Purpose: This file will contain defines for all the critter
-            prototypes for the game. These prototypes can be
-            found in mapper using <F2> or selecting critters. All
-            defines in here will need to be prepended with PID_
-            for the ease of everyone. Additionally, Please do not
-            make duplicate names for the same item. Most should
-            have the correct name.
-
-
-   Created: January 16, 1998
+   File Name: CritrPid.H ..... PRO_CRIT entry = line number - 10
 ******************************************************************/
 
 #define PID_VAULT_DWELLER_MALE 			(16777217)

@@ -49,7 +49,7 @@
 #define AI_GHOUL_NORMAL             (41)
 #define AI_GHOUL_BRAVE              (42)
 #define AI_GARL_HONOR               (43)
-#define AI_EMPTY_SLOT_1             (44)
+#define AI_PIG_RATS		            (44) // Was AI_EMPTY_SLOT_1, but wanrats script is using this?
 #define AI_EMPTY_SLOT_2             (45)
 #define AI_SUPER_MUTANT_GUARD       (46)
 #define AI_SUPER_MUTANT_NORMAL      (47)
