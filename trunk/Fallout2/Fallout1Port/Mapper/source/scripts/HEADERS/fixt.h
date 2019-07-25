@@ -10,7 +10,7 @@
 #define fixt_critter_healing 			if local_var(12) != 1 then begin /* Fallout Fixt lvar12 - this code block heals critter to full HP one time (first time player enters the map) to make sure they always start with full HP.*/ \
 											if (map_first_run) then begin /* Fallout Fixt lvar12 - first visit to map?*/ \
 												if metarule(22, 0) == 0 then begin /* Fallout Fixt lvar12 - Not currently loading a save?*/ \
-													if get_critter_stat(self_obj, 7) > 0 then begin  \
+													if get_critter_stat(self_obj, STAT_max_hp) > 0 then begin  \
 														critter_heal(self_obj, 999);  \
 													end  \
 													if global_var(ARMOR_EQUIP_MOD) then begin  \
