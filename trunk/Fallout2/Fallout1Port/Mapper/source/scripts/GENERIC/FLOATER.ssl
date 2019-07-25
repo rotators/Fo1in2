@@ -1,85 +1,58 @@
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;	
-procedure combat_p_proc;//    script_action == 13	
-procedure combat_rads_inc;	
-procedure critter_p_proc;//    script_action == 12	
-procedure damage_p_proc;//    script_action == 14	
-procedure destroy_p_proc;//    script_action == 18	
-procedure use_skill_on_p_proc;//    script_action == 8	
-variable hostile;	
-variable initial :=  0;	
-variable rndRads := 0;	
-variable rndx;	
+procedure start;
+procedure map_enter_p_proc;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure use_skill_on_p_proc;
 
-procedure start
-begin
+procedure combat_rads_inc;
+
+variable hostile;
+variable initial :=  0;
+variable rndRads := 0;
+variable rndx;
+variable SrcObj := 0;
+variable SrcIsParty := 0;
+
+procedure start begin
 	fixt_critter_healing
-	
-	if not(initial) then begin
-		initial :=  1;
+end
+
+procedure map_enter_p_proc begin
+	if map_first_run then begin
 		if (obj_pid(self_obj) == PID_FLOATER) then begin//	FLOATER
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 73);
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
 		end
-		else begin
-			if (obj_pid(self_obj) == PID_CENTAUR_LESSER) then begin//	LESSER CENTAUR
-				critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 72);
-				critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
-			end
-			else begin
-				if (obj_pid(self_obj) == PID_ZOMBIE_GUARD) then begin//	ZOMBIE GUARD
-					critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 42);
-					critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
-				end
-				else begin
-					if (obj_pid(self_obj) == PID_GREATER_CENTAUR) then begin//	GREATER CENTAUR
-						critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 72);
-						critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
-					end
-					else begin
-						if (obj_pid(self_obj) == PID_BLOODY_FLOATER) then begin//	BLOODY FLOATER
-							critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 73);
-							critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
-						end
-						else begin
-							debug_msg("FLOATER.INT init error, not a Centaur or Floater or Zombie Guard");
-							display_msg("FLOATER.INT init error, not a Centaur or Floater or Zombie Guard");
-							critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, -1);
-							critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
-						end
-					end
-				end
-			end
+		else if (obj_pid(self_obj) == PID_CENTAUR_LESSER) then begin//	LESSER CENTAUR
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 72);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
 		end
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
+		else if (obj_pid(self_obj) == PID_ZOMBIE_GUARD) then begin//	ZOMBIE GUARD
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 42);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
+		end
+		else if (obj_pid(self_obj) == PID_GREATER_CENTAUR) then begin//	GREATER CENTAUR
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 72);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
+		end
+		else if (obj_pid(self_obj) == PID_BLOODY_FLOATER) then begin//	BLOODY FLOATER
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 73);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
 		end
 		else begin
-			if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-				call combat_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 8) then begin//<-- use_skill_on_p_proc
-						call use_skill_on_p_proc;
-					end
-				end
-			end
+			debug_msg("FLOATER.INT init error, not a Centaur or Floater or Zombie Guard");
+			display_msg("FLOATER.INT init error, not a Centaur or Floater or Zombie Guard");
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, -1);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 43);
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 
 	if source_obj == dude_obj then begin
 		if (obj_pid(self_obj) == PID_FLOATER) or (obj_pid(self_obj) == PID_CENTAUR_LESSER) or (obj_pid(self_obj) == PID_GREATER_CENTAUR) or (obj_pid(self_obj) == PID_BLOODY_FLOATER) then begin
@@ -97,18 +70,18 @@ begin
 			end
 		end
 	end
+
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		attack(dude_obj);
 	end
 	else begin
 		if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe))) then begin
 			hostile := 1;
-			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+			attack(dude_obj);
 		end
 //		else begin
 //			hostile := 1;
@@ -116,8 +89,8 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
+
 	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
 		if (obj_pid(self_obj) == PID_FLOATER) or (obj_pid(self_obj) == PID_CENTAUR_LESSER) or (obj_pid(self_obj) == PID_GREATER_CENTAUR) or (obj_pid(self_obj) == PID_BLOODY_FLOATER) then begin
 			script_overrides;
@@ -125,22 +98,60 @@ begin
 			script_overrides;
 		end
 	end
+
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if source_obj > 0 then begin
+		SrcObj := 0;
+		SrcIsParty := 0;
+		SrcObj := obj_pid(source_obj);
+
+		if party_member_obj(SrcObj) then begin
+			SrcIsParty := 1;
+		end
+	end
+	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		hostile := 1;
 	end
 end
 
-procedure combat_p_proc
-begin
+/*
+// This is the vanilla code:
+procedure combat_p_proc begin
+	variable LVar0 := 0;
+	LVar0 := obj_pid(self_obj);
+	if ((LVar0 == 16777261) or (LVar0 == 16777259) or (LVar0 == 16777384) or (LVar0 == 16777383)) then begin
+		if (target_obj == dude_obj) then begin
+			if (fixed_param == 2) then begin
+				if (not(is_success(do_check(target_obj, 6, 0))) and not(is_success(do_check(target_obj, 2, 0)))) then begin
+					radiation_inc(target_obj, 12);
+				end
+				else
+				if (not(is_success(do_check(target_obj, 6, 0))) or not(is_success(do_check(target_obj, 2, 0)))) then begin
+					radiation_inc(target_obj, 9);
+					display_msg( message_str( SCRIPT_GENGHOUL , 300) );
+				end
+				else begin
+					radiation_inc(target_obj, 6);
+					display_msg( message_str( SCRIPT_GENGHOUL , 300) );
+				end
+			end
+		end
+	end
+end
+
+// And this is the fixt code:
+*/
+procedure combat_p_proc begin
+
+	// FIXT BEGIN:
 	if (fixed_param == 2) then begin
 		if (target_obj == dude_obj) then begin
 			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
 				debug_msg("Combat Rads From Irradiated Critters BEGINS");
 			end
+
 			if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 				variable cont := 0;// checked to see if continue to run the code after each stage
 				variable CritterTYPE := 0;// 1 = Ghoul, 2 = Floater, 3 = Centaur, 4 = RadRat, 5 = GlowingOne
@@ -189,16 +200,19 @@ begin
 					end
 					if (random(0, 3) + combat_difficulty + BonusRads) >= 3 then begin// CHANCE TO RUN = Easy: 25%, 50% if glowing/radrat - Normal: 50%, 75% if glowing - Brutal: 75%, 100% if glowing/radrat
 						variable giveRads := 1;
+
 						if critter_inven_obj(self_obj, 1) then begin
 							if (obj_pid(critter_inven_obj(self_obj, 1)) != PID_BRASS_KNUCKLES) and (obj_pid(critter_inven_obj(self_obj, 1)) != PID_SPIKED_KNUCKLES) and (obj_pid(critter_inven_obj(self_obj, 1)) != PID_POWER_FIST) then begin// Brass Knuckles, Spiked Knuckles, Power Fist
 								giveRads := 0;
 							end
 						end
+
 						if critter_inven_obj(self_obj, 2) then begin
 							if (obj_pid(critter_inven_obj(self_obj, 2)) != PID_BRASS_KNUCKLES) and (obj_pid(critter_inven_obj(self_obj, 2)) != PID_SPIKED_KNUCKLES) and (obj_pid(critter_inven_obj(self_obj, 2)) != PID_POWER_FIST) then begin// Brass Knuckles, Spiked Knuckles, Power Fist
 								giveRads := 0;
 							end
 						end
+
 						if giveRads == 1 then begin
 							variable LuckRoll := 0;
 							variable EnduranceRoll := 0;
@@ -222,6 +236,7 @@ begin
 								call combat_rads_inc;
 							end
 						end
+
 					end
 				end
 			end
@@ -243,22 +258,19 @@ begin
 			end
 		end
 	end
+	// FIXT END
+
 end
 
-procedure combat_rads_inc
-begin
+procedure combat_rads_inc begin
 	radiation_inc(dude_obj, rndRads);
 	if ((rndRads == 1) or (rndRads == 2)) then begin
 		display_msg(message_str(SCRIPT_GENGHOUL, 1004));
 	end
-	else begin
-		if ((rndRads > 2) and (rndRads <= 5)) then begin
-			display_msg(message_str(SCRIPT_GENGHOUL, 1005));
-		end
-		else begin
-			if ((rndRads > 5) and (rndRads < 10)) then begin
-				display_msg(message_str(SCRIPT_GENGHOUL, 1006));
-			end
-		end
+	else if ((rndRads > 2) and (rndRads <= 5)) then begin
+		display_msg(message_str(SCRIPT_GENGHOUL, 1005));
+	end
+	else if ((rndRads > 5) and (rndRads < 10)) then begin
+		display_msg(message_str(SCRIPT_GENGHOUL, 1006));
 	end
 end
