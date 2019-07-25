@@ -1,12 +1,26 @@
+/*
+
+	Junktown Scout (Encounter)
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+#define NAME                    SCRIPT_JNKSCOUT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
 procedure Scout01;
 procedure Scout02;
 procedure Scout03;
@@ -14,106 +28,70 @@ procedure Scout04;
 procedure Scout05;
 procedure ScoutEnd;
 
-variable hostile;
+variable tmp_hostile;
+variable SrcObj := 0;
+variable SrcIsParty := 0;
 
 
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		attack(dude_obj);
 	end
 	if (global_var(ENEMY_JUNKTOWN) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
-			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+			attack(dude_obj);
 		end
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
+	if source_obj > 0 then begin
+		SrcObj := 0;
+		SrcIsParty := 0;
+		SrcObj := obj_pid(source_obj);
+
+		if party_member_obj(SrcObj) then begin
+			SrcIsParty := 1;
 		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+	end
+
+	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		inc_good_critter
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end
+
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	display_msg(message_str(SCRIPT_JNKSCOUT, 100));
 end
 
-procedure pickup_p_proc
-begin
-	hostile := 1;
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	start_gdialog(437, self_obj, 4, -1, -1);
-	gsay_start;
-	call Scout01;
-	gsay_end;
-	end_dialogue;
+	start_dialog_at_node(Scout01);
 end
 
-procedure Scout01
-begin
-	gsay_reply(437, 101);
+procedure Scout01 begin
+	Reply(101);
 	call Scout02;
 end
 
-procedure Scout02
-begin
+procedure Scout02 begin
 	giq_option(4, 437, 102, Scout03, 50);
 	giq_option(4, 437, 103, Scout04, 50);
 	giq_option(4, 437, 104, Scout05, 50);
@@ -121,24 +99,20 @@ begin
 	giq_option(-3, 437, 106, ScoutEnd, 50);
 end
 
-procedure Scout03
-begin
-	gsay_reply(437, 107);
+procedure Scout03 begin
+	Reply(107);
 	call Scout02;
 end
 
-procedure Scout04
-begin
-	gsay_reply(437, 108);
+procedure Scout04 begin
+	Reply(108);
 	call Scout02;
 end
 
-procedure Scout05
-begin
-	gsay_reply(437, 109);
+procedure Scout05 begin
+	Reply(109);
 	call Scout02;
 end
 
-procedure ScoutEnd
-begin
+procedure ScoutEnd begin
 end
