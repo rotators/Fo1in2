@@ -247,7 +247,7 @@
 #define PERK_pickpocket          (37)
 #define PERK_ghost               (38)
 #define PERK_cult_of_personality (39)
-///#define PERK_scrounger           (40)  -- Disabled FO2
+#define PERK_scrounger           (40)  //-- Disabled FO2
 #define PERK_explorer            (41)
 ///#define PERK_flower_child        (42)  -- Disabled FO2
 #define PERK_pathfinder          (43)
