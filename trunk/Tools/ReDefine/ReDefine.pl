@@ -812,21 +812,70 @@ foreach my $filename_long( sort{lc($a) cmp lc($b)} @files )
 						# skip unknown arguments
 						next if( $arg_type eq '?' );
 
-						# skip non-numeric arguments
-						if( $arg !~ /^[0-9]+$/ )
-						{
-							#DEBUG( "skipped argument<%d> value<%s>", $idx + 1, $arg );
-							next;
-						}
-						$arg = int($arg);
-
 						# prepare warning message
 						my $line_short = $line;
 						$line_short =~ s!^[\t\ ]*!!;
 						$line_short =~ s![\t\ ]*$!!;
-						my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $arg, $line_info, $idx + 1, $line_short );
+
+						# skip non-numeric arguments
+						if( $arg !~ /^[0-9]+$/ )
+						{
+							# hold on! check if it's just some simple math
+							if( $arg =~ /^([0-9]+)[\t\ ]*(\*|\/|\+|\-)[\t\ ]*([0-9]+)$/ )
+							{
+								my( $left, $op, $right ) = ( int( $1 ), $2, int( $3 ));
+								#DEBUG( "oh noes math! <%s> %s <%s>", $left, $op, $right );
+
+								my $calc = 0;
+
+								# no, i won't eval() this
+
+								if( $op eq "*" )
+								{
+									$calc = $left * $right;
+								}
+								elsif( $op eq "/" )
+								{
+									# don't get into trouble due to shitty modders
+									if( $right == 0 )
+									{
+										WARNING( "DIVISION BY ZERO : %s =LINE= %s", $line_info, $line_short );
+										next;
+									}
+									else
+									{
+										$calc = $left / $right;
+									}
+								}
+								elsif( $op eq "+" )
+								{
+									$calc = $left + $right;
+								}
+								elsif( $op eq "-" )
+								{
+									$calc = $left - $right;
+								}
+
+								# check
+								my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $calc, $line_info, $idx + 1, $line_short );
+								$calc = GetDefine( $arg_type, $calc, $warning_unknown );
+
+								# math failed us
+								next if( $calc =~ /^[0-9]+$/ );
+
+								# great success!
+								$args[$idx] = $calc;
+								next;
+							}
+
+							#DEBUG( "skipped argument<%d> value<%s>", $idx + 1, $arg );
+							next;
+						}
+
+						$arg = int( $arg );
 
 						# replace argument with connected defines
+						my $warning_unknown = sprintf( "unknown %s<%d> : %s argument<%d> =LINE= %s", $arg_type, $arg, $line_info, $idx + 1, $line_short );
 						$args[$idx] = GetDefine( $arg_type, $arg, $warning_unknown );
 					}
 
