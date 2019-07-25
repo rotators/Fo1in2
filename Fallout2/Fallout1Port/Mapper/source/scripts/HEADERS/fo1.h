@@ -21,6 +21,36 @@
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)
 
 //==============================================================
+// Pick dead body type:
+#define pick_dead_body_type 			variable LVar0 := 0; \
+										LVar0 := (random(0, 6) + random(0, 6) + random(0, 6)); \
+										if (LVar0 <= 5) then begin/*// 31.5%*/ \
+											DeathType := 57;/*//		burnt, face down  [FLAMER]*/ \
+										end \
+										else if (LVar0 <= 10) then begin/*// 26%*/ \
+											DeathType := 56;/*//		cut in half  [LASER RIFLE, GATLING LASER]*/ \
+										end \
+										else if (LVar0 <= 14) then begin/*// 21%*/ \
+											DeathType := 53;/*//		head & arm gone - full auto  [MINIGUN]*/ \
+										end \
+										else if (LVar0 <= 16) then begin/*// 10.5%*/ \
+											DeathType := 63;/*//		face down, blood pool  (generic death, no weapon associated)*/ \
+										end \
+										else begin/*// <--------------------	16%*/ \
+											variable LVar1 := 0; \
+											LVar1 := random(0, 2); \
+											if (LVar1 == 0) then begin \
+												DeathType := 54;/*// bullet holes - full auto partial hit*/ \
+											end \
+											else if (LVar1 == 1) then begin \
+												DeathType := 59;/*// exploded  [ROCKET LAUNCHER]*/ \
+											end \
+											else if (LVar1 == 2) then begin \
+												DeathType := 60;/*// melted pile  [PLASMA RIFLE]*/ \
+											end \
+										end
+
+//==============================================================
 // Water Timer related:
 #define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
 #define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
