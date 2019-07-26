@@ -325,5 +325,6 @@
 #define PID_HAMMER 						(16777526)
 #define PID_DEAD_TRAVELER 				(16777527)
 #define PID_KENJI 						(16777528)
+#define PID_MRHANDYC					(16777529)
 
 #endif // CRITRPID_H
