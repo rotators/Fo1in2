@@ -82,10 +82,10 @@ static void Print( const char* prefix, const char* function, const char* frmt, v
     if( StrLength( str ) == (prefix ? StrLength( prefix ) + 1 : 0) + (function ? StrLength( function ) + 3 : 0) )
         return;
 
-	if (lineInfo && !ReDefine::Status.CurrentFile.empty() && ReDefine::Status.CurrentLineNumber)
-		std::snprintf(str, sizeof(str), "%s : fileline<%s:%u>", str, ReDefine::Status.CurrentFile.c_str(), ReDefine::Status.CurrentLine);
+    if( lineInfo && !ReDefine::Status.CurrentFile.empty() && ReDefine::Status.CurrentLineNumber )
+        std::snprintf( str, sizeof(str), "%s : fileline<%s:%u>", str, ReDefine::Status.CurrentFile.c_str(), ReDefine::Status.CurrentLine );
 
-	std::printf("%s\n", str);
+    std::printf( "%s\n", str );
 }
 
 //
@@ -123,21 +123,22 @@ void ReDefine::LOG( const char* format, ... )
     va_end( list );
 }
 
-bool ReDefine::ReadFile(const std::string& path, std::vector<std::string>& lines)
+bool ReDefine::ReadFile( const std::string& path, std::vector<std::string>& lines )
 {
-	lines.clear();
+    lines.clear();
 
-	ifstream fstream;
-	fstream.open(fname, ios_base::in | ios_base::binary);
+    std::ifstream fstream;
+    fstream.open( path, std::ios_base::in | std::ios_base::binary );
 
-	if (fstream.is_open())
-	{
-		char bom[3] = { 0, 0, 0 };
-		fstream.read(bom, sizeof(bom));
-		if (bom[0] != (char)0xEF || bom[1] != (char)0xBB || bom[2] != (char)0xBF)
-			fstream.seekg(0, fstream.beg);
-
-	}
+    if( fstream.is_open() )
+    {
+        char bom[3] = { 0, 0, 0 };
+        fstream.read( bom, sizeof(bom) );
+        if( bom[0] != (char)0xEF || bom[1] != (char)0xBB || bom[2] != (char)0xBF )
+            fstream.seekg( 0, fstream.beg );
+// TODO
+    }
+}
 
 bool ReDefine::Init( int argc, char** argv, const char* config )
 {
@@ -163,8 +164,7 @@ int ReDefine::Exit( int returnValue )
     return returnValue;
 }
 
-#if !defined(REDEFINE_NO_MAIN)
-
+#if !defined (REDEFINE_NO_MAIN)
 int main( int argc, char** argv )
 {
     std::setvbuf( stdout, NULL, _IONBF, 0 );
@@ -177,5 +177,4 @@ int main( int argc, char** argv )
 
     return ReDefine::Exit( EXIT_SUCCESS );
 }
-
 #endif // !REDEFINE_NO_MAIN
