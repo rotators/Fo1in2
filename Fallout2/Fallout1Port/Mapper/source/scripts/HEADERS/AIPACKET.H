@@ -93,7 +93,7 @@
 #define AI_HUB_UNDERGROUND          (85)
 #define AI_HUB_POLICE               (86)
 #define AI_DECKER                   (87)
-#define AI_CAIN                     (88)
+#define AI_KAIN                     (88)
 #define AI_IAN                      (89)
 #define AI_TYCHO                    (90)
 #define AI_VAULTDWELLER             (91)

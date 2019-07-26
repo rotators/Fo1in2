@@ -8,14 +8,14 @@
 
 //==============================================================
 // Generic:
-#define set_story_finished 		 		set_global_var(GAME_CONTINUES,100); \
-										if (dude_is_male) then \
-											play_gmovie(WALKM_MOVIE); \
-										else \
-											play_gmovie(WALKW_MOVIE); \
-										endgame_movie; \
-										gfade_out(1); \
-										world_map; \
+#define set_story_finished 		 		set_global_var(GAME_CONTINUES,100); 	\
+										if (dude_is_male) then 					\
+											play_gmovie(WALKM_MOVIE); 			\
+										else 									\
+											play_gmovie(WALKW_MOVIE); 			\
+										endgame_movie; 							\
+										gfade_out(1);							\
+										world_map; 								\
 										gfade_in(1)
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)

@@ -14,6 +14,8 @@
 
 #define TEAM_RATS								(9)
 
+#define TEAM_HUB_UNDERGROUND 					(38)
+
 #define TEAM_HUB_MUTANTS						(41)
 #define TEAM_BOS 								(44)
 
