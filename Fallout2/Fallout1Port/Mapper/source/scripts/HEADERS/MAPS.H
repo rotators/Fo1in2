@@ -17,6 +17,8 @@
 #define AREA_GLOW                 (9)
 #define AREA_BONEYARD             (10)
 #define AREA_CATHEDRAL            (11)
+#define AREA_CATHEDRAL_DEAD       (12)
+#define AREA_MILITARY_BASE_DEAD   (13)
 
 #define AREA_RND_DESERT           (49)
 #define AREA_RND_MOUNTAIN         (50)
@@ -377,6 +379,8 @@
 #define mark_glow_on_map                 mark_on_map(AREA_GLOW)
 #define mark_boneyard_on_map             mark_on_map(AREA_BONEYARD)
 #define mark_cathedral_on_map            mark_on_map(AREA_CATHEDRAL)
+
+#define mark_cathedral_dead_on_map       mark_on_map(AREA_CATHEDRAL)
 
 /*******************************************************************************
                          Не помечать город на карте

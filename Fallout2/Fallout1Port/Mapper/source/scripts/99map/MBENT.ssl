@@ -1,6 +1,11 @@
 #include "..\headers\define.h"
+#include "..\headers\COMMAND.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
+
 procedure Lighting;
 procedure Darkness;
 
@@ -27,46 +32,64 @@ export variable Tandi_ptr;
 procedure Invasion;
 procedure radio_kludge;
 
+procedure start begin
+end
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call Lighting;
-		set_global_var(WORLDMAPLIST_MILITARYBASE, 2);
-		if (map_first_run) then begin
-			display_msg(message_str(SCRIPT_SHADYWST, 109));
-		end
-		radio_trick := map_var(0);
-		know_door_code := map_var(1);
-		if (global_var(LOAD_MAP_INDEX) == 0) then begin
-			override_map_start(133, 111, 0, 5);
-		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 1) then begin
-				override_map_start(73, 107, 0, 2);
-			end
-			else begin
-				override_map_start(133, 111, 0, 5);
-			end
-		end
-		call add_party;
+procedure map_enter_p_proc begin
+	// Failsafe in case the wrong map loads after cutscene:
+	if (global_var(VATS_BLOWN_CUTSCENE_DONE) > 0) then
+		load_map(MAP_MBDEAD, 0);
+
+	call Lighting;
+	set_global_var(WORLDMAPLIST_MILITARYBASE, 2);
+	if (map_first_run) then begin
+		display_msg(message_str(SCRIPT_SHADYWST, 109));
+	end
+	radio_trick := map_var(0);
+	know_door_code := map_var(1);
+	if (global_var(LOAD_MAP_INDEX) == 0) then begin
+		override_map_start(133, 111, 0, 5);
 	end
 	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call Lighting;
-			if (removal_ptr != 0) then begin
-				destroy_object(removal_ptr);
-				removal_ptr := 0;
-			end
-			call update_party;
+		if (global_var(LOAD_MAP_INDEX) == 1) then begin
+			override_map_start(73, 107, 0, 2);
 		end
 		else begin
-			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-				set_map_var(0, radio_trick);
-				call remove_party;
-			end
+			override_map_start(133, 111, 0, 5);
 		end
 	end
+	call add_party;
+end
+
+procedure map_update_p_proc begin
+	// Failsafe in case the wrong map loads after cutscene:
+	if (global_var(VATS_BLOWN_CUTSCENE_DONE) > 0) then
+		load_map(MAP_MBDEAD, 0);
+
+	call Lighting;
+	if (removal_ptr != 0) then begin
+		destroy_object(removal_ptr);
+		removal_ptr := 0;
+	end
+	call update_party;
+end
+
+procedure map_exit_p_proc begin
+	// The Vats have been destroyed
+	if (global_var(VATS_BLOWN) == 1) and (global_var(VATS_BLOWN_CUTSCENE_DONE) == 0) then begin
+		set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
+		set_end_Vats;
+
+		give_exp_points(EXP_VATS_DESTROYED);
+		display_msg(message_str(SCRIPT_GENCHAT, 701));
+
+		invisible_on_map(AREA_MILITARY_BASE)
+		mark_on_map(AREA_MILITARY_BASE_DEAD)
+		play_gmovie(VATSEXPLODE_MOVIE);
+	end
+
+	set_map_var(0, radio_trick);
+	call remove_party;
 end
 
 procedure Lighting
