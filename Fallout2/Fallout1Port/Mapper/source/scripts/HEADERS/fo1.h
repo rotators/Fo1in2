@@ -172,6 +172,94 @@
 										end \
 									end \
 								end
+								
+//==============================================================
+// Party member map commentary
+#define party_commentary 		if (cur_map_index == MAP_JUNKKILL) then begin /* JUNKTOWN - KILLIAN, CRASH HOUSE*/ \
+									if (tile_distance(tile_num(self_obj), 27883) < 4) then begin\
+										if (not(line151flag)) then begin\
+											float_msg(self_obj, message_str(SCRIPT_IAN, 151), 0);\
+											line151flag := 1;\
+										end\
+									end\
+								end\
+								else if (cur_map_index == MAP_JUNKCSNO) then begin /* JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT*/\
+									if (tile_distance(tile_num(self_obj), 27919) < 4) then begin\
+										if (not(line152flag)) then begin\
+											float_msg(self_obj, message_str(SCRIPT_IAN, 152), 0);\
+											line152flag := 1;\
+										end\
+									end\
+								end\
+								else if (cur_map_index == MAP_HALLDED) then begin /* NECROPOLIS - HALLS OF THE DEAD*/ \
+									if (not(line153flag)) then begin \
+										float_msg(self_obj, message_str(SCRIPT_IAN, 153), 0); \
+										line153flag := 1; \
+								end \
+								else if (cur_map_index == MAP_GLOWENT) then begin /* THE GLOW - ENTRANCE (CRATER)*/ \
+									if (not(line154flag)) then begin \
+										float_msg(self_obj, message_str(SCRIPT_IAN, 154), 0); \
+										if (global_var(KATJA_HIRELING_STATUS) == 2) then begin \
+											float_msg(Katja_ptr, message_str(SCRIPT_KATJA, 185), 5); \
+										end \
+										line154flag := 1; \
+									end \
+								end \
+								else if (cur_map_index == MAP_MBENT) then begin /* MILITARY BASE - OUTSIDE ENTRANCE*/ \
+									if (not(line155flag)) then begin \
+										float_msg(self_obj, message_str(SCRIPT_IAN, 155), 0); \
+										line155flag := 1; \
+									end \
+								end \
+								else if (cur_map_index == MAP_HUBDWNTN) then begin /* THE HUB - DOWNTOWN*/ \
+									if (tile_distance(tile_num(self_obj), 24890) < 4) then begin \
+										if (not(line162flag)) then begin \
+											float_msg(self_obj, message_str(SCRIPT_IAN, 162), 0); \
+											line162flag := 1; \
+										end \
+									end \
+									else if (tile_distance(tile_num(self_obj), 14116) < 4) then begin \
+										if (not(line165flag)) then begin \
+											float_msg(self_obj, message_str(SCRIPT_IAN, 165), 0); \
+											line165flag := 1; \
+										end \
+									end \
+									else if (tile_distance(tile_num(self_obj), 18464) < 4) then begin \
+										if (not(line166flag)) then begin \
+											float_msg(self_obj, message_str(SCRIPT_IAN, 166), 0); \
+											line166flag := 1; \
+										end \
+									end \
+									else if (tile_distance(tile_num(self_obj), 21730) < 4) then begin \
+										if (not(line167flag)) then begin \
+											float_msg(self_obj, message_str(SCRIPT_IAN, 167), 0); \
+											line167flag := 1; \
+										end \
+									end \
+								end \
+								else if (cur_map_index == MAP_HUBOLDTN) then begin /* THE HUB - OLDTOWN*/ \
+									if (tile_distance(tile_num(self_obj), 16082) < 4) then begin \
+										if (line163flag == 0) then begin \
+											float_msg(self_obj, message_str(SCRIPT_IAN, 163), 0); \
+											line163flag := 1; \
+										end \
+									end \
+									else if (cur_map_index == MAP_HUBWATER) then begin /* THE HUB - WATER MERCHANTS*/ \
+										if (tile_distance(tile_num(self_obj), 22497) < 4) then begin \
+											if (line164flag == 0) then begin \
+												float_msg(self_obj, message_str(SCRIPT_IAN, 164), 0); \
+												line164flag := 1; \
+											end \
+										end \
+									end \
+								end \
+								else if (cur_map_index == MAP_VAULT13) then begin /* VAULT 13 - INSIDE*/ \
+									if (line170flag == 0) then begin \
+										float_msg(self_obj, message_str(SCRIPT_IAN, 170), 0); \
+										line170flag := 1; \
+									end \
+								end
+
 
 //==============================================================
 // Quests

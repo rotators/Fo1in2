@@ -1,18 +1,32 @@
+/*
+
+	Ian - Party Member
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
 
 #define NAME                    SCRIPT_IAN
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
 
 #include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+#define set_default_party_follow             set_follow_close
+#define def_follow_msg                       mstr(1020)
+#define def_med_msg                          mstr(1005)
+#define def_far_msg                          mstr(1006)
 
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure use_obj_on_p_proc;//    script_action == 7
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure use_obj_on_p_proc;
 procedure push_p_proc;
 
 procedure join_party;
@@ -42,7 +56,6 @@ procedure Ian19;
 procedure Ian20;
 procedure Ian21;
 
-procedure StepAside;
 procedure IanEnd;
 procedure IanCombat;
 procedure follow_player;
@@ -74,7 +87,6 @@ variable line167flag;
 variable line170flag;
 variable line172flag;
 
-//variable dest_tile;
 variable bestweapon_flag;
 variable armor_flag;
 variable exit_line;
@@ -83,20 +95,6 @@ variable armor_ptr;
 variable armor_pid;
 variable new_proto;
 
-import variable Katja_ptr;
-import variable Ian_ptr;
-
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
 procedure Goodbyes;
 procedure get_armor_ptr;
 procedure get_proto(variable arg0);
@@ -116,8 +114,16 @@ procedure PickDeadBodyType;
 variable DeathType := 56;
 
 // Added by Lexx
-#define float_ian(x)    float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
-#define Ian_In_Party    (global_var(IAN_HIRELING_STATUS) == 2)
+#define PARTY_NODE_X                      Ian15
+#define ian_joins_party                	party_add_self; \
+                                          add_timer_event(self_obj,game_ticks(1),EVENT_JOIN); \
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_joseph     ((dude_at_max_party_size == false) and (Joseph_In_Party == false))
+
+#define float_ian(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define Ian_In_Party    						(global_var(IAN_HIRELING_STATUS) == 2)
+
+#define EVENT_JOIN 								(10)
 variable k;
 
 procedure push_p_proc begin
@@ -127,6 +133,13 @@ procedure push_p_proc begin
    else begin
       k:=300+random(0,2);
       float_ian(k);
+   end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_JOIN) then begin
+      //float_ian(110);
+      float_ian("let's go");
    end
 end
 
@@ -218,7 +231,7 @@ begin
 						critter_add_trait(tmp, 1, 6, 0);
 						display_msg(message_str(SCRIPT_GENCHAT, 192) + (global_var(IAN_LEVEL) + 1) + ".");
 						float_msg(tmp, message_str(SCRIPT_IAN, 1999), 0);
-						Ian_ptr := tmp;
+						//Ian_ptr := tmp;
 						move_to(self_obj, 0, 0);// destroy old Ian
 						destroy_object(self_obj);// destroy old Ian
 					end
@@ -242,11 +255,12 @@ end
 procedure destroy_p_proc
 begin
 	set_global_var(IAN_HIRELING_STATUS, 3);
-	party_remove(self_obj);
-	party_remove(Ian_ptr);
+	//set_party_waiting;
+	//party_remove(self_obj);
+	//party_remove(Ian_ptr);
 
-	inc_good_critter		
-	Ian_ptr := 0;
+	inc_good_critter
+	//Ian_ptr := 0;
 end
 
 procedure look_at_p_proc
@@ -319,12 +333,11 @@ begin
 	script_overrides;
 end
 
-procedure map_enter_p_proc
-begin
-	Ian_ptr := self_obj;
+procedure map_enter_p_proc begin
+	//Ian_ptr := self_obj;
 	if (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - WEST
 		if (map_first_run) then begin
-			if (global_var(IAN_REFRESH_GFX_FLAG) == 0) then begin
+			/*if (global_var(IAN_REFRESH_GFX_FLAG) == 0) then begin
 				variable IanTile := 0;
 				variable NewIan := 0;
 				variable LeatherJacket := 0;
@@ -343,7 +356,7 @@ begin
 				set_global_var(IAN_REFRESH_GFX_FLAG, 1);
 				destroy_object(self_obj);
 				set_global_var(IAN_HIRELING_STATUS, 0);
-			end
+			end*/
 		end
 	end
 	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
@@ -367,10 +380,9 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+	GetReaction;
 	start_gdialog(235, self_obj, 4, -1, -1);
 	if (global_var(IAN_HIRELING_STATUS) == 2) or (global_var(IAN_HIRELING_STATUS) == 3) then begin
 		gdialog_set_barter_mod(255);
@@ -420,7 +432,7 @@ begin
 			party_remove(self_obj);
 			party_add(tmp);
 			critter_add_trait(tmp, 1, 6, 0);
-			Ian_ptr := tmp;
+			//Ian_ptr := tmp;
 			move_to(self_obj, 0, 0);
 			destroy_object(self_obj);
 		end
@@ -631,7 +643,7 @@ begin
 		giq_option(4, 634, 106, join_party, 49);
 	end
 	else begin
-		call DownReact;
+		DownReact;
 		gsay_message(235, 161, 51);
 	end
 end
@@ -639,7 +651,7 @@ end
 procedure Ian18
 begin
 	gsay_reply(235, 124);
-	call UpReact;
+	UpReact;
 	giq_option(4, 634, 106, Ian19, 50);
 end
 
@@ -735,115 +747,8 @@ begin
 	end
 end
 
-procedure map_commentary
-begin
-	if (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-		if (tile_distance(tile_num(self_obj), 27883) < 4) then begin
-			if (not(line151flag)) then begin
-				float_msg(self_obj, message_str(SCRIPT_IAN, 151), 0);
-				line151flag := 1;
-			end
-		end
-	end
-	else begin
-		if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-			if (tile_distance(tile_num(self_obj), 27919) < 4) then begin
-				if (not(line152flag)) then begin
-					float_msg(self_obj, message_str(SCRIPT_IAN, 152), 0);
-					line152flag := 1;
-				end
-			end
-		end
-		else begin
-			if (cur_map_index == MAP_HALLDED) then begin //  NECROPOLIS - HALLS OF THE DEAD
-				if (not(line153flag)) then begin
-					float_msg(self_obj, message_str(SCRIPT_IAN, 153), 0);
-					line153flag := 1;
-				end
-			end
-			else begin
-				if (cur_map_index == MAP_GLOWENT) then begin //  THE GLOW - ENTRANCE (CRATER)
-					if (not(line154flag)) then begin
-						float_msg(self_obj, message_str(SCRIPT_IAN, 154), 0);
-						if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
-							float_msg(Katja_ptr, message_str(SCRIPT_KATJA, 185), 5);
-						end
-						line154flag := 1;
-					end
-				end
-				else begin
-					if (cur_map_index == MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
-						if (not(line155flag)) then begin
-							float_msg(self_obj, message_str(SCRIPT_IAN, 155), 0);
-							line155flag := 1;
-						end
-					end
-					else begin
-						if (cur_map_index == MAP_HUBDWNTN) then begin //  THE HUB - DOWNTOWN
-							if (tile_distance(tile_num(self_obj), 24890) < 4) then begin
-								if (not(line162flag)) then begin
-									float_msg(self_obj, message_str(SCRIPT_IAN, 162), 0);
-									line162flag := 1;
-								end
-							end
-							else begin
-								if (tile_distance(tile_num(self_obj), 14116) < 4) then begin
-									if (not(line165flag)) then begin
-										float_msg(self_obj, message_str(SCRIPT_IAN, 165), 0);
-										line165flag := 1;
-									end
-								end
-								else begin
-									if (tile_distance(tile_num(self_obj), 18464) < 4) then begin
-										if (not(line166flag)) then begin
-											float_msg(self_obj, message_str(SCRIPT_IAN, 166), 0);
-											line166flag := 1;
-										end
-									end
-									else begin
-										if (tile_distance(tile_num(self_obj), 21730) < 4) then begin
-											if (not(line167flag)) then begin
-												float_msg(self_obj, message_str(SCRIPT_IAN, 167), 0);
-												line167flag := 1;
-											end
-										end
-									end
-								end
-							end
-						end
-						else begin
-							if (cur_map_index == MAP_HUBOLDTN) then begin //  THE HUB - OLDTOWN
-								if (tile_distance(tile_num(self_obj), 16082) < 4) then begin
-									if (line163flag == 0) then begin
-										float_msg(self_obj, message_str(SCRIPT_IAN, 163), 0);
-										line163flag := 1;
-									end
-								end
-							end
-							else begin
-								if (cur_map_index == MAP_HUBWATER) then begin //  THE HUB - WATER MERCHANTS
-									if (tile_distance(tile_num(self_obj), 22497) < 4) then begin
-										if (line164flag == 0) then begin
-											float_msg(self_obj, message_str(SCRIPT_IAN, 164), 0);
-											line164flag := 1;
-										end
-									end
-								end
-								else begin
-									if (cur_map_index == MAP_VAULT13) then begin //  VAULT 13 - INSIDE
-										if (line170flag == 0) then begin
-											float_msg(self_obj, message_str(SCRIPT_IAN, 170), 0);
-											line170flag := 1;
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure map_commentary begin
+	//party_commentary
 end
 
 procedure IanTactics
@@ -964,132 +869,6 @@ begin
 	gsay_message(235, 2100, 49);
 	critter_add_trait(self_obj, 1, 5, 89);
 	call IanCombatTactics;
-end
-
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 end
 
 procedure get_armor_ptr
