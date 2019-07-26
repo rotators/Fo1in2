@@ -103,6 +103,17 @@ variable victim;
 
 export variable signal_mutants;
 
+variable knock_down_sound;
+
+#define dude_knockdown 			knock_down_sound := sfx_build_char_name(dude_obj, ANIM_fall_front, snd_knock_down); 	\
+									   reg_anim_clear(dude_obj); 																					\
+									   reg_anim_begin(); 																							\
+									      reg_anim_play_sfx(dude_obj, knock_down_sound, 1); 												\
+									      reg_anim_animate(dude_obj,ANIM_fall_back_sf,5); 												\
+									      reg_anim_animate(dude_obj,ANIM_back_to_standing,-1); 											\
+									   reg_anim_end(); 																								\
+									   critter_injure(dude_obj,DAM_KNOCKED_OUT)
+
 procedure start
 begin
 	if (script_action == 15) then begin
@@ -1707,9 +1718,13 @@ begin
 		end
 		Item := create_object_sid(PID_KNIFE, 0, 0, -1);
 		add_obj_to_inven(Critter, Item);
+		wield_obj_critter(Critter, Item);
+
 		if (random(0, 1)) then begin
 			Item := create_object_sid(PID_HUNTING_RIFLE, 0, 0, -1);
 			add_obj_to_inven(Critter, Item);
+			wield_obj_critter(Critter, Item);
+
 			Item := create_object_sid(PID_223_FMJ, 0, 0, -1);
 			add_mult_objs_to_inven(Critter, Item, has_trait(0, dude_obj, 40) + 1);
 		end
@@ -1859,15 +1874,20 @@ begin
 		anim(Critter, 1000, random(0, 5));
 		Item := create_object_sid(PID_KNIFE, 0, 0, -1);
 		add_obj_to_inven(Critter, Item);
+
 		if (random(0, 1)) then begin
 			Item := create_object_sid(PID_DESERT_EAGLE, 0, 0, -1);
 			add_obj_to_inven(Critter, Item);
+			wield_obj_critter(Critter, Item);
+
 			Item := create_object_sid(PID_44_MAGNUM_JHP, 0, 0, -1);
 			add_mult_objs_to_inven(Critter, Item, has_trait(0, dude_obj, 40) + 1);
 		end
 		else begin
 			Item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);
 			add_obj_to_inven(Critter, Item);
+			wield_obj_critter(Critter, Item);
+
 			Item := create_object_sid(PID_10MM_JHP, 0, 0, -1);
 			add_mult_objs_to_inven(Critter, Item, has_trait(0, dude_obj, 40) + 1);
 		end
@@ -2961,76 +2981,85 @@ begin
 	end
 end
 
-procedure NORTH1
-begin
-	call NORTH2;
-/*
-//	{114}{}{You are traveling through sheer cliffs and rugged terrain.}
-//
-	variable LVar0 := 0;//mainroll
-	variable LVar1 := 0;//dmghp
-	variable LVar2 := 0;//
-	display_msg(message_str(SCRIPT_RNDMTN, 114));
-	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * has_trait(0, dude_obj, 16)) - (5 * get_critter_stat(dude_obj, STAT_pe)) ));
-	if (not(is_success(LVar0))) then begin
-		if ((random(1, 100) >= 95) or is_critical(LVar0)) then begin
-			display_msg(message_str(SCRIPT_RNDMTN, 118));
-			LVar1 := (random(7, 20) + 3);
-			LVar2 := get_critter_stat(dude_obj, STAT_current_hp);
-			if (LVar1 >= LVar2) then begin
-				LVar1 := (LVar2 - 1);
-			end
-			reg_anim_func(2, dude_obj);
-			reg_anim_func(1, 1);
-			reg_anim_animate(dude_obj, 48, -1);
-			reg_anim_animate(dude_obj, 37, -1);
-			reg_anim_func(3, 0);
-			critter_heal(dude_obj, -LVar1);
-			critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
-			critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
-			critter_injure(dude_obj, 16);//    DAM_CRIP_ARM_LEFT     16
-			critter_injure(dude_obj, 32);//    DAM_CRIP_ARM_RIGHT    32
-			display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
-		end
-		else begin
-			display_msg(message_str(SCRIPT_RNDMTN, 117));
-			LVar1 := random(4, 16);
-			LVar2 := get_critter_stat(dude_obj, STAT_current_hp);
-			if (LVar1 >= LVar2) then begin
-				LVar1 := (LVar2 - 1);
-			end
-			reg_anim_func(2, dude_obj);
-			reg_anim_func(1, 1);
-			reg_anim_animate(dude_obj, 48, -1);
-			reg_anim_animate(dude_obj, 37, -1);
-			reg_anim_func(3, 0);
-			critter_heal(dude_obj, -LVar1);
-			display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
-			if (random(0, 3) == 0) then begin
+procedure NORTH1 begin
+
+	if fo1in2_fluff_enc_disabled then begin
+		call NORTH2;
+	end
+	else begin
+
+	//	{114}{}{You are traveling through sheer cliffs and rugged terrain.}
+	//
+		variable LVar0 := 0;//mainroll
+		variable LVar1 := 0;//dmghp
+		variable LVar2 := 0;//
+		display_msg(message_str(SCRIPT_RNDMTN, 114));
+		LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * has_trait(0, dude_obj, 16)) - (5 * get_critter_stat(dude_obj, STAT_pe)) ));
+		if (not(is_success(LVar0))) then begin
+			if ((random(1, 100) >= 95) or is_critical(LVar0)) then begin
+				display_msg(message_str(SCRIPT_RNDMTN, 118));
+				LVar1 := (random(7, 20) + 3);
+				LVar2 := get_critter_stat(dude_obj, STAT_current_hp);
+				if (LVar1 >= LVar2) then begin
+					LVar1 := (LVar2 - 1);
+				end
+
+				reg_anim_func(2, dude_obj);
+				reg_anim_func(1, 1);
+				reg_anim_animate(dude_obj, 48, -1);
+				reg_anim_animate(dude_obj, 37, -1);
+				reg_anim_func(3, 0);
+
+				critter_heal(dude_obj, -LVar1);
 				critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
+				critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
+				critter_injure(dude_obj, 16);//    DAM_CRIP_ARM_LEFT     16
+				critter_injure(dude_obj, 32);//    DAM_CRIP_ARM_RIGHT    32
 				display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
 			end
 			else begin
-// == 1
-				critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
-				display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
-// == 2  injure 16
-// == 3 injure 32
+				display_msg(message_str(SCRIPT_RNDMTN, 117));
+				LVar1 := random(4, 16);
+				LVar2 := get_critter_stat(dude_obj, STAT_current_hp);
+				if (LVar1 >= LVar2) then begin
+					LVar1 := (LVar2 - 1);
+				end
+
+				reg_anim_func(2, dude_obj);
+				reg_anim_func(1, 1);
+				reg_anim_animate(dude_obj, 48, -1);
+				reg_anim_animate(dude_obj, 37, -1);
+				reg_anim_func(3, 0);
+
+				critter_heal(dude_obj, -LVar1);
+				display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
+				if (random(0, 3) == 0) then begin
+					critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
+					display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
+				end
+				else begin
+	// == 1
+					critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
+					display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
+	// == 2  injure 16
+	// == 3 injure 32
+
+				end
+			end
+		end
+		else begin
+			display_msg(message_str(SCRIPT_RNDMTN, 115));
+			if (is_critical(LVar0)) then begin
+				display_msg(message_str(SCRIPT_RNDMTN, 116));
+				critter_heal(dude_obj, random(5, 15));
+	//{116}{}{You find a cave with a small spring and manage to get your first good night's sleep in a long time.}
+	//{142}{}{You refill your empty canteen in the spring.}
+	//{143}{}{You refill your empty canteens in the spring.}
 
 			end
 		end
-	end
-	else begin
-		display_msg(message_str(SCRIPT_RNDMTN, 115));
-		if (is_critical(LVar0)) then begin
-			display_msg(message_str(SCRIPT_RNDMTN, 116));
-			critter_heal(dude_obj, random(5, 15));
-//{116}{}{You find a cave with a small spring and manage to get your first good night's sleep in a long time.}
-//{142}{}{You refill your empty canteen in the spring.}
-//{143}{}{You refill your empty canteens in the spring.}
 
-		end
-	end*/
+	end
 end
 
 procedure NORTH2
@@ -3134,8 +3163,8 @@ begin
 	call stranger;
 end
 
-procedure NORTH6
-begin
+procedure NORTH6 begin
+
 //	{100}{}{You are nearly crushed by a large boulder in an avalanche.}
 //
 	variable LVar0 := 0;
