@@ -692,6 +692,11 @@ FLOAT_MSG_BLUE
                                                debug_msg(" unmark_on_map("+x+")");                       \
                                                mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_UNKNOWN);   \
                                             end
+											
+#define invisible_on_map(x)                 if (town_known(x) != MARK_STATE_UNKNOWN) then begin          \
+                                               debug_msg(" invisible_on_map("+x+")");                    \
+                                               mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_INVISIBLE); \
+                                            end
 
 #define mark_abbey_on_map                   mark_on_map(AREA_ABBEY)
 #define mark_arroyo_on_map                  mark_on_map(AREA_ARROYO)

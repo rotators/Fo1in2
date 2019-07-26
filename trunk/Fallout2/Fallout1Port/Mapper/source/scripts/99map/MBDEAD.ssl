@@ -1,9 +1,10 @@
 #include "..\headers\define.h"
+#include "..\headers\COMMAND.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure map_exit_p_proc;//    script_action == 16
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
 procedure lighting;
 procedure add_party;
 procedure update_party;
@@ -21,61 +22,42 @@ export variable Tandi_ptr;
 procedure Darkness;
 procedure Invasion;
 
-
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call map_update_p_proc;
-		end
-		else begin
-			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-				call map_exit_p_proc;
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
+	invisible_on_map(AREA_MILITARY_BASE)
+
+	override_map_start(133, 111, 0, 5);
+
 	call lighting;
 	call add_party;
 	//call Invasion;
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	call lighting;
 	call update_party;
 end
 
-procedure map_exit_p_proc
-begin
+procedure map_exit_p_proc begin
 	call remove_party;
 end
 
-procedure lighting
-begin
+procedure lighting begin
 	variable LVar0 := 0;
 	LVar0 := game_time_hour;
 	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
 		set_light_level(LVar0 - 600 + 40);
 	end
+	else if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
+		set_light_level(100);
+	end
+	else if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
+		set_light_level(100 - (LVar0 - 1800));
+	end
 	else begin
-		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
-			set_light_level(100);
-		end
-		else begin
-			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
-				set_light_level(100 - (LVar0 - 1800));
-			end
-			else begin
-				set_light_level(40);
-			end
-		end
+		set_light_level(40);
 	end
 end
 
