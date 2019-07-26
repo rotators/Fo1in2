@@ -266,64 +266,33 @@ procedure combat_p_proc begin
 		end
 	end
 
-	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-// checks for dropping of explosives:
-		if critter_inven_obj(dude_obj, 2) > 0 then begin
-			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
-			if IDH2 == 206 then begin
+	if critter_inven_obj(dude_obj, 2) > 0 then begin
+		//H2 := critter_inven_obj(dude_obj, 2);//	"ITEM1" (on the left)
+		IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
+
+		if IDH2 == 206 then begin
+			//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+			drop_obj(critter_inven_obj(dude_obj, 2));
+		end
+		else begin
+			if IDH2 == 209 then begin
 				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
 				drop_obj(critter_inven_obj(dude_obj, 2));
 			end
-			else begin
-				if IDH2 == 209 then begin
-					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-					drop_obj(critter_inven_obj(dude_obj, 2));
-				end
-			end
 		end
-		if critter_inven_obj(dude_obj, 1) > 0 then begin
-			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
-			if IDH1 == 206 then begin
-				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-				drop_obj(critter_inven_obj(dude_obj, 1));
-			end
-			else begin
-				if IDH1 == 209 then begin
-					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-					drop_obj(critter_inven_obj(dude_obj, 1));
-				end
-			end
-		end
+
 	end
-	else begin
-		if critter_inven_obj(dude_obj, 2) > 0 then begin
-			//H2 := critter_inven_obj(dude_obj, 2);//	"ITEM1" (on the left)
-			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
-
-			if IDH2 == 206 then begin
-				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-				drop_obj(critter_inven_obj(dude_obj, 2));
-			end
-			else begin
-				if IDH2 == 209 then begin
-					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-					drop_obj(critter_inven_obj(dude_obj, 2));
-				end
-			end
-
+	if critter_inven_obj(dude_obj, 1) > 0 then begin
+		//H1 := critter_inven_obj(dude_obj, 1);//	"ITEM2" (on the right)
+		IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
+		if IDH1 == 206 then begin
+			//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
+			drop_obj(critter_inven_obj(dude_obj, 1));
 		end
-		if critter_inven_obj(dude_obj, 1) > 0 then begin
-			//H1 := critter_inven_obj(dude_obj, 1);//	"ITEM2" (on the right)
-			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
-			if IDH1 == 206 then begin
+		else begin
+			if IDH1 == 209 then begin
 				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
 				drop_obj(critter_inven_obj(dude_obj, 1));
-			end
-			else begin
-				if IDH1 == 209 then begin
-					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-					drop_obj(critter_inven_obj(dude_obj, 1));
-				end
 			end
 		end
 	end
@@ -341,74 +310,9 @@ procedure critter_p_proc begin
 		end
 	end
 
-// Player has been dipped? PLAYER IS SUPERMUTANT NOW - persisting flag
-	if global_var(PLAYER_BEEN_DIPPED) then begin
-		if critter_inven_obj(dude_obj, 0) then begin
-			if obj_pid(critter_inven_obj(dude_obj, 0)) != PID_CAR_FUEL_INJECTION then begin// <-- green mutant
-				variable del_ptr := 0;
-				del_ptr := critter_inven_obj(dude_obj, 0);
-				rm_obj_from_inven(dude_obj, del_ptr);
-				destroy_object(del_ptr);
-				//inven_unwield;
-				display_msg(message_str(SCRIPT_GENCHAT, 170));
-				while(obj_carrying_pid_obj(dude_obj, PID_CAR_FUEL_INJECTION)) do begin
-					variable Remove := 0;
-					Remove := obj_carrying_pid_obj(dude_obj, PID_CAR_FUEL_INJECTION);
-					rm_obj_from_inven(dude_obj, Remove);
-					destroy_object(Remove);
-					//inven_unwield;
-				end
-			end
-		end
-		else begin
-			variable Requip := 0;
-			//inven_unwield;
-			while(obj_carrying_pid_obj(dude_obj, PID_CAR_FUEL_INJECTION)) do begin
-				variable Removal := 0;
-				Removal := obj_carrying_pid_obj(dude_obj, PID_CAR_FUEL_INJECTION);
-				rm_obj_from_inven(dude_obj, Removal);
-				destroy_object(Removal);
-				//inven_unwield;
-			end
-			Requip := create_object_sid(PID_CAR_FUEL_INJECTION, 0, 0, SCRIPT_GRNMTARM);
-			add_obj_to_inven(dude_obj, Requip);
-			wield_obj_critter(dude_obj, Requip);
-		end
-	end
-
 
 	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 
-// checks for dropping of explosives:
-		if critter_inven_obj(dude_obj, 2) > 0 then begin
-			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
-			if IDH2 == 206 then begin
-				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-				drop_obj(critter_inven_obj(dude_obj, 2));
-			end
-			else begin
-				if IDH2 == 209 then begin
-					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-					drop_obj(critter_inven_obj(dude_obj, 2));
-				end
-			end
-		end
-		if critter_inven_obj(dude_obj, 1) > 0 then begin
-			IDH1 := obj_pid(critter_inven_obj(dude_obj, 1));
-			if IDH1 == 206 then begin
-				//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-				drop_obj(critter_inven_obj(dude_obj, 1));
-			end
-			else begin
-				if IDH1 == 209 then begin
-					//set_global_var(EXPLOSIVES_CRASH_FIX_2 + cur_map_index, 1);
-					drop_obj(critter_inven_obj(dude_obj, 1));
-				end
-			end
-		end
-
-	end
-	else begin
 		if critter_inven_obj(dude_obj, 2) > 0 then begin
 			//H2 := critter_inven_obj(dude_obj, 2);//	"ITEM1" (on the left)
 			IDH2 := obj_pid(critter_inven_obj(dude_obj, 2));
@@ -437,6 +341,7 @@ procedure critter_p_proc begin
 				end
 			end
 		end
+
 	end
 
 // "Poison has left your system"
