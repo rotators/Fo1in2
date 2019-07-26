@@ -21,6 +21,10 @@
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)
 
 //==============================================================
+// Settings:
+#define fo1in2_fluff_enc_disabled 		(global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0)
+
+//==============================================================
 // Pick dead body type:
 #define pick_dead_body_type 			variable LVar0 := 0; \
 										LVar0 := (random(0, 6) + random(0, 6) + random(0, 6)); \
