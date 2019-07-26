@@ -43,8 +43,6 @@ procedure start begin
          if (get_sfall_global_int("opennote") != 1) then begin
    	      set_sfall_global("opennote", 1);
             call show_note;
-
-            lastDay := get_water_days_left;
          end
       end
       else begin
@@ -54,32 +52,27 @@ procedure start begin
          end
       end
 
-		lastDay := get_water_days_left;
-
-		/*if (get_game_mode == PIPBOY) then begin
-			//debug("last day: " + lastDay);
-			if (lastDay < get_water_days_left) then begin
-				lastDay := get_water_days_left;
-				//debug("new day: " + lastDay);
-            DeleteWin("win_days");
-            call show_days;
-         end
-		end*/
-
 		if (game_time > get_sfall_global_int("lastchek")) then begin
-         set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
+         //set_sfall_global("lastchek", game_time + ONE_GAME_DAY);
+         set_sfall_global("lastchek", game_time + ONE_GAME_MINUTE * ((ticks_til_hour(0) / 60) / 10));
 
          if (get_game_mode == PIPBOY) then begin
             DeleteWin("win_days");
             call show_days;
          end
 
-
       end
 
-		// Game over if the timer has run out:
 		//debug("water days left: " + get_water_days_left);
-		if (get_water_days_left <= 0) then begin
+		if (get_water_days_left <= 100) and (get_sfall_global_int("play_boil") == 0) then begin
+			set_sfall_global("play_boil", 1);
+			play_gmovie(BOIL1_MOVIE);
+		end
+		else if (get_water_days_left <= 50) and (get_sfall_global_int("play_boil") == 1) then begin
+			set_sfall_global("play_boil", 2);
+			play_gmovie(BOIL2_MOVIE);
+		end
+		else if (get_water_days_left <= 0) then begin
 			play_gmovie(BOIL3_MOVIE);
 			signal_end_game;
 		end
