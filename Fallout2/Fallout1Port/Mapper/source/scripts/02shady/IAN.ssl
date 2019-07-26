@@ -1,32 +1,19 @@
-/*
-
-	Ian - Party Member
-
-*/
-
-/* Include Files */
 #include "..\headers\define.h"
 
 #define NAME                    SCRIPT_IAN
-//#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
 
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
 
-#define set_default_party_follow             set_follow_close
-#define def_follow_msg                       mstr(1020)
-#define def_med_msg                          mstr(1005)
-#define def_far_msg                          mstr(1006)
-
 procedure start;
-procedure critter_p_proc;
-procedure description_p_proc;
-procedure destroy_p_proc;
-procedure look_at_p_proc;
-procedure map_enter_p_proc;
-procedure pickup_p_proc;
-procedure talk_p_proc;
-procedure use_obj_on_p_proc;
+procedure critter_p_proc;//    script_action == 12
+procedure description_p_proc;//    script_action == 3
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure map_enter_p_proc;//    script_action == 15
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure use_obj_on_p_proc;//    script_action == 7
 procedure push_p_proc;
 
 procedure join_party;
@@ -56,6 +43,7 @@ procedure Ian19;
 procedure Ian20;
 procedure Ian21;
 
+procedure StepAside;
 procedure IanEnd;
 procedure IanCombat;
 procedure follow_player;
@@ -87,6 +75,7 @@ variable line167flag;
 variable line170flag;
 variable line172flag;
 
+//variable dest_tile;
 variable bestweapon_flag;
 variable armor_flag;
 variable exit_line;
@@ -95,7 +84,9 @@ variable armor_ptr;
 variable armor_pid;
 variable new_proto;
 
-procedure Goodbyes;
+import variable Katja_ptr;
+import variable Ian_ptr;
+
 procedure get_armor_ptr;
 procedure get_proto(variable arg0);
 
@@ -114,37 +105,20 @@ procedure PickDeadBodyType;
 variable DeathType := 56;
 
 // Added by Lexx
-#define PARTY_NODE_X                      Ian15
-#define ian_joins_party                	party_add_self; \
-                                          add_timer_event(self_obj,game_ticks(1),EVENT_JOIN); \
-                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
-#define dude_has_free_slot_for_joseph     ((dude_at_max_party_size == false) and (Joseph_In_Party == false))
-
-#define float_ian(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
-#define Ian_In_Party    						(global_var(IAN_HIRELING_STATUS) == 2)
-
-#define EVENT_JOIN 								(10)
-variable k;
+#define float_ian(x)    float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define Ian_In_Party    (global_var(IAN_HIRELING_STATUS) == 2)
 
 procedure push_p_proc begin
    if (Ian_In_Party == false) then begin
       script_overrides;
    end
    else begin
-      k:=300+random(0,2);
-      float_ian(k);
+      float_ian(random(300,302));
    end
 end
 
-procedure timed_event_p_proc begin
-	if (fixed_param == EVENT_JOIN) then begin
-      //float_ian(110);
-      float_ian("let's go");
-   end
-end
+procedure start begin
 
-procedure start
-begin
 	if ((global_var(SHADY_SANDS_WAS_INVADED) == 1) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(7) != 1) then begin
@@ -154,50 +128,10 @@ begin
 			end
 		end
 	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-				call map_enter_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-						call description_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-						else begin
-							if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-								call pickup_p_proc;
-							end
-							else begin
-								if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-									call talk_p_proc;
-								end
-								else begin
-									if (script_action == 7) then begin//<-- use_obj_on_p_proc
-										call use_obj_on_p_proc;
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
 		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
@@ -231,7 +165,7 @@ begin
 						critter_add_trait(tmp, 1, 6, 0);
 						display_msg(message_str(SCRIPT_GENCHAT, 192) + (global_var(IAN_LEVEL) + 1) + ".");
 						float_msg(tmp, message_str(SCRIPT_IAN, 1999), 0);
-						//Ian_ptr := tmp;
+						Ian_ptr := tmp;
 						move_to(self_obj, 0, 0);// destroy old Ian
 						destroy_object(self_obj);// destroy old Ian
 					end
@@ -241,8 +175,7 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	variable PerceptionRoll := 0;
 	PerceptionRoll := do_check(dude_obj, STAT_pe, 1);
 	if is_success(PerceptionRoll) or has_trait(0, dude_obj, 0) then begin
@@ -252,19 +185,16 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(IAN_HIRELING_STATUS, 3);
-	//set_party_waiting;
-	//party_remove(self_obj);
-	//party_remove(Ian_ptr);
+	party_remove(self_obj);
+	party_remove(Ian_ptr);
 
 	inc_good_critter
-	//Ian_ptr := 0;
+	Ian_ptr := 0;
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 // If not in party and haven't had introductions, display "short stocky man" description
 	if (global_var(IAN_HIRELING_STATUS) == 0) then begin
@@ -286,45 +216,29 @@ begin
 					if (LVar1 == 1) then begin// ( 1 = Leather )
 						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 189));
 					end
-					else begin
-						if (LVar1 == 2) then begin// ( 2 = Metal )
-							display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 188));
-						end
-						else begin
-							if (LVar1 == 3) then begin// ( 3 = Power )
-								display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 204));
-							end
-							else begin
-								if (LVar1 == 17) then begin// ( 17 = Combat )
-									display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 205));
-								end
-								else begin
-									if (LVar1 == 74) then begin// ( 74 = Jacket )
-										display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 206));
-									end
-									else begin
-										if (LVar1 == 113) then begin// ( 113 = Robes )
-											display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 207));
-										end
-										else begin
-											if (LVar1 == 232) then begin// ( 232 = Hardened Power )
-												display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 208));
-											end
-											else begin
-												if (LVar1 == 239) then begin// ( 239 = Brotherhood )
-													display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 209));
-												end
-												else begin
-													if (LVar1 == 240) then begin// ( 240 = Tesla )
-														display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 210));
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
+					else if (LVar1 == 2) then begin// ( 2 = Metal )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 188));
+					end
+					else if (LVar1 == 3) then begin// ( 3 = Power )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 204));
+					end
+					else if (LVar1 == 17) then begin// ( 17 = Combat )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 205));
+					end
+					else if (LVar1 == 74) then begin// ( 74 = Jacket )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 206));
+					end
+					else if (LVar1 == 113) then begin// ( 113 = Robes )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 207));
+					end
+					else if (LVar1 == 232) then begin// ( 232 = Hardened Power )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 208));
+					end
+					else if (LVar1 == 239) then begin// ( 239 = Brotherhood )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 209));
+					end
+					else if (LVar1 == 240) then begin// ( 240 = Tesla )
+						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 210));
 					end
 				end
 			end
@@ -333,11 +247,12 @@ begin
 	script_overrides;
 end
 
-procedure map_enter_p_proc begin
-	//Ian_ptr := self_obj;
+procedure map_enter_p_proc
+begin
+	Ian_ptr := self_obj;
 	if (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - WEST
 		if (map_first_run) then begin
-			/*if (global_var(IAN_REFRESH_GFX_FLAG) == 0) then begin
+			if (global_var(IAN_REFRESH_GFX_FLAG) == 0) then begin
 				variable IanTile := 0;
 				variable NewIan := 0;
 				variable LeatherJacket := 0;
@@ -356,7 +271,7 @@ procedure map_enter_p_proc begin
 				set_global_var(IAN_REFRESH_GFX_FLAG, 1);
 				destroy_object(self_obj);
 				set_global_var(IAN_HIRELING_STATUS, 0);
-			end*/
+			end
 		end
 	end
 	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
@@ -370,45 +285,45 @@ procedure map_enter_p_proc begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
+
 	if (global_var(IAN_HIRELING_STATUS) < 2) then begin
 		tmp_hostile := 1;
 	end
 	else begin
 		script_overrides;
 	end
+
 end
 
 procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	GetReaction;
+
+	get_reaction
+
 	start_gdialog(235, self_obj, 4, -1, -1);
 	if (global_var(IAN_HIRELING_STATUS) == 2) or (global_var(IAN_HIRELING_STATUS) == 3) then begin
 		gdialog_set_barter_mod(255);
 	end
+
 	gsay_start;
+
 	if (global_var(ENEMY_SHADY_SANDS) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
 		call Ian14;
 	end
-	else begin
-		if (global_var(IAN_HIRELING_STATUS) == 0) then begin
-			call Ian02;
-		end
-		else begin
-			if (global_var(IAN_HIRELING_STATUS) == 2) then begin
-				call Ian15;
-			end
-			else begin
-				if (global_var(IAN_HIRELING_STATUS) == 3) then begin
-					call Ian21;
-				end
-				else begin
-					call Ian12;
-				end
-			end
-		end
+	else if (global_var(IAN_HIRELING_STATUS) == 0) then begin
+		call Ian02;
 	end
+	else if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		call Ian15;
+	end
+	else if (global_var(IAN_HIRELING_STATUS) == 3) then begin
+		call Ian21;
+	end
+	else begin
+		call Ian12;
+	end
+
 	gsay_end;
 	end_dialogue;
 	if ((global_var(IAN_HIRELING_STATUS) == 2) and (global_var(DESTROY_MASTER_9) == 0)) then begin
@@ -432,15 +347,15 @@ procedure talk_p_proc begin
 			party_remove(self_obj);
 			party_add(tmp);
 			critter_add_trait(tmp, 1, 6, 0);
-			//Ian_ptr := tmp;
+			Ian_ptr := tmp;
 			move_to(self_obj, 0, 0);
 			destroy_object(self_obj);
 		end
 	end
+
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
 		item := obj_pid(obj_being_used_with);
 		if ((item != 40) and (item != 71) and (item != 81) and (item != 103) and (item != 144)) then begin
@@ -463,8 +378,7 @@ begin
 	end
 end
 
-procedure join_party
-begin
+procedure join_party begin
 	set_global_var(IAN_HIRELING_STATUS, 2);
 	set_global_var(DESTROY_VATS_5, 4);
 	set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat(1));
@@ -473,45 +387,38 @@ begin
 	gsay_message(235, 150, 50);
 end
 
-procedure hire_Ian
-begin
+procedure hire_Ian begin
 	item_caps_adjust(dude_obj, -100);
 	call join_party;
 end
 
-procedure Ian01
-begin
+procedure Ian01 begin
 	gsay_message(235, 101, 51);
 end
 
-procedure Ian02
-begin
+procedure Ian02 begin
 	gsay_reply(235, 102);
 	giq_option(4, 235, 103, Ian03, 51);
 	giq_option(4, 235, message_str(SCRIPT_IAN, 104) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_IAN, 105), Ian04, 50);
 	giq_option(-3, 235, 106, Ian05, 50);
 end
 
-procedure Ian03
-begin
+procedure Ian03 begin
 	gsay_message(235, 107, 51);
 end
 
-procedure Ian04
-begin
+procedure Ian04 begin
 	gsay_reply(235, 108);
 	set_global_var(IAN_HIRELING_STATUS, 1);
 	giq_option(4, 235, 109, Ian06, 50);
 	giq_option(5, 235, 110, Ian07, 50);
 end
 
-procedure Ian05
-begin
+procedure Ian05 begin
 	gsay_message(235, 111, 50);
 end
 
-procedure Ian06
-begin
+procedure Ian06 begin
 	gsay_reply(235, 112);
 	giq_option(4, 235, 114, Ian18, 50);
 	giq_option(4, 235, 115, Ian13, 50);
@@ -519,48 +426,41 @@ begin
 	giq_option(5, 235, 116, Ian08, 50);
 end
 
-procedure Ian07
-begin
+procedure Ian07 begin
 	gsay_reply(235, 117);
 	giq_option(4, 235, 118, Ian09, 50);
 	giq_option(4, 235, 119, Ian08, 50);
 end
 
-procedure Ian08
-begin
+procedure Ian08 begin
 	gsay_reply(235, 120);
 	giq_option(4, 235, 121, Ian10, 50);
 	giq_option(5, 235, 122, Ian11, 50);
 end
 
-procedure Ian09
-begin
+procedure Ian09 begin
 	gsay_reply(235, 123);
 	giq_option(4, 634, 104, IanEnd, 50);
 end
 
-procedure Ian10
-begin
+procedure Ian10 begin
 	gsay_reply(235, 125);
 	giq_option(4, 235, 126, Ian09, 50);
 	giq_option(4, 634, 101, IanEnd, 50);
 end
 
-procedure Ian11
-begin
+procedure Ian11 begin
 	gsay_reply(235, 128);
 	giq_option(4, 235, 129, Ian07, 50);
 	giq_option(4, 634, 101, IanEnd, 50);
 end
 
-procedure Ian12
-begin
+procedure Ian12 begin
 	gsay_reply(235, message_str(SCRIPT_IAN, 131) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_IAN, 132));
 	call Ian12a;
 end
 
-procedure Ian12a
-begin
+procedure Ian12a begin
 	giq_option(4, 235, 133, Ian11, 50);
 	giq_option(4, 235, 134, Ian09, 50);
 	giq_option(4, 235, 135, Ian07, 50);
@@ -570,8 +470,7 @@ begin
 	giq_option(4, 235, 138, IanEnd, 50);
 end
 
-procedure Ian13
-begin
+procedure Ian13 begin
 	if (not(global_var(WORLDMAPLIST_THE_HUB))) then begin
 		set_global_var(WORLDMAPLIST_THE_HUB, 1);
 	end
@@ -587,42 +486,35 @@ begin
 	end
 end
 
-procedure Ian14
-begin
+procedure Ian14 begin
 	tmp_hostile := 1;
 	gsay_message(235, 141, 51);
 end
 
-procedure Ian15
-begin
+// Primary dialog node:
+procedure Ian15 begin
 	gsay_reply(235, message_str(SCRIPT_IAN, 142) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_IAN, 143));
 	giq_option(4, 235, 145, Ian16, 50);
 	giq_option(4, 235, 146, Ian13, 50);
 	giq_option(4, 235, 173, Ian20, 50);
 	giq_option(4, 235, 2000, IanCombatTactics, 50);
 	giq_option(4, 389, 159, IanTactics, 50);
-	//giq_option(4, 766, 190, StepAside, 50);
-	//giq_option(4, 766, 197, StepAside, 51);
 	giq_option(4, 235, 144, IanEnd, 50);
-	//giq_option(-3, 766, 195, Ian16, 50);
-	//giq_option(-3, 766, 194, StepAside, 50);
 	giq_option(-3, 817, 139, IanEnd, 50);
 end
 
-procedure Ian16
-begin
+procedure Ian16 begin
 	set_global_var(IAN_HIRELING_STATUS, 3);
 	party_remove(self_obj);
 	gsay_message(235, 147, 50);
 end
 
-procedure Ian17
-begin
-	if (local_var(1) == 1) then begin
+procedure Ian17 begin
+	if (local_var(LVAR_reaction_level) == 1) then begin
 		gsay_message(235, 148, 51);
 	end
 	else begin
-		if (local_var(1) == 2) then begin
+		if (local_var(LVAR_reaction_level) == 2) then begin
 			gsay_reply(235, 156);
 			if (item_caps_total(dude_obj) >= 100) then begin
 				giq_option(4, 235, 157, hire_Ian, 49);
@@ -636,94 +528,54 @@ begin
 	end
 end
 
-procedure Ian17a
-begin
+procedure Ian17a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
 		gsay_reply(235, 160);
 		giq_option(4, 634, 106, join_party, 49);
 	end
 	else begin
-		DownReact;
+		DownReact
 		gsay_message(235, 161, 51);
 	end
 end
 
-procedure Ian18
-begin
+procedure Ian18 begin
 	gsay_reply(235, 124);
-	UpReact;
+	UpReact
 	giq_option(4, 634, 106, Ian19, 50);
 end
 
-procedure Ian19
-begin
+procedure Ian19 begin
 	gsay_reply(235, 127);
 	call Ian12a;
 end
 
-procedure Ian20
-begin
+procedure Ian20 begin
 	gsay_message(235, 174, 50);
 	call Ian15;
 end
 
-procedure Ian21
-begin
+procedure Ian21 begin
 	gsay_reply(235, 202);
 	giq_option(4, 235, 203, join_party, 50);
 	giq_option(4, 235, 204, IanEnd, 50);
 	giq_option(-3, 766, 196, join_party, 50);
 end
 
-procedure StepAside
-begin
-	variable LVar0 := 0;
-	NewHex := 0;
-	LVar0 := random(0, 5);
-	LVar0 := random(0, 5);
-	LVar0 := random(0, 5);
-	if (LVar0 == 0) then begin
-		NewHex := tile_num(self_obj) - 400;
-	end
-	if (LVar0 == 1) then begin
-		NewHex := tile_num(self_obj) - 202;
-	end
-	if (LVar0 == 2) then begin
-		NewHex := tile_num(self_obj) - 198;
-	end
-	if (LVar0 == 3) then begin
-		NewHex := tile_num(self_obj) + 400;
-	end
-	if (LVar0 == 4) then begin
-		NewHex := tile_num(self_obj) + 202;
-	end
-	if (LVar0 == 5) then begin
-		NewHex := tile_num(self_obj) + 198;
-	end
-	script_overrides;
-	move_to(self_obj, NewHex, elevation(self_obj));
-	script_overrides;
-	float_msg(self_obj, message_str(SCRIPT_GENCHAT, random(300, 302)), 0);
+procedure IanEnd begin
 end
 
-procedure IanEnd
-begin
-end
-
-procedure IanCombat
-begin
+procedure IanCombat begin
 	tmp_hostile := 1;
 end
 
-procedure SDUIBEK_DISTANCE
-begin
+procedure SDUIBEK_DISTANCE begin
 	if (tile_distance_objs(self_obj, dude_obj) >= (2 * global_var(DESTROY_VATS_5))) then begin// was 1.5
 		animate_move_obj_to_tile(self_obj, dest_tile, 1 bwor 16);
 	end
 end
 
-procedure TEAMX_DISTANCE
-begin
+procedure TEAMX_DISTANCE begin
 	if (tile_distance_objs(self_obj, dude_obj) > (2 * global_var(DESTROY_VATS_5))) then begin
 		animate_move_obj_to_tile(self_obj, dest_tile, 1 bwor 16);
 	end
@@ -732,8 +584,7 @@ begin
 	end
 end
 
-procedure follow_player
-begin
+procedure follow_player begin
 	if (tile_distance_objs(self_obj, dude_obj) > global_var(DESTROY_VATS_5)) then begin
 		if (anim_busy(self_obj) == 0) then begin
 			dest_tile := tile_num_in_direction(tile_num_in_direction(tile_num(dude_obj), rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)), global_var(DESTROY_VATS_5)), random(0, 5), random(0, 2));
@@ -747,12 +598,118 @@ begin
 	end
 end
 
-procedure map_commentary begin
-	//party_commentary
+procedure map_commentary
+begin
+	if (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+		if (tile_distance(tile_num(self_obj), 27883) < 4) then begin
+			if (not(line151flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 151), 0);
+				line151flag := 1;
+			end
+		end
+	end
+	else begin
+		if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+			if (tile_distance(tile_num(self_obj), 27919) < 4) then begin
+				if (not(line152flag)) then begin
+					float_msg(self_obj, message_str(SCRIPT_IAN, 152), 0);
+					line152flag := 1;
+				end
+			end
+		end
+		else begin
+			if (cur_map_index == MAP_HALLDED) then begin //  NECROPOLIS - HALLS OF THE DEAD
+				if (not(line153flag)) then begin
+					float_msg(self_obj, message_str(SCRIPT_IAN, 153), 0);
+					line153flag := 1;
+				end
+			end
+			else begin
+				if (cur_map_index == MAP_GLOWENT) then begin //  THE GLOW - ENTRANCE (CRATER)
+					if (not(line154flag)) then begin
+						float_msg(self_obj, message_str(SCRIPT_IAN, 154), 0);
+						if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+							float_msg(Katja_ptr, message_str(SCRIPT_KATJA, 185), 5);
+						end
+						line154flag := 1;
+					end
+				end
+				else begin
+					if (cur_map_index == MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
+						if (not(line155flag)) then begin
+							float_msg(self_obj, message_str(SCRIPT_IAN, 155), 0);
+							line155flag := 1;
+						end
+					end
+					else begin
+						if (cur_map_index == MAP_HUBDWNTN) then begin //  THE HUB - DOWNTOWN
+							if (tile_distance(tile_num(self_obj), 24890) < 4) then begin
+								if (not(line162flag)) then begin
+									float_msg(self_obj, message_str(SCRIPT_IAN, 162), 0);
+									line162flag := 1;
+								end
+							end
+							else begin
+								if (tile_distance(tile_num(self_obj), 14116) < 4) then begin
+									if (not(line165flag)) then begin
+										float_msg(self_obj, message_str(SCRIPT_IAN, 165), 0);
+										line165flag := 1;
+									end
+								end
+								else begin
+									if (tile_distance(tile_num(self_obj), 18464) < 4) then begin
+										if (not(line166flag)) then begin
+											float_msg(self_obj, message_str(SCRIPT_IAN, 166), 0);
+											line166flag := 1;
+										end
+									end
+									else begin
+										if (tile_distance(tile_num(self_obj), 21730) < 4) then begin
+											if (not(line167flag)) then begin
+												float_msg(self_obj, message_str(SCRIPT_IAN, 167), 0);
+												line167flag := 1;
+											end
+										end
+									end
+								end
+							end
+						end
+						else begin
+							if (cur_map_index == MAP_HUBOLDTN) then begin //  THE HUB - OLDTOWN
+								if (tile_distance(tile_num(self_obj), 16082) < 4) then begin
+									if (line163flag == 0) then begin
+										float_msg(self_obj, message_str(SCRIPT_IAN, 163), 0);
+										line163flag := 1;
+									end
+								end
+							end
+							else begin
+								if (cur_map_index == MAP_HUBWATER) then begin //  THE HUB - WATER MERCHANTS
+									if (tile_distance(tile_num(self_obj), 22497) < 4) then begin
+										if (line164flag == 0) then begin
+											float_msg(self_obj, message_str(SCRIPT_IAN, 164), 0);
+											line164flag := 1;
+										end
+									end
+								end
+								else begin
+									if (cur_map_index == MAP_VAULT13) then begin //  VAULT 13 - INSIDE
+										if (line170flag == 0) then begin
+											float_msg(self_obj, message_str(SCRIPT_IAN, 170), 0);
+											line170flag := 1;
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
 end
 
-procedure IanTactics
-begin
+procedure IanTactics begin
 	gsay_reply(389, 160);
 	giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 216), IanClose, 50);
 	giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 217), IanClose_SDUIBEK, 50);
@@ -762,8 +719,7 @@ begin
 	giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 217), IanFar_SDUIBEK, 50);
 end
 
-procedure IanClose_SDUIBEK
-begin
+procedure IanClose_SDUIBEK begin
 	set_local_var(4, 1);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
@@ -772,8 +728,7 @@ begin
 	call Ian15;
 end
 
-procedure IanModerate_SDUIBEK
-begin
+procedure IanModerate_SDUIBEK begin
 	set_local_var(4, 0);
 	set_local_var(5, 1);
 	set_local_var(6, 0);
@@ -782,8 +737,7 @@ begin
 	call Ian15;
 end
 
-procedure IanFar_SDUIBEK
-begin
+procedure IanFar_SDUIBEK begin
 	set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 1);
@@ -792,8 +746,7 @@ begin
 	call Ian15;
 end
 
-procedure IanClose
-begin
+procedure IanClose begin
 	set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
@@ -802,8 +755,7 @@ begin
 	call Ian15;
 end
 
-procedure IanModerate
-begin
+procedure IanModerate begin
 	set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
@@ -812,8 +764,7 @@ begin
 	call Ian15;
 end
 
-procedure IanFar
-begin
+procedure IanFar begin
 	set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
@@ -822,8 +773,7 @@ begin
 	call Ian15;
 end
 
-procedure IanCombatTactics
-begin
+procedure IanCombatTactics begin
 	armor_ptr := get_armor_ptr;
 	gsay_reply(235, 2001);
 	giq_option(4, 235, 2010, IanBestWeapon, 49);
@@ -836,45 +786,40 @@ begin
 	giq_option(4, 235, 2015, Ian15, 49);
 end
 
-procedure IanBestWeapon
-begin
+procedure IanBestWeapon begin
 	gsay_message(235, 2100, 49);
 	bestweapon_flag := 1;
 	call IanCombatTactics;
 end
 
-procedure IanArmor
-begin
+procedure IanArmor begin
 	gsay_message(235, 2100, 49);
 	armor_flag := 1;
 	call IanCombatTactics;
 end
 
-procedure IanSniper
-begin
+procedure IanSniper begin
 	gsay_message(235, 2100, 49);
 	critter_add_trait(self_obj, 1, 5, 95);
 	call IanCombatTactics;
 end
 
-procedure IanNearCombat
-begin
+procedure IanNearCombat begin
 	gsay_message(235, 2100, 49);
 	critter_add_trait(self_obj, 1, 5, 96);
 	call IanCombatTactics;
 end
 
-procedure IanFreeCombat
-begin
+procedure IanFreeCombat begin
 	gsay_message(235, 2100, 49);
 	critter_add_trait(self_obj, 1, 5, 89);
 	call IanCombatTactics;
 end
 
-procedure get_armor_ptr
-begin
+procedure get_armor_ptr begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
+
 	LVar1 := obj_pid(critter_inven_obj(self_obj, 0));
 	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_LEATHER_JACKET) and (LVar1 != 74)) then begin//  JACKET
 		LVar0 := obj_carrying_pid_obj(self_obj, PID_LEATHER_JACKET);
@@ -906,56 +851,40 @@ begin
 	return LVar0;
 end
 
-procedure get_proto(variable arg0)
-begin
+procedure get_proto(variable arg0) begin
 	variable LVar1 := 0;
 	if (obj_pid(arg0) == PID_LEATHER_JACKET) then begin
 		LVar1 := 16777529 + (9 * global_var(IAN_LEVEL));
 	end
-	else begin
-		if (obj_pid(arg0) == PID_LEATHER_ARMOR) then begin
-			LVar1 := 16777530 + (9 * global_var(IAN_LEVEL));
-		end
-		else begin
-			if (obj_pid(arg0) == PID_PURPLE_ROBE) then begin
-				LVar1 := 16777531 + (9 * global_var(IAN_LEVEL));
-			end
-			else begin
-				if (obj_pid(arg0) == PID_METAL_ARMOR) then begin
-					LVar1 := 16777532 + (9 * global_var(IAN_LEVEL));
-				end
-				else begin
-					if (obj_pid(arg0) == PID_COMBAT_ARMOR) then begin
-						LVar1 := 16777533 + (9 * global_var(IAN_LEVEL));
-					end
-					else begin
-						if (obj_pid(arg0) == PID_TESLA_ARMOR) then begin
-							LVar1 := 16777534 + (9 * global_var(IAN_LEVEL));
-						end
-						else begin
-							if (obj_pid(arg0) == PID_BROTHERHOOD_COMBAT_ARMOR) then begin
-								LVar1 := 16777535 + (9 * global_var(IAN_LEVEL));
-							end
-							else begin
-								if (obj_pid(arg0) == PID_POWERED_ARMOR) then begin
-									LVar1 := 16777536 + (9 * global_var(IAN_LEVEL));
-								end
-								else begin
-									if (obj_pid(arg0) == PID_HARDENED_POWER_ARMOR) then begin
-										LVar1 := 16777537 + (9 * global_var(IAN_LEVEL));
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (obj_pid(arg0) == PID_LEATHER_ARMOR) then begin
+		LVar1 := 16777530 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_PURPLE_ROBE) then begin
+		LVar1 := 16777531 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_METAL_ARMOR) then begin
+		LVar1 := 16777532 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_COMBAT_ARMOR) then begin
+		LVar1 := 16777533 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_TESLA_ARMOR) then begin
+		LVar1 := 16777534 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_BROTHERHOOD_COMBAT_ARMOR) then begin
+		LVar1 := 16777535 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_POWERED_ARMOR) then begin
+		LVar1 := 16777536 + (9 * global_var(IAN_LEVEL));
+	end
+	else if (obj_pid(arg0) == PID_HARDENED_POWER_ARMOR) then begin
+		LVar1 := 16777537 + (9 * global_var(IAN_LEVEL));
 	end
 	return LVar1;
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
+
+
