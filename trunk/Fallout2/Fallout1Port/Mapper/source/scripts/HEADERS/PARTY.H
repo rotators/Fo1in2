@@ -19,34 +19,7 @@ variable How_Many_Party_Members_Armed;
 
 #define obj_in_party(x)                     (party_member_obj(obj_pid(x)) != 0)
 // Pointers to the Party Members
-#define Vic_Ptr                             party_member_obj(PID_VIC)
-#define Myron_Ptr                           party_member_obj(PID_MYRON)
-#define Marcus_Ptr                          party_member_obj(PID_MARCUS)
-#define MacRae_Ptr                          party_member_obj(PID_JOHN_MACRAE)
-#define Sulik_Ptr                           party_member_obj(PID_SULIK)
-#define Lenny_Ptr                           party_member_obj(PID_LENNY)
-#define Cyberdog_Ptr                        party_member_obj(PID_CYBERDOG)
-#define Doc_Ptr                             party_member_obj(PID_DOC)
-#define Goris_Ptr                           party_member_obj(PID_GORIS)
-#define Davin_Ptr                           party_member_obj(PID_DAVIN)
-#define Miria_Ptr                           party_member_obj(PID_MIRIA)
-#define Robobrain_Ptr                       party_member_obj(PID_BRAINBOT)
 #define Trunk_Ptr                           party_member_obj(PID_CAR_TRUNK)
-#define Dogmeat_Ptr                         party_member_obj(PID_DOGMEAT)
-#define Pariah_Dog_Ptr                      party_member_obj(PID_PARIAH_DOG) // temp
-#define K9_Ptr                              party_member_obj(PID_K9)
-#define Robobrain_Human_Ptr                 party_member_obj(PID_ROBOBRAIN_HUMAN)
-#define Robobrain_Abnormal_Ptr              party_member_obj(PID_ROBOBRAIN_ABNORMAL)
-#define Robobrain_Chimp_Ptr                 party_member_obj(PID_ROBOBRAIN_CHIMP)
-// temporary/invisible party members
-#define Laddie_Ptr                          party_member_obj(PID_LADDIE)
-#define Bess_Ptr                            party_member_obj(PID_BESS)
-#define Chicken_Ptr                         party_member_obj(PID_CHICKEN)
-#define Karl_Ptr                            party_member_obj(PID_KARL)
-#define Jonny_Ptr                           party_member_obj(PID_JONNY)
-#define Lloyd_Ptr                           party_member_obj(PID_LLOYD)
-
-// Fallout 1
 #define Ian_ptr;							party_member_obj(PID_IAN)
 #define Dog_ptr;							party_member_obj(PID_DOGMEAT)
 #define Tycho_ptr;							party_member_obj(PID_TYCHO)
@@ -55,33 +28,6 @@ variable How_Many_Party_Members_Armed;
 #define Handy_ptr;							party_member_obj(PID_MRHANDYC)
 
 // Is this person in my party
-#define Vic_In_Party                        (Vic_Ptr != 0)
-#define Myron_In_Party                      (Myron_Ptr != 0)
-#define Marcus_In_Party                     (Marcus_Ptr != 0)
-#define MacRae_In_Party                     (MacRae_Ptr != 0)
-#define Sulik_In_Party                      (Sulik_Ptr != 0)
-#define Lenny_In_Party                      (Lenny_Ptr != 0)
-#define Cyberdog_In_Party                   (Cyberdog_Ptr != 0)
-#define Doc_In_Party                        (Doc_Ptr != 0)
-#define Goris_In_Party                      (Goris_Ptr != 0)
-#define Davin_In_Party                      (Davin_Ptr != 0)
-#define Miria_In_Party                      (Miria_Ptr != 0)
-#define Robobrain_In_Party                  (Robobrain_Ptr != 0)
-#define Dogmeat_In_Party                    (Dogmeat_Ptr != 0)
-#define Pariah_Dog_In_Party                 (Pariah_Dog_Ptr != 0)
-#define K9_In_Party                         (K9_Ptr != 0)
-#define Robobrain_Human_In_Party            (Robobrain_Human_Ptr != 0)
-#define Robobrain_Abnormal_In_Party         (Robobrain_Abnormal_Ptr != 0)
-#define Robobrain_Chimp_In_Party            (Robobrain_Chimp_Ptr != 0)
-// temporary/invisible party members
-#define Laddie_In_Party                     (Laddie_Ptr != 0)
-#define Bess_In_Party                       (Bess_Ptr != 0)
-#define Chicken_In_Party                    (Chicken_Ptr != 0)
-#define Karl_In_Party                       (Karl_Ptr != 0)
-#define Jonny_In_Party                      (Jonny_Ptr != 0)
-#define Lloyd_In_Party                      (Lloyd_Ptr != 0)
-
-// Fallout 1
 #define Ian_In_Party                      	(Ian_ptr != 0)
 #define Dog_In_Party                      	(Dog_ptr != 0)
 #define Tycho_In_Party                      (Tycho_ptr != 0)
@@ -94,10 +40,10 @@ variable How_Many_Party_Members_Armed;
 #define true_party_size                     (party_size - 1)
 #define party_max_formula                   (floor(dude_charisma/2) + (has_trait(TRAIT_PERK,dude_obj,PERK_magnetic_personality_perk)))
 #define dude_at_max_party_size              ((true_party_size >= (party_max_formula)) or (true_party_size >= 5))
-#define party_size_humans                   (Ian_In_Party+Tycho_In_Party+Katja_In_Party+Tandi_In_Party+	Myron_In_Party+MacRae_In_Party+Sulik_In_Party+Doc_In_Party+Davin_In_Party+Miria_In_Party)
-#define party_size_male                     (Ian_In_Party+Tycho_In_Party+ 								Myron_In_Party+Marcus_In_Party+MacRae_In_Party+Sulik_In_Party+Lenny_In_Party+Doc_In_Party+Goris_In_Party+Davin_In_Party)
-#define party_size_female                   (Katja_In_Party+Tandi_In_Party								Miria_In_Party)
-#define party_size_strange                  (MrHandyC_In_Party+ 										Marcus_In_Party+Lenny_In_Party+Cyberdog_In_Party+Goris_In_Party+Laddie_In_Party+Robobrain_In_Party)
+#define party_size_humans                   (Ian_In_Party+Tycho_In_Party+Katja_In_Party+Tandi_In_Party)
+#define party_size_male                     (Ian_In_Party+Tycho_In_Party)
+#define party_size_female                   (Katja_In_Party+Tandi_In_Party)
+#define party_size_strange                  (MrHandyC_In_Party+Dog_In_Party)
 #define party_size_biped                    (party_size_male + party_size_female)
 
 // Health of Party Members
@@ -111,48 +57,6 @@ variable How_Many_Party_Members_Armed;
 
 
 #define If_Party_Has_Injured                How_Many_Party_Members_Are_Injured := 0;			\
-                                            if (Vic_In_Party) then                              \
-                                                if (Is_Injured(Vic_Ptr)) then                   \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Myron_In_Party) then                            \
-                                                if (Is_Injured(Myron_Ptr)) then                 \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Marcus_In_Party) then                           \
-                                                if (Is_Injured(Marcus_Ptr)) then                \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (MacRae_In_Party) then                           \
-                                                if (Is_Injured(MacRae_Ptr)) then                \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Sulik_In_Party) then                            \
-                                                if (Is_Injured(Sulik_Ptr)) then                 \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Lenny_In_Party) then                            \
-                                                if (Is_Injured(Lenny_Ptr)) then                 \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Cyberdog_In_Party) then                         \
-                                                if (Is_Injured(Cyberdog_Ptr)) then              \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Doc_In_Party) then                              \
-                                                if (Is_Injured(Doc_Ptr)) then                   \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Goris_In_Party) then                            \
-                                                if (Is_Injured(Goris_Ptr)) then                 \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Davin_In_Party) then                            \
-                                                if (Is_Injured(Davin_Ptr)) then                 \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Miria_In_Party) then                            \
-                                                if (Is_Injured(Miria_Ptr)) then                 \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Laddie_In_Party) then                           \
-                                                if (Is_Injured(Laddie_Ptr)) then                \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Robobrain_In_Party) then                        \
-                                                if (Is_Injured(Robobrain_Ptr)) then             \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
-                                            if (Bess_In_Party) then                             \
-                                                if (Is_Injured(Bess_Ptr)) then                  \
-                                                    How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Ian_In_Party) then                             	\
                                                 if (Is_Injured(Ian_Ptr)) then                 	\
                                                     How_Many_Party_Members_Are_Injured+=1;      \
@@ -177,42 +81,6 @@ variable How_Many_Party_Members_Armed;
 #define If_Party_Is_Armed                   How_Many_Party_Members_Armed := 0;                  \
                                             if (dude_is_armed) then                             \
                                                How_Many_Party_Members_Armed+=1;                 \
-                                            if (Vic_In_Party) then                              \
-                                                if (Is_Armed(Vic_Ptr)) then                     \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Myron_In_Party) then                            \
-                                                if (Is_Armed(Myron_Ptr)) then                   \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Marcus_In_Party) then                           \
-                                                if (Is_Armed(Marcus_Ptr)) then                  \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (MacRae_In_Party) then                           \
-                                                if (Is_Armed(MacRae_Ptr)) then                  \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Sulik_In_Party) then                            \
-                                                if (Is_Armed(Sulik_Ptr)) then                   \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Lenny_In_Party) then                            \
-                                                if (Is_Armed(Lenny_Ptr)) then                   \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Cyberdog_In_Party) then                         \
-                                                if (Is_Armed(Cyberdog_Ptr)) then                \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Doc_In_Party) then                              \
-                                                if (Is_Armed(Doc_Ptr)) then                     \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Davin_In_Party) then                            \
-                                                if (Is_Armed(Davin_Ptr)) then                   \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Miria_In_Party) then                            \
-                                                if (Is_Armed(Miria_Ptr)) then                   \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Laddie_In_Party) then                           \
-                                                if (Is_Armed(Laddie_Ptr)) then                  \
-                                                    How_Many_Party_Members_Armed+=1;            \
-                                            if (Robobrain_In_Party) then                        \
-                                                if (Is_Armed(Robobrain_Ptr)) then               \
-                                                    How_Many_Party_Members_Armed+=1;            \
                                             if (Ian_In_Party) then                             	\
                                                 if (Is_Injured(Ian_Ptr)) then                 	\
                                                     How_Many_Party_Members_Armed+=1;      		\
@@ -250,31 +118,7 @@ variable How_Many_Party_Members_Armed;
             end                                                            \
          end
 #define attempt_place_party(the_tile, the_elev)                                     \
-         attempt_place_party_member(Vic_Ptr, the_tile, the_elev)                    \
-         attempt_place_party_member(Myron_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Marcus_Ptr, the_tile, the_elev)                 \
-         attempt_place_party_member(MacRae_Ptr, the_tile, the_elev)                 \
-         attempt_place_party_member(Sulik_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Lenny_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Cyberdog_Ptr, the_tile, the_elev)               \
-         attempt_place_party_member(Doc_Ptr, the_tile, the_elev)                    \
-         attempt_place_party_member(Goris_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Davin_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Miria_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Robobrain_Ptr, the_tile, the_elev)              \
          attempt_place_party_member(Trunk_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Dogmeat_Ptr, the_tile, the_elev)                \
-         attempt_place_party_member(Pariah_Dog_Ptr, the_tile, the_elev)             \
-         attempt_place_party_member(K9_Ptr, the_tile, the_elev)                     \
-         attempt_place_party_member(Robobrain_Human_Ptr, the_tile, the_elev)        \
-         attempt_place_party_member(Robobrain_Abnormal_Ptr, the_tile, the_elev)     \
-         attempt_place_party_member(Robobrain_Chimp_Ptr, the_tile, the_elev)        \
-         attempt_place_party_member(Laddie_Ptr, the_tile, the_elev)                 \
-         attempt_place_party_member(Bess_Ptr, the_tile, the_elev)                   \
-         attempt_place_party_member(Chicken_Ptr, the_tile, the_elev)                \
-         attempt_place_party_member(Karl_Ptr, the_tile, the_elev)                   \
-         attempt_place_party_member(Jonny_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Lloyd_Ptr, the_tile, the_elev)					\
          attempt_place_party_member(Ian_Ptr, the_tile, the_elev)					\
 		 attempt_place_party_member(Dog_Ptr, the_tile, the_elev)					\
 		 attempt_place_party_member(Tycho_Ptr, the_tile, the_elev)					\
@@ -285,33 +129,14 @@ variable How_Many_Party_Members_Armed;
 
 //#define Party_Childkiller                   (global_var(GVAR_PARTY_CHILDKILLER) BWAND Party_Childkiller_Mask)
 
-#define Childkiller_Vic                     ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_2) and (Vic_Ptr != 0))
-#define Childkiller_Myron                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_4) and (Myron_Ptr != 0))
-#define Childkiller_Marcus                  ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_6) and (Marcus_Ptr != 0))
-#define Childkiller_MacRae                  ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_8) and (MacRae_Ptr != 0))
-#define Childkiller_Sulik                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_10) and (Sulik_Ptr != 0))
-#define Childkiller_Lenny                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_12) and (Lenny_Ptr != 0))
-#define Childkiller_Cyberdog                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_14) and (Cyberdog_Ptr != 0))
-#define Childkiller_Doc                     ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_16) and (Doc_Ptr != 0))
-#define Childkiller_Goris                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_18) and (Goris_Ptr != 0))
-#define Childkiller_Davin                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_20) and (Davin_Ptr != 0))
-#define Childkiller_Miria                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_22) and (Miria_Ptr != 0))
-#define Childkiller_Laddie                  ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_24) and (Laddie_Ptr != 0))
-#define Childkiller_Robobrain               ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_26) and (Robobrain_Ptr != 0))
-#define Childkiller_Bess                    ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (Bess_Ptr != 0))
+#define Childkiller_Ian                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_2) and (Ian_Ptr != 0))
+#define Childkiller_Dog                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_4) and (Dog_Ptr != 0))
+#define Childkiller_Tycho                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_6) and (Tycho_Ptr != 0))
+#define Childkiller_Katja                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_8) and (Katja_Ptr != 0))
+#define Childkiller_Tandi                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_10) and (Tandi_Ptr != 0))
+#define Childkiller_MrHandyC                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_12) and (MrHandyC_Ptr != 0))
 
-#define Childkiller_Ian                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (Ian_Ptr != 0))
-#define Childkiller_Dog                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (Dog_Ptr != 0))
-#define Childkiller_Tycho                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (Tycho_Ptr != 0))
-#define Childkiller_Katja                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (Katja_Ptr != 0))
-#define Childkiller_Tandi                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (Tandi_Ptr != 0))
-#define Childkiller_MrHandyC                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_28) and (MrHandyC_Ptr != 0))
-
-#define Party_Childkiller                   (Childkiller_Ian or Childkiller_Dog or Childkiller_Tycho or Childkiller_Katja or Childkiller_Tandi or Childkiller_MrhandyC \
-											 Childkiller_Vic or Childkiller_Myron or Childkiller_Marcus or Childkiller_MacRae or  \
-                                             Childkiller_Sulik or Childkiller_Lenny or Childkiller_Cyberdog or Childkiller_Doc or \
-                                             Childkiller_Goris of Childkiller_Davin or Childkiller_Miria of Childkiller_Laddie or \
-                                             Childkiller_Robobrain or Childkiller_Bess)
+#define Party_Childkiller                   (Childkiller_Ian or Childkiller_Dog or Childkiller_Tycho or Childkiller_Katja or Childkiller_Tandi or Childkiller_MrhandyC
 
 //#define inc_party_childkiller(who)          if () then
 
@@ -527,23 +352,6 @@ variable tmp_hidden;
          end
 #define 	get_p_hidden_flag(x, hidden)                                                                    \
 			get_p_hidden_flag_obj(x, Vic_Ptr, hidden_vic_bit, hidden)                                      	\
-			else get_p_hidden_flag_obj(x, Myron_Ptr, hidden_myron_bit, hidden)                             	\
-			else get_p_hidden_flag_obj(x, Marcus_Ptr, hidden_marcus_bit, hidden)                           	\
-			else get_p_hidden_flag_obj(x, MacRae_Ptr, hidden_macrae_bit, hidden)                           	\
-			else get_p_hidden_flag_obj(x, Sulik_Ptr, hidden_sulik_bit, hidden)                             	\
-			else get_p_hidden_flag_obj(x, Lenny_Ptr, hidden_lenny_bit, hidden)                             	\
-			else get_p_hidden_flag_obj(x, Cyberdog_Ptr, hidden_cyberdog_bit, hidden)                       	\
-			else get_p_hidden_flag_obj(x, Doc_Ptr, hidden_doc_bit, hidden)                                 	\
-			else get_p_hidden_flag_obj(x, Goris_Ptr, hidden_goris_bit, hidden)                             	\
-			else get_p_hidden_flag_obj(x, Davin_Ptr, hidden_davin_bit, hidden)                             	\
-			else get_p_hidden_flag_obj(x, Miria_Ptr, hidden_miria_bit, hidden)                             	\
-			else get_p_hidden_flag_obj(x, Robobrain_Ptr, hidden_robobrain_bit, hidden)                     	\
-			else get_p_hidden_flag_obj(x, Dogmeat_Ptr, hidden_dogmeat_bit, hidden)                         	\
-			else get_p_hidden_flag_obj(x, Pariah_Dog_Ptr, hidden_pariah_dog_bit, hidden)                   	\
-			else get_p_hidden_flag_obj(x, K9_Ptr, hidden_k9_bit, hidden)                                   	\
-			else get_p_hidden_flag_obj(x, Robobrain_Human_Ptr, hidden_robobrain_human_bit, hidden)         	\
-			else get_p_hidden_flag_obj(x, Robobrain_Abnormal_Ptr, hidden_robobrain_abnormal_bit, hidden)   	\
-			else get_p_hidden_flag_obj(x, Robobrain_Chimp_Ptr, hidden_robobrain_chimp_bit, hidden)			\
 			else get_p_hidden_flag_obj(x, Ian_Ptr, hidden_ian_bit, hidden)									\
 			else get_p_hidden_flag_obj(x, Dog_Ptr, hidden_dog_bit, hidden)									\
 			else get_p_hidden_flag_obj(x, Tycho_Ptr, hidden_tycho_bit, hidden)								\
@@ -564,12 +372,13 @@ variable tmp_hidden;
       end                                                                        \
    end
 
-#define hidden_vic_bit                       bit_1
-#define hidden_myron_bit                     bit_2
-#define hidden_marcus_bit                    bit_3
-#define hidden_macrae_bit                    bit_4
-#define hidden_sulik_bit                     bit_5
-#define hidden_lenny_bit                     bit_6
+#define hidden_ian_bit           			bit_1
+#define hidden_dog_bit           			bit_2
+#define hidden_tycho_bit           			bit_3
+#define hidden_katja_bit           			bit_4
+#define hidden_tandi_bit           			bit_5
+#define hidden_mrhandyc_bit           		bit_6
+/*
 #define hidden_cyberdog_bit                  bit_7
 #define hidden_doc_bit                       bit_8
 #define hidden_goris_bit                     bit_9
@@ -581,15 +390,10 @@ variable tmp_hidden;
 #define hidden_k9_bit                        bit_15
 #define hidden_robobrain_human_bit           bit_16
 #define hidden_robobrain_abnormal_bit        bit_17
-#define hidden_robobrain_chimp_bit           bit_18
+#define hidden_robobrain_chimp_bit           bit_18*/
 #define all_hidden_bit                       bit_19
 
-#define hidden_ian_bit           			bit_20
-#define hidden_dog_bit           			bit_21
-#define hidden_tycho_bit           			bit_22
-#define hidden_katja_bit           			bit_23
-#define hidden_tandi_bit           			bit_24
-#define hidden_mrhandyc_bit           		bit_25
+
 
 #define party_bit_hidden(x)                  (gvar_bit(GVAR_PARTY_MEMBERS_HIDDEN, x))
 
@@ -606,24 +410,6 @@ variable tmp_hidden;
          end
 #define party_member_hide_all                                                       \
          set_gvar_bit_on(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                \
-         party_member_hide(Vic_Ptr, hidden_vic_bit)                                 \
-         party_member_hide(Myron_Ptr, hidden_myron_bit)                             \
-         party_member_hide(Marcus_Ptr, hidden_marcus_bit)                           \
-         party_member_hide(MacRae_Ptr, hidden_macrae_bit)                           \
-         party_member_hide(Sulik_Ptr, hidden_sulik_bit)                             \
-         party_member_hide(Lenny_Ptr, hidden_lenny_bit)                             \
-         party_member_hide(Cyberdog_Ptr, hidden_cyberdog_bit)                       \
-         party_member_hide(Doc_Ptr, hidden_doc_bit)                                 \
-         party_member_hide(Goris_Ptr, hidden_goris_bit)                             \
-         party_member_hide(Davin_Ptr, hidden_davin_bit)                             \
-         party_member_hide(Miria_Ptr, hidden_miria_bit)                             \
-         party_member_hide(Robobrain_Ptr, hidden_robobrain_bit)                     \
-         party_member_hide(Dogmeat_Ptr, hidden_dogmeat_bit)                         \
-         party_member_hide(Pariah_Dog_Ptr, hidden_pariah_dog_bit)                   \
-         party_member_hide(K9_Ptr, hidden_k9_bit)                                   \
-         party_member_hide(Robobrain_Human_Ptr, hidden_robobrain_human_bit)         \
-         party_member_hide(Robobrain_Abnormal_Ptr, hidden_robobrain_abnormal_bit)   \
-         party_member_hide(Robobrain_Chimp_Ptr, hidden_robobrain_chimp_bit)			\
          party_member_hide(Ian_Ptr, hidden_ian_bit)                                 \
 		 party_member_hide(Dog_Ptr, hidden_dog_bit)                                 \
 		 party_member_hide(Tycho_Ptr, hidden_tycho_bit)                             \
@@ -649,24 +435,6 @@ variable tmp_hidden;
          end
 #define party_member_unhide_all                                                        \
          set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                  \
-         party_member_unhide(Vic_Ptr, hidden_vic_bit)                                  \
-         party_member_unhide(Myron_Ptr, hidden_myron_bit)                              \
-         party_member_unhide(Marcus_Ptr, hidden_marcus_bit)                            \
-         party_member_unhide(MacRae_Ptr, hidden_macrae_bit)                            \
-         party_member_unhide(Sulik_Ptr, hidden_sulik_bit)                              \
-         party_member_unhide(Lenny_Ptr, hidden_lenny_bit)                              \
-         party_member_unhide(Cyberdog_Ptr, hidden_cyberdog_bit)                        \
-         party_member_unhide(Doc_Ptr, hidden_doc_bit)                                  \
-         party_member_unhide(Goris_Ptr, hidden_goris_bit)                              \
-         party_member_unhide(Davin_Ptr, hidden_davin_bit)                              \
-         party_member_unhide(Miria_Ptr, hidden_miria_bit)                              \
-         party_member_unhide(Robobrain_Ptr, hidden_robobrain_bit)                      \
-         party_member_unhide(Dogmeat_Ptr, hidden_dogmeat_bit)                          \
-         party_member_unhide(Pariah_Dog_Ptr, hidden_pariah_dog_bit)                    \
-         party_member_unhide(K9_Ptr, hidden_k9_bit)                                    \
-         party_member_unhide(Robobrain_Human_Ptr, hidden_robobrain_human_bit)          \
-         party_member_unhide(Robobrain_Abnormal_Ptr, hidden_robobrain_abnormal_bit)    \
-         party_member_unhide(Robobrain_Chimp_Ptr, hidden_robobrain_chimp_bit)		   \
          party_member_unhide(Ian_Ptr, hidden_ian_bit)                                 \
 		 party_member_unhide(Dog_Ptr, hidden_dog_bit)                                 \
 		 party_member_unhide(Tycho_Ptr, hidden_tycho_bit)                             \
@@ -834,9 +602,6 @@ variable tmp_hidden;
 #define set_self_abandon_party               if (obj_in_party(self_obj)) then begin                                                \
                                                 debug_msg("abandon party: " + self_name);                                          \
                                                 party_remove_self;                                                                 \
-                                             end                                                                                   \
-                                             if ((self_pid == PID_MIRIA) or (self_pid == PID_DAVIN)) then begin                    \
-                                                set_dude_was_married;                                                              \
                                              end                                                                                   \
                                              if ((local_var(LVAR_TEAM) != -1) and (self_team == false)) then begin                 \
                                                  critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, local_var(LVAR_TEAM)); \

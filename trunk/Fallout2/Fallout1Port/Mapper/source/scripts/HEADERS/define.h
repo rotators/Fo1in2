@@ -16,7 +16,7 @@
 #include "..\headers\animcomd.h"
 #include "..\headers\CritrPid.h"
 #include "..\headers\ArtFid.h"
-#include "..\headers\Party.h"
+//#include "..\headers\Party.h"
 //#include "..\headers\Reaction.h"
 
 #include "..\headers\fo1.h"
