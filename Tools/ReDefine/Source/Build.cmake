@@ -1,6 +1,6 @@
 # ReDefine build script
 # Based on FOClassic setup
-cmake_minimum_required( VERSION 3.12 FATAL_ERROR ) 
+cmake_minimum_required( VERSION 3.7.2 FATAL_ERROR ) 
 
 #> AutomatedBuild.cmake <#
 
@@ -27,8 +27,9 @@ function( CreateBuildDirectory dir generator tool file )
 		endif()
 		message( STATUS "Starting generator (${generator}${info})" )
 		execute_process(
-			COMMAND ${CMAKE_COMMAND} ${toolchain} -G "${generator}" ${toolset} -S "${CMAKE_CURRENT_LIST_DIR}" -B ${dir}
+			COMMAND ${CMAKE_COMMAND} ${toolchain} -G "${generator}" ${toolset} -S "${CMAKE_CURRENT_LIST_DIR}"
 			RESULT_VARIABLE result
+			WORKING_DIRECTORY "${dir}"
 		)
 		if( NOT result EQUAL 0 )
 			list( APPEND BUILD_FAIL "${dir}" )
@@ -86,7 +87,6 @@ function( FormatSource filename )
 	if( EXISTS "${uncrustemp}" )
 		file( REMOVE "${uncrustemp}" )
 	endif()
-
 	execute_process( COMMAND "${uncrustify}" -c "${uncrustcfg}" -l CPP -f "${filename}" -o "${uncrustemp}" -q --if-changed )
 
 	if( EXISTS "${uncrustemp}" )
@@ -97,17 +97,16 @@ endfunction()
 
 #> Build.cmake <#
 
-#if( UNIX )
-#	set( BUILD_FILE      "Makefile" )
-#	set( BUILD_GENERATOR "Unix Makefiles" )
+if( UNIX )
+	set( BUILD_FILE      "Makefile" )
+	set( BUILD_GENERATOR "Unix Makefiles" )
 #	set( BUILD_TOOL      "Linux32" )
-#else
-if( WIN32 )
+elseif( WIN32 )
 	set( BUILD_FILE      "ReDefine.sln" )
 	set( BUILD_GENERATOR "Visual Studio 15 2017" )
 endif()
 
-set( UNCRUSTIFY_EXECUTABLE "SourceTools/uncrustify.exe" )
+set( UNCRUSTIFY_EXECUTABLE "SourceTools/uncrustify" )
 FormatSource( "ReDefine.cpp" )
 FormatSource( "ReDefine.h" )
 FormatSource( "Defines.cpp" )

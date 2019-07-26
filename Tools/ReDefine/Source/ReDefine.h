@@ -31,7 +31,7 @@ namespace ReDefine
     void WARNING( const char* func, const char* format, ... );
     void LOG( const char* format, ... );
 
-	bool ReadFile( const std::string& path, std::vector<std::string>& lines );
+    bool ReadFile( const std::string& path, std::vector<std::string>& lines );
 
     bool Init( int argc, char** argv, const char* config );
     int  Exit( int returnValue );
