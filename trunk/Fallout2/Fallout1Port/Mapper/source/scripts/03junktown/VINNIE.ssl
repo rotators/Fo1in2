@@ -39,7 +39,6 @@ procedure VinnieEnd;
 procedure VinnieCombat;
 procedure VinnieKillNeal;
 procedure set_sleep_time;
-procedure sleeping;
 
 import variable Neal_ptr;
 import variable removal_ptr;
@@ -54,40 +53,8 @@ variable sleep_time;
 variable wake_time;
 variable night_person;
 
-
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-				call map_enter_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					call look_at_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
 procedure timed_event_p_proc
@@ -136,7 +103,7 @@ begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(DUDE_ENEMY_SKULZ, 1);
 	end
-	inc_evil_critter 
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
@@ -467,24 +434,6 @@ begin
 			if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 				sleep_time := 2200;
 				wake_time := 1000;
-			end
-		end
-	end
-end
-
-procedure sleeping
-begin
-	if (local_var(4) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				set_local_var(4, 0);
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				set_local_var(4, 1);
 			end
 		end
 	end

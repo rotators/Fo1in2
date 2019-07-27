@@ -12,22 +12,22 @@ procedure Alex04;
 procedure Alex05;
 procedure Alex06;
 procedure Alex07;
-procedure sleeping;
 
 variable night_person;
 variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
+
 variable hostile;
 variable initial :=  0;
 
-
+#define LVAR_Sleeping 							(1)
 
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if not(initial) then begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 49);
 		sleep_tile := 14275;
@@ -83,7 +83,7 @@ begin
 		end
 	end
 	else begin
-		call sleeping;
+		sleeping
 	end
 end
 
@@ -177,46 +177,4 @@ procedure Alex07
 begin
 	hostile := 1;
 	gsay_message(670, 113, 51);
-end
-
-procedure sleeping
-begin
-	if (local_var(1) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(1, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(1, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(1, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(1, 1);
-				end
-			end
-		end
-	end
 end

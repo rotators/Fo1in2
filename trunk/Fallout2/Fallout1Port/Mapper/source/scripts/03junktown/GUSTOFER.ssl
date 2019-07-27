@@ -49,13 +49,13 @@ import variable Saul_loses;
 import variable Saul_wins;
 import variable shot_challenger;
 
-procedure sleeping;
-
 variable night_person;
 variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
+
+#define LVAR_Sleeping 							(1)
 
 procedure start begin
 	fixt_critter_healing
@@ -104,7 +104,7 @@ begin
 			end
 		end
 		else begin
-			call sleeping;
+			sleeping
 		end
 	end
 end
@@ -449,46 +449,4 @@ begin
 	destroy_object(challenger_ptr);
 	shot_challenger := 0;
 	challenger_ptr := 0;
-end
-
-procedure sleeping
-begin
-	if (local_var(1) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(1, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(1, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(1, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(1, 1);
-				end
-			end
-		end
-	end
 end

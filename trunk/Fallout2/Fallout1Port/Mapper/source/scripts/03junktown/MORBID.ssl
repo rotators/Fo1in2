@@ -71,7 +71,6 @@ procedure Morbid04N;
 procedure get_eye;
 procedure MorbidCombat;
 procedure MorbidEnd;
-procedure sleeping;
 
 procedure MorbidDownReact;
 
@@ -86,6 +85,7 @@ variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
+
 variable tmp_hostile;
 variable heal;
 variable COST;
@@ -105,6 +105,7 @@ procedure FetchEnd5;
 variable EyeHPloss;
 variable CurrentHP;
 
+#define LVAR_Sleeping 							(6)
 
 procedure start
 begin
@@ -112,44 +113,6 @@ begin
 
 	if (tile_num(self_obj) == 12498) and (elevation(self_obj) == 1) then begin
 		move_to(self_obj, 13498, 1);
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					call map_enter_p_proc;
-				end
-				else begin
-					if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-						call map_update_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-							else begin
-								if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-									call timed_event_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
 	end
 end
 
@@ -183,7 +146,7 @@ begin
 			end
 			else begin
 				if ((local_var(9) == 0) or (local_var(9) == 3)) then begin
-					call sleeping;
+					sleeping
 				end
 			end
 			if (local_var(9) == 1) then begin
@@ -220,7 +183,7 @@ begin
 	home_tile := 13501;
 	sleep_tile := 14098;
 	if (combat_is_initialized == 0) then begin
-		call sleeping;
+		sleeping
 		if ((game_time_hour > 1700) and (game_time_hour < 2330)) then begin
 			move_to(self_obj, 12702, 1);
 		end
@@ -960,46 +923,6 @@ end
 procedure MorbidEnd
 begin
 end
-
-procedure sleeping
-begin
-	if (local_var(6) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-					set_local_var(6, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				set_local_var(6, 0);
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(6, 1);
-				end
-			end
-			else begin
-				if ((tile_num(self_obj) != sleep_tile) and (elevation(self_obj) != 0)) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(6, 1);
-				end
-			end
-		end
-	end
-end
-
-
 
 procedure FetchEnd
 begin

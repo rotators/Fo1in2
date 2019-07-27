@@ -43,13 +43,13 @@ procedure TheresaCombat;
 procedure begin_meeting;
 procedure say_lines;
 procedure rebel_meeting;
-procedure sleeping;
 
 variable night_person;
 variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
+
 variable not_at_meeting := 1;
 variable line;
 variable tmp_hostile;
@@ -57,6 +57,8 @@ variable exp_flag;
 
 procedure PickDeadBodyType;
 variable DeathType := 57;
+
+#define LVAR_Sleeping 							(5)
 
 procedure start
 begin
@@ -137,7 +139,7 @@ begin
 			end
 		end
 		else begin
-			call sleeping;
+			sleeping
 		end
 	end
 end
@@ -230,8 +232,7 @@ begin
 	display_msg(message_str(SCRIPT_THERESA, 100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (not(local_var(4))) then begin
 		set_local_var(4, tile_num(self_obj));
 	end
@@ -536,50 +537,6 @@ procedure TheresaCombat
 begin
 	tmp_hostile := 1;
 end
-
-procedure sleeping
-begin
-	if (local_var(5) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(5, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(5, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(5, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(5, 1);
-				end
-			end
-		end
-	end
-end
-
-
 
 procedure PickDeadBodyType// FINISHED, for Vault 13
 begin

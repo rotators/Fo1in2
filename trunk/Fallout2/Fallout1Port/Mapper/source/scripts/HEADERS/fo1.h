@@ -19,7 +19,46 @@
 										gfade_in(1)
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)
-				
+	
+#define sleeping 	/*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
+					if (local_var(LVAR_Sleeping) == 1) then begin \
+						if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin \
+							if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin \
+								if (tile_num(self_obj) != home_tile) then begin \
+									animate_move_obj_to_tile(self_obj, home_tile, 0); \
+								end \
+								else begin \
+									set_local_var(LVAR_Sleeping, 0); \
+								end \
+							end \
+							else begin \
+								move_to(self_obj, home_tile, elevation(self_obj)); \
+								if (tile_num(self_obj) == home_tile) then begin \
+									set_local_var(LVAR_Sleeping, 0); \
+								end \
+							end \
+						end \
+					end \
+					else begin \
+						if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin \
+							if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin \
+								if (tile_num(self_obj) != sleep_tile) then begin \
+									animate_move_obj_to_tile(self_obj, self_obj, 0); \
+								end \
+								else begin \
+									set_local_var(LVAR_Sleeping, 1); \
+								end \
+							end \
+							else begin \
+								if (tile_num(self_obj) != sleep_tile) then begin \
+									move_to(self_obj, sleep_tile, elevation(self_obj)); \
+								end \
+								else begin \
+									set_local_var(LVAR_Sleeping, 1); \
+								end \
+							end \
+						end \
+					end	
 
 //==============================================================
 // Settings:

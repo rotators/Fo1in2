@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
@@ -8,22 +10,25 @@ procedure look_at_p_proc;//    script_action == 21
 procedure map_enter_p_proc;//    script_action == 15
 procedure pickup_p_proc;//    script_action == 4
 procedure talk_p_proc;//    script_action == 11
+
 procedure Lyle01;
 procedure Lyle02;
 procedure Lyle03;
 procedure Lyle04;
 procedure LyleEnd;
 procedure flee_dude;
-procedure sleeping;
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
-variable hostile;
+
+variable tmp_hostile;
 variable initial :=  0;
-procedure PickDeadBodyType;
 variable DeathType := 57;
+
+#define LVAR_Sleeping 							(4)
 
 procedure start
 begin
@@ -34,7 +39,9 @@ begin
 				if (metarule(22, 0) == 0) then begin//		<-- if not during a Game_Load,
 					set_obj_visibility(self_obj, 0);//		     make sure critter is visibile
 				end
-				call PickDeadBodyType;
+
+				//pick_dead_body_type
+
 				debug_msg("Vault 13 invasion, killing LYLE.SSL with DeathType " + DeathType + ".  ");
 				kill_critter(self_obj, DeathType);
 			end
@@ -42,7 +49,7 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-		
+
 		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
 			call critter_p_proc;
 		end
@@ -81,8 +88,8 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -99,7 +106,7 @@ begin
 			end
 		end
 	end
-	call sleeping;
+	sleeping
 end
 
 procedure damage_p_proc
@@ -150,7 +157,7 @@ begin
 		float_msg(self_obj, message_str(SCRIPT_LYLE, 101), 0);
 	end
 	set_global_var(VAULT_13_HOSTILE, 1);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -230,68 +237,4 @@ begin
 		LVar1 := LVar1 + 1;
 	end
 	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-procedure sleeping
-begin
-	if (local_var(4) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(4, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(4, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(4, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(4, 1);
-				end
-			end
-		end
-	end
-end
-
-procedure PickDeadBodyType// FINISHED, for Vault 13
-begin
-	variable id := 11;
-	id := random(0, 6) + random(0, 6) + random(0, 6);
-	if id <= 2 then begin
-		DeathType := 59;// exploded  [ROCKET LAUNCHER]
-	end
-	else begin
-		if id <= 10 then begin
-			DeathType := 57;// burnt, face down  [FLAMER]
-		end
-		else begin
-			if id <= 15 then begin
-				DeathType := 60;// melted pile  [PLASMA RIFLE]
-			end
-			else begin
-				DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
-			end
-		end
-	end
 end

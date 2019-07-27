@@ -11,7 +11,6 @@ procedure talk_p_proc;//    script_action == 11
 procedure timed_event_p_proc;//    script_action == 22
 
 procedure set_sleep_tile;
-procedure sleeping;
 
 import variable Neal_ptr;
 import variable Skul_target;
@@ -22,55 +21,16 @@ variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
+
 variable dest_tile := 7000;
 variable hostile;
 variable sleeping_disabled;
 variable waypoint;
 
+#define LVAR_Sleeping 							(4)
 
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					call map_enter_p_proc;
-				end
-				else begin
-					if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-						call map_exit_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-							else begin
-								if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-									call timed_event_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
 procedure critter_p_proc
@@ -115,13 +75,13 @@ begin
 				end
 			end
 			if (sleeping_disabled == 0) then begin
-				call sleeping;
+				sleeping
 			end
 		end
 		else begin
 			if (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
 				if ((global_var(BUST_SKULZ) != 2) and (sleeping_disabled == 0)) then begin
-					call sleeping;
+					sleeping
 				end
 			end
 		end
@@ -141,7 +101,7 @@ begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(DUDE_ENEMY_SKULZ, 1);// Enemy of Skulz
 	end
-	inc_evil_critter 
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
@@ -318,44 +278,3 @@ begin
 	end
 end
 
-procedure sleeping
-begin
-	if (local_var(4) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(4, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(4, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(4, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(4, 1);
-				end
-			end
-		end
-	end
-end

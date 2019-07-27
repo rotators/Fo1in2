@@ -17,21 +17,25 @@ procedure push_p_proc;
 procedure get_rations;
 procedure set_ration_tile;
 procedure set_sleep_tile;
-procedure sleeping;
+
 import variable recipient;
 import variable WtrGrd_ptr;
 import variable getting_ration;
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
+
 variable rndx;
 variable tmp_hostile;
 variable sleeping_disabled;
 variable ration_tile;
 procedure PickDeadBodyType;
 variable DeathType := 57;
+
+#define LVAR_Sleeping 							(6)
 
 procedure push_p_proc begin
 end
@@ -53,7 +57,7 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-		
+
 		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
 			call critter_p_proc;
 		end
@@ -111,7 +115,7 @@ begin
 			sleeping_disabled := 0;
 		end
 		if (sleeping_disabled == 0) then begin
-			call sleeping;
+			sleeping
 		end
 	end
 end
@@ -284,48 +288,6 @@ begin
 		else begin
 			if (elevation(self_obj) == 2) then begin
 				sleep_tile := 7000;
-			end
-		end
-	end
-end
-
-procedure sleeping
-begin
-	if (local_var(6) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(6, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(6, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(6, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(6, 1);
-				end
 			end
 		end
 	end

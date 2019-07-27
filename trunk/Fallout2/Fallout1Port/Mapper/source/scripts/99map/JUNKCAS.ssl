@@ -1,7 +1,10 @@
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\MAPJUNKCAS.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure map_exit_p_proc;
 
 procedure Kill_Neal;
@@ -51,147 +54,149 @@ procedure Invasion;
 variable invaderPtr;
 
 procedure start begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	if ((script_action == 16) and (global_var(BUST_SKULZ) == 2) and (global_var(LARS_N_KILLIAN_ON_CASINO) == 1)) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-		set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+end
+
+procedure map_enter_p_proc begin
+variable LVar0 := 0;
+variable LVar1 := 0;
+
+//	if (map_first_run) then begin
+//		variable Critter := 0;
+//		Critter := create_object_sid(16777220, 0, 0, 247);  // here would be Bob, Hernandez, Vasquez
+//		critter_attempt_placement(Critter, 21113, 0);
+//	end
+
+	set_global_var(MARK_JUNK_3, 1);
+	Lighting;
+
+	if ((global_var(JUNKTOWN_WAS_INVADED) == 1) and (metarule(22, 0) == 0) and (map_var(MVAR_Invasion) == 0)) then begin
+		set_map_var(MVAR_Invasion, 1);
+		kill_critter_type(PID_PEASANT_5, 1);
+		kill_critter_type(PID_TOWNSWOMAN_2, 1);
+		kill_critter_type(PID_PEASANT_GREEN, 1);
+		kill_critter_type(PID_THUG, 0);
+		kill_critter_type(PID_STRANGER, 0);
+		kill_critter_type(PID_STRANGER_2, 0);
+		kill_critter_type(PID_PEASANT_2_FEMALE, 1);
+		kill_critter_type(PID_NEAL, 1);
+		kill_critter_type(PID_PEASANT_BLACK, 1);
+		kill_critter_type(PID_PEASANT_FEMALE_CUTE, 1);
+		kill_critter_type(PID_LOSER, 1);
+		kill_critter_type(PID_TOWNSMAN_METAL, 1);
+		kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
+		kill_critter_type(PID_IZO, 1);
+		kill_critter_type(PID_GIZMO, 1);
+		if (global_var(DOGMEAT_HIRELING_STATUS) != 1) then begin
+			kill_critter_type(PID_DOGMEAT, 1);
+		end
+		if (global_var(TYCHO_HIRELING_STATUS) != 2) then begin
+			kill_critter_type(PID_TYCHO, 1);
+		end
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(invaderPtr, 1, 5, 48);
+		critter_attempt_placement(invaderPtr, 24092, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(invaderPtr, 1, 5, 48);
+		critter_attempt_placement(invaderPtr, 22878, 0);
+	end
+	if (global_var(LOAD_MAP_INDEX) == 1) then begin
+		override_map_start(99, 94, 0, 3);
 	end
 	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		//	if (map_first_run) then begin
-		//		variable Critter := 0;
-		//		Critter := create_object_sid(16777220, 0, 0, 247);  // here would be Bob, Hernandez, Vasquez
-		//		critter_attempt_placement(Critter, 21113, 0);
-		//	end
-			set_global_var(MARK_JUNK_3, 1);
-			Lighting;
-			if ((global_var(JUNKTOWN_WAS_INVADED) == 1) and (metarule(22, 0) == 0) and (map_var(11) == 0)) then begin
-				set_map_var(11, 1);
-				kill_critter_type(PID_PEASANT_5, 1);
-				kill_critter_type(PID_TOWNSWOMAN_2, 1);
-				kill_critter_type(PID_PEASANT_GREEN, 1);
-				kill_critter_type(PID_THUG, 0);
-				kill_critter_type(PID_STRANGER, 0);
-				kill_critter_type(PID_STRANGER_2, 0);
-				kill_critter_type(PID_PEASANT_2_FEMALE, 1);
-				kill_critter_type(PID_NEAL, 1);
-				kill_critter_type(PID_PEASANT_BLACK, 1);
-				kill_critter_type(PID_PEASANT_FEMALE_CUTE, 1);
-				kill_critter_type(PID_LOSER, 1);
-				kill_critter_type(PID_TOWNSMAN_METAL, 1);
-				kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
-				kill_critter_type(PID_IZO, 1);
-				kill_critter_type(PID_GIZMO, 1);
-				if (global_var(DOGMEAT_HIRELING_STATUS) != 1) then begin
-					kill_critter_type(PID_DOGMEAT, 1);
-				end
-				if (global_var(TYCHO_HIRELING_STATUS) != 2) then begin
-					kill_critter_type(PID_TYCHO, 1);
-				end
-				invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-				critter_add_trait(invaderPtr, 1, 5, 48);
-				critter_attempt_placement(invaderPtr, 24092, 0);
-				invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-				critter_add_trait(invaderPtr, 1, 5, 48);
-				critter_attempt_placement(invaderPtr, 22878, 0);
+		if ((global_var(LOAD_MAP_INDEX) == 4) and (metarule(22, 0) == 0)) then begin
+			gfade_in(1);
+			override_map_start(120, 87, 0, 5);
+			if (global_var(KILLIAN_DEAD) != 1) then begin
+				LVar0 := create_object_sid(PID_KILLIAN, 0, 0, SCRIPT_KILLIAN);
+				critter_add_trait(LVar0, 1, 6, 0);
+				item := create_object_sid(PID_DESERT_EAGLE, 0, 0, -1);
+				critter_attempt_placement(LVar0, 17522, 0);
+				add_obj_to_inven(LVar0, item);
 			end
-			if (global_var(LOAD_MAP_INDEX) == 1) then begin
-				override_map_start(99, 94, 0, 3);
-			end
-			else begin
-				if ((global_var(LOAD_MAP_INDEX) == 4) and (metarule(22, 0) == 0)) then begin
-					gfade_in(1);
-					override_map_start(120, 87, 0, 5);
-					if (global_var(KILLIAN_DEAD) != 1) then begin
-						LVar0 := create_object_sid(PID_KILLIAN, 0, 0, SCRIPT_KILLIAN);
-						critter_add_trait(LVar0, 1, 6, 0);
-						item := create_object_sid(PID_DESERT_EAGLE, 0, 0, -1);
-						critter_attempt_placement(LVar0, 17522, 0);
-						add_obj_to_inven(LVar0, item);
-					end
-					if (global_var(LARS_DEAD) != 1) then begin
-						LVar1 := create_object_sid(PID_LARS, 0, 0, SCRIPT_LARS);
-						critter_add_trait(LVar1, 1, 6, 0);
-						item := create_object_sid(PID_SHOTGUN, 0, 0, -1);
-						critter_attempt_placement(LVar1, 17323, 0);
-						add_obj_to_inven(LVar1, item);
-						item := create_object_sid(PID_SHOTGUN_SHELLS, 0, 0, -1);
-						add_obj_to_inven(LVar1, item);
-						item := create_object_sid(PID_RADIO, 0, 0, -1);
-						add_obj_to_inven(LVar1, item);
-					end
-				end
-				else begin
-					if ((global_var(LOAD_MAP_INDEX) == 7) and (metarule(22, 0) == 0) and (map_var(2) == 0)) then begin
-						call Kill_Neal;
-					end
-					else begin
-						override_map_start(99, 94, 0, 5);
-					end
-				end
-			end
-			if ((global_var(DESTROY_VATS_11) != 0) and (Neal_ptr != 0)) then begin
-				if ((global_var(DESTROY_VATS_11) < (game_time / (10 * 60 * 60 * 24))) and (metarule(22, 0) == 0)) then begin
-					kill_critter(Neal_ptr, ANIM_fall_front_sf);
-				end
+			if (global_var(LARS_DEAD) != 1) then begin
+				LVar1 := create_object_sid(PID_LARS, 0, 0, SCRIPT_LARS);
+				critter_add_trait(LVar1, 1, 6, 0);
+				item := create_object_sid(PID_SHOTGUN, 0, 0, -1);
+				critter_attempt_placement(LVar1, 17323, 0);
+				add_obj_to_inven(LVar1, item);
+				item := create_object_sid(PID_SHOTGUN_SHELLS, 0, 0, -1);
+				add_obj_to_inven(LVar1, item);
+				item := create_object_sid(PID_RADIO, 0, 0, -1);
+				add_obj_to_inven(LVar1, item);
 			end
 		end
 		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				Lighting;
-				if (metarule(22, 0) == 0) then begin
-					if ((global_var(GIZMO_DEAD) == 1) and (map_var(3) == 0) and (combat_is_initialized == 0) and (global_var(KILLIAN_SOMETHING_0) == 0)) then begin
-						display_msg(message_str(SCRIPT_GIZMO, 217));
-						give_exp_points(600);
-						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
-						set_map_var(3, 1);
-						if (global_var(LOAD_MAP_INDEX) == 4) then begin
-							set_global_var(CAPTURE_GIZMO, 2);
-							set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
-							load_map(MAP_JUNKENT, 5);
-						end
-					end
-					if ((map_var(2) == 1) and (combat_is_initialized == 0)) then begin
-						if (map_var(0) <= 0) then begin
-							set_global_var(BUST_SKULZ, 2);
-							set_map_var(2, 2);
-							set_global_var(DESTROY_VATS_11, 0);
-							display_msg(message_str(SCRIPT_LARS, 154));
-							set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-							give_exp_points(300);
-							set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
-						end
-						else begin
-							if ((map_var(1) <= 0) and (global_var(IS_NEAL_DEAD) == 1)) then begin
-								set_global_var(DESTROY_VATS_13, 2);
-								set_map_var(2, 2);
-								display_msg(message_str(SCRIPT_VINNIE, 164));
-								give_exp_points(300);
-								set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-								if (global_var(ENEMY_JUNKTOWN) == 0) then begin
-									set_global_var(ENEMY_JUNKTOWN, 1);
-									set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
-								end
-							end
-						end
-					end
-					if ((global_var(DESTROY_VATS_11) != 0) and (Neal_ptr != 0)) then begin
-						if (global_var(DESTROY_VATS_11) < (game_time / (10 * 60 * 60 * 24))) then begin
-							kill_critter(Neal_ptr, ANIM_fall_front_sf);
-						end
-					end
-					if (removal_ptr != 0) then begin
-						destroy_object(removal_ptr);
-						removal_ptr := 0;
-					end
+			if ((global_var(LOAD_MAP_INDEX) == 7) and (metarule(22, 0) == 0) and (map_var(MVAR_bar_fight) == 0)) then begin
+				call Kill_Neal;
+			end
+			else begin
+				override_map_start(99, 94, 0, 5);
+			end
+		end
+	end
+	if ((global_var(DESTROY_VATS_11) != 0) and (Neal_ptr != 0)) then begin
+		if ((global_var(DESTROY_VATS_11) < (game_time / (10 * 60 * 60 * 24))) and (metarule(22, 0) == 0)) then begin
+			kill_critter(Neal_ptr, ANIM_fall_front_sf);
+		end
+	end
+end
+
+procedure map_update_p_proc begin
+	Lighting;
+
+	if (metarule(22, 0) == 0) then begin
+		if ((global_var(GIZMO_DEAD) == 1) and (map_var(MVAR_exp_for_killing_Gizmo) == 0) and (combat_is_initialized == 0) and (global_var(KILLIAN_SOMETHING_0) == 0)) then begin
+			display_msg(message_str(SCRIPT_GIZMO, 217));
+			give_exp_points(600);
+			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
+			set_map_var(MVAR_exp_for_killing_Gizmo, 1);
+			if (global_var(LOAD_MAP_INDEX) == 4) then begin
+				set_global_var(CAPTURE_GIZMO, 2);
+				set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+				load_map(MAP_JUNKENT, 5);
+			end
+		end
+
+		if ((map_var(MVAR_bar_fight) == 1) and (combat_is_initialized == 0)) then begin
+			if (map_var(0) <= 0) then begin
+				set_global_var(BUST_SKULZ, 2);
+				set_map_var(MVAR_bar_fight, 2);
+				set_global_var(DESTROY_VATS_11, 0);
+				display_msg(message_str(SCRIPT_LARS, 154));
+				set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+				give_exp_points(300);
+				set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+			end
+			else if ((map_var(MVAR_guards_left) <= 0) and (global_var(IS_NEAL_DEAD) == 1)) then begin
+				set_global_var(DESTROY_VATS_13, 2);
+				set_map_var(MVAR_bar_fight, 2);
+				display_msg(message_str(SCRIPT_VINNIE, 164));
+				give_exp_points(300);
+				set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
+				if (global_var(ENEMY_JUNKTOWN) == 0) then begin
+					set_global_var(ENEMY_JUNKTOWN, 1);
+					set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
 				end
 			end
+		end
 
+		if ((global_var(DESTROY_VATS_11) != 0) and (Neal_ptr != 0)) then begin
+			if (global_var(DESTROY_VATS_11) < (game_time / (10 * 60 * 60 * 24))) then begin
+				kill_critter(Neal_ptr, ANIM_fall_front_sf);
+			end
+		end
+		if (removal_ptr != 0) then begin
+			destroy_object(removal_ptr);
+			removal_ptr := 0;
 		end
 	end
 end
 
 procedure map_exit_p_proc begin
+	if ( (global_var(BUST_SKULZ) == 2) and (global_var(LARS_N_KILLIAN_ON_CASINO) == 1) ) then begin
+		set_global_var(LARS_N_KILLIAN_ON_CASINO, 0);
+	end
+
 	if (challenger_ptr != 0) then begin
 		destroy_object(challenger_ptr);
 	end
@@ -203,7 +208,7 @@ end
 procedure Kill_Neal begin
 	variable LVar0 := 0;
 	override_map_start(81, 103, 0, 5);
-	set_map_var(2, 1);
+	set_map_var(MVAR_bar_fight, 1);
 	LVar0 := create_object_sid(PID_VINNIE, 20277, 0, SCRIPT_VINNIE);
 	item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);
 	add_obj_to_inven(LVar0, item);
@@ -224,7 +229,7 @@ procedure Kill_Neal begin
 	add_obj_to_inven(LVar0, item);
 	set_map_var(0, 4);
 	if (global_var(DESTROY_VATS_15) == 1) then begin
-		set_map_var(1, 4);
+		set_map_var(MVAR_guards_left, 4);
 		LVar0 := create_object_sid(PID_TOWNSMAN_LEATHER, 22083, 0, SCRIPT_JTGENGRD);
 		item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);
 		add_obj_to_inven(LVar0, item);

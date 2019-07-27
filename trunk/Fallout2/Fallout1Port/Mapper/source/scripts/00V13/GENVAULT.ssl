@@ -6,13 +6,13 @@
 #include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 procedure push_p_proc;
 
 procedure Vault00;
@@ -34,13 +34,14 @@ procedure flee_dude;
 procedure get_rations;
 procedure set_ration_tile;
 procedure set_sleep_tile;
-procedure sleeping;
 
 variable night_person;
-variable wake_time;
-variable sleep_time;
+
+#define sleep_time 			random(1900, 1930)
+#define wake_time				sleep_time - 1300
 variable home_tile;
 variable sleep_tile;
+
 variable gword1;
 variable gword2;
 variable PICK;
@@ -51,6 +52,8 @@ variable ration_tile;
 import variable recipient;
 import variable WtrGrd_ptr;
 import variable getting_ration;
+
+#define LVAR_Sleeping 							(6)
 
 procedure PickDeadBodyType;
 variable DeathType := 57;
@@ -75,40 +78,6 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-						call map_enter_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-							else begin
-								if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-									call timed_event_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
 	end
 end
 
@@ -136,7 +105,7 @@ begin
 			set_local_var(5, 0);
 		end
 		if (sleeping_disabled == 0) then begin
-			call sleeping;
+			sleeping
 		end
 	end
 end
@@ -179,8 +148,6 @@ begin
 	critter_add_trait(self_obj, 1, 6, 1);
 	call set_ration_tile;
 	call set_sleep_tile;
-	sleep_time := random(1900, 1930);
-	wake_time := sleep_time - 1300;
 end
 
 procedure pickup_p_proc
@@ -556,48 +523,6 @@ begin
 		else begin
 			if (elevation(self_obj) == 2) then begin
 				sleep_tile := 7000;
-			end
-		end
-	end
-end
-
-procedure sleeping
-begin
-	if (local_var(6) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(6, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(6, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(6, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(6, 1);
-				end
 			end
 		end
 	end
