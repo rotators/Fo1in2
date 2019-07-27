@@ -112,7 +112,7 @@ variable reaction_bonus_karma:=0;
 
 
 #define BottomReact 	set_local_var(LVAR_reaction_level, 1); \
-						set_local_var(LVAR_reaction, 1); 
+						set_local_var(LVAR_reaction, 1);
 
 #define TopReact 		set_local_var(LVAR_reaction, 100); \
 						set_local_var(LVAR_reaction_level, 3);

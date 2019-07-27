@@ -157,6 +157,7 @@
 // Raiders
 
 // Junktown
+#define EXP_KILLED_KENJI 						(400)
 
 // Hub
 

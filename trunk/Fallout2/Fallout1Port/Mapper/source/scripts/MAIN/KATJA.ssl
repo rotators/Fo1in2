@@ -1,0 +1,631 @@
+/*
+
+	Katja - Party Member, Boneyard
+
+*/
+
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_KATJA
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+#define set_default_party_follow             set_follow_close
+
+procedure start;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure map_enter_p_proc;
+procedure use_obj_on_p_proc;
+procedure talk_p_proc;
+procedure look_at_p_proc;
+procedure push_p_proc;
+
+procedure Katja01;
+procedure Katja02;
+procedure Katja03;
+procedure Katja04;
+procedure Katja05;
+procedure Katja06;
+procedure Katja07;
+procedure Katja08;
+procedure Katja09;
+procedure Katja10;
+procedure Katja11;
+procedure Katja12;
+procedure Katja13;
+procedure Katja14;
+procedure Katja15;
+procedure Katja16;
+procedure Katja17;
+procedure Katja18;
+procedure Katja19;
+procedure Katja20;
+procedure Katja21;
+procedure Katja22;
+procedure Katja23;
+procedure Katja24;
+procedure Katja25;
+procedure Katja26;
+procedure Katja28;
+
+procedure Node998;
+procedure Node999;
+
+procedure KatjaLeave;
+procedure KatjaTactics;
+procedure KatjaClose;
+procedure KatjaModerate;
+procedure KatjaFar;
+procedure KatjaExit;
+
+procedure map_commentary;
+procedure pick_lock;
+procedure set_lock;
+procedure KatjaCombatTactics;
+
+procedure KatjaSniper;
+procedure KatjaNearCombat;
+procedure KatjaFreeCombat;
+
+procedure KatjaHolsterWeapon;
+procedure KatjaRemoveArmor;
+
+variable tmp_hostile;
+variable item;
+variable lock;
+
+variable line173flag;
+variable line174flag;
+variable line176flag;
+variable line184flag;
+variable line186flag;
+variable line187flag;
+variable line188flag;
+
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
+
+#define float_katja(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+//#define Katja_In_Party    					Katja_In_Party
+
+#define katja_joins_party               	party_add_self;                                                   \
+                                          add_timer_event(self_obj,game_ticks(1),2);                        \
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_katja  		((dude_at_max_party_size == false) and (Katja_In_Party == false))
+#define EVENT_FLOAT_JOIN 						(2)
+
+procedure Node998 begin
+end
+procedure Node999 begin
+end
+
+procedure start begin
+end
+
+procedure push_p_proc begin
+   if (Katja_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      float_katja(random(300,302));
+   end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_FLOAT_JOIN) then begin
+		debug("katja is joining!");
+	end
+end
+
+procedure critter_p_proc begin
+   if (Katja_In_Party) then begin
+      party_member_follow_dude
+   end
+   else begin
+   	set_self_abandon_party;
+   end
+
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
+		set_self_abandon_party;
+		attack(dude_obj);
+	end
+	else begin
+		call map_commentary;
+	end
+end
+
+procedure destroy_p_proc begin
+	set_global_var(KATJA_HIRELING_STATUS, 3);
+	inc_good_critter
+end
+
+procedure map_enter_p_proc begin
+	/*if (global_var(KATJA_HIRELING_STATUS) < 2) then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER);
+	end
+	else begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_PLAYER);
+	end*/
+
+	// This code sets ai behavior based on set combat tactics:
+	if ((has_trait(1, self_obj, 5) != 4) and (has_trait(1, self_obj, 5) != 95) and (has_trait(1, self_obj, 5) != 96)) then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_GUARD);
+	end
+end
+
+procedure use_obj_on_p_proc begin
+
+	// TODO: Investigate this
+	if Katja_In_Party then begin
+		item := obj_pid(obj_being_used_with);
+		if ((item != 40) and (item != 71) and (item != 81) and (item != 103) and (item != 144)) then begin
+			script_overrides;
+			if (obj_item_subtype(obj_being_used_with) != 3) then begin
+				rm_obj_from_inven(dude_obj, obj_being_used_with);
+				add_obj_to_inven(self_obj, obj_being_used_with);
+			end
+			else begin
+				if ((item == 4) or (item == 9) or (item == 22) or (item == 45) or (item == 7) or (item == 159) or (item == 25) or (item == 26) or (item == 27) or (item == 19) or (item == 21) or (item == 234) or (item == 235) or (item == 116) or (item == 236) or (item == 241)) then begin
+					rm_obj_from_inven(dude_obj, obj_being_used_with);
+					add_obj_to_inven(self_obj, obj_being_used_with);
+					float_msg(self_obj, message_str(SCRIPT_GENCHAT, 215), 5);
+				end
+				else begin
+					float_msg(self_obj, message_str(SCRIPT_MODREACT, 109), 5);
+				end
+			end
+		end
+	end
+
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	// If not in party and haven't had introductions, display "slender young woman" description
+	if (global_var(KATJA_HIRELING_STATUS) == 0) then begin
+		display_msg(message_str(SCRIPT_KATJA, 100));
+	end
+	// if have had introductions or was in party but was asked to leave, display "Katja"
+	else if ((global_var(KATJA_HIRELING_STATUS) == 1) or (global_var(KATJA_HIRELING_STATUS) == 3)) then begin
+		display_msg(message_str(SCRIPT_KATJA, 101));
+	end
+end
+
+
+procedure talk_p_proc begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+
+	start_gdialog(623, self_obj, 4, -1, -1);
+
+	if Katja_In_Party or (global_var(KATJA_HIRELING_STATUS) == 3) then begin
+		gdialog_set_barter_mod(255);
+	end
+
+	gsay_start;
+
+	if (global_var(KATJA_HIRELING_STATUS) == 3) then begin
+		call Katja28;
+	end
+	else if Katja_In_Party then begin
+		call Katja24;
+	end
+	else if (global_var(KATJA_HIRELING_STATUS) == 1) then begin
+		call Katja25;
+	end
+	else begin
+		call Katja01;
+	end
+
+	gsay_end;
+	end_dialogue;
+
+	if (lock) then begin
+		call pick_lock;
+	end
+
+	if Katja_In_Party then begin
+		if (global_var(KATJA_JOINS_GIVE_EXP) == 0) then begin
+			set_global_var(KATJA_JOINS_GIVE_EXP, 1);
+			give_exp_points(200);
+			display_msg(message_str(SCRIPT_KATJA, 180));
+		end
+	end
+
+end
+
+procedure Katja01
+begin
+	Reply(102);
+	giq_option(4, 623, message_str(SCRIPT_KATJA, 103) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_KATJA, 104), Katja02, 50);
+	giq_option(4, 623, 105, Katja02, 50);
+	giq_option(5, 623, 106, Katja05, 50);
+	giq_option(-3, 623, 189, KatjaExit, 50);
+end
+
+procedure Katja02 begin
+	Reply(107);
+	giq_option(5, 623, 108, Katja03, 50);
+	giq_option(5, 623, 109, Katja04, 50);
+	giq_option(4, 623, 110, Katja07, 50);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) != 2) and (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP) == 0)) then begin
+		giq_option(4, 623, 111, Katja06, 50);
+	end
+end
+
+procedure Katja03 begin
+	Reply(112);
+	giq_option(5, 623, 109, Katja04, 50);
+	giq_option(4, 623, 110, Katja07, 50);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) != 2) and (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP) == 0)) then begin
+		giq_option(4, 623, 111, Katja06, 50);
+	end
+end
+
+procedure Katja04 begin
+	set_global_var(KATJA_HIRELING_STATUS, 1);
+	Reply(113);
+	giq_option(5, 623, 114, Katja21, 50);
+	giq_option(4, 623, 116, Katja09, 50);
+	giq_option(4, 623, 115, Node999, 50);
+end
+
+procedure Katja05 begin
+	Reply(117);
+	giq_option(4, 623, message_str(SCRIPT_KATJA, 103) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_KATJA, 104), Katja02, 50);
+	giq_option(4, 623, 118, Katja07, 50);
+	giq_option(4, 623, 115, Node999, 50);
+end
+
+procedure Katja06 begin
+	Reply(119);
+	giq_option(5, 623, 121, Katja11, 50);
+	giq_option(4, 623, 122, Katja10, 50);
+	giq_option(4, 623, 120, Node999, 50);
+end
+
+procedure Katja07 begin
+	Reply(123);
+	giq_option(4, 623, 124, Katja06, 50);
+	giq_option(4, 623, 125, Katja08, 50);
+end
+
+procedure Katja08 begin
+	gsay_message(623, 126, 51);
+end
+
+procedure Katja09 begin
+	Reply(127);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) != 2) and (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP) == 0)) then begin
+		giq_option(4, 623, 128, Katja06, 50);
+	end
+	giq_option(4, 623, 129, Katja10, 50);
+	giq_option(4, 623, 130, Katja17, 50);
+end
+
+procedure Katja10 begin
+	giq_option(4, 623, 131, Katja13, 50);
+	giq_option(4, 623, 133, Katja15, 50);
+	giq_option(4, 623, 134, Katja16, 50);
+	giq_option(4, 623, 135, Katja12, 50);
+	giq_option(4, 623, 130, Katja17, 50);
+	giq_option(4, 623, 136, Node999, 50);
+end
+
+procedure Katja11 begin
+	Reply(137);
+	giq_option(4, 623, 135, Katja12, 50);
+	giq_option(4, 623, 138, Node999, 50);
+end
+
+procedure Katja12 begin
+	Reply(139);
+	call Katja10;
+end
+
+procedure Katja13 begin
+	Reply(140);
+	call Katja10;
+end
+
+procedure Katja14 begin
+	Reply(141);
+	call Katja10;
+end
+
+procedure Katja15 begin
+	Reply(142);
+	call Katja10;
+end
+
+procedure Katja16 begin
+	Reply(143);
+	call Katja10;
+end
+
+procedure Katja17 begin
+	Reply(144);
+	if (not(global_var(WORLDMAPLIST_CHILDREN))) then begin
+		set_global_var(WORLDMAPLIST_CHILDREN, 1);
+	end
+	giq_option(4, 623, 145, Katja18, 50);
+	giq_option(4, 623, 147, Katja10, 50);
+	giq_option(4, 623, 146, Node999, 50);
+end
+
+procedure Katja18 begin
+	Reply(148);
+	giq_option(4, 623, 149, Katja20, 50);
+	giq_option(4, 623, 151, Katja10, 50);
+	giq_option(4, 623, 150, Node999, 50);
+end
+
+procedure Katja19 begin
+	Reply(152);
+	call Katja10;
+end
+
+procedure Katja20 begin
+	if dude_has_free_slot_for_katja or unlimited_party_members then begin
+		set_global_var(KATJA_DISTANCE_VAL, 4);
+		set_global_var(KATYA_DUDE_LAST_LEVEL, get_pc_stat(1));
+
+		katja_joins_party;
+
+		critter_add_trait(self_obj, 1, 6, 0);
+		if (global_var(KATJA_HIRELING_STATUS) == 0) then begin
+			set_global_var(KATJA_HIRELING_STATUS, 2);
+			gsay_message(623, 2200, 50);
+		end
+		else begin
+			set_global_var(KATJA_HIRELING_STATUS, 2);
+			gsay_message(623, 153, 50);
+		end
+	end
+	else begin
+		Reply(2500);
+		NOption(2510,Node999,004);
+	end
+end
+
+procedure Katja21 begin
+	Reply(154);
+	giq_option(4, 623, 156, Katja22, 50);
+	giq_option(6, 623, 157, Katja23, 50);
+	giq_option(4, 623, 155, Node999, 50);
+end
+
+procedure Katja22 begin
+	Reply(158);
+	call Katja10;
+end
+
+procedure Katja23 begin
+	Reply(159);
+	giq_option(4, 623, 160, Katja09, 50);
+	if ((global_var(QUEST_VAULT13_4_WATERCHIP) == 0) and (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP) == 0)) then begin
+		giq_option(4, 623, 161, Katja06, 50);
+	end
+	giq_option(4, 623, 162, Node999, 50);
+end
+
+procedure Katja24 begin
+	Reply(163);
+	if (cur_map_index == MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
+		if (map_var(3)) then begin
+			giq_option(4, 623, 164, set_lock, 50);
+		end
+	end
+	if ((cur_map_index == MAP_JUNKENT) and (elevation(dude_obj) == 1)) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+		if (map_var(4)) then begin
+			giq_option(4, 623, 164, set_lock, 50);
+		end
+	end
+	giq_option(4, 623, 167, KatjaLeave, 50);
+	giq_option(4, 623, 177, Katja26, 50);
+	giq_option(4, 389, 159, KatjaTactics, 49);
+	giq_option(4, 623, 2000, KatjaCombatTactics, 50);
+	giq_option(4, 623, 168, Node999, 50);
+	giq_option(-3, 623, 189, KatjaExit, 50);
+end
+
+procedure Katja25 begin
+	Reply(169);
+	giq_option(4, 623, 171, Katja10, 50);
+	giq_option(4, 623, 170, Node999, 50);
+	giq_option(-3, 623, 189, KatjaExit, 50);
+end
+
+procedure Katja26 begin
+	gsay_message(623, 178, 50);
+	call Katja24;
+end
+
+procedure Katja28 begin
+	Reply(181);
+	giq_option(4, 623, 182, Katja20, 50);
+	giq_option(4, 623, 183, Node999, 50);
+	giq_option(-3, 766, 196, Katja20, 50);
+	giq_option(-3, 623, 189, KatjaExit, 50);
+end
+
+procedure KatjaLeave begin
+	set_global_var(KATJA_HIRELING_STATUS, 3);
+	//party_remove(self_obj);
+	set_party_waiting;
+end
+
+procedure KatjaTactics begin
+	gsay_reply(389, 160);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_CLOSE) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 216), KatjaClose, 50);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_MEDIUM) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 162) + message_str(SCRIPT_GENCHAT, 216), KatjaModerate, 50);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_FAR) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 216), KatjaFar, 50);
+end
+
+procedure KatjaClose begin
+	set_follow_close;
+
+	/*set_local_var(1, 0);
+	set_local_var(2, 0);
+	set_local_var(3, 0);
+	set_global_var(KATJA_DISTANCE_VAL, 2);*/
+	gsay_message(235, 201, 50);
+	call Katja24;
+end
+
+procedure KatjaModerate begin
+	set_follow_medium;
+
+	/*set_local_var(1, 0);
+	set_local_var(2, 0);
+	set_local_var(3, 0);
+	set_global_var(KATJA_DISTANCE_VAL, 4);*/
+	gsay_message(235, 201, 50);
+	call Katja24;
+end
+
+procedure KatjaFar begin
+	set_follow_far;
+
+	/*set_local_var(1, 0);
+	set_local_var(2, 0);
+	set_local_var(3, 0);
+	set_global_var(KATJA_DISTANCE_VAL, 6);*/
+	gsay_message(235, 201, 50);
+	call Katja24;
+end
+
+procedure KatjaExit begin
+	gsay_message(623, 191, 50);
+end
+
+procedure map_commentary begin
+	if (cur_map_index == MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
+		if ((tile_distance(tile_num(self_obj), 27317) < 4) and (line173flag == 0)) then begin
+			float_msg(self_obj, message_str(SCRIPT_KATJA, 173), 5);
+			line173flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_VAULT13) then begin //  VAULT 13 - INSIDE
+		if (elevation(self_obj) == 1) then begin
+			if (tile_distance(tile_num(self_obj), 19111) < 4) then begin
+				if ((line174flag == 0) and (global_var(QUEST_VAULT13_1_REBELS) != 2) and (Ian_ptr != 0)) then begin
+					float_msg(self_obj, message_str(SCRIPT_KATJA, 172), 5);
+					line174flag := 1;
+				end
+			end
+		end
+	end
+	else if (cur_map_index == MAP_HUBDWNTN) then begin //  THE HUB - DOWNTOWN
+		if ((tile_distance(tile_num(self_obj), 28104) < 5) and (line176flag == 0)) then begin
+			float_msg(self_obj, message_str(SCRIPT_KATJA, 176), 5);
+			if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+				float_msg(Tycho_ptr, message_str(SCRIPT_TYCHO, 167), 12);
+			end
+			line176flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_MBVATS12) then begin //  MILITARY BASE -  VATS  (LEVELS 3 AND 4)
+		if (line184flag == 0) then begin
+			float_msg(self_obj, message_str(SCRIPT_KATJA, 184), 5);
+			if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+				float_msg(Ian_ptr, message_str(SCRIPT_IAN, 175), 0);
+			end
+			line184flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_MSTRLR34) then begin //  MASTER'S VAULT -  LEVELS 3 AND 4
+		if (line186flag == 0) then begin
+			float_msg(self_obj, message_str(SCRIPT_KATJA, 186), 5);
+			line186flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_HALLDED) then begin //  NECROPOLIS - HALLS OF THE DEAD
+		if ((tile_distance(tile_num(self_obj), 17274) < 4) and (line187flag == 0)) then begin
+			float_msg(self_obj, message_str(SCRIPT_KATJA, 187), 5);
+			line187flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_LARIPPER) then begin //  L.A. BONEYARD - RIPPERS
+		if (line188flag == 0) then begin
+			float_msg(self_obj, message_str(SCRIPT_KATJA, 188), 5);
+			line188flag := 1;
+		end
+	end
+end
+
+procedure pick_lock begin
+	reg_anim_func(2, self_obj);
+	reg_anim_func(1, 1);
+	reg_anim_obj_move_to_obj(self_obj, lock, -1);
+	reg_anim_animate(self_obj, 11, -1);
+	reg_anim_func(3, 0);
+	use_obj(lock);
+	obj_unlock(lock);
+	lock := 0;
+end
+
+procedure set_lock begin
+	if (cur_map_index == MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
+		lock := map_var(3);
+	end
+	else if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+		lock := map_var(4);
+	end
+end
+
+procedure KatjaCombatTactics begin
+	Reply(2001);
+
+	if (self_is_armed) then
+		giq_option(4, 623, 2010, KatjaHolsterWeapon, 49);
+
+	if (self_wearing_armor) then
+		giq_option(4, 623, 2011, KatjaRemoveArmor, 49);
+
+	giq_option(4, 623, 2012, KatjaSniper, 49);
+	giq_option(4, 623, 2013, KatjaNearCombat, 49);
+	giq_option(4, 623, 2014, KatjaFreeCombat, 49);
+	giq_option(4, 623, 2015, Katja24, 49);
+end
+
+procedure KatjaHolsterWeapon begin
+	inven_unwield(self_obj);
+   Reply(2100);
+	call KatjaCombatTactics;
+end
+
+procedure KatjaRemoveArmor begin
+	remove_armor(self_obj)
+   Reply(2100);
+	call KatjaCombatTactics;
+end
+
+procedure KatjaSniper begin
+	gsay_message(623, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 95);
+	call KatjaCombatTactics;
+end
+
+procedure KatjaNearCombat begin
+	gsay_message(623, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 96);
+	call KatjaCombatTactics;
+end
+
+procedure KatjaFreeCombat begin
+	gsay_message(623, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 4);
+	call KatjaCombatTactics;
+end
+

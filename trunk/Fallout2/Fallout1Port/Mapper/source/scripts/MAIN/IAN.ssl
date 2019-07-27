@@ -1,0 +1,677 @@
+/*
+
+	Ian - Party Member, Shady Sands
+
+*/
+
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_IAN
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+
+#define set_default_party_follow             set_follow_close
+
+procedure start;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure use_obj_on_p_proc;
+procedure push_p_proc;
+
+procedure join_party;
+procedure hire_Ian;
+procedure rejoin_party;
+
+procedure Ian01;
+procedure Ian02;
+procedure Ian03;
+procedure Ian04;
+procedure Ian05;
+procedure Ian06;
+procedure Ian07;
+procedure Ian08;
+procedure Ian09;
+procedure Ian10;
+procedure Ian11;
+procedure Ian12;
+procedure Ian12a;
+procedure Ian13;
+procedure Ian14;
+procedure Ian15;
+procedure Ian16;
+procedure Ian17;
+procedure Ian17a;
+procedure Ian18;
+procedure Ian19;
+procedure Ian20;
+procedure Ian21;
+
+procedure Node999;
+
+procedure map_commentary;
+procedure IanTactics;
+procedure IanClose;
+procedure IanModerate;
+procedure IanFar;
+procedure IanCombatTactics;
+procedure IanSniper;
+procedure IanNearCombat;
+procedure IanFreeCombat;
+
+procedure IanHolsterWeapon;
+procedure IanRemoveArmor;
+
+variable tmp_hostile;
+variable item;
+variable line151flag;
+variable line152flag;
+variable line153flag;
+variable line154flag;
+variable line155flag;
+variable line162flag;
+variable line163flag;
+variable line164flag;
+variable line165flag;
+variable line166flag;
+variable line167flag;
+variable line170flag;
+variable line172flag;
+
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
+
+procedure PickDeadBodyType;
+variable DeathType := 56;
+
+#define float_ian(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+//#define Ian_In_Party    						(global_var(IAN_HIRELING_STATUS) == 2)
+
+#define ian_joins_party               		party_add_self;                                                   	\
+                                          add_timer_event(self_obj,game_ticks(1),EVENT_FLOAT_JOIN);				\
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_ian    		((dude_at_max_party_size == false) and (Ian_In_Party == false))
+#define EVENT_FLOAT_JOIN 						(2)
+
+procedure Node998 begin
+end
+procedure Node999 begin
+end
+
+procedure start begin
+end
+
+procedure push_p_proc begin
+   if (Ian_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      float_ian(random(300,302));
+   end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_FLOAT_JOIN) then begin
+		debug("ian is joining!");
+	end
+end
+
+procedure critter_p_proc begin
+	//debug("LVAR_WAITING: " + local_var(LVAR_WAITING));
+   if (Ian_In_Party) then begin
+   	/*debug("party_is_waiting: " + party_is_waiting);
+   	debug("party_no_follow: " + party_no_follow);
+		debug("LVAR_FOLLOW_DISTANCE" + local_var(LVAR_FOLLOW_DISTANCE));*/
+
+      party_member_follow_dude
+
+   end
+   else begin
+   	set_self_abandon_party;
+   end
+
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
+		set_self_abandon_party;
+		attack(dude_obj);
+	end
+	else begin
+		call map_commentary;
+	end
+end
+
+procedure description_p_proc begin
+	variable PerceptionRoll := 0;
+	PerceptionRoll := do_check(dude_obj, STAT_pe, 1);
+	if is_success(PerceptionRoll) or has_trait(0, dude_obj, 0) then begin
+		script_overrides;
+		display_msg(message_str(SCRIPT_IAN, 130));
+		script_overrides;
+	end
+end
+
+procedure destroy_p_proc begin
+	set_global_var(IAN_HIRELING_STATUS, 3);
+	inc_good_critter
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	// If not in party and haven't had introductions, display "short stocky man" description
+	if (global_var(IAN_HIRELING_STATUS) == 0) then begin
+		display_msg(message_str(SCRIPT_IAN, 100));
+	end
+	else begin
+		// if have had introductions or was in party but was asked to leave, display "Ian"
+		if ((global_var(IAN_HIRELING_STATUS) == 1) or (global_var(IAN_HIRELING_STATUS) == 3)) then begin
+			display_msg(message_str(SCRIPT_IAN, 113));
+		end
+	end
+	script_overrides;
+end
+
+procedure map_enter_p_proc begin
+
+	if (cur_map_index == MAP_SHADYW) then begin
+		if (map_first_run) then begin
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_SHADY_SANDS);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_IAN);
+		end
+	end
+
+	if ((global_var(SHADY_SANDS_WAS_INVADED) == 1) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
+		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+			if (local_var(7) != 1) then begin
+				set_local_var(7, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+
+	/*if Ian_In_Party then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_PLAYER);
+	end
+	else begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_SHADY_SANDS);
+	end*/
+
+	// This code sets ai behavior based on set combat tactics:
+	if ((has_trait(1, self_obj, 5) != AI_IAN) and (has_trait(1, self_obj, 5) != 95) and (has_trait(1, self_obj, 5) != 96)) then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_IAN);
+	end
+
+end
+
+procedure pickup_p_proc begin
+	if (global_var(IAN_HIRELING_STATUS) < 2) then begin
+		tmp_hostile := 1;
+	end
+	else begin
+		script_overrides;
+	end
+end
+
+procedure talk_p_proc begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+
+	get_reaction
+
+	start_gdialog(235, self_obj, 4, -1, -1);
+	if (global_var(IAN_HIRELING_STATUS) == 2) or (global_var(IAN_HIRELING_STATUS) == 3) then begin
+		gdialog_set_barter_mod(255);
+	end
+
+	gsay_start;
+
+	if (global_var(ENEMY_SHADY_SANDS) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
+		call Ian14;
+	end
+	else if (global_var(IAN_HIRELING_STATUS) == 0) then begin
+		call Ian02;
+	end
+	else if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		call Ian15;
+	end
+	else if (global_var(IAN_HIRELING_STATUS) == 3) then begin
+		call Ian21;
+	end
+	else begin
+		call Ian12;
+	end
+
+	gsay_end;
+	end_dialogue;
+	if ((global_var(IAN_HIRELING_STATUS) == 2) and (global_var(DESTROY_MASTER_9) == 0)) then begin
+		set_global_var(DESTROY_MASTER_9, 1);
+		display_msg(message_str(SCRIPT_IAN, 169));
+		give_exp_points(EXP_HIRED_IAN);
+	end
+
+end
+
+procedure use_obj_on_p_proc begin
+
+	// TODO: Investigate this
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		item := obj_pid(obj_being_used_with);
+		if ((item != 40) and (item != 71) and (item != 81) and (item != 103) and (item != 144)) then begin
+			script_overrides;
+			if (obj_item_subtype(obj_being_used_with) != 3) then begin
+				rm_obj_from_inven(dude_obj, obj_being_used_with);
+				add_obj_to_inven(self_obj, obj_being_used_with);
+			end
+			else begin
+				if ((item == 4) or (item == 8) or (item == 18) or (item == 120) or (item == 22) or (item == 9) or (item == 16) or (item == 24) or (item == 241) or (item == 116) or (item == 236) or (item == 234) or (item == 235) or (item == 21)) then begin
+					rm_obj_from_inven(dude_obj, obj_being_used_with);
+					add_obj_to_inven(self_obj, obj_being_used_with);
+					float_msg(self_obj, message_str(SCRIPT_GENCHAT, 215), 0);
+				end
+				else begin
+					float_msg(self_obj, message_str(SCRIPT_MODREACT, 109), 3);
+				end
+			end
+		end
+	end
+
+end
+
+procedure join_party begin
+	if dude_has_free_slot_for_ian or unlimited_party_members then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+		set_global_var(DESTROY_VATS_5, 4);
+		set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat(1));
+
+		ian_joins_party;
+		Reply(150);
+	end
+	else begin
+		Reply(2500);
+		NOption(2510,Node999,004);
+	end
+end
+
+procedure rejoin_party begin
+	if dude_has_free_slot_for_ian or unlimited_party_members then begin
+		set_global_var(IAN_HIRELING_STATUS, 2);
+		set_global_var(DESTROY_VATS_5, 4);
+		set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat(1));
+
+		end_party_waiting;
+		Reply(150);
+	end
+	else begin
+		Reply(2500);
+		NOption(2510,Node999,004);
+	end
+end
+
+procedure hire_Ian begin
+	item_caps_adjust(dude_obj, -100);
+	call join_party;
+end
+
+procedure Ian01 begin
+	gsay_message(235, 101, 51);
+end
+
+procedure Ian02 begin
+	gsay_reply(235, 102);
+	giq_option(4, 235, 103, Ian03, 51);
+	giq_option(4, 235, message_str(SCRIPT_IAN, 104) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_IAN, 105), Ian04, 50);
+	giq_option(-3, 235, 106, Ian05, 50);
+end
+
+procedure Ian03 begin
+	gsay_message(235, 107, 51);
+end
+
+procedure Ian04 begin
+	gsay_reply(235, 108);
+	set_global_var(IAN_HIRELING_STATUS, 1);
+	giq_option(4, 235, 109, Ian06, 50);
+	giq_option(5, 235, 110, Ian07, 50);
+end
+
+procedure Ian05 begin
+	gsay_message(235, 111, 50);
+end
+
+procedure Ian06 begin
+	gsay_reply(235, 112);
+	giq_option(4, 235, 114, Ian18, 50);
+	giq_option(4, 235, 115, Ian13, 50);
+	giq_option(4, 235, 149, Ian17, 50);
+	giq_option(5, 235, 116, Ian08, 50);
+end
+
+procedure Ian07 begin
+	gsay_reply(235, 117);
+	giq_option(4, 235, 118, Ian09, 50);
+	giq_option(4, 235, 119, Ian08, 50);
+end
+
+procedure Ian08 begin
+	gsay_reply(235, 120);
+	giq_option(4, 235, 121, Ian10, 50);
+	giq_option(5, 235, 122, Ian11, 50);
+end
+
+procedure Ian09 begin
+	gsay_reply(235, 123);
+	giq_option(4, 634, 104, Node999, 50);
+end
+
+procedure Ian10 begin
+	gsay_reply(235, 125);
+	giq_option(4, 235, 126, Ian09, 50);
+	giq_option(4, 634, 101, Node999, 50);
+end
+
+procedure Ian11 begin
+	gsay_reply(235, 128);
+	giq_option(4, 235, 129, Ian07, 50);
+	giq_option(4, 634, 101, Node999, 50);
+end
+
+procedure Ian12 begin
+	gsay_reply(235, message_str(SCRIPT_IAN, 131) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_IAN, 132));
+	call Ian12a;
+end
+
+procedure Ian12a begin
+	giq_option(4, 235, 133, Ian11, 50);
+	giq_option(4, 235, 134, Ian09, 50);
+	giq_option(4, 235, 135, Ian07, 50);
+	giq_option(4, 235, 136, Ian10, 50);
+	giq_option(4, 235, 137, Ian13, 50);
+	giq_option(4, 235, 149, Ian17, 50);
+	giq_option(4, 235, 138, Node999, 50);
+end
+
+procedure Ian13 begin
+	if (not(global_var(WORLDMAPLIST_THE_HUB))) then begin
+		set_global_var(WORLDMAPLIST_THE_HUB, 1);
+	end
+	if (not(global_var(WORLDMAPLIST_JUNKTOWN))) then begin
+		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+	end
+	gsay_reply(235, 139);
+	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+		giq_option(4, 235, 140, Ian15, 50);
+	end
+	else begin
+		giq_option(4, 235, 140, Ian12, 50);
+	end
+end
+
+procedure Ian14 begin
+	tmp_hostile := 1;
+	gsay_message(235, 141, 51);
+end
+
+// Primary dialog node:
+procedure Ian15 begin
+	gsay_reply(235, message_str(SCRIPT_IAN, 142) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_IAN, 143));
+	giq_option(4, 235, 145, Ian16, 50);
+	giq_option(4, 235, 146, Ian13, 50);
+	giq_option(4, 235, 173, Ian20, 50);
+	giq_option(4, 235, 2000, IanCombatTactics, 50);
+	giq_option(4, 389, 159, IanTactics, 50);
+	giq_option(4, 235, 144, Node999, 50);
+	giq_option(-3, 817, 139, Node999, 50);
+end
+
+procedure Ian16 begin
+	set_global_var(IAN_HIRELING_STATUS, 3);
+	set_party_waiting;
+	gsay_message(235, 147, 50);
+end
+
+procedure Ian17 begin
+	if (local_var(LVAR_reaction_level) == 1) then begin
+		gsay_message(235, 148, 51);
+	end
+	else begin
+		if (local_var(LVAR_reaction_level) == 2) then begin
+			gsay_reply(235, 156);
+			if (item_caps_total(dude_obj) >= 100) then begin
+				giq_option(4, 235, 157, hire_Ian, 49);
+			end
+			giq_option(6, 235, 159, Ian17a, 50);
+			giq_option(4, 235, 158, Node999, 50);
+		end
+		else begin
+			call join_party;
+		end
+	end
+end
+
+procedure Ian17a begin
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
+		gsay_reply(235, 160);
+		giq_option(4, 634, 106, join_party, 49);
+	end
+	else begin
+		DownReact
+		gsay_message(235, 161, 51);
+	end
+end
+
+procedure Ian18 begin
+	gsay_reply(235, 124);
+	UpReact
+	giq_option(4, 634, 106, Ian19, 50);
+end
+
+procedure Ian19 begin
+	gsay_reply(235, 127);
+	call Ian12a;
+end
+
+procedure Ian20 begin
+	gsay_message(235, 174, 50);
+	call Ian15;
+end
+
+procedure Ian21 begin
+	gsay_reply(235, 202);
+	giq_option(4, 235, 203, rejoin_party, 50);
+	giq_option(4, 235, 204, Node999, 50);
+	giq_option(-3, 766, 196, rejoin_party, 50);
+end
+
+procedure map_commentary begin
+	if (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+		if (tile_distance(tile_num(self_obj), 27883) < 4) then begin
+			if (not(line151flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 151), 0);
+				line151flag := 1;
+			end
+		end
+	end
+	else if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		if (tile_distance(tile_num(self_obj), 27919) < 4) then begin
+			if (not(line152flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 152), 0);
+				line152flag := 1;
+			end
+		end
+	end
+	else if (cur_map_index == MAP_HALLDED) then begin //  NECROPOLIS - HALLS OF THE DEAD
+
+		if (not(line153flag)) then begin
+			float_msg(self_obj, message_str(SCRIPT_IAN, 153), 0);
+			line153flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_GLOWENT) then begin //  THE GLOW - ENTRANCE (CRATER)
+		if (not(line154flag)) then begin
+			float_msg(self_obj, message_str(SCRIPT_IAN, 154), 0);
+			if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+				float_msg(Katja_ptr, message_str(SCRIPT_KATJA, 185), 5);
+			end
+			line154flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
+		if (not(line155flag)) then begin
+			float_msg(self_obj, message_str(SCRIPT_IAN, 155), 0);
+			line155flag := 1;
+		end
+	end
+	else if (cur_map_index == MAP_HUBDWNTN) then begin //  THE HUB - DOWNTOWN
+		if (tile_distance(tile_num(self_obj), 24890) < 4) then begin
+			if (not(line162flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 162), 0);
+				line162flag := 1;
+			end
+		end
+		else if (tile_distance(tile_num(self_obj), 14116) < 4) then begin
+			if (not(line165flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 165), 0);
+				line165flag := 1;
+			end
+		end
+		else if (tile_distance(tile_num(self_obj), 18464) < 4) then begin
+			if (not(line166flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 166), 0);
+				line166flag := 1;
+			end
+		end
+		else if (tile_distance(tile_num(self_obj), 21730) < 4) then begin
+			if (not(line167flag)) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 167), 0);
+				line167flag := 1;
+			end
+		end
+	end
+	else if (cur_map_index == MAP_HUBOLDTN) then begin //  THE HUB - OLDTOWN
+		if (tile_distance(tile_num(self_obj), 16082) < 4) then begin
+			if (line163flag == 0) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 163), 0);
+				line163flag := 1;
+			end
+		end
+	end
+	else if (cur_map_index == MAP_HUBWATER) then begin //  THE HUB - WATER MERCHANTS
+		if (tile_distance(tile_num(self_obj), 22497) < 4) then begin
+			if (line164flag == 0) then begin
+				float_msg(self_obj, message_str(SCRIPT_IAN, 164), 0);
+				line164flag := 1;
+			end
+		end
+	end
+	else if (cur_map_index == MAP_VAULT13) then begin //  VAULT 13 - INSIDE
+		if (line170flag == 0) then begin
+			float_msg(self_obj, message_str(SCRIPT_IAN, 170), 0);
+			line170flag := 1;
+		end
+	end
+end
+
+procedure IanTactics begin
+	gsay_reply(389, 160);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_CLOSE) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 216), IanClose, 50);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_MEDIUM) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 162) + message_str(SCRIPT_GENCHAT, 216), IanModerate, 50);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_FAR) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 216), IanFar, 50);
+end
+
+procedure IanClose begin
+	set_follow_close;
+
+	/*set_local_var(4, 0);
+	set_local_var(5, 0);
+	set_local_var(6, 0);
+	set_global_var(DESTROY_VATS_5, 2);*/
+	gsay_message(235, 201, 50);
+	call Ian15;
+end
+
+procedure IanModerate begin
+	set_follow_medium;
+
+	/*set_local_var(4, 0);
+	set_local_var(5, 0);
+	set_local_var(6, 0);
+	set_global_var(DESTROY_VATS_5, 4);*/
+
+	gsay_message(235, 201, 50);
+	call Ian15;
+end
+
+procedure IanFar begin
+	set_follow_far;
+
+	/*set_local_var(4, 0);
+	set_local_var(5, 0);
+	set_local_var(6, 0);
+	set_global_var(DESTROY_VATS_5, 6);*/
+	gsay_message(235, 201, 50);
+	call Ian15;
+end
+
+procedure IanCombatTactics begin
+	gsay_reply(235, 2001);
+
+	if (self_is_armed) then
+		giq_option(4, 235, 2010, IanHolsterWeapon, 49);
+
+	if (self_wearing_armor) then
+		giq_option(4, 235, 2011, IanRemoveArmor, 49);
+
+	giq_option(4, 235, 2012, IanSniper, 49);
+	giq_option(4, 235, 2013, IanNearCombat, 49);
+	giq_option(4, 235, 2014, IanFreeCombat, 49);
+	giq_option(4, 235, 2015, Ian15, 49);
+end
+
+procedure IanHolsterWeapon begin
+	inven_unwield(self_obj);
+   Reply(201);
+	call IanCombatTactics;
+end
+
+procedure IanRemoveArmor begin
+	remove_armor(self_obj)
+   Reply(201);
+	call IanCombatTactics;
+end
+
+procedure IanSniper begin
+	gsay_message(235, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 95);
+	call IanCombatTactics;
+end
+
+procedure IanNearCombat begin
+	gsay_message(235, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 96);
+	call IanCombatTactics;
+end
+
+procedure IanFreeCombat begin
+	gsay_message(235, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 89);
+	call IanCombatTactics;
+end
+
+procedure PickDeadBodyType begin
+	pick_dead_body_type
+end
+
+

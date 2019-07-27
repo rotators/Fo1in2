@@ -1,87 +1,67 @@
+/*
+
+	Kenji, the assassin send after Killian
+
+*/
+
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
+#define NAME                    SCRIPT_KENJI
 
-variable hostile;
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+
+variable tmp_hostile;
+variable SrcObj := 0;
+variable SrcIsParty := 0;
 
 import variable Killian_ptr;
 
-
-
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					call look_at_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tile_distance(tile_num(self_obj), 26281) > 3) then begin
 		animate_move_obj_to_tile(self_obj, 26281, 0);
 	end
 	else begin
 		if (obj_on_screen(self_obj)) then begin
 			float_msg(self_obj, message_str(SCRIPT_KENJI, 103), 2);
-			attack_complex(Killian_ptr, 0, 1, 0, 0, 30000, 0, 0);
+			attack(Killian_ptr);
 		end
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) or (party_member_obj(source_obj)) then begin
 		set_map_var(2, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	inc_evil_critter 
+procedure destroy_p_proc begin
+	inc_evil_critter
 	if (map_var(2) == 1) then begin
 		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
 		display_msg(message_str(SCRIPT_KENJI, 104));
-		give_exp_points(400);
+		give_exp_points(EXP_KILLED_KENJI);
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_KENJI, 102));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
 	display_msg(message_str(SCRIPT_KENJI, random(100, 101)));
 end
