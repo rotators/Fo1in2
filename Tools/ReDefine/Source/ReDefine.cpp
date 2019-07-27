@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -6,27 +7,15 @@
 #include <memory>
 #include <sstream>
 
-#include "ReDefine.h"
-#include "Defines.h"
-#include "Types.h"
-
 #include "FOClassic/CommandLine.h"
 #include "FOClassic/Ini.h"
 
-enum LogType
-{
-    Debug = 0,
-    Warning,
-    Normal
-};
+#include "ReDefine.h"
+#include "Types.h"
 
-constexpr uint16  MAX_LOGTEXT = 4096;
+constexpr uint16 MAX_LOGTEXT = 4096;
 
-CmdLine*          ReDefine::CommandLine = nullptr;
-Ini*              ReDefine::Config = nullptr;
-ReDefine::SStatus ReDefine::Status;
-
-uint StrLength( const char* str )
+static uint StrLength( const char* str )
 {
     const char* str_ = str;
     while( *str )
@@ -34,76 +23,159 @@ uint StrLength( const char* str )
     return (uint)(str - str_);
 }
 
-void StrInsert( char* to, const char* from )
+static void Print( const char* prefix, const char* function, const char* format, va_list& args, bool lineInfo, ReDefine::SStatus::SCurrent& current )
 {
-    if( !to || !from )
-        return;
+    std::string full;
+    std::string log = "ReDefine";
 
-    int flen = StrLength( from );
-    if( !flen )
-        return;
-
-    char* end_to = to;
-    while( *end_to )
-        ++end_to;
-
-    for( ; end_to >= to; --end_to )
-        *(end_to + flen) = *end_to;
-
-    while( *from )
-    {
-        *to = *from;
-        ++to;
-        ++from;
-    }
-}
-
-static void Print( const char* prefix, const char* function, const char* frmt, va_list& list, bool lineInfo = true )
-{
-    char str[MAX_LOGTEXT] = { 0 };
-
-    if( function )
-    {
-        StrInsert( str, ") " );
-        StrInsert( str, function );
-        StrInsert( str, "(" );
-    }
+    // prefix is part of both message and logfile name
 
     if( prefix )
     {
-        StrInsert( str, " " );
-        StrInsert( str, prefix );
+        full += std::string( prefix );
+        full += " ";
+
+        log += ".";
+        log += std::string( prefix );
     }
 
-    size_t len = StrLength( str );
-    std::vsnprintf( &str[len], MAX_LOGTEXT - len, frmt, list );
-    str[MAX_LOGTEXT - 1] = 0;
+    log += ".log";
 
-    if( StrLength( str ) == (prefix ? StrLength( prefix ) + 1 : 0) + (function ? StrLength( function ) + 3 : 0) )
+    // add current function
+
+    if( function )
+    {
+        full += "(";
+        full += std::string( function );
+        full += ") ";
+    }
+
+    // prepare text
+
+    char text[MAX_LOGTEXT] = { 0 };
+    std::vsnprintf( text, sizeof(text), format, args );
+    text[MAX_LOGTEXT - 1] = 0;
+
+    // skip empty text
+
+    if( !StrLength( text ) )
         return;
 
-    if( lineInfo && !ReDefine::Status.CurrentFile.empty() && ReDefine::Status.CurrentLineNumber )
-        std::snprintf( str, sizeof(str), "%s : fileline<%s:%u>", str, ReDefine::Status.CurrentFile.c_str(), ReDefine::Status.CurrentLine );
+    full += std::string( text );
 
-    std::printf( "%s\n", str );
+    // append filename/line number, if available
+    if( lineInfo && !current.File.empty() && current.LineNumber )
+    {
+        full += " : fileline<";
+        full += current.File;
+        full += ":";
+        full += std::to_string( (long long)current.LineNumber );
+        full += ">";
+    }
+
+    // append currently processed line
+
+    if( !current.Line.empty() )
+    {
+        full += " :: ";
+        full += current.Line;
+    }
+
+    // show && save
+
+    std::printf( "%s\n", full.c_str() );
+
+    std::ofstream flog;
+    flog.open( log, std::ios::out | std::ios::app );
+    if( flog.is_open() )
+    {
+        flog << full;
+        flog << std::endl;
+
+        flog.close();
+    }
+}
+
+//
+
+ReDefine::SStatus::SCurrent::SCurrent()
+{
+    Clear();
+}
+
+void ReDefine::SStatus::SCurrent::Clear()
+{
+    File = "";
+    Line = "";
+    LineNumber = 0;
 }
 
 //
 
 void ReDefine::SStatus::Clear()
 {
-    CurrentFile.clear();
-    CurrentLine.clear();
-    CurrentLineNumber = 0;
+    Current.Clear();
 }
 
 //
+
+ReDefine::ReDefine() :
+    CommandLine( nullptr ),
+    Config( nullptr )
+{}
+
+ReDefine::~ReDefine()
+{
+    Finish();
+}
+
+bool ReDefine::Init( int argc /* = 0 */, char** argv /* = nullptr */ )
+{
+    Finish();
+
+    if( argc && argv )
+        CommandLine = new CmdLine( argc, argv );
+
+    // create config
+    Config = new Ini();
+    Config->KeepKeysOrder = true;
+
+    // remove logfiles from previous run
+    std::remove( "ReDefine.DEBUG.log" );
+    std::remove( "ReDefine.WARNING.log" );
+    std::remove( "ReDefine.log" );
+
+    return true;
+}
+
+void ReDefine::Finish()
+{
+    if( CommandLine )
+    {
+        delete CommandLine;
+        CommandLine = nullptr;
+    }
+
+    if( Config )
+    {
+        delete Config;
+        Config = nullptr;
+    }
+
+    Status.Clear();
+
+    // extern cleanup
+
+    FinishDefines();
+}
+
+// logging
 
 void ReDefine::DEBUG( const char* function, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( "DEBUG", function, format, list );
+    Print( "DEBUG", function, format, list, true, Status.Current );
     va_end( list );
 }
 
@@ -111,7 +183,7 @@ void ReDefine::WARNING( const char* func, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( "WARNING", nullptr, format, list );
+    Print( "WARNING", nullptr, format, list, true, Status.Current );
     va_end( list );
 }
 
@@ -119,62 +191,69 @@ void ReDefine::LOG( const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( nullptr, nullptr, format, list );
+    Print( nullptr, nullptr, format, list, false, Status.Current );
     va_end( list );
 }
 
+// generic file reading
+
 bool ReDefine::ReadFile( const std::string& path, std::vector<std::string>& lines )
 {
+    std::string filename = Config->GetStr( "ReDefine", "ScriptsDir" ) + std::string( "/" ) + path;
     lines.clear();
 
     std::ifstream fstream;
-    fstream.open( path, std::ios_base::in | std::ios_base::binary );
+    fstream.open( filename, std::ios_base::in | std::ios_base::binary );
 
-    if( fstream.is_open() )
+    bool result = fstream.is_open();
+    if( result )
     {
+        // skip bom
         char bom[3] = { 0, 0, 0 };
         fstream.read( bom, sizeof(bom) );
         if( bom[0] != (char)0xEF || bom[1] != (char)0xBB || bom[2] != (char)0xBF )
             fstream.seekg( 0, fstream.beg );
-// TODO
+
+        std::string line;
+        while( !fstream.eof() )
+        {
+            getline( fstream, line );
+
+            line.erase( std::remove( line.begin(), line.end(), '\r' ), line.end() );
+            line.erase( std::remove( line.begin(), line.end(), '\n' ), line.end() );
+
+            lines.push_back( line );
+        }
     }
+    else
+        WARNING( "cannot read file<[%s]/%s>", Config->GetStr( "ReDefine", "ScriptsDir" ).c_str(), path.c_str() );
+
+    return result;
 }
 
-bool ReDefine::Init( int argc, char** argv, const char* config )
+
+bool ReDefine::ReadConfig( const std::string& config )
 {
-    Exit( -1 );
+    if( config.empty() )
+    {
+        WARNING( __FUNCTION__, "empty config filename" );
+        return false;
+    }
 
-    CommandLine = new CmdLine( argc, argv );
-    Config = new Ini();
-    Config->KeepKeysOrder = true;
+    if( !Config->LoadFile( config ) )
+    {
+        WARNING( __FUNCTION__, "cannot read config<%s>", config.c_str() );
+        return false;
+    }
 
-    return Config->LoadFile( config );
+    if( Config->IsSectionKeyEmpty( "ReDefine", "ScriptsDir" ) )
+    {
+        WARNING( __FUNCTION__, "config setting<[ReDefine]->ScriptsDir> is empty or missing" );
+        return false;
+    }
+
+    if( !ReadConfigDefines() )
+        return false;
+
+    return true;
 }
-
-int ReDefine::Exit( int returnValue )
-{
-    if( CommandLine )
-        delete CommandLine;
-
-    if( Config )
-        delete Config;
-
-    FinishDefines();
-
-    return returnValue;
-}
-
-#if !defined (REDEFINE_NO_MAIN)
-int main( int argc, char** argv )
-{
-    std::setvbuf( stdout, NULL, _IONBF, 0 );
-
-    ReDefine::LOG( "ReDefine <3 FO1@2" );
-    ReDefine::LOG( " " );
-
-    if( !ReDefine::Init( argc, argv, "ReDefine.cfg" ) )
-        return ReDefine::Exit( EXIT_FAILURE );
-
-    return ReDefine::Exit( EXIT_SUCCESS );
-}
-#endif // !REDEFINE_NO_MAIN

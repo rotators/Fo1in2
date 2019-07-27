@@ -110,7 +110,7 @@ set( UNCRUSTIFY_EXECUTABLE "SourceTools/uncrustify" )
 FormatSource( "ReDefine.cpp" )
 FormatSource( "ReDefine.h" )
 FormatSource( "Defines.cpp" )
-FormatSource( "Defines.h" )
+FormatSource( "Text.cpp" )
 FormatSource( "Types.h" )
 
 CreateBuildDirectory( "Build" "${BUILD_GENERATOR}" "${BUILD_TOOL}" "${BUILD_FILE}" )

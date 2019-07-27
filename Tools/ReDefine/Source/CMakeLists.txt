@@ -11,11 +11,12 @@ add_executable( ReDefine "" )
 target_sources( ReDefine
 	PRIVATE
 		${CMAKE_CURRENT_LIST_FILE}
-		ReDefine.cpp
-		ReDefine.h
+		Main.cpp
 
 		Defines.cpp
-		Defines.h
+		ReDefine.cpp
+		ReDefine.h
+		Text.cpp
 		Types.h
 
 		# FOClassic
