@@ -35,16 +35,6 @@
 							else																\
 								set_light_level(0)												\
 						
-#define V13CaveLighting  	if not(endgame_running) and (global_var(OVERSEER_END_SEQ) == 0) and (not(is_story_finished)) then begin \
-								set_light_level(DUSK_LIGHT); \
-							end \
-							else begin \
-								if is_story_finished then \
-									set_light_level(40); \
-								else \
-									set_light_level(100); \
-							end
-						
 #define Darkness 			set_light_level(DUSK_LIGHT)
 
 // Fallout 2 lighting:

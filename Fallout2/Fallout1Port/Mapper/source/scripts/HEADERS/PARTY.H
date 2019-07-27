@@ -13,9 +13,9 @@
 variable How_Many_Party_Members_Are_Injured;
 variable How_Many_Party_Members_Armed;
 
-#define FOLLOW_DISTANCE_CLOSE               (3)
-#define FOLLOW_DISTANCE_MEDIUM              (6)
-#define FOLLOW_DISTANCE_FAR                 (9)
+#define FOLLOW_DISTANCE_CLOSE               (2) // Fo2: 3
+#define FOLLOW_DISTANCE_MEDIUM              (4) // Fo2: 6
+#define FOLLOW_DISTANCE_FAR                 (6) // Fo2: 9
 
 #define obj_in_party(x)                     (party_member_obj(obj_pid(x)) != 0)
 // Pointers to the Party Members

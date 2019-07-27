@@ -1,0 +1,758 @@
+/*
+
+	Tycho - Party Member, Junktown
+
+*/
+
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_TYCHO
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+#define set_default_party_follow             set_follow_close
+
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure talk_p_proc;
+procedure use_obj_on_p_proc;
+procedure combat_p_proc;
+procedure push_p_proc;
+
+procedure Tycho01;
+procedure Tycho02;
+procedure Tycho03;
+procedure Tycho04;
+procedure Tycho05;
+procedure Tycho06;
+procedure Tycho07;
+procedure Tycho08;
+procedure Tycho09;
+procedure Tycho10;
+procedure Tycho11;
+procedure Tycho12;
+procedure Tycho13;
+procedure Tycho14;
+procedure Tycho15;
+procedure Tycho16;
+procedure Tycho17;
+procedure Tycho18;
+procedure Tycho19;
+procedure Tycho20;
+procedure Tycho21;
+procedure Tycho22;
+procedure Tycho23;
+procedure Tycho24;
+procedure Tycho25;
+procedure Tycho26;
+procedure Tycho27;
+procedure Tycho28;
+procedure Tycho30;
+procedure Tycho31;
+procedure Tycho32;
+
+procedure Node998;
+procedure Node999;
+
+procedure TychoJoins;
+procedure TychoReJoins;
+procedure TychoTactics;
+procedure TychoClose;
+procedure TychoModerate;
+procedure TychoFar;
+procedure sleeping;
+
+variable night_person;
+variable wake_time;
+variable sleep_time;
+variable home_tile;
+variable sleep_tile;
+variable tmp_hostile;
+variable item;
+variable cola2_ptr;
+
+
+procedure TychoCombatTactics;
+procedure TychoSniper;
+procedure TychoNearCombat;
+procedure TychoFreeCombat;
+
+procedure TychoHolsterWeapon;
+procedure TychoRemoveArmor;
+
+procedure PlayerTraitor;
+
+#define LVAR_Sleeping 							(4)
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
+
+#define float_tycho(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+
+#define tycho_joins_party               	party_add_self;                                                   \
+                                          add_timer_event(self_obj,game_ticks(1),2);                        \
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_tycho  		((dude_at_max_party_size == false) and (Tycho_In_Party == false))
+#define EVENT_FLOAT_JOIN 						(2)
+#define is_junktown_enemy 						((global_var(DUDE_ENEMY_JUNK_CITIZEN) > 0) or (global_var(DUDE_ENEMY_JUNK_BOXER) > 0) or (global_var(ENEMY_JUNKTOWN) > 0))
+#define is_in_junktown 							((cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL))
+
+procedure Node998 begin
+end
+procedure Node999 begin
+end
+
+procedure start begin
+end
+
+procedure push_p_proc begin
+   if (Tycho_In_Party == false) then begin
+      script_overrides;
+   end
+   else begin
+      float_tycho(random(300,302));
+   end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_FLOAT_JOIN) then begin
+		debug("tycho is joining!");
+	end
+end
+
+// Fallout Fixt to prevent Tycho from slaughtering his homies
+procedure combat_p_proc begin
+/*
+	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+		if (global_var(DUDE_ENEMY_JUNK_CITIZEN) > 0) or (global_var(DUDE_ENEMY_JUNK_BOXER) > 0) or (global_var(ENEMY_JUNKTOWN) > 0) then begin
+			if (fixed_param == 4) then begin
+				attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack_setup(self_obj, dude_obj);
+				party_remove(self_obj);
+				call PlayerTraitor;
+			end
+			if (fixed_param == 2) then begin
+				attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+				attack_setup(self_obj, dude_obj);
+				party_remove(self_obj);
+			end
+			attack_setup(self_obj, dude_obj);
+			attack(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+			attack_complex(dude_obj, 0, 3, 0, 0, 30000, 0, 128);
+			party_remove(self_obj);
+		end
+	end
+end
+
+procedure PlayerTraitor// Messages when attacking player (for player killing Junktown citizens)
+begin
+	variable LVar0 := 0;
+	LVar0 := random(0, 5);
+	if LVar0 == 0 then begin
+		float_msg(self_obj, message_str(SCRIPT_TYCHO, 175), 2);
+	end
+	else begin
+		if LVar0 == 1 then begin
+			float_msg(self_obj, message_str(SCRIPT_TYCHO, 176), 2);
+		end
+		else begin
+			if LVar0 == 2 then begin
+				float_msg(self_obj, message_str(SCRIPT_TYCHO, 177), 2);
+			end
+			else begin
+				if LVar0 == 3 then begin
+					float_msg(self_obj, message_str(SCRIPT_TYCHO, 178), 2);
+				end
+				else begin
+					if LVar0 == 4 then begin
+						float_msg(self_obj, message_str(SCRIPT_TYCHO, 179), 2);
+					end
+					else begin
+						float_msg(self_obj, message_str(SCRIPT_TYCHO, 180), 2);
+					end
+				end
+			end
+		end
+	end*/
+end
+
+procedure critter_p_proc begin
+	if (global_var(TYCHO_HIRELING_STATUS) < 2) then begin
+		call sleeping;
+	end
+	else if (Tycho_In_Party) then begin
+      party_member_follow_dude
+   end
+   else begin
+   	set_self_abandon_party;
+   end
+
+	if (tmp_hostile or is_junktown_enemy) then begin
+		if (obj_can_see_obj(self_obj, dude_obj) or obj_can_hear_obj(self_obj, dude_obj)) then begin
+			tmp_hostile := 0;
+			set_self_abandon_party;
+			attack(dude_obj);
+		end
+	end
+	else begin
+		//call map_commentary;
+	end
+end
+
+procedure destroy_p_proc begin
+	set_global_var(TYCHO_HIRELING_STATUS, 3);
+
+	if (source_obj == dude_obj and is_in_junktown) then begin
+		set_global_var(DUDE_ENEMY_JUNK_CITIZEN, 1);
+		set_global_var(ENEMY_JUNKTOWN, 1);
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
+	end
+
+	inc_good_critter
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+
+	// If not in party and haven't had introductions, display "dusty trenchcoat and gasmask" description
+	if (global_var(TYCHO_HIRELING_STATUS) == 0) then begin
+		display_msg(message_str(SCRIPT_TYCHO, 100));
+	end
+	// if have had introductions or was in party but was asked to leave, display "Tycho"
+	else if ((global_var(TYCHO_HIRELING_STATUS) == 1) or (global_var(TYCHO_HIRELING_STATUS) == 3)) then begin
+		display_msg(message_str(SCRIPT_TYCHO, 101));
+	end
+end
+
+procedure map_enter_p_proc begin
+variable
+	sleep_time := 2200,
+	wake_time := 1600,
+	home_tile := 19690,
+	sleep_tile := 7000;
+
+	// TODO: Delete??
+	if (obj_is_carrying_obj_pid(self_obj, PID_NUKA_COLA) >= 2) then begin
+		cola2_ptr := obj_carrying_pid_obj(self_obj, PID_NUKA_COLA);
+	end
+
+	/*if Tycho_In_Party then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_PLAYER);
+	end
+	else begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_JUNKTOWNER);
+	end*/
+
+	// This code sets ai behavior based on set combat tactics:
+	if ((has_trait(1, self_obj, 5) != 90) and (has_trait(1, self_obj, 5) != 95) and (has_trait(1, self_obj, 5) != 96)) then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_TYCHO);
+	end
+
+
+	// TODO: Fix this!
+	// Workaround for invisible proto in the map:
+   art_change_fid_num(self_obj, FID_NMLTHR);
+end
+
+procedure talk_p_proc begin
+	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+
+	get_reaction
+
+	if is_junktown_enemy then begin
+		float_msg(self_obj, message_str(SCRIPT_TYCHO, 180), 2);
+		tmp_hostile := 1;
+	end
+	else begin
+
+		start_gdialog(389, self_obj, 4, -1, -1);
+		if (global_var(TYCHO_HIRELING_STATUS) == 2) or (global_var(TYCHO_HIRELING_STATUS) == 3) then begin
+			gdialog_set_barter_mod(255);
+		end
+
+		gsay_start;
+
+		if (global_var(TYCHO_HIRELING_STATUS) == 3) then begin
+			call Tycho28;
+		end
+		else if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+			call Tycho22;
+		end
+		else if (global_var(TYCHO_HIRELING_STATUS) == 0) then begin
+			call Tycho01;
+		end
+		else if ((global_var(HIRED_BY_GIZMO) == 1) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
+			call Tycho19;
+		end
+		else if (local_var(1) < 2) then begin
+			call Tycho14;
+		end
+		else begin
+			call Tycho15;
+		end
+
+		gsay_end;
+		end_dialogue;
+
+		if Tycho_In_Party then begin
+			if (global_var(DESTROY_MASTER_10) == 0) then begin
+				display_msg(message_str(SCRIPT_TYCHO, 173));
+				give_exp_points(300);
+				set_global_var(DESTROY_MASTER_10, 1);
+			end
+		end
+
+	end
+end
+
+procedure use_obj_on_p_proc begin
+
+	// TODO: Investigate this
+	if Tycho_In_Party then begin
+		item := obj_pid(obj_being_used_with);
+		if ((item != 40) and (item != 71) and (item != 81) and (item != 103) and (item != 144)) then begin
+			script_overrides;
+			if (obj_item_subtype(obj_being_used_with) != 3) then begin
+				rm_obj_from_inven(dude_obj, obj_being_used_with);
+				add_obj_to_inven(self_obj, obj_being_used_with);
+			end
+			else begin
+				if ((item == 8) or (item == 18) or (item == 143) or (item == 10) or (item == 94) or (item == 7) or (item == 21) or (item == 234) or (item == 235) or (item == 24) or (item == 16) or (item == 120) or (item == 242)) then begin
+					rm_obj_from_inven(dude_obj, obj_being_used_with);
+					add_obj_to_inven(self_obj, obj_being_used_with);
+					float_msg(self_obj, message_str(SCRIPT_GENCHAT, 215), 12);
+				end
+				else begin
+					float_msg(self_obj, message_str(SCRIPT_MODREACT, 109), 12);
+				end
+			end
+		end
+	end
+
+end
+
+procedure Tycho01 begin
+	gsay_reply(389, 102);
+	giq_option(4, 389, 103, Node999, 50);
+	giq_option(4, 389, 104, Tycho02, 50);
+	giq_option(-3, 389, 105, Tycho03, 50);
+end
+
+procedure Tycho02 begin
+	if (obj_is_carrying_obj_pid(self_obj, obj_pid(cola2_ptr))) then begin
+		rm_obj_from_inven(self_obj, cola2_ptr);
+		add_obj_to_inven(dude_obj, cola2_ptr);
+	end
+	gsay_reply(389, 106);
+	giq_option(4, 389, 107, Tycho04, 50);
+end
+
+procedure Tycho03 begin
+	gsay_message(389, 108, 50);
+end
+
+procedure Tycho04 begin
+	set_global_var(TYCHO_HIRELING_STATUS, 1);
+	gsay_reply(389, 109);
+	giq_option(4, 389, 110, Tycho05, 50);
+	giq_option(6, 389, 111, Tycho06, 50);
+end
+
+procedure Tycho05 begin
+	gsay_reply(389, 112);
+	giq_option(4, 389, 113, Tycho07, 50);
+	giq_option(6, 389, 114, Tycho08, 50);
+end
+
+procedure Tycho06 begin
+	gsay_reply(389, 115);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 116, Tycho11, 50);
+	end
+	giq_option(6, 389, 117, Tycho09, 50);
+end
+
+procedure Tycho07 begin
+	gsay_reply(389, 118);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 119, Tycho11, 50);
+	end
+	else begin
+		Goodbyes;
+		giq_option(4, 389, exit_line, Node999, 50);
+	end
+end
+
+procedure Tycho08 begin
+	gsay_reply(389, 120);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 121, Tycho11, 50);
+	end
+	else begin
+		Goodbyes;
+		giq_option(4, 389, exit_line, Node999, 50);
+	end
+end
+
+procedure Tycho09 begin
+	gsay_reply(389, 122);
+	giq_option(4, 389, 123, Tycho10, 50);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 116, Tycho11, 50);
+	end
+end
+
+procedure Tycho10 begin
+	gsay_reply(389, 124);
+	giq_option(4, 389, 125, Tycho17, 50);
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, 126, Tycho11, 50);
+	end
+end
+
+procedure Tycho11 begin
+	set_local_var(5, 1);
+	gsay_reply(389, 127);
+	giq_option(4, 389, message_str(SCRIPT_TYCHO, 128) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_TYCHO, 129), Tycho12, 50);
+	giq_option(4, 389, 130, Tycho13, 50);
+end
+
+procedure Tycho12 begin
+	UpReact
+	gsay_message(389, 131, 50);
+end
+
+procedure Tycho13 begin
+	DownReact
+	gsay_reply(389, 132);
+	giq_option(4, 389, 133, Node998, 50);
+	giq_option(4, 389, 134, Node999, 50);
+end
+
+procedure Tycho14 begin
+	gsay_reply(389, 135);
+	giq_option(4, 389, 136, Tycho13, 50);
+	giq_option(4, 389, 137, Tycho08, 50);
+	giq_option(4, 389, 138, Tycho16, 50);
+end
+
+procedure Tycho15 begin
+	gsay_reply(389, 139);
+	giq_option(4, 389, 137, Tycho08, 50);
+	giq_option(4, 389, 138, Tycho16, 50);
+	if (global_var(HIRED_BY_KILLIAN)) then begin
+		giq_option(4, 389, 140, Tycho18, 50);
+	end
+end
+
+procedure Tycho16 begin
+	gsay_reply(389, 141);
+	Goodbyes;
+	giq_option(4, 389, exit_line, Node999, 50);
+end
+
+procedure Tycho17 begin
+	if global_var(FADE_TIMES_INCREASED) then begin
+		gfade_out(1);
+		gfade_out(1);
+	end
+	gfade_out(1);
+
+	critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, 5);
+	game_time_advance(game_ticks(120));
+	gsay_reply(389, 142);
+	gfade_in(1);
+
+	Goodbyes;
+
+	if (local_var(5) != 1) then begin
+		giq_option(4, 389, exit_line, Tycho11, 50);
+	end
+	else begin
+		giq_option(4, 389, exit_line, Node999, 50);
+	end
+
+	display_msg(message_str(SCRIPT_GENCHAT, 116) + 5 + message_str(SCRIPT_GENCHAT, 134));
+end
+
+procedure Tycho18 begin
+	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
+		gsay_message(389, 168, 49);
+	end
+	else begin
+		gsay_message(389, 169, 49);
+	end
+	call TychoJoins;
+end
+
+procedure Tycho19 begin
+	gsay_reply(389, 144);
+	giq_option(4, 389, 145, Tycho20, 50);
+	giq_option(4, 389, 146, Tycho21, 50);
+	giq_option(-3, 389, 105, Node999, 50);
+end
+
+procedure Tycho20 begin
+	gsay_message(389, 147, 50);
+end
+
+procedure Tycho21 begin
+	DownReact
+	gsay_message(389, 148, 50);
+end
+
+// Primary node
+procedure Tycho22 begin
+	gsay_reply(389, 149);
+	if (cur_map_index == MAP_FOOT) then begin
+		giq_option(4, 389, 150, Tycho23, 49);
+	end
+	if (cur_map_index == MAP_GLOWENT) then begin //  THE GLOW - ENTRANCE (CRATER)
+		giq_option(4, 389, 150, Tycho25, 49);
+	end
+	if (cur_map_index == MAP_DETHCLAW) then begin//  THE HUB - DEATHCLAW CAVE
+		giq_option(4, 389, 150, Tycho26, 49);
+	end
+	if (cur_map_index == MAP_HALLDED) then begin //  NECROPOLIS - HALLS OF THE DEAD
+		giq_option(4, 389, 150, Tycho30, 49);
+	end
+	if (cur_map_index == MAP_MBSTRG12) then begin //  MILITARY BASE - STRONGHOLD (LEVELS 1 AND 2)
+		giq_option(4, 389, 150, Tycho31, 49);
+	end
+	if (cur_map_index == MAP_MBVATS12) then begin //  MILITARY BASE -  VATS  (LEVELS 3 AND 4)
+		giq_option(4, 389, 150, Tycho32, 49);
+	end
+	giq_option(4, 389, 151, Tycho24, 49);
+	giq_option(4, 389, 164, Tycho27, 49);
+	giq_option(4, 389, 159, TychoTactics, 50);
+	giq_option(4, 389, 2000, TychoCombatTactics, 50);
+	giq_option(4, 389, 166, Node999, 50);
+	giq_option(-3, 817, 139, Node999, 50);
+end
+
+procedure Tycho23 begin
+	gsay_message(389, 152, 49);
+	call Tycho22;
+end
+
+// Wait here node
+procedure Tycho24 begin
+	//party_remove(self_obj);
+	set_global_var(TYCHO_HIRELING_STATUS, 3);
+	gsay_message(389, 153, 49);
+	set_party_waiting;
+end
+
+procedure Tycho25 begin
+	gsay_message(389, 154, 49);
+	call Tycho22;
+end
+
+procedure Tycho26 begin
+	gsay_message(389, 155, 49);
+	call Tycho22;
+end
+
+procedure Tycho27 begin
+	gsay_message(389, 165, 49);
+	call Tycho22;
+end
+
+procedure Tycho28 begin
+	gsay_reply(389, 170);
+	giq_option(4, 389, 171, TychoReJoins, 49);
+	giq_option(4, 389, 172, Node999, 50);
+	giq_option(-3, 389, 174, TychoReJoins, 49);
+	giq_option(-3, 389, 105, Node999, 50);
+end
+
+procedure Tycho30 begin
+	gsay_message(389, 158, 49);
+	call Tycho22;
+end
+
+procedure Tycho31 begin
+	gsay_message(389, 157, 49);
+	call Tycho22;
+end
+
+procedure Tycho32 begin
+	gsay_message(389, 156, 49);
+	call Tycho22;
+end
+
+procedure TychoJoins begin
+	if dude_has_free_slot_for_tycho or unlimited_party_members then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+		set_global_var(TYCHO_DISTANCE_VAL, 4);
+		set_global_var(TYCHO_DUDE_LAST_LEVEL, get_pc_stat(1));
+		//critter_add_trait(self_obj, 1, 6, 0);
+		//party_add(self_obj);
+
+		tycho_joins_party;
+	end
+	else begin
+		Reply(2500);
+		NOption(2510,Node999,004);
+	end
+end
+
+procedure TychoReJoins begin
+	if dude_has_free_slot_for_tycho or unlimited_party_members then begin
+		set_global_var(TYCHO_HIRELING_STATUS, 2);
+		set_global_var(TYCHO_DISTANCE_VAL, 4);
+		set_global_var(TYCHO_DUDE_LAST_LEVEL, get_pc_stat(1));
+		end_party_waiting;
+	end
+	else begin
+		Reply(2500);
+		NOption(2510,Node999,004);
+	end
+end
+
+procedure TychoTactics begin
+	gsay_reply(389, 160);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_CLOSE) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 216), TychoClose, 50);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_MEDIUM) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 162) + message_str(SCRIPT_GENCHAT, 216), TychoModerate, 50);
+
+	if (local_var(LVAR_FOLLOW_DISTANCE) != FOLLOW_DISTANCE_FAR) then
+		giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 216), TychoFar, 50);
+end
+
+procedure TychoClose begin
+	set_follow_close;
+
+	/*set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 2);*/
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoModerate begin
+	set_follow_medium;
+
+	/*set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 4);*/
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure TychoFar begin
+	set_follow_far;
+
+/*	set_local_var(6, 0);
+	set_local_var(7, 0);
+	set_local_var(8, 0);
+	set_global_var(TYCHO_DISTANCE_VAL, 6);*/
+	gsay_message(235, 201, 50);
+	call Tycho22;
+end
+
+procedure sleeping begin
+	if (local_var(LVAR_Sleeping) == 1) then begin
+
+		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
+				if (tile_num(self_obj) != home_tile) then begin
+					animate_move_obj_to_tile(self_obj, home_tile, 0);
+				end
+				else begin
+					set_local_var(LVAR_Sleeping, 0);
+				end
+			end
+			else begin
+				move_to(self_obj, home_tile, elevation(self_obj));
+				if (tile_num(self_obj) == home_tile) then begin
+					set_local_var(LVAR_Sleeping, 0);
+				end
+			end
+		end
+
+	end
+	else begin
+
+		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+
+			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
+				if (tile_num(self_obj) != sleep_tile) then begin
+					animate_move_obj_to_tile(self_obj, self_obj, 0);
+				end
+				else begin
+					set_local_var(LVAR_Sleeping, 1);
+				end
+
+			end
+			else begin
+
+				if (tile_num(self_obj) != sleep_tile) then begin
+					move_to(self_obj, sleep_tile, elevation(self_obj));
+				end
+				else begin
+					set_local_var(LVAR_Sleeping, 1);
+				end
+
+			end
+		end
+
+	end
+end
+
+procedure TychoCombatTactics begin
+	Reply(2001);
+
+	if (self_is_armed) then
+		giq_option(4, 389, 2010, TychoHolsterWeapon, 49);
+
+	if (self_wearing_armor) then
+		giq_option(4, 389, 2011, TychoRemoveArmor, 49);
+
+	giq_option(4, 389, 2012, TychoSniper, 49);
+	giq_option(4, 389, 2013, TychoNearCombat, 49);
+	giq_option(4, 389, 2014, TychoFreeCombat, 49);
+	giq_option(4, 389, 2015, Tycho22, 49);
+end
+
+procedure TychoHolsterWeapon begin
+	inven_unwield(self_obj);
+	gsay_message(389, 2100, 49);
+	call TychoCombatTactics;
+end
+
+procedure TychoRemoveArmor begin
+	remove_armor(self_obj)
+	gsay_message(389, 2100, 49);
+	call TychoCombatTactics;
+end
+
+procedure TychoSniper begin
+	gsay_message(389, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 95);
+	call TychoCombatTactics;
+end
+
+procedure TychoNearCombat begin
+	gsay_message(389, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 96);
+	call TychoCombatTactics;
+end
+
+procedure TychoFreeCombat begin
+	gsay_message(389, 2100, 49);
+	critter_add_trait(self_obj, 1, 5, 90);
+	call TychoCombatTactics;
+end
+
