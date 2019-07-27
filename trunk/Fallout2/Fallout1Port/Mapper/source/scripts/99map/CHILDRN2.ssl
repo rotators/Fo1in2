@@ -1,20 +1,13 @@
 #include "..\headers\define.h"
 
 procedure start;
-procedure add_party;
-procedure update_party;
-procedure remove_party;
+
 procedure Lighting;
 procedure Darkness;
 procedure Invasion;
 
 export variable signal_mutants;
 
-export variable Ian_ptr;
-export variable Dog_ptr;
-export variable Tycho_ptr;
-export variable Katja_ptr;
-export variable Tandi_ptr;
 export variable Master_Ptr;
 
 variable party_elevation;
@@ -23,38 +16,26 @@ variable player_elevation;
 variable cur_count;
 variable prev_count;
 
-procedure start
-begin
+procedure start begin
 	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
 		call Lighting;
 		player_elevation := elevation(dude_obj);
 		if (global_var(LOAD_MAP_INDEX) == 0) then begin
 			override_map_start(101, 95, 0, 2);
 		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 1) then begin
-				override_map_start(101, 95, 1, 2);
-			end
-			else begin
-				if (global_var(LOAD_MAP_INDEX) == 2) then begin
-					override_map_start(94, 96, 2, 2);
-				end
-				else begin
-					override_map_start(101, 95, 0, 2);
-				end
-			end
+		else if (global_var(LOAD_MAP_INDEX) == 1) then begin
+			override_map_start(101, 95, 1, 2);
 		end
-		call add_party;
+		else if (global_var(LOAD_MAP_INDEX) == 2) then begin
+			override_map_start(94, 96, 2, 2);
+		end
+		else begin
+			override_map_start(101, 95, 0, 2);
+		end
 	end
 	else begin
 		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
 			call Lighting;
-			call update_party;
-		end
-		else begin
-			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-				call remove_party;
-			end
 		end
 	end
 end
@@ -84,21 +65,6 @@ end
 procedure Darkness
 begin
 	set_light_level(40);
-end
-
-procedure add_party
-begin
-	set_add_party
-end
-
-procedure update_party
-begin
-	set_update_party
-end
-
-procedure remove_party
-begin
-	set_remove_party
 end
 
 procedure Invasion begin

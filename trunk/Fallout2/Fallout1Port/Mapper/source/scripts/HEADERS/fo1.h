@@ -103,7 +103,7 @@
 //==============================================================
 // Party related:
 // TODO: Replace with Fo2 party management!
-
+/*
 #define set_remove_party 		if (global_var(IAN_HIRELING_STATUS) == 2) then begin \
 									set_global_var(IAN_HIRELING_STATUS, 2); \
 								end \
@@ -178,7 +178,7 @@
 										end \
 									end \
 								end
-
+*/
 								
 //==============================================================
 // Party member map commentary

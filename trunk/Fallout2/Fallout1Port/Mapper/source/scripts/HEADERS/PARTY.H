@@ -19,13 +19,13 @@ variable How_Many_Party_Members_Armed;
 
 #define obj_in_party(x)                     (party_member_obj(obj_pid(x)) != 0)
 // Pointers to the Party Members
-#define Trunk_Ptr                           party_member_obj(PID_CAR_TRUNK)
-#define Ian_ptr;							party_member_obj(PID_IAN)
-#define Dog_ptr;							party_member_obj(PID_DOGMEAT)
-#define Tycho_ptr;							party_member_obj(PID_TYCHO)
-#define Katja_ptr;							party_member_obj(PID_KATJA)
-#define Tandi_ptr;							party_member_obj(PID_TANDI)
-#define Handy_ptr;							party_member_obj(PID_MRHANDYC)
+#define Trunk_Ptr                        		party_member_obj(PID_CAR_TRUNK)
+#define Ian_ptr										party_member_obj(PID_IAN)
+#define Dog_ptr										party_member_obj(PID_DOGMEAT)
+#define Tycho_ptr										party_member_obj(PID_TYCHO)
+#define Katja_ptr										party_member_obj(PID_KATJA)
+#define Tandi_ptr										party_member_obj(PID_TANDI)
+#define Handy_ptr										party_member_obj(PID_MRHANDYC)
 
 // Is this person in my party
 #define Ian_In_Party                      	(Ian_ptr != 0)
@@ -125,7 +125,7 @@ variable How_Many_Party_Members_Armed;
 		 attempt_place_party_member(Katja_Ptr, the_tile, the_elev)					\
 		 attempt_place_party_member(Tandi_Ptr, the_tile, the_elev)					\
 		 attempt_place_party_member(MrHandyC_Ptr, the_tile, the_elev)
-		 
+
 
 //#define Party_Childkiller                   (global_var(GVAR_PARTY_CHILDKILLER) BWAND Party_Childkiller_Mask)
 
@@ -358,7 +358,7 @@ variable tmp_hidden;
 			else get_p_hidden_flag_obj(x, Katja_Ptr, hidden_katja_bit, hidden)								\
 			else get_p_hidden_flag_obj(x, Tandi_Ptr, hidden_tandi_bit, hidden)								\
 			else get_p_hidden_flag_obj(x, MrHandyC_Ptr, hidden_mrhandyc_bit, hidden)
-			
+
 #define party_member_hidden(x, result)                                           \
    if (x) then begin                                                             \
       if (obj_is_visible_flag(x) == 0) then begin                                \
@@ -416,7 +416,7 @@ variable tmp_hidden;
 		 party_member_hide(Katja_Ptr, hidden_katja_bit)                             \
 		 party_member_hide(Tandi_Ptr, hidden_tandi_bit)                             \
 		 party_member_hide(MrHandyC_Ptr, hidden_mrhandyc_bit)
-		 
+
 
 #define all_party_unhidden                   (all_party_hidden == false)
 #define set_party_bit_unhidden(x, member)    debug_msg("unhiding party member "+obj_name(member)); set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, x); set_obj_visibility(member, 0)
@@ -441,7 +441,7 @@ variable tmp_hidden;
 		 party_member_unhide(Katja_Ptr, hidden_katja_bit)                             \
 		 party_member_unhide(Tandi_Ptr, hidden_tandi_bit)                             \
 		 party_member_unhide(MrHandyC_Ptr, hidden_mrhandyc_bit)
-		 
+
 //End hiding party members
 
 
@@ -633,28 +633,15 @@ variable tmp_hidden;
          end
 
 procedure checkPartyMembersNearDoor begin
-   /*CHECKMEMBERNEARDOOR(Vic_In_Party, Vic_Ptr)
-   CHECKMEMBERNEARDOOR(Myron_In_Party, Myron_Ptr)
-   CHECKMEMBERNEARDOOR(Marcus_In_Party, Marcus_Ptr)
-   CHECKMEMBERNEARDOOR(MacRae_In_Party, MacRae_Ptr)
-   CHECKMEMBERNEARDOOR(Sulik_In_Party, Sulik_Ptr)
-   CHECKMEMBERNEARDOOR(Lenny_In_Party, Lenny_Ptr)
-   CHECKMEMBERNEARDOOR(Cyberdog_In_Party, Cyberdog_Ptr)
-   CHECKMEMBERNEARDOOR(Doc_In_Party, Doc_Ptr)
-   CHECKMEMBERNEARDOOR(Goris_In_Party, Goris_Ptr)
-   CHECKMEMBERNEARDOOR(Davin_In_Party, Davin_Ptr)
-   CHECKMEMBERNEARDOOR(Miria_In_Party, Miria_Ptr)
-   CHECKMEMBERNEARDOOR(Robobrain_In_Party, Robobrain_Ptr)
-   CHECKMEMBERNEARDOOR(Laddie_In_Party, Laddie_Ptr)
-   CHECKMEMBERNEARDOOR(Bess_In_Party, Bess_Ptr)
-   CHECKMEMBERNEARDOOR(Chicken_In_Party, Chicken_Ptr)
-   CHECKMEMBERNEARDOOR(Karl_In_Party, Karl_Ptr)
-   CHECKMEMBERNEARDOOR(Jonny_In_Party, Jonny_Ptr)
-   CHECKMEMBERNEARDOOR(Lloyd_In_Party, Lloyd_Ptr)
-   CHECKMEMBERNEARDOOR(Dogmeat_In_Party, Dogmeat_Ptr)
-   CHECKMEMBERNEARDOOR(Pariah_Dog_In_Party, Pariah_Dog_Ptr)*/
+   CHECKMEMBERNEARDOOR(Ian_In_Party, Ian_ptr)
+   CHECKMEMBERNEARDOOR(Tycho_In_Party, Tycho_ptr)
+   CHECKMEMBERNEARDOOR(Dog_In_Party, Dog_ptr)
+   CHECKMEMBERNEARDOOR(Katja_In_Party, Katja_ptr)
+   CHECKMEMBERNEARDOOR(Tandi_In_Party, Tandi_ptr)
+   CHECKMEMBERNEARDOOR(MrHandyC_In_Party, Handy_ptr)
    return 0;
 end
+
 
 #define party_member_map_enter                        if (cur_map_index == MAP_MODOC_BEDNBREAKFAST or cur_map_index == MAP_THE_SQUAT_A or cur_map_index == MAP_THE_SQUAT_B) then \
                                                          if ((self_elevation != dude_elevation) and (party_is_waiting)) then move_to(self_obj, self_tile, dude_elevation)

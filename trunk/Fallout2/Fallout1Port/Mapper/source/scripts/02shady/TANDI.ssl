@@ -14,6 +14,11 @@
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
 
+#define set_default_party_follow             set_follow_close
+#define def_follow_msg                       mstr(1020)
+#define def_med_msg                          mstr(1005)
+#define def_far_msg                          mstr(1006)
+
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure damage_p_proc;
 procedure talk_p_proc;
@@ -95,7 +100,7 @@ procedure tandiend;
 
 procedure TandiSchedule;
 
-import variable Tandi_Ptr;
+//import variable Tandi_Ptr;
 
 variable BYE;
 variable Only_Once := 1;
@@ -118,6 +123,10 @@ variable DeathType := 56;
 // local_var(7) == ThanksOnce
 // local_var(8) == NoSex
 
+#define LVAR_WAITING                      (26)
+#define LVAR_FOLLOW_DISTANCE              (27)
+#define LVAR_TEAM                         (28)
+
 procedure TandiSex;
 procedure TandiSex1;
 procedure TandiSex2;
@@ -126,6 +135,15 @@ procedure TandiSex1_end;
 procedure TandiSex2_end;
 procedure TandiSex_x;
 
+#define float_tandi(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define Tandi_In_Party    						(global_var(IAN_HIRELING_STATUS) == 2)
+
+#define PARTY_NODE_X                      Node100
+
+#define tandi_joins_party               	party_add_self;                                                   \
+                                          add_timer_event(self_obj,game_ticks(1),2);                        \
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_tandi  		((dude_at_max_party_size == false) and (Ian_In_Party == false))
 
 procedure push_p_proc begin
 end
@@ -160,8 +178,9 @@ end
 
 procedure destroy_p_proc begin
 	if global_var(TANDI_HIRELING_STATUS) == 5 then begin
-		party_remove(self_obj);
-		party_remove(Tandi_ptr);
+		//party_remove(self_obj);
+		//party_remove(Tandi_ptr);
+		tandi_joins_party;
 	end
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
@@ -169,7 +188,7 @@ procedure destroy_p_proc begin
 	set_global_var(TANDI_HIRELING_STATUS, 3);
 
 	inc_good_critter
-	Tandi_ptr := 0;
+	//Tandi_ptr := 0;
 end
 
 procedure talk_p_proc begin
@@ -199,7 +218,7 @@ procedure talk_p_proc begin
 	end
 	else begin
 		if ((CurrentMapNum == 26) or (CurrentMapNum == 25)) then begin//	SHADY SANDS
-			GetReaction;
+			get_reaction
 			start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_SHADY);
 			gsay_start;
 			if (global_var(TANDI_HEREBEFORE_RAIDERS) == 1) then begin
@@ -228,7 +247,7 @@ procedure talk_p_proc begin
 			end_dialogue;
 		end
 		else begin
-			GetReaction;
+			get_reaction
 			if ((CurrentMapNum == 0) or (CurrentMapNum == 1) or (CurrentMapNum == 2)) then begin
 				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//was 14, DESERT
 			end
@@ -318,7 +337,7 @@ end
 
 procedure tandi01a
 begin
-	DownReact;
+	DownReact
 	call tandi02;
 end
 
@@ -360,7 +379,7 @@ end
 
 procedure tandi12
 begin
-	DownReact;
+	DownReact
 	gsay_reply(57, 126);
 	call tandi00;
 end
@@ -500,12 +519,12 @@ end
 procedure tandi36a
 begin
 	if (global_var(FIXT_BUGFIXES_ONLY)) then begin
-		BottomReact;
+		BottomReact
 		call tandi27;
 	end
 	else begin
 		if (global_var(TANDI_SEX_ENABLED) == 0) then begin
-			BottomReact;
+			BottomReact
 			call tandi27;
 		end
 		else begin
@@ -514,7 +533,7 @@ begin
 					call TandiSex;
 				end
 				else begin
-					BottomReact;
+					BottomReact
 					call tandi27;
 				end
 			end
@@ -523,7 +542,7 @@ begin
 					call TandiSex;
 				end
 				else begin
-					BottomReact;
+					BottomReact
 					call tandi27;
 				end
 			end
@@ -930,7 +949,9 @@ procedure map_enter_p_proc begin
 
 	if ((cur_map_index == MAP_SHADYW) and (global_var(TANDI_HIRELING_STATUS) > 1)) then begin
 		if ((global_var(LOAD_MAP_INDEX) == 2) and (global_var(TANDI_LOCATION_TRACKER) == 3)) then begin
-			party_remove(self_obj);
+			//party_remove(self_obj);
+			set_self_abandon_party;
+
 			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
 			critter_attempt_placement(self_obj, 22086, 0);
 			set_global_var(TANDI_LOCATION_TRACKER, 4);
@@ -945,8 +966,8 @@ procedure map_enter_p_proc begin
 
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
+
 	if (obj_can_see_obj(self_obj, dude_obj) and global_var(ENEMY_SHADY_SANDS) and (global_var(TANDI_LOCATION_TRACKER) != 1)) then begin
 		if (party_member_obj(TANDI_SELF_ID) != 0) then begin
 			party_remove(self_obj);
@@ -1061,43 +1082,6 @@ begin
 				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
 			end
 		end
-	end
-end
-
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		ReactToLevel;
 	end
 end
 

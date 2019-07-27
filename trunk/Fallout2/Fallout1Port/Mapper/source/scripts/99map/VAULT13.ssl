@@ -1,11 +1,10 @@
 #include "..\headers\define.h"
 
 procedure start;
-export variable Dog_ptr;
-export variable Ian_ptr;
-export variable Katja_ptr;
-export variable Tandi_ptr;
-export variable Tycho_ptr;
+procedure map_enter_p_proc;
+procedure map_exit_p_proc;
+procedure map_update_p_proc;
+
 export variable armory_access;
 export variable getting_ration;
 export variable Officer_ptr;
@@ -17,13 +16,9 @@ export variable traitor;
 export variable VaultBox_ptr;
 export variable WtrGrd_ptr;
 export variable WtrThief_ptr;
-procedure add_party;
-procedure map_enter_p_proc;
-procedure map_exit_p_proc;
-procedure map_update_p_proc;//    script_action == 23
+
 procedure Make_Critter;
-procedure remove_party;
-procedure update_party;
+
 variable gear;
 variable party_elevation;
 
@@ -33,50 +28,34 @@ variable script := 0;
 variable Critter := 0;
 variable rndx := 0;
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call map_update_p_proc;
-		end
-		else begin
-			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-				call map_exit_p_proc;
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	set_light_level(100);
 	if (map_first_run) then begin
 		set_global_var(QUEST_VAULT13_7_LEARN_AT_LIBRARY, 1);
 	end
+
 	if (global_var(LOAD_MAP_INDEX) == 1) then begin
 		override_map_start(104, 70, 0, 2);
 	end
-	else begin
-		if (global_var(LOAD_MAP_INDEX) == 2) then begin
-			override_map_start(104, 112, 1, 2);
-		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 3) then begin
-				override_map_start(112, 86, 2, 2);
-			end
-			else begin
-				override_map_start(96, 82, 0, 5);
-			end
-		end
+	else if (global_var(LOAD_MAP_INDEX) == 2) then begin
+		override_map_start(104, 112, 1, 2);
 	end
+	else if (global_var(LOAD_MAP_INDEX) == 3) then begin
+		override_map_start(112, 86, 2, 2);
+	end
+	else begin
+		override_map_start(96, 82, 0, 5);
+	end
+
 	if (global_var(VAULT_13_WAS_INVADED) == 1) and (map_var(6) == 0) then begin//		<-- Vault13 invaded
 		if (cur_map_index == MAP_VAULT13) or (cur_map_index == MAP_V13ENT) then begin //  VAULT 13 - ANY MAPS
 			set_map_var(6, 1);// <-- invaded flag
 		end
 	end
+
 	if (map_first_run) and (map_var(4) == 0) then begin
 		set_map_var(4, 1);
 		if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
@@ -265,17 +244,14 @@ begin
 	armory_access := map_var(1);
 	revolting := map_var(2);
 	traitor := map_var(3);
-	call add_party;
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	set_light_level(100);
 	if (removal_ptr != 0) then begin
 		destroy_object(removal_ptr);
 		removal_ptr := 0;
 	end
-	call update_party;
 end
 
 procedure map_exit_p_proc
@@ -288,23 +264,9 @@ begin
 	set_map_var(1, armory_access);
 	set_map_var(2, revolting);
 	set_map_var(3, traitor);
-	call remove_party;
 end
 
-procedure add_party begin
-	set_add_party
-end
-
-procedure update_party begin
-	set_update_party
-end
-
-procedure remove_party begin
-	set_remove_party
-end
-
-procedure Make_Critter
-begin
+procedure Make_Critter begin
 	if not(kind) then begin// DWELLERS DWELLERS
 		rndx := random(0, 5);
 		if rndx == 0 then begin

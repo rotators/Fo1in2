@@ -5,19 +5,27 @@
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
 
+/*
+#define set_default_party_follow             set_follow_close
+#define def_follow_msg                       mstr(1020)
+#define def_med_msg                          mstr(1005)
+#define def_far_msg                          mstr(1006)
+*/
+
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure use_obj_on_p_proc;//    script_action == 7
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure use_obj_on_p_proc;
 procedure push_p_proc;
 
 procedure join_party;
 procedure hire_Ian;
+procedure rejoin_party;
 
 procedure Ian01;
 procedure Ian02;
@@ -78,35 +86,33 @@ variable line172flag;
 //variable dest_tile;
 variable bestweapon_flag;
 variable armor_flag;
-variable exit_line;
 variable tmp;
 variable armor_ptr;
 variable armor_pid;
 variable new_proto;
 
-import variable Katja_ptr;
-import variable Ian_ptr;
-
 procedure get_armor_ptr;
 procedure get_proto(variable arg0);
 
-variable NewHex;
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
 
-//////////////////////////////////////
-//Added by Sduibek for Fallout Fixt:
-//////////////////////////////////////
-procedure TEAMX_DISTANCE;
-procedure SDUIBEK_DISTANCE;
-procedure IanClose_SDUIBEK;
-procedure IanModerate_SDUIBEK;
-procedure IanFar_SDUIBEK;
+variable NewHex;
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
 // Added by Lexx
-#define float_ian(x)    float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
-#define Ian_In_Party    (global_var(IAN_HIRELING_STATUS) == 2)
+#define float_ian(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+//#define Ian_In_Party    						(global_var(IAN_HIRELING_STATUS) == 2)
+
+#define PARTY_NODE_X                      Node100
+
+#define ian_joins_party               		party_add_self;                                                   \
+                                          add_timer_event(self_obj,game_ticks(1),2);                        \
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_ian    		((dude_at_max_party_size == false) and (Ian_In_Party == false))
 
 procedure push_p_proc begin
    if (Ian_In_Party == false) then begin
@@ -118,28 +124,32 @@ procedure push_p_proc begin
 end
 
 procedure start begin
-
-	if ((global_var(SHADY_SANDS_WAS_INVADED) == 1) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
-		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
-			if (local_var(7) != 1) then begin
-				set_local_var(7, 1);
-				call PickDeadBodyType;
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
-
 end
 
 procedure critter_p_proc begin
+	//debug("LVAR_WAITING: " + local_var(LVAR_WAITING));
+   if (Ian_In_Party) then begin
+   	/*debug("party_is_waiting: " + party_is_waiting);
+   	debug("party_no_follow: " + party_no_follow);
+		debug("LVAR_FOLLOW_DISTANCE" + local_var(LVAR_FOLLOW_DISTANCE));*/
+
+      party_member_follow_dude
+
+   end
+   else begin
+   	//debug("ian abandon!");
+   	set_self_abandon_party;
+   end
+
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
+		set_self_abandon_party;
 		attack(dude_obj);
 	end
 	else begin
-		if (global_var(IAN_HIRELING_STATUS) == 2) then begin// if Ian's in your party currently
+		/*if (global_var(IAN_HIRELING_STATUS) == 2) then begin// if Ian's in your party currently
 			call map_commentary;
-			call follow_player;
+			//call follow_player;
 			if (global_var(IAN_LEVEL) < 2) then begin
 				if ((get_pc_stat(1) - global_var(IAN_DUDE_LAST_LEVEL)) > 0) then begin
 					set_global_var(IAN_LEVEL_COUNTER, global_var(IAN_LEVEL_COUNTER) + (get_pc_stat(1) - global_var(IAN_DUDE_LAST_LEVEL)));
@@ -147,6 +157,7 @@ procedure critter_p_proc begin
 				end
 				if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 					if (global_var(IAN_LEVEL_COUNTER) > 3) then begin// Dude has leveled four times since getting Ian (or since last Ian level-up)
+
 						set_global_var(IAN_LEVEL_COUNTER, 0);// IAN_LEVEL_COUNTER
 						set_global_var(IAN_LEVEL, global_var(IAN_LEVEL) + 1);// IAN_LEVEL = IAN_LEVEL + 1
 						armor_ptr := critter_inven_obj(self_obj, 0);// set armor_ptr to whatever armor Ian is wearing
@@ -160,6 +171,7 @@ procedure critter_p_proc begin
 						if (armor_ptr) then begin
 							wield_obj_critter(tmp, armor_ptr);// if so, equip it (on new Ian)
 						end
+
 						party_remove(self_obj);// disband old Ian
 						party_add(tmp);// join new Ian
 						critter_add_trait(tmp, 1, 6, 0);
@@ -168,10 +180,11 @@ procedure critter_p_proc begin
 						Ian_ptr := tmp;
 						move_to(self_obj, 0, 0);// destroy old Ian
 						destroy_object(self_obj);// destroy old Ian
+
 					end
 				end
 			end
-		end
+		end*/
 	end
 end
 
@@ -187,27 +200,28 @@ end
 
 procedure destroy_p_proc begin
 	set_global_var(IAN_HIRELING_STATUS, 3);
-	party_remove(self_obj);
-	party_remove(Ian_ptr);
+	//party_remove(self_obj);
+	//party_remove(Ian_ptr);
 
 	inc_good_critter
-	Ian_ptr := 0;
+	//Ian_ptr := 0;
 end
 
 procedure look_at_p_proc begin
 	script_overrides;
-// If not in party and haven't had introductions, display "short stocky man" description
+	// If not in party and haven't had introductions, display "short stocky man" description
 	if (global_var(IAN_HIRELING_STATUS) == 0) then begin
 		display_msg(message_str(SCRIPT_IAN, 100));
 	end
 	else begin
-// if have had introductions or was in party but was asked to leave, display "Ian"
+		// if have had introductions or was in party but was asked to leave, display "Ian"
 		if ((global_var(IAN_HIRELING_STATUS) == 1) or (global_var(IAN_HIRELING_STATUS) == 3)) then begin
 			display_msg(message_str(SCRIPT_IAN, 113));
 		end
 		else begin
-// if is currently in party, display "Ian" and what type of armor currently worn.
-			if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+
+			// if is currently in party, display "Ian" and what type of armor currently worn.
+			/*if (global_var(IAN_HIRELING_STATUS) == 2) then begin
 				variable LVar0 := 0;
 				variable LVar1 := 0;
 				LVar0 := critter_inven_obj(self_obj, 0);
@@ -241,15 +255,33 @@ procedure look_at_p_proc begin
 						display_msg(message_str(SCRIPT_IAN, 113) + message_str(SCRIPT_GENCHAT, 198) + message_str(SCRIPT_GENCHAT, 210));
 					end
 				end
-			end
+			end*/
+
 		end
 	end
 	script_overrides;
 end
 
-procedure map_enter_p_proc
-begin
-	Ian_ptr := self_obj;
+procedure map_enter_p_proc begin
+
+	if (cur_map_index == MAP_SHADYW) then begin
+		if (map_first_run) then begin
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_SHADY_SANDS);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_IAN);
+		end
+	end
+
+	if ((global_var(SHADY_SANDS_WAS_INVADED) == 1) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
+		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+			if (local_var(7) != 1) then begin
+				set_local_var(7, 1);
+				call PickDeadBodyType;
+				kill_critter(self_obj, DeathType);
+			end
+		end
+	end
+
+	/*Ian_ptr := self_obj;
 	if (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - WEST
 		if (map_first_run) then begin
 			if (global_var(IAN_REFRESH_GFX_FLAG) == 0) then begin
@@ -273,16 +305,19 @@ begin
 				set_global_var(IAN_HIRELING_STATUS, 0);
 			end
 		end
-	end
-	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 0);
+	end*/
+
+	/*if Ian_In_Party then begin
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_PLAYER);
 	end
 	else begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 2);
 	end
 	if ((has_trait(1, self_obj, 5) != 89) and (has_trait(1, self_obj, 5) != 95) and (has_trait(1, self_obj, 5) != 96)) then begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 89);
-	end
+	end*/
+
+
 end
 
 procedure pickup_p_proc begin
@@ -335,7 +370,7 @@ procedure talk_p_proc begin
 		bestweapon_flag := 0;
 		inven_unwield;
 	end
-	if (armor_flag == 1) then begin
+	/*if (armor_flag == 1) then begin
 		armor_flag := 0;
 		new_proto := get_proto(armor_ptr);
 		if (new_proto) then begin
@@ -351,7 +386,7 @@ procedure talk_p_proc begin
 			move_to(self_obj, 0, 0);
 			destroy_object(self_obj);
 		end
-	end
+	end*/
 
 end
 
@@ -382,8 +417,20 @@ procedure join_party begin
 	set_global_var(IAN_HIRELING_STATUS, 2);
 	set_global_var(DESTROY_VATS_5, 4);
 	set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat(1));
-	party_add(self_obj);
-	critter_add_trait(self_obj, 1, 6, 0);
+	//party_add(self_obj);
+	//critter_add_trait(self_obj, 1, 6, 0);
+
+	ian_joins_party;
+
+	gsay_message(235, 150, 50);
+end
+
+procedure rejoin_party begin
+	set_global_var(IAN_HIRELING_STATUS, 2);
+	set_global_var(DESTROY_VATS_5, 4);
+	set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat(1));
+
+	end_party_waiting;
 	gsay_message(235, 150, 50);
 end
 
@@ -505,7 +552,10 @@ end
 
 procedure Ian16 begin
 	set_global_var(IAN_HIRELING_STATUS, 3);
-	party_remove(self_obj);
+	//party_remove(self_obj);
+
+	set_party_waiting;
+
 	gsay_message(235, 147, 50);
 end
 
@@ -557,9 +607,9 @@ end
 
 procedure Ian21 begin
 	gsay_reply(235, 202);
-	giq_option(4, 235, 203, join_party, 50);
+	giq_option(4, 235, 203, rejoin_party, 50);
 	giq_option(4, 235, 204, IanEnd, 50);
-	giq_option(-3, 766, 196, join_party, 50);
+	giq_option(-3, 766, 196, rejoin_party, 50);
 end
 
 procedure IanEnd begin
@@ -585,7 +635,7 @@ procedure TEAMX_DISTANCE begin
 end
 
 procedure follow_player begin
-	if (tile_distance_objs(self_obj, dude_obj) > global_var(DESTROY_VATS_5)) then begin
+	/*if (tile_distance_objs(self_obj, dude_obj) > global_var(DESTROY_VATS_5)) then begin
 		if (anim_busy(self_obj) == 0) then begin
 			dest_tile := tile_num_in_direction(tile_num_in_direction(tile_num(dude_obj), rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)), global_var(DESTROY_VATS_5)), random(0, 5), random(0, 2));
 			if (local_var(4) or local_var(5) or local_var(6)) then begin
@@ -595,7 +645,7 @@ procedure follow_player begin
 				call TEAMX_DISTANCE;
 			end
 		end
-	end
+	end*/
 end
 
 procedure map_commentary
@@ -712,63 +762,43 @@ end
 procedure IanTactics begin
 	gsay_reply(389, 160);
 	giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 216), IanClose, 50);
-	giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 217), IanClose_SDUIBEK, 50);
+	//giq_option(4, 389, message_str(SCRIPT_TYCHO, 161) + message_str(SCRIPT_GENCHAT, 217), IanClose_SDUIBEK, 50);
 	giq_option(4, 389, message_str(SCRIPT_TYCHO, 162) + message_str(SCRIPT_GENCHAT, 216), IanModerate, 50);
-	giq_option(4, 389, message_str(SCRIPT_TYCHO, 162) + message_str(SCRIPT_GENCHAT, 217), IanModerate_SDUIBEK, 50);
+	//giq_option(4, 389, message_str(SCRIPT_TYCHO, 162) + message_str(SCRIPT_GENCHAT, 217), IanModerate_SDUIBEK, 50);
 	giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 216), IanFar, 50);
-	giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 217), IanFar_SDUIBEK, 50);
-end
-
-procedure IanClose_SDUIBEK begin
-	set_local_var(4, 1);
-	set_local_var(5, 0);
-	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 2);
-	gsay_message(235, 201, 50);
-	call Ian15;
-end
-
-procedure IanModerate_SDUIBEK begin
-	set_local_var(4, 0);
-	set_local_var(5, 1);
-	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 4);
-	gsay_message(235, 201, 50);
-	call Ian15;
-end
-
-procedure IanFar_SDUIBEK begin
-	set_local_var(4, 0);
-	set_local_var(5, 0);
-	set_local_var(6, 1);
-	set_global_var(DESTROY_VATS_5, 6);
-	gsay_message(235, 201, 50);
-	call Ian15;
+	//giq_option(4, 389, message_str(SCRIPT_TYCHO, 163) + message_str(SCRIPT_GENCHAT, 217), IanFar_SDUIBEK, 50);
 end
 
 procedure IanClose begin
-	set_local_var(4, 0);
+	set_follow_close;
+
+	/*set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 2);
+	set_global_var(DESTROY_VATS_5, 2);*/
 	gsay_message(235, 201, 50);
 	call Ian15;
 end
 
 procedure IanModerate begin
-	set_local_var(4, 0);
+	set_follow_medium;
+
+	/*set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 4);
+	set_global_var(DESTROY_VATS_5, 4);*/
+
 	gsay_message(235, 201, 50);
 	call Ian15;
 end
 
 procedure IanFar begin
-	set_local_var(4, 0);
+	set_follow_far;
+
+	/*set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 6);
+	set_global_var(DESTROY_VATS_5, 6);*/
 	gsay_message(235, 201, 50);
 	call Ian15;
 end
