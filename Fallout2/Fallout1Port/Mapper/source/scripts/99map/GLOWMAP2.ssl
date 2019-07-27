@@ -1,8 +1,8 @@
 #include "..\headers\define.h"
+#include "..\headers\updatmap.h"
 
 procedure start;
-procedure Darkness;
-procedure Lighting;
+
 procedure Invasion;
 
 variable party_elevation;
@@ -14,7 +14,7 @@ variable rads;
 procedure start
 begin
 	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call Lighting;
+		GlowLighting;
 		//call Invasion;
 		First_Time := game_time / 10;
 //		rads := random(10, 20)  + (difficulty_level * 10);//  10 20 30, 20 30 40
@@ -26,7 +26,7 @@ begin
 	else begin
 		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
 			Next_Time := game_time / 10;
-			call Lighting;
+			GlowLighting;
 			if ((Next_Time - First_Time) > 30) then begin
 				Rads := (Next_Time - First_Time) / 30;
 //			if ((Next_Time - First_Time) >= 1) then begin
@@ -46,36 +46,6 @@ begin
 			end
 		end
 
-	end
-end
-
-procedure Lighting
-begin
-	if (global_var(GLOW_POWER) == 2) then begin
-		set_light_level(100);
-	end
-	else begin
-		if (global_var(GLOW_POWER) == 1) then begin
-			call Darkness;
-		end
-		else begin
-			set_light_level(0);
-		end
-	end
-end
-
-procedure Darkness
-begin
-	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-		if (global_var(CAVES_LIGHT_LEVEL == 0)) then begin
-			set_light_level(10);
-		end
-		else begin
-			set_light_level(global_var(CAVES_LIGHT_LEVEL));
-		end
-	end
-	else begin
-		set_light_level(40);
 	end
 end
 

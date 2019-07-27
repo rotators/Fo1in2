@@ -1,7 +1,7 @@
 #include "..\headers\define.h"
+#include "..\headers\updatmap.h"
 
 procedure start;
-procedure Lighting;
 
 export variable weapon_checked;
 export variable sneak_checked;
@@ -19,7 +19,6 @@ export variable removal_ptr;
 variable party_elevation;
 variable dude_start_hex;
 
-procedure Darkness;
 procedure Invasion;
 
 variable invaderPtr;
@@ -29,7 +28,7 @@ procedure start
 begin
 	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
 		set_global_var(MARK_JUNK_1, 1);
-		call Lighting;
+		Lighting;
 		if (map_first_run) then begin
 			if (global_var(JUNKTOWN_WAS_INVADED) != 1) then begin
 				display_msg(message_str(SCRIPT_SHADYWST, 104));
@@ -117,10 +116,10 @@ begin
 	else begin
 		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
 			if (elevation(dude_obj) == 1) then begin
-				call Darkness;
+				Darkness;
 			end
 			else begin
-				call Lighting;
+				Lighting;
 			end
 			if (removal_ptr != 0) then begin
 				destroy_object(removal_ptr);
@@ -129,39 +128,6 @@ begin
 
 		end
 
-	end
-end
-
-procedure Lighting
-begin
-	variable LVar0 := 0;
-	LVar0 := game_time_hour;
-	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
-		set_light_level(LVar0 - 600 + 40);
-	end
-	else begin
-		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
-			set_light_level(100);
-		end
-		else begin
-			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
-				set_light_level(100 - (LVar0 - 1800));
-			end
-			else begin
-				set_light_level(40);
-			end
-		end
-	end
-end
-
-
-procedure Darkness
-begin
-	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-		set_light_level(global_var(CAVES_LIGHT_LEVEL));
-	end
-	else begin
-		set_light_level(40);
 	end
 end
 
