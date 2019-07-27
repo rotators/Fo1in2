@@ -3,6 +3,7 @@
 #define NAME                    SCRIPT_CHILD
 
 #include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
@@ -30,12 +31,6 @@ variable Start_Moving;
 // Fallout Fixt:
 procedure PickDeadBodyType;
 variable DeathType := 56;
-procedure items_held;
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
 
 procedure push_p_proc begin
 end
@@ -78,7 +73,7 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-		
+
 		if Only_Once then begin
 			Only_Once := 0;
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 2);
@@ -129,32 +124,7 @@ procedure map_enter_p_proc begin
    end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
+
 
 procedure child01
 begin
@@ -257,17 +227,17 @@ begin
 	end
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		attack(dude_obj);
 	end
 end
 
 procedure talk_p_proc
 begin
-	call items_held;
+
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
 	start_gdialog(237, self_obj, 4, -1, -1);
 	gsay_start;
-	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+	if (dude_is_armed) then begin
 		call child04;
 	end
 	else begin

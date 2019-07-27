@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
@@ -34,15 +36,8 @@ procedure LoneRaidCombat;
 procedure LoneRaidEnd;
 procedure LoneRaidLoot;
 procedure flee_dude;
-procedure items_held;
 
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable known;
 variable broken;
@@ -80,38 +75,13 @@ begin
 	end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
+
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 	else begin
 		if ((tile_distance_objs(self_obj, dude_obj) > 8) and (tile_distance_objs(self_obj, dude_obj) < 24)) then begin
@@ -141,7 +111,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -151,8 +121,8 @@ begin
 		call LoneRaid01;
 	end
 	else begin
-		call items_held;
-		if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		
+		if (dude_is_armed) then begin
 			call LoneRaid00;
 		end
 		else begin
@@ -308,7 +278,7 @@ end
 procedure LoneRaid14
 begin
 	gsay_message(700, 137, 51);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure LoneRaid15
@@ -334,7 +304,7 @@ end
 procedure LoneRaid19
 begin
 	gsay_message(700, 144, 51);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure LoneRaid20
@@ -350,12 +320,12 @@ end
 procedure LoneRaid22
 begin
 	gsay_message(700, 147, 51);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure LoneRaidCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure LoneRaidEnd

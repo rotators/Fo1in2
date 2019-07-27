@@ -19,6 +19,7 @@
 										gfade_in(1)
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)
+				
 
 //==============================================================
 // Settings:

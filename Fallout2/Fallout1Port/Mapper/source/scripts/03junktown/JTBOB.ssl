@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure talk_p_proc;//    script_action == 11
@@ -24,13 +26,6 @@ procedure bob15;
 procedure bob16;
 procedure bobend;
 procedure combat;
-procedure items_held;
-
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
 
 variable Herebefore;
 variable Days;
@@ -42,7 +37,7 @@ variable Has_Weapon;
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
 		script_overrides;
 		display_msg(message_str(SCRIPT_JTBOB, 100));
@@ -66,38 +61,10 @@ begin
 	end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
-
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call items_held;
-	if (Has_Weapon == 0) and (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+	if (Has_Weapon == 0) and (dude_is_armed) then begin
 		Has_Weapon := 1;
 		start_gdialog(341, self_obj, 4, -1, -1);
 		gsay_start;
@@ -158,8 +125,7 @@ end
 
 procedure bob4
 begin
-	call items_held;
-	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+	if (dude_is_armed) then begin
 		gsay_message(341, message_str(SCRIPT_JTBOB, 111) + obj_pid(critter_inven_obj(dude_obj, 1)) + message_str(SCRIPT_JTBOB, 112), 50);
 	end
 	else begin
@@ -279,5 +245,5 @@ begin
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end
 
-	inc_good_critter		
+	inc_good_critter
 end

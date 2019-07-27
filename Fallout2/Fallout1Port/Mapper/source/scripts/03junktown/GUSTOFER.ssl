@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat_p_proc;//    script_action == 13
@@ -35,13 +37,6 @@ procedure GustoferBet1;
 procedure GustoferBet2;
 procedure flee_dude;
 procedure destroy_challenger;
-procedure items_held;
-
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
 
 variable round_counter;
 variable robbed;
@@ -62,67 +57,8 @@ variable sleep_time;
 variable home_tile;
 variable sleep_tile;
 
-
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
-	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					call map_enter_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
 end
 
 procedure combat_p_proc
@@ -142,12 +78,11 @@ procedure critter_p_proc
 begin
 	if (global_var(DUDE_ENEMY_JUNK_BOXER) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
-			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+			attack(dude_obj);
 		end
 	end
 	if (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(1) == 0) then begin
-		call items_held;
-		if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		if dude_is_armed then begin
 			call flee_dude;
 		end
 	end
@@ -180,7 +115,7 @@ begin
 		set_global_var(DUDE_ENEMY_JUNK_BOXER, 1);
 	end
 
-	inc_evil_critter 
+	inc_evil_critter
 end
 
 procedure map_enter_p_proc

@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure destroy_p_proc;//    script_action == 18
@@ -73,7 +75,7 @@ procedure mastercbt;
 procedure masterend;
 
 variable MALE;
-variable HOSTILE;
+variable tmp_hostile;
 variable DISARM;
 variable Only_Once := 1;
 variable LIEUTENANTS;
@@ -84,28 +86,12 @@ variable so_long;
 import variable Master_Has_Armed;
 import variable Master_Ptr;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
-variable exit_line;
 variable leave;
-
-
 
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if Only_Once then begin
 		Only_Once := 0;
 		Master_Ptr := self_obj;
@@ -165,15 +151,15 @@ end
 
 procedure Critter_Action
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		set_local_var(5, 1);
-		HOSTILE := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 	else begin
 		if (local_var(5)) then begin
 			if (obj_can_see_obj(self_obj, dude_obj)) then begin
-				HOSTILE := 1;
+				tmp_hostile := 1;
 			end
 		end
 	end
@@ -217,7 +203,7 @@ begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_local_var(5, 1);
 		set_local_var(6, 1);
-		hostile := 1;
+		tmp_hostile := 1;
 		if not(combat_is_initialized) then begin
 			attack_complex(source_obj, 0, 1, 0, 0, 30000, 0, 0);
 		end
@@ -264,7 +250,7 @@ begin
 	set_global_var(MASTER_BLOWN, 1);
 	set_global_var(QUEST_VAULT13_2_MASTER, 2);
 	rm_timer_event(self_obj);
-	inc_evil_critter 
+	inc_evil_critter
 	if (global_var(VATS_BLOWN) == 0) then begin
 		set_global_var(VATS_STATUS, 1);
 	end
@@ -291,7 +277,7 @@ begin
 		if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
 			set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
 		end
-		call get_reaction;
+		get_reaction
 		start_gdialog(51, self_obj, 4, 6, BACKGROUND_MASTER);
 		gsay_start;
 		MALE := get_critter_stat(dude_obj, STAT_gender) == 0;
@@ -771,135 +757,11 @@ end
 
 procedure mastercbt
 begin
-	HOSTILE := 1;
+	tmp_hostile := 1;
 end
 
 procedure masterend
 begin
 end
 
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
 
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-end

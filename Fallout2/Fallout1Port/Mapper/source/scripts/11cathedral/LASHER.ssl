@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure lasher00;
@@ -58,24 +60,15 @@ procedure lasher43;
 procedure lasher44;
 procedure lasherend;
 procedure combat;
-procedure items_held;
 
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
-variable Hostile;
+variable tmp_hostile;
 variable Lasher_Abuse;
 variable Only_Once := 1;
-
-
 
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if Only_Once then begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 20);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 83);
@@ -87,7 +80,7 @@ begin
 	end
 	else begin
 		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			Hostile := 1;
+			tmp_hostile := 1;
 		end
 		else begin
 			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
@@ -114,22 +107,22 @@ begin
 						dialogue_system_enter;
 					end
 					else begin
-						call items_held;
-						if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
-							Hostile := 1;
+
+						if (dude_is_armed) then begin
+							tmp_hostile := 1;
 						end
 					end
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						Hostile := 0;
-						attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+					if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						tmp_hostile := 0;
+						attack(dude_obj);
 					end
 				end
 				else begin
 					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
 						script_overrides;
 						if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
-							call items_held;
-							if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+
+							if (dude_is_armed) then begin
 								start_gdialog(384, self_obj, 4, -1, -1);
 								gsay_start;
 								call lasher04;
@@ -145,8 +138,8 @@ begin
 							end
 						end
 						else begin
-							call items_held;
-							if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+
+							if (dude_is_armed) then begin
 								start_gdialog(384, self_obj, 4, -1, -1);
 								gsay_start;
 								call lasher06;
@@ -205,32 +198,7 @@ begin
 	end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
+
 
 procedure lasher00
 begin
@@ -692,5 +660,5 @@ end
 
 procedure combat
 begin
-	Hostile := 1;
+	tmp_hostile := 1;
 end
