@@ -175,6 +175,7 @@
 #define EXP_BECOME_INITITAT						(2000)
 
 // Mariposa
+#define EXP_HANDYC_CLEANUP 						(1000)
 #define EXP_TRICKING_MUTANTS					(1500)
 #define EXP_SNEAK_SUCCESS 						(2000)
 #define EXP_VATS_DESTROYED 						(10000)

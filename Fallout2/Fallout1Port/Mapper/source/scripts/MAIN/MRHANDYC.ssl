@@ -5,12 +5,12 @@
 #include "..\headers\command.h"
 
 procedure start;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure use_obj_on_p_proc;//    script_action == 7
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
 procedure destroy_p_proc;
 procedure damage_p_proc;
 procedure push_p_proc;
@@ -33,226 +33,219 @@ procedure MrHandyC12;
 procedure MrHandyC13;
 procedure MrHandyC14;
 procedure MrHandyC15;
-/*
-procedure MrHandyC16;
-procedure MrHandyC17;
-procedure MrHandyC18;
-procedure MrHandyC19;
-*/
-procedure MrHandyEND;
+
+procedure Node998;
+procedure Node999;
+
+procedure Node001;
+procedure Node002;
+procedure Node003;
+
+procedure Node1001;
+procedure Node1002;
+procedure Node1003;
+procedure Node1004;
+procedure Node1005;
+procedure Node1006;
+procedure Node1007;
+procedure Node1008;
+procedure Node1009;
+procedure Node1010;
+procedure Node1011;
+procedure Node1012;
+procedure Node1013;
+procedure Node1100;
+
+procedure GetDate;
 
 variable initial :=  0;
 variable tmp_hostile := 0;
-//variable dest_tile;
 
-// local_var(0) == IS_PHYSICAL_DAMAGE_FIXED (repair)
-// local_var(1) == IS_COMPUTER_FIXED (science)
-// local_var(2) == ALREADY_TALKED
-// local_var(3) == CLEANUP_BEGINS (ordered him to continue with his procedures)
-// local_var(4) == IS_RADIO_FIXED (repair or radio)
-// local_var(5) == ALREADY_STOOD_UP
-// local_var(6) == ALREADY_DESTROYED_ITEMS
-// local_var(7) == DECLINED_REPROGRAMMING
+#define LVAR_IS_PHYSICAL_DAMAGE_FIXED		(0) // (repair)
+#define LVAR_IS_COMPUTER_FIXED				(1) // (science)
+#define LVAR_ALREADY_TALKED					(2)
+#define LVAR_CLEANUP_BEGINS					(3) // (ordered him to continue with his procedures)
+#define LVAR_IS_RADIO_FIXED					(4) // (repair or radio)
+#define LVAR_ALREADY_STOOD_UP					(5)
+#define LVAR_ALREADY_DESTROYED_ITEMS 		(6)
+#define LVAR_DECLINED_REPROGRAMMING 		(7)
+#define LVAR_WAITING                      (10)
+#define LVAR_FOLLOW_DISTANCE              (11)
+#define LVAR_TEAM                         (12)
 
-// Added by Lexx
-#define float_mrhandy(x)		float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
-#define MrHandyC_In_Party    	(global_var(MR_HANDYC_HIRELING_STATUS) == 2)
-variable k;
+#define float_handy(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define handy_joins_party               	party_add_self;                                                   \
+                                          add_timer_event(self_obj,game_ticks(1),2);                        \
+                                          critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER)
+#define dude_has_free_slot_for_handy  		((dude_at_max_party_size == false) and (MrHandyC_In_Party == false))
+#define EVENT_FLOAT_JOIN 						(2)
+
+#define handy_is_fixed 							((local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 1))
+
+#define set_default_party_follow             set_follow_medium
+#define PARTY_NODE_X                      	Node001
+#define def_follow_msg                       mstr(1020)
+#define def_heal_msg                         mstr(1003)
+#define def_gear_msg                         mstr(1004)
+
+procedure Node998 begin
+end
+procedure Node999 begin
+end
 
 procedure push_p_proc begin
    if (MrHandyC_In_Party == false) then begin
       script_overrides;
    end
    else begin
-      //k:=random(122,123);
-      //float_mrhandy(k);
+      //float_mrhandy(random(122,123));
    end
 end
 
-procedure start
-begin
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_FLOAT_JOIN) then begin
+		debug("handy is joining!");
+	end
+end
+
+
+procedure start begin
 	fixt_critter_healing
-	
-	if (initial != 1) then begin
-		initial :=  1;
-		if global_var(MR_HANDYC_HIRELING_INIT) != 1 then begin// init reset lvars
-			set_global_var(MR_HANDYC_HIRELING_INIT, 1);
-			set_local_var(0, 0);
-			set_local_var(1, 0);
-			set_local_var(2, 0);
-			set_local_var(3, 0);
-			set_local_var(4, 0);
-			set_local_var(5, 0);
-			set_local_var(6, 0);
-			set_local_var(7, 0);
+end
+
+procedure map_enter_p_proc begin
+	if map_first_run then begin
+		if global_var(GVAR_GVAR_MR_HANDYC_HIRELING_INIT) != 1 then begin// init reset lvars
+			set_global_var(GVAR_GVAR_MR_HANDYC_HIRELING_INIT, 1);
+			set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 0);
+			set_local_var(LVAR_IS_COMPUTER_FIXED, 0);
+			set_local_var(LVAR_ALREADY_TALKED, 0);
+			set_local_var(LVAR_CLEANUP_BEGINS, 0);
+			set_local_var(LVAR_IS_RADIO_FIXED, 0);
+			set_local_var(LVAR_ALREADY_STOOD_UP, 0);
+			set_local_var(LVAR_ALREADY_DESTROYED_ITEMS, 0);
+			set_local_var(LVAR_DECLINED_REPROGRAMMING, 0);
 		end
+
+		// TODO: WHY?????
 		if has_skill(self_obj, SKILL_SMALL_GUNS) < 50 then begin
 			critter_mod_skill(self_obj, SKILL_SMALL_GUNS, 150);
 		end
-		if (global_var(MR_HANDYC_HIRELING) == 1) and (global_var(MR_HANDYC_HIRELING_STATUS) == 1) then begin
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 0);
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 71);
+
+		if (global_var(GVAR_MR_HANDYC_HIRELING) == 1) and (global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS) == 1) then begin
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_PLAYER);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_ROBOTS);
 		end
 		else begin
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 71);
-		end
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-				call description_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 8) then begin//<-- use_skill_on_p_proc
-						call use_skill_on_p_proc;
-					end
-					else begin
-						if (script_action == 7) then begin//<-- use_obj_on_p_proc
-							call use_obj_on_p_proc;
-						end
-						else begin
-							if (script_action == 18) then begin
-								call destroy_p_proc;
-							end
-							else begin
-								if (script_action == 14) then begin
-									call damage_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_ROBOTS);
 		end
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if source_obj == dude_obj then begin
-		if (local_var(0) == 1) and (local_var(1) == 1) and (local_var(4) == 1) then begin// Don't do anything if not fixed.
-			set_global_var(MR_HANDYC_HIRELING_STATUS, 2);
-			if (party_member_obj(obj_pid(self_obj))) then begin
-				party_remove(self_obj);
+		if handy_is_fixed then begin
+			set_global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS, 2);
+			if MrHandyC_In_Party then begin
+				set_self_abandon_party;
 			end
 			tmp_hostile := 1;
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
-	set_global_var(MR_HANDYC_HIRELING_STATUS, 3);
-	if (party_member_obj(obj_pid(self_obj))) then begin
-		party_remove(self_obj);
-	end
+procedure destroy_p_proc begin
+	set_global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS, 3);
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
-		if (local_var(0) == 0) or (local_var(1) == 0) or (local_var(4) == 0) then begin// Don't do anything if not fixed.
+		if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) or (local_var(LVAR_IS_COMPUTER_FIXED) == 0) or (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// Don't do anything if not fixed.
 			script_overrides;
 		end
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
+	if (MrHandyC_In_Party) then begin
+      party_member_follow_dude
+   end
+   else begin
+   	set_self_abandon_party;
+   end
+
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
-		if (local_var(0) == 0) then begin
+
+		if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
 			script_overrides;
 			anim(self_obj, 48, 0);
 		end
-		else begin
-			if (local_var(5) == 0) then begin
-				set_local_var(5, 1);
-				play_sfx("MAHANDKD");// default Stand-Up sound is MAHANDCJ
-				anim(self_obj, 37, 0);
-			end
-			else begin
-				if (local_var(2) == 0) and (local_var(3) == 0) then begin
-					if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-						if (local_var(0) == 1) and (local_var(1) == 1) and (local_var(4) == 1) then begin
-							set_local_var(2, 1);
-							dialogue_system_enter;
-						end
-					end
-				end
-				else begin
-					if (local_var(3) == 1) then begin
-						if local_var(6) == 0 then begin
-							variable KillBox_ptr := 0;
-							set_local_var(6, 1);
-							KillBox_ptr := create_object_sid(PID_DEAD_TRAVELER, 0, 0, -1);// <-- Dead Traveler (Ghoul)  Was:  create_object_sid(PID_IGUANA_STAND, 0, 0, -1);// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
-							move_to(KillBox_ptr, 0, 0);
-							//inven_unwield;
-							move_obj_inven_to_obj(self_obj, KillBox_ptr);
-							destroy_object(KillBox_ptr);
-						end
-						else begin
-							if (tile_num(self_obj) != 20530) then begin
-								animate_move_obj_to_tile(self_obj, 20530, 0);
-							end
-							else begin
-								set_local_var(3, 2);
-								set_global_var(MRHANDYC_NO_DESTROY_MSG, 1);
-								set_global_var(MR_HANDYC_HIRELING_STATUS, 3);
-								field_change := "off";
-								explosion(tile_num(self_obj), elevation(self_obj), 0);
-								explosion(tile_num_in_direction(tile_num(self_obj), 5, 1), elevation(self_obj), 0);
-								explosion(tile_num_in_direction(tile_num(self_obj), 0, 1), elevation(self_obj), 0);
-								explosion(tile_num_in_direction(tile_num(self_obj), 5, 2), elevation(self_obj), 0);
-								explosion(tile_num_in_direction(tile_num(self_obj), 0, 2), elevation(self_obj), 0);
-								display_msg(message_str(SCRIPT_MRHANDYC, 117));//{117}{}{You earn 1000 experience points for doing a little clean-up work.}
-								give_exp_points(1000);
-								critter_dmg(self_obj, random(256, 384), 6);
-							end
-						end
-					end
-					else begin
-						if (global_var(MR_HANDYC_HIRELING_STATUS) == 1) then begin
-							if (tile_distance_objs(self_obj, dude_obj) >= 3) then begin
-								if (anim_busy(self_obj) == 0) then begin
-									dest_tile := tile_num_in_direction(tile_num_in_direction(tile_num(dude_obj), rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)), 1), random(0, 5), random(0, 2));
-									animate_move_obj_to_tile(self_obj, dest_tile, 0);
-								end
-							end
-						end
-					end
+		else if (local_var(LVAR_ALREADY_STOOD_UP) == 0) then begin
+			set_local_var(LVAR_ALREADY_STOOD_UP, 1);
+			play_sfx("MAHANDKD");// default Stand-Up sound is MAHANDCJ
+			anim(self_obj, 37, 0);
+		end
+		else if (local_var(LVAR_ALREADY_TALKED) == 0) and (local_var(LVAR_CLEANUP_BEGINS) == 0) then begin
+			if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+				if handy_is_fixed then begin
+					set_local_var(LVAR_ALREADY_TALKED, 1);
+					dialogue_system_enter;
 				end
 			end
 		end
+		else if (local_var(LVAR_CLEANUP_BEGINS) == 1) then begin
+			if local_var(LVAR_ALREADY_DESTROYED_ITEMS) == 0 then begin
+				variable KillBox_ptr := 0;
+				set_local_var(LVAR_ALREADY_DESTROYED_ITEMS, 1);
+				KillBox_ptr := create_object_sid(PID_DEAD_TRAVELER, 0, 0, -1);// <-- Dead Traveler (Ghoul)  Was:  create_object_sid(PID_IGUANA_STAND, 0, 0, -1);// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
+				move_to(KillBox_ptr, 0, 0);
+				//inven_unwield;
+				move_obj_inven_to_obj(self_obj, KillBox_ptr);
+				destroy_object(KillBox_ptr);
+			end
+			else begin
+				if (tile_num(self_obj) != 20530) then begin
+					animate_move_obj_to_tile(self_obj, 20530, 0);
+				end
+				else begin
+					set_local_var(LVAR_CLEANUP_BEGINS, 2);
+					set_global_var(MRHANDYC_NO_DESTROY_MSG, 1);
+					set_global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS, 3);
+					field_change := "off";
+
+					explosion(tile_num(self_obj), elevation(self_obj), 0);
+					explosion(tile_num_in_direction(tile_num(self_obj), 5, 1), elevation(self_obj), 0);
+					explosion(tile_num_in_direction(tile_num(self_obj), 0, 1), elevation(self_obj), 0);
+					explosion(tile_num_in_direction(tile_num(self_obj), 5, 2), elevation(self_obj), 0);
+					explosion(tile_num_in_direction(tile_num(self_obj), 0, 2), elevation(self_obj), 0);
+
+					display_msg(message_str(SCRIPT_MRHANDYC, 117));//{117}{}{You earn 1000 experience points for doing a little clean-up work.}
+					give_exp_points(EXP_HANDYC_CLEANUP);
+
+					critter_dmg(self_obj, random(256, 384), 6);
+				end
+			end
+		end
+
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
-//	if (local_var(0) == 0) and (local_var(1) == 0) then begin// neither fixed
+//	if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) and (local_var(LVAR_IS_COMPUTER_FIXED) == 0) then begin// neither fixed
 //		script_overrides;
 //
-	if (local_var(0) == 0) then begin// still need physical fix
+	if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin// still need physical fix
 		script_overrides;
 		display_msg(message_str(SCRIPT_MRHANDYC, 100));//{100}{}{This robot is non-functional. The layer of dust on it suggests that it hasn't been active in a while.}
 	end
 	else begin
-		if (local_var(1) == 0) then begin// still need software fix
+		if (local_var(LVAR_IS_COMPUTER_FIXED) == 0) then begin// still need software fix
 			script_overrides;
 			if (get_critter_stat(dude_obj, STAT_iq) > (get_critter_stat(dude_obj, STAT_pe) + has_trait(0, dude_obj, 0))) then begin
 				if (is_success(do_check(dude_obj, STAT_iq, 0))) then begin
@@ -269,7 +262,7 @@ begin
 			end
 		end
 		else begin
-			if (local_var(0) == 1) and (local_var(1) == 1) and (local_var(4) == 0) then begin// not fixed radio
+			if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
 				script_overrides;
 				display_msg(message_str(SCRIPT_MRHANDYC, 123));//{123}{}{The robot's radio is broken.}
 			end
@@ -281,246 +274,250 @@ begin
 	script_overrides;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	if (local_var(3) > 0) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_MRHANDYC, 150));
+
+	if (MrHandyC_In_Party) then begin
+		start_dialog_at_node(PARTY_NODE_X);
+	end
+	else if (not(MrHandyC_In_Party) and (global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS) == 1)) then begin
+		start_dialog_at_node(Node002);
 	end
 	else begin
-		if (global_var(MR_HANDYC_HIRELING_STATUS) > 0) and (global_var(MR_HANDYC_HIRELING_STATUS) < 3)  then begin
+
+		if (local_var(LVAR_CLEANUP_BEGINS) > 0) then begin
+			script_overrides;
+			display_msg(message_str(SCRIPT_MRHANDYC, 150));
+		end
+		else if (global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS) > 0) and (global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS) < 3)  then begin
 			script_overrides;
 			float_msg(self_obj, message_str(SCRIPT_MRHANDYC, 151), 0);
 		end
 		else begin
-			if (local_var(0) == 0) then begin
+			if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
 				script_overrides;
 				display_msg(message_str(SCRIPT_MRHANDYC, 103));//{103}{}{You cannot access the robot's functions, as it is disabled.}
 			end
+			else if handy_is_fixed then begin
+				start_gdialog(631, self_obj, 4, -1, -1);
+				gsay_start;
+				call MrHandyC00;
+				gsay_end;
+				end_dialogue;
+			end
 			else begin
-				if local_var(0) and local_var(1) and local_var(4) then begin
-					start_gdialog(631, self_obj, 4, -1, -1);
-					gsay_start;
-					call MrHandyC00;
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					script_overrides;
-					display_msg(message_str(SCRIPT_MRHANDYC, 122));//{122}{}{The interface systems are not responding to your input.}
-				end
+				script_overrides;
+				display_msg(message_str(SCRIPT_MRHANDYC, 122));//{122}{}{The interface systems are not responding to your input.}
 			end
 		end
+
 	end
+
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
-		script_overrides;
-		display_msg(message_str(SCRIPT_GENCHAT, 211));
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_STEAL) then begin
+		if not(MrHandyC_In_Party) then begin
+			script_overrides;
+			display_msg(message_str(SCRIPT_GENCHAT, 211));
+		end
 	end
 	else begin
-		if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
-			if (local_var(0) == 0) then begin// still need physical fix
+
+		if (action_being_used == SKILL_SCIENCE) then begin
+
+			if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin// still need physical fix
 				script_overrides;
 				display_msg(message_str(SCRIPT_MRHANDYC, 103));//{103}{}{You cannot access the robot's functions, as it is disabled.}
 			end
-			else begin
-				if (local_var(1) == 0) and (local_var(4) == 0) then begin// not already software fixed
-					script_overrides;
-					game_time_advance(game_ticks(300));
-					if is_success(roll_vs_skill(dude_obj, 12, 0)) then begin
-						display_msg(message_str(SCRIPT_MRHANDYC, 105));//{105}{}{You reboot the onboard computer, and successfully restart the robot. You notice that the robot's radio is broken.}
-						set_local_var(1, 1);
-					end
-					else begin
-						display_msg(message_str(SCRIPT_MRHANDYC, 106));//{106}{}{You spend some time working on the robot's computer, but cannot get it restarted.}
-					end
-				end
-				else begin
-					if (local_var(0) == 1) and (local_var(1) == 1) and (local_var(4) == 0) then begin// not fixed radio
-						script_overrides;
-						display_msg(message_str(SCRIPT_MRHANDYC, 123));//{123}{}{The robot's radio is broken.}
-					end
-				end
-			end
-		end
-		else begin
-			if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
-				if (local_var(0) == 0) then begin
-					script_overrides;
-					game_time_advance(game_ticks(12000));
-					if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
-						display_msg(message_str(SCRIPT_MRHANDYC, 101));//{101}{}{The robot is now powered on, but is still not functional.}
-						set_local_var(0, 1);
-					end
-					else begin
-						display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
-					end
-				end
-				else begin
-					if (local_var(0) == 1) and (local_var(1) == 1) and (local_var(4) == 0) then begin// not fixed radio
-						script_overrides;
-						game_time_advance(game_ticks(6000));
-						if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
-							display_msg(message_str(SCRIPT_MRHANDYC, 120));//{120}{}{You jury-rig the robot's radio system; it should be usable now.}
-							set_local_var(4, 1);
-						end
-						else begin
-							display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure use_obj_on_p_proc
-begin
-	if (obj_pid(obj_being_used_with) == PID_MULTI_TOOL) then begin
-		if (local_var(0) == 0) then begin
-			script_overrides;
-			game_time_advance(game_ticks(12000));
-			if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
-				display_msg(message_str(SCRIPT_MRHANDYC, 101));//{101}{}{The robot is now powered on, but is still not functional.}
-				set_local_var(0, 1);
-			end
-			else begin
-				display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
-			end
-		end
-		else begin
-			if (local_var(0) == 1) and (local_var(1) == 1)  and (local_var(4) == 0) then begin// not fixed radio
+			else if (local_var(LVAR_IS_COMPUTER_FIXED) == 0) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not already software fixed
 				script_overrides;
-				game_time_advance(game_ticks(6000));
-				if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
-					display_msg(message_str(SCRIPT_MRHANDYC, 120));//{120}{}{You jury-rig the robot's radio system; it should be usable now.}
-					set_local_var(4, 1);
+				game_time_advance(game_ticks(300));
+
+				if is_success(roll_vs_skill(dude_obj, 12, 0)) then begin
+					display_msg(message_str(SCRIPT_MRHANDYC, 105));//{105}{}{You reboot the onboard computer, and successfully restart the robot. You notice that the robot's radio is broken.}
+					set_local_var(LVAR_IS_COMPUTER_FIXED, 1);
+				end
+				else begin
+					display_msg(message_str(SCRIPT_MRHANDYC, 106));//{106}{}{You spend some time working on the robot's computer, but cannot get it restarted.}
+				end
+
+			end
+			else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+				script_overrides;
+				display_msg(message_str(SCRIPT_MRHANDYC, 123));//{123}{}{The robot's radio is broken.}
+			end
+
+		end
+		else if (action_being_used == SKILL_REPAIR) then begin
+			if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
+				script_overrides;
+				game_time_advance(game_ticks(12000));
+
+				if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
+					display_msg(message_str(SCRIPT_MRHANDYC, 101));//{101}{}{The robot is now powered on, but is still not functional.}
+					set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 1);
 				end
 				else begin
 					display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
 				end
 			end
+			else begin
+				if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+					script_overrides;
+					game_time_advance(game_ticks(6000));
+
+					if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
+						display_msg(message_str(SCRIPT_MRHANDYC, 120));//{120}{}{You jury-rig the robot's radio system; it should be usable now.}
+						set_local_var(LVAR_IS_RADIO_FIXED, 1);
+					end
+					else begin
+						display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
+					end
+				end
+			end
+		end
+
+	end
+end
+
+procedure use_obj_on_p_proc begin
+	if (obj_pid(obj_being_used_with) == PID_MULTI_TOOL) then begin
+		if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
+			script_overrides;
+			game_time_advance(game_ticks(12000));
+
+			if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
+				display_msg(message_str(SCRIPT_MRHANDYC, 101));//{101}{}{The robot is now powered on, but is still not functional.}
+				set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 1);
+			end
+			else begin
+				display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
+			end
+		end
+		else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1)  and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+			script_overrides;
+			game_time_advance(game_ticks(6000));
+
+			if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
+				display_msg(message_str(SCRIPT_MRHANDYC, 120));//{120}{}{You jury-rig the robot's radio system; it should be usable now.}
+				set_local_var(LVAR_IS_RADIO_FIXED, 1);
+			end
+			else begin
+				display_msg(message_str(SCRIPT_MRHANDYC, 104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
+			end
+
 		end
 	end
-	else begin
-		if (obj_pid(obj_being_used_with) == PID_RADIO) then begin
-			if (local_var(0) == 1) and (local_var(1) == 1) and (local_var(4) == 0) then begin// not fixed radio
-				script_overrides;
-				game_time_advance(game_ticks(3000));
-				rm_obj_from_inven(source_obj, obj_being_used_with);
-				destroy_object(obj_being_used_with);
-				display_msg(message_str(SCRIPT_MRHANDYC, 121));//{121}{}{You successfully replace the robot's radio .}
-				set_local_var(4, 1);
-			end
+	else if (obj_pid(obj_being_used_with) == PID_RADIO) then begin
+		if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+			script_overrides;
+
+			game_time_advance(game_ticks(3000));
+
+			rm_obj_from_inven(source_obj, obj_being_used_with);
+			destroy_object(obj_being_used_with);
+
+			display_msg(message_str(SCRIPT_MRHANDYC, 121));//{121}{}{You successfully replace the robot's radio .}
+			set_local_var(LVAR_IS_RADIO_FIXED, 1);
 		end
 	end
 end
 
-procedure MrHandyC00
-begin
+procedure MrHandyC00 begin
 	gsay_reply(631, 107);
 	giq_option(-3, 631, 108, MrHandyC01, 50);
 	giq_option(4, 631, 109, MrHandyC02, 50);
 	giq_option(4, 631, 110, MrHandyC01, 50);
-	if (global_var(MR_HANDYC_HIRELING) == 1) then begin
+	if (global_var(GVAR_MR_HANDYC_HIRELING) == 1) then begin
 		giq_option(6, 631, 124, MrHandyC04, 50);
 	end
 end
 
-procedure MrHandyC01
-begin
+procedure MrHandyC01 begin
 	gsay_message(631, 111, 50);
-	set_local_var(3, 1);
+	set_local_var(LVAR_CLEANUP_BEGINS, 1);
 end
 
-procedure MrHandyC02
-begin
+procedure MrHandyC02 begin
 	gsay_reply(631, 112);
-	giq_option(4, 631, 132, MrHandyEND, 50);
+	giq_option(4, 631, 132, Node999, 50);
 	giq_option(6, 631, 114, MrHandyC03, 50);
 	giq_option(4, 631, 113, MrHandyC01, 50);
-	if (local_var(7) == 0) then begin
+	if (local_var(LVAR_DECLINED_REPROGRAMMING) == 0) then begin
 		giq_option(6, 631, 139, MrHandyC10, 50);
 	end
 end
 
-procedure MrHandyC15
-begin
+procedure MrHandyC15 begin
 	gsay_reply(631, 112);
 	giq_option(6, 631, 114, MrHandyC03, 50);
 	giq_option(4, 631, 113, MrHandyC01, 50);
-	if (local_var(7) == 0) then begin
+	if (local_var(LVAR_DECLINED_REPROGRAMMING) == 0) then begin
 		giq_option(6, 631, 139, MrHandyC10, 50);
 	end
 end
 
-procedure MrHandyC03
-begin
+procedure MrHandyC03 begin
 	gsay_reply(631, 115);
 	giq_option(6, 631, 116, MrHandyC01, 50);
-	giq_option(4, 631, 132, MrHandyEND, 50);
+	giq_option(4, 631, 132, Node999, 50);
 end
 
-procedure MrHandyC04
-begin
+procedure MrHandyC04 begin
 	gsay_reply(631, 125);
 	giq_option(4, 631, 126, MrHandyC05, 50);
 	giq_option(4, 631, 127, MrHandyC06, 50);
 	giq_option(4, 631, 132, MrHandyC15, 50);
 end
 
-procedure MrHandyC05
-begin
+procedure MrHandyC05 begin
 	gsay_reply(631, 130);
 	giq_option(4, 631, 131, MrHandyC07, 50);
 	giq_option(4, 631, 132, MrHandyC15, 50);
 end
 
-procedure MrHandyC06
-begin
+procedure MrHandyC06 begin
 	gsay_reply(631, 128);
 	giq_option(4, 631, 129, MrHandyC05, 50);
 	giq_option(4, 631, 132, MrHandyC15, 50);
 end
 
-procedure MrHandyC07
-begin
+procedure MrHandyC07 begin
 	gsay_reply(631, 133);
 	giq_option(4, 631, 134, MrHandyC08, 50);
 	giq_option(4, 631, 132, MrHandyC15, 50);
 end
 
-procedure MrHandyC08
-begin
+procedure MrHandyC08 begin
 	gsay_reply(631, 135);
 	giq_option(4, 631, 136, MrHandyC09, 50);
 end
 
-procedure MrHandyC09
-begin
+procedure MrHandyC09 begin
 	gsay_reply(631, 137);
-	giq_option(4, 631, 138, MrHandyC02, 50);
-	giq_option(4, 631, 140, MrHandyC10, 50);
-	giq_option(4, 631, 141, MrHandyC02, 50);
+
+	if not(MrHandyC_In_Party) then begin
+		giq_option(4, 631, 138, MrHandyC02, 50);
+		giq_option(4, 631, 140, MrHandyC10, 50);
+		giq_option(4, 631, 141, MrHandyC02, 50);
+	end
+
+	if (MrHandyC_In_Party) then
+		NOption(1030,Node999,004);
 end
 
-procedure MrHandyC10
-begin
-	set_local_var(7, 1);
+procedure MrHandyC10 begin
+	set_local_var(LVAR_DECLINED_REPROGRAMMING, 1);
 	gsay_reply(631, 142);
 	giq_option(4, 631, 132, MrHandyC15, 50);
-	if (global_var(MR_HANDYC_HIRELING) == 1) then begin
+	if (global_var(GVAR_MR_HANDYC_HIRELING) == 1) then begin
 		giq_option(7, 631, 143, MrHandyC11, 50);
 	end
-	set_local_var(7, 1);
+	set_local_var(LVAR_DECLINED_REPROGRAMMING, 1);
 end
 
-procedure MrHandyC11
-begin
+procedure MrHandyC11 begin
 	if is_success(roll_vs_skill(dude_obj, 12, -30)) then begin
 		gsay_reply(631, 144);
 		giq_option(4, 631, 136, MrHandyC13, 50);
@@ -531,26 +528,164 @@ begin
 	end
 end
 
-procedure MrHandyC12
-begin
+procedure MrHandyC12 begin
 	gsay_message(631, 149, 51);
 	tmp_hostile := 1;
 end
 
-procedure MrHandyC13
-begin
+procedure MrHandyC13 begin
 	gsay_reply(631, 145);
 	giq_option(4, 631, 146, MrHandyC14, 50);
 end
 
-procedure MrHandyC14
-begin
+procedure MrHandyC14 begin
 	gsay_message(631, 147, 49);
-	set_global_var(MR_HANDYC_HIRELING_STATUS, 1);
+	set_global_var(GVAR_GVAR_MR_HANDYC_HIRELING_STATUS, 1);
 	critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 50);
-	party_add(self_obj);
+	handy_joins_party;
 end
 
-procedure MrHandyEND
-begin
+// Primary party node
+procedure Node001 begin
+	call GetDate;
+   party_member_default_options;
 end
+
+procedure Node002 begin
+	call GetDate;
+	NOption(1040,Node003,004);
+	NOption(1060,Node999,004);
+end
+
+// Handy rejoin:
+procedure Node003 begin
+	handy_joins_party;
+
+	Reply(2002);
+	NOption(1050,Node999,004);
+end
+
+procedure GetDate begin
+variable time1, time2, time3, time4;
+variable time, date;
+   time1:=floor(game_time_hour/1000);
+   time2:=floor(game_time_hour/100)%10;
+   time3:=floor(game_time_hour/10)%10;
+   time4:=floor(game_time_hour%10);
+   time := time1 + "" + time2 + ":" + time3 + "" + time4;
+   date := get_month + "/" + get_day + "/" + get_year;
+
+   Reply(mstr(1001) + time + " - " + date + ". " + mstr(1000));
+end
+
+procedure Node1001 begin
+   // heal yourself
+   obj_heal(self_obj)
+   if (party_healed_max) then begin
+      Reply(1100);
+   end else if (party_healed_good) then begin
+      Reply(1200);
+   end else if (party_healed_hurt) then begin
+      Reply(1300);
+   end else begin
+      Reply(1400);
+   end
+   party_member_default_options;
+end
+
+procedure Node1002 begin
+   // wait here
+   set_party_waiting;
+   Reply(1501);
+   party_member_default_options;
+end
+
+procedure Node1003 begin
+   // put your weapon away
+   inven_unwield(self_obj);
+   Reply(1600);
+   party_member_default_options;
+end
+
+procedure Node1004 begin
+   // follow close
+   set_follow_close;
+   Reply(1700);
+   party_member_default_options;
+end
+
+procedure Node1005 begin
+   // follow medium
+   set_follow_medium;
+   Reply(1800);
+   party_member_default_options;
+end
+
+procedure Node1006 begin
+   // follow far
+   set_follow_far;
+   Reply(1900);
+   party_member_default_options;
+end
+
+procedure Node1007 begin
+   // distance
+   Reply(1007);
+   party_member_def_follow_options;
+end
+
+procedure Node1008 begin
+   // gear
+   Reply(1008);
+   party_member_def_gear_options;
+end
+
+procedure Node1009 begin
+   // remove armor
+   remove_armor(self_obj)
+   Reply(1009);
+   party_member_default_options;
+end
+
+procedure Node1010 begin
+   // weapons that can be used
+   Reply(1010);
+   party_member_default_options;
+   NOption(1011,Node1011,004);
+end
+
+procedure Node1011 begin
+	Reply(1012);
+	NOption(1013,Node1012,004);
+	NOption(1014,Node1013,004);
+end
+
+procedure Node1012 begin
+	Reply(1016);
+	NOption(1017,MrHandyC08,004);
+end
+
+procedure Node1013 begin
+	Reply(1015);
+	party_member_default_options;
+end
+
+procedure Node1100 begin
+   if (dude_at_max_party_size) then begin
+      set_self_abandon_party;
+      Reply(2000);
+      NOption(g_mstr(10007),Node999,004);
+   end
+   else begin
+      end_party_waiting;
+      Reply(2001);
+      party_member_default_options;
+   end
+end
+
+
+
+
+
+
+
