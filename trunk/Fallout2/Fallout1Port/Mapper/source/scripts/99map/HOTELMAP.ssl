@@ -9,10 +9,10 @@ variable fugee_ptr;
 variable fugee_hex;
 
 #include "..\headers\define.h"
+#include "..\headers\updatmap.h"
 
 procedure start;
-procedure Lighting;
-procedure Darkness;
+
 
 variable party_elevation;
 variable dude_start_hex;
@@ -24,10 +24,10 @@ procedure start
 begin
 	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
 		if (elevation(dude_obj) == 0) then begin
-			call Darkness;
+			Darkness;
 		end
 		else begin
-			call Lighting;
+			Lighting;
 		end
 		if (global_var(LOAD_MAP_INDEX) == 3) then begin
 			override_map_start(94, 136, 1, 5);
@@ -79,10 +79,10 @@ begin
 	else begin
 		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
 			if (elevation(dude_obj) == 0) then begin
-				call Darkness;
+				Darkness;
 			end
 			else begin
-				call Lighting;
+				Lighting;
 			end
 			if (Use_Manhole_Top) then begin
 				animate_stand_reverse_obj(Manhole_Pointer_Top);
@@ -96,38 +96,6 @@ begin
 
 		end
 
-	end
-end
-
-procedure Lighting
-begin
-	variable LVar0 := 0;
-	LVar0 := game_time_hour;
-	if ((LVar0 >= 600) and (LVar0 < 700)) then begin
-		set_light_level(LVar0 - 600 + 40);
-	end
-	else begin
-		if ((LVar0 >= 700) and (LVar0 < 1800)) then begin
-			set_light_level(100);
-		end
-		else begin
-			if ((LVar0 >= 1800) and (LVar0 < 1900)) then begin
-				set_light_level(100 - (LVar0 - 1800));
-			end
-			else begin
-				set_light_level(40);
-			end
-		end
-	end
-end
-
-procedure Darkness
-begin
-	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-		set_light_level(global_var(CAVES_LIGHT_LEVEL));
-	end
-	else begin
-		set_light_level(40);
 	end
 end
 

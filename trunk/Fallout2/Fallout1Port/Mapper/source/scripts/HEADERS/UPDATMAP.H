@@ -5,6 +5,50 @@
 #ifndef UPDATMAP_H
 #define UPDATMAP_H
 
+// Fallout 1 lighting:
+// Lighting Information
+#define BRIGHT_LIGHT                    (100)
+#define CAVERN_LIGHT                    (50)
+#define DUSK_LIGHT                      (40)
+#define INDOOR_LIGHT                    (60)
+#define BASEMENT_LIGHT                  (50)
+#define MILITARY_BASE_LIGHTING          (75)
+
+#define Lighting 			if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin 			\
+								set_light_level(game_time_hour - 600 + DUSK_LIGHT);						\
+							end																			\
+							else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin	\
+								set_light_level(BRIGHT_LIGHT);											\
+							end																			\
+							else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin	\
+								set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));				\
+							end																			\
+							else 																		\
+								set_light_level(DUSK_LIGHT)												\
+
+#define GlowLighting 		if (global_var(GLOW_POWER) == 2) then begin							\
+								set_light_level(BRIGHT_LIGHT);									\
+							end																	\
+							else if (global_var(GLOW_POWER) == 1) then begin					\
+								Darkness;														\
+							end																	\
+							else																\
+								set_light_level(0)												\
+						
+#define V13CaveLighting  	if not(endgame_running) and (global_var(OVERSEER_END_SEQ) == 0) and (not(is_story_finished)) then begin \
+								set_light_level(DUSK_LIGHT); \
+							end \
+							else begin \
+								if is_story_finished then \
+									set_light_level(40); \
+								else \
+									set_light_level(100); \
+							end
+						
+#define Darkness 			set_light_level(DUSK_LIGHT)
+
+// Fallout 2 lighting:
+/*
 // Lighting Information
 #define BRIGHT_LIGHT                    (100)
 #define CAVERN_LIGHT                    (50)
@@ -86,6 +130,9 @@
 #define Basement_Lighting               set_light_level(BASEMENT_LIGHT)
 
 #define Military_Base_Lighting          set_light_level(MILITARY_BASE_LIGHTING)
+*/
+
+
 
 #define set_cur_exit                    wm_area_set_pos(AREA_RND_MOUNTAIN,worldmap_xpos,worldmap_ypos)
 
