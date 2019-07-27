@@ -191,13 +191,13 @@
 
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
-
+/*
 #define IAN_MEMBER_PTR     party_member_obj(PID_IAN)
 #define KATJA_MEMBER_PTR   party_member_obj(PID_KATJA)
 #define TYCHO_MEMBER_PTR   party_member_obj(PID_TYCHO)
 #define DOGMEAT_MEMBER_PTR party_member_obj(PID_DOGMEAT)
 #define TANDI_MEMBER_PTR   party_member_obj(PID_TANDI)
-
+*/
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 

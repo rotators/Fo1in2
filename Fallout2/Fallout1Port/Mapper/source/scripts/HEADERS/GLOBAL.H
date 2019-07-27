@@ -61,6 +61,13 @@
 #define GVAR_ADDICT_TRAGIC						(295)	// maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET							(296)	// maybe hard-coded, maybe not?
 
+// Party members:
+#define GVAR_PARTY_NO_FOLLOW                	(398)
+#define GVAR_CAR_BLOWER                     	(439)
+#define GVAR_FALLOUT_2                      	(494)
+#define GVAR_VIGNETTE_SEQUENCE              	(582)
+#define GVAR_PARTY_MEMBERS_HIDDEN           	(632)
+
 // Endgame slideshow Fo1
 #define GVAR_ENDGAME_MOVIE_DESERT				(408)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_MUTANTS				(409)	// maybe hard-coded, maybe not?

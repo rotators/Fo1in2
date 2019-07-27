@@ -1,31 +1,29 @@
 #include "..\headers\define.h"
 
 procedure start;
-procedure combat_p_proc;//    script_action == 13
-//procedure map_enter_p_proc;
+procedure combat_p_proc;
+procedure map_update_p_proc;
+procedure map_enter_p_proc;
 
 procedure Lighting;
 procedure Tandi_Move;
 procedure Where_Is_Tandi;
 procedure Where_To_Start;
-procedure add_party;
-procedure update_party;
-procedure remove_party;
+
 variable party_elevation;
 variable dude_start_hex;
 variable invaderPtr;
-export variable Ian_ptr;
-export variable Dog_ptr;
-export variable Tycho_ptr;
-export variable Katja_ptr;
-export variable Tandi_ptr;
+
 variable HEREBEFORE := 0;
 procedure DisplayInvadedMSG;
 procedure PickMutant;
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+variable temp_ptr;
+
 		set_global_var(MARK_SHADY_1, 1);
 		call Lighting;
 		if (map_first_run) then begin
@@ -83,42 +81,21 @@ kill_critter_type(PID_ARADESH, #);
 			end
 		end
 		call Where_To_Start;
-		call add_party;
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call Lighting;
-			call update_party;
-		end
-		else begin
-			if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-				call combat_p_proc;
-			end
-			else begin
-				if (script_action == 16) then begin
-					call remove_party;
-				end
-			end
-		end
-	end
+
 end
 
-/*procedure map_enter_p_proc begin
+procedure map_update_p_proc begin
+	call Lighting;
+end
 
-variable temp_ptr;
-	debug("test mutant");
-	Temp_ptr := create_object_sid(PID_NIGHTKIN, 0, 0, -1);
-	critter_attempt_placement(Temp_ptr, 11696, elevation(dude_obj));
-
-end*/
-
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	script_overrides;
+
 	if global_var(FADE_TIMES_INCREASED) then begin
 		gfade_out(1);
 		gfade_out(1);
 	end
+
 	gfade_out(1);
 	move_to(dude_obj, 12107, 0);
 	game_time_advance(game_ticks(1800));
@@ -147,120 +124,82 @@ begin
 	end
 end
 
-procedure Tandi_Move
-begin
+procedure Tandi_Move begin
 	variable LVar0 := 0;
+
 	LVar0 := game_time_hour;
 	if ((LVar0 > 2100) or (LVar0 <= 600)) then begin
-		Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
 		move_to(Tandi_ptr, 24678, 0);
 	end
-	else begin
-		if ((LVar0 > 600) and (LVar0 <= 610)) then begin
-			Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-			move_to(Tandi_ptr, 18709, 0);
-		end
-		else begin
-			if ((LVar0 > 610) and (LVar0 <= 615)) then begin
-				Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-				move_to(Tandi_ptr, 23232, 0);
-			end
-			else begin
-				if (LVar0 == 650) then begin
-					Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-					move_to(Tandi_ptr, 23232, 0);
-				end
-				else begin
-					if ((LVar0 > 650) and (LVar0 <= 1000)) then begin
-						Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-						move_to(Tandi_ptr, 15683, 0);
-					end
-					else begin
-						if ((LVar0 > 1000) and (LVar0 <= 1200)) then begin
-							Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-							move_to(Tandi_ptr, 18709, 0);
-						end
-						else begin
-							if ((LVar0 > 1200) and (LVar0 <= 1300)) then begin
-								Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-								move_to(Tandi_ptr, 24678, 0);
-							end
-							else begin
-								if ((LVar0 > 1300) and (LVar0 <= 1305)) then begin
-									Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-									move_to(Tandi_ptr, 23232, 0);
-								end
-								else begin
-									if (LVar0 == 1905) then begin
-										Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-										move_to(Tandi_ptr, 23232, 0);
-									end
-									else begin
-										if ((LVar0 > 1905) and (LVar0 <= 2100)) then begin
-											Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
-											move_to(Tandi_ptr, 18709, 0);
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if ((LVar0 > 600) and (LVar0 <= 610)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 18709, 0);
 	end
+	else if ((LVar0 > 610) and (LVar0 <= 615)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 23232, 0);
+	end
+	else if (LVar0 == 650) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 23232, 0);
+	end
+	else if ((LVar0 > 650) and (LVar0 <= 1000)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 15683, 0);
+	end
+	else if ((LVar0 > 1000) and (LVar0 <= 1200)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 18709, 0);
+	end
+	else if ((LVar0 > 1200) and (LVar0 <= 1300)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 24678, 0);
+	end
+	else if ((LVar0 > 1300) and (LVar0 <= 1305)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 23232, 0);
+	end
+	else if (LVar0 == 1905) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 23232, 0);
+	end
+	else if ((LVar0 > 1905) and (LVar0 <= 2100)) then begin
+		//Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
+		move_to(Tandi_ptr, 18709, 0);
+	end
+
 end
 
-procedure Where_Is_Tandi
-begin
+procedure Where_Is_Tandi begin
 	if (global_var(TANDI_HIRELING_STATUS) == 1) then begin
+
 	end
-	else begin
-		if (global_var(TANDI_HIRELING_STATUS) == 0) then begin
-			call Tandi_Move;
-		end
-		else begin
-			if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
-				call Tandi_Move;
-			end
-		end
+	else if (global_var(TANDI_HIRELING_STATUS) == 0) then begin
+		call Tandi_Move;
 	end
+	else if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
+		call Tandi_Move;
+	end
+
 end
 
-procedure Where_To_Start
-begin
+procedure Where_To_Start begin
 	if (global_var(LOAD_MAP_INDEX) == 1) then begin
 		override_map_start(107, 60, 0, 2);
 	end
+	else if (global_var(LOAD_MAP_INDEX) == 2) then begin
+		override_map_start(65, 93, 0, 4);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 3) then begin
+		override_map_start(107, 76, 0, 5);
+	end
 	else begin
-		if (global_var(LOAD_MAP_INDEX) == 2) then begin
-			override_map_start(65, 93, 0, 4);
-		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 3) then begin
-				override_map_start(107, 76, 0, 5);
-			end
-			else begin
-				override_map_start(107, 60, 0, 2);
-			end
-		end
+		override_map_start(107, 60, 0, 2);
 	end
 end
 
-procedure add_party begin
-	set_add_party
-end
-
-procedure update_party begin
-	set_update_party
-end
-
-procedure remove_party begin
-	set_remove_party
-end
-
-procedure PickMutant
-begin
+procedure PickMutant begin
 //
 //	Ten different possibles (6 green, 4 black leather). LVar1 is the Proto ID of the critter.
 //
@@ -301,8 +240,7 @@ begin
 	critter_add_trait(invaderPtr, 1, 5, 48); // AI PACKET
 end
 
-procedure DisplayInvadedMSG
-begin
+procedure DisplayInvadedMSG begin
 //	Added by Sduibek for Fallout Fixt. Displays a random "this town is dead" msg if map's been invaded.
 //		Code above (script action 15) should call this only once.
 //

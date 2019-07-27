@@ -1,9 +1,8 @@
 #include "..\headers\define.h"
 
 procedure start;
-procedure add_party;
-procedure update_party;
-procedure remove_party;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
 procedure Darkness;
 procedure addrats;
@@ -20,17 +19,10 @@ variable Tot_Critter_A;
 variable Range;
 variable player_elevation;
 
-export variable Ian_ptr;
-export variable Dog_ptr;
-export variable Tycho_ptr;
-export variable Katja_ptr;
-export variable Tandi_ptr;
-
-
-procedure start
-begin
+procedure start begin
 	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
 		call Darkness;
+
 		if (global_var(NECROP_WATER_CHIP_TAKEN) == 1) then begin
 			if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
 				if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
@@ -40,44 +32,36 @@ begin
 			end
 		end
 		player_elevation := elevation(dude_obj);
+
 		if (global_var(LOAD_MAP_INDEX) == 12) then begin
 			override_map_start(104, 135, 0, 5);
 		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 1) then begin
-				override_map_start(104, 67, 0, 5);
-			end
-			else begin
-				if (global_var(LOAD_MAP_INDEX) == 2) then begin
-					override_map_start(102, 115, 1, 5);
-				end
-				else begin
-					if (global_var(LOAD_MAP_INDEX) == 3) then begin
-						override_map_start(109, 86, 2, 5);
-					end
-					else begin
-						override_map_start(104, 135, 0, 5);
-					end
-				end
-			end
+		else if (global_var(LOAD_MAP_INDEX) == 1) then begin
+			override_map_start(104, 67, 0, 5);
 		end
-		call add_party;
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call Darkness;
-			call update_party;
+		else if (global_var(LOAD_MAP_INDEX) == 2) then begin
+			override_map_start(102, 115, 1, 5);
+		end
+		else if (global_var(LOAD_MAP_INDEX) == 3) then begin
+			override_map_start(109, 86, 2, 5);
 		end
 		else begin
-			if (script_action == 16) then begin
-				call remove_party;
-			end
+			override_map_start(104, 135, 0, 5);
 		end
+
 	end
+
 end
 
-procedure Darkness
-begin
+procedure map_enter_p_proc begin
+
+end
+
+procedure map_update_p_proc begin
+	call Darkness;
+end
+
+procedure Darkness begin
 	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 		set_light_level(global_var(CAVES_LIGHT_LEVEL));
 	end
@@ -99,18 +83,6 @@ begin
 		critter_attempt_placement(Monster, Critter_tile, 0);
 		LVar0 := LVar0 + 1;
 	end
-end
-
-procedure add_party begin
-	set_add_party
-end
-
-procedure update_party begin
-	set_update_party
-end
-
-procedure remove_party begin
-	set_remove_party
 end
 
 procedure Invasion begin
