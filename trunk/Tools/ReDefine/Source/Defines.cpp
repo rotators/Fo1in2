@@ -75,9 +75,9 @@ bool ReDefine::ReadDefines( const std::string& filename, const std::string& type
     Status.Current.File = filename;
     Status.Current.LineNumber = 0;
 
-    // cache pattern
-    std::regex  paren = TextGetDefinePattern( prefix, true );
-    std::regex  noParen = TextGetDefinePattern( prefix, false );
+    // cache patterns
+    std::regex  reParen = TextGetDefinePattern( prefix, true );
+    std::regex  reNoParen = TextGetDefinePattern( prefix, false );
 
     std::string name;
     int         value;
@@ -91,7 +91,7 @@ bool ReDefine::ReadDefines( const std::string& filename, const std::string& type
             continue;
 
         // find defines with given prefix
-        if( TextGetDefine( line, paren, name, value ) || TextGetDefine( line, noParen, name, value ) )
+        if( TextGetDefine( line, reParen, name, value ) || TextGetDefine( line, reNoParen, name, value ) )
         {
             // human detection
             if( RegularDefines[type].find( value ) != RegularDefines[type].end() )
