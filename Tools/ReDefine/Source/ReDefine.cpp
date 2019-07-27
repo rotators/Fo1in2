@@ -23,7 +23,7 @@ static uint StrLength( const char* str )
     return (uint)(str - str_);
 }
 
-static void Print( const char* prefix, const char* function, const char* format, va_list& args, bool lineInfo, ReDefine::SStatus::SCurrent& current )
+static void Print( ReDefine* self, const char* prefix, const char* function, const char* format, va_list& args, bool lineInfo )
 {
     std::string full;
     std::string log = "ReDefine";
@@ -64,21 +64,21 @@ static void Print( const char* prefix, const char* function, const char* format,
     full += std::string( text );
 
     // append filename/line number, if available
-    if( lineInfo && !current.File.empty() && current.LineNumber )
+    if( lineInfo && self && !self->Status.Current.File.empty() && self->Status.Current.LineNumber )
     {
         full += " : fileline<";
-        full += current.File;
+        full += self->Status.Current.File;
         full += ":";
-        full += std::to_string( (long long)current.LineNumber );
+        full += std::to_string( (long long)self->Status.Current.LineNumber );
         full += ">";
     }
 
     // append currently processed line
 
-    if( !current.Line.empty() )
+    if( self && !self->Status.Current.Line.empty() )
     {
         full += " :: ";
-        full += current.Line;
+        full += self->Status.Current.Line;
     }
 
     // show && save
@@ -175,7 +175,7 @@ void ReDefine::DEBUG( const char* function, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( "DEBUG", function, format, list, true, Status.Current );
+    Print( this, "DEBUG", function, format, list, true );
     va_end( list );
 }
 
@@ -183,7 +183,7 @@ void ReDefine::WARNING( const char* func, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( "WARNING", nullptr, format, list, true, Status.Current );
+    Print( this, "WARNING", nullptr, format, list, true );
     va_end( list );
 }
 
@@ -191,7 +191,7 @@ void ReDefine::LOG( const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( nullptr, nullptr, format, list, false, Status.Current );
+    Print( this, nullptr, nullptr, format, list, false );
     va_end( list );
 }
 
