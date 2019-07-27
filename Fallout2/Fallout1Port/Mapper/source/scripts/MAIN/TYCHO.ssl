@@ -64,7 +64,6 @@ procedure TychoTactics;
 procedure TychoClose;
 procedure TychoModerate;
 procedure TychoFar;
-procedure sleeping;
 
 variable night_person;
 variable wake_time;
@@ -100,6 +99,11 @@ procedure PlayerTraitor;
 #define EVENT_FLOAT_JOIN 						(2)
 #define is_junktown_enemy 						((global_var(DUDE_ENEMY_JUNK_CITIZEN) > 0) or (global_var(DUDE_ENEMY_JUNK_BOXER) > 0) or (global_var(ENEMY_JUNKTOWN) > 0))
 #define is_in_junktown 							((cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL))
+
+#define sleep_time 		(2200)
+#define wake_time 		(1600)
+#define home_tile 		(19690)
+#define sleep_tile 		(7000)
 
 procedure Node998 begin
 end
@@ -184,7 +188,7 @@ end
 
 procedure critter_p_proc begin
 	if (global_var(TYCHO_HIRELING_STATUS) < 2) then begin
-		call sleeping;
+		sleeping
 	end
 	else if (Tycho_In_Party) then begin
       party_member_follow_dude
@@ -231,12 +235,6 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-variable
-	sleep_time := 2200,
-	wake_time := 1600,
-	home_tile := 19690,
-	sleep_tile := 7000;
-
 	// TODO: Delete??
 	if (obj_is_carrying_obj_pid(self_obj, PID_NUKA_COLA) >= 2) then begin
 		cola2_ptr := obj_carrying_pid_obj(self_obj, PID_NUKA_COLA);
@@ -660,55 +658,6 @@ procedure TychoFar begin
 	set_global_var(TYCHO_DISTANCE_VAL, 6);*/
 	gsay_message(235, 201, 50);
 	call Tycho22;
-end
-
-procedure sleeping begin
-	if (local_var(LVAR_Sleeping) == 1) then begin
-
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(LVAR_Sleeping, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(LVAR_Sleeping, 0);
-				end
-			end
-		end
-
-	end
-	else begin
-
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(LVAR_Sleeping, 1);
-				end
-
-			end
-			else begin
-
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(LVAR_Sleeping, 1);
-				end
-
-			end
-		end
-
-	end
 end
 
 procedure TychoCombatTactics begin

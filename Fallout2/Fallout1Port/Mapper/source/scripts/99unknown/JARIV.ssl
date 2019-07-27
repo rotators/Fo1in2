@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat_p_proc;//    script_action == 13
@@ -30,8 +32,9 @@ procedure guard07_1;
 procedure guardend;
 
 procedure set_sleep_tile;
-procedure sleeping;
 procedure items_held;
+
+procedure GuardDownReact;
 
 variable RightHand := 0;
 variable LeftHand := 0;
@@ -44,25 +47,13 @@ variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
-variable hostile;
+
+variable tmp_hostile;
 variable initial :=  0;
 variable round_counter;
 variable Warned_Tile;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
+#define LVAR_Sleeping 							(9)
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
@@ -81,7 +72,7 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-		
+
 		if not(initial) then begin
 			initial :=  1;
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 2);
@@ -160,7 +151,7 @@ begin
 		round_counter := round_counter + 1;
 	end
 	if (round_counter > 3) then begin
-		if not(global_var(ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
+		if not(global_var(ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
 			set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
 			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 5);
 		end
@@ -170,29 +161,29 @@ end
 procedure critter_p_proc
 begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
-		if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
-			hostile := 1;
+		if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
+			tmp_hostile := 1;
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
-			
+
 			if (dude_is_armed) then begin
 				if (map_var(0) == 1) then begin
 					call guard11;
 				end
 			end
 			if global_var(ENEMY_SHADY_SANDS) then begin//  Is player ENEMY_SHADY_SANDS?
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 		end
 		if (local_var(7) == 1) then begin
 			if (tile_distance(tile_num(self_obj), tile_num(dude_obj)) < tile_distance(tile_num(self_obj), Warned_Tile)) then begin
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 		end
 	end
@@ -236,7 +227,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -301,9 +292,9 @@ end
 
 procedure timed_event_p_proc
 begin
-	
+
 	if (dude_is_armed) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 	else begin
 		set_map_var(0, 0);
@@ -366,13 +357,17 @@ procedure guard08
 begin
 	gsay_reply(113, 118);
 	giq_option(4, 113, 119, guardend, 50);
-	giq_option(4, 113, 120, DownReact, 50);
+	giq_option(4, 113, 120, GuardDownReact, 50);
+end
+
+procedure GuardDownReact begin
+	DownReact
 end
 
 procedure guard09
 begin
 	gsay_reply(113, 121);
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 113, exit_line, guardend, 50);
 end
 
@@ -400,7 +395,7 @@ end
 
 procedure guard06a
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 	BottomReact
 end
 
@@ -441,174 +436,6 @@ begin
 	end
 	wake_time := random(610, 650);
 	sleep_time := random(2110, 2150);
-end
-
-procedure sleeping
-begin
-	if (local_var(9) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(9, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(9, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, self_obj, 0);
-				end
-				else begin
-					set_local_var(9, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(9, 1);
-				end
-			end
-		end
-	end
-end
-
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	LevelToReact
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	LevelToReact
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 end
 
 procedure PickDeadBodyType

@@ -19,7 +19,6 @@ procedure PeasantC05;
 procedure PeasantC06;
 procedure PeasantC07;
 procedure PeasantCEnd;
-procedure sleeping;
 procedure flee_dude;
 
 variable night_person;
@@ -30,41 +29,10 @@ variable sleep_tile;
 
 import variable removal_ptr;
 
+#define LVAR_Sleeping 							(2)
 
-
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-		call destroy_p_proc;
-	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				call map_update_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
 procedure critter_p_proc
@@ -133,9 +101,8 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
-	call sleeping;
+procedure map_update_p_proc begin
+	sleeping
 end
 
 procedure pickup_p_proc
@@ -275,48 +242,6 @@ end
 
 procedure PeasantCEnd
 begin
-end
-
-procedure sleeping
-begin
-	if (local_var(2) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(2, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(2, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, sleep_tile, 0);
-				end
-				else begin
-					set_local_var(2, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(2, 1);
-				end
-			end
-		end
-	end
 end
 
 procedure flee_dude

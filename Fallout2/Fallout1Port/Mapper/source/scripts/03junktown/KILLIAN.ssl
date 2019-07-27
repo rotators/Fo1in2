@@ -1,14 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+	Killian Darkwaters - Junktown, shop owner
+
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\MAPJUNKKILL.h"
+
+#define NAME                    SCRIPT_KILLIAN
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+
+
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 
 procedure KillianEnd;
 procedure KillianCbt;
@@ -126,7 +138,6 @@ procedure soundcheck;
 procedure playback;
 procedure get_stuff_from_safe;
 procedure put_stuff_in_safe;
-procedure sleeping;
 
 import variable KillSafe_ptr;
 import variable Killian_ptr;
@@ -144,12 +155,18 @@ variable tmp_hostile;
 variable item;
 variable go_to_jail;
 variable night_person;
+
 variable home_tile := 26283;
 variable sleep_tile := 27896;
 variable wake_time := 650;
 variable sleep_time := 1900;
 
+variable SrcObj := 0;
+variable SrcIsParty := 0;
+
 variable remove_dude;
+
+#define LVAR_Sleeping 							(7)
 
 procedure Put_Back_On_Tables;//  Added by Sduibek for Fallout Fixt
 
@@ -178,7 +195,7 @@ begin
 			end
 			if (map_var(9) == 1) then begin
 				if ((cur_map_index == MAP_JUNKKILL) and (local_var(7) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12) and obj_can_see_obj(self_obj, dude_obj)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-					set_map_var(9, 0);
+					set_map_var(MVAR_dude_messing_with_Killians_home, 0);
 					ILLEGAL := 1;
 					TRESPASS := 1;
 					dialogue_system_enter;
@@ -186,13 +203,15 @@ begin
 				else begin
 					ILLEGAL := 0;
 					TRESPASS := 0;
-					set_map_var(9, 0);
+					set_map_var(MVAR_dude_messing_with_Killians_home, 0);
 				end
 			end
-			if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(2) and (cur_map_index == MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+			if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(MVAR_helped_Killian) and (cur_map_index == MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
 				dialogue_system_enter;
 			end
-			call sleeping;
+
+			sleeping
+
 			if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(7) == 0)) then begin
 				if (tile_num(self_obj) != home_tile) then begin
 					animate_move_obj_to_tile(self_obj, home_tile, 0);
@@ -251,14 +270,12 @@ begin
 	Killian_ptr := 0;
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_KILLIAN, 100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	remove_dude := 0;
 	Killian_ptr := self_obj;
 	if (global_var(KILLIAN_DEAD) == 1) then begin
@@ -280,25 +297,27 @@ begin
 				item_caps_adjust(self_obj, random(10, 150));
 			end
 			if (global_var(LARS_N_KILLIAN_ON_CASINO) == 1) then begin
-				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+				if (metarule(22, 0) == 0) then begin
+					set_obj_visibility(self_obj, 1);
+				end//  MAKE INVISIBLE
 			end
 			else begin
-				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				if (metarule(22, 0) == 0) then begin
+					set_obj_visibility(self_obj, 0);
+				end//  MAKE VISIBLE
 			end
 		end
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	ILLEGAL := 1;
 	ILLEGBEFORE := 1;
 	TRESPASS := 0;
 	dialogue_system_enter;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -405,12 +424,12 @@ begin
 						giq_option(-3, 47, 122, Killianx, 50);
 					end
 					else begin
-						if (map_var(2)) then begin
+						if (map_var(MVAR_helped_Killian)) then begin
 							call Killian47;
 						end
 						else begin
 							if (local_var(5) == 1) then begin
-								if ((global_var(GOT_CONFESSION) == 1) or (global_var(BUG_PLANTED) == 1) and (map_var(6) == 0)) then begin
+								if ((global_var(GOT_CONFESSION) == 1) or (global_var(BUG_PLANTED) == 1) and (map_var(MVAR_got_Gizmo) == 0)) then begin
 									call Killian54;
 								end
 								else begin
@@ -433,17 +452,17 @@ begin
 			end_dialogue;
 		end
 	end
-	if ((map_var(5) == 1) and (local_var(7) == 0) and (global_var(HIRED_BY_GIZMO) == 0)) then begin
+	if ((map_var(MVAR_assassin_seed) == 1) and (local_var(7) == 0) and (global_var(HIRED_BY_GIZMO) == 0)) then begin
 		LVar1 := create_object_sid(PID_KENJI, 0, 0, SCRIPT_KENJI);
 		item := create_object_sid(PID_HUNTING_RIFLE, 0, 0, -1);
 		add_obj_to_inven(LVar1, item);
 		critter_add_trait(LVar1, 1, 6, 13);
 		critter_add_trait(LVar1, 1, 5, 1);
 		critter_attempt_placement(LVar1, 28283, 0);
-		set_map_var(5, 2);
+		set_map_var(MVAR_assassin_seed, 2);
 	end
-	if (map_var(6) == 1) then begin
-		set_map_var(6, 2);
+	if (map_var(MVAR_got_Gizmo) == 1) then begin
+		set_map_var(MVAR_got_Gizmo, 2);
 		display_msg(message_str(SCRIPT_KILLIAN, 270));
 		give_exp_points(500);
 	end
@@ -519,7 +538,7 @@ begin
 	if ((global_var(HIRED_BY_GIZMO) == 1) and (global_var(GIZMO_DEAD) == 0) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
 		giq_option(4, 47, 272, Killian88, 50);
 	end
-	if ((global_var(HIRED_BY_KILLIAN) == 1) and (global_var(GIZMO_DEAD) == 0) and (map_var(6) == 0)) then begin
+	if ((global_var(HIRED_BY_KILLIAN) == 1) and (global_var(GIZMO_DEAD) == 0) and (map_var(MVAR_got_Gizmo) == 0)) then begin
 		giq_option(5, 47, 106, Killian23, 50);
 	end
 	giq_option(4, 47, 107, Killianx, 50);
@@ -529,8 +548,8 @@ end
 procedure Killian01
 begin
 	set_local_var(5, 1);
-	if ((map_var(5) == 0) and (global_var(GIZMO_DEAD) == 0) and (map_var(6) == 0) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
-		set_map_var(5, 1);
+	if ((map_var(MVAR_assassin_seed) == 0) and (global_var(GIZMO_DEAD) == 0) and (map_var(MVAR_got_Gizmo) == 0) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
+		set_map_var(MVAR_assassin_seed, 1);
 	end
 	if (local_var(1) == 3) then begin
 		if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
@@ -842,7 +861,7 @@ end
 
 procedure Killian47
 begin
-	set_map_var(2, 0);
+	set_map_var(MVAR_helped_Killian, 0);
 	gsay_reply(47, 198);
 	giq_option(4, 47, 199, Killian48, 50);
 	giq_option(4, 47, 200, Killian50, 50);
@@ -885,7 +904,7 @@ end
 procedure Killian52
 begin
 	set_global_var(CAPTURE_GIZMO, 2);
-	set_map_var(6, 2);
+	set_map_var(MVAR_got_Gizmo, 2);
 	gsay_message(47, 217, 51);
 	set_global_var(KILLIAN_SOMETHING_0, 1);
 	call Killianx1;
@@ -940,8 +959,8 @@ end
 
 procedure Killian59
 begin
-	if (map_var(6) == 0) then begin
-		set_map_var(6, 1);
+	if (map_var(MVAR_got_Gizmo) == 0) then begin
+		set_map_var(MVAR_got_Gizmo, 1);
 	end
 	gsay_reply(47, 230);
 	giq_option(4, 47, 231, Killian60, 50);
@@ -1048,7 +1067,7 @@ end
 procedure Killian89
 begin
 	set_local_var(9, 1);
-	set_map_var(2, 0);
+	set_map_var(MVAR_helped_Killian, 0);
 	float_msg(self_obj, message_str(SCRIPT_KILLIAN, 284), 0);
 end
 
@@ -1212,10 +1231,10 @@ end
 
 procedure Killian_give_stuff
 begin
-	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_TAPE_RECORDER)) then begin
+	if (obj_is_carrying_obj_pid(dude_obj, PID_TAPE_RECORDER)) then begin
 		destroy_object(obj_carrying_pid_obj(dude_obj, PID_TAPE_RECORDER));
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_ELECTRONIC_BUG)) then begin
+	if (obj_is_carrying_obj_pid(dude_obj, PID_ELECTRONIC_BUG)) then begin
 		destroy_object(obj_carrying_pid_obj(dude_obj, PID_ELECTRONIC_BUG));
 	end
 	giq_option(4, 47, 276, Killian_give_shotgun, 49);
@@ -1268,67 +1287,22 @@ begin
 	call Killian_give_stuff;
 end
 
-procedure sleeping
-begin
-	if (local_var(7) == 1) then begin
-		if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-			if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) >= 0)) then begin
-				if (tile_num(self_obj) != home_tile) then begin
-					animate_move_obj_to_tile(self_obj, home_tile, 0);
-				end
-				else begin
-					set_local_var(7, 0);
-				end
-			end
-			else begin
-				move_to(self_obj, home_tile, elevation(self_obj));
-				if (tile_num(self_obj) == home_tile) then begin
-					set_local_var(7, 0);
-				end
-			end
-		end
-	end
-	else begin
-		if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-			if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) >= 0)) then begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					animate_move_obj_to_tile(self_obj, sleep_tile, 0);
-				end
-				else begin
-					set_local_var(7, 1);
-				end
-			end
-			else begin
-				if (tile_num(self_obj) != sleep_tile) then begin
-					move_to(self_obj, sleep_tile, elevation(self_obj));
-				end
-				else begin
-					set_local_var(7, 1);
-				end
-			end
-		end
-	end
-end
-
-
-
-procedure get_stuff_from_safe
-begin
+procedure get_stuff_from_safe begin
 	if (item_caps_total(KillSafe_ptr) != 0) then begin
 		item_caps_adjust(self_obj, item_caps_total(KillSafe_ptr));
 		item_caps_adjust(KillSafe_ptr, -item_caps_total(KillSafe_ptr));
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(KillSafe_ptr, PID_STIMPAK) != 0) then begin// Stimpak
+	if (obj_is_carrying_obj_pid(KillSafe_ptr, PID_STIMPAK) != 0) then begin// Stimpak
 		item := obj_carrying_pid_obj(KillSafe_ptr, PID_STIMPAK);
 		rm_obj_from_inven(KillSafe_ptr, item);
 		add_obj_to_inven(self_obj, item);
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(KillSafe_ptr, PID_44_MAGNUM_JHP) != 0) then begin// .44 Magnum JHP
+	if (obj_is_carrying_obj_pid(KillSafe_ptr, PID_44_MAGNUM_JHP) != 0) then begin// .44 Magnum JHP
 		item := obj_carrying_pid_obj(KillSafe_ptr, PID_44_MAGNUM_JHP);
 		rm_obj_from_inven(KillSafe_ptr, item);
 		add_obj_to_inven(self_obj, item);
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(KillSafe_ptr, PID_BOTTLE_CAPS) != 0) then begin// Bottle Caps
+	if (obj_is_carrying_obj_pid(KillSafe_ptr, PID_BOTTLE_CAPS) != 0) then begin// Bottle Caps
 		item := obj_carrying_pid_obj(KillSafe_ptr, PID_BOTTLE_CAPS);
 		rm_obj_from_inven(KillSafe_ptr, item);
 		add_obj_to_inven(self_obj, item);
@@ -1341,17 +1315,17 @@ begin
 		item_caps_adjust(KillSafe_ptr, item_caps_total(self_obj));
 		item_caps_adjust(self_obj, -item_caps_total(self_obj));
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_STIMPAK) > 1) then begin// Stimpak
+	if (obj_is_carrying_obj_pid(self_obj, PID_STIMPAK) > 1) then begin// Stimpak
 		item := obj_carrying_pid_obj(self_obj, PID_STIMPAK);
 		rm_obj_from_inven(self_obj, item);
 		add_obj_to_inven(KillSafe_ptr, item);
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_44_MAGNUM_JHP) > 1) then begin// .44 Magnum JHP
+	if (obj_is_carrying_obj_pid(self_obj, PID_44_MAGNUM_JHP) > 1) then begin// .44 Magnum JHP
 		item := obj_carrying_pid_obj(self_obj, PID_44_MAGNUM_JHP);
 		rm_obj_from_inven(self_obj, item);
 		add_obj_to_inven(KillSafe_ptr, item);
 	end
-	/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) > 1) then begin//  Bottle Caps
+	if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) > 1) then begin//  Bottle Caps
 		item := obj_carrying_pid_obj(self_obj, PID_BOTTLE_CAPS);
 		rm_obj_from_inven(self_obj, item);
 		add_obj_to_inven(KillSafe_ptr, item);
