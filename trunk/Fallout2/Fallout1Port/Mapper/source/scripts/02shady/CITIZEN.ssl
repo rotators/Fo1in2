@@ -34,9 +34,6 @@ procedure Citizen04;
 procedure CitizenEnd;
 
 procedure flee_dude;
-procedure Goodbyes;
-
-variable exit_line;
 
 variable tmp_hostile;
 variable initial :=  0;
@@ -64,55 +61,12 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-		
+
 		if not(initial) then begin
 			initial :=  1;
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_SHADY_SANDS);
 			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET,AI_PEASANT);
 			add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-		end
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-					call description_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-							call look_at_p_proc;
-						end
-						else begin
-							if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-								call pickup_p_proc;
-							end
-							else begin
-								if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-									call talk_p_proc;
-								end
-								else begin
-									if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-										call timed_event_p_proc;
-									end
-									else begin
-										if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-											call damage_p_proc;
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
 		end
 	end
 end
@@ -135,7 +89,7 @@ begin
 	variable LVar0 := 0;
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 1;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		attack(dude_obj);
 	end
 	else begin
 		if (local_var(4) and (tile_distance_objs(dude_obj, self_obj) < 8)) then begin
@@ -175,7 +129,7 @@ begin
 			set_global_var(ENEMY_SHADY_SANDS, 1);//  Set ENEMY_SHADY_SANDS to True
 		end
 	end
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
@@ -227,7 +181,7 @@ begin
 	gsay_reply(115, DisplayMessage);
 	giq_option(4, 115, 106, Citizen03, 50);
 	giq_option(4, 115, 107, Citizen04, 50);
-	call Goodbyes;
+	Goodbyes;
 	giq_option(1, 115, exit_line, CitizenEnd, 50);
 end
 
@@ -260,11 +214,6 @@ begin
 		LVar1 := LVar1 + 1;
 	end
 	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 end
 
 procedure PickDeadBodyType

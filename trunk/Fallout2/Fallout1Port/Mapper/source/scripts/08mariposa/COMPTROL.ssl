@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;
 procedure critter_p_proc;//    script_action == 12
@@ -20,98 +22,36 @@ procedure GenSupr08;
 procedure GenSuprAlert;
 procedure GenSuprxx;
 
-procedure items_held;
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
 import variable ignoring_dude;
 import variable radio_computer;
 import variable valid_target;
 
 variable initial :=  0;
-variable hostile;
+variable tmp_hostile;
 
 
 
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if not(initial) then begin
 		initial :=  1;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 48);
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-					else begin
-						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-							call timed_event_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
 	end
 end
 
 procedure critter_p_proc
 begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			hostile := 0;
-			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			tmp_hostile := 0;
+			attack(dude_obj);
 		end
 		else begin
 			if (global_var(VATS_ALERT)) then begin
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (not(map_var(4)) and not(ignoring_dude)) then begin
@@ -156,7 +96,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -166,13 +106,12 @@ begin
 		call GenSupr08;
 	end
 	else begin
-		call items_held;
-		if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+		if (dude_is_armed) then begin
 			if (random(0, 5) == 5) then begin
 				call GenSupr00;
 			end
 			else begin
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 		end
 		else begin
@@ -187,13 +126,13 @@ end
 
 procedure timed_event_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure GenSupr00
 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(101, 103)), 2);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure GenSupr03
@@ -230,7 +169,7 @@ end
 
 procedure GenSupr04
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 	gsay_message(433, random(112, 114), 51);
 end
 
@@ -243,7 +182,7 @@ end
 
 procedure GenSupr06
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 	gsay_message(433, random(118, 120), 51);
 end
 
@@ -257,7 +196,7 @@ end
 procedure GenSupr08
 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(124, 127)), 2);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure GenSuprAlert

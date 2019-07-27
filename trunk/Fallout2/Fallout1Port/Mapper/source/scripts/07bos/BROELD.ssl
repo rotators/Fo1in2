@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;
 procedure critter_p_proc;//    script_action == 12
@@ -7,10 +9,8 @@ procedure pickup_p_proc;//    script_action == 4
 procedure look_at_p_proc;//    script_action == 21
 procedure destroy_p_proc;//    script_action == 18
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
-
-
 
 procedure start
 begin
@@ -49,15 +49,15 @@ end
 procedure critter_p_proc
 begin
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
-		hostile := 0;
+		tmp_hostile := 0;
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		set_global_var(ENEMY_BROTHERHOOD, 1);
-		hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 end
 
@@ -69,7 +69,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure look_at_p_proc

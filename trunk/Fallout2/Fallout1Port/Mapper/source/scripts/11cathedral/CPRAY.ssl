@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat;
@@ -9,99 +11,43 @@ procedure destroy_p_proc;//    script_action == 18
 procedure look_at_p_proc;//    script_action == 21
 procedure zamin;
 procedure goto00;
-procedure items_held;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable DISGUISED;
 variable ARMED;
 variable rndx;
 
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
-
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if Only_Once then begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 69);
 		Only_Once := 0;
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
+
 
 procedure combat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 end
 
 procedure pickup_p_proc
 begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
@@ -142,8 +88,8 @@ procedure zamin
 begin
 	DISGUISED := 0;
 	ARMED := 0;
-	call items_held;
-	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+
+	if (dude_is_armed) then begin
 		ARMED := 1;
 	end
 	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin

@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat_p_proc;//    script_action == 13
@@ -39,6 +41,8 @@ procedure SaulCombat;
 procedure create_challenger;
 procedure sleeping;
 
+procedure Saul_UpReact;
+
 import variable challenger_ptr;
 import variable fight;
 import variable Saul_loses;
@@ -50,109 +54,15 @@ variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
-variable HOSTILE;
+variable tmp_hostile;
 variable round_counter;
 variable sleeping_disabled;
 variable challenger_hits;
 variable Saul_hits;
 variable whose_turn;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-procedure items_held;
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
-	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-				call description_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-							call map_enter_p_proc;
-						end
-						else begin
-							if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-								call map_update_p_proc;
-							end
-							else begin
-								if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-									call talk_p_proc;
-								end
-								else begin
-									if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-										call timed_event_p_proc;
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
 end
 
 procedure combat_p_proc
@@ -170,9 +80,9 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		HOSTILE := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 	else begin
 		if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
@@ -202,7 +112,7 @@ begin
 	end
 	if (global_var(DUDE_ENEMY_JUNK_BOXER) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
-			attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+			attack(dude_obj);
 		end
 	end
 end
@@ -224,7 +134,7 @@ begin
 		set_global_var(ENEMY_JUNKTOWN, 1);
 		set_global_var(DUDE_ENEMY_JUNK_BOXER, 1);
 	end
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
@@ -287,7 +197,7 @@ end
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+	get_reaction
 	if (local_var(4)) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), 0);
 	end
@@ -300,8 +210,7 @@ begin
 				float_msg(self_obj, message_str(SCRIPT_ENEMY, 104), 2);
 			end
 			else begin
-				call items_held;
-				if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+				if (dude_is_armed) then begin
 					call Saul06;
 				end
 				else begin
@@ -511,13 +420,13 @@ begin
 	if (not(local_var(6))) then begin
 		giq_option(4, 528, 139, Saul14, 50);
 	end
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
 procedure Saul12
 begin
-	call UpReact;
+	UpReact
 	if (local_var(1) == 1) then begin
 		gsay_reply(528, 140);
 	end
@@ -527,7 +436,7 @@ begin
 	end
 	giq_option(4, 528, 143, Saul13, 50);
 	giq_option(4, 528, 144, Saul14, 50);
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
@@ -537,7 +446,7 @@ begin
 	gsay_reply(528, 145);
 	giq_option(4, 528, 146, Saul19, 50);
 	giq_option(4, 528, 147, Saul14, 50);
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
@@ -548,7 +457,7 @@ begin
 	if (not(local_var(5))) then begin
 		giq_option(4, 528, 149, Saul13, 50);
 	end
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
@@ -562,7 +471,7 @@ begin
 		giq_option(6, 528, 153, Saul16, 49);
 	end
 	else begin
-		call Goodbyes;
+		Goodbyes;
 		giq_option(4, 528, exit_line, SaulEnd, 50);
 	end
 	giq_option(6, 528, 154, Saul24, 50);
@@ -570,10 +479,10 @@ end
 
 procedure Saul16
 begin
-	call UpReact;
+	UpReact
 	gsay_reply(528, 155);
 	giq_option(4, 528, 156, Saul18, 50);
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
@@ -585,7 +494,7 @@ begin
 	if ((global_var(TRISH_STATUS) bwand 1) or (global_var(TRISH_STATUS) bwand 4) and not(global_var(TRISH_STATUS) bwand 64)) then begin
 		giq_option(5, 528, 159, Saul20, 50);
 	end
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
@@ -610,7 +519,7 @@ end
 procedure Saul18a
 begin
 	set_local_var(1, 1);
-	call LevelToReact;
+	LevelToReact
 	call Saul09;
 end
 
@@ -619,10 +528,10 @@ begin
 	gsay_reply(528, 166);
 	giq_option(4, 528, 168, Saul18, 50);
 	if (get_critter_stat(dude_obj, STAT_iq) >= 6) then begin
-		giq_option(6, 528, 167, UpReact, 49);
+		giq_option(6, 528, 167, Saul_UpReact, 49);
 	end
 	else begin
-		call Goodbyes;
+		Goodbyes;
 		giq_option(4, 528, 169, SaulEnd, 50);
 	end
 end
@@ -655,7 +564,7 @@ end
 
 procedure Saul21
 begin
-	call UpReact;
+	UpReact
 	if (not(global_var(TRISH_STATUS) bwand 16)) then begin
 		set_global_var(TRISH_STATUS, global_var(TRISH_STATUS) + 16);
 	end
@@ -689,7 +598,7 @@ begin
 	if (not(local_var(5))) then begin
 		giq_option(4, 528, 184, Saul13, 50);
 	end
-	call Goodbyes;
+	Goodbyes;
 	giq_option(4, 528, exit_line, SaulEnd, 50);
 end
 
@@ -750,135 +659,15 @@ end
 
 procedure SaulCombat
 begin
-	HOSTILE := 1;
+	tmp_hostile := 1;
 end
 
 procedure SaulEnd
 begin
 end
 
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
+procedure Saul_UpReact
 begin
 	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
+	ReactToLevel
 end

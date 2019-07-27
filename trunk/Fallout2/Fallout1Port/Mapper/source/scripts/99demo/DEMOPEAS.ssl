@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;
 procedure destroy_p_proc;//    script_action == 18
@@ -11,7 +13,7 @@ procedure PeasantD02;
 procedure PeasantD03;
 procedure PeasantD04;
 
-variable hostile;
+variable tmp_hostile;
 variable armed;
 variable initial :=  0;
 
@@ -20,15 +22,6 @@ import variable growling;
 import variable smartass;
 import variable smartass2;
 
-procedure items_held;
-
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
-
 procedure start
 begin
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +29,7 @@ begin
 //display_msg("DEMOPEAS.INT - Contact Sduibek if you see this message.");
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 	fixt_critter_healing
-	
+
 	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
 		call destroy_p_proc;
 	end
@@ -55,7 +48,7 @@ begin
 			end
 			else begin
 				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+					attack(dude_obj);
 				end
 				else begin
 					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
@@ -79,33 +72,6 @@ begin
 	end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
-
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
@@ -118,8 +84,8 @@ begin
 			call PeasantD04;
 		end
 		else begin
-			call items_held;
-			if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+
+			if (dude_is_armed) then begin
 				call PeasantD01;
 			end
 			else begin
@@ -136,8 +102,8 @@ end
 
 procedure weapon_check
 begin
-	call items_held;
-	if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) then begin
+
+	if (dude_is_armed) then begin
 		armed := 1;
 	end
 	else begin

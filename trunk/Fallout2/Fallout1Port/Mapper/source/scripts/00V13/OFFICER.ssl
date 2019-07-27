@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
@@ -43,30 +45,12 @@ procedure Officer30;
 procedure Officer31;
 procedure OfficerCombat;
 procedure OfficerEnd;
-procedure items_held;
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
 
-variable hostile;
+variable tmp_hostile;
 import variable SecDoor_ptr;
 import variable armory_access;
 import variable Officer_ptr;
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
+
 procedure PickDeadBodyType;
 variable DeathType := 57;
 
@@ -87,7 +71,7 @@ begin
 	end
 	else begin
 		fixt_critter_healing
-		
+
 		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
 			call critter_p_proc;
 		end
@@ -114,38 +98,11 @@ begin
 	end
 end
 
-procedure items_held
-begin
-	SubtypeWEP := 0;
-	if critter_inven_obj(dude_obj, 1) then begin
-		RightHand := critter_inven_obj(dude_obj, 1);
-		PIDright := obj_pid(RightHand);
-		if obj_item_subtype(RightHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		RightHand := 0;
-		PIDright := 0;
-	end
-	if critter_inven_obj(dude_obj, 2) then begin
-		LeftHand := critter_inven_obj(dude_obj, 2);
-		PIDleft := obj_pid(LeftHand);
-		if obj_item_subtype(LeftHand) == 3 then begin
-			SubtypeWEP := 1;
-		end
-	end
-	else begin
-		LeftHand := 0;
-		PIDleft := 0;
-	end
-end
-
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 	else begin
 		if (global_var(VAULT_13_HOSTILE)) then begin
@@ -167,7 +124,7 @@ begin
 				else begin
 					if (not(armory_access) and (elevation(dude_obj) == elevation(self_obj))) then begin
 						if (tile_distance(tile_num(dude_obj), 21292) < 2) then begin
-							hostile := 1;
+							tmp_hostile := 1;
 						end
 					end
 				end
@@ -189,7 +146,7 @@ begin
 		set_global_var(VAULT_13_HOSTILE, 1);
 	end
 
-	inc_good_critter		
+	inc_good_critter
 	Officer_ptr := 0;
 end
 
@@ -201,21 +158,22 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+
+	get_reaction
+
 	start_gdialog(178, self_obj, 4, -1, -1);
 	gsay_start;
 	if (global_var(VAULT_13_HOSTILE)) then begin
 		call Officer00;
 	end
 	else begin
-		call items_held;
-		if (PIDright != 79) and (PIDright != 205) and (PIDleft != 79) and (PIDleft != 205) and (SubtypeWEP == 1) and (local_var(14) == 0) then begin
+		if dude_is_armed and (local_var(14) == 0) then begin
 			call Officer27;
 		end
 		else begin
@@ -249,7 +207,7 @@ end
 procedure Officer00
 begin
 	gsay_message(178, 100, 51);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure Officer01
@@ -294,7 +252,7 @@ end
 
 procedure Officer07
 begin
-	call UpReact;
+	UpReact
 	gsay_message(178, 116, 49);
 end
 
@@ -307,7 +265,7 @@ end
 
 procedure Officer09
 begin
-	call DownReact;
+	DownReact
 	gsay_message(178, 120, 51);
 end
 
@@ -460,138 +418,11 @@ end
 
 procedure OfficerCombat
 begin
-	call BigDownReact;
-	hostile := 1;
+	BigDownReact
+	tmp_hostile := 1;
 end
 
-procedure OfficerEnd
-begin
-end
-
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
+procedure OfficerEnd begin
 end
 
 procedure PickDeadBodyType// FINISHED, for Vault 13

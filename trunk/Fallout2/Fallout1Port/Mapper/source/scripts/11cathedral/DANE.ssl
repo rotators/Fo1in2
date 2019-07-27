@@ -1,4 +1,6 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;
 procedure talk_p_proc;//    script_action == 11
@@ -35,30 +37,13 @@ procedure dane24;
 procedure danemore;
 procedure danereturn;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
-
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-
-
 
 procedure start
 begin
 	fixt_critter_healing
-	
+
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 20);
@@ -73,7 +58,7 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
@@ -100,16 +85,16 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
-		attack_complex(dude_obj, 0, 1, 0, 0, 30000, 0, 0);
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 end
 
 procedure talk_p_proc
 begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	call get_reaction;
+	get_reaction
 	start_gdialog(-1, self_obj, 4, -1, -1);
 	gsay_start;
 	if (local_var(6) == 0) then begin
@@ -227,7 +212,7 @@ end
 procedure social_skills
 begin
 	script_overrides;
-	call get_reaction;
+	get_reaction
 	call talk_p_proc;
 end
 
@@ -523,128 +508,4 @@ begin
 	end
 end
 
-procedure get_reaction
-begin
-	if (local_var(2) == 0) then begin
-		set_local_var(0, 50);
-		set_local_var(1, 2);
-		set_local_var(2, 1);
-		set_local_var(0, local_var(0) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);
-		set_local_var(0, local_var(0) + (10 * has_trait(0, dude_obj, 10)));
-		if (has_trait(0, dude_obj, 39)) then begin
-			if (global_var(PLAYER_REPUTATION_GENERAL) > 0) then begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		else begin
-			if (local_var(3) == 1) then begin
-				set_local_var(0, local_var(0) - global_var(PLAYER_REPUTATION_GENERAL));
-			end
-			else begin
-				set_local_var(0, local_var(0) + global_var(PLAYER_REPUTATION_GENERAL));
-			end
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			set_local_var(0, local_var(0) - 30);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) + 20);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_local_var(0, local_var(0) - 20);
-		end
-		call ReactToLevel;
-	end
-end
 
-procedure ReactToLevel
-begin
-	if (local_var(0) <= 25) then begin
-		set_local_var(1, 1);
-	end
-	else begin
-		if (local_var(0) <= 75) then begin
-			set_local_var(1, 2);
-		end
-		else begin
-			set_local_var(1, 3);
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (local_var(1) == 1) then begin
-		set_local_var(0, random(1, 25));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			set_local_var(0, random(26, 75));
-		end
-		else begin
-			set_local_var(0, random(76, 100));
-		end
-	end
-end
-
-procedure UpReact
-begin
-	set_local_var(0, local_var(0) + 10);
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	set_local_var(0, local_var(0) - 10);
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	set_local_var(1, 1);
-	set_local_var(0, 1);
-end
-
-procedure TopReact
-begin
-	set_local_var(0, 100);
-	set_local_var(1, 3);
-end
-
-procedure BigUpReact
-begin
-	set_local_var(0, local_var(0) + 25);
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	set_local_var(0, local_var(0) - 25);
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	set_local_var(1, local_var(1) + 1);
-	if (local_var(1) > 3) then begin
-		set_local_var(1, 3);
-	end
-	call LevelToReact;
-end
-
-procedure DownReactLevel
-begin
-	set_local_var(1, local_var(1) - 1);
-	if (local_var(1) < 1) then begin
-		set_local_var(1, 1);
-	end
-	call LevelToReact;
-end
-
-procedure Goodbyes
-begin
-	exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-end
