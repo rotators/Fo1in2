@@ -357,7 +357,7 @@
 #define SCRIPT_CODEDISK  (350)  //  CodeDisk.int    ; Holodisk w/ Brotherhood Honor Code                                          
 #define SCRIPT_GENGAMBL  (351)  //  GenGambl.int    ; generic gambler in junktown                                                 
 #define SCRIPT_PHIL      (352)  //  Phil.int        ; Phil is trying to get into his Junktown Condo
-#define SCRIPT_JUNKDOG   (353)  //  Junkdog.int     ; dog who is blocking phil from the Condo
+#define SCRIPT_DOGMEAT   (353)  //  Junkdog.int     ; dog who is blocking phil from the Condo
 #define SCRIPT_CHEPSLOT  (354)  //  ChepSlot.int    ; cheapy slot machine                                               
 #define SCRIPT_GOODSLOT  (355)  //  GoodSlot.int    ; Good paying slot machine                                          
 #define SCRIPT_LOWJACK   (356)  //  LowJack.int     ; low stakes Blackjack
