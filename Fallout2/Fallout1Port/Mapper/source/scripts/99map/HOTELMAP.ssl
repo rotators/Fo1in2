@@ -17,89 +17,87 @@ procedure start;
 variable party_elevation;
 variable dude_start_hex;
 
-procedure Invasion;
+procedure start begin
+end
 
-
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		if (elevation(dude_obj) == 0) then begin
-			Darkness;
-		end
-		else begin
-			Lighting;
-		end
-		if (global_var(LOAD_MAP_INDEX) == 3) then begin
-			override_map_start(94, 136, 1, 5);
-		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 12) then begin
-				override_map_start(143, 64, 0, 2);
-			end
-			else begin
-				override_map_start(94, 136, 1, 5);
-			end
-		end
-		if (map_first_run) then begin
-			display_msg(message_str(SCRIPT_SHADYWST, 106));
-		end
-		set_global_var(MARK_NECROP_1, 1);//Mark Hotel on the worldmap button list / town selection screen
-		//call Invasion;
-		if ((global_var(NECROPOLIS_WAS_INVADED) == 1) and (metarule(22, 0) == 0) and (map_var(10) == 0)) then begin
-			set_map_var(10, 1);
-			kill_critter_type(PID_ZOMBIE_GUARD, 1);
-			kill_critter_type(PID_MINDLESS_GHOUL, 1);
-			kill_critter_type(PID_GHOUL, 1);
-			kill_critter_type(PID_GLOWING_ONE, 1);
-			fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(fugee_ptr, 1, 5, 48);
-			fugee_hex := 25717;
-			critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-			fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(fugee_ptr, 1, 5, 48);
-			fugee_hex := 24516;
-			critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-			fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(fugee_ptr, 1, 5, 48);
-			fugee_hex := 24927;
-			critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-		end
-		if ((global_var(NECROP_WATER_CHIP_TAKEN) == 1) and (metarule(22, 0) == 0)) then begin
-			if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
-				if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
-					kill_critter_type(PID_ZOMBIE_GUARD, 2);
-					kill_critter_type(PID_MINDLESS_GHOUL, 2);
-					kill_critter_type(PID_GHOUL, 2);
-					kill_critter_type(PID_GLOWING_ONE, 2);
-				end
-			end
-		end
-
+procedure map_enter_p_proc begin
+	if (elevation(dude_obj) == 0) then begin
+		Darkness;
 	end
 	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			if (elevation(dude_obj) == 0) then begin
-				Darkness;
-			end
-			else begin
-				Lighting;
-			end
-			if (Use_Manhole_Top) then begin
-				animate_stand_reverse_obj(Manhole_Pointer_Top);
-			end
-			if (Use_Manhole_Middle) then begin
-				animate_stand_reverse_obj(Manhole_Pointer_Middle);
-			end
-			if (Use_Manhole_Bottom) then begin
-				animate_stand_reverse_obj(Manhole_Pointer_Bottom);
-			end
+		Lighting;
+	end
 
+	if (global_var(LOAD_MAP_INDEX) == 3) then begin
+		override_map_start(94, 136, 1, 5);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 12) then begin
+		override_map_start(143, 64, 0, 2);
+	end
+	else begin
+		override_map_start(94, 136, 1, 5);
+	end
+
+	if (map_first_run) then begin
+		display_msg(message_str(SCRIPT_SHADYWST, 106));
+	end
+
+	set_global_var(MARK_NECROP_1, 1);//Mark Hotel on the worldmap button list / town selection screen
+
+	//check_invasion
+
+	if ((global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1) and (metarule(22, 0) == 0) and (map_var(10) == 0)) then begin
+		set_map_var(10, 1);
+
+		kill_critter_type(PID_ZOMBIE_GUARD, 1);
+		kill_critter_type(PID_MINDLESS_GHOUL, 1);
+		kill_critter_type(PID_GHOUL, 1);
+		kill_critter_type(PID_GLOWING_ONE, 1);
+
+		fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(fugee_ptr, 1, 5, 48);
+		fugee_hex := 25717;
+		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
+
+		fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(fugee_ptr, 1, 5, 48);
+		fugee_hex := 24516;
+		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
+
+		fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(fugee_ptr, 1, 5, 48);
+		fugee_hex := 24927;
+		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
+
+	end
+	if ((global_var(NECROP_WATER_CHIP_TAKEN) == 1) and (metarule(22, 0) == 0)) then begin
+
+		if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
+			if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
+				kill_critter_type(PID_ZOMBIE_GUARD, 2);
+				kill_critter_type(PID_MINDLESS_GHOUL, 2);
+				kill_critter_type(PID_GHOUL, 2);
+				kill_critter_type(PID_GLOWING_ONE, 2);
+			end
 		end
 
 	end
 end
 
-procedure Invasion begin
-	check_invasion
+procedure map_update_p_proc begin
+	if (elevation(dude_obj) == 0) then begin
+		Darkness;
+	end
+	else begin
+		Lighting;
+	end
+	if (Use_Manhole_Top) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Top);
+	end
+	if (Use_Manhole_Middle) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Middle);
+	end
+	if (Use_Manhole_Bottom) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Bottom);
+	end
 end
-

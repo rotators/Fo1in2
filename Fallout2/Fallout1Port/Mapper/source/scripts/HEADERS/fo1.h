@@ -101,7 +101,7 @@
 										end
 
 //==============================================================
-// Water Timer related:
+// Water Chip related:
 #define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
 #define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
 
@@ -111,13 +111,36 @@
 #define hub_invaded							(global_var(THE_HUB_WAS_INVADED) == 1)
 #define bos_invaded							(global_var(BROTHERHOOD_WAS_INVADED) == 1)
 #define boneyard_invaded					(global_var(FOLLOWERS_INVADED) == 1)
-#define necropolis_invaded 					(global_var(NECROPOLIS_WAS_INVADED) == 1)
+#define necropolis_invaded 					(global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)
 #define shady_invaded 						(global_var(SHADY_SANDS_WAS_INVADED) == 1)
 #define junktown_invaded 					(global_var(JUNKTOWN_WAS_INVADED) == 1)
 
+// After x days, Vault 13 gets invaded:
+#define hub_invasion_date 					(get_days_passed + (ONE_GAME_DAY * THE_HUB_INVADED_DATE))
+#define get_hub_days_left 					(global_var(THE_HUB_INVADED_DATE) - get_days_passed)
+
+#define bos_invasion_date 					(get_days_passed + (ONE_GAME_DAY * BROTHERHOOD_INVADED_DATE))
+#define get_bos_days_left 					(global_var(BROTHERHOOD_INVADED_DATE) - get_days_passed)
+
+#define boneyard_invasion_date 				(get_days_passed + (ONE_GAME_DAY * FOLLOWERS_INVADED_DATE))
+#define get_boneyard_days_left 				(global_var(FOLLOWERS_INVADED_DATE) - get_days_passed)
+
+// Afer 110 days, Necropolis gets invaded:
+#define necropolis_invasion_date 			(get_days_passed + (ONE_GAME_DAY * GVAR_NECROPOLIS_INVADED_DATE))
+#define get_necropolis_days_left 			(global_var(GVAR_NECROPOLIS_INVADED_DATE) - get_days_passed)
+
+#define shady_invasion_date 				(get_days_passed + (ONE_GAME_DAY * SHADY_SANDS_INVADED_DATE))
+#define get_shady_days_left 				(global_var(SHADY_SANDS_INVADED_DATE) - get_days_passed)
+
+#define junktown_invasion_date 				(get_days_passed + (ONE_GAME_DAY * JUNKTOWN_INVADED_DATE))
+#define get_junktown_days_left 				(global_var(JUNKTOWN_INVADED_DATE) - get_days_passed)
+
+
+// TODO: This is broken now!!! Remove from map scripts! 
+// We are tracking the invasions via global script.
 #define check_invasion		if (global_var(MASTER_BLOWN) == 0) then begin \
-								if (global_var(NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(NECROPOLIS_WAS_INVADED, 1); \
+								if (global_var(GVAR_NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
+									set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1); \
 								end \
 								if (global_var(THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
 									set_global_var(THE_HUB_WAS_INVADED, 1); \

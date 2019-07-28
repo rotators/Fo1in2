@@ -1,15 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure damage_p_proc;//    script_action == 14
-procedure talk_p_proc;//    script_action == 11
-procedure pickup_p_proc;//    script_action == 4
-//procedure look_at_p_proc;//    script_action == 21
-//procedure description_p_proc;//    script_action == 3
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+	Necropolis - Set the ghoul leader
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_SET
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure timed_event_p_proc;
+procedure damage_p_proc;
+procedure talk_p_proc;
+procedure pickup_p_proc;
+procedure look_at_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
 
 procedure set00;
 procedure set00a;
@@ -130,61 +143,30 @@ variable initial :=  0;
 variable chip;
 variable setgone;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 30);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 78);
 	end
-	if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-		if (fixed_param == 1) then begin
-			set_local_var(9, 1);
-		end
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 21) then begin// 21 is look_at
-							script_overrides;
-							display_msg(message_str(SCRIPT_SET, 100));
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-								call destroy_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == 1) then begin
+		set_local_var(9, 1);
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (global_var(ENEMY_NECROPOLIS) and obj_can_see_obj(self_obj, dude_obj)) then begin
-		if (local_var(6) == 0) then begin
-			dialogue_system_enter;
-		end
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure critter_p_proc begin
+	if (global_var(ENEMY_NECROPOLIS) and obj_can_see_obj(self_obj, dude_obj)) and (local_var(6) == 0) then begin
+		dialogue_system_enter;
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	else if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		set_global_var(ENEMY_NECROPOLIS, 1);
 		attack(dude_obj);
@@ -205,56 +187,36 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(SET_DEAD, 1);
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		tmp_hostile := 1;
-	end
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure travel
-begin
+procedure travel begin
 	load_map(MAP_WATRSHD, 1);
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+
 	if (global_var(SUPER_MUTANTS_KILLED) >= global_var(MAX_MUTANTS)) then begin
 		if (global_var(NECROP_MUTANTS_KILLED) != 2) then begin
 			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
 			set_global_var(NECROP_MUTANTS_KILLED, 2);
 			if global_var(NECRO_30_DAYS_GVAR225) or global_var(FIXT_BUGFIXES_ONLY) then begin
 				set_global_var(NECRO_MUTANTS_TIME_LEFT, game_time / (10 * 60 * 60 * 24));
-				if (global_var(NECROPOLIS_INVADED_DATE) > (global_var(NECRO_MUTANTS_TIME_LEFT) + 30)) then begin
-					set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECRO_MUTANTS_TIME_LEFT) + 30);
+				if (global_var(GVAR_NECROPOLIS_INVADED_DATE) > (global_var(NECRO_MUTANTS_TIME_LEFT) + 30)) then begin
+					set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(NECRO_MUTANTS_TIME_LEFT) + 30);
 				end
 			end
 		end
@@ -981,8 +943,7 @@ begin
 	giq_option(4, 15, 293, setcbt, 51);
 end
 
-procedure set65
-begin
+procedure set65 begin
 	chip := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
 	if (chip != 0) then begin
 		rm_obj_from_inven(dude_obj, chip);

@@ -1,134 +1,120 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
+	Necropolis - Watershed super mutant
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_BARRY
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+
 procedure mutant01;
 procedure mutant02;
-procedure combat;
-procedure Critter_Action;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+procedure Node998;
 
-variable Hostile;
+variable tmp_hostile;
 variable init_teams := 0;
 variable noevent;
 variable loopcount;
 
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_GREEN)
 
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(init_teams)) then begin
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 79);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_SUPER_MUTANT_NECRO);
 		set_local_var(1, 0);
 		init_teams := 1;
 	end
-	else begin
-		if ((script_action == 11) and (global_var(SUPER_MUTANTS_KILLED) < 1)) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			if (global_var(WATERSHED_MUTANTS_LEAVE) == 0) then begin
-				call talk_p_proc;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(101));
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
+	if (global_var(SUPER_MUTANTS_KILLED) < 1) then begin
+		if (global_var(WATERSHED_MUTANTS_LEAVE) == 0) then begin
+
+			anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+			if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+				call mutant01;
 			end
 			else begin
-				display_msg(message_str(SCRIPT_BARRY, 104));
+				call mutant02;
 			end
+
 		end
 		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				script_overrides;
-				display_msg(message_str(SCRIPT_BARRY, 101));
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					Hostile := 1;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call Critter_Action;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
-			end
+			display_msg(mstr(104));
 		end
 	end
 end
 
-procedure talk_p_proc
-begin
-	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
-	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-		call mutant01;
-	end
-	else begin
-		call mutant02;
-	end
+procedure mutant01 begin
+	float(102);
+	call Node998;
 end
 
-procedure mutant01
-begin
-	float_msg(self_obj, message_str(SCRIPT_BARRY, 102), 3);
-	call combat;
+procedure mutant02 begin
+	float(103);
 end
 
-procedure mutant02
-begin
-	float_msg(self_obj, message_str(SCRIPT_BARRY, 103), 3);
+procedure Node998 begin
+	tmp_hostile := 1;
 end
 
-procedure combat
-begin
-	Hostile := 1;
-end
-
-procedure Critter_Action
-begin
+procedure critter_p_proc begin
 	if ((global_var(SUPER_MUTANTS_KILLED) > 0) and obj_can_see_obj(self_obj, dude_obj) and (global_var(WATERSHED_MUTANTS_LEAVE) < 1)) then begin
-		Hostile := 1;
+		tmp_hostile := 1;
 	end
-	if (Hostile > 0) then begin
-		Hostile := 0;
+
+	if (tmp_hostile > 0) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
+
 		if ((global_var(WATERSHED_MUTANTS_LEAVE) == 1) and (tile_num(self_obj) != 15507)) then begin
-			animate_move_obj_to_tile(self_obj, 15507, 0);
+		animate_move_obj_to_tile(self_obj, 15507, 0);
 		end
-		else begin
-			if ((global_var(WATERSHED_MUTANTS_LEAVE) == 1) and (tile_num(self_obj) == 15507)) then begin
-				set_global_var(WATERSHED_MUTANTS_LEAVE, 2);
-			end
-			else begin
-				if ((global_var(WATERSHED_MUTANTS_LEAVE) == 2) and (tile_num(self_obj) != 12536)) then begin
-					animate_move_obj_to_tile(self_obj, 12536, 0);
-				end
-				else begin
-					if ((tile_num(self_obj) == 12536) and (global_var(WATERSHED_MUTANTS_LEAVE) == 2)) then begin
-						if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-					end
-				end
+		else if ((global_var(WATERSHED_MUTANTS_LEAVE) == 1) and (tile_num(self_obj) == 15507)) then begin
+			set_global_var(WATERSHED_MUTANTS_LEAVE, 2);
+		end
+		else if ((global_var(WATERSHED_MUTANTS_LEAVE) == 2) and (tile_num(self_obj) != 12536)) then begin
+			animate_move_obj_to_tile(self_obj, 12536, 0);
+		end
+		else if ((tile_num(self_obj) == 12536) and (global_var(WATERSHED_MUTANTS_LEAVE) == 2)) then begin
+			if (metarule(22, 0) == 0) then begin
+				set_obj_visibility(self_obj, 1); //  MAKE INVISIBLE
 			end
 		end
+
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	set_global_var(SUPER_MUTANTS_KILLED, global_var(SUPER_MUTANTS_KILLED) + 1);
-	if (global_var(SUPER_MUTANTS_KILLED) >= global_var(MAX_MUTANTS)) then begin
-		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
-		set_global_var(NECROP_MUTANTS_KILLED, 2);
-		if global_var(NECRO_30_DAYS_GVAR225) or global_var(FIXT_BUGFIXES_ONLY) then begin
-			set_global_var(NECRO_MUTANTS_TIME_LEFT, game_time / (10 * 60 * 60 * 24));
-			if (global_var(NECROPOLIS_INVADED_DATE) > (global_var(NECRO_MUTANTS_TIME_LEFT) + 30)) then begin
-				set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECRO_MUTANTS_TIME_LEFT) + 30);
-			end
-		end
-	end
-	inc_evil_critter 
+
+	check_watershed_sm_killed
+	inc_evil_critter
 end

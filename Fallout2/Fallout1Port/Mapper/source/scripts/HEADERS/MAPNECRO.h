@@ -24,6 +24,15 @@
 										else begin \
 											call move_elevation; \
 										end \
+										
+										
+#define check_watershed_sm_killed 		if (global_var(SUPER_MUTANTS_KILLED) >= global_var(MAX_MUTANTS)) then begin \
+											set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3); \
+											set_global_var(NECROP_MUTANTS_KILLED, 2); \
+											if (global_var(GVAR_NECROPOLIS_INVADED_DATE) == 110) and get_necropolis_days_left > 30 then begin \
+												set_global_var(GVAR_NECROPOLIS_INVADED_DATE, ((game_time / ONE_GAME_DAY) + 30)); \
+											end \
+										end
 
 //MAP_GLOBAL_VARS:
 
