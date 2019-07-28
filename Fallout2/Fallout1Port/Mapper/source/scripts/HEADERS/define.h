@@ -234,7 +234,7 @@
 #define PERK_sniper              (24)
 #define PERK_silent_death        (25)
 #define PERK_action_boy          (26)
-///#define PERK_mental_block        (27)  -- Disabled FO2
+#define PERK_mental_block        (27)  //-- Disabled FO2
 #define PERK_lifegiver           (28)
 #define PERK_dodger              (29)
 #define PERK_snakeater           (30)
@@ -243,13 +243,13 @@
 #define PERK_master_thief        (33)
 #define PERK_speaker             (34)
 #define PERK_heave_ho            (35)
-///#define PERK_friendly_foe        (36)  -- Disabled FO2
+//#define PERK_friendly_foe        (36)  -- Disabled FO2
 #define PERK_pickpocket          (37)
 #define PERK_ghost               (38)
 #define PERK_cult_of_personality (39)
 #define PERK_scrounger           (40)  //-- Disabled FO2
 #define PERK_explorer            (41)
-///#define PERK_flower_child        (42)  -- Disabled FO2
+#define PERK_flower_child        (42) // -- Disabled FO2
 #define PERK_pathfinder          (43)
 #define PERK_animal_friend       (44) // -- Disabled FO2
 #define PERK_scout               (45)
