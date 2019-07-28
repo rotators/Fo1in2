@@ -3,19 +3,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
-#include <istream>
-#include <memory>
-#include <sstream>
 
-#include "FOClassic/CommandLine.h"
 #include "FOClassic/Ini.h"
 
 #include "ReDefine.h"
-#include "Types.h"
 
-constexpr uint16 MAX_LOGTEXT = 4096;
+constexpr unsigned short MAX_LOGTEXT = 4096;
 
-static uint StrLength( const char* str )
+static unsigned int StrLength( const char* str )
 {
     const char* str_ = str;
     while( *str )
@@ -28,8 +23,7 @@ static void Print( ReDefine* self, const char* prefix, const char* function, con
     std::string full;
     std::string log = "ReDefine";
 
-    // prefix is part of both message and logfile name
-
+    // prefix is part of message and logfile name
     if( prefix )
     {
         full += std::string( prefix );
@@ -42,7 +36,6 @@ static void Print( ReDefine* self, const char* prefix, const char* function, con
     log += ".log";
 
     // add current function
-
     if( function )
     {
         full += "(";
@@ -51,40 +44,47 @@ static void Print( ReDefine* self, const char* prefix, const char* function, con
     }
 
     // prepare text
-
     char text[MAX_LOGTEXT] = { 0 };
     std::vsnprintf( text, sizeof(text), format, args );
     text[MAX_LOGTEXT - 1] = 0;
 
     // skip empty text
-
     if( !StrLength( text ) )
         return;
 
     full += std::string( text );
 
     // append filename/line number, if available
-    if( lineInfo && self && !self->Status.Current.File.empty() && self->Status.Current.LineNumber )
+    if( lineInfo && self && !self->Status.Current.File.empty() )
     {
-        full += " : fileline<";
+        // use "fileline<F:L>" if line number is available
+        // use "file<F>" if line number is not available
+
+        full += " : file";
+        if( self->Status.Current.LineNumber )
+            full += "line";
+        full += "<";
+
         full += self->Status.Current.File;
-        full += ":";
-        full += std::to_string( (long long)self->Status.Current.LineNumber );
+        if( self->Status.Current.LineNumber )
+        {
+            full += ":";
+            full += std::to_string( (long long)self->Status.Current.LineNumber );
+        }
         full += ">";
     }
 
     // append currently processed line
-
     if( self && !self->Status.Current.Line.empty() )
     {
         full += " :: ";
-        full += self->Status.Current.Line;
+        full += self->TextGetTrimmed( self->Status.Current.Line );
     }
 
-    // show && save
-
+    // show...
     std::printf( "%s\n", full.c_str() );
 
+    // ...and save
     std::ofstream flog;
     flog.open( log, std::ios::out | std::ios::app );
     if( flog.is_open() )
@@ -120,7 +120,6 @@ void ReDefine::SStatus::Clear()
 //
 
 ReDefine::ReDefine() :
-    CommandLine( nullptr ),
     Config( nullptr )
 {}
 
@@ -129,12 +128,9 @@ ReDefine::~ReDefine()
     Finish();
 }
 
-bool ReDefine::Init( int argc /* = 0 */, char** argv /* = nullptr */ )
+void ReDefine::Init()
 {
     Finish();
-
-    if( argc && argv )
-        CommandLine = new CmdLine( argc, argv );
 
     // create config
     Config = new Ini();
@@ -145,17 +141,12 @@ bool ReDefine::Init( int argc /* = 0 */, char** argv /* = nullptr */ )
     std::remove( "ReDefine.WARNING.log" );
     std::remove( "ReDefine.log" );
 
-    return true;
+    // extern initialization
+    InitOperators();
 }
 
 void ReDefine::Finish()
 {
-    if( CommandLine )
-    {
-        delete CommandLine;
-        CommandLine = nullptr;
-    }
-
     if( Config )
     {
         delete Config;
@@ -165,8 +156,9 @@ void ReDefine::Finish()
     Status.Clear();
 
     // extern cleanup
-
     FinishDefines();
+    FinishOperators();
+    FinishVariables();
 }
 
 // logging
@@ -196,10 +188,8 @@ void ReDefine::LOG( const char* format, ... )
 }
 
 // generic file reading
-
-bool ReDefine::ReadFile( const std::string& path, std::vector<std::string>& lines )
+bool ReDefine::ReadFile( const std::string& filename, std::vector<std::string>& lines )
 {
-    std::string filename = Config->GetStr( "ReDefine", "ScriptsDir" ) + std::string( "/" ) + path;
     lines.clear();
 
     std::ifstream fstream;
@@ -226,34 +216,34 @@ bool ReDefine::ReadFile( const std::string& path, std::vector<std::string>& line
         }
     }
     else
-        WARNING( "cannot read file<[%s]/%s>", Config->GetStr( "ReDefine", "ScriptsDir" ).c_str(), path.c_str() );
+        WARNING( nullptr, "cannot read file<%s>", filename.c_str() );
 
     return result;
 }
 
-
-bool ReDefine::ReadConfig( const std::string& config )
+bool ReDefine::ReadConfig( const std::string& defines, const std::string& variablePrefix, const std::string& functionPrefix )
 {
-    if( config.empty() )
-    {
-        WARNING( __FUNCTION__, "empty config filename" );
+    if( !ReadConfigDefines( defines ) )
         return false;
-    }
 
-    if( !Config->LoadFile( config ) )
-    {
-        WARNING( __FUNCTION__, "cannot read config<%s>", config.c_str() );
+    if( !ReadConfigVariables( variablePrefix ) )
         return false;
-    }
 
-    if( Config->IsSectionKeyEmpty( "ReDefine", "ScriptsDir" ) )
-    {
-        WARNING( __FUNCTION__, "config setting<[ReDefine]->ScriptsDir> is empty or missing" );
-        return false;
-    }
-
-    if( !ReadConfigDefines() )
-        return false;
+    // if( !ReadConfigFunctions( functionPrefix ) )
+    //     return false;
 
     return true;
+}
+
+void ReDefine::ProcessHeaders( const std::string& path )
+{
+    for( const auto& header : Headers )
+    {
+        ProcessHeader( path, header );
+    }
+}
+
+void ReDefine::ProcessScripts( const std::string& path, bool readOnly /* = false */ )
+{
+    // LOG( "Process scripts..." );
 }

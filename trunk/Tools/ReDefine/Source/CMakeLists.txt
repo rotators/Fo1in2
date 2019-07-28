@@ -9,15 +9,18 @@ project( ReDefine )
 
 add_executable( ReDefine "" )
 target_sources( ReDefine
+	PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/ReDefine.h
+
 	PRIVATE
 		${CMAKE_CURRENT_LIST_FILE}
 		Main.cpp
 
 		Defines.cpp
+		Operators.cpp
 		ReDefine.cpp
-		ReDefine.h
 		Text.cpp
-		Types.h
+		Variables.cpp
 
 		# FOClassic
 		FOClassic/CommandLine.cpp

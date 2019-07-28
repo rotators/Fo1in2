@@ -1,6 +1,7 @@
 #include <climits>
 #include <cerrno>
 #include <cstdlib>
+#include <functional>
 #include <regex>
 
 #include "ReDefine.h"
@@ -29,6 +30,16 @@ bool ReDefine::TextGetInt( const std::string& text, int& result, const unsigned 
     result = l;
 
     return true;
+}
+
+std::string ReDefine::TextGetTrimmed( const std::string& text )
+{
+    std::string result = text;
+
+    result.erase( result.begin(), find_if( result.begin(), result.end(), std::not1( std::ptr_fun<int, int>( isspace ) ) ) );
+    result.erase( find_if( result.rbegin(), result.rend(), std::not1( std::ptr_fun<int, int>( isspace ) ) ).base(), result.end() );
+
+    return result;
 }
 
 bool ReDefine::TextIsDefine( const std::string& text )
