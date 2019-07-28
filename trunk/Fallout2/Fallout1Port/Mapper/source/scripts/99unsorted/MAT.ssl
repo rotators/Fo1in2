@@ -1,4 +1,18 @@
+/*
+
+	???
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
+
+#define NAME                    SCRIPT_MAT
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
@@ -27,82 +41,31 @@ procedure WakeUpCall;
 procedure MatCombat;
 procedure combat;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable SetDayNight;
 variable Sleeping;
 variable LastMove;
+
 variable CaravanAgain := 1;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
+
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 64);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 50);
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-							call timed_event_p_proc;
-						end
-						else begin
-							if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-								call map_enter_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure combat
-begin
-	hostile := 1;
+procedure combat begin
+	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if ((game_time_hour >= 600) and (game_time_hour < 700) or ((game_time_hour >= 700) and (game_time_hour < 1800))) then begin
@@ -123,15 +86,13 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
 	if ((game_time_hour >= 600) and (game_time_hour < 700) or ((game_time_hour >= 700) and (game_time_hour < 1800))) then begin
 		get_reaction
@@ -139,29 +100,25 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_HGENCVAN, 200));
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if ((game_time_hour >= 600) and (game_time_hour < 700) or ((game_time_hour >= 700) and (game_time_hour < 1800))) then begin
 		call SendToWork;
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
 		move_to(self_obj, 10114, 0);
 		if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
@@ -170,15 +127,13 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure SendToWork
-begin
+procedure SendToWork begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := 0;
@@ -188,60 +143,38 @@ begin
 		if (LVar0 == 1) then begin
 			LVar0 := 10518;
 		end
-		else begin
-			if (LVar0 == 2) then begin
-				LVar0 := 11117;
-			end
-			else begin
-				if (LVar0 == 3) then begin
-					LVar0 := 11115;
-				end
-				else begin
-					if (LVar0 == 4) then begin
-						LVar0 := 10913;
-					end
-					else begin
-						if (LVar0 == 5) then begin
-							LVar0 := 10711;
-						end
-						else begin
-							if (LVar0 == 6) then begin
-								LVar0 := 10313;
-							end
-							else begin
-								if (LVar0 == 7) then begin
-									LVar0 := 10115;
-								end
-								else begin
-									if (LVar0 == 8) then begin
-										LVar0 := 9913;
-									end
-									else begin
-										if (LVar0 == 9) then begin
-											LVar0 := 10111;
-										end
-										else begin
-											if (LVar0 == 10) then begin
-												LVar0 := 9918;
-											end
-											else begin
-												if (LVar0 == 11) then begin
-													LVar0 := 11317;
-												end
-												else begin
-													if (LVar0 == 12) then begin
-														LVar0 := 11111;
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+		else if (LVar0 == 2) then begin
+			LVar0 := 11117;
+		end
+		else if (LVar0 == 3) then begin
+			LVar0 := 11115;
+		end
+		else if (LVar0 == 4) then begin
+			LVar0 := 10913;
+		end
+		else if (LVar0 == 5) then begin
+			LVar0 := 10711;
+		end
+		else if (LVar0 == 6) then begin
+			LVar0 := 10313;
+		end
+		else if (LVar0 == 7) then begin
+			LVar0 := 10115;
+		end
+		else if (LVar0 == 8) then begin
+			LVar0 := 9913;
+		end
+		else if (LVar0 == 9) then begin
+			LVar0 := 10111;
+		end
+		else if (LVar0 == 10) then begin
+			LVar0 := 9918;
+		end
+		else if (LVar0 == 11) then begin
+			LVar0 := 11317;
+		end
+		else if (LVar0 == 12) then begin
+			LVar0 := 11111;
 		end
 		if (LVar0 == LastMove) then begin
 			LVar0 := 0;
@@ -255,8 +188,7 @@ begin
 	add_timer_event(self_obj, game_ticks(LVar1), 1);
 end
 
-procedure SendToSleep
-begin
+procedure SendToSleep begin
 	if (Sleeping == 0) then begin
 		Sleeping := 1;
 		SetDayNight := 0;
@@ -266,8 +198,7 @@ begin
 	end
 end
 
-procedure WakeUpCall
-begin
+procedure WakeUpCall begin
 	if (SetDayNight == 0) then begin
 		Sleeping := 0;
 		SetDayNight := 1;
@@ -279,8 +210,7 @@ begin
 	end
 end
 
-procedure MatDialog
-begin
+procedure MatDialog begin
 	start_gdialog(609, self_obj, 4, -1, -1);
 	gsay_start;
 	call Mat1;
@@ -288,13 +218,12 @@ begin
 	end_dialogue;
 end
 
-procedure MatEnd
-begin
+procedure MatEnd begin
 end
 
 procedure MatCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure Mat1
@@ -336,18 +265,23 @@ procedure Mat5
 begin
 	if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then begin
 		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+		mark_on_map(AREA_JUNKTOWN)
 	end
 	if (global_var(WORLDMAPLIST_BROTHERHOOD) == 0) then begin
 		set_global_var(WORLDMAPLIST_BROTHERHOOD, 1);
+		mark_on_map(AREA_BROTHERHOOD)
 	end
 	if (global_var(WORLDMAPLIST_SHADY_SANDS) == 0) then begin
 		set_global_var(WORLDMAPLIST_SHADY_SANDS, 1);
+		mark_on_map(AREA_SHADY_SANDS)
 	end
 	if (global_var(WORLDMAPLIST_NECROPOLIS) == 0) then begin
 		set_global_var(WORLDMAPLIST_NECROPOLIS, 1);
+		mark_on_map(AREA_NECROPOLIS)
 	end
 	if (global_var(WORLDMAPLIST_THE_GLOW) == 0) then begin
 		set_global_var(WORLDMAPLIST_THE_GLOW, 1);
+		mark_on_map(AREA_GLOW)
 	end
 	gsay_reply(609, 220);
 	if (CaravanAgain == 1) then begin

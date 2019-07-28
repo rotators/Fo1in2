@@ -1,6 +1,20 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Encounter - Merchant
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
+
+#define NAME                    SCRIPT_DUC
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+procedure start;
 procedure critter_p_proc;//    script_action == 12
 procedure damage_p_proc;//    script_action == 14
 procedure destroy_p_proc;//    script_action == 18
@@ -29,73 +43,30 @@ variable initial :=  0;
 variable Tandi_seed;
 variable Tandi_rescued;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
+variable SrcObj := 0;
+variable SrcIsParty := 0;
 
 variable GotReaction := 0;
 
 
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
-	
+
 	if not(initial) then begin
 		initial :=  1;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 2);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 6);
 		known := global_var(HAS_PLAYER_MET_DUC);
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					call look_at_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if ((global_var(WATER_THIEF_2) == 1) and (tile_distance_objs(dude_obj, self_obj) < 8)) then begin
 		call flee_dude;
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(WATER_THIEF_2, 1);
 	end
@@ -104,7 +75,7 @@ end
 procedure destroy_p_proc
 begin
 
-	inc_good_critter		
+	inc_good_critter
 	set_global_var(IS_DUC_ALIVE, 1);// Duc Status
 	set_global_var(WATER_THIEF_2, 1);
 end
@@ -229,6 +200,7 @@ begin
 	game_time_advance(game_ticks(86400));
 	if (global_var(WORLDMAPLIST_SHADY_SANDS) < 1) then begin
 		set_global_var(WORLDMAPLIST_SHADY_SANDS, 1);
+		mark_on_map(AREA_SHADY_SANDS)
 	end
 	load_map(MAP_SHADYW, 1);
 end

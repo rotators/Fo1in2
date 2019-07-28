@@ -19,7 +19,10 @@
 										gfade_in(1)
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)
-	
+
+#define military_base_destoryed 		(global_var(VATS_BLOWN_CUTSCENE_DONE) > 0)
+#define cathedral_destroyed 			(global_var(MASTER_BLOWN_CUTSCENE) > 0)
+
 #define sleeping 	/*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
 					if (local_var(LVAR_Sleeping) == 1) then begin \
 						if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin \

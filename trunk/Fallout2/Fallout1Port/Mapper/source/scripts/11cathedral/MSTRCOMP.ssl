@@ -1,4 +1,5 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
 procedure look_at_p_proc;//    script_action == 21
@@ -36,22 +37,27 @@ begin
 	display_msg(message_str(SCRIPT_TERM, 200));
 end
 
-procedure skills
-begin
+procedure skills begin
 	if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
 		if is_success(roll_vs_skill(dude_obj, 12, -50)) then begin
 			display_msg(message_str(SCRIPT_TERM, 203));
 			if global_var(WORLDMAPLIST_MILITARYBASE) == 0 then begin
-				XP := 1250;
+				XP := EXP_FOUND_MILITARY_BASE;
 				set_global_var(WORLDMAPLIST_MILITARYBASE, 1);
+				if (global_var(VATS_BLOWN_CUTSCENE_DONE) > 0) then begin
+					mark_on_map(AREA_MILITARY_BASE_DEAD)
+				end
+				else begin
+					mark_on_map(AREA_MILITARY_BASE)
+				end
 			end
 			else begin
 				if (global_var(WORLDMAPLIST_MILITARYBASE) == 1) then begin
-					XP := 500;
+					XP := EXP_KNEW_ABOUT_MILITARY_BASE;
 					set_global_var(WORLDMAPLIST_MILITARYBASE, 2);
 				end
 				else begin
-					XP := 50;
+					XP := EXP_WENT_TO_MILITARY_BASE;
 				end
 			end
 			display_msg(message_str(SCRIPT_TERM, 204) + XP + message_str(SCRIPT_TERM, 205));
