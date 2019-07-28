@@ -1,13 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Necropolis - Watershed super mutant, Harry
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_HARRY
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+
 procedure gameover;
-procedure talk_p_proc;//    script_action == 11
-procedure Critter_Action;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure destroy_p_proc;//    script_action == 18
 
 procedure surprise;
 procedure harryleave;
@@ -77,6 +92,8 @@ procedure harry307;
 procedure harry308;
 procedure harryxxx;
 
+procedure StartDialog;
+
 variable tmp_hostile;
 variable init_teams := 0;
 variable noevent;
@@ -87,83 +104,52 @@ variable HarryThinks;
 //	SPEECH SHOULD POINT TO EITHER 16 OR 79
 //
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(init_teams)) then begin
 		init_teams := 1;
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 79);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_SUPER_MUTANT_NECRO);
 		set_local_var(5, 0);
-	end
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		if (global_var(WATERSHED_MUTANTS_LEAVE) == 0) then begin
-			call talk_p_proc;
-		end
-		else begin
-			display_msg(message_str(SCRIPT_HARRY, 193));
-		end
-	end
-	else begin
-		if (script_action == 3) then begin// examine
-			if local_var(6) then begin
-				script_overrides;
-				set_local_var(6, 1);
-				display_msg(message_str(SCRIPT_HARRY, 100));
-			end
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				if (obj_can_see_obj(self_obj, dude_obj)) then begin
-					if (fixed_param == 1) then begin
-						call harry07b;
-					end
-					else begin
-						if (fixed_param == 2) then begin
-							call harry21;
-						end
-					end
-				end
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 8) and (global_var(WATERSHED_MUTANTS_LEAVE) < 1)) then begin
-							if (local_var(4) == 0) then begin
-								dialogue_system_enter;
-							end
-							else begin
-								call Critter_Action;
-							end
-						end
-						else begin
-							call Critter_Action;
-						end
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
-			end
-		end
 	end
 end
 
-procedure gameover
-begin
+procedure gameover begin
 	gsay_message(16, 191, 50);
 end
 
-procedure talk_p_proc
-begin
+procedure look_at_p_proc begin
+	if local_var(6) then begin
+		script_overrides;
+		set_local_var(6, 1);
+		display_msg(mstr(100));
+	end
+end
+
+procedure timed_event_p_proc begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		if (fixed_param == 1) then begin
+			call harry07b;
+		end
+		else if (fixed_param == 2) then begin
+			call harry21;
+		end
+	end
+end
+
+procedure talk_p_proc begin
+	if (global_var(WATERSHED_MUTANTS_LEAVE) == 0) then begin
+		call StartDialog;
+	end
+	else begin
+		display_msg(mstr(193));
+	end
+end
+
+procedure StartDialog begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+
 	get_reaction
+
 	start_gdialog(16, self_obj, 4, 5, 4);
 	gsay_start;
 	if (global_var(VATS_BLOWN)) then begin
@@ -179,40 +165,42 @@ begin
 			end
 		end
 		else begin
+
 			set_local_var(4, 1);
 			if (global_var(PLAYER_CAPTURED) == 1) then begin
 				call harry23;
 			end
-			else begin
-				if (global_var(SUPER_MUTANTS_KILLED) > 0) then begin
-					call harry18;
+			else if (global_var(SUPER_MUTANTS_KILLED) > 0) then begin
+				call harry18;
+			end
+			else if ((local_var(1) >= 2) and (tmp_hostile == 0)) then begin
+				if (is_success(do_check(dude_obj, STAT_ch, 0)) and (get_critter_stat(dude_obj, STAT_gender) == 1)) then begin
+					call harry12;
 				end
 				else begin
-					if ((local_var(1) >= 2) and (tmp_hostile == 0)) then begin
-						if (is_success(do_check(dude_obj, STAT_ch, 0)) and (get_critter_stat(dude_obj, STAT_gender) == 1)) then begin
-							call harry12;
-						end
-						else begin
-							call harry00;
-						end
-					end
-					else begin
-						call harry07;
-					end
+					call harry00;
 				end
 			end
+			else begin
+				call harry07;
+			end
+
 		end
 	end
 	gsay_end;
 	end_dialogue;
+
 	if ((HarryThinks != 1) and (global_var(WATERSHED_MUTANTS_LEAVE) != 1)) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure Critter_Action
-begin
-	if (tmp_hostile > 0) then begin
+procedure critter_p_proc begin
+
+	if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 8) and (global_var(WATERSHED_MUTANTS_LEAVE) < 1)) and (local_var(4) == 0) then begin
+		dialogue_system_enter;
+	end
+	else if (tmp_hostile > 0) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -220,22 +208,19 @@ begin
 		if ((global_var(WATERSHED_MUTANTS_LEAVE) == 1) and (tile_num(self_obj) != 15507)) then begin
 			animate_move_obj_to_tile(self_obj, 15507, 0);
 		end
-		else begin
-			if ((global_var(WATERSHED_MUTANTS_LEAVE) == 1) and (tile_num(self_obj) == 15507)) then begin
-				set_global_var(WATERSHED_MUTANTS_LEAVE, 2);
-			end
-			else begin
-				if ((global_var(WATERSHED_MUTANTS_LEAVE) == 2) and (tile_num(self_obj) != 12536)) then begin
-					animate_move_obj_to_tile(self_obj, 12536, 0);
-				end
-				else begin
-					if ((tile_num(self_obj) == 12536) and (global_var(WATERSHED_MUTANTS_LEAVE) == 2)) then begin
-						if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-					end
-				end
+		else if ((global_var(WATERSHED_MUTANTS_LEAVE) == 1) and (tile_num(self_obj) == 15507)) then begin
+			set_global_var(WATERSHED_MUTANTS_LEAVE, 2);
+		end
+		else if ((global_var(WATERSHED_MUTANTS_LEAVE) == 2) and (tile_num(self_obj) != 12536)) then begin
+			animate_move_obj_to_tile(self_obj, 12536, 0);
+		end
+		else if ((tile_num(self_obj) == 12536) and (global_var(WATERSHED_MUTANTS_LEAVE) == 2)) then begin
+			if (metarule(22, 0) == 0) then begin
+				set_obj_visibility(self_obj, 1); //  MAKE INVISIBLE
 			end
 		end
 	end
+
 end
 
 procedure harryleave
@@ -247,8 +232,7 @@ procedure harryend
 begin
 end
 
-procedure harrycbt
-begin
+procedure harrycbt begin
 	tmp_hostile := 1;
 end
 
@@ -675,33 +659,26 @@ begin
 	gsay_message(16, 181, 50);
 end
 
-procedure harry306
-begin
+procedure harry306 begin
 	gsay_message(16, 182, 50);
 end
 
-procedure harry307
-begin
+procedure harry307 begin
 	gsay_message(16, 183, 50);
 end
 
-procedure harry308
-begin
+procedure harry308 begin
 	gsay_message(16, 184, 50);
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		tmp_hostile := 1;
-	end
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure harryxxx
-begin
+procedure harryxxx begin
 //	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 14);
 //	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 14);
-//	set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECROPOLIS_INVADED_DATE) - 14);
+//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 14);
 //	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 14);
 //	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 14);
 //	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 14);
@@ -711,35 +688,11 @@ begin
 	load_map(MAP_MBVATS12, 5);
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(SUPER_MUTANTS_KILLED, global_var(SUPER_MUTANTS_KILLED) + 1);
-	if (global_var(SUPER_MUTANTS_KILLED) >= global_var(MAX_MUTANTS)) then begin
-		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 3);
-		set_global_var(NECROP_MUTANTS_KILLED, 2);
-		if global_var(NECRO_30_DAYS_GVAR225) or global_var(FIXT_BUGFIXES_ONLY) then begin
-			set_global_var(NECRO_MUTANTS_TIME_LEFT, game_time / (10 * 60 * 60 * 24));
-			if (global_var(NECROPOLIS_INVADED_DATE) > (global_var(NECRO_MUTANTS_TIME_LEFT) + 30)) then begin
-				set_global_var(NECROPOLIS_INVADED_DATE, global_var(NECRO_MUTANTS_TIME_LEFT) + 30);
-			end
-		end
-	end
-	rm_timer_event(self_obj);
 
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	check_watershed_sm_killed
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 

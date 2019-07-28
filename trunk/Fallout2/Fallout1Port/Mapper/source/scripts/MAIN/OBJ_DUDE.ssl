@@ -44,11 +44,6 @@ variable SecondsLeft;
 variable TimeFlag;
 variable Zero;
 
-import variable Ian_ptr;
-import variable Tycho_ptr;
-import variable Katja_ptr;
-import variable Tandi_ptr;
-
 procedure Cheater00;
 procedure Cheater00a;
 procedure Cheater00b;
@@ -193,6 +188,7 @@ procedure Slideshow;
 
 procedure start begin
 	// Save the start date to check the water counter / days remaining, etc:
+	// We have to do this, because for some weird reason, the ddraw.ini start date is waaaay off. I can't figure out why.
 	if (global_var(VAULT13_WATER_DAYS_COUNTER) <= 0) then begin
 		set_global_var(VAULT13_WATER_DAYS_COUNTER, 864000);
 	end
@@ -347,7 +343,7 @@ procedure critter_p_proc begin
 
 	end
 
-// "Poison has left your system"
+	// "Poison has left your system"
 	if (get_critter_stat(dude_obj, STAT_current_poison) > 0) then begin// is_poisoned
 		if (metarule(22, 0) == 0) then begin// not IS_LOADING_GAME
 			set_global_var(DUDE_OBJ_POISONED, 1);// tracker
@@ -363,6 +359,8 @@ procedure critter_p_proc begin
 end
 
 procedure look_at_p_proc begin
+	//debug("get_necropolis_days_left: " + get_necropolis_days_left);
+
 	if global_var(CHEAT_DEBUG_MENU_ENABLED) or global_var(DEBUG_MODE_MESSAGES_ON) then begin
 		variable Hand_Item := 0;
 		variable Held_Item_PID := 0;
@@ -385,8 +383,8 @@ procedure description_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-//	variable map_explo_flag := 0;
-// Reset the Holodisk pointers to avoid crashes!
+	//	variable map_explo_flag := 0;
+	// Reset the Holodisk pointers to avoid crashes!
 	set_global_var(ARTIFACT_HOLODISK_POINTER, 0); // ARTIFACT
 	set_global_var(FEVDISK_HOLODISK_POINTER, 0); // FEV
 	set_global_var(DISKA_HOLODISK_POINTER, 0); // DISKA
@@ -396,37 +394,28 @@ procedure map_enter_p_proc begin
 	set_global_var(GENDISK_HOLODISK_POINTER3, 0); // GENDISK_HOLODISK_POINTER3
 	set_global_var(VREE_AUTOPSY_POINTER, 0); // VREE_AUTOPSY
 
-// fix wrong Days Left on Fixes Only mode
-	/*if global_var(FIXT_BUGFIXES_ONLY) == 1 then begin
-		if (get_water_days_left > 150) then begin
-			set_global_var(VAULT13_WATER_DAYS_LEFT, 150);
-		end
-	end*/
-
-// "Player has entered map number blah blah blah"
+	// "Player has entered map number blah blah blah"
 	if global_var(DEBUG_MODE_MESSAGES_ON) then begin// <-- Debug_Enabled
 		call DebugEnterMsgs;
 	end
 
-// Now calls here instead of on each map.
-	call Invasions;
-// [GOOF FIX] ...for my goof of not setting Child-killer Kills Required properly during install:
-	if global_var(CHILDKILLER_NUM_KILLS) == 0 then begin
-		set_global_var(CHILDKILLER_REPUTATION, 0);
-		set_global_var(CHILDKILLER_NUM_KILLS, 2);
-		set_global_var(CHILDKILLER_REPUTATION, 0);
-	end
+	// Now calls here instead of on each map.
+	//call Invasions;
+
+	/*
 // [GOOF FIX] ...for my goof of making Garl's Father 100% of the time:
 	if global_var(MISTAKEN_ID) then begin
 		if (get_critter_stat(dude_obj, STAT_lu) < 9) or (get_critter_stat(dude_obj, STAT_gender) > 0) then begin
 			set_global_var(MISTAKEN_ID, 0);
 		end
-	end
+	end*/
+
 // For part of the crude fix of the Necropolis caravans' loading empty map elevation issue.
 //	if cur_map_index == 4 then begin
 //		set_global_var(CC_NECROP_ALREADY_LOADED, 0);
 //	end
 // "You earn 10000 experience points" since previously it only showed once Vats and Master both dead, even thuogh both give 10000xp independently
+/*
 	if (global_var(FIXT_BASE_VERSION_NUM) >= 6) and (global_var(FIXT_SUBVERSION_INSTALLED) >= 3) then begin
 		if (global_var(PLAYER_INFORMED_10K) != 1) then begin
 			if (global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2) then begin
@@ -445,17 +434,7 @@ procedure map_enter_p_proc begin
 			end
 		end
 	end
-
-// TODO: Either put this into Sfall or think of something else entirely
-// Warn if from older version of Fixt:
-/*	if (metarule(22, 0) == 1) then begin// if Load Game is true. If going into actual dialog, CANNOT DO ON GAME LOAD, because it crashes.
-		if not(((global_var(FIXT_BASE_VERSION_NUM) == 7) and (global_var(FIXT_SUBVERSION_INSTALLED) == 1))) then begin// VERSION, SUBVERSION
-			if (global_var(FIXT_OLD_VERSION_WARNED) != 3) then begin// if FIXT_OLD_VERSION_WARNED hasn't been set
-				display_msg(message_str(SCRIPT_GENCHAT, 433));// Warning player when loading from old version
-				set_global_var(FIXT_OLD_VERSION_WARNED, 3);
-			end
-		end
-	end*/
+*/
 end
 
 procedure map_update_p_proc begin
@@ -683,10 +662,10 @@ procedure KillCheck begin
 			ShootOverseer := 1;
 		end
 		else if ((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and (global_var(NUM_GOOD_MONSTERS_KILLED) >= (2 * global_var(NUM_BAD_MONSTERS_KILLED))) then begin//    If killed at least 25 "people" (Good kills + Evil kills), AND, Evil kills is >= 2 * Good kills
-				ShootOverseer := 1;
+			ShootOverseer := 1;
 		end
 		else if (global_var(PLAYER_REPUTATION_GENERAL) < -1) then begin//    General Reputation is -2 or less
-				ShootOverseer := 1;
+			ShootOverseer := 1;
 		end
 	end
 end
@@ -695,6 +674,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure Invasions begin
+/*
 	variable Skip := 0;
 	if global_var(VATS_BLOWN) then begin//  and if cur_map_index != MAP_MBDEAD
 		if not(global_var(VATSPOW_INVAD_MAP_CLEARED)) then begin
@@ -750,8 +730,8 @@ procedure Invasions begin
 					set_global_var(MARK_LA_5, 0);
 				end
 			end
-			if global_var(NECROPOLIS_INVADED_DATE) <= Days then begin// Necropolis - vanilla 110 days (or 30 after mutants killed)
-				set_global_var(NECROPOLIS_WAS_INVADED, 1);
+			if global_var(GVAR_NECROPOLIS_INVADED_DATE) <= Days then begin// Necropolis - vanilla 110 days (or 30 after mutants killed)
+				set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1);
 				if not(global_var(NECROPL_INVAD_MAP_CLEARED)) then begin
 					set_global_var(NECROPL_INVAD_MAP_CLEARED, 1);
 					//set_global_var(WORLDMAPLIST_NECROPOLIS, 0);
@@ -873,6 +853,7 @@ procedure Invasions begin
 			end
 		end
 	end
+*/
 
 end
 
