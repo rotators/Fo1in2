@@ -66,6 +66,7 @@
 //==============================================================
 // Settings:
 #define fo1in2_fluff_enc_disabled 		(global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0)
+#define fo1in2_armor_change_disabled 	(global_var(GVAR_ALLOW_PARTY_ARMOR_CHANGE) == 0)
 
 //==============================================================
 // Pick dead body type:
