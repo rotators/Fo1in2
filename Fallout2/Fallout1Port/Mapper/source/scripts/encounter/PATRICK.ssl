@@ -1,17 +1,25 @@
 /*
 
-	Encounter singing bard
+	Encounter, Patrick the singing bard
 	
 */
 
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+#define NAME                    SCRIPT_DUC
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+procedure start;    
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 procedure flee_dude;
 
 procedure Patrick01;
@@ -33,17 +41,17 @@ procedure Patrick15;
 procedure Patrick16;
 procedure Patrick17;
 procedure PatrickCombat;
-procedure PatrickEnd;
+procedure Node999;
 
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable known;
 variable scared;
 
+variable SrcObj := 0;    
+variable SrcIsParty := 0;
 
-
-procedure start
-begin
+procedure start begin
 	fixt_critter_healing
 	
 	if not(initial) then begin
@@ -51,71 +59,30 @@ begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 87);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 2);
 	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					call look_at_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (scared) then begin
 		if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
 			call flee_dude;
 		end
 	end
 	else begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			hostile := 0;
+		if (tmp_hostile) then begin
+			tmp_hostile := 0;
 			scared := 1;
 			attack(dude_obj);
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 
 	set_global_var(IS_PATRICK_DEAD, 1);
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	known := global_var(IS_PATRICK_KNOWN);
 	if (known) then begin
@@ -126,13 +93,11 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	hostile := 1;
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
 	known := global_var(IS_PATRICK_KNOWN);
 	if (scared) then begin
@@ -152,8 +117,7 @@ begin
 	end
 end
 
-procedure flee_dude
-begin
+procedure flee_dude begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -167,8 +131,7 @@ begin
 	animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
 
-procedure Patrick01
-begin
+procedure Patrick01 begin
 	known := 1;
 	set_global_var(IS_PATRICK_KNOWN, known);
 	gsay_reply(667, 102);
@@ -180,22 +143,21 @@ begin
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
 		giq_option(4, 667, 106, PatrickCombat, 51);
 	end
-	giq_option(-3, 667, 107, PatrickEnd, 50);
+	giq_option(-3, 667, 107, Node999, 50);
 end
 
-procedure Patrick02
-begin
+procedure Patrick02 begin
 	gsay_reply(667, 108);
 	giq_option(4, 667, 109, Patrick05, 50);
 	giq_option(4, 667, 110, Patrick06, 50);
 	giq_option(4, 667, 111, Patrick05, 50);
-	giq_option(4, 667, 112, PatrickEnd, 50);
+	giq_option(4, 667, 112, Node999, 50);
 end
 
 procedure Patrick03
 begin
 	gsay_reply(667, 113);
-	giq_option(4, 667, 114, PatrickEnd, 50);
+	giq_option(4, 667, 114, Node999, 50);
 	giq_option(4, 667, 115, Patrick05, 50);
 end
 
@@ -216,23 +178,26 @@ begin
 	giq_option(4, 667, 120, Patrick08, 50);
 	giq_option(4, 667, 121, Patrick09, 50);
 	giq_option(4, 667, 110, Patrick06, 50);
-	giq_option(4, 667, 122, PatrickEnd, 50);
+	giq_option(4, 667, 122, Node999, 50);
 end
 
-procedure Patrick06
-begin
+procedure Patrick06 begin
 	gsay_reply(667, 123);
 	if (global_var(WORLDMAPLIST_SHADY_SANDS) < 1) then begin
 		set_global_var(WORLDMAPLIST_SHADY_SANDS, 1);
+		mark_on_map(AREA_SHADY_SANDS)
 	end
 	if (global_var(WORLDMAPLIST_JUNKTOWN) < 1) then begin
 		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+		mark_on_map(AREA_JUNKTOWN)
 	end
 	if (global_var(WORLDMAPLIST_THE_HUB) < 1) then begin
 		set_global_var(WORLDMAPLIST_THE_HUB, 1);
+		mark_on_map(AREA_HUB)
 	end
 	if (global_var(WORLDMAPLIST_NECROPOLIS) < 1) then begin
 		set_global_var(WORLDMAPLIST_NECROPOLIS, 1);
+		mark_on_map(AREA_NECROPOLIS)
 	end
 	call Patrick06a;
 end
@@ -243,13 +208,13 @@ begin
 	giq_option(4, 667, 125, Patrick11, 50);
 	giq_option(4, 667, 126, Patrick12, 50);
 	giq_option(4, 667, 127, Patrick13, 50);
-	giq_option(4, 634, 100, PatrickEnd, 50);
+	giq_option(4, 634, 100, Node999, 50);
 end
 
 procedure Patrick07
 begin
 	gsay_reply(667, 128);
-	giq_option(4, 634, 100, PatrickEnd, 50);
+	giq_option(4, 634, 100, Node999, 50);
 	giq_option(4, 667, 115, Patrick05, 50);
 end
 
@@ -260,7 +225,7 @@ begin
 		giq_option(4, 667, 130, Patrick07, 50);
 	end
 	giq_option(4, 667, 110, Patrick05, 50);
-	giq_option(4, 667, 112, PatrickEnd, 50);
+	giq_option(4, 667, 112, Node999, 50);
 end
 
 procedure Patrick09
@@ -270,7 +235,7 @@ begin
 		giq_option(7, 667, 132, Patrick15, 49);
 	end
 	giq_option(4, 667, 133, Patrick05, 50);
-	giq_option(4, 667, 122, PatrickEnd, 50);
+	giq_option(4, 667, 122, Node999, 50);
 end
 
 procedure Patrick10
@@ -347,7 +312,7 @@ procedure Patrick15
 begin
 	gsay_reply(667, 144);
 	giq_option(4, 667, 145, Patrick16, 49);
-	giq_option(4, 667, 146, PatrickEnd, 50);
+	giq_option(4, 667, 146, Node999, 50);
 end
 
 procedure Patrick16
@@ -367,15 +332,14 @@ procedure Patrick17
 begin
 	gsay_reply(667, 148);
 	giq_option(4, 667, 149, Patrick06, 50);
-	giq_option(4, 667, 150, PatrickEnd, 50);
-	giq_option(-3, 667, 107, PatrickEnd, 50);
+	giq_option(4, 667, 150, Node999, 50);
+	giq_option(-3, 667, 107, Node999, 50);
 end
 
 procedure PatrickCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
-procedure PatrickEnd
-begin
+procedure Node999 begin
 end

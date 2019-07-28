@@ -181,6 +181,9 @@
 #define EXP_VATS_DESTROYED 						(10000)
 
 // Cathedral
+#define EXP_FOUND_MILITARY_BASE 				(1250)
+#define EXP_KNEW_ABOUT_MILITARY_BASE 			(500)
+#define EXP_WENT_TO_MILITARY_BASE 				(50)
 #define EXP_MASTER_DESTROYED 					(10000)
 
 /***************************************************
