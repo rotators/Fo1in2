@@ -1,9 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
+	Cathedral - Viola
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
+
+#define NAME                    SCRIPT_VIOLA
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure destroy_p_proc;
+
 procedure viola00;
 procedure viola01;
 procedure viola02;
@@ -99,62 +118,53 @@ variable Only_Once := 1;
 variable TALKEDTOLAURA;
 variable LAURAWARNING;
 
-procedure start
-begin
-	
+variable SrcObj := 0;
+variable SrcIsParty := 0;
 
+procedure start begin
 	if Only_Once then begin
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 20);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 69);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_CATHEDRAL);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_CHILDREN_TRUE);
 		Only_Once := 0;
-	end
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		call talk_p_proc;
-	end
-	else begin
-		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-			script_overrides;
-			display_msg(message_str(SCRIPT_VIOLA, 100));
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-
-				if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-					if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-						set_global_var(BERSERKER_REPUTATION, 1);
-						set_global_var(CHAMPION_REPUTATION, 0);
-					end
-					if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-						set_global_var(CHAMPION_REPUTATION, 1);
-						set_global_var(BERSERKER_REPUTATION, 0);
-					end
-					set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-					if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-						set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-					end
-				end
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					tmp_hostile := 1;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-							tmp_hostile := 0;
-							attack(dude_obj);
-						end
-					end
-				end
-			end
-		end
 	end
 end
 
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_VIOLA, 100));
+end
 
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_VIOLA, 100));
+end
 
-procedure talk_p_proc
-begin
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure destroy_p_proc begin
+	if source_obj > 0 then begin
+		SrcObj := 0;
+		SrcIsParty := 0;
+		SrcObj := obj_pid(source_obj);
+		if party_member_obj(SrcObj) then begin
+			SrcIsParty := 1;
+		end
+	end
+	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		inc_evil_critter
+	end
+end
+
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
 	GENDER := get_critter_stat(dude_obj, STAT_gender);
 	call weapon_check;
@@ -213,8 +223,7 @@ begin
 	end_dialogue;
 end
 
-procedure viola00
-begin
+procedure viola00 begin
 	if (GENDER == 0) then begin
 		gsay_reply(496, 101);
 	end
@@ -232,8 +241,7 @@ begin
 	giq_option(-3, 496, 108, violacombat, 50);
 end
 
-procedure viola01
-begin
+procedure viola01 begin
 	LAURAWARNING := 1;
 	gsay_reply(496, 109);
 	giq_option(7, 496, 110, viola13, 50);
@@ -245,18 +253,16 @@ begin
 	giq_option(-3, 496, 114, violaend, 50);
 end
 
-procedure viola02
-begin
+procedure viola02 begin
 	gsay_message(496, 115, 50);
 end
 
-procedure viola03
-begin
+procedure viola03 begin
+	debug("msg!!");
 	gsay_message(496, 116, 50);
 end
 
-procedure viola04
-begin
+procedure viola04 begin
 	gsay_reply(496, 117);
 	giq_option(7, 496, 118, viola15, 50);
 	giq_option(4, 496, 119, viola16, 50);
@@ -270,8 +276,7 @@ begin
 	giq_option(-3, 496, 299, violaend, 50);
 end
 
-procedure viola05
-begin
+procedure viola05 begin
 	gsay_reply(496, 123);
 	giq_option(7, 496, 124, viola05a, 50);
 	giq_option(4, 496, 125, viola46, 50);
@@ -282,8 +287,7 @@ begin
 	end
 end
 
-procedure viola05a
-begin
+procedure viola05a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call viola44;
 	end
@@ -292,8 +296,7 @@ begin
 	end
 end
 
-procedure viola06
-begin
+procedure viola06 begin
 	if (GENDER == 0) then begin
 		gsay_reply(496, 129);
 	end
@@ -309,8 +312,7 @@ begin
 	end
 end
 
-procedure viola06a
-begin
+procedure viola06a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call viola50;
 	end
@@ -319,8 +321,7 @@ begin
 	end
 end
 
-procedure viola07
-begin
+procedure viola07 begin
 	if (GENDER == 0) then begin
 		gsay_reply(496, 136);
 	end
@@ -336,8 +337,7 @@ begin
 	end
 end
 
-procedure viola07a
-begin
+procedure viola07a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call viola50;
 	end
@@ -346,8 +346,7 @@ begin
 	end
 end
 
-procedure viola08
-begin
+procedure viola08 begin
 	gsay_reply(496, 143);
 	giq_option(7, 496, 144, viola08a, 50);
 	giq_option(4, 496, 145, viola55, 50);
@@ -357,8 +356,7 @@ begin
 	giq_option(-3, 496, 299, violaend, 50);
 end
 
-procedure viola08a
-begin
+procedure viola08a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call viola53;
 	end
@@ -367,28 +365,23 @@ begin
 	end
 end
 
-procedure viola09
-begin
+procedure viola09 begin
 	gsay_message(496, 147, 50);
 end
 
-procedure viola10
-begin
+procedure viola10 begin
 	gsay_message(496, 148, 50);
 end
 
-procedure viola11
-begin
+procedure viola11 begin
 	gsay_message(496, 149, 50);
 end
 
-procedure viola12
-begin
+procedure viola12 begin
 	gsay_message(496, 150, 50);
 end
 
-procedure viola13
-begin
+procedure viola13 begin
 	gsay_reply(496, 151);
 	giq_option(7, 496, 152, viola20, 50);
 	giq_option(4, 496, 153, viola21, 50);
@@ -861,18 +854,15 @@ begin
 	gsay_option(496, 298, violaend, 50);
 end
 
-procedure violaend
-begin
+procedure violaend begin
 end
 
-procedure violacombat
-begin
+procedure violacombat begin
 	set_global_var(CATHEDRAL_ENEMY, 1);
 	tmp_hostile := 1;
 end
 
-procedure weapon_check
-begin
+procedure weapon_check begin
 
 	if (dude_is_armed) then begin
 		armed := 1;
