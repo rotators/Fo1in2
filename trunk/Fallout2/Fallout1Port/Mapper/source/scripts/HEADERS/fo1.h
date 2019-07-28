@@ -108,14 +108,17 @@
 //==============================================================
 // Invasion related:
 
-#define hub_invaded							(global_var(THE_HUB_WAS_INVADED) == 1)
-#define bos_invaded							(global_var(BROTHERHOOD_WAS_INVADED) == 1)
-#define boneyard_invaded					(global_var(FOLLOWERS_INVADED) == 1)
+#define v13_invaded 						(global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
+#define hub_invaded							(global_var(GVAR_THE_HUB_WAS_INVADED) == 1)
+#define bos_invaded							(global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)
+#define boneyard_invaded					(global_var(GVAR_FOLLOWERS_INVADED) == 1)
 #define necropolis_invaded 					(global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)
-#define shady_invaded 						(global_var(SHADY_SANDS_WAS_INVADED) == 1)
-#define junktown_invaded 					(global_var(JUNKTOWN_WAS_INVADED) == 1)
+#define shady_invaded 						(global_var(GVAR_SHADY_SANDS_WAS_INVADED) == 1)
+#define junktown_invaded 					(global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)
 
-// After x days, Vault 13 gets invaded:
+#define v13_invasion_date 					(get_days_passed + (ONE_GAME_DAY * VAULT_13_INVADED_DATE))
+#define get_v13_days_left 					(global_var(VAULT_13_INVADED_DATE) - get_days_passed)
+
 #define hub_invasion_date 					(get_days_passed + (ONE_GAME_DAY * THE_HUB_INVADED_DATE))
 #define get_hub_days_left 					(global_var(THE_HUB_INVADED_DATE) - get_days_passed)
 
@@ -125,7 +128,6 @@
 #define boneyard_invasion_date 				(get_days_passed + (ONE_GAME_DAY * FOLLOWERS_INVADED_DATE))
 #define get_boneyard_days_left 				(global_var(FOLLOWERS_INVADED_DATE) - get_days_passed)
 
-// Afer 110 days, Necropolis gets invaded:
 #define necropolis_invasion_date 			(get_days_passed + (ONE_GAME_DAY * GVAR_NECROPOLIS_INVADED_DATE))
 #define get_necropolis_days_left 			(global_var(GVAR_NECROPOLIS_INVADED_DATE) - get_days_passed)
 
@@ -143,28 +145,28 @@
 									set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1); \
 								end \
 								if (global_var(THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(THE_HUB_WAS_INVADED, 1); \
+									set_global_var(GVAR_THE_HUB_WAS_INVADED, 1); \
 								end \
 								if (global_var(BROTHERHOOD_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(BROTHERHOOD_WAS_INVADED, 1); \
+									set_global_var(GVAR_BROTHERHOOD_WAS_INVADED, 1); \
 									set_global_var(MARK_BROTHER_2, 0); \
 									set_global_var(MARK_BROTHER_3, 0); \
 									set_global_var(MARK_BROTHER_4, 0); \
 									set_global_var(MARK_BROTHER_5, 0); \
 								end \
 								if (global_var(JUNKTOWN_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(JUNKTOWN_WAS_INVADED, 1); \
+									set_global_var(GVAR_JUNKTOWN_WAS_INVADED, 1); \
 								end \
 								if (global_var(SHADY_SANDS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(SHADY_SANDS_WAS_INVADED, 1); \
+									set_global_var(GVAR_SHADY_SANDS_WAS_INVADED, 1); \
 								end \
 								if (global_var(VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(VAULT_13_WAS_INVADED, 1); \
+									set_global_var(GVAR_VAULT_13_WAS_INVADED, 1); \
 									play_gmovie(OVERRUN_MOVIE); /*//------ Vault 13 is invaded by mutants and killed. You lose. -- was 7 before*/  \
 									signal_end_game; \
 								end \
 								if (global_var(FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(FOLLOWERS_INVADED, 1); \
+									set_global_var(GVAR_FOLLOWERS_INVADED, 1); \
 								end \
 							end
 
