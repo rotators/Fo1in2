@@ -37,6 +37,8 @@
 						
 #define Darkness 			set_light_level(DUSK_LIGHT)
 
+#define Cavern_Lighting 	set_light_level(CAVERN_LIGHT)
+
 // Fallout 2 lighting:
 /*
 // Lighting Information
