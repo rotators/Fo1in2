@@ -66,7 +66,7 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
 
     // read content
     std::vector<std::string> lines;
-    if( !ReadFile( path + std::string( "/" ) + header.Filename, lines ) )
+    if( !ReadFile( TextGetFilename( path, header.Filename ), lines ) )
         return false;
 
     // update status

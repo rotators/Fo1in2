@@ -116,6 +116,7 @@ FormatSource( "Operators.cpp" )
 FormatSource( "Raw.cpp" )
 FormatSource( "ReDefine.cpp" )
 FormatSource( "ReDefine.h" )
+FormatSource( "Script.cpp" )
 FormatSource( "Text.cpp" )
 FormatSource( "Variables.cpp" )
 
