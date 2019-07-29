@@ -51,6 +51,8 @@ public:
     void ProcessHeaders( const std::string& path );
     void ProcessScripts( const std::string& path, bool readOnly = false );
 
+    typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap; // <name, <operator, type>>
+
     //
     // Defines
     //
@@ -74,6 +76,17 @@ public:
     bool ReadConfigDefines( const std::string& section );
     bool IsDefineType( const std::string& type );
     bool ProcessHeader( const std::string& path, const Header& header );
+
+    //
+    // Functions
+    //
+
+    std::map<std::string, std::vector<std::string>> FunctionsArguments; // <name, <types>>
+    GenericOperatorsMap                             FunctionsOperators;
+
+    void FinishFunctions();
+
+    bool ReadConfigFunctions( const std::string& sectionPrefix );
 
     //
     // Operators
@@ -106,8 +119,7 @@ public:
     // Variables
     //
 
-    typedef std::map<std::string, std::map<std::string, std::string>> VariablesMap; // <name, <operator,type>>
-    VariablesMap Variables;
+    GenericOperatorsMap VariablesOperators;
 
     void FinishVariables();
 

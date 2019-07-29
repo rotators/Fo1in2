@@ -229,8 +229,8 @@ bool ReDefine::ReadConfig( const std::string& defines, const std::string& variab
     if( !variablePrefix.empty() && !ReadConfigVariables( variablePrefix ) )
         return false;
 
-    // if( !functionPrefix.empty() && !ReadConfigFunctions( functionPrefix ) )
-    //     return false;
+    if( !functionPrefix.empty() && !ReadConfigFunctions( functionPrefix ) )
+        return false;
 
     return true;
 }
@@ -244,9 +244,9 @@ void ReDefine::ProcessHeaders( const std::string& path )
 
     // validate variables configuration
 
-    VariablesMap validatedVariables;
+    GenericOperatorsMap validated;
 
-    for( auto itVar = Variables.begin(), endVar = Variables.end(); itVar != endVar; ++itVar )
+    for( auto itVar = VariablesOperators.begin(), endVar = VariablesOperators.end(); itVar != endVar; ++itVar )
     {
         for( auto itOpName = itVar->second.begin(), endOpName = itVar->second.end(); itOpName != endOpName; ++itOpName )
         {
@@ -257,14 +257,34 @@ void ReDefine::ProcessHeaders( const std::string& path )
             }
 
             LOG( "Added variable %s... %s %s %s", TextGetLower(  itOpName->first ).c_str(), itVar->first.c_str(), GetOperator( itOpName->first ).c_str(), itOpName->second.c_str() );
-            validatedVariables[itVar->first][itOpName->first] = itOpName->second;
+            validated[itVar->first][itOpName->first] = itOpName->second;
         }
     }
 
-    // TODO validate functions configuration
+    // keep valid settings only
+    VariablesOperators = validated;
+    validated.clear();
+
+    // validate functions configuration
+
+    for( auto itVar = FunctionsOperators.begin(), endVar = FunctionsOperators.end(); itVar != endVar; ++itVar )
+    {
+        for( auto itOpName = itVar->second.begin(), endOpName = itVar->second.end(); itOpName != endOpName; ++itOpName )
+        {
+            if( !IsDefineType( itOpName->second ) )
+            {
+                WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> operatorName<%s>", itOpName->second.c_str(), itVar->first.c_str(), itOpName->first.c_str() );
+                continue;
+            }
+
+            LOG( "Added function %s... %s(...) %s %s", TextGetLower(  itOpName->first ).c_str(), itVar->first.c_str(), GetOperator( itOpName->first ).c_str(), itOpName->second.c_str() );
+            validated[itVar->first][itOpName->first] = itOpName->second;
+        }
+    }
 
     // keep valid settings only
-    Variables = validatedVariables;
+    FunctionsOperators = validated;
+    validated.clear();
 }
 
 void ReDefine::ProcessScripts( const std::string& path, bool readOnly /* = false */ )

@@ -2,14 +2,15 @@
 
 #include "ReDefine.h"
 
-void ReDefine::FinishVariables()
+void ReDefine::FinishFunctions()
 {
-    VariablesOperators.clear();
+    FunctionsArguments.clear();
+    FunctionsOperators.clear();
 }
 
-bool ReDefine::ReadConfigVariables( const std::string& sectionPrefix )
+bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 {
-    FinishVariables();
+    FinishFunctions();
 
     std::vector<std::string> sections;
     if( !Config->GetSections( sections ) )
@@ -19,7 +20,7 @@ bool ReDefine::ReadConfigVariables( const std::string& sectionPrefix )
     {
         if( section.length() < sectionPrefix.length() )
             continue;
-        else if( section == sectionPrefix + "Guess" )
+        else if( section == sectionPrefix )
         {
             DEBUG( __FUNCTION__, "TODO %s", section.c_str() );
         }
@@ -50,7 +51,7 @@ bool ReDefine::ReadConfigVariables( const std::string& sectionPrefix )
 
                 // type validation is part of ProcessHeaders(),
                 // as at this point *Defines maps might not be initialized yet,
-                VariablesOperators[variable][opName] = type;
+                FunctionsOperators[variable][opName] = type;
             }
         }
     }
