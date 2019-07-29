@@ -1,61 +1,48 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure description_p_proc;//    script_action == 3
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure map_update_p_proc;//	script_action == 23
-procedure map_enter_p_proc;//	script_action == 15
+	Junktown - Izo, Gizmo's guard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_IZO
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure description_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure map_update_p_proc;
+procedure map_enter_p_proc;
+
 procedure ShowToDoor_talk;
 procedure PayPlayer_talk;
 procedure IzoEnd;
+
 import variable Gizmo_ptr;
 import variable Gizmo_is_angry;
 import variable show_to_door;
 import variable payment;
+
 variable initial :=  0;
-variable HOSTILE;
+variable tmp_hostile;
 variable line103flag;
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(initial)) then begin
 		initial :=  1;
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 13);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_JUNKTOWN_GIZMO);
 		if (global_var(CAPTURE_GIZMO) == 2) then begin
 			kill_critter(self_obj, ANIM_fall_front_blood_sf);
-		end
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-			call description_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 23) then begin
-						call map_update_p_proc;
-					end
-					else begin
-						if (script_action == 15) then begin
-							call map_enter_p_proc;
-						end
-					end
-				end
-			end
 		end
 	end
 end
@@ -64,21 +51,22 @@ procedure critter_p_proc
 begin
 	if (global_var(ENEMY_GIZMOS_GANG) == 1) then begin// - ENEMY_GIZMOS_GANG
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
-			HOSTILE := 1;
+			tmp_hostile := 1;
 			attack(dude_obj);
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		HOSTILE := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (Gizmo_is_angry) then begin
 			Gizmo_is_angry := 0;
-			attack(dude_obj);//	HOSTILE := 1;
+			attack(dude_obj);//	tmp_hostile := 1;
 		end
 		else begin
-			if (show_to_door) then begin
+			// FIXT:
+			/*if (show_to_door) then begin
 				if global_var(FADE_TIMES_INCREASED) then begin
 					gfade_out(1);
 					gfade_out(1);
@@ -97,10 +85,9 @@ begin
 //				move_to(self_obj, 16921, elevation(self_obj));
 //				gfade_in(1);
 				show_to_door := 0;
-			end
-/*
-//////////////////////////////////////////////////////////
- ORIGINAL:
+			end*/
+
+		// Fo1 original:
 			if (show_to_door) then begin
 				if (tile_distance_objs(dude_obj, Gizmo_ptr) > 8) then begin
 					if (tile_num(self_obj) != 16520) then begin
@@ -124,50 +111,43 @@ begin
 					end
 				end
 			end
-//////////////////////////////////////////////////////////
-*/
+		// Original end
+
 		end
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	set_local_var(4, 0);
 	if (tile_num(self_obj) == 27719) then begin
 		animate_move_obj_to_tile(self_obj, 16720, 1);
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if ((tile_num(self_obj) == 16720) and (local_var(4) == 0)) then begin
 		set_local_var(4, 1);
 		anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), 16920));
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if source_obj == dude_obj then begin
 		set_global_var(ENEMY_GIZMOS_GANG, 1);
 	end
-	inc_evil_critter 
+	inc_evil_critter
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_IZO, 100));
+	display_msg(mstr(100));
 end
 
-procedure pickup_p_proc
-begin
-	HOSTILE := 1;
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	display_msg(message_str(SCRIPT_IZO, 101));
 	if ((payment > 0) and (local_var(3) == 0)) then begin
@@ -175,18 +155,14 @@ begin
 //	   use_obj(dude_obj);//What the fuck is this? --Sduibek
 //
 		item_caps_adjust(dude_obj, payment);
-		start_gdialog(622, self_obj, 4, -1, -1);
-		gsay_start;
-		call PayPlayer_talk;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(PayPlayer_talk);
+
 		payment := 0;
 		set_local_var(3, 1);
 	end
 end
 
-procedure ShowToDoor_talk
-begin
+procedure ShowToDoor_talk begin
 	if not(global_var(GIZMO_NICE_SHOWDOOR)) then begin
 		gsay_message(622, 103, 51);
 	end
@@ -196,13 +172,11 @@ begin
 	end
 end
 
-procedure PayPlayer_talk
-begin
+procedure PayPlayer_talk begin
 	gsay_reply(622, 102);
 	giq_option(4, 622, 104, IzoEnd, 50);
 	giq_option(-3, 622, 105, IzoEnd, 51);
 end
 
-procedure IzoEnd
-begin
+procedure IzoEnd begin
 end

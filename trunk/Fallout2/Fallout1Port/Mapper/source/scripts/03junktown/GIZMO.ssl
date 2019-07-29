@@ -1,8 +1,21 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Junktown - Gizmo the crime boss
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GIZMO
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure Critter_Action;//    script_action == 12
 procedure description_p_proc;//    script_action == 3
 procedure destroy_p_proc;//    script_action == 18
@@ -80,58 +93,23 @@ import variable show_to_door;
 import variable Gizmo_ptr;
 import variable payment;
 
-procedure start
-begin
-	
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
 
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call Critter_Action;
-	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-				call description_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-						call map_enter_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure Critter_Action
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (self_can_see_dude and tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (Killian_ptr != 0) then begin
-			float_msg(self_obj, message_str(SCRIPT_GIZMO, 220), 0);
-			attack_complex(Killian_ptr, 0, 1, 0, 0, 30000, 0, 0);
+			float(220);
+			attack(Killian_ptr);
 		end
 		else begin
-			/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_ELECTRONIC_BUG)) then begin
+			if (obj_is_carrying_obj_pid(self_obj, PID_ELECTRONIC_BUG)) then begin
 				set_global_var(BUG_PLANTED, 1);
 			end
 			else begin
@@ -155,24 +133,21 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_GIZMO, 218));
 	script_overrides;
 end
 
-procedure destroy_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if source_obj == dude_obj then begin
 		set_global_var(ENEMY_GIZMOS_GANG, 1);
 	end
 	inc_evil_critter
 	set_global_var(GIZMO_DEAD, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	if (local_var(10) != 1) then begin
 		set_local_var(10, 1);
 		script_overrides;
@@ -184,8 +159,7 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	variable LVar0 := 0;
 	Gizmo_ptr := self_obj;
 	if (local_var(7) == 0) then begin
@@ -194,22 +168,20 @@ begin
 	if (local_var(9) == 1) then begin
 		payment := local_var(7);
 	end
-	critter_add_trait(self_obj, 1, 6, 13);
-	critter_add_trait(self_obj, 1, 5, 60);
+	critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_JUNKTOWN_GIZMO);
+	critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_GIZMO);
 	if (global_var(CAPTURE_GIZMO) == 2) then begin
 		LVar0 := create_object_sid(PID_GIZMO_REMAINS, tile_num(self_obj), 0, -1);
 		kill_critter(self_obj, ANIM_stand);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	stealing := 1;
 	dialogue_system_enter;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (local_var(8) == 1) then begin
@@ -259,15 +231,13 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		set_global_var(ENEMY_GIZMOS_GANG, 1);// - ENEMY_GIZMOS_GANG
+procedure damage_p_proc begin
+	if source_obj == dude_obj then begin
+		set_global_var(ENEMY_GIZMOS_GANG, 1);
 	end
 end
 
-procedure Gizmo01
-begin
+procedure Gizmo01 begin
 	gsay_reply(44, 101);
 	giq_option(5, 44, 102, Gizmo01_1, 51);//  was 49
 	giq_option(7, 44, 103, Gizmo04, 50);
@@ -581,7 +551,7 @@ procedure Gizmo28
 begin
 	gsay_reply(44, 193);
 	if (global_var(HIRED_BY_KILLIAN) == 1) then begin
-		/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_TAPE_RECORDER)) then begin
+		if (obj_is_carrying_obj_pid(dude_obj, PID_TAPE_RECORDER)) then begin
 			set_global_var(GOT_CONFESSION, 1);
 		end
 	end
@@ -693,8 +663,7 @@ begin
 	call Gizmo11;
 end
 
-procedure Gizmox
-begin
+procedure Gizmox begin
 	set_global_var(GIZMO_NICE_SHOWDOOR, 1);
 	show_to_door := 1;
 end
@@ -716,8 +685,7 @@ begin
 	set_local_var(9, 1);
 end
 
-procedure badmouth
-begin
+procedure badmouth begin
 	set_local_var(5, local_var(5) + 1);
 	if (local_var(5) > 1) then begin
 		call Gizmo11;
