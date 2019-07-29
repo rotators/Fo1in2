@@ -87,15 +87,18 @@ function( FormatSource filename )
 	if( EXISTS "${uncrustemp}" )
 		file( REMOVE "${uncrustemp}" )
 	endif()
-	execute_process( COMMAND "${uncrustify}" -c "${uncrustcfg}" -l CPP -f "${filename}" -o "${uncrustemp}" -q --if-changed )
 
-	if( EXISTS "${uncrustemp}" )
-		file( RENAME "${uncrustemp}" "${filename}" )
+	if( EXISTS "${uncrustify}" )
+		execute_process( COMMAND "${uncrustify}" -c "${uncrustcfg}" -l CPP -f "${filename}" -o "${uncrustemp}" -q --if-changed )
+
+		if( EXISTS "${uncrustemp}" )
+			file( RENAME "${uncrustemp}" "${filename}" )
+		endif()
 	endif()
 
 endfunction() 
 
-#> Build.cmake <#
+#> ReDefine <#
 
 if( UNIX )
 	set( BUILD_FILE      "Makefile" )
@@ -106,7 +109,6 @@ elseif( WIN32 )
 	set( BUILD_GENERATOR "Visual Studio 15 2017" )
 endif()
 
-set( UNCRUSTIFY_EXECUTABLE "SourceTools/uncrustify" )
 FormatSource( "Defines.cpp" )
 FormatSource( "Main.cpp" )
 FormatSource( "Operators.cpp" )

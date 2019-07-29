@@ -32,6 +32,15 @@ bool ReDefine::TextGetInt( const std::string& text, int& result, const unsigned 
     return true;
 }
 
+std::string ReDefine::TextGetLower( const std::string& text )
+{
+    std::string result = text;
+
+    transform( result.begin(), result.end(), result.begin(), ::tolower );
+
+    return result;
+}
+
 std::string ReDefine::TextGetTrimmed( const std::string& text )
 {
     std::string result = text;

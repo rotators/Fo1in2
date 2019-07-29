@@ -20,6 +20,8 @@ void ReDefine::FinishDefines()
 
 bool ReDefine::ReadConfigDefines( const std::string& section )
 {
+    FinishDefines();
+
     if( !Config->IsSection( section ) )
     {
         WARNING( __FUNCTION__, "config section<%s> is missing", section.c_str() );
@@ -49,9 +51,14 @@ bool ReDefine::ReadConfigDefines( const std::string& section )
     return true;
 }
 
+bool ReDefine::IsDefineType( const std::string& type )
+{
+    return RegularDefines.find( type ) != RegularDefines.end() || VirtualDefines.find( type ) != VirtualDefines.end();
+}
+
 bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& header )
 {
-    if( RegularDefines.find( header.Type ) != RegularDefines.end() || VirtualDefines.find( header.Type ) != VirtualDefines.end() )
+    if( IsDefineType( header.Type ) )
     {
         WARNING( __FUNCTION__, "define type<%s> already in use", header.Type.c_str() );
         return false;
@@ -63,6 +70,7 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
         return false;
 
     // update status
+    Status.Current.Clear();
     Status.Current.File = header.Filename;
     Status.Current.LineNumber = 0;
 
@@ -96,7 +104,6 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
             if( !header.Group.empty() )
                 VirtualDefines[header.Group].push_back( header.Type );
         }
-
     }
 
     Status.Current.Clear();
@@ -106,7 +113,7 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
          RegularDefines[header.Type].size(),
          header.Prefix.c_str(),
          RegularDefines[header.Type].size() != 1 ? "s" : "",
-         !header.Group.empty() ? " -> " : "",
+         !header.Group.empty() ? " +> " : "",
          header.Group.c_str()
          );
 

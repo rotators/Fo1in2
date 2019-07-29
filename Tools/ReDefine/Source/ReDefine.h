@@ -66,24 +66,25 @@ public:
     };
 
     std::vector<Header>                               Headers;
-    std::map<std::string, std::map<int, std::string>> RegularDefines;
-    std::map<std::string, std::vector<std::string>>   VirtualDefines;
+    std::map<std::string, std::map<int, std::string>> RegularDefines; // <type, <value, define>>
+    std::map<std::string, std::vector<std::string>>   VirtualDefines; // <type, <regular_types>>
 
     void FinishDefines();
 
     bool ReadConfigDefines( const std::string& section );
+    bool IsDefineType( const std::string& type );
     bool ProcessHeader( const std::string& path, const Header& header );
 
     //
     // Operators
     //
 
-    std::map<std::string, std::string> Operators;
+    std::map<std::string, std::string> Operators; // <opName, op>
 
     void InitOperators();
     void FinishOperators();
 
-    bool        IsOperator( const std::string& opName );
+    bool        IsOperator( const std::string& op );
     bool        IsOperatorName( const std::string& opName );
     std::string GetOperator( const std::string& opName );
     std::string GetOperatorName( const std::string& op );
@@ -94,6 +95,7 @@ public:
 
     bool        TextIsComment( const std::string& text );
     bool        TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
+    std::string TextGetLower( const std::string& text );
     std::string TextGetTrimmed( const std::string& text );
 
     bool       TextIsDefine( const std::string& text );
@@ -104,7 +106,8 @@ public:
     // Variables
     //
 
-    std::map<std::string, std::string> Variables;
+    typedef std::map<std::string, std::map<std::string, std::string>> VariablesMap; // <name, <operator,type>>
+    VariablesMap Variables;
 
     void FinishVariables();
 

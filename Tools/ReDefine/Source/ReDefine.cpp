@@ -223,13 +223,13 @@ bool ReDefine::ReadFile( const std::string& filename, std::vector<std::string>& 
 
 bool ReDefine::ReadConfig( const std::string& defines, const std::string& variablePrefix, const std::string& functionPrefix )
 {
-    if( !ReadConfigDefines( defines ) )
+    if( !defines.empty() && !ReadConfigDefines( defines ) )
         return false;
 
-    if( !ReadConfigVariables( variablePrefix ) )
+    if( !variablePrefix.empty() && !ReadConfigVariables( variablePrefix ) )
         return false;
 
-    // if( !ReadConfigFunctions( functionPrefix ) )
+    // if( !functionPrefix.empty() && !ReadConfigFunctions( functionPrefix ) )
     //     return false;
 
     return true;
@@ -241,9 +241,33 @@ void ReDefine::ProcessHeaders( const std::string& path )
     {
         ProcessHeader( path, header );
     }
+
+    // validate variables configuration
+
+    VariablesMap validatedVariables;
+
+    for( auto itVar = Variables.begin(), endVar = Variables.end(); itVar != endVar; ++itVar )
+    {
+        for( auto itOpName = itVar->second.begin(), endOpName = itVar->second.end(); itOpName != endOpName; ++itOpName )
+        {
+            if( !IsDefineType( itOpName->second ) )
+            {
+                WARNING( __FUNCTION__, "unknown define type<%s> : variable<%s> operatorName<%s>", itOpName->second.c_str(), itVar->first.c_str(), itOpName->first.c_str() );
+                continue;
+            }
+
+            LOG( "Added variable %s... %s %s %s", TextGetLower(  itOpName->first ).c_str(), itVar->first.c_str(), GetOperator( itOpName->first ).c_str(), itOpName->second.c_str() );
+            validatedVariables[itVar->first][itOpName->first] = itOpName->second;
+        }
+    }
+
+    // TODO validate functions configuration
+
+    // keep valid settings only
+    Variables = validatedVariables;
 }
 
 void ReDefine::ProcessScripts( const std::string& path, bool readOnly /* = false */ )
 {
-    // LOG( "Process scripts..." );
+    // LOG( "Process scripts... " );
 }
