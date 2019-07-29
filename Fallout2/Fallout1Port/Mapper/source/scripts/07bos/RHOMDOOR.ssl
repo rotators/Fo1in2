@@ -1,8 +1,13 @@
 #include "..\headers\define.h"
+#include "..\headers\MAPBROTHERHOOD.h"
 
 procedure start;
-procedure damage_p_proc;//    script_action == 14
-procedure timed_event_p_proc;//    script_action == 22
+procedure use_obj_on_p_proc;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
+procedure timed_event_p_proc;
+
 procedure hear_check;
 procedure anger;
 procedure anger2;
@@ -11,36 +16,22 @@ variable failure;
 variable bonus;
 variable Test;
 
-
-procedure start
-begin
-	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-		call damage_p_proc;
-	end
-	else begin
-		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-			call timed_event_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call hear_check;
-			end
-			else begin
-				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-					call hear_check;
-				end
-				else begin
-					if (script_action == 7) then begin//<-- use_obj_on_p_proc
-						call hear_check;
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure damage_p_proc
-begin
+procedure use_obj_on_p_proc begin
+	call hear_check;
+end
+
+procedure use_p_proc begin
+	call hear_check;
+end
+
+procedure use_skill_on_p_proc begin
+	call hear_check;
+end
+
+procedure damage_p_proc begin
 	set_global_var(ENEMY_BROTHERHOOD, 1);
 	set_local_var(0, local_var(0) + 1);
 	if (local_var(0) == 3) then begin
@@ -48,43 +39,37 @@ begin
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
-		set_map_var(19, 0);
+		set_map_var(MVAR_TOUCHING, 0);
 		if (not(combat_is_initialized)) then begin
 			obj_close(self_obj);
 		end
 		add_timer_event(self_obj, game_ticks(3), 2);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			if obj_is_open(self_obj) then begin
-				obj_close(self_obj);
-				add_timer_event(self_obj, game_ticks(3), 3);
-			end
-			else begin
-				add_timer_event(self_obj, game_ticks(3), 2);
-			end
+	else if (fixed_param == 2) then begin
+		if obj_is_open(self_obj) then begin
+			obj_close(self_obj);
+			add_timer_event(self_obj, game_ticks(3), 3);
 		end
 		else begin
-			if (fixed_param == 3) then begin
-				rm_timer_event(self_obj);
-			end
+			add_timer_event(self_obj, game_ticks(3), 2);
 		end
+	end
+	else if (fixed_param == 3) then begin
+		rm_timer_event(self_obj);
 	end
 end
 
-procedure hear_check
-begin
+procedure hear_check begin
 	bonus := -35;
 	failure := 1;
 	if ((metarule(16, 0) > 1) and (source_obj == dude_obj)) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-		set_map_var(19, 2);
+		set_map_var(MVAR_TOUCHING, 2);
 	end
 	else begin
 		if source_obj == dude_obj then begin
-			if (using_skill(dude_obj, 8)) then begin
+			if (using_skill(dude_obj, SKILL_SNEAK)) then begin
 				Test := roll_vs_skill(dude_obj, SKILL_SNEAK, bonus);
 				if (is_success(Test)) then begin
 					failure := 0;
@@ -104,17 +89,17 @@ begin
 	add_timer_event(self_obj, game_ticks(3), 1);
 end
 
-procedure anger
-begin
-	if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
-		set_map_var(19, 1);
-	end
+procedure anger begin
+	/*if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
+		set_map_var(MVAR_TOUCHING, 1);
+	end*/
+	display_msg(message_str(SCRIPT_RHOMBUS, 204));
+	set_map_var(MVAR_TOUCHING, 2);
 end
 
-procedure anger2
-begin
+procedure anger2 begin
 	if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
-		set_map_var(19, 2);
+		set_map_var(MVAR_TOUCHING, 2);
 	end
 end
 

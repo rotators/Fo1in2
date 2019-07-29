@@ -1,13 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
+	Rhombus - Brotherhood of Steel
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPBROTHERHOOD.h"
+
+#define NAME                    SCRIPT_RHOMBUS
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+
 procedure timeforwhat;
 
 procedure rhombus00;
@@ -106,67 +121,41 @@ variable sense;
 variable denounce;
 variable Test;
 
-procedure start
-begin
+variable SrcObj := 0;
+variable SrcIsParty := 0;
 
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 44);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 81);
-	end
-	if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-		call timeforwhat;
-	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_BROTHERHOOD);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_BOS_RHOMBUS);
 	end
 end
 
-procedure rhombus01
-begin
+procedure timed_event_p_proc begin
+	call timeforwhat;
+end
+
+procedure rhombus01 begin
 	gsay_reply(56, 105);
 	giq_option(4, 56, 106, rhombus02, 50);
 	giq_option(4, 56, 107, rhombus03, 51);
 	giq_option(-3, 56, 108, rhombus32, 50);
 end
 
-procedure rhombus02
-begin
+procedure rhombus02 begin
 	gsay_reply(56, 109);
 	call rhombus00;
 end
 
-procedure rhombus03
-begin
+procedure rhombus03 begin
 	DownReact
 	gsay_reply(56, 110);
 	giq_option(4, 56, 111, rhombus03_01, 50);
 	giq_option(4, 56, 112, rhombus05, 51);
 end
 
-procedure rhombus03_01
-begin
+procedure rhombus03_01 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
 		call rhombus04;
 	end
@@ -175,133 +164,117 @@ begin
 	end
 end
 
-procedure rhombus04
-begin
+procedure rhombus04 begin
 	gsay_reply(56, 113);
 	giq_option(4, 56, 114, rhombus02, 50);
 	giq_option(4, 56, 115, rhombus05, 51);
 end
 
-procedure rhombus05
-begin
+procedure rhombus05 begin
 	gsay_message(56, 116, 51);
 	call rhombusx1;
 end
 
-procedure rhombus06
-begin
+procedure rhombus06 begin
 	call anger;
 end
 
-procedure rhombus06a
-begin
+procedure rhombus06a begin
 	DownReact
 	call rhombus06;
 end
 
-procedure rhombus07
-begin
+procedure rhombus07 begin
 	Q1 := Q1 + 1;
+
 	if (Q1 > 4) then begin
 		call anger;
 	end
-	else begin
-		if (Q1 > 3) then begin
-			call annoyed;
-		end
-		else begin
-			if (Q1 > 1) then begin
-				gsay_message(56, 179, 50);
-			end
-			gsay_reply(56, 118);
-			giq_option(4, 56, 119, rhombus08, 50);
-			giq_option(4, 56, 120, rhombus12, 50);
-			giq_option(6, 56, 121, rhombus19, 50);
-		end
+	else if (Q1 > 3) then begin
+		call annoyed;
 	end
+	else if (Q1 > 1) then begin
+		gsay_message(56, 179, 50);
+	end
+
+	gsay_reply(56, 118);
+	giq_option(4, 56, 119, rhombus08, 50);
+	giq_option(4, 56, 120, rhombus12, 50);
+	giq_option(6, 56, 121, rhombus19, 50);
 end
 
-procedure rhombus08
-begin
+procedure rhombus08 begin
 	gsay_reply(56, 122);
 	giq_option(5, 56, 123, rhombus09, 50);
 	giq_option(6, 56, 124, rhombus17, 50);
 	giq_option(4, 56, 125, rhombus18, 51);
 end
 
-procedure rhombus09
-begin
+procedure rhombus09 begin
 	gsay_reply(56, 126);
 	giq_option(5, 56, 127, rhombus09_1, 50);
 	giq_option(5, 56, 128, rhombus04, 50);
 end
 
-procedure rhombus09_1
-begin
+procedure rhombus09_1 begin
 	if (MALE) then begin
 		call rhombus11;
 	end
 	else begin
+
 		if (is_success(do_check(dude_obj, STAT_ch, -1))) then begin
 			call rhombus10;
 		end
 		else begin
 			call rhombus11;
 		end
+
 	end
 end
 
-procedure rhombus10
-begin
+procedure rhombus10 begin
 	set_local_var(6, 1);
 	gsay_reply(56, 129);
 	giq_option(5, 56, 130, rhombus06a, 51);
 	giq_option(5, 56, 131, rhombus02, 50);
 end
 
-procedure rhombus11
-begin
+procedure rhombus11 begin
 	gsay_reply(56, 132);
 	giq_option(5, 56, 133, rhombus06a, 51);
 	giq_option(5, 56, 134, rhombus02, 50);
 end
 
-procedure rhombus12
-begin
+procedure rhombus12 begin
 	gsay_reply(56, 135);
 	giq_option(4, 56, 136, rhombus03, 51);
 	giq_option(4, 56, 137, rhombus13, 50);
 end
 
-procedure rhombus13
-begin
+procedure rhombus13 begin
 	gsay_reply(56, 138);
 	giq_option(5, 56, 139, rhombus14, 50);
 	giq_option(4, 56, 140, rhombus03, 51);
 	giq_option(4, 56, 141, rhombus02, 50);
 end
 
-procedure rhombus14
-begin
+procedure rhombus14 begin
 	gsay_reply(56, 142);
 	giq_option(5, 56, 143, rhombus15, 50);
 	giq_option(5, 56, 144, rhombus03, 51);
 end
 
-procedure rhombus15
-begin
+procedure rhombus15 begin
 	gsay_reply(56, 145);
 	giq_option(5, 56, 146, rhombus02, 50);
 	giq_option(5, 56, 147, rhombus16, 50);
 end
 
-procedure rhombus16
-begin
+procedure rhombus16 begin
 	gsay_message(56, 148, 50);
 end
 
-procedure rhombus17
-begin
+procedure rhombus17 begin
 	gsay_reply(56, 149);
 	giq_option(4, 56, 150, rhombus03, 51);
 	giq_option(4, 56, 151, rhombus12, 50);
@@ -327,33 +300,27 @@ begin
 	giq_option(5, 56, 158, rhombus02, 50);
 end
 
-procedure rhombus21
-begin
+procedure rhombus21 begin
 	Q2 := Q2 + 1;
+
 	if (Q2 > 4) then begin
 		call anger;
 	end
-	else begin
-		if (Q2 > 3) then begin
-			call annoyed;
-		end
-		else begin
-			if (Q2 == 2) then begin
-				gsay_message(56, 180, 50);
-			end
-			else begin
-				if (Q2 == 3) then begin
-					gsay_message(56, 179, 50);
-				end
-			end
-			gsay_message(56, 159, 50);
-			call rhombus00;
-		end
+	else if (Q2 > 3) then begin
+		call annoyed;
 	end
+	else if (Q2 == 2) then begin
+		gsay_message(56, 180, 50);
+	end
+	else if (Q2 == 3) then begin
+		gsay_message(56, 179, 50);
+	end
+
+	gsay_message(56, 159, 50);
+	call rhombus00;
 end
 
-procedure rhombus22
-begin
+procedure rhombus22 begin
 	if (local_var(6) == 0) then begin
 		call rhombus22a;
 	end
@@ -362,8 +329,7 @@ begin
 	end
 end
 
-procedure rhombus22a
-begin
+procedure rhombus22a begin
 	gsay_reply(56, 160);
 	giq_option(4, 56, 161, rhombus09_1, 50);
 	giq_option(4, 56, 162, rhombus00, 50);
@@ -402,35 +368,30 @@ begin
 	end
 end
 
-procedure rhombus24
-begin
+procedure rhombus24 begin
 	DownReact
 	gsay_message(56, 164, 50);
 end
 
-procedure rhombus25
-begin
+procedure rhombus25 begin
 	DownReact
 	gsay_message(56, 165, 50);
 	call rhombusx1;
 end
 
-procedure rhombus26
-begin
+procedure rhombus26 begin
 	DownReact
 	gsay_message(56, 166, 50);
 end
 
-procedure rhombus27
-begin
+procedure rhombus27 begin
 	DownReact
 	gsay_reply(56, 167);
 	giq_option(4, 56, 168, rhombus27_1, 50);
 	giq_option(4, 56, 169, rhombusx1, 50);
 end
 
-procedure rhombus27_1
-begin
+procedure rhombus27_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call rhombus28;
 	end
@@ -637,63 +598,56 @@ procedure anger begin
 	if (MAD == 1) then begin
 		gsay_message(56, 182, 51);
 	end
-	else begin
-		if (MAD == 2) then begin
-			gsay_message(56, 117, 51);
-		end
-		else begin
-			if (MAD == 3) then begin
-				gsay_message(56, 177, 51);
-				call kickout;
-			end
-		end
+	else if (MAD == 2) then begin
+		gsay_message(56, 117, 51);
+	end
+	else if (MAD == 3) then begin
+		gsay_message(56, 177, 51);
+		call kickout;
 	end
 end
 
-procedure annoyed
-begin
+procedure annoyed begin
 	DownReact
 	gsay_message(56, 181, 51);
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
 		tmp_hostile := 1;
 	end
 	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
 		tmp_hostile := 0;
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
+
 		if (obj_can_see_obj(self_obj, dude_obj) and (ILLEGAL == 0)) then begin
 			here := tile_num(dude_obj);
+
 			if (tile_distance(here, 24130) < 6) then begin
 				ILLEGAL := 1;
 			end
-			else begin
-				if (tile_distance(here, 24322) < 6) then begin
-					ILLEGAL := 1;
-				end
-			end
-			if (map_var(19) > 0) then begin
+			else if (tile_distance(here, 24322) < 6) then begin
 				ILLEGAL := 1;
-				set_map_var(19, 0);
 			end
-			else begin
-				if ((tile_num(self_obj) == 22123) and (tile_distance(here, 22930) < 3)) then begin
-					float_msg(self_obj, message_str(SCRIPT_RHOMBUS, 209), 3);
-				end
+
+			if (map_var(MVAR_TOUCHING) > 0) then begin
+				ILLEGAL := 1;
+				set_map_var(MVAR_TOUCHING, 0);
 			end
+			else if ((tile_num(self_obj) == 22123) and (tile_distance(here, 22930) < 3)) then begin
+				float_msg(self_obj, message_str(SCRIPT_RHOMBUS, 209), 3);
+			end
+
 			if (ILLEGAL) then begin
 				loot := 0;
 				loot := obj_carrying_pid_obj(dude_obj, PID_MOTIVATOR);
@@ -705,56 +659,54 @@ begin
 				set_local_var(5, local_var(5) + 1);
 				dialogue_system_enter;
 			end
+
 		end
 		else begin
 			if ((local_var(7) == 1) and (tile_num(self_obj) != 22123)) then begin
 				animate_move_obj_to_tile(self_obj, 22123, 0);
 			end
-			else begin
-				if ((local_var(7) == 2) and (tile_num(self_obj) != 23928)) then begin
-					animate_move_obj_to_tile(self_obj, 23928, 0);
+			else if ((local_var(7) == 2) and (tile_num(self_obj) != 23928)) then begin
+				animate_move_obj_to_tile(self_obj, 23928, 0);
+			end
+			else if (local_var(7) == 3) then begin
+				if (local_var(5) > 0) then begin
+					sense := 0;
 				end
 				else begin
-					if (local_var(7) == 3) then begin
-						if (local_var(5) > 0) then begin
-							sense := 0;
-						end
-						else begin
-							sense := 1;
-						end
-						if (map_var(19) > sense) then begin
-							float_msg(self_obj, message_str(SCRIPT_RHOMBUS, 206), 3);
-							set_map_var(19, 0);
-							set_local_var(7, 2);
-							add_timer_event(self_obj, game_ticks(30), 1);
-						end
-						else begin
-							if (tile_num(self_obj) != 23920) then begin
-								animate_move_obj_to_tile(self_obj, 23920, 0);
-							end
-						end
-					end
-					else begin
-						if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-							if (local_var(8) == 0) then begin
-								set_local_var(8, 1);
-								set_local_var(7, 3);
-							end
-						end
-						else begin
-							set_local_var(8, 0);
-							set_local_var(7, 1);
-						end
+					sense := 1;
+				end
+				if (map_var(MVAR_TOUCHING) > sense) then begin
+					float_msg(self_obj, message_str(SCRIPT_RHOMBUS, 206), 3);
+					set_map_var(MVAR_TOUCHING, 0);
+					set_local_var(7, 2);
+					add_timer_event(self_obj, game_ticks(30), 1);
+				end
+				else begin
+					if (tile_num(self_obj) != 23920) then begin
+						animate_move_obj_to_tile(self_obj, 23920, 0);
 					end
 				end
+			end
+			else begin
+
+				if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+					if (local_var(8) == 0) then begin
+						set_local_var(8, 1);
+						set_local_var(7, 3);
+					end
+				end
+				else begin
+					set_local_var(8, 0);
+					set_local_var(7, 1);
+				end
+
 			end
 		end
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if source_obj == dude_obj then begin
 		tmp_hostile := 1;
 	end
 end
@@ -796,41 +748,25 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 	end
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+
+	inc_good_critter
 	rm_timer_event(self_obj);
 
 	set_global_var(RHOMBUS_STATUS,1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_RHOMBUS, 100));
+	display_msg(mstr(100));
 end
 
-procedure timeforwhat
-begin
+procedure timeforwhat begin
 	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
 		if (local_var(7) == 2) then begin
 			set_local_var(7, 3);
@@ -838,24 +774,21 @@ begin
 	end
 end
 
-procedure kickout
-begin
+procedure kickout begin
 	denounce := 1;
 end
 
+// Player gets kicked out from the Brotherhood
 procedure Remove_Player begin
 	set_global_var(QUEST_BROHOOD_1_JOIN_THEM, 5);
 
-	disable_all_map_elevations(MAP_BROHD12);
-	disable_all_map_elevations(MAP_BROHD34);
+	mark_map_entrance_state(MAP_BROHD12,0);
+	mark_map_entrance_state(MAP_BROHD34,0);
 
 	load_map(MAP_BROHDENT, 1);
 end
 
-
-
-procedure rhombus00
-begin
+procedure rhombus00 begin
 	gsay_reply(0, 0);
 	giq_option(4, 56, 101, rhombus07, 50);
 	giq_option(4, 56, 102, rhombus21, 50);
@@ -866,17 +799,14 @@ begin
 	giq_option(4, 56, 174, rhombusx, 50);
 end
 
-procedure rhombus34
-begin
+procedure rhombus34 begin
 	gsay_message(56, 179, 50);
 end
 
-procedure rhombus39_1
-begin
+procedure rhombus39_1 begin
 	gsay_message(56, 185, 50);
 end
 
-procedure rhombus49
-begin
+procedure rhombus49 begin
 	gsay_message(56, 195, 50);
 end
