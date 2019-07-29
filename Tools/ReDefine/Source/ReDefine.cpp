@@ -157,7 +157,9 @@ void ReDefine::Finish()
 
     // extern cleanup
     FinishDefines();
+    FinishFunctions();
     FinishOperators();
+    FinishRaw();
     FinishVariables();
 }
 
@@ -221,7 +223,7 @@ bool ReDefine::ReadFile( const std::string& filename, std::vector<std::string>& 
     return result;
 }
 
-bool ReDefine::ReadConfig( const std::string& defines, const std::string& variablePrefix, const std::string& functionPrefix )
+bool ReDefine::ReadConfig( const std::string& defines, const std::string& variablePrefix, const std::string& functionPrefix, const std::string& raw )
 {
     if( !defines.empty() && !ReadConfigDefines( defines ) )
         return false;
@@ -230,6 +232,9 @@ bool ReDefine::ReadConfig( const std::string& defines, const std::string& variab
         return false;
 
     if( !functionPrefix.empty() && !ReadConfigFunctions( functionPrefix ) )
+        return false;
+
+    if( !raw.empty() && !ReadConfigRaw( raw ) )
         return false;
 
     return true;
@@ -242,49 +247,92 @@ void ReDefine::ProcessHeaders( const std::string& path )
         ProcessHeader( path, header );
     }
 
+    GenericOperatorsMap validatedOperators;
+    StringVectorMap     validatedFunctions;
+
     // validate variables configuration
 
-    GenericOperatorsMap validated;
-
-    for( auto itVar = VariablesOperators.begin(), endVar = VariablesOperators.end(); itVar != endVar; ++itVar )
+    for( const auto& var : VariablesOperators )
     {
-        for( auto itOpName = itVar->second.begin(), endOpName = itVar->second.end(); itOpName != endOpName; ++itOpName )
+        for( const auto& opName : var.second )
         {
-            if( !IsDefineType( itOpName->second ) )
+            if( !IsDefineType( opName.second ) ) // "?" is not valid in this scope
             {
-                WARNING( __FUNCTION__, "unknown define type<%s> : variable<%s> operatorName<%s>", itOpName->second.c_str(), itVar->first.c_str(), itOpName->first.c_str() );
+                WARNING( __FUNCTION__, "unknown define type<%s> : variable<%s> operatorName<%s>", opName.second.c_str(), var.first.c_str(), opName.first.c_str() );
                 continue;
             }
 
-            LOG( "Added variable %s... %s %s %s", TextGetLower(  itOpName->first ).c_str(), itVar->first.c_str(), GetOperator( itOpName->first ).c_str(), itOpName->second.c_str() );
-            validated[itVar->first][itOpName->first] = itOpName->second;
+            LOG( "Added variable %s ... %s %s %s", TextGetLower(  opName.first ).c_str(), var.first.c_str(), GetOperator( opName.first ).c_str(), opName.second.c_str() );
+            validatedOperators[var.first][opName.first] = opName.second;
         }
     }
 
+    for( const auto& type : VariablesGuessing )
+    {
+        if( !IsDefineType( type ) )    // "?" is not valid in this scope
+        {
+            WARNING( __FUNCTION__, "unknown define type<%s> : variable guessing" );
+            VariablesGuessing.clear(); // zero tolerance policy
+            break;
+        }
+    }
+
+    if( VariablesGuessing.size() )
+        LOG( "Added variable guessing ... %s", TextGetJoined( VariablesGuessing, ", " ).c_str() );
+
     // keep valid settings only
-    VariablesOperators = validated;
-    validated.clear();
+    VariablesOperators = validatedOperators;
+    validatedOperators.clear();
 
     // validate functions configuration
 
-    for( auto itVar = FunctionsOperators.begin(), endVar = FunctionsOperators.end(); itVar != endVar; ++itVar )
+    for( const auto& var : FunctionsOperators )
     {
-        for( auto itOpName = itVar->second.begin(), endOpName = itVar->second.end(); itOpName != endOpName; ++itOpName )
+        for( const auto& opName : var.second )
         {
-            if( !IsDefineType( itOpName->second ) )
+            if( !IsDefineType( opName.second ) ) // "?" is not valid in this scope
             {
-                WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> operatorName<%s>", itOpName->second.c_str(), itVar->first.c_str(), itOpName->first.c_str() );
+                WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> operatorName<%s>", opName.second.c_str(), var.first.c_str(), opName.first.c_str() );
                 continue;
             }
 
-            LOG( "Added function %s... %s(...) %s %s", TextGetLower(  itOpName->first ).c_str(), itVar->first.c_str(), GetOperator( itOpName->first ).c_str(), itOpName->second.c_str() );
-            validated[itVar->first][itOpName->first] = itOpName->second;
+            LOG( "Added function %s ... %s(...) %s %s", TextGetLower(  opName.first ).c_str(), var.first.c_str(), GetOperator( opName.first ).c_str(), opName.second.c_str() );
+            validatedOperators[var.first][opName.first] = opName.second;
         }
     }
 
+    for( const auto& func : FunctionsArguments )
+    {
+        bool         valid = true;
+        unsigned int argument = 0;
+
+        for( const auto& type : func.second )
+        {
+            argument++;
+            if( type != "?" && !IsDefineType( type ) )
+            {
+                WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> argument<%u>", type.c_str(), func.first.c_str(), argument );
+                valid = false;
+            }
+        }
+
+        if( !valid )
+            continue;
+
+        LOG( "Added function ... %s( %s )", func.first.c_str(), TextGetJoined( func.second, ", " ).c_str() );
+        validatedFunctions[func.first] = func.second;
+    }
+
     // keep valid settings only
-    FunctionsOperators = validated;
-    validated.clear();
+    FunctionsOperators = validatedOperators;
+    FunctionsArguments = validatedFunctions;
+
+    // log raw replacement
+
+    for( const auto& from : Raw )
+    {
+        LOG( "Added raw ... %s", from.first.c_str() );
+    }
 }
 
 void ReDefine::ProcessScripts( const std::string& path, bool readOnly /* = false */ )

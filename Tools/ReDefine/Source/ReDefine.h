@@ -46,12 +46,13 @@ public:
     void LOG( const char* format, ... );
 
     bool ReadFile( const std::string& path, std::vector<std::string>& lines );
-    bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix );
+    bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix, const std::string& raw );
 
     void ProcessHeaders( const std::string& path );
     void ProcessScripts( const std::string& path, bool readOnly = false );
 
-    typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap; // <name, <operator, type>>
+    typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap;
+    typedef std::map<std::string, std::vector<std::string>>           StringVectorMap;
 
     //
     // Defines
@@ -69,7 +70,7 @@ public:
 
     std::vector<Header>                               Headers;
     std::map<std::string, std::map<int, std::string>> RegularDefines; // <type, <value, define>>
-    std::map<std::string, std::vector<std::string>>   VirtualDefines; // <type, <regular_types>>
+    StringVectorMap                                   VirtualDefines; // <virtual_type, <types>>
 
     void FinishDefines();
 
@@ -81,8 +82,8 @@ public:
     // Functions
     //
 
-    std::map<std::string, std::vector<std::string>> FunctionsArguments; // <name, <types>>
-    GenericOperatorsMap                             FunctionsOperators;
+    StringVectorMap     FunctionsArguments; // <name, <types>>
+    GenericOperatorsMap FunctionsOperators; // <name, <operator, type>>
 
     void FinishFunctions();
 
@@ -103,11 +104,22 @@ public:
     std::string GetOperatorName( const std::string& op );
 
     //
+    // Raw
+    //
+
+    std::map<std::string, std::string> Raw;
+
+    void FinishRaw();
+
+    bool ReadConfigRaw( const std::string& section );
+
+    //
     // Text
     //
 
     bool        TextIsComment( const std::string& text );
     bool        TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
+    std::string TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter );
     std::string TextGetLower( const std::string& text );
     std::string TextGetTrimmed( const std::string& text );
 
@@ -119,7 +131,8 @@ public:
     // Variables
     //
 
-    GenericOperatorsMap VariablesOperators;
+    GenericOperatorsMap      VariablesOperators; // <name, <operator, type>>
+    std::vector<std::string> VariablesGuessing;  // <types>
 
     void FinishVariables();
 

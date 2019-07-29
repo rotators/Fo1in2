@@ -19,6 +19,7 @@ target_sources( ReDefine
 		Defines.cpp
 		Functions.cpp
 		Operators.cpp
+		Raw.cpp
 		ReDefine.cpp
 		Text.cpp
 		Variables.cpp

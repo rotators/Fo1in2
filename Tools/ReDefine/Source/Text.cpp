@@ -32,6 +32,25 @@ bool ReDefine::TextGetInt( const std::string& text, int& result, const unsigned 
     return true;
 }
 
+std::string ReDefine::TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter )
+{
+    static const std::string empty;
+
+    switch( text.size() )
+    {
+        case 0:
+            return empty;
+        case 1:
+            return text[0];
+        default:
+            std::ostringstream oss;
+            copy( text.begin(), text.end() - 1, std::ostream_iterator<std::string>( oss, delimeter.c_str() ) );
+            oss << *text.rbegin();
+            return oss.str();
+    }
+}
+
+
 std::string ReDefine::TextGetLower( const std::string& text )
 {
     std::string result = text;
