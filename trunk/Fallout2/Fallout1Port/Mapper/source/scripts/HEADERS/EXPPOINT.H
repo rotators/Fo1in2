@@ -160,7 +160,9 @@
 #define EXP_KILLED_KENJI 						(400)
 #define EXP_GET_RID_OF_DOGMEAT 					(35)
 #define EXP_DOGMEAT_JOINS_PARTY					(100)
+
 // Hub
+#define EXP_BOUGHT_WATER_CARAVAN 				(1000)
 
 // Boneyard
 

@@ -2,7 +2,7 @@
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure start;
 procedure combat;
 procedure critter_p_proc;//    script_action == 12
 procedure map_update_p_proc;//    script_action == 23
@@ -65,53 +65,15 @@ variable beenPaid := 1;
 variable UnloadCaravan;
 
 
-procedure start
-begin
-	
-
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-						else begin
-							if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-								call map_update_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (self_can_see_dude and tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -152,7 +114,7 @@ end
 procedure map_enter_p_proc
 begin
 	variable LVar0 := 0;
-	if ((cur_map_index == MAP_LAADYTUM) and (global_var(FOLLOWERS_INVADED) == 1) or ((cur_map_index == MAP_BROHDENT) and (global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)) or ((cur_map_index == MAP_HOTEL) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) or ((cur_map_index == MAP_JUNKENT) and (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)) or ((cur_map_index == MAP_HUBENT) and (global_var(GVAR_THE_HUB_WAS_INVADED) == 1))) then begin //  L.A. BONEYARD ENTRANCE (ADYTUM), BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, JUNKTOWN ENTRANCE, THE HUB ENTRANCE
+	if ((cur_map_index == MAP_LAADYTUM) and (global_var(GVAR_FOLLOWERS_INVADED) == 1) or ((cur_map_index == MAP_BROHDENT) and (global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)) or ((cur_map_index == MAP_HOTEL) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) or ((cur_map_index == MAP_JUNKENT) and (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)) or ((cur_map_index == MAP_HUBENT) and (global_var(GVAR_THE_HUB_WAS_INVADED) == 1))) then begin //  L.A. BONEYARD ENTRANCE (ADYTUM), BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, JUNKTOWN ENTRANCE, THE HUB ENTRANCE
 		LVar0 := 1;
 	end
 	critter_add_trait(self_obj, 1, 6, 64);
@@ -374,9 +336,8 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
@@ -391,13 +352,13 @@ begin
 	else begin
 		if (cur_map_index == MAP_HUBENT) then begin //    THE HUB - ENTRANCE
 		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 11);
-		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 11);
+		//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 11);
 		//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 11);
-		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 11);
-		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 11);
-		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 11);
-		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 11);
-		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 11);
+		//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 11);
+		//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 11);
+		//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 11);
+		//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 11);
+		//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 11);
 			start_gdialog(817, self_obj, 4, -1, -1);
 			gsay_start;
 			if (local_var(7) == 3) then begin
@@ -477,26 +438,11 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	if (cur_map_index != MAP_HUBENT) then begin
 		call remove_caravan;
 	end
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 end
 
 procedure look_at_p_proc
@@ -509,10 +455,9 @@ procedure advance_day
 begin
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (cur_map_index == MAP_HUBENT) then begin //    THE HUB - ENTRANCE
-		if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+		if (source_obj == dude_obj) then begin
 			set_global_var(ENEMY_HUB, 1);
 		end
 	end
@@ -535,37 +480,37 @@ begin
 	giq_option(4, 817, 105, CarvLead03, 50);
 	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-	//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
 	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-	//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
-	//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
-	//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
-	//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
-	//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
 		giq_option(4, 817, 106, CarvLead04, 50);
 	end
 	else begin
 		if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
 		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
 		//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
-		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
-		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
-		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
-		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
 			giq_option(4, 817, 107, CarvLead05, 50);
 		end
 		else begin
 			if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 15);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 15);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 15);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 15);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 15);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 15);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 15);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 15);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 15);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 15);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 15);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 15);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 15);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 15);
 				giq_option(4, 817, 108, CarvLead06, 50);
 			end
 		end
@@ -596,37 +541,37 @@ begin
 	giq_option(4, 817, 116, CarvLead12, 50);
 	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-	//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
 	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-	//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
-	//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
-	//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
-	//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
-	//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
+	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
 		giq_option(4, 817, 117, CarvLead04, 50);
 	end
 	else begin
 		if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
 		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
 		//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
-		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
-		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
-		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
-		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
+		//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
 			giq_option(4, 817, 118, CarvLead05, 50);
 		end
 		else begin
 			if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
 				giq_option(4, 817, 119, CarvLead06, 50);
 			end
 		end
@@ -737,58 +682,58 @@ begin
 		set_global_var(WATER_MERCHANTS_STATUS, 1);
 		if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-		//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+		//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
 		//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-		//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
-		//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
-		//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
-		//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
-		//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+		//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
+		//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
+		//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
+		//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
+		//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
 			LVar0 := do_check(dude_obj, STAT_lu, -2);
 			if (is_success(LVar0)) then begin
 				set_global_var(WATER_MERCHANTS_STATUS, 2);
 				load_map(MAP_HUBENT, 1);
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 			end
 			else begin
 
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 				load_map(MAP_DESERT1, 3);
 
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 			end
 		end
 		else begin
 			if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
 				LVar0 := do_check(dude_obj, STAT_lu, -2);
 				if (is_success(LVar0)) then begin
 					set_global_var(WATER_MERCHANTS_STATUS, 2);
@@ -797,23 +742,23 @@ begin
 				else begin
 
 				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 					load_map(MAP_MNTCRVN4, 3);
 
 				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 				end
 			end
 		end
@@ -826,60 +771,60 @@ begin
 				load_map(MAP_DESERT1, 3);
 
 			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-			//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-			//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-			//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-			//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-			//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-			//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 			end
 			else begin
 				if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 
 				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 					load_map(MAP_DESERT1, 3);
 
 				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 				end
 				else begin
 					if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
 
 					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 						load_map(MAP_MNTCRVN4, 3);
 					end
 					else begin
 						if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
 
 						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 11);
-						//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 11);
+						//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 11);
 						//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 11);
-						//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 11);
-						//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 11);
-						//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 11);
-						//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 11);
-						//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 11);
+						//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 11);
+						//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 11);
+						//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 11);
+						//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 11);
+						//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 11);
 							load_map(MAP_MNTCRVN4, 3);
 						end
 					end
@@ -892,13 +837,13 @@ begin
 				set_global_var(FARGO_TRADERS_STATUS, 1);
 				if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-				//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
 				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-				//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
-				//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
-				//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
-				//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
-				//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
+				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
+				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
+				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
+				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
 					LVar0 := do_check(dude_obj, STAT_lu, -4);
 					if (is_success(LVar0)) then begin
 						set_global_var(FARGO_TRADERS_STATUS, 2);
@@ -906,34 +851,34 @@ begin
 					end
 					else begin
 					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 						load_map(MAP_DESERT1, 3);
 					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 					end
 				end
 				else begin
 					if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
 					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-					//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 2);
+					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
 					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-					//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 2);
-					//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 2);
-					//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 2);
-					//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 2);
-					//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 2);
+					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
+					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
+					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
+					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
+					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
 						LVar0 := do_check(dude_obj, STAT_lu, -4);
 						if (is_success(LVar0)) then begin
 							set_global_var(FARGO_TRADERS_STATUS, 2);
@@ -941,26 +886,26 @@ begin
 						end
 						else begin
 						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-						//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+						//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 						//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-						//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-						//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-						//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-						//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-						//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+						//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+						//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+						//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+						//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+						//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 							load_map(MAP_MNTCRVN4, 3);
 						end
 					end
 					else begin
 						if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
 						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-						//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 7);
+						//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
 						//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-						//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 7);
-						//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 7);
-						//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 7);
-						//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 7);
-						//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 7);
+						//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
+						//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
+						//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
+						//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
+						//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
 							LVar0 := do_check(dude_obj, STAT_lu, -4);
 							if (is_success(LVar0)) then begin
 								set_global_var(FARGO_TRADERS_STATUS, 2);
@@ -968,22 +913,22 @@ begin
 							end
 							else begin
 							//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-							//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 9);
+							//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
 							//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-							//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 9);
-							//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 9);
-							//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 9);
-							//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 9);
-							//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 9);
+							//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
+							//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
+							//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
+							//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
+							//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
 								load_map(MAP_DESERT1, 3);
 							//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-							//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+							//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 							//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-							//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-							//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-							//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-							//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-							//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+							//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+							//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+							//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+							//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+							//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 							end
 						end
 					end
@@ -996,13 +941,13 @@ end
 procedure Abandoned
 begin
 //	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 //	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 501, 51);
 //	set_global_var(CVAN_DRIVER, 1);
 //	set_global_var(CVAN_GUARD, 2);
@@ -1012,13 +957,13 @@ end
 procedure Lost
 begin
 //	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 //	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 502, 51);
 //	set_global_var(CVAN_DRIVER, 1);
 //	set_global_var(CVAN_GUARD, 2);
@@ -1028,13 +973,13 @@ end
 procedure HubAbandoned
 begin
 //	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 //	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 504, 51);
 //	set_global_var(CVAN_DRIVER, 1);
 //	set_global_var(CVAN_GUARD, 2);
@@ -1044,13 +989,13 @@ end
 procedure HubLost
 begin
 //	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(FOLLOWERS_INVADED_DATE, global_var(FOLLOWERS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
 //	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(THE_HUB_INVADED_DATE, global_var(THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(BROTHERHOOD_INVADED_DATE, global_var(BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(JUNKTOWN_INVADED_DATE, global_var(JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(SHADY_SANDS_INVADED_DATE, global_var(SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 1);
+//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
+//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
+//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
+//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
+//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 505, 51);
 //	set_global_var(CVAN_DRIVER, 1);
 //	set_global_var(CVAN_GUARD, 2);

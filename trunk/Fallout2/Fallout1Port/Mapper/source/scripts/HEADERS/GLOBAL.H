@@ -250,13 +250,13 @@
 #define TRISH_EVENT								(1145)
 #define VATS_ALERT								(1146)
 #define VATS_COUNTDOWN							(1147)
-#define FOLLOWERS_INVADED_DATE					(1148)
+#define GVAR_FOLLOWERS_INVADED_DATE					(1148)
 #define GVAR_NECROPOLIS_INVADED_DATE					(1149)
-#define THE_HUB_INVADED_DATE					(1150)
-#define BROTHERHOOD_INVADED_DATE				(1151)
-#define JUNKTOWN_INVADED_DATE					(1152)
-#define SHADY_SANDS_INVADED_DATE				(1153)
-#define VAULT_13_INVADED_DATE					(1154)
+#define GVAR_THE_HUB_INVADED_DATE					(1150)
+#define GVAR_BROTHERHOOD_INVADED_DATE				(1151)
+#define GVAR_JUNKTOWN_INVADED_DATE					(1152)
+#define GVAR_SHADY_SANDS_INVADED_DATE				(1153)
+#define GVAR_VAULT_13_INVADED_DATE					(1154)
 //	moved to top of this file
 //	moved to top of this file
 //	moved to top of this file

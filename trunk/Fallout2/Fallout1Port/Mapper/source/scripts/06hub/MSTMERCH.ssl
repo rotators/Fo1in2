@@ -1,15 +1,30 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure damage_p_proc;//    script_action == 14
+	Hub - Water Merchant leader
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MSTMERCH
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure damage_p_proc;
+
 procedure MasterMerch00;
 procedure MasterMerch01;
 procedure MasterMerch02;
@@ -35,163 +50,98 @@ procedure MasterMerchEnd;
 procedure Lost;
 procedure Abandoned;
 
+procedure Node998;
+procedure Node999;
+
 variable tmp_hostile;
 variable Only_Once := 1;
 
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_RED)
 
-procedure start
-begin
-	
-
-	if Only_Once then begin
-		Only_Once := 0;
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 35);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 50);
-	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-							call damage_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure combat
-begin
+procedure Node998 begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure Node999 begin
+end
+
+procedure start begin
+	if Only_Once then begin
+		Only_Once := 0;
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_HUB_WATER_MERCHANTS);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_MERCHANT);
+	end
+end
+
+procedure critter_p_proc begin
+	if (self_can_see_dude and tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	call MasterMerch00;
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+
 	get_reaction
+
 	if (map_var(2) == 0) then begin
-		float_msg(self_obj, message_str(SCRIPT_MSTMERCH, 156), 2);
+		float(156);
+	end
+	else if (global_var(WATER_JOB) == 5) then begin
+		start_gdialog(598, self_obj, 4, -1, -1);
+		gsay_start;
+		call Lost;
+		gsay_end;
+		end_dialogue;
+	end
+	else if (global_var(WATER_JOB) == 3) then begin
+		start_gdialog(598, self_obj, 4, -1, -1);
+		gsay_start;
+		call Abandoned;
+		gsay_end;
+		end_dialogue;
+	end
+	else if (local_var(4) == 0) then begin
+		set_local_var(4, 1);
+		start_dialog_at_node(MasterMerch01);
+	end
+	else if ((local_var(5) > 0) and (global_var(QUEST_VAULT13_4_WATERCHIP) < 1)) then begin
+		start_dialog_at_node(MasterMerch19);
 	end
 	else begin
-		if (global_var(WATER_JOB) == 5) then begin
-			start_gdialog(598, self_obj, 4, -1, -1);
-			gsay_start;
-			call Lost;
-			gsay_end;
-			end_dialogue;
-		end
-		else begin
-			if (global_var(WATER_JOB) == 3) then begin
-				start_gdialog(598, self_obj, 4, -1, -1);
-				gsay_start;
-				call Abandoned;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				if (local_var(4) == 0) then begin
-					set_local_var(4, 1);
-					start_gdialog(598, self_obj, 4, -1, -1);
-					gsay_start;
-					call MasterMerch01;
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					if ((local_var(5) > 0) and (global_var(QUEST_VAULT13_4_WATERCHIP) < 1)) then begin
-						start_gdialog(598, self_obj, 4, -1, -1);
-						gsay_start;
-						call MasterMerch19;
-						gsay_end;
-						end_dialogue;
-					end
-					else begin
-						start_gdialog(598, self_obj, 4, -1, -1);
-						gsay_start;
-						call MasterMerch10;
-						gsay_end;
-						end_dialogue;
-					end
-				end
-			end
-		end
+		start_dialog_at_node(MasterMerch10);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+procedure destroy_p_proc begin
+	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_MSTMERCH, 100));
+	display_msg(mstr(100));
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure MasterMerch00
-begin
+procedure MasterMerch00 begin
 	float_msg(self_obj, message_str(SCRIPT_MSTMERCH, 101), 2);
-	call combat;
+	call Node998;
 end
 
-procedure MasterMerch01
-begin
+procedure MasterMerch01 begin
 	gsay_reply(598, 102);
 	giq_option(4, 598, 103, MasterMerch02, 50);
 	if ((global_var(QUEST_VAULT13_4_WATERCHIP) != 2) or ((global_var(NECROP_WATER_CHIP_TAKEN) == 1) and (global_var(NECROP_WATER_PUMP_FIXED) == 0))) then begin
@@ -201,8 +151,7 @@ begin
 	giq_option(-3, 598, 106, MasterMerch03, 50);
 end
 
-procedure MasterMerch02
-begin
+procedure MasterMerch02 begin
 	set_map_var(1, 1);
 	gsay_reply(598, 107);
 	giq_option(4, 598, 108, MasterMerchEnd, 50);
@@ -212,13 +161,11 @@ begin
 	giq_option(-3, 598, 110, MasterMerch03, 50);
 end
 
-procedure MasterMerch03
-begin
+procedure MasterMerch03 begin
 	gsay_message(598, 111, 50);
 end
 
-procedure MasterMerch04
-begin
+procedure MasterMerch04 begin
 	if (global_var(WORLDMAPLIST_NECROPOLIS) == 0) then begin
 		set_global_var(WORLDMAPLIST_NECROPOLIS, 1);
 		mark_on_map(AREA_NECROPOLIS)
@@ -304,8 +251,7 @@ begin
 	call MasterMerch15;
 end
 
-procedure MasterMerch15
-begin
+procedure MasterMerch15 begin
 	if (local_var(5) == 0) then begin
 		set_local_var(5, 2000);
 	end
@@ -362,22 +308,23 @@ begin
 	end
 end
 
-procedure MasterMerch19
-begin
+procedure MasterMerch19 begin
 	gsay_reply(598, message_str(SCRIPT_MSTMERCH, 157) + local_var(5) + message_str(SCRIPT_MSTMERCH, 158));
 	call MasterMerch15;
 end
 
-procedure MasterMerch20
-begin
+procedure MasterMerch20 begin
 	variable LVar0 := 0;
 	item_caps_adjust(dude_obj, -1 * local_var(5));
+
 	set_global_var(QUEST_VAULT13_4_WATERCHIP, 1);
 	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) + 100);
-	if (global_var(VAULT_13_INVADED_DATE) >= 100) then begin
-		set_global_var(VAULT_13_INVADED_DATE, global_var(VAULT_13_INVADED_DATE) - 90);
+
+	if get_v13_days_left >= 100 then begin
+		set_v13_days_left(-90);
 	end
-	give_exp_points(1000);
+
+	give_exp_points(EXP_BOUGHT_WATER_CARAVAN);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 1000 + message_str(SCRIPT_GENCHAT, 104));
 	gsay_message(598, 155, 50);
 end
@@ -386,15 +333,13 @@ procedure MasterMerchEnd
 begin
 end
 
-procedure Lost
-begin
+procedure Lost begin
 	set_map_var(2, 0);
 	set_global_var(WATER_JOB, 6);
 	gsay_message(598, 200, 50);
 end
 
-procedure Abandoned
-begin
+procedure Abandoned begin
 	gsay_message(598, 201, 50);
 end
 
