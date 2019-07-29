@@ -5,6 +5,7 @@
 void ReDefine::FinishVariables()
 {
     VariablesOperators.clear();
+    VariablesGuessing.clear();
 }
 
 bool ReDefine::ReadConfigVariables( const std::string& sectionPrefix )
@@ -19,10 +20,19 @@ bool ReDefine::ReadConfigVariables( const std::string& sectionPrefix )
     {
         if( section.length() < sectionPrefix.length() )
             continue;
+        // [VariableGuess]
         else if( section == sectionPrefix + "Guess" )
         {
-            DEBUG( __FUNCTION__, "TODO %s", section.c_str() );
+            std::vector<std::string> types = Config->GetStrVec( section, section );
+            if( !types.size() )
+                continue;
+
+            // type validation is part of ProcessHeaders(),
+            // as at this point *Defines maps might not be initialized yet,
+            VariablesGuessing = types;
         }
+        // [VariableOPERATOR]
+        // see InitOperators() for valid values for OPERATOR
         else if( section.substr( 0, sectionPrefix.length() ) == sectionPrefix )
         {
             const std::string opName = section.substr( sectionPrefix.length(), section.length() - sectionPrefix.length() );

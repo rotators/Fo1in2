@@ -108,7 +108,7 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
 
     Status.Current.Clear();
 
-    LOG( "Process %s... %u %s define%s%s%s",
+    LOG( "Process %s ... %u %s define%s%s%s",
          header.Filename.c_str(),
          RegularDefines[header.Type].size(),
          header.Prefix.c_str(),

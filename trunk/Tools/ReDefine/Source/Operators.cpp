@@ -39,10 +39,10 @@ std::string ReDefine::GetOperator( const std::string& op )
 
 std::string ReDefine::GetOperatorName( const std::string& op )
 {
-    for( auto it = Operators.begin(), end = Operators.end(); it != end; ++it )
+    for( const auto& opName : Operators )
     {
-        if( it->second == op )
-            return it->first;
+        if( opName.second == op )
+            return opName.first;
     }
 
     return std::string();

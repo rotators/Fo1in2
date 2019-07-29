@@ -20,10 +20,32 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
     {
         if( section.length() < sectionPrefix.length() )
             continue;
+        // [Function]
         else if( section == sectionPrefix )
         {
-            DEBUG( __FUNCTION__, "TODO %s", section.c_str() );
+            std::vector<std::string> keys;
+            if( !Config->GetSectionKeys( section, keys ) )
+            {
+                WARNING( "config section<%s> is empty", section.c_str() );
+                continue;
+            }
+
+            for( const auto& name : keys )
+            {
+                std::vector<std::string> types = Config->GetStrVec( section, name );
+                if( !types.size() )
+                {
+                    WARNING( "config setting<%s->%s> is empty", section.c_str(), name.c_str() );
+                    continue;
+                }
+
+                // type validation is part of ProcessHeaders(),
+                // as at this point *Defines maps might not be initialized yet,
+                FunctionsArguments[name] = types;
+            }
         }
+        // [FunctionOPERATOR]
+        // see InitOperators() for valid values for OPERATOR
         else if( section.substr( 0, sectionPrefix.length() ) == sectionPrefix )
         {
             const std::string opName = section.substr( sectionPrefix.length(), section.length() - sectionPrefix.length() );

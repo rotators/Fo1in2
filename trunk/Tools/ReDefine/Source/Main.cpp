@@ -40,15 +40,16 @@ int main( int argc, char** argv )
         //
         // validate config and convert settings to internal structures
         //
-        // sections can be loaded separetely by either calling ReadConfig() changing unwanted sections names to empty strings,
-        // or calling related function only (ReadConfigDefines() / ReadConfigVariables() / ReadConfigFunctions())
+        // sections can be loaded separetely by either calling ReadConfig() and changing unwanted sections names to empty strings,
+        // or calling related ReadConfig*() function only
         //
         // defines section needs to be processed before other settings
         //
-        if( redefine->ReadConfig( "Defines", "Variable", "Function" ) )
+        if( redefine->ReadConfig( "Defines", "Variable", "Function", "Raw" ) )
         {
             // unload config
             // added here to make sure Process*() functions are independent o ReadConfig*()
+            // in long-running applications it might be a good idea to keep config alive
             redefine->Config->Unload();
 
             // process headers
