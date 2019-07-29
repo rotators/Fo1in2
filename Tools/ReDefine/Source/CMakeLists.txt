@@ -17,6 +17,7 @@ target_sources( ReDefine
 		Main.cpp
 
 		Defines.cpp
+		Functions.cpp
 		Operators.cpp
 		ReDefine.cpp
 		Text.cpp
