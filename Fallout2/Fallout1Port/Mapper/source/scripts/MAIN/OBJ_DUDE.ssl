@@ -29,7 +29,6 @@ procedure use_skill_on_p_proc;
 
 procedure KillCheck;
 procedure DebugEnterMsgs;// "Player has entered Map, blah blah"
-procedure Invasions;
 
 variable ShootOverseer := 0;
 variable gun_ptr := 0;
@@ -455,9 +454,6 @@ procedure map_update_p_proc begin
 			end
 		end
 	end
-	else if ((cmap >= 0) and (cmap <= 2)) or ((cmap >= 19) and (cmap <= 23)) or ((cmap >= 49) and (cmap <= 54)) then begin// Random Encounters, since sometimes lots of time will pass during these for things like resting, we want the Invasion timers to always be up-to-date when entering Towns after leaving a Random Encounter.
-		call Invasions;
-	end
 
 	// Check for radiation death screen:
 	set_global_var(GVAR_TRACK_RADIATION_DEATH, get_critter_stat(dude_obj, STAT_current_rad));
@@ -671,190 +667,6 @@ procedure KillCheck begin
 end
 
 procedure use_skill_on_p_proc begin
-end
-
-procedure Invasions begin
-/*
-	variable Skip := 0;
-	if global_var(VATS_BLOWN) then begin//  and if cur_map_index != MAP_MBDEAD
-		if not(global_var(VATSPOW_INVAD_MAP_CLEARED)) then begin
-			set_global_var(VATSPOW_INVAD_MAP_CLEARED, 1);
-			set_global_var(WORLDMAPLIST_MILITARYBASE, 0);
-			set_global_var(MARK_BASE_1, 0);
-			set_global_var(MARK_BASE_2, 0);
-			set_global_var(MARK_BASE_3, 0);
-			set_global_var(MARK_BASE_4, 0);
-			set_global_var(MARK_BASE_5, 0);
-		end
-	end
-	if global_var(MASTER_BLOWN) then begin//  and if cur_map_index != MAP_CHILDEAD
-		if not(global_var(CATHPOW_INVAD_MAP_CLEARED)) then begin
-			set_global_var(CATHPOW_INVAD_MAP_CLEARED, 1);
-			set_global_var(WORLDMAPLIST_CHILDREN, 0);
-			set_global_var(WORLDMAPLIST_MASTERS_LAIR, 0);
-			set_global_var(TOWN_CHILDREN_1, 0);
-			set_global_var(MARK_CHILD_1, 0);
-			set_global_var(MARK_CHILD_2, 0);
-		end
-	end// GVAR 429 == HOW_INVASIONS_STOPPED?  0==Master (vanilla), 1==Master-or-Vats, 2==Both
-	if not(global_var(MASTER_BLOWN)) or not(global_var(VATS_BLOWN)) then begin// 17 == VATS_BLOWN, 18 == MASTER_BLOWN
-		if global_var(HOW_INVASIONS_STOPPED) == 0 then begin
-			if global_var(MASTER_BLOWN) then begin
-				Skip := 1;
-			end
-		end
-		else begin
-			if global_var(HOW_INVASIONS_STOPPED) == 1 then begin
-				if global_var(MASTER_BLOWN) or global_var(VATS_BLOWN) then begin
-					Skip := 1;
-				end
-			end
-			else begin
-				if global_var(MASTER_BLOWN) and global_var(VATS_BLOWN) then begin
-					Skip := 1;
-				end
-			end
-		end
-		if not(Skip) then begin
-			variable Days := 0;
-			Days := game_time / (10 * 60 * 60 * 24);
-			if global_var(GVAR_FOLLOWERS_INVADED_DATE) <= Days then begin// Followers, L.A. Boneyard - vanilla 90 days
-				set_global_var(FOLLOWERS_INVADED, 1);
-				if not(global_var(FOLLOWR_INVAD_MAP_CLEARED)) then begin
-					set_global_var(FOLLOWR_INVAD_MAP_CLEARED, 1);
-					//set_global_var(WORLDMAPLIST_BONEYARD, 0);
-					//set_global_var(MARK_LA_1, 0);
-					set_global_var(MARK_LA_2, 0);
-					set_global_var(MARK_LA_3, 0);
-					set_global_var(MARK_LA_4, 0);
-					set_global_var(MARK_LA_5, 0);
-				end
-			end
-			if global_var(GVAR_NECROPOLIS_INVADED_DATE) <= Days then begin// Necropolis - vanilla 110 days (or 30 after mutants killed)
-				set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1);
-				if not(global_var(NECROPL_INVAD_MAP_CLEARED)) then begin
-					set_global_var(NECROPL_INVAD_MAP_CLEARED, 1);
-					//set_global_var(WORLDMAPLIST_NECROPOLIS, 0);
-					//set_global_var(TOWN_HALL_OF_THE_DEAD, 0);
-					//set_global_var(TOWN_HOTEL_OF_DOOM, 0);
-					//set_global_var(TOWN_NECROP_VAULT, 0);
-					//set_global_var(TOWN_WATERSHED, 0);
-					//set_global_var(MARK_NECROP_1, 0);
-					set_global_var(MARK_NECROP_2, 0);
-					set_global_var(MARK_NECROP_3, 0);
-				end
-			end
-			if global_var(GVAR_THE_HUB_INVADED_DATE) <= Days then begin// The Hub - vanilla 140 days
-				set_global_var(GVAR_THE_HUB_WAS_INVADED, 1);
-				if not(global_var(THE_HUB_INVAD_MAP_CLEARED)) then begin
-					set_global_var(THE_HUB_INVAD_MAP_CLEARED, 1);
-					//set_global_var(WORLDMAPLIST_THE_HUB, 0);
-					//set_global_var(MARK_HUB_1, 0);
-					set_global_var(MARK_HUB_2, 0);
-					set_global_var(MARK_HUB_3, 0);
-					set_global_var(MARK_HUB_4, 0);
-					set_global_var(MARK_HUB_5, 0);
-					set_global_var(MARK_HUB_6, 0);
-				end
-			end
-			if global_var(GVAR_BROTHERHOOD_INVADED_DATE) <= Days then begin// Brotherhood of Steel - vanilla 170 days
-				set_global_var(GVAR_BROTHERHOOD_WAS_INVADED, 1);
-				if not(global_var(BROTHER_INVAD_MAP_CLEARED)) then begin
-					set_global_var(BROTHER_INVAD_MAP_CLEARED, 1);
-					//set_global_var(WORLDMAPLIST_BROTHERHOOD, 0);
-					//set_global_var(TOWN_BROTHERHOOD_12, 0);
-					//set_global_var(TOWN_BROTHERHOOD_34, 0);
-					//set_global_var(TOWN_BROTHERHOOD_ENTRANCE, 0);
-					//set_global_var(MARK_BROTHER_1, 0);
-					set_global_var(MARK_BROTHER_2, 0);
-					set_global_var(MARK_BROTHER_3, 0);
-					set_global_var(MARK_BROTHER_4, 0);
-					set_global_var(MARK_BROTHER_5, 0);
-				end
-			end
-			if global_var(GVAR_JUNKTOWN_INVADED_DATE) <= Days then begin// Junktown - vanilla 200 days
-				set_global_var(GVAR_JUNKTOWN_WAS_INVADED, 1);
-				if not(global_var(JUNKTWN_INVAD_MAP_CLEARED)) then begin
-					set_global_var(JUNKTWN_INVAD_MAP_CLEARED, 1);
-					//set_global_var(WORLDMAPLIST_JUNKTOWN, 0);
-					//set_global_var(TOWN_JUNKTOWN_CASINO, 0);
-					//set_global_var(TOWN_JUNKTOWN_ENTRANCE, 0);
-					//set_global_var(TOWN_JUNKTOWN_KILLIAN, 0);
-					//set_global_var(MARK_JUNK_1, 0);
-					set_global_var(MARK_JUNK_2, 0);
-					set_global_var(MARK_JUNK_3, 0);
-				end
-			end
-			if global_var(GVAR_SHADY_SANDS_INVADED_DATE) <= Days then begin// Shady Sands - vanilla 230 days (NOW ALSO INCLUDES RAIDERS AND VAULT 15)
-				set_global_var(GVAR_SHADY_SANDS_WAS_INVADED, 1);
-				if not(global_var(SHADSND_INVAD_MAP_CLEARED)) then begin
-					set_global_var(SHADSND_INVAD_MAP_CLEARED, 1);
-					//set_global_var(WORLDMAPLIST_SHADY_SANDS, 0);//  SANDS
-					//set_global_var(TOWN_CAVES, 0);//  SANDS (Caves)
-					//set_global_var(TOWN_SHADY_SANDS_EAST, 0);//  SANDS
-					//set_global_var(TOWN_SHADY_SANDS_WEST, 0);//  SANDS
-					//set_global_var(MARK_SHADY_1, 0);// SANDS
-					set_global_var(MARK_SHADY_2, 0);// SANDS
-					set_global_var(MARK_SHADY_3, 0);// SANDS
-					//set_global_var(WORLDMAPLIST_VAULT_15, 0);//  V15
-					//set_global_var(TOWN_BURIED_VAULT_MAP, 0);//  V15
-					//set_global_var(TOWN_VAULT_ENTRANCE, 0);//  V15
-					//set_global_var(MARK_V15_1, 0);// V15
-					set_global_var(MARK_V15_2, 0);// V15
-					set_global_var(MARK_V15_3, 0);// V15
-					set_global_var(MARK_V15_4, 0);// V15
-					//set_global_var(WORLDMAPLIST_RAIDERS, 0);//  RAIDERS
-					//set_global_var(MARK_RAIDERS_1, 0);// RAIDERS
-				end
-			end
-			if (global_var(CAN_PLAY_AFTER_V13_DEAD) == 0) or (global_var(CAN_PLAY_AFTER_V13_DEAD) == 2) then begin// if cannot continue game after V13 invaded
-				if global_var(GVAR_VAULT_13_INVADED_DATE) <= Days then begin// Vault 13 - vanilla 500 days (if enabled)
-					set_global_var(GVAR_VAULT_13_WAS_INVADED, 1);
-					if not(global_var(VAULT13_INVAD_MAP_CLEARED)) then begin
-						set_global_var(VAULT13_INVAD_MAP_CLEARED, 1);
-						set_global_var(WORLDMAPLIST_VAULT_13, 0);
-						set_global_var(TOWN_VAULT_13_MAP, 0);
-						set_global_var(MARK_V13_1, 0);
-						set_global_var(MARK_V13_2, 0);
-						set_global_var(MARK_V13_3, 0);
-						set_global_var(MARK_V13_4, 0);
-					end
-					play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
-					signal_end_game;
-				end
-			end
-			else begin
-				if not(global_var(VAULT_13_INVAD_NUM_MOVED)) then begin// have moved gvar? (to avoid hardcoded endgame custcene)
-					set_global_var(VAULT_13_INVAD_NUM_MOVED, 1);
-					set_global_var(VAULT_13_INVAD_DAYS_LEFT, global_var(GVAR_VAULT_13_INVADED_DATE));// move value, reset original
-					set_global_var(GVAR_VAULT_13_INVADED_DATE, 64000);
-				end
-				if global_var(VAULT_13_INVAD_DAYS_LEFT) <= Days then begin
-					set_global_var(GVAR_VAULT_13_WAS_INVADED, 1);
-					if not(global_var(VAULT13_INVAD_MAP_CLEARED)) then begin
-						set_global_var(VAULT13_INVAD_MAP_CLEARED, 1);
-						set_global_var(WORLDMAPLIST_VAULT_13, 0);
-						set_global_var(TOWN_VAULT_13_MAP, 0);
-						set_global_var(MARK_V13_1, 0);
-						set_global_var(MARK_V13_2, 0);
-						set_global_var(MARK_V13_3, 0);
-						set_global_var(MARK_V13_4, 0);
-						if not(combat_is_initialized) then begin
-							debug_msg("Started playing cutscene#7 for V13 invasion, may crash / cause issues!");
-//							game_ui_disable;
-							gfade_out(1);
-							play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
-							gfade_in(1);
-//							game_ui_enable;
-							debug_msg("Done playing cutscene#7 for V13 invasion.");
-						end
-					end
-				end
-			end
-		end
-	end
-*/
-
 end
 
 procedure GiveItems
@@ -1086,7 +898,6 @@ procedure Slideshow begin
 	set_global_var(VATS_BLOWN,1);
 
 	load_map(MAP_V13ENT, -1);
-	//endgame_slideshow;
 end
 
 procedure Cheater00// GIVE EXPERIENCE
