@@ -1,14 +1,28 @@
+/*
+
+	Boneyard - Miles the chemist
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+#define NAME                    SCRIPT_MILES
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
 
 procedure Miles01;
 procedure Miles02;
@@ -42,44 +56,23 @@ procedure MilesEnd;
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
-variable exit_line;
-
-
-
-procedure Start
-begin
-	
-	
+procedure Start begin
 	if Only_Once then begin
-		/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0) then begin
+		if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0) then begin
 			item_caps_adjust(self_obj, random(500, 750));
 		end
 		if ((global_var(BLADES_STATUS) == 9103) or (global_var(BLADES_STATUS) == 9102)) then begin
-critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 0);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_PLAYER);
 		end
 		else begin
-critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 49);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER);
 		end
-critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 6);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_PEASANT);
 		Only_Once := 0;
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
 		display_msg(message_str(SCRIPT_MILES, 100));
@@ -89,8 +82,7 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
 		display_msg(message_str(SCRIPT_MILES, 100));
@@ -100,9 +92,8 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
-	anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)));
+procedure talk_p_proc begin
+	dude_look_at_critter;
 	if (global_var(ENEMY_ADYTUM) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
@@ -179,37 +170,22 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if source_obj == dude_obj then begin
 		set_global_var(ENEMY_ADYTUM, 1);
-critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 49);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+procedure destroy_p_proc begin
+	if source_obj == dude_obj then begin
+		inc_good_critter
 		set_global_var(ENEMY_ADYTUM, 1);
-critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 49);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER);
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
 		if (global_var(ENEMY_ADYTUM) == 1) then begin
 			attack(dude_obj);
@@ -217,13 +193,11 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var(ENEMY_ADYTUM, 1);
 end
 
-procedure Miles01
-begin
+procedure Miles01 begin
 	gsay_reply(249, 102);
 	giq_option(4, 249, 103, Miles02, 50);
 	giq_option(4, 249, 104, Miles03, 50);
@@ -296,7 +270,7 @@ end
 procedure Miles13
 begin
 	gsay_reply(249, 123);
-	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_PUMP_PARTS)) then begin
+	if (obj_is_carrying_obj_pid(dude_obj, PID_PUMP_PARTS)) then begin
 		gsay_option(249, 124, Miles15, 50);
 	end
 	else begin
@@ -324,8 +298,7 @@ begin
 	gsay_option(249, 132, Miles17a, 50);
 end
 
-procedure Miles17
-begin
+procedure Miles17 begin
 	variable LVar0 := 0;
 	gsay_message(249, 133, 50);
 	LVar0 := obj_carrying_pid_obj(dude_obj, PID_PUMP_PARTS);
@@ -338,8 +311,7 @@ begin
 	gsay_message(249, 137, 50);
 end
 
-procedure Miles17a
-begin
+procedure Miles17a begin
 	variable LVar0 := 0;
 	UpReactLevel
 	gsay_message(249, 133, 50);
@@ -397,7 +369,7 @@ end
 procedure Miles24
 begin
 	gsay_reply(249, 142);
-	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_CHEMISTRY_MANUAL)) then begin
+	if (obj_is_carrying_obj_pid(dude_obj, PID_CHEMISTRY_MANUAL)) then begin
 		gsay_option(249, 143, Miles25, 50);
 	end
 	else begin
@@ -422,10 +394,9 @@ begin
 	gsay_message(249, 148, 50);
 end
 
-procedure Miles28
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
+procedure Miles28 begin
+variable Item;
+
 	gsay_message(249, 149, 50);
 	if global_var(FADE_TIMES_INCREASED) then begin
 		gfade_out(1);
@@ -435,16 +406,13 @@ begin
 	game_time_advance(game_ticks(1 * 60 * 60 * 24));// 1 day for bonding to occur
 	game_time_advance(game_ticks(60 * 60 * 6));// 6 hours to read the books and perform pre-bonding tasks
 	gfade_in(1);
+
 	gsay_message(249, 150, 50);
-	LVar1 := create_object_sid(PID_FRIDGE, 0, 0, -1);
-	move_obj_inven_to_obj(dude_obj, LVar1);
-	move_obj_inven_to_obj(LVar1, dude_obj);
-	LVar0 := obj_carrying_pid_obj(dude_obj, PID_POWERED_ARMOR);
-	rm_obj_from_inven(dude_obj, LVar0);
-	destroy_object(LVar0);
-	destroy_object(LVar1);
-	LVar0 := create_object_sid(PID_HARDENED_POWER_ARMOR, 0, 0, -1);
-	add_obj_to_inven(dude_obj, LVar0);
+
+	remove_pid_qty(dude_obj, PID_POWERED_ARMOR, 1)
+   Item:=create_object(PID_HARDENED_POWER_ARMOR,0,0);
+   add_mult_objs_to_inven(dude_obj,Item,1);
+
 	set_local_var(5, 2);
 end
 

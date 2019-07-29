@@ -68,6 +68,8 @@
 
 #define dude_is_animal_friend 			(has_trait(TRAIT_PERK, dude_obj, PERK_animal_friend) == 1)
 
+#define dude_look_at_critter			anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)))
+
 //==============================================================
 // Settings:
 #define fo1in2_fluff_enc_disabled 		(global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0)
