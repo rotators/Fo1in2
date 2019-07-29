@@ -8,14 +8,17 @@
 
 //==============================================================
 // Generic:
-#define set_story_finished 		 		set_global_var(GAME_CONTINUES,100); 	\
-										if (dude_is_male) then 					\
-											play_gmovie(WALKM_MOVIE); 			\
-										else 									\
-											play_gmovie(WALKW_MOVIE); 			\
-										endgame_movie; 							\
-										gfade_out(1);							\
-										world_map; 								\
+// Note: If the player decides to continue after finishing the game,
+// He will be moved to a new random position on the worldmap.
+#define set_story_finished				set_world_map_pos(random(780,990),random(130,260));	\
+										set_global_var(GAME_CONTINUES,100); 				\
+										if (dude_is_male) then 								\
+											play_gmovie(WALKM_MOVIE); 						\
+										else 												\
+											play_gmovie(WALKW_MOVIE); 						\
+										endgame_movie; 										\
+										gfade_out(1);										\
+										world_map; 											\
 										gfade_in(1)
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)

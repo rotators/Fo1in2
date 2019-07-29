@@ -1,4 +1,5 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
 procedure damage_p_proc;
@@ -13,17 +14,18 @@ procedure Banished02;
 
 import variable vault_door_ptr;
 
+#define LVAR_VaultAccess 		(0)
+#define LVAR_DoorStatus 		(1)
+
 procedure start begin
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		display_msg(message_str(SCRIPT_V13COMP, 124));
 		add_timer_event(self_obj, game_ticks(10), 2);
 	end
 	else if (fixed_param == 2) then begin
-
 		set_global_var(VAULT13_WATER_DAYS_LEFT, 0);
 		game_ui_disable;
 
@@ -42,13 +44,17 @@ end
 
 procedure damage_p_proc begin
 	script_overrides;
-	if not(local_var(1)) then begin
-		set_local_var(1, 1);
+	if (local_var(LVAR_DoorStatus) == 0) then begin
+		set_local_var(LVAR_DoorStatus, 1);
+
 		if is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0)) then begin
 			set_map_var(1, 1);
+
 			display_msg(message_str(SCRIPT_V13COMP, 121) + message_str(SCRIPT_V13COMP, 116) + message_str(SCRIPT_V13COMP, 119));
 			display_msg(message_str(SCRIPT_GENCHAT, 503) + 50 + message_str(SCRIPT_GENCHAT, 504));
-			give_exp_points(50);
+
+			give_exp_points(EXP_DESTROYED_DOOR_TERMINAL);
+
 			if not(obj_is_open(vault_door_ptr)) then begin
 				use_obj(vault_door_ptr);
 			end
@@ -63,11 +69,12 @@ procedure damage_p_proc begin
 				add_timer_event(self_obj, game_ticks(10), 1);
 			end
 		end
+
 	end
 end
 
 procedure look_at_p_proc begin
-	if not(local_var(1)) then begin
+	if not(local_var(LVAR_DoorStatus) == 0) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_V13COMP, 103));
 	end
@@ -78,7 +85,7 @@ procedure look_at_p_proc begin
 end
 
 procedure description_p_proc begin
-	if local_var(1) then begin
+	if local_var(LVAR_DoorStatus) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_V13COMP, 118));
 	end
@@ -87,18 +94,19 @@ end
 procedure use_p_proc begin
 	script_overrides;
 
-	if local_var(1) then begin
+	if (local_var(LVAR_DoorStatus) > 0) then begin
 		display_msg(message_str(SCRIPT_V13COMP, 123));
 	end
 	else begin
-		if ((game_time / (10 * 60 * 60 * 24)) == 0) then begin
-			if (local_var(0)) then begin
+
+		if (get_days_passed < 2) then begin
+			if (local_var(LVAR_VaultAccess) == 0) then begin
 				display_msg(message_str(SCRIPT_V13COMP, 101));
 				float_msg(self_obj, message_str(SCRIPT_V13COMP, 102), 0);//was ", 8" in endgame mod's version
 			end
 			else begin
 				display_msg(message_str(SCRIPT_V13COMP, 100));
-				set_local_var(0, 1);
+				set_local_var(LVAR_VaultAccess, 1);
 			end
 			play_sfx("SLDOORSO");
 		end
@@ -107,15 +115,15 @@ procedure use_p_proc begin
 				use_obj(vault_door_ptr);
 			end
 			else begin
-				call Banished00;//Added from endgame mod by Corpse
+				call Banished00;
 			end
 		end
+
 	end
 
 end
 
-procedure Banished00
-begin
+procedure Banished00 begin
 	if (global_var(OVERSEER_KILLED) == 1) then begin
 		call Banished01;
 	end
@@ -124,15 +132,13 @@ begin
 	end
 end
 
-procedure Banished01
-begin
+procedure Banished01 begin
 	display_msg(message_str(SCRIPT_V13COMP, 101));
 	float_msg(self_obj, message_str(SCRIPT_V13COMP, random(109, 115)), 2);
 	play_sfx("SLDOORSO");
 end
 
-procedure Banished02
-begin
+procedure Banished02 begin
 	display_msg(message_str(SCRIPT_V13COMP, 101));
 	float_msg(self_obj, message_str(SCRIPT_V13COMP, random(104, 108)), 8);
 	play_sfx("SLDOORSO");

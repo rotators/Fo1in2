@@ -19,13 +19,13 @@ variable How_Many_Party_Members_Armed;
 
 #define obj_in_party(x)                     (party_member_obj(obj_pid(x)) != 0)
 // Pointers to the Party Members
-#define Trunk_Ptr                        		party_member_obj(PID_CAR_TRUNK)
-#define Ian_ptr										party_member_obj(PID_IAN)
-#define Dog_ptr										party_member_obj(PID_DOGMEAT)
-#define Tycho_ptr										party_member_obj(PID_TYCHO)
-#define Katja_ptr										party_member_obj(PID_KATJA)
-#define Tandi_ptr										party_member_obj(PID_TANDI)
-#define Handy_ptr										party_member_obj(PID_MRHANDYC)
+#define Trunk_Ptr                        	party_member_obj(PID_CAR_TRUNK)
+#define Ian_ptr								party_member_obj(PID_IAN)
+#define Dog_ptr								party_member_obj(PID_DOGMEAT)
+#define Tycho_ptr							party_member_obj(PID_TYCHO)
+#define Katja_ptr							party_member_obj(PID_KATJA)
+#define Tandi_ptr							party_member_obj(PID_TANDI)
+#define Handy_ptr							party_member_obj(PID_MRHANDYC)
 
 // Is this person in my party
 #define Ian_In_Party                      	(Ian_ptr != 0)
