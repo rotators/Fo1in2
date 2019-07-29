@@ -148,6 +148,7 @@
 
 // Vault 13
 #define EXP_RETURN_WATERCHIP 					(7500)
+#define EXP_DESTROYED_DOOR_TERMINAL 			(50)
 
 // Vault 15
 

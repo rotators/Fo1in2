@@ -179,28 +179,27 @@ procedure start begin
 
 	end
 	else begin
-		
+
 	end
 end
 
 procedure combat_p_proc begin
-
 	if (fixed_param == EVENT_GET_AMMO) then begin
 		if (obj_is_carrying_obj_pid(self_obj, PID_5MM_AP) <= 3) then begin
 			item := create_object_sid(PID_5MM_AP, 0, 0, -1);
 			add_mult_objs_to_inven(self_obj, item, 6);
 		end
 	end
-
 end
 
 procedure critter_p_proc begin
 
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (self_can_see_dude and tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
-		//attack_complex(dude_obj, 0, 1, 100, 250, 300, 0, 128);
+		attack(dude_obj);
 	end
 	else begin
+
 		if ((global_var(VAULT_13_HOSTILE) == 1) and (global_var(OVERSEER_END_SEQ) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
 			if (local_var(LVAR_Hostile) == 0) then begin
 				dialogue_system_enter;
@@ -247,8 +246,8 @@ procedure critter_p_proc begin
 				dialogue_system_enter;
 			end
 		end
-	end
 
+	end
 end
 
 procedure damage_p_proc begin
@@ -302,7 +301,7 @@ procedure talk_p_proc begin
 				call over71;
 		end
 		else if (global_var(QUEST_VAULT13_4_WATERCHIP) == 0) then begin
-			/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
+			if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
 				call over28;
 			end
 			else begin
@@ -366,13 +365,12 @@ procedure talk_p_proc begin
 	gsay_end;
 	end_dialogue;
 
-	// TODO: RE-ENABLE IAN!
-	/*if (Ian_ptr != 0) then begin
+	if (Ian_ptr != 0) then begin
 		if (local_var(LVAR_IanFloat) == 0) then begin
 			float_msg(Ian_ptr, message_str(SCRIPT_IAN, 171), 0);
 			set_local_var(LVAR_IanFloat, 1);
 		end
-	end*/
+	end
 	if (local_var(LVAR_Herebefore) == 1) then begin
 		item := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
 		rm_obj_from_inven(dude_obj, item);
@@ -390,30 +388,25 @@ procedure talk_p_proc begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_STEAL) then begin
 		script_overrides;
 		stealing := 1;
 		dialogue_system_enter;
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 end
 
-procedure overend
-begin
+procedure overend begin
 end
 
-procedure overcbt
-begin
+procedure overcbt begin
 	tmp_hostile := 1;
 end
 
-procedure over00
-begin
+procedure over00 begin
 	set_local_var(LVAR_Herebefore,1);
 	gsay_message(55, 101, 50);
 	gsay_message(55, 102, 50);
@@ -590,8 +583,7 @@ begin
 	giq_option(-3, 55, 153, over37, 50);
 end
 
-procedure over29
-begin
+procedure over29 begin
 	gsay_message(55, 154, 50);
 	if (obj_is_carrying_obj_pid(dude_obj, PID_WATER_CHIP)) then begin
 		call over31;
@@ -601,8 +593,7 @@ begin
 	end
 end
 
-procedure over30
-begin
+procedure over30 begin
 	gsay_message(55, 155, 50);
 	giq_option(4, 55, 164, over31, 50);
 	giq_option(4, 55, 165, over30, 50);
