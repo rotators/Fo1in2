@@ -4,6 +4,20 @@
 #include <cstdlib>
 #include <fstream>
 
+#if defined (HAVE_FILESYSTEM)
+# include <filesystem>
+# if _MSC_VER == 1900 || _MSC_VER == 1800 || _MSC_VER == 1700
+namespace std_filesystem = std::tr2::sys;
+# else
+namespace std_filesystem = std::filesystem;
+# endif
+#elif defined (HAVE_EXPERIMENTAL_FILESYSTEM)
+# include <experimental/filesystem>
+namespace std_filesystem = std::experimental::filesystem;
+#else
+# error "std::filesystem"
+#endif
+
 #include "FOClassic/Ini.h"
 
 #include "ReDefine.h"
@@ -112,9 +126,23 @@ void ReDefine::SStatus::SCurrent::Clear()
 
 //
 
+ReDefine::SStatus::SProcess::SProcess()
+{
+    Clear();
+}
+
+void ReDefine::SStatus::SProcess::Clear()
+{
+    Files = 0;
+    Lines = 0;
+}
+
+//
+
 void ReDefine::SStatus::Clear()
 {
     Current.Clear();
+    Process.Clear();
 }
 
 //
@@ -335,7 +363,30 @@ void ReDefine::ProcessHeaders( const std::string& path )
     }
 }
 
-void ReDefine::ProcessScripts( const std::string& path, bool readOnly /* = false */ )
+void ReDefine::ProcessScripts( const std::string& path, const bool readOnly /* = false */ )
 {
-    // LOG( "Process scripts... " );
+    LOG( "Process scripts ... " );
+
+    std::string              spath = path;
+
+    std::vector<std::string> scripts;
+
+    for( const auto& file : std_filesystem::recursive_directory_iterator( path ) )
+    {
+        if( !std_filesystem::is_regular_file( file ) ) // TODO? symlinks
+            continue;
+
+        if( TextGetLower( file.path().extension() ) != ".ssl" )
+            continue;
+
+        scripts.push_back( file.path().string().substr( path.length(), file.path().string().length() - path.length() ) );
+        scripts.back().erase( 0, scripts.back().find_first_not_of( "\\/" ) ); // trim left
+    }
+
+    std::sort( scripts.begin(), scripts.end() );
+
+    for( auto& script : scripts )
+    {
+        ProcessScript( path, script, readOnly );
+    }
 }

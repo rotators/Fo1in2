@@ -12,6 +12,9 @@ class ReDefine
 {
 public:
 
+    typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap;
+    typedef std::map<std::string, std::vector<std::string>>           StringVectorMap;
+
     //
     // ReDefine
     //
@@ -22,14 +25,24 @@ public:
     {
         struct SCurrent
         {
-            std::string File;
-            std::string Line;
-            uint        LineNumber;
+            std::string  File;
+            std::string  Line;
+            unsigned int LineNumber;
 
             SCurrent();
-            void        Clear();
+            void         Clear();
         }
         Current;
+
+        struct SProcess
+        {
+            unsigned int Files;
+            unsigned int Lines;
+
+            SProcess();
+            void         Clear();
+        }
+        Process;
 
         void Clear();
     }
@@ -45,14 +58,12 @@ public:
     void WARNING( const char* func, const char* format, ... );
     void LOG( const char* format, ... );
 
-    bool ReadFile( const std::string& path, std::vector<std::string>& lines );
+    bool ReadFile( const std::string& filename, std::vector<std::string>& lines );
     bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix, const std::string& raw );
 
     void ProcessHeaders( const std::string& path );
-    void ProcessScripts( const std::string& path, bool readOnly = false );
+    void ProcessScripts( const std::string& path, const bool readOnly = false );
 
-    typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap;
-    typedef std::map<std::string, std::vector<std::string>>           StringVectorMap;
 
     //
     // Defines
@@ -114,10 +125,17 @@ public:
     bool ReadConfigRaw( const std::string& section );
 
     //
+    // Script.cpp
+    //
+
+    void ProcessScript( const std::string& path, const std::string& filename, const bool readOnly = false );
+
+    //
     // Text
     //
 
     bool        TextIsComment( const std::string& text );
+    std::string TextGetFilename( const std::string& path, const std::string& filename );
     bool        TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
     std::string TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter );
     std::string TextGetLower( const std::string& text );

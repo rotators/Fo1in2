@@ -21,6 +21,7 @@ target_sources( ReDefine
 		Operators.cpp
 		Raw.cpp
 		ReDefine.cpp
+		Script.cpp
 		Text.cpp
 		Variables.cpp
 
@@ -40,6 +41,37 @@ if( MSVC )
 
 	set_property( TARGET ReDefine APPEND_STRING PROPERTY LINK_FLAGS "/OPT:REF " )
 endif() 
+
+function( lib_filesystem target )
+	if( NOT CMAKE_CXX_STANDARD )
+		message( FATAL_ERROR "CMAKE_CXX_STANDARD not set" )
+	endif()
+
+	include(CheckIncludeFileCXX)
+
+	set( CMAKE_REQUIRED_FLAGS_OLD "${CMAKE_REQUIRED_FLAGS}" )
+	set( CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} ${CMAKE_CXX${CMAKE_CXX_STANDARD}_STANDARD_COMPILE_OPTION}" )
+
+	check_include_file_cxx( filesystem HAVE_FILESYSTEM )
+	if( NOT HAVE_FILESYSTEM )
+		check_include_file_cxx( experimental/filesystem HAVE_EXPERIMENTAL_FILESYSTEM )
+	endif()
+
+	set( CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_OLD}" )
+
+	if( HAVE_FILESYSTEM )
+		target_compile_definitions( ${target} PRIVATE HAVE_FILESYSTEM )
+	elseif( HAVE_EXPERIMENTAL_FILESYSTEM )
+		target_compile_definitions( ${target} PRIVATE HAVE_EXPERIMENTAL_FILESYSTEM )
+		target_link_libraries( ${target} stdc++fs )
+	else()
+		message( FATAL_ERROR "Cannot find std::filesystem" )
+		#set_target_properties( ${target} PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1 )
+	endif()
+
+endfunction()
+
+lib_filesystem( ReDefine )
 
 # Prettify IDE
 

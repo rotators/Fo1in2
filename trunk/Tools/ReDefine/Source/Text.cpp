@@ -4,6 +4,20 @@
 #include <functional>
 #include <regex>
 
+#if defined (HAVE_FILESYSTEM)
+# include <filesystem>
+# if _MSC_VER == 1900 || _MSC_VER == 1800 || _MSC_VER == 1700
+namespace std_filesystem = std::tr2::sys;
+# else
+namespace std_filesystem = std::filesystem;
+# endif
+#elif defined (HAVE_EXPERIMENTAL_FILESYSTEM)
+# include <experimental/filesystem>
+namespace std_filesystem = std::experimental::filesystem;
+#else
+# error "std::filesystem"
+#endif
+
 #include "ReDefine.h"
 
 static std::regex IsComment( "^[\\t\\ ]*\\/\\/" );
@@ -12,6 +26,21 @@ static std::regex IsDefine( "^[\\t\\ ]*\\#define[\\t\\ ]+" );
 bool ReDefine::TextIsComment( const std::string& text )
 {
     return std::regex_search( text, IsComment );
+}
+
+std::string ReDefine::TextGetFilename( const std::string& path, const std::string& filename )
+{
+    std::string spath = path;
+    std::string sfilename = filename;
+
+    sfilename.erase( 0, sfilename.find_first_not_of( "\\/" ) ); // trim left
+    spath.erase( spath.find_last_not_of( "\\/" ) + 1 );         // trim right
+
+    std_filesystem::path full = std_filesystem::path( spath ) / sfilename;
+
+    // DEBUG( __FUNCTION__, "[%s][%s] -> [%s][%s] -> [%s]", path.c_str(), filename.c_str(), spath.c_str(), sfilename.c_str(), full.string().c_str() );
+
+    return full.string();
 }
 
 bool ReDefine::TextGetInt( const std::string& text, int& result, const unsigned char& base /* = 10 */ )
