@@ -368,7 +368,7 @@
 #define WATER_CHIP_6							(1263)
 #define TANDI_LOCATION_TRACKER					(1264)
 #define WATER_CHIP_8							(1265)
-#define WATER_CHIP_9							(1266)
+#define GVAR_BLADES_INVASION_READY							(1266)
 #define WATER_CHIP_10							(1267)
 #define WATER_CHIP_11							(1268)
 #define RAIDERS_LEFT_IRWIN						(1269)

@@ -1,12 +1,27 @@
-#include "..\headers\define.h"
+/*
 
+	Mariposa - Lou(tennant)
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_LT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 
 procedure Ltcbt;
 procedure Lt01;
@@ -100,7 +115,7 @@ import variable VWeapLocker_ptr;
 variable rndx;
 variable rndy;
 variable rndz;
-variable hostile;
+variable tmp_hostile;
 variable HEREBEFORE;
 variable go_to_cell;
 variable DESTROYED;
@@ -110,26 +125,7 @@ variable hit_dude;
 variable torture_setting;
 variable End_The_Game;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
@@ -142,29 +138,6 @@ begin
 			LVar0 := create_object_sid(PID_SECURITY_CARD, 0, 0, -1);
 			add_obj_to_inven(self_obj, LVar0);
 			set_local_var(6, 1);
-		end
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-						call timed_event_p_proc;
-					end
-				end
-			end
 		end
 	end
 end
@@ -182,8 +155,8 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -206,7 +179,7 @@ begin
 						end
 					end
 					else begin
-						hostile := 1;
+						tmp_hostile := 1;
 					end
 				end
 			end
@@ -214,7 +187,7 @@ begin
 		else begin
 			if ((global_var(ENTERING_VATS_HOW) != 0) and (local_var(7) != 2)) then begin
 				set_global_var(VATS_ALERT, 1);
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 		end
 	end
@@ -225,7 +198,7 @@ begin
 	set_global_var(LIEUTENANTS_DEAD, 1);// Lt dead
 	rm_timer_event(self_obj);
 
-	inc_evil_critter 
+	inc_evil_critter
 	rm_timer_event(self_obj);
 	Lt_ptr := 0;
 end
@@ -282,14 +255,10 @@ begin
 	end
 	else begin
 		float_msg(self_obj, message_str(SCRIPT_LT, 236), 2);
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 	if (local_var(7) == 1) then begin
 		set_local_var(7, 2);
-		if global_var(FADE_TIMES_INCREASED) then begin
-			gfade_out(1);
-			gfade_out(1);
-		end
 		gfade_out(1);
 		move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
 		move_to(dude_obj, 25543, 0);
@@ -359,7 +328,7 @@ end
 
 procedure Ltcbt
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure Lt01

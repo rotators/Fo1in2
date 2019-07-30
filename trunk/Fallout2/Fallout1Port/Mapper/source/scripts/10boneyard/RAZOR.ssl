@@ -1,16 +1,29 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure map_update_p_proc;//    script_action == 23
+	Boneyard - Razor, the leader of the blades
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPLAADYTUM.h"
+
+#define NAME                    SCRIPT_RAZOR
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure map_update_p_proc;
 
 procedure Razor01;
 procedure Razor02;
@@ -73,10 +86,7 @@ import variable RazorPtr;
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
-procedure Start
-begin
-	
-
+procedure Start begin
 	if Only_Once then begin
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 47);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 27);
@@ -88,31 +98,29 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
-		display_msg(message_str(SCRIPT_RAZOR, 220));
+		display_msg(mstr(220));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_RAZOR, 221));
+		display_msg(mstr(221));
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
-		display_msg(message_str(SCRIPT_RAZOR, 220));
+		display_msg(mstr(220));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_RAZOR, 221));
+		display_msg(mstr(221));
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
+
 	if (global_var(ENEMY_BLADES) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
@@ -148,42 +156,32 @@ begin
 					set_local_var(6, 1);
 				end
 				else begin
+
 					if (global_var(GUN_RUNNERS_STATUS) == 9202) then begin
 						call Razor33;
 					end
-					else begin
-						if (global_var(ZIMMERMAN_STATUS) == 9001) then begin
-							call Razor20;
-						end
-						else begin
-							if global_var(RECEIVED_HOLODISK_RAZOR) and (global_var(WATER_CHIP_8) != 2) then begin
-								call Razor26;
-							end
-							else begin
-								if (global_var(ZIMMERMAN_STATUS) == 9003) then begin
-									call Razor30;
-								end
-								else begin
-									if (global_var(ADYTUM_RAZOR_SOMETHING_2) == 1) then begin
-										call Razor46;
-									end
-									else begin
-										if (global_var(ZIMMERMAN_STATUS) == 0) then begin
-											call Razor01;
-										end
-										else begin
-											if (global_var(DUDE_ENEMY_BLADES) == 1) then begin
-												call Razor37;
-											end
-											else begin
-												call fix00;
-											end
-										end
-									end
-								end
-							end
-						end
+					else if (global_var(ZIMMERMAN_STATUS) == 9001) then begin
+						call Razor20;
 					end
+					else if global_var(RECEIVED_HOLODISK_RAZOR) and (global_var(WATER_CHIP_8) != 2) then begin
+						call Razor26;
+					end
+					else if (global_var(ZIMMERMAN_STATUS) == 9003) then begin
+						call Razor30;
+					end
+					else if (global_var(ADYTUM_RAZOR_SOMETHING_2) == 1) then begin
+						call Razor46;
+					end
+					else if (global_var(ZIMMERMAN_STATUS) == 0) then begin
+						call Razor01;
+					end
+					else if (global_var(DUDE_ENEMY_BLADES) == 1) then begin
+						call Razor37;
+					end
+					else begin
+						call fix00;
+					end
+
 				end
 				gsay_end;
 				end_dialogue;
@@ -192,36 +190,21 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if source_obj == dude_obj then begin
 		set_global_var(ENEMY_BLADES, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+procedure destroy_p_proc begin
+	if source_obj == dude_obj then begin
+		inc_good_critter
 		set_global_var(ENEMY_BLADES, 1);
 	end
 	set_global_var(ZIMMERMAN_STATUS, 9002);
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(ADYTUM_RAZOR_SOMETHING_1) == 1) then begin
 		set_local_var(4, 1);
 	end
@@ -232,20 +215,17 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var(ENEMY_BLADES, 1);
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (global_var(ADYTUM_RAZOR_SOMETHING_1) == 1) then begin
 		set_local_var(4, 1);
 	end
 end
 
-procedure Razor01
-begin
+procedure Razor01 begin
 	gsay_reply(278, 100);
 	giq_option(4, 278, 101, Razor02, 50);
 	giq_option(4, 278, 102, Razor03, 50);
@@ -253,8 +233,7 @@ begin
 	giq_option(-3, 278, 104, Razor41, 50);
 end
 
-procedure Razor02
-begin
+procedure Razor02 begin
 	gsay_reply(278, 105);
 	gsay_option(278, 106, Razor03, 50);
 	gsay_option(278, 107, Razor04, 50);
@@ -263,16 +242,14 @@ begin
 	set_local_var(4, 1);
 end
 
-procedure Razor03
-begin
+procedure Razor03 begin
 	gsay_reply(278, 110);
 	gsay_option(278, 111, Razor06, 50);
 	gsay_option(278, 112, Razor07, 50);
 	gsay_option(278, 113, RazorEnd, 50);
 end
 
-procedure Razor04
-begin
+procedure Razor04 begin
 	gsay_reply(278, 114);
 	gsay_option(278, 115, Razor09, 50);
 	gsay_option(278, 116, Razor04a, 50);
@@ -280,8 +257,7 @@ begin
 	gsay_option(278, 117, RazorEnd, 50);
 end
 
-procedure Razor04a
-begin
+procedure Razor04a begin
 	BottomReact
 end
 
@@ -385,137 +361,115 @@ variable holodisk;
 	set_global_var(RAZOR_HOLODISK_POINTER, holodisk);
 end
 
-procedure Razor17
-begin
+procedure Razor17 begin
 	gsay_reply(278, 156);
 	gsay_option(278, 157, RazorEnd, 50);
 end
 
-procedure Razor18
-begin
+procedure Razor18 begin
 	gsay_reply(278, 158);
 	gsay_option(278, 159, RazorEnd, 50);
 	set_global_var(BLADES_STATUS, 9101);
 end
 
-procedure Razor19
-begin
+procedure Razor19 begin
 	gsay_reply(278, 160);
 	gsay_option(278, 161, RazorEnd, 50);
 end
 
-procedure Razor20
-begin
+procedure Razor20 begin
 	gsay_reply(278, 162);
 	giq_option(4, 278, 163, Razor21, 50);
 	giq_option(4, 278, 164, RazorEnd, 50);
 	giq_option(-3, 278, 165, Razor41, 50);
 end
 
-procedure Razor21
-begin
+procedure Razor21 begin
 	gsay_reply(278, 166);
 	gsay_option(278, 167, Razor22, 50);
 	gsay_option(278, 168, Razor07, 50);
 	gsay_option(278, 169, RazorEnd, 50);
 end
 
-procedure Razor22
-begin
+procedure Razor22 begin
 	gsay_reply(278, 170);
 	gsay_option(278, 171, Razor22a, 50);
 	gsay_option(278, 172, Razor23, 50);
 end
 
-procedure Razor22a
-begin
+procedure Razor22a begin
 	set_local_var(5, 1);
 end
 
-procedure Razor23
-begin
+procedure Razor23 begin
 	gsay_reply(278, 173);
 	gsay_option(278, 174, Razor22a, 50);
 	gsay_option(278, 175, Razor24, 50);
 end
 
-procedure Razor24
-begin
+procedure Razor24 begin
 	gsay_reply(278, 176);
 	gsay_option(278, 177, Razor22a, 50);
 	gsay_option(278, 178, Razor25, 50);
 end
 
-procedure Razor25
-begin
+procedure Razor25 begin
 	gsay_reply(278, 179);
 	gsay_option(278, 180, Razor13, 50);
 end
 
-procedure Razor26
-begin
+procedure Razor26 begin
 	gsay_reply(278, 181);
 	giq_option(4, 278, 182, Razor29, 50);
 	giq_option(-3, 278, 183, Razor41, 50);
 end
 
-procedure Razor27
-begin
+procedure Razor27 begin
 	gsay_reply(278, 184);
 	gsay_option(278, 185, Razor28, 50);
 	gsay_option(278, 238, RazorReg, 50);
 	gsay_option(278, 186, RazorEnd, 50);
 end
 
-procedure Razor28
-begin
+procedure Razor28 begin
 	gsay_reply(278, 187);
 	gsay_option(278, 188, Razor16, 50);
 	set_global_var(BLADES_STATUS, 9101);
 end
 
-procedure Razor29
-begin
+procedure Razor29 begin
 	gsay_message(278, 189, 50);
 end
 
-procedure Razor30
-begin
+procedure Razor30 begin
 	gsay_reply(278, 190);
 	giq_option(4, 278, 191, Razor31, 50);
 	giq_option(-3, 278, 192, Razor41, 50);
 end
 
-procedure Razor31
-begin
+procedure Razor31 begin
 	gsay_reply(278, 193);
 	gsay_option(278, 194, Razor32, 50);
 	gsay_option(278, 195, Razor19, 50);
 end
 
-procedure Razor32
-begin
+procedure Razor32 begin
 	gsay_message(278, 196, 50);
 	set_global_var(BLADES_STATUS, 9101);
 end
 
-procedure Razor33
-begin
+procedure Razor33 begin
 	gsay_reply(278, 197);
 	giq_option(4, 278, 198, Razor34, 50);
 	giq_option(4, 278, 199, Razor35, 50);
-	if (global_var(ZIMMERMAN_STATUS) != 9003) then begin
+
+	if (global_var(ZIMMERMAN_STATUS) != 9003) then
 		giq_option(4, 278, 201, Razor36, 50);
-	end
+
 	giq_option(-3, 278, 200, Razor41, 50);
 end
 
-procedure Razor34
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
+procedure Razor34 begin
 	gfade_out(1);
 	game_time_advance(game_ticks(10 * 60 * 60 * 8));
 	set_global_var(BLADES_STATUS, 9104);
@@ -524,12 +478,7 @@ begin
 	gsay_message(278, 202, 50);
 end
 
-procedure Razor35
-begin
-	if global_var(FADE_TIMES_INCREASED) then begin
-		gfade_out(1);
-		gfade_out(1);
-	end
+procedure Razor35 begin
 	gfade_out(1);
 	game_time_advance(game_ticks(10 * 60 * 60 * 24));
 	set_global_var(BLADES_STATUS, 9103);
@@ -539,14 +488,12 @@ begin
 	load_map("laadytum.map", 1);
 end
 
-procedure Razor36
-begin
+procedure Razor36 begin
 	gsay_message(278, 204, 50);
 	set_global_var(BLADES_STATUS, 9102);
 end
 
-procedure Razor37
-begin
+procedure Razor37 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(278, message_str(SCRIPT_RAZOR, 240) + " " + message_str(SCRIPT_RAZOR, 205));
 	end
@@ -555,106 +502,91 @@ begin
 	end
 	giq_option(4, 278, 206, RazorEnd, 50);
 	giq_option(4, 278, 207, RazorEnd, 50);
-	if global_var(RECEIVED_HOLODISK_RAZOR) then begin
+
+	if global_var(RECEIVED_HOLODISK_RAZOR) then
 		giq_option(4, 278, 208, Razor38, 50);
-	end
+
 	giq_option(4, 278, 209, Razor22a, 50);
 	giq_option(-3, 278, 210, Razor41, 50);
 end
 
-procedure Razor38
-begin
+procedure Razor38 begin
 	gsay_message(278, 211, 50);
 end
 
-procedure Razor41
-begin
+procedure Razor41 begin
 	gsay_message(278, 218, 50);
 end
 
-procedure Razor42
-begin
+procedure Razor42 begin
 	gsay_reply(278, 224);
 	giq_option(4, 278, 225, Razor43, 50);
 	giq_option(-3, 278, 226, Razor41, 50);
 end
 
-procedure Razor43
-begin
+procedure Razor43 begin
 	gsay_reply(278, 227);
 	gsay_option(278, 228, Razor44, 50);
 end
 
-procedure Razor44
-begin
+procedure Razor44 begin
 	gsay_message(278, 229, 50);
 	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 500 + message_str(SCRIPT_GENCHAT, 104));
 	give_exp_points(500);
 end
 
-procedure Razor45
-begin
+procedure Razor45 begin
 	gsay_message(278, 230, 50);
 	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 500 + message_str(SCRIPT_GENCHAT, 104));
 	give_exp_points(500);
 end
 
-procedure Razor46
-begin
+procedure Razor46 begin
 	gsay_reply(278, 231);
 	gsay_option(278, 232, Razor46a, 50);
 	gsay_option(278, 233, Razor47, 50);
 end
 
-procedure Razor46a
-begin
+procedure Razor46a begin
 	gsay_message(278, 215, 50);
 end
 
-procedure Razor47
-begin
+procedure Razor47 begin
 	gsay_reply(278, 234);
 	gsay_option(278, 235, Razor47a, 50);
 	gsay_option(278, 236, RazorEnd, 50);
 end
 
-procedure Razor47a
-begin
+procedure Razor47a begin
 	gsay_message(278, 215, 50);
 	set_global_var(BLADES_STATUS, 9101);
 end
 
-procedure Razor48
-begin
+procedure Razor48 begin
 	gsay_message(278, 237, 50);
 	set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 2);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 500 + message_str(SCRIPT_GENCHAT, 104));
 	give_exp_points(500);
 end
 
-procedure RazorFin
-begin
+procedure RazorFin begin
 	gsay_message(278, 223, 50);
 end
 
-procedure RazorReg
-begin
+procedure RazorReg begin
 	gsay_message(278, 239, 50);
 	set_global_var(ADYTUM_RAZOR_SOMETHING_2, 1);
 end
 
-procedure RazorEnd
-begin
+procedure RazorEnd begin
 end
 
-procedure RemoveBlades
-begin
+procedure RemoveBlades begin
 end
 
-procedure fix00
-begin
+procedure fix00 begin
 	gsay_message(278, 222, 50);
 end
 

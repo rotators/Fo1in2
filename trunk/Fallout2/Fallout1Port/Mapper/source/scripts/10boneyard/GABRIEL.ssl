@@ -1,15 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
+	Boneyard, Gun Runners - Gabriel the boss
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPLAADYTUM.h"
+
+#define NAME                    SCRIPT_GABRIEL
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
 
 procedure Gab01;
 procedure Gab02;
@@ -45,39 +58,34 @@ procedure GabEnd;
 import variable JonPtr;
 variable Only_Once := 1;
 
-procedure Start
-begin
-	
-
+procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0) then begin
+		if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0) then begin
 			item_caps_adjust(self_obj, random(50, 150));
 		end
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 48);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 28);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_LA_GUN_RUNNERS);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_GUNRUNNERS);
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
-		display_msg(message_str(SCRIPT_GABRIEL, 101));
+		display_msg(mstr(101));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_GABRIEL, 100));
+		display_msg(mstr(100));
 	end
 	script_overrides;
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
+
 	if ((global_var(DUDE_ENEMY_BLADES) == 1) or (get_critter_stat(dude_obj, STAT_iq) < 4)) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
@@ -94,6 +102,7 @@ begin
 			end
 		end
 		else begin
+
 			if (local_var(5) == 1) then begin
 				if ((local_var(8) == 0) and (global_var(BLADES_STATUS) == 2)) then begin
 					set_local_var(8, 1);
@@ -103,59 +112,39 @@ begin
 					call Gab27;
 				end
 			end
-			else begin
-				if ((global_var(GUN_RUNNERS_STATUS) == 9201) and (global_var(WATER_CHIP_8) == 9250)) then begin
-					call Gab20;
-				end
-				else begin
-					if (global_var(GUN_RUNNERS_STATUS) == 9201) then begin
-						call Gab13;
-					end
-					else begin
-						if ((local_var(6) == 1) or (local_var(7) == 1)) then begin
-							call Gab24;
-						end
-						else begin
-							call Gab12;
-						end
-					end
-				end
+			else if ((global_var(GUN_RUNNERS_STATUS) == 9201) and (global_var(WATER_CHIP_8) == 9250)) then begin
+				call Gab20;
 			end
+			else if (global_var(GUN_RUNNERS_STATUS) == 9201) then begin
+				call Gab13;
+			end
+			else if ((local_var(6) == 1) or (local_var(7) == 1)) then begin
+				call Gab24;
+			end
+			else begin
+				call Gab12;
+			end
+
 		end
 		gsay_end;
 		end_dialogue;
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_BLADES, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_BLADES, 1);
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+		inc_good_critter
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
 		if (global_var(DUDE_ENEMY_BLADES) == 1) then begin
 			attack(dude_obj);
@@ -163,16 +152,17 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var(DUDE_ENEMY_BLADES, 1);
 end
 
-procedure Gab01
-begin
+procedure Gab01 begin
 	gsay_reply(156, 102);
 	gsay_option(156, 103, Gab02, 50);
 	gsay_option(156, 104, Gab04, 50);
+
+	if debug_mode then
+		NOption("***CHEAT *** The deathclaw are kill!",Gab20,001);
 end
 
 procedure Gab02
@@ -288,28 +278,24 @@ begin
 	gsay_option(156, 139, GabEnd, 50);
 end
 
-procedure Gab17
-begin
+procedure Gab17 begin
 	gsay_reply(156, 140);
 	gsay_option(156, 141, Gab18, 50);
 	gsay_option(156, 142, Gab04, 50);
 end
 
-procedure Gab18
-begin
+procedure Gab18 begin
 	gsay_reply(156, 143);
 	gsay_option(156, 144, Gab20, 50);
 	set_local_var(4, 1);
 end
 
-procedure Gab19
-begin
+procedure Gab19 begin
 	gsay_reply(156, 145);
 	gsay_option(156, 146, Gab20, 50);
 end
 
-procedure Gab20
-begin
+procedure Gab20 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(156, 174);
 	end
@@ -328,8 +314,8 @@ begin
 	gsay_option(156, 150, Gab23, 50);
 end
 
-procedure Gab21
-begin
+// Player wants the weapons for himself:
+procedure Gab21 begin
 	gsay_reply(156, 151);
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_option(156, 176, GabEnd, 50);
@@ -340,14 +326,15 @@ begin
 	if (global_var(WATER_CHIP_8) != 2) then begin
 		set_global_var(WATER_CHIP_8, 2);
 		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		give_exp_points(1000);
+
+		give_exp_points(EXP_QUEST_KILLED_DCLAWS);
 		display_msg(message_str(SCRIPT_GENCHAT, 103) + 1000 + message_str(SCRIPT_GENCHAT, 104));
 		set_local_var(6, 1);
 	end
 end
 
-procedure Gab22
-begin
+// Player wants the weapons for the Blades to attack Adytum:
+procedure Gab22 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(156, 178);
 	end
@@ -358,14 +345,14 @@ begin
 	if (global_var(GUN_RUNNERS_STATUS) != 9202) then begin
 		set_global_var(GUN_RUNNERS_STATUS, 9202);
 		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		give_exp_points(1000);
+
+		give_exp_points(EXP_QUEST_KILLED_DCLAWS);
 		display_msg(message_str(SCRIPT_GENCHAT, 103) + 1000 + message_str(SCRIPT_GENCHAT, 104));
 		set_local_var(5, 1);
 	end
 end
 
-procedure Gab23
-begin
+procedure Gab23 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(156, 180);
 	end
@@ -376,8 +363,7 @@ begin
 	UpReactLevel
 end
 
-procedure Gab24
-begin
+procedure Gab24 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_message(156, 182, 50);
 	end
@@ -386,8 +372,7 @@ begin
 	end
 end
 
-procedure Gab25
-begin
+procedure Gab25 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(156, 184);
 	end

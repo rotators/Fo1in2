@@ -1,11 +1,11 @@
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\MAPLAADYTUM.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure map_exit_p_proc;//    script_action == 16
-
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
 
 procedure AddInBlades;
 
@@ -29,16 +29,12 @@ export variable RazorPtr;
 export variable RegGuard1;
 export variable RegGuard2;
 
-procedure Invasion;
-
 variable invaderPtr;
-
 
 procedure start begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	set_global_var(MARK_LA_1, 1);
 	if (elevation(dude_obj) == 1) then begin
 		Darkness;
@@ -46,7 +42,7 @@ begin
 	else begin
 		Lighting;
 	end
-	//call Invasion;
+
 	if (map_first_run) then begin
 		if (global_var(GVAR_FOLLOWERS_INVADED) != 1) then begin
 			display_msg(message_str(SCRIPT_SHADYWST, 115));
@@ -54,27 +50,23 @@ begin
 		else begin
 			variable LVar0;
 			LVar0 := random(0,4);
+
 			if not(LVar0) then begin
 				display_msg(message_str(SCRIPT_SHADYWST, 150));
 			end
-			else begin
-				if LVar0 == 1 then begin
-					display_msg(message_str(SCRIPT_SHADYWST, 151));
-				end
-				else begin
-					if LVar0 == 2 then begin
-						display_msg(message_str(SCRIPT_SHADYWST, 152));
-					end
-					else begin
-						if LVar0 == 3 then begin
-							display_msg(message_str(SCRIPT_SHADYWST, 153));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_SHADYWST, 154));
-						end
-					end
-				end
+			else if LVar0 == 1 then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 151));
 			end
+			else if LVar0 == 2 then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 152));
+			end
+			else if LVar0 == 3 then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 153));
+			end
+			else begin
+				display_msg(message_str(SCRIPT_SHADYWST, 154));
+			end
+
 		end
 	end
 	if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and (metarule(22, 0) == 0) and (map_var(3) == 0)) then begin
@@ -128,21 +120,22 @@ begin
 	override_map_start(100, 53, 0, 2);
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (elevation(dude_obj) == 1) then begin
 		Darkness;
 	end
 	else begin
 		Lighting;
 	end
-	if ((global_var(BLADES_STATUS) == 9103) and (map_var(2) == 0) and (global_var(WATER_CHIP_9) == 1)) then begin
+
+	if ((global_var(BLADES_STATUS) == 9103) and (map_var(MVAR_AddedBlades) == 0) and (global_var(GVAR_BLADES_INVASION_READY) == 1)) then begin
+		debug("oi we Blades go!");
 		call AddInBlades;
 		gfade_in(1);
 	end
 	else begin
-		if ((global_var(BLADES_STATUS) == 9104) and (map_var(2) == 0)) then begin
-			set_map_var(2, 1);
+		if ((global_var(BLADES_STATUS) == 9104) and (map_var(MVAR_AddedBlades) == 0)) then begin
+			set_map_var(MVAR_AddedBlades, 1);
 			kill_critter(JonPtr, ANIM_stand);
 			kill_critter_type(PID_TOWNSMAN_METAL, 0);
 			kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
@@ -177,10 +170,7 @@ begin
 		end
 		else begin
 			if ((map_var(1) == 0) and (global_var(BLADES_STATUS) == 9103)) then begin
-				if global_var(FADE_TIMES_INCREASED) then begin
-					gfade_out(1);
-					gfade_out(1);
-				end
+
 				gfade_out(1);
 				kill_critter_type(PID_INITIATE_KNIGHT_MAN, 0);
 				critter_attempt_placement(RazorPtr, 12700, 0);
@@ -203,12 +193,10 @@ begin
 end
 
 procedure map_exit_p_proc begin
-
 end
 
-procedure AddInBlades
-begin
-	set_map_var(2, 1);
+procedure AddInBlades begin
+	set_map_var(MVAR_AddedBlades, 1);
 	critter_attempt_placement(InBladePtr1, 9702, 0);
 	critter_attempt_placement(InBladePtr2, 9700, 0);
 	critter_attempt_placement(InBladePtr3, 9698, 0);
@@ -217,8 +205,4 @@ begin
 	critter_attempt_placement(InBladePtr6, 26717, 0);
 	critter_attempt_placement(InBladePtr7, 26711, 0);
 	critter_attempt_placement(InBladePtr8, 24492, 0);
-end
-
-procedure Invasion begin
-	//check_invasion
 end

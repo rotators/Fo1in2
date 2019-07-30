@@ -168,6 +168,7 @@
 #define EXP_BOUGHT_WATER_CARAVAN 				(1000)
 
 // Boneyard
+#define EXP_QUEST_KILLED_DCLAWS		 			(1000)
 
 // Necropolis
 #define EXP_WATER_CHIP_TAKEN 					(2500)

@@ -1,15 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Hub - Irwin the farmer who's farm is occupied by raiders.
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_IRWIN
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure damage_p_proc;//    script_action == 14
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure damage_p_proc;
 
 procedure IrwinTalks;
 procedure IrwinAccept;
@@ -31,50 +44,20 @@ procedure GoBack;
 procedure MapLoad;
 
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 41);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 51);
 	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -82,120 +65,91 @@ begin
 		if (tile_num(self_obj) != 27969) then begin
 			animate_move_obj_to_tile(self_obj, 27969, 0);
 		end
-		else begin
-			if (tile_num(self_obj) == 27969) then begin
-				if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-			end
+		else if (tile_num(self_obj) == 27969) then begin
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
 		end
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if source_obj == dude_obj then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	call IrwinTalks;
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_IRWIN, 100));
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if source_obj == dude_obj then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure IrwinTalks
-begin
+procedure IrwinTalks begin
 	if (global_var(IRWIN_FARM_STATUS) == 0) then begin
-		start_gdialog(935, self_obj, 4, -1, -1);
-		gsay_start;
-		call Irwin00;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(Irwin00);
+	end
+	else if ((global_var(IRWIN_FARM_STATUS) == 1) or (global_var(IRWIN_FARM_STATUS) == 2)) then begin
+		start_dialog_at_node(Irwin05);
 	end
 	else begin
-		if ((global_var(IRWIN_FARM_STATUS) == 1) or (global_var(IRWIN_FARM_STATUS) == 2)) then begin
-			start_gdialog(935, self_obj, 4, -1, -1);
-			gsay_start;
-			call Irwin05;
-			gsay_end;
-			end_dialogue;
-		end
-		else begin
-			float_msg(self_obj, message_str(SCRIPT_IRWIN, 117), 8);
-		end
+		float_msg(self_obj, message_str(SCRIPT_IRWIN, 117), 8);
 	end
 end
 
-procedure IrwinAccept
-begin
+procedure IrwinAccept begin
 	gsay_message(935, 109, 50);
 	set_global_var(IRWIN_FARM_STATUS, 1);
 	call MapLoad;
 end
 
-procedure IrwinEnd
-begin
+procedure IrwinEnd begin
 end
 
-procedure Irwin00
-begin
-	gsay_reply(935, 101);
+procedure Irwin00 begin
+	Reply(101);
 	giq_option(4, 935, 102, Irwin01, 50);
 	giq_option(4, 935, 103, Irwin03, 50);
 	giq_option(4, 935, 104, IrwinEnd, 50);
 	giq_option(-3, 935, 118, Irwin07, 50);
 end
 
-procedure Irwin01
-begin
-	if (get_pc_stat(1) < 5) then begin
+procedure Irwin01 begin
+	if (get_pc_stat(1) < 5) then 
 		gsay_message(935, 105, 50);
-	end
-	else begin
+	else 
 		call Irwin02;
-	end
 end
 
-procedure Irwin02
-begin
-	gsay_reply(935, 106);
+procedure Irwin02 begin
+	Reply( 106);
 	giq_option(4, 935, 107, IrwinAccept, 50);
 	giq_option(4, 935, 108, Irwin04, 50);
 end
 
-procedure Irwin03
-begin
+procedure Irwin03 begin
 	gsay_message(935, 110, 50);
 end
 
-procedure Irwin04
-begin
+procedure Irwin04 begin
 	gsay_message(935, 111, 51);
 end
 
-procedure Irwin05
-begin
-	gsay_reply(935, 112);
+procedure Irwin05 begin
+	Reply( 112);
 	if (global_var(IRWIN_FARM_STATUS) == 1) then begin
 		giq_option(4, 935, 400, GoBack, 50);
 		giq_option(-3, 935, 123, GoBack, 50);
@@ -206,8 +160,7 @@ begin
 	giq_option(-3, 935, 121, Irwin07, 50);
 end
 
-procedure Irwin06
-begin
+procedure Irwin06 begin
 	variable LVar0 := 0;
 	if (global_var(IRWIN_FARM_STATUS) == 2) then begin
 		gsay_message(935, 115, 50);
@@ -223,20 +176,17 @@ begin
 	end
 end
 
-procedure Irwin07
-begin
+procedure Irwin07 begin
 	gsay_message(935, 119, 51);
 end
 
-procedure GoBack
-begin
-	gsay_reply(935, 401);
+procedure GoBack begin
+	Reply( 401);
 	giq_option(4, 935, 402, MapLoad, 50);
 	giq_option(-3, 935, 403, MapLoad, 50);
 end
 
-procedure MapLoad
-begin
+procedure MapLoad begin
 	set_map_var(58, 1);
 	load_map(MAP_HUBMIS0, 1);
 end
