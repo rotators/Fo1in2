@@ -4,6 +4,7 @@
 #include <map>
 #include <regex>
 #include <string>
+#include <tuple>
 #include <vector>
 
 class Ini;
@@ -14,6 +15,7 @@ public:
 
     typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap;
     typedef std::map<std::string, std::vector<std::string>>           StringVectorMap;
+    typedef std::tuple<std::string, std::string, std::string>         TripleString;
 
     //
     // ReDefine
@@ -93,6 +95,18 @@ public:
     // Functions
     //
 
+    struct ExtractedFunction
+    {
+        const std::string        Full; // Name + Arguments + Operator + OperatorArguments
+
+        std::string              Name;
+        std::vector<std::string> Arguments;
+        std::string              Operator;
+        std::string              OperatorArgument;
+
+        ExtractedFunction( const std::string& full, const std::string& name, const std::vector<std::string>& arguments = std::vector<std::string>() );
+    };
+
     StringVectorMap     FunctionsArguments; // <name, <types>>
     GenericOperatorsMap FunctionsOperators; // <name, <operator, type>>
 
@@ -139,11 +153,15 @@ public:
     bool        TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
     std::string TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter );
     std::string TextGetLower( const std::string& text );
+    std::string TextGetPacked( const std::string& text );
     std::string TextGetTrimmed( const std::string& text );
 
     bool       TextIsDefine( const std::string& text );
     bool       TextGetDefine( const std::string& text, const std::regex& pattern, std::string& name, int& value );
     std::regex TextGetDefinePattern( const std::string& prefix, bool paren );
+
+    std::vector<TripleString>      TextGetVariables( const std::string& text );
+    std::vector<ExtractedFunction> TextGetFunctions( const std::string& text );
 
     //
     // Variables

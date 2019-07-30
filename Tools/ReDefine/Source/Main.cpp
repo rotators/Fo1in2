@@ -74,6 +74,13 @@ int main( int argc, char** argv )
         result = EXIT_FAILURE;
     }
 
+    if( redefine->Status.Process.Lines && redefine->Status.Process.Files )
+    {
+        redefine->LOG( "Process scripts ... %u line%s in %u file%s",
+                       redefine->Status.Process.Lines, redefine->Status.Process.Lines != 1 ? "s" : "",
+                       redefine->Status.Process.Files, redefine->Status.Process.Files != 1 ? "s" : "" );
+    }
+
     // cleanup
     delete redefine;
 
