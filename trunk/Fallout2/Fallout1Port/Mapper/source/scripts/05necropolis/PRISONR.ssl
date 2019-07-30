@@ -1,0 +1,248 @@
+/*
+
+	Necropolis - Watershed prisoner
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_PRISONR
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure timed_event_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+
+procedure timeforwhat;
+
+procedure prisonr00;
+procedure prisonr01;
+procedure prisonr02;
+procedure prisonr03;
+procedure prisonr04;
+procedure prisonr05;
+procedure prisonr06;
+procedure prisonr07;
+procedure prisonr08;
+procedure prisonrend;
+procedure prisonrcbt;
+
+procedure leave_map;
+
+variable tmp_hostile;
+variable init_teams := 0;
+variable my_hex;
+
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
+
+procedure start begin
+	if (not(init_teams)) then begin
+		init_teams := 1;
+		if (local_var(6) > 9) then begin
+			if (metarule(22, 0) == 0) then begin
+				set_obj_visibility(self_obj, 1);
+			end//  MAKE INVISIBLE
+		end
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_NECROPOLIS_GANGER);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_GHOUL_COWARD);
+	end
+end
+
+procedure timed_event_p_proc begin
+	if (local_var(6) < 10) then begin
+		call timeforwhat;
+	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure destroy_p_proc begin
+	rm_timer_event(self_obj);
+
+	inc_good_critter
+	rm_timer_event(self_obj);
+end
+
+procedure timeforwhat begin
+	if (fixed_param == 1) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_critter;
+
+	if global_var(EXP_REWARD_PRISONER) then begin
+		set_local_var(4, 1);
+		float(126);
+	end
+	else begin
+		start_gdialog(89, self_obj, 4, -1, -1);
+		gsay_start;
+		if (map_var(6) != 0) then begin
+			call prisonr06;
+		end
+		else begin
+			if (local_var(7)) then begin
+				call prisonr05;
+			end
+			else begin
+				set_local_var(7, 1);
+				call prisonr00;
+			end
+		end
+		gsay_end;
+		end_dialogue;
+	end
+end
+
+procedure critter_p_proc begin
+	if (tile_distance_objs(self_obj, dude_obj) < 7) and not(local_var(8)) then begin
+		dialogue_system_enter;
+		set_local_var(8, 1);
+	end
+	else if tile_distance_objs(self_obj, dude_obj) < 7 and not(local_var(9)) and obj_can_see_obj(self_obj, dude_obj) then begin
+		dialogue_system_enter;
+		set_local_var(9, 1);
+	end
+	else begin
+
+		if (map_var(6) != 0) then begin
+			if (local_var(4) == 1) then begin
+				call leave_map;
+			end
+		end
+		else begin
+			if (tmp_hostile) then begin
+				tmp_hostile := 0;
+				attack(dude_obj);
+			end
+		end
+
+	end
+end
+
+procedure prisonrcbt begin
+	add_timer_event(self_obj, game_ticks(2), 1);
+end
+
+procedure prisonrend begin
+end
+
+procedure prisonr00 begin
+	gsay_reply(89, 101);
+	giq_option(4, 89, 102, prisonrend, 50);
+	giq_option(-3, 89, 103, prisonr01, 50);
+	giq_option(4, 89, 104, prisonr02, 50);
+	giq_option(6, 89, 105, prisonr03, 50);
+end
+
+procedure prisonr01 begin
+	gsay_message(89, 106, 50);
+end
+
+procedure prisonr02 begin
+	gsay_message(89, 107, 50);
+end
+
+procedure prisonr03 begin
+	gsay_reply(89, 108);
+	giq_option(6, 89, 109, prisonr04, 50);
+	giq_option(6, 89, 110, prisonr02, 50);
+end
+
+procedure prisonr04 begin
+	gsay_reply(89, 111);
+	giq_option(6, 89, 112, prisonr02, 50);
+	giq_option(6, 89, 113, prisonrend, 50);
+end
+
+procedure prisonr05 begin
+	gsay_message(89, 114, 50);
+end
+
+procedure prisonr06 begin
+	set_local_var(5, 15863);
+	set_local_var(6, 0);
+	set_local_var(4, 1);
+
+	if not(global_var(EXP_REWARD_PRISONER)) then begin// <-- this check by Sduibek, Fallout Fixt
+		give_exp_points(EXP_PRISONER_FREED);
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		set_global_var(EXP_REWARD_PRISONER, 1);
+		display_msg(mstr(124) + EXP_PRISONER_FREED + mstr(125));
+	end
+
+	gsay_reply(89, 115);
+	giq_option(4, 89, 116, prisonrend, 50);
+	giq_option(5, 89, 117, prisonr07, 50);
+	giq_option(-3, 89, 118, prisonrend, 50);
+end
+
+procedure prisonr07 begin
+	gsay_reply(89, 119);
+	giq_option(5, 89, 120, prisonr08, 50);
+	giq_option(5, 89, 121, prisonrend, 50);
+end
+
+procedure prisonr08 begin
+	gsay_reply(89, 122);
+	giq_option(5, 89, 123, prisonrend, 50);
+end
+
+procedure leave_map begin
+	my_hex := tile_num(self_obj);
+	if (my_hex == local_var(5)) then begin
+		set_local_var(6, local_var(6) + 1);
+		if (local_var(6) > 7) then begin
+			set_local_var(6, 10);
+			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			move_to(self_obj, 0, 0);
+		end
+		else begin
+
+			if (local_var(6) == 1) then begin
+				set_local_var(5, 15863);
+			end
+			else if (local_var(6) == 2) then begin
+				set_local_var(5, 13065);
+			end
+			else if (local_var(6) == 3) then begin
+				set_local_var(5, 13081);
+			end
+			else if (local_var(6) == 4) then begin
+				set_local_var(5, 14496);
+			end
+			else if (local_var(6) == 5) then begin
+				set_local_var(5, 11900);
+			end
+			else if (local_var(6) == 6) then begin
+				set_local_var(5, 8700);
+			end
+			else if (local_var(6) == 7) then begin
+				set_local_var(5, 5900);
+			end
+			animate_move_obj_to_tile(self_obj, local_var(5), 0);
+
+		end
+	end
+	animate_move_obj_to_tile(self_obj, local_var(5), 0);
+end
+

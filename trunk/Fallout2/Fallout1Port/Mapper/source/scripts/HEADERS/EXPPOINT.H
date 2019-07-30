@@ -172,6 +172,7 @@
 // Necropolis
 #define EXP_WATER_CHIP_TAKEN 					(2500)
 #define EXP_WATER_PUMP_FIXED					(1000)
+#define EXP_PRISONER_FREED 						(500)
 
 // Glow
 #define EXP_REPAIR_GENERATOR 					(1000)
