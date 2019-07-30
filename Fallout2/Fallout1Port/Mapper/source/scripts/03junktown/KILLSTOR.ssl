@@ -1,3 +1,9 @@
+/*
+
+	Killian - store container
+
+*/
+
 #include "..\headers\define.h"
 
 procedure start;
@@ -10,74 +16,64 @@ import variable Killian_store2_ptr;
 import variable Killian_store3_ptr;
 import variable Killian_ptr;
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			call use_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-		end
-	end
+#define KillianHomeTile 	(26283)
+
+procedure start begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (tile_num(self_obj) == 25880) then begin
 		Killian_store1_ptr := self_obj;
 	end
-	else begin
-		if (tile_num(self_obj) == 25874) then begin
-			Killian_store2_ptr := self_obj;
-		end
-		else begin
-			if (tile_num(self_obj) == 26874) then begin
-				Killian_store3_ptr := self_obj;
-			end
-		end
+	else if (tile_num(self_obj) == 25874) then begin
+		Killian_store2_ptr := self_obj;
+	end
+	else if (tile_num(self_obj) == 26874) then begin
+		Killian_store3_ptr := self_obj;
 	end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	if (global_var(KILLIAN_DEAD) == 0) then begin
-		if (obj_can_see_obj(Killian_ptr, dude_obj)) then begin
+		// We are nerfing Killian a little bit.
+		// TODO: Improve detection code in the future.
+		if ((obj_can_see_obj(Killian_ptr, dude_obj) or tile_distance_objs(Killian_ptr, dude_obj) < 12)) then begin /*tile_num(Killian_ptr) == KillianHomeTile)*/
 			script_overrides;
+			// Left one
 			if (tile_num(self_obj) == 25880) then begin
-// Left one
 				Killian_barter_var := 1;
 			end
-			else begin
-				if (tile_num(self_obj) == 25874) then begin
-// Middle one
-					Killian_barter_var := 2;
-				end
-				else begin
-					if (tile_num(self_obj) == 26874) then begin
-// Right one
-						Killian_barter_var := 3;
-					end
-				end
+			// Middle one
+			else if (tile_num(self_obj) == 25874) then begin
+				Killian_barter_var := 2;
+			end
+			// Right one
+			else if (tile_num(self_obj) == 26874) then begin
+				Killian_barter_var := 3;
 			end
 		end
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+procedure use_skill_on_p_proc begin
+	if ((action_being_used == SKILL_STEAL and global_var(KILLIAN_DEAD) == 0)) then begin
+		if (is_success(roll_vs_skill(dude_obj, SKILL_STEAL, -30)) and not(obj_can_see_obj(Killian_ptr, dude_obj))) then begin
+			// win
+		end
+		else begin
+			script_overrides;
+			Killian_barter_var := -1;
+		end
+	end
+
+	// Old code:
+	/*if (action_being_used == SKILL_STEAL) then begin
 		if (global_var(KILLIAN_DEAD) == 0) then begin
 			if (obj_can_see_obj(Killian_ptr, dude_obj)) then begin
 				script_overrides;
 				Killian_barter_var := -1;
 			end
 		end
-	end
+	end*/
 end
 

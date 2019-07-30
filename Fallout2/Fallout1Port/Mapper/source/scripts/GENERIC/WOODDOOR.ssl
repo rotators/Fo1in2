@@ -1,18 +1,60 @@
 #include "..\headers\define.h"
 
+
+/* Door close distance */
+/* How far do you want the last object that used the door to get away before it closes */
+#define DOOR_CLOSE_DIST                 (10) //(3)
+
+/* Timer id's */
+#define TIMER_CLOSE                     (1)
+
 procedure start;
-procedure damage_p_proc;//    script_action == 14
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure description_p_proc;//    script_action == 3
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure map_update_p_proc;//    script_action == 23
-procedure map_enter_p_proc;//    script_action == 15
+procedure timed_event_p_proc;
+procedure damage_p_proc;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure use_obj_on_p_proc;
+procedure map_update_p_proc;
+procedure map_enter_p_proc;
+
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+
 //local_var(4) == HALLDED | self is Hallded locked door
 //local_var(5) == HALLDED | Hallded lock was picked?
 //local_var(6) == HALLDED | has init Hallded door?
 //local_var(7) == GotExpForPicking (NOT USED)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
 import variable GhDorGrd_Ptr;
+
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+
+variable Locks_Roll;
+variable Traps_Roll;
+variable last_source_obj;
+
+
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+
+/*******************************************************************
+   The start procedure is the first procedure called when the map is
+   first entered. Any initial information that needs to be set up
+   should be placed in here.
+*******************************************************************/
 
 procedure start begin
 	if (tile_num(self_obj) == 17128) and (cur_map_index == MAP_HALLDED) then begin
@@ -25,8 +67,24 @@ procedure start begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure timed_event_p_proc begin
+   if (obj_is_open(self_obj)) then begin
+      if not combat_is_initialized then begin
+         if ((tile_distance_objs(dude_obj, self_obj) > DOOR_CLOSE_DIST) and
+             (checkPartyMembersNearDoor == false) and
+             ((tile_distance_objs(self_obj, last_source_obj) > DOOR_CLOSE_DIST) or
+              (critter_state(last_source_obj) == CRITTER_IS_DEAD))) then begin
+            obj_close(self_obj);
+         end else begin
+            add_timer_event(self_obj, 10, TIMER_CLOSE);
+         end
+      end else begin
+         add_timer_event(self_obj, 10, TIMER_CLOSE);
+      end
+   end
+end
+
+procedure map_enter_p_proc begin
 	if local_var(4) then begin//  HALLDED | self is Hallded locked door
 		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
 			if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
@@ -60,8 +118,7 @@ procedure map_update_p_proc begin
 	end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	if local_var(4) then begin//  HALLDED | self is Hallded locked door
 //		if (map_var(11) == 1) then begin
 //			obj_lock(self_obj);
@@ -104,6 +161,12 @@ begin
 				end
 			end
 		end
+	end
+
+   if fo1in2_auto_doors_closing then begin
+   //	debug("door will close");
+      last_source_obj := source_obj;
+      add_timer_event(self_obj, 10, TIMER_CLOSE);
 	end
 end
 
