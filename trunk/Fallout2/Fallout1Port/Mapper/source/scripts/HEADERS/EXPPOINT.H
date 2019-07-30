@@ -166,6 +166,7 @@
 
 // Hub
 #define EXP_BOUGHT_WATER_CARAVAN 				(1000)
+#define EXP_FIND_DEATHCLAW 						(800)
 
 // Boneyard
 #define EXP_QUEST_KILLED_DCLAWS		 			(1000)
