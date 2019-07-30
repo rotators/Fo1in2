@@ -2,6 +2,14 @@
 
 #include "ReDefine.h"
 
+ReDefine::ExtractedFunction::ExtractedFunction( const std::string& full, const std::string& name, const std::vector<std::string>& arguments /* = std::vector<std::string>() */ ) :
+    Full( full ),
+    Name( name ),
+    Arguments( arguments ),
+    Operator(),
+    OperatorArgument()
+{}
+
 void ReDefine::FinishFunctions()
 {
     FunctionsArguments.clear();

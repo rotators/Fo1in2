@@ -23,6 +23,11 @@ namespace std_filesystem = std::experimental::filesystem;
 static std::regex IsComment( "^[\\t\\ ]*\\/\\/" );
 static std::regex IsDefine( "^[\\t\\ ]*\\#define[\\t\\ ]+" );
 
+static std::regex GetVariables( "([A-Za-z0-9_]+)[\\t\\ ]*([\\:\\=\\!\\<\\>\\+]+)[\\t\\ ]*([0-9]+)" );
+
+static std::regex GetFunctions( "([A-Za-z0-9_]+)\\(" );
+static std::regex GetFunctionsQuotedText( "\".*?\"" );
+
 bool ReDefine::TextIsComment( const std::string& text )
 {
     return std::regex_search( text, IsComment );
@@ -89,6 +94,16 @@ std::string ReDefine::TextGetLower( const std::string& text )
     return result;
 }
 
+std::string ReDefine::TextGetPacked( const std::string& text )
+{
+    std::string result = text;
+
+    result.erase( std::remove( result.begin(), result.end(), ' ' ), result.end() );
+    result.erase( std::remove( result.begin(), result.end(), '\t' ), result.end() );
+
+    return result;
+}
+
 std::string ReDefine::TextGetTrimmed( const std::string& text )
 {
     std::string result = text;
@@ -98,6 +113,7 @@ std::string ReDefine::TextGetTrimmed( const std::string& text )
 
     return result;
 }
+
 
 bool ReDefine::TextIsDefine( const std::string& text )
 {
@@ -120,4 +136,198 @@ bool ReDefine::TextGetDefine( const std::string& text, const std::regex& pattern
 std::regex ReDefine::TextGetDefinePattern( const std::string& prefix, bool paren )
 {
     return std::regex( "^[\\t\\ ]*\\#define[\\t\\ ]+(" + prefix + "_[A-Za-z0-9_]+)[\\t\\ ]+" + (paren ? "\\(" : "") + "([0-9]+)" + (paren ? "\\)" : "") );
+}
+
+std::vector<ReDefine::TripleString> ReDefine::TextGetVariables( const std::string& text )
+{
+    std::vector<TripleString> result;
+
+    for( auto it = std::sregex_iterator( text.begin(), text.end(), GetVariables ), end = std::sregex_iterator(); it != end; ++it )
+    {
+        // DEBUG(__FUNCTION__,"[%s] -> [%s] %s [%s]", text.c_str(), it->str( 1 ).c_str(), it->str( 2 ).c_str(), it->str( 3 ).c_str()  );
+
+        result.push_back( std::make_tuple( it->str( 1 ), it->str( 2 ), it->str( 3 ) ) );
+    }
+
+    return result;
+}
+
+std::vector<ReDefine::ExtractedFunction> ReDefine::TextGetFunctions( const std::string& text )
+{
+
+    std::vector<ExtractedFunction> result;
+
+    unsigned int                   funcIdx = 0;
+    for( auto it = std::sregex_iterator( text.begin(), text.end(), GetFunctions ), end = std::sregex_iterator(); it != end; ++it, funcIdx++ )
+    {
+        const std::string        func = it->str( 1 );
+        std::string              full, arg, op, opArg;
+        std::vector<std::string> args;
+        unsigned int             stage = 0, funcStart = it->position(), funcLen = func.length() + 1, balance = 1;
+        bool                     quote = false, quoteFound = false;
+
+        for( unsigned int t = funcStart + funcLen, tLen = text.length(); t < tLen; t++, funcLen++ )
+        {
+            const char ch = text[t];
+
+            if( ch == ';' && !quote )
+            {
+                full = text.substr( funcStart, funcLen );
+                break;
+            }
+
+            // extract arguments
+            if( stage == 0 )
+            {
+                // detect strings
+                if( ch == '"' )
+                {
+                    quote = !quote;
+                    quoteFound = true;
+                }
+
+                // ignore everything inside strings
+                if( quote )
+                {
+                    arg += ch;
+                    continue;
+                }
+
+                // balancing
+                if( ch == '(' )
+                    balance++;
+                else if( ch == ')' )
+                {
+                    if( --balance == 0 )
+                    {
+                        full = text.substr( funcStart, funcLen + 1 );
+                        stage++;
+                        continue;
+                    }
+                }
+                // update arguments list
+                else if( ch == ',' && balance == 1 )
+                {
+                    args.push_back( TextGetTrimmed( arg ) );
+                    arg.clear();
+                    continue;
+                }
+
+                // update current argument
+                arg += ch;
+            }
+            // extract operator (if any)
+            else if( stage == 1 )
+            {
+                if( ch == ' ' || ch == '\t' )
+                {
+                    if( op.length() )
+                    {
+                        if( !IsOperator( op ) )
+                        {
+                            // TODO? support bw*
+                            // if( op.length() > 2 && op.substr( 0, 2 ) == "bw" )
+                            //     DEBUG( __FUNCTION__, "IGNORED bitwise<%s> :: %s", op.c_str(), text.c_str() );
+
+                            op.clear();
+                            break;
+                        }
+                        stage++;
+                    }
+
+                    continue;
+                }
+                else if( (ch == ')' || ch == ',') && balance == 0 )
+                    break;
+
+                op += ch;
+            }
+            // extract operator argument
+            else
+            {
+                // detect strings
+                if( ch == '"' )
+                {
+                    quote = !quote;
+                    quoteFound = true;
+                }
+
+                // ignore everything inside strings
+                if( quote )
+                {
+                    opArg += ch;
+                    continue;
+                }
+
+                // balancing
+                if( ch == '(' )
+                    balance++;
+                else if( ch == ')' )
+                {
+                    if( balance == 0 )
+                    {
+                        full = text.substr( funcStart, funcLen );
+                        break;
+                    }
+                    balance--;
+                }
+
+                opArg += ch;
+            }
+        }
+
+        // add last argument (if any)
+        if( arg.length() )
+            args.push_back( TextGetTrimmed( arg ) );
+
+        // validate quotes detection
+        if( !quoteFound && std::count( full.begin(), full.end(), '"' ) )
+        {
+            // DEBUG( __FUNCTION__, "QUOTE CHARACTER MISSED" );
+            quoteFound = true;
+        }
+
+        // validate balancing
+        bool parens = false;
+        if( quoteFound )
+        {
+            std::string tmp = std::regex_replace( full, GetFunctionsQuotedText, "STRING" );
+            // DEBUG( __FUNCTION__, "STRIP(%u) [%s] -> [%s]", funcIdx, full.c_str(), tmp.c_str() );
+
+            if( std::count( tmp.begin(), tmp.end(), '(' ) != std::count( tmp.begin(), tmp.end(), ')' ) )
+                parens = true;
+        }
+
+        SStatus::SCurrent prev = Status.Current;
+        Status.Current.Line = text;
+
+        // check if function looks like, well, a function
+        if( balance || quote || parens )
+        {
+            // DEBUG( __FUNCTION__, "FUNCTION(%u) DROPPED(%s%s%s)", funcIdx, balance ? std::to_string( (long long)balance ).c_str() : "", quote ? "Q" : "", parens ? "P" : "" );
+            continue;
+        }
+
+        /*
+           DEBUG( __FUNCTION__, "FUNCTION(%u)", funcIdx );
+           Status.Current.Clear();
+           DEBUG( __FUNCTION__, "\tcalc[%s]", text.substr( funcStart, funcLen ).c_str() );
+           DEBUG( __FUNCTION__, "\tfull[%s]", full.c_str() );
+           DEBUG( __FUNCTION__, "\tfunc[%s] args[%s] op[%s] opArg[%s] ", func.c_str(), TextGetJoined( args, "|" ).c_str(), op.c_str(), opArg.c_str() );
+           Status.Current = prev;
+         */
+
+        // update result
+        ExtractedFunction function( full, func, args );
+
+        if( op.length() && opArg.length() )
+        {
+            function.Operator = TextGetTrimmed( op );
+            function.OperatorArgument = TextGetTrimmed( opArg );
+        }
+
+        result.push_back( function );
+    }
+
+    return result;
 }
