@@ -45,10 +45,22 @@ variable my_hex;
 
 #define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
 
+#define wp1 		(12887)
+#define wp2 		(9889)
+#define wp3 		(10111)
+#define wp4 		(11519)
+#define wp5 		(11324)
+#define wp6 		(6524)
+#define wp7 		(924)
+
+#define LVAR_StartMoving 		(4)
+#define LVAR_MoveTo 				(5)
+#define LVAR_MoveCycle 			(6)
+
 procedure start begin
 	if (not(init_teams)) then begin
 		init_teams := 1;
-		if (local_var(6) > 9) then begin
+		if (local_var(LVAR_MoveCycle) > 9) then begin
 			if (metarule(22, 0) == 0) then begin
 				set_obj_visibility(self_obj, 1);
 			end//  MAKE INVISIBLE
@@ -59,7 +71,7 @@ procedure start begin
 end
 
 procedure timed_event_p_proc begin
-	if (local_var(6) < 10) then begin
+	if (local_var(LVAR_MoveCycle) < 10) then begin
 		call timeforwhat;
 	end
 end
@@ -89,8 +101,8 @@ end
 procedure talk_p_proc begin
 	dude_look_at_critter;
 
-	if global_var(EXP_REWARD_PRISONER) then begin
-		set_local_var(4, 1);
+	if (local_var(LVAR_StartMoving) == 1) then begin
+		set_local_var(LVAR_StartMoving, 1);
 		float(126);
 	end
 	else begin
@@ -125,7 +137,7 @@ procedure critter_p_proc begin
 	else begin
 
 		if (map_var(6) != 0) then begin
-			if (local_var(4) == 1) then begin
+			if (local_var(LVAR_StartMoving) == 1) then begin
 				call leave_map;
 			end
 		end
@@ -179,14 +191,12 @@ procedure prisonr05 begin
 end
 
 procedure prisonr06 begin
-	set_local_var(5, 15863);
-	set_local_var(6, 0);
-	set_local_var(4, 1);
+	set_local_var(LVAR_MoveTo, wp1);
+	set_local_var(LVAR_MoveCycle, 0);
 
-	if not(global_var(EXP_REWARD_PRISONER)) then begin// <-- this check by Sduibek, Fallout Fixt
+	if (local_var(LVAR_StartMoving) == 0) then begin
 		give_exp_points(EXP_PRISONER_FREED);
 		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		set_global_var(EXP_REWARD_PRISONER, 1);
 		display_msg(mstr(124) + EXP_PRISONER_FREED + mstr(125));
 	end
 
@@ -194,6 +204,8 @@ procedure prisonr06 begin
 	giq_option(4, 89, 116, prisonrend, 50);
 	giq_option(5, 89, 117, prisonr07, 50);
 	giq_option(-3, 89, 118, prisonrend, 50);
+
+	set_local_var(LVAR_StartMoving, 1);
 end
 
 procedure prisonr07 begin
@@ -209,40 +221,44 @@ end
 
 procedure leave_map begin
 	my_hex := tile_num(self_obj);
-	if (my_hex == local_var(5)) then begin
-		set_local_var(6, local_var(6) + 1);
-		if (local_var(6) > 7) then begin
-			set_local_var(6, 10);
-			if (metarule(22, 0) == 0) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	if (my_hex == local_var(LVAR_MoveTo)) then begin
+		set_local_var(LVAR_MoveCycle, local_var(LVAR_MoveCycle) + 1);
+		if (local_var(LVAR_MoveCycle) > 7) then begin
+			set_local_var(LVAR_MoveCycle, 10);
+
+			if (metarule(22, 0) == 0) then begin //  MAKE INVISIBLE
+				set_obj_visibility(self_obj, 1);
+			end
+
 			move_to(self_obj, 0, 0);
 		end
 		else begin
 
-			if (local_var(6) == 1) then begin
-				set_local_var(5, 15863);
+			if (local_var(LVAR_MoveCycle) == 1) then begin
+				set_local_var(LVAR_MoveTo, wp1);
 			end
-			else if (local_var(6) == 2) then begin
-				set_local_var(5, 13065);
+			else if (local_var(LVAR_MoveCycle) == 2) then begin
+				set_local_var(LVAR_MoveTo, wp2);
 			end
-			else if (local_var(6) == 3) then begin
-				set_local_var(5, 13081);
+			else if (local_var(LVAR_MoveCycle) == 3) then begin
+				set_local_var(LVAR_MoveTo, wp3);
 			end
-			else if (local_var(6) == 4) then begin
-				set_local_var(5, 14496);
+			else if (local_var(LVAR_MoveCycle) == 4) then begin
+				set_local_var(LVAR_MoveTo, wp4);
 			end
-			else if (local_var(6) == 5) then begin
-				set_local_var(5, 11900);
+			else if (local_var(LVAR_MoveCycle) == 5) then begin
+				set_local_var(LVAR_MoveTo, wp5);
 			end
-			else if (local_var(6) == 6) then begin
-				set_local_var(5, 8700);
+			else if (local_var(LVAR_MoveCycle) == 6) then begin
+				set_local_var(LVAR_MoveTo, wp6);
 			end
-			else if (local_var(6) == 7) then begin
-				set_local_var(5, 5900);
+			else if (local_var(LVAR_MoveCycle) == 7) then begin
+				set_local_var(LVAR_MoveTo, wp7);
 			end
-			animate_move_obj_to_tile(self_obj, local_var(5), 0);
+			animate_move_obj_to_tile(self_obj, local_var(LVAR_MoveTo), 0);
 
 		end
 	end
-	animate_move_obj_to_tile(self_obj, local_var(5), 0);
+	animate_move_obj_to_tile(self_obj, local_var(LVAR_MoveTo), 0);
 end
 

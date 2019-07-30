@@ -16,6 +16,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure timed_event_p_proc;
 procedure combat_p_proc;
 procedure critter_p_proc;
 procedure damage_p_proc;
@@ -151,6 +152,7 @@ variable item;
 
 #define EVENT_GET_AMMO 		(4)
 #define EVENT_END_SEQ 		(5)
+#define EVENT_LIBRARY 		(6)
 
 /*******************************************************************
 *******                         PROCEDURES                   *******
@@ -183,6 +185,28 @@ procedure start begin
 	end
 end
 
+procedure timed_event_p_proc begin
+variable item;
+
+	if (fixed_param == EVENT_LIBRARY) then begin
+		item := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
+		rm_obj_from_inven(dude_obj, item);
+
+		gfade_out(1);
+
+		display_msg(mstr(252));
+		give_exp_points(EXP_RETURN_WATERCHIP);
+
+		set_local_var(LVAR_WaterChipReturned, 2);
+		move_to(dude_obj, 21135, 2);
+		animate_rotation(0);
+
+		display_msg(message_str(SCRIPT_WTRGRD, 117));
+
+		gfade_in(1);
+	end
+end
+
 procedure combat_p_proc begin
 	if (fixed_param == EVENT_GET_AMMO) then begin
 		if (obj_is_carrying_obj_pid(self_obj, PID_5MM_AP) <= 3) then begin
@@ -194,7 +218,7 @@ end
 
 procedure critter_p_proc begin
 
-	if (self_can_see_dude and tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -214,11 +238,9 @@ procedure critter_p_proc begin
 			if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) > 4)) then begin
 				animate_move_obj_to_tile(dude_obj, 19290, 0);
 			end
-			else begin
-				if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
-					game_ui_enable;
-					dialogue_system_enter;
-				end
+			else if ((tile_num(self_obj) != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
+				game_ui_enable;
+				dialogue_system_enter;
 			end
 		end
 		else if ((global_var(OVERSEER_END_SEQ) == 3) and (global_var(OVERSEER_KILLED) == 0)) then begin
@@ -371,26 +393,6 @@ procedure talk_p_proc begin
 			set_local_var(LVAR_IanFloat, 1);
 		end
 	end
-
-	if (local_var(LVAR_Herebefore) == 1) then begin
-		item := obj_carrying_pid_obj(dude_obj, PID_WATER_CHIP);
-		rm_obj_from_inven(dude_obj, item);
-		if global_var(FADE_TIMES_INCREASED) then begin
-			gfade_out(1);
-			gfade_out(1);
-		end
-		gfade_out(1);
-
-		display_msg(message_str(SCRIPT_OVER, 252));
-		give_exp_points(EXP_RETURN_WATERCHIP);
-
-		set_local_var(LVAR_WaterChipReturned, 2);
-		move_to(dude_obj, 21135, 2);
-		display_msg(message_str(SCRIPT_WTRGRD, 117));
-
-		gfade_in(1);
-	end
-
 end
 
 procedure use_skill_on_p_proc begin
@@ -405,6 +407,9 @@ procedure description_p_proc begin
 end
 
 procedure overend begin
+	if (local_var(LVAR_WaterChipReturned) == 1) then begin
+		add_timer_event(self_obj, game_ticks(0), EVENT_LIBRARY);
+	end
 end
 
 procedure overcbt begin
@@ -952,8 +957,7 @@ begin
 	giq_option(0, 634, 106, Over81e, 51);
 end
 
-procedure Over81e
-begin
+procedure Over81e begin
 	gsay_message(55, 265, 51);
 	set_global_var(OVERSEER_END_SEQ, 3);
 	add_timer_event(dude_obj, game_ticks(1), EVENT_END_SEQ);// was 10
