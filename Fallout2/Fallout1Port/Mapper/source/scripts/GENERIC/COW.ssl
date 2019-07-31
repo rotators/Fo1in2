@@ -1,11 +1,16 @@
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure timed_event_p_proc;//    script_action == 22
-procedure description_p_proc;//    script_action == 3
+#define NAME                    SCRIPT_COW
+
+#include "..\headers\command.h"
+
+procedure start;
+procedure push_p_proc;
+procedure timed_event_p_proc;
+procedure talk_p_proc;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
 procedure destroy_p_proc;
 procedure damage_p_proc;
 procedure critter_p_proc;
@@ -13,7 +18,10 @@ procedure critter_p_proc;
 variable initial :=  0;
 variable moo_counter;
 variable critter_tile;
-variable hostile := 0;
+variable tmp_hostile := 0;
+variable hit_counter := 0;
+
+#define TIMER_STAND_UP 4
 
 ////////////////////////////////////////
 //	COW SCRIPTS
@@ -25,10 +33,7 @@ variable hostile := 0;
 
 ////////////////////////////////////////
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		if elevation(self_obj) == elevation(dude_obj) then begin
@@ -47,50 +52,39 @@ begin
 			add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
 		end
 	end
-	if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-		call timed_event_p_proc;
+end
+
+procedure push_p_proc begin
+	if map_is_caravan_escort then begin
+		script_overrides;
 	end
 	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 8) then begin//<-- use_skill_on_p_proc
-						call use_skill_on_p_proc;
-					end
-					else begin
-						if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-							call description_p_proc;
-						end
-						else begin
-							if (script_action == 18) then begin
-								call destroy_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
+	   if (obj_in_party(source_obj)) then begin
+	      if (stat_success(source_obj, STAT_st, 0)) then begin
+	         if ((critter_state(self_obj) bwand DAM_KNOCKED_DOWN) == FALSE) then begin
+	            reg_anim_clear(self_obj);
+	            reg_anim_begin();
+	               reg_anim_animate(self_obj,ANIM_hit_from_front,-1);
+	               reg_anim_animate(self_obj,ANIM_fall_back,5);
+	               reg_anim_animate(self_obj,ANIM_fall_back_sf,-1);
+	            reg_anim_end();
+	            critter_injure(self_obj,DAM_KNOCKED_DOWN);
+	            add_timer_event(self_obj, game_ticks(Random(10, 30)), TIMER_STAND_UP);
+	            debug_msg("ZCBRAHMN: ahh Cow TIPPED you get +10 Hick Experience Points.");
+	         end
+	      end
+	   end
 	end
 end
 
 procedure critter_p_proc begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	if (cur_map_index == MAP_TALKCOW) then begin //  TALKING COWS ENCOUNTER
 		moo_counter := moo_counter + 1;
 		if (moo_counter > 2) then begin
@@ -109,8 +103,7 @@ begin
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_BOOZE)) then begin
 		script_overrides;
@@ -130,8 +123,7 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
 		script_overrides;
 		if (cur_map_index == MAP_TALKCOW) then begin //  TALKING COWS ENCOUNTER
@@ -155,8 +147,25 @@ begin
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
+	if map_cow_can_push then begin
+	 	if (((critter_state(self_obj) bwand 2) == 0) and not(combat_is_initialized) and (anim_busy(self_obj) == 0)) then begin
+			critter_tile := tile_num_in_direction(tile_num(self_obj), random(0, 5), 3);
+			reg_anim_func(2, self_obj);
+			reg_anim_func(1, 1);
+			reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
+			reg_anim_func(3, 0);
+      end
+      else if (fixed_param == TIMER_STAND_UP) then begin
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+         reg_anim_animate_reverse(self_obj, ANIM_fall_back, -1);
+         reg_anim_end();
+         critter_uninjure(self_obj, DAM_KNOCKED_DOWN);
+      end
+		add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
+	end
+
 	if (cur_map_index != MAP_DESCRVN1) and (cur_map_index != MAP_DESCRVN2) and (cur_map_index != MAP_MNTCRVN1) and (cur_map_index != MAP_MNTCRVN2) and (cur_map_index != MAP_MNTCRVN3) and (cur_map_index != MAP_DESCRVN4) and (cur_map_index != MAP_MNTCRVN4) and (cur_map_index != MAP_DESERT1) then begin
 		if (((critter_state(self_obj) bwand 2) == 0) and not(combat_is_initialized)) then begin
 			critter_tile := tile_num_in_direction(tile_num(self_obj), random(0, 5), 3);
@@ -174,8 +183,7 @@ begin
 	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if (cur_map_index == MAP_TALKCOW) then begin //  TALKING COWS ENCOUNTER
 		display_msg(message_str(SCRIPT_BRAHMIN, 106));
@@ -186,74 +194,62 @@ begin
 	script_overrides;
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	if (cur_map_index == MAP_DESCRVN1) or (cur_map_index == MAP_DESCRVN2) or (cur_map_index == MAP_MNTCRVN1) or (cur_map_index == MAP_MNTCRVN2) or (cur_map_index == MAP_MNTCRVN3) or (cur_map_index == MAP_DESCRVN4) or (cur_map_index == MAP_MNTCRVN4) or (cur_map_index == MAP_DESERT1) then begin //  ANY CARAVAN ENCOUNTER MAPS
 		if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
 			set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 1);
 		end
-		else begin
-			if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-				set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 0);
-			end
+		else if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
+			set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 0);
 		end
 	end
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if obj_in_party(source_obj) then begin
 		if (cur_map_index == MAP_HUBENT) or (cur_map_index == MAP_HUBDWNTN) or (cur_map_index == MAP_HUBHEIGT) or (cur_map_index == MAP_HUBOLDTN) or (cur_map_index == MAP_HUBWATER) or (cur_map_index == MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
 			set_global_var(ENEMY_HUB, 1);
 		end
-		else begin
-			if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
-				set_global_var(ENEMY_JUNKTOWN, 1);
-			end
-			else begin
-				if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
-					set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
-				end
-			end
+		else if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+			set_global_var(ENEMY_JUNKTOWN, 1);
+		end
+		else if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+			set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
 		end
 	end
 	if source_obj == dude_obj then begin
 		if (cur_map_index == MAP_DESCRVN1) or (cur_map_index == MAP_DESCRVN2) or (cur_map_index == MAP_MNTCRVN1) or (cur_map_index == MAP_MNTCRVN2) or (cur_map_index == MAP_MNTCRVN3) or (cur_map_index == MAP_DESCRVN4) or (cur_map_index == MAP_MNTCRVN4) or (cur_map_index == MAP_DESERT1) then begin //  ANY CARAVAN ENCOUNTER MAPS
-			set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-				set_global_var(BERSERKER_REPUTATION, 1);
-				set_global_var(CHAMPION_REPUTATION, 0);
-			end
-			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-				set_global_var(CHAMPION_REPUTATION, 1);
-				set_global_var(BERSERKER_REPUTATION, 0);
-			end
-			if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-				set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-			end
+			inc_good_critter
 		end
 	end
 	rm_timer_event(self_obj);
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (cur_map_index == MAP_HUBENT) or (cur_map_index == MAP_HUBDWNTN) or (cur_map_index == MAP_HUBHEIGT) or (cur_map_index == MAP_HUBOLDTN) or (cur_map_index == MAP_HUBWATER) or (cur_map_index == MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
-			set_global_var(ENEMY_HUB, 1);
-		end
-		else begin
-			if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
-				set_global_var(ENEMY_JUNKTOWN, 1);
+procedure damage_p_proc begin
+	if obj_in_party(source_obj) then begin
+		if map_is_caravan_escort then begin
+			if hit_counter < 3 then begin
+				script_overrides;
+				hit_counter := hit_counter + 1;
 			end
 			else begin
-				if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
-					set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
-				end
+				tmp_hostile := 1;
 			end
 		end
-		if (cur_map_index != MAP_DESCRVN1) and (cur_map_index != MAP_DESCRVN2) and (cur_map_index != MAP_MNTCRVN1) and (cur_map_index != MAP_MNTCRVN2) and (cur_map_index != MAP_MNTCRVN3) and (cur_map_index != MAP_DESCRVN4) and (cur_map_index != MAP_MNTCRVN4) and (cur_map_index != MAP_DESERT1) then begin
-			party_remove(self_obj);
-			critter_add_trait(self_obj, 1, 6, 4);/* TEAM_NUM */
-			hostile := 1;
+		else begin
+
+			if (cur_map_index == MAP_HUBENT) or (cur_map_index == MAP_HUBDWNTN) or (cur_map_index == MAP_HUBHEIGT) or (cur_map_index == MAP_HUBOLDTN) or (cur_map_index == MAP_HUBWATER) or (cur_map_index == MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
+				set_global_var(ENEMY_HUB, 1);
+			end
+			else if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+				set_global_var(ENEMY_JUNKTOWN, 1);
+			end
+			else if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+				set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+			end
+			if (cur_map_index != MAP_DESCRVN1) and (cur_map_index != MAP_DESCRVN2) and (cur_map_index != MAP_MNTCRVN1) and (cur_map_index != MAP_MNTCRVN2) and (cur_map_index != MAP_MNTCRVN3) and (cur_map_index != MAP_DESCRVN4) and (cur_map_index != MAP_MNTCRVN4) and (cur_map_index != MAP_DESERT1) then begin
+				party_remove(self_obj);
+				critter_add_trait(self_obj, 1, 6, 4);/* TEAM_NUM */
+				tmp_hostile := 1;
+			end
 		end
 	end
 end
