@@ -22,8 +22,9 @@ namespace std_filesystem = std::experimental::filesystem;
 
 static std::regex IsComment( "^[\\t\\ ]*\\/\\/" );
 static std::regex IsDefine( "^[\\t\\ ]*\\#define[\\t\\ ]+" );
+static std::regex IsInt( "^[\\-]?[0-9]+$" );
 
-static std::regex GetVariables( "([A-Za-z0-9_]+)[\\t\\ ]*([\\:\\=\\!\\<\\>\\+]+)[\\t\\ ]*([0-9]+)" );
+static std::regex GetVariables( "([A-Za-z0-9_]+)[\\t\\ ]*([\\:\\=\\!\\<\\>\\+]+)[\\t\\ ]*([\\-]?[0-9]+)" );
 
 static std::regex GetFunctions( "([A-Za-z0-9_]+)\\(" );
 static std::regex GetFunctionsQuotedText( "\".*?\"" );
@@ -31,6 +32,11 @@ static std::regex GetFunctionsQuotedText( "\".*?\"" );
 bool ReDefine::TextIsComment( const std::string& text )
 {
     return std::regex_search( text, IsComment );
+}
+
+bool ReDefine::TextIsInt( const std::string& text )
+{
+    return std::regex_match( text, IsInt );
 }
 
 std::string ReDefine::TextGetFilename( const std::string& path, const std::string& filename )
@@ -98,8 +104,32 @@ std::string ReDefine::TextGetPacked( const std::string& text )
 {
     std::string result = text;
 
-    result.erase( std::remove( result.begin(), result.end(), ' ' ), result.end() );
-    result.erase( std::remove( result.begin(), result.end(), '\t' ), result.end() );
+    result = TextGetReplaced( result, "\t", " " );
+    result = TextGetReplaced( result, " ", "" );
+
+    // result.erase( std::remove( result.begin(), result.end(), ' ' ), result.end() );
+    // result.erase( std::remove( result.begin(), result.end(), '\t' ), result.end() );
+
+    return result;
+}
+
+std::string ReDefine::TextGetReplaced( const std::string& text, const std::string& from, const std::string& to )
+{
+    std::string                 result;
+
+    std::string::const_iterator textCurrent = text.begin();
+    std::string::const_iterator textEnd = text.end();
+    std::string::const_iterator next = std::search( textCurrent, textEnd, from.begin(), from.end() );
+
+    while( next != textEnd )
+    {
+        result.append( textCurrent, next );
+        result.append( to );
+        textCurrent = next + from.size();
+        next = std::search( textCurrent, textEnd, from.begin(), from.end() );
+    }
+
+    result.append( textCurrent, next );
 
     return result;
 }
@@ -114,16 +144,17 @@ std::string ReDefine::TextGetTrimmed( const std::string& text )
     return result;
 }
 
+//
 
 bool ReDefine::TextIsDefine( const std::string& text )
 {
     return std::regex_search( text, IsDefine );
 }
 
-bool ReDefine::TextGetDefine( const std::string& text, const std::regex& pattern, std::string& name, int& value )
+bool ReDefine::TextGetDefine( const std::string& text, const std::regex& re, std::string& name, int& value )
 {
     std::smatch match;
-    if( std::regex_search( text, match, pattern ) )
+    if( std::regex_search( text, match, re ) )
     {
         name = match.str( 1 );
         TextGetInt( match.str( 2 ), value );
@@ -133,37 +164,37 @@ bool ReDefine::TextGetDefine( const std::string& text, const std::regex& pattern
     return false;
 }
 
-std::regex ReDefine::TextGetDefinePattern( const std::string& prefix, bool paren )
+std::regex ReDefine::TextGetDefineRegex( const std::string& prefix, bool paren )
 {
     return std::regex( "^[\\t\\ ]*\\#define[\\t\\ ]+(" + prefix + "_[A-Za-z0-9_]+)[\\t\\ ]+" + (paren ? "\\(" : "") + "([0-9]+)" + (paren ? "\\)" : "") );
 }
 
-std::vector<ReDefine::TripleString> ReDefine::TextGetVariables( const std::string& text )
+std::vector<ReDefine::Variable> ReDefine::TextGetVariables( const std::string& text )
 {
-    std::vector<TripleString> result;
+    std::vector<Variable> result;
 
     for( auto it = std::sregex_iterator( text.begin(), text.end(), GetVariables ), end = std::sregex_iterator(); it != end; ++it )
     {
-        // DEBUG(__FUNCTION__,"[%s] -> [%s] %s [%s]", text.c_str(), it->str( 1 ).c_str(), it->str( 2 ).c_str(), it->str( 3 ).c_str()  );
+        Variable variable( it->str(), it->str( 1 ), it->str( 2 ), it->str( 3 ) );
 
-        result.push_back( std::make_tuple( it->str( 1 ), it->str( 2 ), it->str( 3 ) ) );
+        result.push_back( variable );
     }
 
     return result;
 }
 
-std::vector<ReDefine::ExtractedFunction> ReDefine::TextGetFunctions( const std::string& text )
+std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& text )
 {
 
-    std::vector<ExtractedFunction> result;
+    std::vector<Function> result;
 
-    unsigned int                   funcIdx = 0;
+    unsigned int          funcIdx = 0;
     for( auto it = std::sregex_iterator( text.begin(), text.end(), GetFunctions ), end = std::sregex_iterator(); it != end; ++it, funcIdx++ )
     {
         const std::string        func = it->str( 1 );
         std::string              full, arg, op, opArg;
         std::vector<std::string> args;
-        unsigned int             stage = 0, funcStart = it->position(), funcLen = func.length() + 1, balance = 1;
+        unsigned int             stage = 0, funcStart = it->position(), funcLen = func.length() + 1, funcArgsLen = 0, balance = 1;
         bool                     quote = false, quoteFound = false;
 
         for( unsigned int t = funcStart + funcLen, tLen = text.length(); t < tLen; t++, funcLen++ )
@@ -200,7 +231,8 @@ std::vector<ReDefine::ExtractedFunction> ReDefine::TextGetFunctions( const std::
                 {
                     if( --balance == 0 )
                     {
-                        full = text.substr( funcStart, funcLen + 1 );
+                        funcArgsLen = funcLen + 1;
+                        full = text.substr( funcStart, funcArgsLen );
                         stage++;
                         continue;
                     }
@@ -272,6 +304,13 @@ std::vector<ReDefine::ExtractedFunction> ReDefine::TextGetFunctions( const std::
                     balance--;
                 }
 
+                // detect operator argument end
+                if( ch == ' ' && text.substr( t + 1, 4 ) == "then" ) // unsafe
+                {
+                    full = text.substr( funcStart, funcLen );
+                    break;
+                }
+
                 opArg += ch;
             }
         }
@@ -292,39 +331,49 @@ std::vector<ReDefine::ExtractedFunction> ReDefine::TextGetFunctions( const std::
         if( quoteFound )
         {
             std::string tmp = std::regex_replace( full, GetFunctionsQuotedText, "STRING" );
-            // DEBUG( __FUNCTION__, "STRIP(%u) [%s] -> [%s]", funcIdx, full.c_str(), tmp.c_str() );
+            // DEBUG( __FUNCTION__, "STRIP(%u) STRINGS [%s] -> [%s]", funcIdx, full.c_str(), tmp.c_str() );
 
             if( std::count( tmp.begin(), tmp.end(), '(' ) != std::count( tmp.begin(), tmp.end(), ')' ) )
                 parens = true;
         }
 
-        SStatus::SCurrent prev = Status.Current;
-        Status.Current.Line = text;
+        // validate operator
+        if( op.length() && !opArg.length() )
+        {
+            // DEBUG( __FUNCTION__, "STRIP(%u) OPERATOR(%s) [%s] -> [%s] :: %s", funcIdx, op.c_str(), full.c_str(), full.substr( 0, funcArgsLen ).c_str(), text.c_str() );
+            full = full.substr( 0, funcArgsLen );
+            op.clear();
+            opArg.clear();
+        }
+
 
         // check if function looks like, well, a function
         if( balance || quote || parens )
         {
-            // DEBUG( __FUNCTION__, "FUNCTION(%u) DROPPED(%s%s%s)", funcIdx, balance ? std::to_string( (long long)balance ).c_str() : "", quote ? "Q" : "", parens ? "P" : "" );
+            bool spam = func != "for";
+
+            if( spam )
+            {
+                SStatus::SCurrent prev = Status.Current;
+
+                Status.Current.Line = text;
+                DEBUG( __FUNCTION__, "FUNCTION(%u)", funcIdx );
+                DEBUG( __FUNCTION__, "DROPPED(%s%s%s)", funcIdx, balance ? std::to_string( (long long)balance ).c_str() : "", quote ? "Q" : "", parens ? "P" : "" );
+                Status.Current.Clear();
+
+                DEBUG( __FUNCTION__, "\tcalc[%s]", text.substr( funcStart, funcLen ).c_str() );
+                DEBUG( __FUNCTION__, "\tfull[%s]", full.c_str() );
+                DEBUG( __FUNCTION__, "\tfunc[%s] args[%s] op[%s] opArg[%s] ", func.c_str(), TextGetJoined( args, "|" ).c_str(), op.c_str(), opArg.c_str() );
+
+                Status.Current = prev;
+            }
+
             continue;
         }
 
-        /*
-           DEBUG( __FUNCTION__, "FUNCTION(%u)", funcIdx );
-           Status.Current.Clear();
-           DEBUG( __FUNCTION__, "\tcalc[%s]", text.substr( funcStart, funcLen ).c_str() );
-           DEBUG( __FUNCTION__, "\tfull[%s]", full.c_str() );
-           DEBUG( __FUNCTION__, "\tfunc[%s] args[%s] op[%s] opArg[%s] ", func.c_str(), TextGetJoined( args, "|" ).c_str(), op.c_str(), opArg.c_str() );
-           Status.Current = prev;
-         */
-
         // update result
-        ExtractedFunction function( full, func, args );
-
-        if( op.length() && opArg.length() )
-        {
-            function.Operator = TextGetTrimmed( op );
-            function.OperatorArgument = TextGetTrimmed( opArg );
-        }
+        Function function( full, func, args, TextGetTrimmed( op ), TextGetTrimmed( opArg ) );
+        function.ArgumentsEnd = funcArgsLen;
 
         result.push_back( function );
     }

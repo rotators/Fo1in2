@@ -119,8 +119,7 @@ ReDefine::SStatus::SCurrent::SCurrent()
 
 void ReDefine::SStatus::SCurrent::Clear()
 {
-    File = "";
-    Line = "";
+    File = Line = "";
     LineNumber = 0;
 }
 
@@ -133,8 +132,7 @@ ReDefine::SStatus::SProcess::SProcess()
 
 void ReDefine::SStatus::SProcess::Clear()
 {
-    Files = 0;
-    Lines = 0;
+    Files = FilesChanged = Lines = LinesChanged = 0;
 }
 
 //
@@ -205,7 +203,7 @@ void ReDefine::WARNING( const char* func, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( this, "WARNING", nullptr, format, list, true );
+    Print( this, "WARNING", func, format, list, true );
     va_end( list );
 }
 
@@ -214,6 +212,14 @@ void ReDefine::LOG( const char* format, ... )
     va_list list;
     va_start( list, format );
     Print( this, nullptr, nullptr, format, list, false );
+    va_end( list );
+}
+
+void ReDefine::ILOG( const char* format, ... )
+{
+    va_list list;
+    va_start( list, format );
+    Print( this, nullptr, nullptr, format, list, true );
     va_end( list );
 }
 
@@ -356,18 +362,22 @@ void ReDefine::ProcessHeaders( const std::string& path )
     FunctionsArguments = validatedFunctions;
 
     // log raw replacement
-
     for( const auto& from : Raw )
     {
         LOG( "Added raw ... %s", from.first.c_str() );
+    }
+
+    // hardcoded for now
+    if( IsDefineType( "SID" ) )
+    {
+        RegularDefines["SID"][0] = "0";
+        RegularDefines["SID"][-1] = "-1";
     }
 }
 
 void ReDefine::ProcessScripts( const std::string& path, const bool readOnly /* = false */ )
 {
-    LOG( "Process scripts ... " );
-
-    std::string              spath = path;
+    LOG( "Process scripts%s ...", readOnly ? " (read only)" : "" );
 
     std::vector<std::string> scripts;
 

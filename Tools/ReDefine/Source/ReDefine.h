@@ -15,7 +15,9 @@ public:
 
     typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap;
     typedef std::map<std::string, std::vector<std::string>>           StringVectorMap;
-    typedef std::tuple<std::string, std::string, std::string>         TripleString;
+
+    struct Function;
+    struct Variable;
 
     //
     // ReDefine
@@ -38,11 +40,15 @@ public:
 
         struct SProcess
         {
-            unsigned int Files;
-            unsigned int Lines;
+            unsigned int                       Files;
+            unsigned int                       FilesChanged;
+            unsigned int                       Lines;
+            unsigned int                       LinesChanged;
+
+            std::map<std::string, std::string> Unknown;
 
             SProcess();
-            void         Clear();
+            void                               Clear();
         }
         Process;
 
@@ -59,6 +65,7 @@ public:
     void DEBUG( const char* func, const char* format, ... );
     void WARNING( const char* func, const char* format, ... );
     void LOG( const char* format, ... );
+    void ILOG( const char* format, ... );
 
     bool ReadFile( const std::string& filename, std::vector<std::string>& lines );
     bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix, const std::string& raw );
@@ -88,37 +95,47 @@ public:
     void FinishDefines();
 
     bool ReadConfigDefines( const std::string& section );
+
     bool IsDefineType( const std::string& type );
+    bool GetDefineName( const std::string& type, const int value, std::string& result );
+
     bool ProcessHeader( const std::string& path, const Header& header );
+    bool ProcessValue( const std::string& type, std::string& value, const bool silent = false );
+    void ProcessValueGuessing( std::string& value );
 
     //
     // Functions
     //
 
-    struct ExtractedFunction
+    struct Function
     {
-        const std::string        Full; // Name + Arguments + Operator + OperatorArguments
-
+        std::string              Full; // Name + Arguments + (Operator + OperatorArguments)
         std::string              Name;
         std::vector<std::string> Arguments;
         std::string              Operator;
         std::string              OperatorArgument;
 
-        ExtractedFunction( const std::string& full, const std::string& name, const std::vector<std::string>& arguments = std::vector<std::string>() );
+        unsigned int             ArgumentsEnd; // Name + Arguments only = Full.substr( 0, ArgumentsEndPos );
+
+        Function( const std::string& full, const std::string& name, const std::vector<std::string>& arguments = std::vector<std::string>(), const std::string& op = std::string(), const std::string& opArgument = std::string() );
     };
 
     StringVectorMap     FunctionsArguments; // <name, <types>>
-    GenericOperatorsMap FunctionsOperators; // <name, <operator, type>>
+    GenericOperatorsMap FunctionsOperators; // <name, <operatorName, type>>
 
     void FinishFunctions();
 
     bool ReadConfigFunctions( const std::string& sectionPrefix );
 
+    std::string GetFullString( const Function& function );
+
+    void ProcessFunctionArguments( Function& current );
+
     //
     // Operators
     //
 
-    std::map<std::string, std::string> Operators; // <opName, op>
+    std::map<std::string, std::string> Operators; // <operatorName, operator>
 
     void InitOperators();
     void FinishOperators();
@@ -127,6 +144,8 @@ public:
     bool        IsOperatorName( const std::string& opName );
     std::string GetOperator( const std::string& opName );
     std::string GetOperatorName( const std::string& op );
+
+    void ProcessOperator( const GenericOperatorsMap& map, const std::string& name, const std::string& op, std::string& opArgument );
 
     //
     // Raw
@@ -149,30 +168,44 @@ public:
     //
 
     bool        TextIsComment( const std::string& text );
+    bool        TextIsInt( const std::string& text );
     std::string TextGetFilename( const std::string& path, const std::string& filename );
     bool        TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
     std::string TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter );
     std::string TextGetLower( const std::string& text );
     std::string TextGetPacked( const std::string& text );
+    std::string TextGetReplaced( const std::string& text, const std::string& from, const std::string& to );
     std::string TextGetTrimmed( const std::string& text );
 
     bool       TextIsDefine( const std::string& text );
-    bool       TextGetDefine( const std::string& text, const std::regex& pattern, std::string& name, int& value );
-    std::regex TextGetDefinePattern( const std::string& prefix, bool paren );
+    bool       TextGetDefine( const std::string& text, const std::regex& re, std::string& name, int& value );
+    std::regex TextGetDefineRegex( const std::string& prefix, bool paren );
 
-    std::vector<TripleString>      TextGetVariables( const std::string& text );
-    std::vector<ExtractedFunction> TextGetFunctions( const std::string& text );
+    std::vector<Variable> TextGetVariables( const std::string& text );
+    std::vector<Function> TextGetFunctions( const std::string& text );
 
     //
     // Variables
     //
 
-    GenericOperatorsMap      VariablesOperators; // <name, <operator, type>>
+    struct Variable
+    {
+        std::string Full;              // Name + Operator + OperatorArgument
+        std::string Name;
+        std::string Operator;
+        std::string OperatorArgument;
+
+        Variable( const std::string& full, const std::string& name, const std::string& op, const std::string& opArgument );
+    };
+
+    GenericOperatorsMap      VariablesOperators; // <name, <operatorName, type>>
     std::vector<std::string> VariablesGuessing;  // <types>
 
     void FinishVariables();
 
     bool ReadConfigVariables( const std::string& sectionPrefix );
+
+    std::string GetFullString( const Variable& variable );
 };
 
 #endif // __REDEFINE__ //
