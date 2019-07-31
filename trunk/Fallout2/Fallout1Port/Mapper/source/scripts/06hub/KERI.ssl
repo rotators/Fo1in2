@@ -1,15 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure timed_event_p_proc;//    script_action == 22
-procedure damage_p_proc;//    script_action == 14
+	Hub - Keri from the Crimson Caravan
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_KERI
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure timed_event_p_proc;
+procedure damage_p_proc;
 
 procedure Keri00;
 procedure Keri01;
@@ -67,55 +80,22 @@ variable SetDayNight;
 variable Destination;
 variable LastMove;
 
-procedure start
-begin
-
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 36);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 50);
 		LastMove := 12127;
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-							call timed_event_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	variable LVar0 := 0;
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -131,28 +111,23 @@ begin
 			end
 		end
 	end
-	else begin
-		if (LVar0 == 11927) then begin
-			if (anim_busy(self_obj) == 0) then begin
-				if (has_trait(1, self_obj, 10) != 5) then begin
-					anim(self_obj, 1000, 5);
-				end
+	else if (LVar0 == 11927) then begin
+		if (anim_busy(self_obj) == 0) then begin
+			if (has_trait(1, self_obj, 10) != 5) then begin
+				anim(self_obj, 1000, 5);
 			end
 		end
-		else begin
-			if (LVar0 == 12127) then begin
-				if (anim_busy(self_obj) == 0) then begin
-					if (has_trait(1, self_obj, 10) != 2) then begin
-						anim(self_obj, 1000, 2);
-					end
-				end
+	end
+	else if (LVar0 == 12127) then begin
+		if (anim_busy(self_obj) == 0) then begin
+			if (has_trait(1, self_obj, 10) != 2) then begin
+				anim(self_obj, 1000, 2);
 			end
 		end
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if (local_var(5) == 0) then begin
 		dialogue_system_enter;
 	end
@@ -161,8 +136,7 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable LVar0 := 0;
 	dude_look_at_critter;
 	get_reaction
@@ -264,8 +238,7 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_map_var(28, 1);
 	rm_timer_event(self_obj);
 
@@ -273,26 +246,22 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_KERI, 100));
+	display_msg(mstr(100));
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	call SendAroundHouse;
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if obj_in_party(source_obj) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure Keri00
-begin
+procedure Keri00 begin
 	if (local_var(7) == 0) then begin
 		set_local_var(7, 1);
 		float_msg(self_obj, message_str(SCRIPT_KERI, 101), 2);
@@ -323,44 +292,35 @@ procedure Keri01 begin
 		if ((global_var(GVAR_FOLLOWERS_INVADED) == 0) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0)) then begin
 			gsay_reply(595, 103);
 		end
+		else if ((global_var(GVAR_FOLLOWERS_INVADED) == 0) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) then begin
+			gsay_reply(595, 304);
+		end
+		else if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0)) then begin
+			gsay_reply(595, 302);
+		end
 		else begin
-			if ((global_var(GVAR_FOLLOWERS_INVADED) == 0) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) then begin
-				gsay_reply(595, 304);
-			end
-			else begin
-				if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0)) then begin
-					gsay_reply(595, 302);
-				end
-				else begin
-					gsay_reply(595, 300);
-				end
-			end
+			gsay_reply(595, 300);
 		end
 	end
 	else begin
 		if ((global_var(GVAR_FOLLOWERS_INVADED) == 0) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0)) then begin
 			gsay_reply(595, 104);
 		end
+		else if ((global_var(GVAR_FOLLOWERS_INVADED) == 0) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) then begin
+			gsay_reply(595, 305);
+		end
+		else if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0)) then begin
+			gsay_reply(595, 303);
+		end
 		else begin
-			if ((global_var(GVAR_FOLLOWERS_INVADED) == 0) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) then begin
-				gsay_reply(595, 305);
-			end
-			else begin
-				if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0)) then begin
-					gsay_reply(595, 303);
-				end
-				else begin
-					gsay_reply(595, 301);
-				end
-			end
+			gsay_reply(595, 301);
 		end
 	end
 	giq_option(4, 595, 105, Keri02, 50);
 	giq_option(-3, 595, 106, Keri02, 50);
 end
 
-procedure Keri02
-begin
+procedure Keri02 begin
 	variable LVar0 := 0;
 	call RecalcDateString;
 	LVar0 := local_var(9);
@@ -373,8 +333,7 @@ begin
 	call Keri04;
 end
 
-procedure Keri03
-begin
+procedure Keri03 begin
 	variable LVar0 := 0;
 	if (local_var(1) != 1) then begin
 		call RecalcDateString;
@@ -393,8 +352,7 @@ begin
 	end
 end
 
-procedure Keri04
-begin
+procedure Keri04 begin
 	giq_option(4, 595, 119, Keri04a, 50);
 	giq_option(4, 595, 120, Keri05, 50);
 	if ((get_critter_stat(dude_obj, STAT_gender) == 0) and (local_var(14) == 0)) then begin
@@ -404,8 +362,7 @@ begin
 	giq_option(-3, 595, 123, Keri07, 50);
 end
 
-procedure Keri04a
-begin
+procedure Keri04a begin
 	variable LVar0 := 0;
 	set_local_var(13, 1);
 	call RecalcDate;
@@ -418,8 +375,7 @@ begin
 	end
 end
 
-procedure Keri04b
-begin
+procedure Keri04b begin
 	variable LVar0 := 0;
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
 		call Keri08;
@@ -429,39 +385,34 @@ begin
 		if (LVar0 <= 6) then begin
 			call Keri16;
 		end
+		else if (is_success(do_check(dude_obj, STAT_ch, 0))) then begin
+			call Keri09;
+		end
 		else begin
-			if (is_success(do_check(dude_obj, STAT_ch, 0))) then begin
-				call Keri09;
-			end
-			else begin
-				call Keri16;
-			end
+			call Keri16;
 		end
 	end
 end
 
-procedure Keri05
-begin
+procedure Keri05 begin
 	set_local_var(13, 0);
 	gsay_message(595, 124, 50);
 end
 
-procedure Keri06
-begin
+procedure Keri06 begin
 	set_local_var(13, 0);
 	gsay_message(595, 126, 50);
 end
 
-procedure Keri07
-begin
+procedure Keri07 begin
 	gsay_message(595, 127, 50);
 end
 
-procedure Keri08
-begin
+procedure Keri08 begin
 	variable LVar0 := 0;
 	set_local_var(14, 1);
 	gsay_message(595, 130, 50);
+
 	gfade_out(1);
 	game_time_advance(game_ticks(60 * 60 * 2));
 	gfade_in(1);
@@ -472,12 +423,12 @@ begin
 	LVar0 := create_object_sid(PID_PSYCHO, 0, 0, -1);
 	add_obj_to_inven(dude_obj, LVar0);
 	display_msg(message_str(SCRIPT_KERI, 229));
+
 	gsay_message(595, 131, 50);
 	gsay_message(595, 132, 50);
 end
 
-procedure Keri09
-begin
+procedure Keri09 begin
 	variable LVar0 := 0;
 	set_local_var(14, 1);
 	gsay_message(595, 133, 50);
@@ -495,8 +446,7 @@ begin
 	gsay_message(595, 132, 50);
 end
 
-procedure Keri10
-begin
+procedure Keri10 begin
 	if (local_var(5) == 0) then begin
 		set_local_var(5, 1);
 		set_map_var(25, 1);
@@ -517,8 +467,7 @@ begin
 	end
 end
 
-procedure Keri10a
-begin
+procedure Keri10a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call Keri11;
 	end
@@ -527,31 +476,26 @@ begin
 	end
 end
 
-procedure Keri11
-begin
+procedure Keri11 begin
 	gsay_message(595, 144, 50);
 end
 
-procedure Keri12
-begin
+procedure Keri12 begin
 	gsay_reply(595, 145);
 	call KeriCombat;
 end
 
-procedure Keri13
-begin
+procedure Keri13 begin
 	float_msg(self_obj, message_str(SCRIPT_KERI, 148), 2);
 	call KeriCombat;
 end
 
-procedure Keri14
-begin
+procedure Keri14 begin
 	float_msg(self_obj, message_str(SCRIPT_KERI, random(149, 150)), 2);
 	call KeriCombat;
 end
 
-procedure Keri15
-begin
+procedure Keri15 begin
 	if (local_var(6) != 3) then begin
 		float_msg(self_obj, message_str(SCRIPT_KERI, 151 + local_var(6)), 2);
 		set_local_var(6, local_var(6) + 1);
@@ -561,28 +505,24 @@ begin
 	end
 end
 
-procedure Keri16
-begin
+procedure Keri16 begin
 	gsay_message(595, 155, 50);
 end
 
-procedure Keri17
-begin
+procedure Keri17 begin
 	gsay_reply(595, 156);
 	call Keri33;
 	call Keri20;
 end
 
-procedure Keri18
-begin
+procedure Keri18 begin
 	call RecalcDateString;
 	gsay_reply(595, message_str(SCRIPT_KERI, 157) + DayString + message_str(SCRIPT_KERI, 158));
 	giq_option(4, 595, 159, Keri30, 50);
 	giq_option(4, 595, 160, Keri34, 50);
 end
 
-procedure Keri19
-begin
+procedure Keri19 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_KERI, 161), 2);
 	end
@@ -591,8 +531,7 @@ begin
 	end
 end
 
-procedure Keri20
-begin
+procedure Keri20 begin
 	giq_option(4, 595, 163, Keri21a, 50);
 	giq_option(4, 595, 164, Keri21b, 50);
 	if (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 0) then begin
@@ -604,171 +543,121 @@ begin
 	giq_option(4, 595, 167, Keri34, 50);
 end
 
-procedure Keri21a
-begin
+// Brotherhood of Steel:
+procedure Keri21a begin
 	variable LVar0 := 0;
 	set_global_var(CRIMSON_CARAVANS_STATUS, 1);
 	LVar0 := random(1, 8);
 	if (LVar0 == 1) then begin
 		gsay_message(595, 168, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(595, 169, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(595, 170, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(595, 171, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(595, 172, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(595, 173, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(595, 174, 50);
-							end
-							else begin
-								if (LVar0 == 8) then begin
-									gsay_message(595, 175, 50);
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(595, 169, 50);
+	end
+	else if (LVar0 == 3) then begin
+		gsay_message(595, 170, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(595, 171, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(595, 172, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(595, 173, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(595, 174, 50);
+	end
+	else if (LVar0 == 8) then begin
+		gsay_message(595, 175, 50);
 	end
 	load_map(MAP_MNTCRVN2, 3);
 end
 
-procedure Keri21b
-begin
+// Junktown:
+procedure Keri21b begin
 	variable LVar0 := 0;
 	set_global_var(CRIMSON_CARAVANS_STATUS, 1);
 	LVar0 := random(1, 7);
 	if (LVar0 == 1) then begin
 		gsay_message(595, 168, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(595, 169, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(595, 170, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(595, 171, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(595, 176, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(595, 177, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(595, 178, 50);
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(595, 169, 50);
+	end
+	else if (LVar0 == 3) then begin
+		gsay_message(595, 170, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(595, 171, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(595, 176, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(595, 177, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(595, 178, 50);
 	end
 	load_map(MAP_MNTCRVN1, 3);
 end
 
-procedure Keri21c
-begin
+// Necropolis:
+procedure Keri21c begin
 	variable LVar0 := 0;
 	set_global_var(CRIMSON_CARAVANS_STATUS, 1);
 	LVar0 := random(1, 7);
 	if (LVar0 == 1) then begin
 		gsay_message(595, 168, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(595, 169, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(595, 170, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(595, 171, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(595, 179, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(595, 180, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(595, 181, 50);
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(595, 169, 50);
+	end
+	else if (LVar0 == 3) then begin
+		gsay_message(595, 170, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(595, 171, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(595, 179, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(595, 180, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(595, 181, 50);
 	end
 	load_map(MAP_DESCRVN2, 3);
 end
 
-procedure Keri21d
-begin
+// Boneyard:
+procedure Keri21d begin
 	variable LVar0 := 0;
 	set_global_var(CRIMSON_CARAVANS_STATUS, 1);
 	LVar0 := random(1, 7);
 	if (LVar0 == 1) then begin
 		gsay_message(595, 168, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(595, 169, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(595, 170, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(595, 171, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(595, 182, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(595, 183, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(595, 184, 50);
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(595, 169, 50);
+	end
+	else if (LVar0 == 3) then begin
+		gsay_message(595, 170, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(595, 171, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(595, 182, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(595, 183, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(595, 184, 50);
 	end
 	load_map(MAP_DESCRVN1, 3);
 end
