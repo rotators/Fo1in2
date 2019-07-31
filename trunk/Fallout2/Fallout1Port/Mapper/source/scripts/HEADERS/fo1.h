@@ -215,8 +215,8 @@
 
 //==============================================================
 // Endgame slideshow
-#define set_end_Master 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,1)
-#define set_end_Vats 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,2)
+#define set_end_Vats 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,1)
+#define set_end_Master 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,2)
 
 #define set_end_necropolis_dehydrated 		set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,1)
 #define set_end_necropolis_survived 		set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,2)

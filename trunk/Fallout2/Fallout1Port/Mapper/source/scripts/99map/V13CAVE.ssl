@@ -15,7 +15,6 @@ procedure Endgame_Slides;
 
 procedure base_inventory;
 procedure cheat_mode;
-procedure DehydrationTesting;// Fallout Fixt
 procedure NamedInven;
 procedure TaggedInven;
 
@@ -23,8 +22,8 @@ procedure SetLight;
 
 variable endgame_running;
 variable party_elevation;
-variable item := 0;// for starting items creation
-variable NumItems := 0;// for starting items creation (Fallout Fixt)
+variable Item := 0;
+variable NumItems := 0;
 
 #define EVENT_END_1 		(1)
 #define EVENT_END_2 		(2)
@@ -145,63 +144,31 @@ variable Critter;
 end
 
 procedure base_inventory begin
-//
-// ALSO NOTE: Ed's corpse provides 1 Knife and 1 ammo (10mm AP)
-//
-	if global_var(FIXT_BUGFIXES_ONLY) then begin// vanilla items
-		item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);//10mm Pistol
-		add_mult_objs_to_inven(dude_obj, item, 1);
-		if difficulty_level != 2 then begin
-			item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
-			add_mult_objs_to_inven(dude_obj, item, 2);
-		end
-		else begin
-			item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
-			add_mult_objs_to_inven(dude_obj, item, 1);
-		end
-		if difficulty_level != 2 then begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
-			add_mult_objs_to_inven(dude_obj, item, 4);
-		end
-		else begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
-			add_mult_objs_to_inven(dude_obj, item, 3);
-		end
-		if difficulty_level != 2 then begin
-			item := create_object_sid(PID_FLARE, 0, 0, -1);//Flare
-			add_mult_objs_to_inven(dude_obj, item, 2);
-		end
-		else begin
-			item := create_object_sid(PID_FLARE, 0, 0, -1);//Flare
-			add_mult_objs_to_inven(dude_obj, item, 1);
-		end
+	Item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);
+	add_mult_objs_to_inven(dude_obj, item, 1);
+	if difficulty_level != 2 then begin
+		Item := create_object_sid(PID_10MM_JHP, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, item, 2);
 	end
 	else begin
-		item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);//10mm Pistol
+		Item := create_object_sid(PID_10MM_JHP, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
-		NumItems := 2 - difficulty_level;
-		if NumItems then begin
-			item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
-			add_mult_objs_to_inven(dude_obj, item, NumItems);
-			NumItems := 0;
-		end
-		NumItems := 4 - difficulty_level;
-		if NumItems then begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
-			add_mult_objs_to_inven(dude_obj, item, NumItems);
-		end
-		NumItems := 3 - difficulty_level;
-		if NumItems then begin
-		item := create_object_sid(PID_FLARE, 0, 0, -1);//Flare
-			add_mult_objs_to_inven(dude_obj, item, NumItems);
-			NumItems := 0;
-		end
-		NumItems := 2 - difficulty_level;
-		if NumItems then begin
-			item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);//Water Flask
-			add_mult_objs_to_inven(dude_obj, item, NumItems);
-			NumItems := 0;
-		end
+	end
+	if difficulty_level != 2 then begin
+		Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, item, 4);
+	end
+	else begin
+		Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, item, 3);
+	end
+	if difficulty_level != 2 then begin
+		Item := create_object_sid(PID_FLARE, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, item, 2);
+	end
+	else begin
+		Item := create_object_sid(PID_FLARE, 0, 0, -1);
+		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
 end
 
@@ -229,13 +196,13 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_SMALL_GUNS) - dude_agility - 35 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
+			Item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
+				Item := create_object_sid(PID_10MM_JHP, 0, 0, -1);//10mm JHP
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -245,12 +212,12 @@ variable
 //	1 = Big Guns
 //
 	if (has_skill(dude_obj, SKILL_BIG_GUNS) - dude_agility - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_FLAMER, 0, 0, -1);//Flamer
+		Item := create_object_sid(PID_FLAMER, 0, 0, -1);//Flamer
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_FLAMETHROWER_FUEL, 0, 0, -1);//Flamer Fuel
+				Item := create_object_sid(PID_FLAMETHROWER_FUEL, 0, 0, -1);//Flamer Fuel
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -260,12 +227,12 @@ variable
 //	2 = Energy Weapons
 //
 	if (has_skill(dude_obj, SKILL_ENERGY_WEAPONS) - dude_agility - 10 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_LASER_PISTOL, 0, 0, -1);//Laser Pistol
+		Item := create_object_sid(PID_LASER_PISTOL, 0, 0, -1);//Laser Pistol
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 			NumItems := 2 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_SMALL_ENERGY_CELL, 0, 0, -1);//Small Energy Cell
+				Item := create_object_sid(PID_SMALL_ENERGY_CELL, 0, 0, -1);//Small Energy Cell
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -275,12 +242,12 @@ variable
 //	3 = Unarmed
 //
 	if (has_skill(dude_obj, SKILL_UNARMED_COMBAT) - ((dude_agility + dude_strength) / 2) - 65 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_BRASS_KNUCKLES, 0, 0, -1);//Brass Knuckles
+		Item := create_object_sid(PID_BRASS_KNUCKLES, 0, 0, -1);//Brass Knuckles
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 			NumItems := 2 - difficulty_level;
 			if NumItems then begin
-			item := create_object_sid(PID_BUFFOUT, 0, 0, -1);//Buffout
+			Item := create_object_sid(PID_BUFFOUT, 0, 0, -1);//Buffout
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -290,12 +257,12 @@ variable
 //	4 = Melee Weapons
 //
 	if (has_skill(dude_obj, SKILL_MELEE) - ((dude_agility + dude_strength) / 2) - 55 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_CLUB, 0, 0, -1);//Club
+		Item := create_object_sid(PID_CLUB, 0, 0, -1);//Club
 		add_mult_objs_to_inven(dude_obj, item, 1);
 		if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 			NumItems := 2 - difficulty_level;
 			if NumItems then begin
-			item := create_object_sid(PID_BUFFOUT, 0, 0, -1);//Buffout
+			Item := create_object_sid(PID_BUFFOUT, 0, 0, -1);//Buffout
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -306,25 +273,25 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_THROWING) - dude_agility - 40 + GIFTED_Handicap - SKILLED_Bonus + GOOD_NATURED_Handicap) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);//Throwing Knife
+			Item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);//Throwing Knife
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);//Throwing Knife
+				Item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);//Throwing Knife
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_FRAG_GRENADE, 0, 0, -1);//Frag Grenade
+				Item := create_object_sid(PID_FRAG_GRENADE, 0, 0, -1);//Frag Grenade
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
 			NumItems := 2 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_PLASMA_GRENADE, 0, 0, -1);//Plasma Grenade
+				Item := create_object_sid(PID_PLASMA_GRENADE, 0, 0, -1);//Plasma Grenade
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -338,15 +305,15 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_FIRST_AID) - ((dude_perception + dude_iq) / 2) - 30 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);
+			Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
-			item := create_object_sid(PID_FIRST_AID_KIT, 0, 0, -1);
+			Item := create_object_sid(PID_FIRST_AID_KIT, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_STIMPAK, 0, 0, -1);
+				Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -357,15 +324,15 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_DOCTOR) - ((dude_perception + dude_iq) / 2) - 15 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_STIMPAK, 0, 0, -1);
+			Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
-			item := create_object_sid(PID_DOCTORS_BAG, 0, 0, -1);
+			Item := create_object_sid(PID_DOCTORS_BAG, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_STIMPAK, 0, 0, -1);
+				Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -375,7 +342,7 @@ variable
 //	8 = Sneak
 //
 	if (has_skill(dude_obj, SKILL_SNEAK) - dude_agility - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
+		Item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
 //
@@ -385,12 +352,12 @@ variable
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
 			AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_LOCKPICKS);
 			if not(AlreadyHas) then begin
-				item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
+				Item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, 1);
 			end
 		end
 		else begin
-			item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
+			Item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 	end
@@ -401,24 +368,24 @@ variable
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
 			AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_LOCKPICKS);
 			if not(AlreadyHas) then begin
-				item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
+				Item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, 1);
 			end
 		end
 		else begin
 			AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_STEALTH_BOY);
 			if not(AlreadyHas) then begin
-				item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
+				Item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, 1);
 			end
 			else begin
 				AlreadyHas := obj_carrying_pid_obj(dude_obj, PID_LOCKPICKS);
 				if not(AlreadyHas) then begin
-					item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
+					Item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 					add_mult_objs_to_inven(dude_obj, item, 1);
 				end
 				else begin
-					item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
+					Item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 					add_mult_objs_to_inven(dude_obj, item, 25);
 				end
 			end
@@ -429,13 +396,13 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_TRAPS) - ((dude_perception + dude_agility) / 2) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
+			Item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
+				Item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -446,13 +413,13 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_SCIENCE) - (2 * dude_iq) - 25 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_MENTATS, 0, 0, -1);
+			Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 2);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_MENTATS, 0, 0, -1);
+				Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -462,7 +429,7 @@ variable
 //	13 = Repair
 //
 	if (has_skill(dude_obj, SKILL_REPAIR) - dude_iq - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
-		item := create_object_sid(PID_MULTI_TOOL, 0, 0, -1);
+		Item := create_object_sid(PID_MULTI_TOOL, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
 //
@@ -470,13 +437,13 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_SPEECH) - (2 * dude_charisma) - 25 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_MENTATS, 0, 0, -1);
+			Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_MENTATS, 0, 0, -1);
+				Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -487,13 +454,13 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_BARTER) - (2 * dude_charisma) - 20 + GIFTED_Handicap - SKILLED_Bonus - GOOD_NATURED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_MENTATS, 0, 0, -1);
+			Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_MENTATS, 0, 0, -1);
+				Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -504,13 +471,13 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_GAMBLING) - (3 * dude_luck) - 20 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
+			Item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 25);
 		end
 		else begin
 			NumItems := (75 - (difficulty_level * 25));
 			if NumItems then begin
-			item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
+			Item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
@@ -521,194 +488,63 @@ variable
 //
 	if (has_skill(dude_obj, SKILL_OUTDOORSMAN) - ((dude_endurance + dude_iq) / 2) - 5 + GIFTED_Handicap - SKILLED_Bonus) >= DiffLevelTaggedPercent then begin
 		if global_var(FIXT_BUGFIXES_ONLY) then begin
-			item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
+			Item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 3);
 		end
 		else begin
 			NumItems := 3 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
+				Item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
 			NumItems := 2 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_FLARE, 0, 0, -1);
+				Item := create_object_sid(PID_FLARE, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
 			NumItems := 1 - difficulty_level;
 			if NumItems then begin
-				item := create_object_sid(PID_RADAWAY, 0, 0, -1);
+				Item := create_object_sid(PID_RADAWAY, 0, 0, -1);
 				add_mult_objs_to_inven(dude_obj, item, NumItems);
 				NumItems := 0;
 			end
-
 		end
 	end
 end
 
-procedure NamedInven
-begin
-	if (proto_data(obj_pid(dude_obj), 1) == "Max Stone") then begin
-		item := create_object_sid(PID_10MM_AP, 0, 0, -1);//10mm AP
+procedure NamedInven begin
+	if (dude_name == "Max Stone") then begin
+		Item := create_object_sid(PID_10MM_AP, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
-		item := create_object_sid(PID_BRASS_KNUCKLES, 0, 0, -1);//Brass Knuckles
+		Item := create_object_sid(PID_BRASS_KNUCKLES, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
-	if (proto_data(obj_pid(dude_obj), 1) == "Natalia") then begin
-		item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);//Throwing Knife
+	if (dude_name == "Natalia") then begin
+		Item := create_object_sid(PID_THROWING_KNIFE, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 2);
-		item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);//Lock Picks
+		Item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
-	if (proto_data(obj_pid(dude_obj), 1) == "Albert") then begin
-		item := create_object_sid(PID_STIMPAK, 0, 0, -1);//Stimpak
+	if (dude_name == "Albert") then begin
+		Item := create_object_sid(PID_STIMPAK, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
-		item := create_object_sid(PID_MENTATS, 0, 0, -1);//Mentats
+		Item := create_object_sid(PID_MENTATS, 0, 0, -1);
 		add_mult_objs_to_inven(dude_obj, item, 1);
 	end
 	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-		if (proto_data(obj_pid(dude_obj), 1) == "Hell Razor") or (proto_data(obj_pid(dude_obj), 1) == "Angela Deth") or (proto_data(obj_pid(dude_obj), 1) == "Thrasher") or (proto_data(obj_pid(dude_obj), 1) == "Snake") or (proto_data(obj_pid(dude_obj), 1) == "Vargas") or (proto_data(obj_pid(dude_obj), 1) == "Snake Varga") or (proto_data(obj_pid(dude_obj), 1) == "Snake Vargas") then begin
-			item := create_object_sid(PID_ROPE, 0, 0, -1);//Rope
+		if (dude_name == "Hell Razor") or (dude_name == "Angela Deth") or (dude_name == "Thrasher") or (dude_name == "Snake") or (dude_name == "Vargas") or (dude_name == "Snake Varga") or (dude_name == "Snake Vargas") then begin
+			Item := create_object_sid(PID_ROPE, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
-			item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);//Water Flask
+			Item := create_object_sid(PID_WATER_FLASK, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
-			item := create_object_sid(PID_CROWBAR, 0, 0, -1);//Crowbar
+			Item := create_object_sid(PID_CROWBAR, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
-			item := create_object_sid(PID_KNIFE, 0, 0, -1);//Knife
+			Item := create_object_sid(PID_KNIFE, 0, 0, -1);
 			add_mult_objs_to_inven(dude_obj, item, 1);
 		end
 	end
-end
-
-procedure cheat_mode
-begin
-	item := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 99999);
-/*	item := create_object_sid(PID_CAR_FUEL_INJECTION, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);*/
-	item := create_object_sid(PID_CLUB, 0, 0, -1);//sledge
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_10MM_PISTOL, 0, 0, -1);//10mm Pistol
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_10MM_AP, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 5);
-	item := create_object_sid(PID_MOTION_SENSOR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_BAG, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_BACKPACK, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_BROWN_BAG, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_HARDENED_POWER_ARMOR, 0, 0, -1);// Hardened power armor
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_CHEST, 0, 0, -1);// Alien Blaster with 100 range and 999 damage.
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_MICRO_FUSION_CELL, 0, 0, -1);// MFC ammo
-	add_mult_objs_to_inven(dude_obj, item, 10);
-	item := create_object_sid(PID_GATLING_LASER, 0, 0, -1);// Gatling Laser
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_FLARE, 0, 0, -1);// Flare
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_14MM_PISTOL, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_223_PISTOL, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_BEER, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_BOOZE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_MOLOTOV_COCKTAIL, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_RADAWAY, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_NUKA_COLA, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_FRAG_GRENADE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 25);
-	item := create_object_sid(PID_PLASMA_GRENADE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 25);
-	item := create_object_sid(PID_PULSE_GRENADE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 25);
-	item := create_object_sid(PID_STIMPAK, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 100);
-	item := create_object_sid(PID_SPEAR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 15);
-	item := create_object_sid(PID_EXPLOSIVE_ROCKET, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 25);
-	item := create_object_sid(PID_MENTATS, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_BUFFOUT, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_PSYCHO, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 20);
-	item := create_object_sid(PID_LEATHER_ARMOR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_METAL_ARMOR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_COMBAT_ARMOR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_LEATHER_JACKET, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_PURPLE_ROBE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	wield_obj_critter(dude_obj, item);
-	item := create_object_sid(PID_BROTHERHOOD_COMBAT_ARMOR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_TESLA_ARMOR, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_FLOWER, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_HUNTING_RIFLE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_FLAMETHROWER_FUEL, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_10MM_SMG, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_5MM_AP, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_SMALL_ENERGY_CELL, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_RAD_X, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_ELECTRONIC_LOCKPICKS, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_LOCKPICKS, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_RED_RYDER_LE_BB_GUN, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_BBS, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_BUFFOUT, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_RIPPER, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_DYNAMITE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 5);
-	item := create_object_sid(PID_ROCKET_LAUNCHER, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_MINIGUN, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_5MM_AP, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 3);
-	item := create_object_sid(PID_STEALTH_BOY, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_FLAMER, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 1);
-	item := create_object_sid(PID_ROPE, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 5);
-	item := create_object_sid(PID_10MM_JHP, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 10);
-	item := create_object_sid(PID_PLASTIC_EXPLOSIVES, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 5);
-	item := create_object_sid(PID_10MM_AP, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 10);
-	item := create_object_sid(PID_LASER_PISTOL, 0, 0, -1);
-	add_mult_objs_to_inven(dude_obj, item, 2);
-	item := create_object_sid(PID_GEIGER_COUNTER, 0, 0, -1);// Geiger counter
-	add_mult_objs_to_inven(dude_obj, item, 1);
 end
 
 /*******************************************************************
