@@ -18,7 +18,7 @@
 											play_gmovie(WALKW_MOVIE); 						\
 										endgame_movie; 										\
 										gfade_out(1);										\
-										world_map; 											\
+										/*world_map;*/load_map(MAP_RNDDESER,0);				\
 										gfade_in(1)
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)

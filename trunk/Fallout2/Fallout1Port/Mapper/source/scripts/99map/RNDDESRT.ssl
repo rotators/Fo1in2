@@ -150,8 +150,7 @@ variable victim;
 
 export variable signal_mutants;
 
-procedure start
-begin
+procedure start begin
 	if (script_action == 15) then begin
 		Lighting;
 		dude_rot := random(0, 5);
@@ -166,76 +165,55 @@ begin
 				set_global_var(AGGRO_FLAG_RND_ENC_unsure, 0);
 				while(Encounter_Num == 0) do begin
 					Encounter_Num := (random(0, 8) + random(0, 8) + random(0, 8));// vanilla was 3d6, mine is 3d9
+
 					if global_var(FIXT_BUGFIXES_ONLY) or (global_var(RANDOM_ENC_IGNORE_LUCK) == 0) then begin//if NOT set to ignore Luck in factoring EncNum
 						if (get_critter_stat(dude_obj, STAT_lu) < 4) or (get_critter_stat(dude_obj, STAT_lu) > 7) then begin
 							if (get_critter_stat(dude_obj, STAT_lu) == 10) then begin
 								if (difficulty_level == 2) then begin
 									Encounter_Num := (Encounter_Num + 1);
 								end
-								else begin
-									if (difficulty_level == 1) then begin
-										Encounter_Num := (Encounter_Num + 2);
-									end
-									else begin
-										if (difficulty_level == 0) then begin
-											Encounter_Num := (Encounter_Num + 3);
-										end
-									end
+								else if (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num + 2);
+								end
+								else if (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num + 3);
 								end
 							end
-							else begin
-								if (get_critter_stat(dude_obj, STAT_lu) == 9) then begin
-									if (difficulty_level == 2) or (difficulty_level == 1) then begin
-										Encounter_Num := (Encounter_Num + 1);
-									end
-									else begin
-										if (difficulty_level == 0) then begin
-											Encounter_Num := (Encounter_Num + 2);
-										end
-									end
+							else if (get_critter_stat(dude_obj, STAT_lu) == 9) then begin
+								if (difficulty_level == 2) or (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num + 1);
 								end
-								else begin
-									if (get_critter_stat(dude_obj, STAT_lu) == 8) then begin
-										if (difficulty_level == 1) or (difficulty_level == 0) then begin
-											Encounter_Num := (Encounter_Num + 1);
-										end
-									end
-									else begin
-										if (get_critter_stat(dude_obj, STAT_lu) == 3) then begin
-											if (difficulty_level == 2) or (difficulty_level == 1) then begin
-												Encounter_Num := (Encounter_Num - 1);
-											end
-										end
-										else begin
-											if (get_critter_stat(dude_obj, STAT_lu) == 2) then begin
-												if (difficulty_level == 1) or (difficulty_level == 0) then begin
-													Encounter_Num := (Encounter_Num - 1);
-												end
-												else begin
-													if (difficulty_level == 2) then begin
-														Encounter_Num := (Encounter_Num - 2);
-													end
-												end
-											end
-											else begin
-												if (get_critter_stat(dude_obj, STAT_lu) == 1) then begin
-													if (difficulty_level == 2) then begin
-														Encounter_Num := (Encounter_Num - 3);
-													end
-													else begin
-														if (difficulty_level == 1) then begin
-															Encounter_Num := (Encounter_Num - 2);
-														end
-														else begin
-															if (difficulty_level == 0) then begin
-																Encounter_Num := (Encounter_Num - 1);
-															end
-														end
-													end
-												end
-											end
-										end
-									end
+								else if (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num + 2);
+								end
+							end
+							else if (get_critter_stat(dude_obj, STAT_lu) == 8) then begin
+								if (difficulty_level == 1) or (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num + 1);
+								end
+							end
+							else if (get_critter_stat(dude_obj, STAT_lu) == 3) then begin
+								if (difficulty_level == 2) or (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num - 1);
+								end
+							end
+							else if (get_critter_stat(dude_obj, STAT_lu) == 2) then begin
+								if (difficulty_level == 1) or (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num - 1);
+								end
+								else if (difficulty_level == 2) then begin
+									Encounter_Num := (Encounter_Num - 2);
+								end
+							end
+							else if (get_critter_stat(dude_obj, STAT_lu) == 1) then begin
+								if (difficulty_level == 2) then begin
+									Encounter_Num := (Encounter_Num - 3);
+								end
+								else if (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num - 2);
+								end
+								else if (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num - 1);
 								end
 							end
 						end
@@ -245,51 +223,37 @@ begin
 							if (difficulty_level == 2) then begin
 								Encounter_Num := (Encounter_Num - 1);
 							end
-							else begin
-								if (difficulty_level == 0) then begin
-									Encounter_Num := (Encounter_Num + 1);
-								end
+							else if (difficulty_level == 0) then begin
+								Encounter_Num := (Encounter_Num + 1);
 							end
 							if (combat_difficulty == 2) then begin
 								Encounter_Num := (Encounter_Num - 1);
 							end
-							else begin
-								if (combat_difficulty == 0) then begin
+							else if (combat_difficulty == 0) then begin
+								Encounter_Num := (Encounter_Num + 1);
+							end
+						end
+						else if global_var(RANDOM_ENC_LEVEL_BASED) then begin// modify EncNum by player level
+							if (get_pc_stat(1) < 7) then begin
+								if (get_pc_stat(1) < 3) then begin
+									Encounter_Num := (Encounter_Num + 3);
+								end
+								else if (get_pc_stat(1) < 5) then begin
+									Encounter_Num := (Encounter_Num + 2);
+								end
+								else if (get_pc_stat(1) < 7) then begin
 									Encounter_Num := (Encounter_Num + 1);
 								end
 							end
-						end
-						else begin
-							if global_var(RANDOM_ENC_LEVEL_BASED) then begin// modify EncNum by player level
-								if (get_pc_stat(1) < 7) then begin
-									if (get_pc_stat(1) < 3) then begin
-										Encounter_Num := (Encounter_Num + 3);
-									end
-									else begin
-										if (get_pc_stat(1) < 5) then begin
-											Encounter_Num := (Encounter_Num + 2);
-										end
-										else begin
-											if (get_pc_stat(1) < 7) then begin
-												Encounter_Num := (Encounter_Num + 1);
-											end
-										end
-									end
+							else if get_pc_stat(1) > 8 then begin
+								if (get_pc_stat(1) < 11) then begin
+									Encounter_Num := (Encounter_Num - 1);
+								end
+								else if (get_pc_stat(1) < 13) then begin
+									Encounter_Num := (Encounter_Num - 2);
 								end
 								else begin
-									if get_pc_stat(1) > 8 then begin
-										if (get_pc_stat(1) < 11) then begin
-											Encounter_Num := (Encounter_Num - 1);
-										end
-										else begin
-											if (get_pc_stat(1) < 13) then begin
-												Encounter_Num := (Encounter_Num - 2);
-											end
-											else begin
-												Encounter_Num := (Encounter_Num - 3);
-											end
-										end
-									end
+									Encounter_Num := (Encounter_Num - 3);
 								end
 							end
 						end
@@ -333,7 +297,7 @@ begin
 //
 				if (global_var(WORLD_TERRAIN) == 0) then begin
 					call North_table;
-					display_msg("north table");
+					debug("north table");
 				end
 				else if (global_var(WORLD_TERRAIN) == 1) then begin
 					call South_table;// why did this previously have a question mark, preventing compiling?
@@ -349,11 +313,11 @@ begin
 				end
 				else if (global_var(WORLD_TERRAIN) == 5) then begin
 					call Shady_table;
-					display_msg("shady table");
+					debug("shady table");
 				end
 				else if (global_var(WORLD_TERRAIN) == 7) then begin
 					call Junk_table;
-					display_msg("junk table");
+					debug("junk table");
 				end
 				else if (global_var(WORLD_TERRAIN) == 8) then begin
 					call Hub_table;
@@ -402,23 +366,15 @@ begin
 
 			end
 		end
-		//call add_party;
 	end
 	else begin
 		if (script_action == 23) then begin
 			Lighting;
-			//call update_party;
-		end
-		else begin
-			if (script_action == 16) then begin
-				//call remove_party;
-			end
 		end
 	end
 end
 
-procedure stranger
-begin
+procedure stranger begin
 	variable ItemToAdd := 1;
 	if (not(global_var(FIXT_BUGFIXES_ONLY))) then begin
 		if (global_var(MYST_STRANGER_LUCK_BASED)) then begin
@@ -1502,8 +1458,7 @@ begin
 	end
 end
 
-procedure Shady5
-begin
+procedure Shady5 begin
 //	display_msg(message_str(112, 171));
 //	display_msg(message_str(112, 175));
 //else call Shady3
@@ -1564,7 +1519,7 @@ begin
 	variable LVar0 := 2;
 	variable money;
 	display_msg(message_str(SCRIPT_RNDDESRT, 172));
-//
+
 	Critter_direction := random(0, 5);
 	money := create_object_sid(PID_BOTTLE_CAPS, 0, 0, -1);
 	Critter_tile := tile_num_in_direction(Dude_tile, Critter_direction, 4);
