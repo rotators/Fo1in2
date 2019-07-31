@@ -1,3 +1,4 @@
+#include "FOClassic/CommandLine.h"
 #include "FOClassic/Ini.h"
 
 #include "ReDefine.h"
@@ -9,6 +10,7 @@ int main( int argc, char** argv )
     std::setvbuf( stdout, NULL, _IONBF, 0 );
 
     ReDefine* redefine = new ReDefine();
+    CmdLine*  cmd = new CmdLine( argc, argv );
 
     redefine->LOG( "ReDefine <3 FO1@2" );
     redefine->LOG( " " );
@@ -58,7 +60,7 @@ int main( int argc, char** argv )
 
             // process scripts
             //
-            redefine->ProcessScripts( scripts, true );
+            redefine->ProcessScripts( scripts, cmd->IsOption( "ro" ) || cmd->IsOption( "read" ) || cmd->IsOption( "read-only" ) );
         }
         else
         {
@@ -79,6 +81,12 @@ int main( int argc, char** argv )
         redefine->LOG( "Process scripts ... %u line%s in %u file%s",
                        redefine->Status.Process.Lines, redefine->Status.Process.Lines != 1 ? "s" : "",
                        redefine->Status.Process.Files, redefine->Status.Process.Files != 1 ? "s" : "" );
+    }
+    if( redefine->Status.Process.LinesChanged && redefine->Status.Process.FilesChanged )
+    {
+        redefine->LOG( "Changed scripts ... %u line%s in %u file%s",
+                       redefine->Status.Process.LinesChanged, redefine->Status.Process.LinesChanged != 1 ? "s" : "",
+                       redefine->Status.Process.FilesChanged, redefine->Status.Process.FilesChanged != 1 ? "s" : "" );
     }
 
     // cleanup

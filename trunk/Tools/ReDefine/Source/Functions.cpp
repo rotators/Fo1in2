@@ -2,12 +2,13 @@
 
 #include "ReDefine.h"
 
-ReDefine::ExtractedFunction::ExtractedFunction( const std::string& full, const std::string& name, const std::vector<std::string>& arguments /* = std::vector<std::string>() */ ) :
+ReDefine::Function::Function( const std::string& full, const std::string& name, const std::vector<std::string>& arguments /* = std::vector<std::string>() */, const std::string& op /* = std::string() */, const std::string& opArgument /* = std::string() */ ) :
     Full( full ),
     Name( name ),
     Arguments( arguments ),
-    Operator(),
-    OperatorArgument()
+    Operator( op ),
+    OperatorArgument( opArgument ),
+    ArgumentsEnd( 0 )
 {}
 
 void ReDefine::FinishFunctions()
@@ -15,6 +16,8 @@ void ReDefine::FinishFunctions()
     FunctionsArguments.clear();
     FunctionsOperators.clear();
 }
+
+//
 
 bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 {
@@ -87,4 +90,53 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
     }
 
     return true;
+}
+
+//
+
+std::string ReDefine::GetFullString( const ReDefine::Function& function )
+{
+    std::string result = function.Name;
+
+    result += "(";
+
+    if( function.Arguments.size() )
+        result += " " + TextGetJoined( function.Arguments, ", " ) + " ";
+
+    result += ")";
+
+    if( function.Operator.length() && function.OperatorArgument.length() )
+        result += " " + function.Operator + " " + function.OperatorArgument;
+
+    return result;
+}
+
+//
+
+void ReDefine::ProcessFunctionArguments( ReDefine::Function& function )
+{
+    auto it = FunctionsArguments.find( function.Name );
+    if( it == FunctionsArguments.end() )
+        return;
+
+    if( it->second.size() != function.Arguments.size() )
+    {
+        WARNING( __FUNCTION__, "invalid number of arguments : found<%u> expected<%u>", function.Arguments.size(), it->second.size() );
+
+        return;
+    }
+
+    if( !function.Arguments.size() )
+        return;
+
+    for( unsigned int idx = 0, len = function.Arguments.size(); idx < len; idx++ )
+    {
+        if( it->second[idx] == "?" )
+        {
+            ProcessValueGuessing( function.Arguments[idx] );
+            continue;
+        }
+
+        ProcessValue( it->second[idx], function.Arguments[idx] );
+    }
 }

@@ -47,3 +47,24 @@ std::string ReDefine::GetOperatorName( const std::string& op )
 
     return std::string();
 }
+
+//
+
+void ReDefine::ProcessOperator( const ReDefine::GenericOperatorsMap& opMap, const std::string& name, const std::string& op, std::string& opArgument )
+{
+    auto itName = opMap.find( name );
+    if( itName == opMap.end() )
+        return;
+
+    if( !IsOperator( op ) )
+        return;
+
+    auto itOp = itName->second.find( GetOperatorName( op ) );
+    if( itOp == itName->second.end() )
+    {
+        DEBUG( nullptr, "<%s> %s <%s>", name.c_str(), op.c_str(), opArgument.c_str() );
+        return;
+    }
+
+    ProcessValue( itOp->second, opArgument );
+}
