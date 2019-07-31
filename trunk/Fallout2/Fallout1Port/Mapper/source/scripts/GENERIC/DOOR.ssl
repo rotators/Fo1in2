@@ -1,50 +1,81 @@
 #include "..\headers\define.h"
 
-procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure description_p_proc;//    script_action == 3
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure map_update_p_proc;//    script_action == 23
-procedure damage_p_proc;//    script_action == 14
 
+/* Door close distance */
+/* How far do you want the last object that used the door to get away before it closes */
+#define DOOR_CLOSE_DIST                 (10) //(3)
+
+/* Timer id's */
+#define TIMER_CLOSE                     (1)
+
+procedure start;
+procedure timed_event_p_proc;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure use_obj_on_p_proc;
+procedure map_update_p_proc;
+procedure damage_p_proc;
+
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+
+//local_var(4) == HALLDED | self is Hallded locked door
+//local_var(5) == HALLDED | Hallded lock was picked?
+//local_var(6) == HALLDED | has init Hallded door?
+//local_var(7) == GotExpForPicking (NOT USED)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
 import variable Cur_Door_Ptr;
 
 
-procedure start
-begin
-	if (script_action == 3) then begin// 21 is look_at, 3 is description (Binoculars)
-		call description_p_proc;
-	end
-	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Critter or Item
-			call use_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-						call damage_p_proc;
-					end
-					else begin
-						if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-							call map_update_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+
+variable Locks_Roll;
+variable Traps_Roll;
+variable last_source_obj;
+
+
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+
+/*******************************************************************
+   The start procedure is the first procedure called when the map is
+   first entered. Any initial information that needs to be set up
+   should be placed in here.
+*******************************************************************/
+
+procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure timed_event_p_proc begin
+   if (obj_is_open(self_obj)) then begin
+      if not combat_is_initialized then begin
+         if ((tile_distance_objs(dude_obj, self_obj) > DOOR_CLOSE_DIST) and
+             (checkPartyMembersNearDoor == false) and
+             ((tile_distance_objs(self_obj, last_source_obj) > DOOR_CLOSE_DIST) or
+              (critter_state(last_source_obj) == CRITTER_IS_DEAD))) then begin
+            obj_close(self_obj);
+         end else begin
+            add_timer_event(self_obj, 10, TIMER_CLOSE);
+         end
+      end else begin
+         add_timer_event(self_obj, 10, TIMER_CLOSE);
+      end
+   end
+end
+
+procedure use_p_proc begin
 	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
 		if (local_var(0) == 0) then begin
 			obj_lock(self_obj);
@@ -57,10 +88,15 @@ begin
 			display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
 		end
 	end
+
+   if fo1in2_auto_doors_closing then begin
+   //	debug("door will close");
+      last_source_obj := source_obj;
+      add_timer_event(self_obj, 10, TIMER_CLOSE);
+	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
 		variable LVar0 := 0;
 		if (local_var(0) == 0) then begin

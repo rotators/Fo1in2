@@ -1,17 +1,34 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
+	Cathedral - THE MASTER
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MASTER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure timed_event_p_proc;
+procedure destroy_p_proc;
+procedure talk_p_proc;
+procedure damage_p_proc;
+procedure combat_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure critter_p_proc;
+procedure use_skill_on_p_proc;
+
 procedure gameover;
 procedure giveme;
-procedure talk_p_proc;//    script_action == 11
-procedure damage_p_proc;//    script_action == 14
-procedure combat_p_proc;//    script_action == 13
-procedure map_enter_p_proc;//    script_action == 15
-procedure Critter_Action;//    script_action == 12
-procedure use_skill_on_p_proc;//    script_action == 8
 
 procedure master00;
 procedure master01;
@@ -88,69 +105,30 @@ import variable Master_Ptr;
 
 variable leave;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		Master_Ptr := self_obj;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 55);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 70);
 	end
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
-		end
-		else begin
-			if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-				call combat_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					if (global_var(MASTER_BLOWN) == 0) then begin
-						call talk_p_proc;
-					end
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-							script_overrides;
-							display_msg(message_str(SCRIPT_MASTER, 100));
-						end
-						else begin
-							if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
-									set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
-									dialogue_system_enter;
-								end
-							end
-							else begin
-								if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-									call Critter_Action;
-								end
-								else begin
-									if (script_action == 8) then begin
-										call use_skill_on_p_proc;
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+end
+
+procedure timed_event_p_proc begin
+	if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
+		set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
+		dialogue_system_enter;
 	end
 end
 
-procedure Critter_Action
-begin
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+
+	kill_critter(self_obj, ANIM_fall_back_sf);
+end
+
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		set_local_var(5, 1);
 		tmp_hostile := 0;
@@ -169,26 +147,22 @@ begin
 			dialogue_system_enter;
 		end
 	end
+	else if (global_var(MORPHEUS_DELIVERS_PLAYER) == 1) then begin
+	end
 	else begin
-		if (global_var(MORPHEUS_DELIVERS_PLAYER) == 1) then begin
-		end
-		else begin
-			if (leave != 1) then begin
-				if (tile_distance_objs(self_obj, dude_obj) < 10) and (Master_Has_Armed != 1) then begin
-					dialogue_system_enter;
-				end
+		if (leave != 1) then begin
+			if (tile_distance_objs(self_obj, dude_obj) < 10) and (Master_Has_Armed != 1) then begin
+				dialogue_system_enter;
 			end
 		end
 	end
 end
 
-procedure gameover
-begin
+procedure gameover begin
 	so_long := 1;
 end
 
-procedure giveme
-begin
+procedure giveme begin
 	if (global_var(VREEDISK_HOLODISK_USED) == 1) or (global_var(VREE_DISK_TRACKER) == 2) or (global_var(VREE_GIVEN_DUDE_AUTOPSY) > 0) then begin// USED_DISK, DISK_REBUILT, DISK_GIVEN
 		set_global_var(VREE_GIVEN_DUDE_AUTOPSY, 2);
 		call master14;
@@ -198,20 +172,18 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_local_var(5, 1);
 		set_local_var(6, 1);
 		tmp_hostile := 1;
 		if not(combat_is_initialized) then begin
-			attack_complex(source_obj, 0, 1, 0, 0, 30000, 0, 0);
+			attack(source_obj);
 		end
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		variable Item := 0;
 		if (everyother == 1) then begin
@@ -239,18 +211,22 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	animate_stand_obj(self_obj);
 end
 
-procedure destroy_p_proc
-begin
+procedure map_update_p_proc begin
+	animate_stand_obj(self_obj);
+end
+
+procedure destroy_p_proc begin
 	set_global_var(PREVENT_REVULSION_DAMAGE, 2);
 	set_global_var(MASTER_BLOWN, 1);
 	set_global_var(QUEST_VAULT13_2_MASTER, 2);
 	rm_timer_event(self_obj);
+
 	inc_evil_critter
+
 	if (global_var(VATS_BLOWN) == 0) then begin
 		set_global_var(VATS_STATUS, 1);
 	end
@@ -261,60 +237,61 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_STEAL) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_GENCHAT, 225));
 		script_overrides;
 	end
 end
 
-procedure talk_p_proc
-begin
-	dude_look_at_critter;
-	if not(global_var(MASTER_ATTACKS)) then begin
-		if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
-			set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
-		end
-		get_reaction
-		start_gdialog(51, self_obj, 4, 6, BACKGROUND_MASTER);
-		gsay_start;
-		MALE := get_critter_stat(dude_obj, STAT_gender) == 0;
-		if (local_var(5)) then begin
-			call master203;
-		end
-		else begin
-			if (local_var(4)) then begin
-				if (global_var(BOMB_DISARMED)) then begin
-					call master46;
-				end
-				else begin
-					if (is_success(do_check(dude_obj, STAT_ch, -1))) then begin
-						call master43;
-					end
-					else begin
-						call master44;
-					end
-				end
+procedure talk_p_proc begin
+	if (global_var(MASTER_BLOWN) == 0) then begin
+		dude_look_at_critter;
+
+		if not(global_var(MASTER_ATTACKS)) then begin
+			if (global_var(MORPHEUS_DELIVERS_PLAYER) == 2) then begin
+				set_global_var(MORPHEUS_DELIVERS_PLAYER, 3);
+			end
+			get_reaction
+			start_gdialog(51, self_obj, 4, 6, BACKGROUND_MASTER);
+			gsay_start;
+			MALE := get_critter_stat(dude_obj, STAT_gender) == 0;
+			if (local_var(5)) then begin
+				call master203;
 			end
 			else begin
-				set_local_var(4, 1);
-				call master00;
+				if (local_var(4)) then begin
+					if (global_var(BOMB_DISARMED)) then begin
+						call master46;
+					end
+					else begin
+						if (is_success(do_check(dude_obj, STAT_ch, -1))) then begin
+							call master43;
+						end
+						else begin
+							call master44;
+						end
+					end
+				end
+				else begin
+					set_local_var(4, 1);
+					call master00;
+				end
+			end
+			gsay_end;
+			end_dialogue;
+			if (so_long) then begin
+				play_gmovie(DIPEDV_MOVIE);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops. --  was 10 before
+				play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose. -- was 7 before
+				signal_end_game;
 			end
 		end
-		gsay_end;
-		end_dialogue;
-		if (so_long) then begin
-			play_gmovie(DIPEDV_MOVIE);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops. --  was 10 before
-			play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose. -- was 7 before
-			signal_end_game;
-		end
+
 	end
 end
 
-procedure master00
-begin
+procedure master00 begin
 	gsay_reply(51, 101);
 	giq_option(4, 51, 102, master01, 50);
 	giq_option(6, 51, 103, master04, 50);
@@ -323,49 +300,43 @@ begin
 	giq_option(-3, 51, 106, master42, 50);
 end
 
-procedure master01
-begin
+procedure master01 begin
 	gsay_reply(51, 107);
 	giq_option(4, 51, 108, master02, 50);
 	giq_option(4, 51, 109, gameover, 50);
 end
 
-procedure master02
-begin
+procedure master02 begin
 	gsay_reply(51, 110);
 	giq_option(4, 51, 111, master03, 51);
 	giq_option(4, 51, 112, gameover, 50);
 end
 
-procedure master03//	<-- Combat trigger [mastercbt]
-begin
+//	Combat trigger [mastercbt]
+procedure master03 begin
 	gsay_message(51, 113, 51);
 	set_global_var(MASTER_ATTACKS, 1);
 	call mastercbt;
 end
 
-procedure master04
-begin
+procedure master04 begin
 	gsay_reply(51, 114);
 	giq_option(6, 51, 115, master36, 50);
 	giq_option(5, 51, 116, master05, 50);
 end
 
-procedure master05
-begin
+procedure master05 begin
 	gsay_reply(51, 117);
 	giq_option(4, 51, 118, master06, 50);
 end
 
-procedure master06
-begin
+procedure master06 begin
 	gsay_reply(51, 119);
 	giq_option(6, 51, 120, master06_1, 50);
 	giq_option(4, 51, 121, master27, 51);
 end
 
-procedure master06_1
-begin
+procedure master06_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call master07;
 	end
@@ -374,8 +345,7 @@ begin
 	end
 end
 
-procedure master07
-begin
+procedure master07 begin
 	gsay_reply(51, 122);
 	giq_option(7, 51, 123, master08, 50);
 	giq_option(6, 51, 124, master33, 51);
@@ -489,8 +459,7 @@ begin
 	call mastercbt;
 end
 
-procedure master19
-begin
+procedure master19 begin
 	gsay_message(51, 153, 50);
 	set_global_var(PREVENT_REVULSION_DAMAGE, 2);
 	Master_Has_Armed := 1;
@@ -743,25 +712,21 @@ begin
 	gsay_message(51, 213, 50);
 end
 
-procedure master202
-begin
+procedure master202 begin
 	gsay_message(51, 214, 50);
 end
 
-procedure master203
-begin
+procedure master203 begin
 	gsay_message(51, 215, 51);
 	set_global_var(MASTER_ATTACKS, 1);
 	call mastercbt;
 end
 
-procedure mastercbt
-begin
+procedure mastercbt begin
 	tmp_hostile := 1;
 end
 
-procedure masterend
-begin
+procedure masterend begin
 end
 
 
