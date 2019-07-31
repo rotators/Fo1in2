@@ -1,12 +1,29 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
+	Generic Super Mutant
+
+	Also checks for Nightkins and Stealth Boys -- they will actually use the!
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENMUTAN
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+#include "..\headers\Sfall\main.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure damage_p_proc;//    script_action == 14
-procedure do_dialogue;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+
+procedure do_dialogue;
 
 procedure pre_dialogue;
 procedure mutan00;
@@ -36,7 +53,28 @@ procedure mutan15;
 procedure mutanend;
 procedure mutancbt;
 
+#define SetSelfFlag(x) 		set_flags(self_obj, x)
+#define GetSelfFlag 			get_flags(self_obj)
+
+#define set_ghost 			SetSelfFlag(GetSelfFlag bwor FLAG_TRANSGLASS)
+#define rem_ghost 			SetSelfFlag(GetSelfFlag bwand bwnot(FLAG_TRANSGLASS))
+
+#define self_is_nightkin 	((obj_pid(self_obj) == PID_NIGHTKIN) or (obj_pid(self_obj) == PID_NIGHTKIN_GUARD) or \
+									(obj_pid(self_obj) == PID_NIGHTKIN_GUARD_2) or (obj_pid(self_obj) == PID_TOUGH_NIGHTKIN) or \
+									(obj_pid(self_obj) == PID_DEADLY_NIGHTKIN) or (obj_pid(self_obj) == PID_SUPER_NIGHTKIN) or (obj_pid(self_obj) == PID_MASTER_NIGHTKIN))
+
+#define spawn_stealth_boy 	if self_is_nightkin and random(0,15) == 1 then begin	\
+									   Item:=create_object(PID_STEALTH_BOY,0,0);				\
+									   add_mult_objs_to_inven(self_obj,Item,1);				\
+									end
+
+/* Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_) */
+
 import variable signal_mutants;
+
+/* Local variables which do not need to be saved between map changes. */
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -45,36 +83,38 @@ variable DISGUISED;
 variable again;
 variable rndx;
 variable RobesCheck;
+variable Use_Stealth_Boy := 0;
+variable Item;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 48);
+
+		// Are we in the Cathedral vault?
+		//if (cur_map_index == MAP_MSTRLR12 or cur_map_index == MAP_MSTRLR34) then
+		//	critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_MASTER_LAIR);
+		//else
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT);
+
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_SUPER_MUTANT_AGGRESSIVE);
 		Only_Once := 0;
 	end
-	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-		call damage_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- do_dialogue (Face icon), can also call "do_dialogue" or "do_dialog"
-			call pre_dialogue;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				tmp_hostile := 1;
-			end
-		end
+
+	if (script_action == 11) then begin//<--- do_dialogue (Face icon), can also call "do_dialogue" or "do_dialog"
+		call pre_dialogue;
 	end
 end
 
+procedure map_enter_p_proc begin
+	if (map_first_run) then
+		spawn_stealth_boy
+end
 
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -94,10 +134,13 @@ begin
 						end
 					end
 				end
+
 				DISGUISED := 0;
+
 				if critter_inven_obj(dude_obj, 0) then begin
 					RobesCheck := critter_inven_obj(dude_obj, 0);
 				end
+
 				if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
 					if (metarule(16, 0) > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
 						DISGUISED := 0;
@@ -106,19 +149,40 @@ begin
 						DISGUISED := 1;
 					end
 				end
+
 				if ((DISGUISED == 0) and (again == 0)) then begin
 					if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
 						again := 1;
 						dialogue_system_enter;
 					end
 				end
+
 			end
 		end
 	end
 end
 
-procedure do_dialogue
-begin
+procedure combat_p_proc begin
+	if (self_is_nightkin and obj_is_carrying_obj_pid(self_obj, PID_STEALTH_BOY)) then begin
+		if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+			if (Use_Stealth_Boy == 0) then begin
+				Use_Stealth_Boy:=1;
+
+				//TODO: Add sfx for activation?
+				anim(self_obj, ANIM_magic_hands_middle, -1);
+				set_ghost;
+
+				display_msg(self_name + message_str(SCRIPT_GENCHAT, 190));
+			end
+		end
+
+		//--- Always add transparency when in combat!
+		if (Use_Stealth_Boy == 1) then
+			set_ghost;
+	end
+end
+
+procedure do_dialogue begin
 	set_local_var(3, 1);
 	get_reaction
 	start_gdialog(524, self_obj, 4, -1, -1);
@@ -139,8 +203,7 @@ begin
 	end_dialogue;
 end
 
-procedure pre_dialogue
-begin
+procedure pre_dialogue begin
 	dude_look_at_critter;
 	if critter_inven_obj(dude_obj, 0) then begin
 		RobesCheck := critter_inven_obj(dude_obj, 0);
@@ -171,30 +234,24 @@ begin
 	end
 end
 
-procedure mutan00
-begin
+procedure mutan00 begin
 	rndx := random(1, 8);
 	if (rndx <= 2) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 100), 2);
 	end
+	else if (rndx <= 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 101), 2);
+	end
+	else if (rndx <= 6) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 102), 2);
+	end
 	else begin
-		if (rndx <= 4) then begin
-			float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 101), 2);
-		end
-		else begin
-			if (rndx <= 6) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 102), 2);
-			end
-			else begin
-				float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 103), 2);
-			end
-		end
+		float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 103), 2);
 	end
 	call mutancbt;
 end
 
-procedure mutan01
-begin
+procedure mutan01 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(524, 104);
 	end
@@ -207,21 +264,18 @@ begin
 	giq_option(-3, 524, 106, mutan02, 51);
 end
 
-procedure mutan02
-begin
+procedure mutan02 begin
 	gsay_message(524, 110, 51);
 	call mutancbt;
 end
 
-procedure mutan03
-begin
+procedure mutan03 begin
 	gsay_reply(524, 111);
 	giq_option(6, 524, 112, mutan03a, 50);
 	giq_option(6, 524, 113, mutancbt, 51);
 end
 
-procedure mutan03a
-begin
+procedure mutan03a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call mutan04;
 	end
@@ -230,14 +284,12 @@ begin
 	end
 end
 
-procedure mutan04
-begin
+procedure mutan04 begin
 	gsay_message(524, 114, 50);
 	set_local_var(5, 1);
 end
 
-procedure mutan05
-begin
+procedure mutan05 begin
 	if (get_critter_stat(dude_obj, STAT_gender) == 0) then begin
 		gsay_reply(524, 115);
 	end
@@ -249,8 +301,7 @@ begin
 	giq_option(-3, 524, 106, mutan06, 50);
 end
 
-procedure mutan05a
-begin
+procedure mutan05a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call mutan08;
 	end
@@ -259,8 +310,7 @@ begin
 	end
 end
 
-procedure mutan05b
-begin
+procedure mutan05b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call mutan10;
 	end
@@ -269,20 +319,17 @@ begin
 	end
 end
 
-procedure mutan06
-begin
+procedure mutan06 begin
 	gsay_message(524, 120, 50);
 	set_local_var(5, 1);
 end
 
-procedure mutan07
-begin
+procedure mutan07 begin
 	gsay_message(524, 121, 51);
 	call mutancbt;
 end
 
-procedure mutan08
-begin
+procedure mutan08 begin
 	gsay_reply(524, 122);
 	giq_option(4, 524, 123, mutan08a, 50);
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
@@ -291,8 +338,7 @@ begin
 	giq_option(7, 524, 125, mutan08b, 50);
 end
 
-procedure mutan08a
-begin
+procedure mutan08a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call mutan04;
 	end
@@ -301,8 +347,7 @@ begin
 	end
 end
 
-procedure mutan08b
-begin
+procedure mutan08b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
 		call mutan04;
 	end
@@ -311,27 +356,23 @@ begin
 	end
 end
 
-procedure mutan09
-begin
+procedure mutan09 begin
 	gsay_message(524, 126, 51);
 	call mutancbt;
 end
 
-procedure mutan10
-begin
+procedure mutan10 begin
 	gsay_message(524, 127, 50);
 	set_local_var(5, 1);
 end
 
-procedure mutan11
-begin
+procedure mutan11 begin
 	gsay_reply(524, 128);
 	giq_option(6, 524, 129, mutan11a, 50);
 	giq_option(6, 524, 130, mutancbt, 51);
 end
 
-procedure mutan11a
-begin
+procedure mutan11a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call mutan12;
 	end
@@ -340,14 +381,12 @@ begin
 	end
 end
 
-procedure mutan12
-begin
+procedure mutan12 begin
 	gsay_message(524, 131, 50);
 	set_local_var(5, 1);
 end
 
-procedure mutan13
-begin
+procedure mutan13 begin
 	gsay_reply(524, 132);
 	giq_option(4, 524, 134, mutancbt, 51);
 	giq_option(4, 524, 135, mutan13a, 50);
@@ -355,8 +394,7 @@ begin
 	giq_option(-3, 524, 133, mutan14, 51);
 end
 
-procedure mutan13a
-begin
+procedure mutan13a begin
 	if (is_success(do_check(dude_obj, STAT_lu, 0))) then begin
 		call mutan12;
 	end
@@ -365,8 +403,7 @@ begin
 	end
 end
 
-procedure mutan13b
-begin
+procedure mutan13b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
 		call mutan10;
 	end
@@ -375,63 +412,37 @@ begin
 	end
 end
 
-procedure mutan14
-begin
+procedure mutan14 begin
 	gsay_message(524, 137, 51);
 	call mutancbt;
 end
 
-procedure mutan15
-begin
+procedure mutan15 begin
 	rndx := random(1, 3);
 	if (rndx == 1) then begin
 		gsay_message(524, 138, 50);
 	end
-	else begin
-		if (rndx == 2) then begin
-			gsay_message(524, 139, 50);
-		end
-		else begin
-			if (rndx == 3) then begin
-				gsay_message(524, 140, 50);
-			end
-		end
+	else if (rndx == 2) then begin
+		gsay_message(524, 139, 50);
+	end
+	else if (rndx == 3) then begin
+		gsay_message(524, 140, 50);
 	end
 end
 
-procedure mutanend
-begin
+procedure mutanend begin
 end
 
-procedure mutancbt
-begin
+procedure mutancbt begin
 	tmp_hostile := 1;
 end
 
-
-
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (global_var(MUTANTS_ENEMY_UNSURE) == 0) then begin
 		set_global_var(MUTANTS_ENEMY_UNSURE, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
