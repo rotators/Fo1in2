@@ -379,6 +379,7 @@ variable step_tile;
 #define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
 
 #define self_can_see_dude                   obj_can_see_obj(self_obj,dude_obj)
+#define self_can_hear_dude                  obj_can_hear_obj(self_obj,dude_obj)
 #define self_distance_from_dude             tile_distance(self_tile, dude_tile)
 #define self_is_high                        drug_influence(self_obj)
 

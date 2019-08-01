@@ -1,14 +1,27 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
-procedure look_at_p_proc;//    script_action == 21
+	Brotherhood - Vree, the head scribe
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_VREE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure look_at_p_proc;
 procedure timed_event_p_proc;
-procedure pickup_p_proc;//    script_action == 4
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
 
 procedure vree00;
 procedure vree01;
@@ -71,8 +84,8 @@ procedure vree01a;
 procedure vree01b;
 procedure vree45a;
 procedure vree46a;
-procedure vree_end;
-procedure vreecbt;
+procedure Node998;
+procedure Node999;
 
 import variable term1_ptr;
 import variable term2_ptr;
@@ -90,52 +103,24 @@ variable MALE;
 variable tmp_hostile;
 variable ATKBROTHERS;
 variable KNOWKEDPLAN;
-variable INITIAT;// never set to any values!! TODO to do
+
+variable INITIAT;
 variable Only_Once := 1;
 
-procedure start
-begin
-	
+#define EVENT_USE_TERMINAL 			(1)
+#define EVENT_SHOW_TERMINAL 			(2)
 
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		Vree_ptr := self_obj;
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 44);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 80);
-		add_timer_event(self_obj, game_ticks(40), 1);
-	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-					call timed_event_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
-			end
-		end
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_BROTHERHOOD);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_BOS_ELDERS);
+		add_timer_event(self_obj, game_ticks(40), EVENT_USE_TERMINAL);
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	start_gdialog(57, self_obj, 4, 4, 5);
 	get_reaction
@@ -176,15 +161,13 @@ begin
 	end_dialogue;
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_VREE, 100));
+	display_msg(mstr(100));
 end
 
-procedure timed_event_p_proc
-begin
-	if (fixed_param == 1) then begin
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_USE_TERMINAL) then begin
 		rndx := random(2, 3);
 		if (rndx == 2) then begin
 			use_obj(term2_ptr);
@@ -194,116 +177,101 @@ begin
 				use_obj(term3_ptr);
 			end
 		end
-		add_timer_event(self_obj, game_ticks(40), 1);
+		add_timer_event(self_obj, game_ticks(40), EVENT_USE_TERMINAL);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			use_obj(term1_ptr);
-			if (local_var(7) < 2) then begin
-				add_timer_event(self_obj, game_ticks(4), 2);
-			end
+	else if (fixed_param == EVENT_SHOW_TERMINAL) then begin
+		use_obj(term1_ptr);
+		if (local_var(7) < 2) then begin
+			add_timer_event(self_obj, game_ticks(4), EVENT_SHOW_TERMINAL);
 		end
-		else begin
-			if (fixed_param == 3) then begin
-				set_local_var(7, 2);
-				add_timer_event(self_obj, game_ticks(4), 1);
-			end
-		end
+	end
+	else if (fixed_param == 3) then begin
+		set_local_var(7, 2);
+		add_timer_event(self_obj, game_ticks(4), EVENT_USE_TERMINAL);
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if obj_in_party(source_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
 		tmp_hostile := 1;
 	end
+
 	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
 		tmp_hostile := 0;
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+
+	if (tmp_hostile) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if obj_in_party(source_obj) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 	end
 	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure vree_end
-begin
+procedure Node998 begin
 end
 
-procedure vreecbt
-begin
+procedure Node999 begin
 end
 
-procedure vree00
-begin
+procedure vree00 begin
 	gsay_reply(58, 101);
 	giq_option(4, 58, 102, vree00a, 49);
 	giq_option(4, 58, 104, vree01, 50);
 	giq_option(-3, 58, 105, vree31, 50);
-	giq_option(4, 58, 103, vree_end, 50);
+	giq_option(4, 58, 103, Node999, 50);
 end
 
-procedure vree01
-begin
+procedure vree01 begin
 	gsay_reply(58, 106);
 	giq_option(4, 58, 108, vree01a, 51);
 	giq_option(4, 58, 109, vree01b, 51);
-	giq_option(4, 58, 107, vree_end, 50);
+	giq_option(4, 58, 107, Node999, 50);
 end
 
-procedure vree02
-begin
+procedure vree02 begin
 	gsay_reply(58, 110);
 	giq_option(4, 58, 111, vree03, 50);
 	giq_option(5, 58, 112, vree17, 50);
 	giq_option(-3, 58, 113, vree31, 50);
 end
 
-procedure vree03
-begin
+procedure vree03 begin
 	gsay_reply(58, 114);
 	giq_option(4, 58, 115, vree03a, 50);
 end
 
-procedure vree03a
-begin
+procedure vree03a begin
 	gsay_message(58, 116, 50);
 	call vree17;
 end
 
-procedure vree17
-begin
+procedure vree17 begin
 	gsay_reply(58, 117);
 	call vree17z;
 end
 
-procedure vree17a
-begin
+procedure vree17a begin
 	gsay_reply(58, 118);
 	call vree17z;
 end
 
-procedure vree17z
-begin
+procedure vree17z begin
 	if (global_var(NECROP_WATER_CHIP_TAKEN) != 1) then begin
 		giq_option(4, 58, 119, vree48, 50);
 	end
@@ -317,78 +285,69 @@ begin
 	end
 end
 
-procedure vree18
-begin
+procedure vree18 begin
 	set_map_var(0, 1);
 	gsay_reply(58, 124);
 	giq_option(4, 58, 126, vree17a, 50);
-	giq_option(4, 58, 125, vree_end, 50);
+	giq_option(4, 58, 125, Node999, 50);
 end
 
-procedure vree19
-begin
+procedure vree19 begin
 	gsay_reply(58, 127);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree21
-begin
+procedure vree21 begin
 	gsay_reply(58, 128);
 	if (local_var(7) == 0) then begin
 		giq_option(5, 58, 129, vree22, 50);
 	end
 	giq_option(4, 58, 131, vree17a, 50);
-	giq_option(4, 58, 130, vree_end, 50);
+	giq_option(4, 58, 130, Node999, 50);
 end
 
-procedure vree22
-begin
+procedure vree22 begin
 	set_local_var(7, 1);
 	gsay_message(58, 132, 50);
-	add_timer_event(self_obj, game_ticks(4), 2);
+	add_timer_event(self_obj, game_ticks(1), EVENT_SHOW_TERMINAL);
 end
 
-procedure vree23
-begin
+procedure vree23 begin
 end
 
-procedure vree24
-begin
+procedure vree24 begin
 	gsay_message(58, 134, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree25
-begin
+procedure vree25 begin
 	item := create_object_sid(PID_RAD_X, 0, 0, -1);
 	add_obj_to_inven(dude_obj, item);
 	gsay_reply(58, 135);
 	giq_option(4, 58, 137, vree17a, 50);
-	giq_option(4, 58, 136, vree_end, 50);
+	giq_option(4, 58, 136, Node999, 50);
 end
 
-procedure vree26
-begin
+procedure vree26 begin
 	gsay_message(58, 138, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree27
-begin
+procedure vree27 begin
 	gsay_reply(58, 139);
 	giq_option(6, 58, 140, vree28, 50);
 	giq_option(4, 58, 142, vree17a, 50);
-	giq_option(5, 58, 141, vree_end, 50);
+	giq_option(5, 58, 141, Node999, 50);
 end
 
-procedure vree28
-begin
+procedure vree28 begin
 	gsay_reply(58, 143);
 	giq_option(6, 58, 145, vree29, 50);
 	giq_option(4, 58, 146, vree17a, 50);
-	giq_option(6, 58, 144, vree_end, 50);
+	giq_option(6, 58, 144, Node999, 50);
 end
 
+// Give the "super mutant are sterile" holodisk
 procedure vree29 begin
 variable holodisk;
 
@@ -397,7 +356,7 @@ variable holodisk;
 	set_local_var(6, 1);
 	gsay_reply(58, 147);
 	giq_option(4, 58, 149, vree17a, 50);
-	giq_option(4, 58, 148, vree_end, 50);
+	giq_option(4, 58, 148, Node999, 50);
 
 	// TODO: Figure out why this was in obj_dude critter_p_proc ....
 	set_global_var(VREE_DISK_TRACKER, 2);
@@ -406,54 +365,46 @@ variable holodisk;
 	set_global_var(VREE_AUTOPSY_POINTER, holodisk);
 end
 
-procedure vree30
-begin
+procedure vree30 begin
 	gsay_message(58, 150, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree31
-begin
+procedure vree31 begin
 	gsay_message(58, 151, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree32
-begin
+procedure vree32 begin
 	gsay_reply(58, 152);
-	giq_option(4, 58, 153, vreecbt, 51);
+	giq_option(4, 58, 153, Node998, 51);
 	giq_option(5, 58, 154, vree33, 50);
 end
 
-procedure vree33
-begin
+procedure vree33 begin
 	gsay_reply(58, 155);
-	giq_option(4, 58, 156, vreecbt, 51);
+	giq_option(4, 58, 156, Node998, 51);
 end
 
-procedure vree34
-begin
+procedure vree34 begin
 	gsay_reply(58, 157);
 	giq_option(4, 58, 158, vree36, 50);
 	giq_option(5, 58, 159, vree39, 50);
 	giq_option(-3, 58, 160, vree35, 50);
 end
 
-procedure vree35
-begin
+procedure vree35 begin
 	gsay_message(58, 161, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree36
-begin
+procedure vree36 begin
 	gsay_reply(58, 162);
 	giq_option(5, 58, 163, vree36_1, 50);
-	giq_option(4, 58, 164, vree_end, 50);
+	giq_option(4, 58, 164, Node999, 50);
 end
 
-procedure vree36_1
-begin
+procedure vree36_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call vree37;
 	end
@@ -462,156 +413,130 @@ begin
 	end
 end
 
-procedure vree37
-begin
+procedure vree37 begin
 	gsay_message(58, 165, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree38
-begin
+procedure vree38 begin
 	gsay_message(58, 166, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree39
-begin
+procedure vree39 begin
 	gsay_reply(58, 167);
 	giq_option(6, 58, 168, vree40, 50);
 	giq_option(6, 58, 169, vree42, 50);
 end
 
-procedure vree40
-begin
+procedure vree40 begin
 	gsay_reply(58, 170);
 	giq_option(6, 58, 171, vree41, 50);
-	giq_option(6, 58, 172, vree_end, 50);
+	giq_option(6, 58, 172, Node999, 50);
 end
 
-procedure vree41
-begin
+procedure vree41 begin
 	gsay_message(58, 173, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree42
-begin
+procedure vree42 begin
 	gsay_message(58, 174, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree43
-begin
+procedure vree43 begin
 	gsay_reply(58, 175);
 	giq_option(4, 58, 176, vree44, 50);
 	giq_option(-3, 58, 177, vree35, 50);
 end
 
-procedure vree44
-begin
+procedure vree44 begin
 	gsay_message(58, 178, 50);
-	call vree_end;
+	call Node999;
 end
 
-procedure vree45
-begin
+procedure vree45 begin
 	gsay_message(58, 179, 50);
 	call vree45a;
 end
 
-procedure vree46
-begin
+procedure vree46 begin
 	gsay_reply(58, 180);
 	giq_option(4, 58, 181, vree47, 50);
 	giq_option(4, 58, 182, vree46a, 50);
 end
 
-procedure vree47
-begin
+procedure vree47 begin
 	gsay_message(58, 183, 50);
 	if (local_var(1) > 2) then begin
 		call vree17;
 	end
 	else begin
 		gsay_message(58, 184, 50);
-		call vree_end;
+		call Node999;
 	end
 end
 
-procedure vree48
-begin
+procedure vree48 begin
 	gsay_reply(58, 185);
 	giq_option(4, 58, 187, vree17, 50);
-	giq_option(4, 58, 186, vree_end, 50);
+	giq_option(4, 58, 186, Node999, 50);
 end
 
-procedure vree200
-begin
+procedure vree200 begin
 	gsay_message(58, 188, 50);
 end
 
-procedure vree201
-begin
+procedure vree201 begin
 	gsay_message(58, 189, 50);
 end
 
-procedure vree202
-begin
+procedure vree202 begin
 	gsay_message(58, 190, 50);
 end
 
-procedure vree203
-begin
+procedure vree203 begin
 	gsay_message(58, 191, 50);
 end
 
-procedure vree204
-begin
+procedure vree204 begin
 	gsay_message(58, 192, 50);
 end
 
-procedure vree205
-begin
+procedure vree205 begin
 	gsay_message(58, 193, 50);
 end
 
-procedure vree300
-begin
+procedure vree300 begin
 	gsay_message(58, 194, 50);
 end
 
-procedure vree301
-begin
+procedure vree301 begin
 	gsay_message(58, 195, 50);
 end
 
-procedure vree302
-begin
+procedure vree302 begin
 	gsay_message(58, 196, 50);
 end
 
-procedure vree303
-begin
+procedure vree303 begin
 	gsay_message(58, 197, 50);
 end
 
-procedure vree304
-begin
+procedure vree304 begin
 	gsay_message(58, 198, 50);
 end
 
-procedure vree305
-begin
+procedure vree305 begin
 	gsay_message(58, 199, 50);
 end
 
-procedure vree306
-begin
+procedure vree306 begin
 	gsay_message(58, 200, 50);
 end
 
-procedure branch01
-begin
+procedure branch01 begin
 	if (local_var(1) >= 2) then begin
 		call vree18;
 	end
@@ -620,8 +545,7 @@ begin
 	end
 end
 
-procedure branch02
-begin
+procedure branch02 begin
 	if (local_var(1) > 1) then begin
 		call vree21;
 	end
@@ -630,8 +554,7 @@ begin
 	end
 end
 
-procedure branch03
-begin
+procedure branch03 begin
 	set_local_var(5, 1);
 	if (local_var(1) > 1) then begin
 		call vree25;
@@ -641,8 +564,7 @@ begin
 	end
 end
 
-procedure branch04
-begin
+procedure branch04 begin
 	if (local_var(1) > 1) then begin
 		call vree27;
 	end
@@ -651,26 +573,22 @@ begin
 	end
 end
 
-procedure vree00a
-begin
+procedure vree00a begin
 	UpReact
-	call vree_end;
+	call Node999;
 end
 
-procedure vree01a
-begin
+procedure vree01a begin
 	DownReact
-	call vree_end;
+	call Node999;
 end
 
-procedure vree01b
-begin
+procedure vree01b begin
 	BigDownReact
-	call vree_end;
+	call Node999;
 end
 
-procedure vree45a
-begin
+procedure vree45a begin
 	variable LVar0 := 0;
 	LVar0 := create_object_sid(PID_RADAWAY, 0, 0, -1);
 	add_obj_to_inven(dude_obj, LVar0);
@@ -681,13 +599,12 @@ begin
 	LVar0 := create_object_sid(PID_MICRO_FUSION_CELL, 0, 0, -1);
 	add_obj_to_inven(dude_obj, LVar0);
 	BigUpReact
-	call vree_end;
+	call Node999;
 end
 
-procedure vree46a
-begin
+procedure vree46a begin
 	DownReact
-	call vree_end;
+	call Node999;
 end
 
 

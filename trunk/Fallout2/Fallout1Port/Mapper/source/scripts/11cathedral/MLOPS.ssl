@@ -1,122 +1,95 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Cathedral Masters Lair - Technician
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MLOPS
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
 procedure dialog_end;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
+
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_RED)
 
 procedure gotonull;
 
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure combat
-begin
-	hostile := 1;
+procedure combat begin
+	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
-end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+	if (not(dude_wearing_coc_robe) and (self_can_see_dude or self_can_hear_dude)) then begin
+		float(103);
+		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure pickup_p_proc begin
+	if obj_in_party(source_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc begin
 	dude_look_at_critter;
-	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
+
+	if dude_wearing_coc_robe then begin
 		if (local_var(0) == 1) then begin
-			float_msg(self_obj, message_str(SCRIPT_MLOPS, 102), 2);
+			float(102);
 		end
 		else begin
-			float_msg(self_obj, message_str(SCRIPT_MLOPS, 101), 2);
+			float(101);
 		end
 		set_local_var(0, 1);
 	end
 	else begin
-		float_msg(self_obj, message_str(SCRIPT_MLOPS, 103), 2);
+		float(103);
 		call combat;
 	end
+
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_MLOPS, 100));
+	display_msg(mstr(100));
 end
 
-procedure dialog_end
-begin
+procedure dialog_end begin
 end
 
-procedure gotonull
-begin
+procedure gotonull begin
 end
