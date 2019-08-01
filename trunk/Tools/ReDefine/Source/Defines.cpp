@@ -17,72 +17,115 @@ void ReDefine::FinishDefines()
 {
     Headers.clear();
     RegularDefines.clear();
+    ProgramDefines.clear();
     VirtualDefines.clear();
 }
 
 //
 
-bool ReDefine::ReadConfigDefines( const std::string& section )
+bool ReDefine::ReadConfigDefines( const std::string& sectionPrefix )
 {
     FinishDefines();
 
-    if( !Config->IsSection( section ) )
+    std::vector<std::string> sections;
+    if( !Config->GetSections( sections ) )
     {
-        WARNING( __FUNCTION__, "config section<%s> is missing", section.c_str() );
+        WARNING( __FUNCTION__, "config is empty (?)" );
         return false;
     }
 
-    std::vector<std::string> types;
-    if( !Config->GetSectionKeys( section, types, true ) )
-    {
-        WARNING( __FUNCTION__, "config section<%s> is empty", section.c_str() );
-        return false;
-    }
+    bool definesFound = false;
 
-    for( const auto& type : types )
+    for( const auto& section : sections )
     {
-        std::vector<std::string> values = Config->GetStrVec( section, type );
-
-        if( values.size() < 2 || values.size() > 3 )
-        {
-            WARNING( __FUNCTION__, "invalid setting<[%s]->%s>", section.c_str(), type.c_str() );
+        // [???] //
+        if( section.substr( 0, sectionPrefix.length() ) != sectionPrefix )
             continue;
-        }
+        // [Defines] //
+        else if( section == sectionPrefix )
+        {
+            definesFound = true;
+            std::vector<std::string> keys;
 
-        Headers.push_back( Header( values[0], type, values[1], values.size() == 3 ? values[2] : std::string() ) );
+            if( !Config->GetSectionKeys( section, keys, true ) )
+            {
+                WARNING( __FUNCTION__, "config section<%s> is empty", section.c_str() );
+                return false;
+            }
+
+            for( const auto& type : keys )
+            {
+                std::vector<std::string> values = Config->GetStrVec( section, type );
+
+                if( values.size() < 2 || values.size() > 3 )
+                {
+                    WARNING( __FUNCTION__, "invalid setting<[%s]->%s>", section.c_str(), type.c_str() );
+                    continue;
+                }
+
+                Headers.push_back( Header( values[0], type, values[1], values.size() == 3 ? values[2] : std::string() ) );
+            }
+        }
+        // [Defines:TYPE] //
+        else if( section.length() >= sectionPrefix.length() + 2 && section.substr( sectionPrefix.length(), 1 ) == ":" )
+        {
+            const std::string        type = section.substr( sectionPrefix.length() + 1 );
+            std::vector<std::string> keys;
+
+            if( !Config->GetSectionKeys( section, keys, true ) )
+            {
+                WARNING( __FUNCTION__, "config section<%s> is empty", section );
+                continue;
+            }
+
+            for( const auto& value : keys )
+            {
+                if( Config->IsSectionKeyEmpty( section, value ) )
+                    continue;
+
+                int val = 0;
+                if( TextIsInt( value ) && TextGetInt( value, val ) )
+                    ProgramDefines[type][val] = Config->GetStr( section, value );
+                else
+                    WARNING( __FUNCTION__, "config setting<%s->%s> invalid", section.c_str(), value.c_str() );
+            }
+        }
     }
 
-    return true;
+    if( !definesFound )
+        WARNING( __FUNCTION__, "config section<%s> is missing", sectionPrefix.c_str() );
+
+    return definesFound;
 }
 
 //
 
 bool ReDefine::IsDefineType( const std::string& type )
 {
-    return RegularDefines.find( type ) != RegularDefines.end() || VirtualDefines.find( type ) != VirtualDefines.end();
+    return RegularDefines.find( type ) != RegularDefines.end() || ProgramDefines.find( type ) != ProgramDefines.end() || VirtualDefines.find( type ) != VirtualDefines.end();
 }
 
-bool ReDefine::GetDefineName( const std::string& type, const int value, std::string& result )
+bool ReDefine::IsRegularDefineType( const std::string& type )
 {
-    auto itVirtual = VirtualDefines.find( type );
+    return RegularDefines.find( type ) != RegularDefines.end();
+}
 
-    if( itVirtual != VirtualDefines.end() )
+bool ReDefine::GetDefineName( const std::string& type, const int value, std::string& result, bool skipVirtual /* = false */ )
+{
+    // if define is virtual, check regular and custom defines
+    if( !skipVirtual )
     {
-        for( const auto& realType : itVirtual->second )
+        auto itVirtual = VirtualDefines.find( type );
+        if( itVirtual != VirtualDefines.end() )
         {
-            auto itReal = RegularDefines.find( realType );
-            if( itReal != RegularDefines.end() )
+            for( const auto& realType : itVirtual->second )
             {
-                auto itVal = itReal->second.find( value );
-                if( itVal != itReal->second.end() )
-                {
-                    result = itVal->second;
+                if( GetDefineName( realType, value, result, true ) )
                     return true;
-                }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
     auto itRegular = RegularDefines.find( type );
@@ -92,6 +135,17 @@ bool ReDefine::GetDefineName( const std::string& type, const int value, std::str
         if( itVal != itRegular->second.end() )
         {
             result = itVal->second;
+            return true;
+        }
+    }
+
+    auto itProg = ProgramDefines.find( type );
+    if( itProg != ProgramDefines.end() )
+    {
+        auto itProgVal = itProg->second.find( value );
+        if( itProgVal != itProg->second.end() )
+        {
+            result = itProgVal->second;
             return true;
         }
     }
@@ -224,9 +278,9 @@ bool ReDefine::ProcessValue( const std::string& type, std::string& value, const 
             }
 
             if( GetDefineName( type, val, value ) )
-                return true;    // great success!
+                return true;        // great success!
             else
-                useVal = true;  // math failed us
+                useVal = true;      // math failed us
         }
     }
     else

@@ -13,12 +13,12 @@ class ReDefine
 {
 public:
 
+    typedef std::map<std::string, std::map<int, std::string>>          DefinesMap;
     typedef std::map<std::string, std::map<std::string, std::string>>  GenericOperatorsMap;
     typedef std::map<std::string, std::vector<std::string>>            StringVectorMap;
     typedef std::map<std::string, std::map<std::string, unsigned int>> UnknownMap;
 
-    struct Function;
-    struct Variable;
+    struct ScriptCode;
 
     //
     // ReDefine
@@ -75,7 +75,6 @@ public:
     void ProcessHeaders( const std::string& path );
     void ProcessScripts( const std::string& path, const bool readOnly = false );
 
-
     //
     // Defines
     //
@@ -90,16 +89,18 @@ public:
         Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& group );
     };
 
-    std::vector<Header>                               Headers;
-    std::map<std::string, std::map<int, std::string>> RegularDefines; // <type, <value, define>>
-    StringVectorMap                                   VirtualDefines; // <virtual_type, <types>>
+    std::vector<Header> Headers;
+    DefinesMap          RegularDefines; // <type, <value, define>>
+    DefinesMap          ProgramDefines; // <type, <value, define>>
+    StringVectorMap     VirtualDefines; // <virtual_type, <types>>
 
     void FinishDefines();
 
-    bool ReadConfigDefines( const std::string& section );
+    bool ReadConfigDefines( const std::string& sectionPrefix );
 
     bool IsDefineType( const std::string& type );
-    bool GetDefineName( const std::string& type, const int value, std::string& result );
+    bool IsRegularDefineType( const std::string& type );
+    bool GetDefineName( const std::string& type, const int value, std::string& result, bool skipVirtual = false );
 
     bool ProcessHeader( const std::string& path, const Header& header );
     bool ProcessValue( const std::string& type, std::string& value, const bool silent = false );
@@ -109,17 +110,6 @@ public:
     // Functions
     //
 
-    struct Function
-    {
-        std::string              Full; // Name + Arguments + (Operator + OperatorArguments)
-        std::string              Name;
-        std::vector<std::string> Arguments;
-        std::string              Operator;
-        std::string              OperatorArgument;
-
-        Function( const std::string& full, const std::string& name, const std::vector<std::string>& arguments = std::vector<std::string>(), const std::string& op = std::string(), const std::string& opArgument = std::string() );
-    };
-
     StringVectorMap     FunctionsArguments; // <name, <types>>
     GenericOperatorsMap FunctionsOperators; // <name, <operatorName, type>>
 
@@ -127,9 +117,7 @@ public:
 
     bool ReadConfigFunctions( const std::string& sectionPrefix );
 
-    std::string GetFullString( const Function& function );
-
-    void ProcessFunctionArguments( Function& current );
+    void ProcessFunctionArguments( ScriptCode& function );
 
     //
     // Operators
@@ -145,7 +133,7 @@ public:
     std::string GetOperator( const std::string& opName );
     std::string GetOperatorName( const std::string& op );
 
-    void ProcessOperator( const GenericOperatorsMap& map, const std::string& name, const std::string& op, std::string& opArgument );
+    void ProcessOperator( const GenericOperatorsMap& map, ScriptCode& code );
 
     //
     // Raw
@@ -162,6 +150,22 @@ public:
     //
     // Script.cpp
     //
+
+    struct ScriptCode
+    {
+        bool                     Function;
+
+        std::string              Full; // Name + (Arguments) + (Operator + OperatorArguments)
+        std::string              Name;
+        std::vector<std::string> Arguments;
+        std::string              Operator;
+        std::string              OperatorArgument;
+
+        ScriptCode();
+    };
+
+    std::string GetFullString( const ScriptCode& code );
+    void        SetFullString( ScriptCode& code );
 
     void ProcessScript( const std::string& path, const std::string& filename, const bool readOnly = false );
 
@@ -183,22 +187,12 @@ public:
     bool       TextGetDefine( const std::string& text, const std::regex& re, std::string& name, int& value );
     std::regex TextGetDefineRegex( const std::string& prefix, bool paren );
 
-    std::vector<Variable> TextGetVariables( const std::string& text );
-    std::vector<Function> TextGetFunctions( const std::string& text );
+    std::vector<ScriptCode> TextGetVariables( const std::string& text );
+    std::vector<ScriptCode> TextGetFunctions( const std::string& text );
 
     //
     // Variables
     //
-
-    struct Variable
-    {
-        std::string Full;              // Name + (Operator + OperatorArgument)
-        std::string Name;
-        std::string Operator;
-        std::string OperatorArgument;
-
-        Variable( const std::string& full, const std::string& name, const std::string& op, const std::string& opArgument );
-    };
 
     GenericOperatorsMap      VariablesOperators; // <name, <operatorName, type>>
     std::vector<std::string> VariablesGuessing;  // <types>
@@ -206,8 +200,6 @@ public:
     void FinishVariables();
 
     bool ReadConfigVariables( const std::string& sectionPrefix );
-
-    std::string GetFullString( const Variable& variable );
 };
 
 #endif // __REDEFINE__ //

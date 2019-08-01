@@ -2,14 +2,6 @@
 
 #include "ReDefine.h"
 
-ReDefine::Function::Function( const std::string& full, const std::string& name, const std::vector<std::string>& arguments /* = std::vector<std::string>() */, const std::string& op /* = std::string() */, const std::string& opArgument /* = std::string() */ ) :
-    Full( full ),
-    Name( name ),
-    Arguments( arguments ),
-    Operator( op ),
-    OperatorArgument( opArgument )
-{}
-
 void ReDefine::FinishFunctions()
 {
     FunctionsArguments.clear();
@@ -28,9 +20,10 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 
     for( const auto& section : sections )
     {
-        if( section.length() < sectionPrefix.length() )
+        // [???] //
+        if( section.substr( 0, sectionPrefix.length() ) != sectionPrefix )
             continue;
-        // [Function]
+        // [Function] //
         else if( section == sectionPrefix )
         {
             std::vector<std::string> keys;
@@ -56,14 +49,14 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
         }
         // [FunctionOPERATOR]
         // see InitOperators() for valid values for OPERATOR
-        else if( section.substr( 0, sectionPrefix.length() ) == sectionPrefix )
+        else if( section.length() >= sectionPrefix.length() + 1 && section.substr( sectionPrefix.length(), 1 ) != ":" )
         {
             const std::string opName = section.substr( sectionPrefix.length(), section.length() - sectionPrefix.length() );
 
             // Operators map should be available at this point, if initialized correctly
             if( !IsOperatorName( opName ) )
             {
-                DEBUG( __FUNCTION__, "config section<%s> ignored", section.c_str() );
+                DEBUG( __FUNCTION__, "config section<%s> ignored : substr<%s>", section.c_str(), section.substr( sectionPrefix.length(), 1 ).c_str() );
                 continue;
             }
 
@@ -74,17 +67,22 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
                 continue;
             }
 
-            for( const auto& variable : keys )
+            for( const auto& function : keys )
             {
-                if( Config->GetStrVec( section, variable ).size() != 1 )
+                if( Config->GetStrVec( section, function ).size() != 1 )
                     continue;
 
-                std::string type = Config->GetStr( section, variable );
+                std::string type = Config->GetStr( section, function );
 
                 // type validation is part of ProcessHeaders(),
                 // as at this point *Defines maps might not be initialized yet,
-                FunctionsOperators[variable][opName] = type;
+                FunctionsOperators[function][opName] = type;
             }
+        }
+        // [Function:NAME]
+        else if( section.length() >= sectionPrefix.length() + 2 && section.substr( sectionPrefix.length(), 1 ) == ":" )
+        {
+            // ReadConfigAction( true, section );
         }
     }
 
@@ -93,26 +91,7 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 
 //
 
-std::string ReDefine::GetFullString( const ReDefine::Function& function )
-{
-    std::string result = function.Name;
-
-    result += "(";
-
-    if( function.Arguments.size() )
-        result += " " + TextGetJoined( function.Arguments, ", " ) + " ";
-
-    result += ")";
-
-    if( function.Operator.length() && function.OperatorArgument.length() )
-        result += " " + function.Operator + " " + function.OperatorArgument;
-
-    return result;
-}
-
-//
-
-void ReDefine::ProcessFunctionArguments( ReDefine::Function& function )
+void ReDefine::ProcessFunctionArguments( ReDefine::ScriptCode& function )
 {
     auto it = FunctionsArguments.find( function.Name );
     if( it == FunctionsArguments.end() )

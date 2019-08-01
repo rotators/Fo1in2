@@ -168,13 +168,19 @@ std::regex ReDefine::TextGetDefineRegex( const std::string& prefix, bool paren )
 
 //
 
-std::vector<ReDefine::Variable> ReDefine::TextGetVariables( const std::string& text )
+std::vector<ReDefine::ScriptCode> ReDefine::TextGetVariables( const std::string& text )
 {
-    std::vector<Variable> result;
+    std::vector<ScriptCode> result;
 
     for( auto it = std::sregex_iterator( text.begin(), text.end(), GetVariables ), end = std::sregex_iterator(); it != end; ++it )
     {
-        Variable variable( it->str(), it->str( 1 ), it->str( 2 ), it->str( 3 ) );
+        ScriptCode variable;
+
+        variable.Function = false;
+        variable.Full = it->str();
+        variable.Name = it->str( 1 );
+        variable.Operator = it->str( 2 );
+        variable.OperatorArgument = it->str( 3 );
 
         result.push_back( variable );
     }
@@ -182,11 +188,11 @@ std::vector<ReDefine::Variable> ReDefine::TextGetVariables( const std::string& t
     return result;
 }
 
-std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& text )
+std::vector<ReDefine::ScriptCode> ReDefine::TextGetFunctions( const std::string& text )
 {
-    std::vector<Function> result;
+    std::vector<ScriptCode> result;
 
-    unsigned int          funcIdx = 0;
+    unsigned int            funcIdx = 0;
     for( auto it = std::sregex_iterator( text.begin(), text.end(), GetFunctions ), end = std::sregex_iterator(); it != end; ++it, funcIdx++ )
     {
         const std::string        func = it->str( 1 );
@@ -380,7 +386,14 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
         }
 
         // update result
-        Function function( full, func, args, TextGetTrimmed( op ), TextGetTrimmed( opArg ) );
+        ScriptCode function;
+
+        function.Function = true;
+        function.Full = full;
+        function.Name = func;
+        function.Arguments = args;
+        function.Operator = TextGetTrimmed( op );
+        function.OperatorArgument = TextGetTrimmed( opArg );
 
         result.push_back( function );
     }
