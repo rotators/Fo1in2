@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "ReDefine.h"
 
 void ReDefine::ProcessScript( const std::string& path, const std::string& filename, bool readOnly /* = false */ )
@@ -73,7 +75,8 @@ void ReDefine::ProcessScript( const std::string& path, const std::string& filena
                 line = TextGetReplaced( line, func.Full, funcUpdate.Full );
         }
 
-        // ... //
+        // process raw replacement
+        ProcessRaw( line );
 
         // detect line change, ignore meaningless changes
         if( TextGetPacked( line ) != TextGetPacked( lineOld ) )
@@ -84,8 +87,8 @@ void ReDefine::ProcessScript( const std::string& path, const std::string& filena
 
             // log changes
             ILOG( "@@" );
-            Status.Current.Clear();
 
+            Status.Current.Clear();
             // DEBUG( nullptr, "<- %s", TextGetPacked( lineOld ).c_str() );
             // DEBUG( nullptr, "-> %s", TextGetPacked( line ).c_str() );
 
@@ -106,11 +109,22 @@ void ReDefine::ProcessScript( const std::string& path, const std::string& filena
     Status.Current.Clear();
 
     if( readOnly )
-        updateFile = false;
+        return;
 
     if( updateFile )
     {
-        Status.Process.FilesChanged++;
-        Status.Process.LinesChanged += changed;
+        std::ofstream file;
+        file.open( TextGetFilename( path, filename ), std::ios::out );
+
+        if( file.is_open() )
+        {
+            file << content;
+            file.close();
+
+            Status.Process.FilesChanged++;
+            Status.Process.LinesChanged += changed;
+        }
+        else
+            WARNING( __FUNCTION__, "cannot write file<%s>", TextGetFilename( path, filename ) );
     }
 }

@@ -7,8 +7,7 @@ ReDefine::Function::Function( const std::string& full, const std::string& name, 
     Name( name ),
     Arguments( arguments ),
     Operator( op ),
-    OperatorArgument( opArgument ),
-    ArgumentsEnd( 0 )
+    OperatorArgument( opArgument )
 {}
 
 void ReDefine::FinishFunctions()

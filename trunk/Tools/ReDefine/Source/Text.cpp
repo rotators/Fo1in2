@@ -102,13 +102,10 @@ std::string ReDefine::TextGetLower( const std::string& text )
 
 std::string ReDefine::TextGetPacked( const std::string& text )
 {
-    std::string result = text;
+    std::string result;
 
-    result = TextGetReplaced( result, "\t", " " );
+    result = TextGetReplaced( text,  "\t", " " );
     result = TextGetReplaced( result, " ", "" );
-
-    // result.erase( std::remove( result.begin(), result.end(), ' ' ), result.end() );
-    // result.erase( std::remove( result.begin(), result.end(), '\t' ), result.end() );
 
     return result;
 }
@@ -169,6 +166,8 @@ std::regex ReDefine::TextGetDefineRegex( const std::string& prefix, bool paren )
     return std::regex( "^[\\t\\ ]*\\#define[\\t\\ ]+(" + prefix + "_[A-Za-z0-9_]+)[\\t\\ ]+" + (paren ? "\\(" : "") + "([0-9]+)" + (paren ? "\\)" : "") );
 }
 
+//
+
 std::vector<ReDefine::Variable> ReDefine::TextGetVariables( const std::string& text )
 {
     std::vector<Variable> result;
@@ -185,7 +184,6 @@ std::vector<ReDefine::Variable> ReDefine::TextGetVariables( const std::string& t
 
 std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& text )
 {
-
     std::vector<Function> result;
 
     unsigned int          funcIdx = 0;
@@ -194,7 +192,8 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
         const std::string        func = it->str( 1 );
         std::string              full, arg, op, opArg;
         std::vector<std::string> args;
-        unsigned int             stage = 0, funcStart = it->position(), funcLen = func.length() + 1, funcArgsLen = 0, balance = 1;
+        unsigned int             stage = 0, funcStart = it->position(), funcLen = func.length() + 1, funcArgsLen = 0;
+        int                      balance = 1;
         bool                     quote = false, quoteFound = false;
 
         for( unsigned int t = funcStart + funcLen, tLen = text.length(); t < tLen; t++, funcLen++ )
@@ -229,10 +228,11 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
                     balance++;
                 else if( ch == ')' )
                 {
-                    if( --balance == 0 )
+                    if( --balance <= 0 )
                     {
                         funcArgsLen = funcLen + 1;
                         full = text.substr( funcStart, funcArgsLen );
+                        balance = 0;
                         stage++;
                         continue;
                     }
@@ -296,12 +296,14 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
                     balance++;
                 else if( ch == ')' )
                 {
-                    if( balance == 0 )
+                    // this will extract pieces like f(arg) + f2(
+                    if( --balance <= 0 )
                     {
-                        full = text.substr( funcStart, funcLen );
+                        full = text.substr( funcStart, funcLen + (balance + 1) );
+                        if( balance == 0 )
+                            opArg += ch;
                         break;
                     }
-                    balance--;
                 }
 
                 // detect operator argument end
@@ -322,7 +324,7 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
         // validate quotes detection
         if( !quoteFound && std::count( full.begin(), full.end(), '"' ) )
         {
-            // DEBUG( __FUNCTION__, "QUOTE CHARACTER MISSED" );
+            DEBUG( __FUNCTION__, "QUOTE CHARACTER MISSED" );
             quoteFound = true;
         }
 
@@ -348,7 +350,9 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
 
 
         // check if function looks like, well, a function
-        if( balance || quote || parens )
+        static const bool funcDebug = false;
+        bool              ignore =  balance > 0 || quote || parens;
+        if( funcDebug || ignore )
         {
             bool spam = func != "for";
 
@@ -357,23 +361,26 @@ std::vector<ReDefine::Function> ReDefine::TextGetFunctions( const std::string& t
                 SStatus::SCurrent prev = Status.Current;
 
                 Status.Current.Line = text;
+
                 DEBUG( __FUNCTION__, "FUNCTION(%u)", funcIdx );
-                DEBUG( __FUNCTION__, "DROPPED(%s%s%s)", funcIdx, balance ? std::to_string( (long long)balance ).c_str() : "", quote ? "Q" : "", parens ? "P" : "" );
+                if( ignore )
+                    DEBUG( __FUNCTION__, "IGNORED(%s%s%s)", balance ? std::to_string( (long long)balance ).c_str() : "", quote ? "Q" : "", parens ? "P" : "" );
+
                 Status.Current.Clear();
 
                 DEBUG( __FUNCTION__, "\tcalc[%s]", text.substr( funcStart, funcLen ).c_str() );
-                DEBUG( __FUNCTION__, "\tfull[%s]", full.c_str() );
+                DEBUG( __FUNCTION__, "\tfull[%s] b=%d", full.c_str(), balance );
                 DEBUG( __FUNCTION__, "\tfunc[%s] args[%s] op[%s] opArg[%s] ", func.c_str(), TextGetJoined( args, "|" ).c_str(), op.c_str(), opArg.c_str() );
 
                 Status.Current = prev;
             }
 
-            continue;
+            if( ignore )
+                continue;
         }
 
         // update result
         Function function( full, func, args, TextGetTrimmed( op ), TextGetTrimmed( opArg ) );
-        function.ArgumentsEnd = funcArgsLen;
 
         result.push_back( function );
     }
