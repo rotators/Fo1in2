@@ -30,3 +30,13 @@ bool ReDefine::ReadConfigRaw( const std::string& section )
 
     return true;
 }
+
+//
+
+void ReDefine::ProcessRaw( std::string& line )
+{
+    for( const auto& replace : Raw )
+    {
+        line = TextGetReplaced( line, replace.first, replace.second );
+    }
+}

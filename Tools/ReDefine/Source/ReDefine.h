@@ -13,8 +13,9 @@ class ReDefine
 {
 public:
 
-    typedef std::map<std::string, std::map<std::string, std::string>> GenericOperatorsMap;
-    typedef std::map<std::string, std::vector<std::string>>           StringVectorMap;
+    typedef std::map<std::string, std::map<std::string, std::string>>  GenericOperatorsMap;
+    typedef std::map<std::string, std::vector<std::string>>            StringVectorMap;
+    typedef std::map<std::string, std::map<std::string, unsigned int>> UnknownMap;
 
     struct Function;
     struct Variable;
@@ -34,21 +35,22 @@ public:
             unsigned int LineNumber;
 
             SCurrent();
+
             void         Clear();
         }
         Current;
 
         struct SProcess
         {
-            unsigned int                       Files;
-            unsigned int                       FilesChanged;
-            unsigned int                       Lines;
-            unsigned int                       LinesChanged;
-
-            std::map<std::string, std::string> Unknown;
+            unsigned int Files;
+            unsigned int FilesChanged;
+            unsigned int Lines;
+            unsigned int LinesChanged;
+            UnknownMap   Unknown; // <type, <value,count>>
 
             SProcess();
-            void                               Clear();
+
+            void         Clear();
         }
         Process;
 
@@ -115,8 +117,6 @@ public:
         std::string              Operator;
         std::string              OperatorArgument;
 
-        unsigned int             ArgumentsEnd; // Name + Arguments only = Full.substr( 0, ArgumentsEndPos );
-
         Function( const std::string& full, const std::string& name, const std::vector<std::string>& arguments = std::vector<std::string>(), const std::string& op = std::string(), const std::string& opArgument = std::string() );
     };
 
@@ -157,6 +157,8 @@ public:
 
     bool ReadConfigRaw( const std::string& section );
 
+    void ProcessRaw( std::string& line );
+
     //
     // Script.cpp
     //
@@ -190,7 +192,7 @@ public:
 
     struct Variable
     {
-        std::string Full;              // Name + Operator + OperatorArgument
+        std::string Full;              // Name + (Operator + OperatorArgument)
         std::string Name;
         std::string Operator;
         std::string OperatorArgument;

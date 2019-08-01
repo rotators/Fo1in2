@@ -82,6 +82,7 @@ int main( int argc, char** argv )
                        redefine->Status.Process.Lines, redefine->Status.Process.Lines != 1 ? "s" : "",
                        redefine->Status.Process.Files, redefine->Status.Process.Files != 1 ? "s" : "" );
     }
+
     if( redefine->Status.Process.LinesChanged && redefine->Status.Process.FilesChanged )
     {
         redefine->LOG( "Changed scripts ... %u line%s in %u file%s",
@@ -89,8 +90,22 @@ int main( int argc, char** argv )
                        redefine->Status.Process.FilesChanged, redefine->Status.Process.FilesChanged != 1 ? "s" : "" );
     }
 
+    if( redefine->Status.Process.Unknown.size() )
+    {
+        redefine->WARNING( nullptr, " " );
+        for( const auto& type : redefine->Status.Process.Unknown )
+        {
+            redefine->WARNING( nullptr, "Unknown %s", type.first.c_str() );
+            for( const auto& value : type.second )
+            {
+                redefine->WARNING( nullptr, "        %s (%u hit%s)", value.first.c_str(), value.second, value.second != 1 ? "s" : "" );
+            }
+        }
+    }
+
     // cleanup
     delete redefine;
+    delete cmd;
 
     return result;
 }
