@@ -276,9 +276,32 @@ bool ReDefine::ReadConfig( const std::string& defines, const std::string& variab
 
 void ReDefine::ProcessHeaders( const std::string& path )
 {
+    // move program defines to function scope
+    DefinesMap programDefines = ProgramDefines;
+    ProgramDefines.clear();
+
     for( const auto& header : Headers )
     {
         ProcessHeader( path, header );
+    }
+
+    // restore program defines
+    // if type has been added by header, put it in RegularDefines (possibly overriding header value),
+    // otherwise, use ProgramDefines
+    for( const auto& itProg : programDefines )
+    {
+        auto itRegular = RegularDefines.find( itProg.first );
+        bool is = itRegular != RegularDefines.end();
+
+        for( const auto& itVal : itProg.second )
+        {
+            if( is )
+                itRegular->second[itVal.first] = itVal.second;
+            else
+                ProgramDefines[itProg.first][itVal.first] = itVal.second;
+
+            LOG( "Added %s define ... %s = %d", itProg.first.c_str(), itVal.second.c_str(), itVal.first );
+        }
     }
 
     GenericOperatorsMap validatedOperators;
@@ -365,13 +388,6 @@ void ReDefine::ProcessHeaders( const std::string& path )
     for( const auto& from : Raw )
     {
         LOG( "Added raw ... %s", from.first.c_str() );
-    }
-
-    // hardcoded for now
-    if( IsDefineType( "SID" ) )
-    {
-        RegularDefines["SID"][0] = "0";
-        RegularDefines["SID"][-1] = "-1";
     }
 }
 

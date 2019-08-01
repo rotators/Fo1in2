@@ -2,15 +2,6 @@
 
 #include "ReDefine.h"
 
-ReDefine::Variable::Variable( const std::string& full, const std::string& name, const std::string& op, const std::string& opArgument ) :
-    Full( full ),
-    Name( name ),
-    Operator( op ),
-    OperatorArgument( opArgument )
-{}
-
-//
-
 void ReDefine::FinishVariables()
 {
     VariablesOperators.clear();
@@ -77,16 +68,4 @@ bool ReDefine::ReadConfigVariables( const std::string& sectionPrefix )
     }
 
     return true;
-}
-
-//
-
-std::string ReDefine::GetFullString( const ReDefine::Variable& variable )
-{
-    std::string result = variable.Name;
-
-    if( variable.Operator.length() && variable.OperatorArgument.length() )
-        result += " " + variable.Operator + " " + variable.OperatorArgument;
-
-    return result;
 }

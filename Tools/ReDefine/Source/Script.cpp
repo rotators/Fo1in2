@@ -2,6 +2,49 @@
 
 #include "ReDefine.h"
 
+ReDefine::ScriptCode::ScriptCode() :
+    Function( false ),
+    Full( "" ),
+    Name( "" ),
+    Arguments(),
+    Operator( "" ),
+    OperatorArgument( "" )
+{}
+
+//
+
+std::string ReDefine::GetFullString( const ScriptCode& code )
+{
+    std::string result;
+
+    if( !code.Name.length() )
+        return result;
+
+    result = code.Name;
+
+    if( code.Function || code.Arguments.size() )
+    {
+        result += "(";
+
+        if( code.Arguments.size() )
+            result += " " + TextGetJoined( code.Arguments, ", " ) + " ";
+
+        result += ")";
+    }
+
+    if( code.Operator.length() && code.OperatorArgument.length() )
+        result += " " + code.Operator + " " + code.OperatorArgument;
+
+    return result;
+}
+
+void ReDefine::SetFullString( ScriptCode& code )
+{
+    code.Full = GetFullString( code );
+}
+
+//
+
 void ReDefine::ProcessScript( const std::string& path, const std::string& filename, bool readOnly /* = false */ )
 {
     std::vector<std::string> lines;
@@ -37,40 +80,34 @@ void ReDefine::ProcessScript( const std::string& path, const std::string& filena
         const std::string lineOld = line;
 
         // process variables
-        for( const Variable& var : TextGetVariables( line ) )
+        for( const ScriptCode& var : TextGetVariables( line ) )
         {
-            Variable varUpdate = var;
+            ScriptCode varUpdate = var;
 
-            ProcessOperator( VariablesOperators, varUpdate.Name, varUpdate.Operator, varUpdate.OperatorArgument );
+            ProcessOperator( VariablesOperators, varUpdate );
 
             if( VariablesOperators.find( varUpdate.Name ) == VariablesOperators.end() && varUpdate.Operator.length() && varUpdate.OperatorArgument.length() )
                 ProcessValueGuessing( varUpdate.OperatorArgument );
 
-            varUpdate.Full = GetFullString( varUpdate );
+            // update if needed
+            SetFullString( varUpdate );
             if( TextGetPacked( var.Full ) != TextGetPacked( varUpdate.Full ) )
                 line = TextGetReplaced( line, var.Full, varUpdate.Full );
         }
 
         // process functions
-        for( const Function& func : TextGetFunctions( line ) )
+        for( const ScriptCode& func : TextGetFunctions( line ) )
         {
-            Function funcUpdate = func;
+            ScriptCode funcUpdate = func;
 
             ProcessFunctionArguments( funcUpdate );
-            ProcessOperator( FunctionsOperators, funcUpdate.Name, funcUpdate.Operator, funcUpdate.OperatorArgument );
+            ProcessOperator( FunctionsOperators, funcUpdate );
 
             if( FunctionsOperators.find( funcUpdate.Name ) == FunctionsOperators.end() && funcUpdate.Operator.length() && funcUpdate.OperatorArgument.length() )
                 ProcessValueGuessing( funcUpdate.OperatorArgument );
 
-            // TODO
-            int sid;
-            if( 0 && funcUpdate.Name == "create_object_sid" && funcUpdate.Arguments.size() == 4 && TextGetInt( funcUpdate.Arguments[3], sid ) && sid == -1 )
-            {
-                funcUpdate.Name = "create_object";
-                funcUpdate.Arguments.resize( 3 );
-            }
-
-            funcUpdate.Full = GetFullString( funcUpdate );
+            // update line if needed
+            SetFullString( funcUpdate );
             if( TextGetPacked( func.Full ) != TextGetPacked( funcUpdate.Full ) )
                 line = TextGetReplaced( line, func.Full, funcUpdate.Full );
         }
