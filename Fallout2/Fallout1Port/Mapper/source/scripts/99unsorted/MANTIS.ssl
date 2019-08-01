@@ -1,19 +1,18 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure timed_event_p_proc;//    script_action == 22
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure damage_p_proc;//    script_action == 14
-variable hostile;
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure timed_event_p_proc;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
+
+variable tmp_hostile;
 variable initial :=  0;
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 55);
@@ -23,77 +22,33 @@ begin
 		end
 		add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				call timed_event_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 8) then begin//<-- use_skill_on_p_proc
-						call use_skill_on_p_proc;
-					end
-					else begin
-						if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-							call damage_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
-		if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin
-			hostile := 1;
+		if (self_can_see_dude or self_can_hear_dude) then begin
+			tmp_hostile := 1;
 			attack(dude_obj);
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	animate_move_obj_to_tile(self_obj, tile_num_in_direction(local_var(0), random(0, 5), random(1, 3)), 0);
 	add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_NUKA_COLA)) then begin
 		script_overrides;
 		rm_obj_from_inven(source_obj, obj_being_used_with);
@@ -102,18 +57,16 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_STEAL) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_GENCHAT, 211));
 		script_overrides;
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+procedure damage_p_proc begin
+	if obj_in_party(source_obj) then begin
+		tmp_hostile := 1;
 	end
 end

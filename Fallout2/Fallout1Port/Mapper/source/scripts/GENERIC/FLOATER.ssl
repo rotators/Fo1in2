@@ -1,4 +1,5 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -10,15 +11,12 @@ procedure use_skill_on_p_proc;
 
 procedure combat_rads_inc;
 
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable rndRads := 0;
 variable rndx;
-variable SrcObj := 0;
-variable SrcIsParty := 0;
 
 procedure start begin
-	
 end
 
 procedure map_enter_p_proc begin
@@ -53,38 +51,21 @@ procedure map_enter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-
-	if source_obj == dude_obj then begin
-		if (obj_pid(self_obj) == PID_FLOATER) or (obj_pid(self_obj) == PID_CENTAUR_LESSER) or (obj_pid(self_obj) == PID_GREATER_CENTAUR) or (obj_pid(self_obj) == PID_BLOODY_FLOATER) then begin
-			set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-				set_global_var(BERSERKER_REPUTATION, 1);
-				set_global_var(CHAMPION_REPUTATION, 0);
-			end
-			if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-				set_global_var(CHAMPION_REPUTATION, 1);
-				set_global_var(BERSERKER_REPUTATION, 0);
-			end
-			if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-				set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-			end
-		end
-	end
-
+	inc_evil_critter
 end
 
 procedure critter_p_proc begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
-		if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe))) then begin
-			hostile := 1;
+		if (self_can_see_dude or self_can_hear_dude) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe))) then begin
+			tmp_hostile := 1;
 			attack(dude_obj);
 		end
 //		else begin
-//			hostile := 1;
+//			tmp_hostile := 1;
 //		end
 	end
 end
@@ -102,17 +83,8 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure damage_p_proc begin
-	if source_obj > 0 then begin
-		SrcObj := 0;
-		SrcIsParty := 0;
-		SrcObj := obj_pid(source_obj);
-
-		if party_member_obj(SrcObj) then begin
-			SrcIsParty := 1;
-		end
-	end
-	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+	if obj_in_party(source_obj) then begin
+		tmp_hostile := 1;
 	end
 end
 

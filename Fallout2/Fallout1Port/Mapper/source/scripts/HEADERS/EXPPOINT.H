@@ -155,6 +155,7 @@
 // Shady Sands
 #define EXP_HIRED_IAN							(100)
 #define EXP_EXPLAINED_CROP_ROTATION 			(500)
+#define EXP_KILLED_SS_RADSCORPION 				(500)
 
 // Raiders
 

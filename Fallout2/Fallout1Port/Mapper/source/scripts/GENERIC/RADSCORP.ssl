@@ -1,29 +1,28 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure timed_event_p_proc;//    script_action == 22
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure description_p_proc;//    script_action == 3
-procedure damage_p_proc;//    script_action == 14
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure timed_event_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure damage_p_proc;
+
 variable critter_tile;
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable PoisonAmount;
 variable LuckRoll;
 variable EnduranceRoll;
 
-procedure start
-begin
+procedure start begin
 // script ID == 12
 //	////display_msg("INIT_RADSCORP.SSL");// - please tell Sduibek when and where you saw this message. Thank you!");
 // MOUNTAIN ENCOUNTER:  North2, North4, South2, South5, Vault6
 // DESERT ENCOUNTER:  North1, North3, North4, South2, South6, Shady3, Raider5, Raider6, Junk1, Hub3, Necrop2, Steel2, Death1, Death2
 //
-	
-	
 	if not(initial) then begin
 		variable AlreadyHasTail := 0;
 		variable AddTail := 0;
@@ -38,43 +37,9 @@ begin
 		add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
 		initial :=  1;
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				call timed_event_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 8) then begin//<-- use_skill_on_p_proc
-						call use_skill_on_p_proc;
-					end
-					else begin
-						if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-							call description_p_proc;
-						end
-						else begin
-							if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-								call damage_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (target_obj == dude_obj) then begin
 		if (fixed_param == 2) then begin
 			if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
@@ -107,62 +72,26 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
-	else begin
-		if (global_var(FIXT_BUGFIXES_ONLY) == 1) then begin
-			if not(dude_is_animal_friend) then begin
-				if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe) * 1)) then begin
-					hostile := 1;
-					attack(dude_obj);
-				end
-			end
-		end
-		else begin
-			if (global_var(ANIMAL_FRIEND_RADSCORPS) == 1) then begin
-				if not(dude_is_animal_friend) then begin
-					if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe) * 2)) then begin
-						hostile := 1;
-						attack(dude_obj);
-					end
-				end
-			end
-			else begin
-				if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe) * 2)) then begin
-					hostile := 1;
-					attack(dude_obj);
-				end
-			end
+	else if not(dude_is_animal_friend) then begin
+		if (self_can_see_dude or self_can_hear_dude) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe) * 1)) then begin
+			tmp_hostile := 1;
+			attack(dude_obj);
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (not(combat_is_initialized)) then begin
 		critter_tile := tile_num_in_direction(tile_num(self_obj), random(0, 5), 3);
 		reg_anim_func(2, self_obj);
@@ -173,17 +102,15 @@ begin
 	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_STEAL) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_GENCHAT, 211));
 		script_overrides;
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (has_trait(0, dude_obj, 0)) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_SSRADSCO, 102));
@@ -191,9 +118,8 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+procedure damage_p_proc begin
+	if obj_in_party(source_obj) then begin
+		tmp_hostile := 1;
 	end
 end

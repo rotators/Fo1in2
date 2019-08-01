@@ -1,22 +1,20 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure timed_event_p_proc;//    script_action == 22
-procedure damage_p_proc;//    script_action == 14
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure destroy_p_proc;//    script_action == 18
+procedure start;
+procedure critter_p_proc;
+procedure timed_event_p_proc;
+procedure damage_p_proc;
+procedure use_skill_on_p_proc;
+procedure destroy_p_proc;
 variable initial :=  0;
-variable hostile := 0;
+variable tmp_hostile := 0;
 
 // I think this is only used in "South5" for RndDesert encounters:
 //{144}{}{You have stumbled into a large gathering of mole rats.}
 // just wander around, instead of attacking player on sight. also don't have Flee_Player function.
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 13);
@@ -27,70 +25,40 @@ begin
 			debug_msg("INIT_MOLERAT2.SSL - please tell Sduibek when and where you saw this message. Thank you!");
 		end
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-			call timed_event_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-			else begin
-				if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-					call damage_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	rm_timer_event(self_obj);
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
-	else begin
-		if not(dude_is_animal_friend) then begin
-			if (obj_can_hear_obj(self_obj, dude_obj) > 0) or (obj_can_see_obj(self_obj, dude_obj) > 0) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe) * 2)) then begin
-				hostile := 1;
-				attack(dude_obj);
-			end
+	else if not(dude_is_animal_friend) then begin
+		if (self_can_see_dude or self_can_hear_dude) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (get_critter_stat(self_obj, STAT_pe) * 2)) then begin
+			tmp_hostile := 1;
+			attack(dude_obj);
 		end
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(self_obj), random(0, 5), random(1, 4)), 0);
 	add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if obj_in_party(source_obj) then begin
 		party_remove(self_obj);
-		critter_add_trait(self_obj, 1, 6, 8);/* TEAM_NUM */  
-		hostile := 1;
+		critter_add_trait(self_obj, 1, 6, 8);/* TEAM_NUM */
+		tmp_hostile := 1;
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
 		script_overrides;
 		display_msg(message_str(SCRIPT_GENCHAT, 211));

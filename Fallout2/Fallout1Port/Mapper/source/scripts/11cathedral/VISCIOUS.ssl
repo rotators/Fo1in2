@@ -48,64 +48,50 @@ procedure start begin
 		smoke_tile := 21299;
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT);
 		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_SUPER_MUTANT_SGT);
+
 		if (local_var(0) == 1) then begin
 			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
 			moving := 0;
 		end
-	end
-	else begin
-		if (local_var(0) != 1) then begin
-			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-						if (fixed_param == 1) then begin
-							moving := 1;
-						end
-					end
-					else begin
-						if (script_action == 4) then begin//<----caught stealing!	pickup_p_proc
-							tmp_hostile := 1;
-						end
-					end
-				end
-			end
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-					tmp_hostile := 0;
-					attack(dude_obj);
-				end
-				else begin
-					if (moving) then begin
-						call moveme;
-					end
-				end
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					script_overrides;
-					if (local_var(3)) then begin
-						display_msg(message_str(SCRIPT_MLOPS, 302));
-					end
-					else begin
-						display_msg(message_str(SCRIPT_MLOPS, 200));
-					end
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
+
 	end
 end
 
+procedure timed_event_p_proc begin
+	if (fixed_param == 1) then begin
+		moving := 1;
+	end
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+	if (local_var(0) != 1) then begin
+
+		if (tmp_hostile) then begin
+			tmp_hostile := 0;
+			attack(dude_obj);
+		end
+		else begin
+			if (moving) then begin
+				call moveme;
+			end
+		end
+
+	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if (local_var(3)) then begin
+		display_msg(message_str(SCRIPT_MLOPS, 302));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_MLOPS, 200));
+	end
+end
 
 procedure damage_p_proc begin
 	if (global_var(MUTANTS_ENEMY_UNSURE) == 0) then begin
@@ -154,8 +140,7 @@ procedure talk_p_proc begin
 	end_dialogue;
 end
 
-procedure moveme
-begin
+procedure moveme begin
 	my_hex := tile_num(self_obj);
 	if (my_hex == local_var(7)) then begin
 		set_local_var(3, 0);
