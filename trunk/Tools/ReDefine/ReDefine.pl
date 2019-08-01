@@ -407,7 +407,7 @@ sub ReadConfig
 {
 	my $content;
 
-	if( open( my $file, "<", "ReDefine.cfg" ))
+	if( open( my $file, "<", "ReDefine.pl.cfg" ))
 	{
 		local $/;
 		$content = <$file>;
@@ -415,7 +415,7 @@ sub ReadConfig
 	}
 	else
 	{
-		die( "Cannot open 'ReDefine.cfg'" );
+		die( "Cannot open 'ReDefine.pl.cfg'" );
 	}
 
 	my @lines = split( /\n/, $content );
