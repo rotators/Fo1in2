@@ -1,11 +1,24 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
+	Cathedral - Morpheus, leading robed guy
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MORPH
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure damage_p_proc;//    script_action == 14
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
+procedure damage_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
 
 procedure morphend;
 procedure morphcbt;
@@ -109,92 +122,82 @@ variable Signal_wait;
 variable deliver_player;
 variable Only_Once := 1;
 
+#define float(x,y)    						float_msg(self_obj, message_str(NAME, x), y)
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		if (cur_map_index == MAP_CHILDRN2) then begin //  CATHEDRAL - LEVEL 2 AND HIGHER
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 20);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_CATHEDRAL);
 		end
 		else begin
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 55);
+			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_MASTER_LAIR);
 		end
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 82);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_COC_MORPHEUS);
 	end
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		call talk_p_proc;
-	end
-	else begin
-		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-			script_overrides;
-			display_msg(message_str(SCRIPT_MORPH, 100));
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == 1) then begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			dialogue_system_enter;
 		end
 		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				if (fixed_param == 1) then begin
-					if (obj_can_see_obj(self_obj, dude_obj)) then begin
-						dialogue_system_enter;
-					end
-					else begin
-						Signal_wait := 0;
-					end
-				end
-				else begin
-					if ((fixed_param == 2) and not(combat_is_initialized)) then begin
-						if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-					end
-				end
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						set_local_var(5, 2);
-					end
-					else begin
-						if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-							call damage_p_proc;
-						end
-						else begin
-							if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 200) then begin
-									destroy_object(self_obj);
-								end
-								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 3) then begin
-									if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-								end
-								if (global_var(MORPHEUS_DELIVERS_PLAYER) == 1) then begin
-									set_global_var(MORPHEUS_DELIVERS_PLAYER, 2);
-									add_timer_event(Master_Ptr, game_ticks(5), 1);
-									add_timer_event(self_obj, game_ticks(5), 2);
-									dialogue_system_enter;
-								end
-								if (local_var(5) == 2) then begin
-									set_local_var(5, 1);
-									attack(dude_obj);
-								end
-								if (tile_num(self_obj) == 23457) then begin
-									if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-								end
-							end
-						end
-					end
-				end
-			end
+			Signal_wait := 0;
+		end
+	end
+	else if ((fixed_param == 2) and not(combat_is_initialized)) then begin
+		if not(is_loading_game) then begin
+			set_obj_visibility(self_obj, 1); //  MAKE INVISIBLE
 		end
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure pickup_p_proc begin
+	set_local_var(5, 2);
+end
+
+procedure critter_p_proc begin
+	if (global_var(MORPHEUS_DELIVERS_PLAYER) == 200) then begin
+		destroy_object(self_obj);
+	end
+
+	if (global_var(MORPHEUS_DELIVERS_PLAYER) == 3) then begin
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	end
+
+	if (global_var(MORPHEUS_DELIVERS_PLAYER) == 1) then begin
+		set_global_var(MORPHEUS_DELIVERS_PLAYER, 2);
+		add_timer_event(Master_Ptr, game_ticks(5), 1);
+		add_timer_event(self_obj, game_ticks(5), 2);
+		dialogue_system_enter;
+	end
+
+	if (local_var(5) == 2) then begin
+		set_local_var(5, 1);
+		attack(dude_obj);
+	end
+
+	if (tile_num(self_obj) == 23457) then begin
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+	end
+end
+
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	MALE := get_critter_stat(dude_obj, STAT_gender) == 0;
+
 	if (local_var(5) != 0) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENCHAT, 172), 2);
 		call morphcbt;
@@ -210,6 +213,7 @@ begin
 				call morph04a;
 			end
 			else begin
+
 				if (cur_map_index == MAP_CHILDRN1) then begin //  CATHEDRAL - OUTSIDE AND GROUND FLOOR
 					start_gdialog(53, self_obj, 4, 2, 8);
 					gsay_start;
@@ -229,22 +233,20 @@ begin
 						end_dialogue;
 					end
 				end
+
 			end
 		end
 	end
 end
 
-procedure morphend
-begin
+procedure morphend begin
 end
 
-procedure morphcbt
-begin
+procedure morphcbt begin
 	set_local_var(5, 2);
 end
 
-procedure morph02
-begin
+procedure morph02 begin
 	gsay_reply(53, 101);
 	giq_option(4, 53, 102, morph02_1, 50);
 	giq_option(5, 53, 103, morph02_3, 50);
@@ -253,15 +255,13 @@ begin
 	giq_option(-3, 53, 107, morph02a, 50);
 end
 
-procedure morph02a
-begin
+procedure morph02a begin
 	gsay_message(53, 108, 51);
 	call morphcbt;
 end
 
-procedure morph02_1
-begin
-	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
+procedure morph02_1 begin
+	if dude_wearing_coc_robe then begin
 		call morph02_2;
 	end
 	else begin
@@ -269,8 +269,7 @@ begin
 	end
 end
 
-procedure morph02_2
-begin
+procedure morph02_2 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call morph03;
 	end
@@ -279,8 +278,7 @@ begin
 	end
 end
 
-procedure morph02_3
-begin
+procedure morph02_3 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call morph07;
 	end
@@ -299,8 +297,7 @@ begin
 	giq_option(4, 53, 114, morph06, 50);
 end
 
-procedure morph03_1
-begin
+procedure morph03_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call morph04;
 	end
@@ -309,8 +306,7 @@ begin
 	end
 end
 
-procedure morph03_2
-begin
+procedure morph03_2 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call morph04;
 	end
@@ -325,9 +321,8 @@ begin
 	call morphx;
 end
 
-procedure morph04a
-begin
-	float_msg(self_obj, message_str(SCRIPT_MORPH, 116), 7);
+procedure morph04a begin
+	float(116,FLOAT_MSG_LIGHT_RED);
 	call morphcbt;
 end
 
@@ -353,8 +348,7 @@ begin
 	giq_option(6, 53, 125, morph07_1, 50);
 end
 
-procedure morph07_1
-begin
+procedure morph07_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call morph20;
 	end
@@ -388,8 +382,7 @@ begin
 	giq_option(4, 53, 138, morph10_1, 50);
 end
 
-procedure morph10_1
-begin
+procedure morph10_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		set_local_var(1, 2);
 		call morph13;
@@ -453,8 +446,7 @@ begin
 	giq_option(4, 53, 157, morph18_2, 50);
 end
 
-procedure morph18_1
-begin
+procedure morph18_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -5))) then begin
 		call morph19;
 	end
@@ -463,8 +455,7 @@ begin
 	end
 end
 
-procedure morph18_2
-begin
+procedure morph18_2 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -15))) then begin
 		call morph12;
 	end
@@ -526,8 +517,7 @@ begin
 	giq_option(4, 53, 181, morph27_1, 50);
 end
 
-procedure morph27_1
-begin
+procedure morph27_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call morph07;
 	end
@@ -573,15 +563,13 @@ begin
 	giq_option(4, 53, 197, morph38, 50);
 end
 
-procedure morph33
-begin
+procedure morph33 begin
 	gsay_reply(53, 198);
 	giq_option(4, 53, 199, morph34, 50);
 	giq_option(4, 53, 200, morph33_1, 50);
 end
 
-procedure morph33_1
-begin
+procedure morph33_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -5))) then begin
 		call morph35;
 	end
@@ -659,8 +647,7 @@ begin
 	giq_option(4, 53, 221, morph42a_1, 50);
 end
 
-procedure morph42a_1
-begin
+procedure morph42a_1 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call morph42b;
 	end
@@ -751,90 +738,74 @@ begin
 	gsay_message(53, 237, 50);
 end
 
-procedure morph59
-begin
+procedure morph59 begin
 	gsay_message(53, 238, 50);
 end
 
-procedure morph60
-begin
+procedure morph60 begin
 	gsay_message(53, 239, 50);
 end
 
-procedure morph61
-begin
+procedure morph61 begin
 	gsay_message(53, 240, 50);
 end
 
-procedure morph62
-begin
+procedure morph62 begin
 	gsay_message(53, 241, 50);
 end
 
-procedure morph63
-begin
+procedure morph63 begin
 	gsay_message(53, 242, 50);
 end
 
-procedure morph64
-begin
+procedure morph64 begin
 	gsay_message(53, 243, 50);
 end
 
-procedure morph65
-begin
+procedure morph65 begin
 	gsay_message(53, 244, 50);
 end
 
-procedure morphx
-begin
+procedure morphx begin
 	Signal_wait := 1;
 	add_timer_event(self_obj, game_ticks(15), 1);
 end
 
-procedure morphx2
-begin
+procedure morphx2 begin
 	deliver_player := 1;
 	set_global_var(MORPHEUS_DELIVERS_PLAYER, 100);
 	set_global_var(PREVENT_REVULSION_DAMAGE, 1);
-	load_map("mstrlr34.map", 12);
+	load_map("MAP_MSTRLR34", 12);
 end
 
-procedure morphx4
-begin
+procedure morphx4 begin
 end
 
-procedure morph66
-begin
-	float_msg(self_obj, message_str(SCRIPT_MORPH, 245), 2);
+procedure morph66 begin
+	float(245,FLOAT_MSG_RED);
 end
 
-procedure morph05a
-begin
+procedure morph05a begin
 	DownReact
 	call morph06;
 end
 
-procedure morph08a
-begin
+procedure morph08a begin
 	DownReact
 	call morph09;
 end
 
-procedure morph32a
-begin
+procedure morph32a begin
 	DownReact
 	call morph33;
 end
 
-procedure morph39a
-begin
+procedure morph39a begin
 	DownReact
 	call morph33;
 end
 
-procedure morph05b
-begin
+procedure morph05b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call morph07;
 	end
@@ -845,15 +816,13 @@ end
 
 
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 set_local_var(5, 1);
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	display_msg(message_str(SCRIPT_MORPH, 500));
-	give_exp_points(1000);
+	give_exp_points(EXP_KILLED_MORPHEUS);
 	set_global_var(MORPHEUS_DELIVERS_PLAYER, 200);
 	rm_timer_event(self_obj);
 
