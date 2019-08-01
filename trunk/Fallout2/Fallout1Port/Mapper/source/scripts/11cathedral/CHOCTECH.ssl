@@ -1,12 +1,25 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
+	Military Base - CoC technicians, VATS location.
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_CHOCTECH
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
 procedure combat;
 
 procedure ChocTech00;
@@ -33,50 +46,25 @@ variable said_stuff;
 variable explode;
 variable initial :=  0;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if not(initial) then begin
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 34);
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 69);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT);
+		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, AI_CHILDREN_TRUE);
 		initial :=  1;
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-			end
-		end
 	end
 end
 
-
-
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (explode) then begin
-			critter_dmg(self_obj, random(200, 250), 6);
+			critter_dmg(self_obj, random(200, 250), DMG_explosion);
 		end
 		else begin
 			if (obj_can_see_obj(self_obj, dude_obj)) then begin
-
 				if (dude_is_armed) then begin
 					if (not(said_stuff)) then begin
 						said_stuff := 1;
@@ -96,14 +84,12 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_CHOCTECH, 100));
+	display_msg(mstr(100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := critter_inven_obj(dude_obj, 0);
@@ -112,11 +98,7 @@ begin
 		LVar1 := obj_pid(LVar0);
 	end
 	if (global_var(MASTER_DEAD) == 1) then begin
-		start_gdialog(358, self_obj, 4, -1, -1);
-		gsay_start;
-		call ChocTech10;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(ChocTech10);
 	end
 	else begin
 		if (global_var(LIEUTENANTS_DEAD) == 1) then begin
@@ -124,11 +106,7 @@ begin
 		end
 		else begin
 //			if (Team9_Count > 0) or (LVar1 == 113) then begin
-				start_gdialog(358, self_obj, 4, -1, -1);
-				gsay_start;
-				call ChocTech02;
-				gsay_end;
-				end_dialogue;
+				start_dialog_at_node(ChocTech02);
 //			end
 //			else begin
 //				call ChocTech01;
@@ -137,38 +115,21 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 	set_global_var(VATS_ALERT, 1);
 end
 
-procedure combat
-begin
+procedure combat begin
 	BottomReact
 	tmp_hostile := 1;
 end
 
-procedure ChocTech00
-begin
+procedure ChocTech00 begin
 	float_msg(self_obj, message_str(SCRIPT_CHOCTECH, random(101, 104)), 0);
 end
 
-procedure ChocTech01
-begin
+procedure ChocTech01 begin
 	variable LVar0;
 	LVar0 := random(0, 3);
 	if not(LVar0) then begin
@@ -179,8 +140,7 @@ begin
 	end
 end
 
-procedure ChocTech02
-begin
+procedure ChocTech02 begin
 	gsay_reply(358, 108);
 	giq_option(-3, 358, 109, ChocTech03, 50);
 	giq_option(4, 358, 110, ChocTech04, 50);
@@ -188,8 +148,7 @@ begin
 	giq_option(6, 358, 112, ChocTech02a, 50);
 end
 
-procedure ChocTech02a
-begin
+procedure ChocTech02a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call ChocTech06;
 	end
@@ -198,31 +157,26 @@ begin
 	end
 end
 
-procedure ChocTech03
-begin
+procedure ChocTech03 begin
 	gsay_message(358, 113, 50);
 end
 
-procedure ChocTech04
-begin
+procedure ChocTech04 begin
 	gsay_message(358, 114, 50);
 end
 
-procedure ChocTech05
-begin
+procedure ChocTech05 begin
 	gsay_message(358, 115, 50);
 	call combat;
 end
 
-procedure ChocTech06
-begin
+procedure ChocTech06 begin
 	gsay_reply(358, 116);
 	giq_option(5, 358, 117, combat, 51);
 	giq_option(6, 358, 118, ChocTech06a, 50);
 end
 
-procedure ChocTech06a
-begin
+procedure ChocTech06a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call ChocTech07;
 	end
@@ -231,42 +185,36 @@ begin
 	end
 end
 
-procedure ChocTech07
-begin
+procedure ChocTech07 begin
 	gsay_reply(358, 119);
 	giq_option(6, 358, 120, ChocTechend, 50);
 	giq_option(6, 358, 121, ChocTech08, 50);
 	giq_option(6, 358, 122, ChocTech05, 50);
 end
 
-procedure ChocTech08
-begin
+procedure ChocTech08 begin
 	gsay_reply(358, 123);
 	giq_option(6, 358, 124, ChocTech05, 50);
 end
 
-procedure ChocTech09
-begin
+procedure ChocTech09 begin
 	float_msg(self_obj, message_str(SCRIPT_CHOCTECH, 125), 0);
 	explode := 1;
 end
 
-procedure ChocTech10
-begin
+procedure ChocTech10 begin
 	gsay_reply(358, 126);
 	giq_option(-3, 358, 127, ChocTech11, 50);
 	giq_option(4, 358, 128, ChocTech11, 50);
 	giq_option(4, 358, 129, combat, 51);
 end
 
-procedure ChocTech11
-begin
+procedure ChocTech11 begin
 	gsay_message(358, 130, 50);
 	explode := 1;
 end
 
-procedure ChocTechend
-begin
+procedure ChocTechend begin
 end
 
 
