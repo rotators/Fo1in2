@@ -132,7 +132,7 @@ ReDefine::SStatus::SProcess::SProcess()
 
 void ReDefine::SStatus::SProcess::Clear()
 {
-    Files = FilesChanged = Lines = LinesChanged = 0;
+    Files = FilesChanges = Lines = LinesChanges = 0;
 }
 
 //
@@ -169,6 +169,7 @@ void ReDefine::Init()
 
     // extern initialization
     InitOperators();
+    InitScript();
 }
 
 void ReDefine::Finish()
@@ -186,6 +187,7 @@ void ReDefine::Finish()
     FinishFunctions();
     FinishOperators();
     FinishRaw();
+    FinishScript();
     FinishVariables();
 }
 
@@ -228,6 +230,10 @@ bool ReDefine::ReadFile( const std::string& filename, std::vector<std::string>& 
 {
     lines.clear();
 
+    // don't waste time on empty files
+    if( std_filesystem::file_size( filename ) == 0 )
+        return true;
+
     std::ifstream fstream;
     fstream.open( filename, std::ios_base::in | std::ios_base::binary );
 
@@ -257,7 +263,7 @@ bool ReDefine::ReadFile( const std::string& filename, std::vector<std::string>& 
     return result;
 }
 
-bool ReDefine::ReadConfig( const std::string& defines, const std::string& variablePrefix, const std::string& functionPrefix, const std::string& raw )
+bool ReDefine::ReadConfig( const std::string& defines, const std::string& variablePrefix, const std::string& functionPrefix, const std::string& raw, const std::string& script )
 {
     if( !defines.empty() && !ReadConfigDefines( defines ) )
         return false;
@@ -269,6 +275,9 @@ bool ReDefine::ReadConfig( const std::string& defines, const std::string& variab
         return false;
 
     if( !raw.empty() && !ReadConfigRaw( raw ) )
+        return false;
+
+    if( !script.empty() && !ReadConfigScript( script ) )
         return false;
 
     return true;
@@ -285,13 +294,16 @@ void ReDefine::ProcessHeaders( const std::string& path )
         ProcessHeader( path, header );
     }
 
+    // won't need that until next ReadConfig()/ReadConfigDefines() call
+    Headers.clear();
+
     // restore program defines
     // if type has been added by header, put it in RegularDefines (possibly overriding header value),
     // otherwise, use ProgramDefines
     for( const auto& itProg : programDefines )
     {
         auto itRegular = RegularDefines.find( itProg.first );
-        bool is = itRegular != RegularDefines.end();
+        bool is = IsRegularDefineType( itProg.first );
 
         for( const auto& itVal : itProg.second )
         {
@@ -334,6 +346,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
         }
     }
 
+    // TODO validate
     if( VariablesGuessing.size() )
         LOG( "Added variable guessing ... %s", TextGetJoined( VariablesGuessing, ", " ).c_str() );
 
@@ -388,6 +401,18 @@ void ReDefine::ProcessHeaders( const std::string& path )
     for( const auto& from : Raw )
     {
         LOG( "Added raw ... %s", from.first.c_str() );
+    }
+
+    // log script editing
+
+    for( const ScriptEdit& before : EditBefore )
+    {
+        LOG( "Added preprocess action ... %s", before.Name.c_str() );
+    }
+
+    for( const ScriptEdit& after : EditAfter )
+    {
+        LOG( "Added postprocess action ... %s", after.Name.c_str() );
     }
 }
 

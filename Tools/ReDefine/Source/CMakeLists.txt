@@ -41,6 +41,8 @@ if( MSVC )
 
 	set_property( TARGET ReDefine APPEND_STRING PROPERTY LINK_FLAGS "/OPT:REF " )
 else()
+	set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
 	include( CheckCXXCompilerFlag )
 	check_cxx_compiler_flag( -Wall   COMPILER_FLAG_WALL )
 	check_cxx_compiler_flag( -Werror COMPILER_FLAG__WERROR )
@@ -80,7 +82,7 @@ function( lib_filesystem target )
 		target_compile_definitions( ${target} PRIVATE HAVE_EXPERIMENTAL_FILESYSTEM )
 		target_link_libraries( ${target} stdc++fs )
 	else()
-		message( FATAL_ERROR "Cannot find std::filesystem" )
+		message( FATAL_ERROR "Cannot find std::filesystem (neither standard or experimental)" )
 		#set_target_properties( ${target} PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1 )
 	endif()
 

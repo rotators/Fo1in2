@@ -1,6 +1,7 @@
 #ifndef __REDEFINE__
 #define __REDEFINE__    // :)
 
+#include <functional>
 #include <map>
 #include <regex>
 #include <string>
@@ -13,12 +14,14 @@ class ReDefine
 {
 public:
 
-    typedef std::map<std::string, std::map<int, std::string>>          DefinesMap;
-    typedef std::map<std::string, std::map<std::string, std::string>>  GenericOperatorsMap;
-    typedef std::map<std::string, std::vector<std::string>>            StringVectorMap;
-    typedef std::map<std::string, std::map<std::string, unsigned int>> UnknownMap;
-
     struct ScriptCode;
+
+    typedef std::map<std::string, std::map<int, std::string>>                                                    DefinesMap;
+    typedef std::map<std::string, std::map<std::string, std::string>>                                            GenericOperatorsMap;
+    typedef std::function<bool (ReDefine* self, const std::vector<std::string>& values, const ScriptCode& code)> ScriptEditIf;
+    typedef std::function<void (ReDefine* self, const std::string& value, ScriptCode& code)>                     ScriptEditDo;
+    typedef std::map<std::string, std::vector<std::string>>                                                      StringVectorMap;
+    typedef std::map<std::string, std::map<std::string, unsigned int>>                                           UnknownMap;
 
     //
     // ReDefine
@@ -42,10 +45,16 @@ public:
 
         struct SProcess
         {
+            // total number of files/lines processed
+
             unsigned int Files;
-            unsigned int FilesChanged;
             unsigned int Lines;
-            unsigned int LinesChanged;
+
+            // total number of files/lines changes or (if running in read-only mode) change candidates
+
+            unsigned int FilesChanges;
+            unsigned int LinesChanges;
+
             UnknownMap   Unknown; // <type, <value,count>>
 
             SProcess();
@@ -70,7 +79,7 @@ public:
     void ILOG( const char* format, ... );
 
     bool ReadFile( const std::string& filename, std::vector<std::string>& lines );
-    bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix, const std::string& raw );
+    bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix, const std::string& raw, const std::string& script );
 
     void ProcessHeaders( const std::string& path );
     void ProcessScripts( const std::string& path, const bool readOnly = false );
@@ -89,9 +98,11 @@ public:
         Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& group );
     };
 
+    // holds [Defines] between reading configuration step and processing headers
     std::vector<Header> Headers;
-    DefinesMap          RegularDefines; // <type, <value, define>>
-    DefinesMap          ProgramDefines; // <type, <value, define>>
+
+    DefinesMap          RegularDefines; // <type, <value, name>>
+    DefinesMap          ProgramDefines; // <type, <value, names>>
     StringVectorMap     VirtualDefines; // <virtual_type, <types>>
 
     void FinishDefines();
@@ -100,7 +111,7 @@ public:
 
     bool IsDefineType( const std::string& type );
     bool IsRegularDefineType( const std::string& type );
-    bool GetDefineName( const std::string& type, const int value, std::string& result, bool skipVirtual = false );
+    bool GetDefineName( const std::string& type, const int value, std::string& result, const bool skipVirtual = false );
 
     bool ProcessHeader( const std::string& path, const Header& header );
     bool ProcessValue( const std::string& type, std::string& value, const bool silent = false );
@@ -148,7 +159,7 @@ public:
     void ProcessRaw( std::string& line );
 
     //
-    // Script.cpp
+    // Script
     //
 
     struct ScriptCode
@@ -164,23 +175,62 @@ public:
         ScriptCode();
     };
 
+    struct ScriptEdit
+    {
+        struct Condition
+        {
+            std::string              Name;
+            std::vector<std::string> Values;
+        };
+
+        struct Result
+        {
+            std::string Name;
+            std::string Value;
+        };
+
+        std::string            Name;
+
+        bool                   Before;
+        bool                   After;
+
+        std::vector<Condition> Conditions;
+        std::vector<Result>    Results;
+
+        ScriptEdit();
+    };
+
+
+    std::map<std::string, ScriptEditIf> EditIf;
+    std::map<std::string, ScriptEditDo> EditDo;
+    std::vector<ScriptEdit>             EditBefore;
+    std::vector<ScriptEdit>             EditAfter;
+
+    void InitScript();
+    void FinishScript( bool finishCallbacks = true );
+
+    bool ReadConfigScript( const std::string& sectionPrefix );
+
     std::string GetFullString( const ScriptCode& code );
     void        SetFullString( ScriptCode& code );
 
     void ProcessScript( const std::string& path, const std::string& filename, const bool readOnly = false );
+    void ProcessScriptEdit( const std::vector<ScriptEdit>& edits, ScriptCode& code );
 
     //
     // Text
     //
 
-    bool        TextIsComment( const std::string& text );
-    bool        TextIsInt( const std::string& text );
-    std::string TextGetFilename( const std::string& path, const std::string& filename );
-    bool        TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
-    std::string TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter );
-    std::string TextGetLower( const std::string& text );
-    std::string TextGetPacked( const std::string& text );
-    std::string TextGetReplaced( const std::string& text, const std::string& from, const std::string& to );
+    bool                     TextIsComment( const std::string& text );
+    bool                     TextIsInt( const std::string& text );
+    std::string              TextGetFilename( const std::string& path, const std::string& filename );
+    bool                     TextGetInt( const std::string& text, int& result, const unsigned char& base = 10 );
+    std::string              TextGetJoined( const std::vector<std::string>& text, const std::string& delimeter );
+    std::string              TextGetLower( const std::string& text );
+    std::string              TextGetPacked( const std::string& text );
+    std::string              TextGetReplaced( const std::string& text, const std::string& from, const std::string& to );
+    std::vector<std::string> TextGetSplitted( const std::string& text, const char& separator );
+
     std::string TextGetTrimmed( const std::string& text );
 
     bool       TextIsDefine( const std::string& text );

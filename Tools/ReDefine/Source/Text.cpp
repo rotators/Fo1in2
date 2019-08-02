@@ -1,8 +1,6 @@
 #include <climits>
 #include <cerrno>
 #include <cstdlib>
-#include <functional>
-#include <regex>
 
 #if defined (HAVE_FILESYSTEM)
 # include <filesystem>
@@ -127,6 +125,26 @@ std::string ReDefine::TextGetReplaced( const std::string& text, const std::strin
     }
 
     result.append( textCurrent, next );
+
+    return result;
+}
+
+std::vector<std::string> ReDefine::TextGetSplitted( const std::string& text, const char& separator )
+{
+    std::vector<std::string> result;
+
+    if( !text.empty() )
+    {
+        std::string        tmp;
+        std::istringstream f( text );
+        while( std::getline( f, tmp, separator ) )
+        {
+            if( separator != ' ' )
+                tmp = TextGetTrimmed( tmp );
+
+            result.push_back( tmp );
+        }
+    }
 
     return result;
 }
@@ -302,7 +320,9 @@ std::vector<ReDefine::ScriptCode> ReDefine::TextGetFunctions( const std::string&
                     balance++;
                 else if( ch == ')' )
                 {
-                    // this will extract pieces like f(arg) + f2(
+                    // this will extract pieces like 'f1(arg) + f2(arg) + f3(arg)' as 'f1(arg) + f2(arg)', ignoring 'f3()' part and anything after
+                    // which is fine, i guess, as we can't do anything with code like 'x != 2 + random(2,4) + 2' anyway
+                    // script edits checking OperatorArgument should be fine too, as they're not allowed to use spaces :>
                     if( --balance <= 0 )
                     {
                         full = text.substr( funcStart, funcLen + (balance + 1) );
