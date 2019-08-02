@@ -11,6 +11,8 @@
     Generic Defines
 ************************************************/
 
+#define car_smitty_hex 		(18491)
+
 //MAP_GLOBAL_VARS:
 
 //GLOBAL                                        NUMBER
@@ -23,7 +25,7 @@
 #define MVAR_RegulatorCount         (1) // Number of Regulators on the map.
 #define MVAR_AddedBlades            (2) // Have the blades been added to the map.
 #define MVAR_InvasionForcesCreated  (3) // Have the invasion forces been created?
-
+#define MVAR_UpgradeMotorcycle 		(4)
 
 #endif // MAPLAADYTUM_H
 
