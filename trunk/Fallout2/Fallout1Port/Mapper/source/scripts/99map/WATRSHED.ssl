@@ -2,6 +2,11 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
+procedure map_lightning;
+procedure set_critter_state;
 
 variable party_elevation;
 variable dude_start_hex;
@@ -20,109 +25,108 @@ export variable Use_Manhole_Top;
 export variable Use_Manhole_Bottom;
 export variable Use_Manhole_Middle;
 
-procedure Invasion;
+procedure start begin
+end
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		if (elevation(dude_obj) == 0) then begin
-			Darkness;
+procedure map_enter_p_proc begin
+	set_global_var(MARK_NECROP_3, 1);
+
+   if (map_first_run) then begin
+	   // Add motorcycle
+	   if not(fo1in2_motorcycle_disabled) then begin
+			Create_Moto1(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV)
 		end
-		else begin
-			Lighting;
-		end
-		if (global_var(HUB_FILLER_30)) then begin
-			override_map_start(57, 62, 1, 0);
-		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 1) then begin
-				//override_map_start(110, 70, 1, 5);
-				override_map_start(134, 54, 1, 5);
-			end
-			else begin
-				if (global_var(LOAD_MAP_INDEX) == 12) then begin
-					override_map_start(53, 98, 0, 5);
-				end
-				else begin
-					//override_map_start(110, 70, 1, 5);
-					override_map_start(134, 54, 1, 5);
-					//override_map_start_hex(10934,1,5); // is pretty much exactly the same????
-				end
-			end
-		end
-		set_global_var(MARK_NECROP_3, 1);
-		if (map_var(7) == 2) then begin
-			kill_critter_type(PID_SUPER_MUTANT, 0);
-			kill_critter_type(PID_HARRY, 0);
-		end
-		if (global_var(NECROP_MUTANTS_KILLED) == 2) then begin
-			if global_var(NECRO_30_DAYS_GVAR225) or global_var(FIXT_BUGFIXES_ONLY) then begin
-				if (((game_time / (10 * 60 * 60 * 24)) - global_var(NECRO_MUTANTS_TIME_LEFT)) > 1) then begin
-					kill_critter_type(PID_PEASANT_ROBE, 0);
-				end
-			end
-		end
-		//call Invasion;
-		if ((global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1) and not(is_loading_game) and (map_var(10) == 0)) then begin
-			set_map_var(10, 1);
-			kill_critter_type(PID_GARRET, 0);
-			kill_critter_type(PID_MINDLESS_GHOUL, 1);
-			kill_critter_type(PID_GHOUL, 1);
-			kill_critter_type(PID_ZOMBIE_GUARD, 1);
-			kill_critter_type(PID_GLOWING_ONE, 1);
-			fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(fugee_ptr, 1, 5, 48);
-			fugee_hex := 16501;
-			critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-			fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(fugee_ptr, 1, 5, 48);
-			fugee_hex := 15696;
-			critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-			fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(fugee_ptr, 1, 5, 48);
-			fugee_hex := 16696;
-			critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-		end
-		if (global_var(GARRET_STATUS) == 3) then begin
-			kill_critter_type(PID_GARRET, 0);
-		end
-		if (global_var(NECROP_WATER_CHIP_TAKEN) == 1) then begin
-			if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
-				if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
-					kill_critter_type(PID_GARRET, 0);
-					kill_critter_type(PID_MINDLESS_GHOUL, 2);
-					kill_critter_type(PID_GHOUL, 2);
-					kill_critter_type(PID_ZOMBIE_GUARD, 2);
-					kill_critter_type(PID_GLOWING_ONE, 2);
-					kill_critter_type(PID_SUPER_MUTANT, 0);
-					kill_critter_type(PID_HARRY, 0);
-				end
-			end
-		end
-		//call add_party;
+	end
+
+	if (global_var(HUB_FILLER_30)) then begin
+		override_map_start(57, 62, 1, 0);
 	end
 	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			if (elevation(dude_obj) == 0) then begin
-				Darkness;
+		if (global_var(LOAD_MAP_INDEX) == 1) then
+			override_map_start(134, 54, 1, 5);
+		else if (global_var(LOAD_MAP_INDEX) == 12) then
+			override_map_start(53, 98, 0, 5);
+		else
+			override_map_start(134, 54, 1, 5);
+			//override_map_start_hex(10934,1,5); // is pretty much exactly the same????
+	end
+
+	if (map_var(7) == 2) then begin
+		kill_critter_type(PID_SUPER_MUTANT, 0);
+		kill_critter_type(PID_HARRY, 0);
+	end
+	if (global_var(NECROP_MUTANTS_KILLED) == 2) then begin
+		if global_var(NECRO_30_DAYS_GVAR225) or global_var(FIXT_BUGFIXES_ONLY) then begin
+			if (((game_time / (10 * 60 * 60 * 24)) - global_var(NECRO_MUTANTS_TIME_LEFT)) > 1) then begin
+				kill_critter_type(PID_PEASANT_ROBE, 0);
 			end
-			else begin
-				Lighting;
-			end
-			if (Use_Manhole_Top) then begin
-				animate_stand_reverse_obj(Manhole_Pointer_Top);
-			end
-			if (Use_Manhole_Middle) then begin
-				animate_stand_reverse_obj(Manhole_Pointer_Middle);
-			end
-			if (Use_Manhole_Bottom) then begin
-				animate_stand_reverse_obj(Manhole_Pointer_Bottom);
+		end
+	end
+
+	call set_critter_state;
+	call map_lightning;
+end
+
+procedure map_update_p_proc begin
+	call map_lightning;
+
+	if (Use_Manhole_Top) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Top);
+	end
+	if (Use_Manhole_Middle) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Middle);
+	end
+	if (Use_Manhole_Bottom) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Bottom);
+	end
+end
+
+procedure map_lightning begin
+	if (elevation(dude_obj) == 0) then
+		Darkness;
+	else
+		Lighting;
+end
+
+procedure set_critter_state begin
+	if ((global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1) and not(is_loading_game) and (map_var(10) == 0)) then begin
+		set_map_var(10, 1);
+		kill_critter_type(PID_GARRET, 0);
+		kill_critter_type(PID_MINDLESS_GHOUL, 1);
+		kill_critter_type(PID_GHOUL, 1);
+		kill_critter_type(PID_ZOMBIE_GUARD, 1);
+		kill_critter_type(PID_GLOWING_ONE, 1);
+		fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(fugee_ptr, 1, 5, 48);
+		fugee_hex := 16501;
+		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
+		fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(fugee_ptr, 1, 5, 48);
+		fugee_hex := 15696;
+		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
+		fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(fugee_ptr, 1, 5, 48);
+		fugee_hex := 16696;
+		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
+	end
+
+	// Is the prisoner still around?
+	if (global_var(GARRET_STATUS) == 3) then begin
+		kill_critter_type(PID_GARRET, 0);
+	end
+
+	// Also kill everyone in the vault
+	if (global_var(NECROP_WATER_CHIP_TAKEN) == 1) then begin
+		if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
+			if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
+				kill_critter_type(PID_GARRET, 0);
+				kill_critter_type(PID_MINDLESS_GHOUL, 2);
+				kill_critter_type(PID_GHOUL, 2);
+				kill_critter_type(PID_ZOMBIE_GUARD, 2);
+				kill_critter_type(PID_GLOWING_ONE, 2);
+				kill_critter_type(PID_SUPER_MUTANT, 0);
+				kill_critter_type(PID_HARRY, 0);
 			end
 		end
 	end
 end
-
-procedure Invasion begin
-	//check_invasion
-end
-

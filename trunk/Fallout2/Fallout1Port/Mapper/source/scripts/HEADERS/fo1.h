@@ -89,12 +89,21 @@
 									(cur_map_index == MAP_MNTCRVN4)
 									
 #define dude_wearing_coc_robe	    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
-											
+
+#define obj_invisible(x)			set_obj_visibility(x,1)
+#define obj_visible(x)				set_obj_visibility(x,0)
+#define set_self_obj_invisible		obj_invisible(self_obj)
+#define set_self_obj_visible		obj_visible(self_obj)
+#define is_visible(x)				(obj_is_visible_flag(x))
+#define is_self_visible				(obj_is_visible_flag(self_obj))
+#define is_map(x)					(cur_map_index == x)
+							
 //==============================================================
 // Settings:
 #define fo1in2_fluff_enc_disabled 		(global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0)
 #define fo1in2_armor_change_disabled 	(global_var(GVAR_ALLOW_PARTY_ARMOR_CHANGE) == 0)
 #define fo1in2_auto_doors_closing 		(global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
+#define fo1in2_motorcycle_disabled 		(global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
 
 //==============================================================
 // Pick dead body type:

@@ -2763,8 +2763,6 @@
 {184900}{}{Computer Console}
 {185000}{}{Viewport Shutters}
 {185100}{}{Steam}
-{185100}{}{Vats}
-{185101}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
 {185200}{}{Vats}
 {185201}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
 {185300}{}{Vats}
@@ -2779,3 +2777,11 @@
 {185701}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
 {185800}{}{Vats}
 {185801}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{185900}{}{Vats}
+{185901}{}{A complex of some sort. You are not sure, but you can see large vats of a greenish goo that looks vaguely important.}
+{186000}{}{Motorcycle}
+{186001}{}{This Chrysalis Motors Cruiser looks to be in pretty good shape for its age.}
+{186100}{}{Motorcycle}
+{186101}{}{This Chrysalis Motors Cruiser looks to be in pretty good shape for its age.}
+{186200}{}{Sidecar}
+{186201}{}{An old motorcycle sidecar. It appears to be in a good shape.}

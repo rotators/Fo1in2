@@ -34,6 +34,16 @@
 											end \
 										end
 
+// Motorcycle related:
+// flags & bits
+/*#define set_den_flag_on(x,n)                       set_gvar_bit_on(GVAR_DEN_FLAG_##n, x)
+#define set_den_flag_off(x,n)                      set_gvar_bit_off(GVAR_DEN_FLAG_##n, x)
+#define get_den_flag(x,n)                          gvar_bit(GVAR_DEN_FLAG_##n, x)
+
+#define took_car_off_den_bus_1_bit                 bit_16
+#define took_car_off_den_bus_1                     get_den_flag(took_car_off_den_bus_1_bit, 3)
+#define set_took_car_off_den_bus_1                 set_den_flag_on(took_car_off_den_bus_1_bit, 3)*/
+
 //MAP_GLOBAL_VARS:
 
 //GLOBAL                                        NUMBER
