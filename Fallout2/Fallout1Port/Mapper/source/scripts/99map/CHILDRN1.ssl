@@ -28,7 +28,7 @@ end
 procedure map_enter_p_proc begin
 
 	// Failsafe in case the wrong map loads after cutscene:
-	if (global_var(MASTER_BLOWN_CUTSCENE) > 0) then
+	if cathedral_destroyed then
 		load_map(MAP_CHILDEAD, 0);
 
 	Lighting;
@@ -65,7 +65,7 @@ end
 
 procedure map_update_p_proc begin
 	// Failsafe in case the wrong map loads after cutscene:
-	if (global_var(MASTER_BLOWN_CUTSCENE) > 0) then
+	if cathedral_destroyed then
 		load_map(MAP_CHILDEAD, 0);
 
 	Lighting;
@@ -76,7 +76,7 @@ end
 
 procedure map_exit_p_proc begin
 	// The Master has been defeated:
-	if (global_var(MASTER_BLOWN) == 1) and (global_var(MASTER_BLOWN_CUTSCENE) == 0) then begin
+	if (global_var(MASTER_BLOWN) == 1) and not(cathedral_destroyed) then begin
 		set_world_map_pos(772,995); // Cathedral
 
 		set_global_var(MASTER_BLOWN_CUTSCENE, 1);
@@ -92,6 +92,11 @@ procedure map_exit_p_proc begin
 		mark_map_entrance_state(MAP_CHILDEAD,1);
 
 		play_gmovie(CATHEXPLODE_MOVIE);
+
+		if get_car_in_cur_map then begin
+			set_car_worldmap;
+			car_give_to_party;
+		end
 
 		if (global_var(VATS_BLOWN)) then begin
 			force_encounter(MAP_V13ENT);
