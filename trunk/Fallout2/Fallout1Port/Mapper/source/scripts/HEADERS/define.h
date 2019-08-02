@@ -333,7 +333,7 @@
 #define TRAIT_good_natured    (10)
 #define TRAIT_drug_addict     (11)
 #define TRAIT_drug_resistant  (12)
-#define TRAIT_sex_appeal      (13) // Deprecated Fo2 stuff
+//#define TRAIT_sex_appeal      (13) // Deprecated Fo2 stuff
 #define TRAIT_night_person    (13)
 #define TRAIT_skilled         (14)
 #define TRAIT_bruiser         (15)
