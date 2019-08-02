@@ -24,7 +24,7 @@ end
 
 procedure map_enter_p_proc begin
 	// Failsafe in case the wrong map loads after cutscene:
-	if (global_var(VATS_BLOWN_CUTSCENE_DONE) > 0) then
+	if military_base_destoryed then
 		load_map(MAP_MBDEAD, 0);
 
 	Lighting;
@@ -53,7 +53,7 @@ end
 
 procedure map_update_p_proc begin
 	// Failsafe in case the wrong map loads after cutscene:
-	if (global_var(VATS_BLOWN_CUTSCENE_DONE) > 0) then
+	if military_base_destoryed then
 		load_map(MAP_MBDEAD, 0);
 
 	Lighting;
@@ -65,7 +65,7 @@ end
 
 procedure map_exit_p_proc begin
 	// The Vats have been destroyed
-	if (global_var(VATS_BLOWN) == 1) and (global_var(VATS_BLOWN_CUTSCENE_DONE) == 0) then begin
+	if (global_var(VATS_BLOWN) == 1) and not(military_base_destoryed) then begin
 		set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
 		set_end_Vats;
 
@@ -80,6 +80,11 @@ procedure map_exit_p_proc begin
 		mark_map_entrance_state(MAP_MBDEAD,1);
 
 		play_gmovie(VATSEXPLODE_MOVIE);
+
+		if get_car_in_cur_map then begin
+			set_car_worldmap;
+			car_give_to_party;
+		end
 
 		if (global_var(MASTER_BLOWN)) then begin
 			force_encounter(MAP_V13ENT);

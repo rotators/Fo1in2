@@ -97,6 +97,10 @@
 #define is_visible(x)				(obj_is_visible_flag(x))
 #define is_self_visible				(obj_is_visible_flag(self_obj))
 #define is_map(x)					(cur_map_index == x)
+
+#define dude_has_car 				global_var(GVAR_PLAYER_GOT_CAR) != 0
+
+ 				
 							
 //==============================================================
 // Settings:
