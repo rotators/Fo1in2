@@ -2,9 +2,12 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure map_exit_p_proc;//    script_action == 16
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
+
+procedure map_lightning;
+procedure Invasion;
 
 export variable Uthern_ptr;
 export variable Orfeo_ptr;
@@ -21,13 +24,8 @@ end
 
 procedure map_enter_p_proc begin
 	set_global_var(MARK_LA_2, 1);
-	Lighting;
+	call map_lightning;
 
-//	if (metarule(14, 0)) then begin
-//		variable Critter := 0;
-//		Critter := create_object_sid(16777220, 0, 0, 271);// new Followers go here
-//		critter_attempt_placement(Critter, 22482, 0);
-//	end
 	if ((map_first_run) and (global_var(GVAR_FOLLOWERS_INVADED) != 1)) then begin
 		display_msg(message_str(SCRIPT_SHADYWST, 114));
 	end
@@ -39,6 +37,56 @@ procedure map_enter_p_proc begin
 			display_msg(message_str(SCRIPT_SHADYWST, 117));
 		end
 	end
+
+	call Invasion;
+
+	if (obj_is_carrying_obj_pid(dude_obj, PID_BRIEFCASE) != 0) then begin
+		dude_carrying_bomb := 1;
+	end
+	/*if (global_var(LOAD_MAP_INDEX) == 10) then begin
+		override_map_start(11917 % 200, 11917 / 200, 0, 5);
+	end
+	else begin
+		if (global_var(LOAD_MAP_INDEX) == 11) then begin
+			override_map_start(18890 % 200, 18890 / 200, 0, 5);
+		end
+		else begin
+			override_map_start(82, 114, 0, 5);
+		end
+	end*/
+
+	if get_car_from_worldmap then begin
+		override_map_start_hex(18121,0,1);
+	end
+	else begin
+		override_map_start_hex(23680,0,5);
+	end
+end
+
+procedure map_update_p_proc begin
+	call map_lightning;
+	if (removal_ptr) then begin
+		destroy_object(removal_ptr);
+		removal_ptr := 0;
+	end
+end
+
+procedure map_exit_p_proc begin
+	if (dude_carrying_bomb == 1) then begin
+		if (obj_is_carrying_obj_pid(dude_obj, PID_BRIEFCASE) == 0) then begin
+			set_global_var(QUEST_BONEYARD_3_BOMBFOLL, 2);
+		end
+	end
+end
+
+procedure map_lightning begin
+	if (elevation(dude_obj) == 1) then
+		Darkness;
+	else
+		Lighting;
+end
+
+procedure Invasion begin
 	if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and not(is_loading_game) and (map_var(2) == 0)) then begin
 		set_map_var(2, 1);
 		kill_critter_type(PID_THUG_BLACK_METAL, 0);
@@ -112,35 +160,6 @@ procedure map_enter_p_proc begin
 		invaderPtr := create_object_sid(PID_MASTERS_PET_MAN, 0, 0, SCRIPT_CHDGUARD);
 		critter_attempt_placement(invaderPtr, 15867, 0);
 	end
-
-	if (obj_is_carrying_obj_pid(dude_obj, PID_BRIEFCASE) != 0) then begin
-		dude_carrying_bomb := 1;
-	end
-	if (global_var(LOAD_MAP_INDEX) == 10) then begin
-		override_map_start(11917 % 200, 11917 / 200, 0, 5);
-	end
-	else begin
-		if (global_var(LOAD_MAP_INDEX) == 11) then begin
-			override_map_start(18890 % 200, 18890 / 200, 0, 5);
-		end
-		else begin
-			override_map_start(82, 114, 0, 5);
-		end
-	end
 end
 
-procedure map_update_p_proc begin
-	Lighting;
-	if (removal_ptr) then begin
-		destroy_object(removal_ptr);
-		removal_ptr := 0;
-	end
-end
 
-procedure map_exit_p_proc begin
-	if (dude_carrying_bomb == 1) then begin
-		if (obj_is_carrying_obj_pid(dude_obj, PID_BRIEFCASE) == 0) then begin
-			set_global_var(QUEST_BONEYARD_3_BOMBFOLL, 2);
-		end
-	end
-end
