@@ -6,22 +6,25 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-#include "..\headers\MAPNECRO.h"
+#include "..\headers\MAPLAADYTUM.h"
 
 #define NAME                    SCRIPT_SMITTY
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
+#include "..\headers\updatmap.h"
 
 /* Standard Script Procedures */
 procedure start;
 procedure look_at_p_proc;
 procedure description_p_proc;
+procedure timed_event_p_proc;
 procedure talk_p_proc;
 procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure pickup_p_proc;
+
 procedure Smitty01;
 procedure Smitty02;
 procedure Smitty03;
@@ -37,12 +40,23 @@ procedure Smitty12;
 procedure Smitty14;
 procedure Smitty14a;
 procedure Smitty15;
-procedure SmittyEnd;
+procedure Node999;
+
+procedure Node1000;
+procedure Node1100;
+procedure Node1200;
+procedure Node1300;
+procedure Node1400;
+procedure Node1500;
 
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
 #define LVAR_UpgradePlasmaRifle 		(5)
+#define LVAR_UpgradeMotorcycle 		(6)
+#define LVAR_UpgradeMotorcycleTimer (7)
+
+#define EVENT_TAKE_BIKE 	(1)
 
 procedure Start begin
 	if Only_Once then begin
@@ -80,6 +94,16 @@ procedure description_p_proc begin
 	end
 end
 
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_TAKE_BIKE) then begin
+		gfade_out(1);
+		set_global_var(GVAR_PLAYER_GOT_CAR,0);
+		Dest_Car(CAR_BONEYARD_ADY_HEX, 0)
+		set_obj_visibility(Trunk_Ptr,1);
+		gfade_in(1);
+	end
+end
+
 procedure talk_p_proc begin
 	dude_look_at_critter;
 
@@ -87,11 +111,17 @@ procedure talk_p_proc begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
 	else begin
-		if ((local_var(4) == 1) and (get_critter_stat(dude_obj, STAT_iq) < 4)) then begin
+
+		// Special dialog if the player arrives with motorcycle:
+		if (dude_has_car and get_car_in_cur_map and local_var(LVAR_UpgradeMotorcycle) == 0) then begin
+			start_dialog_at_node(Node1000);
+		end
+
+		else if ((local_var(4) == 1) and (get_critter_stat(dude_obj, STAT_iq) < 4)) then begin
 			float_msg(self_obj, message_str(SCRIPT_SMITTY, 117), 0);
 		end
 		else begin
-			if (local_var(LVAR_UpgradePlasmaRifle) == 2) then begin
+			if (local_var(LVAR_UpgradePlasmaRifle) == 2) and (not(get_car_in_cur_map) or local_var(LVAR_UpgradeMotorcycle) == 3) then begin
 				float_msg(self_obj, message_str(SCRIPT_SMITTY, 131), 0);
 			end
 			else begin
@@ -164,6 +194,9 @@ procedure Smitty01 begin
 		giq_option(4, 250, 105, Smitty10, 50);
 	end
 
+	if (local_var(LVAR_UpgradeMotorcycle) == 1) then
+		NOption(1510,Node1200,004);
+
 	giq_option(4, 250, 106, Smitty02, 50);
 	giq_option(4, 250, 107, Smitty04, 50);
 	giq_option(4, 250, 108, Smitty06, 50);
@@ -183,6 +216,10 @@ end
 
 procedure Smitty04 begin
 	gsay_reply(250, DisplayMessage);
+
+	if (local_var(LVAR_UpgradeMotorcycle) == 1) then
+		NOption(1510,Node1200,004);
+
 	gsay_option(250, 113, Smitty07, 50);
 	gsay_option(250, 114, Smitty08, 50);
 	gsay_option(250, 115, Smitty09, 50);
@@ -208,8 +245,7 @@ procedure Smitty08 begin
 	call Smitty04;
 end
 
-procedure Smitty09
-begin
+procedure Smitty09 begin
 	DisplayMessage := 121;
 	call Smitty04;
 end
@@ -262,7 +298,60 @@ procedure Smitty15 begin
 	gsay_message(250, 130, 50);
 end
 
-procedure SmittyEnd begin
+procedure Node999 begin
 end
 
+procedure Node1000 begin
+	set_local_var(LVAR_UpgradeMotorcycle,1);
+	Reply(1000);
+	NOption(1010,Node1100,001);
+end
 
+procedure Node1100 begin
+	Reply(1100);
+	NOption(1110,Node1200,004);
+	NOption(1120,Node1500,004);
+end
+
+procedure Node1200 begin
+	Reply(1200);
+	NOption(1210,Node1300,004);
+	NOption(1220,Node1500,004);
+end
+
+procedure Node1300 begin
+	if (dude_caps >= 1000) then begin
+		item_caps_adjust(dude_obj,-1000);
+		set_local_var(LVAR_UpgradeMotorcycle,2);
+
+		Reply(1301);
+		NOption(1310,Node1400,004);
+	end
+	else begin
+		Reply(1300);
+		NOption(1220,Node1500,004);
+	end
+end
+
+// Bike is upgraded:
+procedure Node1400 begin
+	set_local_var(LVAR_UpgradeMotorcycle,3);
+
+	gfade_out(1);
+	game_time_advance(ONE_GAME_DAY * 2);
+
+	Dest_Car(CAR_BONEYARD_ADY_HEX, 0)
+	set_global_var(GVAR_PLAYER_GOT_CAR,2);
+	Create_Car(CAR_BONEYARD_ADY_HEX,0)
+
+	gfade_in(1);
+
+	gsay_message(250, 1400, 50);
+end
+
+procedure Node1500 begin
+	Reply(1500);
+	NOption(107,Smitty04,004);
+	NOption(g_bye,Node999,004);
+end
+      
