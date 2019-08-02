@@ -2,6 +2,10 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
+procedure Invasion;
 
 export variable Billy_Ptr;
 export variable Dan_Ptr;
@@ -9,101 +13,100 @@ export variable Dan_Ptr;
 variable party_elevation;
 variable dude_start_hex;
 
-procedure Invasion;
 
 variable invaderPtr;
 
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		Lighting;
-		if (map_first_run) then begin
-			if (global_var(GVAR_THE_HUB_WAS_INVADED) != 1) then begin
-				display_msg(message_str(SCRIPT_SHADYWST, 105));
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+	Lighting;
+
+	if (map_first_run) then begin
+		if (global_var(GVAR_THE_HUB_WAS_INVADED) != 1) then begin
+			display_msg(message_str(SCRIPT_SHADYWST, 105));
+		end
+		else begin
+			variable LVar0;
+			LVar0 := random(0,4);
+
+			if not(LVar0) then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 150));
+			end
+			else if LVar0 == 1 then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 151));
+			end
+			else if LVar0 == 2 then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 152));
+			end
+			else if LVar0 == 3 then begin
+				display_msg(message_str(SCRIPT_SHADYWST, 153));
 			end
 			else begin
-				variable LVar0;
-				LVar0 := random(0,4);
-				if not(LVar0) then begin
-					display_msg(message_str(SCRIPT_SHADYWST, 150));
-				end
-				else begin
-					if LVar0 == 1 then begin
-						display_msg(message_str(SCRIPT_SHADYWST, 151));
-					end
-					else begin
-						if LVar0 == 2 then begin
-							display_msg(message_str(SCRIPT_SHADYWST, 152));
-						end
-						else begin
-							if LVar0 == 3 then begin
-								display_msg(message_str(SCRIPT_SHADYWST, 153));
-							end
-							else begin
-								display_msg(message_str(SCRIPT_SHADYWST, 154));
-							end
-						end
-					end
-				end
+				display_msg(message_str(SCRIPT_SHADYWST, 154));
 			end
-		end
-		override_map_start(107, 49, 0, 2);
-		set_global_var(MARK_HUB_1, 1);
-		if ((global_var(GVAR_THE_HUB_WAS_INVADED) == 1) and not(is_loading_game) and (map_var(3) == 0)) then begin
-			set_map_var(3, 1);
-			kill_critter_type(PID_MERCENARY_HMBMET, 1);
-			kill_critter_type(PID_GUARD_HMMETL, 1);
-			kill_critter_type(PID_GUARD_10, 1);
-			kill_critter_type(PID_GUARD_NMLTHR, 1);
-			kill_critter_type(PID_MERCHANT_2, 1);
-			kill_critter_type(PID_GUARD_HMMAXX, 1);
-			kill_critter_type(PID_MERCHANT_6, 1);
-			kill_critter_type(PID_GUARD_HFMAXX, 1);
-			kill_critter_type(PID_MERCHANT_4, 1);
-			kill_critter_type(PID_GUARD_HMLTHR, 1);
-			kill_critter_type(PID_GUARD_HFLTHR, 1);
-			kill_critter_type(PID_MERCHANT_7, 1);
-			kill_critter_type(PID_GUARD_4, 1);
-			kill_critter_type(PID_BOY, 1);
-			kill_critter_type(PID_BRAHMIN, 1);
-			kill_critter_type(PID_PEASANT_2_FEMALE, 1);
-			kill_critter_type(PID_DAN, 1);
-			kill_critter_type(PID_FARMER_4, 1);
-			kill_critter_type(PID_FARMER_2, 1);
-			kill_critter_type(PID_PEASANT_3, 1);
-			kill_critter_type(PID_GUARD_NFMETL, 1);
-			kill_critter_type(PID_FRY, 1);
-			kill_critter_type(PID_FARMER_3, 1);
-			kill_critter_type(PID_GUARD_HMBMET, 1);
-			kill_critter_type(PID_GABRIEL, 1);
-			kill_critter_type(PID_PEASANT_YELLOW, 1);
-			invaderPtr := create_object_sid(PID_MASTER_NIGHTKIN, 0, 0, SCRIPT_TROY);
-			critter_attempt_placement(invaderPtr, 13708, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(invaderPtr, 1, 5, 48);
-			critter_attempt_placement(invaderPtr, 17317, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(invaderPtr, 1, 5, 48);
-			critter_attempt_placement(invaderPtr, 20698, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(invaderPtr, 1, 5, 48);
-			critter_attempt_placement(invaderPtr, 23515, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			critter_add_trait(invaderPtr, 1, 5, 48);
-			critter_attempt_placement(invaderPtr, 26904, 0);
-		end
 
+		end
 	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			Lighting;
+	override_map_start(107, 49, 0, 2);
+	set_global_var(MARK_HUB_1, 1);
 
-		end
+	call Invasion;
 
+	if get_car_from_worldmap then begin
+		override_map_start_hex(15301,0,3);
 	end
+
+end
+
+procedure map_update_p_proc begin
+	Lighting;
 end
 
 procedure Invasion begin
-	//check_invasion
+	if ((global_var(GVAR_THE_HUB_WAS_INVADED) == 1) and not(is_loading_game) and (map_var(3) == 0)) then begin
+		set_map_var(3, 1);
+		kill_critter_type(PID_MERCENARY_HMBMET, 1);
+		kill_critter_type(PID_GUARD_HMMETL, 1);
+		kill_critter_type(PID_GUARD_10, 1);
+		kill_critter_type(PID_GUARD_NMLTHR, 1);
+		kill_critter_type(PID_MERCHANT_2, 1);
+		kill_critter_type(PID_GUARD_HMMAXX, 1);
+		kill_critter_type(PID_MERCHANT_6, 1);
+		kill_critter_type(PID_GUARD_HFMAXX, 1);
+		kill_critter_type(PID_MERCHANT_4, 1);
+		kill_critter_type(PID_GUARD_HMLTHR, 1);
+		kill_critter_type(PID_GUARD_HFLTHR, 1);
+		kill_critter_type(PID_MERCHANT_7, 1);
+		kill_critter_type(PID_GUARD_4, 1);
+		kill_critter_type(PID_BOY, 1);
+		kill_critter_type(PID_BRAHMIN, 1);
+		kill_critter_type(PID_PEASANT_2_FEMALE, 1);
+		kill_critter_type(PID_DAN, 1);
+		kill_critter_type(PID_FARMER_4, 1);
+		kill_critter_type(PID_FARMER_2, 1);
+		kill_critter_type(PID_PEASANT_3, 1);
+		kill_critter_type(PID_GUARD_NFMETL, 1);
+		kill_critter_type(PID_FRY, 1);
+		kill_critter_type(PID_FARMER_3, 1);
+		kill_critter_type(PID_GUARD_HMBMET, 1);
+		kill_critter_type(PID_GABRIEL, 1);
+		kill_critter_type(PID_PEASANT_YELLOW, 1);
+		invaderPtr := create_object_sid(PID_MASTER_NIGHTKIN, 0, 0, SCRIPT_TROY);
+		critter_attempt_placement(invaderPtr, 13708, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(invaderPtr, 1, 5, 48);
+		critter_attempt_placement(invaderPtr, 17317, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(invaderPtr, 1, 5, 48);
+		critter_attempt_placement(invaderPtr, 20698, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(invaderPtr, 1, 5, 48);
+		critter_attempt_placement(invaderPtr, 23515, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		critter_add_trait(invaderPtr, 1, 5, 48);
+		critter_attempt_placement(invaderPtr, 26904, 0);
+	end
 end
+

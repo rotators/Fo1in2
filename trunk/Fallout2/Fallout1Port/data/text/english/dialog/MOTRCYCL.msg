@@ -18,6 +18,7 @@
 # SD3:
 {450}{}{You need a key for this vehicle.}
 {451}{}{The vehicle doesn't require any repairs.}
+{452}{}{The key fits!}
 
 {500}{}{The vehicle isn't big enough for your party!}
 {501}{}{Not all of us will fit on the bike.}
