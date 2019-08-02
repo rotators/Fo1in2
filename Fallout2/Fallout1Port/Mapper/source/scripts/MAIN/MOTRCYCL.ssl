@@ -12,14 +12,16 @@
 #define NAME                        SCRIPT_MOTRCYCL
 
 #include "..\headers\command.h"
-//#include "..\headers\NewReno.h"
-#include "..\headers\MAPNECRO.h"
+#include "..\headers\updatmap.h"
+//#include "..\headers\MAPNECRO.h"
 //#include "..\headers\MAPOBTFD.h"
 
 procedure start;
 procedure use_p_proc;
 procedure use_obj_on_p_proc;
 procedure map_exit_p_proc;
+
+procedure refuel_car;
 
 import variable chop_shop_boy_obj;
 import variable smitty_obj;
@@ -28,12 +30,14 @@ variable car_was_used_to_exit;
 
 #define float_normal(x,y)                   float_msg(x, message_str(NAME,y), FLOAT_MSG_NORMAL)
 
+#define max_fill 			(80000)
+#define small_fill 		(400)
+#define big_fill 			(800)
+
 procedure start begin
 end
 
 procedure map_exit_p_proc begin
-	// Set worldmap interface graphic for the motorcycle
-	set_car_intface_art(495);
    car_was_used_to_exit := false;
 end
 
@@ -69,9 +73,9 @@ procedure use_p_proc begin
 		// Lets roll out!
 	   if (stop_car_use == false) then begin
 	      car_was_used_to_exit := true;
-	      play_sfx("engineon");
+	      set_car_exit_map
 
-	      car_give_to_party;
+	      play_sfx("engineon");
 	      debug_msg("Party has the car");
 	   end
 	   else begin
@@ -83,53 +87,16 @@ procedure use_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-variable fuel;
-variable fuel_use;
-variable cur_fuel;
-variable charges;
+	if obj_pid(obj_being_used_with) == PID_MOTO_KEY then begin
+		script_overrides;
 
-	// Refuel the vehicle
-	fuel := obj_pid(obj_being_used_with);
-	cur_fuel := car_gas_amount;
+		set_global_var(GVAR_PLAYER_GOT_CAR,1);
+		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
+		display_mstr(452);
+	end
 
-	// Full tank == 80000
 	if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
-		if (fuel == PID_MICRO_FUSION_CELL) or (fuel == PID_SMALL_ENERGY_CELL) then begin
-			script_overrides;
-
-	      reg_anim_clear(dude_obj);
-	      reg_anim_begin();
-	         reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1);
-	      reg_anim_end();
-
-			// Get amount of item charges
-			fuel_use := obj_carrying_pid_obj(dude_obj, fuel); // needs to be or CTD
-			charges := get_weapon_ammo_count(fuel_use);
-
-			// Bike is not fully charged?
-			if (cur_fuel < 80000) then begin
-				while (cur_fuel < 80000) do begin
-					cur_fuel := car_gas_amount;
-					//debug("charge!" + cur_fuel);
-
-					if fuel == PID_MICRO_FUSION_CELL then begin
-						car_give_gas(800);
-						set_weapon_ammo_count(fuel_use, get_weapon_ammo_count(fuel_use) - 1);
-					end
-					else if fuel == PID_SMALL_ENERGY_CELL then begin
-						car_give_gas(400);
-						set_weapon_ammo_count(fuel_use, get_weapon_ammo_count(fuel_use) - 1);
-					end
-				end
-				display_msg(mstr(510));
-
-			end
-			// Bike is fully charged
-			else begin
-				display_msg(mstr(511));
-			end
-
-		end
+		call refuel_car;
 	end
 end
 
@@ -139,3 +106,54 @@ procedure use_skill_on_p_proc begin
 		display_mstr(451);
    end
 end
+
+procedure refuel_car begin
+variable fuel;
+variable used_fuel;
+variable cur_car_fill;
+variable charges;#
+
+	used_fuel := obj_pid(obj_being_used_with);
+	cur_car_fill := car_gas_amount;
+
+	// Full tank == 80000
+	if (used_fuel == PID_MICRO_FUSION_CELL) or (used_fuel == PID_SMALL_ENERGY_CELL) then begin
+		script_overrides;
+
+      reg_anim_clear(dude_obj);
+      reg_anim_begin();
+         reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1);
+      reg_anim_end();
+
+		// Get amount of item charges
+		fuel := obj_carrying_pid_obj(dude_obj, used_fuel); // needs to be or CTD
+		charges := get_weapon_ammo_count(fuel);
+
+		// Bike is not fully charged?
+		if (cur_car_fill < max_fill) then begin
+			while (cur_car_fill < max_fill) do begin
+				cur_car_fill := car_gas_amount;
+				//debug("charge!" + cur_car_fill);
+
+				if fuel == PID_MICRO_FUSION_CELL then begin
+					car_give_gas(big_fill);
+					set_weapon_ammo_count(fuel, get_weapon_ammo_count(fuel) - 1);
+				end
+				else if fuel == PID_SMALL_ENERGY_CELL then begin
+					car_give_gas(small_fill);
+					set_weapon_ammo_count(fuel, get_weapon_ammo_count(fuel) - 1);
+				end
+			end
+			display_msg(mstr(510));
+
+		end
+		// Bike is fully charged
+		else begin
+			display_msg(mstr(511));
+		end
+
+	end
+end
+
+
+

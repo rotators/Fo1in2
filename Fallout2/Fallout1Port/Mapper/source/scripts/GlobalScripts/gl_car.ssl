@@ -22,7 +22,7 @@ procedure check_vehicle_trunk;
 procedure check_vehicle_location;
 
 #define is_car_created						((tile_contains_obj_pid(car_hex,car_elev,PID_DRIVABLE_MOTO1)) or (tile_contains_obj_pid(car_hex,car_elev,PID_DRIVABLE_MOTO2)))
-#define location_valid						(car_area != 0 and car_hex != 0)
+#define location_valid						(car_area != -1 and car_hex != 0)
 
 #define Place_Trunk(Hex,Elevation)		if (global_var(GVAR_PLAYER_GOT_CAR) == 1) then begin 				\
 														tile:=tile_num_in_direction(Hex,1,1);								\
@@ -36,7 +36,7 @@ procedure check_vehicle_location;
 #define trunk_size_big			(60)
 
 variable tile;
-variable car_area:=0;
+variable car_area:=-1;
 variable car_hex:=0;
 variable car_elev:=0;
 
@@ -79,41 +79,56 @@ procedure check_vehicle_location begin
    if is_map(MAP_V13ENT) then begin
    	car_area := AREA_VAULT_13;
    	car_hex := CAR_V13_HEX;
-   	car_elev := CAR_V13_ELEV;
    end
 
 	// V15
    else if is_map(MAP_VAULTENT) then begin
    	car_area := AREA_VAULT_15;
    	car_hex := CAR_V15_HEX;
-   	car_elev := CAR_V15_ELEV;
    end
 
 	// Shady Sands
    else if is_map(MAP_SHADYW) then begin
    	car_area := AREA_SHADY_SANDS;
    	car_hex := CAR_SHADY_HEX;
-   	car_elev := CAR_SHADY_ELEV;
    end
 
-	// Junktown
+	// Junktown North
+   else if is_map(MAP_JUNKCSNO) then begin
+	   car_area := AREA_JUNKTOWN;
+	   car_elev := CAR_JUNKTOWN_ELEV;
+   end
+
+	// Junktown South
    else if is_map(MAP_JUNKENT) then begin
-   	car_area := AREA_JUNKTOWN;
-   	car_hex := CAR_JUNKTOWN_HEX;
-   	car_elev := CAR_JUNKTOWN_ELEV;
+	   car_area := AREA_JUNKTOWN;
+	   car_elev := CAR_JUNKTOWN_ELEV;
    end
 
 	// Raiders
    else if is_map(MAP_RAIDERS) then begin
    	car_area := AREA_RAIDERS;
    	car_hex := CAR_RAIDERS_HEX;
-   	car_elev := CAR_RAIDERS_ELEV;
    end
 
-	// Necropolis
+	// Necropolis - Hotel
    else if is_map(MAP_HOTEL) then begin
    	car_area := AREA_NECROPOLIS;
    	car_hex := CAR_NECROPOLIS_HOTEL_HEX;
+   	car_elev := CAR_NECROPOLIS_ELEV;
+   end
+
+	// Necropolis - Hall of the Dead
+   else if is_map(MAP_HALLDED) then begin
+   	car_area := AREA_NECROPOLIS;
+   	car_hex := CAR_NECROPOLIS_HALLDEAD_HEX;
+   	car_elev := CAR_NECROPOLIS_ELEV;
+   end
+
+	// Necropolis - Watershed
+   else if is_map(MAP_WATRSHD) then begin
+   	car_area := AREA_NECROPOLIS;
+   	car_hex := CAR_NECROPOLIS_WATERSHED_HEX;
    	car_elev := CAR_NECROPOLIS_ELEV;
    end
 
@@ -121,49 +136,66 @@ procedure check_vehicle_location begin
    else if is_map(MAP_HUBENT) then begin
    	car_area := AREA_HUB;
    	car_hex := CAR_HUB_HEX;
-   	car_elev := CAR_HUB_ELEV;
    end
 
 	// Brotherhood
    else if is_map(MAP_BROHDENT) then begin
    	car_area := AREA_BROTHERHOOD;
    	car_hex := CAR_BOS_HEX;
-   	car_elev := CAR_BOS_ELEV;
    end
 
 	// Military Base
    else if is_map(MAP_MBENT) then begin
    	car_area := AREA_MILITARY_BASE;
    	car_hex := CAR_MBASE_HEX;
-   	car_elev := CAR_MBASE_ELEV;
+   end
+
+	// Military Base - Destroyed
+   else if is_map(MAP_MBDEAD) then begin
+   	car_area := AREA_MILITARY_BASE;
+   	car_hex := CAR_MBASE_DEAD_HEX;
    end
 
 	// Glow
    else if is_map(MAP_GLOWENT) then begin
    	car_area := AREA_GLOW;
    	car_hex := CAR_GLOW_HEX;
-   	car_elev := CAR_GLOW_ELEV;
    end
 
-	// Boneyard
+	// Boneyard - Adytum
    else if is_map(MAP_LAADYTUM) then begin
    	car_area := AREA_BONEYARD;
    	car_hex := CAR_BONEYARD_ADY_HEX;
-   	car_elev := CAR_BONEYARD_ELEV;
+   end
+
+	// Boneyard - Blades
+   else if is_map(MAP_LABLADES) then begin
+   	car_area := AREA_BONEYARD;
+   	car_hex := CAR_BONEYARD_BLADES_HEX;
+   end
+
+	// Boneyard - Library
+   else if is_map(MAP_LAFOLLWR) then begin
+   	car_area := AREA_BONEYARD;
+   	car_hex := CAR_BONEYARD_LIBRARY_HEX;
    end
 
 	// Cathedral
    else if is_map(MAP_CHILDRN1) then begin
    	car_area := AREA_CATHEDRAL;
    	car_hex := CAR_CATHEDRAL_HEX;
-   	car_elev := CAR_CATHEDRAL_ELEV;
+   end
+
+	// Cathedral - Dead
+   else if is_map(MAP_CHILDEAD) then begin
+   	car_area := AREA_CATHEDRAL;
+   	car_hex := CAR_CATHEDRAL_DEAD_HEX;
    end
 
    // Bike outa gas
    else if is_map(MAP_CAR_DESERT) then begin
    	car_area := AREA_CAR_OUTTA_GAS;
    	car_hex := CAR_CAR_OUTTA_GAS_HEX;
-   	car_elev := CAR_CAR_OUTTA_GAS_ELEV;
    end
 
    // No valid location
@@ -179,24 +211,33 @@ procedure check_vehicle_location begin
    // ====================================================================
    if location_valid then begin
 		Upgrade_Car(car_hex,car_elev)
-		if (not(is_car_created) and (global_var(GVAR_PLAYER_GOT_CAR) != 0) and (car_current_town == car_area)) then begin
+
+		if (global_var(GVAR_PLAYER_GOT_CAR) != 0) and not(is_car_created) and get_car_from_worldmap then begin // is the car coming from the worldmap?
+			set_car_current_map;
+
 			Create_Car(car_hex, car_elev)
 			Place_Trunk(car_hex, car_elev);
 			set_obj_visibility(Trunk_Ptr,0);
 			debug("create car at hex: " + car_hex);
 		end
-		else if is_car_created and (car_current_town != car_area) then begin
+		else if is_car_created and ((car_current_town != car_area) or not(get_car_in_cur_map)) then begin // is the car not at all in this town?
 			Dest_Car(car_hex, car_elev)
 			debug("destroy car");
 		end
-		else if is_car_created and (car_current_town == car_area) then begin
+		else if is_car_created and (car_current_town == car_area) and get_car_in_cur_map then begin // is the car already in town AND in THIS map?
 			Place_Trunk(car_hex, car_elev);
 			set_obj_visibility(Trunk_Ptr,0);
 			debug("show trunk");
 		end
+		else begin	// is the car already in town but NOT in THIS map?
+			set_obj_visibility(Trunk_Ptr,1);
+			debug("hide trunk");
+		end
+
 	end
+
+	// For random encounter maps:
 	else begin
-		debug("invalid location!");
 		debug("cur_map_index: " + cur_map_index);
 		debug("cur_town: " + cur_town);
 

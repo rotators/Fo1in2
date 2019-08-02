@@ -129,6 +129,17 @@
 #define set_cur_exit                    wm_area_set_pos(AREA_RND_MOUNTAIN,worldmap_xpos,worldmap_ypos)
 
 // Car Information
+#define get_car_current_map 			global_var(GVAR_CAR_CUR_MAP)
+#define get_car_in_cur_map 				get_car_current_map == cur_map_index
+#define set_car_current_map    			set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
+#define set_car_worldmap     			set_global_var(GVAR_CAR_CUR_MAP,-1)
+#define get_car_from_worldmap 			(global_var(GVAR_CAR_CUR_MAP) == -1)
+
+#define set_car_exit_map 				if (global_var(GVAR_PLAYER_GOT_CAR) != 0) /*and car_in_any_encounter*/ then begin \
+											set_car_worldmap; \
+											car_give_to_party; \
+										end
+
 #define car_in_any_encounter 	  		((car_current_town == AREA_RND_DESERT) or 		\
 										(car_current_town == AREA_RND_MOUNTAIN) or  	\
 										(car_current_town == AREA_RND_CITY) or  		\
@@ -153,33 +164,36 @@
 #define CAR_RND_COAST_HEX                	(20106)
 #define CAR_RND_COAST_ELEV                 	(0)
 
-#define CAR_V13_HEX							(25951)
+#define CAR_V13_HEX							(25953)
 #define CAR_V13_ELEV 						(0)
 #define CAR_V15_HEX							(24711)
 #define CAR_V15_ELEV 						(0)
 #define CAR_SHADY_HEX						(10510)
 #define CAR_SHADY_ELEV 						(0)
-#define CAR_JUNKTOWN_HEX					(28117)
+#define CAR_JUNKTOWN_NORTH_HEX				(11900)
+#define CAR_JUNKTOWN_SOUTH_HEX				(28117)
 #define CAR_JUNKTOWN_ELEV 					(0)
 #define CAR_RAIDERS_HEX						(27693)
 #define CAR_RAIDERS_ELEV 					(0)
-#define CAR_NECROPOLIS_HOTEL_HEX 			(26699)
-#define CAR_NECROPOLIS_HALLDEAD_HEX 		(20956)
-#define CAR_NECROPOLIS_WATERSHED_HEX 		(9729)
+#define CAR_NECROPOLIS_HOTEL_HEX 			(24079)
+#define CAR_NECROPOLIS_HALLDEAD_HEX 		(19955)
+#define CAR_NECROPOLIS_WATERSHED_HEX 		(8937)
 #define CAR_NECROPOLIS_ELEV 				(1)
 #define CAR_HUB_HEX 						(14698)
 #define CAR_HUB_ELEV 						(0)
 #define CAR_BOS_HEX							(26315)
 #define CAR_BOS_ELEV 						(0)
-#define CAR_MBASE_HEX						(24744)
+#define CAR_MBASE_HEX						(18334)
+#define CAR_MBASE_DEAD_HEX					(21124)
 #define CAR_MBASE_ELEV 						(0)
-#define CAR_GLOW_HEX						(26716)
+#define CAR_GLOW_HEX						(22533)
 #define CAR_GLOW_ELEV 						(0)
 #define CAR_BONEYARD_ADY_HEX				(9495)
-#define CAR_BONEYARD_BLADES_HEX				(28506)
-#define CAR_BONEYARD_LIBRARY_HEX			(19312)
+#define CAR_BONEYARD_BLADES_HEX				(28720)
+#define CAR_BONEYARD_LIBRARY_HEX			(18125)
 #define CAR_BONEYARD_ELEV 					(0)
-#define CAR_CATHEDRAL_HEX					(22101)
+#define CAR_CATHEDRAL_HEX					(21475)
+#define CAR_CATHEDRAL_DEAD_HEX				(21901)
 #define CAR_CATHEDRAL_ELEV 					(0)
 
 #define CAR_RANDOM_DESERT_HEX               (20106)
