@@ -7,10 +7,13 @@ int main( int argc, char** argv )
 {
     int result = EXIT_SUCCESS;
 
+    // boring stuff
     std::setvbuf( stdout, NULL, _IONBF, 0 );
-
     ReDefine* redefine = new ReDefine();
     CmdLine*  cmd = new CmdLine( argc, argv );
+
+    // probably most important option
+    const bool readOnly = cmd->IsOption( "ro" ) || cmd->IsOption( "read" ) || cmd->IsOption( "read-only" );
 
     redefine->LOG( "ReDefine <3 FO1@2" );
     redefine->LOG( " " );
@@ -36,8 +39,12 @@ int main( int argc, char** argv )
     if( redefine->Config->LoadFile( config ) )
     {
         // read directories
-        const std::string headers = redefine->Config->GetStr( section, "ScriptsDir" );     // TODO HeadersDir
-        const std::string scripts = redefine->Config->GetStr( section, "ScriptsDir" );
+        std::string headers = redefine->Config->GetStr( section, "ScriptsDir" );     // TODO HeadersDir
+        std::string scripts = redefine->Config->GetStr( section, "ScriptsDir" );
+
+        // override settings from command line
+        if( !cmd->IsOptionEmpty( "scripts" ) )
+            scripts = cmd->GetStr( "scripts" );
 
         //
         // validate config and convert settings to internal structures
@@ -47,7 +54,7 @@ int main( int argc, char** argv )
         //
         // defines section needs to be processed before other settings
         //
-        if( redefine->ReadConfig( "Defines", "Variable", "Function", "Raw" ) )
+        if( redefine->ReadConfig( "Defines", "Variable", "Function", "Raw", "Script" ) )
         {
             // unload config
             // added here to make sure Process*() functions are independent o ReadConfig*()
@@ -60,7 +67,7 @@ int main( int argc, char** argv )
 
             // process scripts
             //
-            redefine->ProcessScripts( scripts, cmd->IsOption( "ro" ) || cmd->IsOption( "read" ) || cmd->IsOption( "read-only" ) );
+            redefine->ProcessScripts( scripts, readOnly );
         }
         else
         {
@@ -83,11 +90,13 @@ int main( int argc, char** argv )
                        redefine->Status.Process.Files, redefine->Status.Process.Files != 1 ? "s" : "" );
     }
 
-    if( redefine->Status.Process.LinesChanged && redefine->Status.Process.FilesChanged )
+    if( redefine->Status.Process.LinesChanges && redefine->Status.Process.FilesChanges )
     {
-        redefine->LOG( "Changed scripts ... %u line%s in %u file%s",
-                       redefine->Status.Process.LinesChanged, redefine->Status.Process.LinesChanged != 1 ? "s" : "",
-                       redefine->Status.Process.FilesChanged, redefine->Status.Process.FilesChanged != 1 ? "s" : "" );
+        redefine->LOG( "%sed scripts ... %u line%s in %u file%s%s",
+                       readOnly ? "Check" : "Chang",
+                       redefine->Status.Process.LinesChanges, redefine->Status.Process.LinesChanges != 1 ? "s" : "",
+                       redefine->Status.Process.FilesChanges, redefine->Status.Process.FilesChanges != 1 ? "s" : "",
+                       readOnly ? " can be changed" : "" );
     }
 
     if( redefine->Status.Process.Unknown.size() )

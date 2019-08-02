@@ -49,7 +49,7 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
         }
         // [FunctionOPERATOR]
         // see InitOperators() for valid values for OPERATOR
-        else if( section.length() >= sectionPrefix.length() + 1 && section.substr( sectionPrefix.length(), 1 ) != ":" )
+        else if( section.length() >= sectionPrefix.length() + 1 )
         {
             const std::string opName = section.substr( sectionPrefix.length(), section.length() - sectionPrefix.length() );
 
@@ -78,11 +78,6 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
                 // as at this point *Defines maps might not be initialized yet,
                 FunctionsOperators[function][opName] = type;
             }
-        }
-        // [Function:NAME]
-        else if( section.length() >= sectionPrefix.length() + 2 && section.substr( sectionPrefix.length(), 1 ) == ":" )
-        {
-            // ReadConfigAction( true, section );
         }
     }
 
