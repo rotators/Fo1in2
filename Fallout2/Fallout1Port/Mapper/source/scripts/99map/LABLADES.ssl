@@ -2,9 +2,9 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure map_exit_p_proc;//    script_action == 16
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
 
 export variable InBladePtr1;
 export variable InBladePtr2;
@@ -26,15 +26,42 @@ end
 
 procedure map_enter_p_proc begin
 	set_global_var(MARK_LA_2, 1);
-	if (elevation(dude_obj) == 1) then begin
-		Darkness;
-	end
-	else begin
-		Lighting;
-	end
+	Lighting;
+
 	if ((map_first_run) and (global_var(GVAR_FOLLOWERS_INVADED) != 1)) then begin
 		display_msg(message_str(SCRIPT_SHADYWST, 113));
 	end
+
+	call Invasion;
+
+	if get_car_from_worldmap then begin
+		override_map_start_hex(28517,0,5);
+	end
+end
+
+procedure map_update_p_proc begin
+	Lighting;
+
+	if (global_var(BLADES_STATUS) == 9104) then begin
+		if not(is_loading_game) then begin	set_obj_visibility(RazorPtr, 1);	end
+		move_to(RazorPtr, 0, 0);
+		kill_critter(RazorPtr, ANIM_stand);
+		gfade_in(1);
+	end
+
+end
+
+procedure map_exit_p_proc
+begin
+
+	if ((global_var(BLADES_STATUS) == 9103) or (global_var(BLADES_STATUS) == 9102)) then begin
+		if not(is_loading_game) then begin	set_obj_visibility(RazorPtr, 1);	end
+		move_to(RazorPtr, 0, 0);
+		kill_critter(RazorPtr, ANIM_stand);
+	end
+end
+
+procedure Invasion begin
 	if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and not(is_loading_game) and (map_var(1) == 0)) then begin
 		set_map_var(1, 1);
 		kill_critter_type(PID_LOSER, 1);
@@ -61,39 +88,4 @@ procedure map_enter_p_proc begin
 		critter_add_trait(invaderPtr, 1, 5, 48);
 		critter_attempt_placement(invaderPtr, 21538, 0);
 	end
-
-	if get_car_from_worldmap then begin
-		override_map_start_hex(28517,0,5);
-	end
-end
-
-procedure map_update_p_proc
-begin
-	if (elevation(dude_obj) == 1) then begin
-		Darkness;
-	end
-	else begin
-		Lighting;
-	end
-	if (global_var(BLADES_STATUS) == 9104) then begin
-		if not(is_loading_game) then begin	set_obj_visibility(RazorPtr, 1);	end
-		move_to(RazorPtr, 0, 0);
-		kill_critter(RazorPtr, ANIM_stand);
-		gfade_in(1);
-	end
-
-end
-
-procedure map_exit_p_proc
-begin
-
-	if ((global_var(BLADES_STATUS) == 9103) or (global_var(BLADES_STATUS) == 9102)) then begin
-		if not(is_loading_game) then begin	set_obj_visibility(RazorPtr, 1);	end
-		move_to(RazorPtr, 0, 0);
-		kill_critter(RazorPtr, ANIM_stand);
-	end
-end
-
-procedure Invasion begin
-	//check_invasion
 end
