@@ -1,0 +1,141 @@
+/*
+
+	Drivable vehicle for Fo1!
+
+*/
+
+/* Include Files */
+
+#include "..\headers\define.h"
+#include "..\headers\Sfall\sfall.h"
+
+#define NAME                        SCRIPT_MOTRCYCL
+
+#include "..\headers\command.h"
+//#include "..\headers\NewReno.h"
+#include "..\headers\MAPNECRO.h"
+//#include "..\headers\MAPOBTFD.h"
+
+procedure start;
+procedure use_p_proc;
+procedure use_obj_on_p_proc;
+procedure map_exit_p_proc;
+
+import variable chop_shop_boy_obj;
+import variable smitty_obj;
+variable stop_car_use := false;
+variable car_was_used_to_exit;
+
+#define float_normal(x,y)                   float_msg(x, message_str(NAME,y), FLOAT_MSG_NORMAL)
+
+procedure start begin
+end
+
+procedure map_exit_p_proc begin
+	// Set worldmap interface graphic for the motorcycle
+	set_car_intface_art(495);
+   car_was_used_to_exit := false;
+end
+
+procedure use_p_proc begin
+   stop_car_use := false;
+
+   // Set worldmap interface graphic for the motorcycle
+	set_car_intface_art(495);
+
+   // Player has the key?
+	if (obj_carrying_pid_obj(dude_obj, PID_MOTO_KEY)) then begin
+		set_global_var(GVAR_PLAYER_GOT_CAR,1);
+		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
+	end
+
+   if (global_var(GVAR_PLAYER_GOT_CAR) == 0) then begin
+      stop_car_use := true;
+      display_mstr(450);
+
+      // Start dialog with Anya the trader
+      //if (global_var(GVAR_Q_03_MOTORCYCLE) == 0) then
+      //	set_global_var(GVAR_Q_03_MOTORCYCLE,1);
+   end
+
+	// Check party members. Everyone fits on the bike?
+	if ( (global_var(GVAR_PLAYER_GOT_CAR) == 1) and (party_size_biped > 1) ) or
+		( (global_var(GVAR_PLAYER_GOT_CAR) == 2) and (party_size_biped > 2) ) then begin
+			script_overrides;
+			display_mstr(500);
+			float_normal(dude_obj,random(501,505));
+	end
+	else begin
+		// Lets roll out!
+	   if (stop_car_use == false) then begin
+	      car_was_used_to_exit := true;
+	      play_sfx("engineon");
+
+	      car_give_to_party;
+	      debug_msg("Party has the car");
+	   end
+	   else begin
+	      script_overrides;
+	      debug_msg("car use stopped by script");
+	   end
+
+   end
+end
+
+procedure use_obj_on_p_proc begin
+variable fuel;
+variable fuel_use;
+variable cur_fuel;
+variable charges;
+
+	// Refuel the vehicle
+	fuel := obj_pid(obj_being_used_with);
+	cur_fuel := car_gas_amount;
+
+	// Full tank == 80000
+	if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
+		if (fuel == PID_MICRO_FUSION_CELL) or (fuel == PID_SMALL_ENERGY_CELL) then begin
+			script_overrides;
+
+	      reg_anim_clear(dude_obj);
+	      reg_anim_begin();
+	         reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1);
+	      reg_anim_end();
+
+			// Get amount of item charges
+			fuel_use := obj_carrying_pid_obj(dude_obj, fuel); // needs to be or CTD
+			charges := get_weapon_ammo_count(fuel_use);
+
+			// Bike is not fully charged?
+			if (cur_fuel < 80000) then begin
+				while (cur_fuel < 80000) do begin
+					cur_fuel := car_gas_amount;
+					//debug("charge!" + cur_fuel);
+
+					if fuel == PID_MICRO_FUSION_CELL then begin
+						car_give_gas(800);
+						set_weapon_ammo_count(fuel_use, get_weapon_ammo_count(fuel_use) - 1);
+					end
+					else if fuel == PID_SMALL_ENERGY_CELL then begin
+						car_give_gas(400);
+						set_weapon_ammo_count(fuel_use, get_weapon_ammo_count(fuel_use) - 1);
+					end
+				end
+				display_msg(mstr(510));
+
+			end
+			// Bike is fully charged
+			else begin
+				display_msg(mstr(511));
+			end
+
+		end
+	end
+end
+
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_REPAIR) then begin
+		script_overrides;
+		display_mstr(451);
+   end
+end

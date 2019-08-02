@@ -1022,3 +1022,10 @@
 {52900}{}{Mining Machine}
 {53000}{}{End Boss Knife}
 {53100}{}{End Boss Plasma Gun}
+{53200}{}{Motorcycle Trunk}
+{53201}{}{The trunk is a great place to store your little bit of stuff.}
+{53300}{}{Sidecar}
+{53301}{}{The sidecar allows another passenger. Also it is a great place to store your little bit of stuff.}
+{53400}{}{Motorcycle Key}
+{53401}{}{This key belongs to a Chrysalis motorcycle.}
+

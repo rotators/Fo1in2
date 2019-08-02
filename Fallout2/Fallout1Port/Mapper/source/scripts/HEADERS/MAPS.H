@@ -18,10 +18,19 @@
 #define AREA_BONEYARD             (10)
 #define AREA_CATHEDRAL            (11)
 
-#define AREA_RND_DESERT           (49)
-#define AREA_RND_MOUNTAIN         (50)
-#define AREA_RND_CITY             (51)
-#define AREA_RND_COAST            (52)
+#define AREA_CAR_OUTTA_GAS        (21)
+
+#define AREA_RND_ENC_DESERT       (26)
+#define AREA_RND_ENC_MOUNTAIN     (27)
+#define AREA_RND_ENC_CITY         (28)
+#define AREA_RND_ENC_COAST        (29)
+
+#define AREA_SHADOW_MAPS          (47)
+
+#define AREA_RND_DESERT           (49) // "Manual" player encounter
+#define AREA_RND_MOUNTAIN         (50) // "Manual" player encounter
+#define AREA_RND_CITY             (51) // "Manual" player encounter
+#define AREA_RND_COAST            (52) // "Manual" player encounter
 
 /*******************************************************************************
                          Индекс текущего города
@@ -97,7 +106,8 @@
 #define MAP_MOUNTN2  (50)
 #define MAP_FOOT     (51)
 #define MAP_TARDIS   (52)
-#define MAP_TALKCOW  (53)
+//#define MAP_TALKCOW  (53) // unused
+#define MAP_CAR_DESERT (53)
 #define MAP_USEDCAR  (54)
 #define MAP_BRODEAD  (55)
 #define MAP_DESCRVN1 (56)

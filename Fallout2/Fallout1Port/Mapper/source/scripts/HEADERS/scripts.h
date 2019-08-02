@@ -994,5 +994,7 @@
 #define SCRIPT_CHEATBOX  (981)
 #define SCRIPT_NIF2HINT  (982)  // niF2Hint.int    ; New Reno Fallout 2 Hintbook
 #define SCRIPT_RNDENC 	 (983)	// Random encounter map selector script
+#define SCRIPT_MOTRCYCL  (984)	// Drivable vehicle 
+#define SCRIPT_MOTRTRNK  (985)  // Motorcycle trunk
 
 #endif // SCRIPTS_H
