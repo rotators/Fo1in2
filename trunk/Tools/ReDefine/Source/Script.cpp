@@ -23,27 +23,10 @@ ReDefine::ScriptEdit::ScriptEdit() :
     Results()
 {}
 
-static bool IfFunction( ReDefine*, const std::vector<std::string>&, const ReDefine::ScriptCode& code )
-{
-    return code.Function == true;
-}
-
-static bool IfVariable( ReDefine*, const std::vector<std::string>&, const ReDefine::ScriptCode& code )
-{
-    return code.Function == false;
-}
-
-static bool IfName( ReDefine*, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
-{
-    if( values.size() < 1 || !values[0].size() )
-        return false;
-
-    return code.Name == values[0];
-}
 
 static bool IfArgumentValue( ReDefine* self, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
 {
-    if( !self || values.size() < 2 || !values[0].size() || !values[1].size() )
+    if( !self || values.size() < 2 || !values[0].length() || !values[1].length() )
         return false;
 
     int idx = -1;
@@ -56,6 +39,100 @@ static bool IfArgumentValue( ReDefine* self, const std::vector<std::string>& val
     return code.Arguments[idx] == values[1];
 }
 
+static bool IfFunction( ReDefine*, const std::vector<std::string>&, const ReDefine::ScriptCode& code )
+{
+    return code.Function == true;
+}
+
+
+static bool IfName( ReDefine*, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+{
+    if( values.size() < 1 || !values[0].length() )
+        return false;
+
+    return code.Name == values[0];
+}
+
+static bool IfOperatorName( ReDefine* self, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+{
+    if( !self || values.size() < 1 || !values[0].length() || !code.Operator.length() )
+        return false;
+
+    return self->GetOperatorName( code.Operator ) == values[0];
+}
+
+static bool IfOperatorValue( ReDefine*, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+{
+    if( values.size() < 1 || !values[0].length() || !code.OperatorArgument.length() )
+        return false;
+
+    return code.OperatorArgument == values[0];
+}
+
+static bool IfVariable( ReDefine*, const std::vector<std::string>&, const ReDefine::ScriptCode& code )
+{
+    return code.Function == false;
+}
+
+static void DoArgumentsClear( ReDefine*, const std::string&, ReDefine::ScriptCode& code )
+{
+    code.Arguments.clear();
+}
+
+static void DoArgumentsResize( ReDefine* self, const std::string& value, ReDefine::ScriptCode& code )
+{
+    if( !self )
+        return;
+
+    int size = -1;
+    if( !value.size() || !self->TextIsInt( value ) || !self->TextGetInt( value, size ) || size < 0 )
+        return;
+
+    code.Arguments.resize( size );
+}
+
+static void DoFunction( ReDefine* self, const std::string& value, ReDefine::ScriptCode& code )
+{
+    code.Function = true;
+
+    if( self && value.length() )
+        self->EditDo["DoNameChange"] ( self, value, code );
+}
+
+static void DoLogCurrentLine( ReDefine* self, const std::string& value, ReDefine::ScriptCode& )
+{
+    if( !self )
+        return;
+
+    ReDefine::SStatus::SCurrent previous = self->Status.Current;
+    self->Status.Current.Line.clear();
+
+    if( value.length() )
+    {
+
+        if( value == "DEBUG" )
+        {
+            self->DEBUG( nullptr, "%%%%" );
+            self->Status.Current.Clear();
+            self->DEBUG( nullptr, "   %s", previous.Line.c_str() );
+        }
+        else if( value == "WARNING" )
+        {
+            self->WARNING( nullptr, "%%%%" );
+            self->Status.Current.Clear();
+            self->WARNING( nullptr, "   %s", previous.Line.c_str() );
+        }
+
+    }
+    else
+    {
+        self->ILOG( "%%%%" );
+        self->LOG( "   %s", previous.Line.c_str() );
+    }
+
+    self->Status.Current = previous;
+}
+
 static void DoNameChange( ReDefine*, const std::string& value, ReDefine::ScriptCode& code )
 {
     if( !value.length() )
@@ -64,13 +141,23 @@ static void DoNameChange( ReDefine*, const std::string& value, ReDefine::ScriptC
     code.Name = value;
 }
 
-static void DoArgumentsResize( ReDefine* self, const std::string& value, ReDefine::ScriptCode& code )
+static void DoOperatorClear( ReDefine*, const std::string&, ReDefine::ScriptCode& code )
 {
-    int size = -1;
-    if( !value.size() || !self->TextIsInt( value ) || !self->TextGetInt( value, size ) || size < 0 )
-        return;
+    code.Operator.clear();
+    code.OperatorArgument.clear();
+}
 
-    code.Arguments.resize( size );
+static void DoVariable( ReDefine* self, const std::string& value, ReDefine::ScriptCode& code )
+{
+    code.Function = false;
+
+    if( self )
+    {
+        self->EditDo["DoArgumentsClear"] ( self, std::string(), code );
+
+        if( value.length() )
+            self->EditDo["DoNameChange"] ( self, value, code );
+    }
 }
 
 //
@@ -78,14 +165,21 @@ static void DoArgumentsResize( ReDefine* self, const std::string& value, ReDefin
 void ReDefine::InitScript()
 {
     // must start with "If"
-    EditIf["IfFunction"] = &IfFunction;
-    EditIf["IfVariable"] = &IfVariable;
-    EditIf["IfName"] = &IfName;
     EditIf["IfArgumentValue"] = &IfArgumentValue;
+    EditIf["IfFunction"] = &IfFunction;
+    EditIf["IfName"] = &IfName;
+    EditIf["IfOperatorName"] = &IfOperatorName;
+    EditIf["IfOperatorValue"] = &IfOperatorValue;
+    EditIf["IfVariable"] = &IfVariable;
 
     // must start with "Do"
-    EditDo["DoNameChange"] = &DoNameChange;
+    EditDo["DoArgumentsClear"] = &DoArgumentsClear;
     EditDo["DoArgumentsResize"] = &DoArgumentsResize;
+    EditDo["DoFunction"] = &DoFunction;
+    EditDo["DoLogCurrentLine"] = &DoLogCurrentLine;
+    EditDo["DoNameChange"] = &DoNameChange;
+    EditDo["DoOperatorClear"] = &DoOperatorClear;
+    EditDo["DoVariable"] = &DoVariable;
 }
 
 void ReDefine::FinishScript( bool finishCallbacks /* = true */ )
