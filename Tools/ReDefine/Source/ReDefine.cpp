@@ -1,7 +1,4 @@
 #include <algorithm>
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
 #include <fstream>
 
 #if defined (HAVE_FILESYSTEM)
@@ -21,94 +18,6 @@ namespace std_filesystem = std::experimental::filesystem;
 #include "FOClassic/Ini.h"
 
 #include "ReDefine.h"
-
-constexpr unsigned short MAX_LOGTEXT = 4096;
-
-static unsigned int StrLength( const char* str )
-{
-    const char* str_ = str;
-    while( *str )
-        str++;
-    return (uint)(str - str_);
-}
-
-static void Print( ReDefine* self, const char* prefix, const char* function, const char* format, va_list& args, bool lineInfo )
-{
-    std::string full;
-    std::string log = "ReDefine";
-
-    // prefix is part of message and logfile name
-    if( prefix )
-    {
-        full += std::string( prefix );
-        full += " ";
-
-        log += ".";
-        log += std::string( prefix );
-    }
-
-    log += ".log";
-
-    // add current function
-    if( function )
-    {
-        full += "(";
-        full += std::string( function );
-        full += ") ";
-    }
-
-    // prepare text
-    char text[MAX_LOGTEXT] = { 0 };
-    std::vsnprintf( text, sizeof(text), format, args );
-    text[MAX_LOGTEXT - 1] = 0;
-
-    // skip empty text
-    if( !StrLength( text ) )
-        return;
-
-    full += std::string( text );
-
-    // append filename/line number, if available
-    if( lineInfo && self && !self->Status.Current.File.empty() )
-    {
-        // use "fileline<F:L>" if line number is available
-        // use "file<F>" if line number is not available
-
-        full += " : file";
-        if( self->Status.Current.LineNumber )
-            full += "line";
-        full += "<";
-
-        full += self->Status.Current.File;
-        if( self->Status.Current.LineNumber )
-        {
-            full += ":";
-            full += std::to_string( (long long)self->Status.Current.LineNumber );
-        }
-        full += ">";
-    }
-
-    // append currently processed line
-    if( self && !self->Status.Current.Line.empty() )
-    {
-        full += " :: ";
-        full += self->TextGetTrimmed( self->Status.Current.Line );
-    }
-
-    // show...
-    std::printf( "%s\n", full.c_str() );
-
-    // ...and save
-    std::ofstream flog;
-    flog.open( log, std::ios::out | std::ios::app );
-    if( flog.is_open() )
-    {
-        flog << full;
-        flog << std::endl;
-
-        flog.close();
-    }
-}
 
 //
 
@@ -191,46 +100,14 @@ void ReDefine::Finish()
     FinishVariables();
 }
 
-// logging
+// files reading
 
-void ReDefine::DEBUG( const char* function, const char* format, ... )
-{
-    va_list list;
-    va_start( list, format );
-    Print( this, "DEBUG", function, format, list, true );
-    va_end( list );
-}
-
-void ReDefine::WARNING( const char* func, const char* format, ... )
-{
-    va_list list;
-    va_start( list, format );
-    Print( this, "WARNING", func, format, list, true );
-    va_end( list );
-}
-
-void ReDefine::LOG( const char* format, ... )
-{
-    va_list list;
-    va_start( list, format );
-    Print( this, nullptr, nullptr, format, list, false );
-    va_end( list );
-}
-
-void ReDefine::ILOG( const char* format, ... )
-{
-    va_list list;
-    va_start( list, format );
-    Print( this, nullptr, nullptr, format, list, true );
-    va_end( list );
-}
-
-// generic file reading
 bool ReDefine::ReadFile( const std::string& filename, std::vector<std::string>& lines )
 {
     lines.clear();
 
     // don't waste time on empty files
+    // also, while( !std::ifstream::eof() ) goes wild on empty files
     if( std_filesystem::file_size( filename ) == 0 )
         return true;
 
@@ -283,6 +160,8 @@ bool ReDefine::ReadConfig( const std::string& defines, const std::string& variab
     return true;
 }
 
+// files processing
+
 void ReDefine::ProcessHeaders( const std::string& path )
 {
     // move program defines to function scope
@@ -298,7 +177,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
     Headers.clear();
 
     // restore program defines
-    // if type has been added by header, put it in RegularDefines (possibly overriding header value),
+    // if type has been added by header, put it in RegularDefines (possibly overriding value from header),
     // otherwise, use ProgramDefines
     for( const auto& itProg : programDefines )
     {
@@ -320,7 +199,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
     StringVectorMap     validatedFunctions;
 
     // validate variables configuration
-    // virtual types "?", "??" and "???" are not valid for variables
+    // virtual ? types are not valid for variables
 
     for( const auto& var : VariablesOperators )
     {
@@ -356,7 +235,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
     validatedOperators.clear();
 
     // validate functions configuration
-    // virtual types "?", "??" and "???" are valid for functions arguments only
+    // virtual ? types are valid for functions arguments only
 
     for( const auto& var : FunctionsOperators )
     {
@@ -381,7 +260,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
         for( const auto& type : func.second )
         {
             argument++;
-            if( type != "?" && type != "??" && type != "???" && !IsDefineType( type ) )
+            if( !(type.front() == '?' && type.back() == '?') && !IsDefineType( type ) )
             {
                 WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> argument<%u>", type.c_str(), func.first.c_str(), argument );
                 valid = false;
@@ -424,6 +303,7 @@ void ReDefine::ProcessScripts( const std::string& path, const bool readOnly /* =
 
     std::vector<std::string> scripts;
 
+
     for( const auto& file : std_filesystem::recursive_directory_iterator( path ) )
     {
         if( !std_filesystem::is_regular_file( file ) ) // TODO? symlinks
@@ -433,7 +313,7 @@ void ReDefine::ProcessScripts( const std::string& path, const bool readOnly /* =
             continue;
 
         scripts.push_back( file.path().string().substr( path.length(), file.path().string().length() - path.length() ) );
-        scripts.back().erase( 0, scripts.back().find_first_not_of( "\\/" ) ); // trim left
+        scripts.back().erase( 0, scripts.back().find_first_not_of( "\\/" ) );  // trim left
     }
 
     std::sort( scripts.begin(), scripts.end() );

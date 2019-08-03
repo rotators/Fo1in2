@@ -21,7 +21,7 @@ void ReDefine::FinishDefines()
     VirtualDefines.clear();
 }
 
-//
+// reading
 
 bool ReDefine::ReadConfigDefines( const std::string& sectionPrefix )
 {
@@ -98,7 +98,7 @@ bool ReDefine::ReadConfigDefines( const std::string& sectionPrefix )
     return definesFound;
 }
 
-//
+// utils
 
 bool ReDefine::IsDefineType( const std::string& type )
 {
@@ -153,7 +153,7 @@ bool ReDefine::GetDefineName( const std::string& type, const int value, std::str
     return false;
 }
 
-//
+// processing
 
 bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& header )
 {

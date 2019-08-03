@@ -8,7 +8,7 @@ void ReDefine::FinishFunctions()
     FunctionsOperators.clear();
 }
 
-//
+// reading
 
 bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 {
@@ -84,7 +84,7 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
     return true;
 }
 
-//
+// processing
 
 void ReDefine::ProcessFunctionArguments( ReDefine::ScriptCode& function )
 {
@@ -125,7 +125,7 @@ void ReDefine::ProcessFunctionArguments( ReDefine::ScriptCode& function )
             WARNING( __FUNCTION__, "argument<%u> type not set", idx );
             continue;
         }
-        else if( function.ArgumentsTypes[idx] == "?" || function.ArgumentsTypes[idx] == "??" || function.ArgumentsTypes[idx] == "???" )
+        else if( function.ArgumentsTypes[idx].front() == '?' && function.ArgumentsTypes[idx].back() == '?' )
         {
             ProcessValueGuessing( function.Arguments[idx] );
             continue;

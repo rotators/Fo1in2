@@ -16,12 +16,21 @@ public:
 
     struct ScriptCode;
 
-    typedef std::map<std::string, std::map<int, std::string>>                                   DefinesMap;
-    typedef std::map<std::string, std::map<std::string, std::string>>                           GenericOperatorsMap;
-    typedef std::function<bool (ReDefine*, const std::vector<std::string>&, const ScriptCode&)> ScriptEditIf;
-    typedef std::function<bool (ReDefine*, const std::vector<std::string>&, ScriptCode&)>       ScriptEditDo;
-    typedef std::map<std::string, std::vector<std::string>>                                     StringVectorMap;
-    typedef std::map<std::string, std::map<std::string, unsigned int>>                          UnknownMap;
+    //
+    // misc maps
+    //
+
+    typedef std::map<std::string, std::map<int, std::string>>          DefinesMap;
+    typedef std::map<std::string, std::map<std::string, std::string>>  GenericOperatorsMap;
+    typedef std::map<std::string, std::vector<std::string>>            StringVectorMap;
+    typedef std::map<std::string, std::map<std::string, unsigned int>> UnknownMap;
+
+    //
+    // script edit actions
+    //
+
+    typedef std::function<bool (ReDefine*, const ScriptCode&, const std::vector<std::string>&)> ScriptEditIf;
+    typedef std::function<bool (ReDefine*, ScriptCode&, const std::vector<std::string>&)>       ScriptEditDo;
 
     //
     // ReDefine
@@ -73,11 +82,6 @@ public:
     void Init();
     void Finish();
 
-    void DEBUG( const char* func, const char* format, ... );
-    void WARNING( const char* func, const char* format, ... );
-    void LOG( const char* format, ... );
-    void ILOG( const char* format, ... );
-
     bool ReadFile( const std::string& filename, std::vector<std::string>& lines );
     bool ReadConfig( const std::string& defines, const std::string& variable_prefix, const std::string& function_prefix, const std::string& raw, const std::string& script );
 
@@ -88,6 +92,7 @@ public:
     // Defines
     //
 
+    // script header definition
     struct Header
     {
         const std::string Filename;
@@ -98,7 +103,7 @@ public:
         Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& group );
     };
 
-    // holds [Defines] between reading configuration step and processing headers
+    // holds [Defines] between reading configuration and processing headers steps
     std::vector<Header> Headers;
 
     DefinesMap          RegularDefines; // <type, <value, name>>
@@ -129,6 +134,15 @@ public:
     bool ReadConfigFunctions( const std::string& sectionPrefix );
 
     void ProcessFunctionArguments( ScriptCode& function );
+
+    //
+    // Log
+    //
+
+    void DEBUG( const char* func, const char* format, ... );
+    void WARNING( const char* func, const char* format, ... );
+    void ILOG( const char* format, ... );
+    void LOG( const char* format, ... );
 
     //
     // Operators
@@ -164,8 +178,8 @@ public:
 
     enum ScriptCodeFlag : unsigned int
     {
-        SCRIPT_CODE_FUNCTION = 0x01,         // if not set, code is variable
-        SCRIPT_CODE_EDITED   = 0x02
+        SCRIPT_CODE_FUNCTION = 0x01, // set for functions, unset for variables
+        SCRIPT_CODE_EDITED   = 0x02  // set if any result function success
     };
 
     struct ScriptCode
@@ -215,8 +229,19 @@ public:
 
     bool ReadConfigScript( const std::string& sectionPrefix );
 
+    // returns string representation of ScriptCode
     std::string GetFullString( const ScriptCode& code );
-    void        SetFullString( ScriptCode& code );
+
+    // sets ScriptCode::Full to value returned by GetFullString()
+    void SetFullString( ScriptCode& code );
+
+    //
+
+    // checks if condition action exists before calling it
+    bool CallEditIf( const std::string& name, const ScriptCode& code, std::vector<std::string> values = std::vector<std::string>() );
+
+    // checks if result action exists before calling it
+    bool CallEditDo( const std::string& name, ScriptCode& code, std::vector<std::string> values = std::vector<std::string>() );
 
     void ProcessScript( const std::string& path, const std::string& filename, const bool readOnly = false );
     void ProcessScriptEdit( const std::vector<ScriptEdit>& edits, ScriptCode& code );

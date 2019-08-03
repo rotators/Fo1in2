@@ -18,6 +18,7 @@ target_sources( ReDefine
 
 		Defines.cpp
 		Functions.cpp
+		Log.cpp
 		Operators.cpp
 		Raw.cpp
 		ReDefine.cpp

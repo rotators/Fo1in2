@@ -111,6 +111,7 @@ endif()
 
 FormatSource( "Defines.cpp" )
 FormatSource( "Functions.cpp" )
+FormatSource( "Log.cpp" )
 FormatSource( "Main.cpp" )
 FormatSource( "Operators.cpp" )
 FormatSource( "Raw.cpp" )
