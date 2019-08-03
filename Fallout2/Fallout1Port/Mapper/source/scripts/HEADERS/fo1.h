@@ -6,10 +6,19 @@
 
 #include "debug.h"
 
-//==============================================================
-// Generic:
-// Note: If the player decides to continue after finishing the game,
-// He will be moved to a new random position on the worldmap.
+/*********************************************************
+	General stats stuff. Moved here because of Wipe.
+*********************************************************/
+// Trait defines //
+#define TRAIT_PERK  (0)
+#define TRAIT_OBJECT (1)
+#define TRAIT_TRAIT  (2)
+
+/*********************************************************
+	Generic:
+	Note: If the player decides to continue after finishing the game,
+	He will be moved to a new random position on the worldmap.
+*********************************************************/
 #define set_story_finished				set_world_map_pos(random(780,990),random(130,260));	\
 										set_global_var(GAME_CONTINUES,100); 				\
 										if (dude_is_male) then 								\
@@ -26,6 +35,7 @@
 #define military_base_destoryed 		(global_var(VATS_BLOWN_CUTSCENE_DONE) > 0)
 #define cathedral_destroyed 			(global_var(MASTER_BLOWN_CUTSCENE) > 0)
 
+// Send NPCs from "day" to "night" position:
 #define sleeping 	/*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
 					if (local_var(LVAR_Sleeping) == 1) then begin \
 						if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin \
@@ -99,16 +109,18 @@
 #define is_self_visible				(obj_is_visible_flag(self_obj))
 #define is_map(x)					(cur_map_index == x)
 			
-							
-//==============================================================
-// Settings:
+
+/*********************************************************
+	Settings:
+*********************************************************/
 #define fo1in2_fluff_enc_disabled 		((global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0) or get_car_from_worldmap)
 #define fo1in2_armor_change_disabled 	(global_var(GVAR_ALLOW_PARTY_ARMOR_CHANGE) == 0)
 #define fo1in2_auto_doors_closing 		(global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
 #define fo1in2_motorcycle_disabled 		(global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
 
-//==============================================================
-// Pick dead body type:
+/*********************************************************
+	Pick dead body type:
+*********************************************************/
 #define pick_dead_body_type 			variable LVar0 := 0; \
 										LVar0 := (random(0, 6) + random(0, 6) + random(0, 6)); \
 										if (LVar0 <= 5) then begin/*// 31.5%*/ \
@@ -137,14 +149,16 @@
 											end \
 										end
 
-//==============================================================
-// Water Chip related:
+/*********************************************************
+	Water Chip related:
+*********************************************************/
 #define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
 #define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
 
-//==============================================================
-// Invasion related:
 
+/*********************************************************
+	Invasion related:
+*********************************************************/
 #define v13_invaded 						(global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
 #define hub_invaded							(global_var(GVAR_THE_HUB_WAS_INVADED) == 1)
 #define bos_invaded							(global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)
@@ -176,12 +190,15 @@
 #define get_junktown_days_left 				(global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
 
 
-//==============================================================
-// Party related:
+/*********************************************************
+	Party related:
+*********************************************************/
 #define unlimited_party_members 		global_var(GVAR_UNLIMITED_PARTY_MEMBERS) == 1
 
-//==============================================================
-// Quests
+
+/*********************************************************
+	Quests:
+*********************************************************/
 #define necropolis_wpump_fixed				(global_var(NECROP_WATER_PUMP_FIXED) == 2)
 #define followers_trained 					(global_var(SLIDE_TRAIN_FOLLOWERS) == 1)
 
@@ -194,8 +211,10 @@
 #define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
 #define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
 
-//==============================================================
-// Endgame slideshow
+
+/*********************************************************
+	Endgame slideshow
+*********************************************************/
 #define set_end_Vats 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,1)
 #define set_end_Master 						set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,2)
 

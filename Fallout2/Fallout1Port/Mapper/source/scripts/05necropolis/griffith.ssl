@@ -95,6 +95,7 @@ variable In_Timed_Event := 0;
 variable Item;
 variable my_hex;
 variable angry := 0;
+variable knows_price := 0;
 
 /*******************************************************************
 *                           PROCEDURES                             *
@@ -126,23 +127,35 @@ procedure critter_p_proc begin
 		self_attack_dude;
 	end
 
-	if (global_var(GVAR_QUEST_MOTORCYCLE) == 1) then
-		start_dialog_at_node(Node1000);
-	else if (global_var(GVAR_QUEST_MOTORCYCLE) == 3) then
-   	add_timer_event(self_obj,game_ticks(0),EVENT_FLOAT_MOTORCYCLE);
+	if not(combat_is_initialized) then begin
+		// Player "used" the bike for the first time
+		if (global_var(GVAR_QUEST_MOTORCYCLE) == 1) then
+			start_dialog_at_node(Node1000);
+		else if (global_var(GVAR_QUEST_MOTORCYCLE) == 3) then
+	   	add_timer_event(self_obj,game_ticks(0),EVENT_FLOAT_MOTORCYCLE);
 
-   if (In_Timed_Event == 0 and Current_Distance_From_Dude < 15) then begin
-   	In_Timed_Event := 1;
-   	add_timer_event(self_obj,game_ticks(1),EVENT_ROTATE);
+		// Always look at the player
+	   if (In_Timed_Event == 0 and Current_Distance_From_Dude < 15) and (local_var(LVAR_MoveTo) == 0) then begin
+	   	In_Timed_Event := 1;
+	   	add_timer_event(self_obj,game_ticks(1),EVENT_ROTATE);
+	   end
+
+		// Player has stolen the controller and Griffith notices it
+		if (self_can_see_dude and local_var(LVAR_Hostile) == 0) and ((obj_is_carrying_obj_pid(dude_obj, PID_MOTO_KEY)) and (global_var(GVAR_QUEST_MOTORCYCLE) < 10))  then begin
+			if not(is_success(roll_vs_skill(dude_obj, SKILL_SNEAK, -10))) then begin
+				float_angry(160);
+				set_local_var(LVAR_Hostile,1);
+			end
+		end
+
+	   // Player gave fuel to Griffith, he drives away.
+	   if (local_var(LVAR_EnergyCells) == 9) then
+	   	call leave_with_bike;
+
+	   // Player bought the bike.
+	   if (local_var(LVAR_StartMoving) == 1) then
+	   	call leave_map;
    end
-
-   // Player gave fuel to Griffith, he drives away.
-   if (local_var(LVAR_EnergyCells) == 9) then
-   	call leave_with_bike;
-
-   // Player bought the bike.
-   if (local_var(LVAR_StartMoving) == 1) then
-   	call leave_map;
 end
 
 procedure leave_map begin
@@ -182,66 +195,77 @@ procedure leave_with_bike begin
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == EVENT_GET_CONTROLLER) then begin
-		if (local_var(LVAR_MoveTo) == 0) and (self_tile == wp_getpart_1) then begin
-			set_local_var(LVAR_MoveTo,1);
-		end
-		else if (local_var(LVAR_MoveTo) == 1) and (self_tile == wp_getpart_2) then begin
-			animate_rotation(0);
-      	reg_anim_clear(self_obj);
-         reg_anim_begin();
-            reg_anim_animate(self_obj, ANIM_magic_hands_ground, -1);
-         reg_anim_end();
+	if not(combat_is_initialized) then begin
 
-		   Item:=create_object(PID_MOTO_KEY,0,0);
-		   add_mult_objs_to_inven(self_obj,Item,1);
+		// Move out to get the fuel cell controller
+		if (fixed_param == EVENT_GET_CONTROLLER) then begin
+			if (local_var(LVAR_MoveTo) == 0) and (self_tile == wp_getpart_1) then begin
+				set_local_var(LVAR_MoveTo,1);
+			end
+			else if (local_var(LVAR_MoveTo) == 1) and (self_tile == wp_getpart_2) then begin
+				animate_rotation(0);
+	      	reg_anim_clear(self_obj);
+	         reg_anim_begin();
+	            reg_anim_animate(self_obj, ANIM_magic_hands_ground, -1);
+	         reg_anim_end();
 
-			set_local_var(LVAR_MoveTo,2);
-		end
-		else if (local_var(LVAR_MoveTo) == 2) and (self_tile == wp_getpart_1) then begin
-			set_local_var(LVAR_MoveTo,3);
-			animate_move_obj_to_tile(self_obj, wp_getpart_bike, 0);
-		end
-		else if (local_var(LVAR_MoveTo) == 3) and (self_tile == wp_getpart_bike) then begin
-			set_local_var(LVAR_EnergyCells,10);
-			set_local_var(LVAR_MoveTo, 4);
+			   Item:=create_object(PID_MOTO_KEY,0,0);
+			   add_mult_objs_to_inven(self_obj,Item,1);
 
-			gfade_out(1);
-				Dest_Car(CAR_UNCLAIMED_HEX, 1)
-				destroy_object(tile_contains_pid_obj(18903,1,PID_MOTO1_TRUNK));
-				set_self_obj_invisible;
+			   set_global_var(GVAR_QUEST_MOTORCYCLE,6); // Took the controller from the stash
+				set_local_var(LVAR_MoveTo,2);
+			end
+			else if (local_var(LVAR_MoveTo) == 2) and (self_tile == wp_getpart_1) then begin
+				set_local_var(LVAR_MoveTo,3);
+				animate_move_obj_to_tile(self_obj, wp_getpart_bike, 0);
+			end
+			else if (local_var(LVAR_MoveTo) == 3) and (self_tile == wp_getpart_bike) then begin
+				if (obj_is_carrying_obj_pid(self_obj, PID_MOTO_KEY)) then begin // only disappear if you still have the controller in your inventory
+					set_local_var(LVAR_EnergyCells,10);
+					set_local_var(LVAR_MoveTo, 4);
 
-				if (Current_Distance_From_Dude < 25) then
-					play_sfx("engineon");
+					gfade_out(1);
+						Dest_Car(CAR_UNCLAIMED_HEX, 1)
+						destroy_object(tile_contains_pid_obj(18903,1,PID_MOTO1_TRUNK));
+						set_self_obj_invisible;
 
-				display_msg(mstr(125) + EXP_GIVEN_ENERGY_CELLS + mstr(126));
-				give_exp_points(EXP_GIVEN_ENERGY_CELLS);
-			gfade_in(1);
-		end
-		else if (local_var(LVAR_MoveTo) == 0) then begin
-			animate_move_obj_to_tile(self_obj, wp_getpart_1, 0);
-		end
-		else if (local_var(LVAR_MoveTo) == 1) then begin
-			animate_move_obj_to_tile(self_obj, wp_getpart_2, 0);
-		end
-		else if (local_var(LVAR_MoveTo) == 2) then begin
-			animate_move_obj_to_tile(self_obj, wp_getpart_1, 0);
+						//if (Current_Distance_From_Dude < 35) then
+							play_sfx("engineon");
+
+						display_msg(mstr(125) + EXP_GIVEN_ENERGY_CELLS + mstr(126));
+						give_exp_points(EXP_GIVEN_ENERGY_CELLS);
+					gfade_in(1);
+				end
+				else begin
+					animate_rotation(random(0,5));
+				end
+			end
+			else if (local_var(LVAR_MoveTo) == 0) then begin
+				animate_move_obj_to_tile(self_obj, wp_getpart_1, 0);
+			end
+			else if (local_var(LVAR_MoveTo) == 1) then begin
+				animate_move_obj_to_tile(self_obj, wp_getpart_2, 0);
+			end
+			else if (local_var(LVAR_MoveTo) == 2) then begin
+				animate_move_obj_to_tile(self_obj, wp_getpart_1, 0);
+			end
+			add_timer_event(self_obj,game_ticks(1),EVENT_GET_CONTROLLER);
 		end
 
-		add_timer_event(self_obj,game_ticks(1),EVENT_GET_CONTROLLER);
-	end
-	else begin
-		// Player looks at motorcycle
-		if (fixed_param == EVENT_FLOAT_MOTORCYCLE) then begin
-			set_global_var(GVAR_QUEST_MOTORCYCLE,2);
-			self_look_at_dude;
-			float(150);
-		end
+		// Normal behaviour
+		else begin
+			// Player looks at motorcycle
+			if (fixed_param == EVENT_FLOAT_MOTORCYCLE) then begin
+				set_global_var(GVAR_QUEST_MOTORCYCLE,2);
+				self_look_at_dude;
+				float(150);
+			end
 
-		// Griffith follows the player with his eyes
-		else if (fixed_param == EVENT_ROTATE) then begin
-			self_look_at_dude;
-			In_Timed_Event := 0;
+			// Griffith follows the player with his eyes
+			else if (fixed_param == EVENT_ROTATE) then begin
+				self_look_at_dude;
+				In_Timed_Event := 0;
+			end
 		end
 	end
 end
@@ -266,10 +290,13 @@ procedure pickup_p_proc begin
 end
 
 procedure talk_p_proc begin
-	dude_look_at_critter;
-	self_look_at_dude;
+dude_look_at_critter;
 
-	if (local_var(LVAR_StartMoving) > 0) or (local_var(LVAR_EnergyCells) >= 9) then begin
+	if ((obj_is_carrying_obj_pid(dude_obj, PID_MOTO_KEY)) and (global_var(GVAR_QUEST_MOTORCYCLE) < 10))  then begin
+		float_angry(160);
+		set_local_var(LVAR_Hostile,1);
+	end
+	else if (local_var(LVAR_StartMoving) > 0) or (local_var(LVAR_EnergyCells) >= 9) then begin
 		float(random(175,180));
 	end
 	else if (local_var(LVAR_Here_Before) == 2) then begin
@@ -398,9 +425,11 @@ procedure Node1600 begin
 
 	if (obj_is_carrying_obj_pid(dude_obj, PID_MICRO_FUSION_CELL)) then begin
 		remove_pid_qty(dude_obj, PID_MICRO_FUSION_CELL, 1)
+		car_give_gas(400);
 	end
 	else begin
 		remove_pid_qty(dude_obj, PID_SMALL_ENERGY_CELL, 1)
+		car_give_gas(200);
 	end
 
 	Reply(1600);
@@ -421,8 +450,10 @@ end
 
 procedure Node1900 begin
 	set_local_var(LVAR_Here_Before,2);
+	knows_price := 1;
 
 	Reply(1900);
+	NOption(1950,Node1400,004);
 	NOption(1910,Node2000,004);
 	NOption(1920,Node3000,004); // 1000 caps
 	NOption(1930,Node2900,004); // 500 caps
@@ -488,6 +519,7 @@ procedure Node2600 begin
 	set_local_var(LVAR_MoveTo, wp_exit_1);
 	set_local_var(LVAR_MoveCycle, 0);
    set_local_var(LVAR_StartMoving, 1);
+   set_global_var(GVAR_QUEST_MOTORCYCLE,10);
 
    Item:=create_object(PID_MOTO_KEY,0,0);
    add_mult_objs_to_inven(dude_obj,Item,1);
@@ -502,8 +534,14 @@ procedure Node2600 begin
 end
 
 procedure Node2700 begin
-	Reply(2700);
+	if (knows_price == 0) then
+		Reply(2700);
+	else
+		Reply(2701);
 	NOption(1910,Node2000,004);
+	NOption(1920,Node3000,004); // 1000 caps
+	NOption(1930,Node2900,004); // 500 caps
+	NOption(mstr(1940) + g_bye,Node999,004);
 end
 
 procedure Node2800 begin
