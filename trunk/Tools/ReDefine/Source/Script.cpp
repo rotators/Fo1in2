@@ -28,6 +28,7 @@ void ReDefine::ScriptCode::UnsetFlag( unsigned int flag )
 {
     Flags = (Flags | flag) ^ flag;
 }
+
 //
 
 ReDefine::ScriptEdit::ScriptEdit() :
@@ -37,14 +38,49 @@ ReDefine::ScriptEdit::ScriptEdit() :
     Results()
 {}
 
+// script edit conditions
 
-static bool IfArgumentValue( ReDefine* self, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+// ? IfArgumentIs:INDEX,DEFINE
+// ? IfArgumentIs:INDEX,DEFINE,TYPE
+static bool IfArgumentIs( ReDefine* redefine, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
-    if( !self || values.size() < 2 || !values[0].length() || !values[1].length() )
+    if( !redefine || values.size() < 2 || !values[0].length() || !values[1].length() )
         return false;
 
     int idx = -1;
-    if( !self->TextIsInt( values[0] ) || !self->TextGetInt( values[0], idx ) || idx < 0 )
+    if( !redefine->TextIsInt( values[0] ) || !redefine->TextGetInt( values[0], idx ) || idx < 0 )
+        return false;
+
+    if( redefine->TextIsInt( code.Arguments[idx] ) )
+    {
+        int         val = -1;
+        std::string type = code.ArgumentsTypes[idx], value;
+
+        if( values.size() >= 3 )
+        {
+            if( redefine->IsDefineType( values[2] ) )
+                type = values[2];
+            else
+                return false;
+        }
+
+        if( !redefine->TextGetInt( code.Arguments[idx], val ) || !redefine->GetDefineName( type, val, value ) )
+            return false;
+
+        return value == values[1];
+    }
+
+    return code.Arguments[idx] == values[1];
+}
+
+// ? IfArgumentValue:INDEX,STRING
+static bool IfArgumentValue( ReDefine* redefine, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
+{
+    if( !redefine || values.size() < 2 || !values[0].length() || !values[1].length() )
+        return false;
+
+    int idx = -1;
+    if( !redefine->TextIsInt( values[0] ) || !redefine->TextGetInt( values[0], idx ) || idx < 0 )
         return false;
 
     if( code.Arguments.size() < (unsigned int)idx + 1 )
@@ -53,12 +89,28 @@ static bool IfArgumentValue( ReDefine* self, const std::vector<std::string>& val
     return code.Arguments[idx] == values[1];
 }
 
-static bool IfFunction( ReDefine*, const std::vector<std::string>&, const ReDefine::ScriptCode& code )
+// ? IfEdited
+static bool IfEdited( ReDefine*, const ReDefine::ScriptCode& code, const std::vector<std::string>& )
 {
-    return code.IsFlag( ReDefine::SCRIPT_CODE_FUNCTION );
+    return code.IsFlag( ReDefine::SCRIPT_CODE_EDITED );
 }
 
-static bool IfName( ReDefine*, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+// ? IfFunction
+// ? IfFunction:STRING
+// > IfName
+static bool IfFunction( ReDefine* redefine, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
+{
+    if( !code.IsFlag( ReDefine::SCRIPT_CODE_FUNCTION ) )
+        return false;
+
+    if( values.size() )
+        return redefine->CallEditIf( "IfName", code, { values[0] } );
+
+    return true;
+}
+
+// ? IfName:STRING
+static bool IfName( ReDefine*, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
     if( values.size() < 1 || !values[0].length() )
         return false;
@@ -66,15 +118,29 @@ static bool IfName( ReDefine*, const std::vector<std::string>& values, const ReD
     return code.Name == values[0];
 }
 
-static bool IfOperatorName( ReDefine* self, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+// ? IfNotEdited
+static bool IfNotEdited( ReDefine*, const ReDefine::ScriptCode& code, const std::vector<std::string>& )
 {
-    if( !self || values.size() < 1 || !values[0].length() || !code.Operator.length() )
-        return false;
-
-    return self->GetOperatorName( code.Operator ) == values[0];
+    return !code.IsFlag( ReDefine::SCRIPT_CODE_EDITED );
 }
 
-static bool IfOperatorValue( ReDefine*, const std::vector<std::string>& values, const ReDefine::ScriptCode& code )
+// ? IfOperator
+static bool IfOperator( ReDefine*, const ReDefine::ScriptCode& code, const std::vector<std::string>& )
+{
+    return code.Operator.length() > 0;
+}
+
+// ? IfOperatorName:STRING
+static bool IfOperatorName( ReDefine* redefine, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
+{
+    if( !redefine || values.size() < 1 || !values[0].length() || !code.Operator.length() )
+        return false;
+
+    return redefine->GetOperatorName( code.Operator ) == values[0];
+}
+
+// ? IfOperatorValue:STRING
+static bool IfOperatorValue( ReDefine*, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
     if( values.size() < 1 || !values[0].length() || !code.OperatorArgument.length() )
         return false;
@@ -82,24 +148,35 @@ static bool IfOperatorValue( ReDefine*, const std::vector<std::string>& values, 
     return code.OperatorArgument == values[0];
 }
 
-static bool IfVariable( ReDefine*, const std::vector<std::string>&, const ReDefine::ScriptCode& code )
+// ? IfVariable
+// ? IfVariable:STRING
+// >IfName
+static bool IfVariable( ReDefine* redefine, const ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
-    return code.IsFlag( ReDefine::SCRIPT_CODE_FUNCTION );
-}
-
-static bool DoArgumentChangeType( ReDefine* self, const std::vector<std::string>& values, ReDefine::ScriptCode& code )
-{
-    if( !self || values.size() < 2 || !values[0].length() || !values[1].length() || !code.IsFlag( ReDefine::SCRIPT_CODE_FUNCTION ) )
+    if( code.IsFlag( ReDefine::SCRIPT_CODE_FUNCTION ) )
         return false;
 
-    if( self->FunctionsArguments.find( code.Name ) == self->FunctionsArguments.end() )
+    if( values.size() )
+        return redefine->CallEditIf( "IfName", code, { values[0] } );
+
+    return true;
+}
+
+// script edit results
+
+static bool DoArgumentSetType( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values )
+{
+    if( !redefine || values.size() < 2 || !values[0].length() || !values[1].length() || !code.IsFlag( ReDefine::SCRIPT_CODE_FUNCTION ) )
+        return false;
+
+    if( redefine->FunctionsArguments.find( code.Name ) == redefine->FunctionsArguments.end() )
     {
-        self->WARNING( __FUNCTION__, "function<%s> must be added to configuration", code.Name.c_str() );
+        redefine->WARNING( __FUNCTION__, "function<%s> must be added to configuration", code.Name.c_str() );
         return false;
     }
 
     int idx = -1;
-    if( !self->TextIsInt( values[0] ) || !self->TextGetInt( values[0], idx ) || idx < 0 )
+    if( !redefine->TextIsInt( values[0] ) || !redefine->TextGetInt( values[0], idx ) || idx < 0 )
         return false;
 
     if( (unsigned int)idx >= code.Arguments.size() )
@@ -110,7 +187,7 @@ static bool DoArgumentChangeType( ReDefine* self, const std::vector<std::string>
     return true;
 }
 
-static bool DoArgumentsClear( ReDefine*, const std::vector<std::string>&, ReDefine::ScriptCode& code )
+static bool DoArgumentsClear( ReDefine*, ReDefine::ScriptCode& code, const std::vector<std::string>& )
 {
     code.Arguments.clear();
     code.ArgumentsTypes.clear();
@@ -118,13 +195,13 @@ static bool DoArgumentsClear( ReDefine*, const std::vector<std::string>&, ReDefi
     return true;
 }
 
-static bool DoArgumentsResize( ReDefine* self, const std::vector<std::string>& values, ReDefine::ScriptCode& code )
+static bool DoArgumentsResize( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values  )
 {
-    if( !self || !values.size() || !values[0].length() )
+    if( !redefine || !values.size() || !values[0].length() )
         return false;
 
     int size = -1;
-    if( !self->TextIsInt( values[0] ) || !self->TextGetInt( values[0], size ) || size < 0 )
+    if( !redefine->TextIsInt( values[0] ) || !redefine->TextGetInt( values[0], size ) || size < 0 )
         return false;
 
     code.Arguments.resize( size );
@@ -133,61 +210,59 @@ static bool DoArgumentsResize( ReDefine* self, const std::vector<std::string>& v
     return true;
 }
 
-static bool DoFunction( ReDefine* self, const std::vector<std::string>& values, ReDefine::ScriptCode& code )
+static bool DoFunction( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
-    if( !self )
+    if( !redefine )
         return false;
 
     code.SetFlag( ReDefine::SCRIPT_CODE_FUNCTION );
 
-    if( values.size() && values[0].length() )
+    if( values.size() )
     {
-        // std::vector<std::string> vals = { values[0] };
-
-        if( !self->EditDo["DoNameChange"] ( self, { values[0] }, code ) )
+        if( !redefine->CallEditDo( "DoNameSet", code, { values[0] } ) )
             return false;
     }
 
     return true;
 }
 
-static bool DoLogCurrentLine( ReDefine* self, const std::vector<std::string>& values, ReDefine::ScriptCode& )
+static bool DoLogCurrentLine( ReDefine* redefine, ReDefine::ScriptCode&, const std::vector<std::string>& values )
 {
-    if( !self )
+    if( !redefine )
         return false;
 
-    ReDefine::SStatus::SCurrent previous = self->Status.Current;
-    self->Status.Current.Line.clear();
+    ReDefine::SStatus::SCurrent previous = redefine->Status.Current;
+    redefine->Status.Current.Line.clear();
 
     if( values.size() && values[0].length() )
     {
 
         if( values[0] == "DEBUG" )
         {
-            self->DEBUG( nullptr, "%%%%" );
-            self->Status.Current.Clear();
-            self->DEBUG( nullptr, "   %s", previous.Line.c_str() );
+            redefine->DEBUG( nullptr, "%%%%" );
+            redefine->Status.Current.Clear();
+            redefine->DEBUG( nullptr, "   %s", previous.Line.c_str() );
         }
         else if( values[0] == "WARNING" )
         {
-            self->WARNING( nullptr, "%%%%" );
-            self->Status.Current.Clear();
-            self->WARNING( nullptr, "   %s", previous.Line.c_str() );
+            redefine->WARNING( nullptr, "%%%%" );
+            redefine->Status.Current.Clear();
+            redefine->WARNING( nullptr, "   %s", previous.Line.c_str() );
         }
 
     }
     else
     {
-        self->ILOG( "%%%%" );
-        self->LOG( "   %s", previous.Line.c_str() );
+        redefine->ILOG( "%%%%" );
+        redefine->LOG( "   %s", previous.Line.c_str() );
     }
 
-    self->Status.Current = previous;
+    redefine->Status.Current = previous;
 
     return true;
 }
 
-static bool DoNameChange( ReDefine*, const std::vector<std::string>& values, ReDefine::ScriptCode& code )
+static bool DoNameSet( ReDefine*,  ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
     if( !values.size() || !values[0].length() )
         return false;
@@ -197,7 +272,7 @@ static bool DoNameChange( ReDefine*, const std::vector<std::string>& values, ReD
     return true;
 }
 
-static bool DoOperatorClear( ReDefine*, const std::vector<std::string>&, ReDefine::ScriptCode& code )
+static bool DoOperatorClear( ReDefine*, ReDefine::ScriptCode& code, const std::vector<std::string>& )
 {
     code.Operator.clear();
     code.OperatorArgument.clear();
@@ -205,19 +280,19 @@ static bool DoOperatorClear( ReDefine*, const std::vector<std::string>&, ReDefin
     return true;
 }
 
-static bool DoVariable( ReDefine* self, const std::vector<std::string>& values, ReDefine::ScriptCode& code )
+static bool DoVariable( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values )
 {
-    if( !self )
+    if( !redefine )
         return false;
 
     code.UnsetFlag( ReDefine::SCRIPT_CODE_FUNCTION );
 
-    if( !self->EditDo["DoArgumentsClear"] ( self, {}, code ) )
+    if( !redefine->CallEditDo( "DoArgumentsClear", code ) )
         return false;
 
-    if( values.size() && values[0].length() )
+    if( values.size() )
     {
-        if( !self->EditDo["DoNameChange"] ( self, { values[0] }, code ) )
+        if( !redefine->CallEditDo( "DoNameSet", code, { values[0] } ) )
             return false;
     }
 
@@ -229,20 +304,24 @@ static bool DoVariable( ReDefine* self, const std::vector<std::string>& values, 
 void ReDefine::InitScript()
 {
     // must start with "If"
+    EditIf["IfArgumentIs"] = &IfArgumentIs;
     EditIf["IfArgumentValue"] = &IfArgumentValue;
+    EditIf["IfEdited"] = &IfEdited;
     EditIf["IfFunction"] = &IfFunction;
     EditIf["IfName"] = &IfName;
+    EditIf["IfNotEdited"] = &IfNotEdited;
+    EditIf["IfOperator"] = &IfOperator;
     EditIf["IfOperatorName"] = &IfOperatorName;
     EditIf["IfOperatorValue"] = &IfOperatorValue;
     EditIf["IfVariable"] = &IfVariable;
 
     // must start with "Do"
-    EditDo["DoArgumentChangeType"] = &DoArgumentChangeType;
+    EditDo["DoArgumentSetType"] = &DoArgumentSetType;
     EditDo["DoArgumentsClear"] = &DoArgumentsClear;
     EditDo["DoArgumentsResize"] = &DoArgumentsResize;
     EditDo["DoFunction"] = &DoFunction;
     EditDo["DoLogCurrentLine"] = &DoLogCurrentLine;
-    EditDo["DoNameChange"] = &DoNameChange;
+    EditDo["DoNameSet"] = &DoNameSet;
     EditDo["DoOperatorClear"] = &DoOperatorClear;
     EditDo["DoVariable"] = &DoVariable;
 }
@@ -259,7 +338,7 @@ void ReDefine::FinishScript( bool finishCallbacks /* = true */ )
     EditAfter.clear();
 }
 
-//
+// reading
 
 bool ReDefine::ReadConfigScript( const std::string& sectionPrefix )
 {
@@ -319,7 +398,7 @@ bool ReDefine::ReadConfigScript( const std::string& sectionPrefix )
                 before = true;
             else if( arg[0] == "RunAfter" )
                 after = true;
-            else if( arg[0].substr( 0, 2 ) == "If" )
+            else if( arg[0].length() >= 3 && arg[0].substr( 0, 2 ) == "If" )
             {
                 ScriptEdit::Action condition;
                 condition.Name = arg[0];
@@ -327,7 +406,7 @@ bool ReDefine::ReadConfigScript( const std::string& sectionPrefix )
 
                 edit.Conditions.push_back( condition );
             }
-            else if( arg[0].substr( 0, 2 ) == "Do" )
+            else if( arg[0].length() >= 3 && arg[0].substr( 0, 2 ) == "Do" )
             {
                 ScriptEdit::Action result;
                 result.Name = arg[0];
@@ -345,6 +424,7 @@ bool ReDefine::ReadConfigScript( const std::string& sectionPrefix )
 
         // DEBUG( __FUNCTION__, "%s : before<%s> after<%s> condition<%u>, result<%u>", edit.Name.c_str(), edit.Before ? "true" : "false", edit.After ? "true" : "false", edit.Conditions.size(), edit.Results.size() );
 
+        // "IGNORE" or error
         if( ignore )
             continue;
 
@@ -380,7 +460,7 @@ bool ReDefine::ReadConfigScript( const std::string& sectionPrefix )
     return true;
 }
 
-//
+// utils
 
 std::string ReDefine::GetFullString( const ScriptCode& code )
 {
@@ -391,7 +471,7 @@ std::string ReDefine::GetFullString( const ScriptCode& code )
 
     result = code.Name;
 
-    if( code.IsFlag( SCRIPT_CODE_FUNCTION ) || code.Arguments.size() )
+    if( code.IsFlag( SCRIPT_CODE_FUNCTION ) )
     {
         result += "(";
 
@@ -412,7 +492,35 @@ void ReDefine::SetFullString( ScriptCode& code )
     code.Full = GetFullString( code );
 }
 
-//
+// checks if given edit action exists before trying to call it
+// EditIf/EditDo should be free to modify by main application at any point;
+// while main application can use EditIf["IfThing"](...) like there's no tomorrow, ReDefine class doing same thing is Bad Idea (TM)
+
+bool ReDefine::CallEditIf( const std::string& name, const ReDefine::ScriptCode& code, std::vector<std::string> values /* = std::vector<std::string>() */ )
+{
+    auto it = EditIf.find( name );
+    if( it == EditIf.end() )
+    {
+        WARNING( __FUNCTION__, "script action condition<%s> not found", name.c_str() );
+        return false;
+    }
+
+    return it->second( this, code, values );
+}
+
+bool ReDefine::CallEditDo( const std::string& name, ReDefine::ScriptCode& code, std::vector<std::string> values /* = std::vector<std::string>() */ )
+{
+    auto it = EditDo.find( name );
+    if( it == EditDo.end() )
+    {
+        WARNING( __FUNCTION__, "script action result<%s> not found", name.c_str() );
+        return false;
+    }
+
+    return it->second( this, code, values );
+}
+
+// processing
 
 void ReDefine::ProcessScript( const std::string& path, const std::string& filename, bool readOnly /* = false */ )
 {
@@ -578,14 +686,7 @@ void ReDefine::ProcessScriptEdit( const std::vector<ReDefine::ScriptEdit>& edits
         // all conditions needs to be satisfied
         for( const ScriptEdit::Action& condition: edit.Conditions )
         {
-            auto _if = EditIf.find( condition.Name );
-            if( _if == EditIf.end() )
-            {
-                WARNING( __FUNCTION__, "script edit<%s> aborted : unknown condition<%s>", edit.Name.c_str(), condition.Name.c_str() );
-                return;
-            }
-
-            run = _if->second( this, condition.Values, codeUpdate );
+            run = CallEditIf( condition.Name, codeUpdate, condition.Values );
             if( edit.Debug )
                 DEBUG( nullptr, "script edit<%s> if<%s(%s)> = %s", edit.Name.c_str(), condition.Name.c_str(), TextGetJoined( condition.Values, "," ).c_str(), run ? "true" : "false" );
 
@@ -604,14 +705,7 @@ void ReDefine::ProcessScriptEdit( const std::vector<ReDefine::ScriptEdit>& edits
         // you are Result, you must Do
         for( const ScriptEdit::Action& result : edit.Results )
         {
-            auto _do = EditDo.find( result.Name );
-            if( _do == EditDo.end() )
-            {
-                WARNING( __FUNCTION__, "script edit<%s> aborted : unknown result<%s>", edit.Name.c_str(), result.Name.c_str() );
-                return;
-            }
-
-            run = _do->second( this, result.Values, codeUpdate );
+            run = CallEditDo( result.Name, codeUpdate, result.Values );
             if( edit.Debug )
                 DEBUG( nullptr, "script edit<%s> do<%s(%s)> = %s", edit.Name.c_str(), result.Name.c_str(), TextGetJoined( result.Values, "," ).c_str(), run ? "true" : "false" );
 

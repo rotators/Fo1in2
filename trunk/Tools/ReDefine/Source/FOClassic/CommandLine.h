@@ -14,7 +14,7 @@ public:
     const std::string App;
 
     CmdLine( int argc, char** argv );
-    ~CmdLine();
+    virtual ~CmdLine();
 
     virtual std::string Get();
     virtual std::string GetArg( unsigned int arg );

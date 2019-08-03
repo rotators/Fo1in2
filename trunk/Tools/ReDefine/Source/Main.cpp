@@ -12,9 +12,10 @@ int main( int argc, char** argv )
     ReDefine* redefine = new ReDefine();
     CmdLine*  cmd = new CmdLine( argc, argv );
 
-    // probably most important option
+    // most important stuff
     const bool readOnly = cmd->IsOption( "ro" ) || cmd->IsOption( "read" ) || cmd->IsOption( "read-only" );
 
+    // called before ReDefine::Init() so it won't be visible in logfile (as it's deleted then)
     redefine->LOG( "ReDefine <3 FO1@2" );
     redefine->LOG( " " );
 
@@ -32,20 +33,32 @@ int main( int argc, char** argv )
     //
     // load config
     // config can be either loaded from ini-like file,
-    // or set "manually" if application is storing configuration in different format
+    // or set "manually" if main application is storing configuration in different format
     //
-    // in both cases it has to be done before any ReadConfig*() call(s), which parses ReDefine::Config content without touching any files
+    // in both cases it has to be done before any ReadConfig*() call(s), which checks ReDefine::Config content without touching any files
     //
     if( redefine->Config->LoadFile( config ) )
     {
-        // read directories
-        std::string headers = redefine->Config->GetStr( section, "ScriptsDir" );     // TODO HeadersDir
+        // read directories configuration
+        std::string headers = redefine->Config->GetStr( section, "HeadersDir" );
         std::string scripts = redefine->Config->GetStr( section, "ScriptsDir" );
 
         // override settings from command line
+        if( !cmd->IsOptionEmpty( "headers" ) )
+            headers = cmd->GetStr( "headers" );
         if( !cmd->IsOptionEmpty( "scripts" ) )
             scripts = cmd->GetStr( "scripts" );
 
+        if( headers.empty() )
+        {
+            redefine->WARNING( nullptr, "headers directory not set" );
+            result = EXIT_FAILURE;
+        }
+        else if( scripts.empty() )
+        {
+            redefine->WARNING( nullptr, "scripts directory not set" );
+            result = EXIT_FAILURE;
+        }
         //
         // validate config and convert settings to internal structures
         //
@@ -54,7 +67,7 @@ int main( int argc, char** argv )
         //
         // defines section needs to be processed before other settings
         //
-        if( redefine->ReadConfig( "Defines", "Variable", "Function", "Raw", "Script" ) )
+        else if( redefine->ReadConfig( "Defines", "Variable", "Function", "Raw", "Script" ) )
         {
             // unload config
             // added here to make sure Process*() functions are independent o ReadConfig*()
