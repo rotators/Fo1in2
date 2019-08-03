@@ -4,14 +4,14 @@
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure damage_p_proc;//    script_action == 14
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure damage_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
 procedure BobStandardQuestions;
 procedure BobBlackmailQuestions;
@@ -99,62 +99,22 @@ import variable BitsBob_Ptr;
 import variable BitsBob_Dialog_Ptr;
 import variable BitsBob_Stand_Ptr;
 
-procedure start
-begin
+procedure start begin
 	if self_obj != 0 then begin
 		set_global_var(IS_BITS_BOB_ALIVE, 1);
-//		display_msg("BitsBob exist: self_obj!=0, set_global_var(IS_BITS_BOB_ALIVE, 1)");
 	end
 	else begin
 		set_global_var(IS_BITS_BOB_ALIVE, 0);
-//		display_msg("BitsBob dead: self_obj==0, set_global_var(IS_BITS_BOB_ALIVE, 0)");
 	end
-	
 
 	if Only_Once then begin
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_JUNKTOWN_MORBID );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_MERCHANT );
 		Only_Once := 0;
 	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-						else begin
-							if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-								call map_enter_p_proc;
-							end
-							else begin
-								if (script_action == 23) then begin
-									call map_update_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (global_var(BITS_BOB_REPORTED) and global_var(BITS_BOB_GOES_TO_JAIL) and not(global_var(FIXT_BUGFIXES_ONLY)) and not(global_var(BITS_BOB_IN_JAIL))) then begin
 		move_to(self_obj, 23065, elevation(self_obj));
 		anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), 22662));
@@ -164,14 +124,12 @@ begin
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -181,15 +139,13 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if obj_in_party(source_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (global_var(BITS_BOB_REPORTED) != 0) then begin
@@ -263,48 +219,28 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(IS_BITS_BOB_ALIVE, 0);
-//	display_msg("BitsBob killed, set_global_var(IS_BITS_BOB_ALIVE, 0)");
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 	BitsBob_Ptr := 0;
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_BITSBOB, 100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	BitsBob_Ptr := self_obj;
 end
 
-procedure BobStandardQuestions
-begin
+procedure BobStandardQuestions begin
 	giq_option(4, 891, 231, Bob11, 50);
 	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
 		giq_option(4, 891, 232, Bob18, 50);
@@ -391,8 +327,7 @@ begin
 	end
 end
 
-procedure Bob00
-begin
+procedure Bob00 begin
 	variable LVar0 := 0;
 	item_caps_adjust(dude_obj, local_var(7));
 	set_local_var(6, (game_time / (10 * 60 * 60 * 24)) + 5);
@@ -601,8 +536,7 @@ begin
 	call BobStandardQuestions;
 end
 
-procedure Bob20
-begin
+procedure Bob20 begin
 	gsay_reply(891, 153);
 	giq_option(4, 891, 154, Bob20a, 50);
 	giq_option(4, 891, 155, Bob34, 50);
@@ -610,8 +544,7 @@ begin
 	giq_option(4, 891, 157, Bob36, 50);
 end
 
-procedure Bob20a
-begin
+procedure Bob20a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
 		call Bob36;
 	end
@@ -769,8 +702,7 @@ begin
 	giq_option(4, 891, 187, Bob44, 50);
 end
 
-procedure Bob36
-begin
+procedure Bob36 begin
 	gsay_reply(891, 188);
 	giq_option(4, 891, 189, Bob42, 50);
 	giq_option(4, 891, 190, Bob43, 50);
@@ -800,8 +732,7 @@ begin
 	giq_option(4, 891, 211, Bob44, 50);
 end
 
-procedure Bob44
-begin
+procedure Bob44 begin
 	gsay_reply(891, 212);
 	giq_option(4, 891, message_str(SCRIPT_BITSBOB, 213) + message_str(SCRIPT_BITSBOB, 214) + message_str(SCRIPT_BITSBOB, 219), Bob44a, 50);
 	giq_option(4, 891, message_str(SCRIPT_BITSBOB, 213) + message_str(SCRIPT_BITSBOB, 215) + message_str(SCRIPT_BITSBOB, 219), Bob44b, 50);
@@ -811,8 +742,7 @@ begin
 	giq_option(4, 891, 220, Bob48, 50);
 end
 
-procedure Bob44a
-begin
+procedure Bob44a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20)) or is_success(do_check(dude_obj, STAT_ch, 2))) then begin
 		set_local_var(7, 50);
 		call Bob46;
@@ -871,10 +801,9 @@ begin
 	gsay_message(891, 221, 51);
 end
 
-procedure Bob46
-begin
+procedure Bob46 begin
 	if (local_var(9) != 2) then begin
-		give_exp_points(500);
+		give_exp_points(EXP_BLACKMAILING_BOB);
 		display_msg(message_str(SCRIPT_GENCHAT, 103) + 500 + message_str(SCRIPT_BITSBOB, 250));
 		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) - 3);
 		set_local_var(9, 2);
@@ -916,8 +845,6 @@ procedure BobCombat
 begin
 	call combat;
 end
-
-
 
 procedure Bob51
 begin

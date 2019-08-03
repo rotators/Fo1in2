@@ -2,41 +2,101 @@
 
 {100}{}{You see: Griffith}
 {101}{}{The ghoul is wearing an old, patched up motorcycle jacket. You see traces of tattoos on his rotten skin.}
-	
+
+{125}{}{You gain }
+{126}{}{ experience for giving fuel to Griffith.}
+
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
 {150}{}{An original Chryslus Motors Cruiser ... !}
 
+{175}{}{I'm out of here.}
+{176}{}{Have fun with the bike.}
+{177}{}{Fuck this place.}
+{178}{}{Sweet baby jesus, something smells around here.}
+{179}{}{You still here?}
+{180}{}{Better get going now.}
+
 {200}{}{The ghoul just stares at you.}
+
+# Angry float
+{300}{}{Fuck off.}
+{301}{}{Just fuck off, you don't even have the money!}
 
 # Dialog:
 {1000}{}{Hey smoothskin, what'cha lookin at? I tell you what: You're looking at an original Chryslus Motors Cruiser, build... Uhm... Actually, I don't know when it was build, but it's pre-war and in top condition!}
-{1001}{}{Back so soon, smoothskin? }
-{1010}{}{Nice ride. Is the engine still running?}
-{1020}{}{You know, I have seen plenty pictures of motorcycles in our vault library. }
-{1030}{}{Please don't talk to me. Bye.}
+{1001}{}{You're here to talk, smoothskin? }
+{1002}{}{You got the caps now or what?}
+{1003}{}{Don't push my buttons, smoothskin.}
+	{1010}{}{Nice ride. Is the engine still running?}
+	{1020}{}{You know, I have seen plenty pictures of motorcycles in our vault library. }
+	{1030}{}{Please don't talk to me. Bye.}
+	{1040}{}{I got the caps.}
 	
 {1100}{}{Of course it runs, dummie! Fill it up with energy cells and it'll come alive and roar like a beast!}
-{1110}{}{Why are you telling me all of this?}
-{1120}{}{I get it, you want to get rid of the bike.}
-{1130}{}{Great, but there is a water chip I have to fetch. See you later.}
+	{1110}{}{Why are you telling me all of this?}
+	{1120}{}{I get it, you want to get rid of the bike.}
+	{1130}{}{Great, but there is a water chip I have to fetch. See you later.}
 	
 {1200}{}{I'm telling you all of this, because you look interested and capable and I feel we're in a bit of a situation here, which requires me to leave this hole as soon as possible.}
-{1210}{}{Now come on. This place doesn't seem all *that* bad to me.}
+	{1210}{}{Now come on. This place doesn't seem all *that* bad to me.}
+	{1220}{}{Why are you not leaving then?}
 	
 {1300}{}{Are you serious? You see'n these green fuckers over there at the watershed? I say shit 's about to go down here. Soon. When that happens, I won't be around anymore.}
-{1310}{}{So why you're not leaving with the bike? That seems like the obvious thing to do.}
+	{1310}{}{So why you're not leaving with the bike? That seems like the obvious thing to do.}
 	
-{1400}{}{Because ... I'm out of energy cells. Even if I wanted to - which I do, believe me - I can't. Don't have any caps and sure as shit you won't find energy cells around here.}
-{1410}{}{You need energy cells, huh? Would these do it for you?}
-{1420}{}{What do you want for the bike?}
-{1430}{}{That sucks, but I have to go now. See you later.}
+{1400}{}{Because I'm out of ENERGY CELLS! Even if I do - which I do, very much, believe me - I can't. Don't have the caps and even if, sure as shit you won't find 'cells to buy anywhere around here.}
+	{1410}{}{Energy cells, huh? Would these do it for you?}
+	{1420}{}{What do you want for the bike?}
+	{1430}{}{That sucks, but I have to go now. See you later.}
 	
-{1500}{}{bla bla bla, I can't pay you.}
-{1510}{}{Just take them and get the hell out of here before I change my mind.}
-{1520}{}{You're right, that's not a good deal.}
+{1500}{}{Shit, yeah! Haven't seen any in ages. But ... I can't pay you.}
+	{1510}{}{Just take them and get the hell out of here before I change my mind.}
+	{1520}{}{You're right, that's not a good deal. What do you want for the bike?}
 	
 {1600}{}{Wait, are you..? Really? ... Thanks man! Time to say goodbye to this death infested hole! Do you think there's something up north for the likes of us? Guess I will find out!}
-{1610}{}{[Done]}
+	{1610}{}{[Done]}
 	
 {1700}{}{You're from a vault, huh? I've been a vault dweller too once! Now look, it only brought the best out of me! Ha-ha! [He flails his scarred and boney arms in front of you] }
+	{1710}{}{[More]}
+
+{1800}{}{Now seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
+	{1810}{}{I'm all ears.}
+
+{1900}{}{Good. I'll give you the bike. For the measly sum of 2.000 caps, it's aaaall yours. Get it?}
+	{1910}{}{That's quite some caps.}
+	{1920}{}{I'll give you 1.000 caps.}
+	{1930}{}{I'll give you 500 caps.}
+	{1940}{}{Not interested. }
+
+{2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
+	{2010}{}{Alright, you've convinced me. Here's the caps, hand me the keys.}
+	{2020}{}{That's too steep for me.}
+
+{2100}{}{Deal! ... Now wait here. I'll go and get the fuel cell controller.}
+	{2110}{}{The fuel cell controller?}
+{2101}{}{You really trying to shit me here, are you? No way you have 2.000 caps!}
+	{2120}{}{Oh ...}
+
+{2200}{}{What? You think I'll keep the bike standing here on the open road just like that? You think I'm stupid? Without the fuel cell controller you can't start the bike, even with the keys. Now wait here, I'll go and get it.}
+	{2210}{}{[Wait]}
+
+{2300}{}{[You wait for Griffith to return.]}
+	{2310}{}{[Wait]}
+
+{2400}{}{[That really takes a while.]}
+	{2410}{}{[Wait]}
+
+{2500}{}{[Did he just scam you?]}
+	{2510}{}{[Wait]}
+
+{2600}{}{Phew. Sure as shit, my lungs aren't the best anymore ... You're still here? Great! Got the controller. Here, take it. I'll make my way to the next caravan out of this shithole.}
+	{2610}{}{Take care.}
+
+{2700}{}{Not much, actually. Just the measly sum of 2.000 caps. That's all.}
+{2800}{}{If you say so. Get back to me if you change your mind.}
+
+
+
+
+
 

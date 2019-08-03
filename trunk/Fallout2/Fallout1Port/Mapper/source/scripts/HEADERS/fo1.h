@@ -176,38 +176,6 @@
 #define get_junktown_days_left 				(global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
 
 
-// TODO: This is broken now!!! Remove from map scripts! 
-// We are tracking the invasions via global script.
-#define check_invasion		if (global_var(MASTER_BLOWN) == 0) then begin \
-								if (global_var(GVAR_NECROPOLIS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1); \
-								end \
-								if (global_var(GVAR_THE_HUB_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_THE_HUB_WAS_INVADED, 1); \
-								end \
-								if (global_var(GVAR_BROTHERHOOD_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_BROTHERHOOD_WAS_INVADED, 1); \
-									set_global_var(MARK_BROTHER_2, 0); \
-									set_global_var(MARK_BROTHER_3, 0); \
-									set_global_var(MARK_BROTHER_4, 0); \
-									set_global_var(MARK_BROTHER_5, 0); \
-								end \
-								if (global_var(GVAR_JUNKTOWN_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_JUNKTOWN_WAS_INVADED, 1); \
-								end \
-								if (global_var(GVAR_SHADY_SANDS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_SHADY_SANDS_WAS_INVADED, 1); \
-								end \
-								if (global_var(GVAR_VAULT_13_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_VAULT_13_WAS_INVADED, 1); \
-									play_gmovie(OVERRUN_MOVIE); /*//------ Vault 13 is invaded by mutants and killed. You lose. -- was 7 before*/  \
-									signal_end_game; \
-								end \
-								if (global_var(GVAR_FOLLOWERS_INVADED_DATE) <= (game_time / (10 * 60 * 60 * 24))) then begin \
-									set_global_var(GVAR_FOLLOWERS_INVADED, 1); \
-								end \
-							end
-
 //==============================================================
 // Party related:
 #define unlimited_party_members 		global_var(GVAR_UNLIMITED_PARTY_MEMBERS) == 1

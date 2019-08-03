@@ -10,9 +10,14 @@ variable fugee_hex;
 
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\command.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
+procedure map_lightning;
+procedure Invasion;
 
 variable party_elevation;
 variable dude_start_hex;
@@ -21,13 +26,6 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	if (elevation(dude_obj) == 0) then begin
-		Darkness;
-	end
-	else begin
-		Lighting;
-	end
-
 	if (global_var(LOAD_MAP_INDEX) == 3) then begin
 		override_map_start(94, 136, 1, 5);
 	end
@@ -48,8 +46,45 @@ procedure map_enter_p_proc begin
 
 	set_global_var(MARK_NECROP_1, 1);//Mark Hotel on the worldmap button list / town selection screen
 
-	//check_invasion
+	call map_lightning;
+	call Invasion;
 
+	if ((global_var(NECROP_WATER_CHIP_TAKEN) == 1) and not(is_loading_game)) then begin
+
+		if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
+			if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
+				kill_critter_type(PID_ZOMBIE_GUARD, 2);
+				kill_critter_type(PID_MINDLESS_GHOUL, 2);
+				kill_critter_type(PID_GHOUL, 2);
+				kill_critter_type(PID_GLOWING_ONE, 2);
+			end
+		end
+
+	end
+end
+
+procedure map_update_p_proc begin
+	call map_lightning;
+
+	if (Use_Manhole_Top) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Top);
+	end
+	if (Use_Manhole_Middle) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Middle);
+	end
+	if (Use_Manhole_Bottom) then begin
+		animate_stand_reverse_obj(Manhole_Pointer_Bottom);
+	end
+end
+
+procedure map_lightning begin
+	if (elevation(dude_obj) == 0) then
+		Darkness;
+	else
+		Lighting;
+end
+
+procedure Invasion begin
 	if ((global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1) and not(is_loading_game) and (map_var(10) == 0)) then begin
 		set_map_var(10, 1);
 
@@ -74,35 +109,6 @@ procedure map_enter_p_proc begin
 		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
 
 	end
-	if ((global_var(NECROP_WATER_CHIP_TAKEN) == 1) and not(is_loading_game)) then begin
-
-		if (((game_time / (10 * 60 * 60 * 24)) - global_var(TIME_CHIP_GONE)) > 7) then begin
-			if (global_var(NECROP_WATER_PUMP_FIXED) != 2) then begin
-				kill_critter_type(PID_ZOMBIE_GUARD, 2);
-				kill_critter_type(PID_MINDLESS_GHOUL, 2);
-				kill_critter_type(PID_GHOUL, 2);
-				kill_critter_type(PID_GLOWING_ONE, 2);
-			end
-		end
-
-	end
 end
 
-procedure map_update_p_proc begin
-	if (elevation(dude_obj) == 0) then begin
-		Darkness;
-	end
-	else begin
-		Lighting;
-	end
-	if (Use_Manhole_Top) then begin
-		animate_stand_reverse_obj(Manhole_Pointer_Top);
-	end
-	if (Use_Manhole_Middle) then begin
-		animate_stand_reverse_obj(Manhole_Pointer_Middle);
-	end
-	if (Use_Manhole_Bottom) then begin
-		animate_stand_reverse_obj(Manhole_Pointer_Bottom);
-	end
-end
 

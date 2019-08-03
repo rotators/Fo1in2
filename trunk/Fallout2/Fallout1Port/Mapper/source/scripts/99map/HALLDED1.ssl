@@ -26,29 +26,24 @@ variable fugee_hex;
 
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\command.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
+procedure map_lightning;
+procedure Invasion;
 
 variable party_elevation;
 variable dude_start_hex;
 
 export variable GhDorGrd_Ptr;
 
-procedure Invasion;
-
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	mark_map_entrance_state(MAP_HALLDED,1); // TODO: Figure out why this workaround is necessary in Necropolis
-
-	// sewers; elev on this map is reversed from standard setup for some reason
-	if (elevation(dude_obj) == 0) then
-		Darkness;
-	else
-		Lighting;
-
 	if (global_var(LOAD_MAP_INDEX) == 2) then begin
 		override_map_start(153, 100, 1, 0);
 	end
@@ -62,12 +57,13 @@ procedure map_enter_p_proc begin
 		override_map_start(153, 100, 1, 0);
 	end
 
-	//if get_car_from_worldmap then begin
-	//	override_map_start_hex(12901,0,3);
-	//end
+	if get_car_from_worldmap then begin
+		override_map_start_hex(12901,0,3);
+	end
 
 	set_global_var(MARK_NECROP_2, 1);
 
+	call map_lightning;
 	call Invasion;
 
 	if ((global_var(NECROP_WATER_CHIP_TAKEN) == 1) and not(is_loading_game)) then begin
@@ -85,15 +81,10 @@ procedure map_enter_p_proc begin
 	if (global_var(GARRET_STATUS) == 3) then begin
 		kill_critter_type(PID_GARRET, 0);
 	end
-
-
 end
 
 procedure map_update_p_proc begin
-	if (elevation(dude_obj) == 0) then
-		Darkness;
-	else
-		Lighting;
+	call map_lightning;
 
 	if (Use_Manhole_Top) then begin
 		animate_stand_reverse_obj(Manhole_Pointer_Top);
@@ -104,6 +95,13 @@ procedure map_update_p_proc begin
 	if (Use_Manhole_Bottom) then begin
 		animate_stand_reverse_obj(Manhole_Pointer_Bottom);
 	end
+end
+
+procedure map_lightning begin
+	if (elevation(dude_obj) == 0) then
+		Darkness;
+	else
+		Lighting;
 end
 
 procedure Invasion begin

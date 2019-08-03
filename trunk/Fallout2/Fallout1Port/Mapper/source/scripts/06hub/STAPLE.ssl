@@ -45,7 +45,7 @@ variable Only_Once := 1;
 
 procedure start
 begin
-	
+
 
 	if Only_Once then begin
 		Only_Once := 0;
@@ -91,8 +91,7 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if source_obj == dude_obj then begin
 		script_overrides;
 		float_msg(self_obj, message_str(SCRIPT_RAZLO, 308), 2);
@@ -114,60 +113,40 @@ begin
 		gsay_end;
 		end_dialogue;
 	end
+	else if (local_var(6) == 1) then begin
+		call Staple13;
+	end
 	else begin
-		if (local_var(6) == 1) then begin
-			call Staple13;
-		end
-		else begin
-			start_gdialog(862, self_obj, 4, -1, -1);
-			gsay_start;
-			call Staple01;
-			gsay_end;
-			end_dialogue;
-		end
+		start_gdialog(862, self_obj, 4, -1, -1);
+		gsay_start;
+		call Staple01;
+		gsay_end;
+		end_dialogue;
 	end
 	call Put_Stuff;
 end
 
-procedure destroy_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 	call Get_Stuff;// Her store inventory moves to her corpse
 
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_STAPLE, 100));
 end
 
-procedure Staple00
-begin
+procedure Staple00 begin
 	gsay_reply(862, 102);
 	call Staple02;
 end
@@ -289,8 +268,7 @@ begin
 	call Staple12;
 end
 
-procedure Staple12
-begin
+procedure Staple12 begin
 	if local_var(5) != 1 then begin
 		variable disk := 0;
 		disk := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_VALTDISK);
@@ -300,8 +278,7 @@ begin
 	gsay_message(862, 123, 50);
 end
 
-procedure Staple13
-begin
+procedure Staple13 begin
 	float_msg(self_obj, message_str(SCRIPT_STAPLE, 124), 2);
 end
 
