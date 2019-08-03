@@ -650,7 +650,6 @@
 
 /* Script MetaRules */
 #define METARULE_SIGNAL_END_GAME  13
-#define METARULE_TEST_FIRSTRUN    14
 #define signal_end_game   metarule(METARULE_SIGNAL_END_GAME, 0)
 #define METARULE_ELEVATOR         15
 #define elevator(X)       metarule(METARULE_ELEVATOR, X)
