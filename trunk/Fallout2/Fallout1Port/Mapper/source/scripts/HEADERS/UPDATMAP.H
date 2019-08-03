@@ -153,7 +153,7 @@
 										(car_current_town == AREA_RND_ENC_COAST))										
 										
 //        City Car is At                Tile Num For Car
-#define CAR_UNCLAIMED_HEX                   (23109)         // When you don't have the car
+#define CAR_UNCLAIMED_HEX                   (18704)         // When you don't have the car
 #define CAR_UNCLAIMED_ELEV                  (1)
 #define CAR_CAR_OUTTA_GAS_HEX               (19100)
 #define CAR_CAR_OUTTA_GAS_ELEV              (0)

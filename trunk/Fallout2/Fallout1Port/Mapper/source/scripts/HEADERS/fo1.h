@@ -69,6 +69,7 @@
 #define dude_is_animal_friend 			(has_trait(TRAIT_PERK, dude_obj, PERK_animal_friend) == 1)
 
 #define dude_look_at_critter			anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)))
+#define self_look_at_dude 				anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), tile_num(dude_obj)))
 
 #define map_cow_can_push 			((cur_map_index != MAP_DESCRVN1) and 	\
 									(cur_map_index != MAP_DESCRVN2) and  	\
@@ -101,7 +102,7 @@
 							
 //==============================================================
 // Settings:
-#define fo1in2_fluff_enc_disabled 		(global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0)
+#define fo1in2_fluff_enc_disabled 		((global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0) or get_car_from_worldmap)
 #define fo1in2_armor_change_disabled 	(global_var(GVAR_ALLOW_PARTY_ARMOR_CHANGE) == 0)
 #define fo1in2_auto_doors_closing 		(global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
 #define fo1in2_motorcycle_disabled 		(global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
