@@ -195,6 +195,25 @@ static bool DoArgumentsClear( ReDefine*, ReDefine::ScriptCode& code, const std::
     return true;
 }
 
+// ? DoArgumentsErase:INDEX
+static bool DoArgumentsErase( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values  )
+{
+    if( !values.size() )
+        return false;
+
+    int idx = -1;
+    if( !redefine->TextIsInt( values[0] ) || !redefine->TextGetInt( values[0], idx ) || idx < 0 )
+        return false;
+
+    if( idx >= code.Arguments.size() )
+        return false;
+
+    code.Arguments.erase( code.Arguments.begin() + idx );
+    code.ArgumentsTypes.erase( code.ArgumentsTypes.begin() + idx );
+
+    return true;
+}
+
 static bool DoArgumentsResize( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values  )
 {
     if( !redefine || !values.size() || !values[0].length() )
@@ -318,6 +337,7 @@ void ReDefine::InitScript()
     // must start with "Do"
     EditDo["DoArgumentSetType"] = &DoArgumentSetType;
     EditDo["DoArgumentsClear"] = &DoArgumentsClear;
+    EditDo["DoArgumentsErase"] = &DoArgumentsErase;
     EditDo["DoArgumentsResize"] = &DoArgumentsResize;
     EditDo["DoFunction"] = &DoFunction;
     EditDo["DoLogCurrentLine"] = &DoLogCurrentLine;
