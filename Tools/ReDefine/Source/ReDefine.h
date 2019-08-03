@@ -16,12 +16,12 @@ public:
 
     struct ScriptCode;
 
-    typedef std::map<std::string, std::map<int, std::string>>                                                    DefinesMap;
-    typedef std::map<std::string, std::map<std::string, std::string>>                                            GenericOperatorsMap;
-    typedef std::function<bool (ReDefine* self, const std::vector<std::string>& values, const ScriptCode& code)> ScriptEditIf;
-    typedef std::function<void (ReDefine* self, const std::string& value, ScriptCode& code)>                     ScriptEditDo;
-    typedef std::map<std::string, std::vector<std::string>>                                                      StringVectorMap;
-    typedef std::map<std::string, std::map<std::string, unsigned int>>                                           UnknownMap;
+    typedef std::map<std::string, std::map<int, std::string>>                                   DefinesMap;
+    typedef std::map<std::string, std::map<std::string, std::string>>                           GenericOperatorsMap;
+    typedef std::function<bool (ReDefine*, const std::vector<std::string>&, const ScriptCode&)> ScriptEditIf;
+    typedef std::function<bool (ReDefine*, const std::vector<std::string>&, ScriptCode&)>       ScriptEditDo;
+    typedef std::map<std::string, std::vector<std::string>>                                     StringVectorMap;
+    typedef std::map<std::string, std::map<std::string, unsigned int>>                          UnknownMap;
 
     //
     // ReDefine
@@ -162,40 +162,44 @@ public:
     // Script
     //
 
+    enum ScriptCodeFlag : unsigned int
+    {
+        SCRIPT_CODE_FUNCTION = 0x01,         // if not set, code is variable
+        SCRIPT_CODE_EDITED   = 0x02
+    };
+
     struct ScriptCode
     {
-        bool                     Function;
-
+        unsigned int             Flags;
         std::string              Full; // Name + (Arguments) + (Operator + OperatorArguments)
         std::string              Name;
         std::vector<std::string> Arguments;
+        std::vector<std::string> ArgumentsTypes;
         std::string              Operator;
         std::string              OperatorArgument;
 
         ScriptCode();
+
+        // for noob coders :)
+
+        bool IsFlag( unsigned int flag ) const;
+        void SetFlag( unsigned int flag );
+        void UnsetFlag( unsigned int flag );
     };
 
     struct ScriptEdit
     {
-        struct Condition
+        struct Action
         {
             std::string              Name;
             std::vector<std::string> Values;
         };
 
-        struct Result
-        {
-            std::string Name;
-            std::string Value;
-        };
+        bool                Debug;
+        std::string         Name;
 
-        std::string            Name;
-
-        bool                   Before;
-        bool                   After;
-
-        std::vector<Condition> Conditions;
-        std::vector<Result>    Results;
+        std::vector<Action> Conditions;
+        std::vector<Action> Results;
 
         ScriptEdit();
     };

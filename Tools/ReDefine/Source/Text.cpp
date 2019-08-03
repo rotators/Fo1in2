@@ -194,7 +194,6 @@ std::vector<ReDefine::ScriptCode> ReDefine::TextGetVariables( const std::string&
     {
         ScriptCode variable;
 
-        variable.Function = false;
         variable.Full = it->str();
         variable.Name = it->str( 1 );
         variable.Operator = it->str( 2 );
@@ -408,7 +407,7 @@ std::vector<ReDefine::ScriptCode> ReDefine::TextGetFunctions( const std::string&
         // update result
         ScriptCode function;
 
-        function.Function = true;
+        function.SetFlag( SCRIPT_CODE_FUNCTION );
         function.Full = full;
         function.Name = func;
         function.Arguments = args;
