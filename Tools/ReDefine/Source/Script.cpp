@@ -365,117 +365,136 @@ bool ReDefine::ReadConfigScript( const std::string& sectionPrefix )
 {
     FinishScript( false );
 
-    if( !Config->IsSection( sectionPrefix ) )
-        return true;
-
-    std::vector<std::string> keys;
-    if( !Config->GetSectionKeys( sectionPrefix, keys, true ) )
+    std::vector<std::string> sections;
+    if( !Config->GetSections( sections ) )
     {
-        WARNING( __FUNCTION__, "config section<%s> is empty", sectionPrefix.c_str() );
-        return true;
+        WARNING( __FUNCTION__, "config is empty (?)" );
+        return false;
     }
 
-    for( const auto& name : keys )
+    for( const auto& section : sections )
     {
-        if( Config->IsSectionKeyEmpty( sectionPrefix, name ) )
+        // [???] //
+        if( section.substr( 0, sectionPrefix.length() ) != sectionPrefix )
             continue;
-
-        ScriptEdit edit;
-        edit.Name = name;
-
-        bool ignore = false, before = false, after = false;
-
-        for( const auto& action : Config->GetStrVec( sectionPrefix, name ) )
+        // [Script] or [Script:CATEGORY] //
+        else if( section == sectionPrefix || (section.length() >= sectionPrefix.length() + 2 && section.substr( sectionPrefix.length(), 1 ) == ":") )
         {
-            // split name from arguments
-            std::vector<std::string> vals;
-            std::vector<std::string> arg = TextGetSplitted( action, ':' );
-            if( !arg.size() )
+            DEBUG( nullptr, "section<%s>", section.c_str() );
+            std::string category;
+            if( section != sectionPrefix )
+                category = section.substr( sectionPrefix.length() + 1 ) + ":";
+
+            std::vector<std::string> keys;
+            if( !Config->GetSectionKeys( section, keys, true ) )
             {
-                ignore = true;
-                break;
-            }
-            else if( arg.size() == 1 )
-            {}
-            else if( arg.size() == 2 )
-                vals = TextGetSplitted( arg[1], ',' );
-            else
-            {
-                WARNING( __FUNCTION__, "script edit<%s> ignored : invalid action<%s>", name.c_str(), action.c_str() );
-                ignore = true;
-                break;
+                WARNING( __FUNCTION__, "config section<%s> is empty", section.c_str() );
+                return true;
             }
 
-            // DEBUG( __FUNCTION__, "%s -> [%s]=[%s]", name.c_str(), arg[0].c_str(), TextGetJoined( vals, "|" ).c_str() );
+            for( const auto& name : keys )
+            {
+                if( Config->IsSectionKeyEmpty( section, name ) )
+                    continue;
 
-            if( arg[0] == "IGNORE" )
-            {
-                ignore = true;
-                break;
-            }
-            else if( arg[0] == "DEBUG" )
-                edit.Debug = true;
-            else if( arg[0] == "RunBefore" )
-                before = true;
-            else if( arg[0] == "RunAfter" )
-                after = true;
-            else if( arg[0].length() >= 3 && arg[0].substr( 0, 2 ) == "If" )
-            {
-                ScriptEdit::Action condition;
-                condition.Name = arg[0];
-                condition.Values = vals;
+                ScriptEdit edit;
+                edit.Name = category + name;
 
-                edit.Conditions.push_back( condition );
-            }
-            else if( arg[0].length() >= 3 && arg[0].substr( 0, 2 ) == "Do" )
-            {
-                ScriptEdit::Action result;
-                result.Name = arg[0];
-                result.Values = vals;
+                bool ignore = false, before = false, after = false;
 
-                edit.Results.push_back( result );
-            }
-            else
-            {
-                WARNING( __FUNCTION__, "script edit<%s> ignored : unknown action<%s>", name.c_str(), arg[0].c_str() );
-                ignore = true;
-                break;
+                for( const auto& action : Config->GetStrVec( section, name ) )
+                {
+                    // split name from arguments
+                    std::vector<std::string> vals;
+                    std::vector<std::string> arg = TextGetSplitted( action, ':' );
+                    if( !arg.size() )
+                    {
+                        ignore = true;
+                        break;
+                    }
+                    else if( arg.size() == 1 )
+                    {}
+                    else if( arg.size() == 2 )
+                        vals = TextGetSplitted( arg[1], ',' );
+                    else
+                    {
+                        WARNING( __FUNCTION__, "script edit<%s> ignored : invalid action<%s>", name.c_str(), action.c_str() );
+                        ignore = true;
+                        break;
+                    }
+
+                    // DEBUG( __FUNCTION__, "%s -> [%s]=[%s]", name.c_str(), arg[0].c_str(), TextGetJoined( vals, "|" ).c_str() );
+
+                    if( arg[0] == "IGNORE" )
+                    {
+                        ignore = true;
+                        break;
+                    }
+                    else if( arg[0] == "DEBUG" )
+                        edit.Debug = true;
+                    else if( arg[0] == "RunBefore" )
+                        before = true;
+                    else if( arg[0] == "RunAfter" )
+                        after = true;
+                    else if( arg[0].length() >= 3 && arg[0].substr( 0, 2 ) == "If" )
+                    {
+                        ScriptEdit::Action condition;
+                        condition.Name = arg[0];
+                        condition.Values = vals;
+
+                        edit.Conditions.push_back( condition );
+                    }
+                    else if( arg[0].length() >= 3 && arg[0].substr( 0, 2 ) == "Do" )
+                    {
+                        ScriptEdit::Action result;
+                        result.Name = arg[0];
+                        result.Values = vals;
+
+                        edit.Results.push_back( result );
+                    }
+                    else
+                    {
+                        WARNING( __FUNCTION__, "script edit<%s> ignored : unknown action<%s>", name.c_str(), arg[0].c_str() );
+                        ignore = true;
+                        break;
+                    }
+                }
+
+                // DEBUG( __FUNCTION__, "%s : before<%s> after<%s> condition<%u>, result<%u>", edit.Name.c_str(), edit.Before ? "true" : "false", edit.After ? "true" : "false", edit.Conditions.size(), edit.Results.size() );
+
+                // "IGNORE" or error
+                if( ignore )
+                    continue;
+
+                // validation
+
+                if( !before && !after )
+                {
+                    WARNING( nullptr, "script edit<%s> ignored : at least one of 'RunBefore' or 'RunAfter' must be set", edit.Name.c_str() );
+                    ignore = true;
+                }
+
+                if( !edit.Conditions.size() )
+                {
+                    WARNING( nullptr, "script edit<%s> ignored : no conditions", edit.Name.c_str() );
+                    ignore = true;
+                }
+
+                if( !edit.Results.size() )
+                {
+                    WARNING( nullptr, "script edit<%s> ignored : no results", edit.Name.c_str() );
+                    ignore = true;
+                }
+
+                if( ignore )
+                    continue;
+
+                if( before )
+                    EditBefore.push_back( edit );
+                if( after )
+                    EditAfter.push_back( edit );
             }
         }
-
-        // DEBUG( __FUNCTION__, "%s : before<%s> after<%s> condition<%u>, result<%u>", edit.Name.c_str(), edit.Before ? "true" : "false", edit.After ? "true" : "false", edit.Conditions.size(), edit.Results.size() );
-
-        // "IGNORE" or error
-        if( ignore )
-            continue;
-
-        // validation
-
-        if( !before && !after )
-        {
-            WARNING( nullptr, "script edit<%s> ignored : at least one of 'RunBefore' or 'RunAfter' must be set", edit.Name.c_str() );
-            ignore = true;
-        }
-
-        if( !edit.Conditions.size() )
-        {
-            WARNING( nullptr, "script edit<%s> ignored : no conditions", edit.Name.c_str() );
-            ignore = true;
-        }
-
-        if( !edit.Results.size() )
-        {
-            WARNING( nullptr, "script edit<%s> ignored : no results", edit.Name.c_str() );
-            ignore = true;
-        }
-
-        if( ignore )
-            continue;
-
-        if( before )
-            EditBefore.push_back( edit );
-        if( after )
-            EditAfter.push_back( edit );
     }
 
     return true;
