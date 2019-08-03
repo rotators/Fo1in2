@@ -286,7 +286,7 @@ variable step_tile;
 
 #define dude_caps                           (item_caps_total(dude_obj))
 
-#define dude_has_car                        (global_var(GVAR_PLAYER_GOT_CAR))
+#define dude_has_car 						global_var(GVAR_PLAYER_GOT_CAR) != 0
 #define dude_is_pornstar                    dude_has_porn_star_rep
 #define dude_is_high                        drug_influence(dude_obj)
 #define dude_found_geck                     global_var(GVAR_VAULT13_FOUND_GECK)
