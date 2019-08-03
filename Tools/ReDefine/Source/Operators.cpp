@@ -9,8 +9,10 @@ void ReDefine::InitOperators()
     Operators["LowerEquals"] = "<=";
     Operators["Greater"] = ">";
     Operators["GreaterEquals"] = ">=";
-    Operators["Add"] = "+";
-    Operators["AddEquals"] = "+=";
+    Operators["Plus"] = "+";
+    Operators["PlusEquals"] = "+=";
+    Operators["Minus"] = "-";
+    Operators["MinusEquals"] = "-=";
 }
 
 void ReDefine::FinishOperators()

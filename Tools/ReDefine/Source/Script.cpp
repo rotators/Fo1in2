@@ -205,7 +205,7 @@ static bool DoArgumentsErase( ReDefine* redefine, ReDefine::ScriptCode& code, co
     if( !redefine->TextIsInt( values[0] ) || !redefine->TextGetInt( values[0], idx ) || idx < 0 )
         return false;
 
-    if( idx >= code.Arguments.size() )
+    if( (unsigned int)idx >= code.Arguments.size() )
         return false;
 
     code.Arguments.erase( code.Arguments.begin() + idx );
@@ -214,6 +214,7 @@ static bool DoArgumentsErase( ReDefine* redefine, ReDefine::ScriptCode& code, co
     return true;
 }
 
+// ? DoArgumentsResize:SIZE
 static bool DoArgumentsResize( ReDefine* redefine, ReDefine::ScriptCode& code, const std::vector<std::string>& values  )
 {
     if( !redefine || !values.size() || !values[0].length() )
@@ -502,7 +503,9 @@ std::string ReDefine::GetFullString( const ScriptCode& code )
     }
 
     if( code.Operator.length() && code.OperatorArgument.length() )
+    {
         result += " " + code.Operator + " " + code.OperatorArgument;
+    }
 
     return result;
 }
