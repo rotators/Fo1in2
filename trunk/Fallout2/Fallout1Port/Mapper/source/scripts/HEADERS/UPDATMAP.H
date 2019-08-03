@@ -129,6 +129,9 @@
 #define set_cur_exit                    wm_area_set_pos(AREA_RND_MOUNTAIN,worldmap_xpos,worldmap_ypos)
 
 // Car Information
+#define trunk_size_small				(40)
+#define trunk_size_big					(60)
+
 #define get_car_current_map 			global_var(GVAR_CAR_CUR_MAP)
 #define get_car_in_cur_map 				get_car_current_map == cur_map_index
 #define set_car_current_map    			set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
@@ -154,6 +157,8 @@
 #define CAR_UNCLAIMED_ELEV                  (1)
 #define CAR_CAR_OUTTA_GAS_HEX               (19100)
 #define CAR_CAR_OUTTA_GAS_ELEV              (0)
+
+#define CAR_UPGRADE_HEX              		(18691)
 
 #define CAR_RND_DESERT_HEX                 	(19096)
 #define CAR_RND_DESERT_ELEV                	(0)
