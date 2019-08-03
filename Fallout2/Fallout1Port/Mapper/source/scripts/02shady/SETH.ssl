@@ -203,31 +203,15 @@ procedure talk_p_proc begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if obj_in_party(source_obj) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-	end
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-			if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+		inc_good_critter
 	end
 	set_global_var(SETH_STATUS, 3);
 end
 
-procedure travel
-begin
+procedure travel begin
 	game_time_advance(game_ticks(60 * 30));
 	if ((global_var(RADSCORPION_SEED) == 0) and (global_var(RADSCORPION_SEED) != 2)) then begin
 		set_global_var(RADSCORPION_SEED, 1);
@@ -235,8 +219,7 @@ begin
 	load_map("caves.map", 1);
 end
 
-procedure no_travel
-begin
+procedure no_travel begin
 	if (global_var(RADSCORPION_SEED) == 2) then begin
 		gsay_message(183, 203, 50);
 	end
@@ -245,8 +228,7 @@ begin
 	end
 end
 
-procedure pick_start
-begin
+procedure pick_start begin
 	if (global_var(SETH_STATUS) == 0) then begin
 		if (local_var(1) < 2) then begin
 			call Seth04;

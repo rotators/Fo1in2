@@ -1,0 +1,232 @@
+/*******************************************************************************
+        Name: Griffith
+        Location: Necropolis
+        Description: Motorcycle quest
+
+            Created: by sFall Script Editor
+            Updated:
+
+*******************************************************************************/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GRIFFITH
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure critter_p_proc;
+procedure timed_event_p_proc;
+procedure description_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
+
+procedure Node998;
+procedure Node999;
+
+procedure Node1000;
+procedure Node1000a;
+procedure Node1100;
+procedure Node1200;
+procedure Node1300;
+procedure Node1400;
+procedure Node1500;
+
+/* Defines */
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_BLUE)
+
+#define EVENT_FLOAT_MOTORCYCLE 		(1)
+#define EVENT_RETURN_ROTATION 		(2)
+#define EVENT_ROTATE				 		(3)
+
+/*****************************************************************
+   Local Variables which are saved.
+   All Local Variables need to be prepended by LVAR_
+*****************************************************************/
+#define LVAR_Hostile                      (4)
+#define LVAR_Here_Before                  (5)
+#define LVAR_Home_Rotation              	(6)
+#define LVAR_EnergyCells 						(7)
+
+variable Only_Once := 0;
+variable In_Timed_Event := 0;
+variable Item;
+
+/*******************************************************************
+*                           PROCEDURES                             *
+*******************************************************************/
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   if (map_first_run) then begin
+      //set_local_var(LVAR_Home_Tile,tile_num(self_obj));
+      set_local_var(LVAR_Home_Rotation,self_cur_rot);
+
+	   critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_GANGER);
+	   critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_GHOUL);
+   end
+
+   if fo1in2_motorcycle_disabled then
+   	destroy_object(self_obj);
+end
+
+procedure critter_p_proc begin
+	if (local_var(LVAR_Hostile) != 0) then begin
+		self_attack_dude;
+	end
+
+	if (global_var(GVAR_QUEST_MOTORCYCLE) == 1) then
+		start_dialog_at_node(Node1000);
+	else if (global_var(GVAR_QUEST_MOTORCYCLE) == 3) then
+   	add_timer_event(self_obj,game_ticks(0),EVENT_FLOAT_MOTORCYCLE);
+
+   if (In_Timed_Event == 0 and Current_Distance_From_Dude < 15) then begin
+   	In_Timed_Event := 1;
+   	add_timer_event(self_obj,game_ticks(1),EVENT_ROTATE);
+   end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_FLOAT_MOTORCYCLE) then begin
+		set_global_var(GVAR_QUEST_MOTORCYCLE,2);
+		self_look_at_dude;
+
+		float(150);
+	end
+	else if (fixed_param == EVENT_RETURN_ROTATION) then begin
+		animate_rotation(local_var(LVAR_Home_Rotation));
+	end
+	else if (fixed_param == EVENT_ROTATE) then begin
+		self_look_at_dude;
+		In_Timed_Event := 0;
+	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if (local_var(LVAR_Here_Before) == 0) then
+		display_msg(mstr(101));
+	else
+		display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(mstr(101));
+end
+
+procedure pickup_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Hostile,1);
+   end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_critter;
+	self_look_at_dude;
+
+	if (global_var(GVAR_QUEST_MOTORCYCLE) == 0) then begin
+		display_msg(mstr(200));
+	end
+	else begin
+		start_dialog_at_node(Node1000);
+	end
+end
+
+procedure use_skill_on_p_proc begin
+end
+
+procedure damage_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Hostile,1);
+   end
+end
+
+procedure destroy_p_proc begin
+	inc_good_critter
+end
+
+procedure Node998 begin
+	set_local_var(LVAR_Hostile,1);
+end
+
+procedure Node999 begin
+end
+
+procedure Node1000 begin
+	if (local_var(LVAR_Here_Before) == 0) then begin
+		set_local_var(LVAR_Here_Before,1);
+		Reply(1000);
+	end
+	else
+   	Reply(1001);
+
+	if (local_var(LVAR_EnergyCells) > 0) then
+		NOption(1410,Node1500,004);
+	else
+   	NOption(1010,Node1100,004);
+
+   NOption(1020,Node999,004);
+   NOption(1030,Node999,004);
+
+	if debug_mode then
+		NOption("*** CHEAT *** Just give me the damn keys already!",Node1000a,004);
+
+   set_global_var(GVAR_QUEST_MOTORCYCLE,2);
+end
+
+procedure Node1000a begin
+   Item:=create_object(PID_MOTO_KEY,0,0);
+   add_mult_objs_to_inven(dude_obj,Item,1);
+end
+
+procedure Node1100 begin
+	Reply(1100);
+   NOption(1110,Node1200,004);
+   NOption(1120,Node999,004);
+
+   if (global_var(NECROP_WATER_CHIP_TAKEN) != 1) then
+  		NOption(1130,Node999,004);
+  	else
+  		NOption(g_bye,Node999,004);
+
+end
+
+procedure Node1200 begin
+	Reply(1200);
+	NOption(1210,Node1300,004);
+end
+
+procedure Node1300 begin
+	Reply(1300);
+	NOption(1310,Node1400,004);
+end
+
+// I'm out of energy cells
+procedure Node1400 begin
+	set_local_var(LVAR_EnergyCells,1);
+
+	Reply(1400);
+	NOption(1410,Node1500,004);
+	NOption(1420,Node999,004); // what do you want for the bike
+	NOption(1430,Node999,004);
+end
+
+procedure Node1500 begin
+
+end
+
+
+
