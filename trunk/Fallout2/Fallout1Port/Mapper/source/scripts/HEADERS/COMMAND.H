@@ -23,10 +23,6 @@
 /*********************************************************
 	General stats stuff. Moved here because of Wipe.
 *********************************************************/
-// Trait defines //
-#define TRAIT_PERK  (0)
-#define TRAIT_OBJECT (1)
-#define TRAIT_TRAIT  (2)
 
 /*********************************************************
  General interaction dealing with the dude

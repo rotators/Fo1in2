@@ -949,7 +949,7 @@
 #define SCRIPT_HIGHELD   (942)  //  HighEld.int     ; Elders for the Brotherhood
 #define SCRIPT_MOLERAT2  (943)  //  MoleRat2.int    ; Another stupid molerat                                                      
 #define SCRIPT_BROELD    (944)  //  BroEld.int      ; Brotherhood elder (generic)
-#define SCRIPT_DEPRECATED_6 (945) //SCRIPT_RNDECSPL  (945)  //  scripts.lst - DONOTUSE wtf??????                                             
+#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int 	; Fuel Cell Controller stash                                     
 #define SCRIPT_ICECHEST  (946)  //  IceChest.int    ; box where Garl can place player's stuff                           
 #define SCRIPT_LTCODES   (947)  //  LtCodes.int     ; Codes the Lt is holding
 #define SCRIPT_PRISFELD  (948)  //  PrisFeld.int    ; prisoner force field in the master's lair                         

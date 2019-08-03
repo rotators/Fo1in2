@@ -1,14 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure timed_event_p_proc;//    script_action == 22
+	Cathedral - Shopkeeper
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_CATHSHOP
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure timed_event_p_proc;
+
 procedure combat;
 
 procedure CathShop00;
@@ -39,10 +53,7 @@ variable Caught_Stealing;
 variable Here_To_Shop;
 variable Go_Balistic;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_CATHEDRAL );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_CHILDREN_TRUE );
@@ -51,60 +62,54 @@ begin
 	end
 end
 
-
-
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable Minigun := 0;
 	variable PurpleRobes := 0;
 	dude_look_at_critter;
 	get_reaction
+
 	PurpleRobes := obj_carrying_pid_obj(self_obj, PID_PURPLE_ROBE);
 	rm_obj_from_inven(self_obj, PurpleRobes);
 	move_obj_inven_to_obj(Shop_Ptr, self_obj);
+
 	start_gdialog(843, self_obj, 4, -1, -1);
 	gsay_start;
 	if (Caught_Stealing) then begin
 		call CathShop00;
 	end
+	else 	if (dude_is_armed) then begin
+		call CathShop02;
+	end
+	else if dude_wearing_coc_robe then begin
+		call CathShop07;
+	end
 	else begin
-		if (dude_is_armed) then begin
-			call CathShop02;
-		end
-		else begin
-			if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
-				call CathShop07;
-			end
-			else begin
-				call CathShop10;
-			end
-		end
+		call CathShop10;
 	end
 	gsay_end;
 	end_dialogue;
+
 	move_obj_inven_to_obj(self_obj, Shop_Ptr);
 	add_obj_to_inven(self_obj, PurpleRobes);
 	wield_obj_critter(self_obj, PurpleRobes);
+
 	if (Go_Balistic) then begin
 		Minigun := create_object( PID_MINIGUN, 0, 0 );
 		add_obj_to_inven(self_obj, Minigun);
@@ -112,44 +117,36 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
 	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_CATHSHOP, 100));
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		Here_To_Shop := 1;
 		dialogue_system_enter;
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			Caught_Stealing := 1;
-			dialogue_system_enter;
-		end
+	else if (fixed_param == 2) then begin
+		Caught_Stealing := 1;
+		dialogue_system_enter;
 	end
 end
 
-procedure CathShop00
-begin
+procedure CathShop00 begin
 	gsay_reply(843, 101);
 	giq_option(-3, 843, 102, CathShop01, 50);
 	giq_option(4, 843, 103, CathShop01, 50);
 	giq_option(5, 843, 104, CathShop00a, 50);
 end
 
-procedure CathShop00a
-begin
+procedure CathShop00a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call combat;
 	end
@@ -158,22 +155,19 @@ begin
 	end
 end
 
-procedure CathShop01
-begin
+procedure CathShop01 begin
 	gsay_message(843, 105, 51);
 	call combat;
 end
 
-procedure CathShop02
-begin
+procedure CathShop02 begin
 	gsay_reply(843, 106);
 	giq_option(-3, 843, 107, CathShopEnd, 50);
 	giq_option(4, 843, 108, CathShop03, 50);
 	giq_option(6, 843, 109, CathShop02a, 50);
 end
 
-procedure CathShop02a
-begin
+procedure CathShop02a begin
 	if (global_var(CATHEDRAL_ENEMY) == 1) then begin
 		call CathShop04;
 	end
@@ -182,85 +176,73 @@ begin
 	end
 end
 
-procedure CathShop03
-begin
+procedure CathShop03 begin
 	gsay_message(843, 110, 50);
 end
 
-procedure CathShop04
-begin
+procedure CathShop04 begin
 	gsay_reply(843, 111);
 	giq_option(6, 843, 112, CathShop01, 50);
 	giq_option(6, 843, 113, CathShopEnd, 50);
 end
 
-procedure CathShop05
-begin
+procedure CathShop05 begin
 	gsay_reply(843, 114);
 	giq_option(6, 843, 115, CathShop00a, 50);
 	giq_option(6, 843, 116, CathShop06, 50);
 end
 
-procedure CathShop06
-begin
+procedure CathShop06 begin
 	gsay_message(843, 117, 50);
 end
 
-procedure CathShop07
-begin
+procedure CathShop07 begin
 	gsay_reply(843, 118);
 	giq_option(-3, 843, 119, CathShop08, 50);
 	giq_option(4, 843, 120, CathShop12, 50);
 	giq_option(4, 843, 121, CathShop09, 50);
 end
 
-procedure CathShop08
-begin
+procedure CathShop08 begin
 	gsay_reply(843, 122);
 	giq_option(-3, 843, 123, CathShopEnd, 50);
 end
 
-procedure CathShop09
-begin
+procedure CathShop09 begin
 	gsay_message(843, 124, 50);
 end
 
-procedure CathShop10
-begin
+procedure CathShop10 begin
 	gsay_reply(843, 125);
 	giq_option(-3, 843, 126, CathShop08, 50);
 	giq_option(4, 843, 127, CathShop13, 50);
 	giq_option(5, 843, 128, CathShop11, 50);
 end
 
-procedure CathShop11
-begin
+procedure CathShop11 begin
 	gsay_reply(843, 129);
 	giq_option(4, 843, 130, CathShopEnd, 50);
 	giq_option(4, 843, 131, CathShop01, 50);
 	giq_option(4, 843, 132, CathShop13, 50);
 end
 
-procedure CathShop12
-begin
+procedure CathShop12 begin
 	gsay_reply(843, 133);
-	giq_option(4, 843, 134, CathShopEnd, 50);
+	//giq_option(4, 843, 134, CathShopEnd, 50);
+	giq_option(4, 843, 136, CathShop14, 50);
 end
 
-procedure CathShop13
-begin
+procedure CathShop13 begin
 	gsay_reply(843, 135);
 	giq_option(4, 843, 136, CathShop14, 50);
 end
 
-procedure CathShop14
-begin
+procedure CathShop14 begin
 	gdialog_mod_barter(-10);
 	gsay_message(843, 137, 50);
 end
 
-procedure CathShopEnd
-begin
+procedure CathShopEnd begin
 end
 
 

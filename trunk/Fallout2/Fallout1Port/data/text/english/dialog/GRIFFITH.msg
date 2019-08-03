@@ -5,9 +5,12 @@
 
 {125}{}{You gain }
 {126}{}{ experience for giving fuel to Griffith.}
+{127}{}{ experience for stealing the motorcycle.}
+{128}{}{ experience for obtaining the motorcycle.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
 {150}{}{An original Chryslus Motors Cruiser ... !}
+{160}{}{You are a god damn THIEF!}
 
 {175}{}{I'm out of here.}
 {176}{}{Have fun with the bike.}
@@ -62,11 +65,12 @@
 {1800}{}{Now seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
 	{1810}{}{I'm all ears.}
 
-{1900}{}{Good. I'll give you the bike. For the measly sum of 2.000 caps, it's aaaall yours. Get it?}
+{1900}{}{I'll give you the bike. For the measly sum of 2.000 caps, it's aaaall yours. Get it? It's time for me to leave this shithole behind.}
 	{1910}{}{That's quite some caps.}
 	{1920}{}{I'll give you 1.000 caps.}
 	{1930}{}{I'll give you 500 caps.}
 	{1940}{}{Not interested. }
+	{1950}{}{You want to leave? Why not with the bike?}
 
 {2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
 	{2010}{}{Alright, you've convinced me. Here's the caps, hand me the keys.}
@@ -93,6 +97,7 @@
 	{2610}{}{Take care.}
 
 {2700}{}{Not much, actually. Just the measly sum of 2.000 caps. That's all.}
+{2701}{}{Aren't you listening? It's 2.000 caps!}
 {2800}{}{If you say so. Get back to me if you change your mind.}
 
 
