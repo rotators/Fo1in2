@@ -560,7 +560,8 @@
 #define PID_MBASE_SEC_CODE					(231)
 #define PID_MOTO1_TRUNK						(532)
 #define PID_MOTO2_TRUNK						(533)
-#define PID_MOTO_KEY		                (534)
+//#define PID_MOTO_KEY		                (534)
+#define PID_MOTO_KEY		                (253)
 
 /******************************************************************
 ***************       Active Items                  ***************

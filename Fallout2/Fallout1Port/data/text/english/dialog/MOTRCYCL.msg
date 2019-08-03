@@ -1,11 +1,11 @@
-{100}{}{This car doesn't appear to be functional. Still, it looks to be in better shape than the other cars
+{100}{}{This motorcycle doesn't appear to be functional. Still, it looks to be in better shape than the other motorcycle
  in the area. Maybe this one can be fixed.}
-{101}{}{Currently, this car doesn't appear to be functional. It needs a fuel cell controller.}
+{101}{}{Currently, this motorcycle doesn't appear to be functional. It needs a fuel cell controller.}
 
-{200}{}{You successfully repair the car with the fuel cell controller.}
-{210}{}{You fail to repair the car with the fuel cell controller.}
+{200}{}{You successfully repair the motorcycle with the fuel cell controller.}
+{210}{}{You fail to repair the motorcycle with the fuel cell controller.}
 
-{220}{}{You successfully upgrade the car with the fuel cell regulator.}
+{220}{}{You successfully upgrade the motorcycle with the fuel cell regulator.}
 {230}{}{You fail to install the fuel cell regulator.}
 
 {250}{}{The motorcycle is out of fuel. Refuel the vehicle to get it started again.}
@@ -16,11 +16,12 @@
 {400}{}{It would be too noisy to pop open the hood and work on the car.}
 
 # SD3:
-{450}{}{You need a key for this vehicle.}
-{451}{}{The vehicle doesn't require any repairs.}
+{450}{}{The motorcycle isn't operational.}
+{451}{}{The motorcycle doesn't require any repairs.}
 {452}{}{The key fits!}
+{453}{}{Looks like the fuel cell controller was removed as a precaution. Maybe it's still around somewhere here?}
 
-{500}{}{The vehicle isn't big enough for your party!}
+{500}{}{The motorcycle isn't big enough for your party!}
 {501}{}{Not all of us will fit on the bike.}
 {502}{}{Someone will have to wait here.}
 {503}{}{The bike isn't big enough for all of us.}

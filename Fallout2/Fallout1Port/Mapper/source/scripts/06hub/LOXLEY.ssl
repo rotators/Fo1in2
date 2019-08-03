@@ -137,8 +137,8 @@ variable floatReward;
 
 procedure start
 begin
-	
-	
+
+
 	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
 		call talk_p_proc;
 	end
@@ -160,21 +160,7 @@ begin
 				end
 				else begin
 					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-
-						if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-							if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-								set_global_var(BERSERKER_REPUTATION, 1);
-								set_global_var(CHAMPION_REPUTATION, 0);
-							end
-							if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-								set_global_var(CHAMPION_REPUTATION, 1);
-								set_global_var(BERSERKER_REPUTATION, 0);
-							end
-							set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-							if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-								set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-							end
-						end
+						inc_good_critter
 					end
 				end
 			end
@@ -182,8 +168,7 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	set_global_var(LOXLEY_KNOWN, 1);
@@ -470,16 +455,14 @@ begin
 	giq_option(4, 49, 176, loxley23c, 51);
 end
 
-procedure loxley24
-begin
+procedure loxley24 begin
 	gsay_reply(49, 177);
 	giq_option(4, 49, 178, loxley25, 51);
 	giq_option(4, 49, 179, loxley26, 50);
 	giq_option(4, 49, 180, loxley24a, 49);
 end
 
-procedure loxley25
-begin
+procedure loxley25 begin
 	gsay_reply(49, 181);
 	giq_option(4, 49, 182, loxley25a, 49);
 	giq_option(4, 49, 183, loxley26, 51);
@@ -492,16 +475,14 @@ begin
 	call loxleyx1;
 end
 
-procedure loxley27
-begin
+procedure loxley27 begin
 	gsay_reply(49, 185);
 	giq_option(4, 49, 186, loxley32, 51);
 	giq_option(4, 49, 187, loxley33, 50);
 	giq_option(4, 49, 188, loxley27a, 50);
 end
 
-procedure loxley29
-begin
+procedure loxley29 begin
 	variable LVar0 := 0;
 	LVar0 := obj_carrying_pid_obj(dude_obj, PID_NECKLACE);
 	UpReact
@@ -509,7 +490,7 @@ begin
 		rm_obj_from_inven(dude_obj, LVar0);
 		add_obj_to_inven(self_obj, LVar0);
 	end
-	give_exp_points(500);
+	give_exp_points(EXP_STOLEN_NECKLACE);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 500 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var(STEAL_NECKLACE, 2);
 	gsay_message(49, 189, 49);
@@ -863,8 +844,7 @@ begin
 	call loxley23;
 end
 
-procedure loxley27a
-begin
+procedure loxley27a begin
 	/* has how many? */    if (obj_is_carrying_obj_pid(dude_obj, PID_NECKLACE)) then begin
 		call loxley29;
 	end

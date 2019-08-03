@@ -1,14 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
+	Boneyard - Chuck, the tarot card guy
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPLAADYTUM.h"
+
+#define NAME                    SCRIPT_CHUCK
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
 
 procedure Chuck01;
 procedure Chuck02;
@@ -41,14 +55,13 @@ procedure ChuckEnd;
 procedure ChuckUpReact;
 procedure ChuckDownReact;
 
-variable initial :=  0;
+procedure start begin
+end
 
-procedure start
-begin
-	
+procedure map_enter_p_proc begin
+	if (map_first_run) then begin
 
-	if not(initial) then begin
-		/* has how many? */    if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0) then begin
+		if (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0) then begin
 			variable LVar0;
 			LVar0 := create_object( PID_BOTTLE_CAPS, 0, 0 );
 			add_mult_objs_to_inven(self_obj, LVar0, random(0, 20));
@@ -59,56 +72,26 @@ begin
 				critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER );
 			end
 		end
-		initial :=  1;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-			end
-		end
+
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_ADYTUM, 1);
-critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER );
+		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER );
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_ADYTUM, 1);
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER );
+		inc_good_critter
+		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_LA_ADYTOWNER );
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4)) then begin
 		display_msg(message_str(SCRIPT_CHUCK, 101));
@@ -118,24 +101,19 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
+
 	get_reaction
-	start_gdialog(664, self_obj, 4, -1, -1);
-	gsay_start;
 	if (local_var(4)) then begin
-		call Chuck22;
+		start_dialog_at_node(Chuck22);
 	end
 	else begin
-		call Chuck01;
+		start_dialog_at_node(Chuck01);
 	end
-	gsay_end;
-	end_dialogue;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
 		if (global_var(ENEMY_ADYTUM) == 1) then begin
 			attack(dude_obj);
@@ -143,13 +121,11 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var(ENEMY_ADYTUM, 1);
 end
 
-procedure Chuck01
-begin
+procedure Chuck01 begin
 	set_local_var(4, 1);
 	gsay_reply(664, 102);
 	giq_option(-3, 664, 103, Chuck02, 50);
@@ -158,29 +134,25 @@ begin
 	giq_option(6, 664, 106, Chuck05, 50);
 end
 
-procedure Chuck02
-begin
+procedure Chuck02 begin
 	gsay_message(664, 107, 50);
 end
 
-procedure Chuck03
-begin
+procedure Chuck03 begin
 	gsay_reply(664, 108);
 	giq_option(4, 664, 109, Chuck09, 50);
 	giq_option(4, 664, 110, Chuck14, 50);
 	giq_option(6, 664, 111, Chuck15, 49);
 end
 
-procedure Chuck04
-begin
+procedure Chuck04 begin
 	gsay_reply(664, 112);
 	giq_option(4, 664, 113, Chuck14, 50);
 	giq_option(4, 664, 114, Chuck18, 50);
 	giq_option(4, 664, 115, ChuckBye, 50);
 end
 
-procedure Chuck05
-begin
+procedure Chuck05 begin
 	gsay_reply(664, 117);
 	giq_option(4, 664, 118, ChuckBye, 50);
 	if (local_var(5) < 4) then begin
@@ -188,52 +160,45 @@ begin
 	end
 end
 
-procedure Chuck06
-begin
+procedure Chuck06 begin
 	DownReact
 	gsay_reply(664, 128);
 	giq_option(4, 664, 129, Chuck07, 51);
 	giq_option(4, 664, 130, Chuck08, 50);
 end
 
-procedure Chuck07
-begin
+procedure Chuck07 begin
 	DownReact
 	set_local_var(5, 4);
 	gsay_message(664, 131, 51);
 end
 
-procedure Chuck08
-begin
+procedure Chuck08 begin
 	UpReact
 	gsay_message(664, 132, 50);
 end
 
-procedure Chuck09
-begin
+procedure Chuck09 begin
 	gsay_reply(664, 133);
 	giq_option(4, 664, 134, ChuckBye, 50);
 	giq_option(4, 664, 135, Chuck10, 50);
 	giq_option(6, 664, 136, Chuck19, 50);
 end
 
-procedure Chuck10
-begin
+procedure Chuck10 begin
 	gsay_reply(664, 137);
 	giq_option(4, 664, 138, ChuckBye, 50);
 	giq_option(4, 664, 139, Chuck11, 50);
 end
 
-procedure Chuck11
-begin
+procedure Chuck11 begin
 	gsay_reply(664, 140);
 	giq_option(4, 664, 134, ChuckBye, 50);
 	giq_option(4, 664, 141, Chuck12, 51);
 	giq_option(4, 664, 142, Chuck13, 50);
 end
 
-procedure Chuck12
-begin
+procedure Chuck12 begin
 	gsay_reply(664, 143);
 	giq_option(4, 664, 144, Chuck07, 51);
 	giq_option(5, 664, 145, ChuckUpReact, 50);
@@ -244,8 +209,7 @@ procedure ChuckUpReact begin
 	UpReact
 end
 
-procedure Chuck13
-begin
+procedure Chuck13 begin
 	gsay_reply(664, 147);
 	if (local_var(5) < 4) then begin
 		giq_option(4, 664, 148, ChuckCards, 49);
@@ -253,30 +217,26 @@ begin
 	giq_option(4, 664, 144, Chuck07, 51);
 end
 
-procedure Chuck14
-begin
+procedure Chuck14 begin
 	gsay_reply(664, 149);
 	giq_option(4, 664, 150, ChuckEnd, 50);
 	giq_option(4, 664, 151, Chuck10, 50);
 end
 
-procedure Chuck15
-begin
+procedure Chuck15 begin
 	gsay_reply(664, 152);
 	giq_option(4, 664, 153, ChuckBye, 50);
 	giq_option(4, 664, 150, ChuckEnd, 50);
 	giq_option(6, 664, 154, Chuck16, 50);
 end
 
-procedure Chuck16
-begin
+procedure Chuck16 begin
 	gsay_reply(664, 155);
 	giq_option(4, 664, 156, ChuckBye, 50);
 	giq_option(6, 664, 157, Chuck17, 50);
 end
 
-procedure Chuck17
-begin
+procedure Chuck17 begin
 	gsay_reply(664, 158);
 	giq_option(4, 664, 159, ChuckBye, 50);
 	giq_option(4, 664, 150, ChuckDownReact, 51);
@@ -286,8 +246,7 @@ procedure ChuckDownReact begin
 	DownReact
 end
 
-procedure Chuck18
-begin
+procedure Chuck18 begin
 	set_local_var(6, 1);
 	gsay_reply(664, 160);
 	giq_option(4, 664, 146, ChuckBye, 50);
@@ -296,29 +255,25 @@ begin
 	end
 end
 
-procedure Chuck19
-begin
+procedure Chuck19 begin
 	gsay_reply(664, 162);
 	giq_option(4, 664, 146, ChuckBye, 50);
 	giq_option(6, 664, 163, Chuck20, 50);
 	giq_option(6, 664, 164, Chuck21, 50);
 end
 
-procedure Chuck20
-begin
+procedure Chuck20 begin
 	gsay_reply(664, 165);
 	giq_option(4, 664, 146, ChuckBye, 50);
 	giq_option(6, 664, 164, Chuck21, 50);
 end
 
-procedure Chuck21
-begin
+procedure Chuck21 begin
 	gsay_reply(664, 166);
 	giq_option(0, 664, 125, ChuckBye, 50);
 end
 
-procedure Chuck22
-begin
+procedure Chuck22 begin
 	gsay_reply(664, random(167, 169));
 	giq_option(-3, 664, 103, Chuck02, 50);
 	giq_option(4, 664, 170, Chuck23, 50);
@@ -330,20 +285,17 @@ begin
 	end
 end
 
-procedure Chuck23
-begin
+procedure Chuck23 begin
 	gsay_reply(664, 173);
 	giq_option(0, 664, 125, ChuckBye, 50);
 end
 
-procedure ChuckCards
-begin
+procedure ChuckCards begin
 	gsay_reply(664, 120);
 	giq_option(0, 664, 125, ChuckCards2, 50);
 end
 
-procedure ChuckCards2
-begin
+procedure ChuckCards2 begin
 	if (local_var(5) == 0) then begin
 		if (global_var(WORLDMAPLIST_BROTHERHOOD) < 1) then begin
 			gsay_reply(664, 121);
@@ -370,7 +322,7 @@ begin
 	end
 	if (local_var(5) >= 3) then begin
 		gsay_reply(664, 124);
-		set_critter_stat( dude_obj, STAT_lu, 1 );
+		set_critter_stat(dude_obj, STAT_lu, 1);
 		display_msg(message_str(SCRIPT_GENCHAT, 167));
 	end
 	set_local_var(5, local_var(5) + 1);
@@ -378,15 +330,12 @@ begin
 	giq_option(4, 664, 127, Chuck06, 50);
 end
 
-procedure ChuckBye
-begin
+procedure ChuckBye begin
 	gsay_message(664, 116, 50);
 end
 
-procedure ChuckEnd
-begin
+procedure ChuckEnd begin
 end
-
 
 
 

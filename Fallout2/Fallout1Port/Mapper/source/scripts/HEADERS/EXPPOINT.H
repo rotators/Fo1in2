@@ -168,6 +168,8 @@
 // Hub
 #define EXP_BOUGHT_WATER_CARAVAN 				(1000)
 #define EXP_FIND_DEATHCLAW 						(800)
+#define EXP_BLACKMAILING_BOB 					(500)
+#define EXP_STOLEN_NECKLACE 					(500)
 
 // Boneyard
 #define EXP_QUEST_KILLED_DCLAWS		 			(1000)
@@ -177,6 +179,7 @@
 #define EXP_WATER_CHIP_TAKEN 					(2500)
 #define EXP_WATER_PUMP_FIXED					(1000)
 #define EXP_PRISONER_FREED 						(500)
+#define EXP_GIVEN_ENERGY_CELLS 					(2000)
 
 // Glow
 #define EXP_REPAIR_GENERATOR 					(1000)
