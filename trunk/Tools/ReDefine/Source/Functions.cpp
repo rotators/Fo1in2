@@ -88,28 +88,49 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 
 void ReDefine::ProcessFunctionArguments( ReDefine::ScriptCode& function )
 {
+    // ignore unknown functions
     auto it = FunctionsArguments.find( function.Name );
     if( it == FunctionsArguments.end() )
         return;
 
+    // make sure function is preconfigured properly
+    std::string  bad;
+    unsigned int found = 0;
+
     if( it->second.size() != function.Arguments.size() )
     {
-        WARNING( __FUNCTION__, "invalid number of arguments : found<%u> expected<%u>", function.Arguments.size(), it->second.size() );
+        bad = "arguments";
+        found = function.Arguments.size();
+    }
+    else if( it->second.size() != function.ArgumentsTypes.size() )
+    {
+        bad = "arguments types";
+        found = function.ArgumentsTypes.size();
+    }
 
+    if( !bad.empty() )
+    {
+        WARNING( __FUNCTION__, "invalid number of %s : found<%u> expected<%u>", bad.c_str(), found, it->second.size() );
         return;
     }
 
+    // called so late to always detect count mismatch
     if( !function.Arguments.size() )
         return;
 
     for( unsigned int idx = 0, len = function.Arguments.size(); idx < len; idx++ )
     {
-        if( it->second[idx] == "?" )
+        if( function.ArgumentsTypes[idx].empty() ) // can happen by using DoArgumentsResize without DoArgumentChangeType or other edit combinations
+        {
+            WARNING( __FUNCTION__, "argument<%u> type not set", idx );
+            continue;
+        }
+        else if( function.ArgumentsTypes[idx] == "?" || function.ArgumentsTypes[idx] == "??" || function.ArgumentsTypes[idx] == "???" )
         {
             ProcessValueGuessing( function.Arguments[idx] );
             continue;
         }
 
-        ProcessValue( it->second[idx], function.Arguments[idx] );
+        ProcessValue( function.ArgumentsTypes[idx], function.Arguments[idx] );
     }
 }

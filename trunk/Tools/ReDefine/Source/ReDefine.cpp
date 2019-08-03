@@ -320,12 +320,13 @@ void ReDefine::ProcessHeaders( const std::string& path )
     StringVectorMap     validatedFunctions;
 
     // validate variables configuration
+    // virtual types "?", "??" and "???" are not valid for variables
 
     for( const auto& var : VariablesOperators )
     {
         for( const auto& opName : var.second )
         {
-            if( !IsDefineType( opName.second ) ) // "?" is not valid in this scope
+            if( !IsDefineType( opName.second ) )
             {
                 WARNING( __FUNCTION__, "unknown define type<%s> : variable<%s> operatorName<%s>", opName.second.c_str(), var.first.c_str(), opName.first.c_str() );
                 continue;
@@ -338,9 +339,9 @@ void ReDefine::ProcessHeaders( const std::string& path )
 
     for( const auto& type : VariablesGuessing )
     {
-        if( !IsDefineType( type ) )    // "?" is not valid in this scope
+        if( !IsDefineType( type ) )
         {
-            WARNING( __FUNCTION__, "unknown define type<%s> : variable guessing" );
+            WARNING( __FUNCTION__, "unknown define type<%s> : variable guessing", type.c_str() );
             VariablesGuessing.clear(); // zero tolerance policy
             break;
         }
@@ -355,12 +356,13 @@ void ReDefine::ProcessHeaders( const std::string& path )
     validatedOperators.clear();
 
     // validate functions configuration
+    // virtual types "?", "??" and "???" are valid for functions arguments only
 
     for( const auto& var : FunctionsOperators )
     {
         for( const auto& opName : var.second )
         {
-            if( !IsDefineType( opName.second ) ) // "?" is not valid in this scope
+            if( !IsDefineType( opName.second ) )
             {
                 WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> operatorName<%s>", opName.second.c_str(), var.first.c_str(), opName.first.c_str() );
                 continue;
@@ -379,7 +381,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
         for( const auto& type : func.second )
         {
             argument++;
-            if( type != "?" && !IsDefineType( type ) )
+            if( type != "?" && type != "??" && type != "???" && !IsDefineType( type ) )
             {
                 WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> argument<%u>", type.c_str(), func.first.c_str(), argument );
                 valid = false;
