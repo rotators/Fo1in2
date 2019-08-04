@@ -1,13 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
+	Mariposa - Guard Team 2
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_VTEAM2
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 
 procedure GenSupr00;
 procedure GenSupr03;
@@ -28,44 +41,17 @@ variable initial :=  0;
 variable tmp_hostile;
 variable round_counter;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if not(initial) then begin
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_SUPER_MUTANT_AGGRESSIVE );
 		initial :=  1;
 	end
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
-	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
 
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		round_counter := round_counter + 1;
 	end
@@ -81,8 +67,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile and obj_can_see_obj(self_obj, dude_obj)) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -106,32 +91,15 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (global_var(LIEUTENANTS_DEAD)) then begin
 		call GenSupr08;
@@ -155,14 +123,12 @@ begin
 	end
 end
 
-procedure GenSupr00
-begin
+procedure GenSupr00 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(101, 103)), 0);
 	tmp_hostile := 1;
 end
 
-procedure GenSupr03
-begin
+procedure GenSupr03 begin
 	gsay_reply(433, random(104, 106));
 	giq_option(-3, 433, 107, GenSupr04, 50);
 	giq_option(4, 433, 108, GenSupr04, 50);
@@ -173,8 +139,7 @@ begin
 	end
 end
 
-procedure GenSupr03a
-begin
+procedure GenSupr03a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call GenSupr07;
 	end
@@ -183,8 +148,7 @@ begin
 	end
 end
 
-procedure GenSupr03b
-begin
+procedure GenSupr03b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
 		call GenSupr07;
 	end
@@ -193,45 +157,38 @@ begin
 	end
 end
 
-procedure GenSupr04
-begin
+procedure GenSupr04 begin
 	tmp_hostile := 1;
 	gsay_message(433, random(112, 114), 50);
 end
 
-procedure GenSupr05
-begin
+procedure GenSupr05 begin
 	gsay_reply(433, 115);
 	giq_option(5, 433, 116, GenSuprxx, 50);
 	giq_option(5, 433, 117, GenSuprAlert, 50);
 end
 
-procedure GenSupr06
-begin
+procedure GenSupr06 begin
 	tmp_hostile := 1;
 	gsay_message(433, random(118, 120), 50);
 end
 
-procedure GenSupr07
-begin
+procedure GenSupr07 begin
 	set_map_var(1, 1);
 	gsay_message(433, random(121, 123), 50);
 end
 
-procedure GenSupr08
-begin
+procedure GenSupr08 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(124, 127)), 0);
 	tmp_hostile := 1;
 end
 
-procedure GenSuprAlert
-begin
+procedure GenSuprAlert begin
 	set_global_var(VATS_ALERT, 1);
 	tmp_hostile := 1;
 end
 
-procedure GenSuprxx
-begin
+procedure GenSuprxx begin
 	set_global_var(ENTERING_VATS_HOW, 2);
 	load_map(MAP_MBVATS12, 5);
 end

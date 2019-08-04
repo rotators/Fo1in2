@@ -27,6 +27,7 @@
 											play_gmovie(WALKW_MOVIE); 						\
 										endgame_movie; 										\
 										gfade_out(1);										\
+										party_member_unhide_all								\
 										/*world_map;*/load_map(MAP_RNDDESER,0);				\
 										gfade_in(1)
 										

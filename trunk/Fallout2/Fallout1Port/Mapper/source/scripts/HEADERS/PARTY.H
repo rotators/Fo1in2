@@ -411,12 +411,12 @@ variable tmp_hidden;
          end
 #define party_member_hide_all                                                       \
          set_gvar_bit_on(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                \
-         party_member_hide(Ian_Ptr, hidden_ian_bit)                                 \
-		 party_member_hide(Dog_Ptr, hidden_dog_bit)                                 \
-		 party_member_hide(Tycho_Ptr, hidden_tycho_bit)                             \
-		 party_member_hide(Katja_Ptr, hidden_katja_bit)                             \
-		 party_member_hide(Tandi_Ptr, hidden_tandi_bit)                             \
-		 party_member_hide(MrHandyC_Ptr, hidden_mrhandyc_bit)
+         party_member_hide(Ian_ptr, hidden_ian_bit)                                 \
+		 party_member_hide(Dog_ptr, hidden_dog_bit)                                 \
+		 party_member_hide(Tycho_ptr, hidden_tycho_bit)                             \
+		 party_member_hide(Katja_ptr, hidden_katja_bit)                             \
+		 party_member_hide(Tandi_ptr, hidden_tandi_bit)                             \
+		 party_member_hide(Handy_ptr, hidden_mrhandyc_bit)
 
 
 #define all_party_unhidden                   (all_party_hidden == false)
@@ -436,12 +436,12 @@ variable tmp_hidden;
          end
 #define party_member_unhide_all                                                        \
          set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                  \
-         party_member_unhide(Ian_Ptr, hidden_ian_bit)                                 \
-		 party_member_unhide(Dog_Ptr, hidden_dog_bit)                                 \
-		 party_member_unhide(Tycho_Ptr, hidden_tycho_bit)                             \
-		 party_member_unhide(Katja_Ptr, hidden_katja_bit)                             \
-		 party_member_unhide(Tandi_Ptr, hidden_tandi_bit)                             \
-		 party_member_unhide(MrHandyC_Ptr, hidden_mrhandyc_bit)
+         party_member_unhide(Ian_ptr, hidden_ian_bit)                                 \
+		 party_member_unhide(Dog_ptr, hidden_dog_bit)                                 \
+		 party_member_unhide(Tycho_ptr, hidden_tycho_bit)                             \
+		 party_member_unhide(Katja_ptr, hidden_katja_bit)                             \
+		 party_member_unhide(Tandi_ptr, hidden_tandi_bit)                             \
+		 party_member_unhide(Handy_ptr, hidden_mrhandyc_bit)
 
 //End hiding party members
 
