@@ -35,6 +35,15 @@ variable car_was_used_to_exit;
 #define small_fill 		(200) // 400
 #define big_fill 			(400) // 800
 
+#define give_bike_exp 					if (global_var(GVAR_QUEST_MOTORCYCLE) < 10) then begin /* Motorcycle was stolen */ \
+													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_STOLEN_CONTROLLER + message_str(SCRIPT_GRIFFITH, 127)); \
+													give_exp_points(EXP_STOLEN_CONTROLLER); \
+												end \
+												else begin \
+													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_BOUGHT_BIKE + message_str(SCRIPT_GRIFFITH, 128)); \
+													give_exp_points(EXP_BOUGHT_BIKE); \
+												end
+
 procedure start begin
 end
 
@@ -58,16 +67,7 @@ procedure use_p_proc begin
 	if (obj_carrying_pid_obj(dude_obj, PID_MOTO_KEY)) then begin
 		set_global_var(GVAR_PLAYER_GOT_CAR,1);
 		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
-
-		// Motorcycle was stolen
-		if (global_var(GVAR_QUEST_MOTORCYCLE) < 10) then begin
-			display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_STOLEN_CONTROLLER + message_str(SCRIPT_GRIFFITH, 127));
-			give_exp_points(EXP_STOLEN_CONTROLLER);
-		end
-		else begin
-			display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_BOUGHT_BIKE + message_str(SCRIPT_GRIFFITH, 128));
-			give_exp_points(EXP_BOUGHT_BIKE);
-		end
+		give_bike_exp
 	end
 
    if not(dude_has_car) then begin
@@ -116,6 +116,7 @@ procedure use_obj_on_p_proc begin
 
 		set_global_var(GVAR_PLAYER_GOT_CAR,1);
 		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
+		give_bike_exp
 		display_mstr(220); // 452
 	end
 	else if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
