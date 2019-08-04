@@ -1,18 +1,28 @@
+/*
+
+	Brotherhood - Cabbot, the door guard
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
 
 #define NAME                    SCRIPT_CABBOT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
 
 #include "..\headers\command.h"
-#include "..\headers\modreact.h"
+#include "..\headers\ModReact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
-procedure damage_p_proc;//    script_action == 14
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure timed_event_p_proc;//    script_action == 22
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure damage_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure timed_event_p_proc;
 
 procedure cabbot01;
 procedure cabbot02;
@@ -95,6 +105,8 @@ procedure combat;
 
 procedure cheat_1;
 
+#define LVAR_Here_Before       		(4)
+
 import variable Door_ptr;
 import variable Cabbot_Ptr;
 
@@ -106,54 +118,121 @@ variable ILLEGAL;
 variable Only_Once := 1;
 variable temp;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		Cabbot_Ptr := self_obj;
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_BROTHERHOOD );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_BROTHERHOOD_KNIGHT );
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
+end
+
+procedure damage_p_proc begin
+	set_global_var(ENEMY_BROTHERHOOD, 1);
+end
+
+procedure critter_p_proc begin
+	if local_var(7) == 1 then begin
+		set_local_var(7, 2);
+		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
+		display_msg(message_str(SCRIPT_CABBOT, 232));
+		give_exp_points(EXP_BECOME_INITITAT);
+	end
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		tmp_hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		tmp_hostile := 0;
+	end
+	if (tmp_hostile) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
+		if (local_var(5) == 0) then begin
+			if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2) then begin
+				add_timer_event(self_obj, game_ticks(1), 1);
+			end
 		end
 		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-					call timed_event_p_proc;
+			if (local_var(5) == 1) then begin
+				if (tile_num(self_obj) == 20706) then begin//20906) then begin
+					set_local_var(5, 2);
+					anim(self_obj, 1000, 2);
 				end
 				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-								call destroy_p_proc;
-							end
-						end
-					end
+					animate_move_obj_to_tile(self_obj, 20706, 0);//20906, 0);
 				end
 			end
 		end
 	end
 end
 
-procedure cabbot01
-begin
-	set_local_var(4, 1);
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_critter;
+	if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 5) then begin
+		float_msg(self_obj, message_str(SCRIPT_CABBOT, 233), 2);
+	end
+	else begin
+		get_reaction
+		start_gdialog(NAME, self_obj, 4, HEAD_CABBOT, BACKGROUND_BHOOD);
+		gsay_start;
+		if (local_var(LVAR_Here_Before) == 1) then begin
+			if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 1) then begin
+				call cabbot24;
+			end
+			else if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2) then begin
+				call cabbot36;
+			end
+			else if (global_var(WITH_CARAVAN == 1)) then begin // TODO: Wrong gvar???? Does this make sense here????
+				call cabbot33;
+			end
+			else begin
+				if (local_var(0) >= 50) then begin
+					call cabbot19;
+				end
+				else begin
+					call cabbot21;
+				end
+			end
+		end
+		else begin
+			call cabbot01;
+		end
+		gsay_end;
+		end_dialogue;
+	end
+end
+
+procedure destroy_p_proc begin
+	rm_timer_event(self_obj);
+
+	if obj_in_party(source_obj) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+	end
+	inc_good_critter
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_CABBOT, 100));
+end
+
+procedure timed_event_p_proc begin
+	set_local_var(5, 1);
+	use_obj(Door_ptr);
+end
+
+procedure cabbot01 begin
+	set_local_var(LVAR_Here_Before, 1);
 	gsay_reply(40, 101);
 	giq_option(4, 40, 103, cabbot17, 50);
 	giq_option(4, 40, 105, cabbot04, 50);
@@ -184,8 +263,7 @@ begin
 	giq_option(4, 40, 113, cabbot10, 50);
 end
 
-procedure cabbot04
-begin
+procedure cabbot04 begin
 	gsay_message(40, 114, 50);
 	set_local_var(6, 1);
 	gfade_out(1);
@@ -213,7 +291,7 @@ end
 procedure cabbot06
 begin
 	gsay_reply(40, 123);
-	if global_var(WORLDMAPLIST_THE_GLOW) == 0 then 
+	if global_var(WORLDMAPLIST_THE_GLOW) == 0 then
 		set_global_var(WORLDMAPLIST_THE_GLOW, 1);
 	mark_on_map(AREA_GLOW)
 
@@ -305,8 +383,7 @@ begin
 	call cabbotx;
 end
 
-procedure cabbot21
-begin
+procedure cabbot21 begin
 	gsay_reply(40, 149);
 	giq_option(5, 40, 150, cabbot21_1, 50);
 	giq_option(4, 40, 151, cabbotx, 50);
@@ -345,8 +422,7 @@ begin
 	giq_option(4, 40, 156, cabbot23a, 51);
 end
 
-procedure cabbot24
-begin
+procedure cabbot24 begin
 	gsay_reply(40, 157);
 	giq_option(4, 40, 158, cabbot25, 50);
 	giq_option(4, 40, 159, cabbot32, 50);
@@ -383,8 +459,7 @@ begin
 	call cabbotx;
 end
 
-procedure cabbot33
-begin
+procedure cabbot33 begin
 	if (local_var(1) >= 3) then begin
 		gsay_reply(40, 170);
 	end
@@ -400,8 +475,7 @@ begin
 	giq_option(4, 40, 174, cabbot33a, 51);
 end
 
-procedure cabbot34
-begin
+procedure cabbot34 begin
 	if (local_var(1) >= 3) then begin
 		gsay_message(40, 175, 49);
 	end
@@ -416,15 +490,13 @@ begin
 	call cabbotx6;
 end
 
-procedure cabbot35
-begin
+procedure cabbot35 begin
 	giq_option(5, 40, 178, cabbot38, 50);
 	giq_option(5, 40, 179, cabbot42, 50);
 	giq_option(4, 40, 180, cabbot37, 50);
 end
 
-procedure cabbot36
-begin
+procedure cabbot36 begin
 	if (local_var(1) >= 3) then begin
 		gsay_reply(40, 182);
 	end
@@ -720,120 +792,6 @@ begin
 	tmp_hostile := 1;
 end
 
-procedure damage_p_proc
-begin
-	set_global_var(ENEMY_BROTHERHOOD, 1);
-end
-
-procedure critter_p_proc
-begin
-	if local_var(7) == 1 then begin
-		set_local_var(7, 2);
-		set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		display_msg(message_str(SCRIPT_CABBOT, 232));
-		give_exp_points(EXP_BECOME_INITITAT);
-	end
-	if (global_var(ENEMY_BROTHERHOOD)) then begin
-		tmp_hostile := 1;
-	end
-	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
-		tmp_hostile := 0;
-	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		set_global_var(ENEMY_BROTHERHOOD, 1);
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (local_var(5) == 0) then begin
-			if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2) then begin
-				add_timer_event(self_obj, game_ticks(1), 1);
-			end
-		end
-		else begin
-			if (local_var(5) == 1) then begin
-				if (tile_num(self_obj) == 20706) then begin//20906) then begin
-					set_local_var(5, 2);
-					anim(self_obj, 1000, 2);
-				end
-				else begin
-					animate_move_obj_to_tile(self_obj, 20706, 0);//20906, 0);
-				end
-			end
-		end
-	end
-end
-
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		tmp_hostile := 1;
-	end
-end
-
-procedure talk_p_proc
-begin
-	dude_look_at_critter;
-	if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 5) then begin
-		float_msg(self_obj, message_str(SCRIPT_CABBOT, 233), 2);
-	end
-	else begin
-		get_reaction
-		start_gdialog(NAME, self_obj, 4, HEAD_CABBOT, BACKGROUND_BHOOD);
-		gsay_start;
-		if (local_var(4) == 1) then begin
-			if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 1) then begin
-				call cabbot24;
-			end
-			else begin
-				if (global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2) then begin
-					call cabbot36;
-				end
-				else begin
-					if (global_var(WITH_CARAVAN == 1)) then begin
-						call cabbot33;
-					end
-					else begin
-						if (local_var(0) >= 50) then begin
-							call cabbot19;
-						end
-						else begin
-							call cabbot21;
-						end
-					end
-				end
-			end
-		end
-		else begin
-			call cabbot01;
-		end
-		gsay_end;
-		end_dialogue;
-	end
-end
-
-procedure destroy_p_proc
-begin
-	rm_timer_event(self_obj);
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		set_global_var(ENEMY_BROTHERHOOD, 1);
-	end
-	inc_good_critter
-	rm_timer_event(self_obj);
-end
-
-procedure look_at_p_proc
-begin
-	script_overrides;
-	display_msg(message_str(SCRIPT_CABBOT, 100));
-end
-
-procedure timed_event_p_proc
-begin
-	set_local_var(5, 1);
-	use_obj(Door_ptr);
-end
 
 
 

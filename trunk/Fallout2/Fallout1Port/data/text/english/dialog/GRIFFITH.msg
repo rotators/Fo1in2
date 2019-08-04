@@ -36,24 +36,24 @@
 	{1040}{}{I got the caps.}
 	
 {1100}{}{Of course it runs, dummie! Fill it up with energy cells and it'll come alive and roar like a beast!}
-	{1110}{}{Why are you telling me all of this?}
+	{1110}{}{Why are you telling me this?}
 	{1120}{}{I get it, you want to get rid of the bike.}
 	{1130}{}{Great, but there is a water chip I have to fetch. See you later.}
 	
 {1200}{}{I'm telling you all of this, because you look interested and capable and I feel we're in a bit of a situation here, which requires me to leave this hole as soon as possible.}
 	{1210}{}{Now come on. This place doesn't seem all *that* bad to me.}
-	{1220}{}{Why are you not leaving then?}
+	{1220}{}{Why aren't you leaving?}
 	
 {1300}{}{Are you serious? You see'n these green fuckers over there at the watershed? I say shit 's about to go down here. Soon. When that happens, I won't be around anymore.}
-	{1310}{}{So why you're not leaving with the bike? That seems like the obvious thing to do.}
+	{1310}{}{So why you're not leaving with the bike?}
 	
 {1400}{}{Because I'm out of ENERGY CELLS! Even if I do - which I do, very much, believe me - I can't. Don't have the caps and even if, sure as shit you won't find 'cells to buy anywhere around here.}
 	{1410}{}{Energy cells, huh? Would these do it for you?}
 	{1420}{}{What do you want for the bike?}
 	{1430}{}{That sucks, but I have to go now. See you later.}
 	
-{1500}{}{Shit, yeah! Haven't seen any in ages. But ... I can't pay you.}
-	{1510}{}{Just take them and get the hell out of here before I change my mind.}
+{1500}{}{Shit, yeah! But ... I can't pay you.}
+	{1510}{}{Just take them and get out of here before I'll change my mind.}
 	{1520}{}{You're right, that's not a good deal. What do you want for the bike?}
 	
 {1600}{}{Wait, are you..? Really? ... Thanks man! Time to say goodbye to this death infested hole! Do you think there's something up north for the likes of us? Guess I will find out!}
@@ -70,10 +70,11 @@
 	{1920}{}{I'll give you 1.000 caps.}
 	{1930}{}{I'll give you 500 caps.}
 	{1940}{}{Not interested. }
-	{1950}{}{You want to leave? Why not with the bike?}
+	{1950}{}{If you want to leave, why not with the bike?}
+	{1960}{}{What will you do with the money?}
 
 {2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
-	{2010}{}{Alright, you've convinced me. Here's the caps, hand me the keys.}
+	{2010}{}{Alright. Here's the caps, hand me the keys.}
 	{2020}{}{That's too steep for me.}
 
 {2100}{}{Deal! ... Now wait here. I'll go and get the fuel cell controller.}
@@ -99,6 +100,8 @@
 {2700}{}{Not much, actually. Just the measly sum of 2.000 caps. That's all.}
 {2701}{}{Aren't you listening? It's 2.000 caps!}
 {2800}{}{If you say so. Get back to me if you change your mind.}
+
+{3100}{}{I'll hit up the next caravan. Maybe up north? Anywhere is better than here.}
 
 
 

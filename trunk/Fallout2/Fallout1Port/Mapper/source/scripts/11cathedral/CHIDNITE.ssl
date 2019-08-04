@@ -1,8 +1,24 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
+	Cathedral - Nightkin guards
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h
+
+#define NAME                    SCRIPT_CHIDNITE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+
 procedure Nightkin01;
 procedure Nightkin01a;
 procedure Nightkin02;
@@ -15,79 +31,62 @@ procedure Nightkin07;
 procedure Nightkinend;
 procedure Combat;
 
-variable Hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if Only_Once then begin
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_CATHEDRAL );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_NIGHTKIN );
 		Only_Once := 0;
 	end
-	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-		script_overrides;
-		display_msg(message_str(SCRIPT_CHIDNITE, 100));
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_CHIDNITE, 100));
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_CHIDNITE, 100));
+end
+
+procedure critter_p_proc begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		if (not(obj_is_carrying_obj_pid(dude_obj, PID_RED_COC_BADGE))) then begin
+			if (not(obj_is_carrying_obj_pid(dude_obj, PID_BLACK_COC_BADGE))) then begin
+				if (obj_pid(critter_inven_obj(dude_obj, 0)) != PID_PURPLE_ROBE) then begin
+					tmp_hostile := 1;
+				end
+			end
+		end
 	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					if (obj_can_see_obj(self_obj, dude_obj)) then begin
-						/* has how many? */    if (not(obj_is_carrying_obj_pid(dude_obj, PID_RED_COC_BADGE))) then begin
-							/* has how many? */    if (not(obj_is_carrying_obj_pid(dude_obj, PID_BLACK_COC_BADGE))) then begin
-								if (obj_pid(critter_inven_obj(dude_obj, 0)) != PID_PURPLE_ROBE) then begin
-									Hostile := 1;
-								end
-							end
-						end
-					end
-					if ((metarule(16, 0) > 1) and obj_can_see_obj(self_obj, dude_obj)) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-						Hostile := 1;
-					end
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						Hostile := 0;
-						attack(dude_obj);
-					end
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						Hostile := 1;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							script_overrides;
-							if (global_var(CATHEDRAL_ENEMY) == 1) then begin
-								float_msg(self_obj, message_str(SCRIPT_CHIDNITE, 101), 0);
-								Hostile := 1;
-							end
-							else begin
-								start_gdialog(394, self_obj, 4, -1, -1);
-								gsay_start;
-								call Nightkin01;
-								gsay_end;
-								end_dialogue;
-							end
-						end
-					end
-				end
-			end
-		end
+	if ((metarule(16, 0) > 1) and obj_can_see_obj(self_obj, dude_obj)) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+		tmp_hostile := 1;
+	end
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 end
 
-procedure Nightkin01
-begin
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
+	script_overrides;
+	if (global_var(CATHEDRAL_ENEMY) == 1) then begin
+		float_msg(self_obj, message_str(SCRIPT_CHIDNITE, 101), 0);
+		tmp_hostile := 1;
+	end
+	else begin
+		start_dialog_at_node(Nightkin01);
+	end
+end
+
+procedure Nightkin01 begin
 	gsay_reply(394, 102);
 	giq_option(7, 394, 103, Nightkin01a, 50);
 	giq_option(4, 394, 104, Nightkin04, 50);
@@ -101,8 +100,7 @@ begin
 	giq_option(-3, 394, 108, Nightkinend, 50);
 end
 
-procedure Nightkin01a
-begin
+procedure Nightkin01a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Nightkin02;
 	end
@@ -111,26 +109,22 @@ begin
 	end
 end
 
-procedure Nightkin02
-begin
+procedure Nightkin02 begin
 	gsay_reply(394, 109);
 	gsay_option(394, 125, Nightkinend, 50);
 end
 
-procedure Nightkin03
-begin
+procedure Nightkin03 begin
 	gsay_reply(394, 110);
 	call Combat;
 end
 
-procedure Nightkin04
-begin
+procedure Nightkin04 begin
 	gsay_reply(394, 111);
 	call Combat;
 end
 
-procedure Nightkin05
-begin
+procedure Nightkin05 begin
 	gsay_reply(394, 112);
 	giq_option(7, 394, 113, Nightkin05a, 50);
 	giq_option(4, 394, 114, Nightkin04, 50);
@@ -142,8 +136,7 @@ begin
 	end
 end
 
-procedure Nightkin05a
-begin
+procedure Nightkin05a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Nightkin06;
 	end
@@ -152,14 +145,12 @@ begin
 	end
 end
 
-procedure Nightkin06
-begin
+procedure Nightkin06 begin
 	gsay_reply(394, 119);
 	gsay_option(394, 125, Nightkinend, 50);
 end
 
-procedure Nightkin07
-begin
+procedure Nightkin07 begin
 	gsay_reply(394, 120);
 	giq_option(4, 394, 121, Nightkin04, 50);
 	giq_option(4, 394, 122, Nightkin04, 50);
@@ -169,38 +160,20 @@ begin
 	end
 end
 
-procedure Nightkinend
-begin
+procedure Nightkinend begin
 end
 
-procedure Combat
-begin
+procedure Combat begin
 	set_global_var(CATHEDRAL_ENEMY, 1);
-	Hostile := 1;
+	tmp_hostile := 1;
 end
 
- 
-procedure damage_p_proc
-begin
-set_global_var(MUTANTS_ENEMY_UNSURE, 1); 
+
+procedure damage_p_proc begin
+	set_global_var(MUTANTS_ENEMY_UNSURE, 1);
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
 

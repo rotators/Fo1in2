@@ -58,6 +58,8 @@ procedure Node2700;
 procedure Node2800;
 procedure Node2900;
 procedure Node3000;
+procedure Node3100;
+procedure MoneyTalk;
 
 procedure leave_map;
 procedure leave_with_bike;
@@ -96,6 +98,7 @@ variable Item;
 variable my_hex;
 variable angry := 0;
 variable knows_price := 0;
+variable asked_money := 0;
 
 /*******************************************************************
 *                           PROCEDURES                             *
@@ -460,17 +463,22 @@ procedure Node1900 begin
 
 	Reply(1900);
 	NOption(1950,Node1400,004);
+	NOption(1960,Node3100,004);
 	NOption(1910,Node2000,004);
-	NOption(1920,Node3000,004); // 1000 caps
-	NOption(1930,Node2900,004); // 500 caps
-	NOption(mstr(1940) + g_bye,Node999,004);
+	call MoneyTalk;
 end
 
 procedure Node2000 begin
 	Reply(2000);
 	NOption(2010,Node2100,004);
+	call MoneyTalk;
+end
+
+procedure MoneyTalk begin
+	NOption(1920,Node3000,004); // 1000 caps
+	NOption(1930,Node2900,004); // 500 caps
 	NOption(2020,Node2800,004);
-	// add haggling with variable, if variable > x, stop talking?
+	NOption(mstr(1940) + g_bye,Node999,004);
 end
 
 procedure Node2100 begin
@@ -545,9 +553,7 @@ procedure Node2700 begin
 	else
 		Reply(2701);
 	NOption(1910,Node2000,004);
-	NOption(1920,Node3000,004); // 1000 caps
-	NOption(1930,Node2900,004); // 500 caps
-	NOption(mstr(1940) + g_bye,Node999,004);
+	call MoneyTalk;
 end
 
 procedure Node2800 begin
@@ -572,5 +578,12 @@ procedure Node3000 begin
 	else begin
 		call Node2900;
 	end
+end
+
+procedure Node3100 begin
+	asked_money := 1;
+	Reply(3100);
+
+	call MoneyTalk;
 end
 
