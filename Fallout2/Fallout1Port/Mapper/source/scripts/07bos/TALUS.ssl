@@ -1,14 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
+	Brotherhood - Talus the trainer
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_TALUS
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
 
 procedure Talus00;
 procedure Talus01;
@@ -91,62 +105,42 @@ variable tmp_hostile;
 variable drugs;
 variable awardex;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_BROTHERHOOD );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_BROTHERHOOD_PALADIN );
 		add_timer_event(self_obj, game_ticks(30), 2);
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-					if (global_var(ENEMY_BROTHERHOOD) == 0) then begin
-						call TalusBackground;
-					end
-				end
-			end
-		end
+end
+
+procedure timed_event_p_proc begin
+	if (global_var(ENEMY_BROTHERHOOD) == 0) then begin
+		call TalusBackground;
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(ENEMY_BROTHERHOOD)) then begin
 		tmp_hostile := 1;
 	end
 	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
 		tmp_hostile := 0;
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (local_var(7) == 0) then begin
@@ -206,25 +200,21 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 	end
 	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_TALUS, 100));
+	display_msg(mstr(100));
 end
 
-procedure weapon_check
-begin
+procedure weapon_check begin
 	if (dude_is_armed) then begin
 		armed := 1;
 	end
@@ -233,8 +223,7 @@ begin
 	end
 end
 
-procedure set_requisition
-begin
+procedure set_requisition begin
 	set_global_var(BROTHERHOOD_WEEKLY_AMMO, game_time);
 	set_local_var(5, 1);
 	set_map_var(17, 1);
@@ -243,8 +232,7 @@ begin
 	set_map_var(10, 3);
 end
 
-procedure Talus00
-begin
+procedure Talus00 begin
 	gsay_reply(318, 101);
 	giq_option(8, 318, 102, Talus01, 50);
 	giq_option(4, 318, 103, Talus02, 50);
@@ -256,8 +244,7 @@ begin
 	giq_option(-3, 318, 105, TalusEnd, 50);
 end
 
-procedure Talus01
-begin
+procedure Talus01 begin
 	gsay_reply(318, 106);
 	giq_option(4, 318, 107, Talus05, 50);
 	Goodbyes;
@@ -345,8 +332,7 @@ begin
 	gsay_message(318, 129, 51);
 end
 
-procedure Talus14
-begin
+procedure Talus14 begin
 	gsay_reply(318, message_str(SCRIPT_TALUS, 130) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_TALUS, 131));
 	if (not(line16flag)) then begin
 		giq_option(5, 318, 132, Talus16, 50);
@@ -368,42 +354,36 @@ begin
 	giq_option(-3, 318, 105, TalusEnd, 50);
 end
 
-procedure Talus14a
-begin
+procedure Talus14a begin
 	call Talus34;
 end
 
-procedure Talus15
-begin
+procedure Talus15 begin
 	gsay_message(318, 137, 50);
 	gsay_reply(318, 138);
 	call set_requisition;
 	giq_option(4, 318, 118, Talus08, 50);
 end
 
-procedure Talus16
-begin
+procedure Talus16 begin
 	line16flag := 1;
 	gsay_message(318, 141, 50);
 	call Talus18;
 end
 
-procedure Talus17
-begin
+procedure Talus17 begin
 	gsay_message(318, 142, 50);
 	call Talus18;
 end
 
-procedure Talus18
-begin
+procedure Talus18 begin
 	gsay_reply(318, 143);
 	giq_option(4, 318, 144, Talus19, 50);
 	giq_option(4, 318, 145, Talus20, 50);
 	giq_option(4, 318, 146, Talus21, 50);
 end
 
-procedure Talus19
-begin
+procedure Talus19 begin
 	who_rhombus := 1;
 	gsay_message(318, 147, 50);
 	gsay_reply(318, 148);
@@ -416,8 +396,7 @@ begin
 	giq_option(4, 318, 151, TalusEnd, 50);
 end
 
-procedure Talus20
-begin
+procedure Talus20 begin
 	who_vree := 1;
 	gsay_message(318, 152, 50);
 	gsay_reply(318, 153);
@@ -430,8 +409,7 @@ begin
 	giq_option(4, 318, 156, TalusEnd, 50);
 end
 
-procedure Talus21
-begin
+procedure Talus21 begin
 	who_maxson := 1;
 	gsay_reply(318, 157);
 	if (who_rhombus == 0) then begin
@@ -443,8 +421,7 @@ begin
 	giq_option(4, 318, 160, TalusEnd, 50);
 end
 
-procedure Talus22
-begin
+procedure Talus22 begin
 	gsay_reply(318, 161);
 	giq_option(4, 318, 162, TalusDownReact, 51);
 	giq_option(4, 318, 163, TalusEnd, 50);
@@ -459,20 +436,17 @@ procedure TalusDownReact begin
 	DownReact
 end
 
-procedure Talus23
-begin
+procedure Talus23 begin
 	gsay_message(318, 166, 51);
 	DownReact
 end
 
-procedure Talus24
-begin
+procedure Talus24 begin
 	gsay_message(318, 167, 51);
 	DownReact
 end
 
-procedure Talus25
-begin
+procedure Talus25 begin
 	gsay_message(318, 168, 50);
 	set_map_var(17, 1);
 	temp := map_var(9) + 3;
@@ -690,60 +664,49 @@ begin
 	call Talus53;
 end
 
-procedure Talus53
-begin
+procedure Talus53 begin
 	set_local_var(8, 1);
 	awardex := 1;
 	gsay_message(318, 216, 50);
 end
 
-procedure Talus54
-begin
+procedure Talus54 begin
 	set_local_var(9, 1);
 	set_map_var(9, map_var(9) + 1);
 	set_map_var(15, 1);
 	gsay_message(318, message_str(SCRIPT_TALUS, 201) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_TALUS, 217), 50);
 end
 
-procedure Talus55
-begin
+procedure Talus55 begin
 	set_local_var(9, 1);
 	gsay_message(318, 218, 50);
 end
 
-procedure TalusBackground
-begin
+procedure TalusBackground begin
 	variable LVar0 := 0;
 	LVar0 := random(1, 5);
+
 	if (LVar0 == 1) then begin
 		LVar0 := message_str(SCRIPT_TALUS, 219);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			LVar0 := message_str(SCRIPT_TALUS, 220);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				LVar0 := message_str(SCRIPT_TALUS, 221);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					LVar0 := message_str(SCRIPT_TALUS, 222);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						LVar0 := message_str(SCRIPT_TALUS, 223);
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		LVar0 := message_str(SCRIPT_TALUS, 220);
 	end
+	else if (LVar0 == 3) then begin
+		LVar0 := message_str(SCRIPT_TALUS, 221);
+	end
+	else if (LVar0 == 4) then begin
+		LVar0 := message_str(SCRIPT_TALUS, 222);
+	end
+	else if (LVar0 == 5) then begin
+		LVar0 := message_str(SCRIPT_TALUS, 223);
+	end
+
 	float_msg(self_obj, LVar0, 0);
 	add_timer_event(self_obj, game_ticks(180), 2);
 end
 
-procedure TalusAmmo
-begin
+procedure TalusAmmo begin
 	if ((map_var(17) > 0) and (((game_time / 10 / 60 / 60 / 24) - (global_var(BROTHERHOOD_WEEKLY_AMMO) / 10 / 60 / 60 / 24)) < 7)) then begin
 		call Talus27;
 	end
@@ -760,7 +723,6 @@ begin
 	end
 end
 
-procedure TalusEnd
-begin
+procedure TalusEnd begin
 end
 

@@ -1,14 +1,27 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Brotherhood - High elder Maxon
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MAXSON
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
 
 procedure Maxson01;
 procedure Maxson02;
@@ -61,37 +74,11 @@ variable temp;
 procedure MaxsonAccept;
 
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_BROTHERHOOD );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_BOS_ELDERS );
-	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
 	end
 end
 
@@ -115,15 +102,13 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	start_gdialog(52, self_obj, 4, 12, 5);
@@ -132,33 +117,27 @@ begin
 		call Maxson34;
 	end
 	else begin
+
 		if (local_var(5) == 1) then begin
 			call Maxson24;
 		end
-		else begin
-			if (local_var(9) == 1) then begin
-				call Maxson22;
-			end
-			else begin
-				if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) then begin
-					call Maxson20;
-				end
-				else begin
-					if (local_var(4) == 0) then begin
-						set_local_var(4, 1);
-						call Maxson01;
-					end
-					else begin
-						if (local_var(1) == 1) then begin
-							call Maxson21;
-						end
-						else begin
-							call Maxson19;
-						end
-					end
-				end
-			end
+		else if (local_var(9) == 1) then begin
+			call Maxson22;
 		end
+		else if (global_var(WORLDMAPLIST_MILITARYBASE) == 2) then begin
+			call Maxson20;
+		end
+		else if (local_var(4) == 0) then begin
+			set_local_var(4, 1);
+			call Maxson01;
+		end
+		else if (local_var(1) == 1) then begin
+			call Maxson21;
+		end
+		else begin
+			call Maxson19;
+		end
+
 	end
 	gsay_end;
 	end_dialogue;
@@ -174,35 +153,18 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	set_global_var(ENEMY_BROTHERHOOD, 1);
 	rm_timer_event(self_obj);
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_MAXSON, 100));
 end
 
-procedure Maxson01
-begin
+procedure Maxson01 begin
 	gsay_reply(52, 106);
 	giq_option(-3, 52, 333, Maxson32, 50);
 	if ((global_var(MISSING_CARAVAN) == 2) and (local_var(9) == 0)) then begin
@@ -215,8 +177,7 @@ begin
 	giq_option(4, 52, 350, Maxson18, 50);
 end
 
-procedure Maxson02
-begin
+procedure Maxson02 begin
 	gsay_reply(52, 162);
 	giq_option(4, 52, 302, Maxson04, 50);
 	giq_option(4, 52, 303, Maxson09, 50);
@@ -224,8 +185,7 @@ begin
 	giq_option(4, 52, 305, Maxson08, 50);
 end
 
-procedure Maxson02a
-begin
+procedure Maxson02a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_BARTER, 0))) then begin
 		Asked_For_1000 := 1;
 		call Maxson09;
@@ -235,12 +195,10 @@ begin
 	end
 end
 
-procedure Maxson03
-begin
+procedure Maxson03 begin
 end
 
-procedure Maxson04
-begin
+procedure Maxson04 begin
 	set_local_var(9, 1);
 	gsay_reply(52, 133);
 	giq_option(4, 52, 306, Maxson04a, 50);
@@ -248,28 +206,24 @@ begin
 	giq_option(4, 52, 308, MaxsonEnd, 50);
 end
 
-procedure Maxson04a
-begin
+procedure Maxson04a begin
 	set_local_var(9, 1);
 	set_map_var(20, 1);
 	call Maxson05;
 end
 
-procedure Maxson05
-begin
+procedure Maxson05 begin
 	gsay_reply(52, 276);
 	giq_option(4, 52, 309, MaxsonEnd, 50);
 end
 
-procedure Maxson06
-begin
+procedure Maxson06 begin
 	gsay_reply(52, 122);
 	giq_option(4, 52, 310, Maxson07, 50);
 	giq_option(4, 52, 311, Maxson02, 50);
 end
 
-procedure Maxson07
-begin
+procedure Maxson07 begin
 	if (dude_is_male) then begin
 		gsay_reply(52, 355);
 	end
@@ -280,16 +234,14 @@ begin
 	giq_option(4, 52, 313, Maxson13, 50);
 end
 
-procedure Maxson08
-begin
+procedure Maxson08 begin
 	gsay_reply(52, 184);
 	giq_option(4, 52, 314, Maxson18, 50);
 	giq_option(4, 52, 315, Maxson04a, 50);
 	giq_option(4, 52, 316, Maxson08a, 50);
 end
 
-procedure Maxson08a
-begin
+procedure Maxson08a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_BARTER, -20))) then begin
 		Asked_For_1000 := 1;
 		call Maxson09;
@@ -299,16 +251,14 @@ begin
 	end
 end
 
-procedure Maxson09
-begin
+procedure Maxson09 begin
 	gsay_reply(52, 223);
 	giq_option(4, 52, 317, Maxson09a, 51);
 	giq_option(4, 52, 318, Maxson18, 50);
 	giq_option(4, 52, 319, MaxsonAccept, 50);
 end
 
-procedure Maxson09a
-begin
+procedure Maxson09a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_BARTER, -10))) then begin
 		call Maxson10;
 	end
@@ -317,8 +267,7 @@ begin
 	end
 end
 
-procedure Maxson10
-begin
+procedure Maxson10 begin
 	set_local_var(9, 1);
 	if (Asked_For_1000) then begin
 		item_caps_adjust(dude_obj, 1000);
@@ -331,58 +280,49 @@ begin
 	giq_option(4, 52, 320, MaxsonEnd, 51);
 end
 
-procedure Maxson11
-begin
+procedure Maxson11 begin
 	gsay_message(52, 229, 51);
 	Denounce_Player := 1;
 end
 
-procedure Maxson12
-begin
+procedure Maxson12 begin
 	gsay_message(52, 229, 51);
 	Denounce_Player := 1;
 end
 
-procedure Maxson13
-begin
+procedure Maxson13 begin
 	gsay_message(52, 231, 51);
 	Denounce_Player := 1;
 end
 
-procedure Maxson14
-begin
+procedure Maxson14 begin
 	gsay_reply(52, 146);
 	giq_option(4, 52, 321, Maxson02, 50);
 end
 
-procedure Maxson15
-begin
+procedure Maxson15 begin
 	gsay_reply(52, 141);
 	giq_option(4, 52, 322, Maxson02, 50);
 	giq_option(4, 52, 323, Maxson16, 50);
 end
 
-procedure Maxson16
-begin
+procedure Maxson16 begin
 	gsay_reply(52, 223);
 	giq_option(4, 52, 324, Maxson17, 50);
 	giq_option(4, 52, 325, Maxson18, 50);
 	giq_option(4, 52, 326, Maxson17, 50);
 end
 
-procedure Maxson17
-begin
+procedure Maxson17 begin
 	gsay_reply(52, 168);
 	giq_option(4, 52, 327, MaxsonEnd, 51);
 end
 
-procedure Maxson18
-begin
+procedure Maxson18 begin
 	gsay_message(52, 222, 50);
 end
 
-procedure Maxson19
-begin
+procedure Maxson19 begin
 	gsay_reply(52, 201);
 	giq_option(-3, 52, 333, Maxson32, 50);
 	if ((global_var(MISSING_CARAVAN) == 2) and (local_var(9) == 0)) then begin
@@ -395,8 +335,7 @@ begin
 	giq_option(4, 52, 331, Maxson18, 50);
 end
 
-procedure Maxson20
-begin
+procedure Maxson20 begin
 	gsay_reply(52, 193);
 	giq_option(-3, 52, 333, Maxson32, 50);
 	if (local_var(7) == 0) then begin
@@ -406,8 +345,7 @@ begin
 	giq_option(4, 52, 336, Maxson18, 50);
 end
 
-procedure Maxson21
-begin
+procedure Maxson21 begin
 	gsay_reply(52, 201);
 	giq_option(-3, 52, 333, Maxson32, 50);
 	giq_option(4, 52, 334, Maxson22, 50);
@@ -415,8 +353,7 @@ begin
 	giq_option(4, 52, 336, Maxson18, 50);
 end
 
-procedure Maxson22
-begin
+procedure Maxson22 begin
 	temp := local_var(7);
 	gsay_reply(52, 205);
 	if ((temp == 0) and (global_var(VATS_BLOWN) == 1)) then begin
@@ -441,8 +378,7 @@ begin
 	giq_option(4, 52, 336, Maxson18, 50);
 end
 
-procedure Maxson23
-begin
+procedure Maxson23 begin
 	set_local_var(7, 1);
 	set_local_var(8, 1);
 	gsay_reply(52, 213);

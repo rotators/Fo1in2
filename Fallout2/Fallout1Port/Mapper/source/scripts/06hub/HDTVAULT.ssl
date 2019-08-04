@@ -1,51 +1,21 @@
 #include "..\headers\define.h"
 
 procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure description_p_proc;//    script_action == 3
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure map_update_p_proc;//    script_action == 23
-procedure damage_p_proc;//    script_action == 14
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure use_obj_on_p_proc;
+procedure map_update_p_proc;
+procedure damage_p_proc;
 procedure OpenDoor;
 
 import variable Cur_Door_Ptr;
 
 
-procedure start
-begin
-	if (script_action == 3) then begin// 21 is look_at, 3 is description (Binoculars)
-		call description_p_proc;
-	end
-	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			call use_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-						call damage_p_proc;
-					end
-					else begin
-						if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-							call map_update_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	if ((local_var(0) == 0) and (source_obj == dude_obj)) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
@@ -60,8 +30,7 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	variable LVar0 := 0;
 	if (local_var(0) == 0) then begin
 		if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
@@ -89,15 +58,13 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (local_var(0) == 0) then begin
 		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := obj_being_used_with;
@@ -125,8 +92,7 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (local_var(0) == 1) then begin
 		obj_unlock(self_obj);
 	end
@@ -135,27 +101,30 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if (local_var(2) == 2) then begin
-		if not(is_loading_game) then begin
-			set_obj_visibility(self_obj, 1);
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+		if (local_var(2) == 2) then begin
+			if not(is_loading_game) then begin
+				set_obj_visibility(self_obj, 1);
+			end
+			set_local_var(1, 1);
+			if cur_map_index == MAP_HUBDWNTN then begin
+				set_map_var(55, 2);
+			end
 		end
-		set_local_var(1, 1);
-		if cur_map_index == MAP_HUBDWNTN then begin
-			set_map_var(55, 2);
+		else begin
+			set_local_var(2, local_var(2) + 1);
+			if cur_map_index == MAP_HUBDWNTN then begin
+				set_map_var(55, 2);
+			end
 		end
 	end
 	else begin
-		set_local_var(2, local_var(2) + 1);
-		if cur_map_index == MAP_HUBDWNTN then begin
-			set_map_var(55, 2);
-		end
+		script_overrides;
 	end
 end
 
-procedure OpenDoor
-begin
+procedure OpenDoor begin
 	obj_unlock(self_obj);
 	set_local_var(0, 1);
 	if cur_map_index == MAP_HUBDWNTN then begin
