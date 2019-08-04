@@ -62,8 +62,7 @@ procedure combat_p_proc begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -116,7 +115,7 @@ procedure talk_p_proc begin
 	get_reaction
 	start_gdialog(367, self_obj, 4, -1, -1);
 	gsay_start;
-	if critter_inven_obj(dude_obj, 0) then begin  variable RobesCheck;  RobesCheck := critter_inven_obj(dude_obj, 0);  end      if (obj_pid(RobesCheck) == PID_PURPLE_ROBE) then begin
+	if dude_wearing_coc_robe then begin
 		call Flip01;
 	end
 	else begin
@@ -131,8 +130,7 @@ procedure talk_p_proc begin
 	end_dialogue;
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			tmp_hostile := 1;
@@ -145,20 +143,17 @@ begin
 	end
 end
 
-procedure Flip00
-begin
+procedure Flip00 begin
 	float_msg(self_obj, message_str(SCRIPT_FLIP, 102), 0);
 	call FlipCombat;
 end
 
-procedure Flip01
-begin
+procedure Flip01 begin
 	add_timer_event(self_obj, game_ticks(30), 1);
 	gsay_message(367, 103, 50);
 end
 
-procedure Flip02
-begin
+procedure Flip02 begin
 	set_local_var(4, 1);
 	gsay_reply(367, 104);
 	giq_option(4, 367, 105, FlipCombat, 50);
@@ -166,15 +161,13 @@ begin
 	giq_option(-3, 367, 107, FlipCombat, 50);
 end
 
-procedure Flip03
-begin
+procedure Flip03 begin
 	gsay_reply(367, 108);
 	giq_option(4, 367, 109, transit, 50);
 	giq_option(4, 367, 110, Flip03a, 50);
 end
 
-procedure Flip03a
-begin
+procedure Flip03a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call FlipLeave;
 	end
@@ -183,31 +176,27 @@ begin
 	end
 end
 
-procedure Flip04
-begin
+procedure Flip04 begin
 	gsay_message(367, 111, 50);
 	call FlipCombat;
 end
 
-procedure Flip05
-begin
+procedure Flip05 begin
 	gsay_message(367, 112, 50);
 	call FlipCombat;
 end
 
-procedure FlipCombat
-begin
+procedure FlipCombat begin
 	tmp_hostile := 1;
 end
 
-procedure transit
-begin
+procedure transit begin
 	set_global_var(ENTERING_VATS_HOW, 2);
-	load_map(MAP_MBVATS12, 5);
+	//load_map(MAP_MBVATS12, 5);
+	load_map("MBVATS12.MAP",5);
 end
 
-procedure FlipLeave
-begin
+procedure FlipLeave begin
 	if (tile_num(self_obj) == home_tile) then begin
 		animate_move_obj_to_tile(self_obj, tile_num_in_direction(home_tile, 0, 5), 0);
 	end
