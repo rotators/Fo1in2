@@ -59,19 +59,19 @@ variable How_Many_Party_Members_Armed;
 
 #define If_Party_Has_Injured                How_Many_Party_Members_Are_Injured := 0;			\
                                             if (Ian_In_Party) then                             	\
-                                                if (Is_Injured(Ian_Ptr)) then                 	\
+                                                if (Is_Injured(Ian_ptr)) then                 	\
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Dog_In_Party) then                             	\
-                                                if (Is_Injured(Dog_Ptr)) then                 	\
+                                                if (Is_Injured(Dog_ptr)) then                 	\
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Tycho_In_Party) then                            \
-                                                if (Is_Injured(Tycho_Ptr)) then                 \
+                                                if (Is_Injured(Tycho_ptr)) then                 \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Katja_In_Party) then                            \
-                                                if (Is_Injured(Katja_Ptr)) then                 \
+                                                if (Is_Injured(Katja_ptr)) then                 \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (Tandi_In_Party) then                            \
-                                                if (Is_Injured(Tandi_Ptr)) then                 \
+                                                if (Is_Injured(Tandi_ptr)) then                 \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (MrHandyC_In_Party) then                         \
                                                 if (Is_Injured(MrHandyC_Ptr)) then              \
@@ -83,19 +83,19 @@ variable How_Many_Party_Members_Armed;
                                             if (dude_is_armed) then                             \
                                                How_Many_Party_Members_Armed+=1;                 \
                                             if (Ian_In_Party) then                             	\
-                                                if (Is_Injured(Ian_Ptr)) then                 	\
+                                                if (Is_Injured(Ian_ptr)) then                 	\
                                                     How_Many_Party_Members_Armed+=1;      		\
                                             if (Dog_In_Party) then                             	\
-                                                if (Is_Injured(Dog_Ptr)) then                 	\
+                                                if (Is_Injured(Dog_ptr)) then                 	\
                                                     How_Many_Party_Members_Armed+=1;      		\
                                             if (Tycho_In_Party) then                            \
-                                                if (Is_Injured(Tycho_Ptr)) then                 \
+                                                if (Is_Injured(Tycho_ptr)) then                 \
                                                     How_Many_Party_Members_Armed+=1;      		\
                                             if (Katja_In_Party) then                            \
-                                                if (Is_Injured(Katja_Ptr)) then                 \
+                                                if (Is_Injured(Katja_ptr)) then                 \
                                                     How_Many_Party_Members_Armed+=1;      		\
                                             if (Tandi_In_Party) then                            \
-                                                if (Is_Injured(Tandi_Ptr)) then                 \
+                                                if (Is_Injured(Tandi_ptr)) then                 \
                                                     How_Many_Party_Members_Armed+=1;      		\
                                             if (MrHandyC_In_Party) then                         \
                                                 if (Is_Injured(MrHandyC_Ptr)) then              \
@@ -120,21 +120,21 @@ variable How_Many_Party_Members_Armed;
          end
 #define attempt_place_party(the_tile, the_elev)                                     \
          attempt_place_party_member(Trunk_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Ian_Ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Dog_Ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Tycho_Ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Katja_Ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Tandi_Ptr, the_tile, the_elev)					\
+         attempt_place_party_member(Ian_ptr, the_tile, the_elev)					\
+		 attempt_place_party_member(Dog_ptr, the_tile, the_elev)					\
+		 attempt_place_party_member(Tycho_ptr, the_tile, the_elev)					\
+		 attempt_place_party_member(Katja_ptr, the_tile, the_elev)					\
+		 attempt_place_party_member(Tandi_ptr, the_tile, the_elev)					\
 		 attempt_place_party_member(MrHandyC_Ptr, the_tile, the_elev)
 
 
 //#define Party_Childkiller                   (global_var(GVAR_PARTY_CHILDKILLER) BWAND Party_Childkiller_Mask)
 
-#define Childkiller_Ian                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_2) and (Ian_Ptr != 0))
-#define Childkiller_Dog                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_4) and (Dog_Ptr != 0))
-#define Childkiller_Tycho                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_6) and (Tycho_Ptr != 0))
-#define Childkiller_Katja                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_8) and (Katja_Ptr != 0))
-#define Childkiller_Tandi                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_10) and (Tandi_Ptr != 0))
+#define Childkiller_Ian                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_2) and (Ian_ptr != 0))
+#define Childkiller_Dog                    	((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_4) and (Dog_ptr != 0))
+#define Childkiller_Tycho                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_6) and (Tycho_ptr != 0))
+#define Childkiller_Katja                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_8) and (Katja_ptr != 0))
+#define Childkiller_Tandi                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_10) and (Tandi_ptr != 0))
 #define Childkiller_MrHandyC                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_12) and (MrHandyC_Ptr != 0))
 
 #define Party_Childkiller                   (Childkiller_Ian or Childkiller_Dog or Childkiller_Tycho or Childkiller_Katja or Childkiller_Tandi or Childkiller_MrhandyC
@@ -265,99 +265,18 @@ variable PartyHealingItem;
 
 
 
-//Hiding party members, by Chris Holland
-//GVAR_PARTY_MEMBERS_HIDDEN
-
-/*
-
-#define set_p_hidden_flag_obj(x, the_ptr, the_bit)                   \
-         if (x == the_ptr) then begin                                \
-            set_gvar_bit_on(GVAR_PARTY_MEMBERS_HIDDEN, the_bit);     \
-         end
-#define set_p_hidden_flag(x)                                                                    \
-         set_p_hidden_flag_obj(x, Vic_Ptr, hidden_vic_bit)                                      \
-         else set_p_hidden_flag_obj(x, Myron_Ptr, hidden_myron_bit)                             \
-         else set_p_hidden_flag_obj(x, Marcus_Ptr, hidden_marcus_bit)                           \
-         else set_p_hidden_flag_obj(x, MacRae_Ptr, hidden_macrae_bit)                           \
-         else set_p_hidden_flag_obj(x, Sulik_Ptr, hidden_sulik_bit)                             \
-         else set_p_hidden_flag_obj(x, Lenny_Ptr, hidden_lenny_bit)                             \
-         else set_p_hidden_flag_obj(x, Cyberdog_Ptr, hidden_cyberdog_bit)                       \
-         else set_p_hidden_flag_obj(x, Doc_Ptr, hidden_doc_bit)                                 \
-         else set_p_hidden_flag_obj(x, Goris_Ptr, hidden_goris_bit)                             \
-         else set_p_hidden_flag_obj(x, Davin_Ptr, hidden_davin_bit)                             \
-         else set_p_hidden_flag_obj(x, Miria_Ptr, hidden_miria_bit)                             \
-         else set_p_hidden_flag_obj(x, Robobrain_Ptr, hidden_robobrain_bit)                     \
-         else set_p_hidden_flag_obj(x, Dogmeat_Ptr, hidden_dogmeat_bit)                         \
-         else set_p_hidden_flag_obj(x, Pariah_Dog_Ptr, hidden_pariah_dog_bit)                   \
-         else set_p_hidden_flag_obj(x, K9_Ptr, hidden_k9_bit)                                   \
-         else set_p_hidden_flag_obj(x, Robobrain_Human_Ptr, hidden_robobrain_human_bit)         \
-         else set_p_hidden_flag_obj(x, Robobrain_Abnormal_Ptr, hidden_robobrain_abnormal_bit)   \
-         else set_p_hidden_flag_obj(x, Robobrain_Chimp_Ptr, hidden_robobrain_chimp_bit)
-
-#define unset_p_hidden_flag_obj(x, the_ptr, the_bit)                    \
-         if (x == the_ptr) then begin                                   \
-            set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, the_bit);       \
-         end
-#define unset_p_hidden_flag(x)                                                                     \
-         unset_p_hidden_flag_obj(x, Vic_Ptr, hidden_vic_bit)                                       \
-         else unset_p_hidden_flag_obj(x, Myron_Ptr, hidden_myron_bit)                              \
-         else unset_p_hidden_flag_obj(x, Marcus_Ptr, hidden_marcus_bit)                            \
-         else unset_p_hidden_flag_obj(x, MacRae_Ptr, hidden_macrae_bit)                            \
-         else unset_p_hidden_flag_obj(x, Sulik_Ptr, hidden_sulik_bit)                              \
-         else unset_p_hidden_flag_obj(x, Lenny_Ptr, hidden_lenny_bit)                              \
-         else unset_p_hidden_flag_obj(x, Cyberdog_Ptr, hidden_cyberdog_bit)                        \
-         else unset_p_hidden_flag_obj(x, Doc_Ptr, hidden_doc_bit)                                  \
-         else unset_p_hidden_flag_obj(x, Goris_Ptr, hidden_goris_bit)                              \
-         else unset_p_hidden_flag_obj(x, Davin_Ptr, hidden_davin_bit)                              \
-         else unset_p_hidden_flag_obj(x, Miria_Ptr, hidden_miria_bit)                              \
-         else unset_p_hidden_flag_obj(x, Robobrain_Ptr, hidden_robobrain_bit)                      \
-         else unset_p_hidden_flag_obj(x, Dogmeat_Ptr, hidden_dogmeat_bit)                          \
-         else unset_p_hidden_flag_obj(x, Pariah_Dog_Ptr, hidden_pariah_dog_bit)                    \
-         else unset_p_hidden_flag_obj(x, K9_Ptr, hidden_k9_bit)                                    \
-         else unset_p_hidden_flag_obj(x, Robobrain_Human_Ptr, hidden_robobrain_human_bit)          \
-         else unset_p_hidden_flag_obj(x, Robobrain_Abnormal_Ptr, hidden_robobrain_abnormal_bit)    \
-         else unset_p_hidden_flag_obj(x, Robobrain_Chimp_Ptr, hidden_robobrain_chimp_bit)
-
-variable tmp_hidden;
-
-#define party_member_hide(x)                                                                 \
-   if (x) then begin                                                                         \
-      if (obj_is_visible_flag(x)) then begin                                                 \
-         set_p_hidden_flag(x)                                                                \
-         set_obj_visibility(x, 1);                                                           \
-      end else begin                                                                         \
-         debug_msg("PARTY.H:::: no party member hidden because they already are invisible"); \
-      end                                                                                    \
-   end
-
-#define party_member_unhide(x)                                                            \
-   if (x) then begin                                                                      \
-      if (obj_is_visible_flag(x) == 0) then begin                                         \
-         get_p_hidden_flag(x, tmp_hidden)                                                 \
-         if (tmp_hidden) then begin                                                       \
-            unset_p_hidden_flag(x)                                                        \
-            set_obj_visibility(x, 0);                                                     \
-         end else begin                                                                   \
-            debug_msg("PARTY.H:::: party member wasn't hidden by my macro");              \
-         end                                                                              \
-      end else begin                                                                      \
-         unset_p_hidden_flag(x)                                                           \
-         debug_msg("PARTY.H:::: party member wasn't hidden.. clearing my state");         \
-      end                                                                                 \
-   end
-
-*/
+//Hiding party members
 #define get_p_hidden_flag_obj(x, the_ptr, the_bit, the_var)             \
          if (x == the_ptr) then begin                                   \
             the_var := gvar_bit(GVAR_PARTY_MEMBERS_HIDDEN, the_bit);    \
          end
 #define 	get_p_hidden_flag(x, hidden)                                                                    \
 			get_p_hidden_flag_obj(x, Vic_Ptr, hidden_vic_bit, hidden)                                      	\
-			else get_p_hidden_flag_obj(x, Ian_Ptr, hidden_ian_bit, hidden)									\
-			else get_p_hidden_flag_obj(x, Dog_Ptr, hidden_dog_bit, hidden)									\
-			else get_p_hidden_flag_obj(x, Tycho_Ptr, hidden_tycho_bit, hidden)								\
-			else get_p_hidden_flag_obj(x, Katja_Ptr, hidden_katja_bit, hidden)								\
-			else get_p_hidden_flag_obj(x, Tandi_Ptr, hidden_tandi_bit, hidden)								\
+			else get_p_hidden_flag_obj(x, Ian_ptr, hidden_ian_bit, hidden)									\
+			else get_p_hidden_flag_obj(x, Dog_ptr, hidden_dog_bit, hidden)									\
+			else get_p_hidden_flag_obj(x, Tycho_ptr, hidden_tycho_bit, hidden)								\
+			else get_p_hidden_flag_obj(x, Katja_ptr, hidden_katja_bit, hidden)								\
+			else get_p_hidden_flag_obj(x, Tandi_ptr, hidden_tandi_bit, hidden)								\
 			else get_p_hidden_flag_obj(x, MrHandyC_Ptr, hidden_mrhandyc_bit, hidden)
 
 #define party_member_hidden(x, result)                                           \
