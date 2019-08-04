@@ -1,52 +1,49 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
+	Brotherhood - Invasion force for Military Base / Cathedral
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_BROINVAD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure push_p_proc;
+procedure talk_p_proc;
 procedure initialize_p_proc;
-procedure critter_p_proc;//    script_action == 12
-procedure map_enter_p_proc;//    script_action == 15
-procedure timed_event_p_proc;//    script_action == 22
-procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
+procedure destroy_p_proc;
 
 variable Only_Once := 1;
 variable Hex_Number;
 
-
-procedure start
-begin
-	if global_var(DEBUG_MODE_MESSAGES_ON) then begin
-		display_msg("attempting to move BroInvad...");
+procedure start begin
+	/*if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+		debug("attempting to move BroInvad...");
 		move_to(self_obj, 26893, elevation(dude_obj));
-		display_msg("dude at " + tile_num(dude_obj));
-		display_msg("self at " + tile_num(self_obj));
-	end
-	
-	
+		debug("dude at " + tile_num(dude_obj));
+		debug("self at " + tile_num(self_obj));
+	end*/
+
 	if Only_Once then begin
 		call initialize_p_proc;
 	end
-	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-		call destroy_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					call map_enter_p_proc;
-				end
-			end
-		end
-	end
 end
 
-procedure talk_p_proc
-begin
+procedure push_p_proc begin
+end
+
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (global_var(BROTHERHOOD_SEND_HELP) != 10) then begin
 		if (dude_is_male) then begin
@@ -58,15 +55,13 @@ begin
 	end
 end
 
-procedure initialize_p_proc
-begin
+procedure initialize_p_proc begin
 	critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_PLAYER );
 	critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_BROTHERHOOD_PALADIN );
 	Only_Once := 0;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 // Remove and destroy if on an invalid map.
 	if (not((cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34) or (cur_map_index == MAP_MBENT) or (cur_map_index == MAP_MBSTRG12) or (cur_map_index == MAP_MBVATS12))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE (now all levels), MASTER'S LAIR ALL LEVELS
 		party_remove(self_obj);
@@ -104,8 +99,7 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 // Not IS_LOADING_GAME
 	if not(is_loading_game) then begin
 		// Add to party if first time on valid entrance map.
@@ -152,8 +146,7 @@ begin
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
 	if (global_var(BROTHERHOOD_SEND_HELP) == 10) then begin
 		set_global_var(BROTHERHOOD_SEND_HELP, 11);
@@ -164,16 +157,16 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	if (combat_is_initialized == 1) then begin
 
 	end
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 	end
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
+
 

@@ -2,6 +2,7 @@
 #include "..\headers\MAPBROTHERHOOD.h"
 
 procedure start;
+procedure map_enter_p_proc;
 procedure use_obj_on_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
@@ -16,7 +17,18 @@ variable failure;
 variable bonus;
 variable Test;
 
+#define EVENT_USED_DOOR 	(1)
+#define EVENT_CLOSE 			(2)
+#define EVENT_DOOR_CLOSED 	(3)
+
 procedure start begin
+end
+
+procedure map_enter_p_proc begin
+	if obj_is_open(self_obj) then begin
+		obj_close(self_obj);
+		add_timer_event(self_obj, game_ticks(0), EVENT_DOOR_CLOSED);
+	end
 end
 
 procedure use_obj_on_p_proc begin
@@ -41,23 +53,23 @@ procedure damage_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
+	if (fixed_param == EVENT_USED_DOOR) then begin
 		set_map_var(MVAR_TOUCHING, 0);
 		if (not(combat_is_initialized)) then begin
 			obj_close(self_obj);
 		end
-		add_timer_event(self_obj, game_ticks(3), 2);
+		add_timer_event(self_obj, game_ticks(3), EVENT_CLOSE);
 	end
-	else if (fixed_param == 2) then begin
+	else if (fixed_param == EVENT_CLOSE) then begin
 		if obj_is_open(self_obj) then begin
 			obj_close(self_obj);
-			add_timer_event(self_obj, game_ticks(3), 3);
+			add_timer_event(self_obj, game_ticks(3), EVENT_DOOR_CLOSED);
 		end
 		else begin
-			add_timer_event(self_obj, game_ticks(3), 2);
+			add_timer_event(self_obj, game_ticks(3), EVENT_CLOSE);
 		end
 	end
-	else if (fixed_param == 3) then begin
+	else if (fixed_param == EVENT_DOOR_CLOSED) then begin
 		rm_timer_event(self_obj);
 	end
 end
@@ -87,7 +99,7 @@ procedure hear_check begin
 			call anger;
 		end
 	end
-	add_timer_event(self_obj, game_ticks(3), 1);
+	add_timer_event(self_obj, game_ticks(3), EVENT_USED_DOOR);
 end
 
 procedure anger begin

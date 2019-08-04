@@ -1,7 +1,10 @@
 #include "..\headers\define.h"
 
 procedure start;
-procedure talk_p_proc;//    script_action == 11
+procedure talk_p_proc;
+procedure use_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
 
 procedure ZAX01;
 procedure ZAX02;
@@ -107,39 +110,31 @@ variable LuckBonus;
 variable PlayerRoll;
 
 
-procedure start
-begin
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		call talk_p_proc;
+procedure start begin
+end
+
+procedure use_p_proc begin
+	dialogue_system_enter;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if (local_var(4) == 1) then begin
+		display_msg(message_str(SCRIPT_ZAX, 100));
 	end
 	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			dialogue_system_enter;
-		end
-		else begin
-			if (script_action == 21) then begin// 21 is look_at
-				script_overrides;
-				if (local_var(4) == 1) then begin
-					display_msg(message_str(SCRIPT_ZAX, 100));
-				end
-				else begin
-					display_msg(message_str(SCRIPT_ZAX, 101));
-				end
-			end
-			else begin
-				if (script_action == 3) then begin//  3 is description (Binoculars) 
-					if (local_var(4) == 1) then begin
-						script_overrides;
-						display_msg(message_str(SCRIPT_ZAX, 101));
-					end
-				end
-			end
-		end
+		display_msg(message_str(SCRIPT_ZAX, 101));
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure description_p_proc begin
+	if (local_var(4) == 1) then begin
+		script_overrides;
+		display_msg(message_str(SCRIPT_ZAX, 101));
+	end
+end
+
+procedure talk_p_proc begin
 	script_overrides;
 	dude_look_at_critter;
 	start_gdialog(312, self_obj, 4, -1, -1);
@@ -149,8 +144,7 @@ begin
 	end_dialogue;
 end
 
-procedure ZAX01
-begin
+procedure ZAX01 begin
 	gsay_reply(312, 102);
 	if (local_var(4) == 0) then begin
 		giq_option(5, 312, 103, ZAX02, 50);
@@ -162,8 +156,7 @@ begin
 	giq_option(-4, 312, 109, ZAX05, 50);
 end
 
-procedure ZAX02
-begin
+procedure ZAX02 begin
 	set_local_var(4, 1);
 	gsay_reply(312, 110);
 	giq_option(5, 312, 111, ZAX06, 50);
@@ -245,29 +238,25 @@ begin
 	giq_option(5, 312, 147, ZAX13, 50);
 end
 
-procedure ZAX12
-begin
+procedure ZAX12 begin
 	gsay_reply(312, message_str(SCRIPT_ZAX, 148) + local_var(11) + message_str(SCRIPT_ZAX, 228) + local_var(12) + message_str(SCRIPT_ZAX, 229) + local_var(13) + message_str(SCRIPT_ZAX, 230));
 	giq_option(5, 312, 215, ChessBlack, 50);
 	giq_option(5, 312, 216, ChessWhite, 50);
 end
 
-procedure ChessBlack
-begin
+procedure ChessBlack begin
 	BLACK := 1;
 	WHITE := 0;
 	call ChessLength;
 end
 
-procedure ChessWhite
-begin
+procedure ChessWhite begin
 	WHITE := 1;
 	BLACK := 0;
 	call ChessLength;
 end
 
-procedure ChessLength
-begin
+procedure ChessLength begin
 	gsay_reply(312, 217);
 	giq_option(5, 312, 218, ChessLongTourn, 50);
 	giq_option(5, 312, 219, ChessTourn, 50);
@@ -277,8 +266,7 @@ begin
 	giq_option(5, 312, 223, ChessBullet, 50);
 end
 
-procedure ChessLongTourn
-begin
+procedure ChessLongTourn begin
 	Length := 360;//  6 hours
 	Penalty := random(1, 3) + random(1, 3) + random(1, 3);
 	LuckBonus := 0;
@@ -335,8 +323,7 @@ begin
 	call ChessPLAY;
 end
 
-procedure ChessPLAY
-begin
+procedure ChessPLAY begin
 	gfade_out(1);
 	game_time_advance(10 * 60 * Length);// how many minutes
 	gfade_in(1);
