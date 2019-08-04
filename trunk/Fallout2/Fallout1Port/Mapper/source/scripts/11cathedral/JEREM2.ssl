@@ -1,14 +1,31 @@
-#include "..\headers\define.h"
+/*
 
+	???
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_JEREM2
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+
 procedure jeremend;
 procedure jeremcbt;
 procedure jeremret;
-variable HOSTILE;
+
+variable tmp_hostile;
 variable Only_Once := 1;
 variable Weapons;
 variable DISGUISED;
@@ -16,10 +33,7 @@ variable moving := 1;
 variable my_hex;
 variable home_tile;
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if (local_var(0) == 0) then begin
 		set_local_var(0, 1);
 		set_local_var(1, 0);
@@ -69,33 +83,15 @@ begin
 			end
 			else begin
 				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					HOSTILE := 1;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
+					tmp_hostile := 1;
 				end
 			end
 		end
 	end
 end
 
-procedure talk_p_proc
-begin
-	if dude_wearing_coc_robe then begin
-		if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-			DISGUISED := 0;
-		end
-		else begin
-			DISGUISED := 1;
-		end
-	end
+procedure talk_p_proc begin
+	coc_disguise_check
 	if (global_var(MASTER_FILLER_4) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_JEREM, 187), 2);
 	end
@@ -105,21 +101,17 @@ begin
 	call jeremcbt;
 end
 
-procedure jeremend
-begin
+procedure jeremend begin
 end
 
-procedure jeremcbt
-begin
-	HOSTILE := 1;
+procedure jeremcbt begin
+	tmp_hostile := 1;
 end
 
-procedure jeremret
-begin
+procedure jeremret begin
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		moving := 1;
 		set_global_var(MASTER_FILLER_5, 1);
@@ -136,10 +128,9 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		HOSTILE := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if (moving) then begin
@@ -170,25 +161,17 @@ begin
 			if (local_var(2) == 0) then begin
 				set_local_var(3, 23689);
 			end
-			else begin
-				if (local_var(2) == 1) then begin
-					set_local_var(3, 22900);
-				end
-				else begin
-					if (local_var(2) == 2) then begin
-						set_local_var(3, 22312);
-					end
-					else begin
-						if (local_var(2) == 3) then begin
-							set_local_var(3, 19512);
-						end
-						else begin
-							if (local_var(2) == 4) then begin
-								set_local_var(3, 16912);
-							end
-						end
-					end
-				end
+			else if (local_var(2) == 1) then begin
+				set_local_var(3, 22900);
+			end
+			else if (local_var(2) == 2) then begin
+				set_local_var(3, 22312);
+			end
+			else if (local_var(2) == 3) then begin
+				set_local_var(3, 19512);
+			end
+			else if (local_var(2) == 4) then begin
+				set_local_var(3, 16912);
 			end
 		end
 		else begin
@@ -196,14 +179,7 @@ begin
 		end
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			DISGUISED := 0;
-			if dude_wearing_coc_robe then begin
-				if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-					DISGUISED := 0;
-				end
-				else begin
-					DISGUISED := 1;
-				end
-			end
+			coc_disguise_check
 			if (DISGUISED == 0) then begin
 				dialogue_system_enter;
 			end
@@ -214,7 +190,7 @@ end
 procedure destroy_p_proc begin
 	set_global_var(MASTER_FILLER_6, 1);
 	rm_timer_event(self_obj);
-	inc_evil_Critter
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 

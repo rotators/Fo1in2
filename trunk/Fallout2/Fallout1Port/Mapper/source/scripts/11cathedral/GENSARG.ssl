@@ -1,12 +1,25 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
+	Cathedral - ???
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENSARG
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure talk_p_proc;//    script_action == 11
+procedure talk_p_proc;
 procedure pre_dialogue;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;
+procedure destroy_p_proc;
 
 procedure mutan00;
 procedure mutan01;
@@ -42,67 +55,35 @@ variable DISGUISED;
 variable again;
 variable rndx;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if Only_Once then begin
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_SUPER_MUTANT_SGT );
 		Only_Once := 0;
 	end
-	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-		if (global_var(MUTANTS_ENEMY_UNSURE) == 0) then begin
-			set_global_var(MUTANTS_ENEMY_UNSURE, 1);
-		end
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call pre_dialogue;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				tmp_hostile := 1;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						script_overrides;
-						display_msg(message_str(SCRIPT_GENSARG, 200));
-					end
-				end
-			end
-		end
+end
+
+procedure damage_p_proc begin
+	if (global_var(MUTANTS_ENEMY_UNSURE) == 0) then begin
+		set_global_var(MUTANTS_ENEMY_UNSURE, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_GENSARG, 200));
+end
 
+procedure destroy_p_proc begin
+	inc_evil_critter
+end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -117,14 +98,7 @@ begin
 			end
 		end
 		DISGUISED := 0;
-		if dude_wearing_coc_robe then begin
-			if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-				DISGUISED := 0;
-			end
-			else begin
-				DISGUISED := 1;
-			end
-		end
+		coc_disguise_check
 		if ((DISGUISED == 0) and (again == 0)) then begin
 			if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
 				again := 1;
@@ -134,8 +108,9 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
+	call pre_dialogue;
+
 	dude_look_at_critter;
 	set_local_var(3, 1);
 	get_reaction
@@ -157,8 +132,7 @@ begin
 	end_dialogue;
 end
 
-procedure pre_dialogue
-begin
+procedure pre_dialogue begin
 	dude_look_at_critter;
 	if dude_wearing_coc_robe then begin
 		if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?

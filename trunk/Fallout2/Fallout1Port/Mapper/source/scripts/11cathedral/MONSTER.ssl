@@ -1,11 +1,11 @@
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure damage_p_proc;//    script_action == 14
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
 procedure combat_rads_inc;
 
 variable HOSTILE;
@@ -15,47 +15,15 @@ variable rndx;
 variable rndRads;
 
 
-procedure start
-begin
-	
-	
+procedure start begin	
 	if Only_Once then begin
 		Only_Once := 0;
 		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
 		anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), 28113));
 	end
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
-	end
-	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-					script_overrides;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 8) then begin//<-- use_skill_on_p_proc
-							call use_skill_on_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 2) then begin
 		if (target_obj == dude_obj) then begin
 			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
@@ -165,23 +133,15 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (hostile) then begin
 		HOSTILE := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			DISGUISED := 0;
-			if dude_wearing_coc_robe then begin
-				if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-					DISGUISED := 0;
-				end
-				else begin
-					DISGUISED := 1;
-				end
-			end
+			coc_disguise_check
 			if (DISGUISED == 0) then begin
 				HOSTILE := 1;
 			end
@@ -189,54 +149,32 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
 		script_overrides;
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		HOSTILE := 1;
 	end
 end
 
-procedure combat_rads_inc
-begin
+procedure combat_rads_inc begin
 	radiation_inc(dude_obj, rndRads);
 	if ((rndRads == 1) or (rndRads == 2)) then begin
 		display_msg(message_str(SCRIPT_GENGHOUL, 1004));
 	end
-	else begin
-		if ((rndRads > 2) and (rndRads <= 5)) then begin
-			display_msg(message_str(SCRIPT_GENGHOUL, 1005));
-		end
-		else begin
-			if ((rndRads > 5) and (rndRads < 10)) then begin
-				display_msg(message_str(SCRIPT_GENGHOUL, 1006));
-			end
-		end
+	else if ((rndRads > 2) and (rndRads <= 5)) then begin
+		display_msg(message_str(SCRIPT_GENGHOUL, 1005));
+	end
+	else if ((rndRads > 5) and (rndRads < 10)) then begin
+		display_msg(message_str(SCRIPT_GENGHOUL, 1006));
 	end
 end
 

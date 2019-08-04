@@ -1,10 +1,27 @@
-#include "..\headers\define.h"
+/*
 
+	Cathedral - Jerem
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_JEREM
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+#include "..\headers\Sfall\main.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure talk_p_proc;//    script_action == 11
+procedure talk_p_proc;
 procedure timed_event_p_proc;
 procedure critter_p_proc;
 procedure destroy_p_proc;
+
 procedure pre_dialogue;
 procedure jerem00;
 procedure jerem00a;
@@ -53,7 +70,8 @@ procedure jeremend;
 procedure jeremcbt;
 procedure jeremret;
 procedure checkarea;
-variable HOSTILE;
+
+variable tmp_hostile;
 variable Only_Once := 1;
 variable Weapons;
 variable DISGUISED;
@@ -64,10 +82,7 @@ variable moving := 1;
 variable my_hex;
 variable home_tile;
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if (local_var(0) == 0) then begin
 		set_local_var(0, 1);
 		set_local_var(1, 0);
@@ -118,35 +133,18 @@ begin
 			end
 			else begin
 				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					HOSTILE := 1;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end								
-					end
+					tmp_hostile := 1;
 				end
 			end
 		end
 	end
 end
 
-procedure pre_dialogue
-begin
+procedure pre_dialogue begin
 	set_global_var(JEREMIAH_CHILDREN_TALKED, 1);
 	again := again + 1;
-	if dude_wearing_coc_robe then begin
-		if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-			DISGUISED := 0;
-		end
-		else begin
-			DISGUISED := 1;
-		end
-	end
+
+	coc_disguise_check
 	if ((DISGUISED == 0) and (again > 1)) then begin
 		call jerem29;
 	end
@@ -157,8 +155,7 @@ begin
 	set_global_var(JEREMIAH_CHILDREN_TALKED, 1);
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	set_global_var(JEREMIAH_CHILDREN_TALKED, 1);
 	call checkarea;
 	start_gdialog(672, self_obj, 4, -1, -1);
@@ -225,47 +222,33 @@ begin
 	set_global_var(JEREMIAH_CHILDREN_TALKED, 1);
 end
 
-procedure checkarea
-begin
+procedure checkarea begin
 	here := tile_num(dude_obj);
 	area := 2;
 	if (tile_distance(here, 13475) < 15) then begin
 		area := 1;
 	end
-	else begin
-		if (tile_distance(here, 13296) < 15) then begin
-			area := 1;
-		end
-		else begin
-			if (tile_distance(here, 16089) < 15) then begin
-				area := 1;
-			end
-			else begin
-				if (tile_distance(here, 25726) < 15) then begin
-					area := 50;
-				end
-				else begin
-					if (tile_distance(here, 27322) < 15) then begin
-						area := 50;
-					end
-					else begin
-						if (tile_distance(here, 25737) < 15) then begin
-							area := 50;
-						end
-						else begin
-							if (tile_distance(here, 22136) < 15) then begin
-								area := 50;
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (tile_distance(here, 13296) < 15) then begin
+		area := 1;
+	end
+	else if (tile_distance(here, 16089) < 15) then begin
+		area := 1;
+	end
+	else if (tile_distance(here, 25726) < 15) then begin
+		area := 50;
+	end
+	else if (tile_distance(here, 27322) < 15) then begin
+		area := 50;
+	end
+	else if (tile_distance(here, 25737) < 15) then begin
+		area := 50;
+	end
+	else if (tile_distance(here, 22136) < 15) then begin
+		area := 50;
 	end
 end
 
-procedure jerem00
-begin
+procedure jerem00 begin
 	if (dude_is_male) then begin
 		gsay_reply(672, 102);
 	end
@@ -276,8 +259,7 @@ begin
 	giq_option(4, 672, 104, jerem00a, 50);
 end
 
-procedure jerem00a
-begin
+procedure jerem00a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -5))) then begin
 		call jerem03;
 	end
@@ -286,13 +268,11 @@ begin
 	end
 end
 
-procedure jerem01
-begin
+procedure jerem01 begin
 	gsay_message(672, 105, 50);
 end
 
-procedure jerem02
-begin
+procedure jerem02 begin
 	gsay_reply(672, 106);
 	giq_option(7, 672, 107, jerem02a, 50);
 	giq_option(4, 672, 108, jerem04, 50);
@@ -635,7 +615,7 @@ end
 
 procedure jeremcbt
 begin
-	HOSTILE := 1;
+	tmp_hostile := 1;
 end
 
 procedure jeremret
@@ -686,8 +666,8 @@ begin
 	if (tile_distance_objs(dude_obj, self_obj) < 8) then begin
 		set_map_var(1, 1);
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		HOSTILE := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if (moving) then begin
@@ -771,14 +751,7 @@ begin
 		end
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			DISGUISED := 0;
-			if dude_wearing_coc_robe then begin
-				if (party_size > 1) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-					DISGUISED := 0;
-				end
-				else begin
-					DISGUISED := 1;
-				end
-			end
+			coc_disguise_check
 			if ((DISGUISED == 0) and (again < 2)) then begin
 				if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
 					if (local_var(2) < 1) then begin
@@ -797,25 +770,10 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(MASTER_FILLER_6, 1);
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
