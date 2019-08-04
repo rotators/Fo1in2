@@ -40,9 +40,10 @@
 	{1120}{}{I get it, you want to get rid of the bike.}
 	{1130}{}{Great, but there is a water chip I have to fetch. See you later.}
 	
-{1200}{}{I'm telling you all of this, because you look interested and capable and I feel we're in a bit of a situation here, which requires me to leave this hole as soon as possible.}
-	{1210}{}{Now come on. This place doesn't seem all *that* bad to me.}
-	{1220}{}{Why aren't you leaving?}
+{1200}{}{Why? Because you look interested, capable, and I feel we're in a bit of a situation here, which requires me to leave this hole as soon as possible.}
+	{1210}{}{This place doesn't seem all *that* bad to me.}
+	{1220}{}{Why aren't you leaving then?}
+	{1230}{}{Are you refering to the mutants occupying the watershed?}
 	
 {1300}{}{Are you serious? You see'n these green fuckers over there at the watershed? I say shit 's about to go down here. Soon. When that happens, I won't be around anymore.}
 	{1310}{}{So why you're not leaving with the bike?}
@@ -74,7 +75,7 @@
 	{1960}{}{What will you do with the money?}
 
 {2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
-	{2010}{}{Alright. Here's the caps, hand me the keys.}
+	{2010}{}{Alright. Here's your 2.000 caps.}
 	{2020}{}{That's too steep for me.}
 
 {2100}{}{Deal! ... Now wait here. I'll go and get the fuel cell controller.}
@@ -103,8 +104,9 @@
 
 {3100}{}{I'll hit up the next caravan. Maybe up north? Anywhere is better than here.}
 
-
-
+{3200}{}{Look! You're actually smarter than everyone else around here! ... They are just the vanguard. There's more to come, I bet on that.}
+	{3210}{}{Alright, I'll buy your bike.}
+	{3220}{}{I better keep going then. See you later.}
 
 
 

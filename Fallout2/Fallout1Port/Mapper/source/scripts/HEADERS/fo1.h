@@ -101,6 +101,14 @@
 									(cur_map_index == MAP_MNTCRVN4)
 									
 #define dude_wearing_coc_robe	    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
+#define coc_disguise_check 			if dude_wearing_coc_robe then begin \
+										if (party_size > 1) then begin	\
+											DISGUISED := 0;				\
+										end								\
+										else begin						\
+											DISGUISED := 1;				\
+										end								\
+									end
 
 #define obj_invisible(x)			set_obj_visibility(x,1)
 #define obj_visible(x)				set_obj_visibility(x,0)
