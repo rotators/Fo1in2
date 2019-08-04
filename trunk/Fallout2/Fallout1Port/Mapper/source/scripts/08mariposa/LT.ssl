@@ -125,6 +125,10 @@ variable hit_dude;
 variable torture_setting;
 variable End_The_Game;
 
+#define EVENT_TORTURE 		(1)
+#define EVENT_TORTURE_END 	(2)
+#define EVENT_ENDGAME 		(3)
+
 procedure start begin
 	if not(initial) then begin
 		initial :=  1;
@@ -142,8 +146,7 @@ procedure start begin
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 2) then begin
 		if (global_var(DESTROY_VATS_4)) then begin
 			if (random(0, 3) == 3) then begin
@@ -153,8 +156,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -193,8 +195,7 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(LIEUTENANTS_DEAD, 1);// Lt dead
 	rm_timer_event(self_obj);
 
@@ -203,53 +204,43 @@ begin
 	Lt_ptr := 0;
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_LT, 100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (local_var(7) == 0) then begin
 		start_gdialog(50, self_obj, 4, 11, BACKGROUND_MILITARYBS);
 		gsay_start;
+
 		if (torture_setting == 2) then begin
 			call Lt36;
 			torture_setting := 3;
 		end
-		else begin
-			if (torture_setting == 3) then begin
-				call Lt37b;
-				torture_setting := 4;
-			end
-			else begin
-				if (torture_setting == 4) then begin
-					call Lt38;
-					torture_setting := 5;
-				end
-				else begin
-					if (global_var(ENTERING_VATS_HOW) == 1) then begin
-						call Lt01;
-					end
-					else begin
-						if (global_var(ENTERING_VATS_HOW) == 2) then begin
-							call Lt41;
-						end
-						else begin
-							if (global_var(ENTERING_VATS_HOW) == 3) then begin
-								call Lt46;
-							end
-							else begin
-								call Lt45;
-							end
-						end
-					end
-				end
-			end
+		else if (torture_setting == 3) then begin
+			call Lt37b;
+			torture_setting := 4;
 		end
+		else if (torture_setting == 4) then begin
+			call Lt38;
+			torture_setting := 5;
+		end
+		else if (global_var(ENTERING_VATS_HOW) == 1) then begin
+			call Lt01;
+		end
+		else if (global_var(ENTERING_VATS_HOW) == 2) then begin
+			call Lt41;
+		end
+		else if (global_var(ENTERING_VATS_HOW) == 3) then begin
+			call Lt46;
+		end
+		else begin
+			call Lt45;
+		end
+
 		gsay_end;
 		end_dialogue;
 	end
@@ -257,17 +248,19 @@ begin
 		float_msg(self_obj, message_str(SCRIPT_LT, 236), 2);
 		tmp_hostile := 1;
 	end
+
+	// Moved dude to prison cell:
 	if (local_var(7) == 1) then begin
 		set_local_var(7, 2);
 		gfade_out(1);
-		move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
-		move_to(dude_obj, 25543, 0);
-		critter_injure(dude_obj, 2);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
-		reg_anim_func(2, dude_obj);
-		reg_anim_func(1, 1);
-		reg_anim_animate(dude_obj, 48, -1);
-		reg_anim_animate(dude_obj, 37, -1);
-		reg_anim_func(3, 0);
+			move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
+			move_to(dude_obj, 25543, 0);
+			critter_injure(dude_obj, 2);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
+			reg_anim_func(2, dude_obj);
+			reg_anim_func(1, 1);
+			reg_anim_animate(dude_obj, 48, -1);
+			reg_anim_animate(dude_obj, 37, -1);
+			reg_anim_func(3, 0);
 		gfade_in(1);
 	end
 //
@@ -275,10 +268,12 @@ begin
 		move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
 		debug_msg("Started playing cutscene#10 and #7 for Dipping and V13 invasion, may crash / cause issues!");
 		gfade_out(1);
+
 		move_to(dude_obj, 12527, 1);// was 12528
 		anim(dude_obj, 1000, 5);
 		move_to(self_obj, 12326, 1);// was 12528
 		anim(self_obj, 1000, 5);
+
 		gfade_in(1);
 		anim(self_obj, 11, 0);
 		play_gmovie(DIPEDV_MOVIE);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops.
@@ -286,53 +281,42 @@ begin
 		play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
 		gfade_out(1);
 		play_sfx("Traitor");
-		add_timer_event(self_obj, game_ticks(35), 3);
+		add_timer_event(self_obj, game_ticks(35), EVENT_ENDGAME);
 		debug_msg("Done playing cutscene#10 and #7 for Dipping and V13 invasion.");
 	end
 end
 
-procedure timed_event_p_proc
-begin
-	if (fixed_param == 1) then begin
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_TORTURE) then begin
 		if (torture_setting == 1) then begin
 			critter_dmg( dude_obj, get_critter_stat(dude_obj, STAT_current_hp) / 3, DMG_normal_dam );
 		end
-		else begin
-			if (torture_setting == 2) then begin
-				critter_dmg( dude_obj, get_critter_stat(dude_obj, STAT_current_hp) / 2, DMG_normal_dam );
-			end
-			else begin
-				if (torture_setting == 3) then begin
-					critter_dmg( dude_obj, get_critter_stat(dude_obj, STAT_current_hp) - 1, DMG_normal_dam );
-				end
-			end
+		else if (torture_setting == 2) then begin
+			critter_dmg( dude_obj, get_critter_stat(dude_obj, STAT_current_hp) / 2, DMG_normal_dam );
+		end
+		else if (torture_setting == 3) then begin
+			critter_dmg( dude_obj, get_critter_stat(dude_obj, STAT_current_hp) - 1, DMG_normal_dam );
 		end
 		anim(dude_obj, 37, 0);
 		torture_setting := torture_setting + 1;
-		add_timer_event(self_obj, game_ticks(3), 2);
+		add_timer_event(self_obj, game_ticks(3), EVENT_TORTURE_END);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			hit_dude := 0;
-			game_ui_enable;
-			dialogue_system_enter;
-		end
-		else begin
-			if (fixed_param == 3) then begin
-				signal_end_game;
-				gfade_in(1);
-			end
-		end
+	else if (fixed_param == EVENT_TORTURE_END) then begin
+		hit_dude := 0;
+		game_ui_enable;
+		dialogue_system_enter;
+	end
+	else if (fixed_param == EVENT_ENDGAME) then begin
+		signal_end_game;
+		gfade_in(1);
 	end
 end
 
-procedure Ltcbt
-begin
+procedure Ltcbt begin
 	tmp_hostile := 1;
 end
 
-procedure Lt01
-begin
+procedure Lt01 begin
 	gsay_reply(50, 101);
 	giq_option(4, 50, 102, Lt02, 50);
 	giq_option(4, 50, 103, Lt01a, 50);
@@ -340,22 +324,19 @@ begin
 	giq_option(-3, 50, 105, Lt48, 50);
 end
 
-procedure Lt01a
-begin
+procedure Lt01a begin
 	gsay_reply(50, 106);
 	giq_option(4, 50, 107, Lt35, 50);
 	giq_option(4, 50, 108, Lt03, 50);
 	giq_option(4, 50, 109, Lt01b, 49);
 end
 
-procedure Lt01b
-begin
+procedure Lt01b begin
 	gsay_message(50, 110, 50);
 	call Ltx3;
 end
 
-procedure Lt02
-begin
+procedure Lt02 begin
 	gsay_reply(50, 111);
 	giq_option(4, 50, 112, Lt35a, 50);
 	giq_option(4, 50, 113, Lt03, 50);
@@ -363,98 +344,84 @@ begin
 	giq_option(4, 50, 115, Lt40, 50);
 end
 
-procedure Lt03
-begin
+procedure Lt03 begin
 	gsay_reply(50, 116);
 	giq_option(4, 50, 117, Lt04, 50);
 	giq_option(4, 50, 118, Lt04, 50);
 	giq_option(4, 50, 119, Lt05, 50);
 end
 
-procedure Lt04
-begin
+procedure Lt04 begin
 	gsay_reply(50, 120);
 	giq_option(4, 50, 121, Lt05, 50);
 	giq_option(4, 50, 122, Lt35, 50);
 	giq_option(5, 50, 123, Lt35a, 50);
 end
 
-procedure Lt05
-begin
+procedure Lt05 begin
 	gsay_message(50, 124, 50);
 	call Lt06;
 end
 
-procedure Lt06
-begin
+procedure Lt06 begin
 	giq_option(5, 50, 125, Lt07, 50);
 	giq_option(6, 50, 126, Lt20, 50);
 	giq_option(4, 50, 127, Lt27, 50);
 	giq_option(4, 50, 128, Lt34, 50);
 end
 
-procedure Lt07
-begin
+procedure Lt07 begin
 	gsay_reply(50, 129);
 	giq_option(5, 50, 130, Lt10, 50);
 	giq_option(5, 50, 131, Lt08, 50);
 	giq_option(4, 50, 132, Lt20, 50);
 end
 
-procedure Lt08
-begin
+procedure Lt08 begin
 	gsay_reply(50, 133);
 	giq_option(4, 50, 134, Lt08a, 50);
 end
 
-procedure Lt08a
-begin
+procedure Lt08a begin
 	gsay_message(50, 135, 50);
 	call Lt06;
 end
 
-procedure Lt09
-begin
+procedure Lt09 begin
 	gsay_message(50, 136, 50);
 	call Lt06;
 end
 
-procedure Lt10
-begin
+procedure Lt10 begin
 	gsay_reply(50, 137);
 	giq_option(4, 50, 138, Lt11, 50);
 end
 
-procedure Lt11
-begin
+procedure Lt11 begin
 	gsay_reply(50, 139);
 	giq_option(4, 50, 140, Lt12, 50);
 	giq_option(6, 50, 141, Lt14, 50);
 	giq_option(6, 50, 142, Lt13, 50);
 end
 
-procedure Lt12
-begin
+procedure Lt12 begin
 	gsay_reply(50, 143);
 	giq_option(6, 50, 144, Lt13, 50);
 	giq_option(4, 50, 145, Lt19, 50);
 end
 
-procedure Lt13
-begin
+procedure Lt13 begin
 	gsay_reply(50, 146);
 	giq_option(6, 50, 147, Lt14, 50);
 	giq_option(5, 50, 148, Lt18a, 51);
 end
 
-procedure Lt14
-begin
+procedure Lt14 begin
 	gsay_reply(50, 149);
 	giq_option(6, 50, 150, Lt15, 50);
 end
 
-procedure Lt15
-begin
+procedure Lt15 begin
 	gsay_reply(50, 151);
 	giq_option(6, 50, 152, Lt16, 50);
 end
@@ -479,8 +446,7 @@ begin
 	giq_option(6, 50, 160, Lt09, 50);
 end
 
-procedure Lt18a
-begin
+procedure Lt18a begin
 	DownReact
 	call Lt18;
 end
@@ -549,8 +515,7 @@ begin
 	giq_option(6, 50, 188, Lt30, 50);
 end
 
-procedure Lt28
-begin
+procedure Lt28 begin
 	gsay_reply(50, 189);
 	call Lt06;
 end
@@ -590,53 +555,45 @@ begin
 	giq_option(6, 50, 204, Lt08a, 50);
 end
 
-procedure Lt34
-begin
+procedure Lt34 begin
 	gsay_reply(50, 205);
 	giq_option(4, 50, 206, Lt35, 51);
 end
 
-procedure Lt35
-begin
+procedure Lt35 begin
 	gsay_message(50, 207, 51);
 	torture_setting := 1;
 end
 
-procedure Lt35a
-begin
+procedure Lt35a begin
 	gsay_message(50, 208, 50);
 	torture_setting := 1;
 end
 
-procedure Lt36
-begin
+procedure Lt36 begin
 	gsay_reply(50, 209);
 	giq_option(4, 50, 210, Lt37, 51);
 	giq_option(4, 50, 211, Lt40, 49);
 end
 
-procedure Lt37
-begin
+procedure Lt37 begin
 	gsay_message(50, 212, 49);
 	torture_setting := 2;
 end
 
-procedure Lt37b
-begin
+procedure Lt37b begin
 	gsay_reply(50, 213);
 	giq_option(4, 50, 214, Ltx1, 51);
 	giq_option(4, 50, 215, Lt40, 49);
 end
 
-procedure Lt38
-begin
+procedure Lt38 begin
 	gsay_reply(50, 216);
 	giq_option(4, 50, 217, Lt39, 50);
 	giq_option(4, 50, 218, Lt40, 50);
 end
 
-procedure Lt39
-begin
+procedure Lt39 begin
 	if (dude_is_male) then begin
 		gsay_reply(50, 272);
 	end
@@ -669,8 +626,7 @@ begin
 	giq_option(5, 50, 230, Lt09, 50);
 end
 
-procedure Lt40a
-begin
+procedure Lt40a begin
 	call Lt40;
 end
 
@@ -703,8 +659,7 @@ begin
 	giq_option(4, 50, 247, Lt03, 50);
 end
 
-procedure Lt45
-begin
+procedure Lt45 begin
 	set_global_var(ENTERING_VATS_HOW, 3);
 	set_local_var(4, 1);
 	if (dude_is_female) then begin
@@ -716,48 +671,40 @@ begin
 	call Ltx4;
 end
 
-procedure Lt46
-begin
+procedure Lt46 begin
 	set_local_var(5, 1);
 	gsay_reply(50, 249);
 	giq_option(4, 50, 251, Lt43, 50);
 end
 
-procedure Lt48
-begin
+procedure Lt48 begin
 	gsay_message(50, 252, 50);
 	call Ltx2;
 end
 
-procedure Ltx1
-begin
+procedure Ltx1 begin
 	torture_setting := 3;
 end
 
-procedure Ltx2
-begin
+procedure Ltx2 begin
 	torture_setting := 0;
 	set_local_var(7, 1);
 end
 
-procedure Ltx3
-begin
+procedure Ltx3 begin
 	End_The_Game := 1;
 end
 
-procedure Ltx4
-begin
+procedure Ltx4 begin
 	set_global_var(DESTROY_VATS_4, 1);
 end
 
-procedure Ltx6
-begin
+procedure Ltx6 begin
 	torture_setting := 0;
 	set_local_var(7, 1);
 end
 
-procedure Torture
-begin
+procedure Torture begin
 	if (tile_num(self_obj) != tile_num_in_direction(tile_num(dude_obj), 1, 1)) then begin
 		animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(dude_obj), 1, 1), 0);
 	end
@@ -766,15 +713,12 @@ begin
 		anim(self_obj, 1000, 4);
 		anim(self_obj, 16, 0);
 		anim(dude_obj, 20, 0);
-		add_timer_event(self_obj, game_ticks(torture_setting), 1);
+		add_timer_event(self_obj, game_ticks(torture_setting), EVENT_TORTURE);
 		hit_dude := 1;
 	end
 end
 
-
-
-procedure Lt40_5
-begin
+procedure Lt40_5 begin
 	gsay_reply(50, 231);
 	giq_option(4, 50, 232, Ltx3, 49);
 	giq_option(4, 50, 233, Ltx2, 51);
