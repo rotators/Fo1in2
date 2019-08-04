@@ -1,15 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
+	Followers of the Apocalypse - Nicole
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_NICOLE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
 
 procedure Nicole00;
 procedure Nicole01;
@@ -60,18 +73,19 @@ procedure NicoleMore;
 procedure NicoleShowOut;
 procedure NicoleEnd;
 
+#define LVAR_TALKED_TO_NICOLE 		(4)
+
 variable Only_Once := 1;
+variable ThiefFlag;
 variable DisplayMessage := 100;
 
-procedure Start
-begin
+procedure Start begin
 	if self_obj != 0 then begin
 		set_global_var(IS_NICOLE_ALIVE, 1);
 	end
 	else begin
 		set_global_var(IS_NICOLE_ALIVE, 0);
 	end
-	
 
 	if Only_Once then begin
 		if (not(metarule(22, 0)) and (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0)) then begin
@@ -82,26 +96,26 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_NICOLE, 100));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_NICOLE, 100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
+
+	get_reaction
+
 	if (global_var(ENEMY_FOLLOWERS) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 104)), 2);
 	end
 	else begin
-		if ((local_var(4) == 1) and (get_critter_stat(dude_obj, STAT_iq) < 4)) then begin
+		if ((local_var(LVAR_TALKED_TO_NICOLE) == 1) and (get_critter_stat(dude_obj, STAT_iq) < 4)) then begin
 			float_msg(self_obj, message_str(SCRIPT_NICOLE, 286), 0);
 		end
 		else begin
@@ -112,7 +126,7 @@ begin
 			end
 			start_gdialog(54, self_obj, 4, 19, BACKGROUND_FOLLOWER);
 			gsay_start;
-			if (local_var(4) == 0) then begin
+			if (local_var(LVAR_TALKED_TO_NICOLE) == 0) then begin
 				call Nicole01;
 			end
 			else begin
@@ -129,36 +143,22 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_FOLLOWERS, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(IS_NICOLE_ALIVE, 0);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+	if (source_obj == dude_obj) then begin
+		inc_good_critter
 		set_global_var(ENEMY_FOLLOWERS, 1);
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
 		if (global_var(ENEMY_FOLLOWERS) == 1) then begin
 			attack(dude_obj);
@@ -166,13 +166,13 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	set_global_var(ENEMY_FOLLOWERS, 1);
+procedure pickup_p_proc begin
+   //ThiefFlag := 1;
+   dialogue_system_enter;
+	//set_global_var(ENEMY_FOLLOWERS, 1);
 end
 
-procedure Nicole00
-begin
+procedure Nicole00 begin
 	gsay_reply(54, DisplayMessage);
 	gsay_option(54, 101, Nicole29, 50);
 	gsay_option(54, 102, Nicole02, 50);
@@ -182,15 +182,14 @@ begin
 	gsay_option(54, 131, Nicole14, 50);
 end
 
-procedure Nicole01
-begin
+procedure Nicole01 begin
 	gsay_reply(54, 105);
 	giq_option(4, 54, 106, Nicole02, 50);
 	giq_option(4, 54, 107, Nicole11, 51);
 	giq_option(4, 54, 108, Nicole09, 50);
 	giq_option(4, 54, 109, Nicole15, 50);
 	giq_option(-3, 54, 110, Nicole78, 50);
-	set_local_var(4, 1);
+	set_local_var(LVAR_TALKED_TO_NICOLE, 1);
 end
 
 procedure Nicole02
@@ -519,8 +518,7 @@ begin
 	set_global_var(FOLLOWER_MACHO_HELP, 1);
 end
 
-procedure Nicole55
-begin
+procedure Nicole55 begin
 	set_global_var(SHADOW_PASSWORD, 1);
 	gsay_message(54, 254, 50);
 end
@@ -530,8 +528,7 @@ begin
 	gsay_message(54, 291, 50);
 end
 
-procedure NicoleMore
-begin
+procedure NicoleMore begin
 	gsay_reply(54, DisplayMessage);
 	if (local_var(1) >= 2) then begin
 		gsay_option(54, 155, Nicole09, 50);
@@ -542,15 +539,13 @@ begin
 	gsay_option(54, 131, Nicole14, 50);
 end
 
-procedure NicoleShowOut
-begin
+procedure NicoleShowOut begin
 	gfade_out(1);
 	move_to(dude_obj, 23883, 0);
 	set_local_var(5, 1);
 end
 
-procedure NicoleEnd
-begin
+procedure NicoleEnd begin
 end
 
 
