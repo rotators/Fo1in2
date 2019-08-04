@@ -1,65 +1,49 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+
+#define NAME 							SCRIPT_SSWELL
 
 procedure start;
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure use_p_proc;//    script_action == 6
-procedure use_obj_on_p_proc;//    script_action == 7
+procedure use_skill_on_p_proc;
+procedure use_p_proc;
+procedure use_obj_on_p_proc;
 
+#define LVAR_UseWell		                 (0)
+#define LVAR_ScienceWell                 (1)
 
-procedure start
-begin
-	if (script_action == 6) then begin
-		call use_p_proc;
-	end
-	else begin
-		if (script_action == 7) then begin//<-- use_obj_on_p_proc
-			call use_obj_on_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	script_overrides;
-	if not(local_var(0)) then begin
-		display_msg(message_str(SCRIPT_SSWELL, 100));
-		set_local_var(0, 1);
+	if not(local_var(LVAR_UseWell)) then begin
+		display_msg(mstr(100));
+		set_local_var(LVAR_UseWell, 1);
 	end
-	else begin
-		display_msg(message_str(SCRIPT_SSWELL, 102));
+	else
+		display_msg(mstr(102));
+end
+
+procedure use_obj_on_p_proc begin
+	if (obj_pid(obj_being_used_with) == PID_ROPE) then begin
+		script_overrides;
+		display_msg(mstr(101));
+	end
+	else if (obj_pid(obj_being_used_with) == PID_BOTTLE_CAPS) then begin
+		script_overrides;
+		display_msg(mstr(103));
+		item_caps_adjust(dude_obj, -1);
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
-	if (obj_pid(obj_being_used_with) == PID_ROPE) then begin//	rope
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_SCIENCE) then begin
 		script_overrides;
-		display_msg(message_str(SCRIPT_SSWELL, 101));
-	end
-	else begin
-		if (obj_pid(obj_being_used_with) == PID_BOTTLE_CAPS) then begin//	bottle caps
-			script_overrides;
-			display_msg(message_str(SCRIPT_SSWELL, 103));
-			item_caps_adjust(dude_obj, -1);
+		if not(local_var(LVAR_ScienceWell)) then begin
+			display_msg(mstr(100));
+			set_local_var(LVAR_ScienceWell, 1);
 		end
-	end
-end
-
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
-		script_overrides;
-		if not(local_var(1)) then begin
-			display_msg(message_str(SCRIPT_SSWELL, 100));
-			set_local_var(1, 1);
-		end
-		else begin
-			display_msg(message_str(SCRIPT_SSWELL, 102));
-		end
+		else
+			display_msg(mstr(102));
 	end
 end

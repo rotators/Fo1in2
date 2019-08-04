@@ -353,81 +353,24 @@ variable Scenery_Creation_Ptr;
 										end		
 										  
 // This will make the cave-in rocks with all the blocking Hexes
-#define Create_Cave_In(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_CAVE_IN_ROCKS,Hex_Num,Elevation);                   \
-                                            Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,3,1);                               \
-                                            Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);       \
-                                            Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,0,1);                               \
-                                            Temp_Scenery_Creation_Hex:=Scenery_Creation_Hex;                                        \
-                                            Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);       \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 3) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,5,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 2) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,0,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 1) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,5,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 2) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,0,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=1;                                                              \
-                                            while (Scenery_Creation_Count < 1) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,1,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 2) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,2,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 1) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,1,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 5) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,2,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Hex:=tile_num_in_direction(Temp_Scenery_Creation_Hex,1,1);             \
-                                            Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 2) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,2,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 1) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,1,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end                                                                                     \
-                                            Scenery_Creation_Count:=0;                                                              \
-                                            while (Scenery_Creation_Count < 4) do begin                                             \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,0,1);              \
-                                                Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
-                                                Scenery_Creation_Count+=1;                                                          \
-                                            end
-
+#define Create_Cave_In(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_CAVE_IN_ROCKS,Hex_Num,Elevation); 					\
+											Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,2,2);                               \
+											Blocking_Cycle(1,1,Elevation)                                                           \
+											Blocking_Cycle(2,1,Elevation)                                                           \
+											Blocking_Cycle(1,1,Elevation)                                                           \
+											Blocking_Cycle(0,3,Elevation)                                                           \
+											Blocking_Cycle(5,1,Elevation)                                                           \
+											Blocking_Cycle(0,1,Elevation)                                                           \
+											Blocking_Cycle(5,4,Elevation)                                                           \
+											Blocking_Cycle(0,1,Elevation)                                                           \
+											Blocking_Cycle(5,3,Elevation)                                                           \
+											Blocking_Cycle(3,6,Elevation)                                                           \
+											Blocking_Cycle(2,1,Elevation)                                                           \
+											Blocking_Cycle(3,1,Elevation)                                                           \
+											Blocking_Cycle(2,1,Elevation)                                                           \
+											Blocking_Cycle(3,1,Elevation)                                                           \
+											Blocking_Cycle(2,3,Elevation)                                                           \
+											Blocking_Cycle(0,1,Elevation)
 
 // Blocking Hex Cycle
 #define create_blocking_hex(the_tile, the_elev) move_to(create_object(PID_BLOCKING_HEX, the_tile, the_elev), the_tile, the_elev)
