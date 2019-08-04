@@ -256,6 +256,14 @@ variable Scenery_Creation_Ptr;
 #define PID_WEEDS 							(33554540)
 #define PID_WOODEN_TABLE_1					(33554435)
 
+// Door types:
+#define PID_DOOR_METAL_EW 					(33554913)
+#define PID_DOOR_METAL_NS 					(33554914)
+#define PID_VDOOR_OLD_METAL_NS				(33554574)
+#define PID_VDOOR_OLD_METAL_EW				(33554575)
+#define PID_VDOOR_V13_METAL_EW				(33554454)
+#define PID_VDOOR_V13_METAL_NS				(33554455)
+
 // SD 3 Motorcycle
 #define PID_DRIVABLE_MOTO1					(33556292)
 #define PID_DRIVABLE_MOTO2					(33556293)

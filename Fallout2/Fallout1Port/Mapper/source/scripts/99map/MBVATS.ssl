@@ -2,9 +2,10 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
-procedure combat_p_proc;//    script_action == 13
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure combat_p_proc;
 
-procedure Invasion;
 export variable Lt_ptr;
 export variable Team9_Count;
 export variable ignoring_dude;
@@ -12,6 +13,7 @@ export variable VWeapLocker_ptr;
 export variable valid_target;
 export variable field_change;
 export variable removal_ptr;
+
 export variable Field1c_Ptr;
 //export variable Field1d_Ptr;
 export variable Field2c_Ptr;
@@ -22,107 +24,98 @@ variable dude_start_hex;
 variable move_party;
 variable player_elevation;
 
-procedure start
-begin
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+	if (map_first_run) then begin
+		field_change := "off";
+	end
+	if (global_var(VATS_ALERT)) then begin
+		field_change := "on";
+	end
+	if (global_var(FORCE_FIELDS_OFF)) then begin
+		field_change := "off";
+	end
+	player_elevation := elevation(dude_obj);
+
+	if (global_var(LOAD_MAP_INDEX) == 0) then begin
+		override_map_start(144, 64, 0, 3);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 1) then begin
+		override_map_start(120, 122, 0, 3);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 2) then begin
+		override_map_start(92, 122, 0, 2);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 3) then begin
+		override_map_start(120, 122, 1, 3);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 4) then begin
+		override_map_start(92, 122, 1, 2);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 5) then begin
+		override_map_start(71, 116, 1, 0);
 	end
 	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			//call Invasion;
-			if (map_first_run) then begin
-				field_change := "off";
-			end
-			if (global_var(VATS_ALERT)) then begin
-				field_change := "on";
-			end
-			if (global_var(FORCE_FIELDS_OFF)) then begin
-				field_change := "off";
-			end
-			player_elevation := elevation(dude_obj);
+		override_map_start(144, 64, 0, 3);
+	end
 
-			if (global_var(LOAD_MAP_INDEX) == 0) then begin
-				override_map_start(144, 64, 0, 3);
-			end
-			else if (global_var(LOAD_MAP_INDEX) == 1) then begin
-				override_map_start(120, 122, 0, 3);
-			end
-			else if (global_var(LOAD_MAP_INDEX) == 2) then begin
-				override_map_start(92, 122, 0, 2);
-			end
-			else if (global_var(LOAD_MAP_INDEX) == 3) then begin
-				override_map_start(120, 122, 1, 3);
-			end
-			else if (global_var(LOAD_MAP_INDEX) == 4) then begin
-				override_map_start(92, 122, 1, 2);
-			end
-			else if (global_var(LOAD_MAP_INDEX) == 5) then begin
-				override_map_start(71, 116, 1, 0);
-			end
-			else begin
-				override_map_start(144, 64, 0, 3);
-			end
-
-			if ((map_first_run) and global_var(ENTERING_VATS_HOW)) then begin
-				move_party := 1;
-			end
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				if (global_var(VATS_ALERT) == 0) then begin
-					if (elevation(dude_obj) == 0) then begin
-						set_global_var(MARK_BASE_4, 1);
-					end
-					else begin
-						set_global_var(MARK_BASE_5, 1);
-						if (not(map_var(4)) and not(global_var(ENTERING_VATS_HOW))) then begin
-							display_msg(message_str(SCRIPT_RADIO, 140));
-							give_exp_points(EXP_SNEAK_SUCCESS);
-							set_map_var(4, 1);
-						end
-					end
-				end
-				else begin
-					if (map_var(19) == 0) then begin
-						display_msg(message_str(SCRIPT_GENCHAT, 186));
-						set_map_var(19, 1);
-					end
-					set_global_var(MARK_BASE_4, 0);
-					set_global_var(MARK_BASE_5, 0);
-				end
-				if (removal_ptr != 0) then begin
-					destroy_object(removal_ptr);
-					removal_ptr := 0;
-				end
-				if (move_party == 1) then begin
-					move_party := 0;
-					if ((global_var(IAN_HIRELING_STATUS) == 2) and not(Ian_ptr == 0)) then begin
-						move_to(Ian_ptr, 26141, 1);
-					end
-					if (global_var(DOGMEAT_HIRELING_STATUS) and not(Dog_ptr == 0)) then begin
-						move_to(Dog_ptr, 25745, 1);
-					end
-					if ((global_var(TYCHO_HIRELING_STATUS) == 2) and not(Tycho_ptr == 0)) then begin
-						move_to(Tycho_ptr, 26143, 1);
-					end
-					if ((global_var(KATJA_HIRELING_STATUS) == 2) and not(Katja_ptr == 0)) then begin
-						move_to(Katja_ptr, 26145, 1);
-					end
-					if ((global_var(TANDI_HIRELING_STATUS) == 5) and not(Tandi_ptr == 0)) then begin
-						move_to(Tandi_ptr, 25947, 1);
-					end
-				end
-				else begin
-
-				end
-			end
-
-		end
+	if ((map_first_run) and global_var(ENTERING_VATS_HOW)) then begin
+		move_party := 1;
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure map_update_p_proc begin
+	if (global_var(VATS_ALERT) == 0) then begin
+		if (elevation(dude_obj) == 0) then begin
+			set_global_var(MARK_BASE_4, 1);
+		end
+		else begin
+			set_global_var(MARK_BASE_5, 1);
+			if (not(map_var(4)) and not(global_var(ENTERING_VATS_HOW))) then begin
+				display_msg(message_str(SCRIPT_RADIO, 140));
+				give_exp_points(EXP_SNEAK_SUCCESS);
+				set_map_var(4, 1);
+			end
+		end
+	end
+	else begin
+		if (map_var(19) == 0) then begin
+			display_msg(message_str(SCRIPT_GENCHAT, 186));
+			set_map_var(19, 1);
+		end
+		set_global_var(MARK_BASE_4, 0);
+		set_global_var(MARK_BASE_5, 0);
+	end
+
+	if (removal_ptr != 0) then begin
+		destroy_object(removal_ptr);
+		removal_ptr := 0;
+	end
+
+	if (move_party == 1) then begin
+		move_party := 0;
+		if (Ian_In_Party and not(Ian_ptr == 0)) then begin
+			move_to(Ian_ptr, 26141, 1);
+		end
+		if (Dog_In_Party and not(Dog_ptr == 0)) then begin
+			move_to(Dog_ptr, 25745, 1);
+		end
+		if (Tycho_In_Party and not(Tycho_ptr == 0)) then begin
+			move_to(Tycho_ptr, 26143, 1);
+		end
+		if (Katja_In_Party and not(Katja_ptr == 0)) then begin
+			move_to(Katja_ptr, 26145, 1);
+		end
+		if (Tandi_In_Party and not(Tandi_ptr == 0)) then begin
+			move_to(Tandi_ptr, 25947, 1);
+		end
+		// TODO: Add Mr. Handy C robot
+	end
+end
+
+procedure combat_p_proc begin
 	if (global_var(DESTROY_VATS_4) == 1) then begin
 		script_overrides;
 		set_global_var(DESTROY_VATS_4, 0);
@@ -130,8 +123,3 @@ begin
 		load_map(MAP_MBVATS12, 5);
 	end
 end
-
-procedure Invasion begin
-	//check_invasion
-end
-
