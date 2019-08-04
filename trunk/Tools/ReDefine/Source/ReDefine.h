@@ -29,8 +29,8 @@ public:
     // script edit actions
     //
 
-    typedef std::function<bool (ReDefine*, const ScriptCode&, const std::vector<std::string>&)> ScriptEditIf;
-    typedef std::function<bool (ReDefine*, ScriptCode&, const std::vector<std::string>&)>       ScriptEditDo;
+    typedef std::function<bool (const ScriptCode&, const std::vector<std::string>&)> ScriptEditIf;
+    typedef std::function<bool (ScriptCode&, const std::vector<std::string>&)>       ScriptEditDo;
 
     //
     // ReDefine
@@ -184,6 +184,8 @@ public:
 
     struct ScriptCode
     {
+        ReDefine*                Parent;
+
         unsigned int             Flags;
         std::string              Full; // Name + (Arguments) + (Operator + OperatorArguments)
         std::string              Name;
@@ -193,12 +195,20 @@ public:
         std::string              OperatorArgument;
 
         ScriptCode();
-
-        // for noob coders :)
+        ScriptCode( ReDefine* parent );
 
         bool IsFlag( unsigned int flag ) const;
         void SetFlag( unsigned int flag );
         void UnsetFlag( unsigned int flag );
+
+        bool IsKnownFunction( const char* caller ) const;
+        bool GetINDEX( const char* caller, const std::string& value, unsigned int& val ) const;
+
+        // checks if condition action exists before calling it
+        bool CallEditIf( const std::string& name, std::vector<std::string> values = std::vector<std::string>() ) const;
+
+        // checks if result action exists before calling it
+        bool CallEditDo( const std::string& name, std::vector<std::string> values = std::vector<std::string>() );
     };
 
     struct ScriptEdit
@@ -237,11 +247,6 @@ public:
 
     //
 
-    // checks if condition action exists before calling it
-    bool CallEditIf( const std::string& name, const ScriptCode& code, std::vector<std::string> values = std::vector<std::string>() );
-
-    // checks if result action exists before calling it
-    bool CallEditDo( const std::string& name, ScriptCode& code, std::vector<std::string> values = std::vector<std::string>() );
 
     void ProcessScript( const std::string& path, const std::string& filename, const bool readOnly = false );
     void ProcessScriptEdit( const std::vector<ScriptEdit>& edits, ScriptCode& code );
