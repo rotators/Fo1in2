@@ -1,55 +1,70 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+
+#define NAME                    	SCRIPT_DOOR
+
+/* Door close distance */
+/* How far do you want the last object that used the door to get away before it closes */
+#define DOOR_CLOSE_DIST                 (10) //(3)
+
+/* Timer id's */
+#define TIMER_CLOSE                     (1)
+
+#define is_metal_door 						(self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS)
+#define is_wood_door 						not(is_metal_door)
+
+/* Penalties for forcing the door open using strength */
+#define Crowbar_Bonus                   (0)
+
+/* Max and Min damage for the trap */
+#define DOOR_STRENGTH                   (2)
+#define MIN_DAMAGE                      (10)
+#define MAX_DAMAGE                      (20)
+#define Crowbar_Strain                  (2)
 
 procedure start;
-procedure damage_p_proc;//    script_action == 14
-procedure timed_event_p_proc;//    script_action == 22
-procedure use_p_proc;//    script_action == 6
+procedure damage_p_proc;
+procedure timed_event_p_proc;
+procedure use_p_proc;
 
-procedure start
-begin
+#define LVAR_Explosion_Attempts 		(8)
+
+procedure start begin
 	/*if global_var(CHEAT_DEBUG_MENU_ENABLED) then begin
 		display_msg("DEBUG MODE: Door destroyed :)");
 		destroy_object(self_obj);
 	end*/
-	if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-		call damage_p_proc;
-	end
-	else begin
-		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-			call timed_event_p_proc;
+end
+
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+
+	//	if (cur_map_index == 13) or (cur_map_index == 14) or (cur_map_index == 15) then begin
+	//		set_global_var(ENEMY_BROTHERHOOD, 1);
+	//	end
+		if is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0)) then begin
+			set_local_var(0, 2);
+			display_msg(message_str(SCRIPT_GENCHAT, 503) + 25 + message_str(SCRIPT_GENCHAT, 504));
+			give_exp_points(25);
 		end
 		else begin
-			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				call use_p_proc;
+			display_msg(message_str(SCRIPT_GENCHAT, 505));
+			if not(obj_is_open(self_obj)) then begin
+				use_obj(self_obj);
 			end
+			set_local_var(0, local_var(0) + 1);
 		end
+		if local_var(0) == 2 then begin
+			destroy_object(self_obj);
+		end
+
 	end
+   else begin
+       display_msg(mstr(193));
+   end
 end
 
-procedure damage_p_proc
-begin
-//	if (cur_map_index == 13) or (cur_map_index == 14) or (cur_map_index == 15) then begin
-//		set_global_var(ENEMY_BROTHERHOOD, 1);
-//	end
-	if is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0)) then begin
-		set_local_var(0, 2);
-		display_msg(message_str(SCRIPT_GENCHAT, 503) + 25 + message_str(SCRIPT_GENCHAT, 504));
-		give_exp_points(25);
-	end
-	else begin
-		display_msg(message_str(SCRIPT_GENCHAT, 505));
-		if not(obj_is_open(self_obj)) then begin
-			use_obj(self_obj);
-		end
-		set_local_var(0, local_var(0) + 1);
-	end
-	if local_var(0) == 2 then begin
-		destroy_object(self_obj);
-	end
-end
-
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if obj_is_open(self_obj) then begin
 			use_obj(self_obj);
@@ -57,11 +72,9 @@ begin
 	end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	if (cur_map_index == MAP_VAULT13) or (cur_map_index == MAP_BROHD12) or (cur_map_index == MAP_BROHD34) then begin
 		rm_timer_event(self_obj);
 		add_timer_event(self_obj, game_ticks(15), 1);
 	end
 end
-

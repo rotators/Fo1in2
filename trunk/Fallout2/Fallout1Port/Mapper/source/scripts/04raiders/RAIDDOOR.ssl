@@ -1,13 +1,15 @@
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 
+#define NAME                    	SCRIPT_DOOR
+
 procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure description_p_proc;//    script_action == 3
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure map_update_p_proc;//    script_action == 23
-procedure damage_p_proc;//    script_action == 14
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure description_p_proc;
+procedure use_obj_on_p_proc;
+procedure map_update_p_proc;
+procedure damage_p_proc;
 
 import variable Cell_Door_Ptr;
 
@@ -15,8 +17,7 @@ import variable Cell_Door_Ptr;
 procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	if (local_var(0) == 0) then begin
 		obj_lock(self_obj);
 	end
@@ -34,8 +35,7 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	variable LVar0 := 0;
 	if (local_var(0) == 0) then begin
 		if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
@@ -63,15 +63,13 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (local_var(0) == 0) then begin
 		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := obj_being_used_with;
@@ -97,8 +95,7 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	Cell_Door_Ptr := self_obj;
 	if (map_var(2) != 0) then begin
 		set_local_var(0, 1);
@@ -111,10 +108,16 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-	set_local_var(1, 1);
-	set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
-	set_map_var(2, 1);
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+		
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		set_local_var(1, 1);
+		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
+		set_map_var(2, 1);
+		
+	end
+   else begin
+       display_msg(mstr(193));
+   end
 end

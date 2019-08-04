@@ -1,5 +1,7 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
+#define NAME                    	SCRIPT_DOOR
 
 /* Door close distance */
 /* How far do you want the last object that used the door to get away before it closes */
@@ -7,6 +9,18 @@
 
 /* Timer id's */
 #define TIMER_CLOSE                     (1)
+
+#define is_metal_door 						(self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS)
+#define is_wood_door 						not(is_metal_door)
+
+/* Penalties for forcing the door open using strength */
+#define Crowbar_Bonus                   (0)
+
+/* Max and Min damage for the trap */
+#define DOOR_STRENGTH                   (2)
+#define MIN_DAMAGE                      (10)
+#define MAX_DAMAGE                      (20)
+#define Crowbar_Strain                  (2)
 
 procedure start;
 procedure timed_event_p_proc;
@@ -26,6 +40,8 @@ procedure damage_p_proc;
 //local_var(5) == HALLDED | Hallded lock was picked?
 //local_var(6) == HALLDED | has init Hallded door?
 //local_var(7) == GotExpForPicking (NOT USED)
+
+#define LVAR_Explosion_Attempts 		(8)
 
 /*******************************************************************
    Imported variables from the Map scripts. These should only be
@@ -90,7 +106,6 @@ procedure use_p_proc begin
 	end
 
    if fo1in2_auto_doors_closing then begin
-   //	debug("door will close");
       last_source_obj := source_obj;
       add_timer_event(self_obj, 10, TIMER_CLOSE);
 	end
@@ -100,7 +115,7 @@ procedure use_skill_on_p_proc begin
 	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
 		variable LVar0 := 0;
 		if (local_var(0) == 0) then begin
-			if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
+			if (action_being_used == SKILL_LOCKPICK) then begin
 				script_overrides;
 				LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
 				if (is_success(LVar0)) then begin
@@ -126,8 +141,7 @@ procedure use_skill_on_p_proc begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
 		if (local_var(0) == 0) then begin
 			display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
@@ -135,8 +149,7 @@ begin
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
 		variable LVar0 := 0;
 		variable LVar1 := 0;
@@ -164,8 +177,7 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
 		if (local_var(0) == 0) then begin
 			obj_lock(self_obj);
@@ -176,18 +188,22 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
-		set_local_var(1, 1);
-		destroy_object(self_obj);
-	end
-	else begin
-		if ((cur_map_index == MAP_MBENT) or (cur_map_index == MAP_MBSTRG12) or (cur_map_index == MAP_MBVATS12)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
-			if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-				set_local_var(1, 1);
-				destroy_object(self_obj);
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+		if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
+			set_local_var(1, 1);
+			destroy_object(self_obj);
+		end
+		else begin
+			if ((cur_map_index == MAP_MBENT) or (cur_map_index == MAP_MBSTRG12) or (cur_map_index == MAP_MBVATS12)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
+				if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
+					set_local_var(1, 1);
+					destroy_object(self_obj);
+				end
 			end
 		end
 	end
+   else begin
+       display_msg(mstr(193));
+   end
 end

@@ -1,5 +1,7 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
+#define NAME                    	SCRIPT_DOOR
 
 /* Door close distance */
 /* How far do you want the last object that used the door to get away before it closes */
@@ -7,6 +9,18 @@
 
 /* Timer id's */
 #define TIMER_CLOSE                     (1)
+
+#define is_metal_door 						(self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW)
+#define is_wood_door 						not(is_metal_door)
+
+/* Penalties for forcing the door open using strength */
+#define Crowbar_Bonus                   (0)
+
+/* Max and Min damage for the trap */
+#define DOOR_STRENGTH                   (2)
+#define MIN_DAMAGE                      (10)
+#define MAX_DAMAGE                      (20)
+#define Crowbar_Strain                  (2)
 
 procedure start;
 procedure timed_event_p_proc;
@@ -28,6 +42,8 @@ procedure map_enter_p_proc;
 //local_var(6) == HALLDED | has init Hallded door?
 //local_var(7) == GotExpForPicking (NOT USED)
 
+#define LVAR_Explosion_Attempts 		(8)
+
 /*******************************************************************
    Imported variables from the Map scripts. These should only be
    pointers and variables that need not be saved. If a variable
@@ -48,7 +64,6 @@ variable last_source_obj;
 /*******************************************************************
 *******                         PROCEDURES                   *******
 *******************************************************************/
-
 
 /*******************************************************************
    The start procedure is the first procedure called when the map is
@@ -236,7 +251,26 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure damage_p_proc begin
-	destroy_object(self_obj);
+  /************ Wood Door ****************/
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+	   if is_wood_door then begin
+			obj_unlock(self_obj);
+			destroy_object(self_obj);
+	   end
+
+	  /************ Metal Door ****************/
+
+	   else if is_metal_door then begin
+	       set_local_var(LVAR_Explosion_Attempts,local_var(LVAR_Explosion_Attempts)+1);
+	       if (local_var(LVAR_Explosion_Attempts) > DOOR_STRENGTH) then begin
+	           obj_unlock(self_obj);
+	           destroy_object(self_obj);
+	       end
+	   end
+	end
+   else begin
+       display_msg(mstr(193));
+   end
 end
 
 procedure description_p_proc begin

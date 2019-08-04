@@ -1,14 +1,18 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+
+#define NAME                    	SCRIPT_DOOR
 
 procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure damage_p_proc;//    script_action == 14
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
 procedure Trapped_And_Locked;
 procedure Locked_Door;
 procedure Trapped_Door;
@@ -26,50 +30,10 @@ variable Traps;
 variable Per;
 
 
-procedure start
-begin
-	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-		call use_p_proc;
-	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				call map_update_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-							call description_p_proc;
-						end
-						else begin
-							if (script_action == 8) then begin//<-- use_skill_on_p_proc
-								call use_skill_on_p_proc;
-							end
-							else begin
-								if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-									call damage_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	variable LVar0 := 0;
 	LVar0 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
 	if (global_var(GLOW_POWER) == 0) then begin
@@ -105,8 +69,7 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if ((local_var(2) == 0) and obj_is_locked(self_obj)) then begin
 		call Trapped_And_Locked;
 	end
@@ -122,8 +85,7 @@ begin
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -175,55 +137,53 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_GLOYLDOR, 123));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if ((local_var(3) == 0) and (local_var(2) == 0)) then begin
 		call Skill_Checks;
 		call Display_Armed_And_Locked;
 	end
+	else if (local_var(2) == 0) then begin
+		call Skill_Checks;
+		call Display_Trapped;
+	end
+	else if (local_var(3) == 0) then begin
+		call Locks_Check;
+		call Display_Locked;
+	end
 	else begin
-		if (local_var(2) == 0) then begin
-			call Skill_Checks;
-			call Display_Trapped;
-		end
-		else begin
-			if (local_var(3) == 0) then begin
-				call Locks_Check;
-				call Display_Locked;
-			end
-			else begin
-				display_msg(message_str(SCRIPT_GLOYLDOR, 123));
-			end
-		end
+		display_msg(message_str(SCRIPT_GLOYLDOR, 123));
 	end
 end
 
-procedure damage_p_proc
-begin
-	if (local_var(1) > 3) then begin
-		set_local_var(2, 1);
-		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-		obj_open(self_obj);
-		set_local_var(3, 1);
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+
+		if (local_var(1) > 3) then begin
+			set_local_var(2, 1);
+			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			obj_open(self_obj);
+			set_local_var(3, 1);
+		end
+
 	end
+   else begin
+       display_msg(mstr(193));
+   end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (local_var(3) == 0) then begin
 		obj_lock(self_obj);
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (local_var(3) == 0) then begin
 		obj_lock(self_obj);
 	end
@@ -232,11 +192,10 @@ begin
 	end
 end
 
-procedure Trapped_And_Locked
-begin
+procedure Trapped_And_Locked begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
-	if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
+	if (action_being_used == SKILL_TRAPS) then begin
 		script_overrides;
 		LVar0 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
 		if (is_success(LVar0)) then begin
@@ -264,7 +223,7 @@ begin
 		end
 	end
 	else begin
-		if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
+		if (action_being_used == SKILL_LOCKPICK) then begin
 			script_overrides;
 			LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, -30);
 			LVar1 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
@@ -312,10 +271,9 @@ begin
 	end
 end
 
-procedure Locked_Door
-begin
+procedure Locked_Door begin
 	variable LVar0 := 0;
-	if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
+	if (action_being_used == SKILL_LOCKPICK) then begin
 		script_overrides;
 		LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, -30);
 		if (is_success(LVar0)) then begin
@@ -339,10 +297,9 @@ begin
 	end
 end
 
-procedure Trapped_Door
-begin
+procedure Trapped_Door begin
 	variable LVar0 := 0;
-	if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
+	if (action_being_used == SKILL_TRAPS) then begin
 		script_overrides;
 		LVar0 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
 		if (is_success(LVar0)) then begin
@@ -371,9 +328,8 @@ begin
 	end
 end
 
-procedure Damage_Dude
-begin
-	critter_dmg(source_obj, local_var(0), 4 bwor 256);//    DMG_BYPASS_ARMOR  (256)
+procedure Damage_Dude begin
+	critter_dmg(source_obj, local_var(0), 4 bwor 256);
 	if (local_var(0) == 1) then begin
 		display_msg(message_str(SCRIPT_GLOYLDOR, 101));
 	end
@@ -382,8 +338,7 @@ begin
 	end
 end
 
-procedure Skill_Checks
-begin
+procedure Skill_Checks begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -412,8 +367,7 @@ begin
 	end
 end
 
-procedure Stat_Checks
-begin
+procedure Stat_Checks begin
 	variable LVar0 := 0;
 	LVar0 := do_check(source_obj, 1, 0);
 	if (is_success(LVar0)) then begin
@@ -434,8 +388,7 @@ begin
 	end
 end
 
-procedure Locks_Check
-begin
+procedure Locks_Check begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := roll_vs_skill(source_obj, SKILL_LOCKPICK, -10);
@@ -462,25 +415,20 @@ begin
 	end
 end
 
-procedure Display_Armed_And_Locked
-begin
+procedure Display_Armed_And_Locked begin
 	if (Per == 0) then begin
 		if (Locks == 0) then begin
 			if (Traps == 0) then begin
 				display_msg(message_str(SCRIPT_GLOYLDOR, 124));
 			end
+			else if (Traps == 1) then begin
+				display_msg(message_str(SCRIPT_GLOYLDOR, 125));
+			end
+			else if (Traps == 2) then begin
+				display_msg(message_str(SCRIPT_GLOYLDOR, 126));
+			end
 			else begin
-				if (Traps == 1) then begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 125));
-				end
-				else begin
-					if (Traps == 2) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 126));
-					end
-					else begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 127));
-					end
-				end
+				display_msg(message_str(SCRIPT_GLOYLDOR, 127));
 			end
 		end
 		else begin
@@ -488,18 +436,14 @@ begin
 				if (Traps == 0) then begin
 					display_msg(message_str(SCRIPT_GLOYLDOR, 128));
 				end
+				else if (Traps == 1) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 129));
+				end
+				else if (Traps == 2) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 130));
+				end
 				else begin
-					if (Traps == 1) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 129));
-					end
-					else begin
-						if (Traps == 2) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 130));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 131));
-						end
-					end
+					display_msg(message_str(SCRIPT_GLOYLDOR, 131));
 				end
 			end
 			else begin
@@ -507,36 +451,28 @@ begin
 					if (Traps == 0) then begin
 						display_msg(message_str(SCRIPT_GLOYLDOR, 132));
 					end
+					else if (Traps == 1) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 133));
+					end
+					else if (Traps == 2) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 134));
+					end
 					else begin
-						if (Traps == 1) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 133));
-						end
-						else begin
-							if (Traps == 2) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 134));
-							end
-							else begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 135));
-							end
-						end
+						display_msg(message_str(SCRIPT_GLOYLDOR, 135));
 					end
 				end
 				else begin
 					if (Traps == 0) then begin
 						display_msg(message_str(SCRIPT_GLOYLDOR, 136));
 					end
+					else if (Traps == 1) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 137));
+					end
+					else if (Traps == 2) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 138));
+					end
 					else begin
-						if (Traps == 1) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 137));
-						end
-						else begin
-							if (Traps == 2) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 138));
-							end
-							else begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 139));
-							end
-						end
+						display_msg(message_str(SCRIPT_GLOYLDOR, 139));
 					end
 				end
 			end
@@ -548,18 +484,14 @@ begin
 				if (Traps == 0) then begin
 					display_msg(message_str(SCRIPT_GLOYLDOR, 140));
 				end
+				else if (Traps == 1) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 141));
+				end
+				else if (Traps == 2) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 142));
+				end
 				else begin
-					if (Traps == 1) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 141));
-					end
-					else begin
-						if (Traps == 2) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 142));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 143));
-						end
-					end
+					display_msg(message_str(SCRIPT_GLOYLDOR, 143));
 				end
 			end
 			else begin
@@ -567,18 +499,14 @@ begin
 					if (Traps == 0) then begin
 						display_msg(message_str(SCRIPT_GLOYLDOR, 144));
 					end
+					else if (Traps == 1) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 145));
+					end
+					else if (Traps == 2) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 146));
+					end
 					else begin
-						if (Traps == 1) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 145));
-						end
-						else begin
-							if (Traps == 2) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 146));
-							end
-							else begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 147));
-							end
-						end
+						display_msg(message_str(SCRIPT_GLOYLDOR, 147));
 					end
 				end
 				else begin
@@ -586,36 +514,28 @@ begin
 						if (Traps == 0) then begin
 							display_msg(message_str(SCRIPT_GLOYLDOR, 148));
 						end
+						else if (Traps == 1) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 149));
+						end
+						else if (Traps == 2) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 150));
+						end
 						else begin
-							if (Traps == 1) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 149));
-							end
-							else begin
-								if (Traps == 2) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 150));
-								end
-								else begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 151));
-								end
-							end
+							display_msg(message_str(SCRIPT_GLOYLDOR, 151));
 						end
 					end
 					else begin
 						if (Traps == 0) then begin
 							display_msg(message_str(SCRIPT_GLOYLDOR, 152));
 						end
+						else if (Traps == 1) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 153));
+						end
+						else if (Traps == 2) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 154));
+						end
 						else begin
-							if (Traps == 1) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 153));
-							end
-							else begin
-								if (Traps == 2) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 154));
-								end
-								else begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 155));
-								end
-							end
+							display_msg(message_str(SCRIPT_GLOYLDOR, 155));
 						end
 					end
 				end
@@ -627,18 +547,14 @@ begin
 					if (Traps == 0) then begin
 						display_msg(message_str(SCRIPT_GLOYLDOR, 156));
 					end
+					else if (Traps == 1) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 157));
+					end
+					else if (Traps == 2) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 158));
+					end
 					else begin
-						if (Traps == 1) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 157));
-						end
-						else begin
-							if (Traps == 2) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 158));
-							end
-							else begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 159));
-							end
-						end
+						display_msg(message_str(SCRIPT_GLOYLDOR, 159));
 					end
 				end
 				else begin
@@ -646,18 +562,14 @@ begin
 						if (Traps == 0) then begin
 							display_msg(message_str(SCRIPT_GLOYLDOR, 160));
 						end
+						else if (Traps == 1) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 161));
+						end
+						else if (Traps == 2) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 162));
+						end
 						else begin
-							if (Traps == 1) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 161));
-							end
-							else begin
-								if (Traps == 2) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 162));
-								end
-								else begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 163));
-								end
-							end
+							display_msg(message_str(SCRIPT_GLOYLDOR, 163));
 						end
 					end
 					else begin
@@ -665,36 +577,28 @@ begin
 							if (Traps == 0) then begin
 								display_msg(message_str(SCRIPT_GLOYLDOR, 164));
 							end
+							else if (Traps == 1) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 165));
+							end
+							else if (Traps == 2) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 166));
+							end
 							else begin
-								if (Traps == 1) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 165));
-								end
-								else begin
-									if (Traps == 2) then begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 166));
-									end
-									else begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 167));
-									end
-								end
+								display_msg(message_str(SCRIPT_GLOYLDOR, 167));
 							end
 						end
 						else begin
 							if (Traps == 0) then begin
 								display_msg(message_str(SCRIPT_GLOYLDOR, 168));
 							end
+							else if (Traps == 1) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 169));
+							end
+							else if (Traps == 2) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 170));
+							end
 							else begin
-								if (Traps == 1) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 169));
-								end
-								else begin
-									if (Traps == 2) then begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 170));
-									end
-									else begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 171));
-									end
-								end
+								display_msg(message_str(SCRIPT_GLOYLDOR, 171));
 							end
 						end
 					end
@@ -705,18 +609,14 @@ begin
 					if (Traps == 0) then begin
 						display_msg(message_str(SCRIPT_GLOYLDOR, 172));
 					end
+					else if (Traps == 1) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 173));
+					end
+					else if (Traps == 2) then begin
+						display_msg(message_str(SCRIPT_GLOYLDOR, 174));
+					end
 					else begin
-						if (Traps == 1) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 173));
-						end
-						else begin
-							if (Traps == 2) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 174));
-							end
-							else begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 175));
-							end
-						end
+						display_msg(message_str(SCRIPT_GLOYLDOR, 175));
 					end
 				end
 				else begin
@@ -724,18 +624,14 @@ begin
 						if (Traps == 0) then begin
 							display_msg(message_str(SCRIPT_GLOYLDOR, 176));
 						end
+						else if (Traps == 1) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 177));
+						end
+						else if (Traps == 2) then begin
+							display_msg(message_str(SCRIPT_GLOYLDOR, 178));
+						end
 						else begin
-							if (Traps == 1) then begin
-								display_msg(message_str(SCRIPT_GLOYLDOR, 177));
-							end
-							else begin
-								if (Traps == 2) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 178));
-								end
-								else begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 179));
-								end
-							end
+							display_msg(message_str(SCRIPT_GLOYLDOR, 179));
 						end
 					end
 					else begin
@@ -743,36 +639,28 @@ begin
 							if (Traps == 0) then begin
 								display_msg(message_str(SCRIPT_GLOYLDOR, 180));
 							end
+							else if (Traps == 1) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 181));
+							end
+							else if (Traps == 2) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 182));
+							end
 							else begin
-								if (Traps == 1) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 181));
-								end
-								else begin
-									if (Traps == 2) then begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 182));
-									end
-									else begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 183));
-									end
-								end
+								display_msg(message_str(SCRIPT_GLOYLDOR, 183));
 							end
 						end
 						else begin
 							if (Traps == 0) then begin
 								display_msg(message_str(SCRIPT_GLOYLDOR, 184));
 							end
+							else if (Traps == 1) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 185));
+							end
+							else if (Traps == 2) then begin
+								display_msg(message_str(SCRIPT_GLOYLDOR, 186));
+							end
 							else begin
-								if (Traps == 1) then begin
-									display_msg(message_str(SCRIPT_GLOYLDOR, 185));
-								end
-								else begin
-									if (Traps == 2) then begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 186));
-									end
-									else begin
-										display_msg(message_str(SCRIPT_GLOYLDOR, 187));
-									end
-								end
+								display_msg(message_str(SCRIPT_GLOYLDOR, 187));
 							end
 						end
 					end
@@ -782,24 +670,19 @@ begin
 	end
 end
 
-procedure Display_Locked
-begin
+procedure Display_Locked begin
 	if (Per == 0) then begin
 		if (Locks == 0) then begin
 			display_msg(message_str(SCRIPT_GLOYLDOR, 124));
 		end
+		else if (Locks == 1) then begin
+			display_msg(message_str(SCRIPT_GLOYLDOR, 128));
+		end
+		else if (Locks == 2) then begin
+			display_msg(message_str(SCRIPT_GLOYLDOR, 132));
+		end
 		else begin
-			if (Locks == 1) then begin
-				display_msg(message_str(SCRIPT_GLOYLDOR, 128));
-			end
-			else begin
-				if (Locks == 2) then begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 132));
-				end
-				else begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 136));
-				end
-			end
+			display_msg(message_str(SCRIPT_GLOYLDOR, 136));
 		end
 	end
 	else begin
@@ -807,18 +690,14 @@ begin
 			if (Locks == 0) then begin
 				display_msg(message_str(SCRIPT_GLOYLDOR, 140));
 			end
+			else if (Locks == 1) then begin
+				display_msg(message_str(SCRIPT_GLOYLDOR, 144));
+			end
+			else if (Locks == 2) then begin
+				display_msg(message_str(SCRIPT_GLOYLDOR, 148));
+			end
 			else begin
-				if (Locks == 1) then begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 144));
-				end
-				else begin
-					if (Locks == 2) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 148));
-					end
-					else begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 152));
-					end
-				end
+				display_msg(message_str(SCRIPT_GLOYLDOR, 152));
 			end
 		end
 		else begin
@@ -826,36 +705,28 @@ begin
 				if (Locks == 0) then begin
 					display_msg(message_str(SCRIPT_GLOYLDOR, 156));
 				end
+				else if (Locks == 1) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 160));
+				end
+				else if (Locks == 2) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 164));
+				end
 				else begin
-					if (Locks == 1) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 160));
-					end
-					else begin
-						if (Locks == 2) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 164));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 168));
-						end
-					end
+					display_msg(message_str(SCRIPT_GLOYLDOR, 168));
 				end
 			end
 			else begin
 				if (Locks == 0) then begin
 					display_msg(message_str(SCRIPT_GLOYLDOR, 172));
 				end
+				else if (Locks == 1) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 176));
+				end
+				else if (Locks == 2) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 180));
+				end
 				else begin
-					if (Locks == 1) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 176));
-					end
-					else begin
-						if (Locks == 2) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 180));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 184));
-						end
-					end
+					display_msg(message_str(SCRIPT_GLOYLDOR, 184));
 				end
 			end
 		end
@@ -868,18 +739,14 @@ begin
 		if (Traps == 0) then begin
 			display_msg(message_str(SCRIPT_GLOYLDOR, 188));
 		end
+		else if (Traps == 1) then begin
+			display_msg(message_str(SCRIPT_GLOYLDOR, 189));
+		end
+		else if (Traps == 2) then begin
+			display_msg(message_str(SCRIPT_GLOYLDOR, 190));
+		end
 		else begin
-			if (Traps == 1) then begin
-				display_msg(message_str(SCRIPT_GLOYLDOR, 189));
-			end
-			else begin
-				if (Traps == 2) then begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 190));
-				end
-				else begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 191));
-				end
-			end
+			display_msg(message_str(SCRIPT_GLOYLDOR, 191));
 		end
 	end
 	else begin
@@ -887,18 +754,14 @@ begin
 			if (Traps == 0) then begin
 				display_msg(message_str(SCRIPT_GLOYLDOR, 192));
 			end
+			else if (Traps == 1) then begin
+				display_msg(message_str(SCRIPT_GLOYLDOR, 193));
+			end
+			else if (Traps == 2) then begin
+				display_msg(message_str(SCRIPT_GLOYLDOR, 194));
+			end
 			else begin
-				if (Traps == 1) then begin
-					display_msg(message_str(SCRIPT_GLOYLDOR, 193));
-				end
-				else begin
-					if (Traps == 2) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 194));
-					end
-					else begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 195));
-					end
-				end
+				display_msg(message_str(SCRIPT_GLOYLDOR, 195));
 			end
 		end
 		else begin
@@ -906,36 +769,28 @@ begin
 				if (Traps == 0) then begin
 					display_msg(message_str(SCRIPT_GLOYLDOR, 196));
 				end
+				else if (Traps == 1) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 197));
+				end
+				else if (Traps == 2) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 198));
+				end
 				else begin
-					if (Traps == 1) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 197));
-					end
-					else begin
-						if (Traps == 2) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 198));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 199));
-						end
-					end
+					display_msg(message_str(SCRIPT_GLOYLDOR, 199));
 				end
 			end
 			else begin
 				if (Traps == 0) then begin
 					display_msg(message_str(SCRIPT_GLOYLDOR, 200));
 				end
+				else if (Traps == 1) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 201));
+				end
+				else if (Traps == 2) then begin
+					display_msg(message_str(SCRIPT_GLOYLDOR, 202));
+				end
 				else begin
-					if (Traps == 1) then begin
-						display_msg(message_str(SCRIPT_GLOYLDOR, 201));
-					end
-					else begin
-						if (Traps == 2) then begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 202));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOYLDOR, 203));
-						end
-					end
+					display_msg(message_str(SCRIPT_GLOYLDOR, 203));
 				end
 			end
 		end
