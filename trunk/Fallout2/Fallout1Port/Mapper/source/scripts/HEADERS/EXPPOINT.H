@@ -179,9 +179,9 @@
 #define EXP_WATER_CHIP_TAKEN 					(2500)
 #define EXP_WATER_PUMP_FIXED					(1000)
 #define EXP_PRISONER_FREED 						(500)
-#define EXP_GIVEN_ENERGY_CELLS 					(2000)
-#define EXP_STOLEN_CONTROLLER 					(500)
-#define EXP_BOUGHT_BIKE 						(1000)
+#define EXP_GIVEN_ENERGY_CELLS 					(1000)
+#define EXP_STOLEN_CONTROLLER 					(250)
+#define EXP_BOUGHT_BIKE 						(500)
 
 // Glow
 #define EXP_REPAIR_GENERATOR 					(1000)

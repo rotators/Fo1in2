@@ -59,6 +59,7 @@ procedure Node2800;
 procedure Node2900;
 procedure Node3000;
 procedure Node3100;
+procedure Node3200;
 procedure MoneyTalk;
 
 procedure leave_map;
@@ -99,6 +100,7 @@ variable my_hex;
 variable angry := 0;
 variable knows_price := 0;
 variable asked_money := 0;
+variable knows_fuel := 0;
 
 /*******************************************************************
 *                           PROCEDURES                             *
@@ -399,8 +401,12 @@ end
 
 procedure Node1200 begin
 	Reply(1200);
-	NOption(1210,Node1300,004);
-	NOption(1220,Node1400,004);
+	BOption(1210,Node1300,004);
+
+	if (knows_fuel == 0) then
+		NOption(1220,Node1400,004);
+
+	GOption(1230,Node3200,006);
 end
 
 procedure Node1300 begin
@@ -411,6 +417,7 @@ end
 // I'm out of energy cells
 procedure Node1400 begin
 	set_local_var(LVAR_EnergyCells,1);
+	knows_fuel := 1;
 
 	Reply(1400);
 
@@ -462,10 +469,13 @@ procedure Node1900 begin
 	knows_price := 1;
 
 	Reply(1900);
-	NOption(1950,Node1400,004);
+
+	if (knows_fuel == 0) then
+		NOption(1950,Node1400,004);
+
 	NOption(1960,Node3100,004);
 	NOption(1910,Node2000,004);
-	call MoneyTalk;
+	//call MoneyTalk;
 end
 
 procedure Node2000 begin
@@ -585,5 +595,11 @@ procedure Node3100 begin
 	Reply(3100);
 
 	call MoneyTalk;
+end
+
+procedure Node3200 begin
+	Reply(3200);
+	NOption(3210,Node1900,004);
+	NOption(3220,Node2800,004);
 end
 
