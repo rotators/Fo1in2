@@ -4,10 +4,11 @@
 
 static std::regex IsSimpleMath( "^([\\-]?[0-9]+)[\\t\\ ]*(\\*|\\/|\\+|\\-)[\\t\\ ]*([\\-]?[0-9]+)$" );
 
-ReDefine::Header::Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& group ) :
+ReDefine::Header::Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& suffix, const std::string& group ) :
     Filename( filename ),
     Type( type ),
     Prefix( prefix ),
+    Suffix( suffix ),
     Group( group )
 {}
 
@@ -57,13 +58,29 @@ bool ReDefine::ReadConfigDefines( const std::string& sectionPrefix )
             {
                 std::vector<std::string> values = Config->GetStrVec( section, type );
 
-                if( values.size() < 2 || values.size() > 3 )
+                if( values.size() < 2 || values.size() > 4 )
                 {
-                    WARNING( __FUNCTION__, "invalid setting<[%s]->%s>", section.c_str(), type.c_str() );
+                    WARNING( __FUNCTION__, "invalid setting<[%s]->%s> : found<%u> values, required<2-4>", section.c_str(), type.c_str(), values.size() );
                     continue;
                 }
 
-                Headers.push_back( Header( values[0], type, values[1], values.size() == 3 ? values[2] : std::string() ) );
+                // [0] filename
+                // [1] prefix (ignored if "-")
+                // [2] suffix (optional; ignored if "-")
+                // [3] group  (optional)
+
+                if( values[1] == "-" )
+                    values[1].clear();
+                if( values.size() >= 3 && values[2] == "-" )
+                    values[2].clear();
+
+                if( values[1].empty() && values[2].empty() )
+                {
+                    WARNING( __FUNCTION__, "invalid setting<[%s]->%s> : neither prefix or suffix is set", section.c_str(), type.c_str() );
+                    continue;
+                }
+
+                Headers.push_back( Header( values[0], type, values[1], values.size() >= 3 ? values[2] : std::string(), values.size() >= 4 ? values[3] : std::string() ) );
             }
         }
         // [Defines:TYPE] //
@@ -162,6 +179,11 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
         WARNING( __FUNCTION__, "define type<%s> already in use", header.Type.c_str() );
         return false;
     }
+    else if( header.Prefix.empty() && header.Suffix.empty() )
+    {
+        WARNING( __FUNCTION__, "prefix/suffix missing" );
+        return false;
+    }
 
     // read content
     std::vector<std::string> lines;
@@ -174,8 +196,8 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
     Status.Current.LineNumber = 0;
 
     // cache patterns
-    std::regex  reParen = TextGetDefineRegex( header.Prefix, true );
-    std::regex  reNoParen = TextGetDefineRegex( header.Prefix, false );
+    std::regex  reParen = TextGetDefineRegex( header.Prefix, header.Suffix, true );
+    std::regex  reNoParen = TextGetDefineRegex( header.Prefix, header.Suffix, false );
 
     std::string name;
     int         value;
@@ -207,10 +229,20 @@ bool ReDefine::ProcessHeader( const std::string& path, const ReDefine::Header& h
 
     Status.Current.Clear();
 
+    std::string what;
+    if( !header.Prefix.empty() && !header.Suffix.empty() )
+        what = header.Prefix + "*" + header.Suffix;
+    else if( !header.Prefix.empty() && header.Suffix.empty() )
+        what = header.Prefix;
+    else if( header.Prefix.empty() && !header.Suffix.empty() )
+        what = header.Suffix;
+    else
+        what = "?!?";
+
     LOG( "Process %s ... %u %s define%s%s%s",
          header.Filename.c_str(),
          RegularDefines[header.Type].size(),
-         header.Prefix.c_str(),
+         what.c_str(),
          RegularDefines[header.Type].size() != 1 ? "s" : "",
          !header.Group.empty() ? " +> " : "",
          header.Group.c_str()

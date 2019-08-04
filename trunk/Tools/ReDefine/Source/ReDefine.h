@@ -98,9 +98,10 @@ public:
         const std::string Filename;
         const std::string Type;
         const std::string Prefix;
+        const std::string Suffix;
         const std::string Group;
 
-        Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& group );
+        Header( const std::string& filename, const std::string& type, const std::string& prefix, const std::string& suffix, const std::string& group );
     };
 
     // holds [Defines] between reading configuration and processing headers steps
@@ -269,7 +270,7 @@ public:
 
     bool       TextIsDefine( const std::string& text );
     bool       TextGetDefine( const std::string& text, const std::regex& re, std::string& name, int& value );
-    std::regex TextGetDefineRegex( const std::string& prefix, bool paren );
+    std::regex TextGetDefineRegex( std::string prefix, std::string suffix, bool paren );
 
     std::vector<ScriptCode> TextGetVariables( const std::string& text );
     std::vector<ScriptCode> TextGetFunctions( const std::string& text );

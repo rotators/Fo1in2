@@ -179,9 +179,14 @@ bool ReDefine::TextGetDefine( const std::string& text, const std::regex& re, std
     return false;
 }
 
-std::regex ReDefine::TextGetDefineRegex( const std::string& prefix, bool paren )
+std::regex ReDefine::TextGetDefineRegex( std::string prefix, std::string suffix, bool paren )
 {
-    return std::regex( "^[\\t\\ ]*\\#define[\\t\\ ]+(" + prefix + "_[A-Za-z0-9_]+)[\\t\\ ]+" + (paren ? "\\(" : "") + "([0-9]+)" + (paren ? "\\)" : "") );
+    if( !prefix.empty() )
+        prefix += "_";
+    if( !suffix.empty() )
+        suffix = "_" + suffix;
+
+    return std::regex( "^[\\t\\ ]*\\#define[\\t\\ ]+(" + prefix + "[A-Za-z0-9_]+" + suffix + ")[\\t\\ ]+" + (paren ? "\\(" : "") + "([0-9]+)" + (paren ? "\\)" : "") );
 }
 
 //
