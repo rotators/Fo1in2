@@ -724,7 +724,7 @@
 #define SCRIPT_GENSCRIB  (717)  //  Genscrib.int    ; Scribe in Brotherhood                                                       
 #define SCRIPT_GENKNIGH  (718)  //  Genknigh.int    ; Knight in Brotherhood                                                       
 #define SCRIPT_GENPALAD  (719)  //  Genpalad.int    ; Paladin in Brotherhood                                                      
-#define SCRIPT_DEPRECATED_4 (720) //SCRIPT_HSLOTS    (720)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_LAKIDS    (720)  //	LAKIDS.int 		; Children swarming the motorcycle in Blades territory
 #define SCRIPT_RIPUP2DN  (721)  //  RipUp2Dn.int    ; Stairs up from the Rippers' cellar.                                         
 #define SCRIPT_RIPDN2UP  (722)  //  RipDn2Up.int    ; Stairs down from the Rippers' hideout.                                      
 #define SCRIPT_RD1SCRB1  (723)  //  Rd1Scrb1.int    ; Random Scribe from the Brotherhood                                          

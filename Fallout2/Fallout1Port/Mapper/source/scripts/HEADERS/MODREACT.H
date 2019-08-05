@@ -1,6 +1,8 @@
 #ifndef MODREACT_H
 #define MODREACT_H
 
+#define TOWN_REPUTATION                 global_var(TOWN_REP_VAR)
+
 /* This set of procedures will find out what the reaction level is. Additionally,
 it will find out what the reaction level is in terms of Good, Neutral, or Bad.
 It will also write in how to modify the reaction level by a level. */
