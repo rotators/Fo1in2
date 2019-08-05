@@ -26,6 +26,9 @@ procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure push_p_proc;
 
+variable SrcObj := 0;
+variable SrcIsParty := 0;
+
 procedure tandi00;
 procedure tandi00_1;
 procedure tandi01;
@@ -164,10 +167,19 @@ procedure pickup_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	if obj_in_party(source_obj) then begin
+	if source_obj > 0 then begin
+		SrcObj := 0;
+		SrcIsParty := 0;
+		SrcObj := obj_pid(source_obj);
+		if party_member_obj(SrcObj) then begin
+			SrcIsParty := 1;
+		end
+	end
+	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);
 	end
 	set_global_var(TANDI_HIRELING_STATUS, 3);
+
 	inc_good_critter
 end
 
@@ -276,11 +288,11 @@ end
 
 procedure tandi00
 begin
-	NOption( 101, tandi15, 5 );
-	NOption( 102, tandi00_1, 4 );
-	NOption( 103, tandi23, 5 );
-	NOption( 104, tandi24, 4 );
-	NOption( 105, tandi28, 4 );
+	giq_option(5, 57, 101, tandi15, 50);
+	giq_option(4, 57, 102, tandi00_1, 50);
+	giq_option(5, 57, 103, tandi23, 50);
+	giq_option(4, 57, 104, tandi24, 50);
+	giq_option(4, 57, 105, tandi28, 50);
 end
 
 procedure tandi00_1
@@ -301,9 +313,9 @@ end
 procedure tandi01
 begin
 	gsay_reply(57, 106);
-	NOption( message_str(SCRIPT_TANDI, 107) + dude_name + message_str(SCRIPT_TANDI, 108), tandi02, 4 );
-	BOption( message_str(SCRIPT_TANDI, 109) + dude_name + message_str(SCRIPT_TANDI, 110), tandi01a, 4 );
-	NOption( 111, tandi29, -3 );
+	giq_option(4, 57, message_str(SCRIPT_TANDI, 107) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_TANDI, 108), tandi02, 50);
+	giq_option(4, 57, message_str(SCRIPT_TANDI, 109) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_TANDI, 110), tandi01a, 51);
+	giq_option(-3, 57, 111, tandi29, 50);
 end
 
 procedure tandi01a
@@ -315,10 +327,10 @@ end
 procedure tandi02
 begin
 	gsay_reply(57, 112);
-	NOption( 113, tandi03, 4 );
-	GOption( 114, tandi14, 5 );
-	NOption( 115, tandi04, 4 );
-	GOption( 116, tandi14, 4 );
+	giq_option(4, 57, 113, tandi03, 50);
+	giq_option(5, 57, 114, tandi14, 49);
+	giq_option(4, 57, 115, tandi04, 50);
+	giq_option(4, 57, 116, tandi14, 49);
 end
 
 procedure tandi03
@@ -330,16 +342,16 @@ end
 procedure tandi04
 begin
 	gsay_reply(57, 118);
-	NOption( 119, tandi05, 5 );
-	BOption( 120, tandi12, 5 );
-	NOption( 121, tandi13, 4 );
+	giq_option(5, 57, 119, tandi05, 50);
+	giq_option(5, 57, 120, tandi12, 51);
+	giq_option(4, 57, 121, tandi13, 50);
 end
 
 procedure tandi05
 begin
 	gsay_reply(57, 122);
-	NOption( 123, tandi03, 0 );
-	NOption( 124, tandi28, 0 );
+	giq_option(0, 57, 123, tandi03, 50);
+	giq_option(0, 57, 124, tandi28, 50);
 end
 
 procedure tandi06
@@ -358,16 +370,16 @@ end
 procedure tandi13
 begin
 	gsay_reply(57, 127);
-	NOption( 128, tandi05, 5 );
-	NOption( 129, tandi03, 4 );
+	giq_option(5, 57, 128, tandi05, 50);
+	giq_option(4, 57, 129, tandi03, 50);
 end
 
 procedure tandi14
 begin
 	gsay_reply(57, 130);
-	NOption( 131, tandi05, 5 );
-	BOption( 132, tandi12, 5 );
-	NOption( 133, tandi13, 4 );
+	giq_option(5, 57, 131, tandi05, 50);
+	giq_option(5, 57, 132, tandi12, 51);
+	giq_option(4, 57, 133, tandi13, 50);
 end
 
 procedure tandi15
@@ -382,7 +394,7 @@ begin
 	else begin
 		gsay_reply(57, 135);
 	end
-	NOption( 136, tandi16, 5 );
+	giq_option(5, 57, 136, tandi16, 50);
 end
 
 procedure tandi16
@@ -417,18 +429,18 @@ begin
 	else begin
 		gsay_reply(57, 142);
 	end
-	NOption( 143, tandi16, 4 );
+	giq_option(4, 57, 143, tandi16, 50);
 	if (local_var(1) > 2) then begin
-		NOption( 144, tandi52, 4 );
+		giq_option(4, 57, 144, tandi52, 50);
 	end
 end
 
 procedure tandi24
 begin
 	gsay_reply(57, 145);
-	NOption( 146, tandi05, 5 );
-	BOption( 147, tandi12, 5 );
-	NOption( 148, tandi13, 4 );
+	giq_option(5, 57, 146, tandi05, 50);
+	giq_option(5, 57, 147, tandi12, 51);
+	giq_option(4, 57, 148, tandi13, 50);
 end
 
 procedure tandi28
@@ -436,7 +448,7 @@ begin
 	if (BYE < 1) then begin
 		BYE := 1;
 		gsay_reply(57, 151);
-		NOption( 152, tandix, 0 );
+		giq_option(0, 57, 152, tandix, 50);
 	end
 	else begin
 		call tandix;
@@ -452,8 +464,8 @@ end
 procedure tandi30
 begin
 	gsay_reply(57, 154);
-	NOption( 155, tandi03, 4 );
-	NOption( 156, tandi28, 4 );
+	giq_option(4, 57, 155, tandi03, 50);
+	giq_option(4, 57, 156, tandi28, 50);
 end
 
 procedure tandi35
@@ -465,17 +477,17 @@ end
 procedure tandi36 begin
 	if not(local_var(7)) then begin
 		gsay_reply(57, 158);
-		NOption( 159, tandi03, 4 );
-		NOption( 161, tandi28, 4 );
+		giq_option(4, 57, 159, tandi03, 50);
+		giq_option(4, 57, 161, tandi28, 50);
 		set_local_var(7, 1);
 	end
 	else begin
 		gsay_reply(57, 154);
-		NOption( 159, tandi03, 4 );
-		NOption( 156, tandi28, 4 );
+		giq_option(4, 57, 159, tandi03, 50);
+		giq_option(4, 57, 156, tandi28, 50);
 	end
-	NOption( 160, tandi36a, 6 );
-	NOption( 162, tandi35, -3 );
+	giq_option(6, 57, 160, tandi36a, 50);
+	giq_option(-3, 57, 162, tandi35, 50);
 end
 
 procedure tandi36a begin
@@ -495,9 +507,9 @@ end
 procedure tandi37
 begin
 	gsay_reply(57, 163);
-	NOption( message_str(SCRIPT_TANDI, 164) + dude_name + message_str(SCRIPT_TANDI, 165), tandi38, 4 );
-	NOption( 166, tandi42, 5 );
-	NOption( 167, tandi43a, -3 );
+	giq_option(4, 57, message_str(SCRIPT_TANDI, 164) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_TANDI, 165), tandi38, 50);
+	giq_option(5, 57, 166, tandi42, 50);
+	giq_option(-3, 57, 167, tandi43a, 50);
 end
 
 procedure tandi38
@@ -513,21 +525,21 @@ end
 procedure tandi38a
 begin
 	gsay_reply(57, 168);
-	NOption( 169, tandiend, 4 );
+	giq_option(4, 57, 169, tandiend, 50);
 end
 
 procedure tandi38b
 begin
 	gsay_reply(57, 168);
-	NOption( 169, tandi39, 4 );
-	NOption( 170, tandi42, 5 );
+	giq_option(4, 57, 169, tandi39, 50);
+	giq_option(5, 57, 170, tandi42, 50);
 end
 
 procedure tandi39
 begin
 	gsay_reply(57, 171);
-	NOption( 172, tandi40, 4 );
-	NOption( 173, tandi41, 5 );
+	giq_option(4, 57, 172, tandi40, 50);
+	giq_option(5, 57, 173, tandi41, 50);
 end
 
 procedure tandi40
@@ -545,16 +557,16 @@ end
 procedure tandi42
 begin
 	gsay_reply(57, 176);
-	NOption( 177, tandi40, 4 );
-	NOption( 178, tandi41, 5 );
+	giq_option(4, 57, 177, tandi40, 50);
+	giq_option(5, 57, 178, tandi41, 50);
 end
 
 procedure tandi43
 begin
 	gsay_reply(57, 179);
-	NOption( 180, tandi39, 4 );
-	NOption( 181, tandi42, 5 );
-	NOption( 182, tandi43a, -3 );
+	giq_option(4, 57, 180, tandi39, 50);
+	giq_option(5, 57, 181, tandi42, 50);
+	giq_option(-3, 57, 182, tandi43a, 50);
 end
 
 procedure tandi43a
@@ -776,12 +788,9 @@ procedure map_enter_p_proc begin
 		critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_TANDI); // Was AI_CAREFUL
 	end
 
-	// Tandi has returned to Shady Sands:
 	if ((cur_map_index == MAP_SHADYW) and (global_var(TANDI_HIRELING_STATUS) > 1)) then begin
 		if ((global_var(LOAD_MAP_INDEX) == 2) and (global_var(TANDI_LOCATION_TRACKER) == 3)) then begin
 			set_self_abandon_party;
-
-			inc_shady_rep(REP_BONUS_TANDI_RESCUED);
 
 			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
 			critter_attempt_placement(self_obj, 22086, 0);
@@ -866,13 +875,13 @@ procedure critter_p_proc begin
 						animate_move_obj_to_tile(self_obj, 23698, 1);
 					end
 					else if ((global_var(TANDI_LOCATION_TRACKER) == 302) and (tile_distance(tile_num(self_obj), 23698) < 2)) then begin
-						set_global_var(TANDI_LOCATION_TRACKER, 303);
+					set_global_var(TANDI_LOCATION_TRACKER, 303);
 					end
 					else if ((global_var(TANDI_LOCATION_TRACKER) == 303) and (tile_distance(tile_num(self_obj), 22086) >= 2)) then begin
-						animate_move_obj_to_tile(self_obj, 22086, 1);
+					animate_move_obj_to_tile(self_obj, 22086, 1);
 					end
 					else if ((global_var(TANDI_LOCATION_TRACKER) == 303) and (tile_distance(tile_num(self_obj), 22086) < 2)) then begin
-						set_global_var(TANDI_LOCATION_TRACKER, 4);
+					set_global_var(TANDI_LOCATION_TRACKER, 4);
 					end
 				end
 				if (obj_can_see_obj(self_obj, dude_obj) and (party_member_obj(TANDI_SELF_ID) == 0) and tmp_hostile) then begin
@@ -938,11 +947,11 @@ procedure Tandi98 begin
 
 	//giq_option(4, 766, 190, Tandi99, 50);
 	//giq_option(4, 766, 197, Tandi100, 51);
-	NOption( 168, TandiEndSDU, 4 );
+	giq_option(4, 623, 168, TandiEndSDU, 50);
 
 //#Sduibek: Stupid Character options for Fallout Fixt:
 	//giq_option(-3, 766, 194, Tandi100, 51);
-	BOption( 189, TandiDumbChar, -3 );
+	giq_option(-3, 623, 189, TandiDumbChar, 51);
 end
 
 procedure Tandi99 begin
@@ -972,6 +981,5 @@ end
 procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
-
 
 
