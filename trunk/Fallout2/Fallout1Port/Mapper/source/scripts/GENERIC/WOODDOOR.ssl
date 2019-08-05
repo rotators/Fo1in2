@@ -32,6 +32,8 @@ procedure use_obj_on_p_proc;
 procedure map_update_p_proc;
 procedure map_enter_p_proc;
 
+procedure Pry_Door;
+
 /*****************************************************************
    Local Variables which are saved. All Local Variables need to be
    prepended by LVAR_
@@ -186,68 +188,88 @@ procedure use_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
+variable Skills_Roll;
+
 	if local_var(4) then begin//  HALLDED | self is Hallded locked door
-		variable LVar0 := 0;
 		if (map_var(11) == 1) and (local_var(5) == 0) then begin
 			if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
 				script_overrides;
-				LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
-				if (is_success(LVar0)) then begin
+				Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
+
+				// Unlock the door:
+				if (is_success(Skills_Roll)) then begin
 					obj_unlock(self_obj);
 					set_local_var(5, 1);
-					display_msg(message_str(SCRIPT_DOOR, 100));//{100}{}{You unlock the door.}
+					display_msg(mstr(100));
 					give_exp_points(25);
 					display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
 				end
 				else begin
-					if (is_critical(LVar0)) then begin
+					// beyond capabilities to open:
+					if (is_critical(Skills_Roll)) then begin
 						jam_lock(self_obj);
-						display_msg(message_str(SCRIPT_DOOR, 110));//{110}{}{The lock is beyond your ability to pick.}
+						display_msg(mstr(110));
 					end
+					// unable to pick the lock:
 					else begin
-						display_msg(message_str(SCRIPT_DOOR, 103));//{103}{}{You were not able to pick the lock.}
+						display_msg(mstr(103));
 					end
 				end
 			end
 		end
+
+		// Door is already open:
 		else begin
-			display_msg(message_str(SCRIPT_DOOR, 109));//{109}{}{The door is already unlocked.}
+			display_msg(mstr(109));
 		end
 	end
 end
 
 procedure use_obj_on_p_proc begin
+   variable Tool;
+   variable Skills_Roll;
+   Tool:=obj_pid(obj_being_used_with);
+
 	if local_var(4) then begin//  HALLDED | self is Hallded locked door
-		variable LVar0 := 0;
-		variable LVar1 := 0;
-		LVar0 := obj_being_used_with;
-		LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-		if ((obj_pid(LVar0) == PID_LOCKPICKS) and (map_var(11) == 1)) then begin
+		Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+
+		if ((Tool == PID_LOCKPICKS) and (map_var(11) == 1)) then begin
 			if (local_var(5) == 0) then begin
 				script_overrides;
-				if (is_success(LVar1)) then begin
+
+				// Door unlocked:
+				if (is_success(Skills_Roll)) then begin
 					obj_unlock(self_obj);
 					set_local_var(5, 1);
-					display_msg(message_str(SCRIPT_DOOR, 100));//{100}{}{You unlock the door.}
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(25);
+					display_msg(mstr(100));
+					display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_LOCKPICK_NORMAL + message_str(SCRIPT_GENCHAT, 104));
+					give_exp_points(EXP_LOCKPICK_NORMAL);
 				end
 				else begin
-					if (is_critical(LVar1)) then begin
-						rm_obj_from_inven(dude_obj, LVar0);
-						destroy_object(LVar0);
-						display_msg(message_str(SCRIPT_DOOR, 101));//{101}{}{You broke your lockpicks!}
+					// Lockpicks broken:
+					if (is_critical(Skills_Roll)) then begin
+						rm_obj_from_inven(dude_obj, Tool);
+						destroy_object(Tool);
+						display_msg(mstr(101));
 					end
+					// Not able to open the door:
 					else begin
-						display_msg(message_str(SCRIPT_DOOR, 103));//{103}{}{You were not able to pick the lock.}
+						display_msg(mstr(103));
 					end
 				end
 			end
+			// Door is already open:
 			else begin
-				display_msg(message_str(SCRIPT_DOOR, 109));//{109}{}{The door is already unlocked.}
+				display_msg(mstr(109));
 			end
 		end
+
+		else if ((Tool == PID_CROWBAR) and (map_var(11) == 1)) then begin
+			script_overrides;
+			call Pry_Door;
+   	end
 	end
+
 end
 
 procedure damage_p_proc begin
@@ -278,4 +300,67 @@ procedure description_p_proc begin
 		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
 	end
 end
+
+procedure Pry_Door begin
+   variable Stat_Roll;
+   script_overrides;
+
+   Stat_Roll:=do_check(source_obj,STAT_st,Crowbar_Bonus);
+
+   if (is_success(Stat_Roll)) then begin
+       obj_unlock(self_obj);
+
+       if (source_obj == dude_obj) then begin
+           display_msg(mstr(176));
+       end
+
+       else begin
+           display_msg(mstr(181));
+       end
+   end
+
+   else if (is_critical(Stat_Roll)) then begin
+       critter_dmg(source_obj,Crowbar_Strain,(DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+
+       if (source_obj == dude_obj) then begin
+           if (Crowbar_Strain == 1) then begin
+               display_msg(mstr(177));
+           end
+           else begin
+               display_msg(mstr(178)+Crowbar_Strain+mstr(179));
+           end
+       end
+
+       else begin
+           if (get_critter_stat(source_obj,STAT_gender) == GENDER_MALE) then begin
+               if (Crowbar_Strain == 1) then begin
+                   display_msg(mstr(182));
+               end
+               else begin
+                   display_msg(mstr(183)+Crowbar_Strain+mstr(184));
+               end
+           end
+
+           else begin
+               if (Crowbar_Strain == 1) then begin
+                   display_msg(mstr(186));
+               end
+               else begin
+                   display_msg(mstr(187)+Crowbar_Strain+mstr(188));
+               end
+           end
+       end
+   end
+
+   else begin
+       if (source_obj == dude_obj) then begin
+           display_msg(mstr(180));
+       end
+
+       else begin
+           display_msg(mstr(185));
+       end
+   end
+end
+
 
