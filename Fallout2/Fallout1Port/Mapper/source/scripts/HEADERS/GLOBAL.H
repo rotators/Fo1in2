@@ -100,6 +100,8 @@
 #define GVAR_HOLODISK_ENCLAVE_CHEMICAL			(576)	// maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_ENCLAVE_ATOMIC			(577)	// maybe hard-coded, maybe not?	
 
+#define GVAR_CAR_PLACED_TILE 					(633)	// Fo2 Engine stuff
+
 // Fallout 1 and Fallout Fixt
 #define GVAR_TRACK_RADIATION_DEATH				(999)
 #define FIXT_BUGFIXES_ONLY						(1000)
