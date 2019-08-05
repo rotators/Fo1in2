@@ -133,7 +133,10 @@ variable
 	used_fuel := obj_pid(obj_being_used_with),
 	cur_car_fill := car_gas_amount,
 	charges,
-	fill_amount;
+	fill_amount,
+	space_in_tank,
+	fuel_efficiency,
+	used_charges;
 
 	// Full tank == 80000
 	if (used_fuel == PID_MICRO_FUSION_CELL or used_fuel == PID_SMALL_ENERGY_CELL) then begin
@@ -148,7 +151,59 @@ variable
       charges := get_weapon_ammo_count(fuel);
 		debug("charges: " + charges);
 
+		cur_car_fill := car_gas_amount;
+		space_in_tank := max_fill - cur_car_fill;
+		debug("cur_car_fill: " + cur_car_fill + "  space_in_tank: " + space_in_tank);
+
 		if used_fuel == PID_MICRO_FUSION_CELL then
+			fuel_efficiency := big_fill;
+		else
+			fuel_efficiency := small_fill;
+
+		fill_amount := fuel_efficiency * charges;
+
+      if(space_in_tank == 0) then begin
+			   display_msg(mstr(511));
+      end
+      // Check if fuel in one pack is less than space left in tank
+		else if(fill_amount <= space_in_tank) then begin
+		   // Fill by fuel left in one pack
+		   //debug("Used per pack fill.");
+			car_give_gas(fill_amount);
+			remove_pid_qty(dude_obj, used_fuel, 1)
+		end
+		else begin
+		   //Use only part of the pack
+		   //debug("Used partial pack fill.");
+		   fill_amount := space_in_tank;
+		   used_charges := space_in_tank / fuel_efficiency;
+		   //Just in case of nonzero modulo add one extra ammo
+		   if( (used_charges * fuel_efficiency) < space_in_tank) then begin
+		      used_charges := used_charges + 1;
+		   end
+
+			car_give_gas(fill_amount);
+			// just double check if we didn't use entire pack
+			if(charges == used_charges) then begin
+		      //debug("Used entire pack anyway");
+			   remove_pid_qty(dude_obj, used_fuel, 1)
+			end
+			else if(charges > used_charges) then begin
+            set_weapon_ammo_count(fuel, get_weapon_ammo_count(fuel) - used_charges);
+		      //debug("Used ammo: "+used_charges);
+			end
+		   else begin
+		      debug("Something went wrong. During refuel. FREE REFUEL!!!");
+		   end
+
+		end
+
+
+		debug("fill_amount: " + fill_amount);
+
+
+
+		/*if used_fuel == PID_MICRO_FUSION_CELL then
 			fill_amount := big_fill * charges;
 		else
 			fill_amount := small_fill * charges;
@@ -162,7 +217,7 @@ variable
 		end
 		else begin
 			display_msg(mstr(511));
-		end
+		end*/
 
 		// TODO: Fix this. Bugged as shit can get. Always breaks after the first time, no matter what.
 		// Get amount of item charges
