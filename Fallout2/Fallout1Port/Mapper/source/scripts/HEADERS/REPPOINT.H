@@ -470,58 +470,58 @@
 #define REP_BONUS_GAME_STARTED              	(25)
 #define REP_BONUS_RETURNED_WATERCHP            	(75)
 
-#define inc_v13_rep(x)    		inc_global_var(GVAR_TOWN_REP_V13, x)
+#define inc_v13_rep(x)    		inc_global_var_amt(GVAR_TOWN_REP_V13, x)
 
 // Vault 15
 
-#define inc_v15_rep(x)    		inc_global_var(GVAR_TOWN_REP_V15, x)
+#define inc_v15_rep(x)    		inc_global_var_amt(GVAR_TOWN_REP_V15, x)
 
 // Shady Sands
 #define REP_BONUS_RADSCORPIONS_GONE            	(5)
 #define REP_BONUS_TANDI_RESCUED	            	(25)
 
-#define inc_shady_rep(x)   		inc_global_var(GVAR_TOWN_REP_SHADYSANDS, x)
+#define inc_shady_rep(x)   		inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
 // Raiders
 
-#define inc_raiders_rep(x)    	inc_global_var(GVAR_TOWN_REP_RAIDERS, x)
+#define inc_raiders_rep(x)    	inc_global_var_amt(GVAR_TOWN_REP_RAIDERS, x)
 
 // Junktown
 
-#define inc_junktown_rep(x)    	inc_global_var(GVAR_TOWN_REP_JUNKTOWN, x)
+#define inc_junktown_rep(x)    	inc_global_var_amt(GVAR_TOWN_REP_JUNKTOWN, x)
 
 // Hub
 
-#define inc_hub_rep(x)    		inc_global_var(GVAR_TOWN_REP_HUB, x)
+#define inc_hub_rep(x)    		inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard
 
-#define inc_boneyard_rep(x)    	inc_global_var(GVAR_TOWN_REP_BONEYARD, x)
+#define inc_boneyard_rep(x)    	inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
 // Necropolis
 #define REP_BONUS_WATERCHIP_TAKEN              	(3)
 #define REP_BONUS_WATER_PUMP_FIXED             	(1)
 #define REP_BACKSTABBED_GRIFFITH 				(-3)
 
-#define inc_necropolis_rep(x)   inc_global_var(GVAR_TOWN_REP_NECROPOLIS, x)
+#define inc_necropolis_rep(x)   inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
 
 // Glow
 
-#define inc_glow_rep(x)    		inc_global_var(GVAR_TOWN_REP_GLOW, x)
+#define inc_glow_rep(x)    		inc_global_var_amt(GVAR_TOWN_REP_GLOW, x)
 
 // BOS
 
-#define inc_bos_rep(x)    		inc_global_var(GVAR_TOWN_REP_BOS, x)
+#define inc_bos_rep(x)    		inc_global_var_amt(GVAR_TOWN_REP_BOS, x)
 
 // Mariposa
-#define REP_BLOWN_UP_VATS 						(-1000)
+#define REP_BLOWN_UP_VATS 						(-100)
 
-#define inc_mbase_rep(x)    	inc_global_var(GVAR_TOWN_REP_MBASE, x)
+#define inc_mbase_rep(x)    	inc_global_var_amt(GVAR_TOWN_REP_MBASE, x)
 
 // Cathedral
-#define REP_BLOWN_UP_MASTER 					(-1000)
+#define REP_BLOWN_UP_MASTER 					(-100)
 
-#define inc_cathedral_rep(x)    inc_global_var(GVAR_TOWN_REP_CATHEDRAL, x)
+#define inc_cathedral_rep(x)    inc_global_var_amt(GVAR_TOWN_REP_CATHEDRAL, x)
 
 
 
