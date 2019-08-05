@@ -375,7 +375,7 @@
 #define WATER_CHIP_11							(1268)
 #define RAIDERS_LEFT_IRWIN						(1269)
 #define WATER_CHIP_13							(1270)
-#define WATER_CHIP_14							(1271)
+#define GVAR_MBASE_DOOR_HOLODISK				(1271)
 #define ENEMY_FOLL_INVADERS						(1272)
 #define DESTROY_VATS_1							(1273)
 #define ROBCTRL_MOVEMENT_HOWMUCH				(1274)
