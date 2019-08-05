@@ -21,6 +21,7 @@ procedure start;
 procedure critter_p_proc;
 procedure talk_p_proc;
 procedure pickup_p_proc;
+procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 procedure description_p_proc;
@@ -42,7 +43,7 @@ variable In_Timed_Event;
 #define EVENT_RUNNING 	(1)
 #define EVENT_FLOAT 		(2)
 
-#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_YELLOW)
 #define float_scared(x)    			float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_RED)
 
 #define MAX_TRAVEL              (5)
@@ -75,7 +76,7 @@ procedure critter_p_proc begin
 		attack(dude_obj);
 	end
 
-	if not(combat_is_initialized) then begin
+	if (not(combat_is_initialized) and tmp_hostile == 0) then begin
 		if (In_Timed_Event == 0) then begin
 			if ((random(0, 15) == 1) and (Start_Moving == 0)) then begin
 				add_timer_event(self_obj, game_ticks(random(3, 6)), EVENT_RUNNING);
@@ -109,7 +110,15 @@ procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then
+		tmp_hostile := 1;
+end
+
 procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then
+		set_global_var(ENEMY_BLADES, 1);
+
 	rm_timer_event(self_obj);
 	inc_good_critter
 	inc_childkiller
