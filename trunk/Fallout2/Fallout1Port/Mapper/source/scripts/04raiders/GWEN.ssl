@@ -1,13 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure Critter_Action;//    script_action == 12    (critter_p_proc)
-procedure damage_p_proc;//    script_action == 14
+	Raiders - Gwen
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GWEN
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
 procedure description_p_proc;
-procedure destroy_p_proc;//    script_action == 18
-procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;
+procedure talk_p_proc;
 procedure look_at_p_proc;
 
 procedure gwen00;
@@ -29,8 +42,7 @@ variable tmp_hostile;
 variable Only_Once := 1;
 variable rndz;
 
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_RAIDERS) then begin //  RAIDERS - KHANS
 			if (local_var(6) != 1) then begin
@@ -40,42 +52,17 @@ begin
 			end
 		end
 	end
-	else begin
-		
 
-		if Only_Once then begin
-			Only_Once := 0;
-			set_self_team(TEAM_RAIDERS );
-			set_self_ai( AI_GENERIC_RAIDER );
-			debug_msg("GWEN init.");
-		end
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-				call description_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						tmp_hostile := 1;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call Critter_Action;
-						end
-						else begin
-
-						end
-					end
-				end
-			end
-		end
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_RAIDERS );
+		set_self_ai( AI_GENERIC_RAIDER );
+		debug_msg("GWEN init.");
 	end
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
 procedure gwen00
@@ -182,8 +169,7 @@ begin
 	tmp_hostile := 1;
 end
 
-procedure Critter_Action
-begin
+procedure critter_p_proc begin
 	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
 		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
 	end
@@ -222,32 +208,29 @@ begin
 	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
 		tmp_hostile := 0;
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
 		attack(dude_obj);
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		if (global_var(MISTAKEN_ID) == 0) then begin//PC was (is?) not mistaken for Garl's father
 			set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
 		end
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if local_var(7) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_GWEN, 200));
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if not(local_var(7)) then begin
 		display_msg(message_str(SCRIPT_GWEN, 100));
@@ -257,22 +240,20 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(TOTAL_RAIDERS, (global_var(TOTAL_RAIDERS) - 1));// Number of raiders left
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
-		set_global_var(GARLS_FRIEND, 0);//GARLS_FRIEND
+	if (source_obj == dude_obj) then begin
+		set_global_var(ENEMY_RAIDERS, 1);
+		set_global_var(GARLS_FRIEND, 0);
+
+		inc_raiders_rep(REP_KILLED_RAIDER);
 	end
 
 	inc_evil_critter
 	fixt_destroy_armor
 end
 
-
-
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
 

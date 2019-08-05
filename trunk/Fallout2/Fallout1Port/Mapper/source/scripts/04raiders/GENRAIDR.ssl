@@ -1,14 +1,27 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
-procedure talk_p_proc;//    script_action == 11
-procedure Critter_Action;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure timed_event_p_proc;//    script_action == 22
-procedure description_p_proc;//    script_action == 3
+	Raiders - Generic raider
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENRAIDR
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure timed_event_p_proc;
+procedure description_p_proc;
 
 import variable killing_women;
 procedure guard00;
@@ -32,7 +45,7 @@ procedure guard15;
 procedure combat;
 procedure PickDeadBodyType;
 
-procedure flee_dude;
+procedure do_flee_dude;
 
 variable tmp_hostile;
 variable initial :=  0;
@@ -42,8 +55,7 @@ variable Weapons;
 variable DeathType := 56;
 variable LastTime;
 
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_RAIDERS) then begin //  RAIDERS - KHANS
 			if (local_var(6) != 1) then begin
@@ -53,45 +65,26 @@ begin
 			end
 		end
 	end
-	else begin
-		
 
-		if not(initial) then begin
-			initial :=  1;
-			item_caps_adjust(self_obj, random(1, get_critter_stat(dude_obj, STAT_lu) * 2));
-			set_self_team(TEAM_RAIDERS );
-			set_self_ai( AI_GENERIC_RAIDER );
-			debug_msg("GENRAIDR init complete.");
-		end
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			script_overrides;
-			display_msg(message_str(SCRIPT_GENRAIDR, 101));
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				call timed_event_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call Critter_Action;
-				end
-				else begin
-					if (script_action == 3) then begin//ON-CLICK DESCRIPTION (Binoculars icon)
-						call description_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							tmp_hostile := 1;
-						end
-					end
-				end
-			end
-		end
+	if not(initial) then begin
+		initial :=  1;
+		item_caps_adjust(self_obj, random(1, get_critter_stat(dude_obj, STAT_lu) * 2));
+		set_self_team(TEAM_RAIDERS );
+		set_self_ai( AI_GENERIC_RAIDER );
+		debug_msg("GENRAIDR init complete.");
 	end
 end
 
-procedure description_p_proc
-begin
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_GENRAIDR, 101));
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure description_p_proc begin
 	script_overrides;
 	if (self_is_male) then begin// MALE raider
 		display_msg(message_str(SCRIPT_GENRAIDR, random(200, 202)));
@@ -101,8 +94,7 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	if (local_var(5) == 1) then begin
 		display_msg(message_str(SCRIPT_GENRAIDR, 100));
 	end
@@ -258,8 +250,7 @@ begin
 	tmp_hostile := 1;
 end
 
-procedure flee_dude
-begin
+procedure do_flee_dude begin
 	variable Msg := 102;
 	variable Run := 0;
 	variable Distance := 0;
@@ -280,7 +271,7 @@ begin
 	animate_move_obj_to_tile(self_obj, Distance, Run);
 end
 
-procedure Critter_Action
+procedure critter_p_proc
 begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
@@ -298,14 +289,14 @@ begin
 			if (local_var(7) == 0) then begin
 				set_local_var(7, 1);
 				LastTime := game_time;
-				call flee_dude;
+				call do_flee_dude;
 			end
 			else begin
 				if (anim_busy(self_obj) == 0) and (game_time - LastTime > 100) then begin
 					rndz := random(0, 20);
 					if (rndz == 1) then begin
 						LastTime := game_time;
-						call flee_dude;
+						call do_flee_dude;
 					end
 				end
 			end
@@ -334,57 +325,47 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		if (global_var(MISTAKEN_ID) == 0) then begin//PC was (is?) not mistaken for Garl's father
 			set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
 		end
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (dude_is_armed) then begin
 			call combat;
 		end
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
-				call combat;
-			end
+	else if (fixed_param == 2) then begin
+		if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+			call combat;
 		end
-		else begin
-			if (fixed_param == 3) then begin
-				if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-					call combat;
-				end
-			end
+	end
+	else if (fixed_param == 3) then begin
+		if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
+			call combat;
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(TOTAL_RAIDERS, (global_var(TOTAL_RAIDERS) - 1));// Number of raiders left
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
 		set_global_var(GARLS_FRIEND, 0);//GARLS_FRIEND
+		inc_raiders_rep(REP_KILLED_RAIDER);
 	end
 	rm_timer_event(self_obj);
 
 	inc_evil_critter
-//
-// "ARMOR DESTROY ON DEATH" MOD:
-//
 	fixt_destroy_armor
 	rm_timer_event(self_obj);
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
 
