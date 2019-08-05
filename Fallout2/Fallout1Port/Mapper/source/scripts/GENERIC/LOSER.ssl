@@ -1,27 +1,34 @@
+/*
+
+	Generic Loser
+
+*/
+
 #include "..\headers\define.h"
 
 #define NAME                    SCRIPT_LOSER
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
 
 #include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 procedure push_p_proc;
 
-procedure flee_dude;
+procedure do_flee_dude;
 
 variable tmp_hostile;
 variable initial :=  0;
 variable round_counter;
 variable PsstTime;
-
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
@@ -29,8 +36,7 @@ variable DeathType := 56;
 procedure push_p_proc begin
 end
 
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(6) != 1) then begin
@@ -41,48 +47,17 @@ begin
 		end
 	end
 	else begin
-		
-		
 		if not(initial) then begin
 			initial :=  1;
-			critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_SHADY_SANDS );
-			critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_PEASANT );
+			set_self_team(TEAM_SHADY_SANDS );
+			set_self_ai( AI_PEASANT );
 			add_timer_event(self_obj, game_ticks(random(15, 60)), 1);
 			add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-		end
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-						end
-					end
-				end
-			end
 		end
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		round_counter := round_counter + 1;
 		if (round_counter > 3) then begin
@@ -94,17 +69,16 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	variable LVar0 := 0;
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (local_var(0)) then begin
 			if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-				call flee_dude;
+				call do_flee_dude;
 			end
 		end
 	end
@@ -116,23 +90,20 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_local_var(0, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin
 			set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
 		end
 	end
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
@@ -166,23 +137,11 @@ begin
 	add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
 end
 
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
+procedure PickDeadBodyType begin
+	pick_dead_body_type
 end
 
-procedure PickDeadBodyType
-begin
-	pick_dead_body_type
+procedure do_flee_dude begin
+	flee_dude
 end
 

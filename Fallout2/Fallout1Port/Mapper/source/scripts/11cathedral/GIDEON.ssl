@@ -1,13 +1,28 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Cathedral - Brainwashed children
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
+
+#define NAME                    SCRIPT_GIDEON
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure combat_p_proc;//    script_action == 13
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure combat_p_proc;
 
 procedure gideon00;
 procedure gideon01;
@@ -46,126 +61,64 @@ procedure dialog_end;
 import variable contpan;
 import variable Psy_Field_Ptr;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable temp;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, 50);
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_BRAINWASHED_CHILDREN );
-	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-						animate_move_obj_to_tile(self_obj, 15319, 0);
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-								call destroy_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
+		set_self_team(50);
+		set_self_ai( AI_BRAINWASHED_CHILDREN );
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	use_obj(contpan);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	start_gdialog(671, self_obj, 4, -1, -1);
 	gsay_start;
-	if (local_var(4) == 0) then begin
+	if (local_var(4) == 0) then
 		call gideon00;
-	end
-	else begin
+	else
 		call gideon01;
-	end
 	set_local_var(4, 1);
 	gsay_end;
 	end_dialogue;
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_GIDEON, 100));
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 end
 
-procedure gideon00
-begin
+procedure gideon00 begin
 	gsay_reply(671, 101);
 	giq_option(8, 671, 102, gideon03, 49 + random(0, 2));
 	giq_option(4, 671, 103, gideon02, 49 + random(0, 2));
@@ -176,16 +129,14 @@ begin
 	giq_option(-3, 671, 106, gideon08, 49 + random(0, 2));
 end
 
-procedure gideon01
-begin
+procedure gideon01 begin
 	gsay_reply(671, 107);
 	giq_option(8, 671, 108, gideon04, 49 + random(0, 2));
 	giq_option(4, 671, 109, dialog_end, 49 + random(0, 2));
 	giq_option(4, 671, 112, gideon01a, 49 + random(0, 2));
 end
 
-procedure gideon01a
-begin
+procedure gideon01a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call gideon03;
 	end
@@ -194,16 +145,14 @@ begin
 	end
 end
 
-procedure gideon02
-begin
+procedure gideon02 begin
 	gsay_reply(671, 113);
 	giq_option(4, 671, 114, dialog_end, 49 + random(0, 2));
 	giq_option(4, 671, 112, gideon02a, 49 + random(0, 2));
 	giq_option(-3, 671, 115, gideon08, 49 + random(0, 2));
 end
 
-procedure gideon02a
-begin
+procedure gideon02a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call gideon09;
 	end
@@ -212,16 +161,14 @@ begin
 	end
 end
 
-procedure gideon03
-begin
+procedure gideon03 begin
 	gsay_reply(671, 116);
 	giq_option(8, 671, 108, gideon04, 49 + random(0, 2));
 	giq_option(4, 671, 117, gideon04, 49 + random(0, 2));
 	giq_option(4, 671, 118, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon04
-begin
+procedure gideon04 begin
 	gsay_reply(671, 119);
 	giq_option(8, 671, 120, gideon05, 49 + random(0, 2));
 	giq_option(4, 671, 121, gideon04a, 49 + random(0, 2));
@@ -229,8 +176,7 @@ begin
 	giq_option(4, 671, 124, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon04a
-begin
+procedure gideon04a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon05;
 	end
@@ -239,8 +185,7 @@ begin
 	end
 end
 
-procedure gideon04b
-begin
+procedure gideon04b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon03;
 	end
@@ -249,8 +194,7 @@ begin
 	end
 end
 
-procedure gideon04c
-begin
+procedure gideon04c begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon07;
 	end
@@ -259,8 +203,7 @@ begin
 	end
 end
 
-procedure gideon05
-begin
+procedure gideon05 begin
 	gsay_reply(671, 125);
 	giq_option(8, 671, 126, gideon06, 49 + random(0, 2));
 	giq_option(4, 671, 127, gideon05a, 49 + random(0, 2));
@@ -270,8 +213,7 @@ begin
 	giq_option(4, 671, 129, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon05a
-begin
+procedure gideon05a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call gideon07;
 	end
@@ -280,8 +222,7 @@ begin
 	end
 end
 
-procedure gideon05b
-begin
+procedure gideon05b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call gideon10;
 	end
@@ -290,8 +231,7 @@ begin
 	end
 end
 
-procedure gideon06
-begin
+procedure gideon06 begin
 	gsay_reply(671, 130);
 	giq_option(8, 671, 131, gideonnull, 49 + random(0, 2));
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
@@ -301,8 +241,7 @@ begin
 	giq_option(4, 671, 134, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon06a
-begin
+procedure gideon06a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideonnull;
 	end
@@ -311,8 +250,7 @@ begin
 	end
 end
 
-procedure gideon07
-begin
+procedure gideon07 begin
 	gsay_reply(671, 135);
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
 		giq_option(4, 671, 136, gideon07b, 49 + random(0, 2));
@@ -321,8 +259,7 @@ begin
 	giq_option(4, 671, 138, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon07a
-begin
+procedure gideon07a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon10;
 	end
@@ -331,8 +268,7 @@ begin
 	end
 end
 
-procedure gideon07b
-begin
+procedure gideon07b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call gideon10;
 	end
@@ -341,8 +277,7 @@ begin
 	end
 end
 
-procedure gideon07c
-begin
+procedure gideon07c begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon06;
 	end
@@ -351,22 +286,19 @@ begin
 	end
 end
 
-procedure gideon08
-begin
+procedure gideon08 begin
 	gsay_message(671, 139, 49 + random(0, 2));
 	call dialog_end;
 end
 
-procedure gideon09
-begin
+procedure gideon09 begin
 	gsay_reply(671, 107);
 	giq_option(4, 671, 141, gideon09a, 49 + random(0, 2));
 	giq_option(4, 671, 127, gideon09b, 49 + random(0, 2));
 	giq_option(4, 671, 124, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon09a
-begin
+procedure gideon09a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon04;
 	end
@@ -375,8 +307,7 @@ begin
 	end
 end
 
-procedure gideon09b
-begin
+procedure gideon09b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call gideon07;
 	end
@@ -385,8 +316,7 @@ begin
 	end
 end
 
-procedure gideon09c
-begin
+procedure gideon09c begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideon10;
 	end
@@ -395,20 +325,17 @@ begin
 	end
 end
 
-procedure gideon10
-begin
+procedure gideon10 begin
 	gsay_message(671, 143, 49 + random(0, 2));
 	call combat;
 end
 
-procedure gideon11
-begin
+procedure gideon11 begin
 	gsay_message(671, 144, 49 + random(0, 2));
 	call dialog_end;
 end
 
-procedure gideon12
-begin
+procedure gideon12 begin
 	gsay_reply(671, 145);
 	giq_option(8, 671, 146, gideon06, 49 + random(0, 2));
 	giq_option(4, 671, 147, gideon12a, 49 + random(0, 2));
@@ -419,8 +346,7 @@ begin
 	giq_option(4, 671, 150, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon12a
-begin
+procedure gideon12a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call gideon13;
 	end
@@ -429,8 +355,7 @@ begin
 	end
 end
 
-procedure gideon12b
-begin
+procedure gideon12b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call gideon10;
 	end
@@ -439,8 +364,7 @@ begin
 	end
 end
 
-procedure gideon13
-begin
+procedure gideon13 begin
 	gsay_reply(671, 130);
 	giq_option(8, 671, 131, gideonnull, 49 + random(0, 2));
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
@@ -451,8 +375,7 @@ begin
 	giq_option(4, 671, 134, dialog_end, 49 + random(0, 2));
 end
 
-procedure gideon13a
-begin
+procedure gideon13a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call gideonnull;
 	end
@@ -461,22 +384,20 @@ begin
 	end
 end
 
-procedure gideonnull
-begin
+procedure gideonnull begin
 	if (local_var(5) == 0) then begin
 		set_local_var(5, 1);
 		use_obj(contpan);
 		use_obj(dude_obj);
 		add_obj_to_inven(dude_obj, create_object( PID_PSYCHIC_NULLIFIER, 0, 0 ));
 		temp := 1000;
-		display_msg(message_str(SCRIPT_GIDEON, 501) + temp + message_str(SCRIPT_GIDEON, 502));
+		display_msg(mstr(501) + temp + mstr(502));
 		give_exp_points(temp);
 		add_timer_event(self_obj, game_ticks(10), 1);
 	end
 end
 
-procedure dialog_end
-begin
+procedure dialog_end begin
 end
 
 

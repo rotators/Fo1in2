@@ -1,14 +1,27 @@
+/*
+
+	Vault 13 - Cindy
+
+*/
+
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+#define NAME                    SCRIPT_CINDY
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_V13)
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
 procedure Cindy01;
 procedure Cindy02;
 procedure Cindy03;
@@ -17,8 +30,8 @@ procedure Cindy05;
 procedure Cindy06;
 procedure Cindy07;
 procedure CindyEnd;
-procedure flee_dude;
 procedure get_rations;
+
 variable crying;
 variable tmp_hostile;
 variable ration_tile := 7000;
@@ -38,8 +51,7 @@ variable DeathType := 57;
 #define sleep_time 		(random(1900, 1930))
 #define wake_time 		(random(600, 630))
 
-procedure start
-begin
+procedure start begin
 	if (global_var(GVAR_VAULT_13_WAS_INVADED) == 1) then begin//		<-- Vault13 invaded
 		if (cur_map_index == MAP_VAULT13) or (cur_map_index == MAP_V13ENT) then begin //  VAULT 13 - ANY MAPS
 			if (local_var(9) != 1) then begin
@@ -53,20 +65,17 @@ begin
 			end
 		end
 	end
-	else begin
-
-	end
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (local_var(6) == 1) then begin
 			if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-				call flee_dude;
+				flee_dude
 			end
 			else begin
 				if (tile_distance(tile_num(dude_obj), home_tile) > 3) then begin
@@ -94,42 +103,37 @@ procedure critter_p_proc begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if  (source_obj == dude_obj) then begin
 		set_local_var(6, 1);
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (local_var(4)) then begin
 		display_msg(message_str(SCRIPT_CINDY, 101));
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	inc_good_critter
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(VAULT_13_HOSTILE, 1);
 	end
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_CINDY, 100));
 end
 
 procedure map_enter_p_proc begin
-	critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_VAULT13 );
+	set_self_team(TEAM_VAULT13 );
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if ((game_time / (10 * 60 * 60 * 24)) >= 30) then begin
 		float_msg(self_obj, message_str(SCRIPT_CINDY, 122), 2);
 	end
@@ -163,28 +167,24 @@ procedure talk_p_proc begin
 	end
 end
 
-procedure Cindy01
-begin
+procedure Cindy01 begin
 	gsay_reply(168, message_str(SCRIPT_CINDY, 102) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_CINDY, 103));
 	giq_option(4, 168, 104, Cindy03, 50);
 	giq_option(4, 168, 105, Cindy04, 50);
 	giq_option(-3, 168, 106, Cindy02, 50);
 end
 
-procedure Cindy02
-begin
+procedure Cindy02 begin
 	set_local_var(4, 1);
 	gsay_reply(168, 107);
 	giq_option(-3, 168, 108, CindyEnd, 50);
 end
 
-procedure Cindy03
-begin
+procedure Cindy03 begin
 	gsay_message(168, random(109, 111), 50);
 end
 
-procedure Cindy04
-begin
+procedure Cindy04 begin
 	if ((game_time / (10 * 60 * 60 * 24)) < 30) then begin
 		gsay_reply(168, 126);
 		giq_option(4, 168, 127, CindyEnd, 49);
@@ -197,47 +197,27 @@ begin
 	end
 end
 
-procedure Cindy05
-begin
+procedure Cindy05 begin
 	gsay_reply(168, 116);
 	giq_option(4, 168, 117, CindyEnd, 50);
 end
 
-procedure Cindy06
-begin
+procedure Cindy06 begin
 	gsay_reply(168, 118);
 	giq_option(4, 168, 119, Cindy07, 50);
 end
 
-procedure Cindy07
-begin
+procedure Cindy07 begin
 	set_global_var(QUEST_VAULT13_5_WTR_THIEF, 1);
 	gsay_reply(168, 120);
 	giq_option(4, 168, 121, CindyEnd, 50);
 	giq_option(4, 168, 112, Cindy05, 50);
 end
 
-procedure CindyEnd
-begin
+procedure CindyEnd begin
 end
 
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-procedure get_rations
-begin
+procedure get_rations begin
 	if (tile_num(self_obj) != ration_tile) then begin
 		sleeping_disabled := 1;
 		if (random(0, 1)) then begin
@@ -257,8 +237,7 @@ begin
 	end
 end
 
-procedure PickDeadBodyType// FINISHED, for Vault 13
-begin
+procedure PickDeadBodyType begin
 	variable id := 11;
 	id := random(0, 6) + random(0, 6) + random(0, 6);
 	if id <= 2 then begin

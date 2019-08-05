@@ -1,21 +1,32 @@
-#include "..\headers\define.h"
+/*
 
+	Shady Sands - bodyguard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_BGUARD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure destroy_p_proc;//    script_action == 18
-procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;
+procedure talk_p_proc;
 
 variable rndx;
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
-
-
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
-
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(6) != 1) then begin
@@ -26,79 +37,38 @@ begin
 		end
 	end
 	else begin
-		
-		
 		if not(initial) then begin
 			initial :=  1;
-			critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_SHADY_SANDS );
-			critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_GUARD );
-		end
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						hostile := 0;
-						attack(dude_obj);
-					end
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						hostile := 1;
-					end
-					else begin
-						if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-							script_overrides;
-							display_msg(message_str(SCRIPT_BGUARD, 100));
-						end
-					end
-				end
-			end
+			set_self_team( TEAM_SHADY_SANDS );
+			set_self_ai( AI_GUARD );
 		end
 	end
 end
 
-procedure talk_p_proc
-begin
-	variable LVar0 := 0;
-	dude_look_at_critter;
-	rndx := random(0, 6);
-	if (rndx == 0) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 101);
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
-	if (rndx == 1) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 102);
-	end
-	if (rndx == 2) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 103);
-	end
-	if (rndx == 3) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 104);
-	end
-	if (rndx == 4) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 105);
-	end
-	if (rndx == 5) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 106);
-	end
-	if (rndx == 6) then begin
-		LVar0 := message_str(SCRIPT_BGUARD, 107);
-	end
-	float_msg(self_obj, LVar0, 0);
-end
- 
-procedure destroy_p_proc
-begin
-
 end
 
-procedure PickDeadBodyType
-begin
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_BGUARD, 100));
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_BGUARD, 100));
+end
+
+procedure talk_p_proc begin
+	float_msg(self_obj, mstr(random(101,107)), 0);
+end
+
+procedure destroy_p_proc begin
+end
+
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
-

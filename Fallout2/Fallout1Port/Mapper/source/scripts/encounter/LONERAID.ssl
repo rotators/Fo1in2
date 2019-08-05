@@ -1,12 +1,23 @@
+/*
+
+	Encounter - Lone Raider
+
+*/
+
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_LONERAID
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
+
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
 procedure LoneRaid00;
 procedure LoneRaid01;
 procedure LoneRaid02;
@@ -35,82 +46,37 @@ procedure LoneRaid22;
 procedure LoneRaidCombat;
 procedure LoneRaidEnd;
 procedure LoneRaidLoot;
-procedure flee_dude;
 
 variable tmp_hostile;
 variable initial :=  0;
 variable known;
 variable broken;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_RAIDERS );
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_GENERIC_RAIDER );
+		set_self_team(TEAM_RAIDERS );
+		set_self_ai( AI_GENERIC_RAIDER );
 		initial :=  1;
-	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-				end
-			end
-		end
 	end
 end
 
-
-
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if ((tile_distance_objs(self_obj, dude_obj) > 8) and (tile_distance_objs(self_obj, dude_obj) < 24)) then begin
-			call flee_dude;
+			flee_dude
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
@@ -121,7 +87,7 @@ begin
 		call LoneRaid01;
 	end
 	else begin
-		
+
 		if (dude_is_armed) then begin
 			call LoneRaid00;
 		end
@@ -337,19 +303,3 @@ begin
 	gdialog_mod_barter(0);
 	giq_option(0, 634, 103, LoneRaidEnd, 51);
 end
-
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 0);
-end
-

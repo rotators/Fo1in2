@@ -1,9 +1,21 @@
 #ifndef TEAMS_H
 #define TEAMS_H
 
-/*******************************************************************************
-                                Номера команд
-*******************************************************************************/
+/*********************************************************
+	General
+*********************************************************/
+
+#define set_self_team(x) 				critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, x)
+#define set_team(x,y) 					critter_add_trait( x, TRAIT_OBJECT, OBJECT_TEAM_NUM, y )
+
+/*********************************************************
+ define file for Team Numbers.
+
+ All defines in this file are to be prepended with TEAM_
+
+ Contents of the File:
+        I.      Team Numbers
+*********************************************************/
 
 #define TEAM_PLAYER						(0)
 #define TEAM_VAULT13					(1)

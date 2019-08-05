@@ -1,14 +1,25 @@
+/*
+
+	Junktown - Gustofer
+
+*/
+
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_GUSTOFER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
 procedure Gustofer00;
 procedure Gustofer00a;
 procedure Gustofer01;
@@ -35,7 +46,6 @@ procedure GustoferEnd;
 procedure GustoferWait;
 procedure GustoferBet1;
 procedure GustoferBet2;
-procedure flee_dude;
 procedure destroy_challenger;
 
 variable round_counter;
@@ -58,7 +68,6 @@ variable sleep_tile;
 #define LVAR_Sleeping 							(1)
 
 procedure start begin
-	
 end
 
 procedure combat_p_proc
@@ -74,8 +83,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(DUDE_ENEMY_JUNK_BOXER) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			attack(dude_obj);
@@ -83,7 +91,7 @@ begin
 	end
 	if (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(1) == 0) then begin
 		if dude_is_armed then begin
-			call flee_dude;
+			flee_dude
 		end
 	end
 	else begin
@@ -109,17 +117,14 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_JUNK_BOXER, 1);
 	end
-
 	inc_evil_critter
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1) then begin
 		destroy_object(self_obj);
 	end
@@ -129,21 +134,19 @@ begin
 	if (not(is_loading_game) and not(obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS))) then begin
 		item_caps_adjust(self_obj, random(0, 10));
 	end
-	critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, 15 );
+	set_self_team(15 );
 	sleep_time := 1920;
 	wake_time := 530;
 	home_tile := 17096;
 	sleep_tile := 7000;
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	robbed := 1;
 	dialogue_system_enter;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (not(robbed) and (local_var(2) == 1) and ((game_time / (10 * 60 * 60 * 24) % 3) != 0)) then begin
 		call Gustofer05;
@@ -422,21 +425,6 @@ begin
 	else begin
 		gsay_message(529, 143, 50);
 	end
-end
-
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
 
 procedure destroy_challenger
