@@ -1,11 +1,12 @@
 #include "..\headers\define.h"
 
 #define NAME                    SCRIPT_GENVAULT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_V13)
 
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure start;
 procedure critter_p_proc;
 procedure damage_p_proc;
 procedure destroy_p_proc;
@@ -30,7 +31,7 @@ procedure Vault08;
 procedure Vault09;
 procedure Vault10;
 procedure Vault11;
-procedure flee_dude;
+
 procedure get_rations;
 procedure set_ration_tile;
 procedure set_sleep_tile;
@@ -61,8 +62,7 @@ variable DeathType := 57;
 procedure push_p_proc begin
 end
 
-procedure start
-begin
+procedure start begin
 	if (global_var(GVAR_VAULT_13_WAS_INVADED) == 1) then begin//		<-- Vault13 invaded
 		if (cur_map_index == MAP_VAULT13) or (cur_map_index == MAP_V13ENT) then begin //  VAULT 13 - ANY MAPS
 			if (local_var(9) != 1) then begin
@@ -77,19 +77,18 @@ begin
 		end
 	end
 	else begin
-		
+
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (local_var(7) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
-			call flee_dude;
+			flee_dude
 		end
 		if (global_var(QUEST_VAULT13_4_WATERCHIP) == 0) then begin
 			if (local_var(5) == 0) then begin
@@ -110,48 +109,32 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_local_var(7, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(VAULT_13_HOSTILE, 1);
 	end
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-	end
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (local_var(4) == 0) then begin
 		set_local_var(4, tile_num(self_obj));
 	end
 	home_tile := local_var(4);
-	critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_VAULT13 );
+	set_self_team( TEAM_VAULT13 );
 	call set_ration_tile;
 	call set_sleep_tile;
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
@@ -168,143 +151,109 @@ procedure talk_p_proc begin
 			display_msg(message_str(SCRIPT_GENVAULT, 167));
 		end
 	end
+	else if (local_var(7) or global_var(VAULT_13_HOSTILE)) then begin
+		call Vault00;
+	end
+	else if ((global_var(QUEST_VAULT13_4_WATERCHIP) != 0) and (global_var(QUEST_VAULT13_4_WATERCHIP) != 1)) then begin
+		call Vault01;
+	end
+	else if dude_is_armed then begin
+		call Vault02;
+	end
+	else if (get_water_days_left < 80) then begin
+		call Vault00b;
+	end
+	else if (get_water_days_left < 40) then begin
+		call Vault00c;
+	end
 	else begin
-		if (local_var(7) or global_var(VAULT_13_HOSTILE)) then begin
-			call Vault00;
-		end
-		else begin
-			if ((global_var(QUEST_VAULT13_4_WATERCHIP) != 0) and (global_var(QUEST_VAULT13_4_WATERCHIP) != 1)) then begin
-				call Vault01;
-			end
-			else begin
-				if dude_is_armed then begin
-					call Vault02;
-				end
-				else begin
-					if (get_water_days_left < 80) then begin
-						call Vault00b;
-					end
-					else begin
-						if (get_water_days_left < 40) then begin
-							call Vault00c;
-						end
-						else begin
-							call Vault00a;
-						end
-					end
-				end
-			end
-		end
+		call Vault00a;
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(WtrGrd_ptr), 2, 1), 0);
 		add_timer_event(self_obj, game_ticks(3), 2);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			getting_ration := 1;
-			if (random(0, 1)) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENVAULT, 165), 0);
-			end
-			add_timer_event(self_obj, game_ticks(3), 3);
+	else if (fixed_param == 2) then begin
+		getting_ration := 1;
+		if (random(0, 1)) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 165), 0);
 		end
-		else begin
-			if (fixed_param == 3) then begin
-				recipient := 0;
-				animate_move_obj_to_tile(self_obj, home_tile, 0);
-			end
-		end
+		add_timer_event(self_obj, game_ticks(3), 3);
+	end
+	else if (fixed_param == 3) then begin
+		recipient := 0;
+		animate_move_obj_to_tile(self_obj, home_tile, 0);
 	end
 end
 
-procedure Vault00
-begin
+procedure Vault00 begin
 	float_msg(self_obj, message_str(SCRIPT_GENVAULT, random(101, 104)), 0);
 end
 
-procedure Vault00a
-begin
+procedure Vault00a begin
 	if (local_var(1) == 3) then begin
 		call Vault03;
 	end
+	else if (local_var(1) == 2) then begin
+		call Vault06;
+	end
 	else begin
-		if (local_var(1) == 2) then begin
-			call Vault06;
-		end
-		else begin
-			call Vault09;
-		end
+		call Vault09;
 	end
 end
 
-procedure Vault00b
-begin
+procedure Vault00b begin
 	if (local_var(1) == 3) then begin
 		call Vault04;
 	end
+	else if (local_var(1) == 2) then begin
+		call Vault07;
+	end
 	else begin
-		if (local_var(1) == 2) then begin
-			call Vault07;
-		end
-		else begin
-			call Vault10;
-		end
+		call Vault10;
 	end
 end
 
-procedure Vault00c
-begin
+procedure Vault00c begin
 	if (local_var(1) == 3) then begin
 		call Vault05;
 	end
+	else if (local_var(1) == 2) then begin
+		call Vault08;
+	end
 	else begin
-		if (local_var(1) == 2) then begin
-			call Vault08;
-		end
-		else begin
-			call Vault11;
-		end
+		call Vault11;
 	end
 end
 
-procedure Vault01
-begin
+procedure Vault01 begin
 	PICK := random(1, 5);
 	if (PICK == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 109), 0);
 	end
-	else begin
-		if (PICK == 2) then begin
-			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 110), 0);
+	else if (PICK == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 110), 0);
+	end
+	else if (PICK == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 111), 0);
+	end
+	else if (PICK == 4) then begin
+		if (dude_is_male) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 112), 0);
 		end
 		else begin
-			if (PICK == 3) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENVAULT, 111), 0);
-			end
-			else begin
-				if (PICK == 4) then begin
-					if (dude_is_male) then begin
-						float_msg(self_obj, message_str(SCRIPT_GENVAULT, 112), 0);
-					end
-					else begin
-						float_msg(self_obj, message_str(SCRIPT_GENVAULT, 113), 0);
-					end
-				end
-				else begin
-					if (PICK == 5) then begin
-						if (dude_is_male) then begin
-							float_msg(self_obj, message_str(SCRIPT_GENVAULT, 114), 0);
-						end
-						else begin
-							float_msg(self_obj, message_str(SCRIPT_GENVAULT, 115), 0);
-						end
-					end
-				end
-			end
+			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 113), 0);
+		end
+	end
+	else if (PICK == 5) then begin
+		if (dude_is_male) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 114), 0);
+		end
+		else begin
+			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 115), 0);
 		end
 	end
 end
@@ -314,95 +263,71 @@ procedure Vault02 begin
 	float_msg(self_obj, message_str(SCRIPT_GENVAULT, random(116, 119)), 0);
 end
 
-procedure Vault03
-begin
+procedure Vault03 begin
 	PICK := random(1, 4);
 	if (PICK == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 120), 0);
 	end
-	else begin
-		if (PICK == 2) then begin
-			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 121), 0);
-		end
-		else begin
-			if (PICK == 3) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENVAULT, 122), 0);
-			end
-			else begin
-				if (PICK == 4) then begin
-					float_msg(self_obj, message_str(SCRIPT_GENVAULT, 123) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_GENVAULT, 124), 0);
-				end
-			end
-		end
+	else if (PICK == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 121), 0);
+	end
+	else if (PICK == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 122), 0);
+	end
+	else if (PICK == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 123) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_GENVAULT, 124), 0);
 	end
 end
 
-procedure Vault04
-begin
+procedure Vault04 begin
 	float_msg(self_obj, message_str(SCRIPT_GENVAULT, random(125, 128)), 0);
 end
 
-procedure Vault05
-begin
+procedure Vault05 begin
 	float_msg(self_obj, message_str(SCRIPT_GENVAULT, random(129, 133)), 0);
 end
 
-procedure Vault06
-begin
+procedure Vault06 begin
 	PICK := random(1, 5);
 	if (PICK == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 134), 0);
 	end
-	else begin
-		if (PICK == 2) then begin
-			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 135) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_GENVAULT, 136), 0);
-		end
-		else begin
-			if (PICK == 3) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENVAULT, 137), 0);
-			end
-			else begin
-				if (PICK == 4) then begin
-					float_msg(self_obj, message_str(SCRIPT_GENVAULT, 138), 0);
-				end
-				else begin
-					if (PICK == 5) then begin
-						float_msg(self_obj, message_str(SCRIPT_GENVAULT, 139), 0);
-					end
-				end
-			end
-		end
+	else if (PICK == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 135) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_GENVAULT, 136), 0);
+	end
+	else if (PICK == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 137), 0);
+	end
+	else if (PICK == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 138), 0);
+	end
+	else if (PICK == 5) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 139), 0);
 	end
 end
 
-procedure Vault07
-begin
+procedure Vault07 begin
 	float_msg(self_obj, message_str(SCRIPT_GENVAULT, random(140, 144)), 0);
 end
 
-procedure Vault08
-begin
+procedure Vault08 begin
 	float_msg(self_obj, message_str(SCRIPT_GENVAULT, random(145, 149)), 0);
 end
 
-procedure Vault09
-begin
+procedure Vault09 begin
 	PICK := random(1, 5);
 	if (PICK == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 150) + proto_data(obj_pid(dude_obj), 1) + message_str(SCRIPT_GENVAULT, 151), 0);
 	end
+	else if (PICK >= 4) then begin
+		display_msg(message_str(SCRIPT_GENVAULT, 150 + PICK));
+	end
 	else begin
-		if (PICK >= 4) then begin
-			display_msg(message_str(SCRIPT_GENVAULT, 150 + PICK));
-		end
-		else begin
-			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 150 + PICK), 0);
-		end
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 150 + PICK), 0);
 	end
 end
 
-procedure Vault10
-begin
+procedure Vault10 begin
 	PICK := random(1, 5);
 	if (PICK == 5) then begin
 		display_msg(message_str(SCRIPT_GENVAULT, 160));
@@ -412,46 +337,23 @@ begin
 	end
 end
 
-procedure Vault11
-begin
+procedure Vault11 begin
 	PICK := random(1, 5);
 	if (PICK == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 161), 0);
 	end
-	else begin
-		if (PICK == 2) then begin
-			float_msg(self_obj, message_str(SCRIPT_GENVAULT, 162), 0);
-		end
-		else begin
-			if (PICK == 3) then begin
-				display_msg(message_str(SCRIPT_GENVAULT, 163));
-			end
-			else begin
-				if (PICK == 4) then begin
-					display_msg(message_str(SCRIPT_GENVAULT, 164));
-				end
-			end
-		end
+	else if (PICK == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 162), 0);
+	end
+	else if (PICK == 3) then begin
+		display_msg(message_str(SCRIPT_GENVAULT, 163));
+	end
+	else if (PICK == 4) then begin
+		display_msg(message_str(SCRIPT_GENVAULT, 164));
 	end
 end
 
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-procedure get_rations
-begin
+procedure get_rations begin
 	sleeping_disabled := 1;
 	if (tile_num(self_obj) != ration_tile) then begin
 		if not(random(0, 9)) then begin
@@ -476,77 +378,58 @@ begin
 	end
 end
 
-procedure set_ration_tile
-begin
+procedure set_ration_tile begin
 	if (elevation(self_obj) == 0) then begin
 		ration_tile := tile_num_in_direction(14704, random(0, 5), random(1, 2));
 	end
-	else begin
-		if (elevation(self_obj) == 1) then begin
-			ration_tile := tile_num_in_direction(21895, random(0, 5), random(1, 2));
+	else if (elevation(self_obj) == 1) then begin
+		ration_tile := tile_num_in_direction(21895, random(0, 5), random(1, 2));
+	end
+	else if (elevation(self_obj) == 2) then begin
+		variable newtile := 0;
+		newtile := random(1, 4);
+		if newtile == 1 then begin
+			newtile := 22717;
+		end
+		else if newtile == 2 then begin
+			newtile := 22513;
+		end
+		else if newtile == 3 then begin
+			newtile := 23114;
 		end
 		else begin
-			if (elevation(self_obj) == 2) then begin
-				variable newtile := 0;
-				newtile := random(1, 4);
-				if newtile == 1 then begin
-					newtile := 22717;
-				end
-				else begin
-					if newtile == 2 then begin
-						newtile := 22513;
-					end
-					else begin
-						if newtile == 3 then begin
-							newtile := 23114;
-						end
-						else begin
-							newtile := 22910;
-						end
-					end
-				end
-				ration_tile := tile_num_in_direction(newtile, random(0, 5), random(1, 2));// was 22513
-			end
+			newtile := 22910;
 		end
+		ration_tile := tile_num_in_direction(newtile, random(0, 5), random(1, 2));// was 22513
 	end
 end
 
-procedure set_sleep_tile
-begin
+procedure set_sleep_tile begin
 	if (elevation(self_obj) == 0) then begin
 		sleep_tile := 7000;
 	end
-	else begin
-		if (elevation(self_obj) == 1) then begin
-			sleep_tile := home_tile;
-		end
-		else begin
-			if (elevation(self_obj) == 2) then begin
-				sleep_tile := 7000;
-			end
-		end
+	else if (elevation(self_obj) == 1) then begin
+		sleep_tile := home_tile;
+	end
+	else if (elevation(self_obj) == 2) then begin
+		sleep_tile := 7000;
 	end
 end
 
-procedure PickDeadBodyType// FINISHED, for Vault 13
-begin
+procedure PickDeadBodyType begin
 	variable id := 11;
 	id := random(0, 6) + random(0, 6) + random(0, 6);
 	if id <= 2 then begin
 		DeathType := 59;// exploded  [ROCKET LAUNCHER]
 	end
+	else if id <= 10 then begin
+		DeathType := 57;// burnt, face down  [FLAMER]
+	end
+	else if id <= 15 then begin
+		DeathType := 60;// melted pile  [PLASMA RIFLE]
+	end
 	else begin
-		if id <= 10 then begin
-			DeathType := 57;// burnt, face down  [FLAMER]
-		end
-		else begin
-			if id <= 15 then begin
-				DeathType := 60;// melted pile  [PLASMA RIFLE]
-			end
-			else begin
-				DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
-			end
-		end
+		DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
 	end
 end
 

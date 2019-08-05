@@ -2,22 +2,23 @@
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
-procedure damage_p_proc;//    script_action == 14
-procedure pickup_p_proc;//    script_action == 4
+#define NAME                    SCRIPT_GENGAMBL
+
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+procedure damage_p_proc;
+procedure pickup_p_proc;
 
 procedure gambler1;
 procedure gambler2;
 procedure gambler3;
 procedure gambler4;
 procedure gambler5;
-procedure flee_dude;
 procedure items_held;
 
 variable RightHand := 0;
@@ -32,7 +33,7 @@ variable weapon_check;
 
 
 procedure start begin
-	
+
 end
 
 procedure critter_p_proc
@@ -63,34 +64,20 @@ begin
 	end
 	if (cur_map_index == MAP_JUNKCSNO) and (global_var(DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin //  GVAR_ENEMY_JUNK_CITIZEN,  MAP == JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
-			call flee_dude;
+			flee_dude
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then begin
 		if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS
 			set_global_var(DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
 			set_global_var(ENEMY_JUNKTOWN, 1);
 		end
 	end
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
@@ -109,7 +96,7 @@ begin
 		item_caps_adjust(self_obj, random(0, 200));
 	end
 	if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_JUNKTOWNER );// was 24 in Vanilla
+		set_self_team(TEAM_JUNKTOWNER );// was 24 in Vanilla
 		if ((global_var(CAPTURE_GIZMO) == 2) or (global_var(GIZMO_DEAD) == 1)) then begin
 			destroy_object(self_obj);
 		end
@@ -146,9 +133,8 @@ begin
 	weapon_check := 0;
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end
 end
@@ -208,21 +194,6 @@ begin
 	else begin
 		float_msg(self_obj, message_str(SCRIPT_GENGAMBL, 114 + LVar0), 0);
 	end
-end
-
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
 
 procedure pickup_p_proc

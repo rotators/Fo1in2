@@ -1,61 +1,41 @@
+/*
+
+	???
+
+*/
+
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure flee_dude;
+#define NAME                    SCRIPT_PEASVICT
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 
 variable initial :=  0;
 variable dude_enemy;
 variable cap_count;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(initial) and map_first_run) then begin
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, global_var(MYST_STRANGER_ITEM));
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_SHADY_SANDS );
+		set_self_ai(global_var(MYST_STRANGER_ITEM));
+		set_self_team(TEAM_SHADY_SANDS );
 		initial :=  1;
 		float_msg(self_obj, message_str(SCRIPT_PHIL, random(128, 129)), 0);
 	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	dude_enemy := global_var(RND_ENC_PEASANTS_HOSTILE);
 	if ((dude_enemy >= 3) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
-		call flee_dude;
+		flee_dude
 	end
 	else begin
 		if ((global_var(WATER_THIEF_2) <= 0) and (dude_enemy < 3) and (global_var(RND_ENC_RAIDERS_KILLED) > 0)) then begin
@@ -75,9 +55,8 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		dude_enemy := global_var(RND_ENC_PEASANTS_HOSTILE);
 		dude_enemy := dude_enemy + 1;
 		set_global_var(RND_ENC_PEASANTS_HOSTILE, dude_enemy);
@@ -108,20 +87,3 @@ begin
 		end
 	end
 end
-
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-

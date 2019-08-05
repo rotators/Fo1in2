@@ -1,12 +1,25 @@
+/*
+
+	Hub - Water Merchants guard who's caravan got attacked by the Deathclaw
+
+*/
+
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure talk_p_proc;//    script_action == 11
+#define NAME                    SCRIPT_TRENT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure use_obj_on_p_proc;
+procedure talk_p_proc;
+
 procedure Trent00;
 procedure Trent01;
 procedure Trent02;
@@ -32,80 +45,30 @@ procedure Trent21;
 procedure Trent22;
 procedure Trent23;
 procedure Trent24;
-procedure flee_dude;
+
 procedure give_money;
+procedure do_flee_dude;
 
 variable calm;
 variable initial :=  0;
 variable known;
 variable scared;
 variable close2dude;
-variable dest_tile;
+
 variable direction;
 variable prev_dist;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
-variable exit_line;
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(initial) and map_first_run) then begin
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_HUB_WATER_MERCHANTS );
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_CAREFUL );
+		set_self_team(TEAM_HUB_WATER_MERCHANTS );
+		set_self_ai( AI_CAREFUL );
 		initial :=  1;
-	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 7) then begin//<-- use_obj_on_p_proc
-							call use_obj_on_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (scared and (tile_distance_objs(self_obj, dude_obj) < 60)) then begin
-		call flee_dude;
+		flee_dude
 	end
 	else begin
 		if (not(close2dude)) then begin
@@ -131,42 +94,28 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		scared := 1;
 	end
 	script_overrides;
-	call flee_dude;
+	call do_flee_dude;
 end
 
-procedure destroy_p_proc
-begin
+procedure do_flee_dude begin
+	flee_dude
+end
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+procedure destroy_p_proc begin
+	inc_good_critter
 	set_global_var(TRENT_STATUS, global_var(TRENT_STATUS) bwor 8);
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	scared := 1;
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	if ((obj_pid(obj_being_used_with) == PID_IGUANA_ON_A_STICK) or (obj_pid(obj_being_used_with) == PID_MEAT_ON_A_STICK) or (obj_pid(obj_being_used_with) == PID_WATER_FLASK)) then begin
 		LVar0 := obj_being_used_with;
@@ -414,20 +363,6 @@ procedure Trent24
 begin
 	float_msg(self_obj, message_str(SCRIPT_TRENT, 139), 3);
 	call give_money;
-end
-
-procedure flee_dude
-begin
-	direction := 0;
-	prev_dist := 0;
-	while(direction < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), direction, 3)) > prev_dist) then begin
-			dest_tile := tile_num_in_direction(tile_num(self_obj), direction, 3);
-			prev_dist := tile_distance(tile_num(dude_obj), dest_tile);
-		end
-		direction := direction + 1;
-	end
-	animate_move_obj_to_tile(self_obj, dest_tile, 1);
 end
 
 procedure give_money

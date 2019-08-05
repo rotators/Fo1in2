@@ -1,44 +1,49 @@
+/*
+
+	Encounter - Generic Raider
+
+*/
+
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_GENRAIDA
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
+
 #include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
 procedure start;
 procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure pickup_p_proc;
 
-procedure flee_dude;
-
 variable tmp_hostile;
 variable initial :=  0;
 variable scared;
 
 procedure start begin
-	//
-
 	if not(initial) then begin
 		initial :=  1;
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_RAIDERS );
-		critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, 20 + random(0, 1));
+		set_self_team(TEAM_RAIDERS );
+		set_self_ai(20 + random(0, 1));
 	end
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		scared := 1;
 		attack(dude_obj);
 	end
 	else begin
-
 		if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
 			if (scared) then begin
-				call flee_dude;
+				flee_dude
 			end
 			else begin
 				tmp_hostile := 1;
 			end
 		end
-
 	end
 end
 
@@ -52,18 +57,3 @@ procedure pickup_p_proc begin
 		tmp_hostile := 1;
 	end
 end
-
-procedure flee_dude begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-

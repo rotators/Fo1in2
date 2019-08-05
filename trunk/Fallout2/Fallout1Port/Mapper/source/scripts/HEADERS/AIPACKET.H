@@ -1,9 +1,21 @@
 #ifndef AIPACKET_H
 #define AIPACKET_H
 
-/*******************************************************************************
-                            Номера пакетов AI
-*******************************************************************************/
+/*********************************************************
+	General
+*********************************************************/
+
+#define set_self_ai(x) 				critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, x)
+#define set_ai(x,y) 				critter_add_trait(x,TRAIT_OBJECT,OBJECT_AI_PACKET, y)
+
+/*********************************************************
+ define file for AI Packets.
+
+ All defines in this file are to be prepended with AI_
+
+ Contents of the File:
+        I.      Team Numbers
+*********************************************************/
 
 #define AI_PLAYER                   (0)
 #define AI_BERZERKER                (1)

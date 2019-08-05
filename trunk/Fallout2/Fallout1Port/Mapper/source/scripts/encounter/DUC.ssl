@@ -15,13 +15,12 @@
 #include "..\headers\ModReact.h"
 
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure flee_dude;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 
 procedure Duc01;
 procedure Duc02;
@@ -50,31 +49,29 @@ variable GotReaction := 0;
 
 
 procedure start begin
-	
+
 
 	if not(initial) then begin
 		initial :=  1;
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_SHADY_SANDS );
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_PEASANT );
+		set_self_team(TEAM_SHADY_SANDS );
+		set_self_ai( AI_PEASANT );
 		known := global_var(HAS_PLAYER_MET_DUC);
 	end
 end
 
 procedure critter_p_proc begin
 	if ((global_var(WATER_THIEF_2) == 1) and (tile_distance_objs(dude_obj, self_obj) < 8)) then begin
-		call flee_dude;
+		flee_dude
 	end
 end
 
 procedure damage_p_proc begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(WATER_THIEF_2, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	inc_good_critter
 	set_global_var(IS_DUC_ALIVE, 1);// Duc Status
 	set_global_var(WATER_THIEF_2, 1);
@@ -138,21 +135,6 @@ begin
 		gsay_end;
 		end_dialogue;
 	end
-end
-
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
 
 procedure Duc01

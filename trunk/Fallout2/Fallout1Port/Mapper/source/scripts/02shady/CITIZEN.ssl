@@ -15,16 +15,16 @@
 #include "..\headers\ModReact.h"
 
 /* Standard Script Procedures */
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 procedure push_p_proc;
 
 procedure Citizen01;
@@ -33,14 +33,11 @@ procedure Citizen03;
 procedure Citizen04;
 procedure CitizenEnd;
 
-procedure flee_dude;
-
 variable tmp_hostile;
 variable initial :=  0;
 variable round_counter;
 variable DisplayMessage := 100;
 variable PsstTime;
-
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
@@ -48,8 +45,7 @@ variable DeathType := 56;
 procedure push_p_proc begin
 end
 
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(6) != 1) then begin
@@ -60,19 +56,17 @@ begin
 		end
 	end
 	else begin
-		
 
 		if not(initial) then begin
 			initial :=  1;
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_SHADY_SANDS);
-			critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET,AI_PEASANT);
+			set_self_team(TEAM_SHADY_SANDS);
+			set_self_ai(AI_PEASANT);
 			add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 		end
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		round_counter := round_counter + 1;
 		if (round_counter > 3) then begin
@@ -84,16 +78,15 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	variable LVar0 := 0;
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	//variable LVar0 := 0;
+	if (tmp_hostile) then begin
 		tmp_hostile := 1;
 		attack(dude_obj);
 	end
 	else begin
 		if (local_var(4) and (tile_distance_objs(dude_obj, self_obj) < 8)) then begin
-			call flee_dude;
+			flee_dude
 		end
 		LVar0 := global_var(CITIZEN_LOSER_PLEASANT_0);
 		if ((((game_time / 10) - LVar0) >= 10) and (tile_distance_objs(self_obj, dude_obj) <= 4) and not(global_var(ENEMY_SHADY_SANDS))) then begin
@@ -104,9 +97,8 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_local_var(4, 1);
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
@@ -114,17 +106,15 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_CITIZEN, 100));
+	display_msg(mstr(100));
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			set_global_var(ENEMY_SHADY_SANDS, 1);//  Set ENEMY_SHADY_SANDS to True
 		end
@@ -133,42 +123,33 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_CITIZEN, 100));
+	display_msg(mstr(100));
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (local_var(4) or global_var(ENEMY_SHADY_SANDS)) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 0);
 	end
 	else begin
-		start_gdialog(115, self_obj, 4, -1, -1);
-		gsay_start;
-		call Citizen01;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(Citizen01);
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (obj_on_screen(self_obj)) then begin
 		animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(self_obj), random(0, 5), random(1, 5)), 0);
 	end
 	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
 
-procedure Citizen01
-begin
+procedure Citizen01 begin
 	DisplayMessage := 105;
 	gsay_reply(115, 101);
 	giq_option(4, 115, 103, Citizen02, 50);
@@ -176,8 +157,7 @@ begin
 	giq_option(-3, 115, 104, CitizenEnd, 50);
 end
 
-procedure Citizen02
-begin
+procedure Citizen02 begin
 	gsay_reply(115, DisplayMessage);
 	giq_option(4, 115, 106, Citizen03, 50);
 	giq_option(4, 115, 107, Citizen04, 50);
@@ -185,38 +165,19 @@ begin
 	giq_option(1, 115, exit_line, CitizenEnd, 50);
 end
 
-procedure Citizen03
-begin
+procedure Citizen03 begin
 	DisplayMessage := 108;
 	call Citizen02;
 end
 
-procedure Citizen04
-begin
+procedure Citizen04 begin
 	DisplayMessage := 109;
 	call Citizen02;
 end
 
-procedure CitizenEnd
-begin
+procedure CitizenEnd begin
 end
 
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end

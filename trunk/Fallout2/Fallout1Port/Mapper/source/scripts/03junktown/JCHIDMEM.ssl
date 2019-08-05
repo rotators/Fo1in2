@@ -1,13 +1,24 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+	Junktown - generic CoC member
+
+*/
+
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_JCHIDMEM
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 
 procedure ChildEnd;
 procedure child_heal;
@@ -34,7 +45,6 @@ procedure Child14;
 procedure Child15;
 procedure Child16;
 procedure Child17;
-procedure flee_dude;
 
 variable night_person;
 variable wake_time;
@@ -55,10 +65,9 @@ procedure start begin
 
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (scared and (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(4) == 0)) then begin
-		call flee_dude;
+		flee_dude
 	end
 	else begin
 		sleeping
@@ -76,7 +85,7 @@ begin
 	end
 	wake_time := 700;
 	sleep_time := 1900;
-	critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_CATHEDRAL );
+	set_self_team(TEAM_CATHEDRAL );
 	if (local_var(6) == 0) then begin
 		set_local_var(6, tile_num(self_obj));
 	end
@@ -354,20 +363,6 @@ begin
 	gsay_message(108, 145, 51);
 end
 
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
 
 
 

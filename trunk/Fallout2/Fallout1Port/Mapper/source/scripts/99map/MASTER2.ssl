@@ -2,6 +2,8 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
 export variable Skill_Used;
 export variable Key_Used;
@@ -21,131 +23,136 @@ variable stuff;
 variable cur_count;
 variable prev_count;
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		Darkness;
-		player_elevation := elevation(dude_obj);
-		if (map_first_run) then begin
-			kill_critter_type(PID_FLOATING_EYE, 0);// Mk II
-			kill_critter_type(PID_EYEBALL_MK2, 0);// Mk I
-		end
-		if (map_first_run) and (player_elevation == 0) then begin
-			variable Critter := 0;
-			Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
-			critter_attempt_placement(Critter, 12653, player_elevation);
-			anim(Critter, 1000, 3);
-			Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
-			critter_attempt_placement(Critter, 12665, player_elevation);
-			anim(Critter, 1000, 1);
-			Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
-			critter_attempt_placement(Critter, 18490, player_elevation);
-			anim(Critter, 1000, 3);
-			Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
-			critter_attempt_placement(Critter, 19290, player_elevation);
-			anim(Critter, 1000, 4);
-			Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
-			critter_attempt_placement(Critter, 19905, player_elevation);
-			anim(Critter, 1000, 5);
-			Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
-			critter_attempt_placement(Critter, 17690, player_elevation);
-			anim(Critter, 1000, 3);
-		end
-		if (player_elevation == 0) then begin
-			if ((game_time_hour >= 700) and (game_time_hour < 1800) and not(is_loading_game)) then begin
-				if (map_var(10) == 0) then begin
-					set_map_var(10, 1);
-					mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
-					critter_attempt_placement(mutan_ptr, 20532, 0);
-					critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
-					stuff := create_object( PID_PLASMA_RIFLE, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_STIMPAK, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
-					critter_attempt_placement(mutan_ptr, 19337, 0);
-					critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
-					stuff := create_object( PID_GATLING_LASER, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_STIMPAK, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
-					critter_attempt_placement(mutan_ptr, 18740, 0);
-					critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
-					stuff := create_object( PID_GATLING_LASER, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_STIMPAK, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
-					critter_attempt_placement(mutan_ptr, 21339, 0);
-					critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
-					stuff := create_object( PID_GATLING_LASER, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-					stuff := create_object( PID_STIMPAK, 0, 0 );
-					add_obj_to_inven(mutan_ptr, stuff);
-				end
-			end
-		end
-		if (global_var(LOAD_MAP_INDEX) == 2) then begin
-			override_map_start(112, 84, 0, 3);
-		end
-		else begin
-			if (global_var(LOAD_MAP_INDEX) == 3) then begin
-				override_map_start(140, 78, 1, 4);
-			end
-			else begin
-				if (global_var(LOAD_MAP_INDEX) == 5) then begin
-					override_map_start(140, 78, 0, 4);
-				end
-				else begin
-					if (global_var(LOAD_MAP_INDEX) == 12) then begin
-						override_map_start(55, 68, 0, 5);
-						if (not(is_loading_game) and (global_var(MORPHEUS_DELIVERS_PLAYER) == 100)) then begin
-							set_global_var(MORPHEUS_DELIVERS_PLAYER, 1);
-							create_object_sid(PID_MORPHEUS, 13854, 0, SCRIPT_MORPH);
-							mutan_ptr := create_object_sid(PID_MASTER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
-							critter_attempt_placement(mutan_ptr, 15468, 0);
-							critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_MASTER_LAIR );
-							stuff := create_object( PID_PLASMA_RIFLE, 0, 0 );
-							add_obj_to_inven(mutan_ptr, stuff);
-							stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
-							add_obj_to_inven(mutan_ptr, stuff);
-							stuff := create_object( PID_STIMPAK, 0, 0 );
-							add_obj_to_inven(mutan_ptr, stuff);
-							mutan_ptr := create_object_sid(PID_MASTER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
-							critter_attempt_placement(mutan_ptr, 15450, 0);
-							critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_MASTER_LAIR );
-							stuff := create_object( PID_PLASMA_RIFLE, 0, 0 );
-							add_obj_to_inven(mutan_ptr, stuff);
-							stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
-							add_obj_to_inven(mutan_ptr, stuff);
-							stuff := create_object( PID_STIMPAK, 0, 0 );
-							add_obj_to_inven(mutan_ptr, stuff);
-						end
-					end
-					else begin
-						override_map_start(112, 84, 0, 3);
-					end
-				end
-			end
-		end
-
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			Darkness;
-
-		end
-
-	end
+procedure start begin
 end
 
+procedure map_enter_p_proc begin
+	Darkness;
+
+	player_elevation := elevation(dude_obj);
+	if (map_first_run) then begin
+		kill_critter_type(PID_FLOATING_EYE, 0);// Mk II
+		kill_critter_type(PID_EYEBALL_MK2, 0);// Mk I
+	end
+
+	if (map_first_run) and (player_elevation == 0) then begin
+		variable Critter := 0;
+		Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
+		critter_attempt_placement(Critter, 12653, player_elevation);
+		anim(Critter, 1000, 3);
+
+		Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
+		critter_attempt_placement(Critter, 12665, player_elevation);
+		anim(Critter, 1000, 1);
+
+		Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
+		critter_attempt_placement(Critter, 18490, player_elevation);
+		anim(Critter, 1000, 3);
+
+		Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
+		critter_attempt_placement(Critter, 19290, player_elevation);
+		anim(Critter, 1000, 4);
+
+		Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
+		critter_attempt_placement(Critter, 19905, player_elevation);
+		anim(Critter, 1000, 5);
+
+		Critter := create_object_sid(PID_FLOATING_EYE, 0, 0, SCRIPT_ROBOT);
+		critter_attempt_placement(Critter, 17690, player_elevation);
+		anim(Critter, 1000, 3);
+	end
+
+	if (player_elevation == 0) then begin
+		if ((game_time_hour >= 700) and (game_time_hour < 1800) and not(is_loading_game)) then begin
+			if (map_var(10) == 0) then begin
+				set_map_var(10, 1);
+
+				mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
+				critter_attempt_placement(mutan_ptr, 20532, 0);
+				critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
+				stuff := create_object( PID_PLASMA_RIFLE, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_STIMPAK, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+
+				mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
+				critter_attempt_placement(mutan_ptr, 19337, 0);
+				critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
+				stuff := create_object( PID_GATLING_LASER, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_STIMPAK, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+
+				mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
+				critter_attempt_placement(mutan_ptr, 18740, 0);
+				critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
+				stuff := create_object( PID_GATLING_LASER, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_STIMPAK, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+
+				mutan_ptr := create_object_sid(PID_SUPER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
+				critter_attempt_placement(mutan_ptr, 21339, 0);
+				critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_NECROPOLIS_MUTANT );
+				stuff := create_object( PID_GATLING_LASER, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+				stuff := create_object( PID_STIMPAK, 0, 0 );
+				add_obj_to_inven(mutan_ptr, stuff);
+			end
+		end
+	end
+
+	if (global_var(LOAD_MAP_INDEX) == 2) then begin
+		override_map_start(112, 84, 0, 3);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 3) then begin
+		override_map_start(140, 78, 1, 4);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 5) then begin
+		override_map_start(140, 78, 0, 4);
+	end
+	else if (global_var(LOAD_MAP_INDEX) == 12) then begin
+		override_map_start(55, 68, 0, 5);
+		if (not(is_loading_game) and (global_var(MORPHEUS_DELIVERS_PLAYER) == 100)) then begin
+			set_global_var(MORPHEUS_DELIVERS_PLAYER, 1);
+			create_object_sid(PID_MORPHEUS, 13854, 0, SCRIPT_MORPH);
+
+			mutan_ptr := create_object_sid(PID_MASTER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
+			critter_attempt_placement(mutan_ptr, 15468, 0);
+			critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_MASTER_LAIR );
+			stuff := create_object( PID_PLASMA_RIFLE, 0, 0 );
+			add_obj_to_inven(mutan_ptr, stuff);
+			stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+			add_obj_to_inven(mutan_ptr, stuff);
+			stuff := create_object( PID_STIMPAK, 0, 0 );
+			add_obj_to_inven(mutan_ptr, stuff);
+
+			mutan_ptr := create_object_sid(PID_MASTER_NIGHTKIN, 0, 0, SCRIPT_GENMUTAN);
+			critter_attempt_placement(mutan_ptr, 15450, 0);
+			critter_add_trait( mutan_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_MASTER_LAIR );
+			stuff := create_object( PID_PLASMA_RIFLE, 0, 0 );
+			add_obj_to_inven(mutan_ptr, stuff);
+			stuff := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+			add_obj_to_inven(mutan_ptr, stuff);
+			stuff := create_object( PID_STIMPAK, 0, 0 );
+			add_obj_to_inven(mutan_ptr, stuff);
+		end
+	end
+	else begin
+		override_map_start(112, 84, 0, 3);
+	end
+
+end
+
+procedure map_update_p_proc begin
+	Darkness;
+end
 

@@ -1,57 +1,37 @@
+/*
+
+	Encounter - Generic BoS Paladin
+
+*/
+
 #include "..\headers\define.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure flee_dude;
+#define NAME                    SCRIPT_GENPALA
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
 
-variable hostile;
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
+variable tmp_hostile;
 variable initial :=  0;
 variable round_counter;
 variable scared;
 
 import variable random_seed_1;
 
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_BROTHERHOOD );
-		critter_add_trait( self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_BROTHERHOOD_PALADIN );
-		hostile := global_var(AGGRO_FLAG_RND_ENC_unsure);
+		set_self_team(TEAM_BROTHERHOOD );
+		set_self_ai( AI_BROTHERHOOD_PALADIN );
+		tmp_hostile := global_var(AGGRO_FLAG_RND_ENC_unsure);
 		initial :=  1;
-	end
-	else begin
-		if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-			call combat_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
 	end
 end
 
@@ -65,52 +45,36 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (scared) then begin
 		if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-			call flee_dude;
+			flee_dude
 		end
 	end
 	else begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			hostile := 0;
+		if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			tmp_hostile := 0;
 			attack(dude_obj);
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
+procedure destroy_p_proc begin
+	inc_good_critter
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_BROTHERHOOD, 1);
 		random_seed_1 := 1;
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if (not(scared)) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 		set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
 		set_global_var(BERSERKER_REPUTATION, 1);
@@ -123,7 +87,7 @@ begin
 		if ((global_var(ENEMY_BROTHERHOOD) == 1) or (random_seed_1 == 1)) then begin
 			float_msg(self_obj, message_str(SCRIPT_GENPALA, 100), 2);
 			set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
-			hostile := 1;
+			tmp_hostile := 1;
 		end
 		else begin
 			if (global_var(BROTHERHOOD_SEED) == 2) then begin
@@ -140,19 +104,3 @@ begin
 		end
 	end
 end
-
-procedure flee_dude
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	while(LVar1 < 5) do begin
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-		end
-		LVar1 := LVar1 + 1;
-	end
-	animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
