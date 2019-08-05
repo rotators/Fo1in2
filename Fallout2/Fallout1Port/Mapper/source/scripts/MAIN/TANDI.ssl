@@ -26,9 +26,6 @@ procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure push_p_proc;
 
-variable SrcObj := 0;
-variable SrcIsParty := 0;
-
 procedure tandi00;
 procedure tandi00_1;
 procedure tandi01;
@@ -167,19 +164,10 @@ procedure pickup_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	if source_obj > 0 then begin
-		SrcObj := 0;
-		SrcIsParty := 0;
-		SrcObj := obj_pid(source_obj);
-		if party_member_obj(SrcObj) then begin
-			SrcIsParty := 1;
-		end
-	end
-	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if obj_in_party(source_obj) then begin
 		set_global_var(ENEMY_SHADY_SANDS, 1);
 	end
 	set_global_var(TANDI_HIRELING_STATUS, 3);
-
 	inc_good_critter
 end
 
@@ -788,9 +776,12 @@ procedure map_enter_p_proc begin
 		critter_add_trait(self_obj, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_TANDI); // Was AI_CAREFUL
 	end
 
+	// Tandi has returned to Shady Sands:
 	if ((cur_map_index == MAP_SHADYW) and (global_var(TANDI_HIRELING_STATUS) > 1)) then begin
 		if ((global_var(LOAD_MAP_INDEX) == 2) and (global_var(TANDI_LOCATION_TRACKER) == 3)) then begin
 			set_self_abandon_party;
+
+			inc_shady_rep(REP_BONUS_TANDI_RESCUED);
 
 			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
 			critter_attempt_placement(self_obj, 22086, 0);
@@ -875,13 +866,13 @@ procedure critter_p_proc begin
 						animate_move_obj_to_tile(self_obj, 23698, 1);
 					end
 					else if ((global_var(TANDI_LOCATION_TRACKER) == 302) and (tile_distance(tile_num(self_obj), 23698) < 2)) then begin
-					set_global_var(TANDI_LOCATION_TRACKER, 303);
+						set_global_var(TANDI_LOCATION_TRACKER, 303);
 					end
 					else if ((global_var(TANDI_LOCATION_TRACKER) == 303) and (tile_distance(tile_num(self_obj), 22086) >= 2)) then begin
-					animate_move_obj_to_tile(self_obj, 22086, 1);
+						animate_move_obj_to_tile(self_obj, 22086, 1);
 					end
 					else if ((global_var(TANDI_LOCATION_TRACKER) == 303) and (tile_distance(tile_num(self_obj), 22086) < 2)) then begin
-					set_global_var(TANDI_LOCATION_TRACKER, 4);
+						set_global_var(TANDI_LOCATION_TRACKER, 4);
 					end
 				end
 				if (obj_can_see_obj(self_obj, dude_obj) and (party_member_obj(TANDI_SELF_ID) == 0) and tmp_hostile) then begin
