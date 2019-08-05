@@ -935,9 +935,6 @@ void ReDefine::ProcessScriptEdit( const std::vector<ReDefine::ScriptEdit>& edits
                 if( first )
                 {
                     changelog.push_back( std::make_pair( editString + " script code", GetFullString( codeUpdate ) ) );
-                    if( code.IsFlag( SCRIPT_CODE_FUNCTION ) )
-                        changelog.push_back( std::make_pair( editString + " script function", GetFullString( codeUpdate ) ) );
-
                     first = false;
                 }
             }

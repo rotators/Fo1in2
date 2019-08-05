@@ -52,8 +52,6 @@ int main( int argc, char** argv )
         if( cmd->IsOption( "debug-edit" ) )
             debugEdit = true;
 
-        redefine->DEBUG( nullptr, " EditDebug = %s", redefine->EditDebug ? "true" : "false" );
-
         if( headers.empty() )
         {
             redefine->WARNING( nullptr, "headers directory not set" );
