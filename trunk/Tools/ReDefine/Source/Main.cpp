@@ -42,12 +42,17 @@ int main( int argc, char** argv )
         // read directories configuration
         std::string headers = redefine->Config->GetStr( section, "HeadersDir" );
         std::string scripts = redefine->Config->GetStr( section, "ScriptsDir" );
+        bool        debugEdit = redefine->Config->GetBool( section, "DebugEdit", false );
 
         // override settings from command line
         if( !cmd->IsOptionEmpty( "headers" ) )
             headers = cmd->GetStr( "headers" );
         if( !cmd->IsOptionEmpty( "scripts" ) )
             scripts = cmd->GetStr( "scripts" );
+        if( cmd->IsOption( "debug-edit" ) )
+            debugEdit = true;
+
+        redefine->DEBUG( nullptr, " EditDebug = %s", redefine->EditDebug ? "true" : "false" );
 
         if( headers.empty() )
         {
@@ -73,6 +78,9 @@ int main( int argc, char** argv )
             // added here to make sure Process*() functions are independent o ReadConfig*()
             // in long-running applications it might be a good idea to keep config alive
             redefine->Config->Unload();
+
+            // additional tuning
+            redefine->EditDebug = debugEdit;
 
             // process headers
             //

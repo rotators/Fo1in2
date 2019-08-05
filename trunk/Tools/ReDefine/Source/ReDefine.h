@@ -177,6 +177,12 @@ public:
     // Script
     //
 
+    struct ScriptFile
+    {
+        std::string              Name;
+        std::vector<std::string> Defines;
+    };
+
     enum ScriptCodeFlag : unsigned int
     {
         SCRIPT_CODE_FUNCTION = 0x01, // set for functions, unset for variables
@@ -186,6 +192,7 @@ public:
     struct ScriptCode
     {
         ReDefine*                Parent;
+        ScriptFile*              File;
 
         unsigned int             Flags;
         std::string              Full; // Name + (Arguments) + (Operator + OperatorArguments)
@@ -204,6 +211,7 @@ public:
 
         bool IsKnownFunction( const char* caller ) const;
         bool GetINDEX( const char* caller, const std::string& value, unsigned int& val ) const;
+        bool GetTYPE( const char* caller, const std::string& value, bool allowUnknown = true ) const;
 
         // checks if condition action exists before calling it
         bool CallEditIf( const std::string& name, std::vector<std::string> values = std::vector<std::string>() ) const;
@@ -234,6 +242,7 @@ public:
     std::map<std::string, ScriptEditDo> EditDo;
     std::vector<ScriptEdit>             EditBefore;
     std::vector<ScriptEdit>             EditAfter;
+    bool                                EditDebug;
 
     void InitScript();
     void FinishScript( bool finishCallbacks = true );
@@ -248,9 +257,9 @@ public:
 
     //
 
-
     void ProcessScript( const std::string& path, const std::string& filename, const bool readOnly = false );
     void ProcessScriptEdit( const std::vector<ScriptEdit>& edits, ScriptCode& code );
+    void ProcessScriptEditChangelog( const std::vector<std::pair<std::string, std::string>>& changelog );
 
     //
     // Text
