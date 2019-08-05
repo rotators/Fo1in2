@@ -364,13 +364,14 @@ variable Scenery_Creation_Ptr;
 											Blocking_Cycle(5,4,Elevation)                                                           \
 											Blocking_Cycle(0,1,Elevation)                                                           \
 											Blocking_Cycle(5,3,Elevation)                                                           \
+											Blocking_Cycle(4,1,Elevation)                                                           \
 											Blocking_Cycle(3,6,Elevation)                                                           \
 											Blocking_Cycle(2,1,Elevation)                                                           \
 											Blocking_Cycle(3,1,Elevation)                                                           \
 											Blocking_Cycle(2,1,Elevation)                                                           \
 											Blocking_Cycle(3,1,Elevation)                                                           \
-											Blocking_Cycle(2,3,Elevation)                                                           \
-											Blocking_Cycle(0,1,Elevation)
+											Blocking_Cycle(2,2,Elevation)                                                           \
+											Blocking_Cycle(1,2,Elevation)
 
 // Blocking Hex Cycle
 #define create_blocking_hex(the_tile, the_elev) move_to(create_object(PID_BLOCKING_HEX, the_tile, the_elev), the_tile, the_elev)
