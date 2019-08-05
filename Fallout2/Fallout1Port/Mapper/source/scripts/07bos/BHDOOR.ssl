@@ -1,0 +1,148 @@
+/*
+
+	This is the Lost Hills entrance door that will be opened by Cabbot!
+
+*/
+
+#include "..\headers\define.h"
+
+#define NAME                    	SCRIPT_DOOR
+
+#include "..\headers\command.h"
+
+procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure look_at_p_proc;
+procedure use_p_proc;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
+procedure timed_event_p_proc;
+procedure damage_p_proc;
+procedure description_p_proc;
+
+import variable Door_ptr;
+import variable Cabbot_Ptr;
+
+#define mstr_bosdr(x) 							message_str(SCRIPT_MBOUT2IN, x)
+
+procedure start begin
+end
+
+procedure damage_p_proc begin
+	// Nothing will break this door, not even explosions
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then
+		display_msg(mstr_bosdr(106));
+   else
+		display_msg(mstr(193));
+end
+
+procedure description_p_proc begin
+	if (obj_is_locked(self_obj)) then begin
+		display_msg(mstr(104));
+	end
+end
+
+procedure map_enter_p_proc begin
+	Door_ptr := self_obj;
+	if obj_is_open(self_obj) then begin
+		add_timer_event(self_obj, game_ticks(1), 1);
+	end
+end
+
+procedure timed_event_p_proc begin
+	set_local_var(0, 0);
+	obj_close(self_obj);
+end
+
+procedure map_update_p_proc begin
+	Door_ptr := self_obj;
+end
+
+procedure look_at_p_proc begin
+	if ((global_var(QUEST_BROHOOD_1_JOIN_THEM) == 2) and (local_var(0) == 0)) then begin
+		display_msg(mstr_bosdr(102));
+	end
+	else begin
+		display_msg(mstr_bosdr(100));
+	end
+end
+
+procedure use_p_proc begin
+	if ((global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) and (local_var(0) == 0)) then begin
+		if (source_obj != Cabbot_Ptr) then begin
+			script_overrides;
+			set_map_var(0, map_var(0) + 1);
+			display_msg(mstr_bosdr(104)); // unable to unlock the door
+		end
+	end
+end
+
+procedure use_obj_on_p_proc begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := obj_being_used_with;
+	LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
+	if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+		set_map_var(0, map_var(0) + 1);
+	end
+	if (obj_pid(LVar0) == PID_ELECTRONIC_LOCKPICKS) then begin
+		script_overrides;
+		if (is_success(LVar1)) then begin
+			if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+				set_map_var(0, map_var(0) + 2);
+				set_global_var(ENEMY_BROTHERHOOD, 1);
+			end
+			set_local_var(0, 1);
+			display_msg(mstr(100)); // you unlock the door
+			display_msg(message_str(SCRIPT_GENCHAT, 103) + "75" + message_str(SCRIPT_GENCHAT, 104));
+			give_exp_points(75);
+		end
+		else begin
+			if (is_critical(LVar1)) then begin
+				rm_obj_from_inven(dude_obj, LVar0);
+				destroy_object(LVar0);
+				jam_lock(self_obj);
+				display_msg(mstr(101)); // lockpicks broken
+			end
+			else begin
+				display_msg(mstr(103)); // not able to pick the lock
+			end
+		end
+	end
+end
+
+procedure use_skill_on_p_proc begin
+	variable LVar0 := 0;
+	if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+		set_map_var(0, map_var(0) + 1);
+	end
+	if (local_var(0) == 0) then begin
+		if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
+			script_overrides;
+			LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -70);
+			if (is_success(LVar0)) then begin
+				set_local_var(0, 1);
+				if (global_var(QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
+					set_map_var(0, map_var(0) + 2);
+					set_global_var(ENEMY_BROTHERHOOD, 1);
+				end
+				display_msg(mstr(100)); // lock unlocked
+				give_exp_points(EXP_LOCKPICK_NEG_50);
+				display_msg(message_str(SCRIPT_GENCHAT, 103) + "75" + message_str(SCRIPT_GENCHAT, 104));
+			end
+			else begin
+				if (is_critical(LVar0)) then begin
+					jam_lock(self_obj);
+					display_msg(mstr(110)); // not skilled enough
+				end
+				else begin
+					display_msg(mstr(103)); // not able to pick the lock
+				end
+			end
+		end
+	end
+	else begin
+		display_msg(mstr(109)); // door is already unlocked
+	end
+end
