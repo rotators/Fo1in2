@@ -1,10 +1,14 @@
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
 
+#include "..\headers\MAPLABLADES.h"
+
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure map_exit_p_proc;
+
+procedure Invasion;
 
 export variable InBladePtr1;
 export variable InBladePtr2;
@@ -13,13 +17,12 @@ export variable InBladePtr4;
 export variable InBladePtr5;
 export variable RazorPtr;
 
-variable party_elevation;
-variable dude_start_hex;
-
-procedure Invasion;
-
 variable invaderPtr;
+variable kidPtr;
+variable KidCount;
 
+#define MaxKids 				(5)
+#define KidsSpawnHex 		(31533)
 
 procedure start begin
 end
@@ -36,6 +39,19 @@ procedure map_enter_p_proc begin
 
 	if get_car_from_worldmap then begin
 		override_map_start_hex(28517,0,5);
+
+		// This will spawn yelling kids around the motorcycle
+		if (map_var(MVAR_Car_Kids_created) == 0) and not(boneyard_invaded) then begin
+			set_map_var(MVAR_Car_Kids_created,1);
+			debug("spawning kids!");
+			while (KidCount < MaxKids) do begin
+				KidCount := KidCount + 1;
+				kidPtr := create_object_sid(PID_BOY, 0, 0, SCRIPT_LAKIDS);
+				critter_attempt_placement(kidPtr, KidsSpawnHex, 0);
+				set_ai(kidPtr, AI_LITTLE_KIDS);
+				set_team(kidPtr, TEAM_LA_BLADES);
+			end
+		end
 	end
 end
 
@@ -60,7 +76,7 @@ procedure map_exit_p_proc begin
 end
 
 procedure Invasion begin
-	if ((global_var(GVAR_FOLLOWERS_INVADED) == 1) and not(is_loading_game) and (map_var(1) == 0)) then begin
+	if (boneyard_invaded and not(is_loading_game) and (map_var(1) == 0)) then begin
 		set_map_var(1, 1);
 		kill_critter_type(PID_LOSER, 1);
 		kill_critter_type(PID_PEASANT_BLACK, 1);
@@ -73,15 +89,19 @@ procedure Invasion begin
 		kill_critter_type(PID_RUTGER, 1);
 		kill_critter_type(PID_DUGAN, 1);
 		kill_critter_type(PID_HAMMER, 1);
+
 		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
 		critter_add_trait( invaderPtr, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_SUPER_MUTANT_AGGRESSIVE );
 		critter_attempt_placement(invaderPtr, 20306, 0);
+
 		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
 		critter_add_trait( invaderPtr, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_SUPER_MUTANT_AGGRESSIVE );
 		critter_attempt_placement(invaderPtr, 15904, 0);
+
 		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
 		critter_add_trait( invaderPtr, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_SUPER_MUTANT_AGGRESSIVE );
 		critter_attempt_placement(invaderPtr, 22480, 0);
+
 		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
 		critter_add_trait( invaderPtr, TRAIT_OBJECT, OBJECT_AI_PACKET, AI_SUPER_MUTANT_AGGRESSIVE );
 		critter_attempt_placement(invaderPtr, 21538, 0);
