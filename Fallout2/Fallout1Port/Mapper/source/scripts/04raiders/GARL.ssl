@@ -1,13 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
-procedure talk_p_proc;//    script_action == 11
+	Raiders - Garl, leader of the Khans
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GARL
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_RAIDERS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+procedure talk_p_proc;
 procedure timed_event_p_proc;
-procedure Critter_Action;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
+procedure critter_p_proc;
+procedure damage_p_proc;
 
 import variable women_killed;
 import variable signal_women;
@@ -104,8 +117,7 @@ variable KATJA := PID_KATJA;
 variable Katja_flag;
 variable DeathType := 56;
 
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_RAIDERS) then begin //  RAIDERS - KHANS
 			if (local_var(4) != 1) then begin
@@ -115,78 +127,52 @@ begin
 			end
 		end
 	end
-	else begin
-		
 
-		if Only_Once then begin
-			Only_Once := 0;
-			set_self_team(TEAM_RAIDERS );
-			set_self_ai( AI_RAIDER_LEADER );
-		end
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				call timed_event_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					script_overrides;
-					display_msg(message_str(SCRIPT_GARL, 100));
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						tmp_hostile := 1;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call Critter_Action;
-						end
-					end
-				end
-			end
-		end
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_RAIDERS );
+		set_self_ai( AI_RAIDER_LEADER );
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_GARL, 100));
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (global_var(GARLS_FRIEND) != 1) then begin
 			dialogue_system_enter;
 		end
 	end
-	else begin
-		if (fixed_param == 2) then begin
+	else if (fixed_param == 2) then begin
+		call freetandi;
+	end
+	else if (fixed_param == 3) then begin
+		call honorarea;
+		float_msg(self_obj, message_str(SCRIPT_GARL, 209), 0);
+	end
+	else if (fixed_param == 4) then begin
+		if (local_var(18) > 0) then begin
+			if not(local_var(8)) then begin
+				call talk_p_proc;
+			end
+			call return_to_map;
 			call freetandi;
 		end
 		else begin
-			if (fixed_param == 3) then begin
-				call honorarea;
-				float_msg(self_obj, message_str(SCRIPT_GARL, 209), 0);
-			end
-			else begin
-				if (fixed_param == 4) then begin
-					if (local_var(18) > 0) then begin
-						if not(local_var(8)) then begin
-							call talk_p_proc;
-						end
-						call return_to_map;
-						call freetandi;
-					end
-					else begin
-						add_timer_event(self_obj, 1, 4);
-						tmp_hostile := 1;
-					end
-				end
-			end
+			add_timer_event(self_obj, 1, 4);
+			tmp_hostile := 1;
 		end
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (elevation(self_obj) == 1) then begin
 		anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), tile_num(dude_obj)));
@@ -254,7 +240,7 @@ begin
 	obj_unlock(Cell_Door_Ptr);
 end
 
-procedure Critter_Action
+procedure critter_p_proc
 begin
 	if (global_var(TANDI_HIRELING_STATUS) == 2) then begin
 		set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
@@ -290,8 +276,7 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if source_obj == dude_obj then begin
 		if (local_var(7) == 0) then begin
 			set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
@@ -302,8 +287,9 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
+	inc_raiders_rep(REP_GARL_KILLED);
+
 	set_global_var(GARL_DEAD, 1);// Is Garl dead?
 	set_global_var(TOTAL_RAIDERS, (global_var(TOTAL_RAIDERS) - 1));// Number of Raiders left
 	if (local_var(7) == 1) then begin
@@ -315,7 +301,7 @@ begin
 	end
 	else begin
 		if (local_var(7) == 0) then begin
-			if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+			if (source_obj == dude_obj) then begin
 				set_global_var(ENEMY_RAIDERS, 1);//ENEMY_RAIDERS
 				set_global_var(GARLS_FRIEND, 0);//GARLS_FRIEND
 			end
@@ -324,10 +310,7 @@ begin
 	rm_timer_event(self_obj);
 
 	inc_evil_critter
-//
-// "ARMOR DESTROY ON DEATH" MOD:
-//
-fixt_destroy_armor
+	fixt_destroy_armor
 	rm_timer_event(self_obj);
 end
 
@@ -899,8 +882,6 @@ begin
 	gdialog_mod_barter(0);
 	gsay_message(137, "", 50);
 end
-
-
 
 procedure PickDeadBodyType
 begin
