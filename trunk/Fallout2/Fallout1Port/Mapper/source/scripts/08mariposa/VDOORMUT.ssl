@@ -1,13 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+	Mariposa - Entrance door guard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_VDOORMUT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 
 procedure GenSupr00;
 procedure GenSupr03;
@@ -21,6 +34,8 @@ procedure GenSupr08;
 procedure GenSuprAlert;
 procedure GenSuprxx;
 
+#define LVAR_CreateHolodisk 	(4)
+
 import variable removal_ptr;
 
 variable initial :=  0;
@@ -28,17 +43,13 @@ variable tmp_hostile;
 variable round_counter;
 variable home_tile := 7000;
 
-
-procedure start
-begin
-	
-
+procedure start begin
 	if (not(initial)) then begin
-		if (local_var(4) == 0) then begin
+		if (local_var(LVAR_CreateHolodisk) == 0) then begin
 			variable LVar0 := 0;
 			LVar0 := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_DOORCODE);
 			add_obj_to_inven(self_obj, LVar0);
-			set_local_var(4, 1);
+			set_local_var(LVAR_CreateHolodisk, 1);
 		end
 		set_self_team(TEAM_NECROPOLIS_MUTANT );
 		set_self_ai( AI_SUPER_MUTANT_SGT );
@@ -46,8 +57,7 @@ begin
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		round_counter := round_counter + 1;
 	end
@@ -56,8 +66,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (round_counter > 0) then begin
 		tmp_hostile := 1;
 	end
@@ -66,47 +75,26 @@ begin
 			tmp_hostile := 0;
 			attack(dude_obj);
 		end
-		else begin
-			if (global_var(VATS_ALERT)) then begin
-				tmp_hostile := 1;
-			end
-			else begin
-				if (not(map_var(4))) then begin
-					if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-						dialogue_system_enter;
-					end
-				end
+		else if (global_var(VATS_ALERT)) then begin
+			tmp_hostile := 1;
+		end
+		else if (not(map_var(4))) then begin
+			if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+				dialogue_system_enter;
 			end
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+procedure destroy_p_proc begin
+	inc_evil_critter
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (global_var(LIEUTENANTS_DEAD)) then begin
 		call GenSupr08;
@@ -130,14 +118,12 @@ begin
 	end
 end
 
-procedure GenSupr00
-begin
+procedure GenSupr00 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(101, 103)), 2);
 	tmp_hostile := 1;
 end
 
-procedure GenSupr03
-begin
+procedure GenSupr03 begin
 	gsay_reply(433, random(104, 106));
 	giq_option( -3, SCRIPT_GENSUPR, 107, GenSupr04, BAD_REACTION );
 	giq_option( 4, SCRIPT_GENSUPR, 108, GenSupr04, BAD_REACTION );
@@ -148,8 +134,7 @@ begin
 	end
 end
 
-procedure GenSupr03a
-begin
+procedure GenSupr03a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call GenSupr07;
 	end
@@ -158,8 +143,7 @@ begin
 	end
 end
 
-procedure GenSupr03b
-begin
+procedure GenSupr03b begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
 		call GenSupr07;
 	end
@@ -168,45 +152,38 @@ begin
 	end
 end
 
-procedure GenSupr04
-begin
+procedure GenSupr04 begin
 	tmp_hostile := 1;
 	gsay_message(433, random(112, 114), 51);
 end
 
-procedure GenSupr05
-begin
+procedure GenSupr05 begin
 	gsay_reply(433, 115);
 	giq_option( 5, SCRIPT_GENSUPR, 116, GenSuprxx, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_GENSUPR, 117, GenSuprAlert, BAD_REACTION );
 end
 
-procedure GenSupr06
-begin
+procedure GenSupr06 begin
 	tmp_hostile := 1;
 	gsay_message(433, random(118, 120), 51);
 end
 
-procedure GenSupr07
-begin
+procedure GenSupr07 begin
 	set_map_var(4, 1);
 	gsay_message(433, random(121, 123), 50);
 end
 
-procedure GenSupr08
-begin
+procedure GenSupr08 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(124, 127)), 2);
 	tmp_hostile := 1;
 end
 
-procedure GenSuprAlert
-begin
+procedure GenSuprAlert begin
 	set_global_var(VATS_ALERT, 1);
 	tmp_hostile := 1;
 end
 
-procedure GenSuprxx
-begin
+procedure GenSuprxx begin
 	set_global_var(ENTERING_VATS_HOW, 2);
 	load_map(MAP_MBVATS12, 5);
 end
