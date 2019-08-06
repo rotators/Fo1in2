@@ -1,1 +1,0 @@
-@cmake -P Build.cmake
