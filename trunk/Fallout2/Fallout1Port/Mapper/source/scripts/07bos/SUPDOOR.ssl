@@ -11,36 +11,7 @@ procedure damage_p_proc;//    script_action == 14
 // local_var(0) == IS_UNLOCKED_STATUS
 // local_var(1) == IS_BLOWN_STATUS
 
-procedure start
-begin
-	if (script_action == 3) then begin// 21 is look_at, 3 is description (Binoculars)
-		call description_p_proc;
-	end
-	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			call use_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-						call damage_p_proc;
-					end
-					else begin
-						if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-							call map_update_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
 procedure use_p_proc
@@ -153,28 +124,32 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	set_local_var(1, (local_var(1) + 1));
-	set_map_var(18, (map_var(18) + 2));
-	if (local_var(1) == 1) then begin
-		display_msg(message_str(SCRIPT_GENCHAT, 500));
-	end
-	else begin
-		if (local_var(1) == 2) then begin
-			display_msg(message_str(SCRIPT_GENCHAT, 501));
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+		set_local_var(1, (local_var(1) + 1));
+		set_map_var(18, (map_var(18) + 2));
+		if (local_var(1) == 1) then begin
+			display_msg(message_str(SCRIPT_GENCHAT, 500));
 		end
 		else begin
-			if (local_var(1) == 3) then begin
-				variable XP_reward := 50;
-				display_msg(message_str(SCRIPT_GENCHAT, 502));
-				set_local_var(0, 1);
-				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-				destroy_object(self_obj);
-				give_exp_points(XP_reward);
-				display_msg(message_str(SCRIPT_GENCHAT, 503) + XP_reward + message_str(SCRIPT_GENCHAT, 504));
+			if (local_var(1) == 2) then begin
+				display_msg(message_str(SCRIPT_GENCHAT, 501));
+			end
+			else begin
+				if (local_var(1) == 3) then begin
+					variable XP_reward := 50;
+					display_msg(message_str(SCRIPT_GENCHAT, 502));
+					set_local_var(0, 1);
+					if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+					destroy_object(self_obj);
+					give_exp_points(XP_reward);
+					display_msg(message_str(SCRIPT_GENCHAT, 503) + XP_reward + message_str(SCRIPT_GENCHAT, 504));
+				end
 			end
 		end
+	end
+	else begin
+		display_msg(message_str(SCRIPT_DOOR,193));
 	end
 end
 
