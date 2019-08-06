@@ -1,0 +1,171 @@
+/*
+
+	?? Marney, Doctor
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MARNEY
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+
+procedure Marney00;
+procedure Marney01;
+procedure Marney02;
+procedure Marney03;
+procedure Marney04;
+procedure Marney05;
+procedure Marney06;
+procedure Marney07;
+procedure MarneyEnd;
+
+variable initial :=  0;
+
+procedure start begin
+	if not(initial) then begin
+		set_self_team(TEAM_LA_FOLLOWERS );
+		set_self_ai( AI_FOLLOWER_LEADER );
+		initial :=  1;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(QUEST_BONEYARD_3_BOMBFOLL) == 2) then begin
+		kill_critter(self_obj, ANIM_exploded_to_nothing_sf);
+	end
+end
+
+procedure destroy_p_proc begin
+   inc_good_critter
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	if (local_var(0)) then begin
+		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+			display_msg(message_str(SCRIPT_MARNEY, 100));
+		end
+		else begin
+			display_msg(message_str(SCRIPT_MARNEY, 101));
+		end
+	end
+	else begin
+		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+			display_msg(message_str(SCRIPT_MARNEY, 102));
+		end
+		else begin
+			display_msg(message_str(SCRIPT_MARNEY, 103));
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	start_gdialog(270, self_obj, 4, -1, -1);
+	gsay_start;
+	set_local_var(0, 1);
+	call Marney00;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Marney00
+begin
+	variable LVar0 := 0;
+	LVar0 := get_critter_stat(dude_obj, STAT_max_hp) - get_critter_stat(dude_obj, STAT_current_hp);
+	gsay_reply(270, 104);
+	giq_option( -3, SCRIPT_MARNEY, 105, Marney01, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MARNEY, 125, MarneyEnd, NEUTRAL_REACTION );
+	if (LVar0 > 0) then begin
+		giq_option( 4, SCRIPT_MARNEY, 106, Marney01, NEUTRAL_REACTION );
+	end
+	if (not(local_var(2))) then begin
+		giq_option( 5, SCRIPT_MARNEY, 107, Marney06, NEUTRAL_REACTION );
+	end
+end
+
+procedure Marney01
+begin
+	gsay_reply(270, 108);
+	giq_option( -3, SCRIPT_MARNEY, 109, Marney02, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_MARNEY, 110, Marney05, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MARNEY, 111, Marney02, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MARNEY, 112, Marney05, NEUTRAL_REACTION );
+end
+
+procedure Marney02
+begin
+	variable LVar0 := 0;
+	gfade_out(1);
+	LVar0 := get_critter_stat(dude_obj, STAT_max_hp) - get_critter_stat(dude_obj, STAT_current_hp);
+	game_time_advance(game_ticks(60 * 20 * LVar0));
+	critter_heal(dude_obj, LVar0);
+	gsay_message(270, 113, 50);
+	if (not(local_var(1))) then begin
+		giq_option( 4, SCRIPT_MARNEY, 114, Marney03, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MARNEY, 115, MarneyEnd, NEUTRAL_REACTION );
+	gfade_in(1);
+end
+
+procedure Marney03
+begin
+	gsay_reply(270, 116);
+	giq_option( 4, SCRIPT_MARNEY, 117, Marney04, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MARNEY, 118, Marney05, NEUTRAL_REACTION );
+end
+
+procedure Marney04
+begin
+	gfade_out(1);
+	game_time_advance(game_ticks(18000));
+	critter_mod_skill(dude_obj, SKILL_FIRST_AID, 15);
+	set_local_var(1, 1);
+	gsay_message(270, 119, 50);
+	gfade_in(1);
+	display_msg(message_str(SCRIPT_GENCHAT, 116) + 15 + message_str(SCRIPT_GENCHAT, 141));
+end
+
+procedure Marney05
+begin
+	gsay_message(270, 120, 50);
+end
+
+procedure Marney06
+begin
+	gsay_reply(270, 121);
+	giq_option( 5, SCRIPT_MARNEY, 122, Marney07, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MARNEY, 123, Marney05, NEUTRAL_REACTION );
+end
+
+procedure Marney07
+begin
+	gfade_out(1);
+	game_time_advance(game_ticks(25200));
+	critter_mod_skill(dude_obj, SKILL_DOCTOR, 15);
+	set_local_var(2, 1);
+	gsay_message(270, 124, 50);
+	gfade_in(1);
+	display_msg(message_str(SCRIPT_GENCHAT, 116) + 15 + message_str(SCRIPT_GENCHAT, 142));
+end
+
+procedure MarneyEnd
+begin
+end
+
+

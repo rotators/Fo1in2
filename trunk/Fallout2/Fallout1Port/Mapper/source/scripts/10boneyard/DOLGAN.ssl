@@ -1,0 +1,213 @@
+/*
+
+	Boneyard - Dolgan / Snake, Blades member
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_DOLGAN
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
+procedure show_true_name;
+procedure show_false_name;
+procedure Dolgan00;
+procedure Dolgan01;
+procedure Dolgan02;
+procedure Dolgan03;
+procedure Dolgan04;
+procedure Dolgan05;
+procedure Dolgan06;
+procedure Dolgan07;
+procedure Train;
+procedure DolganEnd;
+
+variable tmp_hostile;
+variable initial :=  0;
+
+procedure DolganCombat;
+
+procedure start begin
+	if not(initial) then begin
+		set_self_team(TEAM_LA_BLADES );
+		set_self_ai( AI_BLADES );
+		initial :=  1;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj) and (global_var(BLADES_LEFT) < 41)) then begin
+		tmp_hostile := 1;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure destroy_p_proc begin
+	set_global_var(BLADES_LEFT, global_var(BLADES_LEFT) - 1);
+	inc_good_critter
+end
+
+procedure look_at_p_proc
+begin
+	if ((global_var(QUEST_BONEYARD_1_ME_BLADE) == 2) or (get_critter_stat(dude_obj, STAT_lu) > 6)) then begin
+		call show_true_name;
+	end
+	else begin
+		if (get_critter_stat(dude_obj, STAT_lu) < 4) then begin
+			call show_false_name;
+		end
+		else begin
+			if (get_critter_stat(dude_obj, STAT_iq) < 5) then begin
+				call show_false_name;
+			end
+			else begin
+				if (random(0, 1)) then begin
+					call show_false_name;
+				end
+				else begin
+					call show_true_name;
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	start_gdialog(282, self_obj, 4, -1, -1);
+	gsay_start;
+	set_local_var(0, 1);
+	if (global_var(QUEST_BONEYARD_1_ME_BLADE) == 2) then begin
+		call Dolgan03;
+	end
+	else begin
+		if ((global_var(QUEST_BONEYARD_1_ME_BLADE) == 1) and (local_var(1) == 0)) then begin
+			call Dolgan01;
+		end
+		else begin
+			call Dolgan00;
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure show_true_name
+begin
+	script_overrides;
+	if (local_var(0)) then begin
+		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+			display_msg(message_str(SCRIPT_DOLGAN, 100));
+		end
+		else begin
+			display_msg(message_str(SCRIPT_DOLGAN, 101));
+		end
+	end
+	else begin
+		display_msg(message_str(SCRIPT_DOLGAN, 104));
+	end
+end
+
+procedure show_false_name
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_DOLGAN, random(105, 111)));
+end
+
+procedure Dolgan00
+begin
+	float_msg(self_obj, message_str(SCRIPT_DOLGAN, 112), 2);
+end
+
+procedure Dolgan01
+begin
+	float_msg(self_obj, message_str(SCRIPT_DOLGAN, 113), 2);
+	set_local_var(1, 1);
+	critter_mod_skill(dude_obj, SKILL_MELEE, 7);
+	game_time_advance(game_ticks(14400));
+	call Dolgan02;
+	display_msg(message_str(SCRIPT_GENCHAT, 116) + 7 + message_str(SCRIPT_GENCHAT, 121));
+end
+
+procedure Dolgan02
+begin
+	gsay_message(282, 114, 50);
+end
+
+procedure Dolgan03
+begin
+	gsay_reply(282, 115);
+	if (local_var(1) != 2) then begin
+		giq_option( 5, SCRIPT_DOLGAN, 116, Dolgan04, NEUTRAL_REACTION );
+	end
+	giq_option( 5, SCRIPT_DOLGAN, 117, Dolgan07, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_DOLGAN, 118, DolganEnd, NEUTRAL_REACTION );
+end
+
+procedure Dolgan04
+begin
+	gsay_reply(282, 119);
+	if (local_var(1) != 2) then begin
+		giq_option( 4, SCRIPT_DOLGAN, 120, Train, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_DOLGAN, 121, DolganEnd, NEUTRAL_REACTION );
+end
+
+procedure Dolgan05
+begin
+	gsay_message(282, 122, 50);
+end
+
+procedure Dolgan06
+begin
+	gsay_message(282, 123, 50);
+end
+
+procedure Dolgan07
+begin
+	gsay_reply(282, 124);
+	giq_option( 5, SCRIPT_DOLGAN, 125, DolganEnd, NEUTRAL_REACTION );
+end
+
+procedure Train
+begin
+	game_time_advance(game_ticks(21600));
+	set_local_var(1, 2);
+	critter_mod_skill(dude_obj, SKILL_MELEE, 7);
+	call Dolgan05;
+	display_msg(message_str(SCRIPT_GENCHAT, 116) + 7 + message_str(SCRIPT_GENCHAT, 121));
+end
+
+procedure DolganEnd
+begin
+end
+
+procedure DolganCombat
+begin
+	tmp_hostile := 1;
+end
+
+

@@ -1,0 +1,389 @@
+/*
+
+	Boneyard - Fire, Blades member
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_FIRE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_update_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
+procedure Fire00;
+procedure Fire01;
+procedure Fire02;
+procedure Fire03;
+procedure Fire04;
+procedure Fire05;
+procedure Fire06;
+procedure Fire07;
+procedure Fire08;
+procedure Fire09;
+procedure Fire10;
+procedure Fire11;
+procedure Fire12;
+procedure Fire13;
+procedure Fire14;
+procedure Fire15;
+procedure Fire16;
+procedure Fire17;
+procedure Fire18;
+procedure Fire19;
+procedure Fire20;
+procedure Fire21;
+procedure FireCombat;
+procedure FireEnd;
+
+procedure follow_player;
+procedure show_true_name;
+procedure show_false_name;
+
+variable tmp_hostile;
+variable initial :=  0;
+variable prev_tile := 7000;
+variable tmp_dest_tile := 7000;
+variable name;
+
+procedure timed_event_p_proc;//    script_action == 22
+
+procedure start begin
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj) and (global_var(BLADES_LEFT) < 41)) then begin
+		tmp_hostile := 1;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+
+	set_global_var(BLADES_LEFT, global_var(BLADES_LEFT) - 1);
+	if (source_obj == dude_obj) then begin
+		set_global_var(BLADES_HELP, 0);
+	end
+	inc_good_critter
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	if ((global_var(QUEST_BONEYARD_1_ME_BLADE) == 2) or (get_critter_stat(dude_obj, STAT_lu) > 6)) then begin
+		call show_true_name;
+	end
+	else begin
+		if (get_critter_stat(dude_obj, STAT_lu) < 4) then begin
+			call show_false_name;
+		end
+		else begin
+			if (get_critter_stat(dude_obj, STAT_iq) < 5) then begin
+				call show_false_name;
+			end
+			else begin
+				if (random(0, 1)) then begin
+					call show_false_name;
+				end
+				else begin
+					call show_true_name;
+				end
+			end
+		end
+	end
+end
+
+procedure map_update_p_proc
+begin
+	if not(initial) then begin
+      set_self_ai( AI_BLADES );
+		if (cur_map_index == MAP_LABLADES) then begin //  L.A. BONEYARD - BLADES
+         set_self_team(TEAM_LA_BLADES );
+		end
+		else begin
+			if (cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) then begin //  CATHEDRAL - ENTRANCE AND ANY LEVELS
+				party_add(self_obj);
+				if (global_var(BLADES_HELP) == 1) then begin
+					if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+                  set_self_team(TEAM_PLAYER );
+					add_timer_event(self_obj, game_ticks(1), 1);
+				end
+				else begin
+					if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+				end
+			end
+			else begin
+				if ((cur_map_index != MAP_CHILDRN1) and (cur_map_index != MAP_CHILDRN2)) then begin
+					party_remove(self_obj);
+				end
+			end
+		end
+		initial :=  1;
+	end
+	if ((elevation(self_obj) != elevation(dude_obj)) and (global_var(BLADES_HELP) == 1)) then begin
+		move_to(self_obj, tile_num_in_direction(tile_num(dude_obj), random(4, 5), 1), elevation(dude_obj));
+	end
+end
+
+procedure pickup_p_proc
+begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	start_gdialog(280, self_obj, 4, -1, -1);
+	gsay_start;
+	set_local_var(4, 1);
+	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+		call Fire18;
+	end
+	else begin
+		if (global_var(QUEST_BONEYARD_1_ME_BLADE) == 2) then begin
+			call Fire21;
+		end
+		else begin
+			if (global_var(QUEST_BONEYARD_1_ME_BLADE) == 1) then begin
+				if (global_var(BLADES_HELP) == 1) then begin
+					call Fire19;
+				end
+				else begin
+					call Fire20;
+				end
+			end
+			else begin
+				call Fire00;
+			end
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Fire00
+begin
+	gsay_reply(280, 111);
+	giq_option( -3, SCRIPT_FIRE, 112, Fire01, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_FIRE, 113, Fire07, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_FIRE, 114, Fire11, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_FIRE, 115, FireCombat, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_FIRE, 116, FireEnd, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_FIRE, 117, Fire17, NEUTRAL_REACTION );
+end
+
+procedure Fire01
+begin
+	gsay_reply(280, 118);
+	giq_option( -3, SCRIPT_FIRE, 119, Fire02, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_FIRE, 120, Fire05, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_FIRE, 121, Fire06, NEUTRAL_REACTION );
+end
+
+procedure Fire02
+begin
+	gsay_reply(280, 122);
+	giq_option( -3, SCRIPT_FIRE, 123, Fire03, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_FIRE, 124, Fire04, NEUTRAL_REACTION );
+end
+
+procedure Fire03
+begin
+	gsay_message(280, 125, 50);
+end
+
+procedure Fire04
+begin
+	gsay_message(280, 126, 50);
+	call FireCombat;
+end
+
+procedure Fire05
+begin
+	gsay_message(280, 127, 50);
+	call FireCombat;
+end
+
+procedure Fire06
+begin
+	gsay_message(280, 128, 50);
+end
+
+procedure Fire07
+begin
+	gsay_reply(280, 129);
+	giq_option( 4, SCRIPT_FIRE, 130, FireEnd, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_FIRE, 131, Fire08, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_FIRE, 132, Fire09, NEUTRAL_REACTION );
+	giq_option( 7, SCRIPT_FIRE, 133, Fire10, NEUTRAL_REACTION );
+end
+
+procedure Fire08
+begin
+	gsay_message(280, 134, 50);
+	call FireCombat;
+end
+
+procedure Fire09
+begin
+	gsay_reply(280, 135);
+	giq_option( 5, SCRIPT_FIRE, 136, FireEnd, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_FIRE, 137, Fire08, NEUTRAL_REACTION );
+end
+
+procedure Fire10
+begin
+	gsay_message(280, 138, 50);
+end
+
+procedure Fire11
+begin
+	gsay_reply(280, 139);
+	giq_option( 6, SCRIPT_FIRE, 140, Fire12, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_FIRE, 141, Fire15, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_FIRE, 142, Fire16, NEUTRAL_REACTION );
+end
+
+procedure Fire12
+begin
+	gsay_reply(280, 143);
+	giq_option( 6, SCRIPT_FIRE, 144, Fire13, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_FIRE, 145, Fire14, NEUTRAL_REACTION );
+end
+
+procedure Fire13
+begin
+	gsay_message(280, 146, 50);
+end
+
+procedure Fire14
+begin
+	gsay_message(280, 147, 50);
+	call FireCombat;
+end
+
+procedure Fire15
+begin
+	gsay_message(280, 148, 50);
+end
+
+procedure Fire16
+begin
+	gsay_message(280, 149, 50);
+	call FireCombat;
+end
+
+procedure Fire17
+begin
+	gsay_message(280, 150, 50);
+	call FireCombat;
+end
+
+procedure Fire18
+begin
+	gsay_message(280, 151, 50);
+	add_timer_event(self_obj, game_ticks(10), 2);
+end
+
+procedure Fire19
+begin
+	gsay_message(280, 152, 50);
+end
+
+procedure Fire20
+begin
+	gsay_message(280, 153, 50);
+end
+
+procedure Fire21
+begin
+	gsay_message(280, 154, 50);
+end
+
+procedure FireCombat
+begin
+	tmp_hostile := 1;
+end
+
+procedure FireEnd
+begin
+end
+
+procedure follow_player
+begin
+	variable LVar0 := 0;
+	prev_tile := tmp_dest_tile;
+	LVar0 := (has_trait( TRAIT_OBJECT, dude_obj, OBJECT_CUR_ROT ) + random(4, 5)) % 6;
+	tmp_dest_tile := tile_num_in_direction(tile_num(dude_obj), LVar0, random(2, 3));
+	if (tile_distance(prev_tile, tile_num(dude_obj)) > tile_distance(tmp_dest_tile, tile_num(dude_obj))) then begin
+		if (tile_distance_objs(self_obj, dude_obj) > 8) then begin
+			animate_move_obj_to_tile(self_obj, tmp_dest_tile, 1 bwor 16);
+		end
+		else begin
+			animate_move_obj_to_tile(self_obj, tmp_dest_tile, 0 bwor 16);
+		end
+	end
+	else begin
+		if (tile_distance_objs(self_obj, dude_obj) > 8) then begin
+			animate_move_obj_to_tile(self_obj, tmp_dest_tile, 1);
+		end
+		else begin
+			animate_move_obj_to_tile(self_obj, tmp_dest_tile, 0);
+		end
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 3) then begin
+		add_timer_event(self_obj, game_ticks(1), 1);
+	end
+	else begin
+		add_timer_event(self_obj, game_ticks(random(2, 5)), 1);
+	end
+end
+
+procedure show_true_name
+begin
+	script_overrides;
+	if (local_var(4)) then begin
+		display_msg(message_str(SCRIPT_FIRE, 100));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_FIRE, 103));
+	end
+end
+
+procedure show_false_name
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_FIRE, random(104, 110)));
+end
+
+procedure timed_event_p_proc
+begin
+	if (fixed_param == 1) then begin
+		call follow_player;
+	end
+	else begin
+		if (obj_can_see_obj(self_obj, dude_obj)) then begin
+			tmp_hostile := 1;
+		end
+	end
+end
+
+

@@ -1,0 +1,129 @@
+/*
+
+	Hub - Mike, Old Town guard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MIKE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+
+procedure Mike01;
+procedure Mike02;
+procedure Mike03;
+procedure Mike04;
+procedure Mike05;
+procedure Mike06;
+
+variable tmp_hostile;
+variable Only_Once := 1;
+
+procedure start begin
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_HUB_POLICE );
+		set_self_ai( AI_GUARD );
+	end
+end
+
+procedure combat
+begin
+	tmp_hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	get_reaction
+	start_gdialog(821, self_obj, 4, -1, -1);
+	gsay_start;
+	call Mike01;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure destroy_p_proc begin
+   inc_good_critter
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_MIKE, 100));
+end
+
+procedure Mike01
+begin
+	gsay_reply(821, 101);
+	giq_option( -3, SCRIPT_MIKE, 102, Mike02, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MIKE, 103, Mike03, NEUTRAL_REACTION );
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option( 4, SCRIPT_MIKE, 104, Mike04, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MIKE, 105, Mike05, NEUTRAL_REACTION );
+end
+
+procedure Mike02
+begin
+	gsay_message(821, 106, 50);
+end
+
+procedure Mike03
+begin
+	gsay_reply(821, 107);
+	if (global_var(QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+		giq_option( 4, SCRIPT_MIKE, 108, Mike04, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MIKE, 109, Mike05, NEUTRAL_REACTION );
+end
+
+procedure Mike04
+begin
+	gsay_reply(821, 110);
+	giq_option( 4, SCRIPT_MIKE, 111, Mike06, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MIKE, 112, Mike03, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MIKE, 113, Mike05, NEUTRAL_REACTION );
+end
+
+procedure Mike05
+begin
+end
+
+procedure Mike06
+begin
+	call combat;
+end
+
+
+
+

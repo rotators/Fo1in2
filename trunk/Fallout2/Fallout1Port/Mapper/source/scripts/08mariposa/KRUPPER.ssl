@@ -1,0 +1,135 @@
+/*
+
+	Mariposa -
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_KRUPPER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+procedure destroy_p_proc;
+
+procedure krupper00;
+procedure krupper01;
+procedure krupper02;
+procedure krupper03;
+procedure krupper04;
+procedure kruppercombat;
+
+variable tmp_hostile;
+variable initial :=  0;
+
+procedure start begin
+	if not(initial) then begin
+		initial :=  1;
+		set_self_team(TEAM_NECROPOLIS_MUTANT );
+		set_self_ai( AI_SUPER_MUTANT_AGGRESSIVE );
+	end
+end
+
+procedure critter_p_proc
+begin
+	if ((local_var(4) == 0) and obj_can_see_obj(self_obj, dude_obj)) then begin
+		dialogue_system_enter;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_KRUPPER, 100));
+end
+
+procedure pickup_p_proc
+begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	if dude_wearing_coc_robe then begin
+		call krupper01;
+	end
+	else begin
+		call kruppercombat;
+	end
+	set_local_var(4, 1);
+end
+
+procedure timed_event_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure destroy_p_proc begin
+	rm_timer_event(self_obj);
+   inc_inv_evil_crit
+	rm_timer_event(self_obj);
+end
+
+procedure krupper00
+begin
+	float_msg(self_obj, message_str(SCRIPT_KRUPPER, 101), 0);
+	call kruppercombat;
+end
+
+procedure krupper01
+begin
+	start_gdialog(434, self_obj, 4, -1, -1);
+	gsay_start;
+	gsay_reply(434, 102);
+	giq_option( 4, SCRIPT_KRUPPER, 103, krupper03, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KRUPPER, 104, kruppercombat, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_KRUPPER, 105, krupper02, NEUTRAL_REACTION );
+	gsay_end;
+	end_dialogue;
+end
+
+procedure krupper02
+begin
+	gsay_message(434, 106, 50);
+	call kruppercombat;
+end
+
+procedure krupper03
+begin
+	gsay_reply(434, 107);
+	giq_option( 4, SCRIPT_KRUPPER, 108, krupper02, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KRUPPER, 109, krupper04, NEUTRAL_REACTION );
+end
+
+procedure krupper04
+begin
+	gsay_message(434, 110, 50);
+	add_timer_event(self_obj, game_ticks(20), 1);
+end
+
+procedure kruppercombat
+begin
+	tmp_hostile := 1;
+end
+
+
+
+

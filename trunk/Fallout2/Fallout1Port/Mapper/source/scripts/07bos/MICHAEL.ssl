@@ -1,0 +1,1094 @@
+/*
+
+	Brotherhood - Michael
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MICHAEL
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+
+procedure Michael0;
+procedure Michael1;
+procedure Michael2;
+procedure Michael3;
+procedure Michael3a;
+procedure Michael4;
+procedure Michael5;
+procedure Michael10;
+procedure Michael11;
+procedure Michael11a;
+procedure Michael12;
+procedure Michael13;
+procedure Michael13a;
+procedure Michael13b;
+procedure Michael14;
+procedure Michael15;
+procedure Michael16;
+procedure Michael16a;
+procedure Michael16b;
+procedure Michael17;
+procedure Michael18;
+procedure Michael19;
+procedure Michael20;
+procedure Michael21;
+procedure Michael22;
+procedure Michael23;
+procedure Michael24;
+procedure Michael26;
+procedure Michael27;
+procedure Michael28;
+procedure Michael29;
+procedure Michael30;
+procedure Michael38;
+procedure Michael39;
+procedure Michael40;
+procedure Michael41;
+procedure Michael42;
+procedure Michael43;
+procedure Michael44a;
+procedure Michael44b;
+procedure Michael44c;
+procedure Michael44d;
+procedure Michael44e;
+procedure Michael44f;
+procedure Michael44g;
+procedure Michael44h;
+procedure Michael44i;
+procedure Michael47;
+procedure Michael47a;
+procedure Michael48;
+procedure Michael49;
+procedure Michael50;
+procedure Michael52;
+procedure Michael52a;
+procedure Michael53;
+procedure Michael54;
+procedure Michael55;
+procedure Michael56;
+procedure Michael57;
+procedure Michael59;
+procedure Michael60;
+procedure Michael61;
+procedure Michael72;
+procedure Michael73;
+procedure Michael73a;
+procedure Michael73b;
+procedure Michael73c;
+procedure Michael74;
+procedure Michael75;
+procedure Michael75a;
+procedure Michael75b;
+procedure Michael75c;
+procedure Michael76;
+procedure Michael76a;
+procedure Michael77;
+procedure Michael78;
+procedure Michael79;
+procedure Michael79a;
+procedure Michael80;
+procedure Michael144;
+procedure Michael144more;
+procedure Michael145;
+procedure Michael146;
+procedure Michael146a;
+procedure Michael146b;
+procedure Michael147;
+procedure Michael148;
+procedure Michael149;
+procedure Michael150;
+procedure Michaelend;
+
+procedure combat;
+procedure grenadesFail;
+procedure putGrenades;
+
+procedure MichaelUpReact;
+
+variable tmp_hostile;
+variable Only_Once := 1;
+variable Open_Door;
+variable Herebefore;
+variable item;
+variable conmod;
+variable femmod;
+variable Hear_28;
+variable Hear_29;
+variable Hear_50;
+variable temp;
+variable temp2;
+
+procedure start begin
+	if Only_Once then begin
+		Only_Once := 0;
+		/* TEAM_NUM */	set_self_team(TEAM_BROTHERHOOD );
+		/* AI_PACKET */	set_self_ai( AI_BROTHERHOOD_KNIGHT );
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		tmp_hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		tmp_hostile := 0;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	variable talk := true;
+	dude_look_at_critter;
+	get_reaction
+	if (map_var(6) == 2 and global_var(MICHAEL_SOPHIA_GRENADES) < 3) then begin//angry
+		float_msg(self_obj, message_str(SCRIPT_MICHAEL, 203), 2);
+		return;
+	end
+	start_gdialog(320, self_obj, 4, -1, -1);
+	gsay_start;
+	if (local_var(7)) then begin
+		if (map_var(6) == 1) or (map_var(6) == 2) or (map_var(6) == 3) then begin
+			if (global_var(MICHAEL_SOPHIA_GRENADES) >= 3) then begin//quest done
+				set_map_var(6, 4);//done
+				gsay_message(320, 206, 49);
+				BigUpReact
+				if (global_var(MICHAEL_SOPHIA_GRENADES) == 4) then begin
+					gsay_message(320, 300, 50);
+					item := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+					add_mult_objs_to_inven(dude_obj, item, 2);
+				end
+				give_exp_points(300);
+				display_msg(message_str(SCRIPT_GENCHAT, 103) + 300 + message_str(SCRIPT_GENCHAT, 104));
+				talk := false;
+			end
+			else begin//quest in progress
+				if (global_var(MICHAEL_SOPHIA_GRENADES) == 2) or ((game_time / (10 * 60 * 60)) > local_var(5)) then begin
+					talk := false;
+					call grenadesFail;
+				end
+				else if (map_var(6) == 1) then begin
+					call Michael52;//grenade_quest_remind
+					talk := false;
+				end//else normal speech (talk := true)
+			end
+		end
+		if (talk) then begin
+			if (local_var(1) < 2) then begin
+				call Michael60;
+			end
+			else begin
+				call Michael47;
+			end
+		end
+	end
+	else begin
+		set_local_var(7, 1);
+		call Michael3;
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure destroy_p_proc
+begin
+	rm_timer_event(self_obj);
+
+	if (source_obj == dude_obj) then begin
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+	end
+	inc_good_critter
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_MICHAEL, 100));
+	script_overrides;
+end
+
+procedure Michael0
+begin
+	float_msg(self_obj, message_str(SCRIPT_MICHAEL, 103), 0);
+end
+
+procedure Michael1
+begin
+	float_msg(self_obj, message_str(SCRIPT_MICHAEL, 104), 0);
+end
+
+procedure Michael2
+begin
+	float_msg(self_obj, message_str(SCRIPT_MICHAEL, 105), 0);
+end
+
+procedure Michael3
+begin
+	gsay_reply(320, 106);
+	if (local_var(6) == 0) then begin
+		giq_option( 5, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 107), Michael3a, GOOD_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 108), Michael11, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 109), Michael10, NEUTRAL_REACTION );
+	end
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 146), Michael48, NEUTRAL_REACTION );
+	end
+	giq_option( -3, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 110), Michael4, NEUTRAL_REACTION );
+end
+
+procedure Michael3a
+begin
+	UpReact
+	call Michael11;
+end
+
+procedure Michael4
+begin
+	gsay_reply(320, 111);
+	giq_option( -3, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 112), Michael5, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 113), Michael5, NEUTRAL_REACTION );
+end
+
+procedure Michael5
+begin
+	gsay_message(320, 114, 50);
+end
+
+procedure Michael10
+begin
+	gsay_message(320, 115, 50);
+end
+
+procedure Michael11
+begin
+	set_local_var(6, 1);
+	gsay_reply(320, 116);
+	giq_option( 5, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 117), Michael11a, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 118), Michael26, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 119), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael11a
+begin
+	if (is_success(do_check(dude_obj, STAT_ch, 0))) then begin
+		call Michael13;
+	end
+	else begin
+		call Michael12;
+	end
+end
+
+procedure Michael12
+begin
+	gsay_message(320, 120, 50);
+end
+
+procedure Michael13
+begin
+	gsay_reply(320, 121);
+	giq_option( 5, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 122), Michael13a, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 123), Michael13b, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 124), Michael22, NEUTRAL_REACTION );
+end
+
+procedure Michael13a
+begin
+	if (is_success(do_check(dude_obj, STAT_ch, 0))) then begin
+		if (dude_is_male) then begin
+			call Michael16;
+		end
+		else begin
+			call Michael18;
+		end
+	end
+	else begin
+		if (dude_is_male) then begin
+			call Michael14;
+		end
+		else begin
+			call Michael17;
+		end
+	end
+end
+
+procedure Michael13b
+begin
+	if (is_success(do_check(dude_obj, STAT_ch, 0))) then begin
+		call Michael22;
+	end
+	else begin
+		call Michael15;
+	end
+end
+
+procedure Michael14
+begin
+	gsay_message(320, 125, 51);
+	DownReact
+end
+
+procedure Michael15
+begin
+	gsay_message(320, 126, 51);
+	DownReact
+end
+
+procedure Michael16
+begin
+	gsay_reply(320, 127);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 128), Michael16a, GOOD_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 129), Michael16b, BAD_REACTION );
+end
+
+procedure Michael16a
+begin
+	BigUpReact
+	call Michael19;
+end
+
+procedure Michael16b
+begin
+	DownReact
+	call Michael20;
+end
+
+procedure Michael17
+begin
+	gsay_message(320, 130, 51);
+	DownReact
+end
+
+procedure Michael18
+begin
+	gsay_reply(320, 131);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 132), Michael16a, GOOD_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 133), Michael16b, BAD_REACTION );
+end
+
+procedure Michael19
+begin
+	gsay_message(320, 134, 49);
+	TopReact
+	item := create_object( PID_PULSE_GRENADE, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	item := create_object( PID_PULSE_GRENADE, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	item := create_object( PID_PULSE_GRENADE, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+end
+
+procedure Michael20
+begin
+	gsay_message(320, 135, 50);
+end
+
+procedure Michael21
+begin
+	gsay_message(320, 136, 50);
+end
+
+procedure Michael22
+begin
+	gsay_reply(320, 137);
+	giq_option( 6, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 138), Michael23, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 139), Michael24, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 140), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael23
+begin
+	gsay_message(320, 141, 50);
+	TopReact
+	item := create_object( PID_PSYCHO, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	item := create_object( PID_PSYCHO, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+end
+
+procedure Michael24
+begin
+	if (dude_is_male) then begin
+		gsay_message(320, 142, 50);
+	end
+	else begin
+		gsay_message(320, 143, 50);
+	end
+end
+
+procedure Michael26
+begin
+	gsay_reply(320, 144);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 145), Michael27, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 146), Michael48, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 147), Michael27, NEUTRAL_REACTION );
+end
+
+procedure Michael27
+begin
+	gsay_reply(320, 148);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 149), Michael28, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 150), Michael29, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 151), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael28
+begin
+	Hear_28 := 1;
+	gsay_reply(320, 152);
+	if (Hear_29 == 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 153), Michael29, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 154), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael29
+begin
+	Hear_29 := 1;
+	gsay_reply(320, 155);
+	if (Hear_28 == 0) then begin
+		giq_option( 8, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 156), Michael30, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 157), Michael28, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 158), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael30 begin
+	gsay_reply(320, 159);
+	giq_option( 8, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 160), MichaelUpReact, NEUTRAL_REACTION );
+end
+
+procedure MichaelUpReact begin
+   UpReact
+end
+
+procedure Michael38
+begin
+	gsay_reply(320, 167);
+	temp2 := map_var(11) + 1;
+	set_map_var(11, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( temp, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 168), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 169), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael39
+begin
+	gsay_reply(320, 170);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 171), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 172), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael40
+begin
+	gsay_reply(320, 173);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 174), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 175), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael41
+begin
+	gsay_reply(320, 176);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 177), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 178), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael42
+begin
+	gsay_reply(320, 179);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 180), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 181), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael43
+begin
+	gsay_message(320, 182, 50);
+	call Michael49;
+end
+
+procedure Michael44a
+begin
+	temp := 29;
+	call Michael38;
+end
+
+procedure Michael44b
+begin
+	temp := 30;
+	call Michael38;
+end
+
+procedure Michael44c
+begin
+	temp := 31;
+	call Michael38;
+end
+
+procedure Michael44d
+begin
+	temp := 111;
+	call Michael38;
+end
+
+procedure Michael44e
+begin
+	temp := 33;
+	call Michael38;
+end
+
+procedure Michael44f
+begin
+	temp := 34;
+	call Michael38;
+end
+
+procedure Michael44g
+begin
+	temp := 35;
+	call Michael38;
+end
+
+procedure Michael44h
+begin
+	temp := 36;
+	call Michael38;
+end
+
+procedure Michael44i
+begin
+	temp := 95;
+	call Michael38;
+end
+
+procedure Michael47
+begin
+	gsay_reply(320, 183);
+	if (Hear_50 == 0 and map_var(6) == 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 184), Michael50, NEUTRAL_REACTION );
+	end
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 185), Michael48, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 186), Michaelend, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 187), Michael47a, BAD_REACTION );
+	if ((global_var(BROTHER_BUILD_POWER_ARMOR) == 1) and (local_var(8) == 0)) then begin
+		set_local_var(8, 1);
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 240), Michael72, NEUTRAL_REACTION );
+	end
+	giq_option( -3, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 110), Michael4, NEUTRAL_REACTION );
+end
+
+procedure Michael47a
+begin
+	BigDownReact
+	call Michaelend;
+end
+
+procedure Michael48
+begin
+	gsay_message(320, 188, 50);
+	call Michael49;
+end
+
+procedure Michael49
+begin
+	gsay_message(320, 189, 50);
+	if (map_var(20) > 0) then begin
+		call Michael146a;
+	end
+	if (map_var(12) > 0) then begin
+		call Michael146b;
+	end
+	else begin
+		if (map_var(13) > 0) then begin
+			call Michael147;
+		end
+		else begin
+			if (map_var(14) > 0) then begin
+				call Michael148;
+			end
+			else begin
+				if (map_var(15) > 0) then begin
+					call Michael149;
+				end
+				else begin
+					if (map_var(16) > 0) then begin
+						call Michael150;
+					end
+					else begin
+						if (map_var(10) > map_var(11)) then begin
+							call Michael144;
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Michael50
+begin
+	Hear_50 := 1;
+	gsay_reply(320, 190);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 191), putGrenades, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 192), Michaelend, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 193), Michael47a, BAD_REACTION );
+end
+
+procedure putGrenades
+begin
+	gsay_message(320, 194, 50);
+	set_local_var(5, game_time / (10 * 60 * 60));//	1 sec * 1min * 1 hour
+	set_map_var(6, 1);
+	set_global_var(MICHAEL_SOPHIA_GRENADES, 1);
+	item := create_object( PID_PULSE_GRENADE, 0, 0 );
+	add_mult_objs_to_inven(dude_obj, item, 3);
+end
+
+procedure Michael52
+begin
+	gsay_reply(320, 195);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 196), Michael53, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 197), Michael57, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 198), Michaelend, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 199), Michael52a, NEUTRAL_REACTION );
+end
+
+procedure Michael52a
+begin
+	if (dude_is_male) then begin
+		call Michael54;
+	end
+	else begin
+		call Michael55;
+	end
+end
+
+procedure Michael53
+begin
+	gsay_message(320, 200, 50);
+end
+
+procedure Michael54
+begin
+	gsay_message(320, 201, 50);
+	set_global_var(ENEMY_BROTHERHOOD, 1);
+end
+
+procedure Michael55
+begin
+	gsay_message(320, 202, 50);
+	set_global_var(ENEMY_BROTHERHOOD, 1);
+end
+
+procedure Michael56
+begin
+	gsay_message(320, 203, 50);
+end
+
+procedure Michael57
+begin
+	gsay_message(320, 204, 50);
+	BottomReact
+	set_map_var(6, 3); //hide_quest_until_solved
+end
+
+procedure grenadesFail
+begin
+	gsay_message(320, 205, 50);
+	set_map_var(6, 2);
+end
+
+procedure Michael59
+begin
+	gsay_message(320, 206, 50);
+end
+
+
+procedure Michael60
+begin
+	gsay_reply(320, 207);
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 208), Michael61, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 209), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael61
+begin
+	gsay_message(320, 210, 50);
+	call Michael49;
+end
+
+procedure Michael72
+begin
+	femmod := (get_critter_stat(dude_obj, STAT_ch) - 5) * 10;
+	gsay_reply(320, 241);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 242), Michael73, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 243), Michael76, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 244), Michael77, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 245), Michael79, NEUTRAL_REACTION );
+end
+
+procedure Michael73
+begin
+	gsay_reply(320, 246);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 247), Michael73a, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 248), Michael73b, NEUTRAL_REACTION );
+	giq_option( 7, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 249), Michaelend, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 250), Michael73c, NEUTRAL_REACTION );
+end
+
+procedure Michael73a
+begin
+	if (dude_is_male) then begin
+		conmod := -30;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael80;
+	end
+end
+
+procedure Michael73b
+begin
+	if (dude_is_male) then begin
+		conmod := -20;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael80;
+	end
+end
+
+procedure Michael73c
+begin
+	if (dude_is_male) then begin
+		conmod := -10;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael75;
+	end
+end
+
+procedure Michael74
+begin
+	item := create_object( PID_MOTIVATOR, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	gsay_reply(320, 251);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 252), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael75
+begin
+	gsay_reply(320, 253);
+	giq_option( 6, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 254), Michael75a, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 255), Michael75b, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 256), Michael75c, NEUTRAL_REACTION );
+end
+
+procedure Michael75a
+begin
+	if (dude_is_male) then begin
+		conmod := 0;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael80;
+	end
+end
+
+procedure Michael75b
+begin
+	if (dude_is_male) then begin
+		conmod := -100;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael80;
+	end
+end
+
+procedure Michael75c
+begin
+	if (dude_is_male) then begin
+		conmod := -20;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael80;
+	end
+end
+
+procedure Michael76
+begin
+	gsay_reply(320, 257);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 258), Michael76a, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 259), Michaelend, NEUTRAL_REACTION );
+end
+
+procedure Michael76a
+begin
+	if (dude_is_male) then begin
+		conmod := -20;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, conmod))) then begin
+		call Michael74;
+	end
+	else begin
+		call Michael75;
+	end
+end
+
+procedure Michael77
+begin
+	gsay_reply(320, 260);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 261), Michael78, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 262), Michael73, NEUTRAL_REACTION );
+end
+
+procedure Michael78
+begin
+	gsay_message(320, 263, 50);
+end
+
+procedure Michael79
+begin
+	gsay_reply(320, 264);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 265), Michaelend, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 266), Michael79a, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 267), Michael76, NEUTRAL_REACTION );
+end
+
+procedure Michael79a
+begin
+	if (dude_is_male) then begin
+		conmod := -20;
+	end
+	else begin
+		conmod := femmod;
+	end
+	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+		call Michael73;
+	end
+	else begin
+		call Michael77;
+	end
+end
+
+procedure Michael80
+begin
+	gsay_message(320, 268, 50);
+end
+
+procedure Michael144
+begin
+	gsay_reply(320, 211);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 212), Michael145, NEUTRAL_REACTION );
+	if (map_var(10) > map_var(11)) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 213), Michael44a, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 214), Michael44b, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 215), Michael44c, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 216), Michael44d, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 217), Michael44e, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 218), Michael44f, NEUTRAL_REACTION );
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 500), Michael144more, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael144more
+begin
+	gsay_reply(320, 211);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 212), Michael145, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 219), Michael44g, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 220), Michael44h, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 221), Michael44i, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 501), Michael144, NEUTRAL_REACTION );
+end
+
+procedure Michael145
+begin
+	gsay_message(320, 222, 50);
+end
+
+procedure Michael146
+begin
+end
+
+procedure Michael146a
+begin
+	gsay_reply(320, 235);
+	temp2 := map_var(20) - 1;
+	set_map_var(20, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( PID_SUPER_SLEDGE, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 224), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 225), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael146b
+begin
+	gsay_reply(320, 223);
+	temp2 := map_var(12) - 1;
+	set_map_var(12, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( PID_ROCKET_LAUNCHER, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 224), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 225), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael147
+begin
+	gsay_reply(320, 226);
+	temp2 := map_var(13) - 1;
+	set_map_var(13, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( PID_LASER_PISTOL, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 227), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 228), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael148
+begin
+	gsay_reply(320, 229);
+	temp2 := map_var(14) - 1;
+	set_map_var(14, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( PID_BROTHERHOOD_COMBAT_ARMOR, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 230), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 231), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael149
+begin
+	gsay_reply(320, 232);
+	temp2 := map_var(15) - 1;
+	set_map_var(15, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( PID_POWERED_ARMOR, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 233), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 234), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure Michael150
+begin
+	gsay_reply(320, 235);
+	temp2 := map_var(16) - 1;
+	set_map_var(16, temp2);
+	temp2 := map_var(9) - 1;
+	set_map_var(9, temp2);
+	item := create_object( PID_GEIGER_COUNTER, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+	giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 236), Michaelend, NEUTRAL_REACTION );
+	if (map_var(9) > 0) then begin
+		giq_option( 4, SCRIPT_MICHAEL, message_str(SCRIPT_MICHAEL, 237), Michael43, NEUTRAL_REACTION );
+	end
+end
+
+procedure combat
+begin
+	tmp_hostile := 1;
+end
+
+procedure Michaelend
+begin
+end
+
+
+
+
+

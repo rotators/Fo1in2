@@ -1,7 +1,22 @@
-#include "..\headers\define.h"
+/*
 
+	Super Mutant
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MUTANT2
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure talk_p_proc;//    script_action == 11
+procedure talk_p_proc;
 procedure timeforwhat;
 procedure destroy_p_proc;
 procedure critter_p_proc;
@@ -9,7 +24,7 @@ procedure critter_p_proc;
 procedure genericend;
 procedure genericcbt;
 
-variable Hostile;
+variable tmp_hostile;
 variable init_teams := 0;
 variable noevent;
 variable loopcount;
@@ -22,12 +37,7 @@ variable maxsight;
 variable maxleash := 9;
 variable new_tile;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(init_teams)) then begin
 		init_teams := 1;
 		set_self_team(TEAM_NECROPOLIS_MUTANT );
@@ -44,7 +54,7 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
@@ -111,21 +121,7 @@ procedure destroy_p_proc
 begin
 	set_global_var(SUPER_MUTANTS_KILLED, (global_var(SUPER_MUTANTS_KILLED) + 1));
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+   inc_evil_critter
 	rm_timer_event(self_obj);
 end
 
@@ -141,8 +137,8 @@ begin
 			maxsight := 4;
 		end
 		if ((tile_distance_objs(self_obj, dude_obj) <= maxsight) and obj_can_see_obj(self_obj, dude_obj)) then begin
-			if ((Hostile > 0) or (local_var(0) > 0)) then begin
-				Hostile := 0;
+			if ((tmp_hostile > 0) or (local_var(0) > 0)) then begin
+				tmp_hostile := 0;
 				attack(dude_obj);
 			end
 			else begin

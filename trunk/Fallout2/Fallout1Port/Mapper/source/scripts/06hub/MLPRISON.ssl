@@ -1,0 +1,217 @@
+/*
+
+	Hub - prisoner
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MLPRISON
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+
+procedure goto01;
+procedure goto02;
+procedure goto03;
+procedure goto04;
+procedure goto05;
+procedure goto06;
+procedure goto07;
+procedure goto08;
+procedure goto09;
+procedure goto10;
+procedure goto11;
+procedure explode;
+procedure escape;
+procedure dialog_end;
+
+variable tmp_hostile;
+variable Only_Once := 1;
+variable target_hex;
+variable said;
+
+//	USED - black man
+
+procedure start begin
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_SHADY_SANDS );
+		set_self_ai( AI_PEASANT );
+	end
+end
+
+procedure combat
+begin
+	tmp_hostile := 1;
+end
+
+procedure critter_p_proc
+begin
+	if (tile_num(self_obj) < 25000) then begin
+		call explode;
+	end
+	else begin
+		if ((map_var(2) == 1) or (map_var(7) == 1)) then begin
+			call escape;
+		end
+		else begin
+			if (tmp_hostile == 1) then begin
+				attack(dude_obj);
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	get_reaction
+	start_gdialog(682, self_obj, 4, -1, -1);
+	gsay_start;
+	if dude_wearing_coc_robe then begin
+		if (local_var(5) == 1) then begin
+			call goto05;
+		end
+		else begin
+			call goto01;
+		end
+		set_local_var(5, 1);
+	end
+	else begin
+		if (local_var(4) == 1) then begin
+			call goto09;
+		end
+		else begin
+			call goto07;
+		end
+		set_local_var(4, 1);
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure destroy_p_proc begin
+   inc_good_critter
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+end
+
+procedure goto01
+begin
+	gsay_reply(682, 108);
+	giq_option( -3, SCRIPT_MLPRISON, 109, goto02, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 110, goto03, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 111, goto04, BAD_REACTION );
+end
+
+procedure goto02
+begin
+	gsay_message(682, 112, 51);
+	call dialog_end;
+end
+
+procedure goto03
+begin
+	gsay_message(682, 113, 51);
+	call dialog_end;
+end
+
+procedure goto04
+begin
+	gsay_message(682, 128, 51);
+	call dialog_end;
+end
+
+procedure goto05
+begin
+	gsay_reply(682, 114);
+	giq_option( -3, SCRIPT_MLPRISON, 115, goto02, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 116, goto06, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 117, dialog_end, BAD_REACTION );
+end
+
+procedure goto06
+begin
+	gsay_message(682, 118, 51);
+	call dialog_end;
+end
+
+procedure goto07
+begin
+	gsay_reply(682, 119);
+	giq_option( -3, SCRIPT_MLPRISON, 115, goto02, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 120, goto08, BAD_REACTION );
+end
+
+procedure goto08
+begin
+	gsay_message(682, 122, 51);
+	call dialog_end;
+end
+
+procedure goto09
+begin
+	gsay_reply(682, 123);
+	giq_option( -3, SCRIPT_MLPRISON, 115, goto02, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 124, goto11, BAD_REACTION );
+	giq_option( 4, SCRIPT_MLPRISON, 125, dialog_end, BAD_REACTION );
+end
+
+procedure goto10
+begin
+	gsay_message(682, 126, 51);
+	call dialog_end;
+end
+
+procedure goto11
+begin
+	gsay_message(682, 127, 51);
+	call dialog_end;
+end
+
+procedure explode
+begin
+	critter_dmg( self_obj, random(128, 150), DMG_explosion );
+end
+
+procedure escape
+begin
+	if (said == 0) then begin
+		said := 1;
+		float_msg(self_obj, message_str(SCRIPT_MLPRISON, 107), 2);
+	end
+	target_hex := 22912;
+	animate_move_obj_to_tile(self_obj, target_hex, 1);
+end
+
+procedure dialog_end
+begin
+end
+
+
+
+
+

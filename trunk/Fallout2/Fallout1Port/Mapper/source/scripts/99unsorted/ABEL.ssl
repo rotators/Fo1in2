@@ -1,10 +1,25 @@
-#include "..\headers\define.h"
+/*
 
+	?? - Abel, super mutant
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_ABEL
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
 
 procedure Abel00;
 procedure Abel01;
@@ -17,62 +32,25 @@ procedure Abel07;
 procedure Abel08;
 procedure AbelCombat;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
 import variable field_change
 
-variable hostile;
-variable initial :=  0;
-variable exit_line;
+variable tmp_hostile;
+variable initial := 0;
 variable toggle;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_NECROPOLIS_MUTANT );
 		set_self_ai( AI_SUPER_MUTANT_AGGRESSIVE );
 		anim(self_obj, 1000, 3);
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-			end
-		end
-	end
 end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if (obj_can_see_obj(self_obj, dude_obj) or (((tile_num(dude_obj) / 200) > 134) and ((tile_num(dude_obj) % 200) > 108) and (tile_distance_objs(self_obj, dude_obj) <= 10)) and (local_var(4) == 0)) then begin
@@ -87,7 +65,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -188,7 +166,7 @@ begin
 		set_global_var(WATER_CHIP_5, 0);
 		set_map_var(23, 0);
 	end
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 

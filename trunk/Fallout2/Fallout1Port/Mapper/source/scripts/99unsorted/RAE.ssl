@@ -1,6 +1,21 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Super Mutant Rae
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_RAE
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure critter_p_proc;//    script_action == 12
 procedure pickup_p_proc;//    script_action == 4
 procedure talk_p_proc;//    script_action == 11
@@ -55,30 +70,11 @@ procedure raejoin;
 procedure raetym;
 procedure combat;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable movie;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		set_self_team(TEAM_BROTHERHOOD );
@@ -100,16 +96,6 @@ begin
 						call combat;
 					end
 				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
 			end
 		end
 	end
@@ -117,13 +103,13 @@ end
 
 procedure combat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
@@ -131,7 +117,7 @@ end
 procedure pickup_p_proc
 begin
 	if (source_obj == dude_obj) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
@@ -160,7 +146,7 @@ procedure destroy_p_proc
 begin
 	rm_timer_event(self_obj);
 
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 

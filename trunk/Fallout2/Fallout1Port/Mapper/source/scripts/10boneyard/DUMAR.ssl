@@ -1,0 +1,161 @@
+/*
+
+	Boneyard - Dumar, Blades member
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_DUMAR
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure talk_p_proc;
+
+procedure dumar00;
+procedure dumar01;
+procedure dumar02;
+procedure dumar03;
+procedure dumar04;
+procedure dumar05;
+procedure dumar06;
+procedure dumar07;
+procedure dumarend;
+
+variable rndx;
+variable HEREBEFORE;
+variable mad;
+
+procedure start begin
+	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
+		call talk_p_proc;
+		if (mad == 1) then begin
+			attack(dude_obj);
+		end
+	end
+	else begin
+		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+			script_overrides;
+			display_msg(100);
+		end
+		else begin
+			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
+				script_overrides;
+				display_msg(100);
+			end
+			else begin
+				if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
+					call damage_p_proc;
+				end
+			end
+		end
+	end
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	start_gdialog(-1, self_obj, 4, -1, -1);
+	gsay_start;
+	if (HEREBEFORE) then begin
+		call dumar05;
+	end
+	else begin
+		HEREBEFORE := 1;
+		call dumar00;
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure dumar00
+begin
+	sayReply(0, message_str(SCRIPT_DUMAR, 101));
+	if (-get_critter_stat(dude_obj, STAT_iq) >= -3) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 102), dumar04);
+	end
+	if (get_critter_stat(dude_obj, STAT_iq) >= 6) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 103), dumar03);
+	end
+	if (get_critter_stat(dude_obj, STAT_iq) >= 4) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 104), dumar06);
+	end
+	if (get_critter_stat(dude_obj, STAT_iq) >= 4) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 105), dumar07);
+	end
+	if (get_critter_stat(dude_obj, STAT_iq) >= 4) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 105), dumar00);
+	end
+	if (get_critter_stat(dude_obj, STAT_iq) >= 5) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 107), dumar05);
+	end
+	if (get_critter_stat(dude_obj, STAT_iq) >= 6) then begin
+		sayOption(message_str(SCRIPT_DUMAR, 108), dumar02);
+	end
+end
+
+procedure dumar01
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 109));
+	call dumarend;
+end
+
+procedure dumar02
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 110));
+	call dumarend;
+end
+
+procedure dumar03
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 111));
+	call dumarend;
+end
+
+procedure dumar04
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 112));
+	call dumarend;
+end
+
+procedure dumar05
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 113));
+	call dumarend;
+end
+
+procedure dumar06
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 114));
+	mad := 1;
+	call dumarend;
+end
+
+procedure dumar07
+begin
+	sayMessage(0, message_str(SCRIPT_DUMAR, 115));
+	call dumarend;
+end
+
+procedure dumarend
+begin
+end
+
+
+procedure destroy_p_proc begin
+   inc_neutral_critter
+end
+
+
+procedure damage_p_proc
+begin
+ display_msg(message_str(SCRIPT_DUMAR, 116));
+end
