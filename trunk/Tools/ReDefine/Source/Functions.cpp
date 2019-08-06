@@ -88,29 +88,42 @@ bool ReDefine::ReadConfigFunctions( const std::string& sectionPrefix )
 
 void ReDefine::ProcessFunctionArguments( ReDefine::ScriptCode& function )
 {
-    // ignore unknown functions
-    auto it = FunctionsArguments.find( function.Name );
-    if( it == FunctionsArguments.end() )
-        return;
-
     // make sure function is preconfigured properly
-    std::string  bad;
-    unsigned int found = 0;
+    std::string  badArgs;
+    unsigned int found = 0, expected = 0;
 
-    if( it->second.size() != function.Arguments.size() )
+    // known functions
+    auto it = FunctionsArguments.find( function.Name );
+    if( it != FunctionsArguments.end() )
     {
-        bad = "arguments";
-        found = function.Arguments.size();
+        expected = it->second.size();
+
+        if( expected != function.Arguments.size() )
+        {
+            badArgs = "arguments";
+            found = function.Arguments.size();
+        }
+        else if( expected != function.ArgumentsTypes.size() )
+        {
+            badArgs = "arguments types";
+            found = function.ArgumentsTypes.size();
+        }
     }
-    else if( it->second.size() != function.ArgumentsTypes.size() )
+    // unknown functions
+    else
     {
-        bad = "arguments types";
-        found = function.ArgumentsTypes.size();
+        expected = function.Arguments.size();
+
+        if( expected != function.ArgumentsTypes.size() )
+        {
+            badArgs = "arguments types";
+            found = function.ArgumentsTypes.size();
+        }
     }
 
-    if( !bad.empty() )
+    if( !badArgs.empty() )
     {
-        WARNING( __FUNCTION__, "invalid number of %s : found<%u> expected<%u>", bad.c_str(), found, it->second.size() );
+        WARNING( __FUNCTION__, "invalid number of function<%s> %s : found<%u> expected<%u>", function.Name.c_str(), badArgs.c_str(), found, expected );
         return;
     }
 
@@ -125,7 +138,7 @@ void ReDefine::ProcessFunctionArguments( ReDefine::ScriptCode& function )
             WARNING( __FUNCTION__, "argument<%u> type not set", idx );
             continue;
         }
-        else if( function.ArgumentsTypes[idx].front() == '?' && function.ArgumentsTypes[idx].back() == '?' )
+        else if( function.ArgumentsTypes[idx] == "?" ) // skip other mystery types
         {
             ProcessValueGuessing( function.Arguments[idx] );
             continue;
