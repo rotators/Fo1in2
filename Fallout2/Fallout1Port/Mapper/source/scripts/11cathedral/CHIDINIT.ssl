@@ -1,22 +1,32 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
-procedure critter_p_proc;//    script_action == 12
+	Cathedral - Initiate
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_CHIDINIT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+procedure critter_p_proc;
 
 variable initial :=  0;
 variable in_timed_event;
-variable hostile;
+variable tmp_hostile;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_CATHEDRAL );
@@ -26,49 +36,12 @@ begin
 		end
 		anim(self_obj, 1000, random(0, 5));
 	end
-	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-		call destroy_p_proc;
-	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-					call timed_event_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_inv_evil_crit
 	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_FOLL_INVADERS, 1);
 	end
@@ -102,10 +75,10 @@ end
 procedure critter_p_proc
 begin
 	if (global_var(ENEMY_FOLL_INVADERS)) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
-	if (hostile and obj_can_see_obj(self_obj, dude_obj)) then begin
-		hostile := 0;
+	if (tmp_hostile and obj_can_see_obj(self_obj, dude_obj)) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin

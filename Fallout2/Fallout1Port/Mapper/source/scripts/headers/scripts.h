@@ -679,7 +679,7 @@
 #define SCRIPT_JEREM     (672)  //  Jerem.int       ; Captive in the masters Lair
 #define SCRIPT_AIRGRD    (673)  //  AirGrd.int      ; Gaurd in the Master's Lair
 #define SCRIPT_AIRGRD2   (674)  //  AirGrd2.int     ; Another type of Guard in the Master's Lair
-#define SCRIPT_BOSLORI   (675)  //  BOSLori.int     ; Brotherhood of Steel Doctor
+#define SCRIPT_BOSLORRI  (675)  //  BOSLori.int     ; Brotherhood of Steel Doctor
 #define SCRIPT_MOORE     (676)  //  Moore.int       ; person in the master's lair
 #define SCRIPT_LUCY      (677)  //  Lucy.int        ; person in the master's lair
 #define SCRIPT_WIGGUP    (678)  //  Wiggup.int      ; mutant in the master's lair
