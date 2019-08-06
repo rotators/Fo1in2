@@ -260,7 +260,7 @@ void ReDefine::ProcessHeaders( const std::string& path )
         for( const auto& type : func.second )
         {
             argument++;
-            if( !(type.front() == '?' && type.back() == '?') && !IsDefineType( type ) )
+            if( !IsMysteryDefineType( type ) && !IsDefineType( type ) )
             {
                 WARNING( __FUNCTION__, "unknown define type<%s> : function<%s> argument<%u>", type.c_str(), func.first.c_str(), argument );
                 valid = false;

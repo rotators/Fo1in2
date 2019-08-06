@@ -14,7 +14,7 @@ static unsigned int StrLength( const char* str )
     return (unsigned int)(str - str_);
 }
 
-static void Print( ReDefine* redefine, const char* prefix, const char* function, const char* format, va_list& args, bool lineInfo )
+static void Print( ReDefine* redefine, const char* prefix, const char* caller, const char* format, va_list& args, bool lineInfo )
 {
     std::string full;
     std::string log = "ReDefine";
@@ -32,10 +32,10 @@ static void Print( ReDefine* redefine, const char* prefix, const char* function,
     log += ".log";
 
     // add caller function
-    if( function )
+    if( caller )
     {
         full += "(";
-        full += std::string( function );
+        full += std::string( caller );
         full += ") ";
     }
 
@@ -92,19 +92,19 @@ static void Print( ReDefine* redefine, const char* prefix, const char* function,
     }
 }
 
-void ReDefine::DEBUG( const char* function, const char* format, ... )
+void ReDefine::DEBUG( const char* caller, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( this, "DEBUG", function, format, list, true );
+    Print( this, "DEBUG", caller, format, list, true );
     va_end( list );
 }
 
-void ReDefine::WARNING( const char* func, const char* format, ... )
+void ReDefine::WARNING( const char* caller, const char* format, ... )
 {
     va_list list;
     va_start( list, format );
-    Print( this, "WARNING", func, format, list, true );
+    Print( this, "WARNING", caller, format, list, true );
     va_end( list );
 }
 

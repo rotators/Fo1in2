@@ -127,6 +127,11 @@ bool ReDefine::IsRegularDefineType( const std::string& type )
     return RegularDefines.find( type ) != RegularDefines.end();
 }
 
+bool ReDefine::IsMysteryDefineType( const std::string& type )
+{
+    return !type.empty() && type.front() == '?' && type.back() == '?';
+}
+
 bool ReDefine::GetDefineName( const std::string& type, const int value, std::string& result, bool skipVirtual /* = false */ )
 {
     // if define is virtual, check regular and custom defines

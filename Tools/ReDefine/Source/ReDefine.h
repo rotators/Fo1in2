@@ -117,6 +117,7 @@ public:
 
     bool IsDefineType( const std::string& type );
     bool IsRegularDefineType( const std::string& type );
+    bool IsMysteryDefineType( const std::string& type );
     bool GetDefineName( const std::string& type, const int value, std::string& result, const bool skipVirtual = false );
 
     bool ProcessHeader( const std::string& path, const Header& header );
@@ -140,8 +141,8 @@ public:
     // Log
     //
 
-    void DEBUG( const char* func, const char* format, ... );
-    void WARNING( const char* func, const char* format, ... );
+    void DEBUG( const char* caller, const char* format, ... );
+    void WARNING( const char* caller, const char* format, ... );
     void ILOG( const char* format, ... );
     void LOG( const char* format, ... );
 
@@ -209,9 +210,12 @@ public:
         void SetFlag( unsigned int flag );
         void UnsetFlag( unsigned int flag );
 
-        bool IsKnownFunction( const char* caller ) const;
+        bool IsFunction( const char* caller ) const;
+        bool IsFunctionKnown( const char* caller ) const;
+
         bool GetINDEX( const char* caller, const std::string& value, unsigned int& val ) const;
-        bool GetTYPE( const char* caller, const std::string& value, bool allowUnknown = true ) const;
+        bool GetTYPE( const char* caller, const std::string& value, bool allowUnknown = false ) const;
+        bool GetUINT( const char* caller, const std::string& value, unsigned int& val, const std::string& name = "UINT" ) const;
 
         // checks if condition action exists before calling it
         bool CallEditIf( const std::string& name, std::vector<std::string> values = std::vector<std::string>() ) const;
