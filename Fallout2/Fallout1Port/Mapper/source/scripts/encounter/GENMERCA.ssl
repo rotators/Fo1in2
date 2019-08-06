@@ -1,28 +1,42 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+	Generic Merc
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENMERCA
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
 procedure GenMercA00;
 procedure GenMercA01;
 procedure GenMercA02;
 procedure GenMercA03;
 procedure GenMercA04;
 procedure GenMercAEnd;
+
 variable scared;
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable name_index;
 variable job_index;
 variable index;
 variable move;
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_SHADY_SANDS );
@@ -36,49 +50,28 @@ begin
 		end
 		name_index := 105 + index;
 		job_index := 109 + index;
-		hostile := 0;
+		tmp_hostile := 0;
 		set_global_var(MERCS_RANDOM_ENC_unsure, global_var(MERCS_RANDOM_ENC_unsure) + 1);
-	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-			end
-		end
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+procedure destroy_p_proc begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
 	end
-	inc_good_critter		
+	inc_good_critter
 end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 	set_global_var(AGGRO_FLAG_RND_ENC_unsure, 1);
 end
 

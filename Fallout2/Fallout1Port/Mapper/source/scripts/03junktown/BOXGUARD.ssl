@@ -1,14 +1,29 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure map_enter_p_proc;//    script_action == 15
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+	Junktown - boxing ring guard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_BOXGUARD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure map_enter_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 
 variable home_tile := 7000;
-variable hostile;
+variable tmp_hostile;
 variable sfx_name;
 
 import variable challenger_ptr;
@@ -16,42 +31,17 @@ import variable Saul_loses;
 import variable Saul_wins;
 import variable shot_challenger;
 
-
-
-
-procedure start
-begin
-	
-	
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-					call timed_event_p_proc;
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(DUDE_ENEMY_JUNK_BOXER) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			attack(dude_obj);
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -91,28 +81,17 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_JUNK_BOXER, 1);
 	end
-	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-	end
+	inc_neutral_critter
 	rm_timer_event(self_obj);
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1) then begin
 		kill_critter(self_obj, ANIM_fall_front_sf);
 	end

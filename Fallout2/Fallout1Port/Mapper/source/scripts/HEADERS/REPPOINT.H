@@ -219,6 +219,7 @@
                                     CHECK_REP_BERSERKER                                                         \
                                     inc_general_rep(REP_BONUS_KILLED_GOOD_CRITTER);                             \
                                 end
+								
 #endif
 
 #define inc_neutral_critter     if (source_obj == dude_obj) then begin                                          \
@@ -481,7 +482,7 @@
 #define inc_shady_rep(x)   						inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
 // Raiders
-#define REP_KILLED_RAIDER 						(-2)
+#define REP_KILLED_RAIDER 						(-1)
 #define REP_GARL_KILLED 						(-10)
 #define inc_raiders_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_RAIDERS, x)
 

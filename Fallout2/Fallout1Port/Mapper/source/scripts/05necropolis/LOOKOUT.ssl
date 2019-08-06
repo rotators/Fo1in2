@@ -1,26 +1,40 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure combat_p_proc;//    script_action == 13
-procedure destroy_p_proc;//    script_action == 18
+	Necropolis - Underground lookout
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_LOOKOUT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure combat_p_proc;
+procedure destroy_p_proc;
 procedure combat_rads_inc;
 
 procedure spies;
 procedure guilt;
 
-variable Hostile;
+variable tmp_hostile;
 variable init_teams := 0;
 variable rndz;
 variable rndx;
 variable rndRads;
 
-
 procedure start
 begin
-	
-	
+
+
 	if (not(init_teams)) then begin
 		init_teams := 1;
 		set_self_team(TEAM_NECROPOLIS_UNDERGROUND );
@@ -36,22 +50,7 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-						call combat_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
+				tmp_hostile := 1;
 			end
 		end
 	end
@@ -196,8 +195,8 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		Hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -212,23 +211,8 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+procedure destroy_p_proc begin
+	inc_inv_good_crit
 end
 
 procedure combat_rads_inc

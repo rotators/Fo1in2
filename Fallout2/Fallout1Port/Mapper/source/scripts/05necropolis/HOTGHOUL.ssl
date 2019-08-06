@@ -1,10 +1,25 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
-procedure Critter_Action;//    script_action == 12
-procedure combat_p_proc;//    script_action == 13
-procedure destroy_p_proc;//    script_action == 18
+	Necropolis - Ghoul in Hotel map
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_HOTGHOUL
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure combat_p_proc;
+procedure destroy_p_proc;
 procedure combat_rads_inc;
 
 procedure generic00;
@@ -12,7 +27,7 @@ procedure generic02;
 procedure generic03;
 procedure genericcbt;
 
-variable Hostile;
+variable tmp_hostile;
 variable init := 0;
 variable rndx;
 
@@ -25,10 +40,7 @@ variable rndRads;
 //////////////////////////////////////////////////
 
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(init)) then begin
 		set_self_team(TEAM_NECROPOLIS_GANGER );
 		set_self_ai( AI_GHOUL_NORMAL );
@@ -45,22 +57,7 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
-			end
-			else begin
-				if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-					call combat_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call Critter_Action;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
-				end
+				tmp_hostile := 1;
 			end
 		end
 	end
@@ -144,10 +141,10 @@ begin
 	end
 end
 
-procedure Critter_Action
+procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		Hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
@@ -187,7 +184,7 @@ begin
 				end
 			end
 		end
-		Hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
@@ -348,9 +345,7 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	inc_evil_critter 
+procedure destroy_p_proc begin
+	inc_inv_evil_crit
 end
 

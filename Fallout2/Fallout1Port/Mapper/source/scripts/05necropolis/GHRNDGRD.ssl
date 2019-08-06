@@ -1,22 +1,33 @@
+/*
+
+	Necropolis - Random guard
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure talk_p_proc;//    script_action == 11
+#define NAME                    SCRIPT_GHRNDGRD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat_p_proc;
+procedure talk_p_proc;
 procedure combat_rads_inc;
-procedure destroy_p_proc;//    script_action == 18
+procedure destroy_p_proc;
 
-variable Hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable rndx;
 
 variable rndRads;
 
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(initial)) then begin
 		set_self_team(TEAM_NECROPOLIS_GANGER );
 		set_self_ai( AI_GHOUL_NORMAL );
@@ -37,21 +48,16 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
 					if (obj_can_see_obj(self_obj, dude_obj) and global_var(ENEMY_NECROPOLIS)) then begin
-						Hostile := 1;
+						tmp_hostile := 1;
 					end
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						Hostile := 0;
+					if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						tmp_hostile := 0;
 						attack(dude_obj);
-					end
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
 					end
 				end
 			end
@@ -203,9 +209,7 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	inc_evil_critter 
+procedure destroy_p_proc begin
+	inc_inv_evil_crit
 end
 

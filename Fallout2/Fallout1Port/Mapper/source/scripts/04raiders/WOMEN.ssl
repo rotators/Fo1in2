@@ -1,13 +1,27 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+	Raiders - Woman prisoners
+
+*/
+
+/* Include Files */
+
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_WOMEN
+#define TOWN_REP_VAR            GVAR_TOWN_REP_RAIDERS
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
+procedure critter_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
 
 import variable women_killed;
 import variable signal_women;
@@ -21,8 +35,7 @@ procedure PickDeadBodyType;
 variable DeathType := 56;
 
 
-procedure start
-begin
+procedure start begin
 	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
 		if (cur_map_index == MAP_RAIDERS) then begin //  RAIDERS - KHANS
 			if (local_var(4) != 1) then begin
@@ -32,42 +45,19 @@ begin
 			end
 		end
 	end
-	else begin
 
-
-		if Only_Once then begin
-			Only_Once := 0;
-			set_self_team(TEAM_BROTHERHOOD );
-			set_self_ai( AI_LOSER );
-		end
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
-		end
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_BROTHERHOOD );
+		set_self_ai( AI_LOSER );
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if ((global_var(GARL_DEAD) == 1) and (global_var(TOTAL_RAIDERS) <= 12) or (global_var(TOTAL_RAIDERS) <= 6)) then begin
 		if (local_var(0) == 0) then begin
 			set_local_var(0, 1);
@@ -91,8 +81,7 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (local_var(0) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_WOMEN, 104), 2);
@@ -102,25 +91,21 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	women_killed := women_killed + 1;
 	if (women_killed > 1) then begin
 		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
 	end
 
-	inc_good_critter
+	inc_inv_good_crit
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_WOMEN, 100));
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
 

@@ -1,12 +1,28 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+	V13 - water guard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_WTRGRD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_V13)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+
 procedure WtrGrd01;
 procedure WtrGrd02;
 procedure WtrGrd03;
@@ -18,34 +34,22 @@ procedure WtrGRd08;
 procedure WtrGrd09;
 procedure WtrGrdEnd;
 procedure WtrGrdQuest;
+
 import variable WtrGrd_ptr;
 import variable recipient;
 import variable getting_ration;
+
 variable asleep;
-variable hostile;
+variable tmp_hostile;
 variable on_rounds;
 variable going_up;
 variable going_down;
-variable dest_tile;
 variable initial :=  0;
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
+
 procedure PickDeadBodyType;
 variable DeathType := 57;
 
-procedure start
-begin
+procedure start begin
 	if (global_var(GVAR_VAULT_13_WAS_INVADED) == 1) then begin//		<-- Vault13 invaded
 		if (cur_map_index == MAP_VAULT13) or (cur_map_index == MAP_V13ENT) then begin //  VAULT 13 - ANY MAPS
 			if (local_var(9) != 1) then begin
@@ -60,7 +64,6 @@ begin
 		end
 	end
 	else begin
-
 		if not(initial) then begin
 			initial :=  1;
 			WtrGrd_ptr := self_obj;
@@ -77,10 +80,9 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -169,25 +171,12 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(VAULT_13_HOSTILE, 1);
 	end
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-	end
+	inc_good_critter
 	rm_timer_event(self_obj);
 	WtrGrd_ptr := 0;
 end
@@ -201,7 +190,7 @@ end
 procedure pickup_p_proc
 begin
 	float_msg(self_obj, message_str(SCRIPT_WTRGRD, 115), 0);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc

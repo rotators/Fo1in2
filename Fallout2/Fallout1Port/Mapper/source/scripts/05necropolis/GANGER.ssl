@@ -1,9 +1,25 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
-procedure combat_p_proc;//    script_action == 13
-procedure talk_p_proc;//    script_action == 11
+	Necropolis - Ganger
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GANGER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+procedure combat_p_proc;
+procedure talk_p_proc;
+
 procedure combat_rads_inc;
 procedure ghoulend;
 procedure ghoulcbt;
@@ -23,17 +39,14 @@ procedure ghoul11;
 procedure ghoul12;
 procedure ghoul13;
 
-variable Hostile;
+variable tmp_hostile;
 variable init_teams := 0;
 
 variable rndRads;
 variable rndx;
 
+procedure start begin
 
-procedure start
-begin
-	
-	
 	if (not(init_teams)) then begin
 		set_self_team(TEAM_NECROPOLIS_GANGER );
 		set_self_ai( AI_GHOUL_BRAVE );
@@ -49,18 +62,13 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						Hostile := 0;
+					if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						tmp_hostile := 0;
 						attack(dude_obj);
-					end
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
 					end
 				end
 			end
@@ -219,7 +227,7 @@ end
 
 procedure ghoulcbt
 begin
-	Hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure ghoul00

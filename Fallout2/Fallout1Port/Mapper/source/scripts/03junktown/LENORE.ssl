@@ -1,13 +1,27 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
-procedure talk_p_proc;//    script_action == 11
+	Junktown - Lenore
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_LENORE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+procedure talk_p_proc;
 //procedure do_dialogue;
 procedure look_at_p_proc;
 procedure critter_p_proc;
+
 procedure Lenore00;
 procedure Lenore01;
 procedure Lenore02;
@@ -26,43 +40,20 @@ import variable smartass_2;    // map_var(7)
 import variable growling;    // map_var(9)
 */
 
-procedure start
-begin
-	
-
+procedure start begin
 	if (not(initial)) then begin
 		initial :=  1;
 		set_self_team(TEAM_RADSCORPIONS );
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					attack(dude_obj);
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						call critter_p_proc;
-					end
-					else begin
-						if (script_action == 8) then begin//<-- use_skill_on_p_proc
-							if (action_being_used == 14) then begin//-- SPEECH
-								dialogue_system_enter;
-							end
-						end
-					end
-				end
-			end
-		end
+end
+
+procedure pickup_p_proc begin
+	attack(dude_obj);
+end
+
+procedure use_skill_on_p_proc begin
+	if (action_being_used == 14) then begin//-- SPEECH
+		dialogue_system_enter;
 	end
 end
 
@@ -96,7 +87,7 @@ end
 procedure destroy_p_proc
 begin
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end

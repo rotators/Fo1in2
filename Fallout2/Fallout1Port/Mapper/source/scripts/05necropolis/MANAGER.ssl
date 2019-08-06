@@ -1,5 +1,20 @@
-#include "..\headers\define.h"
+/*
 
+	Necropolis - Hotel Manager
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MANAGER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure description_p_proc;
 procedure look_at_p_proc;
@@ -27,7 +42,7 @@ procedure ghoul11;
 procedure ghoulend;
 procedure ghoulcbt;
 
-variable Hostile;
+variable tmp_hostile;
 variable initial :=  0;
 variable noevent;
 variable loopcount;
@@ -41,8 +56,8 @@ variable rndx;
 
 procedure start
 begin
-	
-	
+
+
 	if (not(initial)) then begin
 		initial :=  1;
 		set_self_team(32);//  TEAM -- was 32 in Manager.ssl, 30 in Ghoul.ssl
@@ -57,7 +72,7 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
@@ -127,11 +142,11 @@ begin
 				end
 			end
 		end
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 	else begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			Hostile := 0;
+		if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			tmp_hostile := 0;
 			attack(dude_obj);
 		end
 		else begin
@@ -157,30 +172,16 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_neutral_critter
 	rm_timer_event(self_obj);
 end
 
 procedure timeforwhat
 begin
 	if (fixed_param == 1) then begin
-		Hostile := 1;
+		tmp_hostile := 1;
 	end
 	else begin
 		if (local_var(0) == 0) then begin

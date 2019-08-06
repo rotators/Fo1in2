@@ -1,21 +1,35 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure talk_p_proc;//    script_action == 11
-procedure combat_p_proc;//    script_action == 13
+	Necropolis - Glowing ghoul
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GLOWONE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure combat_p_proc;
 procedure destroy_p_proc;
+
 procedure combat_rads_inc;
-variable hostile := 0;
+
+variable tmp_hostile := 0;
 variable init_teams := 0;
 variable rndx;
 variable rndRads;
 variable AlreadyLooked := 0;
 
 
-procedure start
-begin
-	
-	
+procedure start begin	
 	if (not(init_teams)) then begin
 		init_teams := 1;
 		set_self_team(TEAM_NECROPOLIS_UNDERGROUND );
@@ -45,13 +59,13 @@ begin
 			end
 			else begin
 				if (script_action == 14) then begin//damage
-					if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-						hostile := 1;
+					if (source_obj == dude_obj) then begin
+						tmp_hostile := 1;
 					end
 				end
 				else begin
 					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						hostile := 1;
+						tmp_hostile := 1;
 					end
 					else begin
 						if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
@@ -59,14 +73,9 @@ begin
 						end
 						else begin
 							if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-								if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-									hostile := 0;
+								if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+									tmp_hostile := 0;
 									attack(dude_obj);
-								end
-							end
-							else begin
-								if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-									call destroy_p_proc;
 								end
 							end
 						end
@@ -77,9 +86,7 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	inc_good_critter		
 end
 
