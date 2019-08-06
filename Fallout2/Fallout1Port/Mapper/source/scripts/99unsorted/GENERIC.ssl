@@ -1,5 +1,20 @@
-#include "..\headers\define.h"
+/*
 
+	???
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENERIC
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure talk_p_proc;//    script_action == 11
 procedure Critter_Action;//    script_action == 12
@@ -15,21 +30,7 @@ procedure genericcbt;
 
 procedure timetomove;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-variable Hostile;
+variable tmp_hostile;
 variable init := 0;
 variable maxleash := 9;
 variable noevent;
@@ -48,8 +49,8 @@ variable rndRads;
 
 procedure start
 begin
-	
-	
+
+
 	if (not(init)) then begin
 		init := 1;
 		if (local_var(7) == 0) then begin
@@ -67,21 +68,11 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				Hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
 					call Critter_Action;
-				end
-				else begin
-					if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-						call combat_p_proc;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-					end
 				end
 			end
 		end
@@ -95,14 +86,14 @@ begin
 		set_local_var(4, 1);
 		if (local_var(1) < 2) then begin
 			if (is_success(do_check(dude_obj, STAT_lu, 0))) then begin
-				Hostile := Hostile + 1;
+				tmp_hostile := tmp_hostile + 1;
 			end
 			else begin
-				Hostile := Hostile + 2;
+				tmp_hostile := tmp_hostile + 2;
 			end
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		call generic01;
 	end
 	else begin
@@ -195,8 +186,8 @@ end
 
 procedure Critter_Action
 begin
-	if (Hostile > 0) then begin
-		Hostile := 0;
+	if (tmp_hostile > 0) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -354,23 +345,8 @@ end
 
 
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+   inc_evil_critter
 	rm_timer_event(self_obj);
 end

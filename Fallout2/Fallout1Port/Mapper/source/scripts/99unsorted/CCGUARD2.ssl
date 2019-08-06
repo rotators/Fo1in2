@@ -1,87 +1,54 @@
+/*
+
+	Caravan guard
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+#define NAME                    SCRIPT_CCGUARD2
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
 procedure combat;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure timed_event_p_proc;//    script_action == 22
-procedure damage_p_proc;//    script_action == 14
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure timed_event_p_proc;
+procedure damage_p_proc;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable SetDayNight;
 variable Destination;
 variable LastMove;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
-variable exit_line;
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		set_self_team(TEAM_HUB_FAR_GO_TRADERS );
 		set_self_ai( AI_GUARD_HUMOROUS );
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			call pickup_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-							call timed_event_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
 procedure combat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure critter_p_proc
 begin
 	variable LVar0 := 0;
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
@@ -89,7 +56,7 @@ end
 procedure pickup_p_proc
 begin
 	if (source_obj == dude_obj) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
@@ -100,24 +67,9 @@ begin
 	float_msg(self_obj, message_str(SCRIPT_CARVLEAD, 300), 2);
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if (source_obj == dude_obj) then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var(NUM_GOOD_MONSTERS_KILLED, global_var(NUM_GOOD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) % 2) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, (global_var(PLAYER_REPUTATION_GENERAL) - 1));
-		end
-	end
+   inc_good_critter
 	rm_timer_event(self_obj);
 end
 

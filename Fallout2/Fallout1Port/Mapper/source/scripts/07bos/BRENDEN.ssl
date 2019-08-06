@@ -1,0 +1,174 @@
+/*
+
+	Brotherhood - Brenden
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_BRENDEN
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure talk_p_proc;
+
+procedure Brenden01;
+procedure Brenden02;
+procedure Brenden03;
+procedure Brenden04;
+procedure Brenden05;
+procedure Brenden06;
+procedure Brenden07;
+procedure Brenden08;
+procedure Brenden09;
+procedure Brenden10;
+procedure Brenden11;
+procedure Brenden12;
+procedure BrendenEnd;
+
+variable tmp_hostile;
+variable initial :=  0;
+
+procedure start begin
+	if not(initial) then begin
+		set_self_team(TEAM_BROTHERHOOD );
+		set_self_ai( AI_BROTHERHOOD_INITIATE );
+		initial :=  1;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		tmp_hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		tmp_hostile := 0;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure destroy_p_proc begin
+   inc_good_critter
+	set_global_var(ENEMY_BROTHERHOOD, 1);
+	rm_timer_event(self_obj);
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	start_gdialog(666, self_obj, 4, -1, -1);
+	gsay_start;
+	call Brenden01;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure Brenden01
+begin
+	if (local_var(0)) then begin
+		gsay_reply(666, 112);
+	end
+	else begin
+		set_local_var(0, 1);
+		gsay_reply(666, 102);
+	end
+	giq_option( -3, SCRIPT_BRENDEN, 107, Brenden05, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 103, Brenden02, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 104, Brenden03, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 105, Brenden04, NEUTRAL_REACTION );
+	if (local_var(1) == 0) then begin
+		giq_option( 4, SCRIPT_BRENDEN, 106, Brenden06, NEUTRAL_REACTION );
+	end
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden02
+begin
+	gsay_reply(666, 109);
+	giq_option( 0, SCRIPT_MODREACT, 106, Brenden01, NEUTRAL_REACTION );
+end
+
+procedure Brenden03
+begin
+	gsay_reply(666, 110);
+	giq_option( 0, SCRIPT_MODREACT, 106, Brenden01, NEUTRAL_REACTION );
+end
+
+procedure Brenden04
+begin
+	gsay_reply(666, 111);
+	giq_option( 0, SCRIPT_MODREACT, 106, Brenden01, NEUTRAL_REACTION );
+end
+
+procedure Brenden05
+begin
+	gsay_message(666, 108, 50);
+end
+
+procedure Brenden06
+begin
+	set_local_var(1, 1);
+	gsay_reply(666, 114);
+	giq_option( 4, SCRIPT_BRENDEN, 115, Brenden07, GOOD_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 116, Brenden12, BAD_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden07
+begin
+	gsay_reply(666, 117);
+	giq_option( 6, SCRIPT_BRENDEN, 118, Brenden08, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 119, Brenden11, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden08
+begin
+	gsay_reply(666, 120);
+	giq_option( 6, SCRIPT_BRENDEN, 121, Brenden09, GOOD_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden09
+begin
+	gsay_reply(666, 122);
+	giq_option( 6, SCRIPT_BRENDEN, 123, Brenden10, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden10
+begin
+	gsay_reply(666, 124);
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden11
+begin
+	gsay_reply(666, 125);
+	giq_option( 4, SCRIPT_BRENDEN, 126, Brenden09, GOOD_REACTION );
+	giq_option( 4, SCRIPT_BRENDEN, 113, BrendenEnd, NEUTRAL_REACTION );
+end
+
+procedure Brenden12
+begin
+	gsay_message(666, 127, 51);
+end
+
+procedure BrendenEnd
+begin
+end
+
+

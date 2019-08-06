@@ -1,0 +1,154 @@
+/*
+
+	Cathedral - Senior member Orfeo
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_ORFEO
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
+procedure Orfeo0;
+procedure Orfeo1;
+procedure Orfeo2;
+procedure Orfeo3;
+procedure Orfeoend;
+procedure combat;
+procedure to_master;
+
+variable initial :=  0;
+variable tmp_hostile;
+variable weaponPtr;
+
+import variable Orfeo_ptr;
+
+procedure start begin
+	if not(initial) then begin
+		Orfeo_ptr := self_obj;
+		set_self_team(TEAM_CATHEDRAL );
+		set_self_ai( AI_BRAINWASHED_CHILDREN );
+		anim(self_obj, 1000, 2);
+		if (local_var(1) == 0) then begin
+			set_local_var(1, 1);
+			weaponPtr := create_object( PID_LASER_PISTOL, 0, 0 );
+			add_obj_to_inven(self_obj, weaponPtr);
+			wield_obj_critter(self_obj, weaponPtr);
+			add_obj_to_inven(self_obj, create_object( PID_SMALL_ENERGY_CELL, 0, 0 ));
+		end
+		initial :=  1;
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_FOLL_INVADERS)) then begin
+		tmp_hostile := 1;
+	end
+	if (tmp_hostile and obj_can_see_obj(self_obj, dude_obj)) then begin
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+	else begin
+		if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 6)) then begin
+			if (local_var(0) == 0) then begin
+				dialogue_system_enter;
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc begin
+	Orfeo_ptr := 0;
+	if (source_obj == dude_obj) then begin
+	   inc_inv_evil_crit
+		set_global_var(ENEMY_FOLL_INVADERS, 1);
+	end
+end
+
+procedure look_at_p_proc
+begin
+	if (local_var(0)) then begin
+		script_overrides;
+		display_msg(message_str(SCRIPT_ORFEO, 100));
+	end
+end
+
+procedure pickup_p_proc
+begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc
+begin
+	script_overrides;
+	dude_look_at_critter;
+	if (local_var(0)) then begin
+		call Orfeo3;
+	end
+	else begin
+		set_local_var(0, 1);
+		start_gdialog(269, self_obj, 4, -1, -1);
+		gsay_start;
+		call Orfeo0;
+		gsay_end;
+		end_dialogue;
+	end
+end
+
+procedure Orfeo0
+begin
+	gsay_reply(269, 101);
+	giq_option( -3, SCRIPT_ORFEO, 102, combat, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_ORFEO, 103, Orfeo1, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_ORFEO, 104, Orfeo2, NEUTRAL_REACTION );
+end
+
+procedure Orfeo1
+begin
+	gsay_message(269, 105, 50);
+	call combat;
+end
+
+procedure Orfeo2
+begin
+	gsay_message(269, 106, 50);
+	call to_master;
+end
+
+procedure Orfeo3
+begin
+	float_msg(self_obj, message_str(SCRIPT_ORFEO, 107), 0);
+	call combat;
+end
+
+procedure Orfeoend
+begin
+end
+
+procedure combat
+begin
+	tmp_hostile := tmp_hostile + 1;
+end
+
+procedure to_master
+begin
+	set_global_var(PREVENT_REVULSION_DAMAGE, 1);
+	load_map("mstrlr34.map", 12);
+end
+
+
+

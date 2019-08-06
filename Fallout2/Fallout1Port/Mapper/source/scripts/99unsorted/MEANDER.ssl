@@ -1,5 +1,20 @@
-#include "..\headers\define.h"
+/*
 
+	??
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MEANDER
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure talk_p_proc;//    script_action == 11
 procedure combat_p_proc;//    script_action == 13
@@ -23,7 +38,7 @@ variable rndy;
 variable dist;
 variable curtime;
 variable prevtime;
-variable hostile;
+variable tmp_hostile;
 variable SET;
 variable MUTANTS;
 variable MAXLEASH := 9;
@@ -35,8 +50,8 @@ variable rndRads;
 
 procedure start
 begin
-	
-	
+
+
 	if not(initial) then begin
 		initial :=  1;
 		if (local_var(0) == 0) then begin
@@ -59,12 +74,12 @@ begin
 		end
 		else begin
 			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 			else begin
 				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						hostile := 0;
+					if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						tmp_hostile := 0;
 						attack(dude_obj);
 					end
 					else begin
@@ -89,24 +104,9 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+   inc_good_critter
 	rm_timer_event(self_obj);
 end
 
@@ -115,7 +115,7 @@ begin
 	dude_look_at_critter;
 	start_gdialog(84, self_obj, 4, -1, -1);
 	gsay_start;
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		call generic01;
 	end
 	else begin

@@ -1,0 +1,144 @@
+/*
+
+	Brotherhood Knight B
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_KNIGHTB
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure KnightBRandom;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+
+variable tmp_hostile;
+variable Only_Once := 1;
+
+procedure start begin
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_BROTHERHOOD );
+		set_self_ai( AI_BROTHERHOOD_KNIGHT );
+	end
+end
+
+procedure KnightBRandom
+begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	if (not(LVar0)) then begin
+		LVar0 := random(1, 11);
+	end
+	if (LVar0 > 11) then begin
+		LVar0 := 1;
+	end
+	LVar1 := message_str(SCRIPT_KNIGHTB, 101);
+	if (LVar0 == 2) then begin
+		LVar1 := message_str(SCRIPT_KNIGHTB, 102);
+	end
+	else begin
+		if (LVar0 == 3) then begin
+			LVar1 := message_str(SCRIPT_KNIGHTB, 103);
+		end
+		else begin
+			if (LVar0 == 4) then begin
+				LVar1 := message_str(SCRIPT_KNIGHTB, 104);
+			end
+			else begin
+				if (LVar0 == 5) then begin
+					LVar1 := message_str(SCRIPT_KNIGHTB, 105);
+				end
+				else begin
+					if (LVar0 == 6) then begin
+						LVar1 := message_str(SCRIPT_KNIGHTB, 106);
+					end
+					else begin
+						if (LVar0 == 7) then begin
+							LVar1 := message_str(SCRIPT_KNIGHTB, 107);
+						end
+						else begin
+							if (LVar0 == 8) then begin
+								LVar1 := message_str(SCRIPT_KNIGHTB, 108);
+							end
+							else begin
+								if (LVar0 == 9) then begin
+									LVar1 := message_str(SCRIPT_KNIGHTB, 109);
+								end
+								else begin
+									if (LVar0 == 10) then begin
+										LVar1 := message_str(SCRIPT_KNIGHTB, 110);
+									end
+									else begin
+										if (LVar0 == 11) then begin
+											LVar1 := message_str(SCRIPT_KNIGHTB, 111);
+										end
+										else begin
+											LVar0 := 1;
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	LVar0 := LVar0 + 1;
+	float_msg(self_obj, LVar1, 0);
+end
+
+procedure critter_p_proc
+begin
+	if (global_var(ENEMY_BROTHERHOOD)) then begin
+		tmp_hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		tmp_hostile := 0;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		set_global_var(ENEMY_BROTHERHOOD, 1);
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure pickup_p_proc
+begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	call KnightBRandom;
+end
+
+procedure destroy_p_proc
+begin
+
+	set_global_var(ENEMY_BROTHERHOOD, 1);
+	rm_timer_event(self_obj);
+	inc_good_critter
+end
+
+procedure look_at_p_proc
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_KNIGHTB, 100));
+end
+

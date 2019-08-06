@@ -1,0 +1,291 @@
+/*
+
+	Boneyard - Michelle, Blades member
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MICHELLE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;//    script_action == 12
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure pickup_p_proc;//    script_action == 4
+procedure timed_event_p_proc;//    script_action == 22
+procedure talk_p_proc;//    script_action == 11
+
+procedure Michelle00;
+procedure Michelle01;
+procedure Michelle02;
+procedure Michelle03;
+procedure Michelle04;
+procedure Michelle05;
+procedure Michelle06;
+procedure Michelle07;
+procedure Michelle08;
+procedure Michelle09;
+procedure Michelle10;
+procedure Michelle11;
+procedure Michelle12;
+procedure Michelle13;
+procedure Michelle14;
+procedure Michelle15;
+procedure Michelle16;
+procedure Michelle17;
+procedure MichelleCombat;
+procedure MichelleEnd;
+
+procedure show_true_name;
+procedure show_false_name;
+
+variable tmp_hostile;
+variable initial :=  0;
+
+procedure start begin
+	if not(initial) then begin
+		initial :=  1;
+		set_self_team(TEAM_LA_BLADES );
+		set_self_ai( AI_BLADES );
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj) and (global_var(BLADES_LEFT) < 41)) then begin
+		tmp_hostile := 1;
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+end
+
+procedure destroy_p_proc
+begin
+	set_global_var(BLADES_LEFT, (global_var(BLADES_LEFT) - 1));
+	rm_timer_event(self_obj);
+
+	inc_good_critter		
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc
+begin
+	if (((global_var(QUEST_BONEYARD_1_ME_BLADE) == 2) or get_critter_stat(dude_obj, STAT_lu)) > 6) then begin
+		call show_true_name;
+	end
+	else begin
+		if (get_critter_stat(dude_obj, STAT_lu) < 4) then begin
+			call show_false_name;
+		end
+		else begin
+			if (get_critter_stat(dude_obj, STAT_iq) < 5) then begin
+				call show_false_name;
+			end
+			else begin
+				if (random(0, 1)) then begin
+					call show_false_name;
+				end
+				else begin
+					call show_true_name;
+				end
+			end
+		end
+	end
+end
+
+procedure pickup_p_proc
+begin
+	tmp_hostile := 1;
+end
+
+procedure timed_event_p_proc
+begin
+	if (obj_can_see_obj(self_obj, dude_obj)) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc
+begin
+	dude_look_at_critter;
+	start_gdialog(283, self_obj, 4, -1, -1);
+	gsay_start;
+	set_local_var(0, 1);
+	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+		call Michelle15;
+	end
+	else begin
+		if (global_var(QUEST_BONEYARD_1_ME_BLADE) == 1) then begin
+			call Michelle16;
+		end
+		else begin
+			if (global_var(QUEST_BONEYARD_1_ME_BLADE) == 2) then begin
+				call Michelle17;
+			end
+			else begin
+				call Michelle00;
+			end
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure show_true_name
+begin
+	script_overrides;
+	if (local_var(0)) then begin
+		display_msg(message_str(SCRIPT_MICHELLE, 100));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_MICHELLE, 103));
+	end
+end
+
+procedure show_false_name
+begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_MICHELLE, random(104, 110)));
+end
+
+procedure Michelle00
+begin
+	gsay_reply(283, 111);
+	giq_option( -3, SCRIPT_MICHELLE, 112, Michelle01, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHELLE, 113, Michelle02, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 114, Michelle09, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHELLE, 115, MichelleCombat, NEUTRAL_REACTION );
+end
+
+procedure Michelle01
+begin
+	gsay_reply(283, 116);
+	giq_option( -3, SCRIPT_MICHELLE, 117, MichelleCombat, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_MICHELLE, 118, MichelleEnd, NEUTRAL_REACTION );
+end
+
+procedure Michelle02
+begin
+	gsay_reply(283, 119);
+	giq_option( 4, SCRIPT_MICHELLE, 120, Michelle03, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 121, Michelle04, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 122, Michelle08, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_MICHELLE, 123, MichelleCombat, NEUTRAL_REACTION );
+end
+
+procedure Michelle03
+begin
+	gsay_message(283, 124, 50);
+	call MichelleCombat;
+end
+
+procedure Michelle04
+begin
+	gsay_reply(283, 125);
+	giq_option( 5, SCRIPT_MICHELLE, 126, Michelle05, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 127, Michelle06, NEUTRAL_REACTION );
+	giq_option( 7, SCRIPT_MICHELLE, 128, Michelle07, NEUTRAL_REACTION );
+end
+
+procedure Michelle05
+begin
+	gsay_reply(283, 129);
+	giq_option( 5, SCRIPT_MICHELLE, 130, MichelleEnd, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 131, MichelleEnd, NEUTRAL_REACTION );
+end
+
+procedure Michelle06
+begin
+	gsay_message(283, 132, 50);
+	call MichelleCombat;
+end
+
+procedure Michelle07
+begin
+	gsay_message(283, 133, 50);
+	call MichelleCombat;
+end
+
+procedure Michelle08
+begin
+	gsay_message(283, 134, 50);
+	call MichelleCombat;
+end
+
+procedure Michelle09
+begin
+	gsay_reply(283, 135);
+	giq_option( 5, SCRIPT_MICHELLE, 136, Michelle10, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 137, Michelle11, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 138, Michelle04, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 139, Michelle12, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 140, MichelleCombat, NEUTRAL_REACTION );
+end
+
+procedure Michelle10
+begin
+	gsay_message(283, 141, 50);
+	call MichelleCombat;
+end
+
+procedure Michelle11
+begin
+	gsay_message(283, message_str(SCRIPT_MICHELLE, 142) + " " + message_str(SCRIPT_MICHELLE, 143), 50);
+	call MichelleCombat;
+end
+
+procedure Michelle12
+begin
+	gsay_reply(283, 144);
+	giq_option( 5, SCRIPT_MICHELLE, 145, Michelle13, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 146, Michelle14, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_MICHELLE, 147, MichelleCombat, NEUTRAL_REACTION );
+end
+
+procedure Michelle13
+begin
+	gsay_message(283, 148, 50);
+end
+
+procedure Michelle14
+begin
+	gsay_message(283, 149, 50);
+	call MichelleCombat;
+end
+
+procedure Michelle15
+begin
+	gsay_message(283, 150, 50);
+	add_timer_event(self_obj, game_ticks(10), 1);
+end
+
+procedure Michelle16
+begin
+	gsay_message(283, 151, 50);
+end
+
+procedure Michelle17
+begin
+	gsay_message(283, 152, 50);
+end
+
+procedure MichelleCombat
+begin
+	tmp_hostile := 1;
+end
+
+procedure MichelleEnd
+begin
+end
+
+

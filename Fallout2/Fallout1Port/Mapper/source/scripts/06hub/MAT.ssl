@@ -1,0 +1,326 @@
+/*
+
+	???
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPV13CAVE.h"
+
+#define NAME                    SCRIPT_MAT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+procedure start;
+procedure critter_p_proc;//    script_action == 12
+procedure pickup_p_proc;//    script_action == 4
+procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;//    script_action == 18
+procedure look_at_p_proc;//    script_action == 21
+procedure timed_event_p_proc;//    script_action == 22
+procedure map_enter_p_proc;//    script_action == 15
+procedure damage_p_proc;//    script_action == 14
+
+procedure MatDialog;
+procedure Mat1;
+procedure Mat2;
+procedure Mat3;
+procedure Mat4;
+procedure Mat5;
+procedure Mat6;
+procedure Mat7;
+procedure Mat8;
+procedure MatEnd;
+
+procedure SendToWork;
+procedure SendToSleep;
+procedure WakeUpCall;
+procedure MatCombat;
+procedure combat;
+
+variable tmp_hostile;
+variable Only_Once := 1;
+variable SetDayNight;
+variable Sleeping;
+variable LastMove;
+
+variable CaravanAgain := 1;
+
+procedure start begin
+
+
+	if Only_Once then begin
+		Only_Once := 0;
+		set_self_team(TEAM_HUB_CARTS_GUARD );
+		set_self_ai( AI_MERCHANT );
+	end
+end
+
+procedure combat begin
+	tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+	if ((game_time_hour >= 600) and (game_time_hour < 700) or ((game_time_hour >= 700) and (game_time_hour < 1800))) then begin
+		call WakeUpCall;
+	end
+	else begin
+		call SendToSleep;
+	end
+	if (Sleeping == 1) then begin
+		if (tile_num(self_obj) != 10114) then begin
+			animate_move_obj_to_tile(self_obj, 10114, 0);
+		end
+		else begin
+			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			Sleeping := 2;
+			LastMove := 10114;
+		end
+	end
+end
+
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_critter;
+	if ((game_time_hour >= 600) and (game_time_hour < 700) or ((game_time_hour >= 700) and (game_time_hour < 1800))) then begin
+		get_reaction
+		call MatDialog;
+	end
+end
+
+procedure destroy_p_proc begin
+	rm_timer_event(self_obj);
+
+	inc_good_critter
+	rm_timer_event(self_obj);
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_HGENCVAN, 200));
+end
+
+procedure timed_event_p_proc begin
+	if ((game_time_hour >= 600) and (game_time_hour < 700) or ((game_time_hour >= 700) and (game_time_hour < 1800))) then begin
+		call SendToWork;
+	end
+end
+
+procedure map_enter_p_proc begin
+	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+		move_to(self_obj, 10114, 0);
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		Sleeping := 2;
+		LastMove := 10114;
+	end
+end
+
+procedure damage_p_proc begin
+	if (source_obj == dude_obj) then begin
+		set_global_var(ENEMY_HUB, 1);
+	end
+end
+
+procedure SendToWork begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := 0;
+	LVar1 := random(15, 45);
+	while(LVar0 == 0) do begin
+		LVar0 := random(1, 12);
+		if (LVar0 == 1) then begin
+			LVar0 := 10518;
+		end
+		else if (LVar0 == 2) then begin
+			LVar0 := 11117;
+		end
+		else if (LVar0 == 3) then begin
+			LVar0 := 11115;
+		end
+		else if (LVar0 == 4) then begin
+			LVar0 := 10913;
+		end
+		else if (LVar0 == 5) then begin
+			LVar0 := 10711;
+		end
+		else if (LVar0 == 6) then begin
+			LVar0 := 10313;
+		end
+		else if (LVar0 == 7) then begin
+			LVar0 := 10115;
+		end
+		else if (LVar0 == 8) then begin
+			LVar0 := 9913;
+		end
+		else if (LVar0 == 9) then begin
+			LVar0 := 10111;
+		end
+		else if (LVar0 == 10) then begin
+			LVar0 := 9918;
+		end
+		else if (LVar0 == 11) then begin
+			LVar0 := 11317;
+		end
+		else if (LVar0 == 12) then begin
+			LVar0 := 11111;
+		end
+		if (LVar0 == LastMove) then begin
+			LVar0 := 0;
+		end
+	end
+	LastMove := LVar0;
+	reg_anim_func(2, self_obj);
+	reg_anim_func(1, 1);
+	reg_anim_obj_move_to_tile(self_obj, LVar0, -1);
+	reg_anim_func(3, 0);
+	add_timer_event(self_obj, game_ticks(LVar1), 1);
+end
+
+procedure SendToSleep begin
+	if (Sleeping == 0) then begin
+		Sleeping := 1;
+		SetDayNight := 0;
+		if (random(0, 100) >= 90) then begin
+			float_msg(self_obj, message_str(SCRIPT_HGENCVAN, 201), 2);
+		end
+	end
+end
+
+procedure WakeUpCall begin
+	if (SetDayNight == 0) then begin
+		Sleeping := 0;
+		SetDayNight := 1;
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+		add_timer_event(self_obj, game_ticks(1), 1);
+		if (random(0, 100) >= 90) then begin
+			float_msg(self_obj, message_str(SCRIPT_HGENCVAN, 202), 2);
+		end
+	end
+end
+
+procedure MatDialog begin
+	start_gdialog(609, self_obj, 4, -1, -1);
+	gsay_start;
+	call Mat1;
+	gsay_end;
+	end_dialogue;
+end
+
+procedure MatEnd begin
+end
+
+procedure MatCombat
+begin
+	tmp_hostile := 1;
+end
+
+procedure Mat1
+begin
+	gsay_reply(609, 203);
+	NOption( 204, Mat2, -3 );
+	NOption( 205, Mat3, 4 );
+	NOption( 206, Mat4, 4 );
+	NOption( 207, Mat5, 4 );
+	NOption( 208, MatEnd, 4 );
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		BOption( 209, MatCombat, 4 );
+	end
+end
+
+procedure Mat2
+begin
+	gsay_message(609, 210, 50);
+end
+
+procedure Mat3
+begin
+	gsay_reply(609, 211);
+	NOption( 212, Mat4, 4 );
+	NOption( 213, Mat5, 4 );
+	NOption( 214, Mat6, 4 );
+	NOption( 215, Mat7, 4 );
+	NOption( 216, MatEnd, 4 );
+end
+
+procedure Mat4
+begin
+	gsay_reply(609, 217);
+	NOption( 218, Mat5, 4 );
+	NOption( 219, MatEnd, 4 );
+end
+
+procedure Mat5
+begin
+	if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then
+		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+	mark_on_map(AREA_JUNKTOWN)
+
+	if (global_var(WORLDMAPLIST_BROTHERHOOD) == 0) then
+		set_global_var(WORLDMAPLIST_BROTHERHOOD, 1);
+	mark_on_map(AREA_BROTHERHOOD)
+
+	if (global_var(WORLDMAPLIST_SHADY_SANDS) == 0) then
+		set_global_var(WORLDMAPLIST_SHADY_SANDS, 1);
+	mark_on_map(AREA_SHADY_SANDS)
+
+	if (global_var(WORLDMAPLIST_NECROPOLIS) == 0) then
+		set_global_var(WORLDMAPLIST_NECROPOLIS, 1);
+	mark_on_map(AREA_NECROPOLIS)
+
+	if (global_var(WORLDMAPLIST_THE_GLOW) == 0) then
+		set_global_var(WORLDMAPLIST_THE_GLOW, 1);
+	mark_on_map(AREA_GLOW)
+
+	gsay_reply(609, 220);
+	if (CaravanAgain == 1) then begin
+		NOption( 221, Mat8, 4 );
+		CaravanAgain := 0;
+	end
+	NOption( 222, Mat6, 4 );
+	NOption( 223, Mat3, 4 );
+	NOption( 224, Mat7, 4 );
+	NOption( 225, MatEnd, 4 );
+end
+
+procedure Mat6
+begin
+	gsay_reply(609, 226);
+	NOption( 227, Mat4, 4 );
+	NOption( 228, Mat7, 4 );
+	NOption( 229, MatEnd, 4 );
+end
+
+procedure Mat7
+begin
+	gsay_reply(609, 230);
+	NOption( 231, Mat3, 4 );
+	NOption( 232, Mat4, 4 );
+	NOption( 233, Mat5, 4 );
+	NOption( 234, MatEnd, 4 );
+end
+
+procedure Mat8
+begin
+	gsay_reply(609, 235);
+	if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
+		BOption( 236, MatCombat, 4 );
+	end
+	NOption( 237, Mat7, 4 );
+	NOption( 238, MatEnd, 4 );
+end
+
+
+
+

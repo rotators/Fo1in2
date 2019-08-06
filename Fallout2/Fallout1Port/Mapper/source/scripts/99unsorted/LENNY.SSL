@@ -1,5 +1,20 @@
-#include "..\headers\define.h"
+/*
 
+	Lenny?
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_LENNY
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure talk_p_proc;//    script_action == 11
 procedure Lenny00;
@@ -29,38 +44,23 @@ procedure LennyEnd;
 procedure LennyCombat;
 
 variable known;
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 
 import variable know_fools;
 import variable know_crypts;
 import variable know_power;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
 variable reactionamt := 50;
 variable reaction_level := 2;
 variable got_reaction;
 variable badguy;
-variable exit_line;
 
 
-procedure start
-begin
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
-set_self_team(4);
+      set_self_team(4);
 	end
 	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
 		call talk_p_proc;
@@ -81,8 +81,8 @@ set_self_team(4);
 			end
 			else begin
 				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-						hostile := 0;
+					if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+						tmp_hostile := 0;
 						attack(dude_obj);
 					end
 				end
@@ -408,137 +408,5 @@ end
 
 procedure LennyCombat
 begin
-	hostile := 1;
-end
-
-procedure get_reaction
-begin
-	if (not(got_reaction)) then begin
-		got_reaction := 1;
-		reactionamt := reactionamt + ((get_critter_stat(dude_obj, STAT_ch) - 5) * 5);
-		if (badguy) then begin
-			reactionamt := reactionamt - global_var(PLAYER_REPUTATION_GENERAL);
-		end
-		else begin
-			reactionamt := reactionamt + global_var(PLAYER_REPUTATION_GENERAL);
-		end
-		if (global_var(CHILDKILLER_REPUTATION) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
-			reactionamt := reactionamt - 30;
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1)) then begin
-			reactionamt := reactionamt + 20;
-		end
-		if ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1)) then begin
-			reactionamt := reactionamt - 20;
-		end
-		call ReactToLevel;
-	end
-end
-
-procedure ReactToLevel
-begin
-	if (reactionamt < 24) then begin
-		reaction_level := 1;
-	end
-	else begin
-		if (reactionamt < 74) then begin
-			reaction_level := 2;
-		end
-		else begin
-			reaction_level := 3;
-		end
-	end
-end
-
-procedure LevelToReact
-begin
-	if (reaction_level == 1) then begin
-		reactionamt := random(1, 24);
-	end
-	else begin
-		if (reaction_level == 2) then begin
-			reactionamt := random(25, 74);
-		end
-		else begin
-			reactionamt := random(75, 100);
-		end
-	end
-end
-
-procedure UpReact
-begin
-	reactionamt := reactionamt + 10;
-	call ReactToLevel;
-end
-
-procedure DownReact
-begin
-	reactionamt := reactionamt - 10;
-	call ReactToLevel;
-end
-
-procedure BottomReact
-begin
-	reaction_level := 1;
-	reactionamt := 1;
-end
-
-procedure TopReact
-begin
-	reactionamt := 100;
-	reaction_level := 3;
-end
-
-procedure BigUpReact
-begin
-	reactionamt := reactionamt + 25;
-	call ReactToLevel;
-end
-
-procedure BigDownReact
-begin
-	reactionamt := reactionamt - 25;
-	call ReactToLevel;
-end
-
-procedure UpReactLevel
-begin
-	reaction_level := reaction_level + 1;
-	if (reaction_level > 3) then begin
-		reaction_level := 3;
-	end
-	LevelToReact
-end
-
-procedure DownReactLevel
-begin
-	reaction_level := reaction_level - 1;
-	if (reaction_level < 1) then begin
-		reaction_level := 1;
-	end
-	LevelToReact
-end
-
-procedure Goodbyes
-begin
-	variable LVar0 := 0;
-	LVar0 := random(1, 6);
-	if (LVar0 == 1) then begin
-		exit_line := "Thanks, bye.";
-	end
-	if (LVar0 == 2) then begin
-		exit_line := "Okay, thanks.";
-	end
-	if (LVar0 == 3) then begin
-		exit_line := "Hmm. Bye.";
-	end
-	if (LVar0 == 4) then begin
-		exit_line := "See ya.";
-	end
-	if (LVar0 == 5) then begin
-		exit_line := "Thanks.";
-	end
-	if (LVar0 == 6) then begin
-		exit_line := "Okay, bye.";
-	end
+	tmp_hostile := 1;
 end

@@ -1,14 +1,28 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
+	Boneyard - Caleb
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_CALEB
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+
 procedure DialogWeapon;
 procedure DialogExit;
 procedure Caleb;
@@ -32,10 +46,7 @@ variable Only_Once := 1;
 variable tmp_hostile;
 variable DisplayMessage := 100;
 
-procedure Start
-begin
-	
-
+procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		if (not(is_loading_game) and (obj_is_carrying_obj_pid(self_obj, PID_BOTTLE_CAPS) == 0)) then begin
@@ -49,37 +60,7 @@ begin
 			set_global_var(ADYTUM_CALEB_SOMETHING_0, 1);
 		end
 	end
-	if (script_action == 21) then begin
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 12) then begin
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == 14) then begin
-					call damage_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin
-							call pickup_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
-
-
 
 procedure look_at_p_proc
 begin
@@ -167,27 +148,13 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_map_var(1, map_var(1) - 1);
 
 	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_REGULATORS, 1);//  ENEMY_REGULATOR == 1
 	end
-	if source_obj == dude_obj then begin
-		set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-			set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-		end
-	end
+	inc_good_critter
 	if (map_var(1) == 0) then begin
 		terminate_combat;
 	end
