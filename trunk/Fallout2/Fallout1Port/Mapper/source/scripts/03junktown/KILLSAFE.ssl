@@ -1,13 +1,13 @@
 #include "..\headers\define.h"
 
 procedure start;
-procedure description_p_proc;//    script_action == 3
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure use_p_proc;//    script_action == 6
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure use_skill_on_p_proc;//    script_action == 8
+procedure description_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure use_p_proc;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
 procedure safe_bonus;
 
 variable item;
@@ -16,45 +16,10 @@ variable test;
 import variable KillSafe_ptr;
 
 
-procedure start
-begin
-	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-		call description_p_proc;
-	end
-	else begin
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-				call map_enter_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-						call use_p_proc;
-					end
-					else begin
-						if (script_action == 7) then begin//<-- use_obj_on_p_proc
-							call use_obj_on_p_proc;
-						end
-						else begin
-							if (script_action == 8) then begin//<-- use_skill_on_p_proc
-								call use_skill_on_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if (obj_is_locked(self_obj)) then begin
 		display_msg(message_str(SCRIPT_KILLSAFE, 105));
@@ -64,14 +29,12 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_KILLSAFE, 100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	KillSafe_ptr := self_obj;
 	obj_close(self_obj);
 	obj_lock(self_obj);
@@ -99,15 +62,13 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if (obj_is_locked(self_obj)) then begin
 		script_overrides;
 	end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	if (obj_is_locked(self_obj)) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_KILLSAFE, 105));
@@ -115,8 +76,7 @@ begin
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
 		script_overrides;
 		set_map_var(9, 1);
@@ -143,9 +103,8 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_LOCKPICK) then begin
 		script_overrides;
 		set_map_var(9, 1);
 		if (not(obj_is_locked(self_obj))) then begin
@@ -171,8 +130,7 @@ begin
 	end
 end
 
-procedure safe_bonus
-begin
+procedure safe_bonus begin
 	if (local_var(0) == 0) then begin
 		display_msg(message_str(SCRIPT_KILLSAFE, 106));
 		set_local_var(0, 1);

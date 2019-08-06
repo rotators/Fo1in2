@@ -1,7 +1,23 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure destroy_p_proc;//    script_action == 18
+	Cathedral - ???
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_CHIDGAB
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+
 procedure Brat02;
 procedure Brat03;
 procedure Brat04;
@@ -11,10 +27,8 @@ procedure Brat07;
 procedure Combat;
 procedure BratEnd;
 
-variable Hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
-
-
 
 procedure start
 begin
@@ -31,32 +45,18 @@ begin
 	end
 	else begin
 		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			Hostile := 1;
+			tmp_hostile := 1;
 		end
 		else begin
 			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-					Hostile := 0;
+				if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+					tmp_hostile := 0;
 					attack(dude_obj);
 				end
 			end
 			else begin
 				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-
-					if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-						if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-							set_global_var(BERSERKER_REPUTATION, 1);
-							set_global_var(CHAMPION_REPUTATION, 0);
-						end
-						if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-							set_global_var(CHAMPION_REPUTATION, 1);
-							set_global_var(BERSERKER_REPUTATION, 0);
-						end
-						set_global_var(NUM_BAD_MONSTERS_KILLED, global_var(NUM_BAD_MONSTERS_KILLED) + 1);// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-						if ((global_var(NUM_BAD_MONSTERS_KILLED) % 6) == 0) then begin
-							set_global_var(PLAYER_REPUTATION_GENERAL, global_var(PLAYER_REPUTATION_GENERAL) + 1);
-						end
-					end
+					inc_inv_evil_crit
 				end
 				else begin
 					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
@@ -130,15 +130,12 @@ end
 
 procedure Combat
 begin
-	Hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure BratEnd
 begin
 end
-
-
-
  
 procedure destroy_p_proc
 begin

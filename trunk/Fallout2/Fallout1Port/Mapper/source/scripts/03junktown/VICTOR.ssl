@@ -1,13 +1,29 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
-procedure destroy_p_proc;//    script_action == 18
+	Junktown - Victor
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_VICTOR
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+procedure destroy_p_proc;
+
 procedure Victor01;
 procedure Victor02;
 procedure Victor03;
@@ -24,23 +40,21 @@ variable wake_time;
 variable sleep_time;
 variable home_tile;
 variable sleep_tile;
-variable hostile;
+variable tmp_hostile;
 
 #define LVAR_Sleeping 							(5)
 
 procedure start begin
-	
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var(DUDE_ENEMY_SKULZ) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			attack(dude_obj);
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if (global_var(BUST_SKULZ) != 2) then begin
@@ -73,7 +87,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -104,11 +118,10 @@ begin
 	critter_dmg( self_obj, 250, DMG_normal_dam );
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(DUDE_ENEMY_SKULZ, 1);
 	end
 	inc_evil_critter
@@ -168,7 +181,7 @@ end
 
 procedure VictorCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure VictorDies

@@ -1,18 +1,31 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure description_p_proc;//    script_action == 3
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+	Junktown - Lars
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_LENORE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 
 procedure Lars00;
 procedure Lars01;
@@ -54,47 +67,10 @@ variable Lars_kill_Neal;
 variable nail_Gizmo;
 variable wait_for_Lars;
 
-procedure start
-begin
-	
-
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-			call description_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					call look_at_p_proc;
-				end
-				else begin
-					if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-						call map_enter_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (cur_map_index != MAP_JUNKCSNO) then begin
 		if (fixed_param == 4) then begin
 			round_counter := round_counter + 1;
@@ -108,8 +84,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if ((global_var(GIZMO_DEAD) == 1) and (global_var(LARS_DEAD) == 0) and (cur_map_index == MAP_JUNKCSNO) and (combat_is_initialized == 0)) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 		destroy_object(self_obj);
 	end
@@ -145,7 +120,7 @@ end
 
 procedure damage_p_proc
 begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end
 end
@@ -159,7 +134,7 @@ begin
 	end
 	rm_timer_event(self_obj);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_JUNKTOWN, 1);
 	end
 	inc_good_critter

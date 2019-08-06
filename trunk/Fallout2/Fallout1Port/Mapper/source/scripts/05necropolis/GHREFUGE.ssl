@@ -1,13 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure talk_p_proc;//    script_action == 11
-procedure Critter_Action;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure destroy_p_proc;//    script_action == 18
+	Necropolis - Refugee
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GHREFUGE
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure destroy_p_proc;
 procedure combat_rads_inc;
 
 procedure ghoul00;
@@ -47,11 +60,7 @@ variable HENRY;
 variable rndRads;
 variable rndx;
 
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if (not(init)) then begin
 		init := 1;
 		if (local_var(7) == 0) then begin
@@ -68,21 +77,6 @@ begin
 		if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
 			script_overrides;
 			display_msg(message_str(SCRIPT_GHREFUGE, 100));
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- Critter_Action - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call Critter_Action;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-				end
-			end
 		end
 	end
 end
@@ -415,7 +409,7 @@ begin
 	gsay_message(74, 146, 50);
 end
 
-procedure Critter_Action
+procedure critter_p_proc
 begin
 	if (tmp_hostile > 0) then begin
 		tmp_hostile := 0;
@@ -447,7 +441,7 @@ end
 
 procedure pickup_p_proc
 begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end

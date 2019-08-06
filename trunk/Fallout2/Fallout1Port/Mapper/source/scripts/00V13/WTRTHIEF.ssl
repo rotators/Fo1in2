@@ -1,16 +1,31 @@
-#include "..\headers\define.h"
+/*
 
+	V13 - Water Thief
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_WTRTHIEF
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_V13)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 
 procedure WtrThief01;
 procedure WtrThief02;
@@ -34,33 +49,16 @@ import variable Officer_ptr;
 import variable VaultBox_ptr;
 import variable WtrThief_ptr;
 
-variable hostile;
+variable tmp_hostile;
 variable got_water;
 variable on_the_way;
 variable searched;
 variable scared;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-
-
 procedure start begin
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		if (Officer_ptr != 0) then begin
 			critter_add_trait( Officer_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_PLAYER );
@@ -68,11 +66,10 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	variable LVar0 := 0;
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		scared := 1;
 		attack(dude_obj);
 	end
@@ -130,15 +127,13 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	set_local_var(5, 1);
 	display_msg(message_str(SCRIPT_WTRTHIEF, 102));
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var(QUEST_VAULT13_5_WTR_THIEF, 2);
 	if (Officer_ptr != 0) then begin
 		critter_add_trait( Officer_ptr, TRAIT_OBJECT, OBJECT_TEAM_NUM, TEAM_VAULT13 );
@@ -146,14 +141,7 @@ begin
 	rm_timer_event(self_obj);
 
 	if source_obj == dude_obj then begin
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_GOOD_MONSTERS_KILLED) > (2 * global_var(NUM_BAD_MONSTERS_KILLED))) or (global_var(BERSERKER_REPUTATION) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var(CHAMPION_REPUTATION, 0);
-		end
-		if (((global_var(NUM_BAD_MONSTERS_KILLED) + global_var(NUM_GOOD_MONSTERS_KILLED)) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var(NUM_GOOD_MONSTERS_KILLED))) or (global_var(CHAMPION_REPUTATION) == 1))) then begin
-			set_global_var(CHAMPION_REPUTATION, 1);
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
+		inc_neutral_critter
 		display_msg(message_str(SCRIPT_WTRTHIEF, 104));
 		give_exp_points(500);
 	end
@@ -209,7 +197,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -361,7 +349,7 @@ end
 
 procedure WtrThiefCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure finish_quest

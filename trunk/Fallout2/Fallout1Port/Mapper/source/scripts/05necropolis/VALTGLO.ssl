@@ -1,21 +1,34 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure combat_p_proc;//    script_action == 13
+	Necropolis - Glowing Ghoul in Necropolis Vault
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_VALTGLO
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure combat_p_proc;
 procedure combat;
 procedure combat_rads_inc;
 
-variable hostile;
+variable tmp_hostile;
 variable Only_Once := 1;
 variable rndx;
 variable rndRads;
-
-
 
 procedure start begin
 	if Only_Once then begin
@@ -45,18 +58,18 @@ procedure critter_p_proc begin
 				end
 			end
 		end
-		hostile := 1;
+		tmp_hostile := 1;
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
 procedure pickup_p_proc
 begin
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
-		hostile := 1;
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
 	end
 end
 
@@ -66,10 +79,8 @@ begin
 	display_msg(message_str(SCRIPT_VALTGLO, 101));
 end
 
-procedure destroy_p_proc
-begin
-
-	inc_evil_critter
+procedure destroy_p_proc begin
+	inc_inv_evil_crit
 end
 
 procedure look_at_p_proc
@@ -219,7 +230,7 @@ end
 
 procedure combat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure combat_rads_inc

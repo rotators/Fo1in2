@@ -1,14 +1,29 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_exit_p_proc;//    script_action == 16
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+	Junktown - Generic Skulz ganger
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENSKULZ
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure map_exit_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 
 procedure set_sleep_tile;
 
@@ -22,15 +37,14 @@ variable sleep_time;
 variable home_tile;
 variable sleep_tile;
 
-variable dest_tile := 7000;
-variable hostile;
+variable tmp_dest_tile := 7000;
+variable tmp_hostile;
 variable sleeping_disabled;
 variable waypoint;
 
 #define LVAR_Sleeping 							(4)
 
 procedure start begin
-	
 end
 
 procedure critter_p_proc
@@ -40,15 +54,15 @@ begin
 			attack(dude_obj);
 		end
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 			if ((map_var(2) == 2) and (waypoint == 0)) then begin
 				waypoint := 1;
-				dest_tile := 26297;
+				tmp_dest_tile := 26297;
 				sleeping_disabled := 1;
 			end
 			else begin
@@ -59,16 +73,16 @@ begin
 				end
 			end
 			if (waypoint != 0) then begin
-				if (tile_distance(tile_num(self_obj), dest_tile) > 3) then begin
-					animate_move_obj_to_tile(self_obj, dest_tile, 0);
+				if (tile_distance(tile_num(self_obj), tmp_dest_tile) > 3) then begin
+					animate_move_obj_to_tile(self_obj, tmp_dest_tile, 0);
 				end
 				else begin
 					if (waypoint == 1) then begin
 						if (map_var(2) == 0) then begin
-							dest_tile := 33519;
+							tmp_dest_tile := 33519;
 						end
 						else begin
-							dest_tile := 20076;
+							tmp_dest_tile := 20076;
 							waypoint := 2;
 						end
 					end
@@ -98,7 +112,7 @@ begin
 	end
 	rm_timer_event(self_obj);
 
-	if source_obj > 0 then begin  SrcObj := 0;  SrcIsParty := 0;  SrcObj := obj_pid(source_obj);  if party_member_obj(SrcObj) then begin  SrcIsParty := 1;  end  end    if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj)  then begin
 		set_global_var(DUDE_ENEMY_SKULZ, 1);// Enemy of Skulz
 	end
 	inc_evil_critter
@@ -175,7 +189,7 @@ end
 procedure pickup_p_proc
 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSKULZ, 101), 2);
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -235,7 +249,7 @@ begin
 		end
 		else begin
 			if (fixed_param == 3) then begin
-				dest_tile := 26297;
+				tmp_dest_tile := 26297;
 				sleeping_disabled := 1;
 			end
 		end
