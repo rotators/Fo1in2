@@ -13,7 +13,7 @@
 #include "..\headers\ScenePid.h"
 #include "..\headers\Maps.h"
 #include "..\headers\animcomd.h"
-#include "..\headers\CritrPid.h"
+#include "..\headers\CritPid.h"
 #include "..\headers\ArtFid.h"
 #include "..\headers\Party.h"
 //#include "..\headers\Reaction.h"
