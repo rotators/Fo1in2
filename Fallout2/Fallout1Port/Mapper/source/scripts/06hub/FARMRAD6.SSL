@@ -1,36 +1,31 @@
+/*
+
+	Hub - Farm Raider
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_FARMRAD6
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 
 procedure start;
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure map_enter_p_proc;//    script_action == 15
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure map_enter_p_proc;
 
 variable Only_Once := 1;
 variable PsstTime;
 
-
-
-procedure Start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-			end
-		end
-	end
+procedure Start begin
 end
 
 procedure talk_p_proc
@@ -59,9 +54,8 @@ end
 	//		end
 
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
+	inc_evil_critter
 	set_global_var(FARM_RAIDER_6, 1);
 	set_global_var(RAIDERS_LEFT_IRWIN, (global_var(RAIDERS_LEFT_IRWIN) - 1));
 	if (global_var(RAIDERS_LEFT_IRWIN) <= 0) then begin
@@ -79,8 +73,8 @@ begin
 		set_global_var(FARM_RAIDER_6, self_obj);
 	end
 	if (global_var(FARM_RAIDER_6) != 1) then begin
-		
-		
+
+
 		if (Only_Once == 1) then begin
 			item_caps_adjust(self_obj, (12 + get_critter_stat(dude_obj, STAT_lu)));//change to random 1-10
 			set_self_team(TEAM_RAIDERS );//TEAM#
