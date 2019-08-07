@@ -275,7 +275,9 @@ variable Scenery_Creation_Ptr;
 
 // Misc Commands
 
-// SD3 Motorcycle
+/************************************************
+   Motorcycle
+************************************************/
 #define Create_Moto1(Hex_Num,Elevation)   if ((not(is_loading_game)) /*and (global_var(GVAR_PLAYER_GOT_CAR) != 0)*/) then begin               \
                                             Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO1,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
                                             Scenery_Creation_Hex:=Hex_Num;                                                                \
@@ -352,6 +354,99 @@ variable Scenery_Creation_Ptr;
 											Create_Moto2(Hex_Num,Elevation) \
 										end		
 										  
+
+/************************************************
+    Caravan carts
+************************************************/
+// This will make the East-West Caravans
+#define Create_EW_Caravan(Pid,Hex_Num,Elevation)    Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                     \
+                                                    Scenery_Creation_Hex:=Hex_Num;                                              \
+                                                    Blocking_Cycle(1,1,Elevation)                                              \
+                                                    Blocking_Cycle(3,2,Elevation)                                              \
+                                                    Blocking_Cycle(4,2,Elevation)                                              \
+                                                    Blocking_Cycle(5,1,Elevation)                                              \
+                                                    Blocking_Cycle(0,1,Elevation)                                              \
+                                                    Blocking_Cycle(5,1,Elevation)                                              \
+                                                    Blocking_Cycle(1,2,Elevation)
+
+#define Create_EW_Red_Caravan(Hex_Num,Elevation)    Create_EW_Caravan(PID_EW_RED_CARAVAN,Hex_Num,Elevation)
+#define Create_EW_Grey_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_GREY_CARAVAN,Hex_Num,Elevation)
+#define Create_EW_Wood_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_WOOD_CARAVAN,Hex_Num,Elevation)
+
+#define Dest_Caravan_Cycle(Rot,Count,Elevation)   Scenery_Creation_Count:=0;                                                                             \
+                                                while (Scenery_Creation_Count < Count) do begin                                                          \
+                                                    Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,Rot,1);                             \
+                                                    Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_BLOCKING_HEX);        \
+                                                    destroy_object(Scenery_Creation_Ptr);                                                                \
+                                                    Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_RED_CARAVAN_HANDLE);  \
+                                                    destroy_object(Scenery_Creation_Ptr);                                                                \
+                                                    Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_GREY_CARAVAN_HANDLE); \
+                                                    destroy_object(Scenery_Creation_Ptr);                                                                \
+                                                    Scenery_Creation_Count+=1;                                                                           \
+                                                end
+
+// This will destroy the East-West Caravans
+// TODO: Add wood caravan wagon from SD3!
+#define Destroy_EW_Caravan(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                  \
+                                                /*Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_EW_WOOD_CARAVAN);*/   \
+                                                /*destroy_object(Scenery_Creation_Ptr);*/                                                 \
+                                                Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_EW_RED_CARAVAN);    \
+                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_EW_GREY_CARAVAN);   \
+                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                Scenery_Creation_Hex:=Hex_Num;                                                        \
+                                                   Dest_Caravan_Cycle(1,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(3,2,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(4,2,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(5,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(0,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(5,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(1,2,Elevation)                                                  \
+                                                end
+
+// This will make North-South Caravans
+#define Create_NS_Caravan(Pid,Hex_Num,Elevation)   Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);     \
+                                                   Scenery_Creation_Hex:=Hex_Num;                              \
+                                                   Blocking_Cycle(5,1,Elevation)                              \
+                                                   Blocking_Cycle(4,1,Elevation)                              \
+                                                   if (Pid == PID_NS_RED_CARAVAN) then                                                              \
+                                                      Scenery_Creation:=create_object(PID_RED_CARAVAN_HANDLE,Scenery_Creation_Hex,Elevation);      \
+                                                   else                                                                                             \
+                                                      Scenery_Creation:=create_object(PID_GREY_CARAVAN_HANDLE,Scenery_Creation_Hex,Elevation);     \
+                                                    Blocking_Cycle(5,1,Elevation)                              \
+                                                    Blocking_Cycle(1,2,Elevation)                              \
+                                                    Blocking_Cycle(2,3,Elevation)                              \
+                                                    Blocking_Cycle(3,2,Elevation)                              \
+                                                    Blocking_Cycle(4,1,Elevation)                              \
+                                                    Blocking_Cycle(5,3,Elevation)
+
+#define Create_NS_Red_Caravan(Hex_Num,Elevation)   Create_NS_Caravan(PID_NS_RED_CARAVAN,Hex_Num,Elevation)
+#define Create_NS_Grey_Caravan(Hex_Num,Elevation)  Create_NS_Caravan(PID_NS_GREY_CARAVAN,Hex_Num,Elevation)
+
+// This will destroy the North-South Caravans
+#define Destroy_NS_Caravan(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                  \
+                                                Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_NS_RED_CARAVAN);    \
+                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_NS_GREY_CARAVAN);   \
+                                                destroy_object(Scenery_Creation_Ptr);                                                 \
+                                                Scenery_Creation_Hex:=Hex_Num;                                                        \
+                                                   Dest_Caravan_Cycle(5,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(4,1,Elevation)                                                  \
+                                                Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_RED_CARAVAN_HANDLE);   \
+                                                destroy_object(Scenery_Creation_Ptr);                                                    \
+                                                Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_GREY_CARAVAN_HANDLE);  \
+                                                destroy_object(Scenery_Creation_Ptr);                                                    \
+                                                   Dest_Caravan_Cycle(5,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(1,2,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(2,3,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(3,2,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(4,1,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(5,3,Elevation)                                                  \
+                                                end
+                                             
+/************************************************
+    Other stuff
+************************************************/
 // This will make the cave-in rocks with all the blocking Hexes
 #define Create_Cave_In(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_CAVE_IN_ROCKS,Hex_Num,Elevation); 					\
 											Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,2,2);                               \
@@ -391,42 +486,19 @@ variable Scenery_Creation_Ptr;
                                                     Scenery_Creation_Count+=1;                                                          \
                                                 end
 
-// This will make the East-West Caravans
-#define Create_EW_Caravan(Pid,Hex_Num,Elevation)    Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                     \
+// This will make the broken vault door
+#define Create_Broken_VDoor(Pid,Hex_Num,Elevation)  Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                     \
                                                     Scenery_Creation_Hex:=Hex_Num;                                              \
                                                     Blocking_Cycle(1,1,Elevation)                                              \
+                                                    Blocking_Cycle(2,2,Elevation)                                              \
                                                     Blocking_Cycle(3,2,Elevation)                                              \
-                                                    Blocking_Cycle(4,2,Elevation)                                              \
-                                                    Blocking_Cycle(5,1,Elevation)                                              \
-                                                    Blocking_Cycle(0,1,Elevation)                                              \
-                                                    Blocking_Cycle(5,1,Elevation)                                              \
-                                                    Blocking_Cycle(1,2,Elevation)
+                                                    Blocking_Cycle(4,1,Elevation)                                              \
+                                                    Blocking_Cycle(5,3,Elevation)                                              \
+                                                    Blocking_Cycle(0,2,Elevation)                                              \
+                                                    Blocking_Cycle(1,1,Elevation)
 
-#define Create_EW_Red_Caravan(Hex_Num,Elevation)    Create_EW_Caravan(PID_EW_RED_CARAVAN,Hex_Num,Elevation)
-#define Create_EW_Grey_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_GREY_CARAVAN,Hex_Num,Elevation)
-
-// This will make North-South Caravans
-#define Create_NS_Caravan(Pid,Hex_Num,Elevation)    Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                                          \
-                                                    Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,2);                                        \
-                                                    if (Pid == PID_NS_RED_CARAVAN) then                                                              \
-                                                        Scenery_Creation:=create_object(PID_RED_CARAVAN_HANDLE,Scenery_Creation_Hex,Elevation);      \
-                                                    else                                                                                             \
-                                                        Scenery_Creation:=create_object(PID_GREY_CARAVAN_HANDLE,Scenery_Creation_Hex,Elevation);     \
-                                                    Blocking_Cycle(1,1,Elevation)                                                                   \
-                                                    Blocking_Cycle(2,3,Elevation)                                                                   \
-                                                    Blocking_Cycle(3,1,Elevation)                                                                   \
-                                                    Blocking_Cycle(4,1,Elevation)                                                                   \
-                                                    Blocking_Cycle(5,3,Elevation)
-
-#define Create_Slagged_Door(Hex_Num,Elevation)      Scenery_Creation:=create_object(PID_SLAGGED_DOOR_BOTTOM,Hex_Num,Elevation); \
-                                                    Scenery_Creation:=create_object(PID_SLAGGED_DOOR_TOP,Hex_Num,Elevation);    \
-                                                    Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,2,1);                   \
-                                                    Blocking_Cycle(2,1,Elevation)                                               \
-                                                    Blocking_Cycle(4,2,Elevation)                                               \
-                                                    Blocking_Cycle(5,4,Elevation)                                               \
-                                                    Blocking_Cycle(0,2,Elevation)                                               \
-                                                    Blocking_Cycle(5,1,Elevation)                                               \
-                                                    Blocking_Cycle(0,1,Elevation)
+// Destroyed vault door
+#define Create_Vault_Door_Broken(Hex_Num,Elevation)    Create_Broken_VDoor(PID_VAULT_DOOR_BROKEN,Hex_Num,Elevation)
 
 // This will see if a tile is blocked by a blocking hex
 #define tile_is_blocked(the_tile, the_elev)        (tile_contains_pid_obj(the_tile, the_elev, PID_BLOCKING_HEX) != 0)

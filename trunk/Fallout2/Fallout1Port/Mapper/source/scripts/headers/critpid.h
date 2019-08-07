@@ -1,11 +1,11 @@
 /*
 
 */
-#ifndef CRITRPID_H
-#define CRITRPID_H
+#ifndef CRITPID_H
+#define CRITPID_H
 
 /******************************************************************
-   File Name: CritrPid.H ..... PRO_CRIT entry = line number - 10
+   File Name: CritPid.H ..... PRO_CRIT entry = line number - 10
 ******************************************************************/
 
 #define PID_VAULT_DWELLER_MALE 			(16777217)
@@ -340,4 +340,4 @@
 #define PID_DOGMEAT_STAGE3				(16777544)
 #define PID_DOGMEAT_STAGE4				(16777545)
 
-#endif // CRITRPID_H
+#endif // CRITPID_H
