@@ -58,4 +58,6 @@
 #define TEAM_HUB_VANCE					(81)
 #define TEAM_LA_REGULATORS				(89)
 
+#define TEAM_CARAVAN 					(90)
+
 #endif // TEAMS_H

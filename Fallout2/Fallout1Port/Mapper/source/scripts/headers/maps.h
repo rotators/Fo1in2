@@ -25,6 +25,7 @@
 #define AREA_RND_ENC_CITY         (28)
 #define AREA_RND_ENC_COAST        (29)
 
+#define AREA_CARAVAN_ENCOUNTER    (44)
 #define AREA_SHADOW_MAPS          (47)
 
 #define AREA_RND_DESERT           (49) // "Manual" player encounter

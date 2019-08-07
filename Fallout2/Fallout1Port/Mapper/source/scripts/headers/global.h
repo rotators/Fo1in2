@@ -42,6 +42,7 @@
 
 // Misc - HARDCODED TO THESE GVAR SLOTS
 #define LOAD_MAP_INDEX							(27)	// was 32  (1032) in Fallout 1
+#define GVAR_LOAD_MAP_INDEX 					(27)	// Fo2 - TODO: replace Fo1 name!!
 #define RUNNING_BURNING_GUY						(28)	// was 603 (1603) in Fallout 1
 
 #define GVAR_MAP_EXIT_TILE                  	(46)
@@ -56,6 +57,23 @@
 #define GVAR_HOLODISK_MB_LEVEL_2				(222)	// maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_MB_LEVEL_3				(223)	// maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_MB_LEVEL_4				(224)	// maybe hard-coded, maybe not?
+
+// Caravans for Cities
+#define GVAR_CARAVAN_STATUS                  	(269)
+#define GVAR_CARAVAN_START                   	(270)
+#define GVAR_CARAVAN_END                     	(271)
+#define GVAR_CARAVAN_DRIVERS                 	(272)
+#define GVAR_CARAVAN_GUARDS                  	(273)
+#define GVAR_CARAVAN_CARTS                   	(274)
+#define GVAR_CARAVAN_ENCOUNTERS              	(275)
+#define GVAR_CARAVAN_BRAHMIN                 	(276)
+#define GVAR_CARAVAN_MASTERS                 	(277)
+#define GVAR_CARAVAN_DRIVERS_TOTAL           	(278)
+#define GVAR_CARAVAN_GUARDS_TOTAL            	(279)
+#define GVAR_CARAVAN_CARTS_TOTAL             	(280)
+#define GVAR_CARAVAN_BRAHMIN_TOTAL           	(281)
+#define GVAR_CARAVAN_MASTERS_TOTAL           	(282)
+#define GVAR_CARAVAN_ENCOUNTERS_TOTAL        	(283)
 
 // More vanilla Addictions
 #define GVAR_ADDICT_TRAGIC						(295)	// maybe hard-coded, maybe not?
@@ -4100,8 +4118,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT				(4990)	
 #define RESERVED_FOR_FALLOUT_FIXT				(4991)	
 #define RESERVED_FOR_FALLOUT_FIXT				(4992)	
-#define RESERVED_FOR_FALLOUT_FIXT				(4993)	
-#define RESERVED_FOR_FALLOUT_FIXT				(4994)	*/
+#define RESERVED_FOR_FALLOUT_FIXT				(4993)*/	
+#define GVAR_CRIMSON_CARAVAN					(4994)	
 #define GVAR_GRIFFITH_STATE						(4995)	
 #define GVAR_QUEST_MOTORCYCLE 					(4996)	
 #define GVAR_CAR_CUR_MAP						(4997)

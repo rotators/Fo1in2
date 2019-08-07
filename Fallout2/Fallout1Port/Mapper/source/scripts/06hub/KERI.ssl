@@ -6,13 +6,14 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-#include "..\headers\MAPNECRO.h"
+//#include "..\headers\MAPNECRO.h"
 
 #define NAME                    SCRIPT_KERI
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
 
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
+#include "..\headers\caravan.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -72,6 +73,8 @@ procedure RecalcDateString;
 procedure SendAroundHouse;
 procedure combat;
 
+procedure start_necropolis;
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable days;
@@ -79,6 +82,15 @@ variable DayString := "None";
 variable SetDayNight;
 variable Destination;
 variable LastMove;
+
+#define CARAVAN_WADE            (1)
+#define CARAVAN_SAVINELLI       (2)
+#define CARAVAN_STANWELL        (3)
+
+#define START_DAY               (1)
+#define CURRENT_CARAVAN         (GVAR_CRIMSON_CARAVAN)
+#define CURRENT_CARAVAN_LEADER  (CARAVAN_WADE)
+#define TARGET_TOWN             (MAPSTR_HOTEL)
 
 procedure start begin
 	if Only_Once then begin
@@ -631,6 +643,56 @@ procedure Keri21c begin
 		gsay_message(595, 181, 50);
 	end
 	load_map(MAP_DESCRVN2, 3);
+
+	// New Fo2:
+	//call start_necropolis;
+end
+
+procedure start_necropolis begin
+   variable Caravan_Carts;
+   variable Caravan_Encounters;
+   variable Caravan_Guards;
+
+   set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
+   set_caravan_status(CARAVAN_STATUS_ON_JOB);
+   Caravan_Encounters:=random(1,4);
+   set_caravan_encounters(Caravan_Encounters);
+
+   if (CUR_AREA_HUB) then begin
+       set_global_var(GVAR_CARAVAN_START,CARAVAN_HUB);
+       set_global_var(GVAR_CARAVAN_END,CARAVAN_NECROPOLIS);
+   end
+   else begin
+       set_global_var(GVAR_CARAVAN_START,CARAVAN_NECROPOLIS);
+       set_global_var(GVAR_CARAVAN_END,CARAVAN_HUB);
+   end
+
+   if (global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL) == 0) then begin
+       Caravan_Guards:=random(2,4);
+       set_caravan_guards(Caravan_Guards);
+       if (global_var(GVAR_CARAVAN_END) ==  CARAVAN_NECROPOLIS) then begin
+           game_time_advance(24*ONE_GAME_DAY);
+           load_map(TARGET_TOWN,CURRENT_CARAVAN_LEADER);
+           set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_AVERAGE_SUCCESS);
+       end
+       else begin
+           game_time_advance(24*ONE_GAME_DAY);
+           load_map(MAPSTR_HUBENT,CURRENT_CARAVAN_LEADER);
+           set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_AVERAGE_SUCCESS);
+       end
+   end
+   else begin
+       Caravan_Carts:=random(1,3);
+       Caravan_Guards:=random(2,4);
+
+       set_caravan_masters(1);
+       set_caravan_guards(Caravan_Guards);
+       set_caravan_carts(Caravan_Carts);
+       set_caravan_brahmin(2*Caravan_Carts);
+       set_caravan_drivers(Caravan_Carts);
+
+       load_map(MAP_DESCRVN2,CURRENT_CARAVAN_LEADER);
+   end
 end
 
 // Boneyard:
@@ -751,7 +813,7 @@ procedure RecalcDate begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
-	
+
 	LVar0 := get_day;
 	if (LVar0 <= 3) then begin
 		LVar0 := 3;
@@ -838,7 +900,7 @@ procedure SendAroundHouse begin
 	LVar0 := random(10, 20);
 	while(Destination == 0) do begin
 		Destination := random(1, 3);
-		
+
 		if (Destination == 1) then begin
 			Destination := 12127;
 		end
@@ -851,7 +913,7 @@ procedure SendAroundHouse begin
 		if (Destination == LastMove) then begin
 			Destination := 0;
 		end
-		
+
 	end
 	LastMove := Destination;
 	reg_anim_func(2, self_obj);
