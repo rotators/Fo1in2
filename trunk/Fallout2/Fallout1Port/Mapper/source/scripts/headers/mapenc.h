@@ -11,6 +11,18 @@
     Generic Defines
 ************************************************/
 
+// All Map Vars need to start w/ MVAR_
+#define NUM_MONSTERS             	(0)  // Number of monsters created
+#define MVAR_Hostile_Total 			(1)
+
+//==================================================================
+
+#define FixRotationArc(X)           while (X < 0) do begin      \
+                                        X += 6;                 \
+                                    end                         \
+                                    if (X > 5) then             \
+                                        X := X%6
+										
 #define enc_group_angle(x) 			if (group_angle == 0) then begin 		\
 										x := 3;								\
 									end										\
