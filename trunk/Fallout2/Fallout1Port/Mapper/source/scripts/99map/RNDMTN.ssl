@@ -128,13 +128,13 @@ begin //_FLDC_
 				debug_msg(" ");
 			end
 			if (global_var(LOAD_MAP_INDEX) != 1) then begin
-				Ranger_rerolls := has_trait( TRAIT_PERK, dude_obj, PERK_ranger );
+				Ranger_rerolls := dude_perk( PERK_ranger );
 				set_global_var(AGGRO_FLAG_RND_ENC_unsure, 0);
 				while(Encounter_Num == 0) do begin
 					Encounter_Num := (random(0, 8) + random(0, 8) + random(0, 8));// vanilla was 3d6, mine is 3d9
 					if global_var(FIXT_BUGFIXES_ONLY) or (global_var(RANDOM_ENC_IGNORE_LUCK) == 0) then begin//if NOT set to ignore Luck in factoring EncNum
-						if (get_critter_stat(dude_obj, STAT_lu) < 4) or (get_critter_stat(dude_obj, STAT_lu) > 7) then begin
-							if (get_critter_stat(dude_obj, STAT_lu) == 10) then begin
+						if (dude_luck < 4) or (dude_luck > 7) then begin
+							if (dude_luck == 10) then begin
 								if (difficulty_level == 2) then begin
 									Encounter_Num := (Encounter_Num + 1);
 								end
@@ -150,7 +150,7 @@ begin //_FLDC_
 								end
 							end
 							else begin
-								if (get_critter_stat(dude_obj, STAT_lu) == 9) then begin
+								if (dude_luck == 9) then begin
 									if (difficulty_level == 2) or (difficulty_level == 1) then begin
 										Encounter_Num := (Encounter_Num + 1);
 									end
@@ -161,19 +161,19 @@ begin //_FLDC_
 									end
 								end
 								else begin
-									if (get_critter_stat(dude_obj, STAT_lu) == 8) then begin
+									if (dude_luck == 8) then begin
 										if (difficulty_level == 1) or (difficulty_level == 0) then begin
 											Encounter_Num := (Encounter_Num + 1);
 										end
 									end
 									else begin
-										if (get_critter_stat(dude_obj, STAT_lu) == 3) then begin
+										if (dude_luck == 3) then begin
 											if (difficulty_level == 2) or (difficulty_level == 1) then begin
 												Encounter_Num := (Encounter_Num - 1);
 											end
 										end
 										else begin
-											if (get_critter_stat(dude_obj, STAT_lu) == 2) then begin
+											if (dude_luck == 2) then begin
 												if (difficulty_level == 1) or (difficulty_level == 0) then begin
 													Encounter_Num := (Encounter_Num - 1);
 												end
@@ -184,7 +184,7 @@ begin //_FLDC_
 												end
 											end
 											else begin
-												if (get_critter_stat(dude_obj, STAT_lu) == 1) then begin
+												if (dude_luck == 1) then begin
 													if (difficulty_level == 2) then begin
 														Encounter_Num := (Encounter_Num - 3);
 													end
@@ -396,7 +396,7 @@ procedure stranger
 begin
 	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
 		if (global_var(MYST_STRANGER_LUCK_BASED)) then begin
-			if (has_trait( TRAIT_PERK, dude_obj, PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and (random(1, 10) < (get_critter_stat(dude_obj, STAT_lu) - 1))) then begin
+			if (dude_perk( PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and (random(1, 10) < (dude_luck - 1))) then begin
 				Critter_type := PID_MYSTERIOUS_STRANGER;
 				Critter_script := SCRIPT_MYSTSTRN;
 				Critter_direction := random(0, 5);
@@ -409,7 +409,7 @@ begin
 				add_obj_to_inven(Critter, Item);
 				Item := create_object( PID_STIMPAK, 0, 0 );
 				add_mult_objs_to_inven(Critter, Item, 2);
-				item_caps_adjust(Critter, random(7, 30) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 				if global_var(MYST_STRANGER_HAS_ARMOR) then begin
 					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
 					add_obj_to_inven(Critter, Item);
@@ -419,7 +419,7 @@ begin
 			end
 		end
 		else begin
-			if (has_trait( TRAIT_PERK, dude_obj, PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and (random((0 + global_var(MYST_STRANGER_CHANCE)), (3 + global_var(MYST_STRANGER_CHANCE))) > 1)) then begin
+			if (dude_perk( PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and (random((0 + global_var(MYST_STRANGER_CHANCE)), (3 + global_var(MYST_STRANGER_CHANCE))) > 1)) then begin
 				Critter_type := PID_MYSTERIOUS_STRANGER;
 				Critter_script := SCRIPT_MYSTSTRN;
 				Critter_direction := random(0, 5);
@@ -440,7 +440,7 @@ begin
 				add_obj_to_inven(Critter, Item);
 				Item := create_object( PID_STIMPAK, 0, 0 );
 				add_mult_objs_to_inven(Critter, Item, 2);
-				item_caps_adjust(Critter, random(7, 30) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 				if global_var(MYST_STRANGER_HAS_ARMOR) then begin
 					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
 					add_obj_to_inven(Critter, Item);
@@ -451,7 +451,7 @@ begin
 		end
 	end
 	else begin
-		if (has_trait( TRAIT_PERK, dude_obj, PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and random(0, 1)) then begin
+		if (dude_perk( PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and random(0, 1)) then begin
 			Critter_type := PID_MYSTERIOUS_STRANGER;
 			Critter_script := SCRIPT_MYSTSTRN;
 			Critter_direction := random(0, 5);
@@ -464,7 +464,7 @@ begin
 			add_obj_to_inven(Critter, Item);
 			Item := create_object( PID_STIMPAK, 0, 0 );
 			add_mult_objs_to_inven(Critter, Item, 2);
-			Item := item_caps_adjust(Critter, random(7, 30) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			Item := item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 			set_global_var(MYST_STRANGER_ITEM, 10);
 		end
 	end
@@ -556,7 +556,7 @@ begin
 	critter_attempt_placement(Critter, ((CritterYpos + 1) * 200) + (CritterXpos - 3), 0);
 	Critter := create_object( PID_CONTAINER_WOOD_CRATE, 0, 0 );
 	critter_attempt_placement(Critter, (CritterYpos * 200) + (CritterXpos - 2), 0);
-	item_caps_adjust(Critter, random(2, 6) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(2, 6) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	if (random(0, 1)) then begin
 		Item := create_object( PID_IGUANA_ON_A_STICK, 0, 0 );
 		add_obj_to_inven(Critter, Item);
@@ -598,14 +598,14 @@ begin
 	wield_obj_critter(Patrick, Item);
 	Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
 	add_obj_to_inven(Patrick, Item);
-	if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+	if (dude_perk( PERK_scrounger )) then begin
 		Item := create_object( PID_10MM_AP, 0, 0 );
 		add_obj_to_inven(Patrick, Item);
 	end
 	Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
 	add_obj_to_inven(Patrick, Item);
 	wield_obj_critter(Patrick, Item);
-	item_caps_adjust(Patrick, random(25, 50) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Patrick, random(25, 50) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	Item := create_object( PID_KNIFE, 0, 0 );
 	add_obj_to_inven(Patrick, Item);
 	Item := create_object( PID_CROWBAR, 0, 0 );
@@ -999,8 +999,8 @@ end
 procedure Raider1 begin // Same as Raider3 in RNDDESRT
 	variable LVar0 := 0;
 	display_msg(message_str(SCRIPT_RNDDESRT, 173));
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
 	Tot_Critter_A := random(5, 7);
 	Tot_Critter_B := random(2, 3);
 	group_angle := random(0, 5);
@@ -1069,7 +1069,7 @@ procedure Raider1 begin // Same as Raider3 in RNDDESRT
 				else begin
 					Item := create_object( PID_10MM_JHP, 0, 0 );
 				end
-				add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+				add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 				if (Critter_type == PID_TRAVELER_BALD_LEATHER) then begin
 					Item := create_object( PID_HUNTING_RIFLE, 0, 0 );
 				end
@@ -1079,7 +1079,7 @@ procedure Raider1 begin // Same as Raider3 in RNDDESRT
 			end
 			else begin
 				Item := create_object( PID_10MM_JHP, 0, 0 );
-				add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+				add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 				Item := create_object( PID_10MM_PISTOL, 0, 0 );
 			end
 		end
@@ -1154,7 +1154,7 @@ procedure Raider1 begin // Same as Raider3 in RNDDESRT
 		add_obj_to_inven(Critter, Item);
 		Item := create_object( PID_223_FMJ, 0, 0 );
 		add_obj_to_inven(Critter, Item);
-		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+		if (dude_perk( PERK_scrounger )) then begin
 			Item := create_object( PID_223_FMJ, 0, 0 );
 			add_obj_to_inven(Critter, Item);
 		end
@@ -1196,7 +1196,7 @@ procedure Raider1 begin // Same as Raider3 in RNDDESRT
 	Critter_direction := random(0, 5);
 	call Place_critter;
 	critter_heal(Critter, -5);
-	item_caps_adjust(Critter, random(100, 300) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(100, 300) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	if (random(1, 10) > 6) then begin
 		Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 		add_obj_to_inven(Critter, Item);
@@ -1220,8 +1220,8 @@ end
 procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 	variable LVar0 := 0;
 	display_msg(message_str(SCRIPT_RNDDESRT, 173));
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
 	Tot_Critter_A := random(5, 7);
 	Tot_Critter_B := random(2, 3);
 	group_angle := random(0, 5);
@@ -1289,7 +1289,7 @@ procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 				else begin
 					Item := create_object( PID_10MM_JHP, 0, 0 );
 				end
-				add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+				add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 				if (Critter_type == PID_TRAVELER_BALD_LEATHER) then begin
 					Item := create_object( PID_HUNTING_RIFLE, 0, 0 );
 				end
@@ -1299,7 +1299,7 @@ procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 			end
 			else begin
 				Item := create_object( PID_10MM_JHP, 0, 0 );
-				add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+				add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 				Item := create_object( PID_10MM_PISTOL, 0, 0 );
 			end
 		end
@@ -1374,7 +1374,7 @@ procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 		add_obj_to_inven(Critter, Item);
 		Item := create_object( PID_223_FMJ, 0, 0 );
 		add_obj_to_inven(Critter, Item);
-		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+		if (dude_perk( PERK_scrounger )) then begin
 			Item := create_object( PID_223_FMJ, 0, 0 );
 			add_obj_to_inven(Critter, Item);
 		end
@@ -1416,7 +1416,7 @@ procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 	Critter_direction := random(0, 5);
 	call Place_critter;
 	critter_heal(Critter, -5);
-	item_caps_adjust(Critter, random(100, 300) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(100, 300) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	if (random(1, 10) > 6) then begin
 		Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 		add_obj_to_inven(Critter, Item);
@@ -1441,8 +1441,8 @@ procedure Raider3
 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 196));
 	Tot_Critter_A := random(3, 4);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Critter_type := PID_RADSCORPION;
 	Critter_script := SCRIPT_RADSCORP;
 	while(Tot_Critter_A) do begin
@@ -1458,8 +1458,8 @@ end
 procedure Raider4
 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 197));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Tot_Critter_A := random(4, 6);
 	group_angle := random(0, 5);
 	Critter_script := SCRIPT_GENRAIDA;
@@ -1528,8 +1528,8 @@ end
 procedure Raider5
 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 198));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	Critter_direction := dude_rot;
 	Critter_type := PID_MAN_JEANS;
 	Critter_script := SCRIPT_LONERAID;
@@ -1550,7 +1550,7 @@ begin
 	end
 	add_obj_to_inven(Critter, Item);
 	if (random(0, 1)) then begin
-		item_caps_adjust(Critter, random(5, 10) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+		item_caps_adjust(Critter, random(5, 10) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	end
 end
 
@@ -1558,8 +1558,8 @@ procedure Raider6
 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 199));
 	Tot_Critter_A := random(3, 5);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Critter_script := -1;
 	while(Tot_Critter_A) do begin
 		if (random(0, 1)) then begin
@@ -1591,8 +1591,8 @@ procedure Junk_custom1 begin
 
 	display_msg(message_str(SCRIPT_RNDDESRT, 200));
 	Tot_Critter_A := random(3, 4);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Critter_type := PID_RADSCORPION;
 	Critter_script := SCRIPT_RADSCORP;
 	while(Tot_Critter_A) do begin
@@ -1610,8 +1610,8 @@ procedure Junk_custom2 begin
 
 	display_msg(message_str(SCRIPT_RNDDESRT, 200));
 	Tot_Critter_A := random(3, 4);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Critter_type := PID_RADSCORPION;
 	Critter_script := SCRIPT_RADSCORP;
 	while(Tot_Critter_A) do begin
@@ -1629,8 +1629,8 @@ procedure Junk_custom3 begin
 
 	display_msg(message_str(SCRIPT_RNDDESRT, 223));
 	Tot_Critter_A := random(4, 6);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	group_angle := random(0, 5);
 	Critter_type := PID_COYOTE;
 	Critter_script := SCRIPT_COYOTE;
@@ -1655,8 +1655,8 @@ procedure Junk_custom4 begin
 
 	display_msg(message_str(SCRIPT_RNDDESRT, 224));
 	Tot_Critter_A := random(2, 4);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Critter_type := PID_TRAVELER_GEN_LEATHER;
 	Critter_script := SCRIPT_JNKSCOUT;
 	group_angle := random(0, 5);
@@ -1685,7 +1685,7 @@ procedure Junk_custom4 begin
 			wield_obj_critter(Critter, Item);
 
 			Item := create_object( PID_223_FMJ, 0, 0 );
-			add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+			add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
@@ -1700,8 +1700,8 @@ procedure Junk_custom5 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 225));
 	Tot_Critter_A := random(1, 3);
 	Tot_Critter_B := (random(1, 6) + random(1, 6));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	group_angle := random(0, 5);
 
 	LVar0 := tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(7, 12));
@@ -1722,7 +1722,7 @@ procedure Junk_custom5 begin
 		end
 		call Place_critter;
 		anim(Critter, 1000, random(0, 5));
-		item_caps_adjust(Critter, random(50, 150) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+		item_caps_adjust(Critter, random(50, 150) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		Item := create_object( PID_10MM_AP, 0, 0 );
 		add_mult_objs_to_inven(Critter, Item, random(1, 4));
 		Item := create_object( PID_10MM_JHP, 0, 0 );
@@ -1758,7 +1758,7 @@ procedure Junk_custom5 begin
 			wield_obj_critter(Critter, Item);
 
 			Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-			add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+			add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 		end
 		else begin
 			Item := create_object( PID_10MM_PISTOL, 0, 0 );
@@ -1766,7 +1766,7 @@ procedure Junk_custom5 begin
 			wield_obj_critter(Critter, Item);
 
 			Item := create_object( PID_10MM_JHP, 0, 0 );
-			add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+			add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 		end
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
@@ -1781,29 +1781,29 @@ procedure Junk_custom6 begin
 	LVar1 := create_object( PID_BOTTLE_CAPS, 0, 0 );
 	Critter_direction := random(0, 5);
 	Critter_tile := tile_num_in_direction(Dude_tile, Critter_direction, 4);
-	if (get_critter_stat(dude_obj, STAT_lu) < 3) then begin
+	if (dude_luck < 3) then begin
 		Item := create_object( PID_MUTATED_FRUIT, 0, 0 );
 		critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
 	end
 	else begin
-		if (get_critter_stat(dude_obj, STAT_lu) == 8) then begin
+		if (dude_luck == 8) then begin
 			Item := create_object( PID_MUTATED_FRUIT, 0, 0 );
 			critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
 			Item := create_object( PID_10MM_JHP, 0, 0 );
 			critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
-			if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+			if (dude_perk( PERK_scrounger )) then begin
 				Item := create_object( PID_10MM_JHP, 0, 0 );
 				critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
 			end
 			Item := create_object( PID_BAG, 0, 0 );
 			critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
-			add_mult_objs_to_inven(Item, LVar1, 6 * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			add_mult_objs_to_inven(Item, LVar1, 6 * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		else begin
-			if (get_critter_stat(dude_obj, STAT_lu) > 8) then begin
+			if (dude_luck > 8) then begin
 				Item := create_object( PID_MUTATED_FRUIT, 0, 0 );
 				critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
-				if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+				if (dude_perk( PERK_scrounger )) then begin
 					LVar0 := 4;
 				end
 				while(LVar0) do begin
@@ -1812,7 +1812,7 @@ procedure Junk_custom6 begin
 					LVar0 := LVar0 - 1;
 				end
 				Item := create_object( PID_BAG, 0, 0 );
-				add_mult_objs_to_inven(Item, LVar1, 122 * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				add_mult_objs_to_inven(Item, LVar1, 122 * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 				critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
 				Item := create_object( PID_10MM_PISTOL, 0, 0 );
 				critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
@@ -1821,7 +1821,7 @@ procedure Junk_custom6 begin
 				Item := create_object( PID_MUTATED_FRUIT, 0, 0 );
 				critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
 				Item := create_object( PID_BAG, 0, 0 );
-				add_mult_objs_to_inven(Item, LVar1, 4 * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				add_mult_objs_to_inven(Item, LVar1, 4 * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 				critter_attempt_placement(Item, Critter_tile, elevation(dude_obj));
 			end
 		end
@@ -1834,8 +1834,8 @@ procedure Vats1 begin
 	radiation_inc(dude_obj, random(15, 30));
 	Tot_Critter_A := random(3, 4);
 	Tot_Critter_B := 1;
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
 	while(Tot_Critter_A) do begin
@@ -1885,8 +1885,8 @@ procedure Vats2 begin
 		Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	end
 	Tot_Critter_A := random(3, 5);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	while(Tot_Critter_A) do begin
 		Critter_direction := random(0, 2);
 		call Place_critter;
@@ -1902,8 +1902,8 @@ procedure Vats3 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 306));
 	radiation_inc(dude_obj, random(15, 30));
 	Tot_Critter_A := random(1, 2);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_FLOATER;// FLOATER
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	while(Tot_Critter_A) do begin
@@ -1921,8 +1921,8 @@ procedure Vats3 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	Tot_Critter_A := random(2, 3);
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
@@ -1940,7 +1940,7 @@ procedure Vats3 begin
 	Item := create_object( PID_LASER_RIFLE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 2);
+	add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 2);
 	/* has how many? */    if (not(obj_is_carrying_obj_pid(dude_obj, PID_RADIO))) then begin
 		Item := create_object( PID_RADIO, 0, 0 );
 		add_obj_to_inven(Critter, Item);
@@ -1954,8 +1954,8 @@ procedure Vats4 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 256));
 	radiation_inc(dude_obj, random(15, 30));
 	Tot_Critter_A := random(3, 4);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 4;
+	Inner_ring := (dude_perception / 2) + 2;
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
 	while(Tot_Critter_A) do begin
@@ -1989,8 +1989,8 @@ procedure Vats4 begin
 		add_obj_to_inven(Critter, Item);
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_FLOATER;// FLOATER
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	Critter_direction := random(0, 2);
@@ -2005,8 +2005,8 @@ procedure Vats5 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 306));
 	radiation_inc(dude_obj, random(15, 30));
 	Tot_Critter_A := random(1, 2);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_FLOATER;// FLOATER
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	while(Tot_Critter_A) do begin
@@ -2024,8 +2024,8 @@ procedure Vats5 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	Tot_Critter_A := random(2, 3);
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
@@ -2043,7 +2043,7 @@ procedure Vats5 begin
 	Item := create_object( PID_LASER_RIFLE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 2);
+	add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 2);
 	/* has how many? */    if (not(obj_is_carrying_obj_pid(dude_obj, PID_RADIO))) then begin
 		Item := create_object( PID_RADIO, 0, 0 );
 		add_obj_to_inven(Critter, Item);
@@ -2067,8 +2067,8 @@ procedure Vats6 begin
 			Item := create_object( PID_BURNING_BARREL, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(8, 10)), 0 );
 		end
 	end
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	group_angle := random(0, 5);
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
@@ -2101,8 +2101,8 @@ procedure Vats6 begin
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_5MM_JHP, 0, 0 );
 	add_obj_to_inven(Critter, Item);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_FLOATER;// FLOATER
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	Tot_Critter_A := 2;
@@ -2132,8 +2132,8 @@ procedure Glow1 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 280));
 	radiation_inc(dude_obj, random(30, 60));
 	Tot_Critter_A := random(2, 3);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
 	while(Tot_Critter_A) do begin
@@ -2150,7 +2150,7 @@ procedure Glow1 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
 		Item := create_object( PID_LASER_RIFLE, 0, 0 );
 		add_obj_to_inven(Critter, Item);
-		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+		if (dude_perk( PERK_scrounger )) then begin
 			LVar0 := 5;
 		end
 		while(LVar0) do begin
@@ -2172,12 +2172,12 @@ procedure Glow2 begin
 	LVar0 := game_time_hour;
 	Tot_Critter_A := random(3, 5);
 	if ((LVar0 > 600) and (LVar0 < 1900)) then begin
-		Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-		Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+		Outer_ring := (dude_perception / 3) + 4;
+		Inner_ring := (dude_perception / 3) + 2;
 	end
 	else begin
-		Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
-		Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+		Outer_ring := (dude_perception / 3) + 2;
+		Inner_ring := (dude_perception / 3) + 2;
 	end
 	Critter_type := PID_FLOATER;// FLOATER
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
@@ -2204,8 +2204,8 @@ procedure Glow3 begin
 	display_msg(message_str(SCRIPT_RNDDESRT, 282));
 	radiation_inc(dude_obj, random(30, 60));
 	Tot_Critter_A := random(4, 8);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 4;
+	Inner_ring := (dude_perception / 2) + 2;
 	Critter_type := PID_RADSCORPION;
 	while(Tot_Critter_A) do begin
 		Critter_direction := random(0, 4);
@@ -2223,8 +2223,8 @@ procedure Glow4 begin
 
 	debug("Glow4");
 	display_msg(message_str(SCRIPT_RNDDESRT, 283));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_FLOATER;// FLOATER
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	Tot_Critter_A := 1;
@@ -2241,8 +2241,8 @@ procedure Glow5 begin
 	debug("Glow5");
 	display_msg(message_str(SCRIPT_RNDDESRT, 284));
 	radiation_inc(dude_obj, random(30, 60));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	group_angle := random(0, 5);
 	Tot_Critter_A := 1 + random(0, 1);
 	Critter_type := PID_FLOATER;// FLOATER
@@ -2302,8 +2302,8 @@ procedure Glow6 begin
 	debug("Glow6");
 	display_msg(message_str(SCRIPT_RNDDESRT, 285));
 	radiation_inc(dude_obj, random(30, 60));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
 	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
 	Critter_direction := random(2, 5);
@@ -2327,8 +2327,8 @@ procedure Bone1 begin
 
 	Tot_Critter_A := random(2, 3);
 	group_angle := random(0, 5);
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
 	while(Tot_Critter_A) do begin
@@ -2353,7 +2353,7 @@ procedure Bone1 begin
 			add_obj_to_inven(Critter, Item);
 		end
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(5, 20) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(5, 20) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
@@ -2372,7 +2372,7 @@ procedure Bone1 begin
 		Item := create_object( PID_MINIGUN, 0, 0 );
 		add_obj_to_inven(Critter, Item);
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(5, 20) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(5, 20) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 	end
 	set_global_var(MYST_STRANGER_ITEM, 3);
@@ -2398,8 +2398,8 @@ procedure Bone2 begin
 		critter_attempt_placement(Critter, Critter_tile, elevation(dude_obj));
 	end
 	Dude_tile := Dude_tile + (random(0, 4) - 2 + ((random(0, 2) - 1) * 200));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 2;
 	Tot_Critter_A := random(3, 5);
 	Tot_Critter_B := random(3, 5);
 	Critter_type := PID_GEN_THUG;
@@ -2440,7 +2440,7 @@ procedure Bone2 begin
 		end
 		add_obj_to_inven(Critter, Item);
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(5, 25) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(5, 25) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
@@ -2480,7 +2480,7 @@ procedure Bone2 begin
 		end
 		add_obj_to_inven(Critter, Item);
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(4, 25) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(4, 25) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
@@ -2493,8 +2493,8 @@ procedure Bone3 begin
 
 	debug("Bone3");
 	display_msg(message_str(SCRIPT_RNDDESRT, 309));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Tot_Critter_A := random(3, 7);
 	group_angle := random(0, 5);
 	Critter_type := PID_GEN_THUG;
@@ -2517,7 +2517,7 @@ procedure Bone3 begin
 		end
 		add_obj_to_inven(Critter, Item);
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(4, 25) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(4, 25) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
@@ -2536,10 +2536,10 @@ procedure Bone3 begin
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 	add_obj_to_inven(Critter, Item);
-	item_caps_adjust(Critter, random(25, 100) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(25, 100) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	if (random(0, 1)) then begin
 		Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-		add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+		add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_SLEDGEHAMMER, 0, 0 );
@@ -2547,7 +2547,7 @@ procedure Bone3 begin
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-		add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+		add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_KNIFE, 0, 0 );
@@ -2561,8 +2561,8 @@ procedure Bone4 begin
 
 	debug("Bone4");
 	display_msg(message_str(SCRIPT_RNDDESRT, 310));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Tot_Critter_A := random(2, 3);
 	group_angle := random(0, 5);
 	Critter_type := PID_GEN_THUG;
@@ -2585,7 +2585,7 @@ procedure Bone4 begin
 		end
 		add_obj_to_inven(Critter, Item);
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(4, 25) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(4, 25) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
@@ -2602,10 +2602,10 @@ procedure Bone4 begin
 	anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
 	Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 	add_obj_to_inven(Critter, Item);
-	item_caps_adjust(Critter, random(25, 100) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(25, 100) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	if (random(0, 1)) then begin
 		Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-		add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+		add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_SLEDGEHAMMER, 0, 0 );
@@ -2613,7 +2613,7 @@ procedure Bone4 begin
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-		add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+		add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_KNIFE, 0, 0 );
@@ -2628,8 +2628,8 @@ procedure Bone5 begin
 	debug("Bone5");
 	display_msg(message_str(SCRIPT_RNDDESRT, 311));
 
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Tot_Critter_A := random(2, 3);
 	group_angle := random(0, 5);
 	Critter_type := PID_GEN_THUG;
@@ -2652,7 +2652,7 @@ procedure Bone5 begin
 		end
 		add_obj_to_inven(Critter, Item);
 		if (random(0, 2) == 0) then begin
-			item_caps_adjust(Critter, random(4, 25) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+			item_caps_adjust(Critter, random(4, 25) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
@@ -2671,10 +2671,10 @@ procedure Bone5 begin
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 	add_obj_to_inven(Critter, Item);
-	item_caps_adjust(Critter, random(25, 100) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(25, 100) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	if (random(0, 1)) then begin
 		Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-		add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+		add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_SLEDGEHAMMER, 0, 0 );
@@ -2682,7 +2682,7 @@ procedure Bone5 begin
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-		add_mult_objs_to_inven(Critter, Item, has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1);
+		add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 1);
 	end
 	if (random(0, 1)) then begin
 		Item := create_object( PID_KNIFE, 0, 0 );
@@ -2736,10 +2736,10 @@ procedure hunters begin
 	Item := create_object( PID_ASSAULT_RIFLE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_5MM_AP, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, 4 * (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1));
+	add_mult_objs_to_inven(Critter, Item, 4 * (dude_perk( PERK_scrounger ) + 1));
 	Item := create_object( PID_COMBAT_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
-	item_caps_adjust(Critter, random(5, 30) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	Item := create_object( PID_SUPER_STIMPAK, 0, 0 );
 	add_mult_objs_to_inven(Critter, Item, 2);
 	Critter_direction := group_angle + random(0, 3 * 2) - 3;
@@ -2758,7 +2758,7 @@ procedure hunters begin
 	Item := create_object( PID_METAL_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	if (random(0, 2) == 0) then begin
-		item_caps_adjust(Critter, random(5, 30) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+		item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	end
 	Critter_direction := group_angle + random(0, 3 * 2) - 3;
 	while(Critter_direction < 0) do begin
@@ -2774,13 +2774,13 @@ procedure hunters begin
 	Item := create_object( PID_SNIPER_RIFLE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_223_FMJ, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, 3 * (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1));
+	add_mult_objs_to_inven(Critter, Item, 3 * (dude_perk( PERK_scrounger ) + 1));
 	Item := create_object( PID_METAL_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_EXPLOSIVE_ROCKET, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, 2 * (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1));
+	add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk( PERK_scrounger ) + 1));
 	if (random(0, 2) == 0) then begin
-		item_caps_adjust(Critter, random(5, 40) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+		item_caps_adjust(Critter, random(5, 40) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	end
 	Critter_direction := group_angle + random(0, 3 * 2) - 3;
 	while(Critter_direction < 0) do begin
@@ -2796,11 +2796,11 @@ procedure hunters begin
 	Item := create_object( PID_DESERT_EAGLE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, 2 * (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ) + 1));
+	add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk( PERK_scrounger ) + 1));
 	Item := create_object( PID_METAL_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	if (random(0, 2) == 0) then begin
-		item_caps_adjust(Critter, random(5, 30) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+		item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	end
 	call stranger;
 end
@@ -2874,7 +2874,7 @@ procedure NORTH1 begin
 		debug("north1");
 
 		display_msg(message_str(SCRIPT_RNDMTN, 114));
-		LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * has_trait( TRAIT_PERK, dude_obj, PERK_survivalist )) - (5 * get_critter_stat(dude_obj, STAT_pe)) ));
+		LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk( PERK_survivalist )) - (5 * dude_perception) ));
 		if (not(is_success(LVar0))) then begin
 			if ((random(1, 100) >= 95) or is_critical(LVar0)) then begin
 				display_msg(message_str(SCRIPT_RNDMTN, 118));
@@ -2996,11 +2996,11 @@ procedure NORTH4 begin
 	variable LVar0 := 0;
 
 	debug("north4");
-	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait( TRAIT_PERK, dude_obj, PERK_survivalist ));
+	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk( PERK_survivalist ));
 	if (is_success(LVar0)) then begin
 		display_msg(message_str(SCRIPT_RNDMTN, 106));
-		Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 2;
-		Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+		Outer_ring := (dude_perception / 2) + 2;
+		Inner_ring := (dude_perception / 2) + 1;
 	end
 	else begin
 		display_msg(message_str(SCRIPT_RNDMTN, 107));
@@ -3107,7 +3107,7 @@ procedure NORTH6 begin
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait( TRAIT_PERK, dude_obj, PERK_survivalist ));
+	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk( PERK_survivalist ));
 	if (is_success(LVar0)) then begin
 		display_msg(message_str(SCRIPT_RNDMTN, 101));
 		if (is_critical(LVar0)) then begin
@@ -3119,7 +3119,7 @@ procedure NORTH6 begin
 				Inner_ring := 10;
 				Critter_direction := 2;
 				call Place_critter;
-				item_caps_adjust(Critter, random(10, 60) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(10, 60) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 				if (random(1, 4) == 4) then begin
 					Item := create_object( PID_STIMPAK, 0, 0 );
 					add_obj_to_inven(Critter, Item);
@@ -3130,7 +3130,7 @@ procedure NORTH6 begin
 				end
 				if (random(1, 4) == 4) then begin
 					Item := create_object( PID_10MM_JHP, 0, 0 );
-					add_mult_objs_to_inven(Critter, Item, 1 + has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ));
+					add_mult_objs_to_inven(Critter, Item, 1 + dude_perk( PERK_scrounger ));
 				end
 				if (random(1, 4) == 4) then begin
 					Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
@@ -3202,7 +3202,7 @@ procedure SOUTH_BoneGlow1 begin
 	debug("SOUTH_BoneGlow1");
 
 	display_msg(message_str(SCRIPT_RNDMTN, 114));
-	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait( TRAIT_PERK, dude_obj, PERK_survivalist ));
+	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk( PERK_survivalist ));
 	if (not(is_success(LVar0))) then begin
 		LVar2 := random(1, 100);
 		if ((LVar2 >= 95) or is_critical(LVar0)) then begin
@@ -3363,34 +3363,34 @@ procedure SOUTH_BoneGlow5 begin
 	call Place_critter;
 	anim(Critter, 1000, random(0, 5));
 	kill_critter(Critter, ANIM_burned_to_nothing_sf);
-	if (get_critter_stat(dude_obj, STAT_lu) >= 4) then begin
+	if (dude_luck >= 4) then begin
 		Critter_type := PID_MALE_GUARD_METAL_BLACK;
 		Critter_direction := random(0, 5);
 		call Place_critter;
 		anim(Critter, 1000, random(0, 5));
 		Item := create_object( PID_10MM_AP, 0, 0 );
 		add_obj_to_inven(Critter, Item);
-		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+		if (dude_perk( PERK_scrounger )) then begin
 			Item := create_object( PID_10MM_JHP, 0, 0 );
 			add_obj_to_inven(Critter, Item);
 		end
 		kill_critter(Critter, ANIM_fall_back_sf);
 	end
-	if (get_critter_stat(dude_obj, STAT_lu) >= 4) then begin
+	if (dude_luck >= 4) then begin
 		if (random(0, 1)) then begin
 			Item := create_object( PID_10MM_JHP, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(3, 6)), 0 );
-			if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+			if (dude_perk( PERK_scrounger )) then begin
 				Item := create_object( PID_10MM_JHP, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(3, 6)), 0 );
 			end
 		end
 		if (random(0, 1)) then begin
 			Item := create_object( PID_10MM_AP, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(3, 6)), 0 );
-			if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
+			if (dude_perk( PERK_scrounger )) then begin
 				Item := create_object( PID_10MM_AP, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(3, 6)), 0 );
 			end
 		end
 	end
-	if (get_critter_stat(dude_obj, STAT_lu) >= 9) then begin
+	if (dude_luck >= 9) then begin
 		if (random(0, 1)) then begin
 			Item := create_object( PID_10MM_PISTOL, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(3, 6)), 0 );
 		end
@@ -3404,11 +3404,11 @@ procedure SOUTH_BoneGlow5 begin
 		end
 	end
 	Tot_Critter_A := 0;
-	if (get_critter_stat(dude_obj, STAT_lu) <= 3) then begin
+	if (dude_luck <= 3) then begin
 		Tot_Critter_A := random(2, 4);
 	end
 	else begin
-		if (get_critter_stat(dude_obj, STAT_lu) < 7) then begin
+		if (dude_luck < 7) then begin
 			Tot_Critter_A := random(1, 2);
 		end
 	end
@@ -3480,7 +3480,7 @@ procedure SOUTH_BoneGlow6 begin
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait( TRAIT_PERK, dude_obj, PERK_survivalist ));
+	LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk( PERK_survivalist ));
 	if (is_success(LVar0)) then begin
 		display_msg(message_str(SCRIPT_RNDMTN, 101));
 		if (is_critical(LVar0)) then begin
@@ -3492,7 +3492,7 @@ procedure SOUTH_BoneGlow6 begin
 				Inner_ring := 10;
 				Critter_direction := 2;
 				call Place_critter;
-				item_caps_adjust(Critter, random(10, 60) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(10, 60) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
 				if (random(1, 4) == 4) then begin
 					Item := create_object( PID_STIMPAK, 0, 0 );
 					add_obj_to_inven(Critter, Item);
@@ -3503,7 +3503,7 @@ procedure SOUTH_BoneGlow6 begin
 				end
 				if (random(1, 4) == 4) then begin
 					Item := create_object( PID_10MM_JHP, 0, 0 );
-					add_mult_objs_to_inven(Critter, Item, 1 + has_trait( TRAIT_PERK, dude_obj, PERK_scrounger ));
+					add_mult_objs_to_inven(Critter, Item, 1 + dude_perk( PERK_scrounger ));
 				end
 				if (random(1, 4) == 4) then begin
 					Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
@@ -3571,8 +3571,8 @@ procedure VAULT1 begin
 
 	debug("VAULT1");
 	display_msg(message_str(SCRIPT_RNDMTN, 128));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 4) + 5;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 4) + 4;
+	Outer_ring := (dude_perception / 4) + 5;
+	Inner_ring := (dude_perception / 4) + 4;
 	Critter_direction := random(0, 4);
 	Critter_type := PID_RADSCORPION;
 	Critter_script := SCRIPT_RADSCOR2;
@@ -3607,8 +3607,8 @@ procedure VAULT3 begin
 
 	debug("VAULT3");
 	display_msg(message_str(SCRIPT_RNDMTN, 129));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 4;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 2;
+	Outer_ring := (dude_perception / 3) + 4;
+	Inner_ring := (dude_perception / 3) + 2;
 	Tot_Critter_A := random(2, 3);
 	Critter_script := SCRIPT_WANRATS;
 	while(Tot_Critter_A) do begin
@@ -3630,8 +3630,8 @@ procedure VAULT4 begin
 
 	debug("VAULT4");
 	display_msg(message_str(SCRIPT_RNDMTN, 130));
-	Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 3;
-	Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 2) + 1;
+	Outer_ring := (dude_perception / 2) + 3;
+	Inner_ring := (dude_perception / 2) + 1;
 	Tot_Critter_A := random(4, 8);
 	Critter_type := PID_RAT_CAVE;
 	Critter_script := SCRIPT_WANRATS;
@@ -3729,5 +3729,6 @@ procedure VAULT6 begin
 	end
 	call stranger;
 end
+
 
 
