@@ -311,6 +311,9 @@
 #define PERK_weapon_knockout_perk            (117)
 #define PERK_jinxed_perk                     (118)
 
+#define dude_perk(perk)    has_trait(TRAIT_PERK,dude_obj,perk)
+#define self_perk(perk)    haa_trait(TRAIT_PERK,self_obj,perk)
+
 // Object Trait Subtypes
 #define OBJECT_AI_PACKET  (5)
 #define OBJECT_TEAM_NUM   (6)
@@ -336,6 +339,9 @@
 #define TRAIT_night_person    (13)
 #define TRAIT_skilled         (14)
 #define TRAIT_bruiser         (15)
+
+#define dude_trait(trait)    has_trait(TRAIT_TRAIT,dude_obj,trait)
+#define self_trait(trait)    has_trait(TRAIT_TRAIT,self_obj,trait)
 
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
