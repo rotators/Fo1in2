@@ -1,6 +1,6 @@
 /*
 
-	Caravan Master
+	Caravan enemy - Raider
 
 */
 
@@ -8,7 +8,7 @@
 #include "..\headers\define.h"
 //#include "..\headers\MAPNECRO.h"
 
-#define NAME                    SCRIPT_BECA
+#define NAME                    SCRIPT_CRVNENMY
 //#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
@@ -16,12 +16,9 @@
 
 /* Standard Script Procedures */
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure combat_p_proc;//    script_action == 13
-procedure initialize_p_proc;//	?????
-
-import variable num_monsters;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure initialize_p_proc;
 
 variable Only_Once;
 variable tmp_hostile := 1;
@@ -32,13 +29,7 @@ procedure start begin
 	end
 end
 
-procedure combat_p_proc
-begin
-	tmp_hostile := 1;
-end
-
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile and (elevation(self_obj) == elevation(dude_obj))) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -47,13 +38,15 @@ end
 
 procedure destroy_p_proc begin
 	set_map_var(0, map_var(0) - 1);
-	inc_good_critter
+	inc_evil_critter
 end
 
-procedure initialize_p_proc
-begin
-	set_self_team(86 );
-	set_self_ai( AI_FLOATER );
+procedure initialize_p_proc begin
 	Only_Once := 1;
+	set_self_team(86 );
+	set_self_ai( AI_BERZERKER );
+
+	// Workaround, in case critter is created on wrong elevation:
+	move_to(self_obj,self_tile,dude_elevation);
 end
 
