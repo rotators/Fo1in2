@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\MAPNECRO.h"
+#include "..\headers\hubdwntn.h"
 
 #define NAME                    SCRIPT_KERI
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -73,7 +73,7 @@ procedure RecalcDateString;
 procedure SendAroundHouse;
 procedure combat;
 
-procedure start_necropolis;
+procedure start_caravan;
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -152,106 +152,65 @@ procedure talk_p_proc begin
 	variable LVar0 := 0;
 	dude_look_at_critter;
 	get_reaction
+
 	if (local_var(13) == 1) then begin
 		if (local_var(11) < (game_time / (10 * 60 * 60 * 24 * 365))) then begin
 			set_local_var(13, 0);
 		end
-		else begin
-			if ((local_var(10) < get_month) or (local_var(10) == 12) and (get_month == 1) and ((local_var(10) != 1) or (get_month != 12))) then begin
-				set_local_var(13, 0);
-			end
-			else begin
-				if ((local_var(9) < get_day) and ((local_var(10) != 1) or (get_month != 12))) then begin
-					set_local_var(13, 0);
-				end
-			end
+		else if ((local_var(10) < get_month) or (local_var(10) == 12) and (get_month == 1) and ((local_var(10) != 1) or (get_month != 12))) then begin
+			set_local_var(13, 0);
+		end
+		else if ((local_var(9) < get_day) and ((local_var(10) != 1) or (get_month != 12))) then begin
+			set_local_var(13, 0);
 		end
 	end
+
 	call RecalcDate;
 	LVar0 := local_var(9);
-	if ((map_var(24) == 1) and (map_var(28) == 0)) then begin
+
+	if ((map_var(MVAR_CC_HOSTILE) == 1) and (map_var(MVAR_CC_HAS_BEEN_KILLED) == 0)) then begin
 		call Keri13;
 	end
-	else begin
-		if (local_var(5) == 1) then begin
-			call Keri14;
-		end
-		else begin
-			if (map_var(25) == 1) then begin
-				call Keri15;
-			end
-			else begin
-				if (global_var(CC_JOB) == 5) then begin
-					set_global_var(CC_JOB, 6);
-					set_map_var(25, 1);
-					BottomReact
-					call Keri19;
-				end
-				else begin
-					if (global_var(CC_JOB) == 3) then begin
-						set_global_var(CC_JOB, 6);
-						set_map_var(25, 1);
-						BottomReact
-						start_gdialog(595, self_obj, 4, -1, -1);
-						gsay_start;
-						call Keri35;
-						gsay_end;
-						end_dialogue;
-					end
-					else begin
-						if (map_var(26) == 0) then begin
-							call Keri00;
-						end
-						else begin
-							if (global_var(CC_JOB) == 4) then begin
-								start_gdialog(595, self_obj, 4, -1, -1);
-								gsay_start;
-								call Keri27;
-								gsay_end;
-								end_dialogue;
-							end
-							else begin
-								if ((map_var(26) == 1) and (local_var(13) == 0)) then begin
-									start_gdialog(595, self_obj, 4, -1, -1);
-									gsay_start;
-									if (local_var(4) == 0) then begin
-										call Keri01;
-									end
-									else begin
-										call Keri03;
-									end
-									gsay_end;
-									end_dialogue;
-								end
-								else begin
-									if ((local_var(13) == 1) and (LVar0 == get_day)) then begin
-										start_gdialog(595, self_obj, 4, -1, -1);
-										gsay_start;
-										call Keri28;
-										gsay_end;
-										end_dialogue;
-									end
-									else begin
-										if ((local_var(13) == 1) and (LVar0 != get_day)) then begin
-											start_gdialog(595, self_obj, 4, -1, -1);
-											gsay_start;
-											call Keri29;
-											gsay_end;
-											end_dialogue;
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (local_var(5) == 1) then begin
+		call Keri14;
+	end
+	else if (map_var(25) == 1) then begin
+		call Keri15;
+	end
+	else if (global_var(CC_JOB) == 5) then begin
+		set_global_var(CC_JOB, 6);
+		set_map_var(25, 1);
+		BottomReact
+		call Keri19;
+	end
+	else if (global_var(CC_JOB) == 3) then begin
+		set_global_var(CC_JOB, 6);
+		set_map_var(25, 1);
+		BottomReact
+		start_dialog_at_node(Keri35);
+	end
+	else if (map_var(26) == 0) then begin
+		call Keri00;
+	end
+	else if (global_var(CC_JOB) == 4) then begin
+		start_dialog_at_node(Keri27);
+	end
+	else if ((map_var(26) == 1) and (local_var(13) == 0)) then begin
+		if (local_var(4) == 0) then
+			start_dialog_at_node(Keri01);
+		else
+			start_dialog_at_node(Keri03);
+	end
+	else if ((local_var(13) == 1) and (LVar0 == get_day)) then begin
+		start_dialog_at_node(Keri28);
+	end
+	else if ((local_var(13) == 1) and (LVar0 != get_day)) then begin
+		start_dialog_at_node(Keri29);
 	end
 end
 
 procedure destroy_p_proc begin
-	set_map_var(28, 1);
+	set_map_var(MVAR_CC_HAS_BEEN_KILLED, 1);
 	rm_timer_event(self_obj);
 
 	inc_good_critter
@@ -421,38 +380,41 @@ procedure Keri07 begin
 end
 
 procedure Keri08 begin
-	variable LVar0 := 0;
+	variable Item := 0;
 	set_local_var(14, 1);
 	gsay_message(595, 130, 50);
 
 	gfade_out(1);
 	game_time_advance(game_ticks(60 * 60 * 2));
 	gfade_in(1);
-	LVar0 := create_object( PID_MENTATS, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object( PID_BUFFOUT, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object( PID_PSYCHO, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	display_msg(message_str(SCRIPT_KERI, 229));
 
+	Item := create_object( PID_MENTATS, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+	Item := create_object( PID_BUFFOUT, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+	Item := create_object( PID_PSYCHO, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+
+	display_msg(message_str(SCRIPT_KERI, 229));
 	gsay_message(595, 131, 50);
 	gsay_message(595, 132, 50);
 end
 
 procedure Keri09 begin
-	variable LVar0 := 0;
+	variable Item := 0;
 	set_local_var(14, 1);
 	gsay_message(595, 133, 50);
 	gfade_out(1);
 	game_time_advance(game_ticks(60 * 60 * 2));
 	gfade_in(1);
-	LVar0 := create_object( PID_MENTATS, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object( PID_BUFFOUT, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object( PID_PSYCHO, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
+
+	Item := create_object( PID_MENTATS, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+	Item := create_object( PID_BUFFOUT, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+	Item := create_object( PID_PSYCHO, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+
 	display_msg(message_str(SCRIPT_KERI, 229));
 	gsay_message(595, 131, 50);
 	gsay_message(595, 132, 50);
@@ -584,7 +546,11 @@ procedure Keri21a begin
 	else if (LVar0 == 8) then begin
 		gsay_message(595, 175, 50);
 	end
-	load_map(MAP_MNTCRVN2, 3);
+	//load_map(MAP_MNTCRVN2, 3);
+
+	// New Fo2:
+	set_global_var(GVAR_CARAVAN_END,CARAVAN_BOS);
+	call start_caravan;
 end
 
 // Junktown:
@@ -613,13 +579,18 @@ procedure Keri21b begin
 	else if (LVar0 == 7) then begin
 		gsay_message(595, 178, 50);
 	end
-	load_map(MAP_MNTCRVN1, 3);
+	//load_map(MAP_MNTCRVN1, 3);
+
+	// New Fo2:
+	set_global_var(GVAR_CARAVAN_END,CARAVAN_JUNKTOWN);
+	call start_caravan;
 end
 
 // Necropolis:
 procedure Keri21c begin
 	variable LVar0 := 0;
 	set_global_var(CRIMSON_CARAVANS_STATUS, 1);
+
 	LVar0 := random(1, 7);
 	if (LVar0 == 1) then begin
 		gsay_message(595, 168, 50);
@@ -642,57 +613,11 @@ procedure Keri21c begin
 	else if (LVar0 == 7) then begin
 		gsay_message(595, 181, 50);
 	end
-	load_map(MAP_DESCRVN2, 3);
+	//load_map(MAP_DESCRVN2, 3);
 
 	// New Fo2:
-	//call start_necropolis;
-end
-
-procedure start_necropolis begin
-   variable Caravan_Carts;
-   variable Caravan_Encounters;
-   variable Caravan_Guards;
-
-   set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
-   set_caravan_status(CARAVAN_STATUS_ON_JOB);
-   Caravan_Encounters:=random(1,4);
-   set_caravan_encounters(Caravan_Encounters);
-
-   if (CUR_AREA_HUB) then begin
-       set_global_var(GVAR_CARAVAN_START,CARAVAN_HUB);
-       set_global_var(GVAR_CARAVAN_END,CARAVAN_NECROPOLIS);
-   end
-   else begin
-       set_global_var(GVAR_CARAVAN_START,CARAVAN_NECROPOLIS);
-       set_global_var(GVAR_CARAVAN_END,CARAVAN_HUB);
-   end
-
-   if (global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL) == 0) then begin
-       Caravan_Guards:=random(2,4);
-       set_caravan_guards(Caravan_Guards);
-       if (global_var(GVAR_CARAVAN_END) ==  CARAVAN_NECROPOLIS) then begin
-           game_time_advance(24*ONE_GAME_DAY);
-           load_map(TARGET_TOWN,CURRENT_CARAVAN_LEADER);
-           set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_AVERAGE_SUCCESS);
-       end
-       else begin
-           game_time_advance(24*ONE_GAME_DAY);
-           load_map(MAPSTR_HUBENT,CURRENT_CARAVAN_LEADER);
-           set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_AVERAGE_SUCCESS);
-       end
-   end
-   else begin
-       Caravan_Carts:=random(1,3);
-       Caravan_Guards:=random(2,4);
-
-       set_caravan_masters(1);
-       set_caravan_guards(Caravan_Guards);
-       set_caravan_carts(Caravan_Carts);
-       set_caravan_brahmin(2*Caravan_Carts);
-       set_caravan_drivers(Caravan_Carts);
-
-       load_map(MAP_DESCRVN2,CURRENT_CARAVAN_LEADER);
-   end
+	set_global_var(GVAR_CARAVAN_END,CARAVAN_NECROPOLIS);
+	call start_caravan;
 end
 
 // Boneyard:
@@ -721,11 +646,57 @@ procedure Keri21d begin
 	else if (LVar0 == 7) then begin
 		gsay_message(595, 184, 50);
 	end
-	load_map(MAP_DESCRVN1, 3);
+	//load_map(MAP_DESCRVN1, 3);
+
+	// New Fo2:
+	set_global_var(GVAR_CARAVAN_END,CARAVAN_BONEYARD);
+	call start_caravan;
 end
 
-procedure Keri27
-begin
+procedure start_caravan begin
+   variable Caravan_Carts;
+   variable Caravan_Encounters;
+   variable Caravan_Guards;
+
+   set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
+	set_global_var(GVAR_CARAVAN_START,CARAVAN_HUB);
+
+   set_caravan_status(CARAVAN_STATUS_ON_JOB);
+   Caravan_Encounters:=random(1,4);
+   set_caravan_encounters(Caravan_Encounters);
+
+	set_caravan_masters(1);
+   if (global_var(GVAR_CARAVAN_END) == CARAVAN_NECROPOLIS) then begin
+      set_caravan_guards(2);
+      set_caravan_carts(2);
+      set_caravan_brahmin(2);
+      set_caravan_drivers(0); // Fo1 has no wagon drivers
+      load_map(MAP_DESCRVN2,CURRENT_CARAVAN_LEADER);
+   end
+   else if (global_var(GVAR_CARAVAN_END) == CARAVAN_JUNKTOWN) then begin
+      set_caravan_guards(2);
+      set_caravan_carts(2);
+      set_caravan_brahmin(2*Caravan_Carts);
+      set_caravan_drivers(2);
+      load_map(MAP_MNTCRVN1,CURRENT_CARAVAN_LEADER);
+   end
+   else if (global_var(GVAR_CARAVAN_END) == CARAVAN_BOS) then begin
+      set_caravan_guards(2);
+      set_caravan_carts(2);
+      set_caravan_brahmin(2*Caravan_Carts);
+      set_caravan_drivers(2);
+   	load_map(MAP_MNTCRVN2,CURRENT_CARAVAN_LEADER);
+   end
+   else if (global_var(GVAR_CARAVAN_END) == CARAVAN_BONEYARD) then begin
+      set_caravan_guards(2);
+      set_caravan_carts(2);
+      set_caravan_brahmin(2*Caravan_Carts);
+      set_caravan_drivers(2);
+   	load_map(MAP_DESCRVN1,CURRENT_CARAVAN_LEADER);
+   end
+end
+
+procedure Keri27 begin
 	gsay_reply(595, 198);
 	NOption( 199, Keri04a, 4 );
 	NOption( 200, Keri05, 4 );
@@ -734,8 +705,7 @@ begin
 	NOption( 203, Keri07, -3 );
 end
 
-procedure Keri28
-begin
+procedure Keri28 begin
 	gsay_reply(595, 204);
 	NOption( 205, Keri17, 4 );
 	NOption( 206, KeriEnd, 4 );
@@ -797,7 +767,7 @@ procedure KeriEnd begin
 end
 
 procedure KeriCombat begin
-	set_map_var(24, 1);
+	set_map_var(MVAR_CC_HOSTILE, 1);
 	set_map_var(25, 1);
 	call combat;
 end

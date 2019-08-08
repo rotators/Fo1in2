@@ -1,0 +1,96 @@
+/*
+
+	Caravan job encounter - Caravan Driver
+	Currently unused!
+	Fo1 caravan encounters don't have wagon drivers.
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_CRVNDRVR
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+#include "..\headers\caravan.h"
+#include "..\headers\mapenc.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure timed_event_p_proc;
+procedure map_update_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+
+procedure initialize_p_proc;
+
+variable Only_Once;
+
+#define LVAR_Called_Clear  (10)
+
+#define TIMER_ALL_CLEAR 3
+
+procedure start begin
+	if (Only_Once == 0) then begin
+		call initialize_p_proc;
+	end
+	art_change_fid_num(self_obj, FID_HMLTHR);
+end
+
+procedure timed_event_p_proc begin
+end
+
+procedure map_update_p_proc begin
+end
+
+procedure talk_p_proc begin
+	if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_BROHDENT) or (cur_map_index == MAP_HOTEL) or (cur_map_index == MAP_LAADYTUM) then begin //   //  JUNKTOWN ENTRANCE, BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, L.A. BONEYARD ENTRANCE (ADYTUM)
+		float_msg(self_obj, message_str(SCRIPT_CRVNTEAM, random(100, 102)), 0);
+	end
+	else begin
+		float_msg(self_obj, message_str(SCRIPT_CRVNTEAM, random(103, 115)), 0);
+	end
+end
+
+procedure critter_p_proc begin
+	if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_BROHDENT) or (cur_map_index == MAP_HOTEL) or (cur_map_index == MAP_LAADYTUM) then begin //   //  JUNKTOWN ENTRANCE, BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, L.A. BONEYARD ENTRANCE (ADYTUM)
+		if ((((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
+			destroy_object(self_obj);
+		end
+	end
+end
+
+procedure destroy_p_proc begin
+	if (cur_map_index != MAP_JUNKENT) and (cur_map_index != MAP_BROHDENT) and (cur_map_index != MAP_HOTEL) and (cur_map_index != MAP_LAADYTUM) then begin
+		rm_caravan_drivers(1);
+	end
+   inc_good_critter
+end
+
+procedure initialize_p_proc begin
+	variable LVar0 := 0;
+	Only_Once := 1;
+	if (local_var(0) == 0) then begin
+		set_local_var(0, game_time / (10 * 60 * 60));
+	end
+	if (((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) then begin
+		destroy_object(self_obj);
+	end
+	set_self_team(TEAM_PLAYER );
+	set_self_ai( AI_BERZERKER );
+
+	LVar0 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
+	add_obj_to_inven(self_obj, LVar0);
+	LVar0 := create_object( PID_44_MAGNUM_JHP, 0, 0 );
+	add_obj_to_inven(self_obj, LVar0);
+	LVar0 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
+	add_obj_to_inven(self_obj, LVar0);
+	LVar0 := create_object( PID_44_MAGNUM_JHP, 0, 0 );
+	add_obj_to_inven(self_obj, LVar0);
+	LVar0 := create_object( PID_STIMPAK, 0, 0 );
+	add_obj_to_inven(self_obj, LVar0);
+end
+
+

@@ -47,7 +47,7 @@
 #define SCRIPT_CABBOT    (40)  //  Cabbot.int     ; Cabbot, the initiate from the Brotherhood of Steel
 #define SCRIPT_CHILDMEM  (41)  //  Childmem.int   ; Children of the Cathedral member                                             
 #define SCRIPT_DECKER    (42)  //  Decker.int     ; Decker, the head of the Hub Underground
-#define SCRIPT_DEPRECATED_8 (43) //SCRIPT_ELDER     (43)  //  Elder.int      ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_CRVNDRVR2  (43)  //  crvndrvr.int   ; Caravan driver for the random encounters      DEPRECATED!!!!
 #define SCRIPT_GIZMO     (44)  //  Gizmo.int      ; Gizmo, the casino owner in Junktown
 #define SCRIPT_HAROLD    (45)  //  Harold.int     ; Harold, the old mutant from the Hub
 #define SCRIPT_JAIN      (46)  //  Jain.int       ; Jain, Priestess of the Children of the Cathedral
@@ -565,7 +565,7 @@
 #define SCRIPT_BOBSIGN   (558)  //  bobsign.int     ; Sign outside Bob's Iguana Bits
 #define SCRIPT_CALLY     (559)  //  cally.int       ; Another bodyguard for Lorenzo
 #define SCRIPT_CLEO      (560)  //  cleo.int        ; Guard for Lorenzo in the Hub
-#define SCRIPT_CRVNDRVR  (561)  //  crvndrvr.int    ; Generic Caravan Driver in the Hub                                           
+#define SCRIPT_CRVNDRVR  (561)  //  crvndrvr.int   ; Caravan driver for the random encounters           
 #define SCRIPT_DAN       (562)  //  dan.int         ; Dan 'the Brahmin Man'. sells Brahmin
 #define SCRIPT_DANWIFE   (563)  //  danwife.int     ; Dan's Wife
 #define SCRIPT_DEADGUY   (564)  //  deadguy.int     ; Someone who was stupid enough to mess w/ Decker

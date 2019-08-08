@@ -1,6 +1,13 @@
 #ifndef _GLOBAL_H_DEFINED
 #define _GLOBAL_H_DEFINED
 
+// Mysterious Stranger Flags
+#define STRANGER_DEAD           bit_1
+#define STRANGER_GENDER         bit_2
+#define STRANGER_FEMALE         bit_3
+#define get_stranger_flag(x)    (global_var(GVAR_MYSTERIOUS_STRANGER) bwand x)
+#define set_stranger_flag(x)    set_global_var(GVAR_MYSTERIOUS_STRANGER, global_var(GVAR_MYSTERIOUS_STRANGER) bwor x)
+
 // "QUEST_" at beginning of a GVAR means it's used for creating and crossing out an entry in PIP-Boy. (1 makes appear, 2 or more crosses out. HARD-CODED!)
 // "SLIDE_" at beginning of a GVAR means it's a flag used for choosing which ending slide to show.
 // # define INTERNAL_IDENTIFIER	"(REPLACED BY DATA IN THE QUOTES)" [including the parenthesis]	// COMMENTS/DESCRIPTION
@@ -78,6 +85,9 @@
 // More vanilla Addictions
 #define GVAR_ADDICT_TRAGIC						(295)	// maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET							(296)	// maybe hard-coded, maybe not?
+
+#define GVAR_MYSTERIOUS_STRANGER             (352)
+#define GVAR_MYSTERIOUS_STRANGER_LEVEL       (353)
 
 // Party members:
 #define GVAR_PARTY_NO_FOLLOW                	(398)
@@ -4116,9 +4126,9 @@
 #define RESERVED_FOR_FALLOUT_FIXT				(4988)	
 #define RESERVED_FOR_FALLOUT_FIXT				(4989)	
 #define RESERVED_FOR_FALLOUT_FIXT				(4990)	
-#define RESERVED_FOR_FALLOUT_FIXT				(4991)	
-#define RESERVED_FOR_FALLOUT_FIXT				(4992)	
-#define RESERVED_FOR_FALLOUT_FIXT				(4993)*/	
+#define RESERVED_FOR_FALLOUT_FIXT				(4991)	*/	
+#define GVAR_WATER_CARAVAN						(4992)	
+#define GVAR_FARGO_CARAVAN						(4993)
 #define GVAR_CRIMSON_CARAVAN					(4994)	
 #define GVAR_GRIFFITH_STATE						(4995)	
 #define GVAR_QUEST_MOTORCYCLE 					(4996)	
