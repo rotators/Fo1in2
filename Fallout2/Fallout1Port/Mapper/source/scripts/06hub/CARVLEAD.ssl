@@ -13,6 +13,7 @@
 
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
+#include "..\headers\caravan.h"
 
 /* Standard Script Procedures */
 
@@ -63,17 +64,19 @@ variable spawnDialogue;
 variable beenPaid := 1;
 variable UnloadCaravan;
 
-#define car1_junktown_hex       (30707)
-#define car2_junktown_hex       (30502)
+#define LVAR_CaravanStatus 		(7)
 
-#define car1_bos_hex            (25111)
-#define car2_bos_hex            (25911)
+#define car1_junktown_hex       	(30707)
+#define car2_junktown_hex       	(30502)
 
-#define car1_necropolis_hex     (26894)
-#define car2_necropolis_hex     (26889)
+#define car1_bos_hex            	(25111)
+#define car2_bos_hex            	(25911)
 
-#define car1_boneyard_hex       (9723)
-#define car2_boneyard_hex       (9121)
+#define car1_necropolis_hex     	(26894)
+#define car2_necropolis_hex     	(26889)
+
+#define car1_boneyard_hex       	(9723)
+#define car2_boneyard_hex       	(9121)
 
 procedure start begin
 end
@@ -121,8 +124,10 @@ procedure map_enter_p_proc begin
 	if ((cur_map_index == MAP_LAADYTUM) and (global_var(GVAR_FOLLOWERS_INVADED) == 1) or ((cur_map_index == MAP_BROHDENT) and (global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)) or ((cur_map_index == MAP_HOTEL) and (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)) or ((cur_map_index == MAP_JUNKENT) and (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)) or ((cur_map_index == MAP_HUBENT) and (global_var(GVAR_THE_HUB_WAS_INVADED) == 1))) then begin //  L.A. BONEYARD ENTRANCE (ADYTUM), BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, JUNKTOWN ENTRANCE, THE HUB ENTRANCE
 		LVar0 := 1;
 	end
+
 	set_self_team(TEAM_HUB_CARTS_GUARD );
 	set_self_ai( AI_MERCHANT );
+
 	if (((game_time / (10 * 60 * 60)) - local_var(6)) >= 2) then begin
 		WaitForTwoHours := 0;
 		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
@@ -132,6 +137,7 @@ procedure map_enter_p_proc begin
 			call remove_caravan;
 		end
 	end
+
 	if ((local_var(5) == 1) and (LVar0 == 0)) then begin
 		if (((game_time / (10 * 60 * 60)) - local_var(6)) < 2) then begin
 			WaitForTwoHours := 1;
@@ -149,145 +155,108 @@ procedure map_enter_p_proc begin
 	end
 	else begin
 		if ((global_var(CRIMSON_CARAVANS_STATUS) == 2) or (global_var(CRIMSON_CARAVANS_STATUS) == 3) or ((global_var(WATER_MERCHANTS_STATUS) == 2) or (global_var(WATER_MERCHANTS_STATUS) == 3)) or ((global_var(FARGO_TRADERS_STATUS) == 2) or (global_var(FARGO_TRADERS_STATUS) == 3)) and (LVar0 == 0)) then begin
+			// Was a Water Merchants job:
 			if (global_var(WATER_MERCHANTS_STATUS) == 2) then begin
 				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
 				PaymentAmount := 200;
 				set_local_var(9, 10);
 				FullPayment := 200;
-				if (global_var(CVAN_DRIVER) == 0) then begin
+
+				if (caravan_masters_killed > 0) then
 					PaymentAmount := PaymentAmount - 50;
-				end
-				if (global_var(CVAN_GUARD) == 1) then begin
-					PaymentAmount := PaymentAmount - 25;
-				end
-				else begin
-					if (global_var(CVAN_GUARD) == 0) then begin
-						PaymentAmount := PaymentAmount - 50;
-					end
-				end
-				if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-					PaymentAmount := (PaymentAmount / 2);
-				end
-				if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
+				if (caravan_guards_killed > 0) then
+					PaymentAmount := PaymentAmount - ((50 / caravan_total_guards) * caravan_guards_killed);
+				if (caravan_carts_lost > 0) then
+					PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
+				if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
 					PaymentAmount := 0;
 				end
-				set_local_var(7, 0);
+
+				set_local_var(LVAR_CaravanStatus, 0);
 				set_global_var(WATER_JOB, 4);
 				set_global_var(WATER_MERCHANTS_STATUS, 0);
 				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
 				set_global_var(FARGO_TRADERS_STATUS, 0);
 			end
-			else begin
-				if (global_var(FARGO_TRADERS_STATUS) == 2) then begin
-					if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
-					PaymentAmount := 400;
-					set_local_var(9, 20);
-					FullPayment := 400;
-					if (global_var(CVAN_DRIVER) == 0) then begin
-						PaymentAmount := PaymentAmount - 75;
-					end
-					if (global_var(CVAN_GUARD) == 1) then begin
-						PaymentAmount := PaymentAmount - 25;
-					end
-					else begin
-						if (global_var(CVAN_GUARD) == 0) then begin
-							PaymentAmount := PaymentAmount - 75;
-						end
-					end
-					if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-						PaymentAmount := (PaymentAmount / 2);
-					end
-					if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
-						PaymentAmount := 0;
-					end
-					set_local_var(7, 2);
-					set_global_var(FARGO_JOB, 4);
-					set_global_var(FARGO_TRADERS_STATUS, 0);
-					set_global_var(CRIMSON_CARAVANS_STATUS, 0);
-					set_global_var(WATER_MERCHANTS_STATUS, 0);
+
+			// Was a Far-Go Traders job:
+			else if (global_var(FARGO_TRADERS_STATUS) == 2) then begin
+				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				PaymentAmount := 400;
+				set_local_var(9, 20);
+				FullPayment := 400;
+
+				if (caravan_masters_killed > 0) then
+					PaymentAmount := PaymentAmount - 75;
+				if (caravan_guards_killed > 0) then
+					PaymentAmount := PaymentAmount - 25;
+				else
+					PaymentAmount := PaymentAmount - ((100 / caravan_total_guards) * caravan_guards_killed);
+				if (caravan_carts_lost > 0) then
+					PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
+				if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
+					PaymentAmount := 0;
 				end
-				else begin
-					if (global_var(CRIMSON_CARAVANS_STATUS) == 2) then begin
-						if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
-						PaymentAmount := 600;
-						set_local_var(9, 30);
-						FullPayment := 600;
-						if (global_var(CVAN_DRIVER) == 0) then begin
-							PaymentAmount := PaymentAmount - 100;
-						end
-						if (global_var(CVAN_GUARD) == 1) then begin
-							PaymentAmount := PaymentAmount - 50;
-						end
-						else begin
-							if (global_var(CVAN_GUARD) == 0) then begin
-								PaymentAmount := PaymentAmount - 100;
-							end
-						end
-						if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-							PaymentAmount := (PaymentAmount / 2);
-						end
-						if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
-							PaymentAmount := 0;
-						end
-						set_local_var(7, 1);
-						set_global_var(CC_JOB, 4);
-						set_global_var(CRIMSON_CARAVANS_STATUS, 0);
-						set_global_var(WATER_MERCHANTS_STATUS, 0);
-						set_global_var(FARGO_TRADERS_STATUS, 0);
-					end
-					else begin
-						if (global_var(WATER_MERCHANTS_STATUS) == 3) then begin
-							if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
-							PaymentAmount := 0;
-							set_local_var(7, 3);
-							set_global_var(WATER_JOB, 3);
-							set_global_var(WATER_MERCHANTS_STATUS, 0);
-							set_global_var(CRIMSON_CARAVANS_STATUS, 0);
-							set_global_var(FARGO_TRADERS_STATUS, 0);
-						end
-						else begin
-							if (global_var(FARGO_TRADERS_STATUS) == 3) then begin
-								if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
-								PaymentAmount := 0;
-								set_local_var(7, 3);
-								set_global_var(FARGO_JOB, 3);
-								set_global_var(FARGO_TRADERS_STATUS, 0);
-								set_global_var(CRIMSON_CARAVANS_STATUS, 0);
-								set_global_var(WATER_MERCHANTS_STATUS, 0);
-							end
-							else begin
-								if (global_var(CRIMSON_CARAVANS_STATUS) == 3) then begin
-									if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
-									PaymentAmount := 600;
-									FullPayment := 600;
-									if (global_var(CVAN_DRIVER) == 0) then begin
-										PaymentAmount := PaymentAmount - 100;
-									end
-									if (global_var(CVAN_GUARD) == 1) then begin
-										PaymentAmount := PaymentAmount - 50;
-									end
-									else begin
-										if (global_var(CVAN_GUARD) == 0) then begin
-											PaymentAmount := PaymentAmount - 100;
-										end
-									end
-									if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-										PaymentAmount := (PaymentAmount / 2);
-									end
-									if (global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0) or (PaymentAmount < 0) then begin
-										PaymentAmount := 0;
-									end
-									set_local_var(7, 3);
-									set_global_var(CC_JOB, 3);
-									set_global_var(CRIMSON_CARAVANS_STATUS, 0);
-									set_global_var(WATER_MERCHANTS_STATUS, 0);
-									set_global_var(FARGO_TRADERS_STATUS, 0);
-								end
-							end
-						end
-					end
-				end
+
+				set_local_var(LVAR_CaravanStatus, 2);
+				set_global_var(FARGO_JOB, 4);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
 			end
+
+			// Was a Crimson Caravans job:
+			else if (global_var(CRIMSON_CARAVANS_STATUS) == 2) then begin
+				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				PaymentAmount := 600;
+				set_local_var(9, 30);
+				FullPayment := 600;
+
+				if (caravan_masters_killed > 0) then
+					PaymentAmount := PaymentAmount - 100;
+				if (caravan_guards_killed > 0) then
+					PaymentAmount := PaymentAmount - ((100 / caravan_total_guards) * caravan_guards_killed);
+				if (caravan_carts_lost > 0) then
+					PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
+				if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
+					PaymentAmount := 0;
+				end
+
+				set_local_var(LVAR_CaravanStatus, 1);
+				set_global_var(CC_JOB, 4);
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+			end
+
+			// Caravan lost???
+			else if (global_var(WATER_MERCHANTS_STATUS) == 3) then begin
+				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				PaymentAmount := 0;
+				set_local_var(LVAR_CaravanStatus, 3);
+				set_global_var(WATER_JOB, 3);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+			end
+			else if (global_var(FARGO_TRADERS_STATUS) == 3) then begin
+				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				PaymentAmount := 0;
+				set_local_var(LVAR_CaravanStatus, 3);
+				set_global_var(FARGO_JOB, 3);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
+			end
+			else if (global_var(CRIMSON_CARAVANS_STATUS) == 3) then begin
+				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+				set_local_var(LVAR_CaravanStatus, 3);
+				set_global_var(CC_JOB, 3);
+				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+				set_global_var(WATER_MERCHANTS_STATUS, 0);
+				set_global_var(FARGO_TRADERS_STATUS, 0);
+			end
+
 			set_local_var(5, 1);
 			set_local_var(4, 0);
 			WaitForTwoHours := 1;
@@ -297,44 +266,39 @@ procedure map_enter_p_proc begin
 				call create_caravan;
 			end
 		end
-		else begin
-			if ((global_var(CRIMSON_CARAVANS_STATUS) == 5) or (global_var(WATER_MERCHANTS_STATUS) == 5) or (global_var(FARGO_TRADERS_STATUS) == 5) and (LVar0 == 0)) then begin
-				if (global_var(CRIMSON_CARAVANS_STATUS) == 5) then begin
-					set_global_var(CC_JOB, 5);
-				end
-				else begin
-					if (global_var(WATER_MERCHANTS_STATUS) == 5) then begin
-						set_global_var(WATER_JOB, 5);
-					end
-					else begin
-						if (global_var(FARGO_TRADERS_STATUS) == 5) then begin
-							set_global_var(FARGO_JOB, 5);
-						end
-					end
-				end
-				set_global_var(CRIMSON_CARAVANS_STATUS, 0);
-				set_global_var(WATER_MERCHANTS_STATUS, 0);
-				set_global_var(FARGO_TRADERS_STATUS, 0);
-				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
-				set_local_var(7, 5);
-				PaymentAmount := 0;
-				set_local_var(5, 1);
-				set_local_var(4, 0);
-				WaitForTwoHours := 0;
-				spawnDialogue := 1;
-				beenPaid := 0;
-				if (cur_map_index != MAP_HUBENT) then begin
-					call remove_caravan;
-				end
+		else if ((global_var(CRIMSON_CARAVANS_STATUS) == 5) or (global_var(WATER_MERCHANTS_STATUS) == 5) or (global_var(FARGO_TRADERS_STATUS) == 5) and (LVar0 == 0)) then begin
+			if (global_var(CRIMSON_CARAVANS_STATUS) == 5) then begin
+				set_global_var(CC_JOB, 5);
 			end
-			else begin
-				WaitForTwoHours := 0;
-				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-				set_local_var(5, 0);
-				set_local_var(4, 0);
-				if (cur_map_index != MAP_HUBENT) then begin
-					call remove_caravan;
-				end
+			else if (global_var(WATER_MERCHANTS_STATUS) == 5) then begin
+				set_global_var(WATER_JOB, 5);
+			end
+			else if (global_var(FARGO_TRADERS_STATUS) == 5) then begin
+				set_global_var(FARGO_JOB, 5);
+			end
+
+			set_global_var(CRIMSON_CARAVANS_STATUS, 0);
+			set_global_var(WATER_MERCHANTS_STATUS, 0);
+			set_global_var(FARGO_TRADERS_STATUS, 0);
+			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 0);    end//  MAKE VISIBLE
+			set_local_var(LVAR_CaravanStatus, 5);
+			PaymentAmount := 0;
+			set_local_var(5, 1);
+			set_local_var(4, 0);
+			WaitForTwoHours := 0;
+			spawnDialogue := 1;
+			beenPaid := 0;
+			if (cur_map_index != MAP_HUBENT) then begin
+				call remove_caravan;
+			end
+		end
+		else begin
+			WaitForTwoHours := 0;
+			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			set_local_var(5, 0);
+			set_local_var(4, 0);
+			if (cur_map_index != MAP_HUBENT) then begin
+				call remove_caravan;
 			end
 		end
 	end
@@ -349,80 +313,51 @@ end
 procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
-	if (local_var(7) == 4) then begin
+
+	if (local_var(LVAR_CaravanStatus) == 4) then begin
 		float_msg(self_obj, message_str(SCRIPT_CARVLEAD, random(143, 145)), 2);
 	end
-	else begin
-		if (cur_map_index == MAP_HUBENT) then begin //    THE HUB - ENTRANCE
-		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 11);
-		//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 11);
-		//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 11);
-		//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 11);
-		//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 11);
-		//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 11);
-		//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 11);
-		//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 11);
-			start_gdialog(817, self_obj, 4, -1, -1);
-			gsay_start;
-			if (local_var(7) == 3) then begin
-				call HubAbandoned;
-			end
-			else begin
-				if (local_var(7) == 5) then begin
-					call HubLost;
-				end
-				else begin
-					call CarvLead09;
-				end
-			end
-			gsay_end;
-			end_dialogue;
-			gfade_out(1);
-			set_local_var(5, 0);
-			set_local_var(4, 0);
-			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-			WaitForTwoHours := 0;
-			gfade_in(1);
+	else if (cur_map_index == MAP_HUBENT) then begin //    THE HUB - ENTRANCE
+		// all invade dates - 11
+		if (local_var(LVAR_CaravanStatus) == 3) then begin
+			start_dialog_at_node(HubAbandoned);
+		end
+		else if (local_var(LVAR_CaravanStatus) == 5) then begin
+			start_dialog_at_node(HubLost);
 		end
 		else begin
-			if (local_var(7) == 5) then begin
-				start_gdialog(817, self_obj, 4, -1, -1);
-				gsay_start;
-				call Lost;
-				gsay_end;
-				end_dialogue;
-				gfade_out(1);
-				set_local_var(5, 0);
-				set_local_var(4, 0);
-				WaitForTwoHours := 0;
-				if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-				gfade_in(1);
-			end
-			else begin
-				if (local_var(4) == 0) then begin
-					set_local_var(4, 1);
-					start_gdialog(817, self_obj, 4, -1, -1);
-					gsay_start;
-					if (local_var(7) == 3) then begin
-						set_local_var(7, 4);
-						call Abandoned;
-					end
-					else begin
-						call CarvLead00;
-					end
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					start_gdialog(817, self_obj, 4, -1, -1);
-					gsay_start;
-					call CarvLead07;
-					gsay_end;
-					end_dialogue;
-				end
-			end
+			start_dialog_at_node(CarvLead09);
+		end
+		gfade_out(1);
+		set_local_var(5, 0);
+		set_local_var(4, 0);
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		WaitForTwoHours := 0;
+		gfade_in(1);
+	end
+	else if (local_var(LVAR_CaravanStatus) == 5) then begin
+		start_dialog_at_node(Lost);
+		gfade_out(1);
+		set_local_var(5, 0);
+		set_local_var(4, 0);
+		WaitForTwoHours := 0;
+		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+		gfade_in(1);
+	end
+	else if (local_var(4) == 0) then begin
+		set_local_var(4, 1);
+		if (local_var(LVAR_CaravanStatus) == 3) then begin
+			set_local_var(LVAR_CaravanStatus, 4);
+			start_dialog_at_node(Abandoned);
+		end
+		else begin
+			start_dialog_at_node(CarvLead00);
 		end
 	end
+	else begin
+		start_dialog_at_node(CarvLead07);
+	end
+
 	if (UnloadCaravan == 1) then begin
 		UnloadCaravan := 0;
 		game_time_advance(60 * (60 * 10));
@@ -456,51 +391,35 @@ procedure damage_p_proc begin
 	end
 end
 
+/*
+	Player and caravan have arrived at the target location
+*/
 procedure CarvLead00 begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := PaymentAmount;
 	item_caps_adjust(dude_obj, PaymentAmount);
-	if ((global_var(CVAN_DRIVER) < 1) or (global_var(CVAN_GUARD) < 2) or (global_var(CARAVAN_HOW_MANY_BRAHMIN) < 2)) then begin
+
+	if ((caravan_masters_killed > 0) or (caravan_drivers_killed > 0) or (caravan_guards_killed > 0) or (caravan_carts_lost > 0)) then begin
 		gsay_reply(817, message_str(SCRIPT_CARVLEAD, 600) + LVar0 + message_str(SCRIPT_CARVLEAD, 601) + FullPayment + message_str(SCRIPT_CARVLEAD, 103));
 	end
 	else begin
 		gsay_reply(817, message_str(SCRIPT_CARVLEAD, 101) + LVar0 + message_str(SCRIPT_CARVLEAD, 102) + FullPayment + message_str(SCRIPT_CARVLEAD, 103));
 	end
+
 	beenPaid := 1;
 	giq_option( -3, SCRIPT_CARVLEAD, 104, CarvLead01, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_CARVLEAD, 105, CarvLead03, NEUTRAL_REACTION );
 	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
+		// all timers -7 days
 		giq_option( 4, SCRIPT_CARVLEAD, 106, CarvLead04, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
+		// all timers -2 days
 		giq_option( 4, SCRIPT_CARVLEAD, 107, CarvLead05, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 15);
-	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 15);
-	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 15);
-	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 15);
-	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 15);
-	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 15);
-	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 15);
-	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 15);
+		// all timers -15 days
 		giq_option( 4, SCRIPT_CARVLEAD, 108, CarvLead06, NEUTRAL_REACTION );
 	end
 	if (local_var(9) != 0) then begin
@@ -525,36 +444,15 @@ procedure CarvLead03 begin
 	giq_option( 4, SCRIPT_CARVLEAD, 115, CarvLead11, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_CARVLEAD, 116, CarvLead12, NEUTRAL_REACTION );
 	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
-	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
+		// all timers -7 days
 		giq_option( 4, SCRIPT_CARVLEAD, 117, CarvLead04, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
+		// all timers -2 days
 		giq_option( 4, SCRIPT_CARVLEAD, 118, CarvLead05, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-	//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-	//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
-	//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
+		// all timers -2 days
 		giq_option( 4, SCRIPT_CARVLEAD, 119, CarvLead06, NEUTRAL_REACTION );
 	end
 end
@@ -602,13 +500,17 @@ procedure CarvLead07 begin
 	giq_option( 4, SCRIPT_CARVLEAD, 133, CarvLead12, NEUTRAL_REACTION );
 end
 
+/*
+	Player and caravan have returned to the Hub
+*/
 procedure CarvLead09 begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := PaymentAmount;
+
 	if (PaymentAmount > 0) then begin
 		item_caps_adjust(dude_obj, PaymentAmount);
-		if ((global_var(CVAN_DRIVER) < 1) or (global_var(CVAN_GUARD) < 2) or (global_var(CARAVAN_HOW_MANY_BRAHMIN) < 2)) then begin
+		if ((caravan_masters_killed > 0) or (caravan_drivers_killed > 0) or (caravan_guards_killed > 0) or (caravan_carts_lost > 0)) then begin
 			gsay_reply(817, message_str(SCRIPT_CARVLEAD, 600) + LVar0 + message_str(SCRIPT_CARVLEAD, 603) + message_str(SCRIPT_CARVLEAD, 602));
 		end
 		else begin
@@ -618,6 +520,7 @@ procedure CarvLead09 begin
 	else begin
 		gsay_reply(817, message_str(SCRIPT_CARVLEAD, 604) + message_str(SCRIPT_CARVLEAD, 602));
 	end
+
 	beenPaid := 1;
 	giq_option( -3, SCRIPT_CARVLEAD, 139, CarvLead11, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_CARVLEAD, 140, CarvLead11, NEUTRAL_REACTION );
@@ -650,330 +553,123 @@ procedure CarvLead12 begin
 		end
 	end
 	call remove_caravan;
-	if (local_var(7) == 0) then begin
+	if (local_var(LVAR_CaravanStatus) == 0) then begin
 		set_global_var(WATER_JOB, 1);
 		set_global_var(WATER_MERCHANTS_STATUS, 1);
 		if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-		//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
-		//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-		//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
-		//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
-		//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
-		//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
-		//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
+			// Timers -7 days
 			LVar0 := do_check(dude_obj, STAT_lu, -2);
 			if (is_success(LVar0)) then begin
 				set_global_var(WATER_MERCHANTS_STATUS, 2);
 				load_map(MAP_HUBENT, 1);
-			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
+				// Timers -1 days
 			end
 			else begin
-
-			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
+				// Timers -9 days
 				load_map(MAP_DESERT1, 3);
-
-			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
+				// Timers -1 days
 			end
 		end
-		else begin
-			if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
-			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
-			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
-			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
-			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
-			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
-				LVar0 := do_check(dude_obj, STAT_lu, -2);
-				if (is_success(LVar0)) then begin
-					set_global_var(WATER_MERCHANTS_STATUS, 2);
-					load_map(MAP_HUBENT, 1);
-				end
-				else begin
-
-				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
-					load_map(MAP_MNTCRVN4, 3);
-
-				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
-				end
+		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+			// Timers -2 days
+			LVar0 := do_check(dude_obj, STAT_lu, -2);
+			if (is_success(LVar0)) then begin
+				set_global_var(WATER_MERCHANTS_STATUS, 2);
+				load_map(MAP_HUBENT, 1);
+			end
+			else begin
+				// Timers -9 days
+				load_map(MAP_MNTCRVN4, 3);
+				// Timers -1 days
 			end
 		end
 	end
 	else begin
-		if (local_var(7) == 1) then begin
+		if (local_var(LVAR_CaravanStatus) == 1) then begin
 			set_global_var(CC_JOB, 1);
 			set_global_var(CRIMSON_CARAVANS_STATUS, 1);
+
 			if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
 				load_map(MAP_DESERT1, 3);
-
-			//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-			//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-			//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
+				// Timers -1 days
 			end
-			else begin
-				if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-
-				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
-					load_map(MAP_DESERT1, 3);
-
-				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
-				end
-				else begin
-					if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-
-					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
-						load_map(MAP_MNTCRVN4, 3);
-					end
-					else begin
-						if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-
-						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 11);
-						//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 11);
-						//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 11);
-						//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 11);
-						//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 11);
-						//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 11);
-						//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 11);
-						//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 11);
-							load_map(MAP_MNTCRVN4, 3);
-						end
-					end
-				end
+			else if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+				// Timers -9 days
+				load_map(MAP_DESERT1, 3);
+				// Timers -1 days
+			end
+			else if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+				// Timers -9 days
+				load_map(MAP_MNTCRVN4, 3);
+			end
+			else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+				// Timers -11 days
+				load_map(MAP_MNTCRVN4, 3);
 			end
 		end
-		else begin
-			if (local_var(7) == 2) then begin
-				set_global_var(FARGO_JOB, 1);
-				set_global_var(FARGO_TRADERS_STATUS, 1);
-				if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-				//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-				//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
-				//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-				//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
-				//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
-				//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
-				//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
-				//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
-					LVar0 := do_check(dude_obj, STAT_lu, -4);
-					if (is_success(LVar0)) then begin
-						set_global_var(FARGO_TRADERS_STATUS, 2);
-						load_map(MAP_HUBENT, 1);
-					end
-					else begin
-					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
-						load_map(MAP_DESERT1, 3);
-					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
-					end
+		else if (local_var(LVAR_CaravanStatus) == 2) then begin
+			set_global_var(FARGO_JOB, 1);
+			set_global_var(FARGO_TRADERS_STATUS, 1);
+
+			if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+				// Timers -7 days
+				LVar0 := do_check(dude_obj, STAT_lu, -4);
+				if (is_success(LVar0)) then begin
+					set_global_var(FARGO_TRADERS_STATUS, 2);
+					load_map(MAP_HUBENT, 1);
 				end
 				else begin
-					if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-					//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 2);
-					//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 2);
-					//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 2);
-					//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 2);
-					//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 2);
-					//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 2);
-					//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 2);
-					//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 2);
-						LVar0 := do_check(dude_obj, STAT_lu, -4);
-						if (is_success(LVar0)) then begin
-							set_global_var(FARGO_TRADERS_STATUS, 2);
-							load_map(MAP_HUBENT, 1);
-						end
-						else begin
-						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-						//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-						//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-						//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-						//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-						//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-						//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-						//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
-							load_map(MAP_MNTCRVN4, 3);
-						end
-					end
-					else begin
-						if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-						//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 7);
-						//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 7);
-						//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 7);
-						//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 7);
-						//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 7);
-						//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 7);
-						//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 7);
-						//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 7);
-							LVar0 := do_check(dude_obj, STAT_lu, -4);
-							if (is_success(LVar0)) then begin
-								set_global_var(FARGO_TRADERS_STATUS, 2);
-								load_map(MAP_HUBENT, 1);
-							end
-							else begin
-							//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 9);
-							//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 9);
-							//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 9);
-							//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 9);
-							//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 9);
-							//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 9);
-							//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 9);
-							//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 9);
-								load_map(MAP_DESERT1, 3);
-							//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-							//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-							//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-							//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-							//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-							//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-							//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-							//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
-							end
-						end
-					end
+					// Timers -9 days
+					load_map(MAP_DESERT1, 3);
+					// Timers -1 days
+				end
+			end
+			else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+				// Timers -2 days
+				LVar0 := do_check(dude_obj, STAT_lu, -4);
+				if (is_success(LVar0)) then begin
+					set_global_var(FARGO_TRADERS_STATUS, 2);
+					load_map(MAP_HUBENT, 1);
+				end
+				else begin
+					// Timers -9 days
+					load_map(MAP_MNTCRVN4, 3);
+				end
+			end
+			else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+				// Timers -7 days
+				LVar0 := do_check(dude_obj, STAT_lu, -4);
+				if (is_success(LVar0)) then begin
+					set_global_var(FARGO_TRADERS_STATUS, 2);
+					load_map(MAP_HUBENT, 1);
+				end
+				else begin
+					// Timers -9 days
+					load_map(MAP_DESERT1, 3);
+					// Timers -1 days
 				end
 			end
 		end
 	end
 end
 
-procedure Abandoned
-begin
-//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
+procedure Abandoned begin
 	gsay_message(817, 501, 51);
-//	set_global_var(CVAN_DRIVER, 1);
-//	set_global_var(CVAN_GUARD, 2);
-//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
 end
 
 procedure Lost begin
-//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 502, 51);
-//	set_global_var(CVAN_DRIVER, 1);
-//	set_global_var(CVAN_GUARD, 2);
-//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
 end
 
 procedure HubAbandoned begin
-//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 504, 51);
-//	set_global_var(CVAN_DRIVER, 1);
-//	set_global_var(CVAN_GUARD, 2);
-//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
 end
 
 procedure HubLost begin
-//	set_global_var(VAULT13_WATER_DAYS_LEFT, global_var(VAULT13_WATER_DAYS_LEFT) - 1);
-//	set_global_var(GVAR_FOLLOWERS_INVADED_DATE, global_var(GVAR_FOLLOWERS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_NECROPOLIS_INVADED_DATE, global_var(GVAR_NECROPOLIS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_THE_HUB_INVADED_DATE, global_var(GVAR_THE_HUB_INVADED_DATE) - 1);
-//	set_global_var(GVAR_BROTHERHOOD_INVADED_DATE, global_var(GVAR_BROTHERHOOD_INVADED_DATE) - 1);
-//	set_global_var(GVAR_JUNKTOWN_INVADED_DATE, global_var(GVAR_JUNKTOWN_INVADED_DATE) - 1);
-//	set_global_var(GVAR_SHADY_SANDS_INVADED_DATE, global_var(GVAR_SHADY_SANDS_INVADED_DATE) - 1);
-//	set_global_var(GVAR_VAULT_13_INVADED_DATE, global_var(GVAR_VAULT_13_INVADED_DATE) - 1);
 	gsay_message(817, 505, 51);
-//	set_global_var(CVAN_DRIVER, 1);
-//	set_global_var(CVAN_GUARD, 2);
-//	set_global_var(CARAVAN_HOW_MANY_BRAHMIN, 2);
 end
 
-procedure CarvLead13
-begin
+procedure CarvLead13 begin
 	gsay_reply(817, message_str(SCRIPT_CARVLEAD, 508) + local_var(9) + message_str(SCRIPT_CARVLEAD, 509));
 	giq_option( -3, SCRIPT_CARVLEAD, 510, CarvLead14, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_CARVLEAD, 511, CarvLead11, NEUTRAL_REACTION );
@@ -981,8 +677,7 @@ begin
 	giq_option( 4, SCRIPT_CARVLEAD, 513, CarvLead11, NEUTRAL_REACTION );
 end
 
-procedure CarvLead14
-begin
+procedure CarvLead14 begin
 	UnloadCaravan := 1;
 end
 
@@ -1031,10 +726,12 @@ variable LVar0 := 0;
 variable LVar1 := 0;
 variable Item := 0;
 
-   Create_NS_Red_Caravan(car1_junktown_hex,0)
-	Create_NS_Grey_Caravan(car2_junktown_hex,0)
+	if (caravan_carts_left >= 2) then
+   	Create_NS_Red_Caravan(car1_junktown_hex,0)
+   if (caravan_carts_left >= 1) then
+		Create_NS_Grey_Caravan(car2_junktown_hex,0)
 
-	if (global_var(CVAN_DRIVER) == 1) then begin
+	if (caravan_masters_left >= 1) then begin
 		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 30511, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar0, AI_BERZERKER );
@@ -1043,7 +740,7 @@ variable Item := 0;
 		add_obj_to_inven(LVar0, Item);
 		wield_obj_critter(LVar0, Item);
 	end
-	if (global_var(CVAN_GUARD) == 2) then begin
+	if (caravan_guards_left >= 2) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 29504, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1052,7 +749,7 @@ variable Item := 0;
 		add_obj_to_inven(LVar1, Item);
 		wield_obj_critter(LVar1, Item);
 	end
-	if (global_var(CVAN_GUARD) >= 1) then begin
+	if (caravan_guards_left >= 1) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 31505, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1062,12 +759,12 @@ variable Item := 0;
 		wield_obj_critter(LVar1, Item);
 	end
 
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 29707, 0, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 5);
 		add_timer_event(LVar1, 0, 10);
 	end
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+	if (caravan_brahmin_left >= 1) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 29502, 0, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 5);
 		add_timer_event(LVar1, 0, 10);
@@ -1089,10 +786,12 @@ procedure BOS_Caravan begin
 	variable LVar1 := 0;
 	variable Item := 0;
 
-	Create_EW_Red_Caravan(car1_bos_hex,0)
-	Create_EW_Grey_Caravan(car2_bos_hex,0)
+	if (caravan_carts_left >= 2) then
+		Create_EW_Red_Caravan(car1_bos_hex,0)
+	if (caravan_carts_left >= 1) then
+		Create_EW_Grey_Caravan(car2_bos_hex,0)
 
-	if (global_var(CVAN_DRIVER) == 1) then begin
+	if (caravan_masters_left >= 1) then begin
 		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 26713, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar0, AI_BERZERKER );
@@ -1101,7 +800,7 @@ procedure BOS_Caravan begin
 		add_obj_to_inven(LVar0, Item);
 		wield_obj_critter(LVar0, Item);
 	end
-	if (global_var(CVAN_GUARD) == 2) then begin
+	if (caravan_guards_left >= 2) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 25308, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1110,7 +809,7 @@ procedure BOS_Caravan begin
 		add_obj_to_inven(LVar1, Item);
 		wield_obj_critter(LVar1, Item);
 	end
-	if (global_var(CVAN_GUARD) >= 1) then begin
+	if (caravan_guards_left >= 1) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 25716, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1120,12 +819,12 @@ procedure BOS_Caravan begin
 		wield_obj_critter(LVar1, Item);
 	end
 
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 24908, 0, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 0);
 		add_timer_event(LVar1, 0, 10);
 	end
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+	if (caravan_brahmin_left >= 1) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 25708, 0, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 0);
 		add_timer_event(LVar1, 0, 10);
@@ -1147,10 +846,13 @@ procedure Necropolis_Caravan begin
 	variable LVar1 := 0;
 	variable Item := 0;
 
-	Create_NS_Red_Caravan(car1_necropolis_hex,1)
-	Create_NS_Grey_Caravan(car2_necropolis_hex,1)
+	if (caravan_carts_left >= 2) then
+		Create_NS_Red_Caravan(car1_necropolis_hex,1)
+	if (caravan_carts_left >= 1) then
+		Create_NS_Grey_Caravan(car2_necropolis_hex,1)
 
-	if (global_var(CVAN_DRIVER) == 1) then begin
+	//if (global_var(CVAN_DRIVER) == 1) then begin
+	if (caravan_masters_left >= 1) then begin
 		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 26697, 1, SCRIPT_CRVNTEAM);
 		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar0, AI_BERZERKER );
@@ -1159,7 +861,7 @@ procedure Necropolis_Caravan begin
 		add_obj_to_inven(LVar0, Item);
 		wield_obj_critter(LVar0, Item);
 	end
-	if (global_var(CVAN_GUARD) == 2) then begin
+	if (caravan_guards_left >= 2) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 25891, 1, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1168,7 +870,7 @@ procedure Necropolis_Caravan begin
 		add_obj_to_inven(LVar1, Item);
 		wield_obj_critter(LVar1, Item);
 	end
-	if (global_var(CVAN_GUARD) >= 1) then begin
+	if (caravan_guards_left >= 1) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 27692, 1, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1177,12 +879,14 @@ procedure Necropolis_Caravan begin
 		add_obj_to_inven(LVar1, Item);
 		wield_obj_critter(LVar1, Item);
 	end
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+	//if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 25894, 1, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 5);
 		add_timer_event(LVar1, 0, 10);
 	end
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+	//if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+	if (caravan_brahmin_left >= 1) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 25889, 1, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 5);
 		add_timer_event(LVar1, 0, 10);
@@ -1204,10 +908,12 @@ procedure LABone_Caravan begin
 	variable LVar1 := 0;
 	variable Item := 0;
 
-	Create_EW_Red_Caravan(car1_boneyard_hex,0)
-	Create_EW_Grey_Caravan(car2_boneyard_hex,0)
+	if (caravan_carts_left >= 2) then
+		Create_EW_Red_Caravan(car1_boneyard_hex,0)
+	if (caravan_carts_left >= 1) then
+		Create_EW_Grey_Caravan(car2_boneyard_hex,0)
 
-	if (global_var(CVAN_DRIVER) == 1) then begin
+	if (caravan_masters_left >= 1) then begin
 		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 9320, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar0, AI_BERZERKER );
@@ -1216,7 +922,7 @@ procedure LABone_Caravan begin
 		add_obj_to_inven(LVar0, Item);
 		wield_obj_critter(LVar0, Item);
 	end
-	if (global_var(CVAN_GUARD) == 2) then begin
+	if (caravan_guards_left >= 2) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 10122, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1225,7 +931,7 @@ procedure LABone_Caravan begin
 		add_obj_to_inven(LVar1, Item);
 		wield_obj_critter(LVar1, Item);
 	end
-	if (global_var(CVAN_GUARD) >= 1) then begin
+	if (caravan_guards_left >= 1) then begin
 		LVar1 := create_object_sid(PID_MERCHENARY, 8518, 0, SCRIPT_CRVNTEAM);
 		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
 		set_ai( LVar1, AI_BERZERKER );
@@ -1235,12 +941,12 @@ procedure LABone_Caravan begin
 		wield_obj_critter(LVar1, Item);
 	end
 
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 9920, 0, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 0);
 		add_timer_event(LVar1, 0, 10);
 	end
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+	if (caravan_brahmin_left >= 1) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 9118, 0, SCRIPT_CARCOW);
 		anim(LVar1, 1000, 0);
 		add_timer_event(LVar1, 0, 10);

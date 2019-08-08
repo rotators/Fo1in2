@@ -12,8 +12,7 @@
 ************************************************/
 
 // All Map Vars need to start w/ MVAR_
-#define NUM_MONSTERS             	(0)  // Number of monsters created
-#define MVAR_Hostile_Total 			(1)
+#define MVAR_Hostile_Total             	(0)   // Number of monsters created
 
 //==================================================================
 

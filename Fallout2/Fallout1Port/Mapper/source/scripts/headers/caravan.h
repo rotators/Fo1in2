@@ -281,7 +281,9 @@ variable Finding_New_Tile;
 #define caravan_start                       global_var(GVAR_CARAVAN_START)
 #define caravan_end                         global_var(GVAR_CARAVAN_END)
 
-#define too_many_carts                      ((caravan_carts_left > ((caravan_brahmin_left/2) + (caravan_brahmin_left % 2))) and (caravan_brahmin_left != 0))
+// Fo1 doesn't use 2 brahmins per cart
+//#define too_many_carts                      ((caravan_carts_left > ((caravan_brahmin_left/2) + (caravan_brahmin_left % 2))) and (caravan_brahmin_left != 0))
+#define too_many_carts                      (caravan_carts_left > caravan_brahmin_left)
 
 #define give_money(who,amount)              if (dude_fortune_finder) then                               \
                                                 item_caps_adjust(who,2*(amount));                       \
