@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\MAPNECRO.h"
+#include "..\headers\mapenc.h"
 
 #define NAME                    SCRIPT_CARVLEAD
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -540,114 +540,122 @@ end
 procedure CarvLead11 begin
 end
 
+/*********************************************************
+	Traveling back to the Hub
+*********************************************************/
 procedure CarvLead12 begin
 	variable LVar0 := 0;
+   variable Caravan_Carts;
+   variable Caravan_Encounters;
+   variable Caravan_Guards;
+
+   set_caravan_status(CARAVAN_STATUS_ON_JOB);
+   //Caravan_Encounters:=random(1,4);
+   Caravan_Encounters:=1;
+   set_caravan_encounters(Caravan_Encounters);
+ 	set_caravan_end(CARAVAN_HUB);
+ 	set_caravan_status(CARAVAN_STATUS_ON_JOB);
+
+	set_caravan_masters(1);
+	set_caravan_drivers(0); // Fo1 has no wagon drivers
+   set_caravan_guards(2);
+   set_caravan_carts(2);
+   set_caravan_brahmin(caravan_total_carts);
+
 	set_local_var(5, 0);
 	set_local_var(4, 0);
-	if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 1 then begin
-		set_global_var(COW_ANNIHILATOR_COUNT, 1);
-	end
-	else begin
-		if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 0 then begin
-			set_global_var(COW_ANNIHILATOR_COUNT, 2);
-		end
-	end
+
 	call remove_caravan;
+	// Water Merchants:
 	if (local_var(LVAR_CaravanStatus) == 0) then begin
 		set_global_var(WATER_JOB, 1);
 		set_global_var(WATER_MERCHANTS_STATUS, 1);
+		set_global_var(GVAR_WATER_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
+
 		if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-			// Timers -7 days
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_JUNKTOWN);
+
 			LVar0 := do_check(dude_obj, STAT_lu, -2);
 			if (is_success(LVar0)) then begin
 				set_global_var(WATER_MERCHANTS_STATUS, 2);
 				load_map(MAP_HUBENT, 1);
-				// Timers -1 days
 			end
 			else begin
-				// Timers -9 days
-				load_map(MAP_DESERT1, 3);
-				// Timers -1 days
+				load_map(MAP_DESCRVN2, 3);
 			end
 		end
 		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-			// Timers -2 days
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_BONEYARD);
 			LVar0 := do_check(dude_obj, STAT_lu, -2);
 			if (is_success(LVar0)) then begin
 				set_global_var(WATER_MERCHANTS_STATUS, 2);
 				load_map(MAP_HUBENT, 1);
 			end
 			else begin
-				// Timers -9 days
 				load_map(MAP_MNTCRVN4, 3);
-				// Timers -1 days
 			end
 		end
 	end
-	else begin
-		if (local_var(LVAR_CaravanStatus) == 1) then begin
-			set_global_var(CC_JOB, 1);
-			set_global_var(CRIMSON_CARAVANS_STATUS, 1);
+	// Crimson Caravan:
+	else if (local_var(LVAR_CaravanStatus) == 1) then begin
+		set_global_var(CC_JOB, 1);
+		set_global_var(CRIMSON_CARAVANS_STATUS, 1);
+		set_global_var(GVAR_CRIMSON_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
 
-			if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-				load_map(MAP_DESERT1, 3);
-				// Timers -1 days
+		if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_BOS);
+			load_map(MAP_DESCRVN1, 3);
+		end
+		else if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_JUNKTOWN);
+			load_map(MAP_DESCRVN1, 3);
+		end
+		else if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_NECROPOLIS);
+			load_map(MAP_MNTCRVN4, 3);
+		end
+		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_BONEYARD);
+			load_map(MAP_MNTCRVN4, 3);
+		end
+	end
+	// Fargo Traders:
+	else if (local_var(LVAR_CaravanStatus) == 2) then begin
+		set_global_var(FARGO_JOB, 1);
+		set_global_var(FARGO_TRADERS_STATUS, 1);
+		set_global_var(GVAR_FARGO_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
+
+		if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_JUNKTOWN);
+			LVar0 := do_check(dude_obj, STAT_lu, -4);
+			if (is_success(LVar0)) then begin
+				set_global_var(FARGO_TRADERS_STATUS, 2);
+				load_map(MAP_HUBENT, 1);
 			end
-			else if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-				// Timers -9 days
-				load_map(MAP_DESERT1, 3);
-				// Timers -1 days
+			else begin
+				load_map(MAP_DESCRVN1, 3);
 			end
-			else if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-				// Timers -9 days
-				load_map(MAP_MNTCRVN4, 3);
+		end
+		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_BONEYARD);
+			LVar0 := do_check(dude_obj, STAT_lu, -4);
+			if (is_success(LVar0)) then begin
+				set_global_var(FARGO_TRADERS_STATUS, 2);
+				load_map(MAP_HUBENT, 1);
 			end
-			else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-				// Timers -11 days
+			else begin
 				load_map(MAP_MNTCRVN4, 3);
 			end
 		end
-		else if (local_var(LVAR_CaravanStatus) == 2) then begin
-			set_global_var(FARGO_JOB, 1);
-			set_global_var(FARGO_TRADERS_STATUS, 1);
-
-			if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-				// Timers -7 days
-				LVar0 := do_check(dude_obj, STAT_lu, -4);
-				if (is_success(LVar0)) then begin
-					set_global_var(FARGO_TRADERS_STATUS, 2);
-					load_map(MAP_HUBENT, 1);
-				end
-				else begin
-					// Timers -9 days
-					load_map(MAP_DESERT1, 3);
-					// Timers -1 days
-				end
+		else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+			set_global_var(GVAR_CARAVAN_START,CARAVAN_BOS);
+			LVar0 := do_check(dude_obj, STAT_lu, -4);
+			if (is_success(LVar0)) then begin
+				set_global_var(FARGO_TRADERS_STATUS, 2);
+				load_map(MAP_HUBENT, 1);
 			end
-			else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-				// Timers -2 days
-				LVar0 := do_check(dude_obj, STAT_lu, -4);
-				if (is_success(LVar0)) then begin
-					set_global_var(FARGO_TRADERS_STATUS, 2);
-					load_map(MAP_HUBENT, 1);
-				end
-				else begin
-					// Timers -9 days
-					load_map(MAP_MNTCRVN4, 3);
-				end
-			end
-			else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-				// Timers -7 days
-				LVar0 := do_check(dude_obj, STAT_lu, -4);
-				if (is_success(LVar0)) then begin
-					set_global_var(FARGO_TRADERS_STATUS, 2);
-					load_map(MAP_HUBENT, 1);
-				end
-				else begin
-					// Timers -9 days
-					load_map(MAP_DESERT1, 3);
-					// Timers -1 days
-				end
+			else begin
+				load_map(MAP_DESCRVN1, 3);
 			end
 		end
 	end
