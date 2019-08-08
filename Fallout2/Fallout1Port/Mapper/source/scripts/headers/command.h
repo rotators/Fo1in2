@@ -379,8 +379,6 @@ variable step_tile;
 #define self_elevation                      (elevation(self_obj))
 
 #define self_pid                            (obj_pid(self_obj))
-#define self_team                           has_trait(TRAIT_OBJECT,self_obj,OBJECT_TEAM_NUM)
-#define self_ai                             has_trait(TRAIT_OBJECT,self_obj,OBJECT_AI_PACKET)
 #define self_visible                        obj_is_visible_flag(self_obj)
 
 #define self_cur_hits                       (get_critter_stat(self_obj,STAT_current_hp))
