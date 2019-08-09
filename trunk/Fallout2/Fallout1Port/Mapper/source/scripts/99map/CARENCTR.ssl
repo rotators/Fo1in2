@@ -11,7 +11,7 @@
 #include "..\headers\command.h"
 
 #define START_HEX                (22097)
-#define START_HEX_MOUNTAIN       (18488)
+#define START_HEX_MOUNTAIN       (20496)
 
 #define HUB_ENT_HEX              (9907)
 #define JUNKTOWN_ENT_HEX         (27707)
@@ -115,13 +115,14 @@ procedure map_enter_p_proc begin
        Combat2:=0;
        set_map_var(MVAR_Hostile_Total,0);
 
-		if (cur_map_index != MAP_DESCRVN2) then
-		   call CreateSceneryClutter;
-
-		if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ON_CARAVAN) then begin
+		//if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ON_CARAVAN) then begin
 			call Hub_Caravan;
-			debug("Hub - Crimson Caravan.");
-		end
+		//	debug("Hub - Crimson Caravan.");
+		//end
+
+  		// Create clutter after the wagons, to avoid clipping:
+		if not(map_is_mountain_caravan_escort) and (cur_map_index != MAP_DESCRVN2) then
+		   call CreateSceneryClutter;
 
        Encounter_Number:=total_encounters - encounters_left;
        debug("Total Encounters == "+total_encounters+". Encounters Left == "+encounters_left+". On Encounter "+Encounter_Number);
@@ -164,11 +165,26 @@ procedure map_update_p_proc begin
            if (caravan_end == CARAVAN_BOS) then begin
                set_exit_grids(dude_elevation,MAP_BROHDENT,0,BOS_ENT_HEX,0);
            end
+
+           if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ABANDONED) then begin
+               set_global_var(GVAR_CRIMSON_CARAVAN,HUB_CARAVAN_AVERAGE_SUCCESS);
+           end
        end
        else begin
            dude_facing:=random(0,5);
            dude_start_hex:=tile_num_in_direction(START_HEX,dude_facing,random(3,8));
            set_exit_grids(dude_elevation,MAP_DESCRVN2,0,dude_start_hex,dude_facing);
+       end
+
+       // This is needed here, otherwise every following encounter won't spawn:
+       if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ABANDONED) then begin
+           set_global_var(GVAR_CRIMSON_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
+       end
+       else if (global_var(GVAR_FARGO_CARAVAN) == HUB_CARAVAN_ABANDONED) then begin
+           set_global_var(GVAR_FARGO_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
+       end
+       else if (global_var(GVAR_WATER_CARAVAN) == HUB_CARAVAN_ABANDONED) then begin
+           set_global_var(GVAR_WATER_CARAVAN,HUB_CARAVAN_ON_CARAVAN);
        end
    end
    else begin
@@ -438,13 +454,13 @@ procedure Build_Caravan_Team begin
    variable item;
    variable Weapon_Roll;
    variable val;
-   variable wagon_cart;
+   variable wagon_cart:=0;
 
    debug("Build caravan team!");
 
    // Place the Player
    dude_facing:=random(0,5);
-   if is_map(MAP_MNTCRVN1) or is_map(MAP_MNTCRVN2) or is_map(MAP_MNTCRVN3) or is_map(MAP_MNTCRVN4) then
+   if map_is_mountain_caravan_escort then
    	dude_start_hex:=tile_num_in_direction(START_HEX_MOUNTAIN,dude_facing,random(2,5));
    else
    	dude_start_hex:=tile_num_in_direction(START_HEX,dude_facing,random(3,8));
@@ -458,15 +474,18 @@ procedure Build_Caravan_Team begin
 
    // Place the Caravan Master
    while (Master_Counter < caravan_masters_left) do begin
-       Master_Counter+=1;
+   	debug("create caravan master!");
+		Master_Counter+=1;
 
+		debug("GVAR_CRIMSON_CARAVAN: " + global_var(GVAR_CRIMSON_CARAVAN));
 		if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ON_CARAVAN) then begin
-			Critter:=create_object_sid(PID_LEATHER_JACKET_MAN,0,0,SCRIPT_CRVNTEAM);
+			debug("create caravan master object!");
+			Critter:=create_object_sid(PID_LEATHER_JACKET_MAN,0,dude_elevation,SCRIPT_CRVNTEAM);
 			add_obj_to_inven(Critter, create_object(PID_SHOTGUN,0,0));
 			give_pid_qty(Critter, PID_SHOTGUN_SHELLS, 1)
 		end
 
-       val := set_team( Critter, TEAM_PLAYER );
+       val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
        Critter_Rotation:=(dude_facing + 3) % 6;
        Critter_Tile:=tile_num_in_direction(dude_start_hex,Critter_Rotation,random(5,7));
        critter_attempt_placement(Critter,Critter_Tile,0);
@@ -481,9 +500,11 @@ procedure Build_Caravan_Team begin
 
 	// Spawn caravan car with driver:
 	while (Caravan_Counter < caravan_carts_left) do begin
+		debug("create caravan wagon!");
 		Caravan_Counter+=1;
 		Critter_Tile:=tile_num_in_direction(Critter_Tile,Critter_Rotation,8);
 
+		// Always create the red cart first:
 		if (wagon_cart == 0) then begin
 			wagon_cart := 1;
 			Create_EW_Red_Caravan(Critter_Tile,0)
@@ -501,7 +522,7 @@ procedure Build_Caravan_Team begin
       Brahmin_Tile:=tile_num_in_direction(Critter_Tile,1,2);
       Critter:=create_object_sid(PID_BRAHMIN,0,0,SCRIPT_CARCOW); //SCRIPT_ECCRTBRA);
       critter_attempt_placement(Critter,Brahmin_Tile,0);
-      val := set_team( Critter, TEAM_PLAYER );
+      val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
       anim(Critter,ANIMATE_ROTATION,1);
       Brahmin_Counter+=1;
 
@@ -510,12 +531,13 @@ procedure Build_Caravan_Team begin
 			Brahmin_Tile:=tile_num_in_direction(Critter_Tile,2,2);
 			Critter:=create_object_sid(PID_BRAHMIN,0,0,SCRIPT_CARCOW); //SCRIPT_ECCRTBRA);
 			critter_attempt_placement(Critter,Brahmin_Tile,0);
-			val := set_team( Critter, TEAM_PLAYER );
+			val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
 			anim(Critter,ANIMATE_ROTATION,1);
 			Brahmin_Counter+=1;
 		end*/
 
       if (Driver_Counter < caravan_drivers_left) then begin
+      	debug("create caravan driver!");
          Driver_Counter+=1;
 
          if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ON_CARAVAN) then begin
@@ -524,7 +546,7 @@ procedure Build_Caravan_Team begin
 
          Driver_Tile:=tile_num_in_direction(Critter_Tile,1,3);
          critter_attempt_placement(Critter,Driver_Tile,0);
-         val := set_team( Critter, TEAM_PLAYER );
+         val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
          give_money(Critter,random(5,20));
          anim(Critter,ANIMATE_ROTATION,1);
       end
@@ -540,7 +562,7 @@ procedure Build_Caravan_Team begin
        Brahmin_Tile:=tile_num_in_direction(Brahmin_Tile,random(0,5),random(2,5));
        Critter:=create_object_sid(PID_BRAHMIN,0,0,SCRIPT_CARCOW); //SCRIPT_ECCRTBRA);
        critter_attempt_placement(Critter,Brahmin_Tile,0);
-       val := set_team( Critter, TEAM_PLAYER );
+       val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
        anim(Critter,ANIMATE_ROTATION,random(0,5));
    end
 
@@ -557,7 +579,7 @@ procedure Build_Caravan_Team begin
 
        Driver_Tile:=tile_num_in_direction(Driver_Tile,1,3);
        critter_attempt_placement(Critter,Driver_Tile,0);
-       val := set_team( Critter, TEAM_PLAYER );
+       val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
        give_money(Critter,random(5,20));
        anim(Critter,ANIMATE_ROTATION,random(0,5));
    end
@@ -568,6 +590,7 @@ procedure Build_Caravan_Team begin
    Critter_Tile:=tile_num_in_direction(dude_start_hex,Critter_Rotation,random(7,10));
 
    while (Guard_Counter < caravan_guards_left) do begin
+   	debug("create caravan guard!");
 		Guard_Counter+=1;
 
 		if (global_var(GVAR_CRIMSON_CARAVAN) == HUB_CARAVAN_ON_CARAVAN) then begin
@@ -578,7 +601,7 @@ procedure Build_Caravan_Team begin
 		Critter_Tile:=tile_num_in_direction(Critter_Tile,random(0,5),random(2,4));
 		critter_attempt_placement(Critter,Critter_Tile,0);
 		give_money(Critter,random(10,20));
-		val := set_team( Critter, TEAM_PLAYER );
+		val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
 		anim(Critter,ANIMATE_ROTATION,dude_cur_rot);
 		add_obj_to_inven(Critter,item);
 		wield_obj_critter(Critter,item);
@@ -596,9 +619,10 @@ end
 procedure Add_Mysterious_Stranger begin
 variable LVar0 := 0;
 variable LVar1 := 0;
+	debug("Addy mysterious stranger!");
 
 	//if ((map_first_run) and (global_var(MYST_STRANGER_DEAD) == 0) and (Die_Roll < Stranger_Chance) and ((has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)))) then begin
-	if ((map_first_run) and (global_var(MYST_STRANGER_DEAD) == 0) and ((dude_perk( PERK_mysterious_stranger )))) then begin
+	if ((map_first_run) and (global_var(MYST_STRANGER_DEAD) == 0) and ((has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)))) then begin
 		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), 5, 2);
 		LVar0 := create_object_sid(PID_MYSTERIOUS_STRANGER, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNTEAM);
 		set_team( LVar0, TEAM_PLAYER );
@@ -607,7 +631,7 @@ variable LVar1 := 0;
 		add_obj_to_inven(LVar0, LVar1);
 		wield_obj_critter(LVar0, LVar1);
 		LVar1 := create_object( PID_5MM_AP, 0, 0 );
-		if (dude_perk( PERK_scrounger )) then begin
+		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
 			add_mult_objs_to_inven(LVar0, LVar1, 10);
 		end
 		else begin
@@ -625,7 +649,7 @@ variable LVar1 := 0;
    Die_Roll:=random(0,99);
    Stranger_Chance:=30 + (2 * dude_luck);
 
-   if ((map_first_run) and (global_var(MYST_STRANGER_DEAD) == 0) and (Die_Roll < Stranger_Chance) and ((dude_perk( PERK_mysterious_stranger )))) then begin
+   if ((map_first_run) and (global_var(MYST_STRANGER_DEAD) == 0) and (Die_Roll < Stranger_Chance) and ((has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)))) then begin
        if (not(get_stranger_flag(STRANGER_GENDER))) then begin
            set_stranger_flag(STRANGER_GENDER);
            if (random(0,99) < 50) then
@@ -637,7 +661,7 @@ variable LVar1 := 0;
            Critter:=create_object_sid(PID_MYSTERIOUS_STRANGER_MALE,0,0,SCRIPT_ECMSTSTR);
        Critter_Tile:=tile_num_in_direction(tile_num(dude_obj),random(0,5),random(5,10));
        critter_attempt_placement(Critter,Critter_Tile,elevation(dude_obj));
-       val := set_team( Critter, TEAM_PLAYER );
+       val := critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
 //       critter_add_trait(Critter,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_PLAYER);
        give_money(Critter,random(30,60));
        anim(Critter,ANIMATE_ROTATION,dude_cur_rot);
@@ -1818,9 +1842,14 @@ procedure Small_Merc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := random(2, 4);
+
+	Outer_Circle := random(5, 10) + 2;
+	Inner_Circle := Outer_Circle - 4;
+
 	while(LVar1 < LVar0) do begin
 		Critter_Rotation := random(0, 2);
 		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), Critter_Rotation, random(Inner_Circle, Outer_Circle));
+
 		if (random(0, 1)) then begin
 			Human_Merc := create_object_sid(PID_MERC_FEMALE_LEATHER, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
 			inc_map_var(MVAR_Hostile_Total);
@@ -1840,11 +1869,11 @@ procedure Small_Merc begin
 			anim(Human_Merc, 1000, 5);
 		end
 
+		debug("createing Small_Merc on hex " + (tile_num(Human_Merc)) + ", elevation " + (elevation(Human_Merc)));
+
 		call Human_Stuff;
 		LVar1 := LVar1 + 1;
 	end
-
-	debug("Small_Merc");
 end
 
 procedure Medium_Merc begin
@@ -1861,27 +1890,25 @@ procedure Medium_Merc begin
 		Critter_Rotation := random(0, 2);
 		Total_Rotation := Total_Rotation + (Total_Rotation - Critter_Rotation);
 		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 2);
+
 		LVar2 := random(1, 4);
 		if (LVar2 == 1) then begin
 			Human_Merc := create_object_sid(PID_MERC_FEMALE_LEATHER, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
 			inc_map_var(MVAR_Hostile_Total);
 		end
-		else begin
-			if (LVar2 == 2) then begin
-				Human_Merc := create_object_sid(PID_MERC_MALE_LEATHER, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
-				inc_map_var(MVAR_Hostile_Total);
-			end
-			else begin
-				if (LVar2 == 3) then begin
-					Human_Merc := create_object_sid(PID_MERC_FEMALE_METAL, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
-					inc_map_var(MVAR_Hostile_Total);
-				end
-				else begin
-					Human_Merc := create_object_sid(PID_MALE_GUARD_CA, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
-					inc_map_var(MVAR_Hostile_Total);
-				end
-			end
+		else if (LVar2 == 2) then begin
+			Human_Merc := create_object_sid(PID_MERC_MALE_LEATHER, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
+			inc_map_var(MVAR_Hostile_Total);
 		end
+		else if (LVar2 == 3) then begin
+			Human_Merc := create_object_sid(PID_MERC_FEMALE_METAL, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
+			inc_map_var(MVAR_Hostile_Total);
+		end
+		else begin
+			Human_Merc := create_object_sid(PID_MALE_GUARD_CA, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNENMY);
+			inc_map_var(MVAR_Hostile_Total);
+		end
+
 		if (Total_Rotation == 0) then begin
 			anim(Human_Merc, 1000, 3);
 		end
@@ -2149,6 +2176,7 @@ procedure Huge_Mantis begin
 		Critter_Rotation := random(0, 2);
 		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
 		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
+
 		LVar2 := create_object_sid(PID_GREAT_MANTIS, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNMSTR);
 		inc_map_var(MVAR_Hostile_Total);
 
@@ -2176,12 +2204,17 @@ procedure Small_Spawn begin
 	variable LVar1 := 0;
 	variable LVar2 := 0;
 	LVar0 := random(1, 2);
+	Outer_Circle := random(5, 10) + 2;
+	Inner_Circle := Outer_Circle - 4;
+
 	while(LVar1 < LVar0) do begin
 		Critter_Tile := tile_num_in_direction(tile_num(dude_obj), random(0, 2), random(Inner_Circle, Outer_Circle));
 		LVar2 := create_object_sid(PID_DEATHCLAW_SPAWN, Critter_Tile, elevation(dude_obj), SCRIPT_CRVNMSTR);
 		inc_map_var(MVAR_Hostile_Total);
 		anim(LVar2, 1000, 3);
 		LVar1 := LVar1 + 1;
+
+		debug("createing Small_Spawn on hex " + (tile_num(LVar2)) + ", elevation " + (elevation(LVar2)));
 	end
 
 	debug("Small_Spawn");
@@ -2313,7 +2346,7 @@ procedure Ghoul_Stuff begin
 	variable LVar1 := 0;
 	variable LVar2 := 0;
 	LVar2 := create_object( PID_BOTTLE_CAPS, 0, 0 );
-	add_mult_objs_to_inven(Ghoul_Merc, LVar2, random(1, 10) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	add_mult_objs_to_inven(Ghoul_Merc, LVar2, random(1, 10) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	LVar0 := random(1, 4);
 	if ((LVar0 == 1) or (LVar0 == 2)) then begin
 		LVar1 := create_object( PID_KNIFE, 0, 0 );
@@ -2337,7 +2370,7 @@ procedure Human_Stuff begin
 	variable LVar1 := 0;
 	variable LVar2 := 0;
 	LVar2 := create_object( PID_BOTTLE_CAPS, 0, 0 );
-	add_mult_objs_to_inven(Human_Merc, LVar2, random(4, 20) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	add_mult_objs_to_inven(Human_Merc, LVar2, random(4, 20) * (has_trait( TRAIT_PERK, dude_obj, PERK_fortune_finder ) * global_var(FORTUNE_FINDER_HOW_MUCH)));
 	LVar0 := random(1, 10);
 	if (LVar0 <= 3) then begin
 		LVar1 := create_object( PID_SPEAR, 0, 0 );
@@ -2354,7 +2387,7 @@ procedure Human_Stuff begin
 		add_obj_to_inven(Human_Merc, LVar1);
 		wield_obj_critter(Human_Merc, LVar1);
 		LVar1 := create_object( PID_10MM_AP, 0, 0 );
-		if (dude_perk( PERK_scrounger )) then begin
+		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
 			add_mult_objs_to_inven(Human_Merc, LVar1, random(2, 4));
 		end
 		else begin
@@ -2366,7 +2399,7 @@ procedure Human_Stuff begin
 		add_obj_to_inven(Human_Merc, LVar1);
 		wield_obj_critter(Human_Merc, LVar1);
 		LVar1 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
-		if (dude_perk( PERK_scrounger )) then begin
+		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
 			add_mult_objs_to_inven(Human_Merc, LVar1, random(2, 4));
 		end
 		else begin
@@ -2378,7 +2411,7 @@ procedure Human_Stuff begin
 		add_obj_to_inven(Human_Merc, LVar1);
 		wield_obj_critter(Human_Merc, LVar1);
 		LVar1 := create_object( PID_223_FMJ, 0, 0 );
-		if (dude_perk( PERK_scrounger )) then begin
+		if (has_trait( TRAIT_PERK, dude_obj, PERK_scrounger )) then begin
 			add_mult_objs_to_inven(Human_Merc, LVar1, random(1, 2));
 		end
 		else begin
@@ -2429,8 +2462,8 @@ variable rnd_tile:=0;
 	/*
 	// This is the area in which no scenery will be placed:
 	//if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
-	create_object( PID_BURNING_BARREL, 19904, 0 );
-	create_object( PID_METAL_BARREL_1, 19698, 0 );
+	create_object(33554433,19904,0);
+	create_object(33554437,19698,0);
 	create_object(33554439,21104,0);
 	create_object(33554471,20898,0);
 	*/
@@ -2441,7 +2474,7 @@ variable rnd_tile:=0;
    begin
       iter:=iter+1;
 		a:=random(8000,29000);
-      scenery_pid:=random( PID_ROCKS_6, PID_ROCKS_8 );
+      scenery_pid:=random(33554710,33554712);
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
@@ -2456,7 +2489,7 @@ variable rnd_tile:=0;
    begin
       iter:=iter+1;
 		a:=random(7000,30000);
-      scenery_pid:=random( PID_SCRUB_1, PID_SCRUB_4 );
+      scenery_pid:=random(33554534,33554537);
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
@@ -2471,7 +2504,7 @@ variable rnd_tile:=0;
    begin
       iter:=iter+1;
 		a:=random(7000,30000);
-      scenery_pid:=random( PID_BONES_4, PID_BONES_5 ); // ashes, dead animals //kosci i zw?oki zwierz?cia i bramina
+      scenery_pid:=random(33554517,33554518); // ashes, dead animals //kosci i zw?oki zwierz?cia i bramina
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
@@ -2486,7 +2519,7 @@ variable rnd_tile:=0;
    begin
       iter:=iter+1;
 		a:=random(7000,30000);
-      scenery_pid:=random( PID_TIRE, PID_WEED_3 );
+      scenery_pid:=random(33554533,33554559);
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
@@ -2502,7 +2535,7 @@ variable rnd_tile:=0;
    begin
       iter:=iter+1;
 		a:=random(8000,29000);
-      scenery_pid:=random( PID_ROCKS_3, PID_ROCKS_4 );
+      scenery_pid:=random(33554524,33554525);
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
@@ -2527,4 +2560,3 @@ variable rnd_tile:=0;
    end
 
 end
-
