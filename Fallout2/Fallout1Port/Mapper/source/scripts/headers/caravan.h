@@ -190,6 +190,12 @@ variable Finding_New_Tile;
 #define HUB_ADY_4_4_x										(822)
 #define HUB_ADY_4_4_y										(877)
 
+// Travel time in days
+#define TRAVEL_TIME_HUB_ADY 				(2)
+#define TRAVEL_TIME_HUB_NEC 				(9)
+#define TRAVEL_TIME_HUB_BOS					(15)
+#define TRAVEL_TIME_HUB_JNK 				(7)
+
 // Caravan States
 // GVAR_CARAVAN_STATUS
 #define CARAVAN_STATUS_NONE                 (0)

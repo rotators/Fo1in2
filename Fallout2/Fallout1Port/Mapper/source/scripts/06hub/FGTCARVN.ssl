@@ -6,13 +6,14 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\MAPNECRO.h"
+#include "..\headers\hubdwntn.h"
 
 #define NAME                    SCRIPT_FGTCARVN
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
 
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
+#include "..\headers\caravan.h"
 
 /* Standard Script Procedures */
 
@@ -68,131 +69,99 @@ procedure FGTDriver41;
 procedure FGTDriver42;
 procedure FGTDriverEnd;
 
+procedure start_caravan;
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable DayString := "None";
+variable Roll_Encounter;
+
+#define CURRENT_CARAVAN         		(GVAR_FARGO_CARAVAN)
+#define CARAVAN_START_SETTINGS 	   set_global_var(CURRENT_CARAVAN,HUB_CARAVAN_ON_CARAVAN); \
+												set_global_var(GVAR_CARAVAN_START,CARAVAN_HUB); \
+											   set_caravan_status(CARAVAN_STATUS_ON_JOB); \
+											   set_caravan_encounters(1); /* FarGo Traders only have 1 encounter max!*/ \
+												set_caravan_masters(1); \
+												set_caravan_drivers(0); /* Fo1 has no wagon drivers!*/ \
+											   set_caravan_guards(2); \
+											   set_caravan_carts(2); \
+											   set_caravan_brahmin(caravan_total_carts);
 
 procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		set_self_team(TEAM_HUB_CRIMSON_CARAVANS );
+		set_self_team( TEAM_HUB_FAR_GO_TRADERS );
 		set_self_ai( AI_MERCHANT );
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	call FGTDriver10;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable LVar0 := 0;
 	dude_look_at_critter;
 	get_reaction
+
 	if (local_var(10) == 1) then begin
 		if (local_var(7) < (game_time / (10 * 60 * 60 * 24 * 365))) then begin
 			set_local_var(10, 0);
 		end
-		else begin
-			if ((local_var(6) < get_month) or (local_var(6) == 12) and (get_month == 1) and ((local_var(6) != 1) or (get_month != 12))) then begin
-				set_local_var(10, 0);
-			end
-			else begin
-				if ((local_var(5) < get_day) and ((local_var(6) != 1) or (get_month != 12))) then begin
-					set_local_var(10, 0);
-				end
-			end
+		else if ((local_var(6) < get_month) or (local_var(6) == 12) and (get_month == 1) and ((local_var(6) != 1) or (get_month != 12))) then begin
+			set_local_var(10, 0);
+		end
+		else if ((local_var(5) < get_day) and ((local_var(6) != 1) or (get_month != 12))) then begin
+			set_local_var(10, 0);
 		end
 	end
+
 	call RecalcDate;
 	LVar0 := local_var(5);
 	if (local_var(8) > 0) then begin
 		call FGTDriver14;
 	end
-	else begin
-		if (map_var(35) == 1) then begin
-			call FGTDriver15;
+	else if (map_var(MVAR_FGT_NO_DEAL) == 1) then begin
+		call FGTDriver15;
+	end
+	else if (global_var(FARGO_JOB) == 3) then begin
+		BottomReact
+		start_dialog_at_node(FGTDriver37);
+	end
+	else if (global_var(FARGO_JOB) == 5) then begin
+		start_dialog_at_node(FGTDriver19);
+	end
+	else if (global_var(FARGO_JOB) == 4) then begin
+		TopReact
+		start_dialog_at_node(FGTDriver27);
+	end
+	else if (map_var(MVAR_FGT_WILL_GIVE_JOB) == 0) then begin
+		call FGTDriver00;
+	end
+	else if ((map_var(MVAR_FGT_WILL_GIVE_JOB) == 1) and (local_var(10) == 0)) then begin
+		if (local_var(9) == 0) then begin
+			start_dialog_at_node(FGTDriver01);
 		end
 		else begin
-			if (global_var(FARGO_JOB) == 3) then begin
-				BottomReact
-				start_gdialog(849, self_obj, 4, -1, -1);
-				gsay_start;
-				call FGTDriver37;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				if (global_var(FARGO_JOB) == 5) then begin
-					start_gdialog(849, self_obj, 4, -1, -1);
-					gsay_start;
-					call FGTDriver19;
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					if (global_var(FARGO_JOB) == 4) then begin
-						TopReact
-						start_gdialog(849, self_obj, 4, -1, -1);
-						gsay_start;
-						call FGTDriver27;
-						gsay_end;
-						end_dialogue;
-					end
-					else begin
-						if (map_var(36) == 0) then begin
-							call FGTDriver00;
-						end
-						else begin
-							if ((map_var(36) == 1) and (local_var(10) == 0)) then begin
-								start_gdialog(849, self_obj, 4, -1, -1);
-								gsay_start;
-								if (local_var(9) == 0) then begin
-									call FGTDriver01;
-								end
-								else begin
-									call FGTDriver03;
-								end
-								gsay_end;
-								end_dialogue;
-							end
-							else begin
-								if ((local_var(10) == 1) and (LVar0 == get_day)) then begin
-									start_gdialog(849, self_obj, 4, -1, -1);
-									gsay_start;
-									call FGTDriver28;
-									gsay_end;
-									end_dialogue;
-								end
-								else begin
-									if ((local_var(10) == 1) and (LVar0 != get_day)) then begin
-										start_gdialog(849, self_obj, 4, -1, -1);
-										gsay_start;
-										call FGTDriver29;
-										gsay_end;
-										end_dialogue;
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+			start_dialog_at_node(FGTDriver03);
 		end
+	end
+	else if ((local_var(10) == 1) and (LVar0 == get_day)) then begin
+		start_dialog_at_node(FGTDriver28);
+	end
+	else if ((local_var(10) == 1) and (LVar0 != get_day)) then begin
+		start_dialog_at_node(FGTDriver29);
 	end
 	set_local_var(4, 1);
 end
@@ -207,8 +176,7 @@ begin
 	display_msg(message_str(SCRIPT_FGTCARVN, 100));
 end
 
-procedure RecalcDate
-begin
+procedure RecalcDate begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -218,32 +186,26 @@ begin
 		LVar1 := get_month;
 		LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
 	end
-	else begin
-		if ((LVar0 > 8) and (LVar0 <= 18)) then begin
-			LVar0 := 18;
-			LVar1 := get_month;
-			LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+	else if ((LVar0 > 8) and (LVar0 <= 18)) then begin
+		LVar0 := 18;
+		LVar1 := get_month;
+		LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+	end
+	else if ((LVar0 > 18) and (LVar0 <= 28)) then begin
+		LVar0 := 28;
+		LVar1 := get_month;
+		LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
+	end
+	else if (LVar0 > 28) then begin
+		LVar0 := 8;
+		LVar1 := get_month;
+		if (LVar1 == 12) then begin
+			LVar1 := 1;
+			LVar2 := (game_time / (10 * 60 * 60 * 24 * 365)) + 1;
 		end
 		else begin
-			if ((LVar0 > 18) and (LVar0 <= 28)) then begin
-				LVar0 := 28;
-				LVar1 := get_month;
-				LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
-			end
-			else begin
-				if (LVar0 > 28) then begin
-					LVar0 := 8;
-					LVar1 := get_month;
-					if (LVar1 == 12) then begin
-						LVar1 := 1;
-						LVar2 := (game_time / (10 * 60 * 60 * 24 * 365)) + 1;
-					end
-					else begin
-						LVar1 := LVar1 + 1;
-						LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
-					end
-				end
-			end
+			LVar1 := LVar1 + 1;
+			LVar2 := game_time / (10 * 60 * 60 * 24 * 365);
 		end
 	end
 	set_local_var(5, LVar0);
@@ -251,8 +213,7 @@ begin
 	set_local_var(7, LVar2);
 end
 
-procedure RecalcDateString
-begin
+procedure RecalcDateString begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	call RecalcDate;
@@ -261,85 +222,58 @@ begin
 	if (LVar0 == 1) then begin
 		DayString := message_str(SCRIPT_FGTCARVN, 204);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			DayString := message_str(SCRIPT_FGTCARVN, 205);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				DayString := message_str(SCRIPT_FGTCARVN, 206);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					DayString := message_str(SCRIPT_FGTCARVN, 207);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						DayString := message_str(SCRIPT_FGTCARVN, 208);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							DayString := message_str(SCRIPT_FGTCARVN, 209);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								DayString := message_str(SCRIPT_FGTCARVN, 210);
-							end
-							else begin
-								if (LVar0 == 8) then begin
-									DayString := message_str(SCRIPT_FGTCARVN, 211);
-								end
-								else begin
-									if (LVar0 == 9) then begin
-										DayString := message_str(SCRIPT_FGTCARVN, 212);
-									end
-									else begin
-										if (LVar0 == 10) then begin
-											DayString := message_str(SCRIPT_FGTCARVN, 213);
-										end
-										else begin
-											if (LVar0 == 11) then begin
-												DayString := message_str(SCRIPT_FGTCARVN, 214);
-											end
-											else begin
-												if (LVar0 == 12) then begin
-													DayString := message_str(SCRIPT_FGTCARVN, 215);
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 205);
 	end
+	else if (LVar0 == 3) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 206);
+	end
+	else if (LVar0 == 4) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 207);
+	end
+	else if (LVar0 == 5) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 208);
+	end
+	else if (LVar0 == 6) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 209);
+	end
+	else if (LVar0 == 7) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 210);
+	end
+	else if (LVar0 == 8) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 211);
+	end
+	else if (LVar0 == 9) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 212);
+	end
+	else if (LVar0 == 10) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 213);
+	end
+	else if (LVar0 == 11) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 214);
+	end
+	else if (LVar0 == 12) then begin
+		DayString := message_str(SCRIPT_FGTCARVN, 215);
+	end
+
 	if (LVar1 == 8) then begin
 		DayString := DayString + message_str(SCRIPT_FGTCARVN, 197);
 	end
-	else begin
-		if (LVar1 == 18) then begin
-			DayString := DayString + message_str(SCRIPT_FGTCARVN, 198);
-		end
-		else begin
-			if (LVar1 == 28) then begin
-				DayString := DayString + message_str(SCRIPT_FGTCARVN, 199);
-			end
-		end
+	else if (LVar1 == 18) then begin
+		DayString := DayString + message_str(SCRIPT_FGTCARVN, 198);
+	end
+	else if (LVar1 == 28) then begin
+		DayString := DayString + message_str(SCRIPT_FGTCARVN, 199);
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var(ENEMY_HUB, 1);
 	end
 end
 
-procedure FGTDriver00
-begin
+procedure FGTDriver00 begin
 	if (local_var(4) == 0) then begin
 		float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 101), 2);
 		set_local_var(4, 1);
@@ -349,8 +283,7 @@ begin
 	end
 end
 
-procedure FGTDriver01
-begin
+procedure FGTDriver01 begin
 	if (global_var(WORLDMAPLIST_JUNKTOWN) == 0) then
 		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
 		mark_on_map(AREA_JUNKTOWN)
@@ -373,22 +306,18 @@ begin
 	giq_option( -3, SCRIPT_FGTCARVN, 105, FGTDriver02, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver02
-begin
+procedure FGTDriver02 begin
 	variable LVar0 := 0;
 	call RecalcDateString;
 	LVar0 := local_var(5);
-	if (LVar0 == get_day) then begin
+	if (LVar0 == get_day) then
 		gsay_reply(849, message_str(SCRIPT_FGTCARVN, 106) + message_str(SCRIPT_FGTCARVN, 107));
-	end
-	else begin
+	else
 		gsay_reply(849, message_str(SCRIPT_FGTCARVN, 106) + message_str(SCRIPT_FGTCARVN, 108) + DayString + message_str(SCRIPT_FGTCARVN, 111));
-	end
 	call FGTDriver04;
 end
 
-procedure FGTDriver03
-begin
+procedure FGTDriver03 begin
 	variable LVar0 := 0;
 	if (local_var(1) != 1) then begin
 		call RecalcDateString;
@@ -407,8 +336,7 @@ begin
 	end
 end
 
-procedure FGTDriver04
-begin
+procedure FGTDriver04 begin
 	giq_option( 4, SCRIPT_FGTCARVN, 113, FGTDriver04a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FGTCARVN, 114, FGTDriver05, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FGTCARVN, 115, FGTDriver06, NEUTRAL_REACTION );
@@ -416,8 +344,7 @@ begin
 	giq_option( -3, SCRIPT_FGTCARVN, 117, FGTDriver07, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver04a
-begin
+procedure FGTDriver04a begin
 	variable LVar0 := 0;
 	set_local_var(10, 1);
 	call RecalcDate;
@@ -430,34 +357,29 @@ begin
 	end
 end
 
-procedure FGTDriver05
-begin
+procedure FGTDriver05 begin
 	set_local_var(10, 0);
 	gsay_message(849, 118, 50);
 end
 
-procedure FGTDriver06
-begin
+procedure FGTDriver06 begin
 	set_local_var(10, 0);
 	gsay_message(849, 120, 50);
 end
 
-procedure FGTDriver07
-begin
+procedure FGTDriver07 begin
 	gsay_message(849, 121, 50);
 end
 
-procedure FGTDriver08
-begin
+procedure FGTDriver08 begin
 	gsay_message(849, 123, 50);
 end
 
-procedure FGTDriver10
-begin
+procedure FGTDriver10 begin
 	if (local_var(8) == 0) then begin
 		set_local_var(8, 1);
-		set_map_var(35, 1);
-		set_map_var(10, 0);
+		set_map_var(MVAR_FGT_NO_DEAL, 1);
+		set_map_var(MVAR_FGT_DISCOUNT, 0);
 		gsay_reply(849, 125);
 		giq_option( 4, SCRIPT_FGTCARVN, 126, FGTDriver08, NEUTRAL_REACTION );
 		giq_option( 4, SCRIPT_FGTCARVN, 127, FGTDriver10a, NEUTRAL_REACTION );
@@ -470,8 +392,7 @@ begin
 	end
 end
 
-procedure FGTDriver10a
-begin
+procedure FGTDriver10a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20)) == 1) then begin
 		call FGTDriver11;
 	end
@@ -480,27 +401,23 @@ begin
 	end
 end
 
-procedure FGTDriver11
-begin
-	set_map_var(36, 0);
-	set_map_var(35, 1);
-	set_map_var(10, 0);
+procedure FGTDriver11 begin
+	set_map_var(MVAR_FGT_WILL_GIVE_JOB, 0);
+	set_map_var(MVAR_FGT_NO_DEAL, 1);
+	set_map_var(MVAR_FGT_DISCOUNT, 0);
 	gsay_message(849, 132, 50);
 end
 
-procedure FGTDriver12
-begin
+procedure FGTDriver12 begin
 	gsay_message(849, 133, 51);
 	call combat;
 end
 
-procedure FGTDriver13
-begin
+procedure FGTDriver13 begin
 	float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 137), 2);
 end
 
-procedure FGTDriver14
-begin
+procedure FGTDriver14 begin
 	if (local_var(8) > 0) then begin
 		float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 138), 2);
 	end
@@ -510,55 +427,44 @@ begin
 	end
 end
 
-procedure FGTDriver15
-begin
+procedure FGTDriver15 begin
 	variable LVar0 := 0;
 	LVar0 := random(1, 4);
 	if (LVar0 == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 140), 2);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 141), 2);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 142), 2);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 143), 2);
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 141), 2);
+	end
+	else if (LVar0 == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 142), 2);
+	end
+	else if (LVar0 == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_FGTCARVN, 143), 2);
 	end
 end
 
-procedure FGTDriver17
-begin
+procedure FGTDriver17 begin
 	gsay_reply(849, 145);
 	call FGTDriver33;
 	call FGTDriver20;
 end
 
-procedure FGTDriver18
-begin
+procedure FGTDriver18 begin
 	call RecalcDateString;
 	gsay_reply(849, message_str(SCRIPT_FGTCARVN, 146) + DayString + message_str(SCRIPT_FGTCARVN, 153));
 	giq_option( 4, SCRIPT_FGTCARVN, 154, FGTDriver30, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FGTCARVN, 155, FGTDriver34, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver19
-begin
-	set_map_var(35, 1);
-	set_map_var(10, 0);
+procedure FGTDriver19 begin
+	set_map_var(MVAR_FGT_NO_DEAL, 1);
+	set_map_var(MVAR_FGT_DISCOUNT, 0);
 	set_global_var(FARGO_JOB, 6);
 	gsay_message(849, 156, 51);
 end
 
-procedure FGTDriver20
-begin
+procedure FGTDriver20 begin
 	giq_option( 4, SCRIPT_FGTCARVN, 157, FGTDriver21a, NEUTRAL_REACTION );
 	if (global_var(GVAR_FOLLOWERS_INVADED) == 0) then begin
 		giq_option( 4, SCRIPT_FGTCARVN, 158, FGTDriver21b, NEUTRAL_REACTION );
@@ -567,163 +473,165 @@ begin
 	giq_option( 4, SCRIPT_FGTCARVN, 159, FGTDriver34, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver21a
-begin
+// Junktown
+procedure FGTDriver21a begin
 	variable LVar0 := 0;
 	set_global_var(FARGO_TRADERS_STATUS, 1);
+
 	LVar0 := random(1, 7);
 	if (LVar0 == 1) then begin
 		gsay_message(849, 160, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(849, 161, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(849, 162, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(849, 163, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(849, 167, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(849, 168, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(849, 169, 50);
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(849, 161, 50);
 	end
+	else if (LVar0 == 3) then begin
+		gsay_message(849, 162, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(849, 163, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(849, 167, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(849, 168, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(849, 169, 50);
+	end
+
+	CARAVAN_START_SETTINGS
+	set_caravan_end(CARAVAN_JUNKTOWN);
+
 	LVar0 := do_check(dude_obj, STAT_lu, -4);
 	if (is_success(LVar0)) then begin
+		game_time_advance(TRAVEL_TIME_HUB_JNK*ONE_GAME_DAY + (random(1,10) * ONE_GAME_HOUR));
+
 		set_global_var(FARGO_TRADERS_STATUS, 2);
 		set_global_var(CVAN_DRIVER, 1);
 		set_global_var(CVAN_GUARD, 2);
 		load_map(MAP_JUNKENT, 1);
 	end
 	else begin
-		load_map(MAP_MNTCRVN1, 3);
+		//load_map(MAP_MNTCRVN1, 3);
+		call start_caravan;
 	end
 end
 
-procedure FGTDriver21b
-begin
+// Boneyard
+procedure FGTDriver21b begin
 	variable LVar0 := 0;
 	set_global_var(FARGO_TRADERS_STATUS, 1);
+
 	LVar0 := random(1, 7);
 	if (LVar0 == 1) then begin
 		gsay_message(849, 160, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(849, 161, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(849, 162, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(849, 163, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(849, 164, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(849, 165, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(849, 166, 50);
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(849, 161, 50);
 	end
+	else if (LVar0 == 3) then begin
+		gsay_message(849, 162, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(849, 163, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(849, 164, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(849, 165, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(849, 166, 50);
+	end
+
+	CARAVAN_START_SETTINGS
+	set_caravan_end(CARAVAN_BONEYARD);
+
 	LVar0 := do_check(dude_obj, STAT_lu, -4);
 	if (is_success(LVar0)) then begin
+		game_time_advance(TRAVEL_TIME_HUB_ADY*ONE_GAME_DAY + (random(1,10) * ONE_GAME_HOUR));
+
 		set_global_var(FARGO_TRADERS_STATUS, 2);
 		set_global_var(CVAN_DRIVER, 1);
 		set_global_var(CVAN_GUARD, 2);
 		load_map(MAP_LAADYTUM, 1);
 	end
 	else begin
-		load_map(MAP_DESCRVN1, 3);
+		//load_map(MAP_DESCRVN1, 3);
+		call start_caravan;
 	end
 end
 
-procedure FGTDriver21c
-begin
+// Brotherhood
+procedure FGTDriver21c begin
 	variable LVar0 := 0;
 	set_global_var(FARGO_TRADERS_STATUS, 1);
+
 	LVar0 := random(1, 8);
 	if (LVar0 == 1) then begin
 		gsay_message(849, 160, 50);
 	end
-	else begin
-		if (LVar0 == 2) then begin
-			gsay_message(849, 161, 50);
-		end
-		else begin
-			if (LVar0 == 3) then begin
-				gsay_message(849, 162, 50);
-			end
-			else begin
-				if (LVar0 == 4) then begin
-					gsay_message(849, 163, 50);
-				end
-				else begin
-					if (LVar0 == 5) then begin
-						gsay_message(849, 216, 50);
-					end
-					else begin
-						if (LVar0 == 6) then begin
-							gsay_message(849, 217, 50);
-						end
-						else begin
-							if (LVar0 == 7) then begin
-								gsay_message(849, 218, 50);
-							end
-							else begin
-								if (LVar0 == 8) then begin
-									gsay_message(849, 219, 50);
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+	else if (LVar0 == 2) then begin
+		gsay_message(849, 161, 50);
 	end
+	else if (LVar0 == 3) then begin
+		gsay_message(849, 162, 50);
+	end
+	else if (LVar0 == 4) then begin
+		gsay_message(849, 163, 50);
+	end
+	else if (LVar0 == 5) then begin
+		gsay_message(849, 216, 50);
+	end
+	else if (LVar0 == 6) then begin
+		gsay_message(849, 217, 50);
+	end
+	else if (LVar0 == 7) then begin
+		gsay_message(849, 218, 50);
+	end
+	else if (LVar0 == 8) then begin
+		gsay_message(849, 219, 50);
+	end
+
+   CARAVAN_START_SETTINGS
+   set_caravan_end(CARAVAN_BOS);
+
 	LVar0 := do_check(dude_obj, STAT_lu, -4);
 	if (is_success(LVar0)) then begin
+		game_time_advance(TRAVEL_TIME_HUB_BOS*ONE_GAME_DAY + (random(1,10) * ONE_GAME_HOUR));
+
 		set_global_var(FARGO_TRADERS_STATUS, 2);
 		set_global_var(CVAN_DRIVER, 1);
 		set_global_var(CVAN_GUARD, 2);
 		load_map(MAP_BROHDENT, 1);
 	end
 	else begin
-		load_map(MAP_MNTCRVN2, 3);
+		Roll_Encounter := random(0,100);
+		if (Roll_Encounter < 25) then
+			set_caravan_encounters(2);
+		call start_caravan;
 	end
 end
 
-procedure FGTDriver27
-begin
+procedure start_caravan begin
+   variable Caravan_Carts;
+   variable Caravan_Guards;
+
+   if (caravan_end == CARAVAN_JUNKTOWN) then begin
+      load_map(MAP_MNTCRVN1,1);
+   end
+   else if (caravan_end == CARAVAN_BOS) then begin
+   	load_map(MAP_MNTCRVN2,1);
+  	end
+   else if (caravan_end == CARAVAN_BONEYARD) then begin
+   	load_map(MAP_DESCRVN1,1);
+   end
+end
+
+procedure FGTDriver27 begin
 	gsay_reply(849, 185);
 	giq_option( 4, SCRIPT_FGTCARVN, 186, FGTDriver04a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FGTCARVN, 187, FGTDriver05, NEUTRAL_REACTION );
@@ -732,38 +640,32 @@ begin
 	giq_option( -3, SCRIPT_FGTCARVN, 190, FGTDriver07, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver28
-begin
+procedure FGTDriver28 begin
 	gsay_reply(849, 191);
 	giq_option( 4, SCRIPT_FGTCARVN, 192, FGTDriver17, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FGTCARVN, 193, FGTDriver35, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_FGTCARVN, 194, FGTDriver07, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver29
-begin
+procedure FGTDriver29 begin
 	variable LVar0 := 0;
 	call RecalcDateString;
 	LVar0 := local_var(5);
 	gsay_message(849, message_str(SCRIPT_FGTCARVN, 196) + DayString + message_str(SCRIPT_FGTCARVN, 203) + message_str(SCRIPT_FGTCARVN, 195), 50);
 end
 
-procedure FGTDriver30
-begin
+procedure FGTDriver30 begin
 	set_local_var(10, 1);
 end
 
-procedure FGTDriver31
-begin
+procedure FGTDriver31 begin
 	call combat;
 end
 
-procedure FGTDriver32
-begin
+procedure FGTDriver32 begin
 end
 
-procedure FGTDriver33
-begin
+procedure FGTDriver33 begin
 	variable LVar0 := 0;
 	set_local_var(10, 0);
 	set_global_var(FARGO_JOB, 1);
@@ -771,19 +673,16 @@ begin
 	set_local_var(9, LVar0 + 1);
 end
 
-procedure FGTDriver34
-begin
+procedure FGTDriver34 begin
 	set_local_var(10, 0);
 end
 
-procedure FGTDriver35
-begin
+procedure FGTDriver35 begin
 end
 
-procedure FGTDriver37
-begin
-	set_map_var(35, 1);
-	set_map_var(10, 0);
+procedure FGTDriver37 begin
+	set_map_var(MVAR_FGT_NO_DEAL, 1);
+	set_map_var(MVAR_FGT_DISCOUNT, 0);
 	set_global_var(FARGO_JOB, 6);
 	gsay_reply(849, 170);
 	giq_option( 4, SCRIPT_FGTCARVN, 171, FGTDriver38, NEUTRAL_REACTION );
@@ -793,8 +692,7 @@ begin
 	giq_option( -3, SCRIPT_FGTCARVN, 175, FGTDriverEnd, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver38
-begin
+procedure FGTDriver38 begin
 	gsay_reply(849, 177);
 	giq_option( 4, SCRIPT_FGTCARVN, 178, FGTDriverEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FGTCARVN, 179, combat, BAD_REACTION );
@@ -802,31 +700,26 @@ begin
 	giq_option( 4, SCRIPT_FGTCARVN, 181, FGTDriver42, NEUTRAL_REACTION );
 end
 
-procedure FGTDriver39
-begin
+procedure FGTDriver39 begin
 	gsay_message(849, 176, 50);
 end
 
-procedure FGTDriver40
-begin
+procedure FGTDriver40 begin
 	gsay_message(849, 182, 50);
 end
 
-procedure FGTDriver41
-begin
+procedure FGTDriver41 begin
 	gsay_message(849, 183, 50);
 end
 
-procedure FGTDriver42
-begin
-	set_map_var(35, 0);
-	set_map_var(10, 1);
+procedure FGTDriver42 begin
+	set_map_var(MVAR_FGT_NO_DEAL, 0);
+	set_map_var(MVAR_FGT_DISCOUNT, 1);
 	set_global_var(FARGO_JOB, 1);
 	gsay_message(849, 184, 50);
 end
 
-procedure FGTDriverEnd
-begin
+procedure FGTDriverEnd begin
 end
 
 
