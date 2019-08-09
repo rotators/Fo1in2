@@ -112,6 +112,11 @@
 									(cur_map_index == MAP_MNTCRVN3) or		\
 									(cur_map_index == MAP_MNTCRVN4)
 									
+#define map_is_mountain_caravan_escort	(cur_map_index == MAP_MNTCRVN1) or		\
+										(cur_map_index == MAP_MNTCRVN2) or		\
+										(cur_map_index == MAP_MNTCRVN3) or		\
+										(cur_map_index == MAP_MNTCRVN4)
+									
 #define dude_wearing_coc_robe	    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 #define coc_disguise_check 			if dude_wearing_coc_robe then begin \
 										if (party_size > 1) then begin	\
