@@ -1,33 +1,20 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
-procedure description_p_proc;//    script_action == 3
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
+procedure description_p_proc;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
 variable Hours := 0;
 
-procedure start
-begin
-	if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-		call description_p_proc;
-	end
-	else begin
-		if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			call use_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
 		script_overrides;
 		display_msg(message_str(SCRIPT_LIBCOMP, 101));
+
 		if local_var(0) == 1 then begin
 			gfade_out(1);
 			Hours := random(1, 6);
@@ -40,43 +27,37 @@ begin
 			end
 			gfade_in(1);
 		end
+		else if local_var(0) == 2 then begin
+			gfade_out(1);
+			Hours := random(6, 12);
+			game_time_advance(10 * 60 * 60 * Hours);
+			display_msg(message_str(SCRIPT_LIBCOMP, 106) + Hours + message_str(SCRIPT_LIBCOMP, 108));
+			gfade_in(1);
+		end
+		else if dude_is_stupid then begin
+			gfade_out(1);
+			Hours := random(6, 12);
+			game_time_advance(10 * 60 * 60 * Hours);
+			display_msg(message_str(SCRIPT_LIBCOMP, 106) + Hours + message_str(SCRIPT_LIBCOMP, 109));
+			gfade_in(1);
+			set_local_var(0, 2);
+		end
+		else if is_success(do_check(dude_obj, STAT_iq, 0)) then begin// INTELLIGENCE
+			gfade_out(1);
+			game_time_advance(10 * 60 * 60 * 6);
+			display_msg(message_str(SCRIPT_LIBCOMP, 103));
+			display_msg(message_str(SCRIPT_GENCHAT, 103) + 350 + message_str(SCRIPT_GENCHAT, 104));
+			give_exp_points(350);
+			set_global_var(QUEST_VAULT13_7_LEARN_AT_LIBRARY, 2);
+			gfade_in(1);
+			set_local_var(0, 1);
+		end
 		else begin
-			if local_var(0) == 2 then begin
-				gfade_out(1);
-				Hours := random(6, 12);
-				game_time_advance(10 * 60 * 60 * Hours);
-				display_msg(message_str(SCRIPT_LIBCOMP, 106) + Hours + message_str(SCRIPT_LIBCOMP, 108));
-				gfade_in(1);
-			end
-			else begin
-				if dude_is_stupid then begin
-					gfade_out(1);
-					Hours := random(6, 12);
-					game_time_advance(10 * 60 * 60 * Hours);
-					display_msg(message_str(SCRIPT_LIBCOMP, 106) + Hours + message_str(SCRIPT_LIBCOMP, 109));
-					gfade_in(1);
-					set_local_var(0, 2);
-				end
-				else begin
-					if is_success(do_check(dude_obj, STAT_iq, 0)) then begin// INTELLIGENCE
-						gfade_out(1);
-						game_time_advance(10 * 60 * 60 * 6);
-						display_msg(message_str(SCRIPT_LIBCOMP, 103));
-						display_msg(message_str(SCRIPT_GENCHAT, 103) + 350 + message_str(SCRIPT_GENCHAT, 104));
-						give_exp_points(350);
-						set_global_var(QUEST_VAULT13_7_LEARN_AT_LIBRARY, 2);
-						gfade_in(1);
-						set_local_var(0, 1);
-					end
-					else begin
-						gfade_out(1);
-						game_time_advance(10 * 60 * 60 * 6);
-						display_msg(message_str(SCRIPT_LIBCOMP, 104));
-						set_local_var(0, 2);
-						gfade_in(1);
-					end
-				end
-			end
+			gfade_out(1);
+			game_time_advance(10 * 60 * 60 * 6);
+			display_msg(message_str(SCRIPT_LIBCOMP, 104));
+			set_local_var(0, 2);
+			gfade_in(1);
 		end
 	end
 end
@@ -86,8 +67,7 @@ procedure description_p_proc begin
 	display_msg(message_str(SCRIPT_LIBCOMP, 100));
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_LIBCOMP, 105));
 end
