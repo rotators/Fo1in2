@@ -16,69 +16,79 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure destroy_p_proc;
 procedure timed_event_p_proc;
-procedure initialize_p_proc;
 
 variable Only_Once;
 variable Home_Tile;
 variable critter_tile;
 
-
 procedure start begin
-	if (Only_Once == 0) then begin
-		call initialize_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
+	call map_enter_p_proc;
+end
+
+procedure map_enter_p_proc begin
+	if map_first_run then begin
+		Home_Tile := tile_num(self_obj);
+
+		if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+			set_self_team(TEAM_JUNKTOWN_GUARD );
+			set_self_ai( AI_PEASANT );
 		end
-		else begin
-			if ((script_action == 11) and not(combat_is_initialized)) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-					float_msg(self_obj, message_str(SCRIPT_CARCUST, random(100, 104)), 0);
-				end
-				else begin
-					if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-						float_msg(self_obj, message_str(SCRIPT_CARCUST, random(105, 109)), 0);
-					end
-					else begin
-						if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-							float_msg(self_obj, message_str(SCRIPT_CARCUST, random(110, 114)), 0);
-						end
-						else begin
-							if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-								float_msg(self_obj, message_str(SCRIPT_CARCUST, random(115, 119)), 0);
-							end
-						end
-					end
-				end
-			end
-			else begin
-				if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-					call timed_event_p_proc;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						if ((((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
-							destroy_object(self_obj);
-						end
-					end
-				end
-			end
+		else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+			set_self_team(TEAM_BROTHERHOOD );
+			set_self_ai( AI_BROTHERHOOD_KNIGHT );
+		end
+		else if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+			set_self_team(87);
+			set_self_ai( AI_GHOUL_MINDLESS );
+		end
+		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+			set_self_team(TEAM_LA_ADYTOWNER );
+			set_self_ai( AI_PEASANT );
+		end
+	end
+
+	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
+	if not(map_is_caravan_escort) then begin
+		if (local_var(0) == 0) then begin
+			set_local_var(0, GAME_TIME_IN_HOURS);
+		end
+		if (((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) then begin
+			destroy_object(self_obj);
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure talk_p_proc begin
+	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+		float_msg(self_obj, message_str(SCRIPT_CARCUST, random(100, 104)), 0);
+	end
+	else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+		float_msg(self_obj, message_str(SCRIPT_CARCUST, random(105, 109)), 0);
+	end
+	else if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+		float_msg(self_obj, message_str(SCRIPT_CARCUST, random(110, 114)), 0);
+	end
+	else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+		float_msg(self_obj, message_str(SCRIPT_CARCUST, random(115, 119)), 0);
+	end
+end
+
+procedure critter_p_proc begin
+	if ((((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
+		destroy_object(self_obj);
+	end
+end
+
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (((critter_state(self_obj) bwand 2) == 0) and not(combat_is_initialized)) then begin
 		critter_tile := tile_num_in_direction(Home_Tile, random(0, 5), 3);
 		reg_anim_func(2, self_obj);
@@ -89,39 +99,6 @@ begin
 	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
 
-procedure initialize_p_proc
-begin
-	Only_Once := 1;
-	Home_Tile := tile_num(self_obj);
-	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-set_self_team(TEAM_JUNKTOWN_GUARD );
-set_self_ai( AI_PEASANT );
-	end
-	else begin
-		if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-set_self_team(TEAM_BROTHERHOOD );
-set_self_ai( AI_BROTHERHOOD_KNIGHT );
-		end
-		else begin
-			if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-set_self_team(87);
-set_self_ai( AI_GHOUL_MINDLESS );
-			end
-			else begin
-				if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-set_self_team(TEAM_LA_ADYTOWNER );
-set_self_ai( AI_PEASANT );
-				end
-			end
-		end
-	end
-	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-	if (local_var(0) == 0) then begin
-		set_local_var(0, game_time / (10 * 60 * 60));
-	end
-	if (((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) then begin
-		destroy_object(self_obj);
-	end
-end
+
 
 

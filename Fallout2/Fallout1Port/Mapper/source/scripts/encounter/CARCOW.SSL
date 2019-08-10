@@ -23,7 +23,10 @@ procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
 variable initial :=  0;
 
+#define LVAR_Timer 		(0)
+
 procedure start begin
+	call map_enter_p_proc;
 end
 
 procedure map_enter_p_proc begin
@@ -35,15 +38,19 @@ procedure map_enter_p_proc begin
 	       set_self_team(TEAM_PLAYER);
 	   //else
 	   //    set_self_team(TEAM_BRAHMIN);
+	end
 
+	if not(map_is_caravan_escort) then begin
 		if (local_var(0) == 0) then begin
-			set_local_var(0, game_time / (10 * 60 * 60));
+			set_local_var(0, GAME_TIME_IN_HOURS);
 		end
-		if (((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) then begin
-			debug("remove cow!");
+		if (((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) then begin
 			destroy_object(self_obj);
 		end
 	end
+end
+
+procedure map_update_p_proc begin
 end
 
 procedure combat_p_proc begin
@@ -54,8 +61,8 @@ procedure combat_p_proc begin
 end
 
 procedure critter_p_proc begin
-	if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_BROHDENT) or (cur_map_index == MAP_HOTEL) or (cur_map_index == MAP_LAADYTUM) then begin //   //  JUNKTOWN ENTRANCE, BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, L.A. BONEYARD ENTRANCE (ADYTUM)
-		if ((((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
+	if not(map_is_caravan_escort) then begin
+		if ((((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
 			destroy_object(self_obj);
 		end
 	end
@@ -108,6 +115,16 @@ end
 
 procedure destroy_p_proc begin
    inc_good_critter
+
+	if (cur_map_index == MAP_HUBENT) or (cur_map_index == MAP_HUBDWNTN) or (cur_map_index == MAP_HUBHEIGT) or (cur_map_index == MAP_HUBOLDTN) or (cur_map_index == MAP_HUBWATER) or (cur_map_index == MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
+		set_global_var(ENEMY_HUB, 1);
+	end
+	else if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+		set_global_var(ENEMY_JUNKTOWN, 1);
+	end
+	else if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+	end
 
    if map_is_caravan_escort then begin
    	rm_caravan_brahmin(1);
