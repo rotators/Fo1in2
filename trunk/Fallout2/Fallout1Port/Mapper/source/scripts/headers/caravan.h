@@ -210,14 +210,6 @@ variable Finding_New_Tile;
 #define caravan_style_fargo 			global_var(GVAR_CARAVAN_LOOK) == STYLE_FARGO
 #define caravan_style_water 			global_var(GVAR_CARAVAN_LOOK) == STYLE_WATER
 
-#define GUARD_STYLE_CRIMSON 			(FID_NMMAXX)
-#define GUARD_STYLE_FARGO 				(FID_HMLTHR)
-#define GUARD_STYLE_WATER 				(FID_HMMETL)
-
-#define MASTER_STYLE_CRIMSON 			(FID_HMLTHR)
-#define MASTER_STYLE_FARGO 				(FID_NMLTHR)
-#define MASTER_STYLE_WATER 				(FID_HMMAXX)
-
 // Caravan States
 // GVAR_CARAVAN_STATUS
 #define CARAVAN_STATUS_NONE                 (0)
@@ -268,7 +260,7 @@ variable Finding_New_Tile;
                                             set_global_var(GVAR_CARAVAN_CARTS,x)
 #define set_caravan_encounters(x)           set_global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL,x);            \
                                             set_global_var(GVAR_CARAVAN_ENCOUNTERS,x)
-								
+
 #define CARAVAN_FALSE                           0    //default value of mvar_caravan
 #define CARAVAN_HOME                            1    //value of mvar_caravan if at home
 #define CARAVAN_GOING_HOME                      2    //value of mvar_caravan if going home
