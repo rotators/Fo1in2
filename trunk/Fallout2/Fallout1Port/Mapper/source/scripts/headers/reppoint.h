@@ -42,15 +42,15 @@
 #define town_rep_is_hated                          (global_var(TOWN_REP_VAR) <= -15)
 #define town_rep_is_vilified                       (global_var(TOWN_REP_VAR) <= -30)
 
-#define REP_BONUS_KILLED_GOOD_CRITTER       (-10)
-#define REP_BONUS_KILLED_CHILD              (-15)
-#define REP_BONUS_KILLED_EVIL_CRITTER       (5)
-#define REP_BONUS_KILLED_NEUTRAL_CRITTER    (0)
+#define REP_BONUS_KILLED_GOOD_CRITTER       (-1)	// Fo2: -10
+#define REP_BONUS_KILLED_CHILD              (-2)	// Fo2: -15
+#define REP_BONUS_KILLED_EVIL_CRITTER       (1)		// Fo2: 5
+#define REP_BONUS_KILLED_NEUTRAL_CRITTER    (0)		// Fo2: 0
 
 // General Town Rep
-#define REP_TOWN_KILL_GOOD                      (-5)
-#define REP_TOWN_KILL_CHILD                     (-8)
-#define REP_TOWN_KILL_EVIL                      (2)
+#define REP_TOWN_KILL_GOOD                      (-5)	// Fo2: -5
+#define REP_TOWN_KILL_CHILD                     (-8)	// Fo2: -8
+#define REP_TOWN_KILL_EVIL                      (2) 	// Fo2: 2
 
 #define inc_general_rep(x)      set_global_var(GVAR_PLAYER_REPUTATION, (global_var(GVAR_PLAYER_REPUTATION) + x));               \
                                 debug_msg("Player gains "+x+" Karma Points.");                                                  \
@@ -219,7 +219,7 @@
                                     CHECK_REP_BERSERKER                                                         \
                                     inc_general_rep(REP_BONUS_KILLED_GOOD_CRITTER);                             \
                                 end
-								
+
 #endif
 
 #define inc_neutral_critter     if (source_obj == dude_obj) then begin                                          \
