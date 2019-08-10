@@ -26,7 +26,6 @@ procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
-procedure advance_day;
 procedure damage_p_proc;
 
 procedure CarvLead00;
@@ -77,6 +76,54 @@ variable UnloadCaravan;
 
 #define car1_boneyard_hex       	(9723)
 #define car2_boneyard_hex       	(9121)
+
+#define create_crvn_master 			if (caravan_masters_left >= 1) then begin 																		\
+													/*LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, master_hex, all_elev, SCRIPT_CRVNDRVR);*/ 	\
+													if caravan_style_crimson then 																					\
+														LVar0 := create_object_sid(PID_MERCENARY_HMLTHR, master_hex, all_elev, SCRIPT_CRVNDRVR);	\
+													else if caravan_style_fargo then 																				\
+														LVar0 := create_object_sid(PID_MERCENARY_NMLTHR, master_hex, all_elev, SCRIPT_CRVNDRVR);	\
+													else if caravan_style_water then 																				\
+														LVar0 := create_object_sid(PID_MERC_MALE_LEATHER, master_hex, all_elev, SCRIPT_CRVNDRVR);	\
+													set_team( LVar0, TEAM_HUB_CARTS_GUARD ); 																		\
+													set_ai( LVar0, AI_BERZERKER ); 																					\
+													anim(LVar0, 1000, all_rotation); 																				\
+													Item := create_object( PID_SHOTGUN, 0, 0 ); 																	\
+													add_obj_to_inven(LVar0, Item); 																					\
+													wield_obj_critter(LVar0, Item); 																					\
+												end
+
+#define create_crvn_guard1				if (caravan_guards_left >= 2) then begin 																			\
+													/*LVar1 := create_object_sid(PID_MERCHENARY, guard_1_hex, all_elev, SCRIPT_CRVNTEAM);*/ 			\
+													if caravan_style_crimson then 																					\
+														LVar0 := create_object_sid(PID_MERCHENARY, guard_1_hex, all_elev, SCRIPT_CRVNTEAM);	\
+													else if caravan_style_fargo then 																				\
+														LVar0 := create_object_sid(PID_MERCENARY_HMLTHR, guard_1_hex, all_elev, SCRIPT_CRVNTEAM);	\
+													else if caravan_style_water then 																				\
+														LVar0 := create_object_sid(PID_MERC_MALE_METAL, guard_1_hex, all_elev, SCRIPT_CRVNTEAM);	\
+													set_team( LVar1, TEAM_HUB_CARTS_GUARD ); 																		\
+													set_ai( LVar1, AI_BERZERKER ); 																					\
+													anim(LVar1, 1000, all_rotation); 																				\
+													Item := create_object( PID_DESERT_EAGLE, 0, 0 ); 															\
+													add_obj_to_inven(LVar1, Item); 																					\
+													wield_obj_critter(LVar1, Item); 																					\
+												end
+
+#define create_crvn_guard2				if (caravan_guards_left >= 1) then begin 																			\
+													/*LVar1 := create_object_sid(PID_MERCHENARY, guard_2_hex, all_elev, SCRIPT_CRVNTEAM);*/ 			\
+													if caravan_style_crimson then 																					\
+														LVar0 := create_object_sid(PID_MERCHENARY, guard_2_hex, all_elev, SCRIPT_CRVNTEAM);	\
+													else if caravan_style_fargo then 																				\
+														LVar0 := create_object_sid(PID_MERCENARY_HMLTHR, guard_2_hex, all_elev, SCRIPT_CRVNTEAM);	\
+													else if caravan_style_water then 																				\
+														LVar0 := create_object_sid(PID_MERC_MALE_METAL, guard_2_hex, all_elev, SCRIPT_CRVNTEAM);	\
+													set_team( LVar1, TEAM_HUB_CARTS_GUARD ); 																		\
+													set_ai( LVar1, AI_BERZERKER ); 																					\
+													anim(LVar1, 1000, all_rotation); 																				\
+													Item := create_object( PID_DESERT_EAGLE, 0, 0 ); 															\
+													add_obj_to_inven(LVar1, Item); 																					\
+													wield_obj_critter(LVar1, Item); 																					\
+												end
 
 procedure start begin
 end
@@ -378,9 +425,6 @@ procedure look_at_p_proc begin
 	display_msg(message_str(SCRIPT_CARVLEAD, 100));
 end
 
-procedure advance_day begin
-end
-
 procedure damage_p_proc begin
 	if (cur_map_index == MAP_HUBENT) then begin //    THE HUB - ENTRANCE
 		if (source_obj == dude_obj) then begin
@@ -409,15 +453,12 @@ procedure CarvLead00 begin
 	giq_option( -3, SCRIPT_CARVLEAD, 104, CarvLead01, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_CARVLEAD, 105, CarvLead03, NEUTRAL_REACTION );
 	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		// all timers -7 days
 		giq_option( 4, SCRIPT_CARVLEAD, 106, CarvLead04, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-		// all timers -2 days
 		giq_option( 4, SCRIPT_CARVLEAD, 107, CarvLead05, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-		// all timers -15 days
 		giq_option( 4, SCRIPT_CARVLEAD, 108, CarvLead06, NEUTRAL_REACTION );
 	end
 	if (local_var(9) != 0) then begin
@@ -442,15 +483,12 @@ procedure CarvLead03 begin
 	giq_option( 4, SCRIPT_CARVLEAD, 115, CarvLead11, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_CARVLEAD, 116, CarvLead12, NEUTRAL_REACTION );
 	if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		// all timers -7 days
 		giq_option( 4, SCRIPT_CARVLEAD, 117, CarvLead04, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-		// all timers -2 days
 		giq_option( 4, SCRIPT_CARVLEAD, 118, CarvLead05, NEUTRAL_REACTION );
 	end
 	else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-		// all timers -2 days
 		giq_option( 4, SCRIPT_CARVLEAD, 119, CarvLead06, NEUTRAL_REACTION );
 	end
 end
@@ -498,9 +536,9 @@ procedure CarvLead07 begin
 	giq_option( 4, SCRIPT_CARVLEAD, 133, CarvLead12, NEUTRAL_REACTION );
 end
 
-/*
+/*********************************************************
 	Player and caravan have returned to the Hub
-*/
+*********************************************************/
 procedure CarvLead09 begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
@@ -576,11 +614,11 @@ procedure CarvLead12 begin
 			LVar0 := do_check(dude_obj, STAT_lu, -2);
 			if (is_success(LVar0)) then begin
 				set_global_var(WATER_MERCHANTS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_JNK*ONE_GAME_DAY + (random(60,600)*ONE_GAME_MINUTE));
+				game_time_advance(TRAVEL_TIME_HUB_JNK + (random(60,600)*ONE_GAME_MINUTE));
 				load_map(MAP_HUBENT, 1);
 			end
 			else begin
-				load_map(MAP_DESCRVN2, 3);
+				load_map(MAP_DESCRVN4, 1);
 			end
 		end
 		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
@@ -588,11 +626,11 @@ procedure CarvLead12 begin
 			LVar0 := do_check(dude_obj, STAT_lu, -2);
 			if (is_success(LVar0)) then begin
 				set_global_var(WATER_MERCHANTS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_ADY*ONE_GAME_DAY + (random(60,600)*ONE_GAME_MINUTE));
+				game_time_advance(TRAVEL_TIME_HUB_ADY + (random(60,600)*ONE_GAME_MINUTE));
 				load_map(MAP_HUBENT, 1);
 			end
 			else begin
-				load_map(MAP_MNTCRVN4, 3);
+				load_map(MAP_MNTCRVN4, 1);
 			end
 		end
 	end
@@ -604,19 +642,19 @@ procedure CarvLead12 begin
 
 		if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
 			set_global_var(GVAR_CARAVAN_START,CARAVAN_BOS);
-			load_map(MAP_DESCRVN1, 3);
+			load_map(MAP_DESCRVN3, 1);
 		end
 		else if (cur_map_index == MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
 			set_global_var(GVAR_CARAVAN_START,CARAVAN_JUNKTOWN);
-			load_map(MAP_DESCRVN1, 3);
+			load_map(MAP_DESCRVN4, 1);
 		end
 		else if (cur_map_index == MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
 			set_global_var(GVAR_CARAVAN_START,CARAVAN_NECROPOLIS);
-			load_map(MAP_MNTCRVN4, 3);
+			load_map(MAP_MNTCRVN4, 1);
 		end
 		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
 			set_global_var(GVAR_CARAVAN_START,CARAVAN_BONEYARD);
-			load_map(MAP_MNTCRVN4, 3);
+			load_map(MAP_MNTCRVN3, 1);
 		end
 	end
 	// Fargo Traders:
@@ -630,11 +668,11 @@ procedure CarvLead12 begin
 			LVar0 := do_check(dude_obj, STAT_lu, -4);
 			if (is_success(LVar0)) then begin
 				set_global_var(FARGO_TRADERS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_JNK*ONE_GAME_DAY + (random(60,600)*ONE_GAME_MINUTE));
+				game_time_advance(TRAVEL_TIME_HUB_JNK + (random(60,600)*ONE_GAME_MINUTE));
 				load_map(MAP_HUBENT, 1);
 			end
 			else begin
-				load_map(MAP_DESCRVN1, 3);
+				load_map(MAP_DESCRVN4, 1);
 			end
 		end
 		else if (cur_map_index == MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
@@ -642,11 +680,11 @@ procedure CarvLead12 begin
 			LVar0 := do_check(dude_obj, STAT_lu, -4);
 			if (is_success(LVar0)) then begin
 				set_global_var(FARGO_TRADERS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_ADY*ONE_GAME_DAY + (random(60,600)*ONE_GAME_MINUTE));
+				game_time_advance(TRAVEL_TIME_HUB_ADY + (random(60,600)*ONE_GAME_MINUTE));
 				load_map(MAP_HUBENT, 1);
 			end
 			else begin
-				load_map(MAP_MNTCRVN4, 3);
+				load_map(MAP_MNTCRVN4, 1);
 			end
 		end
 		else if (cur_map_index == MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
@@ -654,11 +692,11 @@ procedure CarvLead12 begin
 			LVar0 := do_check(dude_obj, STAT_lu, -4);
 			if (is_success(LVar0)) then begin
 				set_global_var(FARGO_TRADERS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_BOS*ONE_GAME_DAY + (random(60,600)*ONE_GAME_MINUTE));
+				game_time_advance(TRAVEL_TIME_HUB_BOS + (random(60,600)*ONE_GAME_MINUTE));
 				load_map(MAP_HUBENT, 1);
 			end
 			else begin
-				load_map(MAP_DESCRVN1, 3);
+				load_map(MAP_DESCRVN3, 1);
 			end
 		end
 	end
@@ -737,38 +775,20 @@ variable LVar0 := 0;
 variable LVar1 := 0;
 variable Item := 0;
 
+variable master_hex := 30511;
+variable guard_1_hex := 29504;
+variable guard_2_hex := 31505;
+variable all_elev	:= 0;
+variable all_rotation := 5;
+
 	if (caravan_carts_left >= 2) then
    	Create_NS_Red_Caravan(car1_junktown_hex,0)
    if (caravan_carts_left >= 1) then
 		Create_NS_Grey_Caravan(car2_junktown_hex,0)
 
-	if (caravan_masters_left >= 1) then begin
-		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 30511, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar0, AI_BERZERKER );
-		anim(LVar0, 1000, 5);
-		Item := create_object( PID_SHOTGUN, 0, 0 );
-		add_obj_to_inven(LVar0, Item);
-		wield_obj_critter(LVar0, Item);
-	end
-	if (caravan_guards_left >= 2) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 29504, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 5);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
-	if (caravan_guards_left >= 1) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 31505, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 5);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
+	create_crvn_master
+	create_crvn_guard1
+	create_crvn_guard2
 
 	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 29707, 0, SCRIPT_CARCOW);
@@ -793,42 +813,23 @@ variable Item := 0;
 end
 
 procedure BOS_Caravan begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable Item := 0;
+variable LVar0 := 0;
+variable LVar1 := 0;
+variable Item := 0;
+variable master_hex := 26713;
+variable guard_1_hex := 25308;
+variable guard_2_hex := 25716;
+variable all_elev	:= 0;
+variable all_rotation := 0;
 
 	if (caravan_carts_left >= 2) then
 		Create_EW_Red_Caravan(car1_bos_hex,0)
 	if (caravan_carts_left >= 1) then
 		Create_EW_Grey_Caravan(car2_bos_hex,0)
 
-	if (caravan_masters_left >= 1) then begin
-		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 26713, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar0, AI_BERZERKER );
-		anim(LVar0, 1000, 0);
-		Item := create_object( PID_SHOTGUN, 0, 0 );
-		add_obj_to_inven(LVar0, Item);
-		wield_obj_critter(LVar0, Item);
-	end
-	if (caravan_guards_left >= 2) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 25308, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 0);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
-	if (caravan_guards_left >= 1) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 25716, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 0);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
+	create_crvn_master
+	create_crvn_guard1
+	create_crvn_guard2
 
 	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 24908, 0, SCRIPT_CARCOW);
@@ -853,43 +854,24 @@ procedure BOS_Caravan begin
 end
 
 procedure Necropolis_Caravan begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable Item := 0;
+variable LVar0 := 0;
+variable LVar1 := 0;
+variable Item := 0;
+variable master_hex := 26697;
+variable guard_1_hex := 25891;
+variable guard_2_hex := 27692;
+variable all_elev	:= 1;
+variable all_rotation := 5;
 
 	if (caravan_carts_left >= 2) then
 		Create_NS_Red_Caravan(car1_necropolis_hex,1)
 	if (caravan_carts_left >= 1) then
 		Create_NS_Grey_Caravan(car2_necropolis_hex,1)
 
-	//if (global_var(CVAN_DRIVER) == 1) then begin
-	if (caravan_masters_left >= 1) then begin
-		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 26697, 1, SCRIPT_CRVNTEAM);
-		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar0, AI_BERZERKER );
-		anim(LVar0, 1000, 5);
-		Item := create_object( PID_SHOTGUN, 0, 0 );
-		add_obj_to_inven(LVar0, Item);
-		wield_obj_critter(LVar0, Item);
-	end
-	if (caravan_guards_left >= 2) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 25891, 1, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 5);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
-	if (caravan_guards_left >= 1) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 27692, 1, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 5);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
+	create_crvn_master
+	create_crvn_guard1
+	create_crvn_guard2
+
 	//if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
 	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 25894, 1, SCRIPT_CARCOW);
@@ -915,42 +897,23 @@ procedure Necropolis_Caravan begin
 end
 
 procedure LABone_Caravan begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable Item := 0;
+variable LVar0 := 0;
+variable LVar1 := 0;
+variable Item := 0;
+variable master_hex := 9320;
+variable guard_1_hex := 10122;
+variable guard_2_hex := 8518;
+variable all_elev	:= 0;
+variable all_rotation := 0;
 
 	if (caravan_carts_left >= 2) then
 		Create_EW_Red_Caravan(car1_boneyard_hex,0)
 	if (caravan_carts_left >= 1) then
 		Create_EW_Grey_Caravan(car2_boneyard_hex,0)
 
-	if (caravan_masters_left >= 1) then begin
-		LVar0 := create_object_sid(PID_LEATHER_JACKET_MAN, 9320, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar0, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar0, AI_BERZERKER );
-		anim(LVar0, 1000, 0);
-		Item := create_object( PID_SHOTGUN, 0, 0 );
-		add_obj_to_inven(LVar0, Item);
-		wield_obj_critter(LVar0, Item);
-	end
-	if (caravan_guards_left >= 2) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 10122, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 0);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
-	if (caravan_guards_left >= 1) then begin
-		LVar1 := create_object_sid(PID_MERCHENARY, 8518, 0, SCRIPT_CRVNTEAM);
-		set_team( LVar1, TEAM_HUB_CARTS_GUARD );
-		set_ai( LVar1, AI_BERZERKER );
-		anim(LVar1, 1000, 0);
-		Item := create_object( PID_DESERT_EAGLE, 0, 0 );
-		add_obj_to_inven(LVar1, Item);
-		wield_obj_critter(LVar1, Item);
-	end
+	create_crvn_master
+	create_crvn_guard1
+	create_crvn_guard2
 
 	if (caravan_brahmin_left >= 2) then begin
 		LVar1 := create_object_sid(PID_BRAHMIN, 9920, 0, SCRIPT_CARCOW);
