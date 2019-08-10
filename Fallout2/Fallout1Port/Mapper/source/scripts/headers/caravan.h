@@ -191,10 +191,32 @@ variable Finding_New_Tile;
 #define HUB_ADY_4_4_y										(877)
 
 // Travel time in days
-#define TRAVEL_TIME_HUB_ADY 				(2)
-#define TRAVEL_TIME_HUB_NEC 				(9)
-#define TRAVEL_TIME_HUB_BOS					(15)
-#define TRAVEL_TIME_HUB_JNK 				(7)
+#define TRAVEL_TIME_HUB_ADY 				(2*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_NEC 				(9*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_BOS					(15*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_JNK 				(7*ONE_GAME_DAY)
+
+// Style of the caravan critters
+#define STYLE_NONE 			(0)
+#define STYLE_CRIMSON		(1)
+#define STYLE_FARGO			(2)
+#define STYLE_WATER			(3)
+
+#define set_caravan_style_crimson 		set_global_var(GVAR_CARAVAN_LOOK,STYLE_CRIMSON)
+#define set_caravan_style_fargo 		set_global_var(GVAR_CARAVAN_LOOK,STYLE_FARGO)
+#define set_caravan_style_water 		set_global_var(GVAR_CARAVAN_LOOK,STYLE_WATER)
+
+#define caravan_style_crimson 			global_var(GVAR_CARAVAN_LOOK) == STYLE_CRIMSON
+#define caravan_style_fargo 			global_var(GVAR_CARAVAN_LOOK) == STYLE_FARGO
+#define caravan_style_water 			global_var(GVAR_CARAVAN_LOOK) == STYLE_WATER
+
+#define GUARD_STYLE_CRIMSON 			(FID_NMMAXX)
+#define GUARD_STYLE_FARGO 				(FID_HMLTHR)
+#define GUARD_STYLE_WATER 				(FID_HMMETL)
+
+#define MASTER_STYLE_CRIMSON 			(FID_HMLTHR)
+#define MASTER_STYLE_FARGO 				(FID_NMLTHR)
+#define MASTER_STYLE_WATER 				(FID_HMMAXX)
 
 // Caravan States
 // GVAR_CARAVAN_STATUS

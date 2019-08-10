@@ -1,8 +1,6 @@
 /*
 
-	Caravan job encounter - Caravan Driver
-	Currently unused!
-	Fo1 caravan encounters don't have wagon drivers.
+	Caravan job encounter - Caravan Driver (Master)
 
 */
 
@@ -18,7 +16,9 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure push_p_proc;
 procedure timed_event_p_proc;
+procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure talk_p_proc;
 procedure critter_p_proc;
@@ -33,29 +33,74 @@ variable Only_Once;
 #define TIMER_ALL_CLEAR 3
 
 procedure start begin
-	if (Only_Once == 0) then begin
-		call initialize_p_proc;
-	end
-	art_change_fid_num(self_obj, FID_HMLTHR);
+end
+
+procedure push_p_proc begin
+	if not(map_is_caravan_escort) then
+		script_overrides;
 end
 
 procedure timed_event_p_proc begin
+	// Only one survivor will float the msg (MVAR_CARVN_LEAD)
+   if (fixed_param == TIMER_ALL_CLEAR) then begin
+   	if (map_var(MVAR_CARVN_LEAD) == 0) then
+   		set_map_var(MVAR_CARVN_LEAD,self_obj);
+
+		if (map_var(MVAR_CARVN_LEAD) == self_obj) then begin
+	   	if (not(combat_is_initialized)) then
+	      	float_msg(self_obj,g_mstr(450),FLOAT_COLOR_NORMAL);
+	      add_timer_event( self_obj, game_ticks(10), TIMER_ALL_CLEAR );
+		end
+   end
+end
+
+procedure map_enter_p_proc begin
+	if map_first_run then begin
+		variable LVar0 := 0;
+		if (local_var(0) == 0) then begin
+			set_local_var(0, game_time / (10 * 60 * 60));
+		end
+		if (((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) then begin
+			destroy_object(self_obj);
+		end
+		set_self_team(TEAM_PLAYER );
+		set_self_ai( AI_BERZERKER );
+
+		LVar0 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
+		add_obj_to_inven(self_obj, LVar0);
+		LVar0 := create_object( PID_44_MAGNUM_JHP, 0, 0 );
+		add_obj_to_inven(self_obj, LVar0);
+		LVar0 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
+		add_obj_to_inven(self_obj, LVar0);
+		LVar0 := create_object( PID_44_MAGNUM_JHP, 0, 0 );
+		add_obj_to_inven(self_obj, LVar0);
+		LVar0 := create_object( PID_STIMPAK, 0, 0 );
+		add_obj_to_inven(self_obj, LVar0);
+	end
 end
 
 procedure map_update_p_proc begin
+   if ((not(is_loading_game)) and (not(combat_is_initialized)) ) then begin
+      if map_is_caravan_escort then begin
+         if ((local_var(LVAR_Called_Clear) == 0) and (map_var(MVAR_Hostile_Total) <= 0)) then begin
+           set_local_var(LVAR_Called_Clear,1);
+           add_timer_event( self_obj, game_ticks(2), TIMER_ALL_CLEAR );
+         end
+      end
+   end
 end
 
 procedure talk_p_proc begin
-	if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_BROHDENT) or (cur_map_index == MAP_HOTEL) or (cur_map_index == MAP_LAADYTUM) then begin //   //  JUNKTOWN ENTRANCE, BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, L.A. BONEYARD ENTRANCE (ADYTUM)
-		float_msg(self_obj, message_str(SCRIPT_CRVNTEAM, random(100, 102)), 0);
+	if map_is_caravan_escort then begin
+		float_msg(self_obj, message_str(SCRIPT_CRVNTEAM, random(103, 115)), 0);
 	end
 	else begin
-		float_msg(self_obj, message_str(SCRIPT_CRVNTEAM, random(103, 115)), 0);
+		float_msg(self_obj, message_str(SCRIPT_CRVNTEAM, random(100, 102)), 0);
 	end
 end
 
 procedure critter_p_proc begin
-	if (cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_BROHDENT) or (cur_map_index == MAP_HOTEL) or (cur_map_index == MAP_LAADYTUM) then begin //   //  JUNKTOWN ENTRANCE, BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, L.A. BONEYARD ENTRANCE (ADYTUM)
+	if not(map_is_caravan_escort) then begin //  JUNKTOWN ENTRANCE, BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, L.A. BONEYARD ENTRANCE (ADYTUM)
 		if ((((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
 			destroy_object(self_obj);
 		end
@@ -63,34 +108,8 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	if (cur_map_index != MAP_JUNKENT) and (cur_map_index != MAP_BROHDENT) and (cur_map_index != MAP_HOTEL) and (cur_map_index != MAP_LAADYTUM) then begin
-		rm_caravan_drivers(1);
+	if map_is_caravan_escort then begin
+		rm_caravan_masters(1);
 	end
    inc_good_critter
 end
-
-procedure initialize_p_proc begin
-	variable LVar0 := 0;
-	Only_Once := 1;
-	if (local_var(0) == 0) then begin
-		set_local_var(0, game_time / (10 * 60 * 60));
-	end
-	if (((game_time / (10 * 60 * 60)) - local_var(0)) >= 2) then begin
-		destroy_object(self_obj);
-	end
-	set_self_team(TEAM_PLAYER );
-	set_self_ai( AI_BERZERKER );
-
-	LVar0 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
-	add_obj_to_inven(self_obj, LVar0);
-	LVar0 := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-	add_obj_to_inven(self_obj, LVar0);
-	LVar0 := create_object( PID_44_FMJ_MAGNUM, 0, 0 );
-	add_obj_to_inven(self_obj, LVar0);
-	LVar0 := create_object( PID_44_MAGNUM_JHP, 0, 0 );
-	add_obj_to_inven(self_obj, LVar0);
-	LVar0 := create_object( PID_STIMPAK, 0, 0 );
-	add_obj_to_inven(self_obj, LVar0);
-end
-
-
