@@ -15,18 +15,19 @@
 // Karma & Reputation - HARDCODED TO THESE GVAR SLOTS
 #define PLAYER_REPUTATION_GENERAL				(0)		// was 155 (1155) in Fallout 1
 #define CHILDKILLER_REPUTATION					(1)		// was 158 (1158) in Fallout 1
-#define CHAMPION_REPUTATION						(2)		// was 157 (1157) in Fallout 1
+#define CHAMPION_REPUTATION					(2)		// was 157 (1157) in Fallout 1
 #define BERSERKER_REPUTATION					(3)		// was 156 (1156) in Fallout 1 - was moved to 317 (1317) in Fallout Fixt because of display bug
 #define NUM_BAD_MONSTERS_KILLED					(4)		// was 160 (1160) in Fallout 1
 #define NUM_GOOD_MONSTERS_KILLED				(5)		// was 159 (1159) in Fallout 1
 
+// Karma & Reputation - HARDCODED TO THESE GVAR SLOTS
 // Fo2 defines: Remove old Fo1 names at some point
-#define GVAR_PLAYER_REPUTATION 					(0)
-#define GVAR_CHILDKILLER_REPUTATION				(1)
-#define GVAR_CHAMPION_REPUTATION 				(2)
-#define GVAR_BERSERKER_REPUTATION				(3)
-#define GVAR_BAD_MONSTER						(4)
-#define GVAR_GOOD_MONSTER						(5)
+#define GVAR_PLAYER_REPUTATION					(0) // was 155 (1155) in Fallout 1
+#define GVAR_CHILDKILLER_REPUTATION				(1) // was 158 (1158) in Fallout 1
+#define GVAR_CHAMPION_REPUTATION				(2) // was 157 (1157) in Fallout 1
+#define GVAR_BERSERKER_REPUTATION				(3) // was 156 (1156) in Fallout 1 - was moved to 317 (1317) in Fallout Fixt because of display bug
+#define GVAR_BAD_MONSTER					(4) // was 160 (1160) in Fallout 1
+#define GVAR_GOOD_MONSTER					(5) // was 159 (1159) in Fallout 1
 
 // Karma Titles Fo2
 #define GVAR_KARMA_HOLY_WARRIOR             (37)
@@ -40,6 +41,7 @@
 #define GVAR_KARMA_DEMON_SPAWN              (45)
 
 // Addictions - HARDCODED TO THESE GVAR SLOTS
+// TODO: deprecate, use GVAR_*_ADDICT instead
 #define IS_NUKA_COLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
 #define IS_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
 #define IS_MENTATS_ADDICT						(23)	// was 191 (1191) in Fallout 1
@@ -47,23 +49,32 @@
 #define IS_RADAWAY_ADDICT						(25)	// was 193 (1193) in Fallout 1
 #define IS_ALCOHOL_ADDICT						(26)	// was 194 (1194) in Fallout 1
 
+// Addictions - HARDCODED TO THESE GVAR SLOTS
+#define GVAR_NUKA_COLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
+#define GVAR_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
+#define GVAR_MENTATS_ADDICT						(23)	// was 191 (1191) in Fallout 1
+#define GVAR_PSYCHO_ADDICT						(24)	// was 192 (1192) in Fallout 1
+#define GVAR_RADAWAY_ADDICT						(25)	// was 193 (1193) in Fallout 1
+#define GVAR_ALCOHOL_ADDICT						(26)	// was 194 (1194) in Fallout 1
+
 // Misc - HARDCODED TO THESE GVAR SLOTS
 #define LOAD_MAP_INDEX							(27)	// was 32  (1032) in Fallout 1
-#define GVAR_LOAD_MAP_INDEX 					(27)	// Fo2 - TODO: replace Fo1 name!!
-#define RUNNING_BURNING_GUY						(28)	// was 603 (1603) in Fallout 1
+#define GVAR_LOAD_MAP_INDEX 						(27)	// Fo2 - TODO: replace Fo1 name!! // was 32  (1032) in Fallout 1
+#define RUNNING_BURNING_GUY						(28)	// TODO deprecate, use GVAR_* instead // was 603 (1603) in Fallout 1
+#define GVAR_RUNNING_BURNING_GUY					(28)	// was 603 (1603) in Fallout 1
 
 #define GVAR_MAP_EXIT_TILE                  	(46)
 #define GVAR_MAP_NEXT_TILE                  	(67)
 
 // Holodisks - VANILLA, DON'T USE (probably)
-#define GVAR_HOLODISK_SIERRA_EVACUATION			(164)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_SIERRA_MED_LOG			(165)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_SIERRA_EXP_LOG			(166)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_OUTSIDE				(220)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_1				(221)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_2				(222)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_3				(223)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_4				(224)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_SIERRA_EVACUATION					(164)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_SIERRA_MED_LOG					(165)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_SIERRA_EXP_LOG					(166)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_OUTSIDE					(220)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_1					(221)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_2					(222)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_3					(223)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_4					(224)	// maybe hard-coded, maybe not?
 
 // Caravans for Cities
 #define GVAR_CARAVAN_STATUS                  	(269)
@@ -99,7 +110,7 @@
 // Endgame slideshow Fo1
 #define GVAR_ENDGAME_MOVIE_DESERT				(408)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_MUTANTS				(409)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_NECROPOLIS			(410)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_NECROPOLIS				(410)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_BONEYARD				(411)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_SHADY				(412)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_JUNKTOWN				(413)	// maybe hard-coded, maybe not?
@@ -110,16 +121,16 @@
 
 // Endgame slideshow Fo2
 #define GVAR_ENDGAME_MOVIE_REDDING				(418)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_BROKEN_HILLS			(419)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_BROKEN_HILLS				(419)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_NCR					(420)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_VAULT_15				(421)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_VAULT_13				(422)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_SAN_FRAN_SHI			(423)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_SAN_FRAN_ELRON		(424)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_SAN_FRAN_PUNKS		(425)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_SAN_FRAN_SHI				(423)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_SAN_FRAN_ELRON			(424)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_SAN_FRAN_PUNKS			(425)	// maybe hard-coded, maybe not?
 
 // Dream sequences - HARDCODED DO NOT USE!
-#define GVAR_FALLOUT_2							(494)	// Tracks how many times you've seen the Hakunin dreams.
+#define GVAR_FALLOUT_2						(494)	// Tracks how many times you've seen the Hakunin dreams.
 
 // More vanilla Holodisks
 #define GVAR_HOLODISK_ENCLAVE_SECURITY			(573)	// maybe hard-coded, maybe not?
