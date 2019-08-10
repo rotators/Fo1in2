@@ -50,7 +50,7 @@
 #define IS_ALCOHOL_ADDICT						(26)	// was 194 (1194) in Fallout 1
 
 // Addictions - HARDCODED TO THESE GVAR SLOTS
-#define GVAR_NUKA_COLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
+#define GVAR_NUKACOLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
 #define GVAR_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
 #define GVAR_MENTATS_ADDICT						(23)	// was 191 (1191) in Fallout 1
 #define GVAR_PSYCHO_ADDICT						(24)	// was 192 (1192) in Fallout 1
@@ -103,7 +103,6 @@
 // Party members:
 #define GVAR_PARTY_NO_FOLLOW                	(398)
 #define GVAR_CAR_BLOWER                     	(439)
-#define GVAR_FALLOUT_2                      	(494)
 #define GVAR_VIGNETTE_SEQUENCE              	(582)
 #define GVAR_PARTY_MEMBERS_HIDDEN           	(632)
 
