@@ -32,6 +32,8 @@ procedure Cindy07;
 procedure CindyEnd;
 procedure get_rations;
 
+procedure do_sleep;
+
 variable crying;
 variable tmp_hostile;
 variable ration_tile := 7000;
@@ -46,7 +48,7 @@ variable DeathType := 57;
 #define LVAR_Sleeping 							(5)
 
 #define night_person;
-#define sleep_tile 		(24883)
+#define sleep_tile 		(24683)
 #define home_tile 		(24687)
 #define sleep_time 		(random(1900, 1930))
 #define wake_time 		(random(600, 630))
@@ -97,7 +99,7 @@ procedure critter_p_proc begin
 				set_local_var(7, 0);
 			end
 			if (sleeping_disabled == 0) then begin
-				sleeping
+				call do_sleep;
 			end
 		end
 	end
@@ -147,22 +149,14 @@ procedure talk_p_proc begin
 			float_msg(self_obj, message_str(SCRIPT_CINDY, 125), 0);
 			set_local_var(4, 1);
 		end
+		else if (global_var(QUEST_VAULT13_4_WATERCHIP) == 2) then begin
+			float_msg(self_obj, message_str(SCRIPT_CINDY, 123), 0);
+		end
+		else if (global_var(QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
+			float_msg(self_obj, message_str(SCRIPT_CINDY, 124), 0);
+		end
 		else begin
-			if (global_var(QUEST_VAULT13_4_WATERCHIP) == 2) then begin
-				float_msg(self_obj, message_str(SCRIPT_CINDY, 123), 0);
-			end
-			else begin
-				if (global_var(QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
-					float_msg(self_obj, message_str(SCRIPT_CINDY, 124), 0);
-				end
-				else begin
-					start_gdialog(168, self_obj, 4, -1, -1);
-					gsay_start;
-					call Cindy01;
-					gsay_end;
-					end_dialogue;
-				end
-			end
+			start_dialog_at_node(Cindy01);
 		end
 	end
 end
@@ -243,19 +237,17 @@ procedure PickDeadBodyType begin
 	if id <= 2 then begin
 		DeathType := 59;// exploded  [ROCKET LAUNCHER]
 	end
+	else if id <= 10 then begin
+		DeathType := 57;// burnt, face down  [FLAMER]
+	end
+	else if id <= 15 then begin
+		DeathType := 60;// melted pile  [PLASMA RIFLE]
+	end
 	else begin
-		if id <= 10 then begin
-			DeathType := 57;// burnt, face down  [FLAMER]
-		end
-		else begin
-			if id <= 15 then begin
-				DeathType := 60;// melted pile  [PLASMA RIFLE]
-			end
-			else begin
-				DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
-			end
-		end
+		DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
 	end
 end
 
-
+procedure do_sleep begin
+	sleeping
+end
