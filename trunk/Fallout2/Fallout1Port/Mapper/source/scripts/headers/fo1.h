@@ -20,7 +20,7 @@
 	He will be moved to a new random position on the worldmap.
 *********************************************************/
 #define set_story_finished				set_world_map_pos(random(780,990),random(130,260));	\
-										set_global_var(GAME_CONTINUES,100); 				\
+										set_global_var(GVAR_GAME_CONTINUES,100); 			\
 										if (dude_is_male) then 								\
 											play_gmovie(WALKM_MOVIE); 						\
 										else 												\
@@ -31,7 +31,7 @@
 										/*world_map;*/load_map(MAP_RNDDESER,0);				\
 										gfade_in(1)
 										
-#define is_story_finished				(global_var(GAME_CONTINUES) > 0)
+#define is_story_finished				(global_var(GVAR_GAME_CONTINUES) > 0)
 
 /*********************************************************
 	Quests:
