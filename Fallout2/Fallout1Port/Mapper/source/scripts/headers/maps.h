@@ -338,11 +338,9 @@
 //ѕринудительно установить позицию игрока при загрузке карты
 #define override_map_start_hex(x,y,z)   override_map_start(x%200,x/200,y,z)
 
-/*******************************************************************************
-          ѕоказывает, открыт ли указанный город на глобальной карте
-*******************************************************************************/
-
-//Ќеоткрыт
+/******************************************************************
+ General commands getting information about cities
+******************************************************************/
 #define vault_13_visible_on_map             (town_known(AREA_VAULT_13) != MARK_STATE_UNKNOWN)
 #define vault_15_visible_on_map             (town_known(AREA_VAULT_15) != MARK_STATE_UNKNOWN)
 #define shady_sands_visible_on_map          (town_known(AREA_SHADY_SANDS) != MARK_STATE_UNKNOWN)
@@ -356,7 +354,6 @@
 #define boneyard_visible_on_map             (town_known(AREA_BONEYARD) != MARK_STATE_UNKNOWN)
 #define cathedral_visible_on_map            (town_known(AREA_CATHEDRAL) != MARK_STATE_UNKNOWN)
 
-//ќткрыт
 #define vault_13_visit             (town_known(AREA_VAULT_13) == MARK_STATE_VISITED)
 #define vault_15_visit             (town_known(AREA_VAULT_15) == MARK_STATE_VISITED)
 #define shady_sands_visit          (town_known(AREA_SHADY_SANDS) == MARK_STATE_VISITED)
@@ -370,11 +367,20 @@
 #define boneyard_visit             (town_known(AREA_BONEYARD) == MARK_STATE_VISITED)
 #define cathedral_visit            (town_known(AREA_CATHEDRAL) == MARK_STATE_VISITED)
 
-/*******************************************************************************
-                           ѕометить город на карте
-*******************************************************************************/
-/*¬нимание! Ётот макрос на самом деле сложный, т.е. состоит из нескольких
-команд/операций! ѕри использовании после вызова не ставитс€ ; ("точка с зап€той")!*/
+#define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin          \
+                                               debug_msg("  mark_on_map("+x+")");                        \
+                                               mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN);     \
+                                            end
+
+#define unmark_on_map(x)                    if (town_known(x) != MARK_STATE_UNKNOWN) then begin          \
+                                               debug_msg(" unmark_on_map("+x+")");                       \
+                                               mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_UNKNOWN);   \
+                                            end
+											
+#define invisible_on_map(x)                 if (town_known(x) != MARK_STATE_UNKNOWN) then begin          \
+                                               debug_msg(" invisible_on_map("+x+")");                    \
+                                               mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_INVISIBLE); \
+                                            end
 
 #define mark_vault_13_on_map             mark_on_map(AREA_VAULT_13)
 #define mark_vault_15_on_map             mark_on_map(AREA_VAULT_15)
@@ -391,12 +397,6 @@
 
 #define mark_cathedral_dead_on_map       mark_on_map(AREA_CATHEDRAL)
 
-/*******************************************************************************
-                         Ќе помечать город на карте
-*******************************************************************************/
-/*¬нимание! Ётот макрос на самом деле сложный, т.е. состоит из нескольких
-команд/операций! ѕри использовании после вызова не ставитс€ ; ("точка с зап€той")!*/
-
 #define unmark_vault_13_on_map             unmark_on_map(AREA_VAULT_13)
 #define unmark_vault_15_on_map             unmark_on_map(AREA_VAULT_15)
 #define unmark_shady_sands_on_map          unmark_on_map(AREA_SHADY_SANDS)
@@ -409,5 +409,6 @@
 #define unmark_glow_on_map                 unmark_on_map(AREA_GLOW)
 #define unmark_boneyard_on_map             unmark_on_map(AREA_BONEYARD)
 #define unmark_cathedral_on_map            unmark_on_map(AREA_CATHEDRAL)
+
 
 #endif // MAPS_H
