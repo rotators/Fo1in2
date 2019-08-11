@@ -1,13 +1,28 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure combat_p_proc;//    script_action == 13
-procedure critter_p_proc;//    script_action == 12
-procedure description_p_proc;//    script_action == 3
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+	Boneyard - Talius, the ghoul
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPLAADYTUM.h"
+
+#define NAME                    SCRIPT_TALIUS
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure combat_p_proc;
+procedure critter_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 procedure combat_rads_inc;
 
 procedure Talius00;
@@ -56,17 +71,13 @@ procedure Talius41;
 procedure TaliusEnd;
 procedure combat;
 
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 
 variable rndRads;
 variable rndx;
 
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		set_self_team(TEAM_LA_FOLLOWERS );
 		set_self_ai( AI_FOLLOWER_GUARD );
@@ -80,75 +91,27 @@ begin
 			end
 		end
 	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-				call description_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (is_success(do_check(dude_obj, STAT_pe, dude_awareness))) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_TALIUS, 231));
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	if (source_obj == dude_obj) then begin
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1))) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var( GVAR_GOOD_MONSTER ) % 2) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, (global_var( GVAR_PLAYER_REPUTATION ) - 1) );
-		end
-	end
+procedure destroy_p_proc begin
+	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4)) then begin
 		display_msg(message_str(SCRIPT_TALIUS, 100));
@@ -158,13 +121,11 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	hostile := 1;
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	script_overrides;
 	dude_look_at_critter;
 	if (global_var(QUEST_BONEYARD_4_FIND_SPY) == 2) then begin
@@ -189,13 +150,11 @@ begin
 	end
 end
 
-procedure Talius00
-begin
+procedure Talius00 begin
 	float_msg(self_obj, message_str(SCRIPT_TALIUS, 101), 0);
 end
 
-procedure Talius01
-begin
+procedure Talius01 begin
 	if (dude_is_female) then begin
 		gsay_reply(274, 102);
 	end
@@ -211,8 +170,7 @@ begin
 	giq_option( 8, SCRIPT_TALIUS, 114, Talius37, NEUTRAL_REACTION );
 end
 
-procedure Talius02
-begin
+procedure Talius02 begin
 	gsay_reply(274, 115);
 	giq_option( -3, SCRIPT_TALIUS, 116, Talius03, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_TALIUS, 117, combat, NEUTRAL_REACTION );
@@ -526,7 +484,7 @@ end
 
 procedure combat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure combat_p_proc

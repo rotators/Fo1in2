@@ -1,5 +1,20 @@
-#include "..\headers\define.h"
+/*
 
+	Cathedral - Monsters in Master's Lair
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_MONSTER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure combat_p_proc;
 procedure critter_p_proc;
@@ -8,14 +23,13 @@ procedure use_skill_on_p_proc;
 procedure damage_p_proc;
 procedure combat_rads_inc;
 
-variable HOSTILE;
+variable tmp_hostile;
 variable DISGUISED;
 variable Only_Once := 1;
 variable rndx;
 variable rndRads;
 
-
-procedure start begin	
+procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		set_self_team(TEAM_NECROPOLIS_MUTANT );
@@ -134,8 +148,8 @@ procedure combat_p_proc begin
 end
 
 procedure critter_p_proc begin
-	if (hostile) then begin
-		HOSTILE := 0;
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -143,14 +157,14 @@ procedure critter_p_proc begin
 			DISGUISED := 0;
 			coc_disguise_check
 			if (DISGUISED == 0) then begin
-				HOSTILE := 1;
+				tmp_hostile := 1;
 			end
 		end
 	end
 end
 
 procedure destroy_p_proc begin
-	inc_inv_evil_crit
+	inc_evil_critter
 end
 
 procedure use_skill_on_p_proc begin
@@ -161,7 +175,7 @@ end
 
 procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
-		HOSTILE := 1;
+		tmp_hostile := 1;
 	end
 end
 

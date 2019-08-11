@@ -1,87 +1,59 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
-procedure critter_p_proc;//    script_action == 12
+	Mariposa - One of the dumbest mutants ever. Stands at in the med bay.
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_POWERMUT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
 
 variable initial :=  0;
-variable hostile;
+variable tmp_hostile;
 
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_NECROPOLIS_MUTANT );
 		set_self_ai( AI_SUPER_MUTANT_AGGRESSIVE );
 	end
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-					call critter_p_proc;
-				end
-			end
-		end
-	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_POWERMUT, 101));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	float_msg(self_obj, message_str(SCRIPT_POWERMUT, 100), 2);
 end
 
-procedure destroy_p_proc
-begin
-
-	if (source_obj == dude_obj) then begin
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1))) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var( GVAR_BAD_MONSTER, global_var( GVAR_BAD_MONSTER ) + 1 );// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if ((global_var( GVAR_BAD_MONSTER ) % 6) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, global_var( GVAR_PLAYER_REPUTATION ) + 1 );
-		end
-	end
+procedure destroy_p_proc begin
+	inc_neutral_critter
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			hostile := 0;
+		if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			tmp_hostile := 0;
 			attack(dude_obj);
 		end
-		else begin
-			if (global_var(VATS_ALERT)) then begin
-				hostile := 1;
-			end
+		else if (global_var(VATS_ALERT)) then begin
+			tmp_hostile := 1;
 		end
 	end
 end

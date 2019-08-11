@@ -1,11 +1,27 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
+	Boneyard - FoA guards
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_FOLGUARD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
+
 procedure guard0;
 procedure guard1;
 procedure guard2;
@@ -34,18 +50,12 @@ procedure guard23;
 procedure combat;
 procedure guardend;
 
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
 
 import variable removal_ptr;
 
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		set_self_team(TEAM_LA_FOLLOWERS );
 		if (local_var(0) == 0) then begin
@@ -66,31 +76,6 @@ begin
 		end
 		initial :=  1;
 	end
-	else begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
 procedure critter_p_proc
@@ -100,20 +85,20 @@ begin
 	end
 	else begin
 		if ((map_var(1) == 2) and obj_can_see_obj(self_obj, dude_obj)) then begin
-			hostile := 1;
+			tmp_hostile := 1;
 		end
 	end
 	if (global_var(QUEST_BONEYARD_3_BOMBFOLL) == 2) then begin
 		removal_ptr := self_obj;
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
 		if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
 			if (local_var(1) or global_var(ENEMY_FOLLOWERS)) then begin
-				hostile := 1;
+				tmp_hostile := 1;
 			end
 		end
 	end
@@ -126,22 +111,9 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
+	inc_good_critter
 	if (source_obj == dude_obj) then begin
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1))) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var( GVAR_GOOD_MONSTER ) % 2) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, (global_var( GVAR_PLAYER_REPUTATION ) - 1) );
-		end
 		set_global_var(ENEMY_FOLLOWERS, 1);
 	end
 end
@@ -360,7 +332,7 @@ end
 
 procedure combat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure guardend

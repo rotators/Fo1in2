@@ -156,6 +156,7 @@
 #define EXP_HIRED_IAN							(100)
 #define EXP_EXPLAINED_CROP_ROTATION 			(500)
 #define EXP_KILLED_SS_RADSCORPION 				(500)
+#define EXP_JARVIS_ANTIDOTE						(500)
 
 // Raiders
 
@@ -184,6 +185,8 @@
 #define EXP_BOUGHT_BIKE 						(500)
 
 // Glow
+#define EXP_DISABLED_TRAPS 						(0)
+#define EXP_MAINFRAME_ACCESS					(100)
 #define EXP_REPAIR_GENERATOR 					(1000)
 
 // BOS
@@ -191,6 +194,7 @@
 
 // Mariposa
 #define EXP_HANDYC_CLEANUP 						(1000)
+#define EXP_OVERHEARD_CONVERSATION				(1000)
 #define EXP_TRICKING_MUTANTS					(1500)
 #define EXP_SNEAK_SUCCESS 						(2000)
 #define EXP_VATS_DESTROYED 						(10000)

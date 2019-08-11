@@ -1,4 +1,5 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
 procedure critter_p_proc;//    script_action == 12
@@ -23,15 +24,13 @@ procedure Dragon11;
 procedure DragonCombat;
 procedure DragonEnd;
 
-variable hostile;
+variable tmp_hostile;
 variable initial :=  0;
-
-
 
 procedure start
 begin
-	
-	
+
+
 	if not(initial) then begin
 		set_self_team(TEAM_LA_BLADES );
 		set_self_ai( AI_BLADES );
@@ -70,32 +69,18 @@ begin
 		end
 	end
 	if (obj_can_see_obj(self_obj, dude_obj) and (global_var(BLADES_LEFT) < 41)) then begin
-		hostile := 1;
+		tmp_hostile := 1;
 	end
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 
 	set_global_var(BLADES_LEFT, global_var(BLADES_LEFT) - 1);
-	if (source_obj == dude_obj) then begin
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1))) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var( GVAR_GOOD_MONSTER ) % 2) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, (global_var( GVAR_PLAYER_REPUTATION ) - 1) );
-		end
-	end
+	inc_good_critter
 end
 
 procedure look_at_p_proc
@@ -125,7 +110,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -256,7 +241,7 @@ end
 
 procedure DragonCombat
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure DragonEnd
