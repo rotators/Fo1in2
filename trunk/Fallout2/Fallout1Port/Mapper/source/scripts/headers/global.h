@@ -102,8 +102,8 @@
 
 // Party members:
 #define GVAR_PARTY_NO_FOLLOW                	(398)
-#define GVAR_CAR_BLOWER                     	(439)
-#define GVAR_VIGNETTE_SEQUENCE              	(582)
+#define GVAR_CAR_BLOWER                     	(439) // unused
+#define GVAR_VIGNETTE_SEQUENCE              	(582) // unused
 #define GVAR_PARTY_MEMBERS_HIDDEN           	(632)
 
 // Endgame slideshow Fo1
@@ -496,16 +496,7 @@
 #define ADYTUM_CALEB_SOMETHING_0				(1351)
 #define ADYTUM_RAZOR_SOMETHING_1				(1352)
 #define ADYTUM_RAZOR_SOMETHING_2				(1353)
-#define EXPLOSIVES_CRASH_FIX_1					(1354)
-#define EXPLOSIVES_CRASH_FIX_2					(1355)
-#define EXPLOSIVES_CRASH_FIX_3					(1356)
-#define EXPLOSIVES_CRASH_FIX_4					(1357)
-#define EXPLOSIVES_CRASH_FIX_5					(1358)
-#define EXPLOSIVES_CRASH_FIX_6					(1359)
-#define EXPLOSIVES_CRASH_FIX_7					(1360)
-#define EXPLOSIVES_CRASH_FIX_8					(1361)
-#define EXPLOSIVES_CRASH_FIX_9					(1362)
-#define EXPLOSIVES_CRASH_FIX_10					(1363)
+// 1354-1363 free (was EXPLOSIVES_CRASH_CRAP)
 #define DUDE_EXAMINED_SELF_COUNT				(1364)
 #define DUDE_SHOOTS_OVERSEER					(1365)
 #define QUEST_VAULT15_1_SEARCH_FOR_CLUES		(1366)
@@ -782,8 +773,7 @@
 #define GVAR_OVERSEER_END_SEQ					(1620)
 #define KATYA_DUDE_LAST_LEVEL					(1621)
 #define GVAR_KATYA_DUDE_LAST_LEVEL				(1621)
-#define TYCHO_LEVEL						(1622)
-#define GVAR_TYCHO_LEVEL					(1622)
+// 1622 free
 #define TYCHO_DUDE_LAST_LEVEL					(1623)
 #define GVAR_TYCHO_DUDE_LAST_LEVEL				(1623)
 #define LARS_DEAD						(1624)
@@ -796,12 +786,7 @@
 #define GVAR_DUDE_ENEMY_JUNK_BOXER				(1627)
 #define DUDE_ENEMY_JUNK_CITIZEN					(1628)
 #define GVAR_DUDE_ENEMY_JUNK_CITIZEN				(1628)
-#define IAN_LEVEL_COUNTER					(1629)
-#define GVAR_IAN_LEVEL_COUNTER					(1629)
-#define KATYA_LEVEL_COUNTER					(1630)
-#define GVAR_KATYA_LEVEL_COUNTER				(1630)
-#define TYCHO_LEVEL_COUNTER					(1631)
-#define GVAR_TYCHO_LEVEL_COUNTER				(1631)
+// 1629,1631 free 1630 ???
 
 // Fallout Fixt
 #define BROTHERHOOD_WEEKLY_AMMO					(1632)
@@ -816,8 +801,7 @@
 #define GVAR_STAPLE_RESTOCK_GAMETIME				(1636)
 #define BITS_BOB_REPORTED					(1637)
 #define GVAR_BITS_BOB_REPORTED					(1637)
-#define MB_LEVEL_1_FIELDS					(1638)
-#define GVAR_MB_LEVEL_1_FIELDS					(1638)
+// 1638 free
 #define MASTER_ATTACKS						(1639)
 #define GVAR_MASTER_ATTACKS					(1639)
 
