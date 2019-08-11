@@ -1,5 +1,6 @@
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\mapshady.h"
 
 procedure start;
 procedure combat_p_proc;
@@ -18,6 +19,11 @@ variable HEREBEFORE := 0;
 procedure DisplayInvadedMSG;
 procedure PickMutant;
 
+#define tandi_gets_kidnapped 		((days_since_visited > 1) and (map_var(MVAR_Map_one_Time) == 0) and (global_var(TANDI_HIRELING_STATUS) != 2) and 	\
+											(global_var(TANDI_HIRELING_STATUS) != 1) and (global_var(TANDI_HIRELING_STATUS) != 3) and 			\
+											(global_var(RADSCORPION_SEED) == 2) and (global_var(TOTAL_RAIDERS) > 0) and 								\
+											(global_var(TANDI_HIRELING_STATUS) != 5) and is_garl_alive)
+
 procedure start begin
 end
 
@@ -35,27 +41,12 @@ variable temp_ptr;
 				call DisplayInvadedMSG;
 			end
 		end
-		if ((global_var(GVAR_SHADY_SANDS_WAS_INVADED) == 1) and not(is_loading_game) and (map_var(5) == 0)) then begin//GLOBAL_VAR_12 = Shady Sands invaded
+		if (shady_invaded and not(is_loading_game) and (map_var(MVAR_Invasion) == 0)) then begin//GLOBAL_VAR_12 = Shady Sands invaded
 			if not(HEREBEFORE) then begin
 				call DisplayInvadedMSG;
 			end
-			set_map_var(5, 1);
-/*
-kill_critter_type(PID_PEASANT_YELLOW_FEMALE, #);
-kill_critter_type(PID_PEASANT_YELLOW, #);
-kill_critter_type(PID_DOG, #);
-kill_critter_type(PID_LOSER, #);
-kill_critter_type(PID_BOY, #);
-kill_critter_type(PID_GIRL, #);
-kill_critter_type(PID_ARADESH, #);
-*/
-/*			if (global_var(TANDI_HIRELING_STATUS) != 5) then begin
-				//kill_critter_type(16777216 + 63, DeathType);
-			end
-			if (global_var(IAN_HIRELING_STATUS) != 2) then begin
-				//kill_critter_type(16777216 + 76, DeathType);
-			end
-*/
+			set_map_var(MVAR_Invasion, 1);
+
 			call PickMutant;
 			critter_attempt_placement(invaderPtr, 15514, 0);//was 16514
 			call PickMutant;
@@ -65,23 +56,23 @@ kill_critter_type(PID_ARADESH, #);
 			call PickMutant;
 			critter_attempt_placement(invaderPtr, 20536, 0);
 		end
-		if ((days_since_visited > 1) and (map_var(4) == 0) and (global_var(TANDI_HIRELING_STATUS) != 2) and (global_var(TANDI_HIRELING_STATUS) != 1) and (global_var(TANDI_HIRELING_STATUS) != 3) and (global_var(RADSCORPION_SEED) == 2) and (global_var(TOTAL_RAIDERS) > 0) and (global_var(TANDI_HIRELING_STATUS) != 5) and (global_var(GARL_DEAD) == 0)) then begin
+
+		if tandi_gets_kidnapped then begin
 			set_global_var(TANDI_HIRELING_STATUS, 1);
-			set_map_var(4, 1);
+			set_map_var(MVAR_Map_one_Time, 1);
 		end
 		else begin
 			if ((global_var(TANDI_HIRELING_STATUS) == 5) and (global_var(GVAR_SHADY_SANDS_WAS_INVADED) == 0)) then begin//GLOBAL_VAR_12 = Shady Sands invaded
 				set_global_var(TANDI_HIRELING_STATUS, 2);
-				if ((map_var(1) == 0) and (map_var(3) == 0)) then begin
-					set_map_var(3, 1);
-					set_map_var(1, 1);
+				if ((map_var(MVAR_TANDI_EXP) == 0) and (map_var(MVAR_Map_Only_once) == 0)) then begin
+					set_map_var(MVAR_Map_Only_once, 1);
+					set_map_var(MVAR_TANDI_EXP, 1);
 					display_msg(message_str(SCRIPT_SHADYWST, 100));
 					give_exp_points(400);
 				end
 			end
 		end
 		call Where_To_Start;
-
 end
 
 procedure map_update_p_proc begin
