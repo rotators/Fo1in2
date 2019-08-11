@@ -237,6 +237,8 @@
 #define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
 #define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
 
+#define tandi_is_kidnapped					(global_var(TANDI_HIRELING_STATUS) == 1)
+
 
 /*********************************************************
 	Endgame slideshow
