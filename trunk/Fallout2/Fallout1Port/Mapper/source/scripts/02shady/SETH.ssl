@@ -1,13 +1,26 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure pickup_p_proc;//    script_action == 4
-procedure combat_p_proc;//    script_action == 13
-procedure map_update_p_proc;//    script_action == 23
-procedure talk_p_proc;//    script_action == 11
-procedure destroy_p_proc;//    script_action == 18
+	Shady Sands - Seth, the entrance guard
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\mapshady.h"
+
+#define NAME                    SCRIPT_SETH
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure pickup_p_proc;
+procedure combat_p_proc;
+procedure map_update_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
 
 procedure Seth01;
 procedure Seth02;
@@ -53,8 +66,7 @@ variable DeathType := 56;
 
 #define LVAR_Sleeping 							(5)
 
-procedure start
-begin
+procedure start begin
 	if not(local_var(11)) then begin
 		variable LVar0;
 		set_local_var(11, 1);
@@ -78,58 +90,30 @@ begin
 			end
 		end
 	end
+end
 
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_SETH, 100));
+end
 
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			call map_update_p_proc;
+procedure critter_p_proc begin
+	if (local_var(6) == 0) then begin
+		set_local_var(6, 1);
+		if dude_is_armed then begin
+			float_msg(self_obj, message_str(SCRIPT_SETH, 204), 8);
 		end
 		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 3) then begin// 21 is look_at, 3 is description (Binoculars)
-					script_overrides;
-					display_msg(message_str(SCRIPT_SETH, 100));
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						tmp_hostile := 1;
-					end
-					else begin
-						if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-							call destroy_p_proc;
-						end
-						else begin
-							if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-								if (local_var(6) == 0) then begin
-									set_local_var(6, 1);
-									if dude_is_armed then begin
-										float_msg(self_obj, message_str(SCRIPT_SETH, 204), 8);
-									end
-									else begin
-										float_msg(self_obj, message_str(SCRIPT_SETH, 205), 8);
-									end
-								end
-								if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-									tmp_hostile := 0;
-									attack(dude_obj);
-								end
-							end
-						end
-					end
-				end
-			end
+			float_msg(self_obj, message_str(SCRIPT_SETH, 205), 8);
 		end
+	end
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (fixed_param == 4) then begin
 		round_counter := round_counter + 1;
 	end
@@ -141,8 +125,7 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if not(initial) then begin
 		set_self_team(TEAM_SHADY_SANDS );
 		set_self_ai( AI_GUARD );
@@ -163,49 +146,31 @@ procedure talk_p_proc begin
 		float_msg(self_obj, message_str(SCRIPT_SETH, 320), 2);
 		tmp_hostile := 1;
 	end
-	else begin
-		if (tandi_is_kidnapped and (dude_iq > 3)) then begin
-			set_global_var(TANDI_TALKED_ABOUT, 1);
-			if (local_var(8) == 0) then begin
-				set_local_var(8, 1);
-				start_gdialog(183, self_obj, 4, -1, -1);
-				gsay_start;
-				call TanSeth00;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				start_gdialog(183, self_obj, 4, -1, -1);
-				gsay_start;
-				call TanSeth01;
-				gsay_end;
-				end_dialogue;
-			end
+	else if (tandi_is_kidnapped and (dude_iq > 3)) then begin
+		set_global_var(TANDI_TALKED_ABOUT, 1);
+		if (local_var(8) == 0) then begin
+			set_local_var(8, 1);
+			start_dialog_at_node(TanSeth00);
 		end
 		else begin
-			if (local_var(5) == 1) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), 0);
-			end
-			else begin
-				if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
-					float_msg(self_obj, message_str(SCRIPT_SETH, 101), 2);
-					tmp_hostile := 1;
-				end
-				else begin
-					start_gdialog(183, self_obj, 4, -1, -1);
-					gsay_start;
-					call pick_start;
-					gsay_end;
-					end_dialogue;
-				end
-			end
+			start_dialog_at_node(TanSeth01);
 		end
+	end
+	else if (local_var(5) == 1) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), 0);
+	end
+	else if global_var(ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
+		float_msg(self_obj, message_str(SCRIPT_SETH, 101), 2);
+		tmp_hostile := 1;
+	end
+	else begin
+		start_dialog_at_node(pick_start);
 	end
 end
 
 procedure destroy_p_proc begin
 	if obj_in_party(source_obj) then begin
-		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+		set_global_var(ENEMY_SHADY_SANDS, 1);
 		inc_good_critter
 	end
 	set_global_var(SETH_STATUS, 3);
@@ -313,8 +278,7 @@ procedure Seth08 begin
 	giq_option( 4, SCRIPT_SETH, 120, Seth08a, NEUTRAL_REACTION );
 end
 
-procedure Seth08a
-begin
+procedure Seth08a begin
 	if (local_var(7) == 0) then begin
 		set_local_var(7, 1);
 		call Seth14;
@@ -324,8 +288,7 @@ begin
 	end
 end
 
-procedure Seth09
-begin
+procedure Seth09 begin
 	gsay_reply(183, 121);
 	if (global_var(RADSCORPION_SEED) == 1) then begin
 		giq_option( 4, SCRIPT_SETH, 115, Seth10, NEUTRAL_REACTION );
@@ -341,8 +304,7 @@ begin
 	giq_option( 4, SCRIPT_SETH, 120, Seth08a, NEUTRAL_REACTION );
 end
 
-procedure Seth10
-begin
+procedure Seth10 begin
 	if (global_var(RADSCORPION_SEED) == 2) then begin
 		gsay_reply(183, 201);
 	end
@@ -377,8 +339,7 @@ procedure Seth11 begin
 	giq_option( 4, SCRIPT_SETH, 120, Seth08a, NEUTRAL_REACTION );
 end
 
-procedure Seth12
-begin
+procedure Seth12 begin
 	gsay_reply(183, 124);
 	giq_option( 4, SCRIPT_SETH, 115, Seth10, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_SETH, 116, Seth11, NEUTRAL_REACTION );
@@ -389,8 +350,7 @@ begin
 	giq_option( 4, SCRIPT_SETH, 120, Seth08a, NEUTRAL_REACTION );
 end
 
-procedure Seth13
-begin
+procedure Seth13 begin
 	if (global_var(RADSCORPION_SEED) == 2) then begin
 		gsay_reply(183, 202);
 	end
@@ -403,8 +363,7 @@ begin
 	giq_option( -3, SCRIPT_SETH, 131, no_travel, NEUTRAL_REACTION );
 end
 
-procedure Seth14
-begin
+procedure Seth14 begin
 	gsay_message(183, 206, 50);
 end
 
@@ -421,8 +380,7 @@ procedure TanSeth00 begin
 	end
 end
 
-procedure TanSeth01
-begin
+procedure TanSeth01 begin
 	gsay_reply(183, 305);
 	giq_option( 4, SCRIPT_SETH, 306, TanSeth06, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_SETH, 307, TanSeth05, BAD_REACTION );
