@@ -1,18 +1,33 @@
-#include "..\headers\define.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure map_enter_p_proc;//    script_action == 15
-procedure talk_p_proc;//    script_action == 11
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure destroy_p_proc;//    script_action == 18
-procedure combat_p_proc;//    script_action == 13
-procedure description_p_proc;//    script_action == 3
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure timed_event_p_proc;//    script_action == 22
-procedure map_exit_p_proc;//    script_action == 16
+	Shady Sands - Jarvis
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\mapshady.h"
+
+#define NAME                    SCRIPT_JARVIS
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure map_enter_p_proc;
+procedure talk_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure destroy_p_proc;
+procedure combat_p_proc;
+procedure description_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure timed_event_p_proc;
+procedure map_exit_p_proc;
 
 procedure Jarvis01;
 procedure Jarvis02;
@@ -23,16 +38,13 @@ procedure Jarvis06;
 procedure Jarvisend;
 
 variable use_skill;
-variable hostile;
-
+variable tmp_hostile;
 
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
-
-procedure start
-begin
-	if global_var(GVAR_SHADY_SANDS_WAS_INVADED) then begin
+procedure start begin
+	if shady_invaded then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(6) != 1) then begin
 				set_local_var(6, 1);
@@ -41,67 +53,9 @@ begin
 			end
 		end
 	end
-	else begin
-		
-		
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-				call map_exit_p_proc;
-			end
-			else begin
-				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					call map_enter_p_proc;
-				end
-				else begin
-					if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 7) then begin//<-- use_obj_on_p_proc
-							call use_obj_on_p_proc;
-						end
-						else begin
-							if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-								call pickup_p_proc;
-							end
-							else begin
-								if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-									call destroy_p_proc;
-								end
-								else begin
-									if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-										call combat_p_proc;
-									end
-									else begin
-										if (script_action == 8) then begin//<-- use_skill_on_p_proc
-											call use_skill_on_p_proc;
-										end
-										else begin
-											if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-												call critter_p_proc;
-											end
-											else begin
-												if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-													call timed_event_p_proc;
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4) == 0) then begin
 		display_msg(message_str(SCRIPT_JARVIS, 102));
@@ -111,8 +65,7 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (local_var(5) == 0) then begin
 		anim(self_obj, 48, 0);
 		add_timer_event(self_obj, game_ticks(3600), 1);
@@ -121,28 +74,20 @@ begin
 	set_self_ai( AI_PEASANT );
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (local_var(5) == 0) then begin
 		call Jarvis01;
 	end
+	else if (local_var(4) == 0) then begin
+		start_dialog_at_node(Jarvis02);
+	end
 	else begin
-		start_gdialog(440, self_obj, 4, -1, -1);
-		gsay_start;
-		if (local_var(4) == 0) then begin
-			call Jarvis02;
-		end
-		else begin
-			call Jarvis03;
-		end
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(Jarvis03);
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	variable LVar0 := 0;
 	LVar0 := roll_vs_skill(dude_obj, action_being_used, 0);
 	if (local_var(5) == 0) then begin
@@ -171,8 +116,7 @@ begin
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	if ((obj_pid(obj_being_used_with) == PID_ANTIDOTE) and (local_var(5) == 0)) then begin
 		script_overrides;
 		rm_timer_event(self_obj);
@@ -180,64 +124,47 @@ begin
 		rm_obj_from_inven(dude_obj, obj_being_used_with);
 		destroy_object(obj_being_used_with);
 		display_msg(message_str(SCRIPT_JARVIS, 117));
-		give_exp_points(400);
-		set_global_var( GVAR_PLAYER_REPUTATION, global_var( GVAR_PLAYER_REPUTATION ) + 1 );
+
+		give_exp_points(EXP_JARVIS_ANTIDOTE);
 		display_msg(message_str(SCRIPT_JARVIS, 200));
+
+		set_global_var( GVAR_PLAYER_REPUTATION, global_var( GVAR_PLAYER_REPUTATION ) + 1 );
+		inc_shady_rep(REP_BONUS_HELPING_JARVIS);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
-		set_global_var(ENEMY_SHADY_SANDS, 1);//Set ENEMY_SHADY_SANDS to True
+		set_global_var(ENEMY_SHADY_SANDS, 1);
 	end
-	if source_obj == dude_obj then begin
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		set_global_var( GVAR_PLAYER_REPUTATION, (global_var( GVAR_PLAYER_REPUTATION ) - 1) );
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1))) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var( GVAR_GOOD_MONSTER ) % 2) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, (global_var( GVAR_PLAYER_REPUTATION ) - 1) );
-		end
-	end
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if ((fixed_param == 4) and (local_var(5) == 0)) then begin
 		script_overrides;
 	end
 end
 
-procedure Jarvis01
-begin
+procedure Jarvis01 begin
 	float_msg(self_obj, message_str(SCRIPT_JARVIS, 104), 0);
 end
 
-procedure Jarvis02
-begin
+procedure Jarvis02 begin
 	gsay_reply(440, 105);
 	set_local_var(4, 1);
 	call Jarvis04;
 end
 
-procedure Jarvis03
-begin
+procedure Jarvis03 begin
 	gsay_reply(440, 106);
 	call Jarvis04;
 end
 
-procedure Jarvis04
-begin
+procedure Jarvis04 begin
 	giq_option( 4, SCRIPT_JARVIS, 107, Jarvis05, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JARVIS, 108, Jarvis06, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JARVIS, 109, Jarvisend, NEUTRAL_REACTION );
@@ -246,24 +173,20 @@ begin
 	giq_option( -3, SCRIPT_JARVIS, 120, Jarvisend, NEUTRAL_REACTION );
 end
 
-procedure Jarvis05
-begin
+procedure Jarvis05 begin
 	gsay_reply(440, 110);
 	call Jarvis04;
 end
 
-procedure Jarvis06
-begin
+procedure Jarvis06 begin
 	gsay_reply(440, 111);
 	call Jarvis04;
 end
 
-procedure Jarvisend
-begin
+procedure Jarvisend begin
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if (local_var(4) == 0) then begin
 		display_msg(message_str(SCRIPT_JARVIS, 102));
@@ -273,10 +196,9 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if ((local_var(5) == 1) and (anim_busy(self_obj) == 0)) then begin
@@ -286,22 +208,18 @@ begin
 			reg_anim_animate(self_obj, 37, -1);
 			reg_anim_func(3, 0);
 		end
-		else begin
-			if (critter_state(self_obj) == 0) then begin
-				set_local_var(5, 2);
-				anim(self_obj, 1000, 2);
-			end
+		else if (critter_state(self_obj) == 0) then begin
+			set_local_var(5, 2);
+			anim(self_obj, 1000, 2);
 		end
 	end
 end
 
-procedure pickup_p_proc
-begin
-	hostile := 1;
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (local_var(5) == 0) then begin
 		add_timer_event(self_obj, game_ticks(7200), 1);
 	end
@@ -311,13 +229,11 @@ begin
 	end
 end
 
-procedure map_exit_p_proc
-begin
+procedure map_exit_p_proc begin
 	rm_timer_event(self_obj);
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
 

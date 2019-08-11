@@ -1,8 +1,9 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure Defines;
 procedure Restock;
 
@@ -27,8 +28,7 @@ variable OnlyOnce := 0;
 //	STAPLE_DIFFICULTY_BASED := global_var(STAPLE_DIFFICULTY_BASED);  // (49)  // ! Fallout Fixt: CHOSEN BY PLAYER - Does the number of books spawned for Mrs Stapleton vary based on difficulty played?
 //	STAPLE_RESTOCK_WEEKS := global_var(STAPLE_RESTOCK_WEEKS);    //  549  // ! Fallout Fixt: CHOSEN BY PLAYER - How many weeks between Mrs Stapleton books-&-caps restocks? (1 to 6 maybe?)
 
-procedure start
-begin
+procedure start begin
 	Staple_Box_Ptr := self_obj;
 	if ((map_first_run) and (OnlyOnce == 0) and not(is_loading_game)) then begin    // Generate initial inventory, and initial value for next spawn time
 		OnlyOnce := 1;
@@ -41,20 +41,9 @@ begin
 		add_mult_objs_to_inven(self_obj, ScoutHandbook, global_var(STAPLE_INIT_NUM_BOOKS));
 		add_mult_objs_to_inven(self_obj, GunsAndBullets, global_var(STAPLE_INIT_NUM_BOOKS));
 	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				call map_update_p_proc;
-			end
-		end
-	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 //	variable LVar0;
 //	variable LVar1;
 //	variable LVar2;
@@ -74,8 +63,7 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if ((game_time - global_var( GVAR_STAPLE_RESTOCK_GAMETIME )) > (global_var(STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10)) and not(is_loading_game) and not(map_first_run) then begin//    <--Time for new stuff!
 		call Defines;
 		call Restock;
@@ -83,8 +71,7 @@ begin
 	end
 end
 
-procedure Defines
-begin
+procedure Defines begin
 	BigBookOfScience := create_object( PID_BIG_BOOK_OF_SCIENCE, 0, 0 );
 	DeansElectronics := create_object( PID_DEANS_ELECTRONICS, 0, 0 );
 	FirstAidBook := create_object( PID_FIRST_AID_BOOK, 0, 0 );
@@ -105,8 +92,7 @@ begin
 	end
 end
 
-procedure Restock
-begin
+procedure Restock begin
 	item_caps_adjust(self_obj, (500 + ((random(1, 6) * dude_luck) - 30)));//    Stat=LUCK
 	NumBooks := random(Min, Max);
 	add_mult_objs_to_inven(self_obj, BigBookOfScience, NumBooks);

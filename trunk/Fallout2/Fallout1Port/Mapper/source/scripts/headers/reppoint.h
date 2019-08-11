@@ -477,6 +477,7 @@
 #define inc_v15_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V15, x)
 
 // Shady Sands
+#define REP_BONUS_HELPING_JARVIS            	(1)
 #define REP_BONUS_RADSCORPIONS_GONE            	(5)
 #define REP_BONUS_TANDI_RESCUED	            	(25)
 #define inc_shady_rep(x)   						inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
@@ -499,13 +500,14 @@
 #define inc_boneyard_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
 // Necropolis
-#define REP_BONUS_WATERCHIP_TAKEN              	(3)
-#define REP_BONUS_WATER_PUMP_FIXED             	(1)
+#define REP_BONUS_WATERCHIP_TAKEN              	(-10)
+#define REP_BONUS_WATER_PUMP_FIXED             	(15)
 #define REP_BACKSTABBED_GRIFFITH 				(-3)
 #define inc_necropolis_rep(x)   				inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
 
 // Glow
-
+#define REP_BONUS_DEFEAT_ZAX              		(10)
+#define REP_BONUS_DISABLED_TRAPS            	(1)
 #define inc_glow_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_GLOW, x)
 
 // BOS

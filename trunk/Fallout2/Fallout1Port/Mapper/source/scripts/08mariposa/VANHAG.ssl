@@ -1,82 +1,49 @@
-#include "..\headers\define.h"
+/*
 
+	Mariposa - Van Hagen, Lou's side-dude.
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_VANHAG
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
-procedure timed_event_p_proc;//    script_action == 22
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
 
 import variable Lt_ptr;
 
-variable hostile;
+variable tmp_hostile;
 variable sequence;
 variable iseeu;
 variable waiting;
 variable clock := 4;
 variable initial :=  0;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-variable exit_line;
-
-
-
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_NECROPOLIS_MUTANT );
 		set_self_ai( AI_CHILDREN_TRUE );
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-					else begin
-						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-							call timed_event_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tile_distance_objs(dude_obj, self_obj) < 12) then begin
-		if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-			hostile := 0;
+		if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			tmp_hostile := 0;
 			attack(dude_obj);
 		end
 		if (global_var(ENTERING_VATS_HOW) < 1) then begin
@@ -89,101 +56,64 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	sequence := 10;
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var( GVAR_BAD_MONSTER, global_var( GVAR_BAD_MONSTER ) + 1 );// THIS MONSTER WAS A BAD GUY. INCREASE BadGuysKilled COUNTER
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1))) then begin
-			set_global_var(BERSERKER_REPUTATION, 1);
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var(NUM_BAD_MONSTERS_KILLED) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1))) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var(BERSERKER_REPUTATION, 0);
-		end
-		if ((global_var( GVAR_BAD_MONSTER ) % 6) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, global_var( GVAR_PLAYER_REPUTATION ) + 1 );
-		end
-	end
+	inc_inv_evil_crit
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_VANHAG, 100));
 end
 
-procedure pickup_p_proc
-begin
-	hostile := 1;
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	float_msg(self_obj, message_str(SCRIPT_VANHAG, 101), 0);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	waiting := 0;
 	if (sequence == 0) then begin
 		float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 102), 0);
 	end
-	else begin
-		if (sequence == 1) then begin
-			float_msg(self_obj, message_str(SCRIPT_VANHAG, 103), 0);
-		end
-		else begin
-			if (sequence == 2) then begin
-				float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 104), 0);
-			end
-			else begin
-				if (sequence == 3) then begin
-					float_msg(self_obj, message_str(SCRIPT_VANHAG, 105), 0);
-				end
-				else begin
-					if (sequence == 4) then begin
-						float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 106), 0);
-					end
-					else begin
-						if (sequence == 5) then begin
-							float_msg(self_obj, message_str(SCRIPT_VANHAG, 107), 0);
-							clock := 6;
-						end
-						else begin
-							if (sequence == 6) then begin
-								float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 108), 0);
-								clock := 4;
-							end
-							else begin
-								if (sequence == 7) then begin
-									float_msg(self_obj, message_str(SCRIPT_VANHAG, 109), 0);
-								end
-								else begin
-									if (sequence == 8) then begin
-										float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 110), 0);
-									end
-									else begin
-										if (sequence == 9) then begin
-											float_msg(self_obj, message_str(SCRIPT_VANHAG, 111), 0);
-											if (not(local_var(4))) then begin
-												give_exp_points(1000);
-												display_msg(message_str(SCRIPT_VANHAG, 112));
-												set_local_var(4, 1);
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+	else if (sequence == 1) then begin
+		float_msg(self_obj, message_str(SCRIPT_VANHAG, 103), 0);
+	end
+	else if (sequence == 2) then begin
+		float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 104), 0);
+	end
+	else if (sequence == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_VANHAG, 105), 0);
+	end
+	else if (sequence == 4) then begin
+		float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 106), 0);
+	end
+	else if (sequence == 5) then begin
+		float_msg(self_obj, message_str(SCRIPT_VANHAG, 107), 0);
+		clock := 6;
+	end
+	else if (sequence == 6) then begin
+		float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 108), 0);
+		clock := 4;
+	end
+	else if (sequence == 7) then begin
+		float_msg(self_obj, message_str(SCRIPT_VANHAG, 109), 0);
+	end
+	else if (sequence == 8) then begin
+		float_msg(Lt_ptr, message_str(SCRIPT_VANHAG, 110), 0);
+	end
+	else if (sequence == 9) then begin
+		float_msg(self_obj, message_str(SCRIPT_VANHAG, 111), 0);
+		if (not(local_var(4))) then begin
+			give_exp_points(EXP_OVERHEARD_CONVERSATION);
+			display_msg(message_str(SCRIPT_VANHAG, 112));
+			set_local_var(4, 1);
 		end
 	end
 	sequence := sequence + 1;

@@ -1,36 +1,50 @@
-#include "..\headers\define.h"
+/*
 
+	Boneyard - The Bounty Hunter
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_HUNTER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure pickup_p_proc;//    script_action == 4
-procedure talk_p_proc;//    script_action == 11
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
 import variable removal_ptr;
+
 procedure Hunter01;
 procedure Hunter02;
 procedure Hunter03;
 procedure Hunter04;
 procedure Hunter05;
 procedure Hunter06;
-variable hostile;
+
+variable tmp_hostile;
 variable initial :=  0;
 variable my_script_mode;
 variable pre_fight;
 //local_var(4) == madDumb
 //local_var(5) == mad
 
-procedure start
-begin
-	
-	
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(29);
 		set_self_ai( AI_BERZERKER );
 		if (cur_map_index != MAP_LAFOLLWR) then begin
 			call Hunter05;
-			hostile := 1;
+			tmp_hostile := 1;
 			attack(dude_obj);
 			my_script_mode := 1;
 		end
@@ -41,42 +55,11 @@ begin
 			end
 		end
 	end
-	if (not(my_script_mode)) then begin
-		if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					call look_at_p_proc;
-				end
-				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
@@ -87,8 +70,7 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	variable removal_ptr := 0;
 	if (global_var(HUNTER_RESPAWNS) == 0) or (global_var(FIXT_BUGFIXES_ONLY) == 1) then begin
 		set_global_var(HUNTER_STATUS, 3);
@@ -108,7 +90,7 @@ begin
 		end
 	end
 
-	inc_good_critter		
+	inc_good_critter
 end
 
 procedure look_at_p_proc
@@ -119,7 +101,7 @@ end
 
 procedure pickup_p_proc
 begin
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure talk_p_proc
@@ -128,7 +110,7 @@ begin
 	if (local_var(4)) then begin
 		script_overrides;
 		float_msg(self_obj, message_str(SCRIPT_HUNTER, 126), 0);
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 	else begin
 		start_gdialog(241, self_obj, 4, -1, -1);
@@ -157,7 +139,7 @@ begin
 	end
 	else begin
 		gsay_message(241, 107, 50);
-		hostile := 1;
+		tmp_hostile := 1;
 	end
 end
 
@@ -174,7 +156,7 @@ end
 procedure Hunter05
 begin
 	float_msg(self_obj, message_str(SCRIPT_HUNTER, 110) + (global_var( GVAR_CHILDKILLER_REPUTATION ) * 500) + message_str(SCRIPT_HUNTER, 200), random(7, 9));
-	hostile := 1;
+	tmp_hostile := 1;
 end
 
 procedure Hunter06

@@ -13,8 +13,6 @@
 
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
-//#include "..\headers\MAPNECRO.h"
-//#include "..\headers\MAPOBTFD.h"
 
 procedure start;
 procedure map_exit_p_proc;
@@ -34,16 +32,24 @@ variable car_was_used_to_exit;
 #define small_fill 		(200) // 400
 #define big_fill 			(400) // 800
 
-#define give_bike_exp 					if (global_var(GVAR_QUEST_MOTORCYCLE) < 10) then begin /* Motorcycle was stolen */ \
+#define give_bike_exp 					if (global_var(GVAR_QUEST_MOTORCYCLE) < 10) then begin /* Motorcycle was stolen */ 										\
 													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_STOLEN_CONTROLLER + message_str(SCRIPT_GRIFFITH, 127)); \
-													give_exp_points(EXP_STOLEN_CONTROLLER); \
-												end \
-												else begin \
-													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_BOUGHT_BIKE + message_str(SCRIPT_GRIFFITH, 128)); \
-													give_exp_points(EXP_BOUGHT_BIKE); \
+													give_exp_points(EXP_STOLEN_CONTROLLER); 																							\
+												end 																																				\
+												else begin 																																		\
+													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_BOUGHT_BIKE + message_str(SCRIPT_GRIFFITH, 128)); 		\
+													give_exp_points(EXP_BOUGHT_BIKE); 																									\
 												end
 
 procedure start begin
+end
+
+procedure map_enter_p_proc begin
+	// Failsafe, in case the car spawns on a slightly different hex than town-defined for whatever reason
+	if (not(car_in_any_encounter) and (car_current_town == cur_town) and not(get_car_in_cur_map)) then begin
+		Dest_Car(self_tile, self_elevation)
+		set_obj_visibility(Trunk_Ptr,1);
+	end
 end
 
 procedure map_exit_p_proc begin
@@ -163,10 +169,10 @@ variable
 		fill_amount := fuel_efficiency * charges;
 
       if(space_in_tank == 0) then begin
-			   display_msg(mstr(511));
+			display_msg(mstr(511));
       end
       // Check if fuel in one pack is less than space left in tank
-		else if(fill_amount <= space_in_tank) then begin
+		else if (fill_amount <= space_in_tank) then begin
 		   // Fill by fuel left in one pack
 		   //debug("Used per pack fill.");
 			car_give_gas(fill_amount);
@@ -177,12 +183,14 @@ variable
 		   //debug("Used partial pack fill.");
 		   fill_amount := space_in_tank;
 		   used_charges := space_in_tank / fuel_efficiency;
+
 		   //Just in case of nonzero modulo add one extra ammo
 		   if( (used_charges * fuel_efficiency) < space_in_tank) then begin
 		      used_charges := used_charges + 1;
 		   end
 
 			car_give_gas(fill_amount);
+
 			// just double check if we didn't use entire pack
 			if(charges == used_charges) then begin
 		      //debug("Used entire pack anyway");
@@ -198,61 +206,7 @@ variable
 
 		end
 
-
 		debug("fill_amount: " + fill_amount);
-
-
-
-		/*if used_fuel == PID_MICRO_FUSION_CELL then
-			fill_amount := big_fill * charges;
-		else
-			fill_amount := small_fill * charges;
-
-		debug("fill_amount: " + fill_amount);
-
-		cur_car_fill := car_gas_amount;
-		if (cur_car_fill < max_fill) then begin
-			car_give_gas(fill_amount);
-			remove_pid_qty(dude_obj, used_fuel, 1)
-		end
-		else begin
-			display_msg(mstr(511));
-		end*/
-
-		// TODO: Fix this. Bugged as shit can get. Always breaks after the first time, no matter what.
-		// Get amount of item charges
-		/*fuel := dude_item( used_fuel );
-		charges := get_weapon_ammo_count(fuel);
-
-		if fuel == PID_MICRO_FUSION_CELL then begin
-			if (charges <= 0) then charges := 50;
-			fill_amount := big_fill;
-		end
-		else begin
-			if (charges <= 0) then charges := 40;
-			fill_amount := small_fill;
-		end
-		//debug("charges: " + charges);
-
-		// Bike is not fully charged?
-		if (cur_car_fill < max_fill) then begin
-			while (cur_car_fill < max_fill and charges > 0) do begin
-				cur_car_fill := car_gas_amount;
-				charges := charges - 1;
-
-				debug("charges: " + charges);
-				debug("car fill: " + cur_car_fill);
-
-				car_give_gas(fill_amount);
-				set_weapon_ammo_count(fuel, get_weapon_ammo_count(fuel) - 1);
-			end
-			display_msg(mstr(510));
-		end
-		// Bike is fully charged
-		else begin
-			display_msg(mstr(511));
-		end*/
-
 	end
 end
 
