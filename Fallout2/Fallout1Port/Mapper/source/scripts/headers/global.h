@@ -13,15 +13,6 @@
 // # define INTERNAL_IDENTIFIER	"(REPLACED BY DATA IN THE QUOTES)" [including the parenthesis]	// COMMENTS/DESCRIPTION
 
 // Karma & Reputation - HARDCODED TO THESE GVAR SLOTS
-#define PLAYER_REPUTATION_GENERAL				(0)		// was 155 (1155) in Fallout 1
-#define CHILDKILLER_REPUTATION					(1)		// was 158 (1158) in Fallout 1
-#define CHAMPION_REPUTATION					(2)		// was 157 (1157) in Fallout 1
-#define BERSERKER_REPUTATION					(3)		// was 156 (1156) in Fallout 1 - was moved to 317 (1317) in Fallout Fixt because of display bug
-#define NUM_BAD_MONSTERS_KILLED					(4)		// was 160 (1160) in Fallout 1
-#define NUM_GOOD_MONSTERS_KILLED				(5)		// was 159 (1159) in Fallout 1
-
-// Karma & Reputation - HARDCODED TO THESE GVAR SLOTS
-// Fo2 defines: Remove old Fo1 names at some point
 #define GVAR_PLAYER_REPUTATION					(0) // was 155 (1155) in Fallout 1
 #define GVAR_CHILDKILLER_REPUTATION				(1) // was 158 (1158) in Fallout 1
 #define GVAR_CHAMPION_REPUTATION				(2) // was 157 (1157) in Fallout 1
@@ -41,15 +32,6 @@
 #define GVAR_KARMA_DEMON_SPAWN              (45)
 
 // Addictions - HARDCODED TO THESE GVAR SLOTS
-// TODO: deprecate, use GVAR_*_ADDICT instead
-#define IS_NUKA_COLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
-#define IS_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
-#define IS_MENTATS_ADDICT						(23)	// was 191 (1191) in Fallout 1
-#define IS_PSYCHO_ADDICT						(24)	// was 192 (1192) in Fallout 1
-#define IS_RADAWAY_ADDICT						(25)	// was 193 (1193) in Fallout 1
-#define IS_ALCOHOL_ADDICT						(26)	// was 194 (1194) in Fallout 1
-
-// Addictions - HARDCODED TO THESE GVAR SLOTS
 #define GVAR_NUKACOLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
 #define GVAR_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
 #define GVAR_MENTATS_ADDICT						(23)	// was 191 (1191) in Fallout 1
@@ -58,9 +40,7 @@
 #define GVAR_ALCOHOL_ADDICT						(26)	// was 194 (1194) in Fallout 1
 
 // Misc - HARDCODED TO THESE GVAR SLOTS
-#define LOAD_MAP_INDEX							(27)	// was 32  (1032) in Fallout 1
-#define GVAR_LOAD_MAP_INDEX 						(27)	// Fo2 - TODO: replace Fo1 name!! // was 32  (1032) in Fallout 1
-#define RUNNING_BURNING_GUY						(28)	// TODO deprecate, use GVAR_* instead // was 603 (1603) in Fallout 1
+#define GVAR_LOAD_MAP_INDEX 						(27)	// was 32  (1032) in Fallout 1
 #define GVAR_RUNNING_BURNING_GUY					(28)	// was 603 (1603) in Fallout 1
 
 #define GVAR_MAP_EXIT_TILE                  	(46)
@@ -737,72 +717,42 @@
 #define MYST_STRANGER_DEAD						(1601)
 #define GAME_DIFFICULTY							(1602)
 //	moved to top of this file
-#define ARADESH_STATUS						(1604)
 #define GVAR_ARADESH_STATUS					(1604)
-#define RHOMBUS_STATUS						(1605)
 #define GVAR_RHOMBUS_STATUS					(1605)
-#define SLIDE_KIND_TO_HAROLD					(1606)
 #define GVAR_SLIDE_KIND_TO_HAROLD				(1606)
-#define GARRET_STATUS						(1607)
 #define GVAR_GARRET_STATUS					(1607)
-#define RADIO_COMPUTER_OFF					(1608)
 #define GVAR_RADIO_COMPUTER_OFF					(1608)
-#define FORCE_FIELDS_OFF					(1609)
 #define GVAR_FORCE_FIELDS_OFF					(1609)
-#define FIELD_COMPUTER_MODIFIED					(1610)
 #define GVAR_FIELD_COMPUTER_MODIFIED				(1610)
-#define GARLS_FRIEND						(1611)
 #define GVAR_GARLS_FRIEND					(1611)
-#define ZIMMERMAN_STATUS					(1612)
 #define GVAR_ZIMMERMAN_STATUS					(1612)
-#define BLADES_STATUS						(1613)
 #define GVAR_BLADES_STATUS					(1613)
 #define GUN_RUNNERS_STATUS					(1614)
 #define GVAR_GUN_RUNNERS_STATUS					(1614)
-#define CHEMISTRY_BOOK						(1615)
 #define GVAR_CHEMISTRY_BOOK					(1615)
-#define DUDE_ENEMY_REGULATORS					(1616)
 #define GVAR_DUDE_ENEMY_REGULATORS				(1616)
-#define DUDE_ENEMY_BLADES					(1617)
 #define GVAR_DUDE_ENEMY_BLADES					(1617)
-#define GAME_CONTINUES						(1618)
 #define GVAR_GAME_CONTINUES					(1618)
-#define OVERSEER_KILLED						(1619)
 #define GVAR_OVERSEER_KILLED					(1619)
-#define OVERSEER_END_SEQ					(1620)
 #define GVAR_OVERSEER_END_SEQ					(1620)
-#define KATYA_DUDE_LAST_LEVEL					(1621)
 #define GVAR_KATYA_DUDE_LAST_LEVEL				(1621)
 // 1622 free
-#define TYCHO_DUDE_LAST_LEVEL					(1623)
 #define GVAR_TYCHO_DUDE_LAST_LEVEL				(1623)
-#define LARS_DEAD						(1624)
 #define GVAR_LARS_DEAD						(1624)
-#define LARS_N_KILLIAN_ON_CASINO				(1625)
 #define GVAR_LARS_N_KILLIAN_ON_CASINO				(1625)
-#define DUDE_ENEMY_SKULZ					(1626)
 #define GVAR_DUDE_ENEMY_SKULZ					(1626)
-#define DUDE_ENEMY_JUNK_BOXER					(1627)
 #define GVAR_DUDE_ENEMY_JUNK_BOXER				(1627)
-#define DUDE_ENEMY_JUNK_CITIZEN					(1628)
 #define GVAR_DUDE_ENEMY_JUNK_CITIZEN				(1628)
 // 1629,1631 free 1630 ???
 
 // Fallout Fixt
-#define BROTHERHOOD_WEEKLY_AMMO					(1632)
 #define GVAR_BROTHERHOOD_WEEKLY_AMMO				(1632)
-#define CARAVAN_HOW_MANY_BRAHMIN				(1633)
 #define GVAR_CARAVAN_HOW_MANY_BRAHMIN				(1633)
-#define SET_DOOR_GUARD_WARNING					(1634)
 #define GVAR_SET_DOOR_GUARD_WARNING				(1634)
-#define DUDE_OBJ_POISONED					(1635)
 #define GVAR_DUDE_OBJ_POISONED					(1635)
-#define STAPLE_RESTOCK_GAMETIME					(1636)
 #define GVAR_STAPLE_RESTOCK_GAMETIME				(1636)
-#define BITS_BOB_REPORTED					(1637)
 #define GVAR_BITS_BOB_REPORTED					(1637)
 // 1638 free
-#define MASTER_ATTACKS						(1639)
 #define GVAR_MASTER_ATTACKS					(1639)
 
 /*#define RESERVED_FOR_FALLOUT_FIXT				(1640)
