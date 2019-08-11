@@ -33,9 +33,32 @@
 										
 #define is_story_finished				(global_var(GAME_CONTINUES) > 0)
 
-#define military_base_destoryed 		(global_var(VATS_BLOWN_CUTSCENE_DONE) > 0)
-#define cathedral_destroyed 			(global_var(MASTER_BLOWN_CUTSCENE) > 0)
+/*********************************************************
+	Quests:
+*********************************************************/
+#define waterchip_returned 					(global_var(QUEST_VAULT13_4_WATERCHIP) >= 2)	
 
+#define military_base_destoryed 			(global_var(VATS_BLOWN_CUTSCENE_DONE) > 0)
+#define cathedral_destroyed 				(global_var(MASTER_BLOWN_CUTSCENE) > 0)
+
+#define necropolis_wpump_fixed				(global_var(NECROP_WATER_PUMP_FIXED) == 2)
+#define followers_trained 					(global_var(SLIDE_TRAIN_FOLLOWERS) == 1)
+
+#define get_raiders_alive 					global_var(TOTAL_RAIDERS)
+
+#define is_tandi_alive 						(global_var(TANDI_HIRELING_STATUS) < 3) 
+#define is_aradesh_alive 					(global_var(ARADESH_STATUS) == 0) 
+#define is_killian_alive 					(global_var(KILLIAN_DEAD) == 0) 
+#define is_gizmo_alive 						(global_var(GIZMO_DEAD) == 0) 
+#define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
+#define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
+
+#define tandi_is_kidnapped					(global_var(TANDI_HIRELING_STATUS) == 1)
+#define tandi_not_kidnapped					(global_var(TANDI_HIRELING_STATUS) != 1)
+
+/*********************************************************
+	Other stuff:
+*********************************************************/
 // Send NPCs from "day" to "night" position:
 #define sleeping 	/*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
 					if (local_var(LVAR_Sleeping) == 1) then begin \
@@ -220,25 +243,6 @@
 	Party related:
 *********************************************************/
 #define unlimited_party_members 		global_var(GVAR_UNLIMITED_PARTY_MEMBERS) == 1
-
-
-/*********************************************************
-	Quests:
-*********************************************************/
-#define necropolis_wpump_fixed				(global_var(NECROP_WATER_PUMP_FIXED) == 2)
-#define followers_trained 					(global_var(SLIDE_TRAIN_FOLLOWERS) == 1)
-
-#define get_raiders_alive 					global_var(TOTAL_RAIDERS)
-
-#define is_tandi_alive 						(global_var(TANDI_HIRELING_STATUS) < 3) 
-#define is_aradesh_alive 					(global_var(ARADESH_STATUS) == 0) 
-#define is_killian_alive 					(global_var(KILLIAN_DEAD) == 0) 
-#define is_gizmo_alive 						(global_var(GIZMO_DEAD) == 0) 
-#define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
-#define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
-
-#define tandi_is_kidnapped					(global_var(TANDI_HIRELING_STATUS) == 1)
-#define tandi_not_kidnapped					(global_var(TANDI_HIRELING_STATUS) != 1)
 
 
 /*********************************************************
