@@ -62,8 +62,7 @@ variable waypoint;
 procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -86,24 +85,22 @@ begin
 							dialogue_system_enter;
 						end
 					end
+					else if (using_skill( dude_obj, SKILL_SNEAK ) and not(sneak_checked)) then begin
+						sneaking := 1;
+						sneak_checked := 1;
+						add_timer_event(self_obj, game_ticks(5), 2);
+						dialogue_system_enter;
+					end
 					else begin
-						if (using_skill( dude_obj, SKILL_SNEAK ) and not(sneak_checked)) then begin
-							sneaking := 1;
-							sneak_checked := 1;
-							add_timer_event(self_obj, game_ticks(5), 2);
-							dialogue_system_enter;
-						end
-						else begin
-							if (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-								if ((map_var(8) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
-									set_map_var(8, 0);
-									float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 136), 2);
-									if (warned_about_picking) then begin
-										tmp_hostile := 1;
-									end
-									else begin
-										warned_about_picking := 1;
-									end
+						if (cur_map_index == MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+							if ((map_var(8) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
+								set_map_var(8, 0);
+								float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 136), 2);
+								if (warned_about_picking) then begin
+									tmp_hostile := 1;
+								end
+								else begin
+									warned_about_picking := 1;
 								end
 							end
 						end
@@ -112,28 +109,23 @@ begin
 			end
 		end
 		else begin
+
 			if (cur_map_index == MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 				if (map_var(2) == 2) then begin
 					if (waypoint != 0) then begin
 						if (tile_distance(tile_num(self_obj), tmp_dest_tile) > 3) then begin
 							animate_move_obj_to_tile(self_obj, tmp_dest_tile, 0);
 						end
-						else begin
-							if (waypoint == 1) then begin
-								tmp_dest_tile := 23465;
-								waypoint := 2;
-							end
-							else begin
-								if (waypoint == 2) then begin
-									tmp_dest_tile := 26855;
-									waypoint := 3;
-								end
-								else begin
-									if (waypoint == 3) then begin
-										destroy_object(self_obj);
-									end
-								end
-							end
+						else if (waypoint == 1) then begin
+							tmp_dest_tile := 23465;
+							waypoint := 2;
+						end
+						else if (waypoint == 2) then begin
+							tmp_dest_tile := 26855;
+							waypoint := 3;
+						end
+						else if (waypoint == 3) then begin
+							destroy_object(self_obj);
 						end
 					end
 					else begin
@@ -141,6 +133,7 @@ begin
 					end
 				end
 			end
+
 		end
 	end
 	if (global_var(ENEMY_JUNKTOWN) == 1) then begin
@@ -222,21 +215,17 @@ begin
 			end_dialogue;
 		end
 		else begin
-			if (global_var( GVAR_CHILDKILLER_REPUTATION ) >= global_var(CHILDKILLER_NUM_KILLS)) then begin
+			if has_rep_childkiller then begin
 				call JTGenGrd19;
 			end
+			else if (has_rep_berserker or (local_var(1) == 1)) then begin
+				call JTGenGrd09;
+			end
+			else if (has_rep_champion or (local_var(1) == 3)) then begin
+				call JTGenGrd16;
+			end
 			else begin
-				if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_GOOD_MONSTER ) > (2 * global_var( GVAR_BAD_MONSTER ))) or (global_var( GVAR_BERSERKER_REPUTATION ) == 1)) or (local_var(1) == 1)) then begin
-					call JTGenGrd09;
-				end
-				else begin
-					if (((global_var( GVAR_BAD_MONSTER ) + global_var( GVAR_GOOD_MONSTER )) >= 25) and ((global_var( GVAR_BAD_MONSTER ) > (3 * global_var( GVAR_GOOD_MONSTER ))) or (global_var( GVAR_CHAMPION_REPUTATION ) == 1)) or (local_var(1) == 3)) then begin
-						call JTGenGrd16;
-					end
-					else begin
-						call JTGenGrd20;
-					end
-				end
+				call JTGenGrd20;
 			end
 		end
 	end
