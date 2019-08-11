@@ -54,7 +54,7 @@
 #define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
 
 #define tandi_is_kidnapped					(global_var(TANDI_HIRELING_STATUS) == 1)
-#define tandi_not_kidnapped					(global_var(TANDI_HIRELING_STATUS) != 1)
+#define tandi_not_kidnapped					not(tandi_is_kidnapped)
 
 /*********************************************************
 	Other stuff:
