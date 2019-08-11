@@ -16,6 +16,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure timed_event_p_proc;
 procedure look_at_p_proc;
 procedure description_p_proc;
 procedure talk_p_proc;
@@ -50,11 +51,14 @@ procedure Miles24;
 procedure Miles25;
 procedure Miles27;
 procedure Miles28;
+procedure Miles28a;
 procedure Miles29;
 procedure MilesEnd;
 
 variable Only_Once := 1;
 variable DisplayMessage := 100;
+
+#define EVENT_UPGRADE_PA 	(1)
 
 procedure Start begin
 	if Only_Once then begin
@@ -69,6 +73,16 @@ procedure Start begin
 		end
 		set_self_ai(AI_PEASANT);
 		Only_Once := 0;
+	end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_UPGRADE_PA) then begin
+		gfade_out(1);
+			game_time_advance(game_ticks(1 * 60 * 60 * 24));// 1 day for bonding to occur
+			game_time_advance(game_ticks(60 * 60 * 6));// 6 hours to read the books and perform pre-bonding tasks
+		gfade_in(1);
+		start_dialog_at_node(Miles28a);
 	end
 end
 
@@ -395,17 +409,15 @@ begin
 end
 
 procedure Miles28 begin
-variable Item;
-
 	gsay_message(249, 149, 50);
-	gfade_out(1);
-	game_time_advance(game_ticks(1 * 60 * 60 * 24));// 1 day for bonding to occur
-	game_time_advance(game_ticks(60 * 60 * 6));// 6 hours to read the books and perform pre-bonding tasks
-	gfade_in(1);
+	add_timer_event(self_obj, game_ticks(0), EVENT_UPGRADE_PA);
+end
+
+procedure Miles28a begin
+variable Item;
 
 	gsay_message(249, 150, 50);
 
-	remove_pid_qty(dude_obj, PID_POWERED_ARMOR, 1)
    Item:=create_object(PID_HARDENED_POWER_ARMOR,0,0);
    add_mult_objs_to_inven(dude_obj,Item,1);
 
