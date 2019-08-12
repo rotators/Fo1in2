@@ -61,16 +61,16 @@ begin //_FLDC_
 		dude_rot := random(0, 5);
 		if (map_first_run) and not(is_loading_game) then begin// first visit, not LOADING_GAME
 			set_map_var(0, 1);// Fixt_BEGIN_ENCOUNTER := 1
-			if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+			if global_var( GVAR_DEBUG_MODE_MESSAGES_ON ) then begin
 				debug_msg(" ");  debug_msg(" ");  debug_msg(" ");    display_msg(" --- RANDOM ENCOUNTER, Coast0 --- ");
 				debug_msg(" ");  display_msg("GLOBALVAR (32) is " + global_var( GVAR_LOAD_MAP_INDEX ) + " ");
 			end
 			if (global_var( GVAR_LOAD_MAP_INDEX ) != 1) then begin
 				Ranger_rerolls := dude_perk( PERK_ranger );
-				set_global_var(AGGRO_FLAG_RND_ENC_unsure, 0);
+				set_global_var( GVAR_AGGRO_FLAG_RND_ENC_unsure, 0 );
 				while(Encounter_Num == 0) do begin
 					Encounter_Num := (random(0, 8) + random(0, 8) + random(0, 8));// vanilla was 3d6, mine is 3d9
-					if global_var(FIXT_BUGFIXES_ONLY) or (global_var(RANDOM_ENC_IGNORE_LUCK) == 0) then begin//if NOT set to ignore Luck in factoring EncNum
+					if global_var( GVAR_FIXT_BUGFIXES_ONLY ) or (global_var( GVAR_RANDOM_ENC_IGNORE_LUCK ) == 0) then begin//if NOT set to ignore Luck in factoring EncNum
 						if (dude_luck < 4) or (dude_luck > 7) then begin
 							if (dude_luck == 10) then begin
 								if (difficulty_level == 2) then begin
@@ -143,7 +143,7 @@ begin //_FLDC_
 						end
 					end
 					else begin
-						if (global_var(RANDOM_ENC_DIFF_BASED) == 1) then begin// modify EncNum purely on difficulty levels
+						if (global_var( GVAR_RANDOM_ENC_DIFF_BASED ) == 1) then begin// modify EncNum purely on difficulty levels
 							if (difficulty_level == 2) then begin
 								Encounter_Num := (Encounter_Num - 1);
 							end
@@ -162,7 +162,7 @@ begin //_FLDC_
 							end
 						end
 						else begin
-							if (global_var(RANDOM_ENC_LEVEL_BASED) == 1) then begin// modify EncNum by player level
+							if (global_var( GVAR_RANDOM_ENC_LEVEL_BASED ) == 1) then begin// modify EncNum by player level
 								if (get_pc_stat( PCSTAT_level ) < 7) then begin
 									if (get_pc_stat( PCSTAT_level ) < 3) then begin
 										Encounter_Num := (Encounter_Num + 3);
@@ -196,7 +196,7 @@ begin //_FLDC_
 							end
 						end
 					end
-					if ((global_var(HUNTER_STATUS) != 3) and has_rep_childkiller and random(0, 1)) then begin
+					if ((global_var( GVAR_HUNTER_STATUS ) != 3) and has_rep_childkiller and random(0, 1)) then begin
 						Encounter_Num := 7;// hunters
 					end
 					else begin
@@ -241,16 +241,16 @@ begin //_FLDC_
 				if (Ranger_rerolls) then begin
 					Ranger_rerolls := (Ranger_rerolls - 1);
 					if (Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 5) or (Encounter_Num == 7) then begin
-						if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+						if global_var( GVAR_DEBUG_MODE_MESSAGES_ON ) then begin
 							debug_msg(" ");  display_msg("RANGER PERK rerolls; Encounter_Num == 0");
 						end
 						Encounter_Num := 0;
 					end
 				end
-				if (global_var(RANDOM_ENC_SOMETHING) > 0) then begin
-					debug_msg(" ");    display_msg("Warning: GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(RANDOM_ENC_SOMETHING) + " ");
-					Encounter_Num := global_var(RANDOM_ENC_SOMETHING);
-					set_global_var(RANDOM_ENC_SOMETHING, 0);
+				if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
+					debug_msg(" ");    display_msg("Warning: GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var( GVAR_RANDOM_ENC_SOMETHING ) + " ");
+					Encounter_Num := global_var( GVAR_RANDOM_ENC_SOMETHING );
+					set_global_var( GVAR_RANDOM_ENC_SOMETHING, 0 );
 				end
 //
 //
@@ -262,7 +262,7 @@ begin //_FLDC_
 //
 				call choose_start;
 				Dude_tile := tile_num(dude_obj);
-				if global_var(DEBUG_MODE_MESSAGES_ON) then begin
+				if global_var( GVAR_DEBUG_MODE_MESSAGES_ON ) then begin
 					debug_msg(" ");    display_msg("Coast0 Encounter_Num == " + Encounter_Num + " ");    debug_msg(" ");  debug_msg(" ");  debug_msg(" ");
 				end
 				if map_var(0) != 0 then begin
@@ -331,9 +331,9 @@ procedure map_exit_p_proc begin
 end
 
 procedure stranger begin
-	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-		if global_var(MYST_STRANGER_LUCK_BASED) then begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and (random(1, 10) < (dude_luck - 1))) then begin
+	if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
+		if global_var( GVAR_MYST_STRANGER_LUCK_BASED ) then begin
+			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random(1, 10) < (dude_luck - 1))) then begin
 				Critter_type := PID_MYSTERIOUS_STRANGER;
 				Critter_script := SCRIPT_MYSTSTRN;
 				Critter_direction := random(0, 1);
@@ -350,7 +350,7 @@ procedure stranger begin
 				anim(Critter, 1000, Critter_direction);
 				Item := create_object( PID_RIPPER, 0, 0 );
 				add_obj_to_inven(Critter, Item);
-				if global_var(MYST_STRANGER_HAS_ARMOR) then begin
+				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
 					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
 					add_obj_to_inven(Critter, Item);
 					wield_obj_critter(Critter, Item);
@@ -358,7 +358,7 @@ procedure stranger begin
 			end
 		end
 		else begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and (random((0 + global_var(MYST_STRANGER_CHANCE)), (3 + global_var(MYST_STRANGER_CHANCE))) > 1)) then begin
+			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random((0 + global_var( GVAR_MYST_STRANGER_CHANCE )), (3 + global_var( GVAR_MYST_STRANGER_CHANCE ))) > 1)) then begin
 				Critter_type := PID_MYSTERIOUS_STRANGER;
 				Critter_script := SCRIPT_MYSTSTRN;
 				Critter_direction := random(0, 1);
@@ -375,7 +375,7 @@ procedure stranger begin
 				anim(Critter, 1000, Critter_direction);
 				Item := create_object( PID_RIPPER, 0, 0 );
 				add_obj_to_inven(Critter, Item);
-				if global_var(MYST_STRANGER_HAS_ARMOR) then begin
+				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
 					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
 					add_obj_to_inven(Critter, Item);
 					wield_obj_critter(Critter, Item);
@@ -384,7 +384,7 @@ procedure stranger begin
 		end
 	end
 	else begin
-		if (dude_perk( PERK_mysterious_stranger ) and (global_var(MYST_STRANGER_DEAD) == 0) and random(0, 1)) then begin
+		if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
 			Critter_type := PID_MYSTERIOUS_STRANGER;
 			Critter_script := SCRIPT_MYSTSTRN;
 			Critter_direction := random(0, 1);
@@ -456,7 +456,7 @@ begin
 	wield_obj_critter(Critter, Item);
 	Item := create_object( PID_SUPER_STIMPAK, 0, 0 );//super stim
 	add_mult_objs_to_inven(Critter, Item, 4);
-	item_caps_adjust(Critter, random(40, 100) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(40, 100) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	attack_setup(Critter, dude_obj);
 //
 // Redhead with ripper
@@ -480,7 +480,7 @@ begin
 	wield_obj_critter(Critter, Item);
 	Item := create_object( PID_STIMPAK, 0, 0 );// stimpak
 	add_mult_objs_to_inven(Critter, Item, 3);
-	item_caps_adjust(Critter, random(10, 20) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(10, 20) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 //
 // Redhead with ripper
 	group_angle := random(0, 5);
@@ -503,7 +503,7 @@ begin
 	wield_obj_critter(Critter, Item);
 	Item := create_object( PID_STIMPAK, 0, 0 );// stimpak
 	add_mult_objs_to_inven(Critter, Item, 3);
-	item_caps_adjust(Critter, random(10, 20) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(10, 20) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 //
 // Black male with sledge
 	group_angle := random(0, 5);
@@ -526,7 +526,7 @@ begin
 	wield_obj_critter(Critter, Item);
 	Item := create_object( PID_STIMPAK, 0, 0 );// stimpak
 	add_mult_objs_to_inven(Critter, Item, 3);
-	item_caps_adjust(Critter, random(15, 30) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(15, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 //
 // White male with sniper rifle
 	group_angle := random(0, 5);
@@ -551,7 +551,7 @@ begin
 	wield_obj_critter(Critter, Item);
 	Item := create_object( PID_STIMPAK, 0, 0 );// stimpak
 	add_mult_objs_to_inven(Critter, Item, 3);
-	item_caps_adjust(Critter, random(20, 40) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(20, 40) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 //
 // Melee extra
 	if random(0, (1 + combat_difficulty + difficulty_level)) >= 2 then begin
@@ -781,7 +781,7 @@ begin
 	call Outdoorsman00;
 	if map_var(0) != 0 then begin
 		display_msg(message_str(SCRIPT_RNDCOAST, 100));
-		set_global_var(MYST_STRANGER_ITEM, 12);
+		set_global_var( GVAR_MYST_STRANGER_ITEM, 12 );
 		Outer_ring := (dude_perception / 3) + 7;
 		Inner_ring := (dude_perception / 3) + 4;
 		Tot_Critter_A := random(3, 5);
@@ -843,7 +843,7 @@ begin
 	call Outdoorsman00;
 	if map_var(0) != 0 then begin
 		display_msg(message_str(SCRIPT_RNDCOAST, 111));
-		set_global_var(MYST_STRANGER_ITEM, 12);
+		set_global_var( GVAR_MYST_STRANGER_ITEM, 12 );
 		Tot_Critter_A := random(4, 7);
 		if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin
 			Outer_ring := 6;
@@ -876,7 +876,7 @@ begin
 	call Outdoorsman00;
 	if map_var(0) != 0 then begin
 		display_msg(message_str(SCRIPT_RNDCOAST, 101));
-		set_global_var(MYST_STRANGER_ITEM, 7);
+		set_global_var( GVAR_MYST_STRANGER_ITEM, 7 );
 		Outer_ring := 4;
 		Inner_ring := 1;
 		Tot_Critter_A := random(8, 12);
@@ -915,10 +915,10 @@ begin
 	call Outdoorsman00;
 	if map_var(0) != 0 then begin
 		display_msg(message_str(SCRIPT_RNDCOAST, 102));
-		set_global_var(MYST_STRANGER_ITEM, 68);
-		set_global_var(RND_ENC_RAIDERS_KILLED, 0);
-		set_global_var(RND_ENC_PEASANTS_HOSTILE, 0);
-		set_global_var(RND_ENC_PEASANTS_INIT, 0);
+		set_global_var( GVAR_MYST_STRANGER_ITEM, 68 );
+		set_global_var( GVAR_RND_ENC_RAIDERS_KILLED, 0 );
+		set_global_var( GVAR_RND_ENC_PEASANTS_HOSTILE, 0 );
+		set_global_var( GVAR_RND_ENC_PEASANTS_INIT, 0 );
 		group_angle := random(0, 2);
 		MapX := (Dude_tile % 200) + 8;
 		MapY := (Dude_tile / 200) + 6;
@@ -979,7 +979,7 @@ begin
 		Outer_ring := 9;
 		Inner_ring := 6;
 		Tot_Critter_A := random(3, 4);
-		set_global_var(WATER_THIEF_2, Tot_Critter_A);
+		set_global_var( GVAR_WATER_THIEF_2, Tot_Critter_A );
 		Critter_script := SCRIPT_GENRAIDB;
 		while(Tot_Critter_A) do begin
 			if (random(0, 1)) then begin
@@ -1014,7 +1014,7 @@ begin
 			end
 			anim(Critter, 1000, Critter_direction);
 			if (random(0, 2) == 0) then begin
-				item_caps_adjust(Critter, random(6, 15) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(6, 15) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 			end
 			if (random(0, 1)) then begin
 				if (random(0, 2) == 0) then begin
@@ -1069,7 +1069,7 @@ begin
 				add_obj_to_inven(Critter, Item);
 			end
 			if (random(0, 2) == 0) then begin
-				item_caps_adjust(Critter, random(2, 4) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(2, 4) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 			end
 
 			enc_group_angle(Critter_direction)
@@ -1103,7 +1103,7 @@ begin
 				add_obj_to_inven(Critter, Item);
 			end
 			if (random(0, 2) == 0) then begin
-				item_caps_adjust(Critter, random(2, 4) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+				item_caps_adjust(Critter, random(2, 4) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 			end
 
 			enc_group_angle(Critter_direction)
@@ -1154,7 +1154,7 @@ begin
 	call Outdoorsman00;
 	if map_var(0) != 0 then begin
 		display_msg(message_str(SCRIPT_RNDCOAST, 111));
-		set_global_var(MYST_STRANGER_ITEM, 12);
+		set_global_var( GVAR_MYST_STRANGER_ITEM, 12 );
 		Outer_ring := 6;
 		Inner_ring := 4;
 		Tot_Critter_A := random(4, 6);
@@ -1227,7 +1227,7 @@ begin
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_44_MAGNUM_JHP, 0, 0 );
 	add_mult_objs_to_inven(Critter, Item, 2);
-	item_caps_adjust(Critter, random(50, 100) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(50, 100) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	Item := create_object( PID_IGUANA_ON_A_STICK, 0, 0 );
 	add_mult_objs_to_inven(Critter, Item, 3);
 	Critter := create_object_sid(PID_BOY, 0, 0, SCRIPT_FISHRSON);
@@ -1237,7 +1237,7 @@ begin
 	add_obj_to_inven(Critter, Item);
 	Item := create_object( PID_MEAT_ON_A_STICK, 0, 0 );
 	add_obj_to_inven(Critter, Item);
-	item_caps_adjust(Critter, random(2, 3) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(2, 3) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 end
 
 procedure Coast07
@@ -1286,7 +1286,7 @@ begin
 	add_mult_objs_to_inven(Critter, Item, random(1, 3));
 	Item := create_object( Ammo, 0, 0 );
 	add_mult_objs_to_inven(Critter, Item, (dude_perk( PERK_scrounger ) + 1));
-	item_caps_adjust(Critter, random(4, 25) * (dude_fortune_finder * global_var(FORTUNE_FINDER_HOW_MUCH)));
+	item_caps_adjust(Critter, random(4, 25) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	kill_critter(Critter, ANIM_big_hole_sf);
 end
 
@@ -1329,6 +1329,7 @@ begin
 		end
 	end
 end
+
 
 
 

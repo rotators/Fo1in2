@@ -188,22 +188,22 @@ procedure Slideshow;
 procedure start begin
 	// Save the start date to check the water counter / days remaining, etc:
 	// We have to do this, because reasons.
-	if (global_var(VAULT13_WATER_DAYS_COUNTER) <= 0) then begin
-		set_global_var(VAULT13_WATER_DAYS_COUNTER, 864000);
+	if (global_var( GVAR_VAULT13_WATER_DAYS_COUNTER ) <= 0) then begin
+		set_global_var( GVAR_VAULT13_WATER_DAYS_COUNTER, 864000 );
 	end
 
 	// No idea if this is necessary in here.
 	if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin// <---------- Put here instead of critter_proc and map_update_proc because this way it's only running once per tick
-		if (global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2) then begin
-			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+		if (global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2) then begin
+			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
 				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
 			end
 		end
 	end
 	else begin
 		if (cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34) then begin
-			if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
-				if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+			if ((global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ) != 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
+				if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
 					add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
 				end
 			end
@@ -214,12 +214,12 @@ end
 procedure combat_p_proc begin
 	if fixed_param == 4 then begin// beginning of combat round (including beginning of very first round)
 		if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
-			if ((global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
-				if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+			if ((global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
+				if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
 					variable SecondsCombat;
-					SecondsCombat := (global_var(VATS_COUNTDOWN) - (game_time / 10));
+					SecondsCombat := (global_var( GVAR_VATS_COUNTDOWN ) - (game_time / 10));
 					if (SecondsCombat <= 0) then begin
-						set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
+						set_global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE, 1 );
 						play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
 						signal_end_game;
 					end
@@ -231,11 +231,11 @@ procedure combat_p_proc begin
 		end
 		else begin
 			if (cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34) then begin
-				if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
-					if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
-						SecondsCombat := 240 - ((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION));
-						if (((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
-							set_global_var(MASTER_BLOWN_CUTSCENE, 1);
+				if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
+					if ((global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ) != 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
+						SecondsCombat := 240 - ((game_time / 10) - global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ));
+						if (((game_time / 10) - global_var( GVAR_COUNTDOWN_TO_DESTRUCTION )) >= 240) then begin
+							set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1 );
 							play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
 							signal_end_game;
 						end
@@ -269,11 +269,11 @@ end
 
 procedure critter_p_proc begin
 
-	if global_var(DCMUTANT_GAVE_DISK) != 3 then begin// DCMUTANT_GAVE_DISK:=0; // 477 // ! Fallout Fixt: 2 means showed disk to Rutger
-		if global_var(DCMUTANT_GAVE_DISK) == 2 then begin
-			if global_var(DCMUTANT_DISK_POINTER) > 1 then begin
+	if global_var( GVAR_DCMUTANT_GAVE_DISK ) != 3 then begin// DCMUTANT_GAVE_DISK:=0; // 477 // ! Fallout Fixt: 2 means showed disk to Rutger
+		if global_var( GVAR_DCMUTANT_GAVE_DISK ) == 2 then begin
+			if global_var( GVAR_DCMUTANT_DISK_POINTER ) > 1 then begin
 		//		destroy_object(global_var(DCMUTANT_DISK_POINTER));// DCMUTANT_DISK_POINTER     :=0;    //  451  // ! Fallout Fixt: Holds the DCMutant disk pointer
-				set_global_var(DCMUTANT_GAVE_DISK, 3);
+				set_global_var( GVAR_DCMUTANT_GAVE_DISK, 3 );
 			end
 		end
 	end
@@ -294,7 +294,7 @@ procedure critter_p_proc begin
 end
 
 procedure look_at_p_proc begin
-	if global_var(CHEAT_DEBUG_MENU_ENABLED) or global_var(DEBUG_MODE_MESSAGES_ON) then begin
+	if global_var( GVAR_CHEAT_DEBUG_MENU_ENABLED ) or global_var( GVAR_DEBUG_MODE_MESSAGES_ON ) then begin
 		variable Hand_Item := 0;
 		variable Held_Item_PID := 0;
 		script_overrides;
@@ -306,7 +306,7 @@ procedure look_at_p_proc begin
 end
 
 procedure description_p_proc begin
-	if (global_var(CHEAT_DEBUG_MENU_ENABLED) == 1) then begin
+	if (global_var( GVAR_CHEAT_DEBUG_MENU_ENABLED ) == 1) then begin
 		terminate_combat;
 		script_overrides;
 		if not(combat_is_initialized) then begin// Cheater dialog for debug, testing:
@@ -318,17 +318,17 @@ end
 procedure map_enter_p_proc begin
 	//	variable map_explo_flag := 0;
 	// Reset the Holodisk pointers to avoid crashes!
-	set_global_var(ARTIFACT_HOLODISK_POINTER, 0); // ARTIFACT
-	set_global_var(FEVDISK_HOLODISK_POINTER, 0); // FEV
-	set_global_var(DISKA_HOLODISK_POINTER, 0); // DISKA
-	set_global_var(DISKD_HOLODISK_POINTER, 0); // DISKD
-	set_global_var(GENDISK_HOLODISK_POINTER1, 0); // GENDISK_HOLODISK_POINTER1
-	set_global_var(GENDISK_HOLODISK_POINTER2, 0); // GENDISK_HOLODISK_POINTER2
-	set_global_var(GENDISK_HOLODISK_POINTER3, 0); // GENDISK_HOLODISK_POINTER3
-	set_global_var(VREE_AUTOPSY_POINTER, 0); // VREE_AUTOPSY
+	set_global_var( GVAR_ARTIFACT_HOLODISK_POINTER, 0 ); // ARTIFACT
+	set_global_var( GVAR_FEVDISK_HOLODISK_POINTER, 0 ); // FEV
+	set_global_var( GVAR_DISKA_HOLODISK_POINTER, 0 ); // DISKA
+	set_global_var( GVAR_DISKD_HOLODISK_POINTER, 0 ); // DISKD
+	set_global_var( GVAR_GENDISK_HOLODISK_POINTER1, 0 ); // GENDISK_HOLODISK_POINTER1
+	set_global_var( GVAR_GENDISK_HOLODISK_POINTER2, 0 ); // GENDISK_HOLODISK_POINTER2
+	set_global_var( GVAR_GENDISK_HOLODISK_POINTER3, 0 ); // GENDISK_HOLODISK_POINTER3
+	set_global_var( GVAR_VREE_AUTOPSY_POINTER, 0 ); // VREE_AUTOPSY
 
 	// "Player has entered map number blah blah blah"
-	if global_var(DEBUG_MODE_MESSAGES_ON) then begin// <-- Debug_Enabled
+	if global_var( GVAR_DEBUG_MODE_MESSAGES_ON ) then begin// <-- Debug_Enabled
 		call DebugEnterMsgs;
 	end
 
@@ -337,9 +337,9 @@ procedure map_enter_p_proc begin
 
 	/*
 // [GOOF FIX] ...for my goof of making Garl's Father 100% of the time:
-	if global_var(MISTAKEN_ID) then begin
+	if global_var( GVAR_MISTAKEN_ID ) then begin
 		if (dude_luck < 9) or (dude_is_female) then begin
-			set_global_var(MISTAKEN_ID, 0);
+			set_global_var( GVAR_MISTAKEN_ID, 0 );
 		end
 	end*/
 
@@ -349,20 +349,20 @@ procedure map_enter_p_proc begin
 //	end
 // "You earn 10000 experience points" since previously it only showed once Vats and Master both dead, even thuogh both give 10000xp independently
 /*
-	if (global_var(FIXT_BASE_VERSION_NUM) >= 6) and (global_var(FIXT_SUBVERSION_INSTALLED) >= 3) then begin
-		if (global_var(PLAYER_INFORMED_10K) != 1) then begin
-			if (global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2) then begin
+	if (global_var( GVAR_FIXT_BASE_VERSION_NUM ) >= 6) and (global_var( GVAR_FIXT_SUBVERSION_INSTALLED ) >= 3) then begin
+		if (global_var( GVAR_PLAYER_INFORMED_10K ) != 1) then begin
+			if (global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2) then begin
 				if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
-					set_global_var(PLAYER_INFORMED_10K, 1);
+					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
 					display_msg(message_str(SCRIPT_GENCHAT, 700));
-					set_global_var(PLAYER_INFORMED_10K, 1);
+					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
 				end
 			end
-			else if (global_var(MASTER_BLOWN) == 1) then begin
+			else if (global_var( GVAR_MASTER_BLOWN ) == 1) then begin
 				if ((cur_map_index != MAP_CHILDRN1) and (cur_map_index != MAP_CHILDRN2) and (cur_map_index != MAP_MSTRLR12) and (cur_map_index != MAP_MSTRLR34)) then begin
-					set_global_var(PLAYER_INFORMED_10K, 1);
+					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
 					display_msg(message_str(SCRIPT_GENCHAT, 700));
-					set_global_var(PLAYER_INFORMED_10K, 1);
+					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
 				end
 			end
 		end
@@ -375,15 +375,15 @@ procedure map_update_p_proc begin
 	cmap := cur_map_index;
 
 	if in_mariposa then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
-		if ((global_var(VATS_BLOWN) == 1) and (global_var(QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
-			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+		if ((global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2)) then begin
+			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
 				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
 			end
 		end
 	end
 	else if in_cathedral then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
-		if ((global_var(COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(MASTER_BLOWN) == 1)) then begin
-			if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
+		if ((global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ) != 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
+			if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
 				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
 			end
 		end
@@ -428,7 +428,7 @@ procedure timed_event_p_proc begin
 	end
 	else if fixed_param == EVENT_SHOOT_OVERSEER_AUTO then begin
 		debug("EVENT_SHOOT_OVERSEER_AUTO");
-		if global_var(DUDE_SHOOTS_OVERSEER) < 1 then begin
+		if global_var( GVAR_DUDE_SHOOTS_OVERSEER ) < 1 then begin
 			if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
 				reg_anim_func(2, map_var(0));
 				reg_anim_func(1, 1);
@@ -449,7 +449,7 @@ procedure timed_event_p_proc begin
 				add_timer_event(dude_obj, game_ticks(10), 8);
 			end
 		end
-		set_global_var(DUDE_SHOOTS_OVERSEER, 1);
+		set_global_var( GVAR_DUDE_SHOOTS_OVERSEER, 1 );
 	end
 	else if fixed_param == 8 then begin
 		debug("fixed_param 8");
@@ -459,18 +459,18 @@ procedure timed_event_p_proc begin
 	end
 	else if fixed_param == EVENT_ALLOW_PLAYER_CONTROL then begin
 		debug("EVENT_ALLOW_PLAYER_CONTROL");
-		set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
-		set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
-		set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
+		set_global_var( GVAR_MARK_V13_2, 0 );//	MARK_V13_2                :=1;    //  559
+		set_global_var( GVAR_MARK_V13_3, 0 );//	MARK_V13_3                :=1;    //  560
+		set_global_var( GVAR_MARK_V13_4, 0 );//	MARK_V13_4                :=1;    //  561
 
 		add_timer_event(dude_obj, 0, EVENT_END_GAME);
 	end
 	else if fixed_param == EVENT_SHOOT_OVERSEER_KILLED then begin
 		debug("EVENT_SHOOT_OVERSEER_KILLED");
 		game_ui_enable;
-		set_global_var(MARK_V13_2, 0);//	MARK_V13_2                :=1;    //  559
-		set_global_var(MARK_V13_3, 0);//	MARK_V13_3                :=1;    //  560
-		set_global_var(MARK_V13_4, 0);//	MARK_V13_4                :=1;    //  561
+		set_global_var( GVAR_MARK_V13_2, 0 );//	MARK_V13_2                :=1;    //  559
+		set_global_var( GVAR_MARK_V13_3, 0 );//	MARK_V13_3                :=1;    //  560
+		set_global_var( GVAR_MARK_V13_4, 0 );//	MARK_V13_4                :=1;    //  561
 		kill_critter_type(PID_OVERSEER, 1);//Overseer
 
 		set_story_finished;
@@ -481,12 +481,12 @@ procedure timed_event_p_proc begin
 *******************************************************************/
 	else if fixed_param == EVENT_COUNTDOWN_MASTER then begin
 		if (cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34) then begin
-			if not(global_var(MASTER_BLOWN_CUTSCENE)) then begin
-				SecondsLeft := 240 - ((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION));
-				if (((game_time / 10) - global_var(COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
+			if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
+				SecondsLeft := 240 - ((game_time / 10) - global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ));
+				if (((game_time / 10) - global_var( GVAR_COUNTDOWN_TO_DESTRUCTION )) >= 240) then begin
 					Zero := 0;
 					display_msg(message_str(SCRIPT_MASTER2, 100) + Zero + message_str(SCRIPT_MASTER2, 101));
-					set_global_var(MASTER_BLOWN_CUTSCENE, 1);
+					set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1 );
 					play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
 					signal_end_game;
 				end
@@ -505,12 +505,12 @@ procedure timed_event_p_proc begin
 	end
 	else if fixed_param == EVENT_COUNTDOWN_VATS then begin
 		if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin
-			if global_var(VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
-				SecondsLeft := (global_var(VATS_COUNTDOWN) - (game_time / 10));
+			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
+				SecondsLeft := (global_var( GVAR_VATS_COUNTDOWN ) - (game_time / 10));
 				if (SecondsLeft <= 0) then begin
 					Zero := 0;
 					display_msg(message_str(SCRIPT_MBENT, 100) + Zero + message_str(SCRIPT_MBENT, 101));
-					set_global_var(VATS_BLOWN_CUTSCENE_DONE, 1);
+					set_global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE, 1 );
 					play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
 					signal_end_game;
 				end
@@ -528,15 +528,15 @@ procedure timed_event_p_proc begin
 		end
 	end
 	else if fixed_param == 13 then begin
-		if (global_var(UNDRBED_STARTED_TIMER) == 0) then begin// UNDRBED_STARTED_TIMER
+		if (global_var( GVAR_UNDRBED_STARTED_TIMER ) == 0) then begin// UNDRBED_STARTED_TIMER
 			if (tile_num(dude_obj) == 24692) or (tile_num(dude_obj) == 24892) or (tile_num(dude_obj) == 25092) or (tile_num(dude_obj) == 25292) or (tile_num(dude_obj) == 24492) then begin
-				set_global_var(UNDRBED_STARTED_TIMER, 1);
+				set_global_var( GVAR_UNDRBED_STARTED_TIMER, 1 );
 				if (is_success(do_check(dude_obj, STAT_pe, 0))) then begin
-					set_global_var(UNDRBED_STARTED_TIMER, 2);
+					set_global_var( GVAR_UNDRBED_STARTED_TIMER, 2 );
 					display_msg(message_str(SCRIPT_UNDRBED, 100));
 				end
-				if (global_var(UNDRBED_STARTED_TIMER) == 0) then begin
-					set_global_var(UNDRBED_STARTED_TIMER, 1);
+				if (global_var( GVAR_UNDRBED_STARTED_TIMER ) == 0) then begin
+					set_global_var( GVAR_UNDRBED_STARTED_TIMER, 1 );
 				end
 			end
 			else begin
@@ -544,15 +544,15 @@ procedure timed_event_p_proc begin
 			end
 		end
 		else begin
-			if (global_var(UNDRBED_STARTED_TIMER) == 1) or (global_var(UNDRBED_STARTED_TIMER) == 2) then begin// UNDRBED_STARTED_TIMER -- PHASE2
+			if (global_var( GVAR_UNDRBED_STARTED_TIMER ) == 1) or (global_var( GVAR_UNDRBED_STARTED_TIMER ) == 2) then begin// UNDRBED_STARTED_TIMER -- PHASE2
 				if (tile_num(dude_obj) == 25287) or (tile_num(dude_obj) == 26090) then begin
-					if global_var(FIXT_BUGFIXES_ONLY) or (global_var(UNDRBED_STARTED_TIMER) == 1) then begin
-						set_global_var(UNDRBED_STARTED_TIMER, 3);
+					if global_var( GVAR_FIXT_BUGFIXES_ONLY ) or (global_var( GVAR_UNDRBED_STARTED_TIMER ) == 1) then begin
+						set_global_var( GVAR_UNDRBED_STARTED_TIMER, 3 );
 						display_msg(message_str(SCRIPT_UNDRBED, 101));
-						set_global_var(UNDRBED_STARTED_TIMER, 3);
+						set_global_var( GVAR_UNDRBED_STARTED_TIMER, 3 );
 					end
 					else begin
-						set_global_var(UNDRBED_STARTED_TIMER, 3);
+						set_global_var( GVAR_UNDRBED_STARTED_TIMER, 3 );
 
 						if (is_success(do_check(dude_obj, STAT_pe, 0)) and is_success(do_check(dude_obj, STAT_lu, 0))) then begin
 							variable item := 0;
@@ -565,7 +565,7 @@ procedure timed_event_p_proc begin
 						else begin
 							display_msg(message_str(SCRIPT_UNDRBED, 101));
 						end
-						set_global_var(UNDRBED_STARTED_TIMER, 3);
+						set_global_var( GVAR_UNDRBED_STARTED_TIMER, 3 );
 					end
 				end
 				else begin
@@ -716,7 +716,7 @@ end
 
 procedure FixesOnly
 begin
-	if (global_var(FIXT_BUGFIXES_ONLY)) then begin
+	if (global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
 		gsay_reply(621, 208);
 		giq_option( 1, SCRIPT_CHEATER, 209, FixesOFF, NEUTRAL_REACTION );
 		giq_option( 1, SCRIPT_CHEATER, 210, Cheater00a, NEUTRAL_REACTION );
@@ -730,13 +730,13 @@ end
 
 procedure FixesON
 begin
-	set_global_var(FIXT_BUGFIXES_ONLY, 1);
+	set_global_var( GVAR_FIXT_BUGFIXES_ONLY, 1 );
 	call FixesOnly;
 end
 
 procedure FixesOFF
 begin
-	set_global_var(FIXT_BUGFIXES_ONLY, 0);
+	set_global_var( GVAR_FIXT_BUGFIXES_ONLY, 0 );
 	call FixesOnly;
 end
 
@@ -815,18 +815,18 @@ procedure Cheater00b begin
 end
 
 procedure Cheater00c begin
-	set_global_var(MASTER_BLOWN,1);
+	set_global_var( GVAR_MASTER_BLOWN, 1 );
 	call CheaterEnd;
 end
 
 procedure Cheater00d begin
-	set_global_var(VATS_BLOWN,1);
+	set_global_var( GVAR_VATS_BLOWN, 1 );
 	call CheaterEnd;
 end
 
 procedure Slideshow begin
-	set_global_var(MASTER_BLOWN,1);
-	set_global_var(VATS_BLOWN,1);
+	set_global_var( GVAR_MASTER_BLOWN, 1 );
+	set_global_var( GVAR_VATS_BLOWN, 1 );
 
 	load_map(MAP_V13ENT, -1);
 end
@@ -1706,6 +1706,7 @@ end
 procedure DebugEnterMsgs begin
 	debug_msg("PLAYER HAS -ENTERED- MAP:  " + cur_map_index + "  AT ELEVATION  " + elevation(dude_obj) + "  AND TILE NUMBER  " + tile_num(dude_obj) + ".     ");
 end
+
 
 
 

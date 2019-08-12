@@ -160,19 +160,19 @@ procedure description_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	set_global_var(IAN_HIRELING_STATUS, 3);
+	set_global_var( GVAR_IAN_HIRELING_STATUS, 3 );
 	inc_good_critter
 end
 
 procedure look_at_p_proc begin
 	script_overrides;
 	// If not in party and haven't had introductions, display "short stocky man" description
-	if (global_var(IAN_HIRELING_STATUS) == 0) then begin
+	if (global_var( GVAR_IAN_HIRELING_STATUS ) == 0) then begin
 		display_msg(message_str(SCRIPT_IAN, 100));
 	end
 	else begin
 		// if have had introductions or was in party but was asked to leave, display "Ian"
-		if ((global_var(IAN_HIRELING_STATUS) == 1) or (global_var(IAN_HIRELING_STATUS) == 3)) then begin
+		if ((global_var( GVAR_IAN_HIRELING_STATUS ) == 1) or (global_var( GVAR_IAN_HIRELING_STATUS ) == 3)) then begin
 			display_msg(message_str(SCRIPT_IAN, 113));
 		end
 	end
@@ -188,7 +188,7 @@ procedure map_enter_p_proc begin
 		end
 	end
 
-	if (shady_invaded and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
+	if (shady_invaded and (global_var( GVAR_IAN_HIRELING_STATUS ) != 2)) then begin
 		if (cur_map_index == MAP_SHADYE) or (cur_map_index == MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(7) != 1) then begin
 				set_local_var(7, 1);
@@ -213,7 +213,7 @@ procedure map_enter_p_proc begin
 end
 
 procedure pickup_p_proc begin
-	if (global_var(IAN_HIRELING_STATUS) < 2) then begin
+	if (global_var( GVAR_IAN_HIRELING_STATUS ) < 2) then begin
 		tmp_hostile := 1;
 	end
 	else begin
@@ -227,22 +227,22 @@ procedure talk_p_proc begin
 	get_reaction
 
 	start_gdialog(235, self_obj, 4, -1, -1);
-	if (global_var(IAN_HIRELING_STATUS) == 2) or (global_var(IAN_HIRELING_STATUS) == 3) then begin
+	if (global_var( GVAR_IAN_HIRELING_STATUS ) == 2) or (global_var( GVAR_IAN_HIRELING_STATUS ) == 3) then begin
 		gdialog_set_barter_mod(255);
 	end
 
 	gsay_start;
 
-	if (global_var(ENEMY_SHADY_SANDS) and (global_var(IAN_HIRELING_STATUS) != 2)) then begin
+	if (global_var( GVAR_ENEMY_SHADY_SANDS ) and (global_var( GVAR_IAN_HIRELING_STATUS ) != 2)) then begin
 		call Ian14;
 	end
-	else if (global_var(IAN_HIRELING_STATUS) == 0) then begin
+	else if (global_var( GVAR_IAN_HIRELING_STATUS ) == 0) then begin
 		call Ian02;
 	end
-	else if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+	else if (global_var( GVAR_IAN_HIRELING_STATUS ) == 2) then begin
 		call Ian15;
 	end
-	else if (global_var(IAN_HIRELING_STATUS) == 3) then begin
+	else if (global_var( GVAR_IAN_HIRELING_STATUS ) == 3) then begin
 		call Ian21;
 	end
 	else begin
@@ -252,7 +252,7 @@ procedure talk_p_proc begin
 	gsay_end;
 	end_dialogue;
 
-	if ((global_var(IAN_HIRELING_STATUS) == 2) and (global_var(GVAR_IAN_HIRED) == 0)) then begin
+	if ((global_var( GVAR_IAN_HIRELING_STATUS ) == 2) and (global_var(GVAR_IAN_HIRED) == 0)) then begin
 		set_global_var(GVAR_IAN_HIRED, 1);
 		display_msg(message_str(SCRIPT_IAN, 169));
 		give_exp_points(EXP_HIRED_IAN);
@@ -263,7 +263,7 @@ end
 procedure use_obj_on_p_proc begin
 
 	// TODO: Investigate this
-	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+	if (global_var( GVAR_IAN_HIRELING_STATUS ) == 2) then begin
 		item := obj_pid(obj_being_used_with);
 		if ((item != 40) and (item != 71) and (item != 81) and (item != 103) and (item != 144)) then begin
 			script_overrides;
@@ -288,9 +288,9 @@ end
 
 procedure join_party begin
 	if dude_has_free_slot_for_ian then begin
-		set_global_var(IAN_HIRELING_STATUS, 2);
-		set_global_var(DESTROY_VATS_5, 4);
-		set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ));
+		set_global_var( GVAR_IAN_HIRELING_STATUS, 2 );
+		set_global_var( GVAR_DESTROY_VATS_5, 4 );
+		set_global_var( GVAR_IAN_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ) );
 
 		ian_joins_party;
 		Reply(150);
@@ -303,9 +303,9 @@ end
 
 procedure rejoin_party begin
 	if dude_has_free_slot_for_ian then begin
-		set_global_var(IAN_HIRELING_STATUS, 2);
-		set_global_var(DESTROY_VATS_5, 4);
-		set_global_var(IAN_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ));
+		set_global_var( GVAR_IAN_HIRELING_STATUS, 2 );
+		set_global_var( GVAR_DESTROY_VATS_5, 4 );
+		set_global_var( GVAR_IAN_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ) );
 
 		end_party_waiting;
 		Reply(150);
@@ -338,7 +338,7 @@ end
 
 procedure Ian04 begin
 	gsay_reply(235, 108);
-	set_global_var(IAN_HIRELING_STATUS, 1);
+	set_global_var( GVAR_IAN_HIRELING_STATUS, 1 );
 	giq_option( 4, SCRIPT_IAN, 109, Ian06, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_IAN, 110, Ian07, NEUTRAL_REACTION );
 end
@@ -403,16 +403,16 @@ procedure Ian13 begin
 	// Some Fallout 1 stuff. We have to use mark_on_map to make it work in Fo2
 	// Keeping the Fo1 variables anyway, because they might be needed elswhere.
 	//if (not(global_var(WORLDMAPLIST_THE_HUB))) then begin
-		set_global_var(WORLDMAPLIST_THE_HUB, 1);
+		set_global_var( GVAR_WORLDMAPLIST_THE_HUB, 1 );
 		mark_on_map(AREA_HUB)
 	//end
 	//if (not(global_var(WORLDMAPLIST_JUNKTOWN))) then begin
-		set_global_var(WORLDMAPLIST_JUNKTOWN, 1);
+		set_global_var( GVAR_WORLDMAPLIST_JUNKTOWN, 1 );
 		mark_on_map(AREA_JUNKTOWN)
 	//end
 
 	gsay_reply(235, 139);
-	if (global_var(IAN_HIRELING_STATUS) == 2) then begin
+	if (global_var( GVAR_IAN_HIRELING_STATUS ) == 2) then begin
 		giq_option( 4, SCRIPT_IAN, 140, Ian15, NEUTRAL_REACTION );
 	end
 	else begin
@@ -438,7 +438,7 @@ procedure Ian15 begin
 end
 
 procedure Ian16 begin
-	set_global_var(IAN_HIRELING_STATUS, 3);
+	set_global_var( GVAR_IAN_HIRELING_STATUS, 3 );
 	set_party_waiting;
 	gsay_message(235, 147, 50);
 end
@@ -532,7 +532,7 @@ procedure map_commentary begin
 	else if (cur_map_index == MAP_GLOWENT) then begin //  THE GLOW - ENTRANCE (CRATER)
 		if (not(line154flag)) then begin
 			float_msg(self_obj, message_str(SCRIPT_IAN, 154), 0);
-			if (global_var(KATJA_HIRELING_STATUS) == 2) then begin
+			if (global_var( GVAR_KATJA_HIRELING_STATUS ) == 2) then begin
 				float_msg(Katja_ptr, message_str(SCRIPT_KATJA, 185), 5);
 			end
 			line154flag := 1;
@@ -613,7 +613,7 @@ procedure IanClose begin
 	/*set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 2);*/
+	set_global_var( GVAR_DESTROY_VATS_5, 2 );*/
 	gsay_message(235, 201, 50);
 	call Ian15;
 end
@@ -624,7 +624,7 @@ procedure IanModerate begin
 	/*set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 4);*/
+	set_global_var( GVAR_DESTROY_VATS_5, 4 );*/
 
 	gsay_message(235, 201, 50);
 	call Ian15;
@@ -636,7 +636,7 @@ procedure IanFar begin
 	/*set_local_var(4, 0);
 	set_local_var(5, 0);
 	set_local_var(6, 0);
-	set_global_var(DESTROY_VATS_5, 6);*/
+	set_global_var( GVAR_DESTROY_VATS_5, 6 );*/
 	gsay_message(235, 201, 50);
 	call Ian15;
 end
@@ -689,6 +689,7 @@ end
 procedure PickDeadBodyType begin
 	pick_dead_body_type
 end
+
 
 
 

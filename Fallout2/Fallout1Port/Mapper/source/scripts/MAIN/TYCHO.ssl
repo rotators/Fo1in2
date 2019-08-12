@@ -98,7 +98,7 @@ procedure PlayerTraitor;
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_tycho  		((dude_at_max_party_size == false) and (Tycho_In_Party == false) or unlimited_party_members)
 #define EVENT_FLOAT_JOIN 						(2)
-#define is_junktown_enemy 						((global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) > 0) or (global_var( GVAR_DUDE_ENEMY_JUNK_BOXER ) > 0) or (global_var(ENEMY_JUNKTOWN) > 0))
+#define is_junktown_enemy 						((global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) > 0) or (global_var( GVAR_DUDE_ENEMY_JUNK_BOXER ) > 0) or (global_var( GVAR_ENEMY_JUNKTOWN ) > 0))
 #define is_in_junktown 							((cur_map_index == MAP_JUNKENT) or (cur_map_index == MAP_JUNKCSNO) or (cur_map_index == MAP_JUNKKILL))
 
 #define sleep_time 		(2200)
@@ -131,8 +131,8 @@ end
 
 // Fallout Fixt to prevent Tycho from slaughtering his homies
 procedure combat_p_proc begin
-	if not(global_var(FIXT_BUGFIXES_ONLY)) then begin
-		if (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) > 0) or (global_var( GVAR_DUDE_ENEMY_JUNK_BOXER ) > 0) or (global_var(ENEMY_JUNKTOWN) > 0) then begin
+	if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
+		if (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) > 0) or (global_var( GVAR_DUDE_ENEMY_JUNK_BOXER ) > 0) or (global_var( GVAR_ENEMY_JUNKTOWN ) > 0) then begin
 			party_remove(self_obj);
 			if (fixed_param == 4) then begin
 				attack(dude_obj);
@@ -157,7 +157,7 @@ procedure PlayerTraitor begin
 end
 
 procedure critter_p_proc begin
-	if (global_var(TYCHO_HIRELING_STATUS) < 2) then begin
+	if (global_var( GVAR_TYCHO_HIRELING_STATUS ) < 2) then begin
 		sleeping
 	end
 	else if (Tycho_In_Party) then begin
@@ -180,11 +180,11 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	set_global_var(TYCHO_HIRELING_STATUS, 3);
+	set_global_var( GVAR_TYCHO_HIRELING_STATUS, 3 );
 
 	if (source_obj == dude_obj and is_in_junktown) then begin
 		set_global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1 );
-		set_global_var(ENEMY_JUNKTOWN, 1);
+		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 5 );
 	end
 
@@ -195,11 +195,11 @@ procedure look_at_p_proc begin
 	script_overrides;
 
 	// If not in party and haven't had introductions, display "dusty trenchcoat and gasmask" description
-	if (global_var(TYCHO_HIRELING_STATUS) == 0) then begin
+	if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 0) then begin
 		display_msg(message_str(SCRIPT_TYCHO, 100));
 	end
 	// if have had introductions or was in party but was asked to leave, display "Tycho"
-	else if ((global_var(TYCHO_HIRELING_STATUS) == 1) or (global_var(TYCHO_HIRELING_STATUS) == 3)) then begin
+	else if ((global_var( GVAR_TYCHO_HIRELING_STATUS ) == 1) or (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 3)) then begin
 		display_msg(message_str(SCRIPT_TYCHO, 101));
 	end
 end
@@ -235,22 +235,22 @@ procedure talk_p_proc begin
 	else begin
 
 		start_gdialog(389, self_obj, 4, -1, -1);
-		if (global_var(TYCHO_HIRELING_STATUS) == 2) or (global_var(TYCHO_HIRELING_STATUS) == 3) then begin
+		if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 2) or (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 3) then begin
 			gdialog_set_barter_mod(255);
 		end
 
 		gsay_start;
 
-		if (global_var(TYCHO_HIRELING_STATUS) == 3) then begin
+		if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 3) then begin
 			call Tycho28;
 		end
-		else if (global_var(TYCHO_HIRELING_STATUS) == 2) then begin
+		else if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 2) then begin
 			call Tycho22;
 		end
-		else if (global_var(TYCHO_HIRELING_STATUS) == 0) then begin
+		else if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 0) then begin
 			call Tycho01;
 		end
-		else if ((global_var(HIRED_BY_GIZMO) == 1) and (global_var(HIRED_BY_KILLIAN) == 0)) then begin
+		else if ((global_var( GVAR_HIRED_BY_GIZMO ) == 1) and (global_var( GVAR_HIRED_BY_KILLIAN ) == 0)) then begin
 			call Tycho19;
 		end
 		else if (local_var(1) < 2) then begin
@@ -264,10 +264,10 @@ procedure talk_p_proc begin
 		end_dialogue;
 
 		if Tycho_In_Party then begin
-			if (global_var(DESTROY_MASTER_10) == 0) then begin
+			if (global_var( GVAR_DESTROY_MASTER_10 ) == 0) then begin
 				display_msg(message_str(SCRIPT_TYCHO, 173));
 				give_exp_points(EXP_HIRED_TYCHO);
-				set_global_var(DESTROY_MASTER_10, 1);
+				set_global_var( GVAR_DESTROY_MASTER_10, 1 );
 			end
 		end
 
@@ -321,7 +321,7 @@ procedure Tycho03 begin
 end
 
 procedure Tycho04 begin
-	set_global_var(TYCHO_HIRELING_STATUS, 1);
+	set_global_var( GVAR_TYCHO_HIRELING_STATUS, 1 );
 	gsay_reply(389, 109);
 	giq_option( 4, SCRIPT_TYCHO, 110, Tycho05, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_TYCHO, 111, Tycho06, NEUTRAL_REACTION );
@@ -409,7 +409,7 @@ procedure Tycho15 begin
 	gsay_reply(389, 139);
 	giq_option( 4, SCRIPT_TYCHO, 137, Tycho08, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_TYCHO, 138, Tycho16, NEUTRAL_REACTION );
-	if (global_var(HIRED_BY_KILLIAN)) then begin
+	if (global_var( GVAR_HIRED_BY_KILLIAN )) then begin
 		giq_option( 4, SCRIPT_TYCHO, 140, Tycho18, NEUTRAL_REACTION );
 	end
 end
@@ -507,7 +507,7 @@ procedure Tycho24 begin
 end
 
 procedure NodeWait begin
-	set_global_var(TYCHO_HIRELING_STATUS, 3);
+	set_global_var( GVAR_TYCHO_HIRELING_STATUS, 3 );
 	set_party_waiting;
 end
 
@@ -551,9 +551,9 @@ end
 
 procedure TychoJoins begin
 	if dude_has_free_slot_for_tycho then begin
-		set_global_var(TYCHO_HIRELING_STATUS, 2);
-		set_global_var(TYCHO_DISTANCE_VAL, 4);
-		set_global_var(TYCHO_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ));
+		set_global_var( GVAR_TYCHO_HIRELING_STATUS, 2 );
+		set_global_var( GVAR_TYCHO_DISTANCE_VAL, 4 );
+		set_global_var( GVAR_TYCHO_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ) );
 		//critter_add_trait(self_obj, 1, 6, 0);
 		//party_add(self_obj);
 
@@ -567,9 +567,9 @@ end
 
 procedure TychoReJoins begin
 	if dude_has_free_slot_for_tycho then begin
-		set_global_var(TYCHO_HIRELING_STATUS, 2);
-		set_global_var(TYCHO_DISTANCE_VAL, 4);
-		set_global_var(TYCHO_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ));
+		set_global_var( GVAR_TYCHO_HIRELING_STATUS, 2 );
+		set_global_var( GVAR_TYCHO_DISTANCE_VAL, 4 );
+		set_global_var( GVAR_TYCHO_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ) );
 		end_party_waiting;
 	end
 	else begin
@@ -597,7 +597,7 @@ procedure TychoClose begin
 	/*set_local_var(6, 0);
 	set_local_var(7, 0);
 	set_local_var(8, 0);
-	set_global_var(TYCHO_DISTANCE_VAL, 2);*/
+	set_global_var( GVAR_TYCHO_DISTANCE_VAL, 2 );*/
 	gsay_message(235, 201, 50);
 	call Tycho22;
 end
@@ -608,7 +608,7 @@ procedure TychoModerate begin
 	/*set_local_var(6, 0);
 	set_local_var(7, 0);
 	set_local_var(8, 0);
-	set_global_var(TYCHO_DISTANCE_VAL, 4);*/
+	set_global_var( GVAR_TYCHO_DISTANCE_VAL, 4 );*/
 	gsay_message(235, 201, 50);
 	call Tycho22;
 end
@@ -619,7 +619,7 @@ procedure TychoFar begin
 /*	set_local_var(6, 0);
 	set_local_var(7, 0);
 	set_local_var(8, 0);
-	set_global_var(TYCHO_DISTANCE_VAL, 6);*/
+	set_global_var( GVAR_TYCHO_DISTANCE_VAL, 6 );*/
 	gsay_message(235, 201, 50);
 	call Tycho22;
 end
@@ -668,6 +668,7 @@ procedure TychoFreeCombat begin
 	set_self_ai( AI_TYCHO );
 	call TychoCombatTactics;
 end
+
 
 
 
