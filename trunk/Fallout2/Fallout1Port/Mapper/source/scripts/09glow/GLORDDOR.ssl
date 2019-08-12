@@ -1,14 +1,18 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+
+#define NAME                    	SCRIPT_DOOR
 
 procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure damage_p_proc;//    script_action == 14
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
 procedure Trapped_And_Locked;
 procedure Locked_Door;
 procedure Trapped_Door;
@@ -26,50 +30,10 @@ variable Traps;
 variable Per;
 
 
-procedure start
-begin
-	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-		call use_p_proc;
-	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				call map_update_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-							call description_p_proc;
-						end
-						else begin
-							if (script_action == 8) then begin//<-- use_skill_on_p_proc
-								call use_skill_on_p_proc;
-							end
-							else begin
-								if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-									call damage_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	variable LVar0 := 0;
 	LVar0 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
 	if (global_var( GVAR_GLOW_POWER ) == 0) then begin
@@ -105,25 +69,19 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	if ((local_var(2) == 0) and obj_is_locked(self_obj)) then begin
 		call Trapped_And_Locked;
 	end
-	else begin
-		if (local_var(2) == 0) then begin
-			call Trapped_Door;
-		end
-		else begin
-			if (obj_is_locked(self_obj)) then begin
-				call Locked_Door;
-			end
-		end
+	else if (local_var(2) == 0) then begin
+		call Trapped_Door;
+	end
+	else if (obj_is_locked(self_obj)) then begin
+		call Locked_Door;
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -175,55 +133,53 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_GLORDDOR, 123));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if ((local_var(3) == 0) and (local_var(2) == 0)) then begin
 		call Skill_Checks;
 		call Display_Armed_And_Locked;
 	end
+	else if (local_var(2) == 0) then begin
+		call Skill_Checks;
+		call Display_Trapped;
+	end
+	else if (local_var(3) == 0) then begin
+		call Locks_Check;
+		call Display_Locked;
+	end
 	else begin
-		if (local_var(2) == 0) then begin
-			call Skill_Checks;
-			call Display_Trapped;
-		end
-		else begin
-			if (local_var(3) == 0) then begin
-				call Locks_Check;
-				call Display_Locked;
-			end
-			else begin
-				display_msg(message_str(SCRIPT_GLORDDOR, 123));
-			end
-		end
+		display_msg(message_str(SCRIPT_GLORDDOR, 123));
 	end
 end
 
-procedure damage_p_proc
-begin
-	if (local_var(1) > 3) then begin
-		set_local_var(2, 1);
-		if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
-		obj_open(self_obj);
-		set_local_var(3, 1);
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+
+		if (local_var(1) > 3) then begin
+			set_local_var(2, 1);
+			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
+			obj_open(self_obj);
+			set_local_var(3, 1);
+		end
+
 	end
+   else begin
+       display_msg(mstr(193));
+   end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (local_var(3) == 0) then begin
 		obj_lock(self_obj);
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (local_var(3) == 0) then begin
 		obj_lock(self_obj);
 	end
@@ -232,8 +188,7 @@ begin
 	end
 end
 
-procedure Trapped_And_Locked
-begin
+procedure Trapped_And_Locked begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS

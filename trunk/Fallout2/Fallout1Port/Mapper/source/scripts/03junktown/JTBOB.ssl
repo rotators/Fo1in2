@@ -45,45 +45,30 @@ variable Days;
 variable Met_Casino;
 variable Has_Weapon;
 
+procedure start begin
+end
 
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
 
-procedure start
-begin
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
 
-
-	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-		script_overrides;
-		display_msg(message_str(SCRIPT_JTBOB, 100));
-	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
-			end
-			else begin
-				if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					if (((GAME_TIME_IN_DAYS) - Days) >= 7) then begin
-						kill_critter(self_obj, ANIM_stand);
-					end
-				end
-			end
-		end
+procedure map_enter_p_proc begin
+	if (((GAME_TIME_IN_DAYS) - Days) >= 7) then begin
+		kill_critter(self_obj, ANIM_stand);
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (Has_Weapon == 0) and (dude_is_armed) then begin
 		Has_Weapon := 1;
-		start_gdialog(341, self_obj, 4, -1, -1);
-		gsay_start;
-		call bob0;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(bob0);
 	end
 	else begin
 		if (Met_Casino) then begin
@@ -91,27 +76,18 @@ begin
 		end
 		else begin
 			if (Herebefore) then begin
-				start_gdialog(341, self_obj, 4, -1, -1);
-				gsay_start;
-				call bob13;
-				gsay_end;
-				end_dialogue;
+				start_dialog_at_node(bob13);
 			end
 			else begin
 				Herebefore := 1;
 				Days := GAME_TIME_IN_DAYS;
-				start_gdialog(341, self_obj, 4, -1, -1);
-				gsay_start;
-				call bob10;
-				gsay_end;
-				end_dialogue;
+				start_dialog_at_node(bob10);
 			end
 		end
 	end
 end
 
-procedure bob0
-begin
+procedure bob0 begin
 	gsay_reply(341, 101);
 	giq_option( -3, SCRIPT_JTBOB, 102, bob1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JTBOB, 103, bob2, NEUTRAL_REACTION );
@@ -119,25 +95,21 @@ begin
 	giq_option( 5, SCRIPT_JTBOB, 105, bob3, NEUTRAL_REACTION );
 end
 
-procedure bob1
-begin
+procedure bob1 begin
 	gsay_message(341, 106, 50);
 end
 
-procedure bob2
-begin
+procedure bob2 begin
 	gsay_message(341, 107, 50);
 end
 
-procedure bob3
-begin
+procedure bob3 begin
 	gsay_reply(341, 108);
 	giq_option( 4, SCRIPT_JTBOB, 109, bob4, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 110, bob5, NEUTRAL_REACTION );
 end
 
-procedure bob4
-begin
+procedure bob4 begin
 	if (dude_is_armed) then begin
 		gsay_message(341, message_str(SCRIPT_JTBOB, 111) + obj_pid(critter_inven_obj(dude_obj, 1)) + message_str(SCRIPT_JTBOB, 112), 50);
 	end
@@ -146,8 +118,7 @@ begin
 	end
 end
 
-procedure bob5
-begin
+procedure bob5 begin
 	gsay_reply(341, 115);
 	giq_option( 6, SCRIPT_JTBOB, 116, bob6, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 117, bob7, NEUTRAL_REACTION );
@@ -155,37 +126,32 @@ begin
 	giq_option( 6, SCRIPT_JTBOB, 119, bobend, NEUTRAL_REACTION );
 end
 
-procedure bob6
-begin
+procedure bob6 begin
 	gsay_reply(341, 120);
 	giq_option( 6, SCRIPT_JTBOB, 121, bob7, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 122, bob8, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 123, bobend, NEUTRAL_REACTION );
 end
 
-procedure bob7
-begin
+procedure bob7 begin
 	gsay_reply(341, 124);
 	giq_option( 6, SCRIPT_JTBOB, 125, bob6, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 126, bob8, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 127, bobend, NEUTRAL_REACTION );
 end
 
-procedure bob8
-begin
+procedure bob8 begin
 	gsay_reply(341, 128);
 	giq_option( 6, SCRIPT_JTBOB, 129, bob6, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 130, bob7, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 131, bobend, NEUTRAL_REACTION );
 end
 
-procedure bob9
-begin
+procedure bob9 begin
 	float_msg(self_obj, message_str(SCRIPT_JTBOB, 132), 0);
 end
 
-procedure bob10
-begin
+procedure bob10 begin
 	gsay_reply(341, 133);
 	giq_option( -3, SCRIPT_JTBOB, 134, bob1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JTBOB, 135, bob2, NEUTRAL_REACTION );
@@ -193,15 +159,13 @@ begin
 	giq_option( 5, SCRIPT_JTBOB, 137, bob5, NEUTRAL_REACTION );
 end
 
-procedure bob11
-begin
+procedure bob11 begin
 	gsay_reply(341, 138);
 	giq_option( 4, SCRIPT_JTBOB, 139, bobend, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 140, bob12, NEUTRAL_REACTION );
 end
 
-procedure bob12
-begin
+procedure bob12 begin
 	gsay_reply(341, 141);
 	giq_option( 6, SCRIPT_JTBOB, 142, bob6, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 143, bob7, NEUTRAL_REACTION );
@@ -209,8 +173,7 @@ begin
 	giq_option( 6, SCRIPT_JTBOB, 145, bobend, NEUTRAL_REACTION );
 end
 
-procedure bob13
-begin
+procedure bob13 begin
 	gsay_reply(341, 146);
 	giq_option( -3, SCRIPT_JTBOB, 147, bob1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JTBOB, 148, bob14, NEUTRAL_REACTION );
@@ -218,18 +181,15 @@ begin
 	giq_option( 6, SCRIPT_JTBOB, 150, bob16, NEUTRAL_REACTION );
 end
 
-procedure bob14
-begin
+procedure bob14 begin
 	gsay_message(341, 151, 50);
 end
 
-procedure bob15
-begin
+procedure bob15 begin
 	gsay_message(341, 152, 50);
 end
 
-procedure bob16
-begin
+procedure bob16 begin
 	gsay_reply(341, 153);
 	giq_option( 6, SCRIPT_JTBOB, 154, bob6, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_JTBOB, 155, bob7, NEUTRAL_REACTION );
@@ -237,23 +197,19 @@ begin
 	giq_option( 6, SCRIPT_JTBOB, 157, bobend, NEUTRAL_REACTION );
 end
 
-procedure bobend
-begin
+procedure bobend begin
 end
 
-procedure combat
-begin
+procedure combat begin
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
