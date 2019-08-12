@@ -42,16 +42,16 @@
 #define cathedral_destroyed 				(global_var(GVAR_MASTER_BLOWN_CUTSCENE) > 0)
 
 #define necropolis_wpump_fixed				(global_var(GVAR_NECROP_WATER_PUMP_FIXED) == 2)
-#define followers_trained 					(global_var(SLIDE_TRAIN_FOLLOWERS) == 1)
+#define followers_trained 					(global_var(GVAR_SLIDE_TRAIN_FOLLOWERS) == 1)
 
-#define get_raiders_alive 					global_var(TOTAL_RAIDERS)
+#define get_raiders_alive 					global_var(GVAR_TOTAL_RAIDERS)
 
-#define is_tandi_alive 						(global_var(TANDI_HIRELING_STATUS) < 3)
-#define is_aradesh_alive 					(global_var(ARADESH_STATUS) == 0)
-#define is_killian_alive 					(global_var(KILLIAN_DEAD) == 0)
-#define is_gizmo_alive 						(global_var(GIZMO_DEAD) == 0)
-#define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
-#define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
+#define is_tandi_alive 						(global_var(GVAR_TANDI_HIRELING_STATUS) < 3)
+#define is_aradesh_alive 					(global_var(GVAR_ARADESH_STATUS) == 0)
+#define is_killian_alive 					(global_var(GVAR_KILLIAN_DEAD) == 0)
+#define is_gizmo_alive 						(global_var(GVAR_GIZMO_DEAD) == 0)
+#define is_rhombus_alive 					(global_var(GVAR_RHOMBUS_STATUS) == 0)
+#define is_garl_alive 					 	(global_var(GVAR_GARL_DEAD) == 0)
 
 #define tandi_is_kidnapped					(global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
 #define tandi_not_kidnapped					not(tandi_is_kidnapped)
