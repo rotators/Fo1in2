@@ -7,6 +7,8 @@
 #ifndef FIXT_H
 #define FIXT_H
 
+#error "What do we say about including fixt.h? Not today."
+
 // TODO: Check if this is even necessary anymore
 #define fixt_critter_healing 			if (map_first_run) then begin \
 											if get_critter_stat(self_obj, STAT_max_hp) > 0 then begin \
