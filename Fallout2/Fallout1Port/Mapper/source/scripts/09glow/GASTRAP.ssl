@@ -29,20 +29,30 @@ procedure spatial_p_proc begin
    if (global_var(GVAR_QUEST_GLOW_2_START_POWER) and global_var(GVAR_QUEST_GLOW_1_TRAPS_OFF)) then begin
       if (local_var(LVAR_TrapTriggered) == 0) then begin
          set_local_var(LVAR_TrapTriggered, 1);
-         Damage := random(1, 6) - 3;
 
-			if source_obj == dude_obj then begin
-				float_msg(dude_obj, mstr(100), 0);
-			end
+         if critter_wearing_power_armor(source_obj) then begin
+         	// Power Armor filtration system: Crisis averted!
+         	if (source_obj == dude_obj) then
+         		display_msg(104);
+         	else
+         		display_msg(obj_name(source_obj) + mstr(105));
+         end
+         else begin
+	         Damage := random(1, 6) - 3;
 
-			critter_dmg(dude_obj, Damage, 0);
+				if source_obj == dude_obj then begin
+					float_msg(dude_obj, mstr(100), 0);
+				end
 
-			if source_obj == dude_obj then begin
-				display_msg(mstr(102) + Damage + mstr(103));
-				poison(dude_obj, 50 + (difficulty_level * 50));
-			end
-			else begin
-				display_msg(obj_name(source_obj) + mstr(105));
+				critter_dmg(dude_obj, Damage, 0);
+
+				if source_obj == dude_obj then begin
+					display_msg(mstr(102) + Damage + mstr(103));
+					poison(dude_obj, 50 + (difficulty_level * 50));
+				end
+				else begin
+					display_msg(obj_name(source_obj) + mstr(105));
+				end
 			end
 
       end
