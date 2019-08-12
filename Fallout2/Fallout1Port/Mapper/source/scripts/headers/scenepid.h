@@ -21,6 +21,17 @@ variable Scenery_Creation_Count;
 variable Temp_Scenery_Creation_Hex;
 variable Scenery_Creation_Ptr;
 
+// dummies
+// they should get proper names at some point in future~
+#define PID_33554439 (33554439)
+#define PID_33554471 (33554471)
+#define PID_33554834 (33554834)
+#define PID_33554835 (33554835)
+#define PID_33555090 (33555090)
+#define PID_33555118 (33555118)
+#define PID_33555119 (33555119)
+
+
 #define PID_BLOCKING_HEX                    (33554499)
 #define PID_BLOWN_ARROYO_CAVE_DOOR          (33555365)
 #define PID_ARROYO_CAVE_DOOR                (33555366)
