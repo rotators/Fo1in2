@@ -16,6 +16,13 @@
 #define MVAR_CARVN_LEAD 				(1)
 
 //==================================================================
+#define spawn_dead_critter(x,y,z)		Critter_type := x; 					\
+										Critter_script := y;				\
+										Critter_direction := random(0, 5); 	\
+										call Place_critter; 				\
+										anim(Critter, 1000, random(0, 5)); 	\
+										kill_critter(Critter, z)
+
 
 #define FixRotationArc(X)           while (X < 0) do begin      \
                                         X += 6;                 \
