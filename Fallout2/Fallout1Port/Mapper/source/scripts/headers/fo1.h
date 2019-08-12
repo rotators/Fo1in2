@@ -30,30 +30,30 @@
 										party_member_unhide_all								\
 										/*world_map;*/load_map(MAP_RNDDESER,0);				\
 										gfade_in(1)
-										
+
 #define is_story_finished				(global_var(GVAR_GAME_CONTINUES) > 0)
 
 /*********************************************************
 	Quests:
 *********************************************************/
-#define waterchip_returned 					(global_var(QUEST_VAULT13_4_WATERCHIP) >= 2)	
+#define waterchip_returned 					(global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
 
-#define military_base_destoryed 			(global_var(VATS_BLOWN_CUTSCENE_DONE) > 0)
-#define cathedral_destroyed 				(global_var(MASTER_BLOWN_CUTSCENE) > 0)
+#define military_base_destoryed 			(global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) > 0)
+#define cathedral_destroyed 				(global_var(GVAR_MASTER_BLOWN_CUTSCENE) > 0)
 
-#define necropolis_wpump_fixed				(global_var(NECROP_WATER_PUMP_FIXED) == 2)
+#define necropolis_wpump_fixed				(global_var(GVAR_NECROP_WATER_PUMP_FIXED) == 2)
 #define followers_trained 					(global_var(SLIDE_TRAIN_FOLLOWERS) == 1)
 
 #define get_raiders_alive 					global_var(TOTAL_RAIDERS)
 
-#define is_tandi_alive 						(global_var(TANDI_HIRELING_STATUS) < 3) 
-#define is_aradesh_alive 					(global_var(ARADESH_STATUS) == 0) 
-#define is_killian_alive 					(global_var(KILLIAN_DEAD) == 0) 
-#define is_gizmo_alive 						(global_var(GIZMO_DEAD) == 0) 
+#define is_tandi_alive 						(global_var(TANDI_HIRELING_STATUS) < 3)
+#define is_aradesh_alive 					(global_var(ARADESH_STATUS) == 0)
+#define is_killian_alive 					(global_var(KILLIAN_DEAD) == 0)
+#define is_gizmo_alive 						(global_var(GIZMO_DEAD) == 0)
 #define is_rhombus_alive 					(global_var(RHOMBUS_STATUS) == 0)
 #define is_garl_alive 					 	(global_var(GARL_DEAD) == 0)
 
-#define tandi_is_kidnapped					(global_var(TANDI_HIRELING_STATUS) == 1)
+#define tandi_is_kidnapped					(global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
 #define tandi_not_kidnapped					not(tandi_is_kidnapped)
 
 /*********************************************************
@@ -98,8 +98,8 @@
 								end \
 							end \
 						end \
-					end	
-					
+					end
+
 #define flee_dude 		variable LVar0 := 0; \
 						variable LVar1 := 0; \
 						variable LVar2 := 0; \
@@ -125,7 +125,7 @@
 									(cur_map_index != MAP_DESCRVN4) and  	\
 									(cur_map_index != MAP_MNTCRVN4) and 	\
 									(cur_map_index != MAP_DESERT1))
-									
+
 #define map_is_caravan_escort 		(cur_map_index == MAP_DESCRVN1) or		\
 									(cur_map_index == MAP_DESCRVN2) or		\
 									(cur_map_index == MAP_DESCRVN3) or		\
@@ -134,12 +134,12 @@
 									(cur_map_index == MAP_MNTCRVN2) or		\
 									(cur_map_index == MAP_MNTCRVN3) or		\
 									(cur_map_index == MAP_MNTCRVN4)
-									
+
 #define map_is_mountain_caravan_escort	(cur_map_index == MAP_MNTCRVN1) or		\
 										(cur_map_index == MAP_MNTCRVN2) or		\
 										(cur_map_index == MAP_MNTCRVN3) or		\
 										(cur_map_index == MAP_MNTCRVN4)
-									
+
 #define dude_wearing_coc_robe	    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 #define coc_disguise_check 			if dude_wearing_coc_robe then begin \
 										if (party_size > 1) then begin	\
@@ -157,7 +157,7 @@
 #define is_visible(x)				(obj_is_visible_flag(x))
 #define is_self_visible				(obj_is_visible_flag(self_obj))
 #define is_map(x)					(cur_map_index == x)
-			
+
 
 /*********************************************************
 	Settings:
@@ -202,8 +202,8 @@
 /*********************************************************
 	Water Chip related:
 *********************************************************/
-#define get_days_passed					(GAME_TIME_IN_DAYS - global_var(VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
-#define get_water_days_left 			(global_var(VAULT13_WATER_DAYS_LEFT) - get_days_passed)
+#define get_days_passed					(GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
+#define get_water_days_left 			(global_var(GVAR_VAULT13_WATER_DAYS_LEFT) - get_days_passed)
 
 
 /*********************************************************
