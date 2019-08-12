@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\MAPV13CAVE.h"
+#include "..\headers\hubdwntn.h"
 
 #define NAME                    SCRIPT_KANE
 
@@ -159,27 +159,23 @@ import variable Kane_Ptr;
 import variable Decker_Ptr;
 
 procedure start begin
-	
-
 	if Only_Once then begin
 		Only_Once := 0;
 		Kane_Ptr := self_obj;
-		if (map_var(49) == 1) then begin
+		if (map_var(MVAR_KANE_DEAD) == 1) then begin
 			if not(is_loading_game) then begin    set_obj_visibility(self_obj, 1);    end//  MAKE INVISIBLE
 		end
 		set_self_team(TEAM_HUB_UNDERGROUND);
 		set_self_ai(AI_KAIN);
 	end
-
 end
 
 procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -207,326 +203,149 @@ procedure talk_p_proc begin
 		set_map_var(51, 0);
 		float_msg(self_obj, message_str(SCRIPT_KANE, 300), 2);
 	end
+	else if ((map_var(MVAR_UNDERGROUND_NO_DEAL) == 1) or (map_var(MVAR_UNDERGROUND_HOSTILE) == 1) or (map_var(MVAR_KANE_MEET_DECKER) == 4) or (map_var(MVAR_KANE_MEET_DECKER) == 5) or (map_var(MVAR_DECKER_JOB_STATUS) == 1) or (map_var(MVAR_DECKER_STATUS_JOB2) == 2)) then begin
+		call Kane10;
+	end
 	else begin
-		if ((map_var(11) == 1) or (map_var(44) == 1) or (map_var(45) == 4) or (map_var(45) == 5) or (map_var(46) == 1) or (map_var(47) == 2)) then begin
-			call Kane10;
-		end
-		else begin
-
-			if dude_is_armed then begin
-				if (local_var(6) == 0) then begin
-					set_local_var(6, 1);
-					call Kane61;
-				end
-				else begin
-					if (local_var(6) == 1) then begin
-						set_local_var(6, 2);
-						call Kane62;
-					end
-					else begin
-						call Kane63;
-					end
-				end
+		if dude_is_armed then begin
+			if (local_var(6) == 0) then begin
+				set_local_var(6, 1);
+				call Kane61;
+			end
+			else if (local_var(6) == 1) then begin
+				set_local_var(6, 2);
+				call Kane62;
 			end
 			else begin
-				if (local_var(4) == 0) then begin
-					set_local_var(4, 1);
-					if (((is_killian_alive) and (is_gizmo_alive)) == 1) then begin
-						if (has_rep_berserker) then begin
-							start_gdialog(594, self_obj, 4, -1, -1);
-							gsay_start;
-							call Kane11;
-							gsay_end;
-							end_dialogue;
-						end
-						else begin
-							if (has_rep_champion) then begin
-								start_gdialog(594, self_obj, 4, -1, -1);
-								gsay_start;
-								call Kane15;
-								gsay_end;
-								end_dialogue;
-							end
-							else begin
-								start_gdialog(594, self_obj, 4, -1, -1);
-								gsay_start;
-								call Kane60;
-								gsay_end;
-								end_dialogue;
-							end
-						end
-					end
-					else begin
-						if (((global_var( GVAR_KILLIAN_DEAD ) == 1) == 1) and ((global_var( GVAR_GIZMO_DEAD ) == 1) == 0)) then begin
-							start_gdialog(594, self_obj, 4, -1, -1);
-							gsay_start;
-							call Kane12;
-							gsay_end;
-							end_dialogue;
-						end
-						else begin
-							if (((global_var( GVAR_GIZMO_DEAD ) == 1) == 1) and ((global_var( GVAR_KILLIAN_DEAD ) == 1) == 0)) then begin
-								start_gdialog(594, self_obj, 4, -1, -1);
-								gsay_start;
-								call Kane13;
-								gsay_end;
-								end_dialogue;
-							end
-							else begin
-								if (((global_var( GVAR_KILLIAN_DEAD ) == 1) and (global_var( GVAR_GIZMO_DEAD ) == 1)) == 1) then begin
-									start_gdialog(594, self_obj, 4, -1, -1);
-									gsay_start;
-									call Kane14;
-									gsay_end;
-									end_dialogue;
-								end
-								else begin
-									start_gdialog(594, self_obj, 4, -1, -1);
-									gsay_start;
-									call Kane60;
-									gsay_end;
-									end_dialogue;
-								end
-							end
-						end
-					end
+				call Kane63;
+			end
+		end
+		else if (local_var(4) == 0) then begin
+			set_local_var(4, 1);
+			if (is_killian_alive) and (is_gizmo_alive) then begin
+				if (has_rep_berserker) then begin
+					start_dialog_at_node(Kane11);
+				end
+				else if (has_rep_champion) then begin
+					start_dialog_at_node(Kane15);
 				end
 				else begin
-					if ((map_var(44) == 1) or (map_var(11) == 1)) then begin
-						call Kane10;
-					end
-					else begin
-						if (map_var(45) == 2) then begin
-							start_gdialog(594, self_obj, 4, -1, -1);
-							gsay_start;
-							call Kane93;
-							gsay_end;
-							end_dialogue;
-						end
-						else begin
-							if (map_var(45) == 5) then begin
-								start_gdialog(594, self_obj, 4, -1, -1);
-								gsay_start;
-								call Kane100;
-								gsay_end;
-								end_dialogue;
-							end
-							else begin
-								if (map_var(45) == 4) then begin
-									start_gdialog(594, self_obj, 4, -1, -1);
-									gsay_start;
-									call Kane106;
-									gsay_end;
-									end_dialogue;
-								end
-								else begin
-									if ((global_var( GVAR_KILL_MERCHANT ) != 2) and (local_var(7) == 0)) then begin
-										if (map_var(46) == 0) then begin
-											start_gdialog(594, self_obj, 4, -1, -1);
-											gsay_start;
-											call Kane60;
-											gsay_end;
-											end_dialogue;
-										end
-										else begin
-											if (map_var(46) == 1) then begin
-												start_gdialog(594, self_obj, 4, -1, -1);
-												gsay_start;
-												call Kane10;
-												gsay_end;
-												end_dialogue;
-											end
-											else begin
-												if (map_var(46) == 2) then begin
-													if (global_var( GVAR_KILL_MERCHANT ) == 5) then begin
-														start_gdialog(594, self_obj, 4, -1, -1);
-														gsay_start;
-														call Kane153;
-														gsay_end;
-														end_dialogue;
-													end
-													else begin
-														start_gdialog(594, self_obj, 4, -1, -1);
-														gsay_start;
-														call Kane86;
-														gsay_end;
-														end_dialogue;
-													end
-												end
-												else begin
-													if (map_var(46) == 4) then begin
-														if (global_var( GVAR_KILL_MERCHANT ) == 5) then begin
-															start_gdialog(594, self_obj, 4, -1, -1);
-															gsay_start;
-															call Kane153;
-															gsay_end;
-															end_dialogue;
-														end
-														else begin
-															start_gdialog(594, self_obj, 4, -1, -1);
-															gsay_start;
-															call Kane135;
-															gsay_end;
-															end_dialogue;
-														end
-													end
-												end
-											end
-										end
-									end
-									else begin
-										if ((global_var( GVAR_KILL_MERCHANT ) == 2) and (local_var(7) == 0)) then begin
-											if (map_var(46) == 0) then begin
-												start_gdialog(594, self_obj, 4, -1, -1);
-												gsay_start;
-												call Kane71;
-												gsay_end;
-												end_dialogue;
-											end
-											else begin
-												if (map_var(46) == 1) then begin
-													start_gdialog(594, self_obj, 4, -1, -1);
-													gsay_start;
-													call Kane79;
-													gsay_end;
-													end_dialogue;
-												end
-												else begin
-													if (map_var(46) == 2) then begin
-														start_gdialog(594, self_obj, 4, -1, -1);
-														gsay_start;
-														call Kane89;
-														gsay_end;
-														end_dialogue;
-													end
-													else begin
-														if (map_var(46) == 4) then begin
-															start_gdialog(594, self_obj, 4, -1, -1);
-															gsay_start;
-															call Kane87;
-															gsay_end;
-															end_dialogue;
-														end
-													end
-												end
-											end
-										end
-										else begin
-											if ((global_var( GVAR_KILL_JAIN ) != 2) and (local_var(7) == 112)) then begin
-												if (map_var(47) == 0) then begin
-													start_gdialog(594, self_obj, 4, -1, -1);
-													gsay_start;
-													call Kane134;
-													gsay_end;
-													end_dialogue;
-												end
-												else begin
-													if (map_var(47) == 2) then begin
-														start_gdialog(594, self_obj, 4, -1, -1);
-														gsay_start;
-														call Kane10;
-														gsay_end;
-														end_dialogue;
-													end
-													else begin
-														if (map_var(47) == 3) then begin
-															start_gdialog(594, self_obj, 4, -1, -1);
-															gsay_start;
-															call Kane91;
-															gsay_end;
-															end_dialogue;
-														end
-														else begin
-															if (map_var(47) == 5) then begin
-																start_gdialog(594, self_obj, 4, -1, -1);
-																gsay_start;
-																call Kane135;
-																gsay_end;
-																end_dialogue;
-															end
-														end
-													end
-												end
-											end
-											else begin
-												if ((global_var( GVAR_KILL_JAIN ) == 2) and (local_var(7) == 112)) then begin
-													if (map_var(47) == 0) then begin
-														start_gdialog(594, self_obj, 4, -1, -1);
-														gsay_start;
-														call Kane80;
-														gsay_end;
-														end_dialogue;
-													end
-													else begin
-														if (map_var(47) == 2) then begin
-															start_gdialog(594, self_obj, 4, -1, -1);
-															gsay_start;
-															call Kane79;
-															gsay_end;
-															end_dialogue;
-														end
-														else begin
-															if (map_var(47) == 3) then begin
-																start_gdialog(594, self_obj, 4, -1, -1);
-																gsay_start;
-																call Kane90;
-																gsay_end;
-																end_dialogue;
-															end
-															else begin
-																if (map_var(47) == 5) then begin
-																	start_gdialog(594, self_obj, 4, -1, -1);
-																	gsay_start;
-																	call Kane92;
-																	gsay_end;
-																	end_dialogue;
-																end
-																else begin
-																	if (map_var(47) == 6) then begin
-																		start_gdialog(594, self_obj, 4, -1, -1);
-																		gsay_start;
-																		call Kane134;
-																		gsay_end;
-																		end_dialogue;
-																	end
-																end
-															end
-														end
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
+					start_dialog_at_node(Kane60);
 				end
+			end
+			else if not(is_killian_alive) and is_gizmo_alive then begin
+				start_dialog_at_node(Kane12);
+			end
+			else if not(is_gizmo_alive) and is_killian_alive then begin
+				start_dialog_at_node(Kane13);
+			end
+			else if not(is_killian_alive) and not(is_gizmo_alive) then begin
+				start_dialog_at_node(Kane14);
+			end
+			else begin
+				start_dialog_at_node(Kane60);
+			end
+		end
+		else if ((map_var(MVAR_UNDERGROUND_HOSTILE) == 1) or (map_var(MVAR_UNDERGROUND_NO_DEAL) == 1)) then begin
+			call Kane10;
+		end
+		else if (map_var(MVAR_KANE_MEET_DECKER) == 2) then begin
+			start_dialog_at_node(Kane93);
+		end
+		else if (map_var(MVAR_KANE_MEET_DECKER) == 5) then begin
+			start_dialog_at_node(Kane100);
+		end
+		else if (map_var(MVAR_KANE_MEET_DECKER) == 4) then begin
+			start_dialog_at_node(Kane106);
+		end
+		else if ((global_var( GVAR_KILL_MERCHANT ) != 2) and (local_var(7) == 0)) then begin
+			if (map_var(MVAR_DECKER_JOB_STATUS) == 0) then begin
+				start_dialog_at_node(Kane60);
+			end
+			else if (map_var(MVAR_DECKER_JOB_STATUS) == 1) then begin
+				start_dialog_at_node(Kane10);
+			end
+			else if (map_var(MVAR_DECKER_JOB_STATUS) == 2) then begin
+				if (global_var( GVAR_KILL_MERCHANT ) == 5) then begin
+					start_dialog_at_node(Kane153);
+				end
+				else begin
+					start_dialog_at_node(Kane86);
+				end
+			end
+			else if (map_var(MVAR_DECKER_JOB_STATUS) == 4) then begin
+				if (global_var( GVAR_KILL_MERCHANT ) == 5) then begin
+					start_dialog_at_node(Kane153);
+				end
+				else begin
+					start_dialog_at_node(Kane135);
+				end
+			end
+		end
+		else if ((global_var( GVAR_KILL_MERCHANT ) == 2) and (local_var(7) == 0)) then begin
+			if (map_var(MVAR_DECKER_JOB_STATUS) == 0) then begin
+				start_dialog_at_node(Kane71);
+			end
+			else if (map_var(MVAR_DECKER_JOB_STATUS) == 1) then begin
+				start_dialog_at_node(Kane79);
+			end
+			else if (map_var(MVAR_DECKER_JOB_STATUS) == 2) then begin
+				start_dialog_at_node(Kane89);
+			end
+			else if (map_var(MVAR_DECKER_JOB_STATUS) == 4) then begin
+				start_dialog_at_node(Kane87);
+			end
+		end
+		else if ((global_var( GVAR_KILL_JAIN ) != 2) and (local_var(7) == 112)) then begin
+			if (map_var(MVAR_DECKER_STATUS_JOB2) == 0) then begin
+				start_dialog_at_node(Kane134);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 2) then begin
+				start_dialog_at_node(Kane10);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 3) then begin
+				start_dialog_at_node(Kane91);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 5) then begin
+				start_dialog_at_node(Kane135);
+			end
+		end
+		else if ((global_var( GVAR_KILL_JAIN ) == 2) and (local_var(7) == 112)) then begin
+			if (map_var(MVAR_DECKER_STATUS_JOB2) == 0) then begin
+				start_dialog_at_node(Kane80);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 2) then begin
+				start_dialog_at_node(Kane79);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 3) then begin
+				start_dialog_at_node(Kane90);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 5) then begin
+				start_dialog_at_node(Kane92);
+			end
+			else if (map_var(MVAR_DECKER_STATUS_JOB2) == 6) then begin
+				start_dialog_at_node(Kane134);
 			end
 		end
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	inc_evil_critter
-	set_map_var(49, 1);
-	if ((map_var(49) == 1) and (map_var(50) == 1)) then begin
+	set_map_var(MVAR_KANE_DEAD, 1);
+	if ((map_var(MVAR_KANE_DEAD) == 1) and (map_var(MVAR_DECKER_DEAD) == 1)) then begin
 		set_global_var( GVAR_UNDERGROUND_STATUS, 1 );
-		set_map_var(11, 1);
-		set_map_var(44, 1);
+		set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
+		set_map_var(MVAR_UNDERGROUND_HOSTILE, 1);
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_KANE, 100));
 end
 
-procedure Kane00
-begin
+procedure Kane00 begin
 	NOption( 101, Kane02, 4 );
 	BOption( 102, Kane04, 4 );
 	NOption( 104, Kane07, 4 );
@@ -610,9 +429,9 @@ begin
 		float_msg(self_obj, message_str(SCRIPT_KANE, random(133, 136)), 2);
 	end
 	else begin
-		set_map_var(11, 1);
-		set_map_var(45, 4);
-		set_map_var(44, 1);
+		set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
+		set_map_var(MVAR_KANE_MEET_DECKER, 4);
+		set_map_var(MVAR_UNDERGROUND_HOSTILE, 1);
 		float_msg(self_obj, message_str(SCRIPT_KANE, 137), 2);
 		call combat;
 	end
@@ -629,8 +448,7 @@ begin
 	call Kane00;
 end
 
-procedure Kane12
-begin
+procedure Kane12 begin
 	gsay_reply(594, 140);
 	call Kane00;
 end
@@ -641,8 +459,7 @@ begin
 	call Kane00;
 end
 
-procedure Kane14
-begin
+procedure Kane14 begin
 	if (dude_is_male) then begin
 		gsay_reply(594, 143);
 	end
@@ -975,7 +792,7 @@ end
 
 procedure Kane71
 begin
-	set_map_var(46, 6);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 6);
 	gsay_reply(594, 278);
 	call Kane72;
 end
@@ -1003,7 +820,7 @@ procedure Kane75
 begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
-	set_map_var(46, 5);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 5);
 	give_exp_points(300);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 300 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, (check_general_rep - 1) );
@@ -1017,7 +834,7 @@ end
 
 procedure Kane75a
 begin
-	set_map_var(47, 6);
+	set_map_var(MVAR_DECKER_STATUS_JOB2, 6);
 	call KaneEndRefuses;
 end
 
@@ -1041,7 +858,7 @@ end
 
 procedure Kane79
 begin
-	set_map_var(46, 6);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 6);
 	gsay_message(594, 292, 51);
 	call KaneEndHostile;
 end
@@ -1054,7 +871,7 @@ begin
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 350 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, (check_general_rep - 1) );
 	item_caps_adjust(dude_obj, 1000);
-	set_map_var(47, 7);
+	set_map_var(MVAR_DECKER_STATUS_JOB2, 7);
 	gsay_reply(594, 293);
 	call Kane81;
 end
@@ -1092,7 +909,7 @@ end
 procedure Kane86
 begin
 	variable LVar0 := 0;
-	set_map_var(46, 4);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 4);
 	set_global_var( GVAR_MARK_HUB_4, 1 );
 	item_caps_adjust(dude_obj, 500);
 	gsay_message(594, 301, 50);
@@ -1105,7 +922,7 @@ begin
 	give_exp_points(600);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 600 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 2 );
-	set_map_var(46, 5);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 5);
 	set_local_var(7, 112);
 	gsay_message(594, 302, 50);
 end
@@ -1117,8 +934,8 @@ begin
 	give_exp_points(600);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 600 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 2 );
-	set_map_var(46, 5);
-	set_map_var(47, 5);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 5);
+	set_map_var(MVAR_DECKER_STATUS_JOB2, 5);
 	set_local_var(7, 112);
 	set_global_var( GVAR_KILL_JAIN, 1 );
 	gsay_message(594, 303, 50);
@@ -1131,7 +948,7 @@ begin
 	give_exp_points(600);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 600 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 2 );
-	set_map_var(46, 5);
+	set_map_var(MVAR_DECKER_JOB_STATUS, 5);
 	set_local_var(7, 112);
 	gsay_message(594, 304, 50);
 end
@@ -1143,7 +960,7 @@ begin
 	give_exp_points(700);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 700 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 2 );
-	set_map_var(47, 6);
+	set_map_var(MVAR_DECKER_STATUS_JOB2, 6);
 	gsay_message(594, 305, 50);
 	gsay_message(594, 306, 50);
 end
@@ -1153,7 +970,7 @@ begin
 	variable LVar0 := 0;
 	set_global_var( GVAR_MARK_HUB_6, 1 );
 	item_caps_adjust(dude_obj, 1000);
-	set_map_var(47, 5);
+	set_map_var(MVAR_DECKER_STATUS_JOB2, 5);
 	gsay_message(594, 308, 50);
 end
 
@@ -1164,7 +981,7 @@ begin
 	give_exp_points(700);
 	display_msg(message_str(SCRIPT_GENCHAT, 103) + 700 + message_str(SCRIPT_GENCHAT, 104));
 	set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 2 );
-	set_map_var(47, 6);
+	set_map_var(MVAR_DECKER_STATUS_JOB2, 6);
 	gsay_message(594, 309, 50);
 end
 
@@ -1405,51 +1222,42 @@ begin
 	call KaneEndHostile;
 end
 
-procedure KaneEnd
-begin
+procedure KaneEnd begin
 end
 
-procedure KaneEndHostile
-begin
-	set_map_var(11, 1);
-	set_map_var(44, 1);
-	set_map_var(45, 4);
+procedure KaneEndHostile begin
+	set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
+	set_map_var(MVAR_UNDERGROUND_HOSTILE, 1);
+	set_map_var(MVAR_KANE_MEET_DECKER, 4);
 end
 
-procedure KaneEndNotAcceptedOrDeclined
-begin
-	set_map_var(45, 3);
+procedure KaneEndNotAcceptedOrDeclined begin
+	set_map_var(MVAR_KANE_MEET_DECKER, 3);
 end
 
-procedure KaneEndDeclined
-begin
-	set_map_var(45, 2);
+procedure KaneEndDeclined begin
+	set_map_var(MVAR_KANE_MEET_DECKER, 2);
 end
 
-procedure KaneEndAnnoyed
-begin
-	set_map_var(45, 6);
+procedure KaneEndAnnoyed begin
+	set_map_var(MVAR_KANE_MEET_DECKER, 6);
 end
 
-procedure KaneEndTakeHike
-begin
-	set_map_var(45, 5);
+procedure KaneEndTakeHike begin
+	set_map_var(MVAR_KANE_MEET_DECKER, 5);
 end
 
-procedure KaneEndRefuses
-begin
-	set_map_var(45, 4);
-	set_map_var(11, 1);
+procedure KaneEndRefuses begin
+	set_map_var(MVAR_KANE_MEET_DECKER, 4);
+	set_map_var(MVAR_UNDERGROUND_NO_DEAL, 1);
 end
 
-procedure KaneTravel
-begin
+procedure KaneTravel begin
 	travel := 1;
 end
 
-procedure GoToDecker
-begin
-	set_map_var(45, 1);
+procedure GoToDecker begin
+	set_map_var(MVAR_KANE_MEET_DECKER, 1);
 	gfade_out(1);
 	move_to(self_obj, 22526, 1);
 	anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), tile_num(Decker_Ptr)));
