@@ -451,7 +451,7 @@
 #define RANDOM_ENC_IGNORE_LUCK					(1326)
 #define RANDOM_ENC_DIFF_BASED					(1327)
 #define RANDOM_ENC_LEVEL_BASED					(1328)
-#define ARMOR_DESTROY_MOD						(1329)
+#define GVAR_ARMOR_DESTROY_MOD					(1329)
 #define ARMOR_EQUIP_MOD							(1330)
 #define IS_DUC_ALIVE							(1331)
 #define LANCE_STATUS							(1332)
