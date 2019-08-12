@@ -4,6 +4,9 @@
 
 */
 
+#ifndef FO1_H
+#define FO1_H
+
 #include "debug.h"
 
 /*********************************************************
@@ -283,3 +286,5 @@ end
 #define set_end_raiders_alive				set_global_var(GVAR_ENDGAME_MOVIE_KHANS,3)
 
 #define set_end_ending_vd 					set_global_var(GVAR_ENDGAME_MOVIE_VD,1)
+
+#endif // FO1_H
