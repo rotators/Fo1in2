@@ -100,17 +100,19 @@
 						end \
 					end
 
-#define flee_dude 		variable LVar0 := 0; \
-						variable LVar1 := 0; \
-						variable LVar2 := 0; \
-						while(LVar1 < 5) do begin \
-							if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin \
-								LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3); \
-								LVar2 := tile_distance(tile_num(dude_obj), LVar0); \
-							end \
-							LVar1 := LVar1 + 1; \
-						end \
-						animate_move_obj_to_tile(self_obj, LVar0, 1);
+procedure flee_dude begin
+	variable LVar0 := 0; 
+	variable LVar1 := 0; 
+	variable LVar2 := 0; 
+	while(LVar1 < 5) do begin 
+		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin 
+			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3); 
+			LVar2 := tile_distance(tile_num(dude_obj), LVar0); 
+		end 
+		LVar1 := LVar1 + 1; 
+	end 
+	animate_move_obj_to_tile(self_obj, LVar0, 1);
+end
 
 #define dude_is_animal_friend 			(has_trait(TRAIT_PERK, dude_obj, PERK_animal_friend) == 1)
 
