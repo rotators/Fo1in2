@@ -469,7 +469,7 @@
 
 // Vault 13
 #define REP_BONUS_GAME_STARTED              	(25)
-#define REP_BONUS_RETURNED_WATERCHP            	(75)
+#define REP_BONUS_RETURNED_WATERCHP            	(100)
 #define inc_v13_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V13, x)
 
 // Vault 15
@@ -477,22 +477,29 @@
 #define inc_v15_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V15, x)
 
 // Shady Sands
-#define REP_BONUS_HELPING_JARVIS            	(1)
-#define REP_BONUS_RADSCORPIONS_GONE            	(5)
-#define REP_BONUS_TANDI_RESCUED	            	(25)
+#define REP_BONUS_INSULTED_ARADESH 				(-20)
+#define REP_BONUS_HELPING_JARVIS            	(3)
+#define REP_BONUS_RADSCORPIONS_GONE            	(10)
+#define REP_BONUS_TANDI_RESCUED	            	(50)
 #define inc_shady_rep(x)   						inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
 // Raiders
-#define REP_KILLED_RAIDER 						(-1)
-#define REP_GARL_KILLED 						(-10)
+#define REP_BONUS_KILLED_RAIDER 				(-1)
+#define REP_BONUS_GARL_KILLED 					(-10)
 #define inc_raiders_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_RAIDERS, x)
 
 // Junktown
-
+#define REP_BONUS_KILLED_SKULZ 					(5)
+#define REP_BONUS_KILLED_NEAL 					(-5)
+#define REP_BONUS_KILLED_GIZMO					(10)
+#define REP_BONUS_KILLED_KILLIAN				(-10)
 #define inc_junktown_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_JUNKTOWN, x)
 
 // Hub
-
+#define REP_BONUS_BOB_JAILED					(5)
+#define REP_BONUS_KILLED_DECKER 				(5)
+#define REP_BONUS_KILLED_HIGHTOWER 				(-5)
+#define REP_BONUS_NECKLACE_STOLEN 				(-1)
 #define inc_hub_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard
@@ -502,24 +509,24 @@
 // Necropolis
 #define REP_BONUS_WATERCHIP_TAKEN              	(-10)
 #define REP_BONUS_WATER_PUMP_FIXED             	(15)
-#define REP_BACKSTABBED_GRIFFITH 				(-3)
+#define REP_BONUS_BACKSTABBED_GRIFFITH 			(-3)
 #define inc_necropolis_rep(x)   				inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
 
 // Glow
-#define REP_BONUS_DEFEAT_ZAX              		(10)
+#define REP_BONUS_DEFEAT_ZAX              		(25)
 #define REP_BONUS_DISABLED_TRAPS            	(1)
 #define inc_glow_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_GLOW, x)
 
 // BOS
-
+#define REP_BONUS_KICKED_OUT 					(-25)
 #define inc_bos_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_BOS, x)
 
 // Mariposa
-#define REP_BLOWN_UP_VATS 						(-100)
+#define REP_BONUS_BLOWN_UP_VATS 				(-100)
 #define inc_mbase_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_MBASE, x)
 
 // Cathedral
-#define REP_BLOWN_UP_MASTER 					(-100)
+#define REP_BONUS_BLOWN_UP_MASTER 				(-100)
 #define inc_cathedral_rep(x)    				inc_global_var_amt(GVAR_TOWN_REP_CATHEDRAL, x)
 
 
