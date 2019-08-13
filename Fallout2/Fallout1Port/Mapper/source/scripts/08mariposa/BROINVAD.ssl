@@ -63,18 +63,18 @@ end
 
 procedure critter_p_proc begin
 	// Remove and destroy if on an invalid map.
-	if (not((cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34) or (cur_map_index == MAP_MBENT) or (cur_map_index == MAP_MBSTRG12) or (cur_map_index == MAP_MBVATS12))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE (now all levels), MASTER'S LAIR ALL LEVELS
+	if (not((CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34) or (CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE (now all levels), MASTER'S LAIR ALL LEVELS
 		party_remove(self_obj);
 		destroy_object(self_obj);
 	end
 
 	// Follow player if on valid map, and, display one-time float message on ground-floor maps.
-	if ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) and ((cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34))) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2) and ((cur_map_index == MAP_MBENT) or (cur_map_index == MAP_MBSTRG12) or (cur_map_index == MAP_MBVATS12))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
+	if ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34))) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2) and ((CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
 		if (tile_distance_objs(dude_obj, self_obj) > 6) then begin
 			animate_move_obj_to_tile(self_obj, tile_num_in_direction(tile_num(dude_obj), random(0, 5), random(3, 6)), 1);
 		end
 		if (local_var(0) == 0) then begin
-			if ((tile_distance_objs(dude_obj, self_obj) < 8) and ((cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_MBENT))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+			if ((tile_distance_objs(dude_obj, self_obj) < 8) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_MBENT))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
 				set_local_var(0, 1);
 				float_msg(self_obj, message_str(SCRIPT_BROINVAD, 112), 9);
 			end
@@ -82,7 +82,7 @@ procedure critter_p_proc begin
 	end
 
 	// Removal processes after coming back to ground floor.
-	if ((local_var(4) == 1) and (cur_map_index == MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR
+	if ((local_var(4) == 1) and (CUR_MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR
 		set_local_var(4, 0);
 		set_local_var(1, 2);
 		party_remove(self_obj);
@@ -91,7 +91,7 @@ procedure critter_p_proc begin
 		float_msg(self_obj, message_str(SCRIPT_BROINVAD, 115), 9);
 		add_timer_event(self_obj, 10, 1);
 	end
-	if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(1) == 1) and (cur_map_index == MAP_MBENT) and (local_var(5) == 1) and not(combat_is_initialized)) then begin //  MILITARY BASE - ENTRANCE
+	if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(1) == 1) and (CUR_MAP_MBENT) and (local_var(5) == 1) and not(combat_is_initialized)) then begin //  MILITARY BASE - ENTRANCE
 		set_local_var(1, 2);
 		party_remove(self_obj);
 		set_global_var( GVAR_BROTHERHOOD_SEND_HELP, 10 );
@@ -105,14 +105,14 @@ procedure map_enter_p_proc begin
 // Not IS_LOADING_GAME
 	if not(is_loading_game) then begin
 		// Add to party if first time on valid entrance map.
-		if ((local_var(1) == 0) and ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) and (cur_map_index == MAP_CHILDRN1) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2) and (cur_map_index == MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+		if ((local_var(1) == 0) and ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) and (CUR_MAP_CHILDRN1) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2) and (CUR_MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
 			set_local_var(1, 1);
 			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
 			party_add(self_obj);
 		end
 		else begin
 			// Remove and destroy if on valid map but player not supposed to have them.
-			if (((global_var( GVAR_BROTHERHOOD_SEND_HELP ) != 1) and ((cur_map_index == MAP_CHILDRN1) or (cur_map_index == MAP_CHILDRN2) or (cur_map_index == MAP_MSTRLR12) or (cur_map_index == MAP_MSTRLR34))) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) != 2) and ((cur_map_index == MAP_MBENT) or (cur_map_index == MAP_MBSTRG12) or (cur_map_index == MAP_MBVATS12)))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
+			if (((global_var( GVAR_BROTHERHOOD_SEND_HELP ) != 1) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34))) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) != 2) and ((CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12)))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
 				if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
 				if (local_var(1) != 0) then begin
 					party_remove(self_obj);
@@ -128,21 +128,21 @@ procedure map_enter_p_proc begin
 		end
 		// Boring float messages inside Master's Vault.
 		if ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) or (global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2)) then begin
-			if (cur_map_index == MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
+			if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
 				float_msg(self_obj, message_str(SCRIPT_BROINVAD, 113), 9);
 			end
-			if (cur_map_index == MAP_MSTRLR34) then begin //  MASTER'S VAULT -  LEVELS 3 AND 4
+			if (CUR_MAP_MSTRLR34) then begin //  MASTER'S VAULT -  LEVELS 3 AND 4
 				float_msg(self_obj, message_str(SCRIPT_BROINVAD, 114), 9);
 			end
 		end
 	end
 	// Flags to initiate process of them leaving the map.
-	if (cur_map_index == MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
+	if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
 		set_local_var(4, 1);
 	end
 	// Flag that they've reached Vats, so it'll trigger leaving map when get back to surface.
 	if local_var(5) == 0 then begin
-		if cur_map_index == MAP_MBVATS12 then begin
+		if CUR_MAP_MBVATS12 then begin
 			set_local_var(5, 1);
 		end
 	end
