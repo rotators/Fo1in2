@@ -52,6 +52,7 @@ variable map;
 													wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
 
 procedure start begin
+	call map_enter_p_proc;
 end
 
 procedure map_exit_p_proc begin
@@ -89,6 +90,7 @@ procedure timed_event_p_proc begin
 
    		// Other:
    		else begin
+   			call load_desert;
    			debug("!!!BIG BUG!!!");
    		end
 
@@ -96,6 +98,34 @@ procedure timed_event_p_proc begin
    	end
 
    end
+end
+
+procedure map_enter_p_proc begin
+   variable map := random(1,3);
+   variable Critter;
+   variable Critter_Tile;
+
+   if (CUR_MAP_DESERT0) then begin
+   	set_new_wm_pos;
+   	add_timer_event(self_obj, game_ticks(0), 1);
+   end
+
+   set_map_exit_tiles(0,0);
+   Lighting;
+
+   if (CUR_MAP_RNDDESER) then
+   	call CreateSceneryClutter;
+   else if (CUR_MAP_RNDCITY) then
+		call CreateCityClutter;
+
+end
+
+procedure map_update_p_proc begin
+   if (CUR_MAP_DESERT0) then begin
+	   add_timer_event(self_obj, game_ticks(0), 1);
+	end
+
+   Lighting;
 end
 
 procedure load_city begin
@@ -176,35 +206,6 @@ procedure load_coast begin
    load_map(MAP_RNDCOAST, 0);
 end
 
-procedure map_enter_p_proc begin
-   variable map := random(1,3);
-   variable Critter;
-   variable Critter_Tile;
-
-   if (CUR_MAP_DESERT0) then begin
-   	set_new_wm_pos;
-   	//debug("THAT map");
-   	add_timer_event(self_obj, game_ticks(0), 1);
-   end
-
-   set_map_exit_tiles(0,0);
-   Lighting;
-
-   if (CUR_MAP_RNDDESER) then
-   	call CreateSceneryClutter;
-   else if (CUR_MAP_RNDCITY) then
-		call CreateCityClutter;
-
-end
-
-procedure map_update_p_proc begin
-   if (CUR_MAP_DESERT0) then begin
-	   add_timer_event(self_obj, game_ticks(0), 1);
-	end
-
-   Lighting;
-end
-
 procedure Setup_City begin
    /*if (cur_map_index == MAP_RND_CITY1) then begin
        Create_Car(CAR_RND_CITY1_HEX,CAR_RANDOM_DESERT_ELEV)
@@ -237,6 +238,8 @@ end
 
 
 procedure CreateSceneryClutter begin
+	debug("spawn desert clutter!");
+
 	/*
 	// This is the area in which no scenery will be placed:
 	//if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
@@ -343,6 +346,8 @@ end
 
 procedure CreateCityClutter begin
 variable Item;
+
+	debug("spawn city clutter!");
 
 	if (random(0, 2) == 2) then begin
 		Item := create_object( PID_BOXES_2, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
