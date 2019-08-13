@@ -59,8 +59,7 @@ variable SeenTime2;
 procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
 		if (SeenDude != 1) then begin
 			SeenDude := 1;
@@ -104,7 +103,7 @@ begin
 			end
 		end
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -121,21 +120,18 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if junktown_invaded then begin
 		kill_critter(self_obj, ANIM_burned_to_nothing_sf);
 	end
 	set_self_team(TEAM_JUNKTOWN_MORBID );
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if ((game_time_hour >= 800) and (game_time_hour < 1700)) then begin
 		FuckOff := 0;
@@ -148,29 +144,18 @@ begin
 	end
 	else begin
 		if (loitering) then begin
-			start_gdialog(36, self_obj, 4, -1, -1);
-			gsay_start;
-			call Flash07N;
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(Flash07N);
+		end
+		else if (not(local_var(0))) then begin
+			start_dialog_at_node(Flash00N);
 		end
 		else begin
-			start_gdialog(36, self_obj, 4, -1, -1);
-			gsay_start;
-			if (not(local_var(0))) then begin
-				call Flash00N;
-			end
-			else begin
-				call Flash03N;
-			end
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(Flash03N);
 		end
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			loitering := 1;
@@ -189,19 +174,16 @@ procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 end
 
-procedure Flash00
-begin
+procedure Flash00 begin
 	set_local_var(0, 1);
 	float_msg(self_obj, message_str(SCRIPT_FLASH, 100), 0);
 end
 
-procedure Flash01
-begin
+procedure Flash01 begin
 	float_msg(self_obj, message_str(SCRIPT_FLASH, 106), 0);
 end
 
-procedure Flash00N
-begin
+procedure Flash00N begin
 	set_local_var(0, 1);
 	gsay_reply(36, 101);
 	giq_option( 4, SCRIPT_FLASH, 102, Flash01N, NEUTRAL_REACTION );
@@ -211,8 +193,7 @@ begin
 	giq_option( -3, SCRIPT_FLASH, 105, Flash10N, NEUTRAL_REACTION );
 end
 
-procedure Flash00Na
-begin
+procedure Flash00Na begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
@@ -235,20 +216,17 @@ begin
 	end
 end
 
-procedure Flash01N
-begin
+procedure Flash01N begin
 	float_msg(self_obj, message_str(SCRIPT_FLASH, 107), 7);
 	FuckOff := 1;
 	SeenTime := game_time;
 end
 
-procedure Flash02N
-begin
+procedure Flash02N begin
 	gsay_message(36, 108, 50);
 end
 
-procedure Flash03N
-begin
+procedure Flash03N begin
 	set_local_var(0, 1);
 	gsay_reply(36, 109);
 	giq_option( 4, SCRIPT_FLASH, 110, Flash03Na, NEUTRAL_REACTION );
@@ -256,8 +234,7 @@ begin
 	giq_option( -3, SCRIPT_FLASH, 112, Flash06N, NEUTRAL_REACTION );
 end
 
-procedure Flash03Na
-begin
+procedure Flash03Na begin
 	if (self_elevation == elevation(Morbid_ptr)) then begin
 		call Flash05N;
 	end
@@ -266,32 +243,27 @@ begin
 	end
 end
 
-procedure Flash04N
-begin
+procedure Flash04N begin
 	gsay_reply(36, 113);
 	giq_option( 4, SCRIPT_FLASH, 126, Flash11N, NEUTRAL_REACTION );
 	add_timer_event(self_obj, game_ticks(10), 1);
 end
 
-procedure Flash05N
-begin
+procedure Flash05N begin
 	gsay_message(36, 114, 50);
 end
 
-procedure Flash06N
-begin
+procedure Flash06N begin
 	gsay_message(36, 115, 50);
 end
 
-procedure Flash07N
-begin
+procedure Flash07N begin
 	gsay_reply(36, 116);
 	giq_option( 4, SCRIPT_FLASH, 117, FlashCombat, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_FLASH, 118, Flash07Na, NEUTRAL_REACTION );
 end
 
-procedure Flash07Na
-begin
+procedure Flash07Na begin
 	variable LVar0 := 0;
 	if (dude_is_male) then begin
 		LVar0 := -15;
@@ -312,45 +284,36 @@ begin
 	end
 end
 
-procedure Flash08Na
-begin
+procedure Flash08Na begin
 	gsay_reply(36, 119);
 	giq_option( 4, SCRIPT_FLASH, 120, FlashCombat, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_FLASH, 121, FlashEnd, NEUTRAL_REACTION );
 end
 
-procedure Flash08Nb
-begin
+procedure Flash08Nb begin
 	gsay_reply(36, 122);
 	giq_option( 4, SCRIPT_FLASH, 123, FlashCombat, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_FLASH, 124, FlashEnd, NEUTRAL_REACTION );
 end
 
-procedure Flash09N
-begin
+procedure Flash09N begin
 	gsay_message(36, 125, 50);
 end
 
-procedure Flash10N
-begin
+procedure Flash10N begin
 	add_timer_event(self_obj, game_ticks(10), 1);
 end
 
-procedure Flash11N
-begin
+procedure Flash11N begin
 	gsay_message(36, 127, 50);
 end
 
-procedure FlashCombat
-begin
+procedure FlashCombat begin
 	tmp_hostile := 1;
 end
 
-procedure FlashEnd
-begin
+procedure FlashEnd begin
 end
-
-
 
 procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
