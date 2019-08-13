@@ -367,10 +367,10 @@ variable PartyHealingItem;
 
 // Default
 // party member health states
-#define party_healed_max                     (self_cur_hits == self_max_hits)
-#define party_healed_good                    (((self_cur_hits * 100)/self_max_hits) >= 90)
-#define party_healed_hurt                    (((self_cur_hits * 100)/self_max_hits) >= 70)
-#define party_healed_bad                     (((self_cur_hits * 100)/self_max_hits) < 70)
+#define party_healed_max                     (self_cur_hp == self_max_hp)
+#define party_healed_good                    (((self_cur_hp * 100)/self_max_hp) >= 90)
+#define party_healed_hurt                    (((self_cur_hp * 100)/self_max_hp) >= 70)
+#define party_healed_bad                     (((self_cur_hp * 100)/self_max_hp) < 70)
 
 // Generic Options for party members
 #define def_heal_msg                         g_mstr(10001)
@@ -414,7 +414,7 @@ variable PartyHealingItem;
                                                    set_follow_medium;                                    \
                                                 end                                                      \
                                                 if (heal_msg != 0) then begin                            \
-                                                   if (self_cur_hits < self_max_hits) then begin         \
+                                                   if (self_cur_hp < self_max_hp) then begin         \
                                                       NOption(heal_msg, DEF_PARTY_HEAL_NODE, 004);       \
                                                    end                                                   \
                                                 end                                                      \
