@@ -979,12 +979,6 @@
 #define SCRIPT_HHOOKER2  (970)
 #define SCRIPT_MASSACRE  (971)
 #define SCRIPT_REDFIELD  (972)
-#define SCRIPT_FARMRAD2  (973)
-#define SCRIPT_FARMRAD3  (974)
-#define SCRIPT_FARMRAD4  (975)
-#define SCRIPT_FARMRAD5  (976)
-#define SCRIPT_FARMRAD6  (977)
-#define SCRIPT_FARMRAD7  (978)
 
 // Stuff from scripts.lst
 #define SCRIPT_GRNMTARM  (979)
