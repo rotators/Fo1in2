@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Saul
+	Junktown - Saul, the boxer
 
 */
 
@@ -80,8 +80,7 @@ procedure start begin
 
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if ((fixed_param == 4) and obj_can_see_obj(self_obj, dude_obj)) then begin
 		round_counter := round_counter + 1;
 	end
@@ -93,9 +92,8 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -121,6 +119,7 @@ begin
 			sleeping
 		end
 	end
+
 	if (global_var( GVAR_DUDE_ENEMY_JUNK_BOXER ) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			attack(dude_obj);
@@ -128,16 +127,14 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (is_success(do_check(dude_obj, STAT_pe, dude_awareness))) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_SAUL, 102));
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var( GVAR_SAUL_STATUS, 3 );
 	rm_timer_event(self_obj);
 
@@ -149,28 +146,29 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (not(global_var( GVAR_SAUL_STATUS ))) then begin
-		display_msg(message_str(SCRIPT_SAUL, 101));
+		display_msg(mstr(101));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_SAUL, 100));
+		display_msg(mstr(100));
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	variable LVar0 := 0;
+
 	if junktown_invaded then begin
 		LVar0 := create_object( PID_SPIKED_KNUCKLES, 0, 0 );
 		add_obj_to_inven(self_obj, LVar0);
 		kill_critter(self_obj, ANIM_fall_back_sf);
 	end
+
 	sleeping_disabled := 0;
 	sleep_time := 2000;
 	wake_time := 700;
+
 	if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 		sleep_tile := 7000;
 		if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
@@ -180,76 +178,73 @@ begin
 			home_tile := 16892;
 		end
 	end
+
 	if (global_var( GVAR_SAUL_STATUS ) == 3) then begin
 		destroy_object(self_obj);
 	end
+
 	move_to(self_obj, home_tile, 0);
 	set_self_team( TEAM_15 );
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (not(combat_is_initialized)) then begin
+
 		if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
 			home_tile := 15094;
 		end
 		else begin
 			home_tile := 16892;
 		end
+
 		move_to(self_obj, home_tile, 0);
+
 		if (local_var(8) == 1) then begin
 			set_local_var(8, 0);
 			reg_anim_animate(self_obj, 0, 0);
 		end
+
 		sleeping
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (local_var(4)) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), 0);
 	end
+	else if (critter_state(self_obj) bwand 1) then begin
+		display_msg(mstr(115));
+	end
+	else if (global_var( GVAR_ENEMY_JUNKTOWN )) then begin
+		float_msg(self_obj, message_str(SCRIPT_ENEMY, 104), 2);
+	end
 	else begin
-		if (critter_state(self_obj) bwand 1) then begin
-			display_msg(message_str(SCRIPT_SAUL, 115));
+		if (dude_is_armed) then begin
+			call Saul06;
 		end
 		else begin
-			if (global_var( GVAR_ENEMY_JUNKTOWN )) then begin
-				float_msg(self_obj, message_str(SCRIPT_ENEMY, 104), 2);
+			if (global_var( GVAR_SAUL_STATUS )) then begin
+				start_dialog_at_node(Saul23);
 			end
 			else begin
-				if (dude_is_armed) then begin
-					call Saul06;
-				end
-				else begin
-					start_gdialog(528, self_obj, 4, -1, -1);
-					gsay_start;
-					if (global_var( GVAR_SAUL_STATUS )) then begin
-						call Saul23;
-					end
-					else begin
-						call Saul07;
-					end
-					gsay_end;
-					end_dialogue;
-				end
+				start_dialog_at_node(Saul07);
 			end
 		end
 	end
+
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 32) and (global_var( GVAR_TRISH_STATUS ) bwand 8) and (global_var( GVAR_TRISH_STATUS ) bwand 16)) then begin
 		set_global_var( GVAR_TRISH_STATUS, global_var( GVAR_TRISH_STATUS ) + 32 );
 		display_msg(message_str(SCRIPT_TRISH, 173));
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
-		give_exp_points(250);
+		give_exp_points(EXP_TRISH_SAUL_RELATIONSHIP);
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (challenger_ptr != 0) then begin
+
 		if (fixed_param == 1) then begin
 			if (obj_pid(challenger_ptr) == PID_RADSCORPION) then begin
 				if (random(0, 4) == 0) then begin
@@ -269,64 +264,52 @@ begin
 			end
 			call SaulBoxing;
 		end
-		else begin
-			if (fixed_param == 2) then begin
-				Saul_wins := 1;
-			end
-			else begin
-				if (fixed_param == 3) then begin
-					Saul_loses := 1;
-					set_local_var(8, 1);
-				end
-			end
+
+		else if (fixed_param == 2) then begin
+			Saul_wins := 1;
+		end
+
+		else if (fixed_param == 3) then begin
+			Saul_loses := 1;
+			set_local_var(8, 1);
 		end
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
 end
 
-procedure create_challenger
-begin
+procedure create_challenger begin
 	challenger_ptr := random(0, 4);
+
 	if (challenger_ptr == 4) then begin
 		challenger_ptr := create_object_sid(PID_GREATER_MOLE_RAT, 0, 0, SCRIPT_JBOXER);
 	end
-	else begin
-		if (challenger_ptr == 3) then begin
-			challenger_ptr := create_object_sid(PID_RADSCORPION, 0, 0, SCRIPT_JBOXER);
-		end
-		else begin
-			if (challenger_ptr == 2) then begin
-				challenger_ptr := create_object_sid(PID_TOWNSWOMAN_METAL, 0, 0, SCRIPT_JBOXER);
-			end
-			else begin
-				if (challenger_ptr == 1) then begin
-					challenger_ptr := create_object_sid(PID_TOWNSMAN_LEATHER, 0, 0, SCRIPT_JBOXER);
-				end
-				else begin
-					if (challenger_ptr == 0) then begin
-						challenger_ptr := create_object_sid(PID_MALE_GUARD_METAL_BLACK, 0, 0, SCRIPT_JBOXER);
-					end
-				end
-			end
-		end
+	else if (challenger_ptr == 3) then begin
+		challenger_ptr := create_object_sid(PID_RADSCORPION, 0, 0, SCRIPT_JBOXER);
 	end
+	else if (challenger_ptr == 2) then begin
+		challenger_ptr := create_object_sid(PID_TOWNSWOMAN_METAL, 0, 0, SCRIPT_JBOXER);
+	end
+	else if (challenger_ptr == 1) then begin
+		challenger_ptr := create_object_sid(PID_TOWNSMAN_LEATHER, 0, 0, SCRIPT_JBOXER);
+	end
+	else if (challenger_ptr == 0) then begin
+		challenger_ptr := create_object_sid(PID_MALE_GUARD_METAL_BLACK, 0, 0, SCRIPT_JBOXER);
+	end
+
 	critter_attempt_placement(challenger_ptr, tile_num_in_direction(tile_num(self_obj), 1, 1), 0);
 	anim(challenger_ptr, 1000, 4);
 end
 
-procedure Saul06
-begin
+procedure Saul06 begin
 	float_msg(self_obj, message_str(SCRIPT_SAUL, 104), 2);
 end
 
-procedure Saul07
-begin
+procedure Saul07 begin
 	set_global_var( GVAR_SAUL_STATUS, 1 );
 	if (local_var(1) == 1) then begin
 		gsay_reply(528, 105);
@@ -339,16 +322,14 @@ begin
 	giq_option( 4, SCRIPT_SAUL, message_str(SCRIPT_SAUL, 109) + dude_name + message_str(SCRIPT_SAUL, 110), Saul09, NEUTRAL_REACTION );
 end
 
-procedure Saul08
-begin
+procedure Saul08 begin
 	gsay_reply(528, 111);
 	giq_option( 4, SCRIPT_SAUL, 112, Saul09, BAD_REACTION );
 	giq_option( 4, SCRIPT_SAUL, 113, Saul11, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_SAUL, 103, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul09
-begin
+procedure Saul09 begin
 	if (local_var(1) == 1) then begin
 		gsay_reply(528, 128);
 	end
@@ -366,8 +347,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, 132, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul10
-begin
+procedure Saul10 begin
 	if (local_var(1) == 1) then begin
 		gsay_reply(528, 133);
 	end
@@ -379,8 +359,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, 132, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul11
-begin
+procedure Saul11 begin
 	gsay_reply(528, 137);
 	giq_option( 4, SCRIPT_SAUL, 136, Saul12, GOOD_REACTION );
 	if (not(local_var(5))) then begin
@@ -393,8 +372,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul12
-begin
+procedure Saul12 begin
 	UpReact
 	if (local_var(1) == 1) then begin
 		gsay_reply(528, 140);
@@ -409,8 +387,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul13
-begin
+procedure Saul13 begin
 	set_local_var(5, 1);
 	gsay_reply(528, 145);
 	giq_option( 4, SCRIPT_SAUL, 146, Saul19, NEUTRAL_REACTION );
@@ -419,8 +396,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul14
-begin
+procedure Saul14 begin
 	set_local_var(6, 1);
 	gsay_reply(528, 148);
 	if (not(local_var(5))) then begin
@@ -430,8 +406,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul15
-begin
+procedure Saul15 begin
 	set_local_var(7, 1);
 	gsay_reply(528, 150);
 	giq_option( 4, SCRIPT_SAUL, 151, Saul17, NEUTRAL_REACTION );
@@ -446,8 +421,7 @@ begin
 	giq_option( 6, SCRIPT_SAUL, 154, Saul24, NEUTRAL_REACTION );
 end
 
-procedure Saul16
-begin
+procedure Saul16 begin
 	UpReact
 	gsay_reply(528, 155);
 	giq_option( 4, SCRIPT_SAUL, 156, Saul18, NEUTRAL_REACTION );
@@ -455,8 +429,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul17
-begin
+procedure Saul17 begin
 	set_global_var( GVAR_SAUL_STATUS, 2 );
 	gsay_reply(528, 157);
 	giq_option( 4, SCRIPT_SAUL, 158, Saul18, NEUTRAL_REACTION );
@@ -467,8 +440,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul18
-begin
+procedure Saul18 begin
 	if (local_var(1) < 2) then begin
 		gsay_reply(528, 160);
 	end
@@ -485,15 +457,13 @@ begin
 	giq_option( 4, SCRIPT_SAUL, 165, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul18a
-begin
+procedure Saul18a begin
 	set_local_var(1, 1);
 	LevelToReact
 	call Saul09;
 end
 
-procedure Saul19
-begin
+procedure Saul19 begin
 	gsay_reply(528, 166);
 	giq_option( 4, SCRIPT_SAUL, 168, Saul18, NEUTRAL_REACTION );
 	if (dude_iq >= 6) then begin
@@ -505,8 +475,7 @@ begin
 	end
 end
 
-procedure Saul20
-begin
+procedure Saul20 begin
 	set_global_var( GVAR_SAUL_STATUS, 2 );
 	if (local_var(1) == 1) then begin
 		gsay_reply(528, 169);
@@ -531,8 +500,7 @@ begin
 	giq_option( 4, SCRIPT_SAUL, 175, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul21
-begin
+procedure Saul21 begin
 	UpReact
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 16)) then begin
 		set_global_var( GVAR_TRISH_STATUS, global_var( GVAR_TRISH_STATUS ) + 16 );
@@ -540,8 +508,7 @@ begin
 	gsay_message(528, 176, 49);
 end
 
-procedure Saul22
-begin
+procedure Saul22 begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Saul21;
 	end
@@ -552,8 +519,7 @@ begin
 	end
 end
 
-procedure Saul23
-begin
+procedure Saul23 begin
 	if (local_var(1) < 2) then begin
 		gsay_reply(528, 180);
 	end
@@ -571,17 +537,16 @@ begin
 	giq_option( 4, SCRIPT_SAUL, exit_line, SaulEnd, NEUTRAL_REACTION );
 end
 
-procedure Saul24
-begin
+procedure Saul24 begin
 	gsay_reply(528, 185);
 	giq_option( 4, SCRIPT_SAUL, 186, SaulEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_SAUL, 187, Saul18, NEUTRAL_REACTION );
 end
 
-procedure SaulBoxing
-begin
+procedure SaulBoxing begin
 	reg_anim_func(2, self_obj);
 	reg_anim_func(2, challenger_ptr);
+
 	if (whose_turn == 1) then begin
 		reg_anim_func(1, 1);
 		reg_anim_animate(self_obj, 16, -1);
@@ -603,6 +568,7 @@ begin
 		end
 		reg_anim_func(3, 0);
 	end
+
 	else begin
 		reg_anim_func(1, 1);
 		reg_anim_animate(challenger_ptr, 16, -1);
@@ -624,19 +590,17 @@ begin
 		end
 		reg_anim_func(3, 0);
 	end
+
 end
 
-procedure SaulCombat
-begin
+procedure SaulCombat begin
 	tmp_hostile := 1;
 end
 
-procedure SaulEnd
-begin
+procedure SaulEnd begin
 end
 
-procedure Saul_UpReact
-begin
+procedure Saul_UpReact begin
 	set_local_var(0, local_var(0) + 10);
 	ReactToLevel
 end
