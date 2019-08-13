@@ -1,32 +1,41 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure timed_event_p_proc;//    script_action == 22
+	Boneyard - Regulator guard standing behind Jon Zimmermann
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_PGUARD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+procedure use_obj_on_p_proc;
+procedure timed_event_p_proc;
 
 import variable JonPtr;
 
 variable Only_Once := 1;
 variable PsstTime;
-variable Hostile;
+variable tmp_hostile;
 
-
-
-procedure Start
-begin
-	
-	
+procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		/* has how many? */    if (self_item_count( PID_BOTTLE_CAPS ) == 0) then begin
+		if (self_item_count( PID_BOTTLE_CAPS ) == 0) then begin
 			item_caps_adjust(self_obj, random(1, 10));
 		end
 		set_self_team(TEAM_LA_REGULATORS );
@@ -37,55 +46,19 @@ begin
 			set_local_var(5, 1);
 		end
 	end
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		call talk_p_proc;
-	end
-	else begin
-		if (script_action == 21) then begin// 21 is look_at, 3 is description (Binoculars)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 7) then begin//<-- use_obj_on_p_proc
-				call use_obj_on_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-						else begin
-							if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-								call timed_event_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_REGULATR, 100));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_REGULATR, 100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if ((global_var( GVAR_ENEMY_ADYTUM ) == 1) or (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1)) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
@@ -95,8 +68,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
 		if ((global_var( GVAR_ENEMY_ADYTUM ) == 1) or (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1)) then begin
 			attack(dude_obj);
@@ -108,19 +80,17 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
-		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
-		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 	end
 	inc_evil_critter
 	rm_timer_event(self_obj);
@@ -130,23 +100,20 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
-	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+procedure pickup_p_proc begin
+	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 end
 
-procedure use_obj_on_p_proc
-begin
-	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+procedure use_obj_on_p_proc begin
+	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if ((global_var( GVAR_ZIMMERMAN_STATUS ) == 9003) or (global_var( GVAR_BLADES_STATUS ) == 9103)) then begin
 		if (local_var(4) == 0) then begin
 			set_local_var(4, 1);
 			float_msg(self_obj, message_str(SCRIPT_REGULATR, 139), 2);
-			attack_complex(JonPtr, 0, 1, 100, 250, 300, 0, 128);
+			attack_complex(JonPtr, 0, 1, 100, 250, 300, 0, 128); // The guard will always kill Zimmermann!
 		end
 	end
 	else begin
