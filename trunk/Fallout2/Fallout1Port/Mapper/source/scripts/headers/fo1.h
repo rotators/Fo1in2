@@ -155,10 +155,10 @@ end
 										end								\
 									end
 
-#define obj_invisible(x)			set_obj_visibility(x,1)
-#define obj_visible(x)				set_obj_visibility(x,0)
-#define set_self_obj_invisible		obj_invisible(self_obj)
-#define set_self_obj_visible		obj_visible(self_obj)
+#define set_obj_invisible(x)		set_obj_visibility(x,1)
+#define set_obj_visible(x)			set_obj_visibility(x,0)
+#define set_self_invisible			set_obj_invisible(self_obj)
+#define set_self_visible			set_obj_visible(self_obj)
 #define is_visible(x)				(obj_is_visible_flag(x))
 #define is_self_visible				(obj_is_visible_flag(self_obj))
 #define is_map(x)					(cur_map_index == x)
