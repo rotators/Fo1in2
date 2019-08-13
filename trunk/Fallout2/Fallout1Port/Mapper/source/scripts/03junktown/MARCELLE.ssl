@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Marcelle
+	Junktown - Marcelles, the Crash House owner
 
 */
 
@@ -90,9 +90,11 @@ variable tmp_hostile;
 variable message;
 variable moving_disabled;
 variable showing_room;
+
 variable tmp_dest_tile := 19901;
 variable room_tile := 19289;
 variable waiting_tile := 19095;
+
 variable line00flag;
 variable line04flag;
 variable line06flag;
@@ -103,18 +105,18 @@ variable sfx_name;
 procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			attack(dude_obj);
 		end
 	end
-	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
+
 		if (Shooting == 0) then begin
 			if ((global_var( GVAR_SAVE_SINTHIA ) != 2) and (map_var(3) != 0)) then begin
 				dest_tile := waiting_tile;
@@ -129,30 +131,26 @@ begin
 					end
 				end
 				if (global_var( GVAR_SAVE_SINTHIA ) == 0) then begin
-					if (obj_can_see_obj(self_obj, dude_obj)) then begin
-						if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-							if (not(line00flag)) then begin
-								if (tile_num(self_obj) == waiting_tile) then begin
-									dialogue_system_enter;
-								end
-							end
+					if (obj_can_see_obj(self_obj, dude_obj)) and (tile_distance_objs(self_obj, dude_obj) < 12) and (not(line00flag)) then begin
+						if (tile_num(self_obj) == waiting_tile) then begin
+							dialogue_system_enter;
 						end
 					end
 				end
 			end
-			else begin
-				if ((global_var( GVAR_SAVE_SINTHIA ) == 2) or (map_var(0) == 2)) then begin
-					if (tile_num(self_obj) == waiting_tile) then begin
-						moving_disabled := 0;
-						dest_tile := tmp_dest_tile;
-					end
+			else if ((global_var( GVAR_SAVE_SINTHIA ) == 2) or (map_var(0) == 2)) then begin
+				if (tile_num(self_obj) == waiting_tile) then begin
+					moving_disabled := 0;
+					dest_tile := tmp_dest_tile;
 				end
 			end
+
 			if ((moving_disabled == 0) and (local_var(5) == 0)) then begin
 				if (tile_num(self_obj) != dest_tile) then begin
 					animate_move_obj_to_tile(self_obj, dest_tile, 0);
 				end
 			end
+
 			if (showing_room) then begin
 				dest_tile := room_tile;
 				if (tile_num(self_obj) != dest_tile) then begin
@@ -168,6 +166,7 @@ begin
 					call Marcelles33;
 				end
 			end
+
 			if (tile_distance(tile_num(dude_obj), tmp_dest_tile) < 8) then begin
 				if (local_var(5) == 1) then begin
 					dest_tile := tmp_dest_tile;
@@ -175,41 +174,38 @@ begin
 				end
 			end
 		end
+
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
-		set_global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1 );// GVAR_ENEMY_JUNK_CITIZEN
+		set_global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1 );
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
 	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4)) then begin
-		display_msg(message_str(SCRIPT_MARCELLE, 100));
+		display_msg(mstr(100));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_MARCELLE, 101));
+		display_msg(mstr(101));
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if ((global_var( GVAR_SAVE_SINTHIA ) == 0) and (line00flag == 0) and (map_var(3) != 0)) then begin
 		move_to(self_obj, waiting_tile, 0);
 		dest_tile := waiting_tile;
@@ -220,8 +216,7 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (self_item( PID_SHOTGUN )) then begin
 		Bessy := self_item( PID_SHOTGUN );
 	end
@@ -229,7 +224,7 @@ begin
 		Bessy := create_object( PID_SHOTGUN, 0, 0 );
 		add_obj_to_inven(self_obj, Bessy);
 	end
-	set_self_team(TEAM_JUNKTOWNER );
+	set_self_team( TEAM_JUNKTOWNER );
 	home_tile := 19901;
 	wake_time := 600;
 end
@@ -239,8 +234,7 @@ begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (local_var(5) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), 0);
@@ -256,38 +250,26 @@ begin
 			if ((global_var( GVAR_SAVE_SINTHIA ) == 0) and not(line00flag) and (map_var(3) != 0)) then begin
 				call Marcelles00;
 			end
+			else if (global_var( GVAR_SAVE_SINTHIA ) == 1) then begin
+				call Marcelles03;
+			end
+			else if ((global_var( GVAR_SAVE_SINTHIA ) == 2) and not(line04flag) and (map_var(0) != 2) and (local_var(7) == 0)) then begin
+				call Marcelles04;
+			end
+			else if ((map_var(0) == 2) and not(line06flag)) then begin
+				call Marcelles06;
+			end
+			else if ((global_var( GVAR_KILL_KILLIAN ) == 2) and not(line29flag)) then begin
+				call Marcelles29;
+			end
+			else if (not(local_var(4))) then begin
+				call Marcelles07;
+			end
+			else if (local_var(1) < 2) then begin
+				call Marcelles22;
+			end
 			else begin
-				if (global_var( GVAR_SAVE_SINTHIA ) == 1) then begin
-					call Marcelles03;
-				end
-				else begin
-					if ((global_var( GVAR_SAVE_SINTHIA ) == 2) and not(line04flag) and (map_var(0) != 2) and (local_var(7) == 0)) then begin
-						call Marcelles04;
-					end
-					else begin
-						if ((map_var(0) == 2) and not(line06flag)) then begin
-							call Marcelles06;
-						end
-						else begin
-							if ((global_var( GVAR_KILL_KILLIAN ) == 2) and not(line29flag)) then begin
-								call Marcelles29;
-							end
-							else begin
-								if (not(local_var(4))) then begin
-									call Marcelles07;
-								end
-								else begin
-									if (local_var(1) < 2) then begin
-										call Marcelles22;
-									end
-									else begin
-										call Marcelles17;
-									end
-								end
-							end
-						end
-					end
-				end
+				call Marcelles17;
 			end
 			gsay_end;
 			end_dialogue;
@@ -298,74 +280,62 @@ begin
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		add_timer_event(self_obj, game_ticks(2), 2);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			dest_tile := home_tile;
-			moving_disabled := 0;
+	else if (fixed_param == 2) then begin
+		dest_tile := home_tile;
+		moving_disabled := 0;
+	end
+	else if (fixed_param == 3) then begin
+		if (tile_distance(tile_num(self_obj), 18089) > 2) then begin
+			animate_move_obj_to_tile(self_obj, 18089, 1);
+			add_timer_event(self_obj, 5, 3);
 		end
 		else begin
-			if (fixed_param == 3) then begin
-				if (tile_distance(tile_num(self_obj), 18089) > 2) then begin
-					animate_move_obj_to_tile(self_obj, 18089, 1);
-					add_timer_event(self_obj, 5, 3);
-				end
-				else begin
-					add_timer_event(self_obj, 5, 4);
-				end
-			end
-			else begin
-				if (fixed_param == 4) then begin
-					reg_anim_func(2, JTRaider_ptr);
-					reg_anim_func(1, 1);
-					reg_anim_animate(JTRaider_ptr, 43, -1);
-					reg_anim_animate(JTRaider_ptr, 45, -1);
-					reg_anim_animate(JTRaider_ptr, 44, -1);
-					reg_anim_func(3, 0);
-					critter_dmg( Sinthia_ptr, random(75, 100), DMG_normal_dam );
-					add_timer_event(self_obj, 5, 5);
-					/* has how many? */    if (self_item_count( PID_SHOTGUN ) == 0) then begin
-						Bessy := create_object( PID_SHOTGUN, 0, 0 );
-						add_obj_to_inven(self_obj, Bessy);
-					end
-					wield_obj_critter(self_obj, self_item( PID_SHOTGUN ));
-				end
-				else begin
-					if (fixed_param == 5) then begin
-						reg_anim_func(2, self_obj);
-						reg_anim_func(1, 1);
-						reg_anim_animate(self_obj, 43, -1);
-						reg_anim_animate(self_obj, 45, -1);
-						sfx_name := sfx_build_weapon_name(1, self_item( PID_SHOTGUN ), 0, JTRaider_ptr);
-						reg_anim_play_sfx(self_obj, sfx_name, 0);
-						reg_anim_animate(self_obj, 44, -1);
-						reg_anim_func(3, 0);
-						critter_dmg( JTRaider_ptr, random(75, 100), DMG_normal_dam );
-						Shooting := 0;
-						game_ui_enable;
-					end
-					else begin
-						if (fixed_param == 6) then begin
-							if (global_var( GVAR_SAVE_SINTHIA ) != 2) then begin
-								call Marcelles_charge_raider;
-							end
-						end
-					end
-				end
-			end
+			add_timer_event(self_obj, 5, 4);
+		end
+	end
+	else if (fixed_param == 4) then begin
+		reg_anim_func(2, JTRaider_ptr);
+		reg_anim_func(1, 1);
+		reg_anim_animate(JTRaider_ptr, 43, -1);
+		reg_anim_animate(JTRaider_ptr, 45, -1);
+		reg_anim_animate(JTRaider_ptr, 44, -1);
+		reg_anim_func(3, 0);
+		critter_dmg( Sinthia_ptr, random(75, 100), DMG_normal_dam );
+		add_timer_event(self_obj, 5, 5);
+		if (self_item_count( PID_SHOTGUN ) == 0) then begin
+			Bessy := create_object( PID_SHOTGUN, 0, 0 );
+			add_obj_to_inven(self_obj, Bessy);
+		end
+		wield_obj_critter(self_obj, self_item( PID_SHOTGUN ));
+	end
+	else if (fixed_param == 5) then begin
+		reg_anim_func(2, self_obj);
+		reg_anim_func(1, 1);
+		reg_anim_animate(self_obj, 43, -1);
+		reg_anim_animate(self_obj, 45, -1);
+		sfx_name := sfx_build_weapon_name(1, self_item( PID_SHOTGUN ), 0, JTRaider_ptr);
+		reg_anim_play_sfx(self_obj, sfx_name, 0);
+		reg_anim_animate(self_obj, 44, -1);
+		reg_anim_func(3, 0);
+		critter_dmg( JTRaider_ptr, random(75, 100), DMG_normal_dam );
+		Shooting := 0;
+		game_ui_enable;
+	end
+	else if (fixed_param == 6) then begin
+		if (global_var( GVAR_SAVE_SINTHIA ) != 2) then begin
+			call Marcelles_charge_raider;
 		end
 	end
 end
 
-procedure Marcelles00
-begin
+procedure Marcelles00 begin
 	line00flag := 1;
 	set_global_var( GVAR_SAVE_SINTHIA, 1 );
-	gsay_reply(339, 102);
+	Reply(102);
 	giq_option( 4, SCRIPT_MARCELLE, 103, Marcelles02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 104, MarcellesUpReact, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 105, Marcelles01, NEUTRAL_REACTION );
@@ -375,41 +345,35 @@ procedure MarcellesUpReact begin
 	UpReact
 end
 
-procedure Marcelles01
-begin
+procedure Marcelles01 begin
 	gsay_message(339, 106, 50);
 end
 
-procedure Marcelles02
-begin
+procedure Marcelles02 begin
 	DownReact
-	gsay_reply(339, 107);
+	Reply(107);
 	giq_option( 4, SCRIPT_MARCELLE, 108, Marcelles02a, BAD_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 109, MarcellesEnd, NEUTRAL_REACTION );
 end
 
-procedure Marcelles02a
-begin
+procedure Marcelles02a begin
 	BigDownReact
 	call Marcelles_charge_raider;
 end
 
-procedure Marcelles03
-begin
+procedure Marcelles03 begin
 	gsay_message(339, 110, 50);
 end
 
-procedure Marcelles04
-begin
+procedure Marcelles04 begin
 	line04flag := 1;
 	set_local_var(7, 1);
-	gsay_reply(339, 111);
+	Reply(111);
 	giq_option( -3, SCRIPT_MARCELLE, 112, Marcelles05, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 113, Marcelles05, NEUTRAL_REACTION );
 end
 
-procedure Marcelles05
-begin
+procedure Marcelles05 begin
 	gsay_message(339, 114, 50);
 	if (global_var( GVAR_RENT_TIME ) < (GAME_TIME_IN_DAYS)) then begin
 		set_global_var( GVAR_RENT_TIME, (GAME_TIME_IN_DAYS) + 1 );
@@ -421,35 +385,31 @@ begin
 	message := message_str(SCRIPT_MARCELLE, 115);
 end
 
-procedure Marcelles06
-begin
+procedure Marcelles06 begin
 	line06flag := 1;
 	BigDownReact
-	gsay_reply(339, 116);
+	Reply(116);
 	giq_option( 4, SCRIPT_MARCELLE, 117, MarcellesEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 118, MarcellesEnd, NEUTRAL_REACTION );
 end
 
-procedure Marcelles07
-begin
+procedure Marcelles07 begin
 	set_local_var(4, 1);
-	gsay_reply(339, 119);
+	Reply(119);
 	giq_option( 4, SCRIPT_MARCELLE, 120, Marcelles12, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 121, Marcelles13, NEUTRAL_REACTION );
 	giq_option( 7, SCRIPT_MARCELLE, 122, Marcelles14, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 123, Marcelles08, NEUTRAL_REACTION );
 end
 
-procedure Marcelles08
-begin
-	gsay_reply(339, 124);
+procedure Marcelles08 begin
+	Reply(124);
 	giq_option( -3, SCRIPT_MARCELLE, 125, Marcelles09, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 126, Marcelles08a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 127, Marcelles08b, NEUTRAL_REACTION );
 end
 
-procedure Marcelles08a
-begin
+procedure Marcelles08a begin
 	if (dude_caps >= 25) then begin
 		item_caps_adjust(dude_obj, -25);
 		if (global_var( GVAR_RENT_TIME ) < (GAME_TIME_IN_DAYS)) then begin
@@ -465,8 +425,7 @@ begin
 	end
 end
 
-procedure Marcelles08b
-begin
+procedure Marcelles08b begin
 	if (dude_caps >= 150) then begin
 		item_caps_adjust(dude_obj, -150);
 		if (global_var( GVAR_RENT_TIME ) < (GAME_TIME_IN_DAYS)) then begin
@@ -482,45 +441,38 @@ begin
 	end
 end
 
-procedure Marcelles09
-begin
+procedure Marcelles09 begin
 	gsay_message(339, 128, 50);
 end
 
-procedure Marcelles10
-begin
+procedure Marcelles10 begin
 	gsay_message(339, 129, 50);
 	showing_room := 1;
 	message := message_str(SCRIPT_MARCELLE, 130);
 end
 
-procedure Marcelles11
-begin
+procedure Marcelles11 begin
 	gsay_message(339, 131, 50);
 end
 
-procedure Marcelles12
-begin
+procedure Marcelles12 begin
 	gsay_message(339, 132, 50);
 end
 
-procedure Marcelles13
-begin
-	gsay_reply(339, 133);
+procedure Marcelles13 begin
+	Reply(133);
 	giq_option( 4, SCRIPT_MARCELLE, 134, Marcelles08b, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 135, Marcelles08a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 136, MarcellesEnd, NEUTRAL_REACTION );
 end
 
-procedure Marcelles14
-begin
-	gsay_reply(339, 137);
+procedure Marcelles14 begin
+	Reply(137);
 	giq_option( 5, SCRIPT_MARCELLE, 138, Marcelles14a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 182, MarcellesEnd, NEUTRAL_REACTION );
 end
 
-procedure Marcelles14a
-begin
+procedure Marcelles14a begin
 	if (dude_caps >= 50) then begin
 		call Marcelles15;
 	end
@@ -529,28 +481,24 @@ begin
 	end
 end
 
-procedure Marcelles15
-begin
+procedure Marcelles15 begin
 	item_caps_adjust(dude_obj, -50);
 	gsay_message(339, 139, 50);
 end
 
-procedure Marcelles16
-begin
+procedure Marcelles16 begin
 	DownReact
 	gsay_message(339, 140, 50);
 end
 
-procedure Marcelles17
-begin
-	gsay_reply(339, 141);
+procedure Marcelles17 begin
+	Reply(141);
 	giq_option( 4, SCRIPT_MARCELLE, 142, Marcelles17a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 184, MarcellesEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 143, Marcelles17a, NEUTRAL_REACTION );
 end
 
-procedure Marcelles17a
-begin
+procedure Marcelles17a begin
 	if (global_var( GVAR_RENT_TIME ) > (GAME_TIME_IN_DAYS)) then begin
 		call Marcelles18;
 	end
@@ -559,32 +507,28 @@ begin
 	end
 end
 
-procedure Marcelles18
-begin
-	gsay_reply(339, 144);
+procedure Marcelles18 begin
+	Reply(144);
 	giq_option( 4, SCRIPT_MARCELLE, 145, Marcelles18a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 146, MarcellesEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 147, Marcelles18a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 148, MarcellesEnd, NEUTRAL_REACTION );
 end
 
-procedure Marcelles18a
-begin
+procedure Marcelles18a begin
 	DownReact
 	showing_room := 1;
 	message := message_str(SCRIPT_MARCELLE, 149);
 end
 
-procedure Marcelles19
-begin
-	gsay_reply(339, 150);
+procedure Marcelles19 begin
+	Reply(150);
 	giq_option( -3, SCRIPT_MARCELLE, 151, Marcelles09, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 152, Marcelles19a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 153, Marcelles19b, NEUTRAL_REACTION );
 end
 
-procedure Marcelles19a
-begin
+procedure Marcelles19a begin
 	if (dude_caps >= 25) then begin
 		item_caps_adjust(dude_obj, -25);
 		if (global_var( GVAR_RENT_TIME ) < (GAME_TIME_IN_DAYS)) then begin
@@ -600,8 +544,7 @@ begin
 	end
 end
 
-procedure Marcelles19b
-begin
+procedure Marcelles19b begin
 	if (dude_caps >= 150) then begin
 		item_caps_adjust(dude_obj, -150);
 		if (global_var( GVAR_RENT_TIME ) < (GAME_TIME_IN_DAYS)) then begin
@@ -617,41 +560,35 @@ begin
 	end
 end
 
-procedure Marcelles20
-begin
-	gsay_reply(339, 154);
+procedure Marcelles20 begin
+	Reply(154);
 	giq_option( 4, SCRIPT_MARCELLE, 155, Marcelles19b, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 156, Marcelles19a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 157, MarcellesEnd, NEUTRAL_REACTION );
 end
 
-procedure Marcelles21
-begin
+procedure Marcelles21 begin
 	UpReact
 	gsay_message(339, 158, 50);
 end
 
-procedure Marcelles22
-begin
-	gsay_reply(339, 159);
+procedure Marcelles22 begin
+	Reply(159);
 	giq_option( 4, SCRIPT_MARCELLE, 160, Marcelles24, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 184, MarcellesEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 161, Marcelles23, NEUTRAL_REACTION );
 end
 
-procedure Marcelles23
-begin
+procedure Marcelles23 begin
 	gsay_message(339, 162, 50);
 end
 
-procedure Marcelles24
-begin
-	gsay_reply(339, 163);
+procedure Marcelles24 begin
+	Reply(163);
 	giq_option( 4, SCRIPT_MARCELLE, 164, Marcelles24a, NEUTRAL_REACTION );
 end
 
-procedure Marcelles24a
-begin
+procedure Marcelles24a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Marcelles26;
 	end
@@ -660,20 +597,17 @@ begin
 	end
 end
 
-procedure Marcelles25
-begin
+procedure Marcelles25 begin
 	gsay_message(339, 165, 50);
 end
 
-procedure Marcelles26
-begin
-	gsay_reply(339, 166);
+procedure Marcelles26 begin
+	Reply(166);
 	giq_option( 4, SCRIPT_MARCELLE, 167, Marcelles27, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 168, Marcelles26a, NEUTRAL_REACTION );
 end
 
-procedure Marcelles26a
-begin
+procedure Marcelles26a begin
 	if (dude_caps >= 100) then begin
 		item_caps_adjust(dude_obj, -100);
 		if (global_var( GVAR_RENT_TIME ) < (GAME_TIME_IN_DAYS)) then begin
@@ -689,29 +623,25 @@ begin
 	end
 end
 
-procedure Marcelles27
-begin
-	gsay_reply(339, 169);
+procedure Marcelles27 begin
+	Reply(169);
 	giq_option( 4, SCRIPT_MARCELLE, 170, MarcellesEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 171, Marcelles26a, NEUTRAL_REACTION );
 end
 
-procedure Marcelles28
-begin
+procedure Marcelles28 begin
 	gsay_message(339, 172, 50);
 end
 
-procedure Marcelles29
-begin
+procedure Marcelles29 begin
 	line29flag := 1;
-	gsay_reply(339, 173);
+	Reply(173);
 	giq_option( 4, SCRIPT_MARCELLE, 174, Marcelles31, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_MARCELLE, 175, Marcelles29a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_MARCELLE, 176, Marcelles30, NEUTRAL_REACTION );
 end
 
-procedure Marcelles29a
-begin
+procedure Marcelles29a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Marcelles32;
 	end
@@ -720,26 +650,22 @@ begin
 	end
 end
 
-procedure Marcelles30
-begin
+procedure Marcelles30 begin
 	BottomReact
 	gsay_message(339, 177, 51);
 end
 
-procedure Marcelles31
-begin
+procedure Marcelles31 begin
 	BottomReact
 	gsay_message(339, 178, 51);
 end
 
-procedure Marcelles32
-begin
+procedure Marcelles32 begin
 	BigDownReact
 	gsay_message(339, 179, 51);
 end
 
-procedure Marcelles33
-begin
+procedure Marcelles33 begin
 	messing_with_fridge := 0;
 	if (global_var( GVAR_RENT_TIME ) <= (GAME_TIME_IN_DAYS)) then begin
 		float_msg(self_obj, message_str(SCRIPT_MARCELLE, 181), 2);
@@ -752,18 +678,15 @@ begin
 	end
 end
 
-procedure go_to_room
-begin
+procedure go_to_room begin
 	showing_room := 1;
 	moving_disabled := 1;
 end
 
-procedure MarcellesEnd
-begin
+procedure MarcellesEnd begin
 end
 
-procedure Marcelles_charge_raider
-begin
+procedure Marcelles_charge_raider begin
 	display_msg(message_str(SCRIPT_MARCELLE, 183));
 	add_timer_event(self_obj, 5, 3);
 	game_ui_disable;
