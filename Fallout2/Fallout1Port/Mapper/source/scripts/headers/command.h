@@ -292,8 +292,8 @@ variable step_tile;
 #define tile_behind_obj(who)                (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), 1))
 #define tile_behind_obj_rng(who, rng)       (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), rng))
 
-#define dude_cur_hits                       (get_critter_stat(dude_obj,STAT_current_hp))
-#define dude_max_hits                       (get_critter_stat(dude_obj,STAT_max_hp))
+#define dude_cur_hp                         (get_critter_stat(dude_obj,STAT_current_hp))
+#define dude_max_hp                         (get_critter_stat(dude_obj,STAT_max_hp))
 
 #define dude_mental_block                   (has_trait(TRAIT_PERK,dude_obj,PERK_mental_block))
 #define dude_presence                       (has_trait(TRAIT_PERK,dude_obj,PERK_presence))
@@ -387,8 +387,8 @@ variable step_tile;
 #define self_pid                            (obj_pid(self_obj))
 #define self_visible                        obj_is_visible_flag(self_obj)
 
-#define self_cur_hits                       (get_critter_stat(self_obj,STAT_current_hp))
-#define self_max_hits                       (get_critter_stat(self_obj,STAT_max_hp))
+#define self_cur_hp                         (get_critter_stat(self_obj,STAT_current_hp))
+#define self_max_hp                         (get_critter_stat(self_obj,STAT_max_hp))
 
 #define self_mental_block                   (has_trait(TRAIT_PERK,self_obj,PERK_mental_block))
 #define self_presence                       (has_trait(TRAIT_PERK,self_obj,PERK_presence))
