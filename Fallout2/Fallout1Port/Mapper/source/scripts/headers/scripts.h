@@ -981,14 +981,15 @@
 #define SCRIPT_REDFIELD  (972)
 
 // Stuff from scripts.lst
-#define SCRIPT_GRNMTARM  (979)
-//#define SCRIPT_MYSTSTRN  (980)
+#define SCRIPT_GRNMTARM  (973)
+//#define SCRIPT_MYSTSTRN  (974)
 
 //Lexx
-#define SCRIPT_CHEATBOX  (981)
-#define SCRIPT_NIF2HINT  (982)  // niF2Hint.int    ; New Reno Fallout 2 Hintbook
-#define SCRIPT_RNDENC 	 (983)	// Random encounter map selector script
-#define SCRIPT_MOTRCYCL  (984)	// Drivable vehicle 
-#define SCRIPT_MOTRTRNK  (985)  // Motorcycle trunk
+#define SCRIPT_CHEATBOX  (975)
+#define SCRIPT_NIF2HINT  (976)  // niF2Hint.int    ; New Reno Fallout 2 Hintbook
+#define SCRIPT_RNDENC 	 (977)	// Random encounter map selector script
+#define SCRIPT_MOTRCYCL  (978)	// Drivable vehicle 
+#define SCRIPT_MOTRTRNK  (979)  // Motorcycle trunk
+#define SCRIPT_ZIBRAPOO  (980)  // ziBraPoo.int    ; Generic BRAHMIN SHIT!!! YES YES YES
 
 #endif // SCRIPTS_H
