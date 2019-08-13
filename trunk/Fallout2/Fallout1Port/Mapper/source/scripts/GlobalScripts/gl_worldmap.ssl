@@ -110,15 +110,15 @@ variable prevTable := -1;
 procedure SetWorldmapInfo
 begin
     variable zone := GetCurrentZone();
-    variable terrain := WM_TERRAIN_UNKNOWN, table := atoi( zone["table"] ); // if table is not a number, we're in trouble
+    variable terrain := WORLDMAP_TERRAIN_UNKNOWN, table := atoi( zone["table"] ); // if table is not a number, we're in trouble
 
     // get terrain type from string
     switch( zone["terrain"] )
     begin
-        case "City":     terrain := WM_TERRAIN_CITY;
-        case "Desert":   terrain := WM_TERRAIN_DESERT;
-        case "Mountain": terrain := WM_TERRAIN_MOUNTAIN;
-        case "Ocean":    terrain := WM_TERRAIN_OCEAN;
+        case "City":     terrain := WORLDMAP_TERRAIN_CITY;
+        case "Desert":   terrain := WORLDMAP_TERRAIN_DESERT;
+        case "Mountain": terrain := WORLDMAP_TERRAIN_MOUNTAIN;
+        case "Ocean":    terrain := WORLDMAP_TERRAIN_OCEAN;
         default:         display_msg( "BUG BUG BUG : unknown terrain<" + terrain + ">" );
     end
 
@@ -147,6 +147,12 @@ procedure start begin
 	  call ReadWorldmapTxt;
 	  call SetWorldmapInfo;
 	end
+
+	// This will disable the "You encounter: ..." message:
+	write_int(0x4C1011, 0x90909090);
+	write_byte(0x4C1015, 0x90);
+	write_int(0x4C1042, 0x90909090);
+	write_byte(0x4C1046, 0x90);
 
 	if( get_game_mode == WORLDMAP ) then
 		call SetWorldmapInfo;
