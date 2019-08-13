@@ -64,71 +64,44 @@ variable LVar1 := 0;
 	set_global_var( GVAR_MARK_JUNK_3, 1 );
 	Lighting;
 
-	if (junktown_invaded and not(is_loading_game) and (map_var(MVAR_Invasion) == 0)) then begin
-		set_map_var(MVAR_Invasion, 1);
-		kill_critter_type(PID_PEASANT_5, 1);
-		kill_critter_type(PID_TOWNSWOMAN_2, 1);
-		kill_critter_type(PID_PEASANT_GREEN, 1);
-		kill_critter_type(PID_THUG, 0);
-		kill_critter_type(PID_STRANGER, 0);
-		kill_critter_type(PID_STRANGER_2, 0);
-		kill_critter_type(PID_PEASANT_2_FEMALE, 1);
-		kill_critter_type(PID_NEAL, 1);
-		kill_critter_type(PID_PEASANT_BLACK, 1);
-		kill_critter_type(PID_PEASANT_FEMALE_CUTE, 1);
-		kill_critter_type(PID_LOSER, 1);
-		kill_critter_type(PID_TOWNSMAN_METAL, 1);
-		kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
-		kill_critter_type(PID_IZO, 1);
-		kill_critter_type(PID_GIZMO, 1);
-		if (global_var( GVAR_DOGMEAT_HIRELING_STATUS ) != 1) then begin
-			kill_critter_type(PID_DOGMEAT, 1);
-		end
-		if (global_var( GVAR_TYCHO_HIRELING_STATUS ) != 2) then begin
-			kill_critter_type(PID_TYCHO, 1);
-		end
-		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-		critter_attempt_placement(invaderPtr, 24092, 0);
-		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-		critter_attempt_placement(invaderPtr, 22878, 0);
-	end
+	call Invasion;
+
 	if (global_var( GVAR_LOAD_MAP_INDEX ) == 1) then begin
 		override_map_start(99, 94, 0, 3);
 	end
-	else begin
-		if ((global_var( GVAR_LOAD_MAP_INDEX ) == 4) and not(is_loading_game)) then begin
-			gfade_in(1);
-			override_map_start(120, 87, 0, 5);
-			if (global_var( GVAR_KILLIAN_DEAD ) != 1) then begin
-				LVar0 := create_object_sid(PID_KILLIAN, 0, 0, SCRIPT_KILLIAN);
-				set_team( LVar0, TEAM_PLAYER );
-				item := create_object( PID_DESERT_EAGLE, 0, 0 );
-				critter_attempt_placement(LVar0, 17522, 0);
-				add_obj_to_inven(LVar0, item);
-			end
-			if (global_var( GVAR_LARS_DEAD ) != 1) then begin
-				LVar1 := create_object_sid(PID_LARS, 0, 0, SCRIPT_LARS);
-				set_team( LVar1, TEAM_PLAYER );
-				item := create_object( PID_SHOTGUN, 0, 0 );
-				critter_attempt_placement(LVar1, 17323, 0);
-				add_obj_to_inven(LVar1, item);
-				item := create_object( PID_SHOTGUN_SHELLS, 0, 0 );
-				add_obj_to_inven(LVar1, item);
-				item := create_object( PID_RADIO, 0, 0 );
-				add_obj_to_inven(LVar1, item);
-			end
+	else if ((global_var( GVAR_LOAD_MAP_INDEX ) == 4) and not(is_loading_game)) then begin
+		gfade_in(1);
+		override_map_start(120, 87, 0, 5);
+
+		if (global_var( GVAR_KILLIAN_DEAD ) != 1) then begin
+			LVar0 := create_object_sid(PID_KILLIAN, 0, 0, SCRIPT_KILLIAN);
+			set_team( LVar0, TEAM_PLAYER );
+			item := create_object( PID_DESERT_EAGLE, 0, 0 );
+			critter_attempt_placement(LVar0, 17522, 0);
+			add_obj_to_inven(LVar0, item);
 		end
-		else begin
-			if ((global_var( GVAR_LOAD_MAP_INDEX ) == 7) and not(is_loading_game) and (map_var(MVAR_bar_fight) == 0)) then begin
-				call Kill_Neal;
-			end
-			else begin
-				override_map_start(99, 94, 0, 5);
-			end
+
+		if (global_var( GVAR_LARS_DEAD ) != 1) then begin
+			LVar1 := create_object_sid(PID_LARS, 0, 0, SCRIPT_LARS);
+			set_team( LVar1, TEAM_PLAYER );
+			item := create_object( PID_SHOTGUN, 0, 0 );
+			critter_attempt_placement(LVar1, 17323, 0);
+			add_obj_to_inven(LVar1, item);
+			item := create_object( PID_SHOTGUN_SHELLS, 0, 0 );
+			add_obj_to_inven(LVar1, item);
+			item := create_object( PID_RADIO, 0, 0 );
+			add_obj_to_inven(LVar1, item);
 		end
 	end
+	else begin
+		if ((global_var( GVAR_LOAD_MAP_INDEX ) == 7) and not(is_loading_game) and (map_var(MVAR_bar_fight) == 0)) then begin
+			call Kill_Neal;
+		end
+		else begin
+			override_map_start(99, 94, 0, 5);
+		end
+	end
+
 	if ((global_var( GVAR_DESTROY_VATS_11 ) != 0) and (Neal_ptr != 0)) then begin
 		if ((global_var( GVAR_DESTROY_VATS_11 ) < (GAME_TIME_IN_DAYS)) and not(is_loading_game)) then begin
 			kill_critter(Neal_ptr, ANIM_fall_front_sf);
@@ -184,6 +157,7 @@ procedure map_update_p_proc begin
 				kill_critter(Neal_ptr, ANIM_fall_front_sf);
 			end
 		end
+
 		if (removal_ptr != 0) then begin
 			destroy_object(removal_ptr);
 			removal_ptr := 0;
@@ -243,6 +217,7 @@ procedure Kill_Neal begin
 		item := create_object( PID_SPEAR, 0, 0 );
 		add_obj_to_inven(LVar0, item);
 	end
+
 	game_time_advance(game_ticks(60 * (60 - (game_time_hour % 100))));
 	if (game_time_hour != 300) then begin
 		if (game_time_hour < 300) then begin
@@ -255,7 +230,36 @@ procedure Kill_Neal begin
 end
 
 procedure Invasion begin
-	//check_invasion
+	if (junktown_invaded and not(is_loading_game) and (map_var(MVAR_Invasion) == 0)) then begin
+		set_map_var(MVAR_Invasion, 1);
+		kill_critter_type(PID_PEASANT_5, 1);
+		kill_critter_type(PID_TOWNSWOMAN_2, 1);
+		kill_critter_type(PID_PEASANT_GREEN, 1);
+		kill_critter_type(PID_THUG, 0);
+		kill_critter_type(PID_STRANGER, 0);
+		kill_critter_type(PID_STRANGER_2, 0);
+		kill_critter_type(PID_PEASANT_2_FEMALE, 1);
+		kill_critter_type(PID_NEAL, 1);
+		kill_critter_type(PID_PEASANT_BLACK, 1);
+		kill_critter_type(PID_PEASANT_FEMALE_CUTE, 1);
+		kill_critter_type(PID_LOSER, 1);
+		kill_critter_type(PID_TOWNSMAN_METAL, 1);
+		kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
+		kill_critter_type(PID_IZO, 1);
+		kill_critter_type(PID_GIZMO, 1);
+		if (global_var( GVAR_DOGMEAT_HIRELING_STATUS ) != 1) then begin
+			kill_critter_type(PID_DOGMEAT, 1);
+		end
+		if (global_var( GVAR_TYCHO_HIRELING_STATUS ) != 2) then begin
+			kill_critter_type(PID_TYCHO, 1);
+		end
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 24092, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 22878, 0);
+	end
 end
 
 

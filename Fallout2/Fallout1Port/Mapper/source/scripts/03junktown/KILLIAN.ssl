@@ -321,6 +321,7 @@ procedure talk_p_proc begin
 		end
 		else begin
 			get_reaction
+
 			if (global_var( GVAR_FIXT_BUGFIXES_ONLY ) == 1) or (global_var( GVAR_KILLIAN_WARES_MERGED ) == 0) then begin
 				if (Killian_barter_var >= 0) then begin
 					if (Killian_barter_var == 1) then begin
@@ -328,25 +329,23 @@ procedure talk_p_proc begin
 							move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
 						end
 					end
+					else if (Killian_barter_var == 2) then begin
+						if (Killian_store2_ptr > 0) then begin
+							move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
+						end
+					end
+					else if (Killian_barter_var == 3) then begin
+						if (Killian_store3_ptr > 0) then begin
+							move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
+						end
+					end
 					else begin
-						if (Killian_barter_var == 2) then begin
-							if (Killian_store2_ptr > 0) then begin
-								move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
-							end
-						end
-						else begin
-							if (Killian_barter_var == 3) then begin
-								if (Killian_store3_ptr > 0) then begin
-									move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
-								end
-							end
-							else begin
-								move_obj_inven_to_obj(KillSafe_ptr, self_obj);
-							end
-						end
+						move_obj_inven_to_obj(KillSafe_ptr, self_obj);
 					end
 				end
 			end
+
+			// Fixt start
 			else begin
 				if (global_var( GVAR_KILLIAN_WARES_MERGED ) == 1) then begin
 					if (Killian_store1_ptr > 0) then begin
@@ -363,6 +362,8 @@ procedure talk_p_proc begin
 					end
 				end
 			end
+			// Fixt end
+
 			start_gdialog(47, self_obj, 4, 10, 7);
 			gsay_start;
 			if (ILLEGAL) then begin
@@ -386,18 +387,14 @@ procedure talk_p_proc begin
 					if (local_var(8) == 1) then begin
 						call Killian42;
 					end
+					else if (local_var(8) == 2) then begin
+						call Killian43;
+					end
+					else if (local_var(8) == 3) then begin
+						call Killian44;
+					end
 					else begin
-						if (local_var(8) == 2) then begin
-							call Killian43;
-						end
-						else begin
-							if (local_var(8) == 3) then begin
-								call Killian44;
-							end
-							else begin
-								call Killian30;
-							end
-						end
+						call Killian30;
 					end
 				end
 				else begin
@@ -417,13 +414,11 @@ procedure talk_p_proc begin
 								if ((global_var( GVAR_GOT_CONFESSION ) == 1) or (global_var( GVAR_BUG_PLANTED ) == 1) and (map_var(MVAR_got_Gizmo) == 0)) then begin
 									call Killian54;
 								end
+								else if (local_var(1) >= 2) then begin
+									call Killian24;
+								end
 								else begin
-									if (local_var(1) >= 2) then begin
-										call Killian24;
-									end
-									else begin
-										call Killian26;
-									end
+									call Killian26;
 								end
 							end
 							else begin
@@ -511,8 +506,7 @@ begin
 	gsay_option(47, 111, Killianx, 50);
 end
 
-procedure Killian00
-begin
+procedure Killian00 begin
 	if (local_var(4) == 0) then begin
 		NOption( 101, Killian02, 4 );
 	end
@@ -896,8 +890,7 @@ begin
 	call Killianx1;
 end
 
-procedure Killian53
-begin
+procedure Killian53 begin
 	gsay_message(47, 218, 50);
 	call Killianx4;
 end
@@ -1057,14 +1050,12 @@ begin
 	float_msg(self_obj, message_str(SCRIPT_KILLIAN, 284), 0);
 end
 
-procedure Killian90
-begin
+procedure Killian90 begin
 	gsay_reply(47, 165);
-	GOption( 106, Killian53, 1 );
+	GOption( 107, Killian53, 1 );
 end
 
-procedure Killianx
-begin
+procedure Killianx begin
 end
 
 procedure Killianx1
@@ -1086,8 +1077,7 @@ begin
 	go_to_jail := 1;
 end
 
-procedure Killianx4
-begin
+procedure Killianx4 begin
 	item := create_object( PID_ELECTRONIC_BUG, 0, 0 );
 	add_obj_to_inven(dude_obj, item);
 	if (dude_iq > 3) then begin
@@ -1208,11 +1198,10 @@ begin
 	call Killian64;
 end
 
-procedure Killian_barter
-begin
+procedure Killian_barter begin
 	gdialog_mod_barter(0);
 	gsay_reply(47, " ");
-	NOption( 108, Killianx, 0 );
+	NOption( 107, Killianx, 0 );
 end
 
 procedure Killian_give_stuff

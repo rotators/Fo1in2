@@ -1,14 +1,20 @@
-//
-// ---TRAP SCRIPT---  Sduibek
-//
+/*
+
+	Junktown - Doc Morbid's Locker
+
+*/
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_DOCLOCKR
+
 #include "..\headers\command.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure look_at_p_proc;//    script_action == 21
-procedure use_p_proc;//    script_action == 6
+procedure start;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
+procedure look_at_p_proc;
+procedure use_p_proc;
+
 procedure set_off_trap;
 
 import variable messing_with_Morbid_stuff;
@@ -16,18 +22,18 @@ import variable removal_ptr;
 
 variable SkillCheck;
 
-//DocLockr.int   ; Doc Morbid's locker                                                         # local_vars=15
+#define LVAR_TrapTampering 	(0)
+#define LVAR_TrapFound		 	(1)
+#define LVAR_TrapDisarmed 		(2)
 
 procedure start begin
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	set_map_var(4, self_obj);
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	messing_with_Morbid_stuff := 1;
 	if (source_obj == dude_obj) then begin
 		if (obj_is_locked(self_obj)) then begin
@@ -35,31 +41,34 @@ begin
 			display_msg(message_str(SCRIPT_DOCLOCKR, 100));
 		end
 		else begin
-			if (local_var(2) == 0) then begin
+			if (local_var(LVAR_TrapDisarmed) == 0) then begin
 				script_overrides;
-				if (local_var(1) == 0) then begin
+
+				if (local_var(LVAR_TrapFound) == 0) then begin
+
 					SkillCheck := roll_vs_skill(source_obj, SKILL_TRAPS, 0);
 					if (is_success(SkillCheck)) then begin
 						reg_anim_func(2, source_obj);
 						SkillCheck := roll_vs_skill(source_obj, SKILL_TRAPS, 0);
 						if (is_success(SkillCheck)) then begin
-							set_local_var(1, 1);
-							set_local_var(2, 1);
+							set_local_var(LVAR_TrapFound, 1);
+							set_local_var(LVAR_TrapDisarmed, 1);
 							display_msg(message_str(SCRIPT_DOCLOCKR, 101));
 						end
 						else begin
-							if (is_critical(SkillCheck) and (local_var(2) == 0)) then begin
-								set_local_var(1, 1);
-								set_local_var(2, 1);
+							if (is_critical(SkillCheck) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
+								set_local_var(LVAR_TrapFound, 1);
+								set_local_var(LVAR_TrapDisarmed, 1);
 								display_msg(message_str(SCRIPT_DOCLOCKR, 103));
 								call set_off_trap;
 							end
 							else begin
-								set_local_var(1, 1);
+								set_local_var(LVAR_TrapFound, 1);
 								display_msg(message_str(SCRIPT_DOCLOCKR, 102));
 							end
 						end
 					end
+
 					else begin
 						call set_off_trap;
 					end
@@ -67,20 +76,18 @@ begin
 				else begin
 					call set_off_trap;
 				end
+
 			end
 		end
 	end
-	else begin
-		if (source_obj == Katja_ptr) then begin
-			set_local_var(1, 1);
-			set_local_var(2, 1);
-			obj_unlock(self_obj);
-		end
+	else if (source_obj == Katja_ptr) then begin
+		set_local_var(LVAR_TrapFound, 1);
+		set_local_var(LVAR_TrapDisarmed, 1);
+		obj_unlock(self_obj);
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	messing_with_Morbid_stuff := 1;
 	if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
 		if (obj_is_locked(self_obj)) then begin
@@ -91,10 +98,11 @@ begin
 				display_msg(message_str(SCRIPT_DOCLOCKR, 107));
 			end
 			else begin
+
 				if (is_critical(SkillCheck)) then begin
 					jam_lock(self_obj);
-					set_local_var(0, local_var(0) + 1);
-					if ((local_var(0) >= 3) and (local_var(2) == 0)) then begin
+					set_local_var(LVAR_TrapTampering, local_var(LVAR_TrapTampering) + 1);
+					if ((local_var(LVAR_TrapTampering) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
 						display_msg(message_str(SCRIPT_DOCLOCKR, 106));
 						call set_off_trap;
 					end
@@ -103,8 +111,8 @@ begin
 					end
 				end
 				else begin
-					set_local_var(0, local_var(0) + 1);
-					if ((local_var(0) >= 3) and (local_var(2) == 0)) then begin
+					set_local_var(LVAR_TrapTampering, local_var(LVAR_TrapTampering) + 1);
+					if ((local_var(LVAR_TrapTampering) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
 						display_msg(message_str(SCRIPT_DOCLOCKR, 106));
 						call set_off_trap;
 					end
@@ -112,6 +120,7 @@ begin
 						display_msg(message_str(SCRIPT_DOCLOCKR, 108));
 					end
 				end
+
 			end
 		end
 		else begin
@@ -120,8 +129,7 @@ begin
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	messing_with_Morbid_stuff := 1;
 	if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
 		if (obj_is_locked(self_obj)) then begin
@@ -131,18 +139,16 @@ begin
 				obj_unlock(self_obj);
 				display_msg(message_str(SCRIPT_DOCLOCKR, 107));
 			end
+			else if (is_critical(SkillCheck)) then begin
+				jam_lock(self_obj);
+				display_msg(message_str(SCRIPT_DOCLOCKR, 110));
+			end
 			else begin
-				if (is_critical(SkillCheck)) then begin
-					jam_lock(self_obj);
-					display_msg(message_str(SCRIPT_DOCLOCKR, 110));
-				end
-				else begin
-					display_msg(message_str(SCRIPT_DOCLOCKR, 108));
-					set_local_var(0, local_var(0) + 1);
-					if ((local_var(0) >= 3) and (local_var(2) == 0)) then begin
-						display_msg(message_str(SCRIPT_DOCLOCKR, 106));
-						call set_off_trap;
-					end
+				display_msg(message_str(SCRIPT_DOCLOCKR, 108));
+				set_local_var(LVAR_TrapTampering, local_var(LVAR_TrapTampering) + 1);
+				if ((local_var(LVAR_TrapTampering) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
+					display_msg(message_str(SCRIPT_DOCLOCKR, 106));
+					call set_off_trap;
 				end
 			end
 		end
@@ -152,19 +158,19 @@ begin
 	end
 	else begin
 		if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS//-- TRAPS
-			if (local_var(1) == 0) then begin
+			if (local_var(LVAR_TrapFound) == 0) then begin
 				SkillCheck := roll_vs_skill(source_obj, SKILL_TRAPS, 0);
 				if (is_success(SkillCheck)) then begin
 					if (is_critical(SkillCheck)) then begin
 						script_overrides;
 						display_msg(message_str(SCRIPT_DOCLOCKR, 101));
-						set_local_var(1, 1);
-						set_local_var(2, 1);
+						set_local_var(LVAR_TrapFound, 1);
+						set_local_var(LVAR_TrapDisarmed, 1);
 					end
 					else begin
 						script_overrides;
 						display_msg(message_str(SCRIPT_DOCLOCKR, 111));
-						set_local_var(1, 1);
+						set_local_var(LVAR_TrapFound, 1);
 					end
 				end
 				else begin
@@ -175,21 +181,19 @@ begin
 				end
 			end
 			else begin
-				if (local_var(2) == 0) then begin
+				if (local_var(LVAR_TrapDisarmed) == 0) then begin
 					script_overrides;
 					SkillCheck := roll_vs_skill(source_obj, SKILL_TRAPS, 0);
 					if (is_success(SkillCheck)) then begin
 						display_msg(message_str(SCRIPT_DOCLOCKR, 104));
-						set_local_var(2, 1);
+						set_local_var(LVAR_TrapDisarmed, 1);
+					end
+					else if (is_critical(SkillCheck)) then begin
+						display_msg(message_str(SCRIPT_DOCLOCKR, 106));
+						call set_off_trap;
 					end
 					else begin
-						if (is_critical(SkillCheck)) then begin
-							display_msg(message_str(SCRIPT_DOCLOCKR, 106));
-							call set_off_trap;
-						end
-						else begin
-							display_msg(message_str(SCRIPT_DOCLOCKR, 105));
-						end
+						display_msg(message_str(SCRIPT_DOCLOCKR, 105));
 					end
 				end
 			end
@@ -197,14 +201,13 @@ begin
 	end
 end
 
-procedure set_off_trap
-begin
-	if (local_var(2) == 0) then begin
-		variable Damage := 0;
-		Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
-		play_sfx("WHN1XXX1");
-		critter_dmg( dude_obj, Damage, DMG_explosion );
-//		explosion(tile_num(self_obj), elevation(self_obj), random(6, 36));
+procedure set_off_trap begin
+	if (local_var(LVAR_TrapDisarmed) == 0) then begin
+		//variable Damage := 0;
+		//Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
+		//play_sfx("WHN1XXX1");
+		//critter_dmg( dude_obj, Damage, DMG_explosion );
+		explosion(tile_num(self_obj), elevation(self_obj), random(6, 36));
 		destroy_object(self_obj);
 	end
 end
