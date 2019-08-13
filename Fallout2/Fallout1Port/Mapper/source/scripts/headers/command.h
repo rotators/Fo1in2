@@ -188,6 +188,21 @@ variable step_tile;
 #define anim_run_to_point_rate(the_tile, x)        move_to_point(the_tile, run, x)
 #define anim_run_to_point(the_tile)                anim_run_to_point_rate(the_tile, 1)
 
+// BIG REORDER, for bored people, starts HERE //
+
+#define crit_left_hand(cr)                  critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
+#define dude_left_hand                      crit_left_hand(dude_obj)
+#define self_left_hand                      crit_left_hand(self_obj)
+
+#define crit_right_hand(cr)                 critter_inven_obj(cr,INVEN_TYPE_RIGHT_HAND)
+#define dude_right_hand                     crit_right_hand(dude_obj)
+#define self_right_hand                     crit_right_hand(self_obj)
+
+#define crit_armor(cr)                      critter_inven_obj(cr,INVEN_TYPE_WORN)
+#define dude_armor                          crit_armor(dude_obj)
+#define self_armor                          crit_armor(self_obj)
+
+// BIG REORDER, for bored people, ends HERE //
 
 // map variables that share the same number throught the maps are listed here
 
