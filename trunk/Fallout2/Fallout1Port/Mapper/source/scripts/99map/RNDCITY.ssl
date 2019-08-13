@@ -91,8 +91,7 @@ procedure CITY_Cathedral_6;
 
 export variable signal_mutants;
 
-procedure start
-begin
+procedure start begin
 //	if (map_first_run) then begin
 //		debug_msg(" ");
 //		debug_msg(" ");
@@ -109,13 +108,11 @@ begin
 			if (dude_pos == 0) then begin
 				override_map_start(100, 100, 0, dude_rot);
 			end
+			else if (dude_pos == 1) then begin
+				override_map_start(116, 83, 0, dude_rot);
+			end
 			else begin
-				if (dude_pos == 1) then begin
-					override_map_start(116, 83, 0, dude_rot);
-				end
-				else begin
-					override_map_start(92, 110, 0, dude_rot);
-				end
+				override_map_start(92, 110, 0, dude_rot);
 			end
 		end
 		if ((global_var( GVAR_LOAD_MAP_INDEX ) != 1) and map_first_run) then begin
@@ -127,26 +124,19 @@ begin
 				if (dude_luck >= 9) then begin
 					Encounter_Num := Encounter_Num + 2;
 				end
-				else begin
-					if (dude_luck >= 7) then begin
-						Encounter_Num := Encounter_Num + 1;
-					end
-					else begin
-						if (dude_luck == 3) then begin
-							Encounter_Num := Encounter_Num - 1;
-						end
-						else begin
-							if (dude_luck == 2) then begin
-								Encounter_Num := Encounter_Num - 2;
-							end
-							else begin
-								if (dude_luck == 1) then begin
-									Encounter_Num := Encounter_Num - 3;
-								end
-							end
-						end
-					end
+				else if (dude_luck >= 7) then begin
+					Encounter_Num := Encounter_Num + 1;
 				end
+				else if (dude_luck == 3) then begin
+					Encounter_Num := Encounter_Num - 1;
+				end
+				else if (dude_luck == 2) then begin
+					Encounter_Num := Encounter_Num - 2;
+				end
+				else if (dude_luck == 1) then begin
+					Encounter_Num := Encounter_Num - 3;
+				end
+
 				if ((global_var( GVAR_HUNTER_STATUS ) != 3) and has_rep_childkiller and random(0, 1)) then begin
 					Encounter_Num := 99;
 				end
@@ -154,30 +144,23 @@ begin
 					if (Encounter_Num <= 5) then begin
 						Encounter_Num := 1;
 					end
+					else if (Encounter_Num <= 8) then begin
+						Encounter_Num := 2;
+					end
+					else if (Encounter_Num <= 11) then begin
+						Encounter_Num := 3;
+					end
+					else if (Encounter_Num <= 14) then begin
+						Encounter_Num := 4;
+					end
+					else if (Encounter_Num <= 17) then begin
+						Encounter_Num := 5;
+					end
 					else begin
-						if (Encounter_Num <= 8) then begin
-							Encounter_Num := 2;
-						end
-						else begin
-							if (Encounter_Num <= 11) then begin
-								Encounter_Num := 3;
-							end
-							else begin
-								if (Encounter_Num <= 14) then begin
-									Encounter_Num := 4;
-								end
-								else begin
-									if (Encounter_Num <= 17) then begin
-										Encounter_Num := 5;
-									end
-									else begin
-										Encounter_Num := 6;
-									end
-								end
-							end
-						end
+						Encounter_Num := 6;
 					end
 				end
+
 				if (Ranger_rerolls) then begin
 					if ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 3) or (Encounter_Num == 3) or (Encounter_Num == 5) or (Encounter_Num == 7)) then begin
 						Encounter_Num := 0;
@@ -185,51 +168,43 @@ begin
 					Ranger_rerolls := (Ranger_rerolls - 1);
 				end
 			end
+
 			if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
 				Encounter_Num := global_var( GVAR_RANDOM_ENC_SOMETHING );
 				set_global_var( GVAR_RANDOM_ENC_SOMETHING, 0 );
 				debug_msg("global_var( GVAR_RANDOM_ENC_SOMETHING )");
 			end
+
 			if (global_var(GVAR_WORLDMAP_TABLE) == 0) then begin
 				call CITY_North_VANILLA_table;
 			end
+			else if (global_var(GVAR_WORLDMAP_TABLE) == 1) then begin
+				call CITY_North_VANILLA_table;//CITY_Coast_table;// Merge with Coast encounters. Maybe?
+			end
+			else if (global_var(GVAR_WORLDMAP_TABLE) == 9) or (global_var(GVAR_WORLDMAP_TABLE) == 10) then begin
+				call Necrop_table;// Same as Desert
+			end
+			else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+				call Vats_table;// Same as Desert
+			end
+			else if (global_var(GVAR_WORLDMAP_TABLE) == 13) then begin
+//				if random(0, 1) then begin
+					call Bone_table;// Same as Desert
+//				end
+//				else begin
+//					call CITY_Cathedral_table;// All new, created by Sduibek
+//				end
+			end
 			else begin
-				if (global_var(GVAR_WORLDMAP_TABLE) == 1) then begin
-					call CITY_North_VANILLA_table;//CITY_Coast_table;// Merge with Coast encounters. Maybe?
-				end
-				else begin
-					if (global_var(GVAR_WORLDMAP_TABLE) == 9) or (global_var(GVAR_WORLDMAP_TABLE) == 10) then begin
-						call Necrop_table;// Same as Desert
-					end
-					else begin
-						if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
-							call Vats_table;// Same as Desert
-						end
-						else begin
-							if (global_var(GVAR_WORLDMAP_TABLE) == 13) then begin
-			//					if random(0, 1) then begin
-									call Bone_table;// Same as Desert
-	//							end
-//								else begin
-		//							call CITY_Cathedral_table;// All new, created by Sduibek
-				//				end
-							end
-							else begin
-								display_msg("ERROR! City encounter global_var(GVAR_WORLDMAP_TABLE) is out of range! Please contact Sduibek and provide a savegame from this map.");
-							end
-						end
-					end
-				end
+				display_msg("ERROR! City encounter global_var(GVAR_WORLDMAP_TABLE) is out of range! Please contact Sduibek and provide a savegame from this map.");
 			end
 		end
 
 	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			Lighting;
+end
 
-		end
-	end
+procedure map_update_p_proc begin
+	Lighting;
 end
 
 procedure map_exit_p_proc begin

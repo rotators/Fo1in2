@@ -107,7 +107,6 @@
 #define MAP_MOUNTN2  (50)
 #define MAP_FOOT     (51)
 #define MAP_TARDIS   (52)
-//#define MAP_TALKCOW  (53) // unused
 #define MAP_CAR_DESERT (53)
 #define MAP_USEDCAR  (54)
 #define MAP_BRODEAD  (55)
@@ -127,6 +126,8 @@
 #define MAP_RNDMOUNT (68)
 #define MAP_RNDCITY  (69)
 #define MAP_RNDCOAST (70)
+
+#define MAP_TALKCOW  (71)
 
 /*******************************************************************************
                           Имена карт (строковые)

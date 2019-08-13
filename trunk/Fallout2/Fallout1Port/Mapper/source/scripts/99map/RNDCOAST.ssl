@@ -77,7 +77,7 @@ begin
 				debug_msg(" ");  debug_msg(" ");  debug_msg(" ");    display_msg(" --- RANDOM ENCOUNTER, Coast0 --- ");
 				debug_msg(" ");  display_msg("GLOBALVAR (32) is " + global_var( GVAR_LOAD_MAP_INDEX ) + " ");
 			end
-			if (global_var( GVAR_LOAD_MAP_INDEX ) != 1) then begin
+			//if (global_var( GVAR_LOAD_MAP_INDEX ) != 1) then begin
 				Ranger_rerolls := dude_perk( PERK_ranger );
 				set_global_var( GVAR_AGGRO_FLAG_RND_ENC_unsure, 0 );
 				while(Encounter_Num == 0) do begin
@@ -88,155 +88,122 @@ begin
 								if (difficulty_level == 2) then begin
 									Encounter_Num := (Encounter_Num + 1);
 								end
-								else begin
-
-									if (difficulty_level == 1) then begin
-										Encounter_Num := (Encounter_Num + 2);
-									end
-									else if (difficulty_level == 0) then begin
-										Encounter_Num := (Encounter_Num + 3);
-									end
-
+								else if (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num + 2);
+								end
+								else if (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num + 3);
 								end
 							end
-							else begin
-								if (dude_luck == 9) then begin
-
-									if (difficulty_level == 2) or (difficulty_level == 1) then begin
-										Encounter_Num := (Encounter_Num + 1);
-									end
-									else if (difficulty_level == 0) then begin
-										Encounter_Num := (Encounter_Num + 2);
-									end
+							else if (dude_luck == 9) then begin
+								if (difficulty_level == 2) or (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num + 1);
 								end
-								else if (dude_luck == 8) then begin
-									if (difficulty_level == 1) or (difficulty_level == 0) then begin
-										Encounter_Num := (Encounter_Num + 1);
-									end
+								else if (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num + 2);
 								end
-								else if (dude_luck == 3) then begin
-									if (difficulty_level == 2) or (difficulty_level == 1) then begin
-										Encounter_Num := (Encounter_Num - 1);
-									end
+							end
+							else if (dude_luck == 8) then begin
+								if (difficulty_level == 1) or (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num + 1);
 								end
-								else if (dude_luck == 2) then begin
-									if (difficulty_level == 1) or (difficulty_level == 0) then begin
-										Encounter_Num := (Encounter_Num - 1);
-									end
-									else if (difficulty_level == 2) then begin
-										Encounter_Num := (Encounter_Num - 2);
-									end
+							end
+							else if (dude_luck == 3) then begin
+								if (difficulty_level == 2) or (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num - 1);
 								end
-								else if (dude_luck == 1) then begin
-									if (difficulty_level == 2) then begin
-										Encounter_Num := (Encounter_Num - 3);
-									end
-									else if (difficulty_level == 1) then begin
-										Encounter_Num := (Encounter_Num - 2);
-									end
-									else if (difficulty_level == 0) then begin
-										Encounter_Num := (Encounter_Num - 1);
-									end
+							end
+							else if (dude_luck == 2) then begin
+								if (difficulty_level == 1) or (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num - 1);
+								end
+								else if (difficulty_level == 2) then begin
+									Encounter_Num := (Encounter_Num - 2);
+								end
+							end
+							else if (dude_luck == 1) then begin
+								if (difficulty_level == 2) then begin
+									Encounter_Num := (Encounter_Num - 3);
+								end
+								else if (difficulty_level == 1) then begin
+									Encounter_Num := (Encounter_Num - 2);
+								end
+								else if (difficulty_level == 0) then begin
+									Encounter_Num := (Encounter_Num - 1);
 								end
 							end
 						end
 					end
-					else begin
-						if (global_var( GVAR_RANDOM_ENC_DIFF_BASED ) == 1) then begin// modify EncNum purely on difficulty levels
-							if (difficulty_level == 2) then begin
-								Encounter_Num := (Encounter_Num - 1);
+					else if (global_var( GVAR_RANDOM_ENC_DIFF_BASED ) == 1) then begin// modify EncNum purely on difficulty levels
+						if (difficulty_level == 2) then begin
+							Encounter_Num := (Encounter_Num - 1);
+						end
+						else if (difficulty_level == 0) then begin
+							Encounter_Num := (Encounter_Num + 1);
+						end
+
+						if (combat_difficulty == 2) then begin
+							Encounter_Num := (Encounter_Num - 1);
+						end
+						else if (combat_difficulty == 0) then begin
+							Encounter_Num := (Encounter_Num + 1);
+						end
+					end
+					else if (global_var( GVAR_RANDOM_ENC_LEVEL_BASED ) == 1) then begin// modify EncNum by player level
+						if (get_pc_stat( PCSTAT_level ) < 7) then begin
+							if (get_pc_stat( PCSTAT_level ) < 3) then begin
+								Encounter_Num := (Encounter_Num + 3);
 							end
-							else begin
-								if (difficulty_level == 0) then begin
-									Encounter_Num := (Encounter_Num + 1);
-								end
+							else if (get_pc_stat( PCSTAT_level ) < 5) then begin
+								Encounter_Num := (Encounter_Num + 2);
 							end
-							if (combat_difficulty == 2) then begin
-								Encounter_Num := (Encounter_Num - 1);
-							end
-							else begin
-								if (combat_difficulty == 0) then begin
-									Encounter_Num := (Encounter_Num + 1);
-								end
+							else if (get_pc_stat( PCSTAT_level ) < 7) then begin
+								Encounter_Num := (Encounter_Num + 1);
 							end
 						end
-						else begin
-							if (global_var( GVAR_RANDOM_ENC_LEVEL_BASED ) == 1) then begin// modify EncNum by player level
-								if (get_pc_stat( PCSTAT_level ) < 7) then begin
-									if (get_pc_stat( PCSTAT_level ) < 3) then begin
-										Encounter_Num := (Encounter_Num + 3);
-									end
-									else begin
-										if (get_pc_stat( PCSTAT_level ) < 5) then begin
-											Encounter_Num := (Encounter_Num + 2);
-										end
-										else begin
-											if (get_pc_stat( PCSTAT_level ) < 7) then begin
-												Encounter_Num := (Encounter_Num + 1);
-											end
-										end
-									end
-								end
-								else begin
-									if (get_pc_stat( PCSTAT_level ) > 8) then begin
-										if (get_pc_stat( PCSTAT_level ) < 11) then begin
-											Encounter_Num := (Encounter_Num - 1);
-										end
-										else begin
-											if (get_pc_stat( PCSTAT_level ) < 13) then begin
-												Encounter_Num := (Encounter_Num - 2);
-											end
-											else begin
-												Encounter_Num := (Encounter_Num - 3);
-											end
-										end
-									end
-								end
+						else if (get_pc_stat( PCSTAT_level ) > 8) then begin
+							if (get_pc_stat( PCSTAT_level ) < 11) then begin
+								Encounter_Num := (Encounter_Num - 1);
+							end
+							else if (get_pc_stat( PCSTAT_level ) < 13) then begin
+								Encounter_Num := (Encounter_Num - 2);
+							end
+							else begin
+								Encounter_Num := (Encounter_Num - 3);
 							end
 						end
 					end
 					if ((global_var( GVAR_HUNTER_STATUS ) != 3) and has_rep_childkiller and random(0, 1)) then begin
 						Encounter_Num := 7;// hunters
 					end
-					else begin
-						if (Encounter_Num <= 6) then begin// at normal Luck, 11.5%
-							Encounter_Num := 1;
+					else if (Encounter_Num <= 6) then begin// at normal Luck, 11.5%
+						Encounter_Num := 1;
+					end
+					else if (Encounter_Num <= 9) then begin// at normal Luck, 18%
+						Encounter_Num := 2;
+					end
+					else if (Encounter_Num <= 11) then begin// at normal Luck, 20%
+						Encounter_Num := 3;
+					end
+					else if (Encounter_Num == 12) then begin// 50/50 whether it goes to 3 or 4, factored into the 20% quoted here
+						if (random(0, 1) == 0) then begin
+							Encounter_Num := 3;
 						end
 						else begin
-							if (Encounter_Num <= 9) then begin// at normal Luck, 18%
-								Encounter_Num := 2;
-							end
-							else begin
-								if (Encounter_Num <= 11) then begin// at normal Luck, 20%
-									Encounter_Num := 3;
-								end
-								else begin
-								if (Encounter_Num == 12) then begin// 50/50 whether it goes to 3 or 4, factored into the 20% quoted here
-										if (random(0, 1) == 0) then begin
-											Encounter_Num := 3;
-										end
-										else begin
-											Encounter_Num := 4;
-										end
-									end
-									else begin
-										if (Encounter_Num <= 14) then begin// at normal Luck, 20%
-											Encounter_Num := 4;
-										end
-										else begin
-											if (Encounter_Num <= 17) then begin// at normal Luck, 18%
-												Encounter_Num := 5;
-											end
-											else begin
-												Encounter_Num := 6;// at normal Luck, 11.5%
-											end
-										end
-									end
-								end
-							end
+							Encounter_Num := 4;
 						end
 					end
+					else if (Encounter_Num <= 14) then begin// at normal Luck, 20%
+						Encounter_Num := 4;
+					end
+					else if (Encounter_Num <= 17) then begin// at normal Luck, 18%
+						Encounter_Num := 5;
+					end
+					else begin
+						Encounter_Num := 6;// at normal Luck, 11.5%
+					end
 				end
+
 				if (Ranger_rerolls) then begin
 					Ranger_rerolls := (Ranger_rerolls - 1);
 					if (Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 5) or (Encounter_Num == 7) then begin
@@ -246,19 +213,13 @@ begin
 						Encounter_Num := 0;
 					end
 				end
+
 				if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
 					debug_msg(" ");    display_msg("Warning: GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var( GVAR_RANDOM_ENC_SOMETHING ) + " ");
 					Encounter_Num := global_var( GVAR_RANDOM_ENC_SOMETHING );
 					set_global_var( GVAR_RANDOM_ENC_SOMETHING, 0 );
 				end
-//
-//
-//
-//
-//TESTING, REMOVE FOR RELEASE	Encounter_Num := 1;//Sduibek testing	TESTING TESTING TESTING REMOVE FOR RELEASE
-//
-//
-//
+
 				call choose_start;
 				Dude_tile := tile_num(dude_obj);
 				if global_var( GVAR_DEBUG_MODE_MESSAGES_ON ) then begin
@@ -268,61 +229,48 @@ begin
 					if (Encounter_Num == 1) then begin
 						call Coast01;
 					end
-					else begin
-						if (Encounter_Num == 2) then begin
-							call Coast02;
+					else if (Encounter_Num == 2) then begin
+						call Coast02;
+					end
+					else if (Encounter_Num == 3) then begin
+						call Coast03;
+					end
+					else if (Encounter_Num == 4) then begin
+						call Coast04;
+					end
+					else if (Encounter_Num == 5) then begin
+						call Coast05;
+					end
+					else if (Encounter_Num == 6) then begin
+						if random(0, 1) then begin
+							call Coast06;
 						end
 						else begin
-							if (Encounter_Num == 3) then begin
-								call Coast03;
-							end
-							else begin
-								if (Encounter_Num == 4) then begin
-									call Coast04;
-								end
-								else begin
-									if (Encounter_Num == 5) then begin
-										call Coast05;
-									end
-									else begin
-										if (Encounter_Num == 6) then begin
-											if random(0, 1) then begin
-												call Coast06;
-											end
-											else begin
-												call Coast07;
-											end
-										end
-										else begin
-											call hunters;
-										end
-									end
-								end
-							end
+							call Coast07;
 						end
 					end
+					else begin
+						call hunters;
+					end
 				end
-			end
+			/*end
 			else begin
 				if (dude_pos == 0) then begin
 					override_map_start(92, 98, 0, dude_rot);
 				end
-				else begin
-					if (dude_pos == 1) then begin
-						override_map_start(95, 109, 0, dude_rot);
-					end
-					else begin
-						override_map_start(92, 101, 0, dude_rot);
-					end
+				else if (dude_pos == 1) then begin
+					override_map_start(95, 109, 0, dude_rot);
 				end
-			end
+				else begin
+					override_map_start(92, 101, 0, dude_rot);
+				end
+			end*/
 		end
 	end
-	else begin
-		if (script_action == 23) then begin
-			Lighting;
-		end
-	end
+end
+
+procedure map_update_p_proc begin
+	Lighting;
 end
 
 procedure map_exit_p_proc begin

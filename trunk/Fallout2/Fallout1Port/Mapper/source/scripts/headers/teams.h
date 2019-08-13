@@ -36,7 +36,7 @@
 #define TEAM_JUNKTOWN_RAIDER			(18)
 #define TEAM_JUNKTOWN_MORBID			(19)
 #define TEAM_CATHEDRAL					(20)
-#define TEAM_21					(21)
+#define TEAM_DOGS						(21)
 #define TEAM_22					(22)
 #define TEAM_24					(24)
 #define TEAM_29					(29)
