@@ -302,6 +302,7 @@ variable step_tile;
 #define dude_smooth_talker                  (has_trait(TRAIT_PERK,dude_obj,PERK_smooth_talker))
 
 #define dude_caps                           (item_caps_total(dude_obj))
+#define dude_fid                            (obj_art_fid(dude_obj))
 
 #define dude_has_car 						global_var(GVAR_PLAYER_GOT_CAR) != 0
 #define dude_is_pornstar                    dude_has_porn_star_rep
