@@ -9,65 +9,55 @@ procedure start;
 
 procedure newPtr;
 
-// local_var(0) == Used (put in Pip-Boy)
-// local_var(1) == Examined (change item hoverdescrip)
+#define LVAR_DiskUsed 		(0)
+#define LVAR_DiskExamined 	(1)
 
-
-procedure start
-begin
-	if script_action == 1 then begin// start_proc
-		call newPtr;
-	end
-	else begin
-		if script_action == 21 then begin// 21 is look_at
-			script_overrides;
-			if local_var(1) == 1 then begin
-				display_msg(message_str(SCRIPT_MUTDISK, 104));
-			end
-			else begin
-				display_msg(message_str(SCRIPT_MUTDISK, 100));
-			end
-			call newPtr;
-		end
-		else begin
-			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				script_overrides;
-				set_local_var(1, 1);
-				if local_var(0) == 1 then begin
-					display_msg(message_str(SCRIPT_MUTDISK, 101));
-				end
-				else begin
-					set_local_var(0, 1);
-					set_global_var( GVAR_HOLODISK_MUTANT, 1 );
-					display_msg(message_str(SCRIPT_MUTDISK, 102));
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "185" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(185);
-				end
-				call newPtr;
-			end
-			else begin
-				if script_action == 3 then begin// 3 is description (Binoculars)
-					set_local_var(1, 1);
-					display_msg(message_str(SCRIPT_MUTDISK, 103));
-					call newPtr;
-				end
-				else begin
-					if script_action == 4 then begin//pickup
-						call newPtr;
-					end
-					else begin
-						if script_action == 5 then begin//drop
-							call newPtr;
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
+	call newPtr;
 end
 
-procedure newPtr
-begin
+procedure use_p_proc begin
+	script_overrides;
+	set_local_var(LVAR_DiskExamined, 1);
+	if local_var(LVAR_DiskUsed) == 1 then begin
+		display_msg(message_str(SCRIPT_MUTDISK, 101));
+	end
+	else begin
+		set_local_var(LVAR_DiskUsed, 1);
+		set_global_var( GVAR_HOLODISK_MUTANT, 1 );
+		display_msg(message_str(SCRIPT_MUTDISK, 102));
+		display_msg(message_str(SCRIPT_GENCHAT, 103) + "185" + message_str(SCRIPT_GENCHAT, 104));
+		give_exp_points(185);
+	end
+	call newPtr;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if local_var(LVAR_DiskExamined) == 1 then begin
+		display_msg(message_str(SCRIPT_MUTDISK, 104));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_MUTDISK, 100));
+	end
+	call newPtr;
+end
+
+procedure description_p_proc begin
+	set_local_var(LVAR_DiskExamined, 1);
+	display_msg(message_str(SCRIPT_MUTDISK, 103));
+	call newPtr;
+end
+
+procedure pickup_p_proc begin
+	call newPtr;
+end
+
+procedure drop_p_proc begin
+	call newPtr;
+end
+
+procedure newPtr begin
 	if cur_map_index != MAP_DETHCLAW then begin
 		set_global_var( GVAR_DCMUTANT_DISK_POINTER, self_obj );
 	end
