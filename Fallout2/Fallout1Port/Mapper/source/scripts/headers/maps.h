@@ -144,6 +144,7 @@
 /*******************************************************************************
  Map Names (Strings)
 *******************************************************************************/
+#define MAPSTR(map) #map ".MAP"
 
 #define MAPSTR_DESERT1  "DESERT1.MAP"
 #define MAPSTR_DESERT2  "DESERT2.MAP"
@@ -285,7 +286,7 @@
 #define CUR_MAP_RNDCITY  	(cur_map_index ==  MAP_RNDCITY)
 #define CUR_MAP_RNDCOAST  	(cur_map_index ==  MAP_RNDCOAST)
 
-//Принудительно установить позицию игрока при загрузке карты
+// Force player position when loading map
 #define override_map_start_hex(x,y,z)   override_map_start(x%200,x/200,y,z)
 
 /******************************************************************
