@@ -275,8 +275,8 @@ variable step_tile;
 #define dude_has_gambling_skills            ((dude_iq > 3) and (has_skill(dude_obj, SKILL_GAMBLING) >= 25))
 
 #define dude_is_sneaking                    (using_skill(dude_obj,SKILL_SNEAK))
-#define dude_is_walking                     (art_anim(obj_art_fid(dude_obj)) == ANIM_walk)
-#define dude_is_running                     (art_anim(obj_art_fid(dude_obj)) == ANIM_running)
+#define dude_is_walking                     (art_anim(dude_fid) == ANIM_walk)
+#define dude_is_running                     (art_anim(dude_fid) == ANIM_running)
 #define dude_is_poisoned                    (get_poison(dude_obj))
 #define dude_is_irradiated                  (get_critter_stat(dude_obj, STAT_current_rad))
 #define dude_is_crippled                    ((critter_state(dude_obj) bwand DAM_CRIP_LEG_LEFT)  or \
@@ -375,8 +375,8 @@ variable step_tile;
                                              (obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_RIGHT_HAND)) == PID_LASER_PISTOL))
 
 #define self_is_sneaking                    (using_skill(self_obj,SKILL_SNEAK))
-#define self_is_walking                     (art_anim(obj_art_fid(self_obj)) == ANIM_walk)
-#define self_is_running                     (art_anim(obj_art_fid(self_obj)) == ANIM_running)
+#define self_is_walking                     (art_anim(self_fid) == ANIM_walk)
+#define self_is_running                     (art_anim(self_fid) == ANIM_running)
 #define self_is_poisoned                    (get_poison(self_obj))
 
 #define self_cur_rot                        (has_trait(TRAIT_OBJECT,self_obj,OBJECT_CUR_ROT))
