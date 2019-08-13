@@ -17,6 +17,7 @@ procedure combat_p_proc;
 procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 
@@ -88,12 +89,15 @@ procedure critter_p_proc begin
 			attack(dude_obj);
 		end
 	end
-	if (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(1) == 0) then begin
+
+	// This piece of code fucks up the fights, so we remove it for now:
+	/*if (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(LVAR_Sleeping) == 0) then begin
 		if dude_is_armed then begin
 			call flee_dude;
 		end
 	end
-	else begin
+	else begin*/
+	if not(combat_is_initialized) then begin
 		if (game_time_hour == 1400) then begin
 			if ((line148flag == 0) and ((GAME_TIME_IN_DAYS % 3) == 0)) then begin
 				line148flag := 1;
@@ -104,6 +108,7 @@ procedure critter_p_proc begin
 		else begin
 			line148flag := 0;
 		end
+
 		if (Saul_wins or Saul_loses and shot_challenger) then begin
 			call destroy_challenger;
 			if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
@@ -138,6 +143,26 @@ procedure map_enter_p_proc begin
 	wake_time := 530;
 	home_tile := 17096;
 	sleep_tile := 7000;
+end
+
+procedure map_update_p_proc begin
+	/*if (game_time_hour == 1400) then begin
+		if ((line148flag == 0) and ((GAME_TIME_IN_DAYS % 3) == 0)) then begin
+			line148flag := 1;
+			fight := 1;
+			float_msg(self_obj, message_str(SCRIPT_GUSTOFER, 148), 0);
+		end
+	end
+	else begin
+		line148flag := 0;
+	end
+
+	if (Saul_wins or Saul_loses and shot_challenger) then begin
+		call destroy_challenger;
+		if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+			dialogue_system_enter;
+		end
+	end*/
 end
 
 procedure pickup_p_proc begin
@@ -180,7 +205,7 @@ procedure talk_p_proc begin
 			end
 			else begin
 				if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
-					if (game_time_hour <= 1400) then begin
+					if (game_time_hour < 1400) then begin
 						if (dude_bet == 0) then begin
 							call Gustofer06;
 						end
