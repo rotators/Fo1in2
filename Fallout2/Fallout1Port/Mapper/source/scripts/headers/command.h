@@ -190,6 +190,16 @@ variable step_tile;
 
 // BIG REORDER, for bored people, starts HERE //
 
+
+
+#define dude_name                           obj_name(dude_obj)
+#define self_name                           obj_name(self_obj)
+
+#define dude_tile                           tile_num(dude_obj)
+#define self_tile                           tile_num(self_obj)
+
+//
+
 #define crit_left_hand(cr)                  critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
 #define dude_left_hand                      crit_left_hand(dude_obj)
 #define self_left_hand                      crit_left_hand(self_obj)
@@ -202,6 +212,24 @@ variable step_tile;
 #define dude_armor                          crit_armor(dude_obj)
 #define self_armor                          crit_armor(self_obj)
 
+#define crit_gender(cr)                     get_critter_stat(cr,STAT_gender)
+#define dude_gender                         crit_gender(dude_obj)
+#define self_gender                         crit_gender(self_obj)
+
+#define crit_is_male(cr)                    (crit_gender(cr) == GENDER_MALE)
+#define dude_is_male                        crit_is_male(dude_obj)
+#define self_is_male                        crit_is_male(self_obj)
+
+#define crit_is_female(cr)                  (crit_gender(cr) == GENDER_FEMALE)
+#define dude_is_female                      crit_is_female(dude_obj)
+#define self_is_female                      crit_is_female(self_obj)
+
+#define crit_cur_rot(cr)                    has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
+#define dude_cur_rot                        crit_cur_rot(dude_obj)
+#define self_cur_rot                        crit_cur_rot(self_obj)
+
+
+
 // BIG REORDER, for bored people, ends HERE //
 
 // map variables that share the same number throught the maps are listed here
@@ -212,8 +240,6 @@ variable step_tile;
 #define critter_wearing_armor(x)            (obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_WORN)) == item_type_armor)
 
 #define dude_is_stupid                      (dude_iq <= 3)
-#define dude_name                           (obj_name(dude_obj))
-#define dude_gender                         (get_critter_stat(dude_obj,STAT_gender))
 #define dude_strength                       (get_critter_stat(dude_obj,STAT_st))
 #define dude_perception                     (get_critter_stat(dude_obj,STAT_pe))
 #define dude_endurance                      (get_critter_stat(dude_obj,STAT_en))
@@ -229,8 +255,6 @@ variable step_tile;
 
 #define dude_moron_not_vegetable            (((get_critter_stat(dude_obj,STAT_iq)) > 1) and ((get_critter_stat(dude_obj,STAT_iq)) < 3) )
 
-#define dude_is_male                        (dude_gender == GENDER_MALE)
-#define dude_is_female                      (dude_gender == GENDER_FEMALE)
 #define dude_is_armed                       critter_is_armed(dude_obj)
 #define dude_wearing_armor                  critter_wearing_armor(dude_obj)
 
@@ -299,9 +323,7 @@ variable step_tile;
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_LEFT)  or \
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_RIGHT))
 
-#define dude_cur_rot                        (has_trait(TRAIT_OBJECT,dude_obj,OBJECT_CUR_ROT))
 #define dude_inv_rot                        ((dude_cur_rot + 3)%6)
-#define dude_tile                           (tile_num(dude_obj))
 #define dude_elevation                      (elevation(dude_obj))
 
 #define tile_behind_obj(who)                (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), 1))
@@ -371,8 +393,6 @@ variable step_tile;
                                                end                                              \
                                             end else attack(dude_obj)
 
-#define self_name                           (obj_name(self_obj))
-#define self_gender                         (get_critter_stat(self_obj,STAT_gender))
 #define self_strength                       (get_critter_stat(self_obj,STAT_st))
 #define self_perception                     (get_critter_stat(self_obj,STAT_pe))
 #define self_endurance                      (get_critter_stat(self_obj,STAT_en))
@@ -381,8 +401,6 @@ variable step_tile;
 #define self_agility                        (get_critter_stat(self_obj,STAT_ag))
 #define self_luck                           (get_critter_stat(self_obj,STAT_lu))
 
-#define self_is_male                        (self_gender == GENDER_MALE)
-#define self_is_female                      (self_gender == GENDER_FEMALE)
 #define self_is_armed                       critter_is_armed(self_obj)
 #define self_wearing_armor                  critter_wearing_armor(self_obj)
 
@@ -394,9 +412,7 @@ variable step_tile;
 #define self_is_running                     (art_anim(self_fid) == ANIM_running)
 #define self_is_poisoned                    (get_poison(self_obj))
 
-#define self_cur_rot                        (has_trait(TRAIT_OBJECT,self_obj,OBJECT_CUR_ROT))
 #define self_inv_rot                        ((self_cur_rot + 3)%6)
-#define self_tile                           (tile_num(self_obj))
 #define self_elevation                      (elevation(self_obj))
 
 #define self_pid                            (obj_pid(self_obj))
