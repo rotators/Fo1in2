@@ -376,7 +376,7 @@
 #define PID_MOTIVATOR                       (229)
 
 #define PID_ANNA_GOLD_LOCKET                (252)
-#define PID_CAR_FUEL_CELL_CONTROLLER        (253)
+//#define PID CAR_FUEL_CELL_CONTROLLER      (253) already used by moto key
 #define PID_CAR_FUEL_INJECTION              (254)
 #define PID_DAY_PASS                        (255)
 #define PID_FAKE_CITIZENSHIP                (256)
