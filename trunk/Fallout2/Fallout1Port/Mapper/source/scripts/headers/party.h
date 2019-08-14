@@ -20,21 +20,21 @@ variable How_Many_Party_Members_Armed;
 #define obj_in_party(x)                     (party_member_obj(obj_pid(x)) != 0)
 // Pointers to the Party Members
 //#define Trunk_Ptr                        	party_member_obj(PID_CAR_TRUNK)
-#define Trunk_Ptr                           party_member_obj(PID_MOTO1_TRUNK) 
-#define Ian_ptr								party_member_obj(PID_IAN)
-#define Dog_ptr								party_member_obj(PID_DOGMEAT)
-#define Tycho_ptr							party_member_obj(PID_TYCHO)
-#define Katja_ptr							party_member_obj(PID_KATJA)
-#define Tandi_ptr							party_member_obj(PID_TANDI)
-#define Handy_ptr							party_member_obj(PID_MRHANDYC)
+#define Trunk_Ptr                           	party_member_obj(PID_MOTO1_TRUNK)
+#define Ian_ptr										party_member_obj(PID_IAN)
+#define Dog_ptr										party_member_obj(PID_DOGMEAT)
+#define Tycho_ptr										party_member_obj(PID_TYCHO)
+#define Katja_ptr										party_member_obj(PID_KATJA)
+#define Tandi_ptr										party_member_obj(PID_TANDI)
+#define Handy_ptr										party_member_obj(PID_MRHANDYC)
 
 // Is this person in my party
 #define Ian_In_Party                      	(Ian_ptr != 0)
 #define Dog_In_Party                      	(Dog_ptr != 0)
-#define Tycho_In_Party                      (Tycho_ptr != 0)
-#define Katja_In_Party                      (Katja_ptr != 0)
-#define Tandi_In_Party                      (Tandi_ptr != 0)
-#define MrHandyC_In_Party                   (Handy_ptr != 0)
+#define Tycho_In_Party                   		(Tycho_ptr != 0)
+#define Katja_In_Party                      	(Katja_ptr != 0)
+#define Tandi_In_Party                      	(Tandi_ptr != 0)
+#define MrHandyC_In_Party                   	(Handy_ptr != 0)
 
 // Party Size Information
 #define party_size                          (party_member_count(DONT_LIST_HIDDEN_MEMBERS))

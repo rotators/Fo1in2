@@ -69,9 +69,9 @@
 {1800}{}{Now seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
 	{1810}{}{I'm all ears.}
 
-{1900}{}{I'll give you the bike. For the measly sum of 2.000 caps, it's aaaall yours. Get it? It's time for me to leave this shithole behind.}
-	{1910}{}{2.000? That's quite some caps.}
-	{1920}{}{I'll give you 1.000 caps.}
+{1900}{}{I'll give you the bike. For the measly sum of 2000 caps, it's aaaall yours. Get it? It's time for me to leave this shithole behind.}
+	{1910}{}{2000? That's quite some caps.}
+	{1920}{}{I'll give you 1000 caps.}
 	{1930}{}{I'll give you 500 caps.}
 	{1940}{}{Not interested. }
 	{1950}{}{If you want to leave, why not with the bike?}
@@ -79,12 +79,12 @@
 	{1970}{}{Deal.}
 
 {2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
-	{2010}{}{Alright. Here's your 2.000 caps.}
+	{2010}{}{Alright. Here's your 2000 caps.}
 	{2020}{}{That's too steep for me.}
 
 {2100}{}{Deal! ... Now wait here. I'll go and get the fuel cell controller.}
 	{2110}{}{The fuel cell controller?}
-{2101}{}{You really trying to shit me here, are you? No way you have 2.000 caps!}
+{2101}{}{You really trying to shit me here, are you? No way you have 2000 caps!}
 	{2120}{}{Oh ...}
 
 {2200}{}{What? You think I'll keep the bike standing here on the open road just like that? You think I'm stupid? Without the fuel cell controller you can't start the bike, even with the keys. Now wait here, I'll go and get it.}
@@ -102,8 +102,8 @@
 {2600}{}{Phew. Sure as shit, my lungs aren't the best anymore ... You're still here? Great! Got the controller. Here, take it. I'll make my way to the next caravan out of this shithole.}
 	{2610}{}{Take care.}
 
-{2700}{}{Not much, actually. Just the measly sum of 2.000 caps. That's all.}
-{2701}{}{Aren't you listening? It's 2.000 caps!}
+{2700}{}{Not much, actually. Just the measly sum of 2000 caps. That's all.}
+{2701}{}{Aren't you listening? It's 2000 caps!}
 {2800}{}{If you say so. Get back to me if you change your mind.}
 
 {3100}{}{I'll hit up the next caravan. Maybe up north? Anywhere is better than here.}
