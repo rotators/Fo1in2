@@ -211,6 +211,8 @@
      Giving Experience Points
 ***************************************************/
 
+#define EXP_SHOVELED_ALL_CRAP					(150)
+
 /***************************************
  Give the experience points and display
  a message informing the player how many
