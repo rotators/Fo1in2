@@ -299,7 +299,7 @@ variable step_tile;
 // traits
 //
 
-#define  get_trait(trait)                   has_trait(TRAIT_TRAIT,cr,trait)
+#define  get_trait(cr,trait)                has_trait(TRAIT_TRAIT,cr,trait)
 #define dude_trait(trait)                   get_trait(dude_obj,trait)
 #define self_trait(trait)                   get_trait(self_obj,trait)
 
