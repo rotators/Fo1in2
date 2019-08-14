@@ -9,6 +9,7 @@
 #include "../headers/sfall/sfall.h"
 #include "../headers/sfall/define_lite.h"
 #include "../headers/debug.h"
+#include "../headers/voodoo.h"
 
 #include "../headers/gl_worldmap.h"
 
@@ -119,10 +120,10 @@ begin
         case "Desert":   terrain := WORLDMAP_TERRAIN_DESERT;
         case "Mountain": terrain := WORLDMAP_TERRAIN_MOUNTAIN;
         case "Ocean":    terrain := WORLDMAP_TERRAIN_OCEAN;
-        default:         display_msg( "BUG BUG BUG : unknown terrain<" + terrain + ">" );
+        default:         display_msg( "BUG BUG BUG : unknown terrain<" + zone["terrain"] + ">" );
     end
 
-    // spam when changing changing zone type
+    // spam when changing zone type
     if( debug_mode and (prevTerrain != terrain or prevTable != table) ) then
     begin
         if( not (prevTerrain == "" and prevTable == -1) ) then
@@ -137,25 +138,20 @@ begin
     set_global_var(GVAR_WORLDMAP_TERRAIN, terrain );
 end
 
-procedure start begin
+procedure start
+begin
 
-	if( game_loaded ) then
-	begin
-	  set_global_script_repeat(10);
-	  set_global_script_type(1);
+    if( game_loaded ) then
+    begin
+        set_global_script_repeat(10);
+        set_global_script_type(1);
 
-	  call ReadWorldmapTxt;
-	  call SetWorldmapInfo;
-	end
+        call ReadWorldmapTxt;
+        call SetWorldmapInfo;
+    end
 
-	// This will disable the "You encounter: ..." message:
-	write_int(0x4C1011, 0x90909090);
-	write_byte(0x4C1015, 0x90);
-	write_int(0x4C1042, 0x90909090);
-	write_byte(0x4C1046, 0x90);
+    VOODOO_disable_YouEncounter_message;
 
-	if( get_game_mode == WORLDMAP ) then
-		call SetWorldmapInfo;
+    if( get_game_mode == WORLDMAP ) then
+        call SetWorldmapInfo;
 end
-
-
