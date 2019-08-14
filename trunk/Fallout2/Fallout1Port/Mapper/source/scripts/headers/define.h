@@ -427,9 +427,6 @@
 #define SKILL_GAMBLING                      (16)
 #define SKILL_OUTDOORSMAN                   (17)
 
-#define CRITTER_SKILL_LEVEL(X,Y)  has_skill(X,Y)
-#define critter_skill_level(X,Y)  has_skill(X,Y)
-
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 
