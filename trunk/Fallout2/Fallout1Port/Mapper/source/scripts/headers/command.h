@@ -190,6 +190,12 @@ variable step_tile;
 
 // BIG REORDER, for bored people, starts HERE //
 //
+// misc singletons
+//
+
+#define self_pid                            obj_pid(self_obj)
+
+//
 // misc tuples
 //
 
@@ -507,7 +513,6 @@ variable step_tile;
 #define self_inv_rot                        ((self_cur_rot + 3)%6)
 #define self_elevation                      (elevation(self_obj))
 
-#define self_pid                            (obj_pid(self_obj))
 #define self_visible                        obj_is_visible_flag(self_obj)
 
 #define self_cur_hp                         (get_critter_stat(self_obj,STAT_current_hp))

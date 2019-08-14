@@ -2,14 +2,6 @@
 #define AIPACKET_H
 
 /*********************************************************
-	General
-*********************************************************/
-
-#define self_ai            has_trait(TRAIT_OBJECT,self_obj,OBJECT_AI_PACKET)
-#define set_ai(x,y)        critter_add_trait(x,TRAIT_OBJECT,OBJECT_AI_PACKET, y)
-#define set_self_ai(x)     critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET, x)
-
-/*********************************************************
  define file for AI Packets.
 
  All defines in this file are to be prepended with AI_

@@ -2,14 +2,6 @@
 #define TEAMS_H
 
 /*********************************************************
-	General
-*********************************************************/
-
-#define self_team            has_trait(TRAIT_OBJECT,self_obj,OBJECT_TEAM_NUM)
-#define set_team(x,y)        critter_add_trait( x, TRAIT_OBJECT, OBJECT_TEAM_NUM, y )
-#define set_self_team(x)     critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM, x)
-
-/*********************************************************
  define file for Team Numbers.
 
  All defines in this file are to be prepended with TEAM_
