@@ -59,34 +59,31 @@ procedure start begin
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 	set_local_var(5, 1);
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	variable LVar0 := 0;
 	dude_look_at_critter;
 	gdialog_set_barter_mod(-15);
 	call Get_Stuff;
 	get_reaction
+
 	if ((((GAME_TIME_IN_DAYS) - local_var(6)) >= 1) or (local_var(6) == 0)) then begin
 		set_local_var(6, GAME_TIME_IN_DAYS);
 		set_local_var(7, 2000 + random(0, 1000));
@@ -106,59 +103,52 @@ begin
 			gsay_end;
 			end_dialogue;
 		end
+		else if (local_var(4) == 0) then begin
+			set_local_var(4, 1);
+			start_gdialog(589, self_obj, 4, -1, -1);
+			gsay_start;
+			call Jake01;
+			gsay_end;
+			end_dialogue;
+		end
+		else if (local_var(1) == 1) then begin
+			start_gdialog(589, self_obj, 4, -1, -1);
+			gsay_start;
+			call Jake10;
+			gsay_end;
+			end_dialogue;
+		end
 		else begin
-			if (local_var(4) == 0) then begin
-				set_local_var(4, 1);
-				start_gdialog(589, self_obj, 4, -1, -1);
-				gsay_start;
-				call Jake01;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				if (local_var(1) == 1) then begin
-					start_gdialog(589, self_obj, 4, -1, -1);
-					gsay_start;
-					call Jake10;
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					start_gdialog(589, self_obj, 4, -1, -1);
-					gsay_start;
-					call Jake09;
-					gsay_end;
-					end_dialogue;
-				end
-			end
+			start_gdialog(589, self_obj, 4, -1, -1);
+			gsay_start;
+			call Jake09;
+			gsay_end;
+			end_dialogue;
 		end
 	end
+
 	set_local_var(7, self_caps);
 	item_caps_adjust(self_obj, -1 * local_var(7));
 	call Put_Stuff;
 end
 
 procedure destroy_p_proc begin
-
 	move_obj_inven_to_obj(Jake_Desk_Ptr, self_obj);
 	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_HUBJAKE, 100));
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_HUB, 1 );
 	end
 end
 
-procedure Jake01
-begin
+procedure Jake01 begin
 	gsay_reply(589, 101);
 	giq_option( 4, SCRIPT_HUBJAKE, 102, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 103, Jake02, NEUTRAL_REACTION );
@@ -291,8 +281,7 @@ begin
 	call combat;
 end
 
-procedure Jake16
-begin
+procedure Jake16 begin
 	if (global_var( GVAR_WORLDMAPLIST_BROTHERHOOD ) == 0) then
 		set_global_var( GVAR_WORLDMAPLIST_BROTHERHOOD, 1 );
 		mark_on_map(AREA_BROTHERHOOD)
@@ -304,12 +293,10 @@ begin
 	gsay_message(589, 166, 50);
 end
 
-procedure JakeEnd
-begin
+procedure JakeEnd begin
 end
 
-procedure Barter
-begin
+procedure Barter begin
 	gsay_message(589, 158, 50);
 	gdialog_mod_barter(-15);
 	gsay_reply(589, 159);
@@ -317,13 +304,11 @@ begin
 	giq_option( -3, SCRIPT_HUBJAKE, 161, JakeEnd, NEUTRAL_REACTION );
 end
 
-procedure Get_Stuff
-begin
+procedure Get_Stuff begin
 	move_obj_inven_to_obj(Jake_Desk_Ptr, self_obj);
 end
 
-procedure Put_Stuff
-begin
+procedure Put_Stuff begin
 	move_obj_inven_to_obj(self_obj, Jake_Desk_Ptr);
 end
 
