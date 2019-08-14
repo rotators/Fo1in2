@@ -121,33 +121,29 @@ procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
 		Beth_Ptr := self_obj;
-		set_self_team(TEAM_HUB_CRIMSON_CARAVANS );
+		set_self_team( TEAM_HUB_FAR_GO_TRADERS );
 		set_self_ai( AI_MERCHANT );
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	call Get_Stuff;
 	get_reaction
@@ -176,32 +172,20 @@ begin
 		if (dude_is_armed) and (local_var(14) == 0) then begin
 			call Beth55;
 		end
-		else begin
-			if (dude_is_armed) and (local_var(14) == 1) then begin
-				call Beth56;
+		else if (dude_is_armed) and (local_var(14) == 1) then begin
+			call Beth56;
+		end
+		else if (local_var(4) == 1) then begin
+			if (local_var(1) > 1) then begin
+				start_dialog_at_node(Beth64);
 			end
 			else begin
-				if (local_var(4) == 1) then begin
-					start_gdialog(617, self_obj, 4, -1, -1);
-					gsay_start;
-					if (local_var(1) > 1) then begin
-						call Beth64;
-					end
-					else begin
-						call Beth65;
-					end
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					set_local_var(4, 1);
-					start_gdialog(617, self_obj, 4, -1, -1);
-					gsay_start;
-					call Beth00;
-					gsay_end;
-					end_dialogue;
-				end
+				start_dialog_at_node(Beth65);
 			end
+		end
+		else begin
+			start_dialog_at_node(Beth00);
+			set_local_var(4, 1);
 		end
 	end
 	set_local_var(11, GAME_TIME_IN_HOURS);
@@ -210,34 +194,28 @@ begin
 	call Put_Stuff;
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	inc_good_critter
 	move_obj_inven_to_obj(Beth_Box_Ptr, self_obj);
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_HUB, 1 );
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_HBETH, 100));
 end
 
-procedure Beth00
-begin
+procedure Beth00 begin
 	gsay_reply(617, 101);
 	call Beth01;
 end
 
-procedure Beth01
-begin
+procedure Beth01 begin
 	giq_option( 4, SCRIPT_HBETH, 102, Beth09, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 104, Beth62, GOOD_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 398, Beth68, NEUTRAL_REACTION );
@@ -247,8 +225,7 @@ begin
 	giq_option( -3, SCRIPT_HBETH, 108, Beth04, NEUTRAL_REACTION );
 end
 
-procedure Beth02
-begin
+procedure Beth02 begin
 	if (map_var(41) == 1) then begin
 		giq_option( 4, SCRIPT_HBETH, 109, Beth36, NEUTRAL_REACTION );
 	end
@@ -264,8 +241,7 @@ begin
 	giq_option( 4, SCRIPT_HBETH, 115, BethEnd, NEUTRAL_REACTION );
 end
 
-procedure Beth02a
-begin
+procedure Beth02a begin
 	if (global_var( GVAR_MISSING_CARAVANS_STATUS ) == 5) then begin
 		call Beth37;
 	end
@@ -274,8 +250,7 @@ begin
 	end
 end
 
-procedure Beth02b
-begin
+procedure Beth02b begin
 	if (global_var( GVAR_DECKER_STATUS ) != 0) then begin
 		call Beth66;
 	end
@@ -284,37 +259,28 @@ begin
 	end
 end
 
-procedure Beth03
-begin
+procedure Beth03 begin
 	if (local_var(10) == 1) then begin
 		if ((local_var(5) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) then begin
 			set_local_var(5, 1);
 			set_global_var( GVAR_DECKER_KNOWN, 1 );
 			gsay_reply(617, 123);
 		end
-		else begin
-			if ((local_var(6) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) then begin
-				set_local_var(5, 1);
-				gsay_reply(617, 124);
-			end
-			else begin
-				if ((local_var(7) == 0) and (global_var( GVAR_KILL_JAIN ) == 2)) then begin
-					set_local_var(5, 1);
-					gsay_reply(617, 125);
-				end
-				else begin
-					if ((local_var(8) == 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
-						set_local_var(5, 1);
-						gsay_reply(617, 126);
-					end
-					else begin
-						if ((local_var(9) == 0) and (global_var( GVAR_VATS_BLOWN ) == 1)) then begin
-							set_local_var(5, 1);
-							gsay_reply(617, 127);
-						end
-					end
-				end
-			end
+		else if ((local_var(6) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 124);
+		end
+		else if ((local_var(7) == 0) and (global_var( GVAR_KILL_JAIN ) == 2)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 125);
+		end
+		else if ((local_var(8) == 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 126);
+		end
+		else if ((local_var(9) == 0) and (global_var( GVAR_VATS_BLOWN ) == 1)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 127);
 		end
 	end
 	else begin
@@ -324,29 +290,21 @@ begin
 			set_global_var( GVAR_DECKER_KNOWN, 1 );
 			gsay_reply(617, 117);
 		end
-		else begin
-			if ((local_var(6) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) then begin
-				set_local_var(5, 1);
-				gsay_reply(617, 118);
-			end
-			else begin
-				if ((local_var(7) == 0) and (global_var( GVAR_KILL_JAIN ) == 2)) then begin
-					set_local_var(5, 1);
-					gsay_reply(617, 119);
-				end
-				else begin
-					if ((local_var(8) == 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
-						set_local_var(5, 1);
-						gsay_reply(617, 121);
-					end
-					else begin
-						if ((local_var(9) == 0) and (global_var( GVAR_VATS_BLOWN ) == 1)) then begin
-							set_local_var(5, 1);
-							gsay_reply(617, 122);
-						end
-					end
-				end
-			end
+		else if ((local_var(6) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 118);
+		end
+		else if ((local_var(7) == 0) and (global_var( GVAR_KILL_JAIN ) == 2)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 119);
+		end
+		else if ((local_var(8) == 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 121);
+		end
+		else if ((local_var(9) == 0) and (global_var( GVAR_VATS_BLOWN ) == 1)) then begin
+			set_local_var(5, 1);
+			gsay_reply(617, 122);
 		end
 	end
 	giq_option( 4, SCRIPT_HBETH, 128, Beth03a, NEUTRAL_REACTION );
@@ -354,8 +312,7 @@ begin
 	giq_option( 4, SCRIPT_HBETH, 130, BethEnd, NEUTRAL_REACTION );
 end
 
-procedure Beth03a
-begin
+procedure Beth03a begin
 	if ((local_var(5) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2) or ((local_var(6) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) or ((local_var(7) == 0) and (global_var( GVAR_KILL_JAIN ) == 2)) or ((local_var(8) == 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) or ((local_var(9) == 0) and (global_var( GVAR_VATS_BLOWN ) == 1))) then begin
 		call Beth03;
 	end
@@ -364,75 +321,63 @@ begin
 	end
 end
 
-procedure Beth04
-begin
+procedure Beth04 begin
 	gsay_reply(617, 131);
 	giq_option( -3, SCRIPT_HBETH, 132, Beth05, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_HBETH, 133, Beth05, NEUTRAL_REACTION );
 end
 
-procedure Beth05
-begin
+procedure Beth05 begin
 	gsay_message(617, 134, 50);
 end
 
-procedure Beth06
-begin
+procedure Beth06 begin
 	gsay_reply(617, 135);
 	giq_option( 4, SCRIPT_HBETH, 136, BethEnd, NEUTRAL_REACTION );
 end
 
-procedure Beth07
-begin
+procedure Beth07 begin
 	gsay_reply(617, 137);
 	giq_option( 4, SCRIPT_HBETH, 138, Beth08, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 139, Beth11, NEUTRAL_REACTION );
 end
 
-procedure Beth08
-begin
+procedure Beth08 begin
 	gsay_reply(617, 140);
 	call Beth01;
 end
 
-procedure Beth09
-begin
+procedure Beth09 begin
 	gsay_reply(617, 141);
 	call Beth02;
 end
 
-procedure Beth10
-begin
+procedure Beth10 begin
 	gsay_reply(617, 142);
 	call Beth02;
 end
 
-procedure Beth11
-begin
+procedure Beth11 begin
 	gsay_message(617, 143, 50);
 end
 
-procedure Beth12
-begin
+procedure Beth12 begin
 	gsay_reply(617, 144);
 	giq_option( 4, SCRIPT_HBETH, 145, Beth08, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 146, Beth13, NEUTRAL_REACTION );
 end
 
-procedure Beth13
-begin
+procedure Beth13 begin
 	gsay_message(617, 147, 50);
 end
 
-procedure Beth14
-begin
+procedure Beth14 begin
 	gsay_reply(617, 148);
 	giq_option( 4, SCRIPT_HBETH, 149, Beth15, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 150, Beth20, NEUTRAL_REACTION );
 end
 
-procedure Beth15
-begin
+procedure Beth15 begin
 	set_global_var( GVAR_DECKER_KNOWN, 1 );
 	gsay_reply(617, 151);
 	giq_option( 4, SCRIPT_HBETH, 152, Beth16, NEUTRAL_REACTION );
@@ -442,14 +387,12 @@ begin
 	giq_option( 4, SCRIPT_HBETH, 154, BethEnd, NEUTRAL_REACTION );
 end
 
-procedure Beth15a
-begin
+procedure Beth15a begin
 	BigDownReact
 	call Beth21;
 end
 
-procedure Beth16
-begin
+procedure Beth16 begin
 	set_map_var(48, 1);
 	gsay_reply(617, 155);
 	if ((map_var(46) >= 5) or (map_var(46) >= 5)) then begin
@@ -460,67 +403,56 @@ begin
 	giq_option( 4, SCRIPT_HBETH, 159, Beth18, NEUTRAL_REACTION );
 end
 
-procedure Beth16a
-begin
+procedure Beth16a begin
 	BottomReact
 	call Beth22;
 end
 
-procedure Beth17
-begin
+procedure Beth17 begin
 	gsay_reply(617, 160);
 	giq_option( 4, SCRIPT_HBETH, 161, Beth18, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 162, Beth17a, BAD_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 163, Beth17b, BAD_REACTION );
 end
 
-procedure Beth17a
-begin
+procedure Beth17a begin
 	DownReact
 	call Beth19;
 end
 
-procedure Beth17b
-begin
+procedure Beth17b begin
 	BigDownReact
 	call Beth19;
 end
 
-procedure Beth18
-begin
+procedure Beth18 begin
 	gsay_reply(617, 164);
 	call Beth02;
 end
 
-procedure Beth19
-begin
+procedure Beth19 begin
 	gsay_message(617, 165, 51);
 end
 
-procedure Beth20
-begin
+procedure Beth20 begin
 	gsay_reply(617, 166);
 	call Beth02;
 end
 
-procedure Beth21
-begin
+procedure Beth21 begin
 	gsay_message(617, 167, 51);
 end
 
-procedure Beth22
-begin
+procedure Beth22 begin
 	gsay_message(617, 168, 51);
 end
 
-procedure Beth23
-begin
+procedure Beth23 begin
 	gsay_reply(617, 169);
 	call Beth24;
 end
 
-procedure Beth24
-begin
+procedure Beth24 begin
 	giq_option( 4, SCRIPT_HBETH, 170, Beth25, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 172, Beth30, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HBETH, 173, Beth33, NEUTRAL_REACTION );
@@ -865,79 +797,56 @@ begin
 	end
 end
 
-procedure Beth64
-begin
+procedure Beth64 begin
 	if ((dude_charisma >= 7) and (dude_is_male)) then begin
 		if ((((GAME_TIME_IN_HOURS) - local_var(11)) <= 1) and (dude_is_female)) then begin
 			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 315));
 		end
-		else begin
-			if (((GAME_TIME_IN_HOURS) - local_var(11)) <= 1) then begin
-				gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 316));
-			end
-			else begin
-				if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 1) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 96)) then begin
-					gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 317));
-				end
-				else begin
-					if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 96) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 168)) then begin
-						gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 318));
-					end
-					else begin
-						if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 168) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 336)) then begin
-							gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 319));
-						end
-						else begin
-							if (((GAME_TIME_IN_HOURS) - local_var(11)) > 336) then begin
-								gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 320));
-							end
-						end
-					end
-				end
-			end
+		else if (((GAME_TIME_IN_HOURS) - local_var(11)) <= 1) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 316));
+		end
+		else if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 1) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 96)) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 317));
+		end
+		else if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 96) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 168)) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 318));
+		end
+		else if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 168) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 336)) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 319));
+		end
+		else if (((GAME_TIME_IN_HOURS) - local_var(11)) > 336) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 314)) + " " + message_str(SCRIPT_HBETH, 320));
 		end
 	end
 	else begin
 		if ((((GAME_TIME_IN_HOURS) - local_var(11)) <= 1) and (dude_is_female)) then begin
 			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 315));
 		end
-		else begin
-			if (((GAME_TIME_IN_HOURS) - local_var(11)) <= 1) then begin
-				gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 316));
-			end
-			else begin
-				if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 1) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 96)) then begin
-					gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 317));
-				end
-				else begin
-					if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 96) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 168)) then begin
-						gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 318));
-					end
-					else begin
-						if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 168) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 336)) then begin
-							gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 319));
-						end
-						else begin
-							if (((GAME_TIME_IN_HOURS) - local_var(11)) > 336) then begin
-								gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 320));
-							end
-						end
-					end
-				end
-			end
+		else if (((GAME_TIME_IN_HOURS) - local_var(11)) <= 1) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 316));
+		end
+		else if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 1) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 96)) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 317));
+		end
+		else if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 96) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 168)) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 318));
+		end
+		else if ((((GAME_TIME_IN_HOURS) - local_var(11)) > 168) and (((GAME_TIME_IN_HOURS) - local_var(11)) <= 336)) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 319));
+		end
+		else if (((GAME_TIME_IN_HOURS) - local_var(11)) > 336) then begin
+			gsay_reply(617, message_str(SCRIPT_HBETH, random(311, 313)) + " " + message_str(SCRIPT_HBETH, 320));
 		end
 	end
 	call Beth01;
 end
 
-procedure Beth65
-begin
+procedure Beth65 begin
 	gsay_reply(617, random(322, 329));
 	call Beth01;
 end
 
-procedure Beth66
-begin
+procedure Beth66 begin
 	if (local_var(15) == 0) then begin
 		set_local_var(15, 1);
 		gsay_reply(617, 330);
@@ -951,8 +860,7 @@ begin
 	end
 end
 
-procedure Beth67
-begin
+procedure Beth67 begin
 	variable LVar0 := 0;
 	set_local_var(13, 1);
 	if (dude_is_male) then begin
@@ -975,36 +883,30 @@ begin
 	add_obj_to_inven(dude_obj, LVar0);
 end
 
-procedure Beth68
-begin
+procedure Beth68 begin
 	set_global_var( GVAR_DECKER_KNOWN, 1 );
 	gsay_reply(617, 399);
 	call Beth01;
 end
 
-procedure Beth69
-begin
+procedure Beth69 begin
 	set_global_var( GVAR_DECKER_KNOWN, 1 );
 	gsay_reply(617, 399);
 	call Beth02;
 end
 
-procedure BethEnd
-begin
+procedure BethEnd begin
 end
 
-procedure Get_Stuff
-begin
+procedure Get_Stuff begin
 	move_obj_inven_to_obj(Beth_Box_Ptr, self_obj);
 end
 
-procedure Put_Stuff
-begin
+procedure Put_Stuff begin
 	move_obj_inven_to_obj(self_obj, Beth_Box_Ptr);
 end
 
-procedure Beth02c
-begin
+procedure Beth02c begin
 	if ((local_var(5) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2) or ((local_var(6) == 0) and (global_var( GVAR_DECKER_STATUS ) == 2)) or ((local_var(7) == 0) and (global_var( GVAR_KILL_JAIN ) == 2)) or ((local_var(8) == 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) or ((local_var(9) == 0) and (global_var( GVAR_VATS_BLOWN ) == 1))) then begin
 		call Beth03;
 	end

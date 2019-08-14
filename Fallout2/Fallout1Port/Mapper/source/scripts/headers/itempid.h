@@ -60,7 +60,7 @@
 #define PID_HARDENED_POWER_ARMOR            (232)
 #define PID_BROTHERHOOD_COMBAT_ARMOR        (239)
 #define PID_TESLA_ARMOR                     (240)
-#define PID_CURED_LEATHER_ARMOR             (265)
+#define PID_CURED_LEATHER_ARMOR             (265) // Combat Leather Jacket
 #define PID_ADVANCED_POWER_ARMOR            (348)
 #define PID_ADVANCED_POWER_ARMOR_MK2        (349)
 #define PID_LEATHER_ARMOR_MK_II             (379)
