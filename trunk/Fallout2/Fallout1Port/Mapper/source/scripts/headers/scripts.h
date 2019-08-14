@@ -139,7 +139,7 @@
 #define SCRIPT_VALTMON   (132)  //  ValtMon.int     ; Vault 13 Monitor in the Meeting Room
 #define SCRIPT_CORECOMP  (133)  //  CoreComp.int    ; Central Core computers in Vault 13                                          
 #define SCRIPT_LIBCOMP   (134)  //  LibComp.int     ; Library computer in Vault 13
-#define SCRIPT_ASSBLOW   (135)  //  Assblow.int     ; Guard in Junktown, real name is now Kalnor
+#define SCRIPT_KALNOR	 (135)  //  Assblow.int     ; Guard in Junktown, real name is now Kalnor
 #define SCRIPT_GENRAIDR  (136)  //  GenRaidr.int    ; Generic Raiders                                                             
 #define SCRIPT_GARL      (137)  //  Garl.int        ; Garl from the Raiders' camp
 #define SCRIPT_RAIDPRIS  (138)  //  RaidPris.int    ; Raider prisoner in the camp                                                 

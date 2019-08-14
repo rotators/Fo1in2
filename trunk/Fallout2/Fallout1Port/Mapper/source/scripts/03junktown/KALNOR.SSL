@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Kalnor
+	Junktown - Kalnor, the Junktown entrance guard
 
 */
 
@@ -73,19 +73,20 @@ variable line166flag;
 procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var( GVAR_ENEMY_JUNKTOWN ) == 1) then begin
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			attack(dude_obj);
 		end
 	end
+
 	if (tmp_hostile and not(local_var(4))) then begin
 		tmp_hostile := 0;
 		set_local_var(4, 1);
 		attack(dude_obj);
 	end
 	else begin
+
 		if (obj_can_see_obj(self_obj, dude_obj)) then begin
 			if (global_var( GVAR_ENEMY_JUNKTOWN ) == 1) then begin
 				if (line166flag == 0) then begin
@@ -112,6 +113,7 @@ begin
 				end
 			end
 		end
+
 		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
 			if (((dude_tile / 200) < 125) and ((dude_tile % 200) < 131) and not(local_var(5)) and not(warned)) then begin
 				set_local_var(5, 1);
@@ -135,16 +137,14 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 		set_local_var(6, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
@@ -154,21 +154,18 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if junktown_invaded then begin
 		kill_critter(self_obj, ANIM_exploded_to_nothing_sf);
 	end
-	set_self_team(TEAM_JUNKTOWN_GUARD );
+	set_self_team( TEAM_JUNKTOWN_GUARD );
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (dude_is_armed) then begin
 			tmp_hostile := 1;
@@ -177,136 +174,97 @@ begin
 			weapon_checked := 0;
 		end
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			sneak_checked := 0;
-		end
-		else begin
-			if (fixed_param == 3) then begin
-				tmp_hostile := 1;
-			end
-			else begin
-				if (fixed_param == 4) then begin
-					if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-						if (tile_distance(dude_tile, 27106) > tile_distance(dude_tile, 25905)) then begin
-							if (local_var(5) == 0) then begin
-								if (not(dude_is_sneaking)) then begin
-									tmp_hostile := 1;
-									set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
-								end
-							end
-						end
-						else begin
-							warned := 0;
-						end
+	else if (fixed_param == 2) then begin
+		sneak_checked := 0;
+	end
+	else if (fixed_param == 3) then begin
+		tmp_hostile := 1;
+	end
+	else if (fixed_param == 4) then begin
+		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+			if (tile_distance(dude_tile, 27106) > tile_distance(dude_tile, 25905)) then begin
+				if (local_var(5) == 0) then begin
+					if (not(dude_is_sneaking)) then begin
+						tmp_hostile := 1;
+						set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 					end
 				end
+			end
+			else begin
+				warned := 0;
 			end
 		end
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
+
 	if ((global_var( GVAR_ENEMY_JUNKTOWN ) == 1) and (line166flag == 0)) then begin
-		float_msg(self_obj, message_str(SCRIPT_ASSBLOW, 166), 2);
+		float_msg(self_obj, message_str(SCRIPT_KALNOR, 166), 2);
 		rm_timer_event(self_obj);
 		add_timer_event(self_obj, game_ticks(5), 3);
 	end
-	else begin
-		if ((game_time_hour >= 1900) or (game_time_hour < 600) and (local_var(7) == 1)) then begin
-			if (local_var(5) == 1) then begin
-				float_msg(self_obj, message_str(SCRIPT_ASSBLOW, 167), 0);
-			end
-			else begin
-				float_msg(self_obj, message_str(SCRIPT_ASSBLOW, 156), 0);
-			end
+	else if ((game_time_hour >= 1900) or (game_time_hour < 600) and (local_var(7) == 1)) then begin
+		if (local_var(5) == 1) then begin
+			float_msg(self_obj, message_str(SCRIPT_KALNOR, 167), 0);
 		end
 		else begin
-			if ((dude_is_armed) and not(local_var(4))) then begin
-				start_gdialog(135, self_obj, 4, -1, -1);
-				gsay_start;
-					call guard00;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				if (sneaking) then begin
-					start_gdialog(135, self_obj, 4, -1, -1);
-					gsay_start;
-						call guard06;
-					gsay_end;
-					end_dialogue;
-				end
-				else begin
-					if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-						start_gdialog(135, self_obj, 4, -1, -1);
-						gsay_start;
-							call guard00N;
-						gsay_end;
-						end_dialogue;
-					end
-					else begin
-						if (local_var(8) < 1) or (local_var(9) < 1) then begin
-							start_gdialog(135, self_obj, 4, -1, -1);
-							gsay_start;
-								call guard10;
-							gsay_end;
-							end_dialogue;
-						end
-						else begin
-							float_msg(self_obj, message_str(SCRIPT_ASSBLOW, random(107, 109)), 0);
-						end
-					end
-				end
-			end
+			float_msg(self_obj, message_str(SCRIPT_KALNOR, 156), 0);
 		end
+	end
+	else if ((dude_is_armed) and not(local_var(4))) then begin
+		start_dialog_at_node(guard00);
+	end
+	else if (sneaking) then begin
+		start_dialog_at_node(guard06);
+	end
+	else if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+		start_dialog_at_node(guard00N);
+	end
+	else if (local_var(8) < 1) or (local_var(9) < 1) then begin
+		start_dialog_at_node(guard10);
+	end
+	else begin
+		float_msg(self_obj, message_str(SCRIPT_KALNOR, random(107, 109)), 0);
 	end
 end
 
-procedure guard00a
-begin
-	float_msg(self_obj, message_str(SCRIPT_ASSBLOW, random(101, 103)), 2);
+procedure guard00a begin
+	float_msg(self_obj, message_str(SCRIPT_KALNOR, random(101, 103)), 2);
 end
 
-procedure guard01a
-begin
-	float_msg(self_obj, message_str(SCRIPT_ASSBLOW, random(104, 106)), 3);
+procedure guard01a begin
+	float_msg(self_obj, message_str(SCRIPT_KALNOR, random(104, 106)), 3);
 end
 
-procedure guard00
-begin
+procedure guard00 begin
 	gsay_reply(135, 110);
-	giq_option( 4, SCRIPT_ASSBLOW, 111, guard01, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_ASSBLOW, 112, guard00i, BAD_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 111, guard01, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 112, guard00i, BAD_REACTION );
 	giq_option( 4, SCRIPT_MODREACT, 105, guardend, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_ASSBLOW, 113, guard00ii, GOOD_REACTION );
-	giq_option( -3, SCRIPT_ASSBLOW, 114, guard05, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_KALNOR, 113, guard00ii, GOOD_REACTION );
+	giq_option( -3, SCRIPT_KALNOR, 114, guard05, NEUTRAL_REACTION );
 end
 
-procedure guard00i
-begin
+procedure guard00i begin
 	BigDownReact
 	call guard02;
 end
 
-procedure guard00ii
-begin
+procedure guard00ii begin
 	BigUpReact
 	call guard04;
 end
 
-procedure guard01
-begin
+procedure guard01 begin
 	gsay_reply(135, 115);
-	giq_option( 4, SCRIPT_ASSBLOW, 116, guard02, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_ASSBLOW, 117, guard01i, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 116, guard02, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 117, guard01i, NEUTRAL_REACTION );
 end
 
-procedure guard01i
-begin
+procedure guard01i begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
 		call guard03;
 	end
@@ -315,45 +273,38 @@ begin
 	end
 end
 
-procedure guard02
-begin
+procedure guard02 begin
 	gsay_reply(135, 118);
-	giq_option( 4, SCRIPT_ASSBLOW, 119, guardend, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_ASSBLOW, 120, guard02i, BAD_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 119, guardend, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 120, guard02i, BAD_REACTION );
 end
 
-procedure guard02i
-begin
+procedure guard02i begin
 	tmp_hostile := 1;
 end
 
-procedure guard03
-begin
+procedure guard03 begin
 	set_local_var(4, 1);
 	gsay_message(135, 121, 50);
 end
 
-procedure guard04
-begin
+procedure guard04 begin
 	gsay_message(135, 122, 50);
 end
 
-procedure guard05
-begin
+procedure guard05 begin
 	gsay_message(135, 123, 50);
 end
 
-procedure guard06
-begin
+procedure guard06 begin
 	sneaking := 0;
 	gsay_reply(135, 124);
-	giq_option( 4, SCRIPT_ASSBLOW, 125, guard07, NEUTRAL_REACTION );
-	giq_option( 5, SCRIPT_ASSBLOW, 126, guard06i, NEUTRAL_REACTION );
-	giq_option( -3, SCRIPT_ASSBLOW, 127, guard07, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 125, guard07, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 126, guard06i, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_KALNOR, 127, guard07, NEUTRAL_REACTION );
 end
 
-procedure guard06i
-begin
+procedure guard06i begin
 	variable LVar0 := 0;
 	times_caught_sneaking := times_caught_sneaking + 1;
 	LVar0 := -5 * times_caught_sneaking;
@@ -365,8 +316,7 @@ begin
 	end
 end
 
-procedure guard07
-begin
+procedure guard07 begin
 	if (times_caught_sneaking > 3) then begin
 		gsay_message(135, 129, 51);
 		add_timer_event(self_obj, game_ticks(10), 3);
@@ -376,20 +326,18 @@ begin
 	end
 end
 
-procedure guard08
-begin
+procedure guard08 begin
 	gsay_reply(135, 130);
-	giq_option( 5, SCRIPT_ASSBLOW, 131, guardend, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 131, guardend, NEUTRAL_REACTION );
 	if (dude_is_male) then begin
-		giq_option( 5, SCRIPT_ASSBLOW, 132, guard08i, NEUTRAL_REACTION );
+		giq_option( 5, SCRIPT_KALNOR, 132, guard08i, NEUTRAL_REACTION );
 	end
 	else begin
-		giq_option( 5, SCRIPT_ASSBLOW, 133, guard08i, NEUTRAL_REACTION );
+		giq_option( 5, SCRIPT_KALNOR, 133, guard08i, NEUTRAL_REACTION );
 	end
 end
 
-procedure guard08i
-begin
+procedure guard08i begin
 	if (random(0, 1)) then begin
 		UpReact
 	end
@@ -398,35 +346,30 @@ begin
 	end
 end
 
-procedure guard09
-begin
+procedure guard09 begin
 	gsay_message(135, 134, 50);
 end
 
-procedure guard10
-begin
+procedure guard10 begin
 	gsay_reply(135, 135);
-	giq_option( 5, SCRIPT_ASSBLOW, 137, guard12, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_ASSBLOW, 138, guard15, NEUTRAL_REACTION );
-	giq_option( -3, SCRIPT_ASSBLOW, 139, guard11, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_ASSBLOW, 136, guardend, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 137, guard12, NEUTRAL_REACTION );
+	giq_option( 6, SCRIPT_KALNOR, 138, guard15, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_KALNOR, 139, guard11, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 136, guardend, NEUTRAL_REACTION );
 end
 
-procedure guard11
-begin
+procedure guard11 begin
 	gsay_message(135, 140, 50);
 end
 
-procedure guard12
-begin
+procedure guard12 begin
 	set_local_var(8, 1);
 	gsay_reply(135, 141);
-	giq_option( 5, SCRIPT_ASSBLOW, 142, guard12i, NEUTRAL_REACTION );
-	giq_option( 5, SCRIPT_ASSBLOW, 143, guard14, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 142, guard12i, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 143, guard14, NEUTRAL_REACTION );
 end
 
-procedure guard12i
-begin
+procedure guard12i begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 15))) then begin
 		call guard13;
 	end
@@ -435,54 +378,47 @@ begin
 	end
 end
 
-procedure guard13
-begin
+procedure guard13 begin
 	gsay_reply(135, 144);
-	giq_option( 5, SCRIPT_ASSBLOW, 145, guardend, NEUTRAL_REACTION );
-	giq_option( 5, SCRIPT_ASSBLOW, 146, guard13_BigDownReact, BAD_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 145, guardend, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 146, guard13_BigDownReact, BAD_REACTION );
 end
 
 procedure guard13_BigDownReact begin
 	BigDownReact
 end
 
-procedure guard14
-begin
+procedure guard14 begin
 	gsay_message(135, 147, 50);
 end
 
-procedure guard15
-begin
+procedure guard15 begin
 	set_local_var(9, 1);
 	gsay_reply(135, 148);
-	giq_option( 5, SCRIPT_ASSBLOW, 149, guardend, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 149, guardend, NEUTRAL_REACTION );
 	if (dude_is_female) then begin
-		giq_option( 5, SCRIPT_ASSBLOW, 150, guard16, NEUTRAL_REACTION );
+		giq_option( 5, SCRIPT_KALNOR, 150, guard16, NEUTRAL_REACTION );
 	end
 end
 
-procedure guard16
-begin
+procedure guard16 begin
 	gsay_message(135, 152, 50);
 end
 
-procedure guard17
-begin
+procedure guard17 begin
 	gsay_message(135, random(153, 155), 50);
 end
 
-procedure guard00N
-begin
+procedure guard00N begin
 	set_local_var(7, 1);
 	gsay_reply(135, 156);
-	giq_option( 4, SCRIPT_ASSBLOW, 157, guard02N, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_ASSBLOW, 158, guardend, NEUTRAL_REACTION );
-	giq_option( 5, SCRIPT_ASSBLOW, 159, guard00Na, NEUTRAL_REACTION );
-	giq_option( -3, SCRIPT_ASSBLOW, 160, guard01N, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 157, guard02N, NEUTRAL_REACTION );
+	giq_option( 4, SCRIPT_KALNOR, 158, guardend, NEUTRAL_REACTION );
+	giq_option( 5, SCRIPT_KALNOR, 159, guard00Na, NEUTRAL_REACTION );
+	giq_option( -3, SCRIPT_KALNOR, 160, guard01N, NEUTRAL_REACTION );
 end
 
-procedure guard00Na
-begin
+procedure guard00Na begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call guard03N;
 	end
@@ -491,28 +427,23 @@ begin
 	end
 end
 
-procedure guard01N
-begin
+procedure guard01N begin
 	gsay_message(135, 161, 50);
 end
 
-procedure guard02N
-begin
+procedure guard02N begin
 	gsay_message(135, 162, 50);
 end
 
-procedure guard03N
-begin
+procedure guard03N begin
 	set_local_var(5, 1);
 	gsay_message(135, 163, 50);
 end
 
-procedure guard04N
-begin
+procedure guard04N begin
 	set_local_var(5, 1);
-	gsay_message(135, message_str(SCRIPT_ASSBLOW, 164) + dude_name + message_str(SCRIPT_ASSBLOW, 165), 50);
+	gsay_message(135, message_str(SCRIPT_KALNOR, 164) + dude_name + message_str(SCRIPT_KALNOR, 165), 50);
 end
 
-procedure guardend
-begin
+procedure guardend begin
 end
