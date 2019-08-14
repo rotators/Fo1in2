@@ -55,6 +55,5 @@
 #ifndef night
 #define night                   ((game_time_hour <= 600) or (game_time_hour >= 1800))
 #endif
-#define dude_low_iq             (get_critter_stat(dude_obj,STAT_iq) < 4)
 
 #endif // CONDTION_H
