@@ -473,7 +473,6 @@
 #define inc_v13_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V13, x)
 
 // Vault 15
-
 #define inc_v15_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V15, x)
 
 // Shady Sands
@@ -497,9 +496,10 @@
 
 // Hub
 #define REP_BONUS_BOB_JAILED					(5)
-#define REP_BONUS_KILLED_DECKER 				(5)
-#define REP_BONUS_KILLED_HIGHTOWER 				(-5)
-#define REP_BONUS_NECKLACE_STOLEN 				(-1)
+#define REP_BONUS_KILLED_DECKER 				(10)
+#define REP_BONUS_KILLED_HIGHTOWER 				(-10)
+#define REP_BONUS_NECKLACE_STOLEN 				(-3)
+#define REP_BONUS_KIND_TO_HAROLD				(1)
 #define inc_hub_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard
@@ -530,7 +530,9 @@
 #define inc_cathedral_rep(x)    				inc_global_var_amt(GVAR_TOWN_REP_CATHEDRAL, x)
 
 
-
+/**************************************************************************
+ Fallout 2 reputation values to compare to
+**************************************************************************/
 // Arroyo
 #define REP_BONUS_KILL_EVIL_PLANTS              (0)
 #define REP_BONUS_ARROYO_ELDER_THEFT            (-3)
