@@ -16,27 +16,29 @@ variable initial :=  0;
 variable rndz;
 
 procedure start begin
-// script ID == 928
-//	////display_msg("INIT_RADSCOR2.SSL");// - please tell Sduibek when and where you saw this message. Thank you!");
-// MOUNTAIN ENCOUNTER:  Vault1  ("You see a lone radscorpion, skittering about."
-//
 	if not(initial) then begin
-		variable LVar0 := 0;
-		variable LVar1 := 0;
 		initial :=  1;
+<<<<<<< .mine
+||||||| .r397
+		LVar0 := self_item( PID_SCORPION_TAIL );
+		if not(LVar0) and (obj_pid(self_obj) != (16777216 + 394)) then begin//Check if already has one
+			LVar1 := create_object( PID_SCORPION_TAIL, 0, 0 );//Scorpion Tail
+			add_obj_to_inven(self_obj, LVar1);//Scorpion Tail
+		end
+=======
 		LVar0 := self_item( PID_SCORPION_TAIL );
 		if not(LVar0) and (self_pid != (16777216 + 394)) then begin//Check if already has one
 			LVar1 := create_object( PID_SCORPION_TAIL, 0, 0 );//Scorpion Tail
 			add_obj_to_inven(self_obj, LVar1);//Scorpion Tail
 		end
+>>>>>>> .r398
 		set_self_ai( AI_RADSCORPION );
-		set_self_team(TEAM_RADSCORPIONS );
+		set_self_team( TEAM_RADSCORPIONS );
 		add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
 	end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
 	if (target_obj == dude_obj) then begin
 		if (fixed_param == 2) then begin
 			if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
@@ -48,24 +50,20 @@ begin
 					rndz := (random(5, 12) + (combat_difficulty * 3));// EASY 5-to-12, NORMAL 8-to-15, HARD 11-to-18
 					poison(target_obj, rndz);
 				end
-				else begin
-					if not(is_success(LuckRoll)) or not(is_success(EnduranceRoll)) then begin
-						rndz := (random(3, 9) + (combat_difficulty * 2));// EASY 3-to-9, NORMAL 5-to-11, HARD 7-to-13
+				else if not(is_success(LuckRoll)) or not(is_success(EnduranceRoll)) then begin
+					rndz := (random(3, 9) + (combat_difficulty * 2));// EASY 3-to-9, NORMAL 5-to-11, HARD 7-to-13
+					poison(target_obj, rndz);
+				end
+				else begin// EASY: never, NORMAL: 50% chance, HARD: 66% chance
+					if (random(0, combat_difficulty) >= 1) then begin
+						rndz := (random(1, 6) + combat_difficulty);// EASY 1-to-6, NORMAL 2-to-7, HARD 3-to-8
 						poison(target_obj, rndz);
-					end
-					else begin// EASY: never, NORMAL: 50% chance, HARD: 66% chance
-						if (random(0, combat_difficulty) >= 1) then begin
-							rndz := (random(1, 6) + combat_difficulty);// EASY 1-to-6, NORMAL 2-to-7, HARD 3-to-8
-							poison(target_obj, rndz);
-						end
 					end
 				end
 			end
-			else begin
-				if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) then begin
-					rndz := random(1, 6);
-					poison(target_obj, rndz);
-				end
+			else if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) then begin
+				rndz := random(1, 6);
+				poison(target_obj, rndz);
 			end
 		end
 	end
@@ -85,9 +83,12 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
+	variable tail := 0;
+	tail := create_object(PID_SCORPION_TAIL,0,0);
+	add_obj_to_inven(self_obj,tail);
+
 	rm_timer_event(self_obj);
 	inc_evil_critter
-	rm_timer_event(self_obj);
 end
 
 procedure timed_event_p_proc begin

@@ -5,6 +5,7 @@
 */
 
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -18,6 +19,10 @@ import variable Killian_store3_ptr;
 import variable Killian_ptr;
 
 #define KillianHomeTile 	(26283)
+
+// We are nerfing Killian a little bit.
+// TODO: Improve detection code in the future.
+#define Killian_In_Room 	((obj_can_see_obj(Killian_ptr, dude_obj) or obj_can_hear_obj(Killian_ptr, dude_obj)) or tile_distance_objs(Killian_ptr, dude_obj) < 15)
 
 procedure start begin
 end
@@ -36,9 +41,7 @@ end
 
 procedure use_p_proc begin
 	if (is_killian_alive) then begin
-		// We are nerfing Killian a little bit.
-		// TODO: Improve detection code in the future.
-		if ((obj_can_see_obj(Killian_ptr, dude_obj) or tile_distance_objs(Killian_ptr, dude_obj) < 12)) then begin /*tile_num(Killian_ptr) == KillianHomeTile)*/
+		if Killian_In_Room then begin
 			script_overrides;
 			// Left one
 			if (self_tile == 25880) then begin
@@ -58,22 +61,11 @@ end
 
 procedure use_skill_on_p_proc begin
 	if ((action_being_used == SKILL_STEAL and is_killian_alive)) then begin
-		if (is_success(roll_vs_skill(dude_obj, SKILL_STEAL, -30)) and not(obj_can_see_obj(Killian_ptr, dude_obj))) then begin
-			// win
-		end
-		else begin
-			script_overrides;
-			Killian_barter_var := -1;
-		end
-	end
-
-	// Old code:
-	/*if (action_being_used == SKILL_STEAL) then begin
-		if (is_killian_alive) then begin
-			if (obj_can_see_obj(Killian_ptr, dude_obj)) then begin
+		if Killian_In_Room then begin
+			if (not(dude_is_sneaking) or not(is_success(roll_vs_skill(dude_obj, SKILL_STEAL, -50)))) and (obj_can_see_obj(Killian_ptr, dude_obj)) then begin
 				script_overrides;
 				Killian_barter_var := -1;
 			end
 		end
-	end*/
+	end
 end
