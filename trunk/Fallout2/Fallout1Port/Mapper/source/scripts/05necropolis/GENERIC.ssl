@@ -1,0 +1,200 @@
+/*
+
+	???
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPNECRO.h"
+
+#define NAME                    SCRIPT_GENERIC
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure combat_p_proc;
+procedure timed_event_p_proc;
+
+procedure generic00;
+procedure generic01;
+procedure generic02;
+procedure generic03;
+procedure genericend;
+procedure genericcbt;
+
+variable tmp_hostile;
+variable init := 0;
+variable maxleash := 9;
+variable noevent;
+variable loopcount;
+variable rndx;
+variable rndy;
+variable dist;
+variable new_tile;
+variable SET;
+variable MUTANTS;
+
+procedure start begin
+	if (not(init)) then begin
+		init := 1;
+		if (local_var(7) == 0) then begin
+			set_local_var(7, self_tile);
+			set_local_var(5, 1);
+		end
+		set_self_team( TEAM_32 );
+	end
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
+	dude_look_at_critter;
+	if (local_var(4) == 0) then begin
+		set_local_var(4, 1);
+		if (local_var(1) < 2) then begin
+			if (is_success(do_check(dude_obj, STAT_lu, 0))) then begin
+				tmp_hostile := tmp_hostile + 1;
+			end
+			else begin
+				tmp_hostile := tmp_hostile + 2;
+			end
+		end
+	end
+	if (tmp_hostile) then begin
+		call generic01;
+	end
+	else begin
+		call generic00;
+	end
+end
+
+procedure genericend
+begin
+end
+
+procedure genericcbt
+begin
+end
+
+procedure generic00
+begin
+	rndx := random(1, 7);
+	if (rndx == 1) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 100), 7);
+	end
+	if (rndx == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 101), 7);
+	end
+	if (rndx == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 102), 7);
+	end
+	if (rndx == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 103), 7);
+	end
+	if (rndx == 5) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 104), 7);
+	end
+	if (rndx == 6) then begin
+		call generic02;
+	end
+	if (rndx == 7) then begin
+		call generic03;
+	end
+end
+
+procedure generic01
+begin
+	rndx := random(1, 4);
+	if (rndx == 1) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 105), 7);
+	end
+	if (rndx == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 106), 7);
+	end
+	if (rndx == 3) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 107), 7);
+	end
+	if (rndx == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 108), 7);
+	end
+end
+
+procedure generic02
+begin
+	if (SET == 0) then begin
+		rndx := random(1, 2);
+		if (rndx == 1) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENERIC, 109), 7);
+		end
+		if (rndx == 2) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENERIC, 110), 7);
+		end
+	end
+	else begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 111), 7);
+	end
+end
+
+procedure generic03
+begin
+	if (MUTANTS == 0) then begin
+		rndx := random(1, 2);
+		if (rndx == 1) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENERIC, 112), 7);
+		end
+		if (rndx == 2) then begin
+			float_msg(self_obj, message_str(SCRIPT_GENERIC, 113), 7);
+		end
+	end
+	else begin
+		float_msg(self_obj, message_str(SCRIPT_GENERIC, 114), 7);
+	end
+end
+
+procedure critter_p_proc
+begin
+	if (tmp_hostile > 0) then begin
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+	else begin
+		if (local_var(5)) then begin
+			loopcount := loopcount + 1;
+			if (loopcount > 40) then begin
+				loopcount := 0;
+				if (noevent == 0) then begin
+					noevent := 1;
+					add_timer_event(self_obj, game_ticks(random(5, 13)), 0);
+				end
+			end
+		end
+	end
+end
+
+procedure timed_event_p_proc
+begin
+	noevent := 0;
+	set_local_var(8, self_tile);
+	new_tile := tile_num_in_direction(local_var(8), random(0, 5), 2);
+	if (tile_distance(local_var(7), new_tile) < maxleash) then begin
+		animate_move_obj_to_tile(self_obj, new_tile, 0);
+	end
+end
+
+procedure combat_p_proc begin
+end
+
+procedure destroy_p_proc begin
+	rm_timer_event(self_obj);
+   inc_evil_critter
+	rm_timer_event(self_obj);
+end
