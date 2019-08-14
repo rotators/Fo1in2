@@ -415,7 +415,7 @@ end
 procedure Morbid03
 begin
 	gsay_message(104, 111, 50);
-	if ((get_critter_stat(dude_obj, STAT_current_hp) == get_critter_stat(dude_obj, STAT_max_hp)) and not(get_critter_stat(dude_obj, STAT_current_poison)) and (get_critter_stat(dude_obj, STAT_current_rad) < 31)) then begin
+	if ((dude_cur_hp == dude_max_hp) and not(dude_poison_stat) and (dude_rads < 31)) then begin
 		call Morbid04;
 	end
 	else begin
@@ -487,19 +487,19 @@ begin
 	variable LVar0 := 0;
 	gsay_message(104, 121, 50);
 	DIAGNOSIS := message_str(SCRIPT_MORBID, 122);
-	if (get_critter_stat(dude_obj, STAT_current_hp) == get_critter_stat(dude_obj, STAT_max_hp)) then begin
+	if (dude_cur_hp == dude_max_hp) then begin
 		DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, 178);
 	end
 	else begin
-		if (get_critter_stat(dude_obj, STAT_current_hp) > (get_critter_stat(dude_obj, STAT_max_hp) * 0.70000)) then begin
+		if (dude_cur_hp > (dude_max_hp * 0.70000)) then begin
 			DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, 179);
 		end
 		else begin
-			if (get_critter_stat(dude_obj, STAT_current_hp) > (get_critter_stat(dude_obj, STAT_max_hp) * 0.50000)) then begin
+			if (dude_cur_hp > (dude_max_hp * 0.50000)) then begin
 				DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, 180);
 			end
 			else begin
-				if (get_critter_stat(dude_obj, STAT_current_hp) > (get_critter_stat(dude_obj, STAT_max_hp) * 0.30000)) then begin
+				if (dude_cur_hp > (dude_max_hp * 0.30000)) then begin
 					DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, 181);
 				end
 				else begin
@@ -509,10 +509,10 @@ begin
 		end
 	end
 	DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, random(183, 186));
-	if (get_critter_stat(dude_obj, STAT_current_poison)) then begin
+	if (dude_poison_stat) then begin
 		DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, random(187, 190));
 	end
-	LVar0 := get_critter_stat(dude_obj, STAT_current_rad);
+	LVar0 := dude_rads;
 	if (LVar0 > 30) then begin
 		if (LVar0 < 101) then begin
 			DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, 191);
@@ -534,16 +534,16 @@ begin
 	if ((LVar0 > 30) and (LVar0 < 251)) then begin
 		DIAGNOSIS := DIAGNOSIS + message_str(SCRIPT_MORBID, 195);
 	end
-	heal := get_critter_stat(dude_obj, STAT_max_hp) - get_critter_stat(dude_obj, STAT_current_hp);
+	heal := dude_max_hp - dude_cur_hp;
 	if (local_var(1) >= 2) then begin
 		COST := 3 * heal;
-		if (get_critter_stat(dude_obj, STAT_current_poison)) then begin
+		if (dude_poison_stat) then begin
 			COST := COST + 25;
 		end
 	end
 	else begin
 		COST := 4 * heal;
-		if (get_critter_stat(dude_obj, STAT_current_poison)) then begin
+		if (dude_poison_stat) then begin
 			COST := COST + 50;
 		end
 	end
@@ -581,11 +581,11 @@ begin
 	gsay_message(104, 132, 50);
 	gfade_out(1);
 	rndx := 300 * heal;
-	if (get_critter_stat(dude_obj, STAT_current_poison)) then begin
+	if (dude_poison_stat) then begin
 		rndx := rndx + 1200;
 	end
-	critter_heal(dude_obj, get_critter_stat(dude_obj, STAT_max_hp));
-	poison(dude_obj, -get_critter_stat(dude_obj, STAT_current_poison));
+	critter_heal(dude_obj, dude_max_hp);
+	poison(dude_obj, -dude_poison_stat);
 	game_time_advance(game_ticks(rndx));
 	gfade_in(1);
 	if (dude_caps < COST) then begin
@@ -845,7 +845,7 @@ end
 
 procedure Morbid00Na
 begin
-	if (get_critter_stat(dude_obj, STAT_current_hp) < (get_critter_stat(dude_obj, STAT_max_hp) - 7)) then begin
+	if (dude_cur_hp < (dude_max_hp - 7)) then begin
 		call Morbid03;
 	end
 	else begin
@@ -855,7 +855,7 @@ end
 
 procedure Morbid00Nb
 begin
-	if (get_critter_stat(dude_obj, STAT_current_hp) < (get_critter_stat(dude_obj, STAT_max_hp) - 3)) then begin
+	if (dude_cur_hp < (dude_max_hp - 3)) then begin
 		call Morbid03;
 	end
 	else begin
@@ -889,7 +889,7 @@ end
 
 procedure get_eye
 begin
-	CurrentHP := get_critter_stat(dude_obj, STAT_current_hp);
+	CurrentHP := dude_cur_hp;
 	EyeHPloss := (random(10, 15) - dude_luck);
 	if (EyeHPloss < 1) then begin
 		EyeHPloss := 1;

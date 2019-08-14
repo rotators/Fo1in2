@@ -199,11 +199,18 @@ variable step_tile;
 // misc tuples
 //
 
+#define dude_elevation                      elevation(dude_obj)
+#define self_elevation                      elevation(self_obj)
+
+
 #define dude_fid                            obj_art_fid(dude_obj)
 #define self_fid                            obj_art_fid(self_obj)
 
 #define dude_name                           obj_name(dude_obj)
 #define self_name                           obj_name(self_obj)
+
+#define dude_caps                           item_caps_total(dude_obj)
+#define self_caps                           item_caps_total(self_obj)
 
 #define dude_tile                           tile_num(dude_obj)
 #define self_tile                           tile_num(self_obj)
@@ -263,6 +270,38 @@ variable step_tile;
 // SPECIAL extras
 //
 #define dude_is_stupid                      (dude_iq <= 3)
+
+//
+// hit points
+//
+
+#define  get_cur_hp(cr)                     get_critter_stat(cr,STAT_current_hp)
+#define dude_cur_hp                         get_cur_hp(dude_obj)
+#define self_cur_hp                         get_cur_hp(self_obj)
+
+#define  get_max_hp(cr)                     get_critter_stat(cr,STAT_max_hp)
+#define dude_max_hp                         get_max_hp(dude_obj)
+#define self_max_hp                         get_max_hp(self_obj)
+
+//
+// rads
+//
+
+#define  get_rads(cr)                       get_critter_stat(cr,STAT_current_rad)
+#define dude_rads                           get_rads(dude_obj)
+#define self_rads                           get_rads(self_obj)
+
+//
+// poison
+//
+
+// possibly broken or something
+//#define dude_poison                       get_poison(dude_obj)
+//#define self_poison                       get_poison(self_obj)
+
+#define  get_poison_stat(cr)                get_critter_stat(cr,STAT_current_poison)
+#define dude_poison_stat                    get_poison_stat(dude_obj)
+#define self_poison_stat                    get_poison_stat(self_obj)
 
 //
 // gender
@@ -431,24 +470,17 @@ variable step_tile;
 
 #define dude_is_walking                     (art_anim(dude_fid) == ANIM_walk)
 #define dude_is_running                     (art_anim(dude_fid) == ANIM_running)
-#define dude_is_poisoned                    (get_poison(dude_obj))
-#define dude_is_irradiated                  (get_critter_stat(dude_obj, STAT_current_rad))
 #define dude_is_crippled                    ((critter_state(dude_obj) bwand DAM_CRIP_LEG_LEFT)  or \
                                              (critter_state(dude_obj) bwand DAM_CRIP_LEG_RIGHT) or \
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_LEFT)  or \
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_RIGHT))
 
 #define dude_inv_rot                        ((dude_cur_rot + 3)%6)
-#define dude_elevation                      (elevation(dude_obj))
 
 #define tile_behind_obj(who)                (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), 1))
 #define tile_behind_obj_rng(who, rng)       (tile_num_in_direction(tile_num(who),((has_trait(TRAIT_OBJECT,who,OBJECT_CUR_ROT) + 3) % 6), rng))
 
-#define dude_cur_hp                         (get_critter_stat(dude_obj,STAT_current_hp))
-#define dude_max_hp                         (get_critter_stat(dude_obj,STAT_max_hp))
 
-
-#define dude_caps                           (item_caps_total(dude_obj))
 
 #define dude_has_car 						global_var(GVAR_PLAYER_GOT_CAR) != 0
 #define dude_is_pornstar                    dude_has_porn_star_rep
@@ -508,17 +540,14 @@ variable step_tile;
 
 #define self_is_walking                     (art_anim(self_fid) == ANIM_walk)
 #define self_is_running                     (art_anim(self_fid) == ANIM_running)
-#define self_is_poisoned                    (get_poison(self_obj))
 
 #define self_inv_rot                        ((self_cur_rot + 3)%6)
-#define self_elevation                      (elevation(self_obj))
 
 #define self_visible                        obj_is_visible_flag(self_obj)
 
 #define self_cur_hp                         (get_critter_stat(self_obj,STAT_current_hp))
 #define self_max_hp                         (get_critter_stat(self_obj,STAT_max_hp))
 
-#define self_caps                           (item_caps_total(self_obj))
 
 #define skill_success(x,y,z)                (is_success(roll_vs_skill(x,y,z)))
 #define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
