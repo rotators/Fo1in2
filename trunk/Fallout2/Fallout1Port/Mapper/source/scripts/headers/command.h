@@ -189,15 +189,17 @@ variable step_tile;
 #define anim_run_to_point(the_tile)                anim_run_to_point_rate(the_tile, 1)
 
 // BIG REORDER, for bored people, starts HERE //
-
-
-
+//
+// misc tuples
+//
 #define dude_name                           obj_name(dude_obj)
 #define self_name                           obj_name(self_obj)
 
 #define dude_tile                           tile_num(dude_obj)
 #define self_tile                           tile_num(self_obj)
 
+//
+// gear
 //
 
 #define crit_left_hand(cr)                  critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
@@ -212,6 +214,47 @@ variable step_tile;
 #define dude_armor                          crit_armor(dude_obj)
 #define self_armor                          crit_armor(self_obj)
 
+//
+// SPECIAL
+//
+
+#define crit_strength(cr)                   get_critter_stat(cr,STAT_st)
+#define dude_strength                       crit_strength(dude_obj)
+#define self_strength                       crit_strength(self_obj)
+
+#define crit_perception(cr)                 get_critter_stat(cr,STAT_pe)
+#define dude_perception                     crit_perception(dude_obj)
+#define self_perception                     crit_perception(self_obj)
+
+#define crit_endurance(cr)                  get_critter_stat(cr,STAT_en)
+#define dude_endurance                      crit_endurance(dude_obj)
+#define self_endurance                      crit_endurance(self_obj)
+
+#define crit_charisma(cr)                   get_critter_stat(cr,STAT_ch)
+#define dude_charisma                       dude_charisma(dude_obj)
+#define self_charisma                       crit_charisma(self_obj)
+
+#define crit_iq(cr)                         get_critter_stat(cr,STAT_iq)
+#define dude_iq                             crit_iq(dude_obj)
+#define self_iq                             crit_iq(self_obj)
+
+#define crit_agility(cr)                    get_critter_stat(cr,STAT_ag)
+#define dude_agility                        crit_agility(dude_obj)
+#define self_agility                        crit_agility(self_obj)
+
+#define crit_luck(cr)                       get_critter_stat(cr,STAT_lu)
+#define dude_luck                           crit_luck(dude_obj)
+#define self_luck                           crit_luck(self_obj)
+
+//
+// SPECIAL extras
+//
+#define dude_is_stupid                      (dude_iq <= 3)
+
+//
+// gender
+//
+
 #define crit_gender(cr)                     get_critter_stat(cr,STAT_gender)
 #define dude_gender                         crit_gender(dude_obj)
 #define self_gender                         crit_gender(self_obj)
@@ -223,6 +266,10 @@ variable step_tile;
 #define crit_is_female(cr)                  (crit_gender(cr) == GENDER_FEMALE)
 #define dude_is_female                      crit_is_female(dude_obj)
 #define self_is_female                      crit_is_female(self_obj)
+
+//
+// misc triplets
+//
 
 #define crit_cur_rot(cr)                    has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
 #define dude_cur_rot                        crit_cur_rot(dude_obj)
@@ -239,14 +286,6 @@ variable step_tile;
 #define critter_weight(x)                   (100 + ((get_critter_stat(x,STAT_gender) == GENDER_MALE) * 50) + (get_critter_stat(x,STAT_st) * 5) - ((get_critter_stat(x,STAT_ag) + get_critter_stat(x,STAT_en))/3))
 #define critter_wearing_armor(x)            (obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_WORN)) == item_type_armor)
 
-#define dude_is_stupid                      (dude_iq <= 3)
-#define dude_strength                       (get_critter_stat(dude_obj,STAT_st))
-#define dude_perception                     (get_critter_stat(dude_obj,STAT_pe))
-#define dude_endurance                      (get_critter_stat(dude_obj,STAT_en))
-#define dude_charisma                       (get_critter_stat(dude_obj,STAT_ch))
-#define dude_iq                             (get_critter_stat(dude_obj,STAT_iq))
-#define dude_agility                        (get_critter_stat(dude_obj,STAT_ag))
-#define dude_luck                           (get_critter_stat(dude_obj,STAT_lu))
 #ifndef dude_level
 #define dude_level                          (get_pc_stat(PCSTAT_level))
 #endif
@@ -396,13 +435,6 @@ variable step_tile;
                                                end                                              \
                                             end else attack(dude_obj)
 
-#define self_strength                       (get_critter_stat(self_obj,STAT_st))
-#define self_perception                     (get_critter_stat(self_obj,STAT_pe))
-#define self_endurance                      (get_critter_stat(self_obj,STAT_en))
-#define self_charisma                       (get_critter_stat(self_obj,STAT_ch))
-#define self_iq                             (get_critter_stat(self_obj,STAT_iq))
-#define self_agility                        (get_critter_stat(self_obj,STAT_ag))
-#define self_luck                           (get_critter_stat(self_obj,STAT_lu))
 
 #define self_is_armed                       critter_is_armed(self_obj)
 #define self_wearing_armor                  critter_wearing_armor(self_obj)
