@@ -321,7 +321,7 @@ variable step_tile;
 #define self_team                           get_team(self_obj)
 
 #define set_team(cr,team)                   critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
-#define set_self_team                       set_team(self_obj,team)
+#define set_self_team(team)                 set_team(self_obj,team)
 
 
 //
@@ -383,10 +383,10 @@ variable step_tile;
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) or \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR_MK2) or \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_HARDENED_POWER_ARMOR))
-											 
+
 #define dude_wearing_bos_power_armor        ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) or \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_HARDENED_POWER_ARMOR))
-											 
+
 #define critter_wearing_power_armor(x)      ((obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) or \
                                              (obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) or \
                                              (obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR_MK2) or \
