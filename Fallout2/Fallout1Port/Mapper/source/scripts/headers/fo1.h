@@ -243,15 +243,16 @@ end
 #define junktown_invasion_date 				(get_days_passed + (ONE_GAME_DAY * GVAR_JUNKTOWN_INVADED_DATE))
 #define get_junktown_days_left 				(global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
 
-#define check_invasion_party_waiting		if not(Ian_In_Party) then begin 				\
-																kill_critter_type(PID_IAN, 1);		\
-															end												\
-															if not(Tycho_In_Party) then begin		\
-																kill_critter_type(PID_TYCHO, 1);		\
-															end												\
-															if not(Katja_In_Party) then begin		\
-																kill_critter_type(PID_KATJA, 1);		\
-															end
+// If a (human) party member was waiting in any invasion location, he will be killed.
+#define check_invasion_party_waiting		if not(Ian_In_Party) then begin 			\
+												kill_critter_type(PID_IAN, 1);			\
+											end											\
+											if not(Tycho_In_Party) then begin			\
+												kill_critter_type(PID_TYCHO, 1);		\
+											end											\
+											if not(Katja_In_Party) then begin			\
+												kill_critter_type(PID_KATJA, 1);		\
+											end
 
 /*********************************************************
 	Party related:
