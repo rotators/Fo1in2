@@ -1,0 +1,148 @@
+#include "..\headers\define.h"
+#include "..\headers\command.h"
+
+procedure start;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+procedure combat_p_proc;
+
+procedure mutant00;
+procedure combat;
+procedure canseeme;
+
+variable tmp_hostile;
+variable initial :=  0;
+variable new_tile;
+variable weaponPtr;
+variable WeaponID := 0;// for Fallout Fixt, random weapon gens
+variable AmmoID := 0;// for Fallout Fixt, random weapon gens (ammo)
+
+procedure start begin
+variable LVar5 := 0;
+
+	if not(initial) then begin
+		initial :=  1;
+
+		if (local_var(0) == 0) then begin
+			set_local_var(0, self_tile);
+		end
+		set_self_team( TEAM_NECROPOLIS_MUTANT );
+		set_self_ai( AI_SUPER_MUTANT_NECRO );
+
+		// Add items:
+		LVar5 := create_object( PID_RADIO, 0, 0 );//radio
+		add_mult_objs_to_inven(self_obj, LVar5, 1);
+
+		LVar5 := random(0,1);
+		if (LVar5 == 1) or (LVar5 == 2) then begin
+			LVar5 := create_object( PID_STIMPAK, 0, 0 );
+			add_mult_objs_to_inven(self_obj, LVar5, random(1,2));
+		end
+
+		WeaponID := (random(1, 20));
+		debug("WeaponID for Invader:  " + WeaponID);
+		if (WeaponID == 1) or (WeaponID == 2) or (WeaponID == 3) or (WeaponID == 4) or (WeaponID == 18) then begin
+			AmmoID := create_object( PID_5MM_JHP, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 3));
+			AmmoID := create_object( PID_5MM_AP, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 3));
+			weaponPtr := create_object( PID_MINIGUN, 0, 0 );
+		end
+		else if (WeaponID == 5) or (WeaponID == 6) or (WeaponID == 7) or (WeaponID == 8) then begin
+			AmmoID := create_object( PID_STIMPAK, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, 1);
+			weaponPtr := create_object( PID_SPIKED_KNUCKLES, 0, 0 );
+		end
+		else if (WeaponID == 9) or (WeaponID == 10) or (WeaponID == 11) or (WeaponID == 19) then begin
+			AmmoID := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 2));
+			weaponPtr := create_object( PID_LASER_RIFLE, 0, 0 );
+		end
+		else if (WeaponID == 12) or (WeaponID == 13) or (WeaponID == 14) then begin
+			AmmoID := create_object( PID_FLAMETHROWER_FUEL, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 3));
+			weaponPtr := create_object( PID_FLAMER, 0, 0 );
+		end
+		else if (WeaponID == 15) or (WeaponID == 16) then begin
+			AmmoID := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 2));
+			weaponPtr := create_object( PID_PLASMA_RIFLE, 0, 0 );
+		end
+		else if (WeaponID == 17) then begin
+			AmmoID := create_object( PID_MICRO_FUSION_CELL, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(2, 4));
+			weaponPtr := create_object( PID_GATLING_LASER, 0, 0 );
+		end
+		else begin
+			AmmoID := create_object( PID_EXPLOSIVE_ROCKET, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 6));
+			AmmoID := create_object( PID_ROCKET_AP, 0, 0 );
+			add_mult_objs_to_inven(self_obj, AmmoID, random(1, 5));
+			weaponPtr := create_object( PID_ROCKET_LAUNCHER, 0, 0 );
+		end
+		add_obj_to_inven(self_obj, weaponPtr);
+		wield_obj_critter(self_obj, weaponPtr);
+
+	end
+end
+
+procedure talk_p_proc begin
+	call mutant00;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_INVADER, 100));
+end
+
+procedure pickup_p_proc begin
+	tmp_hostile := 1;
+end
+
+procedure mutant00 begin
+	if not(local_var(2)) then begin
+		variable LVar0;
+		LVar0 := random(101, 107);
+		float_msg(self_obj, message_str(SCRIPT_INVADER, LVar0), 2);
+		call combat;
+	end
+end
+
+procedure combat begin
+	tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+	if (critter_state(self_obj) != 1) and (critter_state(self_obj) != 2) and not(combat_is_initialized) then begin
+		if (tmp_hostile) then begin
+			tmp_hostile := 0;
+			attack(dude_obj);
+		end
+		else begin
+			if (random(0, 4000) == 7) then begin
+				if (anim_busy(self_obj) == 0) and not(anim_busy(self_obj)) then begin
+					animate_move_obj_to_tile(self_obj, tile_num_in_direction(self_tile, random(0, 5), random(2, 4)), 0);
+				end
+			end
+			call canseeme;
+		end
+	end
+end
+
+procedure destroy_p_proc begin
+	set_local_var(2, 1);
+	rm_timer_event(self_obj);
+	inc_evil_critter
+end
+
+procedure combat_p_proc begin
+//	call canseeme;
+end
+
+procedure canseeme begin
+	if (critter_state(self_obj) != 1) and (critter_state(self_obj) != 2) then begin
+		if (obj_can_see_obj(self_obj, dude_obj) and (tile_distance_objs(self_obj, dude_obj) <= 12)) or (tile_distance_objs(self_obj, dude_obj) <= 6) and obj_on_screen(self_obj) then begin
+			call mutant00;
+		end
+	end
+end

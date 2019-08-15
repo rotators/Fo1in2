@@ -1,7 +1,13 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
+procedure Invasion;
+
 export variable Thorndyke_Ptr;
 
 variable party_elevation;
@@ -9,53 +15,45 @@ variable dude_start_hex;
 
 variable invaderPtr;
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		set_global_var( GVAR_MARK_HUB_5, 1 );
-		Lighting;
-		if (hub_invaded and not(is_loading_game) and (map_var(7) == 0)) then begin
-			set_map_var(7, 1);
-			kill_critter_type(PID_MERCHANT_4, 0);
-			kill_critter_type(PID_BRAHMIN, 0);
-			kill_critter_type(PID_MERCHANT_7, 0);
-			kill_critter_type(PID_MERCHANT_5, 0);
-			kill_critter_type(PID_MERCHANT_6, 0);
-			kill_critter_type(PID_MERCHANT_7, 0);
-			kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
-			kill_critter_type(PID_GUARD_HFLTHR, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 23514, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 24102, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 25712, 0);
-		end
-		override_map_start(74, 60, 0, 3);
-
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			Lighting;
-
-		end
-		else begin
-			if (script_action == 16) then begin//map_exit_p_proc (also appears as "remove_party"!) - called on red exit grids
-
-			end
-		end
-	end
+procedure start begin
 end
 
+procedure map_enter_p_proc begin
+	set_global_var( GVAR_MARK_HUB_5, 1 );
+	Lighting;
 
+	call Invasion;
+	override_map_start(74, 60, 0, 3);
+end
 
-
+procedure map_update_p_proc begin
+	Lighting;
+end
 
 procedure Invasion begin
-	//check_invasion
+	if (hub_invaded and not(is_loading_game) and (map_var(7) == 0)) then begin
+		set_map_var(7, 1);
+		kill_critter_type(PID_MERCHANT_4, 0);
+		kill_critter_type(PID_BRAHMIN, 0);
+		kill_critter_type(PID_MERCHANT_7, 0);
+		kill_critter_type(PID_MERCHANT_5, 0);
+		kill_critter_type(PID_MERCHANT_6, 0);
+		kill_critter_type(PID_MERCHANT_7, 0);
+		kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
+		kill_critter_type(PID_GUARD_HFLTHR, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 23514, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 24102, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 25712, 0);
+
+		// Any player party member was waiting in the map before?
+		check_invasion_party_waiting
+	end
 end
 
 

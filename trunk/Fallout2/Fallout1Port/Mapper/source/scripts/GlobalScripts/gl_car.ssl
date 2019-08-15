@@ -11,7 +11,7 @@
 #include "..\headers\updatmap.h"
 #include "..\headers\command.h"
 
-//#include "..\headers\Den.h"
+#include "..\headers\MAPNECRO.h"
 #include "..\headers\Sfall\main.h"
 
 /* Standard Script Procedures */
@@ -23,14 +23,6 @@ procedure check_vehicle_location;
 
 #define is_car_created						((tile_contains_obj_pid(car_hex,car_elev,PID_DRIVABLE_MOTO1)) or (tile_contains_obj_pid(car_hex,car_elev,PID_DRIVABLE_MOTO2)))
 #define location_valid						car_hex != 0
-
-#define Place_Trunk(Hex,Elevation)		if (global_var(GVAR_PLAYER_GOT_CAR) == 1) then begin 				\
-														tile:=tile_num_in_direction(Hex,1,1);								\
-													end else if (global_var(GVAR_PLAYER_GOT_CAR) == 2) then begin 	\
-														tile:=Hex+2; 																\
-														/*debug("newmove!"); */													\
-													end																				\
-                                       move_to(Trunk_Ptr,tile,Elevation)
 
 #define set_spawn_hex(x)					if get_car_from_worldmap then set_car_current_map; \
 													car_hex := x
@@ -208,14 +200,14 @@ procedure check_vehicle_location begin
 		if is_car_created and not(get_car_in_cur_map) then begin
 			debug("car not in this location!");
 			Dest_Car(car_hex, car_elev)
-			set_obj_visibility(Trunk_Ptr,1);
+			set_trunk_invisible;
 		end
 
 		// Car is in town, but not in this map:
 		else if not(get_car_in_cur_map) then begin
 			debug("car in this location, but not map!");
 			Dest_Car(car_hex, car_elev)
-			set_obj_visibility(Trunk_Ptr,1);
+			set_trunk_invisible;
 		end
 
 		// Car is in town and in this map:
@@ -230,8 +222,8 @@ procedure check_vehicle_location begin
 			if not(is_car_created) then begin
 				Create_Car(car_hex, car_elev)
 			end
-			Place_Trunk(car_hex, car_elev);
-			set_obj_visibility(Trunk_Ptr,0);
+			Place_Trunk(car_hex, car_elev)
+			set_trunk_visible;
 		end
 		else begin
 			debug("something went really wrong here");
@@ -250,12 +242,11 @@ procedure check_vehicle_location begin
       	car_elev := dude_elevation;
 
 			Create_Car(car_hex, car_elev)
-			Place_Trunk(car_hex, car_elev);
-			set_obj_visibility(Trunk_Ptr,0);
+			Place_Trunk(car_hex, car_elev)
+			set_trunk_visible;
       end
       else begin
-   		set_obj_visibility(Trunk_Ptr,1);
-   		//debug("hide trunk");
+   		set_trunk_invisible;
       end
 
 	end

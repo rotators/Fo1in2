@@ -1,7 +1,12 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
+procedure Invasion;
 
 variable party_elevation;
 variable dude_start_hex;
@@ -30,75 +35,72 @@ export variable Trish_ptr;
 variable item;
 variable Kenji_ptr;
 
-procedure Invasion;
-
 variable invaderPtr;
 
+procedure start begin
+end
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		set_global_var( GVAR_MARK_JUNK_2, 1 );
-		Lighting;
-		if (junktown_invaded and not(is_loading_game) and (map_var(10) == 0)) then begin
-			set_map_var(10, 1);
-			kill_critter_type(PID_BRAHMIN, 1);
-			kill_critter_type(PID_LOSER, 1);
-			kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
-			kill_critter_type(PID_KILLIAN, 0);
-			kill_critter_type(PID_PEASANT_GREEN, 1);
-			kill_critter_type(PID_PEASANT_5, 1);
-			kill_critter_type(PID_TOWNSWOMAN_2, 1);
-			kill_critter_type(PID_PEASANT_FEMALE_CUTE, 1);
-			kill_critter_type(PID_PEASANT_2_FEMALE, 0);
-			kill_critter_type(PID_VINNIE, 0);
-			kill_critter_type(PID_THUG, 0);
-			kill_critter_type(PID_STRANGER_2, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 28885, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 21671, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 21328, 0);
-		end
-		override_map_start(99, 113, 0, 0);
-		if (map_var(7) == 1) then begin
-			display_msg(message_str(SCRIPT_SINTHIA, random(139, 140)));
-		end
+procedure map_enter_p_proc begin
+	set_global_var( GVAR_MARK_JUNK_2, 1 );
+	Lighting;
 
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			Lighting;
-			if (award and not(map_var(4)) and (global_var( GVAR_SAVE_SINTHIA ) == 2)) then begin
-				display_msg(message_str(SCRIPT_SINTHIA, 175) + award + message_str(SCRIPT_SINTHIA, 176));
-				give_exp_points(award);
-				set_map_var(4, 1);
-			end
-			if ((global_var( GVAR_KILLIAN_DEAD ) == 1) and (global_var( GVAR_KILLIAN_SOMETHING_1 ) == 0)) then begin
-				display_msg(message_str(SCRIPT_KILLIAN, 269));
-				give_exp_points(600);
-				set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 5 );
-				set_global_var( GVAR_KILLIAN_SOMETHING_1, 1 );
-			end
-			if (removal_ptr) then begin
-				destroy_object(removal_ptr);
-				removal_ptr := 0;
-			end
+	call Invasion;
 
-		end
+	override_map_start(99, 113, 0, 0);
+	if (map_var(7) == 1) then begin
+		display_msg(message_str(SCRIPT_SINTHIA, random(139, 140)));
 	end
 end
 
+procedure map_update_p_proc begin
+	Lighting;
+	if (award and not(map_var(4)) and (global_var( GVAR_SAVE_SINTHIA ) == 2)) then begin
+		display_msg(message_str(SCRIPT_SINTHIA, 175) + award + message_str(SCRIPT_SINTHIA, 176));
+		give_exp_points(award);
+		set_map_var(4, 1);
+	end
 
+	if ((global_var( GVAR_KILLIAN_DEAD ) == 1) and (global_var( GVAR_KILLIAN_SOMETHING_1 ) == 0)) then begin
+		display_msg(message_str(SCRIPT_KILLIAN, 269));
+		give_exp_points(600);
+		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 5 );
+		set_global_var( GVAR_KILLIAN_SOMETHING_1, 1 );
+	end
 
-
+	if (removal_ptr) then begin
+		destroy_object(removal_ptr);
+		removal_ptr := 0;
+	end
+end
 
 procedure Invasion begin
-	//check_invasion
+	if (junktown_invaded and not(is_loading_game) and (map_var(10) == 0)) then begin
+		set_map_var(10, 1);
+		kill_critter_type(PID_BRAHMIN, 1);
+		kill_critter_type(PID_LOSER, 1);
+		kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
+		kill_critter_type(PID_KILLIAN, 0);
+		kill_critter_type(PID_PEASANT_GREEN, 1);
+		kill_critter_type(PID_PEASANT_5, 1);
+		kill_critter_type(PID_TOWNSWOMAN_2, 1);
+		kill_critter_type(PID_PEASANT_FEMALE_CUTE, 1);
+		kill_critter_type(PID_PEASANT_2_FEMALE, 0);
+		kill_critter_type(PID_VINNIE, 0);
+		kill_critter_type(PID_THUG, 0);
+		kill_critter_type(PID_STRANGER_2, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 28885, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 21671, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 21328, 0);
+
+		// Any player party member was waiting in the map before?
+		check_invasion_party_waiting
+	end
 end
 
 

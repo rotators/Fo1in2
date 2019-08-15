@@ -22,7 +22,7 @@
 {200}{}{The ghoul just stares at you.}
 
 # Float when getting the fuel cell controller
-{250}{}{Just have to pick something up quickly, then I'm gone for good . . .}
+{250}{}{Just have to pick something up quickly, then I'm gone for good ...}
 
 # Angry float
 {300}{}{Fuck off.}
