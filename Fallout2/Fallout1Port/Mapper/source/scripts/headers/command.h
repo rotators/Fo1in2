@@ -238,31 +238,31 @@ variable step_tile;
 // SPECIAL
 //
 
-#define  get_strength(cr)                   get_critter_stat(cr,STAT_st)
+#define get_strength(cr)                  	get_critter_stat(cr,STAT_st)
 #define dude_strength                       get_strength(dude_obj)
 #define self_strength                       get_strength(self_obj)
 
-#define  get_perception(cr)                 get_critter_stat(cr,STAT_pe)
+#define get_perception(cr)                 	get_critter_stat(cr,STAT_pe)
 #define dude_perception                     get_perception(dude_obj)
 #define self_perception                     get_perception(self_obj)
 
-#define  get_endurance(cr)                  get_critter_stat(cr,STAT_en)
+#define get_endurance(cr)                 	get_critter_stat(cr,STAT_en)
 #define dude_endurance                      get_endurance(dude_obj)
 #define self_endurance                      get_endurance(self_obj)
 
-#define  get_charisma(cr)                   get_critter_stat(cr,STAT_ch)
-#define dude_charisma                       dude_charisma(dude_obj)
+#define get_charisma(cr)                   	get_critter_stat(cr,STAT_ch)
+#define dude_charisma                       get_charisma(dude_obj)
 #define self_charisma                       get_charisma(self_obj)
 
-#define  get_iq(cr)                         get_critter_stat(cr,STAT_iq)
+#define get_iq(cr)                         	get_critter_stat(cr,STAT_iq)
 #define dude_iq                             get_iq(dude_obj)
 #define self_iq                             get_iq(self_obj)
 
-#define  get_agility(cr)                    get_critter_stat(cr,STAT_ag)
+#define get_agility(cr)                    	get_critter_stat(cr,STAT_ag)
 #define dude_agility                        get_agility(dude_obj)
 #define self_agility                        get_agility(self_obj)
 
-#define  get_luck(cr)                       get_critter_stat(cr,STAT_lu)
+#define get_luck(cr)                       	get_critter_stat(cr,STAT_lu)
 #define dude_luck                           get_luck(dude_obj)
 #define self_luck                           get_luck(self_obj)
 
