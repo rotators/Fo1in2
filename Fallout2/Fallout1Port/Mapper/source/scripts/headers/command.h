@@ -193,200 +193,200 @@ variable step_tile;
 // misc singletons
 //
 
-#define self_pid                            obj_pid(self_obj)
+#define self_pid                          obj_pid(self_obj)
 
 //
 // misc tuples
 //
 
-#define dude_elevation                      elevation(dude_obj)
-#define self_elevation                      elevation(self_obj)
+#define dude_elevation                    elevation(dude_obj)
+#define self_elevation                    elevation(self_obj)
 
 
-#define dude_fid                            obj_art_fid(dude_obj)
-#define self_fid                            obj_art_fid(self_obj)
+#define dude_fid                          obj_art_fid(dude_obj)
+#define self_fid                          obj_art_fid(self_obj)
 
-#define dude_name                           obj_name(dude_obj)
-#define self_name                           obj_name(self_obj)
+#define dude_name                         obj_name(dude_obj)
+#define self_name                         obj_name(self_obj)
 
-#define dude_caps                           item_caps_total(dude_obj)
-#define self_caps                           item_caps_total(self_obj)
+#define dude_caps                         item_caps_total(dude_obj)
+#define self_caps                         item_caps_total(self_obj)
 
-#define dude_tile                           tile_num(dude_obj)
-#define self_tile                           tile_num(self_obj)
+#define dude_tile                         tile_num(dude_obj)
+#define self_tile                         tile_num(self_obj)
 
-#define dude_is_sneaking                    using_skill(dude_obj,SKILL_SNEAK)
-#define self_is_sneaking                    using_skill(self_obj,SKILL_SNEAK)
+#define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)
+#define self_is_sneaking                  using_skill(self_obj,SKILL_SNEAK)
 
 //
 // gear
 //
 
-#define get_left_hand(cr)                  	critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
-#define dude_left_hand                     	get_left_hand(dude_obj)
-#define self_left_hand                     	get_left_hand(self_obj)
+#define  get_left_hand(cr)                critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
+#define dude_left_hand                    get_left_hand(dude_obj)
+#define self_left_hand                    get_left_hand(self_obj)
 
-#define get_right_hand(cr)                 	critter_inven_obj(cr,INVEN_TYPE_RIGHT_HAND)
-#define dude_right_hand                    	get_right_hand(dude_obj)
-#define self_right_hand                    	get_right_hand(self_obj)
+#define  get_right_hand(cr)               critter_inven_obj(cr,INVEN_TYPE_RIGHT_HAND)
+#define dude_right_hand                   get_right_hand(dude_obj)
+#define self_right_hand                   get_right_hand(self_obj)
 
-#define get_armor(cr)                      	critter_inven_obj(cr,INVEN_TYPE_WORN)
-#define dude_armor                         	get_armor(dude_obj)
-#define self_armor                         	get_armor(self_obj)
+#define  get_armor(cr)                    critter_inven_obj(cr,INVEN_TYPE_WORN)
+#define dude_armor                        get_armor(dude_obj)
+#define self_armor                        get_armor(self_obj)
 
 //
 // SPECIAL
 //
 
-#define get_strength(cr)                  	get_critter_stat(cr,STAT_st)
-#define dude_strength                      	get_strength(dude_obj)
-#define self_strength                      	get_strength(self_obj)
+#define  get_strength(cr)                 get_critter_stat(cr,STAT_st)
+#define dude_strength                     get_strength(dude_obj)
+#define self_strength                     get_strength(self_obj)
 
-#define get_perception(cr)                 	get_critter_stat(cr,STAT_pe)
-#define dude_perception                    	get_perception(dude_obj)
-#define self_perception                    	get_perception(self_obj)
+#define  get_perception(cr)               get_critter_stat(cr,STAT_pe)
+#define dude_perception                   get_perception(dude_obj)
+#define self_perception                   get_perception(self_obj)
 
-#define get_endurance(cr)                 	get_critter_stat(cr,STAT_en)
-#define dude_endurance                     	get_endurance(dude_obj)
-#define self_endurance                     	get_endurance(self_obj)
+#define  get_endurance(cr)                get_critter_stat(cr,STAT_en)
+#define dude_endurance                    get_endurance(dude_obj)
+#define self_endurance                    get_endurance(self_obj)
 
-#define get_charisma(cr)                   	get_critter_stat(cr,STAT_ch)
-#define dude_charisma                      	get_charisma(dude_obj)
-#define self_charisma                      	get_charisma(self_obj)
+#define  get_charisma(cr)                 get_critter_stat(cr,STAT_ch)
+#define dude_charisma                     get_charisma(dude_obj)
+#define self_charisma                     get_charisma(self_obj)
 
-#define get_iq(cr)                         	get_critter_stat(cr,STAT_iq)
-#define dude_iq                            	get_iq(dude_obj)
-#define self_iq                            	get_iq(self_obj)
+#define  get_iq(cr)                       get_critter_stat(cr,STAT_iq)
+#define dude_iq                           get_iq(dude_obj)
+#define self_iq                           get_iq(self_obj)
 
-#define get_agility(cr)                    	get_critter_stat(cr,STAT_ag)
-#define dude_agility                       	get_agility(dude_obj)
-#define self_agility                       	get_agility(self_obj)
+#define  get_agility(cr)                  get_critter_stat(cr,STAT_ag)
+#define dude_agility                      get_agility(dude_obj)
+#define self_agility                      get_agility(self_obj)
 
-#define get_luck(cr)                       	get_critter_stat(cr,STAT_lu)
-#define dude_luck                          	get_luck(dude_obj)
-#define self_luck                          	get_luck(self_obj)
+#define  get_luck(cr)                     get_critter_stat(cr,STAT_lu)
+#define dude_luck                         get_luck(dude_obj)
+#define self_luck                         get_luck(self_obj)
 
 //
 // SPECIAL extras
 //
-#define dude_is_stupid                      (dude_iq <= 3)
+#define dude_is_stupid                    (dude_iq <= 3)
 
 //
 // hit points
 //
 
-#define get_cur_hp(cr)                    	get_critter_stat(cr,STAT_current_hp)
-#define dude_cur_hp                        	get_cur_hp(dude_obj)
-#define self_cur_hp                        	get_cur_hp(self_obj)
+#define  get_cur_hp(cr)                   get_critter_stat(cr,STAT_current_hp)
+#define dude_cur_hp                       get_cur_hp(dude_obj)
+#define self_cur_hp                       get_cur_hp(self_obj)
 
-#define get_max_hp(cr)                    	get_critter_stat(cr,STAT_max_hp)
-#define dude_max_hp                        	get_max_hp(dude_obj)
-#define self_max_hp                        	get_max_hp(self_obj)
+#define  get_max_hp(cr)                   get_critter_stat(cr,STAT_max_hp)
+#define dude_max_hp                       get_max_hp(dude_obj)
+#define self_max_hp                       get_max_hp(self_obj)
 
 //
 // rads
 //
 
-#define get_rads(cr)                      	get_critter_stat(cr,STAT_current_rad)
-#define dude_rads                          	get_rads(dude_obj)
-#define self_rads                          	get_rads(self_obj)
+#define  get_rads(cr)                     get_critter_stat(cr,STAT_current_rad)
+#define dude_rads                         get_rads(dude_obj)
+#define self_rads                         get_rads(self_obj)
 
 //
 // poison
 //
 
 // possibly broken or something
-//#define dude_poison                      get_poison(dude_obj)
-//#define self_poison                      get_poison(self_obj)
+//#define dude_poison                     get_poison(dude_obj)
+//#define self_poison                     get_poison(self_obj)
 
-#define get_poison_stat(cr)               	get_critter_stat(cr,STAT_current_poison)
-#define dude_poison_stat                   	get_poison_stat(dude_obj)
-#define self_poison_stat                   	get_poison_stat(self_obj)
+#define  get_poison_stat(cr)              get_critter_stat(cr,STAT_current_poison)
+#define dude_poison_stat                  get_poison_stat(dude_obj)
+#define self_poison_stat                  get_poison_stat(self_obj)
 
 //
 // gender
 //
 
-#define get_gender(cr)                    	get_critter_stat(cr,STAT_gender)
-#define dude_gender                        	get_gender(dude_obj)
-#define self_gender                        	get_gender(self_obj)
+#define  get_gender(cr)                   get_critter_stat(cr,STAT_gender)
+#define dude_gender                       get_gender(dude_obj)
+#define self_gender                       get_gender(self_obj)
 
-#define get_is_male(cr)                    	(get_gender(cr) == GENDER_MALE)
-#define dude_is_male                       	get_is_male(dude_obj)
-#define self_is_male                       	get_is_male(self_obj)
+#define  get_is_male(cr)                  (get_gender(cr) == GENDER_MALE)
+#define dude_is_male                      get_is_male(dude_obj)
+#define self_is_male                      get_is_male(self_obj)
 
-#define get_is_female(cr)                  	(get_gender(cr) == GENDER_FEMALE)
-#define dude_is_female                     	get_is_female(dude_obj)
-#define self_is_female                     	get_is_female(self_obj)
+#define  get_is_female(cr)                (get_gender(cr) == GENDER_FEMALE)
+#define dude_is_female                    get_is_female(dude_obj)
+#define self_is_female                    get_is_female(self_obj)
 
 //
 // perks
 //
 
-#define get_perk(cr,perk)                  	has_trait(TRAIT_PERK,cr,perk)
-#define dude_perk(perk)                    	get_perk(dude_obj,perk)
-#define self_perk(perk)                    	get_perk(self_obj,perk)
+#define  get_perk(cr,perk)                has_trait(TRAIT_PERK,cr,perk)
+#define dude_perk(perk)                   get_perk(dude_obj,perk)
+#define self_perk(perk)                   get_perk(self_obj,perk)
 
-#define dude_mental_block                   dude_perk(PERK_mental_block)
-#define dude_presence                       dude_perk(PERK_presence)
-#define dude_awareness                      dude_perk(PERK_bonus_awareness)
-#define dude_fortune_finder                 dude_perk(PERK_fortune_finder)
-#define dude_smooth_talker                  dude_perk(PERK_smooth_talker)
+#define dude_mental_block                 dude_perk(PERK_mental_block)
+#define dude_presence                     dude_perk(PERK_presence)
+#define dude_awareness                    dude_perk(PERK_bonus_awareness)
+#define dude_fortune_finder               dude_perk(PERK_fortune_finder)
+#define dude_smooth_talker                dude_perk(PERK_smooth_talker)
 
-#define self_mental_block                   self_perk(PERK_mental_block)
-#define self_presence                       self_perk(PERK_presence)
-#define self_awareness                      self_perk(PERK_bonus_awareness)
-#define self_fortune_finder                 self_perk(PERK_fortune_finder)
-#define self_smooth_talker                  self_perk(PERK_smooth_talker)
+#define self_mental_block                 self_perk(PERK_mental_block)
+#define self_presence                     self_perk(PERK_presence)
+#define self_awareness                    self_perk(PERK_bonus_awareness)
+#define self_fortune_finder               self_perk(PERK_fortune_finder)
+#define self_smooth_talker                self_perk(PERK_smooth_talker)
 
 
 //
 // traits
 //
 
-#define get_trait(cr,trait)                	has_trait(TRAIT_TRAIT,cr,trait)
-#define dude_trait(trait)                  	get_trait(dude_obj,trait)
-#define self_trait(trait)                  	get_trait(self_obj,trait)
+#define  get_trait(cr,trait)              has_trait(TRAIT_TRAIT,cr,trait)
+#define dude_trait(trait)                 get_trait(dude_obj,trait)
+#define self_trait(trait)                 get_trait(self_obj,trait)
 
 //
 // AI
 //
 
-#define get_ai(cr)                         	has_trait(TRAIT_OBJECT,cr,OBJECT_AI_PACKET)
-#define self_ai                            	get_ai(self_obj)
+#define  get_ai(cr)                       has_trait(TRAIT_OBJECT,cr,OBJECT_AI_PACKET)
+#define self_ai                           get_ai(self_obj)
 
-#define set_ai(cr,ai)                       critter_add_trait(cr,TRAIT_OBJECT,OBJECT_AI_PACKET,ai)
-#define set_self_ai(ai)                     set_ai(self_obj,ai)
+#define set_ai(cr,ai)                     critter_add_trait(cr,TRAIT_OBJECT,OBJECT_AI_PACKET,ai)
+#define set_self_ai(ai)                   set_ai(self_obj,ai)
 
 //
 // team
 //
 
-#define get_team(cr)                       	has_trait(TRAIT_OBJECT,cr,OBJECT_TEAM_NUM)
-#define self_team                          	get_team(self_obj)
+#define  get_team(cr)                     has_trait(TRAIT_OBJECT,cr,OBJECT_TEAM_NUM)
+#define self_team                         get_team(self_obj)
 
-#define set_team(cr,team)                 	critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
-#define set_self_team(team)                 set_team(self_obj,team)
+#define set_team(cr,team)                 critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
+#define set_self_team(team)               set_team(self_obj,team)
 
 
 //
 // items
 //
-#define get_item(cr,x)                     obj_carrying_pid_obj(cr,x) // due to shitty && confusing naming
-#define dude_item(x)                       get_item(dude_obj,x)
-#define self_item(x)                       get_item(self_obj,x)
+#define  get_item(cr,pid)                 obj_carrying_pid_obj(cr,pid) // due to shitty && confusing naming
+#define dude_item(pid)                    get_item(dude_obj,pid)
+#define self_item(pid)                    get_item(self_obj,pid)
 
-#define get_item_count(cr,x)               obj_is_carrying_obj_pid(cr,x) // due to shitty && confusing naming
-#define dude_item_count(x)                 get_item_count(dude_obj,x)
-#define self_item_count(x)                 get_item_count(self_obj,x)
+#define  get_item_count(cr,pid)           obj_is_carrying_obj_pid(cr,pid) // due to shitty && confusing naming
+#define dude_item_count(pid)              get_item_count(dude_obj,pid)
+#define self_item_count(pid)              get_item_count(self_obj,pid)
 
 //
 // misc triplets
 //
 
-#define get_cur_rot(cr)                    has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
-#define dude_cur_rot                       get_cur_rot(dude_obj)
-#define self_cur_rot                       get_cur_rot(self_obj)
+#define  get_cur_rot(cr)                  has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
+#define dude_cur_rot                      get_cur_rot(dude_obj)
+#define self_cur_rot                      get_cur_rot(self_obj)
 
 
 
