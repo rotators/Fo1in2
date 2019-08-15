@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 //#include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_GABRIEL
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -58,6 +59,8 @@ procedure GabEnd;
 import variable JonPtr;
 variable Only_Once := 1;
 
+#define LVAR_Here_Before			(4)
+
 procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
@@ -71,7 +74,7 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) then begin
 		display_msg(mstr(101));
 	end
 	else begin
@@ -93,8 +96,8 @@ procedure talk_p_proc begin
 		get_reaction
 		start_gdialog(156, self_obj, -1, -1, -1);
 		gsay_start;
-		if (local_var(4) == 0) then begin
-			if (global_var( GVAR_WATER_CHIP_8 ) == 9250) then begin
+		if (local_var(LVAR_Here_Before) == 0) then begin
+			if get_all_deathclaws_killed then begin
 				call Gab17;
 			end
 			else begin
@@ -112,10 +115,10 @@ procedure talk_p_proc begin
 					call Gab27;
 				end
 			end
-			else if ((global_var( GVAR_GUN_RUNNERS_STATUS ) == 9201) and (global_var( GVAR_WATER_CHIP_8 ) == 9250)) then begin
+			else if (get_quest_kill_deathclaws and get_all_deathclaws_killed) then begin
 				call Gab20;
 			end
-			else if (global_var( GVAR_GUN_RUNNERS_STATUS ) == 9201) then begin
+			else if get_quest_kill_deathclaws then begin
 				call Gab13;
 			end
 			else if ((local_var(6) == 1) or (local_var(7) == 1)) then begin
@@ -169,7 +172,7 @@ procedure Gab02
 begin
 	gsay_reply(156, 105);
 	gsay_option(156, 106, Gab03, 50);
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 end
 
 procedure Gab03
@@ -190,10 +193,9 @@ begin
 	gsay_option(156, 112, Gab06, 50);
 end
 
-procedure Gab06
-begin
+procedure Gab06 begin
 	gsay_reply(156, 113);
-	if (global_var( GVAR_WATER_CHIP_8 ) == 9250) then begin
+	if get_all_deathclaws_killed then begin
 		gsay_option(156, 114, Gab19, 50);
 	end
 	else begin
@@ -211,7 +213,7 @@ end
 procedure Gab08 begin
 	gsay_reply(156, 118);
 	gsay_option(156, 119, Gab09, 50);
-	if (global_var( GVAR_BLADES_STATUS ) == 9101) then begin
+	if get_arming_blades then begin
 		if (dude_is_male) then begin
 			gsay_option(156, 170, Gab11, 50);
 		end
@@ -228,25 +230,22 @@ procedure Gab09 begin
 end
 
 procedure Gab09a begin
-	set_global_var( GVAR_GUN_RUNNERS_STATUS, 9201 );
+	set_quest_kill_deathclaws;
 end
 
-procedure Gab11
-begin
+procedure Gab11 begin
 	gsay_reply(156, 125);
 	gsay_option(156, 126, Gab09a, 50);
 	gsay_option(156, 127, GabEnd, 50);
 end
 
-procedure Gab12
-begin
+procedure Gab12 begin
 	gsay_reply(156, 128);
 	gsay_option(156, 129, Gab04, 50);
 	gsay_option(156, 130, GabEnd, 50);
 end
 
-procedure Gab13
-begin
+procedure Gab13 begin
 	if (dude_is_male) then begin
 		gsay_reply(156, 172);
 	end
@@ -260,20 +259,17 @@ begin
 		NOption("***CHEAT *** The deathclaw are kill!",Gab20,001);
 end
 
-procedure Gab14
-begin
+procedure Gab14 begin
 	gsay_reply(156, 134);
 	gsay_option(156, 135, GabEnd, 50);
 end
 
-procedure Gab15
-begin
+procedure Gab15 begin
 	gsay_reply(156, 136);
 	gsay_option(156, 137, GabEnd, 50);
 end
 
-procedure Gab16
-begin
+procedure Gab16 begin
 	gsay_reply(156, 138);
 	gsay_option(156, 139, GabEnd, 50);
 end
@@ -287,7 +283,7 @@ end
 procedure Gab18 begin
 	gsay_reply(156, 143);
 	gsay_option(156, 144, Gab20, 50);
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 end
 
 procedure Gab19 begin
@@ -303,7 +299,7 @@ procedure Gab20 begin
 		gsay_reply(156, 175);
 	end
 	gsay_option(156, 148, Gab21, 50);
-	if (global_var( GVAR_BLADES_STATUS ) == 9101) then begin
+	if get_arming_blades then begin
 		if (dude_is_male) then begin
 			gsay_option(156, 170, Gab22, 50);
 		end
@@ -323,8 +319,8 @@ procedure Gab21 begin
 	else begin
 		gsay_option(156, 177, GabEnd, 50);
 	end
-	if (global_var( GVAR_WATER_CHIP_8 ) != 2) then begin
-		set_global_var( GVAR_WATER_CHIP_8, 2 );
+	if not(get_gunrunners_armed_dude) then begin
+		set_gunrunners_armed_dude;
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 1 );
 
 		give_exp_points(EXP_QUEST_KILLED_DCLAWS);
@@ -342,8 +338,8 @@ procedure Gab22 begin
 		gsay_reply(156, 179);
 	end
 	gsay_option(156, 154, GabEnd, 50);
-	if (global_var( GVAR_GUN_RUNNERS_STATUS ) != 9202) then begin
-		set_global_var( GVAR_GUN_RUNNERS_STATUS, 9202 );
+	if not(get_gunrunners_armed_blades) then begin
+		set_gunrunners_armed_blades;
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 1 );
 
 		give_exp_points(EXP_QUEST_KILLED_DCLAWS);

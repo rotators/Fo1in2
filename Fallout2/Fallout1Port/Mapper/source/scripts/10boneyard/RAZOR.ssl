@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_RAZOR
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -90,7 +91,6 @@ procedure Start begin
 	if Only_Once then begin
 		set_self_team(TEAM_LA_BLADES );
 		set_self_ai( AI_BLADES );
-		RazorPtr := self_obj;
 		if (global_var( GVAR_ADYTUM_RAZOR_SOMETHING_1 ) == 1) then begin
 			set_local_var(4, 1);
 		end
@@ -157,16 +157,16 @@ procedure talk_p_proc begin
 				end
 				else begin
 
-					if (global_var( GVAR_GUN_RUNNERS_STATUS ) == 9202) then begin
+					if get_gunrunners_armed_blades then begin
 						call Razor33;
 					end
 					else if (global_var( GVAR_ZIMMERMAN_STATUS ) == 9001) then begin
 						call Razor20;
 					end
-					else if global_var( GVAR_RECEIVED_HOLODISK_RAZOR ) and (global_var( GVAR_WATER_CHIP_8 ) != 2) then begin
+					else if global_var( GVAR_RECEIVED_HOLODISK_RAZOR ) and not(get_gunrunners_armed_dude) then begin
 						call Razor26;
 					end
-					else if (global_var( GVAR_ZIMMERMAN_STATUS ) == 9003) then begin
+					else if get_zimmermann_turned then begin
 						call Razor30;
 					end
 					else if (global_var( GVAR_ADYTUM_RAZOR_SOMETHING_2 ) == 1) then begin
@@ -220,6 +220,9 @@ procedure pickup_p_proc begin
 end
 
 procedure map_update_p_proc begin
+	if (RazorPtr == 0) then
+		RazorPtr := self_obj;
+
 	if (global_var( GVAR_ADYTUM_RAZOR_SOMETHING_1 ) == 1) then begin
 		set_local_var(4, 1);
 	end
@@ -472,7 +475,7 @@ end
 procedure Razor34 begin
 	gfade_out(1);
 	game_time_advance(game_ticks(10 * 60 * 60 * 8));
-	set_global_var( GVAR_BLADES_STATUS, 9104 );
+	set_blades_attacking_alone;
 	TopReact
 	gfade_in(1);
 	gsay_message(278, 202, 50);
@@ -481,7 +484,7 @@ end
 procedure Razor35 begin
 	gfade_out(1);
 	game_time_advance(game_ticks(10 * 60 * 60 * 24));
-	set_global_var( GVAR_BLADES_STATUS, 9103 );
+	set_blades_attacking;
 	TopReact
 	gfade_in(1);
 	gsay_message(278, 203, 50);
@@ -490,7 +493,7 @@ end
 
 procedure Razor36 begin
 	gsay_message(278, 204, 50);
-	set_global_var( GVAR_BLADES_STATUS, 9102 );
+	set_blades_attacking_wait;
 end
 
 procedure Razor37 begin

@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_JON
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -59,6 +60,7 @@ procedure JonZimmermanEnd;
 procedure Cheat001;
 
 import variable JonPtr;
+
 variable Only_Once := 1;
 variable DisplayMessage;
 
@@ -69,8 +71,8 @@ procedure Start begin
 			item_caps_adjust(self_obj, random(50, 150));
 		end
 
-		if (global_var( GVAR_BLADES_STATUS ) == 9103) then begin
-			if (global_var( GVAR_ZIMMERMAN_STATUS ) != 9003) then begin
+		if get_blades_attacking then begin
+			if not(get_zimmermann_turned) then begin
 				set_self_team(TEAM_LA_REGULATORS);
 			end
 			else begin
@@ -106,6 +108,10 @@ procedure talk_p_proc begin
 	if (global_var( GVAR_ENEMY_ADYTUM ) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
+	else if (map_var(MVAR_RegulatorCount) == 0) and get_zimmermann_turned then begin
+		// Added the float message, because in vanilla there seems to be nothing if Zimmermann survives the Blade invasion
+		float_msg(self_obj, message_str(NAME, random(183,187)), FLOAT_COLOR_NORMAL);
+	end
 	else begin
 		if ((local_var(4) == 1) and (dude_iq < 4)) then begin
 			float_msg(self_obj, message_str(SCRIPT_JON, 139), 0);
@@ -136,7 +142,7 @@ procedure talk_p_proc begin
 							end
 						end
 						else begin
-							if (global_var( GVAR_ZIMMERMAN_STATUS ) == 1) then begin
+							if get_zimmermann_insulted then begin
 								call JonZimmerman17;
 							end
 							else if (global_var( GVAR_ZIMMERMAN_STATUS ) == 9001) then begin
@@ -176,18 +182,17 @@ end
 
 procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
-		if ((global_var( GVAR_BLADES_STATUS ) == 9103) and (global_var( GVAR_ZIMMERMAN_STATUS ) != 9003)) then begin
+		if (get_blades_attacking and not(get_zimmermann_turned)) then begin
 			set_self_team(TEAM_LA_REGULATORS);
 			float_msg(self_obj, message_str(SCRIPT_JON, 174), 2);
 			attack(dude_obj);
 		end
-		else begin
-			if (global_var( GVAR_ENEMY_ADYTUM ) == 1) then begin
-				attack(dude_obj);
-			end
+		else if (global_var(GVAR_ENEMY_ADYTUM) == 1) then begin
+			attack(dude_obj);
 		end
 	end
-	if (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1) then begin
+
+	if (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1) and not(get_zimmermann_turned) then begin
 		set_self_team(TEAM_LA_REGULATORS);
 		attack(dude_obj);
 	end
@@ -221,7 +226,7 @@ end
 
 // Attack Adytum with the Blades:
 procedure Cheat001 begin
-	set_global_var( GVAR_BLADES_STATUS, 9103 );
+	set_blades_attacking;
 	call JonZimmerman26;
 
 	debug("mvar: " + map_var(2));
@@ -243,7 +248,7 @@ procedure JonZimmerman03 begin
 end
 
 procedure JonZimmerman03a begin
-	set_global_var( GVAR_ZIMMERMAN_STATUS, 1 );
+	set_zimmermann_insulted;
 end
 
 procedure JonZimmerman04 begin
@@ -400,15 +405,15 @@ procedure JonZimmerman25 begin
 end
 
 procedure JonZimmerman26 begin
-	set_global_var( GVAR_REMOVE_JON_DISK_SON, 1 );
+	set_global_var(GVAR_REMOVE_JON_DISK_SON, 1);
 
 	gsay_message(288, 173, 50);
-	set_global_var( GVAR_ZIMMERMAN_STATUS, 9003 );
+	set_zimmermann_turned;
 
 	// Will the blades help in the attack on adytown?
-	if (global_var( GVAR_BLADES_STATUS ) == 9102) then begin
+	if get_blades_attacking_wait then begin
 		set_self_team(TEAM_PLAYER);
-		set_global_var( GVAR_BLADES_STATUS, 9103 );
+		set_blades_attacking;
 	end
 	else begin
 		set_self_team(TEAM_PLAYER);
@@ -423,10 +428,4 @@ end
 
 procedure JonZimmermanEnd begin
 end
-
-
-
-
-
-
 

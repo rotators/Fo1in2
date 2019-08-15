@@ -1,6 +1,7 @@
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
 #include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
 #include "..\headers\command.h"
 
 procedure start;
@@ -84,65 +85,66 @@ procedure map_update_p_proc begin
 		Lighting;
 	end
 
-	if ((global_var( GVAR_BLADES_STATUS ) == 9103) and (map_var(MVAR_AddedBlades) == 0) and (global_var(GVAR_BLADES_INVASION_READY) == 1)) then begin
-		debug("oi we Blades go!");
+	// The attack starts now:
+	if (get_blades_attacking and (map_var(MVAR_AddedBlades) == 0) and (global_var(GVAR_BLADES_INVASION_READY) == 1)) then begin
+		set_global_var(GVAR_WATER_CHIP_10, 0);
 		call AddInBlades;
+	end
+
+	// Blades are attacking while the player isn't around:
+	else if (get_blades_attacking_alone and (map_var(MVAR_AddedBlades) == 0)) then begin
+		set_map_var(MVAR_AddedBlades, 1);
+		kill_critter(JonPtr, ANIM_stand);
+		kill_critter_type(PID_TOWNSMAN_METAL, 0);
+		kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
+		kill_critter_type(PID_DOG, 0);
+		kill_critter_type(PID_GREENE, 0);
+		kill_critter_type(PID_CALEB, 0);
+		kill_critter_type(PID_TRAVELER_BLACK_METAL, 0);
+		kill_critter_type(PID_STRANGER_HMBMET, 0);
+		kill_critter_type(PID_THUG_BLACK_METAL, 0);
+		kill_critter_type(PID_MERCENARY_HMBMET, 0);
+		kill_critter_type(PID_GUARD_HMBMET, 0);
+		kill_critter_type(PID_TRAVELER_NFMETL, 0);
+		kill_critter_type(PID_STRANGER_NFMETL, 0);
+		kill_critter_type(PID_THUG_FEMALE_YELLOW, 0);
+		kill_critter_type(PID_MERCENARY_NFMETL, 0);
+		kill_critter_type(PID_GUARD_NFMETL, 0);
+		kill_critter_type(PID_TRAVELER_HMMETL, 0);
+		kill_critter_type(PID_STRANGER_HMMETL, 0);
+		kill_critter_type(PID_THUG_MALE_METAL, 0);
+		kill_critter_type(PID_MERC_MALE_METAL, 0);
+		kill_critter_type(PID_GUARD_HMMETL, 0);
+		kill_critter_type(PID_TRAVELER_HFMETL, 0);
+		kill_critter_type(PID_STRANGER_HFMETL, 0);
+		kill_critter_type(PID_THUG_HFMETL, 0);
+		kill_critter_type(PID_MALE_GUARD_CA, 0);
+		kill_critter_type(PID_GUARD_HFMETL, 0);
+		critter_attempt_placement(RazorPtr, 12700, 0);
+		set_global_var( GVAR_BLADES_STATUS, 2 );
+		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
+		display_msg(message_str(SCRIPT_GENCHAT, 103) + 2000 + message_str(SCRIPT_GENCHAT, 104));
+		give_exp_points(2000);
+	end
+
+	// The attack is done:
+	else if ((map_var(MVAR_RegulatorCount) == 0) and get_blades_attacking) and RazorPtr != 0 then begin
+		gfade_out(1);
+		kill_critter_type(PID_INITIATE_KNIGHT_MAN, 0);
+		critter_attempt_placement(RazorPtr, 12700, 0);
+		set_global_var( GVAR_BLADES_STATUS, 2 );
+		set_global_var( GVAR_ADYTUM_RAZOR_SOMETHING_1, 1 );
+		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
+		display_msg(message_str(SCRIPT_GENCHAT, 103) + 2000 + message_str(SCRIPT_GENCHAT, 104));
+		give_exp_points(2000);
 		gfade_in(1);
 	end
-	else begin
-		if ((global_var( GVAR_BLADES_STATUS ) == 9104) and (map_var(MVAR_AddedBlades) == 0)) then begin
-			set_map_var(MVAR_AddedBlades, 1);
-			kill_critter(JonPtr, ANIM_stand);
-			kill_critter_type(PID_TOWNSMAN_METAL, 0);
-			kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
-			kill_critter_type(PID_DOG, 0);
-			kill_critter_type(PID_GREENE, 0);
-			kill_critter_type(PID_CALEB, 0);
-			kill_critter_type(PID_TRAVELER_BLACK_METAL, 0);
-			kill_critter_type(PID_STRANGER_HMBMET, 0);
-			kill_critter_type(PID_THUG_BLACK_METAL, 0);
-			kill_critter_type(PID_MERCENARY_HMBMET, 0);
-			kill_critter_type(PID_GUARD_HMBMET, 0);
-			kill_critter_type(PID_TRAVELER_NFMETL, 0);
-			kill_critter_type(PID_STRANGER_NFMETL, 0);
-			kill_critter_type(PID_THUG_FEMALE_YELLOW, 0);
-			kill_critter_type(PID_MERCENARY_NFMETL, 0);
-			kill_critter_type(PID_GUARD_NFMETL, 0);
-			kill_critter_type(PID_TRAVELER_HMMETL, 0);
-			kill_critter_type(PID_STRANGER_HMMETL, 0);
-			kill_critter_type(PID_THUG_MALE_METAL, 0);
-			kill_critter_type(PID_MERC_MALE_METAL, 0);
-			kill_critter_type(PID_GUARD_HMMETL, 0);
-			kill_critter_type(PID_TRAVELER_HFMETL, 0);
-			kill_critter_type(PID_STRANGER_HFMETL, 0);
-			kill_critter_type(PID_THUG_HFMETL, 0);
-			kill_critter_type(PID_MALE_GUARD_CA, 0);
-			kill_critter_type(PID_GUARD_HFMETL, 0);
-			critter_attempt_placement(RazorPtr, 12700, 0);
-			set_global_var( GVAR_BLADES_STATUS, 2 );
-			set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
-			display_msg(message_str(SCRIPT_GENCHAT, 103) + 2000 + message_str(SCRIPT_GENCHAT, 104));
-			give_exp_points(2000);
-		end
-		else begin
-			if ((map_var(1) == 0) and (global_var( GVAR_BLADES_STATUS ) == 9103)) then begin
 
-				gfade_out(1);
-				kill_critter_type(PID_INITIATE_KNIGHT_MAN, 0);
-				critter_attempt_placement(RazorPtr, 12700, 0);
-				set_global_var( GVAR_BLADES_STATUS, 2 );
-				set_global_var( GVAR_ADYTUM_RAZOR_SOMETHING_1, 1 );
-				set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
-				display_msg(message_str(SCRIPT_GENCHAT, 103) + 2000 + message_str(SCRIPT_GENCHAT, 104));
-				give_exp_points(2000);
-				gfade_in(1);
-			end
-			else begin
-				if ((map_var(1) == 0) and (global_var( GVAR_BLADES_STATUS ) != 2) and (global_var( GVAR_ADYTUM_CALEB_SOMETHING_0 ) == 1)) then begin
-					set_global_var( GVAR_BLADES_STATUS, 2 );
-					set_global_var( GVAR_ADYTUM_RAZOR_SOMETHING_0, 1 );
-				end
-			end
+	// I have no idea:
+	else begin
+		if ((map_var(MVAR_RegulatorCount) == 0) and (global_var( GVAR_BLADES_STATUS ) != 2) and (global_var( GVAR_ADYTUM_CALEB_SOMETHING_0 ) == 1)) then begin
+			set_global_var( GVAR_BLADES_STATUS, 2 );
+			set_global_var( GVAR_ADYTUM_RAZOR_SOMETHING_0, 1 );
 		end
 	end
 
@@ -152,7 +154,10 @@ procedure map_exit_p_proc begin
 end
 
 procedure AddInBlades begin
+	//start_blades_invasion
 	set_map_var(MVAR_AddedBlades, 1);
+
+	debug("oi we Blades go!");
 	critter_attempt_placement(InBladePtr1, 9702, 0);
 	critter_attempt_placement(InBladePtr2, 9700, 0);
 	critter_attempt_placement(InBladePtr3, 9698, 0);
@@ -161,6 +166,7 @@ procedure AddInBlades begin
 	critter_attempt_placement(InBladePtr6, 26717, 0);
 	critter_attempt_placement(InBladePtr7, 26711, 0);
 	critter_attempt_placement(InBladePtr8, 24492, 0);
+	gfade_in(1);
 end
 
 procedure Invasion begin
