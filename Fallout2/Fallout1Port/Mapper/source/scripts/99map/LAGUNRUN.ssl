@@ -1,8 +1,12 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
+procedure Invasion;
 
 variable party_elevation;
 variable dude_start_hex;
@@ -12,67 +16,64 @@ export variable peaceful;
 export variable Locker_Ptr;
 export variable Being_Looted;
 
-procedure Invasion;
-
 variable invaderPtr;
 
+procedure start begin
+end
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		set_global_var( GVAR_MARK_LA_4, 1 );
-		if (dude_elevation == 1) then begin
-			Darkness;
-		end
-		else begin
-			Lighting;
-		end
-		override_map_start(99, 143, 0, 5);
-		if ((map_first_run) and not(boneyard_invaded)) then begin
-			display_msg(message_str(SCRIPT_SHADYWST, 111));
-		end
-		if (boneyard_invaded and not(is_loading_game) and (map_var(2) == 0)) then begin
-			set_map_var(2, 1);
-			kill_critter_type(PID_COMBAT_ARMOR_FEMALE, 1);
-			kill_critter_type(PID_COMBAT_ARMOR_MALE, 1);
-			kill_critter_type(PID_MERCHANT_4, 1);
-			kill_critter_type(PID_GABRIEL, 1);
-			kill_critter_type(PID_THUG_BLACK_METAL, 1);
-			kill_critter_type(PID_GUARD_HMMETL, 1);
-			kill_critter_type(PID_GUARD_NFMETL, 1);
-			kill_critter_type(PID_MALE_GUARD_CA, 1);
-			kill_critter_type(PID_GUARD_HFMETL, 1);
-			kill_critter_type(PID_INITIATE_KNIGHT_MAN, 1);
-			invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 22520, 0);
-			invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 21892, 0);
-			invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 18111, 0);
-			invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 16279, 0);
-		end
-
+procedure map_enter_p_proc begin
+	set_global_var( GVAR_MARK_LA_4, 1 );
+	if (dude_elevation == 1) then begin
+		Darkness;
 	end
 	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			if (dude_elevation == 1) then begin
-				Darkness;
-			end
-			else begin
-				Lighting;
-			end
+		Lighting;
+	end
 
-		end
+	call Invasion;
 
+	override_map_start(99, 143, 0, 5);
+	if ((map_first_run) and not(boneyard_invaded)) then begin
+		display_msg(message_str(SCRIPT_SHADYWST, 111));
 	end
 end
 
+procedure map_update_p_proc begin
+	if (dude_elevation == 1) then begin
+		Darkness;
+	end
+	else begin
+		Lighting;
+	end
+end
 
 procedure Invasion begin
-	//check_invasion
+	if (boneyard_invaded and not(is_loading_game) and (map_var(2) == 0)) then begin
+		set_map_var(2, 1);
+		kill_critter_type(PID_COMBAT_ARMOR_FEMALE, 1);
+		kill_critter_type(PID_COMBAT_ARMOR_MALE, 1);
+		kill_critter_type(PID_MERCHANT_4, 1);
+		kill_critter_type(PID_GABRIEL, 1);
+		kill_critter_type(PID_THUG_BLACK_METAL, 1);
+		kill_critter_type(PID_GUARD_HMMETL, 1);
+		kill_critter_type(PID_GUARD_NFMETL, 1);
+		kill_critter_type(PID_MALE_GUARD_CA, 1);
+		kill_critter_type(PID_GUARD_HFMETL, 1);
+		kill_critter_type(PID_INITIATE_KNIGHT_MAN, 1);
+		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 22520, 0);
+		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 21892, 0);
+		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 18111, 0);
+		invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 16279, 0);
+
+		// Any player party member was waiting in the map before?
+		check_invasion_party_waiting
+	end
 end

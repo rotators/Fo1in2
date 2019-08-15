@@ -104,16 +104,16 @@
 					end
 
 procedure flee_dude begin
-	variable LVar0 := 0; 
-	variable LVar1 := 0; 
-	variable LVar2 := 0; 
-	while(LVar1 < 5) do begin 
-		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin 
-			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3); 
-			LVar2 := tile_distance(tile_num(dude_obj), LVar0); 
-		end 
-		LVar1 := LVar1 + 1; 
-	end 
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	variable LVar2 := 0;
+	while(LVar1 < 5) do begin
+		if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
+			LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
+			LVar2 := tile_distance(tile_num(dude_obj), LVar0);
+		end
+		LVar1 := LVar1 + 1;
+	end
 	animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
 
@@ -161,7 +161,6 @@ end
 #define set_self_visible			set_obj_visible(self_obj)
 #define is_visible(x)				(obj_is_visible_flag(x))
 #define is_self_visible				(obj_is_visible_flag(self_obj))
-#define is_map(x)					(cur_map_index == x)
 
 
 /*********************************************************
@@ -244,6 +243,15 @@ end
 #define junktown_invasion_date 				(get_days_passed + (ONE_GAME_DAY * GVAR_JUNKTOWN_INVADED_DATE))
 #define get_junktown_days_left 				(global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
 
+#define check_invasion_party_waiting		if not(Ian_In_Party) then begin 				\
+																kill_critter_type(PID_IAN, 1);		\
+															end												\
+															if not(Tycho_In_Party) then begin		\
+																kill_critter_type(PID_TYCHO, 1);		\
+															end												\
+															if not(Katja_In_Party) then begin		\
+																kill_critter_type(PID_KATJA, 1);		\
+															end
 
 /*********************************************************
 	Party related:

@@ -13,6 +13,7 @@
 
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\MAPNECRO.h"
 
 procedure start;
 procedure map_exit_p_proc;
@@ -41,14 +42,18 @@ variable car_was_used_to_exit;
 													give_exp_points(EXP_BOUGHT_BIKE); 																									\
 												end
 
+#define bike_is_unclaimed				tile_contains_obj_pid(CAR_UNCLAIMED_HEX,CAR_UNCLAIMED_ELEV,PID_DRIVABLE_MOTO1)
+
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
 	// Failsafe, in case the car spawns on a slightly different hex than town-defined for whatever reason
 	if (not(car_in_any_encounter) and (car_current_town == cur_town) and not(get_car_in_cur_map)) then begin
-		Dest_Car(self_tile, self_elevation)
-		set_obj_visibility(Trunk_Ptr,1);
+		if get_car_used then begin
+			Dest_Car(self_tile, self_elevation)
+			set_trunk_invisible;
+		end
 	end
 end
 
@@ -99,6 +104,7 @@ procedure use_p_proc begin
 	   if (stop_car_use == false) then begin
 	      car_was_used_to_exit := true;
 	      set_car_worldmap;
+	      set_car_used_first_time;
 	      car_give_to_party;
 
 	      play_sfx("engineon");

@@ -508,7 +508,8 @@
 
 // Necropolis
 #define REP_BONUS_WATERCHIP_TAKEN              	(-10)
-#define REP_BONUS_WATER_PUMP_FIXED             	(15)
+#define REP_BONUS_WATER_PUMP_FIXED             	(25)
+#define REP_BONUS_WATERSHED_MUTANTS_DEAD       	(10)
 #define REP_BONUS_BACKSTABBED_GRIFFITH 			(-3)
 #define inc_necropolis_rep(x)   				inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
 

@@ -10,7 +10,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\MAPNECRO.h"
+#include "..\headers\MAPNECRO.h"
 
 #define NAME                    SCRIPT_GRIFFITH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
@@ -82,6 +82,9 @@ procedure leave_with_bike;
 #define wp_getpart_1 		(21729)
 #define wp_getpart_2 		(22747)
 
+#define set_griffith_dead 				set_global_var(GVAR_GRIFFITH_STATE,1)
+#define is_griffith_alive 				(global_var(GVAR_GRIFFITH_STATE) == 0)
+
 /*****************************************************************
    Local Variables which are saved.
    All Local Variables need to be prepended by LVAR_
@@ -123,8 +126,10 @@ procedure map_enter_p_proc begin
 
 	// Player gave energy cells to Griffith. He walks to pick up the controller - if player changes map, he is already gone.
    if ((local_var(LVAR_EnergyCells) >= 9) and not(dude_has_car) and tile_contains_obj_pid(CAR_UNCLAIMED_HEX,CAR_UNCLAIMED_ELEV,PID_DRIVABLE_MOTO1)) then begin
-		Dest_Car(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV)
-		destroy_object(self_obj);
+   	if is_griffith_alive then begin
+			Dest_Car(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV)
+			destroy_object(self_obj);
+		end
 	end
 
    if fo1in2_motorcycle_disabled or (local_var(LVAR_EnergyCells) == 10) or (local_var(LVAR_StartMoving) > 0) then
@@ -271,7 +276,7 @@ procedure timed_event_p_proc begin
 			end
 
 			// Griffith follows the player with his eyes
-			else if (fixed_param == EVENT_FOLLOW_DUDE) then begin
+			else if (fixed_param == EVENT_FOLLOW_DUDE) and (local_var(LVAR_EnergyCells) < 9) and (local_var(LVAR_StartMoving) == 0) then begin
 				self_look_at_dude;
 			end
 		end
@@ -329,8 +334,8 @@ procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	if (local_var(LVAR_StartMoving) == 0) then
-		set_global_var(GVAR_GRIFFITH_STATE,1);
+	//if (local_var(LVAR_StartMoving) == 0) then
+		set_griffith_dead;
 
 	inc_good_critter
 

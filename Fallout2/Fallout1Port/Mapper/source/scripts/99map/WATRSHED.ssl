@@ -2,12 +2,14 @@
 #include "..\headers\command.h"
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\MAPNECRO.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 
 procedure map_lightning;
+procedure Invasion;
 procedure set_critter_state;
 
 variable party_elevation;
@@ -44,7 +46,7 @@ procedure map_enter_p_proc begin
 	end
 
 	// If player has the motorcycle, delete the initial bike on the unused hex
-	else begin
+	else if get_car_used then begin
 		if (dude_has_car and tile_contains_obj_pid(CAR_UNCLAIMED_HEX,CAR_UNCLAIMED_ELEV,PID_DRIVABLE_MOTO1)) then begin
 			Dest_Car(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV)
 		end
@@ -78,6 +80,7 @@ procedure map_enter_p_proc begin
 		end
 	end
 
+	call Invasion;
 	call set_critter_state;
 	call map_lightning;
 end
@@ -103,7 +106,7 @@ procedure map_lightning begin
 		Lighting;
 end
 
-procedure set_critter_state begin
+procedure Invasion begin
 variable Item;
 
 	if (necropolis_invaded and not(is_loading_game) and (map_var(10) == 0)) then begin
@@ -132,8 +135,13 @@ variable Item;
 		set_ai( fugee_ptr, AI_SUPER_MUTANT_AGGRESSIVE );
 		fugee_hex := 16696;
 		critter_attempt_placement(fugee_ptr, fugee_hex, 1);
-	end
 
+		// Any player party member was waiting in the map before?
+		check_invasion_party_waiting
+	end
+end
+
+procedure set_critter_state begin
 	// Is the prisoner still around?
 	if (global_var( GVAR_GARRET_STATUS ) == 3) then begin
 		kill_critter_type(PID_GARRET, 0);

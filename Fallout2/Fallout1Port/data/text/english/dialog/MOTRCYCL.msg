@@ -5,7 +5,7 @@
 {200}{}{You successfully repair the motorcycle with the fuel cell controller.}
 {210}{}{You fail to repair the motorcycle with the fuel cell controller.}
 
-{220}{}{You successfully upgrade the motorcycle with the fuel cell regulator.}
+{220}{}{You successfully attach the fuel cell regulator.}
 {230}{}{You fail to install the fuel cell regulator.}
 
 {250}{}{The motorcycle is out of fuel. Refuel the vehicle to get it started again.}

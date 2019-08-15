@@ -1,7 +1,10 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
 procedure Invasion;
 export variable Front_Door_Ptr;
@@ -10,44 +13,37 @@ variable party_elevation;
 variable dude_start_hex;
 variable invaderPtr;
 
-procedure start
-begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		set_global_var( GVAR_MARK_HUB_3, 1 );
-		Lighting;
-		if (hub_invaded and not(is_loading_game) and (map_var(6) == 0)) then begin
-			set_map_var(6, 1);
-			kill_critter_type(PID_GUARD_10, 1);
-			kill_critter_type(PID_GUARD_HFMAXX, 1);
-			kill_critter_type(PID_GUARD_NMLTHR, 1);
-			kill_critter_type(PID_MYSTERIOUS_STRANGER, 1);
-			kill_critter_type(PID_MARTHA, 1);
-			kill_critter_type(PID_HIGHTOWER, 1);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 19693, 0);
-			invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
-			set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
-			critter_attempt_placement(invaderPtr, 23332, 0);
-		end
-		override_map_start(94, 88, 0, 2);
-
-	end
-	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-			Lighting;
-
-		end
-
-	end
+procedure start begin
 end
 
+procedure map_enter_p_proc begin
+	set_global_var( GVAR_MARK_HUB_3, 1 );
+	Lighting;
 
+	call Invasion;
+	override_map_start(94, 88, 0, 2);
+end
 
-
+procedure map_update_p_proc begin
+	Lighting;
+end
 
 procedure Invasion begin
-	//check_invasion
+	if (hub_invaded and not(is_loading_game) and (map_var(6) == 0)) then begin
+		set_map_var(6, 1);
+		kill_critter_type(PID_GUARD_10, 1);
+		kill_critter_type(PID_GUARD_HFMAXX, 1);
+		kill_critter_type(PID_GUARD_NMLTHR, 1);
+		kill_critter_type(PID_MYSTERIOUS_STRANGER, 1);
+		kill_critter_type(PID_MARTHA, 1);
+		kill_critter_type(PID_HIGHTOWER, 1);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 19693, 0);
+		invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
+		set_ai( invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE );
+		critter_attempt_placement(invaderPtr, 23332, 0);
+	end
 end
 
 
