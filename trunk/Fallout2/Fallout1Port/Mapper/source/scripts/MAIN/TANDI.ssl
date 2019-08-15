@@ -26,9 +26,6 @@ procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure push_p_proc;
 
-variable SrcObj := 0;
-variable SrcIsParty := 0;
-
 procedure tandi00;
 procedure tandi00_1;
 procedure tandi01;
@@ -167,15 +164,7 @@ procedure pickup_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	if source_obj > 0 then begin
-		SrcObj := 0;
-		SrcIsParty := 0;
-		SrcObj := obj_pid(source_obj);
-		if party_member_obj(SrcObj) then begin
-			SrcIsParty := 1;
-		end
-	end
-	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );
 	end
 	set_global_var( GVAR_TANDI_HIRELING_STATUS, 3 );
@@ -185,9 +174,8 @@ end
 
 procedure talk_p_proc begin
 	dude_look_at_critter;
-	CurrentMapNum := cur_map_index;
 
-	if (CurrentMapNum == 24) then begin//	RAIDERS.MAP
+	if CUR_MAP_RAIDERS then begin
 		if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 5) then begin
 			float_msg(self_obj, message_str(SCRIPT_TANDI, 208), 2);
 		end
@@ -211,7 +199,7 @@ procedure talk_p_proc begin
 	end
 	else begin
 
-		if ((CurrentMapNum == 26) or (CurrentMapNum == 25)) then begin//	SHADY SANDS
+		if (CUR_MAP_SHADYW or CUR_MAP_SHADYE) then begin//	SHADY SANDS
 			get_reaction
 			start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_SHADY);
 			gsay_start;
@@ -244,22 +232,22 @@ procedure talk_p_proc begin
 
 			get_reaction
 
-			if ((CurrentMapNum == 0) or (CurrentMapNum == 1) or (CurrentMapNum == 2)) then begin
+			/*if (CUR_MAP_DESERT0 or CUR_MAP_DESERT2 or CUR_MAP_DESERT3) then begin
 				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//was 14, DESERT
 			end
-			else if ((CurrentMapNum == 10) or (CurrentMapNum == 11) or (CurrentMapNum == 12)) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);//JUNKTOWN
+			else if CUR_AREA_JUNKTOWN then begin
+				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);
 			end
-			else if ((CurrentMapNum == 13) or (CurrentMapNum == 14) or (CurrentMapNum == 15)) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_BHOOD);//BROTHERHOOD
+			else if CUR_AREA_BROTHERHOOD then begin
+				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_BHOOD);
 			end
-			else if ((CurrentMapNum == 3) or (CurrentMapNum == 4) or (CurrentMapNum == 5)) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_NECROPOLIS);//NECROPOLIS
+			else if CUR_AREA_NECROPOLIS then begin
+				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_NECROPOLIS);
 			end
-			else if ((CurrentMapNum == 6)) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//VAULT13
+			else if CUR_AREA_VAULT_13 then begin
+				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);
 			end
-			else if ((CurrentMapNum == 7)) then begin
+			else if CUR_MAP_VAULTENT then begin
 				if random(0,1) then begin
 					start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//VAULTENT (15)
 				end
@@ -267,21 +255,21 @@ procedure talk_p_proc begin
 					start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);//VAULTENT (15)
 				end
 			end
-			else if ((CurrentMapNum == 8) or (CurrentMapNum == 9)) then begin
+			else if (CUR_MAP_VAULTBUR or CUR_MAP_VAULTNEC) then begin
 				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//start_gdialog(57, self_obj, 4, 9, 16);//VAULT_DEAD, need exception for tile27000+
 			end
-			else if ((CurrentMapNum == 16) or (CurrentMapNum == 35) or (CurrentMapNum == 37)) then begin
+			else if (CUR_MAP_CAVES or CUR_MAP_V13ENT or CUR_MAP_DETHCLAW) then begin
 				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//start_gdialog(57, self_obj, 4, 9, 15);//BLUE _CAVES_
 			end
 			else begin
 				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);
 			end
 
-			/*gsay_start;
+			gsay_start;
 			call Tandi98;
 			gsay_end;
 			end_dialogue;*/
-			float_msg(self_obj, message_str(SCRIPT_TANDI, random(300, 305)), -1);
+			float_msg(self_obj, message_str(SCRIPT_TANDI, random(300, 305)), FLOAT_COLOR_NORMAL);
 		end
 	end
 end

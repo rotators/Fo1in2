@@ -1,15 +1,30 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
+	Boneyard, Adytum - Regulator Guards
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
+
+#define NAME                    SCRIPT_REGGUARD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+
 procedure DialogWeapon;
 procedure DialogFirstTime;
 procedure DialogSubsequent;
@@ -27,30 +42,28 @@ import variable RegGuard2;
 variable Only_Once := 1;
 variable tmp_hostile;
 
-procedure Start
-begin
-	
-
+procedure Start begin
 	if Only_Once then begin
-		/* has how many? */    if (self_item_count( PID_BOTTLE_CAPS ) == 0) then begin
+		if (self_item_count( PID_BOTTLE_CAPS ) == 0) then begin
 			item_caps_adjust(self_obj, random(2, 20));
 		end
-		set_self_team(TEAM_LA_REGULATORS );
+
+		set_self_team( TEAM_LA_REGULATORS );
 		set_self_ai( AI_REGULATORS );
+
 		if (local_var(6) == 0) then begin
-			set_map_var(1, map_var(1) + 1);
+			set_map_var(MVAR_RegulatorCount, map_var(MVAR_RegulatorCount) + 1);
 			set_local_var(6, 1);
 		end
-		if (global_var( GVAR_BLADES_STATUS ) == 9103) then begin
+
+		if get_blades_attacking then begin
 			variable LVar0;
 			LVar0 := global_var( GVAR_WATER_CHIP_11 );
 			if (LVar0 == 0) then begin
 				RegGuard1 := self_obj;
 			end
-			else begin
-				if (LVar0 == 1) then begin
-					RegGuard2 := self_obj;
-				end
+			else if (LVar0 == 1) then begin
+				RegGuard2 := self_obj;
 			end
 			LVar0 := LVar0 + 1;
 			set_global_var( GVAR_WATER_CHIP_11, LVar0 );
@@ -63,24 +76,19 @@ begin
 	end
 end
 
-
-
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_REGULATR, 100));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_REGULATR, 100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
-	if ((global_var( GVAR_ENEMY_ADYTUM ) == 1) or (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1) or (global_var( GVAR_BLADES_STATUS ) == 9103)) then begin
+	if ((global_var( GVAR_ENEMY_ADYTUM ) == 1) or (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1) or get_blades_attacking) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
 	else begin
@@ -104,69 +112,55 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (obj_can_see_obj(self_obj, dude_obj)) then begin
-		if ((global_var( GVAR_BLADES_STATUS ) == 9103) and (local_var(5) == 0)) then begin
+		if (get_blades_attacking and (local_var(5) == 0)) then begin
 			attack(dude_obj);
-			set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+			set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 		end
-		else begin
-			if ((global_var( GVAR_ENEMY_ADYTUM ) == 1) or (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1)) then begin
-				attack(dude_obj);
-			end
-			else begin
-				if (global_var( GVAR_BLADES_STATUS ) != 9103) then begin
-					if (map_var(0) == 0) then begin
-						set_map_var(0, 1);
-						dialogue_system_enter;
-					end
-				end
-			end
+		else if ((global_var( GVAR_ENEMY_ADYTUM ) == 1) or (global_var( GVAR_DUDE_ENEMY_REGULATORS ) == 1)) then begin
+			attack(dude_obj);
+		end
+		else if not(get_blades_attacking) and (map_var(0) == 0) then begin
+			set_map_var(0, 1);
+			dialogue_system_enter;
 		end
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
-		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
-
-	set_map_var(1, (map_var(1) - 1));
+procedure destroy_p_proc begin
+	set_map_var(MVAR_RegulatorCount, (map_var(MVAR_RegulatorCount) - 1));
 	if (source_obj == dude_obj) then begin
 		inc_evil_critter
-		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+		set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 	end
-	if (map_var(1) == 0) then begin
+	if (map_var(MVAR_RegulatorCount) == 0) then begin
 		terminate_combat;
 	end
 end
 
-procedure pickup_p_proc
-begin
-	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+procedure pickup_p_proc begin
+	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 end
 
-procedure DialogWeapon
-begin
+procedure DialogWeapon begin
 	gsay_message(252, 131, 50);
 end
 
-procedure DialogFirstTime
-begin
+procedure DialogFirstTime begin
 	gsay_reply(252, 103);
 	giq_option( -3, SCRIPT_REGULATR, 106, DialogMain1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_REGULATR, 104, DialogMain1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_REGULATR, 105, DialogMain2, NEUTRAL_REACTION );
 end
 
-procedure DialogSubsequent
-begin
+procedure DialogSubsequent begin
 	gsay_reply(252, 111);
 	giq_option( -3, SCRIPT_REGULATR, 106, DialogMain1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_REGULATR, 104, DialogMain1, NEUTRAL_REACTION );
@@ -174,12 +168,10 @@ begin
 	giq_option( 4, SCRIPT_REGULATR, 114, DialogExit, NEUTRAL_REACTION );
 end
 
-procedure DialogExit
-begin
+procedure DialogExit begin
 end
 
-procedure DialogMain1
-begin
+procedure DialogMain1 begin
 	if (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 0) then begin
 		gsay_message(252, 107, 50);
 	end
@@ -188,8 +180,7 @@ begin
 	end
 end
 
-procedure DialogMain2
-begin
+procedure DialogMain2 begin
 	if (local_var(1) < 2) then begin
 		gsay_message(252, 116, 50);
 	end
@@ -204,35 +195,29 @@ begin
 	end
 end
 
-procedure DialogMain3
-begin
+procedure DialogMain3 begin
 	gsay_message(252, 123, 50);
 	call DialogMain2;
 end
 
-procedure DialogMain4
-begin
+procedure DialogMain4 begin
 	gsay_message(252, 124, 50);
 	call DialogMain2;
 end
 
-procedure DialogMain5
-begin
+procedure DialogMain5 begin
 	if (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 0) then begin
 		gsay_message(252, 125, 50);
 	end
+	else if (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 1) then begin
+		gsay_message(252, 126, 50);
+	end
 	else begin
-		if (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 1) then begin
-			gsay_message(252, 126, 50);
-		end
-		else begin
-			gsay_message(252, 127, 50);
-		end
+		gsay_message(252, 127, 50);
 	end
 end
 
-procedure DialogMain6
-begin
+procedure DialogMain6 begin
 	gsay_message(252, 128, 50);
 	gsay_message(252, 129, 50);
 	call DialogMain2;

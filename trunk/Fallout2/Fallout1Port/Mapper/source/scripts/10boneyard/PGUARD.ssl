@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\MAPNECRO.h"
+#include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_PGUARD
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -40,9 +41,11 @@ procedure Start begin
 		end
 		set_self_team(TEAM_LA_REGULATORS );
 		set_self_ai( AI_REGULATORS );
+
 		add_timer_event(self_obj, game_ticks(random(1, 3)), 1);
+
 		if (local_var(5) == 0) then begin
-			set_map_var(1, map_var(1) + 1);
+			set_map_var(MVAR_RegulatorCount, map_var(MVAR_RegulatorCount) + 1);
 			set_local_var(5, 1);
 		end
 	end
@@ -94,8 +97,8 @@ procedure destroy_p_proc begin
 	end
 	inc_evil_critter
 	rm_timer_event(self_obj);
-	set_map_var(1, (map_var(1) - 1));
-	if (map_var(1) == 0) then begin
+	set_map_var(MVAR_RegulatorCount, (map_var(MVAR_RegulatorCount) - 1));
+	if (map_var(MVAR_RegulatorCount) == 0) then begin
 		terminate_combat;
 	end
 end
@@ -109,7 +112,7 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-	if ((global_var( GVAR_ZIMMERMAN_STATUS ) == 9003) or (global_var( GVAR_BLADES_STATUS ) == 9103)) then begin
+	if (get_zimmermann_turned or get_blades_attacking) then begin
 		if (local_var(4) == 0) then begin
 			set_local_var(4, 1);
 			float_msg(self_obj, message_str(SCRIPT_REGULATR, 139), 2);
