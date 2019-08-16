@@ -27,16 +27,13 @@ procedure destroy_p_proc;
 variable Only_Once := 1;
 variable Hex_Number;
 
-procedure start begin
-	/*if debug_mode then begin
-		debug("attempting to move BroInvad...");
-		move_to(self_obj, 26893, dude_elevation);
-		debug("dude at " + dude_tile);
-		debug("self at " + self_tile);
-	end*/
+#define LVAR_Add_to_Party 		(1)
 
+procedure start begin
 	if Only_Once then begin
-		call initialize_p_proc;
+		set_self_team(TEAM_PLAYER );
+		set_self_ai( AI_BROTHERHOOD_PALADIN );
+		Only_Once := 0;
 	end
 end
 
@@ -53,12 +50,6 @@ procedure talk_p_proc begin
 			float_msg(self_obj, message_str(SCRIPT_BROINVAD, random(106, 111)), 9);
 		end
 	end
-end
-
-procedure initialize_p_proc begin
-	set_self_team(TEAM_PLAYER );
-	set_self_ai( AI_BROTHERHOOD_PALADIN );
-	Only_Once := 0;
 end
 
 procedure critter_p_proc begin
@@ -82,17 +73,20 @@ procedure critter_p_proc begin
 	end
 
 	// Removal processes after coming back to ground floor.
-	if ((local_var(4) == 1) and (CUR_MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR
+	//  CHILDREN - ENTRANCE AND GROUND FLOOR
+	if ((local_var(4) == 1) and (CUR_MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin
 		set_local_var(4, 0);
-		set_local_var(1, 2);
+		set_local_var(LVAR_Add_to_Party, 2);
 		party_remove(self_obj);
 		set_global_var( GVAR_BROTHERHOOD_SEND_HELP, 10 );
 		reg_anim_func(2, self_obj);
 		float_msg(self_obj, message_str(SCRIPT_BROINVAD, 115), 9);
 		add_timer_event(self_obj, 10, 1);
 	end
-	if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(1) == 1) and (CUR_MAP_MBENT) and (local_var(5) == 1) and not(combat_is_initialized)) then begin //  MILITARY BASE - ENTRANCE
-		set_local_var(1, 2);
+
+	//  MILITARY BASE - ENTRANCE
+	if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(LVAR_Add_to_Party) == 1) and (CUR_MAP_MBENT) and (local_var(5) == 1) and not(combat_is_initialized)) then begin
+		set_local_var(LVAR_Add_to_Party, 2);
 		party_remove(self_obj);
 		set_global_var( GVAR_BROTHERHOOD_SEND_HELP, 10 );
 		reg_anim_func(2, self_obj);
@@ -102,30 +96,31 @@ procedure critter_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-// Not IS_LOADING_GAME
 	if not(is_loading_game) then begin
 		// Add to party if first time on valid entrance map.
-		if ((local_var(1) == 0) and ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) and (CUR_MAP_CHILDRN1) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2) and (CUR_MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
-			set_local_var(1, 1);
+		if ((local_var(LVAR_Add_to_Party) == 0) and ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) and (CUR_MAP_CHILDRN1) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2) and (CUR_MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+			set_local_var(LVAR_Add_to_Party, 1);
 			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
 			party_add(self_obj);
 		end
 		else begin
+
 			// Remove and destroy if on valid map but player not supposed to have them.
 			if (((global_var( GVAR_BROTHERHOOD_SEND_HELP ) != 1) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34))) or ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) != 2) and ((CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12)))) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
 				if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
-				if (local_var(1) != 0) then begin
+				if (local_var(LVAR_Add_to_Party) != 0) then begin
 					party_remove(self_obj);
 					destroy_object(self_obj);
 				end
 			end
-			else begin
-				// Remove and destroy when triggered to leave.
-				if ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) >= 10) and (local_var(1) != 0)) then begin
-					destroy_object(self_obj);
-				end
+
+			// Remove and destroy when triggered to leave.
+			else if ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) >= 10) and (local_var(LVAR_Add_to_Party) != 0)) then begin
+				destroy_object(self_obj);
 			end
+
 		end
+
 		// Boring float messages inside Master's Vault.
 		if ((global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 1) or (global_var( GVAR_BROTHERHOOD_SEND_HELP ) == 2)) then begin
 			if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
@@ -135,16 +130,17 @@ procedure map_enter_p_proc begin
 				float_msg(self_obj, message_str(SCRIPT_BROINVAD, 114), 9);
 			end
 		end
+
 	end
+
 	// Flags to initiate process of them leaving the map.
 	if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
 		set_local_var(4, 1);
 	end
+
 	// Flag that they've reached Vats, so it'll trigger leaving map when get back to surface.
-	if local_var(5) == 0 then begin
-		if CUR_MAP_MBVATS12 then begin
-			set_local_var(5, 1);
-		end
+	if local_var(5) == 0 and CUR_MAP_MBVATS12 then begin
+		set_local_var(5, 1);
 	end
 end
 
