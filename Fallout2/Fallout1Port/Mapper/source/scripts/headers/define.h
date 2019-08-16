@@ -648,6 +648,7 @@
 #define signal_end_game   metarule(METARULE_SIGNAL_END_GAME, 0)
 #define METARULE_ELEVATOR         15
 #define elevator(X)       metarule(METARULE_ELEVATOR, X)
+/*
 #define ELEV_BOS1    (0)  // Brotherhood of Steel main elevator
 #define ELEV_BOS2    (1)  // Brotherhood of Steel surface elevator
 #define ELEV_MASTR1  (2)  // Master's upper-level elevator 3-4
@@ -661,6 +662,19 @@
 #define ELEV_SIERRA1 (10) // Sierra Elev 1 (1-2-3)
 #define ELEV_SIERRA2 (11) // Sierra Elev 2 (3-4)
 #define ELEV_SIERRAS (12) // Sierra Service Elev (1-2-3-4)
+*/
+#define ELEV_BOS1 		(0) // Brotherhood of Steel main elevator
+#define ELEV_BOS2 		(1) // Brotherhood of Steel surface elevator
+#define ELEV_MASTR1  	(2) // Master's upper-level elevator 3-4
+#define ELEV_MASTR2  	(3) // Master's lower-level elevator
+#define ELEV_MILB1   	(4) // Military Base upper-level elevator
+#define ELEV_MILB2   	(5) // Military Base lower-level elevator
+#define ELEV_VAULT   	(6) // Vault13 elevator
+#define ELEV_GLOW1   	(7) // Glow elevator yellow
+#define ELEV_GLOW2   	(8) // Glow elevator red
+#define ELEV_GLOW3   	(9) // Glow elevator blue
+#define ELEV_NECVLT  	(10) // Necropolis elevator
+
 #define METARULE_PARTY_COUNT      16
 #define party_member_count(X)    metarule(METARULE_PARTY_COUNT, X)
 #define DONT_LIST_HIDDEN_MEMBERS (0)
