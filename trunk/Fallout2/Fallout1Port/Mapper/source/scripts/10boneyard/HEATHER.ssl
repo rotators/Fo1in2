@@ -65,6 +65,8 @@ procedure combat;
 variable tmp_hostile;
 variable initial :=  0;
 
+#define LVAR_SoldInformation 	(5)
+
 procedure start begin
 	if self_obj != 0 then begin
 		set_global_var( GVAR_IS_HEATHER_ALIVE, 1 );
@@ -73,16 +75,14 @@ procedure start begin
 		set_global_var( GVAR_IS_HEATHER_ALIVE, 0 );
 	end
 
-
 	if not(initial) then begin
-		set_self_team(TEAM_CATHEDRAL ); // TEAM_NUM
-		set_self_ai( AI_CHILDREN_TRUE ); // AI_PACKET
+		set_self_team( TEAM_CATHEDRAL );
+		set_self_ai( AI_CHILDREN_TRUE );
 		initial :=  1;
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (global_var( GVAR_QUEST_BONEYARD_3_BOMBFOLL ) == 2) then begin
 		kill_critter(self_obj, ANIM_burned_to_nothing_sf);
 	end
@@ -100,37 +100,29 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_HEATHER, 100));
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	script_overrides;
 	dude_look_at_critter;
 	get_reaction
 	if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin
-		start_gdialog(266, self_obj, 4, -1, -1);
-		gsay_start;
-		call heather0;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(heather0);
 	end
 	else begin
 		call heather28;
 	end
 end
 
-procedure heather0
-begin
-	gsay_reply(266, 101);
+procedure heather0 begin
+	Reply(101);
 	giq_option( -3, SCRIPT_HEATHER, 102, combat, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_HEATHER, 103, HeatherEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 104, heather0a, NEUTRAL_REACTION );
@@ -138,9 +130,8 @@ begin
 	giq_option( 6, SCRIPT_HEATHER, 106, heather0b, NEUTRAL_REACTION );
 end
 
-procedure heather0a
-begin
-	if (local_var(1) < 2) then begin
+procedure heather0a begin
+	if (local_var(LVAR_reaction_level) < 2) then begin
 		call heather19;
 	end
 	else begin
@@ -148,9 +139,8 @@ begin
 	end
 end
 
-procedure heather0b
-begin
-	if (local_var(1) < 2) then begin
+procedure heather0b begin
+	if (local_var(LVAR_reaction_level) < 2) then begin
 		call heather27;
 	end
 	else begin
@@ -158,9 +148,8 @@ begin
 	end
 end
 
-procedure heather1
-begin
-	gsay_reply(266, 107);
+procedure heather1 begin
+	Reply(107);
 	if (dude_is_male) then begin
 		giq_option( 4, SCRIPT_HEATHER, 108, heather2, NEUTRAL_REACTION );
 	end
@@ -171,184 +160,165 @@ begin
 	giq_option( 4, SCRIPT_HEATHER, 111, heather20, NEUTRAL_REACTION );
 end
 
-procedure heather1a
-begin
+procedure heather1a begin
 	BigDownReact
 	call heather3;
 end
 
-procedure heather2
-begin
+procedure heather2 begin
 	gsay_message(266, 112, 50);
 end
 
-procedure heather3
-begin
-	gsay_reply(266, 113);
+procedure heather3 begin
+	Reply(113);
 	giq_option( 5, SCRIPT_HEATHER, 114, heather3a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 115, heather3b, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 116, heather3c, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 117, HeatherEnd, NEUTRAL_REACTION );
 end
 
-procedure heather3a
-begin
+procedure heather3a begin
 	DownReact
 	call heather4;
 end
 
-procedure heather3b
-begin
+procedure heather3b begin
 	UpReact
 	call heather10;
 end
 
-procedure heather3c
-begin
+procedure heather3c begin
 	BigDownReact
 	call heather8;
 end
 
 procedure heather4
 begin
-	gsay_reply(266, 118);
+	Reply(118);
 	giq_option( 5, SCRIPT_HEATHER, 119, heather5, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_HEATHER, 120, heather10, NEUTRAL_REACTION );
 	giq_option( 7, SCRIPT_HEATHER, 121, heather17, NEUTRAL_REACTION );
 end
 
-procedure heather5
-begin
-	gsay_reply(266, 122);
+procedure heather5 begin
+	Reply(122);
 	giq_option( 5, SCRIPT_HEATHER, 123, heather5a, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_HEATHER, 124, heather7, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_HEATHER, 125, heather9, NEUTRAL_REACTION );
 end
 
-procedure heather5a
-begin
+procedure heather5a begin
 	BigUpReact
 	call heather6;
 end
 
-procedure heather6
-begin
+procedure heather6 begin
 	gsay_message(266, 126, 50);
 end
 
-procedure heather7
-begin
-	gsay_reply(266, 127);
+procedure heather7 begin
+	Reply(127);
 	giq_option( 4, SCRIPT_HEATHER, 128, heather6, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 129, heather8, NEUTRAL_REACTION );
 end
 
-procedure heather8
-begin
+procedure heather8 begin
 	gsay_message(266, 130, 50);
 	call combat;
 end
 
-procedure heather9
-begin
-	gsay_reply(266, 131);
+procedure heather9 begin
+	Reply(131);
 	giq_option( 4, SCRIPT_HEATHER, 132, heather6, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 133, heather8, NEUTRAL_REACTION );
 end
 
-procedure heather10
-begin
-	gsay_reply(266, 134);
+procedure heather10 begin
+	Reply(134);
 	giq_option( 4, SCRIPT_HEATHER, 135, heather11, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_HEATHER, 136, heather12, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 137, HeatherEnd, NEUTRAL_REACTION );
 end
 
-procedure heather11
-begin
-	gsay_reply(266, 138);
+procedure heather11 begin
+	Reply(138);
 	giq_option( 4, SCRIPT_HEATHER, 139, HeatherEnd, NEUTRAL_REACTION );
 end
 
-procedure heather12
-begin
-	gsay_reply(266, 140);
+procedure heather12 begin
+	Reply(140);
 	giq_option( 4, SCRIPT_HEATHER, 141, heather6, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 142, heather13, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 143, HeatherEnd, NEUTRAL_REACTION );
 end
 
-procedure heather13
-begin
-	gsay_reply(266, 144);
+procedure heather13 begin
+	Reply(144);
 	giq_option( 4, SCRIPT_HEATHER, 145, heather14, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 146, heather15, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 147, heather16, NEUTRAL_REACTION );
 end
 
-procedure heather14
-begin
-	gsay_reply(266, 148);
+procedure heather14 begin
+	Reply(148);
 	giq_option( 4, SCRIPT_HEATHER, 149, heather6, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 150, heather8, NEUTRAL_REACTION );
 end
 
-procedure heather15
-begin
-	gsay_reply(266, 151);
+procedure heather15 begin
+	Reply(151);
 	giq_option( 4, SCRIPT_HEATHER, 152, heather8, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 153, combat, NEUTRAL_REACTION );
 end
 
-procedure heather16
-begin
+procedure heather16 begin
 	gsay_message(266, 154, 50);
 end
 
-procedure heather17
-begin
-	gsay_reply(266, 155);
+procedure heather17 begin
+	Reply(155);
 	giq_option( 4, SCRIPT_HEATHER, 156, heather8, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 157, heather18, NEUTRAL_REACTION );
 end
 
-procedure heather18
-begin
-	gsay_reply(266, 158);
+procedure heather18 begin
+	Reply(158);
 	giq_option( 4, SCRIPT_HEATHER, 159, heather8, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HEATHER, 160, heather6, NEUTRAL_REACTION );
 end
 
-procedure heather19
-begin
+procedure heather19 begin
 	gsay_message(266, 161, 50);
 end
 
-procedure heather20
-begin
+procedure heather20 begin
 	gsay_message(266, 162, 50);
 end
 
-procedure heather21
-begin
-	gsay_reply(266, 163);
-	giq_option( 6, SCRIPT_HEATHER, 164, heather22, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_HEATHER, 165, heather26, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_HEATHER, 166, heather25, NEUTRAL_REACTION );
+procedure heather21 begin
+	if (local_var(LVAR_SoldInformation) == 0) then begin
+		Reply(163);
+		giq_option( 6, SCRIPT_HEATHER, 164, heather22, NEUTRAL_REACTION );
+		giq_option( 6, SCRIPT_HEATHER, 165, heather26, NEUTRAL_REACTION );
+		giq_option( 6, SCRIPT_HEATHER, 166, heather25, NEUTRAL_REACTION );
+	end
+	else begin
+		Reply(200);
+		NOption(g_bye, HeatherEnd, 4);
+	end
 end
 
-procedure heather22
-begin
-	gsay_reply(266, 167);
+procedure heather22 begin
+	Reply(167);
 	giq_option( 6, SCRIPT_HEATHER, 168, heather22a, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_HEATHER, 169, heather25, NEUTRAL_REACTION );
 end
 
-procedure heather22a
-begin
+procedure heather22a begin
 	variable LVar0 := 0;
 	if (dude_caps >= 300) then begin
-		dude_caps_adjust( -300 );
+		item_caps_adjust(dude_obj, -300);
+		set_local_var(LVAR_SoldInformation,1);
 		call heather23;
 	end
 	else begin
@@ -356,44 +326,42 @@ begin
 	end
 end
 
-procedure heather23
-begin
+procedure heather23 begin
 	gsay_message(266, 170, 50);
 end
 
-procedure heather24
-begin
+procedure heather24 begin
 	gsay_message(266, 171, 50);
 	call combat;
 end
 
-procedure heather25
-begin
+procedure heather25 begin
 	gsay_message(266, 172, 50);
 end
 
-procedure heather26
-begin
-	gsay_reply(266, 173);
+procedure heather26 begin
+	Reply(173);
 	giq_option( 6, SCRIPT_HEATHER, 174, heather22a, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_HEATHER, 175, heather25, NEUTRAL_REACTION );
 end
 
-procedure heather27
-begin
+procedure heather27 begin
 	gsay_message(266, 176, 50);
 end
 
-procedure heather28
-begin
+procedure heather28 begin
 	float_msg(self_obj, message_str(SCRIPT_HEATHER, 177), 0);
 end
 
-procedure HeatherEnd
-begin
+procedure HeatherEnd begin
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
+
+
+
+
+
+

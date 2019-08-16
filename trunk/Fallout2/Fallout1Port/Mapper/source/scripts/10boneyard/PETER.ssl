@@ -12,13 +12,13 @@
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
-#include "..\headers\ModReact.h"
+//#include "..\headers\ModReact.h"
 
 /* Standard Script Procedures */
 procedure start;
-procedure destroy_p_proc;//    script_action == 18
-procedure look_at_p_proc;//    script_action == 21
-procedure talk_p_proc;//    script_action == 11
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure talk_p_proc;
 
 procedure peter0;
 procedure peter1;
@@ -35,6 +35,8 @@ procedure peter10;
 procedure peterend;
 
 variable initial :=  0;
+
+#define LVAR_Here_before 	(0)
 
 procedure start begin
 	if not(initial) then begin
@@ -56,43 +58,34 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
-	if (local_var(0)) then begin
+procedure look_at_p_proc begin
+	if (local_var(LVAR_Here_before)) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_PETER, 100));
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
-	set_local_var(0, 1);
+	set_local_var(LVAR_Here_before, 1);
 	script_overrides;
+
 	if (global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY ) == 1) then begin
 		call peter9;
 	end
-	else begin
-		if (global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY ) == 2) then begin
-			call peter10;
-		end
-		else begin
-			if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin
-				start_gdialog(267, self_obj, 4, -1, -1);
-				gsay_start;
-				call peter0;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				call peter8;
-			end
-		end
+	else if (global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY ) == 2) then begin
+		call peter10;
 	end
+	else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin
+		start_dialog_at_node(peter0);
+	end
+	else begin
+		call peter8;
+	end
+
 end
 
-procedure peter0
-begin
+procedure peter0 begin
 	gsay_reply(267, 101);
 	giq_option( -3, SCRIPT_PETER, 102, peter1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_PETER, 103, peterend, NEUTRAL_REACTION );
@@ -100,65 +93,54 @@ begin
 	giq_option( 4, SCRIPT_PETER, 105, peter7, NEUTRAL_REACTION );
 end
 
-procedure peter1
-begin
+procedure peter1 begin
 	gsay_message(267, 106, 50);
 end
 
-procedure peter2
-begin
+procedure peter2 begin
 	gsay_reply(267, 107);
 	giq_option( 4, SCRIPT_PETER, 108, peter3, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_PETER, 109, peter4, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_PETER, 110, peter6, NEUTRAL_REACTION );
 end
 
-procedure peter3
-begin
+procedure peter3 begin
 	gsay_message(267, 111, 50);
 end
 
-procedure peter4
-begin
+procedure peter4 begin
 	gsay_reply(267, 112);
 	giq_option( 4, SCRIPT_PETER, 113, peter4a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_PETER, 114, peter5, NEUTRAL_REACTION );
 end
 
-procedure peter4a
-begin
+procedure peter4a begin
 	set_global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY, 1 );
 end
 
-procedure peter5
-begin
+procedure peter5 begin
 	gsay_message(267, 115, 50);
 end
 
-procedure peter6
-begin
+procedure peter6 begin
 	gsay_reply(267, 116);
 	giq_option( 4, SCRIPT_PETER, 117, peter4a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_PETER, 118, peter5, NEUTRAL_REACTION );
 end
 
-procedure peter7
-begin
+procedure peter7 begin
 	gsay_message(267, 119, 50);
 end
 
-procedure peter8
-begin
+procedure peter8 begin
 	float_msg(self_obj, message_str(SCRIPT_PETER, 120), 0);
 end
 
-procedure peter9
-begin
+procedure peter9 begin
 	float_msg(self_obj, message_str(SCRIPT_PETER, 121), 0);
 end
 
-procedure peter10
-begin
+procedure peter10 begin
 	variable LVar0 := 0;
 	float_msg(self_obj, message_str(SCRIPT_PETER, 122), 0);
 	if (local_var(1) == 0) then begin
@@ -172,8 +154,7 @@ begin
 	end
 end
 
-procedure peterend
-begin
+procedure peterend begin
 end
 
 

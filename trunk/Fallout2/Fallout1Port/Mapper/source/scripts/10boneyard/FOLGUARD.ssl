@@ -12,7 +12,7 @@
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
-#include "..\headers\ModReact.h"
+//#include "..\headers\ModReact.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -57,7 +57,7 @@ import variable removal_ptr;
 
 procedure start begin
 	if not(initial) then begin
-		set_self_team(TEAM_LA_FOLLOWERS );
+		set_self_team( TEAM_LA_FOLLOWERS );
 		if (local_var(0) == 0) then begin
 			if (self_is_female) then begin
 				set_local_var(0, random(100, 104));
@@ -78,8 +78,7 @@ procedure start begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (map_var(1) == 1) then begin
 		animate_move_obj_to_tile(self_obj, tile_num_in_direction(dude_tile, random(0, 6), random(3, 7)), 0);
 	end
@@ -104,8 +103,7 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_local_var(1, 1);
 	end
@@ -118,39 +116,30 @@ procedure destroy_p_proc begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	display_msg(message_str(SCRIPT_FOLGUARD, local_var(0)));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	script_overrides;
 	dude_look_at_critter;
 	if (local_var(1) or global_var( GVAR_ENEMY_FOLLOWERS )) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 0);
 	end
 	else begin
-		start_gdialog(264, self_obj, 4, -1, -1);
-		gsay_start;
 		if (global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY ) == 1) then begin
-			call guard16;
+			start_dialog_at_node(guard16);
+		end
+		else if (global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY ) == 2) then begin
+			start_dialog_at_node(guard22);
 		end
 		else begin
-			if (global_var( GVAR_QUEST_BONEYARD_4_FIND_SPY ) == 2) then begin
-				call guard22;
-			end
-			else begin
-				call guard0;
-			end
+			start_dialog_at_node(guard0);
 		end
-		gsay_end;
-		end_dialogue;
 	end
 end
 
-procedure guard0
-begin
+procedure guard0 begin
 	gsay_reply(264, 110);
 	giq_option( -3, SCRIPT_FOLGUARD, 111, guard1, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, message_str(SCRIPT_FOLGUARD, 112) + dude_name + message_str(SCRIPT_FOLGUARD, 113), guard4, NEUTRAL_REACTION );
@@ -158,8 +147,7 @@ begin
 	giq_option( 6, SCRIPT_FOLGUARD, 116, guard11, NEUTRAL_REACTION );
 end
 
-procedure guard1
-begin
+procedure guard1 begin
 	gsay_reply(264, 117);
 	giq_option( -3, SCRIPT_FOLGUARD, message_str(SCRIPT_FOLGUARD, 118) + dude_name + message_str(SCRIPT_FOLGUARD, 119), combat, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_FOLGUARD, message_str(SCRIPT_FOLGUARD, 120) + dude_name + message_str(SCRIPT_FOLGUARD, 121), guard2, NEUTRAL_REACTION );
@@ -167,18 +155,15 @@ begin
 	giq_option( -3, SCRIPT_FOLGUARD, message_str(SCRIPT_FOLGUARD, 123) + dude_name + message_str(SCRIPT_FOLGUARD, 124), guard3, NEUTRAL_REACTION );
 end
 
-procedure guard2
-begin
+procedure guard2 begin
 	gsay_message(264, 125, 50);
 end
 
-procedure guard3
-begin
+procedure guard3 begin
 	gsay_message(264, 126, 50);
 end
 
-procedure guard4
-begin
+procedure guard4 begin
 	gsay_reply(264, 127);
 	giq_option( 4, SCRIPT_FOLGUARD, 128, guard5, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 129, combat, NEUTRAL_REACTION );
@@ -186,13 +171,11 @@ begin
 	giq_option( 4, SCRIPT_FOLGUARD, 131, guard10, NEUTRAL_REACTION );
 end
 
-procedure guard5
-begin
+procedure guard5 begin
 	gsay_message(264, 132, 50);
 end
 
-procedure guard6
-begin
+procedure guard6 begin
 	gsay_reply(264, 133);
 	giq_option( 4, SCRIPT_FOLGUARD, 134, guard5, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 135, guard7, NEUTRAL_REACTION );
@@ -200,76 +183,65 @@ begin
 	giq_option( 4, SCRIPT_FOLGUARD, 137, guard8, NEUTRAL_REACTION );
 end
 
-procedure guard7
-begin
+procedure guard7 begin
 	gsay_reply(264, 138);
 	giq_option( 4, SCRIPT_FOLGUARD, 139, guard5, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 140, guard8, NEUTRAL_REACTION );
 end
 
-procedure guard8
-begin
+procedure guard8 begin
 	gsay_message(264, 141, 50);
 end
 
-procedure guard9
-begin
+procedure guard9 begin
 	gsay_reply(264, 142);
 	giq_option( 4, SCRIPT_FOLGUARD, 143, guardend, NEUTRAL_REACTION );
 end
 
-procedure guard10
-begin
+procedure guard10 begin
 	gsay_reply(264, 144);
 	giq_option( 4, SCRIPT_FOLGUARD, 145, guard5, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 146, guard8, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 147, guard6, NEUTRAL_REACTION );
 end
 
-procedure guard11
-begin
+procedure guard11 begin
 	gsay_reply(264, 148);
 	giq_option( 6, SCRIPT_FOLGUARD, 149, guardend, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_FOLGUARD, 150, guard12, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_FOLGUARD, 151, guard15, NEUTRAL_REACTION );
 end
 
-procedure guard12
-begin
+procedure guard12 begin
 	gsay_reply(264, 152);
 	giq_option( 6, SCRIPT_FOLGUARD, 153, guardend, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_FOLGUARD, 154, guard13, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_FOLGUARD, 155, guard14, NEUTRAL_REACTION );
 end
 
-procedure guard13
-begin
+procedure guard13 begin
 	gsay_reply(264, 156);
 	giq_option( 6, SCRIPT_FOLGUARD, 157, guardend, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_FOLGUARD, 158, combat, NEUTRAL_REACTION );
 end
 
-procedure guard14
-begin
+procedure guard14 begin
 	gsay_message(264, 159, 50);
 end
 
-procedure guard15
-begin
+procedure guard15 begin
 	gsay_reply(264, 160);
 	giq_option( 6, SCRIPT_FOLGUARD, 161, guardend, NEUTRAL_REACTION );
 end
 
-procedure guard16
-begin
+procedure guard16 begin
 	gsay_reply(264, 162);
 	giq_option( 4, SCRIPT_FOLGUARD, 163, guard17, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 164, guard19, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_FOLGUARD, 165, guard16a, NEUTRAL_REACTION );
 end
 
-procedure guard16a
-begin
+procedure guard16a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
 		call guard20;
 	end
@@ -278,39 +250,33 @@ begin
 	end
 end
 
-procedure guard17
-begin
+procedure guard17 begin
 	gsay_reply(264, 166);
 	giq_option( 4, SCRIPT_FOLGUARD, 167, guard18, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 168, guardend, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_FOLGUARD, 169, combat, NEUTRAL_REACTION );
 end
 
-procedure guard18
-begin
+procedure guard18 begin
 	gsay_reply(264, 170);
 	giq_option( 4, SCRIPT_FOLGUARD, 171, guardend, NEUTRAL_REACTION );
 end
 
-procedure guard19
-begin
+procedure guard19 begin
 	gsay_message(264, 172, 50);
 	call combat;
 end
 
-procedure guard20
-begin
+procedure guard20 begin
 	gsay_message(264, 173, 50);
 end
 
-procedure guard21
-begin
+procedure guard21 begin
 	gsay_message(264, 174, 50);
 	call combat;
 end
 
-procedure guard22
-begin
+procedure guard22 begin
 	gsay_reply(264, 175);
 	giq_option( 4, SCRIPT_FOLGUARD, 176, guardend, NEUTRAL_REACTION );
 	if (global_var( GVAR_SLIDE_TRAIN_FOLLOWERS ) == 0) then begin
@@ -318,8 +284,7 @@ begin
 	end
 end
 
-procedure guard23
-begin
+procedure guard23 begin
 	variable LVar0 := 0;
 	LVar0 := 4 * 3600;
 	set_global_var( GVAR_SLIDE_TRAIN_FOLLOWERS, 1 );
@@ -330,11 +295,9 @@ begin
 	giq_option( 4, SCRIPT_FOLGUARD, 179, guardend, NEUTRAL_REACTION );
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure guardend
-begin
+procedure guardend begin
 end
