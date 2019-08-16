@@ -212,6 +212,9 @@ variable step_tile;
 #define dude_caps                         item_caps_total(dude_obj)
 #define self_caps                         item_caps_total(self_obj)
 
+#define dude_caps_adjust(caps)            item_caps_adjust(dude_obj,caps)
+#define self_caps_adjust(caps)            item_caps_adjust(self_obj,caps)
+
 #define dude_tile                         tile_num(dude_obj)
 #define self_tile                         tile_num(self_obj)
 
