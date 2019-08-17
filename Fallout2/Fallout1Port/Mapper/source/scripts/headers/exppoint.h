@@ -212,6 +212,7 @@
 ***************************************************/
 
 #define EXP_SHOVELED_ALL_CRAP					(150)
+#define EXP_TEMPLE_OF_TRIALS					(500)
 
 /***************************************
  Give the experience points and display
