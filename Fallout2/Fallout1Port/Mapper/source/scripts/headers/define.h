@@ -776,6 +776,14 @@
 #define METARULE3_TILE_SET_CENTER           (108)
 #define tile_set_center(tileNum)             metarule3(METARULE3_TILE_SET_CENTER,tileNum,0,0)
 
+#define METARULE3_CHEM_USE_LEVEL            (109)
+#define chem_use_level(WHO)                  metarule3(METARULE3_CHEM_USE_LEVEL,WHO,0,0)
+
+#define METARULE3_CAR_OUT_OF_FUEL           (110)
+#define car_out_of_fuel                      metarule3(METARULE3_CAR_OUT_OF_FUEL,0,0,0)
+
+#define METARULE3_MAP_GET_LOAD_AREA         (111)
+#define map_get_load_area                    metarule3(METARULE3_MAP_GET_LOAD_AREA,0,0,0)
 
 // Used with mark_area_known
 #define MARK_TYPE_TOWN  (0)
