@@ -751,8 +751,6 @@ FLOAT_MSG_BLUE
 /******************************************************************
  General commands getting information about a critter
 ******************************************************************/
-#define critter_is_male         (get_critter_stat(self_obj,STAT_gender) == GENDER_MALE)
-#define critter_is_female       (get_critter_stat(self_obj,STAT_gender) == GENDER_FEMALE)
 /*#define critter_is_armed        (((obj_item_subtype(critter_inven_obj(self_obj,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon)  \
                                 or ((obj_item_subtype(critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND))) == item_type_weapon))
 */
