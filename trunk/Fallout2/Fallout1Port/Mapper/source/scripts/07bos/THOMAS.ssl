@@ -88,49 +88,58 @@ procedure start begin
 		Student_ptr := 0;
 		valid := 1;
 	end
-	if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-		call destroy_p_proc;
+end
+
+procedure timed_event_p_proc begin
+	if (global_var( GVAR_ENEMY_BROTHERHOOD ) == 0) then begin
+		if ((valid == 1) and (Student_ptr != 0)) then begin
+			call do_combat;
+		end
+		else begin
+			add_timer_event(self_obj, game_ticks(5), 0);
+		end
 	end
-	else begin
-		if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-			if (global_var( GVAR_ENEMY_BROTHERHOOD ) == 0) then begin
-				if ((valid == 1) and (Student_ptr != 0)) then begin
-					call do_combat;
+end
+
+procedure critter_p_proc begin
+	if (global_var( GVAR_ENEMY_BROTHERHOOD )) then begin
+		tmp_hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		tmp_hostile := 0;
+	end
+	if (tmp_hostile) then begin
+		set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+
+	if (global_var(GVAR_ENEMY_BROTHERHOOD) == 0) then begin
+		if (map_var(0) == 1) then begin
+			if (local_var(0) < 1) then begin
+				set_local_var(0, 1);
+				phase := 0;
+				if (obj_can_see_obj(dude_obj, self_obj)) then begin
+					if (local_var(6) != 1) then begin
+						lesson_ptr := 1;
+						set_local_var(5, lesson_ptr);
+						set_local_var(0, 2);
+					end
 				end
-				else begin
-					add_timer_event(self_obj, game_ticks(5), 0);
-				end
+				add_timer_event(self_obj, game_ticks(5), 0);
 			end
 		end
 		else begin
-			if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				if (global_var( GVAR_ENEMY_BROTHERHOOD )) then begin
-					tmp_hostile := 1;
-				end
-				if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
-					tmp_hostile := 0;
-				end
-				if (tmp_hostile) then begin
-					set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
-					tmp_hostile := 0;
-					attack(dude_obj);
-				end
-				if (global_var( GVAR_ENEMY_BROTHERHOOD ) == 0) then begin
-					call critter_p_proc;
-				end
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
+			if (local_var(7) == 0) then begin
+				set_local_var(7, 1);
+				call pick_a_student;
 			end
 		end
 	end
 end
 
-procedure weapon_check
-begin
-	if ((obj_item_subtype( get_right_hand( Student_ptr ) ) == item_type_weapon) or (obj_item_subtype( get_left_hand( Student_ptr ) ) == item_type_weapon)) then begin
+procedure weapon_check begin
+	if critter_is_armed(Student_ptr) then begin
 		armed := 1;
 	end
 	else begin
@@ -138,8 +147,7 @@ begin
 	end
 end
 
-procedure give_skill
-begin
+procedure give_skill begin
 	set_local_var(11, local_var(11) + 1);
 	skill_pts := 1;
 	critter_mod_skill(dude_obj, SKILL_UNARMED_COMBAT, skill_pts);
@@ -148,8 +156,7 @@ begin
 	display_msg(message_str(SCRIPT_GENCHAT, 116) + message_str(SCRIPT_GENCHAT, 139));
 end
 
-procedure prepare_for_combat
-begin
+procedure prepare_for_combat begin
 	if (student_armed) then begin
 		st_manuver0 := 41;
 		st_manuver1 := 42;
@@ -176,8 +183,7 @@ begin
 	end
 end
 
-procedure do_combat
-begin
+procedure do_combat begin
 	if (local_var(0) > 1) then begin
 		if (local_var(0) == 2) then begin
 			call lesson1;
@@ -204,21 +210,17 @@ begin
 				if (x < 81) then begin
 					outcome := 0;
 				end
+				else if (x < 98) then begin
+					comment := 3;
+					outcome := 1;
+				end
+				else if (phase > 6) then begin
+					comment := 6;
+					outcome := 2;
+				end
 				else begin
-					if (x < 98) then begin
-						comment := 3;
-						outcome := 1;
-					end
-					else begin
-						if (phase > 6) then begin
-							comment := 6;
-							outcome := 2;
-						end
-						else begin
-							comment := 3;
-							outcome := 1;
-						end
-					end
+					comment := 3;
+					outcome := 1;
 				end
 			end
 			else begin
@@ -226,17 +228,15 @@ begin
 					comment := 6;
 					outcome := 2;
 				end
+				else if (x < st_dodge) then begin
+					comment := 3;
+					outcome := 0;
+				end
 				else begin
-					if (x < st_dodge) then begin
-						comment := 3;
-						outcome := 0;
-					end
-					else begin
-						comment := 4;
-						st_fall := st_fall + 2;
-						set_local_var(4, st_fall);
-						outcome := 1;
-					end
+					comment := 4;
+					st_fall := st_fall + 2;
+					set_local_var(4, st_fall);
+					outcome := 1;
 				end
 			end
 			sequence := atk + outcome;
@@ -256,8 +256,7 @@ begin
 	end
 end
 
-procedure recover_from_combat
-begin
+procedure recover_from_combat begin
 	if (local_var(10) == 1) then begin
 		reg_anim_func(2, self_obj);
 		reg_anim_func(2, Student_ptr);
@@ -282,8 +281,7 @@ begin
 	set_map_var(0, 0);
 end
 
-procedure pick_a_student
-begin
+procedure pick_a_student begin
 	fell := 0;
 	set_local_var(2, fell);
 	set_map_var(0, 0);
@@ -308,185 +306,131 @@ begin
 	set_local_var(3, st_dodge);
 end
 
-procedure praise
-begin
+procedure praise begin
 	temp := random(0, 2);
 	if (comment == 3) then begin
 		float_msg(self_obj, message_str(SCRIPT_THOMAS, 200 + temp), 3);
 	end
-	else begin
-		if (comment == 4) then begin
-			float_msg(self_obj, message_str(SCRIPT_THOMAS, 203 + temp), 3);
+	else if (comment == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_THOMAS, 203 + temp), 3);
+	end
+	else if (comment == 6) then begin
+		if (fell == 2) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 206 + temp), 3);
 		end
 		else begin
-			if (comment == 6) then begin
-				if (fell == 2) then begin
-					float_msg(self_obj, message_str(SCRIPT_THOMAS, 206 + temp), 3);
-				end
-				else begin
-					float_msg(self_obj, message_str(SCRIPT_THOMAS, 209 + temp), 3);
-				end
-			end
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 209 + temp), 3);
 		end
 	end
 end
 
-procedure lesson1
-begin
+procedure lesson1 begin
 	delay := 4;
 	if (lesson_ptr < 6) then begin
 		float_msg(self_obj, message_str(SCRIPT_THOMAS, 100 + lesson_ptr), 3);
 	end
-	else begin
-		if (lesson_ptr == 6) then begin
-			who := 0;
-			sequence := 0;
-			delay := 2;
-			call do_round;
+	else if (lesson_ptr == 6) then begin
+		who := 0;
+		sequence := 0;
+		delay := 2;
+		call do_round;
+	end
+	else if (lesson_ptr == 7) then begin
+		who := 0;
+		sequence := 0;
+		delay := 2;
+		call do_round;
+	end
+	else if (lesson_ptr == 8) then begin
+		who := 1;
+		sequence := 1;
+		delay := 2;
+		call do_round;
+	end
+	else if ((lesson_ptr > 8) and (lesson_ptr < 12)) then begin
+		float_msg(self_obj, message_str(SCRIPT_THOMAS, 100 + lesson_ptr), 3);
+	end
+	else if (lesson_ptr == 12) then begin
+		float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 112), 8);
+	end
+	else if (lesson_ptr == 13) then begin
+		float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 113), 8);
+	end
+	else if ((lesson_ptr > 13) and (lesson_ptr < 18)) then begin
+		if (obj_can_see_obj(dude_obj, self_obj)) then begin
+			call give_skill;
 		end
-		else begin
-			if (lesson_ptr == 7) then begin
-				who := 0;
-				sequence := 0;
-				delay := 2;
-				call do_round;
-			end
-			else begin
-				if (lesson_ptr == 8) then begin
-					who := 1;
-					sequence := 1;
-					delay := 2;
-					call do_round;
-				end
-				else begin
-					if ((lesson_ptr > 8) and (lesson_ptr < 12)) then begin
-						float_msg(self_obj, message_str(SCRIPT_THOMAS, 100 + lesson_ptr), 3);
-					end
-					else begin
-						if (lesson_ptr == 12) then begin
-							float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 112), 8);
-						end
-						else begin
-							if (lesson_ptr == 13) then begin
-								float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 113), 8);
-							end
-							else begin
-								if ((lesson_ptr > 13) and (lesson_ptr < 18)) then begin
-									if (obj_can_see_obj(dude_obj, self_obj)) then begin
-										call give_skill;
-									end
-									float_msg(self_obj, message_str(SCRIPT_THOMAS, 100 + lesson_ptr), 3);
-								end
-								else begin
-									if (lesson_ptr == 19) then begin
-										if (obj_can_see_obj(dude_obj, self_obj)) then begin
-											call give_skill;
-										end
-										call pick_a_student;
-									end
-									else begin
-										if (lesson_ptr == 20) then begin
-											float_msg(self_obj, message_str(SCRIPT_THOMAS, 118), 3);
-										end
-										else begin
-											if (lesson_ptr == 21) then begin
-												who := 0;
-												sequence := 0;
-												delay := 2;
-												call do_round;
-											end
-											else begin
-												if (lesson_ptr == 22) then begin
-													who := 0;
-													sequence := 0;
-													delay := 2;
-													call do_round;
-												end
-												else begin
-													if (lesson_ptr == 23) then begin
-														who := 1;
-														sequence := 0;
-														delay := 2;
-														call do_round;
-													end
-													else begin
-														if (lesson_ptr == 24) then begin
-															who := 0;
-															sequence := 0;
-															delay := 2;
-															call do_round;
-														end
-														else begin
-															if (lesson_ptr == 25) then begin
-																float_msg(self_obj, message_str(SCRIPT_THOMAS, 119), 3);
-															end
-															else begin
-																if (lesson_ptr == 26) then begin
-																	float_msg(self_obj, message_str(SCRIPT_THOMAS, 120), 3);
-																end
-																else begin
-																	if (lesson_ptr == 27) then begin
-																		float_msg(self_obj, message_str(SCRIPT_THOMAS, 121), 3);
-																	end
-																	else begin
-																		if (lesson_ptr == 28) then begin
-																			float_msg(self_obj, message_str(SCRIPT_THOMAS, 122), 3);
-																		end
-																		else begin
-																			if (lesson_ptr == 29) then begin
-																				float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 107), 8);
-																			end
-																			else begin
-																				if (lesson_ptr == 30) then begin
-																					float_msg(self_obj, message_str(SCRIPT_THOMAS, 123), 3);
-																				end
-																				else begin
-																					if (lesson_ptr == 31) then begin
-																						float_msg(self_obj, message_str(SCRIPT_THOMAS, 124), 3);
-																					end
-																					else begin
-																						if (lesson_ptr == 32) then begin
-																							float_msg(self_obj, message_str(SCRIPT_THOMAS, 125), 3);
-																						end
-																						else begin
-																							if (lesson_ptr == 33) then begin
-																								float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 126), 8);
-																							end
-																							else begin
-																								if (lesson_ptr == 34) then begin
-																									float_msg(self_obj, message_str(SCRIPT_THOMAS, 127), 3);
-																								end
-																								else begin
-																									if (lesson_ptr == 35) then begin
-																										float_msg(self_obj, message_str(SCRIPT_THOMAS, 128), 3);
-																									end
-																									else begin
-																										if (lesson_ptr == 36) then begin
-																											float_msg(self_obj, message_str(SCRIPT_THOMAS, 108), 3);
-																										end
-																									end
-																								end
-																							end
-																						end
-																					end
-																				end
-																			end
-																		end
-																	end
-																end
-															end
-														end
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+		float_msg(self_obj, message_str(SCRIPT_THOMAS, 100 + lesson_ptr), 3);
+	end
+	else if (lesson_ptr == 19) then begin
+		if (obj_can_see_obj(dude_obj, self_obj)) then begin
+			call give_skill;
+		end
+		call pick_a_student;
+	end
+	else if (lesson_ptr == 20) then begin
+		float_msg(self_obj, message_str(SCRIPT_THOMAS, 118), 3);
+	end
+	else if (lesson_ptr == 21) then begin
+		who := 0;
+		sequence := 0;
+		delay := 2;
+		call do_round;
+	end
+	else if (lesson_ptr == 22) then begin
+		who := 0;
+		sequence := 0;
+		delay := 2;
+		call do_round;
+	end
+	else if (lesson_ptr == 23) then begin
+		who := 1;
+		sequence := 0;
+		delay := 2;
+		call do_round;
+	end
+	else if (lesson_ptr == 24) then begin
+		who := 0;
+		sequence := 0;
+		delay := 2;
+		call do_round;
+	end
+	else begin
+		if (lesson_ptr == 25) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 119), 3);
+		end
+		else if (lesson_ptr == 26) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 120), 3);
+		end
+		else if (lesson_ptr == 27) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 121), 3);
+		end
+		else if (lesson_ptr == 28) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 122), 3);
+		end
+		else if (lesson_ptr == 29) then begin
+			float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 107), 8);
+		end
+		else if (lesson_ptr == 30) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 123), 3);
+		end
+		else if (lesson_ptr == 31) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 124), 3);
+		end
+		else if (lesson_ptr == 32) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 125), 3);
+		end
+		else if (lesson_ptr == 33) then begin
+			float_msg(Student_ptr, message_str(SCRIPT_THOMAS, 126), 8);
+		end
+		else if (lesson_ptr == 34) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 127), 3);
+		end
+		else if (lesson_ptr == 35) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 128), 3);
+		end
+		else if (lesson_ptr == 36) then begin
+			float_msg(self_obj, message_str(SCRIPT_THOMAS, 108), 3);
 		end
 	end
 	lesson_ptr := lesson_ptr + 1;
@@ -504,43 +448,17 @@ begin
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
 	end
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure critter_p_proc
-begin
-	if (map_var(0) == 1) then begin
-		if (local_var(0) < 1) then begin
-			set_local_var(0, 1);
-			phase := 0;
-			if (obj_can_see_obj(dude_obj, self_obj)) then begin
-				if (local_var(6) != 1) then begin
-					lesson_ptr := 1;
-					set_local_var(5, lesson_ptr);
-					set_local_var(0, 2);
-				end
-			end
-			add_timer_event(self_obj, game_ticks(5), 0);
-		end
-	end
-	else begin
-		if (local_var(7) == 0) then begin
-			set_local_var(7, 1);
-			call pick_a_student;
-		end
-	end
-end
-
-procedure do_round
-begin
+procedure do_round begin
 	set_local_var(1, who);
 	reg_anim_func(2, self_obj);
 	reg_anim_func(2, Student_ptr);
@@ -549,45 +467,33 @@ begin
 		if (student_armed) then begin
 			student_armed := 0;
 		end
-		else begin
-			if (sequence == 0) then begin
-				reg_anim_animate(Student_ptr, st_manuver0, -1);
-				reg_anim_animate(self_obj, in_manuver2, wait2);
-			end
-			else begin
-				if (sequence == 1) then begin
-					reg_anim_animate(Student_ptr, st_manuver0, -1);
-					reg_anim_animate(self_obj, 14, 4);
-				end
-				else begin
-					if (sequence == 2) then begin
-						fell := 1;
-						set_local_var(2, fell);
-						reg_anim_animate(Student_ptr, st_manuver0, -1);
-						reg_anim_animate(self_obj, 20, 4);
-					end
-					else begin
-						if (sequence == 3) then begin
-							reg_anim_animate(Student_ptr, st_manuver1, -1);
-							reg_anim_animate(self_obj, in_manuver2, wait2 + 2);
-						end
-						else begin
-							if (sequence == 4) then begin
-								reg_anim_animate(Student_ptr, st_manuver1, -1);
-								reg_anim_animate(self_obj, 14, 6);
-							end
-							else begin
-								if (sequence == 5) then begin
-									fell := 1;
-									set_local_var(2, fell);
-									reg_anim_animate(Student_ptr, st_manuver1, -1);
-									reg_anim_animate(self_obj, 20, 6);
-								end
-							end
-						end
-					end
-				end
-			end
+		else if (sequence == 0) then begin
+			reg_anim_animate(Student_ptr, st_manuver0, -1);
+			reg_anim_animate(self_obj, in_manuver2, wait2);
+		end
+		else if (sequence == 1) then begin
+			reg_anim_animate(Student_ptr, st_manuver0, -1);
+			reg_anim_animate(self_obj, 14, 4);
+		end
+		else if (sequence == 2) then begin
+			fell := 1;
+			set_local_var(2, fell);
+			reg_anim_animate(Student_ptr, st_manuver0, -1);
+			reg_anim_animate(self_obj, 20, 4);
+		end
+		else if (sequence == 3) then begin
+			reg_anim_animate(Student_ptr, st_manuver1, -1);
+			reg_anim_animate(self_obj, in_manuver2, wait2 + 2);
+		end
+		else if (sequence == 4) then begin
+			reg_anim_animate(Student_ptr, st_manuver1, -1);
+			reg_anim_animate(self_obj, 14, 6);
+		end
+		else if (sequence == 5) then begin
+			fell := 1;
+			set_local_var(2, fell);
+			reg_anim_animate(Student_ptr, st_manuver1, -1);
+			reg_anim_animate(self_obj, 20, 6);
 		end
 	end
 	else begin
@@ -603,52 +509,40 @@ begin
 				reg_anim_animate(self_obj, in_manuver0, -1);
 				reg_anim_animate(Student_ptr, st_manuver2, wait3);
 			end
-			else begin
-				if (sequence == 1) then begin
-					reg_anim_animate(self_obj, in_manuver0, -1);
-					reg_anim_animate(Student_ptr, 14, 4);
-				end
-				else begin
-					if (sequence == 2) then begin
-						fell := 2;
-						set_local_var(2, fell);
-						reg_anim_animate(self_obj, in_manuver0, -1);
-						reg_anim_animate(Student_ptr, 20, 4);
-					end
-					else begin
-						if (sequence == 3) then begin
-							reg_anim_animate(self_obj, in_manuver1, -1);
-							reg_anim_animate(Student_ptr, st_manuver2, wait3 + 2);
-						end
-						else begin
-							if (sequence == 4) then begin
-								reg_anim_animate(self_obj, in_manuver1, -1);
-								reg_anim_animate(Student_ptr, 14, 6);
-							end
-							else begin
-								if (sequence == 5) then begin
-									fell := 2;
-									set_local_var(2, fell);
-									reg_anim_animate(self_obj, in_manuver1, -1);
-									reg_anim_animate(Student_ptr, 20, 6);
-								end
-							end
-						end
-					end
-				end
+			else if (sequence == 1) then begin
+				reg_anim_animate(self_obj, in_manuver0, -1);
+				reg_anim_animate(Student_ptr, 14, 4);
+			end
+			else if (sequence == 2) then begin
+				fell := 2;
+				set_local_var(2, fell);
+				reg_anim_animate(self_obj, in_manuver0, -1);
+				reg_anim_animate(Student_ptr, 20, 4);
+			end
+			else if (sequence == 3) then begin
+				reg_anim_animate(self_obj, in_manuver1, -1);
+				reg_anim_animate(Student_ptr, st_manuver2, wait3 + 2);
+			end
+			else if (sequence == 4) then begin
+				reg_anim_animate(self_obj, in_manuver1, -1);
+				reg_anim_animate(Student_ptr, 14, 6);
+			end
+			else if (sequence == 5) then begin
+				fell := 2;
+				set_local_var(2, fell);
+				reg_anim_animate(self_obj, in_manuver1, -1);
+				reg_anim_animate(Student_ptr, 20, 6);
 			end
 		end
 	end
 	reg_anim_func(3, 0);
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	call Thomas00;
 end
 
-procedure Thomas00
-begin
+procedure Thomas00 begin
 	display_msg(message_str(SCRIPT_THOMAS, 400));
 end
