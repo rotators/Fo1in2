@@ -1,0 +1,137 @@
+/*
+
+   Adds Fallout 1 "tell me about" screen
+
+*/
+
+/* Include Files */
+#include "..\headers\command.h"
+#include "..\headers\define.h"
+#include "..\headers\Sfall\sfall.h"
+#include "..\headers\Sfall\dik.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure but_sta;
+procedure but_del;
+procedure do_on;
+procedure do_on;
+procedure do_off;
+procedure do_down;
+procedure do_up;
+
+procedure OpenMenu;
+
+procedure KeyPressHandler;
+procedure show_note;
+procedure show_days;
+procedure delete_all;
+
+variable tellme_button;
+
+#define Scr_Width      	get_ini_setting("f2_res.ini|MAIN|SCR_WIDTH")
+#define Scr_Heigh      	get_ini_setting("f2_res.ini|MAIN|SCR_HEIGHT")
+
+#define SoundP    		get_ini_string("config\\tellme_button.ini|Button2|Butin")
+#define SoundR    		get_ini_string("config\\tellme_button.ini|Button2|Butou")
+
+#define Empty 433
+
+variable MousonBut;
+variable ButPres;
+variable HiRes;
+
+procedure start begin
+	if (game_loaded) then begin
+		set_global_script_repeat(5);
+		set_global_script_type(1);
+   end
+
+	if (get_game_mode == DIALOG) and tellme_button == 0 then
+		call but_sta;
+	else if (get_game_mode != DIALOG) and tellme_button == 1 then
+		call but_del;
+end
+
+procedure but_sta begin
+   tellme_button:=1;
+   create_win_flag("tellme_but",((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14, 0x20);
+   //CreateWin("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14);
+   SelectWin("tellme_but");
+   AddButton("but2", 0, 0, 14, 14);
+   AddButtonGFX("but2", "PCX/DI_RDBT1.pcx", "PCX/DI_RDBT_BLANK.pcx", "PCX/DI_RDBT2.pcx");
+   AddButtonProc("but2", do_on, do_off, do_down, do_up);
+   ShowWin;
+end
+
+procedure but_del begin
+   tellme_button:=0;
+   SelectWin("tellme_but");
+   DeleteButton("but2");
+   DeleteWin("tellme_but");
+
+   //if (get_sfall_global_int("open_tellme") == 1)  then begin
+   //	set_sfall_global("open_tellme", 0);
+   	DeleteWin("win_tellme");
+   //end
+end
+
+procedure do_on begin
+   debug("do_on!");
+   MousonBut := 1;
+end
+
+procedure do_off begin
+   debug("do_off!");
+   MousonBut := 0;
+end
+
+procedure do_down begin
+   debug("do_down!");
+   if (ButPres == 0) then begin
+      ButPres := 1;
+      play_sfx(SoundP);
+   end
+end
+
+procedure do_up begin
+   debug("do_up!");
+
+   //set_sfall_global("openbutt", 2);
+   //set_sfall_global("openfixi", 1);
+   ButPres := 0;
+   play_sfx(SoundR);
+
+   tellme_button:=0;
+   call OpenMenu;
+end
+
+procedure delete_button begin
+
+end
+
+procedure OpenMenu begin
+	set_sfall_global("open_tellme", 1);
+
+/*
+   SetFont(5);
+   SetTextColor(0.0, 1.0, 0.0);
+   SetHighlightColor(1.0, 1.0, 0.64);
+
+   SayReplyWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
+   SayOptionWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
+
+   SayBorder(5, 5);
+	*/
+
+   CreateWin("win_tellme", ((Scr_Width/2)-214), ((Scr_Heigh/2)-66), 430, 250);
+   SelectWin("win_tellme");
+
+   //draw_image(117440550,0,0,0,1);
+   Display("PCX/tellmeabout.pcx");
+
+   ShowWin;
+   SelectWin("win_tellme");
+
+end
