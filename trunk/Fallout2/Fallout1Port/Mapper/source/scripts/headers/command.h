@@ -32,7 +32,7 @@ variable global_temp;
 
 #define Get_Rotation_Away_From_Dude(x)      rotation_to_tile(tile_num(dude_obj),tile_num(x))
 
-#define Run_Away_From_Dude_Dir             get_Rotation_Away_From_Dude(self_obj)
+#define Run_Away_From_Dude_Dir              Get_Rotation_Away_From_Dude(self_obj)
 #define run_away_from_dist                  random(3, 10)
 #define push_away_from_dist                 random(2, 5)
 
