@@ -206,6 +206,12 @@ variable step_tile;
 #define dude_fid                          obj_art_fid(dude_obj)
 #define self_fid                          obj_art_fid(self_obj)
 
+#define dude_can_see_self                 obj_can_see_obj(dude_obj,self_obj)
+#define self_can_see_dude                 obj_can_see_obj(self_obj,dude_obj)
+
+#define dude_can_hear_self                obj_can_hear_obj(dude_obj,self_obj)
+#define self_can_hear_dude                obj_can_hear_obj(self_obj,dude_obj)
+
 #define dude_name                         obj_name(dude_obj)
 #define self_name                         obj_name(self_obj)
 
@@ -494,7 +500,6 @@ variable step_tile;
 #define dude_stat_win(X,Y)                  ((do_check(dude_obj,X,Y)) > (do_check(self_obj,X,0)))
 #define dude_stat_lose(X,Y)                 ((do_check(dude_obj,X,Y)) < (do_check(self_obj,X,0)))
 #define dude_stat_tie(X,Y)                  ((do_check(dude_obj,X,Y)) == (do_check(self_obj,X,0)))
-#define dude_can_see_self                   obj_can_see_obj(dude_obj,self_obj)
 
 #define dude_is_addict                      (has_trait(TRAIT_TRAIT, dude_obj, TRAIT_drug_addict))
 
@@ -551,8 +556,6 @@ variable step_tile;
 #define skill_success(x,y,z)                (is_success(roll_vs_skill(x,y,z)))
 #define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
 
-#define self_can_see_dude                   obj_can_see_obj(self_obj,dude_obj)
-#define self_can_hear_dude                  obj_can_hear_obj(self_obj,dude_obj)
 #define self_distance_from_dude             tile_distance(self_tile, dude_tile)
 #define self_is_high                        drug_influence(self_obj)
 
