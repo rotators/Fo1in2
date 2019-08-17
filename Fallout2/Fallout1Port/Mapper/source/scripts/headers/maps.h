@@ -372,5 +372,26 @@
 #define unmark_boneyard_on_map             unmark_on_map(AREA_BONEYARD)
 #define unmark_cathedral_on_map            unmark_on_map(AREA_CATHEDRAL)
 
+/*****************************************************************
+********************    Random Encounters  ***********************
+*****************************************************************/
+
+/* The following define is to force critter X to face critter Y */
+#define Face_Critter(Y,X)           anim(X,ANIMATE_ROTATION,rotation_to_tile(tile_num(X),tile_num(Y)))
+
+/* The following define will set a rotation arc for placement
+   of critters. */
+#define FixRotationArc(X)           while (X < 0) do begin      \
+                                        X += 6;                 \
+                                    end                         \
+                                    if (X > 5) then             \
+                                        X := X%6
+
+
+/* The following define will give you the inverse (Y) of a
+   rotation (X) */
+#define InvertRotation(X,Y)         X+=3;                       \
+                                    FixRotationArc(X)
+
 
 #endif // MAPS_H
