@@ -39,6 +39,7 @@
 #define AREA_SPECIAL_RND_COLATRUK (56)
 #define AREA_SPECIAL_RND_FSAUSER  (57)
 #define AREA_SPECIAL_RND_TALKCOW  (58)
+#define AREA_SPECIAL_RND_TEMPLE   (59)
 
 /*******************************************************************************
  Current City Index
@@ -63,6 +64,7 @@
 #define CUR_AREA_SPECIAL_RND_COLATRUK (cur_town == AREA_SPECIAL_RND_COLATRUK)
 #define CUR_AREA_SPECIAL_RND_FSAUSER  (cur_town == AREA_SPECIAL_RND_FSAUSER)
 #define CUR_AREA_SPECIAL_RND_TALKCOW  (cur_town == AREA_SPECIAL_RND_TALKCOW)
+#define CUR_AREA_SPECIAL_RND_TEMPLE   (cur_town == AREA_SPECIAL_RND_TEMPLE)
 
 /*******************************************************************************
  Map Numbers
@@ -140,6 +142,9 @@
 #define MAP_RNDCITY  (69)
 #define MAP_RNDCOAST (70)
 #define MAP_TALKCOW  (71)
+#define MAP_ARTEMPLE (72)
+#define MAP_ARCAVES  (73)
+#define MAP_GUARDIAN (74)
 
 /*******************************************************************************
  Map Names (Strings)
@@ -210,6 +215,9 @@
 #define MAPSTR_MNTCRVN3 "MNTCRVN3.MAP"
 #define MAPSTR_DESCRVN4 "DESCRVN4.MAP"
 #define MAPSTR_MNTCRVN4 "MNTCRVN4.MAP"
+
+#define MAPSTR_ARTEMPLE "artemple.MAP"
+#define MAPSTR_ARCAVES 	"arcaves.MAP"
 
 /*******************************************************************************
  Current map index
@@ -285,6 +293,9 @@
 #define CUR_MAP_RNDMOUNT  	(cur_map_index ==  MAP_RNDMOUNT)
 #define CUR_MAP_RNDCITY  	(cur_map_index ==  MAP_RNDCITY)
 #define CUR_MAP_RNDCOAST  	(cur_map_index ==  MAP_RNDCOAST)
+#define CUR_MAP_ARTEMPLE  	(cur_map_index ==  MAP_ARTEMPLE)
+#define CUR_MAP_ARCAVES  	(cur_map_index ==  MAP_ARCAVES)
+#define CUR_MAP_GUARDIAN  	(cur_map_index ==  MAP_GUARDIAN)
 
 // Force player position when loading map
 #define override_map_start_hex(x,y,z)   override_map_start(x%200,x/200,y,z)

@@ -1,0 +1,290 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+/******************************************************************
+   Filename: SprTrp0.ssl
+
+   Purpose: This script is a spatial/scenery script for a spear
+            trap. Basically, trap will be hidden until the player
+            makes a successful stat roll (vs. Perception). Once
+            Found, the trap will become visible and the player
+            will have to try to disarm it.
+
+   Created: December 18, 1997   RWH2
+
+   Updated:
+        April 14, 1998          rwh2
+                Made the template more generic for any weapon to be
+                fired from any floor plate. All defines at the top
+                are the only things that will need to be changed
+                from now on
+******************************************************************/
+
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_SPRTRP0
+#define CUR_SCRIPT              SCRIPT_SPRTRP50
+
+#include "..\headers\command.h"
+#include "..\headers\arcaves.h"
+
+#define TRAP_BONUS                      (0)
+#define PERCEPTION_BONUS                (0)
+#define AGILITY_BONUS                   (0)
+#define DIST_BONUS                      (2)
+
+#define TRAP_EXP                        EXP_TRAPS_NORMAL
+#define TRAP_TIME                       (0)             // In Seconds
+
+#define MIN_DMG                         (1)
+#define MAX_DMG                         (4)
+#define DAMAGE_TYPE                     DMG_normal_dam
+
+#define INITIAL_TILE                    (27290)         // Tile num spear is fired from
+#define PROJECTILE_ROF                  (500)
+#define TRAP_MVAR                       MVAR_Arroyo_Trial_Spear00
+
+#define ART_TRAP_VISIBLE                ()
+#define ART_TRAP_EXPLODED               ()
+#define ART_TRAP_DISARMED               ()
+#define PROJECTILE_WEAPON               PID_FLYING_SPEAR                    // which image to have flying through the air
+#define PROJECTILE_CREATED              PID_SPEAR                           // 0 == No weapon created
+
+procedure start;
+procedure spatial_p_proc;
+procedure use_skill_on_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure timed_event_p_proc;
+
+procedure Missile_Fired;
+procedure Check_Hit;
+
+#define LVAR_Trap_Found                 (0)
+#define LVAR_Trap_Exploded              (1)
+#define LVAR_Gave_Exp                   (2)
+#define LVAR_Got_Perception_Roll        (3)
+#define LVAR_Extended_Look              (4)
+
+variable Projectile;
+variable Final_Hex;
+variable Projectile_Dir;
+
+procedure start begin
+end
+
+procedure spatial_p_proc begin
+   variable Range;
+   variable Range_Mod;
+   variable Detection_Roll;
+   variable Trap;
+
+   if (obj_type(source_obj) == 1) then begin
+
+       Range:=get_critter_stat(source_obj,STAT_pe) + PERCEPTION_BONUS;
+       Range_Mod:=Range - (tile_distance_objs(self_obj,source_obj)*DIST_BONUS);
+
+       if ((tile_distance_objs(self_obj,source_obj) <= Range) and
+           (local_var(LVAR_Trap_Found) == 0) and (local_var(LVAR_Trap_Exploded) == 0)) then begin
+
+           if (Range_Mod > PERCEPTION_BONUS) then
+               Range_Mod:= PERCEPTION_BONUS;
+
+           Detection_Roll:=do_check(source_obj,STAT_pe,Range_Mod);
+
+           if (is_success(Detection_Roll)) then begin
+
+               set_local_var(LVAR_Trap_Found,1);
+               reg_anim_clear(source_obj);
+               Trap:=create_object_sid(ART_TRAP_VISIBLE,tile_num(self_obj),elevation(self_obj),CUR_SCRIPT);
+
+               if (is_critical(Detection_Roll)) then begin
+                   if (source_obj == dude_obj) then
+                       display_msg(mstr(100));
+                   else if ((proto_data(obj_pid(source_obj),cr_body_type) == CR_BODY_BIPED) and (obj_can_see_obj(source_obj,dude_obj))) then
+                       display_msg(obj_name(source_obj)+mstr(101));
+               end
+
+               else begin
+                   if (source_obj == dude_obj) then
+                       display_msg(mstr(102));
+                   else if ((proto_data(obj_pid(source_obj),cr_body_type) == CR_BODY_BIPED) and (obj_can_see_obj(source_obj,dude_obj))) then
+                       display_msg(obj_name(source_obj)+mstr(103));
+               end
+           end
+       end
+
+       if ((tile_distance_objs(self_obj,source_obj) == 0) and
+           (local_var(LVAR_Trap_Exploded) == 0) and (map_var(TRAP_MVAR) == 0)) then begin
+
+           game_ui_disable;
+
+           debug_msg("Set off the Trap!");
+           Projectile:=create_object(PROJECTILE_WEAPON,INITIAL_TILE,elevation(self_obj));
+           Face_Critter(source_obj,Projectile);
+           if (tile_contains_obj_pid(tile_num(self_obj),elevation(self_obj),ART_TRAP_VISIBLE)) then begin
+               debug_msg("Destroying Visible Trap");
+               destroy_object(tile_contains_pid_obj(tile_num(self_obj),elevation(self_obj),ART_TRAP_VISIBLE));
+               debug_msg("Destroyed Visible Trap");
+           end
+           Trap:=create_object(ART_TRAP_EXPLODED,tile_num(self_obj),elevation(self_obj));
+
+           call Check_Hit;
+
+           set_local_var(LVAR_Trap_Exploded,1);
+           set_map_var(TRAP_MVAR,1);
+
+       end
+   end
+
+end
+
+procedure use_skill_on_p_proc begin
+   variable Traps_Roll;
+   variable Trap;
+
+   if ((local_var(LVAR_Trap_Exploded) == 0) and (map_var(TRAP_MVAR) == 0) and (action_being_used == SKILL_TRAPS)) then begin
+       script_overrides;
+       Traps_Roll:=roll_vs_skill(source_obj,SKILL_TRAPS,TRAP_BONUS);
+       if (source_obj == dude_obj) then begin
+           if (is_success(Traps_Roll)) then begin
+               Trap:=create_object_sid(ART_TRAP_DISARMED,tile_num(self_obj),elevation(self_obj),CUR_SCRIPT);
+               set_local_var(LVAR_Trap_Exploded,1);
+               set_map_var(TRAP_MVAR,1);
+               display_msg(message_str(SCRIPT_GENERIC,102));
+               if (local_var(LVAR_Gave_Exp) == 0) then begin
+                   set_local_var(LVAR_Gave_Exp,1);
+                   give_xp(TRAP_EXP);
+               end
+           end
+           else if (is_critical(Traps_Roll)) then begin
+               set_local_var(LVAR_Trap_Exploded,1);
+               set_map_var(TRAP_MVAR,1);
+               display_msg(message_str(SCRIPT_GENERIC,104));
+               if (tile_contains_obj_pid(tile_num(self_obj),elevation(self_obj),ART_TRAP_VISIBLE)) then begin
+                   debug_msg("Destroying Visible Trap");
+                   destroy_object(tile_contains_pid_obj(tile_num(self_obj),elevation(self_obj),ART_TRAP_VISIBLE));
+                   debug_msg("Destroyed Visible Trap");
+               end
+               Trap:=create_object_sid(ART_TRAP_EXPLODED,tile_num(self_obj),elevation(self_obj),CUR_SCRIPT);
+               call Check_Hit;
+           end
+           else begin
+               display_msg(message_str(SCRIPT_GENERIC,103));
+           end
+       end
+       else begin
+           if (is_success(Traps_Roll)) then begin
+               Trap:=create_object_sid(ART_TRAP_DISARMED,tile_num(self_obj),elevation(self_obj),CUR_SCRIPT);
+               set_map_var(TRAP_MVAR,1);
+               display_msg(obj_name(source_obj)+message_str(SCRIPT_GENERIC,105));
+               if (local_var(LVAR_Gave_Exp) == 0) then begin
+                   set_local_var(LVAR_Gave_Exp,1);
+                   give_xp(TRAP_EXP);
+               end
+           end
+           else if (is_critical(Traps_Roll)) then begin
+               set_local_var(LVAR_Trap_Exploded,1);
+               set_map_var(TRAP_MVAR,1);
+               display_msg(obj_name(source_obj)+message_str(SCRIPT_GENERIC,107));
+               if (tile_contains_obj_pid(tile_num(self_obj),elevation(self_obj),ART_TRAP_VISIBLE)) then begin
+                   debug_msg("Destroying Visible Trap");
+                   destroy_object(tile_contains_pid_obj(tile_num(self_obj),elevation(self_obj),ART_TRAP_VISIBLE));
+                   debug_msg("Destroyed Visible Trap");
+               end
+               Trap:=create_object_sid(ART_TRAP_EXPLODED,tile_num(self_obj),elevation(self_obj),CUR_SCRIPT);
+               call Check_Hit;
+           end
+           else begin
+               display_msg(obj_name(source_obj)+message_str(SCRIPT_GENERIC,106));
+           end
+       end
+   end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(102));
+   debug_msg("Looking At the Trap");
+end
+
+procedure description_p_proc begin
+   variable Perception_Roll;
+
+   script_overrides;
+
+   if (local_var(LVAR_Got_Perception_Roll) == 0) then begin
+       set_local_var(LVAR_Got_Perception_Roll,1);
+       Perception_Roll:=do_check(dude_obj,STAT_pe,PERCEPTION_BONUS);
+       set_local_var(LVAR_Extended_Look,Perception_Roll);
+   end
+
+   if (is_critical(local_var(LVAR_Extended_Look))) then begin
+       if (is_success(local_var(LVAR_Extended_Look))) then
+           display_msg(mstr(100));
+       else
+           display_msg(mstr(106));
+   end
+   else begin
+       display_msg(mstr(102));
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == 1) then begin
+       destroy_object(Projectile);
+       if (PROJECTILE_CREATED != 0) then begin
+           Projectile:=create_object(PROJECTILE_CREATED,Final_Hex,elevation(self_obj));
+           anim(Projectile,ANIMATE_ROTATION,rotation_to_tile(INITIAL_TILE,Final_Hex));
+       end
+       game_ui_enable;
+   end
+end
+
+procedure Check_Hit begin
+   variable Agility_Roll;
+
+   Agility_Roll:=do_check(source_obj,STAT_ag,AGILITY_BONUS);
+
+   if (is_success(Agility_Roll)) then begin
+       if (source_obj == dude_obj) then
+           display_msg(mstr(104));
+       else
+           display_msg(obj_name(source_obj)+mstr(105));
+
+       Final_Hex:=tile_num_in_direction(tile_num(source_obj),rotation_to_tile(INITIAL_TILE,tile_num(source_obj)),3);
+       call Missile_Fired;
+   end
+   else begin
+       Final_Hex:=tile_num(source_obj);
+       call Missile_Fired;
+       critter_dmg(source_obj,random(MIN_DMG,MAX_DMG),(DAMAGE_TYPE BWOR DMG_BYPASS_ARMOR BWOR DMG_NOANIMATE));
+   end
+
+   add_timer_event(self_obj,game_ticks(TRAP_TIME),1);
+end
+
+procedure Missile_Fired begin
+   variable Cur_Tile_Num;
+   variable Counter:=0;
+
+   set_map_var(TRAP_MVAR,1);
+
+   while (tile_num(Projectile) != Final_Hex) do begin
+       if ((Counter % PROJECTILE_ROF) == 0) then begin
+           Cur_Tile_Num:=tile_num_in_direction(tile_num(Projectile),rotation_to_tile(tile_num(Projectile),Final_Hex),1);
+           move_to(Projectile,Cur_Tile_Num,elevation(self_obj));
+           if (Final_Hex == tile_num(source_obj)) then begin
+               anim(source_obj,ANIM_hit_from_back,ANIMATE_FORWARD);
+           end
+           else begin
+               anim(source_obj,ANIM_dodge_anim,ANIMATE_FORWARD);
+           end
+           debug_msg("Projectile == "+tile_num(Projectile)+". Final_Hex == "+Final_Hex);
+       end
+       Counter+=1;
+   end
+end

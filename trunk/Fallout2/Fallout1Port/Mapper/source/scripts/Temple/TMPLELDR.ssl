@@ -1,0 +1,87 @@
+/*
+
+	Special Encounter - Temple of Trials, guard near the fireplace
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_TMPLELDR
+
+#include "..\headers\command.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+
+procedure NodeFloat;
+
+variable init_teams := 0;
+variable teleport := 0;
+
+#define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
+
+#define EVENT_TELEPORT 					(1)
+
+procedure start begin
+	if (not(init_teams)) then begin
+		init_teams := 1;
+		set_self_team( TEAM_VAULT13 );
+		set_self_ai( AI_PEASANT );
+	end
+end
+
+procedure timed_event_p_proc begin
+	if (fixed_param == EVENT_TELEPORT) then begin
+		
+		//play_sfx("neptune");
+		//play_sfx("pluto");
+		//play_sfx("saturn");
+		play_sfx("uranium");
+				
+      gfade_out(600);
+      load_map(MAP_GUARDIAN,10);
+      anim( dude_obj, ANIMATE_ROTATION, 5 );
+      gfade_in(600);
+	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure pickup_p_proc begin
+end
+
+procedure critter_p_proc begin
+	if (self_distance_from_dude < 20 and self_elevation == dude_elevation) then begin
+		call NodeFloat;
+	end
+end
+
+procedure talk_p_proc begin
+	call NodeFloat;
+end
+
+procedure destroy_p_proc begin
+	inc_good_critter
+	if (teleport == 0) then begin
+		teleport := 1;
+		float(151);
+		add_timer_event(self_obj, game_ticks(3), EVENT_TELEPORT);
+	end
+end
+
+procedure NodeFloat begin
+	if (teleport == 0) then begin
+		teleport := 1;
+		float(150);
+		add_timer_event(self_obj, game_ticks(3), EVENT_TELEPORT);
+	end
+end
