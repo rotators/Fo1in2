@@ -1,7 +1,18 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
-#include "..\headers\modreact.h"
+/*
 
+	Encounter - Lance, the traveler
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_LANCE
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure critter_p_proc;
 procedure destroy_p_proc;
@@ -72,79 +83,42 @@ procedure LanceLoot;
 variable initial :=  0;
 variable go_to_Shady;
 variable go_to_Raiders;
-//variable global_temp;
-//variable dest_tile;
-//variable step_tile;
-//variable in_dialog;
-//variable forced_node;
-//variable restock_amt;
-//variable restock_obj;
-//variable restock_trash;
-//variable removed_qty;
 
-procedure start
-begin
-	
-
+procedure start begin
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_SHADY_SANDS );
 		set_self_ai( AI_GUARD );
 	end
-	if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-		call critter_p_proc;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if ((global_var( GVAR_LANCE_STATUS ) bwand 1) != 0) then begin
+		display_msg(message_str(SCRIPT_LANCE, 101));
 	end
 	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				call pickup_p_proc;
-			end
-			else begin
-				if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-					call talk_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						script_overrides;
-						if ((global_var( GVAR_LANCE_STATUS ) bwand 1) != 0) then begin
-							display_msg(message_str(SCRIPT_LANCE, 101));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_LANCE, 100));
-						end
-						script_overrides;
-					end
-				end
-			end
-		end
+		display_msg(message_str(SCRIPT_LANCE, 100));
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if ((global_var( GVAR_LANCE_STATUS ) bwand 2) != 0) then begin
 		attack(dude_obj);
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
 	inc_good_critter
 	set_global_var( GVAR_LANCE_STATUS, global_var( GVAR_LANCE_STATUS ) bwor 4 );
 	set_global_var( GVAR_LANCE_DEAD_ALREADY_SEEN, 1 );
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var( GVAR_LANCE_STATUS, global_var( GVAR_LANCE_STATUS ) bwor 2 );
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (shady_invaded) then begin//GLOBAL_VAR_12 = Shady Sands invaded
@@ -225,8 +199,7 @@ begin
 	end
 end
 
-procedure Lance00
-begin
+procedure Lance00 begin
 	BottomReact
 	set_global_var( GVAR_LANCE_STATUS, global_var( GVAR_LANCE_STATUS ) bwor 1 );
 	gsay_reply(699, 102);
@@ -237,8 +210,7 @@ begin
 	giq_option( -3, SCRIPT_LANCE, 107, Lance13, NEUTRAL_REACTION );
 end
 
-procedure Lance00a
-begin
+procedure Lance00a begin
 	if ((dude_strength > 7) or dude_item_count( PID_PLASMA_RIFLE ) or dude_item_count( PID_LASER_RIFLE ) or dude_item_count( PID_ROCKET_LAUNCHER ) or dude_item_count( PID_MINIGUN )) then begin
 		call Lance08;
 	end
@@ -247,20 +219,17 @@ begin
 	end
 end
 
-procedure Lance01
-begin
+procedure Lance01 begin
 	BottomReact
 	float_msg(self_obj, message_str(SCRIPT_LANCE, 108), 0);
 	set_global_var( GVAR_LANCE_STATUS, global_var( GVAR_LANCE_STATUS ) bwor 2 );
 end
 
-procedure Lance02
-begin
+procedure Lance02 begin
 	float_msg(self_obj, message_str(SCRIPT_LANCE, 109), 0);
 end
 
-procedure Lance03
-begin
+procedure Lance03 begin
 	gsay_reply(699, 110);
 	if ((global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) == 1) and (dude_item_count( PID_WATER_CHIP ) == 0)) then begin
 		giq_option( 4, SCRIPT_LANCE, 111, Lance14, NEUTRAL_REACTION );
@@ -275,8 +244,7 @@ begin
 	giq_option( -3, SCRIPT_LANCE, 115, Lance18, NEUTRAL_REACTION );
 end
 
-procedure Lance04
-begin
+procedure Lance04 begin
 	set_global_var( GVAR_LANCE_STATUS, global_var( GVAR_LANCE_STATUS ) bwor 1 );
 	gsay_reply(699, 116);
 	if ((global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) == 1) and (dude_item_count( PID_WATER_CHIP ) == 0)) then begin
@@ -288,8 +256,7 @@ begin
 	giq_option( -3, SCRIPT_LANCE, 121, Lance24, NEUTRAL_REACTION );
 end
 
-procedure Lance04a
-begin
+procedure Lance04a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Lance19;
 	end
@@ -298,13 +265,11 @@ begin
 	end
 end
 
-procedure Lance05
-begin
+procedure Lance05 begin
 	float_msg(self_obj, message_str(SCRIPT_LANCE, 122), 0);
 end
 
-procedure Lance06
-begin
+procedure Lance06 begin
 	gsay_reply(699, message_str(SCRIPT_LANCE, 123) + dude_name + message_str(SCRIPT_LANCE, 124));
 	giq_option( 4, SCRIPT_LANCE, 125, Lance25, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LANCE, 113, Lance16, NEUTRAL_REACTION );
