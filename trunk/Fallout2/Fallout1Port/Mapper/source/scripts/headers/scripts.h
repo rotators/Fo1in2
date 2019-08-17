@@ -1017,5 +1017,6 @@
 #define SCRIPT_ARCAVES          (1003)   // ARCAVES.int    ; Temple map script
 #define SCRIPT_RNDFORVR         (1004)  // rndForvr.int    ; Guardian of Forever Rnd Enct Map Script
 #define SCRIPT_ECGRDFRV         (1005)  // ecGrdFrv.int    ; Guardian of Forever spatial script
+#define SCRIPT_IIMINE           (1006)  // IIMine.int      ; Mines in Raiders Cave
 
 #endif // SCRIPTS_H
