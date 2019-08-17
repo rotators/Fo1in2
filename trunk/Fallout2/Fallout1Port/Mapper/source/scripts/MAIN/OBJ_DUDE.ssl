@@ -34,10 +34,6 @@ variable ShootOverseer := 0;
 variable gun_ptr := 0;
 variable GunSoundAnim := 0;
 
-variable H1;
-variable H2;
-variable IDH1;
-variable IDH2;
 variable SecondsFLAG;
 variable SecondsLeft;
 variable TimeFlag;
@@ -83,6 +79,7 @@ procedure Cheater19f;
 procedure Cheater19g;
 procedure Cheater19h;
 procedure CheaterEnd;
+
 procedure FixesOFF;// disable "Bug Fixes Only" mode
 procedure FixesON;// enable "Bug Fixes Only" mode
 procedure FixesOnly;// toggle "Bug Fixes Only" mode
@@ -182,8 +179,8 @@ procedure Slideshow;
 #define EVENT_COUNTDOWN_MASTER 			(11)
 #define EVENT_COUNTDOWN_VATS 				(12)
 
-#define in_mariposa 			((cmap == MAP_MBENT) or (cmap == MAP_MBSTRG12) or (cmap == MAP_MBVATS12))
-#define in_cathedral 		((cmap == MAP_CHILDRN1) or (cmap == MAP_CHILDRN2) or (cmap == MAP_MSTRLR12) or (cmap == MAP_MSTRLR34))
+#define in_mariposa 			(CUR_MAP_MBENT or CUR_MAP_MBSTRG12 or CUR_MAP_MBVATS12)
+#define in_cathedral 		(CUR_MAP_CHILDRN1 or CUR_MAP_CHILDRN2 or CUR_MAP_MSTRLR12 or CUR_MAP_MSTRLR34)
 
 procedure start begin
 	// Save the start date to check the water counter / days remaining, etc:
@@ -246,11 +243,9 @@ procedure combat_p_proc begin
 				end
 			end
 		end
-//		set_local_var(0, local_var(0) + 1);// counter to prevent display on first combat turn
 	end
-//
-//if fixed_param == 2) then begin// player lands a hit on their target
-//
+
+
 	if (dude_poison_stat > 0) then begin
 		if not(is_loading_game) then begin// not IS_LOADING_GAME
 			set_global_var( GVAR_DUDE_OBJ_POISONED, 1 );// tracker
@@ -264,20 +259,9 @@ procedure combat_p_proc begin
 			end
 		end
 	end
-
 end
 
 procedure critter_p_proc begin
-
-	if global_var( GVAR_DCMUTANT_GAVE_DISK ) != 3 then begin// DCMUTANT_GAVE_DISK:=0; // 477 // ! Fallout Fixt: 2 means showed disk to Rutger
-		if global_var( GVAR_DCMUTANT_GAVE_DISK ) == 2 then begin
-			if global_var( GVAR_DCMUTANT_DISK_POINTER ) > 1 then begin
-		//		destroy_object(global_var(DCMUTANT_DISK_POINTER));// DCMUTANT_DISK_POINTER     :=0;    //  451  // ! Fallout Fixt: Holds the DCMutant disk pointer
-				set_global_var( GVAR_DCMUTANT_GAVE_DISK, 3 );
-			end
-		end
-	end
-
 	// "Poison has left your system"
 	if (dude_poison_stat > 0) then begin// is_poisoned
 		if not(is_loading_game) then begin// not IS_LOADING_GAME
@@ -290,7 +274,6 @@ procedure critter_p_proc begin
 			display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
 		end
 	end
-
 end
 
 procedure look_at_p_proc begin
@@ -333,49 +316,9 @@ procedure map_enter_p_proc begin
 	if debug_mode then begin// <-- Debug_Enabled
 		call DebugEnterMsgs;
 	end
-
-	// Now calls here instead of on each map.
-	//call Invasions;
-
-	/*
-// [GOOF FIX] ...for my goof of making Garl's Father 100% of the time:
-	if global_var( GVAR_MISTAKEN_ID ) then begin
-		if (dude_luck < 9) or (dude_is_female) then begin
-			set_global_var( GVAR_MISTAKEN_ID, 0 );
-		end
-	end*/
-
-// For part of the crude fix of the Necropolis caravans' loading empty map elevation issue.
-//	if cur_map_index == 4 then begin
-//		set_global_var(CC_NECROP_ALREADY_LOADED, 0);
-//	end
-// "You earn 10000 experience points" since previously it only showed once Vats and Master both dead, even thuogh both give 10000xp independently
-/*
-	if (global_var( GVAR_FIXT_BASE_VERSION_NUM ) >= 6) and (global_var( GVAR_FIXT_SUBVERSION_INSTALLED ) >= 3) then begin
-		if (global_var( GVAR_PLAYER_INFORMED_10K ) != 1) then begin
-			if (global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2) then begin
-				if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
-					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
-					display_msg(message_str(SCRIPT_GENCHAT, 700));
-					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
-				end
-			end
-			else if (global_var( GVAR_MASTER_BLOWN ) == 1) then begin
-				if ((cur_map_index != MAP_CHILDRN1) and (cur_map_index != MAP_CHILDRN2) and (cur_map_index != MAP_MSTRLR12) and (cur_map_index != MAP_MSTRLR34)) then begin
-					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
-					display_msg(message_str(SCRIPT_GENCHAT, 700));
-					set_global_var( GVAR_PLAYER_INFORMED_10K, 1 );
-				end
-			end
-		end
-	end
-*/
 end
 
 procedure map_update_p_proc begin
-	variable cmap := 0;
-	cmap := cur_map_index;
-
 	if in_mariposa then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
 		if ((global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2)) then begin
 			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
@@ -579,9 +522,12 @@ procedure timed_event_p_proc begin
 
 end
 
+/*******************************************************************
+	This, as in vanilla, checks if the PC is a "bad guy", and if so,
+	you'll slaughter the Overseer when he delivers the news.
+	Was under "fixed_param == 6" in timed_event -- Now has its own code routine. [Sduibek]
+*******************************************************************/
 procedure KillCheck begin
-// This, as in vanilla, checks if the PC is a "bad guy", and if so, you'll slaughter the Overseer when he delivers the news.
-// Was under "fixed_param == 6" in timed_event -- Now has its own code routine. [Sduibek]
 	ShootOverseer := 0;
 	if (dude_trait( TRAIT_bloody_mess )) then begin//    Bloody Mess trait
 		ShootOverseer := 1;
