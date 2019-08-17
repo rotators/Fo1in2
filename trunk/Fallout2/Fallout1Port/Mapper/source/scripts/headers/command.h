@@ -548,10 +548,6 @@ variable step_tile;
 
 #define self_visible                        obj_is_visible_flag(self_obj)
 
-#define self_cur_hp                         (get_critter_stat(self_obj,STAT_current_hp))
-#define self_max_hp                         (get_critter_stat(self_obj,STAT_max_hp))
-
-
 #define skill_success(x,y,z)                (is_success(roll_vs_skill(x,y,z)))
 #define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
 
