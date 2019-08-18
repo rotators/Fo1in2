@@ -31,7 +31,7 @@ namespace undat_ui
             this.updater = updater;
             this.error = error;
             this.masterPath = masterPath;
-            this.outputPath = outputPath;
+            this.outputPath = outputPath + "\\data";
             this.extractFiles = extractFiles;
             this.numFiles = extractFiles.Count();
             this.threads = threads;
