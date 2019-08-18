@@ -22,17 +22,21 @@
 	Note: If the player decides to continue after finishing the game,
 	He will be moved to a new random position on the worldmap.
 *********************************************************/
-#define set_story_finished				set_world_map_pos(random(780,990),random(130,260));	\
-										set_global_var(GVAR_GAME_CONTINUES,100); 			\
-										if (dude_is_male) then 								\
-											play_gmovie(WALKM_MOVIE); 						\
-										else 												\
-											play_gmovie(WALKW_MOVIE); 						\
-										endgame_movie; 										\
-										gfade_out(1);										\
-										party_member_unhide_all								\
-										/*world_map;*/load_map(MAP_RNDDESER,0);				\
-										gfade_in(1)
+#define set_story_finished          set_world_map_pos(random(780,990),random(130,260));   \
+                                    set_global_var(GVAR_GAME_CONTINUES,100);              \
+                                    mark_map_entrance_state(MAP_VAULT13,0);               \
+                                    mark_map_entrance_elev_state(MAP_VAULT13,0,0);        \
+                                    mark_map_entrance_elev_state(MAP_VAULT13,1,0);        \
+                                    mark_map_entrance_elev_state(MAP_VAULT13,2,0);        \
+                                    if (dude_is_male) then                                \
+                                       play_gmovie(WALKM_MOVIE);                          \
+                                    else                                                  \
+                                       play_gmovie(WALKW_MOVIE);                          \
+                                    endgame_movie;                                        \
+                                    gfade_out(1);                                         \
+                                    party_member_unhide_all                               \
+                                    /*world_map;*/load_map(MAP_RNDDESER,0);               \
+                                    gfade_in(1)
 
 #define is_story_finished				(global_var(GVAR_GAME_CONTINUES) > 0)
 
