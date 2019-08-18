@@ -307,7 +307,7 @@ variable Scenery_Creation_Ptr;
 											Blocking_Cycle(4,1,Elevation)                                                                 \
 											/*debug("create motorcycle");*/ \
                                           end
-										  
+
 #define Create_Moto2(Hex_Num,Elevation)   if (not(is_loading_game)) then begin               											  \
                                             Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO2,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
                                             Scenery_Creation_Hex:=Hex_Num;                                                                \
@@ -347,24 +347,24 @@ variable Scenery_Creation_Ptr;
                                                 Dest_Block_Cycle(4,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(5,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(0,1,Elevation)                                                    \
-                                                Dest_Block_Cycle(1,1,Elevation) 													\
-                                            end 																					\
+                                                Dest_Block_Cycle(1,1,Elevation) 													               \
+                                            end 																					                     \
                                           end
-										  
+
 // This will make the car that the player drives along the world map
-#define Create_Car(Hex_Num,Elevation)     if (global_var(GVAR_PLAYER_GOT_CAR)== 1) then begin		\
-											Create_Moto1(Hex_Num,Elevation) 						\
-										  end 														\
-										  else if (global_var(GVAR_PLAYER_GOT_CAR)== 2) then begin 	\
-											Create_Moto2(Hex_Num,Elevation) 						\
-										  end
-										  
+#define Create_Car(Hex_Num,Elevation)     if (global_var(GVAR_PLAYER_GOT_CAR)== 1) then begin         \
+											            Create_Moto1(Hex_Num,Elevation)                          \
+                                          end 														               \
+                                          else if (global_var(GVAR_PLAYER_GOT_CAR)== 2) then begin 	\
+            						               Create_Moto2(Hex_Num,Elevation) 						         \
+            					               end
+
 #define Dest_Car(Hex_Num,Elevation)     Dest_Moto(Hex_Num,Elevation)
 #define Upgrade_Car(Hex_Num,Elevation)  if (global_var(GVAR_PLAYER_GOT_CAR)== 2) and (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO1)) then begin \
 											Dest_Moto(Hex_Num,Elevation)	\
 											Create_Moto2(Hex_Num,Elevation) \
-										end		
-										  
+										end
+
 
 /************************************************
     Caravan carts
@@ -454,7 +454,7 @@ variable Scenery_Creation_Ptr;
                                                    Dest_Caravan_Cycle(4,1,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(5,3,Elevation)                                                  \
                                                 end
-                                             
+
 /************************************************
     Other stuff
 ************************************************/
