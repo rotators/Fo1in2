@@ -34,7 +34,7 @@
 							end																	\
 							else																\
 								set_light_level(0)												\
-						
+
 #define Darkness 			set_light_level(DUSK_LIGHT)
 
 #define Cavern_Lighting 	set_light_level(CAVERN_LIGHT)
@@ -132,6 +132,9 @@
 #define trunk_size_small				(40)
 #define trunk_size_big					(60)
 
+#define player_has_normal_bike 		(global_var(GVAR_PLAYER_GOT_CAR) == 1)
+#define player_has_big_bike 			(global_var(GVAR_PLAYER_GOT_CAR) == 2)
+
 #define get_car_current_map 			global_var(GVAR_CAR_CUR_MAP)
 #define get_car_in_cur_map 			get_car_current_map == cur_map_index
 #define set_car_current_map    		set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
@@ -142,19 +145,27 @@
 #define get_car_out_of_fuel 			(global_var(GVAR_BIKE_OUT_OF_FUEL) != 0)
 
 #define set_car_exit_map 				if (global_var(GVAR_PLAYER_GOT_CAR) != 0) and car_in_any_encounter then begin \
-											set_car_worldmap; \
-											car_give_to_party; \
-										end
+													set_car_worldmap; 																			\
+													car_give_to_party; 																			\
+												end
 
-#define car_in_any_encounter 	  		((car_current_town == AREA_RND_DESERT) or 		\
-										(car_current_town == AREA_RND_MOUNTAIN) or  	\
-										(car_current_town == AREA_RND_CITY) or  		\
-										(car_current_town == AREA_RND_COAST) or 		\
-										(car_current_town == AREA_RND_ENC_DESERT) or  	\
-										(car_current_town == AREA_RND_ENC_MOUNTAIN) or  \
-										(car_current_town == AREA_RND_ENC_CITY) or  	\
-										(car_current_town == AREA_RND_ENC_COAST))										
-										
+#define car_in_any_encounter 	  		((car_current_town == AREA_RND_DESERT) or 			\
+												(car_current_town == AREA_RND_MOUNTAIN) or  			\
+												(car_current_town == AREA_RND_CITY) or  				\
+												(car_current_town == AREA_RND_COAST) or 				\
+												(car_current_town == AREA_RND_ENC_DESERT) or  		\
+												(car_current_town == AREA_RND_ENC_MOUNTAIN) or  	\
+												(car_current_town == AREA_RND_ENC_CITY) or  			\
+												(car_current_town == AREA_RND_ENC_COAST) or  		\
+												(car_current_town == AREA_SPECIAL_RND_FOOT) or  	\
+												(car_current_town == AREA_SPECIAL_RND_TARDIS) or  	\
+												(car_current_town == AREA_SPECIAL_RND_USEDCAR) or  \
+												(car_current_town == AREA_SPECIAL_RND_COLATRUK) or \
+												(car_current_town == AREA_SPECIAL_RND_FSAUSER) or  \
+												(car_current_town == AREA_SPECIAL_RND_TALKCOW) or  \
+												(car_current_town == AREA_SPECIAL_RND_TEMPLE))
+
+
 //        City Car is At                Tile Num For Car
 #define CAR_UNCLAIMED_HEX                   (18704)         // When you don't have the car
 #define CAR_UNCLAIMED_ELEV                  (1)
