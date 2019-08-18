@@ -104,9 +104,11 @@ procedure use_p_proc begin
 	   if (stop_car_use == false) then begin
 	      car_was_used_to_exit := true;
 	      set_car_worldmap;
-	      set_car_used_first_time;
-	      car_give_to_party;
 
+	      if not(car_out_of_fuel) then
+	      	set_car_used_first_time;
+
+	      car_give_to_party;
 	      play_sfx("engineon");
 	      debug_msg("Party has the car");
 	   end
@@ -125,7 +127,7 @@ procedure use_obj_on_p_proc begin
 		set_global_var(GVAR_PLAYER_GOT_CAR,1);
 		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
 		give_bike_exp
-		display_mstr(220); // 452
+		display_mstr(220);
 	end
 	else if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
 		call refuel_car;
@@ -177,14 +179,19 @@ variable
       if(space_in_tank == 0) then begin
 			display_msg(mstr(511));
       end
+
       // Check if fuel in one pack is less than space left in tank
 		else if (fill_amount <= space_in_tank) then begin
+			display_mstr(510);
+
 		   // Fill by fuel left in one pack
 		   //debug("Used per pack fill.");
 			car_give_gas(fill_amount);
 			remove_pid_qty(dude_obj, used_fuel, 1)
 		end
 		else begin
+			display_mstr(510);
+
 		   //Use only part of the pack
 		   //debug("Used partial pack fill.");
 		   fill_amount := space_in_tank;
