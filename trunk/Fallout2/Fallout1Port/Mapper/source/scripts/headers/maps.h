@@ -58,6 +58,8 @@
 #define CUR_AREA_BONEYARD             (cur_town == AREA_BONEYARD)
 #define CUR_AREA_CATHEDRAL            (cur_town == AREA_CATHEDRAL)
 
+#define CUR_AREA_CAR_OUTTA_GAS        (cur_town == AREA_CAR_OUTTA_GAS)
+
 #define CUR_AREA_SPECIAL_RND_FOOT     (cur_town == AREA_SPECIAL_RND_FOOT)
 #define CUR_AREA_SPECIAL_RND_TARDIS   (cur_town == AREA_SPECIAL_RND_TARDIS)
 #define CUR_AREA_SPECIAL_RND_USEDCAR  (cur_town == AREA_SPECIAL_RND_USEDCAR)
