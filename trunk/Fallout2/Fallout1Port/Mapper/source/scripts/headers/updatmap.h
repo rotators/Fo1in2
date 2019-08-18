@@ -133,10 +133,13 @@
 #define trunk_size_big					(60)
 
 #define get_car_current_map 			global_var(GVAR_CAR_CUR_MAP)
-#define get_car_in_cur_map 				get_car_current_map == cur_map_index
-#define set_car_current_map    			set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
+#define get_car_in_cur_map 			get_car_current_map == cur_map_index
+#define set_car_current_map    		set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
 #define set_car_worldmap     			set_global_var(GVAR_CAR_CUR_MAP,-1)
-#define get_car_from_worldmap 			(global_var(GVAR_CAR_CUR_MAP) == -1)
+#define get_car_from_worldmap 		(global_var(GVAR_CAR_CUR_MAP) == -1)
+
+#define set_car_out_of_fuel 			set_global_var(GVAR_BIKE_OUT_OF_FUEL,1)
+#define get_car_out_of_fuel 			(global_var(GVAR_BIKE_OUT_OF_FUEL) != 0)
 
 #define set_car_exit_map 				if (global_var(GVAR_PLAYER_GOT_CAR) != 0) and car_in_any_encounter then begin \
 											set_car_worldmap; \
