@@ -13,6 +13,7 @@
 
 #include "..\headers\command.h"
 #include "..\headers\ModReact.h"
+#include "..\headers\updatmap.h"
 
 procedure start;
 procedure critter_p_proc;
@@ -49,8 +50,6 @@ variable GotReaction := 0;
 
 
 procedure start begin
-
-
 	if not(initial) then begin
 		initial :=  1;
 		set_self_team(TEAM_SHADY_SANDS );
@@ -77,8 +76,7 @@ procedure destroy_p_proc begin
 	set_global_var( GVAR_WATER_THIEF_2, 1 );
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (not(known)) then begin
 		display_msg(message_str(SCRIPT_DUC, 100));
@@ -88,13 +86,11 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var( GVAR_WATER_THIEF_2, 1 );
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (global_var( GVAR_WATER_THIEF_2 ) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 0);
@@ -164,10 +160,12 @@ procedure BarterDone
 begin
 end
 
-procedure Duc03
-begin
+procedure Duc03 begin
 	gsay_reply(243, 107);
-	NOption( 108, Duc05, 4 );
+
+	if not(car_in_any_encounter) then
+	   NOption( 108, Duc05, 4 );
+
 	NOption( 109, DucEnd, 4 );
 end
 
@@ -176,8 +174,7 @@ begin
 	gsay_message(243, 128, 50);
 end
 
-procedure Duc05
-begin
+procedure Duc05 begin
 	gsay_message(243, 111, 50);
 	game_time_advance(game_ticks(86400));
 	if (global_var( GVAR_WORLDMAPLIST_SHADY_SANDS ) < 1) then
