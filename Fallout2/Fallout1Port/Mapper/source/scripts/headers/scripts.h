@@ -77,7 +77,7 @@
 #define SCRIPT_GHDORGRD  (70)  //  GhDorGrd.int    ; Ghoul Door Guard.                                                           
 #define SCRIPT_GHGENDED  (71)  //  GhGenDed.int    ; Generic dead ghouls for Necropolis.                                         
 #define SCRIPT_GHGUARD   (72)  //  GhGuard.int     ; Ghoul guard for Set.
-#define SCRIPT_DEPRECATED_10 (73) //SCRIPT_GHOUL     (73)  //  Ghoul.int       ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_CARDESRT  (73)  // CarDesrt.int     ; Car Out of Gas Desert Map
 #define SCRIPT_GHREFUGE  (74)  //  GhRefuge.int    ; Ghoul Refugee hiding the the Zombie hideout                                 
 #define SCRIPT_GHZERO    (75)  //  GhZero.int      ; A ghoul guard
 #define SCRIPT_GLOWONE   (76)  //  GlowOne.int     ; Glowing Ones that are caged by Set.
