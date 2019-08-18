@@ -39,11 +39,12 @@ procedure Pry_Door;
    prepended by LVAR_
 *****************************************************************/
 
-//local_var(4) == HALLDED | self is Hallded locked door
+//local_var(LVAR_HALLDED_Door) == HALLDED | self is Hallded locked door
 //local_var(5) == HALLDED | Hallded lock was picked?
 //local_var(6) == HALLDED | has init Hallded door?
 //local_var(7) == GotExpForPicking (NOT USED)
 
+#define LVAR_HALLDED_Door 				(4)
 #define LVAR_Explosion_Attempts 		(8)
 
 /*******************************************************************
@@ -75,7 +76,7 @@ variable last_source_obj;
 
 procedure start begin
 	if (self_tile == 17128) and (CUR_MAP_HALLDED) then begin
-		set_local_var(4, 1);//  HALLDED | self is Hallded locked door
+		set_local_var(LVAR_HALLDED_Door, 1);//  HALLDED | self is Hallded locked door
 		if (local_var(6) != 1) and (map_first_run) then begin
 			set_local_var(5, 0);
 			set_map_var(11, 1);
@@ -102,7 +103,11 @@ procedure timed_event_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-	if local_var(4) then begin//  HALLDED | self is Hallded locked door
+	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
+		if necropolis_invaded then begin
+			destroy_object(self_obj);
+		end
+
 		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
 			if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
 				obj_unlock(self_obj);
@@ -119,7 +124,7 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-	if local_var(4) then begin//  HALLDED | self is Hallded locked door
+	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
 		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
 			if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
 				obj_unlock(self_obj);
@@ -136,7 +141,7 @@ procedure map_update_p_proc begin
 end
 
 procedure use_p_proc begin
-	if local_var(4) then begin//  HALLDED | self is Hallded locked door
+	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
 //		if (map_var(11) == 1) then begin
 //			obj_lock(self_obj);
 //		end
@@ -190,7 +195,7 @@ end
 procedure use_skill_on_p_proc begin
 variable Skills_Roll;
 
-	if local_var(4) then begin//  HALLDED | self is Hallded locked door
+	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
 		if (map_var(11) == 1) and (local_var(5) == 0) then begin
 			if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
 				script_overrides;
@@ -230,7 +235,7 @@ procedure use_obj_on_p_proc begin
    variable Skills_Roll;
    Tool:=obj_pid(obj_being_used_with);
 
-	if local_var(4) then begin//  HALLDED | self is Hallded locked door
+	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
 		Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
 
 		if ((Tool == PID_LOCKPICKS) and (map_var(11) == 1)) then begin
