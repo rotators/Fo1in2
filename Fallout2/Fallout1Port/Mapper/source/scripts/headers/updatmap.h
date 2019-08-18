@@ -162,8 +162,7 @@
 												(car_current_town == AREA_SPECIAL_RND_USEDCAR) or  \
 												(car_current_town == AREA_SPECIAL_RND_COLATRUK) or \
 												(car_current_town == AREA_SPECIAL_RND_FSAUSER) or  \
-												(car_current_town == AREA_SPECIAL_RND_TALKCOW) or  \
-												(car_current_town == AREA_SPECIAL_RND_TEMPLE))
+												(car_current_town == AREA_SPECIAL_RND_TALKCOW))
 
 
 //        City Car is At                Tile Num For Car
@@ -203,6 +202,8 @@
 #define CAR_BONEYARD_LIBRARY_HEX			(18125)
 #define CAR_CATHEDRAL_HEX					(21475)
 #define CAR_CATHEDRAL_DEAD_HEX				(21901)
+
+#define CAR_RND_FOREVER_HEX                 (18904)
 
 #define CAR_RANDOM_DESERT_HEX               (20106)
 #define CAR_RANDOM_COAST_HEX                (20106)
