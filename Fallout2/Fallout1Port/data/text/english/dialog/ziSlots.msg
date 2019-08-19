@@ -107,7 +107,7 @@
 {2101}{}{Me }
 {2102}{}{ who yu?}
 {2103}{}{Me miss MOM. }
-{2104}{}{ miss ARR-YO. Me want go home}
+{2104}{}{ miss VAUL-T. Me want go home}
 {2105}{}{(Shake its hand)}
 {2106}{}{you one strange mutant}
 {2107}{}{Praise the Vault! Praise the Vault!}
@@ -120,7 +120,7 @@
 {2131}{}{ME }
 {2132}{}{! YU ANSWER ME!}
 {2133}{}{(Shake its hand)}
-{2134}{}{Me child of Vault Dweller. You talk to me NOW.}
+{2134}{}{Me Vault Dweller. You talk to me NOW.}
 {2135}{}{you one strange mutant}
 {2136}{}{Are you a water chip?}
 {2137}{}{Wander off, look for other shiny things}
@@ -145,7 +145,7 @@
 # female
 {2207}{}{*I got what I wanted from you baby. Why don't you give up?*}
 {2208}{}{*Trash!*}
-{2209}{}{*Don't let the casino door hit you in the ass on your way out.*}
+{2209}{}{*Don't let the door hit you in the ass on your way out.*}
 
 # slot machine taunts win
 # male [3X - 1X]
@@ -160,8 +160,8 @@
 {2253}{}{*Ennnnghhhh! That's it, sweetheart! Who's your Daddy?! Who's your Daddy?!! Do it again! Yank it harder this time! Harder!*}
 
 # 13. DRUNK, HIGH OR OTHERWISE FUCKED UP (WTG)
-{2280}{}{(You see a slot machine. Its shiny frame and golden handle gleam seductively beneath New Reno's lights. Its coin slot beckons you, and you feel your face flush with anticipation. As you stare at it, one of its three windows winks at you. From the coin slot you hear a throaty voice.) *Well, my word! Helloooo there, sugah. Show a girl a good time?*}
-{2281}{}{(You see a slot machine. Its strong, rugged frame and golden handle gleam like a sun god beneath New Reno's lights. Its coin slot beckons you seductively, and you feel your thighs burn with anticipation. As you stare at it, suddenly a heavy male voice whispers from the coin slot.) *Ain't seen a pretty woman like you around before, miss. You looking to take a chance?*}
+{2280}{}{(You see a slot machine. Its shiny frame and golden handle gleam seductively beneath the lights. Its coin slot beckons you, and you feel your face flush with anticipation. As you stare at it, one of its three windows winks at you. From the coin slot you hear a throaty voice.) *Well, my word! Helloooo there, sugah. Show a girl a good time?*}
+{2281}{}{(You see a slot machine. Its strong, rugged frame and golden handle gleam like a sun god beneath the lights. Its coin slot beckons you seductively, and you feel your thighs burn with anticipation. As you stare at it, suddenly a heavy male voice whispers from the coin slot.) *Ain't seen a pretty woman like you around before, miss. You looking to take a chance?*}
 {2282}{}{::Pinch self::}
 {2283}{}{Uh…hello?}
 {2284}{}{::Take a deep breath, walk away.::}
@@ -182,9 +182,9 @@
 # 16. DRUNK 3 (15)
 {2340}{}{*Course we can, sweetheart, course we can.* (The slot machine looks sympathetic.) *What's troubling your pretty little head?*}
 {2341}{}{*Course we can, sugah, course we can.* (The slot machine looks sympathetic.) *What's troubling you, handsome?*}
-{2342}{}{Me miss MOM and miss VAULT 13 and I…canna find the Water Chip and…*sniff*}
-{2343}{}{Me miss MOM and VAULT 13 wuz ATTACKED and I…dunna where they are…and…*sniff*}
-{2344}{}{Me need to fix big ship…and I dunna know HOW…and muh-muh-my Mom's GONE and…*sniff*}
+{2342}{}{Me miss MOM and miss VAULT and I…canna find the Water Chip and…*sniff*}
+{2343}{}{Me miss MOM and VAULT wuz ATTACKED and I…dunna where they are…and…*sniff*}
+{2344}{}{Me need to stop big, bad mutants…and I dunna know HOW…and muh-muh-my Mom's GONE and…*sniff*}
 {2345}{}{I finsshed the game…anna now I'm jusht wandrin' round and…ah'm worried itz all OVER and…*sniff*}
 {2346}{}{It's jusht that Fhallowt tooo doesnt s'port my 3D Fxxxx card an I spend so much *monee* onnit and *sniff*}
 {2347}{}{I tried ta get a good charactrr but I think I spent the pointz all *wrong*…n' now I ave a shitteee charactrr…n'…*sniff*}
