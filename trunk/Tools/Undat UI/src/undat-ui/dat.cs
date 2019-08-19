@@ -74,46 +74,43 @@ namespace undat_ui
             return r.ReadBytes(size);
         }
 
-        
-
         // Implemented by following https://falloutmods.fandom.com/wiki/DAT_file_format#Fallout_1_LZSS_uncompression_algorithm
+        // https://en.wikipedia.org/wiki/Lempel-Ziv-Storer-Szymanski
+        // https://web.archive.org/web/20160110174426/https://oku.edu.mie-u.ac.jp/~okumura/compression/history.html
         public byte[] getCompressedBytes(MemoryStream stream)
         {
-            // create a new stream so that we are thread safe.
+            // Create a new stream so that we are thread safe.
             var s = new MemoryStream();
             BinaryBigEndian r;
             lock (streamLock) {
                 stream.Seek(offset, SeekOrigin.Begin);
+                // Copy packedSize amount of bytes from the original dat stream to our new memory stream.
                 for (int i = 0; i < packedSize; i++)
                     s.WriteByte((byte)stream.ReadByte());
 
                 r = new BinaryBigEndian(s);
                 r.BaseStream.Seek(0, SeekOrigin.Begin);
             }
-
-            //var correct = File.ReadAllBytes(@"D:\Fallout\fo1_master\"+this.fullPath);
-
-            int uidx = 0;
             
             short DICT_SIZE = 4096;
             short MIN_MATCH = 3;
             short MAX_MATCH = 18;
 
-            //string debug = "";
             byte[] output = new byte[size];
             byte[] dictionary = new byte[DICT_SIZE];
 
             short N;    // number of bytes to read
-            short NR;   // bytes read
+            short NR;   // bytes read from last block header
             short DO=0; // dictionary offset - for reading
             short DI;   // dictionary index - for writing
+            int OI=0;   // output index, used for writing to the output array.
             int L;      // match length
             byte FL;    // Flags indicating the compression status of up to 8 next characters.
 
             void _cleardict()
             {
                 for (var i = 0; i < DICT_SIZE; i++)
-                    dictionary[i] = 0x20;
+                    dictionary[i] = 0x20; // ' ' in ascii
                 DI = (short)(DICT_SIZE - MAX_MATCH);
             }
 
@@ -143,45 +140,23 @@ namespace undat_ui
                     DI = 0;
             }
 
-            void _write(byte[] by)
+            void _writeBytes(byte[] by)
             {
-                if (uidx >= size)
-                    return;
-                else
+                foreach (var b in by)
                 {
-                    foreach (var b in by)
-                    {
-                        if (uidx >= size)
-                            return;
-                        output[uidx] = b;
-                        /*if(output[uidx] != correct[uidx])
-                        {
-                            var uc = output[uidx];
-                            var cb = correct[uidx];
-
-                            throw new Exception("Byte diff in uncompressed!");
-                        }*/
-
-                        uidx++;
-                    }
+                    if (OI >= size)
+                        return;
+                    output[OI] = b;
+                    OI++;
                 }
-
             }
 
-            void _writeb(byte b)
+            // Write to output and dictionary
+            void _writeByte(byte b)
             {
-                if (uidx >= size)
-                    return;
-
-                output[uidx] = b;
-                /*if (output[uidx] != correct[uidx])
-                {
-                    var cb = correct[uidx];
-                    var ub = output[uidx];
-                    throw new Exception($"Byte diff in compressed block!");
-                }*/
-
-                uidx++;
+                output[OI] = b;
+                OI++;
+                _writedict(b);
             }
 
             _cleardict();
@@ -190,21 +165,17 @@ namespace undat_ui
 
             while (true) // @Start
             {
-                //if (uidx >= size)
-                //    break;
                 if (_lastbyte())
                     break;
                 gotoStart = false;
-                N = r.ReadInt16(); // How many bytes to read
-                NR = 0;
+                N = r.ReadInt16(); // How many bytes to read in the next block
+                NR = 0;    // The amount of bytes we have read in the current block so far
                 if(N == 0) // No bytes, so exit
                     break;
 
-                if (N < 0)
+                if (N < 0) // Uncompressed / literal block
                 {
-                    var b = r.ReadBytes(N * -1);
-                   // Array.Reverse(b); // Reverse since it's big endian
-                    _write(b);
+                    _writeBytes(r.ReadBytes(N * -1)); // We just read N bytes and write to the output buffer. Dictionary is untouched.
                 }
                 else // N > 0
                 {
@@ -221,35 +192,33 @@ namespace undat_ui
                         if (NR >= N || _lastbyte())
                             break; // Go to @Start
 
+                        // Read flag byte
                         FL = _readbyte();
                         if(NR >= N || _lastbyte())
                             break; // Go to @Start
 
                         for (var x = 0; x < 8; x++)
                         {
-                            if (FL % 2 == 1) // @FLodd
+                            if (FL % 2 == 1) // @FLodd, normal byte
                             {
-                                var b = _readbyte();
-                                _writeb(b);
-                                _writedict(b);
+                                // Read byte from stream and put it in the output buffer and dictionary.
+                                _writeByte(_readbyte());
+                                
                                 if (NR >= N)
                                 {
                                     gotoStart = true;
                                     break; // Go to @Start
                                 }
                             }
-                            else // @FLeven
+                            else // @FLeven, encoded dictionary offset
                             {
-                                if (uidx >= size)
-                                    break;
-
                                 if (NR >= N)
                                 {
                                     gotoStart = true;
                                     break; // Go to @Start
                                 }
 
-                               
+                                // Read dictionary offset byte
                                 DO = _readbyte();
 
                                 if (NR >= N)
@@ -258,20 +227,15 @@ namespace undat_ui
                                     break; // Go to @Start
                                 }
 
+                                // Length byte
                                 var LB = _readbyte();
-                                /*if (NR >= N)
-                                {
-                                    gotoStart = true;
-                                    break; // Go to @Start
-                                }*/
 
-                                DO |= (short)((LB & 0xF0) << 4); //  (short)((O | (L & 0xF0) << 4)); // Prepend the high-nibble (first 4 bits) from L to DO
-                                L = (int)((LB & 0x0F) + MIN_MATCH); // and remove it from L (L = L & 0x0F).
+                                DO |= (short)((LB & 0xF0) << 4);    // Prepend the high-nibble (first 4 bits) from LB to DO
+                                L = (int)((LB & 0x0F) + MIN_MATCH); // and remove it from LB and add MIN_MATCH
                                 for (var i = 0; i < L; i++)
                                 {
-                                    var b = _readdict();
-                                    _writeb(b);
-                                    _writedict(b);
+                                    // Read a byte from the dictionary at DO, increment index and write to output and dictionary at DI.
+                                    _writeByte(_readdict());
                                 }
                             }
                             FL = (byte)(FL >> 1); // @flagNext
