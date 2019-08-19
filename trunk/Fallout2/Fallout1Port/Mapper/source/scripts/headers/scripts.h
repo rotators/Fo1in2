@@ -992,12 +992,12 @@
 #define SCRIPT_MOTRTRNK  (979)  // Motorcycle trunk
 #define SCRIPT_ZIBRAPOO  (980)  // ziBraPoo.int    ; Generic BRAHMIN SHIT!!! YES YES YES
 
-#define SCRIPT_AIBKDOR          (981)    // AIBkDor.int     ; Door w/out a handle In Arroyo Caves
-#define SCRIPT_SPRTRP0          (982)    // SprTrp0.int     ; Generic spear Trap (0)
-#define SCRIPT_SPRTRP50         (983)    // SprTrp50.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_SPRTRP51         (984)    // SprTrp51.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_SPRTRP52         (985)    // SprTrp52.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_SPRTRP53         (986)    // SprTrp53.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_AIBKDOR          (981)   // AIBkDor.int     ; Door w/out a handle In Arroyo Caves
+#define SCRIPT_SPRTRP0          (982)   // SprTrp0.int     ; Generic spear Trap (0)
+#define SCRIPT_SPRTRP50         (983)   // SprTrp50.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_SPRTRP51         (984)   // SprTrp51.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_SPRTRP52         (985)   // SprTrp52.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_SPRTRP53         (986)   // SprTrp53.int    ; Arroyo Spear Trap for Caves (50)
 #define SCRIPT_ATSRTRP0         (987)   // ATSrTrp0.int    ; Arroyo Spear Trap for Caves (50)
 #define SCRIPT_ATSRTRP1         (988)   // ATSrTrp1.int    ; Arroyo Spear Trap for Caves (50)
 #define SCRIPT_ATSRTRP2         (989)   // ATSrTrp2.int    ; Arroyo Spear Trap for Caves (50)
@@ -1011,13 +1011,15 @@
 #define SCRIPT_ATSRTRPA         (997)   // ATSrTrpA.int    ; Arroyo Spear Trap for Caves (50)
 #define SCRIPT_ATSRTRPB         (998)   // ATSrTrpB.int    ; Arroyo Spear Trap for Caves (50)
 #define SCRIPT_ATSRTRPC         (999)   // ATSrTrpC.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_ATSRTRPD         (1000)   // ATSrTrpD.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_ATSRTRPE         (1001)   // ATSrTrpE.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_ATSRTRPF         (1002)   // ATSrTrpF.int    ; Arroyo Spear Trap for Caves (50)
-#define SCRIPT_ARCAVES          (1003)   // ARCAVES.int    ; Temple map script
+#define SCRIPT_ATSRTRPD         (1000)  // ATSrTrpD.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_ATSRTRPE         (1001)  // ATSrTrpE.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_ATSRTRPF         (1002)  // ATSrTrpF.int    ; Arroyo Spear Trap for Caves (50)
+#define SCRIPT_ARCAVES          (1003)  // ARCAVES.int     ; Temple map script
 #define SCRIPT_RNDFORVR         (1004)  // rndForvr.int    ; Guardian of Forever Rnd Enct Map Script
 #define SCRIPT_ECGRDFRV         (1005)  // ecGrdFrv.int    ; Guardian of Forever spatial script
 #define SCRIPT_IIMINE           (1006)  // IIMine.int      ; Mines in Raiders Cave
 #define SCRIPT_ZISLOTS          (1007)  // ziSlots.int     ; Generic Fo2 Slot Machine
+#define SCRIPT_ZCCRPDEL         (1008)  // ZCCrpDel.int    ; Craps Dealer
+#define SCRIPT_ZIDCEGRL         (1009)  // ziDceGrl.int    ; Generic Casino Girl with Dice Game
 
 #endif // SCRIPTS_H

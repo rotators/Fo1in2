@@ -1,0 +1,1796 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+/*
+        Name: Craps Dealer
+        Location: Anywhere
+        Description: Generic craps dealer.. Doesn't need to be near a table but probably should be.
+        You should put him on a team otherwise it defaults to loaner
+
+        Log:
+           Please note any changes that have been made to the file in Updated. Then comment
+           the code which you have changed/altered/commented out. Please, do not delete any
+           code which was written.
+
+           Created:
+
+           Updated:
+*/
+
+/* Include Files */
+
+/* Note, the Following Lines need to be in this order so that
+   the script will be compilable. The define Name is referenced
+   in a module from define.h and used in command.h. Please do
+   not change the ordering.
+        -rwh2   11/13/97
+*/
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_ZCCRPDEL
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_)
+
+#include "..\headers\command.h"
+#include "..\headers\ModReact.h"
+
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+
+/* Script Specific Procedure Calls */
+procedure Node998;                                      // This Node is Always Combat
+procedure Node999;                                      // This Node is Always Ending
+
+
+// The next lines are added in by the Designer Tool.
+// Do NOT add in any lines here.
+//~~~~~~~~~~~~~~~~ DESIGNER TOOL STARTS HERE
+#define MORESTRING             (g_mstr(352))
+#define ENDSTRING              (g_mstr(350))
+#define MOREOPTION(x)          NOption(MORESTRING, x, 0)
+#define ENDOPTION              NOption(ENDSTRING, Node999, 0)
+
+procedure NodePassLine;
+procedure NodeDontPassLine;
+procedure NodeComeLine;
+procedure NodeDontComeLine;
+procedure NodePropBet;
+procedure NodePlaceBet;
+procedure NodeFieldBet;
+procedure Node001;
+procedure NodeBet1;
+procedure NodeBet2;
+procedure NodeBet3;
+procedure NodeBet4;
+procedure NodeBet5;
+procedure calculateTotal;
+
+procedure getValue(variable lvarIndx);
+procedure exchangeCaps(variable amount);
+procedure Clear_All_Vars;
+
+//Turn this off if you want the dealer to not accumalte caps from the player.
+//#define DEALER_KEEP_CAPS 1
+
+#define BET1  5
+#define BET2  10
+#define BET3  15
+#define BET4  20
+#define BET5  100
+
+#define ODDS0 0
+#define ODDS1 1
+#define ODDS2 2
+#define ODDS3 3
+
+#define betString(x) (mstr(500) + x + mstr(501))
+
+#define PASS_BET       1
+#define DONT_PASS_BET  2
+#define FIELD_BET      3
+#define COME_BET       4
+#define DONT_COME_BET  5
+#define PROP_CRAPS_BET 6
+#define PROP_6_6_BET   7
+#define PROP_1_1_BET   8
+#define PROP_1_2_BET   9
+#define PROP_5_6_BET   10
+#define PROP_2S_BET    11
+#define PROP_5S_BET    12
+#define PROP_4S_BET    13
+#define PROP_3S_BET    14
+#define PROP_7_BET     15
+#define PLACE_4_BET    16
+#define PLACE_5_BET    17
+#define PLACE_6_BET    18
+#define PLACE_8_BET    19
+#define PLACE_9_BET    20
+#define PLACE_10_BET   21
+
+#define PROPBETS (local_var(LVAR_Prop_7)   or local_var(LVAR_Prop_d3)  or local_var(LVAR_Prop_d4)  or local_var(LVAR_Prop_d5)  or \
+                  local_var(LVAR_Prop_d2)  or local_var(LVAR_Prop_1_2) or local_var(LVAR_Prop_5_6) or local_var(LVAR_Prop_1_1) or \
+                  local_var(LVAR_Prop_6_6) or local_var(LVAR_Prop_Craps))
+
+#define DISPLAYPROPBETS (mstr(123) + local_var(LVAR_Prop_7)   + " " + \
+                         mstr(124) + local_var(LVAR_Prop_d3)  + " " + \
+                         mstr(125) + local_var(LVAR_Prop_d4)  + " " + \
+                         mstr(126) + local_var(LVAR_Prop_d5)  + " " + \
+                         mstr(127) + local_var(LVAR_Prop_d2)  + " " + \
+                         mstr(128) + local_var(LVAR_Prop_1_2) + " " + \
+                         mstr(129) + local_var(LVAR_Prop_5_6) + " " + \
+                         mstr(130) + local_var(LVAR_Prop_1_1) + " " + \
+                         mstr(131) + local_var(LVAR_Prop_6_6) + " " + \
+                         mstr(132) + local_var(LVAR_Prop_Craps))
+
+#define PLACEBETS (local_var(LVAR_Place_4) or local_var(LVAR_Place_5) or local_var(LVAR_Place_6) or \
+                   local_var(LVAR_Place_8) or local_var(LVAR_Place_9) or local_var(LVAR_Place_10))
+
+#define DISPLAYPLACEBETS (mstr(133) + local_var(LVAR_Place_4) + " " + \
+                          mstr(134) + local_var(LVAR_Place_5) + " " + \
+                          mstr(135) + local_var(LVAR_Place_6) + " " + \
+                          mstr(136) + local_var(LVAR_Place_8) + " " + \
+                          mstr(137) + local_var(LVAR_Place_9) + " " + \
+                          mstr(138) + local_var(LVAR_Place_10))
+
+#define DISPLAYPOINTBETS (mstr(109) + " " + local_var(LVAR_Point) + ". " + \
+                          mstr(139) + getvalue(LVAR_Num_4)  + " " + \
+                          mstr(145) + local_var(LVAR_Odds_4) + " " + \
+                          mstr(140) + getvalue(LVAR_Num_5)  + " " + \
+                          mstr(146) + local_var(LVAR_Odds_5) + " " + \
+                          mstr(141) + getvalue(LVAR_Num_6)  + " " + \
+                          mstr(147) + local_var(LVAR_Odds_6) + " " + \
+                          mstr(142) + getvalue(LVAR_Num_8)  + " " + \
+                          mstr(148) + local_var(LVAR_Odds_8) + " " + \
+                          mstr(143) + getvalue(LVAR_Num_9)  + " " + \
+                          mstr(149) + local_var(LVAR_Odds_9) + " " + \
+                          mstr(144) + getvalue(LVAR_Num_10) + " " + \
+                          mstr(150) + local_var(LVAR_Odds_10))
+
+#define NUMBETS (local_var(LVAR_Num_4) or local_var(LVAR_Num_5) or local_var(LVAR_Num_6) or \
+                   local_var(LVAR_Num_8) or local_var(LVAR_Num_9) or local_var(LVAR_Num_10))
+
+//~~~~~~~~~~~~~~~~ DESIGN TOOL ENDS HERE
+// The Following lines are for anything that is not needed to be
+// seen by the design Tool
+
+
+/* Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_ */
+#define LVAR_Herebefore                 (4)
+#define LVAR_Hostile                    (5)
+#define LVAR_Personal_Enemy             (6)
+
+#define LVAR_Pass_Line                  (7)
+#define LVAR_Dont_Pass_Line             (8)
+#define LVAR_Come_Line                  (9)
+#define LVAR_Dont_Come_Line             (10)
+#define LVAR_Prop_7                     (11)
+#define LVAR_Prop_d3                    (12)
+#define LVAR_Prop_d4                    (13)
+#define LVAR_Prop_d5                    (14)
+#define LVAR_Prop_d2                    (15)
+#define LVAR_Prop_1_2                   (16)
+#define LVAR_Prop_5_6                   (17)
+#define LVAR_Prop_1_1                   (18)
+#define LVAR_Prop_6_6                   (19)
+#define LVAR_Prop_Craps                 (20)
+#define LVAR_Place_4                    (21)
+#define LVAR_Place_5                    (22)
+#define LVAR_Place_6                    (23)
+#define LVAR_Place_8                    (24)
+#define LVAR_Place_9                    (25)
+#define LVAR_Place_10                   (26)
+#define LVAR_Field_Bet                  (27)
+
+#define DONT_FLAG                       bit_32 //Used for the numbers below to indicate a don't bet.. so you can't bet 4 billion on a number ohh well
+
+#define LVAR_Num_4                      (28)
+#define LVAR_Num_5                      (29)
+#define LVAR_Num_6                      (30)
+#define LVAR_Num_8                      (31)
+#define LVAR_Num_9                      (32)
+#define LVAR_Num_10                     (33)
+#define LVAR_Odds_4                     (34)
+#define LVAR_Odds_5                     (35)
+#define LVAR_Odds_6                     (36)
+#define LVAR_Odds_8                     (37)
+#define LVAR_Odds_9                     (38)
+#define LVAR_Odds_10                    (39)
+#define LVAR_Point                      (40)
+#define LVAR_Bet_Total                  (41)
+
+
+#define canBet(x)    ((dude_caps - local_var(LVAR_Bet_Total)) > x)
+
+/* Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_) */
+
+
+/* Local variables which do not need to be saved between map changes. */
+variable Only_Once:=0;
+variable betOption := 0;
+variable die1 := 0;
+variable die2 := 0;
+variable sayString := 0;
+variable canleave := 0;
+variable removePoint := 0;
+
+procedure start begin
+end
+
+/* This procedure will get called each time that the map is first entered. It will
+   set up the Team number and AI packet for this critter. This will override the
+   default from the prototype, and needs to be set in scripts. */
+procedure map_enter_p_proc begin
+   Only_Once:=0;
+	if (CUR_MAP_JUNKCSNO) then begin
+	   set_self_team(TEAM_JUNKTOWNER );
+		if ((global_var( GVAR_CAPTURE_GIZMO ) == 2) or not(is_gizmo_alive)) then begin
+			destroy_object(self_obj);
+		end
+	end
+	else if (CUR_MAP_HUBDWNTN) then begin
+      set_self_team( TEAM_HUB_UNDERGROUND );
+	end
+	set_self_ai( AI_MERCHANT );
+end
+
+
+/* Every heartbeat that the critter gets, this procedure will be called. Anything from
+   Movement to attacking the player on sight can be placed in here.*/
+procedure critter_p_proc begin
+
+/* If the critter is mad at the player for any reason, it will attack and remember to attack
+   the player should the game be saved and loaded repeatedly. Additionally, if any special
+   actions need to be taken by the critter based on previous combat, the critter will remember
+   this as well. */
+
+	if (CUR_MAP_JUNKCSNO) and (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) == 1) then begin
+		if (self_can_see_dude) then begin
+			call flee_dude;
+		end
+	end
+	else begin
+
+      if ((local_var(LVAR_Hostile) == 2) and (obj_can_see_obj(self_obj,dude_obj))) then begin
+          set_local_var(LVAR_Hostile,1);
+          attack(dude_obj);
+      end
+
+   end
+
+end
+
+/* Whenever the critter takes damage of any type, this procedure will be called. Things
+   like setting ENEMY_ and LVAR_Personal_Enemy can be set here. */
+procedure damage_p_proc begin
+
+/* If the player causes damage to this critter, then he will instantly consider the player
+   his personal enemy. In Critter_Proc or through dialog, actions will be taken against
+   the player for his evil acts. */
+   if (source_obj == dude_obj) then begin
+       set_local_var(LVAR_Personal_Enemy,1);
+   end
+
+end
+
+/* Any time that the player is caught stealing from this critter, Pickup_proc will be called.
+   In here, various things can happen. The most common response is instant hostility which
+   will be remembered. */
+procedure pickup_p_proc begin
+   if (source_obj == dude_obj) then begin
+       set_local_var(LVAR_Hostile,2);
+   end
+end
+
+/* The dialog system is setup and prepares the player to talk to this NPC. Where To Go
+   written by designers are placed in here. Additionally, Reactions are generated and
+   stored which affects player interactions. */
+procedure talk_p_proc begin
+   Evil_Critter:=0;
+   //Slavery_Tolerant:=SLAVE_TOLERANT;
+   //Karma_Perception:=KARMA_PERCEPTION0;
+
+//   CheckKarma;
+
+//   GetReaction;
+
+   start_gdialog(NAME,self_obj,4,-1,-1);
+   gSay_Start;
+      call Node001;
+   gSay_End;
+   end_dialogue;
+end
+
+/* This procedure gets called only on the death of this NPC. Special things like
+   incrementing the death count for reputation purposes and Enemy Counters are placed
+   in here. */
+procedure destroy_p_proc begin
+
+/* Increment the aligned critter counter*/
+   inc_good_critter
+
+/* Set global_variable for Enemy status*/
+end
+
+/* Look_at_p_proc gets called any time that the player passes the cursor over any object.
+   This should only hold the most cursory of glances for the player. */
+procedure look_at_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore) == 0) then
+      display_mstr(100 + (1000 * self_is_female));
+   else
+      display_mstr(101);
+end
+
+/* The player will see more indepth descriptions from this procedure. They are actively
+   looking at the critter and want more information. Things like names can be added here
+   if the critter is known to the player. */
+procedure description_p_proc begin
+   script_overrides;
+   display_mstr(102 + (1000 * self_is_female));
+end
+
+/* Any time a skill is used on a critter this call is made. This can be to give examinations
+   for things like Doctor skill or messages for various other skills. */
+procedure use_skill_on_p_proc begin
+end
+
+/* Should the Player ever cause the NPC too much discomfort that he desires to attack the player,
+   this call will be made. Essentially, it stores the Hostile vaule so that the critter remembers
+   he was once hostile towards the player.*/
+procedure Node998 begin
+   set_local_var(LVAR_Hostile,2);
+end
+
+/* Anytime that there is a need for an ending to dialog, this node is to be called. It will just
+   exit from the dialog system without any reprisals from the NPC. */
+procedure Node999 begin
+   Call Clear_All_Vars;
+end
+
+procedure Clear_All_Vars begin
+   set_local_var(LVAR_Pass_Line, 0);
+   set_local_var(LVAR_Dont_Pass_Line, 0);
+   set_local_var(LVAR_Come_Line, 0);
+   set_local_var(LVAR_Dont_Come_Line, 0);
+   set_local_var(LVAR_Prop_7, 0);
+   set_local_var(LVAR_Prop_d3, 0);
+   set_local_var(LVAR_Prop_d4, 0);
+   set_local_var(LVAR_Prop_d5, 0);
+   set_local_var(LVAR_Prop_d2, 0);
+   set_local_var(LVAR_Prop_1_2, 0);
+   set_local_var(LVAR_Prop_5_6, 0);
+   set_local_var(LVAR_Prop_1_1, 0);
+   set_local_var(LVAR_Prop_6_6, 0);
+   set_local_var(LVAR_Prop_Craps, 0);
+   set_local_var(LVAR_Place_4, 0);
+   set_local_var(LVAR_Place_5, 0);
+   set_local_var(LVAR_Place_6, 0);
+   set_local_var(LVAR_Place_8, 0);
+   set_local_var(LVAR_Place_9, 0);
+   set_local_var(LVAR_Place_10, 0);
+   set_local_var(LVAR_Field_Bet, 0);
+   set_local_var(LVAR_Num_4, 0);
+   set_local_var(LVAR_Num_5, 0);
+   set_local_var(LVAR_Num_6, 0);
+   set_local_var(LVAR_Num_8, 0);
+   set_local_var(LVAR_Num_9, 0);
+   set_local_var(LVAR_Num_10, 0);
+   set_local_var(LVAR_Odds_4, 0);
+   set_local_var(LVAR_Odds_5, 0);
+   set_local_var(LVAR_Odds_6, 0);
+   set_local_var(LVAR_Odds_8, 0);
+   set_local_var(LVAR_Odds_9, 0);
+   set_local_var(LVAR_Odds_10, 0);
+   set_local_var(LVAR_Point, 0);
+   set_local_var(LVAR_Bet_Total, 0);
+end
+
+// Not lines are allowed to be added below here
+// The Following lines are from the Design Tool
+//~~~~~~~~~~~~~~~~ DESIGN TOOL STARTS HERE
+
+procedure getValue(variable lvarIndx) begin
+   return local_var(lvarIndx);
+end
+
+procedure NodeBet1 begin
+   if (betOption == PASS_BET) then begin
+      set_local_var(LVAR_Pass_Line, BET1);
+   end else if (betOption == DONT_PASS_BET) then begin
+      set_local_var(LVAR_Dont_Pass_Line, BET1);
+   end else if (betOption == FIELD_BET) then begin
+      set_local_var(LVAR_Field_Bet, BET1);
+   end else if (betOption == COME_BET) then begin
+      set_local_var(LVAR_Come_Line, BET1);
+   end else if (betOption == DONT_COME_BET) then begin
+      set_local_var(LVAR_Dont_Come_Line, BET1);
+
+   end else if (betOption == PROP_CRAPS_BET) then begin
+      set_local_var(LVAR_Prop_Craps, BET1);
+   end else if (betOption == PROP_6_6_BET) then begin
+      set_local_var(LVAR_Prop_6_6, BET1);
+   end else if (betOption == PROP_1_1_BET) then begin
+      set_local_var(LVAR_Prop_1_1, BET1);
+   end else if (betOption == PROP_1_2_BET) then begin
+      set_local_var(LVAR_Prop_1_2, BET1);
+   end else if (betOption == PROP_5_6_BET) then begin
+      set_local_var(LVAR_Prop_5_6, BET1);
+   end else if (betOption == PROP_2S_BET) then begin
+      set_local_var(LVAR_Prop_d2, BET1);
+   end else if (betOption == PROP_5S_BET) then begin
+      set_local_var(LVAR_Prop_d5, BET1);
+   end else if (betOption == PROP_4S_BET) then begin
+      set_local_var(LVAR_Prop_d4, BET1);
+   end else if (betOption == PROP_3S_BET) then begin
+      set_local_var(LVAR_Prop_d3, BET1);
+   end else if (betOption == PROP_7_BET) then begin
+      set_local_var(LVAR_Prop_7, BET1);
+
+   end else if (betOption == PLACE_4_BET) then begin
+      set_local_var(LVAR_Place_4, BET2);
+   end else if (betOption == PLACE_5_BET) then begin
+      set_local_var(LVAR_Place_5, BET2);
+   end else if (betOption == PLACE_6_BET) then begin
+      set_local_var(LVAR_Place_6, BET2);
+   end else if (betOption == PLACE_8_BET) then begin
+      set_local_var(LVAR_Place_8, BET2);
+   end else if (betOption == PLACE_9_BET) then begin
+      set_local_var(LVAR_Place_9, BET2);
+   end else if (betOption == PLACE_10_BET) then begin
+      set_local_var(LVAR_Place_10, BET2);
+   end
+
+   call Node001;
+end
+
+procedure NodeBet2 begin
+   if (betOption == PASS_BET) then begin
+      set_local_var(LVAR_Pass_Line, BET2);
+   end else if (betOption == DONT_PASS_BET) then begin
+      set_local_var(LVAR_Dont_Pass_Line, BET2);
+   end else if (betOption == FIELD_BET) then begin
+      set_local_var(LVAR_Field_Bet, BET2);
+   end else if (betOption == COME_BET) then begin
+      set_local_var(LVAR_Come_Line, BET2);
+   end else if (betOption == DONT_COME_BET) then begin
+      set_local_var(LVAR_Dont_Come_Line, BET2);
+
+   end else if (betOption == PROP_CRAPS_BET) then begin
+      set_local_var(LVAR_Prop_Craps, BET2);
+   end else if (betOption == PROP_6_6_BET) then begin
+      set_local_var(LVAR_Prop_6_6, BET2);
+   end else if (betOption == PROP_1_1_BET) then begin
+      set_local_var(LVAR_Prop_1_1, BET2);
+   end else if (betOption == PROP_1_2_BET) then begin
+      set_local_var(LVAR_Prop_1_2, BET2);
+   end else if (betOption == PROP_5_6_BET) then begin
+      set_local_var(LVAR_Prop_5_6, BET2);
+   end else if (betOption == PROP_2S_BET) then begin
+      set_local_var(LVAR_Prop_d2, BET2);
+   end else if (betOption == PROP_5S_BET) then begin
+      set_local_var(LVAR_Prop_d5, BET2);
+   end else if (betOption == PROP_4S_BET) then begin
+      set_local_var(LVAR_Prop_d4, BET2);
+   end else if (betOption == PROP_3S_BET) then begin
+      set_local_var(LVAR_Prop_d3, BET2);
+   end else if (betOption == PROP_7_BET) then begin
+      set_local_var(LVAR_Prop_7, BET2);
+
+   end else if (betOption == PLACE_4_BET) then begin
+      set_local_var(LVAR_Place_4, BET2);
+   end else if (betOption == PLACE_5_BET) then begin
+      set_local_var(LVAR_Place_5, BET2);
+   end else if (betOption == PLACE_6_BET) then begin
+      set_local_var(LVAR_Place_6, BET2);
+   end else if (betOption == PLACE_8_BET) then begin
+      set_local_var(LVAR_Place_8, BET2);
+   end else if (betOption == PLACE_9_BET) then begin
+      set_local_var(LVAR_Place_9, BET2);
+   end else if (betOption == PLACE_10_BET) then begin
+      set_local_var(LVAR_Place_10, BET2);
+   end
+   call Node001;
+end
+
+procedure NodeBet3 begin
+   if (betOption == PASS_BET) then begin
+      set_local_var(LVAR_Pass_Line, BET3);
+   end else if (betOption == DONT_PASS_BET) then begin
+      set_local_var(LVAR_Dont_Pass_Line, BET3);
+   end else if (betOption == FIELD_BET) then begin
+      set_local_var(LVAR_Field_Bet, BET3);
+   end else if (betOption == COME_BET) then begin
+      set_local_var(LVAR_Come_Line, BET3);
+   end else if (betOption == DONT_COME_BET) then begin
+      set_local_var(LVAR_Dont_Come_Line, BET3);
+
+   end else if (betOption == PROP_CRAPS_BET) then begin
+      set_local_var(LVAR_Prop_Craps, BET3);
+   end else if (betOption == PROP_6_6_BET) then begin
+      set_local_var(LVAR_Prop_6_6, BET3);
+   end else if (betOption == PROP_1_1_BET) then begin
+      set_local_var(LVAR_Prop_1_1, BET3);
+   end else if (betOption == PROP_1_2_BET) then begin
+      set_local_var(LVAR_Prop_1_2, BET3);
+   end else if (betOption == PROP_5_6_BET) then begin
+      set_local_var(LVAR_Prop_5_6, BET3);
+   end else if (betOption == PROP_2S_BET) then begin
+      set_local_var(LVAR_Prop_d2, BET3);
+   end else if (betOption == PROP_5S_BET) then begin
+      set_local_var(LVAR_Prop_d5, BET3);
+   end else if (betOption == PROP_4S_BET) then begin
+      set_local_var(LVAR_Prop_d4, BET3);
+   end else if (betOption == PROP_3S_BET) then begin
+      set_local_var(LVAR_Prop_d3, BET3);
+   end else if (betOption == PROP_7_BET) then begin
+      set_local_var(LVAR_Prop_7, BET3);
+
+   end else if (betOption == PLACE_4_BET) then begin
+      set_local_var(LVAR_Place_4, BET3);
+   end else if (betOption == PLACE_5_BET) then begin
+      set_local_var(LVAR_Place_5, BET3);
+   end else if (betOption == PLACE_6_BET) then begin
+      set_local_var(LVAR_Place_6, BET3);
+   end else if (betOption == PLACE_8_BET) then begin
+      set_local_var(LVAR_Place_8, BET3);
+   end else if (betOption == PLACE_9_BET) then begin
+      set_local_var(LVAR_Place_9, BET3);
+   end else if (betOption == PLACE_10_BET) then begin
+      set_local_var(LVAR_Place_10, BET3);
+   end
+
+   call Node001;
+end
+
+procedure NodeBet4 begin
+   if (betOption == PASS_BET) then begin
+      set_local_var(LVAR_Pass_Line, BET4);
+   end else if (betOption == DONT_PASS_BET) then begin
+      set_local_var(LVAR_Dont_Pass_Line, BET4);
+   end else if (betOption == FIELD_BET) then begin
+      set_local_var(LVAR_Field_Bet, BET4);
+   end else if (betOption == COME_BET) then begin
+      set_local_var(LVAR_Come_Line, BET4);
+   end else if (betOption == DONT_COME_BET) then begin
+      set_local_var(LVAR_Dont_Come_Line, BET4);
+
+   end else if (betOption == PROP_CRAPS_BET) then begin
+      set_local_var(LVAR_Prop_Craps, BET4);
+   end else if (betOption == PROP_6_6_BET) then begin
+      set_local_var(LVAR_Prop_6_6, BET4);
+   end else if (betOption == PROP_1_1_BET) then begin
+      set_local_var(LVAR_Prop_1_1, BET4);
+   end else if (betOption == PROP_1_2_BET) then begin
+      set_local_var(LVAR_Prop_1_2, BET4);
+   end else if (betOption == PROP_5_6_BET) then begin
+      set_local_var(LVAR_Prop_5_6, BET4);
+   end else if (betOption == PROP_2S_BET) then begin
+      set_local_var(LVAR_Prop_d2, BET4);
+   end else if (betOption == PROP_5S_BET) then begin
+      set_local_var(LVAR_Prop_d5, BET4);
+   end else if (betOption == PROP_4S_BET) then begin
+      set_local_var(LVAR_Prop_d4, BET4);
+   end else if (betOption == PROP_3S_BET) then begin
+      set_local_var(LVAR_Prop_d3, BET4);
+   end else if (betOption == PROP_7_BET) then begin
+      set_local_var(LVAR_Prop_7, BET4);
+
+   end else if (betOption == PLACE_4_BET) then begin
+      set_local_var(LVAR_Place_4, BET4);
+   end else if (betOption == PLACE_5_BET) then begin
+      set_local_var(LVAR_Place_5, BET4);
+   end else if (betOption == PLACE_6_BET) then begin
+      set_local_var(LVAR_Place_6, BET4);
+   end else if (betOption == PLACE_8_BET) then begin
+      set_local_var(LVAR_Place_8, BET4);
+   end else if (betOption == PLACE_9_BET) then begin
+      set_local_var(LVAR_Place_9, BET4);
+   end else if (betOption == PLACE_10_BET) then begin
+      set_local_var(LVAR_Place_10, BET4);
+   end
+
+   call Node001;
+end
+
+procedure NodeBet5 begin
+   if (betOption == PASS_BET) then begin
+      set_local_var(LVAR_Pass_Line, BET5);
+   end else if (betOption == DONT_PASS_BET) then begin
+      set_local_var(LVAR_Dont_Pass_Line, BET5);
+   end else if (betOption == FIELD_BET) then begin
+      set_local_var(LVAR_Field_Bet, BET5);
+   end else if (betOption == COME_BET) then begin
+      set_local_var(LVAR_Come_Line, BET5);
+   end else if (betOption == DONT_COME_BET) then begin
+      set_local_var(LVAR_Dont_Come_Line, BET5);
+
+   end else if (betOption == PROP_CRAPS_BET) then begin
+      set_local_var(LVAR_Prop_Craps, BET5);
+   end else if (betOption == PROP_6_6_BET) then begin
+      set_local_var(LVAR_Prop_6_6, BET5);
+   end else if (betOption == PROP_1_1_BET) then begin
+      set_local_var(LVAR_Prop_1_1, BET5);
+   end else if (betOption == PROP_1_2_BET) then begin
+      set_local_var(LVAR_Prop_1_2, BET5);
+   end else if (betOption == PROP_5_6_BET) then begin
+      set_local_var(LVAR_Prop_5_6, BET5);
+   end else if (betOption == PROP_2S_BET) then begin
+      set_local_var(LVAR_Prop_d2, BET5);
+   end else if (betOption == PROP_5S_BET) then begin
+      set_local_var(LVAR_Prop_d5, BET5);
+   end else if (betOption == PROP_4S_BET) then begin
+      set_local_var(LVAR_Prop_d4, BET5);
+   end else if (betOption == PROP_3S_BET) then begin
+      set_local_var(LVAR_Prop_d3, BET5);
+   end else if (betOption == PROP_7_BET) then begin
+      set_local_var(LVAR_Prop_7, BET5);
+
+   end else if (betOption == PLACE_4_BET) then begin
+      set_local_var(LVAR_Place_4, BET5);
+   end else if (betOption == PLACE_5_BET) then begin
+      set_local_var(LVAR_Place_5, BET5);
+   end else if (betOption == PLACE_6_BET) then begin
+      set_local_var(LVAR_Place_6, BET5);
+   end else if (betOption == PLACE_8_BET) then begin
+      set_local_var(LVAR_Place_8, BET5);
+   end else if (betOption == PLACE_9_BET) then begin
+      set_local_var(LVAR_Place_9, BET5);
+   end else if (betOption == PLACE_10_BET) then begin
+      set_local_var(LVAR_Place_10, BET5);
+   end
+   call Node001;
+end
+
+procedure NodeBet0 begin
+   if (betOption == PASS_BET) then begin
+      set_local_var(LVAR_Pass_Line, 0);
+   end else if (betOption == DONT_PASS_BET) then begin
+      set_local_var(LVAR_Dont_Pass_Line, 0);
+   end else if (betOption == FIELD_BET) then begin
+      set_local_var(LVAR_Field_Bet, 0);
+   end else if (betOption == COME_BET) then begin
+      set_local_var(LVAR_Come_Line, 0);
+   end else if (betOption == DONT_COME_BET) then begin
+      set_local_var(LVAR_Dont_Come_Line, 0);
+
+   end else if (betOption == PROP_CRAPS_BET) then begin
+      set_local_var(LVAR_Prop_Craps, 0);
+   end else if (betOption == PROP_6_6_BET) then begin
+      set_local_var(LVAR_Prop_6_6, 0);
+   end else if (betOption == PROP_1_1_BET) then begin
+      set_local_var(LVAR_Prop_1_1, 0);
+   end else if (betOption == PROP_1_2_BET) then begin
+      set_local_var(LVAR_Prop_1_2, 0);
+   end else if (betOption == PROP_5_6_BET) then begin
+      set_local_var(LVAR_Prop_5_6, 0);
+   end else if (betOption == PROP_2S_BET) then begin
+      set_local_var(LVAR_Prop_d2, 0);
+   end else if (betOption == PROP_5S_BET) then begin
+      set_local_var(LVAR_Prop_d5, 0);
+   end else if (betOption == PROP_4S_BET) then begin
+      set_local_var(LVAR_Prop_d4, 0);
+   end else if (betOption == PROP_3S_BET) then begin
+      set_local_var(LVAR_Prop_d3, 0);
+   end else if (betOption == PROP_7_BET) then begin
+      set_local_var(LVAR_Prop_7, 0);
+
+   end else if (betOption == PLACE_4_BET) then begin
+      set_local_var(LVAR_Place_4, 0);
+   end else if (betOption == PLACE_5_BET) then begin
+      set_local_var(LVAR_Place_5, 0);
+   end else if (betOption == PLACE_6_BET) then begin
+      set_local_var(LVAR_Place_6, 0);
+   end else if (betOption == PLACE_8_BET) then begin
+      set_local_var(LVAR_Place_8, 0);
+   end else if (betOption == PLACE_9_BET) then begin
+      set_local_var(LVAR_Place_9, 0);
+   end else if (betOption == PLACE_10_BET) then begin
+      set_local_var(LVAR_Place_10, 0);
+   end
+   call Node001;
+end
+
+
+#define BETBLOCK                                 \
+   NOption(betString(0), NodeBet0, 1);           \
+   if (canBet(BET1)) then                        \
+      NOption(betString(BET1), NodeBet1, 1);     \
+   if (canBet(BET2)) then                        \
+      NOption(betString(BET2), NodeBet2, 1);     \
+   if (canBet(BET3)) then                        \
+      NOption(betString(BET3), NodeBet3, 1);     \
+   if (canBet(BET4)) then                        \
+      NOption(betString(BET4), NodeBet4, 1);     \
+   if (canBet(BET5)) then                        \
+      NOption(betString(BET5), NodeBet5, 1);     \
+   NOption(713, Node001, 1)
+
+procedure NodePassLine begin
+   betOption := PASS_BET;
+   Reply(104);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure NodeDontPassLine begin
+   betOption := DONT_PASS_BET;
+   Reply(105);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure NodeComeLine begin
+   betOption := COME_BET;
+   Reply(106);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure NodeDontComeLine begin
+   betOption := DONT_COME_BET;
+   Reply(107);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node7_Prop begin
+   betOption := PROP_7_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node3s_Prop begin
+   betOption := PROP_3S_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node4s_Prop begin
+   betOption := PROP_4S_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node5s_Prop begin
+   betOption := PROP_5S_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node2s_Prop begin
+   betOption := PROP_2S_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node1_2_Prop begin
+   betOption := PROP_1_2_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node5_6_Prop begin
+   betOption := PROP_5_6_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node1_1_Prop begin
+   betOption := PROP_1_1_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node6_6_Prop begin
+   betOption := PROP_6_6_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(mstr(713), Node001, 1);
+end
+
+procedure Node_Craps_Prop begin
+   betOption := PROP_CRAPS_BET;
+   Reply(153);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure NodeSingleProp begin
+   Reply(152);
+   NOption(mstr(200) + ": " + local_var(LVAR_Prop_7), Node7_Prop, 1);
+   NOption(mstr(205) + ": " + local_var(LVAR_Prop_1_2), Node1_2_Prop, 1);
+   NOption(mstr(206) + ": " + local_var(LVAR_Prop_5_6), Node5_6_Prop, 1);
+   NOption(mstr(207) + ": " + local_var(LVAR_Prop_1_1), Node1_1_Prop, 1);
+   NOption(mstr(208) + ": " + local_var(LVAR_Prop_6_6), Node6_6_Prop, 1);
+   NOption(mstr(209) + ": " + local_var(LVAR_Prop_Craps), Node_Craps_Prop, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure NodeHardwayProp begin
+   Reply(152);
+   NOption(mstr(201) + ": " + local_var(LVAR_Prop_d3), Node3s_Prop, 1);
+   NOption(mstr(202) + ": " + local_var(LVAR_Prop_d4), Node4s_Prop, 1);
+   NOption(mstr(203) + ": " + local_var(LVAR_Prop_d5), Node5s_Prop, 1);
+   NOption(mstr(204) + ": " + local_var(LVAR_Prop_d2), Node2s_Prop, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure NodePropBet begin
+   Reply(156);
+   NOption(154, NodeSingleProp, 1);
+   NOption(155, NodeHardwayProp, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure NodePlace4 begin
+   betOption := PLACE_4_BET;
+   Reply(157);
+   BETBLOCK;
+end
+
+procedure NodePlace5 begin
+   betOption := PLACE_5_BET;
+   Reply(157);
+   BETBLOCK;
+end
+
+procedure NodePlace6 begin
+   betOption := PLACE_6_BET;
+   Reply(157);
+   BETBLOCK;
+end
+
+procedure NodePlace8 begin
+   betOption := PLACE_8_BET;
+   Reply(157);
+   BETBLOCK;
+end
+
+procedure NodePlace9 begin
+   betOption := PLACE_9_BET;
+   Reply(157);
+   BETBLOCK;
+end
+
+procedure NodePlace10 begin
+   betOption := PLACE_10_BET;
+   Reply(157);
+   BETBLOCK;
+end
+
+procedure NodePlaceBet begin
+   Reply(299);
+   NOption(300, NodePlace4, 1);
+   NOption(301, NodePlace5, 1);
+   NOption(302, NodePlace6, 1);
+   NOption(303, NodePlace8, 1);
+   NOption(304, NodePlace9, 1);
+   NOption(305, NodePlace10, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure NodeFieldBet begin
+   betOption := FIELD_BET;
+   Reply(108);
+
+   if (canBet(BET1)) then
+      NOption(betString(BET1), NodeBet1, 1);
+   if (canBet(BET2)) then
+      NOption(betString(BET2), NodeBet2, 1);
+   if (canBet(BET3)) then
+      NOption(betString(BET3), NodeBet3, 1);
+   if (canBet(BET4)) then
+      NOption(betString(BET4), NodeBet4, 1);
+   if (canBet(BET5)) then
+      NOption(betString(BET5), NodeBet5, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure getNumVar(variable number) begin
+   if (number == 4) then
+      return LVAR_Num_4;
+   if (number == 5) then
+      return LVAR_Num_5;
+   if (number == 6) then
+      return LVAR_Num_6;
+   if (number == 8) then
+      return LVAR_Num_8;
+   if (number == 9) then
+      return LVAR_Num_9;
+   if (number == 10) then
+      return LVAR_Num_10;
+end
+
+procedure getOddsVar(variable number) begin
+   if (number == 4) then
+      return LVAR_Odds_4;
+   if (number == 5) then
+      return LVAR_Odds_5;
+   if (number == 6) then
+      return LVAR_Odds_6;
+   if (number == 8) then
+      return LVAR_Odds_8;
+   if (number == 9) then
+      return LVAR_Odds_9;
+   if (number == 10) then
+      return LVAR_Odds_10;
+end
+
+procedure set_number_bet(variable number, variable amount) begin
+   variable numVar;
+
+   numVar := getNumVar(number);
+   set_local_var(numVar, amount);
+end
+
+procedure set_dont_number_bet(variable number, variable amount) begin
+   variable numVar;
+
+   numVar := getNumVar(number);
+   set_local_var(numVar, amount);
+   set_local_var(numVar, local_var(numVar) bwor DONT_FLAG);
+end
+
+procedure check_Pass_Line begin
+   variable total;
+
+   total := die1 + die2;
+   debug_msg("ZCCRPDEL: checking pass line totol die rolls: " + total);
+   if (local_var(LVAR_Point) == 0) then begin
+      if (total == 7) then begin
+         sayString += mstr(600) + " ";
+         call exchangeCaps(local_var(LVAR_Pass_Line));
+         set_local_var(LVAR_Pass_Line, 0);
+      end else if (total == 11) then begin
+         sayString += mstr(601) + " ";
+         call exchangeCaps(local_var(LVAR_Pass_Line));
+         set_local_var(LVAR_Pass_Line, 0);
+      end else if (total == 2) then begin
+         sayString += mstr(602) + " ";
+         call exchangeCaps(-local_var(LVAR_Pass_Line));
+         set_local_var(LVAR_Pass_Line, 0);
+      end else if (total == 3) then begin
+         sayString += mstr(603) + " ";
+         call exchangeCaps(-local_var(LVAR_Pass_Line));
+         set_local_var(LVAR_Pass_Line, 0);
+      end else if (total == 12) then begin
+         sayString += mstr(604) + " ";
+         call exchangeCaps(-local_var(LVAR_Pass_Line));
+         set_local_var(LVAR_Pass_Line, 0);
+      end else begin
+         removePoint := 0;
+         set_local_var(LVAR_Point, total);
+         call set_number_bet(total, local_var(LVAR_Pass_Line));
+         set_local_var(LVAR_Pass_Line, 0);
+      end
+   end
+end
+
+procedure exchangeCaps(variable amount) begin
+   amount := floor amount;
+#ifdef DEALER_KEEP_CAPS
+   item_caps_adjust(self_obj, -amount);
+#endif
+   debug_msg("ZCCRPDEL: giving player: " + amount);
+   item_caps_adjust(dude_obj, amount);
+end
+
+procedure check_Dont_Pass_Line begin
+   variable total;
+
+   if (local_var(LVAR_Point) == 0) then begin
+      total := die1 + die2;
+
+      if (local_var(LVAR_Dont_Pass_Line) > 0) then begin
+         if (total == 7) then begin
+            sayString += mstr(610) + " ";
+            call exchangeCaps(-local_var(LVAR_Dont_Pass_Line));
+            set_local_var(LVAR_Dont_Pass_Line, 0);
+         end else if (total == 11) then begin
+            sayString += mstr(611) + " ";
+            call exchangeCaps(-local_var(LVAR_Dont_Pass_Line));
+            set_local_var(LVAR_Dont_Pass_Line, 0);
+         end else if (total == 2) then begin
+            sayString += mstr(612) + " ";
+            call exchangeCaps(local_var(LVAR_Dont_Pass_Line));
+            set_local_var(LVAR_Dont_Pass_Line, 0);
+         end else if (total == 3) then begin
+            sayString += mstr(613) + " ";
+            call exchangeCaps(local_var(LVAR_Dont_Pass_Line));
+            item_caps_adjust(dude_obj, local_var(LVAR_Dont_Pass_Line));
+            set_local_var(LVAR_Dont_Pass_Line, 0);
+         end else if (total == 12) then begin
+            sayString += mstr(614) + " ";
+            set_local_var(LVAR_Dont_Pass_Line, 0);
+         end else begin
+            set_local_var(LVAR_Point, total);
+            call set_dont_number_bet(total, local_var(LVAR_Dont_Pass_Line));
+            set_local_var(LVAR_Dont_Pass_Line, 0);
+         end
+      end
+   end
+end
+
+procedure check_Come_Line begin
+   variable total;
+
+   total := die1 + die2;
+   if (local_var(LVAR_Come_Line) > 0) then begin
+      if (total == 7) then begin
+         sayString += mstr(600) + " ";
+         call exchangeCaps(local_var(LVAR_Come_Line));
+         set_local_var(LVAR_Come_Line, 0);
+      end else if (total == 11) then begin
+         sayString += mstr(601) + " ";
+         call exchangeCaps(local_var(LVAR_Come_Line));
+         set_local_var(LVAR_Come_Line, 0);
+      end else if (total == 2) then begin
+         sayString += mstr(602) + " ";
+         call exchangeCaps(-local_var(LVAR_Come_Line));
+         set_local_var(LVAR_Come_Line, 0);
+      end else if (total == 3) then begin
+         sayString += mstr(603) + " ";
+         call exchangeCaps(-local_var(LVAR_Come_Line));
+         set_local_var(LVAR_Come_Line, 0);
+      end else if (total == 12) then begin
+         sayString += mstr(604) + " ";
+         call exchangeCaps(-local_var(LVAR_Come_Line));
+         set_local_var(LVAR_Come_Line, 0);
+      end else begin
+         call set_number_bet(total, local_var(LVAR_Come_Line));
+         set_local_var(LVAR_Come_Line, 0);
+      end
+   end
+end
+
+procedure check_Dont_Come_Line begin
+   variable total;
+
+   total := die1 + die2;
+
+   if (local_var(LVAR_Dont_Come_Line) > 0) then begin
+      if (total == 7) then begin
+         sayString += mstr(610) + " ";
+         call exchangeCaps(-local_var(LVAR_Dont_Come_Line));
+         set_local_var(LVAR_Dont_Come_Line, 0);
+      end else if (total == 11) then begin
+         sayString += mstr(611) + " ";
+         call exchangeCaps(-local_var(LVAR_Dont_Come_Line));
+         set_local_var(LVAR_Dont_Come_Line, 0);
+      end else if (total == 2) then begin
+         sayString += mstr(612) + " ";
+         call exchangeCaps(local_var(LVAR_Dont_Come_Line));
+         set_local_var(LVAR_Dont_Come_Line, 0);
+      end else if (total == 3) then begin
+         sayString += mstr(613) + " ";
+         call exchangeCaps(local_var(LVAR_Dont_Come_Line));
+         set_local_var(LVAR_Dont_Come_Line, 0);
+      end else if (total == 12) then begin
+         sayString += mstr(614) + " ";
+         set_local_var(LVAR_Dont_Come_Line, 0);
+      end else begin
+         call set_dont_number_bet(total, local_var(LVAR_Dont_Come_Line));
+         set_local_var(LVAR_Dont_Come_Line, 0);
+      end
+   end
+end
+
+#define PROPBLOCK(msg1, var, winPayMul, condw, condl)    \
+   if (local_var(var)) then begin                        \
+      if (condw) then begin                              \
+         sayString += mstr(msg1) + " ";                  \
+         sayString += mstr(631) + " ";                   \
+         call exchangeCaps(local_var(var) * winPayMul);  \
+         set_local_var(var, 0);                          \
+      end else if (condl) then begin                     \
+         sayString += mstr(msg1) + " ";                  \
+         sayString += mstr(630) + " ";                   \
+         call exchangeCaps(-local_var(var));             \
+         set_local_var(var, 0);                          \
+      end                                                \
+   end
+
+
+procedure check_Prop_7 begin
+   variable total;
+
+   total := die1 + die2;
+   PROPBLOCK(620, LVAR_Prop_7, 5, (total == 7), (total != 7))
+end
+
+procedure check_Prop_d3 begin
+   variable total;
+
+   total := die1 + die2;
+
+   //Will check condtion 1 before condition 2
+   PROPBLOCK(621, LVAR_Prop_d3, 9, (die1 == 3 and die2 == 3), (total == 6 or ((total == 7 or total == 11) and (local_var(LVAR_Point) == 0))))
+end
+
+procedure check_Prop_d4 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(622, LVAR_Prop_d4, 9, (die1 == 4 and die2 == 4), (total == 8 or ((total == 7 or total == 11) and (local_var(LVAR_Point) == 0))))
+end
+
+procedure check_Prop_d5 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(623, LVAR_Prop_d5, 7, (die1 == 5 and die2 == 5), (total == 10 or ((total == 7 or total == 11) and (local_var(LVAR_Point) == 0))))
+end
+
+procedure check_Prop_d2 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(624, LVAR_Prop_d2, 7, (die1 == 2 and die2 == 2), (total == 4 or ((total == 7 or total == 11) and (local_var(LVAR_Point) == 0))))
+end
+
+procedure check_Prop_1_2 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(625, LVAR_Prop_1_2, 15, (total == 3), (total != 3))
+end
+
+procedure check_Prop_5_6 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(626, LVAR_Prop_5_6, 15, (total == 11), (total != 11))
+end
+
+procedure check_Prop_1_1 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(627, LVAR_Prop_1_1, 30, (total == 2), (total != 2))
+end
+
+procedure check_Prop_6_6 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(628, LVAR_Prop_6_6, 30, (total == 12), (total != 12))
+end
+
+procedure check_Prop_Craps begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(629, LVAR_Prop_Craps, 7, (total == 2 or total == 3 or total == 12), (total != 2 or total != 3 or total != 12))
+end
+
+procedure check_Place_4 begin
+   variable total;
+
+   total := die1 + die2;
+   //Prop block also works for place bets
+   PROPBLOCK(650, LVAR_Place_4, 1.8, (total == 4), (total == 7))
+end
+
+procedure check_Place_5 begin
+   variable total;
+
+   total := die1 + die2;
+   PROPBLOCK(651, LVAR_Place_5, 1.5, (total == 5), (total == 7))
+end
+
+procedure check_Place_6 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(652, LVAR_Place_6, 1.16, (total == 6), (total == 7))
+end
+
+procedure check_Place_8 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(653, LVAR_Place_8, 1.16, (total == 8), (total == 7))
+end
+
+procedure check_Place_9 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(654, LVAR_Place_9, 1.5, (total == 9), (total == 7))
+end
+
+procedure check_Place_10 begin
+   variable total;
+   total := die1 + die2;
+   PROPBLOCK(655, LVAR_Place_10, 1.8, (total == 10), (total == 7))
+end
+
+procedure check_Field_Bet begin
+   variable total;
+   total := die1 + die2;
+
+   if (local_var(LVAR_Field_Bet)) then begin
+      if (total == 2) then begin
+         sayString += mstr(660) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet) * 2);
+      end else if (total == 3) then begin
+         sayString += mstr(661) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet));
+      end else if (total == 4) then begin
+         sayString += mstr(662) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet));
+      end else if (total == 9) then begin
+         sayString += mstr(663) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet));
+      end else if (total == 10) then begin
+         sayString += mstr(664) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet));
+      end else if (total == 11) then begin
+         sayString += mstr(665) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet));
+      end else if (total == 12) then begin
+         sayString += mstr(666) + " ";
+         call exchangeCaps(local_var(LVAR_Field_Bet) * 3);
+      end else begin
+         sayString += mstr(667);
+         call exchangeCaps(-local_var(LVAR_Field_Bet));
+      end
+      set_local_var(LVAR_Field_Bet, 0);
+   end
+end
+
+procedure calculateOdds(variable number) begin
+   if (number == 4 or number == 10) then
+      return 2;
+   if (number == 5 or number == 9) then
+      return 1.5;
+   if (number == 6 or number == 8) then
+      return 1.2;
+end
+
+procedure calculateDont(variable number) begin
+   if (number == 4 or number == 10) then
+      return .5;
+   if (number == 5 or number == 9) then
+      return .666;
+   if (number == 6 or number == 8) then
+      return .833;
+end
+
+/* all the cases for a pay off
+
+   roll == number
+      point is on
+         play bet
+            pay flat
+            pay odds
+        dont bet
+            take flat
+            take odds
+      point is off
+         play bet
+            pay flat
+            return odds
+         dont bet
+            take flat
+            return odds
+   roll == 7
+      point is on
+         play bet
+            take flat
+            take odds
+         dont bet
+            pay flat
+            pay odds
+      point is off
+         play bet
+            take flat
+            return odds
+         dont bet
+            pay flat
+            return odds
+*/
+
+
+#define NUMBLOCK(number, strflat, strodds)                                                  \
+procedure check_Num_##number begin                                                          \
+   variable total;                                                                          \
+   variable dontbet;                                                                        \
+   variable amount;                                                                         \
+                                                                                            \
+   total := die1 + die2;                                                                    \
+   if (local_var(LVAR_Num_##number)) then begin                                             \
+      if (local_var(LVAR_Num_##number) bwand DONT_FLAG) then begin                          \
+         amount := local_var(LVAR_Num_##number) bwxor DONT_FLAG;                            \
+         dontbet := 1;                                                                      \
+      end else begin                                                                        \
+         amount := local_var(LVAR_Num_##number);                                            \
+         dontbet := 0;                                                                      \
+      end                                                                                   \
+      if (total == number) then begin                                                       \
+         if (local_var(LVAR_Point)) then begin                                              \
+            if (dontbet == 0) then begin                                                    \
+               sayString += mstr(701) + ":" + mstr(strflat) + " " + mstr(631) + " ";        \
+               call exchangeCaps(amount);                                                   \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(701) + ":" + mstr(strodds) + " " + mstr(631) + " ";     \
+                  call exchangeCaps(local_var(LVAR_Odds_##number) * calculateOdds(number)); \
+               end                                                                          \
+            end else begin                                                                  \
+               sayString += mstr(702) + ":" + mstr(strflat) + " " + mstr(630) + " ";        \
+               call exchangeCaps(-amount);                                                  \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(702) + ":" + mstr(strodds) + " " + mstr(630) + " ";     \
+                  call exchangeCaps(-local_var(LVAR_Odds_##number));                        \
+               end                                                                          \
+            end                                                                             \
+         end else begin                                                                     \
+            if (dontbet == 0) then begin                                                    \
+               sayString += mstr(701) + ":" + mstr(strflat) + " " + mstr(631) + " ";        \
+               call exchangeCaps(amount);                                                   \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(701) + mstr(strodds) + " " + mstr(700) + " ";           \
+               end                                                                          \
+            end else begin                                                                  \
+               sayString += mstr(702) + ":" + mstr(strflat) + " " + mstr(630) + " ";        \
+               call exchangeCaps(-amount);                                                  \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(702) + ":" + mstr(strodds) + " " + mstr(700) + " ";     \
+               end                                                                          \
+            end                                                                             \
+         end                                                                                \
+         if (local_var(LVAR_Point) == total) then begin                                     \
+            debug_msg("ZCCRPDEL: uhh removing point: " + local_var(LVAR_Point) + " total " + total); \
+            removePoint := 1;                                                               \
+         end                                                                                \
+         set_local_var(LVAR_Num_##number, 0);                                               \
+         set_local_var(LVAR_Odds_##number, 0);                                              \
+      end else if (total == 7) then begin                                                   \
+         if (local_var(LVAR_Point)) then begin                                              \
+            if (dontbet == 0) then begin                                                    \
+               sayString += mstr(701) + ":" + mstr(strflat) + " " + mstr(630) + " ";        \
+               call exchangeCaps(-amount);                                                  \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(701) + ":" + mstr(strodds) + " " + mstr(630) + " ";     \
+                  call exchangeCaps(-local_var(LVAR_Odds_##number));                        \
+               end                                                                          \
+            end else begin                                                                  \
+               sayString += mstr(702) + ":" + mstr(strflat) + " " + mstr(631) + " ";        \
+               call exchangeCaps(amount);                                                   \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(702) + ":" + mstr(strodds) + " " + mstr(631) + " ";     \
+                  call exchangeCaps(local_var(LVAR_Odds_##number) * calculateDont(number)); \
+               end                                                                          \
+            end                                                                             \
+         end else begin                                                                     \
+            if (dontbet == 0) then begin                                                    \
+               sayString += mstr(701) + ":" + mstr(strflat) + " " + mstr(630) + " ";        \
+               call exchangeCaps(-amount);                                                  \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(701) + ":" + mstr(strodds) + " " + mstr(700) + " ";     \
+               end                                                                          \
+            end else begin                                                                  \
+               sayString += mstr(702) + ":" + mstr(strflat) + " " + mstr(631) + " ";        \
+               call exchangeCaps(amount);                                                   \
+               if (local_var(LVAR_Odds_##number)) then begin                                \
+                  sayString += mstr(702) + ":" + mstr(strodds) + " " + mstr(702) + " ";     \
+               end                                                                          \
+            end                                                                             \
+         end                                                                                \
+         removePoint := 1;                                                                  \
+         set_local_var(LVAR_Num_##number, 0);                                               \
+         set_local_var(LVAR_Odds_##number, 0);                                              \
+      end                                                                                   \
+   end                                                                                      \
+end
+
+NUMBLOCK(4, 670, 680)
+NUMBLOCK(5, 671, 681)
+NUMBLOCK(6, 672, 682)
+NUMBLOCK(8, 673, 683)
+NUMBLOCK(9, 674, 684)
+NUMBLOCK(10, 675, 685)
+
+procedure checkPoint begin
+   if (removePoint) then begin
+      removePoint := 0;
+      set_local_var(LVAR_Point, 0);
+   end
+
+   if (local_var(LVAR_Point)) then
+      sayString += mstr(109) + " " + local_var(LVAR_Point) + " ";
+   else
+      sayString += mstr(714) + " ";
+end
+
+procedure NodePayOff begin
+   call check_Prop_7;
+   call check_Prop_d3;
+   call check_Prop_d4;
+   call check_Prop_d5;
+   call check_Prop_d2;
+   call check_Prop_1_2;
+   call check_Prop_5_6;
+   call check_Prop_1_1;
+   call check_Prop_6_6;
+   call check_Prop_Craps;
+   call check_Place_4;
+   call check_Place_5;
+   call check_Place_6;
+   call check_Place_8;
+   call check_Place_9;
+   call check_Place_10;
+   call check_Field_Bet;
+   call check_Num_4;
+   call check_Num_5;
+   call check_Num_6;
+   call check_Num_8;
+   call check_Num_9;
+   call check_Num_10;
+   call check_Pass_Line;
+   call check_Dont_Pass_Line;
+   call check_Come_Line;
+   call check_Dont_Come_Line;
+
+   call checkPoint;
+
+   Reply(sayString);
+   NOption(MORESTRING, Node001, 1);
+end
+
+procedure superRandom(variable low, variable hi) begin
+   variable count := 0;
+   variable i := 0;
+   variable num := 0;
+   variable tmp := 0;
+
+   count := Random(25, 55);
+
+   tmp := Random(low, hi);
+
+   while (i < count) do begin
+      tmp := Random(low, hi);
+      if (Random(0, 1)) then
+         num := tmp;
+      i += 1;
+   end
+
+   return num;
+end
+
+procedure NodeRoll begin
+   if (local_var(LVAR_Bet_Total) > dude_caps) then begin
+      Reply(mstr(154) + local_var(LVAR_Bet_Total));
+      MOREOPTION(Node001);
+   end else begin
+      play_sfx("dice");
+
+      die1 := superRandom(1, 6);
+      die2 := superRandom(1, 6);
+      Reply(mstr(710) + " " + die1 + " " + mstr(711) + " " + die2);
+      NOption(MORESTRING, NodePayOff, 1);
+   end
+end
+
+#define NODEODDSTAKE(x, name, odds)                               \
+procedure NOdds##name##x  begin                                   \
+   set_local_var(getOddsVar(x), odds * local_var(getNumVar(x)) );  \
+   call Node001;                                                   \
+end
+
+NODEODDSTAKE(4, 0, ODDS0)
+NODEODDSTAKE(4, 1, ODDS1)
+NODEODDSTAKE(4, 2, ODDS2)
+NODEODDSTAKE(4, 3, ODDS3)
+
+NODEODDSTAKE(5, 0, ODDS0)
+NODEODDSTAKE(5, 1, ODDS1)
+NODEODDSTAKE(5, 2, ODDS2)
+NODEODDSTAKE(5, 3, ODDS3)
+
+NODEODDSTAKE(6, 0, ODDS0)
+NODEODDSTAKE(6, 1, ODDS1)
+NODEODDSTAKE(6, 2, ODDS2)
+NODEODDSTAKE(6, 3, ODDS3)
+
+NODEODDSTAKE(8, 0, ODDS0)
+NODEODDSTAKE(8, 1, ODDS1)
+NODEODDSTAKE(8, 2, ODDS2)
+NODEODDSTAKE(8, 3, ODDS3)
+
+NODEODDSTAKE(9, 0, ODDS0)
+NODEODDSTAKE(9, 1, ODDS1)
+NODEODDSTAKE(9, 2, ODDS2)
+NODEODDSTAKE(9, 3, ODDS3)
+
+NODEODDSTAKE(10, 0, ODDS0)
+NODEODDSTAKE(10, 1, ODDS1)
+NODEODDSTAKE(10, 2, ODDS2)
+NODEODDSTAKE(10, 3, ODDS3)
+
+
+/*
+
+
+*/
+
+
+#define NODEODDS(number)                                                        \
+procedure NodeOdds##number begin                                                \
+   variable current;                                                            \
+   variable valo1 := 1;                                                         \
+   variable valo2 := 2;                                                         \
+   variable valo3 := 3;                                                         \
+                                                                                \
+   valo1 := local_var(getNumVar(number)) * ODDS1;                               \
+   valo2 := local_var(getNumVar(number)) * ODDS2;                               \
+   valo3 := local_var(getNumVar(number)) * ODDS3;                               \
+                                                                                \
+   current := local_var(getOddsVar(number));                                    \
+                                                                                \
+   Reply(mstr(801) + number + " " + mstr(803) + current);                       \
+   NOption("0" + mstr(802) + ". (0)", NOdds0##number, 1);                       \
+   NOption(ODDS1 + mstr(802) + ". (" + valo1 + ")", NOdds1##number, 1);         \
+   NOption(ODDS2 + mstr(802) + ". (" + valo2 + ")", NOdds2##number, 1);         \
+   NOption(ODDS3 + mstr(802) + ". (" + valo3 + ")", NOdds3##number, 1);         \
+   NOption(713, Node001, 1);                                                    \
+end
+
+NODEODDS(4)
+NODEODDS(5)
+NODEODDS(6)
+NODEODDS(8)
+NODEODDS(9)
+NODEODDS(10)
+
+procedure NodeOdds begin
+   debug_msg("got to node odds");
+   Reply(810);
+
+   if (local_var(LVAR_Num_4)) then
+      NOption(804, NodeOdds4, 1);
+   if (local_var(LVAR_Num_5)) then
+      NOption(805, NodeOdds5, 1);
+   if (local_var(LVAR_Num_6)) then
+      NOption(806, NodeOdds6, 1);
+   if (local_var(LVAR_Num_8)) then
+      NOption(807, NodeOdds8, 1);
+   if (local_var(LVAR_Num_9)) then
+      NOption(808, NodeOdds9, 1);
+   if (local_var(LVAR_Num_10)) then
+      NOption(809, NodeOdds10, 1);
+   NOption(713, Node001, 1);
+end
+
+procedure Node001 begin
+   call calculateTotal;
+
+   sayString := "";
+
+   if (local_var(LVAR_Point) == 0) then begin
+      Reply(mstr(103) + " " + DISPLAYPOINTBETS);
+      if (local_var(LVAR_Pass_Line) == 0) then begin
+         NOption(110, NodePassLine, 1);
+      end else begin
+         NOption(mstr(119) + local_var(LVAR_Pass_Line), NodePassLine, 1);
+      end
+   end else begin
+      Reply(DISPLAYPOINTBETS);
+      if (local_var(LVAR_Come_Line) == 0) then begin
+         NOption(112, NodeComeLine, 1);
+      end else begin
+         NOption(mstr(121) + local_var(LVAR_Come_Line), NodeComeLine, 1);
+      end
+      NOption(800, NodeOdds, 1);
+   end
+
+   if (PROPBETS == 0) then
+      NOption(114, NodePropBet, 1);
+   else
+      NOption(DISPLAYPROPBETS, NodePropBet, 1);
+
+   if (PLACEBETS == 0) then
+      NOption(115, NodePlaceBet, 1);
+   else
+      NOption(DISPLAYPLACEBETS, NodePlaceBet, 1);
+
+   if (local_var(LVAR_Field_Bet) == 0) then
+      NOption(116, NodeFieldBet, 1);
+   else
+      NOption(mstr(151) + local_var(LVAR_Field_Bet), NodeFieldBet, 1);
+
+   if (local_var(LVAR_Bet_Total) > 0) then
+      NOption(118, NodeRoll, 1);
+
+   //if (NUMBETS == 0) then --comment out by killap - no reason to not always allow this; plus player can get stuck without it
+      NOption(712, Node999, 1);
+end
+
+procedure calculateTotal begin
+   set_local_var(LVAR_Bet_Total,
+      local_var(LVAR_Pass_Line)      +
+      local_var(LVAR_Dont_Pass_Line) +
+      local_var(LVAR_Come_Line)      +
+      local_var(LVAR_Dont_Come_Line) +
+      local_var(LVAR_Prop_7)         +
+      local_var(LVAR_Prop_d3)        +
+      local_var(LVAR_Prop_d4)        +
+      local_var(LVAR_Prop_d5)        +
+      local_var(LVAR_Prop_d2)        +
+      local_var(LVAR_Prop_1_2)       +
+      local_var(LVAR_Prop_5_6)       +
+      local_var(LVAR_Prop_1_1)       +
+      local_var(LVAR_Prop_6_6)       +
+      local_var(LVAR_Prop_Craps)     +
+      local_var(LVAR_Place_4)        +
+      local_var(LVAR_Place_5)        +
+      local_var(LVAR_Place_6)        +
+      local_var(LVAR_Place_8)        +
+      local_var(LVAR_Place_9)        +
+      local_var(LVAR_Place_10)       +
+      local_var(LVAR_Field_Bet)      +
+      local_var(LVAR_Num_4)          +
+      local_var(LVAR_Num_5)          +
+      local_var(LVAR_Num_6)          +
+      local_var(LVAR_Num_8)          +
+      local_var(LVAR_Num_9)          +
+      local_var(LVAR_Num_10)         +
+      local_var(LVAR_Odds_4)         +
+      local_var(LVAR_Odds_5)         +
+      local_var(LVAR_Odds_6)         +
+      local_var(LVAR_Odds_8)         +
+      local_var(LVAR_Odds_9)         +
+      local_var(LVAR_Odds_10));
+end
+//xxxxxxxxxxxxxxxxxxxx
