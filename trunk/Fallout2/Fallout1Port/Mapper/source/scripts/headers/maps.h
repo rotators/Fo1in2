@@ -4,6 +4,7 @@
 /*******************************************************************************
  Location numbers
 *******************************************************************************/
+#define AREA_WORLDMAP             (-1)
 
 #define AREA_VAULT_13             (0)
 #define AREA_VAULT_15             (1)
@@ -67,6 +68,8 @@
 #define CUR_AREA_SPECIAL_RND_FSAUSER  (cur_town == AREA_SPECIAL_RND_FSAUSER)
 #define CUR_AREA_SPECIAL_RND_TALKCOW  (cur_town == AREA_SPECIAL_RND_TALKCOW)
 #define CUR_AREA_SPECIAL_RND_TEMPLE   (cur_town == AREA_SPECIAL_RND_TEMPLE)
+
+#define CUR_AREA_WORLDMAP             (cur_town == AREA_WORLDMAP)
 
 /*******************************************************************************
  Map Numbers
