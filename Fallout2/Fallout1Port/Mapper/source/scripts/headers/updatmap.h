@@ -14,28 +14,28 @@
 #define BASEMENT_LIGHT                  (50)
 #define MILITARY_BASE_LIGHTING          (75)
 
-#define Lighting 			if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin 			\
-								set_light_level(game_time_hour - 600 + DUSK_LIGHT);						\
-							end																			\
-							else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin	\
-								set_light_level(BRIGHT_LIGHT);											\
-							end																			\
-							else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin	\
-								set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));				\
-							end																			\
-							else 																		\
-								set_light_level(DUSK_LIGHT)												\
+#define Lighting 	         if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin 			\
+      								set_light_level(game_time_hour - 600 + DUSK_LIGHT);						   \
+      							end																			               \
+      							else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin   \
+      								set_light_level(BRIGHT_LIGHT);											         \
+      							end																			               \
+      							else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin  \
+      								set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));				      \
+      							end																			               \
+      							else 																		                  \
+      								set_light_level(DUSK_LIGHT)
 
-#define GlowLighting 		if (global_var(GLOW_POWER) == 2) then begin							\
-								set_light_level(BRIGHT_LIGHT);									\
-							end																	\
-							else if (global_var(GLOW_POWER) == 1) then begin					\
-								Darkness;														\
-							end																	\
-							else																\
-								set_light_level(0)												\
+#define GlowLighting 	   if (global_var(GVAR_GLOW_POWER) == 2) then begin      \
+								      set_light_level(BRIGHT_LIGHT);					      \
+      							end																	\
+      							else if (global_var(GVAR_GLOW_POWER) == 1) then begin \
+      								Darkness;														\
+      							end																	\
+      							else													            \
+      								set_light_level(0)						               \
 
-#define Darkness 			set_light_level(DUSK_LIGHT)
+#define Darkness 			   set_light_level(DUSK_LIGHT)
 
 #define Cavern_Lighting 	set_light_level(CAVERN_LIGHT)
 
