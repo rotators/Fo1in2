@@ -1018,5 +1018,6 @@
 #define SCRIPT_RNDFORVR         (1004)  // rndForvr.int    ; Guardian of Forever Rnd Enct Map Script
 #define SCRIPT_ECGRDFRV         (1005)  // ecGrdFrv.int    ; Guardian of Forever spatial script
 #define SCRIPT_IIMINE           (1006)  // IIMine.int      ; Mines in Raiders Cave
+#define SCRIPT_ZISLOTS          (1007)  // ziSlots.int     ; Generic Fo2 Slot Machine
 
 #endif // SCRIPTS_H
