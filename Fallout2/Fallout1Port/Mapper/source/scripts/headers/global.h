@@ -120,6 +120,8 @@
 
 #define GVAR_CAR_PLACED_TILE 					(633)	// Fo2 Engine stuff
 
+#define GVAR_TOASTER_SLOTMACHINES                 (756)
+
 // Fallout 1 and Fallout Fixt
 #define GVAR_TRACK_RADIATION_DEATH				(999)
 #define GVAR_FIXT_BUGFIXES_ONLY						(1000)
