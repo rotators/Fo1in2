@@ -30,20 +30,6 @@ variable ILLEGALBEFORE;
 variable TRESPASS;
 variable CRIME;
 
-///////////////////////////////////////////////////////
-// VARIABLES FROM VANILLA THAT WEREN'T/AREN'T USED:
-import variable Black_Door_Ptr;
-
-variable rndx;
-variable rndy;
-variable rndz;
-variable DESTROYED;
-variable KILLEDANY;
-variable CAPTURED;
-variable AFTERX;
-variable CHILDREN;
-///////////////////////////////////////////////////////
-
 procedure lauracbt;
 procedure laura01;
 procedure laura01a;
@@ -162,145 +148,110 @@ procedure laura88;
 procedure laura88a;
 procedure lauraend;
 
-procedure start
-begin
+procedure start begin
+end
 
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_LAURA, 100));
+end
 
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		call talk_p_proc;
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_LAURA, 100));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+	Laura_Ptr := self_obj;
+	if (local_var(4) == 1) then begin
+		set_local_var(4, 2);
+		set_local_var(9, 1);
+		animate_move_obj_to_tile(self_obj, 14089, 0);
 	end
-	else begin
-		if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-			call destroy_p_proc;
+	else if ((local_var(4) == 2) and (self_tile != 14089)) then begin
+		animate_move_obj_to_tile(self_obj, 14089, 0);
+	end
+	else if ((local_var(4) == 2) and (self_tile == 14089)) then begin
+		set_local_var(4, 3);
+		obj_unlock(Red_Door_Ptr);
+		use_obj(Red_Door_Ptr);
+		animate_move_obj_to_tile(self_obj, 12495, 0);
+	end
+	else if ((local_var(4) == 3) and (self_tile != 12495)) then begin
+		animate_move_obj_to_tile(self_obj, 12495, 0);
+	end
+	else if ((local_var(4) == 3) and (self_tile == 12495)) then begin
+		set_local_var(4, 4);
+		animate_move_obj_to_tile(self_obj, 12302, 0);
+	end
+	else if (local_var(4) == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_GENCHAT, 178), 8);
+		set_local_var(4, 5);
+		set_local_var(9, 2);
+	end
+	else if (local_var(4) == 5) then begin
+		set_local_var(4, 6);
+		animate_move_obj_to_tile(self_obj, 15099, 0);
+	end
+	else if ((local_var(4) == 6) and (self_tile != 15099)) then begin
+		animate_move_obj_to_tile(self_obj, 15099, 0);
+	end
+	else if ((local_var(4) == 6) and (self_tile == 15099)) then begin
+		set_local_var(4, 7);
+		animate_move_obj_to_tile(self_obj, 23301, 0);
+	end
+	else if ((local_var(4) == 7) and (self_tile != 23301)) then begin
+		animate_move_obj_to_tile(self_obj, 23301, 0);
+	end
+	else if ((local_var(4) == 7) and (self_tile == 23301)) then begin
+		set_local_var(4, 8);
+		animate_move_obj_to_tile(self_obj, 27106, 0);
+	end
+	else if ((local_var(4) == 8) and (self_tile != 27106)) then begin
+		animate_move_obj_to_tile(self_obj, 27106, 0);
+	end
+	/*else if ((local_var(4) == 8) and (self_tile == 27106)) then begin
+		set_local_var(4, 9);
+		if not(is_loading_game) then begin    set_self_invisible;    end
+	end*/
+	else if ((local_var(4) == 8) and (self_tile == 26105)) then begin // Different hex, so Laura doesn't get stuck.
+		set_local_var(4, 9);
+		if not(is_loading_game) then begin
+		   play_sfx("SODOORSF");
+		   set_self_invisible;
+      end
+	end
+	else if (local_var(5) == 1) then begin
+		set_local_var(5, 2);
+		animate_move_obj_to_tile(self_obj, 22090, 0);
+	end
+	else if ((local_var(5) == 2) and (self_tile != 22090)) then begin
+		animate_move_obj_to_tile(self_obj, 22090, 0);
+	end
+	else if ((local_var(5) == 2) and (self_tile == 22090)) then begin
+		set_local_var(5, 3);
+	end
+	else if (local_var(9) == 1) then begin
+		if ((self_tile == 22090) or (self_tile == 12495)) then begin
+			set_local_var(9, 0);
 		end
-		else begin
-			if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-				script_overrides;
-				display_msg(message_str(SCRIPT_LAURA, 100));
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					tmp_hostile := 1;
-				end
-				else begin
-					if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-						Laura_Ptr := self_obj;
-						if (local_var(4) == 1) then begin
-							set_local_var(4, 2);
-							set_local_var(9, 1);
-							animate_move_obj_to_tile(self_obj, 14089, 0);
-						end
-						else begin
-							if ((local_var(4) == 2) and (self_tile != 14089)) then begin
-								animate_move_obj_to_tile(self_obj, 14089, 0);
-							end
-							else begin
-								if ((local_var(4) == 2) and (self_tile == 14089)) then begin
-									set_local_var(4, 3);
-									obj_unlock(Red_Door_Ptr);
-									use_obj(Red_Door_Ptr);
-									animate_move_obj_to_tile(self_obj, 12495, 0);
-								end
-								else begin
-									if ((local_var(4) == 3) and (self_tile != 12495)) then begin
-										animate_move_obj_to_tile(self_obj, 12495, 0);
-									end
-									else begin
-										if ((local_var(4) == 3) and (self_tile == 12495)) then begin
-											set_local_var(4, 4);
-											animate_move_obj_to_tile(self_obj, 12302, 0);
-										end
-										else begin
-											if (local_var(4) == 4) then begin
-												float_msg(self_obj, message_str(SCRIPT_GENCHAT, 178), 8);
-												set_local_var(4, 5);
-												set_local_var(9, 2);
-											end
-											else begin
-												if (local_var(4) == 5) then begin
-													set_local_var(4, 6);
-													animate_move_obj_to_tile(self_obj, 15099, 0);
-												end
-												else begin
-													if ((local_var(4) == 6) and (self_tile != 15099)) then begin
-														animate_move_obj_to_tile(self_obj, 15099, 0);
-													end
-													else begin
-														if ((local_var(4) == 6) and (self_tile == 15099)) then begin
-															set_local_var(4, 7);
-															animate_move_obj_to_tile(self_obj, 23301, 0);
-														end
-														else begin
-															if ((local_var(4) == 7) and (self_tile != 23301)) then begin
-																animate_move_obj_to_tile(self_obj, 23301, 0);
-															end
-															else begin
-																if ((local_var(4) == 7) and (self_tile == 23301)) then begin
-																	set_local_var(4, 8);
-																	animate_move_obj_to_tile(self_obj, 27106, 0);
-																end
-																else begin
-																	if ((local_var(4) == 8) and (self_tile != 27106)) then begin
-																		animate_move_obj_to_tile(self_obj, 27106, 0);
-																	end
-																	else begin
-																		if ((local_var(4) == 8) and (self_tile == 27106)) then begin
-																			set_local_var(4, 9);
-																			if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
-																		end
-																		else begin
-																			if (local_var(5) == 1) then begin
-																				set_local_var(5, 2);
-																				animate_move_obj_to_tile(self_obj, 22090, 0);
-																			end
-																			else begin
-																				if ((local_var(5) == 2) and (self_tile != 22090)) then begin
-																					animate_move_obj_to_tile(self_obj, 22090, 0);
-																				end
-																				else begin
-																					if ((local_var(5) == 2) and (self_tile == 22090)) then begin
-																						set_local_var(5, 3);
-																					end
-																					else begin
-																						if (local_var(9) == 1) then begin
-																							if ((self_tile == 22090) or (self_tile == 12495)) then begin
-																								set_local_var(9, 0);
-																							end
-																						end
-																					end
-																				end
-																			end
-																		end
-																	end
-																end
-															end
-														end
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-						if (tmp_hostile) then begin
-							tmp_hostile := 0;
-							attack(dude_obj);
-						end
-					end
-					else begin
-						if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1)
-							tmp_hostile := 1;
-						end
-					end
-				end
-			end
-		end
+	end
+
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure timed_event_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
 	get_reaction
 	if (local_var(9) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENCHAT, 177), 8);
@@ -358,13 +309,11 @@ procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 end
 
-procedure lauracbt
-begin
+procedure lauracbt begin
 	tmp_hostile := 1;
 end
 
-procedure laura01
-begin
+procedure laura01 begin
 	if (MALE) then begin
 		gsay_reply(48, 102);
 	end
@@ -379,14 +328,12 @@ begin
 	giq_option( -3, SCRIPT_LAURA, 108, laura01a, NEUTRAL_REACTION );
 end
 
-procedure laura01a
-begin
+procedure laura01a begin
 	gsay_message(48, 110, 50);
 	call laurax;
 end
 
-procedure laura02
-begin
+procedure laura02 begin
 	gsay_reply(48, 112);
 	if (global_var( GVAR_SHADOW_PASSWORD ) == 1) then begin
 		giq_option( 4, SCRIPT_LAURA, 113, laura03, NEUTRAL_REACTION );
@@ -394,8 +341,7 @@ begin
 	giq_option( 4, SCRIPT_LAURA, 114, laura10, NEUTRAL_REACTION );
 end
 
-procedure laura03
-begin
+procedure laura03 begin
 	gsay_reply(48, 116);
 	if (global_var( GVAR_SHADOW_PASSWORD ) == 1) then begin
 		giq_option( 4, SCRIPT_LAURA, 117, laura04, NEUTRAL_REACTION );
@@ -403,48 +349,41 @@ begin
 	giq_option( 4, SCRIPT_LAURA, 118, laura09, NEUTRAL_REACTION );
 end
 
-procedure laura04
-begin
+procedure laura04 begin
 	gsay_message(48, 120, 50);
 	set_local_var(7, 1);
 	call laurax1;
 end
 
-procedure laura09
-begin
+procedure laura09 begin
 	gsay_reply(48, 122);
 	call laurax;
 end
 
-procedure laura10
-begin
+procedure laura10 begin
 	gsay_reply(48, 124);
 	giq_option( 4, SCRIPT_LAURA, 125, laura03, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 126, laura11, NEUTRAL_REACTION );
 end
 
-procedure laura11
-begin
+procedure laura11 begin
 	DownReact
 	gsay_message(48, 128, 50);
 	call laurax;
 end
 
-procedure laura14
-begin
+procedure laura14 begin
 	gsay_message(48, 130, 50);
 	call laurax;
 end
 
-procedure laura15
-begin
+procedure laura15 begin
 	DownReact
 	gsay_message(48, 132, 50);
 	call laurax;
 end
 
-procedure laura16
-begin
+procedure laura16 begin
 	if (local_var(1) > 1) then begin
 		gsay_reply(48, 134);
 	end
@@ -459,26 +398,22 @@ begin
 	giq_option( -3, SCRIPT_LAURA, 140, laura16a, NEUTRAL_REACTION );
 end
 
-procedure laura16a
-begin
+procedure laura16a begin
 	gsay_message(48, 142, 50);
 	call laurax;
 end
 
-procedure laura21
-begin
+procedure laura21 begin
 	gsay_message(48, 144, 50);
 	giq_option( 4, SCRIPT_LAURA, 145, laura22, NEUTRAL_REACTION );
 end
 
-procedure laura22
-begin
+procedure laura22 begin
 	gsay_message(48, 147, 50);
 	call laura23;
 end
 
-procedure laura23
-begin
+procedure laura23 begin
 	giq_option( 5, SCRIPT_LAURA, 148, laura24, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 149, laura33, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 150, laura23_1, NEUTRAL_REACTION );
@@ -488,8 +423,7 @@ begin
 	giq_option( 4, SCRIPT_LAURA, 152, laura59, NEUTRAL_REACTION );
 end
 
-procedure laura23_1
-begin
+procedure laura23_1 begin
 	if (global_var( GVAR_COC_STATUS ) == 0) then begin
 		call laura51;
 	end
@@ -501,47 +435,40 @@ begin
 	end
 end
 
-procedure laura24
-begin
+procedure laura24 begin
 	gsay_reply(48, 154);
 	giq_option( 4, SCRIPT_LAURA, 155, laura25, NEUTRAL_REACTION );
 end
 
-procedure laura25
-begin
+procedure laura25 begin
 	gsay_reply(48, 157);
 	giq_option( 4, SCRIPT_LAURA, 158, laura26, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 159, laura28, NEUTRAL_REACTION );
 end
 
-procedure laura26
-begin
+procedure laura26 begin
 	gsay_reply(48, 161);
 	giq_option( 4, SCRIPT_LAURA, 162, laura27, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 163, laura31, NEUTRAL_REACTION );
 end
 
-procedure laura27
-begin
+procedure laura27 begin
 	gsay_reply(48, 165);
 	giq_option( 4, SCRIPT_LAURA, 166, laura28, NEUTRAL_REACTION );
 end
 
-procedure laura28
-begin
+procedure laura28 begin
 	gsay_reply(48, 168);
 	giq_option( 4, SCRIPT_LAURA, 169, laura29, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 170, laura30, NEUTRAL_REACTION );
 end
 
-procedure laura29
-begin
+procedure laura29 begin
 	gsay_reply(48, 172);
 	call laurax4;
 end
 
-procedure laura30
-begin
+procedure laura30 begin
 	rndu := random(1, 2);
 	if (rndu == 1) then begin
 		gsay_reply(48, 174);
@@ -552,119 +479,102 @@ begin
 	call laura23;
 end
 
-procedure laura31
-begin
+procedure laura31 begin
 	gsay_reply(48, 178);
 	giq_option( 4, SCRIPT_LAURA, 179, laura32a, BAD_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 180, laura30, NEUTRAL_REACTION );
 end
 
-procedure laura32
-begin
+procedure laura32 begin
 	gsay_reply(48, 182);
 	giq_option( 4, SCRIPT_LAURA, 183, laurax2, BAD_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 184, laurax8, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 185, laura30, NEUTRAL_REACTION );
 end
 
-procedure laura32a
-begin
+procedure laura32a begin
 	DownReact
 	call laura32;
 end
 
-procedure laura33
-begin
+procedure laura33 begin
 	gsay_reply(48, 187);
 	giq_option( 4, SCRIPT_LAURA, 188, laura34, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 189, laura35, NEUTRAL_REACTION );
 end
 
-procedure laura34
-begin
+procedure laura34 begin
 	gsay_reply(48, 191);
 	giq_option( 6, SCRIPT_LAURA, 192, laura36, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 193, laura36, NEUTRAL_REACTION );
 end
 
-procedure laura35
-begin
+procedure laura35 begin
 	gsay_reply(48, 195);
 	giq_option( 6, SCRIPT_LAURA, 196, laura36, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 197, laura36, NEUTRAL_REACTION );
 end
 
-procedure laura36
-begin
+procedure laura36 begin
 	gsay_reply(48, 199);
 	giq_option( 4, SCRIPT_LAURA, 200, laura37, NEUTRAL_REACTION );
 end
 
-procedure laura37
-begin
+procedure laura37 begin
 	gsay_reply(48, 202);
 	giq_option( 4, SCRIPT_LAURA, 203, laura28, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 204, laura27, NEUTRAL_REACTION );
 end
 
-procedure laura38
-begin
+procedure laura38 begin
 	gsay_reply(48, 206);
 	giq_option( 4, SCRIPT_LAURA, 207, laura39, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 208, laura43, NEUTRAL_REACTION );
 end
 
-procedure laura39
-begin
+procedure laura39 begin
 	gsay_reply(48, 210);
 	giq_option( 4, SCRIPT_LAURA, 211, laura40, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 212, laura42, NEUTRAL_REACTION );
 end
 
-procedure laura40
-begin
+procedure laura40 begin
 	gsay_reply(48, 214);
 	giq_option( 4, SCRIPT_LAURA, 215, laura30, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 216, laura41, NEUTRAL_REACTION );
 end
 
-procedure laura41
-begin
+procedure laura41 begin
 	gsay_message(48, 218, 50);
 	call laurax6;
 end
 
-procedure laura42
-begin
+procedure laura42 begin
 	gsay_reply(48, 220);
 	giq_option( 4, SCRIPT_LAURA, 221, laura30, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 222, laura41, NEUTRAL_REACTION );
 end
 
-procedure laura43
-begin
+procedure laura43 begin
 	gsay_reply(48, 224);
 	giq_option( 4, SCRIPT_LAURA, 225, laura44, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 226, laura45, NEUTRAL_REACTION );
 end
 
-procedure laura44
-begin
+procedure laura44 begin
 	gsay_reply(48, 228);
 	giq_option( 4, SCRIPT_LAURA, 229, laura42, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 230, laura45, NEUTRAL_REACTION );
 end
 
-procedure laura45
-begin
+procedure laura45 begin
 	gsay_reply(48, 232);
 	giq_option( 4, SCRIPT_LAURA, 233, laura37, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 234, laura30, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LAURA, 235, laura41, NEUTRAL_REACTION );
 end
 
-procedure laura46
-begin
+procedure laura46 begin
 	gsay_reply(48, 237);
 	giq_option( 4, SCRIPT_LAURA, 238, laura46_1, NEUTRAL_REACTION );
 end
