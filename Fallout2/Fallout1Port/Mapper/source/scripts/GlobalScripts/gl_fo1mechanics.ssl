@@ -5,15 +5,17 @@
 */
 
 /* Include Files */
-//#include "..\headers\define.h"
+#include "..\headers\define.h"
 //#include "..\headers\maps.h"
 //#include "..\headers\updatmap.h"
-//#include "..\headers\command.h"
+#include "..\headers\command.h"
 
 #include "..\headers\Sfall\main.h"
 
 /* Standard Script Procedures */
 procedure start;
+
+procedure night_person;
 
 procedure general;
 procedure apcost_handler;
@@ -21,7 +23,7 @@ procedure apcost_handler;
 procedure start begin
    if (game_loaded) then begin
    	set_global_script_type(0);
-   	//register_hook_proc(HOOK_CALCAPCOST, apcost_handler);
+   	register_hook_proc(HOOK_GAMEMODECHANGE, night_person);
    end
 
 	call general;
@@ -33,6 +35,26 @@ procedure general begin
 
    // Max rad resistance is 100%
 	set_pc_stat_max(STAT_rad_resist,100);
+end
+
+procedure night_person begin
+	/* Night Person Trait
+	As a night-time person, you are more awake when the sun goes down.
+	Your Intelligence and Perception are improved at night, but dulled during the day. */
+	if (dude_trait( TRAIT_night_person )) then begin
+		if night and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 0) then begin
+		   set_global_var(GVAR_NIGHT_PERSON_ACTIVE,1);
+			set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj,1) + 2);
+			set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj,4) + 2);
+			debug("Night person trait is active!");
+		end
+		else if not(night) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 1) then begin
+		   set_global_var(GVAR_NIGHT_PERSON_ACTIVE,0);
+			set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj,1) - 2);
+			set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj,4) - 2);
+			debug("Night person trait is not active!");
+		end
+	end
 end
 
 procedure apcost_handler begin
