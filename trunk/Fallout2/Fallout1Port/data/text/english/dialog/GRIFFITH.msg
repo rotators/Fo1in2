@@ -113,4 +113,13 @@
 	{3220}{}{I better keep going then. See you later.}
 
 
+# Dumb dude
+	{4999}{}{Uuuhhh ...}
+{5000}{}{}
+{5001}{}{You're back! What now, dummie?}
+
+
+
+
+
 
