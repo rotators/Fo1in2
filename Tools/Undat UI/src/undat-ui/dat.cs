@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,6 +74,8 @@ namespace undat_ui
             return r.ReadBytes(size);
         }
 
+        
+
         // Implemented by following https://falloutmods.fandom.com/wiki/DAT_file_format#Fallout_1_LZSS_uncompression_algorithm
         public byte[] getCompressedBytes(MemoryStream stream)
         {
@@ -81,12 +84,14 @@ namespace undat_ui
             BinaryBigEndian r;
             lock (streamLock) {
                 stream.Seek(offset, SeekOrigin.Begin);
-                for (int i = 0; i < size; i++)
+                for (int i = 0; i < packedSize; i++)
                     s.WriteByte((byte)stream.ReadByte());
 
                 r = new BinaryBigEndian(s);
                 r.BaseStream.Seek(0, SeekOrigin.Begin);
             }
+
+            //var correct = File.ReadAllBytes(@"D:\Fallout\fo1_master\"+this.fullPath);
 
             int uidx = 0;
             
@@ -98,12 +103,12 @@ namespace undat_ui
             byte[] output = new byte[size];
             byte[] dictionary = new byte[DICT_SIZE];
 
-            short N;  // number of bytes to read
-            short NR; // bytes read
-            short DO; // dictionary offset - for reading
-            short DI; // dictionary index - for writing
-            byte L;   // match length
-            byte FL;  // Flags indicating the compression status of up to 8 next characters.
+            short N;    // number of bytes to read
+            short NR;   // bytes read
+            short DO=0; // dictionary offset - for reading
+            short DI;   // dictionary index - for writing
+            int L;      // match length
+            byte FL;    // Flags indicating the compression status of up to 8 next characters.
 
             void _cleardict()
             {
@@ -112,6 +117,7 @@ namespace undat_ui
                 DI = (short)(DICT_SIZE - MAX_MATCH);
             }
 
+            bool _lastbyte() { return r.BaseStream.Position == r.BaseStream.Length; }
             byte _readbyte()
             {
                 NR++;
@@ -123,7 +129,8 @@ namespace undat_ui
                 if (DO == 4096)
                     DO = 0;
                 var b = dictionary[DO];
-                DO++;
+                if (DO++ == 4096)
+                    DO = 0;
                 return b;
             }
 
@@ -132,7 +139,8 @@ namespace undat_ui
                 if (DI == 4096)
                     DI = 0;
                 dictionary[DI] = b;
-                DI++;
+                if (DI++ == 4096)
+                    DI = 0;
             }
 
             void _write(byte[] by)
@@ -146,6 +154,14 @@ namespace undat_ui
                         if (uidx >= size)
                             return;
                         output[uidx] = b;
+                        /*if(output[uidx] != correct[uidx])
+                        {
+                            var uc = output[uidx];
+                            var cb = correct[uidx];
+
+                            throw new Exception("Byte diff in uncompressed!");
+                        }*/
+
                         uidx++;
                     }
                 }
@@ -158,74 +174,120 @@ namespace undat_ui
                     return;
 
                 output[uidx] = b;
+                /*if (output[uidx] != correct[uidx])
+                {
+                    var cb = correct[uidx];
+                    var ub = output[uidx];
+                    throw new Exception($"Byte diff in compressed block!");
+                }*/
+
                 uidx++;
             }
 
             _cleardict();
 
+            var gotoStart = false;
+
             while (true) // @Start
             {
-                if (uidx >= size)
+                //if (uidx >= size)
+                //    break;
+                if (_lastbyte())
                     break;
-                if (r.BaseStream.Position == r.BaseStream.Length)
-                    break;
-
+                gotoStart = false;
                 N = r.ReadInt16(); // How many bytes to read
                 NR = 0;
-                if(N == 0 || uidx > size) // No bytes, so exit
+                if(N == 0) // No bytes, so exit
                     break;
 
                 if (N < 0)
                 {
                     var b = r.ReadBytes(N * -1);
-                    Array.Reverse(b); // Reverse since it's big endian
+                   // Array.Reverse(b); // Reverse since it's big endian
                     _write(b);
                 }
                 else // N > 0
                 {
                     _cleardict();
                     // @Flag
-                    while (uidx < size)
+                    while (true)
                     {
-                        FL = _readbyte();
-                        if (NR == N)
-                            break; // Go to @Start
-                        if(uidx > size)
+                        if (gotoStart)
                             break;
+
+                        if (_lastbyte())
+                            break;
+
+                        if (NR >= N || _lastbyte())
+                            break; // Go to @Start
+
+                        FL = _readbyte();
+                        if(NR >= N || _lastbyte())
+                            break; // Go to @Start
 
                         for (var x = 0; x < 8; x++)
                         {
-                            if (FL % 2 != 0) // @FLodd
+                            if (FL % 2 == 1) // @FLodd
                             {
                                 var b = _readbyte();
                                 _writeb(b);
                                 _writedict(b);
+                                if (NR >= N)
+                                {
+                                    gotoStart = true;
+                                    break; // Go to @Start
+                                }
                             }
                             else // @FLeven
                             {
                                 if (uidx >= size)
                                     break;
 
-                                var O = _readbyte();
-                                L = _readbyte();
+                                if (NR >= N)
+                                {
+                                    gotoStart = true;
+                                    break; // Go to @Start
+                                }
 
-                                DO = (short)(O | ((L & 0xF0) << 4)); // Prepend the high-nibble (first 4 bits) from L to DO
-                                L = (byte)(L & 0x0F); // and remove it from L (L = L & 0x0F).
-                                for (var i = 0; i < (L + MIN_MATCH); i++)
+                               
+                                DO = _readbyte();
+
+                                if (NR >= N)
+                                {
+                                    gotoStart = true;
+                                    break; // Go to @Start
+                                }
+
+                                var LB = _readbyte();
+                                /*if (NR >= N)
+                                {
+                                    gotoStart = true;
+                                    break; // Go to @Start
+                                }*/
+
+                                DO |= (short)((LB & 0xF0) << 4); //  (short)((O | (L & 0xF0) << 4)); // Prepend the high-nibble (first 4 bits) from L to DO
+                                L = (int)((LB & 0x0F) + MIN_MATCH); // and remove it from L (L = L & 0x0F).
+                                for (var i = 0; i < L; i++)
                                 {
                                     var b = _readdict();
                                     _writeb(b);
                                     _writedict(b);
                                 }
                             }
-                            FL = (byte)(FL / 2); // @flagNext
+                            FL = (byte)(FL >> 1); // @flagNext
+                            if (_lastbyte())
+                            {
+                                gotoStart = true;
+                                break;
+                            }
                         }
                     }
                 }
             }
             s.Dispose();
             r.Dispose();
-            return output.Take(size).ToArray();
+
+            return output;
         }
     }
 

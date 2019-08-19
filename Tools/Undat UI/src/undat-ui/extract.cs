@@ -25,7 +25,7 @@ namespace undat_ui
 
         FO1Dat dat;
 
-        public Extractor(Action<string> error, Action<string, int, int> updater, 
+        public Extractor(Action<string> error, Action<string, int, int> updater,
             string masterPath, string outputPath, string[] extractFiles, int threads)
         {
             this.updater = updater;
@@ -33,7 +33,7 @@ namespace undat_ui
             this.masterPath = masterPath;
             this.outputPath = outputPath + "\\data";
             this.extractFiles = extractFiles;
-            this.numFiles = extractFiles.Count();
+            this.numFiles = this.extractFiles.Count();
             this.threads = threads;
         }
         public void ThreadStart()
@@ -58,7 +58,9 @@ namespace undat_ui
                 var file = dat.getFile(f);
                 if (file == null)
                     continue;
+
                 File.WriteAllBytes($"{this.outputPath}\\{f}", dat.getData(file));
+                
                 this.updater(f, completedFiles++, this.numFiles);
             }
 
