@@ -61,6 +61,13 @@ procedure Node2900;
 procedure Node3000;
 procedure Node3100;
 procedure Node3200;
+
+procedure Node5000;
+procedure Node5100;
+procedure Node5200;
+procedure Node5300;
+procedure Node5400;
+
 procedure MoneyTalk;
 
 procedure leave_map;
@@ -105,6 +112,8 @@ variable angry := 0;
 variable knows_price := 0;
 variable asked_money := 0;
 variable knows_fuel := 0;
+variable asked_1000 := 0;
+variable asked_500 := 0;
 
 import variable Griffith_Ptr;
 
@@ -360,19 +369,28 @@ procedure Node1000 begin
 		Reply(1000);
 	end
 	else begin
-		if (angry > 2) then
-			Reply(1003);
-		else
-   		Reply(1001);
+	   if (dude_iq <= 3) then begin
+	      Reply(5001);
+	      NLowOption(5030,Node5100);
+      end
+      else begin
+   		if (angry > 2) then
+   			Reply(1003);
+   		else
+      		Reply(1001);
+      end
    end
 
 	if (local_var(LVAR_EnergyCells) > 0) then
-		NOption(1410,Node1500,004);
+		GOption(1410,Node1500,004);
 	else
-   	NOption(1010,Node1100,004);
+   	GOption(1010,Node1100,004);
 
    NOption(1020,Node1700,004);
-   NOption(1030,Node999,004);
+   BOption(1030,Node999,004);
+
+   NLowOption(4999,Node5000);
+   NLowOption(5030,Node999);
 
 	if debug_mode then
 		NOption("*** CHEAT *** Just give me the damn keys already!",Node2600,004);
@@ -386,9 +404,11 @@ procedure Node1000a begin
 	else
 		Reply(1002);
 
-	NOption(1040,Node2100,004); // 2000 caps
-	NOption(1920,Node3000,004); // 1000 caps
-	NOption(1930,Node2900,004); // 500 caps
+	GOption(1040,Node2100,004); // 2000 caps
+	if (asked_1000 == 0) then
+	   BOption(1920,Node3000,004); // 1000 caps
+   if (asked_500 == 0) then
+	   BOption(1930,Node2900,004); // 500 caps
 	BOption(1910,Node2000,004);
 	NOption(g_bye,Node999,004);
 end
@@ -396,10 +416,10 @@ end
 procedure Node1100 begin
 	Reply(1100);
    NOption(1110,Node1200,004);
-   NOption(1120,Node1800,005);
+   GOption(1120,Node1800,005);
 
    if (global_var( GVAR_NECROP_WATER_CHIP_TAKEN ) != 1) then
-  		NOption(1130,Node999,004);
+  		BOption(1130,Node999,004);
   	else
   		NOption(g_bye,Node999,004);
 
@@ -428,10 +448,10 @@ procedure Node1400 begin
 	Reply(1400);
 
 	if ((dude_item_count( PID_MICRO_FUSION_CELL )) or (dude_item_count( PID_SMALL_ENERGY_CELL ))) then
-		NOption(1410,Node1500,004);
+		GOption(1410,Node1500,004);
 
-	NOption(1420,Node2700,004);
-	NOption(1430,Node999,004);
+	GOption(1420,Node2700,004);
+	BOption(1430,Node999,004);
 end
 
 procedure Node1500 begin
@@ -470,7 +490,7 @@ end
 
 procedure Node1800 begin
 	Reply(1800);
-	NOption(1810,Node1900,004);
+	GOption(1810,Node1900,004);
 	// add more options here
 end
 
@@ -490,15 +510,18 @@ end
 
 procedure Node2000 begin
 	Reply(2000);
-	NOption(2010,Node2100,004);
+	GOption(2010,Node2100,004);
 	call MoneyTalk;
 end
 
 procedure MoneyTalk begin
-	NOption(1920,Node3000,004); // 1000 caps
-	NOption(1930,Node2900,004); // 500 caps
+   if (asked_1000 == 0) then
+	   BOption(1920,Node3000,004); // 1000 caps
+
+   if (asked_500 == 0) then
+	   BOption(1930,Node2900,004); // 500 caps
 	NOption(2020,Node2800,004);
-	NOption(mstr(1940) + g_bye,Node999,004);
+	BOption(mstr(1940) + g_bye,Node999,004);
 end
 
 procedure Node2100 begin
@@ -506,7 +529,7 @@ procedure Node2100 begin
 		set_local_var(LVAR_Here_Before,2);
 
 		Reply(2101);
-		NOption(2120,Node999,004);
+		BOption(2120,Node999,004);
 	end
 	else begin
 		dude_caps_adjust( -2000 );
@@ -583,12 +606,14 @@ end
 procedure Node2900 begin
 	float_angry(300);
 	angry := angry + 1;
+	asked_500 := 1;
 end
 
 procedure Node3000 begin
 	if (dude_caps < 1000) then begin
 		float_angry(301);
 		angry := angry + 1;
+		asked_1000 := 1;
 	end
 	else if (is_success(roll_vs_skill(dude_obj, SKILL_BARTER, -35))) then begin
 		dude_caps_adjust( -1000 );
@@ -609,6 +634,52 @@ end
 
 procedure Node3200 begin
 	Reply(3200);
-	NOption(3210,Node1900,004);
+	GOption(3210,Node1900,004);
 	NOption(3220,Node2800,004);
 end
+
+procedure Node5000 begin
+   Reply(5000);
+   NLowOption(5010,Node5100);
+   NLowOption(5020,Node999);
+end
+
+procedure Node5100 begin
+   Reply(5100);
+   NOption(5110,Node5200,001);
+end
+
+procedure Node5200 begin
+   if ((dude_item_count( PID_MICRO_FUSION_CELL )) or (dude_item_count( PID_SMALL_ENERGY_CELL ))) then begin
+      Reply(5201);
+      GLowOption(5220,Node5400);
+      NLowOption(5230,Node5300);
+   end
+   else begin
+      Reply(5200);
+      NLowOption(5210,Node999);
+   end
+end
+
+procedure Node5300 begin
+   Reply(5300);
+   GLowOption(5310,Node5400);
+   BLowOption(5320,Node999);
+end
+
+procedure Node5400 begin
+	set_local_var(LVAR_EnergyCells,9);
+	inc_general_rep(5);
+
+	if (dude_item_count( PID_MICRO_FUSION_CELL )) then begin
+		remove_pid_qty(dude_obj, PID_MICRO_FUSION_CELL, 1)
+		car_give_gas(400);
+	end
+	else begin
+		remove_pid_qty(dude_obj, PID_SMALL_ENERGY_CELL, 1)
+		car_give_gas(200);
+	end
+
+	float(251);
+end
+

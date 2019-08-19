@@ -9,7 +9,7 @@
 {128}{}{ experience for obtaining the motorcycle.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
-{150}{}{An original Chryslus Motors Cruiser ... !}
+{150}{}{An original Chryslus Motors Cruiser!}
 {160}{}{You are a god damn THIEF!}
 
 {175}{}{I'm out of here.}
@@ -23,6 +23,7 @@
 
 # Float when getting the fuel cell controller
 {250}{}{Just have to pick something up quickly, then I'm gone for good ...}
+{251}{}{He-he, what an idiot! Just have to grab my shit now and then bye, bye!}
 
 # Angry float
 {300}{}{Fuck off.}
@@ -63,10 +64,10 @@
 {1600}{}{Wait, are you..? Really? ... Thanks man! Time to say goodbye to this death infested hole! Do you think there's something up north for the likes of us? Guess I will find out!}
 	{1610}{}{[Done]}
 	
-{1700}{}{You're from a vault, huh? I've been a vault dweller too once! Now look, it only brought the best out of me! Ha-ha! [He flails his scarred and boney arms in front of you] }
+{1700}{}{You're from a vault, huh? I've been a vault dweller too once! Now look, it only brought the best out of me! Ha-ha! [He flails his boney arms in front of you] }
 	{1710}{}{[More]}
 
-{1800}{}{Now seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
+{1800}{}{Now, seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
 	{1810}{}{I'm all ears.}
 
 {1900}{}{I'll give you the bike. For the measly sum of 2000 caps, it's aaaall yours. Get it? It's time for me to leave this shithole behind.}
@@ -114,9 +115,30 @@
 
 
 # Dumb dude
-	{4999}{}{Uuuhhh ...}
-{5000}{}{}
+	{4999}{}{Huh?}
+{5000}{}{Are you shitting me? You're even more stupid than you look like! Now what the hell managed to bring you here?}
 {5001}{}{You're back! What now, dummie?}
+	{5010}{}{Uuuhhh ...}
+	{5020}{}{Uh. Go.}
+	{5030}{}{Uhm....}
+
+{5100}{}{Alright, alright, you don't have to answer. Lost your way, huh? I get it, Necropolis can be like that to some. With the stinky sewers and all of that ...}
+	{5110}{}{[More]}
+{5200}{}{Now please go play somewhere else. Maybe over there at the watershed? They should have about your level of smarts. Now go. Shush!}
+{5201}{}{... Hey, wait a moment! Are those energy cells I'm seeing in your pack? Do you mind giving them to me? I ... uh ... want to look at them.}
+	{5210}{}{Oh!}
+	{5220}{}{YES!}
+	{5230}{}{NO!}
+
+{5300}{}{Please?}
+	{5310}{}{Ok.}
+	{5320}{}{NO, NO, NO!}
+
+
+
+
+
+
 
 
 
