@@ -17,22 +17,22 @@
 #define GVAR_CHILDKILLER_REPUTATION				(1) // was 158 (1158) in Fallout 1
 #define GVAR_CHAMPION_REPUTATION				(2) // was 157 (1157) in Fallout 1
 #define GVAR_BERSERKER_REPUTATION				(3) // was 156 (1156) in Fallout 1 - was moved to 317 (1317) in Fallout Fixt because of display bug
-#define GVAR_BAD_MONSTER					(4) // was 160 (1160) in Fallout 1
-#define GVAR_GOOD_MONSTER					(5) // was 159 (1159) in Fallout 1
+#define GVAR_BAD_MONSTER						(4) // was 160 (1160) in Fallout 1
+#define GVAR_GOOD_MONSTER						(5) // was 159 (1159) in Fallout 1
 
 // Karma Titles Fo2
-#define GVAR_KARMA_HOLY_WARRIOR             (37)
-#define GVAR_KARMA_GUARDIAN_OF_THE_WASTES   (38)
-#define GVAR_KARMA_SHIELD_OF_HOPE           (39)
-#define GVAR_KARMA_DEFENDER                 (40)
-#define GVAR_KARMA_WANDERER                 (41)
-#define GVAR_KARMA_BETRAYER                 (42)
-#define GVAR_KARMA_SWORD_OF_DESPAIR         (43)
-#define GVAR_KARMA_SCOURGE_OF_THE_WASTES    (44)
-#define GVAR_KARMA_DEMON_SPAWN              (45)
+#define GVAR_KARMA_HOLY_WARRIOR             	(37)
+#define GVAR_KARMA_GUARDIAN_OF_THE_WASTES   	(38)
+#define GVAR_KARMA_SHIELD_OF_HOPE           	(39)
+#define GVAR_KARMA_DEFENDER                 	(40)
+#define GVAR_KARMA_WANDERER                 	(41)
+#define GVAR_KARMA_BETRAYER                 	(42)
+#define GVAR_KARMA_SWORD_OF_DESPAIR         	(43)
+#define GVAR_KARMA_SCOURGE_OF_THE_WASTES    	(44)
+#define GVAR_KARMA_DEMON_SPAWN              	(45)
 
 // Addictions - HARDCODED TO THESE GVAR SLOTS
-#define GVAR_NUKACOLA_ADDICT						(21)	// was 189 (1189) in Fallout 1
+#define GVAR_NUKACOLA_ADDICT					(21)	// was 189 (1189) in Fallout 1
 #define GVAR_BUFFOUT_ADDICT						(22)	// was 190 (1190) in Fallout 1
 #define GVAR_MENTATS_ADDICT						(23)	// was 191 (1191) in Fallout 1
 #define GVAR_PSYCHO_ADDICT						(24)	// was 192 (1192) in Fallout 1
@@ -40,21 +40,23 @@
 #define GVAR_ALCOHOL_ADDICT						(26)	// was 194 (1194) in Fallout 1
 
 // Misc - HARDCODED TO THESE GVAR SLOTS
-#define GVAR_LOAD_MAP_INDEX 						(27)	// was 32  (1032) in Fallout 1
-#define GVAR_RUNNING_BURNING_GUY					(28)	// was 603 (1603) in Fallout 1
+#define GVAR_LOAD_MAP_INDEX 					(27)	// was 32  (1032) in Fallout 1
+#define GVAR_RUNNING_BURNING_GUY				(28)	// was 603 (1603) in Fallout 1
 
 #define GVAR_MAP_EXIT_TILE                  	(46)
 #define GVAR_MAP_NEXT_TILE                  	(67)
 
 // Holodisks - VANILLA, DON'T USE (probably)
-#define GVAR_HOLODISK_SIERRA_EVACUATION					(164)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_SIERRA_MED_LOG					(165)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_SIERRA_EXP_LOG					(166)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_OUTSIDE					(220)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_1					(221)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_2					(222)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_3					(223)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_MB_LEVEL_4					(224)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_SIERRA_EVACUATION			(164)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_SIERRA_MED_LOG			(165)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_SIERRA_EXP_LOG			(166)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_OUTSIDE				(220)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_1				(221)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_2				(222)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_3				(223)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_MB_LEVEL_4				(224)	// maybe hard-coded, maybe not?
+
+#define GVAR_NEW_RENO_MADE_MAN               	(230)
 
 // Caravans for Cities
 #define GVAR_CARAVAN_STATUS                  	(269)
@@ -77,8 +79,8 @@
 #define GVAR_ADDICT_TRAGIC						(295)	// maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET							(296)	// maybe hard-coded, maybe not?
 
-#define GVAR_MYSTERIOUS_STRANGER             (352)
-#define GVAR_MYSTERIOUS_STRANGER_LEVEL       (353)
+#define GVAR_MYSTERIOUS_STRANGER             	(352)
+#define GVAR_MYSTERIOUS_STRANGER_LEVEL       	(353)
 
 // Party members:
 #define GVAR_PARTY_NO_FOLLOW                	(398)
