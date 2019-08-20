@@ -67,6 +67,8 @@ variable Lars_kill_Neal;
 variable nail_Gizmo;
 variable wait_for_Lars;
 
+#define LVAR_Here_Before   (4)
+
 procedure start begin
 end
 
@@ -106,8 +108,7 @@ procedure critter_p_proc begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	if (is_success(do_check(dude_obj, STAT_pe, dude_awareness))) then begin
 		script_overrides;
 		display_msg(message_str(SCRIPT_LARS, 103));
@@ -118,15 +119,13 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var( GVAR_LARS_DEAD, 1 );
 	if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 		script_overrides;
@@ -141,10 +140,9 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4)) then begin
+	if (local_var(LVAR_Here_Before)) then begin
 		display_msg(message_str(SCRIPT_LARS, 101));
 	end
 	else begin
@@ -152,8 +150,7 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (global_var( GVAR_LARS_DEAD ) == 1) then begin
 		destroy_object(self_obj);
 	end
@@ -178,8 +175,7 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	float_msg(self_obj, message_str(SCRIPT_LARS, 104), 0);
 	tmp_hostile := 1;
 end
@@ -197,29 +193,21 @@ begin
 		if (global_var( GVAR_ENEMY_JUNKTOWN ) == 1) then begin
 			call Lars27;
 		end
+		else if ((global_var( GVAR_GIZMO_DEAD ) == 1) and (global_var( GVAR_CAPTURE_GIZMO ) != 2)) then begin
+			call Lars26;
+		end
+		else if (global_var( GVAR_CAPTURE_GIZMO ) == 1) then begin
+			set_local_var(LVAR_Here_Before, 1);
+			call Lars21;
+		end
+		else if (local_var(LVAR_Here_Before) == 0) then begin
+			call Lars00;
+		end
+		else if (global_var( GVAR_BUST_SKULZ ) == 2) then begin
+			call Lars19;
+		end
 		else begin
-			if ((global_var( GVAR_GIZMO_DEAD ) == 1) and (global_var( GVAR_CAPTURE_GIZMO ) != 2)) then begin
-				call Lars26;
-			end
-			else begin
-				if (global_var( GVAR_CAPTURE_GIZMO ) == 1) then begin
-					set_local_var(4, 1);
-					call Lars21;
-				end
-				else begin
-					if (local_var(4) == 0) then begin
-						call Lars00;
-					end
-					else begin
-						if (global_var( GVAR_BUST_SKULZ ) == 2) then begin
-							call Lars19;
-						end
-						else begin
-							call Lars12;
-						end
-					end
-				end
-			end
+			call Lars12;
 		end
 	end
 	gsay_end;
@@ -229,47 +217,38 @@ begin
 		set_global_var( GVAR_LARS_N_KILLIAN_ON_CASINO, 1 );
 		load_map(MAP_JUNKCSNO, 4);
 	end
-	else begin
-		if ((global_var( GVAR_BUST_SKULZ ) == 2) and (local_var(5) == 0)) then begin
-			set_local_var(5, 1);
-			gfade_out(1);
-			give_exp_points(500);
-			set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 3 );
-			display_msg(message_str(SCRIPT_LARS, 174));
-			game_time_advance(game_ticks(7200));
-			gfade_in(1);
-		end
-		else begin
-			if (wait_for_Lars) then begin
-				gfade_out(1);
-				game_time_advance(game_ticks(3000));
-				set_global_var( GVAR_CAPTURE_GIZMO, 2 );
-				gfade_in(1);
-				wait_for_Lars := 0;
-			end
-			else begin
-				if (Lars_kill_Neal) then begin
-					Lars_kill_Neal := 0;
-					set_global_var( GVAR_LARS_N_KILLIAN_ON_CASINO, 1 );
-					load_map(MAP_JUNKCSNO, 7);
-				end
-				else begin
-					if (Lars_bust_Skulz) then begin
-						Lars_bust_Skulz := 0;
-						gfade_out(1);
-						set_global_var( GVAR_BUST_SKULZ, 2 );
-						set_global_var( GVAR_DESTROY_VATS_11, 0 );
-						display_msg(message_str(SCRIPT_LARS, 167));
-						gfade_in(1);
-					end
-				end
-			end
-		end
+	else if ((global_var( GVAR_BUST_SKULZ ) == 2) and (local_var(5) == 0)) then begin
+		set_local_var(5, 1);
+		gfade_out(1);
+		give_exp_points(500);
+		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 3 );
+		display_msg(message_str(SCRIPT_LARS, 174));
+		game_time_advance(game_ticks(7200));
+		gfade_in(1);
+	end
+	else if (wait_for_Lars) then begin
+		gfade_out(1);
+		game_time_advance(game_ticks(3000));
+		set_global_var( GVAR_CAPTURE_GIZMO, 2 );
+		gfade_in(1);
+		wait_for_Lars := 0;
+	end
+	else if (Lars_kill_Neal) then begin
+		Lars_kill_Neal := 0;
+		set_global_var( GVAR_LARS_N_KILLIAN_ON_CASINO, 1 );
+		load_map(MAP_JUNKCSNO, 7);
+	end
+	else if (Lars_bust_Skulz) then begin
+		Lars_bust_Skulz := 0;
+		gfade_out(1);
+		set_global_var( GVAR_BUST_SKULZ, 2 );
+		set_global_var( GVAR_DESTROY_VATS_11, 0 );
+		display_msg(message_str(SCRIPT_LARS, 167));
+		gfade_in(1);
 	end
 end
 
-procedure Lars00
-begin
+procedure Lars00 begin
 	gsay_reply(518, 105);
 	giq_option( 4, SCRIPT_LARS, 106, Lars02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LARS, 107, Lars05, NEUTRAL_REACTION );
@@ -286,69 +265,59 @@ begin
 	end
 end
 
-procedure Lars01
-begin
+procedure Lars01 begin
 	gsay_message(518, 111, 51);
 	tmp_hostile := 1;
 end
 
-procedure Lars02
-begin
+procedure Lars02 begin
 	gsay_reply(518, 112);
 	giq_option( 4, SCRIPT_LARS, 113, Lars03, NEUTRAL_REACTION );
 	Goodbyes;
 	giq_option( 4, SCRIPT_LARS, exit_line, LarsEnd, NEUTRAL_REACTION );
 end
 
-procedure Lars03
-begin
+procedure Lars03 begin
 	gsay_reply(518, 114);
 	giq_option( 4, SCRIPT_LARS, 115, Lars04, NEUTRAL_REACTION );
 	Goodbyes;
 	giq_option( 4, SCRIPT_LARS, exit_line, LarsEnd, NEUTRAL_REACTION );
 end
 
-procedure Lars04
-begin
+procedure Lars04 begin
 	DownReact
 	gsay_message(518, 116, 51);
 end
 
-procedure Lars05
-begin
+procedure Lars05 begin
 	gsay_reply(518, 117);
 	giq_option( 4, SCRIPT_LARS, 118, Lars04, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LARS, 119, Lars06, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_LARS, 120, Lars07, NEUTRAL_REACTION );
 end
 
-procedure Lars06
-begin
+procedure Lars06 begin
 	gsay_message(518, 121, 50);
 end
 
-procedure Lars07
-begin
+procedure Lars07 begin
 	gsay_reply(518, 122);
 	giq_option( 4, SCRIPT_LARS, 123, Lars08, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LARS, 124, Lars09, NEUTRAL_REACTION );
 end
 
-procedure Lars08
-begin
+procedure Lars08 begin
 	set_global_var( GVAR_BUST_SKULZ, 1 );
 	gsay_message(518, 125, 50);
 end
 
-procedure Lars09
-begin
+procedure Lars09 begin
 	gsay_message(518, 126, 50);
 end
 
-procedure Lars10
-begin
+procedure Lars10 begin
 	variable LVar0 := 0;
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 	LVar0 := message_str(SCRIPT_LARS, 128) + dude_name + message_str(SCRIPT_LARS, 129);
 	gsay_reply(518, 127);
 	giq_option( 4, SCRIPT_LARS, LVar0, Lars11, NEUTRAL_REACTION );
@@ -358,8 +327,7 @@ begin
 	end
 end
 
-procedure Lars11
-begin
+procedure Lars11 begin
 	variable LVar0 := 0;
 	LVar0 := message_str(SCRIPT_LARS, 131) + dude_name + message_str(SCRIPT_LARS, 132);
 	gsay_reply(518, LVar0);
@@ -369,8 +337,7 @@ begin
 	giq_option( 4, SCRIPT_LARS, exit_line, LarsEnd, NEUTRAL_REACTION );
 end
 
-procedure Lars12
-begin
+procedure Lars12 begin
 	if (local_var(1) > 1) then begin
 		gsay_reply(518, 135);
 	end
@@ -394,9 +361,8 @@ begin
 	end
 end
 
-procedure Lars13
-begin
-	set_local_var(4, 1);
+procedure Lars13 begin
+	set_local_var(LVAR_Here_Before, 1);
 	gsay_reply(518, 140);
 	giq_option( 4, SCRIPT_LARS, 141, Lars17, NEUTRAL_REACTION );
 	if (global_var( GVAR_SHERRY_TELLS_ON_SKULZ )) then begin
@@ -404,8 +370,7 @@ begin
 	end
 end
 
-procedure Lars14
-begin
+procedure Lars14 begin
 	gsay_reply(518, 143);
 	giq_option( 4, SCRIPT_LARS, 144, Lars15, NEUTRAL_REACTION );
 	if (global_var( GVAR_SHERRY_TELLS_ON_SKULZ )) then begin
@@ -413,8 +378,7 @@ begin
 	end
 end
 
-procedure Lars15
-begin
+procedure Lars15 begin
 	gsay_reply(518, 146);
 	giq_option( 4, SCRIPT_LARS, 147, LarsEnd, NEUTRAL_REACTION );
 	if (global_var( GVAR_SHERRY_TELLS_ON_SKULZ )) then begin
@@ -422,20 +386,17 @@ begin
 	end
 end
 
-procedure Lars16
-begin
+procedure Lars16 begin
 	set_global_var( GVAR_BUST_SKULZ, 2 );
 	gsay_message(518, 149, 49);
 end
 
-procedure Lars17
-begin
+procedure Lars17 begin
 	DownReact
 	gsay_message(518, 150, 51);
 end
 
-procedure Lars18
-begin
+procedure Lars18 begin
 	set_global_var( GVAR_BUST_SKULZ, 1 );
 	gsay_reply(518, 151);
 	Goodbyes;
@@ -479,7 +440,7 @@ begin
 	gsay_reply(518, 163);
 	giq_option( 4, SCRIPT_LARS, 164, Lars25, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_LARS, 165, LarsKillNeal, GOOD_REACTION );
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 end
 
 procedure Lars25
