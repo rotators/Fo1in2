@@ -180,3 +180,16 @@
 {2344}{}{ could always use new inventory item [Leave.]}
 {2352}{}{ caps? 'Too rich for your blood?' [Scoffs.] Pal, you're in the wrong place.}
 {2353}{}{ caps? 'Too rich for your blood?' [Scoffs.] Girl, you're in the wrong place.}
+
+# new
+{5000}{}{ This is the final payout. The house is calling it a night!}
+{5001}{}{ This is the final payout. The house is calling it a day!}
+
+{5100}{}{Sorry, this table has been closed.}
+{5101}{}{I'm sorry sir, but this table has been closed.}
+{5102}{}{I'm sorry ma'am, but this table has been closed.}
+
+
+
+
+
