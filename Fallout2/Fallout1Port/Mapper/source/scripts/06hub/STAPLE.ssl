@@ -49,10 +49,18 @@ procedure Staple16;
 procedure Staple17;
 procedure StapleEnd;
 
+procedure Node1000;
+procedure Node1100;
+procedure Node1200;
+
 import variable Staple_Box_Ptr;
 
 procedure Get_Stuff;
 procedure Put_Stuff;
+
+#define LVAR_Here_Before      (4)
+
+#define LVAR_Give_Hintbook    (7)
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -65,14 +73,12 @@ procedure start begin
 	end
 end
 
-procedure combat
-begin
+procedure combat begin
 	attack(dude_obj);
 	tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -87,29 +93,20 @@ procedure pickup_p_proc begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	call Get_Stuff;
 	get_reaction
 	gdialog_set_barter_mod(-40);
-	if (local_var(4) == 0) then begin
-		set_local_var(4, 1);
-		start_gdialog(862, self_obj, 4, -1, -1);
-		gsay_start;
-		call Staple00;
-		gsay_end;
-		end_dialogue;
+	if (local_var(LVAR_Here_Before) == 0) then begin
+		set_local_var(LVAR_Here_Before, 1);
+		start_dialog_at_node(Staple00);
 	end
 	else if (local_var(6) == 1) then begin
 		call Staple13;
 	end
 	else begin
-		start_gdialog(862, self_obj, 4, -1, -1);
-		gsay_start;
-		call Staple01;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(Staple01);
 	end
 	call Put_Stuff;
 end
@@ -139,10 +136,15 @@ procedure Staple00 begin
 	call Staple02;
 end
 
-procedure Staple01
-begin
-	gsay_reply(862, 103);
-	call Staple02;
+procedure Staple01 begin
+   if (local_var(LVAR_Give_Hintbook) == 0) and is_story_finished then begin
+      set_local_var(LVAR_Give_Hintbook,1);
+      call Node1000;
+   end
+   else begin
+   	Reply(103);
+   	call Staple02;
+	end
 end
 
 procedure Staple02
@@ -292,8 +294,7 @@ begin
 	end
 end
 
-procedure Staple16
-begin
+procedure Staple16 begin
 	variable item := 0;
 	dude_caps_adjust( -750 );
 	set_global_var( GVAR_CHEMISTRY_BOOK, 2 );
@@ -302,21 +303,38 @@ begin
 	gsay_message(862, 132, 50);
 end
 
-procedure Staple17
-begin
+procedure Staple17 begin
 	gsay_message(862, 133, 50);
 end
 
-procedure StapleEnd
-begin
+procedure StapleEnd begin
 end
 
-procedure Get_Stuff
-begin
+procedure Get_Stuff begin
 	move_obj_inven_to_obj(Staple_Box_Ptr, self_obj);
 end
 
-procedure Put_Stuff
-begin
+procedure Put_Stuff begin
 	move_obj_inven_to_obj(self_obj, Staple_Box_Ptr);
 end
+
+procedure Node1000 begin
+   Reply(1000);
+   NOption(1010,Node1100,001);
+end
+
+procedure Node1100 begin
+	variable item := 0;
+	item := create_object( PID_FALLOUT_2_HINTBOOK, 0, 0 );
+	add_obj_to_inven(dude_obj, item);
+
+   Reply(1100);
+   NOption(1110,Node1200,004);
+   NLowOption(1111,StapleEnd);
+end
+
+procedure Node1200 begin
+   Reply(1200);
+end
+
+
