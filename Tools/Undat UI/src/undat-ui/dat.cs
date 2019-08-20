@@ -2,12 +2,161 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace undat_ui
 {
+    // Implemented by following https://falloutmods.fandom.com/wiki/DAT_file_format#Fallout_1_LZSS_uncompression_algorithm
+    // https://en.wikipedia.org/wiki/Lempel-Ziv-Storer-Szymanski
+    // https://web.archive.org/web/20160110174426/https://oku.edu.mie-u.ac.jp/~okumura/compression/history.html
+    class FO1LZSS
+    {
+        int uncompressedSize;
+        BinaryBigEndian stream;
+
+        readonly short DICT_SIZE = 4096;
+        readonly short MIN_MATCH = 3;
+        readonly short MAX_MATCH = 18;
+
+        byte[] output;
+        byte[] dictionary;
+
+        short N;    // number of bytes to read
+        short NR;   // bytes read from last block header
+        short DO = 0; // dictionary offset - for reading
+        short DI;   // dictionary index - for writing
+        int OI = 0; // output index, used for writing to the output array.
+        int L;      // match length
+        byte FL;    // Flags indicating the compression status of up to 8 next characters.
+
+        public FO1LZSS(BinaryBigEndian stream, int uncompressedSize)
+        {
+            this.uncompressedSize = uncompressedSize;
+            this.stream = stream;
+        }
+
+        bool LastByte() { return stream.BaseStream.Position == stream.BaseStream.Length; }
+
+        private void ClearDict()
+        {
+            for (var i = 0; i < DICT_SIZE; i++)
+                dictionary[i] = 0x20; // ' ' in ascii
+            DI = (short)(DICT_SIZE - MAX_MATCH);
+        }
+
+        private byte ReadByte()
+        {
+            NR++;
+            return stream.ReadByte();
+        }
+
+        private byte[] ReadBytes(int bytes)
+        {
+            return stream.ReadBytes(bytes);
+        }
+
+        // Write to output and dictionary
+        void WriteByte(byte b)
+        {
+            output[OI++] = b;
+            dictionary[(DI++ % DICT_SIZE)] = b;
+        }
+
+        private void WriteBytes(byte[] bytes)
+        {
+            foreach (var b in bytes)
+            {
+                if (OI >= uncompressedSize)
+                    return;
+                output[OI++] = b;
+            }
+        }
+
+        private byte ReadDict()
+        {
+            return dictionary[(DO++ % DICT_SIZE)];
+        }
+
+        private Int16 ReadInt16()
+        {
+            return stream.ReadInt16();
+        }
+
+        private void ReadBlock(int N)
+        {
+            NR = 0; // The amount of bytes we have read in the current block so far
+            if (N < 0) // Uncompressed / literal block
+            {
+                WriteBytes(ReadBytes(N * -1)); // We just read N bytes and write to the output buffer. Dictionary is untouched.
+            }
+            else // N > 0
+            {
+                ClearDict();
+                // @Flag
+                while (true)
+                {
+                    if (NR >= N || LastByte())
+                        return; // Go to @Start
+
+                    // Read flag byte
+                    FL = ReadByte();
+                    if (NR >= N || LastByte())
+                        return; // Go to @Start
+
+                    for (var x = 0; x < 8; x++)
+                    {
+                        if (FL % 2 == 1) // @FLodd, normal byte
+                        {
+                            // Read byte from stream and put it in the output buffer and dictionary.
+                            WriteByte(ReadByte());
+                            if (NR >= N)
+                                return;
+                        }
+                        else // @FLeven, encoded dictionary offset
+                        {
+                            if (NR >= N)
+                                return;
+
+                            // Read dictionary offset byte
+                            DO = ReadByte();
+
+                            if (NR >= N)
+                                return;
+
+                            // Length byte
+                            var LB = ReadByte();
+
+                            DO |= (short)((LB & 0xF0) << 4);    // Prepend the high-nibble (first 4 bits) from LB to DO
+                            L = (int)((LB & 0x0F) + MIN_MATCH); // and remove it from LB and add MIN_MATCH
+                            for (var i = 0; i < L; i++)
+                            {
+                                // Read a byte from the dictionary at DO, increment index and write to output and dictionary at DI.
+                                WriteByte(ReadDict());
+                            }
+                        }
+                        FL = (byte)(FL >> 1); // @flagNext
+                        if (LastByte())
+                            return;
+                    }
+                }
+            }
+        }
+
+        public byte[] Decompress() {
+            output = new byte[uncompressedSize];
+            dictionary = new byte[DICT_SIZE];
+
+            while(!LastByte()) // @Start
+            {
+                N = ReadInt16(); // How many bytes to read in the next block
+                if (N == 0) // No bytes, so exit
+                    break;
+                ReadBlock(N);
+            }
+            return output;
+        }
+    }
+
     class BinaryBigEndian : BinaryReader
     {
         public BinaryBigEndian(System.IO.Stream stream) : base(stream) { }
@@ -59,9 +208,6 @@ namespace undat_ui
         public int size;
         public int packedSize;
 
-
-        private readonly object streamLock = new object();
-
         public byte[] getData(MemoryStream stream)
         {
             return packed ? getCompressedBytes(stream) : getBytes(stream);
@@ -74,184 +220,26 @@ namespace undat_ui
             return r.ReadBytes(size);
         }
 
-        // Implemented by following https://falloutmods.fandom.com/wiki/DAT_file_format#Fallout_1_LZSS_uncompression_algorithm
-        // https://en.wikipedia.org/wiki/Lempel-Ziv-Storer-Szymanski
-        // https://web.archive.org/web/20160110174426/https://oku.edu.mie-u.ac.jp/~okumura/compression/history.html
         public byte[] getCompressedBytes(MemoryStream stream)
         {
             // Create a new stream so that we are thread safe.
             var s = new MemoryStream();
             BinaryBigEndian r;
-            lock (streamLock) {
-                stream.Seek(offset, SeekOrigin.Begin);
-                // Copy packedSize amount of bytes from the original dat stream to our new memory stream.
-                for (int i = 0; i < packedSize; i++)
-                    s.WriteByte((byte)stream.ReadByte());
+            stream.Seek(offset, SeekOrigin.Begin);
+            // Copy packedSize amount of bytes from the original dat stream to our new memory stream.
+            for (int i = 0; i < packedSize; i++)
+                s.WriteByte((byte)stream.ReadByte());
 
-                r = new BinaryBigEndian(s);
-                r.BaseStream.Seek(0, SeekOrigin.Begin);
-            }
+            r = new BinaryBigEndian(s);
+            r.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            var LZSS = new FO1LZSS(r, size);
+            var bytes = LZSS.Decompress();
             
-            short DICT_SIZE = 4096;
-            short MIN_MATCH = 3;
-            short MAX_MATCH = 18;
-
-            byte[] output = new byte[size];
-            byte[] dictionary = new byte[DICT_SIZE];
-
-            short N;    // number of bytes to read
-            short NR;   // bytes read from last block header
-            short DO=0; // dictionary offset - for reading
-            short DI;   // dictionary index - for writing
-            int OI=0;   // output index, used for writing to the output array.
-            int L;      // match length
-            byte FL;    // Flags indicating the compression status of up to 8 next characters.
-
-            void _cleardict()
-            {
-                for (var i = 0; i < DICT_SIZE; i++)
-                    dictionary[i] = 0x20; // ' ' in ascii
-                DI = (short)(DICT_SIZE - MAX_MATCH);
-            }
-
-            bool _lastbyte() { return r.BaseStream.Position == r.BaseStream.Length; }
-            byte _readbyte()
-            {
-                NR++;
-                return r.ReadByte();
-            }
-
-            byte _readdict()
-            {
-                if (DO == 4096)
-                    DO = 0;
-                var b = dictionary[DO];
-                if (DO++ == 4096)
-                    DO = 0;
-                return b;
-            }
-
-            void _writedict(byte b)
-            {
-                if (DI == 4096)
-                    DI = 0;
-                dictionary[DI] = b;
-                if (DI++ == 4096)
-                    DI = 0;
-            }
-
-            void _writeBytes(byte[] by)
-            {
-                foreach (var b in by)
-                {
-                    if (OI >= size)
-                        return;
-                    output[OI] = b;
-                    OI++;
-                }
-            }
-
-            // Write to output and dictionary
-            void _writeByte(byte b)
-            {
-                output[OI] = b;
-                OI++;
-                _writedict(b);
-            }
-
-            _cleardict();
-
-            var gotoStart = false;
-
-            while (true) // @Start
-            {
-                if (_lastbyte())
-                    break;
-                gotoStart = false;
-                N = r.ReadInt16(); // How many bytes to read in the next block
-                NR = 0;    // The amount of bytes we have read in the current block so far
-                if(N == 0) // No bytes, so exit
-                    break;
-
-                if (N < 0) // Uncompressed / literal block
-                {
-                    _writeBytes(r.ReadBytes(N * -1)); // We just read N bytes and write to the output buffer. Dictionary is untouched.
-                }
-                else // N > 0
-                {
-                    _cleardict();
-                    // @Flag
-                    while (true)
-                    {
-                        if (gotoStart)
-                            break;
-
-                        if (_lastbyte())
-                            break;
-
-                        if (NR >= N || _lastbyte())
-                            break; // Go to @Start
-
-                        // Read flag byte
-                        FL = _readbyte();
-                        if(NR >= N || _lastbyte())
-                            break; // Go to @Start
-
-                        for (var x = 0; x < 8; x++)
-                        {
-                            if (FL % 2 == 1) // @FLodd, normal byte
-                            {
-                                // Read byte from stream and put it in the output buffer and dictionary.
-                                _writeByte(_readbyte());
-                                
-                                if (NR >= N)
-                                {
-                                    gotoStart = true;
-                                    break; // Go to @Start
-                                }
-                            }
-                            else // @FLeven, encoded dictionary offset
-                            {
-                                if (NR >= N)
-                                {
-                                    gotoStart = true;
-                                    break; // Go to @Start
-                                }
-
-                                // Read dictionary offset byte
-                                DO = _readbyte();
-
-                                if (NR >= N)
-                                {
-                                    gotoStart = true;
-                                    break; // Go to @Start
-                                }
-
-                                // Length byte
-                                var LB = _readbyte();
-
-                                DO |= (short)((LB & 0xF0) << 4);    // Prepend the high-nibble (first 4 bits) from LB to DO
-                                L = (int)((LB & 0x0F) + MIN_MATCH); // and remove it from LB and add MIN_MATCH
-                                for (var i = 0; i < L; i++)
-                                {
-                                    // Read a byte from the dictionary at DO, increment index and write to output and dictionary at DI.
-                                    _writeByte(_readdict());
-                                }
-                            }
-                            FL = (byte)(FL >> 1); // @flagNext
-                            if (_lastbyte())
-                            {
-                                gotoStart = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
             s.Dispose();
             r.Dispose();
 
-            return output;
+            return bytes;
         }
     }
 
@@ -290,6 +278,12 @@ namespace undat_ui
             return found.files.Where(x => x.name == file).SingleOrDefault();
         }
 
+        private string ReadString(BinaryBigEndian r)
+        {
+            var len = r.ReadByte();
+            return Encoding.ASCII.GetString(r.ReadBytes(len));
+        }
+
         public ReadError Open(string filename)
         {
             if (!File.Exists(filename))
@@ -303,19 +297,11 @@ namespace undat_ui
             unknown2 = r.ReadInt32();
             unknown3 = r.ReadInt32();
 
-            if(unknown != 94 && unknown2 != 0)
+            if(unknown != 0x5E && unknown2 != 0)
                 return ReadError.NotValidMasterDat;
-
-            var ascii = Encoding.ASCII;
-
             for (var i = 0; i < dirCount; i++)
             {
-                var len = r.ReadByte();
-                var name = ascii.GetString(r.ReadBytes(len));
-                directories.Add(new FO1Dir()
-                {
-                    name = name
-                });
+                directories.Add(new FO1Dir() { name = ReadString(r) });
             }
 
             for (var i=0; i < dirCount;i++)
@@ -327,9 +313,8 @@ namespace undat_ui
                 r.ReadInt32(); // unknown6
                 for (var y = 0; y < dir.fileCount; y++)
                 {
-                    var len = r.ReadByte();
-                    var name = ascii.GetString(r.ReadBytes(len));
-                    var packed = r.ReadInt32() == 64;
+                    var name = ReadString(r);
+                    var packed = r.ReadInt32() == 0x40;
                     var offset = r.ReadInt32();
                     var size = r.ReadInt32();
                     var sizePacked = r.ReadInt32();

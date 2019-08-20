@@ -41,8 +41,7 @@ namespace undat_ui
             }),
             this.txtMaster.Text,
             this.txtDestination.Text, 
-            extractFiles,
-            Config.Threads);
+            extractFiles);
             extract.Begin();
         }
        

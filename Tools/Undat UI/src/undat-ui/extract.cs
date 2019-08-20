@@ -12,7 +12,6 @@ namespace undat_ui
     {
         Action<string, int, int> updater;
         Action<string> error;
-        Action done;
 
         string masterPath;
         string outputPath;
@@ -21,12 +20,11 @@ namespace undat_ui
         int completedFiles = 0;
         int curFile = 0;
         int numFiles = 0;
-        int threads = 1;
 
         FO1Dat dat;
 
         public Extractor(Action<string> error, Action<string, int, int> updater,
-            string masterPath, string outputPath, string[] extractFiles, int threads)
+            string masterPath, string outputPath, string[] extractFiles)
         {
             this.updater = updater;
             this.error = error;
@@ -34,9 +32,9 @@ namespace undat_ui
             this.outputPath = outputPath + "\\data";
             this.extractFiles = extractFiles;
             this.numFiles = this.extractFiles.Count();
-            this.threads = threads;
         }
-        public void ThreadStart()
+
+        public void ExtractFiles()
         {
             while (completedFiles < numFiles)
             {
@@ -58,7 +56,6 @@ namespace undat_ui
                 var file = dat.getFile(f);
                 if (file == null)
                     continue;
-
                 File.WriteAllBytes($"{this.outputPath}\\{f}", dat.getData(file));
                 
                 this.updater(f, completedFiles++, this.numFiles);
@@ -67,16 +64,12 @@ namespace undat_ui
             this.updater("All files were extracted.", this.numFiles, this.numFiles);
         }
 
-        private readonly object fileLock = new object();
         public string GetNextFile()
         {
-            lock (fileLock)
-            {
-                var c = curFile++;
-                if (c >= numFiles)
-                    return null;
-                return extractFiles[c];
-            }
+            var c = curFile++;
+            if (c >= numFiles)
+                return null;
+            return extractFiles[c];
         }
 
         public void Begin()
@@ -98,15 +91,12 @@ namespace undat_ui
 
             if (!Directory.Exists(this.outputPath))
             {
-                this.error($"Directory is that you've selected as destination: '{this.outputPath}' doesn't exist.");
+                this.error($"Directory that you've selected as destination: '{this.outputPath}' doesn't exist.");
                 return;
             }
 
-            for(int i=0;i<threads;i++)
-            {
-                var t = new Thread(new ThreadStart(ThreadStart));
-                t.Start();
-            }
+            var t = new Thread(new ThreadStart(ExtractFiles));
+            t.Start();
         }
 
     }
