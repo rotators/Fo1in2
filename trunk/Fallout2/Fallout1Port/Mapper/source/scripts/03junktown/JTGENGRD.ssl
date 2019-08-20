@@ -59,6 +59,9 @@ variable sneaking;
 variable warned_about_picking;
 variable waypoint;
 
+#define LVAR_Home_Tile                  (5)
+#define LVAR_Home_Rotation              (6)
+
 procedure start begin
 end
 
@@ -69,73 +72,67 @@ procedure critter_p_proc begin
 	end
 	else begin
 		if ((CUR_MAP_JUNKKILL) or (CUR_MAP_JUNKENT)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE  [OR]   ENTRANCE, MORBID, LARS
-			if (self_tile != local_var(5)) then begin
-				animate_move_obj_to_tile(self_obj, local_var(5), 0);
+			if (self_tile != local_var(LVAR_Home_Tile)) then begin
+				animate_move_obj_to_tile(self_obj, local_var(LVAR_Home_Tile), 0);
 			end
+
 			if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
 				if (global_var( GVAR_ENEMY_JUNKTOWN ) == 1) then begin
 					float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 138), 2);
 					tmp_hostile := 1;
 				end
-				else begin
-					if (dude_is_armed) and (local_var(4) == 0) and (map_var(2) == 0) and (global_var( GVAR_HIRED_BY_KILLIAN ) == 0) and (global_var( GVAR_CAPTURE_GIZMO ) == 0) and (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-						if (not(weapon_checked)) then begin
-							weapon_checked := 1;
-							add_timer_event(self_obj, game_ticks(10), 1);
-							dialogue_system_enter;
-						end
-					end
-					else if (dude_is_sneaking and not(sneak_checked)) then begin
-						sneaking := 1;
-						sneak_checked := 1;
-						add_timer_event(self_obj, game_ticks(5), 2);
+				else if (dude_is_armed) and (local_var(4) == 0) and (map_var(2) == 0) and (global_var( GVAR_HIRED_BY_KILLIAN ) == 0) and (global_var( GVAR_CAPTURE_GIZMO ) == 0) and (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+					if (not(weapon_checked)) then begin
+						weapon_checked := 1;
+						add_timer_event(self_obj, game_ticks(10), 1);
 						dialogue_system_enter;
 					end
-					else begin
-						if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-							if ((map_var(8) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
-								set_map_var(8, 0);
-								float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 136), 2);
-								if (warned_about_picking) then begin
-									tmp_hostile := 1;
-								end
-								else begin
-									warned_about_picking := 1;
-								end
-							end
+				end
+				else if (dude_is_sneaking and not(sneak_checked)) then begin
+					sneaking := 1;
+					sneak_checked := 1;
+					add_timer_event(self_obj, game_ticks(5), 2);
+					dialogue_system_enter;
+				end
+				else if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+					if ((map_var(8) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
+						set_map_var(8, 0);
+						float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 136), 2);
+						if (warned_about_picking) then begin
+							tmp_hostile := 1;
+						end
+						else begin
+							warned_about_picking := 1;
 						end
 					end
 				end
 			end
 		end
-		else begin
-
-			if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-				if (map_var(2) == 2) then begin
-					if (waypoint != 0) then begin
-						if (tile_distance(self_tile, tmp_dest_tile) > 3) then begin
-							animate_move_obj_to_tile(self_obj, tmp_dest_tile, 0);
-						end
-						else if (waypoint == 1) then begin
-							tmp_dest_tile := 23465;
-							waypoint := 2;
-						end
-						else if (waypoint == 2) then begin
-							tmp_dest_tile := 26855;
-							waypoint := 3;
-						end
-						else if (waypoint == 3) then begin
-							destroy_object(self_obj);
-						end
+		else if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+			if (map_var(2) == 2) then begin
+				if (waypoint != 0) then begin
+					if (tile_distance(self_tile, tmp_dest_tile) > 3) then begin
+						animate_move_obj_to_tile(self_obj, tmp_dest_tile, 0);
 					end
-					else begin
+					else if (waypoint == 1) then begin
+						tmp_dest_tile := 23465;
+						waypoint := 2;
+					end
+					else if (waypoint == 2) then begin
+						tmp_dest_tile := 26855;
+						waypoint := 3;
+					end
+					else if (waypoint == 3) then begin
 						destroy_object(self_obj);
 					end
 				end
+				else begin
+					destroy_object(self_obj);
+				end
 			end
-
 		end
 	end
+
 	if (global_var( GVAR_ENEMY_JUNKTOWN ) == 1) then begin
 		if (self_can_see_dude) then begin
 			attack(dude_obj);
@@ -143,15 +140,13 @@ procedure critter_p_proc begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_JTGENGRD, 100));
 	script_overrides;
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
@@ -166,53 +161,52 @@ begin
 	rm_timer_event(self_obj);
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
+   if not(map_first_run) then begin
+      critter_attempt_placement(self_obj,local_var(LVAR_Home_Tile), self_elevation);
+      animate_rotation(local_var(LVAR_Home_Rotation));
+   end
+
 	if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
 		set_self_team(TEAM_JUNKTOWN_GUARD );
 	end
-	else begin
-		if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-			set_self_team(TEAM_PLAYER );
-			tmp_dest_tile := 23666;
-			waypoint := 1;
-			if (map_var(2) != 1) then begin
-				destroy_object(self_obj);
-			end
+	else if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+		set_self_team( TEAM_PLAYER );
+		tmp_dest_tile := 23666;
+		waypoint := 1;
+		if (map_var(2) != 1) then begin
+			destroy_object(self_obj);
 		end
 	end
-	if (local_var(5) == 0) then begin
-		set_local_var(5, self_tile);
+
+	if (local_var(LVAR_Home_Tile) == 0) then begin
+		set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	float_msg(self_obj, message_str(SCRIPT_JTGENGRD, random(136, 138)), 2);
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	get_reaction
 	if (sneaking and (times_caught_sneaking >= 3)) then begin
 		call JTGenGrd18;
 	end
 	else begin
+
 		if (not(local_var(4)) and (dude_is_armed) or (sneaking and (times_caught_sneaking < 3))) then begin
-			start_gdialog(37, self_obj, 4, -1, -1);
-			gsay_start;
 			if (dude_is_armed) then begin
-				call JTGenGrd00;
+				start_dialog_at_node(JTGenGrd00);
 			end
 			else begin
 				if (sneaking) then begin
-					call JTGenGrd06;
+					start_dialog_at_node(JTGenGrd06);
 				end
 			end
-			gsay_end;
-			end_dialogue;
 		end
 		else begin
 			if has_rep_childkiller then begin
@@ -228,11 +222,11 @@ begin
 				call JTGenGrd20;
 			end
 		end
+
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (weapon_checked) then begin
 			if (dude_is_armed) then begin
@@ -244,32 +238,24 @@ begin
 			end
 		end
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			sneak_checked := 0;
-		end
-		else begin
-			if (fixed_param == 3) then begin
-				tmp_hostile := 1;
-			end
-			else begin
-				if (fixed_param == 4) then begin
-					float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 139), 0);
-				end
-			end
-		end
+	else if (fixed_param == 2) then begin
+		sneak_checked := 0;
+	end
+	else if (fixed_param == 3) then begin
+		tmp_hostile := 1;
+	end
+   else if (fixed_param == 4) then begin
+		float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 139), 0);
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 	end
 end
 
-procedure JTGenGrd00
-begin
+procedure JTGenGrd00 begin
 	DownReact
 	gsay_reply(37, 110);
 	giq_option( 4, SCRIPT_JTGENGRD, 111, JTGenGrd01, NEUTRAL_REACTION );
@@ -279,27 +265,23 @@ begin
 	giq_option( -3, SCRIPT_JTGENGRD, 114, JTGenGrd05, NEUTRAL_REACTION );
 end
 
-procedure JTGenGrd00a
-begin
+procedure JTGenGrd00a begin
 	DownReact
 	call JTGenGrd02;
 end
 
-procedure JTGenGrd00b
-begin
+procedure JTGenGrd00b begin
 	UpReact
 	call JTGenGrd04;
 end
 
-procedure JTGenGrd01
-begin
+procedure JTGenGrd01 begin
 	gsay_reply(37, 115);
 	giq_option( 4, SCRIPT_JTGENGRD, 116, JTGenGrd02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JTGENGRD, 117, JTGenGrd01a, NEUTRAL_REACTION );
 end
 
-procedure JTGenGrd01a
-begin
+procedure JTGenGrd01a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
 		call JTGenGrd03;
 	end
@@ -308,36 +290,30 @@ begin
 	end
 end
 
-procedure JTGenGrd02
-begin
+procedure JTGenGrd02 begin
 	gsay_reply(37, 118);
 	giq_option( 4, SCRIPT_JTGENGRD, 119, JTGenGrdEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_JTGENGRD, 120, JTGenGrd02a, BAD_REACTION );
 end
 
-procedure JTGenGrd02a
-begin
+procedure JTGenGrd02a begin
 	tmp_hostile := 1;
 end
 
-procedure JTGenGrd03
-begin
+procedure JTGenGrd03 begin
 	set_local_var(4, 1);
 	gsay_message(37, 121, 50);
 end
 
-procedure JTGenGrd04
-begin
+procedure JTGenGrd04 begin
 	gsay_message(37, 122, 50);
 end
 
-procedure JTGenGrd05
-begin
+procedure JTGenGrd05 begin
 	gsay_message(37, 123, 50);
 end
 
-procedure JTGenGrd06
-begin
+procedure JTGenGrd06 begin
 	times_caught_sneaking := times_caught_sneaking + 1;
 	add_timer_event(self_obj, game_ticks(5), 2);
 	gsay_reply(37, 124);
@@ -346,8 +322,7 @@ begin
 	giq_option( -3, SCRIPT_JTGENGRD, 127, JTGenGrd07, NEUTRAL_REACTION );
 end
 
-procedure JTGenGrd06a
-begin
+procedure JTGenGrd06a begin
 	variable LVar0 := 0;
 	LVar0 := -5 * times_caught_sneaking;
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, LVar0))) then begin
@@ -358,13 +333,11 @@ begin
 	end
 end
 
-procedure JTGenGrd07
-begin
+procedure JTGenGrd07 begin
 	gsay_message(37, 128, 50);
 end
 
-procedure JTGenGrd08
-begin
+procedure JTGenGrd08 begin
 	gsay_reply(37, 130);
 	giq_option( 5, SCRIPT_JTGENGRD, 131, JTGenGrdEnd, NEUTRAL_REACTION );
 	if (dude_is_male) then begin
@@ -375,8 +348,7 @@ begin
 	end
 end
 
-procedure JTGenGrd08a
-begin
+procedure JTGenGrd08a begin
 	if (random(0, 1)) then begin
 		DownReact
 	end
@@ -385,33 +357,27 @@ begin
 	end
 end
 
-procedure JTGenGrd09
-begin
+procedure JTGenGrd09 begin
 	float_msg(self_obj, message_str(SCRIPT_JTGENGRD, random(101, 103)), 51);
 end
 
-procedure JTGenGrd16
-begin
+procedure JTGenGrd16 begin
 	float_msg(self_obj, message_str(SCRIPT_JTGENGRD, random(104, 106)), 49);
 end
 
-procedure JTGenGrd18
-begin
+procedure JTGenGrd18 begin
 	float_msg(self_obj, message_str(SCRIPT_JTGENGRD, 135), 2);
 	add_timer_event(self_obj, game_ticks(5), 3);
 end
 
-procedure JTGenGrd19
-begin
+procedure JTGenGrd19 begin
 	display_msg(message_str(SCRIPT_JTGENGRD, 129));
 	tmp_hostile := 1;
 end
 
-procedure JTGenGrd20
-begin
+procedure JTGenGrd20 begin
 	float_msg(self_obj, message_str(SCRIPT_JTGENGRD, random(107, 109)), 0);
 end
 
-procedure JTGenGrdEnd
-begin
+procedure JTGenGrdEnd begin
 end
