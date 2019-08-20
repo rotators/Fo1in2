@@ -51,6 +51,8 @@ procedure Node015;
 procedure Node016;
 procedure Node017;
 
+procedure NodeClosed;
+
 /* Local Variables which are saved. All Local Variables need to be
    prepended by LVAR_ */
 #define LVAR_Flags                        (0)
@@ -58,6 +60,17 @@ procedure Node017;
 #define LVAR_Examined                     (2)
 #define LVAR_Dice_Tamper                  (3)
 #define LVAR_Personal_Enemy               (4)
+#define LVAR_Dealer_Money                 (5)
+#define LVAR_Caps_Restocked_Time          (6)
+
+#define restock_time                      (ONE_GAME_DAY)
+#define set_dealer_timeout                set_local_var(LVAR_Caps_Restocked_Time, game_time + restock_time); \
+                                          set_dealer_money(random(dealer_money_min,dealer_money_max))
+#define get_dealer_timeout                (game_time <= local_var(LVAR_Caps_Restocked_Time))
+#define dealer_money_min                  (1500)
+#define dealer_money_max                  (3500)
+#define set_dealer_money(x)               set_local_var(LVAR_Dealer_Money,local_var(LVAR_Dealer_Money) + x)
+#define get_dealer_money                  local_var(LVAR_Dealer_Money)
 
 // settings start
 #define level_1_bet                       (5)            // setting one of the level_#_bet will adjust the 5 levels
@@ -176,6 +189,8 @@ procedure map_enter_p_proc begin
 	end
 	set_self_ai( AI_MERCHANT );
    add_timer_event(self_obj,game_ticks(random(1,30)),1);
+
+   set_dealer_money(random(dealer_money_min,dealer_money_max));
 end
 
 procedure critter_p_proc begin
@@ -214,10 +229,14 @@ end
 
 procedure talk_p_proc begin
    debug_msg("talk_p_proc:");
-   if ((dice_count == 1) and (get_dice_tamper == false)) then begin
+   if get_dealer_timeout then begin
+      call NodeClosed;
+   end
+   else if ((dice_count == 1) and (get_dice_tamper == false)) then begin
       debug_msg("   a");
       start_dialog_at_node(Node013);
-   end else begin
+   end
+   else begin
       debug_msg("   b");
       call Node017;
    end
@@ -343,14 +362,15 @@ procedure Node011 begin
 end
 
 procedure Node013 begin
-   if /*(dude_family_conflict) and*/ not(is_story_finished) then begin
+   /*if (dude_family_conflict) and not(is_story_finished) then begin
       dice_reply(dice_mstr(320) + level_1_bet + dice_mstr(2321) );
-   end else if (dude_has_important_rep) then begin
+   end else*/ if (dude_has_important_rep) then begin
       dice_reply(dice_mstr(321 + dude_is_female) + level_1_bet + dice_mstr(2321));
    end else begin
       dice_reply(dice_mstr(323) + level_1_bet + dice_mstr(2321));
    end
    play_dice_options
+
 end
 
 procedure Node014 begin
@@ -395,8 +415,17 @@ variable the_result := 0;
    end
    // display results
    dude_caps_adjust( the_result*bet_amt );
-   dice_reply(400 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))) + (10*the_result));
-   play_dice_options
+   set_dealer_money(-the_result*bet_amt);
+
+   if (get_dealer_money <= 0) then begin
+      set_dealer_timeout;
+      if day then
+         gSay_Reply( SCRIPT_ZIDCEGRL, mstr(400 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))) + (10*the_result)) + mstr(5000 + day) );
+   end
+   else begin
+      dice_reply(400 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))) + (10*the_result));
+      play_dice_options
+   end
    dice_option(440 + night, Node999, 001);
 end
 
@@ -407,3 +436,9 @@ procedure Node017 begin
    dice_floater(450 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))));
    debug_msg("   b");
 end
+
+procedure NodeClosed begin
+   dice_floater(5100 + (dude_has_important_rep*(dude_is_male + (2*dude_is_female))));
+end
+
+
