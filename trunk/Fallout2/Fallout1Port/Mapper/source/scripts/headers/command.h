@@ -353,7 +353,7 @@ variable step_tile;
 // traits
 //
 
-#define  get_trait(cr,trait)              has_trait(TRAIT_TRAIT,cr,trait)
+#define get_trait(cr,trait)               has_trait(TRAIT_TRAIT,cr,trait)
 #define dude_trait(trait)                 get_trait(dude_obj,trait)
 #define self_trait(trait)                 get_trait(self_obj,trait)
 
@@ -361,7 +361,7 @@ variable step_tile;
 // AI
 //
 
-#define  get_ai(cr)                       has_trait(TRAIT_OBJECT,cr,OBJECT_AI_PACKET)
+#define get_ai(cr)                        has_trait(TRAIT_OBJECT,cr,OBJECT_AI_PACKET)
 #define self_ai                           get_ai(self_obj)
 
 #define set_ai(cr,ai)                     critter_add_trait(cr,TRAIT_OBJECT,OBJECT_AI_PACKET,ai)
@@ -371,7 +371,7 @@ variable step_tile;
 // team
 //
 
-#define  get_team(cr)                     has_trait(TRAIT_OBJECT,cr,OBJECT_TEAM_NUM)
+#define get_team(cr)                      has_trait(TRAIT_OBJECT,cr,OBJECT_TEAM_NUM)
 #define self_team                         get_team(self_obj)
 
 #define set_team(cr,team)                 critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
@@ -381,11 +381,11 @@ variable step_tile;
 //
 // items
 //
-#define  get_item(cr,pid)                 obj_carrying_pid_obj(cr,pid) // due to shitty && confusing naming
+#define get_item(cr,pid)                  obj_carrying_pid_obj(cr,pid) // due to shitty && confusing naming
 #define dude_item(pid)                    get_item(dude_obj,pid)
 #define self_item(pid)                    get_item(self_obj,pid)
 
-#define  get_item_count(cr,pid)           obj_is_carrying_obj_pid(cr,pid) // due to shitty && confusing naming
+#define get_item_count(cr,pid)            obj_is_carrying_obj_pid(cr,pid) // due to shitty && confusing naming
 #define dude_item_count(pid)              get_item_count(dude_obj,pid)
 #define self_item_count(pid)              get_item_count(self_obj,pid)
 
@@ -393,7 +393,7 @@ variable step_tile;
 // misc triplets
 //
 
-#define  get_cur_rot(cr)                  has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
+#define get_cur_rot(cr)                   has_trait(TRAIT_OBJECT,cr,OBJECT_CUR_ROT)
 #define dude_cur_rot                      get_cur_rot(dude_obj)
 #define self_cur_rot                      get_cur_rot(self_obj)
 
