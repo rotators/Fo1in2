@@ -1,4 +1,5 @@
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 
 procedure start;
 procedure critter_p_proc;//    script_action == 12
@@ -6,7 +7,8 @@ procedure description_p_proc;//    script_action == 3
 procedure use_skill_on_p_proc;//    script_action == 8
 procedure Repair_Attempt;
 import variable valid_target;
-variable hostile;
+
+variable tmp_hostile;
 variable initial :=  0;
 ///////////////////////////////////////////////////////////////////
 //	For two-armed brainbots in	Military Base, Vats level 2
@@ -41,8 +43,8 @@ end
 
 procedure critter_p_proc
 begin
-	if (hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-		hostile := 0;
+	if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	if (global_var( GVAR_DESTROY_VATS_3 ) != 0) then begin
@@ -64,7 +66,7 @@ begin
 		if (global_var( GVAR_DESTROY_VATS_3 ) == 0) then begin
 			if (global_var( GVAR_DESTROY_VATS_1 ) == 0) then begin
 				if (self_can_see_dude) then begin
-					hostile := 1;
+					tmp_hostile := 1;
 				end
 			end
 			else begin
@@ -82,7 +84,7 @@ begin
 					else begin
 						if (global_var( GVAR_DESTROY_VATS_1 ) == 3) then begin
 							if (self_can_see_dude) then begin
-								hostile := 1;
+								tmp_hostile := 1;
 							end
 						end
 					end
