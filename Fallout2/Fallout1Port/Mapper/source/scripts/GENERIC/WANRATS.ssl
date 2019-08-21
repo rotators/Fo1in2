@@ -27,8 +27,7 @@ procedure talk_p_proc;
 
 variable initial :=  0;
 variable tmp_hostile := 0;
-variable SrcObj := 0;
-variable SrcIsParty := 0;
+variable tmp_attacked;
 
 /*******************************************************************
 *******                         PROCEDURES                   *******
@@ -91,12 +90,12 @@ end
 
 procedure critter_p_proc begin
 
-	if (CUR_MAP_VAULT13) or (CUR_MAP_V13ENT) then begin
+	if CUR_AREA_VAULT_13 then begin
 		if v13_invaded or map_var(2) then begin
 			if (local_var(9) != 1) then begin
 				set_local_var(9, 1);//		<-- only once
-				if not(is_loading_game) then begin//		<-- if not during a Game_Load,
-					set_self_visible;//		     make sure critter is visibile
+				if not(is_loading_game) then begin
+					set_self_visible;
 				end
 				debug_msg("Vault 13 invasion, killing WANRATS.SSL with DeathType " + 59 + ".  ");
 				kill_critter(self_obj, ANIM_exploded_to_nothing_sf);
@@ -104,7 +103,7 @@ procedure critter_p_proc begin
 		end
 	end
 
-	if (tmp_hostile) then begin
+	if (tmp_hostile and (tmp_attacked == 0)) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
@@ -120,7 +119,8 @@ end
 
 procedure timed_event_p_proc begin
 	animate_move_obj_to_tile(self_obj, tile_num_in_direction(self_tile, random(0, 5), random(1, 3)), 0);
-	add_timer_event(self_obj, random(30, 50), 0);//game_ticks(random(1, 5)), 0);
+	//add_timer_event(self_obj, random(30, 50), 0);
+	add_timer_event(self_obj, game_ticks(random(1, 5)), 0); // Fo1 vanilla
 end
 
 procedure use_skill_on_p_proc begin
@@ -132,16 +132,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure damage_p_proc begin
-	if source_obj > 0 then begin
-		SrcObj := 0;
-		SrcIsParty := 0;
-		SrcObj := obj_pid(source_obj);
-
-		if party_member_obj(SrcObj) then begin
-			SrcIsParty := 1;
-		end
-	end
-	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if obj_in_party(source_obj) then begin
 		party_remove(self_obj);
 		set_self_team(TEAM_RATS);
 		tmp_hostile := 1;
@@ -158,3 +149,10 @@ procedure talk_p_proc begin
 	display_msg(message_str(SCRIPT_GENCHAT, 800));
 	script_overrides;
 end
+
+procedure combat_p_proc begin
+   if (fixed_param == 4) then begin
+      tmp_attacked := 1;
+   end
+end
+
