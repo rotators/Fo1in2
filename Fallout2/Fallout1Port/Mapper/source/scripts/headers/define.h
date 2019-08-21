@@ -674,6 +674,7 @@
 #define ELEV_GLOW2   	(8) // Glow elevator red
 #define ELEV_GLOW3   	(9) // Glow elevator blue
 #define ELEV_NECVLT  	(10) // Necropolis elevator
+#define ELEV_GLOW1A  	(11) // This elevator fixes a bug on "level 3" (see comment in elev6_m1.ssl)
 
 #define METARULE_PARTY_COUNT      16
 #define party_member_count(X)    metarule(METARULE_PARTY_COUNT, X)
