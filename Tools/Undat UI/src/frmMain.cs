@@ -11,7 +11,6 @@ using System.Windows.Forms;
 
 namespace undat_ui
 {
-    
     public partial class frmMain : Form
     {
         public frmMain()
