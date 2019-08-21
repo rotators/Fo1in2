@@ -65,10 +65,7 @@ variable THRONE;
 variable target_hex := 20113;
 variable my_hex;
 
-procedure start
-begin
-
-
+procedure start begin
 	if (not(init)) then begin
 		if (local_var(7) == 0) then begin
 			set_local_var(7, self_tile);
@@ -78,94 +75,75 @@ begin
 		Garret_ptr := self_obj;
 		init := 1;
 	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(SCRIPT_GARRET, 100));
+end
+
+procedure pickup_p_proc begin
+   Hostile := 1;
+end
+
+procedure critter_p_proc begin
+	if (global_var( GVAR_ENEMY_NECROPOLIS ) and self_can_see_dude) then begin
+		attack(dude_obj);
+	end
 	else begin
-		if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-			call damage_p_proc;
+
+		my_hex := self_tile;
+		if (Hostile > 0) then begin
+			set_global_var( GVAR_ENEMY_NECROPOLIS, 1 );
+			attack(dude_obj);
 		end
-		else begin
-			if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-				call talk_p_proc;
+
+		if (global_var( GVAR_SIGNAL_REWARD ) bwand 1) then begin
+			if (local_var(5) == 0) then begin
+				moving := 1;
+				float_msg(self_obj, message_str(SCRIPT_GARRET, 114), 0);
+				set_local_var(5, 1);
 			end
-			else begin
-				if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-					script_overrides;
-					display_msg(message_str(SCRIPT_GARRET, 100));
+			else if (local_var(5) == 1) then begin
+				moving := 1;
+				if (my_hex != target_hex) then begin
+					animate_move_obj_to_tile(self_obj, target_hex, 0);
 				end
 				else begin
-					if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-						Hostile := 1;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							if (global_var( GVAR_ENEMY_NECROPOLIS ) and self_can_see_dude) then begin
-								attack(dude_obj);
-							end
-							else begin
-								my_hex := self_tile;
-								if (Hostile > 0) then begin
-									set_global_var( GVAR_ENEMY_NECROPOLIS, 1 );
-									attack(dude_obj);
-								end
-								if (global_var( GVAR_SIGNAL_REWARD ) bwand 1) then begin
-									if (local_var(5) == 0) then begin
-										moving := 1;
-										float_msg(self_obj, message_str(SCRIPT_GARRET, 114), 0);
-										set_local_var(5, 1);
-									end
-									else begin
-										if (local_var(5) == 1) then begin
-											moving := 1;
-											if (my_hex != target_hex) then begin
-												animate_move_obj_to_tile(self_obj, target_hex, 0);
-											end
-											else begin
-												set_local_var(5, 2);
-												use_obj(Fridge_ptr);
-											end
-										end
-										else begin
-											if (local_var(5) == 2) then begin
-												moving := 1;
-												if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
-													call reward;
-													set_local_var(5, 3);
-													use_obj(Fridge_ptr);
-												end
-											end
-											else begin
-												if (local_var(5) == 3) then begin
-													moving := 1;
-													target_hex := local_var(7);
-													if (my_hex != target_hex) then begin
-														animate_move_obj_to_tile(self_obj, target_hex, 0);
-													end
-													else begin
-														call done;
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-
-								set_global_var( GVAR_ENEMY_NECROPOLIS, 1 );
-								set_global_var( GVAR_GARRET_STATUS, 3 );
-								inc_evil_critter
-							end
-						end
-					end
+					set_local_var(5, 2);
+					use_obj(Fridge_ptr);
+				end
+			end
+			else if (local_var(5) == 2) then begin
+				moving := 1;
+				if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
+					call reward;
+					set_local_var(5, 3);
+					use_obj(Fridge_ptr);
+				end
+			end
+			else if (local_var(5) == 3) then begin
+				moving := 1;
+				target_hex := local_var(7);
+				if (my_hex != target_hex) then begin
+					animate_move_obj_to_tile(self_obj, target_hex, 0);
+				end
+				else begin
+					call done;
 				end
 			end
 		end
+
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure destroy_p_proc begin
+	set_global_var( GVAR_ENEMY_NECROPOLIS, 1 );
+	set_global_var( GVAR_GARRET_STATUS, 3 );
+	inc_inv_evil_crit
+end
+
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if ((local_var(8) == 0) and (global_var( GVAR_SIGNAL_REWARD ) bwand 2)) then begin
 		set_local_var(8, 1);
@@ -239,28 +217,24 @@ begin
 	end
 end
 
-procedure garretend
-begin
+procedure garretend begin
 end
 
-procedure garretcbt
-begin
+procedure garretcbt begin
 	Hostile := 1;
 end
 
-procedure goodstuff
-begin
+procedure goodstuff begin
 	CASH := CASH + 100;
 	dude_caps_adjust( 100 );
 	call neutstuff;
 	call badstuff;
 end
 
-procedure neutstuff
-begin
+procedure neutstuff begin
 	CASH := CASH + 50;
 	dude_caps_adjust( 50 );
-	/* has how many? */    if (get_item_count( Fridge_ptr, PID_SHOTGUN )) then begin
+	if (get_item_count( Fridge_ptr, PID_SHOTGUN )) then begin
 		display_msg(message_str(SCRIPT_GARRET, 204));
 		Shotgun_ptr := get_item( Fridge_ptr, PID_SHOTGUN );
 		rm_obj_from_inven(Fridge_ptr, Shotgun_ptr);
@@ -269,7 +243,7 @@ begin
 	else begin
 		robbed := 1;
 	end
-	/* has how many? */    if (get_item_count( Fridge_ptr, PID_SHOTGUN_SHELLS )) then begin
+	if (get_item_count( Fridge_ptr, PID_SHOTGUN_SHELLS )) then begin
 		display_msg(message_str(SCRIPT_GARRET, 205));
 		Shells_ptr := get_item( Fridge_ptr, PID_SHOTGUN_SHELLS );
 		rm_obj_from_inven(Fridge_ptr, Shells_ptr);
@@ -278,7 +252,7 @@ begin
 	else begin
 		robbed := 1;
 	end
-	/* has how many? */    if (get_item_count( Fridge_ptr, PID_SHOTGUN_SHELLS )) then begin
+	if (get_item_count( Fridge_ptr, PID_SHOTGUN_SHELLS )) then begin
 		Shells_ptr := get_item( Fridge_ptr, PID_SHOTGUN_SHELLS );
 		rm_obj_from_inven(Fridge_ptr, Shells_ptr);
 		add_obj_to_inven(dude_obj, Shells_ptr);
@@ -288,8 +262,7 @@ begin
 	end
 end
 
-procedure badstuff
-begin
+procedure badstuff begin
 	CASH := CASH + 50;
 	dude_caps_adjust( 50 );
 	flare_count := 0;
@@ -304,8 +277,7 @@ begin
 	call give_cola;
 end
 
-procedure reward
-begin
+procedure reward begin
 	CASH := 0;
 	robbed := 0;
 	display_msg(message_str(SCRIPT_GARRET, 203));
@@ -345,14 +317,12 @@ begin
 	end
 end
 
-procedure done
-begin
+procedure done begin
 	moving := 0;
 	set_local_var(5, 4);
 end
 
-procedure garret00a
-begin
+procedure garret00a begin
 	gsay_reply(102, 101);
 	giq_option( 4, SCRIPT_GARRET, 102, garretend, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GARRET, 103, garret01a, NEUTRAL_REACTION );
@@ -366,16 +336,14 @@ begin
 	call garretend;
 end
 
-procedure garret00c
-begin
+procedure garret00c begin
 	gsay_reply(102, 109);
 	giq_option( 3, SCRIPT_GARRET, 110, garret01c, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_GARRET, 111, garret00ca, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GARRET, 112, garret02c, NEUTRAL_REACTION );
 end
 
-procedure garret00ca
-begin
+procedure garret00ca begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call garret03c;
 	end
@@ -384,8 +352,7 @@ begin
 	end
 end
 
-procedure garret01a
-begin
+procedure garret01a begin
 	if (indlog) then begin
 		gsay_message(102, 113, 50);
 	end
@@ -395,15 +362,13 @@ begin
 	call garretend;
 end
 
-procedure garret01c
-begin
+procedure garret01c begin
 	gsay_message(102, 115, 50);
 	DownReact
 	call garretend;
 end
 
-procedure garret02a
-begin
+procedure garret02a begin
 	DownReact
 	if (indlog) then begin
 		gsay_message(102, 116, 50);
@@ -414,22 +379,19 @@ begin
 	call garretend;
 end
 
-procedure garret02c
-begin
+procedure garret02c begin
 	gsay_message(102, 117, 50);
 	call garretend;
 end
 
-procedure garret03c
-begin
+procedure garret03c begin
 	gsay_message(102, 118, 50);
 	display_msg(message_str(SCRIPT_GARRET, 119));
 	gsay_message(102, 120, 50);
 	call garretend;
 end
 
-procedure garret04
-begin
+procedure garret04 begin
 	start_gdialog(102, self_obj, 4, -1, -1);
 	gsay_start;
 	indlog := 1;
@@ -439,9 +401,8 @@ begin
 	end_dialogue;
 end
 
-procedure give_flare
-begin
-	/* has how many? */    if (get_item_count( Fridge_ptr, PID_FLARE )) then begin
+procedure give_flare begin
+	if (get_item_count( Fridge_ptr, PID_FLARE )) then begin
 		flare_count := flare_count + 1;
 		Flare_ptr := get_item( Fridge_ptr, PID_FLARE );
 		rm_obj_from_inven(Fridge_ptr, Flare_ptr);
@@ -452,9 +413,8 @@ begin
 	end
 end
 
-procedure give_cola
-begin
-	/* has how many? */    if (get_item_count( Fridge_ptr, PID_NUKA_COLA )) then begin
+procedure give_cola begin
+	if (get_item_count( Fridge_ptr, PID_NUKA_COLA )) then begin
 		cola_count := cola_count + 1;
 		Cola_ptr := get_item( Fridge_ptr, PID_NUKA_COLA );
 		rm_obj_from_inven(Fridge_ptr, Cola_ptr);
@@ -465,13 +425,6 @@ begin
 	end
 end
 
-
-
-procedure destroy_p_proc begin
-	inc_neutral_critter
-end
-
-procedure damage_p_proc
-begin
-set_global_var( GVAR_ENEMY_NECROPOLIS, 1 );
+procedure damage_p_proc begin
+   set_global_var( GVAR_ENEMY_NECROPOLIS, 1 );
 end

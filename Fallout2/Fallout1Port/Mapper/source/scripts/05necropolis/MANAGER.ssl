@@ -18,12 +18,11 @@
 procedure start;
 procedure description_p_proc;
 procedure look_at_p_proc;
-procedure timeforwhat;//timed_p_proc
-procedure pre_dialogue;
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure destroy_p_proc;//    script_action == 18
-procedure combat_p_proc;//    script_action == 13
+procedure timed_event_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure combat_p_proc;
 
 procedure ghoul00;
 procedure ghoul01;
@@ -52,26 +51,16 @@ variable rndx;
 // local_var(0) HAS_TALKED_TO_PLAYER
 // local_var(1) HAS_BEEN_EXAMINED
 
-
 procedure start begin
 	if (not(initial)) then begin
 		initial :=  1;
 		set_self_team( TEAM_32 );//  TEAM -- was 32 in Manager.ssl, 30 in Ghoul.ssl
-		set_self_ai( AI_GHOUL_NASTY );//  AI PACKET
+		set_self_ai( AI_GHOUL_NASTY );
 	end
-	if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-		call timeforwhat;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call pre_dialogue;
-		end
-		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-				tmp_hostile := 1;
-			end
-		end
-	end
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
 end
 
 procedure description_p_proc
@@ -81,8 +70,7 @@ begin
 	set_local_var(1, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (not(local_var(1)) and not(local_var(0))) then begin
 		display_msg(message_str(SCRIPT_GHOUL, 100));
@@ -92,50 +80,28 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
-	if ((global_var( GVAR_NECROP_WATER_CHIP_TAKEN ) != 0) and (global_var( GVAR_NECROP_WATER_PUMP_FIXED ) != 2)) then begin
-		variable LVar0 := 0;
-		LVar0 := random(2,5);
-		if LVar0 == 2 then begin
-			float_msg(self_obj, message_str(SCRIPT_VALTGLO, 102), 2);
-		end
-		else begin
-			if LVar0 == 3 then begin
-				float_msg(self_obj, message_str(SCRIPT_VALTGLO, 103), 2);
-			end
-			else begin
-				if LVar0 == 4 then begin
-					float_msg(self_obj, message_str(SCRIPT_VALTGLO, 104), 2);
-				end
-				else begin
-					float_msg(self_obj, message_str(SCRIPT_VALTGLO, 105), 2);
-				end
-			end
-		end
-		tmp_hostile := 1;
+procedure critter_p_proc begin
+	if (tmp_hostile) then begin
+		tmp_hostile := 0;
+		attack(dude_obj);
 	end
 	else begin
-		if (tmp_hostile) then begin
-			tmp_hostile := 0;
-			attack(dude_obj);
+
+		if ((game_time_hour >= 1900) or (game_time_hour < 600) and (self_tile != 22531)) then begin
+			animate_move_obj_to_tile(self_obj, 22531, 0);
 		end
-		else begin
-			if ((game_time_hour >= 1900) or (game_time_hour < 600) and (self_tile != 22531)) then begin
-				animate_move_obj_to_tile(self_obj, 22531, 0);
-			end
-			if (day and (self_tile != 24730)) then begin
-				animate_move_obj_to_tile(self_obj, 24730, 0);
-			end
-			loopcount := loopcount + 1;
-			if (loopcount > 40) then begin
-				loopcount := 0;
-				if (tile_distance_objs(self_obj, dude_obj) < 7) then begin
-					if (self_can_see_dude) then begin
-						if (noevent == 0) then begin
-							noevent := 1;
-							add_timer_event(self_obj, game_ticks(5), 0);
-						end
+		if (day and (self_tile != 24730)) then begin
+			animate_move_obj_to_tile(self_obj, 24730, 0);
+		end
+
+		loopcount := loopcount + 1;
+		if (loopcount > 40) then begin
+			loopcount := 0;
+			if (tile_distance_objs(self_obj, dude_obj) < 7) then begin
+				if (self_can_see_dude) then begin
+					if (noevent == 0) then begin
+						noevent := 1;
+						add_timer_event(self_obj, game_ticks(5), 0);
 					end
 				end
 			end
@@ -146,11 +112,9 @@ end
 procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	inc_neutral_critter
-	rm_timer_event(self_obj);
 end
 
-procedure timeforwhat
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		tmp_hostile := 1;
 	end
@@ -161,38 +125,29 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
-	start_gdialog(30, self_obj, 4, -1, -1);
-	gsay_start;
-	set_local_var(0, 1);
-	call ghoul00;
-	gsay_end;
-	end_dialogue;
-end
-
-procedure pre_dialogue
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (local_var(0)) then begin
 		call ghoul08;
 	end
 	else begin
-		call talk_p_proc;
+   	start_gdialog(30, self_obj, 4, -1, -1);
+   	gsay_start;
+   	set_local_var(0, 1);
+   	call ghoul00;
+   	gsay_end;
+   	end_dialogue;
 	end
 end
 
-procedure ghoulend
-begin
+procedure ghoulend begin
 end
 
-procedure ghoulcbt
-begin
+procedure ghoulcbt begin
 	add_timer_event(self_obj, game_ticks(2), 1);
 end
 
-procedure ghoul00
-begin
+procedure ghoul00 begin
 	gsay_reply(30, 101);
 	giq_option( 6, SCRIPT_GHOUL, 102, ghoul01, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GHOUL, 103, ghoul04, NEUTRAL_REACTION );
@@ -201,37 +156,31 @@ begin
 	giq_option( -3, SCRIPT_GHOUL, 105, ghoulend, NEUTRAL_REACTION );
 end
 
-procedure ghoul01
-begin
+procedure ghoul01 begin
 	gsay_reply(30, 106);
 	giq_option( 6, SCRIPT_GHOUL, 107, ghoul02, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_GHOUL, 108, ghoul03, NEUTRAL_REACTION );
 end
 
-procedure ghoul02
-begin
+procedure ghoul02 begin
 	gsay_message(30, 109, 50);
 end
 
-procedure ghoul03
-begin
+procedure ghoul03 begin
 	gsay_message(30, 110, 50);
 end
 
-procedure ghoul04
-begin
+procedure ghoul04 begin
 	gsay_message(30, 111, 50);
 end
 
-procedure ghoul05
-begin
+procedure ghoul05 begin
 	gsay_reply(30, 112);
 	giq_option( 4, SCRIPT_GHOUL, 113, ghoul07, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GHOUL, 114, ghoul05a, NEUTRAL_REACTION );
 end
 
-procedure ghoul05a
-begin
+procedure ghoul05a begin
 	if (is_success(do_check(dude_obj, 14, 0))) then begin
 		call ghoul06;
 	end
@@ -240,37 +189,31 @@ begin
 	end
 end
 
-procedure ghoul06
-begin
+procedure ghoul06 begin
 	gsay_message(30, 115, 50);
 end
 
-procedure ghoul07
-begin
+procedure ghoul07 begin
 	gsay_message(30, 116, 50);
 	call ghoulcbt;
 end
 
-procedure ghoul08
-begin
+procedure ghoul08 begin
 	float_msg(self_obj, message_str(SCRIPT_GHOUL, 117), 7);
 	call ghoulend;
 end
 
-procedure ghoul09
-begin
+procedure ghoul09 begin
 	gsay_reply(30, 119);
 	giq_option( 4, SCRIPT_GHOUL, 120, ghoul10, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GHOUL, 121, ghoul11, NEUTRAL_REACTION );
 end
 
-procedure ghoul10
-begin
+procedure ghoul10 begin
 	gsay_message(30, 122, 50);
 end
 
-procedure ghoul11
-begin
+procedure ghoul11 begin
 	gsay_message(30, 123, 50);
 end
 
