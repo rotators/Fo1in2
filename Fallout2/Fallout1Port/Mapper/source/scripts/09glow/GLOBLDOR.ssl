@@ -1,14 +1,24 @@
+/*
+
+   Glow Blue Door
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\command.h"
+
+#define NAME                    	SCRIPT_DOOR
 
 procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure use_skill_on_p_proc;//    script_action == 8
-procedure use_obj_on_p_proc;//    script_action == 7
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure damage_p_proc;//    script_action == 14
-procedure map_enter_p_proc;//    script_action == 15
-procedure map_update_p_proc;//    script_action == 23
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+
 procedure Trapped_And_Locked;
 procedure Locked_Door;
 procedure Trapped_Door;
@@ -26,46 +36,7 @@ variable Traps;
 variable Per;
 
 
-procedure start
-begin
-	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-		call use_p_proc;
-	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				call map_update_p_proc;
-			end
-			else begin
-				if (script_action == 7) then begin//<-- use_obj_on_p_proc
-					call use_obj_on_p_proc;
-				end
-				else begin
-					if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						call look_at_p_proc;
-					end
-					else begin
-						if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-							call description_p_proc;
-						end
-						else begin
-							if (script_action == 8) then begin//<-- use_skill_on_p_proc
-								call use_skill_on_p_proc;
-							end
-							else begin
-								if (script_action == 14) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-									call damage_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+procedure start begin
 end
 
 procedure use_p_proc
@@ -128,7 +99,7 @@ begin
 	variable LVar1 := 0;
 	variable LVar2 := 0;
 	LVar0 := obj_pid(obj_being_used_with);
-	if (LVar0 == 77) then begin
+	if (LVar0 == PID_ELECTRONIC_LOCKPICKS) then begin
 		script_overrides;
 		if (local_var(2) == 0) then begin
 			LVar1 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
@@ -164,14 +135,12 @@ begin
 			end
 		end
 	end
-	else begin
-		if (LVar0 == 97) then begin
-			script_overrides;
-			set_local_var(2, 1);
-			obj_unlock(self_obj);
-			set_local_var(3, 1);
-			display_msg(message_str(SCRIPT_GLOBLDOR, 106));
-		end
+	else if (LVar0 == PID_BLUE_PASS_KEY) then begin
+		script_overrides;
+		set_local_var(2, 1);
+		obj_unlock(self_obj);
+		set_local_var(3, 1);
+		display_msg(message_str(SCRIPT_GLOBLDOR, 106));
 	end
 end
 
@@ -205,14 +174,20 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
-	if (local_var(1) > 3) then begin
-		set_local_var(2, 1);
-		if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
-		obj_open(self_obj);
-		set_local_var(3, 1);
+procedure damage_p_proc begin
+	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+
+   	if (local_var(1) > 3) then begin
+   		set_local_var(2, 1);
+   		if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
+   		obj_open(self_obj);
+   		set_local_var(3, 1);
+   	end
+
 	end
+   else begin
+       display_msg(mstr(193));
+   end
 end
 
 procedure map_enter_p_proc
