@@ -11,11 +11,9 @@ namespace Packrat
     {
         static void Main(string[] args)
         {
-            //var file = DatFile.FromFile(@"D:\Fallout\dev\Fo1Port\trunk\Fallout2\Fallout1Port\data\art\inven\CAP2.FRM", @"art\inven", true);
-            //var file2 = DatFile.FromFile(@"D:\Fallout\dev\Fo1Port\trunk\Fallout2\Fallout1Port\data\art\inven\zipgun.FRM", @"art\inven", true);
-            //Dat.CreateDat(Directory.GetCurrentDirectory() + "\\test.dat", new List<DatFile> { file, file2});
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-GB");
             Script.Run("script.pack");
-            Console.ReadKey();
+            Console.Read();
         }
     }
 }

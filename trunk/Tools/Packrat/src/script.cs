@@ -25,7 +25,7 @@ namespace Packrat
         public List<string> args = new List<string>();
     }
 
-    // Best "scripting language" ever, even better then the fallout one...
+    // Best "scripting language" ever, even better than the fallout one...
     class Script
     {
         readonly static string[] ValidFunctions = new string[] { "echo", "pack", "output" };
@@ -41,9 +41,6 @@ namespace Packrat
                 var c = line[i];
                 if (c == ' ') // ignore space
                     continue;
-
-                //if (next != '\0' && c != next)
-                //    continue;
 
                 if(c == '"' && call.op == Operation.Assign)
                 {
@@ -110,17 +107,7 @@ namespace Packrat
                 buffer += c;
             }
 
-            /*if(next != '\0' && call == null)
-            {
-                Console.WriteLine($"Error on line {lineNum}, expected '{next}' after '{after}'.");
-            }*/
-
             return call;
-        }
-
-        public void ProcessArg(string arg)
-        {
-
         }
 
         static Dictionary<string, string> Variables = new Dictionary<string, string>();
