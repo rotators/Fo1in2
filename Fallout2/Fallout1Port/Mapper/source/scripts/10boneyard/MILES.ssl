@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-#include "..\headers\MAPNECRO.h"
+#include "..\headers\MAPLAADYTUM.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_MILES
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -58,14 +59,15 @@ procedure MilesEnd;
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
-#define EVENT_UPGRADE_PA 	(1)
+#define LVAR_Here_Before       		(4)
+#define LVAR_Miles_Status       		(5)
 
 procedure Start begin
 	if Only_Once then begin
 		if (self_caps == 0) then begin
 			self_caps_adjust( random(500, 750) );
 		end
-		if ((global_var( GVAR_BLADES_STATUS ) == 9103) or (global_var( GVAR_BLADES_STATUS ) == 9102)) then begin
+		if (get_blades_attacking or get_blades_attacking_wait) then begin
 			set_self_team(TEAM_PLAYER);
 		end
 		else begin
@@ -81,7 +83,7 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) then begin
 		display_msg(message_str(SCRIPT_MILES, 100));
 	end
 	else begin
@@ -91,7 +93,7 @@ end
 
 procedure description_p_proc begin
 	script_overrides;
-	if (local_var(4) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) then begin
 		display_msg(message_str(SCRIPT_MILES, 100));
 	end
 	else begin
@@ -104,76 +106,62 @@ procedure talk_p_proc begin
 	if (global_var( GVAR_ENEMY_ADYTUM ) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
 	end
+	else if ((local_var(LVAR_Here_Before) == 1) and (dude_iq < 4)) then begin
+		float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
+	end
+	else if (local_var(LVAR_Miles_Status) == 2) then begin
+		float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
+	end
 	else begin
-		if ((local_var(4) == 1) and (dude_iq < 4)) then begin
-			float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
+		get_reaction
+		start_gdialog(249, self_obj, -1, -1, -1);
+		gsay_start;
+		if (local_var(LVAR_Here_Before) == 0) then begin
+			call Miles01;
 		end
-		else begin
-			if (local_var(5) == 2) then begin
-				float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
-			end
-			else begin
-				get_reaction
-				start_gdialog(249, self_obj, -1, -1, -1);
-				gsay_start;
-				if (local_var(4) == 0) then begin
-					call Miles01;
+		else if get_quest_farm_inactive then begin
+			DisplayMessage := 118;
+			call Miles04;
+		end
+		else if get_quest_farm_active then begin
+			call Miles13;
+		end
+		else if get_given_parts_to_smitty_yet then begin
+			call Miles18;
+		end
+		else if get_parts_fixed then begin
+			call Miles19;
+		end
+		else if get_offer_upgrading_item then begin
+			if (local_var(LVAR_Miles_Status) == 0) then begin
+				if (dude_item_count( PID_POWERED_ARMOR )) then begin
+					call Miles22;
 				end
 				else begin
-					if (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 0) then begin
-						DisplayMessage := 118;
-						call Miles04;
+					call Miles22a;
+				end
+			end
+			else begin
+				if (local_var(LVAR_Miles_Status) == 9305) then begin
+					if (dude_item_count( PID_POWERED_ARMOR )) then begin
+						call Miles24;
 					end
 					else begin
-						if (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 1) then begin
-							call Miles13;
-						end
-						else begin
-							if (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 9302) then begin
-								call Miles18;
-							end
-							else begin
-								if (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 9303) then begin
-									call Miles19;
-								end
-								else begin
-									if (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 9304) then begin
-										if (local_var(5) == 0) then begin
-											/* has how many? */    if (dude_item_count( PID_POWERED_ARMOR )) then begin
-												call Miles22;
-											end
-											else begin
-												call Miles22a;
-											end
-										end
-										else begin
-											if (local_var(5) == 9305) then begin
-												/* has how many? */    if (dude_item_count( PID_POWERED_ARMOR )) then begin
-													call Miles24;
-												end
-												else begin
-													call Miles29;
-												end
-											end
-											else begin
-												/* has how many? */    if (dude_item_count( PID_POWERED_ARMOR )) then begin
-													call Miles28;
-												end
-												else begin
-													call Miles29;
-												end
-											end
-										end
-									end
-								end
-							end
-						end
+						call Miles29;
 					end
 				end
-				gsay_end;
-				end_dialogue;
+				else begin
+					if (dude_item_count( PID_POWERED_ARMOR )) then begin
+						call Miles28;
+					end
+					else begin
+						call Miles29;
+					end
+				end
 			end
 		end
+		gsay_end;
+		end_dialogue;
 	end
 end
 
@@ -225,9 +213,8 @@ begin
 	call Miles04;
 end
 
-procedure Miles04
-begin
-	set_local_var(4, 1);
+procedure Miles04 begin
+	set_local_var(LVAR_Here_Before, 1);
 	gsay_reply(249, DisplayMessage);
 	gsay_option(249, 108, Miles05, 50);
 	gsay_option(249, 109, Miles06, 50);
@@ -260,7 +247,7 @@ end
 
 procedure Miles09
 begin
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 	gsay_message(249, 117, 50);
 end
 
@@ -271,14 +258,12 @@ begin
 	gsay_option(249, 121, MilesEnd, 50);
 end
 
-procedure Miles12
-begin
+procedure Miles12 begin
 	gsay_message(249, 122, 50);
-	set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 1 );
+	set_quest_farm_active;
 end
 
-procedure Miles13
-begin
+procedure Miles13 begin
 	gsay_reply(249, 123);
 	if (dude_item_count( PID_PUMP_PARTS )) then begin
 		gsay_option(249, 124, Miles15, 50);
@@ -293,10 +278,9 @@ begin
 	gsay_message(249, 126, 50);
 end
 
-procedure Miles15
-begin
+procedure Miles15 begin
 	gsay_reply(249, 127);
-	set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9302 );
+	set_give_parts_to_smitty;
 	gsay_option(249, 128, Miles16, 50);
 	gsay_option(249, 129, MilesEnd, 50);
 end
@@ -317,7 +301,8 @@ procedure Miles17 begin
 	dude_caps_adjust( 125 );
 	LVar0 := create_object( PID_STIMPAK, 0, 0 );
 	add_mult_objs_to_inven(dude_obj, LVar0, 3);
-	set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9304 );
+
+	set_offer_upgrading_item;
 	gsay_message(249, 137, 50);
 end
 
@@ -331,19 +316,17 @@ procedure Miles17a begin
 	dude_caps_adjust( 150 );
 	LVar0 := create_object( PID_STIMPAK, 0, 0 );
 	add_mult_objs_to_inven(dude_obj, LVar0, 4);
-	set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9304 );
+	set_offer_upgrading_item;
 	gsay_message(249, 137, 50);
 end
 
-procedure Miles18
-begin
+procedure Miles18 begin
 	gsay_reply(249, 134);
 	gsay_option(249, 128, Miles16, 50);
 	gsay_option(249, 129, MilesEnd, 50);
 end
 
-procedure Miles19
-begin
+procedure Miles19 begin
 	variable LVar0 := 0;
 	gsay_message(249, 135, 50);
 	gsay_message(249, 136, 50);
@@ -353,31 +336,27 @@ begin
 	dude_caps_adjust( 250 );
 	LVar0 := create_object( PID_STIMPAK, 0, 0 );
 	add_mult_objs_to_inven(dude_obj, LVar0, 6);
-	set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9304 );
+	set_offer_upgrading_item;
 	gsay_message(249, 137, 50);
 end
 
-procedure Miles22
-begin
+procedure Miles22 begin
 	gsay_reply(249, 138);
-	set_local_var(5, 9305);
+	set_local_var(LVAR_Miles_Status, 9305);
 	set_global_var( GVAR_CHEMISTRY_BOOK, 1 );
 	gsay_option(249, 139, MilesEnd, 50);
 	gsay_option(249, 140, Miles23, 50);
 end
 
-procedure Miles22a
-begin
+procedure Miles22a begin
 	gsay_message(249, 153, 50);
 end
 
-procedure Miles23
-begin
+procedure Miles23 begin
 	gsay_message(249, 141, 50);
 end
 
-procedure Miles24
-begin
+procedure Miles24 begin
 	gsay_reply(249, 142);
 	if (dude_item_count( PID_CHEMISTRY_MANUAL )) then begin
 		gsay_option(249, 143, Miles25, 50);
@@ -387,20 +366,18 @@ begin
 	end
 end
 
-procedure Miles25
-begin
+procedure Miles25 begin
 	variable LVar0 := 0;
 	gsay_reply(249, 145);
 	LVar0 := dude_item( PID_CHEMISTRY_MANUAL );
 	rm_obj_from_inven(dude_obj, LVar0);
 	add_obj_to_inven(self_obj, LVar0);
-	set_local_var(5, 9306);
+	set_local_var(LVAR_Miles_Status, 9306);
 	gsay_option(249, 146, Miles28, 50);
 	gsay_option(249, 147, Miles27, 50);
 end
 
-procedure Miles27
-begin
+procedure Miles27 begin
 	gsay_message(249, 148, 50);
 end
 
@@ -426,14 +403,12 @@ variable Item;
    Item:=create_object(PID_HARDENED_POWER_ARMOR,0,0);
    add_mult_objs_to_inven(dude_obj,Item,1);
 
-	set_local_var(5, 2);
+	set_local_var(LVAR_Miles_Status, 2);
 end
 
-procedure Miles29
-begin
+procedure Miles29 begin
 	gsay_message(249, 151, 50);
 end
 
-procedure MilesEnd
-begin
+procedure MilesEnd begin
 end
