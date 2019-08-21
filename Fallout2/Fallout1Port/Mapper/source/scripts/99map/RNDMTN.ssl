@@ -1,3 +1,12 @@
+/*
+
+	Random mountain encounter map
+
+*/
+
+#define NAME                    SCRIPT_RNDMTN
+
+/* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 #include "..\headers\MAPENC.h"
@@ -43,7 +52,7 @@ procedure NORTH4;
 procedure NORTH5;
 procedure NORTH6;
 procedure Patrick;// ---------------RNDMTN ONLY
-procedure Place_critter;
+
 procedure Raider_table;//FROM RNDDESRT
 procedure Raider1;//FROM RNDDESRT
 procedure Raider2;//FROM RNDDESRT
@@ -59,7 +68,6 @@ procedure SOUTH_BoneGlow3;
 procedure SOUTH_BoneGlow4;
 procedure SOUTH_BoneGlow5;
 procedure SOUTH_BoneGlow6;
-procedure stranger;
 procedure update_party;
 procedure Vats_table;//FROM RNDDESRT
 procedure Vats1;//FROM RNDDESRT
@@ -77,13 +85,6 @@ procedure VAULT5;// ---------------RNDMTN ONLY
 procedure VAULT6;// ---------------RNDMTN ONLY
 
 variable rnd_critter;
-variable Critter;
-variable Critter_direction;
-variable Critter_script := -1;
-variable Critter_tile;
-variable Critter_type;
-variable CritterXpos;// ---------------RNDMTN ONLY
-variable CritterYpos;// ---------------RNDMTN ONLY
 
 variable dude_pos;
 variable dude_rot;
@@ -91,9 +92,6 @@ variable dude_start_hex;// ---------------RNDMTN ONLY
 variable Dude_tile;
 variable Encounter_Num;
 variable group_angle;
-variable Inner_ring;
-variable Item;
-variable Outer_ring;
 variable party_elevation;
 variable Ranger_rerolls;
 
@@ -340,83 +338,6 @@ procedure map_exit_p_proc begin
 	set_car_exit_map
 end
 
-procedure stranger begin
-	if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-		if (global_var( GVAR_MYST_STRANGER_LUCK_BASED )) then begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random(1, 10) < (dude_luck - 1))) then begin
-				Critter_type := PID_MYSTERIOUS_STRANGER;
-				Critter_script := SCRIPT_MYSTSTRN;
-				Critter_direction := random(0, 5);
-				Outer_ring := 7;
-				Inner_ring := 4;
-				call Place_critter;
-				Item := create_object( PID_PURPLE_ROBE, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				Item := create_object( PID_SPEAR, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				Item := create_object( PID_STIMPAK, 0, 0 );
-				add_mult_objs_to_inven(Critter, Item, 2);
-				item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
-					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
-					add_obj_to_inven(Critter, Item);
-					wield_obj_critter(Critter, Item);
-				end
-				set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
-			end
-		end
-		else begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random((0 + global_var( GVAR_MYST_STRANGER_CHANCE )), (3 + global_var( GVAR_MYST_STRANGER_CHANCE ))) > 1)) then begin
-				Critter_type := PID_MYSTERIOUS_STRANGER;
-				Critter_script := SCRIPT_MYSTSTRN;
-				Critter_direction := random(0, 5);
-				Outer_ring := 7;
-				Inner_ring := 4;
-				call Place_critter;
-				Critter_direction := dude_rot + (random(0, 2) - 1);
-				while(Critter_direction < 0) do begin
-					Critter_direction := Critter_direction + 6;
-				end
-				if (Critter_direction > 5) then begin
-					Critter_direction := Critter_direction % 6;
-				end
-				anim(Critter, 1000, Critter_direction);
-				Item := create_object( PID_PURPLE_ROBE, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				Item := create_object( PID_SPEAR, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				Item := create_object( PID_STIMPAK, 0, 0 );
-				add_mult_objs_to_inven(Critter, Item, 2);
-				item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
-					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
-					add_obj_to_inven(Critter, Item);
-					wield_obj_critter(Critter, Item);
-				end
-				set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
-			end
-		end
-	end
-	else begin
-		if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
-			Critter_type := PID_MYSTERIOUS_STRANGER;
-			Critter_script := SCRIPT_MYSTSTRN;
-			Critter_direction := random(0, 5);
-			Outer_ring := 7;
-			Inner_ring := 4;
-			call Place_critter;
-			Item := create_object( PID_PURPLE_ROBE, 0, 0 );
-			add_obj_to_inven(Critter, Item);
-			Item := create_object( PID_SPEAR, 0, 0 );
-			add_obj_to_inven(Critter, Item);
-			Item := create_object( PID_STIMPAK, 0, 0 );
-			add_mult_objs_to_inven(Critter, Item, 2);
-			Item := item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-			set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
-		end
-	end
-end
-
 procedure Place_critter
 begin
 	variable Facing := 0;
@@ -432,7 +353,6 @@ begin
 	end
 	critter_attempt_placement(Critter, Critter_tile, dude_elevation);
 end
-
 
 // TODO: FIX SHITTY START POSITION!!!
 procedure choose_start begin
@@ -537,11 +457,11 @@ procedure Patrick begin
 		Item := create_object( PID_10MM_AP, 0, 0 );
 		add_obj_to_inven(Patrick, Item);
 	end
-	
+
 	Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
 	add_obj_to_inven(Patrick, Item);
 	wield_obj_critter(Patrick, Item);
-	
+
 	item_caps_adjust(Patrick, random(25, 50) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	Item := create_object( PID_KNIFE, 0, 0 );
 	add_obj_to_inven(Patrick, Item);
@@ -983,11 +903,11 @@ procedure Raider1 begin // Same as Raider3 in RNDDESRT
 		end
 	end
 	anim(Critter, 1000, Critter_direction);
-	
+
 	Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	wield_obj_critter(Critter, Item);
-	
+
 	Item := create_object( PID_KNIFE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	kill_critter(Critter, ANIM_fall_back_blood_sf);
@@ -1083,7 +1003,7 @@ procedure Raider1 begin // Same as Raider3 in RNDDESRT
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
@@ -1202,11 +1122,11 @@ procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 		end
 	end
 	anim(Critter, 1000, Critter_direction);
-	
+
 	Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	wield_obj_critter(Critter, Item);
-	
+
 	Item := create_object( PID_KNIFE, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	kill_critter(Critter, ANIM_fall_back_blood_sf);
@@ -1301,7 +1221,7 @@ procedure Raider2 begin // Same as Raider3 in RNDMTN or Raider1in RNDDESRT
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Raider3 begin
@@ -1321,7 +1241,7 @@ procedure Raider3 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Raider4 begin
@@ -1393,7 +1313,7 @@ procedure Raider4 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Raider5 begin
@@ -1473,7 +1393,7 @@ procedure Junk_custom1 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Junk_custom2 begin
@@ -1492,7 +1412,7 @@ procedure Junk_custom2 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Junk_custom3 begin
@@ -1518,7 +1438,7 @@ procedure Junk_custom3 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Junk_custom4 begin
@@ -1746,7 +1666,7 @@ procedure Vats1 begin
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats2 begin
@@ -1771,7 +1691,7 @@ procedure Vats2 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats3 begin
@@ -1823,7 +1743,7 @@ procedure Vats3 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats4 begin
@@ -1874,7 +1794,7 @@ procedure Vats4 begin
 	call Place_critter;
 	anim(Critter, 1000, random(3, 4));
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats5 begin
@@ -1926,7 +1846,7 @@ procedure Vats5 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats6 begin
@@ -1999,7 +1919,7 @@ procedure Vats6 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Glow1 begin
@@ -2037,7 +1957,7 @@ procedure Glow1 begin
 		end
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Glow2 begin
@@ -2072,7 +1992,7 @@ procedure Glow2 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Glow3 begin
@@ -2091,7 +2011,7 @@ procedure Glow3 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Glow4 begin
@@ -2192,7 +2112,7 @@ procedure Glow6 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone1 begin
@@ -2251,7 +2171,7 @@ procedure Bone1 begin
 		end
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone2 begin
@@ -2361,7 +2281,7 @@ procedure Bone2 begin
 	end
 	attack_setup(Critter, victim);
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone3 begin
@@ -2407,11 +2327,11 @@ procedure Bone3 begin
 	end
 	call Place_critter;
 	anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
-	
+
 	Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	wield_obj_critter(Critter, Item);
-	
+
 	Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	item_caps_adjust(Critter, random(25, 100) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
@@ -2432,7 +2352,7 @@ procedure Bone3 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone4 begin
@@ -2498,7 +2418,7 @@ procedure Bone4 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone5 begin
@@ -2545,11 +2465,11 @@ procedure Bone5 begin
 	end
 	call Place_critter;
 	anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
-	
+
 	Item := create_object( PID_LEATHER_ARMOR, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	wield_obj_critter(Critter, Item);
-	
+
 	Item := create_object( PID_FIRST_AID_KIT, 0, 0 );
 	add_obj_to_inven(Critter, Item);
 	item_caps_adjust(Critter, random(25, 100) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
@@ -2570,7 +2490,7 @@ procedure Bone5 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone6 begin
@@ -2594,7 +2514,7 @@ procedure Bone6 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure hunters begin
@@ -2683,7 +2603,7 @@ procedure hunters begin
 	if (random(0, 2) == 0) then begin
 		item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure VAULT_table begin
@@ -2843,7 +2763,7 @@ procedure NORTH2 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure NORTH3 begin
@@ -2915,7 +2835,7 @@ procedure NORTH5 begin
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure NORTH6 begin
@@ -3138,7 +3058,7 @@ procedure SOUTH_BoneGlow2 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure SOUTH_BoneGlow3 begin
@@ -3156,7 +3076,7 @@ procedure SOUTH_BoneGlow3 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure SOUTH_BoneGlow4 begin
@@ -3420,7 +3340,7 @@ procedure VAULT1 begin
 	Critter_script := SCRIPT_RADSCOR2;
 	call Place_critter;
 	anim(Critter, 1000, random(0, 5));
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure VAULT2 begin
@@ -3465,7 +3385,7 @@ procedure VAULT3 begin
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure VAULT4 begin
@@ -3488,7 +3408,7 @@ procedure VAULT4 begin
 		end
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure VAULT5 begin
@@ -3569,5 +3489,5 @@ procedure VAULT6 begin
 		call Place_critter;
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end

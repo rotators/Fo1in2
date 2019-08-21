@@ -4,15 +4,12 @@
 
 */
 
+#define NAME                    SCRIPT_RNDDESRT
 
 /* Include Files */
 #include "..\headers\define.h"
-#include "..\headers\MAPENC.h"
-
-#define NAME                    SCRIPT_RNDDESRT
-
-
 #include "..\headers\command.h"
+#include "..\headers\MAPENC.h"
 #include "..\headers\updatmap.h"
 
 procedure start;
@@ -21,7 +18,6 @@ procedure map_exit_p_proc;
 procedure choose_start;
 procedure hunters;
 procedure Place_critter;
-procedure stranger;
 
 procedure Coast01;
 procedure Coast02;
@@ -31,21 +27,14 @@ procedure Coast05;
 procedure Coast06;
 procedure Coast07;
 
-variable Critter;
-variable Critter_direction;
-variable Critter_script := -1;
-variable Critter_tile;
-variable Critter_type;
 variable dude_pos;
 variable dude_rot;
 variable Dude_tile;
 variable Encounter_Num;
 variable group_angle;
-variable Inner_ring;
-variable Item;
+
 variable MapX;
 variable MapY;
-variable Outer_ring;
 variable party_elevation := 5;
 variable Ranger_rerolls;
 variable restrict_range;
@@ -63,7 +52,6 @@ procedure Avoid;
 
 export variable signal_mutants;
 //////////////////////////////////////
-
 
 procedure start
 begin
@@ -275,81 +263,6 @@ end
 
 procedure map_exit_p_proc begin
 	set_car_exit_map
-end
-
-procedure stranger begin
-	if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-		if global_var( GVAR_MYST_STRANGER_LUCK_BASED ) then begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random(1, 10) < (dude_luck - 1))) then begin
-				Critter_type := PID_MYSTERIOUS_STRANGER;
-				Critter_script := SCRIPT_MYSTSTRN;
-				Critter_direction := random(0, 1);
-				Outer_ring := 10;
-				Inner_ring := 5;
-				call Place_critter;
-				Critter_direction := dude_rot + (random(0, 2) - 1);
-				while(Critter_direction < 0) do begin
-					Critter_direction := Critter_direction + 6;
-				end
-				if (Critter_direction > 5) then begin
-					Critter_direction := Critter_direction % 6;
-				end
-				anim(Critter, 1000, Critter_direction);
-				Item := create_object( PID_RIPPER, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
-					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
-					add_obj_to_inven(Critter, Item);
-					wield_obj_critter(Critter, Item);
-				end
-			end
-		end
-		else begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random((0 + global_var( GVAR_MYST_STRANGER_CHANCE )), (3 + global_var( GVAR_MYST_STRANGER_CHANCE ))) > 1)) then begin
-				Critter_type := PID_MYSTERIOUS_STRANGER;
-				Critter_script := SCRIPT_MYSTSTRN;
-				Critter_direction := random(0, 1);
-				Outer_ring := 10;
-				Inner_ring := 5;
-				call Place_critter;
-				Critter_direction := dude_rot + (random(0, 2) - 1);
-				while(Critter_direction < 0) do begin
-					Critter_direction := Critter_direction + 6;
-				end
-				if (Critter_direction > 5) then begin
-					Critter_direction := Critter_direction % 6;
-				end
-				anim(Critter, 1000, Critter_direction);
-				Item := create_object( PID_RIPPER, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
-					Item := create_object( PID_LEATHER_JACKET, 0, 0 );
-					add_obj_to_inven(Critter, Item);
-					wield_obj_critter(Critter, Item);
-				end
-			end
-		end
-	end
-	else begin
-		if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
-			Critter_type := PID_MYSTERIOUS_STRANGER;
-			Critter_script := SCRIPT_MYSTSTRN;
-			Critter_direction := random(0, 1);
-			Outer_ring := 7;
-			Inner_ring := 4;
-			call Place_critter;
-			Critter_direction := dude_rot + (random(0, 2) - 1);
-			while(Critter_direction < 0) do begin
-				Critter_direction := Critter_direction + 6;
-			end
-			if (Critter_direction > 5) then begin
-				Critter_direction := Critter_direction % 6;
-			end
-			anim(Critter, 1000, Critter_direction);
-			Item := create_object( PID_RIPPER, 0, 0 );
-			add_obj_to_inven(Critter, Item);
-		end
-	end
 end
 
 procedure Place_critter
@@ -670,7 +583,7 @@ begin
 		add_mult_objs_to_inven(Critter, Item, 1);
 		item_caps_adjust(Critter, random(1, dude_luck));
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Outdoorsman00
@@ -780,7 +693,7 @@ begin
 		end
 		call Place_critter;
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
-		call stranger;
+		call Add_Mysterious_Stranger;
 	end
 end
 
@@ -813,7 +726,7 @@ begin
 			anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 			Tot_Critter_A := Tot_Critter_A - 1;
 		end
-		call stranger;
+		call Add_Mysterious_Stranger;
 	end
 end
 
@@ -852,7 +765,7 @@ begin
 			anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 			Tot_Critter_A := Tot_Critter_A - 1;
 		end
-		call stranger;
+		call Add_Mysterious_Stranger;
 	end
 end
 
@@ -1091,7 +1004,7 @@ begin
 		end
 		anim(Critter, 1000, Critter_direction);
 		attack_setup(victim, Critter);
-		call stranger;
+		call Add_Mysterious_Stranger;
 	end
 end
 
@@ -1130,7 +1043,7 @@ begin
 			anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
 			Tot_Critter_A := Tot_Critter_A - 1;
 		end
-		call stranger;
+		call Add_Mysterious_Stranger;
 	end
 end
 

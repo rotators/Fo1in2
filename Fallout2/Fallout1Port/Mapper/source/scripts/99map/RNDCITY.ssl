@@ -1,3 +1,12 @@
+/*
+
+	Random city encounter map
+
+*/
+
+#define NAME                    SCRIPT_RNDCITY
+
+/* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 #include "..\headers\MAPENC.h"
@@ -6,7 +15,6 @@
 procedure start;
 procedure map_exit_p_proc;
 
-procedure stranger;
 procedure Place_critter;
 procedure hunters;
 
@@ -26,19 +34,13 @@ variable Tot_Critter_B;
 variable Encounter_Num;
 variable dude_pos;
 variable dude_rot;
-variable Item;
+
 variable Dude_tile;
 variable group_angle;
 variable Ranger_rerolls;
-variable Critter;
-variable Inner_ring;
-variable Outer_ring;
-variable Critter_direction;
-variable Critter_type;
-variable Critter_script := -1;
+
 variable start_attack;
 variable victim;
-variable Critter_tile;
 
 //////////////////// ENTRIES FROM RNDDESRT: /////////////////////
 procedure choose_start;
@@ -183,101 +185,6 @@ procedure map_exit_p_proc begin
 	set_car_exit_map
 end
 
-procedure stranger begin
-	if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-		if (global_var( GVAR_MYST_STRANGER_LUCK_BASED )) then begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random(1, 10) < (dude_luck - 1))) then begin
-				Critter_type := PID_MYSTERIOUS_STRANGER;
-				Critter_script := SCRIPT_MYSTSTRN;
-				Critter_direction := random(0, 5);
-				Outer_ring := 7;
-				Inner_ring := 4;
-				call Place_critter;
-				Critter_direction := dude_rot + (random(0, 2) - 1);
-				while(Critter_direction < 0) do begin
-					Critter_direction := Critter_direction + 6;
-				end
-				if (Critter_direction > 5) then begin
-					Critter_direction := Critter_direction % 6;
-				end
-				anim(Critter, 1000, Critter_direction);
-				Item := create_object( PID_STIMPAK, 0, 0 );
-				add_mult_objs_to_inven(Critter, Item, 2);
-				Item := create_object( PID_FRAG_GRENADE, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				Item := create_object( PID_BRASS_KNUCKLES, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
-					Item := create_object( PID_METAL_ARMOR, 0, 0 );
-					add_obj_to_inven(Critter, Item);
-					wield_obj_critter(Critter, Item);
-				end
-				set_global_var( GVAR_MYST_STRANGER_ITEM, 23 );
-			end
-		end
-		else begin
-			if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and (random((0 + global_var( GVAR_MYST_STRANGER_CHANCE )), (3 + global_var( GVAR_MYST_STRANGER_CHANCE ))) > 1)) then begin
-				Critter_type := PID_MYSTERIOUS_STRANGER;
-				Critter_script := SCRIPT_MYSTSTRN;
-				Critter_direction := random(0, 5);
-				Outer_ring := 7;
-				Inner_ring := 4;
-				call Place_critter;
-				Critter_direction := dude_rot + (random(0, 2) - 1);
-				while(Critter_direction < 0) do begin
-					Critter_direction := Critter_direction + 6;
-				end
-				if (Critter_direction > 5) then begin
-					Critter_direction := Critter_direction % 6;
-				end
-				anim(Critter, 1000, Critter_direction);
-				Item := create_object( PID_STIMPAK, 0, 0 );
-				add_mult_objs_to_inven(Critter, Item, 2);
-				Item := create_object( PID_FRAG_GRENADE, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				Item := create_object( PID_BRASS_KNUCKLES, 0, 0 );
-				add_obj_to_inven(Critter, Item);
-				item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-				if global_var( GVAR_MYST_STRANGER_HAS_ARMOR ) then begin
-					Item := create_object( PID_METAL_ARMOR, 0, 0 );
-					add_obj_to_inven(Critter, Item);
-					wield_obj_critter(Critter, Item);
-				end
-				set_global_var( GVAR_MYST_STRANGER_ITEM, 23 );
-			end
-		end
-	end
-	else begin
-		if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
-			Critter_type := PID_MYSTERIOUS_STRANGER;
-			Critter_script := SCRIPT_MYSTSTRN;
-			Critter_direction := random(0, 5);
-			Outer_ring := 7;
-			Inner_ring := 4;
-			call Place_critter;
-			Critter_direction := dude_rot + (random(0, 2) - 1);
-			while(Critter_direction < 0) do begin
-				Critter_direction := Critter_direction + 6;
-			end
-			if (Critter_direction > 5) then begin
-				Critter_direction := Critter_direction % 6;
-			end
-			anim(Critter, 1000, Critter_direction);
-			Item := create_object( PID_STIMPAK, 0, 0 );
-			add_mult_objs_to_inven(Critter, Item, 2);
-			Item := create_object( PID_FRAG_GRENADE, 0, 0 );
-			add_obj_to_inven(Critter, Item);
-			Item := create_object( PID_BRASS_KNUCKLES, 0, 0 );
-			add_obj_to_inven(Critter, Item);
-			item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-			set_global_var( GVAR_MYST_STRANGER_ITEM, 23 );
-		end
-	end
-end
-
-
-
 procedure Place_critter begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
@@ -381,7 +288,7 @@ procedure hunters begin
 	if (random(0, 2) == 0) then begin
 		item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure CITY_North_VANILLA_1 begin
@@ -433,7 +340,7 @@ procedure CITY_North_VANILLA_1 begin
 		add_obj_to_inven(Critter, Item);
 		item_caps_adjust(Critter, random(5, 20) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
 	end
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure CITY_North_VANILLA_2
@@ -539,7 +446,7 @@ begin
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
 	attack_setup(Critter, victim);
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure CITY_North_VANILLA_3 begin
@@ -632,7 +539,7 @@ variable rnd_weapon;
 	end
 
 	start_attack := 1;
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure CITY_North_VANILLA_4
@@ -678,7 +585,7 @@ begin
 		attack(dude_obj);
 	end
 	start_attack := 1;
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure CITY_North_VANILLA_5 begin
@@ -758,7 +665,7 @@ variable rnd_weapon;
 		attack(dude_obj);
 	end
 	start_attack := 1;
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure CITY_North_VANILLA_6
@@ -785,7 +692,7 @@ begin
 		attack(dude_obj);
 	end
 	start_attack := 1;
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone_table begin
@@ -880,7 +787,7 @@ begin
 		end
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone_2
@@ -988,7 +895,7 @@ begin
 	end
 	attack_setup(Critter, victim);
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone_3 begin
@@ -1062,7 +969,7 @@ variable rnd_weapon;
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone_4 begin
@@ -1126,7 +1033,7 @@ procedure Bone_4 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone_5 begin
@@ -1192,7 +1099,7 @@ procedure Bone_5 begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Bone_6
@@ -1216,7 +1123,7 @@ begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure choose_start
@@ -1448,7 +1355,7 @@ procedure Necrop_1 begin
 	end
 	attack_setup(Critter, victim);
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Necrop_2 begin
@@ -1527,7 +1434,7 @@ procedure Necrop_2 begin
 	end
 	attack_setup(Critter, victim);
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Necrop_3 begin
@@ -1551,7 +1458,7 @@ procedure Necrop_3 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Necrop_4 begin
@@ -1612,7 +1519,7 @@ procedure Necrop_4 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Necrop_5 begin
@@ -1636,7 +1543,7 @@ procedure Necrop_5 begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 1 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Necrop_6 begin
@@ -1772,7 +1679,7 @@ begin
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats_2
@@ -1797,7 +1704,7 @@ begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats_3
@@ -1849,7 +1756,7 @@ begin
 		add_obj_to_inven(Critter, Item);
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats_4
@@ -1900,7 +1807,7 @@ begin
 	call Place_critter;
 	anim(Critter, 1000, random(3, 4));
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end
 
 procedure Vats_5
@@ -2025,5 +1932,5 @@ begin
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
-	call stranger;
+	call Add_Mysterious_Stranger;
 end

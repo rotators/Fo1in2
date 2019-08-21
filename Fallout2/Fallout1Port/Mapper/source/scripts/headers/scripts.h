@@ -860,7 +860,7 @@
 #define SCRIPT_SKUMDOOR  (853)  //  SkumDoor.int    ; Skum Pit door                                                     
 #define SCRIPT_SUPAMBSH  (854)  //  SupAmbsh.int    ; Super Mutant Ambush for random encounters                                   
 #define SCRIPT_MOATCHEK  (855)  //  MoatChek.int    ; dex check for the moat                                                      
-#define SCRIPT_MYSTSTRN  (856)  //  MystStrn.int    ; Mysterious Stranger Script                                                  
+//#define SCRIPT_MYSTSTRN  (856)  //  MystStrn.int    ; Mysterious Stranger Script                                                  
 #define SCRIPT_SUPGRD    (857)  //  SupGrd.int      ; Supply guards for the Brotherhood
 #define SCRIPT_SUPDOOR   (858)  //  SupDoor.int     ; Supply door in the Brotherhood
 #define SCRIPT_VWEPLOKR  (859)  //  VWepLokr.int    ; Vats Weapon Locker                                                
@@ -982,7 +982,7 @@
 
 // Stuff from scripts.lst
 #define SCRIPT_GRNMTARM  (973)
-//#define SCRIPT_MYSTSTRN  (974)
+#define SCRIPT_MYSTSTRN  (974)
 
 //Lexx
 #define SCRIPT_CHEATBOX  (975)
