@@ -124,7 +124,7 @@ procedure map_enter_p_proc begin
 		   call CreateSceneryClutter;
 
 		Encounter_Number:=total_encounters - encounters_left;
-		if Encounter_Number < 0 then Encounter_Number := 1;
+		//if Encounter_Number < 0 then Encounter_Number := 1;
 		debug("Total Encounters == "+total_encounters+". Encounters Left == "+encounters_left+". On Encounter "+Encounter_Number);
 		made_encounter;
 
@@ -132,9 +132,11 @@ procedure map_enter_p_proc begin
 			attack_setup(Combat1,Combat2);
 			debug("Having "+Combat1+" fighting "+Combat2+".");
 		end
+		debug("final dude elevation: " + dude_elevation);
    end
 
    Lighting;
+   set_global_var(GVAR_LOAD_MAP_INDEX,0);
 end
 
 procedure map_update_p_proc begin
@@ -145,7 +147,9 @@ procedure map_update_p_proc begin
 
    if (map_var(MVAR_Hostile_Total) <= 0) then begin
        if (encounters_left <= 0 or caravan_carts_left == 0) then begin
-           debug("Caravan_End == "+caravan_end);
+           debug("*** CARAVAN ENDED: "+caravan_end);
+           debug("*** encounters_left: " + encounters_left);
+           debug("*** caravan_carts_left: " + caravan_carts_left);
 
            // Fo1:
            if (caravan_end == CARAVAN_HUB) then begin
@@ -303,7 +307,7 @@ procedure Build_Caravan_Team begin
    variable val;
    variable wagon_cart:=0;
 
-   debug("Build caravan team!");
+   //debug("Build caravan team!");
 
    // Place the Player
    dude_facing:=random(0,5);
@@ -312,8 +316,9 @@ procedure Build_Caravan_Team begin
    else
    	dude_start_hex:=tile_num_in_direction(START_HEX,dude_facing,random(3,8));
 
-   override_map_start_hex(dude_start_hex,0,random(0,5));
+   override_map_start_hex(dude_start_hex,random(0,2),random(0,5));
    anim(dude_obj,ANIMATE_ROTATION,dude_facing);
+   debug("dude elevation is " + dude_elevation);
 
    call Add_Mysterious_Stranger;
 
@@ -322,7 +327,6 @@ procedure Build_Caravan_Team begin
 
    // Place the Caravan Master
    while (Master_Counter < caravan_masters_left) do begin
-   	debug("create caravan master!");
 		Master_Counter+=1;
 
 		// Crimson Caravan master:
@@ -347,9 +351,10 @@ procedure Build_Caravan_Team begin
        val := set_team( Critter, TEAM_PLAYER );
        Critter_Rotation:=(dude_facing + 3) % 6;
        Critter_Tile:=tile_num_in_direction(dude_start_hex,Critter_Rotation,random(5,7));
-       critter_attempt_placement(Critter,Critter_Tile,0);
+       critter_attempt_placement(Critter,Critter_Tile,dude_elevation);
        give_money(Critter,random(10,30));
        anim(Critter,ANIMATE_ROTATION,rotation_to_tile(tile_num(Critter),dude_tile));
+       debug("created caravan master on elevation " + elevation(Critter) + " and hex " + tile_num(Critter) );
    end
 
    // Place the Caravan, Driver and Brahmin
@@ -370,17 +375,19 @@ procedure Build_Caravan_Team begin
 		// Always create the red cart first:
 		if (wagon_cart == 0) then begin
 			wagon_cart := 1;
-			Create_EW_Red_Caravan(Critter_Tile,0)
-			Brahmin_Rotation := 0;
+			Create_EW_Red_Caravan(Critter_Tile,dude_elevation)
+			Brahmin_Rotation := random(0,1);
 		end
 		else begin
-			Create_EW_Grey_Caravan(Critter_Tile,0)
-			Brahmin_Rotation := 1;
+			Create_EW_Grey_Caravan(Critter_Tile,dude_elevation)
+			Brahmin_Rotation := random(0,1);
 		end
 
-      Brahmin_Tile:=tile_num_in_direction(Critter_Tile,1,2);
+      Brahmin_Tile:=tile_num_in_direction(Critter_Tile,1,1);
+      Brahmin_Tile:=tile_num_in_direction(Brahmin_Tile,0,1);
+      Brahmin_Tile:=tile_num_in_direction(Brahmin_Tile,1,1);
       Critter:=create_object_sid(PID_BRAHMIN,0,0,SCRIPT_CARCOW); //SCRIPT_ECCRTBRA);
-      critter_attempt_placement(Critter,Brahmin_Tile,0);
+      critter_attempt_placement(Critter,Brahmin_Tile,dude_elevation);
       val := set_team( Critter, TEAM_PLAYER );
       anim(Critter,ANIMATE_ROTATION,Brahmin_Rotation);
       Brahmin_Counter+=1;
@@ -396,7 +403,6 @@ procedure Build_Caravan_Team begin
 		end*/
 
       if (Driver_Counter < caravan_drivers_left) then begin
-      	debug("create caravan driver!");
          Driver_Counter+=1;
 
          if caravan_style_crimson then begin // Crimson Caravan guard
@@ -410,10 +416,11 @@ procedure Build_Caravan_Team begin
          end
 
          Driver_Tile:=tile_num_in_direction(Critter_Tile,1,3);
-         critter_attempt_placement(Critter,Driver_Tile,0);
+         critter_attempt_placement(Critter,Driver_Tile,dude_elevation);
          val := set_team( Critter, TEAM_PLAYER );
          give_money(Critter,random(5,20));
          anim(Critter,ANIMATE_ROTATION,1);
+         debug("created caravan driver on elevation " + elevation(Critter) + " and hex " + tile_num(Critter) );
       end
    end
 
@@ -426,7 +433,7 @@ procedure Build_Caravan_Team begin
 
        Brahmin_Tile:=tile_num_in_direction(Brahmin_Tile,random(0,5),random(2,5));
        Critter:=create_object_sid(PID_BRAHMIN,0,0,SCRIPT_CARCOW); //SCRIPT_ECCRTBRA);
-       critter_attempt_placement(Critter,Brahmin_Tile,0);
+       critter_attempt_placement(Critter,Brahmin_Tile,dude_elevation);
        val := set_team( Critter, TEAM_PLAYER );
        anim(Critter,ANIMATE_ROTATION,random(0,5));
    end
@@ -449,7 +456,7 @@ procedure Build_Caravan_Team begin
        end
 
        Driver_Tile:=tile_num_in_direction(Driver_Tile,1,3);
-       critter_attempt_placement(Critter,Driver_Tile,0);
+       critter_attempt_placement(Critter,Driver_Tile,dude_elevation);
        val := set_team( Critter, TEAM_PLAYER );
        give_money(Critter,random(5,20));
        anim(Critter,ANIMATE_ROTATION,random(0,5));
@@ -461,7 +468,6 @@ procedure Build_Caravan_Team begin
    Critter_Tile:=tile_num_in_direction(dude_start_hex,Critter_Rotation,random(7,10));
 
    while (Guard_Counter < caravan_guards_left) do begin
-   	debug("create caravan guard!");
 		Guard_Counter+=1;
 
 		if caravan_style_crimson then begin // Crimson Caravan guard
@@ -478,7 +484,7 @@ procedure Build_Caravan_Team begin
 		end
 
 		Critter_Tile:=tile_num_in_direction(Critter_Tile,random(0,5),random(2,4));
-		critter_attempt_placement(Critter,Critter_Tile,0);
+		critter_attempt_placement(Critter,Critter_Tile,dude_elevation);
 		give_money(Critter,random(10,20));
 		val := set_team( Critter, TEAM_PLAYER );
 		anim(Critter,ANIMATE_ROTATION,dude_cur_rot);
@@ -489,6 +495,8 @@ procedure Build_Caravan_Team begin
 			item:=create_object(PID_STIMPAK,0,0);
 			add_obj_to_inven(Critter,item);
 		end
+
+		debug("created caravan guard on elevation " + elevation(Critter) + " and hex " + tile_num(Critter) );
    end
 
    debug("caravan_brahmin_left: " + caravan_brahmin_left);
@@ -505,57 +513,57 @@ variable Encounter_Rnd;
 
    if (total_encounters == 1) then begin
        set_caravan_pos(HUB_JNK_1_1_x,HUB_JNK_1_1_y);
-       set_exit_grids(0,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
+       set_exit_grids(dude_elevation,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
        game_time_advance(7*ONE_GAME_DAY);
    end
    else if (total_encounters == 2) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_JNK_2_1_x,HUB_JNK_2_1_y+25);       //added +25 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(3*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_JNK_2_2_x,HUB_JNK_2_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(4*ONE_GAME_DAY);
        end
    end
    else if (total_encounters == 3) then begin
       if (Encounter_Number == 0) then begin                    // this is the first encounter
          set_caravan_pos(HUB_JNK_3_1_x,HUB_JNK_3_1_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(2*ONE_GAME_DAY);
       end
       else if (Encounter_Number == 1) then begin               // this is the second encounter
          set_caravan_pos(HUB_JNK_3_2_x,HUB_JNK_3_2_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(3*ONE_GAME_DAY);
       end
       else if (Encounter_Number == 2) then begin               // this is the third encounter
          set_caravan_pos(HUB_JNK_3_3_x,HUB_JNK_3_3_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(2*ONE_GAME_DAY);
       end
    end
    else if (total_encounters == 4) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_JNK_4_1_x,HUB_JNK_4_1_y-50);       //added -50 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(1*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_JNK_4_2_x,HUB_JNK_4_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(2*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 2) then begin               // this is the third encounter
            set_caravan_pos(HUB_JNK_4_3_x,HUB_JNK_4_3_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(2*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 3) then begin               // this is the forth encounter
            set_caravan_pos(HUB_JNK_4_4_x,HUB_JNK_4_4_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(2*ONE_GAME_DAY);
        end
    end
@@ -613,20 +621,20 @@ variable Encounter_Rnd;
 
    if (total_encounters == 1) then begin
        set_caravan_pos(HUB_ADY_1_1_x,HUB_ADY_1_1_y);
-       set_exit_grids(0,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
+       set_exit_grids(dude_elevation,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
        game_time_advance(2*ONE_GAME_DAY);
        //check_area;
    end
    else if (total_encounters == 2) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_ADY_2_1_x,HUB_ADY_2_1_y+25);       //added +25 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(1*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_ADY_2_2_x,HUB_ADY_2_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(1*ONE_GAME_DAY);
            //check_area;
        end
@@ -634,19 +642,19 @@ variable Encounter_Rnd;
    else if (total_encounters == 3) then begin
       if (Encounter_Number == 0) then begin                    // this is the first encounter
          set_caravan_pos(HUB_ADY_3_1_x,HUB_ADY_3_1_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(0.5*ONE_GAME_DAY);
          //check_area;
       end
       else if (Encounter_Number == 1) then begin               // this is the second encounter
          set_caravan_pos(HUB_ADY_3_2_x,HUB_ADY_3_2_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(0.5*ONE_GAME_DAY);
          //check_area;
       end
       else if (Encounter_Number == 2) then begin               // this is the third encounter
          set_caravan_pos(HUB_ADY_3_3_x,HUB_ADY_3_3_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(1*ONE_GAME_DAY);
          //check_area;
       end
@@ -654,25 +662,25 @@ variable Encounter_Rnd;
    else if (total_encounters == 4) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_ADY_4_1_x,HUB_ADY_4_1_y-50);       //added -50 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(0.5*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_ADY_4_2_x,HUB_ADY_4_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(0.5*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 2) then begin               // this is the third encounter
            set_caravan_pos(HUB_ADY_4_3_x,HUB_ADY_4_3_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(0.5*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 3) then begin               // this is the forth encounter
            set_caravan_pos(HUB_ADY_4_4_x,HUB_ADY_4_4_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(0.5*ONE_GAME_DAY);
            //check_area;
        end
@@ -729,57 +737,57 @@ variable Encounter_Rnd;
 
    if (total_encounters == 1) then begin
        set_caravan_pos(HUB_BOS_1_1_x,HUB_BOS_1_1_y);
-       set_exit_grids(0,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
+       set_exit_grids(dude_elevation,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
        game_time_advance(15*ONE_GAME_DAY);
    end
    else if (total_encounters == 2) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_BOS_2_1_x,HUB_BOS_2_1_y+25);       //added +25 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(7*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_BOS_2_2_x,HUB_BOS_2_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(8*ONE_GAME_DAY);
        end
    end
    else if (total_encounters == 3) then begin
       if (Encounter_Number == 0) then begin                    // this is the first encounter
          set_caravan_pos(HUB_BOS_3_1_x,HUB_BOS_3_1_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(5*ONE_GAME_DAY);
       end
       else if (Encounter_Number == 1) then begin               // this is the second encounter
          set_caravan_pos(HUB_BOS_3_2_x,HUB_BOS_3_2_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(5*ONE_GAME_DAY);
       end
       else if (Encounter_Number == 2) then begin               // this is the third encounter
          set_caravan_pos(HUB_BOS_3_3_x,HUB_BOS_3_3_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(5*ONE_GAME_DAY);
       end
    end
    else if (total_encounters == 4) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_BOS_4_1_x,HUB_BOS_4_1_y-50);       //added -50 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(5*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_BOS_4_2_x,HUB_BOS_4_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(6*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 2) then begin               // this is the third encounter
            set_caravan_pos(HUB_BOS_4_3_x,HUB_BOS_4_3_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(4*ONE_GAME_DAY);
        end
        else if (Encounter_Number == 3) then begin               // this is the forth encounter
            set_caravan_pos(HUB_BOS_4_4_x,HUB_BOS_4_4_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(6*ONE_GAME_DAY);
        end
    end
@@ -825,20 +833,20 @@ variable Encounter_Rnd;
 
    if (total_encounters == 1) then begin
        set_caravan_pos(HUB_NEC_1_1_x,HUB_NEC_1_1_y);
-       set_exit_grids(0,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
+       set_exit_grids(dude_elevation,-2,0,20100,0);                          // Exit grids on elevation 0 goto Worldmap
        game_time_advance(9*ONE_GAME_DAY);
        //check_area;
    end
    else if (total_encounters == 2) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_NEC_2_1_x,HUB_NEC_2_1_y+25);       //added +25 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(4*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_NEC_2_2_x,HUB_NEC_2_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(5*ONE_GAME_DAY);
            //check_area;
        end
@@ -846,19 +854,19 @@ variable Encounter_Rnd;
    else if (total_encounters == 3) then begin
       if (Encounter_Number == 0) then begin                    // this is the first encounter
          set_caravan_pos(HUB_NEC_3_1_x,HUB_NEC_3_1_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(3*ONE_GAME_DAY);
          //check_area;
       end
       else if (Encounter_Number == 1) then begin               // this is the second encounter
          set_caravan_pos(HUB_NEC_3_2_x,HUB_NEC_3_2_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(3*ONE_GAME_DAY);
          //check_area;
       end
       else if (Encounter_Number == 2) then begin               // this is the third encounter
          set_caravan_pos(HUB_NEC_3_3_x,HUB_NEC_3_3_y);
-         set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+         set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
          game_time_advance(3*ONE_GAME_DAY);
          //check_area;
       end
@@ -866,25 +874,25 @@ variable Encounter_Rnd;
    else if (total_encounters == 4) then begin
        if (Encounter_Number == 0) then begin                    // this is the first encounter
            set_caravan_pos(HUB_NEC_4_1_x,HUB_NEC_4_1_y-50);       //added -50 -killap
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(2*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 1) then begin               // this is the second encounter
            set_caravan_pos(HUB_NEC_4_2_x,HUB_NEC_4_2_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(2*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 2) then begin               // this is the third encounter
            set_caravan_pos(HUB_NEC_4_3_x,HUB_NEC_4_3_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(3*ONE_GAME_DAY);
            //check_area;
        end
        else if (Encounter_Number == 3) then begin               // this is the forth encounter
            set_caravan_pos(HUB_NEC_4_4_x,HUB_NEC_4_4_y);
-           set_exit_grids(0,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
+           set_exit_grids(dude_elevation,-2,0,20100,0);                      // Exit grids on elevation 0 goto Worldmap
            game_time_advance(2*ONE_GAME_DAY);
            //check_area;
        end
@@ -1581,6 +1589,10 @@ end
 procedure Medium_Ghoul begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
+
+	Outer_Circle := random(5, 10) + 2;
+	Inner_Circle := Outer_Circle - 4;
+
 	LVar0 := random(4, 6);
 	while(LVar1 < LVar0) do begin
 		Critter_Rotation := random(0, 2);
@@ -1611,7 +1623,7 @@ procedure Medium_Ghoul begin
 		LVar1 := LVar1 + 1;
 	end
 
-	debug("Medium_Ghoul");
+	debug("Medium_Ghoul on elevation " + elevation(Ghoul_Merc));
 end
 
 procedure Large_Ghoul begin
@@ -1846,13 +1858,13 @@ procedure Huge_Merc begin
 
 		LVar2 := random(1, 4);
 		if (LVar2 == 1) then
-			Human_Merc := create_object_sid(PID_MERC_FEMALE_LEATHER, 0, 0, SCRIPT_CRVNENMY);
+			Human_Merc := create_object_sid(PID_MERC_FEMALE_LEATHER, 0, dude_elevation, SCRIPT_CRVNENMY);
 		else if (LVar2 == 2) then
-			Human_Merc := create_object_sid(PID_MERC_MALE_LEATHER, 0, 0, SCRIPT_CRVNENMY);
+			Human_Merc := create_object_sid(PID_MERC_MALE_LEATHER, 0, dude_elevation, SCRIPT_CRVNENMY);
 		else if (LVar2 == 3) then
-			Human_Merc := create_object_sid(PID_MERC_MALE_METAL, 0, 0, SCRIPT_CRVNENMY);
+			Human_Merc := create_object_sid(PID_MERC_MALE_METAL, 0, dude_elevation, SCRIPT_CRVNENMY);
 		else
-			Human_Merc := create_object_sid(PID_MALE_GUARD_CA, 0, 0, SCRIPT_CRVNENMY);
+			Human_Merc := create_object_sid(PID_MALE_GUARD_CA, 0, dude_elevation, SCRIPT_CRVNENMY);
 		critter_attempt_placement(Human_Merc, Critter_Tile, dude_elevation); // fix spawning inside other critters
 		inc_map_var(MVAR_Hostile_Total);
 
@@ -2005,7 +2017,7 @@ procedure Huge_Mantis begin
 		Total_Rotation := Total_Rotation + (Critter_Rotation - Total_Rotation);
 		Critter_Tile := tile_num_in_direction(Critter_Tile, Critter_Rotation, random(Inner_Circle, Outer_Circle) / 3);
 
-		Mantis := create_object_sid(PID_GREAT_MANTIS, 0, 0, SCRIPT_CRVNMSTR);
+		Mantis := create_object_sid(PID_GREAT_MANTIS, 0, dude_elevation, SCRIPT_CRVNMSTR);
 		critter_attempt_placement(Mantis, Critter_Tile, dude_elevation);
 		inc_map_var(MVAR_Hostile_Total);
 
@@ -2039,7 +2051,7 @@ procedure Small_Spawn begin
 	while(LVar1 < LVar0) do begin
 		Critter_Tile := tile_num_in_direction(dude_tile, random(0, 2), random(Inner_Circle, Outer_Circle));
 
-		Deathclaw := create_object_sid(PID_DEATHCLAW_SPAWN, 0, 0, SCRIPT_CRVNMSTR);
+		Deathclaw := create_object_sid(PID_DEATHCLAW_SPAWN, 0, dude_elevation, SCRIPT_CRVNMSTR);
 		critter_attempt_placement(Deathclaw, Critter_Tile, dude_elevation);
 		inc_map_var(MVAR_Hostile_Total);
 
@@ -2067,7 +2079,7 @@ procedure Monster_Pack begin
 	Inner_Circle := Outer_Circle - 4;
 	Critter_Tile := tile_num_in_direction(dude_tile, random(0, 2), random(Inner_Circle, Outer_Circle));
 
-	LVar0 := create_object_sid(PID_DEATHCLAW_SPAWN, 0, 0, SCRIPT_CRVNMSTR);
+	LVar0 := create_object_sid(PID_DEATHCLAW_SPAWN, 0, dude_elevation, SCRIPT_CRVNMSTR);
 	critter_attempt_placement(LVar0, Critter_Tile, dude_elevation);
 	inc_map_var(MVAR_Hostile_Total);
 
@@ -2316,10 +2328,10 @@ variable rnd_tile:=0;
       iter:=iter+1;
 		a:=random(8000,29000);
       scenery_pid:=random( PID_ROCKS_6, PID_ROCKS_8 );
-		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+		if tile_contains_pid_obj(a,dude_elevation,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
-            create_object(scenery_pid,a,0); // generuje sceneri?
+            create_object(scenery_pid,a,dude_elevation); // generuje sceneri?
          end
       end
    end
@@ -2331,10 +2343,10 @@ variable rnd_tile:=0;
       iter:=iter+1;
 		a:=random(7000,30000);
       scenery_pid:=random( PID_SCRUB_1, PID_SCRUB_4 );
-		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+		if tile_contains_pid_obj(a,dude_elevation,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
-            create_object(scenery_pid,a,0);
+            create_object(scenery_pid,a,dude_elevation);
          end
       end
    end
@@ -2346,10 +2358,10 @@ variable rnd_tile:=0;
       iter:=iter+1;
 		a:=random(7000,30000);
       scenery_pid:=random( PID_BONES_4, PID_BONES_5 ); // ashes, dead animals //kosci i zw?oki zwierz?cia i bramina
-		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+		if tile_contains_pid_obj(a,dude_elevation,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
-            create_object(scenery_pid,a,0);
+            create_object(scenery_pid,a,dude_elevation);
          end
       end
    end
@@ -2361,11 +2373,11 @@ variable rnd_tile:=0;
       iter:=iter+1;
 		a:=random(7000,30000);
       scenery_pid:=random( PID_TIRE, PID_WEED_3 );
-		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+		if tile_contains_pid_obj(a,dude_elevation,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
-            create_object(scenery_pid,a,0);
-            create_object(PID_BLOCKING_HEX,a,0); //create a blocker on the same hex
+            create_object(scenery_pid,a,dude_elevation);
+            create_object(PID_BLOCKING_HEX,a,dude_elevation); //create a blocker on the same hex
          end
       end
    end
@@ -2377,10 +2389,10 @@ variable rnd_tile:=0;
       iter:=iter+1;
 		a:=random(8000,29000);
       scenery_pid:=random( PID_ROCKS_3, PID_ROCKS_4 );
-		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+		if tile_contains_pid_obj(a,dude_elevation,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
-            create_object(scenery_pid,a,0); // generuje sceneri?
+            create_object(scenery_pid,a,dude_elevation); // generuje sceneri?
          end
       end
    end
@@ -2392,10 +2404,10 @@ variable rnd_tile:=0;
       iter:=iter+1;
 		a:=random(7000,30000);
       scenery_pid:=random(33556497,33556499);
-		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+		if tile_contains_pid_obj(a,dude_elevation,scenery_pid) then begin end else begin
    		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
 	   	begin
-            create_object(scenery_pid,a,0);
+            create_object(scenery_pid,a,dude_elevation);
          end
       end
    end
