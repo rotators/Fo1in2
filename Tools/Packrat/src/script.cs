@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Packrat
 {
-    // Parse packscript
-
     enum Operation
     {
         Nop,
