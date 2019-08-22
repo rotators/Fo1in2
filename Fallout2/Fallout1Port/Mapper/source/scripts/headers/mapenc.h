@@ -74,8 +74,9 @@ procedure Add_Mysterious_Stranger begin
    if ((map_first_run) and (not(get_stranger_flag(STRANGER_DEAD))) and (Die_Roll < Stranger_Chance) and ((has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)))) then begin
        if (not(get_stranger_flag(STRANGER_GENDER))) then begin
            set_stranger_flag(STRANGER_GENDER);
-           if (random(0,99) < 50) then
+           if (random(0,99) < 50) then begin
                set_stranger_flag(STRANGER_FEMALE);
+           end
        end
        if (get_stranger_flag(STRANGER_FEMALE)) then
            Critter:=create_object_sid(PID_MYSTERIOUS_STRANGER_FEMALE,0,0,SCRIPT_MYSTSTRN);

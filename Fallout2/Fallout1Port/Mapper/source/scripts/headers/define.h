@@ -670,8 +670,8 @@
 #define ELEV_MILB1   	(4) // Military Base upper-level elevator
 #define ELEV_MILB2   	(5) // Military Base lower-level elevator
 #define ELEV_VAULT   	(6) // Vault13 elevator
-#define ELEV_GLOW1   	(7) // Glow elevator yellow
-#define ELEV_GLOW2   	(8) // Glow elevator red
+#define ELEV_GLOW1   	(7) // Glow elevator red
+#define ELEV_GLOW2   	(8) // Glow elevator yellow
 #define ELEV_GLOW3   	(9) // Glow elevator blue
 #define ELEV_NECVLT  	(10) // Necropolis elevator
 #define ELEV_GLOW1A  	(11) // This elevator fixes a bug on "level 3" (see comment in elev6_m1.ssl)
