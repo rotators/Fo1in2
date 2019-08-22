@@ -101,51 +101,53 @@
 #define GVAR_ENDGAME_MOVIE_VD					(417)	// maybe hard-coded, maybe not?
 
 // Endgame slideshow Fo2
-#define GVAR_ENDGAME_MOVIE_REDDING				(418)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_REDDING					(418)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_BROKEN_HILLS				(419)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_NCR					(420)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_VAULT_15				(421)	// maybe hard-coded, maybe not?
-#define GVAR_ENDGAME_MOVIE_VAULT_13				(422)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_NCR						(420)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_VAULT_15					(421)	// maybe hard-coded, maybe not?
+#define GVAR_ENDGAME_MOVIE_VAULT_13					(422)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_SAN_FRAN_SHI				(423)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_SAN_FRAN_ELRON			(424)	// maybe hard-coded, maybe not?
 #define GVAR_ENDGAME_MOVIE_SAN_FRAN_PUNKS			(425)	// maybe hard-coded, maybe not?
 
+// Hardcoded / special death screen (Modoc)
+#define GVAR_TRACK_RADIATION_DEATH					(491)
+
 // Dream sequences - HARDCODED DO NOT USE!
-#define GVAR_FALLOUT_2						(494)	// Tracks how many times you've seen the Hakunin dreams.
+#define GVAR_FALLOUT_2								(494)	// Tracks how many times you've seen the Hakunin dreams.
 
 // More vanilla Holodisks
-#define GVAR_HOLODISK_ENCLAVE_SECURITY			(573)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_ENCLAVE_STATE				(574)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_ENCLAVE_WORD				(575)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_ENCLAVE_CHEMICAL			(576)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_ENCLAVE_ATOMIC			(577)	// maybe hard-coded, maybe not?	
+#define GVAR_HOLODISK_ENCLAVE_SECURITY				(573)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_ENCLAVE_STATE					(574)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_ENCLAVE_WORD					(575)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_ENCLAVE_CHEMICAL				(576)	// maybe hard-coded, maybe not?
+#define GVAR_HOLODISK_ENCLAVE_ATOMIC				(577)	// maybe hard-coded, maybe not?	
 
-#define GVAR_CAR_PLACED_TILE 					(633)	// Fo2 Engine stuff
+#define GVAR_CAR_PLACED_TILE 						(633)	// Fo2 Engine stuff
 
-#define GVAR_TOASTER_SLOTMACHINES                 (756)
+#define GVAR_TOASTER_SLOTMACHINES                 	(756)
 
 // Fallout 1 and Fallout Fixt
-#define GVAR_TRACK_RADIATION_DEATH				(999)
 #define GVAR_FIXT_BUGFIXES_ONLY						(1000)
 #define GVAR_AGATHA_IS_ENABLED						(1001)
 #define GVAR_SHADYSANDS_RADSCORPS_LEFT				(1002)
 #define GVAR_BOS_LORRI_CHA_ENABLED					(1003)
-#define GVAR_DOGS_KILLED								(1004)
-#define GVAR_DOGMEAT_HIRELING_STATUS					(1005)
-#define GVAR_IS_HAROLD_ALIVE							(1006)
-#define GVAR_FOLLOWERS_INVADED					(1007)
-#define GVAR_CAN_REPORT_BITS_BOB						(1008)
+#define GVAR_DOGS_KILLED							(1004)
+#define GVAR_DOGMEAT_HIRELING_STATUS				(1005)
+#define GVAR_IS_HAROLD_ALIVE						(1006)
+#define GVAR_FOLLOWERS_INVADED						(1007)
+#define GVAR_CAN_REPORT_BITS_BOB					(1008)
 #define GVAR_IS_BITS_BOB_ALIVE						(1009)
-#define GVAR_VAULT13_WATER_DAYS_LEFT					(1010)
-#define GVAR_VAULT_13_WAS_INVADED				(1011)
-#define GVAR_SHADY_SANDS_WAS_INVADED			(1012)
-#define GVAR_NECROPOLIS_WAS_INVADED				(1013)
-#define GVAR_THE_HUB_WAS_INVADED				(1014)
-#define GVAR_JUNKTOWN_WAS_INVADED				(1015)
-#define GVAR_BROTHERHOOD_WAS_INVADED			(1016)
+#define GVAR_VAULT13_WATER_DAYS_LEFT				(1010)
+#define GVAR_VAULT_13_WAS_INVADED					(1011)
+#define GVAR_SHADY_SANDS_WAS_INVADED				(1012)
+#define GVAR_NECROPOLIS_WAS_INVADED					(1013)
+#define GVAR_THE_HUB_WAS_INVADED					(1014)
+#define GVAR_JUNKTOWN_WAS_INVADED					(1015)
+#define GVAR_BROTHERHOOD_WAS_INVADED				(1016)
 #define GVAR_VATS_BLOWN								(1017)
 #define GVAR_MASTER_BLOWN							(1018)
-#define GVAR_CHILDKILLER_PIC_RESTORE					(1019) // unused
+#define GVAR_CHILDKILLER_PIC_RESTORE				(1019) // unused
 #define GVAR_MYST_STRANGER_RESPAWNS					(1020)
 #define GVAR_HIT_GIVES_RADS_GHOULS					(1021)
 #define GVAR_FIXT_BASE_VERSION_NUM					(1022)
@@ -153,14 +155,14 @@
 #define GVAR_FOLLOWERS_LEFT							(1024)
 #define GVAR_IS_HEATHER_ALIVE						(1025)
 #define GVAR_TANDI_HIRELING_STATUS					(1026)
-#define GVAR_PLAYER_CURRENT_PLVL						(1027)
-#define GVAR_RADSCORPIONS_KILLED						(1028)
+#define GVAR_PLAYER_CURRENT_PLVL					(1027)
+#define GVAR_RADSCORPIONS_KILLED					(1028)
 #define GVAR_NECROP_MUTANTS_KILLED					(1029)
-#define GVAR_NECROP_WATER_CHIP_TAKEN					(1030)
-#define GVAR_NECROP_WATER_PUMP_FIXED					(1031)
+#define GVAR_NECROP_WATER_CHIP_TAKEN				(1030)
+#define GVAR_NECROP_WATER_PUMP_FIXED				(1031)
 //	moved to top of this file
 #define GVAR_ENABLE_HOOKERS							(1033)
-#define GVAR_HIT_GIVES_RADS_FLOATERS					(1034)
+#define GVAR_HIT_GIVES_RADS_FLOATERS				(1034)
 #define GVAR_SUPER_MUTANTS_KILLED					(1035)
 #define GVAR_HIRED_BY_KILLIAN						(1036)
 #define GVAR_KILLIAN_DEAD							(1037)

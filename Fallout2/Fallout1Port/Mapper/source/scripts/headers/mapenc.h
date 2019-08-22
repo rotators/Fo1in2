@@ -69,8 +69,6 @@ procedure Add_Mysterious_Stranger begin
    Die_Roll:=random(0,99);
    Stranger_Chance:=30 + (2 * dude_luck);
 
-   debug("spawn fo2 stranger!");
-
    if ((map_first_run) and (not(get_stranger_flag(STRANGER_DEAD))) and (Die_Roll < Stranger_Chance) and ((has_trait(TRAIT_PERK,dude_obj,PERK_mysterious_stranger)))) then begin
        if (not(get_stranger_flag(STRANGER_GENDER))) then begin
            set_stranger_flag(STRANGER_GENDER);
