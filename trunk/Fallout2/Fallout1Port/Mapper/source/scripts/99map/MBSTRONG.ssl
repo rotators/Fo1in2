@@ -3,7 +3,7 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
-procedure combat_p_proc;//    script_action == 13
+procedure combat_p_proc;
 
 variable party_elevation;
 variable dude_start_hex;
@@ -29,86 +29,70 @@ export variable Field6a_Ptr;
 export variable Field1b_Ptr;
 export variable Field2b_Ptr;
 
-procedure start
-begin
-	if (script_action == 13) then begin//<-- combat_p_proc , basically does combat_is_initialized == 1
-		call combat_p_proc;
-	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			set_light_level(100);
-			if (map_first_run) then begin
-				field_change := "off";
-			end
-			if (global_var( GVAR_VATS_ALERT )) then begin
-				field_change := "on";
-			end
-			if (global_var( GVAR_FORCE_FIELDS_OFF )) then begin
-				field_change := "off";
-			end
-			if (global_var( GVAR_LOAD_MAP_INDEX ) == 0) then begin
-				override_map_start(120, 75, 0, 2);
-//display_msg("gvar32=0");
-			end
-			else begin
-				if (global_var( GVAR_LOAD_MAP_INDEX ) == 1) then begin
-					override_map_start(120, 75, 1, 2);
-//display_msg("gvar32=1");
-				end
-				else begin
-					if (global_var( GVAR_LOAD_MAP_INDEX ) == 12) then begin
-						override_map_start(92, 135, 0, 5);// was (92, 135, 0, 5)
-//display_msg("gvar32=12");
-					end
-					else begin
-						override_map_start(93, 143, 0, 5);
-//display_msg("gvar32=" + global_var(LOAD_MAP_INDEX));
-					end
-				end
-			end
-			radio_room_attacked := map_var(13);
-         set_global_var(GVAR_LOAD_MAP_INDEX,0);
-		end
-		else begin
-			if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-				set_light_level(100);
-				if (global_var( GVAR_VATS_ALERT ) == 0) then begin
-					if (dude_elevation == 0) then begin
-						set_global_var( GVAR_MARK_BASE_2, 1 );
-					end
-					else begin
-						set_global_var( GVAR_MARK_BASE_3, 1 );
-					end
-				end
-				else begin
-					if (map_var(24) == 0) then begin
-						display_msg(message_str(SCRIPT_GENCHAT, 186));
-						set_map_var(24, 1);
-					end
-					set_global_var( GVAR_MARK_BASE_2, 0 );
-					set_global_var( GVAR_MARK_BASE_3, 0 );
-				end
-				if (removal_ptr != 0) then begin
-					destroy_object(removal_ptr);
-					removal_ptr := 0;
-				end
-
-			end
-
-		end
-	end
+procedure start begin
 end
 
-procedure combat_p_proc
-begin
+procedure map_enter_p_proc begin
+	set_light_level(BRIGHT_LIGHT);
+	if (map_first_run) then begin
+		field_change := "off";
+	end
+
+	if (global_var( GVAR_VATS_ALERT )) then begin
+		field_change := "on";
+	end
+	if (global_var( GVAR_FORCE_FIELDS_OFF )) then begin
+		field_change := "off";
+	end
+
+	if (global_var( GVAR_LOAD_MAP_INDEX ) == 0) then begin
+		override_map_start(120, 75, 0, 2);
+	end
+	else if (global_var( GVAR_LOAD_MAP_INDEX ) == 1) then begin
+		override_map_start(120, 75, 1, 2);
+	end
+	else if (global_var( GVAR_LOAD_MAP_INDEX ) == 12) then begin
+		override_map_start(92, 135, 0, 5);// was (92, 135, 0, 5)
+	end
+	else begin
+		override_map_start(93, 143, 0, 5);
+	end
+
+	radio_room_attacked := map_var(13);
+   set_global_var(GVAR_LOAD_MAP_INDEX,0);
+end
+
+procedure map_update_p_proc begin
+   set_light_level(BRIGHT_LIGHT);
+
+   if (global_var( GVAR_VATS_ALERT ) == 0) then begin
+   	if (dude_elevation == 0) then begin
+   		set_global_var( GVAR_MARK_BASE_2, 1 );
+   	end
+   	else begin
+   		set_global_var( GVAR_MARK_BASE_3, 1 );
+   	end
+   end
+   else begin
+   	if (map_var(24) == 0) then begin
+   		display_msg(message_str(SCRIPT_GENCHAT, 186));
+   		set_map_var(24, 1);
+   	end
+   	set_global_var( GVAR_MARK_BASE_2, 0 );
+   	set_global_var( GVAR_MARK_BASE_3, 0 );
+   end
+
+   if (removal_ptr != 0) then begin
+   	destroy_object(removal_ptr);
+   	removal_ptr := 0;
+   end
+end
+
+procedure combat_p_proc begin
 	if (global_var( GVAR_DESTROY_VATS_4 )) then begin
 		script_overrides;
 		set_global_var( GVAR_DESTROY_VATS_4, 0 );
 		set_global_var( GVAR_ENTERING_VATS_HOW, 3 );
 		load_map(MAP_MBVATS12, 5);
 	end
-end
-
-procedure Invasion begin
-	//check_invasion
 end
