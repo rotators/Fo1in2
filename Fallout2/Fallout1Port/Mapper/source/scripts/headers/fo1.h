@@ -62,6 +62,15 @@
 #define is_gizmo_alive 						(global_var(GVAR_GIZMO_DEAD) == 0)
 #define is_rhombus_alive 					(global_var(GVAR_RHOMBUS_STATUS) == 0)
 #define is_garl_alive 					 	(global_var(GVAR_GARL_DEAD) == 0)
+#define is_nicole_alive 					(global_var(GVAR_IS_NICOLE_ALIVE) == 0)
+
+#define is_laura_alive 						(global_var(GVAR_IS_LAURA_ALIVE) != 1)
+
+#define set_laura_escaping					set_global_var(GVAR_IS_LAURA_ALIVE,2)
+#define is_laura_escaping					(global_var(GVAR_IS_LAURA_ALIVE) == 2)
+
+#define set_laura_escaped					set_global_var(GVAR_IS_LAURA_ALIVE,3)
+#define is_laura_escaped					(global_var(GVAR_IS_LAURA_ALIVE) == 3)
 
 #define tandi_is_kidnapped					(global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
 #define tandi_not_kidnapped					not(tandi_is_kidnapped)
@@ -220,11 +229,11 @@ end
 /*********************************************************
 	Invasion related:
 *********************************************************/
-#define v13_invaded 						(global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
+#define v13_invaded 						   (global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
 #define hub_invaded							(global_var(GVAR_THE_HUB_WAS_INVADED) == 1)
 #define bos_invaded							(global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)
 #define boneyard_invaded					(global_var(GVAR_FOLLOWERS_INVADED) == 1)
-#define necropolis_invaded 					(global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)
+#define necropolis_invaded 			   (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)
 #define shady_invaded 						(global_var(GVAR_SHADY_SANDS_WAS_INVADED) == 1)
 #define junktown_invaded 					(global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)
 
@@ -238,28 +247,28 @@ end
 #define bos_invasion_date 					(get_days_passed + (ONE_GAME_DAY * GVAR_BROTHERHOOD_INVADED_DATE))
 #define get_bos_days_left 					(global_var(GVAR_BROTHERHOOD_INVADED_DATE) - get_days_passed)
 
-#define boneyard_invasion_date 				(get_days_passed + (ONE_GAME_DAY * GVAR_FOLLOWERS_INVADED_DATE))
-#define get_boneyard_days_left 				(global_var(GVAR_FOLLOWERS_INVADED_DATE) - get_days_passed)
+#define boneyard_invasion_date 		   (get_days_passed + (ONE_GAME_DAY * GVAR_FOLLOWERS_INVADED_DATE))
+#define get_boneyard_days_left 		   (global_var(GVAR_FOLLOWERS_INVADED_DATE) - get_days_passed)
 
-#define necropolis_invasion_date 			(get_days_passed + (ONE_GAME_DAY * GVAR_NECROPOLIS_INVADED_DATE))
-#define get_necropolis_days_left 			(global_var(GVAR_NECROPOLIS_INVADED_DATE) - get_days_passed)
+#define necropolis_invasion_date 	   (get_days_passed + (ONE_GAME_DAY * GVAR_NECROPOLIS_INVADED_DATE))
+#define get_necropolis_days_left 	   (global_var(GVAR_NECROPOLIS_INVADED_DATE) - get_days_passed)
 
 #define shady_invasion_date 				(get_days_passed + (ONE_GAME_DAY * GVAR_SHADY_SANDS_INVADED_DATE))
 #define get_shady_days_left 				(global_var(GVAR_SHADY_SANDS_INVADED_DATE) - get_days_passed)
 
-#define junktown_invasion_date 				(get_days_passed + (ONE_GAME_DAY * GVAR_JUNKTOWN_INVADED_DATE))
-#define get_junktown_days_left 				(global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
+#define junktown_invasion_date 		   (get_days_passed + (ONE_GAME_DAY * GVAR_JUNKTOWN_INVADED_DATE))
+#define get_junktown_days_left 		   (global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
 
 // If a (human) party member was waiting in any invasion location, he will be killed.
 #define check_invasion_party_waiting		if not(Ian_In_Party) then begin 			\
-												kill_critter_type(PID_IAN, 1);			\
-											end											\
-											if not(Tycho_In_Party) then begin			\
-												kill_critter_type(PID_TYCHO, 1);		\
-											end											\
-											if not(Katja_In_Party) then begin			\
-												kill_critter_type(PID_KATJA, 1);		\
-											end
+         												kill_critter_type(PID_IAN, 1);			\
+         											end											\
+         											if not(Tycho_In_Party) then begin			\
+         												kill_critter_type(PID_TYCHO, 1);		\
+         											end											\
+         											if not(Katja_In_Party) then begin			\
+         												kill_critter_type(PID_KATJA, 1);		\
+         											end
 
 /*********************************************************
 	Party related:

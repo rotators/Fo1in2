@@ -16,6 +16,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
 
@@ -148,7 +149,17 @@ procedure laura88;
 procedure laura88a;
 procedure lauraend;
 
+#define LVAR_Move_Secret_Door    (4)
+#define LVAR_Move_Private        (5)
+
 procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   if is_laura_escaping or is_laura_escaped then begin
+      set_laura_escaped;
+      destroy_object(self_obj);
+   end
 end
 
 procedure look_at_p_proc begin
@@ -167,74 +178,89 @@ end
 
 procedure critter_p_proc begin
 	Laura_Ptr := self_obj;
-	if (local_var(4) == 1) then begin
-		set_local_var(4, 2);
+
+	// Laura shows the door to the Master's Lair.
+	if (local_var(LVAR_Move_Secret_Door) == 1) then begin
+		set_local_var(LVAR_Move_Secret_Door, 2);
 		set_local_var(9, 1);
 		animate_move_obj_to_tile(self_obj, 14089, 0);
 	end
-	else if ((local_var(4) == 2) and (self_tile != 14089)) then begin
+	else if ((local_var(LVAR_Move_Secret_Door) == 2) and (self_tile != 14089)) then begin
 		animate_move_obj_to_tile(self_obj, 14089, 0);
 	end
-	else if ((local_var(4) == 2) and (self_tile == 14089)) then begin
-		set_local_var(4, 3);
+	else if ((local_var(LVAR_Move_Secret_Door) == 2) and (self_tile == 14089)) then begin
+		set_local_var(LVAR_Move_Secret_Door, 3);
 		obj_unlock(Red_Door_Ptr);
 		use_obj(Red_Door_Ptr);
 		animate_move_obj_to_tile(self_obj, 12495, 0);
 	end
-	else if ((local_var(4) == 3) and (self_tile != 12495)) then begin
+	else if ((local_var(LVAR_Move_Secret_Door) == 3) and (self_tile != 12495)) then begin
 		animate_move_obj_to_tile(self_obj, 12495, 0);
 	end
-	else if ((local_var(4) == 3) and (self_tile == 12495)) then begin
-		set_local_var(4, 4);
+	else if ((local_var(LVAR_Move_Secret_Door) == 3) and (self_tile == 12495)) then begin
+		set_local_var(LVAR_Move_Secret_Door, 4);
 		animate_move_obj_to_tile(self_obj, 12302, 0);
 	end
-	else if (local_var(4) == 4) then begin
+	else if (local_var(LVAR_Move_Secret_Door) == 4) then begin
 		float_msg(self_obj, message_str(SCRIPT_GENCHAT, 178), 8);
-		set_local_var(4, 5);
+		set_local_var(LVAR_Move_Secret_Door, 5);
 		set_local_var(9, 2);
+
+      debug("Laura will escape now!");
+      set_laura_escaping;
 	end
-	else if (local_var(4) == 5) then begin
-		set_local_var(4, 6);
+	else if (local_var(LVAR_Move_Secret_Door) == 5) then begin
+		set_local_var(LVAR_Move_Secret_Door, 6);
 		animate_move_obj_to_tile(self_obj, 15099, 0);
 	end
-	else if ((local_var(4) == 6) and (self_tile != 15099)) then begin
+	else if ((local_var(LVAR_Move_Secret_Door) == 6) and (self_tile != 15099)) then begin
 		animate_move_obj_to_tile(self_obj, 15099, 0);
 	end
-	else if ((local_var(4) == 6) and (self_tile == 15099)) then begin
-		set_local_var(4, 7);
+	else if ((local_var(LVAR_Move_Secret_Door) == 6) and (self_tile == 15099)) then begin
+		set_local_var(LVAR_Move_Secret_Door, 7);
 		animate_move_obj_to_tile(self_obj, 23301, 0);
 	end
-	else if ((local_var(4) == 7) and (self_tile != 23301)) then begin
+	else if ((local_var(LVAR_Move_Secret_Door) == 7) and (self_tile != 23301)) then begin
 		animate_move_obj_to_tile(self_obj, 23301, 0);
 	end
-	else if ((local_var(4) == 7) and (self_tile == 23301)) then begin
-		set_local_var(4, 8);
+	else if ((local_var(LVAR_Move_Secret_Door) == 7) and (self_tile == 23301)) then begin
+		set_local_var(LVAR_Move_Secret_Door, 8);
 		animate_move_obj_to_tile(self_obj, 27106, 0);
 	end
-	else if ((local_var(4) == 8) and (self_tile != 27106)) then begin
+	/*else if ((local_var(LVAR_Move_Secret_Door) == 8) and (self_tile != 27106)) then begin
 		animate_move_obj_to_tile(self_obj, 27106, 0);
 	end
-	/*else if ((local_var(4) == 8) and (self_tile == 27106)) then begin
-		set_local_var(4, 9);
+	else if ((local_var(LVAR_Move_Secret_Door) == 8) and (self_tile == 27106)) then begin
+		set_local_var(LVAR_Move_Secret_Door, 9);
 		if not(is_loading_game) then begin    set_self_invisible;    end
 	end*/
-	else if ((local_var(4) == 8) and (self_tile == 26105)) then begin // Different hex, so Laura doesn't get stuck.
-		set_local_var(4, 9);
+   else if ((local_var(LVAR_Move_Secret_Door) == 8) and (self_tile != 26105)) then begin
+		animate_move_obj_to_tile(self_obj, 26105, 0);
+	end
+
+	// Laura has escaped:
+	else if ((local_var(LVAR_Move_Secret_Door) == 8) and (self_tile == 26105)) then begin
+		set_local_var(LVAR_Move_Secret_Door, 9);
 		if not(is_loading_game) then begin
 		   play_sfx("SODOORSF");
+		   set_laura_escaped;
 		   set_self_invisible;
       end
 	end
-	else if (local_var(5) == 1) then begin
-		set_local_var(5, 2);
+
+	// Laura moves to another room, so player can speak to here in private:
+	else if (local_var(LVAR_Move_Private) == 1) then begin
+		set_local_var(LVAR_Move_Private, 2);
 		animate_move_obj_to_tile(self_obj, 22090, 0);
 	end
-	else if ((local_var(5) == 2) and (self_tile != 22090)) then begin
+	else if ((local_var(LVAR_Move_Private) == 2) and (self_tile != 22090)) then begin
 		animate_move_obj_to_tile(self_obj, 22090, 0);
 	end
-	else if ((local_var(5) == 2) and (self_tile == 22090)) then begin
-		set_local_var(5, 3);
+	else if ((local_var(LVAR_Move_Private) == 2) and (self_tile == 22090)) then begin
+		set_local_var(LVAR_Move_Private, 3);
 	end
+
+   // Laura is in the private room or at the backdoor. Dude can talk to her again:
 	else if (local_var(9) == 1) then begin
 		if ((self_tile == 22090) or (self_tile == 12495)) then begin
 			set_local_var(9, 0);
@@ -283,13 +309,11 @@ procedure talk_p_proc begin
 					if (local_var(7) == 1) then begin
 						call laura61;
 					end
+					else if (local_var(8) == 1) then begin
+						call laura21;
+					end
 					else begin
-						if (local_var(8) == 1) then begin
-							call laura21;
-						end
-						else begin
-							call laura16;
-						end
+						call laura16;
 					end
 				end
 				else begin
@@ -304,9 +328,9 @@ procedure talk_p_proc begin
 end
 
 procedure destroy_p_proc begin
+   set_global_var( GVAR_IS_LAURA_ALIVE, 0 );
 	rm_timer_event(self_obj);
 	inc_good_critter
-	rm_timer_event(self_obj);
 end
 
 procedure lauracbt begin
@@ -693,8 +717,7 @@ begin
 	call laura23;
 end
 
-procedure laura61
-begin
+procedure laura61 begin
 	if (local_var(1) > 1) then begin
 		gsay_reply(48, 288);
 	end
@@ -705,14 +728,12 @@ begin
 	giq_option( 4, SCRIPT_LAURA, 292, laura41, NEUTRAL_REACTION );
 end
 
-procedure laura62
-begin
+procedure laura62 begin
 	DownReact
 	gsay_message(48, 294, 50);
 end
 
-procedure laura63
-begin
+procedure laura63 begin
 	DownReact
 	gsay_reply(48, 296);
 	giq_option( 4, SCRIPT_LAURA, 297, laurax2, NEUTRAL_REACTION );
@@ -806,10 +827,9 @@ procedure laurax
 begin
 end
 
-procedure laurax1
-begin
+procedure laurax1 begin
 	set_local_var(8, 1);
-	set_local_var(5, 1);
+	set_local_var(LVAR_Move_Private, 1);
 	set_local_var(9, 1);
 end
 
@@ -822,22 +842,18 @@ procedure laurax3
 begin
 end
 
-procedure laurax4
-begin
-	set_local_var(4, 1);
+procedure laurax4 begin
+	set_local_var(LVAR_Move_Secret_Door, 1);
 	set_local_var(9, 1);
 end
 
-procedure laurax5
-begin
-
+procedure laurax5 begin
 	gfade_out(1);
 	gfade_in(1);
 end
 
-procedure laurax6
-begin
-	set_local_var(5, 1);
+procedure laurax6 begin
+	set_local_var(LVAR_Move_Private, 1);
 	set_local_var(9, 1);
 end
 

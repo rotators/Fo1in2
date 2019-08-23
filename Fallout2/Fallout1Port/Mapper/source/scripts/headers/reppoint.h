@@ -478,7 +478,7 @@
 // Shady Sands
 #define REP_BONUS_INSULTED_ARADESH 				(-20)
 #define REP_BONUS_HELPING_JARVIS            	(3)
-#define REP_BONUS_RADSCORPIONS_GONE            	(10)
+#define REP_BONUS_RADSCORPIONS_GONE            	(15)
 #define REP_BONUS_TANDI_RESCUED	            	(50)
 #define inc_shady_rep(x)   						inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
