@@ -5,7 +5,13 @@
 #ifndef ARCAVES_H
 #define ARCAVES_H
 
- // Map vars for Arroyo Village Map
+
+#define teleport_back      play_sfx("uranium");                   \
+                           gfade_out(600);                        \
+                           load_map(MAP_GUARDIAN,10);             \
+                           anim( dude_obj, ANIMATE_ROTATION, 5 ); \
+                           gfade_in(600)
+ 
 
  // Comments
 
@@ -37,11 +43,5 @@
 #define MVAR_Arroyo_Trial_Spear19               (19)
 #define MVAR_Passed_Fighting                    (20)
 
-
-
-
-#define Fighting_No                             (0)
-#define Fighting_Started                        (1)
-#define Fighting_Finished                       (2)
 
 #endif // ARCAVES_H

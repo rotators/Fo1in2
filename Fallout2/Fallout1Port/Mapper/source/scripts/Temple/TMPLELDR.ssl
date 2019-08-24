@@ -6,6 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\arcaves.h"
 
 #define NAME                    SCRIPT_TMPLELDR
 
@@ -19,20 +20,25 @@ procedure critter_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
 
+procedure attacked;
 procedure NodeFloat;
 
 variable init_teams := 0;
 variable teleport := 0;
+
+import variable Elder_ptr;
 
 #define float(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
 
 #define EVENT_TELEPORT 					(1)
 
 procedure start begin
+   Elder_ptr := self_obj;
+
 	if (not(init_teams)) then begin
 		init_teams := 1;
 		set_self_team( TEAM_VAULT13 );
-		set_self_ai( AI_PEASANT );
+		set_self_ai( AI_FLOATER );
 	end
 end
 
@@ -43,15 +49,7 @@ procedure timed_event_p_proc begin
 		give_exp_points(EXP_TEMPLE_OF_TRIALS);
 		display_msg(mstr(200) + EXP_TEMPLE_OF_TRIALS + mstr(201));
 
-		//play_sfx("neptune");
-		//play_sfx("pluto");
-		//play_sfx("saturn");
-		play_sfx("uranium");
-
-      gfade_out(600);
-      load_map(MAP_GUARDIAN,10);
-      anim( dude_obj, ANIMATE_ROTATION, 5 );
-      gfade_in(600);
+      teleport_back;
 	end
 end
 
@@ -64,7 +62,7 @@ procedure pickup_p_proc begin
 end
 
 procedure critter_p_proc begin
-	if (self_distance_from_dude < 10 and self_elevation == dude_elevation) then begin
+	if (self_distance_from_dude < 12 and self_elevation == dude_elevation) then begin
 		call NodeFloat;
 	end
 end
@@ -75,11 +73,7 @@ end
 
 procedure destroy_p_proc begin
 	inc_good_critter
-	if (teleport == 0) then begin
-		teleport := 1;
-		float(152);
-		add_timer_event(self_obj, game_ticks(8), EVENT_TELEPORT);
-	end
+	Elder_ptr := 0;
 end
 
 procedure NodeFloat begin
