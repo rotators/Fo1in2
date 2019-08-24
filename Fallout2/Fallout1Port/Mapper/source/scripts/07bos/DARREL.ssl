@@ -1,6 +1,7 @@
 /*
 
 	Brotherhood - Darrel
+	Guy next to Cabbot.
 
 */
 
@@ -16,8 +17,15 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure damage_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
 
 procedure start_dialogue;
+
 procedure Darrel01;
 procedure Darrel02;
 procedure Darrel02a;
@@ -58,13 +66,6 @@ procedure DarrelEnd;
 procedure giveradx;
 procedure combat;
 
-procedure damage_p_proc;
-procedure critter_p_proc;
-procedure pickup_p_proc;
-procedure talk_p_proc;
-procedure destroy_p_proc;
-procedure look_at_p_proc;
-
 variable known;
 variable Only_Once := 1;
 variable tmp_hostile;
@@ -80,29 +81,80 @@ procedure start begin
 	end
 end
 
-procedure start_dialogue
-begin
+procedure look_at_p_proc begin
+	script_overrides;
+	if (known) then begin
+		display_msg(message_str(SCRIPT_DARREL, 100));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_DARREL, 101));
+	end
+end
+
+procedure damage_p_proc begin
+	set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
+end
+
+procedure critter_p_proc begin
+	if (global_var( GVAR_ENEMY_BROTHERHOOD )) then begin
+		tmp_hostile := 1;
+	end
+	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
+		tmp_hostile := 0;
+	end
+	if (tmp_hostile) then begin
+		set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
+		tmp_hostile := 0;
+		attack(dude_obj);
+	end
+	if (local_var(5) == 0) then begin
+		if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 1) then begin
+			call Darrel58;
+		end
+	end
+end
+
+procedure pickup_p_proc begin
+	if (source_obj == dude_obj) then begin
+		tmp_hostile := 1;
+	end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_critter;
+	if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 5) then begin
+		float_msg(self_obj, message_str(SCRIPT_CABBOT, 233), 2);
+	end
+	else if (local_var(4) == 0) then begin
+		call start_dialogue;
+	end
+	else if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 2) then begin
+		call Darrel73;
+	end
+	else begin
+		call start_dialogue;
+	end
+end
+
+procedure destroy_p_proc begin
+	set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
+	inc_good_critter
+end
+
+procedure start_dialogue begin
 	get_reaction
 	if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 1) then begin
-		start_gdialog(316, self_obj, 4, -1, -1);
-		gsay_start;
 		if (second) then begin
-			call Darrel71;
+			start_dialog_at_node(Darrel71);
 		end
 		else begin
 			second := 1;
-			call Darrel59;
+			start_dialog_at_node(Darrel59);
 		end
-		gsay_end;
-		end_dialogue;
 	end
 	else begin
 		if (local_var(4) == 0) then begin
-			start_gdialog(316, self_obj, 4, -1, -1);
-			gsay_start;
-			call Darrel01;
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(Darrel01);
 		end
 		else begin
 			call Darrel16;
@@ -111,8 +163,7 @@ begin
 	set_local_var(4, 1);
 end
 
-procedure Darrel01
-begin
+procedure Darrel01 begin
 	gsay_reply(316, 102);
 	giq_option( -3, SCRIPT_DARREL, 103, Darrel02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 104, Darrel03, NEUTRAL_REACTION );
@@ -125,8 +176,7 @@ begin
 	giq_option( 4, SCRIPT_DARREL, 107, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure Darrel02
-begin
+procedure Darrel02 begin
 	if (local_var(6) == 0) then begin
 		gsay_reply(316, 108);
 		giq_option( -3, SCRIPT_DARREL, 300, Darrel02a, NEUTRAL_REACTION );
@@ -136,14 +186,12 @@ begin
 	end
 end
 
-procedure Darrel02a
-begin
+procedure Darrel02a begin
 	gsay_reply(316, 209);
 	giq_option( -3, SCRIPT_DARREL, 300, Darrel02b, NEUTRAL_REACTION );
 end
 
-procedure Darrel02b
-begin
+procedure Darrel02b begin
 	gsay_reply(316, 210);
 	giq_option( -3, SCRIPT_DARREL, 300, Darrel02c, NEUTRAL_REACTION );
 end
@@ -317,8 +365,7 @@ begin
 	giq_option( 4, SCRIPT_DARREL, 170, Darrel69, NEUTRAL_REACTION );
 end
 
-procedure Darrel66
-begin
+procedure Darrel66 begin
 	gsay_reply(316, 174);
 	giq_option( 4, SCRIPT_DARREL, 175, Darrel68, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 176, DarrelEnd, NEUTRAL_REACTION );
@@ -326,45 +373,39 @@ begin
 	giq_option( 4, SCRIPT_DARREL, 206, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure Darrel67
-begin
+procedure Darrel67 begin
 	gsay_reply(316, 179);
 	giq_option( 4, SCRIPT_DARREL, 180, Darrel64, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 203, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure Darrel68
-begin
+procedure Darrel68 begin
 	gsay_reply(316, 181);
 	giq_option( 4, SCRIPT_DARREL, 182, DarrelEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 183, Darrel63, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 184, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure Darrel69
-begin
+procedure Darrel69 begin
 	gsay_reply(316, 189);
 	giq_option( 4, SCRIPT_DARREL, 203, DarrelEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 190, Darrel72, NEUTRAL_REACTION );
 end
 
-procedure Darrel70
-begin
+procedure Darrel70 begin
 	gsay_reply(316, 168);
 	giq_option( 4, SCRIPT_DARREL, 203, DarrelEnd, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 190, Darrel72, NEUTRAL_REACTION );
 end
 
-procedure Darrel71
-begin
+procedure Darrel71 begin
 	gsay_reply(316, 191);
 	giq_option( 4, SCRIPT_DARREL, 188, Darrel72, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 192, DarrelEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_DARREL, 103, Darrel02, NEUTRAL_REACTION );
 end
 
-procedure Darrel72
-begin
+procedure Darrel72 begin
 	gsay_reply(316, 193);
 	giq_option( 4, SCRIPT_DARREL, 186, Darrel69, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 187, Darrel70, NEUTRAL_REACTION );
@@ -374,29 +415,23 @@ begin
 	giq_option( 4, SCRIPT_DARREL, 207, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure Darrel73
-begin
+procedure Darrel73 begin
 	ccount := ccount + 1;
 	if (ccount < 6) then begin
 		float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 200 + random(0, 2)), 2);
 	end
+	else if (ccount < 9) then begin
+		float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 203 + random(0, 4)), 2);
+	end
+	else if (ccount < 12) then begin
+		float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 209 + random(0, 3)), 2);
+	end
 	else begin
-		if (ccount < 9) then begin
-			float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 203 + random(0, 4)), 2);
-		end
-		else begin
-			if (ccount < 12) then begin
-				float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 209 + random(0, 3)), 2);
-			end
-			else begin
-				display_msg(message_str(SCRIPT_RD1SCRB1, 213));
-			end
-		end
+		display_msg(message_str(SCRIPT_RD1SCRB1, 213));
 	end
 end
 
-procedure Darrel75
-begin
+procedure Darrel75 begin
 	gsay_reply(316, 195);
 	giq_option( 4, SCRIPT_DARREL, 196, Darrel11, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DARREL, 197, Darrel76, NEUTRAL_REACTION );
@@ -404,8 +439,7 @@ begin
 	giq_option( 4, SCRIPT_DARREL, 198, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure Darrel76
-begin
+procedure Darrel76 begin
 	gsay_reply(316, 199);
 	giq_option( 4, SCRIPT_DARREL, 104, Darrel03, NEUTRAL_REACTION );
 	if (global_var( GVAR_NECROP_WATER_CHIP_TAKEN ) != 1) then begin
@@ -414,12 +448,10 @@ begin
 	giq_option( 4, SCRIPT_DARREL, 208, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure DarrelEnd
-begin
+procedure DarrelEnd begin
 end
 
-procedure giveradx
-begin
+procedure giveradx begin
 	set_local_var(6, 1);
 	radx := create_object( PID_RAD_X, 0, 0 );
 	add_obj_to_inven(dude_obj, radx);
@@ -427,79 +459,10 @@ begin
 	giq_option( -3, SCRIPT_DARREL, 300, DarrelEnd, NEUTRAL_REACTION );
 end
 
-procedure combat
-begin
+procedure combat begin
 	tmp_hostile := 1;
 end
 
-procedure damage_p_proc
-begin
-	set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
-end
-
-procedure critter_p_proc
-begin
-	if (global_var( GVAR_ENEMY_BROTHERHOOD )) then begin
-		tmp_hostile := 1;
-	end
-	if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
-		tmp_hostile := 0;
-	end
-	if (tmp_hostile) then begin
-		set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	if (local_var(5) == 0) then begin
-		if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 1) then begin
-			call Darrel58;
-		end
-	end
-end
-
-procedure pickup_p_proc
-begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
-end
-
-procedure talk_p_proc
-begin
-	dude_look_at_critter;
-	if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 5) then begin
-		float_msg(self_obj, message_str(SCRIPT_CABBOT, 233), 2);
-	end
-	else begin
-		if (local_var(4) == 0) then begin
-			call start_dialogue;
-		end
-		else begin
-			if (global_var( GVAR_QUEST_BROHOOD_1_JOIN_THEM ) == 2) then begin
-				call Darrel73;
-			end
-			else begin
-				call start_dialogue;
-			end
-		end
-	end
-end
-
-procedure destroy_p_proc begin
-	set_global_var( GVAR_ENEMY_BROTHERHOOD, 1 );
-	inc_good_critter
-end
-
-procedure look_at_p_proc
-begin
-	script_overrides;
-	if (known) then begin
-		display_msg(message_str(SCRIPT_DARREL, 100));
-	end
-	else begin
-		display_msg(message_str(SCRIPT_DARREL, 101));
-	end
-end
 
 
 
