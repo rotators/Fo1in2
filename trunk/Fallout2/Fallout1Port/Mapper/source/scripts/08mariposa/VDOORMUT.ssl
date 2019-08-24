@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\mapnecro.h"
+#include "..\headers\mbase.h"
 
 #define NAME                    SCRIPT_VDOORMUT
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -51,7 +51,7 @@ procedure start begin
 			add_obj_to_inven(self_obj, LVar0);
 			set_local_var(LVAR_CreateHolodisk, 1);
 		end
-		set_self_team(TEAM_NECROPOLIS_MUTANT );
+		set_self_team( TEAM_NECROPOLIS_MUTANT );
 		set_self_ai( AI_SUPER_MUTANT_SGT );
 		initial :=  1;
 	end
@@ -96,7 +96,12 @@ end
 
 procedure talk_p_proc begin
 	dude_look_at_critter;
-	if (global_var( GVAR_LIEUTENANTS_DEAD )) then begin
+
+	if bos_invading_mbase then begin
+   	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(101, 103)), 2);
+   	tmp_hostile := 1;
+	end
+	else if (global_var( GVAR_LIEUTENANTS_DEAD )) then begin
 		call GenSupr08;
 	end
 	else begin
@@ -109,11 +114,7 @@ procedure talk_p_proc begin
 			end
 		end
 		else begin
-			start_gdialog(433, self_obj, 4, -1, -1);
-			gsay_start;
-			call GenSupr03;
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(GenSupr03);
 		end
 	end
 end
