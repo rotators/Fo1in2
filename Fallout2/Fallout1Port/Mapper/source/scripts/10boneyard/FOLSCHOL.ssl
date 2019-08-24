@@ -1,53 +1,45 @@
+/*
+
+	Boneyard - generic FoA scholar
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\mapnecro.h"
 
 #define NAME                    SCRIPT_FOLSCHOL
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure timed_event_p_proc;//    script_action == 22
-procedure pickup_p_proc;//    script_action == 4
-procedure map_enter_p_proc;//	15
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure timed_event_p_proc;
+procedure pickup_p_proc;
+procedure map_enter_p_proc;
 procedure push_p_proc;
 
 variable Only_Once := 1;
 variable PsstTime;
 
-procedure get_reaction;
-procedure ReactToLevel;
-procedure LevelToReact;
-procedure UpReact;
-procedure DownReact;
-procedure BottomReact;
-procedure TopReact;
-procedure BigUpReact;
-procedure BigDownReact;
-procedure UpReactLevel;
-procedure DownReactLevel;
-procedure Goodbyes;
-
-variable exit_line;
-
-
 procedure push_p_proc begin
 end
 
-procedure Start
-begin
-
-
+procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		/* has how many? */    if (self_caps == 0) then begin
+		if (self_caps == 0) then begin
 			self_caps_adjust( random(1, 10) );
 		end
-		set_self_team(TEAM_LA_FOLLOWERS );
+		set_self_team( TEAM_LA_FOLLOWERS );
 		add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 	end
 	if script_action == 15 then begin
@@ -55,27 +47,23 @@ begin
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if global_var( GVAR_FOLLOWERS_LEFT ) == 0 then begin
 		set_global_var( GVAR_FOLLOWERS_LEFT, 24 );
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_FOLSCHOL, 100));
+	display_msg(mstr(100));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_FOLSCHOL, 100));
+	display_msg(mstr(100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
 	if (global_var( GVAR_ENEMY_FOLLOWERS ) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
@@ -90,8 +78,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	variable LVar0 := 0;
 	LVar0 := global_var( GVAR_FOLSCHOL_SOMETHING_0 );
 	if ((((game_time / 10) - LVar0) >= 10) and (tile_distance_objs(self_obj, dude_obj) <= 4) and (global_var( GVAR_ENEMY_FOLLOWERS ) == 0)) then begin
@@ -113,32 +100,28 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_FOLLOWERS, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	set_global_var( GVAR_FOLLOWERS_LEFT, (global_var( GVAR_FOLLOWERS_LEFT ) - 1) );
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_FOLLOWERS, 1 );
 	end
-	inc_good_critter		
+	inc_good_critter
 	rm_timer_event(self_obj);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	animate_move_obj_to_tile(self_obj, tile_num_in_direction(self_tile, random(0, 5), random(1, 5)), 0);
 	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var( GVAR_ENEMY_FOLLOWERS, 1 );
 end
