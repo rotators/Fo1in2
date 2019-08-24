@@ -623,6 +623,9 @@ variable step_tile;
 
 variable in_dialog;
 variable forced_node;
+
+#define start_dialog(X,Y)                       start_gdialog(-1,X,Y,-1,-1)
+
 #define start_dialog_at_node(x)                       if (in_dialog == false) then begin           \
                                                          in_dialog := true;                        \
                                                          start_gdialog(NAME,self_obj,4,-1,-1);     \

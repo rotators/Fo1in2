@@ -114,8 +114,6 @@
 #define FLOAT_MSG_LIGHT_GREY (12)
 #define float_msg_clear(WHO)  float_msg(WHO,0,0)
 
-// dialogue defines //
-#define start_dialogue(X,Y)   start_gdialog(-1,X,Y,-1,-1)
 // head_anim enums
 //#define very_good_reaction  (0)
 #define good_fidget         (1)
