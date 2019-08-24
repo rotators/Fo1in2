@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\mapnecro.h"
+#include "..\headers\mbase.h"
 
 #define NAME                    SCRIPT_VGATEMUT
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -34,6 +34,8 @@ procedure VGateMut07;
 procedure VGateMut08;
 procedure VGateMutAlert;
 procedure VGateMutxx;
+
+procedure bos_attack;
 
 import variable removal_ptr;
 
@@ -136,10 +138,12 @@ begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_critter;
-	if (global_var( GVAR_LIEUTENANTS_DEAD )) then begin
+	if bos_invading_mbase then begin
+	   call bos_attack;
+	end
+	else if (global_var( GVAR_LIEUTENANTS_DEAD )) then begin
 		call VGateMut08;
 	end
 	else begin
@@ -152,17 +156,12 @@ begin
 			end
 		end
 		else begin
-			start_gdialog(433, self_obj, 4, -1, -1);
-			gsay_start;
-			call VGateMut03;
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(VGateMut03);
 		end
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (not(map_var(0))) then begin
 		if (self_tile == guard_tile) then begin
 			animate_move_obj_to_tile(self_obj, gate_tile, 0);
@@ -174,8 +173,7 @@ begin
 	end
 end
 
-procedure VGateMut00
-begin
+procedure VGateMut00 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(101, 103)), 2);
 	tmp_hostile := 1;
 end
@@ -237,20 +235,22 @@ begin
 	gsay_message(433, random(121, 123), 50);
 end
 
-procedure VGateMut08
-begin
+procedure VGateMut08 begin
 	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(124, 127)), 2);
 	tmp_hostile := 1;
 end
 
-procedure VGateMutAlert
-begin
+procedure VGateMutAlert begin
 	set_global_var( GVAR_VATS_ALERT, 1 );
 	tmp_hostile := 1;
 end
 
-procedure VGateMutxx
-begin
+procedure VGateMutxx begin
 	set_global_var( GVAR_ENTERING_VATS_HOW, 2 );
 	load_map(MAP_MBVATS12, 5);
+end
+
+procedure bos_attack begin
+	float_msg(self_obj, message_str(SCRIPT_GENSUPR, random(101, 103)), 2);
+	tmp_hostile := 1;
 end
