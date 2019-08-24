@@ -1,11 +1,23 @@
+/*
+
+	Masters Vault, computer terminals
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_TERM
+
 #include "..\headers\command.h"
 
+/* Standard Script Procedures */
 procedure start;
-procedure look_at_p_proc;//    script_action == 21
-procedure skills;
+procedure use_skill_on_p_proc;
+procedure use_p_proc;
+procedure look_at_p_proc;
 
-variable XP;
+procedure skills;
 
 // "From this point on, you'll be attacked if you're not wearing Robes
 // or if you have any follower. If you talk your way past the two guards
@@ -13,64 +25,61 @@ variable XP;
 // on the computer just inside and gain the location of the Military Base
 // (even if you have it). You can also get this from the computers on level 2."
 
-procedure start
-begin
-	if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-		call look_at_p_proc;
-	end
-	else begin
-		if (script_action == 8) then begin//<-- use_skill_on_p_proc
-			script_overrides;
-			call skills;
-		end
-		else begin
-			if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				display_msg(message_str(SCRIPT_TERM, 201));
-			end
-		end
-	end
+variable XP;
+
+#define LVAR_ReceivedXP 							(0)
+
+procedure start begin
 end
 
-procedure look_at_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_TERM, 200));
+	call skills;
+end
+
+procedure use_p_proc begin
+   display_msg(mstr(201));
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(200));
 end
 
 procedure skills begin
-	if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
-		if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -50)) then begin
-			display_msg(message_str(SCRIPT_TERM, 203));
-			if global_var( GVAR_WORLDMAPLIST_MILITARYBASE ) == 0 then begin
-				XP := EXP_FOUND_MILITARY_BASE;
-				set_global_var( GVAR_WORLDMAPLIST_MILITARYBASE, 1 );
-				//if (global_var(VATS_BLOWN_CUTSCENE_DONE) > 0) then begin
-				//	mark_on_map(AREA_MILITARY_BASE_DEAD)
-				//end
-				//else begin
-					mark_on_map(AREA_MILITARY_BASE)
-				//end
-			end
-			else begin
-				if (global_var( GVAR_WORLDMAPLIST_MILITARYBASE ) == 1) then begin
-					XP := EXP_KNEW_ABOUT_MILITARY_BASE;
-					set_global_var( GVAR_WORLDMAPLIST_MILITARYBASE, 1 ); // Was 2 before!! Causes weird dialog, because the player wasn't actually there yet.
-				end
-				else begin
-					XP := EXP_WENT_TO_MILITARY_BASE;
-				end
-			end
-			display_msg(message_str(SCRIPT_TERM, 204) + XP + message_str(SCRIPT_TERM, 205));
-			give_exp_points(XP);
-		end
-		else begin
-			display_msg(message_str(SCRIPT_TERM, 201));
-		end
+	if (action_being_used == SKILL_SCIENCE) then begin
+	   if (local_var(LVAR_ReceivedXP) == 0) then begin
+
+   		if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -50)) then begin
+   			display_msg(mstr(203));
+
+   			if global_var( GVAR_WORLDMAPLIST_MILITARYBASE ) == 0 then begin
+   				XP := EXP_FOUND_MILITARY_BASE;
+   				set_global_var( GVAR_WORLDMAPLIST_MILITARYBASE, 1 );
+   				mark_on_map(AREA_MILITARY_BASE)
+   			end
+   			else begin
+   				if (global_var( GVAR_WORLDMAPLIST_MILITARYBASE ) == 1) then begin
+   					XP := EXP_KNEW_ABOUT_MILITARY_BASE;
+   					set_global_var( GVAR_WORLDMAPLIST_MILITARYBASE, 1 ); // Was 2 before!! Causes weird dialog, because the player wasn't actually there yet.
+   				end
+   				else begin
+   					XP := EXP_WENT_TO_MILITARY_BASE;
+   				end
+   			end
+
+   			display_msg(mstr(204) + XP + mstr(205));
+   			give_exp_points(XP);
+            set_local_var(LVAR_ReceivedXP, 1);
+   		end
+   		else begin
+   			display_msg(mstr(201));
+   		end
+
+      end
 	end
-	else begin
-		if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
-			display_msg(message_str(SCRIPT_TERM, 202));
-		end
+	else if (action_being_used == SKILL_REPAIR) then begin
+		display_msg(mstr(202));
 	end
 end
 
