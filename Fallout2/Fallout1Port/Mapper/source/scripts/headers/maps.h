@@ -343,44 +343,61 @@
                                                debug_msg(" unmark_on_map("+x+")");                       \
                                                mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_UNKNOWN);   \
                                             end
-											
+
 #define invisible_on_map(x)                 if (town_known(x) != MARK_STATE_UNKNOWN) then begin          \
                                                debug_msg(" invisible_on_map("+x+")");                    \
                                                mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_INVISIBLE); \
                                             end
 
-#define mark_vault_13_on_map             mark_on_map(AREA_VAULT_13)
-#define mark_vault_15_on_map             mark_on_map(AREA_VAULT_15)
-#define mark_shady_sands_on_map          mark_on_map(AREA_SHADY_SANDS)
-#define mark_junktown_on_map             mark_on_map(AREA_JUNKTOWN)
-#define mark_raiders_on_map              mark_on_map(AREA_RAIDERS)
-#define mark_necropolis_on_map           mark_on_map(AREA_NECROPOLIS)
-#define mark_hub_on_map                  mark_on_map(AREA_HUB)
-#define mark_brotherhood_on_map          mark_on_map(AREA_BROTHERHOOD)
-#define mark_military_base_on_map        mark_on_map(AREA_MILITARY_BASE)
-#define mark_glow_on_map                 mark_on_map(AREA_GLOW)
-#define mark_boneyard_on_map             mark_on_map(AREA_BONEYARD)
-#define mark_cathedral_on_map            mark_on_map(AREA_CATHEDRAL)
+#define mark_vault_13_on_map              mark_on_map(AREA_VAULT_13)
+#define mark_vault_15_on_map              mark_on_map(AREA_VAULT_15)
+#define mark_shady_sands_on_map           mark_on_map(AREA_SHADY_SANDS)
+#define mark_junktown_on_map              mark_on_map(AREA_JUNKTOWN)
+#define mark_raiders_on_map               mark_on_map(AREA_RAIDERS)
+#define mark_necropolis_on_map            mark_on_map(AREA_NECROPOLIS)
+#define mark_hub_on_map                   mark_on_map(AREA_HUB)
+#define mark_brotherhood_on_map           mark_on_map(AREA_BROTHERHOOD)
+#define mark_military_base_on_map         mark_on_map(AREA_MILITARY_BASE)
+#define mark_glow_on_map                  mark_on_map(AREA_GLOW)
+#define mark_boneyard_on_map              mark_on_map(AREA_BONEYARD)
+#define mark_cathedral_on_map             mark_on_map(AREA_CATHEDRAL)
 
-#define mark_cathedral_dead_on_map       mark_on_map(AREA_CATHEDRAL)
+#define mark_cathedral_dead_on_map        mark_on_map(AREA_CATHEDRAL)
 
-#define unmark_vault_13_on_map             unmark_on_map(AREA_VAULT_13)
-#define unmark_vault_15_on_map             unmark_on_map(AREA_VAULT_15)
-#define unmark_shady_sands_on_map          unmark_on_map(AREA_SHADY_SANDS)
-#define unmark_junktown_on_map             unmark_on_map(AREA_JUNKTOWN)
-#define unmark_raiders_on_map              unmark_on_map(AREA_RAIDERS)
-#define unmark_necropolis_on_map           unmark_on_map(AREA_NECROPOLIS)
-#define unmark_hub_on_map                  unmark_on_map(AREA_HUB)
-#define unmark_brotherhood_on_map          unmark_on_map(AREA_BROTHERHOOD)
-#define unmark_military_base_on_map        unmark_on_map(AREA_MILITARY_BASE)
-#define unmark_glow_on_map                 unmark_on_map(AREA_GLOW)
-#define unmark_boneyard_on_map             unmark_on_map(AREA_BONEYARD)
-#define unmark_cathedral_on_map            unmark_on_map(AREA_CATHEDRAL)
+#define unmark_vault_13_on_map            unmark_on_map(AREA_VAULT_13)
+#define unmark_vault_15_on_map            unmark_on_map(AREA_VAULT_15)
+#define unmark_shady_sands_on_map         unmark_on_map(AREA_SHADY_SANDS)
+#define unmark_junktown_on_map            unmark_on_map(AREA_JUNKTOWN)
+#define unmark_raiders_on_map             unmark_on_map(AREA_RAIDERS)
+#define unmark_necropolis_on_map          unmark_on_map(AREA_NECROPOLIS)
+#define unmark_hub_on_map                 unmark_on_map(AREA_HUB)
+#define unmark_brotherhood_on_map         unmark_on_map(AREA_BROTHERHOOD)
+#define unmark_military_base_on_map       unmark_on_map(AREA_MILITARY_BASE)
+#define unmark_glow_on_map                unmark_on_map(AREA_GLOW)
+#define unmark_boneyard_on_map            unmark_on_map(AREA_BONEYARD)
+#define unmark_cathedral_on_map           unmark_on_map(AREA_CATHEDRAL)
 
-/*****************************************************************
-********************    Random Encounters  ***********************
-*****************************************************************/
+/******************************************************************
+ Advance the game time when using NPCs from encounter to travel
+******************************************************************/
+variable get_wm_distance;
+#define advance_time_travel_to_shady               advance_time_wm_travel(1073,72,MAP_SHADYW,1)
+#define advance_time_travel_to_raiders             advance_time_wm_travel(1123,172,MAP_RAIDERS,0)
+#define advance_time_travel_to_junktown            advance_time_wm_travel(873,522,MAP_JUNKENT,1)
+#define advance_time_travel_to_hub                 advance_time_wm_travel(873,722,MAP_HUBENT,1)
+#define advance_time_travel_to_necropolis          advance_time_wm_travel(1123,672,MAP_HOTEL,1)
+#define advance_time_travel_to_boneyard            advance_time_wm_travel(773,922,MAP_LAADYTUM,1)
+#define advance_time_travel_to_bos                 advance_time_wm_travel(623,472,MAP_BROHDENT,0)
+#define advance_time_travel_to_mbase_vats          advance_time_wm_travel(173,72,MAP_MBVATS12,5)
+#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                   \
+                                                   get_wm_distance := round(get_wm_distance) / 50;                                           \
+                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");                          \
+                                                   game_time_advance((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(10,300))); \
+                                                   load_map(map, index)
 
+/******************************************************************
+ Random Encounters
+******************************************************************/
 /* The following define is to force critter X to face critter Y */
 #define Face_Critter(Y,X)           anim(X,ANIMATE_ROTATION,rotation_to_tile(tile_num(X),tile_num(Y)))
 
