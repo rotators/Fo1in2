@@ -361,8 +361,7 @@
 #define mark_glow_on_map                  mark_on_map(AREA_GLOW)
 #define mark_boneyard_on_map              mark_on_map(AREA_BONEYARD)
 #define mark_cathedral_on_map             mark_on_map(AREA_CATHEDRAL)
-
-#define mark_cathedral_dead_on_map        mark_on_map(AREA_CATHEDRAL)
+//#define mark_cathedral_dead_on_map        mark_on_map(AREA_CATHEDRAL)
 
 #define unmark_vault_13_on_map            unmark_on_map(AREA_VAULT_13)
 #define unmark_vault_15_on_map            unmark_on_map(AREA_VAULT_15)
@@ -389,10 +388,10 @@ variable get_wm_distance;
 #define advance_time_travel_to_boneyard            advance_time_wm_travel(773,922,MAP_LAADYTUM,1)
 #define advance_time_travel_to_bos                 advance_time_wm_travel(623,472,MAP_BROHDENT,0)
 #define advance_time_travel_to_mbase_vats          advance_time_wm_travel(173,72,MAP_MBVATS12,5)
-#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                   \
-                                                   get_wm_distance := round(get_wm_distance) / 50;                                           \
-                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");                          \
-                                                   game_time_advance((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(10,300))); \
+#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                      \
+                                                   get_wm_distance := round(get_wm_distance) / 50;                                              \
+                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");                             \
+                                                   game_time_advance((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(-300,300)));  \
                                                    load_map(map, index)
 
 /******************************************************************

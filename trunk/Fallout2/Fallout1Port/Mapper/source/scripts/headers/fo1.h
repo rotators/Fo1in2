@@ -187,6 +187,7 @@ end
 #define fo1in2_auto_doors_closing 		(global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
 #define fo1in2_motorcycle_disabled 		(global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
 #define fo1in2_destroy_armor_disabled 	(global_var(GVAR_ARMOR_DESTROY_MOD) == 0)
+#define fo1in2_merch_restock_disabled	(global_var(GVAR_ENABLE_FO2_MERCHANT_RESTOCK) == 0)
 
 /*********************************************************
 	Pick dead body type:

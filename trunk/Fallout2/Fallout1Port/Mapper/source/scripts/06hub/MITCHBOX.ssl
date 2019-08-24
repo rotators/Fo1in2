@@ -1,13 +1,79 @@
+/*
+
+        Hub, Mitch - Merchant inventory container
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_MITCHBOX
+
+#include "..\headers\command.h"
+
+#define LVAR_RESTOCK_TIME                       (0)
+
 procedure start;
-variable OnceOnly := 1;
+procedure map_enter_p_proc;
+
 import variable Mitch_Box_Ptr;
 
-procedure start
-begin
-	if (OnceOnly) then begin
-		OnceOnly := 0;
-		Mitch_Box_Ptr := self_obj;
-	end
+procedure start begin
+	Mitch_Box_Ptr := self_obj;
 end
+
+procedure map_enter_p_proc begin
+/* Set up the door state when the player first enters the map */
+   Mitch_Box_Ptr := self_obj;
+
+   // Fo2-style merchant inventory:
+   if not(fo1in2_merch_restock_disabled) then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+            //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
+
+            check_restock_item(PID_STIMPAK, 6, 27, 100)
+            check_restock_item(PID_GEIGER_COUNTER, 0, 1, 100)
+            check_restock_item(PID_MENTATS, 0, 3, 100)
+            check_restock_item(PID_MOTION_SENSOR, 0, 1, 100)
+            check_restock_item(PID_BIG_BOOK_OF_SCIENCE, 0, 1, 100)
+            check_restock_item(PID_DEANS_ELECTRONICS, 0, 1, 100)
+            check_restock_item(PID_FIRST_AID_BOOK, 0, 1, 100)
+            check_restock_item(PID_SCOUT_HANDBOOK, 0, 1, 100)
+            check_restock_item(PID_PSYCHO, 0, 4, 100)
+            check_restock_item(PID_ROPE, 2, 5, 100)
+            check_restock_item(PID_NUKA_COLA, 3, 6, 100)
+            check_restock_item(PID_MULTI_TOOL, 0, 1, 100)
+            check_restock_item(PID_COMBAT_KNIFE, 0, 1, 100)
+            check_restock_item(PID_RADIO, 0, 1, 100)
+            check_restock_item(PID_RADAWAY, 0, 3, 100)
+            check_restock_item(PID_FLAMETHROWER_FUEL, 0, 2, 100)
+
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+         end
+      end
+   end
+
+   // Fo1-style merchant inventory:
+   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
+      set_local_var(LVAR_RESTOCK_TIME,1);
+
+      give_pid_qty(self_obj, PID_STIMPAK, 27)
+      give_pid_qty(self_obj, PID_GEIGER_COUNTER, 1)
+      give_pid_qty(self_obj, PID_MENTATS, 3)
+      give_pid_qty(self_obj, PID_MOTION_SENSOR, 1)
+      give_pid_qty(self_obj, PID_BIG_BOOK_OF_SCIENCE, 1)
+      give_pid_qty(self_obj, PID_DEANS_ELECTRONICS, 1)
+      give_pid_qty(self_obj, PID_FIRST_AID_BOOK, 1)
+      give_pid_qty(self_obj, PID_SCOUT_HANDBOOK, 1)
+      give_pid_qty(self_obj, PID_PSYCHO, 4)
+      give_pid_qty(self_obj, PID_ROPE, 5)
+      give_pid_qty(self_obj, PID_NUKA_COLA, 6)
+      give_pid_qty(self_obj, PID_MULTI_TOOL, 1)
+      give_pid_qty(self_obj, PID_COMBAT_KNIFE, 1)
+      give_pid_qty(self_obj, PID_RADIO, 1)
+      give_pid_qty(self_obj, PID_RADAWAY, 3)
+      give_pid_qty(self_obj, PID_FLAMETHROWER_FUEL, 2)
+   end
+end
+

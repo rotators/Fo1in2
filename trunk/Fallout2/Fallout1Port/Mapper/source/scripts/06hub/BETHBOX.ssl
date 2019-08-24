@@ -1,28 +1,88 @@
+/*
+
+        Hub, Beth - Merchant inventory container
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
 
-// TODO: Apply Fo2's check_restock_item instead of adding the items directly to the box via mapper!
+#define NAME                    SCRIPT_BETHBOX
+
+#include "..\headers\command.h"
+
+#define LVAR_RESTOCK_TIME                       (0)
 
 procedure start;
 procedure map_enter_p_proc;
 
-variable OnceOnly := 1;
 variable Item;
 
 import variable Beth_Box_Ptr;
 
 procedure start begin
-	if (OnceOnly) then begin
-		OnceOnly := 0;
-		Beth_Box_Ptr := self_obj;
-	end
+	Beth_Box_Ptr := self_obj;
 end
 
 procedure map_enter_p_proc begin
-	// Added in Fo1@2:
-	if map_first_run then begin
-	   Item:=create_object(PID_CURED_LEATHER_ARMOR,0,0);
-	   add_mult_objs_to_inven(self_obj,Item,2);
-	end
+/* Set up the door state when the player first enters the map */
+   Beth_Box_Ptr := self_obj;
+
+   // Fo2-style merchant inventory:
+   if not(fo1in2_merch_restock_disabled) then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+            //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
+
+            check_restock_item(PID_LEATHER_ARMOR, 1, 3, 100)
+            check_restock_item(PID_CURED_LEATHER_ARMOR, 1, 2, 100)
+            check_restock_item(PID_METAL_ARMOR, 1, 2, 100)
+            check_restock_item(PID_CLUB, 1, 5, 100)
+            check_restock_item(PID_SPEAR, 1, 3, 100)
+            check_restock_item(PID_SLEDGEHAMMER, 1, 1, 100)
+            check_restock_item(PID_KNIFE, 1, 5, 100)
+            check_restock_item(PID_10MM_PISTOL, 1, 2, 100)
+            check_restock_item(PID_CROWBAR, 1, 3, 100)
+            check_restock_item(PID_BRASS_KNUCKLES, 1, 4, 100)
+            check_restock_item(PID_FRAG_GRENADE, 2, 7, 100)
+            check_restock_item(PID_THROWING_KNIFE, 2, 4, 100)
+            check_restock_item(PID_10MM_SMG, 0, 1, 100)
+            check_restock_item(PID_223_FMJ, 1, 6, 100)
+            check_restock_item(PID_SHOTGUN, 0, 1, 100)
+            check_restock_item(PID_SHOTGUN_SHELLS, 2, 10, 100)
+            check_restock_item(PID_BBS, 0, 5, 100)
+            check_restock_item(PID_COMBAT_KNIFE, 0, 1, 100)
+
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+         end
+      end
+   end
+
+   // Fo1-style merchant inventory:
+   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
+      set_local_var(LVAR_RESTOCK_TIME,1);
+
+      give_pid_qty(self_obj, PID_LEATHER_ARMOR, 3)
+      give_pid_qty(self_obj, PID_CURED_LEATHER_ARMOR, 2)
+      give_pid_qty(self_obj, PID_METAL_ARMOR, 2)
+      give_pid_qty(self_obj, PID_CLUB, 5)
+      give_pid_qty(self_obj, PID_SPEAR, 3)
+      give_pid_qty(self_obj, PID_SLEDGEHAMMER, 1)
+      give_pid_qty(self_obj, PID_KNIFE, 5)
+      give_pid_qty(self_obj, PID_10MM_PISTOL, 2)
+      give_pid_qty(self_obj, PID_CROWBAR, 3)
+      give_pid_qty(self_obj, PID_BRASS_KNUCKLES, 4)
+      give_pid_qty(self_obj, PID_FRAG_GRENADE, 7)
+      give_pid_qty(self_obj, PID_THROWING_KNIFE, 4)
+      give_pid_qty(self_obj, PID_10MM_SMG, 1)
+      give_pid_qty(self_obj, PID_223_FMJ, 6)
+      give_pid_qty(self_obj, PID_SHOTGUN, 1)
+      give_pid_qty(self_obj, PID_SHOTGUN_SHELLS, 10)
+      give_pid_qty(self_obj, PID_BBS, 5)
+      give_pid_qty(self_obj, PID_COMBAT_KNIFE, 1)
+   end
 end
+
+
 
 
