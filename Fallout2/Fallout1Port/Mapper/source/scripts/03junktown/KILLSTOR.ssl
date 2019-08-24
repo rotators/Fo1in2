@@ -1,16 +1,27 @@
 /*
 
-	Killian - store container
+        Junktown, Killian - Merchant inventory container
+        This script covers three different containers!
 
 */
 
+/* Include Files */
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_KILLSTOR
+
 #include "..\headers\command.h"
+
+#define LVAR_RESTOCK_TIME                       (0)
 
 procedure start;
 procedure map_enter_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
+
+procedure inv_table_1;
+procedure inv_table_2;
+procedure inv_table_3;
 
 import variable Killian_barter_var;
 import variable Killian_store1_ptr;
@@ -20,6 +31,10 @@ import variable Killian_ptr;
 
 #define KillianHomeTile 	(26283)
 
+#define table_left_hex         (25880)
+#define table_middle_hex       (25874)
+#define table_right_hex        (26874)
+
 // We are nerfing Killian a little bit.
 // TODO: Improve detection code in the future.
 #define Killian_In_Room 	((obj_can_see_obj(Killian_ptr, dude_obj) or obj_can_hear_obj(Killian_ptr, dude_obj)) or tile_distance_objs(Killian_ptr, dude_obj) < 15)
@@ -28,31 +43,35 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	if (self_tile == 25880) then begin
+	if (self_tile == table_left_hex) then begin
 		Killian_store1_ptr := self_obj;
 	end
-	else if (self_tile == 25874) then begin
+	else if (self_tile == table_middle_hex) then begin
 		Killian_store2_ptr := self_obj;
 	end
-	else if (self_tile == 26874) then begin
+	else if (self_tile == table_right_hex) then begin
 		Killian_store3_ptr := self_obj;
 	end
+
+	if (self_obj == Killian_store1_ptr) then
+	   call inv_table_1;
+	else if (self_obj == Killian_store2_ptr) then
+	   call inv_table_2;
+	else
+	   call inv_table_3;
 end
 
 procedure use_p_proc begin
 	if (is_killian_alive) then begin
 		if Killian_In_Room then begin
 			script_overrides;
-			// Left one
-			if (self_tile == 25880) then begin
+			if (self_tile == table_left_hex) then begin
 				Killian_barter_var := 1;
 			end
-			// Middle one
-			else if (self_tile == 25874) then begin
+			else if (self_tile == table_middle_hex) then begin
 				Killian_barter_var := 2;
 			end
-			// Right one
-			else if (self_tile == 26874) then begin
+			else if (self_tile == table_right_hex) then begin
 				Killian_barter_var := 3;
 			end
 		end
@@ -68,4 +87,116 @@ procedure use_skill_on_p_proc begin
 			end
 		end
 	end
+end
+
+/*******************************************************************
+   Left Table
+*******************************************************************/
+procedure inv_table_1 begin
+   // Fo2-style merchant inventory:
+   if not(fo1in2_merch_restock_disabled) then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+
+            check_restock_item(PID_SPRINGER_RIFLE, 0, 1, 10) // Special!
+
+            check_restock_item(PID_SHOTGUN, 0, 1, 100)
+            check_restock_item(PID_SHOTGUN_SHELLS, 0, 1, 100)
+            check_restock_item(PID_44_MAGNUM_JHP, 1, 5, 100)
+            check_restock_item(PID_10MM_JHP, 1, 2, 100)
+            check_restock_item(PID_10MM_AP, 0, 1, 100)
+            check_restock_item(PID_223_FMJ, 1, 4, 100)
+            check_restock_item(PID_KNIFE, 1, 2, 100)
+            check_restock_item(PID_SPEAR, 0, 1, 100)
+            check_restock_item(PID_FLARE, 1, 4, 100)
+            check_restock_item(PID_DYNAMITE, 0, 2, 100)
+
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+         end
+      end
+   end
+
+   // Fo1-style merchant inventory:
+   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
+      set_local_var(LVAR_RESTOCK_TIME,1);
+
+      give_pid_qty(self_obj, PID_SHOTGUN, 1)
+      give_pid_qty(self_obj, PID_SHOTGUN_SHELLS, 1)
+      give_pid_qty(self_obj, PID_44_MAGNUM_JHP, 5)
+      give_pid_qty(self_obj, PID_10MM_JHP, 2)
+      give_pid_qty(self_obj, PID_10MM_AP, 1)
+      give_pid_qty(self_obj, PID_223_FMJ, 4)
+      give_pid_qty(self_obj, PID_KNIFE, 2)
+      give_pid_qty(self_obj, PID_SPEAR, 1)
+      give_pid_qty(self_obj, PID_FLARE, 4)
+      give_pid_qty(self_obj, PID_DYNAMITE, 2)
+   end
+end
+
+/*******************************************************************
+   Middle Table
+*******************************************************************/
+procedure inv_table_2 begin
+   // Fo2-style merchant inventory:
+   if not(fo1in2_merch_restock_disabled) then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+
+            check_restock_item(PID_LEATHER_JACKET, 0, 2, 100)
+            check_restock_item(PID_LEATHER_ARMOR, 0, 2, 100)
+
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+         end
+      end
+   end
+
+   // Fo1-style merchant inventory:
+   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
+      set_local_var(LVAR_RESTOCK_TIME,1);
+
+      give_pid_qty(self_obj, PID_LEATHER_JACKET, 1)
+      give_pid_qty(self_obj, PID_LEATHER_ARMOR, 1)
+   end
+end
+
+/*******************************************************************
+   Right Table
+*******************************************************************/
+procedure inv_table_3 begin
+   // Fo2-style merchant inventory:
+   if not(fo1in2_merch_restock_disabled) then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+
+            check_restock_item(PID_STIMPAK, 1, 5, 100)
+            check_restock_item(PID_MUTATED_FRUIT, 3, 8, 100)
+            check_restock_item(PID_GEIGER_COUNTER, 0, 1, 100)
+            check_restock_item(PID_FIRST_AID_KIT, 0, 2, 100)
+            check_restock_item(PID_DOCTORS_BAG, 0, 2, 100)
+            check_restock_item(PID_KEYS, 0, 1, 100)
+            check_restock_item(PID_BACKPACK, 0, 1, 100)
+            check_restock_item(PID_ROPE, 0, 2, 100)
+            check_restock_item(PID_BAG, 0, 1, 100)
+            check_restock_item(PID_BAG, 0, 1, 100)
+
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+         end
+      end
+   end
+
+   // Fo1-style merchant inventory:
+   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
+      set_local_var(LVAR_RESTOCK_TIME,1);
+
+      give_pid_qty(self_obj, PID_STIMPAK, 5)
+      give_pid_qty(self_obj, PID_MUTATED_FRUIT, 8)
+      give_pid_qty(self_obj, PID_GEIGER_COUNTER, 1)
+      give_pid_qty(self_obj, PID_FIRST_AID_KIT, 2)
+      give_pid_qty(self_obj, PID_DOCTORS_BAG, 2)
+      give_pid_qty(self_obj, PID_KEYS, 1)
+      give_pid_qty(self_obj, PID_BACKPACK, 1)
+      give_pid_qty(self_obj, PID_ROPE, 1)
+      give_pid_qty(self_obj, PID_BAG, 1)
+      give_pid_qty(self_obj, PID_BAG, 1)
+   end
 end
