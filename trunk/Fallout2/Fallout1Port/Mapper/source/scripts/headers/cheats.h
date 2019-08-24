@@ -580,7 +580,7 @@ end
 
 procedure Nec1
 begin
-	load_map(MAP_HALLDED, -1);
+	load_map(MAP_HALLDED, 2);
 end
 
 procedure Nec2
