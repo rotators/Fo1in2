@@ -28,7 +28,6 @@ variable critter_tile;
 variable tmp_hostile := 0;
 variable Only_Once := 1;
 variable Start_Moving;
-variable rndz;
 variable ExpReward;
 
 procedure start begin
@@ -111,33 +110,8 @@ end
 procedure combat_p_proc begin
 	if (target_obj == dude_obj) then begin
 		if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
-			if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-				variable LuckRoll := 0;
-				variable EnduranceRoll := 0;
-				LuckRoll := do_check(dude_obj, STAT_lu, 0);
-				EnduranceRoll := do_check(dude_obj, STAT_en, 0);
-				if (not(is_success(LuckRoll)) and not(is_success(EnduranceRoll))) then begin
-					rndz := (random(5, 12) + (combat_difficulty * 3));// EASY 5-to-12, NORMAL 8-to-15, HARD 11-to-18
-					poison(target_obj, rndz);
-				end
-				else begin
-					if not(is_success(LuckRoll)) or not(is_success(EnduranceRoll)) then begin
-						rndz := (random(3, 9) + (combat_difficulty * 2));// EASY 3-to-9, NORMAL 5-to-11, HARD 7-to-13
-						poison(target_obj, rndz);
-					end
-					else begin// EASY: never, NORMAL: 50% chance, HARD: 66% chance
-						if (random(0, combat_difficulty) >= 1) then begin
-							rndz := (random(1, 6) + combat_difficulty);// EASY 1-to-6, NORMAL 2-to-7, HARD 3-to-8
-							poison(target_obj, rndz);
-						end
-					end
-				end
-			end
-			else begin
-				if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) then begin
-					rndz := random(1, 6);
-					poison(target_obj, rndz);
-				end
+			if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) and not(dude_wearing_power_armor) then begin
+            poison(target_obj, random(1, 6));
 			end
 		end
 	end
