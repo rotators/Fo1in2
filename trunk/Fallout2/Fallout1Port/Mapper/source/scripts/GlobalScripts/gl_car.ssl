@@ -18,7 +18,7 @@
 procedure start;
 procedure map_enter_p_proc;
 
-procedure car_travel;
+procedure car_travel_check_hook;
 procedure check_vehicle_trunk;
 procedure check_vehicle_location;
 procedure spawn_car;
@@ -28,15 +28,32 @@ procedure spawn_car;
 
 #define set_spawn_hex(x)					if get_car_from_worldmap then set_car_current_map; \
 													car_hex := x
+
+
+#define LARGE_CENTER_OFFSET_X         (2.5)
+#define LARGE_CENTER_OFFSET_Y         (3.5)
+#define LARGE_RADIUS                  (25.0)
+#define DISTANCE_FROM_TOWN_LARGE(x, y, tx, ty)         (abs(x-(tx+LARGE_CENTER_OFFSET_X))<LARGE_RADIUS and abs(y-(ty+LARGE_CENTER_OFFSET_Y))<LARGE_RADIUS)
+#define TOWN_COUNT             (12)
+
+variable townArray;
+
 variable tile;
 variable car_area:=-1;
 variable car_hex:=0;
 variable car_elev:=0;
 
+variable dudeX := 0;
+variable dudeY := 0;
+variable townX := 0;
+variable townY := 0;
+variable distance := 0;
+variable i := 0;
+
 procedure start begin
    if (game_loaded) then begin
-   	set_global_script_type(0);
-   	register_hook_proc(HOOK_CARTRAVEL, car_travel);
+      set_global_var(GVAR_CAR_PREV_LOCATION, car_current_town);
+   	register_hook_proc(HOOK_MOUSECLICK, car_travel_check_hook);
    end
 end
 
@@ -50,8 +67,48 @@ procedure map_enter_p_proc begin
 	end
 end
 
-procedure car_travel begin
-   debug("every day i'm travelin");
+procedure car_travel_check_hook begin
+   if(get_game_mode == WORLDMAP) then begin
+      if(car_current_town == AREA_CAR_OUTTA_GAS and global_var(GVAR_CAR_PREV_LOCATION)!=AREA_CAR_OUTTA_GAS) then begin
+         debug("Car ran out of fuel, but was not autoparked in Town by SFALL");
+
+         townArray := [
+         823,  72,   "VAULT 13",   MAP_V13ENT,
+         1273, 72,   "VAULT 15",   MAP_VAULTENT,
+         1073, 72,   "SHADY",      MAP_SHADYW,
+         873,  522,  "JUNKTOWN",   MAP_JUNKENT,
+         1123, 172,  "RAIDERS",    MAP_RAIDERS,
+         1123, 672,  "NECROPOLIS", MAP_HOTEL,
+         873,  722,  "HUB",        MAP_HUBENT,
+         623,  472,  "BOS",        MAP_BROHDENT,
+         173,  72,   "MARIPOSA",   MAP_MBENT,
+         1223, 1272, "GLOW",       MAP_GLOWENT,
+         773,  922,  "BONE",       MAP_LAADYTUM,
+         773,  1022, "CATHEDRAL",  MAP_CHILDRN1
+         ];
+
+         //Check if current WM coordiantes are above town.
+
+         dudeX := worldmap_xpos;
+         dudeY := worldmap_ypos;
+         for (i := 0; (i<TOWN_COUNT) ; i++) begin
+            if(DISTANCE_FROM_TOWN_LARGE(dudeX, dudeY, townArray[i*4], townArray[i*4+1])) then begin
+               debug("Car parked in: "+townArray[i*4+2]);
+               set_global_var(GVAR_CAR_CUR_MAP, townArray[i*4+3]);
+
+               //Uncomment To Hide on WorldMap click
+               //invisible_on_map(AREA_CAR_OUTTA_GAS);
+               break;
+            end
+         end
+         // not found
+         if(i == TOWN_COUNT) then begin
+            debug("Car left in OUTTA GAS LOCATION");
+            set_global_var(GVAR_CAR_CUR_MAP, MAP_CAR_DESERT);
+         end
+      end
+      set_global_var(GVAR_CAR_PREV_LOCATION, car_current_town);
+   end
 end
 
 procedure check_vehicle_trunk begin
@@ -74,6 +131,11 @@ procedure check_vehicle_location begin
 	car_elev := 0;
 	car_area:=0;
 	car_hex:=0;
+
+   //Car is not in OUTTA GAS LOCATION so hide that location
+   if(global_var(GVAR_CAR_CUR_MAP) != MAP_CAR_DESERT) then begin
+      invisible_on_map(AREA_CAR_OUTTA_GAS)
+   end
 
 	 // Entering through dialog teleport or caravan does not update cur_town,
 	 // map check needed for following
@@ -192,8 +254,8 @@ procedure check_vehicle_location begin
 
    // Bike outa gas
 	else if (CUR_AREA_CAR_OUTTA_GAS) then begin
+   	//Always Spawn on OUTTA GAS MAP
    	car_hex := CAR_CAR_OUTTA_GAS_HEX;
-   	if get_car_from_worldmap then set_global_var(GVAR_CAR_CUR_MAP,MAP_CAR_DESERT);
    end
 
    // Special Encounter: Guardians
@@ -221,8 +283,8 @@ procedure spawn_car begin
    if location_valid then begin
 		Upgrade_Car(car_hex,car_elev)
 
-		// Car is in town and in this map:
-		if get_car_in_cur_map then begin
+		// Car is in town and in this map or this is OUTTA GAS MAP:
+		if get_car_in_cur_map or CUR_AREA_CAR_OUTTA_GAS then begin
 			// If the car is still on the upgraded hex, remove it:
 			if CUR_MAP_LAADYTUM and (global_var(GVAR_PLAYER_GOT_CAR) == 2) and (tile_contains_obj_pid(CAR_UPGRADE_HEX,0,PID_DRIVABLE_MOTO2)) then begin
 				Dest_Car(CAR_UPGRADE_HEX, 0)

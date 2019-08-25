@@ -121,7 +121,7 @@
 #define GVAR_HOLODISK_ENCLAVE_STATE					(574)	// maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_ENCLAVE_WORD					(575)	// maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_ENCLAVE_CHEMICAL				(576)	// maybe hard-coded, maybe not?
-#define GVAR_HOLODISK_ENCLAVE_ATOMIC				(577)	// maybe hard-coded, maybe not?	
+#define GVAR_HOLODISK_ENCLAVE_ATOMIC				(577)	// maybe hard-coded, maybe not?
 
 #define GVAR_CAR_PLACED_TILE 						(633)	// Fo2 Engine stuff
 
@@ -4105,8 +4105,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT				(4981)
 #define RESERVED_FOR_FALLOUT_FIXT				(4982)
 #define RESERVED_FOR_FALLOUT_FIXT				(4983)
-#define RESERVED_FOR_FALLOUT_FIXT				(4984)
-#define RESERVED_FOR_FALLOUT_FIXT				(4985)*/
+#define RESERVED_FOR_FALLOUT_FIXT				(4984)*/
+#define GVAR_CAR_PREV_LOCATION					(4985)
 #define GVAR_ENABLE_FO2_MERCHANT_RESTOCK 		(4986)
 #define GVAR_IS_LAURA_ALIVE						(4987)
 #define GVAR_NIGHT_PERSON_ACTIVE				(4988)
