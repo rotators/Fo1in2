@@ -91,14 +91,11 @@ procedure start begin
 	end
 	else begin
 
-		// Locker disabled. Why was this added??? It's on a bad hex, and there is no indication of it being needed? -Lexx
-		/*
 		if not(initial) then begin
 			variable Locker;
 			variable item;
 			initial :=  1;
-			Locker := create_object( PID_WALL_LOCKER_CLEAN_LEFT, 0, 0 );
-			move_to(Locker, 14474, self_elevation);
+			Locker := create_object( PID_WALL_LOCKER_CLEAN_RIGHT, 13278, 0 );
 			item := create_object( PID_FIRST_AID_KIT, 0, 0 );//First Aid Kit
 			add_mult_objs_to_inven(Locker, item, 1);
 			item := create_object( PID_STIMPAK, 0, 0 );//Stimpak
@@ -108,7 +105,6 @@ procedure start begin
 			set_self_team(TEAM_VAULT13 );
 			initial :=  1;
 		end
-		*/
 
 	end
 end
@@ -217,8 +213,7 @@ begin
 	NOption( 164, Medic16, 0 );
 end
 
-procedure Medic04// MAIN MENU
-begin
+procedure Medic04 begin
 	if global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) == 2 then begin
 		gsay_reply(184, 157);// thanks for saving us
 	end
@@ -256,30 +251,25 @@ begin
 		NOption( 110, Medic05, -3 );// i want drugs (STUPID)
 		NOption( 115, Medic08, 5 );// i want drugs
 	end
-	else begin
-		if (local_var(7) == 1) then begin
+	else if (local_var(7) == 1) then begin
+		set_local_var(8, GAME_TIME_IN_DAYS);
+		NOption( 110, Medic28, -3 );// i want drugs (STUPID)
+		NOption( 116, Medic11, 5 );// i want more stimpaks
+	end
+	else if (local_var(7) == 2) then begin
+		if ((GAME_TIME_IN_DAYS) - local_var(8)) >= 30 then begin
 			set_local_var(8, GAME_TIME_IN_DAYS);
-			NOption( 110, Medic28, -3 );// i want drugs (STUPID)
-			NOption( 116, Medic11, 5 );// i want more stimpaks
+			NOption( 110, Medic29, -3 );// i want drugs (STUPID)
+			NOption( 116, Medic29, 5 );// i want more stimpaks
 		end
 		else begin
-			if (local_var(7) == 2) then begin
-				if ((GAME_TIME_IN_DAYS) - local_var(8)) >= 30 then begin
-					set_local_var(8, GAME_TIME_IN_DAYS);
-					NOption( 110, Medic29, -3 );// i want drugs (STUPID)
-					NOption( 116, Medic29, 5 );// i want more stimpaks
-				end
-				else begin
-					BOption( 110, Medic27, -3 );// i want drugs (STUPID)
-					NOption( 116, Medic27, 5 );// i want more stimpaks
-				end
-			end
+			BOption( 110, Medic27, -3 );// i want drugs (STUPID)
+			NOption( 116, Medic27, 5 );// i want more stimpaks
 		end
 	end
 end
 
-procedure Medic04a// don't need healing if small dmg
-begin
+procedure Medic04a begin
 	if (damage > 3) or (PoisAmt > 0) then begin
 		call Medic14;
 	end
@@ -353,8 +343,7 @@ begin
 	add_mult_objs_to_inven(dude_obj, Stimpak, 4 - difficulty_level);
 end
 
-procedure Medic11
-begin
+procedure Medic11 begin
 	if local_var(7) == 1 then begin
 		set_local_var(7, 2);
 	end
