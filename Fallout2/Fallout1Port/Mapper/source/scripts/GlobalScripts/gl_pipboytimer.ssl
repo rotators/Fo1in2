@@ -65,12 +65,16 @@ procedure start begin
       register_hook_proc(HOOK_RESTTIMER, pipboy_note_refresh);
    end
 
-	// Find the Water Chip for V13:
-   if (timer_active) then
-		call check_watertimer;
+	if not(combat_is_initialized) then begin
+   	// Find the Water Chip for V13:
+      if (timer_active) then
+   		call check_watertimer;
 
-	if not(is_story_finished) then
-		call check_invasions;
+      // Invasion timers
+      // TODO: Toggle like in Fixt? Master or Vats or both required?
+   	if not(cathedral_destroyed) then
+   		call check_invasions;
+   end
 end
 
 procedure pipboy_note begin
@@ -103,58 +107,52 @@ end
 
 procedure check_watertimer begin
 	//debug("water days left: " + get_water_days_left);
-	if not(combat_is_initialized) then begin
-   	if (get_water_days_left <= 100) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 0) then begin
-   		set_global_var(GVAR_PLAY_BOIL_MOVIE,1);
-   		play_gmovie(BOIL1_MOVIE);
-   	end
-   	else if (get_water_days_left <= 50) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 1) then begin
-   		set_global_var(GVAR_PLAY_BOIL_MOVIE,2);
-   		play_gmovie(BOIL2_MOVIE);
-   	end
-   	else if (get_water_days_left <= 0) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 2) then begin
-   		set_global_var(GVAR_PLAY_BOIL_MOVIE,3);
-   		play_gmovie(BOIL3_MOVIE);
-   		signal_end_game;
-   	end
+	if (get_water_days_left <= 100) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 0) then begin
+		set_global_var(GVAR_PLAY_BOIL_MOVIE,1);
+		play_gmovie(BOIL1_MOVIE);
+	end
+	else if (get_water_days_left <= 50) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 1) then begin
+		set_global_var(GVAR_PLAY_BOIL_MOVIE,2);
+		play_gmovie(BOIL2_MOVIE);
+	end
+	else if (get_water_days_left <= 0) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 2) then begin
+		set_global_var(GVAR_PLAY_BOIL_MOVIE,3);
+		play_gmovie(BOIL3_MOVIE);
+		signal_end_game;
 	end
 end
 
 procedure check_invasions begin
-	// Track the other timers in the game as well, such as the town invasion stuff
-	// TODO: Toggle like in Fixt? Master or Vats or both required?
-	if not(cathedral_destroyed) then begin
-		if get_v13_days_left <= 0 and not(v13_invaded) then begin
-			set_global_var(GVAR_VAULT_13_WAS_INVADED, 1);
+	if get_v13_days_left <= 0 and not(v13_invaded) then begin
+		set_global_var(GVAR_VAULT_13_WAS_INVADED, 1);
 
-			play_gmovie(OVERRUN_MOVIE);
-			signal_end_game;
-			debug("v13 just got invaded!");
-		end
-		if get_hub_days_left <= 0 and not(hub_invaded) then begin
-			set_global_var(GVAR_THE_HUB_WAS_INVADED, 1);
-			debug("the hub just got invaded!");
-		end
-		if get_bos_days_left <= 0 and not(bos_invaded) then begin
-			set_global_var(GVAR_BROTHERHOOD_WAS_INVADED, 1);
-			debug("the bos just got invaded!");
-		end
-		if get_boneyard_days_left <= 0 and not(boneyard_invaded) then begin
-			set_global_var(GVAR_FOLLOWERS_INVADED, 1);
-			debug("the bos just got invaded!");
-		end
-		if get_necropolis_days_left <= 0 and not(necropolis_invaded) then begin
-			set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1);
-			debug("necropolis just got invaded!");
-		end
-		if get_shady_days_left <= 0 and not(shady_invaded) then begin
-			set_global_var(GVAR_SHADY_SANDS_WAS_INVADED, 1);
-			debug("shady sands just got invaded!");
-		end
-		if get_junktown_days_left <= 0 and not(junktown_invaded) then begin
-			set_global_var(GVAR_JUNKTOWN_WAS_INVADED, 1);
-			debug("junktown just got invaded!");
-		end
+		play_gmovie(OVERRUN_MOVIE);
+		signal_end_game;
+		debug("v13 just got invaded!");
+	end
+	if get_hub_days_left <= 0 and not(hub_invaded) then begin
+		set_global_var(GVAR_THE_HUB_WAS_INVADED, 1);
+		debug("the hub just got invaded!");
+	end
+	if get_bos_days_left <= 0 and not(bos_invaded) then begin
+		set_global_var(GVAR_BROTHERHOOD_WAS_INVADED, 1);
+		debug("the bos just got invaded!");
+	end
+	if get_boneyard_days_left <= 0 and not(boneyard_invaded) then begin
+		set_global_var(GVAR_FOLLOWERS_INVADED, 1);
+		debug("the bos just got invaded!");
+	end
+	if get_necropolis_days_left <= 0 and not(necropolis_invaded) then begin
+		set_global_var(GVAR_NECROPOLIS_WAS_INVADED, 1);
+		debug("necropolis just got invaded!");
+	end
+	if get_shady_days_left <= 0 and not(shady_invaded) then begin
+		set_global_var(GVAR_SHADY_SANDS_WAS_INVADED, 1);
+		debug("shady sands just got invaded!");
+	end
+	if get_junktown_days_left <= 0 and not(junktown_invaded) then begin
+		set_global_var(GVAR_JUNKTOWN_WAS_INVADED, 1);
+		debug("junktown just got invaded!");
 	end
 end
 

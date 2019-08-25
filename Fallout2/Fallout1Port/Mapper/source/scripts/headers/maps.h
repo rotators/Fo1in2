@@ -376,7 +376,7 @@
 #define unmark_boneyard_on_map            unmark_on_map(AREA_BONEYARD)
 #define unmark_cathedral_on_map           unmark_on_map(AREA_CATHEDRAL)
 
-#define unmark_car_outta_gas_on_map       unmark_on_map(AREA_CAR_OUTTA_GAS)
+#define unmark_car_outta_gas_on_map       mark_area_known(MARK_TYPE_TOWN, AREA_CAR_OUTTA_GAS, MARK_STATE_UNKNOWN)
 
 /******************************************************************
  Advance the game time when using NPCs from encounter to travel

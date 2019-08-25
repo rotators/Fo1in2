@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\command.h"
+#include "..\headers\updatmap.h"
 #include "..\headers\voodoo.h"
 
 #include "..\headers\sfall\main.h"
@@ -14,6 +15,9 @@
 /* Standard Script Procedures */
 procedure start;
 
+procedure mode_change;
+procedure scene_master_destroyed;
+procedure scene_vats_destroyed;
 procedure night_person;
 
 procedure general;
@@ -22,7 +26,7 @@ procedure apcost_handler;
 procedure start begin
    if (game_loaded) then begin
    	set_global_script_type(0);
-   	register_hook_proc(HOOK_GAMEMODECHANGE, night_person);
+   	register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
    end
 
 	call general;
@@ -37,6 +41,64 @@ procedure general begin
 
    // Changes the PipBoy rest timer from 08:00 to 06:00
 	VOODOO_rest_till0600;
+end
+
+procedure mode_change begin
+   call scene_master_destroyed;
+   call scene_vats_destroyed;
+   call night_person;
+end
+
+procedure scene_master_destroyed begin
+   if (get_game_mode == WORLDMAP) then begin
+   	if (global_var( GVAR_MASTER_BLOWN ) == 1) and not(cathedral_destroyed) then begin
+   		set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1 );
+   		set_end_Master;
+
+   		inc_cathedral_rep(REP_BONUS_BLOWN_UP_MASTER);
+
+   		give_exp_points(EXP_MASTER_DESTROYED);
+   		display_msg(message_str(SCRIPT_GENCHAT, 702));
+
+   		mark_map_entrance_state(MAP_CHILDRN1,0);
+   		mark_map_entrance_state(MAP_CHILDRN2,0);
+   		mark_map_entrance_state(MAP_MSTRLR12,0);
+   		mark_map_entrance_state(MAP_MSTRLR34,0);
+         mark_map_entrance_elev_state(MAP_CHILDRN1,1,0); // We need this additionally, otherwise the stupid entry point won't disable itself.
+   		mark_map_entrance_state(MAP_CHILDEAD,1);
+
+   		play_gmovie(CATHEXPLODE_MOVIE);
+
+   		if (global_var( GVAR_VATS_BLOWN )) and (waterchip_returned /*or dude_item_count(PID_WATER_CHIP)*/) then begin
+   			force_encounter(MAP_V13ENT);
+   		end
+   	end
+	end
+end
+
+procedure scene_vats_destroyed begin
+   if (get_game_mode == WORLDMAP) then begin
+      if (global_var( GVAR_VATS_BLOWN ) == 1) and not(military_base_destoryed) then begin
+   		set_global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE, 1 );
+   		set_end_Vats;
+
+   		inc_mbase_rep(REP_BONUS_BLOWN_UP_VATS);
+
+   		give_exp_points(EXP_VATS_DESTROYED);
+   		display_msg(message_str(SCRIPT_GENCHAT, 701));
+
+   		mark_map_entrance_state(MAP_MBENT,0);
+   		mark_map_entrance_state(MAP_MBSTRG12,0);
+   		mark_map_entrance_state(MAP_MBVATS12,0);
+   		mark_map_entrance_state(MAP_MBDEAD,1);
+
+   		play_gmovie(VATSEXPLODE_MOVIE);
+
+   		if (global_var( GVAR_MASTER_BLOWN )) and waterchip_returned then begin
+   			force_encounter(MAP_V13ENT);
+   		end
+   	end
+   end
 end
 
 procedure night_person begin
