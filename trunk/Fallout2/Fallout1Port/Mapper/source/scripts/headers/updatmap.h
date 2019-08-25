@@ -132,8 +132,8 @@
 #define trunk_size_small				(40)
 #define trunk_size_big					(80)
 
-#define player_has_normal_bike 		(global_var(GVAR_PLAYER_GOT_CAR) == 1)
-#define player_has_big_bike 			(global_var(GVAR_PLAYER_GOT_CAR) == 2)
+#define dude_has_bike 		         (global_var(GVAR_PLAYER_GOT_CAR) == 1)
+#define dude_has_upgraded_bike 	   (global_var(GVAR_PLAYER_GOT_CAR) == 2)
 
 #define get_car_current_map 			global_var(GVAR_CAR_CUR_MAP)
 #define get_car_in_cur_map 			get_car_current_map == cur_map_index
