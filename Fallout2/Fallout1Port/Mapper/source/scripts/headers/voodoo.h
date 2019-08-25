@@ -1,8 +1,10 @@
 #ifndef VOODOO_H
 #define VOODOO_H
-//
-// memory editing macros
-//
+
+/*********************************************************
+	All kinds of memory editing macros
+	Requires AllowUnsafeScripting=1 in ddraw.ini!
+*********************************************************/
 
 // This will disable running the credits after the endgame slides:
 #define VOODOO_mode_fo1_ending						\
@@ -15,5 +17,8 @@
                write_byte(0x4C1015, 0x90); 			\
                write_int( 0x4C1042,  0x90909090); 	\
                write_byte(0x4C1046, 0x90)
+			   
+// This will change the rest timer "wait until 08:00" to 06:00 like in Fallout 1.
+#define VOODOO_rest_till0600 	write_int(0x4995F3, 6)
 
 #endif // VOODOO_H //

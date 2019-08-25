@@ -58,11 +58,11 @@ variable OffsetY;
 
 procedure start begin
 	if (game_loaded) then begin
-		set_global_script_repeat(5);
+		set_global_script_repeat(100);
 		set_global_script_type(1);
 
       register_hook_proc(HOOK_GAMEMODECHANGE, pipboy_note);
-      //register_hook_proc(HOOK_RESTTIMER, pipboy_note_refresh);
+      register_hook_proc(HOOK_RESTTIMER, pipboy_note_refresh);
    end
 
 	// Find the Water Chip for V13:
@@ -92,25 +92,6 @@ procedure pipboy_note begin
 end
 
 procedure pipboy_note_refresh begin
-   // TODO: Find a better way to refresh the "days left" window via hook script.
-   /*variable ticks := get_sfall_arg;
-   if ticks > next0000 then begin
-      next0000 := ticks + ticks_til_hour(0);
-
-      debug("oh snap! " + ticks + " till 0: " + ticks_til_hour(0));
-
-      DeleteWin("win_days");
-      //call show_days;
-
-      create_win("win_days", ((Scr_Width/2)-253), ((Scr_Heigh/2)-110), 40, 19);
-      SelectWin("win_days");
-      Display("PCX/days/"+ get_water_days_left +".pcx");
-      ShowWin;
-   end*/
-end
-
-procedure check_watertimer begin
-   // How long until it is 00:00 next? We will refresh the window then:
    if (get_game_mode == PIPBOY) then begin
    	if (game_time > get_sfall_global_int("lastchek")) then begin
          set_sfall_global("lastchek", game_time + ONE_GAME_MINUTE * ((ticks_til_hour(0) / 60) / 10));
@@ -118,7 +99,9 @@ procedure check_watertimer begin
          call show_days;
       end
    end
+end
 
+procedure check_watertimer begin
 	//debug("water days left: " + get_water_days_left);
 	if not(combat_is_initialized) then begin
    	if (get_water_days_left <= 100) and (global_var(GVAR_PLAY_BOIL_MOVIE) == 0) then begin
