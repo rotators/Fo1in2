@@ -19,6 +19,7 @@ procedure start;
 procedure map_enter_p_proc;
 
 procedure car_travel_check_hook;
+procedure car_travel;
 procedure check_vehicle_trunk;
 procedure check_vehicle_location;
 procedure spawn_car;
@@ -54,6 +55,9 @@ procedure start begin
    if (game_loaded) then begin
       set_global_var(GVAR_CAR_PREV_STATUS, car_out_of_fuel );//car_current_town);
    	register_hook_proc(HOOK_MOUSECLICK, car_travel_check_hook);
+
+   	//TODO should be fixed by sfall later and could be removed.
+   	register_hook_proc(HOOK_CARTRAVEL, car_travel);
    end
 end
 
@@ -67,6 +71,17 @@ procedure map_enter_p_proc begin
 	end
 end
 
+// Hook for handling town/world button issue with car.
+// (Entering town via town/world button makes you use car when leaving on foot).
+//TODO should be fixed by sfall later and could be removed.
+procedure car_travel begin
+   //A foolproofing check in case there is car_travel_check_hook gets called first.
+   if(not car_out_of_fuel) then begin
+       set_global_var(GVAR_CAR_CUR_MAP, -1);
+   end
+end
+
+// Hook for checking vehicle running out of fuel and parking it if above town.
 procedure car_travel_check_hook begin
    if(get_game_mode == WORLDMAP) then begin
       if(car_out_of_fuel and global_var(GVAR_CAR_PREV_STATUS)!=car_out_of_fuel) then begin
