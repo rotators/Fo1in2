@@ -171,13 +171,14 @@ end
 										end								\
 									end
 
-#define set_obj_invisible(x)		set_obj_visibility(x,1)
-#define set_obj_visible(x)			set_obj_visibility(x,0)
+// both blocks below should be moved to command.h at some point
+#define is_visible(cr)				has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
+#define self_visible				is_visible(self_obj)
+
+#define set_obj_invisible(cr)			set_obj_visibility(cr,1)
+#define set_obj_visible(cr)			set_obj_visibility(cr,0)
 #define set_self_invisible			set_obj_invisible(self_obj)
 #define set_self_visible			set_obj_visible(self_obj)
-#define is_visible(x)				(obj_is_visible_flag(x))
-#define is_self_visible				(obj_is_visible_flag(self_obj))
-
 
 /*********************************************************
 	Settings:
