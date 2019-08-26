@@ -231,15 +231,15 @@ variable step_tile;
 // gear
 //
 
-#define  get_left_hand(cr)                critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
+#define get_left_hand(cr)                 critter_inven_obj(cr,INVEN_TYPE_LEFT_HAND)
 #define dude_left_hand                    get_left_hand(dude_obj)
 #define self_left_hand                    get_left_hand(self_obj)
 
-#define  get_right_hand(cr)               critter_inven_obj(cr,INVEN_TYPE_RIGHT_HAND)
+#define get_right_hand(cr)                critter_inven_obj(cr,INVEN_TYPE_RIGHT_HAND)
 #define dude_right_hand                   get_right_hand(dude_obj)
 #define self_right_hand                   get_right_hand(self_obj)
 
-#define  get_armor(cr)                    critter_inven_obj(cr,INVEN_TYPE_WORN)
+#define get_armor(cr)                     critter_inven_obj(cr,INVEN_TYPE_WORN)
 #define dude_armor                        get_armor(dude_obj)
 #define self_armor                        get_armor(self_obj)
 
