@@ -553,8 +553,6 @@ variable step_tile;
 
 #define self_inv_rot                        ((self_cur_rot + 3)%6)
 
-#define self_visible                        obj_is_visible_flag(self_obj)
-
 #define skill_success(x,y,z)                (is_success(roll_vs_skill(x,y,z)))
 #define stat_success(x,y,z)                 (is_success(do_check(x,y,z)))
 
