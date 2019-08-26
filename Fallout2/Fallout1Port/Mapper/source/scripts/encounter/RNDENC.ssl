@@ -22,37 +22,30 @@ procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure map_exit_p_proc;
 
-procedure load_city;
-procedure load_mountains;
-procedure load_desert;
-procedure load_coast;
-
-procedure Initial_Inven;
-procedure Setup_City;
 procedure CreateSceneryClutter;
 procedure CreateCityClutter;
 
-procedure add_party;
-
 variable scenery_pid;
 variable scenery_tile;
-variable a:=0;
-variable iter:=0;
+variable a := 0;
+variable iter := 0;
 variable temp_pid;
 
-variable iter2:=0;
-variable iter_cluster:=0;
-variable rnd_tile:=0;
+variable iter2 := 0;
+variable iter_cluster := 0;
+variable rnd_tile := 0;
 
 variable map;
+variable spawn_hex := 0;
 
 #define set_new_wm_pos 						wm_area_set_pos(AREA_RND_CITY, worldmap_xpos, worldmap_ypos); 		\
 													wm_area_set_pos(AREA_RND_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
 													wm_area_set_pos(AREA_RND_DESERT, worldmap_xpos, worldmap_ypos); 	\
 													wm_area_set_pos(AREA_RND_COAST, worldmap_xpos, worldmap_ypos)
 
+#define in_spawn_zone(x,y)             tile_in_tile_rect((x%200)-5,(x/200)-5,(x%200)+5,(x/200)+5,y)
+
 procedure start begin
-	call map_enter_p_proc;
 end
 
 procedure map_exit_p_proc begin
@@ -70,27 +63,27 @@ procedure timed_event_p_proc begin
 
 			// In Desert:
 			if (is_terrain_desert) then begin
-				call load_desert;
+				load_map(MAP_RNDDESER, 0);
 			end
 
    		// In Mountains:
    		else if (is_terrain_mountain) then begin
-   			call load_mountains;
+   			load_map(MAP_RNDMOUNT, 0);
    		end
 
       	// In City:
    		else if (is_terrain_city) then begin
-   			call load_city;
+   			load_map(MAP_RNDCITY, 0);
 			end
 
    		// In Coast:
    		else if (is_terrain_ocean) then begin
-   			call load_coast;
+   			load_map(MAP_RNDCOAST, 0);
    		end
 
    		// Other:
    		else begin
-   			call load_desert;
+   			load_map(MAP_RNDDESER, 0);
    			debug("!!!BIG BUG!!!");
    		end
 
@@ -110,6 +103,49 @@ procedure map_enter_p_proc begin
    	add_timer_event(self_obj, game_ticks(0), 1);
    end
 
+   // Random start position for desert map:
+   else if (CUR_MAP_RNDDESER) then begin
+      map := random(1,8);
+      if (map == 1) then
+         spawn_hex := 12103;
+      else if (map == 2) then
+         spawn_hex := 21133;
+      else if (map == 3) then
+         spawn_hex := 25099;
+      else if (map == 4) then
+         spawn_hex := 16262;
+      else if (map == 5) then
+         spawn_hex := 17323;
+      else if (map == 6) then
+         spawn_hex := 19268;
+      else if (map == 7) then
+         spawn_hex := 15691;
+      else if (map == 8) then
+         spawn_hex := 21106;
+   end
+
+   // Random start position for city map:
+   else if (CUR_MAP_RNDCITY) then begin
+      map := random(1,7);
+      if (map == 1) then
+         spawn_hex := 26293;
+      else if (map == 2) then
+         spawn_hex := 22075;
+      else if (map == 3) then
+         spawn_hex := 12893;
+      else if (map == 4) then
+         spawn_hex := 17730;
+      else if (map == 5) then
+         spawn_hex := 21941;
+      else if (map == 6) then
+         spawn_hex := 22117;
+      else if (map == 7) then
+         spawn_hex := 20294;
+   end
+
+   if (spawn_hex != 0) then
+      override_map_start_hex(spawn_hex,0,random(0,5));
+
    set_map_exit_tiles(0,0);
    Lighting;
 
@@ -128,128 +164,10 @@ procedure map_update_p_proc begin
    Lighting;
 end
 
-procedure load_city begin
-	map := random(1,8);
-
-   load_map(MAP_RNDCITY, 0);
-	/*if map == 1 then
-		load_map(MAP_RND_CITY1, 0);
-	else if map == 2 then
-		load_map(MAP_RND_CITY_2, 0);
-	else if map == 3 then
-		load_map(MAP_RND_CITY_3, 0);
-	else if map == 4 then
-		load_map(MAP_RND_CITY_4, 0);
-	else if map == 5 then
-		load_map(MAP_RND_CITY_5, 0);
-	else if map == 6 then
-		load_map(MAP_RND_CITY_6, 0);
-	else if map == 7 then
-		load_map(MAP_RND_CITY_7, 0);
-	else if map == 8 then
-		load_map(MAP_RND_CITY_8, 0);*/
-end
-
-procedure load_mountains begin
-
-   load_map(MAP_RNDMOUNT, 0);
-
-	// Real mountains:
-	/*if (random(1,10) > 4) then begin
-		map := random(1,3);
-		if map == 1 then
-			load_map(MAP_RND_MOUNTAIN1, 0);
-		else if map == 2 then
-			load_map(MAP_RND_MOUNTAIN2, 0);
-		else if map == 3 then
-			load_map(MAP_RND_MOUNTAIN_3, 0);
-	end
-	// Forrest:
-	else begin
-		map := random(4,7);
-		if map == 4 then
-			load_map(MAP_RND_DESERT5, 0);
-		else if map == 5 then
-			load_map(MAP_RND_DESERT6, 0);
-		else if map == 6 then
-			load_map(MAP_RND_DESERT7, 0);
-		else if map == 7 then
-			load_map(MAP_RND_DESERT_8, 0);
-	end*/
-
-	// This shit is buggy in here:
-	/*else if map == 4 then
-		load_map(MAP_RND_MOUNTAIN_4, 0);
-	else if map == 5 then
-		load_map(MAP_RND_MOUNTAIN_5, 0);
-	else if map == 6 then
-		load_map(MAP_RND_MOUNTAIN_6, 0);*/
-end
-
-procedure load_desert begin
-	map := random(2,4);
-
-   load_map(MAP_RNDDESER, 0);
-
-	/*if map == 2 then
-		load_map(MAP_RND_DESERT_2, 0);
-	else if map == 3 then
-		load_map(MAP_RND_DESERT_3, 0);
-	else if map == 4 then
-		load_map(MAP_RND_DESERT4, 0);
-	else if map == 5 and (WM_In_Sand(worldmap_xpos,worldmap_ypos)) then
-		load_map(MAP_RND_DESERT_10, 0);
-*/
-end
-
-procedure load_coast begin
-   load_map(MAP_RNDCOAST, 0);
-end
-
-procedure Setup_City begin
-   /*if (cur_map_index == MAP_RND_CITY1) then begin
-       Create_Car(CAR_RND_CITY1_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_2) then begin
-       Create_Car(CAR_RND_CITY2_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_3) then begin
-       Create_Car(CAR_RND_CITY3_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_4) then begin
-       Create_Car(CAR_RND_CITY4_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_5) then begin
-       Create_Car(CAR_RND_CITY5_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_6) then begin
-       Create_Car(CAR_RND_CITY6_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_7) then begin
-       Create_Car(CAR_RND_CITY7_HEX,CAR_RANDOM_DESERT_ELEV)
-   end
-   else if (cur_map_index == MAP_RND_CITY_8) then begin
-       Create_Car(CAR_RND_CITY8_HEX,CAR_RANDOM_DESERT_ELEV)
-   end*/
-end
-
-procedure Initial_Inven begin
-end
-
-
 procedure CreateSceneryClutter begin
 	debug("spawn desert clutter!");
 
-	/*
-	// This is the area in which no scenery will be placed:
-	//if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
-	create_object (PID_BURNING_BARREL, 19904, 0);
-	create_object (PID_METAL_BARREL_1, 19698, 0);
-	create_object (33554439,21104,0);
-	create_object (33554471,20898,0);
-	*/
-
-// Generate desert scenery - scrub grass
+   // Scrub grass
    iter:=0;
    while iter<50 do
    begin
@@ -257,14 +175,15 @@ procedure CreateSceneryClutter begin
 		a:=random(7000,30000);
       scenery_pid:=random( PID_SCRUB_1, PID_SCRUB_4 );
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
-   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+   		//if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+   		if not(in_spawn_zone(dude_tile,a)) then
 	   	begin
             create_object(scenery_pid,a,0);
          end
       end
    end
 
-// generate desert scenery - remains / dead animals, etc.
+   // Remains / dead animals, etc.
    iter:=0;
    while iter<3 do
    begin
@@ -272,14 +191,14 @@ procedure CreateSceneryClutter begin
 		a:=random(7000,30000);
       scenery_pid:=random( PID_BONES_4, PID_BONES_5 ); // ashes, dead animals //kosci i zw?oki zwierz?cia i bramina
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
-   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+   		if not(in_spawn_zone(dude_tile,a)) then
 	   	begin
             create_object(scenery_pid,a,0);
          end
       end
    end
 
-// Generation of desert scenery - tires, grass, smog, barrels desert elements
+   // Tires, grass, smog, barrels desert elements
    iter:=0;
    while iter<8 do
    begin
@@ -287,7 +206,7 @@ procedure CreateSceneryClutter begin
 		a:=random(7000,30000);
       scenery_pid:=random( PID_TIRE, PID_WEED_3 );
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
-   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+   		if not(in_spawn_zone(dude_tile,a)) then
 	   	begin
             create_object(scenery_pid,a,0);
             create_object(PID_BLOCKING_HEX,a,0); //create a blocker on the same hex
@@ -295,7 +214,7 @@ procedure CreateSceneryClutter begin
       end
    end
 
-// Generating desert scenery - piles of cool rocks in the desert
+   // Piles of cool rocks in the desert
    iter:=0;
    while iter<8 do
    begin
@@ -303,7 +222,7 @@ procedure CreateSceneryClutter begin
 		a:=random(8000,29000);
       scenery_pid:=random( PID_ROCKS_3, PID_ROCKS_4 );
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
-   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+   		if not(in_spawn_zone(dude_tile,a)) then
 	   	begin
             create_object(scenery_pid,a,0); // generuje sceneri?
          end
@@ -327,7 +246,7 @@ procedure CreateSceneryClutter begin
    end
 */
 
-// Generation of desert scenery - stone plains just in the desert near the mountains
+   // Stone plains just in the desert near the mountains
    iter:=0;
    while iter<5 do
    begin
@@ -335,9 +254,43 @@ procedure CreateSceneryClutter begin
 		a:=random(7000,30000);
       scenery_pid:=random(33556497,33556499);
 		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
-   		if not(tile_in_tile_rect(19904,19698,21104,20898,a)) then
+   		if not(in_spawn_zone(dude_tile,a)) then
 	   	begin
             create_object(scenery_pid,a,0);
+         end
+      end
+   end
+
+   // Cactus! - from RNDDESRT.ssl
+   if (random(0,3) == 1) then begin
+      iter:=0;
+      while iter<10 do
+      begin
+         iter:=iter+1;
+   		a:=random(7000,30000);
+         scenery_pid:=random(PID_CACTUS_1,PID_CACTUS_2);
+   		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+      		if not(in_spawn_zone(dude_tile,a)) then
+   	   	begin
+               create_object(scenery_pid,a,0);
+            end
+         end
+      end
+   end
+
+   // Tires
+   if (random(0,5) == 1) then begin
+      iter:=0;
+      while iter<14 do
+      begin
+         iter:=iter+1;
+   		a:=random(7000,30000);
+         scenery_pid:=PID_TIRE;
+   		if tile_contains_pid_obj(a,0,scenery_pid) then begin end else begin
+      		if not(in_spawn_zone(dude_tile,a)) then
+   	   	begin
+               create_object(scenery_pid,a,0);
+            end
          end
       end
    end
@@ -347,23 +300,35 @@ end
 procedure CreateCityClutter begin
 variable Item;
 
-	debug("spawn city clutter!");
-
-	if (random(0, 2) == 2) then begin
+	if (random(0, 2) == 1) then begin
 		Item := create_object( PID_BOXES_2, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
 		Item := create_object( PID_BOXES_3, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
-		Item := create_object( PID_TRASH_CAN, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
 	end
-
-	if (random(0, 5) == 5) then begin
+   else if (random(0,2) == 1) then begin
+   	Item := create_object( PID_JUNK, tile_num_in_direction(dude_tile, random(0, 5), random(5, 20)), 0 );
+   	Item := create_object( PID_METAL_BARREL_1, tile_num_in_direction(dude_tile, random(0, 5), random(5, 20)), 0 );
+   	Item := create_object( PID_ROCKS_3, tile_num_in_direction(dude_tile, random(0, 5), random(5, 25)), 0 );
+	end
+   else if (random(0, 5) == 5) then begin
 		if (day) then begin
 			if (random(0, 2) >= 1) then
 				Item := create_object( PID_METAL_BARREL_1, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
-			else
-				Item := create_object( PID_BURNING_BARREL, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
+			else begin
+				Item := create_object( PID_METAL_BARREL_1, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
+				Item := create_object( PID_METAL_BARREL_1, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
+		   end
 		end
 		else begin
-			Item := create_object( PID_BURNING_BARREL, tile_num_in_direction(dude_tile + random(0, 8) - 4, random(0, 5), random(5, 8)), 0 );
+			Item := create_object( PID_BURNING_BARREL, tile_num_in_direction(dude_tile + random(0, 5) - 4, random(0, 5), random(5, 8)), 0 );
+			if (random(0, 2) >= 1) then
+			   Item := create_object( PID_BURNING_BARREL, tile_num_in_direction(dude_tile + random(0, 5) - 4, random(0, 5), random(15, 35)), 0 );
 		end
 	end
+
+	if (random(0,2) == 1) then
+      Item := create_object( PID_TRASH_CAN, tile_num_in_direction(dude_tile + random(8, 16) - 4, random(0, 5), random(8, 16)), 0 );
+
+	if (random(0,3) == 1) then
+	   Item := create_object( PID_CHAIR, tile_num_in_direction(dude_tile + random(2, 10) - 4, random(0, 5), random(0, 10)), 0 );
+
 end
