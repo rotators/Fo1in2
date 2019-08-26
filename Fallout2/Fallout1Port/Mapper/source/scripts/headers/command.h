@@ -342,6 +342,7 @@ variable step_tile;
 #define dude_fortune_finder               dude_perk(PERK_fortune_finder)
 #define dude_smooth_talker                dude_perk(PERK_smooth_talker)
 #define dude_excrement_expediter          dude_perk(PERK_expert_excrement_expediter_perk)
+#define dude_quick_pockets		          dude_perk(PERK_quick_pockets)
 
 #define self_mental_block                 self_perk(PERK_mental_block)
 #define self_presence                     self_perk(PERK_presence)
