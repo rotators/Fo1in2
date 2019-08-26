@@ -4699,8 +4699,11 @@ debug("Death5");
 		Critter_script := SCRIPT_WANRATS;
 		call Place_critter;
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
-		Outer_ring := (dude_perception / 3) + 8;
+
+		// TODO: Check if this is a Fixt addition??
+		/*Outer_ring := (dude_perception / 3) + 8;
 		Inner_ring := (dude_perception / 3) + 8;
+
 		Critter_direction := random(0, 5);
 		Critter_type := PID_DEATHCLAW_SPAWN;// 165  Deathclaw Spawn
 		Critter_script := SCRIPT_DETHCLAW;//DethClaw.int
@@ -4708,19 +4711,54 @@ debug("Death5");
 		call Place_critter;
 
 		anim(Critter, 1000, rotation_to_tile(tile_num(Critter), dude_tile));
-		set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
+		set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );*/
 
 		call Add_Mysterious_Stranger;
 
 		display_msg(message_str(SCRIPT_RNDDESRT, 301));
-		display_msg(message_str(SCRIPT_RNDDESRT, 302));
+		//display_msg(message_str(SCRIPT_RNDDESRT, 302)); // Fixt addition?
 	end
 end
 
+// The Hub quest Deathclaw encounter:
 procedure Death6 begin
-	debug("Death6");
+   debug("Death6");
 
-	Outer_ring := (dude_perception / 2) + 5;
+   Outer_ring := (get_critter_stat(dude_obj, 1) / 2) + 5;
+   Inner_ring := (get_critter_stat(dude_obj, 1) / 2) + 2;
+   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin // Added quest check, so the Deathclaw doesn't appear before missing caravans.
+      display_msg(message_str(SCRIPT_RNDDESRT, 286));
+      Critter_direction := random(0, 5);
+      Critter_type := PID_DEATHCLAW;
+      Critter_script := SCRIPT_DETHCLAW;
+      call Place_critter;
+      anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
+   end
+   else begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 303));
+      Critter_type := 16777227;
+      Critter_script := 12;
+      Tot_Critter_A := random(3, 5);
+      group_angle := random(0, 5);
+      while (Tot_Critter_A) do begin
+         Critter_direction := group_angle + (random(0, 4) - 2);
+         while (Critter_direction < 0) do begin
+            Critter_direction := Critter_direction + 6;
+         end
+         if (Critter_direction > 5) then begin
+            Critter_direction := Critter_direction % 6;
+         end
+         call Place_critter();
+         anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
+         Tot_Critter_A := Tot_Critter_A - 1;
+      end
+   end
+
+   set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
+   call Add_Mysterious_Stranger;
+
+// FIXT:
+/*		Outer_ring := (dude_perception / 2) + 5;
 	Inner_ring := (dude_perception / 2) + 2;
 	Critter_direction := random(0, 5);
 //	Critter_type := 16777267;
@@ -4745,7 +4783,7 @@ procedure Death6 begin
 	end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 2 );
 	call Add_Mysterious_Stranger;
-	display_msg(message_str(SCRIPT_RNDDESRT, 302));
+	display_msg(message_str(SCRIPT_RNDDESRT, 302));*/
 end
 
 procedure Bone1 begin
