@@ -2521,20 +2521,32 @@ end
 procedure Hub6 begin
 debug("Hub6");
 
-	display_msg(message_str(SCRIPT_RNDDESRT, 137));
-	Tot_Critter_A := random(2, 4);
-	Outer_ring := (dude_perception / 2) + 6;
-	Inner_ring := (dude_perception / 2) + 3;
-	Critter_type := PID_BRAHMIN;
-	Critter_script := SCRIPT_BRAHMIN;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 5);
-		call Place_critter;
-		Tot_Critter_A := Tot_Critter_A - 1;
+   // "Quack" encounter - added by Fo1in2
+   if (random(0,5) == 1) and (global_var(GVAR_ENC_QUACK_DEAD) == 0) then begin
+
+   	Critter_type := PID_ENC_QUACK;
+   	Critter_script := SCRIPT_ENCQUACK;
+   	call Place_critter;
+
+   end
+   else begin
+
+   	display_msg(message_str(SCRIPT_RNDDESRT, 137));
+   	Tot_Critter_A := random(2, 4);
+   	Outer_ring := (dude_perception / 2) + 6;
+   	Inner_ring := (dude_perception / 2) + 3;
+   	Critter_type := PID_BRAHMIN;
+   	Critter_script := SCRIPT_BRAHMIN;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 5);
+   		call Place_critter;
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Critter_type := PID_PEASANT_5;
+   	Critter_script := -1; // TODO: Write a script for this guy.
+   	call Place_critter;
+
 	end
-	Critter_type := PID_PEASANT_5;
-	Critter_script := -1;
-	call Place_critter;
 end
 
 procedure Necrop1 begin
@@ -3187,7 +3199,7 @@ procedure Necrop6 begin
    		wield_obj_critter(Critter, LVar1);
    	end
 	end
-	
+
 	if (random(0, 3) == 3) then begin
 		LVar1 := create_object( PID_ROPE, 0, 0 );
 		add_obj_to_inven(Critter, LVar1);

@@ -1,0 +1,283 @@
+/*
+	Special Encounter - trader / quack
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\MAPOBTWN.h"
+
+#define NAME                    SCRIPT_ENCQUACK
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_OBSTOWN)
+
+#include "..\headers\command.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure timed_event_p_proc;
+procedure use_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure destroy_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
+procedure talk_p_proc;
+
+procedure Node998;
+procedure Node999;
+
+procedure doBarter;
+
+procedure Node1000;
+procedure Node1100;
+procedure Node1200;
+procedure Node1300;
+
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+
+#define LVAR_Herebefore                 	(4)
+#define LVAR_Hostile                    	(5)
+#define LVAR_Personal_Enemy             	(6)
+#define LVAR_AskedDirections					(7)
+
+#define float_color(x)            			float_msg(self_obj, message_str(NAME,x), FLOAT_MSG_NORMAL)
+
+#define Quack_Trade_Modifier 					(350)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+variable Only_Once:=0;
+variable last_question;
+
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+
+/*******************************************************************
+   The start procedure is the first procedure called when the map is
+   first entered. Any initial information that needs to be set up
+   should be placed in here.
+*******************************************************************/
+
+procedure start begin
+end
+
+procedure critter_p_proc begin
+   if (((local_var(LVAR_Hostile) == 2)
+      or (local_var(LVAR_Personal_Enemy) == 1))
+      and (obj_can_see_obj(self_obj,dude_obj))) then begin
+         set_local_var(LVAR_Hostile,1);
+
+         if (Only_Once == 0) then begin
+         	Only_Once := 1;
+         	float_color(150);
+         	attack(dude_obj);
+         end
+   end
+end
+
+procedure timed_event_p_proc begin
+end
+
+/**************************************************************************************
+   Any time that the player is caught stealing from this critter, Pickup_proc will be called.
+   In here, various things can happen. The most common response is instant hostility which
+   will be remembered.
+**************************************************************************************/
+procedure pickup_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Hostile,2);
+   end
+end
+
+/********************************************************************
+********************************************************************/
+
+procedure use_p_proc begin
+end
+
+/***************************************************************************
+   This procedure gets called only on the death of this NPC. Special things like
+   incrementing the death count for reputation purposes and Enemy Counters are placed
+   in here.
+***************************************************************************/
+
+procedure destroy_p_proc begin
+/* Increment the aligned critter counter*/
+   inc_neutral_critter
+   set_global_var(GVAR_ENC_QUACK_DEAD,1);
+end
+
+/***************************************************************************
+   This is cursory glance description that the player will receive should
+   he just pass the Action Cursor over. Examines which give more information
+   need to be in the description_p_proc procedure.
+***************************************************************************/
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if (local_var(LVAR_Herebefore) == 0) then begin
+      //set_local_var(LVAR_Herebefore,1);
+      display_msg(mstr(100));
+   end else begin
+      display_msg(mstr(101));
+   end
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   if dude_iq > 3 then
+  		display_msg(mstr(102));
+  	else
+  		display_msg(mstr(103));
+end
+
+procedure use_skill_on_p_proc begin
+end
+
+procedure use_obj_on_p_proc begin
+end
+
+/******************************************************************************************
+   IF it gets damaged
+******************************************************************************************/
+
+procedure damage_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Personal_Enemy,1);
+   end
+end
+
+/***************************************************************************************
+   Whenever the map is first entered, this procedure will be called.
+***************************************************************************************/
+
+procedure map_enter_p_proc begin
+variable Scenery_Creation_Hex;
+variable Scenery_Creation;
+
+   Only_Once:=0;
+
+   if (map_first_run) then begin
+      critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_TEAM_NUM,TEAM_JUNKTOWNER);
+      critter_add_trait(self_obj,TRAIT_OBJECT,OBJECT_AI_PACKET,AI_MERCHANT);
+
+      if CUR_MAP_MOUNTN1 then
+      	critter_attempt_placement(self_obj,19084, self_elevation);
+      else if CUR_MAP_MOUNTN2 then
+      	critter_attempt_placement(self_obj,19481, self_elevation);
+
+      animate_rotation(3);
+
+		// Wagon:
+		Scenery_Creation_Hex:=tile_num_in_direction(self_tile,5,4);
+		Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,0,1);
+      Create_NS_Grey_Caravan(Scenery_Creation_Hex,0)
+
+      // Rug:
+      Scenery_Creation_Hex:=tile_num_in_direction(self_tile,5,1);
+      Scenery_Creation:=create_object(33554810,Scenery_Creation_Hex,0);
+
+      // Chair:
+      Scenery_Creation_Hex:=tile_num_in_direction(self_tile,4,2);
+      Scenery_Creation:=create_object(33554667,Scenery_Creation_Hex,0);
+
+      // Brahmin:
+      Scenery_Creation_Hex:=tile_num_in_direction(self_tile,5,8);
+      Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,0,1);
+      Scenery_Creation:=create_object_sid(PID_BRAHMIN,0,0,SCRIPT_CARCOW);
+		critter_attempt_placement(Scenery_Creation,Scenery_Creation_Hex,0);
+		anim(Scenery_Creation, ANIMATE_ROTATION, 5);
+
+		// Give stimpaks:
+		give_pid_qty(self_obj, PID_SUPER_STIMPAK, 2)
+
+		display_msg(mstr(110));
+   end
+end
+
+
+/**************************************************************************************
+   This procedure gets called roughly every 30 seconds of real time.
+**************************************************************************************/
+
+procedure map_update_p_proc begin
+end
+
+procedure map_exit_p_proc begin
+end
+
+/**************************************************************************************
+   This is used for any dialogue that may need to occur with the player.
+**************************************************************************************/
+
+procedure talk_p_proc begin
+	last_question := 0;
+
+	gdialog_set_barter_mod(Quack_Trade_Modifier);
+
+	face_start_dialog_at_node(Node1000);
+end
+
+procedure Node998 begin
+	set_local_var(LVAR_Personal_Enemy,1);
+end
+
+procedure Node999 begin
+end
+
+procedure doBarter begin
+	Reply(1102);
+	gdialog_mod_barter(Quack_Trade_Modifier);
+	call Node1200;
+end
+
+procedure Node1000 begin
+	if (local_var(LVAR_Herebefore) == 0) then
+		Reply(1000);
+	else
+		Reply(1001);
+
+	GOption(1010,Node1100,004);
+	GLowOption(1011,Node1100);
+	NOption(1020,Node1300,005);
+	BOption(1030,Node999,004);
+	BLowOption(1031,Node999);
+
+	set_local_var(LVAR_Herebefore,1);
+end
+
+procedure Node1100 begin
+	Reply(1100 + dude_is_female);
+	NOption(1110,doBarter,001);
+end
+
+procedure Node1200 begin
+	Reply(1200);
+	GOption(1210,doBarter,004);
+	NOption(1220,Node999,004);
+
+	GLowOption(1211,doBarter);
+	NLowOption(1221,Node999);
+end
+
+procedure Node1300 begin
+	Reply(1300 + dude_is_female);
+	NOption(1310,doBarter,001);
+end
