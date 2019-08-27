@@ -30,6 +30,9 @@
 
 {510}{}{You charge the bike with more power.}
 {511}{}{The bike is already fully charged.}
+{512}{}{The bike is running at }
+{513}{}{% power.}
 
 {520}{}{The fuel cell regulator is missing.}
+
 
