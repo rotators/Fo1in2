@@ -207,6 +207,7 @@ variable Scenery_Creation_Ptr;
 #define PID_BURNING_BARREL 					(33554433)
 #define PID_CACTUS_1						(33554496)
 #define PID_CACTUS_2 						(33554497)
+#define PID_OLD_CHAIR						(33554667)
 #define PID_CART 							(33554800)
 #define PID_CHAIR 							(33555207)
 #define PID_CHAIR_1 						(33554527)

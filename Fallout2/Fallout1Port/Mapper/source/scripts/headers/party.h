@@ -118,14 +118,14 @@ variable How_Many_Party_Members_Armed;
                critter_attempt_placement(the_obj, the_tile, the_elev);     \
             end                                                            \
          end
-#define attempt_place_party(the_tile, the_elev)                                     \
-         attempt_place_party_member(Trunk_Ptr, the_tile, the_elev)                  \
-         attempt_place_party_member(Ian_ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Dog_ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Tycho_ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Katja_ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(Tandi_ptr, the_tile, the_elev)					\
-		 attempt_place_party_member(MrHandyC_Ptr, the_tile, the_elev)
+#define attempt_place_party(the_tile, the_elev)                           \
+        attempt_place_party_member(Trunk_Ptr, the_tile, the_elev)         \
+        attempt_place_party_member(Ian_ptr, the_tile, the_elev)           \
+		  attempt_place_party_member(Dog_ptr, the_tile, the_elev)           \
+		  attempt_place_party_member(Tycho_ptr, the_tile, the_elev)         \
+		  attempt_place_party_member(Katja_ptr, the_tile, the_elev)         \
+		  attempt_place_party_member(Tandi_ptr, the_tile, the_elev)         \
+		  attempt_place_party_member(MrHandyC_Ptr, the_tile, the_elev)
 
 
 //#define Party_Childkiller                   (global_var(GVAR_PARTY_CHILDKILLER) BWAND Party_Childkiller_Mask)
@@ -353,14 +353,14 @@ variable PartyHealingItem;
                debug_msg("PARTY.H:::: party member wasn't hidden.. clearing my state");         \
             end                                                                                 \
          end
-#define party_member_unhide_all                                                        \
-         set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                  \
-         party_member_unhide(Ian_ptr, hidden_ian_bit)                                 \
-		 party_member_unhide(Dog_ptr, hidden_dog_bit)                                 \
-		 party_member_unhide(Tycho_ptr, hidden_tycho_bit)                             \
-		 party_member_unhide(Katja_ptr, hidden_katja_bit)                             \
-		 party_member_unhide(Tandi_ptr, hidden_tandi_bit)                             \
-		 party_member_unhide(Handy_ptr, hidden_mrhandyc_bit)
+#define party_member_unhide_all                                                      \
+        set_gvar_bit_off(GVAR_PARTY_MEMBERS_HIDDEN, all_hidden_bit);                 \
+        party_member_unhide(Ian_ptr, hidden_ian_bit)                                 \
+		  party_member_unhide(Dog_ptr, hidden_dog_bit)                                 \
+		  party_member_unhide(Tycho_ptr, hidden_tycho_bit)                             \
+		  party_member_unhide(Katja_ptr, hidden_katja_bit)                             \
+		  party_member_unhide(Tandi_ptr, hidden_tandi_bit)                             \
+		  party_member_unhide(Handy_ptr, hidden_mrhandyc_bit)
 
 //End hiding party members
 
