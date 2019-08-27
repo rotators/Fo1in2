@@ -1021,5 +1021,6 @@
 #define SCRIPT_ZISLOTS          (1007)  // ziSlots.int     ; Generic Fo2 Slot Machine
 #define SCRIPT_ZCCRPDEL         (1008)  // ZCCrpDel.int    ; Craps Dealer
 #define SCRIPT_ZIDCEGRL         (1009)  // ziDceGrl.int    ; Generic Casino Girl with Dice Game
+#define SCRIPT_ENCQUACK         (1010)  // ENCQUACK.int    ; Fo1in2 encounter, old quack
 
 #endif // SCRIPTS_H
