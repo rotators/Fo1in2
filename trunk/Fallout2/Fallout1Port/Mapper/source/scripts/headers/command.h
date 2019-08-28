@@ -88,9 +88,9 @@ variable global_temp;
                                                 if (anim_busy(self_obj) == false) then begin                      \
                                                    dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, Run_Away_From_Dude_Dir, the_dist), random(0, 5), random(0, 2)); \
                                                    if (Current_Distance_From_Dude > (the_range * 2)) then begin   \
-                                                      animate_run_to_tile(dest_tile);                             \
+                                                      self_run_to_tile(dest_tile);                             \
                                                    end else begin                                                 \
-                                                      animate_move_to_tile(dest_tile);                            \
+                                                      self_move_to_tile(dest_tile);                            \
                                                    end                                                            \
                                                 end else if (self_distance_from_dude < tile_distance(self_tile, dest_tile)) then begin  \
                                                    reg_anim_clear(self_obj);                                      \
