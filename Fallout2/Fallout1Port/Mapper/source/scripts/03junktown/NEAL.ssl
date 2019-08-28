@@ -68,6 +68,9 @@ variable change_team;
 
 #define LVAR_Sleeping 							(9)
 
+#define EVENT_SHOOT                    (4)
+#define EVENT_TARGET_DEAD              (10)
+
 procedure start
 begin
 
@@ -281,6 +284,8 @@ begin
 end
 
 procedure timed_event_p_proc begin
+variable Sound2;
+
 	if (fixed_param == 1) then begin
 		float_msg(Trish_ptr, message_str(SCRIPT_TRISH, 150), 4);
 		if ((global_var( GVAR_TRISH_STATUS ) bwand 2) == 0) then begin
@@ -324,13 +329,32 @@ procedure timed_event_p_proc begin
 		reg_anim_play_sfx(self_obj, sfx_name, 0);
 		reg_anim_animate(self_obj, 44, -1);
 		reg_anim_func(3, 0);
-		add_timer_event(self_obj, 5, 4);
+		add_timer_event(self_obj, 5, EVENT_SHOOT);
 	end
-	else if (fixed_param == 4) then begin
-	   // TODO: Exchange splatter animation to "big hole" or something.
-		critter_dmg( Skul_target, random(50, 75), DMG_normal_dam );
+	else if (fixed_param == EVENT_SHOOT) then begin
+	   // vanilla Fo1:
+		//critter_dmg( Skul_target, random(50, 75), DMG_normal_dam );
+
+		// Fo1in2:
+		if not(fo1in2_destroy_armor_disabled) then
+		   rm_obj_from_inven(Skul_target, get_armor(Skul_target));
+
+		game_ui_disable;
+      Sound2:=sfx_build_char_name(Skul_target, ANIM_big_hole, snd_die);
+      reg_anim_clear(Skul_target);
+      reg_anim_begin();
+         reg_anim_animate(Skul_target, ANIM_big_hole, -1);
+         reg_anim_play_sfx(Skul_target, Sound2, 0);
+      reg_anim_end();
+      add_timer_event(self_obj, 23, EVENT_TARGET_DEAD);
+
+      // vanilla Fo1:
 		float_msg(self_obj, message_str(SCRIPT_NEAL, 146), 2);
 		moving_disabled := 0;
+	end
+	else if (fixed_param == EVENT_TARGET_DEAD) then begin
+      kill_critter(Skul_target, ANIM_big_hole);
+      game_ui_enable;
 	end
 	else if (fixed_param == 5) then begin
 		float_msg(self_obj, message_str(SCRIPT_NEAL, 147), 2);
