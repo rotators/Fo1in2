@@ -136,7 +136,7 @@
 #define Current_Distance_From_Who(Source,Dest)  tile_distance_objs(Source,Dest)
 
 #define Flee_From_Who(Source,Dest)              if (Current_Distance_From_Who(Source,Dest) < 8) then begin                \
-                                                    animate_run_to_tile(Run_Away_From_Who_Tile(Source,Dest));             \
+                                                    self_run_to_tile(Run_Away_From_Who_Tile(Source,Dest));             \
                                                 end
 
 
