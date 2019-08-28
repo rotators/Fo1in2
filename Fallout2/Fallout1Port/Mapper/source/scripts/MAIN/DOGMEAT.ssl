@@ -80,7 +80,6 @@ procedure critter_p_proc begin
 	if not(global_var( GVAR_DOGMEAT_HIRELING_STATUS )) then begin
 		if (local_var(4) == 0) then begin
 			if (self_can_see_dude) then begin
-
 				if dude_armor then begin
 					variable JacketCheck;
 					JacketCheck := dude_armor;
@@ -117,15 +116,13 @@ procedure critter_p_proc begin
 			end
 		end
 	end
-	else begin
-		if (local_var(4) == 0) then begin
-			if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-				if (map_var(MVAR_Phil_approaches)) then begin
-					if (map_var(MVAR_dog_is_angry)) then begin
-						add_timer_event(self_obj, game_ticks(6), 1);
-					end
-					set_map_var(MVAR_Phil_approaches, 0);
+	else if (local_var(4) == 0) then begin
+		if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+			if (map_var(MVAR_Phil_approaches)) then begin
+				if (map_var(MVAR_dog_is_angry)) then begin
+					add_timer_event(self_obj, game_ticks(6), 1);
 				end
+				set_map_var(MVAR_Phil_approaches, 0);
 			end
 		end
 	end
@@ -135,15 +132,7 @@ procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	set_global_var( GVAR_DOGMEAT_HIRELING_STATUS, 0 );
 
-	if source_obj > 0 then begin
-		SrcObj := 0;
-		SrcIsParty := 0;
-		SrcObj := obj_pid(source_obj);
-		if party_member_obj(SrcObj) then begin
-			SrcIsParty := 1;
-		end
-	end
-	if (source_obj == dude_obj) or (SrcIsParty == 1) then begin
+	if obj_in_party(source_obj) then begin
 		if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
 			set_global_var( GVAR_DOGMEAT_SOMETHING_0, 2 );
 			set_global_var( GVAR_DOGMEAT_SOMETHING_1, 2 );
@@ -155,7 +144,6 @@ procedure destroy_p_proc begin
 			set_map_var(MVAR_growling, 0);
 		end
 	end
-	rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
