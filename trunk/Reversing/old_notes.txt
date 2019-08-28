@@ -1,0 +1,125 @@
+411A00 = mem offset - file offset
+ 
+_check_ranged_miss: bullet is flying, skips original target
+returned 1 if something is hit, 0 otherwise
+ 
+ 
+_combat_ctd_init, standard attack struct:
++0  attacker id
++4  attack type
++8  _item_hit_with
++0c 3
++10 0 (1-5 added in case of "hurt self" critfail) (DAMAGE! :D)
++14 0 (critfail flags) (used in _attack_crit_failure, set to 0x00020000, or'd with critfail flags. [1])
++18 0 (something later passed by compute_spray) (rounds used?) (set to max when "lost rest of ammo")
++1c additional attack message number (as in combat.msg), default -1
++20 target id
++24 target hex (-1 if target id = 0)
++28 aimed location (from arg.1, usually = 3 for uncalled)
++2c 0
++30 0 (flags for critical hit effects, or'd in _attack_crit_success)
++34 0 (in case of possible knockdown, damage/10 or damage/5 depending on weapon perk, /2 if stonewall p)
++3c 0 (used in shoot_along_path)
++38 target id (secondary?) (backup of original?)
+[1] 0x00010000 always or'd if anything is hit
+ 
+ 
+_compute_damage local vars:
+9   passed rounds
+7   passed damage multiplier
+11  critfail randhit target id (attacker or target) or target id
+12  in case of anyhit, attack id + 34, 0 otherwise
+13  in case of anyhit, attack id + 30 (= crit hit effects flags), attack id + 14 otherwise
+15  damage type
+6   damage threshold
+5   damage resistance
+14  original damage resistance
+10  if player and ranged attack (not throwing?) then bonus ranged damage level *2, 0 otherwise
+8   100 (125 or 75 if wimpy or rough)
+16  0 if combat difficulty is normal, 1 otherwise
+ 
+ 
+_determine_tohit_func local vars:
+3   _weapon_hit_with
+4   distmod1
+5   attacker id + 3c
+6   attacker's pe
+7   use ac (0/1)
+8   distmod2
+9   is attack ranged (0/1)
+10  attacker's hex
+11  aimed location
+12  dist (acc)
+13  0/1 (used in combat difficulty tests)
+ 
+ 
+shoot_along_path local vars:
+4   final tile
+5   weapon animation (= burst or flame)
+8   id of current critter in path (at start: attacker id)
+7   0
+3   0 (bullets that hit current target)
+ 
+critter (object?) struct:
++0  some id?
++4  current hex
++20 used in combat_attack to replace crithit flags in attack_struct
++24 flags (0x00080000 for "alive"?)
++28 current direction
++40 current action points
++54 id of last attacker?
++58 current hp
++5c radiation level
++60 poison level
++64 some flags (used for knockdowns)
+ 
+attack animations (not complete):
+10  punch
+11  kick
+12  throw
+2d  single
+2e  burst
+2f  flame
+ 
+damage types:
+0   normal
+1   laser
+2   fire
+3   plasma
+4   electrical
+5   emp
+6   explosive
+ 
+weapon subtypes:
+1   unarmed
+2   melee
+3   throwing
+4   guns
+ 
+special melee attacks
+04  punch
+05  kick
+08  strong punch
+09  hammer punch
+0a  haymaker
+0b  jab
+0c  palm strike
+0d  piercing strike
+0e  strong kick
+0f  snap kick
+10  power kick
+11  hip kick
+12  hook kick
+13  piercing kick
+ 
+ 
+_stat_level input: as in stat.msg -100
+ 
+ 
+queue_add(int time_off, int p1, int p2, int critter_id) (through eax, ebx, ecx, edx)
+allocates 0x14 bytes (a node in normal queue):
++0  initial eax + time_off (current_time+time_off)
++4  initial ecx (probably event type)
++8  initial edx (critter id)
++0c initial ebx (0 in case of poison)
++10 pointer
