@@ -198,10 +198,29 @@ variable step_tile;
 //
 // misc tuples
 //
+#define dude_walk_to_tile(tile)           animate_move_obj_to_tile(dude_obj,tile,ANIMATE_WALK)
+#define self_walk_to_tile(tile)           animate_move_obj_to_tile(self_obj,tile,ANIMATE_WALK)
+
+#define dude_walk_to_tile_force(tile)     animate_move_obj_to_tile(dude_obj,tile,ANIMATE_WALK_FORCE)
+#define self_walk_to_tile_force(tile)     animate_move_obj_to_tile(self_obj,tile,ANIMATE_WALK_FORCE)
+
+#define dude_run_to_tile(tile)            animate_move_obj_to_tile(dude_obj,tile,ANIMATE_RUN)
+#define self_run_to_tile(tile)            animate_move_obj_to_tile(self_obj,tile,ANIMATE_RUN)
+
+#define dude_run_to_tile_force(tile)      animate_move_obj_to_tile(self_obj,tile,ANIMATE_RUN_FORCE)
+#define self_run_to_tile_force(tile)      animate_move_obj_to_tile(self_obj,tile,ANIMATE_RUN_FORCE)
+
+#define dude_stand                        animate_stand_obj(dude_obj)
+#define self_stand                        animate_stand_obj(self_obj)
+
+#define dude_stand_reverse                animate_stand_reverse_obj(dude_obj)
+#define self_stand_reverse                animate_stand_reverse_obj(self_obj)
+
+#define dude_set_frame(frame)             anim(dude_obj,ANIMATE_SET_FRAME,frame)
+#define self_set_frame(frame)             anim(self_obj,ANIMATE_SET_FRAME,frame)
 
 #define dude_elevation                    elevation(dude_obj)
 #define self_elevation                    elevation(self_obj)
-
 
 #define dude_fid                          obj_art_fid(dude_obj)
 #define self_fid                          obj_art_fid(self_obj)
@@ -224,9 +243,14 @@ variable step_tile;
 #define dude_tile                         tile_num(dude_obj)
 #define self_tile                         tile_num(self_obj)
 
+#define dude_rotation_to_self             rotation_to_tile(dude_tile,self_tile)
+#define self_rotation_to_dude             rotation_to_tile(self_tile,dude_tile)
+
+#define dude_look_at_critter              anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
+#define self_look_at_dude                 anim(self_obj,ANIMATE_ROTATION,self_rotation_to_dude)
+
 #define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)
 #define self_is_sneaking                  using_skill(self_obj,SKILL_SNEAK)
-
 //
 // gear
 //
@@ -341,8 +365,9 @@ variable step_tile;
 #define dude_awareness                    dude_perk(PERK_bonus_awareness)
 #define dude_fortune_finder               dude_perk(PERK_fortune_finder)
 #define dude_smooth_talker                dude_perk(PERK_smooth_talker)
-#define dude_excrement_expediter          dude_perk(PERK_expert_excrement_expediter_perk)
-#define dude_quick_pockets		          dude_perk(PERK_quick_pockets)
+#define dude_excrement_expediter          dude_perk(PERK_expert_excrement_expediter_perk) // TODO ReDefine
+#define dude_quick_pockets                dude_perk(PERK_quick_pockets) // TODO ReDefine
+// TODO add && ReDefine dude_is_animal_friend
 
 #define self_mental_block                 self_perk(PERK_mental_block)
 #define self_presence                     self_perk(PERK_presence)
@@ -378,6 +403,14 @@ variable step_tile;
 
 #define set_team(cr,team)                 critter_add_trait(cr,TRAIT_OBJECT,OBJECT_TEAM_NUM,team)
 #define set_self_team(team)               set_team(self_obj,team)
+
+//
+// Rotators, rotate!
+//
+
+#define obj_rotate(obj,dir)               anim(obj,ANIMATE_ROTATION,dir)
+#define dude_rotate(dir)                  obj_rotate(dude_obj,dir)
+#define self_rotate(dir)                  obj_rotate(self_obj,dir)
 
 
 //
