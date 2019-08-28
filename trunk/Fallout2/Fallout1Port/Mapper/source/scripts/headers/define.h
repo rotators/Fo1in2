@@ -646,20 +646,6 @@
 #define METARULE_ELEVATOR         15
 #define elevator(X)       metarule(METARULE_ELEVATOR, X)
 
-//#define ELEV_BOS1    (0)  // Brotherhood of Steel main elevator
-//#define ELEV_BOS2    (1)  // Brotherhood of Steel surface elevator
-//#define ELEV_MASTR1  (2)  // Master's upper-level elevator 3-4
-//#define ELEV_MASTR2  (3)  // Master's lower-level elevator
-//#define ELEV_MILB1   (4)  // Military Base upper-level elevator
-//#define ELEV_MILB2   (5)  // Military Base lower-level elevator
-//#define ELEV_GLOW1   (6)  // Glow Elevator upper
-//#define ELEV_GLOW2   (7)  // Glow elevator lower
-//#define ELEV_VAULT   (8)  // Vault13 elevator
-//#define ELEV_NECVLT  (9)  // Necropolis elevator
-//#define ELEV_SIERRA1 (10) // Sierra Elev 1 (1-2-3)
-//#define ELEV_SIERRA2 (11) // Sierra Elev 2 (3-4)
-//#define ELEV_SIERRAS (12) // Sierra Service Elev (1-2-3-4)
-
 #define ELEV_BOS1 		(0) // Brotherhood of Steel main elevator
 #define ELEV_BOS2 		(1) // Brotherhood of Steel surface elevator
 #define ELEV_MASTR1  	(2) // Master's upper-level elevator 3-4
