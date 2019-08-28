@@ -47,30 +47,30 @@ variable global_temp;
 
 #define away_from_tile_type(x, type, dist)  if (anim_busy(self_obj) == false) then begin                                                             \
                                                global_temp := rotation_to_tile(x, self_tile);                                                        \
-                                               animate_##type##_to_tile(tile_num_in_direction(self_tile, global_temp, dist));                        \
+                                               self_##type##_to_tile(tile_num_in_direction(self_tile, global_temp, dist));                        \
                                                global_temp := (global_temp + 1) % 6;                                                                 \
                                                while ((anim_busy(self_obj) == false) and (global_temp != rotation_to_tile(x, self_tile))) do begin   \
                                                   debug_msg("flee loop: rot == "+global_temp);                                                       \
-                                                  animate_##type##_to_tile(tile_num_in_direction(self_tile, global_temp, dist));                     \
+                                                  self_##type##_to_tile(tile_num_in_direction(self_tile, global_temp, dist));                     \
                                                   global_temp := (global_temp + 1) % 6;                                                              \
                                                end                                                                                                   \
                                             end
 
-#define simulate_push(x)                    away_from_tile_type(tile_num_in_direction(self_tile, rotation_to_tile(x, self_tile), 1), move, push_away_from_dist)
+#define simulate_push(x)                    away_from_tile_type(tile_num_in_direction(self_tile, rotation_to_tile(x, self_tile), 1), walk, push_away_from_dist)
 #define flee_from_tile(x)                   away_from_tile_type(x, run, run_away_from_dist)
 #define Flee_From_Dude                      if ((Current_Distance_From_Dude < 8) or (self_can_see_dude)) then begin  \
                                                flee_from_tile(dude_tile)                                             \
                                             end
 
 #define Flee_From_Dude_Force                if ((Current_Distance_From_Dude < 8) or (self_can_see_dude)) then begin  \
-                                                animate_run_to_tile_force(Run_Away_From_Dude_Tile);                  \
+                                                self_run_to_tile_force(Run_Away_From_Dude_Tile);                  \
                                             end
 
 #define Follow_Dude(X,Y)                    if (Current_Distance_From_Dude > X) then begin                  \
                                                if (Current_Distance_From_Dude > X*2) then begin             \
-                                                  animate_run_to_tile(Future_Distance_From_Dude(Y));        \
+                                                  self_run_to_tile(Future_Distance_From_Dude(Y));        \
                                                end else begin                                               \
-                                                  animate_move_to_tile(Future_Distance_From_Dude(Y));       \
+                                                  self_walk_to_tile(Future_Distance_From_Dude(Y));       \
                                                end                                                          \
                                             end
 
@@ -99,21 +99,21 @@ variable global_temp;
 #define follow_dude_point(the_range, the_dist)     follow_obj_point(the_range, the_dist, dude_obj)
 
 #define Follow_Dude_Run_Only(X,Y)           if (Current_Distance_From_Dude > X) then begin                  \
-                                               animate_run_to_tile(Future_Distance_From_Dude(Y));           \
+                                               self_run_to_tile(Future_Distance_From_Dude(Y));           \
                                             end
 
 #define Follow_Obj_Run_Only(O,X,Y)          if (tile_distance_objs(self_obj,O) > X) then begin              \
-                                               animate_run_to_tile(Future_Distance_From_Obj(O, Y));         \
+                                               self_run_to_tile(Future_Distance_From_Obj(O, Y));         \
                                             end
 #define Get_In_Obj_Face(the_obj)            if (tile_distance_objs(self_obj, the_obj) > 1) then begin                                                              \
-                                               animate_move_to_tile(tile_num_in_direction(tile_num(the_obj), has_trait(TRAIT_OBJECT,the_obj,OBJECT_CUR_ROT), 1));  \
+                                               self_walk_to_tile(tile_num_in_direction(tile_num(the_obj), has_trait(TRAIT_OBJECT,the_obj,OBJECT_CUR_ROT), 1));  \
                                             end else if (rotation_to_tile(tile_num(self_obj),tile_num(the_obj)) != self_cur_rot) then begin                        \
                                                if (anim_busy(self_obj) == false) then begin                                                                        \
                                                   Face_Critter(the_obj, self_obj);                                                                                 \
                                                end                                                                                                                 \
                                             end
 #define Get_In_Face_Run_Dist(the_obj,dist)  if (tile_distance_objs(self_obj, the_obj) > 1) then begin                                                              \
-                                               animate_run_to_tile(tile_num_in_direction(tile_num(the_obj), has_trait(TRAIT_OBJECT,the_obj,OBJECT_CUR_ROT), dist));\
+                                               self_run_to_tile(tile_num_in_direction(tile_num(the_obj), has_trait(TRAIT_OBJECT,the_obj,OBJECT_CUR_ROT), dist));\
                                             end else if (rotation_to_tile(tile_num(self_obj),tile_num(the_obj)) != self_cur_rot) then begin                        \
                                                if (anim_busy(self_obj) == false) then begin                                                                        \
                                                   Face_Critter(the_obj, self_obj);                                                                                 \
@@ -138,10 +138,10 @@ variable global_temp;
                                                 end                                                                                                                \
                                              end
 
-#define Get_Next_To_Obj_And_Face_Rate(the_obj, x)     next_and_face_obj(the_obj, animate_move_to_tile, x)
-#define Get_Next_To_Obj_And_Face(the_obj)             next_and_face_obj(the_obj, animate_move_to_tile, 1)
-#define Run_Next_To_Obj_And_Face_Rate(the_obj, x)     next_and_face_obj(the_obj, animate_run_to_tile, x)
-#define Run_Next_To_Obj_And_Face(the_obj)             next_and_face_obj(the_obj, animate_run_to_tile, 1)
+#define Get_Next_To_Obj_And_Face_Rate(the_obj, x)     next_and_face_obj(the_obj, self_walk_to_tile, x)
+#define Get_Next_To_Obj_And_Face(the_obj)             next_and_face_obj(the_obj, self_walk_to_tile, 1)
+#define Run_Next_To_Obj_And_Face_Rate(the_obj, x)     next_and_face_obj(the_obj, self_run_to_tile, x)
+#define Run_Next_To_Obj_And_Face(the_obj)             next_and_face_obj(the_obj, self_run_to_tile, 1)
 #define point_move_next_and_face_Rate(the_obj, x)     point_next_and_face_obj(the_obj, anim_move_to_point, x)
 #define point_move_next_and_face(the_obj)             point_next_and_face_obj(the_obj, anim_move_to_point, 1)
 #define point_run_next_and_face_Rate(the_obj, x)      point_next_and_face_obj(the_obj, anim_run_to_point, x)
@@ -170,10 +170,10 @@ variable step_tile;
                                                       end else if (anim_busy(self_obj) == false) then begin                                                                                     \
                                                          dest_tile := the_tile;                                                                                                                 \
                                                          step_tile := the_tile;                                                                                                                 \
-                                                         animate_##move_type##_to_tile(step_tile);                                                                                              \
+                                                         self_##move_type##_to_tile(step_tile);                                                                                              \
                                                          while ((anim_busy(self_obj) == false) and (((tile_distance(self_tile, the_tile)) >= (tile_distance(step_tile, the_tile))))) do begin   \
                                                             step_tile := tile_num_in_direction(step_tile, rotation_to_tile(step_tile, self_tile), (x % tile_distance(step_tile, self_tile)) + 1);   \
-                                                            animate_##move_type##_to_tile(step_tile);                                                                                           \
+                                                            self_##move_type##_to_tile(step_tile);                                                                                           \
                                                          end                                                                                                                                    \
                                                          if (anim_busy(self_obj) == false) then begin                                                                                           \
                                                             FAIL_STEP_ACTION                                                                                                                    \
@@ -183,7 +183,7 @@ variable step_tile;
                                                       end                                                                                                                                       \
                                                    end
 
-#define anim_move_to_point_rate(the_tile, x)       move_to_point(the_tile, move, x)
+#define anim_move_to_point_rate(the_tile, x)       move_to_point(the_tile, walk, x)
 #define anim_move_to_point(the_tile)               anim_move_to_point_rate(the_tile, 1)
 #define anim_run_to_point_rate(the_tile, x)        move_to_point(the_tile, run, x)
 #define anim_run_to_point(the_tile)                anim_run_to_point_rate(the_tile, 1)
@@ -681,7 +681,7 @@ variable tmp_rotation;
 											   Face_Critter(dude_obj,self_obj); 	\
 											   Face_Critter(self_obj,dude_obj); 	\
 											   start_dialog_at_node(x); 			\
-											   animate_rotation(tmp_rotation)
+											   self_rotate(tmp_rotation)
 											   
 /*
 FLOAT_MSG_BLACK

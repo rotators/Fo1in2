@@ -923,7 +923,7 @@
                                     end                                                   \
                                 end                                                       \
                                 else if (NPC_REACTION_TYPE == REACTION_C) then begin      \
-                                    animate_run_to_tile(tile_num_in_direction(tile_num(self_obj), rotation_to_tile(tile_num(source_obj),tile_num(self_obj)), random(8,14)));  \
+                                    self_run_to_tile(tile_num_in_direction(tile_num(self_obj), rotation_to_tile(tile_num(source_obj),tile_num(self_obj)), random(8,14)));  \
                                 end
 // global pickups
 procedure old_pickup_p_proc;
