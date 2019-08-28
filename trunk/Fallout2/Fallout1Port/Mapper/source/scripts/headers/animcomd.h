@@ -21,24 +21,18 @@
 ************************************************************/
 
 // Animation macros & defines //
-#define ANIMATE_WALK                (0)
-#define ANIMATE_RUN                 (1)
-#define ANIMATE_INTERRUPT           (16)
+#define ANIMATE_WALK                 (0) // NOTE: defined as ANIMATE_SPEED type in ReDefine.cfg
+#define ANIMATE_RUN                  (1) // NOTE: defined as ANIMATE_SPEED type in ReDefine.cfg
+#define ANIMATE_INTERRUPT            (16)
+#define ANIMATE_WALK_FORCE           (ANIMATE_WALK bwor ANIMATE_INTERRUPT)
+#define ANIMATE_RUN_FORCE            (ANIMATE_RUN  bwor ANIMATE_INTERRUPT)
 
-#define ANIMATE_FORWARD             (0)
-#define ANIMATE_REVERSE             (1)
+#define ANIMATE_FORWARD              (0)
+#define ANIMATE_REVERSE              (1)
 
-#define animate_move_to_tile(X)         animate_move_obj_to_tile(self_obj, X, ANIMATE_WALK)
-#define animate_run_to_tile(X)          animate_move_obj_to_tile(self_obj, X, ANIMATE_RUN)
-#define animate_stand                   animate_stand_obj(self_obj)
-#define animate_stand_reverse           animate_stand_reverse_obj(self_obj)
-#define animate_move_to_tile_force(X)   animate_move_obj_to_tile(self_obj, X, (ANIMATE_WALK bwor ANIMATE_INTERRUPT))
-#define animate_run_to_tile_force(X)    animate_move_obj_to_tile(self_obj, X, (ANIMATE_RUN bwor ANIMATE_INTERRUPT))
-#define ANIMATE_ROTATION                (1000)
-#define ANIMATE_SET_FRAME               (1010)
-#define MAX_ROTATIONS                   (6)
-#define animate_rotation(X)             anim(self_obj, ANIMATE_ROTATION, X)
-#define animate_set_frame(FRAME)        anim(self_obj, ANIMATE_SET_FRAME, FRAME)
+#define ANIMATE_ROTATION             (1000) // NOTE: injected into ANIM type in ReDefine.cfg
+#define ANIMATE_SET_FRAME            (1010) // NOTE: injected into ANIM type in ReDefine.cfg
+#define MAX_ROTATIONS                (6)
 
 // basic animations  0-19
 #define ANIM_stand                    (0)

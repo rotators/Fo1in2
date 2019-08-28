@@ -20,10 +20,6 @@
 
 #include "..\headers\fo1.h"
 
-// TODO MOVE TO ANIMCOMD.H ON REDEFINE RUN animate_move_obj_to_tile(...)
-#define ANIMATE_WALK_FORCE (0 bwor 16)
-#define ANIMATE_RUN_FORCE  (1 bwor 16)
-
 // script.h: Script Procedure Types //
 #define no_proc           (0)
 #define start_proc        (1)
