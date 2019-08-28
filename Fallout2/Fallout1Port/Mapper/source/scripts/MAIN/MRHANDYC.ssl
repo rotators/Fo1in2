@@ -52,9 +52,6 @@ procedure Node1007;
 procedure Node1008;
 procedure Node1009;
 procedure Node1010;
-procedure Node1011;
-procedure Node1012;
-procedure Node1013;
 procedure Node1100;
 
 procedure GetDate;
@@ -74,12 +71,13 @@ variable tmp_hostile := 0;
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
 
-#define float_handy(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define float_handy(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
 #define handy_joins_party               	party_add_self;                                                   \
                                           add_timer_event(self_obj,game_ticks(1),2);                        \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_handy  		((dude_at_max_party_size == false) and (MrHandyC_In_Party == false) or unlimited_party_members)
 #define EVENT_FLOAT_JOIN 						(2)
+#define EVENT_CALIBRATE                   (3)
 
 #define handy_is_fixed 							((local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 1))
 
@@ -106,6 +104,10 @@ end
 procedure timed_event_p_proc begin
 	if (fixed_param == EVENT_FLOAT_JOIN) then begin
 		debug("handy is joining!");
+	end
+	else if (fixed_param == EVENT_CALIBRATE) then begin
+	   if (random(0,1) == 1) then
+	      float_handy(random(1004,1006));
 	end
 end
 
@@ -300,11 +302,7 @@ procedure talk_p_proc begin
 				display_msg(message_str(SCRIPT_MRHANDYC, 103));//{103}{}{You cannot access the robot's functions, as it is disabled.}
 			end
 			else if handy_is_fixed then begin
-				start_gdialog(631, self_obj, 4, -1, -1);
-				gsay_start;
-				call MrHandyC00;
-				gsay_end;
-				end_dialogue;
+				start_dialog_at_node(MrHandyC00);
 			end
 			else begin
 				script_overrides;
@@ -649,12 +647,14 @@ procedure Node1007 begin
    // distance
    Reply(1007);
    party_member_def_follow_options;
+   flush_add_timer_event_sec(self_obj, 0, EVENT_CALIBRATE);
 end
 
 procedure Node1008 begin
    // gear
-   Reply(1008);
+   Reply(1010);
    party_member_def_gear_options;
+   flush_add_timer_event_sec(self_obj, 0, EVENT_CALIBRATE);
 end
 
 procedure Node1009 begin
@@ -666,25 +666,8 @@ end
 
 procedure Node1010 begin
    // weapons that can be used
-   Reply(1010);
+   Reply(1011);
    party_member_default_options;
-   NOption(1011,Node1011,004);
-end
-
-procedure Node1011 begin
-	Reply(1012);
-	NOption(1013,Node1012,004);
-	NOption(1014,Node1013,004);
-end
-
-procedure Node1012 begin
-	Reply(1016);
-	NOption(1017,MrHandyC08,004);
-end
-
-procedure Node1013 begin
-	Reply(1015);
-	party_member_default_options;
 end
 
 procedure Node1100 begin
