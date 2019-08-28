@@ -11,7 +11,13 @@
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
+#define PARTY_NODE_X                         Node1000
 #define set_default_party_follow             set_follow_close
+#define def_weapon_use_msg                   mstr(177)
+#define def_wait_msg                         mstr(167)
+#define def_nowait_msg                       mstr(182)
+#define def_end_msg                          mstr(2015)
+#define def_gear_msg                         mstr(2000)
 
 procedure start;
 procedure timed_event_p_proc;
@@ -53,6 +59,18 @@ procedure Katja28;
 
 procedure Node998;
 procedure Node999;
+procedure Node1000;
+procedure Node1001;
+procedure Node1002;
+procedure Node1003;
+procedure Node1004;
+procedure Node1005;
+procedure Node1006;
+procedure Node1007;
+procedure Node1008;
+procedure Node1009;
+procedure Node1010;
+procedure Node1100;
 
 procedure KatjaLeave;
 procedure KatjaTactics;
@@ -89,14 +107,12 @@ variable line188flag;
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
 
-#define float_katja(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
-//#define Katja_In_Party    					Katja_In_Party
-
-#define katja_joins_party               	party_add_self;                                                   \
+#define float_katja(x)                    float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
+#define katja_joins_party                 party_add_self;                                                   \
                                           add_timer_event(self_obj,game_ticks(1),2);                        \
                                           set_self_team(TEAM_PLAYER)
-#define dude_has_free_slot_for_katja  		((dude_at_max_party_size == false) and (Katja_In_Party == false) or unlimited_party_members)
-#define EVENT_FLOAT_JOIN 						(2)
+#define dude_has_free_slot_for_katja      ((dude_at_max_party_size == false) and (Katja_In_Party == false) or unlimited_party_members)
+#define EVENT_FLOAT_JOIN                  (2)
 
 procedure Node998 begin
 end
@@ -111,7 +127,8 @@ procedure push_p_proc begin
       script_overrides;
    end
    else begin
-      float_katja(random(300,302));
+      if (random(0,1) == 1) then
+         float_katja(random(310,313));
    end
 end
 
@@ -129,6 +146,10 @@ procedure critter_p_proc begin
    	set_self_abandon_party;
    end
 
+	if (self_can_see_dude) and (global_var(GVAR_ENEMY_FOLLOWERS)) then begin
+		tmp_hostile := 1;
+	end
+
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		set_self_abandon_party;
@@ -145,17 +166,9 @@ procedure destroy_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-	/*if (global_var( GVAR_KATJA_HIRELING_STATUS ) < 2) then begin
+	if (global_var( GVAR_KATJA_HIRELING_STATUS ) < 2) then begin
 		set_self_team(TEAM_LA_ADYTOWNER);
 	end
-	else begin
-		set_self_team(TEAM_PLAYER);
-	end*/
-
-	// This code sets ai behavior based on set combat tactics:
-	//if ((self_ai != AI_GUARD) and (self_ai != AI_PARTY_KATJA_AGGRESSIVE) and (self_ai != AI_PARTY_KATJA_BERSERK)) then begin
-	//	set_self_ai(AI_KATJA);
-	//end
 end
 
 procedure use_obj_on_p_proc begin
@@ -202,17 +215,18 @@ procedure talk_p_proc begin
 
 	start_gdialog(623, self_obj, 4, -1, -1);
 
-	if Katja_In_Party or (global_var( GVAR_KATJA_HIRELING_STATUS ) == 3) then begin
+	if (Katja_In_Party or party_is_waiting) then begin
 		gdialog_set_barter_mod(255);
 	end
 
 	gsay_start;
 
-	if (global_var( GVAR_KATJA_HIRELING_STATUS ) == 3) then begin
+	/*if party_is_waiting then begin
 		call Katja28;
 	end
-	else if Katja_In_Party then begin
-		call Katja24;
+	else*/ if (Katja_In_Party or party_is_waiting) then begin
+		//call Katja24;
+		call Node1000;
 	end
 	else if (global_var( GVAR_KATJA_HIRELING_STATUS ) == 1) then begin
 		call Katja25;
@@ -538,7 +552,7 @@ procedure map_commentary begin
 	else if (CUR_MAP_MBVATS12) then begin //  MILITARY BASE -  VATS  (LEVELS 3 AND 4)
 		if (line184flag == 0) then begin
 			float_msg(self_obj, message_str(SCRIPT_KATJA, 184), 5);
-			if (global_var( GVAR_IAN_HIRELING_STATUS ) == 2) then begin
+			if (Ian_In_Party) then begin
 				float_msg(Ian_ptr, message_str(SCRIPT_IAN, 175), 0);
 			end
 			line184flag := 1;
@@ -613,18 +627,129 @@ end
 
 procedure KatjaSniper begin
 	gsay_message(623, 2100, 49);
-	set_self_ai( AI_PARTY_KATJA_AGGRESSIVE );
+	//set_self_ai( AI_PARTY_KATJA_AGGRESSIVE );
 	call KatjaCombatTactics;
 end
 
 procedure KatjaNearCombat begin
 	gsay_message(623, 2100, 49);
-	set_self_ai( AI_PARTY_KATJA_BERSERK );
+	//set_self_ai( AI_PARTY_KATJA_BERSERK );
 	call KatjaCombatTactics;
 end
 
 procedure KatjaFreeCombat begin
 	gsay_message(623, 2100, 49);
-	set_self_ai( AI_GUARD );
+	//set_self_ai( AI_GUARD );
 	call KatjaCombatTactics;
+end
+
+
+// party stuff
+procedure Node1000 begin
+   if party_is_waiting then begin
+      Reply(181);
+   end
+   else begin
+      Reply(mstr(163));
+      // Lockpick
+   	if (CUR_MAP_MBENT) then begin //  MILITARY BASE - OUTSIDE ENTRANCE
+   		if (map_var(3)) then begin
+   			giq_option( 4, SCRIPT_KATJA, 164, set_lock, NEUTRAL_REACTION );
+   		end
+   	end
+   	if ((CUR_MAP_JUNKENT) and (dude_elevation == 1)) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+   		if (map_var(4)) then begin
+   			giq_option( 4, SCRIPT_KATJA, 164, set_lock, NEUTRAL_REACTION );
+   		end
+   	end
+   end
+   party_member_default_options;
+end
+
+procedure Node1001 begin
+   // heal yourself
+   obj_heal(self_obj)
+   global_temp := 0;
+   if (party_healed_max) then begin
+      Reply(300);
+   end else if (party_healed_good) then begin
+      Reply(301);
+   end else if (party_healed_hurt) then begin
+      Reply(302);
+   end else begin
+      Reply(303);
+   end
+
+   party_member_default_options;
+end
+procedure Node1002 begin
+   set_global_var( GVAR_KATJA_HIRELING_STATUS, 3 );
+
+   // wait here
+   set_party_waiting;
+   Reply(2100);
+   party_member_default_options;
+end
+procedure Node1003 begin
+   // put your weapon away
+   inven_unwield(self_obj);
+   Reply(179);
+   party_member_default_options;
+end
+procedure Node1004 begin
+   // follow close
+   set_follow_close;
+   Reply(2100);
+   party_member_default_options;
+end
+procedure Node1005 begin
+   // follow medium
+   set_follow_medium;
+   Reply(2100);
+   party_member_default_options;
+end
+procedure Node1006 begin
+   // follow far
+   set_follow_far;
+   Reply(2100);
+   party_member_default_options;
+end
+procedure Node1007 begin
+   // distance
+   Reply(2100);
+   party_member_def_follow_options;
+end
+procedure Node1008 begin
+   // gear
+   Reply(2001);
+   party_member_def_gear_options;
+end
+procedure Node1009 begin
+   // remove armor
+   remove_armor(self_obj)
+   Reply(2100);
+   party_member_default_options;
+end
+procedure Node1010 begin
+   // weapons that can be used
+   Reply(178);
+   party_member_default_options;
+end
+procedure Node1100 begin
+   // join me
+   if (dude_charisma <= 1) then begin
+      set_self_abandon_party;
+      Reply(2500);
+      NOption(g_mstr(10007),Node999,001);
+   end else if (dude_at_max_party_size) then begin
+      set_self_abandon_party;
+      Reply(2500);
+      NOption(g_mstr(10007),Node999,001);
+   end else begin
+      set_global_var( GVAR_KATJA_HIRELING_STATUS, 2 );
+
+      end_party_waiting;
+      Reply(153);
+      party_member_default_options;
+   end
 end

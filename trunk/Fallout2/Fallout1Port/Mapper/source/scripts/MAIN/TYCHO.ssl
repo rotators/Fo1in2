@@ -11,7 +11,13 @@
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
+#define PARTY_NODE_X                         Node1000
 #define set_default_party_follow             set_follow_close
+#define def_weapon_use_msg                   mstr(164)
+#define def_wait_msg                         mstr(151)
+#define def_nowait_msg                       mstr(171)
+#define def_end_msg                          mstr(166)
+#define def_gear_msg                         mstr(2000)
 
 procedure start;
 procedure critter_p_proc;
@@ -54,9 +60,22 @@ procedure Tycho28;
 procedure Tycho30;
 procedure Tycho31;
 procedure Tycho32;
+procedure Tycho33; // Fo1in2
 
 procedure Node998;
 procedure Node999;
+procedure Node1000;
+procedure Node1001;
+procedure Node1002;
+procedure Node1003;
+procedure Node1004;
+procedure Node1005;
+procedure Node1006;
+procedure Node1007;
+procedure Node1008;
+procedure Node1009;
+procedure Node1010;
+procedure Node1100;
 
 procedure TychoJoins;
 procedure TychoReJoins;
@@ -92,14 +111,13 @@ procedure PlayerTraitor;
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
 
-#define float_tycho(x)    						float_msg(self_obj, message_str(SCRIPT_GENCHAT, x), FLOAT_MSG_NORMAL)
+#define float_tycho(x)    						float_msg(self_obj, message_str(NAME, x), FLOAT_MSG_NORMAL)
 #define tycho_joins_party               	party_add_self;                                                   \
                                           add_timer_event(self_obj,game_ticks(1),2);                        \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_tycho  		((dude_at_max_party_size == false) and (Tycho_In_Party == false) or unlimited_party_members)
 #define EVENT_FLOAT_JOIN 						(2)
 #define is_junktown_enemy 						((global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) > 0) or (global_var( GVAR_DUDE_ENEMY_JUNK_BOXER ) > 0) or (global_var( GVAR_ENEMY_JUNKTOWN ) > 0))
-#define is_in_junktown 							((CUR_MAP_JUNKENT) or (CUR_MAP_JUNKCSNO) or (CUR_MAP_JUNKKILL))
 
 #define sleep_time 		(2200)
 #define wake_time 		(1600)
@@ -119,7 +137,8 @@ procedure push_p_proc begin
       script_overrides;
    end
    else begin
-      float_tycho(random(300,302));
+      if (random(0,1) == 1) then
+         float_tycho(random(310,313));
    end
 end
 
@@ -182,7 +201,7 @@ end
 procedure destroy_p_proc begin
 	set_global_var( GVAR_TYCHO_HIRELING_STATUS, 3 );
 
-	if (source_obj == dude_obj and is_in_junktown) then begin
+	if (source_obj == dude_obj and CUR_AREA_JUNKTOWN) then begin
 		set_global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1 );
 		set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 5 );
@@ -202,25 +221,18 @@ procedure look_at_p_proc begin
 	else if ((global_var( GVAR_TYCHO_HIRELING_STATUS ) == 1) or (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 3)) then begin
 		display_msg(message_str(SCRIPT_TYCHO, 101));
 	end
+
+	debug("TYCHO AI: " + get_ai(self_obj));
 end
 
 procedure map_enter_p_proc begin
-	// TODO: Delete??
 	if (self_item_count( PID_NUKA_COLA ) >= 2) then begin
 		cola2_ptr := self_item( PID_NUKA_COLA );
 	end
 
-	/*if Tycho_In_Party then begin
-		set_self_team(TEAM_PLAYER);
-	end
-	else begin
+	if (global_var( GVAR_TYCHO_HIRELING_STATUS ) < 2) then begin
 		set_self_team(TEAM_JUNKTOWNER);
-	end*/
-
-	// This code sets ai behavior based on set combat tactics:
-	//if ((self_ai != AI_TYCHO) and (self_ai != AI_PARTY_TYCHO_AGGRESSIVE) and (self_ai != AI_PARTY_TYCHO_BERSERK)) then begin
-	//	set_self_ai(AI_TYCHO);
-	//end
+	end
 end
 
 procedure talk_p_proc begin
@@ -235,17 +247,18 @@ procedure talk_p_proc begin
 	else begin
 
 		start_gdialog(389, self_obj, 4, -1, -1);
-		if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 2) or (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 3) then begin
+		if Tycho_In_Party or party_is_waiting then begin
 			gdialog_set_barter_mod(255);
 		end
 
 		gsay_start;
 
-		if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 3) then begin
+		/*if party_is_waiting then begin
 			call Tycho28;
 		end
-		else if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 2) then begin
-			call Tycho22;
+		else*/ if Tycho_In_Party or party_is_waiting then begin
+			//call Tycho22;
+			call Node1000;
 		end
 		else if (global_var( GVAR_TYCHO_HIRELING_STATUS ) == 0) then begin
 			call Tycho01;
@@ -263,12 +276,10 @@ procedure talk_p_proc begin
 		gsay_end;
 		end_dialogue;
 
-		if Tycho_In_Party then begin
-			if (global_var( GVAR_DESTROY_MASTER_10 ) == 0) then begin
-				display_msg(message_str(SCRIPT_TYCHO, 173));
-				give_exp_points(EXP_HIRED_TYCHO);
-				set_global_var( GVAR_DESTROY_MASTER_10, 1 );
-			end
+		if Tycho_In_Party and (global_var( GVAR_TYCHO_JOINS_GIVE_EXP ) == 0) then begin
+			display_msg(message_str(SCRIPT_TYCHO, 173));
+			give_exp_points(EXP_HIRED_TYCHO);
+			set_global_var( GVAR_TYCHO_JOINS_GIVE_EXP, 1 );
 		end
 
 	end
@@ -497,7 +508,8 @@ end
 
 procedure Tycho23 begin
 	gsay_message(389, 152, 49);
-	call Tycho22;
+	//call Tycho22;
+	call Node1000;
 end
 
 // Wait here node
@@ -513,12 +525,14 @@ end
 
 procedure Tycho25 begin
 	gsay_message(389, 154, 49);
-	call Tycho22;
+	//call Tycho22;
+	call Node1000;
 end
 
 procedure Tycho26 begin
 	gsay_message(389, 155, 49);
-	call Tycho22;
+	//call Tycho22;
+	call Node1000;
 end
 
 procedure Tycho27 begin
@@ -536,24 +550,32 @@ end
 
 procedure Tycho30 begin
 	gsay_message(389, 158, 49);
-	call Tycho22;
+	//call Tycho22;
+	call Node1000;
 end
 
 procedure Tycho31 begin
 	gsay_message(389, 157, 49);
-	call Tycho22;
+	//call Tycho22;
+	call Node1000;
 end
 
 procedure Tycho32 begin
 	gsay_message(389, 156, 49);
-	call Tycho22;
+	//call Tycho22;
+	call Node1000;
+end
+
+procedure Tycho33 begin
+	gsay_message(389, 2200, 49);
+	call Node1000;
 end
 
 procedure TychoJoins begin
 	if dude_has_free_slot_for_tycho then begin
 		set_global_var( GVAR_TYCHO_HIRELING_STATUS, 2 );
 		set_global_var( GVAR_TYCHO_DISTANCE_VAL, 4 );
-		set_global_var( GVAR_TYCHO_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ) );
+		//set_global_var( GVAR_TYCHO_DUDE_LAST_LEVEL, get_pc_stat( PCSTAT_level ) );
 		//critter_add_trait(self_obj, 1, 6, 0);
 		//party_add(self_obj);
 
@@ -653,18 +675,141 @@ end
 
 procedure TychoSniper begin
 	gsay_message(389, 2100, 49);
-	set_self_ai( AI_PARTY_TYCHO_AGGRESSIVE );
+	//set_self_ai( AI_PARTY_TYCHO_AGGRESSIVE );
 	call TychoCombatTactics;
 end
 
 procedure TychoNearCombat begin
 	gsay_message(389, 2100, 49);
-	set_self_ai( AI_PARTY_TYCHO_BERSERK );
+	//set_self_ai( AI_PARTY_TYCHO_BERSERK );
 	call TychoCombatTactics;
 end
 
 procedure TychoFreeCombat begin
 	gsay_message(389, 2100, 49);
-	set_self_ai( AI_TYCHO );
+	//set_self_ai( AI_TYCHO );
 	call TychoCombatTactics;
 end
+
+// party stuff
+procedure Node1000 begin
+   if party_is_waiting then begin
+      Reply(170);
+   end
+   else begin
+      Reply(mstr(149));
+   	if (CUR_AREA_JUNKTOWN and is_gizmo_alive) then begin
+   		NOption(150,Tycho33,004);
+   	end
+   	else if (CUR_MAP_FOOT) then begin
+   		giq_option( 4, SCRIPT_TYCHO, 150, Tycho23, GOOD_REACTION );
+   	end
+   	else if (CUR_MAP_GLOWENT) then begin //  THE GLOW - ENTRANCE (CRATER)
+   		giq_option( 4, SCRIPT_TYCHO, 150, Tycho25, GOOD_REACTION );
+   	end
+   	else if (CUR_MAP_DETHCLAW) then begin//  THE HUB - DEATHCLAW CAVE
+   		giq_option( 4, SCRIPT_TYCHO, 150, Tycho26, GOOD_REACTION );
+   	end
+   	else if (CUR_MAP_HALLDED) then begin //  NECROPOLIS - HALLS OF THE DEAD
+   		giq_option( 4, SCRIPT_TYCHO, 150, Tycho30, GOOD_REACTION );
+   	end
+   	else if (CUR_MAP_MBSTRG12) then begin //  MILITARY BASE - STRONGHOLD (LEVELS 1 AND 2)
+   		giq_option( 4, SCRIPT_TYCHO, 150, Tycho31, GOOD_REACTION );
+   	end
+   	else if (CUR_MAP_MBVATS12) then begin //  MILITARY BASE -  VATS  (LEVELS 3 AND 4)
+   		giq_option( 4, SCRIPT_TYCHO, 150, Tycho32, GOOD_REACTION );
+   	end
+   end
+   party_member_default_options;
+end
+
+procedure Node1001 begin
+   // heal yourself
+   obj_heal(self_obj)
+   global_temp := 0;
+   if (party_healed_max) then begin
+      Reply(300);
+   end else if (party_healed_good) then begin
+      Reply(301);
+   end else if (party_healed_hurt) then begin
+      Reply(302);
+   end else begin
+      Reply(303);
+   end
+
+   party_member_default_options;
+end
+procedure Node1002 begin
+	set_global_var( GVAR_TYCHO_HIRELING_STATUS, 3 );
+
+   // wait here
+   set_party_waiting;
+   Reply(153);
+   party_member_default_options;
+end
+procedure Node1003 begin
+   // put your weapon away
+   inven_unwield(self_obj);
+   Reply(random(2100,2101));
+   party_member_default_options;
+end
+procedure Node1004 begin
+   // follow close
+   set_follow_close;
+   Reply(random(2100,2101));
+   party_member_default_options;
+end
+procedure Node1005 begin
+   // follow medium
+   set_follow_medium;
+   Reply(random(2100,2101));
+   party_member_default_options;
+end
+procedure Node1006 begin
+   // follow far
+   set_follow_far;
+   Reply(random(2100,2101));
+   party_member_default_options;
+end
+procedure Node1007 begin
+   // distance
+   Reply(160);
+   party_member_def_follow_options;
+end
+procedure Node1008 begin
+   // gear
+   Reply(170);
+   party_member_def_gear_options;
+end
+procedure Node1009 begin
+   // remove armor
+   remove_armor(self_obj)
+   Reply(random(2100,2101));
+   party_member_default_options;
+end
+procedure Node1010 begin
+   // weapons that can be used
+   Reply(165);
+   party_member_default_options;
+end
+procedure Node1100 begin
+   // join me
+   if (dude_charisma <= 1) then begin
+      set_self_abandon_party;
+      Reply(2500);
+      NOption(g_mstr(10007),Node999,001);
+   end else if (dude_at_max_party_size) then begin
+      set_self_abandon_party;
+      Reply(2500);
+      NOption(g_mstr(10007),Node999,001);
+   end else begin
+		set_global_var( GVAR_TYCHO_HIRELING_STATUS, 2 );
+		set_global_var( GVAR_TYCHO_DISTANCE_VAL, 4 );
+
+      end_party_waiting;
+      Reply(2102);
+      party_member_default_options;
+   end
+end
+
+
