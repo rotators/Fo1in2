@@ -103,6 +103,8 @@ variable line167flag;
 variable line170flag;
 variable line172flag;
 
+variable AskAgain := 0;
+
 #define LVAR_WAITING                      (10)
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
@@ -114,6 +116,7 @@ variable DeathType := 56;
 #define ian_joins_party                   party_add_self;                                                   	\
                                           add_timer_event(self_obj,game_ticks(1),EVENT_FLOAT_JOIN);				\
                                           set_self_team(TEAM_PLAYER)
+#define ian_hired                         (global_var(GVAR_IAN_HIRELING_STATUS) > 1)
 #define dude_has_free_slot_for_ian        ((dude_at_max_party_size == false) and (Ian_In_Party == false) or unlimited_party_members)
 #define EVENT_FLOAT_JOIN                  (2)
 
@@ -356,9 +359,20 @@ procedure Ian06 begin
 end
 
 procedure Ian07 begin
-	gsay_reply(235, 117);
-	giq_option( 4, SCRIPT_IAN, 118, Ian09, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_IAN, 119, Ian08, NEUTRAL_REACTION );
+   if (AskAgain == 0) then
+      Reply(117);
+   else
+      Reply(2601);
+
+   giq_option( 4, SCRIPT_IAN, 118, Ian09, NEUTRAL_REACTION );
+   giq_option( 4, SCRIPT_IAN, 119, Ian08, NEUTRAL_REACTION );
+
+   if ian_hired then begin
+   	giq_option( 4, SCRIPT_IAN, 133, Ian11, NEUTRAL_REACTION );
+   	giq_option( 4, SCRIPT_IAN, 134, Ian09, NEUTRAL_REACTION );
+   	giq_option( 4, SCRIPT_IAN, 136, Ian10, NEUTRAL_REACTION );
+   	NOption(2015,Node999,001);
+   end
 end
 
 procedure Ian08 begin
@@ -369,19 +383,35 @@ end
 
 procedure Ian09 begin
 	gsay_reply(235, 123);
-	giq_option( 4, SCRIPT_MODREACT, 104, Node999, NEUTRAL_REACTION );
+
+   if ian_hired then begin
+      AskAgain := 1;
+      NOption(2600,Ian07,001);
+   end
+   else
+	   giq_option( 4, SCRIPT_MODREACT, 104, Node999, NEUTRAL_REACTION );
 end
 
 procedure Ian10 begin
 	gsay_reply(235, 125);
 	giq_option( 4, SCRIPT_IAN, 126, Ian09, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_MODREACT, 101, Node999, NEUTRAL_REACTION );
+
+	if ian_hired then
+	   NOption(2015,Node999,001);
+	else
+	   giq_option( 4, SCRIPT_MODREACT, 101, Node999, NEUTRAL_REACTION );
 end
 
 procedure Ian11 begin
 	gsay_reply(235, 128);
-	giq_option( 4, SCRIPT_IAN, 129, Ian07, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_MODREACT, 101, Node999, NEUTRAL_REACTION );
+   if ian_hired then begin
+      AskAgain := 1;
+      NOption(2600,Ian07,001);
+   end
+   else begin
+	   giq_option( 4, SCRIPT_IAN, 129, Ian07, NEUTRAL_REACTION );
+	   giq_option( 4, SCRIPT_MODREACT, 101, Node999, NEUTRAL_REACTION );
+	end
 end
 
 procedure Ian12 begin
