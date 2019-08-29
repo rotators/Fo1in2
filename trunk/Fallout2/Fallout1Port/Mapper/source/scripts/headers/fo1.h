@@ -135,9 +135,6 @@ end
 
 #define dude_is_animal_friend 			(has_trait(TRAIT_PERK, dude_obj, PERK_animal_friend) == 1)
 
-#define dude_look_at_critter			anim(dude_obj, 1000, rotation_to_tile(tile_num(dude_obj), tile_num(self_obj)))
-#define self_look_at_dude 				anim(self_obj, 1000, rotation_to_tile(tile_num(self_obj), tile_num(dude_obj)))
-
 #define map_cow_can_push 			((cur_map_index != MAP_DESCRVN1) and 	\
 									(cur_map_index != MAP_DESCRVN2) and  	\
 									(cur_map_index != MAP_MNTCRVN1) and  	\
