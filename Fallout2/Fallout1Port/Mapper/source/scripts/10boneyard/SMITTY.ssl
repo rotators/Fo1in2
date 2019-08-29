@@ -19,6 +19,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure look_at_p_proc;
 procedure description_p_proc;
 procedure timed_event_p_proc;
@@ -59,6 +60,8 @@ variable DisplayMessage := 100;
 #define LVAR_UpgradePlasmaRifle 		(5)
 #define LVAR_UpgradeMotorcycle 		(6)
 #define LVAR_UpgradeMotorcycleTimer (7)
+#define LVAR_Home_Tile              (8)
+#define LVAR_Home_Rotation          (9)
 
 #define EVENT_TAKE_BIKE 	(1)
 
@@ -66,9 +69,6 @@ variable DisplayMessage := 100;
 
 procedure Start begin
 	if Only_Once then begin
-		if (not(is_loading_game) and (self_caps == 0)) then begin
-			self_caps_adjust( random(500, 750) );
-		end
 		if (get_blades_attacking or get_blades_attacking_wait) then begin
 			set_self_team(TEAM_PLAYER);
 		end
@@ -78,6 +78,18 @@ procedure Start begin
 		set_self_ai(AI_PEASANT);
 		Only_Once := 0;
 	end
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+      self_caps_adjust( random(500, 750) );
+   end
+   else begin
+      critter_attempt_placement(self_obj,local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+   end
 end
 
 procedure look_at_p_proc begin

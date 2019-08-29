@@ -1,12 +1,14 @@
 /*
 
 	Boneyard - Lorraine
+	GREEN-HAIR PUNK CHICK WITH SMG IN MIDDLE OF ADYTUM ENTRANCE MAP
 
 */
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\mapnecro.h"
+#include "..\headers\maplaadytum.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_LORRAINE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -16,15 +18,14 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure critter_p_proc;
-//
-//  GREEN-HAIR PUNK CHICK WITH SMG IN MIDDLE OF ADYTUM ENTRANCE MAP
-//
+
 procedure Lorraine01;
 procedure Lorraine02;
 procedure Lorraine03;
@@ -56,9 +57,12 @@ procedure Lorraine27;
 variable tmp_hostile;
 variable initial :=  0;
 
+#define LVAR_Home_Tile              (5)
+#define LVAR_Home_Rotation          (6)
+
 procedure start begin
 	if not(initial) then begin
-		if ((global_var( GVAR_BLADES_STATUS ) == 9103) or (global_var( GVAR_BLADES_STATUS ) == 9102)) then begin
+		if (get_blades_attacking or get_blades_attacking_wait) then begin
 			set_self_team(TEAM_PLAYER );
 		end
 		else begin
@@ -66,6 +70,17 @@ procedure start begin
 		end
 		initial :=  1;
 	end
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   else begin
+      critter_attempt_placement(self_obj,local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+   end
 end
 
 procedure damage_p_proc begin

@@ -1,15 +1,29 @@
+/*
+
+	Boneyard - Dugan, Blades member, nuka cola addict
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\mapnecro.h"
+
+#define NAME                    SCRIPT_DUGAN
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure pickup_p_proc;//    script_action == 4
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure pickup_p_proc;
+
 procedure Dugan01;
 procedure Dugan02;
 procedure Dugan03;
@@ -24,10 +38,7 @@ procedure DuganEnd;
 variable Only_Once := 1;
 variable PsstTime;
 
-procedure Start
-begin
-
-
+procedure Start begin
 	if Only_Once then begin
 		set_self_team(TEAM_LA_BLADES );
 		set_self_ai( AI_BLADES );
@@ -35,8 +46,7 @@ begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
 		display_msg(message_str(SCRIPT_DUGAN, 101));
@@ -46,8 +56,7 @@ begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	if (local_var(4) == 1) then begin
 		display_msg(message_str(SCRIPT_DUGAN, 101));
@@ -57,8 +66,7 @@ begin
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 	if (global_var( GVAR_ENEMY_BLADES ) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
@@ -69,17 +77,12 @@ begin
 		end
 		else begin
 			get_reaction
-			start_gdialog(917, self_obj, -1, -1, -1);
-			gsay_start;
-			call Dugan01;
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(Dugan01);
 		end
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if ((((game_time / 10) - PsstTime) >= 30) and (tile_distance_objs(self_obj, dude_obj) <= 10)) then begin
 		float_msg(self_obj, message_str(SCRIPT_DUGAN, random(121, 125)), 0);
 		PsstTime := game_time / 10;
@@ -91,40 +94,24 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_BLADES, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
-
+procedure destroy_p_proc begin
+   inc_good_critter
 	if (source_obj == dude_obj) then begin
-		if (has_rep_berserker) then begin
-			set_global_var( GVAR_BERSERKER_REPUTATION, 1 );
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (has_rep_champion) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var( GVAR_BERSERKER_REPUTATION, 0 );
-		end
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var( GVAR_GOOD_MONSTER ) % 2) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, (check_general_rep - 1) );
-		end
 		set_global_var( GVAR_ENEMY_BLADES, 1 );
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var( GVAR_ENEMY_BLADES, 1 );
 end
 
-procedure Dugan01
-begin
+procedure Dugan01 begin
 	gsay_reply(917, 102);
 	giq_option( 4, SCRIPT_DUGAN, 103, Dugan02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_DUGAN, 104, Dugan03, NEUTRAL_REACTION );
@@ -136,19 +123,16 @@ begin
 	giq_option( -3, SCRIPT_DUGAN, 108, Dugan09, NEUTRAL_REACTION );
 end
 
-procedure Dugan02
-begin
+procedure Dugan02 begin
 	gsay_message(917, 109, 50);
 end
 
-procedure Dugan03
-begin
+procedure Dugan03 begin
 	gsay_reply(917, 110);
 	call Dugan04;
 end
 
-procedure Dugan04
-begin
+procedure Dugan04 begin
 	gsay_option(917, 111, Dugan05, 50);
 	gsay_option(917, 112, Dugan06, 50);
 	gsay_option(917, 113, Dugan07, 50);
@@ -156,35 +140,29 @@ begin
 	gsay_option(917, 115, DuganEnd, 50);
 end
 
-procedure Dugan05
-begin
+procedure Dugan05 begin
 	gsay_reply(917, 116);
 	call Dugan04;
 end
 
-procedure Dugan06
-begin
+procedure Dugan06 begin
 	gsay_reply(917, 117);
 	call Dugan04;
 end
 
-procedure Dugan07
-begin
+procedure Dugan07 begin
 	gsay_reply(917, 118);
 	call Dugan04;
 end
 
-procedure Dugan08
-begin
+procedure Dugan08 begin
 	gsay_message(917, 119, 50);
 	call Dugan01;
 end
 
-procedure Dugan09
-begin
+procedure Dugan09 begin
 	gsay_message(917, 120, 50);
 end
 
-procedure DuganEnd
-begin
+procedure DuganEnd begin
 end

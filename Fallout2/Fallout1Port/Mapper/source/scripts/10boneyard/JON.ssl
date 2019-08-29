@@ -17,6 +17,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure look_at_p_proc;
 procedure description_p_proc;
 procedure talk_p_proc;
@@ -64,12 +65,12 @@ import variable JonPtr;
 variable Only_Once := 1;
 variable DisplayMessage;
 
+#define LVAR_Home_Tile              (6)
+#define LVAR_Home_Rotation          (7)
+
 procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		if (self_caps == 0) then begin
-			self_caps_adjust( random(50, 150) );
-		end
 
 		if get_blades_attacking then begin
 			if not(get_zimmermann_turned) then begin
@@ -82,10 +83,21 @@ procedure Start begin
 		else begin
 			set_self_team(TEAM_LA_ADYTOWNER);
 		end
-
 		set_self_ai(AI_PEASANT);
 		JonPtr := self_obj;
 	end
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+      self_caps_adjust( random(50, 150) );
+   end
+   else begin
+      critter_attempt_placement(self_obj,local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+   end
 end
 
 procedure look_at_p_proc begin
