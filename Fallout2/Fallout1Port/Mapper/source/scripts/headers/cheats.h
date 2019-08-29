@@ -10,6 +10,7 @@ procedure Cheater00a;
 procedure Cheater00b;
 procedure Cheater00c;
 procedure Cheater00d;
+procedure Cheater00d1;
 procedure Cheater01;
 procedure Cheater02;
 procedure Cheater03;
@@ -329,10 +330,17 @@ procedure Cheater00d begin
 	call CheaterEnd;
 end
 
+procedure Cheater00d1 begin
+	set_global_var( GVAR_VATS_BLOWN, 1 );
+	set_global_var( GVAR_QUEST_VAULT13_3_KILL_VATS, 2 );
+	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 300 );
+end
+
 procedure Cheater00b begin
 	Reply("Master or Vats?");
 	NOption("Master", Cheater00C, 001);
 	NOption("Vats", Cheater00d, 001);
+	NOption("Start Vats destruction timer!", Cheater00d1, 001);
 	NOption(g_bye, CheaterEnd, 004);
 end
 
