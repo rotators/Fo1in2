@@ -246,7 +246,7 @@ variable step_tile;
 #define dude_rotation_to_self             rotation_to_tile(dude_tile,self_tile)
 #define self_rotation_to_dude             rotation_to_tile(self_tile,dude_tile)
 
-#define dude_look_at_critter              anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
+#define dude_look_at_self              anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
 #define self_look_at_dude                 anim(self_obj,ANIMATE_ROTATION,self_rotation_to_dude)
 
 #define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)
