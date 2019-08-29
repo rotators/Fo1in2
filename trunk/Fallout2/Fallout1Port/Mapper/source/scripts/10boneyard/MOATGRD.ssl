@@ -1,17 +1,30 @@
+/*
+
+	Boneyard - Guard at the moat bridge.
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+//#include "..\headers\mapnecro.h"
+
+#define NAME                    SCRIPT_MOATGRD
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure look_at_p_proc;//    script_action == 21
-procedure description_p_proc;//    script_action == 3
-procedure talk_p_proc;//    script_action == 11
-procedure critter_p_proc;//    script_action == 12
-procedure damage_p_proc;//    script_action == 14
-procedure destroy_p_proc;//    script_action == 18
-procedure timed_event_p_proc;//    script_action == 22
-procedure map_enter_p_proc;//    script_action == 15
-procedure pickup_p_proc;//    script_action == 4
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+procedure damage_p_proc;
+procedure destroy_p_proc;
+procedure timed_event_p_proc;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
 
 procedure Moat00;
 procedure Moat01;
@@ -26,81 +39,46 @@ procedure MoatCombat;
 variable Only_Once := 1;
 variable DestTile;
 
-procedure Start
-begin
+#define LVAR_Home_Tile              (4)
+#define LVAR_Home_Rotation          (7)
 
-
+procedure Start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		/* has how many? */    if (self_caps == 0) then begin
-			self_caps_adjust( random(2, 20) );
-		end
 		set_self_team(TEAM_LA_GUN_RUNNERS );
 		set_self_ai( AI_GUNRUNNERS );
-		if (local_var(4) == 0) then begin
+		if (local_var(LVAR_Home_Tile) == 0) then begin
 			DestTile := self_tile;
-			set_local_var(4, DestTile);
-		end
-	end
-	if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-		call talk_p_proc;
-	end
-	else begin
-		if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-			call map_enter_p_proc;
-		end
-		else begin
-			if (script_action == 21) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-				call look_at_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-						call destroy_p_proc;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-						else begin
-							if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-								call timed_event_p_proc;
-							end
-							else begin
-								if (script_action == 3) then begin
-									call description_p_proc;
-								end
-								else begin
-									if (script_action == 14) then begin
-										call damage_p_proc;
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+			set_local_var(LVAR_Home_Tile, DestTile);
 		end
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure map_enter_p_proc begin
+	if (not(is_loading_game)) then begin
+		move_to(self_obj, local_var(LVAR_Home_Tile), 0);
+      self_rotate(local_var(LVAR_Home_Rotation));
+	end
+
+   if map_first_run then
+      self_caps_adjust( random(2, 20) );
+end
+
+procedure pickup_p_proc begin
+	set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
+end
+
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_MOATGRD, 100));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_MOATGRD, 100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 	if (global_var( GVAR_DUDE_ENEMY_BLADES ) == 1) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 2);
@@ -115,8 +93,7 @@ begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (self_tile != DestTile) then begin
 		self_walk_to_tile( DestTile );
 	end
@@ -130,45 +107,28 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 	end
 	inc_good_critter
-	rm_timer_event(self_obj);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
 			set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 			attack(dude_obj);
 		end
 	end
-end
-
-procedure map_enter_p_proc
-begin
-	if (not(is_loading_game)) then begin
-		move_to(self_obj, local_var(4), 0);
-		self_rotate( 2 );
-	end
-end
-
-procedure pickup_p_proc
-begin
-	set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 end
 
 procedure Moat00

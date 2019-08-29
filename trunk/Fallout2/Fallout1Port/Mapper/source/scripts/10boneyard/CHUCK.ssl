@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\maplaadytum.h"
+#include "..\headers\boneyard.h"
 
 #define NAME                    SCRIPT_CHUCK
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -55,24 +56,28 @@ procedure ChuckEnd;
 procedure ChuckUpReact;
 procedure ChuckDownReact;
 
+#define LVAR_Home_Tile              (7)
+#define LVAR_Home_Rotation          (8)
+
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
 	if (map_first_run) then begin
+	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+		self_caps_adjust( random(0, 20) );
+	end
+	else begin
+      critter_attempt_placement(self_obj,local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+	end
 
-		if (self_caps == 0) then begin
-			variable LVar0;
-			LVar0 := create_object( PID_BOTTLE_CAPS, 0, 0 );
-			add_mult_objs_to_inven(self_obj, LVar0, random(0, 20));
-			if ((global_var( GVAR_BLADES_STATUS ) == 9103) or (global_var( GVAR_BLADES_STATUS ) == 9102)) then begin
-				set_self_team(TEAM_PLAYER );
-			end
-			else begin
-				set_self_team(TEAM_LA_ADYTOWNER );
-			end
-		end
-
+	if (get_blades_attacking or get_blades_attacking_wait) then begin
+		set_self_team(TEAM_PLAYER );
+	end
+	else begin
+		set_self_team(TEAM_LA_ADYTOWNER );
 	end
 end
 
