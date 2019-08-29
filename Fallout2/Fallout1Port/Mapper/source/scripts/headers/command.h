@@ -90,7 +90,7 @@ variable global_temp;
                                                    if (Current_Distance_From_Dude > (the_range * 2)) then begin   \
                                                       self_run_to_tile(dest_tile);                             \
                                                    end else begin                                                 \
-                                                      self_move_to_tile(dest_tile);                            \
+                                                      self_walk_to_tile(dest_tile);                            \
                                                    end                                                            \
                                                 end else if (self_distance_from_dude < tile_distance(self_tile, dest_tile)) then begin  \
                                                    reg_anim_clear(self_obj);                                      \
