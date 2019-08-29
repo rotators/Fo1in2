@@ -10,6 +10,7 @@ set /a e=0
 for /f "usebackq" %%S in (`dir /s /b *.ssl`) do (
 	pushd %%~dpS
 
+	echo --------- %%S
 	%compile% -q -n -l -p -O2 %%~nxS -o drycompile.int
 
 	if exist "drycompile.int" (
