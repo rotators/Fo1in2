@@ -27,9 +27,9 @@ procedure look_at_p_proc;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure timed_event_p_proc;
-procedure use_skill_on_p_proc;
 
 procedure KillCheck;
+procedure PoisonCheck;
 
 variable ShootOverseer := 0;
 variable gun_ptr := 0;
@@ -49,41 +49,21 @@ variable Zero;
 #define EVENT_COUNTDOWN_MASTER 			(11)
 #define EVENT_COUNTDOWN_VATS 				(12)
 
-#define in_mariposa 			(CUR_MAP_MBENT or CUR_MAP_MBSTRG12 or CUR_MAP_MBVATS12)
-#define in_cathedral 		(CUR_MAP_CHILDRN1 or CUR_MAP_CHILDRN2 or CUR_MAP_MSTRLR12 or CUR_MAP_MSTRLR34)
-
 procedure start begin
 	// Save the start date to check the water counter / days remaining, etc:
 	// We have to do this, because reasons.
 	if (global_var( GVAR_VAULT13_WATER_DAYS_COUNTER ) <= 0) then begin
 		set_global_var( GVAR_VAULT13_WATER_DAYS_COUNTER, 864000 );
 	end
-
-	// No idea if this is necessary in here.
-	if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin// <---------- Put here instead of critter_proc and map_update_proc because this way it's only running once per tick
-		if (global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2) then begin
-			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
-				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
-			end
-		end
-	end
-	else begin
-		if (CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34) then begin
-			if ((global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ) != 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
-				if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
-					add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
-				end
-			end
-		end
-	end
 end
 
 procedure combat_p_proc begin
-	if fixed_param == 4 then begin// beginning of combat round (including beginning of very first round)
-		if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
+variable SecondsCombat;
+
+	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+		if CUR_AREA_MILITARY_BASE then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
 			if ((global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
 				if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
-					variable SecondsCombat;
 					SecondsCombat := (global_var( GVAR_VATS_COUNTDOWN ) - (game_time / 10));
 					if (SecondsCombat <= 0) then begin
 						set_global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE, 1 );
@@ -96,7 +76,7 @@ procedure combat_p_proc begin
 				end
 			end
 		end
-		else if (CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34) then begin
+		else if CUR_AREA_CATHEDRAL then begin
 			if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
 				if ((global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ) != 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
 					SecondsCombat := 240 - ((game_time / 10) - global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ));
@@ -113,43 +93,16 @@ procedure combat_p_proc begin
 		end
 	end
 
-
-	if (dude_poison_stat > 0) then begin
-		if not(is_loading_game) then begin// not IS_LOADING_GAME
-			set_global_var( GVAR_DUDE_OBJ_POISONED, 1 );// tracker
-		end
-	end
-	else begin
-		if (global_var( GVAR_DUDE_OBJ_POISONED ) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
-			set_global_var( GVAR_DUDE_OBJ_POISONED, 0 );//	<< Clear the "Player Is Poisoned" tracker
-			if not(is_loading_game) then begin// not IS_LOADING_GAME
-				display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
-			end
-		end
-	end
+	call PoisonCheck;
 end
 
 procedure critter_p_proc begin
-	// "Poison has left your system"
-	if (dude_poison_stat > 0) then begin// is_poisoned
-		if not(is_loading_game) then begin// not IS_LOADING_GAME
-			set_global_var( GVAR_DUDE_OBJ_POISONED, 1 );// tracker
-		end
-	end
-	else if (global_var( GVAR_DUDE_OBJ_POISONED ) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
-		set_global_var( GVAR_DUDE_OBJ_POISONED, 0 );//	<< Clear the "Player Is Poisoned" tracker
-		if not(is_loading_game) then begin// not IS_LOADING_GAME
-			display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
-		end
-	end
+   call PoisonCheck;
 end
 
 procedure look_at_p_proc begin
 	if global_var( GVAR_CHEAT_DEBUG_MENU_ENABLED ) or debug_mode then begin
-		variable Hand_Item := 0;
-		variable Held_Item_PID := 0;
 		script_overrides;
-
 		if (dude_poison_stat > 0) or (dude_rads > 0) then begin
 			display_msg("Current poison: " + dude_poison_stat + ". " + "Current rads: " + dude_rads + ". " + "Current time: " + game_time_hour + ". ");
 		end
@@ -160,7 +113,7 @@ procedure description_p_proc begin
 	if (global_var( GVAR_CHEAT_DEBUG_MENU_ENABLED ) == 1) then begin
 		terminate_combat;
 		script_overrides;
-		if not(combat_is_initialized) then begin// Cheater dialog for debug, testing:
+		if not(combat_is_initialized) then begin
 			start_dialog_at_node(Cheater00a);
 		end
 	end
@@ -179,20 +132,18 @@ procedure map_enter_p_proc begin
 	set_global_var( GVAR_VREE_AUTOPSY_POINTER, 0 ); // VREE_AUTOPSY
 
 	// "Player has entered map number blah blah blah"
-	if debug_mode then begin// <-- Debug_Enabled
-		call DebugEnterMsgs;
-	end
+	if debug_mode then call DebugEnterMsgs;
 end
 
 procedure map_update_p_proc begin
-	if in_mariposa then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
+	if CUR_AREA_MILITARY_BASE then begin
 		if ((global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2)) then begin
 			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
 				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
 			end
 		end
 	end
-	else if in_cathedral then begin// Reactivates my "every 5 seconds" countdown fix if it got interrupted somehow (for example by dialog, or another script)
+	else if CUR_AREA_CATHEDRAL then begin
 		if ((global_var( GVAR_COUNTDOWN_TO_DESTRUCTION ) != 0) and (global_var( GVAR_MASTER_BLOWN ) == 1)) then begin
 			if not(global_var( GVAR_MASTER_BLOWN_CUTSCENE )) then begin
 				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
@@ -211,7 +162,6 @@ procedure timed_event_p_proc begin
 	if fixed_param == EVENT_END_GAME then begin
 		debug("EVENT_END_GAME");
 		game_ui_enable;
-
 		set_story_finished;
 		kill_critter_type(PID_OVERSEER, 0);
 	end
@@ -414,5 +364,18 @@ procedure KillCheck begin
 	end
 end
 
-procedure use_skill_on_p_proc begin
+procedure PoisonCheck begin
+	// "Poison has left your system"
+	if (dude_poison_stat > 0) then begin
+		if not(is_loading_game) then begin
+			set_global_var( GVAR_DUDE_OBJ_POISONED, 1 );// tracker
+		end
+	end
+	else if (global_var( GVAR_DUDE_OBJ_POISONED ) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
+		set_global_var( GVAR_DUDE_OBJ_POISONED, 0 );//	<< Clear the "Player Is Poisoned" tracker
+		if not(is_loading_game) then begin
+			display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
+		end
+	end
 end
+
