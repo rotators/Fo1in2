@@ -1,6 +1,6 @@
 /*
 
-	Master's Vault
+    Master's Vault
 
 */
 
@@ -30,6 +30,6 @@
 #define MVAR_PLACEHOLDER1         (8)
 #define MVAR_PLACEHOLDER2         (9)
 #define MVAR_INVADED              (10)  // have i placed critters here
-#define MVAR_TERMINAL_EXP 	      (11)  // player got the terminal experience bonus already?
+#define MVAR_TERMINAL_EXP         (11)  // player got the terminal experience bonus already?
 
 #endif // MAPMSTRLR12_H
