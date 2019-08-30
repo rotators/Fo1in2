@@ -14,6 +14,8 @@ namespace Overseer
     public partial class frmMain : Form
     {
         Memory mem;
+        MemoryReader reader;
+        FalloutMemory fmem;
 
         public frmMain()
         {
@@ -26,6 +28,8 @@ namespace Overseer
             if (fallout2.Length > 0)
             {
                 mem = new Memory(fallout2[0].Id);
+                reader = new MemoryReader(mem);
+                fmem = new FalloutMemory(reader);
                 tmrRefresh.Enabled = true;
             }
         }
@@ -37,7 +41,7 @@ namespace Overseer
 
         private void AddByte(int offset, string name)
         {
-            dataGridView1.Rows.Add(offset, name, "Byte", mem.ReadByte(offset).ToString());
+            this.AddRow(offset, name, "Byte", mem.ReadByte(offset).ToString());
         }
 
         private void AddInt16(int offset, string name)
@@ -53,36 +57,28 @@ namespace Overseer
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             this.ReadMemory();
+            lstMessage.Items.Clear();
+            /*foreach (var s in fmem.ReadScriptList())
+            {
+                lstScripts.Items.Add(new ListViewItem(new string[] { s.fileName, s.numLocalVars.ToString() }));
+            }*/
+            /*AddMsg("SCRNAME", fmem.ReadMessageList(0x56D754));
+            AddMsg("COMBAT.MSG", fmem.ReadMessageList(0x56D368));
+            AddMsg("MAP.MSG", fmem.ReadMessageList(0x631D48));
+            AddMsg("PROTO", fmem.ReadMessageList(0x6647FC));
+            AddMsg("WORLDMAP.MSG", fmem.ReadMessageList(0x672FB0));*/
+
+
+            //var st = Encoding.ASCII.GetString(bytes);
         }
 
-        private List<PathNode> ReadPaths()
+        private void AddMsg(string name, MessageList list)
         {
-            var paths = new List<PathNode>();
-            var deref = mem.ReadInt(0x6B24D0);
-            var pn = mem.ReadPathNode(deref);
-            paths.Add(pn);
-            while(pn.nextPtr != 0)
-            {
-                var off = mem.ReadInt(pn.nextPtr);
-                pn = mem.ReadPathNode(pn.nextPtr);
-                paths.Add(pn);
-            }
-            return paths;
+            foreach (var node in list.nodes)
+                lstMessage.Items.Add(new ListViewItem(new string[] { name, node.number.ToString(), node.message, node.audio.Replace('\0',' ')}));
         }
 
-        private List<ScriptListInfo> ReadScriptList()
-        {
-            var s = new List<ScriptListInfo>();
-            var offset = mem.ReadInt(0x51C7C8); // dereference pointer
-            var scriptInfo = mem.ReadScriptListInfo(offset);
-            while (scriptInfo != null)
-            {
-                s.Add(scriptInfo);
-                offset += 20;
-                scriptInfo = mem.ReadScriptListInfo(offset);
-            }
-            return s;
-        }
+
 
         private void ReadMemory()
         {
@@ -94,12 +90,18 @@ namespace Overseer
             AddInt16(0x6AC7A4, "mouseY");
             AddString(0x56D75C, "playerName");
             //ReadPaths();
-            var scripts = ReadScriptList();
+            
         }
 
         private void TmrRefresh_Tick(object sender, EventArgs e)
         {
             this.ReadMemory();
+        }
+
+        private void DATToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dat = new frmDatafiles(this.fmem, this.reader);
+            dat.Show();
         }
     }
 }
