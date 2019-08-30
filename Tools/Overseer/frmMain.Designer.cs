@@ -48,6 +48,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.interfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -184,7 +185,8 @@
             // windowsToolStripMenuItem
             // 
             this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.dATToolStripMenuItem});
+            this.dATToolStripMenuItem,
+            this.interfaceToolStripMenuItem});
             this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
             this.windowsToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.windowsToolStripMenuItem.Text = "Window";
@@ -195,6 +197,13 @@
             this.dATToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dATToolStripMenuItem.Text = "Datafiles";
             this.dATToolStripMenuItem.Click += new System.EventHandler(this.DATToolStripMenuItem_Click);
+            // 
+            // interfaceToolStripMenuItem
+            // 
+            this.interfaceToolStripMenuItem.Name = "interfaceToolStripMenuItem";
+            this.interfaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.interfaceToolStripMenuItem.Text = "Interface";
+            this.interfaceToolStripMenuItem.Click += new System.EventHandler(this.InterfaceToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -239,6 +248,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dATToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem interfaceToolStripMenuItem;
     }
 }
 

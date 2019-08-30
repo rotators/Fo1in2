@@ -12,12 +12,8 @@ namespace Overseer
 {
     public partial class frmDatafiles : Form
     {
-        FalloutMemory mem;
-        MemoryReader reader;
-        public frmDatafiles(FalloutMemory mem, MemoryReader reader)
+        public frmDatafiles()
         {
-            this.mem = mem;
-            this.reader = reader;
             InitializeComponent();
         }
 
@@ -25,13 +21,11 @@ namespace Overseer
         {
             lstDatafiles.Items.Clear();
             lstFiles.Items.Clear();
-            var paths = mem.ReadPaths().ToList();
-            foreach(var p in paths)
+            foreach(var p in Engine.ReadPaths())
             {
                 var datArchive = p.datArchive.Read();
                 lstDatafiles.Items.Add(new ListViewItem(new string[] { p.path, datArchive.numFiles.ToString() }));
-                var files = datArchive.GetFiles(reader).ToList();
-                foreach(var f in files)
+                foreach(var f in datArchive.GetFiles())
                 {
                     lstFiles.Items.Add(new ListViewItem(new string[] { $"{p.path.Trim('\0')}\\{f.path}", f.compressed ? "Yes" : "No", f.size.ToString(), f.packedSize.ToString(), f.offset.ToString()  }));
                 }
