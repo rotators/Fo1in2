@@ -551,7 +551,6 @@
 
 // New Fo1:
 #define PID_DRESSER 						(68)
-#define PID_BOS_HOLODISK					(164)
 #define PID_GIZMO_REMAINS					(213)
 #define PID_MBASE_SEC_CODE					(231)
 #define PID_MOTO1_TRUNK						(532)
@@ -560,6 +559,7 @@
 #define PID_MOTO_KEY		                (253)
 
 // Fo1 Holodisks
+#define PID_BOS_HOLODISK					(164) // Artifact disk
 #define PID_FEV_HOLODISK					(190)
 #define PID_SECURITY_HOLODISK				(191)
 #define PID_ALPHA_EXPERIMENT_HOLODISK		(192)
@@ -567,6 +567,9 @@
 #define PID_VREE_HOLODISK					(194)
 #define PID_BOS_HONOR_HOLODISK				(195)
 #define PID_MUTANT_TRANSMISSION_HOLODISK 	(196)
+#define PID_BOS_HISTORY_HOLODISK 			(215)
+#define PID_MAXON_HISTORY_HOLODISK 			(216)
+#define PID_REGULATOR_HOLODISK 				(238)
 
 /******************************************************************
 ***************       Active Items                  ***************

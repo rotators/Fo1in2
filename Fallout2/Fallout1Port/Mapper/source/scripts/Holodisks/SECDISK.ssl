@@ -6,172 +6,41 @@
 
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_SECDISK
+
+#include "..\headers\command.h"
+
 procedure start;
 procedure look_at_p_proc;
 procedure description_p_proc;
 procedure use_p_proc;
+
+#define LVAR_Used          (0)
 
 procedure start begin
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   display_msg(message_str( SCRIPT_SECDISK, 100 ));
+   display_msg(mstr(100));
 end
 
 procedure description_p_proc begin
 	script_overrides;
-   display_msg(message_str( SCRIPT_SECDISK, 100 ));
+   display_msg(mstr(100));
 end
 
 procedure use_p_proc begin
    script_overrides;
-   if (local_var(0) == 1) then begin
-      display_msg(message_str( SCRIPT_SECDISK, 101 ));
+   if (local_var(LVAR_Used) == 1) then begin
+      display_msg(mstr(101));
    end
    else begin
-      display_msg(message_str( SCRIPT_SECDISK, 102 ));
+      display_msg(mstr(102));
       set_global_var( GVAR_SECDISK_HOLODISK_USED, 1 );
-      set_local_var(0, 1);
-      rm_obj_from_inven(dude_obj, self_obj);
+      set_local_var(LVAR_Used, 1);
+      //rm_obj_from_inven(dude_obj, self_obj);
       display_msg(message_str( SCRIPT_GENCHAT, 103 ) + "100" + message_str( SCRIPT_GENCHAT, 104 ));
       give_exp_points(100);
    end
 end
-
-/*
-
-//
-// ---HOLODISK SCRIPT---  Sduibek
-//
-// ITEM SLOT AVAILABLE
-// ProtoID	191	Name:	Security Disk	Cost:	50
-// script:	349	SecDisk.int    ; Holodisk w/ Security Code for the Glow
-// GVAR	163 (vanilla)	A holodisk with the writing Security Log" on the label.	<-- This can definitely be removed; one line.
-
-// is now GVAR 484 !!!!!
-
-#include "..\headers\define.h"
-
-procedure start;
-procedure talk_p_proc;
-
-procedure CombatCheck;
-procedure SecDisk00;
-procedure SecDisk01;
-procedure SecDisk02;
-
-procedure newPtrSECDISK;
-
-// local_var(0) == Used (put in Pip-Boy)
-// local_var(1) == Examined (change item hoverdescrip)
-
-
-procedure start
-begin
-	if script_action == 1 then begin// start_proc
-		call newPtrSECDISK;
-	end
-	else begin
-		if script_action == 21 then begin// 21 is look_at
-			script_overrides;
-			if local_var(1) != 1 then begin// not used or Examined yet
-				display_msg(message_str(SCRIPT_SECDISK, 100));
-			end
-			else begin
-				display_msg(message_str(SCRIPT_SECDISK, 104));
-			end
-			call newPtrSECDISK;
-		end
-		else begin
-			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				script_overrides;
-				set_local_var(1, 1);
-				if local_var(0) == 1 then begin
-					display_msg(message_str(SCRIPT_SECDISK, 101));//Abort
-					call CombatCheck;
-				end
-				else begin
-					set_local_var(0, 1);
-					set_global_var( GVAR_SECDISK_HOLODISK_FLAG, 1 );
-//	SECDISK_HOLODISK_POINTER  :=0;    //  485  // ! Fallout Fixt: Pointer for destroying SecDisk.ssl
-					display_msg(message_str(SCRIPT_SECDISK, 102));//Downloaded OK
-					call CombatCheck;
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "110" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(110);
-				end
-				call newPtrSECDISK;
-			end
-			else begin
-				if script_action == 3 then begin// 3 is description (Binoculars)
-					set_local_var(1, 1);
-					display_msg(message_str(SCRIPT_SECDISK, 103));
-					call newPtrSECDISK;
-				end
-				else begin
-					if script_action == 4 then begin//pickup
-						call newPtrSECDISK;
-					end
-					else begin
-						if script_action == 5 then begin//drop
-							call newPtrSECDISK;
-						end
-						else begin
-							if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure newPtrSECDISK
-begin
-//	if (cur_map_index != 42) and (cur_map_index != 43) then begin
-//		set_global_var(, self_obj);
-//	end
-end
-
-procedure CombatCheck
-begin
-	if combat_is_initialized then begin
-		display_msg(message_str(SCRIPT_SECDISK, 109));
-	end
-	else begin
-		dialogue_system_enter;
-	end
-end
-
-procedure talk_p_proc
-begin
-	start_gdialog(349, self_obj, 4, -1, -1);
-	gsay_start;
-	call SecDisk00;
-	gsay_end;
-	end_dialogue;
-end
-
-procedure SecDisk00
-begin
-	gsay_reply(349, 106);
-	giq_option( 0, SCRIPT_SECDISK, 108, SecDisk01, NEUTRAL_REACTION );
-end
-
-procedure SecDisk01
-begin
-	gsay_reply(349, 105);
-	giq_option( 0, SCRIPT_SECDISK, 108, SecDisk02, NEUTRAL_REACTION );
-
-end
-
-procedure SecDisk02
-begin
-	gsay_message(349, 107, 50);
-end
-
-
-                */
-
