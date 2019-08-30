@@ -32,12 +32,6 @@ procedure gambler4;
 procedure gambler5;
 procedure items_held;
 
-variable RightHand := 0;
-variable LeftHand := 0;
-variable PIDright := 0;
-variable PIDleft := 0;
-variable SubtypeWEP := 0;
-
 variable tmp_hostile;
 variable weapon_check;
 
@@ -92,22 +86,20 @@ procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_GENGAMBL, 100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
+   if map_first_run then
+      self_caps_adjust( random(0, 200) );
+
 	if (local_var(0) == 0) then begin
 		set_local_var(0, self_tile);
 	end
-	if (not(is_loading_game) and self_caps == 0) then begin
-		self_caps_adjust( random(0, 200) );
-	end
-	if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-		set_self_team(TEAM_JUNKTOWNER );// was 24 in Vanilla
+	if (CUR_MAP_JUNKCSNO) then begin
+		set_self_team(TEAM_JUNKTOWNER );
 		if ((global_var( GVAR_CAPTURE_GIZMO ) == 2) or (global_var( GVAR_GIZMO_DEAD ) == 1)) then begin
 			destroy_object(self_obj);
 		end
@@ -123,18 +115,14 @@ procedure talk_p_proc begin
 		if has_rep_childkiller then begin
 			call gambler3;
 		end
+		else if (global_var( GVAR_KILL_KILLIAN ) == 2) then begin
+			call gambler4;
+		end
+		else if (check_general_rep < -10) then begin
+			call gambler2;
+		end
 		else begin
-			if (global_var( GVAR_KILL_KILLIAN ) == 2) then begin
-				call gambler4;
-			end
-			else begin
-				if (check_general_rep < -10) then begin
-					call gambler2;
-				end
-				else begin
-					call gambler5;
-				end
-			end
+			call gambler5;
 		end
 	end
 end
