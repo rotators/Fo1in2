@@ -47,21 +47,22 @@ procedure Start begin
 		Only_Once := 0;
 		set_self_team(TEAM_LA_GUN_RUNNERS );
 		set_self_ai( AI_GUNRUNNERS );
-		if (local_var(LVAR_Home_Tile) == 0) then begin
-			DestTile := self_tile;
-			set_local_var(LVAR_Home_Tile, DestTile);
-		end
 	end
 end
 
 procedure map_enter_p_proc begin
-	if (not(is_loading_game)) then begin
+   if map_first_run then begin
+      self_caps_adjust( random(2, 20) );
+	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   else if (not(is_loading_game)) then begin
 		move_to(self_obj, local_var(LVAR_Home_Tile), 0);
       self_rotate(local_var(LVAR_Home_Rotation));
 	end
 
-   if map_first_run then
-      self_caps_adjust( random(2, 20) );
+   // Fix for wandering off:
+	if (DestTile == 0) then DestTile := local_var(LVAR_Home_Tile);
 end
 
 procedure pickup_p_proc begin
@@ -85,11 +86,7 @@ procedure talk_p_proc begin
 	end
 	else begin
 		get_reaction
-		start_gdialog(6, self_obj, -1, -1, -1);
-		gsay_start;
-		call Moat00;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(Moat00);
 	end
 end
 
@@ -115,7 +112,6 @@ end
 
 procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 	end
@@ -131,8 +127,7 @@ procedure timed_event_p_proc begin
 	end
 end
 
-procedure Moat00
-begin
+procedure Moat00 begin
 	gsay_reply(6, 101);
 	giq_option( 4, SCRIPT_MOATGRD, 103, Moat02, NEUTRAL_REACTION );
 	if (local_var(5) == 0) then begin
@@ -147,46 +142,39 @@ begin
 	giq_option( -3, SCRIPT_MOATGRD, 102, Moat01, NEUTRAL_REACTION );
 end
 
-procedure Moat01
-begin
+procedure Moat01 begin
 	gsay_message(6, 107, 50);
 	add_timer_event(self_obj, game_ticks(10), 1);
 	BottomReact
 end
 
-procedure Moat02
-begin
+procedure Moat02 begin
 	gsay_message(6, 107, 50);
 	add_timer_event(self_obj, game_ticks(10 * 2), 1);
 	BottomReact
 end
 
-procedure Moat03
-begin
+procedure Moat03 begin
 	gsay_message(6, 116, 50);
 	DestTile := 26299;
 	set_local_var(5, 1);
 end
 
-procedure Moat04
-begin
+procedure Moat04 begin
 	gsay_message(6, 117, 50);
 	DestTile := 26299;
 end
 
-procedure Moat05
-begin
+procedure Moat05 begin
 	gsay_message(6, 113, 50);
 	DestTile := 26299;
 	set_local_var(5, 1);
 end
 
-procedure MoatCombat
-begin
+procedure MoatCombat begin
 	add_timer_event(self_obj, game_ticks(10), 1);
 	BottomReact
 end
 
-procedure MoatEnd
-begin
+procedure MoatEnd begin
 end
