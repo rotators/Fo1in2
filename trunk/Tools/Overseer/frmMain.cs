@@ -11,97 +11,77 @@ using System.Windows.Forms;
 
 namespace Overseer
 {
+    public static class ExtGrid
+    {
+        public static DataGridView grid;
+        public static void ToGrid<T>(this Global<T> global, string name)
+        {
+            string s = "";
+            var v = global.value.GetType();
+            s = Convert.ToString(global.value);
+
+            grid.Rows.Add((new string[] { global.HexOffset, name, v.Name, s }));
+        }
+    }
+
+
     public partial class frmMain : Form
     {
-        Memory mem;
-        MemoryReader reader;
-        FalloutMemory fmem;
-
         public frmMain()
         {
             InitializeComponent();
+            ExtGrid.grid = this.dataGridView1;
         }
 
         private void BtnAttach_Click(object sender, EventArgs e)
         {
-            var fallout2 = Process.GetProcessesByName("Fallout2");
-            if (fallout2.Length > 0)
-            {
-                mem = new Memory(fallout2[0].Id);
-                reader = new MemoryReader(mem);
-                fmem = new FalloutMemory(reader);
+            if (Engine.AttachToFallout())
                 tmrRefresh.Enabled = true;
-            }
-        }
-
-        private void AddRow(int offset, string name, string datatype, string value)
-        {
-            this.dataGridView1.Rows.Add(new string[] { "0x" + offset.ToString("x"), name, datatype, value});
-        }
-
-        private void AddByte(int offset, string name)
-        {
-            this.AddRow(offset, name, "Byte", mem.ReadByte(offset).ToString());
-        }
-
-        private void AddInt16(int offset, string name)
-        {
-            this.AddRow(offset, name, "Int16", mem.ReadInt16(offset).ToString());
-        }
-
-        private void AddString(int offset, string name)
-        {
-            this.AddRow(offset, name, "String", mem.ReadString(offset, out int _).ToString());
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            this.ReadMemory();
+            this.ReadFromMemory();
             lstMessage.Items.Clear();
-            /*foreach (var s in fmem.ReadScriptList())
-            {
-                lstScripts.Items.Add(new ListViewItem(new string[] { s.fileName, s.numLocalVars.ToString() }));
-            }*/
-            /*AddMsg("SCRNAME", fmem.ReadMessageList(0x56D754));
-            AddMsg("COMBAT.MSG", fmem.ReadMessageList(0x56D368));
-            AddMsg("MAP.MSG", fmem.ReadMessageList(0x631D48));
-            AddMsg("PROTO", fmem.ReadMessageList(0x6647FC));
-            AddMsg("WORLDMAP.MSG", fmem.ReadMessageList(0x672FB0));*/
+            AddMsg("SCRNAME",      Engine.ReadMessageList(0x56D754));
+            AddMsg("COMBAT.MSG",   Engine.ReadMessageList(0x56D368));
+            AddMsg("MAP.MSG",      Engine.ReadMessageList(0x631D48));
+            AddMsg("PROTO",        Engine.ReadMessageList(0x6647FC));
+            AddMsg("WORLDMAP.MSG", Engine.ReadMessageList(0x672FB0));
+        }
 
+        private void TmrRefresh_Tick(object sender, EventArgs e)
+        {
+            this.ReadFromMemory();
+        }
 
-            //var st = Encoding.ASCII.GetString(bytes);
+        private void DATToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dat = new frmDatafiles();
+            dat.Show();
+        }
+
+        private void InterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var iface = new frmInterface();
+            iface.Show();
         }
 
         private void AddMsg(string name, MessageList list)
         {
             foreach (var node in list.nodes)
-                lstMessage.Items.Add(new ListViewItem(new string[] { name, node.number.ToString(), node.message, node.audio.Replace('\0',' ')}));
+                lstMessage.Items.Add(new ListViewItem(new string[] { name, node.number.ToString(), node.message, node.audio.Replace('\0', ' ') }));
         }
 
-
-
-        private void ReadMemory()
+        private void ReadFromMemory()
         {
             this.dataGridView1.Rows.Clear();
-            AddByte(0x672E0C, "worldPosX");
-            AddByte(0x672E10, "worldPosY");
-            AddByte(0x6681B0, "playerLevel");
-            AddInt16(0x6AC7A8, "mouseX");
-            AddInt16(0x6AC7A4, "mouseY");
-            AddString(0x56D75C, "playerName");
-            //ReadPaths();
-            
-        }
-
-        private void TmrRefresh_Tick(object sender, EventArgs e)
-        {
-            this.ReadMemory();
-        }
-
-        private void DATToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var dat = new frmDatafiles(this.fmem, this.reader);
-            dat.Show();
+            Globals.MouseX.ToGrid("MouseX");
+            Globals.MouseY.ToGrid("MouseY");
+            Globals.PlayerLevel.ToGrid("PlayerLevel");
+            Globals.PlayerName.ToGrid("PlayerName");
+            Globals.WorldPosX.ToGrid("WorldPosX");
+            Globals.WorldPosY.ToGrid("WorldPosY");
         }
     }
 }

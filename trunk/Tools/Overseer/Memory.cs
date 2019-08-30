@@ -8,103 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
-
 namespace Overseer
 {
-    public abstract class IParsable<T> {
-        public static T Parse(MemoryReader mem) { return default(T); }
-    }
-
-    public class PathNode : IParsable<PathNode>
-    {
-        public string path;
-        public Pointer<DatArchive> datArchive;
-        public long isDat;
-        public Pointer<PathNode> nextPtr;
-
-        public new static PathNode Parse(MemoryReader mem)
-        {
-            return new PathNode()
-            {
-                path = mem.ReadStringPtr(),
-                datArchive = new Pointer<DatArchive>(mem.ReadInt32(), mem),
-                isDat = mem.ReadInt32(),
-                nextPtr = new Pointer<PathNode>(mem.ReadInt32(), mem),
-            };
-        }
-    }
-
-    public class ScriptListInfo
-    {
-        public string fileName;
-        public long numLocalVars;
-    }
-
-    public class MessageNode
-    {
-        public int number;
-        public int flags;
-        public string audio;
-        public string message;
-    }
-
-    public class DatFile : IParsable<DatFile>
-    {
-        public string path;
-        public bool compressed;
-        public int size;
-        public int packedSize;
-        public int offset;
-
-        public new static DatFile Parse(MemoryReader mem)
-        {
-            return new DatFile()
-            {
-                path = mem.ReadStringPtr(),
-                compressed = mem.ReadInt32()==0x01,
-                size = mem.ReadInt32(),
-                packedSize = mem.ReadInt32(),
-                offset = mem.ReadInt32()
-            };
-        }
-    }
-
-    public class DatArchive : IParsable<DatArchive>
-    {
-        public string Name;
-        public int unknown;
-        public int numFiles;
-        public Pointer<DatFile> FirstFilePtr;
-
-        public IEnumerable<DatFile> GetFiles(MemoryReader mem)
-        {
-            yield return FirstFilePtr.Read();
-            for(var i=0;i<numFiles-1;i++)
-            {
-                yield return DatFile.Parse(mem);
-            }
-        }
-
-        public new static DatArchive Parse(MemoryReader mem)
-        {
-            return new DatArchive()
-            {
-                Name = mem.ReadStringPtr(),
-                unknown = mem.ReadInt32(),
-                numFiles = mem.ReadInt32(),
-                FirstFilePtr = new Pointer<DatFile>(mem.ReadInt32(), mem),
-            };
-        }
-    }
-
-    public class MessageList
-    {
-        public long numMsgs;
-        public List<MessageNode> nodes;
-    }
-
     public class Pointer<T> where T : IParsable<T>
     {
         int ptr;
@@ -132,96 +37,6 @@ namespace Overseer
             this.mem.offset = this.mem.Dereference(ptr);
             return this.CallParse();
         }
-    }
-
-    public class FalloutMemory
-    {
-        MemoryReader reader;
-        public FalloutMemory(MemoryReader reader)
-        {
-            this.reader = reader;
-        }
-
-        public MessageList ReadMessageList(int offset)
-        {
-            this.reader.offset = offset;
-            var m = new MessageList();
-            m.nodes = new List<MessageNode>();
-            m.numMsgs = this.ReadInt32();
-            ReadPointer(this.reader.offset);
-
-            for (var i = 0; i < m.numMsgs; i++)
-                m.nodes.Add(ReadMessageNode());
-            return m;
-        }
-
-        public MessageNode ReadMessageNode()
-        {
-            return new MessageNode()
-            {
-                number  = ReadInt32(),
-                flags   = ReadInt32(),
-                audio   = ReadStringPtr(),
-                message = ReadStringPtr()
-            };
-        }
-
-        byte[] ReadBytes(int num) { return this.reader.ReadBytes(num); }
-        Int32 ReadPointer(int offset) { return this.reader.Dereference(offset); }
-        Int16 ReadInt16() { return this.reader.ReadInt16(); }
-        Int32 ReadInt32() { return this.reader.ReadInt32(); }
-        Int64 ReadInt64() { return this.reader.ReadInt64(); }
-
-        string ReadStringPtr()
-        {
-            return this.reader.ReadStringPtr();
-        }
-        string ReadString(int? len=null) {
-            string s = this.reader.ReadString(len);
-            if (s.IndexOf('\0') == -1)
-                return null;
-            s = s.Substring(0, s.IndexOf('\0'));
-            return s;
-        }
-
-        public IEnumerable<PathNode> ReadPaths()
-        {
-            var n = new Pointer<PathNode>(0x6B24D0, this.reader).Dereference();
-            while (n.nextPtr.IsValid())
-            {
-                yield return n;
-                n = n.nextPtr.Read();
-            }
-        }
-
-        public IEnumerable<ScriptListInfo> ReadScriptList()
-        {
-            reader.Dereference(0x51C7C8); // dereference pointer and set the offset.
-            ScriptListInfo scriptInfo=null;
-            do
-            {
-                scriptInfo = ReadScriptListInfo();
-                if (scriptInfo != null)
-                    yield return scriptInfo;
-            } while (scriptInfo != null);
-        }
-
-        public ScriptListInfo ReadScriptListInfo()
-        {
-            var name = ReadString(16);
-            var num = ReadInt32();
-            if (num < 0)
-                return null;
-
-            return new ScriptListInfo()
-            {
-                fileName = name,
-                numLocalVars = num
-            };
-        }
-
-        /**/
-
     }
 
     // Reads bytes and advances offset.
@@ -305,7 +120,7 @@ namespace Overseer
         const int PROCESS_VM_OPERATION = 0x08;
         const int PROCESS_VM_READ = 0x10;
         const int PROCESS_VM_WRITE = 0x20;
-        
+
 
         [DllImport("kernel32", SetLastError = true)]
         public static extern IntPtr OpenProcess(
@@ -323,12 +138,9 @@ namespace Overseer
         int lpNumberOfBytesRead
         );
 
-        Process process;
         IntPtr handle;
-
-        public Memory(int pid)
+        public Memory(Process process)
         {
-            this.process = Process.GetProcessById(pid);
             this.handle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_READ, IntPtr.Zero, new IntPtr(process.Id));
         }
 
