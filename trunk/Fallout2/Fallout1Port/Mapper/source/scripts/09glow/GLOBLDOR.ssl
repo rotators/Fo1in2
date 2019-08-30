@@ -5,9 +5,11 @@
 */
 
 #include "..\headers\define.h"
-#include "..\headers\command.h"
+#include "..\headers\glow.h"
 
 #define NAME                    	SCRIPT_DOOR
+
+#include "..\headers\command.h"
 
 procedure start;
 procedure use_p_proc;
@@ -93,13 +95,12 @@ begin
 	end
 end
 
-procedure use_obj_on_p_proc
-begin
-	variable LVar0 := 0;
+procedure use_obj_on_p_proc begin
+	variable Item := 0;
 	variable LVar1 := 0;
 	variable LVar2 := 0;
-	LVar0 := obj_pid(obj_being_used_with);
-	if (LVar0 == PID_ELECTRONIC_LOCKPICKS) then begin
+	Item := obj_pid(obj_being_used_with);
+	if (Item == PID_ELECTRONIC_LOCKPICKS) then begin
 		script_overrides;
 		if (local_var(2) == 0) then begin
 			LVar1 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
@@ -126,8 +127,8 @@ begin
 					display_msg(message_str(SCRIPT_GLOBLDOR, 121));
 					jam_lock(self_obj);
 					display_msg(message_str(SCRIPT_GLOBLDOR, 110));
-					rm_obj_from_inven(source_obj, LVar0);
-					destroy_object(LVar0);
+					rm_obj_from_inven(source_obj, Item);
+					destroy_object(Item);
 				end
 				else begin
 					display_msg(message_str(SCRIPT_GLOBLDOR, 122));
@@ -135,12 +136,23 @@ begin
 			end
 		end
 	end
-	else if (LVar0 == PID_BLUE_PASS_KEY) then begin
+	else if (Item == PID_BLUE_PASS_KEY) then begin
 		script_overrides;
 		set_local_var(2, 1);
 		obj_unlock(self_obj);
 		set_local_var(3, 1);
 		display_msg(message_str(SCRIPT_GLOBLDOR, 106));
+
+      play_sfx_doorcard;
+	end
+	else if (Item == PID_RED_PASS_KEY) or (Item == PID_YELLOW_PASS_KEY) then begin
+	   script_overrides;
+	   display_msg(message_str(SCRIPT_GLOBLDOR, 107));
+	   play_sfx_doorfail;
+	end
+	else begin
+	   script_overrides;
+	   display_msg(message_str(SCRIPT_GLOBLDOR, 108));
 	end
 end
 

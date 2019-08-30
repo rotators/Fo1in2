@@ -2,78 +2,64 @@
 // ---HOLODISK SCRIPT---  Sduibek
 //
 // KEEP ORIGINAL ITEM	rebuild via critter_p_proc - DONE.
-// ProtoID	164	Name:	Brotherhood Disk	Cost:	70   
+// ProtoID	164	Name:	Brotherhood Disk	Cost:	70
 // script:	333	Artifact.int   ; the artifact the Brotherhood sends you to find.
 // GVAR	161	"Ancient Brotherhood Disk" - A holodisk with information about the Brotherhood of Steel.
 
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_ARTIFACT
+
+#include "..\headers\command.h"
+
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_p_proc;
+
 procedure NewPtr;
 
-// local_var(0) == Used (put in Pip-Boy)
-// local_var(1) == Examined (change item hoverdescrip)
+#define LVAR_Used          (0)
+#define LVAR_Examined      (1)
 
-
-procedure start
-begin
-	if script_action == 21 then begin// 21 is look_at
-		script_overrides;
-		if (local_var(1) < 1) and (global_var( GVAR_ARTIFACT_HOLODISK_USED ) != 1) then begin// not used or Examined yet
-			display_msg(message_str(SCRIPT_ARTIFACT, 100));
-		end
-		else begin
-			display_msg(message_str(SCRIPT_ARTIFACT, 104));
-		end
-	end
-	else begin
-		if script_action == 3 then begin// 3 is description (Binoculars)
-			set_local_var(1, 1);
-			display_msg(message_str(SCRIPT_ARTIFACT, 103));
-		end
-		else begin
-			if script_action == 6 then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				script_overrides;
-				set_local_var(1, 1);
-				if local_var(0) == 1 then begin
-					display_msg(message_str(SCRIPT_ARTIFACT, 101));//Abort
-				end
-				else begin
-					set_local_var(0, 1);
-					set_global_var( GVAR_ARTIFACT_HOLODISK_USED, 1 );
-					display_msg(message_str(SCRIPT_ARTIFACT, 102));//Downloaded OK
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "250" + message_str(SCRIPT_GENCHAT, 104));// more exp, for Fallout Fixt
-					give_exp_points(250);
-				end
-			end
-		end
-	end
-	call NewPtr;
+procedure start begin
+	//call NewPtr;
 end
 
-procedure NewPtr
-begin
+procedure look_at_p_proc begin
+	script_overrides;
+	if (local_var(LVAR_Examined) < 1) and (global_var( GVAR_ARTIFACT_HOLODISK_USED ) != 1) then begin// not used or Examined yet
+		display_msg(mstr(100));
+	end
+	else begin
+		display_msg(mstr(104));
+	end
+end
+
+procedure description_p_proc begin
+	set_local_var(LVAR_Examined, 1);
+	display_msg(mstr(103));
+end
+
+procedure use_p_proc begin
+	script_overrides;
+	set_local_var(LVAR_Examined, 1);
+	if local_var(LVAR_Used) == 1 then begin
+		display_msg(mstr(101));
+	end
+	else begin
+		set_local_var(LVAR_Used, 1);
+		set_global_var( GVAR_ARTIFACT_HOLODISK_USED, 1 );
+		display_msg(mstr(102));//Downloaded OK
+		display_msg(message_str(SCRIPT_GENCHAT, 103) + "250" + message_str(SCRIPT_GENCHAT, 104));// more exp, for Fallout Fixt
+		give_exp_points(250);
+	end
+end
+
+procedure NewPtr begin
 	if self_obj != 0 then begin
 		if (cur_map_index != MAP_GLOW1) and (cur_map_index != MAP_GLOW2) then begin
 			set_global_var( GVAR_ARTIFACT_HOLODISK_POINTER, self_obj );
 		end
 	end
 end
-
-
-//	if script_action == 1 then begin// start_proc
-//		call NewPtr;
-//	end
-//	else begin
-//				else begin
-//					if script_action == 4 then begin//pickup
-//						call NewPtr;
-//					end
-//					else begin
-//						if script_action == 5 then begin//drop
-//							call NewPtr;
-//						end
-//					end
-//				end
-//			end
-
