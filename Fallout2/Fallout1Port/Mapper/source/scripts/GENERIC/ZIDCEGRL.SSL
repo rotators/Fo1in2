@@ -62,8 +62,11 @@ procedure NodeClosed;
 #define LVAR_Personal_Enemy               (4)
 #define LVAR_Dealer_Money                 (5)
 #define LVAR_Caps_Restocked_Time          (6)
+#define LVAR_Tamper_Reset_Time            (7)
 
+#define tamper_time                       (ONE_GAME_DAY)
 #define restock_time                      (ONE_GAME_DAY)
+#define get_tamper_timeout                (game_time <= local_var(LVAR_Tamper_Reset_Time))
 #define set_dealer_timeout                set_local_var(LVAR_Caps_Restocked_Time, game_time + restock_time); \
                                           set_dealer_money(random(dealer_money_min,dealer_money_max))
 #define get_dealer_timeout                (game_time <= local_var(LVAR_Caps_Restocked_Time))
@@ -92,10 +95,23 @@ procedure NodeClosed;
 #define dice_tamper_bit                   bit_10
 #define get_dice_tamper                   lvar_bit(LVAR_Flags, dice_tamper_bit)
 
-#define set_dice_tamper                   if (get_dice_tamper == false) then begin         \
-                                             set_lvar_bit_on(LVAR_Flags, dice_tamper_bit); \
-                                             remove_pid_qty(self_obj, PID_DICE, self_item_count( PID_DICE )) \
+#define set_dice_tamper                   if (get_dice_tamper == false) then begin                                         \
+                                             set_lvar_bit_on(LVAR_Flags, dice_tamper_bit);                                 \
+                                             remove_pid_qty(self_obj, PID_DICE, self_item_count( PID_DICE ))               \
                                              remove_pid_qty(self_obj, PID_LOADED_DICE, self_item_count( PID_LOADED_DICE )) \
+                                             set_local_var(LVAR_Tamper_Reset_Time, game_time + tamper_time);               \
+                                          end
+
+#define reset_dice_tamper                 if (get_dice_tamper == true) and not(get_tamper_timeout) then begin              \
+                                             set_lvar_bit_off(LVAR_Flags, dice_tamper_bit);                                \
+                                             remove_pid_qty(self_obj, PID_DICE, self_item_count( PID_DICE ))               \
+                                             remove_pid_qty(self_obj, PID_LOADED_DICE, self_item_count( PID_LOADED_DICE )) \
+                                             if CUR_MAP_JUNKCSNO then begin                                                \
+                                                check_restock_item_min_limit(PID_LOADED_DICE, 1, 1, 100)                   \
+                                             end                                                                           \
+                                             else begin                                                                    \
+                                                check_restock_item_min_limit(PID_DICE, 1, 1, 100)                          \
+                                             end                                                                           \
                                           end
 
 // macros
@@ -158,7 +174,7 @@ procedure timed_event_p_proc begin
       if (self_distance_from_dude <= 4) then begin
          if (random(0,2) == 0) then begin
             play_sfx("dice1");
-         end else if (self_can_see_dude) then begin
+         end else if (self_can_see_dude) and not(get_dealer_timeout) then begin
             if (is_story_finished) then call Node002;
             //else if (dude_family_same) then call Node003;
             //else if (dude_family_conflict) then call Node005;
@@ -232,6 +248,8 @@ procedure pickup_p_proc begin
 end
 
 procedure talk_p_proc begin
+   reset_dice_tamper // If player tampered with dices and the timeout has run out, allow gambling again
+
    debug_msg("talk_p_proc:");
    if get_dealer_timeout then begin
       call NodeClosed;
