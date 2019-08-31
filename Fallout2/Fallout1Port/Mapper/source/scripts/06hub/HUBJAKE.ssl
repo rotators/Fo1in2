@@ -51,6 +51,11 @@ variable Only_Once := 1;
 
 import variable Jake_Desk_Ptr;
 
+#define LVAR_Here_Before      (4)
+#define LVAR_Hostile          (5)
+#define LVAR_Restock_Time     (6)
+#define LVAR_Caps_Amount      (7)
+
 procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
@@ -61,7 +66,7 @@ end
 
 procedure combat begin
 	tmp_hostile := 1;
-	set_local_var(5, 1);
+	set_local_var(LVAR_Hostile, 1);
 end
 
 procedure critter_p_proc begin
@@ -84,52 +89,36 @@ procedure talk_p_proc begin
 	call Get_Stuff;
 	get_reaction
 
-	if ((((GAME_TIME_IN_DAYS) - local_var(6)) >= 1) or (local_var(6) == 0)) then begin
-		set_local_var(6, GAME_TIME_IN_DAYS);
-		set_local_var(7, 2000 + random(0, 1000));
-		self_caps_adjust( local_var(7) );
+	if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Time)) >= 1) or (local_var(LVAR_Restock_Time) == 0)) then begin
+		set_local_var(LVAR_Restock_Time, GAME_TIME_IN_DAYS);
+		set_local_var(LVAR_Caps_Amount, 2000 + random(0, 1000));
+		self_caps_adjust( local_var(LVAR_Caps_Amount) );
 	end
 	else begin
-		self_caps_adjust( local_var(7) );
+		self_caps_adjust( local_var(LVAR_Caps_Amount) );
 	end
 
-	if (local_var(5) == 1) then begin
+	if (local_var(LVAR_Hostile) == 1) then begin
 		call combat;
 	end
 	else begin
-		if (global_var( GVAR_ENEMY_HUB ) == 1) then begin
-			start_gdialog(589, self_obj, 4, -1, -1);
-			gsay_start;
-			call Jake10;
-			gsay_end;
-			end_dialogue;
+		if (global_var(GVAR_ENEMY_HUB) == 1) then begin
+			start_dialog_at_node(Jake10);
 		end
-		else if (local_var(4) == 0) then begin
-			set_local_var(4, 1);
-			start_gdialog(589, self_obj, 4, -1, -1);
-			gsay_start;
-			call Jake01;
-			gsay_end;
-			end_dialogue;
+		else if (local_var(LVAR_Here_Before) == 0) then begin
+			set_local_var(LVAR_Here_Before, 1);
+			start_dialog_at_node(Jake01);
 		end
-		else if (local_var(1) == 1) then begin
-			start_gdialog(589, self_obj, 4, -1, -1);
-			gsay_start;
-			call Jake10;
-			gsay_end;
-			end_dialogue;
+		else if bad_critter_reaction then begin
+			start_dialog_at_node(Jake10);
 		end
 		else begin
-			start_gdialog(589, self_obj, 4, -1, -1);
-			gsay_start;
-			call Jake09;
-			gsay_end;
-			end_dialogue;
+			start_dialog_at_node(Jake09);
 		end
 	end
 
-	set_local_var(7, self_caps);
-	self_caps_adjust( -1 * local_var(7) );
+	set_local_var(LVAR_Caps_Amount, self_caps);
+	self_caps_adjust( -1 * local_var(LVAR_Caps_Amount) );
 	call Put_Stuff;
 end
 
@@ -162,8 +151,7 @@ procedure Jake01 begin
 	giq_option( -3, SCRIPT_HUBJAKE, 108, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake02
-begin
+procedure Jake02 begin
 	gsay_reply(589, 109);
 	giq_option( 4, SCRIPT_HUBJAKE, 110, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 111, Jake05, NEUTRAL_REACTION );
@@ -171,16 +159,14 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 113, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake03
-begin
+procedure Jake03 begin
 	gsay_reply(589, 114);
 	giq_option( 4, SCRIPT_HUBJAKE, 115, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 116, Jake02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 117, Jake04, NEUTRAL_REACTION );
 end
 
-procedure Jake04
-begin
+procedure Jake04 begin
 	gsay_message(589, 118, 50);
 	gsay_reply(589, 162);
 	giq_option( 4, SCRIPT_HUBJAKE, 119, Barter, NEUTRAL_REACTION );
@@ -191,16 +177,14 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 122, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake05
-begin
+procedure Jake05 begin
 	gsay_reply(589, 123);
 	giq_option( 4, SCRIPT_HUBJAKE, 124, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 125, Jake06, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 126, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake06
-begin
+procedure Jake06 begin
 	gsay_reply(589, 127);
 	giq_option( 4, SCRIPT_HUBJAKE, 128, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 129, Jake07, NEUTRAL_REACTION );
@@ -208,8 +192,7 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 131, Jake14, BAD_REACTION );
 end
 
-procedure Jake07
-begin
+procedure Jake07 begin
 	gsay_reply(589, 132);
 	giq_option( 4, SCRIPT_HUBJAKE, 133, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 134, Jake08, NEUTRAL_REACTION );
@@ -218,8 +201,7 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 137, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake08
-begin
+procedure Jake08 begin
 	gsay_reply(589, 138);
 	giq_option( 4, SCRIPT_HUBJAKE, 139, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 140, Jake07, NEUTRAL_REACTION );
@@ -227,8 +209,7 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 142, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake09
-begin
+procedure Jake09 begin
 	if (dude_is_male) then begin
 		gsay_reply(589, 163);
 	end
@@ -242,8 +223,7 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 147, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake10
-begin
+procedure Jake10 begin
 	gsay_reply(589, 148);
 	giq_option( -3, SCRIPT_HUBJAKE, 149, Barter, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_HUBJAKE, 150, Jake13, NEUTRAL_REACTION );
@@ -253,31 +233,26 @@ begin
 	giq_option( 4, SCRIPT_HUBJAKE, 153, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake11
-begin
+procedure Jake11 begin
 	float_msg(self_obj, message_str(SCRIPT_HUBJAKE, 154), 2);
 	call combat;
 end
 
-procedure Jake12
-begin
-	set_global_var( GVAR_VANCE_KNOWS_PLAYER, 1 );// VANCE_KNOWS_PLAYER
+procedure Jake12 begin
+	set_global_var( GVAR_VANCE_KNOWS_PLAYER, 1 );
 	gsay_reply(589, 155);
 	giq_option( 4, SCRIPT_HUBJAKE, 156, Jake08, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 157, Jake13, NEUTRAL_REACTION );
 end
 
-procedure Jake13
-begin
+procedure Jake13 begin
 end
 
-procedure Jake14
-begin
+procedure Jake14 begin
 	BottomReact
 end
 
-procedure Jake15
-begin
+procedure Jake15 begin
 	BottomReact
 	call combat;
 end
