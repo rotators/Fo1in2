@@ -1,6 +1,6 @@
 /*
 
-	The Glow defines
+    The Glow defines
 
 */
 
@@ -34,14 +34,14 @@
 #define set_glow_weapons_unlocked   set_global_var(GVAR_WEAPON_LOCKER, 2)
 
 // Using Keycards on doors and lockers:
-#define play_sfx_doorcard	if (random(0,1) == 1) then    \
-      							   play_sfx("SLDOORSA");      \
-      							else                          \
-      							   play_sfx("SLDOORSB")
+#define play_sfx_doorcard   if (random(0,1) == 1) then    \
+                                play_sfx("SLDOORSA");     \
+                            else                          \
+                                play_sfx("SLDOORSB")
 
-#define play_sfx_doorfail 	if (random(0,1) == 1) then    \
-      							   play_sfx("SNDOORSA");      \
-      							else                          \
-      							   play_sfx("SNDOORSB")
+#define play_sfx_doorfail   if (random(0,1) == 1) then    \
+                                play_sfx("SNDOORSA");     \
+                            else                          \
+                                play_sfx("SNDOORSB")
 
 #endif // GLOW_H

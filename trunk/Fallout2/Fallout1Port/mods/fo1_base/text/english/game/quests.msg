@@ -11,8 +11,9 @@
 {100}{}{Find the Water Chip.}
 {101}{}{Calm the rebel faction.}
 {102}{}{Find the Water Thief.}
-{103}{}{Destroy the Super Mutant leader.}
-{104}{}{Destroy the source of the Super Mutants.}
+{103}{}{Destroy the Mutant leader.}
+{104}{}{Destroy the source of the Mutants.}
+
 {105}{}{Help the medic to synthesize Antidote.}
 {106}{}{Learn about the outside world at the library.}
 {107}{}{Gain entry to the Armory.}
