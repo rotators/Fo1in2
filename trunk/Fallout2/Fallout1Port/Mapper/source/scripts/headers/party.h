@@ -544,7 +544,7 @@ variable PartyHealingItem;
                                             get_item_count(Handy_ptr,x)) > 0)
                                             
 #define party_remove_holodisk(x)            if (get_item_count(dude_obj,x) > 0) then begin          \
-                                                remove_pid_qty(Ian_ptr, x, 1)                       \
+                                                remove_pid_qty(dude_obj, x, 1)                      \
                                             end                                                     \
                                             else if (get_item_count(Ian_ptr,x) > 0) then begin      \
                                                 remove_pid_qty(Ian_ptr, x, 1)                       \
