@@ -1,10 +1,23 @@
+/*
+
+	The Glow - Power terminal(s)
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\glow.h"
+
+#define NAME                    SCRIPT_GPWRTERM
+
 #include "..\headers\command.h"
 
+/* Standard Script Procedures */
 procedure start;
-procedure use_p_proc;//    script_action == 6
-procedure talk_p_proc;//    script_action == 11
-procedure use_skill_on_p_proc;//    script_action == 8
+procedure use_p_proc;
+procedure talk_p_proc;
+procedure use_skill_on_p_proc;
+
 procedure Term01;
 procedure Term02;
 procedure Term03;
@@ -27,183 +40,145 @@ procedure Term14a;
 procedure Term15;
 procedure TermEnd;
 
-
-procedure start
-begin
-	if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-		call use_p_proc;
-	end
-	else begin
-		if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-			call talk_p_proc;
-		end
-		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				call use_skill_on_p_proc;
-			end
-		end
-	end
+procedure start begin
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	script_overrides;
 	dialogue_system_enter;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 	start_gdialog(828, self_obj, 4, -1, -1);
 	gsay_start;
-	if (global_var( GVAR_GLOW_POWER ) == 0) then begin
+	if glow_power_offline then begin
 		call Term14;
 	end
+	else if glow_power_emergency then begin
+		call Term01;
+	end
 	else begin
-		if (global_var( GVAR_GLOW_POWER ) == 1) then begin
-			call Term01;
-		end
-		else begin
-			call Term09;
-		end
+		call Term09;
 	end
 	gsay_end;
 	end_dialogue;
 end
 
-procedure use_skill_on_p_proc
-begin
-	if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_SCIENCE) then begin
 		script_overrides;
 		dialogue_system_enter;
 	end
 end
 
-procedure Term01
-begin
+procedure Term01 begin
 	gsay_reply(828, 100);
 	giq_option( 4, SCRIPT_GPWRTERM, 101, Term02, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GPWRTERM, 102, Term10, NEUTRAL_REACTION );
 	giq_option( 0, SCRIPT_GPWRTERM, 103, TermEnd, NEUTRAL_REACTION );
 end
 
-procedure Term02
-begin
+procedure Term02 begin
 	gsay_reply(828, 104);
 	giq_option( 4, SCRIPT_GPWRTERM, 105, Term03, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 106, Term06, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 107, Term01, NEUTRAL_REACTION );
 end
 
-procedure Term03
-begin
+procedure Term03 begin
 	gsay_reply(828, 108);
 	giq_option( 4, SCRIPT_GPWRTERM, 109, Term03a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 110, Term02, NEUTRAL_REACTION );
 end
 
-procedure Term03a
-begin
-	if (global_var( GVAR_QUEST_GLOW_2_START_POWER ) != 2) then begin
+procedure Term03a begin
+	if not(glow_quest_power_restored) then begin
 		call Term04;
 	end
 	else begin
-		set_global_var( GVAR_GLOW_POWER, 2 );
+		set_glow_power_online;
 	end
 end
 
-procedure Term04
-begin
+procedure Term04 begin
 	gsay_reply(828, 111);
 	giq_option( 8, SCRIPT_GPWRTERM, 112, Term05, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 113, Term02, NEUTRAL_REACTION );
 end
 
-procedure Term05
-begin
+procedure Term05 begin
 	gsay_reply(828, 114);
 	giq_option( 4, SCRIPT_GPWRTERM, 115, Term02, NEUTRAL_REACTION );
 end
 
-procedure Term06
-begin
+procedure Term06 begin
 	gsay_reply(828, 116);
 	giq_option( 4, SCRIPT_GPWRTERM, 117, Term06a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 118, Term02, NEUTRAL_REACTION );
 end
 
-procedure Term06a
-begin
-	set_global_var( GVAR_GLOW_POWER, 0 );
+procedure Term06a begin
+	set_glow_power_offline;
 end
 
-procedure Term07
-begin
+procedure Term07 begin
 	gsay_reply(828, 119);
 	giq_option( 4, SCRIPT_GPWRTERM, 120, Term08, NEUTRAL_REACTION );
 	giq_option( 0, SCRIPT_GPWRTERM, 121, TermEnd, NEUTRAL_REACTION );
 end
 
-procedure Term08
-begin
+procedure Term08 begin
 	gsay_reply(828, 122);
 	giq_option( 4, SCRIPT_GPWRTERM, 123, Term09a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 124, Term07, NEUTRAL_REACTION );
 end
 
-procedure Term09
-begin
+procedure Term09 begin
 	gsay_reply(828, 125);
 	giq_option( -3, SCRIPT_GPWRTERM, 126, Term09a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_GPWRTERM, 127, Term09a, NEUTRAL_REACTION );
 	giq_option( 0, SCRIPT_GPWRTERM, 128, TermEnd, NEUTRAL_REACTION );
 end
 
-procedure Term09a
-begin
-	set_global_var( GVAR_GLOW_POWER, 1 );
+procedure Term09a begin
+	set_glow_power_emergency;
 end
 
-procedure Term10
-begin
+procedure Term10 begin
 	gsay_reply(828, 129);
 	giq_option( -3, SCRIPT_GPWRTERM, 130, Term11, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GPWRTERM, 131, Term13, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GPWRTERM, 132, Term01, NEUTRAL_REACTION );
 end
 
-procedure Term11
-begin
+procedure Term11 begin
 	gsay_reply(828, 133);
 	giq_option( -3, SCRIPT_GPWRTERM, 134, Term11a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GPWRTERM, 135, Term10, NEUTRAL_REACTION );
 end
 
-procedure Term11a
-begin
-	if (global_var( GVAR_QUEST_GLOW_2_START_POWER ) != 2) then begin
+procedure Term11a begin
+	if not(glow_quest_power_restored) then begin
 		call Term12;
 	end
 	else begin
-		set_global_var( GVAR_GLOW_POWER, 2 );
+		set_glow_power_online;
 	end
 end
 
-procedure Term12
-begin
+procedure Term12 begin
 	gsay_reply(828, 136);
 	giq_option( -3, SCRIPT_GPWRTERM, 137, Term10, NEUTRAL_REACTION );
 end
 
-procedure Term13
-begin
+procedure Term13 begin
 	gsay_reply(828, 138);
 	giq_option( -3, SCRIPT_GPWRTERM, 148, Term06a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GPWRTERM, 137, Term10, NEUTRAL_REACTION );
 end
 
-procedure Term14
-begin
+procedure Term14 begin
 	gsay_reply(828, 139);
 	giq_option( 4, SCRIPT_GPWRTERM, 140, Term14a, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_GPWRTERM, 141, Term15, NEUTRAL_REACTION );
@@ -213,22 +188,19 @@ begin
 	giq_option( 0, SCRIPT_GPWRTERM, 145, TermEnd, NEUTRAL_REACTION );
 end
 
-procedure Term14a
-begin
-	set_global_var( GVAR_GLOW_POWER, 1 );
-	if (global_var( GVAR_QUEST_GLOW_2_START_POWER ) == 2) then begin
+procedure Term14a begin
+	set_glow_power_emergency;
+	if glow_quest_power_restored then begin
 		call Term01;
 	end
 end
 
-procedure Term15
-begin
+procedure Term15 begin
 	gsay_reply(828, 146);
 	giq_option( 0, SCRIPT_GPWRTERM, 147, TermEnd, NEUTRAL_REACTION );
 end
 
-procedure TermEnd
-begin
+procedure TermEnd begin
 end
 
 
