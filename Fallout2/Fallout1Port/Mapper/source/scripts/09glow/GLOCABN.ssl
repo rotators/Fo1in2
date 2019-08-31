@@ -1,47 +1,65 @@
+/*
+
+   Glow locked cabinet container
+
+      UNUSED
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\glow.h"
 
+#define NAME                    	SCRIPT_GLOCABN
+
+#include "..\headers\command.h"
+
+/* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure pickup_p_proc;
+procedure use_skill_on_p_proc;
 
+procedure start begin
+end
 
-procedure start
-begin
-	if ((script_action == 21) or (script_action == 3)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure pickup_p_proc begin
+	if (local_var(0) == 0) then begin
 		script_overrides;
-		display_msg(message_str(SCRIPT_GLOCABN, 100));
+		display_msg(mstr(101));
 	end
-	else begin
-		if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-			if (local_var(0) == 0) then begin
-				script_overrides;
-				display_msg(message_str(SCRIPT_GLOCABN, 101));
-			end
+end
+
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_LOCKPICK) then begin
+		if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, -15))) then begin
+			set_local_var(0, 1);
+			display_msg(mstr(102));
 		end
 		else begin
-			if (script_action == 8) then begin//<-- use_skill_on_p_proc
-				if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
-					if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, -15))) then begin
-						set_local_var(0, 1);
-						display_msg(message_str(SCRIPT_GLOCABN, 102));
-					end
-					else begin
-						display_msg(message_str(SCRIPT_GLOCABN, 103));
-					end
-				end
-				else begin
-					if (action_being_used == SKILL_SCIENCE) then begin//-- SCIENCE
-						if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -5))) then begin
-							set_local_var(0, 1);
-							display_msg(message_str(SCRIPT_GLOCABN, 104));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_GLOCABN, 105));
-						end
-					end
-					else begin
-						display_msg(message_str(SCRIPT_GLOCABN, 106));
-					end
-				end
-			end
+			display_msg(mstr(103));
 		end
+	end
+	else if (action_being_used == SKILL_SCIENCE) then begin
+		if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -5))) then begin
+			set_local_var(0, 1);
+			display_msg(mstr(104));
+		end
+		else begin
+			display_msg(mstr(105));
+		end
+	end
+	else begin
+		display_msg(mstr(106));
 	end
 end

@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef UPDATMAP_H
@@ -14,30 +14,34 @@
 #define BASEMENT_LIGHT                  (50)
 #define MILITARY_BASE_LIGHTING          (75)
 
-#define Lighting 	         if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin 			\
-      								set_light_level(game_time_hour - 600 + DUSK_LIGHT);						   \
-      							end																			               \
-      							else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin   \
-      								set_light_level(BRIGHT_LIGHT);											         \
-      							end																			               \
-      							else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin  \
-      								set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));				      \
-      							end																			               \
-      							else 																		                  \
-      								set_light_level(DUSK_LIGHT)
+#define Lighting                if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin          \
+                                    set_light_level(game_time_hour - 600 + DUSK_LIGHT);                     \
+                                end                                                                         \
+                                else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin    \
+                                    set_light_level(BRIGHT_LIGHT);                                          \
+                                end                                                                         \
+                                else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin   \
+                                    set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));                \
+                                end                                                                         \
+                                else                                                                        \
+                                    set_light_level(DUSK_LIGHT)
 
-#define GlowLighting 	   if (global_var(GVAR_GLOW_POWER) == 2) then begin      \
-								      set_light_level(BRIGHT_LIGHT);					      \
-      							end																	\
-      							else if (global_var(GVAR_GLOW_POWER) == 1) then begin \
-      								Darkness;														\
-      							end																	\
-      							else													            \
-      								set_light_level(0)						               \
+#define GlowLighting            if glow_power_online then begin         \
+                                    Full_Light;                         \
+                                end                                     \
+                                else if glow_power_emergency then begin \
+                                    Darkness;                           \
+                                end                                     \
+                                else                                    \
+                                    LightOff                            \
 
-#define Darkness 			   set_light_level(DUSK_LIGHT)
-
-#define Cavern_Lighting 	set_light_level(CAVERN_LIGHT)
+#define Darkness                set_light_level(DUSK_LIGHT)
+#define Cavern_Lighting         set_light_level(CAVERN_LIGHT)
+#define Full_Light              set_light_level(BRIGHT_LIGHT)
+#define Indoor_Lighting         set_light_level(INDOOR_LIGHT)
+#define Basement_Lighting       set_light_level(BASEMENT_LIGHT)
+#define Military_Base_Lighting  set_light_level(MILITARY_BASE_LIGHTING)
+#define LightOff                set_light_level(0)
 
 // Fallout 2 lighting:
 /*
@@ -129,40 +133,40 @@
 #define set_cur_exit                wm_area_set_pos(AREA_RND_MOUNTAIN,worldmap_xpos,worldmap_ypos)
 
 // Car Information
-#define trunk_size_small				(40)
-#define trunk_size_big					(80)
+#define trunk_size_small                (40)
+#define trunk_size_big                  (80)
 
-#define dude_has_bike 		         (global_var(GVAR_PLAYER_GOT_CAR) == 1)
-#define dude_has_upgraded_bike 	   (global_var(GVAR_PLAYER_GOT_CAR) == 2)
+#define dude_has_bike                (global_var(GVAR_PLAYER_GOT_CAR) == 1)
+#define dude_has_upgraded_bike     (global_var(GVAR_PLAYER_GOT_CAR) == 2)
 
-#define get_car_current_map 			global_var(GVAR_CAR_CUR_MAP)
-#define get_car_in_cur_map 			get_car_current_map == cur_map_index
-#define set_car_current_map    		set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
-#define set_car_worldmap     			set_global_var(GVAR_CAR_CUR_MAP,-1)
-#define get_car_from_worldmap 		(global_var(GVAR_CAR_CUR_MAP) == -1)
+#define get_car_current_map             global_var(GVAR_CAR_CUR_MAP)
+#define get_car_in_cur_map          get_car_current_map == cur_map_index
+#define set_car_current_map         set_global_var(GVAR_CAR_CUR_MAP,cur_map_index)
+#define set_car_worldmap                set_global_var(GVAR_CAR_CUR_MAP,-1)
+#define get_car_from_worldmap       (global_var(GVAR_CAR_CUR_MAP) == -1)
 
-#define set_car_out_of_fuel 			set_global_var(GVAR_BIKE_OUT_OF_FUEL,1)
-#define get_car_out_of_fuel 			(global_var(GVAR_BIKE_OUT_OF_FUEL) != 0)
+#define set_car_out_of_fuel             set_global_var(GVAR_BIKE_OUT_OF_FUEL,1)
+#define get_car_out_of_fuel             (global_var(GVAR_BIKE_OUT_OF_FUEL) != 0)
 
-#define set_car_exit_map 				if (global_var(GVAR_PLAYER_GOT_CAR) != 0) and car_in_any_encounter then begin \
-													set_car_worldmap; 																			\
-													car_give_to_party; 																			\
-												end
+#define set_car_exit_map                if (global_var(GVAR_PLAYER_GOT_CAR) != 0) and car_in_any_encounter then begin \
+                                                    set_car_worldmap;                                                                           \
+                                                    car_give_to_party;                                                                          \
+                                                end
 
-#define car_in_any_encounter 	  		((car_current_town == AREA_RND_DESERT) or 			\
-												(car_current_town == AREA_RND_MOUNTAIN) or  			\
-												(car_current_town == AREA_RND_CITY) or  				\
-												(car_current_town == AREA_RND_COAST) or 				\
-												(car_current_town == AREA_RND_ENC_DESERT) or  		\
-												(car_current_town == AREA_RND_ENC_MOUNTAIN) or  	\
-												(car_current_town == AREA_RND_ENC_CITY) or  			\
-												(car_current_town == AREA_RND_ENC_COAST) or  		\
-												(car_current_town == AREA_SPECIAL_RND_FOOT) or  	\
-												(car_current_town == AREA_SPECIAL_RND_TARDIS) or  	\
-												(car_current_town == AREA_SPECIAL_RND_USEDCAR) or  \
-												(car_current_town == AREA_SPECIAL_RND_COLATRUK) or \
-												(car_current_town == AREA_SPECIAL_RND_FSAUSER) or  \
-												(car_current_town == AREA_SPECIAL_RND_TALKCOW))
+#define car_in_any_encounter            ((car_current_town == AREA_RND_DESERT) or           \
+                                                (car_current_town == AREA_RND_MOUNTAIN) or              \
+                                                (car_current_town == AREA_RND_CITY) or                  \
+                                                (car_current_town == AREA_RND_COAST) or                 \
+                                                (car_current_town == AREA_RND_ENC_DESERT) or        \
+                                                (car_current_town == AREA_RND_ENC_MOUNTAIN) or      \
+                                                (car_current_town == AREA_RND_ENC_CITY) or              \
+                                                (car_current_town == AREA_RND_ENC_COAST) or         \
+                                                (car_current_town == AREA_SPECIAL_RND_FOOT) or      \
+                                                (car_current_town == AREA_SPECIAL_RND_TARDIS) or    \
+                                                (car_current_town == AREA_SPECIAL_RND_USEDCAR) or  \
+                                                (car_current_town == AREA_SPECIAL_RND_COLATRUK) or \
+                                                (car_current_town == AREA_SPECIAL_RND_FSAUSER) or  \
+                                                (car_current_town == AREA_SPECIAL_RND_TALKCOW))
 
 
 //        City Car is At                Tile Num For Car

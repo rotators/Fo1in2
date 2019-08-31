@@ -1,4 +1,7 @@
 #include "..\headers\define.h"
+#include "..\headers\maps\glow2.h"
+#include "..\headers\glow.h"
+
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
@@ -17,23 +20,19 @@ end
 
 procedure map_enter_p_proc begin
 	GlowLighting;
-	//call Invasion;
-	First_Time := game_time / 10;
-//	rads := random(10, 20)  + (difficulty_level * 10);//  10 20 30, 20 30 40
-//	radiation_inc(dude_obj, rads);
-//	First_Time := game_time / 10;
-//	rads := 0;
 
-   set_global_var(GVAR_LOAD_MAP_INDEX,0); 
+	First_Time := game_time / 10;
+
+   set_global_var(GVAR_LOAD_MAP_INDEX,0);
 end
 
 procedure map_update_p_proc begin
-	Next_Time := game_time / 10;
 	GlowLighting;
+
+	Next_Time := game_time / 10;
+
 	if ((Next_Time - First_Time) > 30) then begin
 		Rads := (Next_Time - First_Time) / 30;
-//	if ((Next_Time - First_Time) >= 1) then begin
-//		rads := random(10, 20)  + (difficulty_level * 10) - random(0, 6);
 		radiation_inc(dude_obj, rads);
 		First_Time := game_time / 10;
 		rads := 0;
@@ -41,11 +40,12 @@ procedure map_update_p_proc begin
 	else begin
 		radiation_inc(dude_obj, 1);
 	end
-	if ((map_var(0) == 0) and (dude_elevation == 1)) then begin
+
+	if ((map_var(MVAR_gave_exp) == 0) and (dude_elevation == 1)) then begin
 		display_msg(message_str(SCRIPT_GLOWGEN, 107));
-		display_msg(message_str(SCRIPT_GENCHAT, 103) + "1000" + message_str(SCRIPT_GENCHAT, 104));
-		give_exp_points(1000);
-		set_map_var(0, 1);
+		display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_REPAIR_GENERATOR + message_str(SCRIPT_GENCHAT, 104));
+		give_exp_points(EXP_REPAIR_GENERATOR);
+		set_map_var(MVAR_gave_exp, 1);
 	end
 end
 
