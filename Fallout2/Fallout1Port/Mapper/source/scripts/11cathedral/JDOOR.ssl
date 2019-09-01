@@ -1,125 +1,99 @@
+/*
+
+	Cathedral - secret door to Master's Lair
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_DOOR
+
 #include "..\headers\command.h"
 
+/* Standard Script Procedures */
 procedure start;
-procedure use_p_proc;//    script_action == use_proc
-procedure look_at_p_proc;//    script_action == look_at_proc
-procedure use_obj_on_p_proc;//    script_action == use_obj_on_proc
-procedure use_skill_on_p_proc;//    script_action == use_skill_on_proc
-procedure map_update_p_proc;//    script_action == map_update_proc
-procedure map_enter_p_proc;//    script_action == map_enter_proc
-procedure damage_p_proc;//    script_action == damage_proc
+procedure use_p_proc;
+procedure look_at_p_proc;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
+procedure map_update_p_proc;
+procedure map_enter_p_proc;
+procedure damage_p_proc;
 
 import variable J_Door_Ptr;
 
 variable cantopen;
 
-procedure start
-begin
-	if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				call use_p_proc;
-			end
-			else begin
-				if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
-					call use_skill_on_p_proc;
-				end
-				else begin
-					if (script_action == use_obj_on_proc) then begin//<-- use_obj_on_p_proc
-						call use_obj_on_p_proc;
-					end
-					else begin
-						if (script_action == damage_proc) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-							call damage_p_proc;
-						end
-						else begin
-							if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-								if (not(combat_is_initialized)) then begin
-									obj_close(self_obj);
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+procedure start begin
+end
+
+procedure timed_event_p_proc begin
+	if (not(combat_is_initialized)) then begin
+		obj_close(self_obj);
 	end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
 	cantopen := 0;
 	if source_obj == dude_obj then begin
 		cantopen := 1;
 		if (dude_tile == 27913) then begin
 			cantopen := 0;
 		end
-		else begin
-			if (dude_tile == 28113) then begin
-				cantopen := 0;
-			end
-			else begin
-				if (dude_tile == 28313) then begin
-					cantopen := 0;
-				end
-			end
+		else if (dude_tile == 28113) then begin
+			cantopen := 0;
+		end
+		else if (dude_tile == 28313) then begin
+			cantopen := 0;
 		end
 	end
 	if ((local_var(0) == 0) and cantopen) then begin
 		script_overrides;
-		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+		display_msg(mstr(104));//{104}{}{The door is locked.}
 	end
 	add_timer_event(self_obj, game_ticks(20), 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_DOOR, 201));//{201}{}{You notice some irregularities in the wall.}
+	display_msg(mstr(201));//{201}{}{You notice some irregularities in the wall.}
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
+
 	LVar0 := obj_being_used_with;
 	LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
 	if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
 		script_overrides;
-		display_msg(message_str(SCRIPT_DOOR, 200));//{200}{}{There is no lock on this door to pick.}
+		display_msg(mstr(200));//{200}{}{There is no lock on this door to pick.}
 	end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
 	script_overrides;
-	display_msg(message_str(SCRIPT_DOOR, 200));//{200}{}{There is no lock on this door to pick.}
+	display_msg(mstr(200));//{200}{}{There is no lock on this door to pick.}
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	J_Door_Ptr := self_obj;
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	J_Door_Ptr := self_obj;
 end
 
 procedure damage_p_proc begin
 	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-		if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
+		if not(is_loading_game) then begin
+		   set_self_invisible;
+		end
 		set_local_var(1, 1);
 		rm_timer_event(self_obj);
 	end
 	else begin
-		display_msg(message_str(SCRIPT_DOOR,193));
+		display_msg(mstr(193));
 	end
 end
