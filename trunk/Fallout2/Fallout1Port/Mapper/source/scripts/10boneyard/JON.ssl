@@ -65,6 +65,8 @@ import variable JonPtr;
 variable Only_Once := 1;
 variable DisplayMessage;
 
+#define LVAR_Here_Before            (4)
+
 #define LVAR_Home_Tile              (6)
 #define LVAR_Home_Rotation          (7)
 
@@ -102,7 +104,7 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) then begin
 		display_msg(mstr(176));
 	end
 	else begin
@@ -125,11 +127,11 @@ procedure talk_p_proc begin
 		float_msg(self_obj, message_str(NAME, random(183,187)), FLOAT_COLOR_NORMAL);
 	end
 	else begin
-		if ((local_var(4) == 1) and (dude_iq < 4)) then begin
+		if ((local_var(LVAR_Here_Before) == 1) and (dude_iq < 4)) then begin
 			float_msg(self_obj, message_str(SCRIPT_JON, 139), 0);
 		end
 		else begin
-			if (global_var( GVAR_ZIMMERMAN_STATUS ) == 2) then begin
+			if get_zimmermann_at_peace then begin
 				float_msg(self_obj, message_str(SCRIPT_JON, random(183, 187)), 0);
 			end
 			else begin
@@ -137,7 +139,7 @@ procedure talk_p_proc begin
 				start_gdialog(288, self_obj, -1, -1, -1);
 				gsay_start;
 				DisplayMessage := 100;
-				if (local_var(4) == 0) then begin
+				if (local_var(LVAR_Here_Before) == 0) then begin
 					call JonZimmerman00;
 				end
 				else begin
@@ -219,7 +221,7 @@ procedure JonZimmerman00 begin
 	gsay_reply(288, 100);
 	NOption( 181, JonZimmerman01, 4 );
 	NOption( 104, JonZimmerman13, -3 );
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 end
 
 procedure JonZimmerman01 begin
@@ -298,14 +300,14 @@ end
 
 procedure JonZimmerman08a begin
 	BottomReact
-	set_global_var( GVAR_ZIMMERMAN_STATUS, 1 );
+	set_zimmermann_insulted;
 end
 
 procedure JonZimmerman09 begin
 	gsay_reply(288, 131);
 	gsay_option(288, 132, JonZimmerman10, 50);
 	gsay_option(288, 133, JonZimmerman08a, 50);
-	set_global_var( GVAR_ZIMMERMAN_STATUS, 1 );
+	set_zimmermann_insulted;
 end
 
 procedure JonZimmerman10 begin
@@ -323,7 +325,7 @@ procedure JonZimmerman12 begin
 	gsay_message(288, 138, 50);
 	BottomReact
 
-	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );//  ENEMY_REGULATOR == 1
+	set_global_var( GVAR_DUDE_ENEMY_REGULATORS, 1 );
 	gfade_out(1);
 	move_to(dude_obj, 10500, 0);
 	gfade_in(1);
@@ -382,7 +384,7 @@ procedure JonZimmerman21 begin
 	gsay_option(288, 163, JonZimmerman22, 50);
 	gsay_option(288, 164, JonZimmerman23, 50);
 	gsay_option(288, 165, JonZimmerman22, 50);
-	set_global_var( GVAR_ZIMMERMAN_STATUS, 2 );
+	set_zimmermann_at_peace;
 end
 
 procedure JonZimmerman22 begin

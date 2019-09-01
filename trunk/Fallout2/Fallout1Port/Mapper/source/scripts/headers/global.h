@@ -743,7 +743,7 @@
 #define GVAR_OVERSEER_END_SEQ                   (1620)
 #define GVAR_QUEST_KILL_MOMCLAW                 (1621)
 // 1622 free
-#define GVAR_TYCHO_DUDE_LAST_LEVEL              (1623) // unused
+#define GVAR_QUEST_KILL_RAZOR                   (1623) // unused
 #define GVAR_LARS_DEAD                          (1624)
 #define GVAR_LARS_N_KILLIAN_ON_CASINO           (1625)
 #define GVAR_DUDE_ENEMY_SKULZ                   (1626)
