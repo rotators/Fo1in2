@@ -70,22 +70,68 @@
 	}
 
 namespace dude {
+	
+	//int __stdcall config_get_value(char* )
 
-	static int ret;
-	int __stdcall check_move(int actionPoints)
+
+	static int result;
+	static int unknown = 0x58E950;
+	static int system = 0x500170;
+	static int interrupt_walk = 0x500160;
+	int check_move(int actionPoints)
 	{
-		// this code sucks...
-		__asm { 
-				push actionPoints;
-				mov eax, esp;
-				call fo::funcoffs::check_move_
-				mov ret, eax;
-				add esp, 4 };
-		return ret;
+		long x;
+		long y;
+		fo::func::mouse_get_position(&x, &y);
+		DWORD tile = fo::func::tile_num(x, y);
+		if (tile != -1)
+		{
+			int InCombat = *reinterpret_cast<int*>(FO_VAR_combat_state);
+			if (InCombat != 1)
+			{
+				// If interrupt_walk is allowed.
+
+
+				// TODO: fix, causes crash
+				//WRAP_WATCOM_CALL3(config_get_value_, unknown, system, interrupt_walk);
+				//_asm { mov result, eax }
+				/*if (result == 1) {
+					fo::GameObject* obj_dude = *reinterpret_cast<fo::GameObject * *>(FO_VAR_obj_dude);
+					fo::func::register_clear(obj_dude);
+					//WRAP_WATCOM_CALL1(register_clear_, obj_dude);
+				}*/
+
+				//return tile;
+			}
+		}
+
+		// Is this really relevant to implement? Something with returning to end when
+		// left or right ctrl is down.
+
+		//cmp byte ptr ds : [6AD84D] , 0
+		//jne fallout2.418051
+		//cmp byte ptr ds : [6AD8CD] , 0
+		//je fallout2.4180A7
+		//_asm { sub esp, 4 }
+
+		return tile;
 	}
 
+	/*static int ret;
+	int __stdcall check_move_wrap(int actionPoints)
+	{
+		// this code sucks...
+		__asm {
+			push actionPoints;
+			mov eax, esp;
+			call check_move
+				mov ret, eax;
+			add esp, 4 };
+		return ret;
+	}*/
+
 	// dude_run, 0x0041810C
-	void __stdcall run(int actionPoints)
+	void run(int actionPoints)
 	{
 		DWORD dstTile;
 		// Check to which tile we are moving
@@ -108,7 +154,7 @@ namespace dude {
 	Move dude to a tile, used when clicking on a hex.
 	actionPoints == -1 when not in combat
 	*/
-	void __stdcall move(int actionPoints) 
+	void move(int actionPoints) 
 	{
 		DWORD dstTile;
 		// Check to which tile we are moving
