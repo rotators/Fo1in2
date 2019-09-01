@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\junkcsno.h"
 
 #define NAME                    SCRIPT_GENSKULZ
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -42,7 +42,11 @@ variable tmp_hostile;
 variable sleeping_disabled;
 variable waypoint;
 
-#define LVAR_Sleeping 							(4)
+#define LVAR_Sleeping 					    (4)
+#define LVAR_Home_Tile                  (5)
+#define LVAR_Float                      (6)
+
+#define SKULLZ_TARGET_CRITTER_HEX         20082
 
 procedure start begin
 end
@@ -59,34 +63,32 @@ procedure critter_p_proc begin
 	end
 	else begin
 		if (CUR_MAP_JUNKCSNO) then begin
-			if ((map_var(2) == 2) and (waypoint == 0)) then begin
+			if ((map_var(MVAR_bar_fight) == 2) and (waypoint == 0)) then begin
 				waypoint := 1;
 				tmp_dest_tile := 26297;
 				sleeping_disabled := 1;
 			end
-			else begin
-				if ((global_var( GVAR_DESTROY_VATS_10 ) == 1) and (waypoint == 0)) then begin
-					waypoint := 1;
-					sleeping_disabled := 1;
-					add_timer_event(self_obj, game_ticks(8), 3);
-				end
+			else if ((global_var( GVAR_DESTROY_VATS_10 ) == 1) and (waypoint == 0)) then begin
+				waypoint := 1;
+				sleeping_disabled := 1;
+				add_timer_event(self_obj, game_ticks(8), 3);
 			end
+
 			if (waypoint != 0) then begin
 				if (tile_distance(self_tile, tmp_dest_tile) > 3) then begin
 					self_walk_to_tile( tmp_dest_tile );
 				end
-				else begin
-					if (waypoint == 1) then begin
-						if (map_var(2) == 0) then begin
-							tmp_dest_tile := 33519;
-						end
-						else begin
-							tmp_dest_tile := 20076;
-							waypoint := 2;
-						end
+				else if (waypoint == 1) then begin
+					if (map_var(MVAR_bar_fight) == 0) then begin
+						tmp_dest_tile := 33519;
+					end
+					else begin
+						tmp_dest_tile := 20076;
+						waypoint := 2;
 					end
 				end
 			end
+
 			if (sleeping_disabled == 0) then begin
 				sleeping
 			end
@@ -100,17 +102,17 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	if (home_tile == 20082) then begin
+	if (home_tile == SKULLZ_TARGET_CRITTER_HEX) then begin
 		Skul_target := 0;
 	end
-	if (CUR_MAP_JUNKCSNO) and (map_var(2) == 1) then begin
-		set_map_var(0, (map_var(0) - 1));
-	end
-	rm_timer_event(self_obj);
 
+	if (CUR_MAP_JUNKCSNO) and (map_var(MVAR_bar_fight) == 1) then begin
+		set_map_var(MVAR_Skulz_left, (map_var(MVAR_Skulz_left) - 1));
+	end
 	if (source_obj == dude_obj)  then begin
 		set_global_var( GVAR_DUDE_ENEMY_SKULZ, 1 );
 	end
+	rm_timer_event(self_obj);
 	inc_evil_critter
 end
 
@@ -120,23 +122,32 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-	if (not(local_var(5))) then begin
-		set_local_var(5, self_tile);
+	if not(local_var(LVAR_Home_Tile)) then begin
+		set_local_var(LVAR_Home_Tile, self_tile);
 	end
-	home_tile := local_var(5);
+	home_tile := local_var(LVAR_Home_Tile);
+
+	set_self_team(TEAM_JUNKTOWN_SKULZ );
+	set_self_ai( AI_SKULZ );
+
 	if (CUR_MAP_JUNKENT) then begin
 		if (global_var( GVAR_BUST_SKULZ ) != 2) then begin
-			if not(is_loading_game) then begin    set_self_invisible;    end
+			if not(is_loading_game) then begin
+			   set_self_invisible;
+			end
 		end
 		else begin
 			if not(junktown_invaded) then begin
-				if not(is_loading_game) then begin    set_self_visible;    end
+				if not(is_loading_game) then begin
+				   set_self_visible;
+				end
 			end
 			else begin
 				kill_critter(self_obj, ANIM_stand);
 			end
 		end
 	end
+
 	if (cur_map_index != MAP_JUNKCSNO) then begin
 		if (CUR_MAP_JUNKENT) then begin
 			if (global_var( GVAR_BUST_SKULZ ) == 2) then begin
@@ -148,16 +159,13 @@ procedure map_enter_p_proc begin
 		end
 	end
 	else begin
-		if ((global_var( GVAR_DESTROY_VATS_10 ) == 1) and (map_var(2) == 0)) then begin
+		if ((global_var( GVAR_DESTROY_VATS_10 ) == 1) and (map_var(MVAR_bar_fight) == 0)) then begin
 			destroy_object(self_obj);
 		end
 	end
 
-	set_self_team(TEAM_JUNKTOWN_SKULZ );
-	set_self_ai( AI_SKULZ );
-
 	if (global_var( GVAR_BUST_SKULZ ) == 2) then begin
-		if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+		if (CUR_MAP_JUNKENT) then begin
 			if not(is_loading_game) then begin    set_self_visible;    end
 		end
 		else begin
@@ -167,14 +175,14 @@ procedure map_enter_p_proc begin
 
 	call set_sleep_tile;
 
-	if (home_tile == 20082) and (CUR_MAP_JUNKCSNO) then begin
+	if (home_tile == SKULLZ_TARGET_CRITTER_HEX) and (CUR_MAP_JUNKCSNO) then begin
 		Skul_target := self_obj;
 	end
 end
 
 procedure map_exit_p_proc begin
 	if (CUR_MAP_JUNKCSNO) then begin
-		if ((global_var( GVAR_DESTROY_VATS_10 ) == 1) and (map_var(2) == 0)) then begin
+		if ((global_var( GVAR_DESTROY_VATS_10 ) == 1) and (map_var(MVAR_bar_fight) == 0)) then begin
 			destroy_object(self_obj);
 		end
 	end
@@ -189,21 +197,21 @@ procedure talk_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	dude_look_at_self;
-	if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		set_local_var(6, 104);
+	if (CUR_MAP_JUNKENT) then begin
+		set_local_var(LVAR_Float, 104);
 	end
 	else begin
-		if (CUR_MAP_JUNKCSNO) and (map_var(2) == 2) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-			set_local_var(6, 112);
+		if (CUR_MAP_JUNKCSNO) and (map_var(MVAR_bar_fight) == 2) then begin
+			set_local_var(LVAR_Float, 112);
 		end
 		else begin
 			LVar1 := random(101, 105);
 			LVar1 := random(101, 105);
 			LVar1 := random(101, 105);
-			set_local_var(6, LVar1);
+			set_local_var(LVAR_Float, LVar1);
 		end
 	end
-	LVar0 := message_str(SCRIPT_GENSKULZ, local_var(6));
+	LVar0 := message_str(SCRIPT_GENSKULZ, local_var(LVAR_Float));
 	if (local_var(4) == 1) then begin
 		LVar0 := message_str(SCRIPT_GENSKULZ, 106);
 	end
@@ -217,7 +225,7 @@ procedure timed_event_p_proc begin
 				float_msg(self_obj, message_str(SCRIPT_GENSKULZ, random(107, 112)), 0);
 			end
 			else begin
-				self_walk_to_tile( tile_num_in_direction(local_var(5), random(0, 3), random(0, 5)) );
+				self_walk_to_tile( tile_num_in_direction(local_var(LVAR_Home_Tile), random(0, 3), random(0, 5)) );
 			end
 		end
 		add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
@@ -228,12 +236,12 @@ procedure timed_event_p_proc begin
 		rm_timer_event(Neal_ptr);
 		reg_anim_clear( self_obj );
 		reg_anim_begin();
-		reg_anim_obj_move_to_obj(self_obj, Trish_ptr, -1);
-		reg_anim_animate(self_obj, 16, -1);
-		reg_anim_animate(Trish_ptr, 20, 4);
-		reg_anim_animate(Trish_ptr, 48, -1);
-		reg_anim_animate(Trish_ptr, 37, -1);
-		reg_anim_obj_run_to_tile(Trish_ptr, 19889, -1);
+   		reg_anim_obj_move_to_obj(self_obj, Trish_ptr, -1);
+   		reg_anim_animate(self_obj, 16, -1);
+   		reg_anim_animate(Trish_ptr, 20, 4);
+   		reg_anim_animate(Trish_ptr, 48, -1);
+   		reg_anim_animate(Trish_ptr, 37, -1);
+   		reg_anim_obj_run_to_tile(Trish_ptr, 19889, -1);
 		reg_anim_end();
 		add_timer_event(Neal_ptr, game_ticks(3), 1);
 	end
