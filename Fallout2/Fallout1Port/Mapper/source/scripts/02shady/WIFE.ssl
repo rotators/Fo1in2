@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\shadyw.h"
+#include "..\headers\shadysands.h"
 
 #define NAME                    SCRIPT_WIFE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
@@ -36,7 +37,7 @@ variable DeathType := 56;
 
 procedure start begin
 	if shady_invaded then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+		if CUR_AREA_SHADY_SANDS then begin
 			if (local_var(4) != 1) then begin
 				set_local_var(4, 1);
 				call PickDeadBodyType;
@@ -67,37 +68,32 @@ procedure talk_p_proc begin
 	end
 end
 
-procedure Wife01
-begin
+procedure Wife01 begin
 	gsay_reply(119, 100);
 	giq_option( 4, SCRIPT_WIFE, 101, Wife02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_WIFE, 107, WifeEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_WIFE, 102, Wife03, NEUTRAL_REACTION );
 end
 
-procedure Wife02
-begin
+procedure Wife02 begin
 	gsay_message(119, 103, 50);
 end
 
-procedure Wife03
-begin
+procedure Wife03 begin
 	gsay_message(119, 104, 50);
 end
 
-procedure Wife00n
-begin
+procedure Wife00n begin
 	float_msg(self_obj, message_str(SCRIPT_WIFE, 105), 8);
 end
 
-procedure WifeEnd
-begin
+procedure WifeEnd begin
 end
 
 procedure critter_p_proc begin
-	if (map_var(2) == 1) then begin
+	if (map_var(MVAR_Caught_Stealing) == 1) then begin
 		set_local_var(0, local_var(0) + 1);
-		set_map_var(2, 0);
+		set_map_var(MVAR_Caught_Stealing, 0);
 		if (local_var(0) < 3) then begin
 			float_msg(self_obj, message_str(SCRIPT_RAZLO, 308), 2);
 		end
@@ -105,36 +101,36 @@ procedure critter_p_proc begin
 			tmp_hostile := 1;
 		end
 	end
+
 	if (self_can_see_dude) then begin
 		if global_var( GVAR_ENEMY_SHADY_SANDS ) then begin//   Is Shady Sands tmp_hostile to player?
 			tmp_hostile := 1;
 		end
 	end
+
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
 procedure destroy_p_proc begin
 	inc_good_critter
 	if (source_obj == dude_obj) then begin
-		set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );//Set ENEMY_SHADY_SANDS to True
+		set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );
 	end
 end
 
 procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
-		set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );//Set ENEMY_SHADY_SANDS to True
+		set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );
 	end
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end

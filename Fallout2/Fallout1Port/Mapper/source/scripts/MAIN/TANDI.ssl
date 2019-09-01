@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\maps\v13ent.h"
+#include "..\headers\shadysands.h"
 
 #define NAME                    SCRIPT_TANDI
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
@@ -198,8 +198,7 @@ procedure talk_p_proc begin
 		end
 	end
 	else begin
-
-		if (CUR_MAP_SHADYW or CUR_MAP_SHADYE) then begin//	SHADY SANDS
+		if CUR_AREA_SHADY_SANDS then begin
 			get_reaction
 			start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_SHADY);
 			gsay_start;
@@ -229,46 +228,7 @@ procedure talk_p_proc begin
 			end_dialogue;
 		end
 		else begin
-
 			get_reaction
-
-			/*if (CUR_MAP_DESERT0 or CUR_MAP_DESERT2 or CUR_MAP_DESERT3) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//was 14, DESERT
-			end
-			else if CUR_AREA_JUNKTOWN then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);
-			end
-			else if CUR_AREA_BROTHERHOOD then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_BHOOD);
-			end
-			else if CUR_AREA_NECROPOLIS then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_NECROPOLIS);
-			end
-			else if CUR_AREA_VAULT_13 then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);
-			end
-			else if CUR_MAP_VAULTENT then begin
-				if random(0,1) then begin
-					start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);//VAULTENT (15)
-				end
-				else begin
-					start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_JUNKTOWN);//VAULTENT (15)
-				end
-			end
-			else if (CUR_MAP_VAULTBUR or CUR_MAP_VAULTNEC) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//start_gdialog(57, self_obj, 4, 9, 16);//VAULT_DEAD, need exception for tile27000+
-			end
-			else if (CUR_MAP_CAVES or CUR_MAP_V13ENT or CUR_MAP_DETHCLAW) then begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_VAULT);//start_gdialog(57, self_obj, 4, 9, 15);//BLUE _CAVES_
-			end
-			else begin
-				start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND1);
-			end
-
-			gsay_start;
-			call Tandi98;
-			gsay_end;
-			end_dialogue;*/
 			float_msg(self_obj, message_str(SCRIPT_TANDI, random(300, 305)), FLOAT_COLOR_NORMAL);
 		end
 	end
@@ -283,18 +243,15 @@ begin
 	giq_option( 4, SCRIPT_TANDI, 105, tandi28, NEUTRAL_REACTION );
 end
 
-procedure tandi00_1
-begin
-	if (global_var( GVAR_RADSCORPION_SEED ) == 0) then begin
+procedure tandi00_1 begin
+	if radscorp_quest_inactive then begin
 		call tandi20;
 	end
+	else if radscorp_quest_completed then begin
+		call tandi21;
+	end
 	else begin
-		if (global_var( GVAR_RADSCORPION_SEED ) == 2) then begin
-			call tandi21;
-		end
-		else begin
-			call tandi22;
-		end
+		call tandi22;
 	end
 end
 
@@ -757,7 +714,7 @@ end
 
 procedure map_enter_p_proc begin
 	if shady_invaded and (global_var( GVAR_TANDI_HIRELING_STATUS ) != 5) then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+		if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(9) != 1) then begin
 				set_local_var(9, 1);
 				call PickDeadBodyType;
@@ -767,7 +724,7 @@ procedure map_enter_p_proc begin
 	end
 
 	if (map_first_run) then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin
+		if CUR_AREA_SHADY_SANDS then begin
 			set_self_team( TEAM_SHADY_SANDS );
 		end
 		else begin
@@ -826,7 +783,7 @@ procedure critter_p_proc begin
 			end
 		end
 		else begin
-			if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+			if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
 				if (global_var( GVAR_TANDI_HIRELING_STATUS ) > 1) then begin
 					variable Temp_ptr := 0;
 					Temp_ptr := create_object( PID_DEAD_TRAVELER, 0, 0 );// <-- Dead Traveler (Ghoul)  Was:  create_object( PID_IGUANA_STAND, 0, 0 );// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.

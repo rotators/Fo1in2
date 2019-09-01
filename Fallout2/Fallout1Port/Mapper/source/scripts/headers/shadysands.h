@@ -4,30 +4,32 @@
 
 */
 
-#ifndef MAPSHADY_H
-#define MAPSHADY_H
+#ifndef SHADYSANDS_H
+#define SHADYSANDS_H
 
 /************************************************
     Generic Defines
 ************************************************/
+#define set_heal_jarvis                if (global_var(GVAR_CURE_JARVIS) == 0) then set_global_var(GVAR_CURE_JARVIS,1)
+#define set_jarvis_healed              set_global_var(GVAR_CURE_JARVIS,2)
+#define get_jarvis_healed              (global_var(GVAR_CURE_JARVIS) >= 2)
 
-//MAP_GLOBAL_VARS:
+// Radscorpion quest
+#define radscorp_quest_inactive        (global_var(GVAR_RADSCORPION_SEED) == 0)
+#define radscorp_quest_active          (global_var(GVAR_RADSCORPION_SEED) == 1)
+#define radscorp_quest_completed       (global_var(GVAR_RADSCORPION_SEED) == 2)
 
-//GLOBAL                                        NUMBER
-// timed event params
+#define set_radscorp_quest_active      set_global_var(GVAR_RADSCORPION_SEED, 1)
+#define set_radscorp_quest_completed   set_global_var(GVAR_RADSCORPION_SEED, 2)
 
-//==================================================================
+// Tandi quest
+#define get_tandi_returned             (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
 
-// All Map Vars need to start w/ MVAR_
-// ShadyE:
-#define MVAR_Invasion             (0) // Has the town been invaded by Super Mutants?
+#define tandi_quest_inactive           (global_var(GVAR_TANDI_RESCUE) == 0)
+#define tandi_quest_active             (global_var(GVAR_TANDI_RESCUE) == 1)
+#define tandi_quest_completed          (global_var(GVAR_TANDI_RESCUE) == 2)
 
-//ShadyW:
-#define MVAR_WARNED               (0) // has the player been warned to put his weapon away?
-#define MVAR_TANDI_EXP            (1)
-#define MVAR_Caught_Stealing      (2)
-#define MVAR_Map_Only_once        (3)
-#define MVAR_Map_one_Time         (4)
-#define MVAR_Invasion             (5)
+#define set_tandi_quest_active         set_global_var(GVAR_TANDI_RESCUE, 1)
+#define set_tandi_quest_completed      set_global_var(GVAR_TANDI_RESCUE, 2)
 
-#endif // MAPSHADY_H
+#endif // SHADYSANDS_H

@@ -74,6 +74,7 @@
 
 #define tandi_is_kidnapped					(global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
 #define tandi_not_kidnapped					not(tandi_is_kidnapped)
+#define tandi_is_rescued 					(global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
 
 /*********************************************************
 	Other stuff:

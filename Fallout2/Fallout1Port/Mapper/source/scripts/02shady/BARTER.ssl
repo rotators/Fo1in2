@@ -1,14 +1,28 @@
+/*
+
+	Shady Sands - Merchant in East Side
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\maps\shadye.h"
+#include "..\headers\shadysands.h"
+
+#define NAME                    SCRIPT_BARTER
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
+
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
-procedure critter_p_proc;//    script_action == 12
-procedure pickup_p_proc;//    script_action == 4
-procedure destroy_p_proc;//    script_action == 18
-procedure talk_p_proc;//    script_action == 11
-procedure look_at_p_proc;//    script_action == 21
-procedure timed_event_p_proc;//    script_action == 22
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure destroy_p_proc;
+procedure talk_p_proc;
+procedure look_at_p_proc;
+procedure timed_event_p_proc;
 
 procedure barter00;
 procedure barter01;
@@ -38,16 +52,12 @@ variable Only_Once := 1;
 variable Caught_Stealing;
 variable Here_To_Shop;
 
-
-
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
-
-procedure start
-begin
+procedure start begin
 	if shady_invaded then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+		if CUR_AREA_SHADY_SANDS then begin
 			if (local_var(6) != 1) then begin
 				set_local_var(6, 1);
 				call PickDeadBodyType;
@@ -56,54 +66,21 @@ begin
 		end
 	end
 	else begin
-
-
 		if Only_Once then begin
 			Only_Once := 0;
-		set_self_team(TEAM_SHADY_SANDS );
-		set_self_ai( AI_MERCHANT );
+		   set_self_team(TEAM_SHADY_SANDS );
+		   set_self_ai( AI_MERCHANT );
 			exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
 		end
-		if (script_action == 21) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-			call look_at_p_proc;
-		end
-		else begin
-			if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-				call timed_event_p_proc;
-			end
-			else begin
-				if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
-					call pickup_p_proc;
-				end
-				else begin
-					if (script_action == 11) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-						call talk_p_proc;
-					end
-					else begin
-						if (script_action == 12) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-							call critter_p_proc;
-						end
-						else begin
-							if (script_action == 18) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-								call destroy_p_proc;
-							end
-							else begin
-								if (script_action == 3) then begin//DETAILED ON-CLICK DESCRIPTION (Binoculars icon) - description_p_proc
-									//script_overrides;
-									display_msg(message_str(SCRIPT_BARTER, 100));
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+   end
 end
 
-procedure talk_p_proc
-begin
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
 
+procedure talk_p_proc begin
 	dude_look_at_self;
 
 	get_reaction
@@ -113,181 +90,151 @@ begin
 	if (Caught_Stealing) then begin
 		call BarterGuy00;
 	end
+	else if dude_is_armed then begin
+		call BarterGuy02;
+	end
 	else begin
-		if dude_is_armed then begin
-			call BarterGuy02;
-		end
-		else begin
-			//call get_stuff_from_safe;
-			call BarterGuy01;
-		end
+		//call get_stuff_from_safe;
+		call BarterGuy01;
 	end
 	gsay_end;
 	end_dialogue;
 	//call put_stuff_in_safe;
 end
 
-procedure BarterGuy08
-begin
+procedure BarterGuy08 begin
 	gdialog_mod_barter(0);
 	gsay_message(47, exit_line, 50);
 end
 
-procedure BarterGuy01
-begin
+procedure BarterGuy01 begin
 	gsay_reply(3, 101);
 	giq_option( 4, SCRIPT_BARTER, 102, do_barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_BARTER, 103, BarterGuyEnd, NEUTRAL_REACTION );
 end
 
-procedure BarterGuy04
-begin
+procedure BarterGuy04 begin
 	no_deal := 1;
 	gsay_reply(3, 107);
 end
 
-procedure BarterGuy05
-begin
+procedure BarterGuy05 begin
 	gsay_reply(3, 108);
 end
 
-procedure BarterGuy03
-begin
+procedure BarterGuy03 begin
 	gsay_reply(3, 104);
 	giq_option( 4, SCRIPT_BARTER, 105, BarterGuy05, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_BARTER, 106, BarterGuy04, NEUTRAL_REACTION );
 end
 
-procedure BarterGuy06
-begin
+procedure BarterGuy06 begin
 	gsay_reply(3, 109);
 end
 
-procedure BarterGuy07
-begin
+procedure BarterGuy07 begin
 	gsay_reply(3, 110);
 end
 
-procedure BarterGuy00
-begin
+procedure BarterGuy00 begin
 	gsay_message(3, 110, 50);
 end
 
-procedure BarterGuy02
-begin
+procedure BarterGuy02 begin
 	gsay_message(3, 113, 50);
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
-
-	if source_obj == dude_obj then begin
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		if ((global_var( GVAR_GOOD_MONSTER ) % 7) == 0) then begin
-			set_global_var( GVAR_PLAYER_REPUTATION, (check_general_rep - 1) );
-		end
-	end
-	rm_timer_event(self_obj);
+   inc_good_critter
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	if (source_obj == dude_obj) then begin
 		tmp_hostile := 1;
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if not(local_var(4)) then begin
-		display_msg(message_str(SCRIPT_BARTER, 112));
+		display_msg(mstr(112));
 		set_local_var(4, 1);
 	end
 	else begin
-		display_msg(message_str(SCRIPT_BARTER, 100));
+		display_msg(mstr(100));
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		Here_To_Shop := 1;
 		dialogue_system_enter;
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			Caught_Stealing := 1;
-			dialogue_system_enter;
-		end
+	else if (fixed_param == 2) then begin
+		Caught_Stealing := 1;
+		dialogue_system_enter;
 	end
 end
 
 procedure BarterGuyEnd begin
 end
 
-procedure do_barter
-begin
+procedure do_barter begin
 	gdialog_mod_barter(0);
 	gsay_reply(634, 100);
 	giq_option( 4, SCRIPT_DUC, 129, BarterGuyEnd, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_DUC, 131, BarterGuyEnd, NEUTRAL_REACTION );
 end
 
-procedure barter00
-begin
-	float_msg(self_obj, message_str(SCRIPT_BARTER, 110), 0);
+procedure barter00 begin
+	float_msg(self_obj, mstr(110), 0);
 end
 
-procedure barter01
-begin
-	variable LVar0 := 0;
+procedure barter01 begin
+	variable Item := 0;
+
 	gsay_message(3, 108, 50);
 	gfade_out(1);
 	game_time_advance(600);
 	gfade_in(1);
-	LVar0 := create_object( PID_KNIFE, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object( PID_SPEAR, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object( PID_STIMPAK, 0, 0 );
-	add_obj_to_inven(dude_obj, LVar0);
+
+	Item := create_object( PID_KNIFE, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+	Item := create_object( PID_SPEAR, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
+	Item := create_object( PID_STIMPAK, 0, 0 );
+	add_obj_to_inven(dude_obj, Item);
 end
 
-procedure barter02
-begin
+procedure barter02 begin
 	set_global_var( GVAR_BARTER_WAS_GIVEN, 1 );
 	gsay_reply(3, 104);
 	giq_option( 4, SCRIPT_BARTER, 105, barter01, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_BARTER, 106, barter04, NEUTRAL_REACTION );
 end
 
-procedure barter03
-begin
+procedure barter03 begin
 	if (global_var( GVAR_RADSCORPION_SEED ) <= 1) then begin
 		gsay_message(3, 109, 50);
 	end
-	if (global_var( GVAR_RADSCORPION_SEED ) == 2) then begin
+	if radscorp_quest_completed then begin
 		gsay_message(3, 111, 50);
 	end
 end
 
-procedure barter04
-begin
+procedure barter04 begin
 	no_deal := 1;
 	gsay_message(3, 107, 50);
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end

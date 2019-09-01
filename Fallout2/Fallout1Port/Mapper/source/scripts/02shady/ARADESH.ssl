@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\maps\v13ent.h"
+#include "..\headers\maps\shadyw.h"
+#include "..\headers\shadysands.h"
 
 #define NAME                    SCRIPT_ARADESH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
@@ -15,7 +16,7 @@
 #include "..\headers\modreact.h"
 
 /* Standard Script Procedures */
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+procedure start;
 procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure do_dialogue;
@@ -135,10 +136,7 @@ variable TRESPASS;
 variable ILLEGAL;
 variable ILLEGBEFORE;
 variable tmp_hostile;
-variable rndx;
-variable rndy;
-variable rndz;
-variable MALE;
+
 variable initial :=  0;
 variable pickup_attempt;
 
@@ -147,6 +145,7 @@ variable isGoodGuy := 1;// Fallout Fixt
 procedure PickDeadBodyType;// Fallout Fixt
 variable DeathType := 56;
 
+#define LVAR_Invasion         (6)
 
 procedure start begin
 	if (local_var(11) != 1) then begin
@@ -160,16 +159,13 @@ procedure start begin
 		end
 	end
 	if shady_invaded then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
-			if (local_var(6) != 1) then begin
-				set_local_var(6, 1);
+		if CUR_AREA_SHADY_SANDS then begin
+			if (local_var(LVAR_Invasion) != 1) then begin
+				set_local_var(LVAR_Invasion, 1);
 				call PickDeadBodyType;
 				kill_critter(self_obj, DeathType);
 			end
 		end
-	end
-	else begin
-
 	end
 end
 
@@ -178,14 +174,13 @@ procedure look_at_p_proc begin
 	display_msg(message_str(SCRIPT_ARADESH, 100));
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
 	else begin
-		if global_var( GVAR_ENEMY_SHADY_SANDS ) then begin//   Is Shady Sands tmp_hostile to player?
+		if global_var( GVAR_ENEMY_SHADY_SANDS ) then begin
 			if (self_can_see_dude) then begin
 				tmp_hostile := 1;
 				attack(dude_obj);
@@ -245,7 +240,7 @@ procedure do_dialogue begin
 		gsay_start;
 		if tandi_is_kidnapped then begin
 			set_local_var(4, 1);
-			if (global_var( GVAR_TANDI_RESCUE ) == 0) then begin
+			if tandi_quest_inactive then begin
 				call aradesh39;
 			end
 			else begin
@@ -258,17 +253,17 @@ procedure do_dialogue begin
 					call aradesh46;
 				end
 				else begin
-					if ((global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) and (local_var(8) == 0)) then begin
+					if (get_tandi_returned and (local_var(8) == 0)) then begin
 						call aradesh43;
 					end
 					else begin
-						if ((global_var( GVAR_RADSCORPION_SEED ) == 2) and (local_var(10) == 0)) then begin
+						if (radscorp_quest_completed and (local_var(10) == 0)) then begin
 							set_local_var(10, 1);
 							call aradesh31;
 						end
 						else begin
 							if tandi_is_kidnapped then begin
-								if (global_var( GVAR_TANDI_RESCUE ) == 0) then begin
+								if tandi_quest_inactive then begin
 									call aradesh39;
 								end
 								else begin
@@ -276,20 +271,18 @@ procedure do_dialogue begin
 								end
 							end
 							else begin
-								if ((global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) and (global_var( GVAR_RADSCORPION_SEED ) != 2)) then begin
+								if (get_tandi_returned and not(radscorp_quest_completed)) then begin
 									call aradesh30a;
 								end
+								else if get_tandi_returned then begin
+									call aradesh35;
+								end
 								else begin
-									if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) then begin
-										call aradesh35;
+									if (local_var(1) < 3) then begin
+										call aradesh18;
 									end
 									else begin
-										if (local_var(1) < 3) then begin
-											call aradesh18;
-										end
-										else begin
-											call aradesh17;
-										end
+										call aradesh17;
 									end
 								end
 							end
@@ -307,22 +300,18 @@ procedure do_dialogue begin
 	end
 end
 
-procedure aradeshleave
-begin
+procedure aradeshleave begin
 	gsay_message(33, 276, 50);
 end
 
-procedure aradeshend
-begin
+procedure aradeshend begin
 end
 
-procedure aradeshcbt
-begin
+procedure aradeshcbt begin
 	tmp_hostile := 1;
 end
 
-procedure aradesh01
-begin
+procedure aradesh01 begin
 	if (local_var(1) >= 2) then begin
 		if (local_var(1) >= 3) then begin
 			gsay_reply(33, 101);
@@ -343,8 +332,7 @@ begin
 	NOption( 110, aradesh15, -3 );
 end
 
-procedure aradesh01_2
-begin
+procedure aradesh01_2 begin
 	set_local_var(9, local_var(9) + 1);
 	DownReact
 	if (local_var(1) >= 2) then begin
@@ -355,8 +343,7 @@ begin
 	end
 end
 
-procedure aradesh01_3
-begin
+procedure aradesh01_3 begin
 	if (local_var(1) >= 2) then begin
 		call aradesh13;
 	end
@@ -365,8 +352,7 @@ begin
 	end
 end
 
-procedure aradesh02
-begin
+procedure aradesh02 begin
 	gsay_reply(33, 111);
 	NOption( 112, aradesh02_2, 4 );
 	BOption( 113, aradesh01_2, 4 );
@@ -374,8 +360,7 @@ begin
 	NOption( 115, aradesh02_5, 5 );
 end
 
-procedure aradesh02_2
-begin
+procedure aradesh02_2 begin
 	if (local_var(1) >= 2) then begin
 		call aradesh03;
 	end
@@ -384,8 +369,7 @@ begin
 	end
 end
 
-procedure aradesh02_4
-begin
+procedure aradesh02_4 begin
 	if (local_var(1) >= 2) then begin
 		call aradesh09;
 	end
@@ -394,8 +378,7 @@ begin
 	end
 end
 
-procedure aradesh02_5
-begin
+procedure aradesh02_5 begin
 	if (local_var(1) >= 2) then begin
 		call aradesh04;
 	end
@@ -404,8 +387,7 @@ begin
 	end
 end
 
-procedure aradesh03
-begin
+procedure aradesh03 begin
 	gsay_reply(33, 116);
 	NOption( 117, aradesh04, 4 );
 	BOption( 118, aradesh01_2, 4 );
@@ -413,14 +395,12 @@ begin
 	BOption( 120, aradesh07, 4 );
 end
 
-procedure aradesh04
-begin
+procedure aradesh04 begin
 	gsay_message(33, 121, 50);
 	call aradeshend;
 end
 
-procedure aradesh05
-begin
+procedure aradesh05 begin
 	gsay_reply(33, 122);
 	BOption( 123, aradesh06, 5 );
 	NOption( 124, aradesh04, 4 );
@@ -439,15 +419,13 @@ procedure aradesh07 begin
 	call aradeshx2;
 end
 
-procedure aradesh08
-begin
+procedure aradesh08 begin
 	gsay_reply(33, 128);
 	GOption( 129, aradesh08a, 4 );
 	BOption( 130, aradesh08b, 5 );
 end
 
-procedure aradesh08a
-begin
+procedure aradesh08a begin
 	if (local_var(9) > 0) then begin
 		set_local_var(9, local_var(9) - 1);
 	end
@@ -455,41 +433,35 @@ begin
 	call aradesh04;
 end
 
-procedure aradesh08b
-begin
+procedure aradesh08b begin
 	set_local_var(9, local_var(9) + 1);
 	DownReact
 	call aradesh06;
 end
 
-procedure aradesh09
-begin
+procedure aradesh09 begin
 	gsay_reply(33, 131);
 	NOption( 132, aradesh09a, 0 );
 end
 
-procedure aradesh09a
-begin
+procedure aradesh09a begin
 	gsay_message(33, 133, 50);
 	call aradeshx;
 end
 
-procedure aradesh10
-begin
+procedure aradesh10 begin
 	gsay_message(33, 134, 50);
 	call aradeshx;
 end
 
-procedure aradesh11
-begin
+procedure aradesh11 begin
 	gsay_reply(33, 135);
 	NOption( 136, aradesh12, 4 );
 	NOption( 137, aradesh11a, 5 );
 	BOption( 138, aradesh11b, 4 );
 end
 
-procedure aradesh11a
-begin
+procedure aradesh11a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call aradesh02;
 	end
@@ -498,69 +470,57 @@ begin
 	end
 end
 
-procedure aradesh11b
-begin
+procedure aradesh11b begin
 	set_local_var(9, local_var(9) + 1);
 	DownReact
 	call aradesh14;
 end
 
-procedure aradesh12
-begin
+procedure aradesh12 begin
 	gsay_reply(33, 139);
 	NOption( 140, aradesh02, 5 );
 	NOption( 141, aradesh13, 4 );
 	NOption( 142, aradesh05, 4 );
 end
 
-procedure aradesh13
-begin
+procedure aradesh13 begin
 	gsay_reply(33, 143);
 	NOption( 160, aradesh19, 4 );
 	NOption( 151, aradesh24c, 4 );
 	NOption( 156, aradesh36, -3 );
 end
 
-procedure aradesh14
-begin
+procedure aradesh14 begin
 	gsay_reply(33, 144);
 	BOption( 145, aradesh06, 5 );
 	NOption( 146, aradesh04, 4 );
 	BOption( 147, aradesh07, 4 );
 end
 
-procedure aradesh15
-begin
+procedure aradesh15 begin
 	gsay_message(33, 148, 50);
 	call aradeshx;
 end
 
 procedure aradesh16 begin
-	if (global_var( GVAR_RADSCORPION_SEED ) == 0) then begin
+	if radscorp_quest_inactive then begin
 		call aradesh28;
 	end
+	else if radscorp_quest_active then begin
+		call aradesh30a;
+	end
+	else if (radscorp_quest_completed and not(get_tandi_returned)) then begin
+		call aradesh31;
+	end
+	else if get_tandi_returned then begin
+		call aradesh35;
+	end
 	else begin
-		if (global_var( GVAR_RADSCORPION_SEED ) == 1) then begin
-			call aradesh30a;
-		end
-		else begin
-			if ((global_var( GVAR_RADSCORPION_SEED ) == 2) and not(global_var( GVAR_TANDI_HIRELING_STATUS ) == 2)) then begin
-				call aradesh31;
-			end
-			else begin
-				if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) then begin
-					call aradesh35;
-				end
-				else begin
-					call aradesh26;
-				end
-			end
-		end
+		call aradesh26;
 	end
 end
 
-procedure aradesh17
-begin
+procedure aradesh17 begin
 	gsay_reply(33, 152);
 	NOption( 153, aradesh19, 4 );
 	NOption( 154, aradesh17_2, 4 );
@@ -568,9 +528,8 @@ begin
 	NOption( 156, aradesh36, -3 );
 end
 
-procedure aradesh17_2
-begin
-	if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) then begin
+procedure aradesh17_2 begin
+	if get_tandi_returned then begin
 		call aradesh44;
 	end
 	else begin
@@ -578,11 +537,10 @@ begin
 	end
 end
 
-procedure aradesh17_3
-begin
+procedure aradesh17_3 begin
 	set_local_var(9, local_var(9) + 1);
 	DownReact
-	if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) then begin
+	if get_tandi_returned then begin
 		call aradesh27;
 	end
 	else begin
@@ -600,8 +558,7 @@ begin
 	end
 end
 
-procedure aradesh18
-begin
+procedure aradesh18 begin
 	if (local_var(1) >= 2) then begin
 		gsay_reply(33, 157);
 	end
@@ -614,8 +571,7 @@ begin
 	NOption( 162, aradesh36, -3 );
 end
 
-procedure aradesh19
-begin
+procedure aradesh19 begin
 	if (local_var(1) >= 2) then begin
 		gsay_reply(33, 163);
 	end
@@ -627,8 +583,7 @@ begin
 	NOption( 167, aradesh24c, 4 );
 end
 
-procedure aradesh20
-begin
+procedure aradesh20 begin
 	if (local_var(1) >= 3) then begin
 		gsay_message(33, 168, 50);
 	end
@@ -643,20 +598,17 @@ begin
 	call aradeshx;
 end
 
-procedure aradesh21
-begin
+procedure aradesh21 begin
 	gsay_message(33, 171, 50);
 	call aradeshx;
 end
 
-procedure aradesh22
-begin
+procedure aradesh22 begin
 	gsay_message(33, 172, 50);
 	call aradeshx1;
 end
 
-procedure aradesh23
-begin
+procedure aradesh23 begin
 	if (local_var(1) >= 2) then begin
 		gsay_reply(33, 173);
 	end
@@ -668,8 +620,7 @@ begin
 	NOption( 177, aradesh17_2, 4 );
 end
 
-procedure aradesh23_2
-begin
+procedure aradesh23_2 begin
 	if (local_var(1) >= 2) then begin
 		call aradesh24;
 	end
@@ -678,28 +629,24 @@ begin
 	end
 end
 
-procedure aradesh24
-begin
+procedure aradesh24 begin
 	gsay_reply(33, 178);
 	NOption( 179, aradesh24a, 0 );
 end
 
-procedure aradesh24a
-begin
+procedure aradesh24a begin
 	gsay_reply(33, 180);
 	NOption( 181, aradesh19, 4 );
 	NOption( 182, aradesh24c, 4 );
 end
 
-procedure aradesh24b
-begin
+procedure aradesh24b begin
 	gsay_reply(33, 183);
 	NOption( 184, aradesh19, 4 );
 end
 
-procedure aradesh24c
-begin
-	if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 2) then begin
+procedure aradesh24c begin
+	if get_tandi_returned then begin
 		call aradesh44;
 	end
 	else begin
@@ -707,8 +654,7 @@ begin
 	end
 end
 
-procedure aradesh25
-begin
+procedure aradesh25 begin
 	if (local_var(0) < 2) then begin
 		gsay_reply(33, 185);
 	end
@@ -718,72 +664,62 @@ begin
 	NOption( 187, aradesh19, 4 );
 end
 
-procedure aradesh26
-begin
+procedure aradesh26 begin
 	gsay_reply(33, 188);
 	NOption( 189, aradesh27, 7 );
 	NOption( 190, aradesh19, 6 );
 	NOption( 191, aradesh24c, 6 );
 end
 
-procedure aradesh27
-begin
+procedure aradesh27 begin
 	gsay_reply(33, 192);
 	NOption( 193, aradesh25, 8 );
 	NOption( 194, aradesh16, 5 );
 	NOption( 195, aradesh24c, 5 );
 end
 
-procedure aradesh28
-begin
+procedure aradesh28 begin
 	gsay_reply(33, 196);
 	NOption( 197, aradesh28a, 4 );
 end
 
-procedure aradesh28a
-begin
+procedure aradesh28a begin
 	gsay_reply(33, 198);
 	GOption( 199, aradesh29, 4 );
 	BOption( 200, aradesh28b, 4 );
 	BOption( 201, aradesh28c, 4 );
 end
 
-procedure aradesh28b
-begin
+procedure aradesh28b begin
 	set_local_var(9, local_var(9) + 1);
 	DownReact
 	call aradesh30;
 end
 
-procedure aradesh28c
-begin
+procedure aradesh28c begin
 	set_local_var(9, local_var(9) + 1);
 	DownReact
 	call aradesh19;
 end
 
-procedure aradesh29
-begin
+procedure aradesh29 begin
 	gsay_message(33, 202, 50);
-	set_global_var( GVAR_RADSCORPION_SEED, 1 );
+	set_radscorp_quest_active;
 	call aradeshx;
 end
 
-procedure aradesh30
-begin
+procedure aradesh30 begin
 	gsay_reply(33, 203);
 	GOption( 204, aradesh30b, 5 );
 	NOption( 205, aradesh19, 4 );
 end
 
-procedure aradesh30a
-begin
+procedure aradesh30a begin
 	gsay_message(33, 206, 50);
 	call aradeshx;
 end
 
-procedure aradesh30b
-begin
+procedure aradesh30b begin
 	if (local_var(9) > 0) then begin
 		set_local_var(9, local_var(9) - 1);
 	end
@@ -791,8 +727,7 @@ begin
 	call aradesh29;
 end
 
-procedure aradesh31
-begin
+procedure aradesh31 begin
 	gsay_reply(33, 207);
 	NOption( 208, aradesh19, 4 );
 	if (global_var( GVAR_RADSCORPIONS_KILLED ) == 2) then begin
@@ -800,36 +735,33 @@ begin
 	end
 end
 
-procedure aradesh32
-begin
+procedure aradesh32 begin
 	gsay_reply(33, 210);
 	NOption( 211, aradesh19, 4 );
 	NOption( 212, aradesh17_2, 4 );
 end
 
-procedure aradesh33
-begin
+procedure aradesh33 begin
 	gsay_message(33, 213, 50);
 	set_global_var( GVAR_TANDI_RESCUE, 1 );
 	call aradeshx;
 end
 
 procedure aradesh35 begin
-	gsay_reply(33, 214);
+   gsay_reply(33, 214);
 	NOption( 215, aradesh25, 5 );
 	NOption( 216, aradesh16, 4 );
 	NOption( 217, aradesh24c, 4 );
 end
 
-procedure aradesh36
-begin
+procedure aradesh36 begin
 	gsay_message(33, 218, 50);
 	call aradeshx;
 end
 
 procedure aradesh37 begin
 	gsay_reply(33, 219);
-	if (global_var( GVAR_TANDI_HIRELING_STATUS ) == 3) then begin
+	if not(is_tandi_alive) then begin
 		NOption( 220, aradesh38, 5 );
 		NOption( 221, aradesh37a, 4 );
 		NOption( 222, aradesh37a, -3 );
