@@ -54,14 +54,13 @@ import variable Officer_ptr;
 procedure PickDeadBodyType;
 variable DeathType := 57;
 
-procedure start
-begin
-	if (v13_invaded) then begin//		<-- Vault13 invaded
-		if (CUR_MAP_VAULT13) or (CUR_MAP_V13ENT) then begin //  VAULT 13 - ANY MAPS
+procedure start begin
+	if (v13_invaded) then begin
+		if CUR_AREA_VAULT_13 then begin
 			if (local_var(9) != 1) then begin
-				set_local_var(9, 1);//		<-- only once
-				if not(is_loading_game) then begin//		<-- if not during a Game_Load,
-					set_self_visible;//		     make sure critter is visibile
+				set_local_var(9, 1);
+				if not(is_loading_game) then begin
+					set_self_visible;
 				end
 				call PickDeadBodyType;
 				debug_msg("Vault 13 invasion, killing OFFICER.SSL with DeathType " + DeathType + ".  ");
@@ -69,37 +68,9 @@ begin
 			end
 		end
 	end
-	else begin
-
-
-		if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-				call destroy_p_proc;
-			end
-			else begin
-				if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-					call map_enter_p_proc;
-				end
-				else begin
-					if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-						call pickup_p_proc;
-					end
-					else begin
-						if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-							call talk_p_proc;
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -114,55 +85,45 @@ begin
 			if ((armory_access == 1) and not(obj_is_open(SecDoor_ptr))) then begin
 				use_obj(SecDoor_ptr);
 			end
-			else begin
-				if (armory_access == 2) then begin
-					self_rotate( 5 );
-					float_msg(self_obj, message_str(SCRIPT_OFFICER, 159), 0);
-					armory_access := 0;
-					set_map_var(1, armory_access);
-				end
-				else begin
-					if (not(armory_access) and (dude_elevation == self_elevation)) then begin
-						if (tile_distance(dude_tile, 21292) < 2) then begin
-							tmp_hostile := 1;
-						end
-					end
+			else if (armory_access == 2) then begin
+				self_rotate( 5 );
+				float_msg(self_obj, message_str(SCRIPT_OFFICER, 159), 0);
+				armory_access := 0;
+				set_map_var(1, armory_access);
+			end
+			else if (not(armory_access) and (dude_elevation == self_elevation)) then begin
+				if (tile_distance(dude_tile, 21292) < 2) then begin
+					tmp_hostile := 1;
 				end
 			end
 		end
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_VAULT_13_HOSTILE, 1 );
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_VAULT_13_HOSTILE, 1 );
 	end
-
 	inc_good_critter
 	Officer_ptr := 0;
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	set_self_team(TEAM_VAULT13 );
 	Officer_ptr := self_obj;
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 
 	get_reaction
@@ -189,13 +150,11 @@ begin
 						call Officer02;
 					end
 				end
+				else if (armory_access) then begin
+					call Officer26;
+				end
 				else begin
-					if (armory_access) then begin
-						call Officer26;
-					end
-					else begin
-						call Officer18;
-					end
+					call Officer18;
 				end
 			end
 		end
@@ -204,19 +163,16 @@ begin
 	end_dialogue;
 end
 
-procedure Officer00
-begin
+procedure Officer00 begin
 	gsay_message(178, 100, 51);
 	tmp_hostile := 1;
 end
 
-procedure Officer01
-begin
+procedure Officer01 begin
 	gsay_message(178, 101, 50);
 end
 
-procedure Officer02
-begin
+procedure Officer02 begin
 	gsay_reply(178, 102);
 	giq_option( 4, SCRIPT_OFFICER, 103, Officer04, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 104, Officer08, NEUTRAL_REACTION );
@@ -224,88 +180,74 @@ begin
 	giq_option( -3, SCRIPT_OFFICER, 106, Officer03, NEUTRAL_REACTION );
 end
 
-procedure Officer03
-begin
+procedure Officer03 begin
 	gsay_reply(178, 107);
 	giq_option( 4, SCRIPT_OFFICER, 159, OfficerEnd, NEUTRAL_REACTION );
 end
 
-procedure Officer04
-begin
+procedure Officer04 begin
 	gsay_reply(178, 108);
 	giq_option( 4, SCRIPT_OFFICER, 109, OfficerEnd, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 110, Officer05, NEUTRAL_REACTION );
 end
 
-procedure Officer05
-begin
+procedure Officer05 begin
 	gsay_reply(178, 111);
 	giq_option( 5, SCRIPT_OFFICER, 112, Officer06, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_OFFICER, 113, Officer07, NEUTRAL_REACTION );
 end
 
-procedure Officer06
-begin
+procedure Officer06 begin
 	gsay_reply(178, 114);
 	giq_option( 5, SCRIPT_OFFICER, 115, OfficerEnd, NEUTRAL_REACTION );
 end
 
-procedure Officer07
-begin
+procedure Officer07 begin
 	UpReact
 	gsay_message(178, 116, 49);
 end
 
-procedure Officer08
-begin
+procedure Officer08 begin
 	gsay_reply(178, 117);
 	giq_option( 4, SCRIPT_OFFICER, 118, Officer09, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_OFFICER, 119, Officer10, NEUTRAL_REACTION );
 end
 
-procedure Officer09
-begin
+procedure Officer09 begin
 	DownReact
 	gsay_message(178, 120, 51);
 end
 
-procedure Officer10
-begin
+procedure Officer10 begin
 	gsay_message(178, 121, 50);
 end
 
-procedure Officer11
-begin
+procedure Officer11 begin
 	gsay_reply(178, 122);
 	giq_option( 5, SCRIPT_OFFICER, 123, Officer13, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 124, Officer12, NEUTRAL_REACTION );
 end
 
-procedure Officer12
-begin
+procedure Officer12 begin
 	gsay_message(178, 125, 50);
 end
 
-procedure Officer13
-begin
+procedure Officer13 begin
 	gsay_reply(178, 126);
 	giq_option( 5, SCRIPT_OFFICER, 127, Officer15, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 128, Officer14, NEUTRAL_REACTION );
 end
 
-procedure Officer14
-begin
+procedure Officer14 begin
 	gsay_message(178, 129, 50);
 end
 
-procedure Officer15
-begin
+procedure Officer15 begin
 	gsay_reply(178, 130);
 	giq_option( 5, SCRIPT_OFFICER, 131, Officer15a, NEUTRAL_REACTION );
 end
 
-procedure Officer15a
-begin
+procedure Officer15a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Officer17;
 	end
@@ -314,45 +256,38 @@ begin
 	end
 end
 
-procedure Officer16
-begin
+procedure Officer16 begin
 	gsay_message(178, 132, 50);
 end
 
-procedure Officer17
-begin
+procedure Officer17 begin
 	armory_access := 1;
 	set_map_var(1, armory_access);
 	gsay_message(178, 133, 50);
 end
 
-procedure Officer18
-begin
+procedure Officer18 begin
 	gsay_reply(178, message_str(SCRIPT_OFFICER, 134) + dude_name + message_str(SCRIPT_OFFICER, 135));
 	giq_option( 4, SCRIPT_OFFICER, 136, Officer20, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 137, Officer21, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_OFFICER, 138, Officer19, NEUTRAL_REACTION );
 end
 
-procedure Officer19
-begin
+procedure Officer19 begin
 	gsay_message(178, 139, 50);
 end
 
-procedure Officer20
-begin
+procedure Officer20 begin
 	gsay_message(178, 140, 50);
 end
 
-procedure Officer21
-begin
+procedure Officer21 begin
 	gsay_reply(178, 141);
 	giq_option( 5, SCRIPT_OFFICER, 142, Officer22, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 143, Officer21a, NEUTRAL_REACTION );
 end
 
-procedure Officer21a
-begin
+procedure Officer21a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Officer23;
 	end
@@ -361,63 +296,52 @@ begin
 	end
 end
 
-procedure Officer22
-begin
+procedure Officer22 begin
 	gsay_reply(178, 144);
 	giq_option( 5, SCRIPT_OFFICER, 145, OfficerEnd, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 146, OfficerCombat, BAD_REACTION );
 end
 
-procedure Officer23
-begin
+procedure Officer23 begin
 	gsay_message(178, 147, 50);
 end
 
-procedure Officer24
-begin
+procedure Officer24 begin
 	gsay_message(178, 148, 50);
 end
 
-procedure Officer25
-begin
+procedure Officer25 begin
 	gsay_message(178, 149, 50);
 end
 
-procedure Officer26
-begin
+procedure Officer26 begin
 	gsay_message(178, 150, 50);
 end
 
-procedure Officer27
-begin
+procedure Officer27 begin
 	gsay_message(178, 151, 50);
 end
 
-procedure Officer28
-begin
+procedure Officer28 begin
 	gsay_reply(178, 152);
 	giq_option( 4, SCRIPT_OFFICER, 153, Officer30, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_OFFICER, 154, Officer31, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_OFFICER, 155, Officer29, NEUTRAL_REACTION );
 end
 
-procedure Officer29
-begin
+procedure Officer29 begin
 	gsay_message(178, 156, 50);
 end
 
-procedure Officer30
-begin
+procedure Officer30 begin
 	gsay_message(178, 157, 50);
 end
 
-procedure Officer31
-begin
+procedure Officer31 begin
 	gsay_message(178, 158, 50);
 end
 
-procedure OfficerCombat
-begin
+procedure OfficerCombat begin
 	BigDownReact
 	tmp_hostile := 1;
 end
@@ -425,8 +349,7 @@ end
 procedure OfficerEnd begin
 end
 
-procedure PickDeadBodyType// FINISHED, for Vault 13
-begin
+procedure PickDeadBodyType begin
 	variable id := 11;
 	id := random(0, 6) + random(0, 6) + random(0, 6);
 	if id <= 2 then begin
