@@ -78,14 +78,14 @@ namespace dude {
 	static int unknown = 0x58E950;
 	static int system = 0x500170;
 	static int interrupt_walk = 0x500160;
-	int check_move(int actionPoints)
+	int __stdcall check_move(int actionPoints)
 	{
 		long x;
 		long y;
 		fo::func::mouse_get_position(&x, &y);
 		DWORD tile = fo::func::tile_num(x, y);
-		if (tile != -1)
-		{
+		//if (tile != -1)
+		//{
 			int InCombat = *reinterpret_cast<int*>(FO_VAR_combat_state);
 			if (InCombat != 1)
 			{
@@ -93,7 +93,7 @@ namespace dude {
 
 
 				// TODO: fix, causes crash
-				//WRAP_WATCOM_CALL3(config_get_value_, unknown, system, interrupt_walk);
+				WRAP_WATCOM_CALL3(config_get_value_, unknown, system, interrupt_walk);
 				//_asm { mov result, eax }
 				/*if (result == 1) {
 					fo::GameObject* obj_dude = *reinterpret_cast<fo::GameObject * *>(FO_VAR_obj_dude);
@@ -103,7 +103,7 @@ namespace dude {
 
 				//return tile;
 			}
-		}
+		//}
 
 		// Is this really relevant to implement? Something with returning to end when
 		// left or right ctrl is down.
@@ -131,7 +131,7 @@ namespace dude {
 	}*/
 
 	// dude_run, 0x0041810C
-	void run(int actionPoints)
+	void __stdcall run(int actionPoints)
 	{
 		DWORD dstTile;
 		// Check to which tile we are moving
@@ -154,7 +154,7 @@ namespace dude {
 	Move dude to a tile, used when clicking on a hex.
 	actionPoints == -1 when not in combat
 	*/
-	void move(int actionPoints) 
+	void __stdcall move(int actionPoints)
 	{
 		DWORD dstTile;
 		// Check to which tile we are moving
