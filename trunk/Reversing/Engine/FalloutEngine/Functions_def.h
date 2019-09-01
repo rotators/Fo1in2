@@ -127,16 +127,17 @@ WRAP_WATCOM_FUNC3(long, register_object_light, GameObject*, object, long, lightR
 // WRAP_WATCOM_FUNC3(long, register_object_move_on_stairs_, GameObject*, object;
 // WRAP_WATCOM_FUNC3(long, register_object_move_straight_to_tile_, GameObject*, object;
 // WRAP_WATCOM_FUNC3(long, register_object_move_to_object_, GameObject*, object;
- WRAP_WATCOM_FUNC5(int, register_object_move_to_tile, GameObject*, object, DWORD, dstTile, int, prop, int, unknown, int, unknown2)
- WRAP_WATCOM_FUNC5(int, register_object_run_to_tile, GameObject*, object, DWORD, dstTile, int, prop, int, unknown, int, unknown2)
+WRAP_WATCOM_FUNC5(int, register_object_move_to_tile, GameObject*, object, DWORD, dstTile, int, prop, int, unknown, int, unknown2)
+WRAP_WATCOM_FUNC5(int, register_object_run_to_tile, GameObject*, object, DWORD, dstTile, int, prop, int, unknown, int, unknown2)
 // WRAP_WATCOM_FUNC3(long, register_object_must_call_, GameObject*, object;
 WRAP_WATCOM_FUNC1(long, register_object_must_erase, GameObject*, object)
 // WRAP_WATCOM_FUNC3(long, register_object_outline_, GameObject*, object;
 // WRAP_WATCOM_FUNC3(long, register_object_play_sfx_, GameObject*, object;
 // WRAP_WATCOM_FUNC3(long, register_object_run_to_object_, GameObject*, object;
 // WRAP_WATCOM_FUNC3(long, register_object_run_to_tile_, GameObject*, object;
-WRAP_WATCOM_FUNC1(void, register_begin, int, unknown);
-WRAP_WATCOM_FUNC0(void, register_end);
+WRAP_WATCOM_FUNC1(void, register_clear, GameObject*, object)
+WRAP_WATCOM_FUNC1(void, register_begin, int, unknown)
+WRAP_WATCOM_FUNC0(void, register_end)
 WRAP_WATCOM_FUNC3(long, register_object_take_out, GameObject*, object, long, holdFrameId, long, nothing)
 WRAP_WATCOM_FUNC3(long, register_object_turn_towards, GameObject*, object, long, tileNum, long, nothing)
 WRAP_WATCOM_FUNC2(long, skill_dec_point_force, GameObject*, critter, long, skill)
@@ -148,6 +149,8 @@ WRAP_WATCOM_FUNC3(long, stat_set_bonus, GameObject*, critter, long, statID, long
 // adds experience points to PC
 WRAP_WATCOM_FUNC1(void, stat_pc_add_experience, long, amount)
 WRAP_WATCOM_FUNC1(long, text_font, long, fontNum)
+// Get tile at mouse x, y.
+WRAP_WATCOM_FUNC2(DWORD, tile_num, long, x, long, y)
 // redraws the whole screen
 WRAP_WATCOM_FUNC0(void, tile_refresh_display)
 // redraws the given rectangle on screen
