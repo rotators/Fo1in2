@@ -19,22 +19,32 @@
 #define momclaw_quest_active            (global_var(GVAR_QUEST_KILL_MOMCLAW) == 1)
 #define momclaw_quest_completed         (global_var(GVAR_QUEST_KILL_MOMCLAW) == 2)
 #define set_momclaw_quest_active        set_global_var(GVAR_QUEST_KILL_MOMCLAW, 1)
-#define set_momclaw_quest_completed     set_global_var(GVAR_QUEST_KILL_MOMCLAW, 2)
+#define set_momclaw_quest_completed     if momclaw_quest_active then set_global_var(GVAR_QUEST_KILL_MOMCLAW, 2)
 
 // Deathclaws:
 #define set_quest_kill_deathclaws       set_global_var(GVAR_GUN_RUNNERS_STATUS, 9201)
 #define get_quest_kill_deathclaws       (global_var(GVAR_GUN_RUNNERS_STATUS) == 9201)
 
-#define set_all_deathclaws_killed       set_global_var(GVAR_WATER_CHIP_8, 9250)
+#define set_all_deathclaws_killed       set_global_var(GVAR_WATER_CHIP_8, 9250); \
+                                        set_momclaw_quest_completed
 #define get_all_deathclaws_killed       (global_var(GVAR_WATER_CHIP_8) == 9250)
 
-#define set_gunrunners_armed_blades     set_global_var(GVAR_GUN_RUNNERS_STATUS, 9202)
+#define set_gunrunners_armed_blades     set_global_var(GVAR_GUN_RUNNERS_STATUS, 9202); \
+                                        set_blades_quest_completed
 #define get_gunrunners_armed_blades     (global_var(GVAR_GUN_RUNNERS_STATUS) == 9202)
 
-#define set_gunrunners_armed_dude       set_global_var(GVAR_WATER_CHIP_8, 2)
+#define set_gunrunners_armed_dude       set_global_var(GVAR_WATER_CHIP_8, 2); \
+                                        set_blades_quest_completed
 #define get_gunrunners_armed_dude       (global_var(GVAR_WATER_CHIP_8) == 2)
 
 //--- Blades:
+// PipBoy quest tracker:
+#define arming_blades_quest_inactive    (global_var(GVAR_QUEST_BLADE_WEAPONS) == 0)
+#define arming_blades_quest_active      (global_var(GVAR_QUEST_BLADE_WEAPONS) == 1)
+#define arming_blades_quest_completed   (global_var(GVAR_QUEST_BLADE_WEAPONS) == 2)
+#define set_blades_quest_active         set_global_var(GVAR_QUEST_BLADE_WEAPONS, 1)
+#define set_blades_quest_completed      if arming_blades_quest_active then set_global_var(GVAR_QUEST_BLADE_WEAPONS, 2)
+
 #define set_arming_blades               set_global_var(GVAR_BLADES_STATUS, 9101)
 #define get_arming_blades               global_var( GVAR_BLADES_STATUS ) == 9101
 
@@ -58,7 +68,7 @@
 #define quest_kill_razor_active         (global_var(GVAR_QUEST_KILL_RAZOR) == 1)
 #define quest_kill_razor_completed      (global_var(GVAR_QUEST_KILL_RAZOR) == 2)
 #define set_quest_kill_razor_active     set_global_var(GVAR_QUEST_KILL_RAZOR, 1)
-#define set_quest_kill_razor_completed  set_global_var(GVAR_QUEST_KILL_RAZOR, 2)
+#define set_quest_kill_razor_completed  if quest_kill_razor_active then set_global_var(GVAR_QUEST_KILL_RAZOR, 2)
 
 
 //--- Zimmermann:
@@ -67,7 +77,7 @@
 #define get_task_kill_razor             (global_var(GVAR_ZIMMERMAN_STATUS) == 9001)
 
 #define set_razor_killed                set_global_var(GVAR_ZIMMERMAN_STATUS, 9002); \
-                                        if quest_kill_razor_active then set_quest_kill_razor_completed
+                                        set_quest_kill_razor_completed
 #define get_razor_killed                (global_var(GVAR_ZIMMERMAN_STATUS) == 9002)
 
 #define set_zimmermann_turned           set_global_var(GVAR_ZIMMERMAN_STATUS, 9003)
