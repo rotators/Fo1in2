@@ -741,7 +741,7 @@
 #define GVAR_GAME_CONTINUES                     (1618)
 #define GVAR_OVERSEER_KILLED                    (1619)
 #define GVAR_OVERSEER_END_SEQ                   (1620)
-#define GVAR_KATYA_DUDE_LAST_LEVEL              (1621) // unused
+#define GVAR_QUEST_KILL_MOMCLAW                 (1621)
 // 1622 free
 #define GVAR_TYCHO_DUDE_LAST_LEVEL              (1623) // unused
 #define GVAR_LARS_DEAD                          (1624)
