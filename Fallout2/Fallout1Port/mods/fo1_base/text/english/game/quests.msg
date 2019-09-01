@@ -52,12 +52,12 @@
 #
 # Junktown Quests
 #
-{400}{}{Help Saul.}
-{401}{}{Kill Killian.}
-{402}{}{Rescue Sinthia.}
-{403}{}{Save Trish.}
-{404}{}{Stop Gizmo.}
-{405}{}{Bust the Skulz gang.}
+{400}{}{Help Saul.}										#fo1 vanilla
+{401}{}{Kill Killian.}									#fo1 vanilla
+{402}{}{Rescue Sinthia.}								#fo1 vanilla
+{403}{}{Save Trish.}									#fo1 vanilla
+{404}{}{Stop Gizmo.}									#fo1 vanilla
+{405}{}{Bust the Skulz gang.}							#fo1 vanilla
 {406}{}{Join the Skulz.}
 {407}{}{Steal Neal's urn from Skum Pitt.}
 {408}{}{RESERVED}
@@ -92,11 +92,11 @@
 #
 # The Hub Quests
 #
-{700}{}{Find and destroy the Deathclaw.}
-{701}{}{Dispose of Jain.}
-{702}{}{Dispose of merchant.}
-{703}{}{Find the missing caravans.}
-{704}{}{Steal necklace from the Merchants.}
+{700}{}{Find and destroy the Deathclaw.}			#fo1 vanilla
+{701}{}{Dispose of Jain.}							#fo1 vanilla
+{702}{}{Dispose of merchant.}						#fo1 vanilla
+{703}{}{Find the missing caravans.}					#fo1 vanilla
+{704}{}{Steal necklace from the Merchants.}			#fo1 vanilla
 {705}{}{Join the Theives' Circle.}
 {706}{}{Dispose of Decker.}
 {707}{}{Send water to Vault 13.}
@@ -107,8 +107,8 @@
 #
 # Brotherhood of Steel Quests
 #
-{800}{}{Become an Initiate.}
-{801}{}{Rescue Initiate from the Hub.}
+{800}{}{Become an Initiate.}						#fo1 vanilla
+{801}{}{Rescue Initiate from the Hub.}				#fo1 vanilla
 {802}{}{Become a Knight.}
 {803}{}{Learn from the Library Computers.}
 {804}{}{Receive operations from Lori.}
@@ -141,21 +141,21 @@
 # The Glow Quests
 #
 {1000}{}{Gain entrance into the Glow.}
-{1001}{}{Disarm traps for the facility.}
-{1002}{}{Turn on power for the Glow.}
+{1001}{}{Disarm traps for the facility.}		#fo1 vanilla
+{1002}{}{Turn on power for the Glow.}			#fo1 vanilla
 
 #
 # L.A. Boneyard / Adytum Quests
 #
-{1100}{}{Become a Blade.}
-{1101}{}{Deliver Locket for Romero.}
-{1102}{}{Deliver package from the Gun Runners.}
-{1103}{}{Find Children spy in the Followers.}
-{1104}{}{Fix hydroponic farms in Adytum.}
-{1105}{}{Rescue Jason Zimmerman.}
-{1106}{}{Stop the Gangs from attacking Adytum.}
+{1100}{}{Become a Blade.}						#fo1 vanilla
+{1101}{}{Deliver Locket for Romero.}			#fo1 vanilla
+{1102}{}{Deliver package from the Gun Runners.}	#fo1 vanilla
+{1103}{}{Find Children spy in the Followers.}	#fo1 vanilla
+{1104}{}{Fix hydroponic farms in Adytum.}		#fo1 vanilla
+{1105}{}{Rescue Jason Zimmerman.}				#fo1 vanilla
+{1106}{}{Stop the Gangs from attacking Adytum.}	#fo1 vanilla
 {1107}{}{Kill the Mother Deathclaw.}
-{1108}{}{Convince the Gun Runners to supply to the Blades.}
+{1108}{}{Convince the Gun Runners to supply the Blades.}
 {1109}{}{RESERVED}
 {1110}{}{RESERVED}
 {1111}{}{RESERVED}

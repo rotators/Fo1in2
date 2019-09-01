@@ -14,6 +14,14 @@
 
 //******************** Quest: Blades vs. Regulators conflict
 //--- Gun Runners:
+// PipBoy quest tracker:
+#define momclaw_quest_inactive         (global_var(GVAR_QUEST_KILL_MOMCLAW) == 0)
+#define momclaw_quest_active           (global_var(GVAR_QUEST_KILL_MOMCLAW) == 1)
+#define momclaw_quest_completed        (global_var(GVAR_QUEST_KILL_MOMCLAW) == 2)
+#define set_momclaw_quest_active       set_global_var(GVAR_QUEST_KILL_MOMCLAW, 1)
+#define set_momclaw_quest_completed    set_global_var(GVAR_QUEST_KILL_MOMCLAW, 2)
+
+// Deathclaws:
 #define set_quest_kill_deathclaws 		set_global_var(GVAR_GUN_RUNNERS_STATUS, 9201)
 #define get_quest_kill_deathclaws		(global_var(GVAR_GUN_RUNNERS_STATUS) == 9201)
 
@@ -55,19 +63,19 @@
 
 //******************** Quest: Fix the farm
 //--- Smitty and Miles:
-#define get_quest_farm_inactive        (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 0)
-#define set_quest_farm_active          set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 1 )
-#define get_quest_farm_active          (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 1)
+#define get_quest_farm_inactive        (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 0)
+#define set_quest_farm_active          set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 1)
+#define get_quest_farm_active          (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 1)
 
-#define set_give_parts_to_smitty       set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9302 )
-#define get_given_parts_to_smitty_yet  (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 9302)
+#define set_give_parts_to_smitty       set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 9302)
+#define get_given_parts_to_smitty_yet  (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 9302)
 
-#define set_smitty_fixing_parts        set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9303 )
-#define get_smitty_fixing_parts        (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) < 9303)
-#define get_parts_fixed                (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 9303)
+#define set_smitty_fixing_parts        set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 9303)
+#define get_smitty_fixing_parts        (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) < 9303)
+#define get_parts_fixed                (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 9303)
 
-#define set_offer_upgrading_item       set_global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM, 9304 )
-#define get_offer_upgrading_item       (global_var( GVAR_QUEST_BONEYARD_5_FIX_FARM ) == 9304)
+#define set_offer_upgrading_item       set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 9304)
+#define get_offer_upgrading_item       (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 9304)
 
 // Generic dialog stuff:
 #define set_zimmermann_insulted 		   set_global_var(GVAR_ZIMMERMAN_STATUS, 1)

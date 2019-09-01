@@ -10,9 +10,11 @@
 /************************************************
     Generic Defines
 ************************************************/
+// Heal Jarvis quest
+#define get_jarvis_healed              (global_var(GVAR_CURE_JARVIS) >= 2)
+
 #define set_heal_jarvis                if (global_var(GVAR_CURE_JARVIS) == 0) then set_global_var(GVAR_CURE_JARVIS,1)
 #define set_jarvis_healed              set_global_var(GVAR_CURE_JARVIS,2)
-#define get_jarvis_healed              (global_var(GVAR_CURE_JARVIS) >= 2)
 
 // Radscorpion quest
 #define radscorp_quest_inactive        (global_var(GVAR_RADSCORPION_SEED) == 0)
