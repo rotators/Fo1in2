@@ -103,6 +103,7 @@ WRAP_WATCOM_FUNC2(long, obj_pid_new, GameObject*, object, long, pid)
 WRAP_WATCOM_FUNC1(long, obj_lock_is_jammed, GameObject*, object)
 WRAP_WATCOM_FUNC1(void, obj_unjam_lock, GameObject*, object)
 WRAP_WATCOM_FUNC1(void, pc_flag_on, long, flag)
+WRAP_WATCOM_FUNC1(void, pc_flag_off, long, flag)
 WRAP_WATCOM_FUNC2(void, perk_add_effect, GameObject*, critter, long, perkId)
 WRAP_WATCOM_FUNC2(long, perk_can_add, GameObject*, critter, long, perkId)
 //WRAP_WATCOM_FUNC2(void, perk_remove_effect,  GameObject*, critter, long, perkId)
@@ -127,6 +128,7 @@ WRAP_WATCOM_FUNC3(long, register_object_light, GameObject*, object, long, lightR
 // WRAP_WATCOM_FUNC3(long, register_object_move_straight_to_tile_, GameObject*, object;
 // WRAP_WATCOM_FUNC3(long, register_object_move_to_object_, GameObject*, object;
  WRAP_WATCOM_FUNC5(int, register_object_move_to_tile, GameObject*, object, DWORD, dstTile, int, prop, int, unknown, int, unknown2)
+ WRAP_WATCOM_FUNC5(int, register_object_run_to_tile, GameObject*, object, DWORD, dstTile, int, prop, int, unknown, int, unknown2)
 // WRAP_WATCOM_FUNC3(long, register_object_must_call_, GameObject*, object;
 WRAP_WATCOM_FUNC1(long, register_object_must_erase, GameObject*, object)
 // WRAP_WATCOM_FUNC3(long, register_object_outline_, GameObject*, object;
