@@ -69,25 +69,57 @@
 		WRAP_WATCOM_CALL6(name##_, arg1, arg2, arg3, arg4, arg5, arg6) \
 	}
 
-extern DWORD& lastDestination;
 namespace dude {
-	/*
-	dude_move, 0x4180B4
-	Move dude to a tile, used when clicking on a hex.
-	actionPoints -1 when not in combat
-	*/
-	void move(int actionPoints) 
+
+	static int ret;
+	int __stdcall check_move(int actionPoints)
+	{
+		// this code sucks...
+		__asm { 
+				push actionPoints;
+				mov eax, esp;
+				call fo::funcoffs::check_move_
+				mov ret, eax;
+				add esp, 4 };
+		return ret;
+	}
+
+	// dude_run, 0x0041810C
+	void __stdcall run(int actionPoints)
 	{
 		DWORD dstTile;
 		// Check to which tile we are moving
-		dstTile = fo::func::check_move(actionPoints);
-		if (dstTile == -1) // Invalid tile -  0xFFFFFFFF
+		dstTile = check_move(actionPoints);
+		if (dstTile == -1) // Can't go there, not enough actionpoints or invalid tile.
+			return;
+
+		fo::GameObject* obj_dude = *reinterpret_cast<fo::GameObject * *>(FO_VAR_obj_dude);
+		if (fo::func::perk_level(obj_dude, fo::Perk::PERK_silent_running) == 0)
+			fo::func::pc_flag_off(0); // Turn off sneak flag is we don't have silent running
+
+		fo::func::register_begin(2);
+		int prop = *(int*)((DWORD)(&obj_dude + 0x28)); // not sure what this property is?
+		fo::func::register_object_run_to_tile(obj_dude, dstTile, prop, actionPoints, 0);
+		fo::func::register_end();
+	}
+
+	/*
+	dude_move, 0x4180B4
+	Move dude to a tile, used when clicking on a hex.
+	actionPoints == -1 when not in combat
+	*/
+	void __stdcall move(int actionPoints) 
+	{
+		DWORD dstTile;
+		// Check to which tile we are moving
+		dstTile = check_move(actionPoints);
+		if (dstTile == -1) // Can't go there, not enough actionpoints or invalid tile.
 			return;
 
 		DWORD lastDest = *reinterpret_cast<DWORD*>(FO_VAR_lastDest);
 		if (lastDest != dstTile) 
 		{
-			*(DWORD*)((DWORD)FO_VAR_lastDest) = dstTile; // save the tile we're going ot.
+			*(DWORD*)((DWORD)FO_VAR_lastDest) = dstTile; // save the tile we're going to.
 			fo::func::register_begin(2);
 			fo::GameObject* obj_dude = *reinterpret_cast<fo::GameObject**>(FO_VAR_obj_dude);
 			int prop = *(int*)((DWORD)(&obj_dude + 0x28)); // not sure what this property is?
@@ -95,23 +127,26 @@ namespace dude {
 			fo::func::register_end();
 		}
 		else { // if last tile was the same one, run there instead.
-			fo::func::dude_run(actionPoints);
-			/*_asm { mov eax, [esp] }
-			WRAP_WATCOM_CALL0(dude_run);
-			_asm { mov [esp], eax }*/
+			//fo::func::dude_run(actionPoints);
+			run(actionPoints);
+		}
+	}
+
+
+
+	void __declspec(naked) hook_run() {
+		__asm {
+			_asm { push eax }
+			_asm { call run }
+			_asm { ret }
 		}
 	}
 
 	// TODO: Autogenerate
 	void __declspec(naked) hook_move() {
 		__asm {
-			_asm { push ebx }
-			_asm { push ecx }
-			_asm { push edx }
+			_asm { push eax }
 			_asm { call move }
-			_asm { pop edx }
-			_asm { pop ecx }
-			_asm { pop ebx }
 			_asm { ret }
 		}
 	}

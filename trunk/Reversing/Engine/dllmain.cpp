@@ -8,6 +8,7 @@
 
 void Hook() {
 	sfall::HookCall(0x44C0CB, dude::hook_move);
+	sfall::HookCall(0x44C0E1, dude::hook_run);
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
