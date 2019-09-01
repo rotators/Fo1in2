@@ -5,7 +5,7 @@ procedure Initialize_Fridge;
 procedure Looting_Fridge;
 procedure Open_Fridge;
 procedure pick_lock;
-procedure map_update_p_proc;//    script_action == 23
+procedure map_update_p_proc;//    script_action == map_update_proc
 
 import variable Garret_ptr;
 import variable Fridge_ptr;
@@ -15,33 +15,33 @@ variable last_user;
 
 procedure start
 begin
-	if (script_action == 15) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
+	if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
 		call Initialize_Fridge;
 	end
 	else begin
-		if (script_action == 23) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
+		if (script_action == map_update_proc) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
 			call map_update_p_proc;
 		end
 		else begin
-			if (script_action == 4) then begin//<---caught stealing! (pickup_p_proc)
+			if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
 				call Looting_Fridge;
 			end
 			else begin
-				if (script_action == 6) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+				if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
 					call Open_Fridge;
 				end
 				else begin
-					if (script_action == 22) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+					if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
 						float_msg(Garret_ptr, message_str(SCRIPT_NGARFRDG, 105), 0);
 					end
 					else begin
-						if (script_action == 7) then begin//<-- use_obj_on_p_proc
+						if (script_action == use_obj_on_proc) then begin//<-- use_obj_on_p_proc
 							if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
 								call pick_lock;
 							end
 						end
 						else begin
-							if (script_action == 8) then begin//<-- use_skill_on_p_proc
+							if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
 								if (action_being_used == SKILL_LOCKPICK) then begin//-- LOCKPICK
 									call pick_lock;
 								end
