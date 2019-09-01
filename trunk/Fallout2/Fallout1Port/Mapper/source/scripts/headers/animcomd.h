@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef ANIMCOMD_H
@@ -103,7 +103,7 @@
 //#define ANIM_fire_dance_sf           (61)// doesn't exist, but keeps the enums ordered
 #define ANIM_fall_back_blood_sf      (61)
 #define ANIM_fall_front_blood_sf     (62)
-// called shot interface picture	 64
+// called shot interface picture     64
 #define ANIM_called_shot_pic         (63)
 #define ANIM_max_anim                (65)   // 65
 
@@ -113,8 +113,8 @@
 #define REG_ANIM_BEGIN  1
 #define REG_ANIM_CLEAR  2
 #define REG_ANIM_END    3
-#define reg_anim_begin()    reg_anim_func(REG_ANIM_BEGIN, RB_UNRESERVED)
-#define reg_anim_clear(who) reg_anim_func(REG_ANIM_CLEAR, who)
-#define reg_anim_end()      reg_anim_func(REG_ANIM_END, 0)
+#define reg_anim_begin()            reg_anim_func(REG_ANIM_BEGIN, RB_UNRESERVED)
+#define reg_anim_clear(who)         reg_anim_func(REG_ANIM_CLEAR, who)
+#define reg_anim_end()              reg_anim_func(REG_ANIM_END, 0)
 
 #endif // ANIMCOMD_H
