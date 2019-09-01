@@ -743,12 +743,13 @@
 #define GVAR_OVERSEER_END_SEQ                   (1620)
 #define GVAR_QUEST_KILL_MOMCLAW                 (1621)
 // 1622 free
-#define GVAR_QUEST_KILL_RAZOR                   (1623) // unused
+#define GVAR_QUEST_KILL_RAZOR                   (1623)
 #define GVAR_LARS_DEAD                          (1624)
 #define GVAR_LARS_N_KILLIAN_ON_CASINO           (1625)
 #define GVAR_DUDE_ENEMY_SKULZ                   (1626)
 #define GVAR_DUDE_ENEMY_JUNK_BOXER              (1627)
 #define GVAR_DUDE_ENEMY_JUNK_CITIZEN            (1628)
+#define GVAR_QUEST_BLADE_WEAPONS                (1629)
 // 1629,1631 free 1630 ???
 
 // Fallout Fixt
