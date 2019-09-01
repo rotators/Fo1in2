@@ -6,6 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\maps\shadyw.h"
 #include "..\headers\shadysands.h"
 
 #define NAME                    SCRIPT_TGUARD
@@ -60,25 +61,15 @@ variable Warned_Tile;
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
+#define LVAR_Invasion 							(6)
 #define LVAR_Sleeping 							(9)
+#define LVAR_Home_Tile 							(10)
 
 procedure start begin
-/*	if (map_first_run) then begin
-		if self_tile == 18931 then begin
-			variable KillBox_ptr := 0;
-			KillBox_ptr := create_object( PID_DEAD_TRAVELER, 0, 0 );// <-- Dead Traveler (Ghoul)  Was:  create_object( PID_IGUANA_STAND, 0, 0 );// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
-			move_to(KillBox_ptr, 0, 0);
-			//inven_unwield;
-			move_obj_inven_to_obj(self_obj, KillBox_ptr);
-			destroy_object(KillBox_ptr);
-			move_to(self_obj, 0, 0);
-			destroy_object(self_obj);
-		end
-	end*/
 	if shady_invaded then begin
 		if CUR_AREA_SHADY_SANDS then begin
-			if (local_var(6) != 1) then begin
-				set_local_var(6, 1);
+			if (local_var(LVAR_Invasion) != 1) then begin
+				set_local_var(LVAR_Invasion, 1);
 				call PickDeadBodyType;
 				kill_critter(self_obj, DeathType);
 			end
@@ -89,22 +80,20 @@ procedure start begin
 		initial :=  1;
 		set_self_team( TEAM_SHADY_SANDS );
 		set_self_ai( AI_GUARD );
-		if (local_var(10) == 0) then begin
-			set_local_var(10, self_tile);
+		if (local_var(LVAR_Home_Tile) == 0) then begin
+			set_local_var(LVAR_Home_Tile, self_tile);
 		end
-		home_tile := local_var(10);
+		home_tile := local_var(LVAR_Home_Tile);
 	end
 end
-
-
 
 procedure combat_p_proc begin
 	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
 		round_counter := round_counter + 1;
 	end
 	if (round_counter > 3) then begin
-		if not(global_var( GVAR_ENEMY_SHADY_SANDS )) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
-			set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );//Set ENEMY_SHADY_SANDS to True
+		if not(global_var( GVAR_ENEMY_SHADY_SANDS )) then begin
+			set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );
 			set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 5 );
 		end
 	end
@@ -117,7 +106,7 @@ procedure critter_p_proc begin
 		end
 		else begin
 			if (dude_is_armed) then begin
-				if (map_var(0) == 0) then begin
+				if (map_var(MVAR_WARNED) == 0) then begin
 					call guard11;
 				end
 			end
@@ -135,8 +124,7 @@ procedure critter_p_proc begin
 	end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
 	script_overrides;
 	display_msg(mstr(100));
 end
@@ -169,7 +157,7 @@ procedure talk_p_proc begin
 		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), 0);
 	end
 	else begin
-		if global_var( GVAR_ENEMY_SHADY_SANDS ) then begin//  Is player ENEMY_SHADY_SANDS?
+		if global_var( GVAR_ENEMY_SHADY_SANDS ) then begin
 			set_local_var(4, 1);
 			call guard00;
 		end
@@ -214,7 +202,7 @@ procedure timed_event_p_proc begin
 		tmp_hostile := 1;
 	end
 	else begin
-		set_map_var(0, 0);
+		set_map_var(MVAR_WARNED, 0);
 	end
 end
 
@@ -285,7 +273,7 @@ end
 procedure guard11 begin
 	float_msg(self_obj, mstr(123), 7);
 	add_timer_event(self_obj, game_ticks(10), 1);
-	set_map_var(0, 1);
+	set_map_var(MVAR_WARNED, 1);
 end
 
 procedure guard12 begin
