@@ -8,12 +8,11 @@
 #
 # Vault 13 Quests
 #
-{100}{}{Find the Water Chip.}
-{101}{}{Calm the rebel faction.}
-{102}{}{Find the Water Thief.}
-{103}{}{Destroy the Mutant leader.}
-{104}{}{Destroy the source of the Mutants.}
-
+{100}{}{Find the Water Chip.} 				#fo1 vanilla
+{101}{}{Calm the rebel faction.}			#fo1 vanilla
+{102}{}{Find the Water Thief.}				#fo1 vanilla
+{103}{}{Destroy the Mutant leader.}			#fo1 vanilla
+{104}{}{Destroy the source of the Mutants.}	#fo1 vanilla
 {105}{}{Help the medic to synthesize Antidote.}
 {106}{}{Learn about the outside world at the library.}
 {107}{}{Gain entry to the Armory.}
@@ -43,10 +42,10 @@
 #
 {300}{}{Talk to Katrina.}
 {301}{}{Hire Ian.}
-{302}{}{Stop the radscorpions.}
-{303}{}{Help Razlo find a cure for radscorpion venom.}
-{304}{}{Cure Jarvis of radscorpion poison.}
-{305}{}{Rescue Tandi from the Khans.}
+{302}{}{Stop the radscorpions.}							#fo1 vanilla
+{303}{}{Help Razlo find a cure for radscorpion venom.}	#fo1 vanilla
+{304}{}{Cure Jarvis of radscorpion poison.}				#fo1 vanilla
+{305}{}{Rescue Tandi from the Khans.}					#fo1 vanilla
 {306}{}{Help Shady Sands improve their crop yield.}
 {307}{}{Lead Seth and the guards to destroy the Khans.}
 

@@ -5,6 +5,7 @@
 */
 
 #include "..\headers\define.h"
+#include "..\headers\shadysands.h"
 
 #define NAME                    SCRIPT_PLEASANT
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SHADYSANDS)
@@ -37,7 +38,7 @@ end
 
 procedure start begin
 	if shady_invaded then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
+		if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
 			if (local_var(4) != 1) then begin
 				set_local_var(4, 1);
 				call PickDeadBodyType;
@@ -102,7 +103,7 @@ end
 procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 	if (source_obj == dude_obj) then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin
+		if CUR_AREA_SHADY_SANDS then begin
 			set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );//Set ENEMY_SHADY_SANDS to True
 		end
 	end
@@ -110,8 +111,7 @@ procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_PLEASANT, 100));
 end
@@ -121,31 +121,26 @@ begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 	if (local_var(0) or global_var( GVAR_ENEMY_SHADY_SANDS )) then begin
 		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), 0);
 	end
+	else if radscorp_quest_completed then begin
+		float_msg(self_obj, message_str(SCRIPT_PLEASANT, random(101, 104)), 0);
+	end
 	else begin
-		if (global_var( GVAR_RADSCORPION_SEED ) == 2) then begin
-			float_msg(self_obj, message_str(SCRIPT_PLEASANT, random(101, 104)), 0);
-		end
-		else begin
-			float_msg(self_obj, message_str(SCRIPT_PLEASANT, random(101, 107)), 0);
-		end
+		float_msg(self_obj, message_str(SCRIPT_PLEASANT, random(101, 107)), 0);
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (obj_on_screen(self_obj)) then begin
 		self_walk_to_tile( tile_num_in_direction(self_tile, random(0, 5), random(1, 5)) );
 	end
 	add_timer_event(self_obj, game_ticks(random(6, 10)), 1);
 end
 
-procedure PickDeadBodyType
-begin
+procedure PickDeadBodyType begin
 	pick_dead_body_type
 end

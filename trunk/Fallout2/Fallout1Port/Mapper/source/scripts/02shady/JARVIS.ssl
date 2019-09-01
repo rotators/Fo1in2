@@ -43,11 +43,15 @@ variable tmp_hostile;
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
+#define LVAR_Here_Before      (4)
+#define LVAR_PoisonHealed     (5)
+#define LVAR_Invasion         (6)
+
 procedure start begin
 	if shady_invaded then begin
-		if (CUR_MAP_SHADYE) or (CUR_MAP_SHADYW) then begin //  SHADY SANDS - EAST OR WEST
-			if (local_var(6) != 1) then begin
-				set_local_var(6, 1);
+		if CUR_AREA_SHADY_SANDS then begin
+			if (local_var(LVAR_Invasion) != 1) then begin
+				set_local_var(LVAR_Invasion, 1);
 				call PickDeadBodyType;
 				kill_critter(self_obj, DeathType);
 			end
@@ -57,29 +61,29 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4) == 0) then begin
-		display_msg(message_str(SCRIPT_JARVIS, 102));
+	if (local_var(LVAR_Here_Before) == 0) then begin
+		display_msg(mstr(102));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_JARVIS, 103));
+		display_msg(mstr(103));
 	end
 end
 
 procedure map_enter_p_proc begin
-	if (local_var(5) == 0) then begin
+	if (local_var(LVAR_PoisonHealed) == 0) then begin
 		anim( self_obj, ANIM_fall_back_sf, 0 );
 		add_timer_event(self_obj, game_ticks(3600), 1);
 	end
-	set_self_team(TEAM_SHADY_SANDS );
+	set_self_team( TEAM_SHADY_SANDS );
 	set_self_ai( AI_PEASANT );
 end
 
 procedure talk_p_proc begin
 	dude_look_at_self;
-	if (local_var(5) == 0) then begin
+	if (local_var(LVAR_PoisonHealed) == 0) then begin
 		call Jarvis01;
 	end
-	else if (local_var(4) == 0) then begin
+	else if (local_var(LVAR_Here_Before) == 0) then begin
 		start_dialog_at_node(Jarvis02);
 	end
 	else begin
@@ -88,45 +92,46 @@ procedure talk_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
-	variable LVar0 := 0;
-	LVar0 := roll_vs_skill(dude_obj, action_being_used, 0);
-	if (local_var(5) == 0) then begin
+	variable Skill := 0;
+	Skill := roll_vs_skill(dude_obj, action_being_used, 0);
+	if (local_var(LVAR_PoisonHealed) == 0) then begin
 		script_overrides;
 		if (action_being_used == SKILL_FIRST_AID) then begin
-			if (is_success(LVar0)) then begin
-				display_msg(message_str(SCRIPT_JARVIS, 112));
+			if (is_success(Skill)) then begin
+				display_msg(mstr(112));
 			end
 			else begin
-				display_msg(message_str(SCRIPT_JARVIS, 113));
+				display_msg(mstr(113));
+			end
+		end
+		else if (action_being_used == SKILL_DOCTOR) then begin
+			if (is_success(Skill)) then begin
+				display_msg(mstr(114));
+			end
+			else begin
+				display_msg(mstr(115));
 			end
 		end
 		else begin
-			if (action_being_used == SKILL_DOCTOR) then begin
-				if (is_success(LVar0)) then begin
-					display_msg(message_str(SCRIPT_JARVIS, 114));
-				end
-				else begin
-					display_msg(message_str(SCRIPT_JARVIS, 115));
-				end
-			end
-			else begin
-				display_msg(message_str(SCRIPT_JARVIS, 116));
-			end
+			display_msg(mstr(116));
 		end
 	end
 end
 
 procedure use_obj_on_p_proc begin
-	if ((obj_pid(obj_being_used_with) == PID_ANTIDOTE) and (local_var(5) == 0)) then begin
+	if ((obj_pid(obj_being_used_with) == PID_ANTIDOTE) and (local_var(LVAR_PoisonHealed) == 0)) then begin
 		script_overrides;
+
 		rm_timer_event(self_obj);
-		set_local_var(5, 1);
+		set_local_var(LVAR_PoisonHealed, 1);
 		rm_obj_from_inven(dude_obj, obj_being_used_with);
 		destroy_object(obj_being_used_with);
-		display_msg(message_str(SCRIPT_JARVIS, 117));
+
+		display_msg(mstr(117));
+		set_jarvis_healed;
 
 		give_exp_points(EXP_JARVIS_ANTIDOTE);
-		display_msg(message_str(SCRIPT_JARVIS, 200));
+		display_msg(mstr(200));
 
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 1 );
 		inc_shady_rep(REP_BONUS_HELPING_JARVIS);
@@ -140,22 +145,22 @@ procedure destroy_p_proc begin
 		set_global_var( GVAR_ENEMY_SHADY_SANDS, 1 );
 	end
 	inc_good_critter
-	rm_timer_event(self_obj);
 end
 
 procedure combat_p_proc begin
-	if ((fixed_param == COMBAT_SUBTYPE_TURN) and (local_var(5) == 0)) then begin
+	if ((fixed_param == COMBAT_SUBTYPE_TURN) and (local_var(LVAR_PoisonHealed) == 0)) then begin
 		script_overrides;
 	end
 end
 
 procedure Jarvis01 begin
-	float_msg(self_obj, message_str(SCRIPT_JARVIS, 104), 0);
+   set_heal_jarvis;
+	float_msg(self_obj, mstr(104), 0);
 end
 
 procedure Jarvis02 begin
 	gsay_reply(440, 105);
-	set_local_var(4, 1);
+	set_local_var(LVAR_Here_Before, 1);
 	call Jarvis04;
 end
 
@@ -188,11 +193,11 @@ end
 
 procedure description_p_proc begin
 	script_overrides;
-	if (local_var(4) == 0) then begin
-		display_msg(message_str(SCRIPT_JARVIS, 102));
+	if (local_var(LVAR_Here_Before) == 0) then begin
+		display_msg(mstr(102));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_JARVIS, 103));
+		display_msg(mstr(103));
 	end
 end
 
@@ -201,7 +206,7 @@ procedure critter_p_proc begin
 		tmp_hostile := 0;
 		attack(dude_obj);
 	end
-	if ((local_var(5) == 1) and (anim_busy(self_obj) == 0)) then begin
+	if ((local_var(LVAR_PoisonHealed) == 1) and (anim_busy(self_obj) == 0)) then begin
 		if (critter_state(self_obj) == 2) then begin
 			reg_anim_clear( self_obj );
 			reg_anim_begin();
@@ -209,7 +214,7 @@ procedure critter_p_proc begin
 			reg_anim_end();
 		end
 		else if (critter_state(self_obj) == 0) then begin
-			set_local_var(5, 2);
+			set_local_var(LVAR_PoisonHealed, 2);
 			self_rotate( 2 );
 		end
 	end
@@ -220,12 +225,12 @@ procedure pickup_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-	if (local_var(5) == 0) then begin
+	if (local_var(LVAR_PoisonHealed) == 0) then begin
 		add_timer_event(self_obj, game_ticks(7200), 1);
 	end
 	if (tile_distance_objs(dude_obj, self_obj) < dude_perception) then begin
-		display_msg(message_str(SCRIPT_JARVIS, 100));
-		float_msg(self_obj, message_str(SCRIPT_JARVIS, 101), 0);
+		display_msg(mstr(100));
+		float_msg(self_obj, mstr(101), 0);
 	end
 end
 
