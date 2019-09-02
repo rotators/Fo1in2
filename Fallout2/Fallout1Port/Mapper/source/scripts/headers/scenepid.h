@@ -84,6 +84,8 @@ variable Scenery_Creation_Ptr;
 #define PID_NS_ANIM_FIELD                   (33555981)
 
 // Rocks Info
+#define PID_BLUE_ROCK_PILE_SMALL_1          (33554511)
+#define PID_BLUE_ROCK_PILE_SMALL_2          (33554512)
 #define PID_LARGE_BLUE_ROCK_PILE            (33554513)
 #define PID_CAVE_IN_ROCKS                   (33554839)
 
