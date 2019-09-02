@@ -1,18 +1,27 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_BVMEET
+
+#include "..\headers\command.h"
+
 procedure start;
 procedure damage_p_proc;
 
+variable rocks;
+
+#define LVAR_Only_Once     (0)
+
+#define ROCK_HEX           18487
 
 procedure start begin
 end
 
 procedure spatial_p_proc begin
 	if source_obj == dude_obj then begin
-		if (local_var(0) == 0) then begin
-			set_local_var(0, 1);
+		if (local_var(LVAR_Only_Once) == 0) then begin
+			set_local_var(LVAR_Only_Once, 1);
 			if (is_success(do_check(dude_obj, STAT_pe, -2))) then begin
-				display_msg(message_str(SCRIPT_BVMEET, 100));
+				display_msg(mstr(100));
 			end
 		end
 	end
@@ -21,8 +30,10 @@ end
 procedure damage_p_proc begin
 	script_overrides;
 	gfade_out(1);
-	if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin// TRAPS
+	if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin
 		display_msg(message_str(SCRIPT_BLAST, 100));
+
+		rocks:=create_object(PID_LARGE_BLUE_ROCK_PILE,ROCK_HEX,2);
 		give_exp_points(10);
 		display_msg(message_str(SCRIPT_BLAST, 103));
 	end

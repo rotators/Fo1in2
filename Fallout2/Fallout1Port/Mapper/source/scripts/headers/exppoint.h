@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+    Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef EXPPOINT_H
@@ -147,72 +147,74 @@
 --------------------------------------------------*/
 
 // Vault 13
-#define EXP_RETURN_WATERCHIP 					(7500)
-#define EXP_DESTROYED_DOOR_TERMINAL 			(50)
+#define EXP_RETURN_WATERCHIP                    (7500)
+#define EXP_DESTROYED_DOOR_TERMINAL             (50)
 
 // Vault 15
+#define EXP_V15_EXPLORED			            (500)
 
 // Shady Sands
-#define EXP_HIRED_IAN							(100)
-#define EXP_EXPLAINED_CROP_ROTATION 			(500)
-#define EXP_KILLED_SS_RADSCORPION 				(500)
-#define EXP_JARVIS_ANTIDOTE						(500)
+#define EXP_HIRED_IAN                           (100)
+#define EXP_TANDI_RETURNED                      (400)
+#define EXP_EXPLAINED_CROP_ROTATION             (500)
+#define EXP_KILLED_SS_RADSCORPION               (500)
+#define EXP_JARVIS_ANTIDOTE                     (500)
 
 // Raiders
 
 // Junktown
-#define EXP_TRISH_SAUL_RELATIONSHIP 			(250)
-#define EXP_KILLED_KENJI 						(400)
-#define EXP_GET_RID_OF_DOGMEAT 					(35)
-#define EXP_DOGMEAT_JOINS_PARTY					(100)
-#define EXP_HIRED_TYCHO 						(300)
+#define EXP_TRISH_SAUL_RELATIONSHIP             (250)
+#define EXP_KILLED_KENJI                        (400)
+#define EXP_GET_RID_OF_DOGMEAT                  (35)
+#define EXP_DOGMEAT_JOINS_PARTY                 (100)
+#define EXP_HIRED_TYCHO                         (300)
 
 // Hub
-#define EXP_BOUGHT_WATER_CARAVAN 				(1000)
-#define EXP_FIND_DEATHCLAW 						(800)
-#define EXP_BLACKMAILING_BOB 					(500)
-#define EXP_NECKLACE_STOLEN 					(500)
+#define EXP_BOUGHT_WATER_CARAVAN                (1000)
+#define EXP_FIND_DEATHCLAW                      (800)
+#define EXP_BLACKMAILING_BOB                    (500)
+#define EXP_NECKLACE_STOLEN                     (500)
 
 // Boneyard
-#define EXP_QUEST_KILLED_DCLAWS		 			(1000)
-#define EXP_UPGRADE_MOTORCYCLE 					(500)
+#define EXP_QUEST_KILLED_DCLAWS                 (1000)
+#define EXP_UPGRADE_MOTORCYCLE                  (500)
 
 // Necropolis
-#define EXP_WATER_CHIP_TAKEN 					(2500)
-#define EXP_WATER_PUMP_FIXED					(1000)
-#define EXP_PRISONER_FREED 						(500)
-#define EXP_GIVEN_ENERGY_CELLS 					(1000)
-#define EXP_STOLEN_CONTROLLER 					(250)
-#define EXP_BOUGHT_BIKE 						(500)
+#define EXP_WATER_CHIP_TAKEN                    (2500)
+#define EXP_WATER_PUMP_FIXED                    (1000)
+#define EXP_PRISONER_FREED                      (500)
+#define EXP_GIVEN_ENERGY_CELLS                  (1000)
+#define EXP_STOLEN_CONTROLLER                   (250)
+#define EXP_BOUGHT_BIKE                         (500)
 
 // Glow
-#define EXP_DISABLED_TRAPS 						(0)
-#define EXP_MAINFRAME_ACCESS					(100)
-#define EXP_REPAIR_GENERATOR 					(1000)
+#define EXP_DISABLED_TRAPS                      (0)
+#define EXP_MAINFRAME_ACCESS                    (100)
+#define EXP_REPAIR_GENERATOR                    (1000)
 
 // BOS
-#define EXP_BECOME_INITITAT						(2000)
+#define EXP_BECOME_INITITAT                     (2000)
 
 // Mariposa
-#define EXP_HANDYC_CLEANUP 						(1000)
-#define EXP_OVERHEARD_CONVERSATION				(1000)
-#define EXP_TRICKING_MUTANTS					(1500)
-#define EXP_SNEAK_SUCCESS 						(2000)
-#define EXP_VATS_DESTROYED 						(10000)
+#define EXP_HANDYC_CLEANUP                      (1000)
+#define EXP_OVERHEARD_CONVERSATION              (1000)
+#define EXP_TRICKING_MUTANTS                    (1500)
+#define EXP_SNEAK_SUCCESS                       (2000)
+#define EXP_VATS_DESTROYED                      (10000)
 
 // Cathedral
-#define EXP_KILLED_MORPHEUS 					(1000)
-#define EXP_FOUND_MILITARY_BASE 				(1250)
-#define EXP_KNEW_ABOUT_MILITARY_BASE 			(500)
-#define EXP_WENT_TO_MILITARY_BASE 				(50)
-#define EXP_MASTER_DESTROYED 					(10000)
+#define EXP_KILLED_MORPHEUS                     (1000)
+#define EXP_FOUND_MILITARY_BASE                 (1250)
+#define EXP_KNEW_ABOUT_MILITARY_BASE            (500)
+#define EXP_WENT_TO_MILITARY_BASE               (50)
+#define EXP_MASTER_DESTROYED                    (10000)
 
 /***************************************************
      Giving Experience Points
 ***************************************************/
 
-#define EXP_SHOVELED_ALL_CRAP					(150)
-#define EXP_TEMPLE_OF_TRIALS					(500)
+#define EXP_SHOVELED_ALL_CRAP                   (150)
+#define EXP_TEMPLE_OF_TRIALS                    (500)
 
 /***************************************
  Give the experience points and display
