@@ -1,0 +1,127 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Vree.Data
+{
+    // https://docs.microsoft.com/en-us/cpp/cpp/argument-passing-and-naming-conventions?view=vs-2019
+    enum CallingConvention
+    {
+        cdecl,      // Caller cleans stack, parameters on stack, in reverse order (right to left).
+        stdcall,    // Callee cleans stack, parameters on stack, in reverse order (right to left)
+        fastcall,   // Callee cleans stack, Arg 1 in ECX, Arg 2 in EDX, rest on stack in reverse order (right to left). 
+        thiscall,   //
+        vectorcall, //
+        watcom      // Arg 1 in EAX, 2 in EDX, 3 in EBX, 4 in ECX, rest on stack in left to right order.
+    }
+
+    [Serializable]
+    class Argument
+    {
+        public Enum Enum;
+        public DataType Type;
+        public string Name;
+
+        public string String
+        {
+            get
+            {
+                string def = Enum != null ? Enum.Name : Type.String;
+                return " " + Name;
+            }
+        }
+    }
+
+    [Serializable]
+    class Function
+    {
+        public ReturnVariable ReturnType;
+        public uint Offset;
+        public string Name;
+        public List<Argument> Arguments;
+        public CallingConvention Calling;
+        public string Comment;
+        public bool Implemented; // Has been reimplemented.
+        public string Definition
+        {
+            get
+            {
+                string retString = ReturnType == null ? "void" : ReturnType.String;
+                string args = Arguments == null ? "" : string.Join(", ", Arguments.Select(x => x.String).ToArray());
+                return $"{retString} {Name}({args})";
+            }
+        }
+    }
+    [Serializable]
+    class ReturnVariable
+    {
+        public bool IsArray() => Length > 1;
+        public bool Pointer;
+        public UInt16 Length;
+        public DataType Type;
+        public string String
+        {
+            get
+            {
+                return Type.String + (Length>0?"[]":"")+(Pointer?"*":"");
+            }
+        }
+    }
+
+    [Serializable]
+    class GlobalVariable
+    {
+        public bool IsArray() => Length > 1;
+        public bool Pointer;
+        public UInt16 Length;
+        public uint Offset;
+        public string Name;
+        public DataType Type;
+        public string Comment;
+        public string String
+        {
+            get
+            {
+                var t = Type == null ? "void*" : Type.String;
+                return t + (Length > 0 ? "[]" : "") + (Pointer ? "*" : "") + " " + Name;
+            }
+        }
+    }
+
+    [Serializable]
+    class VreeDB
+    {
+        public List<Function> Functions;
+        public List<GlobalVariable> Variables;
+
+        public static VreeDB Load(string filename)
+        {
+            var fileStream = new FileStream(filename, FileMode.Open);
+
+            //create a BinaryFormatter and deserialize the object
+            BinaryFormatter formatter = new BinaryFormatter();
+            return (VreeDB)formatter.Deserialize(fileStream);
+        }
+        public bool Save(string filename)
+        {
+            var noext = Path.GetFileNameWithoutExtension(filename);
+            var dir = Path.GetDirectoryName(filename);
+            if (File.Exists(dir + "\\" + noext + ".bak"))
+                File.Delete(dir + "\\" + noext + ".bak");
+
+            
+
+            if (File.Exists(filename))
+                File.Move(filename, dir + "\\" + noext+".bak");
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = new FileStream(filename, FileMode.Create);
+            formatter.Serialize(fileStream, this);
+            return true;
+        }
+    }
+}
