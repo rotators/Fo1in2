@@ -1,11 +1,16 @@
 #include "..\headers\define.h"
+#include "..\headers\maps\vaultent.h"
+
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == map_enter_proc
+procedure map_enter_p_proc;
 
-procedure Invasion;
+variable Scorp_hex;
+variable Scorp_ptr;
+variable luck;
+variable roll;
 
 procedure start begin
 end
@@ -18,28 +23,21 @@ procedure map_enter_p_proc begin
 	end
 	set_global_var( GVAR_MARK_V15_1, 1 );
 
+   // Activate V15 quests:
+   set_global_var( GVAR_QUEST_VAULT15_1_SEARCH_FOR_CLUES, 1 );
+	set_global_var( GVAR_QUEST_VAULT15_2_FIND_WATER_CHIP, 1 );
 
-	/*if (global_var( GVAR_LOAD_MAP_INDEX ) == 1) then begin
-		override_map_start(113, 96, 0, 2);
-	end
-	else if (global_var( GVAR_LOAD_MAP_INDEX ) == 2) then begin
-		override_map_start(115, 105, 0, 5);
-	end
-	else begin
-		override_map_start_hex(24317,0,5);
-	end
-	*/
-	//if (global_var(LOAD_MAP_INDEX) == 0) then
-	//	override_map_start_hex(24317,0,5);
+	if (map_var(MVAR_SPAWNED) == 0) then begin
+		set_map_var(MVAR_SPAWNED, 1);
 
-	if (map_var(0) == 0) then begin
-		variable Scorp_hex := 0;
-		variable Scorp_ptr := 0;
-		set_map_var(0, 1);
-		Scorp_ptr := create_object_sid(PID_RADSCORPION, 0, 0, SCRIPT_RADSCORP);
-		Scorp_hex := 21515;
-		critter_attempt_placement(Scorp_ptr, Scorp_hex, 0);
-		/* TEAM_NUM */  set_team( Scorp_ptr, TEAM_RADSCORPIONS );
+      luck := get_critter_stat( dude_obj, STAT_lu );
+      roll := random(1, 6) + random(1, 6) + random(1, 6);
+      if ((luck < 4) or (roll < 8)) then begin
+   		Scorp_ptr := create_object_sid(PID_RADSCORPION, 0, 0, SCRIPT_RADSCORP);
+   		Scorp_hex := 21515;
+   		critter_attempt_placement(Scorp_ptr, Scorp_hex, 0);
+   		set_team(Scorp_ptr, TEAM_RADSCORPIONS);
+   	end
 	end
 
 	set_global_var(GVAR_LOAD_MAP_INDEX,0);
@@ -47,8 +45,4 @@ end
 
 procedure map_update_p_proc begin
 	Lighting;
-end
-
-procedure Invasion begin
-	//check_invasion
 end
