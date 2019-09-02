@@ -151,6 +151,7 @@
 #define EXP_DESTROYED_DOOR_TERMINAL             (50)
 
 // Vault 15
+#define EXP_RATS_TUNNEL_DESTROYED               (100)
 #define EXP_V15_EXPLORED			            (500)
 
 // Shady Sands

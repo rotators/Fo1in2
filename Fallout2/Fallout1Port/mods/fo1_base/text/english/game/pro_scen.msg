@@ -2785,3 +2785,4 @@
 {186101}{}{This Chrysalis Motors Cruiser looks to be in pretty good shape for its age.}
 {186200}{}{Sidecar}
 {186201}{}{An old motorcycle sidecar. It appears to be in a good shape.}
+{186300}{}{Cave Wall}

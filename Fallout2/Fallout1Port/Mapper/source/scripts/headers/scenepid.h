@@ -276,6 +276,9 @@ variable Scenery_Creation_Ptr;
 #define PID_VDOOR_V13_METAL_EW				(33554454)
 #define PID_VDOOR_V13_METAL_NS				(33554455)
 
+// Fo1in2:
+#define PID_RATHOLE 						(33556295)
+
 // SD 3 Motorcycle
 #define PID_DRIVABLE_MOTO1					(33556292)
 #define PID_DRIVABLE_MOTO2					(33556293)

@@ -1,46 +1,72 @@
 #include "..\headers\define.h"
+#include "..\headers\maps\vaultbur.h"
 
 #define NAME                    SCRIPT_BVMEET
 
 #include "..\headers\command.h"
 
 procedure start;
+procedure spatial_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure map_update_p_proc;
 procedure damage_p_proc;
 
 variable rocks;
 
 #define LVAR_Only_Once     (0)
 
-#define ROCK_HEX           18487
-
 procedure start begin
 end
 
 procedure spatial_p_proc begin
-	if source_obj == dude_obj then begin
-		if (local_var(LVAR_Only_Once) == 0) then begin
-			set_local_var(LVAR_Only_Once, 1);
-			if (is_success(do_check(dude_obj, STAT_pe, -2))) then begin
-				display_msg(mstr(100));
-			end
-		end
+   if (map_var(MVAR_RATHOLE_STATE) == STATE_OPEN) then begin
+   	if source_obj == dude_obj then begin
+   		if (local_var(LVAR_Only_Once) == 0) then begin
+   			set_local_var(LVAR_Only_Once, 1);
+   			if (is_success(do_check(dude_obj, STAT_pe, -2))) then begin
+   				display_msg(mstr(100));
+   			end
+   		end
+   	end
 	end
 end
 
-procedure damage_p_proc begin
-	script_overrides;
-	gfade_out(1);
-	if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin
-		display_msg(message_str(SCRIPT_BLAST, 100));
+procedure look_at_p_proc begin
+end
 
-		rocks:=create_object(PID_LARGE_BLUE_ROCK_PILE,ROCK_HEX,2);
-		give_exp_points(10);
-		display_msg(message_str(SCRIPT_BLAST, 103));
-	end
-	else begin
-		display_msg(message_str(SCRIPT_BLAST, 102));
-	end
-	gfade_in(1);
-	destroy_object(self_obj);
+procedure description_p_proc begin
+   if (map_var(MVAR_RATHOLE_STATE) == STATE_LARGE) then
+      display_msg(mstr(112));
+   else
+      display_msg(mstr(111));
+end
+
+procedure map_update_p_proc begin
+end
+
+procedure damage_p_proc begin
+   if (map_var(MVAR_RATHOLE_STATE) == STATE_OPEN) then begin
+   	script_overrides;
+   	gfade_out(1);
+   	if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin
+   		display_msg(message_str(SCRIPT_BLAST, 100));
+   		rocks:=create_object(PID_LARGE_BLUE_ROCK_PILE,ROCK_HEX,2);
+
+   		give_exp_points(EXP_RATS_TUNNEL_DESTROYED);
+   		display_msg(mstr(113) + EXP_RATS_TUNNEL_DESTROYED + mstr(114));
+   	   set_map_var(MVAR_RATHOLE_STATE,STATE_CLOSED);
+   	end
+   	else begin
+   		display_msg(message_str(SCRIPT_BLAST, 102));
+   		set_map_var(MVAR_RATHOLE_STATE,STATE_LARGE);
+   	end
+   	gfade_in(1);
+
+   	if (self_pid == PID_RATHOLE and map_var(MVAR_RATHOLE_STATE) == STATE_LARGE) then
+   	   self_set_frame(1);
+   	else
+   	   destroy_object(self_obj);
+   end
 end
 

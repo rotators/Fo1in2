@@ -6,6 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\maps\vaultbur.h"
 
 #define NAME                    SCRIPT_WANRATS
 
@@ -21,53 +22,24 @@ procedure use_skill_on_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
 
-/*******************************************************************
-   Local variables which do not need to be saved between map changes.
-*******************************************************************/
-
 variable initial :=  0;
 variable tmp_hostile := 0;
 variable tmp_attacked;
 
-/*******************************************************************
-*******                         PROCEDURES                   *******
-*******************************************************************/
-
-
-/*******************************************************************
-   The start procedure is the first procedure called when the map is
-   first entered. Any initial information that needs to be set up
-   should be placed in here.
-*******************************************************************/
-
-//  All rats in Vault 15, all levels
-//  All rats in Vault 13 cave entrance
-//  All rats in Necroplois SEWERS
-//  All rats in Desert encounters
-/////////////////////////////////////////////////
-//-PIG-
-//		78 == pig rat		16777294
-//		177 == Mean pig rat	16777393
-//		397 == Rabid pig rat	16777613 - doesn't exist in Fo1
-//-MOLE-
-//		162 == lesser mole rat	16777378
-//		10 == Greater mole rat	16777226
-//		398 == Rabid mole rat	16777614 - doesn't exist in Fo1
-//-RAT-
-//		48 == cave rat		16777264
-//		159 == Tough rat	16777375
-//		160 == Irradiated rat	16777376
-//		161 == Tough Irradiated rat	16777377
-//		399 == Rabid rat	16777615
-//		400 == Rabid Irradiated rat	16777616 - doesn't exist in Fo1
+#define LVAR_V15_Spawn        (10)
 
 procedure start begin
-
+   // Used for respawning rats in V15:
+   if CUR_MAP_VAULTBUR then begin
+      if (local_var(LVAR_V15_Spawn) == 0 and self_elevation == 2) then begin
+         set_local_var(LVAR_V15_Spawn,1);
+         inc_map_var(MVAR_RoamingCount);
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
 	if (map_first_run) then begin
-
 		if (self_pid == PID_LESSER_MOLE_RAT) or (self_pid == PID_GREATER_MOLE_RAT)/* or (obj_pid (self_obj) == 16777614)*/ then begin// MOLE
 			set_self_ai(AI_MOLE_RATS);
 		end
@@ -79,13 +51,10 @@ procedure map_enter_p_proc begin
 		end
 
 		set_self_team(TEAM_RATS);
-		add_timer_event(self_obj, random(30, 50), 0);//game_ticks(random(1, 5)), 0);
 
-		if debug_mode then begin
-			debug_msg("WANRATS m" + cur_map_index + " e" + self_elevation + " " + self_tile);
-		end
-
+		debug_msg("WANRATS m" + cur_map_index + " e" + self_elevation + " " + self_tile);
 	end
+   add_timer_event(self_obj, random(1, 5), 0);
 end
 
 procedure critter_p_proc begin
@@ -118,8 +87,7 @@ end
 
 procedure timed_event_p_proc begin
 	self_walk_to_tile( tile_num_in_direction(self_tile, random(0, 5), random(1, 3)) );
-	//add_timer_event(self_obj, random(30, 50), 0);
-	add_timer_event(self_obj, game_ticks(random(1, 5)), 0); // Fo1 vanilla
+	add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
 end
 
 procedure use_skill_on_p_proc begin
@@ -139,7 +107,10 @@ procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
+   // Used for respawning rats in V15:
+   if (CUR_MAP_VAULTBUR and self_elevation == 2) then begin
+      dec_map_var(MVAR_RoamingCount);
+   end
 end
 
 procedure talk_p_proc begin
