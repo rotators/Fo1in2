@@ -705,7 +705,7 @@
 #define SCRIPT_MERCH1    (698)  //  Merch1.int      ; Merchant from the Hub
 #define SCRIPT_LANCE     (699)  //  Lance.int       ; Shady Sands guard on long patrol.
 #define SCRIPT_LONERAID  (700)  //  LoneRaid.int    ; Lone Raider trying to get to camp.                                          
-#define SCRIPT_DEPRECATED_3 (701) //SCRIPT_RNDMERCH  (701)  //  scripts.lst - DONOTUSE wtf??????                                                    
+#define SCRIPT_JGIZSIGN  (701)  //  JGIZSIGN.int 	; Junktown, Gizmo sign                                             
 #define SCRIPT_PALSCOUT  (702)  //  PalScout.int    ; Random Paladin scouts.                                                      
 #define SCRIPT_TRENT     (703)  //  Trent.int       ; Survivor of a Deathclaw attack.
 #define SCRIPT_HDEALER   (704)  //  HDealer.int     ; dealer in the falcon for craps

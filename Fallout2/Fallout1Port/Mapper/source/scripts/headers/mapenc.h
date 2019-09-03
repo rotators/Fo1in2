@@ -43,7 +43,7 @@
 									end
 
 /************************************************
-    Mysterious Stranger Fo1
+    Mysterious Stranger
 ************************************************/
 variable Critter;
 variable Critter_direction;
