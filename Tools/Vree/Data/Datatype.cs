@@ -22,6 +22,21 @@ namespace Vree.Data
             return "";
         }
 
+        public static IEnumerable<BasicType> AllBasicTypes(this BasicType type)
+        {
+            yield return BasicType.FLOAT;
+            yield return BasicType.INT8;
+            yield return BasicType.INT16;
+            yield return BasicType.INT32;
+            yield return BasicType.INT64;
+            yield return BasicType.UINT8;
+            yield return BasicType.UINT16;
+            yield return BasicType.UINT32;
+            yield return BasicType.UINT64;
+            yield return BasicType.CHARP;
+            yield return BasicType.BOOL;
+            yield return BasicType.VOID;
+        }
         public static string GetBasicTypeString(this BasicType type)
         {
             switch(type)
@@ -35,6 +50,7 @@ namespace Vree.Data
                 case BasicType.UINT16: return "uint16";
                 case BasicType.UINT32: return "uint32";
                 case BasicType.UINT64: return "uint64";
+                case BasicType.CHARP: return "char*";
                 case BasicType.BOOL: return "bool";
                 case BasicType.VOID: return "void";
                 default: throw new Exception("Unable to find string for type: " + type);
@@ -52,8 +68,9 @@ namespace Vree.Data
     public enum BasicType {
         VOID,
         BOOL,
+        CHARP,  // char*
         INT8, 
-        UINT8,  // char*
+        UINT8,
         INT16, 
         UINT16, 
         INT32,
@@ -64,7 +81,7 @@ namespace Vree.Data
     }
 
     [Serializable]
-    class Enum
+    public class Enum
     {
         public bool DisplayAsHex;
         public BasicType Type;
@@ -72,7 +89,7 @@ namespace Vree.Data
     }
 
     [Serializable]
-    class Field
+    public class Field
     {
         DataType Type;
         UInt16 Offset; // Offset within the datastructure in bytes.
@@ -80,7 +97,7 @@ namespace Vree.Data
     }
 
     [Serializable]
-    class DataType
+    public class DataType
     {
         public bool IsBasicType;
         public BasicType BasicType;

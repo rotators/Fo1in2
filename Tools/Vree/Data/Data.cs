@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Vree.Data
 {
     // https://docs.microsoft.com/en-us/cpp/cpp/argument-passing-and-naming-conventions?view=vs-2019
-    enum CallingConvention
+    public enum CallingConvention
     {
         cdecl,      // Caller cleans stack, parameters on stack, in reverse order (right to left).
         stdcall,    // Callee cleans stack, parameters on stack, in reverse order (right to left)
@@ -20,7 +20,7 @@ namespace Vree.Data
     }
 
     [Serializable]
-    class Argument
+    public class Argument
     {
         public Enum Enum;
         public DataType Type;
@@ -31,13 +31,13 @@ namespace Vree.Data
             get
             {
                 string def = Enum != null ? Enum.Name : Type.String;
-                return " " + Name;
+                return def + " " + Name;
             }
         }
     }
 
     [Serializable]
-    class Function
+    public class Function
     {
         public ReturnVariable ReturnType;
         public uint Offset;
@@ -57,17 +57,29 @@ namespace Vree.Data
         }
     }
     [Serializable]
-    class ReturnVariable
+    public class ReturnVariable
     {
         public bool IsArray() => Length > 1;
         public bool Pointer;
         public UInt16 Length;
         public DataType Type;
+
+        public string LenStr
+        {
+            get
+            {
+                if (Length == 1 || Length == 0)
+                    return "";
+                if (Length == UInt16.MaxValue) // This probably a bad way to represent []
+                    return "[]";
+                return $"[{Length}]";
+            }
+        }
         public string String
         {
             get
             {
-                return Type.String + (Length>0?"[]":"")+(Pointer?"*":"");
+                return Type.String + LenStr+(Pointer?"*":"");
             }
         }
     }
@@ -82,6 +94,13 @@ namespace Vree.Data
         public string Name;
         public DataType Type;
         public string Comment;
+        public void SetBasicType(BasicType type)
+        {
+            if (Type == null)
+                Type = new DataType();
+            Type.BasicType = type;
+            Type.IsBasicType = true;
+        }
         public string String
         {
             get
@@ -97,6 +116,8 @@ namespace Vree.Data
     {
         public List<Function> Functions;
         public List<GlobalVariable> Variables;
+        public List<DataType> Types;
+        public List<Enum> Enums;
 
         public static VreeDB Load(string filename)
         {
