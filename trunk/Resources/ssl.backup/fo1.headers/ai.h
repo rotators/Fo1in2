@@ -100,6 +100,10 @@
 #define AI_RUNAWAY                    (94)
 
 // TeamX
-// TODO
+// NOTE: Used by TYCHO.ssl only
+
+#define AI_TEAMX_95                   (95)
+#define AI_TEAMX_96                   (96)
+#define AI_TEAMX_97                   (97)
 
 #endif // __AI__ //
