@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\junkcsno.h"
 
 #define NAME                    SCRIPT_TRISH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -88,9 +88,10 @@ procedure critter_p_proc begin
 	else begin
 		call TrishSleeping;
 	end
-	if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+
+	if (CUR_MAP_JUNKCSNO) then begin
 		if (self_can_see_dude) then begin
-			if ((map_var(0) == 1) and (map_var(1) == 1) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+			if ((map_var(MVAR_Skulz_left) == 1) and (map_var(MVAR_guards_left) == 1) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
 				dialogue_system_enter;
 			end
 		end
@@ -105,7 +106,8 @@ procedure critter_p_proc begin
 			self_walk_to_tile( home_tile );
 		end
 	end
-	if (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+
+	if (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) == 1) then begin
 		if (self_can_see_dude) then begin
 			attack(dude_obj);
 		end
@@ -129,25 +131,27 @@ procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	if ((global_var( GVAR_TRISH_STATUS ) bwand 1) or (global_var( GVAR_TRISH_STATUS ) bwand 4)) then begin
-		display_msg(message_str(SCRIPT_TRISH, 100));
+		display_msg(mstr(100));
 	end
 	else begin
-		display_msg(message_str(SCRIPT_TRISH, 167));
+		display_msg(mstr(167));
 	end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	Trish_ptr := self_obj;
 	set_self_team(TEAM_JUNKTOWNER );
-	if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+	if (CUR_MAP_JUNKCSNO) then begin
 		home_tile := 20083;
 		sleep_time := 330;
 		wake_time := 1300;
+      if (self_tile != home_tile) then begin
+         critter_attempt_placement(self_obj,home_tile, self_elevation);
+         self_rotate(2);
+      end
 	end
 	else begin
 		home_tile := 16297;
@@ -156,52 +160,42 @@ begin
 	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (global_var( GVAR_TRISH_STATUS ) bwand 64) then begin
 		destroy_object(self_obj);
 	end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 	get_reaction
-	if (local_var(4)) then begin
-		float_msg(self_obj, message_str(SCRIPT_TRISH, 151), 0);
+	if (local_var(LVAR_Sleeping)) then begin
+		float_msg(self_obj, mstr(151), 0);
 	end
 	else begin
-		if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+		if (CUR_MAP_JUNKKILL) then begin
 			if ((global_var( GVAR_SAUL_STATUS ) == 3) and not(local_var(7))) then begin
 				call Trish17;
 			end
+			else if ((global_var( GVAR_SAUL_STATUS ) == 2) and not(local_var(5)) and not(global_var( GVAR_TRISH_STATUS ) bwand 8)) then begin
+				call Trish3;
+			end
+			else if ((global_var( GVAR_TRISH_STATUS ) bwand 32) and not(local_var(6))) then begin
+				call Trish16;
+			end
+			else if (not((global_var( GVAR_TRISH_STATUS ) bwand 1) or (global_var( GVAR_TRISH_STATUS ) bwand 4))) then begin
+				call Trish0;
+			end
+			else if ((global_var( GVAR_TRISH_STATUS ) bwand 4) and not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
+				call Trish11;
+			end
 			else begin
-				if ((global_var( GVAR_SAUL_STATUS ) == 2) and not(local_var(5)) and not(global_var( GVAR_TRISH_STATUS ) bwand 8)) then begin
-					call Trish3;
-				end
-				else begin
-					if ((global_var( GVAR_TRISH_STATUS ) bwand 32) and not(local_var(6))) then begin
-						call Trish16;
-					end
-					else begin
-						if (not((global_var( GVAR_TRISH_STATUS ) bwand 1) or (global_var( GVAR_TRISH_STATUS ) bwand 4))) then begin
-							call Trish0;
-						end
-						else begin
-							if ((global_var( GVAR_TRISH_STATUS ) bwand 4) and not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
-								call Trish11;
-							end
-							else begin
-								call Trish15;
-							end
-						end
-					end
-				end
+				call Trish15;
 			end
 		end
 		else begin
 			if ((game_time_hour >= 1300) and (game_time_hour < 1600)) then begin
-				float_msg(self_obj, message_str(SCRIPT_TRISH, 152), 0);
+				float_msg(self_obj, mstr(152), 0);
 			end
 			else begin
 				call Trish25;
@@ -210,14 +204,13 @@ begin
 	end
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 32) and (global_var( GVAR_TRISH_STATUS ) bwand 8) and (global_var( GVAR_TRISH_STATUS ) bwand 16)) then begin
 		set_global_var( GVAR_TRISH_STATUS, global_var( GVAR_TRISH_STATUS ) + 32 );
-		display_msg(message_str(SCRIPT_TRISH, 173));
+		display_msg(mstr(173));
 		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
-		give_exp_points(250);
+		give_exp_points(EXP_SAUL_TRISH_RELATIONSHIP);
 	end
 end
 
-procedure Trish0
-begin
+procedure Trish0 begin
 	start_gdialog(342, self_obj, 4, -1, -1);
 	gsay_start;
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
@@ -231,18 +224,15 @@ begin
 	end_dialogue;
 end
 
-procedure Trish1
-begin
+procedure Trish1 begin
 	gsay_message(342, 105, 50);
 end
 
-procedure Trish2
-begin
+procedure Trish2 begin
 	gsay_message(342, 106, 50);
 end
 
-procedure Trish3
-begin
+procedure Trish3 begin
 	start_gdialog(342, self_obj, 4, -1, -1);
 	gsay_start;
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
@@ -257,8 +247,7 @@ begin
 	end_dialogue;
 end
 
-procedure Trish4
-begin
+procedure Trish4 begin
 	if (local_var(5) == 0) then begin
 		set_local_var(5, 1);
 	end
@@ -267,38 +256,33 @@ begin
 	giq_option( 5, SCRIPT_TRISH, 113, Trish6, NEUTRAL_REACTION );
 end
 
-procedure Trish5
-begin
+procedure Trish5 begin
 	gsay_reply(342, 114);
 	giq_option( 5, SCRIPT_TRISH, 115, Trish9, NEUTRAL_REACTION );
 	giq_option( 7, SCRIPT_TRISH, 116, Trish10, NEUTRAL_REACTION );
 end
 
-procedure Trish6
-begin
+procedure Trish6 begin
 	gsay_reply(342, 117);
 	giq_option( 5, SCRIPT_TRISH, 118, Trish6a, BAD_REACTION );
 	giq_option( 5, SCRIPT_TRISH, 119, Trish7, NEUTRAL_REACTION );
 	giq_option( 6, SCRIPT_TRISH, 169, Trish8, NEUTRAL_REACTION );
 end
 
-procedure Trish6a
-begin
+procedure Trish6a begin
 	DownReact
 	call Trish7;
 end
 
-procedure Trish7
-begin
+procedure Trish7 begin
 	gsay_message(342, 120, 50);
 end
 
-procedure Trish8
-begin
+procedure Trish8 begin
 	variable LVar0 := 0;
-	LVar0 := message_str(SCRIPT_TRISH, 121);
-	if (not(global_var( GVAR_GIZMO_DEAD ))) then begin
-		LVar0 := LVar0 + " " + message_str(SCRIPT_TRISH, 168);
+	LVar0 := mstr(121);
+	if is_gizmo_alive then begin
+		LVar0 := LVar0 + " " + mstr(168);
 	end
 	gsay_message(342, LVar0, 49);
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 8)) then begin
@@ -306,21 +290,18 @@ begin
 	end
 end
 
-procedure Trish9
-begin
+procedure Trish9 begin
 	gsay_reply(342, 122);
 	giq_option( 5, SCRIPT_TRISH, 123, Trish8, NEUTRAL_REACTION );
 	giq_option( 5, SCRIPT_TRISH, 124, Trish7, NEUTRAL_REACTION );
 end
 
-procedure Trish10
-begin
+procedure Trish10 begin
 	gsay_reply(342, 125);
 	giq_option( 5, SCRIPT_TRISH, 126, Trish8, NEUTRAL_REACTION );
 end
 
-procedure Trish11
-begin
+procedure Trish11 begin
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
 		set_global_var( GVAR_TRISH_STATUS, global_var( GVAR_TRISH_STATUS ) + 1 );
 	end
@@ -334,48 +315,41 @@ begin
 	end_dialogue;
 end
 
-procedure Trish12
-begin
+procedure Trish12 begin
 	DownReact
 	gsay_message(342, 131, 50);
 end
 
-procedure Trish13
-begin
+procedure Trish13 begin
 	gsay_reply(342, 132);
 	giq_option( 5, SCRIPT_TRISH, 133, TrishEnd, NEUTRAL_REACTION );
 end
 
-procedure Trish14
-begin
+procedure Trish14 begin
 	float_msg(self_obj, message_str(SCRIPT_TRISH, random(134, 136)), 0);
 end
 
-procedure Trish15
-begin
-	float_msg(self_obj, message_str(SCRIPT_TRISH, 137), 0);
+procedure Trish15 begin
+	float_msg(self_obj, mstr(137), 0);
 end
 
-procedure Trish16
-begin
+procedure Trish16 begin
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
 		set_global_var( GVAR_TRISH_STATUS, global_var( GVAR_TRISH_STATUS ) + 1 );
 	end
 	set_local_var(6, 1);
-	float_msg(self_obj, message_str(SCRIPT_TRISH, 138), 0);
+	float_msg(self_obj, mstr(138), 0);
 end
 
-procedure Trish17
-begin
+procedure Trish17 begin
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 1)) then begin
 		set_global_var( GVAR_TRISH_STATUS, global_var( GVAR_TRISH_STATUS ) + 1 );
 	end
 	set_local_var(7, 1);
-	float_msg(self_obj, message_str(SCRIPT_TRISH, 139), 0);
+	float_msg(self_obj, mstr(139), 0);
 end
 
-procedure Trish18
-begin
+procedure Trish18 begin
 	set_local_var(8, 1);
 	gsay_reply(342, 140);
 	giq_option( -3, SCRIPT_TRISH, 141, TrishEnd, NEUTRAL_REACTION );
@@ -383,8 +357,7 @@ begin
 	giq_option( 6, SCRIPT_TRISH, 143, Trish19, NEUTRAL_REACTION );
 end
 
-procedure Trish19
-begin
+procedure Trish19 begin
 	gsay_reply(342, 144);
 	giq_option( 6, SCRIPT_TRISH, 145, Trish20, NEUTRAL_REACTION );
 	if (not(global_var( GVAR_GIZMO_STATUS ) == 3)) then begin
@@ -396,34 +369,30 @@ begin
 	giq_option( 6, SCRIPT_TRISH, 148, TrishEnd, NEUTRAL_REACTION );
 end
 
-procedure Trish20
-begin
+procedure Trish20 begin
 	set_local_var(10, 1);
 	gsay_reply(342, 149);
 	call Trish24;
 end
 
-procedure Trish21
-begin
+procedure Trish21 begin
 	variable LVar0 := 0;
 	set_local_var(11, 1);
-	LVar0 := message_str(SCRIPT_TRISH, 154);
+	LVar0 := mstr(154);
 	if (not(global_var( GVAR_KILLIAN_DEAD ))) then begin
-		LVar0 := LVar0 + message_str(SCRIPT_TRISH, 155);
+		LVar0 := LVar0 + mstr(155);
 	end
 	gsay_reply(342, LVar0);
 	call Trish24;
 end
 
-procedure Trish22
-begin
+procedure Trish22 begin
 	set_local_var(13, 1);
 	gsay_reply(342, 158);
 	call Trish24;
 end
 
-procedure Trish23
-begin
+procedure Trish23 begin
 	if (global_var( GVAR_GIZMO_STATUS ) == 3) then begin
 		gsay_reply(342, 162);
 	end
@@ -433,13 +402,12 @@ begin
 	call Trish24;
 end
 
-procedure Trish24
-begin
+procedure Trish24 begin
 	if (not(local_var(10))) then begin
 		giq_option( 6, SCRIPT_TRISH, 145, Trish20, NEUTRAL_REACTION );
 	end
 	if (not(local_var(11))) then begin
-		if (not(global_var( GVAR_GIZMO_DEAD ))) then begin
+		if is_gizmo_alive then begin
 			giq_option( 6, SCRIPT_TRISH, 146, Trish21, NEUTRAL_REACTION );
 		end
 	end
@@ -449,8 +417,7 @@ begin
 	giq_option( 6, SCRIPT_TRISH, 148, TrishEnd, NEUTRAL_REACTION );
 end
 
-procedure Trish25
-begin
+procedure Trish25 begin
 	start_gdialog(342, self_obj, 4, -1, -1);
 	gsay_start;
 	if (not(global_var( GVAR_TRISH_STATUS ) bwand 4)) then begin
@@ -468,8 +435,7 @@ begin
 	end_dialogue;
 end
 
-procedure Trish26
-begin
+procedure Trish26 begin
 	gsay_reply(342, 161);
 	giq_option( 4, SCRIPT_TRISH, 164, TrishCola, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_TRISH, 165, TrishBeer, NEUTRAL_REACTION );
@@ -477,8 +443,7 @@ begin
 	giq_option( 4, SCRIPT_TRISH, 153, TrishEnd, NEUTRAL_REACTION );
 end
 
-procedure Trish27
-begin
+procedure Trish27 begin
 	if (local_var(1) < 2) then begin
 		gsay_message(342, 160, 51);
 	end
@@ -487,27 +452,23 @@ begin
 	end
 end
 
-procedure Trish28
-begin
+procedure Trish28 begin
 	gsay_message(342, 171, 50);
 end
 
-procedure Trish29
-begin
-	float_msg(self_obj, message_str(SCRIPT_TRISH, 140), 0);
-	display_msg(message_str(SCRIPT_TRISH, 172));
+procedure Trish29 begin
+	float_msg(self_obj, mstr(140), 0);
+	display_msg(mstr(172));
 	give_exp_points(300);
 	BigUpReact
-	set_map_var(1, 0);
-	set_map_var(0, 0);
+	set_map_var(MVAR_guards_left, 0);
+	set_map_var(MVAR_Skulz_left, 0);
 end
 
-procedure TrishEnd
-begin
+procedure TrishEnd begin
 end
 
-procedure TrishCola
-begin
+procedure TrishCola begin
 	if (dude_caps >= 3) then begin
 		dude_caps_adjust( -3 );
 		item := create_object( PID_NUKA_COLA, 0, 0 );
@@ -516,8 +477,7 @@ begin
 	end
 end
 
-procedure TrishBeer
-begin
+procedure TrishBeer begin
 	if (dude_caps >= 5) then begin
 		dude_caps_adjust( -5 );
 		item := create_object( PID_BEER, 0, 0 );
@@ -526,8 +486,7 @@ begin
 	end
 end
 
-procedure TrishBooze
-begin
+procedure TrishBooze begin
 	if (dude_caps >= 20) then begin
 		dude_caps_adjust( -20 );
 		item := create_object( PID_BOOZE, 0, 0 );
@@ -536,26 +495,25 @@ begin
 	end
 end
 
-procedure TrishSleeping
-begin
+procedure TrishSleeping begin
 	if (sleep_time > wake_time) then begin
 		if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time)) then begin
 			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			set_local_var(4, 0);
+			set_local_var(LVAR_Sleeping, 0);
 		end
 		else begin
 			if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
-			set_local_var(4, 1);
+			set_local_var(LVAR_Sleeping, 1);
 		end
 	end
 	else begin
 		if ((game_time_hour >= sleep_time) and (game_time_hour < wake_time)) then begin
 			if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
-			set_local_var(4, 1);
+			set_local_var(LVAR_Sleeping, 1);
 		end
 		else begin
 			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			set_local_var(4, 0);
+			set_local_var(LVAR_Sleeping, 0);
 		end
 	end
 end

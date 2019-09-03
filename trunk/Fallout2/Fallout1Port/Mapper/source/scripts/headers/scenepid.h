@@ -280,6 +280,7 @@ variable Scenery_Creation_Ptr;
 
 // Fo1in2:
 #define PID_RATHOLE 						(33556295)
+#define PID_GIZMO_SIGN_OFF					(33556296)
 
 // SD 3 Motorcycle
 #define PID_DRIVABLE_MOTO1					(33556292)

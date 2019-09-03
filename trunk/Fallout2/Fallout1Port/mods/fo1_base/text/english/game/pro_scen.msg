@@ -2786,3 +2786,5 @@
 {186200}{}{Sidecar}
 {186201}{}{An old motorcycle sidecar. It appears to be in a good shape.}
 {186300}{}{Cave Wall}
+{186400}{}{Casino Sign}
+{186401}{}{The advertisement for Gizmo's Casino. It has been turned off.}
