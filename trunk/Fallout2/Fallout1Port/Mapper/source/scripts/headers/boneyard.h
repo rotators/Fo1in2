@@ -87,8 +87,10 @@
 //******************** Quest: Fix the farm
 //--- Smitty and Miles:
 #define get_quest_farm_inactive         (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 0)
-#define set_quest_farm_active           set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 1)
 #define get_quest_farm_active           (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 1)
+#define get_quest_farm_completed        (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) >= 2)
+#define set_quest_farm_active           set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 1)
+#define set_quest_farm_completed        set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 2)
 
 #define set_give_parts_to_smitty        set_global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM, 9302)
 #define get_given_parts_to_smitty_yet   (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) == 9302)

@@ -556,6 +556,7 @@
 #define PID_MOTO2_TRUNK						(533)
 //#define PID_MOTO_KEY		                (534)
 #define PID_MOTO_KEY		                (253)
+#define PID_FARM_PARTS		                (535)
 
 // Fo1 Holodisks
 #define PID_BOS_HOLODISK					(164) // Artifact disk
