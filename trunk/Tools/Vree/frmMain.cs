@@ -38,6 +38,8 @@ namespace Vree
         const string ascArrow = " ▲";
         const string descArrow = " ▼";
 
+        VreeDB db;
+
         public frmMain()
         {
             InitializeComponent();
@@ -51,47 +53,19 @@ namespace Vree
             colVariables.Add(new ColumnHeader() { Text = "Definition", Width = 500, Name = "colDef" });
             colVariables.Add(new ColumnHeader() { Text = "Comment", Width = 200, Name = "colComment" });
 
-            /* List<Function> funcs = new List<Function>(); 
-             foreach(var func in File.ReadLines(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\FunctionOffsets_def.h"))
-             {
-                 var spl = func.Split(',');
-                 var name = spl[0].Substring(5, spl[0].Length - 6);
-                 //var offset = spl[1].Substring(0, spl[1].Length - 1);
-                 var offset = spl[1].Trim();
-
-                 var uintoff = Convert.ToUInt32(offset.Substring(2, offset.IndexOf(')') - 2), 16);
-
-                 funcs.Add(new Function()
-                 {
-                     Arguments=null,
-                     Calling=CallingConvention.watcom,
-                     Name=name,
-                     Offset=uintoff
-                 });
-             }
-
-             db.Save(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");*/
-
-            var db = VreeDB.Load(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");
-            foreach (var r in File.ReadLines(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\symbols.txt"))
-            {
-                var spl = r.Split(new string[] { ": " }, StringSplitOptions.None);
-                if (spl[1][0] != '_')
-                    continue;
-                var offset = Convert.ToUInt32(spl[0], 16);
-                db.Variables.Add(new GlobalVariable {
-                    Name = spl[1].Substring(1, spl[1].Length-1),
-                    Offset = offset,
-                    Type = null
-                });
-            }
-
-            db.Save(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");
-
+            db = VreeDB.Load(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");
             foreach (var f in db.Functions)
-                funcItems.Add(new ListViewItem(new string[] { "0x" + f.Offset.ToString("x").ToUpper(), f.Definition, f.Comment }));
+            {
+                var li = new ListViewItem(new string[] { "0x" + f.Offset.ToString("x").ToUpper(), f.Definition, f.Comment });
+                li.Tag = f.Offset;
+                funcItems.Add(li);
+            }
             foreach (var v in db.Variables)
-                varItems.Add(new ListViewItem(new string[] { "0x" + v.Offset.ToString("x").ToUpper(), v.String, v.Comment }));
+            {
+                var li = new ListViewItem(new string[] { "0x" + v.Offset.ToString("x").ToUpper(), v.String, v.Comment });
+                li.Tag = v.Offset;
+                varItems.Add(li);
+            }
 
             lstViewMain.BeginUpdate();
             lstViewMain.Items.AddRange(funcItems.ToArray());
@@ -120,7 +94,11 @@ namespace Vree
             var items = displayType == DisplayList.Functions ? funcItems : varItems;
             foreach (var i in items)
             {
-                if (!i.SubItems[1].Text.ToLower().Contains(t)) continue;
+                if (!i.SubItems[1].Text.ToLower().Contains(t) 
+                 && !i.SubItems[0].Text.ToLower().Contains(t)
+                 && !i.SubItems[2].Text.ToLower().Contains(t)
+                 )
+                    continue;
                 filtered.Add(i);
             }
             if (sortIndex == 0) filtered.Sort(new OffsetCompare());
@@ -148,7 +126,6 @@ namespace Vree
             {
                 lstViewMain.Columns[idx].Text = colText;
                 sortDesc = !sortDesc;
-               // col.Text = col.Text.Substring(0, col.Text.Length - 2); // Remove old arrow
             }
             else
             {
@@ -172,6 +149,123 @@ namespace Vree
         {
             this.displayType = DisplayList.Functions;
             this.UpdateListView();
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            db.Save(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");
+        }
+
+        private void SetVariableTypeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeSelectedVariablesDatatype();
+        }
+
+        private void BtnChangeDatatype_Click(object sender, EventArgs e)
+        {
+            ChangeSelectedVariablesDatatype();
+        }
+
+        private void ChangeSelectedVariablesDatatype()
+        {
+            var edit = new frmEditType();
+            edit.ShowDialog();
+            if (edit.Selected == null)
+                return;
+            EditSelectedVariables((v, i) =>
+            {
+                if (edit.Selected.IsBasicType)
+                    v.SetBasicType(edit.Selected.BasicType);
+                i.SubItems[1].Text = v.String;
+            });
+        }
+
+        private void EditSelectedVariables(Action<GlobalVariable, ListViewItem> action)
+        {
+            foreach (ListViewItem i in lstViewMain.SelectedItems)
+            {
+                var v = db.Variables.Find(x => x.Offset == (uint)i.Tag);
+                action(v, i);
+            }
+            lstViewMain.Refresh();
+        }
+
+        private void EditSelectedFunctions(Action<Function, ListViewItem> action)
+        {
+            foreach (ListViewItem i in lstViewMain.SelectedItems)
+            {
+                var f = db.Functions.Find(x => x.Offset == (uint)i.Tag);
+                action(f, i);
+            }
+            lstViewMain.Refresh();
+        }
+
+        private GlobalVariable GetSelectedVar()
+        {
+            return db.Variables.Find(x => x.Offset == (uint)lstViewMain.SelectedItems[0].Tag);
+        }
+
+        private Function GetSelectedFunc()
+        {
+            return db.Functions.Find(x => x.Offset == (uint)lstViewMain.SelectedItems[0].Tag);
+        }
+
+        private void BtnComment_Click(object sender, EventArgs e)
+        {
+            if (lstViewMain.SelectedItems.Count == 0)
+                return;
+
+            if(lstViewMain.SelectedItems.Count > 1)
+            {
+                MessageBox.Show("Only one item allowed when changing comment.");
+            }
+
+            var cmt = new frmComment();
+            if (displayType == DisplayList.Variables)
+            {
+                var gvar = GetSelectedVar();
+                cmt.ReadComment(gvar.Comment);
+            }
+            if(displayType == DisplayList.Functions)
+            {
+                var func = GetSelectedFunc();
+                cmt.ReadComment(func.Comment);
+            }
+
+            cmt.ShowDialog();
+            if (cmt.Comment == null)
+                return;
+
+            if (displayType == DisplayList.Variables)
+            {
+                EditSelectedVariables((v, i) =>
+                {
+                    v.Comment = cmt.Comment;
+                    i.SubItems[2].Text = v.Comment;
+                });
+            }
+            if (displayType == DisplayList.Functions)
+            {
+                EditSelectedFunctions((f, i) =>
+                {
+                    f.Comment = cmt.Comment;
+                    i.SubItems[2].Text = f.Comment;
+                });
+            }
+        }
+
+        private void LstViewMain_DoubleClick(object sender, EventArgs e)
+        {
+            if(displayType == DisplayList.Functions)
+            {
+                var editFunc = new frmEditFunction(GetSelectedFunc());
+                editFunc.ShowDialog();
+                EditSelectedFunctions((f, i) =>
+                {
+                    f = editFunc.func;
+                    i.SubItems[1].Text = f.Definition;
+                });
+            }
         }
     }
 }

@@ -36,6 +36,12 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnShowFunctions = new System.Windows.Forms.Button();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setVariableTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnChangeDatatype = new System.Windows.Forms.Button();
+            this.btnComment = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,6 +60,7 @@
             this.lstViewMain.UseCompatibleStateImageBehavior = false;
             this.lstViewMain.View = System.Windows.Forms.View.Details;
             this.lstViewMain.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.LstViewMain_ColumnClick);
+            this.lstViewMain.DoubleClick += new System.EventHandler(this.LstViewMain_DoubleClick);
             // 
             // btnShowVariables
             // 
@@ -86,6 +93,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -95,6 +103,9 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadToolStripMenuItem,
+            this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -115,11 +126,61 @@
             this.btnShowFunctions.UseVisualStyleBackColor = true;
             this.btnShowFunctions.Click += new System.EventHandler(this.BtnShowFunctions_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setVariableTypeToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // setVariableTypeToolStripMenuItem
+            // 
+            this.setVariableTypeToolStripMenuItem.Name = "setVariableTypeToolStripMenuItem";
+            this.setVariableTypeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setVariableTypeToolStripMenuItem.Text = "Set Datatype";
+            this.setVariableTypeToolStripMenuItem.Click += new System.EventHandler(this.SetVariableTypeToolStripMenuItem_Click);
+            // 
+            // loadToolStripMenuItem
+            // 
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Text = "Load";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // btnChangeDatatype
+            // 
+            this.btnChangeDatatype.Location = new System.Drawing.Point(289, 38);
+            this.btnChangeDatatype.Name = "btnChangeDatatype";
+            this.btnChangeDatatype.Size = new System.Drawing.Size(103, 27);
+            this.btnChangeDatatype.TabIndex = 6;
+            this.btnChangeDatatype.Text = "Change Datatype";
+            this.btnChangeDatatype.UseVisualStyleBackColor = true;
+            this.btnChangeDatatype.Click += new System.EventHandler(this.BtnChangeDatatype_Click);
+            // 
+            // btnComment
+            // 
+            this.btnComment.Location = new System.Drawing.Point(398, 38);
+            this.btnComment.Name = "btnComment";
+            this.btnComment.Size = new System.Drawing.Size(70, 27);
+            this.btnComment.TabIndex = 7;
+            this.btnComment.Text = "Comment";
+            this.btnComment.UseVisualStyleBackColor = true;
+            this.btnComment.Click += new System.EventHandler(this.BtnComment_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(953, 628);
+            this.Controls.Add(this.btnComment);
+            this.Controls.Add(this.btnChangeDatatype);
             this.Controls.Add(this.btnShowFunctions);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtSearch);
@@ -146,6 +207,12 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.Button btnShowFunctions;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setVariableTypeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.Button btnChangeDatatype;
+        private System.Windows.Forms.Button btnComment;
     }
 }
 
