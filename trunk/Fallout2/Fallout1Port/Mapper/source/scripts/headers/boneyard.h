@@ -45,7 +45,8 @@
 #define set_blades_quest_active         set_global_var(GVAR_QUEST_BLADE_WEAPONS, 1)
 #define set_blades_quest_completed      if arming_blades_quest_active then set_global_var(GVAR_QUEST_BLADE_WEAPONS, 2)
 
-#define set_arming_blades               set_global_var(GVAR_BLADES_STATUS, 9101)
+#define set_arming_blades               set_global_var(GVAR_BLADES_STATUS, 9101); \
+                                        set_blades_quest_active
 #define get_arming_blades               global_var( GVAR_BLADES_STATUS ) == 9101
 
 // Player wants to talk to Zimmermann before the attack:

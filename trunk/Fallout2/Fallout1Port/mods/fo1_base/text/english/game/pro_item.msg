@@ -936,7 +936,7 @@
 {48000}{}{Bonus +1 Agility}
 {48100}{}{Bonus +1 Intelligence}
 {48200}{}{Bonus +1 Strength}
-{48300}{}{Fallout 2 Hintbook}
+{48300}{}{Fallout Hintbook}
 {48301}{}{Well, THIS would have been good to have at the beginning of the goddamn game.}
 {48400}{}{Player's Ear}
 {48401}{}{This is your ear. The Masticator bit it off during the fight and spit it on your unconscious body. If you are reading this, it probably means you will be reloading soon. Of course, it is possible this item has some special value.}

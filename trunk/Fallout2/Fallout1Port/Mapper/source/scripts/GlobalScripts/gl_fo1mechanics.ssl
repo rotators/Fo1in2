@@ -9,24 +9,25 @@
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 #include "..\headers\voodoo.h"
-
 #include "..\headers\sfall\main.h"
+
+#include "..\headers\boneyard.h"
 
 /* Standard Script Procedures */
 procedure start;
 
+procedure general;
 procedure mode_change;
 procedure scene_master_destroyed;
 procedure scene_vats_destroyed;
 procedure night_person;
-
-procedure general;
-procedure apcost_handler;
+procedure item_description;
 
 procedure start begin
    if (game_loaded) then begin
    	set_global_script_type(0);
    	register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
+   	register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description);
    end
 
 	call general;
@@ -139,12 +140,15 @@ procedure night_person begin
 	end
 end
 
-procedure apcost_handler begin
-   /*variable args := get_sfall_args, item;
-   item := item_by_attack_type(args[0], args[1]);
-   if (obj_item_subtype(item) != item_type_weapon) then begin
-      set_sfall_return(ITEM_USE_COST);
-      last_used_item := item;
-   end*/
+procedure item_description begin
+   variable item := obj_pid(get_sfall_arg);
+   variable description;
+
+   if (item == PID_FARM_PARTS) and get_quest_farm_active then begin
+		if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
+         description := get_string_pointer(message_str(SCRIPT_FARMPART,101));
+         set_sfall_return(description);
+		end
+   end
 end
 
