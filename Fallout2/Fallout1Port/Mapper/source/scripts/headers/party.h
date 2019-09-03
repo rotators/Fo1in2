@@ -533,9 +533,9 @@ variable PartyHealingItem;
 
 
 /***************************************************************************************
-   If holodisk is given to an NPC, check party inventory and remove the disk
+   If item is given to an NPC, check party inventory and remove it
 ****************************************************************************************/
-#define party_has_holodisk(x)               ((get_item_count(dude_obj,x) +   \
+#define party_has_item(x)                   ((get_item_count(dude_obj,x) +   \
                                             get_item_count(Ian_ptr,x)    +   \
                                             get_item_count(Tycho_ptr,x)  +   \
                                             get_item_count(Dog_ptr,x)    +   \
@@ -543,7 +543,7 @@ variable PartyHealingItem;
                                             get_item_count(Tandi_ptr,x)  +   \
                                             get_item_count(Handy_ptr,x)) > 0)
                                             
-#define party_remove_holodisk(x)            if (get_item_count(dude_obj,x) > 0) then begin          \
+#define party_remove_item(x)                if (get_item_count(dude_obj,x) > 0) then begin          \
                                                 remove_pid_qty(dude_obj, x, 1)                      \
                                             end                                                     \
                                             else if (get_item_count(Ian_ptr,x) > 0) then begin      \
