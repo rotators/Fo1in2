@@ -2,8 +2,7 @@
 #define __DEFINE__
 
 //
-// based on:
-// - https://github.com/Ytfarc/sfall1/blob/master/Source/Define.h
+// from https://github.com/Ytfarc/sfall1/blob/master/Source/Define.h
 //
 
 #define no_proc            (0)
@@ -186,5 +185,7 @@
 #define SKILL_BARTER         (15)
 #define SKILL_GAMBLING       (16)
 #define SKILL_OUTDOORSMAN    (17)
+
+//
 
 #endif // __DEFINE__ //
