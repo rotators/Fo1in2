@@ -82,7 +82,7 @@
 #define SCRIPT_GHZERO    (75)  //  GhZero.int      ; A ghoul guard
 #define SCRIPT_GLOWONE   (76)  //  GlowOne.int     ; Glowing Ones that are caged by Set.
 #define SCRIPT_GROUNDR   (77)  //  Groundr.int     ; Necropolis Undergrounders
-#define SCRIPT_DEPRECATED_11 (78) //SCRIPT_GUARD     (78)  //  Guard.int       ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_ECPLANT   (78)  // ECPlant.int      ; Random Encounter Spore Plant
 #define SCRIPT_DEPRECATED_12 (79) //SCRIPT_HARRY     (79)  //  Harry.int       ; scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_LARRY     (80)  //  Larry.int       ; Larry the Super Mutant
 #define SCRIPT_LEADER    (81)  //  Leader.int      ; The ghoul leader in Necropolis (Ganger?)

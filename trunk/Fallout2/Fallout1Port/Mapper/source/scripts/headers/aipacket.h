@@ -147,4 +147,8 @@
 #define AI_PARTY_MRHANDY_COWARD		(127)
 #define AI_PARTY_MRHANDY_CUSTOM		(128)
 
+#define AI_SPORE_PLANT              (129) // 5
+#define AI_TOUGH_BOT                (130) // 32
+#define AI_GECKO                    (131) // 26
+
 #endif // AIPACKET_H
