@@ -70,5 +70,6 @@
 // Fo1in2:
 #define TEAM_CARAVAN 					(90)
 #define TEAM_RND_SPORE_PLANT			(91)
+#define TEAM_RND_GECKO 					(92)
 
 #endif // TEAMS_H

@@ -83,7 +83,7 @@
 #define SCRIPT_GLOWONE   (76)  //  GlowOne.int     ; Glowing Ones that are caged by Set.
 #define SCRIPT_GROUNDR   (77)  //  Groundr.int     ; Necropolis Undergrounders
 #define SCRIPT_ECPLANT   (78)  // ECPlant.int      ; Random Encounter Spore Plant
-#define SCRIPT_DEPRECATED_12 (79) //SCRIPT_HARRY     (79)  //  Harry.int       ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_ECGECKO   (79)  // ECGecko.int      ; Random Encounter Gecko
 #define SCRIPT_LARRY     (80)  //  Larry.int       ; Larry the Super Mutant
 #define SCRIPT_LEADER    (81)  //  Leader.int      ; The ghoul leader in Necropolis (Ganger?)
 #define SCRIPT_DEPRECATED_13 (82) //SCRIPT_MANAGER   (82)  //  Manager.int     ; scripts.lst - DONOTUSE wtf??????
