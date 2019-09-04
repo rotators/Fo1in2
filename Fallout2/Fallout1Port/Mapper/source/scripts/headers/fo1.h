@@ -38,7 +38,7 @@
                                     /*world_map;*/load_map(MAP_RNDDESER,0);               \
                                     gfade_in(1)
 
-#define is_story_finished           global_var(GVAR_GAME_CONTINUES) > 0)
+#define is_story_finished           (global_var(GVAR_GAME_CONTINUES) > 0)
 
 /*********************************************************
     Quests:

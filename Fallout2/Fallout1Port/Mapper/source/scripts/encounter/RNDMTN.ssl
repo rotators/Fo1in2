@@ -1914,19 +1914,43 @@ end
 procedure Glow3 begin
 	debug("Glow3");
 
-	display_msg(message_str(SCRIPT_RNDDESRT, 282));
-	radiation_inc(dude_obj, random(30, 60));
-	Tot_Critter_A := random(4, 8);
-	Outer_ring := (dude_perception / 2) + 4;
-	Inner_ring := (dude_perception / 2) + 2;
+   // Fo1in2 - Fire Geckos:
+   if (random(0,2) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 289));
+   	radiation_inc(dude_obj, random(30, 60));
+   	Tot_Critter_A := random(2, 5);
+   	Outer_ring := (dude_perception / 2) + 4;
+   	Inner_ring := (dude_perception / 2) + 2;
 
-	Critter_type := PID_RADSCORPION;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 4);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
+   	Critter_type := PID_FIRE_GECKO;
+		Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Item := create_object( PID_FIRE_GECKO_FLAME_WEAPON, 0, 0 );
+		add_obj_to_inven(Critter, Item);
+		wield_obj_critter(Critter, Item);
+   end
+
+   // Vanilla:
+   else begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 282));
+   	radiation_inc(dude_obj, random(30, 60));
+   	Tot_Critter_A := random(4, 8);
+   	Outer_ring := (dude_perception / 2) + 4;
+   	Inner_ring := (dude_perception / 2) + 2;
+
+   	Critter_type := PID_RADSCORPION;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   end
 
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
@@ -2580,8 +2604,6 @@ procedure NORTH1 begin
 		call NORTH2;
 	end
 	else begin
-	//	{114}{}{You are traveling through sheer cliffs and rugged terrain.}
-	//
 		variable LVar0 := 0;//mainroll
 		variable LVar1 := 0;//dmghp
 		variable LVar2 := 0;//
@@ -2631,12 +2653,8 @@ procedure NORTH1 begin
 					display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
 				end
 				else begin
-	// == 1
 					critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
 					display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
-	// == 2  injure 16
-	// == 3 injure 32
-
 				end
 			end
 		end
@@ -2645,10 +2663,6 @@ procedure NORTH1 begin
 			if (is_critical(LVar0)) then begin
 				display_msg(message_str(SCRIPT_RNDMTN, 116));
 				critter_heal(dude_obj, random(5, 15));
-	//{116}{}{You find a cave with a small spring and manage to get your first good night's sleep in a long time.}
-	//{142}{}{You refill your empty canteen in the spring.}
-	//{143}{}{You refill your empty canteens in the spring.}
-
 			end
 		end
 
@@ -2656,35 +2670,59 @@ procedure NORTH1 begin
 end
 
 procedure NORTH2 begin
-//	{105}{}{Radscorpions!!}
-//
-
 	debug("north2");
-	display_msg(message_str(SCRIPT_RNDMTN, 105));
-	Tot_Critter_A := random(2, 3);
-	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-		Outer_ring := 5;
-		Inner_ring := 3;
-	end
-	else begin
+
+	// Fo1in2, Gecko encounter
+	if (random(0,1) == 2) then begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 200));
+   	Tot_Critter_A := random(2, 4);
 		Outer_ring := 8;
 		Inner_ring := 6;
+   	Critter_type := PID_GECKO;
+   	Critter_script := SCRIPT_ECGECKO;
+   	group_angle := random(0, 3);
+   	if (group_angle == 3) then begin
+   		group_angle := 4;
+   	end
+   	if (group_angle == 2) then begin
+   		group_angle := 4;
+   	end
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := group_angle;
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
 	end
-	Critter_type := PID_RADSCORPION;
-	Critter_script := SCRIPT_RADSCORP;
-	group_angle := random(0, 3);
-	if (group_angle == 3) then begin
-		group_angle := 4;
-	end
-	if (group_angle == 2) then begin
-		group_angle := 4;
-	end
-	while(Tot_Critter_A) do begin
-		Critter_direction := group_angle;
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
+
+	// Vanilla encounter:
+	else begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 105));
+   	Tot_Critter_A := random(2, 3);
+   	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+   		Outer_ring := 5;
+   		Inner_ring := 3;
+   	end
+   	else begin
+   		Outer_ring := 8;
+   		Inner_ring := 6;
+   	end
+   	Critter_type := PID_RADSCORPION;
+   	Critter_script := SCRIPT_RADSCORP;
+   	group_angle := random(0, 3);
+   	if (group_angle == 3) then begin
+   		group_angle := 4;
+   	end
+   	if (group_angle == 2) then begin
+   		group_angle := 4;
+   	end
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := group_angle;
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   end
 	call Add_Mysterious_Stranger;
 end
 
@@ -2702,9 +2740,6 @@ procedure NORTH3 begin
 end
 
 procedure NORTH4 begin
-//	{106}{}{A particularly sneaky radscorpion seems to be trying to ambush you.}
-//	{107}{}{Out of nowhere, a radscorpion suddenly strikes!}
-//
 	variable LVar0 := 0;
 
 	debug("north4");
@@ -2727,8 +2762,6 @@ procedure NORTH4 begin
 end
 
 procedure NORTH5 begin
-//{108}{}{You have stumbled upon a family of mole rats.}
-//
 	variable LVar0 := 1;
 
 	debug("north5");
@@ -3491,18 +3524,38 @@ end
 
 procedure South2 begin
 	debug("South2");
-	display_msg(message_str(SCRIPT_RNDMTN, 136));
-	Tot_Critter_A := random(2, 6);
-	Outer_ring := 7;
-	Inner_ring := 4;
-	Critter_type := PID_RADSCORPION;
-	Critter_script := SCRIPT_RADSCORP;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 4);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
+
+   // Fo1in2, Geckos:
+	if (random(0,2) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 136));
+   	Tot_Critter_A := random(2, 6);
+   	Outer_ring := 7;
+   	Inner_ring := 4;
+   	Critter_type := PID_GOLDEN_GECKO;
+   	Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
 	end
+
+	// Vanilla:
+	else begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 136));
+   	Tot_Critter_A := random(2, 6);
+   	Outer_ring := 7;
+   	Inner_ring := 4;
+   	Critter_type := PID_RADSCORPION;
+   	Critter_script := SCRIPT_RADSCORP;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   end
 	call Add_Mysterious_Stranger;
 end
 
