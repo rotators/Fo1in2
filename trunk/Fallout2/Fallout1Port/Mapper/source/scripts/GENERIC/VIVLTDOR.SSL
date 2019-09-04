@@ -1,0 +1,272 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+/******************************************************************************************
+        Item: Vault City Level 2 Doors
+        Description:
+
+        Log:
+           Please note any changes that have been made to the file in Updated. Then comment
+           the code which you have changed/altered/commented out. Please, do not delete any
+           code which was written.
+
+           Created: September 26, 1997
+
+           Updated:
+******************************************************************************************/
+
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_VIVLTDOR
+#define CUR_COMP_SCRIPT         SCRIPT_VIVLTDOR
+
+#include "..\headers\command.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure use_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+
+procedure Node002;
+procedure Node003;
+procedure Node004;
+procedure Node005;
+procedure Node006;
+procedure Node007;
+procedure Node008;
+
+procedure NodeOpen;
+
+#define float_dude(x)             float_msg(dude_obj, message_str(NAME,x), FLOAT_COLOR_NORMAL)
+
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+#define LVAR_Door_Open     (0)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+
+
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+
+/*******************************************************************
+   The start procedure is the first procedure called when the map is
+   first entered. Any initial information that needs to be set up
+   should be placed in here.
+*******************************************************************/
+
+procedure start begin
+end
+
+procedure timed_event_p_proc begin
+   if ( fixed_param == 1 ) then begin
+      reg_anim_clear(self_obj); //added by killap
+      obj_unlock( self_obj );
+      obj_open( self_obj );
+   end
+end
+
+/********************************************************************
+********************************************************************/
+
+procedure use_p_proc begin
+   script_overrides;
+   if( local_var( LVAR_Door_Open ) == 1 ) then
+      call Node008;
+   else begin
+      if( dude_strength < 8 ) then
+         call Node002;
+      else
+         call Node005;
+   end
+end
+
+/***************************************************************************
+   This is cursory glance description that the player will receive should
+   he just pass the Action Cursor over. Examines which give more information
+   need to be in the description_p_proc procedure.
+***************************************************************************/
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+
+/**********************************************************************************
+**********************************************************************************/
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(101));
+end
+
+
+/**********************************************************************************
+   Make sure the door is working.
+**********************************************************************************/
+
+procedure use_skill_on_p_proc begin
+   variable skill;
+
+   if( local_var( LVAR_Door_Open ) == 1 ) then begin
+      script_overrides; //added by killap
+      call Node008;
+   end else begin
+      skill := action_being_used;
+      script_overrides; //added by killap
+      if( skill == SKILL_LOCKPICK ) then
+         call Node007;
+   end
+end
+
+
+/**********************************************************************************
+   This is called when the player is using an object on the door. When the check is
+   made to find out what is being used, obj_pid(obj_being_used_with) will need to
+   be checked against a prototype.
+**********************************************************************************/
+
+procedure use_obj_on_p_proc begin
+   variable object;
+   //variable objectPID;
+   object:=obj_pid(obj_being_used_with); //combined into one by killap
+   
+   if( local_var( LVAR_Door_Open ) == 1 ) then
+      call Node008;
+   else begin
+      script_overrides;
+      //object := obj_being_used_with; - comment out by killap
+      //objectPID := obj_pid( object ); - comment out by killap
+      
+      if( object == PID_CROWBAR ) then begin
+         //script_overrides; //coment out by killap
+         if( dude_strength > 6 ) then
+            call Node004;
+         else begin
+            call Node003;
+         end
+      end
+      //else if( ( object == PID_DYNAMITE ) or ( object == PID_PLASTIC_EXPLOSIVES ) ) then begin --comment out by killap
+         //script_overrides; - comment out by killap
+      //   call Node006;
+      //end
+      else if( ( object == PID_LOCKPICKS ) or ( object == PID_ELECTRONIC_LOCKPICKS ) or ( object == PID_EXP_LOCKPICK_SET ) or ( object == PID_ELEC_LOCKPICK_MKII ) ) then begin
+         //script_overrides; - comment out by killap
+         call Node007;
+      end
+   end
+end
+
+
+/******************************************************************************************
+   IF it gets damaged it breaks
+******************************************************************************************/
+
+procedure damage_p_proc begin
+   script_overrides;
+
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then
+      call Node006;
+end
+
+/***************************************************************************************
+   Whenever the map is first entered, this procedure will be called.
+***************************************************************************************/
+
+procedure map_enter_p_proc begin
+   if( local_var( LVAR_Door_Open ) == 0 ) then begin
+      obj_close( self_obj );
+      obj_lock( self_obj );
+   end
+end
+
+
+/**************************************************************************************
+   This procedure gets called roughly every 30 seconds of real time.
+**************************************************************************************/
+
+procedure map_update_p_proc begin
+end
+
+/**************************************************************************************
+   This is used for any dialogue that may need to occur with the player.
+**************************************************************************************/
+
+procedure talk_p_proc begin
+end
+
+procedure Node002 begin
+   if( dude_iq < 4 ) then
+      float_dude(102);
+   else
+      float_dude(103);
+end
+
+procedure Node003 begin
+   float_dude(104);
+   display_msg( mstr(105) );
+end
+
+procedure Node004 begin
+   float_dude(106);
+   display_msg( mstr(107) );
+   call NodeOpen;
+//   set_local_var( LVAR_Door_Open, 1 );
+//   obj_open( self_obj );
+end
+
+procedure Node005 begin
+   float_dude(108);
+   display_msg( mstr(109) );
+   call NodeOpen;
+end
+
+procedure NodeOpen begin
+   set_local_var( LVAR_Door_Open, 1 );
+   add_timer_event(self_obj,2,1); //edit by killap (changed from 1,1 to 2,1)
+end
+
+procedure Node006 begin
+   if( dude_iq < 4 ) then
+      float_dude(111);
+   else
+      float_dude(110);
+end
+
+procedure Node007 begin
+   if( dude_iq < 4 ) then
+      float_dude(113);
+   else
+      float_dude(112);
+end
+
+procedure Node008 begin
+   if( dude_iq < 4 ) then
+      float_dude(115);
+   else
+      float_dude(114);
+end

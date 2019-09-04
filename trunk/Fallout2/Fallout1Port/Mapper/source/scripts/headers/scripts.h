@@ -47,7 +47,7 @@
 #define SCRIPT_CABBOT    (40)  //  Cabbot.int     ; Cabbot, the initiate from the Brotherhood of Steel
 #define SCRIPT_CHILDMEM  (41)  //  Childmem.int   ; Children of the Cathedral member                                             
 #define SCRIPT_DECKER    (42)  //  Decker.int     ; Decker, the head of the Hub Underground
-#define SCRIPT_CRVNDRVR2  (43)  //  crvndrvr.int   ; Caravan driver for the random encounters      DEPRECATED!!!!
+#define SCRIPT_VIVLTDOR  (43)  //  VIVltDor.int    ; Vault City 2nd floor doors
 #define SCRIPT_GIZMO     (44)  //  Gizmo.int      ; Gizmo, the casino owner in Junktown
 #define SCRIPT_HAROLD    (45)  //  Harold.int     ; Harold, the old mutant from the Hub
 #define SCRIPT_JAIN      (46)  //  Jain.int       ; Jain, Priestess of the Children of the Cathedral
