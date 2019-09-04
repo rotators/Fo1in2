@@ -2755,7 +2755,10 @@ procedure NORTH4 begin
 		Inner_ring := 1;
 	end
 	Critter_direction := dude_rot;
-	Critter_type := PID_RADSCORPION;
+	if (random(0,1) == 1) then
+	   Critter_type := PID_SMALL_RADSCORPION; // Fo1in2 addition
+	else
+	   Critter_type := PID_RADSCORPION;
 	Critter_script := SCRIPT_RADSCORP;
 	call Place_critter;
 	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
@@ -2765,31 +2768,58 @@ procedure NORTH5 begin
 	variable LVar0 := 1;
 
 	debug("north5");
-	display_msg(message_str(SCRIPT_RNDMTN, 108));
-	Tot_Critter_A := random(2, 4);
-	Outer_ring := 5;
-	Inner_ring := 3;
-	Critter_script := SCRIPT_WANRATS;
-	while(Tot_Critter_A) do begin
-		if (random(0, 4) == 4) then begin
-			Critter_type := PID_GREATER_MOLE_RAT;
-		end
-		else begin
-			Critter_type := PID_LESSER_MOLE_RAT;
-		end
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		if (LVar0) then begin
-			LVar0 := random(2, 4);
-			while(LVar0) do begin
-				Item := create_object( PID_MUTATED_FRUIT, tile_num_in_direction(tile_num(Critter), random(0, 5), random(2, 4)), 0 );
-				LVar0 := LVar0 - 1;
-			end
-			LVar0 := 0;
-		end
-		Tot_Critter_A := Tot_Critter_A - 1;
+
+	// Fo1in2, Gecko encounter
+	if (random(0,1) == 2) then begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 200));
+   	Tot_Critter_A := random(2, 6);
+		Outer_ring := 8;
+		Inner_ring := 6;
+   	Critter_type := PID_GECKO;
+   	Critter_script := SCRIPT_ECGECKO;
+   	group_angle := random(0, 3);
+   	if (group_angle == 3) then begin
+   		group_angle := 4;
+   	end
+   	if (group_angle == 2) then begin
+   		group_angle := 4;
+   	end
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := group_angle;
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
 	end
+
+	// Vanilla encounter:
+	else begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 108));
+   	Tot_Critter_A := random(2, 4);
+   	Outer_ring := 5;
+   	Inner_ring := 3;
+   	Critter_script := SCRIPT_WANRATS;
+   	while(Tot_Critter_A) do begin
+   		if (random(0, 4) == 4) then begin
+   			Critter_type := PID_GREATER_MOLE_RAT;
+   		end
+   		else begin
+   			Critter_type := PID_LESSER_MOLE_RAT;
+   		end
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		if (LVar0) then begin
+   			LVar0 := random(2, 4);
+   			while(LVar0) do begin
+   				Item := create_object( PID_MUTATED_FRUIT, tile_num_in_direction(tile_num(Critter), random(0, 5), random(2, 4)), 0 );
+   				LVar0 := LVar0 - 1;
+   			end
+   			LVar0 := 0;
+   		end
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   end
 	call Add_Mysterious_Stranger;
 end
 
@@ -3291,7 +3321,12 @@ procedure VAULT1 begin
 	Outer_ring := (dude_perception / 4) + 5;
 	Inner_ring := (dude_perception / 4) + 4;
 	Critter_direction := random(0, 4);
-	Critter_type := PID_RADSCORPION;
+
+	if (random(0,1) == 1) then
+	   Critter_type := PID_SMALL_RADSCORPION;
+	else
+	   Critter_type := PID_RADSCORPION;
+
 	Critter_script := SCRIPT_RADSCOR2;
 	call Place_critter;
 	obj_rotate( Critter, random(0, 5) );
@@ -3344,25 +3379,44 @@ procedure VAULT3 begin
 end
 
 procedure VAULT4 begin
-
 	debug("VAULT4");
-	display_msg(message_str(SCRIPT_RNDMTN, 130));
-	Outer_ring := (dude_perception / 2) + 3;
-	Inner_ring := (dude_perception / 2) + 1;
-	Tot_Critter_A := random(4, 8);
-	Critter_type := PID_RAT_CAVE;
-	Critter_script := SCRIPT_WANRATS;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 5);
-		call Place_critter;
-		if (random(0, 1)) then begin
-			obj_rotate( Critter, random(0, 5) );
-		end
-		else begin
-			obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		end
-		Tot_Critter_A := Tot_Critter_A - 1;
+
+  // Fo1in2, Geckos:
+	if (random(0,2) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 202));
+   	Tot_Critter_A := random(3, 6);
+   	Outer_ring := (dude_perception / 2) + 3;
+   	Inner_ring := (dude_perception / 2) + 1;
+   	Critter_type := PID_GECKO;
+   	Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
 	end
+
+	// Vanilla:
+	else begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 130));
+   	Outer_ring := (dude_perception / 2) + 3;
+   	Inner_ring := (dude_perception / 2) + 1;
+   	Tot_Critter_A := random(4, 8);
+   	Critter_type := PID_RAT_CAVE;
+   	Critter_script := SCRIPT_WANRATS;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 5);
+   		call Place_critter;
+   		if (random(0, 1)) then begin
+   			obj_rotate( Critter, random(0, 5) );
+   		end
+   		else begin
+   			obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		end
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   end
 	call Add_Mysterious_Stranger;
 end
 
