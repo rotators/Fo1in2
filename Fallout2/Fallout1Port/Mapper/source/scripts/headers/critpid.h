@@ -339,5 +339,11 @@
 #define PID_DOGMEAT_STAGE4				(16777545)
 #define PID_MYSTERIOUS_STRANGER_FEMALE	(16777546)
 #define PID_ENC_QUACK					(16777547)
+#define PID_SMALL_RADSCORPION           (16777548)
+#define PID_SPORE_PLANT                 (16777549)
+#define PID_MISSILE_BOT                 (16777550)
+#define PID_GECKO                       (16777551)
+#define PID_GOLDEN_GECKO                (16777552)
+#define PID_FIRE_GECKO                  (16777553)
 
 #endif // CRITPID_H
