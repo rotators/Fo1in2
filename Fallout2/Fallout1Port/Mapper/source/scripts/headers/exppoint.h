@@ -176,6 +176,7 @@
 #define EXP_FIND_DEATHCLAW                      (800)
 #define EXP_BLACKMAILING_BOB                    (500)
 #define EXP_NECKLACE_STOLEN                     (500)
+#define EXP_IRWINE_FARM_CLEARED                 (500)
 
 // Boneyard
 #define EXP_QUEST_KILLED_DCLAWS                 (1000)

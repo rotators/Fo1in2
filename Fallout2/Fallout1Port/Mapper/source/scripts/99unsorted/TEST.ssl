@@ -1,5 +1,13 @@
 #include "..\headers\define.h"
 #include "..\headers\command.h"
+#include "..\headers\sfall\main.h"
+
+#define SetSelfFlag(x) 		set_flags(self_obj, x)
+#define GetSelfFlag 			get_flags(self_obj)
+
+variable once;
+variable test1;
+variable test2;
 
 procedure start;
 
@@ -9,10 +17,26 @@ procedure start;
 // local_var(3)  == RESERVED - Reaction code
 // local_var(12) == RESERVED - Sduibek's init sequence
 
+procedure destroy_p_proc begin
+end
+
+procedure look_at_p_proc begin
+   //set_proto_data(obj_pid(self_obj),PROTO_CR_FLAGS,CFLG_NOSTEAL);
+   set_proto_data(obj_pid(self_obj),PROTO_CR_FLAGS,GetSelfFlag bwand bwnot(CFLG_NODROP));
+
+   test1 := (get_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS) bwand CFLG_NOSTEAL);
+   test2 := (get_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS) bwand CFLG_NODROP);
+
+   debug("CFLG_NOSTEAL: " + test1);
+   debug("CFLG_NODROP: " + test2);
+end
 
 procedure start begin
-	display_msg("fid: " + self_fid);
-	display_msg("pid: " + self_pid);
+   if once == 0 then begin
+      once := 1;
+   	display_msg("fid: " + self_fid);
+   	display_msg("pid: " + self_pid);
+   end
 /*
 	if script_action == no_proc then begin
 		display_msg("no_proc (0) TEST.SSL & obj_id = " + self_pid);
