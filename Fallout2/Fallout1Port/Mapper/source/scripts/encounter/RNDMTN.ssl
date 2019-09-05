@@ -198,8 +198,7 @@ procedure map_exit_p_proc begin
 	set_car_exit_map
 end
 
-procedure Place_critter
-begin
+procedure Place_critter begin
 	variable Facing := 0;
 	variable Distance := 0;
 	variable Ring := 0;
@@ -243,7 +242,8 @@ procedure choose_start begin
 	end
 	else begin
 		if (Encounter_Num == 5) then begin
-			override_map_start(99, 87, 0, 2);
+			//override_map_start(99, 87, 0, 2);
+			override_map_start(92, 93, 0, 2);
 		end
 		else if (Encounter_Num == 6) then begin
 			override_map_start(92, 93, 0, 2);
@@ -1913,11 +1913,11 @@ end
 
 procedure Glow3 begin
 	debug("Glow3");
+   radiation_inc(dude_obj, random(30, 60));
 
    // Fo1in2 - Fire Geckos:
-   if (random(0,2) == 1) then begin
+   if (random(0,1) == 1) then begin
    	display_msg(message_str(SCRIPT_RNDDESRT, 289));
-   	radiation_inc(dude_obj, random(30, 60));
    	Tot_Critter_A := random(2, 5);
    	Outer_ring := (dude_perception / 2) + 4;
    	Inner_ring := (dude_perception / 2) + 2;
@@ -1938,7 +1938,6 @@ procedure Glow3 begin
    // Vanilla:
    else begin
    	display_msg(message_str(SCRIPT_RNDDESRT, 282));
-   	radiation_inc(dude_obj, random(30, 60));
    	Tot_Critter_A := random(4, 8);
    	Outer_ring := (dude_perception / 2) + 4;
    	Inner_ring := (dude_perception / 2) + 2;
@@ -1980,8 +1979,10 @@ procedure Glow5 begin
 
 	display_msg(message_str(SCRIPT_RNDDESRT, 284));
 	radiation_inc(dude_obj, random(30, 60));
+
 	Outer_ring := (dude_perception / 3) + 4;
 	Inner_ring := (dude_perception / 3) + 2;
+
 	group_angle := random(0, 5);
 	Tot_Critter_A := 1 + random(0, 1);
 
@@ -2039,23 +2040,48 @@ end
 
 procedure Glow6 begin
 	debug("Glow6");
-	display_msg(message_str(SCRIPT_RNDDESRT, 285));
-	radiation_inc(dude_obj, random(30, 60));
-	Outer_ring := (dude_perception / 3) + 4;
-	Inner_ring := (dude_perception / 3) + 2;
+   radiation_inc(dude_obj, random(30, 60));
 
-	Critter_type := PID_CENTAUR_LESSER;
-	Critter_script := SCRIPT_FLOATER;
-	Critter_direction := random(2, 5);
-	call Place_critter;
-	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-	if (random(0, 1)) then begin
-		Critter_type := PID_FLOATER;
-		Critter_script := SCRIPT_FLOATER;
-		Critter_direction := random(1, 4);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-	end
+   // Fo1in2 - Fire Geckos:
+   if (random(0,1) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 289));
+   	radiation_inc(dude_obj, random(30, 60));
+   	Tot_Critter_A := random(2, 4);
+   	Outer_ring := (dude_perception / 2) + 4;
+   	Inner_ring := (dude_perception / 2) + 2;
+
+   	Critter_type := PID_FIRE_GECKO;
+		Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Item := create_object( PID_FIRE_GECKO_FLAME_WEAPON, 0, 0 );
+		add_obj_to_inven(Critter, Item);
+		wield_obj_critter(Critter, Item);
+   end
+
+   // Vanilla:
+   else begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 285));
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_CENTAUR_LESSER;
+   	Critter_script := SCRIPT_FLOATER;
+   	Critter_direction := random(2, 5);
+   	call Place_critter;
+   	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   	if (random(0, 1)) then begin
+   		Critter_type := PID_FLOATER;
+   		Critter_script := SCRIPT_FLOATER;
+   		Critter_direction := random(1, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   	end
+   end
 
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
@@ -3383,8 +3409,12 @@ procedure VAULT4 begin
 
   // Fo1in2, Geckos:
 	if (random(0,2) == 1) then begin
-   	display_msg(message_str(SCRIPT_RNDMTN, 202));
-   	Tot_Critter_A := random(3, 6);
+   	Tot_Critter_A := random(2, 6);
+   	if (Tot_Critter_A <= 4) then
+   	   display_msg(message_str(SCRIPT_RNDMTN, 202));
+   	else
+   	   display_msg(message_str(SCRIPT_RNDMTN, 201));
+
    	Outer_ring := (dude_perception / 2) + 3;
    	Inner_ring := (dude_perception / 2) + 1;
    	Critter_type := PID_GECKO;
@@ -3579,13 +3609,34 @@ end
 procedure South2 begin
 	debug("South2");
 
+   display_msg(message_str(SCRIPT_RNDMTN, 136));
+	Tot_Critter_A := random(2, 6);
+	Outer_ring := 7;
+	Inner_ring := 4;
+
+	Critter_type := PID_RADSCORPION;
+	Critter_script := SCRIPT_RADSCORP;
+	while(Tot_Critter_A) do begin
+		Critter_direction := random(0, 4);
+		call Place_critter;
+		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+		Tot_Critter_A := Tot_Critter_A - 1;
+	end
+
+	call Add_Mysterious_Stranger;
+end
+
+procedure South3 begin
+	debug("South3");
+
    // Fo1in2, Geckos:
-	if (random(0,2) == 1) then begin
-   	display_msg(message_str(SCRIPT_RNDMTN, 136));
+	if (random(0,1) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDMTN, 202));
    	Tot_Critter_A := random(2, 6);
    	Outer_ring := 7;
    	Inner_ring := 4;
-   	Critter_type := PID_GOLDEN_GECKO;
+
+      Critter_type := PID_GOLDEN_GECKO;
    	Critter_script := SCRIPT_ECGECKO;
    	while(Tot_Critter_A) do begin
    		Critter_direction := random(0, 4);
@@ -3597,12 +3648,13 @@ procedure South2 begin
 
 	// Vanilla:
 	else begin
-   	display_msg(message_str(SCRIPT_RNDMTN, 136));
-   	Tot_Critter_A := random(2, 6);
-   	Outer_ring := 7;
-   	Inner_ring := 4;
-   	Critter_type := PID_RADSCORPION;
-   	Critter_script := SCRIPT_RADSCORP;
+   	display_msg(message_str(SCRIPT_RNDMTN, 120));
+   	Tot_Critter_A := random(3, 8);
+   	Outer_ring := 5;
+   	Inner_ring := 2;
+
+   	Critter_type := PID_RAT_CAVE;
+   	Critter_script := SCRIPT_WANRATS;
    	while(Tot_Critter_A) do begin
    		Critter_direction := random(0, 4);
    		call Place_critter;
@@ -3613,26 +3665,9 @@ procedure South2 begin
 	call Add_Mysterious_Stranger;
 end
 
-procedure South3 begin
-	debug("South3");
-	display_msg(message_str(SCRIPT_RNDMTN, 120));
-	Tot_Critter_A := random(3, 8);
-	Outer_ring := 5;
-	Inner_ring := 2;
-	Critter_type := PID_RAT_CAVE;
-	Critter_script := SCRIPT_WANRATS;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 4);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	call Add_Mysterious_Stranger;
-end
-
 procedure South4 begin
 	debug("South4");
-	if (global_var( GVAR_IS_PATRICK_DEAD ) == 0) then begin
+	if (global_var( GVAR_IS_PATRICK_DEAD ) == 0) and (random(0,1) == 1) then begin
 		call Patrick;
 	end
 	else begin

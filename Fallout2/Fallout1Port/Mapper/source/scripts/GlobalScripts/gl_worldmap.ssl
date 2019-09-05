@@ -13,17 +13,18 @@
 
 #include "../headers/gl_worldmap.h"
 
+#define in_glow_zone       ((worldmap_xpos >= 1150) and (worldmap_xpos <= 1300) and (worldmap_ypos >= 1200) and (worldmap_ypos <= 1350))
+
 // some consts
-
-#define  TILE_COUNT      (20)
+#define  TILE_COUNT        (20)
 variable TILE_COUNT_X := 0;
-#define  TILE_COUNT_Y    (TILE_COUNT / TILE_COUNT_X)
-#define  TILE_ZONES_X    (7)
-#define  TILE_ZONES_Y    (6)
+#define  TILE_COUNT_Y      (TILE_COUNT / TILE_COUNT_X)
+#define  TILE_ZONES_X      (7)
+#define  TILE_ZONES_Y      (6)
 
-#define ZONE_SIZE        (50)
-#define ZONE_COUNT_X     (TILE_COUNT_X * TILE_ZONES_X)
-#define ZONE_COUNT_Y     (TILE_COUNT_Y * TILE_ZONES_Y)
+#define ZONE_SIZE          (50)
+#define ZONE_COUNT_X       (TILE_COUNT_X * TILE_ZONES_X)
+#define ZONE_COUNT_Y       (TILE_COUNT_Y * TILE_ZONES_Y)
 
 //
 // worldmap zones table
@@ -43,14 +44,14 @@ variable TILE_COUNT_X := 0;
 //
 
 variable ZONES;
+variable tick;
 
 procedure GetZone(variable zx, variable zy)
 begin
     return ZONES[zx][zy];
 end
 
-procedure GetCurrentZone
-begin
+procedure GetCurrentZone begin
     return GetZone( worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE );
 end
 
@@ -138,20 +139,26 @@ begin
     set_global_var(GVAR_WORLDMAP_TERRAIN, terrain );
 end
 
-procedure start
-begin
+procedure SetRadiation begin
+   if game_time > tick then begin
+      tick := game_time + ONE_GAME_HOUR;
+      radiation_inc(dude_obj, random(0, 2));
+   end
+end
 
-    if( game_loaded ) then
-    begin
-        set_global_script_repeat(10);
-        set_global_script_type(1);
+procedure start begin
+   if (game_loaded) then begin
+      set_global_script_repeat(10);
+      set_global_script_type(1);
 
-        call ReadWorldmapTxt;
-        call SetWorldmapInfo;
-    end
+      call ReadWorldmapTxt;
+      call SetWorldmapInfo;
+   end
 
-    VOODOO_disable_YouEncounter_message;
+   VOODOO_disable_YouEncounter_message;
 
-    if( get_game_mode == WORLDMAP ) then
-        call SetWorldmapInfo;
+   if (get_game_mode == WORLDMAP) then begin
+      call SetWorldmapInfo;
+      if in_glow_zone then call SetRadiation;
+   end
 end

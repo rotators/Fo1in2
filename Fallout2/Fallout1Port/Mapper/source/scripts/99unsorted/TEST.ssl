@@ -1,160 +1,34 @@
-#include "..\headers\define.h"
 #include "..\headers\command.h"
+#include "..\headers\define.h"
 #include "..\headers\sfall\main.h"
 
-#define SetSelfFlag(x) 		set_flags(self_obj, x)
-#define GetSelfFlag 			get_flags(self_obj)
+#define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
+#define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
 
-variable once;
-variable test1;
-variable test2;
+procedure start;
+procedure map_enter_p_proc;
 
 procedure start;
 
-// local_var(0)  == RESERVED - Reaction code
-// local_var(1)  == RESERVED - Reaction code
-// local_var(2)  == RESERVED - Reaction code
-// local_var(3)  == RESERVED - Reaction code
-// local_var(12) == RESERVED - Sduibek's init sequence
-
 procedure destroy_p_proc begin
+   variable tail := 0;
+
+   if (has_trait(TRAIT_PERK,dude_obj,PERK_gecko_skinning_perk)) then begin
+      tail := create_object(PID_GECKO_PELT,0,0);
+      add_obj_to_inven(self_obj,tail);
+      set_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS, get_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL));
+   end else begin
+      set_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS, get_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
+   end
 end
 
 procedure look_at_p_proc begin
-   //set_proto_data(obj_pid(self_obj),PROTO_CR_FLAGS,CFLG_NOSTEAL);
-   set_proto_data(obj_pid(self_obj),PROTO_CR_FLAGS,GetSelfFlag bwand bwnot(CFLG_NODROP));
+   debug("my pid is: " + self_pid);
+end
 
-   test1 := (get_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS) bwand CFLG_NOSTEAL);
-   test2 := (get_proto_data(obj_pid(self_obj), PROTO_CR_FLAGS) bwand CFLG_NODROP);
-
-   debug("CFLG_NOSTEAL: " + test1);
-   debug("CFLG_NODROP: " + test2);
+procedure map_enter_p_proc begin
 end
 
 procedure start begin
-   if once == 0 then begin
-      once := 1;
-   	display_msg("fid: " + self_fid);
-   	display_msg("pid: " + self_pid);
-   end
-/*
-	if script_action == no_proc then begin
-		display_msg("no_proc (0) TEST.SSL & obj_id = " + self_pid);
-	end
-	else begin
-		if script_action == start_proc then begin
-			display_msg("start_proc (1) TEST.SSL & obj_id = " + self_pid);
-		end
-		else begin
-			if script_action == spatial_proc then begin
-				display_msg("spatial_proc (2) TEST.SSL & obj_id = " + self_pid);
-			end
-			else begin
-				if script_action == description_proc then begin
-					display_msg("description_proc (3) TEST.SSL & obj_id = " + self_pid);
-				end
-				else begin
-					if script_action == pickup_proc then begin
-						display_msg("pickup_proc (4) TEST.SSL & obj_id = " + self_pid);
-					end
-					else begin
-						if script_action == drop_proc then begin
-							display_msg("drop_proc (5) TEST.SSL & obj_id = " + self_pid);
-						end
-						else begin
-							if script_action == use_proc then begin
-								display_msg("use_proc (6) TEST.SSL & obj_id = " + self_pid);
-							end
-							else begin
-								if script_action == use_obj_on_proc then begin
-									display_msg("use_obj_on_proc (7) TEST.SSL & obj_id = " + self_pid);
-								end
-								else begin
-									if script_action == use_skill_on_proc then begin
-										display_msg("use_skill_on_proc (8) TEST.SSL & obj_id = " + self_pid);
-									end
-									else begin
-										if script_action == use_ad_on_proc then begin
-											display_msg("use_ad_on_proc (9) TEST.SSL & obj_id = " + self_pid);
-										end
-										else begin
-											if script_action == use_disad_on_proc then begin
-												display_msg("use_disad_on_proc (10) TEST.SSL & obj_id = " + self_pid);
-											end
-											else begin
-												if script_action == talk_proc then begin
-													display_msg("talk_proc (11) TEST.SSL & obj_id = " + self_pid);
-												end
-												else begin
-													if script_action == critter_proc then begin
-														display_msg("critter_proc (12) TEST.SSL & obj_id = " + self_pid);
-													end
-													else begin
-														if script_action == combat_proc then begin
-															display_msg("combat_proc (13) TEST.SSL & obj_id = " + self_pid);
-														end
-														else begin
-															if script_action == damage_proc then begin
-																display_msg("damage_proc (14) TEST.SSL & obj_id = " + self_pid);
-															end
-															else begin
-																if script_action == map_enter_proc then begin
-																	display_msg("map_enter_proc (15) TEST.SSL & obj_id = " + self_pid);
-																end
-																else begin
-																	if script_action == map_exit_proc then begin
-																		display_msg("map_exit_proc (16) TEST.SSL & obj_id = " + self_pid);
-																	end
-																	else begin
-																		if script_action == create_proc then begin
-																			display_msg("create_proc (17) TEST.SSL & obj_id = " + self_pid);
-																		end
-																		else begin
-																			if script_action == destroy_proc then begin
-																				display_msg("destroy_proc (18) TEST.SSL & obj_id = " + self_pid);
-																			end
-																			else begin
-																				if script_action == barter_init_proc then begin
-																					display_msg("barter_init_proc (19) TEST.SSL & obj_id = " + self_pid);
-																				end
-																				else begin
-																					if script_action == barter_proc then begin
-																						display_msg("barter_proc (20) TEST.SSL & obj_id = " + self_pid);
-																					end
-																					else begin
-																						if script_action == look_at_proc then begin
-																							display_msg("look_at_proc (21) TEST.SSL & obj_id = " + self_pid);
-																						end
-																						else begin
-																							if script_action == timed_event_proc then begin
-																								display_msg("timed_event_proc (22) TEST.SSL & obj_id = " + self_pid);
-																							end
-																							else begin
-																								if script_action == map_update_proc then begin
-																									display_msg("map_update_proc (23) TEST.SSL & obj_id = " + self_pid);
-																								end
-																							end
-																						end
-																					end
-																				end
-																			end
-																		end
-																	end
-																end
-															end
-														end
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-*/
 end
+

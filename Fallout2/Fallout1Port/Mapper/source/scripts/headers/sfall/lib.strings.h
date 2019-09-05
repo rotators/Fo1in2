@@ -1,6 +1,9 @@
 /**
+
   This library contains procedures to work with strings.
+
   @author phobos2077
+
 */
 
 #ifndef LIB_STRINGS_H
@@ -163,14 +166,14 @@ end
  * Useful in cunjunction with is_in_array()
  */
 procedure string_split_ints(variable str, variable split) begin
-	variable i := 0;
-	variable list;
-	list := string_split(str, split);
-	while (i < len_array(list)) do begin
-		list[i] := atoi(list[i]);
-		i++;
-	end
-	return list;
+   variable i := 0;
+   variable list;
+   list := string_split(str, split);
+   while (i < len_array(list)) do begin
+      list[i] := atoi(list[i]);
+      i++;
+   end
+   return list;
 end
 
 
@@ -188,24 +191,24 @@ end
 */
 
 #define _TOKENIZE_BEGIN       \
-  variable token, rest, line, result, n; \
-  line := tokenize(str, 0, '%'); \
-  result := line; \
-  while line != str do begin \
-    token := tokenize(str, line, '%'); \
-    line += "%" + token; \
-    if token == "" then result += "%"; \
-    else begin
+   variable token, rest, line, result, n; \
+   line := tokenize(str, 0, '%'); \
+   result := line; \
+   while line != str do begin \
+      token := tokenize(str, line, '%'); \
+      line += "%" + token; \
+      if token == "" then result += "%"; \
+      else begin
 
 #define _TOKENIZE_END       \
-    end \
-    rest := tokenize(str, line, '%'); \
-    if (rest != 0) then begin \
-      line += "%" + rest; \
-      result += rest; \
-    end \
-  end \
-  return result;
+      end \
+      rest := tokenize(str, line, '%'); \
+      if (rest != 0) then begin \
+         line += "%" + rest; \
+         result += rest; \
+      end \
+   end \
+   return result;
 
 
 procedure parse_str_list(variable str, variable list) begin
@@ -237,3 +240,4 @@ end
 #undef _TOKENIZE_END
 
 #endif
+
