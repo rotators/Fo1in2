@@ -80,6 +80,7 @@ procedure SOUTH_BoneGlow5;
 procedure SOUTH_BoneGlow6;
 
 procedure update_party;
+
 procedure Vats_table;//FROM RNDDESRT
 procedure Vats1;//FROM RNDDESRT
 procedure Vats2;//FROM RNDDESRT
@@ -87,6 +88,7 @@ procedure Vats3;//FROM RNDDESRT
 procedure Vats4;//FROM RNDDESRT
 procedure Vats5;//FROM RNDDESRT
 procedure Vats6;//FROM RNDDESRT
+
 procedure VAULT_table;// ---------------RNDMTN ONLY
 procedure VAULT1;// ---------------RNDMTN ONLY
 procedure VAULT2;// ---------------RNDMTN ONLY
@@ -179,6 +181,9 @@ procedure map_enter_p_proc begin
          else if (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin
             call South_table;
          end
+         else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+            call Vats_table;
+         end
          else if (global_var(GVAR_WORLDMAP_TABLE) == 12) then begin
             call Glow_table;
          end
@@ -242,7 +247,6 @@ procedure choose_start begin
 	end
 	else begin
 		if (Encounter_Num == 5) then begin
-			//override_map_start(99, 87, 0, 2);
 			override_map_start(92, 93, 0, 2);
 		end
 		else if (Encounter_Num == 6) then begin
@@ -1543,6 +1547,7 @@ procedure Vats1 begin
 	Tot_Critter_B := 1;
 	Outer_ring := (dude_perception / 3) + 4;
 	Inner_ring := (dude_perception / 3) + 2;
+
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
 	while(Tot_Critter_A) do begin
@@ -1563,6 +1568,7 @@ procedure Vats1 begin
 		add_obj_to_inven(Critter, Item);
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
+
 	Critter_type := PID_NIGHTKIN;
 	Critter_script := SCRIPT_SUPAMBSH;
 	while(Tot_Critter_B) do begin
@@ -1575,31 +1581,56 @@ procedure Vats1 begin
 		add_obj_to_inven(Critter, Item);
 		Tot_Critter_B := Tot_Critter_B - 1;
 	end
+
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
 end
 
 procedure Vats2 begin
 	debug("vats2");
-	display_msg(message_str(SCRIPT_RNDDESRT, 254));
-	radiation_inc(dude_obj, random(15, 30));
-	if (random(0, 1)) then begin
-		Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
-		Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+
+   // Fo1in2 - Fire Geckos:
+   if (random(0,1) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 291));
+   	Tot_Critter_A := random(2, 5);
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_FIRE_GECKO;
+		Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Item := create_object( PID_FIRE_GECKO_FLAME_WEAPON, 0, 0 );
+		add_obj_to_inven(Critter, Item);
+		wield_obj_critter(Critter, Item);
+   end
+
+   // Vanilla:
+   else begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 254));
+   	if (random(0, 1)) then begin
+   		Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
+   		Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	end
+   	else begin
+   		Critter_type := PID_FLOATER;// FLOATER
+   		Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	end
+   	Tot_Critter_A := random(3, 5);
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
 	end
-	else begin
-		Critter_type := PID_FLOATER;// FLOATER
-		Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
-	end
-	Tot_Critter_A := random(3, 5);
-	Outer_ring := (dude_perception / 3) + 4;
-	Inner_ring := (dude_perception / 3) + 2;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
+
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
 end
@@ -1607,154 +1638,237 @@ end
 procedure Vats3 begin
 	debug("vats3");
 	display_msg(message_str(SCRIPT_RNDDESRT, 306));
-	radiation_inc(dude_obj, random(15, 30));
-	Tot_Critter_A := random(1, 2);
-	Outer_ring := (dude_perception / 3) + 4;
-	Inner_ring := (dude_perception / 3) + 2;
-	Critter_type := PID_FLOATER;// FLOATER
-	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
-	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
-	Tot_Critter_A := 1;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Outer_ring := (dude_perception / 2) + 3;
-	Inner_ring := (dude_perception / 2) + 2;
-	Tot_Critter_A := random(2, 3);
-	Critter_type := PID_MEAN_SUPER_MUTANT;
-	Critter_script := SCRIPT_MUTAMBSH;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Critter_type := PID_NIGHTKIN;
-	Critter_script := SCRIPT_SUPAMBSH;
-	Critter_direction := random(0, 2);
-	call Place_critter;
-	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-	Item := create_object( PID_LASER_RIFLE, 0, 0 );
-	add_obj_to_inven(Critter, Item);
-	Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 2);
-	/* has how many? */    if (not(dude_item_count( PID_RADIO ))) then begin
-		Item := create_object( PID_RADIO, 0, 0 );
-		add_obj_to_inven(Critter, Item);
-	end
+
+   // Fo1in2 - Golden Geckos:
+   if (random(0,1) == 1) then begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 401));
+   	Tot_Critter_A := random(3, 6);
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_GOLDEN_GECKO;
+		Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   end
+
+   // Vanilla:
+   else begin
+   	Tot_Critter_A := random(1, 2);
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_FLOATER;// FLOATER
+   	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+
+   	Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
+   	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	Tot_Critter_A := 1;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Outer_ring := (dude_perception / 2) + 3;
+   	Inner_ring := (dude_perception / 2) + 2;
+   	Tot_Critter_A := random(2, 3);
+
+   	Critter_type := PID_MEAN_SUPER_MUTANT;
+   	Critter_script := SCRIPT_MUTAMBSH;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+
+   	Critter_type := PID_NIGHTKIN;
+   	Critter_script := SCRIPT_SUPAMBSH;
+   	Critter_direction := random(0, 2);
+   	call Place_critter;
+   	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   	Item := create_object( PID_LASER_RIFLE, 0, 0 );
+   	add_obj_to_inven(Critter, Item);
+   	Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
+   	add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 2);
+   	if (not(dude_item_count( PID_RADIO ))) then begin
+   		Item := create_object( PID_RADIO, 0, 0 );
+   		add_obj_to_inven(Critter, Item);
+   	end
+   end
+
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
 end
 
 procedure Vats4 begin
 	debug("vats4");
-	display_msg(message_str(SCRIPT_RNDDESRT, 256));
-	radiation_inc(dude_obj, random(15, 30));
-	Tot_Critter_A := random(3, 4);
-	Outer_ring := (dude_perception / 2) + 4;
-	Inner_ring := (dude_perception / 2) + 2;
-	Critter_type := PID_MEAN_SUPER_MUTANT;
-	Critter_script := SCRIPT_MUTAMBSH;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, random(3, 4) );
-		if (random(0, 1) == 1) then begin
-			if (random(0, 1) == 1) then begin
-				Item := create_object( PID_FLAMER, 0, 0 );
-			end
-			else begin
-				Item := create_object( PID_MINIGUN, 0, 0 );
-			end
-		end
-		else begin
-			Item := create_object( PID_SPIKED_KNUCKLES, 0, 0 );
-		end
-		add_obj_to_inven(Critter, Item);
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Critter_type := PID_NIGHTKIN;
-	Critter_script := SCRIPT_SUPAMBSH;
-	Tot_Critter_B := 1;
-	while(Tot_Critter_B) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, random(3, 4) );
-		Item := create_object( PID_MINIGUN, 0, 0 );
-		add_obj_to_inven(Critter, Item);
-		Item := create_object( PID_5MM_JHP, 0, 0 );
-		add_obj_to_inven(Critter, Item);
-		Tot_Critter_B := Tot_Critter_B - 1;
-	end
-	Outer_ring := (dude_perception / 3) + 4;
-	Inner_ring := (dude_perception / 3) + 2;
-	Critter_type := PID_FLOATER;// FLOATER
-	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
-	Critter_direction := random(0, 2);
-	call Place_critter;
-	obj_rotate( Critter, random(3, 4) );
+
+   // Fo1in2:
+   if (random(0,1) == 1) then begin
+	   display_msg(message_str(SCRIPT_RNDDESRT, 313));
+   	Tot_Critter_A := random(4, 6);
+   	if (day) then begin
+   		Outer_ring := 6;
+   		Inner_ring := 3;
+   	end
+   	else begin
+   		Outer_ring := 4;
+   		Inner_ring := 3;
+   	end
+   	Critter_type := PID_MANTIS;
+   	Critter_script := SCRIPT_MANTIS;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 5);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+
+   end
+
+	// Vanilla:
+	else begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 256));
+   	Tot_Critter_A := random(1, 2);
+   	Outer_ring := (dude_perception / 2) + 4;
+   	Inner_ring := (dude_perception / 2) + 2;
+
+   	Critter_type := PID_MEAN_SUPER_MUTANT;
+   	Critter_script := SCRIPT_MUTAMBSH;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, random(3, 4) );
+   		if (random(0, 1) == 1) then begin
+   			if (random(0, 1) == 1) then begin
+   				Item := create_object( PID_FLAMER, 0, 0 );
+   			end
+   			else begin
+   				Item := create_object( PID_MINIGUN, 0, 0 );
+   			end
+   		end
+   		else begin
+   			Item := create_object( PID_SPIKED_KNUCKLES, 0, 0 );
+   		end
+   		add_obj_to_inven(Critter, Item);
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+
+   	Critter_type := PID_NIGHTKIN;
+   	Critter_script := SCRIPT_SUPAMBSH;
+   	Tot_Critter_B := 1;
+   	while(Tot_Critter_B) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, random(3, 4) );
+   		Item := create_object( PID_MINIGUN, 0, 0 );
+   		add_obj_to_inven(Critter, Item);
+   		Item := create_object( PID_5MM_JHP, 0, 0 );
+   		add_obj_to_inven(Critter, Item);
+   		Tot_Critter_B := Tot_Critter_B - 1;
+   	end
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_FLOATER;// FLOATER
+   	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	Critter_direction := random(0, 2);
+   	call Place_critter;
+   	obj_rotate( Critter, random(3, 4) );
+   end
+
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
 end
 
 procedure Vats5 begin
 	debug("vats5");
-	display_msg(message_str(SCRIPT_RNDDESRT, 306));
-	radiation_inc(dude_obj, random(15, 30));
-	Tot_Critter_A := random(1, 2);
-	Outer_ring := (dude_perception / 3) + 4;
-	Inner_ring := (dude_perception / 3) + 2;
-	Critter_type := PID_FLOATER;// FLOATER
-	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
-	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
-	Tot_Critter_A := 1;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Outer_ring := (dude_perception / 2) + 3;
-	Inner_ring := (dude_perception / 2) + 2;
-	Tot_Critter_A := random(2, 3);
-	Critter_type := PID_MEAN_SUPER_MUTANT;
-	Critter_script := SCRIPT_MUTAMBSH;
-	while(Tot_Critter_A) do begin
-		Critter_direction := random(0, 2);
-		call Place_critter;
-		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-		Tot_Critter_A := Tot_Critter_A - 1;
-	end
-	Critter_type := PID_NIGHTKIN;
-	Critter_script := SCRIPT_SUPAMBSH;
-	Critter_direction := random(0, 2);
-	call Place_critter;
-	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
-	Item := create_object( PID_LASER_RIFLE, 0, 0 );
-	add_obj_to_inven(Critter, Item);
-	Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-	add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 2);
-	/* has how many? */    if (not(dude_item_count( PID_RADIO ))) then begin
-		Item := create_object( PID_RADIO, 0, 0 );
+
+   // Fo1in2 - Fire Geckos:
+   if (random(0,1) == 1) or military_base_destoryed then begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 291));
+   	Tot_Critter_A := random(2, 4);
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_FIRE_GECKO;
+		Critter_script := SCRIPT_ECGECKO;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 4);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Item := create_object( PID_FIRE_GECKO_FLAME_WEAPON, 0, 0 );
 		add_obj_to_inven(Critter, Item);
-	end
+		wield_obj_critter(Critter, Item);
+   end
+
+   // Vanilla:
+   else begin
+   	display_msg(message_str(SCRIPT_RNDDESRT, 306));
+
+   	Tot_Critter_A := random(1, 2);
+   	Outer_ring := (dude_perception / 3) + 4;
+   	Inner_ring := (dude_perception / 3) + 2;
+
+   	Critter_type := PID_FLOATER;// FLOATER
+   	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+
+   	Critter_type := PID_CENTAUR_LESSER;// LESSER CENTAUR
+   	Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   	Tot_Critter_A := 1;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+   	Outer_ring := (dude_perception / 2) + 3;
+   	Inner_ring := (dude_perception / 2) + 2;
+   	Tot_Critter_A := random(2, 3);
+
+   	Critter_type := PID_MEAN_SUPER_MUTANT;
+   	Critter_script := SCRIPT_MUTAMBSH;
+   	while(Tot_Critter_A) do begin
+   		Critter_direction := random(0, 2);
+   		call Place_critter;
+   		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   		Tot_Critter_A := Tot_Critter_A - 1;
+   	end
+
+   	Critter_type := PID_NIGHTKIN;
+   	Critter_script := SCRIPT_SUPAMBSH;
+   	Critter_direction := random(0, 2);
+   	call Place_critter;
+   	obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
+   	Item := create_object( PID_LASER_RIFLE, 0, 0 );
+   	add_obj_to_inven(Critter, Item);
+   	Item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
+   	add_mult_objs_to_inven(Critter, Item, dude_perk( PERK_scrounger ) + 2);
+   	if (not(dude_item_count( PID_RADIO ))) then begin
+   		Item := create_object( PID_RADIO, 0, 0 );
+   		add_obj_to_inven(Critter, Item);
+   	end
+   end
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
 end
@@ -1762,7 +1876,7 @@ end
 procedure Vats6 begin
 	debug("vats6");
 	display_msg(message_str(SCRIPT_RNDDESRT, 279));
-	radiation_inc(dude_obj, random(15, 30));
+
 	Item := create_object( PID_POT, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(8, 10)), 0 );
 	Item := create_object( PID_BOXES_2, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(5, 9)), 0 );
 	Item := create_object( PID_BOXES_3, tile_num_in_direction(Dude_tile + random(0, 8) - 4, random(0, 5), random(5, 9)), 0 );
@@ -1777,6 +1891,7 @@ procedure Vats6 begin
 	Outer_ring := (dude_perception / 2) + 3;
 	Inner_ring := (dude_perception / 2) + 2;
 	group_angle := random(0, 5);
+
 	Critter_type := PID_MEAN_SUPER_MUTANT;
 	Critter_script := SCRIPT_MUTAMBSH;
 	Tot_Critter_A := random(2, 3);
@@ -1792,6 +1907,7 @@ procedure Vats6 begin
 		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
+
 	Critter_type := PID_NIGHTKIN;
 	Critter_script := SCRIPT_SUPAMBSH;
 	Critter_direction := random(0, 2);
@@ -1828,6 +1944,7 @@ procedure Vats6 begin
 		obj_rotate( Critter, rotation_to_tile(tile_num(Critter), dude_tile) );
 		Tot_Critter_A := Tot_Critter_A - 1;
 	end
+
 	set_global_var( GVAR_MYST_STRANGER_ITEM, 3 );
 	call Add_Mysterious_Stranger;
 end
