@@ -50,4 +50,10 @@
 #define set_trunk_visible               if get_car_used then set_obj_visibility(Trunk_Ptr,0)
 #define set_trunk_invisible             if get_car_used then set_obj_visibility(Trunk_Ptr,1)
 
+// Find the fuel cell controler without Griffith:
+#define STATE_HIDDEN             0
+#define STATE_SPOTTED            1
+#define STATE_TAKEN_DUDE         2
+#define STATE_TAKEN_GRIFFITH     3
+
 #endif // MAPNECRO_H

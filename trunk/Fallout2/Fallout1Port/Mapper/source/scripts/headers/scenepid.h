@@ -31,11 +31,11 @@ variable Scenery_Creation_Ptr;
 #define PID_33555118 (33555118)
 #define PID_33555119 (33555119)
 
-
 #define PID_BLOCKING_HEX                    (33554499)
 #define PID_BLOWN_ARROYO_CAVE_DOOR          (33555365)
 #define PID_ARROYO_CAVE_DOOR                (33555366)
 #define PID_TEMPLE_SKULL_POLE               (33555374)
+#define PID_RED_ARMCHAIR 			 		(33554665)
 
 // Navarro Door
 #define PID_NS_NAVARRO_BUNKER_DOOR          (33554450)

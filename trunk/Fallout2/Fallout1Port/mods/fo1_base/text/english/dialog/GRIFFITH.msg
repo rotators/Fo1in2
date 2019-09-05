@@ -4,13 +4,14 @@
 {101}{}{The ghoul is wearing an old, patched up motorcycle jacket. You see traces of tattoos on his rotten skin.}
 
 {125}{}{You gain }
-{126}{}{ experience for giving fuel to Griffith.}
+{126}{}{ experience for helping Griffith to leave Necropolis.}
 {127}{}{ experience for stealing the motorcycle.}
 {128}{}{ experience for obtaining the motorcycle.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
 {150}{}{An original Chryslus Motors Cruiser!}
 {160}{}{You are a god damn THIEF!}
+{161}{}{What the? Where is my ..?!}
 
 {175}{}{I'm out of here.}
 {176}{}{Have fun with the bike.}
@@ -18,6 +19,12 @@
 {178}{}{Sweet baby jesus, something smells around here.}
 {179}{}{You still here?}
 {180}{}{Better get going now.}
+
+{181}{}{Fuck this place.}
+{182}{}{Get out of my sight.}
+{183}{}{What?}
+{184}{}{Go away.}
+{185}{}{Someone stole my fuel controller!}
 
 {200}{}{The ghoul just stares at you.}
 

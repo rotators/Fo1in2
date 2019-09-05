@@ -23,7 +23,7 @@
 #define MVAR_PLACEHOLDER1        (8)
 #define MVAR_PLACEHOLDER2        (9)
 #define MVAR_INVADED             (10) // Has map been invaded?
-#define MVAR_Fixt_PLACEHOLDER_0  (11) //  Adding for ass-covering and future-proofing
+#define MVAR_FUEL_CELL_STASH     (11) // Did the player find the fuel cell controler?
 #define MVAR_Fixt_PLACEHOLDER_1  (12) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_2  (13) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_3  (14) //  Adding for ass-covering and future-proofing
