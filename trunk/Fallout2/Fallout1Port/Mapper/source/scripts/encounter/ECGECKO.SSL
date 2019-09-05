@@ -7,7 +7,7 @@
 */
 
 #include "..\headers\define.h"
-//#include "..\headers\sfall\main.h"
+#include "..\headers\sfall\main.h"
 
 #define NAME                    SCRIPT_ECGECKO
 
@@ -19,13 +19,10 @@ procedure critter_p_proc;
 procedure map_enter_p_proc;
 
 variable starttile := 0;
-/*
-#define SetSelfFlag(x) 		set_flags(self_obj, x)
-#define GetSelfFlag 			get_flags(self_obj)
 
-#define set_ghost 			SetSelfFlag(GetSelfFlag bwor CFLG_NOSTEAL)
-#define rem_ghost 			SetSelfFlag(GetSelfFlag bwand bwnot(CFLG_NOSTEAL))
-*/
+#define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
+#define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
+
 procedure map_enter_p_proc begin
    starttile := self_tile;
    set_self_team( TEAM_RND_GECKO );
@@ -36,10 +33,6 @@ procedure map_enter_p_proc begin
 end
 
 procedure start begin
-   //SetSelfFlag(GetSelfFlag bwor CFLG_NOSTEAL);
-   //SetSelfFlag(GetSelfFlag bwor CFLG_NODROP);
-
-   //debug("GetSelfFlag: " + GetSelfFlag);
 end
 
 procedure critter_p_proc begin
@@ -69,9 +62,11 @@ procedure destroy_p_proc begin
             tail := create_object(PID_GOLDEN_GECKO_PELT,0,0);
 
       add_obj_to_inven(self_obj,tail);
+      set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL));
    end
    else begin
-      //set_proto_data(obj_pid(self_obj),PROTO_IT_FLAGS,ITEM_ACTION_USE);
-     // rem_lootable;
+      debug("nosteal before set: " + get_proto_data(self_pid, PROTO_CR_FLAGS));
+      set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL);
+      debug("nosteal after set: " + get_proto_data(self_pid, PROTO_CR_FLAGS));
    end
 end
