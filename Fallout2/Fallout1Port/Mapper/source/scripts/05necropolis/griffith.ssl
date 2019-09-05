@@ -11,6 +11,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\necropolis.h"
+#include "..\headers\maps\watrshd.h"
 
 #define NAME                    SCRIPT_GRIFFITH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
@@ -85,9 +86,9 @@ procedure leave_with_bike;
 #define wp_exit_2 			(25304)
 #define wp_exit_3 			(27681)
 
-#define wp_getpart_bike 	(18905)
-#define wp_getpart_1 		(21729)
-#define wp_getpart_2 		(22747)
+#define wp_getpart_bike 	(18703)
+#define wp_getpart_1 		(19288)
+#define wp_getpart_2 		(17883)
 
 #define set_griffith_dead 				set_global_var(GVAR_GRIFFITH_STATE,1)
 #define is_griffith_alive 				(global_var(GVAR_GRIFFITH_STATE) == 0)
@@ -137,18 +138,18 @@ procedure map_enter_p_proc begin
 
 	// Player gave energy cells to Griffith. He walks to pick up the controller - if player changes map, he is already gone.
    if ((local_var(LVAR_EnergyCells) >= 9) and not(dude_has_car) and tile_contains_obj_pid(CAR_UNCLAIMED_HEX,CAR_UNCLAIMED_ELEV,PID_DRIVABLE_MOTO1)) then begin
-   	if is_griffith_alive then begin
+   	if is_griffith_alive and (map_var(MVAR_FUEL_CELL_STASH) != STATE_TAKEN_DUDE) then begin
 			Dest_Car(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV)
 			destroy_object(self_obj);
 		end
 	end
 
-   if fo1in2_motorcycle_disabled or (local_var(LVAR_EnergyCells) == 10) or (local_var(LVAR_StartMoving) > 0) then
+   if fo1in2_motorcycle_disabled or ((map_var(MVAR_FUEL_CELL_STASH) != STATE_TAKEN_DUDE) and ((local_var(LVAR_EnergyCells) == 10) or (local_var(LVAR_StartMoving) > 0))) then
    	destroy_object(self_obj);
 end
 
 procedure critter_p_proc begin
-	if ((local_var(LVAR_Hostile) != 0) or angry > 3) then begin
+	if self_can_see_dude and ((local_var(LVAR_Hostile) != 0) or angry > 3) then begin
 		self_attack_dude;
 	end
 
@@ -228,17 +229,25 @@ procedure timed_event_p_proc begin
 				set_local_var(LVAR_MoveTo,1);
 			end
 			else if (local_var(LVAR_MoveTo) == 1) and (self_tile == wp_getpart_2) then begin
-				self_rotate( 0 );
+				self_rotate( 5 );
 	      	reg_anim_clear(self_obj);
 	         reg_anim_begin();
 	            reg_anim_animate(self_obj, ANIM_magic_hands_ground, -1);
 	         reg_anim_end();
 
-			   Item:=create_object(PID_MOTO_KEY,0,0);
-			   add_mult_objs_to_inven(self_obj,Item,1);
+            if (map_var(MVAR_FUEL_CELL_STASH) != STATE_TAKEN_DUDE) then begin
+   			   Item:=create_object(PID_MOTO_KEY,0,0);
+   			   add_mult_objs_to_inven(self_obj,Item,1);
 
-			   set_global_var(GVAR_QUEST_MOTORCYCLE,6); // Took the controller from the stash
-				set_local_var(LVAR_MoveTo,2);
+               set_map_var(MVAR_FUEL_CELL_STASH, STATE_TAKEN_GRIFFITH);
+   			   set_global_var(GVAR_QUEST_MOTORCYCLE,6);
+   				set_local_var(LVAR_MoveTo,2);
+   		   end
+   		   else begin
+   		      float_angry(161);
+    		      set_global_var(GVAR_QUEST_MOTORCYCLE,6);
+   		      set_local_var(LVAR_MoveTo,2);
+   		   end
 			end
 			else if (local_var(LVAR_MoveTo) == 2) and (self_tile == wp_getpart_1) then begin
 				set_local_var(LVAR_MoveTo,3);
@@ -317,10 +326,18 @@ end
 procedure talk_p_proc begin
 dude_look_at_self;
 
+   // Player has the controller and Griffith sees it:
 	if ((dude_item_count( PID_MOTO_KEY )) and (global_var(GVAR_QUEST_MOTORCYCLE) < 10))  then begin
 		float_angry(160);
 		set_local_var(LVAR_Hostile,1);
 	end
+
+	// Player took the controller, but Griffith doesn't know:
+	else if (map_var(MVAR_FUEL_CELL_STASH) == STATE_TAKEN_DUDE) and (global_var(GVAR_QUEST_MOTORCYCLE) >= 6) then begin
+	   float_angry(random(181,185));
+	end
+
+	// Griffith is leaving:
 	else if (local_var(LVAR_StartMoving) > 0) or (local_var(LVAR_EnergyCells) >= 9) then begin
 		float(random(175,180));
 	end
