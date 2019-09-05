@@ -24,7 +24,6 @@ procedure spatial_p_proc;
 procedure description_p_proc;
 procedure look_at_p_proc;
 procedure use_p_proc;
-procedure use_skill_on_p_proc;
 
 /* Defines */
 #define LVAR_Only_Once     (0)
@@ -46,11 +45,9 @@ procedure spatial_p_proc begin
    	if source_obj == dude_obj then begin
 			if (is_success(do_check(dude_obj, STAT_pe, -5))) and (is_success(do_check(dude_obj, STAT_lu, -2))) then begin
 				display_msg(mstr(200));
-
 	         set_map_var(MVAR_FUEL_CELL_STASH, STATE_SPOTTED);
-			   if (self_pid == PID_RED_ARMCHAIR and map_var(MVAR_FUEL_CELL_STASH) == STATE_SPOTTED) then
-			      set_proto_data(self_pid,PROTO_IT_FLAGS,ITEM_ACTION_USE);
 
+			   set_proto_data(PID_RED_ARMCHAIR,PROTO_IT_FLAGS,ITEM_ACTION_USE);
 			   destroy_object(self_obj);
    		end
    	end
@@ -62,28 +59,22 @@ procedure look_at_p_proc begin
 end
 
 procedure description_p_proc begin
-   usable_chair;
-
    if not(fo1in2_motorcycle_disabled) then begin
       script_overrides;
 
 	   if (map_var(MVAR_FUEL_CELL_STASH) == STATE_HIDDEN) and (self_distance_from_dude < 5) then begin
    	   if (dude_perception > 5 or is_success(roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, -40)) or is_success(roll_vs_skill(dude_obj, SKILL_STEAL, -20)))  then begin
             display_msg(mstr(200));
-
             set_map_var(MVAR_FUEL_CELL_STASH, STATE_SPOTTED);
-   		   if (self_pid == PID_RED_ARMCHAIR and map_var(MVAR_FUEL_CELL_STASH) == STATE_SPOTTED) then
-   		      set_proto_data(self_pid,PROTO_IT_FLAGS,ITEM_ACTION_USE);
          end
       end
       else if (map_var(MVAR_FUEL_CELL_STASH) == STATE_SPOTTED) then begin
          display_msg(mstr(200));
-		   if (self_pid == PID_RED_ARMCHAIR) then
-		      set_proto_data(self_pid,PROTO_IT_FLAGS,ITEM_ACTION_USE);
       end
       else begin
          display_msg(mstr(random(100,102)));
       end
+      usable_chair;
 
    end
 end
@@ -98,9 +89,6 @@ procedure use_p_proc begin
       add_mult_objs_to_inven(dude_obj,Item,1);
 
       set_map_var(MVAR_FUEL_CELL_STASH, STATE_TAKEN_DUDE);
-      set_proto_data(self_pid,PROTO_IT_FLAGS,RMOBJ_USE_OBJ);
+      usable_chair;
    end
-end
-
-procedure use_skill_on_p_proc begin
 end
