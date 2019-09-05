@@ -13,9 +13,14 @@
 
 #include "..\headers\boneyard.h"
 
+#define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
+#define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
+
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 
+procedure ondeath_handler;
 procedure general;
 procedure mode_change;
 procedure scene_master_destroyed;
@@ -28,9 +33,27 @@ procedure start begin
    	set_global_script_type(0);
    	register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
    	register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description);
+   	register_hook_proc(HOOK_ONDEATH, ondeath_handler);
+   	call map_enter_p_proc;
    end
 
 	call general;
+end
+
+procedure map_enter_p_proc begin
+   if has_trait(TRAIT_PERK, dude_obj, PERK_gecko_skinning_perk) then begin
+      set_lootable(PID_GECKO);
+      set_lootable(PID_GOLDEN_GECKO);
+      set_lootable(PID_FIRE_GECKO);
+   end else begin
+      set_unlootable(PID_GECKO);
+      set_unlootable(PID_GOLDEN_GECKO);
+      set_unlootable(PID_FIRE_GECKO);
+   end
+end
+
+procedure ondeath_handler begin
+   call map_enter_p_proc;
 end
 
 procedure general begin
