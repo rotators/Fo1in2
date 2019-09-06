@@ -57,6 +57,9 @@ procedure pushstims;
 procedure pushdrugs;
 procedure medicend;
 
+procedure Node2000;
+procedure Node3000;
+
 variable damage := 0;
 variable intensity := 0;
 variable removal := 0;
@@ -74,6 +77,8 @@ variable initial :=  0;
 
 procedure PickDeadBodyType;
 variable DeathType := 57;
+
+#define LVAR_Had_Toe_Removed   (11)
 
 procedure start begin
 	if (v13_invaded) then begin
@@ -220,13 +225,16 @@ procedure Medic04 begin
 	else begin
 		if not(local_var(6)) then begin
 			gsay_reply( SCRIPT_MEDIC, 113 );// what can i do for you?
-			NOption( 114, Medic12, 4 );
+			NOption(114, Medic12, 4 );
 		end
 		else begin// hello again!
 			gsay_reply( SCRIPT_MEDIC, message_str(SCRIPT_MEDIC, 106) + dude_name + message_str(SCRIPT_MEDIC, 107) );
 			NOption( 108, Medic06, 4 );
 			NOption( 109, Medic12, 4 );
 		end
+
+		if( global_var(GVAR_HAVE_MUTATED) == 1 ) then
+			NOption(2000, Node2000, 004);
 	end
 	if PoisAmt > 0 then begin// i've been poisoned
 		NOption( 161, Medic07, 5 );
@@ -336,8 +344,7 @@ begin
 	NOption( 124, pushdrugs, 4 );
 end
 
-procedure pushstims
-begin
+procedure pushstims begin
 	variable Stimpak := 0;
 	Stimpak := create_object( PID_STIMPAK, 0, 0 );
 	add_mult_objs_to_inven(dude_obj, Stimpak, 4 - difficulty_level);
@@ -404,24 +411,19 @@ begin
 	end
 end
 
-procedure Medic18// checking for rads amounts
-begin
+procedure Medic18 begin
 	game_time_advance(10 * 60);
 	if (rads > 400) then begin
 		intensity := message_str(SCRIPT_MEDIC, 132);
 	end
+	else if (rads > 200) then begin
+		intensity := message_str(SCRIPT_MEDIC, 133);
+	end
+	else if (rads > 100) then begin
+	   intensity := message_str(SCRIPT_MEDIC, 134);
+	end
 	else begin
-		if (rads > 200) then begin
-			intensity := message_str(SCRIPT_MEDIC, 133);
-		end
-		else begin
-			if (rads > 100) then begin
-				intensity := message_str(SCRIPT_MEDIC, 134);
-			end
-			else begin
-				intensity := message_str(SCRIPT_MEDIC, 135);
-			end
-		end
+		intensity := message_str(SCRIPT_MEDIC, 135);
 	end
 	gsay_reply( SCRIPT_MEDIC, intensity );
 	NOption( 138, Medic19, 4 );
@@ -437,8 +439,7 @@ begin
 	gsay_message( SCRIPT_MEDIC, 144, 50 );
 end
 
-procedure Medic20// how long
-begin
+procedure Medic20 begin
 	call Medic24;
 	if not(Hours) then begin
 		gsay_reply( SCRIPT_MEDIC, message_str(SCRIPT_MEDIC, 165) + message_str(SCRIPT_MEDIC, 166) + message_str(SCRIPT_MEDIC, 170) );
@@ -465,9 +466,9 @@ begin
 	NOption( 148, Medic22, 4 );
 end
 
-procedure Medic21// how long, how many
-begin
+procedure Medic21 begin
 	call Medic24;
+
 	if Hours > 1 then begin
 		if (removal > rads) or (removal == rads) then begin
 			IfRounded := message_str(SCRIPT_MEDIC, 168);
@@ -484,6 +485,7 @@ begin
 			IfRounded := message_str(SCRIPT_MEDIC, 150);
 		end
 	end
+
 	if not(Hours) then begin
 		gsay_reply( SCRIPT_MEDIC, message_str(SCRIPT_MEDIC, 165) + message_str(SCRIPT_MEDIC, 166) + IfRounded + rounded + message_str(SCRIPT_MEDIC, 151) );
 	end
@@ -505,6 +507,7 @@ begin
 			end
 		end
 	end
+
 	NOption( 152, Medic19, 4 );
 	NOption( 153, Medic22, 4 );
 end
@@ -546,8 +549,7 @@ begin
 	end
 end
 
-procedure Medic25
-begin
+procedure Medic25 begin
 	gfade_out(1);
 	gfade_in(1);
 	call Medic18;
@@ -573,16 +575,14 @@ begin
 	call pushdrugs;
 end
 
-procedure Medic29
-begin
+procedure Medic29 begin
 	variable Stimpak := 0;
 	Stimpak := create_object( PID_STIMPAK, 0, 0 );
 	add_mult_objs_to_inven(dude_obj, Stimpak, 4 - difficulty_level);
 	gsay_message( SCRIPT_MEDIC, 111, 50 );// ah yes, here you go
 end
 
-procedure pushdrugs
-begin
+procedure pushdrugs begin
 	variable drugs := 0;
 	variable LVar0 := 0;
 	LVar0 := 2 - difficulty_level;
@@ -601,24 +601,68 @@ end
 procedure medicend begin
 end
 
-procedure PickDeadBodyType// FINISHED, for Vault 13
-begin
+procedure PickDeadBodyType begin
 	variable id := 11;
 	id := random(0, 6) + random(0, 6) + random(0, 6);
 	if id <= 2 then begin
 		DeathType := 59;// exploded  [ROCKET LAUNCHER]
 	end
-	else begin
-		if id <= 10 then begin
-			DeathType := 57;// burnt, face down  [FLAMER]
-		end
-		else begin
-			if id <= 15 then begin
-				DeathType := 60;// melted pile  [PLASMA RIFLE]
-			end
-			else begin
-				DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
-			end
-		end
+	else if id <= 10 then begin
+		DeathType := 57;// burnt, face down  [FLAMER]
 	end
+	else if id <= 15 then begin
+		DeathType := 60;// melted pile  [PLASMA RIFLE]
+	end
+	else begin
+		DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
+	end
+end
+
+procedure Node2000 begin
+   if (local_var(LVAR_Had_Toe_Removed) == 0) then begin
+      NMessage(2001);
+      Reply(2002);
+   end
+   else begin
+      Reply(2003);
+   end
+
+   NOption(2010, Node3000, 004);
+   NOption(2020, Medic04, 004);
+   NOption(2030, medicend, 004);
+end
+
+procedure Node3000 begin
+variable toe;
+
+   NMessage(3000);
+
+   gfade_out(600);
+
+   // Remove mutation
+   //if (map_var(MVAR_Auto_Doc_Fixed) == 0) then begin
+   if (dude_rads > 50) then begin
+      set_global_var(GVAR_HAVE_MUTATED, 0);
+      set_global_var(GVAR_MUTATE_STAGE, 1);
+      set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS);
+   end
+   else begin
+      set_global_var(GVAR_HAVE_MUTATED, 0);
+      set_global_var(GVAR_MUTATE_STAGE, 0);
+   end
+
+   // Give player a mutated "toe"
+   toe := create_object( PID_MUTATED_TOE, 0, 0);
+   add_obj_to_inven( dude_obj, toe );
+   gfade_in(600);
+
+   Reply(3001);
+
+   if (local_var(LVAR_Had_Toe_Removed) == 0) then begin
+      set_local_var(LVAR_Had_Toe_Removed, 1);
+      NOption(3010, Medic04, 004);
+   end
+   else
+      NOption(3020, medicend, 004);
+   NOption(3030, medicend, 004);
 end
