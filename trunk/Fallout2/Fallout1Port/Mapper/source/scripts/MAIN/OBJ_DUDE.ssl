@@ -125,6 +125,8 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
+   variable days_since_exposed;
+
 	if CUR_AREA_MILITARY_BASE then begin
 		if ((global_var( GVAR_VATS_BLOWN ) == 1) and (global_var( GVAR_QUEST_VAULT13_3_KILL_VATS ) == 2)) then begin
 			if global_var( GVAR_VATS_BLOWN_CUTSCENE_DONE ) != 1 then begin
@@ -139,6 +141,39 @@ procedure map_update_p_proc begin
 			end
 		end
 	end
+
+   // Fo2 MUTATION CODE
+   if (global_var(GVAR_HAVE_MUTATED) == 0) then begin
+      if (global_var(GVAR_MUTATE_STAGE) > 0) then begin
+         days_since_exposed := GAME_TIME_IN_DAYS - global_var(GVAR_MUTATE_WHEN);
+         //debug_msg("days since exposed "+days_since_exposed);
+         if (days_since_exposed > 30) then begin
+            if (global_var(GVAR_MUTATE_STAGE) < 5) then begin
+               display_msg(mstr(140));
+               set_global_var(GVAR_MUTATE_STAGE,5);
+               set_global_var(GVAR_HAVE_MUTATED,1);
+            end
+         end
+         else if (days_since_exposed > 25) then begin
+            if (global_var(GVAR_MUTATE_STAGE) < 4) then begin
+               display_msg(mstr(130));
+               set_global_var(GVAR_MUTATE_STAGE,4);
+            end
+         end
+         else if (days_since_exposed > 20) then begin
+            if (global_var(GVAR_MUTATE_STAGE) < 3) then begin
+               display_msg(mstr(120));
+               set_global_var(GVAR_MUTATE_STAGE,3);
+            end
+         end
+         else if (days_since_exposed > 15) then begin
+            if (global_var(GVAR_MUTATE_STAGE) < 2) then begin
+               display_msg(mstr(110));
+               set_global_var(GVAR_MUTATE_STAGE,2);
+            end
+         end
+      end//if mutate_stage>0
+   end//if have_mutated=0
 
 	// Check for radiation death screen:
 	/*if (dude_rads > 1000) then

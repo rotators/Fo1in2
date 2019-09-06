@@ -41,28 +41,6 @@ procedure spatial_p_proc begin
 	else begin
 		call pain;
 	end
-
-// Damage Type 3 == Plasma
-//
-/*	if source_obj == dude_obj then begin
-		radiation_inc(dude_obj, 100);
-		Damage := random(5, 30) + (difficulty_level * 10);
-		CurrentHP := dude_cur_hp;
-		if Damage >= CurrentHP then begin
-			critter_dmg( dude_obj, Damage, DMG_plasma );// doesn't NO_ANIMATE, so that you can melt properly
-		end
-		else begin
-			critter_dmg(dude_obj, Damage, 3 bwor 512);// NO_ANIMATE
-		end
-	end
-	else begin
-		if party_member_obj(obj_pid(source_obj)) then begin
-			critter_dmg( source_obj, random(10, 20), DMG_plasma );
-		end
-		else begin
-			critter_dmg( source_obj, random(15, 40), DMG_plasma );
-		end
-	end*/
 end
 
 procedure pain begin
@@ -72,7 +50,6 @@ procedure pain begin
 			radiation_inc(dude_obj, 100);
 			Damage := random(5, 30) + (difficulty_level * 10);
 			CurrentHP := dude_cur_hp;
-
 			if Damage >= CurrentHP then begin
 				critter_dmg( dude_obj, Damage, DMG_plasma );// doesn't NO_ANIMATE, so that you can melt properly
 			end
@@ -80,37 +57,30 @@ procedure pain begin
 				critter_dmg(dude_obj, Damage, 3 bwor 512);// NO_ANIMATE
 			end
 
+         // Let the toe mutate! - Fo2 code
+   		if (global_var(GVAR_MUTATE_STAGE) < 1) then begin
+   		  mutate:=global_var(GVAR_MUTATE);
+   		  mutate:=mutate+2;
+   		  set_global_var(GVAR_MUTATE,mutate);
+   		  if (mutate > 29) then begin
+   		     set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS);
+   		     set_global_var(GVAR_MUTATE_STAGE,1);
+   		     display_msg(mstr(150));
+   		  end
+   		  else if (mutate > 14) then
+   		     display_msg(mstr(140));
+   		  else
+   		     display_msg(mstr(110));
+   		end
 		end
 		else begin
-
 			if party_member_obj(obj_pid(source_obj)) then begin
 				critter_dmg( source_obj, random(10, 20), DMG_plasma );
 			end
 			else begin
 				critter_dmg( source_obj, random(15, 40), DMG_plasma );
 			end
-
 		end
 
-
-
-   	// TODO: Fallout 2 code. Maybe add mutating toe one day?
-		//if not wearing powered armor then do damage
-		//debug_msg("It hurts!");
-		/*if ( (source_obj == dude_obj) and (global_var(GVAR_MUTATE_STAGE) < 1) ) then begin
-		  mutate:=global_var(GVAR_MUTATE);
-		  mutate:=mutate+2;
-		  set_global_var(GVAR_MUTATE,mutate);
-		  if (mutate > 29) then begin
-		     set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS); //store the time
-		     set_global_var(GVAR_MUTATE_STAGE,1);
-		     display_msg(mstr(150));
-		  end
-		  else if (mutate > 14) then
-		     display_msg(mstr(140));
-		  else
-		     display_msg(mstr(110));
-		end
-		critter_dmg(source_obj, 2, DMG_plasma);*/
 	end
 end
