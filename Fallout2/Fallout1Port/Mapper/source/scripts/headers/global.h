@@ -42,11 +42,10 @@
 // Misc - HARDCODED TO THESE GVAR SLOTS
 #define GVAR_LOAD_MAP_INDEX                     (27)    // was 32  (1032) in Fallout 1
 #define GVAR_RUNNING_BURNING_GUY                (28)    // was 603 (1603) in Fallout 1
-
 #define GVAR_MAP_EXIT_TILE                      (46)
 #define GVAR_MAP_NEXT_TILE                      (67)
 
-// Holodisks - VANILLA, DON'T USE (probably)
+// More Fo2 Vanilla stuff
 #define GVAR_HOLODISK_SIERRA_EVACUATION         (164)   // maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_SIERRA_MED_LOG            (165)   // maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_SIERRA_EXP_LOG            (166)   // maybe hard-coded, maybe not?
@@ -56,6 +55,10 @@
 #define GVAR_HOLODISK_MB_LEVEL_3                (223)   // maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_MB_LEVEL_4                (224)   // maybe hard-coded, maybe not?
 
+#define GVAR_MUTATE                         	(132)
+#define GVAR_MUTATE_WHEN                    	(133)
+#define GVAR_HAVE_MUTATED                   	(192)
+#define GVAR_MUTATE_STAGE                   	(193)
 #define GVAR_NEW_RENO_MADE_MAN                  (230)
 
 // Caravans for Cities
