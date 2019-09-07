@@ -37,6 +37,9 @@ variable Scenery_Creation_Ptr;
 #define PID_TEMPLE_SKULL_POLE               (33555374)
 #define PID_RED_ARMCHAIR 			 		(33554665)
 
+#define PID_BUSH_GREEN_1 					(33555375)
+#define PID_BUSH_GREEN_2 					(33555376)
+
 // Navarro Door
 #define PID_NS_NAVARRO_BUNKER_DOOR          (33554450)
 

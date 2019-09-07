@@ -85,6 +85,25 @@ export variable signal_mutants;
 procedure start begin
 end
 
+procedure roll_encounter begin
+	Encounter_Num := random(1, 6) + random(1, 6) + random(1, 6);
+	if (dude_luck >= 9) then begin
+		Encounter_Num := Encounter_Num + 2;
+	end
+	else if (dude_luck >= 7) then begin
+		Encounter_Num := Encounter_Num + 1;
+	end
+	else if (dude_luck == 3) then begin
+		Encounter_Num := Encounter_Num - 1;
+	end
+	else if (dude_luck == 2) then begin
+		Encounter_Num := Encounter_Num - 2;
+	end
+	else if (dude_luck == 1) then begin
+		Encounter_Num := Encounter_Num - 3;
+	end
+end
+
 procedure map_enter_p_proc begin
 	Lighting;
 
@@ -106,22 +125,7 @@ procedure map_enter_p_proc begin
 	Ranger_rerolls := dude_perk( PERK_ranger );
 	set_global_var( GVAR_AGGRO_FLAG_RND_ENC_unsure, 0 );
 	while(Encounter_Num == 0) do begin
-		Encounter_Num := random(1, 6) + random(1, 6) + random(1, 6);
-		if (dude_luck >= 9) then begin
-			Encounter_Num := Encounter_Num + 2;
-		end
-		else if (dude_luck >= 7) then begin
-			Encounter_Num := Encounter_Num + 1;
-		end
-		else if (dude_luck == 3) then begin
-			Encounter_Num := Encounter_Num - 1;
-		end
-		else if (dude_luck == 2) then begin
-			Encounter_Num := Encounter_Num - 2;
-		end
-		else if (dude_luck == 1) then begin
-			Encounter_Num := Encounter_Num - 3;
-		end
+	   call roll_encounter;
 
 		if ((global_var( GVAR_HUNTER_STATUS ) != 3) and has_rep_childkiller and random(0, 1)) then begin
 			Encounter_Num := 99;
@@ -703,7 +707,10 @@ procedure Bone_table begin
 	if (Ranger_rerolls) then begin
 		Ranger_rerolls := (Ranger_rerolls - 1);
 		if ((Encounter_Num == 1) or (Encounter_Num == 3) or (Encounter_Num == 5) or (Encounter_Num == 7)) then begin
-			Encounter_Num := 0;
+		   while ((Encounter_Num == 1) or (Encounter_Num == 3) or (Encounter_Num == 5) or (Encounter_Num == 7)) do begin
+            call roll_encounter;
+         end
+		   debug(" ");  debug("RANGER PERK rerolls; Encounter_Num == " + Encounter_Num);
 		end
 	end
 	if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
@@ -1206,12 +1213,14 @@ begin
 	Dude_tile := dude_tile;
 end
 
-procedure CITY_North_VANILLA_table
-begin
+procedure CITY_North_VANILLA_table begin
 	if (Ranger_rerolls) then begin
 		Ranger_rerolls := (Ranger_rerolls - 1);
 		if ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 6) or (Encounter_Num == 7)) then begin
-			Encounter_Num := 0;
+		   while ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 6) or (Encounter_Num == 7)) do begin
+            call roll_encounter;
+         end
+		   debug(" ");  debug("RANGER PERK rerolls; Encounter_Num == " + Encounter_Num);
 		end
 	end
 	if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
@@ -1223,34 +1232,24 @@ begin
 		if (Encounter_Num == 1) then begin
 			call CITY_North_VANILLA_1;
 		end
-		else begin
-			if (Encounter_Num == 2) then begin
-				call CITY_North_VANILLA_2;
-			end
-			else begin
-				if (Encounter_Num == 3) then begin
-					call CITY_North_VANILLA_3;
-				end
-				else begin
-					if (Encounter_Num == 4) then begin
-						call CITY_North_VANILLA_4;
-					end
-					else begin
-						if (Encounter_Num == 5) then begin
-							call CITY_North_VANILLA_5;
-						end
-						else begin
-							if (Encounter_Num == 6) then begin
-								call CITY_North_VANILLA_6;
-							end
-							else begin
-								call hunters;
-							end
-						end
-					end
-				end
-			end
+		else if (Encounter_Num == 2) then begin
+			call CITY_North_VANILLA_2;
 		end
+		else if (Encounter_Num == 3) then begin
+			call CITY_North_VANILLA_3;
+		end
+		else if (Encounter_Num == 4) then begin
+			call CITY_North_VANILLA_4;
+		end
+		else if (Encounter_Num == 5) then begin
+			call CITY_North_VANILLA_5;
+		end
+		else if (Encounter_Num == 6) then begin
+			call CITY_North_VANILLA_6;
+		end
+		else begin
+			call hunters;
+	   end
 	end
 end
 
@@ -1258,7 +1257,10 @@ procedure Necrop_table begin
 	if (Ranger_rerolls) then begin
 		Ranger_rerolls := (Ranger_rerolls - 1);
 		if ((Encounter_Num == 2) or (Encounter_Num == 3) or (Encounter_Num == 5) or (Encounter_Num == 7)) then begin
-			Encounter_Num := 0;
+		   while ((Encounter_Num == 2) or (Encounter_Num == 3) or (Encounter_Num == 5) or (Encounter_Num == 7)) do begin
+            call roll_encounter;
+         end
+		   debug(" ");  debug("RANGER PERK rerolls; Encounter_Num == " + Encounter_Num);
 		end
 	end
 	if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
@@ -1621,7 +1623,10 @@ procedure Vats_table begin
 	if (Ranger_rerolls) then begin
 		Ranger_rerolls := (Ranger_rerolls - 1);
 		if ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 3) or (Encounter_Num == 4) or (Encounter_Num == 7)) then begin
-			Encounter_Num := 0;
+		   while ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 3) or (Encounter_Num == 4) or (Encounter_Num == 7)) do begin
+            call roll_encounter;
+         end
+		   debug(" ");  debug("RANGER PERK rerolls; Encounter_Num == " + Encounter_Num);
 		end
 	end
 	if (global_var( GVAR_RANDOM_ENC_SOMETHING ) > 0) then begin
