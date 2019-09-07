@@ -170,6 +170,7 @@
 #define EXP_DOGMEAT_JOINS_PARTY                 (100)
 #define EXP_HIRED_TYCHO                         (300)
 #define EXP_SAUL_TRISH_RELATIONSHIP 			(250)
+#define EXP_BUSTING_OUT_OF_JAIL     			(250)
 
 // Hub
 #define EXP_BOUGHT_WATER_CARAVAN                (1000)
