@@ -50,6 +50,8 @@ procedure NodeOpen;
 
 #define float_dude(x)             float_msg(dude_obj, message_str(NAME,x), FLOAT_COLOR_NORMAL)
 
+#define EVENT_OPEN_DOOR    (1)
+
 /*****************************************************************
    Local Variables which are saved. All Local Variables need to be
    prepended by LVAR_
@@ -82,7 +84,7 @@ procedure start begin
 end
 
 procedure timed_event_p_proc begin
-   if ( fixed_param == 1 ) then begin
+   if ( fixed_param == EVENT_OPEN_DOOR ) then begin
       reg_anim_clear(self_obj); //added by killap
       obj_unlock( self_obj );
       obj_open( self_obj );
@@ -111,8 +113,8 @@ end
 ***************************************************************************/
 
 procedure look_at_p_proc begin
-   script_overrides;
-   display_msg(mstr(100));
+   //script_overrides;
+   //display_msg(mstr(100));
 end
 
 
@@ -152,33 +154,25 @@ end
 
 procedure use_obj_on_p_proc begin
    variable object;
-   //variable objectPID;
-   object:=obj_pid(obj_being_used_with); //combined into one by killap
-   
+   object:=obj_pid(obj_being_used_with);
+
    if( local_var( LVAR_Door_Open ) == 1 ) then
       call Node008;
    else begin
       script_overrides;
-      //object := obj_being_used_with; - comment out by killap
-      //objectPID := obj_pid( object ); - comment out by killap
-      
+
       if( object == PID_CROWBAR ) then begin
-         //script_overrides; //coment out by killap
          if( dude_strength > 6 ) then
             call Node004;
          else begin
             call Node003;
          end
       end
-      //else if( ( object == PID_DYNAMITE ) or ( object == PID_PLASTIC_EXPLOSIVES ) ) then begin --comment out by killap
-         //script_overrides; - comment out by killap
-      //   call Node006;
-      //end
       else if( ( object == PID_LOCKPICKS ) or ( object == PID_ELECTRONIC_LOCKPICKS ) or ( object == PID_EXP_LOCKPICK_SET ) or ( object == PID_ELEC_LOCKPICK_MKII ) ) then begin
-         //script_overrides; - comment out by killap
          call Node007;
       end
    end
+
 end
 
 
@@ -235,8 +229,6 @@ procedure Node004 begin
    float_dude(106);
    display_msg( mstr(107) );
    call NodeOpen;
-//   set_local_var( LVAR_Door_Open, 1 );
-//   obj_open( self_obj );
 end
 
 procedure Node005 begin
@@ -247,7 +239,7 @@ end
 
 procedure NodeOpen begin
    set_local_var( LVAR_Door_Open, 1 );
-   add_timer_event(self_obj,2,1); //edit by killap (changed from 1,1 to 2,1)
+   add_timer_event(self_obj,2,EVENT_OPEN_DOOR);
 end
 
 procedure Node006 begin
