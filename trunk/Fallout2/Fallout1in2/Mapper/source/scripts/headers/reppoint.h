@@ -492,6 +492,7 @@
 #define REP_BONUS_KILLED_NEAL 					(-5)
 #define REP_BONUS_KILLED_GIZMO					(10)
 #define REP_BONUS_KILLED_KILLIAN				(-10)
+#define REP_BONUS_FLEEING_JAIL 					(-5)
 #define inc_junktown_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_JUNKTOWN, x)
 
 // Hub
