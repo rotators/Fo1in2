@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\maps\junkkill.h"
+#include "..\headers\sfall\main.h"
 
 #define NAME                    SCRIPT_KILLIAN
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -20,6 +21,7 @@ procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 procedure map_enter_p_proc;
+procedure map_exit_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 
@@ -165,12 +167,9 @@ variable sleep_tile := 27896;
 variable wake_time := 650;
 variable sleep_time := 1900;
 
-variable SrcObj := 0;
-variable SrcIsParty := 0;
-
 variable remove_dude;
 
-#define LVAR_Sleeping 							(7)
+#define LVAR_Sleeping 	      (7)
 
 procedure start begin
 end
@@ -263,7 +262,7 @@ end
 procedure map_enter_p_proc begin
 	remove_dude := 0;
 	Killian_ptr := self_obj;
-	if (global_var( GVAR_KILLIAN_DEAD ) == 1) then begin
+	if not(is_killian_alive) then begin
 		destroy_object(self_obj);
 	end
 	else begin
@@ -293,6 +292,18 @@ procedure map_enter_p_proc begin
 			end
 		end
 	end
+end
+
+procedure map_exit_p_proc begin
+variable critter;
+
+   // Remove the dead body of Kenji:
+   foreach critter in list_as_array(LIST_CRITTERS) begin
+      if (critter_state(critter) == CRITTER_IS_DEAD) then begin
+         if (obj_pid(critter) == PID_KENJI) then
+            destroy_object(critter);
+      end
+   end
 end
 
 procedure pickup_p_proc begin
