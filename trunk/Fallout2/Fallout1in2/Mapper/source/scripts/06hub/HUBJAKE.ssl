@@ -47,8 +47,10 @@ procedure Get_Stuff;
 procedure Put_Stuff;
 
 variable tmp_hostile;
-variable tmp_box;
 variable Only_Once := 1;
+
+variable tmp_box;
+variable killed := 0;
 
 import variable Jake_Desk_Ptr;
 
@@ -57,6 +59,7 @@ import variable Jake_Desk_Ptr;
 #define LVAR_Restock_Time     (6)
 #define LVAR_Caps_Amount      (7)
 #define LVAR_CheckedSelection (8)
+#define LVAR_GeigerCounter    (9)
 
 procedure start begin
 	if Only_Once then begin
@@ -125,8 +128,9 @@ procedure talk_p_proc begin
 end
 
 procedure destroy_p_proc begin
-	move_obj_inven_to_obj(Jake_Desk_Ptr, self_obj);
 	inc_good_critter
+   killed := 1;
+	move_obj_inven_to_obj(Jake_Desk_Ptr, self_obj);
 end
 
 procedure look_at_p_proc begin
@@ -154,6 +158,12 @@ procedure Jake01 begin
 end
 
 procedure Jake02 begin
+   // Add one Geiger Counter if there is none right now (dialog consistency)
+   if (get_item_count(self_obj,PID_GEIGER_COUNTER) == 0) and (local_var(LVAR_GeigerCounter) == 0) then begin
+      set_local_var(LVAR_GeigerCounter,1);
+      give_pid_qty(self_obj, PID_GEIGER_COUNTER, 1)
+   end
+
 	gsay_reply( SCRIPT_HUBJAKE, 109 );
 	giq_option( 4, SCRIPT_HUBJAKE, 110, Barter, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 111, Jake05, NEUTRAL_REACTION );
@@ -288,11 +298,11 @@ end
 procedure Jake16 begin
 	if (global_var( GVAR_WORLDMAPLIST_BROTHERHOOD ) == 0) then
 		set_global_var( GVAR_WORLDMAPLIST_BROTHERHOOD, 1 );
-		mark_on_map(AREA_BROTHERHOOD)
+   mark_on_map(AREA_BROTHERHOOD)
 
 	if (global_var( GVAR_WORLDMAPLIST_BONEYARD ) == 0) then
 		set_global_var( GVAR_WORLDMAPLIST_BONEYARD, 1 );
-		mark_on_map(AREA_BONEYARD)
+   mark_on_map(AREA_BONEYARD)
 
 	gsay_message( SCRIPT_HUBJAKE, 166, 50 );
 end
@@ -313,14 +323,16 @@ end
 procedure Get_Stuff begin
 variable wield_pid;
 
-   // Create a temp box to save Jacobs "real" inventory
-   tmp_box := create_object( PID_CONTAINER_WOOD_CRATE, 0, 0 );
-   move_obj_inven_to_obj(self_obj, tmp_box);
+   if (killed == 0) then begin
+      // Create a temp box to save Jacobs "real" inventory
+      tmp_box := create_object( PID_CONTAINER_WOOD_CRATE, 0, 0 );
+      move_obj_inven_to_obj(self_obj, tmp_box);
 
-   // We create a new temporary sledge hammer for Jacob, so he keeps it while in dialog mode
-   // TODO: Improve code to only move items he doesn't wield, so we don't have to spawn the extra sledge
-   wield_pid := create_object( PID_SUPER_SLEDGE, 0, 0 );
-   wield_obj(wield_pid);
+      // We create a new temporary sledge hammer for Jacob, so he keeps it while in dialog mode
+      // TODO: Improve code to only move items he doesn't wield, so we don't have to spawn the extra sledge
+      wield_pid := create_object( PID_SUPER_SLEDGE, 0, 0 );
+      wield_obj(wield_pid);
+   end
 
    // Move the barter inventory to Jacob
 	move_obj_inven_to_obj(Jake_Desk_Ptr, self_obj);
@@ -329,14 +341,14 @@ end
 procedure Put_Stuff begin
 variable wield_pid;
 
-   // We remove the temporary sledge hammer before giving him back his real inventory
+   // We remove the temporary weapon before giving him back his real inventory
    wield_pid := self_item(PID_SUPER_SLEDGE);
    destroy_object(wield_pid);
 
    // Move the barter inventory back into the trade box
 	move_obj_inven_to_obj(self_obj, Jake_Desk_Ptr);
 
-   // Now give Jacob his inventory back, get rid of the temp box and wield the real sledge
+   // Now give his inventory back, get rid of the temp box and wield the real weapon
    move_obj_inven_to_obj(tmp_box, self_obj);
    destroy_object(tmp_box);
    wield_pid := self_item(PID_SUPER_SLEDGE);
