@@ -47,6 +47,7 @@ procedure Get_Stuff;
 procedure Put_Stuff;
 
 variable tmp_hostile;
+variable tmp_box;
 variable Only_Once := 1;
 
 import variable Jake_Desk_Ptr;
@@ -55,6 +56,7 @@ import variable Jake_Desk_Ptr;
 #define LVAR_Hostile          (5)
 #define LVAR_Restock_Time     (6)
 #define LVAR_Caps_Amount      (7)
+#define LVAR_CheckedSelection (8)
 
 procedure start begin
 	if Only_Once then begin
@@ -167,6 +169,8 @@ procedure Jake03 begin
 end
 
 procedure Jake04 begin
+   set_local_var(LVAR_Here_Before,2);
+
 	gsay_message( SCRIPT_HUBJAKE, 118, 50 );
 	gsay_reply( SCRIPT_HUBJAKE, 162 );
 	giq_option( 4, SCRIPT_HUBJAKE, 119, Barter, NEUTRAL_REACTION );
@@ -219,7 +223,19 @@ procedure Jake09 begin
 	giq_option( -3, SCRIPT_HUBJAKE, 144, Barter, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_HUBJAKE, 145, Jake13, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 146, Barter, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_HUBJAKE, 165, Jake16, NEUTRAL_REACTION );
+
+	if (local_var(LVAR_Here_Before) < 2) then begin
+   	if (global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) != 2) then begin
+   		giq_option( 4, SCRIPT_HUBJAKE, 104, Jake03, NEUTRAL_REACTION );
+   	end
+   	giq_option( 4, SCRIPT_HUBJAKE, 105, Jake04, NEUTRAL_REACTION );
+   end
+
+	if (local_var(LVAR_CheckedSelection) > 0) then
+	   giq_option( 4, SCRIPT_HUBJAKE, 165, Jake16, NEUTRAL_REACTION );
+	else
+      giq_option( 4, SCRIPT_HUBJAKE, 103, Jake02, NEUTRAL_REACTION );
+
 	giq_option( 4, SCRIPT_HUBJAKE, 147, Jake13, NEUTRAL_REACTION );
 end
 
@@ -228,7 +244,19 @@ procedure Jake10 begin
 	giq_option( -3, SCRIPT_HUBJAKE, 149, Barter, NEUTRAL_REACTION );
 	giq_option( -3, SCRIPT_HUBJAKE, 150, Jake13, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 151, Barter, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_HUBJAKE, 165, Jake16, NEUTRAL_REACTION );
+
+	if (local_var(LVAR_Here_Before) < 2) then begin
+   	if (global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) != 2) then begin
+   		giq_option( 4, SCRIPT_HUBJAKE, 104, Jake03, NEUTRAL_REACTION );
+   	end
+   	giq_option( 4, SCRIPT_HUBJAKE, 105, Jake04, NEUTRAL_REACTION );
+   end
+
+	if (local_var(LVAR_CheckedSelection) > 0) then
+	   giq_option( 4, SCRIPT_HUBJAKE, 165, Jake16, NEUTRAL_REACTION );
+	else
+      giq_option( 4, SCRIPT_HUBJAKE, 103, Jake02, NEUTRAL_REACTION );
+
 	giq_option( 4, SCRIPT_HUBJAKE, 152, Jake15, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUBJAKE, 153, Jake13, NEUTRAL_REACTION );
 end
@@ -273,6 +301,8 @@ procedure JakeEnd begin
 end
 
 procedure Barter begin
+   set_local_var(LVAR_CheckedSelection,1);
+
 	gsay_message( SCRIPT_HUBJAKE, 158, 50 );
 	gdialog_mod_barter(-15);
 	gsay_reply( SCRIPT_HUBJAKE, 159 );
@@ -281,9 +311,34 @@ procedure Barter begin
 end
 
 procedure Get_Stuff begin
+variable wield_pid;
+
+   // Create a temp box to save Jacobs "real" inventory
+   tmp_box := create_object( PID_CONTAINER_WOOD_CRATE, 0, 0 );
+   move_obj_inven_to_obj(self_obj, tmp_box);
+
+   // We create a new temporary sledge hammer for Jacob, so he keeps it while in dialog mode
+   // TODO: Improve code to only move items he doesn't wield, so we don't have to spawn the extra sledge
+   wield_pid := create_object( PID_SUPER_SLEDGE, 0, 0 );
+   wield_obj(wield_pid);
+
+   // Move the barter inventory to Jacob
 	move_obj_inven_to_obj(Jake_Desk_Ptr, self_obj);
 end
 
 procedure Put_Stuff begin
+variable wield_pid;
+
+   // We remove the temporary sledge hammer before giving him back his real inventory
+   wield_pid := self_item(PID_SUPER_SLEDGE);
+   destroy_object(wield_pid);
+
+   // Move the barter inventory back into the trade box
 	move_obj_inven_to_obj(self_obj, Jake_Desk_Ptr);
+
+   // Now give Jacob his inventory back, get rid of the temp box and wield the real sledge
+   move_obj_inven_to_obj(tmp_box, self_obj);
+   destroy_object(tmp_box);
+   wield_pid := self_item(PID_SUPER_SLEDGE);
+   wield_obj(wield_pid);
 end
