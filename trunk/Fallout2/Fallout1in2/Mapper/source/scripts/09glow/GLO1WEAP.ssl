@@ -1,29 +1,86 @@
 #include "..\headers\define.h"
+
+#define NAME                    SCRIPT_GLO1WEAP
+
 #include "..\headers\command.h"
 
 procedure start;
+procedure timed_event_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_p_proc;
+procedure use_obj_on_p_proc;
+procedure damage_p_proc;
 
+#define float_dude(x)             float_msg(dude_obj, message_str(NAME,x), FLOAT_COLOR_NORMAL)
 
-procedure start
-begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
-	variable LVar3 := 0;
-	LVar0 := dude_strength;
-	LVar1 := dude_agility;
-	LVar2 := dude_luck;
-	LVar3 := LVar0 + LVar1 + LVar2;
-	if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+#define EVENT_OPEN_DOOR    (1)
+
+#define LVAR_Door_Open     (0)
+
+variable stats_combined := 0;
+variable crowbar := 0;
+
+procedure start begin
+   if (local_var(LVAR_Door_Open) == 0) then
+      obj_lock(self_obj);
+   else
+      obj_unlock(self_obj);
+end
+
+procedure timed_event_p_proc begin
+   if ( fixed_param == EVENT_OPEN_DOOR ) then begin
+      set_local_var(LVAR_Door_Open, 1);
+      reg_anim_clear(self_obj);
+      obj_unlock(self_obj);
+      obj_open(self_obj);
+
+      float_dude(104);
+
+      if (crowbar > 0) then
+         display_msg(mstr(102));
+   end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(mstr(100));
+end
+
+procedure use_p_proc begin
+   stats_combined := dude_strength + dude_agility + dude_luck;
+
+	if ((dude_strength < (8 - crowbar)) and (stats_combined < (18 - crowbar))) and (local_var(LVAR_Door_Open) == 0) then begin
 		script_overrides;
-		display_msg(message_str(SCRIPT_GLO1WEAP, 100));
+      if (crowbar > 0) then
+         display_msg(mstr(101) + " " + mstr(103));
+      else
+         display_msg(mstr(101));
 	end
-	else begin
-		if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-			if ((LVar0 < 8) and (LVar3 < 18)) then begin
-				script_overrides;
-				display_msg(message_str(SCRIPT_GLO1WEAP, 101));
-			end
-		end
+	else if (local_var(LVAR_Door_Open) == 0) then begin
+	   add_timer_event(self_obj,2,EVENT_OPEN_DOOR);
 	end
 end
+
+procedure use_obj_on_p_proc begin
+variable object;
+   object:=obj_pid(obj_being_used_with);
+
+   if (object == PID_CROWBAR) then begin
+      crowbar := 2;
+      call use_p_proc;
+   end
+end
+
+procedure damage_p_proc begin
+   script_overrides;
+
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then
+      display_msg(message_str(SCRIPT_DOOR,193));
+end
+

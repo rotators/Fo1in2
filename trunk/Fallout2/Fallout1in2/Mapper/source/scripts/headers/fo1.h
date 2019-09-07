@@ -50,8 +50,13 @@
 
 #define military_base_destoryed             (global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) > 0)
 #define cathedral_destroyed                 (global_var(GVAR_MASTER_BLOWN_CUTSCENE) > 0)
+#define set_military_base_destoryed         set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1); \
+                                            set_end_Vats
+#define set_cathedral_destroyed             set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1); \
+                                            set_end_Master
 
 #define necropolis_wpump_fixed              (global_var(GVAR_NECROP_WATER_PUMP_FIXED) == 2)
+
 #define followers_trained                   (global_var(GVAR_SLIDE_TRAIN_FOLLOWERS) == 1)
 
 #define get_raiders_alive                   global_var(GVAR_TOTAL_RAIDERS)
@@ -65,10 +70,8 @@
 #define is_nicole_alive                     (global_var(GVAR_IS_NICOLE_ALIVE) == 0)
 
 #define is_laura_alive                      (global_var(GVAR_IS_LAURA_ALIVE) != 1)
-
 #define set_laura_escaping                  set_global_var(GVAR_IS_LAURA_ALIVE,2)
 #define is_laura_escaping                   (global_var(GVAR_IS_LAURA_ALIVE) == 2)
-
 #define set_laura_escaped                   set_global_var(GVAR_IS_LAURA_ALIVE,3)
 #define is_laura_escaped                    (global_var(GVAR_IS_LAURA_ALIVE) == 3)
 
