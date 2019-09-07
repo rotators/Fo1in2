@@ -181,6 +181,9 @@ end
 #define set_self_invisible          set_obj_invisible(self_obj)
 #define set_self_visible            set_obj_visible(self_obj)
 
+#define set_disable_barter          set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_BARTER))
+#define set_enable_barter           set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_BARTER)
+
 /*********************************************************
     Settings:
 *********************************************************/
