@@ -234,6 +234,8 @@ variable merch_slot_armor_flags;
 #define fo1in2_motorcycle_disabled      (global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
 #define fo1in2_destroy_armor_disabled   (global_var(GVAR_ARMOR_DESTROY_MOD) == 0)
 #define fo1in2_merch_restock_disabled   (global_var(GVAR_ENABLE_FO2_MERCHANT_RESTOCK) == 0)
+#define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
+
 
 /*********************************************************
     Pick dead body type:

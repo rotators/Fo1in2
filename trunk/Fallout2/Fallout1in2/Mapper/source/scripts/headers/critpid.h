@@ -201,7 +201,7 @@
 #define PID_DEADLY_NIGHTKIN 			(16777407)
 #define PID_SUPER_NIGHTKIN 				(16777408)
 #define PID_MASTER_NIGHTKIN 			(16777409)
-#define PID_GUARD_NMPEAS				(16777410)	// (194)
+#define PID_GUARD_NMPEAS				(16777410)	// (194) - Used for Irwine in the Hub
 #define PID_MERCHANT_7 					(16777411)
 #define PID_GUARD_6 					(16777412)
 #define PID_GUARD_7 					(16777413)

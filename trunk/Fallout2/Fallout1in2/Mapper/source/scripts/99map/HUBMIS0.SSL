@@ -1,28 +1,42 @@
+/*
+
+	Hub - Irwine Farm
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
+#include "..\headers\maps\hubmis.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == map_enter_proc
-procedure map_update_p_proc;//    script_action == map_update_proc
-procedure map_exit_p_proc;//    script_action == map_exit_proc
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
 
-
-variable party_elevation;
-variable dude_start_hex;
-
+variable critter;
 
 procedure start begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	Lighting;
-	override_map_start(122, 101, 0, 2);
+	override_map_start(122, 101, 0, 0);
+
+	// If the player has finished the quest, move Irwine into the map
+	if (global_var(GVAR_IRWIN_FARM_STATUS) == 2) and (map_var(MVAR_IRWINE_ARRIVED) == 0) then begin
+	   set_map_var(MVAR_IRWINE_ARRIVED,1);
+		critter := create_object_sid(PID_GUARD_NMPEAS, 0, 0, SCRIPT_IRWIN);
+		critter_attempt_placement(critter, 20295, 0);
+	end
+
+   // If satellite quest locations are enabled, exit to the worldmap and not hub downtown
+	if not(fo1in2_satellite_loc_disabled) then begin
+	   set_exit_grids(0,-2,0,20100,0);
+	end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
 	if (dude_elevation == 1) then begin
 		Darkness;
 	end
@@ -34,5 +48,4 @@ begin
 end
 
 procedure map_exit_p_proc begin
-//	game_time_advance((0 - (10 * 60 * 60 * 24 * 6)));
 end

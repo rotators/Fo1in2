@@ -67,5 +67,8 @@
 #define MVAR_UNDERGROUND_SURRENDERED            (54)
 #define MVAR_VAULT_OPEN                         (55)
 #define MVAR_BUTCH_AWAITING_INFO                (56)
+#define MVAR_Butch_Awaiting_Info                (56)
+#define MVAR_Invasion                           (57) // Has this map been invaded by Super Mutants?
+#define MVAR_Fixt_IRWIN_CLOCK_ROLLBACK          (58) // set to 1 means roll back one week on map exit
 
 #endif // HUBDWNTN_H
