@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\huboldtn.h"
 
 #define NAME                    SCRIPT_SLAPPY
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -37,6 +37,7 @@ procedure Slappy10;
 procedure Slappy11;
 procedure SlappyEnd;
 procedure SlappyClaw;
+procedure SlappyClaw2;
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -45,7 +46,7 @@ variable lastBabble;
 procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		set_self_team(TEAM_HUB_SKAG );
+		set_self_team( TEAM_HUB_SKAG );
 		set_self_ai( AI_HUB_MUTANTS );
 	end
 end
@@ -116,7 +117,7 @@ end
 
 procedure Slappy01 begin
 	gsay_reply( SCRIPT_SLAPPY, 108 );
-	if (global_var( GVAR_MISSING_CARAVANS_STATUS ) == 3) then begin
+	if (global_var( GVAR_MISSING_CARAVANS_STATUS ) == 3) and not(hub_lair_visible_on_map) then begin
 		giq_option( 4, SCRIPT_SLAPPY, 109, Slappy03, NEUTRAL_REACTION );
 	end
 	if (global_var( GVAR_MISSING_CARAVANS_STATUS ) == 2) then begin
@@ -157,8 +158,15 @@ procedure Slappy06 begin
 end
 
 procedure Slappy07 begin
-	gsay_reply( SCRIPT_SLAPPY, 128 );
-	giq_option( 4, SCRIPT_SLAPPY, 129, SlappyClaw, NEUTRAL_REACTION );
+	if fo1in2_satellite_loc_disabled then begin
+	   gsay_reply( SCRIPT_SLAPPY, 128 );
+	   giq_option( 4, SCRIPT_SLAPPY, 129, SlappyClaw, NEUTRAL_REACTION );
+	end
+	else if not(hub_lair_visible_on_map) then begin
+	   Reply(2000);
+	   giq_option( 4, SCRIPT_SLAPPY, 2010, SlappyClaw2, NEUTRAL_REACTION );
+	end
+
 	giq_option( 4, SCRIPT_SLAPPY, 130, SlappyEnd, NEUTRAL_REACTION );
 end
 
@@ -183,11 +191,25 @@ end
 procedure SlappyEnd begin
 end
 
+// Vanilla Fo1, teleport the player:
 procedure SlappyClaw begin
-	if (map_var(10) == 0) then begin
-		set_map_var(10, 1);
+	if (map_var(MVAR_Once_DeathClaw) == 0) then begin
+		set_map_var(MVAR_Once_DeathClaw, 1);
 		give_exp_points(EXP_FIND_DEATHCLAW);
 		display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_FIND_DEATHCLAW + message_str(SCRIPT_GENCHAT, 104));
 	end
-	load_map(MAP_DETHCLAW, 0);
+   load_map(MAP_DETHCLAW, 0);
+end
+
+// If the player enabled satellite quest locations, mark the location instead:
+procedure SlappyClaw2 begin
+   Reply(2100);
+   NOption(2110,SlappyEnd,001);
+
+	if (map_var(MVAR_Once_DeathClaw) == 0) then begin
+		set_map_var(MVAR_Once_DeathClaw, 1);
+		give_exp_points(EXP_FIND_DEATHCLAW);
+		display_msg(mstr(150) + EXP_FIND_DEATHCLAW + mstr(151));
+	end
+   mark_hub_lair_on_map
 end

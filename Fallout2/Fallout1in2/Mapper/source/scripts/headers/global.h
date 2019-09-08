@@ -4110,8 +4110,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4979)
 #define RESERVED_FOR_FALLOUT_FIXT               (4980)
 #define RESERVED_FOR_FALLOUT_FIXT               (4981)
-#define RESERVED_FOR_FALLOUT_FIXT               (4982)
-#define RESERVED_FOR_FALLOUT_FIXT               (4983)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4982)*/
+#define GVAR_ENABLE_SATELLITE_LOCATIONS         (4983)
 #define GVAR_ENC_QUACK_DEAD                     (4984)
 #define GVAR_CAR_PREV_STATUS                    (4985)
 #define GVAR_ENABLE_FO2_MERCHANT_RESTOCK        (4986)

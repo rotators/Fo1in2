@@ -166,11 +166,11 @@ procedure destroy_p_proc begin
 end
 
 procedure travel begin
-	game_time_advance(game_ticks(60 * 30));
 	if (radscorp_quest_inactive and not(radscorp_quest_completed)) then begin
 		set_radscorp_quest_active;
 	end
-	load_map("caves.map", 1);
+   game_time_advance(game_ticks(60 * 30));
+   load_map(MAP_CAVES, 1);
 end
 
 procedure no_travel begin
@@ -260,7 +260,7 @@ procedure Seth08 begin
 		giq_option( 4, SCRIPT_SETH, 116, Seth11, NEUTRAL_REACTION );
 	end
 	giq_option( 4, SCRIPT_SETH, 117, Seth12, NEUTRAL_REACTION );
-	if ((local_var(LVAR_Here_Before) == 1) and not(radscorp_quest_completed)) then begin
+	if ((local_var(LVAR_Here_Before) == 1) and not(radscorp_quest_completed) and not(shady_caves_visible_on_map)) then begin
 		giq_option( 4, SCRIPT_SETH, 118, Seth13, NEUTRAL_REACTION );
 		giq_option( -3, SCRIPT_SETH, 119, Seth13, NEUTRAL_REACTION );
 	end
@@ -286,7 +286,7 @@ procedure Seth09 begin
 		giq_option( 4, SCRIPT_SETH, 116, Seth11, NEUTRAL_REACTION );
 	end
 	giq_option( 4, SCRIPT_SETH, 117, Seth12, NEUTRAL_REACTION );
-	if (local_var(LVAR_Here_Before) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
 		giq_option( 4, SCRIPT_SETH, 118, Seth13, NEUTRAL_REACTION );
 		giq_option( -3, SCRIPT_SETH, 119, Seth13, NEUTRAL_REACTION );
 	end
@@ -305,7 +305,7 @@ procedure Seth10 begin
 		giq_option( 4, SCRIPT_SETH, 116, Seth11, NEUTRAL_REACTION );
 	end
 	giq_option( 4, SCRIPT_SETH, 117, Seth12, NEUTRAL_REACTION );
-	if (local_var(LVAR_Here_Before) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
 		giq_option( 4, SCRIPT_SETH, 118, Seth13, NEUTRAL_REACTION );
 		giq_option( -3, SCRIPT_SETH, 119, Seth13, NEUTRAL_REACTION );
 	end
@@ -321,7 +321,7 @@ procedure Seth11 begin
 		giq_option( 4, SCRIPT_SETH, 115, Seth10, NEUTRAL_REACTION );
 	end
 	giq_option( 4, SCRIPT_SETH, 117, Seth12, NEUTRAL_REACTION );
-	if (local_var(LVAR_Here_Before) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
 		giq_option( 4, SCRIPT_SETH, 118, Seth13, NEUTRAL_REACTION );
 		giq_option( -3, SCRIPT_SETH, 119, Seth13, NEUTRAL_REACTION );
 	end
@@ -332,7 +332,7 @@ procedure Seth12 begin
 	gsay_reply( SCRIPT_SETH, 124 );
 	giq_option( 4, SCRIPT_SETH, 115, Seth10, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_SETH, 116, Seth11, NEUTRAL_REACTION );
-	if (local_var(LVAR_Here_Before) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
 		giq_option( 4, SCRIPT_SETH, 118, Seth13, NEUTRAL_REACTION );
 		giq_option( -3, SCRIPT_SETH, 119, Seth13, NEUTRAL_REACTION );
 	end
@@ -340,16 +340,26 @@ procedure Seth12 begin
 end
 
 procedure Seth13 begin
-	if radscorp_quest_completed then begin
-		gsay_reply( SCRIPT_SETH, 202 );
-	end
-	else begin
-		gsay_reply( SCRIPT_SETH, 125 );
-	end
-	giq_option( 4, SCRIPT_SETH, 126, travel, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SETH, 127, no_travel, NEUTRAL_REACTION );
-	giq_option( -3, SCRIPT_SETH, 130, travel, NEUTRAL_REACTION );
-	giq_option( -3, SCRIPT_SETH, 131, no_travel, NEUTRAL_REACTION );
+   // Vanilla Fo1, teleport the player:
+   if fo1in2_satellite_loc_disabled then begin
+   	if radscorp_quest_completed then begin
+   		gsay_reply( SCRIPT_SETH, 202 );
+   	end
+   	else begin
+   		gsay_reply( SCRIPT_SETH, 125 );
+   	end
+   	giq_option( 4, SCRIPT_SETH, 126, travel, NEUTRAL_REACTION );
+   	giq_option( 4, SCRIPT_SETH, 127, no_travel, NEUTRAL_REACTION );
+   	giq_option( -3, SCRIPT_SETH, 130, travel, NEUTRAL_REACTION );
+   	giq_option( -3, SCRIPT_SETH, 131, no_travel, NEUTRAL_REACTION );
+   end
+
+   // If the player enabled satellite quest locations, mark the location instead:
+   else begin
+  		Reply(2000);
+  		NOption(2010,Sethend,001);
+      mark_shady_caves_on_map
+   end
 end
 
 procedure Seth14 begin
