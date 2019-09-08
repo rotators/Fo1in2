@@ -42,7 +42,8 @@ variable Only_Once := 1;
 // Fallout Fixt:
 procedure GoBack;
 procedure MapLoad;
-procedure MapMark;
+procedure MapMark1;
+procedure MapMark2;
 
 
 procedure start begin
@@ -121,15 +122,18 @@ procedure IrwinTalks begin
 end
 
 procedure IrwinAccept begin
-	gsay_message( SCRIPT_IRWIN, 109, 50 );
-	set_global_var( GVAR_IRWIN_FARM_STATUS, 1 );
+   set_global_var( GVAR_IRWIN_FARM_STATUS, 1 );
 
 	// If the player enabled satellite quest locations, mark the location instead.
 	// Otherwise teleport the player:
-	if fo1in2_satellite_loc_disabled then
+	if fo1in2_satellite_loc_disabled then begin
+	   gsay_message( SCRIPT_IRWIN, 109, 50 );
 	   call MapLoad;
-	else
-      call MapMark;
+	end
+	else begin
+	   Reply(109);
+	   NOption(2001, MapMark1, 001);
+   end
 end
 
 procedure IrwinEnd begin
@@ -206,8 +210,8 @@ procedure GoBack begin
 	end
 	else begin
 	   Reply( 401);
-	   NOption( 402, MapMark, 4 );
-	   NOption( 403, MapMark, -3 );
+	   NOption( 402, MapMark1, 4 );
+	   NOption( 403, MapMark1, -3 );
 	end
 end
 
@@ -216,9 +220,16 @@ procedure MapLoad begin
 	load_map(MAP_HUBMIS0, 1);
 end
 
-procedure MapMark begin
-   game_time_advance(ONE_GAME_MINUTE * random(15,30));
+procedure MapMark1 begin
    Reply(2000);
-   NOption(2010, IrwinEnd, 001);
-   mark_hub_farm_on_map
+   NOption(2001, MapMark2, 001);
 end
+
+procedure MapMark2 begin
+   gfade_out(60);
+   mark_hub_farm_on_map
+   game_time_advance(ONE_GAME_MINUTE * random(15,30));
+   gfade_in(60);
+   GMessage(2002);
+end
+
