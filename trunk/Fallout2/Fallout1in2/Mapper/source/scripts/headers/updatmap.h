@@ -207,6 +207,10 @@
 #define CAR_CATHEDRAL_HEX                    (21475)
 #define CAR_CATHEDRAL_DEAD_HEX               (21901)
 
+#define CAR_SHADY_CAVES_HEX                  (20962)
+#define CAR_HUB_FARM_HEX                     (20928)
+#define CAR_HUB_LAIR_HEX                     (13937)
+
 #define CAR_RND_FOREVER_HEX                  (18904)
 
 #define CAR_RANDOM_DESERT_HEX                (20106)
