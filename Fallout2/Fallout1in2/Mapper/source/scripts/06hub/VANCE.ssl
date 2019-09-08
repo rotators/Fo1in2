@@ -335,41 +335,13 @@ end
 
 procedure destroy_p_proc begin
 	inc_good_critter
-	killed := 1;
-	call Get_Stuff;
-end
-
-procedure Get_Stuff begin
-variable wield_pid;
-
-   if (killed == 0) then begin
-      // Create a temp box to save Vance "real" inventory
-      tmp_box := create_object( PID_CONTAINER_WOOD_CRATE, 0, 0 );
-      move_obj_inven_to_obj(self_obj, tmp_box);
-
-      // We create a new temporary weapon for Vance, so he keeps it while in dialog mode
-      // TODO: Improve code to only move items he doesn't wield, so we don't have to spawn the extra weapon
-      wield_pid := create_object( PID_DESERT_EAGLE, 0, 0 );
-      wield_obj(wield_pid);
-   end
-
-   // Move the barter inventory to Vance
 	move_obj_inven_to_obj(Vance_Box_Ptr, self_obj);
 end
 
+procedure Get_Stuff begin
+   get_barter_inven(Vance_Box_Ptr);
+end
+
 procedure Put_Stuff begin
-variable wield_pid;
-
-   // We remove the temporary weapon before giving him back his real inventory
-   wield_pid := self_item(PID_DESERT_EAGLE);
-   destroy_object(wield_pid);
-
-   // Move the barter inventory back into the trade box
-	move_obj_inven_to_obj(self_obj, Vance_Box_Ptr);
-
-   // Now give his inventory back, get rid of the temp box and wield the real weapon
-   move_obj_inven_to_obj(tmp_box, self_obj);
-   destroy_object(tmp_box);
-   wield_pid := self_item(PID_DESERT_EAGLE);
-   wield_obj(wield_pid);
+   put_barter_inven(Vance_Box_Ptr);
 end

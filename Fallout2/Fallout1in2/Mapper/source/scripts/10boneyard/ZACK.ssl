@@ -6,7 +6,9 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\maps\laadytum.h"
+#include "..\headers\maps\lagunrun.h"
+#include "..\headers\boneyard.h"
+#include "..\headers\sfall\main.h"
 
 #define NAME                    SCRIPT_ZACK
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -35,11 +37,19 @@ procedure ZackNo;
 procedure ZackBarter;
 procedure ZackEnd;
 
+procedure Get_Stuff;
+procedure Put_Stuff;
+
 import variable Locker_Ptr;
 
 variable Only_Once := 1;
 variable BarterMod := 4294967286; /* (-10) */
 variable DisplayMessage;
+
+#define LVAR_Here_Before         (4)
+#define LVAR_Discount            (5)
+#define LVAR_Restock_Time        (6)
+#define LVAR_Caps_Amount         (7)
 
 procedure Start begin
 	if Only_Once then begin
@@ -51,7 +61,7 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) then begin
 		display_msg(message_str(SCRIPT_ZACK, 100));
 	end
 	else begin
@@ -61,7 +71,7 @@ end
 
 procedure description_p_proc begin
 	script_overrides;
-	if (local_var(4) == 1) then begin
+	if (local_var(LVAR_Here_Before) == 1) then begin
 		display_msg(message_str(SCRIPT_ZACK, 100));
 	end
 	else begin
@@ -77,20 +87,23 @@ procedure talk_p_proc begin
 	end
 	else begin
 		BarterMod := -10;
-		move_obj_inven_to_obj(Locker_Ptr, self_obj);
-		if ((((GAME_TIME_IN_DAYS) - local_var(6)) >= 1) or (local_var(6) == 0)) then begin
-			set_local_var(6, GAME_TIME_IN_DAYS);
-			set_local_var(7, 3000 + random(0, 1000));
+
+		//move_obj_inven_to_obj(Locker_Ptr, self_obj);
+		call Get_Stuff;
+
+		if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Time)) >= 1) or (local_var(LVAR_Restock_Time) == 0)) then begin
+			set_local_var(LVAR_Restock_Time, GAME_TIME_IN_DAYS);
+			set_local_var(LVAR_Caps_Amount, 3000 + random(0, 1000));
 		end
-		self_caps_adjust( local_var(7) );
+		self_caps_adjust( local_var(LVAR_Caps_Amount) );
 		get_reaction
 		start_gdialog(377, self_obj, -1, -1, -1);
 		gsay_start;
-		if (local_var(5) == 2) then begin
+		if (local_var(LVAR_Discount) == 2) then begin
 			BarterMod := 15;
 		end
 		else begin
-			if (local_var(5) == 1) then begin
+			if (local_var(LVAR_Discount) == 1) then begin
 				BarterMod := 5;
 			end
 			else begin
@@ -98,7 +111,7 @@ procedure talk_p_proc begin
 			end
 		end
 		gdialog_set_barter_mod(BarterMod);
-		if (local_var(4) == 0) then begin
+		if (local_var(LVAR_Here_Before) == 0) then begin
 			call Zack00;
 		end
 		else begin
@@ -106,14 +119,15 @@ procedure talk_p_proc begin
 		end
 		gsay_end;
 		end_dialogue;
-		set_local_var(7, self_caps);
-		self_caps_adjust( -1 * local_var(7) );
-		move_obj_inven_to_obj(self_obj, Locker_Ptr);
+		set_local_var(LVAR_Caps_Amount, self_caps);
+		self_caps_adjust( -1 * local_var(LVAR_Caps_Amount) );
+
+		//move_obj_inven_to_obj(self_obj, Locker_Ptr);
+		call Put_Stuff;
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 	end
@@ -126,8 +140,7 @@ procedure destroy_p_proc begin
 	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (self_can_see_dude) then begin
 		if (global_var( GVAR_DUDE_ENEMY_BLADES ) == 1) then begin
 			attack(dude_obj);
@@ -135,84 +148,71 @@ begin
 	end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	set_global_var( GVAR_DUDE_ENEMY_BLADES, 1 );
 end
 
-procedure Zack00
-begin
+procedure Zack00 begin
 	gsay_reply( SCRIPT_ZACK, 102 );
 	gsay_option( SCRIPT_ZACK, 104, ZackBarter, 50 );
 	gsay_option( SCRIPT_ZACK, 103, Zack02, 50 );
-	if (local_var(5) == 0) then begin
+	if (local_var(LVAR_Discount) == 0) then begin
 		DisplayMessage := 117;
 		gsay_option( SCRIPT_ZACK, 105, Zack04, 50 );
 	end
-	else begin
-		if (local_var(5) == 1) then begin
-			DisplayMessage := 123;
-			gsay_option( SCRIPT_ZACK, 122, Zack05, 50 );
-		end
+	else if (local_var(LVAR_Discount) == 1) then begin
+		DisplayMessage := 123;
+		gsay_option( SCRIPT_ZACK, 122, Zack05, 50 );
 	end
 	gsay_option( SCRIPT_ZACK, 107, ZackEnd, 50 );
 end
 
-procedure Zack01
-begin
+procedure Zack01 begin
 	gsay_reply( SCRIPT_ZACK, 106 );
 	gsay_option( SCRIPT_ZACK, 104, ZackBarter, 50 );
 	gsay_option( SCRIPT_ZACK, 103, Zack02, 50 );
-	if (local_var(5) == 0) then begin
+	if (local_var(LVAR_Discount) == 0) then begin
 		DisplayMessage := 117;
 		gsay_option( SCRIPT_ZACK, 105, Zack04, 50 );
 	end
-	else begin
-		if (local_var(5) == 1) then begin
-			DisplayMessage := 123;
-			gsay_option( SCRIPT_ZACK, 122, Zack05, 50 );
-		end
+	else if (local_var(LVAR_Discount) == 1) then begin
+		DisplayMessage := 123;
+		gsay_option( SCRIPT_ZACK, 122, Zack05, 50 );
 	end
 	gsay_option( SCRIPT_ZACK, 107, ZackEnd, 50 );
 end
 
-procedure Zack02
-begin
+procedure Zack02 begin
 	gsay_reply( SCRIPT_ZACK, 114 );
 	gsay_option( SCRIPT_ZACK, 115, Zack03, 50 );
 end
 
-procedure Zack03
-begin
+procedure Zack03 begin
 	gsay_reply( SCRIPT_ZACK, 111 );
 	gsay_option( SCRIPT_ZACK, 113, ZackBarter, 50 );
 end
 
-procedure Zack04
-begin
+procedure Zack04 begin
 	if (global_var( GVAR_WATER_CHIP_8 ) == 9250) then begin
 		BarterMod := 15;
-		set_local_var(5, 2);
+		set_local_var(LVAR_Discount, 2);
+		call ZackYes;
+	end
+	else if get_quest_kill_deathclaws then begin
+		BarterMod := 5;
+		set_local_var(LVAR_Discount, 1);
 		call ZackYes;
 	end
 	else begin
-		if get_quest_kill_deathclaws then begin
-			BarterMod := 5;
-			set_local_var(5, 1);
-			call ZackYes;
-		end
-		else begin
-			BarterMod := -10;
-			call ZackNo;
-		end
+		BarterMod := -10;
+		call ZackNo;
 	end
 end
 
-procedure Zack05
-begin
+procedure Zack05 begin
 	if (global_var( GVAR_WATER_CHIP_8 ) == 9250) then begin
 		BarterMod := 15;
-		set_local_var(5, 2);
+		set_local_var(LVAR_Discount, 2);
 		call ZackYes;
 	end
 	else begin
@@ -220,26 +220,30 @@ begin
 	end
 end
 
-procedure ZackYes
-begin
+procedure ZackYes begin
 	gsay_reply( SCRIPT_ZACK, 116 );
 	gsay_option( SCRIPT_ZACK, 120, ZackBarter, 50 );
 	gsay_option( SCRIPT_ZACK, 121, ZackEnd, 50 );
 end
 
-procedure ZackNo
-begin
+procedure ZackNo begin
 	gsay_reply( SCRIPT_ZACK, DisplayMessage );
 	gsay_option( SCRIPT_ZACK, 119, ZackBarter, 50 );
 	gsay_option( SCRIPT_ZACK, 107, ZackEnd, 50 );
 end
 
-procedure ZackBarter
-begin
+procedure ZackBarter begin
 	gdialog_mod_barter(BarterMod);
 	gsay_message( SCRIPT_ZACK, 108, 50 );
 end
 
-procedure ZackEnd
-begin
+procedure ZackEnd begin
+end
+
+procedure Get_Stuff begin
+   get_barter_inven(Locker_Ptr);
+end
+
+procedure Put_Stuff begin
+   put_barter_inven(Locker_Ptr);
 end
