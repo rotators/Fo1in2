@@ -25,6 +25,7 @@
                             call move_elevation;                                                        \
                         end
 
+// Player has killed Harry & friends
 #define check_watershed_sm_killed       if (global_var(GVAR_SUPER_MUTANTS_KILLED) >= global_var(GVAR_MAX_MUTANTS)) then begin    \
                                             set_global_var(GVAR_PLAYER_REPUTATION, global_var(GVAR_PLAYER_REPUTATION) + 3);      \
                                             set_global_var(GVAR_NECROP_MUTANTS_KILLED, 2);                                       \
@@ -34,10 +35,10 @@
                                             end                                                                                  \
                                         end
 
+// Car related defines
 #define set_car_used_first_time         if (global_var(GVAR_QUEST_MOTORCYCLE) < 20) then \
                                         set_global_var(GVAR_QUEST_MOTORCYCLE,20)
 #define get_car_used                    (global_var(GVAR_QUEST_MOTORCYCLE) >= 20)
-
 #define Place_Trunk(Hex,Elevation)      if get_car_used then begin                                          \
                                             if (global_var(GVAR_PLAYER_GOT_CAR) == 1) then begin            \
                                                 tile:=tile_num_in_direction(Hex,1,1);                       \
@@ -46,7 +47,6 @@
                                             end                                                             \
                                             move_to(Trunk_Ptr,tile,Elevation);                              \
                                         end
-
 #define set_trunk_visible               if get_car_used then set_obj_visibility(Trunk_Ptr,0)
 #define set_trunk_invisible             if get_car_used then set_obj_visibility(Trunk_Ptr,1)
 
