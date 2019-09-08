@@ -52,8 +52,6 @@ variable How_Many_Party_Members_Armed;
 #define Injured_How_Much(Who)               (get_critter_stat(Who, STAT_max_hit_points) - get_critter_stat(Who, STAT_current_hp))
 #define Is_Crippled(Who)                    (critter_state(Who) BWAND (DAM_CRIP_LEG_LEFT BWOR DAM_CRIP_LEG_RIGHT BWOR DAM_CRIP_ARM_LEFT BWOR DAM_CRIP_ARM_RIGHT))
 #define Is_Blind(Who)                       (critter_state(Who) BWAND DAM_BLIND)
-//#define Is_Armed(Who)                       (((obj_item_subtype(critter_inven_obj(Who,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon)       \
-//                                            or ((obj_item_subtype(critter_inven_obj(Who,INVEN_TYPE_LEFT_HAND))) == item_type_weapon))
 #define Is_Armed(Who)                       (((obj_item_subtype(critter_inven_obj(Who,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon))
 
 
@@ -529,8 +527,7 @@ variable PartyHealingItem;
 #define end_party_waiting                    set_local_var(LVAR_WAITING, 0);              \
                                              party_add_self
 
-
-// If a (human) party member was waiting in any invasion location, he will be killed.
+// If a party member was waiting in any invasion location, he will be killed
 #define check_invasion_party_waiting        if not(Ian_In_Party) then begin             \
                                                 kill_critter_type(PID_IAN, 1);          \
                                             end                                         \
@@ -602,9 +599,5 @@ procedure checkPartyMembersNearDoor begin
    CHECKMEMBERNEARDOOR(MrHandyC_In_Party, Handy_ptr)
    return 0;
 end
-
-
-#define party_member_map_enter                        if (cur_map_index == MAP_MODOC_BEDNBREAKFAST or cur_map_index == MAP_THE_SQUAT_A or cur_map_index == MAP_THE_SQUAT_B) then \
-                                                         if ((self_elevation != dude_elevation) and (party_is_waiting)) then move_to(self_obj, self_tile, dude_elevation)
 
 #endif // PARTY_H

@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\hubdwntn.h"
+#include "..\headers\sfall\main.h"
 
 #define NAME                    SCRIPT_STAPLE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -58,6 +59,7 @@ procedure Get_Stuff;
 procedure Put_Stuff;
 
 #define LVAR_Here_Before      (4)
+#define LVAR_GivenHolodisk    (5)
 
 #define LVAR_Give_Hintbook    (7)
 
@@ -114,8 +116,7 @@ procedure destroy_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_ENEMY_HUB, 1 );
 	end
-	call Get_Stuff;// Her store inventory moves to her corpse
-
+	move_obj_inven_to_obj(Staple_Box_Ptr, self_obj);
 	inc_good_critter
 end
 
@@ -146,10 +147,9 @@ procedure Staple01 begin
 	end
 end
 
-procedure Staple02
-begin
+procedure Staple02 begin
 	giq_option( 4, SCRIPT_STAPLE, 104, Staple03, NEUTRAL_REACTION );
-	if ((global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) != 2) and (local_var(5) == 0)) then begin
+	if ((global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) != 2) and (local_var(LVAR_GivenHolodisk) == 0)) then begin
 		giq_option( 4, SCRIPT_STAPLE, 105, Staple04, NEUTRAL_REACTION );
 	end
 	if (global_var( GVAR_CHEMISTRY_BOOK ) == 1) then begin
@@ -159,8 +159,7 @@ begin
 	giq_option( -3, SCRIPT_STAPLE, 125, Staple14, NEUTRAL_REACTION );
 end
 
-procedure Staple03
-begin
+procedure Staple03 begin
 	gsay_message( SCRIPT_STAPLE, 107, 50 );
 	gdialog_mod_barter(-40);
 	gsay_reply( SCRIPT_STAPLE, 127 );
@@ -168,21 +167,18 @@ begin
 	giq_option( -3, SCRIPT_STAPLE, 129, StapleEnd, NEUTRAL_REACTION );
 end
 
-procedure Staple04
-begin
+procedure Staple04 begin
 	gsay_reply( SCRIPT_STAPLE, 108 );
 	giq_option( 4, SCRIPT_STAPLE, 109, Staple05, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_STAPLE, 110, Staple06, NEUTRAL_REACTION );
 end
 
-procedure Staple05
-begin
+procedure Staple05 begin
 	gsay_reply( SCRIPT_STAPLE, 111 );
 	giq_option( 4, SCRIPT_STAPLE, 112, Staple06, NEUTRAL_REACTION );
 end
 
-procedure Staple06
-begin
+procedure Staple06 begin
 	gsay_reply( SCRIPT_STAPLE, 113 );
 	giq_option( 4, SCRIPT_STAPLE, 114, Staple06a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_STAPLE, 115, Staple06b, NEUTRAL_REACTION );
@@ -190,8 +186,7 @@ begin
 	giq_option( 4, SCRIPT_STAPLE, 117, StapleEnd, NEUTRAL_REACTION );
 end
 
-procedure Staple06a
-begin
+procedure Staple06a begin
 	if (dude_caps >= 750) then begin
 		call Staple09;
 	end
@@ -200,8 +195,7 @@ begin
 	end
 end
 
-procedure Staple06b
-begin
+procedure Staple06b begin
 	if (is_success(do_check(dude_obj, STAT_ch, 0)) or is_success(roll_vs_skill(dude_obj, SKILL_BARTER, 0))) then begin
 		if (dude_caps >= 500) then begin
 			call Staple10;
@@ -215,8 +209,7 @@ begin
 	end
 end
 
-procedure Staple06c
-begin
+procedure Staple06c begin
 	if (is_success(do_check(dude_obj, STAT_st, 0))) then begin
 		call Staple11;
 	end
@@ -225,44 +218,41 @@ begin
 	end
 end
 
-procedure Staple07
-begin
+procedure Staple07 begin
 	gsay_message( SCRIPT_STAPLE, 118, 50 );
 end
 
-procedure Staple08
-begin
+procedure Staple08 begin
 	set_local_var(6, 1);
 	gsay_message( SCRIPT_STAPLE, 119, 51 );
 end
 
-procedure Staple09
-begin
+procedure Staple09 begin
 	dude_caps_adjust( -750 );
 	gsay_message( SCRIPT_STAPLE, 120, 50 );
 	call Staple12;
 end
 
-procedure Staple10
-begin
+procedure Staple10 begin
 	dude_caps_adjust( -500 );
 	gsay_message( SCRIPT_STAPLE, 121, 50 );
 	call Staple12;
 end
 
-procedure Staple11
-begin
+procedure Staple11 begin
 	set_local_var(6, 1);
 	gsay_message( SCRIPT_STAPLE, 122, 51 );
 	call Staple12;
 end
 
 procedure Staple12 begin
-	if local_var(5) != 1 then begin
+	if local_var(LVAR_GivenHolodisk) != 1 then begin
 		variable disk := 0;
-		disk := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_VALTDISK);
+
+		disk := create_object(PID_VAULT_RECORDS_HOLODISK, 0,0);
 		add_obj_to_inven(dude_obj, disk);
-		set_local_var(5, 1);
+
+		set_local_var(LVAR_GivenHolodisk, 1);
 	end
 	gsay_message( SCRIPT_STAPLE, 123, 50 );
 end
@@ -271,20 +261,17 @@ procedure Staple13 begin
 	float_msg(self_obj, message_str(SCRIPT_STAPLE, 124), 2);
 end
 
-procedure Staple14
-begin
+procedure Staple14 begin
 	gsay_message( SCRIPT_STAPLE, 126, 50 );
 end
 
-procedure Staple15
-begin
+procedure Staple15 begin
 	gsay_reply( SCRIPT_STAPLE, 131 );
 	giq_option( 4, SCRIPT_STAPLE, 114, Staple15a, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_STAPLE, 117, StapleEnd, NEUTRAL_REACTION );
 end
 
-procedure Staple15a
-begin
+procedure Staple15a begin
 	if (dude_caps >= 750) then begin
 		call Staple16;
 	end
@@ -310,11 +297,11 @@ procedure StapleEnd begin
 end
 
 procedure Get_Stuff begin
-	move_obj_inven_to_obj(Staple_Box_Ptr, self_obj);
+   get_barter_inven(Staple_Box_Ptr);
 end
 
 procedure Put_Stuff begin
-	move_obj_inven_to_obj(self_obj, Staple_Box_Ptr);
+   put_barter_inven(Staple_Box_Ptr);
 end
 
 procedure Node1000 begin
