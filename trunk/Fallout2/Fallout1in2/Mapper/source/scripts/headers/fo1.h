@@ -192,38 +192,38 @@ variable merch_slot_2;
 variable merch_slot_2_flags;
 variable merch_slot_armor;
 variable merch_slot_armor_flags;
-#define get_barter_inven(x)			merch_slot_1 := critter_inven_obj(self_obj, INVEN_TYPE_LEFT_HAND);	\
-									merch_slot_2 := critter_inven_obj(self_obj, INVEN_TYPE_RIGHT_HAND);	\
-									merch_slot_armor := critter_inven_obj(self_obj,INVEN_TYPE_WORN);	\
-									if (merch_slot_1 > 0) then											\
-										merch_slot_1_flags := get_flags(merch_slot_1);					\
-								    if (merch_slot_2 > 0) then											\
-										merch_slot_2_flags := get_flags(merch_slot_2);					\
-									if (merch_slot_armor > 0) then										\
-										merch_slot_armor_flags := get_flags(merch_slot_armor);			\
-									tmp_merch_box := create_object(PID_CONTAINER_WOOD_CRATE, 0, 0);		\
-									move_obj_inven_to_obj(self_obj, tmp_merch_box);						\
-									/* This is just for the visuals in dialog interface */				\
-									if (merch_slot_2 > 0) then											\
-										wield_obj(merch_slot_2);										\
-									/* Move the barter inventory to merchant */							\
-									move_obj_inven_to_obj(x, self_obj)
+#define get_barter_inven(x)         merch_slot_1 := critter_inven_obj(self_obj, INVEN_TYPE_LEFT_HAND);  \
+                                    merch_slot_2 := critter_inven_obj(self_obj, INVEN_TYPE_RIGHT_HAND); \
+                                    merch_slot_armor := critter_inven_obj(self_obj,INVEN_TYPE_WORN);    \
+                                    if (merch_slot_1 > 0) then                                          \
+                                        merch_slot_1_flags := get_flags(merch_slot_1);                  \
+                                    if (merch_slot_2 > 0) then                                          \
+                                        merch_slot_2_flags := get_flags(merch_slot_2);                  \
+                                    if (merch_slot_armor > 0) then                                      \
+                                        merch_slot_armor_flags := get_flags(merch_slot_armor);          \
+                                    tmp_merch_box := create_object(PID_CONTAINER_WOOD_CRATE, 0, 0);     \
+                                    move_obj_inven_to_obj(self_obj, tmp_merch_box);                     \
+                                    /* This is just for the visuals in dialog interface */              \
+                                    if (merch_slot_2 > 0) then                                          \
+                                        wield_obj(merch_slot_2);                                        \
+                                    /* Move the barter inventory to merchant */                         \
+                                    move_obj_inven_to_obj(x, self_obj)
 
-#define put_barter_inven(x)			/* Move the barter inventory back into the trade box */				\
-									move_obj_inven_to_obj(self_obj, x);									\
-									/* Now give his inventory back and get rid of the temp box */		\
-									move_obj_inven_to_obj(tmp_merch_box, self_obj);						\
-									/* Wield all items as before */										\
-									if (merch_slot_1 > 0) then begin									\
-										set_flags(merch_slot_1, merch_slot_1_flags);					\
-									end																	\
-									if (merch_slot_2 > 0) then begin									\
-										set_flags(merch_slot_2, merch_slot_2_flags);					\
-									end																	\
-									if (merch_slot_armor > 0) then begin								\
-										set_flags(merch_slot_armor, merch_slot_armor_flags);			\
-									end																	\
-									destroy_object(tmp_merch_box)
+#define put_barter_inven(x)         /* Move the barter inventory back into the trade box */             \
+                                    move_obj_inven_to_obj(self_obj, x);                                 \
+                                    /* Now give his inventory back and get rid of the temp box */       \
+                                    move_obj_inven_to_obj(tmp_merch_box, self_obj);                     \
+                                    /* Wield all items as before */                                     \
+                                    if (merch_slot_1 > 0) then begin                                    \
+                                        set_flags(merch_slot_1, merch_slot_1_flags);                    \
+                                    end                                                                 \
+                                    if (merch_slot_2 > 0) then begin                                    \
+                                        set_flags(merch_slot_2, merch_slot_2_flags);                    \
+                                    end                                                                 \
+                                    if (merch_slot_armor > 0) then begin                                \
+                                        set_flags(merch_slot_armor, merch_slot_armor_flags);            \
+                                    end                                                                 \
+                                    destroy_object(tmp_merch_box)
 
 /*********************************************************
     Settings:
@@ -238,32 +238,32 @@ variable merch_slot_armor_flags;
 /*********************************************************
     Pick dead body type:
 *********************************************************/
-#define pick_dead_body_type             variable LVar0 := 0; \
-                                        LVar0 := (random(0, 6) + random(0, 6) + random(0, 6)); \
-                                        if (LVar0 <= 5) then begin/*// 31.5%*/ \
-                                            DeathType := 57;/*//        burnt, face down  [FLAMER]*/ \
-                                        end \
-                                        else if (LVar0 <= 10) then begin/*// 26%*/ \
+#define pick_dead_body_type             variable LVar0 := 0;                                            \
+                                        LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));          \
+                                        if (LVar0 <= 5) then begin/*// 31.5%*/                          \
+                                            DeathType := 57;/*//        burnt, face down  [FLAMER]*/    \
+                                        end                                                             \
+                                        else if (LVar0 <= 10) then begin/*// 26%*/                      \
                                             DeathType := 56;/*//        cut in half  [LASER RIFLE, GATLING LASER]*/ \
-                                        end \
-                                        else if (LVar0 <= 14) then begin/*// 21%*/ \
+                                        end                                                             \
+                                        else if (LVar0 <= 14) then begin/*// 21%*/                      \
                                             DeathType := 53;/*//        head & arm gone - full auto  [MINIGUN]*/ \
-                                        end \
-                                        else if (LVar0 <= 16) then begin/*// 10.5%*/ \
+                                        end                                                             \
+                                        else if (LVar0 <= 16) then begin/*// 10.5%*/                    \
                                             DeathType := 63;/*//        face down, blood pool  (generic death, no weapon associated)*/ \
-                                        end \
-                                        else begin/*// <--------------------    16%*/ \
-                                            variable LVar1 := 0; \
-                                            LVar1 := random(0, 2); \
-                                            if (LVar1 == 0) then begin \
+                                        end                                                             \
+                                        else begin/*// <--------------------    16%*/                   \
+                                            variable LVar1 := 0;                                        \
+                                            LVar1 := random(0, 2);                                      \
+                                            if (LVar1 == 0) then begin                                  \
                                                 DeathType := 54;/*// bullet holes - full auto partial hit*/ \
-                                            end \
-                                            else if (LVar1 == 1) then begin \
-                                                DeathType := 59;/*// exploded  [ROCKET LAUNCHER]*/ \
-                                            end \
-                                            else if (LVar1 == 2) then begin \
-                                                DeathType := 60;/*// melted pile  [PLASMA RIFLE]*/ \
-                                            end \
+                                            end                                                         \
+                                            else if (LVar1 == 1) then begin                             \
+                                                DeathType := 59;/*// exploded  [ROCKET LAUNCHER]*/      \
+                                            end                                                         \
+                                            else if (LVar1 == 2) then begin                             \
+                                                DeathType := 60;/*// melted pile  [PLASMA RIFLE]*/      \
+                                            end                                                         \
                                         end
 
 /*********************************************************
@@ -305,17 +305,6 @@ variable merch_slot_armor_flags;
 
 #define junktown_invasion_date              (get_days_passed + (ONE_GAME_DAY * GVAR_JUNKTOWN_INVADED_DATE))
 #define get_junktown_days_left              (global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
-
-// If a (human) party member was waiting in any invasion location, he will be killed.
-#define check_invasion_party_waiting        if not(Ian_In_Party) then begin             \
-                                                kill_critter_type(PID_IAN, 1);          \
-                                            end                                         \
-                                            if not(Tycho_In_Party) then begin           \
-                                                kill_critter_type(PID_TYCHO, 1);        \
-                                            end                                         \
-                                            if not(Katja_In_Party) then begin           \
-                                                kill_critter_type(PID_KATJA, 1);        \
-                                            end
 
 /*********************************************************
     Party related:
