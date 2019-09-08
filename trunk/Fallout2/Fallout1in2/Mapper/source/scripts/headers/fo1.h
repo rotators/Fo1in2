@@ -181,8 +181,49 @@ end
 #define set_self_invisible          set_obj_invisible(self_obj)
 #define set_self_visible            set_obj_visible(self_obj)
 
+// Merchant stuff
 #define set_disable_barter          set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_BARTER))
 #define set_enable_barter           set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_BARTER)
+
+variable tmp_merch_box;
+variable merch_slot_1;
+variable merch_slot_1_flags;
+variable merch_slot_2;
+variable merch_slot_2_flags;
+variable merch_slot_armor;
+variable merch_slot_armor_flags;
+#define get_barter_inven(x)			merch_slot_1 := critter_inven_obj(self_obj, INVEN_TYPE_LEFT_HAND);	\
+									merch_slot_2 := critter_inven_obj(self_obj, INVEN_TYPE_RIGHT_HAND);	\
+									merch_slot_armor := critter_inven_obj(self_obj,INVEN_TYPE_WORN);	\
+									if (merch_slot_1 > 0) then											\
+										merch_slot_1_flags := get_flags(merch_slot_1);					\
+								    if (merch_slot_2 > 0) then											\
+										merch_slot_2_flags := get_flags(merch_slot_2);					\
+									if (merch_slot_armor > 0) then										\
+										merch_slot_armor_flags := get_flags(merch_slot_armor);			\
+									tmp_merch_box := create_object(PID_CONTAINER_WOOD_CRATE, 0, 0);		\
+									move_obj_inven_to_obj(self_obj, tmp_merch_box);						\
+									/* This is just for the visuals in dialog interface */				\
+									if (merch_slot_2 > 0) then											\
+										wield_obj(merch_slot_2);										\
+									/* Move the barter inventory to merchant */							\
+									move_obj_inven_to_obj(x, self_obj)
+
+#define put_barter_inven(x)			/* Move the barter inventory back into the trade box */				\
+									move_obj_inven_to_obj(self_obj, x);									\
+									/* Now give his inventory back and get rid of the temp box */		\
+									move_obj_inven_to_obj(tmp_merch_box, self_obj);						\
+									/* Wield all items as before */										\
+									if (merch_slot_1 > 0) then begin									\
+										set_flags(merch_slot_1, merch_slot_1_flags);					\
+									end																	\
+									if (merch_slot_2 > 0) then begin									\
+										set_flags(merch_slot_2, merch_slot_2_flags);					\
+									end																	\
+									if (merch_slot_armor > 0) then begin								\
+										set_flags(merch_slot_armor, merch_slot_armor_flags);			\
+									end																	\
+									destroy_object(tmp_merch_box)
 
 /*********************************************************
     Settings:
