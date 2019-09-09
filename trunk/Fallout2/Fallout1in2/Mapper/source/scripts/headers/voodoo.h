@@ -7,6 +7,7 @@
 *********************************************************/
 
 // This will disable running the credits after the endgame slides:
+// This is done via Sfall now (F1EngineBehavior=1)
 #define VOODOO_mode_fo1_ending						\
                write_int( 0x4A4343, 0x90909090); 	\
                write_byte(0x4A4347, 0x90)
