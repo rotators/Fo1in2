@@ -114,7 +114,7 @@
 #define GVAR_ENDGAME_MOVIE_SAN_FRAN_PUNKS       (425)   // maybe hard-coded, maybe not?
 
 // Hardcoded / special death screen (Modoc)
-#define GVAR_TRACK_RADIATION_DEATH              (491)
+#define GVAR_SPECIAL_RADIATION_DEATH            (491)
 
 // Dream sequences - HARDCODED DO NOT USE!
 #define GVAR_FALLOUT_2                          (494)   // Tracks how many times you've seen the Hakunin dreams.
