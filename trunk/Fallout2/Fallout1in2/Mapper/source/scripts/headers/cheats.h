@@ -345,6 +345,7 @@ procedure Cheater00b begin
 end
 
 procedure Slideshow begin
+	set_waterchip_returned;
 	set_global_var( GVAR_MASTER_BLOWN, 1 );
 	set_global_var( GVAR_VATS_BLOWN, 1 );
 
