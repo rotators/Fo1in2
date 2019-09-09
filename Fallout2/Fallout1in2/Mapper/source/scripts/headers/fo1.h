@@ -44,6 +44,7 @@
     Quests:
 *********************************************************/
 #define waterchip_returned                  (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
+#define set_waterchip_returned              set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2)
 
 #define get_quest_vats_active               ((global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) > 0) and not(military_base_destoryed))
 #define get_quest_master_active             ((global_var(GVAR_QUEST_VAULT13_2_MASTER) > 0) and not(cathedral_destroyed))
