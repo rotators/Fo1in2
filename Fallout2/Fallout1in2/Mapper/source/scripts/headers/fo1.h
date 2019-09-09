@@ -13,7 +13,7 @@
     General stats stuff. Moved here because of Wipe.
 *********************************************************/
 // Trait defines //
-#define TRAIT_PERK  (0)
+#define TRAIT_PERK   (0)
 #define TRAIT_OBJECT (1)
 #define TRAIT_TRAIT  (2)
 
@@ -137,8 +137,6 @@ procedure flee_dude begin
     end
     animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
-
-#define dude_is_animal_friend           (has_trait(TRAIT_PERK, dude_obj, PERK_animal_friend) == 1)
 
 #define map_cow_can_push            ((cur_map_index != MAP_DESCRVN1) and    \
                                     (cur_map_index != MAP_DESCRVN2) and     \
