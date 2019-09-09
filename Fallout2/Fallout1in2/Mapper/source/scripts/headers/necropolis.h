@@ -25,6 +25,9 @@
                             call move_elevation;                                                        \
                         end
 
+// Quests
+#define set_waterpump_fixed            set_global_var(GVAR_NECROP_WATER_PUMP_FIXED, 2)
+
 // Player has killed Harry & friends
 #define check_watershed_sm_killed       if (global_var(GVAR_SUPER_MUTANTS_KILLED) >= global_var(GVAR_MAX_MUTANTS)) then begin    \
                                             set_global_var(GVAR_PLAYER_REPUTATION, global_var(GVAR_PLAYER_REPUTATION) + 3);      \
