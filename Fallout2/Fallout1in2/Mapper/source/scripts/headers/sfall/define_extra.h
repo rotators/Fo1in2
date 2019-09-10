@@ -2,6 +2,16 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+#define BODY_HIT_HEAD       (0)
+#define BODY_HIT_LEFT_ARM   (1)
+#define BODY_HIT_RIGHT_ARM  (2)
+#define BODY_HIT_TORSO      (3)
+#define BODY_HIT_RIGHT_LEG  (4)
+#define BODY_HIT_LEFT_LEG   (5)
+#define BODY_HIT_EYES       (6)
+#define BODY_HIT_GROIN      (7)
+#define BODY_UNCALLED       (8)
+
 #define OBJ_TYPE_ITEM       (0)
 #define OBJ_TYPE_CRITTER    (1)
 #define OBJ_TYPE_SCENERY    (2)
@@ -31,6 +41,7 @@
 
 #define WEAPON_BIGGUN         256  // 0x00000100 - Big Gun
 #define WEAPON_2HAND          512  // 0x00000200 - 2Hnd (weapon is two-handed)
+#define WEAPON_ENERGY        1024  // 0x00000400 - Energy Weapon (forces weapon to use Energy Weapons skill)
 
 #define ATKMODE_PRI_NONE        0
 #define ATKMODE_PRI_PUNCH       1  // 0001

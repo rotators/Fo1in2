@@ -19,6 +19,7 @@
 //#include "..\headers\reaction.h"
 
 #include "..\headers\fo1.h"
+#include "..\headers\sd3.h"
 
 // script.h: Script Procedure Types //
 #define no_proc           (0)
