@@ -19,6 +19,7 @@
 #define BARTER      (0x20000)
 #define HEROWIN     (0x40000)
 #define DIALOGVIEW  (0x80000)
+#define COUNTERWIN  (0x100000) // counter window for moving multiple items or setting a timer
 
 //Valid arguments to register_hook
 #define HOOK_TOHIT            (0)
@@ -73,7 +74,8 @@
 #define LIST_ALL         (9)
 
 //Valid flags for force_encounter_with_flags
-#define ENCOUNTER_FLAG_NO_CAR (1)
+#define ENCOUNTER_FLAG_NO_CAR   (1)
+#define ENCOUNTER_FLAG_LOCK     (2) // block new forced encounter by the next function call until the current specified encounter occurs
 
 //The attack types returned by get_attack_type
 #define ATKTYPE_LWEP1           (0)
@@ -142,12 +144,13 @@
 #define reverse_array(array)        resize_array(array, -4)
 // randomly shuffle elements in list/map
 #define shuffle_array(array)        resize_array(array, -5)
-// sort map in ascending order by value
+// sort map in ascending order by key value
 #define sort_map_value(array)       resize_array(array, -6)
-// sort map in descending order by value
-#define sort_map_value_desc(array)  resize_array(array, -7)
+// sort map in descending order by key value
+#define sort_map_reverse(array)     resize_array(array, -7)
 // remove element from map or just replace value with 0 for list
 #define unset_array(array, item)    set_array(array, item, 0)
+
 // same as "key_pressed" but checks VK codes instead of DX codes
 #define key_pressed_vk(key)         (key_pressed(key bwor 0x80000000))
 
@@ -228,14 +231,7 @@
 #define mstr_stat(x)        (message_str_game(GAME_MSG_STAT, x))
 #define mstr_trait(x)       (message_str_game(GAME_MSG_TRAIT, x))
 #define mstr_worldmap(x)    (message_str_game(GAME_MSG_WORLDMAP, x))
-#define mstr_pro_item(x)    (message_str_game(GAME_MSG_PRO_ITEM, x)) // SD3 gldbg
-#define mstr_pro_crit(x)    (message_str_game(GAME_MSG_PRO_CRIT, x)) // SD3 gldbg
-#define mstr_pro_scen(x)    (message_str_game(GAME_MSG_PRO_SCEN, x)) // SD3 gldbg
-#define mstr_pro_wall(x)    (message_str_game(GAME_MSG_PRO_WALL, x)) // SD3 gldbg
-#define mstr_pro_tile(x)    (message_str_game(GAME_MSG_PRO_TILE, x)) // SD3 gldbg
-#define mstr_pro_misc(x)    (message_str_game(GAME_MSG_PRO_MISC, x)) // SD3 gldbg
-#define mstr_gvar(x)        (message_str_game(GAME_MSG_GVAR, x)) // SD3 gldbg
-#define mstr_mvar(x)        (message_str_game(GAME_MSG_MVAR, x)) // SD3 gldbg
+
 
 #define BLOCKING_TYPE_BLOCK     (0)
 #define BLOCKING_TYPE_SHOOT     (1)  // use this for more realistic line-of-sight checks
@@ -251,7 +247,7 @@
 #define ADD_PERK_MODE_REMOVE    (4)  // remove from the list of selectable perks
 
 // sfall_funcX macros
-#define add_extra_msg_file(name, number)                sfall_func2("add_extra_msg_file", name, number)
+#define add_extra_msg_file(name)                        sfall_func1("add_extra_msg_file", name)
 #define add_iface_tag                                   sfall_func0("add_iface_tag")
 #define art_cache_clear                                 sfall_func0("art_cache_clear")
 #define attack_is_aimed                                 sfall_func0("attack_is_aimed")
