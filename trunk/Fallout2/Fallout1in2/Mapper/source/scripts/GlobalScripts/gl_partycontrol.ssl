@@ -38,7 +38,7 @@ procedure combatturn_handler begin
       status := get_sfall_arg,
       critter := get_sfall_arg,
       //arg3 := get_sfall_arg,
-      pid;
+      pid, perkID, level;
 
    //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + ", arg3: " + arg3);
    if npcControl then begin
@@ -52,6 +52,14 @@ procedure combatturn_handler begin
       if (critter != real_dude_obj) then begin
          if not(npcControl) then obj_set_light_level(real_dude_obj, 0, 0); // dude off light
          npcControl := critter;
+         // set perks (only work with 4.1.8+)
+         foreach (perkID in perksList) begin
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            if (level) then begin
+               critter_add_trait(critter, TRAIT_PERK, perkID, level);
+            end
+         end
+         intface_redraw;
          lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
          lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
          obj_set_light_level(critter, 100, 4);
