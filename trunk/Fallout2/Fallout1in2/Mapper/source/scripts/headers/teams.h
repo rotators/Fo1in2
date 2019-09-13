@@ -31,7 +31,7 @@
 #define TEAM_DOGS						(21)
 #define TEAM_22							(22)
 #define TEAM_24							(24)
-#define TEAM_29							(29)
+#define TEAM_BOUNTY_HUNTER  			(29)
 #define TEAM_NECROPOLIS_GANGER			(30)
 #define TEAM_NECROPOLIS_UNDERGROUND		(31)
 #define TEAM_32							(32) //#define TEAM_NECROPOLIS_MINDLESS (32)

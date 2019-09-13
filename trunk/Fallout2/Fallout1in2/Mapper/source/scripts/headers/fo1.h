@@ -76,6 +76,9 @@
 #define set_laura_escaped                   set_global_var(GVAR_IS_LAURA_ALIVE,3)
 #define is_laura_escaped                    (global_var(GVAR_IS_LAURA_ALIVE) == 3)
 
+#define set_hunter_killed                   set_global_var(GVAR_HUNTER_STATUS,3)
+#define bounty_hunter_killed                (global_var(GVAR_HUNTER_STATUS) == 3)
+
 #define tandi_is_kidnapped                  (global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
 #define tandi_not_kidnapped                 not(tandi_is_kidnapped)
 #define tandi_is_rescued                    (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)

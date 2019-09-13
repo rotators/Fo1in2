@@ -34,13 +34,14 @@ variable tmp_hostile;
 variable initial :=  0;
 variable my_script_mode;
 variable pre_fight;
-//local_var(4) == madDumb
-//local_var(5) == mad
+
+#define LVAR_DumbDude      (4)
+#define LVAR_BadJoke       (5)
 
 procedure start begin
 	if not(initial) then begin
 		initial :=  1;
-		set_self_team( TEAM_29 );
+		set_self_team( TEAM_BOUNTY_HUNTER );
 		set_self_ai( AI_BERZERKER );
 		if (cur_map_index != MAP_LAFOLLWR) then begin
 			call Hunter05;
@@ -48,11 +49,9 @@ procedure start begin
 			attack(dude_obj);
 			my_script_mode := 1;
 		end
-		else begin
-			if (global_var( GVAR_HUNTER_STATUS ) == 3) then begin
-				move_to(self_obj, 7000, 0);
-				removal_ptr := self_obj;
-			end
+		else if bounty_hunter_killed then begin
+			move_to(self_obj, 7000, 0);
+			removal_ptr := self_obj;
 		end
 	end
 end
@@ -63,66 +62,45 @@ procedure critter_p_proc begin
 		attack(dude_obj);
 	end
 	else begin
+
 		if (self_can_see_dude and not(my_script_mode) and not(pre_fight) and has_rep_childkiller) then begin
 			call Hunter05;
 			pre_fight := 1;
 		end
+
 	end
 end
 
 procedure destroy_p_proc begin
 	variable removal_ptr := 0;
 	if (global_var( GVAR_HUNTER_RESPAWNS ) == 0) or (global_var( GVAR_FIXT_BUGFIXES_ONLY ) == 1) then begin
-		set_global_var( GVAR_HUNTER_STATUS, 3 );
+		set_hunter_killed;
 	end
-	if self_item( PID_COMBAT_ARMOR ) then begin// combat armor
-		if random(0, 10) then begin
-			removal_ptr := self_item( PID_COMBAT_ARMOR );
-			rm_obj_from_inven(self_obj, removal_ptr);
-			destroy_object(removal_ptr);
-		end
-	end
-	if self_item( PID_ASSAULT_RIFLE ) then begin// assault rifle
-		if random(0, 10) then begin
-			removal_ptr := self_item( PID_ASSAULT_RIFLE );
-			rm_obj_from_inven(self_obj, removal_ptr);
-			destroy_object(removal_ptr);
-		end
-	end
-
 	inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(message_str(SCRIPT_HUNTER, 100));
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
-	if (local_var(4)) then begin
+	if (local_var(LVAR_DumbDude)) then begin
 		script_overrides;
 		float_msg(self_obj, message_str(SCRIPT_HUNTER, 126), 0);
 		tmp_hostile := 1;
 	end
 	else begin
-		start_gdialog(241, self_obj, 4, -1, -1);
-		gsay_start;
-		call Hunter01;
-		gsay_end;
-		end_dialogue;
+		start_dialog_at_node(Hunter01);
 	end
 end
 
-procedure Hunter01
-begin
+procedure Hunter01 begin
 	gsay_reply( SCRIPT_HUNTER, 101 );
 	giq_option( 4, SCRIPT_HUNTER, 102, Hunter02, NEUTRAL_REACTION );
 	giq_option( 4, SCRIPT_HUNTER, 103, Hunter03, NEUTRAL_REACTION );
@@ -131,11 +109,10 @@ begin
 	giq_option( -3, SCRIPT_HUNTER, 124, Hunter06, NEUTRAL_REACTION );
 end
 
-procedure Hunter02
-begin
-	if (not(local_var(5))) then begin
+procedure Hunter02 begin
+	if (not(local_var(LVAR_BadJoke))) then begin
 		gsay_message( SCRIPT_HUNTER, 106, 50 );
-		set_local_var(5, 1);
+		set_local_var(LVAR_BadJoke, 1);
 	end
 	else begin
 		gsay_message( SCRIPT_HUNTER, 107, 50 );
@@ -143,24 +120,20 @@ begin
 	end
 end
 
-procedure Hunter03
-begin
+procedure Hunter03 begin
 	gsay_message( SCRIPT_HUNTER, 108, 50 );
 end
 
-procedure Hunter04
-begin
+procedure Hunter04 begin
 	gsay_message( SCRIPT_HUNTER, 109, 50 );
 end
 
-procedure Hunter05
-begin
+procedure Hunter05 begin
 	float_msg(self_obj, message_str(SCRIPT_HUNTER, 110) + (global_var( GVAR_CHILDKILLER_REPUTATION ) * 500) + message_str(SCRIPT_HUNTER, 200), random(7, 9));
 	tmp_hostile := 1;
 end
 
-procedure Hunter06
-begin
+procedure Hunter06 begin
 	gsay_message( SCRIPT_HUNTER, 125, 50 );
-	set_local_var(4, 1);
+	set_local_var(LVAR_DumbDude, 1);
 end
