@@ -40,7 +40,7 @@ variable How_Many_Party_Members_Armed;
 #define party_size                          (party_member_count(DONT_LIST_HIDDEN_MEMBERS))
 #define true_party_size                     (party_size - 1)
 #define party_max_formula                   (floor(dude_charisma/2) + (has_trait(TRAIT_PERK,dude_obj,PERK_magnetic_personality_perk)))
-#define dude_at_max_party_size              ((true_party_size >= (party_max_formula)) or (true_party_size >= 5))
+#define dude_at_max_party_size              (((true_party_size >= (party_max_formula)) or (true_party_size >= 5)) or unlimited_party_members)
 #define party_size_humans                   (Ian_In_Party+Tycho_In_Party+Katja_In_Party+Tandi_In_Party)
 #define party_size_male                     (Ian_In_Party+Tycho_In_Party)
 #define party_size_female                   (Katja_In_Party+Tandi_In_Party)
@@ -551,7 +551,7 @@ variable PartyHealingItem;
                                             get_item_count(Katja_ptr,x)  +   \
                                             get_item_count(Tandi_ptr,x)  +   \
                                             get_item_count(Handy_ptr,x)) > 0)
-                                            
+
 #define party_remove_item(x)                if (get_item_count(dude_obj,x) > 0) then begin          \
                                                 remove_pid_qty(dude_obj, x, 1)                      \
                                             end                                                     \
