@@ -55,10 +55,10 @@
 #define GVAR_HOLODISK_MB_LEVEL_3                (223)   // maybe hard-coded, maybe not?
 #define GVAR_HOLODISK_MB_LEVEL_4                (224)   // maybe hard-coded, maybe not?
 
-#define GVAR_MUTATE                         	(132)
-#define GVAR_MUTATE_WHEN                    	(133)
-#define GVAR_HAVE_MUTATED                   	(192)
-#define GVAR_MUTATE_STAGE                   	(193)
+#define GVAR_MUTATE                             (132)
+#define GVAR_MUTATE_WHEN                        (133)
+#define GVAR_HAVE_MUTATED                       (192)
+#define GVAR_MUTATE_STAGE                       (193)
 #define GVAR_NEW_RENO_MADE_MAN                  (230)
 
 // Caravans for Cities
@@ -339,7 +339,7 @@
 #define GVAR_WATER_JOB                          (1205)
 #define GVAR_FARGO_JOB                          (1206)
 #define GVAR_LOXLEY_KNOWN                       (1207)
-#define GVAR_POWER_ARMOR_WEIGHTS                (1208)
+#define GVAR_ENABLE_UNLIMITED_HPA               (1208)
 #define GVAR_HOLODISK_MUTANT                    (1209)
 #define GVAR_HOLODISK_BROTHER_HISTORY           (1210)
 #define GVAR_HOLODISK_SOPHIA                    (1211)
