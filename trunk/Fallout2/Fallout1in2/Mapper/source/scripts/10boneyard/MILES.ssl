@@ -57,6 +57,11 @@ procedure Miles28a;
 procedure Miles29;
 procedure MilesEnd;
 
+procedure NodeMoreHPA1;
+procedure NodeMoreHPA2;
+procedure NodeMoreHPA2a;
+procedure NodeMoreHPA3;
+
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
@@ -122,7 +127,11 @@ procedure talk_p_proc begin
 		float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
 	end
 	else if (local_var(LVAR_Miles_Status) == 2) then begin
-		float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
+	   if (not(fo1in2_unlimited_hpa_disabled) and dude_item_count(PID_POWERED_ARMOR)) then begin
+   		start_dialog_at_node(NodeMoreHPA1);
+	   end
+	   else
+		   float_msg(self_obj, message_str(SCRIPT_MILES, 152), 0);
 	end
 	else begin
 		get_reaction
@@ -153,22 +162,20 @@ procedure talk_p_proc begin
 					call Miles22a;
 				end
 			end
-			else begin
-				if (local_var(LVAR_Miles_Status) == 9305) then begin
-					if (dude_item_count( PID_POWERED_ARMOR )) then begin
-						call Miles24;
-					end
-					else begin
-						call Miles29;
-					end
+			else if (local_var(LVAR_Miles_Status) == 9305) then begin
+				if (dude_item_count( PID_POWERED_ARMOR )) then begin
+					call Miles24;
 				end
 				else begin
-					if (dude_item_count( PID_POWERED_ARMOR )) then begin
-						call Miles28;
-					end
-					else begin
-						call Miles29;
-					end
+					call Miles29;
+				end
+			end
+			else begin
+				if (dude_item_count( PID_POWERED_ARMOR )) then begin
+					call Miles28;
+				end
+				else begin
+					call Miles29;
 				end
 			end
 		end
@@ -431,3 +438,28 @@ end
 
 procedure MilesEnd begin
 end
+
+procedure NodeMoreHPA1 begin
+   Reply(2000);
+   if (dude_caps >= 1000) then
+      NOption(2010,NodeMoreHPA2,004);
+   else
+      NOption(2020,NodeMoreHPA3,004);
+   NOption(2030,MilesEnd,004);
+end
+
+procedure NodeMoreHPA2 begin
+   Reply(2100);
+   NOption(2110,NodeMoreHPA2a,004);
+   NOption(2120,Miles27,004);
+end
+
+procedure NodeMoreHPA2a begin
+   dude_caps_adjust(1000);
+   call Miles28;
+end
+
+procedure NodeMoreHPA3 begin
+   NMessage(2200);
+end
+
