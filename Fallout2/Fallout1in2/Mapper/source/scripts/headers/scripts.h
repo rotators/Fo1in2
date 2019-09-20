@@ -1022,5 +1022,9 @@
 #define SCRIPT_ZCCRPDEL         (1008)  // ZCCrpDel.int    ; Craps Dealer
 #define SCRIPT_ZIDCEGRL         (1009)  // ziDceGrl.int    ; Generic Casino Girl with Dice Game
 #define SCRIPT_ENCQUACK         (1010)  // ENCQUACK.int    ; Fo1in2 encounter, old quack
+#define SCRIPT_ZILOCKER         (1011)  // ziLocker.int    ; Generic Locker Script
+#define SCRIPT_ZIWEAKLK         (1012)  // ziWeakLk.int    ; Generic Weak Lock Watch Script
+#define SCRIPT_ZIMEDMLK         (1013)  // ziMedmLk.int    ; Generic Medium Lock Watch Script
+#define SCRIPT_ZIHARDLK         (1014)  // ziHardLk.int    ; Generic Hard Lock Watch Script
 
 #endif // SCRIPTS_H
