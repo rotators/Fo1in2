@@ -1,0 +1,353 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+/*
+        Item: Generic Locker
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+
+#define NAME                    SCRIPT_ZILOCKER
+
+#include "..\headers\command.h"
+#ifdef EXTRA_HEADER
+   #include EXTRA_HEADER
+#endif
+
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure pickup_p_proc;
+procedure use_p_proc;
+procedure damage_p_proc;
+procedure map_exit_p_proc;
+procedure map_update_p_proc;
+procedure use_obj_on_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+
+#ifdef WATCHER_OBJ
+   import variable WATCHER_OBJ;
+#endif
+
+#define LVAR_Flags                           (0)
+
+#define gave_xp_bit                          bit_10
+#define gave_warning_bit                     bit_11
+
+#define gave_xp                              lvar_bit(LVAR_Flags, gave_xp_bit)
+#define set_gave_xp                          if (gave_xp == false) then begin          \
+                                                give_xp(UNLOCK_EXP);                   \
+                                             end                                       \
+                                             set_lvar_bit_on(LVAR_Flags, gave_xp_bit)
+
+#define gave_warning                         ((lvar_bit(LVAR_Flags, gave_warning_bit)) or (SKIP_WARNING))
+#ifndef do_warning_action
+   #define do_warning_action                 float_msg(WATCHER_OBJ, g_mstr(5400), FLOAT_COLOR_NORMAL);
+#endif
+#ifndef do_attack_action
+   #define do_attack_action                  attack_setup(WATCHER_OBJ, user_obj);
+#endif
+#define set_gave_warning                     if (gave_warning) then begin        \
+                                                do_attack_action                 \
+                                             end else begin                      \
+                                                do_warning_action                \
+                                             end                                 \
+                                             set_lvar_bit_on(LVAR_Flags, gave_warning_bit)
+
+// exporting self_obj
+#ifdef EXPORT_VAR
+import variable EXPORT_VAR;
+   #define export_self_var                   EXPORT_VAR := self_obj;
+#else
+   #define export_self_var
+#endif
+
+#ifndef look_at_action
+   #define look_at_action
+#endif
+#ifndef description_action
+   #define description_action
+#endif
+
+#define EXPLOSION_SUCCESS_CHECK              (true)
+#define PRY_CROWBAR_MOD                      (0)
+#ifndef SKIP_WARNING
+   #define SKIP_WARNING                      (false)
+#endif
+#ifndef LOCKPICK_SKILL_PENALTY
+   #define LOCKPICK_SKILL_PENALTY            EASY_LOCK_PENALTY
+#endif
+#define LOCKPICK_ITEM_PENALTY                (LOCKPICK_SKILL_PENALTY + 20)
+#define EXD_LOCKPICK_PENALTY                 (LOCKPICK_SKILL_PENALTY + 40)
+#define UNLOCK_EXP                           EXP_LOCKPICK_NORMAL
+// conditions for locking/closing on map enter
+#ifndef LOCKER_LOCKABLE
+   #define LOCKER_LOCKABLE                   (true)
+#endif
+#define ENTER_CLOSE_AND_LOCK_CONDITION       (false)   // defaults to the first time run
+#ifndef ENTER_LOCK_CONDITION
+   #define ENTER_LOCK_CONDITION              ENTER_CLOSE_AND_LOCK_CONDITION
+#endif
+#define ENTER_CLOSE_CONDITION                (false)
+// conditions for locking/closing on map update
+#define UPDATE_CLOSE_AND_LOCK_CONDITION      (false)
+#define UPDATE_LOCK_CONDITION                UPDATE_CLOSE_AND_LOCK_CONDITION
+#define UPDATE_CLOSE_CONDITION               (false)
+#ifndef WATCHER_OBJ
+   #define WATCHER_OBJ                       (0)               // object of script watching locker
+#endif
+#ifndef DO_CHECK_TAMPER_CONDITION
+   #define DO_CHECK_TAMPER_CONDITION         (true)            // setting this to true will always check no matter what
+#endif
+// general a generic way to deal with each response as one
+#ifndef genereral_caught_action
+   #define genereral_caught_action           if (caught_tamper) then begin          \
+                                                script_overrides;                   \
+                                                set_gave_warning;                   \
+                                             end
+#endif
+
+#ifndef watch_box_conditions
+   #define watch_box_conditions              (obj_can_see_obj(WATCHER_OBJ, user_obj))
+#endif
+// what to do when source is caught using locker
+#define caught_use_action                    genereral_caught_action
+// what to do when source is caught using an object on the locker
+#define caught_use_obj_action                genereral_caught_action
+// what to do when source is caught using a skill on the locker
+#define caught_use_skill_action              genereral_caught_action
+// what to do when locker is damaged
+#define damage_action                        genereral_caught_action
+#define check_tamper                         if (caught_tamper == false) then begin                                                                           \
+                                                if (DO_CHECK_TAMPER_CONDITION) then begin                                                                     \
+                                                   if (WATCHER_OBJ != 0) then begin                                                                           \
+                                                      if ((obj_is_visible_flag(WATCHER_OBJ)) and (is_critter_dead(WATCHER_OBJ) == false)) then begin          \
+                                                         if (watch_box_conditions) then begin                                                                 \
+                                                            caught_tamper := true;                                                                            \
+                                                         end                                                                                                  \
+                                                      end                                                                                                     \
+                                                   end                                                                                                        \
+                                                end                                                                                                           \
+                                             end
+#ifndef map_enter_action
+   #define map_enter_action
+#endif
+
+#define EASY_LOCK_PENALTY                    (-20)
+#define MEDIUM_LOCK_PENALTY                  (-40)
+#define HARD_LOCK_PENALTY                    (-75)
+
+#define lock_success_msg                     if (user_obj == dude_obj) then begin               \
+                                                display_mstr(102);                              \
+                                                set_gave_xp;                                    \
+                                             end else if (user_obj != 0) then begin             \
+                                                display_msg(obj_name(user_obj) + mstr(202));    \
+                                                set_gave_xp;                                    \
+                                             end                                                \
+                                             debug_msg("lock_success_msg")
+#define lock_fail_msg                        if (user_obj == dude_obj) then begin               \
+                                                display_mstr(103);                              \
+                                             end else if (user_obj != 0) then begin             \
+                                                display_msg(obj_name(user_obj) + mstr(203));    \
+                                             end                                                \
+                                             debug_msg("lock_fail_msg")
+#define unlock_success_msg                   if (user_obj == dude_obj) then begin               \
+                                                display_mstr(100);                              \
+                                                set_gave_xp;                                    \
+                                             end else if (user_obj != 0) then begin             \
+                                                display_msg(obj_name(user_obj) + mstr(200));    \
+                                                set_gave_xp;                                    \
+                                             end                                                \
+                                             debug_msg("unlock_success_msg")
+#define unlock_fail_msg                      if (user_obj == dude_obj) then begin               \
+                                                display_mstr(101);                              \
+                                             end else if (user_obj != 0) then begin             \
+                                                display_msg(obj_name(user_obj) + mstr(201));    \
+                                             end                                                \
+                                             debug_msg("unlock_fail_msg")
+
+#define pry_success_msg                      if (user_obj == dude_obj) then begin               \
+                                                display_mstr(400);                              \
+                                                set_gave_xp;                                    \
+                                             end else if (user_obj != 0) then begin             \
+                                                display_msg(obj_name(user_obj) + mstr(500));    \
+                                                set_gave_xp;                                    \
+                                             end                                                \
+                                             debug_msg("pry_success_msg")
+#define pry_fail_msg                         if (user_obj == dude_obj) then begin               \
+                                                display_mstr(401);                              \
+                                             end else if (user_obj != 0) then begin             \
+                                                display_msg(obj_name(user_obj) + mstr(501));    \
+                                             end                                                \
+                                             debug_msg("pry_fail_msg")
+
+#define gave_exp                             lvar_bit(LVAR_Flags, gave_exp_bit)
+#define set_gave_exp                         if (gave_exp == false) then begin            \
+                                                give_xp(UNLOCK_EXP);                      \
+                                             end                                          \
+                                             set_lvar_bit_on(LVAR_Flags, gave_exp_bit)
+#define attempt_unlock(x)                    if (LOCKER_LOCKABLE) then begin                                                  \
+                                                if (is_success(roll_vs_skill(user_obj, SKILL_LOCKPICK, x))) then begin        \
+                                                   script_overrides;                                                          \
+                                                   unlock_success_msg;                                                        \
+                                                   obj_unlock(self_obj);                                                      \
+                                                end else begin                                                                \
+                                                   script_overrides;                                                          \
+                                                   unlock_fail_msg;                                                           \
+                                                end                                                                           \
+                                             end
+#define attempt_lock(x)                      if (LOCKER_LOCKABLE) then begin                                                  \
+                                                if (is_success(roll_vs_skill(user_obj, SKILL_LOCKPICK, x))) then begin        \
+                                                   script_overrides;                                                          \
+                                                   lock_success_msg;                                                          \
+                                                   obj_lock(self_obj);                                                        \
+                                                end else begin                                                                \
+                                                   script_overrides;                                                          \
+                                                   lock_fail_msg;                                                             \
+                                                end                                                                           \
+                                             end
+#define explosion_open_locker                if (EXPLOSION_SUCCESS_CHECK) then begin   \
+                                                display_mstr(300);                     \
+                                                obj_unlock(self_obj);                  \
+                                             end else begin                            \
+                                                display_mstr(301);                     \
+                                             end
+#define attempt_pry(the_mod)                 if (is_success(do_check(user_obj, STAT_st, the_mod))) then begin  \
+                                                pry_success_msg;                                               \
+                                                obj_unlock(self_obj);                                          \
+                                             end else begin                                                    \
+                                                pry_fail_msg;                                                  \
+                                             end
+
+variable caught_tamper;
+variable user_obj;
+variable temp_roll;
+
+procedure start begin
+end
+
+procedure look_at_p_proc begin
+   look_at_action
+end
+
+procedure description_p_proc begin
+   description_action
+end
+
+procedure timed_event_p_proc begin
+end
+
+procedure map_enter_p_proc begin
+   map_enter_action
+   export_self_var
+   if (is_loading_game == false) then begin
+      if (ENTER_CLOSE_CONDITION) then begin
+         obj_close(self_obj);
+      end
+      if ((ENTER_LOCK_CONDITION) and (LOCKER_LOCKABLE)) then begin
+         obj_lock(self_obj);
+      end
+   end
+end
+
+procedure map_exit_p_proc begin
+  set_lvar_bit_off(LVAR_Flags, gave_warning_bit);
+end
+
+procedure map_update_p_proc begin
+   export_self_var
+   if (UPDATE_CLOSE_CONDITION) then begin
+      obj_close(self_obj);
+   end
+   if ((UPDATE_LOCK_CONDITION) and (LOCKER_LOCKABLE)) then begin
+      obj_lock(self_obj);
+   end
+end
+
+procedure damage_p_proc begin
+   if (obj_is_locked(self_obj)) then begin
+      if (target_obj != 0) then begin
+         if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+            explosion_open_locker
+         end
+      end
+   end
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      damage_action
+   end
+end
+
+procedure pickup_p_proc begin
+end
+
+procedure use_p_proc begin
+   caught_tamper := false;
+   user_obj := source_obj;
+   //debug_msg("using object");
+   if (user_obj != 0) then begin
+     // debug_msg("about to run check_tamper");
+      check_tamper
+      if (caught_tamper) then begin
+         caught_use_action
+      end
+   end
+end
+
+procedure use_obj_on_p_proc begin
+   caught_tamper := false;
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      check_tamper
+      if (caught_tamper) then begin
+         caught_use_obj_action
+      end else if (obj_is_locked(self_obj)) then begin
+         if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+            script_overrides;
+            attempt_unlock(LOCKPICK_ITEM_PENALTY)
+         end else if (obj_pid(obj_being_used_with) == PID_EXP_LOCKPICK_SET) then begin
+            script_overrides;
+            attempt_unlock(LOCKPICK_ITEM_PENALTY)
+         end else if (obj_pid(obj_being_used_with) == PID_CROWBAR) then begin
+            script_overrides;
+            attempt_pry(PRY_CROWBAR_MOD)
+         end
+      end else begin
+         if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+            script_overrides;
+            attempt_lock(EXD_LOCKPICK_PENALTY)
+         end else if (obj_pid(obj_being_used_with) == PID_EXP_LOCKPICK_SET) then begin
+            script_overrides;
+            attempt_lock(EXD_LOCKPICK_PENALTY)
+         end
+      end
+   end
+end
+
+procedure use_skill_on_p_proc begin
+   caught_tamper := false;
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      check_tamper
+      if (caught_tamper) then begin
+         caught_use_skill_action
+      end else if (action_being_used == SKILL_LOCKPICK) then begin
+         script_overrides;
+         if (obj_is_locked(self_obj)) then begin
+            attempt_unlock(LOCKPICK_SKILL_PENALTY)
+         end else begin
+            attempt_lock(LOCKPICK_SKILL_PENALTY)
+         end
+      //added by killap - expansion
+      end else begin
+         if (obj_is_locked(self_obj)) then begin
+            script_overrides;
+         end
+      end
+      //end added
+   end
+end
