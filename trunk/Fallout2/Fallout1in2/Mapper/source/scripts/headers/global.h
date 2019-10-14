@@ -413,7 +413,7 @@
 #define GVAR_KATJA_DISTANCE_VAL                 (1279)
 #define GVAR_DAN_HUB_STATUS                     (1280)
 #define GVAR_DESTROY_VATS_9                     (1281)
-#define GVAR_DESTROY_VATS_10                    (1282)
+#define GVAR_JOIN_SKULLZ                        (1282)
 #define GVAR_DESTROY_VATS_11                    (1283)
 #define GVAR_IS_NEAL_DEAD                       (1284)
 #define GVAR_DESTROY_VATS_13                    (1285)
