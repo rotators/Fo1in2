@@ -1,3 +1,9 @@
+/*
+
+   Door script, not sure where this is used?!
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 
@@ -92,7 +98,7 @@ procedure timed_event_p_proc begin
 end
 
 procedure use_p_proc begin
-	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
+	if not(CUR_AREA_MILITARY_BASE) then begin
 		if (local_var(0) == 0) then begin
 			obj_lock(self_obj);
 		end
@@ -112,7 +118,7 @@ procedure use_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
-	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
+	if not(CUR_AREA_MILITARY_BASE) then begin
 		variable LVar0 := 0;
 		if (local_var(0) == 0) then begin
 			if (action_being_used == SKILL_LOCKPICK) then begin
@@ -142,7 +148,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure description_p_proc begin
-	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
+   if not(CUR_AREA_MILITARY_BASE) then begin
 		if (local_var(0) == 0) then begin
 			display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
 		end
@@ -150,7 +156,7 @@ procedure description_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
+   if not(CUR_AREA_MILITARY_BASE) then begin
 		variable LVar0 := 0;
 		variable LVar1 := 0;
 		LVar0 := obj_being_used_with;
@@ -178,7 +184,7 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure map_update_p_proc begin
-	if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin
+   if not(CUR_AREA_MILITARY_BASE) then begin
 		if (local_var(0) == 0) then begin
 			obj_lock(self_obj);
 		end
@@ -190,16 +196,14 @@ end
 
 procedure damage_p_proc begin
 	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-		if ((cur_map_index != MAP_MBENT) and (cur_map_index != MAP_MBSTRG12) and (cur_map_index != MAP_MBVATS12)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
+      if not(CUR_AREA_MILITARY_BASE) then begin
 			set_local_var(1, 1);
 			destroy_object(self_obj);
 		end
-		else begin
-			if ((CUR_MAP_MBENT) or (CUR_MAP_MBSTRG12) or (CUR_MAP_MBVATS12)) then begin //  MILITARY BASE - ENTRANCE AND ANY LEVELS
-				if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-					set_local_var(1, 1);
-					destroy_object(self_obj);
-				end
+		else if CUR_AREA_MILITARY_BASE then begin
+			if not(global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
+				set_local_var(1, 1);
+				destroy_object(self_obj);
 			end
 		end
 	end
