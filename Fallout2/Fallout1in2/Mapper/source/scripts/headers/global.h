@@ -393,7 +393,7 @@
 #define GVAR_HOLODISK_POWER_ARMOR_SPEC          (1259)
 #define GVAR_HOLODISK_PERSONNEL_RECORD          (1260)
 #define GVAR_VAULT_13_HOSTILE                   (1261)
-#define GVAR_WATER_CHIP_5                       (1262)
+#define GVAR_MBASE_FORCE_FIELD_STATE            (1262)
 #define GVAR_WATER_CHIP_6                       (1263)
 #define GVAR_TANDI_LOCATION_TRACKER             (1264)
 #define GVAR_WATER_CHIP_8                       (1265)
