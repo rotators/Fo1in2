@@ -40,10 +40,13 @@ procedure TineEnd;
 variable tmp_hostile;
 variable initial :=  0;
 variable round_counter;
+variable barter_mod := 0;
 
 import variable Tine_barter;
 import variable AdyStor1_ptr;
 import variable AdyStor2_ptr;
+
+#define barter_mod_initial       (0)    // vanilla: 0
 
 procedure start begin
 	if not(initial) then begin
@@ -119,58 +122,54 @@ procedure talk_p_proc begin
 			move_obj_inven_to_obj(AdyStor2_ptr, self_obj);
 		end
 	end
+
+	barter_mod := barter_mod_initial;
+	gdialog_set_barter_mod(barter_mod);
+
 	if (Tine_barter == -1) then begin
 		float_msg( self_obj, message_str(SCRIPT_JTGENGRD, 136), FLOAT_MSG_RED );
 		tmp_hostile := 1;
 	end
+	else if ((Tine_barter != 0) and ((local_var(5) == 1) or (global_var( GVAR_ENEMY_ADYTUM ) == 1))) then begin
+		float_msg( self_obj, message_str(SCRIPT_ENEMY, 104), FLOAT_MSG_RED );
+	end
 	else begin
-		if ((Tine_barter != 0) and ((local_var(5) == 1) or (global_var( GVAR_ENEMY_ADYTUM ) == 1))) then begin
-			float_msg( self_obj, message_str(SCRIPT_ENEMY, 104), FLOAT_MSG_RED );
+		start_gdialog(256, self_obj, 4, -1, -1);
+		gsay_start;
+		if (Tine_barter == 1) then begin
+			call Tine_barter1;
+		end
+		else if (Tine_barter == 2) then begin
+			call Tine_barter2;
 		end
 		else begin
-			start_gdialog(256, self_obj, 4, -1, -1);
-			gsay_start;
-			if (Tine_barter == 1) then begin
-				call Tine_barter1;
+			if (local_var(4)) then begin
+				call Tine07;
 			end
 			else begin
-				if (Tine_barter == 2) then begin
-					call Tine_barter2;
-				end
-				else begin
-					if (local_var(4)) then begin
-						call Tine07;
-					end
-					else begin
-						call Tine01;
-					end
-				end
+				call Tine01;
 			end
-			gsay_end;
-			end_dialogue;
 		end
+		gsay_end;
+		end_dialogue;
 	end
+
 	if (Tine_barter == 1) then begin
 		move_obj_inven_to_obj(self_obj, AdyStor1_ptr);
 	end
+	else if (Tine_barter == 2) then begin
+		move_obj_inven_to_obj(self_obj, AdyStor2_ptr);
+	end
+	else if (LVar0 == 1) then begin
+		move_obj_inven_to_obj(self_obj, AdyStor1_ptr);
+	end
 	else begin
-		if (Tine_barter == 2) then begin
-			move_obj_inven_to_obj(self_obj, AdyStor2_ptr);
-		end
-		else begin
-			if (LVar0 == 1) then begin
-				move_obj_inven_to_obj(self_obj, AdyStor1_ptr);
-			end
-			else begin
-				move_obj_inven_to_obj(self_obj, AdyStor2_ptr);
-			end
-		end
+		move_obj_inven_to_obj(self_obj, AdyStor2_ptr);
 	end
 	Tine_barter := 0;
 end
 
-procedure Tine01
-begin
+procedure Tine01 begin
 	if (local_var(1) < 2) then begin
 		gsay_reply( SCRIPT_TAYLOR, 102 );
 	end
@@ -214,9 +213,8 @@ begin
 	call Tine02;
 end
 
-procedure Tine05
-begin
-	gdialog_mod_barter(0);
+procedure Tine05 begin
+	gdialog_mod_barter(barter_mod);
 	gsay_message( SCRIPT_TAYLOR, 114, 50 );
 end
 
@@ -241,8 +239,7 @@ begin
 	call Tine02;
 end
 
-procedure Tine08
-begin
+procedure Tine08 begin
 	if (local_var(0) < 2) then begin
 		gsay_reply( SCRIPT_TAYLOR, 119 );
 	end
@@ -252,9 +249,8 @@ begin
 	call Tine02;
 end
 
-procedure TineBarter
-begin
-	gdialog_mod_barter(0);
+procedure TineBarter begin
+	gdialog_mod_barter(barter_mod);
 	gsay_message( SCRIPT_MODREACT, 100, 50 );
 end
 
