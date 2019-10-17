@@ -43,13 +43,17 @@ procedure Put_Stuff;
 import variable Locker_Ptr;
 
 variable Only_Once := 1;
-variable BarterMod := 4294967286; /* (-10) */
+variable BarterMod := 0;
 variable DisplayMessage;
 
 #define LVAR_Here_Before         (4)
 #define LVAR_Discount            (5)
 #define LVAR_Restock_Time        (6)
 #define LVAR_Caps_Amount         (7)
+
+#define barter_mod_initial       (30)    // vanilla: -10
+#define barter_mod_discount_1    (15)    // vanilla: 5
+#define barter_mod_discount_2    (5)     // vanilla: 15
 
 procedure Start begin
 	if Only_Once then begin
@@ -86,7 +90,7 @@ procedure talk_p_proc begin
 		float_msg( self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED );
 	end
 	else begin
-		BarterMod := -10;
+		BarterMod := barter_mod_initial;
 
 		//move_obj_inven_to_obj(Locker_Ptr, self_obj);
 		call Get_Stuff;
@@ -100,14 +104,14 @@ procedure talk_p_proc begin
 		start_gdialog(377, self_obj, -1, -1, -1);
 		gsay_start;
 		if (local_var(LVAR_Discount) == 2) then begin
-			BarterMod := 15;
+			BarterMod := barter_mod_discount_2;
 		end
 		else begin
 			if (local_var(LVAR_Discount) == 1) then begin
-				BarterMod := 5;
+				BarterMod := barter_mod_discount_1;
 			end
 			else begin
-				BarterMod := -10;
+				BarterMod := barter_mod_initial;
 			end
 		end
 		gdialog_set_barter_mod(BarterMod);
@@ -194,24 +198,24 @@ end
 
 procedure Zack04 begin
 	if get_all_deathclaws_killed then begin
-		BarterMod := 15;
+		BarterMod := barter_mod_discount_2;
 		set_local_var(LVAR_Discount, 2);
 		call ZackYes;
 	end
 	else if get_quest_kill_deathclaws then begin
-		BarterMod := 5;
+		BarterMod := barter_mod_discount_1;
 		set_local_var(LVAR_Discount, 1);
 		call ZackYes;
 	end
 	else begin
-		BarterMod := -10;
+		BarterMod := barter_mod_initial;
 		call ZackNo;
 	end
 end
 
 procedure Zack05 begin
 	if get_all_deathclaws_killed then begin
-		BarterMod := 15;
+		BarterMod := barter_mod_discount_2;
 		set_local_var(LVAR_Discount, 2);
 		call ZackYes;
 	end
