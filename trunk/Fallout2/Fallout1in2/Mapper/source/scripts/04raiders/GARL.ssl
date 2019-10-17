@@ -16,6 +16,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
@@ -135,6 +136,18 @@ procedure start begin
 	end
 end
 
+procedure map_enter_p_proc begin
+variable Item;
+
+   // Remove Garl's armor if the armor destroy mod is enabled:
+	if not(fo1in2_destroy_armor_disabled) then begin
+		if critter_wearing_armor(self_obj) then begin
+			Item := get_armor(self_obj);
+			rm_obj_from_inven(self_obj, Item);
+		end
+	end
+end
+
 procedure look_at_p_proc begin
 	script_overrides;
 	display_msg(mstr(100));
@@ -243,7 +256,7 @@ end
 procedure critter_p_proc
 begin
 	if get_tandi_returned then begin
-		set_global_var( GVAR_ENEMY_RAIDERS, 1 );//ENEMY_RAIDERS
+		set_global_var( GVAR_ENEMY_RAIDERS, 1 );
 	end
 	else begin
 		if (global_var( GVAR_MISTAKEN_ID )) then begin//Raiders think you are Garl's father
@@ -251,11 +264,11 @@ begin
 		end
 		else begin
 			if global_var( GVAR_TANDI_ESCAPE ) then begin
-				set_global_var( GVAR_ENEMY_RAIDERS, 1 );//ENEMY_RAIDERS
+				set_global_var( GVAR_ENEMY_RAIDERS, 1 );
 			end
 			if (self_can_see_dude) then begin
 				if (global_var( GVAR_RAID_LOOTING )) then begin//  "RAID_LOOTING" (are you stealing from them)
-					set_global_var( GVAR_ENEMY_RAIDERS, 1 );//ENEMY_RAIDERS
+					set_global_var( GVAR_ENEMY_RAIDERS, 1 );
 				end
 			end
 		end
@@ -279,7 +292,7 @@ end
 procedure damage_p_proc begin
 	if source_obj == dude_obj then begin
 		if (local_var(7) == 0) then begin
-			set_global_var( GVAR_ENEMY_RAIDERS, 1 );//ENEMY_RAIDERS
+			set_global_var( GVAR_ENEMY_RAIDERS, 1 );
 		end
 		else begin
 			set_local_var(18, 1);
@@ -302,7 +315,7 @@ procedure destroy_p_proc begin
 	end
 	else if (local_var(7) == 0) then begin
 		//if (source_obj == dude_obj) then begin
-			set_global_var( GVAR_ENEMY_RAIDERS, 1 );//ENEMY_RAIDERS
+			set_global_var( GVAR_ENEMY_RAIDERS, 1 );
 			set_global_var( GVAR_GARLS_FRIEND, 0 );//GARLS_FRIEND
 		//end
 	end
@@ -316,8 +329,7 @@ procedure freetandi begin
 	obj_unlock(Cell_Door_Ptr);
 end
 
-procedure garlcbt
-begin
+procedure garlcbt begin
 	tmp_hostile := 1;
 end
 
