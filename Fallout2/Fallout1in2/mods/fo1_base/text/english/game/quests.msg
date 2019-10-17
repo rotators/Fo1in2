@@ -103,7 +103,7 @@
 {708}{}{Become a guard for the Water Merchants.}
 {709}{}{Become a guard for the Far Go Traders.}
 {710}{}{Become a guard for the Crimson Caravan.}
-{711}{}{Get rid of the raiders at Irwine's Farm.}
+{711}{}{Get rid of the raiders at Irwin's Farm.}
 
 #
 # Brotherhood of Steel Quests

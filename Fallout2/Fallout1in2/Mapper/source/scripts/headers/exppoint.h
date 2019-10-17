@@ -227,6 +227,6 @@
  points he received.
 ***************************************/
 #define give_xp(x)                              give_exp_points(x);             \
-                                                display_msg(message_str(SCRIPT_GENERIC,100)+x+message_str(SCRIPT_GENERIC,101))
+                                                display_msg(message_str(SCRIPT_GENERIC,10)+x+message_str(SCRIPT_GENERIC,11))
 
 #endif // EXPPOINT_H
