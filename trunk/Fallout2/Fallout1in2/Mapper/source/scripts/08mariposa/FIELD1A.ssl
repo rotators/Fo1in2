@@ -1,22 +1,24 @@
+/*
+
+   Military Base - Force Field
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\mbase.h"
+//#include "..\headers\maps\mbstrg12.h"
+
+#define NAME                    SCRIPT_FIELD1A
+
+#include "..\headers\command.h"
 
 procedure start;
-procedure map_enter_p_proc;//    script_action == map_enter_proc
-procedure map_update_p_proc;//    script_action == map_update_proc
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
 import variable Field1a_Ptr;
 
-
-procedure start
-begin
-	if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-		call map_enter_p_proc;
-	end
-	else begin
-		if (script_action == map_update_proc) then begin
-			call map_update_p_proc;
-		end
-	end
+procedure start begin
 end
 
 procedure map_enter_p_proc
@@ -24,10 +26,10 @@ begin
 	Field1a_Ptr := self_obj;
 	if (global_var( GVAR_VATS_ALERT ) == 1) then begin
 		if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-		set_global_var( GVAR_WATER_CHIP_5, 1 );
+		set_force_fields_on;
 		set_map_var(16, 1);
 	end
-	if ((global_var( GVAR_WATER_CHIP_5 ) == 0) or (map_var(16) == 0)) then begin
+	if (get_force_fields_off or (map_var(16) == 0)) then begin
 		if not(is_loading_game) then begin    set_self_invisible;    end
 	end
 end
@@ -35,7 +37,7 @@ end
 procedure map_update_p_proc
 begin
 	Field1a_Ptr := self_obj;
-	if (global_var( GVAR_WATER_CHIP_5 ) == 0) then begin
+	if get_force_fields_off then begin
 		if ((map_var(16) == 0) and (global_var( GVAR_VATS_ALERT ) == 1)) then begin
 			if not(is_loading_game) then begin    set_self_invisible;    end
 			set_map_var(16, 1);
@@ -45,14 +47,14 @@ begin
 		end
 	end
 	else begin
-		if (global_var( GVAR_WATER_CHIP_5 ) == 1) then begin
+		if get_force_fields_on then begin
 			set_map_var(16, 1);
 			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
 		end
 		else begin
 			if (global_var( GVAR_VATS_ALERT ) == 1) then begin
 				if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-				set_global_var( GVAR_WATER_CHIP_5, 1 );
+				set_force_fields_on;
 				set_map_var(16, 1);
 			end
 		end

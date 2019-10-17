@@ -201,6 +201,7 @@
 #define EXP_BECOME_INITITAT                     (2000)
 
 // Mariposa
+#define EXP_BONUS_HACKING 						(800)
 #define EXP_HANDYC_CLEANUP                      (1000)
 #define EXP_OVERHEARD_CONVERSATION              (1000)
 #define EXP_TRICKING_MUTANTS                    (1500)
