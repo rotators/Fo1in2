@@ -9,12 +9,23 @@
 #include "..\headers\sfall\sfall.h"
 
 procedure start;
+procedure get_highest_barter_in_party;
 procedure barterprice_handler;
 
 procedure start begin
    if game_loaded then begin
       register_hook_proc(HOOK_BARTERPRICE, barterprice_handler);
    end
+end
+
+procedure get_highest_barter_in_party begin
+   variable who, max;
+   foreach (who in party_member_list_critters) begin
+      if (has_skill(who, SKILL_BARTER) > max) then begin
+         max := has_skill(who, SKILL_BARTER);
+      end
+   end
+   return max;
 end
 
 procedure barterprice_handler begin
@@ -37,7 +48,8 @@ procedure barterprice_handler begin
       final_price;
 
    if not(partyMem) then begin
-      dude_barter := has_skill(dude_obj, SKILL_BARTER);
+      //dude_barter := has_skill(dude_obj, SKILL_BARTER);
+      dude_barter := get_highest_barter_in_party;
       trader_barter := has_skill(trader, SKILL_BARTER);
       if (has_trait(TRAIT_PERK, dude_obj, PERK_master_trader)) then master_trader := 125;
       barter_diff := gdialog_get_barter_mod + dude_barter - trader_barter + master_trader;
