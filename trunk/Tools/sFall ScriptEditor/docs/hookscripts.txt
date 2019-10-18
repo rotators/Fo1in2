@@ -10,8 +10,6 @@ To aid in mods compatibility, avoid using hs_xxx .int scripts. Instead it is rec
 
 Example setup for a hook-script based mod:
 
-
-
 procedure tohit_hook_handler begin
    display_msg("Modifying hit_hook " + get_sfall_arg);
    set_hit_chance_max(100);
@@ -23,9 +21,6 @@ procedure start begin
       register_hook_proc(HOOK_TOHIT, tohit_hook_handler);
    end
 end
-
-
-
 
 There are script functions available, specific to hook scripts:
 
@@ -46,9 +41,10 @@ Changes argument value. The argument number (argnum) is 0-indexed. This is usefu
 
 > void register_hook(int hooktype)
 Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, "start" proc will be executed in a current global script. You can use all above functions like normal.
+NOTE: In order to better interact with the execution order of hook scripts in version 4.2, the registration order of hook handlers for the function was changed, so hook handlers will be executed after all hook scripts registered with the register_hook_proc function. To return to the old hook registration system, use the BackwardHooksRegistration option in ddraw.ini.
 
-> void register_hook_proc(int hooktype, proc procedure)
-The same as register_hook, except that you specifically define which procedure in the current script should be called as a hook (instead of "start"). Pass procedure the same as how you use dialog option functions. This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script, no conflicts if you don't use "hs_*.int" scripts) and flexibility (you can place all related hook scripts for specific mod in a single script!).
+> void register_hook_proc(int hooktype, procedure proc)
+The same as register_hook, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass procedure the same as how you use dialog option functions. This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script, no conflicts if you don't use "hs_*.int" scripts) and flexibility (you can place all related hook scripts for specific mod in a single script!).
 
 NOTE: you can hook several scripts to a single hook point, for example if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with "set_sfall_return", the next script may override this value if calls "set_sfall_return" again. Sometimes you need to multiply certain value in a chain of hook scripts.
 Example: let's say we have a Mod A which reduces all "to hit" chances by 50%. The code might look like this:
@@ -256,6 +252,7 @@ Obj     arg5 - The destination object, when the item is moved to other object, o
 HOOK_BARTERPRICE (hs_barterprice.int)
 
 Runs whenever the value of goods being purchased is calculated
+Note: The hook is executed twice when entering the barter or after transaction, the first time for the player, the second time for the NPC
 
 critter arg1 - the critter doing the bartering (either dude_obj or inven_dude)
 critter arg2 - the critter being bartered with
@@ -266,6 +263,7 @@ int     arg6 - the value of all goods being traded before skill modifications
 critter arg7 - table of offered goods (being sold to NPC)
 int     arg8 - the total cost of the goods offered by the player
 int     arg9 - set 1 if the "offers" button was pressed (not for a party member), otherwise 0
+int     arg10 - set to 1 if there is a barter exchange with a party member NPC, otherwise 0
 
 int     ret1 - the modified value of all of the goods (pass -1 if you just want to modify offered goods)
 int     ret2 - the modified value of all offered goods
@@ -422,7 +420,8 @@ What you can do:
 - add AP costs for all inventory movement including reloading
 - apply or remove some special scripted effects depending on PC's armor
 
-int     arg1 - Target slot (0 - main backpack, 1 - left hand, 2 - right hand, 3 - armor slot, 4 - weapon, when reloading it by dropping ammo, 5 - container, like bag/backpack, 6 - dropping on the ground, 7 - pickup the item)
+int     arg1 - Target slot (0 - main backpack, 1 - left hand, 2 - right hand, 3 - armor slot, 4 - weapon, when reloading it by dropping ammo, 5 - container, like bag/backpack, 6 - dropping on the ground,
+                            7 - pickup the item, 8 - drop item on dude picture box)
 Item    arg2 - Item being moved
 Item    arg3 - Item being replaced, weapon being reloaded, or container being filled (can be 0)
 
@@ -453,7 +452,8 @@ Also happens on other screens, like barter.
 
 NOTE: FID has following format: 0x0ABBCDDD, where A is object type, BB - animation code (always 0 in this case), C - weapon code, DDD - FRM index in LST file.
 
-int     arg1 - the vanilla fid calculated by the engine according to critter base FID and armor/weapon being used
+int     arg1 - the vanilla FID calculated by the engine according to critter base FID and armor/weapon being used
+int     arg2 - the modified FID, calculated by the internal sfall code (like Hero Appearance Mod)
 
 int     ret1 - overrides the calculated FID with provided value
 
@@ -463,9 +463,9 @@ HOOK_COMBATTURN (hs_combatturn.int)
 
 Runs before and after each turn in combat (for both PC and NPC).
 
-int     arg1 - event type: 1 - start of turn, 0 - normal end of turn, -1 - combat ended abruptly (by script or by pressing Enter during PC turn)
+int     arg1 - event type: 1 - start of turn, 0 - normal end of turn, -1 - combat ended abruptly (by script or by pressing Enter during PC turn), -2 - normal ending of combat (always run hook at end of combat)
 int     arg2 - critter doing the turn
-boolean arg3 - sets to 1 at the beginning of the player’s turn, after the game has been loaded, 0 - otherwise
+boolean arg3 - sets to 1 at the beginning/ending of the player’s turn, after the game has been loaded, 0 - otherwise
 
 int     ret1 - pass 1 at the start of turn to skip the turn, pass -1 at the end of turn to force end of combat
 
@@ -632,3 +632,17 @@ Critter arg3 - the critter (usually dude_obj)
 
 int     ret1 - overrides the result of the Sneak check
 int     ret2 - overrides the duration time for the current check
+
+-------------------------------------------
+
+HOOK_STDPROCEDURE (hs_stdprocedure.int)
+
+Runs before Fallout executes a standard procedure (handler) in script of objects.
+NOTE: this hook will not be executed for "start", critter_p_proc, timed_event_p_proc, and map_update_p_proc procedures.
+
+int     arg1 - number of the standard script handler (see define.h)
+Obj     arg2 - the object that owns the executed handler
+Obj     arg3 - the object that called this handler (can be 0)
+
+int     ret1 - pass -1 to cancel the execution of the handler
+

@@ -19,6 +19,7 @@
 #define BARTER      (0x20000)
 #define HEROWIN     (0x40000)
 #define DIALOGVIEW  (0x80000)
+#define COUNTERWIN  (0x100000) // window input the number of moved items or setting a timer
 
 //Valid arguments to register_hook
 #define HOOK_TOHIT            (0)
@@ -61,6 +62,7 @@
 #define HOOK_SUBCOMBATDAMAGE  (37)
 #define HOOK_SETLIGHTING      (38)
 #define HOOK_SNEAK            (39)
+#define HOOK_STDPROCEDURE     (40)
 
 //Valid arguments to list_begin
 #define LIST_CRITTERS    (0)
@@ -73,7 +75,8 @@
 #define LIST_ALL         (9)
 
 //Valid flags for force_encounter_with_flags
-#define ENCOUNTER_FLAG_NO_CAR (1)
+#define ENCOUNTER_FLAG_NO_CAR   (1)
+#define ENCOUNTER_FLAG_LOCK     (2) // block new forced encounter by the next executes function until the current specified encounter occurs
 
 //The attack types returned by get_attack_type
 #define ATKTYPE_LWEP1           (0)
@@ -142,12 +145,13 @@
 #define reverse_array(array)        resize_array(array, -4)
 // randomly shuffle elements in list/map
 #define shuffle_array(array)        resize_array(array, -5)
-// sort map in ascending order by value
+// sort map in ascending order by key value
 #define sort_map_value(array)       resize_array(array, -6)
-// sort map in descending order by value
-#define sort_map_value_desc(array)  resize_array(array, -7)
+// sort map in descending order by key value
+#define sort_map_reverse(array)     resize_array(array, -7)
 // remove element from map or just replace value with 0 for list
 #define unset_array(array, item)    set_array(array, item, 0)
+
 // same as "key_pressed" but checks VK codes instead of DX codes
 #define key_pressed_vk(key)         (key_pressed(key bwor 0x80000000))
 
@@ -238,7 +242,13 @@
 #define party_member_list_critters      party_member_list(0)
 #define party_member_list_all           party_member_list(1)
 
+// fake perks/traits add mode flags
+#define ADD_PERK_MODE_TRAIT     (1)  // add to the player traits list
+#define ADD_PERK_MODE_PERK      (2)  // add to the player perks list
+#define ADD_PERK_MODE_REMOVE    (4)  // remove from the list of selectable perks after added to player
+
 // sfall_funcX macros
+#define add_extra_msg_file(name)                        sfall_func1("add_extra_msg_file", name)
 #define add_iface_tag                                   sfall_func0("add_iface_tag")
 #define art_cache_clear                                 sfall_func0("art_cache_clear")
 #define attack_is_aimed                                 sfall_func0("attack_is_aimed")
@@ -249,6 +259,8 @@
 #define dialog_message(text)                            sfall_func1("dialog_message", text)
 #define dialog_obj                                      sfall_func0("dialog_obj")
 #define display_stats                                   sfall_func0("display_stats")
+#define draw_image(pathFile, frame, x, y, noTrans)      sfall_func5("draw_image", pathFile, frame, x, y, noTrans)
+#define draw_image_scaled(artId, frame, x, y, w, h)     sfall_func6("draw_image_scaled", artId, frame, x, y, w, h)
 #define exec_map_update_scripts                         sfall_func0("exec_map_update_scripts")
 #define floor2(value)                                   sfall_func1("floor2", value)
 #define get_can_rest_on_map(map, elev)                  sfall_func2("get_can_rest_on_map", map, elev)
@@ -262,6 +274,8 @@
 #define get_object_data(obj, offset)                    sfall_func2("get_object_data", obj, offset)
 #define get_outline(obj)                                sfall_func1("get_outline", obj)
 #define get_string_pointer(text)                        sfall_func1("get_string_pointer", text)
+#define has_fake_perk_npc(npc, perk)                    sfall_func2("has_fake_perk_npc", npc, perk)
+#define has_fake_trait_npc(npc, trait)                  sfall_func2("has_fake_trait_npc", npc, trait)
 #define intface_hide                                    sfall_func0("intface_hide")
 #define intface_is_hidden                               sfall_func0("intface_is_hidden")
 #define intface_redraw                                  sfall_func0("intface_redraw")
@@ -271,6 +285,7 @@
 #define item_weight(obj)                                sfall_func1("item_weight", obj)
 #define lock_is_jammed(obj)                             sfall_func1("lock_is_jammed", obj)
 #define loot_obj                                        sfall_func0("loot_obj")
+#define metarule_exist(metarule)                        sfall_func1("metarule_exist", metarule)
 #define npc_engine_level_up(toggle)                     sfall_func1("npc_engine_level_up", toggle)
 #define obj_under_cursor(crSwitch, inclDude)            sfall_func2("obj_under_cursor", crSwitch, inclDude)
 #define outlined_object                                 sfall_func0("outlined_object")
@@ -294,3 +309,7 @@
 #define spatial_radius(obj)                             sfall_func1("spatial_radius", obj)
 #define tile_refresh_display                            sfall_func0("tile_refresh_display")
 #define unjam_lock(obj)                                 sfall_func1("unjam_lock", obj)
+
+#define set_fake_perk_npc(npc, perk, level, image, desc)        sfall_func5("set_fake_perk_npc", npc, perk, level, image, desc)
+#define set_fake_trait_npc(npc, trait, active, image, desc)     sfall_func5("set_fake_trait_npc", npc, trait, active, image, desc)
+#define set_selectable_perk_npc(npc, perk, active, image, desc) sfall_func5("set_selectable_perk_npc", npc, perk, active, image, desc)

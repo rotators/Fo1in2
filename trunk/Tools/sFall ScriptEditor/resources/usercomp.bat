@@ -4,24 +4,33 @@ rem *** Example user config for compiling script file ***
 if not exist %1 goto NOFILE
 set namescript=%~n1
 
+rem Include files path
 set ipath=%2
 
+rem Path to compile scripts
+set pathcompile=%3
+
 rem Preprocessor definition for conditional compilation option
-set def=%3
+set def=
+if not %4 == 0 (
+	echo Build type: %4
+	set def=-d%4%
+) else (echo Build type: None)
 
-rem Compiling with Short-Circuit Evaluation option
-set shortCircuit=%4
+rem Compiling with optimization level option
+set optimize=%5
 
-rem Set path to compile scripts
-set pathcompile=..\
+rem Compiling with Short-Circuit Evaluation option (last)
+set shortCircuit=%7
 
 rem Set name and path for preprocessing file
 set prefile=..\scrTemp\%namescript%_[pre].ssl
 if exist %prefile% del %prefile%
+if exist %namescript%.ssl del /q %namescript%.ssl
 
 echo -------------------------------------------------------------------------------
-echo   Compilation script: 
-echo   %1
+echo   Compilation script:
+echo   %~6\%namescript%.ssl
 echo -------------------------------------------------------------------------------
 wcc386.exe %1 -p -fo=%namescript%.i -w -i=%ipath% %def%
 if not exist %namescript%.i goto ERROR
@@ -30,21 +39,25 @@ echo   Preprocessing script: OK.
 ren %namescript%.i %namescript%.ssl
 if exist %namescript%.int del %namescript%.int
 
-rem compiling script with original fallout Bis compiler
-dos32a.exe bcompile.exe %namescript%.ssl
-if exist %namescript%.int goto COMPILE
-echo   [Warning] BIS Compilation script error.
+rem compiling script sfall compiler with BIS compatible mode
+compile.exe -b -O%optimize% %namescript%.ssl
 
-echo   Sfall - Compilation script.
+if exist %namescript%.int (
+	echo   [BIS] Script compilation is completed.
+	goto COMPILE
+)
+echo   [BIS] Compilation script error.
+echo   Try sfall compiler.
 echo -------------------------------------------------------------------------------
-compile.exe -O1 %shortCircuit% %namescript%.ssl
+compile.exe -O%optimize% %shortCircuit% %namescript%.ssl
 echo -------------------------------------------------------------------------------
+if not exist %namescript%.int goto ERROR
+echo   [SFALL] Script compilation is completed.
+
 :COMPILE
-if not exist %namescript%.int goto ERROR 
-move %namescript%.int %pathcompile%%namescript%.int
+move %namescript%.int %pathcompile%\%namescript%.int
 del %namescript%.ssl
-echo Script compilation is completed.
-echo Script file is compiled into: %pathcompile%%namescript%.int
+echo Script file is compiled into: %pathcompile:~1,-1%\%namescript%.int
 goto DONE
 
 :NOFILE
