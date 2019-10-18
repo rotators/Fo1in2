@@ -1,14 +1,15 @@
 ﻿// A sequence of whitespace with the character '|', acts as a wrap on a new line (that is, equivalent to \n).
 
 // VANILLA PROCEDURE HANDLERS:
-
 Handler description_p_proc | - Handler, a detailed description for the object. | By default, the description specified in the prototype object is called. || Note: The procedure must contain script_overrides to avoid simultaneous execution and the standard function for the description.
 Handler look_at_p_proc | - The handler is called when you look at the object. By default, the prototype name of the object is displayed. || Note: The procedure must contain script_overrides to avoid simultaneous execution and a standard function.
 Handler damage_p_proc | - The handler is called when the object is damaged. The number of received damage is transmitted through the parameter fixed_param. || Attention! If the damage has been fully paid off at the expense of the armor, then this handler is not called!
 Handler use_p_proc | - The handler is called when this object is used. | To get the address of the object used on the object, use the function source_obj. || Note: This handler is not called for some types of items when working with inventory!
 Handler use_obj_on_p_proc | - The handler is called when another object is used on this object. | The parameter obj_being_used_with receives a pointer to the object that was used.
 Handler use_skill_on_p_proc | - The handler is called when some skill is used on the object. | Through the parameter action_being_used gets the skill number used on the object (see DEFINE.H, section Skill Equates).
-Handler combat_p_proc | - The handler is executed during the battle. | The number of the specific event that caused the function is passed as a parameter to fixed_param. 
+Handler combat_p_proc | - The handler is executed during the battle. | The number of the specific event that caused the function is passed as a parameter to fixed_param.
+Handler combat_is_starting_p_proc | - The handler is executed every time before the start of the combat.
+Handler combat_is_over_p_proc | - A handler is executed every time before the combat ends.
 Handler critter_p_proc | - The handler is responsible for the behavior of the object, it is executed constantly several times per second. | As a parameter gets fixed_param - the damage done to the last mission (do not work). || Note: if this procedure is not present in the script, then errors can occur, and the first encountered procedure can be perceived as this handler, which will be constantly executed.
 Handler push_p_proc | - The handler is called when trying to push the object.
 Handler talk_p_proc | - A dialog handler is called when trying to talk to an object.
@@ -21,11 +22,9 @@ Handler map_update_p_proc | - The handler is called when the map is updated. | U
 Handler destroy_p_proc | - The handler is called when the self-object is destroyed.
 Handler spatial_p_proc | - The handler is called in the object's script, when passing an object over the self-object.
 Handler timed_event_p_proc | - Timer event handler. | Called when the previously set timer is triggered. | Functions are passed to the parameter fixed_param, set in add_timer_event.
-Handler start | - The handler is called when the script run, that is, every time you entrace to the map.
-
+Handler start | - The handler is called when the script run, that is, every time you entrance to the map.
 
 // VANILLA OPCODES AND MACROS (generated from russian HLP file and google-translated)
-
 void use_obj (ObjectPtr obj) | - Use this object.
 boolean tile_in_tile_rect (int tile1, int tile2, int tile3, int tile4, int tile) | - Check whether the point (hex) belongs to the rectangle. TRUE - if the specified hex belongs to the specified rectangle, otherwise - FALSE
 void set_map_music (int map_id, string acmFileName) | - Sets background music for the specified map.
@@ -115,9 +114,7 @@ void set_gvar_bit_off (int var_index, int bit_num) | - Sets specified bit of glo
 void set_mvar_bit_off (int var_index, int bit_num) | - Sets specified bit of variable map to 0.
 void set_lvar_bit_off (int var_index, int bit_num) | - Sets specified bit of local variable to 0.
 
-
 // INTERFACE FUNCTIONS
-
 void CreateWin (string win_name, int x, int y, int width, int height) | - Creates window name "win_name".
 void DeleteWin (string win_name) | - Removes window by name.
 void SelectWin (string win_name) | - Selects window by name (make it active).
@@ -135,7 +132,7 @@ void AddButton (string btn_name, int x, int y, int width, int height) | - Сreat
 void DeleteButton (string btn_name) | - Removes button by name.
 void AddButtonGFX (string btn_name, string downpcx, string uppcx, string overpcx) | - Binds to button name "btn_name" graphic images for button states "pressed", "not pressed" and "mouse over".
 void AddButtonProc (string btn_name, procedure button_on, procedure button_off, procedure button_press, procedure button_release) | - Binds to   button "btn_name" procedures for handling events.
-void AddButtonText (string btn_name, string text) | - Create label text on button "btn_name". 
+void AddButtonText (string btn_name, string text) | - Create label text on button "btn_name".
 void AddRegion string reg_name {int x, int y, int x, int y, int x, int y, ...} | - Add an arbitrary region named "reg_name". || Notes: The area can be created only in the user window, when the window is deleted, the area is automatically deleted.
 void DeleteRegion (string reg_name) | - Remove region by reg_name.
 void AddRegionProc (string reg_name, procedure on, procedure off, procedure press, procedure release) | - Binds region to procedure for handling events.
@@ -179,14 +176,12 @@ void SayReply (string reply_name, string reply_text) | - Display to the replica 
 void SayOption (string option_text, procedure target/string reply_name) | - Display a variant of the answer, in the window of the player's responses (see SayOptionWindow). || Note: If the response to the replica is one, then the response window is not created and no response is output. To continue the dialogue, click on the NPC replica window. The target procedure will be taken from the same written, but not displayed SayOption.
 void SayMessage (string message_title, string message_text) | - Display a message in the replica window (that is removed by clicking) (see SayReplyWindow and SayMessageTimeout).
 void AddKey (char key_code, procedure callback_proc) | - Associate the specified key with the procedure-handler. || Notes: | 1. The function is case sensitive. 'A' and 'A' are different keys. | 2. The function works only with Say-windows.
-void DeleteKey (char key_code) | - Cancel the associated procedure for the specified key (see AddKey). 
+void DeleteKey (char key_code) | - Cancel the associated procedure for the specified key (see AddKey).
 void FadeIn (int delay) | - Restore the screen after FadeOut. || Note: Unlike gfade_in and gfade_out, it does not ignore the delay.
 void FadeOut (int delay) | - Slowly extinguish the image. || Note: Unlike gfade_in and gfade_out, it does not ignore the delay.
 string SelectFileList (string title, string mask) | - Display file selection window. || Note: The window is always displayed in the same place on the screen (closer to the center).
 
-
 // VANILLA OPCODES (descriptions from falloutmods.wikia.com)
-
 int action_being_used() | - Script Returns the current skill being used on a script object.
 void add_obj_to_inven(ObjectPtr who, ObjectPtr item) | - Adds an object (item) to another object’s (who’s) inventory. || Note: that this only works with objects of type Item.
 void add_mult_objs_to_inven(ObjectPtr who, ObjectPtr item, int count) | - Adds (count) instances of an object (item) to another object’s (who’s) inventory. || Note: that this only works with objects of type Item.
@@ -203,8 +198,8 @@ void animate_stand_reverse_obj(ObjectPtr obj) | - Sets up an animation for an ob
 void art_anim(int fid) | - Returns the animation that this fid represents (ANIM_stand, ANIM_pickup, etc.).
 void attack(ObjectPtr who) | - Causes the focused object (self) to attempt to attack an object (who). Note that this is a macro to attack_complex() below.
 void attack_complex(ObjectPtr who, int called_shot, int num_attacks, int bonus, int min_damage, int max_damage, int attacker_results, int target_results) | - Causes the current object (self – must be a critter) to attempt to attack a critter (who) with various parameters modifying the combat.
-void attack_setup(ObjectPtr who, ObjectPtr victim) | - Sets up an attack from who on victim, without expecting this script to be involved. Can be used to setup attacks on critters from the map script. 
-int car_current_town | - Map Returns the current town area the car can be found at. Area #’s can be found in scripts\headers\maps.h 
+void attack_setup(ObjectPtr who, ObjectPtr victim) | - Sets up an attack from who on victim, without expecting this script to be involved. Can be used to setup attacks on critters from the map script.
+int car_current_town | - Map Returns the current town area the car can be found at. Area #’s can be found in scripts\headers\maps.h
 int car_give_to_party | - Map Gives the car to the party, and takes them to the worldmap.
 int car_give_gas(int amount) | - Gives the car a given amount (amount) of gas, function returns exact amount of fuel that was not used.
 int combat_difficulty | - Returns the current Combat difficulty level of the game (defined in the options screen).
@@ -223,23 +218,23 @@ int critter_rm_trait(ObjectPtr who, int trait_type, int trait, int amount) | - R
 int critter_set_flee_state(ObjectPtr who, Boolean flee_on) | - Sets the FLEE flag on or off. This controls whether the critter flees during combat.
 int critter_skill_level(ObjectPtr who, int skillNum) | - Returns the current skill level of a particular object’s (who) skill (skillNum).
 int critter_state(ObjectPtr who) | - Returns the state of a given critter object (from combat data), used to determine if a critter is dead, unconscious, etc.
-int critter_stop_attacking(ObjectPtr who) | - Flags the critter object (who) as no longer wishing to be active in combat. 
-int cur_map_index | - Map Returns the index # of the current map, to be matched with the define-constant in define.h. 
-int cur_town | - Map Returns the index # of the current town, to be matched with the define-constant in define.h. 
+int critter_stop_attacking(ObjectPtr who) | - Flags the critter object (who) as no longer wishing to be active in combat.
+int cur_map_index | - Map Returns the index # of the current map, to be matched with the define-constant in define.h.
+int cur_town | - Map Returns the index # of the current town, to be matched with the define-constant in define.h.
 int days_since_visited | - Map Returns the number of days since this map was last visited, or (-1) if it has never been visited before.
 void debug_msg(string text) | - Prints a string to the debug monitor. Should be used exclusively for debug information, instead of display_msg()! The user will never see these messages unless they have debugging enabled and activated. If they have debugging enabled and DEBUGLOG set, the messages will only show up in debug.log file.
 int destroy_object(ObjectPtr obj) | - Destroys an object (obj), which will cause it’s script to be called in the destroy_proc section if the object is *NOT* the calling object.
 int destroy_mult_objs(ObjectPtr item, int count) | - Destroys count number of instances of an item object. This function will figure out which inventory this item is in (if it isn’t on the ground). If it is on the ground, of course, there is only one instance of this object, so only one will be destroyed.
-void dialogue_reaction(int mood) | - Set up a reaction animation in the dialogue system. 
-void dialogue_system_enter | - Dialog Tells the dialog system that this object is requesting the talk system. This is used when the script wants to start dialog instead of waiting for the player to initiate it. The script will be called back in its talk_proc section. 
+void dialogue_reaction(int mood) | - Set up a reaction animation in the dialogue system.
+void dialogue_system_enter | - Dialog Tells the dialog system that this object is requesting the talk system. This is used when the script wants to start dialog instead of waiting for the player to initiate it. The script will be called back in its talk_proc section.
 int difficulty_level | - Returns the current Game difficulty level of the game (defined in the options screen).
 void display_msg(string message) | - Displays a string on the in-game PDA display (lower-left hand corner).
 int do_check(ObjectPtr who, int check, int modifier) | - Do a check/test-roll versus one of the various basic traits (strength, perception, etc.). || Note: these cannot generate Critical Success or Critical Failure as they are a basic X==Y check.
 void drop_obj(ObjectPtr obj) | - Causes the critter self-object to remove a given object (obj) from it’s inventory and place it on the ground at its hex. This animates the self_obj.
-int drug_influence(ObjectPtr who) | - Returns True if a given critter object (who) is currently under any drug influences, False otherwise. 
+int drug_influence(ObjectPtr who) | - Returns True if a given critter object (who) is currently under any drug influences, False otherwise.
 ObjectPtr dude_obj | - Returns a pointer to the dude object (the player).
 int elevation(ObjectPtr obj) | - Returns the current elevation being displayed.
-void end_dialogue | - Terminates the dialogue system. 
+void end_dialogue | - Terminates the dialogue system.
 void endgame_movie | - Meta Plays the endgame movie.
 void endgame_slideshow | - Plays the endgame slideshow. The slideshow will fade in to its palette, so it is proper to call gfade_out(1) and then expect this command to fix the palette for you.
 int explosion(int where, 0-2 elevation, int damage) | - Sets up an explosion at a given tile number (where) on a given elevation, that will cause damage in a radius.
@@ -253,9 +248,9 @@ void game_ui_disable() | - Disables game user-interface input from the player (t
 void game_ui_enable() | - Re-enables game user-interface input from the player. This *MUST* be called relatively soon after disabling the UI or the player will be stuck, unable to do anything.
 int game_ui_is_disabled() | - Returns True if the game UI is currently disabled (the player is currently ‘locked-out’), and False otherwise.
 int gdialog_barter() | - Tells the dialog system to switch to the barter screen. (Sets the barter modifier to 0).
-int get_critter_stat(ObjectPtr who, int stat) | - Returns the value of a desired attribute/stat in a critter object (who). 
+int get_critter_stat(ObjectPtr who, int stat) | - Returns the value of a desired attribute/stat in a critter object (who).
 int get_day | - Time Returns the current day of the month.
-int gdialog_mod_barter(+/- percent modifier) | - Tells the dialog system to switch to the barter screen, using a given modifier. 
+int gdialog_mod_barter(+/- percent modifier) | - Tells the dialog system to switch to the barter screen, using a given modifier.
 int get_month | - Time Returns the current month of the year.
 int get_pc_stat(int pcStat) | - Returns the value of a desired pc-only stat of the obj_dude. These are found in define.h all starting with “PCSTAT_”.
 int get_poison(ObjectPtr who) | - Returns the value of a given critters’ (who) poison level. NOTE: In Fallout 1 this gives an error message.
@@ -268,7 +263,7 @@ int global_var(unsigned int var_index) | - Returns the value of a global variabl
 void gsay_end(unsigned int var_index) | - Ends a dialog sequence, which will bring up the sequence (actually display it).
 void gsay_message(int msg_list, int msg_num, int reaction) | - Sets up a sayMessage, which is a reply with just a [Done] option. The msg_list determines which message file to look in, and the msg_num determines which line to use from the file.
 void gsay_option(int msg_list, int msg_num, procedure target, int reaction) | - Sets up an option-choice for a reply block, getting the string from the message file (msg_list) and message number (msg_num), which will cause a given reaction (reaction), and if chosen will jump to the given (target) procedure.
-void gsay_reply(int msg_list, int msg_num) | - Sets up a reply block (what the *CRITTER* says). 
+void gsay_reply(int msg_list, int msg_num) | - Sets up a reply block (what the *CRITTER* says).
 void gsay_start | - Dialog Starts a new dialog sequence.
 int has_skill(ObjectPtr who, int skill [0 to 17]) | - This returns the level of the skill of the target critter. (0 to 200 for Fallout 1), (0 to 300 for Fallout 2)
 int has_trait(int trait_type, ObjectPtr who, int trait) | - Returns the value of a given critter object’s (who) trait of a given Trait_type (see define.h). This can be used to determine if the player has a particular Perk, AI Packet, team num, current rotation, or Trait (finesse, bruiser, etc.).
@@ -293,7 +288,7 @@ int map_var(unsigned int var_index) | - Returns the value of a map-global variab
 string message_str(int list, int msg_num) | - Returns a string from the message module for a given list and a given # (msg_num).
 int move_to(ObjectPtr obj, int tile_num, 0-2 elev) | - Immediately moves an object (obj) to the given tile number and elevation on the current map.
 int move_obj_inven_to_obj(ObjectPtr srcObj, ObjectPtr destObj) | - Moves an object’s (srcObj) entire inventory into another object’s (destObj) inventory.
-ObjectPtr obj_art_fid(ObjectPtr obj) | - Returns the fid # (used to index art) of a given object (obj). 
+ObjectPtr obj_art_fid(ObjectPtr obj) | - Returns the fid # (used to index art) of a given object (obj).
 ObjectPtr obj_being_used_with() | - Returns a pointer to the object being used on another object.
 boolean obj_can_hear_obj(ObjectPtr src_obj, ObjectPtr dst_obj) | - Returns True if the source object (src_obj) is capable of hearing the destination object (dst_obj). This includes distance factors, current activity (standing/walking/running), and skill use (stealth/etc.).
 boolean obj_can_see_obj(ObjectPtr src_obj, ObjectPtr dst_obj) | - Returns True if the source object (src_obj) has line-of-sight (LOS) with the destination object (dst_obj). This also takes into account perception & stealth rolls of the objects are critters.
@@ -321,14 +316,14 @@ void party_remove(ObjectPtr who) | - Removes a given critter (who) from the list
 void pickup_obj(ObjectPtr obj) | - Causes the critter self-object to animate and attempt to pick up a given object (obj). If used in regard to a critter, this flag is pinged when a steal detect fails. In other words when detected stealing, pickup_obj is called for the person you were stealing from.
 void play_gmovie() | - Plays one of the Fallout movies (full-screen, compressed, etc.).
 void play_sfx() | - Starts a new sound effect to be played on the queue.
-void poison(ObjectPtr who, int amount) | - Modifies the critter's poison level by a given amount. Positive numbers increase their level of poisoning, negative numbers decrease it. 
+void poison(ObjectPtr who, int amount) | - Modifies the critter's poison level by a given amount. Positive numbers increase their level of poisoning, negative numbers decrease it.
 int|string proto_data(int pid, int data_member) | - Returns the value of a data-member of a given prototype (pid).
 void radiation_dec(ObjectPtr who, int amount) | - Decrements a critter’s radiation counter by a given amount. || NOTE: This should only be done to the player (obj_dude) in Fallout due to design restrictions!
 void radiation_inc(ObjectPtr who, int amount) | - Increments a critter’s radiation counter by a given amount. || NOTE: This should only be done to the player (obj_dude) in Fallout due to design restrictions!
 int random(int min, int max) | - Returns a random value between (min) and (max), inclusive.
 void reg_anim_animate(ObjectPtr what, int anim, int delay) | - Adds a single, in-place animation on an object (what) to an animation sequence-list, at a given delay from the previous animation (delay should always be -1).
 void reg_anim_animate_forever(ObjectPtr what, int anim, int delay) | - Adds a single, in-place animation on an object (what) to an animation sequence-list, at a given delay from the previous animation (delay should always be -1). This animation will animate continuously until something in the system interrupts it. To be used *very* sparingly, for instance Gizmo’s sign and the ‘pray’ signs in the children of the cathedral (which will have to be toned down).
-void reg_anim_animate_reverse(ObjectPtr what, int anim, int delay) | - Adds a single, in-place reversed animation on an object (what) to an animation sequence-list, at a given delay from the previous animation (delay should always be -1). 
+void reg_anim_animate_reverse(ObjectPtr what, int anim, int delay) | - Adds a single, in-place reversed animation on an object (what) to an animation sequence-list, at a given delay from the previous animation (delay should always be -1).
 void reg_anim_begin() | - Anim Tells the system to start an animation sequence-list.
 void reg_anim_clear(ObjectPtr object) | - Terminates all animations that are currently registered for a given object. reg_anim_end void Anim Activates the animation sequence-list. Without this call the animation will never occur. || Note: All animation sequences must be registered at ONCE! In other words, you cannot let the script end and finish registering the animations later.
 void reg_anim_obj_move_to_obj(ObjectPtr who, ObjectPtr dest_obj, int delay) | - Adds an animation to cause a critter object (who) to attempt to walk to another object (dest_obj) at a given delay from the previous animation (delay should always be -1).
@@ -360,7 +355,7 @@ void signal_end_game() | - Tells the system that a script is indicating the game
 ObjectPtr source_obj() | - Returns a pointer to the source object (activator) for this action. The source object for a pickup_proc (pickup an object script_action) would be the critter picking the object up, for instance.
 void start_dialogue(ObjectPtr who, int mood) | - Start the dialogue system focusing on a critter (who) and starting in a given (mood). This call sets up the appropriate dialog windows, head art, etc. If this call is not made before the normal dialog calls (sayReply, sayMessage, sayOption, etc.) then the dialog windows will not come up, and only grey boxes will appear with the text.
 void start_gdialog(int msgFileNum, ObjectPtr who, int mood, int headNum, int backgroundIdx) | - Start the dialogue system focusing on a critter (who) and starting in a given (mood). This call sets up the appropriate dialog windows, head art, etc. If this call is not made before the normal dialog calls (sayReply, sayMessage, sayOption, etc.) then the dialog windows will not come up, and only grey boxes will appear with the text.
-ObjectPtr target_obj() | - Returns a pointer to the target object for this action. The target object is what is being acted upon. 
+ObjectPtr target_obj() | - Returns a pointer to the target object for this action. The target object is what is being acted upon.
 void terminate_combat | - Combat Tells the combat system to terminate prematurely. USE WITH CAUTION. This doesn’t prevent another (or even the SAME) script from re-starting combat, so make sure you turn off any hostile flags, etc.
 boolean tile_contains_obj_pid(int tile, 0-2 elev, int pid) | - Returns True if a particular tile contains an object with a matching prototype index # (obj pid).
 ObjectPtr tile_contains_pid_obj(int tile, 0-2 elev, int pid) | - Returns a pointer to the first object that matches a particular pid # that is on a particular tile and elevation.
@@ -384,11 +379,9 @@ string tokenize(string MainString, string Token, char Delimiter) | - Parses a st
 // unknown
 int skill_contest(int skill) | - Returns the value of a completed skill vs skill contest (to run through is_success & is_critical). || Note: Unimplemented in Fallout 1.
 //int world_map_x_pos() | - Returns the current X Position of the party on the World Map.
-//int world_map_y_pos() | - Returns the current Y Position of the party on the World Map. 
-
+//int world_map_y_pos() | - Returns the current Y Position of the party on the World Map.
 
 // SFALL LIST OPCODES:
-
 int   read_byte(int address)
 int   read_short(int address)
 int   read_int(int address)
@@ -656,9 +649,7 @@ int tile_under_cursor
 int gdialog_get_barter_mod
 void set_inven_ap_cost
 
-
 // SFALL OPCODES with descriptions (will override entries from above)
-
 int  key_pressed(int dxScancode)
 void tap_key(int dxScancode)
 int  get_mouse_x()
@@ -667,15 +658,15 @@ int  get_mouse_buttons() | - Returns the number of the mouse button that is curr
 
 void block_combat(bool value) | - Deny the player to enter combat mode.
 int game_loaded() | - Returns 1 the first time it is called after a new game or game load, and 0 any time after.
-int get_ini_setting(string setting) | - Reads an integer value from an ini file in the fallout directory. 
-string get_ini_string(string setting) | - Reads a string value from an ini file in the fallout directory. 
-int get_game_mode() | - Is a more flexible version of in_world_map. It will return a set of flags indicating which mode the game is currently in. 
+int get_ini_setting(string setting) | - Reads an integer value from an ini file in the fallout directory.
+string get_ini_string(string setting) | - Reads a string value from an ini file in the fallout directory.
+int get_game_mode() | - Is a more flexible version of in_world_map. It will return a set of flags indicating which mode the game is currently in.
 int get_uptime() | - Is just a wrapper around the windows GetTickCount() function. It's useful for making time fade effects in shaders, since they already have access to the current tick count.
-void set_self(objptr) | - Overrides the scripts self_obj for the next function call. 
-void mod_skill_points_per_level(int value) | - Accepts a value of between -100 and 100, and modifies the number of skill points the player recieves when they level up. 
-void seq_perk_freq(int value) | - Sets the number of levels between each perk. 
-ObjectPtr get_last_target(objptr critter) | - Will return the last critter to be deliberately attacked 
-ObjectPtr get_last_attacker(objptr critter) | - Will return the last critter to deliberately launch an attack against the argument critter. 
+void set_self(objptr) | - Overrides the scripts self_obj for the next function call.
+void mod_skill_points_per_level(int value) | - Accepts a value of between -100 and 100, and modifies the number of skill points the player recieves when they level up.
+void seq_perk_freq(int value) | - Sets the number of levels between each perk.
+ObjectPtr get_last_target(objptr critter) | - Will return the last critter to be deliberately attacked
+ObjectPtr get_last_attacker(objptr critter) | - Will return the last critter to deliberately launch an attack against the argument critter.
 void set_base_pickpocket_mod(int max, int mod) | - Changes maximum chance of success and chance mod for each steal attempt
 void set_critter_pickpocket_mod(CritterPtr, int max, int mod) | - The same as set_base_pickpocket, but applies only to specific critter
 void reg_anim_combat_check(int enable)  | - Allows to enable all reg_anim_* functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before "reg_anim_begin" - "reg_anim_end" block.
@@ -685,15 +676,24 @@ void reg_anim_light(objptr, int light, int delay) | - Change light of any object
 void reg_anim_change_fid(objptr, int FID, int delay)  | - Should work like art_change_fid_num but in reg_anim sequence.
 void reg_anim_take_out(objptr, holdFrameID, delay)  | - Plays "take out weapon" animation for given holdFrameID. It is not required to have such weapon in critter's inventory.
 void reg_anim_turn_towards(objptr, int tile/target, delay)  | - Makes object change it's direction to face given tile num or target object.
+
 int metarule2_explosions(int arg1, int arg2) | - Was made as a dirty easy hack to allow dynamically change some explosion parameters (ranged attack). All changed parameters are reset to vanilla state automatically after each attack action. Following macros are available in sfall.h:
 void set_attack_explosion_pattern(x, y)  | - Currently y is not used and x means: 1 - reduced explosion pattern (3 effects are spawned instead of 7), 0 - full pattern.
 void set_attack_explosion_art(x, y)  | - y not used and x is a misc frame ID (last 3 bytes, without object type) to use for the next explosion.
 void set_attack_explosion_radius(x)  | - Changes radius at which explosion will hit secondary targets for the next attack (from the experiments it is limited to something around 8 by the engine).
+void set_attack_is_explosion (type) | - Sets an explosive effect with damage of the specified type for a subsequent attack, with all targets in the blast radius receiving damage of the specified type. || Note: In this case, the weapon's damage must match the damage type specified.
 void set_attack_is_explosion_fire  | - If you call this right before using a weapon with fire damage type, it will produce explosion effects (and radius damage) just like "explosion" type, but all targets will still recieve fire damage.
+
+void set_explosion_radius (grenade, rocket) | - Sets a constant radius for the explosions of the grenades type and/or explosions of the type of missile and dynamite. | Setting the value to 0 does not change the corresponding radius. || Note: The set radius will be reset when the player starts or loads a new game.
+array get_explosion_damage (itemPid) | - Returns an array of minimum and maximum damage for the specified explosive item.
+void set_dynamite_damage (minDmg, maxDmg) | - Sets the minimum and maximum damage for a dynamite item.
+void set_plastic_damage (minDmg, maxDmg) | - Sets the minimum and maximum damage for a plastic explosive item.
+void set_explosion_max_targets (countTargets) | - Sets the maximum number of additional targets when generating explosions. | The valid range is 1..6 (default value is 6).
+
 array string_split(string, split) | - Takes a string and a seperator, searches the string for all instances of the seperator, and returns a temp array filled with the pieces of the string split at each instance. If you give an empty string as the seperator, the string is split into individual characters.
 string substr(string, start, length)  | - Cuts a substring from a string starting at "start" up to "length" characters. | If start is negative - it indicates starting position from the end of the string (for example substr("test", -2, 2) will return last 2 charactes: "st"). | If length is negative - it means so many characters will be omitted from the end of string (example: substr("test", 0, -2) will return string without last 2 characters: "te").
 int strlen(string text)  | - Returns string length
-string sprintf(string format, any value)  | - Formats given value using standart syntax of C printf function (google "printf" for format details). However it is limited to formatting only 1 value. 
+string sprintf(string format, any value)  | - Formats given value using standart syntax of C printf function (google "printf" for format details). However it is limited to formatting only 1 value.
 int typeof(any value)  | - Returns type of the given value: VALTYPE_INT, VALTYPE_FLOAT or VALTYPE_STR.
 int charcode(string text)  | - Returns ASCII code for the first character in given string
 float log(float x) | - Natural logarithm of x.
@@ -718,17 +718,16 @@ int art_exists(int artFID) | - checks if given artFID exists in the game | - Use
 int obj_is_carrying_obj(ObjectPtr invenObj, ObjectPtr itemObj) | - Returns number of itemObj inside invenObj's inventory, note that both arguments are object pointers.
 
 // hook scripts
-
 int init_hook() | - The hook script equivilent of game_loaded; it returns 2 when the script is first loaded, 1 when the player reloads and 0 otherwise.
 mixed get_sfall_arg() | - Gets the next argument from sfall. Each time it's called it returns the next argument, or otherwise it returns 0 if there are no more arguments left.
 array get_sfall_args() | - Returns all hook arguments as a new temp array.
 void set_sfall_return(int value) | - Used to return the new values from the script. Each time it's called it sets the next value, or if you've already set all return values it does nothing.
 void set_sfall_arg(int argnum, int value) | - Changes argument value. This is usefull if you have several hook scripts attached to one hook point (see below).
 void register_hook(int hooktype) | - Used from a normal global script if you want to run it at the same point a full hook script would normally run.
-void register_hook_proc(int hooktype, proc procedure) | - Works just like register_hook, except that you specifically define which procedure in the current script should be called as a hook (instead of "start").
+void register_hook_proc(int hooktype, procedure proc) | - Works just like register_hook, except that you specifically define which procedure in the current script should be called as a hook (instead of "start").
+void register_hook_proc_spec(int hooktype, procedure proc) | - Works just like register_hook_proc, but allows to register a script at the end of the hook script execution chain, i.e. the hook will be executed after all previously registered hook scripts for the same hook, including the hs_*.int script.
 
 // arrays
-
 int create_array(int size, int flags) | - Creates permanent array (but not "saved").
 int temp_array(int size, int flags) | - Works exactly like "create_array", only created array becomes "temporary".
 void fix_array(int arrayID) | - Changes "temporary" array into "permanent" ("permanent" arrays are not automatically saved into savegames).
@@ -743,6 +742,26 @@ int arrayexpr(mixed key, mixed value) | - Don't use it directly; it is used by c
 void save_array(mixed key, int arrayID) | - Array is saved (arrayID is associated with given "key").
 int load_array(mixed key) | - Load array from savegame data by the same key provided in "save_array".
 
+// array macros
+void create_lookup_map | - Creates a persistent "lookup" associative array in which the value of existing keys are read-only, and cannot be changed. || Note: This array type allows you to store zero (0) for the key value.
+void temp_lookup_map | - Creates a temporary "lookup" associative array in which the value of existing keys are read-only, and cannot be changed. || Note: this array type allows you to store zero (0) for the key value.
+void sort_map_value (array) | - Sorts the specified associative array in ascending order by key value.
+void sort_map_reverse (array) | - Sorts the specified associative array in descending order by key value.
+void sort_array (array) | - Sorts the specified array in ascending order of its values. || Note: For an associative array, sorting is done by key.
+void sort_array_reverse (array) | - Sorts the specified array in descending order of its values. || Note: For an associative array, sorting is done by key.
+
+int create_array_list (size) | - Creates a persistent array with the specified size. || Macro: create_array(size, 0)
+int temp_array_list (size) | - Creates a temporary array with the specified size. || Macro: temp_array(size, 0)
+int create_array_map | - Creates a permanent associative array. || Macro: create_array(-1, 0)
+int temp_array_map | - Creates a temporary associative array. || Macro: temp_array(-1, 0)
+bool array_is_map (array) | - Returns True if the specified array is associative. || Macro: array_key(x, -1) == 1
+bool is_in_array (item, array) | - Returns True if the specified element exists in the specified array. || Macro: scan_array(array, item) != -1
+bool array_exists (array) | - Returns True if the specified array exists. || Macro: len_array(array) != -1
+void clear_array (array) | - Removes all elements in the specified array. || Macro: resize_array(array, 0)
+void reverse_array (array) | - Reverses the order of elements in the specified array or map. || Macro: resize_array(array, -4)
+void shuffle_array (array) | - Randomly shuffles the elements of the specified array or map. || Macro: resize_array(array, -5)
+
+// FuncX
 any sfall_func0(string funcName) | - Calls scripting function with given name and no arguments.
 any sfall_func1(string funcName, arg1) | - Calls scripting function with given name and 1 argument.
 any sfall_func2(string funcName, arg1, arg2) | - Calls scripting function with given name and 2 arguments.
@@ -802,9 +821,20 @@ void set_drugs_data (int type, int pid, int value) | - Overrides the set paramet
 int set_unique_id (ObjectPtr obj) | - Assigns a unique ID number to the object and returns it. | If a unique ID number has already been assigned to an object, then ID number is returned without reassignment. | Items with unique IDs will not stack with other items of the same type in the inventory. | Unique ID numbers have a range from 0x10000000 to 0x7FFFFFFF | There is also a unique ID number range for the player and party members from 18000 to 83535.
 int unset_unique_id (ObjectPtr obj) | - To assign a new ID number generated by the engine to the object (i.e. unassign a unique ID).
 
+int metarule_exist (string metaruleName) | - return True if the specified name of metarule (sfall_funcX) function exists in the current version of sfall.
+void draw_image (string/int pathFile/artId, int frame, int x, int y, bool noTransparent) | - Displays the specified FRM image in the active window created by vanilla CreateWin or sfall's create_win script function. |     pathFile/artId: path to the FRM file (e.g. "art\inven\5mmap.frm"), or its FRM ID number (e.g. 117440550, see specification of the FID format) | optional arguments: | - frame: frame number, the first frame starts from zero | - x/y: offset relative to the top-left corner of the window  | - noTransparent: pass true to display an image without transparent background
+void draw_image_scaled (string/int pathFile/artId, int frame, int x, int y, int width, int height) | - Displays the specified FRM image in the active window created by vanilla CreateWin or sfall's create_win script function. |     pathFile/artId: path to the FRM file (e.g. "art\inven\5mmap.frm"), or its FRM ID number (e.g. 117440550, see specification of the FID format) | optional arguments: | - frame: frame number, the first frame starts from zero | - x/y: offset relative to the top-left corner of the window | - width/height: image size, used to scale the image when displaying it, pass -1 to width or height for keep aspect ratio when scaling
+int add_extra_msg_file (string fileName, int fileNumber) | - Loads the custom message file, and returns the file ID number assigned to it in range from 0x3000 to 0x3FFF for the message_str_game function to get messages from the file. | - fileName: the name of the custom message file (including the .msg extension) in "text\<language>\game\" directory | optional argument: - fileNumber: the file ID number for the message_str_game function. The available range is from 0x2000 to 0x2FFF (see ExtraGameMsgFileList setting in ddraw.ini) use fileNumber only if you want to add a message file without editing ddraw.ini or existing scripts to support the old way.
+
 array get_ini_section({string file}, {string sect}) | - Returns an associative array of keys and values for a given INI file and section.
 array get_ini_sections({string file}) | - Returns an array of names of all sections in a given INI file.
 void set_ini_setting(string setting, int/string value) | - Writes an integer or a string value to an ini file in the Fallout directory. | The setting argument works in the same way as in get_ini_setting, seperate the file name, section and key with a '|' character. || Note: The section name is limited to 32 characters.
+
+void set_fake_perk_npc (object npc, string name_perk, int level, int image, string desc) | - Are similar to functions set_fake_perk_npc, but adds a fake perk to the specified party member NPC (include dude_obj).
+void set_fake_trait_npc (object npc, string name_trait, int active, int image, string desc) | - Are similar to functions set_fake_trait_npc, but adds a fake trait to the specified party member NPC (include dude_obj).
+void set_selectable_perk_npc (object npc, string name_perk, int active, int image, string desc) | - Are similar to functions set_selectable_perk_npc, but adds a fake perk to selected list the specified party member NPC (include dude_obj).
+int has_fake_perk_npc (object npc, string name_perk) | - Are similar to functions has_fake_perk_npc, but checks a fake perk to the specified party member NPC (include dude_obj).
+int has_fake_trait_npc (object npc, string name_trait) | - Are similar to functions has_fake_trait_npc, but checks a fake trait to the specified party member NPC (include dude_obj).
 
 // SFALL HOOK
 Define HOOK_TOHIT  (value 0) | - Runs when fallout is calculating the chances of an attack striking a target, after the hit chance is fully calculated normally, including applying the 95% cap. || int       arg1 - The unmodified hit chance. | critter arg2 - The attacker. | critter arg3 - The target of the attack. | int       arg4 - The targeted bodypart. | int        arg5 - Source tile (may differ from attacker's tile, when AI is considering potential fire position). | int       arg6 - Attack Type (one of ATKTYPE_*). | int       arg7 - Ranged flag (0 or 1, actually passed 1 even for unarmed attacks, may be a vanilla bug). || int     ret1 - The new hit chance.
@@ -829,7 +859,7 @@ Define HOOK_REMOVEINVENOBJ  (value 9) | - Runs when an object is removed from a 
 
 Define HOOK_BARTERPRICE  (value 10) | - Runs whenever the value of goods being purchased is calculated. || critter arg1 - The critter doing the bartering (either dude_obj or inven_dude). | critter arg2 - The critter being bartered with. | int       arg3 - The default value of the goods. | critter arg4 - Table of requested goods (being bought from NPC). | int       arg5 - The amount of actual caps in the barter stack (as opposed to goods). | int        arg6 - The value of all goods being traded before skill modifications. | critter arg7 - Table of offered goods (being sold to NPC). | int       arg8 - The total cost of the goods offered by the player. | int       arg9 - Set 1 if the "offers" button was pressed (not for a party member), otherwise 0. || int     ret1 - The modified value of all of the goods, pass -1 if you just want to modify offered goods. | int     ret2 - The modified value of all offered goods.
 
-Define HOOK_MOVECOST  (value 11) | - Runs when calculating the AP cost of movement. || Critter arg1 - The critter doing the moving. | int     arg2 - The number of hexes being moved. | int     arg3 - The original AP cost. || int     ret1 - The new AP cost. 
+Define HOOK_MOVECOST  (value 11) | - Runs when calculating the AP cost of movement. || Critter arg1 - The critter doing the moving. | int     arg2 - The number of hexes being moved. | int     arg3 - The original AP cost. || int     ret1 - The new AP cost.
 
 Define HOOK_ITEMDAMAGE  (value 16) | - Runs when retrieving the damage rating of the players used weapon. (Which may be their fists.) || int     arg1 - The default min damage. | int     arg2 - The default max damage. | Item  arg3 - The weapon used. (0 if unarmed). | Critter arg4 - The critter doing the attacking. | int     arg5 - The type of attack. | int     arg6 - Non zero if this is an attack using a melee weapon. || int     ret1 - Either the damage to be used, if ret2 isn't given, or the new minimum damage if it is. | int     ret2 - The new maximum damage.
 
