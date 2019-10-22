@@ -4109,8 +4109,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4978)
 #define RESERVED_FOR_FALLOUT_FIXT               (4979)
 #define RESERVED_FOR_FALLOUT_FIXT               (4980)
-#define RESERVED_FOR_FALLOUT_FIXT               (4981)
-#define RESERVED_FOR_FALLOUT_FIXT               (4982)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4981)*/
+#define GVAR_PALADIN_KILL_COUNT                 (4982)
 #define GVAR_ENABLE_SATELLITE_LOCATIONS         (4983)
 #define GVAR_ENC_QUACK_DEAD                     (4984)
 #define GVAR_CAR_PREV_STATUS                    (4985)
