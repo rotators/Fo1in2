@@ -68,7 +68,7 @@
 #define is_gizmo_alive                      (global_var(GVAR_GIZMO_DEAD) == 0)
 #define is_rhombus_alive                    (global_var(GVAR_RHOMBUS_STATUS) == 0)
 #define is_garl_alive                       (global_var(GVAR_GARL_DEAD) == 0)
-#define is_nicole_alive                     (global_var(GVAR_IS_NICOLE_ALIVE) == 0)
+#define is_nicole_alive                     (global_var(GVAR_IS_NICOLE_ALIVE) == 1)
 
 #define is_laura_alive                      (global_var(GVAR_IS_LAURA_ALIVE) != 1)
 #define set_laura_escaping                  set_global_var(GVAR_IS_LAURA_ALIVE,2)
