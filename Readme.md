@@ -19,4 +19,5 @@ Notable Features:
 - Continue playing after the main story has been completed. (Optional)
 - And much more...
 
-Not to forget: This project is a more accessible modding platform and allows the creation of more complex modifications than ever be possible with the engine of the first game!
+Not to forget:
+This project is a more accessible modding platform and allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
