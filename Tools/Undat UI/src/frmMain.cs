@@ -13,6 +13,8 @@ namespace undat_ui
 {
     public partial class frmMain : Form
     {
+        bool isDone = false;
+
         public frmMain()
         {
             InitializeComponent();
@@ -21,8 +23,11 @@ namespace undat_ui
         private void BtnExtract_Click(object sender, EventArgs e)
         {
             this.lblExtracting.Visible = true;
+            
+            if(isDone)
+                Environment.Exit(0);
 
-            var extractFiles = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\files.txt");
+            var extractFiles = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\undat_files.txt");
             this.progressBar.Value = 0;
             this.progressBar.Maximum = extractFiles.Count();
 
@@ -37,6 +42,15 @@ namespace undat_ui
                     this.progressBar.Value = cur;
                     this.lblExtracting.Text = $"[{cur}/{max}] " + currentFile;
                 });
+
+                if(cur==max)
+                {
+                    this.isDone = true;
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.btnExtract.Text = "Done!";
+                    });
+                }
             }),
             this.txtMaster.Text,
             this.txtDestination.Text, 

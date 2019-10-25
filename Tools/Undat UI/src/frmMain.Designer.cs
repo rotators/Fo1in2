@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.label1 = new System.Windows.Forms.Label();
             this.txtMaster = new System.Windows.Forms.TextBox();
             this.btnExtract = new System.Windows.Forms.Button();
@@ -140,8 +141,9 @@
             this.Controls.Add(this.txtMaster);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
-            this.Text = "FO1 data extractor";
+            this.Text = "FO1 DAT extractor";
             this.ResumeLayout(false);
             this.PerformLayout();
 

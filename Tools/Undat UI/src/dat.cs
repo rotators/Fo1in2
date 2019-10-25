@@ -208,19 +208,19 @@ namespace undat_ui
         public int size;
         public int packedSize;
 
-        public byte[] getData(MemoryStream stream)
+        public byte[] getData(FileStream stream)
         {
             return packed ? getCompressedBytes(stream) : getBytes(stream);
         }
 
-        public byte[] getBytes(MemoryStream stream)
+        public byte[] getBytes(FileStream stream)
         {
             var r = new BinaryBigEndian(stream);
             r.BaseStream.Seek(offset, SeekOrigin.Begin);
             return r.ReadBytes(size);
         }
 
-        public byte[] getCompressedBytes(MemoryStream stream)
+        public byte[] getCompressedBytes(FileStream stream)
         {
             // Create a new stream so that we are thread safe.
             var s = new MemoryStream();
@@ -263,7 +263,7 @@ namespace undat_ui
 
         public byte[] getData(FO1File file)
         {
-            return file.getData(memStream);
+            return file.getData(fileStream);
         }
 
         public FO1File getFile(string path)
@@ -329,10 +329,6 @@ namespace undat_ui
                     });
                 }
             }
-
-            this.memStream = new MemoryStream();
-            this.fileStream.Position = 0;
-            this.fileStream.CopyTo(this.memStream);
 
             return ReadError.Success;
         }
