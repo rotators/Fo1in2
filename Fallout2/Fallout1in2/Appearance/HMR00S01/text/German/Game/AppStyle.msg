@@ -1,0 +1,2 @@
+{100}{}{Style (Langhaar)}
+{101}{}{Deine langen fliegenden Locken federn auf deinen Schultern, als du vorbei gehst. Your fellow villagers look on in awe as the multifaceted strands of your glorious mane sparkle in the morning light.}
