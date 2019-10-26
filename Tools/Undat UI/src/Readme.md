@@ -14,7 +14,7 @@ This is a tool to extract needed files from the MASTER.DAT resource file shipped
 2019-10-25
 * .NET 4.0 as a runtime target for maximum compatibility with ancient Windows versions.
 * Added a nicer icon than the default one provided by .NET.
-* File containing list of files to extract is now named [undat_files.txt](undat_files.txt)
+* File containing list of files to extract is now named [undat_files.txt](../undat_files.txt)
 
 ## 1.0
 * Initial release.
