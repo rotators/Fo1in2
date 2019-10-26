@@ -34,7 +34,7 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
 
     # if log exists and not empty
     if [ -s "$log_file" ]; then
-       echo ::group::[$ssl_prefix] $ssl_show
+       echo ::group::$ssl_prefix $ssl_show
        cat $log_file
        echo ::endgroup::
     fi
