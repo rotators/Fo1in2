@@ -7,7 +7,7 @@ Generally we do not try to make a 1:1 copy of the first game. So, if you want to
 
 However, if you do not mind the one or the other change in mechanics, then Fallout et tu can be your way to go!
 
-Notable Features:
+## Notable Features:
 - Replicated Fallout 1 in 2 as good as possible.
 - Integrated Hero Appearance mod (Bald Dude, Long Hair Dude, Punk Girl)
 - Selected Fallout 2 weapons have been added (sparingly!) to the game world in ways that don't break the gameplay.
@@ -19,5 +19,5 @@ Notable Features:
 - Continue playing after the main story has been completed. (Optional)
 - And much more...
 
-Not to forget:
+## Not to forget:
 This project is a more accessible modding platform and allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
