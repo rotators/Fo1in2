@@ -59,7 +59,12 @@
 #define GVAR_MUTATE_WHEN                        (133)
 #define GVAR_HAVE_MUTATED                       (192)
 #define GVAR_MUTATE_STAGE                       (193)
+#define GVAR_PLAYER_SEX_LEVEL                   (194)
 #define GVAR_NEW_RENO_MADE_MAN                  (230)
+#define GVAR_SEX_COUNTER                        (358)
+#define GVAR_SEXPERT                            (588)
+#define GVAR_GIGALO                             (589)
+#define GVAR_DUDE_VIRGIN                        (590)
 
 // Caravans for Cities
 #define GVAR_CARAVAN_STATUS                     (269)

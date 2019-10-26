@@ -682,7 +682,7 @@ variable tmp_rotation;
 											   Face_Critter(self_obj,dude_obj); 	\
 											   start_dialog_at_node(x); 			\
 											   self_rotate(tmp_rotation)
-											   
+
 /*
 FLOAT_MSG_BLACK
 FLOAT_MSG_PURPLE
@@ -1073,7 +1073,7 @@ variable removed_qty;
  general macros/defines related to having sex
 ******************************************************************/
 // is_sex_god is temporary for when the player gets the sex perk ***
-#define is_sex_god               ((global_var(GVAR_PLAYER_SEX_LEVEL)>=100) or (dude_has_porn_star_rep))
+#define is_sex_god               ((global_var(GVAR_PLAYER_SEX_LEVEL)>=100) /*or (dude_has_porn_star_rep)*/)
 #define have_sex_time_obj(x)     (((get_critter_stat(x,STAT_en)) * random(4,8)) * ONE_GAME_MINUTE)
 #define have_sex_time            have_sex_time_obj(dude_obj)
 #define advance_sex_time         game_time_advance(have_sex_time)
@@ -1089,7 +1089,7 @@ variable removed_qty;
                                     (get_critter_stat(x,STAT_ag)*13) +                    \
                                     (get_critter_stat(x,STAT_st)*12))/100) +              \
                                     (has_trait(TRAIT_PERK,x,PERK_kama_sutra_perk) * 2) +  \
-                                    (has_trait(TRAIT_TRAIT,x,TRAIT_sex_appeal)) +         \
+                                    /*(has_trait(TRAIT_TRAIT,x,TRAIT_sex_appeal)) +*/     \
                                     (is_sex_god * 2 * (x == dude_obj)))
 #define dude_sex_rating          obj_sex_rating(dude_obj)
 #define self_sex_rating          obj_sex_rating(self_obj)

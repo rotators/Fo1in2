@@ -712,7 +712,7 @@
 #define SCRIPT_HSLOTS    (705)  //  HSlots.int      ; slot machines in the Hub
 #define SCRIPT_HRNDBAR   (706)  //  HRndBar.int     ; Random dialog in the bar of the HUb
 #define SCRIPT_HGENGAMB  (707)  //  HGenGamb.int    ; generic gamblers in the hub                                                 
-#define SCRIPT_HHOOKER   (708)  //  HHooker.int     ; Hooker in the Falcon
+#define SCRIPT_HHOOKERA  (708)  //  HHooker.int     ; Hooker in the Falcon
 #define SCRIPT_HJOHN     (709)  //  HJohn.int       ; Hooker's customer in the Falcon
 #define SCRIPT_HGENDEAL  (710)  //  HGenDeal.int    ; Generic Dealer in the Falcon                                                
 #define SCRIPT_SMPRAY    (711)  //  smpray.int      ; praying mutants in masters vault
@@ -976,7 +976,7 @@
 #define SCRIPT_FKE_DUDE  (967)
 #define SCRIPT_ALLDOGS   (968)
 #define SCRIPT_BOBSTAND  (969)
-#define SCRIPT_HHOOKER2  (970)
+#define SCRIPT_HHOOKERD  (970)
 #define SCRIPT_MASSACRE  (971)
 #define SCRIPT_REDFIELD  (972)
 
