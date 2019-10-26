@@ -4,7 +4,7 @@ This is a tool to extract needed files from the MASTER.DAT resource file shipped
 
 ## 1.02
 2019-10-26
-* Fixed a bug causing the MASTER.DAT to fail if you selected CRITTER.DAT instead.
+* Fixed a bug where the validation of MASTER.DAT failed in such a way that if you selected CRITTER.DAT instead, the application accepted it as a valid MASTER.DAT.
 * Minor UI tweaks.
 * Better error handling.
 * Proper versioning.
