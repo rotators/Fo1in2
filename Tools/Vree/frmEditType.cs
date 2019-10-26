@@ -50,5 +50,40 @@ namespace Vree
         {
             SetBasic(BasicType.CHARP);
         }
+
+        private void btnUint16_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.UINT16);
+        }
+
+        private void btnInt8_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.INT8);
+        }
+
+        private void btnUint8_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.UINT8);
+        }
+
+        private void btnFloat_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.FLOAT);
+        }
+
+        private void btnInt32_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.INT32);
+        }
+
+        private void btnInt64_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.INT64);
+        }
+
+        private void btnUint64_Click(object sender, EventArgs e)
+        {
+            SetBasic(BasicType.UINT64);
+        }
     }
 }

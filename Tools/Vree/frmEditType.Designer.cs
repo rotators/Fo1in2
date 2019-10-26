@@ -65,6 +65,7 @@
             this.btnInt32.TabIndex = 2;
             this.btnInt32.Text = "Int32";
             this.btnInt32.UseVisualStyleBackColor = true;
+            this.btnInt32.Click += new System.EventHandler(this.btnInt32_Click);
             // 
             // button4
             // 
@@ -99,6 +100,7 @@
             this.btnInt64.TabIndex = 6;
             this.btnInt64.Text = "Int64";
             this.btnInt64.UseVisualStyleBackColor = true;
+            this.btnInt64.Click += new System.EventHandler(this.btnInt64_Click);
             // 
             // btnFloat
             // 
@@ -108,6 +110,7 @@
             this.btnFloat.TabIndex = 7;
             this.btnFloat.Text = "Float";
             this.btnFloat.UseVisualStyleBackColor = true;
+            this.btnFloat.Click += new System.EventHandler(this.btnFloat_Click);
             // 
             // btnUint32
             // 
@@ -127,6 +130,7 @@
             this.btnUint64.TabIndex = 10;
             this.btnUint64.Text = "Uint64";
             this.btnUint64.UseVisualStyleBackColor = true;
+            this.btnUint64.Click += new System.EventHandler(this.btnUint64_Click);
             // 
             // btnCharp
             // 
@@ -146,6 +150,7 @@
             this.btnUint16.TabIndex = 13;
             this.btnUint16.Text = "Uint16";
             this.btnUint16.UseVisualStyleBackColor = true;
+            this.btnUint16.Click += new System.EventHandler(this.btnUint16_Click);
             // 
             // btnInt16
             // 
@@ -164,6 +169,7 @@
             this.btnUint8.TabIndex = 14;
             this.btnUint8.Text = "Uint8";
             this.btnUint8.UseVisualStyleBackColor = true;
+            this.btnUint8.Click += new System.EventHandler(this.btnUint8_Click);
             // 
             // btnInt8
             // 
@@ -173,6 +179,7 @@
             this.btnInt8.TabIndex = 15;
             this.btnInt8.Text = "Int8";
             this.btnInt8.UseVisualStyleBackColor = true;
+            this.btnInt8.Click += new System.EventHandler(this.btnInt8_Click);
             // 
             // chkArray
             // 

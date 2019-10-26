@@ -53,7 +53,7 @@ namespace Vree
             colVariables.Add(new ColumnHeader() { Text = "Definition", Width = 500, Name = "colDef" });
             colVariables.Add(new ColumnHeader() { Text = "Comment", Width = 200, Name = "colComment" });
 
-            db = VreeDB.Load(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");
+            db = VreeDB.Load(VreeDB.FindPath());
             foreach (var f in db.Functions)
             {
                 var li = new ListViewItem(new string[] { "0x" + f.Offset.ToString("x").ToUpper(), f.Definition, f.Comment });
@@ -153,7 +153,7 @@ namespace Vree
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            db.Save(@"D:\Fallout\dev\Fo1Port\trunk\Reversing\fo2_vree.db");
+            db.Save(VreeDB.FindPath());
         }
 
         private void SetVariableTypeToolStripMenuItem_Click(object sender, EventArgs e)

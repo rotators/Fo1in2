@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,7 +87,7 @@ namespace Vree.Data
     }
 
     [Serializable]
-    class GlobalVariable
+    public class GlobalVariable
     {
         public bool IsArray() => Length > 1;
         public bool Pointer;
@@ -112,20 +114,42 @@ namespace Vree.Data
     }
 
     [Serializable]
-    class VreeDB
+    public class VreeDB
     {
         public List<Function> Functions;
         public List<GlobalVariable> Variables;
         public List<DataType> Types;
         public List<Enum> Enums;
 
+        public static string FindPath()
+        {
+            var startDir = Environment.CurrentDirectory;
+            var dir = startDir;
+            while (true)
+            {
+                if (dir.Length == 3)
+                    return null;
+                dir = Path.GetFullPath(dir + "\\..");
+
+                if (File.Exists(dir + "/Readme.md") && Directory.Exists(dir + "/Fallout2")
+                    && Directory.Exists(dir + "/Resources") && Directory.Exists(dir + "/Tools"))
+                    break;
+            }
+            return Path.GetFullPath(dir + "/Reversing/fo2_vree.db");
+        }
+
         public static VreeDB Load(string filename)
         {
-            var fileStream = new FileStream(filename, FileMode.Open);
+            VreeDB db = null;
+            using (var fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            {
 
-            //create a BinaryFormatter and deserialize the object
-            BinaryFormatter formatter = new BinaryFormatter();
-            return (VreeDB)formatter.Deserialize(fileStream);
+                //create a BinaryFormatter and deserialize the object
+                BinaryFormatter formatter = new BinaryFormatter();
+                db = (VreeDB)formatter.Deserialize(fileStream);
+                fileStream.Close();
+            }
+            return db;
         }
         public bool Save(string filename)
         {
@@ -140,9 +164,11 @@ namespace Vree.Data
                 File.Move(filename, dir + "\\" + noext+".bak");
 
             BinaryFormatter formatter = new BinaryFormatter();
+            //formatter.Binder = new CustomizedBinder();
             FileStream fileStream = new FileStream(filename, FileMode.Create);
             formatter.Serialize(fileStream, this);
             return true;
         }
+
     }
 }

@@ -82,18 +82,18 @@ namespace Overseer
         }
 
         // TODO: Generate with script.
-        public static Global<byte> WorldPosX => Byte(0x672E0C);
+        /*public static Global<byte> WorldPosX => Byte(0x672E0C);
         public static Global<byte> WorldPosY => Byte(0x672E10);
         public static Global<byte> PlayerLevel => Byte(0x6681B0);
         public static Global<short> MouseX => Int16(0x6AC7A8);
         public static Global<short> MouseY => Int16(0x6AC7A4);
-        public static Global<string> PlayerName => CString(0x56D75C);
+        public static Global<string> PlayerName => CString(0x56D75C);*/
 
-        private static Global<string> CString(int offset) => new Global<string> { offset = offset, value = mem.ReadString(offset, out int _) };
-        private static Global<short> Int16(int offset) => new Global<short> { offset = offset, value = mem.ReadInt16(offset) };
-        private static Global<int> Int32(int offset) => new Global<int> { offset = offset, value = mem.ReadInt32(offset) };
-        private static Global<byte> Byte(int offset) => new Global<byte> { offset = offset, value = mem.ReadByte(offset) };
-        private static Global<bool> Bool(int offset) => new Global<bool> { offset = offset, value = mem.ReadBool(offset) };
+        public static Global<string> CString(int offset) => new Global<string> { offset = offset, value = mem.ReadString(offset, out int _) };
+        public static Global<short> Int16(int offset) => new Global<short> { offset = offset, value = mem.ReadInt16(offset) };
+        public static Global<int> Int32(int offset) => new Global<int> { offset = offset, value = mem.ReadInt32(offset) };
+        public static Global<byte> Byte(int offset) => new Global<byte> { offset = offset, value = mem.ReadByte(offset) };
+        public static Global<bool> Bool(int offset) => new Global<bool> { offset = offset, value = mem.ReadBool(offset) };
 
     }
 

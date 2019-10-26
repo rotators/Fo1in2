@@ -19,4 +19,17 @@ namespace Overseer
             Application.Run(new frmMain());
         }
     }
+
+    public static class ExtGrid
+    {
+        public static DataGridView grid;
+        public static void ToGrid<T>(this Global<T> global, string name)
+        {
+            string s = "";
+            var v = global.value.GetType();
+            s = Convert.ToString(global.value);
+
+            grid.Rows.Add((new string[] { global.HexOffset, name, v.Name, s }));
+        }
+    }
 }

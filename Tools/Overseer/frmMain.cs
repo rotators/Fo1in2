@@ -4,29 +4,22 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vree.Data;
 
 namespace Overseer
 {
-    public static class ExtGrid
-    {
-        public static DataGridView grid;
-        public static void ToGrid<T>(this Global<T> global, string name)
-        {
-            string s = "";
-            var v = global.value.GetType();
-            s = Convert.ToString(global.value);
-
-            grid.Rows.Add((new string[] { global.HexOffset, name, v.Name, s }));
-        }
-    }
+   
 
 
     public partial class frmMain : Form
     {
+        VreeDB db;
+
         public frmMain()
         {
             InitializeComponent();
@@ -76,12 +69,25 @@ namespace Overseer
         private void ReadFromMemory()
         {
             this.dataGridView1.Rows.Clear();
-            Globals.MouseX.ToGrid("MouseX");
-            Globals.MouseY.ToGrid("MouseY");
-            Globals.PlayerLevel.ToGrid("PlayerLevel");
-            Globals.PlayerName.ToGrid("PlayerName");
-            Globals.WorldPosX.ToGrid("WorldPosX");
-            Globals.WorldPosY.ToGrid("WorldPosY");
+            db = VreeDB.Load(VreeDB.FindPath());
+            foreach(var a in db.Variables)
+            {
+                if (a.Type == null)
+                    continue;
+
+                if(a.Type.IsBasicType)
+                {
+                    switch (a.Type.BasicType)
+                    {
+                        case BasicType.UINT8: Globals.Byte((int)a.Offset).ToGrid(a.Name); break;
+                        case BasicType.INT8: Globals.Byte((int)a.Offset).ToGrid(a.Name); break;
+                        case BasicType.UINT16: Globals.Int16((int)a.Offset).ToGrid(a.Name); break;
+                        case BasicType.UINT32: Globals.Int32((int)a.Offset).ToGrid(a.Name); break;
+                        case BasicType.CHARP: Globals.CString((int)a.Offset).ToGrid(a.Name); break;
+                    }
+                }
+                
+            }
         }
     }
 }

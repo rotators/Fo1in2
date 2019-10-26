@@ -55,6 +55,8 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.grOffset,
@@ -194,14 +196,14 @@
             // dATToolStripMenuItem
             // 
             this.dATToolStripMenuItem.Name = "dATToolStripMenuItem";
-            this.dATToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dATToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.dATToolStripMenuItem.Text = "Datafiles";
             this.dATToolStripMenuItem.Click += new System.EventHandler(this.DATToolStripMenuItem_Click);
             // 
             // interfaceToolStripMenuItem
             // 
             this.interfaceToolStripMenuItem.Name = "interfaceToolStripMenuItem";
-            this.interfaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.interfaceToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.interfaceToolStripMenuItem.Text = "Interface";
             this.interfaceToolStripMenuItem.Click += new System.EventHandler(this.InterfaceToolStripMenuItem_Click);
             // 
