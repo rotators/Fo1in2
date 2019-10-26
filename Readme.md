@@ -19,5 +19,5 @@ However, if you do not mind the one or the other change in mechanics, then Fallo
 - Continue playing after the main story has been completed. (Optional)
 - And much more...
 
-## Not to forget:
+Not to forget:
 This project is a more accessible modding platform and allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
