@@ -29,7 +29,7 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
        rm $int_file
     else
        ssl_prefix=ERROR
-       exit_val=1
+       exit_val=1207
     fi
 
     # if log exists and not empty
@@ -47,5 +47,4 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
     rm $log_file
 done
 
-echo exit $exit_val
 exit $exit_val
