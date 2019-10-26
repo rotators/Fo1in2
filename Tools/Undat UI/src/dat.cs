@@ -258,7 +258,6 @@ namespace undat_ui
         int unknown2; // Always 0
         int unknown3; // Checksum?
         FileStream fileStream;
-        MemoryStream memStream;
         List<FO1Dir> directories;
 
         public byte[] getData(FO1File file)
@@ -297,7 +296,7 @@ namespace undat_ui
             unknown2 = r.ReadInt32();
             unknown3 = r.ReadInt32();
 
-            if(unknown != 0x5E && unknown2 != 0)
+            if(unknown != 0x5E || unknown2 != 0)
                 return ReadError.NotValidMasterDat;
             for (var i = 0; i < dirCount; i++)
             {
