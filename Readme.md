@@ -7,17 +7,19 @@ Generally we do not try to make a 1:1 copy of the first game. So, if you want to
 
 However, if you do not mind the one or the other change in mechanics, then Fallout et tu can be your way to go!
 
-## Notable Features:
-- Replicated Fallout 1 in 2 as good as possible.
-- Integrated Hero Appearance mod (Bald Dude, Long Hair Dude, Punk Girl)
-- Selected Fallout 2 weapons have been added (sparingly!) to the game world in ways that don't break the gameplay.
+## Features:
+- Replicates Fallout 1 in 2 almost 1:1.
+- Comes with the Hero Appearance mod integrated (Bald Dude, Long Hair Dude, Punk Girl).
+- Selected Fallout 2 weapons have been added (sparingly!) to the game world in ways that don't break the game balance.
+- Fallout 2 styled merchant inventory restocking (Optional).
 - Party members and generic NPCs can be pushed out of the way.
 - Party members level up and change their appearance based on worn armor.
-- Party members can be controlled in combat (Optional)
-- Automatic door opening and closing (Optional)
-- Traverse the wastes on your very own motorcycle! (Optional)
-- Continue playing after the main story has been completed. (Optional)
-- And much more...
+- Party members can be controlled in combat (Optional).
+- Automatic door opening and closing (Optional).
+- Traverse the wastes on your very own motorcycle (Optional)!
+- Continue playing after the main story has been completed (Optional).
+- Lots of bugfixes, making the game run more stable than even the original with patches.
 
 Not to forget:
+
 This project is a more accessible modding platform and allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
