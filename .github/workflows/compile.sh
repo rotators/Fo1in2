@@ -8,12 +8,12 @@ exit_val=0
 echo Compiling...
 
 for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
-    local ssl_file=$(basename $ssl_full)
-    local ssl_dir=$(dirname $ssl_full)
-    local ssl_show=$(echo "$ssl_full" | sed -e "s!^$scripts_dir/!!")
-    local int_file=$(echo "$ssl_file" | sed -e 's!\.[Ss][Ss][Ll]$!\.int!')
-    local log_file=$ssl_file.log
-    local ssl_prefix=
+    ssl_file=$(basename $ssl_full)
+    ssl_dir=$(dirname $ssl_full)
+    ssl_show=$(echo "$ssl_full" | sed -e "s!^$scripts_dir/!!")
+    int_file=$(echo "$ssl_file" | sed -e 's!\.[Ss][Ss][Ll]$!\.int!')
+    log_file=$ssl_file.log
+    ssl_prefix=
 
     # ssl compiler is too dumb to understand paths and always checks current directory
     cd $ssl_dir
