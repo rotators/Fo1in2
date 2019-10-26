@@ -34,9 +34,15 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
 
     # if log exists and not empty
     if [ -s "$log_file" ]; then
-       echo ::group::$ssl_prefix $ssl_show
-       cat $log_file
-       echo ::endgroup::
+       if [ "$ssl_prefix" == "ERROR" ]; then
+          echo $ssl_prefix $ssl_show
+          cat $log_file
+       else
+          # fold scripts with warnings only
+          echo ::group::$ssl_prefix $ssl_show
+          cat $log_file
+          echo ::endgroup::
+       fi
     fi
     rm $log_file
 done
