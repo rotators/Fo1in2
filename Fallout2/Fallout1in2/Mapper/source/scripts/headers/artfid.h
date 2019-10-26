@@ -108,12 +108,12 @@
 #define FID_MAANTT        (16777313)
 #define FID_NFVALT        (16777314)
 #define FID_MABRAN        (16777315)
-#define FID_NMBONC        (16777316)
-#define FID_NMBRSR        (16777317)
-#define FID_NAVGUL        (16777318)
-#define FID_MALIEN        (16777319)
-#define FID_MAFIRE        (16777320)
-//#define FID_NMASIA        (16777321) // Duplicate, reserv
+#define FID_MADETH        (16777316)
+#define FID_MAGUNN        (16777317)
+#define FID_MABOS2        (16777318)
+//#define FID_MAWASP        (16777319) // unused???
+#define FID_HAENRO        (16777320)
+//#define FID_reserv        (16777321) // Duplicate, reserv
 #define FID_NFLYNN        (16777322)
 #define FID_MABOSS        (16777323)
 #define FID_MAQUEN        (16777324)
