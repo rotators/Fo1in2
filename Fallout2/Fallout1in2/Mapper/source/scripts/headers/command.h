@@ -219,6 +219,8 @@ variable step_tile;
 #define dude_set_frame(frame)             anim(dude_obj,ANIMATE_SET_FRAME,frame)
 #define self_set_frame(frame)             anim(self_obj,ANIMATE_SET_FRAME,frame)
 
+#undef  dude_elevation
+#undef  self_elevation
 #define dude_elevation                    elevation(dude_obj)
 #define self_elevation                    elevation(self_obj)
 
@@ -240,13 +242,15 @@ variable step_tile;
 #define dude_caps_adjust(caps)            item_caps_adjust(dude_obj,caps)
 #define self_caps_adjust(caps)            item_caps_adjust(self_obj,caps)
 
+#undef  dude_tile
+#undef  self_tile
 #define dude_tile                         tile_num(dude_obj)
 #define self_tile                         tile_num(self_obj)
 
 #define dude_rotation_to_self             rotation_to_tile(dude_tile,self_tile)
 #define self_rotation_to_dude             rotation_to_tile(self_tile,dude_tile)
 
-#define dude_look_at_self              anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
+#define dude_look_at_self                 anim(dude_obj,ANIMATE_ROTATION,dude_rotation_to_self)
 #define self_look_at_dude                 anim(self_obj,ANIMATE_ROTATION,self_rotation_to_dude)
 
 #define dude_is_sneaking                  using_skill(dude_obj,SKILL_SNEAK)

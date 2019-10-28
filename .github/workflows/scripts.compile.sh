@@ -5,6 +5,7 @@ compile_exe="$(pwd)/Tools/sFall_ScriptEditor/resources/compile.exe"
 scripts_dir="$(pwd)/Fallout2/Fallout1in2/Mapper/source/scripts"
 
 # output grouping, for GitHub Actions
+# regular echo when running on local
 function group_start()
 {
     if [ -n "$GITHUB_ACTIONS" ]; then
@@ -15,6 +16,7 @@ function group_start()
 }
 
 # output grouping, for GitHub Actions
+# no-op when running on local
 function group_end()
 {
     if [ -n "$GITHUB_ACTIONS" ]; then
@@ -58,7 +60,7 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
     cd "$ssl_dir"
     $compile_exe -q -n -l -p -s -O2 "$ssl_file" -o "$int_file" > "$log_file"
 
-    # clean unwanted lines from log
+    # remove unwanted lines from log
     sed -i '/^$/d' $log_file
     sed -i '/^Compiling /d' $log_file
     sed -i '/THERE WERE ERRORS/d' $log_file
