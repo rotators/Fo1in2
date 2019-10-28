@@ -1,5 +1,6 @@
 #!/bin/bash
 
+windows_pwd="$(pwd | sed -re 's!^/([A-Za-z])/!\U\1:/!g')/"
 compile_exe="$(pwd)/Tools/sFall_ScriptEditor/resources/compile.exe"
 scripts_dir="$(pwd)/Fallout2/Fallout1in2/Mapper/source/scripts"
 
@@ -16,7 +17,7 @@ function group_start()
 # output grouping, for GitHub Actions
 function group_end()
 {
-    if [ -n "$GIHUB_ACTIONS" ]; then
+    if [ -n "$GITHUB_ACTIONS" ]; then
        echo "::endgroup::"
     fi
 }
@@ -62,6 +63,9 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
     sed -i '/^Compiling /d' $log_file
     sed -i '/THERE WERE ERRORS/d' $log_file
 
+    # convert absolute paths to relative
+    sed -i "s!$windows_pwd!!g" $log_file
+
     # pass #1
     # guess result -- does bytecode exists?
     if [ -f "$int_file" ]; then
@@ -69,7 +73,7 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
        ssl_result=WARNING
     else
        ssl_result=ERROR
-       num_errors=$((num_errors++))
+       num_errors=$((num_errors+1))
     fi
 
     # pass #2
@@ -81,7 +85,7 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
           echo $log_msg
           cat $log_file
        else
-          num_warnings=$((num_warnings++))
+          num_warnings=$((num_warnings+1))
 
           # group scripts with warnings only
           group_start $log_msg
