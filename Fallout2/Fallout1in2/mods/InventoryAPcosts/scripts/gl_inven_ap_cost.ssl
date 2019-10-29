@@ -1,0 +1,80 @@
+/*
+
+   AP costs mod for fallout 2, originally by phobos2077.
+   Modified for Fallout et tu (but also works with Fo2 vanilla).
+
+      - Reduces inventory opening costs to 0 action points.
+      - Doing anything in the inventory costs 2 action points.
+      - Limits the Quick Pockets perk to 1 rank.
+	  - Works with any other Fallout 2 mod.
+
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\define_extra.h"
+
+#define ITEM_USE_COST   (2 - dude_quick_pockets)
+
+procedure check_ap (variable critter, variable item) begin
+   variable ap;
+
+   if (combat_is_initialized) then begin
+      if (get_game_mode bwand INVENTORY) then begin
+         ap := get_critter_current_ap(critter);
+
+         if (ap >= ITEM_USE_COST) then begin
+            set_critter_current_ap(critter, ap - ITEM_USE_COST);
+         end
+         else begin
+
+            // TODO: Move text to *.msg or *.ini file.
+            if (ITEM_USE_COST == 1) then
+               display_msg("You need " + ITEM_USE_COST + " action point.");
+            else
+               display_msg("You need " + ITEM_USE_COST + " action points.");
+
+            set_sfall_return(0);
+         end
+      end
+   end
+end
+
+procedure useobjon_handler begin
+   variable target, critter, item;
+   target := get_sfall_arg;
+   critter := get_sfall_arg;
+   item := get_sfall_arg;
+
+   call check_ap(critter, item);
+end
+
+procedure moveobj_handler begin
+   variable target, item, critter;
+   target := get_sfall_arg;
+   item := get_sfall_arg;
+   critter := dude_obj;
+
+   call check_ap(critter, item);
+end
+
+procedure start begin
+   if game_loaded then begin
+      register_hook_proc(HOOK_USEOBJON, useobjon_handler);
+      register_hook_proc(HOOK_INVENTORYMOVE, moveobj_handler);
+
+      // This mod will override the inventory opening ap costs from the ddraw.ini
+      // Also makes it so that the Quick Pockets perk can only be taken once.
+      set_inven_ap_cost(0);
+      set_perk_ranks(PERK_quick_pockets, 1);
+
+      // Workaround, in case the player has more than 1 rank of Quick Pocket perk when running this script.
+      if (dude_quick_pockets) > 1 then begin
+         set_perk_owed(dude_quick_pockets - 1);
+         critter_rm_trait(dude_obj, TRAIT_PERK, PERK_quick_pockets, 1); // No matter the value, it always removes all perk ranks.
+         critter_add_trait(dude_obj, TRAIT_PERK, PERK_quick_pockets, 1); // Re-add one rank
+      end
+   end
+end
+
