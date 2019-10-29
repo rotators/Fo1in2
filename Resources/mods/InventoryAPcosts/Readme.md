@@ -1,4 +1,4 @@
-#Inventory AP Costs
+# Inventory AP Costs
 
     Features:
       - Reduces inventory opening costs to 0.
