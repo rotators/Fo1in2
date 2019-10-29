@@ -17,23 +17,17 @@
 
 #define ITEM_USE_COST   (2 - dude_quick_pockets)
 
-procedure check_ap (variable target, variable critter, variable item) begin
-   variable ap, cost;
+procedure check_ap (variable critter, variable item) begin
+   variable ap;
 
    if (combat_is_initialized) then begin
-      if (get_game_mode bwand INVENTORY) then
-         cost := ITEM_USE_COST;
-      else
-         cost := 0;
-
-      if (cost > 0) then begin
+      if (get_game_mode bwand INVENTORY) then begin
          ap := get_critter_current_ap(critter);
+
          if (ap >= ITEM_USE_COST) then begin
-            set_critter_current_ap(critter, ap - cost);
+            set_critter_current_ap(critter, ap - ITEM_USE_COST);
          end
          else begin
-            if (cost < ITEM_USE_COST) then
-               set_critter_current_ap(critter, ap + ITEM_USE_COST - cost);
 
             // TODO: Move text to *.msg or *.ini file.
             if (ITEM_USE_COST == 1) then
@@ -53,7 +47,7 @@ procedure useobjon_handler begin
    critter := get_sfall_arg;
    item := get_sfall_arg;
 
-   call check_ap(target, critter, item);
+   call check_ap(critter, item);
 end
 
 procedure moveobj_handler begin
@@ -62,7 +56,7 @@ procedure moveobj_handler begin
    item := get_sfall_arg;
    critter := dude_obj;
 
-   call check_ap(target, critter, item);
+   call check_ap(critter, item);
 end
 
 procedure start begin
