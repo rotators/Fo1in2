@@ -23,19 +23,24 @@ jobs:
 #   with:
 #    fetch-depth: 1
 
+  - name: Software
+    run:  sudo apt install dos2unix
+
   - name: Environment
     run:  |
           :
-          echo ::set-env name=MOD_VERSION::$MOD_VERSION_MAJOR.$(git rev-list HEAD --count)
-          echo ::set-env name=MOD_ZIP::${MOD_ZIP}${MOD_VERSION}.zip
+          ver="$MOD_VERSION_MAJOR.$(git rev-list HEAD --count)"
+          echo ::set-env name=MOD_VERSION::$ver
+          echo ::set-env name=MOD_ZIP::${MOD_ZIP}${ver}.zip
 
   - name: Update ddraw.ini
-    run: |
-         :
-         ddraw_ini="$MOD_DIR/ddraw.ini"
-         sed -ri "s!^[\t\ ]*VersionString=.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION!" "$ddraw_ini"
-         grep "^VersionString=" "$ddraw_ini" | awk -F = '{print $2}'
-         unix2dos "$ddraw_ini"
+    run:  |
+          :
+          ddraw_ini="$MOD_DIR/ddraw.ini"
+          sed -ri "s!^[\t\ ]*VersionString=.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION!" "$ddraw_ini"
+          grep "^VersionString=" "$ddraw_ini" | awk -F = '{print $2}'
+          git diff $MOD_DIR/ddraw.ini | cat -v
+          unix2dos "$ddraw_ini"
 
   - name: Cleanup
     run: |
