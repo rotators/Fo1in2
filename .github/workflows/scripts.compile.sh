@@ -5,6 +5,12 @@ compile_exe="$(pwd)/Tools/sFall_ScriptEditor/resources/compile.exe"
 scripts_dir="$(pwd)/Fallout2/Fallout1in2/Mapper/source/scripts"
 bytecode_dir="$(pwd)/Fallout2/Fallout1in2/mods/fo1_base/scripts"
 
+option_bytecode=0
+
+for option in "$@"; do
+    [ "$option" == "--bytecode" ] && option_bytecode=1
+done
+
 # output grouping, for GitHub Actions
 # regular echo when running on local
 function group_start()
@@ -27,14 +33,17 @@ function group_end()
 
 # sanity checks
 if   [ ! -f "$compile_exe" ]; then
-     echo "[ERROR] Cannot find compiler"
+     echo "[ERROR] Cannot find compiler : $compile_exe"
      exit 1
 elif [ ! -x "$compile_exe" ]; then
      echo "[ERROR] Cannot run compiler"
      exit 1
 elif [ ! -d "$scripts_dir" ]; then
-     echo "[ERROR] Cannot find scripts directory"
-     exit
+     echo "[ERROR] Cannot find scripts directory : $scripts_dir"
+     exit 1
+elif [ ! -d "$bytecode_dir" ]; then
+     echo "[ERROR] Cannot find bytecode directory : $bytecode_dir"
+     exit 1
 fi
 
 num_errors=0
@@ -71,12 +80,16 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
 
     # pass #1
     # guess result -- does bytecode exists?
-    if [ -f "$int_file" ]; then
-       rm $int_file
-       ssl_result=WARNING
-    else
+    if [ ! -f "$int_file" ]; then
        ssl_result=ERROR
        num_errors=$((num_errors+1))
+    else
+       if [ $option_bytecode -eq 1 ]; then
+          mv $int_file $bytecode_dir/$int_file
+       else
+         rm $int_file
+       fi
+       ssl_result=WARNING
     fi
 
     # pass #2
