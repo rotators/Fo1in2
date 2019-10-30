@@ -1,0 +1,66 @@
+name: Pack
+
+on:
+ push:
+  paths:
+  - '.github/workflows/pack.yml'
+
+jobs:
+
+ # https://fodev.net/pastebin/?u=fo1in2-release-list
+
+ Test:
+  runs-on: ubuntu-latest
+  env:
+   MOD_ZIP:            "Fallout1in2-v"
+   MOD_DIR:            "Fallout2/Fallout1in2/"
+   MOD_VERSION_STRING: "FALLOUT ET TU"
+   MOD_VERSION_MAJOR:  0
+  steps:
+
+  - name: Clone
+    uses: actions/checkout@master
+#   with:
+#    fetch-depth: 1
+
+  - name: Environment
+    run:  |
+          :
+          echo ::set-env name=MOD_VERSION::$MOD_VERSION_MAJOR.$(git rev-list HEAD --count)
+          echo ::set-env name=MOD_ZIP::${MOD_ZIP}${MOD_VERSION}.zip
+
+  - name: Update ddraw.ini
+    run: |
+         :
+         ddraw_ini="$MOD_DIR/ddraw.ini"
+         sed -ri "s!^[\t\ ]*VersionString=.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION!" "$ddraw_ini"
+         grep "^VersionString=" "$ddraw_ini" | awk -F = '{print $2}'
+         unix2dos "$ddraw_ini"
+
+  - name: Cleanup
+    run: |
+         :
+         rm -fR Fallout2/Fallout1in2/Mapper/
+         rm -f  Fallout2/Fallout1in2/ddraw.dev.*
+         rm -f  Fallout2/Fallout1in2/ddraw.fo1in2.ini
+         find Fallout2 -name '.gitignore' -delete
+         find Fallout2 -name '.gitattributes' -delete
+
+  - name: Copy UndatUI
+    run: |
+         :
+         cp "Undat UI/undat.exe" $MOD_DIR
+         cp "Undat UI/undat_files.txt $MOD_DIR
+
+  - name: git
+    run:  |
+          :
+          git status
+          echo ---
+          git diff $MOD_DIR/ddraw.ini | cat -v
+
+  - name: Pack
+    run:  7z a $MOD_ZIP Fallout2 Readme.md
+
+  - name: Pack show
+    run:  7z l $MOD_ZIP
