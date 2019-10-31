@@ -6,9 +6,11 @@ scripts_dir="$(pwd)/Fallout2/Fallout1in2/Mapper/source/scripts"
 bytecode_dir="$(pwd)/Fallout2/Fallout1in2/mods/fo1_base/scripts"
 
 option_bytecode=0
+option_optimization=2
 
 for option in "$@"; do
-    [ "$option" == "--bytecode" ] && option_bytecode=1
+    [[ "$option" == "--bytecode" ]] && option_bytecode=1
+    [[ "$option" =~ ^--optimization=([0-9]+)$ ]] && option_optimization=${BASH_REMATCH[1]}
 done
 
 # output grouping, for GitHub Actions
@@ -68,7 +70,7 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
 
     # ssl compiler is too dumb to understand paths and always checks current directory
     cd "$ssl_dir"
-    $compile_exe -q -l -p -s -O2 "$ssl_file" -o "$int_file" > "$log_file"
+    $compile_exe -q -l -p -s -O${option_optimization} "$ssl_file" -o "$int_file" > "$log_file"
 
     # remove unwanted lines from log
     sed -i '/^$/d' $log_file
