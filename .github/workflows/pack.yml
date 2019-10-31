@@ -10,12 +10,12 @@ jobs:
  # https://fodev.net/pastebin/?u=fo1in2-release-list
 
  Test:
-  runs-on: ubuntu-latest
+  runs-on: windows-latest
   env:
-   MOD_ZIP:            "Fallout1in2-v"
    MOD_DIR:            "Fallout2/Fallout1in2/"
    MOD_VERSION_STRING: "FALLOUT ET TU"
    MOD_VERSION_MAJOR:  0
+   MOD_ZIP:            "Fallout1in2-v"
   steps:
 
   - name: Clone
@@ -23,49 +23,44 @@ jobs:
 #   with:
 #    fetch-depth: 1
 
-  - name: Software
-    run:  sudo apt install dos2unix
+  - name:  Environment
+    run:   |
+           :
+           commits="$(git rev-list HEAD --count)"
+           echo ::set-env name=MOD_VERSION_STRING::${MOD_VERSION_STRING} ${MOD_VERSION_MAJOR}.${commits}
+           echo ::set-env name=MOD_ZIP::${MOD_ZIP}${MOD_VERSION_MAJOR}.${commits}.zip
+    shell: bash
 
-  - name: Environment
-    run:  |
-          :
-          ver="$MOD_VERSION_MAJOR.$(git rev-list HEAD --count)"
-          echo ::set-env name=MOD_VERSION::$ver
-          echo ::set-env name=MOD_ZIP::${MOD_ZIP}${ver}.zip
+  - name:  Update ddraw.ini
+    run:   |
+           :
+           ddraw_ini="$MOD_DIR/ddraw.ini"
+           sed -i "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING!" "$ddraw_ini"
+           grep "^VersionString=" "$ddraw_ini"
+           git diff "$ddraw_ini" | cat -v
+    shell: bash
 
-  - name: Update ddraw.ini
-    run:  |
-          :
-          ddraw_ini="$MOD_DIR/ddraw.ini"
-          sed -ri "s!^[\t\ ]*VersionString=.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION!" "$ddraw_ini"
-          grep "^VersionString=" "$ddraw_ini" | awk -F = '{print $2}'
-          git diff $MOD_DIR/ddraw.ini | cat -v
-          unix2dos "$ddraw_ini"
+  - name:  Cleanup
+    run:   |
+           :
+           rm -fR $MOD_DIR/Mapper/
+           rm -f  $MOD_DIR/ddraw.dev.*
+           rm -f  $MOD_DIR/ddraw.fo1in2.ini
+           find Fallout2 -name '.gitignore' -delete
+           find Fallout2 -name '.gitattributes' -delete
+    shell: bash
 
-  - name: Cleanup
-    run: |
-         :
-         rm -fR Fallout2/Fallout1in2/Mapper/
-         rm -f  Fallout2/Fallout1in2/ddraw.dev.*
-         rm -f  Fallout2/Fallout1in2/ddraw.fo1in2.ini
-         find Fallout2 -name '.gitignore' -delete
-         find Fallout2 -name '.gitattributes' -delete
+  - name:  Copy UndatUI
+    run:   |
+           :
+           cp "Tools/Undat UI/undat.exe" $MOD_DIR
+           cp "Tools/Undat UI/undat_files.txt" $MOD_DIR
+    shell: bash
 
-  - name: Copy UndatUI
-    run: |
-         :
-         cp "Tools/Undat UI/undat.exe" $MOD_DIR
-         cp "Tools/Undat UI/undat_files.txt" $MOD_DIR
+  - name:  Pack
+    run:   7z a "$MOD_ZIP" Fallout2 Readme.md
+    shell: bash
 
-  - name: git
-    run:  |
-          :
-          git status
-          echo ---
-          git diff "$MOD_DIR/ddraw.ini" | cat -v
-
-  - name: Pack
-    run:  7z a "$MOD_ZIP" Fallout2 Readme.md
-
-  - name: Pack show
-    run:  7z l "$MOD_ZIP"
+  - name:  Pack listing
+    run:   7z l "$MOD_ZIP"
+    shell: bash
