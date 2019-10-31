@@ -35,9 +35,8 @@ jobs:
     run:   |
            :
            ddraw_ini="$MOD_DIR/ddraw.ini"
-           sed -i "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING!" "$ddraw_ini"
-           grep "^VersionString=" "$ddraw_ini"
-           git diff "$ddraw_ini" | cat -v
+           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING!" $ddraw_ini
+           grep "^VersionString=" $ddraw_ini
     shell: bash
 
   - name:  Cleanup
@@ -57,10 +56,15 @@ jobs:
            cp "Tools/Undat UI/undat_files.txt" $MOD_DIR
     shell: bash
 
-  - name:  Pack
-    run:   7z a "$MOD_ZIP" Fallout2 Readme.md
+  - name:  Update configuration
+    run:   unix2dos $MOD_DIR/*.ini $MOD_DIR/*.cfg $MOD_DIR/config/* $MOD_DIR/undat_files.txt
     shell: bash
 
+  - name:  Pack
+    run:   7z a "$GITHUB_WORKSPACE/$MOD_ZIP" Fallout1in2
+    shell: bash
+    working-directory: Fallout2
+
   - name:  Pack listing
-    run:   7z l "$MOD_ZIP"
+    run:   7z l $MOD_ZIP
     shell: bash
