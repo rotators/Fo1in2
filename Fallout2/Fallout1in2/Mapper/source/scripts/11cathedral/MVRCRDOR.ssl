@@ -1,29 +1,36 @@
 #include "..\headers\define.h"
 
+#define NAME                    SCRIPT_MVRCRDOR
+
+#include "..\headers\command.h"
+
 procedure start;
+
 procedure use_stuff;
 procedure pick_lock;
 
 variable unlocked;
 
+procedure start begin
+end
 
-procedure start
-begin
-   if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-      script_overrides;
-      display_msg(message_str(SCRIPT_MVRCRDOR, 100));//{100}{}{You see a steel door. A sign on it reads: "Reactor Core Control Room. Authorized Personnel Only."}
-   end
-   else begin
-      if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-         call use_stuff;
-      end
-      else begin
-         if (script_action == use_obj_on_proc) then begin//<-- use_obj_on_p_proc
-            if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
-               call pick_lock;
-            end
-         end
-      end
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(message_str(NAME, 100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(message_str(NAME, 100));
+end
+
+procedure use_p_proc begin
+   call use_stuff;
+end
+
+procedure use_obj_on_p_proc begin
+   if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
+      call pick_lock;
    end
 end
 
@@ -31,27 +38,25 @@ procedure damage_p_proc begin
    display_msg(message_str(SCRIPT_DOOR, 193));
 end
 
-procedure use_stuff
-begin
+procedure use_stuff begin
    if (not(unlocked)) then begin
       script_overrides;
-      display_msg(message_str(SCRIPT_MVRCRDOR, 101));//{101}{}{The door is locked electronically.}
+      display_msg(message_str(NAME, 101));
    end
 end
 
-procedure pick_lock
-begin
+procedure pick_lock begin
    script_overrides;
    if (unlocked) then begin
-      display_msg(message_str(SCRIPT_MVRCRDOR, 102));//{102}{}{The door is not locked.}
+      display_msg(message_str(NAME, 102));
    end
    else begin
       if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20))) then begin
-         display_msg(message_str(SCRIPT_MVRCRDOR, 103));//{103}{}{You manage to bypass the electronic lock.}
+         display_msg(message_str(NAME, 103));
          unlocked := 1;
       end
       else begin
-         display_msg(message_str(SCRIPT_MVRCRDOR, 104));//{104}{}{Your attempt to circumvent the electronic lock fails.}
+         display_msg(message_str(NAME, 104));
       end
    end
 end

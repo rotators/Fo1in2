@@ -1,18 +1,28 @@
+/*
+
+   Cathedral - Master Lair, Nuclear bomb control terminal
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\maps\mstrlr34.h"
 
 #define NAME                    SCRIPT_MVCOMP
 
 #include "..\headers\command.h"
 
 procedure start;
+
 procedure skills;
 procedure armit;
 procedure disarmit;
 procedure reset;
+
 import variable Key_Used;
 import variable Skill_Used;
 import variable Master_Has_Armed;
 import variable Bomb_Armed;
+
 variable test;
 variable test1;
 variable test2;
@@ -20,62 +30,59 @@ variable my_iq;
 variable my_pe;
 variable lockmod;
 
-procedure start
-begin
-   if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-      set_map_var(5, 1);
+procedure start begin
+end
+
+procedure use_p_proc begin
+   set_map_var(MVAR_TOUCHING, 1);
+   script_overrides;
+   display_msg(mstr(100));
+   my_iq := dude_iq;
+   my_pe := dude_perception;
+   if (my_iq < my_pe) then begin
+      test := do_check(dude_obj, STAT_iq, 0);
+   end
+   else begin
+      test := do_check(dude_obj, STAT_pe, 0);
+   end
+   if (is_success(test)) then begin
+      display_msg(mstr(101));
+   end
+end
+
+procedure use_skill_on_p_proc begin
+   set_map_var(MVAR_TOUCHING, 1);
+   script_overrides;
+   call skills;
+end
+
+procedure use_obj_on_p_proc begin
+   set_map_var(MVAR_TOUCHING, 1);
+   if (obj_pid(obj_being_used_with) == PID_NUKE_KEY) then begin
       script_overrides;
-      display_msg(mstr(100));
-      my_iq := dude_iq;
-      my_pe := dude_perception;
-      if (my_iq < my_pe) then begin
-         test := do_check(dude_obj, STAT_iq, 0);
+      if (Bomb_Armed == 1) then begin
+         if (Master_Has_Armed == 1) then begin
+            display_msg(mstr(105));
+         end
+         else begin
+            call disarmit;
+         end
       end
       else begin
-         test := do_check(dude_obj, STAT_pe, 0);
-      end
-      if (is_success(test)) then begin
-         display_msg(mstr(101));
+         call armit;
       end
    end
    else begin
-      if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
-         set_map_var(5, 1);
-         script_overrides;
-         call skills;
+      if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
+         lockmod := 40;
       end
       else begin
-         if (script_action == use_obj_on_proc) then begin//<-- use_obj_on_p_proc
-            set_map_var(5, 1);
-            if (obj_pid(obj_being_used_with) == PID_NUKE_KEY) then begin
-               script_overrides;
-               if (Bomb_Armed == 1) then begin
-                  if (Master_Has_Armed == 1) then begin
-                     display_msg(mstr(105));
-                  end
-                  else begin
-                     call disarmit;
-                  end
-               end
-               else begin
-                  call armit;
-               end
-            end
-            else begin
-               if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
-                  lockmod := 40;
-               end
-               else begin
-                  display_msg(mstr(105));
-               end
-            end
-         end
+         display_msg(mstr(105));
       end
    end
 end
 
-procedure skills
-begin
+procedure skills begin
    if (Bomb_Armed == 1) then begin
       display_msg(mstr(105));
    end
@@ -94,40 +101,33 @@ begin
             end
          end
       end
-      else begin
-         if (action_being_used == SKILL_LOCKPICK) then begin
-            if (has_skill(dude_obj, SKILL_LOCKPICK) < 70) then begin
-               display_msg(mstr(112));
-            end
-            else begin
-               test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, lockmod - 60);
-               if (is_success(test)) then begin
-                  call armit;
-               end
-               else begin
-                  display_msg(mstr(112));
-               end
-            end
+      else if (action_being_used == SKILL_LOCKPICK) then begin
+         if (has_skill(dude_obj, SKILL_LOCKPICK) < 70) then begin
+            display_msg(mstr(112));
          end
          else begin
-            if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
-               display_msg(mstr(111));
+            test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, lockmod - 60);
+            if (is_success(test)) then begin
+               call armit;
             end
             else begin
-               if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
-                  display_msg(mstr(110));
-               end
-               else begin
-                  display_msg(mstr(105));
-               end
+               display_msg(mstr(112));
             end
          end
+      end
+      else if (action_being_used == SKILL_TRAPS) then begin
+         display_msg(mstr(111));
+      end
+      else if (action_being_used == SKILL_REPAIR) then begin
+         display_msg(mstr(110));
+      end
+      else begin
+         display_msg(mstr(105));
       end
    end
 end
 
-procedure armit
-begin
+procedure armit begin
    display_msg(mstr(102));
    if (global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) == 0) then begin
       set_global_var(GVAR_COUNTDOWN_TO_DESTRUCTION, (game_time / 10));
@@ -139,8 +139,7 @@ begin
    end
 end
 
-procedure disarmit
-begin
+procedure disarmit begin
    if ((((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION)) > 30) or (Skill_Used == 1)) then begin
       call reset;
    end
@@ -150,8 +149,7 @@ begin
    end
 end
 
-procedure reset
-begin
+procedure reset begin
    display_msg(mstr(103));
    set_global_var(GVAR_COUNTDOWN_TO_DESTRUCTION, 0);
    set_global_var(GVAR_MASTER_BLOWN, 0);
