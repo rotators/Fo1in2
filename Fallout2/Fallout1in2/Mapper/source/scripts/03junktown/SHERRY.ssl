@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Sherry, prostitute
+	Junktown - Sherry, Skullz gang member
 
 */
 
@@ -69,7 +69,13 @@ variable sleep_time;
 variable home_tile;
 variable sleep_tile;
 
+#define LVAR_Herebefore 						(4)
 #define LVAR_Sleeping 							(5)
+#define LVAR_LeaveTimer							(6)
+#define LVAR_Ask_GangInfo   					(7)
+#define LVAR_Ask_WhatDo    					(8)
+#define LVAR_Ask_WhyStay   					(9)
+#define LVAR_Ask_Snitch    					(10)
 
 procedure start begin
 end
@@ -81,10 +87,10 @@ procedure critter_p_proc begin
 	end
 	else begin
 		if (global_var( GVAR_SHERRY_TURNS ) == 1) then begin
-			if ((game_time - local_var(6)) > (10 * 60 * 60 * 24)) then begin
-            set_self_team(TEAM_JUNKTOWNER );
+			if ((game_time - local_var(LVAR_LeaveTimer)) > (ONE_GAME_DAY)) then begin
+            set_self_team( TEAM_JUNKTOWNER );
 				set_global_var( GVAR_SHERRY_TURNS, 2 );
-				set_local_var(6, 0);
+				set_local_var(LVAR_LeaveTimer, 0);
 				home_tile := 18125;
 				sleep_tile := 17924;
 			end
@@ -102,7 +108,7 @@ procedure critter_p_proc begin
 			attack(dude_obj);
 		end
 	end
-	else if ((global_var( GVAR_SHERRY_TURNS ) == 2) and (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) == 1)) then begin//  GVAR_ENEMY_JUNK_CITIZEN
+	else if ((global_var( GVAR_SHERRY_TURNS ) == 2) and (global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN ) == 1)) then begin
 		if (self_can_see_dude) then begin
 			attack(dude_obj);
 		end
@@ -121,7 +127,7 @@ procedure destroy_p_proc begin
 			set_global_var( GVAR_DUDE_ENEMY_SKULZ, 1 );
 		end
 		else begin
-			set_global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1 );// GVAR_ENEMY_JUNK_CITIZEN
+			set_global_var( GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1 );
 			set_global_var( GVAR_ENEMY_JUNKTOWN, 1 );
 			set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep - 5 );
 		end
@@ -129,211 +135,179 @@ procedure destroy_p_proc begin
 	end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
 	script_overrides;
-	if (local_var(4)) then begin
-		display_msg(message_str(SCRIPT_SHERRY, 100));
-	end
-	else begin
-		display_msg(message_str(SCRIPT_SHERRY, 101));
-	end
+	if (local_var(LVAR_Herebefore)) then
+		display_msg(mstr(100));
+	else
+		display_msg(mstr(101));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	sleep_time := 2000;
 	wake_time := 630;
 	if ((global_var( GVAR_BUST_SKULZ ) == 2) and (global_var( GVAR_SHERRY_TURNS ) != 2)) then begin
 		destroy_object(self_obj);
 	end
 	if (global_var( GVAR_SHERRY_TURNS ) != 2) then begin
-set_self_team(TEAM_JUNKTOWN_SKULZ );
+      set_self_team( TEAM_JUNKTOWN_SKULZ );
 		home_tile := 15513;
 		sleep_tile := 13494;
 	end
 	else begin
-set_self_team(TEAM_JUNKTOWNER );
+      set_self_team( TEAM_JUNKTOWNER );
 		home_tile := 18125;
 		sleep_tile := 17924;
 	end
 end
 
-procedure pickup_p_proc
-begin
-	float_msg( self_obj, message_str(SCRIPT_SHERRY, 102), FLOAT_MSG_NORMAL );
+procedure pickup_p_proc begin
+	float_msg( self_obj, mstr(102), FLOAT_MSG_NORMAL );
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
-	if (local_var(5) == 1) then begin
+
+	if (local_var(LVAR_Sleeping) == 1) then begin
 		float_msg( self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL );
 	end
 	else begin
 		get_reaction
-		start_gdialog(388, self_obj, 4, -1, -1);
-		gsay_start;
-		if (global_var( GVAR_SHERRY_TURNS ) == 2) then begin
-			call Sherry22;
-		end
-		else begin
-			if (local_var(4) == 1) then begin
-				call Sherry15;
-			end
-			else begin
-				call Sherry01;
-			end
-		end
-		gsay_end;
-		end_dialogue;
+		if (global_var(GVAR_SHERRY_TURNS) == 2) then
+			start_dialog_at_node(Sherry22);
+		else if (local_var(LVAR_Herebefore) == 1) then
+			start_dialog_at_node(Sherry15);
+		else
+			start_dialog_at_node(Sherry01);
 	end
+
 	if (feed_dude) then begin
 		call SherryCook;
 	end
 end
 
-procedure Sherry01
-begin
-	set_local_var(4, 1);
-	gsay_reply( SCRIPT_SHERRY, 103 );
-	giq_option( 4, SCRIPT_SHERRY, message_str(SCRIPT_SHERRY, 104) + dude_name + message_str(SCRIPT_SHERRY, 105), Sherry02, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 106, Sherry03, NEUTRAL_REACTION );
-	giq_option( -3, SCRIPT_SHERRY, 107, Sherry04, NEUTRAL_REACTION );
+procedure Sherry01 begin
+	set_local_var(LVAR_Herebefore, 1);
+	Reply( 103 );
+	giq_option( 4, NAME, mstr(104) + dude_name + mstr(105), Sherry02, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 106, Sherry03, NEUTRAL_REACTION );
+	giq_option( -3, NAME, 107, Sherry04, NEUTRAL_REACTION );
 end
 
-procedure Sherry02
-begin
-	gsay_reply( SCRIPT_SHERRY, 108 );
-	giq_option( 4, SCRIPT_SHERRY, 109, SherryCombat, BAD_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 110, SherryEnd, NEUTRAL_REACTION );
-	giq_option( 5, SCRIPT_SHERRY, 111, Sherry05, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_SHERRY, 112, Sherry07, NEUTRAL_REACTION );
+procedure Sherry02 begin
+	Reply( 108 );
+	giq_option( 4, NAME, 109, SherryCombat, BAD_REACTION );
+	giq_option( 4, NAME, 110, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 5, NAME, 111, Sherry05, NEUTRAL_REACTION );
+	giq_option( 6, NAME, 112, Sherry07, NEUTRAL_REACTION );
 end
 
-procedure Sherry03
-begin
+procedure Sherry03 begin
 	DownReact
-	gsay_reply( SCRIPT_SHERRY, 113 );
-	giq_option( 4, SCRIPT_SHERRY, 114, SherryEnd, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 115, SherryCombat, NEUTRAL_REACTION );
+	Reply( 113 );
+	giq_option( 4, NAME, 114, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 115, SherryCombat, NEUTRAL_REACTION );
 end
 
-procedure Sherry04
-begin
-	gsay_message( SCRIPT_SHERRY, 116, 50 );
+procedure Sherry04 begin
+	gsay_message( NAME, 116, NEUTRAL_REACTION );
 end
 
-procedure Sherry05
-begin
-	gsay_reply( SCRIPT_SHERRY, 117 );
-	giq_option( 4, SCRIPT_SHERRY, 118, Sherry11, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 119, SherryEnd, NEUTRAL_REACTION );
+procedure Sherry05 begin
+	Reply( 117 );
+	giq_option( 4, NAME, 118, Sherry11, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 119, SherryEnd, NEUTRAL_REACTION );
 end
 
-procedure Sherry06
-begin
-	gsay_reply( SCRIPT_SHERRY, 120 );
-	giq_option( 4, SCRIPT_SHERRY, 121, Sherry07, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 122, Sherry08, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 123, SherryEnd, NEUTRAL_REACTION );
+procedure Sherry06 begin
+	Reply( 120 );
+	giq_option( 4, NAME, 121, Sherry07, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 122, Sherry08, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 123, SherryEnd, NEUTRAL_REACTION );
 end
 
-procedure Sherry07
-begin
-	gsay_message( SCRIPT_SHERRY, 124, 51 );
+procedure Sherry07 begin
+	gsay_message( NAME, 124, BAD_REACTION );
 end
 
-procedure Sherry08
-begin
-	gsay_reply( SCRIPT_SHERRY, 125 );
+procedure Sherry08 begin
+	Reply( 125 );
 	call Sherry13;
 end
 
-procedure Sherry09
-begin
-	set_local_var(7, 1);
-	gsay_reply( SCRIPT_SHERRY, 126 );
-	giq_option( 4, SCRIPT_SHERRY, 127, Sherry10, NEUTRAL_REACTION );
+procedure Sherry09 begin
+	set_local_var(LVAR_Ask_GangInfo, 1);
+	Reply( 126 );
+	giq_option( 4, NAME, 127, Sherry10, NEUTRAL_REACTION );
 	call Sherry13;
 end
 
-procedure Sherry10
-begin
-	gsay_reply( SCRIPT_SHERRY, 128 );
+procedure Sherry10 begin
+	Reply( 128 );
 	call Sherry13;
 end
 
-procedure Sherry11
-begin
-	gsay_reply( SCRIPT_SHERRY, 129 );
+procedure Sherry11 begin
+	Reply( 129 );
 	call Sherry13;
 end
 
-procedure Sherry12
-begin
-	set_local_var(8, 1);
-	gsay_reply( SCRIPT_SHERRY, 130 );
-	giq_option( 4, SCRIPT_SHERRY, 131, Sherry26, NEUTRAL_REACTION );
+procedure Sherry12 begin
+	set_local_var(LVAR_Ask_WhatDo, 1);
+	Reply( 130 );
+	giq_option( 4, NAME, 131, Sherry26, NEUTRAL_REACTION );
 	call Sherry13;
 end
 
-procedure Sherry13
-begin
-	if (not(local_var(7))) then begin
-		giq_option( 5, SCRIPT_SHERRY, 133, Sherry09, NEUTRAL_REACTION );
+procedure Sherry13 begin
+	if (not(local_var(LVAR_Ask_GangInfo))) then begin
+		giq_option( 5, NAME, 133, Sherry09, NEUTRAL_REACTION );
 	end
-	if (not(local_var(8))) then begin
-		giq_option( 4, SCRIPT_SHERRY, 132, Sherry12, NEUTRAL_REACTION );
+	if (not(local_var(LVAR_Ask_WhatDo))) then begin
+		giq_option( 4, NAME, 132, Sherry12, NEUTRAL_REACTION );
 	end
-	if (not(local_var(9))) then begin
-		giq_option( 6, SCRIPT_SHERRY, 134, Sherry14, NEUTRAL_REACTION );
+	if (not(local_var(LVAR_Ask_WhyStay))) then begin
+		giq_option( 6, NAME, 134, Sherry14, NEUTRAL_REACTION );
 	end
 	Goodbyes;
-	giq_option( 4, SCRIPT_SHERRY, exit_line, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 4, NAME, exit_line, SherryEnd, NEUTRAL_REACTION );
 end
 
-procedure Sherry14
-begin
-	set_local_var(9, 1);
-	gsay_reply( SCRIPT_SHERRY, 135 );
+procedure Sherry14 begin
+	set_local_var(LVAR_Ask_WhyStay, 1);
+	Reply( 135 );
 	call Sherry13;
 end
 
-procedure Sherry15
-begin
-	gsay_reply( SCRIPT_SHERRY, 136 );
-	giq_option( 4, SCRIPT_SHERRY, 137, Sherry16, NEUTRAL_REACTION );
-	if (local_var(6) == 0) then begin
-		giq_option( 5, SCRIPT_SHERRY, 138, Sherry17, NEUTRAL_REACTION );
+procedure Sherry15 begin
+	Reply( 136 );
+	giq_option( 4, NAME, 137, Sherry16, NEUTRAL_REACTION );
+	if (local_var(LVAR_LeaveTimer) == 0) then begin
+		giq_option( 5, NAME, 138, Sherry17, NEUTRAL_REACTION );
 	end
 	Goodbyes;
-	giq_option( 4, SCRIPT_SHERRY, exit_line, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 4, NAME, exit_line, SherryEnd, NEUTRAL_REACTION );
 end
 
-procedure Sherry16
-begin
-	gsay_message( SCRIPT_SHERRY, 139, 51 );
+procedure Sherry16 begin
+	gsay_message( NAME, 139, BAD_REACTION );
 	call SherryCombat;
 end
 
-procedure Sherry17
-begin
-	gsay_reply( SCRIPT_SHERRY, 140 );
-	giq_option( 4, SCRIPT_SHERRY, 141, SherryEnd, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_SHERRY, 142, Sherry18, NEUTRAL_REACTION );
+procedure Sherry17 begin
+	Reply( 140 );
+	giq_option( 4, NAME, 141, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 6, NAME, 142, Sherry18, NEUTRAL_REACTION );
 end
 
-procedure Sherry18
-begin
-	gsay_reply( SCRIPT_SHERRY, 143 );
-	giq_option( 4, SCRIPT_SHERRY, 144, SherryEnd, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_SHERRY, 145, Sherry18a, NEUTRAL_REACTION );
+procedure Sherry18 begin
+	Reply( 143 );
+	giq_option( 4, NAME, 144, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 6, NAME, 145, Sherry18a, NEUTRAL_REACTION );
 end
 
-procedure Sherry18a
-begin
+procedure Sherry18a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Sherry19;
 	end
@@ -342,70 +316,60 @@ begin
 	end
 end
 
-procedure Sherry19
-begin
-	gsay_reply( SCRIPT_SHERRY, 146 );
-	giq_option( 6, SCRIPT_SHERRY, 147, Sherry21, NEUTRAL_REACTION );
+procedure Sherry19 begin
+	Reply( 146 );
+	giq_option( 6, NAME, 147, Sherry21, NEUTRAL_REACTION );
 end
 
-procedure Sherry20
-begin
+procedure Sherry20 begin
 	DownReact
-	gsay_message( SCRIPT_SHERRY, 148, 51 );
+	gsay_message( NAME, 148, BAD_REACTION );
 end
 
-procedure Sherry21
-begin
-	set_local_var(6, game_time);
+procedure Sherry21 begin
+	set_local_var(LVAR_LeaveTimer, game_time);
 	set_global_var( GVAR_SHERRY_TURNS, 1 );
-	gsay_message( SCRIPT_SHERRY, 149, 50 );
+	gsay_message( NAME, 149, NEUTRAL_REACTION );
 end
 
-procedure Sherry22
-begin
-	gsay_reply( SCRIPT_SHERRY, 150 );
-	giq_option( 4, SCRIPT_SHERRY, 151, SherryEnd, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 152, Sherry23, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 153, Sherry24, NEUTRAL_REACTION );
-	if ((local_var(10) == 0) and (global_var( GVAR_BUST_SKULZ ) == 1)) then begin
-		giq_option( 4, SCRIPT_SHERRY, 166, Sherry27, NEUTRAL_REACTION );
+procedure Sherry22 begin
+	Reply( 150 );
+	giq_option( 4, NAME, 151, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 152, Sherry23, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 153, Sherry24, NEUTRAL_REACTION );
+	if ((local_var(LVAR_Ask_Snitch) == 0) and (global_var( GVAR_BUST_SKULZ ) == 1)) then begin
+		giq_option( 4, NAME, 166, Sherry27, NEUTRAL_REACTION );
 	end
 end
 
-procedure Sherry23
-begin
-	gsay_reply( SCRIPT_SHERRY, 154 );
-	giq_option( 4, SCRIPT_SHERRY, 155, Sherry25, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 156, SherryEnd, NEUTRAL_REACTION );
+procedure Sherry23 begin
+	Reply( 154 );
+	giq_option( 4, NAME, 155, Sherry25, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 156, SherryEnd, NEUTRAL_REACTION );
 end
 
-procedure Sherry24
-begin
-	gsay_message( SCRIPT_SHERRY, 157, 50 );
+procedure Sherry24 begin
+	gsay_message( NAME, 157, NEUTRAL_REACTION );
 end
 
-procedure Sherry25
-begin
+procedure Sherry25 begin
 	feed_dude := 1;
 end
 
-procedure Sherry26
-begin
-	gsay_reply( SCRIPT_SHERRY, 159 );
+procedure Sherry26 begin
+	Reply( 159 );
 	call Sherry13;
 end
 
-procedure Sherry27
-begin
-	set_local_var(10, 1);
-	gsay_reply( SCRIPT_SHERRY, 160 );
-	giq_option( 4, SCRIPT_SHERRY, 161, Sherry27a, NEUTRAL_REACTION );
-	giq_option( 4, SCRIPT_SHERRY, 162, SherryEnd, NEUTRAL_REACTION );
-	giq_option( 6, SCRIPT_SHERRY, 163, Sherry28, NEUTRAL_REACTION );
+procedure Sherry27 begin
+	set_local_var(LVAR_Ask_Snitch, 1);
+	Reply( 160 );
+	giq_option( 4, NAME, 161, Sherry27a, NEUTRAL_REACTION );
+	giq_option( 4, NAME, 162, SherryEnd, NEUTRAL_REACTION );
+	giq_option( 6, NAME, 163, Sherry28, NEUTRAL_REACTION );
 end
 
-procedure Sherry27a
-begin
+procedure Sherry27a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call Sherry28;
 	end
@@ -414,30 +378,25 @@ begin
 	end
 end
 
-procedure Sherry28
-begin
-	gsay_message( SCRIPT_SHERRY, 164, 50 );
+procedure Sherry28 begin
+	gsay_message( NAME, 164, NEUTRAL_REACTION );
 	set_global_var( GVAR_SHERRY_TELLS_ON_SKULZ, 1 );
 end
 
-procedure Sherry29
-begin
-	gsay_message( SCRIPT_SHERRY, 165, 50 );
+procedure Sherry29 begin
+	gsay_message( NAME, 165, NEUTRAL_REACTION );
 end
 
-procedure SherryCombat
-begin
+procedure SherryCombat begin
 	tmp_hostile := 1;
 end
 
-procedure SherryCook
-begin
+procedure SherryCook begin
 	use_obj(dude_obj);
-	float_msg( self_obj, message_str(SCRIPT_SHERRY, 158), FLOAT_MSG_NORMAL );
+	float_msg( self_obj, mstr(158), FLOAT_MSG_NORMAL );
 	critter_heal(dude_obj, 1);
 	feed_dude := 0;
 end
 
-procedure SherryEnd
-begin
+procedure SherryEnd begin
 end

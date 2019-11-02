@@ -83,18 +83,18 @@
 
 // Movie number defines //
 // Commented out movies are done in the C-engine.  JLR
-//#define INTERPLAY_LOGO_MOVIE_PC 	0 //   "iplogo.mve",  // Interplay logo.
-//#define INTRO_MOVIE             	1 //   "intro.mve",   // Intro.
-//#define OVERSEER_MOVIE			2 // ovrintro.mve
-#define VATSEXPLODE_MOVIE			3 // vexpld.mve
-#define CATHEXPLODE_MOVIE			4 // cathexp.mve
-#define DIPEDV_MOVIE				5 // dipedv.mve
-#define OVERRUN_MOVIE				6 // ovrrun.mve
-#define WALKM_MOVIE					10 // walkm.mve
-#define WALKW_MOVIE					11 // walkw.mve
-#define BOIL1_MOVIE					12 // boil1.mve		// in-engine
-#define BOIL2_MOVIE					13 // boil2.mve		// in-engine
-#define BOIL3_MOVIE					14 // boil3.mve		// obj_dude script
+//#define INTERPLAY_LOGO_MOVIE_PC   0 //   "iplogo.mve",  // Interplay logo.
+//#define INTRO_MOVIE               1 //   "intro.mve",   // Intro.
+//#define OVERSEER_MOVIE            2 // ovrintro.mve
+#define VATSEXPLODE_MOVIE           3 // vexpld.mve
+#define CATHEXPLODE_MOVIE           4 // cathexp.mve
+#define DIPEDV_MOVIE                5 // dipedv.mve
+#define OVERRUN_MOVIE               6 // ovrrun.mve
+#define WALKM_MOVIE                 10 // walkm.mve
+#define WALKW_MOVIE                 11 // walkw.mve
+#define BOIL1_MOVIE                 12 // boil1.mve     // in-engine
+#define BOIL2_MOVIE                 13 // boil2.mve     // in-engine
+#define BOIL3_MOVIE                 14 // boil3.mve     // obj_dude script
 
 // float_msg defines //
 #define FLOAT_MSG_WARNING    (-2)
@@ -156,30 +156,32 @@
 #define HEAD_OVERSEER    (1)  //ovrsr  -- vault
 */
 // Head defines //
-#define BACKGROUND1           (2)    // rstymetl
-#define BACKGROUND_HUB        (3) //hub.frm
-#define BACKGROUND_NECROPOLIS (4) //necro.frm
-#define BACKGROUND_BHOOD      (5) //bhood.frm
-#define BACKGROUND_MILITARYBS (6) //military.frm
-#define BACKGROUND_JUNKTOWN   (7) //junktown.frm
-#define BACKGROUND_CATHEDRAL  (8) //cath.frm
-#define BACKGROUND_SHADY      (9) //shady.frm
-#define BACKGROUND_VAULT     (10) //vault.frm
-#define BACKGROUND_MASTER    (11) //master.frm
-#define BACKGROUND_FOLLOWER  (12) //follow.frm
-#define BACKGROUND_RAIDERS   (13) //raider.frm
+#define BACKGROUND1           (2)   // rstymetl
+#define BACKGROUND_HUB        (3)   //hub.frm
+#define BACKGROUND_NECROPOLIS (4)   //necro.frm
+#define BACKGROUND_BHOOD      (5)   //bhood.frm
+#define BACKGROUND_MILITARYBS (6)   //military.frm
+#define BACKGROUND_JUNKTOWN   (7)   //junktown.frm
+#define BACKGROUND_CATHEDRAL  (8)   //cath.frm
+#define BACKGROUND_SHADY      (9)   //shady.frm
+#define BACKGROUND_VAULT     (10)   //vault.frm
+#define BACKGROUND_MASTER    (11)   //master.frm
+#define BACKGROUND_FOLLOWER  (12)   //follow.frm
+#define BACKGROUND_RAIDERS   (13)   //raider.frm
    // Start of Fallout 2: Backgrounds
-#define BACKGROUND_CAVE      (14) //cave0001.frm
-#define BACKGROUND_ENCLAVE   (15) //enclave.frm
-#define BACKGROUND_WASTELAND (16) //wastelnd.frm
-#define BACKGROUND_BOSS      (17) // boss.frm
-#define BACKGROUND_PRESIDENT (18)       // pres.frm
-#define BACKGROUND_TENT      (19)       // tent.frm
-#define BACKGROUND_ADOBE     (20)       // Adobe.frm
+#define BACKGROUND_CAVE      (14)   //cave0001.frm
+#define BACKGROUND_ENCLAVE   (15)   //enclave.frm
+#define BACKGROUND_WASTELAND (16)   //wastelnd.frm
+#define BACKGROUND_BOSS      (17)   // boss.frm
+#define BACKGROUND_PRESIDENT (18)   // pres.frm
+#define BACKGROUND_TENT      (19)   // tent.frm
+#define BACKGROUND_ADOBE     (20)   // Adobe.frm
 // Mood defines //
 #define GOOD_REACTION    (49)
 #define NEUTRAL_REACTION (50)
 #define BAD_REACTION     (51)
+
+// Fallout 2 reaction defines are inverted:
 //#define BAD_REACTION     (49)
 //#define NEUTRAL_REACTION (50)
 //#define GOOD_REACTION    (51)
@@ -611,18 +613,18 @@
 #define METARULE_ELEVATOR         15
 #define elevator(X)       metarule(METARULE_ELEVATOR, X)
 
-#define ELEV_BOS1 		(0) // Brotherhood of Steel main elevator
-#define ELEV_BOS2 		(1) // Brotherhood of Steel surface elevator
-#define ELEV_MASTR1  	(2) // Master's upper-level elevator 3-4
-#define ELEV_MASTR2  	(3) // Master's lower-level elevator
-#define ELEV_MILB1   	(4) // Military Base upper-level elevator
-#define ELEV_MILB2   	(5) // Military Base lower-level elevator
-#define ELEV_VAULT   	(6) // Vault13 elevator
-#define ELEV_GLOW1   	(7) // Glow elevator red
-#define ELEV_GLOW2   	(8) // Glow elevator yellow
-#define ELEV_GLOW3   	(9) // Glow elevator blue
-#define ELEV_NECVLT  	(10) // Necropolis elevator
-#define ELEV_GLOW1A  	(11) // This elevator fixes a bug on "level 3" (see comment in elev6_m1.ssl)
+#define ELEV_BOS1       (0) // Brotherhood of Steel main elevator
+#define ELEV_BOS2       (1) // Brotherhood of Steel surface elevator
+#define ELEV_MASTR1     (2) // Master's upper-level elevator 3-4
+#define ELEV_MASTR2     (3) // Master's lower-level elevator
+#define ELEV_MILB1      (4) // Military Base upper-level elevator
+#define ELEV_MILB2      (5) // Military Base lower-level elevator
+#define ELEV_VAULT      (6) // Vault13 elevator
+#define ELEV_GLOW1      (7) // Glow elevator red
+#define ELEV_GLOW2      (8) // Glow elevator yellow
+#define ELEV_GLOW3      (9) // Glow elevator blue
+#define ELEV_NECVLT     (10) // Necropolis elevator
+#define ELEV_GLOW1A     (11) // This elevator fixes a bug on "level 3" (see comment in elev6_m1.ssl)
 
 #define METARULE_PARTY_COUNT      16
 #define party_member_count(X)    metarule(METARULE_PARTY_COUNT, X)
