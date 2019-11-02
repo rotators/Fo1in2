@@ -1,6 +1,6 @@
 /*
 
-	Cathedral - Shopkeeper
+   Cathedral - Shopkeeper
 
 */
 
@@ -54,192 +54,192 @@ variable Here_To_Shop;
 variable Go_Balistic;
 
 procedure start begin
-	if Only_Once then begin
-		set_self_team(TEAM_CATHEDRAL);
-		set_self_ai(AI_CHILDREN_TRUE);
-		Shopkeeper_Ptr := self_obj;
-		Only_Once := 0;
-	end
+   if Only_Once then begin
+      set_self_team(TEAM_CATHEDRAL);
+      set_self_ai(AI_CHILDREN_TRUE);
+      Shopkeeper_Ptr := self_obj;
+      Only_Once := 0;
+   end
 end
 
 procedure combat begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
 end
 
 procedure pickup_p_proc begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure talk_p_proc begin
-	variable Minigun := 0;
-	variable PurpleRobes := 0;
-	dude_look_at_self;
-	get_reaction
+   variable Minigun := 0;
+   variable PurpleRobes := 0;
+   dude_look_at_self;
+   get_reaction
 
-	PurpleRobes := self_item(PID_PURPLE_ROBE);
-	rm_obj_from_inven(self_obj, PurpleRobes);
-	move_obj_inven_to_obj(Shop_Ptr, self_obj);
+   PurpleRobes := self_item(PID_PURPLE_ROBE);
+   rm_obj_from_inven(self_obj, PurpleRobes);
+   move_obj_inven_to_obj(Shop_Ptr, self_obj);
 
-	start_gdialog(843, self_obj, 4, -1, -1);
-	gsay_start;
-	if (Caught_Stealing) then begin
-		call CathShop00;
-	end
-	else 	if (dude_is_armed) then begin
-		call CathShop02;
-	end
-	else if dude_wearing_coc_robe then begin
-		call CathShop07;
-	end
-	else begin
-		call CathShop10;
-	end
-	gsay_end;
-	end_dialogue;
+   start_gdialog(843, self_obj, 4, -1, -1);
+   gsay_start;
+   if (Caught_Stealing) then begin
+      call CathShop00;
+   end
+   else  if (dude_is_armed) then begin
+      call CathShop02;
+   end
+   else if dude_wearing_coc_robe then begin
+      call CathShop07;
+   end
+   else begin
+      call CathShop10;
+   end
+   gsay_end;
+   end_dialogue;
 
-	move_obj_inven_to_obj(self_obj, Shop_Ptr);
-	add_obj_to_inven(self_obj, PurpleRobes);
-	wield_obj_critter(self_obj, PurpleRobes);
+   move_obj_inven_to_obj(self_obj, Shop_Ptr);
+   add_obj_to_inven(self_obj, PurpleRobes);
+   wield_obj_critter(self_obj, PurpleRobes);
 
-	if (Go_Balistic) then begin
-		Minigun := create_object(PID_MINIGUN, 0, 0);
-		add_obj_to_inven(self_obj, Minigun);
-		wield_obj_critter(self_obj, Minigun);
-	end
+   if (Go_Balistic) then begin
+      Minigun := create_object(PID_MINIGUN, 0, 0);
+      add_obj_to_inven(self_obj, Minigun);
+      wield_obj_critter(self_obj, Minigun);
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	inc_good_critter
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
+   inc_good_critter
+   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
-		Here_To_Shop := 1;
-		dialogue_system_enter;
-	end
-	else if (fixed_param == 2) then begin
-		Caught_Stealing := 1;
-		dialogue_system_enter;
-	end
+   if (fixed_param == 1) then begin
+      Here_To_Shop := 1;
+      dialogue_system_enter;
+   end
+   else if (fixed_param == 2) then begin
+      Caught_Stealing := 1;
+      dialogue_system_enter;
+   end
 end
 
 procedure CathShop00 begin
-	Reply(101);
-	NOption(102, CathShop01, -3);
-	NOption(103, CathShop01, 4);
-	NOption(104, CathShop00a, 5);
+   Reply(101);
+   NOption(102, CathShop01, -3);
+   NOption(103, CathShop01, 4);
+   NOption(104, CathShop00a, 5);
 end
 
 procedure CathShop00a begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call combat;
-	end
-	else begin
-		call CathShop01;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call combat;
+   end
+   else begin
+      call CathShop01;
+   end
 end
 
 procedure CathShop01 begin
-	BMessage(105);
-	call combat;
+   BMessage(105);
+   call combat;
 end
 
 procedure CathShop02 begin
-	Reply(106);
-	NOption(107, CathShopEnd, -3);
-	NOption(108, CathShop03, 4);
-	NOption(109, CathShop02a, 6);
+   Reply(106);
+   NOption(107, CathShopEnd, -3);
+   NOption(108, CathShop03, 4);
+   NOption(109, CathShop02a, 6);
 end
 
 procedure CathShop02a begin
-	if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
-		call CathShop04;
-	end
-	else begin
-		call CathShop05;
-	end
+   if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
+      call CathShop04;
+   end
+   else begin
+      call CathShop05;
+   end
 end
 
 procedure CathShop03 begin
-	NMessage(110);
+   NMessage(110);
 end
 
 procedure CathShop04 begin
-	Reply(111);
-	NOption(112, CathShop01, 6);
-	NOption(113, CathShopEnd, 6);
+   Reply(111);
+   NOption(112, CathShop01, 6);
+   NOption(113, CathShopEnd, 6);
 end
 
 procedure CathShop05 begin
-	Reply(114);
-	NOption(115, CathShop00a, 6);
-	NOption(116, CathShop06, 6);
+   Reply(114);
+   NOption(115, CathShop00a, 6);
+   NOption(116, CathShop06, 6);
 end
 
 procedure CathShop06 begin
-	NMessage(117);
+   NMessage(117);
 end
 
 procedure CathShop07 begin
-	Reply(118);
-	NOption(119, CathShop08, -3);
-	NOption(120, CathShop12, 4);
-	NOption(121, CathShop09, 4);
+   Reply(118);
+   NOption(119, CathShop08, -3);
+   NOption(120, CathShop12, 4);
+   NOption(121, CathShop09, 4);
 end
 
 procedure CathShop08 begin
-	Reply(122);
-	NOption(123, CathShopEnd, -3);
+   Reply(122);
+   NOption(123, CathShopEnd, -3);
 end
 
 procedure CathShop09 begin
-	NMessage(124);
+   NMessage(124);
 end
 
 procedure CathShop10 begin
-	Reply(125);
-	NOption(126, CathShop08, -3);
-	NOption(127, CathShop13, 4);
-	NOption(128, CathShop11, 5);
+   Reply(125);
+   NOption(126, CathShop08, -3);
+   NOption(127, CathShop13, 4);
+   NOption(128, CathShop11, 5);
 end
 
 procedure CathShop11 begin
-	Reply(129);
-	NOption(130, CathShopEnd, 4);
-	NOption(131, CathShop01, 4);
-	NOption(132, CathShop13, 4);
+   Reply(129);
+   NOption(130, CathShopEnd, 4);
+   NOption(131, CathShop01, 4);
+   NOption(132, CathShop13, 4);
 end
 
 procedure CathShop12 begin
-	Reply(133);
-	//giq_option(4, 843, 134, CathShopEnd, 50);
-	NOption(136, CathShop14, 4);
+   Reply(133);
+   //giq_option(4, 843, 134, CathShopEnd, 50);
+   NOption(136, CathShop14, 4);
 end
 
 procedure CathShop13 begin
-	Reply(135);
-	NOption(136, CathShop14, 4);
+   Reply(135);
+   NOption(136, CathShop14, 4);
 end
 
 procedure CathShop14 begin
-	gdialog_mod_barter(-10);
-	NMessage(137);
+   gdialog_mod_barter(-10);
+   NMessage(137);
 end
 
 procedure CathShopEnd begin

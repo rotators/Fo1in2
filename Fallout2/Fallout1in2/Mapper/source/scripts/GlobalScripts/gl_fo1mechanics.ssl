@@ -26,23 +26,23 @@ procedure item_description;
 
 procedure start begin
    if (game_loaded) then begin
-   	set_global_script_type(0);
-   	register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
-   	register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description);
+      set_global_script_type(0);
+      register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
+      register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description);
    end
 
-	call general;
+   call general;
 end
 
 procedure general begin
-	// Max skill is 200%
+   // Max skill is 200%
    set_skill_max(200);
 
    // Max rad resistance is 100%
-	set_pc_stat_max(STAT_rad_resist, 100);
+   set_pc_stat_max(STAT_rad_resist, 100);
 
    // Changes the PipBoy rest timer from 08:00 to 06:00
-	VOODOO_rest_till0600;
+   VOODOO_rest_till0600;
 end
 
 procedure mode_change begin
@@ -56,86 +56,86 @@ end
 
 procedure scene_master_destroyed begin
    if (get_game_mode == WORLDMAP) then begin
-   	if (global_var(GVAR_MASTER_BLOWN) == 1) and not(cathedral_destroyed) then begin
-   		set_cathedral_destroyed;
+      if (global_var(GVAR_MASTER_BLOWN) == 1) and not(cathedral_destroyed) then begin
+         set_cathedral_destroyed;
 
-   		inc_cathedral_rep(REP_BONUS_BLOWN_UP_MASTER);
+         inc_cathedral_rep(REP_BONUS_BLOWN_UP_MASTER);
 
-   		give_exp_points(EXP_MASTER_DESTROYED);
-   		display_msg(message_str(SCRIPT_GENCHAT, 702));
+         give_exp_points(EXP_MASTER_DESTROYED);
+         display_msg(message_str(SCRIPT_GENCHAT, 702));
 
-   		mark_map_entrance_state(MAP_CHILDRN1, 0);
-   		mark_map_entrance_state(MAP_CHILDRN2, 0);
-   		mark_map_entrance_state(MAP_MSTRLR12, 0);
-   		mark_map_entrance_state(MAP_MSTRLR34, 0);
+         mark_map_entrance_state(MAP_CHILDRN1, 0);
+         mark_map_entrance_state(MAP_CHILDRN2, 0);
+         mark_map_entrance_state(MAP_MSTRLR12, 0);
+         mark_map_entrance_state(MAP_MSTRLR34, 0);
          mark_map_entrance_elev_state(MAP_CHILDRN1, 1, 0); // We need this additionally, otherwise the stupid entry point won't disable itself.
-   		mark_map_entrance_state(MAP_CHILDEAD, 1);
+         mark_map_entrance_state(MAP_CHILDEAD, 1);
 
-   		play_gmovie(CATHEXPLODE_MOVIE);
+         play_gmovie(CATHEXPLODE_MOVIE);
 
-   		if (global_var(GVAR_VATS_BLOWN)) and waterchip_returned then begin
-   			force_encounter(MAP_V13ENT);
-   		end
-   	end
-	end
+         if (global_var(GVAR_VATS_BLOWN)) and waterchip_returned then begin
+            force_encounter(MAP_V13ENT);
+         end
+      end
+   end
 end
 
 procedure scene_vats_destroyed begin
    if (get_game_mode == WORLDMAP) then begin
       if (global_var(GVAR_VATS_BLOWN) == 1) and not(military_base_destoryed) then begin
-   		set_military_base_destoryed;
+         set_military_base_destoryed;
 
-   		inc_mbase_rep(REP_BONUS_BLOWN_UP_VATS);
+         inc_mbase_rep(REP_BONUS_BLOWN_UP_VATS);
 
-   		give_exp_points(EXP_VATS_DESTROYED);
-   		display_msg(message_str(SCRIPT_GENCHAT, 701));
+         give_exp_points(EXP_VATS_DESTROYED);
+         display_msg(message_str(SCRIPT_GENCHAT, 701));
 
-   		mark_map_entrance_state(MAP_MBENT, 0);
-   		mark_map_entrance_state(MAP_MBSTRG12, 0);
-   		mark_map_entrance_state(MAP_MBVATS12, 0);
-   		mark_map_entrance_state(MAP_MBDEAD, 1);
+         mark_map_entrance_state(MAP_MBENT, 0);
+         mark_map_entrance_state(MAP_MBSTRG12, 0);
+         mark_map_entrance_state(MAP_MBVATS12, 0);
+         mark_map_entrance_state(MAP_MBDEAD, 1);
 
-   		play_gmovie(VATSEXPLODE_MOVIE);
+         play_gmovie(VATSEXPLODE_MOVIE);
 
-   		if (global_var(GVAR_MASTER_BLOWN)) and waterchip_returned then begin
-   			force_encounter(MAP_V13ENT);
-   		end
-   	end
+         if (global_var(GVAR_MASTER_BLOWN)) and waterchip_returned then begin
+            force_encounter(MAP_V13ENT);
+         end
+      end
    end
 end
 
 procedure night_person begin
-	/* Night Person Trait
-	As a night-time person, you are more awake when the sun goes down.
-	Your Intelligence and Perception are improved at night, but dulled during the day. */
-	if (dude_trait(TRAIT_night_person)) then begin
-	   if (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 0) then
-	      set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
-	      mod_skill_points_per_level(2);
+   /* Night Person Trait
+   As a night-time person, you are more awake when the sun goes down.
+   Your Intelligence and Perception are improved at night, but dulled during the day. */
+   if (dude_trait(TRAIT_night_person)) then begin
+      if (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 0) then
+         set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
+         mod_skill_points_per_level(2);
 
-		if night and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 1) then begin
-		   set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 2);
-			set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj, 1) + 2);
-			set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj, 4) + 2);
-			debug("Night person trait is active!");
-		end
-		else if not(night) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
-		   set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
-			set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj, 1) - 2);
-			set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj, 4) - 2);
-			debug("Night person trait is not active!");
-		end
-	end
-	// If used Mutate!-perk to remove Night Person, reset everything to default:
-	else if (not(dude_trait(TRAIT_night_person)) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) > 0)) then begin
-	   set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 0);
-	   mod_skill_points_per_level(0);
-		if night then begin
-			set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj, 1) - 2);
-			set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj, 4) - 2);
-		end
-		debug("Night person trait is disabled!");
-	end
+      if night and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 1) then begin
+         set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 2);
+         set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj, 1) + 2);
+         set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj, 4) + 2);
+         debug("Night person trait is active!");
+      end
+      else if not(night) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
+         set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
+         set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj, 1) - 2);
+         set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj, 4) - 2);
+         debug("Night person trait is not active!");
+      end
+   end
+   // If used Mutate!-perk to remove Night Person, reset everything to default:
+   else if (not(dude_trait(TRAIT_night_person)) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) > 0)) then begin
+      set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 0);
+      mod_skill_points_per_level(0);
+      if night then begin
+         set_critter_extra_stat(dude_obj, 1, get_critter_extra_stat(dude_obj, 1) - 2);
+         set_critter_extra_stat(dude_obj, 4, get_critter_extra_stat(dude_obj, 4) - 2);
+      end
+      debug("Night person trait is disabled!");
+   end
 end
 
 procedure item_description begin
@@ -143,9 +143,9 @@ procedure item_description begin
    variable description;
 
    if (item == PID_FARM_PARTS) and get_quest_farm_active then begin
-		//if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
+      //if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
          description := get_string_pointer(message_str(SCRIPT_FARMPART, 101));
          set_sfall_return(description);
-		//end
+      //end
    end
 end

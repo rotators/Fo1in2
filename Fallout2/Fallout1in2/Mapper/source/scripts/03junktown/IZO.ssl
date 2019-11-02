@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Izo, Gizmo's guard
+   Junktown - Izo, Gizmo's guard
 
 */
 
@@ -38,115 +38,115 @@ variable tmp_hostile;
 variable line103flag;
 
 procedure start begin
-	if (not(initial)) then begin
-		initial := 1;
-		set_self_team(TEAM_JUNKTOWN_GIZMO);
-		if (global_var(GVAR_CAPTURE_GIZMO) == 2) then begin
-			kill_critter(self_obj, ANIM_fall_front_blood_sf);
-		end
-	end
+   if (not(initial)) then begin
+      initial := 1;
+      set_self_team(TEAM_JUNKTOWN_GIZMO);
+      if (global_var(GVAR_CAPTURE_GIZMO) == 2) then begin
+         kill_critter(self_obj, ANIM_fall_front_blood_sf);
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1) then begin
-		if (self_can_see_dude) then begin
-			tmp_hostile := 1;
-			attack(dude_obj);
-		end
-	end
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (Gizmo_is_angry) then begin
-			Gizmo_is_angry := 0;
-			attack(dude_obj);//	tmp_hostile := 1;
-		end
-		else begin
-			if (show_to_door) then begin
-				if (tile_distance_objs(dude_obj, Gizmo_ptr) > 8) then begin
-					if (self_tile != 16520) then begin
-						self_walk_to_tile(16520);
-					end
-					else begin
-						self_rotate(2);
-						line103flag := 0;
-						show_to_door := 0;
-					end
-				end
-				else if (self_tile != 18720) then begin
-					self_walk_to_tile(18720);
-				end
-				else begin
-					if (not(line103flag)) then begin
-						line103flag := 1;
-						display_msg(mstr(103));
-					end
-				end
-			end
+   if (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1) then begin
+      if (self_can_see_dude) then begin
+         tmp_hostile := 1;
+         attack(dude_obj);
+      end
+   end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (Gizmo_is_angry) then begin
+         Gizmo_is_angry := 0;
+         attack(dude_obj);//  tmp_hostile := 1;
+      end
+      else begin
+         if (show_to_door) then begin
+            if (tile_distance_objs(dude_obj, Gizmo_ptr) > 8) then begin
+               if (self_tile != 16520) then begin
+                  self_walk_to_tile(16520);
+               end
+               else begin
+                  self_rotate(2);
+                  line103flag := 0;
+                  show_to_door := 0;
+               end
+            end
+            else if (self_tile != 18720) then begin
+               self_walk_to_tile(18720);
+            end
+            else begin
+               if (not(line103flag)) then begin
+                  line103flag := 1;
+                  display_msg(mstr(103));
+               end
+            end
+         end
 
-		end
-	end
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
-	set_local_var(4, 0);
-	if (self_tile == 27719) then begin
-		self_run_to_tile(16720);
-	end
+   set_local_var(4, 0);
+   if (self_tile == 27719) then begin
+      self_run_to_tile(16720);
+   end
 end
 
 procedure map_update_p_proc begin
-	if ((self_tile == 16720) and (local_var(4) == 0)) then begin
-		set_local_var(4, 1);
-		self_rotate(rotation_to_tile(self_tile, 16920));
-	end
+   if ((self_tile == 16720) and (local_var(4) == 0)) then begin
+      set_local_var(4, 1);
+      self_rotate(rotation_to_tile(self_tile, 16920));
+   end
 end
 
 procedure destroy_p_proc begin
-	if source_obj == dude_obj then begin
-		set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);
-	end
-	inc_evil_critter
+   if source_obj == dude_obj then begin
+      set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);
+   end
+   inc_evil_critter
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	display_msg(mstr(101));
-	if ((payment > 0) and (local_var(3) == 0)) then begin
-	   use_obj(dude_obj);
-		dude_caps_adjust(payment);
-		start_dialog_at_node(PayPlayer_talk);
+   dude_look_at_self;
+   display_msg(mstr(101));
+   if ((payment > 0) and (local_var(3) == 0)) then begin
+      use_obj(dude_obj);
+      dude_caps_adjust(payment);
+      start_dialog_at_node(PayPlayer_talk);
 
-		payment := 0;
-		set_local_var(3, 1);
-	end
+      payment := 0;
+      set_local_var(3, 1);
+   end
 end
 
 procedure ShowToDoor_talk begin
-	if not(global_var(GVAR_GIZMO_NICE_SHOWDOOR)) then begin
-		BMessage(103);
-	end
-	else begin
-		set_global_var(GVAR_GIZMO_NICE_SHOWDOOR, 0);
-		NMessage(106);
-	end
+   if not(global_var(GVAR_GIZMO_NICE_SHOWDOOR)) then begin
+      BMessage(103);
+   end
+   else begin
+      set_global_var(GVAR_GIZMO_NICE_SHOWDOOR, 0);
+      NMessage(106);
+   end
 end
 
 procedure PayPlayer_talk begin
-	Reply(102);
-	NOption(104, IzoEnd, 4);
-	BOption(105, IzoEnd, -3);
+   Reply(102);
+   NOption(104, IzoEnd, 4);
+   BOption(105, IzoEnd, -3);
 end
 
 procedure IzoEnd begin

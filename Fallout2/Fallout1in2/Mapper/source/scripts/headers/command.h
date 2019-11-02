@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+   Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef COMMAND_H
@@ -21,7 +21,7 @@
 #include "reppoint.h"
 
 /*********************************************************
-	General stats stuff. Moved here because of Wipe.
+   General stats stuff. Moved here because of Wipe.
 *********************************************************/
 
 /*********************************************************
@@ -504,12 +504,12 @@ variable step_tile;
                                     (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_PURPLE_ROBE) and               \
                                     (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_HARDENED_POWER_ARMOR) and      \
                                     (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_BROTHERHOOD_COMBAT_ARMOR) and  \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_TESLA_ARMOR) and				\
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_CURED_LEATHER_ARMOR) and		\
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_ADVANCED_POWER_ARMOR) and		\
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_ADVANCED_POWER_ARMOR_MK2) and	\
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_LEATHER_ARMOR_MK_II) and		\
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_METAL_ARMOR_MK_II) and			\
+                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_TESLA_ARMOR) and          \
+                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_CURED_LEATHER_ARMOR) and     \
+                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_ADVANCED_POWER_ARMOR) and    \
+                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_ADVANCED_POWER_ARMOR_MK2) and   \
+                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_LEATHER_ARMOR_MK_II) and     \
+                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_METAL_ARMOR_MK_II) and       \
                                     (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_COMBAT_ARMOR_MK_II) ) then
 
 #define dude_has_gambling_skills            ((dude_iq > 3) and (has_skill(dude_obj, SKILL_GAMBLING) >= 25))
@@ -528,7 +528,7 @@ variable step_tile;
 
 
 
-#define dude_has_car 						global_var(GVAR_PLAYER_GOT_CAR) != 0
+#define dude_has_car                   global_var(GVAR_PLAYER_GOT_CAR) != 0
 #define dude_is_pornstar                    dude_has_porn_star_rep
 #define dude_is_high                        drug_influence(dude_obj)
 #define dude_found_geck                     global_var(GVAR_VAULT13_FOUND_GECK)
@@ -681,11 +681,11 @@ variable forced_node;
                                                       end
 
 variable tmp_rotation;
-#define face_start_dialog_at_node(x) 		   tmp_rotation:=self_cur_rot; 			\
-											   Face_Critter(dude_obj,self_obj); 	\
-											   Face_Critter(self_obj,dude_obj); 	\
-											   start_dialog_at_node(x); 			\
-											   self_rotate(tmp_rotation)
+#define face_start_dialog_at_node(x)         tmp_rotation:=self_cur_rot;         \
+                                    Face_Critter(dude_obj,self_obj);    \
+                                    Face_Critter(self_obj,dude_obj);    \
+                                    start_dialog_at_node(x);         \
+                                    self_rotate(tmp_rotation)
 
 /*
 FLOAT_MSG_BLACK

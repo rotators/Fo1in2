@@ -27,168 +27,168 @@ variable test;
 
 procedure start
 begin
-	if (map_first_run) then begin
-		display_msg("INIT SETCOLER.SSL at map number " + cur_map_index + " and elevation " + self_elevation + ". Please take a screenshot now and send to Sduibek. Thanks!");
-	end
-	if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-		call see_stuff;
-	end
-	else begin
-		if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
-			call trap_stuff;
-		end
-		else begin
-			if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-				if (local_var(1) == 0) then begin
-					call find_iq;
-				end
-				else begin
-					if (local_var(2)) then begin
-						call close_cooler;
-					end
-					else begin
-						call open_cooler;
-					end
-				end
-			end
-			else begin
-				if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-					if (local_var(2) == 0) then begin
-						script_overrides;
-					end
-				end
-			end
-		end
-	end
+   if (map_first_run) then begin
+      display_msg("INIT SETCOLER.SSL at map number " + cur_map_index + " and elevation " + self_elevation + ". Please take a screenshot now and send to Sduibek. Thanks!");
+   end
+   if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
+      call see_stuff;
+   end
+   else begin
+      if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
+         call trap_stuff;
+      end
+      else begin
+         if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
+            if (local_var(1) == 0) then begin
+               call find_iq;
+            end
+            else begin
+               if (local_var(2)) then begin
+                  call close_cooler;
+               end
+               else begin
+                  call open_cooler;
+               end
+            end
+         end
+         else begin
+            if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
+               if (local_var(2) == 0) then begin
+                  script_overrides;
+               end
+            end
+         end
+      end
+   end
 end
 
 procedure trap_stuff
 begin
-	script_overrides;
-	if (local_var(0)) then begin
-		if (local_var(1) == 0) then begin
-			if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
-				call disarm_trap;
-			end
-			else begin
-				if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
-					call disarm_mech;
-				end
-				else begin
-					display_msg(mstr(100));
-				end
-			end
-		end
-	end
-	else begin
-		call find_trap;
-	end
+   script_overrides;
+   if (local_var(0)) then begin
+      if (local_var(1) == 0) then begin
+         if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
+            call disarm_trap;
+         end
+         else begin
+            if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
+               call disarm_mech;
+            end
+            else begin
+               display_msg(mstr(100));
+            end
+         end
+      end
+   end
+   else begin
+      call find_trap;
+   end
 end
 
 procedure see_stuff
 begin
-	script_overrides;
-	display_msg(mstr(109));
+   script_overrides;
+   display_msg(mstr(109));
 end
 
 procedure find_trap
 begin
-	if (has_skill(dude_obj, SKILL_TRAPS)) then begin
-		test := roll_vs_skill(dude_obj, SKILL_TRAPS, -10);
-		if (is_success(test)) then begin
-			display_msg(mstr(101));
-			set_local_var(0, 1);
-		end
-		else begin
-			display_msg(mstr(102));
-			call explode;
-		end
-	end
+   if (has_skill(dude_obj, SKILL_TRAPS)) then begin
+      test := roll_vs_skill(dude_obj, SKILL_TRAPS, -10);
+      if (is_success(test)) then begin
+         display_msg(mstr(101));
+         set_local_var(0, 1);
+      end
+      else begin
+         display_msg(mstr(102));
+         call explode;
+      end
+   end
 end
 
 procedure find_iq
 begin
-	script_overrides;
-	if (local_var(0)) then begin
-		call failure;
-	end
-	else begin
-		test := do_check(dude_obj, STAT_iq, 0);
-		if (is_success(test)) then begin
-			display_msg(mstr(101));
-			set_local_var(0, 1);
-		end
-		else begin
-			display_msg(mstr(102));
-			call explode;
-		end
-	end
+   script_overrides;
+   if (local_var(0)) then begin
+      call failure;
+   end
+   else begin
+      test := do_check(dude_obj, STAT_iq, 0);
+      if (is_success(test)) then begin
+         display_msg(mstr(101));
+         set_local_var(0, 1);
+      end
+      else begin
+         display_msg(mstr(102));
+         call explode;
+      end
+   end
 end
 
 procedure disarm_trap
 begin
-	script_overrides;
-	test := roll_vs_skill(dude_obj, SKILL_TRAPS, 10);
-	if (is_success(test)) then begin
-		display_msg(mstr(103));
-		set_local_var(1, 1);
-	end
-	else begin
-		if (is_critical(test)) then begin
-			display_msg(mstr(105));
-			call explode;
-		end
-		else begin
-			display_msg(mstr(104));
-		end
-	end
+   script_overrides;
+   test := roll_vs_skill(dude_obj, SKILL_TRAPS, 10);
+   if (is_success(test)) then begin
+      display_msg(mstr(103));
+      set_local_var(1, 1);
+   end
+   else begin
+      if (is_critical(test)) then begin
+         display_msg(mstr(105));
+         call explode;
+      end
+      else begin
+         display_msg(mstr(104));
+      end
+   end
 end
 
 procedure disarm_mech
 begin
-	script_overrides;
-	test := roll_vs_skill(dude_obj, SKILL_REPAIR, 30);
-	if (is_success(test)) then begin
-		display_msg(mstr(103));
-		set_local_var(1, 1);
-	end
-	else begin
-		if (is_critical(test)) then begin
-			display_msg(mstr(105));
-			call explode;
-		end
-		else begin
-			display_msg(mstr(104));
-		end
-	end
+   script_overrides;
+   test := roll_vs_skill(dude_obj, SKILL_REPAIR, 30);
+   if (is_success(test)) then begin
+      display_msg(mstr(103));
+      set_local_var(1, 1);
+   end
+   else begin
+      if (is_critical(test)) then begin
+         display_msg(mstr(105));
+         call explode;
+      end
+      else begin
+         display_msg(mstr(104));
+      end
+   end
 end
 
 procedure failure
 begin
-	script_overrides;
-	display_msg(mstr(106));
-	call explode;
+   script_overrides;
+   display_msg(mstr(106));
+   call explode;
 end
 
 procedure explode
 begin
-	explosion(self_tile, self_elevation, 0);
-	damage := random(1, 6) + random(1, 6) + random(1, 6);
-	critter_dmg(dude_obj, damage, DMG_normal_dam);
-	set_local_var(1, 1);
-	set_local_var(0, 1);
+   explosion(self_tile, self_elevation, 0);
+   damage := random(1, 6) + random(1, 6) + random(1, 6);
+   critter_dmg(dude_obj, damage, DMG_normal_dam);
+   set_local_var(1, 1);
+   set_local_var(0, 1);
 end
 
 procedure close_cooler
 begin
-	script_overrides;
-	self_stand_reverse;
-	set_local_var(2, 0);
+   script_overrides;
+   self_stand_reverse;
+   set_local_var(2, 0);
 end
 
 procedure open_cooler
 begin
-	script_overrides;
-	self_stand;
-	set_local_var(2, 1);
+   script_overrides;
+   self_stand;
+   set_local_var(2, 1);
 end

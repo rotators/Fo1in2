@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Killian Darkwaters
+   Junktown - Killian Darkwaters
 
 */
 
@@ -169,7 +169,7 @@ variable sleep_time := 1900;
 
 variable remove_dude;
 
-#define LVAR_Sleeping 	      (7)
+#define LVAR_Sleeping         (7)
 
 variable barter_mod := 0;
 #define barter_mod_initial       (0)    // vanilla : 0
@@ -178,123 +178,123 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
-		if (self_can_see_dude) then begin
-			tmp_hostile := 1;
-		end
-	end
-	else begin
-		if (tmp_hostile) then begin
-			tmp_hostile := 0;
-			attack(dude_obj);
-		end
-		else begin
-			if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and (tile_distance_objs(self_obj, dude_obj) < 12) and self_can_see_dude and (CUR_MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-				ILLEGAL := 1;
-				TRESPASS := 1;
-				dialogue_system_enter;
-			end
-			if (map_var(MVAR_dude_messing_with_Killians_home) == 1) then begin
-				if ((CUR_MAP_JUNKKILL) and (local_var(7) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12) and (self_can_see_dude or self_can_hear_dude)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-					set_map_var(MVAR_dude_messing_with_Killians_home, 0);
-					ILLEGAL := 1;
-					TRESPASS := 1;
-					dialogue_system_enter;
-				end
-				else begin
-					ILLEGAL := 0;
-					TRESPASS := 0;
-					set_map_var(MVAR_dude_messing_with_Killians_home, 0);
-				end
-			end
-			if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(MVAR_helped_Killian) and (CUR_MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-				dialogue_system_enter;
-			end
+   if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
+      if (self_can_see_dude) then begin
+         tmp_hostile := 1;
+      end
+   end
+   else begin
+      if (tmp_hostile) then begin
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      else begin
+         if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and (tile_distance_objs(self_obj, dude_obj) < 12) and self_can_see_dude and (CUR_MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+            ILLEGAL := 1;
+            TRESPASS := 1;
+            dialogue_system_enter;
+         end
+         if (map_var(MVAR_dude_messing_with_Killians_home) == 1) then begin
+            if ((CUR_MAP_JUNKKILL) and (local_var(7) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12) and (self_can_see_dude or self_can_hear_dude)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+               set_map_var(MVAR_dude_messing_with_Killians_home, 0);
+               ILLEGAL := 1;
+               TRESPASS := 1;
+               dialogue_system_enter;
+            end
+            else begin
+               ILLEGAL := 0;
+               TRESPASS := 0;
+               set_map_var(MVAR_dude_messing_with_Killians_home, 0);
+            end
+         end
+         if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(MVAR_helped_Killian) and (CUR_MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+            dialogue_system_enter;
+         end
 
-			sleeping
+         sleeping
 
-			if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(7) == 0)) then begin
-				if (self_tile != home_tile) then begin
-					self_walk_to_tile(home_tile);
-				end
-				else begin
-					if (self_cur_rot != 2) then begin
-						self_rotate(2);
-					end
-				end
-			end
-			if (Killian_barter_var != 0) then begin
-				if ((local_var(7) == 0) and (CUR_MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-					if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-						dialogue_system_enter;
-					end
-					else begin
-						self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 1));
-					end
-				end
-				else begin
-					Killian_barter_var := 0;
-				end
-			end
-		end
-	end
+         if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(7) == 0)) then begin
+            if (self_tile != home_tile) then begin
+               self_walk_to_tile(home_tile);
+            end
+            else begin
+               if (self_cur_rot != 2) then begin
+                  self_rotate(2);
+               end
+            end
+         end
+         if (Killian_barter_var != 0) then begin
+            if ((local_var(7) == 0) and (CUR_MAP_JUNKKILL)) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+               if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+                  dialogue_system_enter;
+               end
+               else begin
+                  self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 1));
+               end
+            end
+            else begin
+               Killian_barter_var := 0;
+            end
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	variable DogTags := 0;
-	DogTags := create_object(PID_DOG_TAGS, 0, 0);
-	add_obj_to_inven(self_obj, DogTags);
-	set_global_var(GVAR_KILLIAN_DEAD, 1);
-	if (global_var(GVAR_KILL_KILLIAN) == 1) then begin
-		set_global_var(GVAR_KILL_KILLIAN, 2);
-	end
+   variable DogTags := 0;
+   DogTags := create_object(PID_DOG_TAGS, 0, 0);
+   add_obj_to_inven(self_obj, DogTags);
+   set_global_var(GVAR_KILLIAN_DEAD, 1);
+   if (global_var(GVAR_KILL_KILLIAN) == 1) then begin
+      set_global_var(GVAR_KILL_KILLIAN, 2);
+   end
 
-	if (source_obj == dude_obj) then begin
-		inc_junktown_rep(REP_BONUS_KILLED_KILLIAN);
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
-	inc_good_critter
-	Killian_ptr := 0;
+   if (source_obj == dude_obj) then begin
+      inc_junktown_rep(REP_BONUS_KILLED_KILLIAN);
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
+   inc_good_critter
+   Killian_ptr := 0;
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure map_enter_p_proc begin
-	remove_dude := 0;
-	Killian_ptr := self_obj;
-	if not(is_killian_alive) then begin
-		destroy_object(self_obj);
-	end
-	else begin
-		if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
-			if not(is_gizmo_alive) then begin
-				destroy_object(self_obj);
-			end
-			else begin
-				set_self_team(TEAM_PLAYER);
-				float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
-			end
-		end
-		else begin
-			set_self_team(TEAM_JUNKTOWN_GUARD);
-			if (not(is_loading_game) and (self_caps == 0)) then begin
-				self_caps_adjust(random(10, 150));
-			end
-			if (global_var(GVAR_LARS_N_KILLIAN_ON_CASINO) == 1) then begin
-				if not(is_loading_game) then begin
-					set_self_invisible;
-				end
-			end
-			else begin
-				if not(is_loading_game) then begin
-					set_self_visible;
-				end
-			end
-		end
-	end
+   remove_dude := 0;
+   Killian_ptr := self_obj;
+   if not(is_killian_alive) then begin
+      destroy_object(self_obj);
+   end
+   else begin
+      if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+         if not(is_gizmo_alive) then begin
+            destroy_object(self_obj);
+         end
+         else begin
+            set_self_team(TEAM_PLAYER);
+            float_msg(self_obj, mstr(271), FLOAT_MSG_GREEN);
+         end
+      end
+      else begin
+         set_self_team(TEAM_JUNKTOWN_GUARD);
+         if (not(is_loading_game) and (self_caps == 0)) then begin
+            self_caps_adjust(random(10, 150));
+         end
+         if (global_var(GVAR_LARS_N_KILLIAN_ON_CASINO) == 1) then begin
+            if not(is_loading_game) then begin
+               set_self_invisible;
+            end
+         end
+         else begin
+            if not(is_loading_game) then begin
+               set_self_visible;
+            end
+         end
+      end
+   end
 end
 
 procedure map_exit_p_proc begin
@@ -304,9 +304,9 @@ variable critter;
    foreach critter in list_as_array(LIST_CRITTERS) begin
       if (critter_state(critter) == CRITTER_IS_DEAD) then begin
          if (obj_pid(critter) == PID_KENJI) then begin
-				if (Killian_store1_ptr > 0) then begin
-					move_obj_inven_to_obj(critter, Killian_store1_ptr);
-				end
+            if (Killian_store1_ptr > 0) then begin
+               move_obj_inven_to_obj(critter, Killian_store1_ptr);
+            end
             destroy_object(critter);
          end
       end
@@ -314,182 +314,182 @@ variable critter;
 end
 
 procedure pickup_p_proc begin
-	ILLEGAL := 1;
-	ILLEGBEFORE := 1;
-	TRESPASS := 0;
-	dialogue_system_enter;
+   ILLEGAL := 1;
+   ILLEGBEFORE := 1;
+   TRESPASS := 0;
+   dialogue_system_enter;
 end
 
 procedure talk_p_proc begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	variable LVar2 := 0;
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   variable LVar2 := 0;
 
-	dude_look_at_self;
+   dude_look_at_self;
 
-	barter_mod := barter_mod_initial;
-	gdialog_set_barter_mod(barter_mod);
+   barter_mod := barter_mod_initial;
+   gdialog_set_barter_mod(barter_mod);
 
-	call get_stuff_from_safe;
-	LVar0 := self_item(PID_DESERT_EAGLE);
-	rm_obj_from_inven(self_obj, LVar0);
-	LVar2 := self_item(PID_KNIFE);
-	rm_obj_from_inven(self_obj, LVar2);
+   call get_stuff_from_safe;
+   LVar0 := self_item(PID_DESERT_EAGLE);
+   rm_obj_from_inven(self_obj, LVar0);
+   LVar2 := self_item(PID_KNIFE);
+   rm_obj_from_inven(self_obj, LVar2);
 
-	if ((local_var(7) == 1) and (TRESPASS == 0) and not(Killian_barter_var == -1)) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
-	end
-	else begin
-		if ((global_var(GVAR_GOT_CONFESSION) != 1) and (global_var(GVAR_BUG_PLANTED) != 1) and not(is_gizmo_alive) and (local_var(9) == 0)) then begin
-			call Killian89;
-		end
-		else begin
-			get_reaction
+   if ((local_var(7) == 1) and (TRESPASS == 0) and not(Killian_barter_var == -1)) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
+   end
+   else begin
+      if ((global_var(GVAR_GOT_CONFESSION) != 1) and (global_var(GVAR_BUG_PLANTED) != 1) and not(is_gizmo_alive) and (local_var(9) == 0)) then begin
+         call Killian89;
+      end
+      else begin
+         get_reaction
 
-			if (Killian_barter_var >= 0) then begin
-				if (Killian_barter_var == 1) then begin
-					if (Killian_store1_ptr > 0) then begin
-						move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
-					end
-				end
-				else if (Killian_barter_var == 2) then begin
-					if (Killian_store2_ptr > 0) then begin
-						move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
-					end
-				end
-				else if (Killian_barter_var == 3) then begin
-					if (Killian_store3_ptr > 0) then begin
-						move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
-					end
-				end
-				else begin
-					move_obj_inven_to_obj(KillSafe_ptr, self_obj);
-				end
-			end
+         if (Killian_barter_var >= 0) then begin
+            if (Killian_barter_var == 1) then begin
+               if (Killian_store1_ptr > 0) then begin
+                  move_obj_inven_to_obj(Killian_store1_ptr, self_obj);
+               end
+            end
+            else if (Killian_barter_var == 2) then begin
+               if (Killian_store2_ptr > 0) then begin
+                  move_obj_inven_to_obj(Killian_store2_ptr, self_obj);
+               end
+            end
+            else if (Killian_barter_var == 3) then begin
+               if (Killian_store3_ptr > 0) then begin
+                  move_obj_inven_to_obj(Killian_store3_ptr, self_obj);
+               end
+            end
+            else begin
+               move_obj_inven_to_obj(KillSafe_ptr, self_obj);
+            end
+         end
 
-			start_gdialog(47, self_obj, 4, 10, 7);
-			gsay_start;
-			if (ILLEGAL) then begin
-				if (ILLEGBEFORE) then begin
-					call Killian30;
-				end
-				else begin
-					ILLEGBEFORE := 1;
-					if (TRESPASS) then begin
-						call Killian31;
-					end
-					else begin
-						call Killian29;
-					end
-				end
-			end
-			else begin
-				if (Killian_barter_var == -1) then begin
-					set_local_var(8, local_var(8) + 1);
-					Killian_barter_var := 0;
-					if (local_var(8) == 1) then begin
-						call Killian42;
-					end
-					else if (local_var(8) == 2) then begin
-						call Killian43;
-					end
-					else if (local_var(8) == 3) then begin
-						call Killian44;
-					end
-					else begin
-						call Killian30;
-					end
-				end
-				else if (Killian_barter_var != 0) then begin
-					Reply(115);
-					NOption(118, Killian_barter, 4);
-					NOption(121, Killianx, 4);
-					NOption(110, Killian_barter, -3);
-					NOption(122, Killianx, -3);
-				end
-				else begin
-					if (map_var(MVAR_helped_Killian)) then begin
-						call Killian47;
-					end
-					else begin
-						if (local_var(5) == 1) then begin
-							if ((global_var(GVAR_GOT_CONFESSION) == 1) or (global_var(GVAR_BUG_PLANTED) == 1) and (map_var(MVAR_got_Gizmo) == 0)) then begin
-								call Killian54;
-							end
-							else if (local_var(1) >= 2) then begin
-								call Killian24;
-							end
-							else begin
-								call Killian26;
-							end
-						end
-						else begin
-							call Killian01;
-						end
-					end
-				end
-			end
-			gsay_end;
-			end_dialogue;
-		end
-	end
+         start_gdialog(47, self_obj, 4, 10, 7);
+         gsay_start;
+         if (ILLEGAL) then begin
+            if (ILLEGBEFORE) then begin
+               call Killian30;
+            end
+            else begin
+               ILLEGBEFORE := 1;
+               if (TRESPASS) then begin
+                  call Killian31;
+               end
+               else begin
+                  call Killian29;
+               end
+            end
+         end
+         else begin
+            if (Killian_barter_var == -1) then begin
+               set_local_var(8, local_var(8) + 1);
+               Killian_barter_var := 0;
+               if (local_var(8) == 1) then begin
+                  call Killian42;
+               end
+               else if (local_var(8) == 2) then begin
+                  call Killian43;
+               end
+               else if (local_var(8) == 3) then begin
+                  call Killian44;
+               end
+               else begin
+                  call Killian30;
+               end
+            end
+            else if (Killian_barter_var != 0) then begin
+               Reply(115);
+               NOption(118, Killian_barter, 4);
+               NOption(121, Killianx, 4);
+               NOption(110, Killian_barter, -3);
+               NOption(122, Killianx, -3);
+            end
+            else begin
+               if (map_var(MVAR_helped_Killian)) then begin
+                  call Killian47;
+               end
+               else begin
+                  if (local_var(5) == 1) then begin
+                     if ((global_var(GVAR_GOT_CONFESSION) == 1) or (global_var(GVAR_BUG_PLANTED) == 1) and (map_var(MVAR_got_Gizmo) == 0)) then begin
+                        call Killian54;
+                     end
+                     else if (local_var(1) >= 2) then begin
+                        call Killian24;
+                     end
+                     else begin
+                        call Killian26;
+                     end
+                  end
+                  else begin
+                     call Killian01;
+                  end
+               end
+            end
+         end
+         gsay_end;
+         end_dialogue;
+      end
+   end
 
-	if ((map_var(MVAR_assassin_seed) == 1) and (local_var(7) == 0) and (global_var(GVAR_HIRED_BY_GIZMO) == 0)) then begin
-		LVar1 := create_object_sid(PID_KENJI, 0, 0, SCRIPT_KENJI);
-		item := create_object(PID_HUNTING_RIFLE, 0, 0);
-		add_obj_to_inven(LVar1, item);
-		set_team(LVar1, TEAM_JUNKTOWN_GIZMO);
-		set_ai(LVar1, AI_BERZERKER);
-		critter_attempt_placement(LVar1, 28283, 0);
-		set_map_var(MVAR_assassin_seed, 2);
-	end
+   if ((map_var(MVAR_assassin_seed) == 1) and (local_var(7) == 0) and (global_var(GVAR_HIRED_BY_GIZMO) == 0)) then begin
+      LVar1 := create_object_sid(PID_KENJI, 0, 0, SCRIPT_KENJI);
+      item := create_object(PID_HUNTING_RIFLE, 0, 0);
+      add_obj_to_inven(LVar1, item);
+      set_team(LVar1, TEAM_JUNKTOWN_GIZMO);
+      set_ai(LVar1, AI_BERZERKER);
+      critter_attempt_placement(LVar1, 28283, 0);
+      set_map_var(MVAR_assassin_seed, 2);
+   end
 
-	if (map_var(MVAR_got_Gizmo) == 1) then begin
-		set_map_var(MVAR_got_Gizmo, 2);
-		display_msg(mstr(270));
-		give_exp_points(500);
-	end
+   if (map_var(MVAR_got_Gizmo) == 1) then begin
+      set_map_var(MVAR_got_Gizmo, 2);
+      display_msg(mstr(270));
+      give_exp_points(500);
+   end
 
-	//call Put_Back_On_Tables;// <-- Fallout Fixt
-	call put_stuff_in_safe;
-	if (Killian_barter_var >= 0) then begin
-		if (Killian_barter_var == 1) then begin
-			move_obj_inven_to_obj(self_obj, Killian_store1_ptr);
-		end
-		else if (Killian_barter_var == 2) then begin
-			move_obj_inven_to_obj(self_obj, Killian_store2_ptr);
-		end
-		else if (Killian_barter_var == 3) then begin
-			move_obj_inven_to_obj(self_obj, Killian_store3_ptr);
-		end
-//		else begin
-//			move_obj_inven_to_obj(self_obj, KillSafe_ptr);
-//		end
-		Killian_barter_var := 0;
-	end
+   //call Put_Back_On_Tables;// <-- Fallout Fixt
+   call put_stuff_in_safe;
+   if (Killian_barter_var >= 0) then begin
+      if (Killian_barter_var == 1) then begin
+         move_obj_inven_to_obj(self_obj, Killian_store1_ptr);
+      end
+      else if (Killian_barter_var == 2) then begin
+         move_obj_inven_to_obj(self_obj, Killian_store2_ptr);
+      end
+      else if (Killian_barter_var == 3) then begin
+         move_obj_inven_to_obj(self_obj, Killian_store3_ptr);
+      end
+//    else begin
+//       move_obj_inven_to_obj(self_obj, KillSafe_ptr);
+//    end
+      Killian_barter_var := 0;
+   end
 
-	if not(self_item(PID_DESERT_EAGLE)) then begin
-		add_obj_to_inven(self_obj, LVar0);
-	end
-	else begin
-		add_obj_to_inven(KillSafe_ptr, LVar0);
-	end
-	if not(self_item(PID_KNIFE)) then begin
-		add_obj_to_inven(self_obj, LVar2);
-	end
-	else begin
-		add_obj_to_inven(KillSafe_ptr, LVar2);
-	end
+   if not(self_item(PID_DESERT_EAGLE)) then begin
+      add_obj_to_inven(self_obj, LVar0);
+   end
+   else begin
+      add_obj_to_inven(KillSafe_ptr, LVar0);
+   end
+   if not(self_item(PID_KNIFE)) then begin
+      add_obj_to_inven(self_obj, LVar2);
+   end
+   else begin
+      add_obj_to_inven(KillSafe_ptr, LVar2);
+   end
 
-	if (go_to_jail) then begin
-		set_global_var(GVAR_PLAYER_REPUTATION, (check_general_rep - 1));
-		go_to_jail := 0;
-		load_map(MAP_JUNKENT, 6);
-	end
-	if (remove_dude) then begin
-		remove_dude := 0;
-		move_to(dude_obj, 28083, self_elevation);
-	end
+   if (go_to_jail) then begin
+      set_global_var(GVAR_PLAYER_REPUTATION, (check_general_rep - 1));
+      go_to_jail := 0;
+      load_map(MAP_JUNKENT, 6);
+   end
+   if (remove_dude) then begin
+      remove_dude := 0;
+      move_to(dude_obj, 28083, self_elevation);
+   end
 end
 
 procedure KillianEnd
@@ -498,557 +498,557 @@ end
 
 procedure KillianCbt
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure Killian0a
 begin
-	Reply(109);
-	gsay_option(NAME, 110, Killian21, 50);
-	gsay_option(NAME, 111, Killianx, 50);
+   Reply(109);
+   gsay_option(NAME, 110, Killian21, 50);
+   gsay_option(NAME, 111, Killianx, 50);
 end
 
 procedure Killian00 begin
-	if (local_var(4) == 0) then begin
-		NOption(101, Killian02, 4);
-	end
-	NOption(102, Killian11, 5);
-	NOption(103, Killian22, 5);
-	NOption(104, Killian21, 4);
-	NOption(105, Killian13, 5);
-	if ((global_var(GVAR_HIRED_BY_GIZMO) == 1) and (is_gizmo_alive) and (global_var(GVAR_HIRED_BY_KILLIAN) == 0)) then begin
-		NOption(272, Killian88, 4);
-	end
-	if ((global_var(GVAR_HIRED_BY_KILLIAN) == 1) and (is_gizmo_alive) and (map_var(MVAR_got_Gizmo) == 0)) then begin
-		NOption(106, Killian23, 5);
-	end
-	NOption(107, Killianx, 4);
-	NOption(108, Killian0a, -3);
+   if (local_var(4) == 0) then begin
+      NOption(101, Killian02, 4);
+   end
+   NOption(102, Killian11, 5);
+   NOption(103, Killian22, 5);
+   NOption(104, Killian21, 4);
+   NOption(105, Killian13, 5);
+   if ((global_var(GVAR_HIRED_BY_GIZMO) == 1) and (is_gizmo_alive) and (global_var(GVAR_HIRED_BY_KILLIAN) == 0)) then begin
+      NOption(272, Killian88, 4);
+   end
+   if ((global_var(GVAR_HIRED_BY_KILLIAN) == 1) and (is_gizmo_alive) and (map_var(MVAR_got_Gizmo) == 0)) then begin
+      NOption(106, Killian23, 5);
+   end
+   NOption(107, Killianx, 4);
+   NOption(108, Killian0a, -3);
 end
 
 procedure Killian01
 begin
-	set_local_var(5, 1);
-	if ((map_var(MVAR_assassin_seed) == 0) and (is_gizmo_alive) and (map_var(MVAR_got_Gizmo) == 0) and (global_var(GVAR_HIRED_BY_KILLIAN) == 0)) then begin
-		set_map_var(MVAR_assassin_seed, 1);
-	end
-	if (local_var(1) == 3) then begin
-		if (dude_is_male) then begin
-			Reply(112);
-		end
-		else begin
-			Reply(113);
-		end
-	end
-	else begin
-		if (local_var(1) == 1) then begin
-			Reply(114);
-		end
-		else begin
-			Reply(115);
-		end
-	end
-	call Killian00;
+   set_local_var(5, 1);
+   if ((map_var(MVAR_assassin_seed) == 0) and (is_gizmo_alive) and (map_var(MVAR_got_Gizmo) == 0) and (global_var(GVAR_HIRED_BY_KILLIAN) == 0)) then begin
+      set_map_var(MVAR_assassin_seed, 1);
+   end
+   if (local_var(1) == 3) then begin
+      if (dude_is_male) then begin
+         Reply(112);
+      end
+      else begin
+         Reply(113);
+      end
+   end
+   else begin
+      if (local_var(1) == 1) then begin
+         Reply(114);
+      end
+      else begin
+         Reply(115);
+      end
+   end
+   call Killian00;
 end
 
 procedure Killian02
 begin
-	set_local_var(4, 1);
-	Reply(123);
-	NOption(mstr(124) + dude_name + mstr(125), Killian02b, 4);
-	NOption(mstr(126) + dude_name + mstr(127), Killian03, 4);
-	BOption(128, Killian02a, 5);
+   set_local_var(4, 1);
+   Reply(123);
+   NOption(mstr(124) + dude_name + mstr(125), Killian02b, 4);
+   NOption(mstr(126) + dude_name + mstr(127), Killian03, 4);
+   BOption(128, Killian02a, 5);
 end
 
 procedure Killian03
 begin
-	Reply(129);
-	BOption(130, Killian05, 4);
-	NOption(131, Killian03aa, 6);
-	NOption(132, Killian03ba, 5);
-	BOption(133, Killian03ca, 5);
+   Reply(129);
+   BOption(130, Killian05, 4);
+   NOption(131, Killian03aa, 6);
+   NOption(132, Killian03ba, 5);
+   BOption(133, Killian03ca, 5);
 end
 
 procedure Killian03a
 begin
-	NMessage(134);
-	call Killian08;
+   NMessage(134);
+   call Killian08;
 end
 
 procedure Killian04
 begin
-	NMessage(135);
-	call Killian00;
+   NMessage(135);
+   call Killian00;
 end
 
 procedure Killian05
 begin
-	Reply(136);
-	GOption(137, Killian06, 4);
-	GOption(138, Killian04, 5);
+   Reply(136);
+   GOption(137, Killian06, 4);
+   GOption(138, Killian04, 5);
 end
 
 procedure Killian06
 begin
-	Reply(139);
-	call Killian00;
+   Reply(139);
+   call Killian00;
 end
 
 procedure Killian08
 begin
-	Reply(140);
-	NOption(141, Killian09, 5);
-	NOption(142, Killian00, 4);
+   Reply(140);
+   NOption(141, Killian09, 5);
+   NOption(142, Killian00, 4);
 end
 
 procedure Killian09
 begin
-	if (not(global_var(GVAR_WORLDMAPLIST_THE_HUB))) then
-		set_global_var(GVAR_WORLDMAPLIST_THE_HUB, 1);
-		mark_on_map(AREA_HUB)
+   if (not(global_var(GVAR_WORLDMAPLIST_THE_HUB))) then
+      set_global_var(GVAR_WORLDMAPLIST_THE_HUB, 1);
+      mark_on_map(AREA_HUB)
 
-	if (not(global_var(GVAR_WORLDMAPLIST_NECROPOLIS))) then
-		set_global_var(GVAR_WORLDMAPLIST_NECROPOLIS, 1);
+   if (not(global_var(GVAR_WORLDMAPLIST_NECROPOLIS))) then
+      set_global_var(GVAR_WORLDMAPLIST_NECROPOLIS, 1);
 
-	Reply(143);
-	NOption(144, Killian10, 5);
-	BOption(145, Killian09a, 5);
-	NOption(146, Killianx, 4);
+   Reply(143);
+   NOption(144, Killian10, 5);
+   BOption(145, Killian09a, 5);
+   NOption(146, Killianx, 4);
 end
 
 procedure Killian09a
 begin
-	DownReactLevel
-	call Killian04;
+   DownReactLevel
+   call Killian04;
 end
 
 procedure Killian10
 begin
-	if (local_var(1) >= 2) then begin
-		Reply(147);
-	end
-	else begin
-		Reply(148);
-	end
-	call Killian00;
+   if (local_var(1) >= 2) then begin
+      Reply(147);
+   end
+   else begin
+      Reply(148);
+   end
+   call Killian00;
 end
 
 procedure Killian11
 begin
-	Reply(149);
-	NOption(150, Killian12, 4);
-	NOption(151, Killian13, 5);
-	NOption(152, Killian08, 6);
-	NOption(153, Killian11a, 4);
+   Reply(149);
+   NOption(150, Killian12, 4);
+   NOption(151, Killian13, 5);
+   NOption(152, Killian08, 6);
+   NOption(153, Killian11a, 4);
 end
 
 procedure Killian11a
 begin
-	Reply(" ");
-	call Killian00;
+   Reply(" ");
+   call Killian00;
 end
 
 procedure Killian12
 begin
-	Reply(154);
-	call Killian00;
+   Reply(154);
+   call Killian00;
 end
 
 procedure Killian13 begin
-	Reply(155);
-	NOption(156, Killian13b, 4);
-	BOption(157, Killian13a, 6);
+   Reply(155);
+   NOption(156, Killian13b, 4);
+   BOption(157, Killian13a, 6);
 end
 
 procedure Killian13a begin
-	DownReactLevel
-	call Killian14;
+   DownReactLevel
+   call Killian14;
 end
 
 procedure Killian13b begin
-	gsay_reply(0, 0);
-	call Killian00;
+   gsay_reply(0, 0);
+   call Killian00;
 end
 
 procedure Killian14 begin
-	Reply(158);
-	NOption(159, Killian15, 4);
-	BOption(160, Killian16, 6);
+   Reply(158);
+   NOption(159, Killian15, 4);
+   BOption(160, Killian16, 6);
 end
 
 procedure Killian15
 begin
-	Reply(161);
-	call Killian00;
+   Reply(161);
+   call Killian00;
 end
 
 procedure Killian16
 begin
-	BMessage(162);
+   BMessage(162);
 end
 
 procedure Killian21 begin
-	Reply(163);
-	giq_option(0, SCRIPT_MODREACT, 106, Killian_barter, NEUTRAL_REACTION);
+   Reply(163);
+   giq_option(0, SCRIPT_MODREACT, 106, Killian_barter, NEUTRAL_REACTION);
 end
 
 procedure Killian22
 begin
-	NMessage(164);
+   NMessage(164);
 end
 
 procedure Killian23
 begin
-	NMessage(165);
+   NMessage(165);
 end
 
 procedure Killian24
 begin
-	Reply(166);
-	call Killian00;
+   Reply(166);
+   call Killian00;
 end
 
 procedure Killian26
 begin
-	Reply(167);
-	call Killian00;
+   Reply(167);
+   call Killian00;
 end
 
 procedure Killian27
 begin
-	NMessage(168);
+   NMessage(168);
 end
 
 procedure Killian28
 begin
-	Reply(169);
-	call Killianx1;
+   Reply(169);
+   call Killianx1;
 end
 
 procedure Killian29
 begin
-	NMessage(170);
+   NMessage(170);
 end
 
 procedure Killian30
 begin
-	ILLEGAL := 0;
-	ILLEGBEFORE := 0;
-	Reply(171);
-	call Killianx1;
+   ILLEGAL := 0;
+   ILLEGBEFORE := 0;
+   Reply(171);
+   call Killianx1;
 end
 
 procedure Killian31
 begin
-	ILLEGAL := 0;
-	TRESPASS := 0;
-	Reply(172);
-	NOption(173, Killian34, 4);
-	NOption(174, Killian32, 5);
-	NOption(175, Killian35, 4);
-	NOption(122, Killianx2, -3);
+   ILLEGAL := 0;
+   TRESPASS := 0;
+   Reply(172);
+   NOption(173, Killian34, 4);
+   NOption(174, Killian32, 5);
+   NOption(175, Killian35, 4);
+   NOption(122, Killianx2, -3);
 end
 
 procedure Killian32
 begin
-	Reply(176);
-	BOption(177, Killian32a, 4);
-	BOption(178, KillianCbt, 5);
+   Reply(176);
+   BOption(177, Killian32a, 4);
+   BOption(178, KillianCbt, 5);
 end
 
 procedure Killian34
 begin
-	Reply(179);
-	NOption(180, Killianx2, 4);
-	BOption(181, KillianCbt, 5);
+   Reply(179);
+   NOption(180, Killianx2, 4);
+   BOption(181, KillianCbt, 5);
 end
 
 procedure Killian35
 begin
-	Reply(182);
-	call Killianx1;
+   Reply(182);
+   call Killianx1;
 end
 
 procedure Killian36
 begin
-	NMessage(185);
+   NMessage(185);
 end
 
 procedure Killian37
 begin
-	NMessage(186);
+   NMessage(186);
 end
 
 procedure Killian38
 begin
-	NMessage(187);
+   NMessage(187);
 end
 
 procedure Killian39
 begin
-	NMessage(188);
+   NMessage(188);
 end
 
 procedure Killian40
 begin
-	NMessage(189);
+   NMessage(189);
 end
 
 procedure Killian41
 begin
-	NMessage(190);
+   NMessage(190);
 end
 
 procedure Killian42
 begin
-	NMessage(191);
-	call Killianx;
+   NMessage(191);
+   call Killianx;
 end
 
 procedure Killian43
 begin
-	NMessage(192);
-	call Killianx;
+   NMessage(192);
+   call Killianx;
 end
 
 procedure Killian44
 begin
-	Reply(193);
-	call Killianx1;
+   Reply(193);
+   call Killianx1;
 end
 
 procedure Killian45
 begin
-	Reply(194);
-	NOption(195, Killian45a, 4);
-	NOption(196, Killian46, 4);
+   Reply(194);
+   NOption(195, Killian45a, 4);
+   NOption(196, Killian46, 4);
 end
 
 procedure Killian45a
 begin
-	Reply(" ");
-	call Killian00;
+   Reply(" ");
+   call Killian00;
 end
 
 procedure Killian46
 begin
-	NMessage(197);
-	call Killianx;
+   NMessage(197);
+   call Killianx;
 end
 
 procedure Killian47
 begin
-	set_map_var(MVAR_helped_Killian, 0);
-	Reply(198);
-	NOption(199, Killian48, 4);
-	NOption(200, Killian50, 4);
-	GOption(201, Killian90, 4);
-	GOption(110, Killian90, -3);
-	NOption(111, Killian52, -3);
+   set_map_var(MVAR_helped_Killian, 0);
+   Reply(198);
+   NOption(199, Killian48, 4);
+   NOption(200, Killian50, 4);
+   GOption(201, Killian90, 4);
+   GOption(110, Killian90, -3);
+   NOption(111, Killian52, -3);
 end
 
 procedure Killian48
 begin
-	Reply(202);
-	NOption(203, Killian49, 4);
-	NOption(204, Killian51, 4);
-	NOption(205, Killian52, 6);
+   Reply(202);
+   NOption(203, Killian49, 4);
+   NOption(204, Killian51, 4);
+   NOption(205, Killian52, 6);
 end
 
 procedure Killian49
 begin
-	Reply(206);
-	NOption(207, Killian50, 4);
-	NOption(208, Killian51, 5);
-	NOption(209, Killian52, 4);
+   Reply(206);
+   NOption(207, Killian50, 4);
+   NOption(208, Killian51, 5);
+   NOption(209, Killian52, 4);
 end
 
 procedure Killian50
 begin
-	Reply(210);
-	NOption(211, Killian53, 4);
-	NOption(212, Killian52, 4);
-	NOption(213, Killian51, 5);
+   Reply(210);
+   NOption(211, Killian53, 4);
+   NOption(212, Killian52, 4);
+   NOption(213, Killian51, 5);
 end
 
 procedure Killian51
 begin
-	Reply(214);
-	NOption(215, Killian53, 4);
-	BOption(216, Killian52, 4);
+   Reply(214);
+   NOption(215, Killian53, 4);
+   BOption(216, Killian52, 4);
 end
 
 procedure Killian52
 begin
-	set_global_var(GVAR_CAPTURE_GIZMO, 2);
-	set_map_var(MVAR_got_Gizmo, 2);
-	BMessage(217);
-	set_global_var(GVAR_KILLIAN_SOMETHING_0, 1);
-	call Killianx1;
+   set_global_var(GVAR_CAPTURE_GIZMO, 2);
+   set_map_var(MVAR_got_Gizmo, 2);
+   BMessage(217);
+   set_global_var(GVAR_KILLIAN_SOMETHING_0, 1);
+   call Killianx1;
 end
 
 procedure Killian53 begin
-	NMessage(218);
-	call Killianx4;
+   NMessage(218);
+   call Killianx4;
 end
 
 procedure Killian54
 begin
-	Reply(219);
-	NOption(220, Killian55, 4);
-	NOption(111, Killian55, -3);
-	if ((global_var(GVAR_BUG_PLANTED) == 1) or (global_var(GVAR_GOT_CONFESSION) == 1)) then begin
-		GOption(221, Killian56, 4);
-		GOption(110, Killian56, -3);
-	end
+   Reply(219);
+   NOption(220, Killian55, 4);
+   NOption(111, Killian55, -3);
+   if ((global_var(GVAR_BUG_PLANTED) == 1) or (global_var(GVAR_GOT_CONFESSION) == 1)) then begin
+      GOption(221, Killian56, 4);
+      GOption(110, Killian56, -3);
+   end
 end
 
 procedure Killian55
 begin
-	NMessage(222);
-	call Killianx;
+   NMessage(222);
+   call Killianx;
 end
 
 procedure Killian56
 begin
-	Reply(223);
-	if (global_var(GVAR_BUG_PLANTED)) then begin
-		NOption(224, Killian57, 4);
-		NOption(108, Killian57, -3);
-	end
-	if (global_var(GVAR_GOT_CONFESSION)) then begin
-		NOption(225, Killian58, 4);
-	end
+   Reply(223);
+   if (global_var(GVAR_BUG_PLANTED)) then begin
+      NOption(224, Killian57, 4);
+      NOption(108, Killian57, -3);
+   end
+   if (global_var(GVAR_GOT_CONFESSION)) then begin
+      NOption(225, Killian58, 4);
+   end
 end
 
 procedure Killian57
 begin
-	GMessage(226);
-	call soundcheck;
+   GMessage(226);
+   call soundcheck;
 end
 
 procedure Killian58 begin
-	Reply(228);
-	giq_option(0, SCRIPT_MODREACT, 106, playback, GOOD_REACTION);
+   Reply(228);
+   giq_option(0, SCRIPT_MODREACT, 106, playback, GOOD_REACTION);
 end
 
 procedure Killian59
 begin
-	if (map_var(MVAR_got_Gizmo) == 0) then begin
-		set_map_var(MVAR_got_Gizmo, 1);
-	end
-	Reply(230);
-	NOption(231, Killian60, 4);
-	NOption(232, Killian61, 4);
-	NOption(233, Killian64, 5);
-	NOption(110, Killian60, -3);
-	NOption(111, Killian64, -3);
+   if (map_var(MVAR_got_Gizmo) == 0) then begin
+      set_map_var(MVAR_got_Gizmo, 1);
+   end
+   Reply(230);
+   NOption(231, Killian60, 4);
+   NOption(232, Killian61, 4);
+   NOption(233, Killian64, 5);
+   NOption(110, Killian60, -3);
+   NOption(111, Killian64, -3);
 end
 
 procedure Killian60
 begin
-	set_local_var(1, 3);
-	LevelToReact
-	set_global_var(GVAR_CAPTURE_GIZMO, 1);
-	GMessage(234);
-	call Killianx;
+   set_local_var(1, 3);
+   LevelToReact
+   set_global_var(GVAR_CAPTURE_GIZMO, 1);
+   GMessage(234);
+   call Killianx;
 end
 
 procedure Killian61
 begin
-	Reply(235);
-	NOption(236, Killian62, 4);
-	NOption(237, Killian63, 4);
+   Reply(235);
+   NOption(236, Killian62, 4);
+   NOption(237, Killian63, 4);
 end
 
 procedure Killian62
 begin
-	set_global_var(GVAR_CAPTURE_GIZMO, 1);
-	NMessage(238);
-	call Killianx;
+   set_global_var(GVAR_CAPTURE_GIZMO, 1);
+   NMessage(238);
+   call Killianx;
 end
 
 procedure Killian63
 begin
-	Reply(239);
-	NOption(240, Killian62, 4);
-	BOption(241, Killian63a, 4);
+   Reply(239);
+   NOption(240, Killian62, 4);
+   BOption(241, Killian63a, 4);
 end
 
 procedure Killian64
 begin
-	NMessage(242);
-	call Killianx;
+   NMessage(242);
+   call Killianx;
 end
 
 procedure Killian65
 begin
-	NMessage(243);
+   NMessage(243);
 end
 
 procedure Killian66
 begin
-	NMessage(244);
+   NMessage(244);
 end
 
 procedure Killian67
 begin
-	NMessage(245);
+   NMessage(245);
 end
 
 procedure Killian68
 begin
-	NMessage(246);
+   NMessage(246);
 end
 
 procedure Killian71
 begin
-	NMessage(249);
+   NMessage(249);
 end
 
 procedure Killian72
 begin
-	NMessage(250);
+   NMessage(250);
 end
 
 procedure Killian73
 begin
-	NMessage(251);
+   NMessage(251);
 end
 
 procedure Killian74
 begin
-	NMessage(252);
+   NMessage(252);
 end
 
 procedure Killian75
 begin
-	NMessage(253);
+   NMessage(253);
 end
 
 procedure Killian76
 begin
-	NMessage(254);
+   NMessage(254);
 end
 
 procedure Killian88
 begin
-	Reply(243);
-	NOption(273, Killianx, 4);
-	BOption(274, KillianCbt, 4);
-	GOption(275, Killian48, 4);
+   Reply(243);
+   NOption(273, Killianx, 4);
+   BOption(274, KillianCbt, 4);
+   GOption(275, Killian48, 4);
 end
 
 procedure Killian89
 begin
-	set_local_var(9, 1);
-	set_map_var(MVAR_helped_Killian, 0);
-	float_msg(self_obj, mstr(284), FLOAT_MSG_NORMAL);
+   set_local_var(9, 1);
+   set_map_var(MVAR_helped_Killian, 0);
+   float_msg(self_obj, mstr(284), FLOAT_MSG_NORMAL);
 end
 
 procedure Killian90 begin
-	Reply(165);
-	GOption(107, Killian53, 1);
+   Reply(165);
+   GOption(107, Killian53, 1);
 end
 
 procedure Killianx begin
@@ -1056,243 +1056,243 @@ end
 
 procedure Killianx1
 begin
-	NOption(183, Killianx3, 4);
-	BOption(184, KillianCbt, 4);
-	BOption(108, KillianCbt, -3);
+   NOption(183, Killianx3, 4);
+   BOption(184, KillianCbt, 4);
+   BOption(108, KillianCbt, -3);
 end
 
 procedure Killianx2
 begin
-	if ((game_time_hour >= sleep_time) or (game_time_hour < 700)) then begin
-		remove_dude := 1;
-	end
+   if ((game_time_hour >= sleep_time) or (game_time_hour < 700)) then begin
+      remove_dude := 1;
+   end
 end
 
 procedure Killianx3
 begin
-	go_to_jail := 1;
+   go_to_jail := 1;
 end
 
 procedure Killianx4 begin
-	item := create_object(PID_ELECTRONIC_BUG, 0, 0);
-	add_obj_to_inven(dude_obj, item);
-	if (dude_iq > 3) then begin
-		item := create_object(PID_TAPE_RECORDER, 0, 0);
-		add_obj_to_inven(dude_obj, item);
-	end
-	set_global_var(GVAR_HIRED_BY_KILLIAN, 1);
+   item := create_object(PID_ELECTRONIC_BUG, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   if (dude_iq > 3) then begin
+      item := create_object(PID_TAPE_RECORDER, 0, 0);
+      add_obj_to_inven(dude_obj, item);
+   end
+   set_global_var(GVAR_HIRED_BY_KILLIAN, 1);
 end
 
 procedure Killian69
 begin
-	NMessage(247);
+   NMessage(247);
 end
 
 procedure Killian70
 begin
-	NMessage(248);
+   NMessage(248);
 end
 
 procedure Killian76a
 begin
-	NMessage(255);
+   NMessage(255);
 end
 
 procedure Killian77
 begin
-	NMessage(256);
+   NMessage(256);
 end
 
 procedure Killian78
 begin
-	NMessage(257);
+   NMessage(257);
 end
 
 procedure Killian79
 begin
-	NMessage(258);
+   NMessage(258);
 end
 
 procedure Killian80
 begin
-	NMessage(259);
+   NMessage(259);
 end
 
 procedure Killian81
 begin
-	NMessage(260);
+   NMessage(260);
 end
 
 procedure Killian82
 begin
-	NMessage(261);
+   NMessage(261);
 end
 
 procedure Killian83
 begin
-	NMessage(262);
+   NMessage(262);
 end
 
 procedure Killian84
 begin
-	NMessage(263);
+   NMessage(263);
 end
 
 procedure Killian85
 begin
-	NMessage(264);
+   NMessage(264);
 end
 
 procedure Killian86
 begin
-	NMessage(265);
+   NMessage(265);
 end
 
 procedure Killian87
 begin
-	NMessage(266);
+   NMessage(266);
 end
 
 procedure Killian02a
 begin
-	DownReactLevel
-	call Killian16;
+   DownReactLevel
+   call Killian16;
 end
 
 procedure Killian02b begin
-	gsay_reply(0, 0);
-	call Killian00;
+   gsay_reply(0, 0);
+   call Killian00;
 end
 
 procedure Killian03aa
 begin
-	DownReactLevel
-	call Killian04;
+   DownReactLevel
+   call Killian04;
 end
 
 procedure Killian03ba
 begin
-	call Killian03a;
+   call Killian03a;
 end
 
 procedure Killian03ca
 begin
-	DownReactLevel
-	call Killian16;
+   DownReactLevel
+   call Killian16;
 end
 
 procedure Killian32a
 begin
-	DownReactLevel
-	call Killianx2;
+   DownReactLevel
+   call Killianx2;
 end
 
 procedure Killian63a
 begin
-	DownReactLevel
-	call Killian64;
+   DownReactLevel
+   call Killian64;
 end
 
 procedure Killian_barter begin
-	gdialog_mod_barter(barter_mod);
-	Reply(" ");
-	giq_option(0, SCRIPT_MODREACT, 108, Killianx, NEUTRAL_REACTION);
+   gdialog_mod_barter(barter_mod);
+   Reply(" ");
+   giq_option(0, SCRIPT_MODREACT, 108, Killianx, NEUTRAL_REACTION);
 end
 
 procedure Killian_give_stuff
 begin
-	if (dude_item_count(PID_TAPE_RECORDER)) then begin
-		destroy_object(dude_item(PID_TAPE_RECORDER));
-	end
-	if (dude_item_count(PID_ELECTRONIC_BUG)) then begin
-		destroy_object(dude_item(PID_ELECTRONIC_BUG));
-	end
-	GOption(276, Killian_give_shotgun, 4);
-	GOption(277, Killian_give_armor, 4);
-	GOption(278, Killian_give_doctor_bag, 4);
-	GOption(279, Killian_give_stimpaks, 4);
-	GOption(280, Killian59, 4);
-	GOption(111, Killian59, -3);
+   if (dude_item_count(PID_TAPE_RECORDER)) then begin
+      destroy_object(dude_item(PID_TAPE_RECORDER));
+   end
+   if (dude_item_count(PID_ELECTRONIC_BUG)) then begin
+      destroy_object(dude_item(PID_ELECTRONIC_BUG));
+   end
+   GOption(276, Killian_give_shotgun, 4);
+   GOption(277, Killian_give_armor, 4);
+   GOption(278, Killian_give_doctor_bag, 4);
+   GOption(279, Killian_give_stimpaks, 4);
+   GOption(280, Killian59, 4);
+   GOption(111, Killian59, -3);
 end
 
 procedure Killian_give_shotgun begin
-	item := create_object(PID_SHOTGUN, 0, 0);
-	add_obj_to_inven(dude_obj, item);
-	item := create_object(PID_SHOTGUN_SHELLS, 0, 0);
-	add_mult_objs_to_inven(dude_obj, item, 5);
-	call Killian59;
+   item := create_object(PID_SHOTGUN, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   item := create_object(PID_SHOTGUN_SHELLS, 0, 0);
+   add_mult_objs_to_inven(dude_obj, item, 5);
+   call Killian59;
 end
 
 procedure Killian_give_armor begin
-	item := create_object(PID_LEATHER_ARMOR, 0, 0);
-	add_obj_to_inven(dude_obj, item);
-	call Killian59;
+   item := create_object(PID_LEATHER_ARMOR, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   call Killian59;
 end
 
 procedure Killian_give_doctor_bag begin
-	item := create_object(PID_DOCTORS_BAG, 0, 0);
-	add_obj_to_inven(dude_obj, item);
-	call Killian59;
+   item := create_object(PID_DOCTORS_BAG, 0, 0);
+   add_obj_to_inven(dude_obj, item);
+   call Killian59;
 end
 
 procedure Killian_give_stimpaks begin
-	item := create_object(PID_STIMPAK, 0, 0);
-	add_mult_objs_to_inven(dude_obj, item, 5);
-	call Killian59;
+   item := create_object(PID_STIMPAK, 0, 0);
+   add_mult_objs_to_inven(dude_obj, item, 5);
+   call Killian59;
 end
 
 procedure soundcheck begin
-	Reply(227);
-	call Killian_give_stuff;
+   Reply(227);
+   call Killian_give_stuff;
 end
 
 procedure playback
 begin
-	Reply(229);
-	call Killian_give_stuff;
+   Reply(229);
+   call Killian_give_stuff;
 end
 
 procedure get_stuff_from_safe begin
-	if (item_caps_total(KillSafe_ptr) != 0) then begin
-		self_caps_adjust(item_caps_total(KillSafe_ptr));
-		item_caps_adjust(KillSafe_ptr, -item_caps_total(KillSafe_ptr));
-	end
-	if (get_item_count(KillSafe_ptr, PID_STIMPAK) != 0) then begin// Stimpak
-		item := get_item(KillSafe_ptr, PID_STIMPAK);
-		rm_obj_from_inven(KillSafe_ptr, item);
-		add_obj_to_inven(self_obj, item);
-	end
-	if (get_item_count(KillSafe_ptr, PID_44_MAGNUM_JHP) != 0) then begin// .44 Magnum JHP
-		item := get_item(KillSafe_ptr, PID_44_MAGNUM_JHP);
-		rm_obj_from_inven(KillSafe_ptr, item);
-		add_obj_to_inven(self_obj, item);
-	end
-	if (item_caps_total(KillSafe_ptr) != 0) then begin// Bottle Caps
-		item := get_item(KillSafe_ptr, PID_BOTTLE_CAPS);
-		rm_obj_from_inven(KillSafe_ptr, item);
-		add_obj_to_inven(self_obj, item);
-	end
+   if (item_caps_total(KillSafe_ptr) != 0) then begin
+      self_caps_adjust(item_caps_total(KillSafe_ptr));
+      item_caps_adjust(KillSafe_ptr, -item_caps_total(KillSafe_ptr));
+   end
+   if (get_item_count(KillSafe_ptr, PID_STIMPAK) != 0) then begin// Stimpak
+      item := get_item(KillSafe_ptr, PID_STIMPAK);
+      rm_obj_from_inven(KillSafe_ptr, item);
+      add_obj_to_inven(self_obj, item);
+   end
+   if (get_item_count(KillSafe_ptr, PID_44_MAGNUM_JHP) != 0) then begin// .44 Magnum JHP
+      item := get_item(KillSafe_ptr, PID_44_MAGNUM_JHP);
+      rm_obj_from_inven(KillSafe_ptr, item);
+      add_obj_to_inven(self_obj, item);
+   end
+   if (item_caps_total(KillSafe_ptr) != 0) then begin// Bottle Caps
+      item := get_item(KillSafe_ptr, PID_BOTTLE_CAPS);
+      rm_obj_from_inven(KillSafe_ptr, item);
+      add_obj_to_inven(self_obj, item);
+   end
 end
 
 procedure put_stuff_in_safe
 begin
-	if (self_caps != 0) then begin
-		item_caps_adjust(KillSafe_ptr, self_caps);
-		self_caps_adjust(-self_caps);
-	end
-	if (self_item_count(PID_STIMPAK) > 1) then begin// Stimpak
-		item := self_item(PID_STIMPAK);
-		rm_obj_from_inven(self_obj, item);
-		add_obj_to_inven(KillSafe_ptr, item);
-	end
-	if (self_item_count(PID_44_MAGNUM_JHP) > 1) then begin// .44 Magnum JHP
-		item := self_item(PID_44_MAGNUM_JHP);
-		rm_obj_from_inven(self_obj, item);
-		add_obj_to_inven(KillSafe_ptr, item);
-	end
-	if (self_caps > 1) then begin//  Bottle Caps
-		item := self_item(PID_BOTTLE_CAPS);
-		rm_obj_from_inven(self_obj, item);
-		add_obj_to_inven(KillSafe_ptr, item);
-	end
+   if (self_caps != 0) then begin
+      item_caps_adjust(KillSafe_ptr, self_caps);
+      self_caps_adjust(-self_caps);
+   end
+   if (self_item_count(PID_STIMPAK) > 1) then begin// Stimpak
+      item := self_item(PID_STIMPAK);
+      rm_obj_from_inven(self_obj, item);
+      add_obj_to_inven(KillSafe_ptr, item);
+   end
+   if (self_item_count(PID_44_MAGNUM_JHP) > 1) then begin// .44 Magnum JHP
+      item := self_item(PID_44_MAGNUM_JHP);
+      rm_obj_from_inven(self_obj, item);
+      add_obj_to_inven(KillSafe_ptr, item);
+   end
+   if (self_caps > 1) then begin//  Bottle Caps
+      item := self_item(PID_BOTTLE_CAPS);
+      rm_obj_from_inven(self_obj, item);
+      add_obj_to_inven(KillSafe_ptr, item);
+   end
 end

@@ -619,7 +619,7 @@
 #define GVAR_GENDISK_HOLODISK_POINTER3          (1489) // unused
 #define GVAR_DISKA_HOLODISK_POINTER             (1490) // unused
 #define GVAR_DISKD_HOLODISK_POINTER             (1491) // unused
-#define GVAR_NICOLE_DEAD                   		(1492)
+#define GVAR_NICOLE_DEAD                        (1492)
 #define GVAR_FIND_INITIATE_4                    (1493) // unused
 #define GVAR_FIND_INITIATE_5                    (1494) // unused
 #define GVAR_FIND_INITIATE_6                    (1495) // unused

@@ -1,6 +1,6 @@
 /*
 
-	Vault 13 Overseer
+   Vault 13 Overseer
 
 */
 
@@ -121,13 +121,13 @@ procedure over203;
    Local Variables which are saved. All Local Variables need to be
    prepended by LVAR_
 *****************************************************************/
-#define LVAR_WaterChipReturned 					(4)
-#define LVAR_GiveMoreItems          			(5)
-#define LVAR_Endgame             				(6)
-#define LVAR_IanFloat        			       	(7)
-#define LVAR_Hostile 								(8)
-#define LVAR_OnlyOnce								(9)
-#define LVAR_Herebefore                 		(10)
+#define LVAR_WaterChipReturned               (4)
+#define LVAR_GiveMoreItems                   (5)
+#define LVAR_Endgame                         (6)
+#define LVAR_IanFloat                        (7)
+#define LVAR_Hostile                         (8)
+#define LVAR_OnlyOnce                        (9)
+#define LVAR_Herebefore                      (10)
 
 /*******************************************************************
    Imported variables from the Map scripts. These should only be
@@ -150,9 +150,9 @@ variable Visits_vats_blown := 1;
 
 variable item;
 
-#define EVENT_GET_AMMO 		(4)
-#define EVENT_END_SEQ 		(5)
-#define EVENT_LIBRARY 		(6)
+#define EVENT_GET_AMMO     (4)
+#define EVENT_END_SEQ      (5)
+#define EVENT_LIBRARY      (6)
 
 /*******************************************************************
 *******                         PROCEDURES                   *******
@@ -166,494 +166,494 @@ variable item;
 *******************************************************************/
 
 procedure start begin
-	// V13 has been invaded:
-	if (CUR_MAP_VAULT13) and (v13_invaded) then begin
+   // V13 has been invaded:
+   if (CUR_MAP_VAULT13) and (v13_invaded) then begin
 
-		if (local_var(LVAR_OnlyOnce) != 1) then begin
-			set_local_var(LVAR_OnlyOnce, 1);//		<-- only once
-			if not(is_loading_game) then begin
-				set_self_visible;
-			end
-			move_to(self_obj, 21062, 2);// still doesn't line up properly with pedastal!!!!!
-			debug_msg("Vault 13 invasion, killing OVER.SSL with DeathType " + 63 + ".  ");
-			kill_critter(self_obj, ANIM_called_shot_pic);// otherwise get "can't match fid!" errors
-		end
+      if (local_var(LVAR_OnlyOnce) != 1) then begin
+         set_local_var(LVAR_OnlyOnce, 1);//     <-- only once
+         if not(is_loading_game) then begin
+            set_self_visible;
+         end
+         move_to(self_obj, 21062, 2);// still doesn't line up properly with pedastal!!!!!
+         debug_msg("Vault 13 invasion, killing OVER.SSL with DeathType " + 63 + ".  ");
+         kill_critter(self_obj, ANIM_called_shot_pic);// otherwise get "can't match fid!" errors
+      end
 
-	end
-	else begin
+   end
+   else begin
 
-	end
+   end
 end
 
 procedure timed_event_p_proc begin
 variable item;
 
-	if (fixed_param == EVENT_LIBRARY) then begin
-		item := dude_item(PID_WATER_CHIP);
-		rm_obj_from_inven(dude_obj, item);
+   if (fixed_param == EVENT_LIBRARY) then begin
+      item := dude_item(PID_WATER_CHIP);
+      rm_obj_from_inven(dude_obj, item);
 
-		gfade_out(1);
+      gfade_out(1);
 
-		display_msg(mstr(252));
-		give_exp_points(EXP_RETURN_WATERCHIP);
-		inc_v13_rep(REP_BONUS_RETURNED_WATERCHP);
+      display_msg(mstr(252));
+      give_exp_points(EXP_RETURN_WATERCHIP);
+      inc_v13_rep(REP_BONUS_RETURNED_WATERCHP);
 
-		set_local_var(LVAR_WaterChipReturned, 2);
-		move_to(dude_obj, 21135, 2);
-		dude_rotate(0);
+      set_local_var(LVAR_WaterChipReturned, 2);
+      move_to(dude_obj, 21135, 2);
+      dude_rotate(0);
 
-		display_msg(message_str(SCRIPT_WTRGRD, 117));
+      display_msg(message_str(SCRIPT_WTRGRD, 117));
 
-		gfade_in(1);
+      gfade_in(1);
 
-		// If the Master and Vats have been destroyed already, end the game now:
-		if military_base_destoryed and cathedral_destroyed then
-			load_map(MAP_V13ENT, 0);
-	end
+      // If the Master and Vats have been destroyed already, end the game now:
+      if military_base_destoryed and cathedral_destroyed then
+         load_map(MAP_V13ENT, 0);
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == EVENT_GET_AMMO) then begin
-		if (self_item_count(PID_5MM_AP) <= 3) then begin
-			item := create_object(PID_5MM_AP, 0, 0);
-			add_mult_objs_to_inven(self_obj, item, 6);
-		end
-	end
+   if (fixed_param == EVENT_GET_AMMO) then begin
+      if (self_item_count(PID_5MM_AP) <= 3) then begin
+         item := create_object(PID_5MM_AP, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 6);
+      end
+   end
 end
 
 procedure critter_p_proc begin
 
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
 
-		if ((global_var(GVAR_VAULT_13_HOSTILE) == 1) and (global_var(GVAR_OVERSEER_END_SEQ) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-			if (local_var(LVAR_Hostile) == 0) then begin
-				dialogue_system_enter;
-			end
-		end
-		else if (global_var(GVAR_OVERSEER_END_SEQ) == 1) then begin
-			game_ui_disable;
-			self_walk_to_tile(18690);
-			set_global_var(GVAR_OVERSEER_END_SEQ, 2);
-		end
-		else if (global_var(GVAR_OVERSEER_END_SEQ) == 2) then begin
-			if ((self_tile != 18690) and (tile_distance_objs(self_obj, dude_obj) > 4)) then begin
-				dude_walk_to_tile(19290);
-			end
-			else if ((self_tile != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
-				game_ui_enable;
-				dialogue_system_enter;
-			end
-		end
-		else if ((global_var(GVAR_OVERSEER_END_SEQ) == 3) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
-			self_walk_to_tile(17290);
-			set_global_var(GVAR_OVERSEER_END_SEQ, 4);
-		end
-		else if ((global_var(GVAR_OVERSEER_END_SEQ) == 4) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
-			self_walk_to_tile(17290);
-			if (self_tile != 17290) then begin
-				add_timer_event(vault_door_ptr, game_ticks(1), 2);
-			end
-			set_global_var(GVAR_OVERSEER_END_SEQ, 5);
-			self_walk_to_tile(15690);
-		end
-		else if ((global_var(GVAR_OVERSEER_END_SEQ) == 5) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
-			if (self_tile != 15690) then begin
-				set_global_var(GVAR_OVERSEER_END_SEQ, 6);
-			end
-		end
-		else if ((global_var(GVAR_OVERSEER_END_SEQ) == 6) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
-			self_walk_to_tile(13690);
-		end
-		else if waterchip_returned and (global_var(GVAR_VATS_BLOWN) and global_var(GVAR_MASTER_BLOWN) and (local_var(LVAR_Endgame) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-			if (global_var(GVAR_OVERSEER_END_SEQ) == 0) then begin
-				dialogue_system_enter;
-			end
-		end
+      if ((global_var(GVAR_VAULT_13_HOSTILE) == 1) and (global_var(GVAR_OVERSEER_END_SEQ) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+         if (local_var(LVAR_Hostile) == 0) then begin
+            dialogue_system_enter;
+         end
+      end
+      else if (global_var(GVAR_OVERSEER_END_SEQ) == 1) then begin
+         game_ui_disable;
+         self_walk_to_tile(18690);
+         set_global_var(GVAR_OVERSEER_END_SEQ, 2);
+      end
+      else if (global_var(GVAR_OVERSEER_END_SEQ) == 2) then begin
+         if ((self_tile != 18690) and (tile_distance_objs(self_obj, dude_obj) > 4)) then begin
+            dude_walk_to_tile(19290);
+         end
+         else if ((self_tile != 18690) and (tile_distance_objs(self_obj, dude_obj) <= 4)) then begin
+            game_ui_enable;
+            dialogue_system_enter;
+         end
+      end
+      else if ((global_var(GVAR_OVERSEER_END_SEQ) == 3) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
+         self_walk_to_tile(17290);
+         set_global_var(GVAR_OVERSEER_END_SEQ, 4);
+      end
+      else if ((global_var(GVAR_OVERSEER_END_SEQ) == 4) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
+         self_walk_to_tile(17290);
+         if (self_tile != 17290) then begin
+            add_timer_event(vault_door_ptr, game_ticks(1), 2);
+         end
+         set_global_var(GVAR_OVERSEER_END_SEQ, 5);
+         self_walk_to_tile(15690);
+      end
+      else if ((global_var(GVAR_OVERSEER_END_SEQ) == 5) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
+         if (self_tile != 15690) then begin
+            set_global_var(GVAR_OVERSEER_END_SEQ, 6);
+         end
+      end
+      else if ((global_var(GVAR_OVERSEER_END_SEQ) == 6) and (global_var(GVAR_OVERSEER_KILLED) == 0)) then begin
+         self_walk_to_tile(13690);
+      end
+      else if waterchip_returned and (global_var(GVAR_VATS_BLOWN) and global_var(GVAR_MASTER_BLOWN) and (local_var(LVAR_Endgame) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+         if (global_var(GVAR_OVERSEER_END_SEQ) == 0) then begin
+            dialogue_system_enter;
+         end
+      end
 
-	end
+   end
 end
 
 procedure damage_p_proc begin
-	if (global_var(GVAR_OVERSEER_END_SEQ) < 1) then begin
-		if source_obj == dude_obj then begin
-			set_global_var(GVAR_VAULT_13_HOSTILE, 1);
-		end
-	end
+   if (global_var(GVAR_OVERSEER_END_SEQ) < 1) then begin
+      if source_obj == dude_obj then begin
+         set_global_var(GVAR_VAULT_13_HOSTILE, 1);
+      end
+   end
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure map_enter_p_proc begin
-	set_self_team(TEAM_VAULT13);
-	if (global_var(GVAR_OVERSEER_KILLED) == 1) then begin
-		destroy_object(self_obj);
-	end
+   set_self_team(TEAM_VAULT13);
+   if (global_var(GVAR_OVERSEER_KILLED) == 1) then begin
+      destroy_object(self_obj);
+   end
 
-	// If the player decided to continue playing, delete the Overseer from the endgame cutscene:
-	if (is_story_finished and (cur_map_index != MAP_VAULT13)) then begin
-		destroy_object(self_obj);
-	end
+   // If the player decided to continue playing, delete the Overseer from the endgame cutscene:
+   if (is_story_finished and (cur_map_index != MAP_VAULT13)) then begin
+      destroy_object(self_obj);
+   end
 end
 
 procedure pickup_p_proc begin
-	stealing := 1;
-	dialogue_system_enter;
+   stealing := 1;
+   dialogue_system_enter;
 end
 
 procedure talk_p_proc begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	dude_look_at_self;
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   dude_look_at_self;
 
-	get_reaction
+   get_reaction
 
-	start_gdialog(55, self_obj, 4, 1, 10);
-	gsay_start;
-	if waterchip_returned and (global_var(GVAR_VATS_BLOWN) and global_var(GVAR_MASTER_BLOWN) and (global_var(GVAR_GAME_CONTINUES) < 1)) then begin
-		call over81;
-	end
-	else begin
+   start_gdialog(55, self_obj, 4, 1, 10);
+   gsay_start;
+   if waterchip_returned and (global_var(GVAR_VATS_BLOWN) and global_var(GVAR_MASTER_BLOWN) and (global_var(GVAR_GAME_CONTINUES) < 1)) then begin
+      call over81;
+   end
+   else begin
 
-		if (global_var(GVAR_VAULT_13_HOSTILE)) then begin
-			call over72;
-		end
-		else if (stealing) then begin
-				call over71;
-		end
-		else if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) then begin
-			if (dude_item_count(PID_WATER_CHIP)) then begin
-				call over28;
-			end
-			else begin
-				if (Visits_without_chip == 1) then begin
-					call over07;
-				end
-				else if (Visits_without_chip == 2) then begin
-					call over12;
-				end
-				else if (Visits_without_chip > 2) then begin
-					call over19;
-				end
-				Visits_without_chip := Visits_without_chip + 1;
-			end
+      if (global_var(GVAR_VAULT_13_HOSTILE)) then begin
+         call over72;
+      end
+      else if (stealing) then begin
+            call over71;
+      end
+      else if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) then begin
+         if (dude_item_count(PID_WATER_CHIP)) then begin
+            call over28;
+         end
+         else begin
+            if (Visits_without_chip == 1) then begin
+               call over07;
+            end
+            else if (Visits_without_chip == 2) then begin
+               call over12;
+            end
+            else if (Visits_without_chip > 2) then begin
+               call over19;
+            end
+            Visits_without_chip := Visits_without_chip + 1;
+         end
 
-		end
-		else if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 1) then begin
-			if (dude_item_count(PID_WATER_CHIP)) then begin
-				call over28;
-			end
-			else begin
-				if (Visits_with_caravans == 1) then begin
-					call over73;
-				end
-				else if (Visits_with_caravans > 1) then begin
-					call over80;
-				end
-			end
-			Visits_with_caravans := Visits_with_caravans + 1;
+      end
+      else if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 1) then begin
+         if (dude_item_count(PID_WATER_CHIP)) then begin
+            call over28;
+         end
+         else begin
+            if (Visits_with_caravans == 1) then begin
+               call over73;
+            end
+            else if (Visits_with_caravans > 1) then begin
+               call over80;
+            end
+         end
+         Visits_with_caravans := Visits_with_caravans + 1;
 
-		end
-		else begin
+      end
+      else begin
 
-			if (not(global_var(GVAR_VATS_BLOWN))) then begin
-				if (global_var(GVAR_MASTER_BLOWN)) then begin
-					call over54;
-				end
-				else begin
-					if (Visits_master_alive == 1) then begin
-						call over42;
-					end
-					else begin
-						call over50;
-					end
-				end
-				Visits_master_alive := Visits_master_alive + 1;
-			end
-			else if (global_var(GVAR_MASTER_BLOWN)) then begin
-				call over81;
-			end
-			else if (Visits_vats_blown == 1) then begin
-				call over62;
-			end
-			else begin
-				call over68;
-			end
-			Visits_vats_blown := Visits_vats_blown + 1;
-		end
-	end
+         if (not(global_var(GVAR_VATS_BLOWN))) then begin
+            if (global_var(GVAR_MASTER_BLOWN)) then begin
+               call over54;
+            end
+            else begin
+               if (Visits_master_alive == 1) then begin
+                  call over42;
+               end
+               else begin
+                  call over50;
+               end
+            end
+            Visits_master_alive := Visits_master_alive + 1;
+         end
+         else if (global_var(GVAR_MASTER_BLOWN)) then begin
+            call over81;
+         end
+         else if (Visits_vats_blown == 1) then begin
+            call over62;
+         end
+         else begin
+            call over68;
+         end
+         Visits_vats_blown := Visits_vats_blown + 1;
+      end
+   end
 
-	gsay_end;
-	end_dialogue;
+   gsay_end;
+   end_dialogue;
 
-	if (Ian_ptr != 0) then begin
-		if (local_var(LVAR_IanFloat) == 0) then begin
-			float_msg(Ian_ptr, message_str(SCRIPT_IAN, 171), FLOAT_MSG_NORMAL);
-			set_local_var(LVAR_IanFloat, 1);
-		end
-	end
+   if (Ian_ptr != 0) then begin
+      if (local_var(LVAR_IanFloat) == 0) then begin
+         float_msg(Ian_ptr, message_str(SCRIPT_IAN, 171), FLOAT_MSG_NORMAL);
+         set_local_var(LVAR_IanFloat, 1);
+      end
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_STEAL) then begin
-		script_overrides;
-		stealing := 1;
-		dialogue_system_enter;
-	end
+   if (action_being_used == SKILL_STEAL) then begin
+      script_overrides;
+      stealing := 1;
+      dialogue_system_enter;
+   end
 end
 
 procedure description_p_proc begin
 end
 
 procedure overend begin
-	if (local_var(LVAR_WaterChipReturned) == 1) then begin
-		add_timer_event(self_obj, game_ticks(0), EVENT_LIBRARY);
-	end
+   if (local_var(LVAR_WaterChipReturned) == 1) then begin
+      add_timer_event(self_obj, game_ticks(0), EVENT_LIBRARY);
+   end
 end
 
 procedure overcbt begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure over00 begin
-	set_local_var(LVAR_Herebefore, 1);
-	NMessage(101);
-	NMessage(102);
-	call over01;
+   set_local_var(LVAR_Herebefore, 1);
+   NMessage(101);
+   NMessage(102);
+   call over01;
 end
 
 procedure over01
 begin
-	NMessage(103);
-	call over04;
+   NMessage(103);
+   call over04;
 end
 
 procedure over01a
 begin
-	NMessage(104);
+   NMessage(104);
 end
 
 procedure over02
 begin
-	NMessage(105);
-	call over04;
+   NMessage(105);
+   call over04;
 end
 
 procedure over03
 begin
-	NMessage(106);
-	call over04;
+   NMessage(106);
+   call over04;
 end
 
 procedure over04
 begin
-	NMessage(107);
-	NMessage(108);
-	call over05;
+   NMessage(107);
+   NMessage(108);
+   call over05;
 end
 
 procedure over05
 begin
-	NMessage(109);
-	call over06;
+   NMessage(109);
+   call over06;
 end
 
 procedure over06 begin
-	set_global_var(GVAR_WORLDMAPLIST_VAULT_15, 1);
-	mark_on_map(AREA_VAULT_15)
-	NMessage(110);
+   set_global_var(GVAR_WORLDMAPLIST_VAULT_15, 1);
+   mark_on_map(AREA_VAULT_15)
+   NMessage(110);
 end
 
 procedure over07
 begin
-	Reply(111);
-	BOption(112, over10, 7);
-	NOption(113, over09, 6);
-	NOption(114, over08, 4);
-	NOption(115, over08, -3);
+   Reply(111);
+   BOption(112, over10, 7);
+   NOption(113, over09, 6);
+   NOption(114, over08, 4);
+   NOption(115, over08, -3);
 end
 
 procedure over08
 begin
-	Reply(116);
-	NOption(260, overend, 4);
+   Reply(116);
+   NOption(260, overend, 4);
 end
 
 procedure over09
 begin
-	Reply(117);
-	NOption(118, over08, 4);
+   Reply(117);
+   NOption(118, over08, 4);
 end
 
 procedure over10
 begin
-	Reply(119);
-	NOption(120, over08, 4);
+   Reply(119);
+   NOption(120, over08, 4);
 end
 
 procedure over12
 begin
-	Reply(121);
-	NOption(122, over13, 4);
-	NOption(123, over14, 5);
-	BOption(124, over16, 4);
-	BOption(125, over16, -3);
+   Reply(121);
+   NOption(122, over13, 4);
+   NOption(123, over14, 5);
+   BOption(124, over16, 4);
+   BOption(125, over16, -3);
 end
 
 procedure over13
 begin
-	NMessage(126);
+   NMessage(126);
 end
 
 procedure over14
 begin
-	Reply(127);
-	NOption(128, overend, 6);
+   Reply(127);
+   NOption(128, overend, 6);
 end
 
 procedure over16
 begin
-	NMessage(129);
+   NMessage(129);
 end
 
 procedure over19
 begin
-	Reply(130);
-	BOption(131, over21, 5);
-	NOption(132, over22, 6);
-	NOption(133, over20, 4);
-	NOption(134, over20, -3);
+   Reply(130);
+   BOption(131, over21, 5);
+   NOption(132, over22, 6);
+   NOption(133, over20, 4);
+   NOption(134, over20, -3);
 end
 
 procedure over20
 begin
-	NMessage(135);
+   NMessage(135);
 end
 
 procedure over21
 begin
-	BMessage(136);
+   BMessage(136);
 end
 
 procedure over22
 begin
-	Reply(137);
-	NOption(138, over23, 6);
-	if (not(local_var(LVAR_GiveMoreItems))) then begin
-		NOption(139, over24, 6);
-	end
-	NOption(140, over25, 6);
+   Reply(137);
+   NOption(138, over23, 6);
+   if (not(local_var(LVAR_GiveMoreItems))) then begin
+      NOption(139, over24, 6);
+   end
+   NOption(140, over25, 6);
 end
 
 procedure over23
 begin
-	NMessage(141);
+   NMessage(141);
 end
 
 procedure over24
 begin
-	variable LVar0 := 0;
-	set_local_var(LVAR_GiveMoreItems, 1);
-	LVar0 := create_object(PID_STIMPAK, 0, 0);
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object(PID_STIMPAK, 0, 0);
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object(PID_10MM_JHP, 0, 0);
-	add_obj_to_inven(dude_obj, LVar0);
-	LVar0 := create_object(PID_10MM_JHP, 0, 0);
-	add_obj_to_inven(dude_obj, LVar0);
-	NMessage(142);
+   variable LVar0 := 0;
+   set_local_var(LVAR_GiveMoreItems, 1);
+   LVar0 := create_object(PID_STIMPAK, 0, 0);
+   add_obj_to_inven(dude_obj, LVar0);
+   LVar0 := create_object(PID_STIMPAK, 0, 0);
+   add_obj_to_inven(dude_obj, LVar0);
+   LVar0 := create_object(PID_10MM_JHP, 0, 0);
+   add_obj_to_inven(dude_obj, LVar0);
+   LVar0 := create_object(PID_10MM_JHP, 0, 0);
+   add_obj_to_inven(dude_obj, LVar0);
+   NMessage(142);
 end
 
 procedure over25
 begin
-	Reply(143);
-	NOption(144, over26, 5);
-	NOption(145, over27, 5);
+   Reply(143);
+   NOption(144, over26, 5);
+   NOption(145, over27, 5);
 end
 
 procedure over26
 begin
-	Reply(146);
-	NOption(147, overend, 5);
-	NOption(148, overend, 6);
+   Reply(146);
+   NOption(147, overend, 5);
+   NOption(148, overend, 6);
 end
 
 procedure over27
 begin
-	NMessage(149);
+   NMessage(149);
 end
 
 procedure over28 begin
-	Reply(150);
-	NOption(151, over31, 4);
-	NOption(152, over34, 6);
-	NOption(153, over37, -3);
+   Reply(150);
+   NOption(151, over31, 4);
+   NOption(152, over34, 6);
+   NOption(153, over37, -3);
 end
 
 procedure over29 begin
-	NMessage(154);
-	if (dude_item_count(PID_WATER_CHIP)) then begin
-		call over31;
-	end
-	else begin
-		call over30;
-	end
+   NMessage(154);
+   if (dude_item_count(PID_WATER_CHIP)) then begin
+      call over31;
+   end
+   else begin
+      call over30;
+   end
 end
 
 procedure over30 begin
-	NMessage(155);
-	NOption(164, over31, 4);
-	NOption(165, over30, 4);
+   NMessage(155);
+   NOption(164, over31, 4);
+   NOption(165, over30, 4);
 end
 
 procedure over31 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	Visits_with_chip := Visits_with_chip + 1;
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   Visits_with_chip := Visits_with_chip + 1;
 
-	set_waterchip_returned;
+   set_waterchip_returned;
 
-	if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 3);
-	end
-	if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
-		set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 3);
-	end
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 3);
+   end
+   if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
+      set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 3);
+   end
 
-	set_local_var(LVAR_WaterChipReturned, 1);
-	LVar0 := dude_item(PID_WATER_CHIP);
-	destroy_object(LVar0);
-	LVar1 := dude_item(PID_WATER_CHIP);
-	destroy_object(LVar1);
+   set_local_var(LVAR_WaterChipReturned, 1);
+   LVar0 := dude_item(PID_WATER_CHIP);
+   destroy_object(LVar0);
+   LVar1 := dude_item(PID_WATER_CHIP);
+   destroy_object(LVar1);
 
-	Reply(156);
-	NOption(157, over32, 6);
-	NOption(158, over33, 4);
+   Reply(156);
+   NOption(157, over32, 6);
+   NOption(158, over33, 4);
 end
 
 procedure over32 begin
-	Reply(159);
-	NOption(160, overend, 4);
+   Reply(159);
+   NOption(160, overend, 4);
 end
 
 procedure over33
 begin
-	Reply(161);
-	NOption(162, overend, 4);
+   Reply(161);
+   NOption(162, overend, 4);
 end
 
 procedure over34
 begin
-	Reply(163);
-	NOption(164, over31, 4);
-	NOption(165, over30, 4);
+   Reply(163);
+   NOption(164, over31, 4);
+   NOption(165, over30, 4);
 end
 
 procedure over34_1
@@ -662,341 +662,341 @@ end
 
 procedure over37
 begin
-	Reply(166);
-	NOption(196, over38, 0);
+   Reply(166);
+   NOption(196, over38, 0);
 end
 
 procedure over38
 begin
-	Reply(167);
-	NOption(196, over38a, 0);
+   Reply(167);
+   NOption(196, over38a, 0);
 end
 
 procedure over38a
 begin
-	Reply(168);
-	NOption(196, over39, 0);
+   Reply(168);
+   NOption(196, over39, 0);
 end
 
 procedure over39
 begin
-	Reply(169);
-	NOption(196, over40, 0);
+   Reply(169);
+   NOption(196, over40, 0);
 end
 
 procedure over40 begin
-	Visits_with_chip := Visits_with_chip + 1;
+   Visits_with_chip := Visits_with_chip + 1;
 
-	set_waterchip_returned;
+   set_waterchip_returned;
 
-	if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 3);
-	end
-	if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
-		set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 3);
-	end
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 3);
+   end
+   if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) != 2) then begin
+      set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 3);
+   end
 
-	set_local_var(LVAR_WaterChipReturned, 1);
-	item := dude_item(PID_WATER_CHIP);
-	destroy_object(item);
-	item := dude_item(PID_WATER_CHIP);
-	destroy_object(item);
-	Reply(170);
-	NOption(171, over41, -3);
-	NOption(172, over41a, -3);
+   set_local_var(LVAR_WaterChipReturned, 1);
+   item := dude_item(PID_WATER_CHIP);
+   destroy_object(item);
+   item := dude_item(PID_WATER_CHIP);
+   destroy_object(item);
+   Reply(170);
+   NOption(171, over41, -3);
+   NOption(172, over41a, -3);
 end
 
 procedure over41 begin
-	NMessage(173);
+   NMessage(173);
 end
 
 procedure over41a begin
-	NMessage(174);
+   NMessage(174);
 end
 
 procedure over42 begin
-	set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 1);
-	set_global_var(GVAR_QUEST_VAULT13_2_MASTER, 1);
+   set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 1);
+   set_global_var(GVAR_QUEST_VAULT13_2_MASTER, 1);
 
-	Reply(175);
-	NOption(176, over43, 4);
-	NOption(177, over49, -3);
+   Reply(175);
+   NOption(176, over43, 4);
+   NOption(177, over49, -3);
 end
 
 procedure over43
 begin
-	Reply(178);
-	NOption(179, over44, 4);
+   Reply(178);
+   NOption(179, over44, 4);
 end
 
 procedure over44
 begin
-	Reply(180);
-	NOption(181, over45, 4);
-	NOption(182, over46, 7);
+   Reply(180);
+   NOption(181, over45, 4);
+   NOption(182, over46, 7);
 end
 
 procedure over45
 begin
-	Reply(183);
-	NOption(184, over47, 4);
+   Reply(183);
+   NOption(184, over47, 4);
 end
 
 procedure over46
 begin
-	Reply(185);
-	NOption(186, over47, 6);
+   Reply(185);
+   NOption(186, over47, 6);
 end
 
 procedure over47
 begin
-	Reply(187);
-	NOption(188, overend, 4);
-	NOption(189, over48, 6);
+   Reply(187);
+   NOption(188, overend, 4);
+   NOption(189, over48, 6);
 end
 
 procedure over48
 begin
-	NMessage(190);
+   NMessage(190);
 end
 
 procedure over49
 begin
-	NMessage(191);
+   NMessage(191);
 end
 
 procedure over50
 begin
-	Reply(192);
-	NOption(193, over51, 4);
-	NOption(194, over52, 6);
-	NOption(195, over53, 5);
-	NOption(196, over51, -3);
+   Reply(192);
+   NOption(193, over51, 4);
+   NOption(194, over52, 6);
+   NOption(195, over53, 5);
+   NOption(196, over51, -3);
 end
 
 procedure over51
 begin
-	NMessage(197);
+   NMessage(197);
 end
 
 procedure over52
 begin
-	NMessage(198);
+   NMessage(198);
 end
 
 procedure over53
 begin
-	NMessage(199);
+   NMessage(199);
 end
 
 procedure over54
 begin
-	Reply(200);
-	NOption(201, over55, 4);
-	NOption(202, over55, 6);
-	NOption(203, over61, -3);
+   Reply(200);
+   NOption(201, over55, 4);
+   NOption(202, over55, 6);
+   NOption(203, over61, -3);
 end
 
 procedure over55
 begin
-	Reply(204);
-	NOption(205, over60, 4);
+   Reply(204);
+   NOption(205, over60, 4);
 end
 
 procedure over58
 begin
-	NMessage(207);
+   NMessage(207);
 end
 
 procedure over59
 begin
-	NMessage(208);
+   NMessage(208);
 end
 
 procedure over60 begin
-	// Fix to give the quest if Master was killed before Water Chip got brought back:
-	if (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 0) then
-		set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 1);
+   // Fix to give the quest if Master was killed before Water Chip got brought back:
+   if (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 0) then
+      set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 1);
 
-	NMessage(209);
+   NMessage(209);
 end
 
 procedure over61
 begin
-	Reply(210);
-	NOption(211, over61a, -3);
+   Reply(210);
+   NOption(211, over61a, -3);
 end
 
 procedure over61a
 begin
-	NMessage(212);
+   NMessage(212);
 end
 
 procedure over62
 begin
-	Reply(213);
-	NOption(214, over63, 4);
-	NOption(215, over64, 6);
-	NOption(216, over63, -3);
+   Reply(213);
+   NOption(214, over63, 4);
+   NOption(215, over64, 6);
+   NOption(216, over63, -3);
 end
 
 procedure over63
 begin
-	Reply(217);
-	NOption(218, over64, 4);
-	NOption(219, over64, -3);
+   Reply(217);
+   NOption(218, over64, 4);
+   NOption(219, over64, -3);
 end
 
 procedure over64
 begin
-	Reply(220);
-	NOption(221, over66, 4);
-	NOption(222, over66, -3);
+   Reply(220);
+   NOption(221, over66, 4);
+   NOption(222, over66, -3);
 end
 
 procedure over66 begin
-	// Fix to give the quest if Vats was destroyed before Water Chip got brought back:
-	if (global_var(GVAR_QUEST_VAULT13_2_MASTER) == 0) then
-		set_global_var(GVAR_QUEST_VAULT13_2_MASTER, 1);
+   // Fix to give the quest if Vats was destroyed before Water Chip got brought back:
+   if (global_var(GVAR_QUEST_VAULT13_2_MASTER) == 0) then
+      set_global_var(GVAR_QUEST_VAULT13_2_MASTER, 1);
 
-	NMessage(223);
+   NMessage(223);
 end
 
 procedure over68
 begin
-	Reply(224);
-	NOption(225, over69, 4);
-	NOption(226, over70, 4);
-	NOption(227, over69, -3);
+   Reply(224);
+   NOption(225, over69, 4);
+   NOption(226, over70, 4);
+   NOption(227, over69, -3);
 end
 
 procedure over69
 begin
-	NMessage(228);
+   NMessage(228);
 end
 
 procedure over70
 begin
-	NMessage(229);
+   NMessage(229);
 end
 
 procedure over71
 begin
-	stealing := 0;
-	BMessage(230);
+   stealing := 0;
+   BMessage(230);
 end
 
 procedure over72
 begin
-	Reply(231);
-	set_local_var(LVAR_Hostile, 1);
-	BOption(259, overcbt, 4);
-	BOption(234, overcbt, -3);
+   Reply(231);
+   set_local_var(LVAR_Hostile, 1);
+   BOption(259, overcbt, 4);
+   BOption(234, overcbt, -3);
 end
 
 procedure over73
 begin
-	Reply(232);
-	NOption(233, over75, 4);
-	NOption(234, over74, -3);
+   Reply(232);
+   NOption(233, over75, 4);
+   NOption(234, over74, -3);
 end
 
 procedure over74
 begin
-	NMessage(235);
+   NMessage(235);
 end
 
 procedure over75
 begin
-	Reply(236);
-	NOption(237, over76, 4);
-	NOption(238, over77, 6);
+   Reply(236);
+   NOption(237, over76, 4);
+   NOption(238, over77, 6);
 end
 
 procedure over76
 begin
-	NMessage(239);
+   NMessage(239);
 end
 
 procedure over77
 begin
-	Reply(240);
-	NOption(241, over78, 5);
-	NOption(242, over79, 6);
+   Reply(240);
+   NOption(241, over78, 5);
+   NOption(242, over79, 6);
 end
 
 procedure over78
 begin
-	NMessage(243);
+   NMessage(243);
 end
 
 procedure over79
 begin
-	NMessage(244);
+   NMessage(244);
 end
 
 procedure over80
 begin
-	NMessage(245);
+   NMessage(245);
 end
 
 procedure over81 begin
-	set_local_var(LVAR_Endgame, 1);
-	set_local_var(LVAR_Hostile, 1);
-	TopReact
-	Reply(261);
-	giq_option(0, SCRIPT_MODREACT, 106, Over81b, GOOD_REACTION);
+   set_local_var(LVAR_Endgame, 1);
+   set_local_var(LVAR_Hostile, 1);
+   TopReact
+   Reply(261);
+   giq_option(0, SCRIPT_MODREACT, 106, Over81b, GOOD_REACTION);
 end
 
 procedure Over81b begin
-	set_local_var(1, 50);
-	ReactToLevel
-	Reply(262);
-	giq_option(0, SCRIPT_MODREACT, 106, Over81c, BAD_REACTION);
+   set_local_var(1, 50);
+   ReactToLevel
+   Reply(262);
+   giq_option(0, SCRIPT_MODREACT, 106, Over81c, BAD_REACTION);
 end
 
 procedure Over81c begin
-	BottomReact
-	Reply(263);
-	giq_option(0, SCRIPT_MODREACT, 106, Over81d, BAD_REACTION);
+   BottomReact
+   Reply(263);
+   giq_option(0, SCRIPT_MODREACT, 106, Over81d, BAD_REACTION);
 end
 
 procedure Over81d begin
-	Reply(264);
-	giq_option(0, SCRIPT_MODREACT, 106, Over81e, BAD_REACTION);
+   Reply(264);
+   giq_option(0, SCRIPT_MODREACT, 106, Over81e, BAD_REACTION);
 end
 
 procedure Over81e begin
-	BMessage(265);
-	set_global_var(GVAR_OVERSEER_END_SEQ, 3);
-	add_timer_event(dude_obj, game_ticks(1), EVENT_END_SEQ);// was 10
+   BMessage(265);
+   set_global_var(GVAR_OVERSEER_END_SEQ, 3);
+   add_timer_event(dude_obj, game_ticks(1), EVENT_END_SEQ);// was 10
 end
 
 procedure over100
 begin
-	NMessage(247);
+   NMessage(247);
 end
 
 procedure over200
 begin
-	NMessage(248);
+   NMessage(248);
 end
 
 procedure over201
 begin
-	NMessage(249);
+   NMessage(249);
 end
 
 procedure over202
 begin
-	NMessage(250);
+   NMessage(250);
 end
 
 procedure over203
 begin
-	NMessage(251);
+   NMessage(251);
 end
 
 procedure destroy_p_proc begin
-	inc_good_critter
+   inc_good_critter
 end

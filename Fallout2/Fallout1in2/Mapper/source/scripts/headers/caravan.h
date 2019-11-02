@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+   Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef CARAVAN_H
@@ -79,136 +79,136 @@ variable Finding_New_Tile;
 // Caravan Encounter World Coordinates.
 // Start City, Destination City, Number of Encounters, Encounter Subclass, x/y position
 // Hub <--> Junktown, 1 Encounter only
-#define HUB_JNK_1_1_x										(883)
-#define HUB_JNK_1_1_y										(625)
+#define HUB_JNK_1_1_x                              (883)
+#define HUB_JNK_1_1_y                              (625)
 
 // Hub <--> Junktown, 2 Encounter only
-#define HUB_JNK_2_1_x										(874)
-#define HUB_JNK_2_1_y										(661)
-#define HUB_JNK_2_2_x										(877)
-#define HUB_JNK_2_2_y										(573)
+#define HUB_JNK_2_1_x                              (874)
+#define HUB_JNK_2_1_y                              (661)
+#define HUB_JNK_2_2_x                              (877)
+#define HUB_JNK_2_2_y                              (573)
 
 // Hub <--> Junktown, 3 Encounter only
-#define HUB_JNK_3_1_x										(875)
-#define HUB_JNK_3_1_y										(673)
-#define HUB_JNK_3_2_x										(876)
-#define HUB_JNK_3_2_y										(626)
-#define HUB_JNK_3_3_x										(876)
-#define HUB_JNK_3_3_y										(574)
+#define HUB_JNK_3_1_x                              (875)
+#define HUB_JNK_3_1_y                              (673)
+#define HUB_JNK_3_2_x                              (876)
+#define HUB_JNK_3_2_y                              (626)
+#define HUB_JNK_3_3_x                              (876)
+#define HUB_JNK_3_3_y                              (574)
 
 // Hub <--> Junktown, 4 Encounter only
-#define HUB_JNK_4_1_x										(876)
-#define HUB_JNK_4_1_y										(683)
-#define HUB_JNK_4_2_x										(876)
-#define HUB_JNK_4_2_y										(646)
-#define HUB_JNK_4_3_x										(876)
-#define HUB_JNK_4_3_y										(602)
-#define HUB_JNK_4_4_x										(876)
-#define HUB_JNK_4_4_y										(566)
+#define HUB_JNK_4_1_x                              (876)
+#define HUB_JNK_4_1_y                              (683)
+#define HUB_JNK_4_2_x                              (876)
+#define HUB_JNK_4_2_y                              (646)
+#define HUB_JNK_4_3_x                              (876)
+#define HUB_JNK_4_3_y                              (602)
+#define HUB_JNK_4_4_x                              (876)
+#define HUB_JNK_4_4_y                              (566)
 
 // Hub <--> Necropolis, 1 Encounter only
-#define HUB_NEC_1_1_x										(997)
-#define HUB_NEC_1_1_y										(708)
+#define HUB_NEC_1_1_x                              (997)
+#define HUB_NEC_1_1_y                              (708)
 
 // Hub <--> Necropolis, 2 Encounter only
-#define HUB_NEC_2_1_x										(947)
-#define HUB_NEC_2_1_y										(713)
-#define HUB_NEC_2_2_x										(1038)
-#define HUB_NEC_2_2_y										(694)
+#define HUB_NEC_2_1_x                              (947)
+#define HUB_NEC_2_1_y                              (713)
+#define HUB_NEC_2_2_x                              (1038)
+#define HUB_NEC_2_2_y                              (694)
 
 // Hub <--> Necropolis, 3 Encounter only
-#define HUB_NEC_3_1_x										(953)
-#define HUB_NEC_3_1_y										(711)
-#define HUB_NEC_3_2_x										(1008)
-#define HUB_NEC_3_2_y										(700)
-#define HUB_NEC_3_3_x										(1074)
-#define HUB_NEC_3_3_y										(674)
+#define HUB_NEC_3_1_x                              (953)
+#define HUB_NEC_3_1_y                              (711)
+#define HUB_NEC_3_2_x                              (1008)
+#define HUB_NEC_3_2_y                              (700)
+#define HUB_NEC_3_3_x                              (1074)
+#define HUB_NEC_3_3_y                              (674)
 
 // Hub <--> Necropolis, 4 Encounter only
-#define HUB_NEC_4_1_x										(928)
-#define HUB_NEC_4_1_y										(728)
-#define HUB_NEC_4_2_x										(1004)
-#define HUB_NEC_4_2_y										(714)
-#define HUB_NEC_4_3_x										(1085)
-#define HUB_NEC_4_3_y										(721)
-#define HUB_NEC_4_4_x										(1140)
-#define HUB_NEC_4_4_y										(720)
+#define HUB_NEC_4_1_x                              (928)
+#define HUB_NEC_4_1_y                              (728)
+#define HUB_NEC_4_2_x                              (1004)
+#define HUB_NEC_4_2_y                              (714)
+#define HUB_NEC_4_3_x                              (1085)
+#define HUB_NEC_4_3_y                              (721)
+#define HUB_NEC_4_4_x                              (1140)
+#define HUB_NEC_4_4_y                              (720)
 
 // Hub <--> Brotherhood, 1 Encounter only
-#define HUB_BOS_1_1_x										(727)
-#define HUB_BOS_1_1_y										(614)
+#define HUB_BOS_1_1_x                              (727)
+#define HUB_BOS_1_1_y                              (614)
 
 // Hub <--> Brotherhood, 2 Encounter only
-#define HUB_BOS_2_1_x										(785)
-#define HUB_BOS_2_1_y										(652)
-#define HUB_BOS_2_2_x										(691)
-#define HUB_BOS_2_2_y										(546)
+#define HUB_BOS_2_1_x                              (785)
+#define HUB_BOS_2_1_y                              (652)
+#define HUB_BOS_2_2_x                              (691)
+#define HUB_BOS_2_2_y                              (546)
 
 // Hub <--> Brotherhood, 3 Encounter only
-#define HUB_BOS_3_1_x										(781)
-#define HUB_BOS_3_1_y										(694)
-#define HUB_BOS_3_2_x										(698)
-#define HUB_BOS_3_2_y										(595)
-#define HUB_BOS_3_3_x										(675)
-#define HUB_BOS_3_3_y										(493)
+#define HUB_BOS_3_1_x                              (781)
+#define HUB_BOS_3_1_y                              (694)
+#define HUB_BOS_3_2_x                              (698)
+#define HUB_BOS_3_2_y                              (595)
+#define HUB_BOS_3_3_x                              (675)
+#define HUB_BOS_3_3_y                              (493)
 
 // Hub <--> Brotherhood, 4 Encounter only
-#define HUB_BOS_4_1_x										(813)
-#define HUB_BOS_4_1_y										(693)
-#define HUB_BOS_4_2_x										(728)
-#define HUB_BOS_4_2_y										(645)
-#define HUB_BOS_4_3_x										(691)
-#define HUB_BOS_4_3_y										(510)
-#define HUB_BOS_4_4_x										(667)
-#define HUB_BOS_4_4_y										(475)
+#define HUB_BOS_4_1_x                              (813)
+#define HUB_BOS_4_1_y                              (693)
+#define HUB_BOS_4_2_x                              (728)
+#define HUB_BOS_4_2_y                              (645)
+#define HUB_BOS_4_3_x                              (691)
+#define HUB_BOS_4_3_y                              (510)
+#define HUB_BOS_4_4_x                              (667)
+#define HUB_BOS_4_4_y                              (475)
 
 // Hub <--> Boneyard, 1 Encounter only
-#define HUB_ADY_1_1_x										(820)
-#define HUB_ADY_1_1_y										(817)
+#define HUB_ADY_1_1_x                              (820)
+#define HUB_ADY_1_1_y                              (817)
 
 // Hub <--> Boneyard, 2 Encounter only
-#define HUB_ADY_2_1_x										(843)
-#define HUB_ADY_2_1_y										(779)
-#define HUB_ADY_2_2_x										(807)
-#define HUB_ADY_2_2_y										(855)
+#define HUB_ADY_2_1_x                              (843)
+#define HUB_ADY_2_1_y                              (779)
+#define HUB_ADY_2_2_x                              (807)
+#define HUB_ADY_2_2_y                              (855)
 
 // Hub <--> Boneyard, 3 Encounter only
-#define HUB_ADY_3_1_x										(827)
-#define HUB_ADY_3_1_y										(761)
-#define HUB_ADY_3_2_x										(786)
-#define HUB_ADY_3_2_y										(804)
-#define HUB_ADY_3_3_x										(775)
-#define HUB_ADY_3_3_y										(877)
+#define HUB_ADY_3_1_x                              (827)
+#define HUB_ADY_3_1_y                              (761)
+#define HUB_ADY_3_2_x                              (786)
+#define HUB_ADY_3_2_y                              (804)
+#define HUB_ADY_3_3_x                              (775)
+#define HUB_ADY_3_3_y                              (877)
 
 // Hub <--> Boneyard, 4 Encounter only
-#define HUB_ADY_4_1_x										(834)
-#define HUB_ADY_4_1_y										(723)
-#define HUB_ADY_4_2_x										(815)
-#define HUB_ADY_4_2_y										(771)
-#define HUB_ADY_4_3_x										(824)
-#define HUB_ADY_4_3_y										(818)
-#define HUB_ADY_4_4_x										(822)
-#define HUB_ADY_4_4_y										(877)
+#define HUB_ADY_4_1_x                              (834)
+#define HUB_ADY_4_1_y                              (723)
+#define HUB_ADY_4_2_x                              (815)
+#define HUB_ADY_4_2_y                              (771)
+#define HUB_ADY_4_3_x                              (824)
+#define HUB_ADY_4_3_y                              (818)
+#define HUB_ADY_4_4_x                              (822)
+#define HUB_ADY_4_4_y                              (877)
 
 // Travel time in days
-#define TRAVEL_TIME_HUB_ADY 				(2*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_NEC 				(9*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_BOS					(15*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_JNK 				(7*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_ADY            (2*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_NEC            (9*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_BOS               (15*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_JNK            (7*ONE_GAME_DAY)
 
 // Style of the caravan critters
-#define STYLE_NONE 			(0)
-#define STYLE_CRIMSON		(1)
-#define STYLE_FARGO			(2)
-#define STYLE_WATER			(3)
+#define STYLE_NONE         (0)
+#define STYLE_CRIMSON      (1)
+#define STYLE_FARGO        (2)
+#define STYLE_WATER        (3)
 
-#define set_caravan_style_crimson 		set_global_var(GVAR_CARAVAN_LOOK,STYLE_CRIMSON)
-#define set_caravan_style_fargo 		set_global_var(GVAR_CARAVAN_LOOK,STYLE_FARGO)
-#define set_caravan_style_water 		set_global_var(GVAR_CARAVAN_LOOK,STYLE_WATER)
+#define set_caravan_style_crimson      set_global_var(GVAR_CARAVAN_LOOK,STYLE_CRIMSON)
+#define set_caravan_style_fargo     set_global_var(GVAR_CARAVAN_LOOK,STYLE_FARGO)
+#define set_caravan_style_water     set_global_var(GVAR_CARAVAN_LOOK,STYLE_WATER)
 
-#define caravan_style_crimson 			global_var(GVAR_CARAVAN_LOOK) == STYLE_CRIMSON
-#define caravan_style_fargo 			global_var(GVAR_CARAVAN_LOOK) == STYLE_FARGO
-#define caravan_style_water 			global_var(GVAR_CARAVAN_LOOK) == STYLE_WATER
+#define caravan_style_crimson          global_var(GVAR_CARAVAN_LOOK) == STYLE_CRIMSON
+#define caravan_style_fargo         global_var(GVAR_CARAVAN_LOOK) == STYLE_FARGO
+#define caravan_style_water         global_var(GVAR_CARAVAN_LOOK) == STYLE_WATER
 
 // Caravan States
 // GVAR_CARAVAN_STATUS
@@ -225,23 +225,23 @@ variable Finding_New_Tile;
 // GVAR_CARAVAN_START
 // GVAR_CARAVAN_END
 #define CARAVAN_NONE                        (0)
-#define CARAVAN_HUB                        	(1)
-#define CARAVAN_JUNKTOWN                   	(2)
-#define CARAVAN_NECROPOLIS                 	(3)
-#define CARAVAN_BOS		                	(4)
-#define CARAVAN_BONEYARD                   	(5)
+#define CARAVAN_HUB                          (1)
+#define CARAVAN_JUNKTOWN                     (2)
+#define CARAVAN_NECROPOLIS                   (3)
+#define CARAVAN_BOS                       (4)
+#define CARAVAN_BONEYARD                     (5)
 
 // Hub Caravans
-#define HUB_CARAVAN_NONE               		(0)
-#define HUB_CARAVAN_AGREED              	(1)
-#define HUB_CARAVAN_NOT_READY_YET      		(2)
-#define HUB_CARAVAN_ABANDONED           	(3)
-#define HUB_CARAVAN_ON_CARAVAN          	(4)
-#define HUB_CARAVAN_TOTAL_FAILURE       	(5)
-#define HUB_CARAVAN_FAILURE             	(6)
-#define HUB_CARAVAN_AVERAGE_SUCCESS     	(7)
-#define HUB_CARAVAN_COMPLETE_SUCCESS    	(8)
-#define HUB_CARAVAN_THEFT               	(9)
+#define HUB_CARAVAN_NONE                     (0)
+#define HUB_CARAVAN_AGREED                (1)
+#define HUB_CARAVAN_NOT_READY_YET            (2)
+#define HUB_CARAVAN_ABANDONED             (3)
+#define HUB_CARAVAN_ON_CARAVAN            (4)
+#define HUB_CARAVAN_TOTAL_FAILURE         (5)
+#define HUB_CARAVAN_FAILURE               (6)
+#define HUB_CARAVAN_AVERAGE_SUCCESS       (7)
+#define HUB_CARAVAN_COMPLETE_SUCCESS      (8)
+#define HUB_CARAVAN_THEFT                 (9)
 
 // Set States for the Caravan
 #define set_caravan_status(x)               set_global_var(GVAR_CARAVAN_STATUS,x)

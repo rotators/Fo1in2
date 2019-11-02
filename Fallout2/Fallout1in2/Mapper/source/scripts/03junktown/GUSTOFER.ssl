@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Gustofer
+   Junktown - Gustofer
 
 */
 
@@ -66,370 +66,370 @@ variable sleep_time;
 variable home_tile;
 variable sleep_tile;
 
-#define LVAR_Sleeping 							(1)
+#define LVAR_Sleeping                     (1)
 
 procedure start begin
 end
 
 procedure combat_p_proc begin
-	if ((fixed_param == COMBAT_SUBTYPE_TURN) and self_can_see_dude) then begin
-		round_counter := round_counter + 1;
-	end
-	if (round_counter > 3) then begin
-		if (global_var(GVAR_ENEMY_JUNKTOWN) == 0) then begin
-			set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-			set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		end
-	end
+   if ((fixed_param == COMBAT_SUBTYPE_TURN) and self_can_see_dude) then begin
+      round_counter := round_counter + 1;
+   end
+   if (round_counter > 3) then begin
+      if (global_var(GVAR_ENEMY_JUNKTOWN) == 0) then begin
+         set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+         set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_DUDE_ENEMY_JUNK_BOXER) == 1) then begin
-		if (self_can_see_dude) then begin
-			attack(dude_obj);
-		end
-	end
+   if (global_var(GVAR_DUDE_ENEMY_JUNK_BOXER) == 1) then begin
+      if (self_can_see_dude) then begin
+         attack(dude_obj);
+      end
+   end
 
-	// This piece of code fucks up the fights, so we remove it for now:
-	/*if (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(LVAR_Sleeping) == 0) then begin
-		if dude_is_armed then begin
-			call flee_dude;
-		end
-	end
-	else begin*/
-	if not(combat_is_initialized) then begin
-		if (game_time_hour == 1400) then begin
-			if ((line148flag == 0) and ((GAME_TIME_IN_DAYS % 3) == 0)) then begin
-				line148flag := 1;
-				fight := 1;
-				float_msg(self_obj, mstr(148), FLOAT_MSG_NORMAL);
-			end
-		end
-		else begin
-			line148flag := 0;
-		end
+   // This piece of code fucks up the fights, so we remove it for now:
+   /*if (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(LVAR_Sleeping) == 0) then begin
+      if dude_is_armed then begin
+         call flee_dude;
+      end
+   end
+   else begin*/
+   if not(combat_is_initialized) then begin
+      if (game_time_hour == 1400) then begin
+         if ((line148flag == 0) and ((GAME_TIME_IN_DAYS % 3) == 0)) then begin
+            line148flag := 1;
+            fight := 1;
+            float_msg(self_obj, mstr(148), FLOAT_MSG_NORMAL);
+         end
+      end
+      else begin
+         line148flag := 0;
+      end
 
-		if (Saul_wins or Saul_loses and shot_challenger) then begin
-			call destroy_challenger;
-			if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-				dialogue_system_enter;
-			end
-		end
-		else begin
-			sleeping
-		end
-	end
+      if (Saul_wins or Saul_loses and shot_challenger) then begin
+         call destroy_challenger;
+         if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+            dialogue_system_enter;
+         end
+      end
+      else begin
+         sleeping
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_JUNK_BOXER, 1);
-	end
-	inc_evil_critter
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_JUNK_BOXER, 1);
+   end
+   inc_evil_critter
 end
 
 procedure map_enter_p_proc begin
-	if junktown_invaded then begin
-		destroy_object(self_obj);
-	end
-	if (local_var(0) == 0) then begin
-		set_local_var(0, self_tile);
-	end
-	if (not(is_loading_game) and self_caps == 0) then begin
-		self_caps_adjust(random(0, 10));
-	end
-	set_self_team(TEAM_15);
-	sleep_time := 1920;
-	wake_time := 530;
-	home_tile := 17096;
-	sleep_tile := 7000;
+   if junktown_invaded then begin
+      destroy_object(self_obj);
+   end
+   if (local_var(0) == 0) then begin
+      set_local_var(0, self_tile);
+   end
+   if (not(is_loading_game) and self_caps == 0) then begin
+      self_caps_adjust(random(0, 10));
+   end
+   set_self_team(TEAM_15);
+   sleep_time := 1920;
+   wake_time := 530;
+   home_tile := 17096;
+   sleep_tile := 7000;
 end
 
 procedure map_update_p_proc begin
-	/*if (game_time_hour == 1400) then begin
-		if ((line148flag == 0) and ((GAME_TIME_IN_DAYS % 3) == 0)) then begin
-			line148flag := 1;
-			fight := 1;
-			float_msg(self_obj, mstr(148), FLOAT_MSG_NORMAL);
-		end
-	end
-	else begin
-		line148flag := 0;
-	end
+   /*if (game_time_hour == 1400) then begin
+      if ((line148flag == 0) and ((GAME_TIME_IN_DAYS % 3) == 0)) then begin
+         line148flag := 1;
+         fight := 1;
+         float_msg(self_obj, mstr(148), FLOAT_MSG_NORMAL);
+      end
+   end
+   else begin
+      line148flag := 0;
+   end
 
-	if (Saul_wins or Saul_loses and shot_challenger) then begin
-		call destroy_challenger;
-		if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-			dialogue_system_enter;
-		end
-	end*/
+   if (Saul_wins or Saul_loses and shot_challenger) then begin
+      call destroy_challenger;
+      if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+         dialogue_system_enter;
+      end
+   end*/
 end
 
 procedure pickup_p_proc begin
-	robbed := 1;
-	dialogue_system_enter;
+   robbed := 1;
+   dialogue_system_enter;
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (not(robbed) and (local_var(2) == 1) and ((GAME_TIME_IN_DAYS % 3) != 0)) then begin
-		call Gustofer05;
-	end
-	else begin
-		start_gdialog(529, self_obj, 4, -1, -1);
-		gsay_start;
-		if (Saul_wins) then begin
+   dude_look_at_self;
+   if (not(robbed) and (local_var(2) == 1) and ((GAME_TIME_IN_DAYS % 3) != 0)) then begin
+      call Gustofer05;
+   end
+   else begin
+      start_gdialog(529, self_obj, 4, -1, -1);
+      gsay_start;
+      if (Saul_wins) then begin
 
-			if (dude_bet == 1) then begin
-				call Gustofer16;
-			end
-			else begin
-				call Gustofer07;
-			end
+         if (dude_bet == 1) then begin
+            call Gustofer16;
+         end
+         else begin
+            call Gustofer07;
+         end
 
-		end
-		else if (Saul_loses) then begin
+      end
+      else if (Saul_loses) then begin
 
-			if (dude_bet == 2) then begin
-				call Gustofer16;
-			end
-			else begin
-				call Gustofer07;
-			end
+         if (dude_bet == 2) then begin
+            call Gustofer16;
+         end
+         else begin
+            call Gustofer07;
+         end
 
-		end
-		else begin
+      end
+      else begin
 
-			if (robbed) then begin
-				call Gustofer13;
-			end
-			else begin
-				if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
-					if (game_time_hour < 1400) then begin
-						if (dude_bet == 0) then begin
-							call Gustofer06;
-						end
-						else begin
-							NMessage(152);
-						end
-					end
-					else begin
-						if (challenger_ptr != 0) then begin
-							call Gustofer19;
-						end
-						else begin
-							call Gustofer18;
-							dude_bet := 0;
-						end
-					end
-				end
-				else begin
-					call Gustofer00;
-				end
-			end
+         if (robbed) then begin
+            call Gustofer13;
+         end
+         else begin
+            if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
+               if (game_time_hour < 1400) then begin
+                  if (dude_bet == 0) then begin
+                     call Gustofer06;
+                  end
+                  else begin
+                     NMessage(152);
+                  end
+               end
+               else begin
+                  if (challenger_ptr != 0) then begin
+                     call Gustofer19;
+                  end
+                  else begin
+                     call Gustofer18;
+                     dude_bet := 0;
+                  end
+               end
+            end
+            else begin
+               call Gustofer00;
+            end
+         end
 
-		end
-		gsay_end;
-		end_dialogue;
-	end
+      end
+      gsay_end;
+      end_dialogue;
+   end
 end
 
 procedure Gustofer00 begin
-	set_local_var(2, 1);
-	Reply(100);
-	NOption(101, Gustofer01, -3);
-	NOption(102, GustoferEnd, 4);
-	NOption(103, Gustofer00a, 6);
+   set_local_var(2, 1);
+   Reply(100);
+   NOption(101, Gustofer01, -3);
+   NOption(102, GustoferEnd, 4);
+   NOption(103, Gustofer00a, 6);
 end
 
 procedure Gustofer00a begin
-	if ((GAME_TIME_IN_DAYS % 3) == 1) then begin
-		call Gustofer03;
-	end
-	else begin
-		call Gustofer02;
-	end
+   if ((GAME_TIME_IN_DAYS % 3) == 1) then begin
+      call Gustofer03;
+   end
+   else begin
+      call Gustofer02;
+   end
 end
 
 procedure Gustofer01 begin
-	NMessage(104);
+   NMessage(104);
 end
 
 procedure Gustofer02 begin
-	Reply(105);
-	NOption(107, GustoferEnd, 4);
-	if (global_var(GVAR_SAUL_STATUS) == 0) then begin
-		NOption(108, Gustofer04, 4);
-	end
+   Reply(105);
+   NOption(107, GustoferEnd, 4);
+   if (global_var(GVAR_SAUL_STATUS) == 0) then begin
+      NOption(108, Gustofer04, 4);
+   end
 end
 
 procedure Gustofer03 begin
-	Reply(106);
-	NOption(107, GustoferEnd, 4);
-	if (global_var(GVAR_SAUL_STATUS) == 0) then begin
-		NOption(108, Gustofer04, 4);
-	end
+   Reply(106);
+   NOption(107, GustoferEnd, 4);
+   if (global_var(GVAR_SAUL_STATUS) == 0) then begin
+      NOption(108, Gustofer04, 4);
+   end
 end
 
 procedure Gustofer04 begin
-	NMessage(109);
+   NMessage(109);
 end
 
 procedure Gustofer05 begin
-	variable LVar0 := 0;
-	LVar0 := mstr(110);
-	if ((GAME_TIME_IN_DAYS % 3) == 1) then begin
-		LVar0 := LVar0 + mstr(112);
-	end
-	else if ((GAME_TIME_IN_DAYS % 3) == 2) then begin
-		LVar0 := LVar0 + mstr(111);
-	end
-	float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
+   variable LVar0 := 0;
+   LVar0 := mstr(110);
+   if ((GAME_TIME_IN_DAYS % 3) == 1) then begin
+      LVar0 := LVar0 + mstr(112);
+   end
+   else if ((GAME_TIME_IN_DAYS % 3) == 2) then begin
+      LVar0 := LVar0 + mstr(111);
+   end
+   float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
 end
 
 procedure Gustofer06 begin
-	Reply(113);
-	NOption(101, Gustofer01, -3);
-	NOption(114, GustoferEnd, 4);
-	NOption(115, Gustofer08, 4);
-	NOption(116, Gustofer09, 4);
+   Reply(113);
+   NOption(101, Gustofer01, -3);
+   NOption(114, GustoferEnd, 4);
+   NOption(115, Gustofer08, 4);
+   NOption(116, Gustofer09, 4);
 end
 
 procedure Gustofer07 begin
-	Saul_wins := 0;
-	Saul_loses := 0;
-	dude_bet := 0;
-	if (dude_is_male) then begin
-		NMessage(150);
-	end
-	else begin
-		NMessage(151);
-	end
+   Saul_wins := 0;
+   Saul_loses := 0;
+   dude_bet := 0;
+   if (dude_is_male) then begin
+      NMessage(150);
+   end
+   else begin
+      NMessage(151);
+   end
 end
 
 procedure Gustofer08 begin
-	Reply(120);
-	NOption(121, GustoferBet1, 4);
-	NOption(122, GustoferBet2, 4);
+   Reply(120);
+   NOption(121, GustoferBet1, 4);
+   NOption(122, GustoferBet2, 4);
 end
 
 procedure Gustofer09 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		Reply(123);
-		if (global_var(GVAR_SAUL_STATUS) == 0) then begin
-			NOption(124, Gustofer10, 4);
-		end
-		NOption(125, Gustofer11, 4);
-		NOption(126, GustoferEnd, 4);
-	end
-	else begin
-		NMessage(127);
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      Reply(123);
+      if (global_var(GVAR_SAUL_STATUS) == 0) then begin
+         NOption(124, Gustofer10, 4);
+      end
+      NOption(125, Gustofer11, 4);
+      NOption(126, GustoferEnd, 4);
+   end
+   else begin
+      NMessage(127);
+   end
 end
 
 procedure Gustofer10 begin
-	Reply(128);
-	giq_option(0, SCRIPT_MODREACT, 106, Gustofer10a, NEUTRAL_REACTION);
+   Reply(128);
+   giq_option(0, SCRIPT_MODREACT, 106, Gustofer10a, NEUTRAL_REACTION);
 end
 
 procedure Gustofer10a begin
-	Reply(129);
-	NOption(130, Gustofer11, 4);
-	NOption(131, GustoferEnd, 4);
+   Reply(129);
+   NOption(130, Gustofer11, 4);
+   NOption(131, GustoferEnd, 4);
 end
 
 procedure Gustofer11 begin
-	Reply(132);
-	NOption(133, Gustofer12, 4);
-	NOption(134, GustoferEnd, 4);
+   Reply(132);
+   NOption(133, Gustofer12, 4);
+   NOption(134, GustoferEnd, 4);
 end
 
 procedure Gustofer12 begin
-	Reply(135);
-	NOption(136, GustoferEnd, 4);
+   Reply(135);
+   NOption(136, GustoferEnd, 4);
 end
 
 procedure Gustofer13 begin
-	robbed := 0;
-	Reply(137);
-	BOption(138, Gustofer14, 4);
-	BOption(139, Gustofer15, 4);
-	BOption(101, Gustofer15, -3);
+   robbed := 0;
+   Reply(137);
+   BOption(138, Gustofer14, 4);
+   BOption(139, Gustofer15, 4);
+   BOption(101, Gustofer15, -3);
 end
 
 procedure Gustofer14 begin
-	BMessage(140);
+   BMessage(140);
 end
 
 procedure Gustofer15 begin
-	BMessage(141);
+   BMessage(141);
 end
 
 procedure Gustofer16 begin
-	dude_bet := 0;
-	if (Saul_wins) then begin
-		dude_caps_adjust(50);
-	end
-	else begin
-		dude_caps_adjust(100);
-	end
-	Saul_wins := 0;
-	Saul_loses := 0;
-	NMessage(142);
-	call destroy_challenger;
+   dude_bet := 0;
+   if (Saul_wins) then begin
+      dude_caps_adjust(50);
+   end
+   else begin
+      dude_caps_adjust(100);
+   end
+   Saul_wins := 0;
+   Saul_loses := 0;
+   NMessage(142);
+   call destroy_challenger;
 end
 
 procedure Gustofer17 begin
-	NMessage(147);
+   NMessage(147);
 end
 
 procedure Gustofer18 begin
-	Reply(118);
-	NOption(119, GustoferEnd, 4);
-	NOption(101, GustoferEnd, -3);
+   Reply(118);
+   NOption(119, GustoferEnd, 4);
+   NOption(101, GustoferEnd, -3);
 end
 
 procedure Gustofer19 begin
-	NMessage(149);
+   NMessage(149);
 end
 
 procedure GustoferEnd begin
 end
 
 procedure GustoferWait begin
-	gfade_out(1);
-	game_time_advance(game_ticks((3600 * (13 - (game_time_hour / 100))) + (60 * (60 - (game_time_hour % 100)))));
-	gfade_in(1);
+   gfade_out(1);
+   game_time_advance(game_ticks((3600 * (13 - (game_time_hour / 100))) + (60 * (60 - (game_time_hour % 100)))));
+   gfade_in(1);
 end
 
 procedure GustoferBet1 begin
-	if (dude_caps >= 25) then begin
-		dude_caps_adjust(-25);
-		dude_bet := 1;
-		Reply(144);
-		NOption(145, GustoferWait, 4);
-		NOption(146, Gustofer17, 4);
-	end
-	else begin
-		NMessage(143);
-	end
+   if (dude_caps >= 25) then begin
+      dude_caps_adjust(-25);
+      dude_bet := 1;
+      Reply(144);
+      NOption(145, GustoferWait, 4);
+      NOption(146, Gustofer17, 4);
+   end
+   else begin
+      NMessage(143);
+   end
 end
 
 procedure GustoferBet2 begin
-	if (dude_caps >= 25) then begin
-		dude_caps_adjust(-25);
-		dude_bet := 2;
-		Reply(144);
-		NOption(145, GustoferWait, 4);
-		NOption(146, Gustofer17, 4);
-	end
-	else begin
-		NMessage(143);
-	end
+   if (dude_caps >= 25) then begin
+      dude_caps_adjust(-25);
+      dude_bet := 2;
+      Reply(144);
+      NOption(145, GustoferWait, 4);
+      NOption(146, Gustofer17, 4);
+   end
+   else begin
+      NMessage(143);
+   end
 end
 
 procedure destroy_challenger begin
-	destroy_object(challenger_ptr);
-	shot_challenger := 0;
-	challenger_ptr := 0;
+   destroy_object(challenger_ptr);
+   shot_challenger := 0;
+   challenger_ptr := 0;
 end

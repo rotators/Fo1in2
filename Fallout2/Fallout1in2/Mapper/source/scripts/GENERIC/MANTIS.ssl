@@ -13,60 +13,60 @@ variable tmp_hostile;
 variable initial := 0;
 
 procedure start begin
-	if not(initial) then begin
-		initial := 1;
-		set_self_team(TEAM_MASTER_LAIR);
-		set_self_ai(AI_DOG);
-		if (local_var(0) == 0) then begin
-			set_local_var(0, self_tile);
-		end
-		add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
-	end
+   if not(initial) then begin
+      initial := 1;
+      set_self_team(TEAM_MASTER_LAIR);
+      set_self_ai(AI_DOG);
+      if (local_var(0) == 0) then begin
+         set_local_var(0, self_tile);
+      end
+      add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
+   end
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (self_can_see_dude or self_can_hear_dude) then begin
-			tmp_hostile := 1;
-			attack(dude_obj);
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (self_can_see_dude or self_can_hear_dude) then begin
+         tmp_hostile := 1;
+         attack(dude_obj);
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	inc_evil_critter
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
+   inc_evil_critter
+   rm_timer_event(self_obj);
 end
 
 procedure timed_event_p_proc begin
-	self_walk_to_tile(tile_num_in_direction(local_var(0), random(0, 5), random(1, 3)));
-	add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
+   self_walk_to_tile(tile_num_in_direction(local_var(0), random(0, 5), random(1, 3)));
+   add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
 end
 
 procedure use_obj_on_p_proc begin
-	if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_NUKA_COLA)) then begin
-		script_overrides;
-		rm_obj_from_inven(source_obj, obj_being_used_with);
-		destroy_object(obj_being_used_with);
-		critter_dmg(self_obj, (self_cur_hp + random(1, 6) + random(1, 6)), DMG_explosion);
-	end
+   if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_NUKA_COLA)) then begin
+      script_overrides;
+      rm_obj_from_inven(source_obj, obj_being_used_with);
+      destroy_object(obj_being_used_with);
+      critter_dmg(self_obj, (self_cur_hp + random(1, 6) + random(1, 6)), DMG_explosion);
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_STEAL) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_GENCHAT, 211));
-		script_overrides;
-	end
+   if (action_being_used == SKILL_STEAL) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_GENCHAT, 211));
+      script_overrides;
+   end
 end
 
 procedure damage_p_proc begin
-	if obj_in_party(source_obj) then begin
-		tmp_hostile := 1;
-	end
+   if obj_in_party(source_obj) then begin
+      tmp_hostile := 1;
+   end
 end

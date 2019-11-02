@@ -15,72 +15,72 @@ variable tmp_hostile := 0;
 variable initial := 0;
 
 procedure start begin
-	if not(initial) then begin
-		initial := 1;
-		set_self_ai(AI_RADSCORPION);
-		set_self_team(TEAM_RADSCORPIONS);
-		add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
-	end
+   if not(initial) then begin
+      initial := 1;
+      set_self_ai(AI_RADSCORPION);
+      set_self_team(TEAM_RADSCORPIONS);
+      add_timer_event(self_obj, game_ticks(random(1, 5)), 1);
+   end
 end
 
 procedure combat_p_proc begin
-	if (target_obj == dude_obj) then begin
-		if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
-			if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) and not(dude_wearing_power_armor) then begin
+   if (target_obj == dude_obj) then begin
+      if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
+         if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) and not(dude_wearing_power_armor) then begin
             poison(target_obj, random(1, 6));
-			end
-		end
-	end
+         end
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else if not(dude_animal_friend) then begin
-		if (self_can_see_dude or self_can_hear_dude) then begin
-			tmp_hostile := 1;
-			attack(dude_obj);
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else if not(dude_animal_friend) then begin
+      if (self_can_see_dude or self_can_hear_dude) then begin
+         tmp_hostile := 1;
+         attack(dude_obj);
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	variable tail := 0;
-	tail := create_object(PID_SCORPION_TAIL, 0, 0);
-	add_obj_to_inven(self_obj, tail);
+   variable tail := 0;
+   tail := create_object(PID_SCORPION_TAIL, 0, 0);
+   add_obj_to_inven(self_obj, tail);
 end
 
 procedure timed_event_p_proc begin
-	if (not(combat_is_initialized)) then begin
-		critter_tile := tile_num_in_direction(self_tile, random(0, 5), 3);
-		reg_anim_clear(self_obj);
-		reg_anim_begin();
-		reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
-		reg_anim_end();
-	end
-	add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
+   if (not(combat_is_initialized)) then begin
+      critter_tile := tile_num_in_direction(self_tile, random(0, 5), 3);
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_obj_move_to_tile(self_obj, critter_tile, -1);
+      reg_anim_end();
+   end
+   add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_STEAL) then begin//-- STEAL
-		script_overrides;
-		display_msg(message_str(SCRIPT_GENCHAT, 211));
-		script_overrides;
-	end
+   if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+      script_overrides;
+      display_msg(message_str(SCRIPT_GENCHAT, 211));
+      script_overrides;
+   end
 end
 
 procedure description_p_proc begin
-	if (dude_awareness) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_SSRADSCO, 102));
-		script_overrides;
-	end
+   if (dude_awareness) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_SSRADSCO, 102));
+      script_overrides;
+   end
 end
 
 procedure damage_p_proc begin
-	if obj_in_party(source_obj) then begin
-		tmp_hostile := 1;
-	end
+   if obj_in_party(source_obj) then begin
+      tmp_hostile := 1;
+   end
 end

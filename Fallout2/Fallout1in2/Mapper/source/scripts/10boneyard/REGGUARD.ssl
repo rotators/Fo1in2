@@ -1,6 +1,6 @@
 /*
 
-	Boneyard, Adytum - Regulator Guards
+   Boneyard, Adytum - Regulator Guards
 
 */
 
@@ -43,33 +43,33 @@ variable Only_Once := 1;
 variable tmp_hostile;
 
 procedure Start begin
-	if Only_Once then begin
-		set_self_team(TEAM_LA_REGULATORS);
-		set_self_ai(AI_REGULATORS);
+   if Only_Once then begin
+      set_self_team(TEAM_LA_REGULATORS);
+      set_self_ai(AI_REGULATORS);
 
-		if (local_var(6) == 0) then begin
-			set_map_var(MVAR_RegulatorCount, map_var(MVAR_RegulatorCount) + 1);
-			set_local_var(6, 1);
-		end
+      if (local_var(6) == 0) then begin
+         set_map_var(MVAR_RegulatorCount, map_var(MVAR_RegulatorCount) + 1);
+         set_local_var(6, 1);
+      end
 
-		if get_blades_attacking then begin
-			variable LVar0;
-			LVar0 := global_var(GVAR_WATER_CHIP_11);
-			if (LVar0 == 0) then begin
-				RegGuard1 := self_obj;
-			end
-			else if (LVar0 == 1) then begin
-				RegGuard2 := self_obj;
-			end
-			LVar0 := LVar0 + 1;
-			set_global_var(GVAR_WATER_CHIP_11, LVar0);
-		end
-		else begin
-			RegGuard1 := 0;
-			RegGuard2 := 0;
-		end
-		Only_Once := 0;
-	end
+      if get_blades_attacking then begin
+         variable LVar0;
+         LVar0 := global_var(GVAR_WATER_CHIP_11);
+         if (LVar0 == 0) then begin
+            RegGuard1 := self_obj;
+         end
+         else if (LVar0 == 1) then begin
+            RegGuard2 := self_obj;
+         end
+         LVar0 := LVar0 + 1;
+         set_global_var(GVAR_WATER_CHIP_11, LVar0);
+      end
+      else begin
+         RegGuard1 := 0;
+         RegGuard2 := 0;
+      end
+      Only_Once := 0;
+   end
 end
 
 procedure map_enter_p_proc begin
@@ -78,151 +78,151 @@ procedure map_enter_p_proc begin
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if ((global_var(GVAR_ENEMY_ADYTUM) == 1) or (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1) or get_blades_attacking) then begin
-		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
-	end
-	else begin
-		get_reaction
-		start_gdialog(252, self_obj, -1, -1, -1);
-		gsay_start;
-		if (dude_is_armed) then begin
-			call DialogWeapon;
-		end
-		else begin
-			if (local_var(4) == 0) then begin
-				set_local_var(4, 1);
-				call DialogFirstTime;
-			end
-			else begin
-				call DialogSubsequent;
-			end
-		end
-		gsay_end;
-		end_dialogue;
-	end
+   dude_look_at_self;
+   if ((global_var(GVAR_ENEMY_ADYTUM) == 1) or (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1) or get_blades_attacking) then begin
+      float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
+   end
+   else begin
+      get_reaction
+      start_gdialog(252, self_obj, -1, -1, -1);
+      gsay_start;
+      if (dude_is_armed) then begin
+         call DialogWeapon;
+      end
+      else begin
+         if (local_var(4) == 0) then begin
+            set_local_var(4, 1);
+            call DialogFirstTime;
+         end
+         else begin
+            call DialogSubsequent;
+         end
+      end
+      gsay_end;
+      end_dialogue;
+   end
 end
 
 procedure critter_p_proc begin
-	if (self_can_see_dude) then begin
-		if (get_blades_attacking and (local_var(5) == 0)) then begin
-			attack(dude_obj);
-			set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
-		end
-		else if ((global_var(GVAR_ENEMY_ADYTUM) == 1) or (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1)) then begin
-			attack(dude_obj);
-		end
-		else if not(get_blades_attacking) and (map_var(0) == 0) then begin
-			set_map_var(0, 1);
-			dialogue_system_enter;
-		end
-	end
+   if (self_can_see_dude) then begin
+      if (get_blades_attacking and (local_var(5) == 0)) then begin
+         attack(dude_obj);
+         set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
+      end
+      else if ((global_var(GVAR_ENEMY_ADYTUM) == 1) or (global_var(GVAR_DUDE_ENEMY_REGULATORS) == 1)) then begin
+         attack(dude_obj);
+      end
+      else if not(get_blades_attacking) and (map_var(0) == 0) then begin
+         set_map_var(0, 1);
+         dialogue_system_enter;
+      end
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
+   end
 end
 
 procedure destroy_p_proc begin
-	set_map_var(MVAR_RegulatorCount, (map_var(MVAR_RegulatorCount) - 1));
-	if (source_obj == dude_obj) then begin
-		inc_evil_critter
-		set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
-	end
-	if (map_var(MVAR_RegulatorCount) == 0) then begin
-		terminate_combat;
-	end
+   set_map_var(MVAR_RegulatorCount, (map_var(MVAR_RegulatorCount) - 1));
+   if (source_obj == dude_obj) then begin
+      inc_evil_critter
+      set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
+   end
+   if (map_var(MVAR_RegulatorCount) == 0) then begin
+      terminate_combat;
+   end
 end
 
 procedure pickup_p_proc begin
-	set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
+   set_global_var(GVAR_DUDE_ENEMY_REGULATORS, 1);
 end
 
 procedure DialogWeapon begin
-	NMessage(131);
+   NMessage(131);
 end
 
 procedure DialogFirstTime begin
-	Reply(103);
-	giq_option(-3, NAME, 106, DialogMain1, NEUTRAL_REACTION);
-	giq_option(4, NAME, 104, DialogMain1, NEUTRAL_REACTION);
-	giq_option(4, NAME, 105, DialogMain2, NEUTRAL_REACTION);
+   Reply(103);
+   giq_option(-3, NAME, 106, DialogMain1, NEUTRAL_REACTION);
+   giq_option(4, NAME, 104, DialogMain1, NEUTRAL_REACTION);
+   giq_option(4, NAME, 105, DialogMain2, NEUTRAL_REACTION);
 end
 
 procedure DialogSubsequent begin
-	Reply(111);
-	giq_option(-3, NAME, 106, DialogMain1, NEUTRAL_REACTION);
-	giq_option(4, NAME, 104, DialogMain1, NEUTRAL_REACTION);
-	giq_option(4, NAME, 105, DialogMain2, NEUTRAL_REACTION);
-	giq_option(4, NAME, 114, DialogExit, NEUTRAL_REACTION);
+   Reply(111);
+   giq_option(-3, NAME, 106, DialogMain1, NEUTRAL_REACTION);
+   giq_option(4, NAME, 104, DialogMain1, NEUTRAL_REACTION);
+   giq_option(4, NAME, 105, DialogMain2, NEUTRAL_REACTION);
+   giq_option(4, NAME, 114, DialogExit, NEUTRAL_REACTION);
 end
 
 procedure DialogExit begin
 end
 
 procedure DialogMain1 begin
-	if quest_kill_razor_inactive then begin
-		NMessage(107);
-	end
-	else if quest_kill_razor_active then begin
-		NMessage(109);
-	end
-	else begin
-		NMessage(110);
-	end
+   if quest_kill_razor_inactive then begin
+      NMessage(107);
+   end
+   else if quest_kill_razor_active then begin
+      NMessage(109);
+   end
+   else begin
+      NMessage(110);
+   end
 end
 
 procedure DialogMain2 begin
-	if (local_var(1) < 2) then begin
-		NMessage(116);
-	end
-	else begin
-		Reply(117);
-		giq_option(-3, NAME, 106, DialogExit, NEUTRAL_REACTION);
-		giq_option(4, NAME, 118, DialogMain3, NEUTRAL_REACTION);
-		giq_option(4, NAME, 119, DialogMain4, NEUTRAL_REACTION);
-		giq_option(5, NAME, 120, DialogMain5, NEUTRAL_REACTION);
-		giq_option(6, NAME, 121, DialogMain6, NEUTRAL_REACTION);
-		giq_option(4, NAME, 114, DialogExit, NEUTRAL_REACTION);
-	end
+   if (local_var(1) < 2) then begin
+      NMessage(116);
+   end
+   else begin
+      Reply(117);
+      giq_option(-3, NAME, 106, DialogExit, NEUTRAL_REACTION);
+      giq_option(4, NAME, 118, DialogMain3, NEUTRAL_REACTION);
+      giq_option(4, NAME, 119, DialogMain4, NEUTRAL_REACTION);
+      giq_option(5, NAME, 120, DialogMain5, NEUTRAL_REACTION);
+      giq_option(6, NAME, 121, DialogMain6, NEUTRAL_REACTION);
+      giq_option(4, NAME, 114, DialogExit, NEUTRAL_REACTION);
+   end
 end
 
 procedure DialogMain3 begin
-	NMessage(123);
-	call DialogMain2;
+   NMessage(123);
+   call DialogMain2;
 end
 
 procedure DialogMain4 begin
-	NMessage(124);
-	call DialogMain2;
+   NMessage(124);
+   call DialogMain2;
 end
 
 procedure DialogMain5 begin
-	if quest_kill_razor_inactive then begin
-		NMessage(125);
-	end
-	else if quest_kill_razor_active then begin
-		NMessage(126);
-	end
-	else begin
-		NMessage(127);
-	end
+   if quest_kill_razor_inactive then begin
+      NMessage(125);
+   end
+   else if quest_kill_razor_active then begin
+      NMessage(126);
+   end
+   else begin
+      NMessage(127);
+   end
 end
 
 procedure DialogMain6 begin
-	NMessage(128);
-	NMessage(129);
-	call DialogMain2;
+   NMessage(128);
+   NMessage(129);
+   call DialogMain2;
 end

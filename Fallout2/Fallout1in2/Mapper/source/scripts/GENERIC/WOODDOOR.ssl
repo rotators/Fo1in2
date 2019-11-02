@@ -1,7 +1,7 @@
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 
-#define NAME                    	SCRIPT_DOOR
+#define NAME                     SCRIPT_DOOR
 
 /* Door close distance */
 /* How far do you want the last object that used the door to get away before it closes */
@@ -10,8 +10,8 @@
 /* Timer id's */
 #define TIMER_CLOSE                     (1)
 
-#define is_metal_door 						(self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW)
-#define is_wood_door 						not(is_metal_door)
+#define is_metal_door                  (self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW)
+#define is_wood_door                   not(is_metal_door)
 
 /* Penalties for forcing the door open using strength */
 #define Crowbar_Bonus                   (0)
@@ -44,8 +44,8 @@ procedure Pry_Door;
 //local_var(6) == HALLDED | has init Hallded door?
 //local_var(7) == GotExpForPicking (NOT USED)
 
-#define LVAR_HALLDED_Door 				(4)
-#define LVAR_Explosion_Attempts 		(8)
+#define LVAR_HALLDED_Door           (4)
+#define LVAR_Explosion_Attempts     (8)
 
 /*******************************************************************
    Imported variables from the Map scripts. These should only be
@@ -75,14 +75,14 @@ variable last_source_obj;
 *******************************************************************/
 
 procedure start begin
-	if (self_tile == 17128) and (CUR_MAP_HALLDED) then begin
-		set_local_var(LVAR_HALLDED_Door, 1);//  HALLDED | self is Hallded locked door
-		if (local_var(6) != 1) and (map_first_run) then begin
-			set_local_var(5, 0);
-			set_map_var(11, 1);
-			set_local_var(6, 1);
-		end
-	end
+   if (self_tile == 17128) and (CUR_MAP_HALLDED) then begin
+      set_local_var(LVAR_HALLDED_Door, 1);//  HALLDED | self is Hallded locked door
+      if (local_var(6) != 1) and (map_first_run) then begin
+         set_local_var(5, 0);
+         set_map_var(11, 1);
+         set_local_var(6, 1);
+      end
+   end
 end
 
 procedure timed_event_p_proc begin
@@ -103,131 +103,131 @@ procedure timed_event_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-		if necropolis_invaded then begin
-			destroy_object(self_obj);
-		end
+   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
+      if necropolis_invaded then begin
+         destroy_object(self_obj);
+      end
 
-		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-			if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
-				obj_unlock(self_obj);
-			end
-		end
-		else if (local_var(5) == 1) then begin
-			obj_unlock(self_obj);
-		end
-		else if (local_var(5) == 0) and (map_var(12) != 1) then begin
-			obj_close(self_obj);
-			obj_lock(self_obj);
-		end
-	end
+      if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+         if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
+            obj_unlock(self_obj);
+         end
+      end
+      else if (local_var(5) == 1) then begin
+         obj_unlock(self_obj);
+      end
+      else if (local_var(5) == 0) and (map_var(12) != 1) then begin
+         obj_close(self_obj);
+         obj_lock(self_obj);
+      end
+   end
 end
 
 procedure map_update_p_proc begin
-	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-			if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
-				obj_unlock(self_obj);
-			end
-		end
-		else if (local_var(5) == 1) then begin
-			obj_unlock(self_obj);
-		end
-		else if (local_var(5) == 0) and (map_var(12) != 1) then begin
-			obj_close(self_obj);
-			obj_lock(self_obj);
-		end
-	end
+   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
+      if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+         if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
+            obj_unlock(self_obj);
+         end
+      end
+      else if (local_var(5) == 1) then begin
+         obj_unlock(self_obj);
+      end
+      else if (local_var(5) == 0) and (map_var(12) != 1) then begin
+         obj_close(self_obj);
+         obj_lock(self_obj);
+      end
+   end
 end
 
 procedure use_p_proc begin
-	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-//		if (map_var(11) == 1) then begin
-//			obj_lock(self_obj);
-//		end
-//		else begin
-//			if (map_var(11) == 0) then begin
-//				obj_unlock(self_obj);
-//			end
-//		end
-		if ((map_var(11) == 1) and (source_obj == dude_obj)) then begin
-			if (local_var(5) == 0) then begin
-				if (GhDorGrd_Ptr != 0) and not(combat_is_initialized) then begin
-					float_msg(GhDorGrd_Ptr, message_str(SCRIPT_GHDORGRD, 101), FLOAT_MSG_NORMAL);
-					obj_lock(self_obj);
-					script_overrides;
-					display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-				end
-				else begin
-					obj_lock(self_obj);
-					script_overrides;
-					display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-				end
-			end
-			else begin
-				if (local_var(5) == 1) then begin
-					if (GhDorGrd_Ptr != 0) then begin
-						if not(dude_is_sneaking) and (source_obj == dude_obj) then begin
-							script_overrides;
-							set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 1);
-						end
-						else begin
-							if dude_is_sneaking and is_success(roll_vs_skill(dude_obj, SKILL_SNEAK, 0)) and (source_obj == dude_obj) then begin
-								obj_unlock(self_obj);
-							end
-						end
-					end
-					else begin
-						obj_unlock(self_obj);
-					end
-				end
-			end
-		end
-	end
+   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
+//    if (map_var(11) == 1) then begin
+//       obj_lock(self_obj);
+//    end
+//    else begin
+//       if (map_var(11) == 0) then begin
+//          obj_unlock(self_obj);
+//       end
+//    end
+      if ((map_var(11) == 1) and (source_obj == dude_obj)) then begin
+         if (local_var(5) == 0) then begin
+            if (GhDorGrd_Ptr != 0) and not(combat_is_initialized) then begin
+               float_msg(GhDorGrd_Ptr, message_str(SCRIPT_GHDORGRD, 101), FLOAT_MSG_NORMAL);
+               obj_lock(self_obj);
+               script_overrides;
+               display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+            end
+            else begin
+               obj_lock(self_obj);
+               script_overrides;
+               display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+            end
+         end
+         else begin
+            if (local_var(5) == 1) then begin
+               if (GhDorGrd_Ptr != 0) then begin
+                  if not(dude_is_sneaking) and (source_obj == dude_obj) then begin
+                     script_overrides;
+                     set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 1);
+                  end
+                  else begin
+                     if dude_is_sneaking and is_success(roll_vs_skill(dude_obj, SKILL_SNEAK, 0)) and (source_obj == dude_obj) then begin
+                        obj_unlock(self_obj);
+                     end
+                  end
+               end
+               else begin
+                  obj_unlock(self_obj);
+               end
+            end
+         end
+      end
+   end
 
    if fo1in2_auto_doors_closing then begin
-   //	debug("door will close");
+   // debug("door will close");
       last_source_obj := source_obj;
       add_timer_event(self_obj, 10, TIMER_CLOSE);
-	end
+   end
 end
 
 procedure use_skill_on_p_proc begin
 variable Skills_Roll;
 
-	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-		if (map_var(11) == 1) and (local_var(5) == 0) then begin
-			if (action_being_used == SKILL_LOCKPICK) then begin
-				script_overrides;
-				Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
+   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
+      if (map_var(11) == 1) and (local_var(5) == 0) then begin
+         if (action_being_used == SKILL_LOCKPICK) then begin
+            script_overrides;
+            Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
 
-				// Unlock the door:
-				if (is_success(Skills_Roll)) then begin
-					obj_unlock(self_obj);
-					set_local_var(5, 1);
-					display_msg(mstr(100));
-					give_exp_points(25);
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
-				end
-				else begin
-					// beyond capabilities to open:
-					if (is_critical(Skills_Roll)) then begin
-						jam_lock(self_obj);
-						display_msg(mstr(110));
-					end
-					// unable to pick the lock:
-					else begin
-						display_msg(mstr(103));
-					end
-				end
-			end
-		end
+            // Unlock the door:
+            if (is_success(Skills_Roll)) then begin
+               obj_unlock(self_obj);
+               set_local_var(5, 1);
+               display_msg(mstr(100));
+               give_exp_points(25);
+               display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
+            end
+            else begin
+               // beyond capabilities to open:
+               if (is_critical(Skills_Roll)) then begin
+                  jam_lock(self_obj);
+                  display_msg(mstr(110));
+               end
+               // unable to pick the lock:
+               else begin
+                  display_msg(mstr(103));
+               end
+            end
+         end
+      end
 
-		// Door is already open:
-		else begin
-			display_msg(mstr(109));
-		end
-	end
+      // Door is already open:
+      else begin
+         display_msg(mstr(109));
+      end
+   end
 end
 
 procedure use_obj_on_p_proc begin
@@ -235,75 +235,75 @@ procedure use_obj_on_p_proc begin
    variable Skills_Roll;
    Tool := obj_pid(obj_being_used_with);
 
-	if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-		Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
+      Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
 
-		if ((Tool == PID_LOCKPICKS) and (map_var(11) == 1)) then begin
-			if (local_var(5) == 0) then begin
-				script_overrides;
+      if ((Tool == PID_LOCKPICKS) and (map_var(11) == 1)) then begin
+         if (local_var(5) == 0) then begin
+            script_overrides;
 
-				// Door unlocked:
-				if (is_success(Skills_Roll)) then begin
-					obj_unlock(self_obj);
-					set_local_var(5, 1);
-					display_msg(mstr(100));
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_LOCKPICK_NORMAL + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(EXP_LOCKPICK_NORMAL);
-				end
-				else begin
-					// Lockpicks broken:
-					if (is_critical(Skills_Roll)) then begin
-						rm_obj_from_inven(dude_obj, Tool);
-						destroy_object(Tool);
-						display_msg(mstr(101));
-					end
-					// Not able to open the door:
-					else begin
-						display_msg(mstr(103));
-					end
-				end
-			end
-			// Door is already open:
-			else begin
-				display_msg(mstr(109));
-			end
-		end
+            // Door unlocked:
+            if (is_success(Skills_Roll)) then begin
+               obj_unlock(self_obj);
+               set_local_var(5, 1);
+               display_msg(mstr(100));
+               display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_LOCKPICK_NORMAL + message_str(SCRIPT_GENCHAT, 104));
+               give_exp_points(EXP_LOCKPICK_NORMAL);
+            end
+            else begin
+               // Lockpicks broken:
+               if (is_critical(Skills_Roll)) then begin
+                  rm_obj_from_inven(dude_obj, Tool);
+                  destroy_object(Tool);
+                  display_msg(mstr(101));
+               end
+               // Not able to open the door:
+               else begin
+                  display_msg(mstr(103));
+               end
+            end
+         end
+         // Door is already open:
+         else begin
+            display_msg(mstr(109));
+         end
+      end
 
-		else if ((Tool == PID_CROWBAR) and (map_var(11) == 1)) then begin
-			script_overrides;
-			call Pry_Door;
-   	end
-	end
+      else if ((Tool == PID_CROWBAR) and (map_var(11) == 1)) then begin
+         script_overrides;
+         call Pry_Door;
+      end
+   end
 
 end
 
 procedure damage_p_proc begin
   /************ Wood Door ****************/
-	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-	   if is_wood_door then begin
-			obj_unlock(self_obj);
-			destroy_object(self_obj);
-	   end
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      if is_wood_door then begin
+         obj_unlock(self_obj);
+         destroy_object(self_obj);
+      end
 
-	  /************ Metal Door ****************/
+     /************ Metal Door ****************/
 
-	   else if is_metal_door then begin
-	       set_local_var(LVAR_Explosion_Attempts, local_var(LVAR_Explosion_Attempts)+1);
-	       if (local_var(LVAR_Explosion_Attempts) > DOOR_STRENGTH) then begin
-	           obj_unlock(self_obj);
-	           destroy_object(self_obj);
-	       end
-	   end
-	end
+      else if is_metal_door then begin
+          set_local_var(LVAR_Explosion_Attempts, local_var(LVAR_Explosion_Attempts)+1);
+          if (local_var(LVAR_Explosion_Attempts) > DOOR_STRENGTH) then begin
+              obj_unlock(self_obj);
+              destroy_object(self_obj);
+          end
+      end
+   end
    else begin
        display_msg(mstr(193));
    end
 end
 
 procedure description_p_proc begin
-	if (obj_is_locked(self_obj)) then begin
-		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-	end
+   if (obj_is_locked(self_obj)) then begin
+      display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+   end
 end
 
 procedure Pry_Door begin

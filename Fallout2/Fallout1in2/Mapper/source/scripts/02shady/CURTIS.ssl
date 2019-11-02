@@ -1,6 +1,6 @@
 /*
 
-	Shady Sands - Curtis
+   Shady Sands - Curtis
 
 */
 
@@ -50,195 +50,195 @@ variable tmp_hostile;
 procedure PickDeadBodyType;
 variable DeathType := 56;
 
-#define LVAR_Sleeping 							(4)
+#define LVAR_Sleeping                     (4)
 
 procedure start begin
-	if shady_invaded then begin
-		if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
-			if (local_var(6) != 1) then begin
-				set_local_var(6, 1);
-				call PickDeadBodyType;
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
+   if shady_invaded then begin
+      if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
+         if (local_var(6) != 1) then begin
+            set_local_var(6, 1);
+            call PickDeadBodyType;
+            kill_critter(self_obj, DeathType);
+         end
+      end
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		round_counter := (round_counter + 1);
-	end
-	if (round_counter > 3) then begin
-		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);//  ENEMY_SHADY_SANDS
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      round_counter := (round_counter + 1);
+   end
+   if (round_counter > 3) then begin
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);//  ENEMY_SHADY_SANDS
+   end
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//  Is player ENEMY_SHADY_SANDS?
-			if (self_can_see_dude) then begin
-				tmp_hostile := 1;
-				attack(dude_obj);
-			end
-		end
-		else begin
-			if (local_var(5) == 1) then begin
-				if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-					call flee_dude;
-				end
-				else begin
-					tmp_hostile := 1;
-				end
-			end
-			else begin
-				sleeping
-			end
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//  Is player ENEMY_SHADY_SANDS?
+         if (self_can_see_dude) then begin
+            tmp_hostile := 1;
+            attack(dude_obj);
+         end
+      end
+      else begin
+         if (local_var(5) == 1) then begin
+            if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
+               call flee_dude;
+            end
+            else begin
+               tmp_hostile := 1;
+            end
+         end
+         else begin
+            sleeping
+         end
+      end
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_local_var(5, 1);
-		set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);//  ENEMY_SHADY_SANDS
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      set_local_var(5, 1);
+      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);//  ENEMY_SHADY_SANDS
+      tmp_hostile := 1;
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
 
-	inc_good_critter
-	rm_timer_event(self_obj);
+   inc_good_critter
+   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure map_enter_p_proc begin
-	home_tile := 22713;
-	wake_time := 615;
-	sleep_time := 2115;
-	sleep_tile := 27702;
-	set_self_team(TEAM_SHADY_SANDS);
-	set_self_ai(AI_PEASANT);
-	add_timer_event(self_obj, game_ticks(5), 1);
+   home_tile := 22713;
+   wake_time := 615;
+   sleep_time := 2115;
+   sleep_tile := 27702;
+   set_self_team(TEAM_SHADY_SANDS);
+   set_self_ai(AI_PEASANT);
+   add_timer_event(self_obj, game_ticks(5), 1);
 end
 
 procedure pickup_p_proc
 begin
-	set_local_var(5, 1);
+   set_local_var(5, 1);
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	if ((local_var(5) == 1) or global_var(GVAR_ENEMY_SHADY_SANDS)) then begin
-		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
-	end
-	else begin
-		start_gdialog(236, self_obj, 4, -1, -1);
-		gsay_start;
-		if (local_var(3) == 1) then begin
-			call Curtis02;
-		end
-		else begin
-			call Curtis01;
-		end
-		gsay_end;
-		end_dialogue;
-	end
+   dude_look_at_self;
+   if ((local_var(5) == 1) or global_var(GVAR_ENEMY_SHADY_SANDS)) then begin
+      float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
+   end
+   else begin
+      start_gdialog(236, self_obj, 4, -1, -1);
+      gsay_start;
+      if (local_var(3) == 1) then begin
+         call Curtis02;
+      end
+      else begin
+         call Curtis01;
+      end
+      gsay_end;
+      end_dialogue;
+   end
 end
 
 procedure timed_event_p_proc
 begin
-	if (local_var(4) == 0) then begin
-		if (random(0, 3) == 3) then begin
-			anim(self_obj, ANIM_magic_hands_ground, 0);
-		end
-		else begin
-			call movement;
-		end
-	end
-	add_timer_event(self_obj, game_ticks(random(3, 7)), 1);
+   if (local_var(4) == 0) then begin
+      if (random(0, 3) == 3) then begin
+         anim(self_obj, ANIM_magic_hands_ground, 0);
+      end
+      else begin
+         call movement;
+      end
+   end
+   add_timer_event(self_obj, game_ticks(random(3, 7)), 1);
 end
 
 procedure Curtis01
 begin
-	Reply(101);
-	NOption(102, Curtis03, 4);
-	NOption(103, CurtisEnd, -3);
+   Reply(101);
+   NOption(102, Curtis03, 4);
+   NOption(103, CurtisEnd, -3);
 end
 
 procedure Curtis02 begin
-	Reply(104);
-	giq_option(0, SCRIPT_MODREACT, 106, Curtis03, NEUTRAL_REACTION);
+   Reply(104);
+   giq_option(0, SCRIPT_MODREACT, 106, Curtis03, NEUTRAL_REACTION);
 end
 
 procedure Curtis03
 begin
-	Reply(105);
-	call Curtis03a;
+   Reply(105);
+   call Curtis03a;
 end
 
 procedure Curtis03a
 begin
-	if (local_var(3) == 0) then begin
-		NOption(106, Curtis04, 4);
-	end
-	if (local_var(0) == 0) then begin
-		NOption(107, Curtis05, 5);
-	end
-	if (local_var(1) == 0) then begin
-		NOption(108, Curtis06, 4);
-	end
-	NOption(109, CurtisEnd, 4);
+   if (local_var(3) == 0) then begin
+      NOption(106, Curtis04, 4);
+   end
+   if (local_var(0) == 0) then begin
+      NOption(107, Curtis05, 5);
+   end
+   if (local_var(1) == 0) then begin
+      NOption(108, Curtis06, 4);
+   end
+   NOption(109, CurtisEnd, 4);
 end
 
 procedure Curtis04
 begin
-	Reply(110);
-	set_local_var(3, 1);
-	call Curtis03a;
+   Reply(110);
+   set_local_var(3, 1);
+   call Curtis03a;
 end
 
 procedure Curtis05
 begin
-	set_local_var(0, 1);
-	Reply(111);
-	call Curtis03a;
+   set_local_var(0, 1);
+   Reply(111);
+   call Curtis03a;
 end
 
 procedure Curtis06
 begin
-	Reply(112);
-	NOption(113, Curtis03, 4);
-	if ((has_skill(dude_obj, SKILL_SCIENCE) >= 40) and (local_var(1) == 0)) then begin
-		NOption(114, Curtis07, 5);
-	end
+   Reply(112);
+   NOption(113, Curtis03, 4);
+   if ((has_skill(dude_obj, SKILL_SCIENCE) >= 40) and (local_var(1) == 0)) then begin
+      NOption(114, Curtis07, 5);
+   end
 end
 
 procedure Curtis07
 begin
-	Reply(115);
-	NOption(116, CurtisEnd, 4);
-	NOption(117, Curtis08, 5);
+   Reply(115);
+   NOption(116, CurtisEnd, 4);
+   NOption(117, Curtis08, 5);
 end
 
 procedure Curtis08
 begin
-	NMessage(118);
-	set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
-	set_local_var(1, 1);
-	give_exp_points(EXP_EXPLAINED_CROP_ROTATION);
-	display_msg(mstr(200));
+   NMessage(118);
+   set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
+   set_local_var(1, 1);
+   give_exp_points(EXP_EXPLAINED_CROP_ROTATION);
+   display_msg(mstr(200));
 end
 
 procedure CurtisEnd begin
@@ -246,15 +246,15 @@ end
 
 procedure movement
 begin
-	variable LVar0 := 0;
-	LVar0 := random(0, 5);
-	new_tile := tile_num_in_direction(self_tile, LVar0, 1);
-	if (tile_distance(home_tile, new_tile) < 6) then begin
-		self_walk_to_tile(new_tile);
-	end
+   variable LVar0 := 0;
+   LVar0 := random(0, 5);
+   new_tile := tile_num_in_direction(self_tile, LVar0, 1);
+   if (tile_distance(home_tile, new_tile) < 6) then begin
+      self_walk_to_tile(new_tile);
+   end
 end
 
 procedure PickDeadBodyType
 begin
-	pick_dead_body_type
+   pick_dead_body_type
 end

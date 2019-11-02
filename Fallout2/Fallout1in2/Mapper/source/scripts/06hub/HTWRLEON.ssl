@@ -1,6 +1,6 @@
 /*
 
-	Hub - Hightower / Leon
+   Hub - Hightower / Leon
 
 */
 
@@ -49,224 +49,224 @@ variable visible := 1;
 import variable Front_Door_Ptr;
 
 procedure start begin
-	if Only_Once then begin
-		Only_Once := 0;
-		if (global_var(GVAR_KILL_MERCHANT) == 5) then begin
-			if not(is_loading_game) then begin    set_self_invisible;    end
-			visible := 0;
-		end
-		set_self_team(TEAM_42);
-		set_self_ai(AI_GUARD_SADISTIC);
-	end
+   if Only_Once then begin
+      Only_Once := 0;
+      if (global_var(GVAR_KILL_MERCHANT) == 5) then begin
+         if not(is_loading_game) then begin    set_self_invisible;    end
+         visible := 0;
+      end
+      set_self_team(TEAM_42);
+      set_self_ai(AI_GUARD_SADISTIC);
+   end
 end
 
 procedure combat
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure critter_p_proc begin
-	if (visible == 0) then begin
-		script_overrides;
-	end
-	else begin
-		if (tmp_hostile) then begin
-			tmp_hostile := 0;
-			attack(dude_obj);
-		end
-		if (map_var(5) == 1) then begin
-			if ((self_can_hear_dude) or (self_can_see_dude)) then begin
-				call combat;
-			end
-		end
-		else begin
-			if (map_var(1) == 1) then begin
-				call LeonPerformDump;
-			end
-		end
-		if (morning or (day)) then begin
-			if (self_tile != 22120) then begin
-				self_walk_to_tile(22120);
-			end
-		end
-		else begin
-			if (self_tile != 16519) then begin
-				self_walk_to_tile(16519);
-			end
-		end
-		if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
-			if ((local_var(5) == 0) and (self_tile == 22120)) then begin
-				set_local_var(5, 1);
-				dialogue_system_enter;
-			end
-		end
-	end
+   if (visible == 0) then begin
+      script_overrides;
+   end
+   else begin
+      if (tmp_hostile) then begin
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      if (map_var(5) == 1) then begin
+         if ((self_can_hear_dude) or (self_can_see_dude)) then begin
+            call combat;
+         end
+      end
+      else begin
+         if (map_var(1) == 1) then begin
+            call LeonPerformDump;
+         end
+      end
+      if (morning or (day)) then begin
+         if (self_tile != 22120) then begin
+            self_walk_to_tile(22120);
+         end
+      end
+      else begin
+         if (self_tile != 16519) then begin
+            self_walk_to_tile(16519);
+         end
+      end
+      if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+         if ((local_var(5) == 0) and (self_tile == 22120)) then begin
+            set_local_var(5, 1);
+            dialogue_system_enter;
+         end
+      end
+   end
 end
 
 procedure pickup_p_proc
 begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	get_reaction
-	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-		float_msg(self_obj, mstr(141), FLOAT_MSG_RED);
-	end
-	else begin
-		if (global_var(GVAR_ENEMY_HUB) == 1) then begin
-			float_msg(self_obj, mstr(142), FLOAT_MSG_RED);
-			call combat;
-		end
-		else begin
-			if (local_var(4) == 0) then begin
-				set_local_var(4, 1);
-				start_gdialog(866, self_obj, 4, -1, -1);
-				gsay_start;
-				call Leon01;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				start_gdialog(866, self_obj, 4, -1, -1);
-				gsay_start;
-				call Leon08;
-				gsay_end;
-				end_dialogue;
-			end
-		end
-	end
+   dude_look_at_self;
+   get_reaction
+   if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+      float_msg(self_obj, mstr(141), FLOAT_MSG_RED);
+   end
+   else begin
+      if (global_var(GVAR_ENEMY_HUB) == 1) then begin
+         float_msg(self_obj, mstr(142), FLOAT_MSG_RED);
+         call combat;
+      end
+      else begin
+         if (local_var(4) == 0) then begin
+            set_local_var(4, 1);
+            start_gdialog(866, self_obj, 4, -1, -1);
+            gsay_start;
+            call Leon01;
+            gsay_end;
+            end_dialogue;
+         end
+         else begin
+            start_gdialog(866, self_obj, 4, -1, -1);
+            gsay_start;
+            call Leon08;
+            gsay_end;
+            end_dialogue;
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	inc_good_critter
+   inc_good_critter
 end
 
 procedure look_at_p_proc
 begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure damage_p_proc
 begin
-	set_map_var(5, 1);
+   set_map_var(5, 1);
 end
 
 procedure Leon01
 begin
-	Reply(101);
-	giq_option(4, NAME, 102, Leon01a, NEUTRAL_REACTION);
-	giq_option(4, NAME, 103, LeonCombat, BAD_REACTION);
-	giq_option(4, NAME, 104, Leon03, NEUTRAL_REACTION);
-	if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
-		giq_option(4, NAME, 140, Leon04, NEUTRAL_REACTION);
-	end
-	giq_option(-3, NAME, 138, Leon09, NEUTRAL_REACTION);
+   Reply(101);
+   giq_option(4, NAME, 102, Leon01a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 103, LeonCombat, BAD_REACTION);
+   giq_option(4, NAME, 104, Leon03, NEUTRAL_REACTION);
+   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+      giq_option(4, NAME, 140, Leon04, NEUTRAL_REACTION);
+   end
+   giq_option(-3, NAME, 138, Leon09, NEUTRAL_REACTION);
 end
 
 procedure Leon01a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call Leon02;
-	end
-	else begin
-		call Leon04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call Leon02;
+   end
+   else begin
+      call Leon04;
+   end
 end
 
 procedure Leon02
 begin
-	Reply(105);
-	giq_option(4, NAME, 106, LeonEnd, NEUTRAL_REACTION);
-	giq_option(4, NAME, 107, Leon03, NEUTRAL_REACTION);
+   Reply(105);
+   giq_option(4, NAME, 106, LeonEnd, NEUTRAL_REACTION);
+   giq_option(4, NAME, 107, Leon03, NEUTRAL_REACTION);
 end
 
 procedure Leon03
 begin
-	Reply(108);
-	giq_option(4, NAME, 109, LeonCombat, BAD_REACTION);
-	giq_option(4, NAME, 110, LeonKickOut, NEUTRAL_REACTION);
-	giq_option(4, NAME, 111, LeonCombat, BAD_REACTION);
+   Reply(108);
+   giq_option(4, NAME, 109, LeonCombat, BAD_REACTION);
+   giq_option(4, NAME, 110, LeonKickOut, NEUTRAL_REACTION);
+   giq_option(4, NAME, 111, LeonCombat, BAD_REACTION);
 end
 
 procedure Leon04
 begin
-	Reply(112);
-	giq_option(4, NAME, 113, Leon03, NEUTRAL_REACTION);
-	giq_option(4, NAME, 114, Leon04a, NEUTRAL_REACTION);
-	if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
-		giq_option(4, NAME, 115, Leon06, NEUTRAL_REACTION);
-	end
+   Reply(112);
+   giq_option(4, NAME, 113, Leon03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 114, Leon04a, NEUTRAL_REACTION);
+   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+      giq_option(4, NAME, 115, Leon06, NEUTRAL_REACTION);
+   end
 end
 
 procedure Leon04a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call Leon02;
-	end
-	else begin
-		call Leon05;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call Leon02;
+   end
+   else begin
+      call Leon05;
+   end
 end
 
 procedure Leon05
 begin
-	Reply(116);
-	giq_option(4, NAME, 117, Leon03, NEUTRAL_REACTION);
-	if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
-		giq_option(4, NAME, 118, Leon06, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 119, Leon03, NEUTRAL_REACTION);
-	giq_option(4, NAME, 120, LeonKickOut, NEUTRAL_REACTION);
+   Reply(116);
+   giq_option(4, NAME, 117, Leon03, NEUTRAL_REACTION);
+   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+      giq_option(4, NAME, 118, Leon06, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 119, Leon03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 120, LeonKickOut, NEUTRAL_REACTION);
 end
 
 procedure Leon06
 begin
-	NMessage(121);
-	NMessage(122);
-	Reply(123);
-	giq_option(4, NAME, 124, Leon07, NEUTRAL_REACTION);
-	giq_option(4, NAME, 125, LeonCombat, BAD_REACTION);
-	giq_option(4, NAME, 126, Leon03, NEUTRAL_REACTION);
+   NMessage(121);
+   NMessage(122);
+   Reply(123);
+   giq_option(4, NAME, 124, Leon07, NEUTRAL_REACTION);
+   giq_option(4, NAME, 125, LeonCombat, BAD_REACTION);
+   giq_option(4, NAME, 126, Leon03, NEUTRAL_REACTION);
 end
 
 procedure Leon07
 begin
-	Reply(127);
-	giq_option(4, NAME, 128, Leon03, NEUTRAL_REACTION);
-	giq_option(4, NAME, 129, LeonKickOut, NEUTRAL_REACTION);
+   Reply(127);
+   giq_option(4, NAME, 128, Leon03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 129, LeonKickOut, NEUTRAL_REACTION);
 end
 
 procedure Leon08
 begin
-	Reply(130);
-	giq_option(4, NAME, 131, LeonCombat, BAD_REACTION);
-	giq_option(4, NAME, 132, LeonKickOut, NEUTRAL_REACTION);
-	giq_option(4, NAME, 133, Leon08a, NEUTRAL_REACTION);
+   Reply(130);
+   giq_option(4, NAME, 131, LeonCombat, BAD_REACTION);
+   giq_option(4, NAME, 132, LeonKickOut, NEUTRAL_REACTION);
+   giq_option(4, NAME, 133, Leon08a, NEUTRAL_REACTION);
 end
 
 procedure Leon08a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
-		call Leon02;
-	end
-	else begin
-		call Leon04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
+      call Leon02;
+   end
+   else begin
+      call Leon04;
+   end
 end
 
 procedure Leon09
 begin
-	Reply(134);
-	giq_option(4, NAME, 135, LeonCombat, BAD_REACTION);
-	giq_option(4, NAME, 136, LeonKickOut, NEUTRAL_REACTION);
-	giq_option(4, NAME, 137, LeonKickOut, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 139, LeonKickOut, NEUTRAL_REACTION);
+   Reply(134);
+   giq_option(4, NAME, 135, LeonCombat, BAD_REACTION);
+   giq_option(4, NAME, 136, LeonKickOut, NEUTRAL_REACTION);
+   giq_option(4, NAME, 137, LeonKickOut, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 139, LeonKickOut, NEUTRAL_REACTION);
 end
 
 procedure LeonEnd
@@ -275,21 +275,21 @@ end
 
 procedure LeonKickOut
 begin
-	set_map_var(1, 1);
+   set_map_var(1, 1);
 end
 
 procedure LeonPerformDump begin
-	set_map_var(1, 0);
-	set_map_var(3, 0);
-	gfade_out(1);
-	obj_close(Front_Door_Ptr);
-	set_local_var(5, 0);
-	move_to(dude_obj, 21931, 0);
-	gfade_in(1);
+   set_map_var(1, 0);
+   set_map_var(3, 0);
+   gfade_out(1);
+   obj_close(Front_Door_Ptr);
+   set_local_var(5, 0);
+   move_to(dude_obj, 21931, 0);
+   gfade_in(1);
 end
 
 procedure LeonCombat
 begin
-	set_local_var(5, 1);
-	call combat;
+   set_local_var(5, 1);
+   call combat;
 end

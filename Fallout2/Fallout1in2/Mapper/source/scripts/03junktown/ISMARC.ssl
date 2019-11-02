@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Ismarc
+   Junktown - Ismarc
 
 */
 
@@ -56,245 +56,245 @@ variable line08flag;
 variable line11flag;
 variable line12flag;
 
-#define LVAR_Sleeping 							(4)
+#define LVAR_Sleeping                     (4)
 
 procedure start begin
 end
 
 procedure critter_p_proc
 begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (local_var(4) == 0) then begin
-			if (self_tile != home_tile) then begin
-				self_walk_to_tile(home_tile);
-			end
-			else begin
-				if (self_cur_rot != 2) then begin
-					self_rotate(2);
-				end
-			end
-		end
-		if ((game_time_hour >= 1500) and (game_time_hour <= 1900) and not(singing)) then begin
-			rm_timer_event(self_obj);
-			add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
-			singing := 1;
-			song_line_offset := 0;
-			song_line_base := 0;
-		end
-		sleeping
-	end
-	if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
-		if (self_can_see_dude) then begin
-			attack(dude_obj);
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (local_var(4) == 0) then begin
+         if (self_tile != home_tile) then begin
+            self_walk_to_tile(home_tile);
+         end
+         else begin
+            if (self_cur_rot != 2) then begin
+               self_rotate(2);
+            end
+         end
+      end
+      if ((game_time_hour >= 1500) and (game_time_hour <= 1900) and not(singing)) then begin
+         rm_timer_event(self_obj);
+         add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
+         singing := 1;
+         song_line_offset := 0;
+         song_line_base := 0;
+      end
+      sleeping
+   end
+   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+      if (self_can_see_dude) then begin
+         attack(dude_obj);
+      end
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
 end
 
 procedure destroy_p_proc
 begin
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
 
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
-	inc_good_critter
-	rm_timer_event(self_obj);
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
+   inc_good_critter
+   rm_timer_event(self_obj);
 end
 
 procedure map_enter_p_proc
 begin
-	if junktown_invaded then begin
-		destroy_object(self_obj);
-	end
-	set_self_team(TEAM_JUNKTOWNER);
-	if (not(is_loading_game) and (self_caps == 0)) then begin
-		self_caps_adjust(random(20, 50));
-	end
-	sleep_tile := 7000;
-	home_tile := 19089;
-	sleep_time := 2210;
-	wake_time := 1420;
+   if junktown_invaded then begin
+      destroy_object(self_obj);
+   end
+   set_self_team(TEAM_JUNKTOWNER);
+   if (not(is_loading_game) and (self_caps == 0)) then begin
+      self_caps_adjust(random(20, 50));
+   end
+   sleep_tile := 7000;
+   home_tile := 19089;
+   sleep_time := 2210;
+   wake_time := 1420;
 end
 
 procedure pickup_p_proc
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	get_reaction
-	start_gdialog(668, self_obj, 4, -1, -1);
-	gsay_start;
-	call Ismarc01;
-	gsay_end;
-	end_dialogue;
+   dude_look_at_self;
+   get_reaction
+   start_gdialog(668, self_obj, 4, -1, -1);
+   gsay_start;
+   call Ismarc01;
+   gsay_end;
+   end_dialogue;
 end
 
 procedure timed_event_p_proc
 begin
-	if (fixed_param == 1) then begin
-		if (song_line_base == 0) then begin
-			song_line_base := (random(0, 2) * 4) + 127;
-			song_line_offset := 0;
-		end
-		if (song_line_offset < 4) then begin
-			reg_anim_clear(self_obj);
-			reg_anim_begin();
-			reg_anim_animate(self_obj, 13, -1);
-			reg_anim_animate(self_obj, 15, 3);
-			reg_anim_animate(self_obj, 14, 3);
-			reg_anim_animate(self_obj, 13, 3);
-			reg_anim_animate(self_obj, 0, 3);
-			reg_anim_end();
-			float_msg(self_obj, mstr(song_line_base + song_line_offset), FLOAT_MSG_NORMAL);
-			song_line_offset := song_line_offset + 1;
-			add_timer_event(self_obj, game_ticks(5), 1);
-		end
-		else begin
-			singing := 0;
-			song_line_offset := 0;
-			song_line_base := 0;
-		end
-	end
+   if (fixed_param == 1) then begin
+      if (song_line_base == 0) then begin
+         song_line_base := (random(0, 2) * 4) + 127;
+         song_line_offset := 0;
+      end
+      if (song_line_offset < 4) then begin
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+         reg_anim_animate(self_obj, 13, -1);
+         reg_anim_animate(self_obj, 15, 3);
+         reg_anim_animate(self_obj, 14, 3);
+         reg_anim_animate(self_obj, 13, 3);
+         reg_anim_animate(self_obj, 0, 3);
+         reg_anim_end();
+         float_msg(self_obj, mstr(song_line_base + song_line_offset), FLOAT_MSG_NORMAL);
+         song_line_offset := song_line_offset + 1;
+         add_timer_event(self_obj, game_ticks(5), 1);
+      end
+      else begin
+         singing := 0;
+         song_line_offset := 0;
+         song_line_base := 0;
+      end
+   end
 end
 
 procedure Ismarc01
 begin
-	if (local_var(1) < 2) then begin
-		Reply(102);
-	end
-	else begin
-		Reply(103);
-	end
-	giq_option(4, NAME, 104, Ismarc02, GOOD_REACTION);
-	giq_option(4, NAME, 105, Ismarc03, BAD_REACTION);
-	giq_option(4, NAME, 106, IsmarcEnd, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 107, Ismarc04, BAD_REACTION);
+   if (local_var(1) < 2) then begin
+      Reply(102);
+   end
+   else begin
+      Reply(103);
+   end
+   giq_option(4, NAME, 104, Ismarc02, GOOD_REACTION);
+   giq_option(4, NAME, 105, Ismarc03, BAD_REACTION);
+   giq_option(4, NAME, 106, IsmarcEnd, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 107, Ismarc04, BAD_REACTION);
 end
 
 procedure Ismarc02
 begin
-	UpReact
-	if (local_var(1) == 1) then begin
-		call Ismarc03;
-	end
-	else begin
-		Reply(109);
-		call Ismarc10;
-	end
+   UpReact
+   if (local_var(1) == 1) then begin
+      call Ismarc03;
+   end
+   else begin
+      Reply(109);
+      call Ismarc10;
+   end
 end
 
 procedure Ismarc03
 begin
-	BMessage(108);
+   BMessage(108);
 end
 
 procedure Ismarc04
 begin
-	BMessage(114);
+   BMessage(114);
 end
 
 procedure Ismarc05
 begin
-	line05flag := 1;
-	Reply(115);
-	call Ismarc09;
+   line05flag := 1;
+   Reply(115);
+   call Ismarc09;
 end
 
 procedure Ismarc06
 begin
-	line06flag := 1;
-	//if (global_var(WORLDMAPLIST_THE_HUB) < 1) then begin
-		set_global_var(GVAR_WORLDMAPLIST_THE_HUB, 1);
-		mark_on_map(AREA_HUB)
-	//end
-	Reply(120);
-	call Ismarc09;
+   line06flag := 1;
+   //if (global_var(WORLDMAPLIST_THE_HUB) < 1) then begin
+      set_global_var(GVAR_WORLDMAPLIST_THE_HUB, 1);
+      mark_on_map(AREA_HUB)
+   //end
+   Reply(120);
+   call Ismarc09;
 end
 
 procedure Ismarc07
 begin
-	line07flag := 1;
-	if (global_var(GVAR_WORLDMAPLIST_BROTHERHOOD) < 1) then
-		set_global_var(GVAR_WORLDMAPLIST_BROTHERHOOD, 1);
-		mark_on_map(AREA_BROTHERHOOD)
+   line07flag := 1;
+   if (global_var(GVAR_WORLDMAPLIST_BROTHERHOOD) < 1) then
+      set_global_var(GVAR_WORLDMAPLIST_BROTHERHOOD, 1);
+      mark_on_map(AREA_BROTHERHOOD)
 
-	Reply(121);
-	call Ismarc09;
+   Reply(121);
+   call Ismarc09;
 end
 
 procedure Ismarc08 begin
-	line08flag := 1;
-	if (global_var(GVAR_WORLDMAPLIST_BONEYARD) < 1) then
-		set_global_var(GVAR_WORLDMAPLIST_BONEYARD, 1);
-		mark_on_map(AREA_BONEYARD)
+   line08flag := 1;
+   if (global_var(GVAR_WORLDMAPLIST_BONEYARD) < 1) then
+      set_global_var(GVAR_WORLDMAPLIST_BONEYARD, 1);
+      mark_on_map(AREA_BONEYARD)
 
-	Reply(122);
-	call Ismarc09;
+   Reply(122);
+   call Ismarc09;
 end
 
 procedure Ismarc09
 begin
-	if (not(line06flag)) then begin
-		giq_option(4, NAME, 116, Ismarc06, NEUTRAL_REACTION);
-	end
-	if (not(line07flag)) then begin
-		giq_option(4, NAME, 117, Ismarc07, NEUTRAL_REACTION);
-	end
-	if (not(line08flag)) then begin
-		giq_option(4, NAME, 118, Ismarc08, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 119, IsmarcEnd, NEUTRAL_REACTION);
+   if (not(line06flag)) then begin
+      giq_option(4, NAME, 116, Ismarc06, NEUTRAL_REACTION);
+   end
+   if (not(line07flag)) then begin
+      giq_option(4, NAME, 117, Ismarc07, NEUTRAL_REACTION);
+   end
+   if (not(line08flag)) then begin
+      giq_option(4, NAME, 118, Ismarc08, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 119, IsmarcEnd, NEUTRAL_REACTION);
 end
 
 procedure Ismarc10
 begin
-	if (not(line05flag)) then begin
-		giq_option(4, NAME, 110, Ismarc05, NEUTRAL_REACTION);
-	end
-	if (not(line11flag)) then begin
-		giq_option(4, NAME, 111, Ismarc11, GOOD_REACTION);
-	end
-	if (not(line12flag)) then begin
-		giq_option(4, NAME, 112, Ismarc12, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 113, IsmarcEnd, NEUTRAL_REACTION);
+   if (not(line05flag)) then begin
+      giq_option(4, NAME, 110, Ismarc05, NEUTRAL_REACTION);
+   end
+   if (not(line11flag)) then begin
+      giq_option(4, NAME, 111, Ismarc11, GOOD_REACTION);
+   end
+   if (not(line12flag)) then begin
+      giq_option(4, NAME, 112, Ismarc12, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 113, IsmarcEnd, NEUTRAL_REACTION);
 end
 
 procedure Ismarc11
 begin
-	variable LVar0 := 0;
-	if (dude_caps >= 5) then begin
-		UpReact
-		LVar0 := rm_mult_objs_from_inven(dude_obj, dude_item(PID_BOTTLE_CAPS), 5);
-		LVar0 := create_object(PID_BOTTLE_CAPS, 0, 0);
-		add_mult_objs_to_inven(self_obj, LVar0, 5);
-		Reply(123);
-		giq_option(0, SCRIPT_MODREACT, 106, Ismarc10, GOOD_REACTION);
-	end
-	else begin
-		Reply(124);
-		call Ismarc10;
-	end
+   variable LVar0 := 0;
+   if (dude_caps >= 5) then begin
+      UpReact
+      LVar0 := rm_mult_objs_from_inven(dude_obj, dude_item(PID_BOTTLE_CAPS), 5);
+      LVar0 := create_object(PID_BOTTLE_CAPS, 0, 0);
+      add_mult_objs_to_inven(self_obj, LVar0, 5);
+      Reply(123);
+      giq_option(0, SCRIPT_MODREACT, 106, Ismarc10, GOOD_REACTION);
+   end
+   else begin
+      Reply(124);
+      call Ismarc10;
+   end
 end
 
 procedure Ismarc12
 begin
-	Reply(125);
-	call Ismarc10;
+   Reply(125);
+   call Ismarc10;
 end
 
 procedure IsmarcEnd

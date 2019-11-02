@@ -25,157 +25,157 @@ procedure start begin
 end
 
 procedure damage_p_proc begin
-	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-		messing_with_SkumDoor := 1;
-		SkumDoor_ptr := 0;
-		destroy_object(self_obj);
-	end
-	else begin
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      messing_with_SkumDoor := 1;
+      SkumDoor_ptr := 0;
+      destroy_object(self_obj);
+   end
+   else begin
        display_msg(message_str(SCRIPT_DOOR, 193));
-	end
+   end
 end
 
 procedure destroy_p_proc
 begin
-	messing_with_SkumDoor := 1;
-	SkumDoor_ptr := 0;
+   messing_with_SkumDoor := 1;
+   SkumDoor_ptr := 0;
 end
 
 procedure map_enter_p_proc
 begin
-	SkumDoor_ptr := self_obj;
-	if not(junktown_invaded) then begin
-		if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
-			obj_close(self_obj);
-			obj_lock(self_obj);
-		end
-		else begin
-			obj_unlock(self_obj);
-		end
-		set_local_var(0, 0);
-	end
-	else begin
-		obj_unlock(self_obj);
-		obj_close(self_obj);
-	end
+   SkumDoor_ptr := self_obj;
+   if not(junktown_invaded) then begin
+      if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
+         obj_close(self_obj);
+         obj_lock(self_obj);
+      end
+      else begin
+         obj_unlock(self_obj);
+      end
+      set_local_var(0, 0);
+   end
+   else begin
+      obj_unlock(self_obj);
+      obj_close(self_obj);
+   end
 end
 
 procedure map_update_p_proc
 begin
-	if not(junktown_invaded) then begin
-		if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
-			if ((local_var(0) == 0) and not(messing_with_SkumDoor)) then begin
-				obj_close(self_obj);
-				obj_lock(self_obj);
-			end
-		end
-		else begin
-			obj_unlock(self_obj);
-		end
-	end
+   if not(junktown_invaded) then begin
+      if ((game_time_hour > 409) and (game_time_hour < 1400)) then begin
+         if ((local_var(0) == 0) and not(messing_with_SkumDoor)) then begin
+            obj_close(self_obj);
+            obj_lock(self_obj);
+         end
+      end
+      else begin
+         obj_unlock(self_obj);
+      end
+   end
 end
 
 procedure use_p_proc
 begin
-	if not(junktown_invaded) then begin
-		if source_obj == dude_obj then begin
-			if (obj_is_locked(self_obj)) then begin
-				script_overrides;
-				display_msg(mstr(100));
-			end
-		end
-		else begin
-			if (Neal_ptr != 0) then begin
-				if (source_obj == Neal_ptr) then begin
-					set_local_var(0, 0);
-					if (Neal_closing_door == 0) then begin
-						script_overrides;
-						obj_unlock(self_obj);
-						obj_open(self_obj);
-					end
-					else begin
-						script_overrides;
-						obj_close(self_obj);
-						obj_lock(self_obj);
-					end
-					if (messing_with_SkumDoor) then begin
-						messing_with_SkumDoor := 3;
-					end
-					else begin
-						add_timer_event(Neal_ptr, game_ticks(1), 8);
-					end
-				end
-			end
-		end
-	end
+   if not(junktown_invaded) then begin
+      if source_obj == dude_obj then begin
+         if (obj_is_locked(self_obj)) then begin
+            script_overrides;
+            display_msg(mstr(100));
+         end
+      end
+      else begin
+         if (Neal_ptr != 0) then begin
+            if (source_obj == Neal_ptr) then begin
+               set_local_var(0, 0);
+               if (Neal_closing_door == 0) then begin
+                  script_overrides;
+                  obj_unlock(self_obj);
+                  obj_open(self_obj);
+               end
+               else begin
+                  script_overrides;
+                  obj_close(self_obj);
+                  obj_lock(self_obj);
+               end
+               if (messing_with_SkumDoor) then begin
+                  messing_with_SkumDoor := 3;
+               end
+               else begin
+                  add_timer_event(Neal_ptr, game_ticks(1), 8);
+               end
+            end
+         end
+      end
+   end
 end
 
 procedure use_obj_on_p_proc
 begin
-	if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
-		if (obj_is_locked(self_obj)) then begin
-			test := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
-			if (is_success(test)) then begin
-				display_msg(mstr(101));
-				obj_unlock(self_obj);
-				set_local_var(0, 1);
-			end
-			else begin
-				if (is_critical(test)) then begin
-					display_msg(mstr(103));
-					jam_lock(self_obj);
-				end
-				else begin
-					display_msg(mstr(102));
-				end
-			end
-			if source_obj == dude_obj then begin
-				if ((game_time_hour >= 1300) and (game_time_hour < 1400)) then begin
-					messing_with_SkumDoor := 1;
-				end
-			end
-		end
-		else begin
-			display_msg(mstr(104));
-		end
-	end
+   if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+      if (obj_is_locked(self_obj)) then begin
+         test := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
+         if (is_success(test)) then begin
+            display_msg(mstr(101));
+            obj_unlock(self_obj);
+            set_local_var(0, 1);
+         end
+         else begin
+            if (is_critical(test)) then begin
+               display_msg(mstr(103));
+               jam_lock(self_obj);
+            end
+            else begin
+               display_msg(mstr(102));
+            end
+         end
+         if source_obj == dude_obj then begin
+            if ((game_time_hour >= 1300) and (game_time_hour < 1400)) then begin
+               messing_with_SkumDoor := 1;
+            end
+         end
+      end
+      else begin
+         display_msg(mstr(104));
+      end
+   end
 end
 
 procedure use_skill_on_p_proc
 begin
-	if (action_being_used == SKILL_LOCKPICK) then begin
-		script_overrides;
-		if (obj_is_locked(self_obj)) then begin
-			test := roll_vs_skill(source_obj, action_being_used, -10);
-			if (is_success(test)) then begin
-				display_msg(mstr(101));
-				obj_unlock(self_obj);
-				set_local_var(0, 1);
-			end
-			else begin
-				if (is_critical(test)) then begin
-					display_msg(mstr(103));
-					jam_lock(self_obj);
-				end
-				else begin
-					display_msg(mstr(102));
-				end
-			end
-			if source_obj == dude_obj then begin
-				if ((game_time_hour >= 1300) and (game_time_hour < 1400)) then begin
-					messing_with_SkumDoor := 1;
-				end
-			end
-		end
-		else begin
-			display_msg(mstr(104));
-		end
-	end
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      script_overrides;
+      if (obj_is_locked(self_obj)) then begin
+         test := roll_vs_skill(source_obj, action_being_used, -10);
+         if (is_success(test)) then begin
+            display_msg(mstr(101));
+            obj_unlock(self_obj);
+            set_local_var(0, 1);
+         end
+         else begin
+            if (is_critical(test)) then begin
+               display_msg(mstr(103));
+               jam_lock(self_obj);
+            end
+            else begin
+               display_msg(mstr(102));
+            end
+         end
+         if source_obj == dude_obj then begin
+            if ((game_time_hour >= 1300) and (game_time_hour < 1400)) then begin
+               messing_with_SkumDoor := 1;
+            end
+         end
+      end
+      else begin
+         display_msg(mstr(104));
+      end
+   end
 end
 
 procedure description_p_proc
 begin
-	if (local_var(0) == 0) then begin
-		display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-	end
+   if (local_var(0) == 0) then begin
+      display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+   end
 end

@@ -152,7 +152,7 @@
 
 // Vault 15
 #define EXP_RATS_TUNNEL_DESTROYED               (100)
-#define EXP_V15_EXPLORED			            (500)
+#define EXP_V15_EXPLORED                     (500)
 
 // Shady Sands
 #define EXP_HIRED_IAN                           (100)
@@ -169,8 +169,8 @@
 #define EXP_GET_RID_OF_DOGMEAT                  (35)
 #define EXP_DOGMEAT_JOINS_PARTY                 (100)
 #define EXP_HIRED_TYCHO                         (300)
-#define EXP_SAUL_TRISH_RELATIONSHIP 			(250)
-#define EXP_BUSTING_OUT_OF_JAIL     			(250)
+#define EXP_SAUL_TRISH_RELATIONSHIP          (250)
+#define EXP_BUSTING_OUT_OF_JAIL              (250)
 
 // Hub
 #define EXP_BOUGHT_WATER_CARAVAN                (1000)
@@ -201,7 +201,7 @@
 #define EXP_BECOME_INITITAT                     (2000)
 
 // Mariposa
-#define EXP_BONUS_HACKING 						(800)
+#define EXP_BONUS_HACKING                 (800)
 #define EXP_HANDYC_CLEANUP                      (1000)
 #define EXP_OVERHEARD_CONVERSATION              (1000)
 #define EXP_TRICKING_MUTANTS                    (1500)

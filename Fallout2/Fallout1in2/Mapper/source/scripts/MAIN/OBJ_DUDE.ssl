@@ -39,61 +39,61 @@ variable SecondsFLAG;
 variable SecondsLeft;
 variable Zero;
 
-#define EVENT_END_GAME 						(3)
-#define EVENT_TIMEOUT 						(5)
-#define EVENT_SHOOT_OVERSEER 				(6)
-#define EVENT_SHOOT_OVERSEER_AUTO 		(7)
-//#define EVENT_??? 							(8)
-#define EVENT_ALLOW_PLAYER_CONTROL 		(9)
-#define EVENT_SHOOT_OVERSEER_KILLED 	(10)
-#define EVENT_COUNTDOWN_MASTER 			(11)
-#define EVENT_COUNTDOWN_VATS 				(12)
+#define EVENT_END_GAME                 (3)
+#define EVENT_TIMEOUT                  (5)
+#define EVENT_SHOOT_OVERSEER           (6)
+#define EVENT_SHOOT_OVERSEER_AUTO      (7)
+//#define EVENT_???                    (8)
+#define EVENT_ALLOW_PLAYER_CONTROL     (9)
+#define EVENT_SHOOT_OVERSEER_KILLED    (10)
+#define EVENT_COUNTDOWN_MASTER         (11)
+#define EVENT_COUNTDOWN_VATS           (12)
 
 procedure start begin
-	// Save the start date to check the water counter / days remaining, etc:
-	// We have to do this, because reasons.
-	if (global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) <= 0) then begin
-		set_global_var(GVAR_VAULT13_WATER_DAYS_COUNTER, 864000);
-	end
+   // Save the start date to check the water counter / days remaining, etc:
+   // We have to do this, because reasons.
+   if (global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) <= 0) then begin
+      set_global_var(GVAR_VAULT13_WATER_DAYS_COUNTER, 864000);
+   end
 end
 
 procedure combat_p_proc begin
 variable SecondsCombat;
 
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		if CUR_AREA_MILITARY_BASE then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
-			if ((global_var(GVAR_VATS_BLOWN) == 1) and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
-				if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
-					SecondsCombat := (global_var(GVAR_VATS_COUNTDOWN) - (game_time / 10));
-					if (SecondsCombat <= 0) then begin
-						set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1);
-						play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
-						signal_end_game;
-					end
-					else begin
-						display_msg(message_str(SCRIPT_MBENT, 100) + SecondsCombat + message_str(SCRIPT_MBENT, 101));//   "Time Left : XXX Seconds"
-					end
-				end
-			end
-		end
-		else if CUR_AREA_CATHEDRAL then begin
-			if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
-				if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(GVAR_MASTER_BLOWN) == 1)) then begin
-					SecondsCombat := 240 - ((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION));
-					if (((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
-						set_global_var(GVAR_MASTER_BLOWN_CUTSCENE, 1);
-						play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
-						signal_end_game;
-					end
-					else begin
-						display_msg(message_str(SCRIPT_MASTER2, 100) + SecondsCombat + message_str(SCRIPT_MASTER2, 101));//   "Time Left : XXX Seconds"
-					end
-				end
-			end
-		end
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      if CUR_AREA_MILITARY_BASE then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
+         if ((global_var(GVAR_VATS_BLOWN) == 1) and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
+            if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+               SecondsCombat := (global_var(GVAR_VATS_COUNTDOWN) - (game_time / 10));
+               if (SecondsCombat <= 0) then begin
+                  set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1);
+                  play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
+                  signal_end_game;
+               end
+               else begin
+                  display_msg(message_str(SCRIPT_MBENT, 100) + SecondsCombat + message_str(SCRIPT_MBENT, 101));//   "Time Left : XXX Seconds"
+               end
+            end
+         end
+      end
+      else if CUR_AREA_CATHEDRAL then begin
+         if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
+            if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(GVAR_MASTER_BLOWN) == 1)) then begin
+               SecondsCombat := 240 - ((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION));
+               if (((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
+                  set_global_var(GVAR_MASTER_BLOWN_CUTSCENE, 1);
+                  play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
+                  signal_end_game;
+               end
+               else begin
+                  display_msg(message_str(SCRIPT_MASTER2, 100) + SecondsCombat + message_str(SCRIPT_MASTER2, 101));//   "Time Left : XXX Seconds"
+               end
+            end
+         end
+      end
+   end
 
-	call PoisonCheck;
+   call PoisonCheck;
 end
 
 procedure critter_p_proc begin
@@ -101,48 +101,48 @@ procedure critter_p_proc begin
 end
 
 procedure look_at_p_proc begin
-	debug("necrop: " + get_necropolis_days_left);
+   debug("necrop: " + get_necropolis_days_left);
 
-	if global_var(GVAR_CHEAT_DEBUG_MENU_ENABLED) or debug_mode then begin
-		script_overrides;
-		if (dude_poison_stat > 0) or (dude_rads > 0) then begin
-			display_msg("Current poison: " + dude_poison_stat + ". " + "Current rads: " + dude_rads + ". " + "Current time: " + game_time_hour + ". ");
-		end
-	end
+   if global_var(GVAR_CHEAT_DEBUG_MENU_ENABLED) or debug_mode then begin
+      script_overrides;
+      if (dude_poison_stat > 0) or (dude_rads > 0) then begin
+         display_msg("Current poison: " + dude_poison_stat + ". " + "Current rads: " + dude_rads + ". " + "Current time: " + game_time_hour + ". ");
+      end
+   end
 end
 
 procedure description_p_proc begin
-	if (global_var(GVAR_CHEAT_DEBUG_MENU_ENABLED) == 1) then begin
-		terminate_combat;
-		script_overrides;
-		if not(combat_is_initialized) then begin
-			start_dialog_at_node(Cheater00a);
-		end
-	end
+   if (global_var(GVAR_CHEAT_DEBUG_MENU_ENABLED) == 1) then begin
+      terminate_combat;
+      script_overrides;
+      if not(combat_is_initialized) then begin
+         start_dialog_at_node(Cheater00a);
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
-	// "Player has entered map number blah blah blah"
-	//if debug_mode then call DebugEnterMsgs;
+   // "Player has entered map number blah blah blah"
+   //if debug_mode then call DebugEnterMsgs;
 end
 
 procedure map_update_p_proc begin
    variable days_since_exposed;
 
-	if CUR_AREA_MILITARY_BASE then begin
-		if ((global_var(GVAR_VATS_BLOWN) == 1) and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
-			if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
-				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
-			end
-		end
-	end
-	else if CUR_AREA_CATHEDRAL then begin
-		if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(GVAR_MASTER_BLOWN) == 1)) then begin
-			if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
-				add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
-			end
-		end
-	end
+   if CUR_AREA_MILITARY_BASE then begin
+      if ((global_var(GVAR_VATS_BLOWN) == 1) and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
+         if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+            add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
+         end
+      end
+   end
+   else if CUR_AREA_CATHEDRAL then begin
+      if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(GVAR_MASTER_BLOWN) == 1)) then begin
+         if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
+            add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
+         end
+      end
+   end
 
    // Fo2 MUTATION CODE
    if (global_var(GVAR_HAVE_MUTATED) == 0) then begin
@@ -179,222 +179,222 @@ procedure map_update_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-	if fixed_param == EVENT_END_GAME then begin
-		debug("EVENT_END_GAME");
-		game_ui_enable;
-		set_story_finished;
-		kill_critter_type(PID_OVERSEER, 0);
-	end
-	else if fixed_param == EVENT_TIMEOUT then begin
-		debug("EVENT_TIMEOUT");
-		game_ui_disable;
-		add_timer_event(dude_obj, 4, EVENT_SHOOT_OVERSEER);
-	end
-	else if fixed_param == EVENT_SHOOT_OVERSEER then begin
-		debug("EVENT_SHOOT_OVERSEER");
-		ShootOverseer := 0;
-		call KillCheck;
+   if fixed_param == EVENT_END_GAME then begin
+      debug("EVENT_END_GAME");
+      game_ui_enable;
+      set_story_finished;
+      kill_critter_type(PID_OVERSEER, 0);
+   end
+   else if fixed_param == EVENT_TIMEOUT then begin
+      debug("EVENT_TIMEOUT");
+      game_ui_disable;
+      add_timer_event(dude_obj, 4, EVENT_SHOOT_OVERSEER);
+   end
+   else if fixed_param == EVENT_SHOOT_OVERSEER then begin
+      debug("EVENT_SHOOT_OVERSEER");
+      ShootOverseer := 0;
+      call KillCheck;
 
-		if (ShootOverseer == 1) then begin
-			gun_ptr := create_object(PID_10MM_PISTOL, 0, 0);
-			add_obj_to_inven(dude_obj, gun_ptr);
+      if (ShootOverseer == 1) then begin
+         gun_ptr := create_object(PID_10MM_PISTOL, 0, 0);
+         add_obj_to_inven(dude_obj, gun_ptr);
 
-			if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
-				wield_obj_critter(dude_obj, gun_ptr);
-			end
+         if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+            wield_obj_critter(dude_obj, gun_ptr);
+         end
 
-			set_global_var(GVAR_OVERSEER_KILLED, 2);
-			add_timer_event(dude_obj, 10, EVENT_SHOOT_OVERSEER_AUTO);//was 25
-		end
-		else begin
-			add_timer_event(dude_obj, 36, EVENT_ALLOW_PLAYER_CONTROL);//was 36
-		end
-	end
-	else if fixed_param == EVENT_SHOOT_OVERSEER_AUTO then begin
-		debug("EVENT_SHOOT_OVERSEER_AUTO");
-		if global_var(GVAR_DUDE_SHOOTS_OVERSEER) < 1 then begin
-			if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
-				reg_anim_clear(map_var(0));
-				reg_anim_begin();
-				reg_anim_animate(dude_obj, 43, -1);
+         set_global_var(GVAR_OVERSEER_KILLED, 2);
+         add_timer_event(dude_obj, 10, EVENT_SHOOT_OVERSEER_AUTO);//was 25
+      end
+      else begin
+         add_timer_event(dude_obj, 36, EVENT_ALLOW_PLAYER_CONTROL);//was 36
+      end
+   end
+   else if fixed_param == EVENT_SHOOT_OVERSEER_AUTO then begin
+      debug("EVENT_SHOOT_OVERSEER_AUTO");
+      if global_var(GVAR_DUDE_SHOOTS_OVERSEER) < 1 then begin
+         if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+            reg_anim_clear(map_var(0));
+            reg_anim_begin();
+            reg_anim_animate(dude_obj, 43, -1);
 
-				GunSoundAnim := sfx_build_weapon_name(1, gun_ptr, 0, map_var(0));
+            GunSoundAnim := sfx_build_weapon_name(1, gun_ptr, 0, map_var(0));
 
-				reg_anim_play_sfx(dude_obj, GunSoundAnim, -1);
-				reg_anim_animate(dude_obj, 45, -1);
+            reg_anim_play_sfx(dude_obj, GunSoundAnim, -1);
+            reg_anim_animate(dude_obj, 45, -1);
 
-				GunSoundAnim := sfx_build_char_name(map_var(0), 20, 3);
+            GunSoundAnim := sfx_build_char_name(map_var(0), 20, 3);
 
-				reg_anim_play_sfx(map_var(0), GunSoundAnim, 0);
-				reg_anim_animate(map_var(0), 20, 0);
-				reg_anim_animate(dude_obj, 44, 0);
-				reg_anim_end();
+            reg_anim_play_sfx(map_var(0), GunSoundAnim, 0);
+            reg_anim_animate(map_var(0), 20, 0);
+            reg_anim_animate(dude_obj, 44, 0);
+            reg_anim_end();
 
-				add_timer_event(dude_obj, game_ticks(10), 8);
-			end
-		end
-		set_global_var(GVAR_DUDE_SHOOTS_OVERSEER, 1);
-	end
-	else if fixed_param == 8 then begin
-		debug("fixed_param 8");
-		game_ui_enable;
-		set_global_var(GVAR_OVERSEER_END_SEQ, 7);// <-- EndGame Mod
-		add_timer_event(dude_obj, game_ticks(1), EVENT_SHOOT_OVERSEER_KILLED);
-	end
-	else if fixed_param == EVENT_ALLOW_PLAYER_CONTROL then begin
-		debug("EVENT_ALLOW_PLAYER_CONTROL");
-		set_global_var(GVAR_MARK_V13_2, 0);//	MARK_V13_2 := 1;    //  559
-		set_global_var(GVAR_MARK_V13_3, 0);//	MARK_V13_3 := 1;    //  560
-		set_global_var(GVAR_MARK_V13_4, 0);//	MARK_V13_4 := 1;    //  561
+            add_timer_event(dude_obj, game_ticks(10), 8);
+         end
+      end
+      set_global_var(GVAR_DUDE_SHOOTS_OVERSEER, 1);
+   end
+   else if fixed_param == 8 then begin
+      debug("fixed_param 8");
+      game_ui_enable;
+      set_global_var(GVAR_OVERSEER_END_SEQ, 7);// <-- EndGame Mod
+      add_timer_event(dude_obj, game_ticks(1), EVENT_SHOOT_OVERSEER_KILLED);
+   end
+   else if fixed_param == EVENT_ALLOW_PLAYER_CONTROL then begin
+      debug("EVENT_ALLOW_PLAYER_CONTROL");
+      set_global_var(GVAR_MARK_V13_2, 0);//  MARK_V13_2 := 1;    //  559
+      set_global_var(GVAR_MARK_V13_3, 0);//  MARK_V13_3 := 1;    //  560
+      set_global_var(GVAR_MARK_V13_4, 0);//  MARK_V13_4 := 1;    //  561
 
-		add_timer_event(dude_obj, 0, EVENT_END_GAME);
-	end
-	else if fixed_param == EVENT_SHOOT_OVERSEER_KILLED then begin
-		debug("EVENT_SHOOT_OVERSEER_KILLED");
-		game_ui_enable;
-		set_global_var(GVAR_MARK_V13_2, 0);//	MARK_V13_2 := 1;    //  559
-		set_global_var(GVAR_MARK_V13_3, 0);//	MARK_V13_3 := 1;    //  560
-		set_global_var(GVAR_MARK_V13_4, 0);//	MARK_V13_4 := 1;    //  561
-		kill_critter_type(PID_OVERSEER, 1);//Overseer
+      add_timer_event(dude_obj, 0, EVENT_END_GAME);
+   end
+   else if fixed_param == EVENT_SHOOT_OVERSEER_KILLED then begin
+      debug("EVENT_SHOOT_OVERSEER_KILLED");
+      game_ui_enable;
+      set_global_var(GVAR_MARK_V13_2, 0);//  MARK_V13_2 := 1;    //  559
+      set_global_var(GVAR_MARK_V13_3, 0);//  MARK_V13_3 := 1;    //  560
+      set_global_var(GVAR_MARK_V13_4, 0);//  MARK_V13_4 := 1;    //  561
+      kill_critter_type(PID_OVERSEER, 1);//Overseer
 
-		set_story_finished;
-	end
+      set_story_finished;
+   end
 
 /*******************************************************************
    Run the Mariposa and Cathedral bomb countdown
 *******************************************************************/
-	else if fixed_param == EVENT_COUNTDOWN_MASTER then begin
-		if (CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34) then begin
-			if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
-				SecondsLeft := 240 - ((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION));
-				if (((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
-					Zero := 0;
-					display_msg(message_str(SCRIPT_MASTER2, 100) + Zero + message_str(SCRIPT_MASTER2, 101));
-					set_global_var(GVAR_MASTER_BLOWN_CUTSCENE, 1);
-					play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
-					signal_end_game;
-				end
-				else if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
-					SecondsFLAG := 1;
-					display_msg(message_str(SCRIPT_MASTER2, 100) + SecondsLeft + message_str(SCRIPT_MASTER2, 101));
-				end
-				else begin
-					if (SecondsLeft % 5) then begin
-						SecondsFLAG := 0;
-					end
-				end
-				add_timer_event(dude_obj, 10, EVENT_COUNTDOWN_MASTER);
-			end
-		end
-	end
-	else if fixed_param == EVENT_COUNTDOWN_VATS then begin
-		if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin
-			if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
-				SecondsLeft := (global_var(GVAR_VATS_COUNTDOWN) - (game_time / 10));
-				if (SecondsLeft <= 0) then begin
-					Zero := 0;
-					display_msg(message_str(SCRIPT_MBENT, 100) + Zero + message_str(SCRIPT_MBENT, 101));
-					set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1);
-					play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
-					signal_end_game;
-				end
-				else if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
-					SecondsFLAG := 1;
-					display_msg(message_str(SCRIPT_MBENT, 100) + SecondsLeft + message_str(SCRIPT_MBENT, 101));
-				end
-				else begin
-					if (SecondsLeft % 5) then begin
-						SecondsFLAG := 0;
-					end
-				end
-				add_timer_event(dude_obj, 10, EVENT_COUNTDOWN_VATS);
-			end
-		end
-	end
-	else if fixed_param == 13 then begin
-		if (global_var(GVAR_UNDRBED_STARTED_TIMER) == 0) then begin// UNDRBED_STARTED_TIMER
-			if (dude_tile == 24692) or (dude_tile == 24892) or (dude_tile == 25092) or (dude_tile == 25292) or (dude_tile == 24492) then begin
-				set_global_var(GVAR_UNDRBED_STARTED_TIMER, 1);
-				if (is_success(do_check(dude_obj, STAT_pe, 0))) then begin
-					set_global_var(GVAR_UNDRBED_STARTED_TIMER, 2);
-					display_msg(message_str(SCRIPT_UNDRBED, 100));
-				end
-				if (global_var(GVAR_UNDRBED_STARTED_TIMER) == 0) then begin
-					set_global_var(GVAR_UNDRBED_STARTED_TIMER, 1);
-				end
-			end
-			else begin
-				add_timer_event(dude_obj, 5, 13);
-			end
-		end
-		else begin
-			if (global_var(GVAR_UNDRBED_STARTED_TIMER) == 1) or (global_var(GVAR_UNDRBED_STARTED_TIMER) == 2) then begin// UNDRBED_STARTED_TIMER -- PHASE2
-				if (dude_tile == 25287) or (dude_tile == 26090) then begin
-					if global_var(GVAR_FIXT_BUGFIXES_ONLY) or (global_var(GVAR_UNDRBED_STARTED_TIMER) == 1) then begin
-						set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
-						display_msg(message_str(SCRIPT_UNDRBED, 101));
-						set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
-					end
-					else begin
-						set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
+   else if fixed_param == EVENT_COUNTDOWN_MASTER then begin
+      if (CUR_MAP_CHILDRN1) or (CUR_MAP_CHILDRN2) or (CUR_MAP_MSTRLR12) or (CUR_MAP_MSTRLR34) then begin
+         if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
+            SecondsLeft := 240 - ((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION));
+            if (((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
+               Zero := 0;
+               display_msg(message_str(SCRIPT_MASTER2, 100) + Zero + message_str(SCRIPT_MASTER2, 101));
+               set_global_var(GVAR_MASTER_BLOWN_CUTSCENE, 1);
+               play_gmovie(CATHEXPLODE_MOVIE);//------ Cathedral and Master's Vault go pfoom. Look at the pretty lights, Ma!
+               signal_end_game;
+            end
+            else if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
+               SecondsFLAG := 1;
+               display_msg(message_str(SCRIPT_MASTER2, 100) + SecondsLeft + message_str(SCRIPT_MASTER2, 101));
+            end
+            else begin
+               if (SecondsLeft % 5) then begin
+                  SecondsFLAG := 0;
+               end
+            end
+            add_timer_event(dude_obj, 10, EVENT_COUNTDOWN_MASTER);
+         end
+      end
+   end
+   else if fixed_param == EVENT_COUNTDOWN_VATS then begin
+      if (cur_map_index > MAP_LAFOLLWR) and (cur_map_index < MAP_MSTRLR12) then begin
+         if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
+            SecondsLeft := (global_var(GVAR_VATS_COUNTDOWN) - (game_time / 10));
+            if (SecondsLeft <= 0) then begin
+               Zero := 0;
+               display_msg(message_str(SCRIPT_MBENT, 100) + Zero + message_str(SCRIPT_MBENT, 101));
+               set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1);
+               play_gmovie(VATSEXPLODE_MOVIE);//------ Military Base goes boom and dies, sweet!
+               signal_end_game;
+            end
+            else if ((SecondsLeft % 5) == 0) and (SecondsFLAG == 0)  then begin
+               SecondsFLAG := 1;
+               display_msg(message_str(SCRIPT_MBENT, 100) + SecondsLeft + message_str(SCRIPT_MBENT, 101));
+            end
+            else begin
+               if (SecondsLeft % 5) then begin
+                  SecondsFLAG := 0;
+               end
+            end
+            add_timer_event(dude_obj, 10, EVENT_COUNTDOWN_VATS);
+         end
+      end
+   end
+   else if fixed_param == 13 then begin
+      if (global_var(GVAR_UNDRBED_STARTED_TIMER) == 0) then begin// UNDRBED_STARTED_TIMER
+         if (dude_tile == 24692) or (dude_tile == 24892) or (dude_tile == 25092) or (dude_tile == 25292) or (dude_tile == 24492) then begin
+            set_global_var(GVAR_UNDRBED_STARTED_TIMER, 1);
+            if (is_success(do_check(dude_obj, STAT_pe, 0))) then begin
+               set_global_var(GVAR_UNDRBED_STARTED_TIMER, 2);
+               display_msg(message_str(SCRIPT_UNDRBED, 100));
+            end
+            if (global_var(GVAR_UNDRBED_STARTED_TIMER) == 0) then begin
+               set_global_var(GVAR_UNDRBED_STARTED_TIMER, 1);
+            end
+         end
+         else begin
+            add_timer_event(dude_obj, 5, 13);
+         end
+      end
+      else begin
+         if (global_var(GVAR_UNDRBED_STARTED_TIMER) == 1) or (global_var(GVAR_UNDRBED_STARTED_TIMER) == 2) then begin// UNDRBED_STARTED_TIMER -- PHASE2
+            if (dude_tile == 25287) or (dude_tile == 26090) then begin
+               if global_var(GVAR_FIXT_BUGFIXES_ONLY) or (global_var(GVAR_UNDRBED_STARTED_TIMER) == 1) then begin
+                  set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
+                  display_msg(message_str(SCRIPT_UNDRBED, 101));
+                  set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
+               end
+               else begin
+                  set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
 
-						if (is_success(do_check(dude_obj, STAT_pe, 0)) and is_success(do_check(dude_obj, STAT_lu, 0))) then begin
-							variable item := 0;
-							variable item_ptr := 0;
-							item := create_object(PID_SMALL_STATUETTE, 0, 0);
-							item_ptr := item;
-							move_to(item_ptr, 27297, dude_elevation);
-							display_msg(message_str(SCRIPT_UNDRBED, 102));
-						end
-						else begin
-							display_msg(message_str(SCRIPT_UNDRBED, 101));
-						end
-						set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
-					end
-				end
-				else begin
-					add_timer_event(dude_obj, 5, 13);
-				end
-			end
-		end
-	end
+                  if (is_success(do_check(dude_obj, STAT_pe, 0)) and is_success(do_check(dude_obj, STAT_lu, 0))) then begin
+                     variable item := 0;
+                     variable item_ptr := 0;
+                     item := create_object(PID_SMALL_STATUETTE, 0, 0);
+                     item_ptr := item;
+                     move_to(item_ptr, 27297, dude_elevation);
+                     display_msg(message_str(SCRIPT_UNDRBED, 102));
+                  end
+                  else begin
+                     display_msg(message_str(SCRIPT_UNDRBED, 101));
+                  end
+                  set_global_var(GVAR_UNDRBED_STARTED_TIMER, 3);
+               end
+            end
+            else begin
+               add_timer_event(dude_obj, 5, 13);
+            end
+         end
+      end
+   end
 
 end
 
 /*******************************************************************
-	This, as in vanilla, checks if the PC is a "bad guy", and if so,
-	you'll slaughter the Overseer when he delivers the news.
-	Was under "fixed_param == 6" in timed_event -- Now has its own code routine. [Sduibek]
+   This, as in vanilla, checks if the PC is a "bad guy", and if so,
+   you'll slaughter the Overseer when he delivers the news.
+   Was under "fixed_param == 6" in timed_event -- Now has its own code routine. [Sduibek]
 *******************************************************************/
 procedure KillCheck begin
-	ShootOverseer := 0;
-	if (dude_trait(TRAIT_bloody_mess)) then begin//    Bloody Mess trait
-		ShootOverseer := 1;
-	end
-	else begin
-		if has_rep_childkiller then begin
-			ShootOverseer := 1;
-		end
-		else if has_rep_berserker then begin
-			ShootOverseer := 1;
-		end
-		else if (check_general_rep < -1) then begin//    General Reputation is -2 or less
-			ShootOverseer := 1;
-		end
-	end
+   ShootOverseer := 0;
+   if (dude_trait(TRAIT_bloody_mess)) then begin//    Bloody Mess trait
+      ShootOverseer := 1;
+   end
+   else begin
+      if has_rep_childkiller then begin
+         ShootOverseer := 1;
+      end
+      else if has_rep_berserker then begin
+         ShootOverseer := 1;
+      end
+      else if (check_general_rep < -1) then begin//    General Reputation is -2 or less
+         ShootOverseer := 1;
+      end
+   end
 end
 
 procedure PoisonCheck begin
-	// "Poison has left your system"
-	if (dude_poison_stat > 0) then begin
-		if not(is_loading_game) then begin
-			set_global_var(GVAR_DUDE_OBJ_POISONED, 1);// tracker
-		end
-	end
-	else if (global_var(GVAR_DUDE_OBJ_POISONED) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
-		set_global_var(GVAR_DUDE_OBJ_POISONED, 0);//	<< Clear the "Player Is Poisoned" tracker
-		if not(is_loading_game) then begin
-			display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
-		end
-	end
+   // "Poison has left your system"
+   if (dude_poison_stat > 0) then begin
+      if not(is_loading_game) then begin
+         set_global_var(GVAR_DUDE_OBJ_POISONED, 1);// tracker
+      end
+   end
+   else if (global_var(GVAR_DUDE_OBJ_POISONED) == 1) then begin// if player is no longer actually poisoned and PlayerIsPoisoned tracker is still flagged
+      set_global_var(GVAR_DUDE_OBJ_POISONED, 0);// << Clear the "Player Is Poisoned" tracker
+      if not(is_loading_game) then begin
+         display_msg(message_str(SCRIPT_GENCHAT, 214));// "The poison has left your system."
+      end
+   end
 end

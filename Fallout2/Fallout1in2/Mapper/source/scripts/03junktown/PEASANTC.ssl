@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Generic peasant
+   Junktown - Generic peasant
 
 */
 
@@ -44,202 +44,202 @@ variable sleep_tile;
 
 import variable removal_ptr;
 
-#define LVAR_Sleeping 							(2)
+#define LVAR_Sleeping                     (2)
 
 procedure start begin
 
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
-		if (self_can_see_dude) then begin
-			call flee_dude;
-		end
-	end
+   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+      if (self_can_see_dude) then begin
+         call flee_dude;
+      end
+   end
 end
 
 procedure damage_p_proc
 begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
 end
 
 procedure destroy_p_proc begin
 
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		inc_good_critter
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      inc_good_critter
+   end
 end
 
 procedure map_enter_p_proc
 begin
-	if (map_var(2) == 1) then begin
-		if not(is_loading_game) then begin    set_self_invisible;    end
-		removal_ptr := self_obj;
-	end
-	else begin
-		sleep_time := random(2215, 2230);
-		wake_time := random(715, 730);
-		if ((GAME_TIME_IN_DAYS) < 80) then begin
-			sleep_tile := 15275;
-			home_tile := 14267;
-		end
-		else begin
-			sleep_tile := 23524;
-			home_tile := 23923;
-		end
-	end
-	set_self_team(TEAM_JUNKTOWNER);
-	set_self_ai(AI_PEASANT);
-	if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
-		move_to(self_obj, home_tile, self_elevation);
-	end
-	if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
-		move_to(self_obj, sleep_tile, self_elevation);
-	end
+   if (map_var(2) == 1) then begin
+      if not(is_loading_game) then begin    set_self_invisible;    end
+      removal_ptr := self_obj;
+   end
+   else begin
+      sleep_time := random(2215, 2230);
+      wake_time := random(715, 730);
+      if ((GAME_TIME_IN_DAYS) < 80) then begin
+         sleep_tile := 15275;
+         home_tile := 14267;
+      end
+      else begin
+         sleep_tile := 23524;
+         home_tile := 23923;
+      end
+   end
+   set_self_team(TEAM_JUNKTOWNER);
+   set_self_ai(AI_PEASANT);
+   if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin
+      move_to(self_obj, home_tile, self_elevation);
+   end
+   if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin
+      move_to(self_obj, sleep_tile, self_elevation);
+   end
 end
 
 procedure map_update_p_proc begin
-	sleeping
+   sleeping
 end
 
 procedure pickup_p_proc
 begin
-	set_local_var(1, 1);
-	float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
+   set_local_var(1, 1);
+   float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	if (local_var(2) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
-	end
-	else begin
-		if (local_var(1) == 1) then begin
-			float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
-		end
-		else begin
-			if ((GAME_TIME_IN_DAYS) < 80) then begin
-				set_local_var(0, 1);
-				if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
-					float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
-				end
-				else begin
-					if (check_general_rep < -10) then begin
-						float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
-					end
-					else begin
-						if (dude_is_male) then begin
-							float_msg(self_obj, mstr(random(102, 103)), FLOAT_MSG_GREEN);
-						end
-						else begin
-							float_msg(self_obj, mstr(random(102, 104)), FLOAT_MSG_GREEN);
-						end
-					end
-				end
-			end
-			else begin
-				set_map_var(2, 1);
-				start_gdialog(438, self_obj, 4, -1, -1);
-				gsay_start;
-				call PeasantC00;
-				gsay_end;
-				end_dialogue;
-			end
-		end
-	end
+   dude_look_at_self;
+   if (local_var(2) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
+   end
+   else begin
+      if (local_var(1) == 1) then begin
+         float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
+      end
+      else begin
+         if ((GAME_TIME_IN_DAYS) < 80) then begin
+            set_local_var(0, 1);
+            if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+               float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
+            end
+            else begin
+               if (check_general_rep < -10) then begin
+                  float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
+               end
+               else begin
+                  if (dude_is_male) then begin
+                     float_msg(self_obj, mstr(random(102, 103)), FLOAT_MSG_GREEN);
+                  end
+                  else begin
+                     float_msg(self_obj, mstr(random(102, 104)), FLOAT_MSG_GREEN);
+                  end
+               end
+            end
+         end
+         else begin
+            set_map_var(2, 1);
+            start_gdialog(438, self_obj, 4, -1, -1);
+            gsay_start;
+            call PeasantC00;
+            gsay_end;
+            end_dialogue;
+         end
+      end
+   end
 end
 
 procedure PeasantC00
 begin
-	Reply(105);
-	giq_option(4, NAME, 106, PeasantCEnd, NEUTRAL_REACTION);
-	giq_option(5, NAME, 107, PeasantC00a, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 108, PeasantC01, NEUTRAL_REACTION);
+   Reply(105);
+   giq_option(4, NAME, 106, PeasantCEnd, NEUTRAL_REACTION);
+   giq_option(5, NAME, 107, PeasantC00a, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 108, PeasantC01, NEUTRAL_REACTION);
 end
 
 procedure PeasantC00a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call PeasantC03;
-	end
-	else begin
-		call PeasantC02;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call PeasantC03;
+   end
+   else begin
+      call PeasantC02;
+   end
 end
 
 procedure PeasantC01
 begin
-	NMessage(109);
+   NMessage(109);
 end
 
 procedure PeasantC02
 begin
-	NMessage(110);
+   NMessage(110);
 end
 
 procedure PeasantC03
 begin
-	Reply(111);
-	giq_option(5, NAME, 112, PeasantC04, BAD_REACTION);
-	giq_option(6, NAME, 113, PeasantC03a, NEUTRAL_REACTION);
-	giq_option(4, NAME, 106, PeasantCEnd, NEUTRAL_REACTION);
+   Reply(111);
+   giq_option(5, NAME, 112, PeasantC04, BAD_REACTION);
+   giq_option(6, NAME, 113, PeasantC03a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 106, PeasantCEnd, NEUTRAL_REACTION);
 end
 
 procedure PeasantC03a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
-		call PeasantC06;
-	end
-	else begin
-		call PeasantC05;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
+      call PeasantC06;
+   end
+   else begin
+      call PeasantC05;
+   end
 end
 
 procedure PeasantC04
 begin
-	set_local_var(1, 1);
-	BMessage(114);
+   set_local_var(1, 1);
+   BMessage(114);
 end
 
 procedure PeasantC05
 begin
-	NMessage(115);
+   NMessage(115);
 end
 
 procedure PeasantC06
 begin
-	variable LVar0 := 0;
-	LVar0 := mstr(116);
-	if not(is_killian_alive) then begin
-		if not(is_gizmo_alive) then begin
-			LVar0 := LVar0 + mstr(120);
-		end
-		else begin
-			LVar0 := LVar0 + mstr(119);
-		end
-	end
-	else begin
-		if not(is_gizmo_alive) then begin
-			LVar0 := LVar0 + mstr(118);
-		end
-		else begin
-			LVar0 := LVar0 + mstr(117);
-		end
-	end
-	Reply(LVar0);
-	giq_option(5, NAME, 121, PeasantC07, NEUTRAL_REACTION);
-	giq_option(5, NAME, 122, PeasantCEnd, NEUTRAL_REACTION);
+   variable LVar0 := 0;
+   LVar0 := mstr(116);
+   if not(is_killian_alive) then begin
+      if not(is_gizmo_alive) then begin
+         LVar0 := LVar0 + mstr(120);
+      end
+      else begin
+         LVar0 := LVar0 + mstr(119);
+      end
+   end
+   else begin
+      if not(is_gizmo_alive) then begin
+         LVar0 := LVar0 + mstr(118);
+      end
+      else begin
+         LVar0 := LVar0 + mstr(117);
+      end
+   end
+   Reply(LVar0);
+   giq_option(5, NAME, 121, PeasantC07, NEUTRAL_REACTION);
+   giq_option(5, NAME, 122, PeasantCEnd, NEUTRAL_REACTION);
 end
 
 procedure PeasantC07
 begin
-	NMessage(123);
+   NMessage(123);
 end
 
 procedure PeasantCEnd

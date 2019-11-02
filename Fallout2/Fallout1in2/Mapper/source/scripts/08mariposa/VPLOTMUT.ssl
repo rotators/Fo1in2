@@ -1,6 +1,6 @@
 /*
 
-	Mariposa - ???
+   Mariposa - ???
 
 */
 
@@ -47,214 +47,214 @@ variable home_tile := 7000;
 variable waypoint;
 
 procedure start begin
-	if not(initial) then begin
-		initial := 1;
-		set_self_team(TEAM_NECROPOLIS_MUTANT);
-		if (map_var(0)) then begin
-			move_to(self_obj, home_tile, 0);
-		end
-		else begin
-			add_timer_event(self_obj, game_ticks(45), 1);
-		end
-	end
+   if not(initial) then begin
+      initial := 1;
+      set_self_team(TEAM_NECROPOLIS_MUTANT);
+      if (map_var(0)) then begin
+         move_to(self_obj, home_tile, 0);
+      end
+      else begin
+         add_timer_event(self_obj, game_ticks(45), 1);
+      end
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		round_count := round_count + 1;
-	end
-	if (round_count > 2) then begin
-		call VPLotMutAlert;
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      round_count := round_count + 1;
+   end
+   if (round_count > 2) then begin
+      call VPLotMutAlert;
+   end
 end
 
 procedure critter_p_proc begin
-	if (self_can_see_dude) then begin
-		if (tmp_hostile) then begin
-			tmp_hostile := 0;
-			attack(dude_obj);
-		end
-		else begin
-			if (global_var(GVAR_VATS_ALERT)) then begin
-				tmp_hostile := 1;
-			end
-			else begin
-				if (not(map_var(4))) then begin
-					if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-						dialogue_system_enter;
-					end
-				end
-			end
-		end
-	end
-	if (map_var(0)) then begin
-		if (not(waypoint)) then begin
-			if (self_tile != 22312) then begin
-				self_walk_to_tile(22312);
-			end
-			else begin
-				waypoint := 1;
-			end
-		end
-		else begin
-			if (waypoint == 1) then begin
-				if (self_tile != 26317) then begin
-					self_walk_to_tile(26317);
-				end
-				else begin
-					waypoint := 2;
-				end
-			end
-			else begin
-				if (waypoint == 2) then begin
-					if (self_tile != 31517) then begin
-						self_walk_to_tile(32319);
-					end
-					else begin
-						waypoint := 3;
-					end
-				end
-				else begin
-					if (waypoint == 3) then begin
-						removal_ptr := self_obj;
-					end
-				end
-			end
-		end
-	end
+   if (self_can_see_dude) then begin
+      if (tmp_hostile) then begin
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      else begin
+         if (global_var(GVAR_VATS_ALERT)) then begin
+            tmp_hostile := 1;
+         end
+         else begin
+            if (not(map_var(4))) then begin
+               if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+                  dialogue_system_enter;
+               end
+            end
+         end
+      end
+   end
+   if (map_var(0)) then begin
+      if (not(waypoint)) then begin
+         if (self_tile != 22312) then begin
+            self_walk_to_tile(22312);
+         end
+         else begin
+            waypoint := 1;
+         end
+      end
+      else begin
+         if (waypoint == 1) then begin
+            if (self_tile != 26317) then begin
+               self_walk_to_tile(26317);
+            end
+            else begin
+               waypoint := 2;
+            end
+         end
+         else begin
+            if (waypoint == 2) then begin
+               if (self_tile != 31517) then begin
+                  self_walk_to_tile(32319);
+               end
+               else begin
+                  waypoint := 3;
+               end
+            end
+            else begin
+               if (waypoint == 3) then begin
+                  removal_ptr := self_obj;
+               end
+            end
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	inc_inv_evil_crit
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
+   inc_inv_evil_crit
+   rm_timer_event(self_obj);
 end
 
 procedure pickup_p_proc
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	if (global_var(GVAR_LIEUTENANTS_DEAD)) then begin
-		call VPLotMut08;
-	end
-	else begin
-		if (dude_is_armed) and not(tmp_hostile) then begin
-			if (random(0, 5) == 5) then begin
-				call VPLotMut00;
-			end
-			else begin
-				tmp_hostile := 1;
-			end
-		end
-		else begin
-			start_gdialog(433, self_obj, 4, -1, -1);
-			gsay_start;
-			call VPLotMut03;
-			gsay_end;
-			end_dialogue;
-		end
-	end
+   dude_look_at_self;
+   if (global_var(GVAR_LIEUTENANTS_DEAD)) then begin
+      call VPLotMut08;
+   end
+   else begin
+      if (dude_is_armed) and not(tmp_hostile) then begin
+         if (random(0, 5) == 5) then begin
+            call VPLotMut00;
+         end
+         else begin
+            tmp_hostile := 1;
+         end
+      end
+      else begin
+         start_gdialog(433, self_obj, 4, -1, -1);
+         gsay_start;
+         call VPLotMut03;
+         gsay_end;
+         end_dialogue;
+      end
+   end
 end
 
 procedure timed_event_p_proc
 begin
-	if (not(map_var(0))) then begin
-		if (self_tile == guard_tile) then begin
-			if (not(all_clear)) then begin
-				float_msg(self_obj, mstr(100), FLOAT_MSG_NORMAL);
-				all_clear := 1;
-			end
-			self_walk_to_tile(parking_lot_tile);
-		end
-		else begin
-			all_clear := 0;
-			self_walk_to_tile(guard_tile);
-		end
-		add_timer_event(self_obj, game_ticks(60), 1);
-	end
+   if (not(map_var(0))) then begin
+      if (self_tile == guard_tile) then begin
+         if (not(all_clear)) then begin
+            float_msg(self_obj, mstr(100), FLOAT_MSG_NORMAL);
+            all_clear := 1;
+         end
+         self_walk_to_tile(parking_lot_tile);
+      end
+      else begin
+         all_clear := 0;
+         self_walk_to_tile(guard_tile);
+      end
+      add_timer_event(self_obj, game_ticks(60), 1);
+   end
 end
 
 procedure VPLotMut00
 begin
-	float_msg(self_obj, mstr(random(101, 103)), FLOAT_MSG_NORMAL);
-	tmp_hostile := 1;
+   float_msg(self_obj, mstr(random(101, 103)), FLOAT_MSG_NORMAL);
+   tmp_hostile := 1;
 end
 
 procedure VPLotMut03
 begin
-	Reply(random(104, 106));
-	giq_option(-3, NAME, 107, VPLotMut04, NEUTRAL_REACTION);
-	giq_option(4, NAME, 108, VPLotMut04, NEUTRAL_REACTION);
-	giq_option(5, NAME, 109, VPLotMut05, NEUTRAL_REACTION);
-	giq_option(6, NAME, 110, VPLotMut03a, NEUTRAL_REACTION);
-	if dude_wearing_coc_robe then begin
-		giq_option(6, NAME, 111, VPLotMut03b, NEUTRAL_REACTION);
-	end
+   Reply(random(104, 106));
+   giq_option(-3, NAME, 107, VPLotMut04, NEUTRAL_REACTION);
+   giq_option(4, NAME, 108, VPLotMut04, NEUTRAL_REACTION);
+   giq_option(5, NAME, 109, VPLotMut05, NEUTRAL_REACTION);
+   giq_option(6, NAME, 110, VPLotMut03a, NEUTRAL_REACTION);
+   if dude_wearing_coc_robe then begin
+      giq_option(6, NAME, 111, VPLotMut03b, NEUTRAL_REACTION);
+   end
 end
 
 procedure VPLotMut03a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call VPLotMut07;
-	end
-	else begin
-		call VPLotMut06;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call VPLotMut07;
+   end
+   else begin
+      call VPLotMut06;
+   end
 end
 
 procedure VPLotMut03b
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
-		call VPLotMut07;
-	end
-	else begin
-		call VPLotMut06;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
+      call VPLotMut07;
+   end
+   else begin
+      call VPLotMut06;
+   end
 end
 
 procedure VPLotMut04
 begin
-	tmp_hostile := 1;
-	NMessage(random(112, 114));
+   tmp_hostile := 1;
+   NMessage(random(112, 114));
 end
 
 procedure VPLotMut05
 begin
-	Reply(115);
-	giq_option(5, NAME, 116, VPLotMutxx, NEUTRAL_REACTION);
-	giq_option(5, NAME, 117, VPLotMutAlert, NEUTRAL_REACTION);
+   Reply(115);
+   giq_option(5, NAME, 116, VPLotMutxx, NEUTRAL_REACTION);
+   giq_option(5, NAME, 117, VPLotMutAlert, NEUTRAL_REACTION);
 end
 
 procedure VPLotMut06
 begin
-	tmp_hostile := 1;
-	NMessage(random(118, 120));
+   tmp_hostile := 1;
+   NMessage(random(118, 120));
 end
 
 procedure VPLotMut07
 begin
-	set_map_var(4, 1);
-	NMessage(random(121, 123));
+   set_map_var(4, 1);
+   NMessage(random(121, 123));
 end
 
 procedure VPLotMut08
 begin
-	float_msg(self_obj, mstr(random(124, 127)), FLOAT_MSG_NORMAL);
-	tmp_hostile := 1;
+   float_msg(self_obj, mstr(random(124, 127)), FLOAT_MSG_NORMAL);
+   tmp_hostile := 1;
 end
 
 procedure VPLotMutAlert
 begin
-	set_global_var(GVAR_VATS_ALERT, 1);
-	tmp_hostile := 1;
+   set_global_var(GVAR_VATS_ALERT, 1);
+   tmp_hostile := 1;
 end
 
 procedure VPLotMutxx
 begin
-	set_global_var(GVAR_ENTERING_VATS_HOW, 2);
-	load_map(MAP_MBVATS12, 5);
+   set_global_var(GVAR_ENTERING_VATS_HOW, 2);
+   load_map(MAP_MBVATS12, 5);
 end

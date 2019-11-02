@@ -1,12 +1,12 @@
 /*
 
-	Door to Jacobs room (Hub - Oldtown)
-	This script isn't used in vanilla Fo1.
+   Door to Jacobs room (Hub - Oldtown)
+   This script isn't used in vanilla Fo1.
 
 */
 #include "..\headers\define.h"
 
-#define NAME                    	SCRIPT_DOOR
+#define NAME                     SCRIPT_DOOR
 
 #include "..\headers\command.h"
 
@@ -21,96 +21,96 @@ import variable jake_door_ptr;
 
 variable OnceOnly := 1;
 
-#define LVAR_DoorStatus 	(0)
+#define LVAR_DoorStatus    (0)
 
 procedure start begin
-	if (OnceOnly) then begin
-		OnceOnly := 0;
-		jake_door_ptr := self_obj;
-		call map_update_p_proc;
-	end
+   if (OnceOnly) then begin
+      OnceOnly := 0;
+      jake_door_ptr := self_obj;
+      call map_update_p_proc;
+   end
 end
 
 procedure look_at_p_proc begin
-	if (local_var(LVAR_DoorStatus) == 0) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_HUBJAKE, 203));
-	end
+   if (local_var(LVAR_DoorStatus) == 0) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_HUBJAKE, 203));
+   end
 end
 
 procedure use_obj_on_p_proc begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	LVar0 := obj_being_used_with;
-	LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
-	if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
-		script_overrides;
-		if (is_success(LVar1)) then begin
-			set_local_var(LVAR_DoorStatus, 1);
-			display_msg(message_str(SCRIPT_HUBJAKE, 204));
-		end
-		else if (is_critical(LVar1)) then begin
-			rm_obj_from_inven(dude_obj, LVar0);
-			destroy_object(LVar0);
-			display_msg(message_str(SCRIPT_HUBJAKE, 207));
-		end
-		else begin
-			display_msg(message_str(SCRIPT_HUBJAKE, 205));
-		end
-	end
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := obj_being_used_with;
+   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
+   if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
+      script_overrides;
+      if (is_success(LVar1)) then begin
+         set_local_var(LVAR_DoorStatus, 1);
+         display_msg(message_str(SCRIPT_HUBJAKE, 204));
+      end
+      else if (is_critical(LVar1)) then begin
+         rm_obj_from_inven(dude_obj, LVar0);
+         destroy_object(LVar0);
+         display_msg(message_str(SCRIPT_HUBJAKE, 207));
+      end
+      else begin
+         display_msg(message_str(SCRIPT_HUBJAKE, 205));
+      end
+   end
 end
 
 procedure map_update_p_proc begin
-	if (not((game_time_hour >= 1900) or (game_time_hour < 600))) then begin
-		set_local_var(LVAR_DoorStatus, 1);
-	end
-	if (local_var(LVAR_DoorStatus) == 0) then begin
-		obj_lock(self_obj);
-	end
-	else begin
-		obj_unlock(self_obj);
-	end
-	set_map_var(7, 0);
-	if (map_var(6) == 0) then begin
-		if (obj_is_open(self_obj) == 1) then begin
-			set_map_var(7, 1);
-		end
-	end
-	if (obj_is_locked(self_obj) == 1) then begin
-		set_local_var(LVAR_DoorStatus, 1);
-	end
-	else begin
-		set_local_var(LVAR_DoorStatus, 0);
-	end
+   if (not((game_time_hour >= 1900) or (game_time_hour < 600))) then begin
+      set_local_var(LVAR_DoorStatus, 1);
+   end
+   if (local_var(LVAR_DoorStatus) == 0) then begin
+      obj_lock(self_obj);
+   end
+   else begin
+      obj_unlock(self_obj);
+   end
+   set_map_var(7, 0);
+   if (map_var(6) == 0) then begin
+      if (obj_is_open(self_obj) == 1) then begin
+         set_map_var(7, 1);
+      end
+   end
+   if (obj_is_locked(self_obj) == 1) then begin
+      set_local_var(LVAR_DoorStatus, 1);
+   end
+   else begin
+      set_local_var(LVAR_DoorStatus, 0);
+   end
 end
 
 procedure damage_p_proc begin
-	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-		if not(is_loading_game) then begin    set_self_invisible;    end
-		set_local_var(1, 1);
-		set_map_var(6, 1);
-	end
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      if not(is_loading_game) then begin    set_self_invisible;    end
+      set_local_var(1, 1);
+      set_map_var(6, 1);
+   end
    else begin
        display_msg(mstr(193));
    end
 end
 
 procedure use_skill_on_p_proc begin
-	variable LVar0 := 0;
-	if (local_var(LVAR_DoorStatus) == 0) then begin
-		if (action_being_used == SKILL_LOCKPICK) then begin
-			script_overrides;
-			LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
-			if (is_success(LVar0)) then begin
-				set_local_var(LVAR_DoorStatus, 1);
-				display_msg(message_str(SCRIPT_HUBJAKE, 204));
-			end
-			else begin
-				display_msg(message_str(SCRIPT_HUBJAKE, 205));
-			end
-		end
-	end
-	else begin
-		display_msg(message_str(SCRIPT_HUBJAKE, 206));
-	end
+   variable LVar0 := 0;
+   if (local_var(LVAR_DoorStatus) == 0) then begin
+      if (action_being_used == SKILL_LOCKPICK) then begin
+         script_overrides;
+         LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
+         if (is_success(LVar0)) then begin
+            set_local_var(LVAR_DoorStatus, 1);
+            display_msg(message_str(SCRIPT_HUBJAKE, 204));
+         end
+         else begin
+            display_msg(message_str(SCRIPT_HUBJAKE, 205));
+         end
+      end
+   end
+   else begin
+      display_msg(message_str(SCRIPT_HUBJAKE, 206));
+   end
 end

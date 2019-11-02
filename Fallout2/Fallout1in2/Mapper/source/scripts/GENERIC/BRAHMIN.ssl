@@ -22,47 +22,47 @@ variable initial := 0;
 variable temp_hostile := 0;
 variable DeathType := 56;
 
-#define EVENT_WALK 				(1)
-#define EVENT_FLOAT 				(2)
-#define EVENT_POOP 				(3)
+#define EVENT_WALK            (1)
+#define EVENT_FLOAT           (2)
+#define EVENT_POOP            (3)
 
 #define EVENT_STAND_UP 4
 
 #define float(x)                           float_msg(self_obj, mstr(x), FLOAT_COLOR_NORMAL)
 
 ////////////////////////////////////////
-//	COW SCRIPTS
+// COW SCRIPTS
 ////////////////////////////////////////
 
-//	cow		5
-//	BRAHMIN		34	<-- USE THIS ONE FOR DIALOG
-//	carcow		966
+// cow      5
+// BRAHMIN     34 <-- USE THIS ONE FOR DIALOG
+// carcow      966
 
 ////////////////////////////////////////
 
 procedure start begin
-	if shady_invaded then begin
-		if CUR_AREA_SHADY_SANDS then begin
-			if (local_var(4) != 1) then begin
-				set_local_var(4, 1);
-				call PickDeadBodyType;
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
-	else begin
-		if not(initial) then begin
-			initial := 1;
-			set_self_ai(AI_COW);
-			set_self_team(TEAM_4);
-		end
-	end
+   if shady_invaded then begin
+      if CUR_AREA_SHADY_SANDS then begin
+         if (local_var(4) != 1) then begin
+            set_local_var(4, 1);
+            call PickDeadBodyType;
+            kill_critter(self_obj, DeathType);
+         end
+      end
+   end
+   else begin
+      if not(initial) then begin
+         initial := 1;
+         set_self_ai(AI_COW);
+         set_self_team(TEAM_4);
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
-	flush_add_timer_event_sec(self_obj, random(15, 90), EVENT_WALK);
-	flush_add_timer_event_sec(self_obj, random(5, 15), EVENT_FLOAT);
-	flush_add_timer_event_sec(self_obj, random(0, 300), EVENT_POOP);
+   flush_add_timer_event_sec(self_obj, random(15, 90), EVENT_WALK);
+   flush_add_timer_event_sec(self_obj, random(5, 15), EVENT_FLOAT);
+   flush_add_timer_event_sec(self_obj, random(0, 300), EVENT_POOP);
 end
 
 procedure push_p_proc begin
@@ -84,19 +84,19 @@ procedure push_p_proc begin
 end
 
 procedure critter_p_proc begin
-	if (temp_hostile) then begin
-		temp_hostile := 0;
-		attack(dude_obj);
-	end
+   if (temp_hostile) then begin
+      temp_hostile := 0;
+      attack(dude_obj);
+   end
 end
 
 procedure description_p_proc begin
-	display_msg(message_str(SCRIPT_BRAHMIN, 100));
+   display_msg(message_str(SCRIPT_BRAHMIN, 100));
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	display_msg(message_str(SCRIPT_BRAHMIN, random(102, 105)));
+   dude_look_at_self;
+   display_msg(message_str(SCRIPT_BRAHMIN, random(102, 105)));
 end
 
 procedure timed_event_p_proc begin
@@ -131,72 +131,72 @@ variable temp_poo;
 end
 
 procedure use_obj_on_p_proc begin
-	variable Item := 0;
-	if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_BOOZE)) then begin
-		script_overrides;
-		Item := obj_being_used_with;
-		rm_obj_from_inven(source_obj, obj_being_used_with);
-		destroy_object(Item);
-		play_sfx("MABROMAQ");
+   variable Item := 0;
+   if ((obj_pid(obj_being_used_with) == PID_BEER) or (obj_pid(obj_being_used_with) == PID_BOOZE)) then begin
+      script_overrides;
+      Item := obj_being_used_with;
+      rm_obj_from_inven(source_obj, obj_being_used_with);
+      destroy_object(Item);
+      play_sfx("MABROMAQ");
 
-		reg_anim_clear(self_obj);
-		reg_anim_begin();
-		reg_anim_animate(self_obj, 14, -1);
-		reg_anim_animate(self_obj, 20, 5);
-		reg_anim_animate(self_obj, 48, -1);
-		reg_anim_end();
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_animate(self_obj, 14, -1);
+      reg_anim_animate(self_obj, 20, 5);
+      reg_anim_animate(self_obj, 48, -1);
+      reg_anim_end();
 
-		critter_injure(self_obj, DAM_KNOCKED_DOWN);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
-		critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);//    DAM_CRIP_LEG_LEFT      4
-		critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);//    DAM_CRIP_LEG_RIGHT     8
-	end
+      critter_injure(self_obj, DAM_KNOCKED_DOWN);//    DAM_KNOCKED_DOWN       2     <-- DOES NOT WORK!!!
+      critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);//    DAM_CRIP_LEG_LEFT      4
+      critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);//    DAM_CRIP_LEG_RIGHT     8
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_SCIENCE) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_BRAHMIN, 101));
-	end
-	else if (action_being_used == SKILL_STEAL) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_GENCHAT, 211));
-		script_overrides;
-	end
+   if (action_being_used == SKILL_SCIENCE) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_BRAHMIN, 101));
+   end
+   else if (action_being_used == SKILL_STEAL) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_GENCHAT, 211));
+      script_overrides;
+   end
 end
 
 procedure damage_p_proc begin
-	if obj_in_party(source_obj) then begin
-		if (CUR_MAP_HUBENT) or (CUR_MAP_HUBDWNTN) or (CUR_MAP_HUBHEIGT) or (CUR_MAP_HUBOLDTN) or (CUR_MAP_HUBWATER) or (CUR_MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
-			set_global_var(GVAR_ENEMY_HUB, 1);
-		end
-		else if (CUR_MAP_JUNKENT) or (CUR_MAP_JUNKCSNO) or (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
-			set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-		end
-		else if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
-			set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-		end
-		party_remove(self_obj);
-		set_self_team(TEAM_4);/* TEAM_NUM */
-		temp_hostile := 1;
-	end
+   if obj_in_party(source_obj) then begin
+      if (CUR_MAP_HUBENT) or (CUR_MAP_HUBDWNTN) or (CUR_MAP_HUBHEIGT) or (CUR_MAP_HUBOLDTN) or (CUR_MAP_HUBWATER) or (CUR_MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
+         set_global_var(GVAR_ENEMY_HUB, 1);
+      end
+      else if (CUR_MAP_JUNKENT) or (CUR_MAP_JUNKCSNO) or (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+         set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+      end
+      else if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
+         set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+      end
+      party_remove(self_obj);
+      set_self_team(TEAM_4);/* TEAM_NUM */
+      temp_hostile := 1;
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	if (source_obj == dude_obj) then begin
-		if (CUR_MAP_HUBENT) or (CUR_MAP_HUBDWNTN) or (CUR_MAP_HUBHEIGT) or (CUR_MAP_HUBOLDTN) or (CUR_MAP_HUBWATER) or (CUR_MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
-			set_global_var(GVAR_ENEMY_HUB, 1);
-		end
-		else if (CUR_MAP_JUNKENT) or (CUR_MAP_JUNKCSNO) or (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
-			set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-		end
-		else if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
-			set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-		end
-	end
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
+   if (source_obj == dude_obj) then begin
+      if (CUR_MAP_HUBENT) or (CUR_MAP_HUBDWNTN) or (CUR_MAP_HUBHEIGT) or (CUR_MAP_HUBOLDTN) or (CUR_MAP_HUBWATER) or (CUR_MAP_HUBMIS0) then begin //  THE HUB - ANY MAPS
+         set_global_var(GVAR_ENEMY_HUB, 1);
+      end
+      else if (CUR_MAP_JUNKENT) or (CUR_MAP_JUNKCSNO) or (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - ANY MAPS //  JUNKTOWN MAPS
+         set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+      end
+      else if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
+         set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+      end
+   end
+   rm_timer_event(self_obj);
 end
 
 procedure PickDeadBodyType begin
-	pick_dead_body_type
+   pick_dead_body_type
 end

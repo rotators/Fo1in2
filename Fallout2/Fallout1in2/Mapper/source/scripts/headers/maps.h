@@ -348,9 +348,9 @@
 #define boneyard_visit                      (town_known(AREA_BONEYARD) == MARK_STATE_VISITED)
 #define cathedral_visit                     (town_known(AREA_CATHEDRAL) == MARK_STATE_VISITED)
 
-#define shady_caves_visit 		            (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
-#define hub_farm_visit 	 		            (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
-#define hub_lair_visit 			            (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
+#define shady_caves_visit                 (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
+#define hub_farm_visit                    (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
+#define hub_lair_visit                    (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
 
 #define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin          \
                                                debug_msg("  mark_on_map("+x+")");                        \

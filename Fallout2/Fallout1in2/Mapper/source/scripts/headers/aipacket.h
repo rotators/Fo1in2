@@ -54,7 +54,7 @@
 #define AI_GHOUL_NORMAL             (41)
 #define AI_GHOUL_BRAVE              (42)
 #define AI_GARL_HONOR               (43)
-#define AI_PIG_RATS		            (44) // Was AI_EMPTY_SLOT_1, but wanrats script is using this?
+#define AI_PIG_RATS                 (44) // Was AI_EMPTY_SLOT_1, but wanrats script is using this?
 #define AI_EMPTY_SLOT_2             (45)
 #define AI_SUPER_MUTANT_GUARD       (46)
 #define AI_SUPER_MUTANT_NORMAL      (47)
@@ -106,46 +106,46 @@
 #define AI_GHOUL_MINDLESS           (93)
 #define AI_RUNAWAY                  (94)
 
-#define AI_PARTY_IAN_BERSERK		(95)
-#define AI_PARTY_IAN_AGGRESSIVE		(96)
-#define AI_PARTY_IAN_DEFENSIVE		(97)
-#define AI_PARTY_IAN_COWARD			(98)
-#define AI_PARTY_IAN_CUSTOM			(99)
+#define AI_PARTY_IAN_BERSERK     (95)
+#define AI_PARTY_IAN_AGGRESSIVE     (96)
+#define AI_PARTY_IAN_DEFENSIVE      (97)
+#define AI_PARTY_IAN_COWARD         (98)
+#define AI_PARTY_IAN_CUSTOM         (99)
 
-#define AI_PARTY_TYCHO_BERSERK		(100)
-#define AI_PARTY_TYCHO_AGGRESSIVE	(101)
-#define AI_PARTY_TYCHO_DEFENSIVE	(102)
-#define AI_PARTY_TYCHO_COWARD		(103)
-#define AI_PARTY_TYCHO_CUSTOM		(104)
+#define AI_PARTY_TYCHO_BERSERK      (100)
+#define AI_PARTY_TYCHO_AGGRESSIVE   (101)
+#define AI_PARTY_TYCHO_DEFENSIVE (102)
+#define AI_PARTY_TYCHO_COWARD    (103)
+#define AI_PARTY_TYCHO_CUSTOM    (104)
 
-#define AI_KATJA					(105) // DEPRECATED!
-#define AI_PARTY_KATJA_BERSERK		(106)
-#define AI_PARTY_KATJA_AGGRESSIVE	(107)
-#define AI_PARTY_KATJA_DEFENSIVE	(108)
-#define AI_PARTY_KATJA_COWARD		(109)
-#define AI_PARTY_KATJA_CUSTOM		(110)
+#define AI_KATJA              (105) // DEPRECATED!
+#define AI_PARTY_KATJA_BERSERK      (106)
+#define AI_PARTY_KATJA_AGGRESSIVE   (107)
+#define AI_PARTY_KATJA_DEFENSIVE (108)
+#define AI_PARTY_KATJA_COWARD    (109)
+#define AI_PARTY_KATJA_CUSTOM    (110)
 
-#define AI_TANDI					(111) // DEPRECATED!
-#define AI_PARTY_TANDI_BERSERK		(112) // unused
-#define AI_PARTY_TANDI_AGGRESSIVE	(113) // unused
-#define AI_PARTY_TANDI_DEFENSIVE	(114) // unused
-#define AI_PARTY_TANDI_COWARD		(115) // unused
-#define AI_PARTY_TANDI_CUSTOM		(116) // unused
+#define AI_TANDI              (111) // DEPRECATED!
+#define AI_PARTY_TANDI_BERSERK      (112) // unused
+#define AI_PARTY_TANDI_AGGRESSIVE   (113) // unused
+#define AI_PARTY_TANDI_DEFENSIVE (114) // unused
+#define AI_PARTY_TANDI_COWARD    (115) // unused
+#define AI_PARTY_TANDI_CUSTOM    (116) // unused
 
-#define AI_DOGMEAT					(117) // DEPRECATED!
-#define AI_PARTY_DOGMEAT_BERSERK	(118)
-#define AI_PARTY_DOGMEAT_AGGRESSIVE	(119)
-#define AI_PARTY_DOGMEAT_DEFENSIVE	(120)
-#define AI_PARTY_DOGMEAT_COWARD		(121)
-#define AI_PARTY_DOGMEAT_CUSTOM		(122)
+#define AI_DOGMEAT               (117) // DEPRECATED!
+#define AI_PARTY_DOGMEAT_BERSERK (118)
+#define AI_PARTY_DOGMEAT_AGGRESSIVE (119)
+#define AI_PARTY_DOGMEAT_DEFENSIVE  (120)
+#define AI_PARTY_DOGMEAT_COWARD     (121)
+#define AI_PARTY_DOGMEAT_CUSTOM     (122)
 
-#define AI_MYSTERIOUS_STRANGER 		(123)
+#define AI_MYSTERIOUS_STRANGER      (123)
 
-#define AI_PARTY_MRHANDY_BERSERK	(124)
-#define AI_PARTY_MRHANDY_AGGRESSIVE	(125)
-#define AI_PARTY_MRHANDY_DEFENSIVE	(126)
-#define AI_PARTY_MRHANDY_COWARD		(127)
-#define AI_PARTY_MRHANDY_CUSTOM		(128)
+#define AI_PARTY_MRHANDY_BERSERK (124)
+#define AI_PARTY_MRHANDY_AGGRESSIVE (125)
+#define AI_PARTY_MRHANDY_DEFENSIVE  (126)
+#define AI_PARTY_MRHANDY_COWARD     (127)
+#define AI_PARTY_MRHANDY_CUSTOM     (128)
 
 #define AI_SPORE_PLANT              (129) // 5
 #define AI_TOUGH_BOT                (130) // 32

@@ -1,6 +1,6 @@
 /*
 
-	Hub - Thorndyke
+   Hub - Thorndyke
 
 */
 
@@ -68,452 +68,452 @@ variable HealPlayer;
 import variable Thorndyke_Ptr;
 
 procedure start begin
-	if Only_Once then begin
-		Only_Once := 0;
-		Thorndyke_Ptr := self_obj;
-		set_self_team(TEAM_HUB_CATHEDRAL);
-		set_self_ai(AI_COC_HUB_BRAINWASHED);
-	end
+   if Only_Once then begin
+      Only_Once := 0;
+      Thorndyke_Ptr := self_obj;
+      set_self_team(TEAM_HUB_CATHEDRAL);
+      set_self_ai(AI_COC_HUB_BRAINWASHED);
+   end
 end
 
 procedure combat
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure critter_p_proc
 begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	if ((map_var(6) == 1) and (self_can_see_dude)) then begin
-		call combat;
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   if ((map_var(6) == 1) and (self_can_see_dude)) then begin
+      call combat;
+   end
 end
 
 procedure pickup_p_proc begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure talk_p_proc
 begin
-	variable LVar0 := 0;
-	dude_look_at_self;
-	get_reaction
-	if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
-		call Thorn00;
-	end
-	else begin
-		if (local_var(5) == 1) then begin
-			call Thorn28;
-		end
-		else begin
-			if (map_var(0) == 1) then begin
-				call Thorn29;
-			end
-			else begin
-				if has_rep_childkiller or global_var(GVAR_BERSERKER_REPUTATION) then begin
-					call Thorn01;
-				end
-				else begin
-					start_gdialog(603, self_obj, 4, -1, -1);
-					gsay_start;
-					call Thorn02;
-					gsay_end;
-					end_dialogue;
-				end
-			end
-		end
-	end
-	if (HealPlayer == 1) then begin
-		HealPlayer := 0;
-		set_local_var(6, GAME_TIME_IN_HOURS);
-		if (PlayerYellsOuch == 1) then begin
-			PlayerYellsOuch := 0;
-			float_msg(dude_obj, 168, FLOAT_MSG_WHITE);
-		end
-		float_msg(self_obj, mstr(DoctorPostTreatmentResponse), FLOAT_MSG_RED);
-		LVar0 := random(5, 15) + 10;
-		critter_heal(dude_obj, LVar0);
-	end
+   variable LVar0 := 0;
+   dude_look_at_self;
+   get_reaction
+   if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
+      call Thorn00;
+   end
+   else begin
+      if (local_var(5) == 1) then begin
+         call Thorn28;
+      end
+      else begin
+         if (map_var(0) == 1) then begin
+            call Thorn29;
+         end
+         else begin
+            if has_rep_childkiller or global_var(GVAR_BERSERKER_REPUTATION) then begin
+               call Thorn01;
+            end
+            else begin
+               start_gdialog(603, self_obj, 4, -1, -1);
+               gsay_start;
+               call Thorn02;
+               gsay_end;
+               end_dialogue;
+            end
+         end
+      end
+   end
+   if (HealPlayer == 1) then begin
+      HealPlayer := 0;
+      set_local_var(6, GAME_TIME_IN_HOURS);
+      if (PlayerYellsOuch == 1) then begin
+         PlayerYellsOuch := 0;
+         float_msg(dude_obj, 168, FLOAT_MSG_WHITE);
+      end
+      float_msg(self_obj, mstr(DoctorPostTreatmentResponse), FLOAT_MSG_RED);
+      LVar0 := random(5, 15) + 10;
+      critter_heal(dude_obj, LVar0);
+   end
 end
 
 procedure destroy_p_proc begin
-	inc_good_critter
+   inc_good_critter
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_map_var(6, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_map_var(6, 1);
+   end
 end
 
 procedure Thorn00
 begin
-	float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
-	call flee_dude;
+   float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
+   call flee_dude;
 end
 
 procedure Thorn01
 begin
-	float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
-	call flee_dude;
+   float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
+   call flee_dude;
 end
 
 procedure Thorn02
 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	LVar0 := dude_cur_hp;
-	LVar1 := dude_max_hp;
-	if (LVar0 == LVar1) then begin
-		if (dude_is_male) then begin
-			Reply(103);
-		end
-		else begin
-			Reply(104);
-		end
-		GOption(105, Thorn02a, 7);
-		NOption(106, Thorn05, 7);
-		NOption(107, Thorn06, 4);
-		NOption(108, Thorn07, 4);
-		BOption(109, Thorn08, 4);
-		BOption(110, Thorn09, -3);
-	end
-	else begin
-		if ((LVar0 < LVar1) and (((GAME_TIME_IN_HOURS) - local_var(6)) < 24)) then begin
-			if (dude_is_male) then begin
-				Reply(111);
-			end
-			else begin
-				Reply(112);
-			end
-			NOption(113, Thorn02a, 7);
-			NOption(114, Thorn05, 7);
-			BOption(115, Thorn27, 4);
-			GOption(116, Thorn07, 4);
-			BOption(117, Thorn08, 4);
-			NOption(118, Thorn09, -3);
-		end
-		else begin
-			if ((LVar0 > (LVar1 / 2)) and (((GAME_TIME_IN_HOURS) - local_var(6)) > 24)) then begin
-				if (dude_is_male) then begin
-					Reply(119);
-				end
-				else begin
-					Reply(120);
-				end
-				NOption(121, Thorn10, 7);
-				NOption(122, Thorn10, 7);
-				NOption(123, Thorn11, 4);
-				NOption(124, Thorn12, 4);
-				NOption(125, Thorn13, 4);
-				NOption(126, Thorn14, 4);
-				NOption(127, Thorn15, -3);
-				NOption(128, Thorn16, -3);
-			end
-			else begin
-				if ((LVar0 < (LVar1 / 2)) and (((GAME_TIME_IN_HOURS) - local_var(6)) > 24)) then begin
-					if (dude_is_male) then begin
-						Reply(129);
-					end
-					else begin
-						Reply(130);
-					end
-					NOption(131, Thorn10, 7);
-					NOption(132, Thorn10, 7);
-					NOption(133, Thorn11, 4);
-					NOption(124, Thorn12, 4);
-					NOption(134, Thorn13, 4);
-					NOption(135, Thorn14, 4);
-					NOption(136, Thorn15, -3);
-					NOption(137, Thorn16, -3);
-				end
-			end
-		end
-	end
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := dude_cur_hp;
+   LVar1 := dude_max_hp;
+   if (LVar0 == LVar1) then begin
+      if (dude_is_male) then begin
+         Reply(103);
+      end
+      else begin
+         Reply(104);
+      end
+      GOption(105, Thorn02a, 7);
+      NOption(106, Thorn05, 7);
+      NOption(107, Thorn06, 4);
+      NOption(108, Thorn07, 4);
+      BOption(109, Thorn08, 4);
+      BOption(110, Thorn09, -3);
+   end
+   else begin
+      if ((LVar0 < LVar1) and (((GAME_TIME_IN_HOURS) - local_var(6)) < 24)) then begin
+         if (dude_is_male) then begin
+            Reply(111);
+         end
+         else begin
+            Reply(112);
+         end
+         NOption(113, Thorn02a, 7);
+         NOption(114, Thorn05, 7);
+         BOption(115, Thorn27, 4);
+         GOption(116, Thorn07, 4);
+         BOption(117, Thorn08, 4);
+         NOption(118, Thorn09, -3);
+      end
+      else begin
+         if ((LVar0 > (LVar1 / 2)) and (((GAME_TIME_IN_HOURS) - local_var(6)) > 24)) then begin
+            if (dude_is_male) then begin
+               Reply(119);
+            end
+            else begin
+               Reply(120);
+            end
+            NOption(121, Thorn10, 7);
+            NOption(122, Thorn10, 7);
+            NOption(123, Thorn11, 4);
+            NOption(124, Thorn12, 4);
+            NOption(125, Thorn13, 4);
+            NOption(126, Thorn14, 4);
+            NOption(127, Thorn15, -3);
+            NOption(128, Thorn16, -3);
+         end
+         else begin
+            if ((LVar0 < (LVar1 / 2)) and (((GAME_TIME_IN_HOURS) - local_var(6)) > 24)) then begin
+               if (dude_is_male) then begin
+                  Reply(129);
+               end
+               else begin
+                  Reply(130);
+               end
+               NOption(131, Thorn10, 7);
+               NOption(132, Thorn10, 7);
+               NOption(133, Thorn11, 4);
+               NOption(124, Thorn12, 4);
+               NOption(134, Thorn13, 4);
+               NOption(135, Thorn14, 4);
+               NOption(136, Thorn15, -3);
+               NOption(137, Thorn16, -3);
+            end
+         end
+      end
+   end
 end
 
 procedure Thorn02a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn03;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn03;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn03
 begin
-	Reply(138);
-	NOption(139, Thorn03a, 7);
-	NOption(140, Thorn03b, 7);
-	NOption(141, Thorn05, 7);
-	NOption(142, Thorn07, 4);
-	NOption(143, Thorn19, 4);
+   Reply(138);
+   NOption(139, Thorn03a, 7);
+   NOption(140, Thorn03b, 7);
+   NOption(141, Thorn05, 7);
+   NOption(142, Thorn07, 4);
+   NOption(143, Thorn19, 4);
 end
 
 procedure Thorn03a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn17;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn17;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn03b
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn18;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn18;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn04
 begin
-	if (dude_is_male) then begin
-		NMessage(144);
-	end
-	else begin
-		NMessage(145);
-	end
+   if (dude_is_male) then begin
+      NMessage(144);
+   end
+   else begin
+      NMessage(145);
+   end
 end
 
 procedure Thorn05
 begin
-	if (dude_is_male) then begin
-		NMessage(146);
-	end
-	else begin
-		NMessage(147);
-	end
+   if (dude_is_male) then begin
+      NMessage(146);
+   end
+   else begin
+      NMessage(147);
+   end
 end
 
 procedure Thorn06
 begin
-	NMessage(148);
+   NMessage(148);
 end
 
 procedure Thorn07
 begin
-	NMessage(149);
+   NMessage(149);
 end
 
 procedure Thorn08
 begin
-	BMessage(150);
+   BMessage(150);
 end
 
 procedure Thorn09
 begin
-	NMessage(151);
+   NMessage(151);
 end
 
 procedure Thorn10
 begin
-	Reply(152);
-	BOption(153, Thorn20, 7);
-	NOption(154, Thorn20, 7);
-	NOption(155, Thorn11, 4);
-	GOption(156, Thorn12, 4);
-	NOption(157, Thorn13, 4);
-	NOption(158, Thorn14, 4);
+   Reply(152);
+   BOption(153, Thorn20, 7);
+   NOption(154, Thorn20, 7);
+   NOption(155, Thorn11, 4);
+   GOption(156, Thorn12, 4);
+   NOption(157, Thorn13, 4);
+   NOption(158, Thorn14, 4);
 end
 
 procedure Thorn11
 begin
-	Reply(159);
-	NOption(160, Thorn12, 4);
-	NOption(157, Thorn13, 4);
-	BOption(162, Thorn24, 4);
-	NOption(163, Thorn14, 4);
+   Reply(159);
+   NOption(160, Thorn12, 4);
+   NOption(157, Thorn13, 4);
+   BOption(162, Thorn24, 4);
+   NOption(163, Thorn14, 4);
 end
 
 procedure Thorn12
 begin
-	DoctorPostTreatmentResponse := 164;
-	PlayerYellsOuch := 0;
-	HealPlayer := 1;
-	NMessage(161);
+   DoctorPostTreatmentResponse := 164;
+   PlayerYellsOuch := 0;
+   HealPlayer := 1;
+   NMessage(161);
 end
 
 procedure Thorn13
 begin
-	NMessage(165);
+   NMessage(165);
 end
 
 procedure Thorn14
 begin
-	NMessage(166);
+   NMessage(166);
 end
 
 procedure Thorn15
 begin
-	DoctorPostTreatmentResponse := 169;
-	PlayerYellsOuch := 1;
-	HealPlayer := 1;
-	NMessage(167);
+   DoctorPostTreatmentResponse := 169;
+   PlayerYellsOuch := 1;
+   HealPlayer := 1;
+   NMessage(167);
 end
 
 procedure Thorn16
 begin
-	NMessage(170);
+   NMessage(170);
 end
 
 procedure Thorn17
 begin
-	Reply(171);
-	NOption(172, Thorn17a, 7);
-	NOption(173, Thorn27, 4);
-	NOption(174, Thorn27, 4);
-	NOption(175, Thorn14, 4);
+   Reply(171);
+   NOption(172, Thorn17a, 7);
+   NOption(173, Thorn27, 4);
+   NOption(174, Thorn27, 4);
+   NOption(175, Thorn14, 4);
 end
 
 procedure Thorn17a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn21;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn21;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn18
 begin
-	Reply(176);
-	NOption(177, Thorn18a, 7);
-	BOption(178, Thorn24, 4);
-	NOption(179, Thorn27, 4);
-	BOption(180, Thorn24, 4);
-	NOption(181, Thorn14, 4);
+   Reply(176);
+   NOption(177, Thorn18a, 7);
+   BOption(178, Thorn24, 4);
+   NOption(179, Thorn27, 4);
+   BOption(180, Thorn24, 4);
+   NOption(181, Thorn14, 4);
 end
 
 procedure Thorn18a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn22;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn22;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn19
 begin
-	NMessage(182);
+   NMessage(182);
 end
 
 procedure Thorn20
 begin
-	Reply(183);
-	BOption(184, Thorn23, 7);
-	BOption(185, Thorn24, 4);
-	GOption(186, Thorn12, 4);
-	NOption(187, Thorn13, 4);
-	NOption(188, Thorn14, 4);
+   Reply(183);
+   BOption(184, Thorn23, 7);
+   BOption(185, Thorn24, 4);
+   GOption(186, Thorn12, 4);
+   NOption(187, Thorn13, 4);
+   NOption(188, Thorn14, 4);
 end
 
 procedure Thorn21
 begin
-	Reply(189);
-	NOption(190, Thorn25, 7);
-	NOption(191, Thorn27, 4);
-	NOption(192, Thorn27, 4);
-	BOption(193, Thorn24, 4);
+   Reply(189);
+   NOption(190, Thorn25, 7);
+   NOption(191, Thorn27, 4);
+   NOption(192, Thorn27, 4);
+   BOption(193, Thorn24, 4);
 end
 
 procedure Thorn22
 begin
-	Reply(194);
-	NOption(195, Thorn22a, 7);
-	NOption(196, Thorn22b, 4);
-	NOption(197, Thorn27, 4);
-	NOption(198, Thorn27, 4);
-	BOption(199, Thorn24, 4);
+   Reply(194);
+   NOption(195, Thorn22a, 7);
+   NOption(196, Thorn22b, 4);
+   NOption(197, Thorn27, 4);
+   NOption(198, Thorn27, 4);
+   BOption(199, Thorn24, 4);
 end
 
 procedure Thorn22a
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn25;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn25;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn22b
 begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
-		call Thorn26;
-	end
-	else begin
-		call Thorn04;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)) == 1) then begin
+      call Thorn26;
+   end
+   else begin
+      call Thorn04;
+   end
 end
 
 procedure Thorn23
 begin
-	set_local_var(5, 1);
-	BMessage(200);
+   set_local_var(5, 1);
+   BMessage(200);
 end
 
 procedure Thorn24
 begin
-	set_local_var(5, 1);
-	BMessage(201);
+   set_local_var(5, 1);
+   BMessage(201);
 end
 
 procedure Thorn25
 begin
-	if (dude_is_male) then begin
-		NMessage(202);
-	end
-	else begin
-		NMessage(203);
-	end
+   if (dude_is_male) then begin
+      NMessage(202);
+   end
+   else begin
+      NMessage(203);
+   end
 end
 
 procedure Thorn26
 begin
-	Reply(204);
-	NOption(205, Thorn27, 7);
-	NOption(206, Thorn07, 4);
-	BOption(207, Thorn24, 4);
-	BOption(208, Thorn24, 4);
-	BOption(209, Thorn27, 4);
+   Reply(204);
+   NOption(205, Thorn27, 7);
+   NOption(206, Thorn07, 4);
+   BOption(207, Thorn24, 4);
+   BOption(208, Thorn24, 4);
+   BOption(209, Thorn27, 4);
 end
 
 procedure Thorn27
 begin
-	NMessage(210);
+   NMessage(210);
 end
 
 procedure Thorn28
 begin
-	if (dude_is_male) then begin
-		float_msg(self_obj, mstr(211), FLOAT_MSG_RED);
-	end
-	else begin
-		float_msg(self_obj, mstr(212), FLOAT_MSG_RED);
-	end
+   if (dude_is_male) then begin
+      float_msg(self_obj, mstr(211), FLOAT_MSG_RED);
+   end
+   else begin
+      float_msg(self_obj, mstr(212), FLOAT_MSG_RED);
+   end
 end
 
 procedure Thorn29
 begin
-	float_msg(self_obj, mstr(213), FLOAT_MSG_RED);
+   float_msg(self_obj, mstr(213), FLOAT_MSG_RED);
 end

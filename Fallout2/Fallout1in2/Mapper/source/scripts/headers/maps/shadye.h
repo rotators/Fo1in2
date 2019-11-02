@@ -1,6 +1,6 @@
 /*
 
-	Shady Sands east side map (Garden)
+   Shady Sands east side map (Garden)
 
 */
 

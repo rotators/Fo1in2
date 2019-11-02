@@ -1,8 +1,8 @@
 /*
 
-	Generic Super Mutant
+   Generic Super Mutant
 
-	Also checks for Nightkins and Stealth Boys -- they will actually use the!
+   Also checks for Nightkins and Stealth Boys -- they will actually use the!
 
 */
 
@@ -53,20 +53,20 @@ procedure mutan15;
 procedure mutanend;
 procedure mutancbt;
 
-#define SetSelfFlag(x) 		set_flags(self_obj, x)
-#define GetSelfFlag 			get_flags(self_obj)
+#define SetSelfFlag(x)     set_flags(self_obj, x)
+#define GetSelfFlag        get_flags(self_obj)
 
-#define set_ghost 			SetSelfFlag(GetSelfFlag bwor FLAG_TRANSGLASS)
-#define rem_ghost 			SetSelfFlag(GetSelfFlag bwand bwnot(FLAG_TRANSGLASS))
+#define set_ghost          SetSelfFlag(GetSelfFlag bwor FLAG_TRANSGLASS)
+#define rem_ghost          SetSelfFlag(GetSelfFlag bwand bwnot(FLAG_TRANSGLASS))
 
-#define self_is_nightkin 	((self_pid == PID_NIGHTKIN) or (self_pid == PID_NIGHTKIN_GUARD) or \
-									(self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or \
-									(self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
+#define self_is_nightkin   ((self_pid == PID_NIGHTKIN) or (self_pid == PID_NIGHTKIN_GUARD) or \
+                           (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or \
+                           (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
 
-#define spawn_stealth_boy 	if self_is_nightkin and random(0, 15) == 1 then begin	\
-									   Item := create_object(PID_STEALTH_BOY, 0, 0);				\
-									   add_mult_objs_to_inven(self_obj, Item, 1);				\
-									end
+#define spawn_stealth_boy  if self_is_nightkin and random(0, 15) == 1 then begin \
+                              Item := create_object(PID_STEALTH_BOY, 0, 0);            \
+                              add_mult_objs_to_inven(self_obj, Item, 1);            \
+                           end
 
 /* Imported variables from the Map scripts. These should only be
    pointers and variables that need not be saved. If a variable
@@ -87,347 +87,347 @@ variable Use_Stealth_Boy := 0;
 variable Item;
 
 procedure start begin
-	if Only_Once then begin
+   if Only_Once then begin
 
-		// Are we in the Cathedral vault?
-		//if (cur_map_index == MAP_MSTRLR12 or cur_map_index == MAP_MSTRLR34) then
-		//	set_self_team(TEAM_MASTER_LAIR);
-		//else
-			set_self_team(TEAM_NECROPOLIS_MUTANT);
+      // Are we in the Cathedral vault?
+      //if (cur_map_index == MAP_MSTRLR12 or cur_map_index == MAP_MSTRLR34) then
+      // set_self_team(TEAM_MASTER_LAIR);
+      //else
+         set_self_team(TEAM_NECROPOLIS_MUTANT);
 
-		set_self_ai(AI_SUPER_MUTANT_AGGRESSIVE);
-		Only_Once := 0;
-	end
+      set_self_ai(AI_SUPER_MUTANT_AGGRESSIVE);
+      Only_Once := 0;
+   end
 
-	if (script_action == talk_proc) then begin//<--- do_dialogue (Face icon), can also call "do_dialogue" or "do_dialog"
-		call pre_dialogue;
-	end
+   if (script_action == talk_proc) then begin//<--- do_dialogue (Face icon), can also call "do_dialogue" or "do_dialog"
+      call pre_dialogue;
+   end
 end
 
 procedure map_enter_p_proc begin
-	if (map_first_run) then
-		spawn_stealth_boy
+   if (map_first_run) then
+      spawn_stealth_boy
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (signal_mutants == 1) then begin
-			signal_mutants := 0;
-			call mutancbt;
-		end
-		else begin
-			if (self_can_see_dude) then begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (signal_mutants == 1) then begin
+         signal_mutants := 0;
+         call mutancbt;
+      end
+      else begin
+         if (self_can_see_dude) then begin
 
-				if (dude_is_armed) then begin
-					if (Weapons == 0) then begin
-						Weapons := 1;
-						if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
-							dialogue_system_enter;
-						end
-					end
-				end
+            if (dude_is_armed) then begin
+               if (Weapons == 0) then begin
+                  Weapons := 1;
+                  if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+                     dialogue_system_enter;
+                  end
+               end
+            end
 
-				DISGUISED := 0;
+            DISGUISED := 0;
 
-				if dude_armor then begin
-					RobesCheck := dude_armor;
-				end
+            if dude_armor then begin
+               RobesCheck := dude_armor;
+            end
 
-				coc_disguise_check
-				if ((DISGUISED == 0) and (again == 0)) then begin
-					if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
-						again := 1;
-						dialogue_system_enter;
-					end
-				end
+            coc_disguise_check
+            if ((DISGUISED == 0) and (again == 0)) then begin
+               if (tile_distance_objs(self_obj, dude_obj) < 6) then begin
+                  again := 1;
+                  dialogue_system_enter;
+               end
+            end
 
-			end
-		end
-	end
+         end
+      end
+   end
 end
 
 procedure combat_p_proc begin
-	if (self_is_nightkin and self_item_count(PID_STEALTH_BOY)) then begin
-		if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-			if (Use_Stealth_Boy == 0) then begin
-				Use_Stealth_Boy := 1;
+   if (self_is_nightkin and self_item_count(PID_STEALTH_BOY)) then begin
+      if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+         if (Use_Stealth_Boy == 0) then begin
+            Use_Stealth_Boy := 1;
 
-				//TODO: Add sfx for activation?
-				anim(self_obj, ANIM_magic_hands_middle, -1);
-				set_ghost;
+            //TODO: Add sfx for activation?
+            anim(self_obj, ANIM_magic_hands_middle, -1);
+            set_ghost;
 
-				display_msg(self_name + message_str(SCRIPT_GENCHAT, 190));
-			end
-		end
+            display_msg(self_name + message_str(SCRIPT_GENCHAT, 190));
+         end
+      end
 
-		//--- Always add transparency when in combat!
-		if (Use_Stealth_Boy == 1) then
-			set_ghost;
-	end
+      //--- Always add transparency when in combat!
+      if (Use_Stealth_Boy == 1) then
+         set_ghost;
+   end
 end
 
 procedure do_dialogue begin
-	set_local_var(3, 1);
-	get_reaction
-	start_gdialog(524, self_obj, 4, -1, -1);
-	gsay_start;
-	if (Weapons == 1) then begin
-		call mutan01;
-	end
-	else begin
-		if (local_var(4)) then begin
-			call mutan13;
-		end
-		else begin
-			set_local_var(4, 1);
-			call mutan05;
-		end
-	end
-	gsay_end;
-	end_dialogue;
+   set_local_var(3, 1);
+   get_reaction
+   start_gdialog(524, self_obj, 4, -1, -1);
+   gsay_start;
+   if (Weapons == 1) then begin
+      call mutan01;
+   end
+   else begin
+      if (local_var(4)) then begin
+         call mutan13;
+      end
+      else begin
+         set_local_var(4, 1);
+         call mutan05;
+      end
+   end
+   gsay_end;
+   end_dialogue;
 end
 
 procedure pre_dialogue begin
-	dude_look_at_self;
-	if dude_armor then begin
-		RobesCheck := dude_armor;
-	end
-	coc_disguise_check
-	if (Weapons == 1) then begin
-		if (DISGUISED) then begin
-			call do_dialogue;
-		end
-		else begin
-			call mutan00;
-		end
-	end
-	else begin
-		if (DISGUISED) then begin
-			call do_dialogue;
-		end
-		else begin
-			call mutan00;
-		end
-	end
+   dude_look_at_self;
+   if dude_armor then begin
+      RobesCheck := dude_armor;
+   end
+   coc_disguise_check
+   if (Weapons == 1) then begin
+      if (DISGUISED) then begin
+         call do_dialogue;
+      end
+      else begin
+         call mutan00;
+      end
+   end
+   else begin
+      if (DISGUISED) then begin
+         call do_dialogue;
+      end
+      else begin
+         call mutan00;
+      end
+   end
 end
 
 procedure mutan00 begin
-	rndx := random(1, 8);
-	if (rndx <= 2) then begin
-		float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
-	end
-	else if (rndx <= 4) then begin
-		float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
-	end
-	else if (rndx <= 6) then begin
-		float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
-	end
-	else begin
-		float_msg(self_obj, mstr(103), FLOAT_MSG_RED);
-	end
-	call mutancbt;
+   rndx := random(1, 8);
+   if (rndx <= 2) then begin
+      float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
+   end
+   else if (rndx <= 4) then begin
+      float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
+   end
+   else if (rndx <= 6) then begin
+      float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
+   end
+   else begin
+      float_msg(self_obj, mstr(103), FLOAT_MSG_RED);
+   end
+   call mutancbt;
 end
 
 procedure mutan01 begin
-	if (dude_is_male) then begin
-		Reply(104);
-	end
-	else begin
-		Reply(105);
-	end
-	BOption(107, mutan02, 4);
-	NOption(108, mutan03, 6);
-	NOption(109, mutan04, 9);
-	BOption(106, mutan02, -3);
+   if (dude_is_male) then begin
+      Reply(104);
+   end
+   else begin
+      Reply(105);
+   end
+   BOption(107, mutan02, 4);
+   NOption(108, mutan03, 6);
+   NOption(109, mutan04, 9);
+   BOption(106, mutan02, -3);
 end
 
 procedure mutan02 begin
-	BMessage(110);
-	call mutancbt;
+   BMessage(110);
+   call mutancbt;
 end
 
 procedure mutan03 begin
-	Reply(111);
-	NOption(112, mutan03a, 6);
-	BOption(113, mutancbt, 6);
+   Reply(111);
+   NOption(112, mutan03a, 6);
+   BOption(113, mutancbt, 6);
 end
 
 procedure mutan03a begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call mutan04;
-	end
-	else begin
-		call mutan02;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call mutan04;
+   end
+   else begin
+      call mutan02;
+   end
 end
 
 procedure mutan04 begin
-	NMessage(114);
-	set_local_var(5, 1);
+   NMessage(114);
+   set_local_var(5, 1);
 end
 
 procedure mutan05 begin
-	if (dude_is_male) then begin
-		Reply(115);
-	end
-	else begin
-		Reply(116);
-	end
-	NOption(118, mutan05a, 4);
-	NOption(119, mutan05b, 6);
-	NOption(106, mutan06, -3);
+   if (dude_is_male) then begin
+      Reply(115);
+   end
+   else begin
+      Reply(116);
+   end
+   NOption(118, mutan05a, 4);
+   NOption(119, mutan05b, 6);
+   NOption(106, mutan06, -3);
 end
 
 procedure mutan05a begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call mutan08;
-	end
-	else begin
-		call mutan07;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call mutan08;
+   end
+   else begin
+      call mutan07;
+   end
 end
 
 procedure mutan05b begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call mutan10;
-	end
-	else begin
-		call mutan11;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call mutan10;
+   end
+   else begin
+      call mutan11;
+   end
 end
 
 procedure mutan06 begin
-	NMessage(120);
-	set_local_var(5, 1);
+   NMessage(120);
+   set_local_var(5, 1);
 end
 
 procedure mutan07 begin
-	BMessage(121);
-	call mutancbt;
+   BMessage(121);
+   call mutancbt;
 end
 
 procedure mutan08 begin
-	Reply(122);
-	NOption(123, mutan08a, 4);
-	if (has_rep_berserker) then begin
-		BOption(124, mutancbt, 4);
-	end
-	NOption(125, mutan08b, 7);
+   Reply(122);
+   NOption(123, mutan08a, 4);
+   if (has_rep_berserker) then begin
+      BOption(124, mutancbt, 4);
+   end
+   NOption(125, mutan08b, 7);
 end
 
 procedure mutan08a begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call mutan04;
-	end
-	else begin
-		call mutan07;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call mutan04;
+   end
+   else begin
+      call mutan07;
+   end
 end
 
 procedure mutan08b begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
-		call mutan04;
-	end
-	else begin
-		call mutan09;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
+      call mutan04;
+   end
+   else begin
+      call mutan09;
+   end
 end
 
 procedure mutan09 begin
-	BMessage(126);
-	call mutancbt;
+   BMessage(126);
+   call mutancbt;
 end
 
 procedure mutan10 begin
-	NMessage(127);
-	set_local_var(5, 1);
+   NMessage(127);
+   set_local_var(5, 1);
 end
 
 procedure mutan11 begin
-	Reply(128);
-	NOption(129, mutan11a, 6);
-	BOption(130, mutancbt, 6);
+   Reply(128);
+   NOption(129, mutan11a, 6);
+   BOption(130, mutancbt, 6);
 end
 
 procedure mutan11a begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-		call mutan12;
-	end
-	else begin
-		call mutan09;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      call mutan12;
+   end
+   else begin
+      call mutan09;
+   end
 end
 
 procedure mutan12 begin
-	NMessage(131);
-	set_local_var(5, 1);
+   NMessage(131);
+   set_local_var(5, 1);
 end
 
 procedure mutan13 begin
-	Reply(132);
-	BOption(134, mutancbt, 4);
-	NOption(135, mutan13a, 4);
-	NOption(136, mutan13b, 6);
-	BOption(133, mutan14, -3);
+   Reply(132);
+   BOption(134, mutancbt, 4);
+   NOption(135, mutan13a, 4);
+   NOption(136, mutan13b, 6);
+   BOption(133, mutan14, -3);
 end
 
 procedure mutan13a begin
-	if (is_success(do_check(dude_obj, STAT_lu, 0))) then begin
-		call mutan12;
-	end
-	else begin
-		call mutan09;
-	end
+   if (is_success(do_check(dude_obj, STAT_lu, 0))) then begin
+      call mutan12;
+   end
+   else begin
+      call mutan09;
+   end
 end
 
 procedure mutan13b begin
-	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
-		call mutan10;
-	end
-	else begin
-		call mutan11;
-	end
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
+      call mutan10;
+   end
+   else begin
+      call mutan11;
+   end
 end
 
 procedure mutan14 begin
-	BMessage(137);
-	call mutancbt;
+   BMessage(137);
+   call mutancbt;
 end
 
 procedure mutan15 begin
-	rndx := random(1, 3);
-	if (rndx == 1) then begin
-		NMessage(138);
-	end
-	else if (rndx == 2) then begin
-		NMessage(139);
-	end
-	else if (rndx == 3) then begin
-		NMessage(140);
-	end
+   rndx := random(1, 3);
+   if (rndx == 1) then begin
+      NMessage(138);
+   end
+   else if (rndx == 2) then begin
+      NMessage(139);
+   end
+   else if (rndx == 3) then begin
+      NMessage(140);
+   end
 end
 
 procedure mutanend begin
 end
 
 procedure mutancbt begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure damage_p_proc begin
-	if (global_var(GVAR_MUTANTS_ENEMY_UNSURE) == 0) then begin
-		set_global_var(GVAR_MUTANTS_ENEMY_UNSURE, 1);
-	end
+   if (global_var(GVAR_MUTANTS_ENEMY_UNSURE) == 0) then begin
+      set_global_var(GVAR_MUTANTS_ENEMY_UNSURE, 1);
+   end
 end
 
 procedure destroy_p_proc begin
-	inc_evil_critter
+   inc_evil_critter
 end

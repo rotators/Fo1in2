@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Sinthia, prostitute
+   Junktown - Sinthia, prostitute
 
 */
 
@@ -85,405 +85,405 @@ variable sleep_time;
 variable home_tile;
 variable sleep_tile;
 
-#define LVAR_Sleeping 							(4)
+#define LVAR_Sleeping                     (4)
 
 procedure start begin
-	if (initial == 0) then begin
-		initial := 1;
-		Sinthia_ptr := self_obj;
-	end
+   if (initial == 0) then begin
+      initial := 1;
+      Sinthia_ptr := self_obj;
+   end
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin
-		if (self_can_see_dude) then begin
-			attack(dude_obj);
-		end
-	end
-	if (map_var(MVAR_raider_status) == 2) then begin
-		if ((local_var(6) == 0) and self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-			dialogue_system_enter;
-		end
-	end
-	if (global_var(GVAR_SAVE_SINTHIA) == 2) then begin
-		if (local_var(6) == 1) then begin
-			set_map_var(MVAR_Sinthia_dead, 1);
-			sleeping_disabled := 1;
-			if (waypoint == 0) then begin
-				dest_tile := 21097;
-				waypoint := 1;
-			end
-			if (tile_distance(self_tile, dest_tile) > 2) then begin
-				self_walk_to_tile(dest_tile);
-			end
-			else begin
-				destroy_object(self_obj);
-			end
-		end
-	end
+   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin
+      if (self_can_see_dude) then begin
+         attack(dude_obj);
+      end
+   end
+   if (map_var(MVAR_raider_status) == 2) then begin
+      if ((local_var(6) == 0) and self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
+         dialogue_system_enter;
+      end
+   end
+   if (global_var(GVAR_SAVE_SINTHIA) == 2) then begin
+      if (local_var(6) == 1) then begin
+         set_map_var(MVAR_Sinthia_dead, 1);
+         sleeping_disabled := 1;
+         if (waypoint == 0) then begin
+            dest_tile := 21097;
+            waypoint := 1;
+         end
+         if (tile_distance(self_tile, dest_tile) > 2) then begin
+            self_walk_to_tile(dest_tile);
+         end
+         else begin
+            destroy_object(self_obj);
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	Sinthia_ptr := 0;
-	set_global_var(GVAR_SAVE_SINTHIA, 2);
-	set_map_var(MVAR_Sinthia_dead, 2);
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		inc_good_critter
-	end
-	rm_timer_event(self_obj);
+   Sinthia_ptr := 0;
+   set_global_var(GVAR_SAVE_SINTHIA, 2);
+   set_map_var(MVAR_Sinthia_dead, 2);
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      inc_good_critter
+   end
+   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	if (local_var(5) == 1) then begin
-		display_msg(mstr(100));
-	end
-	else begin
-		display_msg(mstr(101));
-	end
+   script_overrides;
+   if (local_var(5) == 1) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
 end
 
 procedure map_enter_p_proc begin
-	set_self_team(TEAM_JUNKTOWNER);
-	Sinthia_ptr := self_obj;
-	home_tile := 17485;
-	sleep_tile := 16681;
-	sleep_time := 2300;
-	wake_time := 1000;
-	if (not(is_loading_game) and (local_var(6) == 1)) then begin
-		Sinthia_ptr := 0;
-		destroy_object(self_obj);
-	end
+   set_self_team(TEAM_JUNKTOWNER);
+   Sinthia_ptr := self_obj;
+   home_tile := 17485;
+   sleep_tile := 16681;
+   sleep_time := 2300;
+   wake_time := 1000;
+   if (not(is_loading_game) and (local_var(6) == 1)) then begin
+      Sinthia_ptr := 0;
+      destroy_object(self_obj);
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (local_var(6) == 1) then begin
-		display_msg(mstr(171));
-	end
-	else begin
-		if ((map_var(MVAR_save_da_ho) > 0) and (map_var(MVAR_save_da_ho) < 3) and (map_var(MVAR_raider_status) == 0)) then begin
-			call Sinthia07;
-		end
-		else begin
-			get_reaction
-			start_gdialog(338, self_obj, 4, -1, -1);
-			gsay_start;
-			set_local_var(5, 1);
-			if (map_var(MVAR_raider_status) == 2) then begin
-				call Sinthia16;
-			end
-			else if ((map_var(MVAR_raider_status) == 1) and (local_var(7) == 0)) then begin
-				call Sinthia17;
-			end
-			else if ((global_var(GVAR_SAVE_SINTHIA) == 2) and (local_var(8) == 0)) then begin
-				call Sinthia08;
-			end
-			else if (map_var(MVAR_save_da_ho) < 3) then begin
-				call Sinthia00;
-			end
-			else if (local_var(1) < 2) then begin
-				call Sinthia29;
-			end
-			else begin
-				call Sinthia20;
-			end
-			gsay_end;
-			end_dialogue;
-		end
-	end
+   dude_look_at_self;
+   if (local_var(6) == 1) then begin
+      display_msg(mstr(171));
+   end
+   else begin
+      if ((map_var(MVAR_save_da_ho) > 0) and (map_var(MVAR_save_da_ho) < 3) and (map_var(MVAR_raider_status) == 0)) then begin
+         call Sinthia07;
+      end
+      else begin
+         get_reaction
+         start_gdialog(338, self_obj, 4, -1, -1);
+         gsay_start;
+         set_local_var(5, 1);
+         if (map_var(MVAR_raider_status) == 2) then begin
+            call Sinthia16;
+         end
+         else if ((map_var(MVAR_raider_status) == 1) and (local_var(7) == 0)) then begin
+            call Sinthia17;
+         end
+         else if ((global_var(GVAR_SAVE_SINTHIA) == 2) and (local_var(8) == 0)) then begin
+            call Sinthia08;
+         end
+         else if (map_var(MVAR_save_da_ho) < 3) then begin
+            call Sinthia00;
+         end
+         else if (local_var(1) < 2) then begin
+            call Sinthia29;
+         end
+         else begin
+            call Sinthia20;
+         end
+         gsay_end;
+         end_dialogue;
+      end
+   end
 
-	if (do_it) then begin
-		call Sinthia30;
-	end
+   if (do_it) then begin
+      call Sinthia30;
+   end
 
-	if (remove_Raider) then begin
-		if (JTRaider_ptr != 0) then begin
-			set_map_var(MVAR_save_da_ho, 3);
-			set_global_var(GVAR_SAVE_SINTHIA, 2);
-			display_msg(mstr(177));
-			destroy_object(JTRaider_ptr);
-			JTRaider_ptr := 0;
-			remove_Raider := 0;
-		end
-	end
+   if (remove_Raider) then begin
+      if (JTRaider_ptr != 0) then begin
+         set_map_var(MVAR_save_da_ho, 3);
+         set_global_var(GVAR_SAVE_SINTHIA, 2);
+         display_msg(mstr(177));
+         destroy_object(JTRaider_ptr);
+         JTRaider_ptr := 0;
+         remove_Raider := 0;
+      end
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 2) then begin
-		if ((global_var(GVAR_SAVE_SINTHIA) != 2) and (local_var(7) == 0)) then begin
-			dialogue_system_enter;
-		end
-	end
-	else begin
-		self_rotate(3);
-	end
+   if (fixed_param == 2) then begin
+      if ((global_var(GVAR_SAVE_SINTHIA) != 2) and (local_var(7) == 0)) then begin
+         dialogue_system_enter;
+      end
+   end
+   else begin
+      self_rotate(3);
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
 end
 
 procedure Sinthia00 begin
-	Reply(102);
-	giq_option(4, NAME, 103, SinthiaEnd, NEUTRAL_REACTION);
-	giq_option(6, NAME, 104, Sinthia00a, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 105, Sinthia00b, NEUTRAL_REACTION);
+   Reply(102);
+   giq_option(4, NAME, 103, SinthiaEnd, NEUTRAL_REACTION);
+   giq_option(6, NAME, 104, Sinthia00a, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 105, Sinthia00b, NEUTRAL_REACTION);
 end
 
 procedure Sinthia00a begin
-	if (dude_is_male) then begin
-		call Sinthia04;
-	end
-	else begin
-		call Sinthia03;
-	end
+   if (dude_is_male) then begin
+      call Sinthia04;
+   end
+   else begin
+      call Sinthia03;
+   end
 end
 
 procedure Sinthia00b begin
-	if (dude_is_male) then begin
-		call Sinthia01;
-	end
-	else begin
-		call Sinthia02;
-	end
+   if (dude_is_male) then begin
+      call Sinthia01;
+   end
+   else begin
+      call Sinthia02;
+   end
 end
 
 procedure Sinthia01 begin
-	NMessage(106);
+   NMessage(106);
 end
 
 procedure Sinthia02 begin
-	NMessage(107);
+   NMessage(107);
 end
 
 procedure Sinthia03 begin
-	NMessage(108);
+   NMessage(108);
 end
 
 procedure Sinthia04 begin
-	Reply(109);
-	giq_option(6, NAME, 110, Sinthia05, NEUTRAL_REACTION);
-	if (global_var(GVAR_DOGMEAT_HIRELING_STATUS)) then begin
-		giq_option(6, NAME, 111, Sinthia06, NEUTRAL_REACTION);
-	end
+   Reply(109);
+   giq_option(6, NAME, 110, Sinthia05, NEUTRAL_REACTION);
+   if (global_var(GVAR_DOGMEAT_HIRELING_STATUS)) then begin
+      giq_option(6, NAME, 111, Sinthia06, NEUTRAL_REACTION);
+   end
 end
 
 procedure Sinthia05 begin
-	NMessage(112);
+   NMessage(112);
 end
 
 procedure Sinthia06 begin
-	DownReact
-	NMessage(113);
+   DownReact
+   NMessage(113);
 end
 
 procedure Sinthia07 begin
-	float_msg(self_obj, mstr(random(114, 117)), FLOAT_MSG_LIGHT_RED);
+   float_msg(self_obj, mstr(random(114, 117)), FLOAT_MSG_LIGHT_RED);
 end
 
 procedure Sinthia08 begin
-	set_local_var(8, 1);
-	BigUpReact
-	Reply(118);
-	giq_option(4, NAME, 119, Sinthia10, NEUTRAL_REACTION);
-	giq_option(5, NAME, 120, Sinthia11, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 121, Sinthia09, NEUTRAL_REACTION);
+   set_local_var(8, 1);
+   BigUpReact
+   Reply(118);
+   giq_option(4, NAME, 119, Sinthia10, NEUTRAL_REACTION);
+   giq_option(5, NAME, 120, Sinthia11, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 121, Sinthia09, NEUTRAL_REACTION);
 end
 
 procedure Sinthia09 begin
-	NMessage(122);
+   NMessage(122);
 end
 
 procedure Sinthia10 begin
-	DownReact
-	NMessage(123);
+   DownReact
+   NMessage(123);
 end
 
 procedure Sinthia11 begin
-	Reply(124);
-	giq_option(5, NAME, 125, Sinthia12, NEUTRAL_REACTION);
-	giq_option(5, NAME, 126, Sinthia15, NEUTRAL_REACTION);
+   Reply(124);
+   giq_option(5, NAME, 125, Sinthia12, NEUTRAL_REACTION);
+   giq_option(5, NAME, 126, Sinthia15, NEUTRAL_REACTION);
 end
 
 procedure Sinthia12 begin
-	Reply(127);
-	giq_option(0, SCRIPT_MODREACT, 106, Sinthia12a, GOOD_REACTION);
+   Reply(127);
+   giq_option(0, SCRIPT_MODREACT, 106, Sinthia12a, GOOD_REACTION);
 end
 
 procedure Sinthia12a begin
-	Reply(128);
-	giq_option(5, NAME, 129, Sinthia14, NEUTRAL_REACTION);
-	giq_option(5, NAME, 130, Sinthia13, NEUTRAL_REACTION);
+   Reply(128);
+   giq_option(5, NAME, 129, Sinthia14, NEUTRAL_REACTION);
+   giq_option(5, NAME, 130, Sinthia13, NEUTRAL_REACTION);
 end
 
 procedure Sinthia13 begin
-	Reply(131);
-	giq_option(0, SCRIPT_MODREACT, 106, Sinthia13a, NEUTRAL_REACTION);
+   Reply(131);
+   giq_option(0, SCRIPT_MODREACT, 106, Sinthia13a, NEUTRAL_REACTION);
 end
 
 procedure Sinthia13a begin
-	if ((dude_is_male) or is_success(do_check(dude_obj, STAT_ch, 0))) then begin
-		Reply(132);
-		giq_option(0, SCRIPT_MODREACT, 106, SinOn, GOOD_REACTION);
-	end
-	else begin
-		GMessage(133);
-	end
+   if ((dude_is_male) or is_success(do_check(dude_obj, STAT_ch, 0))) then begin
+      Reply(132);
+      giq_option(0, SCRIPT_MODREACT, 106, SinOn, GOOD_REACTION);
+   end
+   else begin
+      GMessage(133);
+   end
 end
 
 procedure Sinthia14 begin
-	NMessage(134);
-	if (not(global_var(GVAR_KILLIAN_DEAD)) and is_gizmo_alive) then begin
-		NMessage(136);
-	end
+   NMessage(134);
+   if (not(global_var(GVAR_KILLIAN_DEAD)) and is_gizmo_alive) then begin
+      NMessage(136);
+   end
 end
 
 procedure Sinthia15 begin
-	Reply(137);
-	giq_option(5, NAME, 138, Sinthia14, NEUTRAL_REACTION);
+   Reply(137);
+   giq_option(5, NAME, 138, Sinthia14, NEUTRAL_REACTION);
 end
 
 procedure Sinthia16 begin
-	variable LVar0 := 0;
-	set_local_var(6, 1);
-	if (dude_is_male) then begin
-		Reply(141);
-	end
-	else begin
-		Reply(142);
-	end
-	giq_option(0, SCRIPT_MODREACT, 106, Sinthia16a, NEUTRAL_REACTION);
+   variable LVar0 := 0;
+   set_local_var(6, 1);
+   if (dude_is_male) then begin
+      Reply(141);
+   end
+   else begin
+      Reply(142);
+   end
+   giq_option(0, SCRIPT_MODREACT, 106, Sinthia16a, NEUTRAL_REACTION);
 end
 
 procedure Sinthia16a begin
-	BottomReact
-	dest_tile := 7521;
-	NMessage(143);
+   BottomReact
+   dest_tile := 7521;
+   NMessage(143);
 end
 
 procedure Sinthia17 begin
-	set_local_var(7, 1);
-	Reply(144);
-	giq_option(4, NAME, 145, Sinthia19, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 146, Sinthia18, NEUTRAL_REACTION);
+   set_local_var(7, 1);
+   Reply(144);
+   giq_option(4, NAME, 145, Sinthia19, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 146, Sinthia18, NEUTRAL_REACTION);
 end
 
 procedure Sinthia18 begin
-	BottomReact
-	set_local_var(6, 1);
-	NMessage(147);
+   BottomReact
+   set_local_var(6, 1);
+   NMessage(147);
 end
 
 procedure Sinthia19 begin
-	remove_Raider := 1;
-	Reply(148);
-	giq_option(4, NAME, 149, Sinthia08, NEUTRAL_REACTION);
+   remove_Raider := 1;
+   Reply(148);
+   giq_option(4, NAME, 149, Sinthia08, NEUTRAL_REACTION);
 end
 
 procedure Sinthia20 begin
-	Reply(150);
-	giq_option(4, NAME, 151, Sinthia22, NEUTRAL_REACTION);
-	if (dude_is_male) then begin
-		giq_option(4, NAME, 152, Sinthia20a, NEUTRAL_REACTION);
-	end
-	if (not(line23flag) and (is_gizmo_alive)) then begin
-		giq_option(6, NAME, 153, Sinthia23, NEUTRAL_REACTION);
-	end
+   Reply(150);
+   giq_option(4, NAME, 151, Sinthia22, NEUTRAL_REACTION);
+   if (dude_is_male) then begin
+      giq_option(4, NAME, 152, Sinthia20a, NEUTRAL_REACTION);
+   end
+   if (not(line23flag) and (is_gizmo_alive)) then begin
+      giq_option(6, NAME, 153, Sinthia23, NEUTRAL_REACTION);
+   end
 end
 
 procedure Sinthia20a begin
-	if (dude_caps >= 40) then begin
-		dude_caps_adjust(-40);
-		call Sinthia27;
-	end
-	else begin
-		call Sinthia28;
-	end
+   if (dude_caps >= 40) then begin
+      dude_caps_adjust(-40);
+      call Sinthia27;
+   end
+   else begin
+      call Sinthia28;
+   end
 end
 
 procedure Sinthia21 begin
-	NMessage(154);
+   NMessage(154);
 end
 
 procedure Sinthia22 begin
-	NMessage(155);
+   NMessage(155);
 end
 
 procedure Sinthia23 begin
-	line23flag := 1;
-	Reply(156);
-	call SinthiaQuestions;
+   line23flag := 1;
+   Reply(156);
+   call SinthiaQuestions;
 end
 
 procedure Sinthia24 begin
-	line24flag := 1;
-	Reply(161);
-	call SinthiaQuestions;
+   line24flag := 1;
+   Reply(161);
+   call SinthiaQuestions;
 end
 
 procedure Sinthia25 begin
-	line25flag := 1;
-	Reply(162);
-	call SinthiaQuestions;
+   line25flag := 1;
+   Reply(162);
+   call SinthiaQuestions;
 end
 
 procedure Sinthia26 begin
-	line26flag := 1;
-	Reply(163);
-	call SinthiaQuestions;
+   line26flag := 1;
+   Reply(163);
+   call SinthiaQuestions;
 end
 
 procedure Sinthia27 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	LVar0 := random(1, 3);
-	LVar1 := mstr(163 + LVar0);
-	float_msg(self_obj, LVar1, FLOAT_MSG_LIGHT_RED);
-	call SinOn;
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := random(1, 3);
+   LVar1 := mstr(163 + LVar0);
+   float_msg(self_obj, LVar1, FLOAT_MSG_LIGHT_RED);
+   call SinOn;
 end
 
 procedure Sinthia28 begin
-	DownReact
-	NMessage(167);
+   DownReact
+   NMessage(167);
 end
 
 procedure Sinthia29 begin
-	NMessage(168);
+   NMessage(168);
 end
 
 procedure Sinthia30 begin
-	gfade_out(1);
-	//game_time_advance(game_ticks(600));
-	do_default_sex;
-	move_to(dude_obj, 18291, 0);
-	if (not(is_success(do_check(dude_obj, STAT_iq, 0)))) then begin
-		set_map_var(MVAR_hodiction, 1);
-	end
-	gfade_in(1);
-	do_it := 0;
+   gfade_out(1);
+   //game_time_advance(game_ticks(600));
+   do_default_sex;
+   move_to(dude_obj, 18291, 0);
+   if (not(is_success(do_check(dude_obj, STAT_iq, 0)))) then begin
+      set_map_var(MVAR_hodiction, 1);
+   end
+   gfade_in(1);
+   do_it := 0;
 end
 
 procedure SinOn begin
-	do_it := 1;
+   do_it := 1;
 end
 
 procedure SinthiaQuestions begin
-	if (not(line24flag)) then begin
-		giq_option(6, NAME, 157, Sinthia24, NEUTRAL_REACTION);
-	end
-	if (not(line25flag)) then begin
-		giq_option(6, NAME, 158, Sinthia25, NEUTRAL_REACTION);
-	end
-	if (not(line26flag)) then begin
-		giq_option(6, NAME, 159, Sinthia26, NEUTRAL_REACTION);
-	end
-	giq_option(6, NAME, 160, SinthiaEnd, NEUTRAL_REACTION);
+   if (not(line24flag)) then begin
+      giq_option(6, NAME, 157, Sinthia24, NEUTRAL_REACTION);
+   end
+   if (not(line25flag)) then begin
+      giq_option(6, NAME, 158, Sinthia25, NEUTRAL_REACTION);
+   end
+   if (not(line26flag)) then begin
+      giq_option(6, NAME, 159, Sinthia26, NEUTRAL_REACTION);
+   end
+   giq_option(6, NAME, 160, SinthiaEnd, NEUTRAL_REACTION);
 end
 
 procedure SinthiaEnd begin

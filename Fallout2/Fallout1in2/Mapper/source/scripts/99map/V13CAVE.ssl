@@ -26,8 +26,8 @@ variable party_elevation;
 variable Item := 0;
 variable NumItems := 0;
 
-#define EVENT_END_1 		(1)
-#define EVENT_END_2 		(2)
+#define EVENT_END_1     (1)
+#define EVENT_END_2     (2)
 
 procedure start begin
 end
@@ -35,84 +35,84 @@ end
 procedure map_enter_p_proc begin
 variable Item;
 
-	call SetLight;
+   call SetLight;
 
-	if v13_invaded then begin
-		set_map_var(2, 1);
-	end
+   if v13_invaded then begin
+      set_map_var(2, 1);
+   end
 
-	if (map_first_run) then begin
-		if debug_mode then begin
-			override_map_start_hex(25936, 0, 1);
-		end
-		else begin
-			override_map_start_hex(17690, 0, 2);
-		end
+   if (map_first_run) then begin
+      if debug_mode then begin
+         override_map_start_hex(25936, 0, 1);
+      end
+      else begin
+         override_map_start_hex(17690, 0, 2);
+      end
 
-	   // randomize time between 3:00AM and 7:00AM to get "night sky" message:
-	   // Advance until 00:00, then add 3 to 7 hours.
-	   game_time_advance((ONE_GAME_MINUTE * (ticks_til_hour(0) / 60) / 10) + (ONE_GAME_MINUTE * random(180, 420)));
+      // randomize time between 3:00AM and 7:00AM to get "night sky" message:
+      // Advance until 00:00, then add 3 to 7 hours.
+      game_time_advance((ONE_GAME_MINUTE * (ticks_til_hour(0) / 60) / 10) + (ONE_GAME_MINUTE * random(180, 420)));
 
-		set_global_var(GVAR_QUEST_VAULT13_0_WATERCHIP_TRACKER, 1);
+      set_global_var(GVAR_QUEST_VAULT13_0_WATERCHIP_TRACKER, 1);
 
-		//--- Activate V13 and V15 on the worldmap:
-		mark_on_map(AREA_VAULT_13)
-		mark_on_map(AREA_VAULT_15)
+      //--- Activate V13 and V15 on the worldmap:
+      mark_on_map(AREA_VAULT_13)
+      mark_on_map(AREA_VAULT_15)
 
-		//--- Give initial reputation:
-		inc_v13_rep(REP_BONUS_GAME_STARTED);
+      //--- Give initial reputation:
+      inc_v13_rep(REP_BONUS_GAME_STARTED);
 
-		display_msg(message_str(SCRIPT_FEARDARK, 100));
+      display_msg(message_str(SCRIPT_FEARDARK, 100));
 
-		if global_var(GVAR_IRONMAN_MODE) == 0 then begin
-			call base_inventory;
-			call TagInven;
-		end
-		else if global_var(GVAR_IRONMAN_MODE) == 1 then
-			call base_inventory;
-		else if global_var(GVAR_IRONMAN_MODE) == 2 then
-			call TagInven;
-		//call NamedInven;
-	end
+      if global_var(GVAR_IRONMAN_MODE) == 0 then begin
+         call base_inventory;
+         call TagInven;
+      end
+      else if global_var(GVAR_IRONMAN_MODE) == 1 then
+         call base_inventory;
+      else if global_var(GVAR_IRONMAN_MODE) == 2 then
+         call TagInven;
+      //call NamedInven;
+   end
 
-	// Check if we should run the endgame scene:
-	else begin
-		if ( (waterchip_returned /*or dude_item_count(PID_WATER_CHIP)*/) and (military_base_destoryed and cathedral_destroyed and (endgame_running == 0)) and (not(is_story_finished)) ) then begin
-			// Remove water chip, if player still has one:
-			if not(waterchip_returned) and (dude_item_count(PID_WATER_CHIP)) then begin
-				set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2);
-				item := dude_item(PID_WATER_CHIP);
-				rm_obj_from_inven(dude_obj, item);
-			end
+   // Check if we should run the endgame scene:
+   else begin
+      if ( (waterchip_returned /*or dude_item_count(PID_WATER_CHIP)*/) and (military_base_destoryed and cathedral_destroyed and (endgame_running == 0)) and (not(is_story_finished)) ) then begin
+         // Remove water chip, if player still has one:
+         if not(waterchip_returned) and (dude_item_count(PID_WATER_CHIP)) then begin
+            set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2);
+            item := dude_item(PID_WATER_CHIP);
+            rm_obj_from_inven(dude_obj, item);
+         end
 
-			// Hide party members
-			party_member_hide_all
+         // Hide party members
+         party_member_hide_all
 
-			game_ui_disable;
-			call Endgame_Slides;
-		end
-		else begin
-			override_map_start(136, 129, 0, 1);
-		end
-	end
+         game_ui_disable;
+         call Endgame_Slides;
+      end
+      else begin
+         override_map_start(136, 129, 0, 1);
+      end
+   end
 
-	set_global_var(GVAR_LOAD_MAP_INDEX, 0);
+   set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
 
 procedure map_update_p_proc begin
-	call SetLight;
+   call SetLight;
 end
 
 procedure SetLight begin
-	if not(endgame_running) and (global_var(GVAR_OVERSEER_END_SEQ) == 0) and (not(is_story_finished)) then begin
-		Darkness;
-	end
-	else begin
-		if is_story_finished then
-			Darkness;
-		else
-			set_light_level(100);
-	end
+   if not(endgame_running) and (global_var(GVAR_OVERSEER_END_SEQ) == 0) and (not(is_story_finished)) then begin
+      Darkness;
+   end
+   else begin
+      if is_story_finished then
+         Darkness;
+      else
+         set_light_level(100);
+   end
 end
 
 procedure map_exit_p_proc begin
@@ -121,38 +121,38 @@ end
 procedure timed_event_p_proc begin
 variable Critter;
 
-	if (fixed_param == EVENT_END_1) then begin
-		debug("EG Scene 1 - Setup");
+   if (fixed_param == EVENT_END_1) then begin
+      debug("EG Scene 1 - Setup");
 
-		kill_critter_type(PID_RAT_CAVE, 0);
+      kill_critter_type(PID_RAT_CAVE, 0);
 
-		set_light_level(100);
-		override_map_start(90, 96, 0, 5);
+      set_light_level(100);
+      override_map_start(90, 96, 0, 5);
 
-		gfade_out(1);
-		// This is done via native Sfall function now: F1EngineBehavior=1
-		//VOODOO_mode_fo1_ending;
-		endgame_slideshow;
+      gfade_out(1);
+      // This is done via native Sfall function now: F1EngineBehavior=1
+      //VOODOO_mode_fo1_ending;
+      endgame_slideshow;
 
-		endgame_running := 2;
-		add_timer_event(self_obj, game_ticks(0), EVENT_END_2);
-	end
-	else if (fixed_param == EVENT_END_2) then begin
-		debug("EG Scene 2 - Overseer approaching");
+      endgame_running := 2;
+      add_timer_event(self_obj, game_ticks(0), EVENT_END_2);
+   end
+   else if (fixed_param == EVENT_END_2) then begin
+      debug("EG Scene 2 - Overseer approaching");
 
-		// Create the Overseer while the ending slides are running:
-		Critter := create_object_sid(PID_OVERSEER, 0, 0, SCRIPT_OVER);
-		set_map_var(0, Critter);
-		obj_rotate(Critter, 2);
+      // Create the Overseer while the ending slides are running:
+      Critter := create_object_sid(PID_OVERSEER, 0, 0, SCRIPT_OVER);
+      set_map_var(0, Critter);
+      obj_rotate(Critter, 2);
 
-		// Move to the vault door and use it:
-		critter_attempt_placement(Critter, 15690, dude_elevation);
-		use_obj(vault_door_ptr);
+      // Move to the vault door and use it:
+      critter_attempt_placement(Critter, 15690, dude_elevation);
+      use_obj(vault_door_ptr);
 
-		set_global_var(GVAR_OVERSEER_END_SEQ, 1);
-		add_timer_event(vault_door_ptr, game_ticks(5), 1);
-		endgame_running := 3;
-	end
+      set_global_var(GVAR_OVERSEER_END_SEQ, 1);
+      add_timer_event(vault_door_ptr, game_ticks(5), 1);
+      endgame_running := 3;
+   end
 end
 
 procedure base_inventory begin
@@ -245,82 +245,82 @@ end
    Set the outcome of the endgame slides.
 *******************************************************************/
 procedure Endgame_Slides begin
-	// Start
-	if (global_var(GVAR_ENDGAME_MOVIE_MUTANTS) == 0) then
-		set_end_Master;
+   // Start
+   if (global_var(GVAR_ENDGAME_MOVIE_MUTANTS) == 0) then
+      set_end_Master;
 
-	// Necropolis
-	if necropolis_invaded then
-		set_end_necropolis_invaded;
-	else if necropolis_wpump_fixed then
-		set_end_necropolis_survived;
-	else
-		set_end_necropolis_dehydrated;
+   // Necropolis
+   if necropolis_invaded then
+      set_end_necropolis_invaded;
+   else if necropolis_wpump_fixed then
+      set_end_necropolis_survived;
+   else
+      set_end_necropolis_dehydrated;
 
-	// Boneyard
-	if boneyard_visible_on_map then begin
-		if /*followers_trained*/ not(boneyard_invaded) and is_nicole_alive and is_laura_escaped then
-			set_end_foa_trained; // good ending \o/
-		else
-			set_end_foa_invaded;
-	end
+   // Boneyard
+   if boneyard_visible_on_map then begin
+      if /*followers_trained*/ not(boneyard_invaded) and is_nicole_alive and is_laura_escaped then
+         set_end_foa_trained; // good ending \o/
+      else
+         set_end_foa_invaded;
+   end
 
-	// Shady Sands
-	if shady_sands_visible_on_map then begin
-		if shady_invaded then
-			set_end_shady_invaded;
-		else if is_tandi_alive and is_aradesh_alive then
-			set_end_shady_good;
-		else if is_aradesh_alive then
-			set_end_shady_tandi_dead;
-		else if is_tandi_alive then
-			set_end_shady_aradesh_dead;
-		else
-			set_end_shady_bad;
-	end
+   // Shady Sands
+   if shady_sands_visible_on_map then begin
+      if shady_invaded then
+         set_end_shady_invaded;
+      else if is_tandi_alive and is_aradesh_alive then
+         set_end_shady_good;
+      else if is_aradesh_alive then
+         set_end_shady_tandi_dead;
+      else if is_tandi_alive then
+         set_end_shady_aradesh_dead;
+      else
+         set_end_shady_bad;
+   end
 
-	// Junktown
-	if junktown_visible_on_map then begin
-		if junktown_invaded or (not(is_killian_alive) and (not(is_gizmo_alive))) then
-			set_end_junktown_invaded;
-		else if is_killian_alive then
-			set_end_junktown_killian;
-		else
-			set_end_junktown_gizmo;
-	end
+   // Junktown
+   if junktown_visible_on_map then begin
+      if junktown_invaded or (not(is_killian_alive) and (not(is_gizmo_alive))) then
+         set_end_junktown_invaded;
+      else if is_killian_alive then
+         set_end_junktown_killian;
+      else
+         set_end_junktown_gizmo;
+   end
 
-	// Brotherhood of Steel
-	if brotherhood_visible_on_map then begin
-		if is_rhombus_alive then
-			set_end_bos_good;
-		else
-			set_end_bos_bad;
-	end
+   // Brotherhood of Steel
+   if brotherhood_visible_on_map then begin
+      if is_rhombus_alive then
+         set_end_bos_good;
+      else
+         set_end_bos_bad;
+   end
 
-	// Hub
-	if hub_visible_on_map then begin
-		if ( (global_var(GVAR_IS_HAROLD_ALIVE) == 1) and (global_var(GVAR_DECKER_STATUS) == 1) and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) ) then
-			set_end_hub_good;
-		else
-			set_end_hub_bad;
-	end
+   // Hub
+   if hub_visible_on_map then begin
+      if ( (global_var(GVAR_IS_HAROLD_ALIVE) == 1) and (global_var(GVAR_DECKER_STATUS) == 1) and (global_var(GVAR_SLIDE_KIND_TO_HAROLD) == 1) ) then
+         set_end_hub_good;
+      else
+         set_end_hub_bad;
+   end
 
-	// Raiders
-	if raiders_visible_on_map then begin
+   // Raiders
+   if raiders_visible_on_map then begin
 
-		if ( (get_raiders_alive <= 3) or ( (not(is_garl_alive)) and (get_raiders_alive <= 8) ) ) then
-			set_end_raiders_dead;
-		else if (get_raiders_alive < 16) then
-			set_end_raiders_hurt;
-		else
-			set_end_raiders_alive;
-	end
-	else begin
-		set_end_raiders_alive;
-	end
+      if ( (get_raiders_alive <= 3) or ( (not(is_garl_alive)) and (get_raiders_alive <= 8) ) ) then
+         set_end_raiders_dead;
+      else if (get_raiders_alive < 16) then
+         set_end_raiders_hurt;
+      else
+         set_end_raiders_alive;
+   end
+   else begin
+      set_end_raiders_alive;
+   end
 
-	// Vault Dweller
-	set_end_ending_vd;
+   // Vault Dweller
+   set_end_ending_vd;
 
-	add_timer_event(self_obj, game_ticks(0), EVENT_END_1);
+   add_timer_event(self_obj, game_ticks(0), EVENT_END_1);
 end

@@ -27,141 +27,141 @@ procedure start begin
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(112));
+   script_overrides;
+   display_msg(mstr(112));
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	if (tile_distance_objs(self_obj, dude_obj) < 2) then begin
-		call search;
-	end
-	else begin
-		display_msg(mstr(107));
-	end
+   script_overrides;
+   if (tile_distance_objs(self_obj, dude_obj) < 2) then begin
+      call search;
+   end
+   else begin
+      display_msg(mstr(107));
+   end
 end
 
 procedure use_p_proc begin
-	script_overrides;
-	call removal;
+   script_overrides;
+   call removal;
 end
 
 procedure use_skill_on_p_proc begin
-	script_overrides;
-	if (action_being_used == SKILL_REPAIR) then begin
-		call removal;
-	end
-	else begin
-		call skills;
-	end
+   script_overrides;
+   if (action_being_used == SKILL_REPAIR) then begin
+      call removal;
+   end
+   else begin
+      call skills;
+   end
 end
 
 procedure use_obj_on_p_proc begin
-	if (obj_pid(obj_being_used_with) == PID_WATER_CHIP) then begin
-		script_overrides;
+   if (obj_pid(obj_being_used_with) == PID_WATER_CHIP) then begin
+      script_overrides;
 
-		display_msg(mstr(110));
+      display_msg(mstr(110));
 
-		rm_obj_from_inven(dude_obj, obj_being_used_with);
-		add_obj_to_inven(self_obj, obj_being_used_with);
+      rm_obj_from_inven(dude_obj, obj_being_used_with);
+      add_obj_to_inven(self_obj, obj_being_used_with);
 
-		set_global_var(GVAR_NECROP_WATER_CHIP_TAKEN, 0);
-		set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 0);
-	end
-	else begin
-		display_msg(mstr(111));
-	end
+      set_global_var(GVAR_NECROP_WATER_CHIP_TAKEN, 0);
+      set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 0);
+   end
+   else begin
+      display_msg(mstr(111));
+   end
 end
 
 
 procedure search begin
-	test := do_check(dude_obj, STAT_pe, 0);
+   test := do_check(dude_obj, STAT_pe, 0);
 
-	if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN)) then begin
-		display_msg(mstr(100));
-	end
-	else begin
-		if (is_success(test)) then begin
-			display_msg(mstr(101));
-			set_local_var(1, 1);
-		end
-		else begin
-			game_time_advance(game_ticks(1200));
-			display_msg(mstr(102));
-			set_local_var(1, 1);
-		end
-	end
+   if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN)) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      if (is_success(test)) then begin
+         display_msg(mstr(101));
+         set_local_var(1, 1);
+      end
+      else begin
+         game_time_advance(game_ticks(1200));
+         display_msg(mstr(102));
+         set_local_var(1, 1);
+      end
+   end
 
 end
 
 procedure removal begin
-	test := do_check(dude_obj, STAT_iq, 0);
-	test1 := do_check(dude_obj, STAT_ag, 0);
-	test2 := roll_vs_skill(dude_obj, SKILL_REPAIR, bonus);
+   test := do_check(dude_obj, STAT_iq, 0);
+   test1 := do_check(dude_obj, STAT_ag, 0);
+   test2 := roll_vs_skill(dude_obj, SKILL_REPAIR, bonus);
 
-	if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN) == 1) then begin
-		display_msg(mstr(103));
-	end
-	else begin
-		if (is_success(test) or is_success(test1) or is_success(test2)) then begin
+   if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN) == 1) then begin
+      display_msg(mstr(103));
+   end
+   else begin
+      if (is_success(test) or is_success(test1) or is_success(test2)) then begin
 
-			if (necropolis_wpump_fixed) then begin
-				display_msg(mstr(117));
-			end
-			else begin
-				display_msg(mstr(104));
-			end
+         if (necropolis_wpump_fixed) then begin
+            display_msg(mstr(117));
+         end
+         else begin
+            display_msg(mstr(104));
+         end
 
-			add_obj_to_inven(dude_obj, create_object(PID_WATER_CHIP, 0, 0));
-			set_global_var(GVAR_NECROP_WATER_CHIP_TAKEN, 1);
-			set_global_var(GVAR_TIME_CHIP_GONE, GAME_TIME_IN_DAYS);
+         add_obj_to_inven(dude_obj, create_object(PID_WATER_CHIP, 0, 0));
+         set_global_var(GVAR_NECROP_WATER_CHIP_TAKEN, 1);
+         set_global_var(GVAR_TIME_CHIP_GONE, GAME_TIME_IN_DAYS);
 
-			if (local_var(2) < 1) then begin
-				set_local_var(2, 1);
-				temp := EXP_WATER_CHIP_TAKEN - (global_var(GVAR_SUPER_MUTANTS_KILLED) * 250);
-				set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + REP_BONUS_WATERCHIP_TAKEN);
-				give_exp_points(temp);
+         if (local_var(2) < 1) then begin
+            set_local_var(2, 1);
+            temp := EXP_WATER_CHIP_TAKEN - (global_var(GVAR_SUPER_MUTANTS_KILLED) * 250);
+            set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + REP_BONUS_WATERCHIP_TAKEN);
+            give_exp_points(temp);
 
-				display_msg(mstr(113) + temp + mstr(114));
-			end
-			Character_Point := Character_Point + 1;
+            display_msg(mstr(113) + temp + mstr(114));
+         end
+         Character_Point := Character_Point + 1;
 
-		end
-		else begin
+      end
+      else begin
 
-			if (is_critical(test) or is_critical(test1) or is_critical(test2)) then begin
-				game_time_advance(game_ticks(3600));
-				display_msg(mstr(105));
-			end
-			else begin
-				display_msg(mstr(106));
-				game_time_advance(game_ticks(1800));
-			end
+         if (is_critical(test) or is_critical(test1) or is_critical(test2)) then begin
+            game_time_advance(game_ticks(3600));
+            display_msg(mstr(105));
+         end
+         else begin
+            display_msg(mstr(106));
+            game_time_advance(game_ticks(1800));
+         end
 
-		end
-	end
+      end
+   end
 
 end
 
 procedure skills begin
 
-	if (action_being_used == SKILL_SCIENCE) then begin
-		if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN)) then begin
-			display_msg(mstr(116));
-		end
-		else begin
-			test := roll_vs_skill(dude_obj, SKILL_SCIENCE, 20);
-			if (is_success(test)) then begin
-				bonus := 40;
-				display_msg(mstr(115));
-			end
-			else begin
-				display_msg(mstr(109));
-			end
-		end
-	end
-	else begin
-		display_msg(mstr(109));
-	end
+   if (action_being_used == SKILL_SCIENCE) then begin
+      if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN)) then begin
+         display_msg(mstr(116));
+      end
+      else begin
+         test := roll_vs_skill(dude_obj, SKILL_SCIENCE, 20);
+         if (is_success(test)) then begin
+            bonus := 40;
+            display_msg(mstr(115));
+         end
+         else begin
+            display_msg(mstr(109));
+         end
+      end
+   end
+   else begin
+      display_msg(mstr(109));
+   end
 
 end

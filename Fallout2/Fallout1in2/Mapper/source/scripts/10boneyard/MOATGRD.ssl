@@ -1,6 +1,6 @@
 /*
 
-	Boneyard - Guard at the moat bridge.
+   Boneyard - Guard at the moat bridge.
 
 */
 
@@ -43,137 +43,137 @@ variable DestTile;
 #define LVAR_Home_Rotation          (7)
 
 procedure Start begin
-	if Only_Once then begin
-		Only_Once := 0;
-		set_self_team(TEAM_LA_GUN_RUNNERS);
-		set_self_ai(AI_GUNRUNNERS);
-	end
+   if Only_Once then begin
+      Only_Once := 0;
+      set_self_team(TEAM_LA_GUN_RUNNERS);
+      set_self_ai(AI_GUNRUNNERS);
+   end
 end
 
 procedure map_enter_p_proc begin
    if map_first_run then begin
       self_caps_adjust(random(2, 20));
-	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Tile, self_tile);
       set_local_var(LVAR_Home_Rotation, self_cur_rot);
    end
    else if (not(is_loading_game)) then begin
-		move_to(self_obj, local_var(LVAR_Home_Tile), 0);
+      move_to(self_obj, local_var(LVAR_Home_Tile), 0);
       self_rotate(local_var(LVAR_Home_Rotation));
-	end
+   end
 
    // Fix for wandering off:
-	if (DestTile == 0) then DestTile := local_var(LVAR_Home_Tile);
+   if (DestTile == 0) then DestTile := local_var(LVAR_Home_Tile);
 end
 
 procedure pickup_p_proc begin
-	set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+   set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (global_var(GVAR_DUDE_ENEMY_BLADES) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
-	end
-	else begin
-		get_reaction
-		start_dialog_at_node(Moat00);
-	end
+   dude_look_at_self;
+   if (global_var(GVAR_DUDE_ENEMY_BLADES) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
+   end
+   else begin
+      get_reaction
+      start_dialog_at_node(Moat00);
+   end
 end
 
 procedure critter_p_proc begin
-	if (self_tile != DestTile) then begin
-		self_walk_to_tile(DestTile);
-	end
-	else begin
-		self_rotate(2);
-	end
-	if (self_can_see_dude) then begin
-		if (global_var(GVAR_DUDE_ENEMY_BLADES) == 1) then begin
-			attack(dude_obj);
-		end
-	end
+   if (self_tile != DestTile) then begin
+      self_walk_to_tile(DestTile);
+   end
+   else begin
+      self_rotate(2);
+   end
+   if (self_can_see_dude) then begin
+      if (global_var(GVAR_DUDE_ENEMY_BLADES) == 1) then begin
+         attack(dude_obj);
+      end
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
-	end
-	inc_good_critter
+   rm_timer_event(self_obj);
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+   end
+   inc_good_critter
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
-		if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
-			set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
-			attack(dude_obj);
-		end
-	end
+   if (fixed_param == 1) then begin
+      if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
+         set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+         attack(dude_obj);
+      end
+   end
 end
 
 procedure Moat00 begin
-	Reply(101);
-	giq_option(4, NAME, 103, Moat02, NEUTRAL_REACTION);
-	if (local_var(5) == 0) then begin
-		giq_option(4, NAME, 104, Moat05, NEUTRAL_REACTION);
-		giq_option(4, NAME, 115, Moat03, NEUTRAL_REACTION);
-	end
-	else begin
-		giq_option(4, NAME, 119, Moat04, NEUTRAL_REACTION);
-		giq_option(4, NAME, 118, Moat04, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 111, MoatCombat, BAD_REACTION);
-	giq_option(-3, NAME, 102, Moat01, NEUTRAL_REACTION);
+   Reply(101);
+   giq_option(4, NAME, 103, Moat02, NEUTRAL_REACTION);
+   if (local_var(5) == 0) then begin
+      giq_option(4, NAME, 104, Moat05, NEUTRAL_REACTION);
+      giq_option(4, NAME, 115, Moat03, NEUTRAL_REACTION);
+   end
+   else begin
+      giq_option(4, NAME, 119, Moat04, NEUTRAL_REACTION);
+      giq_option(4, NAME, 118, Moat04, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 111, MoatCombat, BAD_REACTION);
+   giq_option(-3, NAME, 102, Moat01, NEUTRAL_REACTION);
 end
 
 procedure Moat01 begin
-	NMessage(107);
-	add_timer_event(self_obj, game_ticks(10), 1);
-	BottomReact
+   NMessage(107);
+   add_timer_event(self_obj, game_ticks(10), 1);
+   BottomReact
 end
 
 procedure Moat02 begin
-	NMessage(107);
-	add_timer_event(self_obj, game_ticks(10 * 2), 1);
-	BottomReact
+   NMessage(107);
+   add_timer_event(self_obj, game_ticks(10 * 2), 1);
+   BottomReact
 end
 
 procedure Moat03 begin
-	NMessage(116);
-	DestTile := 26299;
-	set_local_var(5, 1);
+   NMessage(116);
+   DestTile := 26299;
+   set_local_var(5, 1);
 end
 
 procedure Moat04 begin
-	NMessage(117);
-	DestTile := 26299;
+   NMessage(117);
+   DestTile := 26299;
 end
 
 procedure Moat05 begin
-	NMessage(113);
-	DestTile := 26299;
-	set_local_var(5, 1);
+   NMessage(113);
+   DestTile := 26299;
+   set_local_var(5, 1);
 end
 
 procedure MoatCombat begin
-	add_timer_event(self_obj, game_ticks(10), 1);
-	BottomReact
+   add_timer_event(self_obj, game_ticks(10), 1);
+   BottomReact
 end
 
 procedure MoatEnd begin

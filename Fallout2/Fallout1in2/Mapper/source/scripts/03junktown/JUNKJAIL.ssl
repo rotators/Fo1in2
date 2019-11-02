@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Jail door
+   Junktown - Jail door
 
 */
 
@@ -34,87 +34,87 @@ procedure start begin
 end
 
 procedure damage_p_proc begin
-	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-		destroy_object(self_obj);
-	end
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+      destroy_object(self_obj);
+   end
    else begin
        display_msg(message_str(SCRIPT_DOOR, 193));
    end
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	display_msg(mstr(101));
+   script_overrides;
+   display_msg(mstr(101));
 end
 
 procedure map_enter_p_proc begin
-	if (self_tile == 18666) then begin
-		obj_close(self_obj);
-		obj_lock(self_obj);
-		jail_door_ptr := self_obj;
-	end
+   if (self_tile == 18666) then begin
+      obj_close(self_obj);
+      obj_lock(self_obj);
+      jail_door_ptr := self_obj;
+   end
 end
 
 procedure spatial_p_proc begin
-	if ((source_obj == dude_obj) and (triggered == 0) and (map_var(MVAR_dude_in_jail) == 1)) then begin
-		display_msg(mstr(100));
-		set_map_var(MVAR_dude_in_jail, 0);
-		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 3);
+   if ((source_obj == dude_obj) and (triggered == 0) and (map_var(MVAR_dude_in_jail) == 1)) then begin
+      display_msg(mstr(100));
+      set_map_var(MVAR_dude_in_jail, 0);
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 3);
 
-		display_msg(mstr(107) + EXP_BUSTING_OUT_OF_JAIL + mstr(108));
-		give_exp_points(EXP_BUSTING_OUT_OF_JAIL);
+      display_msg(mstr(107) + EXP_BUSTING_OUT_OF_JAIL + mstr(108));
+      give_exp_points(EXP_BUSTING_OUT_OF_JAIL);
 
-		if (global_var(GVAR_ENEMY_JUNKTOWN) == 0) then begin
-			set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-			set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-			inc_junktown_rep(REP_BONUS_FLEEING_JAIL);
-		end
-		triggered := 1;
-		destroy_object(self_obj);
-	end
+      if (global_var(GVAR_ENEMY_JUNKTOWN) == 0) then begin
+         set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+         set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+         inc_junktown_rep(REP_BONUS_FLEEING_JAIL);
+      end
+      triggered := 1;
+      destroy_object(self_obj);
+   end
 end
 
 procedure use_obj_on_p_proc begin
-	if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
-		skill_test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
-		call lockpicking;
-	end
+   if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+      skill_test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
+      call lockpicking;
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_LOCKPICK) then begin
-		skill_test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
-		call lockpicking;
-	end
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      skill_test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
+      call lockpicking;
+   end
 end
 
 procedure lockpicking begin
-	script_overrides;
-	set_map_var(MVAR_dude_picked_jail_door, map_var(MVAR_dude_picked_jail_door) + 1);
-	if (is_success(skill_test)) then begin
-		if (obj_is_locked(self_obj)) then begin
-			obj_unlock(self_obj);
-			display_msg(mstr(103));
-		end
-		else begin
-			obj_lock(self_obj);
-			display_msg(mstr(104));
-		end
-	end
-	else begin
-		if (obj_is_locked(self_obj)) then begin
-			display_msg(mstr(105));
-		end
-		else begin
-			display_msg(mstr(106));
-		end
-	end
+   script_overrides;
+   set_map_var(MVAR_dude_picked_jail_door, map_var(MVAR_dude_picked_jail_door) + 1);
+   if (is_success(skill_test)) then begin
+      if (obj_is_locked(self_obj)) then begin
+         obj_unlock(self_obj);
+         display_msg(mstr(103));
+      end
+      else begin
+         obj_lock(self_obj);
+         display_msg(mstr(104));
+      end
+   end
+   else begin
+      if (obj_is_locked(self_obj)) then begin
+         display_msg(mstr(105));
+      end
+      else begin
+         display_msg(mstr(106));
+      end
+   end
 end
 
 procedure use_p_proc begin
-	if (obj_is_locked(self_obj)) then begin
-		script_overrides;
-		display_msg(mstr(102));
-	end
+   if (obj_is_locked(self_obj)) then begin
+      script_overrides;
+      display_msg(mstr(102));
+   end
 end

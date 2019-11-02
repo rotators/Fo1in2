@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+   Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef SCENEPID_H
@@ -35,15 +35,15 @@ variable Scenery_Creation_Ptr;
 #define PID_BLOWN_ARROYO_CAVE_DOOR          (33555365)
 #define PID_ARROYO_CAVE_DOOR                (33555366)
 #define PID_TEMPLE_SKULL_POLE               (33555374)
-#define PID_RED_ARMCHAIR 			 		(33554665)
+#define PID_RED_ARMCHAIR               (33554665)
 
-#define PID_BUSH_GREEN_1 					(33555375)
-#define PID_BUSH_GREEN_2 					(33555376)
+#define PID_BUSH_GREEN_1               (33555375)
+#define PID_BUSH_GREEN_2               (33555376)
 
 // BOS Entrance scenery
-#define PID_EW_BOS_DOOR 					(33554585)
-#define PID_BOS_ELEVATOR_TOP 				(33554613)
-#define PID_BOS_MARKER   					(33554589)
+#define PID_EW_BOS_DOOR                (33554585)
+#define PID_BOS_ELEVATOR_TOP           (33554613)
+#define PID_BOS_MARKER                 (33554589)
 
 // Navarro Door
 #define PID_NS_NAVARRO_BUNKER_DOOR          (33554450)
@@ -198,106 +198,106 @@ variable Scenery_Creation_Ptr;
 #define PID_SLOT_FACING_3                   (33554897)
 
 // Sewer hole cover / door
-#define PID_SEWER_COVER						(33554576)
+#define PID_SEWER_COVER                (33554576)
 
 // New Fallout 1:
-#define PID_BEAM_1 							(33554999)
-#define PID_BEAM_2 							(33555000)
-#define PID_BED_1 							(33554640)
-#define PID_BED_2 							(33554641)
-#define PID_BONES_1 						(33554514)
-#define PID_BONES_2 						(33554515)
-#define PID_BONES_3 						(33554516)
-#define PID_BONES_4 						(33554517)
-#define PID_BONES_5 						(33554518)
-#define PID_BOXES_1 						(33554652)
-#define PID_BOXES_2 						(33554653)
-#define PID_BOXES_3 						(33554654)
-#define PID_BOXES_4 						(33554655)
-#define PID_BURNING_BARREL 					(33554433)
-#define PID_CACTUS_1						(33554496)
-#define PID_CACTUS_2 						(33554497)
-#define PID_OLD_CHAIR						(33554667)
-#define PID_CART 							(33554800)
-#define PID_CHAIR 							(33555207)
-#define PID_CHAIR_1 						(33554527)
-#define PID_CHAIR_2 						(33554528)
-#define PID_CHAIR_3 						(33554529)
-#define PID_CHAIR_4 						(33554530)
-#define PID_DIRT_1 							(33554551)
-#define PID_DIRT_2 							(33554552)
-#define PID_DIRT_3 							(33554553)
-#define PID_DIRT_4 							(33554554)
-#define PID_DIRT_5 							(33554555)
-#define PID_DIRT_6 							(33554556)
-#define PID_ELEVATOR_SHAFT_1 				(33555333)
-#define PID_ELEVATOR_SHAFT_2 				(33555334)
-#define PID_FIRE_PIT 						(33555044)
-#define PID_JUNK 							(33554541)
-#define PID_METAL_BARREL_1 					(33554437)
-#define PID_POT 							(33554804)
-#define PID_ROCKS_1 						(33554522)
-#define PID_ROCKS_2 						(33554523)
-#define PID_ROCKS_3 						(33554524)
-#define PID_ROCKS_4 						(33554525)
-#define PID_ROCKS_5 						(33554542)
-#define PID_ROCKS_6 						(33554710)
-#define PID_ROCKS_7 						(33554711)
-#define PID_ROCKS_8 						(33554712)
-#define PID_ROCKS_9 						(33554860)
-#define PID_ROCKS_10 						(33554861)
-#define PID_ROCKS_11 						(33554862)
-#define PID_ROCKS_12 						(33554863)
-#define PID_ROCKS_13 						(33554864)
-#define PID_ROCKS_14 						(33554865)
-#define PID_ROCKS_15 						(33554866)
-#define PID_ROCKS_16 						(33554867)
-#define PID_RUG_1 							(33554808)
-#define PID_RUG_2 							(33554809)
-#define PID_RUG_3 							(33554810)
-#define PID_SCRUB_1 						(33554534)
-#define PID_SCRUB_2 						(33554535)
-#define PID_SCRUB_3 						(33554536)
-#define PID_SCRUB_4 						(33554537)
-#define PID_TIRE 							(33554533)
-#define PID_TRASH_1 						(33554743)
-#define PID_TRASH_2 						(33554744)
-#define PID_TRASH_3 						(33554745)
-#define PID_TRASH_4 						(33554746)
-#define PID_TRASH_CAN 						(33554747)
-#define PID_TREE_1 							(33554748)
-#define PID_TREE_2 							(33554749)
-#define PID_TREE_3 							(33554750)
-#define PID_TREE_4 							(33554751)
-#define PID_TREE_5 							(33554752)
-#define PID_TREE_6 							(33554753)
-#define PID_TREE_OLD 						(33554498)
-#define PID_WEED_1 							(33554557)
-#define PID_WEED_2 							(33554558)
-#define PID_WEED_3 							(33554559)
-#define PID_WEEDS 							(33554540)
-#define PID_WOODEN_TABLE_1					(33554435)
+#define PID_BEAM_1                     (33554999)
+#define PID_BEAM_2                     (33555000)
+#define PID_BED_1                      (33554640)
+#define PID_BED_2                      (33554641)
+#define PID_BONES_1                 (33554514)
+#define PID_BONES_2                 (33554515)
+#define PID_BONES_3                 (33554516)
+#define PID_BONES_4                 (33554517)
+#define PID_BONES_5                 (33554518)
+#define PID_BOXES_1                 (33554652)
+#define PID_BOXES_2                 (33554653)
+#define PID_BOXES_3                 (33554654)
+#define PID_BOXES_4                 (33554655)
+#define PID_BURNING_BARREL                (33554433)
+#define PID_CACTUS_1                (33554496)
+#define PID_CACTUS_2                   (33554497)
+#define PID_OLD_CHAIR                  (33554667)
+#define PID_CART                    (33554800)
+#define PID_CHAIR                      (33555207)
+#define PID_CHAIR_1                 (33554527)
+#define PID_CHAIR_2                 (33554528)
+#define PID_CHAIR_3                 (33554529)
+#define PID_CHAIR_4                 (33554530)
+#define PID_DIRT_1                     (33554551)
+#define PID_DIRT_2                     (33554552)
+#define PID_DIRT_3                     (33554553)
+#define PID_DIRT_4                     (33554554)
+#define PID_DIRT_5                     (33554555)
+#define PID_DIRT_6                     (33554556)
+#define PID_ELEVATOR_SHAFT_1           (33555333)
+#define PID_ELEVATOR_SHAFT_2           (33555334)
+#define PID_FIRE_PIT                   (33555044)
+#define PID_JUNK                    (33554541)
+#define PID_METAL_BARREL_1                (33554437)
+#define PID_POT                     (33554804)
+#define PID_ROCKS_1                 (33554522)
+#define PID_ROCKS_2                 (33554523)
+#define PID_ROCKS_3                 (33554524)
+#define PID_ROCKS_4                 (33554525)
+#define PID_ROCKS_5                 (33554542)
+#define PID_ROCKS_6                 (33554710)
+#define PID_ROCKS_7                 (33554711)
+#define PID_ROCKS_8                 (33554712)
+#define PID_ROCKS_9                 (33554860)
+#define PID_ROCKS_10                   (33554861)
+#define PID_ROCKS_11                   (33554862)
+#define PID_ROCKS_12                   (33554863)
+#define PID_ROCKS_13                   (33554864)
+#define PID_ROCKS_14                   (33554865)
+#define PID_ROCKS_15                   (33554866)
+#define PID_ROCKS_16                   (33554867)
+#define PID_RUG_1                      (33554808)
+#define PID_RUG_2                      (33554809)
+#define PID_RUG_3                      (33554810)
+#define PID_SCRUB_1                 (33554534)
+#define PID_SCRUB_2                 (33554535)
+#define PID_SCRUB_3                 (33554536)
+#define PID_SCRUB_4                 (33554537)
+#define PID_TIRE                    (33554533)
+#define PID_TRASH_1                 (33554743)
+#define PID_TRASH_2                 (33554744)
+#define PID_TRASH_3                 (33554745)
+#define PID_TRASH_4                 (33554746)
+#define PID_TRASH_CAN                  (33554747)
+#define PID_TREE_1                     (33554748)
+#define PID_TREE_2                     (33554749)
+#define PID_TREE_3                     (33554750)
+#define PID_TREE_4                     (33554751)
+#define PID_TREE_5                     (33554752)
+#define PID_TREE_6                     (33554753)
+#define PID_TREE_OLD                   (33554498)
+#define PID_WEED_1                     (33554557)
+#define PID_WEED_2                     (33554558)
+#define PID_WEED_3                     (33554559)
+#define PID_WEEDS                      (33554540)
+#define PID_WOODEN_TABLE_1             (33554435)
 
 // Door types:
-#define PID_DOOR_METAL_EW 					(33554913)
-#define PID_DOOR_METAL_NS 					(33554914)
-#define PID_VDOOR_OLD_METAL_NS				(33554574)
-#define PID_VDOOR_OLD_METAL_EW				(33554575)
-#define PID_VDOOR_V13_METAL_EW				(33554454)
-#define PID_VDOOR_V13_METAL_NS				(33554455)
+#define PID_DOOR_METAL_EW              (33554913)
+#define PID_DOOR_METAL_NS              (33554914)
+#define PID_VDOOR_OLD_METAL_NS            (33554574)
+#define PID_VDOOR_OLD_METAL_EW            (33554575)
+#define PID_VDOOR_V13_METAL_EW            (33554454)
+#define PID_VDOOR_V13_METAL_NS            (33554455)
 
 // Fo1in2:
-#define PID_RATHOLE 						(33556295)
-#define PID_GIZMO_SIGN_OFF					(33556296)
+#define PID_RATHOLE                 (33556295)
+#define PID_GIZMO_SIGN_OFF             (33556296)
 
 // SD 3 Motorcycle
-#define PID_DRIVABLE_MOTO1					(33556292)
-#define PID_DRIVABLE_MOTO2					(33556293)
-#define PID_SIDECAR							(33556294)
+#define PID_DRIVABLE_MOTO1             (33556292)
+#define PID_DRIVABLE_MOTO2             (33556293)
+#define PID_SIDECAR                    (33556294)
 
 // SD 3 Motorcycle Trunk
-#define FID_MOTOTRUNK1						(16777408)
-#define FID_MOTOTRUNK2						(16777409)
+#define FID_MOTOTRUNK1                 (16777408)
+#define FID_MOTOTRUNK2                 (16777409)
 
 // Misc Commands
 
@@ -318,17 +318,17 @@ variable Scenery_Creation_Ptr;
                                                 create_object_sid(PID_MOTO1_TRUNK,Scenery_Creation_Hex,Elevation,SCRIPT_MOTRTRNK);        \
                                                 debug_msg("Making new Trunk.");                                                           \
                                             end                                                                                           \
-											Blocking_Cycle(2,1,Elevation)                                                                 \
-											Blocking_Cycle(4,1,Elevation)                                                                 \
-											/*debug("create motorcycle");*/ \
+                                 Blocking_Cycle(2,1,Elevation)                                                                 \
+                                 Blocking_Cycle(4,1,Elevation)                                                                 \
+                                 /*debug("create motorcycle");*/ \
                                           end
 
-#define Create_Moto2(Hex_Num,Elevation)   if (not(is_loading_game)) then begin               											  \
+#define Create_Moto2(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                  \
                                             Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO2,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
                                             Scenery_Creation_Hex:=Hex_Num;                                                                \
                                             Blocking_Cycle(2,2,Elevation)                                                                 \
                                             Blocking_Cycle(4,2,Elevation)                                                                 \
-											Blocking_Cycle(5,1,Elevation)                                                                 \
+                                 Blocking_Cycle(5,1,Elevation)                                                                 \
                                             if (Trunk_Ptr != 0) then begin                                                                \
                                                 move_to(Trunk_Ptr,Scenery_Creation_Hex,Elevation);                                        \
                                                 debug_msg("Moving the Car Trunk");                                                        \
@@ -337,10 +337,10 @@ variable Scenery_Creation_Ptr;
                                                 create_object_sid(PID_MOTO1_TRUNK,Scenery_Creation_Hex,Elevation,SCRIPT_MOTRTRNK);        \
                                                 debug_msg("Making new Trunk.");                                                           \
                                             end                                                                                           \
-											Blocking_Cycle(5,0,Elevation)                                                                 \
-											Blocking_Cycle(0,1,Elevation)                                                                 \
-											Blocking_Cycle(1,1,Elevation)                                                                 \
-											/*debug("create motorcycle 2");*/ \
+                                 Blocking_Cycle(5,0,Elevation)                                                                 \
+                                 Blocking_Cycle(0,1,Elevation)                                                                 \
+                                 Blocking_Cycle(1,1,Elevation)                                                                 \
+                                 /*debug("create motorcycle 2");*/ \
                                           end
 
 #define Dest_Moto(Hex_Num,Elevation)      if (not(is_loading_game)) then begin                                                     \
@@ -362,23 +362,23 @@ variable Scenery_Creation_Ptr;
                                                 Dest_Block_Cycle(4,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(5,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(0,1,Elevation)                                                    \
-                                                Dest_Block_Cycle(1,1,Elevation) 													               \
-                                            end 																					                     \
+                                                Dest_Block_Cycle(1,1,Elevation)                                                     \
+                                            end                                                                                     \
                                           end
 
 // This will make the car that the player drives along the world map
 #define Create_Car(Hex_Num,Elevation)     if (global_var(GVAR_PLAYER_GOT_CAR)== 1) then begin         \
-											            Create_Moto1(Hex_Num,Elevation)                          \
-                                          end 														               \
-                                          else if (global_var(GVAR_PLAYER_GOT_CAR)== 2) then begin 	\
-            						               Create_Moto2(Hex_Num,Elevation) 						         \
-            					               end
+                                             Create_Moto1(Hex_Num,Elevation)                          \
+                                          end                                                         \
+                                          else if (global_var(GVAR_PLAYER_GOT_CAR)== 2) then begin    \
+                                             Create_Moto2(Hex_Num,Elevation)                          \
+                                          end
 
 #define Dest_Car(Hex_Num,Elevation)     Dest_Moto(Hex_Num,Elevation)
 #define Upgrade_Car(Hex_Num,Elevation)  if (global_var(GVAR_PLAYER_GOT_CAR)== 2) and (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO1)) then begin \
-											Dest_Moto(Hex_Num,Elevation)	\
-											Create_Moto2(Hex_Num,Elevation) \
-										end
+                                 Dest_Moto(Hex_Num,Elevation)  \
+                                 Create_Moto2(Hex_Num,Elevation) \
+                              end
 
 
 /************************************************
@@ -474,25 +474,25 @@ variable Scenery_Creation_Ptr;
     Other stuff
 ************************************************/
 // This will make the cave-in rocks with all the blocking Hexes
-#define Create_Cave_In(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_CAVE_IN_ROCKS,Hex_Num,Elevation); 					\
-											Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,2,2);                               \
-											Blocking_Cycle(1,1,Elevation)                                                           \
-											Blocking_Cycle(2,1,Elevation)                                                           \
-											Blocking_Cycle(1,1,Elevation)                                                           \
-											Blocking_Cycle(0,3,Elevation)                                                           \
-											Blocking_Cycle(5,1,Elevation)                                                           \
-											Blocking_Cycle(0,1,Elevation)                                                           \
-											Blocking_Cycle(5,4,Elevation)                                                           \
-											Blocking_Cycle(0,1,Elevation)                                                           \
-											Blocking_Cycle(5,3,Elevation)                                                           \
-											Blocking_Cycle(4,1,Elevation)                                                           \
-											Blocking_Cycle(3,6,Elevation)                                                           \
-											Blocking_Cycle(2,1,Elevation)                                                           \
-											Blocking_Cycle(3,1,Elevation)                                                           \
-											Blocking_Cycle(2,1,Elevation)                                                           \
-											Blocking_Cycle(3,1,Elevation)                                                           \
-											Blocking_Cycle(2,2,Elevation)                                                           \
-											Blocking_Cycle(1,2,Elevation)
+#define Create_Cave_In(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_CAVE_IN_ROCKS,Hex_Num,Elevation);                \
+                                 Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,2,2);                               \
+                                 Blocking_Cycle(1,1,Elevation)                                                           \
+                                 Blocking_Cycle(2,1,Elevation)                                                           \
+                                 Blocking_Cycle(1,1,Elevation)                                                           \
+                                 Blocking_Cycle(0,3,Elevation)                                                           \
+                                 Blocking_Cycle(5,1,Elevation)                                                           \
+                                 Blocking_Cycle(0,1,Elevation)                                                           \
+                                 Blocking_Cycle(5,4,Elevation)                                                           \
+                                 Blocking_Cycle(0,1,Elevation)                                                           \
+                                 Blocking_Cycle(5,3,Elevation)                                                           \
+                                 Blocking_Cycle(4,1,Elevation)                                                           \
+                                 Blocking_Cycle(3,6,Elevation)                                                           \
+                                 Blocking_Cycle(2,1,Elevation)                                                           \
+                                 Blocking_Cycle(3,1,Elevation)                                                           \
+                                 Blocking_Cycle(2,1,Elevation)                                                           \
+                                 Blocking_Cycle(3,1,Elevation)                                                           \
+                                 Blocking_Cycle(2,2,Elevation)                                                           \
+                                 Blocking_Cycle(1,2,Elevation)
 
 // Blocking Hex Cycle
 #define create_blocking_hex(the_tile, the_elev) move_to(create_object(PID_BLOCKING_HEX, the_tile, the_elev), the_tile, the_elev)

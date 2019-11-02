@@ -1,6 +1,6 @@
 /*
 
-	Junktown - generic CoC member
+   Junktown - generic CoC member
 
 */
 
@@ -59,76 +59,76 @@ variable hp_injured;
 variable healing_cost;
 variable poison_cost;
 
-#define LVAR_Sleeping 							(4)
+#define LVAR_Sleeping                     (4)
 
 procedure start begin
 
 end
 
 procedure critter_p_proc begin
-	if (scared and (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(4) == 0)) then begin
-		call flee_dude;
-	end
-	else begin
-		sleeping
-	end
+   if (scared and (tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(4) == 0)) then begin
+      call flee_dude;
+   end
+   else begin
+      sleeping
+   end
 end
 
 procedure destroy_p_proc begin
-	inc_inv_evil_crit
+   inc_inv_evil_crit
 end
 
 procedure map_enter_p_proc
 begin
-	if junktown_invaded then begin
-		destroy_object(self_obj);
-	end
-	wake_time := 700;
-	sleep_time := 1900;
-	set_self_team(TEAM_CATHEDRAL);
-	if (local_var(6) == 0) then begin
-		set_local_var(6, self_tile);
-	end
-	home_tile := local_var(6);
-	sleep_tile := 15275;
-	if ((GAME_TIME_IN_DAYS) < 80) then begin
-		if not(is_loading_game) then begin    set_self_invisible;    end
-	end
-	else begin
-		if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-	end
+   if junktown_invaded then begin
+      destroy_object(self_obj);
+   end
+   wake_time := 700;
+   sleep_time := 1900;
+   set_self_team(TEAM_CATHEDRAL);
+   if (local_var(6) == 0) then begin
+      set_local_var(6, self_tile);
+   end
+   home_tile := local_var(6);
+   sleep_tile := 15275;
+   if ((GAME_TIME_IN_DAYS) < 80) then begin
+      if not(is_loading_game) then begin    set_self_invisible;    end
+   end
+   else begin
+      if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+   end
 end
 
 procedure map_update_p_proc
 begin
-	if ((GAME_TIME_IN_DAYS) < 80) then begin
-		if not(is_loading_game) then begin    set_self_invisible;    end
-	end
-	else begin
-		if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-	end
+   if ((GAME_TIME_IN_DAYS) < 80) then begin
+      if not(is_loading_game) then begin    set_self_invisible;    end
+   end
+   else begin
+      if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+   end
 end
 
 procedure pickup_p_proc
 begin
-	scared := 1;
+   scared := 1;
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	if (scared) then begin
-		float_msg(self_obj, mstr(145), FLOAT_MSG_RED);
-	end
-	else begin
-		if (local_var(5) == 0) then begin
-			start_gdialog(108, self_obj, 4, -1, -1);
-			gsay_start;
-			call Child00;
-			gsay_end;
-			end_dialogue;
-		end
-	end
+   dude_look_at_self;
+   if (scared) then begin
+      float_msg(self_obj, mstr(145), FLOAT_MSG_RED);
+   end
+   else begin
+      if (local_var(5) == 0) then begin
+         start_gdialog(108, self_obj, 4, -1, -1);
+         gsay_start;
+         call Child00;
+         gsay_end;
+         end_dialogue;
+      end
+   end
 end
 
 procedure ChildEnd
@@ -136,228 +136,228 @@ begin
 end
 
 procedure child_heal begin
-	game_time_advance(game_ticks(600 * hp_injured));
-	critter_heal(dude_obj, hp_injured);
-	set_v13_days_left(-1);
+   game_time_advance(game_ticks(600 * hp_injured));
+   critter_heal(dude_obj, hp_injured);
+   set_v13_days_left(-1);
 end
 
 procedure child_pois begin
-	if (dude_poison_stat != 0) then begin
-		game_time_advance(game_ticks(1800));
-	end
-	poison(dude_obj, -dude_poison_stat);
+   if (dude_poison_stat != 0) then begin
+      game_time_advance(game_ticks(1800));
+   end
+   poison(dude_obj, -dude_poison_stat);
 end
 
 procedure Child00
 begin
-	Reply(100);
-	NOption(101, Child04, 4);
-	NOption(102, Child11, 5);
-	if ((map_var(2) == 1) and (local_var(7) == 0)) then begin
-		NOption(103, Child15, 5);
-	end
-	NOption(104, Child01, -3);
+   Reply(100);
+   NOption(101, Child04, 4);
+   NOption(102, Child11, 5);
+   if ((map_var(2) == 1) and (local_var(7) == 0)) then begin
+      NOption(103, Child15, 5);
+   end
+   NOption(104, Child01, -3);
 end
 
 procedure Child01
 begin
-	NMessage(105);
-	if (dude_cur_hp < dude_max_hp) then begin
-		call child_heal;
-		call Child03;
-	end
-	else begin
-		call Child02;
-	end
+   NMessage(105);
+   if (dude_cur_hp < dude_max_hp) then begin
+      call child_heal;
+      call Child03;
+   end
+   else begin
+      call Child02;
+   end
 end
 
 procedure Child02
 begin
-	NMessage(106);
+   NMessage(106);
 end
 
 procedure Child03
 begin
-	critter_heal(dude_obj, dude_max_hp);
-	poison(dude_obj, -dude_poison_stat);
-	NMessage(107);
+   critter_heal(dude_obj, dude_max_hp);
+   poison(dude_obj, -dude_poison_stat);
+   NMessage(107);
 end
 
 procedure Child04
 begin
-	if (local_var(1) == 3) then begin
-		healing_cost := 5;
-		poison_cost := 12;
-	end
-	else begin
-		if (local_var(1) == 1) then begin
-			healing_cost := 20;
-			poison_cost := 50;
-		end
-		else begin
-			healing_cost := 10;
-			poison_cost := 25;
-		end
-	end
-	hp_injured := dude_max_hp - dude_cur_hp;
-	cost := hp_injured * healing_cost;
-	if (dude_poison_stat != 0) then begin
-		cost := cost + poison_cost;
-	end
-	if (hp_injured > 0) then begin
-		NMessage(108);
-	end
-	if (dude_poison_stat != 0) then begin
-		NMessage(109);
-	end
-	if (dude_rads > 50) then begin
-		NMessage(110);
-	end
-	if (cost > 0) then begin
-		Reply(mstr(111) + cost + mstr(112));
-		NOption(113, Child04a, 4);
-		NOption(114, ChildEnd, 4);
-		NOption(115, Child09, 4);
-		NOption(mstr(116) + (cost * 0.75000) + mstr(117), Child05, 4);
-	end
-	else begin
-		NMessage(146);
-	end
+   if (local_var(1) == 3) then begin
+      healing_cost := 5;
+      poison_cost := 12;
+   end
+   else begin
+      if (local_var(1) == 1) then begin
+         healing_cost := 20;
+         poison_cost := 50;
+      end
+      else begin
+         healing_cost := 10;
+         poison_cost := 25;
+      end
+   end
+   hp_injured := dude_max_hp - dude_cur_hp;
+   cost := hp_injured * healing_cost;
+   if (dude_poison_stat != 0) then begin
+      cost := cost + poison_cost;
+   end
+   if (hp_injured > 0) then begin
+      NMessage(108);
+   end
+   if (dude_poison_stat != 0) then begin
+      NMessage(109);
+   end
+   if (dude_rads > 50) then begin
+      NMessage(110);
+   end
+   if (cost > 0) then begin
+      Reply(mstr(111) + cost + mstr(112));
+      NOption(113, Child04a, 4);
+      NOption(114, ChildEnd, 4);
+      NOption(115, Child09, 4);
+      NOption(mstr(116) + (cost * 0.75000) + mstr(117), Child05, 4);
+   end
+   else begin
+      NMessage(146);
+   end
 end
 
 procedure Child04a
 begin
-	if (cost > dude_caps) then begin
-		call Child08;
-	end
-	else begin
-		call Child06;
-	end
+   if (cost > dude_caps) then begin
+      call Child08;
+   end
+   else begin
+      call Child06;
+   end
 end
 
 procedure Child05
 begin
-	Reply(118);
-	NOption(119, Child05a, 4);
-	BOption(120, Child05b, 4);
+   Reply(118);
+   NOption(119, Child05a, 4);
+   BOption(120, Child05b, 4);
 end
 
 procedure Child05a
 begin
-	if (cost > dude_caps) then begin
-		call Child08;
-	end
-	else begin
-		call Child06;
-	end
+   if (cost > dude_caps) then begin
+      call Child08;
+   end
+   else begin
+      call Child06;
+   end
 end
 
 procedure Child05b
 begin
-	set_local_var(5, 1);
-	call ChildEnd;
+   set_local_var(5, 1);
+   call ChildEnd;
 end
 
 procedure Child06
 begin
-	if (dude_is_male) then begin
-		Reply(121);
-	end
-	else begin
-		Reply(122);
-	end
-	giq_option(0, SCRIPT_MODREACT, 106, Child07, NEUTRAL_REACTION);
+   if (dude_is_male) then begin
+      Reply(121);
+   end
+   else begin
+      Reply(122);
+   end
+   giq_option(0, SCRIPT_MODREACT, 106, Child07, NEUTRAL_REACTION);
 end
 
 procedure Child07 begin
-	gfade_out(1);
-	dude_caps_adjust(-cost);
-	call child_heal;
-	call child_pois;
-	gfade_in(1);
-	NMessage(123);
+   gfade_out(1);
+   dude_caps_adjust(-cost);
+   call child_heal;
+   call child_pois;
+   gfade_in(1);
+   NMessage(123);
 end
 
 procedure Child08
 begin
-	if (dude_caps > 0) then begin
-		cost := dude_caps;
-	end
-	Reply(124);
-	if (dude_caps > 0) then begin
-		NOption(125, Child06, 4);
-	end
-	NOption(129, ChildEnd, 4);
+   if (dude_caps > 0) then begin
+      cost := dude_caps;
+   end
+   Reply(124);
+   if (dude_caps > 0) then begin
+      NOption(125, Child06, 4);
+   end
+   NOption(129, ChildEnd, 4);
 end
 
 procedure Child09
 begin
-	if (dude_caps > 0) then begin
-		cost := dude_caps;
-	end
-	Reply(127);
-	if (dude_caps > 0) then begin
-		NOption(128, Child09a, 4);
-	end
-	NOption(129, ChildEnd, 4);
+   if (dude_caps > 0) then begin
+      cost := dude_caps;
+   end
+   Reply(127);
+   if (dude_caps > 0) then begin
+      NOption(128, Child09a, 4);
+   end
+   NOption(129, ChildEnd, 4);
 end
 
 procedure Child09a
 begin
-	if (cost > dude_caps) then begin
-		call Child06;
-	end
-	else begin
-		call Child10;
-	end
+   if (cost > dude_caps) then begin
+      call Child06;
+   end
+   else begin
+      call Child10;
+   end
 end
 
 procedure Child10 begin
-	Reply(130);
-	giq_option(0, SCRIPT_MODREACT, 106, Child06, NEUTRAL_REACTION);
+   Reply(130);
+   giq_option(0, SCRIPT_MODREACT, 106, Child06, NEUTRAL_REACTION);
 end
 
 procedure Child11
 begin
-	Reply(131);
-	NOption(132, ChildEnd, 4);
-	NOption(133, Child12, 4);
+   Reply(131);
+   NOption(132, ChildEnd, 4);
+   NOption(133, Child12, 4);
 end
 
 procedure Child12
 begin
-	Reply(134);
-	NOption(135, Child14, 4);
-	NOption(136, Child13, 4);
+   Reply(134);
+   NOption(135, Child14, 4);
+   NOption(136, Child13, 4);
 end
 
 procedure Child13
 begin
-	BMessage(137);
+   BMessage(137);
 end
 
 procedure Child14
 begin
-	Reply(138);
-	NOption(139, ChildEnd, 4);
+   Reply(138);
+   NOption(139, ChildEnd, 4);
 end
 
 procedure Child15
 begin
-	set_local_var(7, 1);
-	Reply(140);
-	NOption(141, Child16, 5);
-	NOption(142, ChildEnd, 5);
+   set_local_var(7, 1);
+   Reply(140);
+   NOption(141, Child16, 5);
+   NOption(142, ChildEnd, 5);
 end
 
 procedure Child16
 begin
-	Reply(143);
-	NOption(144, ChildEnd, 5);
+   Reply(143);
+   NOption(144, ChildEnd, 5);
 end
 
 procedure Child17
 begin
-	scared := 1;
-	BMessage(145);
+   scared := 1;
+   BMessage(145);
 end

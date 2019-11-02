@@ -1,6 +1,6 @@
 /*
 
-	Drivable vehicle for Fo1!
+   Drivable vehicle for Fo1!
 
 */
 
@@ -31,38 +31,38 @@ variable car_was_used_to_exit;
 
 #define float_normal(x, y)                   float_msg(x, mstr(y), FLOAT_MSG_NORMAL)
 
-#define max_fill 			(80000)
-#define small_fill 		(200) // 400
-#define big_fill 			(400) // 800
+#define max_fill        (80000)
+#define small_fill      (200) // 400
+#define big_fill        (400) // 800
 
-#define give_bike_exp 					if (global_var(GVAR_QUEST_MOTORCYCLE) < 10) then begin /* Motorcycle was stolen */ 										\
-													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_STOLEN_CONTROLLER + message_str(SCRIPT_GRIFFITH, 127)); \
-													give_exp_points(EXP_STOLEN_CONTROLLER); 																							\
-												end 																																				\
-												else begin 																																		\
-													display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_BOUGHT_BIKE + message_str(SCRIPT_GRIFFITH, 128)); 		\
-													give_exp_points(EXP_BOUGHT_BIKE); 																									\
-												end																																				\
-												display_mstr(220)
+#define give_bike_exp               if (global_var(GVAR_QUEST_MOTORCYCLE) < 10) then begin /* Motorcycle was stolen */                             \
+                                       display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_STOLEN_CONTROLLER + message_str(SCRIPT_GRIFFITH, 127)); \
+                                       give_exp_points(EXP_STOLEN_CONTROLLER);                                                                     \
+                                    end                                                                                                            \
+                                    else begin                                                                                                     \
+                                       display_msg(message_str(SCRIPT_GRIFFITH, 125) + EXP_BOUGHT_BIKE + message_str(SCRIPT_GRIFFITH, 128));       \
+                                       give_exp_points(EXP_BOUGHT_BIKE);                                                                           \
+                                    end                                                                                                            \
+                                    display_mstr(220)
 
-#define bike_is_unclaimed				tile_contains_obj_pid(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV, PID_DRIVABLE_MOTO1)
+#define bike_is_unclaimed           tile_contains_obj_pid(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV, PID_DRIVABLE_MOTO1)
 
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	// Delete the vehicle if it's not in this map:
-	if (not(car_in_any_encounter) and not(get_car_in_cur_map)) then begin
-		if get_car_used or get_car_out_of_fuel then begin
-			Dest_Car(self_tile, self_elevation)
-			set_trunk_invisible;
-		end
-	end
+   // Delete the vehicle if it's not in this map:
+   if (not(car_in_any_encounter) and not(get_car_in_cur_map)) then begin
+      if get_car_used or get_car_out_of_fuel then begin
+         Dest_Car(self_tile, self_elevation)
+         set_trunk_invisible;
+      end
+   end
 end
 
 procedure map_exit_p_proc begin
    // Set worldmap interface graphic for the motorcycle -- needed here, in case player will exit encounter map via grid.
-	set_car_intface_art(495);
+   set_car_intface_art(495);
    car_was_used_to_exit := false;
    stop_car_use := true;
 end
@@ -81,55 +81,55 @@ procedure use_p_proc begin
    stop_car_use := false;
 
    // Set worldmap interface graphic for the motorcycle
-	set_car_intface_art(495);
+   set_car_intface_art(495);
 
    // Player has the key?
-	if (dude_item(PID_MOTO_KEY)) then begin
-		set_global_var(GVAR_PLAYER_GOT_CAR, 1);
-		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
-		give_bike_exp;
-	end
+   if (dude_item(PID_MOTO_KEY)) then begin
+      set_global_var(GVAR_PLAYER_GOT_CAR, 1);
+      remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
+      give_bike_exp;
+   end
 
    if not(dude_has_car) then begin
       stop_car_use := true;
 
       if global_var(GVAR_GRIFFITH_STATE) == 0 then
-      	display_mstr(450);
+         display_mstr(450);
       else
-      	display_mstr(453);
+         display_mstr(453);
 
       // Start dialog with Griffith, the owner
       if (global_var(GVAR_QUEST_MOTORCYCLE) == 0) then
-      	set_global_var(GVAR_QUEST_MOTORCYCLE, 1);
+         set_global_var(GVAR_QUEST_MOTORCYCLE, 1);
       else if (global_var(GVAR_QUEST_MOTORCYCLE) == 2) then
-      	set_global_var(GVAR_QUEST_MOTORCYCLE, 3);
+         set_global_var(GVAR_QUEST_MOTORCYCLE, 3);
    end
 
-	// Check party members. Everyone fits on the bike?
-	if ( dude_has_bike and (party_size_biped > 1) ) or
-		( dude_has_upgraded_bike and (party_size_biped > 3) ) then begin
-			script_overrides;
-			display_mstr(500);
-			float_normal(dude_obj, random(501, 505));
-	end
-	else begin
-		// Lets roll out!
-	   if (stop_car_use == false) then begin
-	      car_was_used_to_exit := true;
+   // Check party members. Everyone fits on the bike?
+   if ( dude_has_bike and (party_size_biped > 1) ) or
+      ( dude_has_upgraded_bike and (party_size_biped > 3) ) then begin
+         script_overrides;
+         display_mstr(500);
+         float_normal(dude_obj, random(501, 505));
+   end
+   else begin
+      // Lets roll out!
+      if (stop_car_use == false) then begin
+         car_was_used_to_exit := true;
 
-	      if not(car_out_of_fuel) then begin
-	      	set_car_used_first_time;
-	      	set_car_worldmap;
-	      end
+         if not(car_out_of_fuel) then begin
+            set_car_used_first_time;
+            set_car_worldmap;
+         end
 
-	      car_give_to_party;
-	      play_sfx("engineon");
-	      debug_msg("Party has the car");
-	   end
-	   else begin
-	      script_overrides;
-	      debug_msg("car use stopped by script");
-	   end
+         car_give_to_party;
+         play_sfx("engineon");
+         debug_msg("Party has the car");
+      end
+      else begin
+         script_overrides;
+         debug_msg("car use stopped by script");
+      end
 
    end
 end
@@ -137,110 +137,110 @@ end
 procedure use_obj_on_p_proc begin
 variable Item := obj_pid(obj_being_used_with);
 
-	if (Item == PID_MOTO_KEY) then begin
-		script_overrides;
+   if (Item == PID_MOTO_KEY) then begin
+      script_overrides;
 
-		set_global_var(GVAR_PLAYER_GOT_CAR, 1);
-		remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
-		give_bike_exp;
-	end
-	else if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
-	   script_overrides;
-		call refuel_car;
-	end
-	else begin
-	   if (Item == PID_MICRO_FUSION_CELL or Item == PID_SMALL_ENERGY_CELL) then begin
-	      script_overrides;
-	      display_msg(mstr(520));
-	   end
-	end
+      set_global_var(GVAR_PLAYER_GOT_CAR, 1);
+      remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
+      give_bike_exp;
+   end
+   else if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
+      script_overrides;
+      call refuel_car;
+   end
+   else begin
+      if (Item == PID_MICRO_FUSION_CELL or Item == PID_SMALL_ENERGY_CELL) then begin
+         script_overrides;
+         display_msg(mstr(520));
+      end
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_REPAIR) then begin
-		script_overrides;
-		display_mstr(451);
+   if (action_being_used == SKILL_REPAIR) then begin
+      script_overrides;
+      display_mstr(451);
    end
 end
 
 procedure refuel_car begin
 variable
-	fuel,
-	used_fuel := obj_pid(obj_being_used_with),
-	cur_car_fill := car_gas_amount,
-	charges,
-	fill_amount,
-	space_in_tank,
-	fuel_efficiency,
-	used_charges;
+   fuel,
+   used_fuel := obj_pid(obj_being_used_with),
+   cur_car_fill := car_gas_amount,
+   charges,
+   fill_amount,
+   space_in_tank,
+   fuel_efficiency,
+   used_charges;
 
-	// Full tank == 80000
-	if (used_fuel == PID_MICRO_FUSION_CELL or used_fuel == PID_SMALL_ENERGY_CELL) then begin
-		script_overrides;
+   // Full tank == 80000
+   if (used_fuel == PID_MICRO_FUSION_CELL or used_fuel == PID_SMALL_ENERGY_CELL) then begin
+      script_overrides;
 
       reg_anim_clear(dude_obj);
       reg_anim_begin();
          reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1);
       reg_anim_end();
 
-		fuel := dude_item(used_fuel);
+      fuel := dude_item(used_fuel);
       charges := get_weapon_ammo_count(fuel);
-		debug("charges: " + charges);
+      debug("charges: " + charges);
 
-		cur_car_fill := car_gas_amount;
-		space_in_tank := max_fill - cur_car_fill;
-		debug("cur_car_fill: " + cur_car_fill + "  space_in_tank: " + space_in_tank);
+      cur_car_fill := car_gas_amount;
+      space_in_tank := max_fill - cur_car_fill;
+      debug("cur_car_fill: " + cur_car_fill + "  space_in_tank: " + space_in_tank);
 
-		if used_fuel == PID_MICRO_FUSION_CELL then
-			fuel_efficiency := big_fill;
-		else
-			fuel_efficiency := small_fill;
+      if used_fuel == PID_MICRO_FUSION_CELL then
+         fuel_efficiency := big_fill;
+      else
+         fuel_efficiency := small_fill;
 
-		fill_amount := fuel_efficiency * charges;
+      fill_amount := fuel_efficiency * charges;
 
       if (space_in_tank == 0) then begin
-			display_msg(mstr(511));
+         display_msg(mstr(511));
       end
 
       // Check if fuel in one pack is less than space left in tank
-		else if (fill_amount <= space_in_tank) then begin
-			display_mstr(510);
+      else if (fill_amount <= space_in_tank) then begin
+         display_mstr(510);
 
-		   // Fill by fuel left in one pack
-		   //debug("Used per pack fill.");
-			car_give_gas(fill_amount);
-			remove_pid_qty(dude_obj, used_fuel, 1)
-		end
-		else begin
-			display_mstr(510);
+         // Fill by fuel left in one pack
+         //debug("Used per pack fill.");
+         car_give_gas(fill_amount);
+         remove_pid_qty(dude_obj, used_fuel, 1)
+      end
+      else begin
+         display_mstr(510);
 
-		   //Use only part of the pack
-		   //debug("Used partial pack fill.");
-		   fill_amount := space_in_tank;
-		   used_charges := space_in_tank / fuel_efficiency;
+         //Use only part of the pack
+         //debug("Used partial pack fill.");
+         fill_amount := space_in_tank;
+         used_charges := space_in_tank / fuel_efficiency;
 
-		   //Just in case of nonzero modulo add one extra ammo
-		   if((used_charges * fuel_efficiency) < space_in_tank) then begin
-		      used_charges := used_charges + 1;
-		   end
+         //Just in case of nonzero modulo add one extra ammo
+         if((used_charges * fuel_efficiency) < space_in_tank) then begin
+            used_charges := used_charges + 1;
+         end
 
-			car_give_gas(fill_amount);
+         car_give_gas(fill_amount);
 
-			// just double check if we didn't use entire pack
-			if(charges == used_charges) then begin
-		      //debug("Used entire pack anyway");
-			   remove_pid_qty(dude_obj, used_fuel, 1)
-			end
-			else if(charges > used_charges) then begin
+         // just double check if we didn't use entire pack
+         if(charges == used_charges) then begin
+            //debug("Used entire pack anyway");
+            remove_pid_qty(dude_obj, used_fuel, 1)
+         end
+         else if(charges > used_charges) then begin
             set_weapon_ammo_count(fuel, get_weapon_ammo_count(fuel) - used_charges);
-		      //debug("Used ammo: "+used_charges);
-			end
-		   else begin
-		      debug("Something went wrong. During refuel. FREE REFUEL!!!");
-		   end
+            //debug("Used ammo: "+used_charges);
+         end
+         else begin
+            debug("Something went wrong. During refuel. FREE REFUEL!!!");
+         end
 
-		end
+      end
 
-		debug("fill_amount: " + fill_amount);
-	end
+      debug("fill_amount: " + fill_amount);
+   end
 end

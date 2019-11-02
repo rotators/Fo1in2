@@ -18,106 +18,106 @@ variable failure;
 variable bonus;
 variable Test;
 
-#define EVENT_USED_DOOR 	(1)
-#define EVENT_CLOSE 			(2)
-#define EVENT_DOOR_CLOSED 	(3)
+#define EVENT_USED_DOOR    (1)
+#define EVENT_CLOSE        (2)
+#define EVENT_DOOR_CLOSED  (3)
 
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	if obj_is_open(self_obj) then begin
-		obj_close(self_obj);
-		add_timer_event(self_obj, game_ticks(0), EVENT_DOOR_CLOSED);
-	end
+   if obj_is_open(self_obj) then begin
+      obj_close(self_obj);
+      add_timer_event(self_obj, game_ticks(0), EVENT_DOOR_CLOSED);
+   end
 end
 
 procedure use_obj_on_p_proc begin
-	call hear_check;
+   call hear_check;
 end
 
 procedure use_p_proc begin
-	if obj_in_party(source_obj) then
-		call hear_check;
+   if obj_in_party(source_obj) then
+      call hear_check;
 end
 
 procedure use_skill_on_p_proc begin
-	call hear_check;
+   call hear_check;
 end
 
 procedure damage_p_proc begin
-	if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-		set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
-		set_local_var(0, local_var(0) + 1);
-		if (local_var(0) == 3) then begin
-			if not(is_loading_game) then begin    set_self_invisible;    end
-		end
-	end
-	else begin
-		display_msg(message_str(SCRIPT_DOOR, 193));
-	end
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
+      set_local_var(0, local_var(0) + 1);
+      if (local_var(0) == 3) then begin
+         if not(is_loading_game) then begin    set_self_invisible;    end
+      end
+   end
+   else begin
+      display_msg(message_str(SCRIPT_DOOR, 193));
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == EVENT_USED_DOOR) then begin
-		set_map_var(MVAR_TOUCHING, 0);
-		if (not(combat_is_initialized)) then begin
-			obj_close(self_obj);
-		end
-		add_timer_event(self_obj, game_ticks(3), EVENT_CLOSE);
-	end
-	else if (fixed_param == EVENT_CLOSE) then begin
-		if obj_is_open(self_obj) then begin
-			obj_close(self_obj);
-			add_timer_event(self_obj, game_ticks(3), EVENT_DOOR_CLOSED);
-		end
-		else begin
-			add_timer_event(self_obj, game_ticks(3), EVENT_CLOSE);
-		end
-	end
-	else if (fixed_param == EVENT_DOOR_CLOSED) then begin
-		rm_timer_event(self_obj);
-	end
+   if (fixed_param == EVENT_USED_DOOR) then begin
+      set_map_var(MVAR_TOUCHING, 0);
+      if (not(combat_is_initialized)) then begin
+         obj_close(self_obj);
+      end
+      add_timer_event(self_obj, game_ticks(3), EVENT_CLOSE);
+   end
+   else if (fixed_param == EVENT_CLOSE) then begin
+      if obj_is_open(self_obj) then begin
+         obj_close(self_obj);
+         add_timer_event(self_obj, game_ticks(3), EVENT_DOOR_CLOSED);
+      end
+      else begin
+         add_timer_event(self_obj, game_ticks(3), EVENT_CLOSE);
+      end
+   end
+   else if (fixed_param == EVENT_DOOR_CLOSED) then begin
+      rm_timer_event(self_obj);
+   end
 end
 
 procedure hear_check begin
-	bonus := -35;
-	failure := 1;
-	if ((party_size > 1) and (source_obj == dude_obj)) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
-		set_map_var(MVAR_TOUCHING, 2);
-	end
-	else begin
-		if source_obj == dude_obj then begin
-			if (dude_is_sneaking) then begin
-				Test := roll_vs_skill(dude_obj, SKILL_SNEAK, bonus);
-				if (is_success(Test)) then begin
-					failure := 0;
-				end
-				else begin
-					failure := 1;
-				end
-				if (has_skill(dude_obj, SKILL_SNEAK) < 40) then begin
-					failure := 1;
-				end
-			end
-		end
-		if (failure) then begin
-			call anger;
-		end
-	end
-	add_timer_event(self_obj, game_ticks(3), EVENT_USED_DOOR);
+   bonus := -35;
+   failure := 1;
+   if ((party_size > 1) and (source_obj == dude_obj)) then begin//  PARTY_COUNT > 1.    Is player travelling with homies?
+      set_map_var(MVAR_TOUCHING, 2);
+   end
+   else begin
+      if source_obj == dude_obj then begin
+         if (dude_is_sneaking) then begin
+            Test := roll_vs_skill(dude_obj, SKILL_SNEAK, bonus);
+            if (is_success(Test)) then begin
+               failure := 0;
+            end
+            else begin
+               failure := 1;
+            end
+            if (has_skill(dude_obj, SKILL_SNEAK) < 40) then begin
+               failure := 1;
+            end
+         end
+      end
+      if (failure) then begin
+         call anger;
+      end
+   end
+   add_timer_event(self_obj, game_ticks(3), EVENT_USED_DOOR);
 end
 
 procedure anger begin
-	/*if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
-		set_map_var(MVAR_TOUCHING, 1);
-	end*/
-	display_msg(message_str(SCRIPT_RHOMBUS, 204));
-	set_map_var(MVAR_TOUCHING, 2);
+   /*if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
+      set_map_var(MVAR_TOUCHING, 1);
+   end*/
+   display_msg(message_str(SCRIPT_RHOMBUS, 204));
+   set_map_var(MVAR_TOUCHING, 2);
 end
 
 procedure anger2 begin
-	if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
-		set_map_var(MVAR_TOUCHING, 2);
-	end
+   if ((map_var(19) < 1) and (source_obj == dude_obj)) then begin
+      set_map_var(MVAR_TOUCHING, 2);
+   end
 end

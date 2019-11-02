@@ -1,6 +1,6 @@
 /*
 
-	Boneyard - Smitty the blacksmith
+   Boneyard - Smitty the blacksmith
 
 */
 
@@ -56,33 +56,33 @@ procedure Node1500;
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
-#define LVAR_Here_Before       		(4)
-#define LVAR_UpgradePlasmaRifle 		(5)
-#define LVAR_UpgradeMotorcycle 		(6)
+#define LVAR_Here_Before            (4)
+#define LVAR_UpgradePlasmaRifle     (5)
+#define LVAR_UpgradeMotorcycle      (6)
 #define LVAR_UpgradeMotorcycleTimer (7)
 #define LVAR_Home_Tile              (8)
 #define LVAR_Home_Rotation          (9)
 
-#define EVENT_TAKE_BIKE 	(1)
+#define EVENT_TAKE_BIKE    (1)
 
 #define get_has_plasma_to_upgrade        (local_var(LVAR_UpgradePlasmaRifle) == 9307)
 
 procedure Start begin
-	if Only_Once then begin
-		if (get_blades_attacking or get_blades_attacking_wait) then begin
-			set_self_team(TEAM_PLAYER);
-		end
-		else begin
-			set_self_team(TEAM_LA_ADYTOWNER);
-		end
-		set_self_ai(AI_PEASANT);
-		Only_Once := 0;
-	end
+   if Only_Once then begin
+      if (get_blades_attacking or get_blades_attacking_wait) then begin
+         set_self_team(TEAM_PLAYER);
+      end
+      else begin
+         set_self_team(TEAM_LA_ADYTOWNER);
+      end
+      set_self_ai(AI_PEASANT);
+      Only_Once := 0;
+   end
 end
 
 procedure map_enter_p_proc begin
    if map_first_run then begin
-	   set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Tile, self_tile);
       set_local_var(LVAR_Home_Rotation, self_cur_rot);
       self_caps_adjust(random(500, 750));
    end
@@ -93,307 +93,307 @@ procedure map_enter_p_proc begin
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	if (local_var(LVAR_Here_Before) == 1) then begin
-		display_msg(mstr(100));
-	end
-	else begin
-		display_msg(mstr(101));
-	end
+   script_overrides;
+   if (local_var(LVAR_Here_Before) == 1) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	if (local_var(LVAR_Here_Before) == 1) then begin
-		display_msg(mstr(100));
-	end
-	else begin
-		display_msg(mstr(101));
-	end
+   script_overrides;
+   if (local_var(LVAR_Here_Before) == 1) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == EVENT_TAKE_BIKE) then begin
-		gfade_out(1);
-		set_global_var(GVAR_PLAYER_GOT_CAR, 0);
-		Dest_Car(CAR_BONEYARD_ADY_HEX, 0)
-		set_obj_invisible(Trunk_Ptr);
-		gfade_in(1);
-	end
+   if (fixed_param == EVENT_TAKE_BIKE) then begin
+      gfade_out(1);
+      set_global_var(GVAR_PLAYER_GOT_CAR, 0);
+      Dest_Car(CAR_BONEYARD_ADY_HEX, 0)
+      set_obj_invisible(Trunk_Ptr);
+      gfade_in(1);
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
+   dude_look_at_self;
 
-	if (global_var(GVAR_ENEMY_ADYTUM) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
-	end
-	else begin
+   if (global_var(GVAR_ENEMY_ADYTUM) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
+   end
+   else begin
 
-		// Special dialog if the player arrives with motorcycle:
-		if (dude_has_car and get_car_in_cur_map and local_var(LVAR_UpgradeMotorcycle) == 0) then begin
-			start_dialog_at_node(Node1000);
-		end
+      // Special dialog if the player arrives with motorcycle:
+      if (dude_has_car and get_car_in_cur_map and local_var(LVAR_UpgradeMotorcycle) == 0) then begin
+         start_dialog_at_node(Node1000);
+      end
 
-		else if ((local_var(LVAR_Here_Before) == 1) and (dude_iq < 4)) then begin
-			float_msg(self_obj, mstr(117), FLOAT_MSG_NORMAL);
-		end
-		else begin
-			if (local_var(LVAR_UpgradePlasmaRifle) == 2) and (not(get_car_in_cur_map) or local_var(LVAR_UpgradeMotorcycle) == 3) then begin
-				float_msg(self_obj, mstr(131), FLOAT_MSG_NORMAL);
-			end
-			else begin
-				get_reaction
-				start_gdialog(250, self_obj, -1, -1, -1);
-				gsay_start;
+      else if ((local_var(LVAR_Here_Before) == 1) and (dude_iq < 4)) then begin
+         float_msg(self_obj, mstr(117), FLOAT_MSG_NORMAL);
+      end
+      else begin
+         if (local_var(LVAR_UpgradePlasmaRifle) == 2) and (not(get_car_in_cur_map) or local_var(LVAR_UpgradeMotorcycle) == 3) then begin
+            float_msg(self_obj, mstr(131), FLOAT_MSG_NORMAL);
+         end
+         else begin
+            get_reaction
+            start_gdialog(250, self_obj, -1, -1, -1);
+            gsay_start;
 
-				if get_parts_fixed then begin
-					call Smitty11;
-				end
-				else if get_offer_upgrading_item then begin
-					if (local_var(LVAR_UpgradePlasmaRifle) == 0) then begin
-						call Smitty12;
-					end
-					else if get_has_plasma_to_upgrade then begin
-						if (dude_item_count(PID_PLASMA_RIFLE)) then begin
-							call Smitty14;
-						end
-						else begin
-							call Smitty15;
-						end
-					end
-					else begin
-					   // plasma rifle upgraded, smitty already proposed bike upgrade before, but bike upgrade not finished
-					   call Node1100;
-					end
-				end
-				else begin
-					if (local_var(LVAR_reaction_level) < 2) then begin
-						DisplayMessage := 103;
-						call Smitty01;
-					end
-					else begin
-						DisplayMessage := 102;
-						call Smitty01;
-					end
-				end
+            if get_parts_fixed then begin
+               call Smitty11;
+            end
+            else if get_offer_upgrading_item then begin
+               if (local_var(LVAR_UpgradePlasmaRifle) == 0) then begin
+                  call Smitty12;
+               end
+               else if get_has_plasma_to_upgrade then begin
+                  if (dude_item_count(PID_PLASMA_RIFLE)) then begin
+                     call Smitty14;
+                  end
+                  else begin
+                     call Smitty15;
+                  end
+               end
+               else begin
+                  // plasma rifle upgraded, smitty already proposed bike upgrade before, but bike upgrade not finished
+                  call Node1100;
+               end
+            end
+            else begin
+               if (local_var(LVAR_reaction_level) < 2) then begin
+                  DisplayMessage := 103;
+                  call Smitty01;
+               end
+               else begin
+                  DisplayMessage := 102;
+                  call Smitty01;
+               end
+            end
 
-				gsay_end;
-				end_dialogue;
-			end
-		end
-	end
+            gsay_end;
+            end_dialogue;
+         end
+      end
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_ADYTUM, 1);
-		set_self_team(TEAM_LA_ADYTOWNER);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_ADYTUM, 1);
+      set_self_team(TEAM_LA_ADYTOWNER);
+   end
 end
 
 procedure destroy_p_proc begin
-	if source_obj == dude_obj then begin
-		inc_good_critter
-		set_global_var(GVAR_ENEMY_ADYTUM, 1);
-		set_self_team(TEAM_LA_ADYTOWNER);
-	end
+   if source_obj == dude_obj then begin
+      inc_good_critter
+      set_global_var(GVAR_ENEMY_ADYTUM, 1);
+      set_self_team(TEAM_LA_ADYTOWNER);
+   end
 end
 
 procedure pickup_p_proc begin
-	set_global_var(GVAR_ENEMY_ADYTUM, 1);
+   set_global_var(GVAR_ENEMY_ADYTUM, 1);
 end
 
 procedure Smitty01 begin
-	Reply(DisplayMessage);
-	DisplayMessage := 112;
+   Reply(DisplayMessage);
+   DisplayMessage := 112;
 
-	if (local_var(LVAR_Here_Before) == 0) then begin
-		NOption(104, Smitty03, 4);
-	end
+   if (local_var(LVAR_Here_Before) == 0) then begin
+      NOption(104, Smitty03, 4);
+   end
 
-	if (get_smitty_fixing_parts and (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) > 2)) then begin
-		NOption(105, Smitty10, 4);
-	end
+   if (get_smitty_fixing_parts and (global_var(GVAR_QUEST_BONEYARD_5_FIX_FARM) > 2)) then begin
+      NOption(105, Smitty10, 4);
+   end
 
-	if (local_var(LVAR_UpgradeMotorcycle) == 1) then
-		NOption(1510, Node1200, 004);
+   if (local_var(LVAR_UpgradeMotorcycle) == 1) then
+      NOption(1510, Node1200, 004);
 
-	NOption(106, Smitty02, 4);
-	NOption(107, Smitty04, 4);
-	NOption(108, Smitty06, 4);
-	NOption(109, Smitty05, -3);
+   NOption(106, Smitty02, 4);
+   NOption(107, Smitty04, 4);
+   NOption(108, Smitty06, 4);
+   NOption(109, Smitty05, -3);
 end
 
 procedure Smitty02 begin
-	DisplayMessage := 110;
-	call Smitty01;
+   DisplayMessage := 110;
+   call Smitty01;
 end
 
 procedure Smitty03 begin
-	set_local_var(LVAR_Here_Before, 1);
-	DisplayMessage := 111;
-	call Smitty01;
+   set_local_var(LVAR_Here_Before, 1);
+   DisplayMessage := 111;
+   call Smitty01;
 end
 
 procedure Smitty04 begin
-	Reply(DisplayMessage);
+   Reply(DisplayMessage);
 
-	if (local_var(LVAR_UpgradeMotorcycle) == 1) then
-		NOption(1510, Node1200, 004);
+   if (local_var(LVAR_UpgradeMotorcycle) == 1) then
+      NOption(1510, Node1200, 004);
 
-	gsay_option(NAME, 113, Smitty07, 50);
-	gsay_option(NAME, 114, Smitty08, 50);
-	gsay_option(NAME, 115, Smitty09, 50);
-	gsay_option(NAME, 116, Smitty06, 50);
+   gsay_option(NAME, 113, Smitty07, 50);
+   gsay_option(NAME, 114, Smitty08, 50);
+   gsay_option(NAME, 115, Smitty09, 50);
+   gsay_option(NAME, 116, Smitty06, 50);
 end
 
 procedure Smitty05 begin
-	set_local_var(LVAR_Here_Before, 1);
-	NMessage(117);
+   set_local_var(LVAR_Here_Before, 1);
+   NMessage(117);
 end
 
 procedure Smitty06 begin
-	NMessage(118);
+   NMessage(118);
 end
 
 procedure Smitty07 begin
-	DisplayMessage := 119;
-	call Smitty04;
+   DisplayMessage := 119;
+   call Smitty04;
 end
 
 procedure Smitty08 begin
-	DisplayMessage := 120;
-	call Smitty04;
+   DisplayMessage := 120;
+   call Smitty04;
 end
 
 procedure Smitty09 begin
-	DisplayMessage := 121;
-	call Smitty04;
+   DisplayMessage := 121;
+   call Smitty04;
 end
 
 procedure Smitty10 begin
-	NMessage(122);
-	gfade_out(1);
-	game_time_advance(game_ticks(10 * 60 * 60));
-	gfade_in(1);
-	set_smitty_fixing_parts;
-	NMessage(123);
+   NMessage(122);
+   gfade_out(1);
+   game_time_advance(game_ticks(10 * 60 * 60));
+   gfade_in(1);
+   set_smitty_fixing_parts;
+   NMessage(123);
 end
 
 procedure Smitty11 begin
-	NMessage(124);
+   NMessage(124);
 end
 
 procedure Smitty12 begin
-	NMessage(125);
-	set_local_var(LVAR_UpgradePlasmaRifle, 9307);
-	if (dude_item_count(PID_PLASMA_RIFLE)) then begin
-		call Smitty14;
-	end
+   NMessage(125);
+   set_local_var(LVAR_UpgradePlasmaRifle, 9307);
+   if (dude_item_count(PID_PLASMA_RIFLE)) then begin
+      call Smitty14;
+   end
 end
 
 procedure Smitty14 begin
-	Reply(127);
-	gsay_option(NAME, 126, Smitty14a, 50);
+   Reply(127);
+   gsay_option(NAME, 126, Smitty14a, 50);
 end
 
 procedure Smitty14a begin
 variable Item;
 
-	NMessage(128);
+   NMessage(128);
 
-	remove_pid_qty(dude_obj, PID_PLASMA_RIFLE, 1)
+   remove_pid_qty(dude_obj, PID_PLASMA_RIFLE, 1)
 
-	gfade_out(1);
-	game_time_advance(game_ticks(10 * 60 * 60 * 2));
-	gfade_in(1);
-	NMessage(129);
+   gfade_out(1);
+   game_time_advance(game_ticks(10 * 60 * 60 * 2));
+   gfade_in(1);
+   NMessage(129);
 
    Item := create_object(PID_TURBO_PLASMA_RIFLE, 0, 0);
    add_mult_objs_to_inven(dude_obj, Item, 1);
 
-	set_local_var(LVAR_UpgradePlasmaRifle, 2);
+   set_local_var(LVAR_UpgradePlasmaRifle, 2);
 end
 
 procedure Smitty15 begin
-	//Option to ask for upgrade of bike while no plasma rifle to upgrade
-	Reply(130);
-	if (local_var(LVAR_UpgradeMotorcycle) == 1 and get_car_in_cur_map) then
-		NOption(1510, Node1200, 004);
-	NOption(1220, Smitty06, 004);
+   //Option to ask for upgrade of bike while no plasma rifle to upgrade
+   Reply(130);
+   if (local_var(LVAR_UpgradeMotorcycle) == 1 and get_car_in_cur_map) then
+      NOption(1510, Node1200, 004);
+   NOption(1220, Smitty06, 004);
 end
 
 procedure Node999 begin
 end
 
 procedure Node1000 begin
-	set_local_var(LVAR_UpgradeMotorcycle, 1);
-	Reply(1000);
-	NOption(1010, Node1100, 001);
+   set_local_var(LVAR_UpgradeMotorcycle, 1);
+   Reply(1000);
+   NOption(1010, Node1100, 001);
 end
 
 procedure Node1100 begin
-	Reply(1100);
-	NOption(1110, Node1200, 004);
-	NOption(1120, Node1500, 004);
+   Reply(1100);
+   NOption(1110, Node1200, 004);
+   NOption(1120, Node1500, 004);
 end
 
 procedure Node1200 begin
-	if (global_var(GVAR_BLADES_STATUS) == 2) then begin // Blades have taken over Adytum
-		Reply(mstr(1200) + mstr(1201));
-		NOption(1230, Node1300a, 004);
-		NOption(1220, Node1500, 004);
-	end
-	else begin
-		Reply(1200);
-		NOption(1210, Node1300, 004);
-		NOption(1220, Node1500, 004);
-	end
+   if (global_var(GVAR_BLADES_STATUS) == 2) then begin // Blades have taken over Adytum
+      Reply(mstr(1200) + mstr(1201));
+      NOption(1230, Node1300a, 004);
+      NOption(1220, Node1500, 004);
+   end
+   else begin
+      Reply(1200);
+      NOption(1210, Node1300, 004);
+      NOption(1220, Node1500, 004);
+   end
 end
 
 procedure Node1300 begin
-	if (dude_caps >= 1000) then begin
-		dude_caps_adjust(-1000);
-		set_local_var(LVAR_UpgradeMotorcycle, 2);
+   if (dude_caps >= 1000) then begin
+      dude_caps_adjust(-1000);
+      set_local_var(LVAR_UpgradeMotorcycle, 2);
 
-		Reply(1301);
-		NOption(1310, Node1400, 004);
-	end
-	else begin
-		Reply(1300);
-		NOption(1220, Node1500, 004);
-	end
+      Reply(1301);
+      NOption(1310, Node1400, 004);
+   end
+   else begin
+      Reply(1300);
+      NOption(1220, Node1500, 004);
+   end
 end
 
 procedure Node1300a begin
-	set_local_var(LVAR_UpgradeMotorcycle, 2);
-	Reply(1301);
-	NOption(1310, Node1400, 004);
+   set_local_var(LVAR_UpgradeMotorcycle, 2);
+   Reply(1301);
+   NOption(1310, Node1400, 004);
 end
 
 // Bike is upgraded:
 procedure Node1400 begin
-	set_local_var(LVAR_UpgradeMotorcycle, 3);
+   set_local_var(LVAR_UpgradeMotorcycle, 3);
 
-	gfade_out(1);
-	game_time_advance(ONE_GAME_HOUR * random(10, 24));
+   gfade_out(1);
+   game_time_advance(ONE_GAME_HOUR * random(10, 24));
 
-	Dest_Car(CAR_BONEYARD_ADY_HEX, 0)
-	set_global_var(GVAR_PLAYER_GOT_CAR, 2);
+   Dest_Car(CAR_BONEYARD_ADY_HEX, 0)
+   set_global_var(GVAR_PLAYER_GOT_CAR, 2);
 
-	Create_Car(CAR_UPGRADE_HEX, 0)
+   Create_Car(CAR_UPGRADE_HEX, 0)
 
-	art_change_fid_num(Trunk_Ptr, FID_MOTOTRUNK2);
-	set_proto_data(obj_pid(Trunk_Ptr), PROTO_CN_MAX_SIZE, trunk_size_big);
+   art_change_fid_num(Trunk_Ptr, FID_MOTOTRUNK2);
+   set_proto_data(obj_pid(Trunk_Ptr), PROTO_CN_MAX_SIZE, trunk_size_big);
 
-	gfade_in(1);
+   gfade_in(1);
 
-	NMessage(1400);
+   NMessage(1400);
 end
 
 procedure Node1500 begin
-	Reply(1500);
-	NOption(107, Smitty04, 004);
-	NOption(g_bye, Node999, 004);
+   Reply(1500);
+   NOption(107, Smitty04, 004);
+   NOption(g_bye, Node999, 004);
 end

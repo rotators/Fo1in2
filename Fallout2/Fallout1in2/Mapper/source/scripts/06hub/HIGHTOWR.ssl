@@ -1,6 +1,6 @@
 /*
 
-	Hub - Hightower
+   Hub - Hightower
 
 */
 
@@ -42,195 +42,195 @@ variable Only_Once := 1;
 variable visible := 1;
 
 procedure start begin
-	if Only_Once then begin
-		Only_Once := 0;
-		if (global_var(GVAR_KILL_MERCHANT) == 5) then begin
-			if not(is_loading_game) then begin    set_self_invisible;    end
-			visible := 0;
-		end
-		set_self_team(TEAM_42);
-		set_self_ai(AI_LOSER);
-	end
+   if Only_Once then begin
+      Only_Once := 0;
+      if (global_var(GVAR_KILL_MERCHANT) == 5) then begin
+         if not(is_loading_game) then begin    set_self_invisible;    end
+         visible := 0;
+      end
+      set_self_team(TEAM_42);
+      set_self_ai(AI_LOSER);
+   end
 end
 
 procedure combat
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure critter_p_proc
 begin
-	if (visible == 0) then begin
-		script_overrides;
-	end
-	else begin
-		if (tmp_hostile) then begin
-			tmp_hostile := 0;
-			attack(dude_obj);
-		end
-		if (map_var(5) == 1) then begin
-			if ((self_can_hear_dude) or (self_can_see_dude)) then begin
-				call combat;
-			end
-		end
-		else begin
-			if (morning or (day)) then begin
-				if (self_tile != 25125) then begin
-					self_walk_to_tile(25125);
-				end
-				else begin
-					if ((dude_tile == 24522) or self_can_see_dude and (map_var(1) == 0)) then begin
-						dialogue_system_enter;
-					end
-				end
-			end
-			else begin
-				if (self_tile != 24708) then begin
-					self_walk_to_tile(24708);
-				end
-			end
-		end
-	end
+   if (visible == 0) then begin
+      script_overrides;
+   end
+   else begin
+      if (tmp_hostile) then begin
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      if (map_var(5) == 1) then begin
+         if ((self_can_hear_dude) or (self_can_see_dude)) then begin
+            call combat;
+         end
+      end
+      else begin
+         if (morning or (day)) then begin
+            if (self_tile != 25125) then begin
+               self_walk_to_tile(25125);
+            end
+            else begin
+               if ((dude_tile == 24522) or self_can_see_dude and (map_var(1) == 0)) then begin
+                  dialogue_system_enter;
+               end
+            end
+         end
+         else begin
+            if (self_tile != 24708) then begin
+               self_walk_to_tile(24708);
+            end
+         end
+      end
+   end
 end
 
 procedure pickup_p_proc
 begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
-	get_reaction
-	if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-		float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
-		call combat;
-	end
-	else begin
-		if (global_var(GVAR_ENEMY_HUB) == 1) then begin
-			float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
-			call combat;
-		end
-		else begin
-			if (local_var(4) == 0) then begin
-				set_local_var(4, 1);
-				start_gdialog(582, self_obj, 4, -1, -1);
-				gsay_start;
-				call Daren01;
-				gsay_end;
-				end_dialogue;
-			end
-			else begin
-				float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
-				call combat;
-			end
-		end
-	end
+   dude_look_at_self;
+   get_reaction
+   if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+      float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
+      call combat;
+   end
+   else begin
+      if (global_var(GVAR_ENEMY_HUB) == 1) then begin
+         float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
+         call combat;
+      end
+      else begin
+         if (local_var(4) == 0) then begin
+            set_local_var(4, 1);
+            start_gdialog(582, self_obj, 4, -1, -1);
+            gsay_start;
+            call Daren01;
+            gsay_end;
+            end_dialogue;
+         end
+         else begin
+            float_msg(self_obj, mstr(127), FLOAT_MSG_RED);
+            call combat;
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	inc_good_critter
-	inc_hub_rep(REP_BONUS_KILLED_HIGHTOWER);
-	set_map_var(0, map_var(0) + 1);
-	if (map_var(0) > 1) then begin
-		set_global_var(GVAR_KILL_MERCHANT, 2);
-	end
+   inc_good_critter
+   inc_hub_rep(REP_BONUS_KILLED_HIGHTOWER);
+   set_map_var(0, map_var(0) + 1);
+   if (map_var(0) > 1) then begin
+      set_global_var(GVAR_KILL_MERCHANT, 2);
+   end
 end
 
 procedure look_at_p_proc
 begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure damage_p_proc
 begin
-	set_map_var(5, 1);
-	set_global_var(GVAR_KILL_MERCHANT, 5);
+   set_map_var(5, 1);
+   set_global_var(GVAR_KILL_MERCHANT, 5);
 end
 
 procedure combat_p_proc
 begin
-	critter_set_flee_state(self_obj, 1);
+   critter_set_flee_state(self_obj, 1);
 end
 
 procedure Daren01
 begin
-	Reply(101);
-	giq_option(4, NAME, 102, Daren02, NEUTRAL_REACTION);
-	if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
-		giq_option(4, NAME, 103, Daren03, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, mstr(104) + dude_name + mstr(105), Daren04, NEUTRAL_REACTION);
-	giq_option(4, NAME, 106, Daren07, NEUTRAL_REACTION);
-	giq_option(4, NAME, 107, Daren06, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 108, Daren06, NEUTRAL_REACTION);
+   Reply(101);
+   giq_option(4, NAME, 102, Daren02, NEUTRAL_REACTION);
+   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+      giq_option(4, NAME, 103, Daren03, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, mstr(104) + dude_name + mstr(105), Daren04, NEUTRAL_REACTION);
+   giq_option(4, NAME, 106, Daren07, NEUTRAL_REACTION);
+   giq_option(4, NAME, 107, Daren06, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 108, Daren06, NEUTRAL_REACTION);
 end
 
 procedure Daren02
 begin
-	Reply(109);
-	if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
-		giq_option(4, NAME, 110, DarenCombat, BAD_REACTION);
-	end
-	giq_option(4, NAME, 111, Daren05, NEUTRAL_REACTION);
-	giq_option(4, NAME, 112, Daren06, NEUTRAL_REACTION);
-	giq_option(4, NAME, 113, Daren06, NEUTRAL_REACTION);
+   Reply(109);
+   if (global_var(GVAR_KILL_MERCHANT) == 1) then begin
+      giq_option(4, NAME, 110, DarenCombat, BAD_REACTION);
+   end
+   giq_option(4, NAME, 111, Daren05, NEUTRAL_REACTION);
+   giq_option(4, NAME, 112, Daren06, NEUTRAL_REACTION);
+   giq_option(4, NAME, 113, Daren06, NEUTRAL_REACTION);
 end
 
 procedure Daren03
 begin
-	Reply(114);
-	giq_option(4, NAME, 115, Daren06, NEUTRAL_REACTION);
-	giq_option(4, NAME, 116, Daren07, NEUTRAL_REACTION);
-	giq_option(4, NAME, 117, DarenCombat, BAD_REACTION);
-	giq_option(4, NAME, 118, Daren06, NEUTRAL_REACTION);
+   Reply(114);
+   giq_option(4, NAME, 115, Daren06, NEUTRAL_REACTION);
+   giq_option(4, NAME, 116, Daren07, NEUTRAL_REACTION);
+   giq_option(4, NAME, 117, DarenCombat, BAD_REACTION);
+   giq_option(4, NAME, 118, Daren06, NEUTRAL_REACTION);
 end
 
 procedure Daren04
 begin
-	BMessage(mstr(119) + dude_name + mstr(120));
-	call DarenEndLeon;
+   BMessage(mstr(119) + dude_name + mstr(120));
+   call DarenEndLeon;
 end
 
 procedure Daren05
 begin
-	Reply(121);
-	giq_option(4, NAME, 122, Daren07, NEUTRAL_REACTION);
-	if (dude_caps >= 100) then begin
-		giq_option(4, NAME, 123, Daren05a, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 124, Daren06, NEUTRAL_REACTION);
+   Reply(121);
+   giq_option(4, NAME, 122, Daren07, NEUTRAL_REACTION);
+   if (dude_caps >= 100) then begin
+      giq_option(4, NAME, 123, Daren05a, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 124, Daren06, NEUTRAL_REACTION);
 end
 
 procedure Daren05a
 begin
-	variable LVar0 := 0;
-	dude_caps_adjust(-100);
-	BMessage(125);
-	call DarenEndLeon;
+   variable LVar0 := 0;
+   dude_caps_adjust(-100);
+   BMessage(125);
+   call DarenEndLeon;
 end
 
 procedure Daren06
 begin
-	BMessage(126);
-	call DarenEndLeon;
+   BMessage(126);
+   call DarenEndLeon;
 end
 
 procedure Daren07
 begin
-	BMessage(127);
-	call DarenCombat;
+   BMessage(127);
+   call DarenCombat;
 end
 
 procedure DarenCombat
 begin
-	call combat;
+   call combat;
 end
 
 procedure DarenEndLeon
 begin
-	set_map_var(1, 1);
+   set_map_var(1, 1);
 end

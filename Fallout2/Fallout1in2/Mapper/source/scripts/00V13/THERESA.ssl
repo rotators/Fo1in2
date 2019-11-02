@@ -1,6 +1,6 @@
 /*
 
-	Vault 13 - Theresa
+   Vault 13 - Theresa
 
 */
 
@@ -71,405 +71,405 @@ variable exp_flag;
 procedure PickDeadBodyType;
 variable DeathType := 57;
 
-#define LVAR_Sleeping 							(5)
+#define LVAR_Sleeping                     (5)
 
 procedure start begin
-	if (v13_invaded) then begin
-		if CUR_AREA_VAULT_13 then begin
-			if (local_var(9) != 1) then begin
-				set_local_var(9, 1);//		<-- only once
-				if not(is_loading_game) then begin
-					set_self_visible;
-				end
-				call PickDeadBodyType;
-				debug_msg("Vault 13 invasion, killing THERESA.SSL with DeathType " + DeathType + ".  ");
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
+   if (v13_invaded) then begin
+      if CUR_AREA_VAULT_13 then begin
+         if (local_var(9) != 1) then begin
+            set_local_var(9, 1);//     <-- only once
+            if not(is_loading_game) then begin
+               set_self_visible;
+            end
+            call PickDeadBodyType;
+            debug_msg("Vault 13 invasion, killing THERESA.SSL with DeathType " + DeathType + ".  ");
+            kill_critter(self_obj, DeathType);
+         end
+      end
+   end
 end
 
 procedure critter_p_proc
 begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if map_var(5) != 0 then begin
-			if ((GAME_TIME_IN_DAYS) > map_var(5)) and (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-				destroy_object(self_obj);
-			end
-		end
-		if ((game_time_hour >= 1700) and (game_time_hour < 1710)) then begin
-			if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-				if (not_at_meeting) then begin
-					call rebel_meeting;
-				end
-			end
-		end
-		else begin
-			sleeping
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if map_var(5) != 0 then begin
+         if ((GAME_TIME_IN_DAYS) > map_var(5)) and (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+            destroy_object(self_obj);
+         end
+      end
+      if ((game_time_hour >= 1700) and (game_time_hour < 1710)) then begin
+         if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+            if (not_at_meeting) then begin
+               call rebel_meeting;
+            end
+         end
+      end
+      else begin
+         sleeping
+      end
+   end
 end
 
 procedure rebel_meeting begin
-	not_at_meeting := 0;
-	add_timer_event(self_obj, game_ticks(3), 4);
+   not_at_meeting := 0;
+   add_timer_event(self_obj, game_ticks(3), 4);
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
-		not_at_meeting := 1;
-	end
-	else if (fixed_param == 2) then begin
-		call begin_meeting;
-	end
-	else if (fixed_param == 3) then begin
-		call say_lines;
-	end
-	else if (fixed_param == 4) then begin
-		self_walk_to_tile(home_tile);
-		add_timer_event(self_obj, game_ticks(10), 2);// was 60 ticks
-	end
+   if (fixed_param == 1) then begin
+      not_at_meeting := 1;
+   end
+   else if (fixed_param == 2) then begin
+      call begin_meeting;
+   end
+   else if (fixed_param == 3) then begin
+      call say_lines;
+   end
+   else if (fixed_param == 4) then begin
+      self_walk_to_tile(home_tile);
+      add_timer_event(self_obj, game_ticks(10), 2);// was 60 ticks
+   end
 end
 
 procedure begin_meeting begin
-	self_walk_to_tile(home_tile);
-	line := 1;
-	add_timer_event(self_obj, game_ticks(10), 3);
+   self_walk_to_tile(home_tile);
+   line := 1;
+   add_timer_event(self_obj, game_ticks(10), 3);
 end
 
 procedure say_lines begin
-	variable LVar0 := 0;
-	LVar0 := mstr(159 + line);
-	float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
-	line := line + 1;
-	if (line < 11) then begin
-		add_timer_event(self_obj, game_ticks(10), 3);
-	end
-	else begin
-		add_timer_event(self_obj, game_ticks(600), 1);
-	end
+   variable LVar0 := 0;
+   LVar0 := mstr(159 + line);
+   float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
+   line := line + 1;
+   if (line < 11) then begin
+      add_timer_event(self_obj, game_ticks(10), 3);
+   end
+   else begin
+      add_timer_event(self_obj, game_ticks(600), 1);
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then begin
-		set_local_var(8, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_local_var(8, 1);
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 1 then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
-		display_msg(mstr(177));
-		give_exp_points(250);
-		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 4);
-	end
+   rm_timer_event(self_obj);
+   if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 1 then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
+      display_msg(mstr(177));
+      give_exp_points(250);
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 4);
+   end
 
-	inc_good_critter
+   inc_good_critter
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure map_enter_p_proc begin
-	if (not(local_var(4))) then begin
-		set_local_var(4, self_tile);
-	end
-	home_tile := local_var(4);
-	set_self_team(TEAM_87);
-	sleep_tile := home_tile;
-	sleep_time := 1915;
-	wake_time := 715;
+   if (not(local_var(4))) then begin
+      set_local_var(4, self_tile);
+   end
+   home_tile := local_var(4);
+   set_self_team(TEAM_87);
+   sleep_tile := home_tile;
+   sleep_time := 1915;
+   wake_time := 715;
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (map_var(5) == 250) then begin
-		set_map_var(5, (GAME_TIME_IN_DAYS) + 3);
-	end
-	get_reaction
-	if (local_var(5) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
-	end
-	else begin
-		if (global_var(GVAR_VAULT_13_HOSTILE) or local_var(8)) then begin
-			float_msg(self_obj, mstr(174), FLOAT_MSG_RED);
-		end
-		else begin
-			start_gdialog(378, self_obj, 4, -1, -1);
-			gsay_start;
-			if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 2) then begin
-				call Theresa24;
-			end
-			else begin
-				if (global_var(GVAR_QUEST_VAULT13_1_REBELS) == 2) then begin
-					call Theresa23;
-				end
-				else begin
-					if ((global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (game_time_hour >= 1700) and (game_time_hour < 1710)) then begin
-						call Theresa15;
-					end
-					else begin
-						if (local_var(1) >= 2) then begin
-							call Theresa01;
-						end
-						else begin
-							call Theresa14;
-						end
-					end
-				end
-			end
-			gsay_end;
-			end_dialogue;
-		end
-	end
-	if (exp_flag) then begin
-		exp_flag := 0;
-		give_exp_points(750);
-		display_msg(mstr(173));
-	end
-	if ((game_time_hour >= 1700) and (game_time_hour <= 1710)) then begin
-	end
-	else begin
-		if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (local_var(5) == 0) and local_var(6) then begin
-			float_msg(self_obj, mstr(176), FLOAT_MSG_NORMAL);
-		end
-	end
+   dude_look_at_self;
+   if (map_var(5) == 250) then begin
+      set_map_var(5, (GAME_TIME_IN_DAYS) + 3);
+   end
+   get_reaction
+   if (local_var(5) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
+   end
+   else begin
+      if (global_var(GVAR_VAULT_13_HOSTILE) or local_var(8)) then begin
+         float_msg(self_obj, mstr(174), FLOAT_MSG_RED);
+      end
+      else begin
+         start_gdialog(378, self_obj, 4, -1, -1);
+         gsay_start;
+         if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 2) then begin
+            call Theresa24;
+         end
+         else begin
+            if (global_var(GVAR_QUEST_VAULT13_1_REBELS) == 2) then begin
+               call Theresa23;
+            end
+            else begin
+               if ((global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (game_time_hour >= 1700) and (game_time_hour < 1710)) then begin
+                  call Theresa15;
+               end
+               else begin
+                  if (local_var(1) >= 2) then begin
+                     call Theresa01;
+                  end
+                  else begin
+                     call Theresa14;
+                  end
+               end
+            end
+         end
+         gsay_end;
+         end_dialogue;
+      end
+   end
+   if (exp_flag) then begin
+      exp_flag := 0;
+      give_exp_points(750);
+      display_msg(mstr(173));
+   end
+   if ((game_time_hour >= 1700) and (game_time_hour <= 1710)) then begin
+   end
+   else begin
+      if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) and (local_var(5) == 0) and local_var(6) then begin
+         float_msg(self_obj, mstr(176), FLOAT_MSG_NORMAL);
+      end
+   end
 end
 
 procedure Theresa01
 begin
-	Reply(mstr(101) + dude_name + mstr(102));
-	giq_option(4, NAME, 103, Theresa02, NEUTRAL_REACTION);
-	giq_option(4, NAME, 104, Theresa03, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 105, Theresa04, NEUTRAL_REACTION);
+   Reply(mstr(101) + dude_name + mstr(102));
+   giq_option(4, NAME, 103, Theresa02, NEUTRAL_REACTION);
+   giq_option(4, NAME, 104, Theresa03, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 105, Theresa04, NEUTRAL_REACTION);
 end
 
 procedure Theresa02
 begin
-	set_local_var(6, 1);
-	if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
-	end
-	Reply(106);
-	giq_option(4, NAME, 107, Theresa05, BAD_REACTION);
-	giq_option(4, NAME, 108, Theresa06, NEUTRAL_REACTION);
-	giq_option(4, NAME, 109, Theresa07, NEUTRAL_REACTION);
-	giq_option(6, NAME, 110, Theresa02a, NEUTRAL_REACTION);
+   set_local_var(6, 1);
+   if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
+   end
+   Reply(106);
+   giq_option(4, NAME, 107, Theresa05, BAD_REACTION);
+   giq_option(4, NAME, 108, Theresa06, NEUTRAL_REACTION);
+   giq_option(4, NAME, 109, Theresa07, NEUTRAL_REACTION);
+   giq_option(6, NAME, 110, Theresa02a, NEUTRAL_REACTION);
 end
 
 procedure Theresa02a
 begin
-	variable LVar0 := 0;
-	if (not(local_var(7))) then begin
-		set_local_var(7, 1);
-		LVar0 := roll_vs_skill(dude_obj, SKILL_SPEECH, 0);
-		if (is_success(LVar0)) then begin
-			call Theresa08;
-		end
-		else begin
-			call Theresa09;
-		end
-	end
-	else begin
-		call Theresa25;
-	end
+   variable LVar0 := 0;
+   if (not(local_var(7))) then begin
+      set_local_var(7, 1);
+      LVar0 := roll_vs_skill(dude_obj, SKILL_SPEECH, 0);
+      if (is_success(LVar0)) then begin
+         call Theresa08;
+      end
+      else begin
+         call Theresa09;
+      end
+   end
+   else begin
+      call Theresa25;
+   end
 end
 
 procedure Theresa03
 begin
-	Reply(111);
-	giq_option(4, NAME, 112, Theresa07, NEUTRAL_REACTION);
-	giq_option(4, NAME, 113, Theresa06, NEUTRAL_REACTION);
+   Reply(111);
+   giq_option(4, NAME, 112, Theresa07, NEUTRAL_REACTION);
+   giq_option(4, NAME, 113, Theresa06, NEUTRAL_REACTION);
 end
 
 procedure Theresa04
 begin
-	NMessage(114);
+   NMessage(114);
 end
 
 procedure Theresa05
 begin
-	DownReact
-	Reply(115);
-	giq_option(4, NAME, 116, Theresa09, NEUTRAL_REACTION);
-	giq_option(6, NAME, 117, Theresa02a, NEUTRAL_REACTION);
+   DownReact
+   Reply(115);
+   giq_option(4, NAME, 116, Theresa09, NEUTRAL_REACTION);
+   giq_option(6, NAME, 117, Theresa02a, NEUTRAL_REACTION);
 end
 
 procedure Theresa06
 begin
-	NMessage(118);
+   NMessage(118);
 end
 
 procedure Theresa07
 begin
-	set_local_var(6, 1);
-	if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
-	end
-	Reply(119);
-	giq_option(4, NAME, 120, Theresa11, NEUTRAL_REACTION);
-	giq_option(4, NAME, 121, Theresa12, NEUTRAL_REACTION);
+   set_local_var(6, 1);
+   if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
+   end
+   Reply(119);
+   giq_option(4, NAME, 120, Theresa11, NEUTRAL_REACTION);
+   giq_option(4, NAME, 121, Theresa12, NEUTRAL_REACTION);
 end
 
 procedure Theresa08
 begin
-	UpReact
-	set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
-	line := 10;
-	exp_flag := 1;
-	Reply(122);
-	giq_option(4, NAME, 123, TheresaEnd, NEUTRAL_REACTION);
+   UpReact
+   set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
+   line := 10;
+   exp_flag := 1;
+   Reply(122);
+   giq_option(4, NAME, 123, TheresaEnd, NEUTRAL_REACTION);
 end
 
 procedure Theresa09
 begin
-	DownReact
-	NMessage(124);
+   DownReact
+   NMessage(124);
 end
 
 procedure Theresa10
 begin
-	NMessage(125);
+   NMessage(125);
 end
 
 procedure Theresa11
 begin
-	DownReact
-	Reply(126);
-	giq_option(4, NAME, 127, TheresaEnd, NEUTRAL_REACTION);
-	giq_option(6, NAME, 128, Theresa02a, NEUTRAL_REACTION);
+   DownReact
+   Reply(126);
+   giq_option(4, NAME, 127, TheresaEnd, NEUTRAL_REACTION);
+   giq_option(6, NAME, 128, Theresa02a, NEUTRAL_REACTION);
 end
 
 procedure Theresa12
 begin
-	UpReact
-	Reply(129);
-	giq_option(4, NAME, 130, Theresa13, NEUTRAL_REACTION);
-	if (global_var(GVAR_WORLDMAPLIST_SHADY_SANDS) != 0) then begin
-		giq_option(4, NAME, 131, Theresa13, NEUTRAL_REACTION);
-	end
+   UpReact
+   Reply(129);
+   giq_option(4, NAME, 130, Theresa13, NEUTRAL_REACTION);
+   if (global_var(GVAR_WORLDMAPLIST_SHADY_SANDS) != 0) then begin
+      giq_option(4, NAME, 131, Theresa13, NEUTRAL_REACTION);
+   end
 end
 
 procedure Theresa13
 begin
-	NMessage(132);
+   NMessage(132);
 end
 
 procedure Theresa14
 begin
-	NMessage(133);
+   NMessage(133);
 end
 
 procedure Theresa15
 begin
-	set_local_var(6, 1);
-	if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
-	end
-	Reply(134);
-	giq_option(4, NAME, 135, Theresa16, BAD_REACTION);
-	giq_option(4, NAME, 136, Theresa17, NEUTRAL_REACTION);
-	giq_option(6, NAME, 137, Theresa18, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 138, TheresaEnd, NEUTRAL_REACTION);
+   set_local_var(6, 1);
+   if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
+   end
+   Reply(134);
+   giq_option(4, NAME, 135, Theresa16, BAD_REACTION);
+   giq_option(4, NAME, 136, Theresa17, NEUTRAL_REACTION);
+   giq_option(6, NAME, 137, Theresa18, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 138, TheresaEnd, NEUTRAL_REACTION);
 end
 
 procedure Theresa16
 begin
-	DownReact
-	Reply(139);
-	giq_option(4, NAME, 140, Theresa20, NEUTRAL_REACTION);
-	giq_option(4, NAME, 141, TheresaEnd, NEUTRAL_REACTION);
+   DownReact
+   Reply(139);
+   giq_option(4, NAME, 140, Theresa20, NEUTRAL_REACTION);
+   giq_option(4, NAME, 141, TheresaEnd, NEUTRAL_REACTION);
 end
 
 procedure Theresa17
 begin
-	Reply(142);
-	giq_option(4, NAME, 143, Theresa19, NEUTRAL_REACTION);
-	giq_option(6, NAME, 144, Theresa21, NEUTRAL_REACTION);
+   Reply(142);
+   giq_option(4, NAME, 143, Theresa19, NEUTRAL_REACTION);
+   giq_option(6, NAME, 144, Theresa21, NEUTRAL_REACTION);
 end
 
 procedure Theresa18
 begin
-	Reply(145);
-	giq_option(6, NAME, 146, Theresa21, NEUTRAL_REACTION);
-	giq_option(6, NAME, 147, Theresa19, NEUTRAL_REACTION);
+   Reply(145);
+   giq_option(6, NAME, 146, Theresa21, NEUTRAL_REACTION);
+   giq_option(6, NAME, 147, Theresa19, NEUTRAL_REACTION);
 end
 
 procedure Theresa19
 begin
-	Reply(148);
-	giq_option(4, NAME, 149, TheresaCombat, BAD_REACTION);
-	giq_option(4, NAME, 150, TheresaEnd, NEUTRAL_REACTION);
+   Reply(148);
+   giq_option(4, NAME, 149, TheresaCombat, BAD_REACTION);
+   giq_option(4, NAME, 150, TheresaEnd, NEUTRAL_REACTION);
 end
 
 procedure Theresa20
 begin
-	Reply(151);
-	giq_option(4, NAME, 152, Theresa17, NEUTRAL_REACTION);
-	giq_option(6, NAME, 153, Theresa21, NEUTRAL_REACTION);
+   Reply(151);
+   giq_option(4, NAME, 152, Theresa17, NEUTRAL_REACTION);
+   giq_option(6, NAME, 153, Theresa21, NEUTRAL_REACTION);
 end
 
 procedure Theresa21
 begin
-	if (local_var(7)) then begin
-		call Theresa25;
-	end
-	else begin
-		set_local_var(7, 1);
-		if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-			exp_flag := 1;
-			set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
-			line := 10;
-			NMessage(154);
-		end
-		else begin
-			Reply(155);
-			giq_option(4, NAME, 156, TheresaCombat, BAD_REACTION);
-			giq_option(4, NAME, 157, TheresaEnd, NEUTRAL_REACTION);
-		end
-	end
+   if (local_var(7)) then begin
+      call Theresa25;
+   end
+   else begin
+      set_local_var(7, 1);
+      if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+         exp_flag := 1;
+         set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
+         line := 10;
+         NMessage(154);
+      end
+      else begin
+         Reply(155);
+         giq_option(4, NAME, 156, TheresaCombat, BAD_REACTION);
+         giq_option(4, NAME, 157, TheresaEnd, NEUTRAL_REACTION);
+      end
+   end
 end
 
 procedure Theresa22
 begin
-	set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
-	line := 10;
-	exp_flag := 1;
-	Reply(158);
-	giq_option(4, NAME, 159, TheresaEnd, NEUTRAL_REACTION);
+   set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
+   line := 10;
+   exp_flag := 1;
+   Reply(158);
+   giq_option(4, NAME, 159, TheresaEnd, NEUTRAL_REACTION);
 end
 
 procedure Theresa23
 begin
-	Reply(170);
-	giq_option(4, NAME, 171, TheresaEnd, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 138, TheresaEnd, NEUTRAL_REACTION);
+   Reply(170);
+   giq_option(4, NAME, 171, TheresaEnd, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 138, TheresaEnd, NEUTRAL_REACTION);
 end
 
 procedure Theresa24
 begin
-	if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-		set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
-		exp_flag := 0;
-		line := 10;
-	end
-	NMessage(172);
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 2);
+      exp_flag := 0;
+      line := 10;
+   end
+   NMessage(172);
 end
 
 procedure Theresa25
 begin
-	NMessage(175);
+   NMessage(175);
 end
 
 procedure TheresaEnd
@@ -478,27 +478,27 @@ end
 
 procedure TheresaCombat
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure PickDeadBodyType// FINISHED, for Vault 13
 begin
-	variable id := 11;
-	id := random(0, 6) + random(0, 6) + random(0, 6);
-	if id <= 2 then begin
-		DeathType := 59;// exploded  [ROCKET LAUNCHER]
-	end
-	else begin
-		if id <= 10 then begin
-			DeathType := 57;// burnt, face down  [FLAMER]
-		end
-		else begin
-			if id <= 15 then begin
-				DeathType := 60;// melted pile  [PLASMA RIFLE]
-			end
-			else begin
-				DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
-			end
-		end
-	end
+   variable id := 11;
+   id := random(0, 6) + random(0, 6) + random(0, 6);
+   if id <= 2 then begin
+      DeathType := 59;// exploded  [ROCKET LAUNCHER]
+   end
+   else begin
+      if id <= 10 then begin
+         DeathType := 57;// burnt, face down  [FLAMER]
+      end
+      else begin
+         if id <= 15 then begin
+            DeathType := 60;// melted pile  [PLASMA RIFLE]
+         end
+         else begin
+            DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
+         end
+      end
+   end
 end

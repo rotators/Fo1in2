@@ -1,6 +1,6 @@
 /*
 
-	Vault 13 - Rebel
+   Vault 13 - Rebel
 
 */
 
@@ -52,271 +52,271 @@ variable not_at_meeting := 1;
 procedure PickDeadBodyType;
 variable DeathType := 57;
 
-#define LVAR_Sleeping 							(4)
+#define LVAR_Sleeping                     (4)
 
 procedure start begin
-	if (v13_invaded) then begin
-		if CUR_AREA_VAULT_13 then begin
-			if (local_var(9) != 1) then begin
-				set_local_var(9, 1);//		<-- only once
-				if not(is_loading_game) then begin
-					set_self_visible;
-				end
-				call PickDeadBodyType;
-				debug_msg("Vault 13 invasion, killing REBEL.SSL with DeathType " + DeathType + ".  ");
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
+   if (v13_invaded) then begin
+      if CUR_AREA_VAULT_13 then begin
+         if (local_var(9) != 1) then begin
+            set_local_var(9, 1);//     <-- only once
+            if not(is_loading_game) then begin
+               set_self_visible;
+            end
+            call PickDeadBodyType;
+            debug_msg("Vault 13 invasion, killing REBEL.SSL with DeathType " + DeathType + ".  ");
+            kill_critter(self_obj, DeathType);
+         end
+      end
+   end
 end
 
 procedure critter_p_proc
 begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if map_var(5) != 0 then begin
-			if ((GAME_TIME_IN_DAYS) > map_var(5)) and (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-				destroy_object(self_obj);
-			end
-		end
-		if ((game_time_hour >= 1700) and (game_time_hour < 1710)) then begin
-			if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-				if (not_at_meeting) then begin
-					call rebel_meeting;
-				end
-			end
-			else begin
-				self_walk_to_tile(home_tile);
-			end
-		end
-		else begin
-			if self_tile != home_tile then begin
-				self_walk_to_tile(home_tile);
-			end
-			else begin
-				sleeping
-			end
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if map_var(5) != 0 then begin
+         if ((GAME_TIME_IN_DAYS) > map_var(5)) and (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+            destroy_object(self_obj);
+         end
+      end
+      if ((game_time_hour >= 1700) and (game_time_hour < 1710)) then begin
+         if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+            if (not_at_meeting) then begin
+               call rebel_meeting;
+            end
+         end
+         else begin
+            self_walk_to_tile(home_tile);
+         end
+      end
+      else begin
+         if self_tile != home_tile then begin
+            self_walk_to_tile(home_tile);
+         end
+         else begin
+            sleeping
+         end
+      end
+   end
 end
 
 procedure damage_p_proc
 begin
-	if (source_obj == dude_obj) then begin
-		set_local_var(6, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_local_var(6, 1);
+   end
 end
 
 procedure destroy_p_proc
 begin
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
 
-	inc_good_critter
-	rm_timer_event(self_obj);
+   inc_good_critter
+   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc
 begin
-	if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-		display_msg(mstr(101));
-	end
-	else begin
-		display_msg(mstr(100));
-	end
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+      display_msg(mstr(101));
+   end
+   else begin
+      display_msg(mstr(100));
+   end
 end
 
 procedure map_enter_p_proc begin
-	if (local_var(5) == 0) then begin
-		set_local_var(5, self_tile);
-	end
-	home_tile := local_var(5);
-	sleep_tile := home_tile;
-	sleep_time := random(1900, 1930);
-	wake_time := random(700, 715);
-	set_self_team(TEAM_87);
+   if (local_var(5) == 0) then begin
+      set_local_var(5, self_tile);
+   end
+   home_tile := local_var(5);
+   sleep_tile := home_tile;
+   sleep_time := random(1900, 1930);
+   wake_time := random(700, 715);
+   set_self_team(TEAM_87);
 end
 
 procedure pickup_p_proc
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc
 begin
-	dude_look_at_self;
+   dude_look_at_self;
 
-	get_reaction
+   get_reaction
 
-	if (local_var(4) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
-	end
-	else if (local_var(6)) then begin
-		float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
-	end
-	else if (global_var(GVAR_VAULT_13_HOSTILE)) then begin
-		float_msg(self_obj, mstr(139), FLOAT_MSG_RED);
-	end
-	else if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) != 0) then begin
-		call Rebel01;
-	end
-	else begin
-		if dude_is_armed then begin
-			call Rebel02;
-		end
-		else begin
-			if (local_var(1) >= 2) then begin
-				start_dialog_at_node(Rebel03);
-			end
-			else begin
-			   start_dialog_at_node(Rebel09);
-			end
-		end
-	end
+   if (local_var(4) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
+   end
+   else if (local_var(6)) then begin
+      float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
+   end
+   else if (global_var(GVAR_VAULT_13_HOSTILE)) then begin
+      float_msg(self_obj, mstr(139), FLOAT_MSG_RED);
+   end
+   else if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) != 0) then begin
+      call Rebel01;
+   end
+   else begin
+      if dude_is_armed then begin
+         call Rebel02;
+      end
+      else begin
+         if (local_var(1) >= 2) then begin
+            start_dialog_at_node(Rebel03);
+         end
+         else begin
+            start_dialog_at_node(Rebel09);
+         end
+      end
+   end
 end
 
 procedure timed_event_p_proc begin
-	self_walk_to_tile(home_tile);
-	not_at_meeting := 1;
+   self_walk_to_tile(home_tile);
+   not_at_meeting := 1;
 end
 
 procedure Rebel01 begin
-	variable LVar0 := 0;
-	LVar0 := random(1, 5);
-	if (LVar0 == 1) then begin
-		LVar0 := mstr(105);
-	end
-	else if (LVar0 == 2) then begin
-		LVar0 := mstr(106);
-	end
-	else if (LVar0 == 3) then begin
-		LVar0 := mstr(107);
-	end
-	else if (LVar0 == 4) then begin
-		if (dude_is_male) then begin
-			LVar0 := mstr(108);
-		end
-		else begin
-			LVar0 := mstr(109);
-		end
-	end
-	else if (LVar0 == 5) then begin
-		if (dude_is_male) then begin
-			LVar0 := mstr(110);
-		end
-		else begin
-			LVar0 := mstr(111);
-		end
-	end
-	float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
+   variable LVar0 := 0;
+   LVar0 := random(1, 5);
+   if (LVar0 == 1) then begin
+      LVar0 := mstr(105);
+   end
+   else if (LVar0 == 2) then begin
+      LVar0 := mstr(106);
+   end
+   else if (LVar0 == 3) then begin
+      LVar0 := mstr(107);
+   end
+   else if (LVar0 == 4) then begin
+      if (dude_is_male) then begin
+         LVar0 := mstr(108);
+      end
+      else begin
+         LVar0 := mstr(109);
+      end
+   end
+   else if (LVar0 == 5) then begin
+      if (dude_is_male) then begin
+         LVar0 := mstr(110);
+      end
+      else begin
+         LVar0 := mstr(111);
+      end
+   end
+   float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
 end
 
 procedure Rebel02 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	DownReact
-	LVar1 := mstr(random(112, 115));
-	float_msg(self_obj, LVar1, FLOAT_MSG_RED);
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   DownReact
+   LVar1 := mstr(random(112, 115));
+   float_msg(self_obj, LVar1, FLOAT_MSG_RED);
 end
 
 procedure Rebel03 begin
-	Reply(116);
-	giq_option(4, NAME, 117, Rebel04, NEUTRAL_REACTION);
-	giq_option(4, NAME, 118, Rebel05, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 119, Rebel08, NEUTRAL_REACTION);
+   Reply(116);
+   giq_option(4, NAME, 117, Rebel04, NEUTRAL_REACTION);
+   giq_option(4, NAME, 118, Rebel05, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 119, Rebel08, NEUTRAL_REACTION);
 end
 
 procedure Rebel04 begin
-	Reply(120);
-	giq_option(4, NAME, 121, RebelEnd, NEUTRAL_REACTION);
+   Reply(120);
+   giq_option(4, NAME, 121, RebelEnd, NEUTRAL_REACTION);
 end
 
 procedure Rebel05 begin
-	if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
-		if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
-			set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
-		end
-		Reply(122);
-		giq_option(4, NAME, 123, Rebel06, NEUTRAL_REACTION);
-		giq_option(4, NAME, 124, Rebel07, NEUTRAL_REACTION);
-	end
-	else begin
-		Reply(125);
-	end
-	giq_option(4, NAME, 126, RebelEnd, NEUTRAL_REACTION);
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then begin
+      if global_var(GVAR_QUEST_VAULT13_1_REBELS) == 0 then begin
+         set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 1);
+      end
+      Reply(122);
+      giq_option(4, NAME, 123, Rebel06, NEUTRAL_REACTION);
+      giq_option(4, NAME, 124, Rebel07, NEUTRAL_REACTION);
+   end
+   else begin
+      Reply(125);
+   end
+   giq_option(4, NAME, 126, RebelEnd, NEUTRAL_REACTION);
 end
 
 procedure Rebel06 begin
-	Reply(127);
-	giq_option(4, NAME, 128, RebelEnd, NEUTRAL_REACTION);
-	giq_option(4, NAME, 129, RebelEnd, NEUTRAL_REACTION);
+   Reply(127);
+   giq_option(4, NAME, 128, RebelEnd, NEUTRAL_REACTION);
+   giq_option(4, NAME, 129, RebelEnd, NEUTRAL_REACTION);
 end
 
 procedure Rebel07 begin
-	Reply(130);
-	giq_option(4, NAME, 131, RebelEnd, NEUTRAL_REACTION);
-	giq_option(4, NAME, 132, Rebel06, NEUTRAL_REACTION);
+   Reply(130);
+   giq_option(4, NAME, 131, RebelEnd, NEUTRAL_REACTION);
+   giq_option(4, NAME, 132, Rebel06, NEUTRAL_REACTION);
 end
 
 procedure Rebel08 begin
-	Reply(133);
-	giq_option(-3, NAME, 134, RebelEnd, NEUTRAL_REACTION);
+   Reply(133);
+   giq_option(-3, NAME, 134, RebelEnd, NEUTRAL_REACTION);
 end
 
 procedure Rebel09 begin
-	Reply(135);
-	giq_option(4, NAME, 136, RebelCombat, NEUTRAL_REACTION);
-	giq_option(4, NAME, 137, RebelEnd, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 138, RebelEnd, NEUTRAL_REACTION);
+   Reply(135);
+   giq_option(4, NAME, 136, RebelCombat, NEUTRAL_REACTION);
+   giq_option(4, NAME, 137, RebelEnd, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 138, RebelEnd, NEUTRAL_REACTION);
 end
 
 procedure RebelEnd begin
 end
 
 procedure RebelCombat begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure rebel_meeting begin
-	if (dest_tile == 0) then begin
-		if home_tile == 18089 then begin
-			dest_tile := tile_num_in_direction(18510, 5, 1);
-		end
-		else if home_tile == 18526 then begin
-			dest_tile := tile_num_in_direction(18112, 2, 1);
-		end
-		else if home_tile == 25325 then begin
-			dest_tile := tile_num_in_direction(18511, 2, 1);
-		end
-		else begin
-			dest_tile := tile_num_in_direction(18310, 2, 1);
-		end
-	end
-	if (self_tile != dest_tile) then begin
-		self_walk_to_tile(dest_tile);
-	end
-	add_timer_event(self_obj, game_ticks(240), 0);
-	if (self_tile == dest_tile) then begin
-		self_rotate(rotation_to_tile(self_tile, (self_tile - 200)));
-		not_at_meeting := 0;
-	end
+   if (dest_tile == 0) then begin
+      if home_tile == 18089 then begin
+         dest_tile := tile_num_in_direction(18510, 5, 1);
+      end
+      else if home_tile == 18526 then begin
+         dest_tile := tile_num_in_direction(18112, 2, 1);
+      end
+      else if home_tile == 25325 then begin
+         dest_tile := tile_num_in_direction(18511, 2, 1);
+      end
+      else begin
+         dest_tile := tile_num_in_direction(18310, 2, 1);
+      end
+   end
+   if (self_tile != dest_tile) then begin
+      self_walk_to_tile(dest_tile);
+   end
+   add_timer_event(self_obj, game_ticks(240), 0);
+   if (self_tile == dest_tile) then begin
+      self_rotate(rotation_to_tile(self_tile, (self_tile - 200)));
+      not_at_meeting := 0;
+   end
 end
 
 procedure PickDeadBodyType begin
-	variable id := 11;
-	id := random(0, 6) + random(0, 6) + random(0, 6);
-	if id <= 2 then begin
-		DeathType := 59;// exploded  [ROCKET LAUNCHER]
-	end
-	else if id <= 10 then begin
-		DeathType := 57;// burnt, face down  [FLAMER]
-	end
-	else if id <= 15 then begin
-		DeathType := 60;// melted pile  [PLASMA RIFLE]
-	end
-	else begin
-		DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
-	end
+   variable id := 11;
+   id := random(0, 6) + random(0, 6) + random(0, 6);
+   if id <= 2 then begin
+      DeathType := 59;// exploded  [ROCKET LAUNCHER]
+   end
+   else if id <= 10 then begin
+      DeathType := 57;// burnt, face down  [FLAMER]
+   end
+   else if id <= 15 then begin
+      DeathType := 60;// melted pile  [PLASMA RIFLE]
+   end
+   else begin
+      DeathType := 63;// face down, blood pool  (generic death, no weapon associated)
+   end
 end

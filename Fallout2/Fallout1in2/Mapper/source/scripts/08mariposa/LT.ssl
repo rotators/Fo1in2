@@ -1,6 +1,6 @@
 /*
 
-	Mariposa - Lou(tennant)
+   Mariposa - Lou(tennant)
 
 */
 
@@ -125,685 +125,685 @@ variable hit_dude;
 variable torture_setting;
 variable End_The_Game;
 
-#define EVENT_TORTURE 		(1)
-#define EVENT_TORTURE_END 	(2)
-#define EVENT_ENDGAME 		(3)
+#define EVENT_TORTURE      (1)
+#define EVENT_TORTURE_END  (2)
+#define EVENT_ENDGAME      (3)
 
 procedure start begin
-	if not(initial) then begin
-		initial := 1;
-		set_self_team(TEAM_NECROPOLIS_MUTANT);
-		set_self_ai(AI_SUPER_MUTANT_SGT);
-		Lt_ptr := self_obj;
-		if (local_var(6) == 0) then begin
-			variable LVar0 := 0;
-			LVar0 := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_LTCODES);
-			add_obj_to_inven(self_obj, LVar0);
-			LVar0 := create_object(PID_SECURITY_CARD, 0, 0);
-			add_obj_to_inven(self_obj, LVar0);
-			set_local_var(6, 1);
-		end
-	end
+   if not(initial) then begin
+      initial := 1;
+      set_self_team(TEAM_NECROPOLIS_MUTANT);
+      set_self_ai(AI_SUPER_MUTANT_SGT);
+      Lt_ptr := self_obj;
+      if (local_var(6) == 0) then begin
+         variable LVar0 := 0;
+         LVar0 := create_object_sid(PID_HOLODISK, 0, 0, SCRIPT_LTCODES);
+         add_obj_to_inven(self_obj, LVar0);
+         LVar0 := create_object(PID_SECURITY_CARD, 0, 0);
+         add_obj_to_inven(self_obj, LVar0);
+         set_local_var(6, 1);
+      end
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
-		if (global_var(GVAR_DESTROY_VATS_4)) then begin
-			if (random(0, 3) == 3) then begin
-				critter_injure(dude_obj, DAM_KNOCKED_OUT);//    DAM_KNOCKED_OUT      1    <-- DOES NOT WORK!!!
-			end
-		end
-	end
+   if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
+      if (global_var(GVAR_DESTROY_VATS_4)) then begin
+         if (random(0, 3) == 3) then begin
+            critter_injure(dude_obj, DAM_KNOCKED_OUT);//    DAM_KNOCKED_OUT      1    <-- DOES NOT WORK!!!
+         end
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (self_can_see_dude) then begin
-			if (torture_setting > 0) then begin
-				if (hit_dude == 0) then begin
-					call Torture;
-				end
-			end
-			else begin
-				if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-					if (not(global_var(GVAR_DESTROY_VATS_4))) then begin
-						if (not(local_var(4))) then begin
-							dialogue_system_enter;
-						end
-						else if (not(local_var(5))) then begin
-							dialogue_system_enter;
-						end
-					end
-					else begin
-						tmp_hostile := 1;
-					end
-				end
-			end
-		end
-		else begin
-			if ((global_var(GVAR_ENTERING_VATS_HOW) != 0) and (local_var(7) != 2)) then begin
-				set_global_var(GVAR_VATS_ALERT, 1);
-				tmp_hostile := 1;
-			end
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (self_can_see_dude) then begin
+         if (torture_setting > 0) then begin
+            if (hit_dude == 0) then begin
+               call Torture;
+            end
+         end
+         else begin
+            if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+               if (not(global_var(GVAR_DESTROY_VATS_4))) then begin
+                  if (not(local_var(4))) then begin
+                     dialogue_system_enter;
+                  end
+                  else if (not(local_var(5))) then begin
+                     dialogue_system_enter;
+                  end
+               end
+               else begin
+                  tmp_hostile := 1;
+               end
+            end
+         end
+      end
+      else begin
+         if ((global_var(GVAR_ENTERING_VATS_HOW) != 0) and (local_var(7) != 2)) then begin
+            set_global_var(GVAR_VATS_ALERT, 1);
+            tmp_hostile := 1;
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	set_global_var(GVAR_LIEUTENANTS_DEAD, 1);// Lt dead
-	rm_timer_event(self_obj);
+   set_global_var(GVAR_LIEUTENANTS_DEAD, 1);// Lt dead
+   rm_timer_event(self_obj);
 
-	inc_inv_evil_crit
-	rm_timer_event(self_obj);
-	Lt_ptr := 0;
+   inc_inv_evil_crit
+   rm_timer_event(self_obj);
+   Lt_ptr := 0;
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	get_reaction
-	if (local_var(7) == 0) then begin
-		start_gdialog(50, self_obj, 4, 11, BACKGROUND_MILITARYBS);
-		gsay_start;
+   dude_look_at_self;
+   get_reaction
+   if (local_var(7) == 0) then begin
+      start_gdialog(50, self_obj, 4, 11, BACKGROUND_MILITARYBS);
+      gsay_start;
 
-		if (torture_setting == 2) then begin
-			call Lt36;
-			torture_setting := 3;
-		end
-		else if (torture_setting == 3) then begin
-			call Lt37b;
-			torture_setting := 4;
-		end
-		else if (torture_setting == 4) then begin
-			call Lt38;
-			torture_setting := 5;
-		end
-		else if (global_var(GVAR_ENTERING_VATS_HOW) == 1) then begin
-			call Lt01;
-		end
-		else if (global_var(GVAR_ENTERING_VATS_HOW) == 2) then begin
-			call Lt41;
-		end
-		else if (global_var(GVAR_ENTERING_VATS_HOW) == 3) then begin
-			call Lt46;
-		end
-		else begin
-			call Lt45;
-		end
+      if (torture_setting == 2) then begin
+         call Lt36;
+         torture_setting := 3;
+      end
+      else if (torture_setting == 3) then begin
+         call Lt37b;
+         torture_setting := 4;
+      end
+      else if (torture_setting == 4) then begin
+         call Lt38;
+         torture_setting := 5;
+      end
+      else if (global_var(GVAR_ENTERING_VATS_HOW) == 1) then begin
+         call Lt01;
+      end
+      else if (global_var(GVAR_ENTERING_VATS_HOW) == 2) then begin
+         call Lt41;
+      end
+      else if (global_var(GVAR_ENTERING_VATS_HOW) == 3) then begin
+         call Lt46;
+      end
+      else begin
+         call Lt45;
+      end
 
-		gsay_end;
-		end_dialogue;
-	end
-	else begin
-		float_msg(self_obj, mstr(236), FLOAT_MSG_RED);
-		tmp_hostile := 1;
-	end
+      gsay_end;
+      end_dialogue;
+   end
+   else begin
+      float_msg(self_obj, mstr(236), FLOAT_MSG_RED);
+      tmp_hostile := 1;
+   end
 
-	// Moved dude to prison cell:
-	if (local_var(7) == 1) then begin
-		set_local_var(7, 2);
-		gfade_out(1);
-			move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
-			move_to(dude_obj, 25543, 0);
-			critter_injure(dude_obj, DAM_KNOCKED_DOWN);//    DAM_KNOCKED_DOWN       2		<-- DOES NOT WORK!!!
-			reg_anim_clear(dude_obj);
-			reg_anim_begin();
-			reg_anim_animate(dude_obj, 48, -1);
-			reg_anim_animate(dude_obj, 37, -1);
-			reg_anim_end();
-		gfade_in(1);
-	end
+   // Moved dude to prison cell:
+   if (local_var(7) == 1) then begin
+      set_local_var(7, 2);
+      gfade_out(1);
+         move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
+         move_to(dude_obj, 25543, 0);
+         critter_injure(dude_obj, DAM_KNOCKED_DOWN);//    DAM_KNOCKED_DOWN       2     <-- DOES NOT WORK!!!
+         reg_anim_clear(dude_obj);
+         reg_anim_begin();
+         reg_anim_animate(dude_obj, 48, -1);
+         reg_anim_animate(dude_obj, 37, -1);
+         reg_anim_end();
+      gfade_in(1);
+   end
 //
-	if (End_The_Game == 1) then begin
-		move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
-		debug_msg("Started playing cutscene#10 and #7 for Dipping and V13 invasion, may crash / cause issues!");
-		gfade_out(1);
+   if (End_The_Game == 1) then begin
+      move_obj_inven_to_obj(dude_obj, VWeapLocker_ptr);
+      debug_msg("Started playing cutscene#10 and #7 for Dipping and V13 invasion, may crash / cause issues!");
+      gfade_out(1);
 
-		move_to(dude_obj, 12527, 1);// was 12528
-		dude_rotate(5);
-		move_to(self_obj, 12326, 1);// was 12528
-		self_rotate(5);
+      move_to(dude_obj, 12527, 1);// was 12528
+      dude_rotate(5);
+      move_to(self_obj, 12326, 1);// was 12528
+      self_rotate(5);
 
-		gfade_in(1);
-		anim(self_obj, ANIM_magic_hands_middle, 0);
-		play_gmovie(DIPEDV_MOVIE);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops.
-		move_to(dude_obj, 25543, 0);
-		play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
-		gfade_out(1);
-		play_sfx("Traitor");
-		add_timer_event(self_obj, game_ticks(35), EVENT_ENDGAME);
-		debug_msg("Done playing cutscene#10 and #7 for Dipping and V13 invasion.");
-	end
+      gfade_in(1);
+      anim(self_obj, ANIM_magic_hands_middle, 0);
+      play_gmovie(DIPEDV_MOVIE);//------ Player is dipped in FEV Vats and becomes a Super Mutant. Oops.
+      move_to(dude_obj, 25543, 0);
+      play_gmovie(OVERRUN_MOVIE);//------ Vault 13 is invaded by mutants and killed. You lose.
+      gfade_out(1);
+      play_sfx("Traitor");
+      add_timer_event(self_obj, game_ticks(35), EVENT_ENDGAME);
+      debug_msg("Done playing cutscene#10 and #7 for Dipping and V13 invasion.");
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == EVENT_TORTURE) then begin
-		if (torture_setting == 1) then begin
-			critter_dmg(dude_obj, dude_cur_hp / 3, DMG_normal_dam);
-		end
-		else if (torture_setting == 2) then begin
-			critter_dmg(dude_obj, dude_cur_hp / 2, DMG_normal_dam);
-		end
-		else if (torture_setting == 3) then begin
-			critter_dmg(dude_obj, dude_cur_hp - 1, DMG_normal_dam);
-		end
-		anim(dude_obj, ANIM_back_to_standing, 0);
-		torture_setting := torture_setting + 1;
-		add_timer_event(self_obj, game_ticks(3), EVENT_TORTURE_END);
-	end
-	else if (fixed_param == EVENT_TORTURE_END) then begin
-		hit_dude := 0;
-		game_ui_enable;
-		dialogue_system_enter;
-	end
-	else if (fixed_param == EVENT_ENDGAME) then begin
-		signal_end_game;
-		gfade_in(1);
-	end
+   if (fixed_param == EVENT_TORTURE) then begin
+      if (torture_setting == 1) then begin
+         critter_dmg(dude_obj, dude_cur_hp / 3, DMG_normal_dam);
+      end
+      else if (torture_setting == 2) then begin
+         critter_dmg(dude_obj, dude_cur_hp / 2, DMG_normal_dam);
+      end
+      else if (torture_setting == 3) then begin
+         critter_dmg(dude_obj, dude_cur_hp - 1, DMG_normal_dam);
+      end
+      anim(dude_obj, ANIM_back_to_standing, 0);
+      torture_setting := torture_setting + 1;
+      add_timer_event(self_obj, game_ticks(3), EVENT_TORTURE_END);
+   end
+   else if (fixed_param == EVENT_TORTURE_END) then begin
+      hit_dude := 0;
+      game_ui_enable;
+      dialogue_system_enter;
+   end
+   else if (fixed_param == EVENT_ENDGAME) then begin
+      signal_end_game;
+      gfade_in(1);
+   end
 end
 
 procedure Ltcbt begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure Lt01 begin
-	Reply(101);
-	NOption(102, Lt02, 4);
-	NOption(103, Lt01a, 4);
-	NOption(104, Lt03, 5);
-	NOption(105, Lt48, -3);
+   Reply(101);
+   NOption(102, Lt02, 4);
+   NOption(103, Lt01a, 4);
+   NOption(104, Lt03, 5);
+   NOption(105, Lt48, -3);
 end
 
 procedure Lt01a begin
-	Reply(106);
-	NOption(107, Lt35, 4);
-	NOption(108, Lt03, 4);
-	GOption(109, Lt01b, 4);
+   Reply(106);
+   NOption(107, Lt35, 4);
+   NOption(108, Lt03, 4);
+   GOption(109, Lt01b, 4);
 end
 
 procedure Lt01b begin
-	NMessage(110);
-	call Ltx3;
+   NMessage(110);
+   call Ltx3;
 end
 
 procedure Lt02 begin
-	Reply(111);
-	NOption(112, Lt35a, 4);
-	NOption(113, Lt03, 4);
-	NOption(114, Lt35, 4);
-	NOption(115, Lt40, 4);
+   Reply(111);
+   NOption(112, Lt35a, 4);
+   NOption(113, Lt03, 4);
+   NOption(114, Lt35, 4);
+   NOption(115, Lt40, 4);
 end
 
 procedure Lt03 begin
-	Reply(116);
-	NOption(117, Lt04, 4);
-	NOption(118, Lt04, 4);
-	NOption(119, Lt05, 4);
+   Reply(116);
+   NOption(117, Lt04, 4);
+   NOption(118, Lt04, 4);
+   NOption(119, Lt05, 4);
 end
 
 procedure Lt04 begin
-	Reply(120);
-	NOption(121, Lt05, 4);
-	NOption(122, Lt35, 4);
-	NOption(123, Lt35a, 5);
+   Reply(120);
+   NOption(121, Lt05, 4);
+   NOption(122, Lt35, 4);
+   NOption(123, Lt35a, 5);
 end
 
 procedure Lt05 begin
-	NMessage(124);
-	call Lt06;
+   NMessage(124);
+   call Lt06;
 end
 
 procedure Lt06 begin
-	NOption(125, Lt07, 5);
-	NOption(126, Lt20, 6);
-	NOption(127, Lt27, 4);
-	NOption(128, Lt34, 4);
+   NOption(125, Lt07, 5);
+   NOption(126, Lt20, 6);
+   NOption(127, Lt27, 4);
+   NOption(128, Lt34, 4);
 end
 
 procedure Lt07 begin
-	Reply(129);
-	NOption(130, Lt10, 5);
-	NOption(131, Lt08, 5);
-	NOption(132, Lt20, 4);
+   Reply(129);
+   NOption(130, Lt10, 5);
+   NOption(131, Lt08, 5);
+   NOption(132, Lt20, 4);
 end
 
 procedure Lt08 begin
-	Reply(133);
-	NOption(134, Lt08a, 4);
+   Reply(133);
+   NOption(134, Lt08a, 4);
 end
 
 procedure Lt08a begin
-	NMessage(135);
-	call Lt06;
+   NMessage(135);
+   call Lt06;
 end
 
 procedure Lt09 begin
-	NMessage(136);
-	call Lt06;
+   NMessage(136);
+   call Lt06;
 end
 
 procedure Lt10 begin
-	Reply(137);
-	NOption(138, Lt11, 4);
+   Reply(137);
+   NOption(138, Lt11, 4);
 end
 
 procedure Lt11 begin
-	Reply(139);
-	NOption(140, Lt12, 4);
-	NOption(141, Lt14, 6);
-	NOption(142, Lt13, 6);
+   Reply(139);
+   NOption(140, Lt12, 4);
+   NOption(141, Lt14, 6);
+   NOption(142, Lt13, 6);
 end
 
 procedure Lt12 begin
-	Reply(143);
-	NOption(144, Lt13, 6);
-	NOption(145, Lt19, 4);
+   Reply(143);
+   NOption(144, Lt13, 6);
+   NOption(145, Lt19, 4);
 end
 
 procedure Lt13 begin
-	Reply(146);
-	NOption(147, Lt14, 6);
-	BOption(148, Lt18a, 5);
+   Reply(146);
+   NOption(147, Lt14, 6);
+   BOption(148, Lt18a, 5);
 end
 
 procedure Lt14 begin
-	Reply(149);
-	NOption(150, Lt15, 6);
+   Reply(149);
+   NOption(150, Lt15, 6);
 end
 
 procedure Lt15 begin
-	Reply(151);
-	NOption(152, Lt16, 6);
+   Reply(151);
+   NOption(152, Lt16, 6);
 end
 
 procedure Lt16
 begin
-	Reply(153);
-	NOption(154, Lt17, 6);
+   Reply(153);
+   NOption(154, Lt17, 6);
 end
 
 procedure Lt17
 begin
-	Reply(155);
-	NOption(156, Lt09, 6);
-	BOption(157, Lt18a, 6);
+   Reply(155);
+   NOption(156, Lt09, 6);
+   BOption(157, Lt18a, 6);
 end
 
 procedure Lt18
 begin
-	Reply(158);
-	BOption(159, Lt35, 6);
-	NOption(160, Lt09, 6);
+   Reply(158);
+   BOption(159, Lt35, 6);
+   NOption(160, Lt09, 6);
 end
 
 procedure Lt18a begin
-	DownReact
-	call Lt18;
+   DownReact
+   call Lt18;
 end
 
 procedure Lt19
 begin
-	Reply(161);
-	NOption(162, Lt18, 4);
-	NOption(163, Lt14, 4);
+   Reply(161);
+   NOption(162, Lt18, 4);
+   NOption(163, Lt14, 4);
 end
 
 procedure Lt20
 begin
-	Reply(164);
-	NOption(165, Lt21, 6);
-	NOption(166, Lt10, 4);
+   Reply(164);
+   NOption(165, Lt21, 6);
+   NOption(166, Lt10, 4);
 end
 
 procedure Lt21
 begin
-	Reply(167);
-	NOption(168, Lt22, 6);
-	NOption(169, Lt29, 6);
+   Reply(167);
+   NOption(168, Lt22, 6);
+   NOption(169, Lt29, 6);
 end
 
 procedure Lt22
 begin
-	Reply(170);
-	NOption(171, Lt23, 6);
-	NOption(172, Lt26, 6);
+   Reply(170);
+   NOption(171, Lt23, 6);
+   NOption(172, Lt26, 6);
 end
 
 procedure Lt23
 begin
-	Reply(173);
-	NOption(174, Lt24, 6);
-	NOption(175, Lt25, 6);
+   Reply(173);
+   NOption(174, Lt24, 6);
+   NOption(175, Lt25, 6);
 end
 
 procedure Lt24
 begin
-	Reply(176);
-	BOption(177, Lt18a, 6);
-	NOption(178, Lt09, 6);
+   Reply(176);
+   BOption(177, Lt18a, 6);
+   NOption(178, Lt09, 6);
 end
 
 procedure Lt25
 begin
-	Reply(179);
-	NOption(180, Lt18, 4);
-	NOption(181, Lt28, 6);
+   Reply(179);
+   NOption(180, Lt18, 4);
+   NOption(181, Lt28, 6);
 end
 
 procedure Lt26
 begin
-	Reply(182);
-	NOption(183, Lt27, 5);
-	NOption(184, Lt28, 6);
+   Reply(182);
+   NOption(183, Lt27, 5);
+   NOption(184, Lt28, 6);
 end
 
 procedure Lt27
 begin
-	Reply(185);
-	NOption(186, Lt35, 4);
-	NOption(187, Lt08a, 6);
-	NOption(188, Lt30, 6);
+   Reply(185);
+   NOption(186, Lt35, 4);
+   NOption(187, Lt08a, 6);
+   NOption(188, Lt30, 6);
 end
 
 procedure Lt28 begin
-	Reply(189);
-	call Lt06;
+   Reply(189);
+   call Lt06;
 end
 
 procedure Lt29
 begin
-	Reply(190);
-	NOption(191, Lt22, 4);
-	NOption(192, Lt28, 4);
-	NOption(193, Lt23, 4);
+   Reply(190);
+   NOption(191, Lt22, 4);
+   NOption(192, Lt28, 4);
+   NOption(193, Lt23, 4);
 end
 
 procedure Lt30
 begin
-	Reply(194);
-	NOption(195, Lt31, 6);
-	NOption(196, Lt33, 7);
+   Reply(194);
+   NOption(195, Lt31, 6);
+   NOption(196, Lt33, 7);
 end
 
 procedure Lt31
 begin
-	Reply(197);
-	NOption(198, Lt32, 6);
+   Reply(197);
+   NOption(198, Lt32, 6);
 end
 
 procedure Lt32
 begin
-	Reply(199);
-	BOption(200, Lt35, 6);
-	NOption(201, Lt28, 6);
+   Reply(199);
+   BOption(200, Lt35, 6);
+   NOption(201, Lt28, 6);
 end
 
 procedure Lt33
 begin
-	Reply(202);
-	BOption(203, Lt35, 6);
-	NOption(204, Lt08a, 6);
+   Reply(202);
+   BOption(203, Lt35, 6);
+   NOption(204, Lt08a, 6);
 end
 
 procedure Lt34 begin
-	Reply(205);
-	BOption(206, Lt35, 4);
+   Reply(205);
+   BOption(206, Lt35, 4);
 end
 
 procedure Lt35 begin
-	BMessage(207);
-	torture_setting := 1;
+   BMessage(207);
+   torture_setting := 1;
 end
 
 procedure Lt35a begin
-	NMessage(208);
-	torture_setting := 1;
+   NMessage(208);
+   torture_setting := 1;
 end
 
 procedure Lt36 begin
-	Reply(209);
-	BOption(210, Lt37, 4);
-	GOption(211, Lt40, 4);
+   Reply(209);
+   BOption(210, Lt37, 4);
+   GOption(211, Lt40, 4);
 end
 
 procedure Lt37 begin
-	GMessage(212);
-	torture_setting := 2;
+   GMessage(212);
+   torture_setting := 2;
 end
 
 procedure Lt37b begin
-	Reply(213);
-	BOption(214, Ltx1, 4);
-	GOption(215, Lt40, 4);
+   Reply(213);
+   BOption(214, Ltx1, 4);
+   GOption(215, Lt40, 4);
 end
 
 procedure Lt38 begin
-	Reply(216);
-	NOption(217, Lt39, 4);
-	NOption(218, Lt40, 4);
+   Reply(216);
+   NOption(217, Lt39, 4);
+   NOption(218, Lt40, 4);
 end
 
 procedure Lt39 begin
-	if (dude_is_male) then begin
-		Reply(272);
-	end
-	else begin
-		Reply(271);
-	end
-	NOption(220, Lt39a, 6);
-	BOption(111, Ltx2, 4);
+   if (dude_is_male) then begin
+      Reply(272);
+   end
+   else begin
+      Reply(271);
+   end
+   NOption(220, Lt39a, 6);
+   BOption(111, Ltx2, 4);
 end
 
 procedure Lt39a
 begin
-	Reply(221);
-	NOption(222, Lt39b, 7);
-	BOption(223, Ltx2, 6);
+   Reply(221);
+   NOption(222, Lt39b, 7);
+   BOption(223, Ltx2, 6);
 end
 
 procedure Lt39b
 begin
-	Reply(224);
-	GOption(225, Lt40, 7);
-	BOption(226, Ltx2, 7);
+   Reply(224);
+   GOption(225, Lt40, 7);
+   BOption(226, Ltx2, 7);
 end
 
 procedure Lt40
 begin
-	Reply(227);
-	GOption(228, Ltx3, 4);
-	NOption(229, Lt35, 4);
-	NOption(230, Lt09, 5);
+   Reply(227);
+   GOption(228, Ltx3, 4);
+   NOption(229, Lt35, 4);
+   NOption(230, Lt09, 5);
 end
 
 procedure Lt40a begin
-	call Lt40;
+   call Lt40;
 end
 
 procedure Lt41
 begin
-	Reply(235);
-	BOption(236, Lt42, 4);
-	NOption(237, Lt43, 5);
-	NOption(238, Lt48, -3);
+   Reply(235);
+   BOption(236, Lt42, 4);
+   NOption(237, Lt43, 5);
+   NOption(238, Lt48, -3);
 end
 
 procedure Lt42
 begin
-	Reply(239);
-	NOption(240, Lt43, 6);
-	NOption(241, Lt44, 4);
+   Reply(239);
+   NOption(240, Lt43, 6);
+   NOption(241, Lt44, 4);
 end
 
 procedure Lt43
 begin
-	Reply(242);
-	NOption(243, Lt35, 4);
-	NOption(244, Lt03, 5);
+   Reply(242);
+   NOption(243, Lt35, 4);
+   NOption(244, Lt03, 5);
 end
 
 procedure Lt44
 begin
-	Reply(245);
-	NOption(246, Lt35, 4);
-	NOption(247, Lt03, 4);
+   Reply(245);
+   NOption(246, Lt35, 4);
+   NOption(247, Lt03, 4);
 end
 
 procedure Lt45 begin
-	set_global_var(GVAR_ENTERING_VATS_HOW, 3);
-	set_local_var(4, 1);
-	if (dude_is_female) then begin
-		NMessage(248);
-	end
-	else begin
-		NMessage(270);
-	end
-	call Ltx4;
+   set_global_var(GVAR_ENTERING_VATS_HOW, 3);
+   set_local_var(4, 1);
+   if (dude_is_female) then begin
+      NMessage(248);
+   end
+   else begin
+      NMessage(270);
+   end
+   call Ltx4;
 end
 
 procedure Lt46 begin
-	set_local_var(5, 1);
-	Reply(249);
-	NOption(251, Lt43, 4);
+   set_local_var(5, 1);
+   Reply(249);
+   NOption(251, Lt43, 4);
 end
 
 procedure Lt48 begin
-	NMessage(252);
-	call Ltx2;
+   NMessage(252);
+   call Ltx2;
 end
 
 procedure Ltx1 begin
-	torture_setting := 3;
+   torture_setting := 3;
 end
 
 procedure Ltx2 begin
-	torture_setting := 0;
-	set_local_var(7, 1);
+   torture_setting := 0;
+   set_local_var(7, 1);
 end
 
 procedure Ltx3 begin
-	End_The_Game := 1;
+   End_The_Game := 1;
 end
 
 procedure Ltx4 begin
-	set_global_var(GVAR_DESTROY_VATS_4, 1);
+   set_global_var(GVAR_DESTROY_VATS_4, 1);
 end
 
 procedure Ltx6 begin
-	torture_setting := 0;
-	set_local_var(7, 1);
+   torture_setting := 0;
+   set_local_var(7, 1);
 end
 
 procedure Torture begin
-	if (self_tile != tile_num_in_direction(dude_tile, 1, 1)) then begin
-		self_walk_to_tile(tile_num_in_direction(dude_tile, 1, 1));
-	end
-	else begin
-		game_ui_disable;
-		self_rotate(4);
-		anim(self_obj, ANIM_throw_punch, 0);
-		anim(dude_obj, ANIM_fall_back, 0);
-		add_timer_event(self_obj, game_ticks(torture_setting), EVENT_TORTURE);
-		hit_dude := 1;
-	end
+   if (self_tile != tile_num_in_direction(dude_tile, 1, 1)) then begin
+      self_walk_to_tile(tile_num_in_direction(dude_tile, 1, 1));
+   end
+   else begin
+      game_ui_disable;
+      self_rotate(4);
+      anim(self_obj, ANIM_throw_punch, 0);
+      anim(dude_obj, ANIM_fall_back, 0);
+      add_timer_event(self_obj, game_ticks(torture_setting), EVENT_TORTURE);
+      hit_dude := 1;
+   end
 end
 
 procedure Lt40_5 begin
-	Reply(231);
-	GOption(232, Ltx3, 4);
-	BOption(233, Ltx2, 4);
-	NOption(234, Lt09, 5);
+   Reply(231);
+   GOption(232, Ltx3, 4);
+   BOption(233, Ltx2, 4);
+   NOption(234, Lt09, 5);
 end
 
 procedure Lt50
 begin
-	NMessage(253);
+   NMessage(253);
 end
 
 procedure Lt51
 begin
-	NMessage(254);
+   NMessage(254);
 end
 
 procedure Lt52
 begin
-	NMessage(255);
+   NMessage(255);
 end
 
 procedure Lt53
 begin
-	NMessage(256);
+   NMessage(256);
 end
 
 procedure Lt54
 begin
-	NMessage(257);
+   NMessage(257);
 end
 
 procedure Lt55
 begin
-	NMessage(258);
+   NMessage(258);
 end
 
 procedure Lt56
 begin
-	NMessage(259);
+   NMessage(259);
 end
 
 procedure Lt57
 begin
-	NMessage(260);
+   NMessage(260);
 end
 
 procedure Lt58
 begin
-	NMessage(261);
+   NMessage(261);
 end
 
 procedure Lt59
 begin
-	NMessage(262);
+   NMessage(262);
 end
 
 procedure Lt60
 begin
-	NMessage(263);
+   NMessage(263);
 end
 
 procedure Lt61
 begin
-	NMessage(264);
+   NMessage(264);
 end
 
 procedure Lt62
 begin
-	NMessage(265);
+   NMessage(265);
 end
 
 procedure Lt63
 begin
-	NMessage(266);
+   NMessage(266);
 end
 
 procedure Lt64
 begin
-	NMessage(267);
+   NMessage(267);
 end
 
 procedure Lt65
 begin
-	NMessage(268);
+   NMessage(268);
 end
 
 procedure Lt66
 begin
-	NMessage(269);
+   NMessage(269);
 end

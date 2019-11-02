@@ -21,113 +21,113 @@ import variable removal_ptr;
 
 
 procedure start begin
-	if (map_first_run) then begin
-		display_msg("INIT VBOOM.SSL at map number " + cur_map_index + " and elevation " + self_elevation + ". Please take a screenshot now and send to Sduibek. Thanks!");
-	end
-	if not(initial) then begin
-		initial := 1;
-	end
+   if (map_first_run) then begin
+      display_msg("INIT VBOOM.SSL at map number " + cur_map_index + " and elevation " + self_elevation + ". Please take a screenshot now and send to Sduibek. Thanks!");
+   end
+   if not(initial) then begin
+      initial := 1;
+   end
 end
 
 procedure description_p_proc
 begin
-	variable LVar0 := 0;
-	script_overrides;
-	LVar0 := message_str(SCRIPT_VATALERT, 100);
-	if (not(local_var(0))) then begin
-		if (not(is_success(do_check(dude_obj, STAT_pe, dude_awareness)))) then begin
-			LVar0 := message_str(SCRIPT_VATALERT, 101);
-		end
-		else begin
-			set_local_var(0, 1);
-		end
-	end
-	display_msg(LVar0);
+   variable LVar0 := 0;
+   script_overrides;
+   LVar0 := message_str(SCRIPT_VATALERT, 100);
+   if (not(local_var(0))) then begin
+      if (not(is_success(do_check(dude_obj, STAT_pe, dude_awareness)))) then begin
+         LVar0 := message_str(SCRIPT_VATALERT, 101);
+      end
+      else begin
+         set_local_var(0, 1);
+      end
+   end
+   display_msg(LVar0);
 end
 
 procedure look_at_p_proc
 begin
-	if (map_var(10) == 1) then begin
-		script_overrides;
-		call deallocate;
-	end
+   if (map_var(10) == 1) then begin
+      script_overrides;
+      call deallocate;
+   end
 end
 
 procedure spatial_p_proc
 begin
-	variable LVar0 := 0;
-	if (map_var(10) == 1) then begin
-		call deallocate;
-	end
-	else begin
-		if source_obj == dude_obj then begin
-			if (map_var(7) == 1) then begin
-				call detonate;
-			end
-			else begin
-				if (is_success(do_check(dude_obj, STAT_pe, dude_awareness - 3))) then begin
-					script_overrides;
-					LVar0 := message_str(SCRIPT_VBOOM, 100);
-					if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 10))) then begin
-						LVar0 := LVar0 + message_str(SCRIPT_VBOOM, 101);
-					end
-					set_local_var(0, 1);
-					display_msg(LVar0);
-				end
-			end
-		end
-	end
+   variable LVar0 := 0;
+   if (map_var(10) == 1) then begin
+      call deallocate;
+   end
+   else begin
+      if source_obj == dude_obj then begin
+         if (map_var(7) == 1) then begin
+            call detonate;
+         end
+         else begin
+            if (is_success(do_check(dude_obj, STAT_pe, dude_awareness - 3))) then begin
+               script_overrides;
+               LVar0 := message_str(SCRIPT_VBOOM, 100);
+               if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 10))) then begin
+                  LVar0 := LVar0 + message_str(SCRIPT_VBOOM, 101);
+               end
+               set_local_var(0, 1);
+               display_msg(LVar0);
+            end
+         end
+      end
+   end
 end
 
 procedure use_skill_on_p_proc
 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
-		if (local_var(0)) then begin
-			script_overrides;
-			LVar1 := roll_vs_skill(dude_obj, SKILL_TRAPS, 10);
-			if (is_success(LVar1)) then begin
-				display_msg(message_str(SCRIPT_VBOOM, 102));
-				LVar0 := create_object(PID_PLASMA_GRENADE, 0, 0);
-				add_obj_to_inven(dude_obj, LVar0);
-				call deallocate;
-			end
-			else begin
-				if (is_critical(LVar1)) then begin
-					display_msg(message_str(SCRIPT_VBOOM, 103));
-					call detonate;
-				end
-				else begin
-					display_msg(message_str(SCRIPT_VBOOM, random(104, 106)));
-				end
-			end
-		end
-	end
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   if (action_being_used == SKILL_TRAPS) then begin//-- TRAPS
+      if (local_var(0)) then begin
+         script_overrides;
+         LVar1 := roll_vs_skill(dude_obj, SKILL_TRAPS, 10);
+         if (is_success(LVar1)) then begin
+            display_msg(message_str(SCRIPT_VBOOM, 102));
+            LVar0 := create_object(PID_PLASMA_GRENADE, 0, 0);
+            add_obj_to_inven(dude_obj, LVar0);
+            call deallocate;
+         end
+         else begin
+            if (is_critical(LVar1)) then begin
+               display_msg(message_str(SCRIPT_VBOOM, 103));
+               call detonate;
+            end
+            else begin
+               display_msg(message_str(SCRIPT_VBOOM, random(104, 106)));
+            end
+         end
+      end
+   end
 end
 
 procedure deallocate
 begin
-	move_to(self_obj, 7000, 0);
-	set_map_var(10, 1);
-	removal_ptr := self_obj;
+   move_to(self_obj, 7000, 0);
+   set_map_var(10, 1);
+   removal_ptr := self_obj;
 end
 
 procedure detonate
 begin
-	variable LVar0 := 0;
-	LVar0 := random(10, 20);
-	explosion(dude_tile, dude_elevation, LVar0);
-	call deallocate;
+   variable LVar0 := 0;
+   LVar0 := random(10, 20);
+   explosion(dude_tile, dude_elevation, LVar0);
+   call deallocate;
 end
 
 procedure plasma_death
 begin
-	explosion(dude_tile, dude_elevation, 0);
-	reg_anim_clear(dude_obj);
-	reg_anim_begin();
-	reg_anim_animate(dude_obj, 32, -1);
-	reg_anim_end();
-	game_ui_disable;
-	add_timer_event(dude_obj, game_ticks(5), 8);
+   explosion(dude_tile, dude_elevation, 0);
+   reg_anim_clear(dude_obj);
+   reg_anim_begin();
+   reg_anim_animate(dude_obj, 32, -1);
+   reg_anim_end();
+   game_ui_disable;
+   add_timer_event(dude_obj, game_ticks(5), 8);
 end

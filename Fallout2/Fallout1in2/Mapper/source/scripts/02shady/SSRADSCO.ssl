@@ -1,6 +1,6 @@
 /*
 
-	Shady Sands - Radscorpion in scorpion cave
+   Shady Sands - Radscorpion in scorpion cave
 
 */
 
@@ -35,99 +35,99 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	if Only_Once then begin
-		Only_Once := 0;
-		set_self_ai(AI_RADSCORPION);
-		set_self_team(TEAM_RADSCORPIONS);
-	end
+   if Only_Once then begin
+      Only_Once := 0;
+      set_self_ai(AI_RADSCORPION);
+      set_self_team(TEAM_RADSCORPIONS);
+   end
 end
 
 procedure map_update_p_proc begin
 end
 
 procedure critter_p_proc begin
-	if ((random(1, 10) == 1) and (Start_Moving == 0)) then begin
-		Start_Moving := 1;
-		add_timer_event(self_obj, game_ticks(random(2, 5)), 1);
-	end
+   if ((random(1, 10) == 1) and (Start_Moving == 0)) then begin
+      Start_Moving := 1;
+      add_timer_event(self_obj, game_ticks(random(2, 5)), 1);
+   end
 
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else if (self_can_see_dude or self_can_hear_dude) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (self_perception * 2)) then begin
-		tmp_hostile := 1;
-		attack(dude_obj);
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else if (self_can_see_dude or self_can_hear_dude) then begin// or (tile_distance_objs(self_obj, dude_obj) <= (self_perception * 2)) then begin
+      tmp_hostile := 1;
+      attack(dude_obj);
+   end
 
-	if CUR_MAP_CAVES and (global_var(GVAR_RADSCORPION_SEED) >= 2) then
-		destroy_object(self_obj);
+   if CUR_MAP_CAVES and (global_var(GVAR_RADSCORPION_SEED) >= 2) then
+      destroy_object(self_obj);
 end
 
 procedure destroy_p_proc begin
-	variable tail := 0;
-	tail := create_object(PID_SCORPION_TAIL, 0, 0);
-	add_obj_to_inven(self_obj, tail);
+   variable tail := 0;
+   tail := create_object(PID_SCORPION_TAIL, 0, 0);
+   add_obj_to_inven(self_obj, tail);
 
-	rm_timer_event(self_obj);
-	set_global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT, (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) - 1));//reduce Scorpions Left counter
-	if global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) <= 0 then begin
-		set_global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT, 0);
-		set_global_var(GVAR_RADSCORPIONS_KILLED, 1);
-		set_radscorp_quest_completed;
+   rm_timer_event(self_obj);
+   set_global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT, (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) - 1));//reduce Scorpions Left counter
+   if global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) <= 0 then begin
+      set_global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT, 0);
+      set_global_var(GVAR_RADSCORPIONS_KILLED, 1);
+      set_radscorp_quest_completed;
 
-		if not(global_var(GVAR_ALL_SS_RADSCORPS_KILLED)) then begin
-			ExpReward := EXP_KILLED_SS_RADSCORPION;
+      if not(global_var(GVAR_ALL_SS_RADSCORPS_KILLED)) then begin
+         ExpReward := EXP_KILLED_SS_RADSCORPION;
 
-			inc_shady_rep(REP_BONUS_RADSCORPIONS_GONE);
-			give_exp_points(ExpReward);
-			display_msg(mstr(100) + ExpReward + mstr(101));
+         inc_shady_rep(REP_BONUS_RADSCORPIONS_GONE);
+         give_exp_points(ExpReward);
+         display_msg(mstr(100) + ExpReward + mstr(101));
 
-			set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 6);
-			set_global_var(GVAR_ALL_SS_RADSCORPS_KILLED, 1);
-		end
-	end
-	inc_evil_critter
+         set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 6);
+         set_global_var(GVAR_ALL_SS_RADSCORPS_KILLED, 1);
+      end
+   end
+   inc_evil_critter
 end
 
 procedure timed_event_p_proc begin
-	variable LVar0 := 0;
-	if (Start_Moving == 1) then begin
-		LVar0 := tile_num_in_direction(self_tile, random(0, 5), 3);
-		Start_Moving := 0;
-		reg_anim_clear(self_obj);
-		reg_anim_begin();
-		reg_anim_obj_move_to_tile(self_obj, LVar0, -1);
-		reg_anim_end();
-	end
+   variable LVar0 := 0;
+   if (Start_Moving == 1) then begin
+      LVar0 := tile_num_in_direction(self_tile, random(0, 5), 3);
+      Start_Moving := 0;
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_obj_move_to_tile(self_obj, LVar0, -1);
+      reg_anim_end();
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_STEAL) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_GENCHAT, 211));
-	end
+   if (action_being_used == SKILL_STEAL) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_GENCHAT, 211));
+   end
 end
 
 procedure combat_p_proc begin
-	if (target_obj == dude_obj) then begin
-		if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
-			if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) and not(dude_wearing_power_armor) then begin
+   if (target_obj == dude_obj) then begin
+      if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
+         if (not(is_success(do_check(dude_obj, STAT_lu, -1)))) and not(dude_wearing_power_armor) then begin
             poison(target_obj, random(1, 6));
-			end
-		end
-	end
+         end
+      end
+   end
 end
 
 procedure description_p_proc begin
-	if (dude_awareness) then begin
-		script_overrides;
-		display_msg(mstr(102));
-	end
+   if (dude_awareness) then begin
+      script_overrides;
+      display_msg(mstr(102));
+   end
 end
 
 procedure damage_p_proc begin
-	if obj_in_party(source_obj) then begin
-		tmp_hostile := 1;
-	end
+   if obj_in_party(source_obj) then begin
+      tmp_hostile := 1;
+   end
 end

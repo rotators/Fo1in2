@@ -1,6 +1,6 @@
 /*
 
-	Super Mutant
+   Super Mutant
 
 */
 
@@ -31,80 +31,80 @@ procedure start
 begin
 
 
-	if (not(init_teams)) then begin
-		init_teams := 1;
-		set_self_team(TEAM_NECROPOLIS_MUTANT);
-	end
-	if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-		call timeforwhat;
-	end
-	else begin
-		if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-			tmp_hostile := 1;
-		end
-		else begin
-			if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-				call critter_p_proc;
-			end
-			else begin
-				if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == look_at_proc) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-						display_msg(message_str(SCRIPT_MUTANT3, 100));
-					end
-				end
-			end
-		end
-	end
+   if (not(init_teams)) then begin
+      init_teams := 1;
+      set_self_team(TEAM_NECROPOLIS_MUTANT);
+   end
+   if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
+      call timeforwhat;
+   end
+   else begin
+      if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
+         tmp_hostile := 1;
+      end
+      else begin
+         if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
+            call critter_p_proc;
+         end
+         else begin
+            if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
+               call destroy_p_proc;
+            end
+            else begin
+               if (script_action == look_at_proc) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
+                  display_msg(message_str(SCRIPT_MUTANT3, 100));
+               end
+            end
+         end
+      end
+   end
 end
 
 procedure timeforwhat
 begin
-	if (local_var(0) == 1) then begin
-		self_walk_to_tile(16929);
-		set_local_var(0, 0);
-	end
-	else begin
-		self_walk_to_tile(10917);
-		set_local_var(0, 1);
-		add_timer_event(self_obj, game_ticks(40), 0);
-	end
+   if (local_var(0) == 1) then begin
+      self_walk_to_tile(16929);
+      set_local_var(0, 0);
+   end
+   else begin
+      self_walk_to_tile(10917);
+      set_local_var(0, 1);
+      add_timer_event(self_obj, game_ticks(40), 0);
+   end
 end
 
 procedure supercbt
 begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure superx
 begin
-	call supercbt;
+   call supercbt;
 end
 
 procedure critter_p_proc
 begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if not(necropolis_invaded) then begin
-			if not(is_loading_game) then begin    set_self_invisible;    end
-		end
-		else begin
-			if (local_var(0) != 1) then begin
-				couple_of_minutes := 150 + random(1, 60);
-				add_timer_event(self_obj, game_ticks(couple_of_minutes), 0);
-			end
-		end
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if not(necropolis_invaded) then begin
+         if not(is_loading_game) then begin    set_self_invisible;    end
+      end
+      else begin
+         if (local_var(0) != 1) then begin
+            couple_of_minutes := 150 + random(1, 60);
+            add_timer_event(self_obj, game_ticks(couple_of_minutes), 0);
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	set_global_var(GVAR_SUPER_MUTANTS_KILLED, (global_var(GVAR_SUPER_MUTANTS_KILLED) + 1));
-	rm_timer_event(self_obj);
+   set_global_var(GVAR_SUPER_MUTANTS_KILLED, (global_var(GVAR_SUPER_MUTANTS_KILLED) + 1));
+   rm_timer_event(self_obj);
    inc_evil_critter
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
 end

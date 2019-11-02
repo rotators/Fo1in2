@@ -1,7 +1,7 @@
 /*
 
-	Boneyard - Kids in Blades territory.
-	Will spawn if the player arrives with motorcycle.
+   Boneyard - Kids in Blades territory.
+   Will spawn if the player arrives with motorcycle.
 
 */
 
@@ -38,135 +38,135 @@ variable Start_Moving;
 
 variable In_Timed_Event;
 
-#define LVAR_HomeTile 	(3)
+#define LVAR_HomeTile   (3)
 
-#define EVENT_RUNNING 	(1)
-#define EVENT_FLOAT 		(2)
+#define EVENT_RUNNING   (1)
+#define EVENT_FLOAT     (2)
 
-#define float(x)    						float_msg(self_obj, mstr(x), FLOAT_MSG_YELLOW)
-#define float_scared(x)    			float_msg(self_obj, mstr(x), FLOAT_MSG_RED)
+#define float(x)                    float_msg(self_obj, mstr(x), FLOAT_MSG_YELLOW)
+#define float_scared(x)             float_msg(self_obj, mstr(x), FLOAT_MSG_RED)
 
 #define MAX_TRAVEL              (5)
 
 procedure start begin
-	if Only_Once then begin
-		Only_Once := 0;
+   if Only_Once then begin
+      Only_Once := 0;
 
-		set_self_team(TEAM_LA_BLADES);
-		set_self_ai(AI_LITTLE_KIDS);
+      set_self_team(TEAM_LA_BLADES);
+      set_self_ai(AI_LITTLE_KIDS);
 
-		if (local_var(LVAR_HomeTile) == 0) then begin
-			set_local_var(LVAR_HomeTile, self_tile);
-		end
-		if self_item_count(PID_ROCK) < 8 then begin
-			variable Rocks := 0;
-			Rocks := create_object(PID_ROCK, 0, 0);
-			add_mult_objs_to_inven(self_obj, Rocks, random(8, 14));
-		end
-	end
+      if (local_var(LVAR_HomeTile) == 0) then begin
+         set_local_var(LVAR_HomeTile, self_tile);
+      end
+      if self_item_count(PID_ROCK) < 8 then begin
+         variable Rocks := 0;
+         Rocks := create_object(PID_ROCK, 0, 0);
+         add_mult_objs_to_inven(self_obj, Rocks, random(8, 14));
+      end
+   end
 end
 
 procedure push_p_proc begin
-	Flee_From_Dude
+   Flee_From_Dude
 end
 
 procedure critter_p_proc begin
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
 
-	if (not(combat_is_initialized) and tmp_hostile == 0) then begin
-		if (In_Timed_Event == 0) then begin
-			if ((random(0, 15) == 1) and (Start_Moving == 0)) then begin
-				add_timer_event(self_obj, game_ticks(random(3, 6)), EVENT_RUNNING);
-			end
+   if (not(combat_is_initialized) and tmp_hostile == 0) then begin
+      if (In_Timed_Event == 0) then begin
+         if ((random(0, 15) == 1) and (Start_Moving == 0)) then begin
+            add_timer_event(self_obj, game_ticks(random(3, 6)), EVENT_RUNNING);
+         end
 
-			if (random(0, 50) == 1) then begin
-				In_Timed_Event := 1;
-				add_timer_event(self_obj, game_ticks(random(2, 8)), EVENT_FLOAT);
-			end
-		end
-	end
+         if (random(0, 50) == 1) then begin
+            In_Timed_Event := 1;
+            add_timer_event(self_obj, game_ticks(random(2, 8)), EVENT_FLOAT);
+         end
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
-	// We make you look like a real girl!
+   // We make you look like a real girl!
    if (self_pid == PID_GIRL) then begin
       art_change_fid_num(self_obj, FID_NFCHLD);
    end
 
    if not(get_car_in_cur_map) then
-   	destroy_object(self_obj);
+      destroy_object(self_obj);
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	get_reaction
-	call Node1000;
+   dude_look_at_self;
+   get_reaction
+   call Node1000;
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj) then
-		tmp_hostile := 1;
+   if (source_obj == dude_obj) then
+      tmp_hostile := 1;
 end
 
 procedure destroy_p_proc begin
-	if (source_obj == dude_obj) then
-		set_global_var(GVAR_ENEMY_BLADES, 1);
+   if (source_obj == dude_obj) then
+      set_global_var(GVAR_ENEMY_BLADES, 1);
 
-	rm_timer_event(self_obj);
-	inc_good_critter
-	inc_childkiller
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
+   inc_good_critter
+   inc_childkiller
+   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(message_str(SCRIPT_CHILD, 100));
+   script_overrides;
+   display_msg(message_str(SCRIPT_CHILD, 100));
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	display_msg(message_str(SCRIPT_CHILD, 100));
+   script_overrides;
+   display_msg(message_str(SCRIPT_CHILD, 100));
 end
 
 procedure timed_event_p_proc begin
-	Start_Moving := 0;
-	if (fixed_param == EVENT_RUNNING) then begin
-		if (tile_distance(self_tile, CAR_BONEYARD_BLADES_HEX) < MAX_TRAVEL) then
-			self_run_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, MAX_TRAVEL)));
-		else
-			self_run_to_tile(tile_num_in_direction(CAR_BONEYARD_BLADES_HEX, random(0, 5), random(1, MAX_TRAVEL)));
-	end
-	else if (fixed_param == EVENT_FLOAT) then begin
-		call NodeFloat;
-		In_Timed_Event := 0;
-	end
+   Start_Moving := 0;
+   if (fixed_param == EVENT_RUNNING) then begin
+      if (tile_distance(self_tile, CAR_BONEYARD_BLADES_HEX) < MAX_TRAVEL) then
+         self_run_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, MAX_TRAVEL)));
+      else
+         self_run_to_tile(tile_num_in_direction(CAR_BONEYARD_BLADES_HEX, random(0, 5), random(1, MAX_TRAVEL)));
+   end
+   else if (fixed_param == EVENT_FLOAT) then begin
+      call NodeFloat;
+      In_Timed_Event := 0;
+   end
 end
 
 procedure NodeFloat begin
-	float(random(110, 120));
+   float(random(110, 120));
 end
 
 procedure Node1000 begin
-	if (TOWN_REPUTATION < -2) or bad_critter_reaction then begin
-		Flee_From_Dude
-		float_scared(random(125, 130));
-	end
-	else begin
-		if (random(0, 10) == 1) then begin
-			if dude_is_male then
-				float(150);
-			else
-				float(151);
-		end
-		else begin
-			float(random(152, 167));
-		end
-	end
+   if (TOWN_REPUTATION < -2) or bad_critter_reaction then begin
+      Flee_From_Dude
+      float_scared(random(125, 130));
+   end
+   else begin
+      if (random(0, 10) == 1) then begin
+         if dude_is_male then
+            float(150);
+         else
+            float(151);
+      end
+      else begin
+         float(random(152, 167));
+      end
+   end
 end

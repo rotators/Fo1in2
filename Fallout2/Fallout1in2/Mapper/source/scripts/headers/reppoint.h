@@ -1,5 +1,5 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+   Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
 */
 
 #ifndef REPPOINT_H
@@ -42,15 +42,15 @@
 #define town_rep_is_hated                          (global_var(TOWN_REP_VAR) <= -15)
 #define town_rep_is_vilified                       (global_var(TOWN_REP_VAR) <= -30)
 
-#define REP_BONUS_KILLED_GOOD_CRITTER       (-1)	// Fo2: -10
-#define REP_BONUS_KILLED_CHILD              (-2)	// Fo2: -15
-#define REP_BONUS_KILLED_EVIL_CRITTER       (1)		// Fo2: 5
-#define REP_BONUS_KILLED_NEUTRAL_CRITTER    (0)		// Fo2: 0
+#define REP_BONUS_KILLED_GOOD_CRITTER       (-1)   // Fo2: -10
+#define REP_BONUS_KILLED_CHILD              (-2)   // Fo2: -15
+#define REP_BONUS_KILLED_EVIL_CRITTER       (1)    // Fo2: 5
+#define REP_BONUS_KILLED_NEUTRAL_CRITTER    (0)    // Fo2: 0
 
 // General Town Rep
-#define REP_TOWN_KILL_GOOD                      (-5)	// Fo2: -5
-#define REP_TOWN_KILL_CHILD                     (-8)	// Fo2: -8
-#define REP_TOWN_KILL_EVIL                      (2) 	// Fo2: 2
+#define REP_TOWN_KILL_GOOD                      (-5)  // Fo2: -5
+#define REP_TOWN_KILL_CHILD                     (-8)  // Fo2: -8
+#define REP_TOWN_KILL_EVIL                      (2)   // Fo2: 2
 
 #define inc_general_rep(x)      set_global_var(GVAR_PLAYER_REPUTATION, (global_var(GVAR_PLAYER_REPUTATION) + x));               \
                                 debug_msg("Player gains "+x+" Karma Points.");                                                  \
@@ -468,68 +468,68 @@
 
 
 // Vault 13
-#define REP_BONUS_GAME_STARTED              	(25)
-#define REP_BONUS_RETURNED_WATERCHP            	(100)
-#define inc_v13_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V13, x)
+#define REP_BONUS_GAME_STARTED               (25)
+#define REP_BONUS_RETURNED_WATERCHP             (100)
+#define inc_v13_rep(x)                    inc_global_var_amt(GVAR_TOWN_REP_V13, x)
 
 // Vault 15
-#define inc_v15_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_V15, x)
+#define inc_v15_rep(x)                    inc_global_var_amt(GVAR_TOWN_REP_V15, x)
 
 // Shady Sands
-#define REP_BONUS_INSULTED_ARADESH 				(-20)
-#define REP_BONUS_HELPING_JARVIS            	(3)
-#define REP_BONUS_RADSCORPIONS_GONE            	(15)
-#define REP_BONUS_TANDI_RESCUED	            	(50)
-#define inc_shady_rep(x)   						inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
+#define REP_BONUS_INSULTED_ARADESH           (-20)
+#define REP_BONUS_HELPING_JARVIS             (3)
+#define REP_BONUS_RADSCORPIONS_GONE             (15)
+#define REP_BONUS_TANDI_RESCUED                 (50)
+#define inc_shady_rep(x)                     inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
 // Raiders
-#define REP_BONUS_KILLED_RAIDER 				(-1)
-#define REP_BONUS_GARL_KILLED 					(-10)
-#define inc_raiders_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_RAIDERS, x)
+#define REP_BONUS_KILLED_RAIDER           (-1)
+#define REP_BONUS_GARL_KILLED                (-10)
+#define inc_raiders_rep(x)                   inc_global_var_amt(GVAR_TOWN_REP_RAIDERS, x)
 
 // Junktown
-#define REP_BONUS_KILLED_SKULZ 					(5)
-#define REP_BONUS_KILLED_NEAL 					(-5)
-#define REP_BONUS_KILLED_GIZMO					(10)
-#define REP_BONUS_KILLED_KILLIAN				(-10)
-#define REP_BONUS_FLEEING_JAIL 					(-5)
-#define inc_junktown_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_JUNKTOWN, x)
+#define REP_BONUS_KILLED_SKULZ               (5)
+#define REP_BONUS_KILLED_NEAL                (-5)
+#define REP_BONUS_KILLED_GIZMO               (10)
+#define REP_BONUS_KILLED_KILLIAN          (-10)
+#define REP_BONUS_FLEEING_JAIL               (-5)
+#define inc_junktown_rep(x)                  inc_global_var_amt(GVAR_TOWN_REP_JUNKTOWN, x)
 
 // Hub
-#define REP_BONUS_BOB_JAILED					(5)
-#define REP_BONUS_KILLED_DECKER 				(10)
-#define REP_BONUS_KILLED_HIGHTOWER 				(-10)
-#define REP_BONUS_NECKLACE_STOLEN 				(-3)
-#define REP_BONUS_KIND_TO_HAROLD				(1)
-#define inc_hub_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
+#define REP_BONUS_BOB_JAILED              (5)
+#define REP_BONUS_KILLED_DECKER           (10)
+#define REP_BONUS_KILLED_HIGHTOWER           (-10)
+#define REP_BONUS_NECKLACE_STOLEN            (-3)
+#define REP_BONUS_KIND_TO_HAROLD          (1)
+#define inc_hub_rep(x)                    inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard
 
-#define inc_boneyard_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
+#define inc_boneyard_rep(x)                  inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
 // Necropolis
-#define REP_BONUS_WATERCHIP_TAKEN              	(-10)
-#define REP_BONUS_WATER_PUMP_FIXED             	(25)
-#define REP_BONUS_WATERSHED_MUTANTS_DEAD       	(10)
-#define REP_BONUS_BACKSTABBED_GRIFFITH 			(-3)
-#define inc_necropolis_rep(x)   				inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
+#define REP_BONUS_WATERCHIP_TAKEN               (-10)
+#define REP_BONUS_WATER_PUMP_FIXED              (25)
+#define REP_BONUS_WATERSHED_MUTANTS_DEAD        (10)
+#define REP_BONUS_BACKSTABBED_GRIFFITH          (-3)
+#define inc_necropolis_rep(x)             inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
 
 // Glow
-#define REP_BONUS_DEFEAT_ZAX              		(25)
-#define REP_BONUS_DISABLED_TRAPS            	(1)
-#define inc_glow_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_GLOW, x)
+#define REP_BONUS_DEFEAT_ZAX                    (25)
+#define REP_BONUS_DISABLED_TRAPS             (1)
+#define inc_glow_rep(x)                      inc_global_var_amt(GVAR_TOWN_REP_GLOW, x)
 
 // BOS
-#define REP_BONUS_KICKED_OUT 					(-25)
-#define inc_bos_rep(x)    						inc_global_var_amt(GVAR_TOWN_REP_BOS, x)
+#define REP_BONUS_KICKED_OUT              (-25)
+#define inc_bos_rep(x)                    inc_global_var_amt(GVAR_TOWN_REP_BOS, x)
 
 // Mariposa
-#define REP_BONUS_BLOWN_UP_VATS 				(-100)
-#define inc_mbase_rep(x)    					inc_global_var_amt(GVAR_TOWN_REP_MBASE, x)
+#define REP_BONUS_BLOWN_UP_VATS           (-100)
+#define inc_mbase_rep(x)                  inc_global_var_amt(GVAR_TOWN_REP_MBASE, x)
 
 // Cathedral
-#define REP_BONUS_BLOWN_UP_MASTER 				(-100)
-#define inc_cathedral_rep(x)    				inc_global_var_amt(GVAR_TOWN_REP_CATHEDRAL, x)
+#define REP_BONUS_BLOWN_UP_MASTER            (-100)
+#define inc_cathedral_rep(x)              inc_global_var_amt(GVAR_TOWN_REP_CATHEDRAL, x)
 
 
 /**************************************************************************
@@ -673,8 +673,8 @@
 #define REP_BONUS_VAULT_CONSIDERED_COMPANION_SALE (-3)
 #define REP_BONUS_VAULT_SOLD_COMPANION          (-10)
 #define REP_BONUS_VAULT_WANTED_BETTER_OFFER     (-3)
-#define REP_BONUS_MARTIN_STOP_SINGING		(-1)
-#define REP_BONUS_MARTIN_KEEP_SINGING		(1)
+#define REP_BONUS_MARTIN_STOP_SINGING     (-1)
+#define REP_BONUS_MARTIN_KEEP_SINGING     (1)
 #define REP_BONUS_VAULT_KILL_MONSTERS           (-15)
 #define REP_BONUS_VAULT_RM_VILLAGERS            (-20)
 #define REP_BONUS_SCREW_VILLAGE                 (-20)
@@ -682,7 +682,7 @@
 #define REP_BONUS_REDDING_CURED_JET_NICE        (25)
 #define REP_BONUS_REDDING_CURED_JET_GREED       (15)
 #define REP_BONUS_BUST_MOORE                    (2)
-#define REP_BONUS_THREATENED_SKEEV					(-3)
+#define REP_BONUS_THREATENED_SKEEV              (-3)
 #define REP_BONUS_GAVE_TROY_FORMULA             (10)
 #define REP_BONUS_RECONCILED_VIC_AND_VAL        (3)
 #define REP_BONUS_BLACKMAIL_MOORE               (-3)
@@ -692,16 +692,16 @@
 #define REP_BONUS_PHYLLIS_OUTSIDE               (3)
 
 // Broken Hills Rep bonuses
-#define REP_BONUS_CONSPIRACY_EXPOSED		(20)
-#define REP_BONUS_JAILBREAK_SUCCEEDS		      (-10)
-#define REP_BONUS_PURIFIER_DESTROYED		      (-50)
-#define REP_BONUS_PURIFIER_FIXED		         (20)
+#define REP_BONUS_CONSPIRACY_EXPOSED      (20)
+#define REP_BONUS_JAILBREAK_SUCCEEDS            (-10)
+#define REP_BONUS_PURIFIER_DESTROYED            (-50)
+#define REP_BONUS_PURIFIER_FIXED             (20)
 #define REP_BONUS_GAVE_BROKEN_HILLS_ORE         (15)
-#define REP_BONUS_MOCKED_DAN						(-5)
-#define REP_BONUS_CONSOLED_DAN						(5)
-#define REP_BONUS_REJECTED_DAN						(-10)
-#define REP_BONUS_GOT_ERIC_AC						(3)
-#define REP_BONUS_OPTIMIZED_POWER_GRID				(10)
+#define REP_BONUS_MOCKED_DAN                 (-5)
+#define REP_BONUS_CONSOLED_DAN                  (5)
+#define REP_BONUS_REJECTED_DAN                  (-10)
+#define REP_BONUS_GOT_ERIC_AC                (3)
+#define REP_BONUS_OPTIMIZED_POWER_GRID          (10)
 #define REP_BONUS_OFFERED_SULLIVAN_MONEY         (10)
 #define REP_BONUS_TYPHON_TOLD_TREASURE           (2)
 #define REP_BONUS_DIDNT_KILL_TYPHON              (2)

@@ -1,6 +1,6 @@
 /*
 
-	Military Base Entrance
+   Military Base Entrance
 
 */
 
@@ -26,6 +26,6 @@
 #define MVAR_ignoring_dude        (4) // Mutants ignoring Dude
 #define MVAR_UNKNOWN_VAR_0        (5) // According to F12se this is actually used???
 #define MVAR_UNKNOWN_VAR_1        (6) // According to F12se this is actually used???
-#define MVAR_BOS_FLOAT 			  (7) // Only one soldier will float welcome
+#define MVAR_BOS_FLOAT          (7) // Only one soldier will float welcome
 
 #endif // MAPMBENT_H

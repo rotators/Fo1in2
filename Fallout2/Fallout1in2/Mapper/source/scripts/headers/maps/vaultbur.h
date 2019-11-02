@@ -1,6 +1,6 @@
 /*
 
-	Vault 15 - Burried Vault
+   Vault 15 - Burried Vault
 
 */
 

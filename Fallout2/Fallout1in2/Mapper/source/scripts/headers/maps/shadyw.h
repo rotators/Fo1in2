@@ -1,6 +1,6 @@
 /*
 
-	Shady Sands west side map (Townhall)
+   Shady Sands west side map (Townhall)
 
 */
 

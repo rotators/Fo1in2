@@ -1,6 +1,6 @@
 /*
 
-	Brotherhood - Invasion force for Military Base / Cathedral
+   Brotherhood - Invasion force for Military Base / Cathedral
 
 */
 
@@ -37,7 +37,7 @@ variable Hex_Number;
 */
 
 #define LVAR_BoS_Joins              (0)
-#define LVAR_Add_to_Party 		      (1)
+#define LVAR_Add_to_Party           (1)
 
 #define LVAR_Master_Stop_Following  (4)
 #define LVAR_Vats_Stop_Following    (5)
@@ -49,152 +49,152 @@ variable Hex_Number;
 #define set_mbase_final_map      set_local_var(LVAR_Vats_Stop_Following, 1)
 
 procedure start begin
-	if Only_Once then begin
-		set_self_team(TEAM_PLAYER);
-		set_self_ai(AI_BROTHERHOOD_PALADIN);
-		Only_Once := 0;
-	end
+   if Only_Once then begin
+      set_self_team(TEAM_PLAYER);
+      set_self_ai(AI_BROTHERHOOD_PALADIN);
+      Only_Once := 0;
+   end
 
-	// Unused. Delete in Cathedral.
-	if CUR_MAP_CHILDRN1 then
-	   destroy_object(self_obj);
+   // Unused. Delete in Cathedral.
+   if CUR_MAP_CHILDRN1 then
+      destroy_object(self_obj);
 end
 
 procedure push_p_proc begin
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (global_var(GVAR_BROTHERHOOD_SEND_HELP) != 10) then begin
-		if (dude_is_male) then begin
-			float_msg(self_obj, mstr(random(100, 105)), FLOAT_MSG_WHITE);
-		end
-		else begin
-			float_msg(self_obj, mstr(random(106, 111)), FLOAT_MSG_WHITE);
-		end
-	end
+   dude_look_at_self;
+   if (global_var(GVAR_BROTHERHOOD_SEND_HELP) != 10) then begin
+      if (dude_is_male) then begin
+         float_msg(self_obj, mstr(random(100, 105)), FLOAT_MSG_WHITE);
+      end
+      else begin
+         float_msg(self_obj, mstr(random(106, 111)), FLOAT_MSG_WHITE);
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	// Remove and destroy if on an invalid map.
+   // Remove and destroy if on an invalid map.
    if not(cathedral_valid_map) or not(mbase_valid_map) then begin
-		party_remove(self_obj);
-		destroy_object(self_obj);
-	end
+      party_remove(self_obj);
+      destroy_object(self_obj);
+   end
 
-	// Follow player if on valid map, and, display one-time float message on ground-floor maps.
-	if (bos_invading_cathedral and cathedral_valid_map) or (bos_invading_mbase and mbase_valid_map) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
-		if (tile_distance_objs(dude_obj, self_obj) > 6) then begin
-			self_run_to_tile(tile_num_in_direction(dude_tile, random(0, 5), random(3, 6)));
-		end
-		if (local_var(LVAR_BoS_Joins) == 0) then begin
-			if ((tile_distance_objs(dude_obj, self_obj) < 8) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_MBENT))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
-				set_local_var(LVAR_BoS_Joins, 1);
-				if (map_var(MVAR_BOS_FLOAT) == 0) then begin
-				   set_map_var(MVAR_BOS_FLOAT, 1);
-				   float_msg(self_obj, mstr(112), FLOAT_MSG_WHITE);
-				end
-			end
-		end
-	end
+   // Follow player if on valid map, and, display one-time float message on ground-floor maps.
+   if (bos_invading_cathedral and cathedral_valid_map) or (bos_invading_mbase and mbase_valid_map) then begin //  CHILDREN - ALL LEVELS, MILITARY BASE ENTRANCE, MASTER'S LAIR ALL LEVELS
+      if (tile_distance_objs(dude_obj, self_obj) > 6) then begin
+         self_run_to_tile(tile_num_in_direction(dude_tile, random(0, 5), random(3, 6)));
+      end
+      if (local_var(LVAR_BoS_Joins) == 0) then begin
+         if ((tile_distance_objs(dude_obj, self_obj) < 8) and ((CUR_MAP_CHILDRN1) or (CUR_MAP_MBENT))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+            set_local_var(LVAR_BoS_Joins, 1);
+            if (map_var(MVAR_BOS_FLOAT) == 0) then begin
+               set_map_var(MVAR_BOS_FLOAT, 1);
+               float_msg(self_obj, mstr(112), FLOAT_MSG_WHITE);
+            end
+         end
+      end
+   end
 
-	// Removal processes after coming back to ground floor.
-	if not(combat_is_initialized) then begin
-	//  CHILDREN - ENTRANCE AND GROUND FLOOR
-	/*if ((local_var(LVAR_Master_Stop_Following) == 1) and (CUR_MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin
-		set_local_var(LVAR_Master_Stop_Following, 0);
-		set_local_var(LVAR_Add_to_Party, 2);
-		party_remove(self_obj);
-		set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 10);
-		reg_anim_clear(self_obj);
-		float_msg(self_obj, message_str(SCRIPT_BROINVAD, 115), FLOAT_MSG_WHITE);
-		add_timer_event(self_obj, 10, 1);
-	end*/
-	//  MILITARY BASE - ENTRANCE
-   	if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(LVAR_Add_to_Party) == 1) and (CUR_MAP_MBVATS12 and dude_elevation == 1) and (local_var(LVAR_Vats_Stop_Following) == 1)) then begin
-   		set_local_var(LVAR_Add_to_Party, 2);
-   		party_remove(self_obj);
-   		if (global_var(GVAR_BROTHERHOOD_SEND_HELP) < 10) then begin
-   		   set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 10);
-   		   float_msg(self_obj, mstr(115), FLOAT_MSG_WHITE);
-   		end
-   		reg_anim_clear(self_obj);
-   		add_timer_event(self_obj, 10, 4);
-   	end
-	end
+   // Removal processes after coming back to ground floor.
+   if not(combat_is_initialized) then begin
+   //  CHILDREN - ENTRANCE AND GROUND FLOOR
+   /*if ((local_var(LVAR_Master_Stop_Following) == 1) and (CUR_MAP_CHILDRN1) and (self_elevation == local_var(3)) and not(combat_is_initialized)) then begin
+      set_local_var(LVAR_Master_Stop_Following, 0);
+      set_local_var(LVAR_Add_to_Party, 2);
+      party_remove(self_obj);
+      set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 10);
+      reg_anim_clear(self_obj);
+      float_msg(self_obj, message_str(SCRIPT_BROINVAD, 115), FLOAT_MSG_WHITE);
+      add_timer_event(self_obj, 10, 1);
+   end*/
+   //  MILITARY BASE - ENTRANCE
+      if ((global_var(GVAR_MBASE_DOOR_HOLODISK) == 2) and (local_var(LVAR_Add_to_Party) == 1) and (CUR_MAP_MBVATS12 and dude_elevation == 1) and (local_var(LVAR_Vats_Stop_Following) == 1)) then begin
+         set_local_var(LVAR_Add_to_Party, 2);
+         party_remove(self_obj);
+         if (global_var(GVAR_BROTHERHOOD_SEND_HELP) < 10) then begin
+            set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 10);
+            float_msg(self_obj, mstr(115), FLOAT_MSG_WHITE);
+         end
+         reg_anim_clear(self_obj);
+         add_timer_event(self_obj, 10, 4);
+      end
+   end
 end
 
 procedure map_enter_p_proc begin
-	if not(is_loading_game) then begin
-		// Add to party if first time on valid entrance map.
-		if ((local_var(LVAR_Add_to_Party) == 0) and (/*bos_invading_cathedral and (CUR_MAP_CHILDRN1) or*/ (bos_invading_mbase and (CUR_MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
-			set_local_var(LVAR_Add_to_Party, 1);
-			if not(is_loading_game) then begin
-			   set_self_visible;
-			end
-			party_add(self_obj);
-		end
-		else begin
+   if not(is_loading_game) then begin
+      // Add to party if first time on valid entrance map.
+      if ((local_var(LVAR_Add_to_Party) == 0) and (/*bos_invading_cathedral and (CUR_MAP_CHILDRN1) or*/ (bos_invading_mbase and (CUR_MAP_MBENT)))) then begin //  CHILDREN - ENTRANCE AND GROUND FLOOR, MILITARY BASE ENTRANCE
+         set_local_var(LVAR_Add_to_Party, 1);
+         if not(is_loading_game) then begin
+            set_self_visible;
+         end
+         party_add(self_obj);
+      end
+      else begin
 
-			// Remove and destroy if on valid map but player not supposed to have them.
-			if (global_var(GVAR_BROTHERHOOD_SEND_HELP) >= 10) then begin
-			   if (local_var(LVAR_Add_to_Party) != 0) then begin
-   				party_remove(self_obj);
-   				destroy_object(self_obj);
-   		   end
-			end
-			if /*(not(bos_invading_cathedral) and cathedral_valid_map) or*/ (not(bos_invading_mbase) and mbase_valid_map) then begin
-				if not(is_loading_game) then begin
-				   set_self_invisible;
-				end
-				if (local_var(LVAR_Add_to_Party) != 0) then begin
-					party_remove(self_obj);
-					destroy_object(self_obj);
-				end
-			end
+         // Remove and destroy if on valid map but player not supposed to have them.
+         if (global_var(GVAR_BROTHERHOOD_SEND_HELP) >= 10) then begin
+            if (local_var(LVAR_Add_to_Party) != 0) then begin
+               party_remove(self_obj);
+               destroy_object(self_obj);
+            end
+         end
+         if /*(not(bos_invading_cathedral) and cathedral_valid_map) or*/ (not(bos_invading_mbase) and mbase_valid_map) then begin
+            if not(is_loading_game) then begin
+               set_self_invisible;
+            end
+            if (local_var(LVAR_Add_to_Party) != 0) then begin
+               party_remove(self_obj);
+               destroy_object(self_obj);
+            end
+         end
 
-			// Remove and destroy when triggered to leave.
-			else if ((global_var(GVAR_BROTHERHOOD_SEND_HELP) >= 10) and (local_var(LVAR_Add_to_Party) != 0)) then begin
-				destroy_object(self_obj);
-			end
+         // Remove and destroy when triggered to leave.
+         else if ((global_var(GVAR_BROTHERHOOD_SEND_HELP) >= 10) and (local_var(LVAR_Add_to_Party) != 0)) then begin
+            destroy_object(self_obj);
+         end
 
-		end
+      end
 
-		// Boring float messages inside Master's Vault.
-		if ((global_var(GVAR_BROTHERHOOD_SEND_HELP) == 1) or (global_var(GVAR_BROTHERHOOD_SEND_HELP) == 2)) then begin
-			if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
-				float_msg(self_obj, mstr(113), FLOAT_MSG_WHITE);
-			end
-			if (CUR_MAP_MSTRLR34) then begin //  MASTER'S VAULT -  LEVELS 3 AND 4
-				float_msg(self_obj, mstr(114), FLOAT_MSG_WHITE);
-			end
-		end
+      // Boring float messages inside Master's Vault.
+      if ((global_var(GVAR_BROTHERHOOD_SEND_HELP) == 1) or (global_var(GVAR_BROTHERHOOD_SEND_HELP) == 2)) then begin
+         if (CUR_MAP_MSTRLR12) then begin //  MASTER'S VAULT -  ENTRANCE AND FIRST LEVEL   (LEVELS 1 AND 2)
+            float_msg(self_obj, mstr(113), FLOAT_MSG_WHITE);
+         end
+         if (CUR_MAP_MSTRLR34) then begin //  MASTER'S VAULT -  LEVELS 3 AND 4
+            float_msg(self_obj, mstr(114), FLOAT_MSG_WHITE);
+         end
+      end
 
-	end
+   end
 
-	// Flags to initiate process of them leaving the map.
-	if local_var(LVAR_Master_Stop_Following) == 0 and CUR_MAP_MSTRLR12 then begin
-		set_cathedral_final_map;
-	end
-	// Flag that they've reached Vats, so it'll trigger leaving map when get back to surface.
-	else if local_var(LVAR_Vats_Stop_Following) == 0 and CUR_MAP_MBVATS12 then begin
-	   set_mbase_final_map;
-	end
+   // Flags to initiate process of them leaving the map.
+   if local_var(LVAR_Master_Stop_Following) == 0 and CUR_MAP_MSTRLR12 then begin
+      set_cathedral_final_map;
+   end
+   // Flag that they've reached Vats, so it'll trigger leaving map when get back to surface.
+   else if local_var(LVAR_Vats_Stop_Following) == 0 and CUR_MAP_MBVATS12 then begin
+      set_mbase_final_map;
+   end
 end
 
 procedure timed_event_p_proc begin
    if not(combat_is_initialized) then begin
-   	if not(is_loading_game) then begin
-   		set_self_invisible;
-   		destroy_object(self_obj);
-   	end
+      if not(is_loading_game) then begin
+         set_self_invisible;
+         destroy_object(self_obj);
+      end
 
-   	if (global_var(GVAR_BROTHERHOOD_SEND_HELP) == 10) then begin
-   		set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 11);
-   		gfade_out(1);
-   			float_msg_clear(self_obj);
-   		gfade_in(1);
-   	end
+      if (global_var(GVAR_BROTHERHOOD_SEND_HELP) == 10) then begin
+         set_global_var(GVAR_BROTHERHOOD_SEND_HELP, 11);
+         gfade_out(1);
+            float_msg_clear(self_obj);
+         gfade_in(1);
+      end
 
    end
    else begin
@@ -207,12 +207,12 @@ procedure destroy_p_proc begin
    // Killing more than one is on purpose -> BoS becomes hostile.
    // Killing *all* paladins means there is nobody left to tell a story.
    // TODO: Find a way to improve this, because currently this is just shit.
-	/*if (source_obj == dude_obj) then begin
-	   inc_global_var(GVAR_PALADIN_KILL_COUNT);
-	   if (global_var(GVAR_PALADIN_KILL_COUNT) >= 2) then
-		   set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
-		else if (global_var(GVAR_PALADIN_KILL_COUNT) >= 3) then
-		   set_global_var(GVAR_ENEMY_BROTHERHOOD, 0);
-	end*/
-	inc_good_critter
+   /*if (source_obj == dude_obj) then begin
+      inc_global_var(GVAR_PALADIN_KILL_COUNT);
+      if (global_var(GVAR_PALADIN_KILL_COUNT) >= 2) then
+         set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
+      else if (global_var(GVAR_PALADIN_KILL_COUNT) >= 3) then
+         set_global_var(GVAR_ENEMY_BROTHERHOOD, 0);
+   end*/
+   inc_good_critter
 end

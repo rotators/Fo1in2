@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Generic Skulz ganger
+   Junktown - Generic Skulz ganger
 
 */
 
@@ -43,7 +43,7 @@ variable tmp_hostile;
 variable sleeping_disabled;
 variable waypoint;
 
-#define LVAR_Sleeping 					    (4)
+#define LVAR_Sleeping                   (4)
 #define LVAR_Home_Tile                  (5)
 #define LVAR_Float                      (6)
 
@@ -53,229 +53,229 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_DUDE_ENEMY_SKULZ) == 1) then begin
-		if (self_can_see_dude) then begin
-			attack(dude_obj);
-		end
-	end
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
-		if (CUR_MAP_JUNKCSNO) then begin
-			if ((map_var(MVAR_bar_fight) == 2) and (waypoint == 0)) then begin
-				waypoint := 1;
-				tmp_dest_tile := 26297;
-				sleeping_disabled := 1;
-			end
-			else if (quest_join_skullz_active and (waypoint == 0)) then begin
-				waypoint := 1;
-				sleeping_disabled := 1;
-				add_timer_event(self_obj, game_ticks(8), 3);
-			end
+   if (global_var(GVAR_DUDE_ENEMY_SKULZ) == 1) then begin
+      if (self_can_see_dude) then begin
+         attack(dude_obj);
+      end
+   end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (CUR_MAP_JUNKCSNO) then begin
+         if ((map_var(MVAR_bar_fight) == 2) and (waypoint == 0)) then begin
+            waypoint := 1;
+            tmp_dest_tile := 26297;
+            sleeping_disabled := 1;
+         end
+         else if (quest_join_skullz_active and (waypoint == 0)) then begin
+            waypoint := 1;
+            sleeping_disabled := 1;
+            add_timer_event(self_obj, game_ticks(8), 3);
+         end
 
-			if (waypoint != 0) then begin
-				if (tile_distance(self_tile, tmp_dest_tile) > 3) then begin
-					self_walk_to_tile(tmp_dest_tile);
-				end
-				else if (waypoint == 1) then begin
-					if (map_var(MVAR_bar_fight) == 0) then begin
-						tmp_dest_tile := 33519;
-					end
-					else begin
-						tmp_dest_tile := 20076;
-						waypoint := 2;
-					end
-				end
-			end
+         if (waypoint != 0) then begin
+            if (tile_distance(self_tile, tmp_dest_tile) > 3) then begin
+               self_walk_to_tile(tmp_dest_tile);
+            end
+            else if (waypoint == 1) then begin
+               if (map_var(MVAR_bar_fight) == 0) then begin
+                  tmp_dest_tile := 33519;
+               end
+               else begin
+                  tmp_dest_tile := 20076;
+                  waypoint := 2;
+               end
+            end
+         end
 
-			if (sleeping_disabled == 0) then begin
-				sleeping
-			end
-		end
-		else if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
-			if ((global_var(GVAR_BUST_SKULZ) != 2) and (sleeping_disabled == 0)) then begin
-				sleeping
-			end
-		end
-	end
+         if (sleeping_disabled == 0) then begin
+            sleeping
+         end
+      end
+      else if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+         if ((global_var(GVAR_BUST_SKULZ) != 2) and (sleeping_disabled == 0)) then begin
+            sleeping
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	if (home_tile == SKULLZ_TARGET_CRITTER_HEX) then begin
-		Skul_target := 0;
-	end
+   if (home_tile == SKULLZ_TARGET_CRITTER_HEX) then begin
+      Skul_target := 0;
+   end
 
-	if (CUR_MAP_JUNKCSNO) and (map_var(MVAR_bar_fight) == 1) then begin
-		set_map_var(MVAR_Skulz_left, (map_var(MVAR_Skulz_left) - 1));
-	end
-	if (source_obj == dude_obj)  then begin
-		set_global_var(GVAR_DUDE_ENEMY_SKULZ, 1);
-	end
-	rm_timer_event(self_obj);
-	inc_evil_critter
+   if (CUR_MAP_JUNKCSNO) and (map_var(MVAR_bar_fight) == 1) then begin
+      set_map_var(MVAR_Skulz_left, (map_var(MVAR_Skulz_left) - 1));
+   end
+   if (source_obj == dude_obj)  then begin
+      set_global_var(GVAR_DUDE_ENEMY_SKULZ, 1);
+   end
+   rm_timer_event(self_obj);
+   inc_evil_critter
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure map_enter_p_proc begin
-	if not(local_var(LVAR_Home_Tile)) then begin
-		set_local_var(LVAR_Home_Tile, self_tile);
-	end
-	home_tile := local_var(LVAR_Home_Tile);
+   if not(local_var(LVAR_Home_Tile)) then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+   end
+   home_tile := local_var(LVAR_Home_Tile);
 
-	set_self_team(TEAM_JUNKTOWN_SKULZ);
-	set_self_ai(AI_SKULZ);
+   set_self_team(TEAM_JUNKTOWN_SKULZ);
+   set_self_ai(AI_SKULZ);
 
-	if (CUR_MAP_JUNKENT) then begin
-		if (global_var(GVAR_BUST_SKULZ) != 2) then begin
-			if not(is_loading_game) then begin
-			   set_self_invisible;
-			end
-		end
-		else begin
-			if not(junktown_invaded) then begin
-				if not(is_loading_game) then begin
-				   set_self_visible;
-				end
-			end
-			else begin
-				kill_critter(self_obj, ANIM_stand);
-			end
-		end
-	end
+   if (CUR_MAP_JUNKENT) then begin
+      if (global_var(GVAR_BUST_SKULZ) != 2) then begin
+         if not(is_loading_game) then begin
+            set_self_invisible;
+         end
+      end
+      else begin
+         if not(junktown_invaded) then begin
+            if not(is_loading_game) then begin
+               set_self_visible;
+            end
+         end
+         else begin
+            kill_critter(self_obj, ANIM_stand);
+         end
+      end
+   end
 
-	if (cur_map_index != MAP_JUNKCSNO) then begin
-		if (CUR_MAP_JUNKENT) then begin
-			if (global_var(GVAR_BUST_SKULZ) == 2) then begin
-				add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
-			end
-		end
-		else if (CUR_MAP_JUNKKILL) then begin
-			add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
-		end
-	end
-	else begin
-		if (quest_join_skullz_active and (map_var(MVAR_bar_fight) == 0)) then begin
-			destroy_object(self_obj);
-		end
-	end
+   if (cur_map_index != MAP_JUNKCSNO) then begin
+      if (CUR_MAP_JUNKENT) then begin
+         if (global_var(GVAR_BUST_SKULZ) == 2) then begin
+            add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
+         end
+      end
+      else if (CUR_MAP_JUNKKILL) then begin
+         add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
+      end
+   end
+   else begin
+      if (quest_join_skullz_active and (map_var(MVAR_bar_fight) == 0)) then begin
+         destroy_object(self_obj);
+      end
+   end
 
-	if (global_var(GVAR_BUST_SKULZ) == 2) then begin
-		if (CUR_MAP_JUNKENT) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end
-		end
-		else begin
-			destroy_object(self_obj);
-		end
-	end
+   if (global_var(GVAR_BUST_SKULZ) == 2) then begin
+      if (CUR_MAP_JUNKENT) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end
+      end
+      else begin
+         destroy_object(self_obj);
+      end
+   end
 
-	call set_sleep_tile;
+   call set_sleep_tile;
 
-	if (home_tile == SKULLZ_TARGET_CRITTER_HEX) and (CUR_MAP_JUNKCSNO) then begin
-		Skul_target := self_obj;
-	end
+   if (home_tile == SKULLZ_TARGET_CRITTER_HEX) and (CUR_MAP_JUNKCSNO) then begin
+      Skul_target := self_obj;
+   end
 end
 
 procedure map_exit_p_proc begin
-	if (CUR_MAP_JUNKCSNO) then begin
-		if (quest_join_skullz_active and (map_var(MVAR_bar_fight) == 0)) then begin
-		   destroy_object(tile_contains_pid_obj(SKULLZ_TARGET_CRITTER_HEX, 0, PID_STRANGER)); // Remove the dead body!
-			destroy_object(self_obj);
-		end
-	end
+   if (CUR_MAP_JUNKCSNO) then begin
+      if (quest_join_skullz_active and (map_var(MVAR_bar_fight) == 0)) then begin
+         destroy_object(tile_contains_pid_obj(SKULLZ_TARGET_CRITTER_HEX, 0, PID_STRANGER)); // Remove the dead body!
+         destroy_object(self_obj);
+      end
+   end
 end
 
 procedure pickup_p_proc begin
-	float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
-	tmp_hostile := 1;
+   float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	dude_look_at_self;
-	if (CUR_MAP_JUNKENT) then begin
-		set_local_var(LVAR_Float, 104);
-	end
-	else begin
-		if (CUR_MAP_JUNKCSNO) and (map_var(MVAR_bar_fight) == 2) then begin
-			set_local_var(LVAR_Float, 112);
-		end
-		else begin
-			LVar1 := random(101, 105);
-			LVar1 := random(101, 105);
-			LVar1 := random(101, 105);
-			set_local_var(LVAR_Float, LVar1);
-		end
-	end
-	LVar0 := mstr(local_var(LVAR_Float));
-	if (local_var(4) == 1) then begin
-		LVar0 := mstr(106);
-	end
-	float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   dude_look_at_self;
+   if (CUR_MAP_JUNKENT) then begin
+      set_local_var(LVAR_Float, 104);
+   end
+   else begin
+      if (CUR_MAP_JUNKCSNO) and (map_var(MVAR_bar_fight) == 2) then begin
+         set_local_var(LVAR_Float, 112);
+      end
+      else begin
+         LVar1 := random(101, 105);
+         LVar1 := random(101, 105);
+         LVar1 := random(101, 105);
+         set_local_var(LVAR_Float, LVar1);
+      end
+   end
+   LVar0 := mstr(local_var(LVAR_Float));
+   if (local_var(4) == 1) then begin
+      LVar0 := mstr(106);
+   end
+   float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
-		if ((local_var(4) == 0) and (combat_is_initialized == 0)) then begin
-			if (random(0, 1)) then begin
-				float_msg(self_obj, mstr(random(107, 112)), FLOAT_MSG_NORMAL);
-			end
-			else begin
-				self_walk_to_tile(tile_num_in_direction(local_var(LVAR_Home_Tile), random(0, 3), random(0, 5)));
-			end
-		end
-		add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
-	end
-	else if ((fixed_param == 2) and (Trish_ptr != 0) and (Neal_ptr != 0)) then begin
-		float_msg(self_obj, message_str(SCRIPT_SHARK, 102), FLOAT_MSG_RED);
-		rm_timer_event(Trish_ptr);
-		rm_timer_event(Neal_ptr);
-		reg_anim_clear(self_obj);
-		reg_anim_begin();
-   		reg_anim_obj_move_to_obj(self_obj, Trish_ptr, -1);
-   		reg_anim_animate(self_obj, 16, -1);
-   		reg_anim_animate(Trish_ptr, 20, 4);
-   		reg_anim_animate(Trish_ptr, 48, -1);
-   		reg_anim_animate(Trish_ptr, 37, -1);
-   		reg_anim_obj_run_to_tile(Trish_ptr, 19889, -1);
-		reg_anim_end();
-		add_timer_event(Neal_ptr, game_ticks(3), 1);
-	end
-	else if (fixed_param == 3) then begin
-		tmp_dest_tile := 26297;
-		sleeping_disabled := 1;
-	end
+   if (fixed_param == 1) then begin
+      if ((local_var(4) == 0) and (combat_is_initialized == 0)) then begin
+         if (random(0, 1)) then begin
+            float_msg(self_obj, mstr(random(107, 112)), FLOAT_MSG_NORMAL);
+         end
+         else begin
+            self_walk_to_tile(tile_num_in_direction(local_var(LVAR_Home_Tile), random(0, 3), random(0, 5)));
+         end
+      end
+      add_timer_event(self_obj, game_ticks(random(30, 60)), 1);
+   end
+   else if ((fixed_param == 2) and (Trish_ptr != 0) and (Neal_ptr != 0)) then begin
+      float_msg(self_obj, message_str(SCRIPT_SHARK, 102), FLOAT_MSG_RED);
+      rm_timer_event(Trish_ptr);
+      rm_timer_event(Neal_ptr);
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+         reg_anim_obj_move_to_obj(self_obj, Trish_ptr, -1);
+         reg_anim_animate(self_obj, 16, -1);
+         reg_anim_animate(Trish_ptr, 20, 4);
+         reg_anim_animate(Trish_ptr, 48, -1);
+         reg_anim_animate(Trish_ptr, 37, -1);
+         reg_anim_obj_run_to_tile(Trish_ptr, 19889, -1);
+      reg_anim_end();
+      add_timer_event(Neal_ptr, game_ticks(3), 1);
+   end
+   else if (fixed_param == 3) then begin
+      tmp_dest_tile := 26297;
+      sleeping_disabled := 1;
+   end
 end
 
 procedure set_sleep_tile begin
-	if (CUR_MAP_JUNKKILL) then begin
-		if (home_tile == 13502) then begin
-			sleep_tile := 13093;
-		end
-		else if (home_tile == 13516) then begin
-			sleep_tile := 13719;
-		end
-		else if (home_tile == 13717) then begin
-			sleep_tile := 13721;
-		end
-		sleep_time := random(2200, 2215);
-		wake_time := random(800, 815);
-	end
-	else if (CUR_MAP_JUNKCSNO) then begin
-		sleep_tile := 7000;
-		sleep_time := 300;
-		wake_time := 1600;
-		night_person := 1;
-	end
-	else if (CUR_MAP_JUNKENT) then begin
-		sleep_tile := home_tile;
-		sleep_time := 2200;
-		wake_time := 1000;
-	end
+   if (CUR_MAP_JUNKKILL) then begin
+      if (home_tile == 13502) then begin
+         sleep_tile := 13093;
+      end
+      else if (home_tile == 13516) then begin
+         sleep_tile := 13719;
+      end
+      else if (home_tile == 13717) then begin
+         sleep_tile := 13721;
+      end
+      sleep_time := random(2200, 2215);
+      wake_time := random(800, 815);
+   end
+   else if (CUR_MAP_JUNKCSNO) then begin
+      sleep_tile := 7000;
+      sleep_time := 300;
+      wake_time := 1600;
+      night_person := 1;
+   end
+   else if (CUR_MAP_JUNKENT) then begin
+      sleep_tile := home_tile;
+      sleep_time := 2200;
+      wake_time := 1000;
+   end
 end

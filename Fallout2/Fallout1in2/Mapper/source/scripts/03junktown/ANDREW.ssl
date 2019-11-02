@@ -1,6 +1,6 @@
 /*
 
-	Junktown - Andrew the jail guard
+   Junktown - Andrew the jail guard
 
 */
 
@@ -46,160 +46,160 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-	if junktown_invaded then begin
-		kill_critter(self_obj, ANIM_fall_front_sf);
-	end
-	set_self_team(TEAM_JUNKTOWN_GUARD);
-	set_self_ai(AI_GUARD_HUMOROUS);
-	if (local_var(LVAR_Home_Tile) == 0) then begin
-		set_local_var(LVAR_Home_Tile, self_tile);
-	end
+   if junktown_invaded then begin
+      kill_critter(self_obj, ANIM_fall_front_sf);
+   end
+   set_self_team(TEAM_JUNKTOWN_GUARD);
+   set_self_ai(AI_GUARD_HUMOROUS);
+   if (local_var(LVAR_Home_Tile) == 0) then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		round_counter := round_counter + 1;
-	end
-	if (round_counter > 3) then begin
-		if (global_var(GVAR_ENEMY_JUNKTOWN) == 0) then begin
-			set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-			set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		end
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      round_counter := round_counter + 1;
+   end
+   if (round_counter > 3) then begin
+      if (global_var(GVAR_ENEMY_JUNKTOWN) == 0) then begin
+         set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+         set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
-		if (self_can_see_dude) then begin
-			attack(dude_obj);
-		end
-	end
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	else begin
+   if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
+      if (self_can_see_dude) then begin
+         attack(dude_obj);
+      end
+   end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
 
-		if ((map_var(MVAR_dude_in_jail) == 1) and ((GAME_TIME_IN_DAYS) > map_var(5))) then begin
-			if (jail_door_ptr != 0) then begin
-				obj_unlock(jail_door_ptr);
-				use_obj(jail_door_ptr);
-				moving_flag := 0;
-				rm_timer_event(self_obj);
-				add_timer_event(self_obj, game_ticks(5), 1);
-			end
-			set_map_var(MVAR_dude_in_jail, 0);
-			float_msg(self_obj, mstr(101), FLOAT_MSG_GREEN);
-		end
-		else if (map_var(MVAR_dude_picked_jail_door) == 1) then begin
-			set_map_var(MVAR_dude_picked_jail_door, map_var(MVAR_dude_picked_jail_door) + 1);
-			float_msg(self_obj, mstr(116), FLOAT_MSG_RED);
-		end
-		else if (map_var(MVAR_dude_picked_jail_door) == 3) then begin
-			if (jail_door_ptr != 0) then begin
-				obj_unlock(jail_door_ptr);
-			end
-			tmp_hostile := 1;
-		end
-		else begin
-			if (moving_flag == 1) then begin
-				if (self_tile != local_var(LVAR_Home_Tile)) then begin
-					self_walk_to_tile(local_var(LVAR_Home_Tile));
-				end
-				else if (self_cur_rot != 3) and not(combat_is_initialized) then begin
-				   self_rotate(3);
-				end
-			end
-			if ((global_var(GVAR_ENEMY_JUNKTOWN) == 1) and self_can_see_dude) then begin
-				dialogue_system_enter;
-			end
-		end
+      if ((map_var(MVAR_dude_in_jail) == 1) and ((GAME_TIME_IN_DAYS) > map_var(5))) then begin
+         if (jail_door_ptr != 0) then begin
+            obj_unlock(jail_door_ptr);
+            use_obj(jail_door_ptr);
+            moving_flag := 0;
+            rm_timer_event(self_obj);
+            add_timer_event(self_obj, game_ticks(5), 1);
+         end
+         set_map_var(MVAR_dude_in_jail, 0);
+         float_msg(self_obj, mstr(101), FLOAT_MSG_GREEN);
+      end
+      else if (map_var(MVAR_dude_picked_jail_door) == 1) then begin
+         set_map_var(MVAR_dude_picked_jail_door, map_var(MVAR_dude_picked_jail_door) + 1);
+         float_msg(self_obj, mstr(116), FLOAT_MSG_RED);
+      end
+      else if (map_var(MVAR_dude_picked_jail_door) == 3) then begin
+         if (jail_door_ptr != 0) then begin
+            obj_unlock(jail_door_ptr);
+         end
+         tmp_hostile := 1;
+      end
+      else begin
+         if (moving_flag == 1) then begin
+            if (self_tile != local_var(LVAR_Home_Tile)) then begin
+               self_walk_to_tile(local_var(LVAR_Home_Tile));
+            end
+            else if (self_cur_rot != 3) and not(combat_is_initialized) then begin
+               self_rotate(3);
+            end
+         end
+         if ((global_var(GVAR_ENEMY_JUNKTOWN) == 1) and self_can_see_dude) then begin
+            dialogue_system_enter;
+         end
+      end
 
-	end
+   end
 end
 
 procedure look_at_p_proc begin
-	if (local_var(0) == 1) then begin
-		script_overrides;
-		display_msg(mstr(100));
-	end
+   if (local_var(0) == 1) then begin
+      script_overrides;
+      display_msg(mstr(100));
+   end
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
-		float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
-		tmp_hostile := 1;
-	end
-	else begin
-		start_dialog_at_node(Andrew01);
-	end
+   dude_look_at_self;
+   if (global_var(GVAR_ENEMY_JUNKTOWN) == 1) then begin
+      float_msg(self_obj, mstr(102), FLOAT_MSG_RED);
+      tmp_hostile := 1;
+   end
+   else begin
+      start_dialog_at_node(Andrew01);
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
-		obj_close(jail_door_ptr);
-		rm_timer_event(self_obj);
-		add_timer_event(self_obj, game_ticks(10), 2);
-	end
-	else if (fixed_param == 2) then begin
-		moving_flag := 1;
-	end
+   if (fixed_param == 1) then begin
+      obj_close(jail_door_ptr);
+      rm_timer_event(self_obj);
+      add_timer_event(self_obj, game_ticks(10), 2);
+   end
+   else if (fixed_param == 2) then begin
+      moving_flag := 1;
+   end
 end
 
 procedure damage_p_proc begin
-	if (source_obj == dude_obj)  then begin
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
+   if (source_obj == dude_obj)  then begin
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-	end
-	inc_good_critter
+   rm_timer_event(self_obj);
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
+   end
+   inc_good_critter
 end
 
 procedure Andrew01 begin
-	Reply(103);
-	giq_option(4, NAME, 104, Andrew02, NEUTRAL_REACTION);
-	giq_option(4, NAME, 105, Andrew03, NEUTRAL_REACTION);
-	giq_option(4, NAME, 106, Andrew04, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 113, Andrew06, NEUTRAL_REACTION);
+   Reply(103);
+   giq_option(4, NAME, 104, Andrew02, NEUTRAL_REACTION);
+   giq_option(4, NAME, 105, Andrew03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 106, Andrew04, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 113, Andrew06, NEUTRAL_REACTION);
 end
 
 procedure Andrew02 begin
-	set_local_var(0, 1);
-	Reply(107);
-	giq_option(4, NAME, 105, Andrew03, NEUTRAL_REACTION);
-	giq_option(4, NAME, 106, Andrew04, NEUTRAL_REACTION);
+   set_local_var(0, 1);
+   Reply(107);
+   giq_option(4, NAME, 105, Andrew03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 106, Andrew04, NEUTRAL_REACTION);
 end
 
 procedure Andrew03 begin
-	Reply(108);
-	giq_option(6, NAME, 109, Andrew05, NEUTRAL_REACTION);
-	giq_option(4, NAME, 110, Andrew04, NEUTRAL_REACTION);
+   Reply(108);
+   giq_option(6, NAME, 109, Andrew05, NEUTRAL_REACTION);
+   giq_option(4, NAME, 110, Andrew04, NEUTRAL_REACTION);
 end
 
 procedure Andrew04 begin
-	NMessage(111);
+   NMessage(111);
 end
 
 procedure Andrew05 begin
-	Reply(112);
-	giq_option(4, NAME, 110, Andrew04, NEUTRAL_REACTION);
+   Reply(112);
+   giq_option(4, NAME, 110, Andrew04, NEUTRAL_REACTION);
 end
 
 procedure Andrew06 begin
-	if (dude_is_male) then begin
-		NMessage(114);
-	end
-	else begin
-		NMessage(115);
-	end
+   if (dude_is_male) then begin
+      NMessage(114);
+   end
+   else begin
+      NMessage(115);
+   end
 end

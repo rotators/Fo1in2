@@ -139,7 +139,7 @@
 #define SCRIPT_VALTMON   (132)  //  ValtMon.int     ; Vault 13 Monitor in the Meeting Room
 #define SCRIPT_CORECOMP  (133)  //  CoreComp.int    ; Central Core computers in Vault 13                                          
 #define SCRIPT_LIBCOMP   (134)  //  LibComp.int     ; Library computer in Vault 13
-#define SCRIPT_KALNOR	 (135)  //  Assblow.int     ; Guard in Junktown, real name is now Kalnor
+#define SCRIPT_KALNOR    (135)  //  Assblow.int     ; Guard in Junktown, real name is now Kalnor
 #define SCRIPT_GENRAIDR  (136)  //  GenRaidr.int    ; Generic Raiders                                                             
 #define SCRIPT_GARL      (137)  //  Garl.int        ; Garl from the Raiders' camp
 #define SCRIPT_RAIDPRIS  (138)  //  RaidPris.int    ; Raider prisoner in the camp                                                 
@@ -636,7 +636,7 @@
 #define SCRIPT_HDTUP2DN  (629)  //  HDtUp2Dn.int    ; Hub, Downtown, ladder going up to down                                      
 #define SCRIPT_HDTVAULT  (630)  //  HDtVault.int    ; Vault to FLC in the Hub                                           
 #define SCRIPT_MRHANDYC  (631)  //  MrHandyC.int    ; Mr. Handy for cleaning up the Vats.                                         
-#define SCRIPT_DEPRECATED_1 	(632) //SCRIPT_STUDENT   (632)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_DEPRECATED_1   (632) //SCRIPT_STUDENT   (632)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_THOMAS    (633)  //  Thomas.int      ; trainer in the Brotherhood
 #define SCRIPT_MODREACT  (634)  //  ModReact.int    ; DO NOT ATTACH TO ANYTHING. JUST IN TO MAKE THINGS COMPILE                   
 #define SCRIPT_ADY2FARM  (635)  //  Ady2Farm.int    ; Moves dude from Adytum to hydroponic farms                                  
@@ -705,7 +705,7 @@
 #define SCRIPT_MERCH1    (698)  //  Merch1.int      ; Merchant from the Hub
 #define SCRIPT_LANCE     (699)  //  Lance.int       ; Shady Sands guard on long patrol.
 #define SCRIPT_LONERAID  (700)  //  LoneRaid.int    ; Lone Raider trying to get to camp.                                          
-#define SCRIPT_JGIZSIGN  (701)  //  JGIZSIGN.int 	; Junktown, Gizmo sign                                             
+#define SCRIPT_JGIZSIGN  (701)  //  JGIZSIGN.int   ; Junktown, Gizmo sign                                             
 #define SCRIPT_PALSCOUT  (702)  //  PalScout.int    ; Random Paladin scouts.                                                      
 #define SCRIPT_TRENT     (703)  //  Trent.int       ; Survivor of a Deathclaw attack.
 #define SCRIPT_HDEALER   (704)  //  HDealer.int     ; dealer in the falcon for craps
@@ -724,7 +724,7 @@
 #define SCRIPT_GENSCRIB  (717)  //  Genscrib.int    ; Scribe in Brotherhood                                                       
 #define SCRIPT_GENKNIGH  (718)  //  Genknigh.int    ; Knight in Brotherhood                                                       
 #define SCRIPT_GENPALAD  (719)  //  Genpalad.int    ; Paladin in Brotherhood                                                      
-#define SCRIPT_LAKIDS    (720)  //	LAKIDS.int 		; Children swarming the motorcycle in Blades territory
+#define SCRIPT_LAKIDS    (720)  //  LAKIDS.int     ; Children swarming the motorcycle in Blades territory
 #define SCRIPT_RIPUP2DN  (721)  //  RipUp2Dn.int    ; Stairs up from the Rippers' cellar.                                         
 #define SCRIPT_RIPDN2UP  (722)  //  RipDn2Up.int    ; Stairs down from the Rippers' hideout.                                      
 #define SCRIPT_RD1SCRB1  (723)  //  Rd1Scrb1.int    ; Random Scribe from the Brotherhood                                          
@@ -747,7 +747,7 @@
 #define SCRIPT_REVULSE   (740)  //  Revulse.int     ; Corridor of revulsion
 #define SCRIPT_FIELDGEN  (741)  //  fieldgen.int    ; field generator in the military base                                        
 #define SCRIPT_ELEVCON   (742)  //  ElevCon.int     ; Elevator Control for the Force Fields to the Nuke Bomb
-#define SCRIPT_GENZOMBI  (743)  //  genzombi.int	; Generic "Zombie Guard" in worldmap encounters
+#define SCRIPT_GENZOMBI  (743)  //  genzombi.int   ; Generic "Zombie Guard" in worldmap encounters
 #define SCRIPT_BROHIST   (744)  //  BroHist.int     ; Holodisk for the Brotherhood history
 #define SCRIPT_SOPDISK   (745)  //  SopDisk.int     ; Sophia's History disk of the Brotherhood
 #define SCRIPT_MAXDISK   (746)  //  MaxDisk.int     ; Maxson's Version of the history of the Brotherhood
@@ -949,7 +949,7 @@
 #define SCRIPT_HIGHELD   (942)  //  HighEld.int     ; Elders for the Brotherhood
 #define SCRIPT_MOLERAT2  (943)  //  MoleRat2.int    ; Another stupid molerat                                                      
 #define SCRIPT_BROELD    (944)  //  BroEld.int      ; Brotherhood elder (generic)
-#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int 	; Fuel Cell Controller stash                                     
+#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int   ; Fuel Cell Controller stash                                     
 #define SCRIPT_ICECHEST  (946)  //  IceChest.int    ; box where Garl can place player's stuff                           
 #define SCRIPT_LTCODES   (947)  //  LtCodes.int     ; Codes the Lt is holding
 #define SCRIPT_PRISFELD  (948)  //  PrisFeld.int    ; prisoner force field in the master's lair                         
@@ -987,8 +987,8 @@
 //Lexx
 #define SCRIPT_CHEATBOX  (975)
 #define SCRIPT_NIF2HINT  (976)  // niF2Hint.int    ; New Reno Fallout 2 Hintbook
-#define SCRIPT_RNDENC 	 (977)	// Random encounter map selector script
-#define SCRIPT_MOTRCYCL  (978)	// Drivable vehicle 
+#define SCRIPT_RNDENC    (977)   // Random encounter map selector script
+#define SCRIPT_MOTRCYCL  (978)   // Drivable vehicle 
 #define SCRIPT_MOTRTRNK  (979)  // Motorcycle trunk
 #define SCRIPT_ZIBRAPOO  (980)  // ziBraPoo.int    ; Generic BRAHMIN SHIT!!! YES YES YES
 

@@ -536,7 +536,7 @@ variable PartyHealingItem;
                                             end                                         \
                                             if not(Katja_In_Party) then begin           \
                                                 kill_critter_type(PID_KATJA, 1);        \
-                                            end											\
+                                            end                               \
                                             if not(MrHandyC_In_Party) then begin        \
                                                 kill_critter_type(PID_MRHANDYC, 1);     \
                                             end

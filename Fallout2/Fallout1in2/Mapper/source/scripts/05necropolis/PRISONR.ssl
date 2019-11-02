@@ -1,6 +1,6 @@
 /*
 
-	Necropolis - Watershed prisoner
+   Necropolis - Watershed prisoner
 
 */
 
@@ -43,221 +43,221 @@ variable tmp_hostile;
 variable init_teams := 0;
 variable my_hex;
 
-#define float(x)    						float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
+#define float(x)                    float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
 
-#define wp1 		(12887)
-#define wp2 		(9889)
-#define wp3 		(10111)
-#define wp4 		(11519)
-#define wp5 		(11324)
-#define wp6 		(6524)
-#define wp7 		(924)
+#define wp1       (12887)
+#define wp2       (9889)
+#define wp3       (10111)
+#define wp4       (11519)
+#define wp5       (11324)
+#define wp6       (6524)
+#define wp7       (924)
 
-#define LVAR_StartMoving 		(4)
-#define LVAR_MoveTo 				(5)
-#define LVAR_MoveCycle 			(6)
+#define LVAR_StartMoving      (4)
+#define LVAR_MoveTo           (5)
+#define LVAR_MoveCycle        (6)
 
 procedure start begin
-	if (not(init_teams)) then begin
-		init_teams := 1;
-		if (local_var(LVAR_MoveCycle) > 9) then begin
-			if not(is_loading_game) then begin
-				set_self_invisible;
-			end
-		end
-		set_self_team(TEAM_NECROPOLIS_GANGER);
-		set_self_ai(AI_GHOUL_COWARD);
-	end
+   if (not(init_teams)) then begin
+      init_teams := 1;
+      if (local_var(LVAR_MoveCycle) > 9) then begin
+         if not(is_loading_game) then begin
+            set_self_invisible;
+         end
+      end
+      set_self_team(TEAM_NECROPOLIS_GANGER);
+      set_self_ai(AI_GHOUL_COWARD);
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (local_var(LVAR_MoveCycle) < 10) then begin
-		call timeforwhat;
-	end
+   if (local_var(LVAR_MoveCycle) < 10) then begin
+      call timeforwhat;
+   end
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure destroy_p_proc begin
-	rm_timer_event(self_obj);
+   rm_timer_event(self_obj);
 
-	inc_inv_good_crit
-	rm_timer_event(self_obj);
+   inc_inv_good_crit
+   rm_timer_event(self_obj);
 end
 
 procedure timeforwhat begin
-	if (fixed_param == 1) then begin
-		tmp_hostile := 1;
-	end
+   if (fixed_param == 1) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
+   dude_look_at_self;
 
-	if (local_var(LVAR_StartMoving) == 1) then begin
-		set_local_var(LVAR_StartMoving, 1);
-		float(126);
-	end
-	else begin
-		start_gdialog(89, self_obj, 4, -1, -1);
-		gsay_start;
-		if (map_var(6) != 0) then begin
-			call prisonr06;
-		end
-		else begin
-			if (local_var(7)) then begin
-				call prisonr05;
-			end
-			else begin
-				set_local_var(7, 1);
-				call prisonr00;
-			end
-		end
-		gsay_end;
-		end_dialogue;
-	end
+   if (local_var(LVAR_StartMoving) == 1) then begin
+      set_local_var(LVAR_StartMoving, 1);
+      float(126);
+   end
+   else begin
+      start_gdialog(89, self_obj, 4, -1, -1);
+      gsay_start;
+      if (map_var(6) != 0) then begin
+         call prisonr06;
+      end
+      else begin
+         if (local_var(7)) then begin
+            call prisonr05;
+         end
+         else begin
+            set_local_var(7, 1);
+            call prisonr00;
+         end
+      end
+      gsay_end;
+      end_dialogue;
+   end
 end
 
 procedure critter_p_proc begin
-	if (tile_distance_objs(self_obj, dude_obj) < 7) and not(local_var(8)) then begin
-		dialogue_system_enter;
-		set_local_var(8, 1);
-	end
-	else if tile_distance_objs(self_obj, dude_obj) < 7 and not(local_var(9)) and self_can_see_dude then begin
-		dialogue_system_enter;
-		set_local_var(9, 1);
-	end
-	else begin
+   if (tile_distance_objs(self_obj, dude_obj) < 7) and not(local_var(8)) then begin
+      dialogue_system_enter;
+      set_local_var(8, 1);
+   end
+   else if tile_distance_objs(self_obj, dude_obj) < 7 and not(local_var(9)) and self_can_see_dude then begin
+      dialogue_system_enter;
+      set_local_var(9, 1);
+   end
+   else begin
 
-		if (map_var(6) != 0) then begin
-			if (local_var(LVAR_StartMoving) == 1) then begin
-				call leave_map;
-			end
-		end
-		else begin
-			if (tmp_hostile) then begin
-				tmp_hostile := 0;
-				attack(dude_obj);
-			end
-		end
+      if (map_var(6) != 0) then begin
+         if (local_var(LVAR_StartMoving) == 1) then begin
+            call leave_map;
+         end
+      end
+      else begin
+         if (tmp_hostile) then begin
+            tmp_hostile := 0;
+            attack(dude_obj);
+         end
+      end
 
-	end
+   end
 end
 
 procedure prisonrcbt begin
-	add_timer_event(self_obj, game_ticks(2), 1);
+   add_timer_event(self_obj, game_ticks(2), 1);
 end
 
 procedure prisonrend begin
 end
 
 procedure prisonr00 begin
-	Reply(101);
-	NOption(102, prisonrend, 4);
-	NOption(103, prisonr01, -3);
-	NOption(104, prisonr02, 4);
-	NOption(105, prisonr03, 6);
+   Reply(101);
+   NOption(102, prisonrend, 4);
+   NOption(103, prisonr01, -3);
+   NOption(104, prisonr02, 4);
+   NOption(105, prisonr03, 6);
 end
 
 procedure prisonr01 begin
-	NMessage(106);
+   NMessage(106);
 end
 
 procedure prisonr02 begin
-	NMessage(107);
+   NMessage(107);
 end
 
 procedure prisonr03 begin
-	Reply(108);
-	NOption(109, prisonr04, 6);
-	NOption(110, prisonr02, 6);
+   Reply(108);
+   NOption(109, prisonr04, 6);
+   NOption(110, prisonr02, 6);
 end
 
 procedure prisonr04 begin
-	Reply(111);
-	NOption(112, prisonr02, 6);
-	NOption(113, prisonrend, 6);
+   Reply(111);
+   NOption(112, prisonr02, 6);
+   NOption(113, prisonrend, 6);
 end
 
 procedure prisonr05 begin
-	NMessage(114);
+   NMessage(114);
 end
 
 procedure prisonr06 begin
-	set_local_var(LVAR_MoveTo, wp1);
-	set_local_var(LVAR_MoveCycle, 0);
+   set_local_var(LVAR_MoveTo, wp1);
+   set_local_var(LVAR_MoveCycle, 0);
 
-	if (local_var(LVAR_StartMoving) == 0) then begin
-		give_exp_points(EXP_PRISONER_FREED);
-		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 1);
-		display_msg(mstr(124) + EXP_PRISONER_FREED + mstr(125));
-	end
+   if (local_var(LVAR_StartMoving) == 0) then begin
+      give_exp_points(EXP_PRISONER_FREED);
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 1);
+      display_msg(mstr(124) + EXP_PRISONER_FREED + mstr(125));
+   end
 
-	Reply(115);
-	NOption(116, prisonrend, 4);
-	NOption(117, prisonr07, 5);
-	NOption(118, prisonrend, -3);
+   Reply(115);
+   NOption(116, prisonrend, 4);
+   NOption(117, prisonr07, 5);
+   NOption(118, prisonrend, -3);
 
-	set_local_var(LVAR_StartMoving, 1);
+   set_local_var(LVAR_StartMoving, 1);
 end
 
 procedure prisonr07 begin
-	Reply(119);
-	NOption(120, prisonr08, 5);
-	NOption(121, prisonrend, 5);
+   Reply(119);
+   NOption(120, prisonr08, 5);
+   NOption(121, prisonrend, 5);
 end
 
 procedure prisonr08 begin
-	Reply(122);
-	NOption(123, prisonrend, 5);
+   Reply(122);
+   NOption(123, prisonrend, 5);
 end
 
 procedure leave_map begin
-	my_hex := self_tile;
-	if (my_hex == local_var(LVAR_MoveTo)) then begin
-		set_local_var(LVAR_MoveCycle, local_var(LVAR_MoveCycle) + 1);
-		if (local_var(LVAR_MoveCycle) > 7) then begin
-			set_local_var(LVAR_MoveCycle, 10);
+   my_hex := self_tile;
+   if (my_hex == local_var(LVAR_MoveTo)) then begin
+      set_local_var(LVAR_MoveCycle, local_var(LVAR_MoveCycle) + 1);
+      if (local_var(LVAR_MoveCycle) > 7) then begin
+         set_local_var(LVAR_MoveCycle, 10);
 
-			if not(is_loading_game) then begin
-				set_self_invisible;
-			end
+         if not(is_loading_game) then begin
+            set_self_invisible;
+         end
 
-			move_to(self_obj, 0, 0);
-		end
-		else begin
+         move_to(self_obj, 0, 0);
+      end
+      else begin
 
-			if (local_var(LVAR_MoveCycle) == 1) then begin
-				set_local_var(LVAR_MoveTo, wp1);
-			end
-			else if (local_var(LVAR_MoveCycle) == 2) then begin
-				set_local_var(LVAR_MoveTo, wp2);
-			end
-			else if (local_var(LVAR_MoveCycle) == 3) then begin
-				set_local_var(LVAR_MoveTo, wp3);
-			end
-			else if (local_var(LVAR_MoveCycle) == 4) then begin
-				set_local_var(LVAR_MoveTo, wp4);
-			end
-			else if (local_var(LVAR_MoveCycle) == 5) then begin
-				set_local_var(LVAR_MoveTo, wp5);
-			end
-			else if (local_var(LVAR_MoveCycle) == 6) then begin
-				set_local_var(LVAR_MoveTo, wp6);
-			end
-			else if (local_var(LVAR_MoveCycle) == 7) then begin
-				set_local_var(LVAR_MoveTo, wp7);
-			end
-			self_walk_to_tile(local_var(LVAR_MoveTo));
+         if (local_var(LVAR_MoveCycle) == 1) then begin
+            set_local_var(LVAR_MoveTo, wp1);
+         end
+         else if (local_var(LVAR_MoveCycle) == 2) then begin
+            set_local_var(LVAR_MoveTo, wp2);
+         end
+         else if (local_var(LVAR_MoveCycle) == 3) then begin
+            set_local_var(LVAR_MoveTo, wp3);
+         end
+         else if (local_var(LVAR_MoveCycle) == 4) then begin
+            set_local_var(LVAR_MoveTo, wp4);
+         end
+         else if (local_var(LVAR_MoveCycle) == 5) then begin
+            set_local_var(LVAR_MoveTo, wp5);
+         end
+         else if (local_var(LVAR_MoveCycle) == 6) then begin
+            set_local_var(LVAR_MoveTo, wp6);
+         end
+         else if (local_var(LVAR_MoveCycle) == 7) then begin
+            set_local_var(LVAR_MoveTo, wp7);
+         end
+         self_walk_to_tile(local_var(LVAR_MoveTo));
 
-		end
-	end
-	self_walk_to_tile(local_var(LVAR_MoveTo));
+      end
+   end
+   self_walk_to_tile(local_var(LVAR_MoveTo));
 end

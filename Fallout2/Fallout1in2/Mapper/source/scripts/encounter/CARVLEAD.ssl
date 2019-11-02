@@ -1,6 +1,6 @@
 /*
 
-	Caravan escort job - Caravan Leader
+   Caravan escort job - Caravan Leader
 
 */
 
@@ -63,505 +63,505 @@ variable spawnDialogue;
 variable beenPaid := 1;
 variable UnloadCaravan;
 
-#define LVAR_CaravanStatus 		(7)
+#define LVAR_CaravanStatus       (7)
 
-#define car1_junktown_hex       	(30707)
-#define car2_junktown_hex       	(30502)
+#define car1_junktown_hex        (30707)
+#define car2_junktown_hex        (30502)
 
-#define car1_bos_hex            	(25111)
-#define car2_bos_hex            	(25911)
+#define car1_bos_hex             (25111)
+#define car2_bos_hex             (25911)
 
-#define car1_necropolis_hex     	(26894)
-#define car2_necropolis_hex     	(26889)
+#define car1_necropolis_hex      (26894)
+#define car2_necropolis_hex      (26889)
 
-#define car1_boneyard_hex       	(9723)
-#define car2_boneyard_hex       	(9121)
+#define car1_boneyard_hex        (9723)
+#define car2_boneyard_hex        (9121)
 
-#define create_crvn_master 			if (caravan_masters_left >= 1) then begin 																		\
-													if caravan_style_crimson then 																					\
-														LVar0 := create_object_sid(PID_MERCENARY_HMLTHR, master_hex, all_elev, SCRIPT_CRVNDRVR);	\
-													else if caravan_style_fargo then 																				\
-														LVar0 := create_object_sid(PID_MERCENARY_NMLTHR, master_hex, all_elev, SCRIPT_CRVNDRVR);	\
-													else if caravan_style_water then 																				\
-														LVar0 := create_object_sid(PID_MERC_MALE_LEATHER, master_hex, all_elev, SCRIPT_CRVNDRVR);	\
-													set_team(LVar0, TEAM_HUB_CARTS_GUARD); 																		\
-													obj_rotate(LVar0, all_rotation);																	\
-													Item := create_object(PID_SHOTGUN, 0, 0); 																	\
-													add_obj_to_inven(LVar0, Item); 																					\
-													wield_obj_critter(LVar0, Item); 																					\
-												end
+#define create_crvn_master          if (caravan_masters_left >= 1) then begin                                                       \
+                                       if caravan_style_crimson then                                                                \
+                                          LVar0 := create_object_sid(PID_MERCENARY_HMLTHR, master_hex, all_elev, SCRIPT_CRVNDRVR);  \
+                                       else if caravan_style_fargo then                                                             \
+                                          LVar0 := create_object_sid(PID_MERCENARY_NMLTHR, master_hex, all_elev, SCRIPT_CRVNDRVR);  \
+                                       else if caravan_style_water then                                                             \
+                                          LVar0 := create_object_sid(PID_MERC_MALE_LEATHER, master_hex, all_elev, SCRIPT_CRVNDRVR); \
+                                       set_team(LVar0, TEAM_HUB_CARTS_GUARD);                                                       \
+                                       obj_rotate(LVar0, all_rotation);                                                 \
+                                       Item := create_object(PID_SHOTGUN, 0, 0);                                                    \
+                                       add_obj_to_inven(LVar0, Item);                                                               \
+                                       wield_obj_critter(LVar0, Item);                                                              \
+                                    end
 
-#define create_crvn_guard				if (caravan_guards_left >= 2) then begin 																			\
-													if caravan_style_crimson then 																					\
-														LVar1 := create_object_sid(PID_MERCHENARY, guard_hex, all_elev, SCRIPT_CRVNTEAM);	\
-													else if caravan_style_fargo then 																				\
-														LVar1 := create_object_sid(PID_MERCENARY_HMLTHR, guard_hex, all_elev, SCRIPT_CRVNTEAM);	\
-													else if caravan_style_water then 																				\
-														LVar1 := create_object_sid(PID_MERC_MALE_METAL, guard_hex, all_elev, SCRIPT_CRVNTEAM);	\
-													set_team(LVar1, TEAM_HUB_CARTS_GUARD); 																		\
-													obj_rotate(LVar1, all_rotation);																	\
-													Item := create_object(PID_DESERT_EAGLE, 0, 0); 															\
-													add_obj_to_inven(LVar1, Item); 																					\
-													wield_obj_critter(LVar1, Item); 																					\
-												end
+#define create_crvn_guard           if (caravan_guards_left >= 2) then begin                                                        \
+                                       if caravan_style_crimson then                                                                \
+                                          LVar1 := create_object_sid(PID_MERCHENARY, guard_hex, all_elev, SCRIPT_CRVNTEAM);   \
+                                       else if caravan_style_fargo then                                                             \
+                                          LVar1 := create_object_sid(PID_MERCENARY_HMLTHR, guard_hex, all_elev, SCRIPT_CRVNTEAM);   \
+                                       else if caravan_style_water then                                                             \
+                                          LVar1 := create_object_sid(PID_MERC_MALE_METAL, guard_hex, all_elev, SCRIPT_CRVNTEAM); \
+                                       set_team(LVar1, TEAM_HUB_CARTS_GUARD);                                                       \
+                                       obj_rotate(LVar1, all_rotation);                                                 \
+                                       Item := create_object(PID_DESERT_EAGLE, 0, 0);                                            \
+                                       add_obj_to_inven(LVar1, Item);                                                               \
+                                       wield_obj_critter(LVar1, Item);                                                              \
+                                    end
 
 
 procedure start begin
 end
 
 procedure combat begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure critter_p_proc begin
-	if (self_can_see_dude and tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
-	if (spawnDialogue == 1) then begin
-		spawnDialogue := 0;
-		set_local_var(6, GAME_TIME_IN_HOURS);
-		dialogue_system_enter;
-	end
-	else begin
-		if (local_var(5) == 1) then begin
-			if ((WaitForTwoHours == 1) and (((GAME_TIME_IN_HOURS) - local_var(6)) >= 2)) then begin
-				WaitForTwoHours := 0;
-				gfade_out(1);
-				set_local_var(5, 0);
-				set_local_var(4, 0);
-				if not(is_loading_game) then begin    set_self_invisible;    end
-				if (cur_map_index != MAP_HUBENT) then begin
-					call remove_caravan;
-				end
-				gfade_in(1);
-				display_msg(message_str(SCRIPT_CARVLEAD, 151));
-			end
-		end
-		else begin
-			if not(is_loading_game) then begin    set_self_invisible;    end
-		end
-	end
+   if (self_can_see_dude and tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   if (spawnDialogue == 1) then begin
+      spawnDialogue := 0;
+      set_local_var(6, GAME_TIME_IN_HOURS);
+      dialogue_system_enter;
+   end
+   else begin
+      if (local_var(5) == 1) then begin
+         if ((WaitForTwoHours == 1) and (((GAME_TIME_IN_HOURS) - local_var(6)) >= 2)) then begin
+            WaitForTwoHours := 0;
+            gfade_out(1);
+            set_local_var(5, 0);
+            set_local_var(4, 0);
+            if not(is_loading_game) then begin    set_self_invisible;    end
+            if (cur_map_index != MAP_HUBENT) then begin
+               call remove_caravan;
+            end
+            gfade_in(1);
+            display_msg(message_str(SCRIPT_CARVLEAD, 151));
+         end
+      end
+      else begin
+         if not(is_loading_game) then begin    set_self_invisible;    end
+      end
+   end
 end
 
 procedure map_update_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-	variable LVar0 := 0;
-	if ((CUR_MAP_LAADYTUM) and boneyard_invaded or ((CUR_MAP_BROHDENT) and bos_invaded) or ((CUR_MAP_HOTEL) and necropolis_invaded) or ((CUR_MAP_JUNKENT) and junktown_invaded) or ((CUR_MAP_HUBENT) and hub_invaded)) then begin //  L.A. BONEYARD ENTRANCE (ADYTUM), BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, JUNKTOWN ENTRANCE, THE HUB ENTRANCE
-		LVar0 := 1;
-	end
+   variable LVar0 := 0;
+   if ((CUR_MAP_LAADYTUM) and boneyard_invaded or ((CUR_MAP_BROHDENT) and bos_invaded) or ((CUR_MAP_HOTEL) and necropolis_invaded) or ((CUR_MAP_JUNKENT) and junktown_invaded) or ((CUR_MAP_HUBENT) and hub_invaded)) then begin //  L.A. BONEYARD ENTRANCE (ADYTUM), BROHERHOOD ENTRANCE, NECROPOLIS HOTEL, JUNKTOWN ENTRANCE, THE HUB ENTRANCE
+      LVar0 := 1;
+   end
 
-	set_self_team(TEAM_HUB_CARTS_GUARD);
-	set_self_ai(AI_MERCHANT);
+   set_self_team(TEAM_HUB_CARTS_GUARD);
+   set_self_ai(AI_MERCHANT);
 
-	if (((GAME_TIME_IN_HOURS) - local_var(6)) >= 2) then begin
-		WaitForTwoHours := 0;
-		if not(is_loading_game) then begin    set_self_invisible;    end
-		set_local_var(5, 0);
-		set_local_var(4, 0);
-		if (cur_map_index != MAP_HUBENT) then begin
-			call remove_caravan;
-		end
-	end
+   if (((GAME_TIME_IN_HOURS) - local_var(6)) >= 2) then begin
+      WaitForTwoHours := 0;
+      if not(is_loading_game) then begin    set_self_invisible;    end
+      set_local_var(5, 0);
+      set_local_var(4, 0);
+      if (cur_map_index != MAP_HUBENT) then begin
+         call remove_caravan;
+      end
+   end
 
-	if ((local_var(5) == 1) and (LVar0 == 0)) then begin
-		if (((GAME_TIME_IN_HOURS) - local_var(6)) < 2) then begin
-			WaitForTwoHours := 1;
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-		end
-		else begin
-			WaitForTwoHours := 0;
-			if not(is_loading_game) then begin    set_self_invisible;    end
-			set_local_var(5, 0);
-			set_local_var(4, 0);
-			if (cur_map_index != MAP_HUBENT) then begin
-				call remove_caravan;
-			end
-		end
-	end
-	else if ((global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 2) or (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 3) or ((global_var(GVAR_WATER_MERCHANTS_STATUS) == 2) or (global_var(GVAR_WATER_MERCHANTS_STATUS) == 3)) or ((global_var(GVAR_FARGO_TRADERS_STATUS) == 2) or (global_var(GVAR_FARGO_TRADERS_STATUS) == 3)) and (LVar0 == 0)) then begin
-		// Was a Water Merchants job:
-		if (global_var(GVAR_WATER_MERCHANTS_STATUS) == 2) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			PaymentAmount := 200;
-			set_local_var(9, 10);
-			FullPayment := 200;
+   if ((local_var(5) == 1) and (LVar0 == 0)) then begin
+      if (((GAME_TIME_IN_HOURS) - local_var(6)) < 2) then begin
+         WaitForTwoHours := 1;
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+      end
+      else begin
+         WaitForTwoHours := 0;
+         if not(is_loading_game) then begin    set_self_invisible;    end
+         set_local_var(5, 0);
+         set_local_var(4, 0);
+         if (cur_map_index != MAP_HUBENT) then begin
+            call remove_caravan;
+         end
+      end
+   end
+   else if ((global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 2) or (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 3) or ((global_var(GVAR_WATER_MERCHANTS_STATUS) == 2) or (global_var(GVAR_WATER_MERCHANTS_STATUS) == 3)) or ((global_var(GVAR_FARGO_TRADERS_STATUS) == 2) or (global_var(GVAR_FARGO_TRADERS_STATUS) == 3)) and (LVar0 == 0)) then begin
+      // Was a Water Merchants job:
+      if (global_var(GVAR_WATER_MERCHANTS_STATUS) == 2) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+         PaymentAmount := 200;
+         set_local_var(9, 10);
+         FullPayment := 200;
 
-			if (caravan_masters_killed > 0) then
-				PaymentAmount := PaymentAmount - 50;
-			if (caravan_guards_killed > 0) then
-				PaymentAmount := PaymentAmount - ((50 / caravan_total_guards) * caravan_guards_killed);
-			if (caravan_carts_lost > 0) then
-				PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
-			if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
-				PaymentAmount := 0;
-			end
+         if (caravan_masters_killed > 0) then
+            PaymentAmount := PaymentAmount - 50;
+         if (caravan_guards_killed > 0) then
+            PaymentAmount := PaymentAmount - ((50 / caravan_total_guards) * caravan_guards_killed);
+         if (caravan_carts_lost > 0) then
+            PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
+         if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
+            PaymentAmount := 0;
+         end
 
-			set_local_var(LVAR_CaravanStatus, 0);
-			set_global_var(GVAR_WATER_JOB, 4);
-			set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-			set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-			set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-		end
+         set_local_var(LVAR_CaravanStatus, 0);
+         set_global_var(GVAR_WATER_JOB, 4);
+         set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+         set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+         set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+      end
 
-		// Was a Far-Go Traders job:
-		else if (global_var(GVAR_FARGO_TRADERS_STATUS) == 2) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			PaymentAmount := 400;
-			set_local_var(9, 20);
-			FullPayment := 400;
+      // Was a Far-Go Traders job:
+      else if (global_var(GVAR_FARGO_TRADERS_STATUS) == 2) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+         PaymentAmount := 400;
+         set_local_var(9, 20);
+         FullPayment := 400;
 
-			if (caravan_masters_killed > 0) then
-				PaymentAmount := PaymentAmount - 75;
-			if (caravan_guards_killed > 0) then
-				PaymentAmount := PaymentAmount - 25;
-			else
-				PaymentAmount := PaymentAmount - ((100 / caravan_total_guards) * caravan_guards_killed);
-			if (caravan_carts_lost > 0) then
-				PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
-			if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
-				PaymentAmount := 0;
-			end
+         if (caravan_masters_killed > 0) then
+            PaymentAmount := PaymentAmount - 75;
+         if (caravan_guards_killed > 0) then
+            PaymentAmount := PaymentAmount - 25;
+         else
+            PaymentAmount := PaymentAmount - ((100 / caravan_total_guards) * caravan_guards_killed);
+         if (caravan_carts_lost > 0) then
+            PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_carts) * caravan_carts_lost);
+         if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
+            PaymentAmount := 0;
+         end
 
-			set_local_var(LVAR_CaravanStatus, 2);
-			set_global_var(GVAR_FARGO_JOB, 4);
-			set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-			set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-			set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-		end
+         set_local_var(LVAR_CaravanStatus, 2);
+         set_global_var(GVAR_FARGO_JOB, 4);
+         set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+         set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+         set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+      end
 
-		// Was a Crimson Caravans job:
-		else if (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 2) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			PaymentAmount := 600;
-			set_local_var(9, 30);
-			FullPayment := 600;
+      // Was a Crimson Caravans job:
+      else if (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 2) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+         PaymentAmount := 600;
+         set_local_var(9, 30);
+         FullPayment := 600;
 
-			if (caravan_masters_killed > 0) then
-				PaymentAmount := PaymentAmount - 100;
-			if (caravan_guards_killed > 0) then
-				PaymentAmount := PaymentAmount - ((100 / caravan_total_guards) * caravan_guards_killed);
-			if (caravan_brahmin_killed > 0) then
-				PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_brahmin) * caravan_brahmin_killed);
-			if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
-				PaymentAmount := 0;
-			end
+         if (caravan_masters_killed > 0) then
+            PaymentAmount := PaymentAmount - 100;
+         if (caravan_guards_killed > 0) then
+            PaymentAmount := PaymentAmount - ((100 / caravan_total_guards) * caravan_guards_killed);
+         if (caravan_brahmin_killed > 0) then
+            PaymentAmount := PaymentAmount - ((PaymentAmount / caravan_total_brahmin) * caravan_brahmin_killed);
+         if (caravan_carts_left == 0) or (PaymentAmount < 0) then begin
+            PaymentAmount := 0;
+         end
 
-			set_local_var(LVAR_CaravanStatus, 1);
-			set_global_var(GVAR_CC_JOB, 4);
-			set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-			set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-			set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-		end
+         set_local_var(LVAR_CaravanStatus, 1);
+         set_global_var(GVAR_CC_JOB, 4);
+         set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+         set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+         set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+      end
 
-		// Caravan lost???
-		else if (global_var(GVAR_WATER_MERCHANTS_STATUS) == 3) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			PaymentAmount := 0;
-			set_local_var(LVAR_CaravanStatus, 3);
-			set_global_var(GVAR_WATER_JOB, 3);
-			set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-			set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-			set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-		end
-		else if (global_var(GVAR_FARGO_TRADERS_STATUS) == 3) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			PaymentAmount := 0;
-			set_local_var(LVAR_CaravanStatus, 3);
-			set_global_var(GVAR_FARGO_JOB, 3);
-			set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-			set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-			set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-		end
-		else if (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 3) then begin
-			if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-			set_local_var(LVAR_CaravanStatus, 3);
-			set_global_var(GVAR_CC_JOB, 3);
-			set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-			set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-			set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-		end
+      // Caravan lost???
+      else if (global_var(GVAR_WATER_MERCHANTS_STATUS) == 3) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+         PaymentAmount := 0;
+         set_local_var(LVAR_CaravanStatus, 3);
+         set_global_var(GVAR_WATER_JOB, 3);
+         set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+         set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+         set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+      end
+      else if (global_var(GVAR_FARGO_TRADERS_STATUS) == 3) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+         PaymentAmount := 0;
+         set_local_var(LVAR_CaravanStatus, 3);
+         set_global_var(GVAR_FARGO_JOB, 3);
+         set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+         set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+         set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+      end
+      else if (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 3) then begin
+         if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+         set_local_var(LVAR_CaravanStatus, 3);
+         set_global_var(GVAR_CC_JOB, 3);
+         set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+         set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+         set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+      end
 
-		set_local_var(5, 1);
-		set_local_var(4, 0);
-		WaitForTwoHours := 1;
-		spawnDialogue := 1;
-		beenPaid := 0;
-		if (cur_map_index != MAP_HUBENT) then begin
-			call create_caravan;
-		end
-	end
-	else if ((global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 5) or (global_var(GVAR_WATER_MERCHANTS_STATUS) == 5) or (global_var(GVAR_FARGO_TRADERS_STATUS) == 5) and (LVar0 == 0)) then begin
-		if (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 5) then begin
-			set_global_var(GVAR_CC_JOB, 5);
-		end
-		else if (global_var(GVAR_WATER_MERCHANTS_STATUS) == 5) then begin
-			set_global_var(GVAR_WATER_JOB, 5);
-		end
-		else if (global_var(GVAR_FARGO_TRADERS_STATUS) == 5) then begin
-			set_global_var(GVAR_FARGO_JOB, 5);
-		end
+      set_local_var(5, 1);
+      set_local_var(4, 0);
+      WaitForTwoHours := 1;
+      spawnDialogue := 1;
+      beenPaid := 0;
+      if (cur_map_index != MAP_HUBENT) then begin
+         call create_caravan;
+      end
+   end
+   else if ((global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 5) or (global_var(GVAR_WATER_MERCHANTS_STATUS) == 5) or (global_var(GVAR_FARGO_TRADERS_STATUS) == 5) and (LVar0 == 0)) then begin
+      if (global_var(GVAR_CRIMSON_CARAVANS_STATUS) == 5) then begin
+         set_global_var(GVAR_CC_JOB, 5);
+      end
+      else if (global_var(GVAR_WATER_MERCHANTS_STATUS) == 5) then begin
+         set_global_var(GVAR_WATER_JOB, 5);
+      end
+      else if (global_var(GVAR_FARGO_TRADERS_STATUS) == 5) then begin
+         set_global_var(GVAR_FARGO_JOB, 5);
+      end
 
-		set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
-		set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
-		set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
-		if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
-		set_local_var(LVAR_CaravanStatus, 5);
-		PaymentAmount := 0;
-		set_local_var(5, 1);
-		set_local_var(4, 0);
-		WaitForTwoHours := 0;
-		spawnDialogue := 1;
-		beenPaid := 0;
-		if (cur_map_index != MAP_HUBENT) then begin
-			call remove_caravan;
-		end
-	end
-	else begin
-		WaitForTwoHours := 0;
-		if not(is_loading_game) then begin    set_self_invisible;    end
-		set_local_var(5, 0);
-		set_local_var(4, 0);
-		if (cur_map_index != MAP_HUBENT) then begin
-			call remove_caravan;
-		end
-	end
+      set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 0);
+      set_global_var(GVAR_WATER_MERCHANTS_STATUS, 0);
+      set_global_var(GVAR_FARGO_TRADERS_STATUS, 0);
+      if not(is_loading_game) then begin    set_self_visible;    end//  MAKE VISIBLE
+      set_local_var(LVAR_CaravanStatus, 5);
+      PaymentAmount := 0;
+      set_local_var(5, 1);
+      set_local_var(4, 0);
+      WaitForTwoHours := 0;
+      spawnDialogue := 1;
+      beenPaid := 0;
+      if (cur_map_index != MAP_HUBENT) then begin
+         call remove_caravan;
+      end
+   end
+   else begin
+      WaitForTwoHours := 0;
+      if not(is_loading_game) then begin    set_self_invisible;    end
+      set_local_var(5, 0);
+      set_local_var(4, 0);
+      if (cur_map_index != MAP_HUBENT) then begin
+         call remove_caravan;
+      end
+   end
 end
 
 procedure pickup_p_proc begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	get_reaction
+   dude_look_at_self;
+   get_reaction
 
-	if (local_var(LVAR_CaravanStatus) == 4) then begin
-		float_msg(self_obj, message_str(SCRIPT_CARVLEAD, random(143, 145)), FLOAT_MSG_RED);
-	end
-	else if (CUR_MAP_HUBENT) then begin //    THE HUB - ENTRANCE
-		// all invade dates - 11
-		if (local_var(LVAR_CaravanStatus) == 3) then begin
-			start_dialog_at_node(HubAbandoned);
-		end
-		else if (local_var(LVAR_CaravanStatus) == 5) then begin
-			start_dialog_at_node(HubLost);
-		end
-		else begin
-			start_dialog_at_node(CarvLead09);
-		end
-		gfade_out(1);
-		set_local_var(5, 0);
-		set_local_var(4, 0);
-		if not(is_loading_game) then begin    set_self_invisible;    end
-		WaitForTwoHours := 0;
-		gfade_in(1);
-	end
-	else if (local_var(LVAR_CaravanStatus) == 5) then begin
-		start_dialog_at_node(Lost);
-		gfade_out(1);
-		set_local_var(5, 0);
-		set_local_var(4, 0);
-		WaitForTwoHours := 0;
-		if not(is_loading_game) then begin    set_self_invisible;    end
-		gfade_in(1);
-	end
-	else if (local_var(4) == 0) then begin
-		set_local_var(4, 1);
-		if (local_var(LVAR_CaravanStatus) == 3) then begin
-			set_local_var(LVAR_CaravanStatus, 4);
-			start_dialog_at_node(Abandoned);
-		end
-		else begin
-			start_dialog_at_node(CarvLead00);
-		end
-	end
-	else begin
-		start_dialog_at_node(CarvLead07);
-	end
+   if (local_var(LVAR_CaravanStatus) == 4) then begin
+      float_msg(self_obj, message_str(SCRIPT_CARVLEAD, random(143, 145)), FLOAT_MSG_RED);
+   end
+   else if (CUR_MAP_HUBENT) then begin //    THE HUB - ENTRANCE
+      // all invade dates - 11
+      if (local_var(LVAR_CaravanStatus) == 3) then begin
+         start_dialog_at_node(HubAbandoned);
+      end
+      else if (local_var(LVAR_CaravanStatus) == 5) then begin
+         start_dialog_at_node(HubLost);
+      end
+      else begin
+         start_dialog_at_node(CarvLead09);
+      end
+      gfade_out(1);
+      set_local_var(5, 0);
+      set_local_var(4, 0);
+      if not(is_loading_game) then begin    set_self_invisible;    end
+      WaitForTwoHours := 0;
+      gfade_in(1);
+   end
+   else if (local_var(LVAR_CaravanStatus) == 5) then begin
+      start_dialog_at_node(Lost);
+      gfade_out(1);
+      set_local_var(5, 0);
+      set_local_var(4, 0);
+      WaitForTwoHours := 0;
+      if not(is_loading_game) then begin    set_self_invisible;    end
+      gfade_in(1);
+   end
+   else if (local_var(4) == 0) then begin
+      set_local_var(4, 1);
+      if (local_var(LVAR_CaravanStatus) == 3) then begin
+         set_local_var(LVAR_CaravanStatus, 4);
+         start_dialog_at_node(Abandoned);
+      end
+      else begin
+         start_dialog_at_node(CarvLead00);
+      end
+   end
+   else begin
+      start_dialog_at_node(CarvLead07);
+   end
 
-	if (UnloadCaravan == 1) then begin
-		UnloadCaravan := 0;
-		game_time_advance(60 * (60 * 10));
-		dude_caps_adjust(local_var(9));
-		display_msg(mstr(520));
-		display_msg(mstr(521) + local_var(9) + mstr(522));
-		set_local_var(9, 0);
-	end
+   if (UnloadCaravan == 1) then begin
+      UnloadCaravan := 0;
+      game_time_advance(60 * (60 * 10));
+      dude_caps_adjust(local_var(9));
+      display_msg(mstr(520));
+      display_msg(mstr(521) + local_var(9) + mstr(522));
+      set_local_var(9, 0);
+   end
 end
 
 procedure destroy_p_proc begin
-	if (cur_map_index != MAP_HUBENT) then begin
-		call remove_caravan;
-	end
-	inc_good_critter
+   if (cur_map_index != MAP_HUBENT) then begin
+      call remove_caravan;
+   end
+   inc_good_critter
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(message_str(SCRIPT_CARVLEAD, 100));
+   script_overrides;
+   display_msg(message_str(SCRIPT_CARVLEAD, 100));
 end
 
 procedure damage_p_proc begin
-	if (CUR_MAP_HUBENT) then begin //    THE HUB - ENTRANCE
-		if (source_obj == dude_obj) then begin
-			set_global_var(GVAR_ENEMY_HUB, 1);
-		end
-	end
+   if (CUR_MAP_HUBENT) then begin //    THE HUB - ENTRANCE
+      if (source_obj == dude_obj) then begin
+         set_global_var(GVAR_ENEMY_HUB, 1);
+      end
+   end
 end
 
 /*
-	Player and caravan have arrived at the target location
+   Player and caravan have arrived at the target location
 */
 procedure CarvLead00 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	LVar0 := PaymentAmount;
-	dude_caps_adjust(PaymentAmount);
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := PaymentAmount;
+   dude_caps_adjust(PaymentAmount);
 
-	if ((caravan_masters_killed > 0) or (caravan_drivers_killed > 0) or (caravan_guards_killed > 0) or (caravan_carts_lost > 0)) then begin
-		gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 600) + LVar0 + message_str(SCRIPT_CARVLEAD, 601) + FullPayment + message_str(SCRIPT_CARVLEAD, 103));
-	end
-	else begin
-		gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 101) + LVar0 + message_str(SCRIPT_CARVLEAD, 102) + FullPayment + message_str(SCRIPT_CARVLEAD, 103));
-	end
+   if ((caravan_masters_killed > 0) or (caravan_drivers_killed > 0) or (caravan_guards_killed > 0) or (caravan_carts_lost > 0)) then begin
+      gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 600) + LVar0 + message_str(SCRIPT_CARVLEAD, 601) + FullPayment + message_str(SCRIPT_CARVLEAD, 103));
+   end
+   else begin
+      gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 101) + LVar0 + message_str(SCRIPT_CARVLEAD, 102) + FullPayment + message_str(SCRIPT_CARVLEAD, 103));
+   end
 
-	beenPaid := 1;
-	giq_option(-3, SCRIPT_CARVLEAD, 104, CarvLead01, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 105, CarvLead03, NEUTRAL_REACTION);
-	if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		giq_option(4, SCRIPT_CARVLEAD, 106, CarvLead04, NEUTRAL_REACTION);
-	end
-	else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-		giq_option(4, SCRIPT_CARVLEAD, 107, CarvLead05, NEUTRAL_REACTION);
-	end
-	else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-		giq_option(4, SCRIPT_CARVLEAD, 108, CarvLead06, NEUTRAL_REACTION);
-	end
-	if (local_var(9) != 0) then begin
-		giq_option(4, SCRIPT_CARVLEAD, 506, CarvLead13, NEUTRAL_REACTION);
-		giq_option(-3, SCRIPT_CARVLEAD, 507, CarvLead13, NEUTRAL_REACTION);
-	end
+   beenPaid := 1;
+   giq_option(-3, SCRIPT_CARVLEAD, 104, CarvLead01, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 105, CarvLead03, NEUTRAL_REACTION);
+   if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+      giq_option(4, SCRIPT_CARVLEAD, 106, CarvLead04, NEUTRAL_REACTION);
+   end
+   else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+      giq_option(4, SCRIPT_CARVLEAD, 107, CarvLead05, NEUTRAL_REACTION);
+   end
+   else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+      giq_option(4, SCRIPT_CARVLEAD, 108, CarvLead06, NEUTRAL_REACTION);
+   end
+   if (local_var(9) != 0) then begin
+      giq_option(4, SCRIPT_CARVLEAD, 506, CarvLead13, NEUTRAL_REACTION);
+      giq_option(-3, SCRIPT_CARVLEAD, 507, CarvLead13, NEUTRAL_REACTION);
+   end
 end
 
 procedure CarvLead01 begin
-	gsay_reply(SCRIPT_CARVLEAD, 109);
-	giq_option(-3, SCRIPT_CARVLEAD, 110, CarvLead11, NEUTRAL_REACTION);
-	giq_option(-3, SCRIPT_CARVLEAD, 111, CarvLead02, NEUTRAL_REACTION);
-	giq_option(-3, SCRIPT_CARVLEAD, 112, CarvLead12, NEUTRAL_REACTION);
+   gsay_reply(SCRIPT_CARVLEAD, 109);
+   giq_option(-3, SCRIPT_CARVLEAD, 110, CarvLead11, NEUTRAL_REACTION);
+   giq_option(-3, SCRIPT_CARVLEAD, 111, CarvLead02, NEUTRAL_REACTION);
+   giq_option(-3, SCRIPT_CARVLEAD, 112, CarvLead12, NEUTRAL_REACTION);
 end
 
 procedure CarvLead02 begin
-	gsay_message(SCRIPT_CARVLEAD, 113, NEUTRAL_REACTION);
+   gsay_message(SCRIPT_CARVLEAD, 113, NEUTRAL_REACTION);
 end
 
 procedure CarvLead03 begin
-	gsay_reply(SCRIPT_CARVLEAD, 114);
-	giq_option(4, SCRIPT_CARVLEAD, 115, CarvLead11, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 116, CarvLead12, NEUTRAL_REACTION);
-	if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		giq_option(4, SCRIPT_CARVLEAD, 117, CarvLead04, NEUTRAL_REACTION);
-	end
-	else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-		giq_option(4, SCRIPT_CARVLEAD, 118, CarvLead05, NEUTRAL_REACTION);
-	end
-	else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-		giq_option(4, SCRIPT_CARVLEAD, 119, CarvLead06, NEUTRAL_REACTION);
-	end
+   gsay_reply(SCRIPT_CARVLEAD, 114);
+   giq_option(4, SCRIPT_CARVLEAD, 115, CarvLead11, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 116, CarvLead12, NEUTRAL_REACTION);
+   if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+      giq_option(4, SCRIPT_CARVLEAD, 117, CarvLead04, NEUTRAL_REACTION);
+   end
+   else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+      giq_option(4, SCRIPT_CARVLEAD, 118, CarvLead05, NEUTRAL_REACTION);
+   end
+   else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+      giq_option(4, SCRIPT_CARVLEAD, 119, CarvLead06, NEUTRAL_REACTION);
+   end
 end
 
 procedure CarvLead04 begin
-	gsay_reply(SCRIPT_CARVLEAD, 120);
-	giq_option(4, SCRIPT_CARVLEAD, 121, CarvLead03, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 122, CarvLead11, NEUTRAL_REACTION);
+   gsay_reply(SCRIPT_CARVLEAD, 120);
+   giq_option(4, SCRIPT_CARVLEAD, 121, CarvLead03, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 122, CarvLead11, NEUTRAL_REACTION);
 end
 
 procedure CarvLead05 begin
-	gsay_reply(SCRIPT_CARVLEAD, 123);
-	giq_option(4, SCRIPT_CARVLEAD, 125, CarvLead03, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 126, CarvLead11, NEUTRAL_REACTION);
+   gsay_reply(SCRIPT_CARVLEAD, 123);
+   giq_option(4, SCRIPT_CARVLEAD, 125, CarvLead03, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 126, CarvLead11, NEUTRAL_REACTION);
 end
 
 procedure CarvLead06 begin
-	gsay_reply(SCRIPT_CARVLEAD, 127);
-	giq_option(4, SCRIPT_CARVLEAD, 128, CarvLead03, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 129, CarvLead11, NEUTRAL_REACTION);
+   gsay_reply(SCRIPT_CARVLEAD, 127);
+   giq_option(4, SCRIPT_CARVLEAD, 128, CarvLead03, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 129, CarvLead11, NEUTRAL_REACTION);
 end
 
 procedure CarvLead07 begin
-	variable LVar0 := 0;
-	if (beenPaid == 0) then begin
-		dude_caps_adjust(PaymentAmount);
-		//
-		// "CONTACT SDUIBEK IF YOU SEE THIS MESSAGE" fixme todo debug testing
-		//
-		display_msg(message_str(SCRIPT_GENCHAT, 401));
-		display_msg(message_str(SCRIPT_GENCHAT, 401));
-		display_msg(message_str(SCRIPT_GENCHAT, 401));
-		display_msg(message_str(SCRIPT_GENCHAT, 401));
-		display_msg(message_str(SCRIPT_GENCHAT, 401));
-		beenPaid := 1;
-	end
-	gsay_reply(SCRIPT_CARVLEAD, 130);
-	if (local_var(9) != 0) then begin
-		giq_option(4, SCRIPT_CARVLEAD, 506, CarvLead13, NEUTRAL_REACTION);
-		giq_option(-3, SCRIPT_CARVLEAD, 507, CarvLead13, NEUTRAL_REACTION);
-	end
-	giq_option(-3, SCRIPT_CARVLEAD, 131, CarvLead12, NEUTRAL_REACTION);
-	giq_option(-3, SCRIPT_CARVLEAD, 111, CarvLead11, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 132, CarvLead11, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 133, CarvLead12, NEUTRAL_REACTION);
+   variable LVar0 := 0;
+   if (beenPaid == 0) then begin
+      dude_caps_adjust(PaymentAmount);
+      //
+      // "CONTACT SDUIBEK IF YOU SEE THIS MESSAGE" fixme todo debug testing
+      //
+      display_msg(message_str(SCRIPT_GENCHAT, 401));
+      display_msg(message_str(SCRIPT_GENCHAT, 401));
+      display_msg(message_str(SCRIPT_GENCHAT, 401));
+      display_msg(message_str(SCRIPT_GENCHAT, 401));
+      display_msg(message_str(SCRIPT_GENCHAT, 401));
+      beenPaid := 1;
+   end
+   gsay_reply(SCRIPT_CARVLEAD, 130);
+   if (local_var(9) != 0) then begin
+      giq_option(4, SCRIPT_CARVLEAD, 506, CarvLead13, NEUTRAL_REACTION);
+      giq_option(-3, SCRIPT_CARVLEAD, 507, CarvLead13, NEUTRAL_REACTION);
+   end
+   giq_option(-3, SCRIPT_CARVLEAD, 131, CarvLead12, NEUTRAL_REACTION);
+   giq_option(-3, SCRIPT_CARVLEAD, 111, CarvLead11, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 132, CarvLead11, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 133, CarvLead12, NEUTRAL_REACTION);
 end
 
 /*********************************************************
-	Player and caravan have returned to the Hub
+   Player and caravan have returned to the Hub
 *********************************************************/
 procedure CarvLead09 begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	LVar0 := PaymentAmount;
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := PaymentAmount;
 
-	if (PaymentAmount > 0) then begin
-		dude_caps_adjust(PaymentAmount);
-		if ((caravan_masters_killed > 0) or (caravan_drivers_killed > 0) or (caravan_guards_killed > 0) or (caravan_carts_lost > 0)) then begin
-			gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 600) + LVar0 + message_str(SCRIPT_CARVLEAD, 603) + message_str(SCRIPT_CARVLEAD, 602));
-		end
-		else begin
-			gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 137) + LVar0 + message_str(SCRIPT_CARVLEAD, 138));
-		end
-	end
-	else begin
-		gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 604) + message_str(SCRIPT_CARVLEAD, 602));
-	end
+   if (PaymentAmount > 0) then begin
+      dude_caps_adjust(PaymentAmount);
+      if ((caravan_masters_killed > 0) or (caravan_drivers_killed > 0) or (caravan_guards_killed > 0) or (caravan_carts_lost > 0)) then begin
+         gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 600) + LVar0 + message_str(SCRIPT_CARVLEAD, 603) + message_str(SCRIPT_CARVLEAD, 602));
+      end
+      else begin
+         gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 137) + LVar0 + message_str(SCRIPT_CARVLEAD, 138));
+      end
+   end
+   else begin
+      gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 604) + message_str(SCRIPT_CARVLEAD, 602));
+   end
 
-	beenPaid := 1;
-	giq_option(-3, SCRIPT_CARVLEAD, 139, CarvLead11, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 140, CarvLead11, NEUTRAL_REACTION);
+   beenPaid := 1;
+   giq_option(-3, SCRIPT_CARVLEAD, 139, CarvLead11, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 140, CarvLead11, NEUTRAL_REACTION);
 end
 
 procedure CarvLead10 begin
-	variable LVar0 := 0;
-	LVar0 := random(1, 2);
-	if (LVar0 == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_CARVLEAD, 141), FLOAT_MSG_RED);
-	end
-	else begin
-		float_msg(self_obj, message_str(SCRIPT_CARVLEAD, 142), FLOAT_MSG_RED);
-	end
+   variable LVar0 := 0;
+   LVar0 := random(1, 2);
+   if (LVar0 == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_CARVLEAD, 141), FLOAT_MSG_RED);
+   end
+   else begin
+      float_msg(self_obj, message_str(SCRIPT_CARVLEAD, 142), FLOAT_MSG_RED);
+   end
 end
 
 procedure CarvLead11 begin
 end
 
 /*********************************************************
-	Traveling back to the Hub
+   Traveling back to the Hub
 *********************************************************/
 procedure CarvLead12 begin
-	variable LVar0 := 0;
+   variable LVar0 := 0;
    variable Caravan_Carts;
    variable Caravan_Encounters;
    variable Caravan_Guards;
@@ -570,185 +570,185 @@ procedure CarvLead12 begin
    //Caravan_Encounters:=random(1,4);
    Caravan_Encounters := 1;
    set_caravan_encounters(Caravan_Encounters);
- 	set_caravan_end(CARAVAN_HUB);
- 	set_caravan_status(CARAVAN_STATUS_ON_JOB);
+   set_caravan_end(CARAVAN_HUB);
+   set_caravan_status(CARAVAN_STATUS_ON_JOB);
 
-	set_caravan_masters(1);
-	set_caravan_drivers(0); // Fo1 has no wagon drivers
+   set_caravan_masters(1);
+   set_caravan_drivers(0); // Fo1 has no wagon drivers
    set_caravan_guards(2);
    set_caravan_carts(2);
    set_caravan_brahmin(caravan_total_carts);
 
-	set_local_var(5, 0);
-	set_local_var(4, 0);
+   set_local_var(5, 0);
+   set_local_var(4, 0);
 
-	call remove_caravan;
-	// Water Merchants:
-	if (local_var(LVAR_CaravanStatus) == 0) then begin
-		set_global_var(GVAR_WATER_JOB, 1);
-		set_global_var(GVAR_WATER_MERCHANTS_STATUS, 1);
-		set_global_var(GVAR_WATER_CARAVAN, HUB_CARAVAN_ON_CARAVAN);
+   call remove_caravan;
+   // Water Merchants:
+   if (local_var(LVAR_CaravanStatus) == 0) then begin
+      set_global_var(GVAR_WATER_JOB, 1);
+      set_global_var(GVAR_WATER_MERCHANTS_STATUS, 1);
+      set_global_var(GVAR_WATER_CARAVAN, HUB_CARAVAN_ON_CARAVAN);
 
-		if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_JUNKTOWN);
+      if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_JUNKTOWN);
 
-			LVar0 := do_check(dude_obj, STAT_lu, -2);
-			if (is_success(LVar0)) then begin
-				set_global_var(GVAR_WATER_MERCHANTS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_JNK + (random(60, 600)*ONE_GAME_MINUTE));
-				load_map(MAP_HUBENT, 1);
-			end
-			else begin
-				load_map(MAP_DESCRVN4, 1);
-			end
-		end
-		else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_BONEYARD);
-			LVar0 := do_check(dude_obj, STAT_lu, -2);
-			if (is_success(LVar0)) then begin
-				set_global_var(GVAR_WATER_MERCHANTS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_ADY + (random(60, 600)*ONE_GAME_MINUTE));
-				load_map(MAP_HUBENT, 1);
-			end
-			else begin
-				load_map(MAP_MNTCRVN4, 1);
-			end
-		end
-	end
-	// Crimson Caravan:
-	else if (local_var(LVAR_CaravanStatus) == 1) then begin
-		set_global_var(GVAR_CC_JOB, 1);
-		set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 1);
-		set_global_var(GVAR_CRIMSON_CARAVAN, HUB_CARAVAN_ON_CARAVAN);
+         LVar0 := do_check(dude_obj, STAT_lu, -2);
+         if (is_success(LVar0)) then begin
+            set_global_var(GVAR_WATER_MERCHANTS_STATUS, 2);
+            game_time_advance(TRAVEL_TIME_HUB_JNK + (random(60, 600)*ONE_GAME_MINUTE));
+            load_map(MAP_HUBENT, 1);
+         end
+         else begin
+            load_map(MAP_DESCRVN4, 1);
+         end
+      end
+      else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_BONEYARD);
+         LVar0 := do_check(dude_obj, STAT_lu, -2);
+         if (is_success(LVar0)) then begin
+            set_global_var(GVAR_WATER_MERCHANTS_STATUS, 2);
+            game_time_advance(TRAVEL_TIME_HUB_ADY + (random(60, 600)*ONE_GAME_MINUTE));
+            load_map(MAP_HUBENT, 1);
+         end
+         else begin
+            load_map(MAP_MNTCRVN4, 1);
+         end
+      end
+   end
+   // Crimson Caravan:
+   else if (local_var(LVAR_CaravanStatus) == 1) then begin
+      set_global_var(GVAR_CC_JOB, 1);
+      set_global_var(GVAR_CRIMSON_CARAVANS_STATUS, 1);
+      set_global_var(GVAR_CRIMSON_CARAVAN, HUB_CARAVAN_ON_CARAVAN);
 
-		if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_BOS);
-			load_map(MAP_DESCRVN3, 1);
-		end
-		else if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_JUNKTOWN);
-			load_map(MAP_DESCRVN4, 1);
-		end
-		else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_NECROPOLIS);
-			load_map(MAP_MNTCRVN4, 1);
-		end
-		else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_BONEYARD);
-			load_map(MAP_MNTCRVN3, 1);
-		end
-	end
-	// Fargo Traders:
-	else if (local_var(LVAR_CaravanStatus) == 2) then begin
-		set_global_var(GVAR_FARGO_JOB, 1);
-		set_global_var(GVAR_FARGO_TRADERS_STATUS, 1);
-		set_global_var(GVAR_FARGO_CARAVAN, HUB_CARAVAN_ON_CARAVAN);
+      if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_BOS);
+         load_map(MAP_DESCRVN3, 1);
+      end
+      else if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_JUNKTOWN);
+         load_map(MAP_DESCRVN4, 1);
+      end
+      else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_NECROPOLIS);
+         load_map(MAP_MNTCRVN4, 1);
+      end
+      else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_BONEYARD);
+         load_map(MAP_MNTCRVN3, 1);
+      end
+   end
+   // Fargo Traders:
+   else if (local_var(LVAR_CaravanStatus) == 2) then begin
+      set_global_var(GVAR_FARGO_JOB, 1);
+      set_global_var(GVAR_FARGO_TRADERS_STATUS, 1);
+      set_global_var(GVAR_FARGO_CARAVAN, HUB_CARAVAN_ON_CARAVAN);
 
-		if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_JUNKTOWN);
-			LVar0 := do_check(dude_obj, STAT_lu, -4);
-			if (is_success(LVar0)) then begin
-				set_global_var(GVAR_FARGO_TRADERS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_JNK + (random(60, 600)*ONE_GAME_MINUTE));
-				load_map(MAP_HUBENT, 1);
-			end
-			else begin
-				load_map(MAP_DESCRVN4, 1);
-			end
-		end
-		else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_BONEYARD);
-			LVar0 := do_check(dude_obj, STAT_lu, -4);
-			if (is_success(LVar0)) then begin
-				set_global_var(GVAR_FARGO_TRADERS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_ADY + (random(60, 600)*ONE_GAME_MINUTE));
-				load_map(MAP_HUBENT, 1);
-			end
-			else begin
-				load_map(MAP_MNTCRVN4, 1);
-			end
-		end
-		else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-			set_global_var(GVAR_CARAVAN_START, CARAVAN_BOS);
-			LVar0 := do_check(dude_obj, STAT_lu, -4);
-			if (is_success(LVar0)) then begin
-				set_global_var(GVAR_FARGO_TRADERS_STATUS, 2);
-				game_time_advance(TRAVEL_TIME_HUB_BOS + (random(60, 600)*ONE_GAME_MINUTE));
-				load_map(MAP_HUBENT, 1);
-			end
-			else begin
-				load_map(MAP_DESCRVN3, 1);
-			end
-		end
-	end
+      if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_JUNKTOWN);
+         LVar0 := do_check(dude_obj, STAT_lu, -4);
+         if (is_success(LVar0)) then begin
+            set_global_var(GVAR_FARGO_TRADERS_STATUS, 2);
+            game_time_advance(TRAVEL_TIME_HUB_JNK + (random(60, 600)*ONE_GAME_MINUTE));
+            load_map(MAP_HUBENT, 1);
+         end
+         else begin
+            load_map(MAP_DESCRVN4, 1);
+         end
+      end
+      else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_BONEYARD);
+         LVar0 := do_check(dude_obj, STAT_lu, -4);
+         if (is_success(LVar0)) then begin
+            set_global_var(GVAR_FARGO_TRADERS_STATUS, 2);
+            game_time_advance(TRAVEL_TIME_HUB_ADY + (random(60, 600)*ONE_GAME_MINUTE));
+            load_map(MAP_HUBENT, 1);
+         end
+         else begin
+            load_map(MAP_MNTCRVN4, 1);
+         end
+      end
+      else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+         set_global_var(GVAR_CARAVAN_START, CARAVAN_BOS);
+         LVar0 := do_check(dude_obj, STAT_lu, -4);
+         if (is_success(LVar0)) then begin
+            set_global_var(GVAR_FARGO_TRADERS_STATUS, 2);
+            game_time_advance(TRAVEL_TIME_HUB_BOS + (random(60, 600)*ONE_GAME_MINUTE));
+            load_map(MAP_HUBENT, 1);
+         end
+         else begin
+            load_map(MAP_DESCRVN3, 1);
+         end
+      end
+   end
 end
 
 procedure Abandoned begin
-	gsay_message(SCRIPT_CARVLEAD, 501, BAD_REACTION);
+   gsay_message(SCRIPT_CARVLEAD, 501, BAD_REACTION);
 end
 
 procedure Lost begin
-	gsay_message(SCRIPT_CARVLEAD, 502, BAD_REACTION);
+   gsay_message(SCRIPT_CARVLEAD, 502, BAD_REACTION);
 end
 
 procedure HubAbandoned begin
-	gsay_message(SCRIPT_CARVLEAD, 504, BAD_REACTION);
+   gsay_message(SCRIPT_CARVLEAD, 504, BAD_REACTION);
 end
 
 procedure HubLost begin
-	gsay_message(SCRIPT_CARVLEAD, 505, BAD_REACTION);
+   gsay_message(SCRIPT_CARVLEAD, 505, BAD_REACTION);
 end
 
 procedure CarvLead13 begin
-	gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 508) + local_var(9) + message_str(SCRIPT_CARVLEAD, 509));
-	giq_option(-3, SCRIPT_CARVLEAD, 510, CarvLead14, NEUTRAL_REACTION);
-	giq_option(-3, SCRIPT_CARVLEAD, 511, CarvLead11, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 512, CarvLead14, NEUTRAL_REACTION);
-	giq_option(4, SCRIPT_CARVLEAD, 513, CarvLead11, NEUTRAL_REACTION);
+   gsay_reply(SCRIPT_CARVLEAD, message_str(SCRIPT_CARVLEAD, 508) + local_var(9) + message_str(SCRIPT_CARVLEAD, 509));
+   giq_option(-3, SCRIPT_CARVLEAD, 510, CarvLead14, NEUTRAL_REACTION);
+   giq_option(-3, SCRIPT_CARVLEAD, 511, CarvLead11, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 512, CarvLead14, NEUTRAL_REACTION);
+   giq_option(4, SCRIPT_CARVLEAD, 513, CarvLead11, NEUTRAL_REACTION);
 end
 
 procedure CarvLead14 begin
-	UnloadCaravan := 1;
+   UnloadCaravan := 1;
 end
 
 procedure create_caravan begin
-	if (local_var(8) == 0) then begin
-		set_local_var(8, 1);
-		if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-			call Junktown_Caravan;
-		end
-		else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-			call BOS_Caravan;
-		end
-		else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-			call Necropolis_Caravan;
-		end
-		else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-			call LABone_Caravan;
-		end
-	end
+   if (local_var(8) == 0) then begin
+      set_local_var(8, 1);
+      if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+         call Junktown_Caravan;
+      end
+      else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+         call BOS_Caravan;
+      end
+      else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+         call Necropolis_Caravan;
+      end
+      else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+         call LABone_Caravan;
+      end
+   end
 end
 
 procedure remove_caravan begin
-	if (local_var(8) == 1) then begin
-		set_local_var(8, 0);
-		if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
-		   Destroy_NS_Caravan(car1_junktown_hex, 0)
-			Destroy_NS_Caravan(car2_junktown_hex, 0)
-		end
-		else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
-		   Destroy_EW_Caravan(car1_bos_hex, 0)
-			Destroy_EW_Caravan(car2_bos_hex, 0)
-		end
-		else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
-		   Destroy_NS_Caravan(car1_necropolis_hex, 1)
-			Destroy_NS_Caravan(car2_necropolis_hex, 1)
-		end
-		else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
-		   Destroy_EW_Caravan(car1_boneyard_hex, 0)
-			Destroy_EW_Caravan(car2_boneyard_hex, 0)
-		end
-	end
+   if (local_var(8) == 1) then begin
+      set_local_var(8, 0);
+      if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+         Destroy_NS_Caravan(car1_junktown_hex, 0)
+         Destroy_NS_Caravan(car2_junktown_hex, 0)
+      end
+      else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+         Destroy_EW_Caravan(car1_bos_hex, 0)
+         Destroy_EW_Caravan(car2_bos_hex, 0)
+      end
+      else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+         Destroy_NS_Caravan(car1_necropolis_hex, 1)
+         Destroy_NS_Caravan(car2_necropolis_hex, 1)
+      end
+      else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+         Destroy_EW_Caravan(car1_boneyard_hex, 0)
+         Destroy_EW_Caravan(car2_boneyard_hex, 0)
+      end
+   end
 end
 
 procedure Junktown_Caravan begin
@@ -760,39 +760,39 @@ variable guard_hex;
 variable all_elev := 0;
 variable all_rotation := 5;
 
-	if (caravan_carts_left >= 2) then
-   	Create_NS_Red_Caravan(car1_junktown_hex, 0)
+   if (caravan_carts_left >= 2) then
+      Create_NS_Red_Caravan(car1_junktown_hex, 0)
    if (caravan_carts_left >= 1) then
-		Create_NS_Grey_Caravan(car2_junktown_hex, 0)
+      Create_NS_Grey_Caravan(car2_junktown_hex, 0)
 
-	create_crvn_master
+   create_crvn_master
 
-	guard_hex := 29504;
-	create_crvn_guard
+   guard_hex := 29504;
+   create_crvn_guard
 
-	guard_hex := 31505;
-	create_crvn_guard
+   guard_hex := 31505;
+   create_crvn_guard
 
-	if (caravan_carts_left >= 2) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 29707, 0, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 5);
-		add_timer_event(LVar1, 0, 10);
-	end
-	if (caravan_carts_left >= 1) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 29502, 0, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 5);
-		add_timer_event(LVar1, 0, 10);
-	end
+   if (caravan_carts_left >= 2) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 29707, 0, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 5);
+      add_timer_event(LVar1, 0, 10);
+   end
+   if (caravan_carts_left >= 1) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 29502, 0, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 5);
+      add_timer_event(LVar1, 0, 10);
+   end
 
-	LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_PEASANT_5, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
-	LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_LOSER, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
-	LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_PEASANT_FEMALE_CUTE, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_PEASANT_5, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_LOSER, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(28711, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_PEASANT_FEMALE_CUTE, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
 end
 
 procedure BOS_Caravan begin
@@ -804,38 +804,38 @@ variable guard_hex;
 variable all_elev := 0;
 variable all_rotation := 0;
 
-	if (caravan_carts_left >= 2) then
-		Create_EW_Red_Caravan(car1_bos_hex, 0)
-	if (caravan_carts_left >= 1) then
-		Create_EW_Grey_Caravan(car2_bos_hex, 0)
+   if (caravan_carts_left >= 2) then
+      Create_EW_Red_Caravan(car1_bos_hex, 0)
+   if (caravan_carts_left >= 1) then
+      Create_EW_Grey_Caravan(car2_bos_hex, 0)
 
-	create_crvn_master
-	guard_hex := 25308;
-	create_crvn_guard
+   create_crvn_master
+   guard_hex := 25308;
+   create_crvn_guard
 
-	guard_hex := 25716;
-	create_crvn_guard
+   guard_hex := 25716;
+   create_crvn_guard
 
-	if (caravan_carts_left >= 2) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 24908, 0, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 0);
-		add_timer_event(LVar1, 0, 10);
-	end
-	if (caravan_carts_left >= 1) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 25708, 0, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 0);
-		add_timer_event(LVar1, 0, 10);
-	end
+   if (caravan_carts_left >= 2) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 24908, 0, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 0);
+      add_timer_event(LVar1, 0, 10);
+   end
+   if (caravan_carts_left >= 1) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 25708, 0, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 0);
+      add_timer_event(LVar1, 0, 10);
+   end
 
-	LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_JUNIOR_PALADIN, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
-	LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_JOURNEYMAN_KNIGHT, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
-	LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_INITIATE_SCRIBE, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_JUNIOR_PALADIN, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_JOURNEYMAN_KNIGHT, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(25702, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_INITIATE_SCRIBE, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
 end
 
 procedure Necropolis_Caravan begin
@@ -847,41 +847,41 @@ variable guard_hex;
 variable all_elev := 1;
 variable all_rotation := 5;
 
-	if (caravan_carts_left >= 2) then
-		Create_NS_Red_Caravan(car1_necropolis_hex, 1)
-	if (caravan_carts_left >= 1) then
-		Create_NS_Grey_Caravan(car2_necropolis_hex, 1)
+   if (caravan_carts_left >= 2) then
+      Create_NS_Red_Caravan(car1_necropolis_hex, 1)
+   if (caravan_carts_left >= 1) then
+      Create_NS_Grey_Caravan(car2_necropolis_hex, 1)
 
-	create_crvn_master
+   create_crvn_master
 
-	guard_hex := 25891;
-	create_crvn_guard
+   guard_hex := 25891;
+   create_crvn_guard
 
-	guard_hex := 27692;
-	create_crvn_guard
+   guard_hex := 27692;
+   create_crvn_guard
 
-	//if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
-	if (caravan_carts_left >= 2) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 25894, 1, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 5);
-		add_timer_event(LVar1, 0, 10);
-	end
-	//if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
-	if (caravan_carts_left >= 1) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 25889, 1, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 5);
-		add_timer_event(LVar1, 0, 10);
-	end
+   //if global_var(CARAVAN_HOW_MANY_BRAHMIN) == 2 then begin
+   if (caravan_carts_left >= 2) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 25894, 1, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 5);
+      add_timer_event(LVar1, 0, 10);
+   end
+   //if global_var(CARAVAN_HOW_MANY_BRAHMIN) >= 1 then begin
+   if (caravan_carts_left >= 1) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 25889, 1, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 5);
+      add_timer_event(LVar1, 0, 10);
+   end
 
-	LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_GHOUL, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 1);
-	LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_GHOUL, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 1);
-	LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_GHOUL, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 1);
+   LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_GHOUL, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 1);
+   LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_GHOUL, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 1);
+   LVar0 := tile_num_in_direction(24697, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_GHOUL, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 1);
 end
 
 procedure LABone_Caravan begin
@@ -893,37 +893,37 @@ variable guard_hex;
 variable all_elev := 0;
 variable all_rotation := 0;
 
-	if (caravan_carts_left >= 2) then
-		Create_EW_Red_Caravan(car1_boneyard_hex, 0)
-	if (caravan_carts_left >= 1) then
-		Create_EW_Grey_Caravan(car2_boneyard_hex, 0)
+   if (caravan_carts_left >= 2) then
+      Create_EW_Red_Caravan(car1_boneyard_hex, 0)
+   if (caravan_carts_left >= 1) then
+      Create_EW_Grey_Caravan(car2_boneyard_hex, 0)
 
-	create_crvn_master
+   create_crvn_master
 
-	guard_hex := 10122;
-	create_crvn_guard
+   guard_hex := 10122;
+   create_crvn_guard
 
-	guard_hex := 8518;
-	create_crvn_guard
+   guard_hex := 8518;
+   create_crvn_guard
 
-	if (caravan_carts_left >= 2) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 9920, 0, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 0);
-		add_timer_event(LVar1, 0, 10);
-	end
-	if (caravan_carts_left >= 1) then begin
-		LVar1 := create_object_sid(PID_BRAHMIN, 9118, 0, SCRIPT_CARCOW);
-		obj_rotate(LVar1, 0);
-		add_timer_event(LVar1, 0, 10);
-	end
+   if (caravan_carts_left >= 2) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 9920, 0, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 0);
+      add_timer_event(LVar1, 0, 10);
+   end
+   if (caravan_carts_left >= 1) then begin
+      LVar1 := create_object_sid(PID_BRAHMIN, 9118, 0, SCRIPT_CARCOW);
+      obj_rotate(LVar1, 0);
+      add_timer_event(LVar1, 0, 10);
+   end
 
-	LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_PEASANT_GREEN, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
-	LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_PEASANT_YELLOW, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
-	LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
-	LVar1 := create_object_sid(PID_PEASANT_FEMALE_CUTE, 0, 0, SCRIPT_CARCUST);
-	critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_PEASANT_GREEN, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_PEASANT_YELLOW, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
+   LVar0 := tile_num_in_direction(9716, random(0, 5), 3);
+   LVar1 := create_object_sid(PID_PEASANT_FEMALE_CUTE, 0, 0, SCRIPT_CARCUST);
+   critter_attempt_placement(LVar1, LVar0, 0);
 end

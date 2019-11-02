@@ -19,142 +19,142 @@ procedure start begin
 end
 
 procedure use_p_pro begin
-	call attempt_open;
+   call attempt_open;
 end
 
 procedure map_enter_p_proc begin
-	call update_status;
+   call update_status;
 end
 
 procedure map_update_p_proc begin
-	call update_status;
+   call update_status;
 end
 
 procedure update_status begin
-	if (local_var(1) == 1) then begin// container was unlocked with explosives
-		set_local_var(0, 1);
-	end
-	if (local_var(0) == 0) then begin
-		obj_lock(self_obj);
-	end
-	else begin
-		obj_unlock(self_obj);
-	end
+   if (local_var(1) == 1) then begin// container was unlocked with explosives
+      set_local_var(0, 1);
+   end
+   if (local_var(0) == 0) then begin
+      obj_lock(self_obj);
+   end
+   else begin
+      obj_unlock(self_obj);
+   end
 end
 
 procedure attempt_open begin
-	call update_status;
-	if (obj_is_locked(self_obj)) then begin
-		script_overrides;
-		display_msg(message_str(SCRIPT_GENLOCK, 100));
-	end
+   call update_status;
+   if (obj_is_locked(self_obj)) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_GENLOCK, 100));
+   end
 end
 
 procedure use_skill_on_p_proc begin
-	if (action_being_used == SKILL_LOCKPICK) then begin
-		script_overrides;
-		RollvsLockpick := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
-		if (obj_is_locked(self_obj)) then begin
-			if (is_success(RollvsLockpick)) then begin
-				set_local_var(0, 1);
-				obj_unlock(self_obj);
-				if (is_critical(RollvsLockpick)) then begin
-					display_msg(message_str(SCRIPT_GENLOCK, 106));
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(50);
-				end
-				else begin
-					display_msg(message_str(SCRIPT_GENLOCK, 101));
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(25);
-				end
-			end
-			else begin
-				if (is_critical(RollvsLockpick)) then begin
-					display_msg(message_str(SCRIPT_GENLOCK, 102));
-					jam_lock(self_obj);
-				end
-				else begin
-					display_msg(message_str(SCRIPT_GENLOCK, 103));
-				end
-			end
-		end
-		else begin
-			display_msg(message_str(SCRIPT_GENLOCK, 104));
-		end
-	end
-	else begin
-		if (action_being_used == SKILL_STEAL) then begin//-- STEAL
-			call attempt_open;
-		end
-	end
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      script_overrides;
+      RollvsLockpick := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
+      if (obj_is_locked(self_obj)) then begin
+         if (is_success(RollvsLockpick)) then begin
+            set_local_var(0, 1);
+            obj_unlock(self_obj);
+            if (is_critical(RollvsLockpick)) then begin
+               display_msg(message_str(SCRIPT_GENLOCK, 106));
+               display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
+               give_exp_points(50);
+            end
+            else begin
+               display_msg(message_str(SCRIPT_GENLOCK, 101));
+               display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
+               give_exp_points(25);
+            end
+         end
+         else begin
+            if (is_critical(RollvsLockpick)) then begin
+               display_msg(message_str(SCRIPT_GENLOCK, 102));
+               jam_lock(self_obj);
+            end
+            else begin
+               display_msg(message_str(SCRIPT_GENLOCK, 103));
+            end
+         end
+      end
+      else begin
+         display_msg(message_str(SCRIPT_GENLOCK, 104));
+      end
+   end
+   else begin
+      if (action_being_used == SKILL_STEAL) then begin//-- STEAL
+         call attempt_open;
+      end
+   end
 end
 
 procedure use_obj_on_p_proc begin
-	variable ItemUsed := 0;
-	ItemUsed := obj_being_used_with;
-	if (obj_pid(ItemUsed) == PID_LOCKPICKS) then begin
-		script_overrides;
-		RollvsLockpick := roll_vs_skill(source_obj, SKILL_LOCKPICK, 20);
-		if (obj_is_locked(self_obj)) then begin
-			if (is_success(RollvsLockpick)) then begin
-				set_local_var(0, 1);
-				obj_unlock(self_obj);
-				if (is_critical(RollvsLockpick)) then begin
-					display_msg(message_str(SCRIPT_GENLOCK, 106));
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(50);
-				end
-				else begin
-					display_msg(message_str(SCRIPT_GENLOCK, 101));
-					display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
-					give_exp_points(25);
-				end
-			end
-			else begin
-				if (is_critical(RollvsLockpick)) then begin
-					display_msg(message_str(SCRIPT_GENLOCK, 102));
-					display_msg(message_str(SCRIPT_GENLOCK, 105));
-					jam_lock(self_obj);
-					rm_obj_from_inven(source_obj, ItemUsed);
-					destroy_object(ItemUsed);
-				end
-				else begin
-					display_msg(message_str(SCRIPT_GENLOCK, 103));
-				end
-			end
-		end
-		else begin
-			display_msg(message_str(SCRIPT_GENLOCK, 104));
-		end
-	end
+   variable ItemUsed := 0;
+   ItemUsed := obj_being_used_with;
+   if (obj_pid(ItemUsed) == PID_LOCKPICKS) then begin
+      script_overrides;
+      RollvsLockpick := roll_vs_skill(source_obj, SKILL_LOCKPICK, 20);
+      if (obj_is_locked(self_obj)) then begin
+         if (is_success(RollvsLockpick)) then begin
+            set_local_var(0, 1);
+            obj_unlock(self_obj);
+            if (is_critical(RollvsLockpick)) then begin
+               display_msg(message_str(SCRIPT_GENLOCK, 106));
+               display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
+               give_exp_points(50);
+            end
+            else begin
+               display_msg(message_str(SCRIPT_GENLOCK, 101));
+               display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
+               give_exp_points(25);
+            end
+         end
+         else begin
+            if (is_critical(RollvsLockpick)) then begin
+               display_msg(message_str(SCRIPT_GENLOCK, 102));
+               display_msg(message_str(SCRIPT_GENLOCK, 105));
+               jam_lock(self_obj);
+               rm_obj_from_inven(source_obj, ItemUsed);
+               destroy_object(ItemUsed);
+            end
+            else begin
+               display_msg(message_str(SCRIPT_GENLOCK, 103));
+            end
+         end
+      end
+      else begin
+         display_msg(message_str(SCRIPT_GENLOCK, 104));
+      end
+   end
 end
 
 procedure damage_p_proc begin
-	if not(global_var(GVAR_FIXT_BUGFIXES_ONLY)) then begin
-		if (global_var(GVAR_EXPLOSIVES_RUIN_LOCKERS) == 1) then begin
-			script_overrides;
-			if not(is_loading_game) then begin
-				set_self_invisible;
-			end
-			destroy_object(self_obj);
-			display_msg(message_str(SCRIPT_GENLOCK, 112));
-			script_overrides;
-		end
-		else begin
-			script_overrides;
-			set_local_var(1, 1);
-			set_local_var(0, 1);
-			display_msg(message_str(SCRIPT_GENLOCK, 111));
-			display_msg(message_str(SCRIPT_GENCHAT, 103) + "10" + message_str(SCRIPT_GENCHAT, 104));
-			give_exp_points(10);
-			script_overrides;
-		end
-	end
+   if not(global_var(GVAR_FIXT_BUGFIXES_ONLY)) then begin
+      if (global_var(GVAR_EXPLOSIVES_RUIN_LOCKERS) == 1) then begin
+         script_overrides;
+         if not(is_loading_game) then begin
+            set_self_invisible;
+         end
+         destroy_object(self_obj);
+         display_msg(message_str(SCRIPT_GENLOCK, 112));
+         script_overrides;
+      end
+      else begin
+         script_overrides;
+         set_local_var(1, 1);
+         set_local_var(0, 1);
+         display_msg(message_str(SCRIPT_GENLOCK, 111));
+         display_msg(message_str(SCRIPT_GENCHAT, 103) + "10" + message_str(SCRIPT_GENCHAT, 104));
+         give_exp_points(10);
+         script_overrides;
+      end
+   end
 end
 
 procedure description_p_proc begin
-	if (obj_is_locked(self_obj)) then begin
-		display_msg(message_str(SCRIPT_GENLOCK, 100));
-	end
+   if (obj_is_locked(self_obj)) then begin
+      display_msg(message_str(SCRIPT_GENLOCK, 100));
+   end
 end

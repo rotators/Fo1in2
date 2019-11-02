@@ -1,6 +1,6 @@
 /*
 
-	Shady Sands - Seth, the entrance guard
+   Shady Sands - Seth, the entrance guard
 
 */
 
@@ -66,299 +66,299 @@ procedure PickDeadBodyType;
 variable DeathType := 56;
 
 #define LVAR_Here_Before                  (4)
-#define LVAR_Sleeping 							(5)
+#define LVAR_Sleeping                     (5)
 #define LVAR_Welcome                      (6)
 #define LVAR_Invasion                     (10)
 
 procedure start begin
-	if shady_invaded then begin
-		if CUR_AREA_SHADY_SANDS then begin
-			if (local_var(LVAR_Invasion) != 1) then begin
-				set_local_var(LVAR_Invasion, 1);
-				call PickDeadBodyType;
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
+   if shady_invaded then begin
+      if CUR_AREA_SHADY_SANDS then begin
+         if (local_var(LVAR_Invasion) != 1) then begin
+            set_local_var(LVAR_Invasion, 1);
+            call PickDeadBodyType;
+            kill_critter(self_obj, DeathType);
+         end
+      end
+   end
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure critter_p_proc begin
-	if (local_var(LVAR_Welcome) == 0) then begin
-		set_local_var(LVAR_Welcome, 1);
-		if dude_is_armed then begin
-			float_msg(self_obj, mstr(204), FLOAT_MSG_YELLOW);
-		end
-		else begin
-			float_msg(self_obj, mstr(205), FLOAT_MSG_YELLOW);
-		end
-	end
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
+   if (local_var(LVAR_Welcome) == 0) then begin
+      set_local_var(LVAR_Welcome, 1);
+      if dude_is_armed then begin
+         float_msg(self_obj, mstr(204), FLOAT_MSG_YELLOW);
+      end
+      else begin
+         float_msg(self_obj, mstr(205), FLOAT_MSG_YELLOW);
+      end
+   end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		round_counter := round_counter + 1;
-	end
-	if (round_counter > 3) then begin
-		if not(global_var(GVAR_ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
-			set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-			set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		end
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      round_counter := round_counter + 1;
+   end
+   if (round_counter > 3) then begin
+      if not(global_var(GVAR_ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
+         set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+         set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      end
+   end
 end
 
 procedure map_update_p_proc begin
-	if not(initial) then begin
-		set_self_team(TEAM_SHADY_SANDS);
-		set_self_ai(AI_GUARD);
-		home_tile := 14108;
-		sleep_tile := 15925;
-		wake_time := 600;
-		sleep_time := 2100;
-		initial := 1;
-	end
+   if not(initial) then begin
+      set_self_team(TEAM_SHADY_SANDS);
+      set_self_ai(AI_GUARD);
+      home_tile := 14108;
+      sleep_tile := 15925;
+      wake_time := 600;
+      sleep_time := 2100;
+      initial := 1;
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
+   dude_look_at_self;
 
-	get_reaction
+   get_reaction
 
-	if (local_var(9) == 1) then begin
-		float_msg(self_obj, mstr(320), FLOAT_MSG_RED);
-		tmp_hostile := 1;
-	end
-	else if (tandi_is_kidnapped and (dude_iq > 3)) then begin
-		set_global_var(GVAR_TANDI_TALKED_ABOUT, 1);
-		if (local_var(8) == 0) then begin
-			set_local_var(8, 1);
-			start_dialog_at_node(TanSeth00);
-		end
-		else begin
-			start_dialog_at_node(TanSeth01);
-		end
-	end
-	else if (local_var(5) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
-	end
-	else if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
-		float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
-		tmp_hostile := 1;
-	end
-	else begin
-		start_dialog_at_node(pick_start);
-	end
+   if (local_var(9) == 1) then begin
+      float_msg(self_obj, mstr(320), FLOAT_MSG_RED);
+      tmp_hostile := 1;
+   end
+   else if (tandi_is_kidnapped and (dude_iq > 3)) then begin
+      set_global_var(GVAR_TANDI_TALKED_ABOUT, 1);
+      if (local_var(8) == 0) then begin
+         set_local_var(8, 1);
+         start_dialog_at_node(TanSeth00);
+      end
+      else begin
+         start_dialog_at_node(TanSeth01);
+      end
+   end
+   else if (local_var(5) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
+   end
+   else if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
+      float_msg(self_obj, mstr(101), FLOAT_MSG_RED);
+      tmp_hostile := 1;
+   end
+   else begin
+      start_dialog_at_node(pick_start);
+   end
 end
 
 procedure destroy_p_proc begin
-	if obj_in_party(source_obj) then begin
-		set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-		inc_good_critter
-	end
-	set_global_var(GVAR_SETH_STATUS, 3);
+   if obj_in_party(source_obj) then begin
+      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+      inc_good_critter
+   end
+   set_global_var(GVAR_SETH_STATUS, 3);
 end
 
 procedure travel begin
-	if (radscorp_quest_inactive and not(radscorp_quest_completed)) then begin
-		set_radscorp_quest_active;
-	end
+   if (radscorp_quest_inactive and not(radscorp_quest_completed)) then begin
+      set_radscorp_quest_active;
+   end
    game_time_advance(game_ticks(60 * 30));
    load_map(MAP_CAVES, 1);
 end
 
 procedure no_travel begin
-	if radscorp_quest_completed then begin
-		NMessage(203);
-	end
-	else begin
-		NMessage(128);
-	end
+   if radscorp_quest_completed then begin
+      NMessage(203);
+   end
+   else begin
+      NMessage(128);
+   end
 end
 
 procedure pick_start begin
-	if (global_var(GVAR_SETH_STATUS) == 0) then begin
-		if (local_var(1) < 2) then begin
-			call Seth04;
-		end
-		else begin
-			call Seth05;
-		end
-	end
-	else begin
-		if radscorp_quest_completed then begin
-			BigUpReact
-			GMessage(200);
-			if (dude_iq > 3) then begin
-				call Seth07;
-			end
-		end
-		else begin
-			if (local_var(1) < 2) then begin
-				call Seth09;
-			end
-			else begin
-				call Seth07;
-			end
-		end
-	end
+   if (global_var(GVAR_SETH_STATUS) == 0) then begin
+      if (local_var(1) < 2) then begin
+         call Seth04;
+      end
+      else begin
+         call Seth05;
+      end
+   end
+   else begin
+      if radscorp_quest_completed then begin
+         BigUpReact
+         GMessage(200);
+         if (dude_iq > 3) then begin
+            call Seth07;
+         end
+      end
+      else begin
+         if (local_var(1) < 2) then begin
+            call Seth09;
+         end
+         else begin
+            call Seth07;
+         end
+      end
+   end
 end
 
 procedure Seth01 begin
-	NMessage(101);
-	tmp_hostile := 1;
+   NMessage(101);
+   tmp_hostile := 1;
 end
 
 procedure Seth02 begin
-	NMessage(102);
-	tmp_hostile := 1;
+   NMessage(102);
+   tmp_hostile := 1;
 end
 
 procedure Seth03 begin
-	Reply(103);
-	set_local_var(LVAR_Here_Before, 1);
-	gsay_option(NAME, 104, Seth13, 50);
-	gsay_option(NAME, 105, Seth08a, 50);
+   Reply(103);
+   set_local_var(LVAR_Here_Before, 1);
+   gsay_option(NAME, 104, Seth13, 50);
+   gsay_option(NAME, 105, Seth08a, 50);
 end
 
 procedure Seth04 begin
-	Reply(106);
-	set_global_var(GVAR_SETH_STATUS, 1);
-	giq_option(4, NAME, 107, Seth02, NEUTRAL_REACTION);
-	giq_option(4, NAME, 108, Seth06, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 109, Seth03, NEUTRAL_REACTION);
+   Reply(106);
+   set_global_var(GVAR_SETH_STATUS, 1);
+   giq_option(4, NAME, 107, Seth02, NEUTRAL_REACTION);
+   giq_option(4, NAME, 108, Seth06, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 109, Seth03, NEUTRAL_REACTION);
 end
 
 procedure Seth05 begin
-	Reply(110);
-	set_global_var(GVAR_SETH_STATUS, 1);
-	giq_option(4, NAME, 111, Seth06, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 112, Seth03, NEUTRAL_REACTION);
+   Reply(110);
+   set_global_var(GVAR_SETH_STATUS, 1);
+   giq_option(4, NAME, 111, Seth06, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 112, Seth03, NEUTRAL_REACTION);
 end
 
 procedure Seth06 begin
-	Reply(113);
-	call Seth08;
+   Reply(113);
+   call Seth08;
 end
 
 procedure Seth07 begin
-	Reply(114);
-	call Seth08;
+   Reply(114);
+   call Seth08;
 end
 
 procedure Seth08 begin
-	if radscorp_quest_active then begin
-		giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
-	end
-	if tandi_is_kidnapped then begin
-		giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
-	if ((local_var(LVAR_Here_Before) == 1) and not(radscorp_quest_completed) and not(shady_caves_visible_on_map)) then begin
-		giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
+   if radscorp_quest_active then begin
+      giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
+   end
+   if tandi_is_kidnapped then begin
+      giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
+   if ((local_var(LVAR_Here_Before) == 1) and not(radscorp_quest_completed) and not(shady_caves_visible_on_map)) then begin
+      giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
 end
 
 procedure Seth08a begin
-	if (local_var(7) == 0) then begin
-		set_local_var(7, 1);
-		call Seth14;
-	end
-	else begin
-		call Sethend;
-	end
+   if (local_var(7) == 0) then begin
+      set_local_var(7, 1);
+      call Seth14;
+   end
+   else begin
+      call Sethend;
+   end
 end
 
 procedure Seth09 begin
-	Reply(121);
-	if radscorp_quest_active then begin
-		giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
-	end
-	if tandi_is_kidnapped then begin
-		giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
-	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
-		giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
+   Reply(121);
+   if radscorp_quest_active then begin
+      giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
+   end
+   if tandi_is_kidnapped then begin
+      giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
+   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+      giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
 end
 
 procedure Seth10 begin
-	if radscorp_quest_completed then begin
-		Reply(201);
-	end
-	else begin
-		Reply(122);
-	end
-	set_local_var(LVAR_Here_Before, 1);
-	if tandi_is_kidnapped then begin
-		giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
-	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
-		giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
+   if radscorp_quest_completed then begin
+      Reply(201);
+   end
+   else begin
+      Reply(122);
+   end
+   set_local_var(LVAR_Here_Before, 1);
+   if tandi_is_kidnapped then begin
+      giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
+   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+      giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
 end
 
 procedure Seth11 begin
-	set_global_var(GVAR_WORLDMAPLIST_RAIDERS, 1);
-	mark_on_map(AREA_RAIDERS)
+   set_global_var(GVAR_WORLDMAPLIST_RAIDERS, 1);
+   mark_on_map(AREA_RAIDERS)
 
-	Reply(123);
-	if radscorp_quest_active then begin
-		giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
-	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
-		giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
+   Reply(123);
+   if radscorp_quest_active then begin
+      giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 117, Seth12, NEUTRAL_REACTION);
+   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+      giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
 end
 
 procedure Seth12 begin
-	Reply(124);
-	giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
-	giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
-	if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
-		giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
+   Reply(124);
+   giq_option(4, NAME, 115, Seth10, NEUTRAL_REACTION);
+   giq_option(4, NAME, 116, Seth11, NEUTRAL_REACTION);
+   if (local_var(LVAR_Here_Before) == 1) and not(shady_caves_visible_on_map) then begin
+      giq_option(4, NAME, 118, Seth13, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 119, Seth13, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 120, Seth08a, NEUTRAL_REACTION);
 end
 
 procedure Seth13 begin
    // Vanilla Fo1, teleport the player:
    if fo1in2_satellite_loc_disabled then begin
-   	if radscorp_quest_completed then begin
-   		Reply(202);
-   	end
-   	else begin
-   		Reply(125);
-   	end
-   	giq_option(4, NAME, 126, travel, NEUTRAL_REACTION);
-   	giq_option(4, NAME, 127, no_travel, NEUTRAL_REACTION);
-   	giq_option(-3, NAME, 130, travel, NEUTRAL_REACTION);
-   	giq_option(-3, NAME, 131, no_travel, NEUTRAL_REACTION);
+      if radscorp_quest_completed then begin
+         Reply(202);
+      end
+      else begin
+         Reply(125);
+      end
+      giq_option(4, NAME, 126, travel, NEUTRAL_REACTION);
+      giq_option(4, NAME, 127, no_travel, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 130, travel, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 131, no_travel, NEUTRAL_REACTION);
    end
 
    // If the player enabled satellite quest locations, mark the location instead:
    else begin
-  		Reply(2000);
-  		NOption(2010, Seth13a, 001);
+      Reply(2000);
+      NOption(2010, Seth13a, 001);
    end
 end
 
@@ -371,77 +371,77 @@ procedure Seth13a begin
 end
 
 procedure Seth14 begin
-	NMessage(206);
+   NMessage(206);
 end
 
 procedure Sethend begin
 end
 
 procedure TanSeth00 begin
-	Reply(300);
-	giq_option(4, NAME, 301, TanSeth03, NEUTRAL_REACTION);
-	giq_option(4, NAME, 302, TanSeth02, BAD_REACTION);
-	giq_option(4, NAME, 303, TanSeth02, NEUTRAL_REACTION);
-	if radscorp_quest_active then begin
-		giq_option(4, NAME, 304, TanSeth07, NEUTRAL_REACTION);
-	end
+   Reply(300);
+   giq_option(4, NAME, 301, TanSeth03, NEUTRAL_REACTION);
+   giq_option(4, NAME, 302, TanSeth02, BAD_REACTION);
+   giq_option(4, NAME, 303, TanSeth02, NEUTRAL_REACTION);
+   if radscorp_quest_active then begin
+      giq_option(4, NAME, 304, TanSeth07, NEUTRAL_REACTION);
+   end
 end
 
 procedure TanSeth01 begin
-	Reply(305);
-	giq_option(4, NAME, 306, TanSeth06, NEUTRAL_REACTION);
-	giq_option(4, NAME, 307, TanSeth05, BAD_REACTION);
-	giq_option(4, NAME, 308, TanSeth06, NEUTRAL_REACTION);
-	if radscorp_quest_active then begin
-		giq_option(4, NAME, 309, TanSeth07, NEUTRAL_REACTION);
-	end
+   Reply(305);
+   giq_option(4, NAME, 306, TanSeth06, NEUTRAL_REACTION);
+   giq_option(4, NAME, 307, TanSeth05, BAD_REACTION);
+   giq_option(4, NAME, 308, TanSeth06, NEUTRAL_REACTION);
+   if radscorp_quest_active then begin
+      giq_option(4, NAME, 309, TanSeth07, NEUTRAL_REACTION);
+   end
 end
 
 procedure TanSeth02 begin
-	NMessage(310);
+   NMessage(310);
 end
 
 procedure TanSeth03 begin
-	set_global_var(GVAR_WORLDMAPLIST_RAIDERS, 1);
-	mark_on_map(AREA_RAIDERS)
+   set_global_var(GVAR_WORLDMAPLIST_RAIDERS, 1);
+   mark_on_map(AREA_RAIDERS)
 
-	Reply(311);
-	giq_option(4, NAME, 312, Sethend, NEUTRAL_REACTION);
-	giq_option(4, NAME, 313, TanSeth02, BAD_REACTION);
-	giq_option(4, NAME, 314, TanSeth04, BAD_REACTION);
-	giq_option(4, NAME, 315, TanSeth02, BAD_REACTION);
+   Reply(311);
+   giq_option(4, NAME, 312, Sethend, NEUTRAL_REACTION);
+   giq_option(4, NAME, 313, TanSeth02, BAD_REACTION);
+   giq_option(4, NAME, 314, TanSeth04, BAD_REACTION);
+   giq_option(4, NAME, 315, TanSeth02, BAD_REACTION);
 end
 
 procedure TanSeth04 begin
-	Reply(316);
-	giq_option(4, NAME, 317, TanSeth05, BAD_REACTION);
-	giq_option(4, NAME, 318, Sethend, NEUTRAL_REACTION);
-	giq_option(4, NAME, 319, TanSeth02, BAD_REACTION);
+   Reply(316);
+   giq_option(4, NAME, 317, TanSeth05, BAD_REACTION);
+   giq_option(4, NAME, 318, Sethend, NEUTRAL_REACTION);
+   giq_option(4, NAME, 319, TanSeth02, BAD_REACTION);
 end
 
 procedure TanSeth05 begin
-	set_local_var(9, 1);
-	tmp_hostile := 1;
-	BMessage(320);
+   set_local_var(9, 1);
+   tmp_hostile := 1;
+   BMessage(320);
 end
 
 procedure TanSeth06 begin
-	NMessage(321);
+   NMessage(321);
 end
 
 procedure TanSeth07 begin
-	Reply(322);
-	giq_option(4, NAME, 323, travel, NEUTRAL_REACTION);
-	giq_option(4, NAME, 324, TanSeth02, BAD_REACTION);
-	giq_option(4, NAME, 325, Sethend, NEUTRAL_REACTION);
+   Reply(322);
+   giq_option(4, NAME, 323, travel, NEUTRAL_REACTION);
+   giq_option(4, NAME, 324, TanSeth02, BAD_REACTION);
+   giq_option(4, NAME, 325, Sethend, NEUTRAL_REACTION);
 end
 
 procedure pickup_p_proc begin
-	if (source_obj == dude_obj) then begin
-		tmp_hostile := 1;
-	end
+   if (source_obj == dude_obj) then begin
+      tmp_hostile := 1;
+   end
 end
 
 procedure PickDeadBodyType begin
-	pick_dead_body_type
+   pick_dead_body_type
 end

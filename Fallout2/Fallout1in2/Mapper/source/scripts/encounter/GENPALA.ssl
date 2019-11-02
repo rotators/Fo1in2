@@ -1,6 +1,6 @@
 /*
 
-	Encounter - Generic BoS Paladin
+   Encounter - Generic BoS Paladin
 
 */
 
@@ -27,80 +27,80 @@ variable scared;
 import variable random_seed_1;
 
 procedure start begin
-	if not(initial) then begin
-		set_self_team(TEAM_BROTHERHOOD);
-		set_self_ai(AI_BROTHERHOOD_PALADIN);
-		tmp_hostile := global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure);
-		initial := 1;
-	end
+   if not(initial) then begin
+      set_self_team(TEAM_BROTHERHOOD);
+      set_self_ai(AI_BROTHERHOOD_PALADIN);
+      tmp_hostile := global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure);
+      initial := 1;
+   end
 end
 
 procedure combat_p_proc
 begin
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		round_counter := round_counter + 1;
-		if (self_cur_hp < 10) then begin
-			scared := 1;
-		end
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      round_counter := round_counter + 1;
+      if (self_cur_hp < 10) then begin
+         scared := 1;
+      end
+   end
 end
 
 procedure critter_p_proc begin
-	if (scared) then begin
-		if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-			call flee_dude;
-		end
-	end
-	else begin
-		if (tmp_hostile) then begin
-			tmp_hostile := 0;
-			attack(dude_obj);
-		end
-	end
+   if (scared) then begin
+      if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
+         call flee_dude;
+      end
+   end
+   else begin
+      if (tmp_hostile) then begin
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+   end
 end
 
 procedure destroy_p_proc begin
-	inc_good_critter
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
-		random_seed_1 := 1;
-	end
+   inc_good_critter
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
+      random_seed_1 := 1;
+   end
 end
 
 procedure pickup_p_proc begin
-	if (not(scared)) then begin
-		tmp_hostile := 1;
-		set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
-	end
+   if (not(scared)) then begin
+      tmp_hostile := 1;
+      set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if (has_rep_berserker) then begin
-		set_global_var(GVAR_BERSERKER_REPUTATION, 1);
-		set_global_var(GVAR_CHAMPION_REPUTATION, 0);
-	end
-	if (scared) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENPALA, 101), FLOAT_MSG_RED);
-	end
-	else begin
-		if ((global_var(GVAR_ENEMY_BROTHERHOOD) == 1) or (random_seed_1 == 1)) then begin
-			float_msg(self_obj, message_str(SCRIPT_GENPALA, 100), FLOAT_MSG_RED);
-			set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
-			tmp_hostile := 1;
-		end
-		else begin
-			if (global_var(GVAR_BROTHERHOOD_SEED) == 2) then begin
-				float_msg(self_obj, message_str(SCRIPT_GENPALA, 102), FLOAT_MSG_BLUE);
-			end
-			else begin
-				if ((check_general_rep < -20) or (has_rep_berserker) or has_rep_childkiller) then begin
-					float_msg(self_obj, message_str(SCRIPT_GENPALA, 104), FLOAT_MSG_RED);
-				end
-				else begin
-					float_msg(self_obj, message_str(SCRIPT_GENPALA, 103), FLOAT_MSG_GREEN);
-				end
-			end
-		end
-	end
+   dude_look_at_self;
+   if (has_rep_berserker) then begin
+      set_global_var(GVAR_BERSERKER_REPUTATION, 1);
+      set_global_var(GVAR_CHAMPION_REPUTATION, 0);
+   end
+   if (scared) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENPALA, 101), FLOAT_MSG_RED);
+   end
+   else begin
+      if ((global_var(GVAR_ENEMY_BROTHERHOOD) == 1) or (random_seed_1 == 1)) then begin
+         float_msg(self_obj, message_str(SCRIPT_GENPALA, 100), FLOAT_MSG_RED);
+         set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
+         tmp_hostile := 1;
+      end
+      else begin
+         if (global_var(GVAR_BROTHERHOOD_SEED) == 2) then begin
+            float_msg(self_obj, message_str(SCRIPT_GENPALA, 102), FLOAT_MSG_BLUE);
+         end
+         else begin
+            if ((check_general_rep < -20) or (has_rep_berserker) or has_rep_childkiller) then begin
+               float_msg(self_obj, message_str(SCRIPT_GENPALA, 104), FLOAT_MSG_RED);
+            end
+            else begin
+               float_msg(self_obj, message_str(SCRIPT_GENPALA, 103), FLOAT_MSG_GREEN);
+            end
+         end
+      end
+   end
 end

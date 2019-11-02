@@ -1,6 +1,6 @@
 /*
 
-	Shady Sands - Razlo
+   Shady Sands - Razlo
 
 */
 
@@ -116,536 +116,536 @@ variable DeathType := 56;
 #define LVAR_Talk_TandiRescued   (5)
 #define LVAR_Invasion            (6)
 #define LVAR_Tail_EXP            (7)
-#define LVAR_Sleeping 			   (9)
+#define LVAR_Sleeping            (9)
 
 procedure start begin
-	if shady_invaded then begin
-		if CUR_AREA_SHADY_SANDS then begin
-			if (local_var(LVAR_Invasion) != 1) then begin
-				set_local_var(LVAR_Invasion, 1);
-				call PickDeadBodyType;
-				kill_critter(self_obj, DeathType);
-			end
-		end
-	end
+   if shady_invaded then begin
+      if CUR_AREA_SHADY_SANDS then begin
+         if (local_var(LVAR_Invasion) != 1) then begin
+            set_local_var(LVAR_Invasion, 1);
+            call PickDeadBodyType;
+            kill_critter(self_obj, DeathType);
+         end
+      end
+   end
 end
 
 procedure combat_p_proc begin
-	if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-		round_counter := round_counter + 1;
-	end
-	if (round_counter > 3) then begin
-		if not(global_var(GVAR_ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
-			set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-			set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
-		end
-	end
+   if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+      round_counter := round_counter + 1;
+   end
+   if (round_counter > 3) then begin
+      if not(global_var(GVAR_ENEMY_SHADY_SANDS)) then begin//Shady Sands is NOT tmp_hostile to player;  i.e. globalvar ENEMY_SHADY_SANDS is not enabled
+         set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+         set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
+      end
+   end
 end
 
 procedure map_update_p_proc begin
-	if not(initial) then begin
-		set_self_team(TEAM_SHADY_SANDS);
-		set_self_ai(AI_PEASANT);
-		home_tile := 24529;
-		sleep_tile := 23133;
-		wake_time := 630;
-		sleep_time := 2230;
-		initial := 0;
-	end
+   if not(initial) then begin
+      set_self_team(TEAM_SHADY_SANDS);
+      set_self_ai(AI_PEASANT);
+      home_tile := 24529;
+      sleep_tile := 23133;
+      wake_time := 630;
+      sleep_time := 2230;
+      initial := 0;
+   end
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	MAX_HITS := dude_max_hp;
-	HITS := dude_cur_hp;
+   dude_look_at_self;
+   MAX_HITS := dude_max_hp;
+   HITS := dude_cur_hp;
 
-	get_reaction
-	CHECK_REP_BERSERKER
-	CHECK_REP_CHAMPION
+   get_reaction
+   CHECK_REP_BERSERKER
+   CHECK_REP_CHAMPION
 
-	if (local_var(9) == 1) then begin
-		float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
-	end
-	else begin
-		if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-			set_local_var(LVAR_Invasion, 1);
-			start_dialog_at_node(razlo00n);
-		end
-		else if radscorp_quest_active then begin
-			if (tandi_is_kidnapped and (local_var(LVAR_Here_Before) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-				set_local_var(LVAR_Here_Before, 1);
-				start_dialog_at_node(razlo01);
-			end
-			else begin
-				start_dialog_at_node(razlo23);
-			end
-		end
-		else if (dude_item_count(PID_SCORPION_TAIL)) then begin
-			start_dialog_at_node(razlo23);
-		end
-		else if ((local_var(LVAR_Invasion) == 0) and (local_var(1) >= 2)) then begin
-			set_local_var(LVAR_Invasion, 1);
-			start_dialog_at_node(razlo10);
-		end
-		else if (local_var(LVAR_Invasion) == 0) then begin
-			set_local_var(LVAR_Invasion, 1);
-			start_dialog_at_node(razlo18);
-		end
-		else if not(is_tandi_alive) then begin
-			call razlo09;
-		end
-		else if (tandi_is_rescued and (local_var(LVAR_Talk_TandiRescued) == 0)) then begin
-			set_local_var(LVAR_Talk_TandiRescued, 1);
-			call razlo08;
-		end
-		else if (tandi_is_kidnapped and (local_var(LVAR_Here_Before) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-			set_local_var(LVAR_Here_Before, 1);
-			start_dialog_at_node(razlo01);
-		end
-		else if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1) and (local_var(LVAR_Here_Before) == 1)) then begin
-			set_local_var(LVAR_Here_Before, 2);
-			call razlo07;
-		end
-		else if (has_rep_berserker or has_rep_childkiller) then begin
-			start_dialog_at_node(razlo00);
-			display_msg(mstr(103));
-		end
-		else if (local_var(1) >= 2) then begin
-			start_dialog_at_node(razlo19);
-		end
-		else begin
-			start_dialog_at_node(razlo21);
-		end
-	end
-	call remove_items;
+   if (local_var(9) == 1) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
+   end
+   else begin
+      if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+         set_local_var(LVAR_Invasion, 1);
+         start_dialog_at_node(razlo00n);
+      end
+      else if radscorp_quest_active then begin
+         if (tandi_is_kidnapped and (local_var(LVAR_Here_Before) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
+            set_local_var(LVAR_Here_Before, 1);
+            start_dialog_at_node(razlo01);
+         end
+         else begin
+            start_dialog_at_node(razlo23);
+         end
+      end
+      else if (dude_item_count(PID_SCORPION_TAIL)) then begin
+         start_dialog_at_node(razlo23);
+      end
+      else if ((local_var(LVAR_Invasion) == 0) and (local_var(1) >= 2)) then begin
+         set_local_var(LVAR_Invasion, 1);
+         start_dialog_at_node(razlo10);
+      end
+      else if (local_var(LVAR_Invasion) == 0) then begin
+         set_local_var(LVAR_Invasion, 1);
+         start_dialog_at_node(razlo18);
+      end
+      else if not(is_tandi_alive) then begin
+         call razlo09;
+      end
+      else if (tandi_is_rescued and (local_var(LVAR_Talk_TandiRescued) == 0)) then begin
+         set_local_var(LVAR_Talk_TandiRescued, 1);
+         call razlo08;
+      end
+      else if (tandi_is_kidnapped and (local_var(LVAR_Here_Before) == 0) and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
+         set_local_var(LVAR_Here_Before, 1);
+         start_dialog_at_node(razlo01);
+      end
+      else if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1) and (local_var(LVAR_Here_Before) == 1)) then begin
+         set_local_var(LVAR_Here_Before, 2);
+         call razlo07;
+      end
+      else if (has_rep_berserker or has_rep_childkiller) then begin
+         start_dialog_at_node(razlo00);
+         display_msg(mstr(103));
+      end
+      else if (local_var(1) >= 2) then begin
+         start_dialog_at_node(razlo19);
+      end
+      else begin
+         start_dialog_at_node(razlo21);
+      end
+   end
+   call remove_items;
 end
 
 procedure razlo00 begin
-	NMessage(101);
+   NMessage(101);
 end
 
 procedure razlo00a begin
-	display_msg(mstr(103));
+   display_msg(mstr(103));
 end
 
 procedure razlo01 begin
-	Reply(104);
-	if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-		giq_option(4, NAME, 105, razlo03, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 143, razlo22, NEUTRAL_REACTION);
-	giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 106, razlo02, NEUTRAL_REACTION);
+   Reply(104);
+   if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
+      giq_option(4, NAME, 105, razlo03, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 143, razlo22, NEUTRAL_REACTION);
+   giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 106, razlo02, NEUTRAL_REACTION);
 end
 
 procedure razlo02 begin
-	NMessage(107);
-	set_local_var(LVAR_Here_Before, 1);
+   NMessage(107);
+   set_local_var(LVAR_Here_Before, 1);
 end
 
 procedure razlo03 begin
-	set_local_var(LVAR_Here_Before, 1);
-	Reply(108);
-	giq_option(5, NAME, 110, razlo04, NEUTRAL_REACTION);
-	giq_option(4, NAME, 109, razloend, NEUTRAL_REACTION);
-	giq_option(5, NAME, 111, razloend, NEUTRAL_REACTION);
+   set_local_var(LVAR_Here_Before, 1);
+   Reply(108);
+   giq_option(5, NAME, 110, razlo04, NEUTRAL_REACTION);
+   giq_option(4, NAME, 109, razloend, NEUTRAL_REACTION);
+   giq_option(5, NAME, 111, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlo04 begin
-	Reply(112);
-	giq_option(4, NAME, 113, razlo05, NEUTRAL_REACTION);
-	giq_option(4, NAME, 114, razlo06, NEUTRAL_REACTION);
+   Reply(112);
+   giq_option(4, NAME, 113, razlo05, NEUTRAL_REACTION);
+   giq_option(4, NAME, 114, razlo06, NEUTRAL_REACTION);
 end
 
 procedure razlo05 begin
-	NMessage(115);
+   NMessage(115);
 end
 
 procedure razlo06 begin
-	NMessage(116);
-	call givestuff;
+   NMessage(116);
+   call givestuff;
 end
 
 procedure razlo06na begin
-	NMessage(306);
-	call razlo06nb;
+   NMessage(306);
+   call razlo06nb;
 end
 
 procedure razlo06nb begin
-	variable Item := 0;
+   variable Item := 0;
 
-	NMessage(307);
+   NMessage(307);
 
-	Item := create_object(PID_ANTIDOTE, 0, 0);
-	add_obj_to_inven(dude_obj, Item);
+   Item := create_object(PID_ANTIDOTE, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 
-	Item := dude_item(PID_SCORPION_TAIL);
-	rm_obj_from_inven(dude_obj, Item);
-	destroy_object(Item);
+   Item := dude_item(PID_SCORPION_TAIL);
+   rm_obj_from_inven(dude_obj, Item);
+   destroy_object(Item);
 
-	if (local_var(LVAR_Tail_EXP) == 0) then begin
-		set_local_var(LVAR_Tail_EXP, 1);
-		give_exp_points(250);
-		display_msg(mstr(300));
-	end
+   if (local_var(LVAR_Tail_EXP) == 0) then begin
+      set_local_var(LVAR_Tail_EXP, 1);
+      give_exp_points(250);
+      display_msg(mstr(300));
+   end
 
-	gfade_out(1);
-	game_time_advance(game_ticks(1200 * damage));
-	gfade_in(1);
+   gfade_out(1);
+   game_time_advance(game_ticks(1200 * damage));
+   gfade_in(1);
 
-	critter_heal(dude_obj, damage);
+   critter_heal(dude_obj, damage);
 end
 
 procedure razlo07 begin
-	float_msg(self_obj, mstr(117), FLOAT_MSG_RED);
+   float_msg(self_obj, mstr(117), FLOAT_MSG_RED);
 end
 
 procedure razlo08 begin
-	float_msg(self_obj, mstr(118), FLOAT_MSG_LIGHT_RED);
+   float_msg(self_obj, mstr(118), FLOAT_MSG_LIGHT_RED);
 end
 
 procedure razlo09 begin
-	float_msg(self_obj, mstr(119), FLOAT_MSG_LIGHT_GREY);
+   float_msg(self_obj, mstr(119), FLOAT_MSG_LIGHT_GREY);
 end
 
 procedure razlo10 begin
-	Reply(120);
-	giq_option(4, NAME, 122, razlo14, NEUTRAL_REACTION);
-	giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
-	giq_option(4, NAME, 121, razloend, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 123, razlo11, NEUTRAL_REACTION);
+   Reply(120);
+   giq_option(4, NAME, 122, razlo14, NEUTRAL_REACTION);
+   giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
+   giq_option(4, NAME, 121, razloend, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 123, razlo11, NEUTRAL_REACTION);
 end
 
 procedure razlo11 begin
-	NMessage(124);
-	damage := MAX_HITS - HITS;
-	if (damage > (MAX_HITS / 4)) then begin
-		call razlo14;
-	end
-	else begin
-		call razlo12;
-	end
+   NMessage(124);
+   damage := MAX_HITS - HITS;
+   if (damage > (MAX_HITS / 4)) then begin
+      call razlo14;
+   end
+   else begin
+      call razlo12;
+   end
 end
 
 procedure razlo12 begin
-	NMessage(125);
+   NMessage(125);
 end
 
 procedure razlo14 begin
-	NMessage(126);
-	damage := MAX_HITS - HITS;
-	if (damage < (MAX_HITS / 4)) then begin
-		call razlowmpa;
-	end
-	else if (damage < (MAX_HITS / 2)) then begin
-		call razlofixa;
-	end
-	else if (damage < (3 * MAX_HITS / 4)) then begin
-		call razlofixb;
-	end
-	else begin
-		call razlofixc;
-	end
+   NMessage(126);
+   damage := MAX_HITS - HITS;
+   if (damage < (MAX_HITS / 4)) then begin
+      call razlowmpa;
+   end
+   else if (damage < (MAX_HITS / 2)) then begin
+      call razlofixa;
+   end
+   else if (damage < (3 * MAX_HITS / 4)) then begin
+      call razlofixb;
+   end
+   else begin
+      call razlofixc;
+   end
 end
 
 procedure razlo15 begin
-	NMessage(127);
+   NMessage(127);
 end
 
 procedure razlo17 begin
-	variable LVar0 := 0;
+   variable LVar0 := 0;
 
-	if (damage < (MAX_HITS / 2)) then begin
-		LVar0 := create_object(PID_BARTER_LIGHT_HEALING, 0, 0);
-		add_obj_to_inven(self_obj, LVar0);
-	end
-	else if (damage < (3 * MAX_HITS / 4)) then begin
-		LVar0 := create_object(PID_BARTER_MEDIUM_HEALING, 0, 0);
-		add_obj_to_inven(self_obj, LVar0);
-	end
-	else begin
-		LVar0 := create_object(PID_BARTER_HEAVY_HEALING, 0, 0);
-		add_obj_to_inven(self_obj, LVar0);
-	end
+   if (damage < (MAX_HITS / 2)) then begin
+      LVar0 := create_object(PID_BARTER_LIGHT_HEALING, 0, 0);
+      add_obj_to_inven(self_obj, LVar0);
+   end
+   else if (damage < (3 * MAX_HITS / 4)) then begin
+      LVar0 := create_object(PID_BARTER_MEDIUM_HEALING, 0, 0);
+      add_obj_to_inven(self_obj, LVar0);
+   end
+   else begin
+      LVar0 := create_object(PID_BARTER_HEAVY_HEALING, 0, 0);
+      add_obj_to_inven(self_obj, LVar0);
+   end
 
-	gdialog_mod_barter(0);
-	NMessage(126);
-	call razlo08n;
+   gdialog_mod_barter(0);
+   NMessage(126);
+   call razlo08n;
 end
 
 procedure razlo18 begin
-	Reply(128);
-	giq_option(4, NAME, 130, razlo14, NEUTRAL_REACTION);
-	giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
-	giq_option(5, NAME, 129, razloend, NEUTRAL_REACTION);
+   Reply(128);
+   giq_option(4, NAME, 130, razlo14, NEUTRAL_REACTION);
+   giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
+   giq_option(5, NAME, 129, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlo19 begin
-	Reply(131);
-	giq_option(4, NAME, 132, razlo20, NEUTRAL_REACTION);
-	giq_option(4, NAME, 143, razlo22, NEUTRAL_REACTION);
-	giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 134, razlo11, NEUTRAL_REACTION);
+   Reply(131);
+   giq_option(4, NAME, 132, razlo20, NEUTRAL_REACTION);
+   giq_option(4, NAME, 143, razlo22, NEUTRAL_REACTION);
+   giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 134, razlo11, NEUTRAL_REACTION);
 end
 
 procedure razlo20 begin
-	NMessage(135);
+   NMessage(135);
 end
 
 procedure razlo21 begin
-	Reply(136);
-	giq_option(4, NAME, 138, razlo22, NEUTRAL_REACTION);
-	giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 139, razlo11, NEUTRAL_REACTION);
-	giq_option(4, NAME, 137, razloend, NEUTRAL_REACTION);
+   Reply(136);
+   giq_option(4, NAME, 138, razlo22, NEUTRAL_REACTION);
+   giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 139, razlo11, NEUTRAL_REACTION);
+   giq_option(4, NAME, 137, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlo22 begin
-	NMessage(140);
-	call razlo14;
+   NMessage(140);
+   call razlo14;
 end
 
 procedure razlo23 begin
-	Reply(141);
-	giq_option(4, NAME, 143, razlo22, NEUTRAL_REACTION);
-	giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
-	giq_option(5, NAME, 145, razlo27, NEUTRAL_REACTION);
+   Reply(141);
+   giq_option(4, NAME, 143, razlo22, NEUTRAL_REACTION);
+   giq_option(4, NAME, 144, razlo23a, NEUTRAL_REACTION);
+   giq_option(5, NAME, 145, razlo27, NEUTRAL_REACTION);
 
-	if (dude_item_count(PID_SCORPION_TAIL)) then begin
-		giq_option(4, NAME, 146, razlo30, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 303, razlo30, NEUTRAL_REACTION);
-	end
+   if (dude_item_count(PID_SCORPION_TAIL)) then begin
+      giq_option(4, NAME, 146, razlo30, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 303, razlo30, NEUTRAL_REACTION);
+   end
 
-	giq_option(4, NAME, 142, razloend, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 147, razlo11, NEUTRAL_REACTION);
+   giq_option(4, NAME, 142, razloend, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 147, razlo11, NEUTRAL_REACTION);
 end
 
 procedure razlo23a begin
-	if (local_var(8) == 1) then begin
-		call razlo25;
-	end
-	else begin
-		call razlo24;
-	end
+   if (local_var(8) == 1) then begin
+      call razlo25;
+   end
+   else begin
+      call razlo24;
+   end
 end
 
 procedure razlo24 begin
-	NMessage(148);
+   NMessage(148);
 end
 
 procedure razlo25 begin
-	NMessage(149);
-	if (dude_poison_stat != 0) then begin
-		NMessage(150);
-		poison(dude_obj, -dude_poison_stat);
-		call razlo26;
-	end
-	else begin
-		NMessage(151);
-	end
+   NMessage(149);
+   if (dude_poison_stat != 0) then begin
+      NMessage(150);
+      poison(dude_obj, -dude_poison_stat);
+      call razlo26;
+   end
+   else begin
+      NMessage(151);
+   end
 end
 
 procedure razlo26 begin
-	NMessage(152);
+   NMessage(152);
 end
 
 procedure razlo27 begin
-	NMessage(153);
-	Reply(154);
-	giq_option(5, NAME, 156, razlo29, NEUTRAL_REACTION);
-	giq_option(5, NAME, 157, razlo28, NEUTRAL_REACTION);
-	giq_option(4, NAME, 155, razlo27a, GOOD_REACTION);
+   NMessage(153);
+   Reply(154);
+   giq_option(5, NAME, 156, razlo29, NEUTRAL_REACTION);
+   giq_option(5, NAME, 157, razlo28, NEUTRAL_REACTION);
+   giq_option(4, NAME, 155, razlo27a, GOOD_REACTION);
 end
 
 procedure razlo27a begin
-	UpReact
+   UpReact
 end
 
 procedure razlo28 begin
-	Reply(158);
-	giq_option(5, NAME, 159, razloend, NEUTRAL_REACTION);
+   Reply(158);
+   giq_option(5, NAME, 159, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlo29 begin
-	NMessage(160);
+   NMessage(160);
 end
 
 procedure razlo30 begin
-	NMessage(161);
-	gfade_out(1);
-	game_time_advance(game_ticks(14400));
-	gfade_in(1);
-	set_local_var(8, 1);
-	call razlo31;
+   NMessage(161);
+   gfade_out(1);
+   game_time_advance(game_ticks(14400));
+   gfade_in(1);
+   set_local_var(8, 1);
+   call razlo31;
 end
 
 procedure razlo31 begin
-	variable Item := 0;
+   variable Item := 0;
 
-	NMessage(162);
+   NMessage(162);
 
-	Item := create_object(PID_ANTIDOTE, 0, 0);
-	add_obj_to_inven(dude_obj, Item);
+   Item := create_object(PID_ANTIDOTE, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 
-	tail := dude_item(PID_SCORPION_TAIL);
-	rm_obj_from_inven(dude_obj, tail);
-	destroy_object(tail);
+   tail := dude_item(PID_SCORPION_TAIL);
+   rm_obj_from_inven(dude_obj, tail);
+   destroy_object(tail);
 
-	if (local_var(LVAR_Tail_EXP) == 0) then begin
-		set_local_var(LVAR_Tail_EXP, 1);
-		give_exp_points(250);
-		display_msg(mstr(300));
-	end
+   if (local_var(LVAR_Tail_EXP) == 0) then begin
+      set_local_var(LVAR_Tail_EXP, 1);
+      give_exp_points(250);
+      display_msg(mstr(300));
+   end
 end
 
 procedure razlo00n begin
-	Reply(163);
-	giq_option(4, NAME, 164, razlo00n_a, NEUTRAL_REACTION);
-	if radscorp_quest_active then begin
-		giq_option(5, NAME, 165, razlo09n, NEUTRAL_REACTION);
-	end
-	if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
-		giq_option(5, NAME, 166, razlo15n, NEUTRAL_REACTION);
-	end
-	giq_option(-3, NAME, 167, razlo01n, NEUTRAL_REACTION);
+   Reply(163);
+   giq_option(4, NAME, 164, razlo00n_a, NEUTRAL_REACTION);
+   if radscorp_quest_active then begin
+      giq_option(5, NAME, 165, razlo09n, NEUTRAL_REACTION);
+   end
+   if (tandi_is_kidnapped and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
+      giq_option(5, NAME, 166, razlo15n, NEUTRAL_REACTION);
+   end
+   giq_option(-3, NAME, 167, razlo01n, NEUTRAL_REACTION);
 end
 
 procedure razlo01n begin
-	NMessage(168);
-	DownReact
+   NMessage(168);
+   DownReact
 end
 
 procedure razlo02n begin
-	Reply(169);
-	giq_option(4, NAME, 170, razlo04n, NEUTRAL_REACTION);
-	giq_option(4, NAME, 171, razlo03n, NEUTRAL_REACTION);
+   Reply(169);
+   giq_option(4, NAME, 170, razlo04n, NEUTRAL_REACTION);
+   giq_option(4, NAME, 171, razlo03n, NEUTRAL_REACTION);
 end
 
 procedure razlo03n begin
-	NMessage(172);
-	DownReact
+   NMessage(172);
+   DownReact
 end
 
 procedure razlo04n begin
-	Reply(173);
-	giq_option(4, NAME, 174, razlo05n, NEUTRAL_REACTION);
+   Reply(173);
+   giq_option(4, NAME, 174, razlo05n, NEUTRAL_REACTION);
 end
 
 procedure razlo05n begin
-	damage := MAX_HITS - HITS;
-	if (damage < (MAX_HITS / 4)) then begin
-		call razlowmpb;
-	end
-	else if (damage < (MAX_HITS / 2)) then begin
-		call razlofixa;
-	end
-	else if (damage < (3 * MAX_HITS / 4)) then begin
-		call razlofixb;
-	end
-	else begin
-		call razlofixc;
-	end
+   damage := MAX_HITS - HITS;
+   if (damage < (MAX_HITS / 4)) then begin
+      call razlowmpb;
+   end
+   else if (damage < (MAX_HITS / 2)) then begin
+      call razlofixa;
+   end
+   else if (damage < (3 * MAX_HITS / 4)) then begin
+      call razlofixb;
+   end
+   else begin
+      call razlofixc;
+   end
 end
 
 procedure razlo06n begin
-	Reply(186);
-	giq_option(4, NAME, 187, razlo17, NEUTRAL_REACTION);
-	if (dude_item_count(PID_SCORPION_TAIL)) then begin
-		giq_option(4, NAME, 305, razlo06na, NEUTRAL_REACTION);
-		giq_option(-3, NAME, 303, razlo06na, NEUTRAL_REACTION);
-	end
-	giq_option(4, NAME, 188, razloend, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 304, razlo17, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
+   Reply(186);
+   giq_option(4, NAME, 187, razlo17, NEUTRAL_REACTION);
+   if (dude_item_count(PID_SCORPION_TAIL)) then begin
+      giq_option(4, NAME, 305, razlo06na, NEUTRAL_REACTION);
+      giq_option(-3, NAME, 303, razlo06na, NEUTRAL_REACTION);
+   end
+   giq_option(4, NAME, 188, razloend, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 304, razlo17, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlo07n begin
-	GMessage(189);
+   GMessage(189);
 end
 
 procedure razlo08n begin
-	if (dude_item_count(PID_BARTER_LIGHT_HEALING) or dude_item_count(PID_BARTER_MEDIUM_HEALING) or dude_item_count(PID_BARTER_HEAVY_HEALING)) then begin
-		call razlo14n;
-	end
-	else if (dude_caps >= COST) then begin
-		dude_caps_adjust(-COST);
-		call razlo14n;
-	end
-	else begin
-		call razlo06n;
-	end
+   if (dude_item_count(PID_BARTER_LIGHT_HEALING) or dude_item_count(PID_BARTER_MEDIUM_HEALING) or dude_item_count(PID_BARTER_HEAVY_HEALING)) then begin
+      call razlo14n;
+   end
+   else if (dude_caps >= COST) then begin
+      dude_caps_adjust(-COST);
+      call razlo14n;
+   end
+   else begin
+      call razlo06n;
+   end
 end
 
 procedure razlo09n begin
-	Reply(190);
-	giq_option(6, NAME, 191, razlo10n, NEUTRAL_REACTION);
+   Reply(190);
+   giq_option(6, NAME, 191, razlo10n, NEUTRAL_REACTION);
 end
 
 procedure razlo10n begin
-	NMessage(192);
+   NMessage(192);
 end
 
 procedure razlo11n begin
-	Reply(108);
-	giq_option(5, NAME, 194, razlo04, NEUTRAL_REACTION);
-	giq_option(5, NAME, 195, razloend, NEUTRAL_REACTION);
+   Reply(108);
+   giq_option(5, NAME, 194, razlo04, NEUTRAL_REACTION);
+   giq_option(5, NAME, 195, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlo14n begin
-	NMessage(196);
-	gfade_out(1);
-	game_time_advance(game_ticks(1200 * damage));
-	gfade_in(1);
-	critter_heal(dude_obj, damage);
+   NMessage(196);
+   gfade_out(1);
+   game_time_advance(game_ticks(1200 * damage));
+   gfade_in(1);
+   critter_heal(dude_obj, damage);
 end
 
 procedure razlo15n begin
-	if (local_var(11) == 1) then begin
-		call razlo16n;
-	end
-	else begin
-		set_local_var(11, 1);
-		call razlo11n;
-	end
+   if (local_var(11) == 1) then begin
+      call razlo16n;
+   end
+   else begin
+      set_local_var(11, 1);
+      call razlo11n;
+   end
 end
 
 procedure razlo16n begin
-	NMessage(197);
+   NMessage(197);
 end
 
 procedure razlowmpa begin
-	NMessage(175);
+   NMessage(175);
 end
 
 procedure razlowmpb begin
-	NMessage(176);
+   NMessage(176);
 end
 
 procedure razlofixa begin
-	COST := 25;
-	Reply(177);
-	giq_option(4, NAME, 178, razlo08n, NEUTRAL_REACTION);
-	giq_option(4, NAME, 179, razlo06n, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 301, razlo08n, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
+   COST := 25;
+   Reply(177);
+   giq_option(4, NAME, 178, razlo08n, NEUTRAL_REACTION);
+   giq_option(4, NAME, 179, razlo06n, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 301, razlo08n, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlofixb begin
-	COST := 50;
-	Reply(180);
-	giq_option(4, NAME, 181, razlo08n, NEUTRAL_REACTION);
-	giq_option(4, NAME, 182, razlo06n, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 301, razlo08n, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
+   COST := 50;
+   Reply(180);
+   giq_option(4, NAME, 181, razlo08n, NEUTRAL_REACTION);
+   giq_option(4, NAME, 182, razlo06n, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 301, razlo08n, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlofixc begin
-	COST := 100;
-	Reply(183);
-	giq_option(4, NAME, 184, razlo08n, NEUTRAL_REACTION);
-	giq_option(4, NAME, 185, razlo06n, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 301, razlo08n, NEUTRAL_REACTION);
-	giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
+   COST := 100;
+   Reply(183);
+   giq_option(4, NAME, 184, razlo08n, NEUTRAL_REACTION);
+   giq_option(4, NAME, 185, razlo06n, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 301, razlo08n, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 302, razloend, NEUTRAL_REACTION);
 end
 
 procedure razlox begin
@@ -655,104 +655,104 @@ procedure razloend begin
 end
 
 procedure givestuff begin
-	variable Item := 0;
+   variable Item := 0;
 
-	Item := create_object(PID_STIMPAK, 0, 0);
-	add_obj_to_inven(dude_obj, Item);
+   Item := create_object(PID_STIMPAK, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 
-	Item := create_object(PID_STIMPAK, 0, 0);
-	add_obj_to_inven(dude_obj, Item);
+   Item := create_object(PID_STIMPAK, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 
-	Item := create_object(PID_MUTATED_FRUIT, 0, 0);
-	add_obj_to_inven(dude_obj, Item);
+   Item := create_object(PID_MUTATED_FRUIT, 0, 0);
+   add_obj_to_inven(dude_obj, Item);
 
-	if (local_var(8) == 1) then begin
-		Item := create_object(PID_ANTIDOTE, 0, 0);
-		add_obj_to_inven(dude_obj, Item);
-	end
+   if (local_var(8) == 1) then begin
+      Item := create_object(PID_ANTIDOTE, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+   end
 end
 
 procedure remove_items begin
-	variable Item := 0;
-	if (dude_item_count(PID_BARTER_LIGHT_HEALING)) then begin
-		Item := dude_item(PID_BARTER_LIGHT_HEALING);
-		rm_obj_from_inven(dude_obj, Item);
-		destroy_object(Item);
-	end
-	if (self_item_count(PID_BARTER_LIGHT_HEALING)) then begin
-		Item := self_item(PID_BARTER_LIGHT_HEALING);
-		rm_obj_from_inven(self_obj, Item);
-		destroy_object(Item);
-	end
-	if (dude_item_count(PID_BARTER_MEDIUM_HEALING)) then begin
-		Item := dude_item(PID_BARTER_MEDIUM_HEALING);
-		rm_obj_from_inven(dude_obj, Item);
-		destroy_object(Item);
-	end
-	if (self_item_count(PID_BARTER_MEDIUM_HEALING)) then begin
-		Item := self_item(PID_BARTER_MEDIUM_HEALING);
-		rm_obj_from_inven(self_obj, Item);
-		destroy_object(Item);
-	end
-	if (dude_item_count(PID_BARTER_HEAVY_HEALING)) then begin
-		Item := dude_item(PID_BARTER_HEAVY_HEALING);
-		rm_obj_from_inven(dude_obj, Item);
-		destroy_object(Item);
-	end
-	if (self_item_count(PID_BARTER_HEAVY_HEALING)) then begin
-		Item := self_item(PID_BARTER_HEAVY_HEALING);
-		rm_obj_from_inven(self_obj, Item);
-		destroy_object(Item);
-	end
+   variable Item := 0;
+   if (dude_item_count(PID_BARTER_LIGHT_HEALING)) then begin
+      Item := dude_item(PID_BARTER_LIGHT_HEALING);
+      rm_obj_from_inven(dude_obj, Item);
+      destroy_object(Item);
+   end
+   if (self_item_count(PID_BARTER_LIGHT_HEALING)) then begin
+      Item := self_item(PID_BARTER_LIGHT_HEALING);
+      rm_obj_from_inven(self_obj, Item);
+      destroy_object(Item);
+   end
+   if (dude_item_count(PID_BARTER_MEDIUM_HEALING)) then begin
+      Item := dude_item(PID_BARTER_MEDIUM_HEALING);
+      rm_obj_from_inven(dude_obj, Item);
+      destroy_object(Item);
+   end
+   if (self_item_count(PID_BARTER_MEDIUM_HEALING)) then begin
+      Item := self_item(PID_BARTER_MEDIUM_HEALING);
+      rm_obj_from_inven(self_obj, Item);
+      destroy_object(Item);
+   end
+   if (dude_item_count(PID_BARTER_HEAVY_HEALING)) then begin
+      Item := dude_item(PID_BARTER_HEAVY_HEALING);
+      rm_obj_from_inven(dude_obj, Item);
+      destroy_object(Item);
+   end
+   if (self_item_count(PID_BARTER_HEAVY_HEALING)) then begin
+      Item := self_item(PID_BARTER_HEAVY_HEALING);
+      rm_obj_from_inven(self_obj, Item);
+      destroy_object(Item);
+   end
 end
 
 procedure critter_p_proc begin
-	if (map_var(2) == 1) then begin
-		set_local_var(10, local_var(10) + 1);
-		set_map_var(2, 0);
-		if (local_var(10) < 3) then begin
-			float_msg(self_obj, mstr(308), FLOAT_MSG_RED);
-		end
-		else begin
-			tmp_hostile := 1;
-		end
-	end
-	if (self_can_see_dude) then begin
-		if global_var(GVAR_ENEMY_SHADY_SANDS) then begin
-			tmp_hostile := 1;
-		end
-	end
-	if (tmp_hostile) then begin
-		tmp_hostile := 0;
-		attack(dude_obj);
-	end
+   if (map_var(2) == 1) then begin
+      set_local_var(10, local_var(10) + 1);
+      set_map_var(2, 0);
+      if (local_var(10) < 3) then begin
+         float_msg(self_obj, mstr(308), FLOAT_MSG_RED);
+      end
+      else begin
+         tmp_hostile := 1;
+      end
+   end
+   if (self_can_see_dude) then begin
+      if global_var(GVAR_ENEMY_SHADY_SANDS) then begin
+         tmp_hostile := 1;
+      end
+   end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	display_msg(mstr(100));
+   script_overrides;
+   display_msg(mstr(100));
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
-	if (source_obj == dude_obj) then begin
-		set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-	end
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
+   end
 end
 
 procedure pickup_p_proc begin
-	tmp_hostile := 1;
+   tmp_hostile := 1;
 end
 
 procedure razlo00n_a begin
-	if (has_rep_berserker or has_rep_childkiller) then begin
-		call razlo02n;
-	end
-	else begin
-		call razlo00;
-	end
+   if (has_rep_berserker or has_rep_childkiller) then begin
+      call razlo02n;
+   end
+   else begin
+      call razlo00;
+   end
 end
 
 procedure PickDeadBodyType begin
-	pick_dead_body_type
+   pick_dead_body_type
 end
