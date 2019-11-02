@@ -262,14 +262,24 @@ variable merch_slot_armor_flags;
                                         end
 
 /*********************************************************
-    Water Chip related:
+    Game time Limits
 *********************************************************/
-#define get_days_passed                 (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
-#define get_water_days_left             (global_var(GVAR_VAULT13_WATER_DAYS_LEFT) - get_days_passed)
+/*********************************************************
+            Water Chip related:
+*********************************************************/
+#define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
+#define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS_LEFT) - get_days_passed)
 
+#define TIME_LIMIT_1                        (100)
+#define TIME_LIMIT_2                        (50)
+#define TIME_LIMIT_3                        (0)
+
+#define reached_tl_1                        (get_water_days_left <= TIME_LIMIT_1)
+#define reached_tl_2                        (get_water_days_left <= TIME_LIMIT_2)
+#define reached_tl_3                        (get_water_days_left <= TIME_LIMIT_3)
 
 /*********************************************************
-    Invasion related:
+            Invasion related:
 *********************************************************/
 #define v13_invaded                         (global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
 #define hub_invaded                         (global_var(GVAR_THE_HUB_WAS_INVADED) == 1)
