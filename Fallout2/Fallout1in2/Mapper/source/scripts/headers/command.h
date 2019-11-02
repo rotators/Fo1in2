@@ -1114,49 +1114,6 @@ variable removed_qty;
    move_obj_inven_to_obj(obj, global_temp);                     \
    destroy_object(global_temp)
 
-/*******************************************************************************************************************
-********** These represent the players acomplishments through the game *********************************************
-********** Note: these reflect the Fallout2 variable designers put in the scripts assuming we were *****************
-********** going to have a magic variable to keep track of the player stats throught the game **********************
-*******************************************************************************************************************/
-#define f2_state_v13_looking                          (0)
-#define f2_state_v13_known                            (1)   // set -Chris H
-#define f2_state_v13_found                            (2)   // set -Chris H
-#define f2_state_v13_entered                          (3)   // set -Chris H
-#define f2_state_tribe_kidnapped                      (4)   // ### state not set
-#define f2_state_fix_tanker                           (5)   // didn't need to exist
-#define f2_state_tanker_fix_known                     (6)   // set -Chris H
-#define f2_state_tanker_fixed                         (7)   // set -Chris H
-#define f2_state_enclave_destroyed                    (8)   // ### state not set
-
-#define set_f2(x)                                     if (global_var(GVAR_FALLOUT_2) < x) then set_global_var(GVAR_FALLOUT_2, x)
-#define force_f2(x)                                   set_global_var(GVAR_FALLOUT_2, x)
-#define get_f2(x)                                     (global_var(GVAR_FALLOUT_2) == x)
-#define f2_flag_any                                   (global_var(GVAR_FALLOUT_2))
-
-#define Fallout2_vault13_looking                     get_f2(f2_state_v13_looking)
-#define Fallout2_vault13_location_known              get_f2(f2_state_v13_known)
-#define Fallout2_vault13_found                       get_f2(f2_state_v13_found)
-#define Fallout2_vault13_entered                     get_f2(f2_state_v13_entered)
-#define Fallout2_tribe_kidnapped                     get_f2(f2_state_tribe_kidnapped)
-#define Fallout2_fix_tanker                          get_f2(f2_state_fix_tanker)
-#define Fallout2_tanker_known                        get_f2(f2_state_tanker_fix_known)
-#define Fallout2_tanker_fixed                        get_f2(f2_state_tanker_fixed)
-#define Fallout2_enclave_destroyed                   get_f2(f2_state_enclave_destroyed)
-
-/*
-#define Fallout2_nothing                              (false) // ***
-#define Fallout2_vault13_looking                      (vault_13_visible_on_map == false)
-#define Fallout2_vault13_location_known               ((vault_13_visible_on_map) and (vault_13_visit == false))
-#define Fallout2_vault13_found                        (vault_13_visit)
-#define Fallout2_vault13_entered                      ((vault_13_visit) and map_is_known(MAP_VAULT_13))
-#define Fallout2_tribe_kidnapped                      (arroyo_destroyed_visit)
-#define Fallout2_fix_tanker                           (false) // ***
-#define Fallout2_tanker_known                         (false) // ***
-#define Fallout2_tanker_fixed                         (false) // ***
-#define Fallout2_enclave_destroyed                    (false) // ***
-*/
-
 // Info relating to carry weight, how much something costs, and weights
 #define pid_weight(x)                                   proto_data(x,it_weight)
 #define obj_weight(x)                                   pid_weight(obj_pid(x))
@@ -1169,29 +1126,6 @@ variable removed_qty;
 #define who_max_carry(x)                               get_critter_stat(x,STAT_carry_amt)
 #define who_carry_amount(x)                             has_trait(TRAIT_OBJECT, x, OBJECT_CUR_WEIGHT)
 #define who_inven_free_amt(x)                           (who_max_carry(x) - who_carry_amount(x))
-
-
-/********************************************************************
-*******************   Game time Limits   ****************************
-********************************************************************/
-
-#ifndef TIME_LIMIT_1
-#define TIME_LIMIT_1                        (60)
-#endif
-#ifndef TIME_LIMIT_2
-#define TIME_LIMIT_2                        (120)
-#endif
-#ifndef TIME_LIMIT_3
-#define TIME_LIMIT_3                        (180)
-#endif
-#ifndef TIME_LIMIT_4
-#define TIME_LIMIT_4                        (240)
-#endif
-
-#define reached_tl_1                        (GAME_TIME_IN_DAYS >= TIME_LIMIT_1)
-#define reached_tl_2                        (GAME_TIME_IN_DAYS >= TIME_LIMIT_2)
-#define reached_tl_3                        (GAME_TIME_IN_DAYS >= TIME_LIMIT_3)
-#define reached_tl_4                        (GAME_TIME_IN_DAYS >= TIME_LIMIT_4)
 
 
 /********************************************************************
@@ -1245,108 +1179,5 @@ variable removed_qty;
          debug_msg("created out of business @ tile == " + tile + " / elevation == " + elev)
 #define create_north_out_of_business(x, e)            create_out_of_business(x, e, PID_OUT_OF_BUSINESS_NORTH)
 #define create_east_out_of_business(x, e)             create_out_of_business(x, e, PID_OUT_OF_BUSINESS_EAST)
-
-/*******************************************************************************************************************
-********** These are new reno macros that are used in other scripts ************************************************
-*******************************************************************************************************************/
-// new reno macros start
-#define nr_mstr(x)                                    message_str(SCRIPT_NEWR1,(x))
-
-// porn star start
-#define porn_star_msg_start                           (500)
-#define dude_has_porn_star_rep                        (global_var(GVAR_NEW_RENO_PORN_STAR) > 0)
-#define dude_porn_star_number                         (global_var(GVAR_NEW_RENO_PORN_STAR))
-#define porn_star_name                                (nr_mstr(porn_star_msg_start + dude_porn_star_number))
-// porn star end
-
-// prize fighter start
-#define prizefighter_msg_start                        (400)
-#define dude_is_prizefighter                          (global_var(GVAR_NEW_RENO_HAS_REP_PRIZEFIGHTER) > 0)
-#define dude_prizefighter_number                      (global_var(GVAR_NEW_RENO_PRIZEFIGHTER))
-#define prizefighter_name                             (nr_mstr(prizefighter_msg_start + dude_prizefighter_number))
-// prize fighter end
-
-// made man start
-#define family_name_msg_start                         (200)
-#define made_man_msg_start                            (300)
-#define dude_is_made_man                              (global_var(GVAR_NEW_RENO_MADE_MAN) > 0)
-#define family_none                                   (0)
-#define family_salvatore                              (1)
-#define family_bishop                                 (2)
-#define family_mordino                                (3)
-#define family_wright                                 (4)
-#define dude_family                                   (global_var(GVAR_NEW_RENO_MADE_MAN)/100)
-#define dude_made_man_number                          (global_var(GVAR_NEW_RENO_MADE_MAN)%100)
-#define dude_family_name                              (nr_mstr(family_name_msg_start + dude_family))
-#define made_man_num_to_name(x)                       (nr_mstr(made_man_msg_start + x))
-#define made_man_name                                 made_man_num_to_name(dude_made_man_number)
-#define salvatore_power                               (global_var(GVAR_SALVATORE_FAMILY_COUNTER))
-#define bishop_power                                  (global_var(GVAR_BISHOP_FAMILY_COUNTER))
-#define mordino_power                                 (global_var(GVAR_MORDINO_FAMILY_COUNTER))
-#define wright_power                                  (global_var(GVAR_WRIGHT_FAMILY_COUNTER))
-#define dec_family_counter_amt(the_family, x)         if (family_crushed(the_family) == false) then begin                        \
-                                                         if (the_family == family_salvatore) then begin                          \
-                                                            dec_global_var_amt(GVAR_SALVATORE_FAMILY_COUNTER,x);                 \
-                                                         end else if (the_family == family_bishop) then begin                    \
-                                                            dec_global_var_amt(GVAR_BISHOP_FAMILY_COUNTER,x);                    \
-                                                         end else if (the_family == family_mordino) then begin                   \
-                                                            dec_global_var_amt(GVAR_MORDINO_FAMILY_COUNTER,x);                   \
-                                                         end else if (the_family == family_wright) then begin                    \
-                                                            dec_global_var_amt(GVAR_WRIGHT_FAMILY_COUNTER,x);                    \
-                                                         end                                                                     \
-                                                      end                                                                        \
-                                                      debug_msg("\nfamily standings: ");                                         \
-                                                      debug_msg("\n  Salvatore == "+global_var(GVAR_SALVATORE_FAMILY_COUNTER));  \
-                                                      debug_msg("\n  Bishop == "+global_var(GVAR_BISHOP_FAMILY_COUNTER));        \
-                                                      debug_msg("\n  Mordino == "+global_var(GVAR_MORDINO_FAMILY_COUNTER));      \
-                                                      debug_msg("\n  Wright == "+global_var(GVAR_WRIGHT_FAMILY_COUNTER))
-#define family_crushed(x)                             (((x == family_salvatore) and (global_var(GVAR_SALVATORE_FAMILY_COUNTER) <= -1)) or \
-                                                       ((x == family_bishop) and (global_var(GVAR_BISHOP_FAMILY_COUNTER) <= -1)) or       \
-                                                       ((x == family_mordino) and (global_var(GVAR_MORDINO_FAMILY_COUNTER) <= -1)) or     \
-                                                       ((x == family_wright) and (global_var(GVAR_WRIGHT_FAMILY_COUNTER) <= -1)))
-#define set_family_crushed(the_family)                if (the_family == family_salvatore) then begin                             \
-                                                         set_global_var(GVAR_SALVATORE_FAMILY_COUNTER, -1);                      \
-                                                      end else if (the_family == family_bishop) then begin                       \
-                                                         set_global_var(GVAR_BISHOP_FAMILY_COUNTER, -1);                         \
-                                                      end else if (the_family == family_mordino) then begin                      \
-                                                         set_global_var(GVAR_MORDINO_FAMILY_COUNTER, -1);                        \
-                                                      end else if (the_family == family_wright) then begin                       \
-                                                         set_global_var(GVAR_WRIGHT_FAMILY_COUNTER, -1);                         \
-                                                      end
-#define dec_family_counter(the_family)                dec_family_counter_amt(the_family, 1)
-// made man end
-// new reno macros end
-
-// den macros start
-#define state_vic_known_no                         (0)
-#define state_vic_known_merchant                   (1)
-#define state_vic_known_name                       (2)
-#define vic_known(x)                               (global_var(GVAR_DEN_VIC_KNOWN) == x)
-#define set_vic_known(x)                           if (x > global_var(GVAR_DEN_VIC_KNOWN)) then set_global_var(GVAR_DEN_VIC_KNOWN, x)
-// den macros end
-
-// raiders macros start
-#define raiders_dead_bit                              bit_1
-#define raiders_marcus_bit                            bit_2
-#define raiders_robobrain_bit                         bit_3
-#define raiders_bonenose_bit                          bit_4
-#define raiders_alarm_bit                             bit_5
-#define know_raiders_trap_bit                         bit_6
-
-#define raiders_dead                                  gvar_bit(GVAR_RAIDERS_FLAGS, raiders_dead_bit)
-#define set_raiders_dead                              set_gvar_bit_on(GVAR_RAIDERS_FLAGS, raiders_dead_bit)
-#define raiders_marcus                                gvar_bit(GVAR_RAIDERS_FLAGS, raiders_marcus_bit)
-#define set_raiders_marcus                            set_gvar_bit_on(GVAR_RAIDERS_FLAGS, raiders_marcus_bit)
-#define raiders_robobrain                             gvar_bit(GVAR_RAIDERS_FLAGS, raiders_robobrain_bit)
-#define set_raiders_robobrain                         set_gvar_bit_on(GVAR_RAIDERS_FLAGS, raiders_robobrain_bit)
-#define raiders_bonenose                              gvar_bit(GVAR_RAIDERS_FLAGS, raiders_bonenose_bit)
-#define set_raiders_bonenose                          set_gvar_bit_on(GVAR_RAIDERS_FLAGS, raiders_bonenose_bit)
-#define raiders_alarm                                 gvar_bit(GVAR_RAIDERS_FLAGS, raiders_alarm_bit)
-#define set_raiders_alarm                             set_gvar_bit_on(GVAR_RAIDERS_FLAGS, raiders_alarm_bit)
-#define off_raiders_alarm                             set_gvar_bit_off(GVAR_RAIDERS_FLAGS, raiders_alarm_bit)
-#define know_raiders_trap                             gvar_bit(GVAR_RAIDERS_FLAGS, know_raiders_trap_bit)
-#define set_know_raiders_trap                         set_gvar_bit_on(GVAR_RAIDERS_FLAGS, know_raiders_trap_bit)
-#define off_know_raiders_trap                         set_gvar_bit_off(GVAR_RAIDERS_FLAGS, know_raiders_trap_bit)
-// raiders macros end
 
 #endif // COMMAND_H
