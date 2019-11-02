@@ -40,6 +40,11 @@ variable Scenery_Creation_Ptr;
 #define PID_BUSH_GREEN_1 					(33555375)
 #define PID_BUSH_GREEN_2 					(33555376)
 
+// BOS Entrance scenery
+#define PID_EW_BOS_DOOR 					(33554585)
+#define PID_BOS_ELEVATOR_TOP 				(33554613)
+#define PID_BOS_MARKER   					(33554589)
+
 // Navarro Door
 #define PID_NS_NAVARRO_BUNKER_DOOR          (33554450)
 
