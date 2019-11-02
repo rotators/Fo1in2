@@ -73,7 +73,7 @@ variable PoisAmt := 0;
 variable rounded := 0;
 variable IfRounded := 0;
 variable home_tile := 13084;// was 13881
-variable initial :=  0;
+variable initial := 0;
 
 procedure PickDeadBodyType;
 variable DeathType := 57;
@@ -99,16 +99,16 @@ procedure start begin
 		if not(initial) then begin
 			variable Locker;
 			variable item;
-			initial :=  1;
-			Locker := create_object( PID_WALL_LOCKER_CLEAN_RIGHT, 13278, 0 );
-			item := create_object( PID_FIRST_AID_KIT, 0, 0 );//First Aid Kit
+			initial := 1;
+			Locker := create_object(PID_WALL_LOCKER_CLEAN_RIGHT, 13278, 0);
+			item := create_object(PID_FIRST_AID_KIT, 0, 0);//First Aid Kit
 			add_mult_objs_to_inven(Locker, item, 1);
-			item := create_object( PID_STIMPAK, 0, 0 );//Stimpak
+			item := create_object(PID_STIMPAK, 0, 0);//Stimpak
 			add_mult_objs_to_inven(Locker, item, 4 - difficulty_level);
-			item := create_object( PID_FLARE, 0, 0 );//Flare
+			item := create_object(PID_FLARE, 0, 0);//Flare
 			add_mult_objs_to_inven(Locker, item, 4 - difficulty_level);
-			set_self_team(TEAM_VAULT13 );
-			initial :=  1;
+			set_self_team(TEAM_VAULT13);
+			initial := 1;
 		end
 
 	end
@@ -116,12 +116,12 @@ end
 
 procedure critter_p_proc begin
 	if self_tile != home_tile then begin
-		self_walk_to_tile( home_tile );
+		self_walk_to_tile(home_tile);
 	end
 	else begin
 		if local_var(10) != 2 then begin
 			if self_tile == home_tile then begin
-				self_rotate( 2 );
+				self_rotate(2);
 				set_local_var(10, 2);
 			end
 		end
@@ -137,18 +137,18 @@ end
 
 procedure destroy_p_proc begin
 	if (source_obj == dude_obj) or party_member_obj(obj_pid(source_obj)) then begin
-		set_global_var( GVAR_VAULT_13_HOSTILE, 1 );
+		set_global_var(GVAR_VAULT_13_HOSTILE, 1);
 	end
 	inc_good_critter
 end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(NAME, 136));
+	display_msg(mstr(136));
 end
 
 procedure pickup_p_proc begin
-	float_msg( self_obj, message_str(NAME, 160), FLOAT_MSG_RED );
+	float_msg(self_obj, mstr(160), FLOAT_MSG_RED);
 	set_local_var(5, 1);
 end
 
@@ -161,7 +161,7 @@ procedure talk_p_proc begin
 		get_reaction
 		start_gdialog(184, self_obj, 4, -1, -1);
 		gsay_start;
-		if (local_var(5) == 1) or (global_var( GVAR_VAULT_13_HOSTILE ) == 1) then begin
+		if (local_var(5) == 1) or (global_var(GVAR_VAULT_13_HOSTILE) == 1) then begin
 			call Medic00;// bad player
 		end
 		else begin
@@ -181,7 +181,7 @@ procedure talk_p_proc begin
 		end_dialogue;
 	end
 	else begin
-		display_msg(message_str(NAME, 159));
+		display_msg(mstr(159));
 	end
 	if not(local_var(6)) then begin
 		set_local_var(6, 1);
@@ -193,86 +193,86 @@ end
 
 procedure Medic00// bad player
 begin
-	gsay_reply( NAME, 100 );
-	BOption( 101, Medic01, 4 );
-	BOption( 102, Medic02, -3 );
+	Reply(100);
+	BOption(101, Medic01, 4);
+	BOption(102, Medic02, -3);
 end
 
 procedure Medic01// bad player
 begin
 	set_local_var(4, 1);
 	BigDownReact
-	gsay_message( NAME, 103, BAD_REACTION );
+	BMessage(103);
 end
 
 procedure Medic02// bad player
 begin
 	set_local_var(4, 1);
 	BigDownReact
-	gsay_message( NAME, 104, BAD_REACTION );
+	BMessage(104);
 end
 
 procedure Medic03// hurt lots or poisoned
 begin
-	gsay_reply( NAME, 105 );
-	NOption( 164, Medic16, 0 );
+	Reply(105);
+	NOption(164, Medic16, 0);
 end
 
 procedure Medic04 begin
-	if global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) == 2 then begin
-		gsay_reply( NAME, 157 );// thanks for saving us
+	if global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 2 then begin
+		Reply(157);// thanks for saving us
 	end
 	else begin
 		if not(local_var(6)) then begin
-			gsay_reply( NAME, 113 );// what can i do for you?
-			NOption(114, Medic12, 4 );
+			Reply(113);// what can i do for you?
+			NOption(114, Medic12, 4);
 		end
 		else begin// hello again!
-			gsay_reply( NAME, message_str(NAME, 106) + dude_name + message_str(NAME, 107) );
-			NOption( 108, Medic06, 4 );
-			NOption( 109, Medic12, 4 );
+			Reply(mstr(106) + dude_name + mstr(107));
+			NOption(108, Medic06, 4);
+			NOption(109, Medic12, 4);
 		end
 
-		if( global_var(GVAR_HAVE_MUTATED) == 1 ) then
+		if(global_var(GVAR_HAVE_MUTATED) == 1) then
 			NOption(2000, Node2000, 004);
 	end
 	if PoisAmt > 0 then begin// i've been poisoned
-		NOption( 161, Medic07, 5 );
+		NOption(161, Medic07, 5);
 	end
 	if rads > 0 then begin// i'm irradiated
-		NOption( 162, Medic26, 5 );
+		NOption(162, Medic26, 5);
 	end
-	if global_var( GVAR_QUEST_VAULT13_4_WATERCHIP ) == 2 then begin// you're welcome. bye.
-		NOption( 163, medicend, 4 );
+	if global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 2 then begin// you're welcome. bye.
+		NOption(163, medicend, 4);
 	end
 	if dude_is_stupid then begin// STUPID
-		NOption( 117, Medic12, -3 );// need healing
+		NOption(117, Medic12, -3);// need healing
 		if not(local_var(6)) then begin
-			BOption( 118, Medic15, -3 );// info on healing STUPID
+			BOption(118, Medic15, -3);// info on healing STUPID
 		end
 		else begin
-			BOption( 171, Medic15, -3 );// info on healing
+			BOption(171, Medic15, -3);// info on healing
 		end
 	end
 	if (local_var(7) == 0) then begin
 		set_local_var(8, GAME_TIME_IN_DAYS);
-		NOption( 110, Medic05, -3 );// i want drugs (STUPID)
-		NOption( 115, Medic08, 5 );// i want drugs
+		NOption(110, Medic05, -3);// i want drugs (STUPID)
+		NOption(115, Medic08, 5);// i want drugs
 	end
 	else if (local_var(7) == 1) then begin
 		set_local_var(8, GAME_TIME_IN_DAYS);
-		NOption( 110, Medic28, -3 );// i want drugs (STUPID)
-		NOption( 116, Medic11, 5 );// i want more stimpaks
+		NOption(110, Medic28, -3);// i want drugs (STUPID)
+		NOption(116, Medic11, 5);// i want more stimpaks
 	end
 	else if (local_var(7) == 2) then begin
 		if ((GAME_TIME_IN_DAYS) - local_var(8)) >= 30 then begin
 			set_local_var(8, GAME_TIME_IN_DAYS);
-			NOption( 110, Medic29, -3 );// i want drugs (STUPID)
-			NOption( 116, Medic29, 5 );// i want more stimpaks
+			NOption(110, Medic29, -3);// i want drugs (STUPID)
+			NOption(116, Medic29, 5);// i want more stimpaks
 		end
 		else begin
-			BOption( 110, Medic27, -3 );// i want drugs (STUPID)
-			NOption( 116, Medic27, 5 );// i want more stimpaks
+			BOption(110, Medic27, -3);// i want drugs (STUPID)
+			NOption(116, Medic27, 5);// i want more stimpaks
 		end
 	end
 end
@@ -291,13 +291,13 @@ begin
 	if local_var(7) == 0 then begin
 		set_local_var(7, 1);
 	end
-	gsay_message( NAME, 111, NEUTRAL_REACTION );
+	NMessage(111);
 	call pushstims;
 end
 
 procedure Medic06//{112}{}{Good, keep up the good work. And let me know if you need anything.}
 begin
-	gsay_message( NAME, 112, NEUTRAL_REACTION );
+	NMessage(112);
 end
 
 procedure Medic07// poisoned heal request
@@ -306,7 +306,7 @@ begin
 	gfade_out(1);
 	game_time_advance(10 * 60 * PoisAmt * 3);
 	gfade_in(1);
-	gsay_message( NAME, 156, NEUTRAL_REACTION );
+	NMessage(156);
 	if (player_max_hits - player_hits) <= 3 then begin
 		critter_heal(dude_obj, player_max_hits);
 	end
@@ -314,9 +314,9 @@ end
 
 procedure Medic08//{119}{}{I'm not authorized to give you any. Sorry.}
 begin
-	gsay_reply( NAME, 119 );
-	BOption( 120, medicend, 4 );
-	NOption( 121, Medic08a, 6 );
+	Reply(119);
+	BOption(120, medicend, 4);
+	NOption(121, Medic08a, 6);
 end
 
 procedure Medic08a// skillcheck for drug demand
@@ -335,18 +335,18 @@ end
 procedure Medic09//{122}{}{Sorry, I can't give them to you.}
 begin
 	set_local_var(7, 3);
-	gsay_message( NAME, 122, BAD_REACTION );
+	BMessage(122);
 end
 
 procedure Medic10//{123}{}{Well, since you put it that way. But don't tell anyone that I let you have these. They are extremely addictive and dangerous to use.
 begin
-	gsay_reply( NAME, 123 );
-	NOption( 124, pushdrugs, 4 );
+	Reply(123);
+	NOption(124, pushdrugs, 4);
 end
 
 procedure pushstims begin
 	variable Stimpak := 0;
-	Stimpak := create_object( PID_STIMPAK, 0, 0 );
+	Stimpak := create_object(PID_STIMPAK, 0, 0);
 	add_mult_objs_to_inven(dude_obj, Stimpak, 4 - difficulty_level);
 end
 
@@ -358,36 +358,36 @@ procedure Medic11 begin
 		call Medic29;
 	end
 	else begin
-		gsay_message( NAME, 125, NEUTRAL_REACTION );//{125}{}{Stimpaks are being rationed. You are welcome to what we have in the medical container on the wall. Take as many as you need, but use them sparingly. It will be a while before we'll be able to get you some more.}
+		NMessage(125);//{125}{}{Stimpaks are being rationed. You are welcome to what we have in the medical container on the wall. Take as many as you need, but use them sparingly. It will be a while before we'll be able to get you some more.}
 	end
 end
 
 procedure Medic12// "hmm let's see..."
 begin
-	gsay_reply( NAME, 126 );
-	NOption( 164, Medic04a, 0 );
+	Reply(126);
+	NOption(164, Medic04a, 0);
 end
 
 procedure Medic13// don't need healing if small dmg
 begin
-	gsay_message( NAME, 127, NEUTRAL_REACTION );
+	NMessage(127);
 end
 
 procedure Medic14//"{128}{}{You look hurt. Here, let me help you.}"
 begin
-	gsay_reply( NAME, 128 );
-	NOption( 164, Medic16, 0 );
+	Reply(128);
+	NOption(164, Medic16, 0);
 end
 
 procedure Medic15//{129}{}{If you need healing, come back here to me or use some of the stimpaks we have. You can get more stimpaks from the wall.}
 begin
-	gsay_message( NAME, 129, NEUTRAL_REACTION );
+	NMessage(129);
 end
 
 procedure Medic16// "lie down and we'll start"
 begin
-	gsay_reply( NAME, 130 );
-	NOption( 164, Medic17, 0 );
+	Reply(130);
+	NOption(164, Medic17, 0);
 end
 
 procedure Medic17// healing
@@ -402,7 +402,7 @@ begin
 	critter_heal(dude_obj, damage);
 	game_time_advance(10 * 60 * damage * 5);
 	gfade_in(1);
-	gsay_message( NAME, 131, NEUTRAL_REACTION );
+	NMessage(131);
 	if (player_max_hits - player_hits) <= 3 then begin
 		critter_heal(dude_obj, player_max_hits);
 	end
@@ -414,56 +414,56 @@ end
 procedure Medic18 begin
 	game_time_advance(10 * 60);
 	if (rads > 400) then begin
-		intensity := message_str(NAME, 132);
+		intensity := mstr(132);
 	end
 	else if (rads > 200) then begin
-		intensity := message_str(NAME, 133);
+		intensity := mstr(133);
 	end
 	else if (rads > 100) then begin
-	   intensity := message_str(NAME, 134);
+	   intensity := mstr(134);
 	end
 	else begin
-		intensity := message_str(NAME, 135);
+		intensity := mstr(135);
 	end
-	gsay_reply( NAME, intensity );
-	NOption( 138, Medic19, 4 );
-	NOption( 139, Medic22, 4 );
-	NOption( 140, Medic20, 4 );
-	NOption( 141, Medic21, 6 );
-	NOption( 142, Medic19, -3 );
-	NOption( 143, Medic22, -3 );
+	Reply(intensity);
+	NOption(138, Medic19, 4);
+	NOption(139, Medic22, 4);
+	NOption(140, Medic20, 4);
+	NOption(141, Medic21, 6);
+	NOption(142, Medic19, -3);
+	NOption(143, Medic22, -3);
 end
 
 procedure Medic19// "okay fine, bye"
 begin
-	gsay_message( NAME, 144, NEUTRAL_REACTION );
+	NMessage(144);
 end
 
 procedure Medic20 begin
 	call Medic24;
 	if not(Hours) then begin
-		gsay_reply( NAME, message_str(NAME, 165) + message_str(NAME, 166) + message_str(NAME, 170) );
+		Reply(mstr(165) + mstr(166) + mstr(170));
 	end
 	else begin
 		if Hours == 1 then begin
 			if TempMinutes >= 30 then begin
-				gsay_reply( NAME, message_str(NAME, 145) + Hours + message_str(NAME, 169) + message_str(NAME, 146) );
+				Reply(mstr(145) + Hours + mstr(169) + mstr(146));
 			end
 			else begin
-				gsay_reply( NAME, message_str(NAME, 145) + message_str(NAME, 166) + message_str(NAME, 170) );
+				Reply(mstr(145) + mstr(166) + mstr(170));
 			end
 		end
 		else begin
 			if TempMinutes >= 30 then begin
-				gsay_reply( NAME, message_str(NAME, 145) + Hours + message_str(NAME, 169) + message_str(NAME, 146) );
+				Reply(mstr(145) + Hours + mstr(169) + mstr(146));
 			end
 			else begin
-				gsay_reply( NAME, message_str(NAME, 145) + Hours + message_str(NAME, 146) );
+				Reply(mstr(145) + Hours + mstr(146));
 			end
 		end
 	end
-	NOption( 147, Medic19, 4 );
-	NOption( 148, Medic22, 4 );
+	NOption(147, Medic19, 4);
+	NOption(148, Medic22, 4);
 end
 
 procedure Medic21 begin
@@ -471,51 +471,51 @@ procedure Medic21 begin
 
 	if Hours > 1 then begin
 		if (removal > rads) or (removal == rads) then begin
-			IfRounded := message_str(NAME, 168);
+			IfRounded := mstr(168);
 		end
 		else begin
-			IfRounded := message_str(NAME, 150);
+			IfRounded := mstr(150);
 		end
 	end
 	else begin
 		if (removal > rads) or (removal == rads) then begin
-			IfRounded := message_str(NAME, 167);
+			IfRounded := mstr(167);
 		end
 		else begin
-			IfRounded := message_str(NAME, 150);
+			IfRounded := mstr(150);
 		end
 	end
 
 	if not(Hours) then begin
-		gsay_reply( NAME, message_str(NAME, 165) + message_str(NAME, 166) + IfRounded + rounded + message_str(NAME, 151) );
+		Reply(mstr(165) + mstr(166) + IfRounded + rounded + mstr(151));
 	end
 	else begin
 		if Hours == 1 then begin
 			if TempMinutes >= 30 then begin
-				gsay_reply( NAME, message_str(NAME, 149) + Hours + message_str(NAME, 169) + IfRounded + rounded + message_str(NAME, 151) );
+				Reply(mstr(149) + Hours + mstr(169) + IfRounded + rounded + mstr(151));
 			end
 			else begin
-				gsay_reply( NAME, message_str(NAME, 149) + message_str(NAME, 166) + IfRounded + rounded + message_str(NAME, 151) );
+				Reply(mstr(149) + mstr(166) + IfRounded + rounded + mstr(151));
 			end
 		end
 		else begin
 			if TempMinutes >= 30 then begin
-				gsay_reply( NAME, message_str(NAME, 149) + Hours + message_str(NAME, 169) + IfRounded + rounded + message_str(NAME, 151) );
+				Reply(mstr(149) + Hours + mstr(169) + IfRounded + rounded + mstr(151));
 			end
 			else begin
-				gsay_reply( NAME, message_str(NAME, 149) + Hours + IfRounded + rounded + message_str(NAME, 151) );
+				Reply(mstr(149) + Hours + IfRounded + rounded + mstr(151));
 			end
 		end
 	end
 
-	NOption( 152, Medic19, 4 );
-	NOption( 153, Medic22, 4 );
+	NOption(152, Medic19, 4);
+	NOption(153, Medic22, 4);
 end
 
 procedure Medic22// yes, remove them
 begin
-	gsay_reply( NAME, random(154, 155) );
-	NOption( 164, Medic23, 0 );
+	Reply(random(154, 155));
+	NOption(164, Medic23, 0);
 end
 
 procedure Medic23// time fade & increase for removal
@@ -524,7 +524,7 @@ begin
 	radiation_inc(dude_obj, -removal);
 	game_time_advance(10 * 60 * Minutes);
 	gfade_in(1);
-	gsay_message( NAME, 156, NEUTRAL_REACTION );
+	NMessage(156);
 end
 
 procedure Medic24// COMPUTE RADS TO HEAL, MINUTES, AND HOURS
@@ -557,13 +557,13 @@ end
 
 procedure Medic26// irradiated heal request
 begin
-	gsay_reply( NAME, 137 );
-	NOption( 164, Medic25, 0 );
+	Reply(137);
+	NOption(164, Medic25, 0);
 end
 
 procedure Medic27// Lol dumb if already got drugs twice
 begin
-	gsay_message( NAME, 125, BAD_REACTION );
+	BMessage(125);
 end
 
 procedure Medic28//stupid character, give drugs
@@ -571,16 +571,16 @@ begin
 	if local_var(7) == 1 then begin
 		set_local_var(7, 2);
 	end
-	gsay_message( NAME, 172, NEUTRAL_REACTION );
+	NMessage(172);
 	call pushdrugs;
 end
 
 procedure Medic29 begin
 	variable Stimpak := 0;
-	Stimpak := create_object( PID_STIMPAK, 0, 0 );
+	Stimpak := create_object(PID_STIMPAK, 0, 0);
 	//add_mult_objs_to_inven(dude_obj, Stimpak, 4 - difficulty_level);
 	add_mult_objs_to_inven(dude_obj, Stimpak, 1);
-	gsay_message( NAME, 111, NEUTRAL_REACTION );
+	NMessage(111);
 end
 
 procedure pushdrugs begin
@@ -588,14 +588,14 @@ procedure pushdrugs begin
 	variable LVar0 := 0;
 	LVar0 := 2 - difficulty_level;
 	if LVar0 then begin
-		drugs := create_object( PID_STIMPAK, 0, 0 );// STIMPAK
+		drugs := create_object(PID_STIMPAK, 0, 0);// STIMPAK
 		add_mult_objs_to_inven(dude_obj, drugs, LVar0);
-		drugs := create_object( PID_BUFFOUT, 0, 0 );// BUFFOUT
+		drugs := create_object(PID_BUFFOUT, 0, 0);// BUFFOUT
 		add_mult_objs_to_inven(dude_obj, drugs, LVar0);
 	end
-	drugs := create_object( PID_SUPER_STIMPAK, 0, 0 );// SUPER STIM
+	drugs := create_object(PID_SUPER_STIMPAK, 0, 0);// SUPER STIM
 	add_mult_objs_to_inven(dude_obj, drugs, 1);
-	drugs := create_object( PID_PSYCHO, 0, 0 );// PSYCHO
+	drugs := create_object(PID_PSYCHO, 0, 0);// PSYCHO
 	add_mult_objs_to_inven(dude_obj, drugs, 1);
 end
 
@@ -653,8 +653,8 @@ variable toe;
    end
 
    // Give player a mutated "toe"
-   toe := create_object( PID_MUTATED_TOE, 0, 0);
-   add_obj_to_inven( dude_obj, toe );
+   toe := create_object(PID_MUTATED_TOE, 0, 0);
+   add_obj_to_inven(dude_obj, toe);
    gfade_in(600);
 
    Reply(3001);

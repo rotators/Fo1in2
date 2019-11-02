@@ -68,41 +68,41 @@ procedure start begin
 end
 
 procedure damage_p_proc begin
-	if (global_var( GVAR_VATS_BLOWN ) == 0) then begin
-		set_global_var( GVAR_VATS_COUNTDOWN, ((game_time / 10) + 120) );
+	if (global_var(GVAR_VATS_BLOWN) == 0) then begin
+		set_global_var(GVAR_VATS_COUNTDOWN, ((game_time / 10) + 120));
 		call VatsGoBoom_SETVARS;
 		call Update_Invasion;
-		display_msg(message_str(NAME, 179));
+		display_msg(mstr(179));
 	end
 	else begin
-		display_msg(message_str(NAME, 189));
+		display_msg(mstr(189));
 	end
 end
 
 procedure VatsGoBoom_SETVARS
 begin
 	add_timer_event(dude_obj, 0, 12);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
-	set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 5 );// Reputation plus five (5)
-	set_global_var( GVAR_VATS_BLOWN, 1 );//   "VATS_BLOWN"
-	set_global_var( GVAR_QUEST_VAULT13_3_KILL_VATS, 2 );//   "DESTROY_MASTER_4"
+	set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 5);// Reputation plus five (5)
+	set_global_var(GVAR_VATS_BLOWN, 1);//   "VATS_BLOWN"
+	set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 2);//   "DESTROY_MASTER_4"
 end
 
 procedure description_p_proc
 begin
 	script_overrides;
-	display_msg(message_str(NAME, 200));
+	display_msg(mstr(200));
 end
 
 procedure look_at_p_proc
 begin
 	script_overrides;
-	display_msg(message_str(NAME, 100));
+	display_msg(mstr(100));
 end
 
 procedure talk_p_proc
 begin
 	dude_look_at_self;
-	if (global_var( GVAR_VATS_COUNTDOWN ) == 0) then begin
+	if (global_var(GVAR_VATS_COUNTDOWN) == 0) then begin
 		if (local_var(0) == 1) and not(local_var(2)) then begin
 			start_gdialog(371, self_obj, 4, -1, -1);
 			gsay_start;
@@ -124,7 +124,7 @@ procedure use_p_proc
 begin
 	script_overrides;
 	if (local_var(0) == 0) then begin
-		display_msg(message_str(NAME, 177));
+		display_msg(mstr(177));
 	end
 	else begin
 		dialogue_system_enter;
@@ -136,7 +136,7 @@ begin
 	if (obj_pid(obj_being_used_with) == PID_SECURITY_CARD) then begin
 		if (local_var(0) == 0) then begin
 			script_overrides;
-			display_msg(message_str(NAME, 180));
+			display_msg(mstr(180));
 			set_local_var(0, 1);
 //			dialogue_system_enter;
 		end
@@ -149,10 +149,10 @@ begin
 		script_overrides;
 		if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
 			set_local_var(0, 1);
-			display_msg(message_str(NAME, 176));
+			display_msg(mstr(176));
 		end
 		else begin
-			display_msg(message_str(NAME, 178));
+			display_msg(mstr(178));
 		end
 		game_time_advance(game_ticks(300));
 	end
@@ -161,63 +161,63 @@ end
 procedure VConComp00
 begin
 	play_sfx("SLDOORSO");
-	gsay_message( NAME, 101, BAD_REACTION );
+	BMessage(101);
 end
 
 procedure VConComp01
 begin
 	play_sfx("SLDOORSO");
-	gsay_reply( NAME, 102 );
-	giq_option( 1, NAME, 203, VConComp01a, GOOD_REACTION );
+	Reply(102);
+	giq_option(1, NAME, 203, VConComp01a, GOOD_REACTION);
 end
 
 /////////////////////////////////////// MAIN MENU //////////////////////////////////////////////
 
 procedure VConComp01a// main menu
 begin
-	gsay_reply( NAME, 140 );
-	giq_option( 4, NAME, 103, VConComp02, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 104, VConComp11, NEUTRAL_REACTION );
-	if global_var( GVAR_FIXT_BUGFIXES_ONLY ) then begin
-		giq_option( 4, NAME, 106, VConComp05, NEUTRAL_REACTION );//set base to alert status
+	Reply(140);
+	giq_option(4, NAME, 103, VConComp02, NEUTRAL_REACTION);
+	giq_option(4, NAME, 104, VConComp11, NEUTRAL_REACTION);
+	if global_var(GVAR_FIXT_BUGFIXES_ONLY) then begin
+		giq_option(4, NAME, 106, VConComp05, NEUTRAL_REACTION);//set base to alert status
 	end
 	else begin
-		giq_option( 4, NAME, 105, VConComp16, NEUTRAL_REACTION );//medical uplink
-		giq_option( 4, NAME, 106, VConComp05, NEUTRAL_REACTION );//SAME AS ABOVE
-		giq_option( 4, NAME, 182, VConComp35, NEUTRAL_REACTION );//set base to alert status, disable console
+		giq_option(4, NAME, 105, VConComp16, NEUTRAL_REACTION);//medical uplink
+		giq_option(4, NAME, 106, VConComp05, NEUTRAL_REACTION);//SAME AS ABOVE
+		giq_option(4, NAME, 182, VConComp35, NEUTRAL_REACTION);//set base to alert status, disable console
 		if (has_skill(dude_obj, SKILL_SCIENCE) >= 75) then begin
-			giq_option( 8, NAME, 201, VConComp32, NEUTRAL_REACTION );//disable alarms
+			giq_option(8, NAME, 201, VConComp32, NEUTRAL_REACTION);//disable alarms
 		end
 	end
-	giq_option( 1, NAME, 181, VConCompEnd, NEUTRAL_REACTION );
+	giq_option(1, NAME, 181, VConCompEnd, NEUTRAL_REACTION);
 end
 
 ///////////////////////////////// ENCRYPTED BOMB CODES /////////////////////////////////////////
 
 procedure VConComp02// encryped bomb codes
 begin
-	if global_var( GVAR_FIXT_BUGFIXES_ONLY ) then begin
-		gsay_reply( NAME, 140 );
-		giq_option( 4, NAME, 107, VConComp03, NEUTRAL_REACTION );// silent, 1 min (SAME AS BELOW)
-		giq_option( 4, NAME, 108, VConComp04, NEUTRAL_REACTION );// loud, 30 sec (SAME AS BELOW)
-		giq_option( 4, NAME, 109, VConComp05, NEUTRAL_REACTION );// alert
-		giq_option( 4, NAME, 110, VConComp06, NEUTRAL_REACTION );// silent, 3 min
-		giq_option( 4, NAME, 111, VConComp07, NEUTRAL_REACTION );// loud, 3 min (SAME AS BELOW)
-		giq_option( 4, NAME, 112, VConComp08, NEUTRAL_REACTION );// instant - bad idea  (SAME AS BELOW)
-		giq_option( 5, NAME, 113, VConComp02a, NEUTRAL_REACTION );
-		giq_option( 1, NAME, 204, VConComp01a, NEUTRAL_REACTION );
+	if global_var(GVAR_FIXT_BUGFIXES_ONLY) then begin
+		Reply(140);
+		giq_option(4, NAME, 107, VConComp03, NEUTRAL_REACTION);// silent, 1 min (SAME AS BELOW)
+		giq_option(4, NAME, 108, VConComp04, NEUTRAL_REACTION);// loud, 30 sec (SAME AS BELOW)
+		giq_option(4, NAME, 109, VConComp05, NEUTRAL_REACTION);// alert
+		giq_option(4, NAME, 110, VConComp06, NEUTRAL_REACTION);// silent, 3 min
+		giq_option(4, NAME, 111, VConComp07, NEUTRAL_REACTION);// loud, 3 min (SAME AS BELOW)
+		giq_option(4, NAME, 112, VConComp08, NEUTRAL_REACTION);// instant - bad idea  (SAME AS BELOW)
+		giq_option(5, NAME, 113, VConComp02a, NEUTRAL_REACTION);
+		giq_option(1, NAME, 204, VConComp01a, NEUTRAL_REACTION);
 	end
 	else begin
-		gsay_reply( NAME, 140 );
-		giq_option( 4, NAME, 107, VConComp03, NEUTRAL_REACTION );// silent, 1 min (SAME AS ABOVE)
-		giq_option( 4, NAME, 108, VConComp04, NEUTRAL_REACTION );// loud, 30 sec (SAME AS ABOVE)
-		giq_option( 4, NAME, 185, VConComp35, NEUTRAL_REACTION );// alert & lockout console
-		giq_option( 4, NAME, 110, VConComp36, NEUTRAL_REACTION );// silent, 5 min
-		giq_option( 4, NAME, 111, VConComp07, NEUTRAL_REACTION );// loud, 3 min (SAME AS ABOVE)
+		Reply(140);
+		giq_option(4, NAME, 107, VConComp03, NEUTRAL_REACTION);// silent, 1 min (SAME AS ABOVE)
+		giq_option(4, NAME, 108, VConComp04, NEUTRAL_REACTION);// loud, 30 sec (SAME AS ABOVE)
+		giq_option(4, NAME, 185, VConComp35, NEUTRAL_REACTION);// alert & lockout console
+		giq_option(4, NAME, 110, VConComp36, NEUTRAL_REACTION);// silent, 5 min
+		giq_option(4, NAME, 111, VConComp07, NEUTRAL_REACTION);// loud, 3 min (SAME AS ABOVE)
 //		giq_option(4, 371, 186, VConComp37, 50);// loud, 1 min
-		giq_option( 4, NAME, 112, VConComp08, NEUTRAL_REACTION );// instant -bad idea  (SAME AS ABOVE)
-		giq_option( 6, NAME, 113, VConComp02a, NEUTRAL_REACTION );// int required 6 instead of 5
-		giq_option( 1, NAME, 204, VConComp01a, NEUTRAL_REACTION );
+		giq_option(4, NAME, 112, VConComp08, NEUTRAL_REACTION);// instant -bad idea  (SAME AS ABOVE)
+		giq_option(6, NAME, 113, VConComp02a, NEUTRAL_REACTION);// int required 6 instead of 5
+		giq_option(1, NAME, 204, VConComp01a, NEUTRAL_REACTION);
 	end
 end
 
@@ -225,64 +225,64 @@ end
 
 procedure VConComp09//  hacked bomb codes
 begin
-	gsay_reply( NAME, 120 );
-	if global_var( GVAR_FIXT_BUGFIXES_ONLY ) then begin
-		giq_option( 4, NAME, 121, VConComp03, NEUTRAL_REACTION );// silent, 1 min
-		giq_option( 4, NAME, 122, VConComp04, NEUTRAL_REACTION );// loud, 30 sec
-		giq_option( 4, NAME, 123, VConComp05, NEUTRAL_REACTION );// alert
-		giq_option( 4, NAME, 124, VConComp06, NEUTRAL_REACTION );// silent, 3 min
-		giq_option( 4, NAME, 125, VConComp07, NEUTRAL_REACTION );// loud, 3 min
-		giq_option( 4, NAME, 126, VConComp08, NEUTRAL_REACTION );// instant - bad idea  (SAME AS BELOW)
+	Reply(120);
+	if global_var(GVAR_FIXT_BUGFIXES_ONLY) then begin
+		giq_option(4, NAME, 121, VConComp03, NEUTRAL_REACTION);// silent, 1 min
+		giq_option(4, NAME, 122, VConComp04, NEUTRAL_REACTION);// loud, 30 sec
+		giq_option(4, NAME, 123, VConComp05, NEUTRAL_REACTION);// alert
+		giq_option(4, NAME, 124, VConComp06, NEUTRAL_REACTION);// silent, 3 min
+		giq_option(4, NAME, 125, VConComp07, NEUTRAL_REACTION);// loud, 3 min
+		giq_option(4, NAME, 126, VConComp08, NEUTRAL_REACTION);// instant - bad idea  (SAME AS BELOW)
 	end
 	else begin
-		giq_option( 4, NAME, 121, VConComp03, NEUTRAL_REACTION );// silent, 1 min
-		giq_option( 4, NAME, 187, VConComp37, NEUTRAL_REACTION );// loud, 1 min
-		giq_option( 4, NAME, 183, VConComp35, NEUTRAL_REACTION );// alert & lockout console
-		giq_option( 4, NAME, 184, VConComp36, NEUTRAL_REACTION );// silent, 5 min
-		giq_option( 4, NAME, 125, VConComp07, NEUTRAL_REACTION );// loud, 3 min
-		giq_option( 4, NAME, 126, VConComp08, NEUTRAL_REACTION );// instant -bad idea  (SAME AS ABOVE)
+		giq_option(4, NAME, 121, VConComp03, NEUTRAL_REACTION);// silent, 1 min
+		giq_option(4, NAME, 187, VConComp37, NEUTRAL_REACTION);// loud, 1 min
+		giq_option(4, NAME, 183, VConComp35, NEUTRAL_REACTION);// alert & lockout console
+		giq_option(4, NAME, 184, VConComp36, NEUTRAL_REACTION);// silent, 5 min
+		giq_option(4, NAME, 125, VConComp07, NEUTRAL_REACTION);// loud, 3 min
+		giq_option(4, NAME, 126, VConComp08, NEUTRAL_REACTION);// instant -bad idea  (SAME AS ABOVE)
 		if (has_skill(dude_obj, SKILL_SCIENCE) >= 50) then begin
-			giq_option( 7, NAME, 304, VConComp34, NEUTRAL_REACTION );// 10 min, silent	(entry added by Sduibek)
+			giq_option(7, NAME, 304, VConComp34, NEUTRAL_REACTION);// 10 min, silent	(entry added by Sduibek)
 		end
-		giq_option( 4, NAME, 301, VConComp33, NEUTRAL_REACTION );// 5 min	(entry added by Sduibek)
+		giq_option(4, NAME, 301, VConComp33, NEUTRAL_REACTION);// 5 min	(entry added by Sduibek)
 	end
-	giq_option( 1, NAME, 208, VConComp01a, NEUTRAL_REACTION );//exit
+	giq_option(1, NAME, 208, VConComp01a, NEUTRAL_REACTION);//exit
 end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 procedure VConComp32
 begin
-	set_global_var( GVAR_VATS_ALERT, 0 );//	disable "VATS_ALARM_ALERT" (disable it)
-	gsay_message( NAME, 205, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_ALERT, 0);//	disable "VATS_ALARM_ALERT" (disable it)
+	NMessage(205);
 end
 
 procedure VConComp33
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 300 );
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 302, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 300);
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(302);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp34
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 600 );
-	gsay_message( NAME, 305, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 600);
+	NMessage(305);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp37
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 60 );
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 188, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 60);
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(188);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp02a
 begin
-	if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -20)) or (global_var( GVAR_MBASE_DECRYPTION_CODES ) > 0) then begin// roll was -10
+	if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -20)) or (global_var(GVAR_MBASE_DECRYPTION_CODES) > 0) then begin// roll was -10
 		call VConComp09;
 	end
 	else begin
@@ -292,127 +292,127 @@ end
 
 procedure VConComp03
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 60 );
-	gsay_message( NAME, 114, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 60);
+	NMessage(114);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp04
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 30 );
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 115, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 30);
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(115);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp05
 begin
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 116, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(116);
 end
 
 procedure VConComp35
 begin
 	set_local_var(2, 1);//	<-- lock out console
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 206, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(206);
 end
 
 procedure VConComp06
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 180 );
-	gsay_message( NAME, 117, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 180);
+	NMessage(117);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp36
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 300 );
-	gsay_message( NAME, 117, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 300);
+	NMessage(117);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp07
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 180 );
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 118, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 180);
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(118);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp08
 begin
-	set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) );// plus nothing because it's instant boom
-	set_global_var( GVAR_VATS_ALERT, 1 );//	"VATS_ALARM_ALERT"
-	gsay_message( NAME, 119, NEUTRAL_REACTION );
+	set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10));// plus nothing because it's instant boom
+	set_global_var(GVAR_VATS_ALERT, 1);//	"VATS_ALARM_ALERT"
+	NMessage(119);
 	call VatsGoBoom_SETVARS;
 end
 
 procedure VConComp10
 begin
 	if (local_var(1) == 1) then begin
-		set_global_var( GVAR_VATS_ALERT, 1 );
+		set_global_var(GVAR_VATS_ALERT, 1);
 	end
 	else begin
 		set_local_var(1, 1);
 	end
-	gsay_message( NAME, 127, BAD_REACTION );
+	BMessage(127);
 end
 
 procedure VConComp11
 begin
-	gsay_reply( NAME, 128 );
-	giq_option( 4, NAME, 129, VConComp12, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 130, VConComp14, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 131, VConComp13, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 132, VConComp14, NEUTRAL_REACTION );
-	giq_option( 1, NAME, 204, VConComp01a, NEUTRAL_REACTION );
+	Reply(128);
+	giq_option(4, NAME, 129, VConComp12, NEUTRAL_REACTION);
+	giq_option(4, NAME, 130, VConComp14, NEUTRAL_REACTION);
+	giq_option(4, NAME, 131, VConComp13, NEUTRAL_REACTION);
+	giq_option(4, NAME, 132, VConComp14, NEUTRAL_REACTION);
+	giq_option(1, NAME, 204, VConComp01a, NEUTRAL_REACTION);
 end
 
 procedure VConComp12
 begin
-	gsay_reply( NAME, 133 );
-	giq_option( 4, NAME, 134, VConComp12a, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 135, VConComp11, NEUTRAL_REACTION );
+	Reply(133);
+	giq_option(4, NAME, 134, VConComp12a, NEUTRAL_REACTION);
+	giq_option(4, NAME, 135, VConComp11, NEUTRAL_REACTION);
 end
 
 procedure VConComp12a
 begin
-	if global_var( GVAR_HOLODISK_VATS_GREY ) != 1 then begin
-		set_global_var( GVAR_HOLODISK_VATS_GREY, 1 );
-		gsay_reply( NAME, 202 );
-		giq_option( 4, NAME, 203, VConComp15, NEUTRAL_REACTION );
+	if global_var(GVAR_HOLODISK_VATS_GREY) != 1 then begin
+		set_global_var(GVAR_HOLODISK_VATS_GREY, 1);
+		Reply(202);
+		giq_option(4, NAME, 203, VConComp15, NEUTRAL_REACTION);
 	end
 	else begin
-		gsay_reply( NAME, 207 );
-		giq_option( 4, NAME, 203, VConComp15, NEUTRAL_REACTION );
+		Reply(207);
+		giq_option(4, NAME, 203, VConComp15, NEUTRAL_REACTION);
 	end
 end
 
 procedure VConComp13
 begin
-	gsay_reply( NAME, 136 );
-	giq_option( 4, NAME, 137, VConComp13a, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 135, VConComp11, NEUTRAL_REACTION );
+	Reply(136);
+	giq_option(4, NAME, 137, VConComp13a, NEUTRAL_REACTION);
+	giq_option(4, NAME, 135, VConComp11, NEUTRAL_REACTION);
 end
 
 procedure VConComp13a
 begin
-	if global_var( GVAR_HOLODISK_VATS_MAXSON ) != 1 then begin
-		set_global_var( GVAR_HOLODISK_VATS_MAXSON, 1 );
-		gsay_reply( NAME, 202 );
-		giq_option( 4, NAME, 203, VConComp15, NEUTRAL_REACTION );
+	if global_var(GVAR_HOLODISK_VATS_MAXSON) != 1 then begin
+		set_global_var(GVAR_HOLODISK_VATS_MAXSON, 1);
+		Reply(202);
+		giq_option(4, NAME, 203, VConComp15, NEUTRAL_REACTION);
 	end
 	else begin
-		gsay_reply( NAME, 207 );
-		giq_option( 4, NAME, 203, VConComp15, NEUTRAL_REACTION );
+		Reply(207);
+		giq_option(4, NAME, 203, VConComp15, NEUTRAL_REACTION);
 	end
 end
 
 procedure VConComp14
 begin
-	gsay_reply( NAME, 139 );
-	giq_option( 1, NAME, 203, VConComp01a, NEUTRAL_REACTION );
+	Reply(139);
+	giq_option(1, NAME, 203, VConComp01a, NEUTRAL_REACTION);
 end
 
 procedure VConComp15
@@ -422,17 +422,17 @@ end
 
 procedure VConComp16
 begin
-	gsay_reply( NAME, 141 );
-	giq_option( 6, NAME, 142, VConComp17, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 138, VConComp15, NEUTRAL_REACTION );
+	Reply(141);
+	giq_option(6, NAME, 142, VConComp17, NEUTRAL_REACTION);
+	giq_option(4, NAME, 138, VConComp15, NEUTRAL_REACTION);
 end
 
 procedure VConComp17
 begin
-	gsay_reply( NAME, 143 );
-	giq_option( 4, SCRIPT_MODREACT, 104, VConCompEnd, NEUTRAL_REACTION );
-	giq_option( 6, NAME, 144, VConComp17a, NEUTRAL_REACTION );
-	giq_option( 6, NAME, 145, VConComp17b, NEUTRAL_REACTION );
+	Reply(143);
+	giq_option(4, SCRIPT_MODREACT, 104, VConCompEnd, NEUTRAL_REACTION);
+	giq_option(6, NAME, 144, VConComp17a, NEUTRAL_REACTION);
+	giq_option(6, NAME, 145, VConComp17b, NEUTRAL_REACTION);
 end
 
 procedure VConComp17a
@@ -457,25 +457,25 @@ end
 
 procedure VConComp18
 begin
-	gsay_reply( NAME, 146 );
+	Reply(146);
 	call VConComp18a;
 end
 
 procedure VConComp18a
 begin
-	giq_option( 6, NAME, 147, VConComp19, NEUTRAL_REACTION );
-	giq_option( 6, NAME, 148, VConComp19, NEUTRAL_REACTION );
-	giq_option( 7, NAME, 149, VConComp19, NEUTRAL_REACTION );
-	giq_option( 1, NAME, 150, VConCompEnd, NEUTRAL_REACTION );
+	giq_option(6, NAME, 147, VConComp19, NEUTRAL_REACTION);
+	giq_option(6, NAME, 148, VConComp19, NEUTRAL_REACTION);
+	giq_option(7, NAME, 149, VConComp19, NEUTRAL_REACTION);
+	giq_option(1, NAME, 150, VConCompEnd, NEUTRAL_REACTION);
 end
 
 procedure VConComp19
 begin
-	gsay_reply( NAME, 151 );
-	giq_option( 6, NAME, 152, VConComp20, NEUTRAL_REACTION );
-	giq_option( 6, NAME, 153, VConComp21, NEUTRAL_REACTION );
-	giq_option( 6, NAME, 154, VConComp20, NEUTRAL_REACTION );
-	giq_option( 7, NAME, 155, VConComp19a, NEUTRAL_REACTION );
+	Reply(151);
+	giq_option(6, NAME, 152, VConComp20, NEUTRAL_REACTION);
+	giq_option(6, NAME, 153, VConComp21, NEUTRAL_REACTION);
+	giq_option(6, NAME, 154, VConComp20, NEUTRAL_REACTION);
+	giq_option(7, NAME, 155, VConComp19a, NEUTRAL_REACTION);
 end
 
 procedure VConComp19a
@@ -490,87 +490,87 @@ end
 
 procedure VConComp20
 begin
-	gsay_reply( NAME, 156 );
+	Reply(156);
 	call VConComp18a;
 end
 
 procedure VConComp21
 begin
-	gsay_reply( NAME, 157 );
-	giq_option( 6, NAME, 158, VConComp27, NEUTRAL_REACTION );
-	giq_option( 7, NAME, 159, VConComp30, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 150, VConCompEnd, NEUTRAL_REACTION );
+	Reply(157);
+	giq_option(6, NAME, 158, VConComp27, NEUTRAL_REACTION);
+	giq_option(7, NAME, 159, VConComp30, NEUTRAL_REACTION);
+	giq_option(4, NAME, 150, VConCompEnd, NEUTRAL_REACTION);
 end
 
 procedure VConComp22
 begin
-	gsay_reply( NAME, 160 );
-	giq_option( 4, NAME, 161, VConComp23, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 162, VConComp24, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 163, VConComp25, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 164, VConComp26, NEUTRAL_REACTION );
+	Reply(160);
+	giq_option(4, NAME, 161, VConComp23, NEUTRAL_REACTION);
+	giq_option(4, NAME, 162, VConComp24, NEUTRAL_REACTION);
+	giq_option(4, NAME, 163, VConComp25, NEUTRAL_REACTION);
+	giq_option(4, NAME, 164, VConComp26, NEUTRAL_REACTION);
 end
 
 procedure VConComp23
 begin
-	gsay_reply( NAME, 165 );
-	giq_option( 4, NAME, 166, VConComp22, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 138, VConComp18, NEUTRAL_REACTION );
+	Reply(165);
+	giq_option(4, NAME, 166, VConComp22, NEUTRAL_REACTION);
+	giq_option(4, NAME, 138, VConComp18, NEUTRAL_REACTION);
 end
 
 procedure VConComp24
 begin
-	gsay_reply( NAME, 167 );
-	giq_option( 4, NAME, 166, VConComp22, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 138, VConComp18, NEUTRAL_REACTION );
+	Reply(167);
+	giq_option(4, NAME, 166, VConComp22, NEUTRAL_REACTION);
+	giq_option(4, NAME, 138, VConComp18, NEUTRAL_REACTION);
 end
 
 procedure VConComp25
 begin
-	gsay_reply( NAME, 168 );
-	giq_option( 4, NAME, 166, VConComp22, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 138, VConComp18, NEUTRAL_REACTION );
+	Reply(168);
+	giq_option(4, NAME, 166, VConComp22, NEUTRAL_REACTION);
+	giq_option(4, NAME, 138, VConComp18, NEUTRAL_REACTION);
 end
 
 procedure VConComp26
 begin
-	gsay_reply( NAME, 169 );
-	giq_option( 4, NAME, 166, VConComp22, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 138, VConComp18, NEUTRAL_REACTION );
+	Reply(169);
+	giq_option(4, NAME, 166, VConComp22, NEUTRAL_REACTION);
+	giq_option(4, NAME, 138, VConComp18, NEUTRAL_REACTION);
 end
 
 procedure VConComp27
 begin
-	gsay_reply( NAME, 170 );
-	giq_option( 4, NAME, 172, VConComp28, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 173, VConComp29, NEUTRAL_REACTION );
+	Reply(170);
+	giq_option(4, NAME, 172, VConComp28, NEUTRAL_REACTION);
+	giq_option(4, NAME, 173, VConComp29, NEUTRAL_REACTION);
 end
 
 procedure VConComp28
 begin
-	gsay_reply( NAME, 171 );
-	giq_option( 4, NAME, 138, VConComp01a, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 150, VConCompEnd, NEUTRAL_REACTION );
+	Reply(171);
+	giq_option(4, NAME, 138, VConComp01a, NEUTRAL_REACTION);
+	giq_option(4, NAME, 150, VConCompEnd, NEUTRAL_REACTION);
 end
 
 procedure VConComp29
 begin
-	gsay_reply( NAME, 146 );
+	Reply(146);
 	call VConComp18a;
 end
 
 procedure VConComp30
 begin
-	gsay_reply( NAME, 174 );
-	giq_option( 4, NAME, 172, VConComp31, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 173, VConComp29, NEUTRAL_REACTION );
+	Reply(174);
+	giq_option(4, NAME, 172, VConComp31, NEUTRAL_REACTION);
+	giq_option(4, NAME, 173, VConComp29, NEUTRAL_REACTION);
 end
 
 procedure VConComp31
 begin
-	gsay_reply( NAME, 175 );
-	giq_option( 4, NAME, 138, VConComp01a, NEUTRAL_REACTION );
-	giq_option( 4, NAME, 150, VConCompEnd, NEUTRAL_REACTION );
+	Reply(175);
+	giq_option(4, NAME, 138, VConComp01a, NEUTRAL_REACTION);
+	giq_option(4, NAME, 150, VConCompEnd, NEUTRAL_REACTION);
 end
 
 procedure VConCompEnd

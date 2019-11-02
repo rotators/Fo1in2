@@ -49,8 +49,8 @@ procedure MapMark2;
 procedure start begin
 	if Only_Once then begin
 		Only_Once := 0;
-		set_self_team(TEAM_HUB_SKAG );
-		set_self_ai( AI_HUB_PEASANTS );
+		set_self_team(TEAM_HUB_SKAG);
+		set_self_ai(AI_HUB_PEASANTS);
 	end
 end
 
@@ -65,9 +65,9 @@ procedure critter_p_proc begin
 	end
 
 	if CUR_MAP_HUBDWNTN then begin
-   	if (global_var( GVAR_IRWIN_FARM_STATUS ) == 501) then begin
+   	if (global_var(GVAR_IRWIN_FARM_STATUS) == 501) then begin
    		if (self_tile != 27969) then begin
-   			self_walk_to_tile( 27969 );
+   			self_walk_to_tile(27969);
    		end
    		else if (self_tile == 27969) then begin
    			if not(is_loading_game) then begin
@@ -89,7 +89,7 @@ procedure talk_p_proc begin
 	get_reaction
 
 	if CUR_MAP_HUBMIS0 then
-      float_msg( self_obj, mstr(random(2500,2510)), FLOAT_MSG_YELLOW );
+      float_msg(self_obj, mstr(random(2500, 2510)), FLOAT_MSG_YELLOW);
 	else
 	   call IrwinTalks;
 end
@@ -100,34 +100,34 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	display_msg(message_str(NAME, 100));
+	display_msg(mstr(100));
 end
 
 procedure damage_p_proc begin
 	if source_obj == dude_obj then begin
-		set_global_var( GVAR_ENEMY_HUB, 1 );
+		set_global_var(GVAR_ENEMY_HUB, 1);
 	end
 end
 
 procedure IrwinTalks begin
-	if (global_var( GVAR_IRWIN_FARM_STATUS ) == 0) then begin
+	if (global_var(GVAR_IRWIN_FARM_STATUS) == 0) then begin
 		start_dialog_at_node(Irwin00);
 	end
-	else if ((global_var( GVAR_IRWIN_FARM_STATUS ) == 1) or (global_var( GVAR_IRWIN_FARM_STATUS ) == 2)) then begin
+	else if ((global_var(GVAR_IRWIN_FARM_STATUS) == 1) or (global_var(GVAR_IRWIN_FARM_STATUS) == 2)) then begin
 		start_dialog_at_node(Irwin05);
 	end
 	else begin
-		float_msg( self_obj, message_str(NAME, 117), FLOAT_MSG_YELLOW );
+		float_msg(self_obj, mstr(117), FLOAT_MSG_YELLOW);
 	end
 end
 
 procedure IrwinAccept begin
-   set_global_var( GVAR_IRWIN_FARM_STATUS, 1 );
+   set_global_var(GVAR_IRWIN_FARM_STATUS, 1);
 
 	// If the player enabled satellite quest locations, mark the location instead.
 	// Otherwise teleport the player:
 	if fo1in2_satellite_loc_disabled then begin
-	   gsay_message( NAME, 109, NEUTRAL_REACTION );
+	   NMessage(109);
 	   call MapLoad;
 	end
 	else begin
@@ -141,77 +141,77 @@ end
 
 procedure Irwin00 begin
 	Reply(101);
-	NOption( 102, Irwin01, 4 );
-	NOption( 103, Irwin03, 4 );
-	NOption( 104, IrwinEnd, 4 );
-	NOption( 118, Irwin07, -3 );
+	NOption(102, Irwin01, 4);
+	NOption(103, Irwin03, 4);
+	NOption(104, IrwinEnd, 4);
+	NOption(118, Irwin07, -3);
 end
 
 procedure Irwin01 begin
 	if (dude_level < 5) then
-		gsay_message( NAME, 105, NEUTRAL_REACTION );
+		NMessage(105);
 	else
 		call Irwin02;
 end
 
 procedure Irwin02 begin
-	Reply( 106);
-	NOption( 107, IrwinAccept, 4 );
-	NOption( 108, Irwin04, 4 );
+	Reply(106);
+	NOption(107, IrwinAccept, 4);
+	NOption(108, Irwin04, 4);
 end
 
 procedure Irwin03 begin
-	gsay_message( NAME, 110, NEUTRAL_REACTION );
+	NMessage(110);
 end
 
 procedure Irwin04 begin
-	gsay_message( NAME, 111, BAD_REACTION );
+	BMessage(111);
 end
 
 procedure Irwin05 begin
-	Reply( 112);
-	if (global_var( GVAR_IRWIN_FARM_STATUS ) == 1) and not(hub_farm_visible_on_map) then begin
-		NOption( 400, GoBack, 4 );
-		NOption( 123, GoBack, -3 );
+	Reply(112);
+	if (global_var(GVAR_IRWIN_FARM_STATUS) == 1) and not(hub_farm_visible_on_map) then begin
+		NOption(400, GoBack, 4);
+		NOption(123, GoBack, -3);
 	end
-	NOption( 113, Irwin06, 4 );
-	NOption( 114, Irwin04, 4 );
-	NOption( 120, Irwin06, -3 );
-	NOption( 121, Irwin07, -3 );
+	NOption(113, Irwin06, 4);
+	NOption(114, Irwin04, 4);
+	NOption(120, Irwin06, -3);
+	NOption(121, Irwin07, -3);
 end
 
 procedure Irwin06 begin
 	variable LVar0 := 0;
-	if (global_var( GVAR_IRWIN_FARM_STATUS ) == 2) then begin
-		gsay_message( NAME, 115, NEUTRAL_REACTION );
-		LVar0 := create_object( PID_223_PISTOL, 0, 0 );
+	if (global_var(GVAR_IRWIN_FARM_STATUS) == 2) then begin
+		NMessage(115);
+		LVar0 := create_object(PID_223_PISTOL, 0, 0);
 		add_obj_to_inven(dude_obj, LVar0);
 
 		give_exp_points(EXP_IRWINE_FARM_CLEARED);
 		display_msg(mstr(200) + EXP_IRWINE_FARM_CLEARED + mstr(201));
 
-		set_global_var( GVAR_PLAYER_REPUTATION, check_general_rep + 2 );
-		set_global_var( GVAR_IRWIN_FARM_STATUS, 501 );
+		set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
+		set_global_var(GVAR_IRWIN_FARM_STATUS, 501);
 	end
 	else begin
-		gsay_message( NAME, 116, BAD_REACTION );
+		BMessage(116);
 	end
 end
 
 procedure Irwin07 begin
-	gsay_message( NAME, 119, BAD_REACTION );
+	BMessage(119);
 end
 
 procedure GoBack begin
 	if fo1in2_satellite_loc_disabled then begin
-	   Reply( 401);
-	   NOption( 402, MapLoad, 4 );
-	   NOption( 403, MapLoad, -3 );
+	   Reply(401);
+	   NOption(402, MapLoad, 4);
+	   NOption(403, MapLoad, -3);
 	end
 	else begin
-	   Reply( 401);
-	   NOption( 402, MapMark1, 4 );
-	   NOption( 403, MapMark1, -3 );
+	   Reply(401);
+	   NOption(402, MapMark1, 4);
+	   NOption(403, MapMark1, -3);
 	end
 end
 
@@ -228,7 +228,7 @@ end
 procedure MapMark2 begin
    gfade_out(60);
    mark_hub_farm_on_map
-   game_time_advance(ONE_GAME_MINUTE * random(15,30));
+   game_time_advance(ONE_GAME_MINUTE * random(15, 30));
    gfade_in(60);
    GMessage(2002);
 end

@@ -52,7 +52,7 @@ begin
 end
 
 procedure GetCurrentZone begin
-    return GetZone( worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE );
+    return GetZone(worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE);
 end
 
 // read [Tile*] sections of WORLDMAP.TXT and save parts of info in ZONES[][]
@@ -62,16 +62,16 @@ begin
     variable forTile, forX, forY;
 
     // must be set before using some TILE_/ZONE_ macros
-    TILE_COUNT_X := get_ini_setting( "mods\\fo1_base\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles" );
+    TILE_COUNT_X := get_ini_setting("mods\\fo1_base\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles");
 
-    if( ZONES == 0 ) then
+    if(ZONES == 0) then
     begin
         // no idea how to create 2d array properly
         variable x;
-        ZONES := create_array( ZONE_COUNT_X, 0 );
+        ZONES := create_array(ZONE_COUNT_X, 0);
         for( x := 0; x < ZONE_COUNT_Y; x++ )
         begin
-            ZONES[x] := create_array( ZONE_COUNT_Y, 0 );
+            ZONES[x] := create_array(ZONE_COUNT_Y, 0);
         end
     end
 
@@ -83,9 +83,9 @@ begin
             begin
                 variable zx := (forTile % TILE_COUNT_X) * TILE_ZONES_X + forX;
                 variable zy := (forTile / TILE_COUNT_X) * TILE_ZONES_Y + forY;
-                variable line := get_ini_string( "mods\\fo1_base\\data\\WORLDMAP.TXT|Tile " + forTile + "|" + forX + "_" + forY );
+                variable line := get_ini_string("mods\\fo1_base\\data\\WORLDMAP.TXT|Tile " + forTile + "|" + forX + "_" + forY);
                 // TODO? strip trailing comments, if any
-                variable cfg := string_split( line, "," );
+                variable cfg := string_split(line, ",");
                 variable zone := create_array(-1, 2);
 
                 zone["zx"] := zx;
@@ -100,8 +100,8 @@ begin
 
                 ZONES[zx][zy] := zone;
 
-                if( debug_mode and zone["table"] != "0" and atoi( zone["table"] ) == 0 ) then
-                    display_msg( "BUG BUG BUG : [Tile " + forTile + "]->" + forX + "_" + forY + " : table<" + zone["table"] + "> is not a number");
+                if(debug_mode and zone["table"] != "0" and atoi( zone["table"] ) == 0) then
+                    display_msg("BUG BUG BUG : [Tile " + forTile + "]->" + forX + "_" + forY + " : table<" + zone["table"] + "> is not a number");
             end
         end
     end
@@ -112,31 +112,31 @@ variable prevTable := -1;
 procedure SetWorldmapInfo
 begin
     variable zone := GetCurrentZone();
-    variable terrain := WORLDMAP_TERRAIN_UNKNOWN, table := atoi( zone["table"] ); // if table is not a number, we're in trouble
+    variable terrain := WORLDMAP_TERRAIN_UNKNOWN, table := atoi(zone["table"]); // if table is not a number, we're in trouble
 
     // get terrain type from string
-    switch( zone["terrain"] )
+    switch(zone["terrain"])
     begin
         case "City":     terrain := WORLDMAP_TERRAIN_CITY;
         case "Desert":   terrain := WORLDMAP_TERRAIN_DESERT;
         case "Mountain": terrain := WORLDMAP_TERRAIN_MOUNTAIN;
         case "Ocean":    terrain := WORLDMAP_TERRAIN_OCEAN;
-        default:         display_msg( "BUG BUG BUG : unknown terrain<" + zone["terrain"] + ">" );
+        default : display_msg("BUG BUG BUG : unknown terrain<" + zone["terrain"] + ">");
     end
 
     // spam when changing zone type
-    if( debug_mode and (prevTerrain != terrain or prevTable != table) ) then
+    if(debug_mode and (prevTerrain != terrain or prevTable != table)) then
     begin
-        if( not (prevTerrain == "" and prevTable == -1) ) then
-            debug( "exit " + prevTerrain + prevTable);
+        if(not (prevTerrain == "" and prevTable == -1)) then
+            debug("exit " + prevTerrain + prevTable);
 
-        debug( "enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "_" + zone["tile_y"] + ">");
+        debug("enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "_" + zone["tile_y"] + ">");
         prevTerrain := terrain;
         prevTable := table;
     end
 
-    set_global_var(GVAR_WORLDMAP_TABLE, table );
-    set_global_var(GVAR_WORLDMAP_TERRAIN, terrain );
+    set_global_var(GVAR_WORLDMAP_TABLE, table);
+    set_global_var(GVAR_WORLDMAP_TERRAIN, terrain);
 end
 
 procedure SetRadiation begin
