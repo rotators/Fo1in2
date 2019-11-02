@@ -12,7 +12,7 @@ jobs:
  Test:
   runs-on: windows-latest
   env:
-   MOD_DIR:            "Fallout2/Fallout1in2/"
+   MOD_DIR:            "Fallout2/Fallout1in2"
    MOD_VERSION_STRING: "FALLOUT ET TU"
    MOD_VERSION_MAJOR:  0
    MOD_ZIP:            "Fallout1in2-v"
@@ -29,14 +29,6 @@ jobs:
            commits="$(git rev-list HEAD --count)"
            echo ::set-env name=MOD_VERSION_STRING::${MOD_VERSION_STRING} ${MOD_VERSION_MAJOR}.${commits}
            echo ::set-env name=MOD_ZIP::${MOD_ZIP}${MOD_VERSION_MAJOR}.${commits}.zip
-    shell: bash
-
-  - name:  Update ddraw.ini
-    run:   |
-           :
-           ddraw_ini="$MOD_DIR/ddraw.ini"
-           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING!" $ddraw_ini
-           grep "^VersionString=" $ddraw_ini
     shell: bash
 
   - name:  Cleanup
@@ -57,7 +49,11 @@ jobs:
     shell: bash
 
   - name:  Update configuration
-    run:   unix2dos $MOD_DIR/*.ini $MOD_DIR/*.cfg $MOD_DIR/config/* $MOD_DIR/undat_files.txt
+    run:   |
+           :
+           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING!" $MOD_DIR/ddraw.ini
+           grep "^VersionString=" $MOD_DIR/ddraw.ini
+           unix2dos $MOD_DIR/*.txt $MOD_DIR/*.ini $MOD_DIR/*.cfg $MOD_DIR/config/*
     shell: bash
 
   - name:  Pack
