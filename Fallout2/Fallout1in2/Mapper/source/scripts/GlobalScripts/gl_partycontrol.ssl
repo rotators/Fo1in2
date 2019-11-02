@@ -38,7 +38,7 @@ procedure combatturn_handler begin
       critter := get_sfall_arg,
       pid, perkID, level;
 
-   //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + ", arg3: " + get_sfall_arg);
+   //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg);
    if npcControl then begin
       if lightInt then lightInt := round((lightInt / 65536.0) * 100); // calc percent of intensity
       obj_set_light_level(npcControl, lightInt, lightDist);           // restore light for prev. controlled NPC
@@ -53,7 +53,7 @@ procedure combatturn_handler begin
          npcControl := critter;
          // set perks (only work with 4.1.8+)
          foreach (perkID in perksList) begin
-            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            level := get_perk( real_dude_obj, perkID );
             if (level) then begin
                critter_add_trait(critter, TRAIT_PERK, perkID, level);
             end
@@ -68,6 +68,8 @@ procedure combatturn_handler begin
          npcControl := 0; // dude control
       end
       if inControl then begin
+         // check preference setting _combat_highlight
+         if (read_byte(0x56D38C)) then set_outline(critter, OUTLINE_GREY);
          // center the screen on the controlled critter/dude and remove roof tiles
          move_to(dude_obj, dude_tile, dude_elevation);
          if (displayName and critter != real_dude_obj) then begin
@@ -77,6 +79,13 @@ procedure combatturn_handler begin
          end
       end
    end else if inControl then begin
+      // remove perks before switching control (only work with 4.1.8+)
+      foreach (perkID in perksList) begin
+         level := get_perk( real_dude_obj, perkID );
+         if (level) then begin
+            critter_rm_trait(critter, TRAIT_PERK, perkID, level);
+         end
+      end
       if isShowTag then begin
          hide_iface_tag(displayName);
          isShowTag := false;
