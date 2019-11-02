@@ -264,10 +264,11 @@ variable merch_slot_armor_flags;
 /*********************************************************
     Game time Limits
 *********************************************************/
+#define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
+
 /*********************************************************
             Water Chip related:
 *********************************************************/
-#define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
 #define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS_LEFT) - get_days_passed)
 
 #define TIME_LIMIT_1                        (100)

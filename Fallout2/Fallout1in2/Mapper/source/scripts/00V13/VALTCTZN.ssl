@@ -1,14 +1,25 @@
+/*
+
+	Vault 13 - Generic citizen
+
+*/
+
+/* Include Files */
 #include "..\headers\define.h"
+#include "..\headers\maps\vault13.h"
 
 #define NAME                    SCRIPT_VALTCTZN
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_V13)
 
 #include "..\headers\command.h"
+#include "..\headers\modreact.h"
 
-procedure start;    variable SrcObj := 0;    variable SrcIsParty := 0;
+/* Standard Script Procedures */
+procedure start;
 procedure critter_p_proc;
 procedure damage_p_proc;
 procedure destroy_p_proc;
-procedure map_enter_p_proc;//    script_action == map_enter_proc
+procedure map_enter_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
@@ -40,10 +51,9 @@ variable DeathType := 57;
 procedure push_p_proc begin
 end
 
-procedure start
-begin
+procedure start begin
 	if (v13_invaded) then begin
-		if CUR_AREA_VAULT_13 then begin 
+		if CUR_AREA_VAULT_13 then begin
 			if (local_var(9) != 1) then begin
 				set_local_var(9, 1);//		<-- only once
 				if not(is_loading_game) then begin
@@ -55,47 +65,9 @@ begin
 			end
 		end
 	end
-	else begin
-
-
-		if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-			call critter_p_proc;
-		end
-		else begin
-			if (script_action == damage_proc) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-				call damage_p_proc;
-			end
-			else begin
-				if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-					call destroy_p_proc;
-				end
-				else begin
-					if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-						call map_enter_p_proc;
-					end
-					else begin
-						if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-							call pickup_p_proc;
-						end
-						else begin
-							if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-								call talk_p_proc;
-							end
-							else begin
-								if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-									call timed_event_p_proc;
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	if (tmp_hostile) then begin
 		tmp_hostile := 0;
 		attack(dude_obj);
@@ -120,37 +92,22 @@ begin
 	end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
 	if (source_obj == dude_obj) then begin
 		set_local_var(7, 1);
 	end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
 	rm_timer_event(self_obj);
 
 	if (source_obj == dude_obj) then begin
 		set_global_var( GVAR_VAULT_13_HOSTILE, 1 );
 	end
-	if source_obj == dude_obj then begin
-		set_global_var( GVAR_GOOD_MONSTER, global_var( GVAR_GOOD_MONSTER ) + 1 );// THIS MONSTER WAS A GOOD GUY. INCREASE GoodGuysKilled COUNTER
-		set_global_var( GVAR_PLAYER_REPUTATION, (check_general_rep - 1) );
-		if (has_rep_berserker) then begin
-			set_global_var( GVAR_BERSERKER_REPUTATION, 1 );
-			set_global_var( GVAR_CHAMPION_REPUTATION, 0 );
-		end
-		if (has_rep_champion) then begin
-			set_global_var( GVAR_CHAMPION_REPUTATION, 1 );
-			set_global_var( GVAR_BERSERKER_REPUTATION, 0 );
-		end
-	end
-	rm_timer_event(self_obj);
+	inc_good_critter
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
 	if (not(local_var(4))) then begin
 		set_local_var(4, self_tile);
 	end
@@ -162,13 +119,11 @@ begin
 	wake_time := sleep_time - 1300;
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
 	tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
 	dude_look_at_self;
 	if (local_var(6) == 1) then begin
 		if (random(0, 1)) then begin
@@ -186,36 +141,30 @@ begin
 			if (rndx == 0) then begin
 				rndx := random(101, 106);
 			end
-			float_msg( self_obj, message_str(SCRIPT_VALTCTZN, rndx), FLOAT_MSG_NORMAL );
+			float_msg( self_obj, message_str(NAME, rndx), FLOAT_MSG_NORMAL );
 		end
 	end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		self_walk_to_tile( tile_num_in_direction(tile_num(WtrGrd_ptr), 2, 1) );
 		add_timer_event(self_obj, game_ticks(3), 2);
 	end
-	else begin
-		if (fixed_param == 2) then begin
-			getting_ration := 1;
-			if (random(0, 1)) then begin
-				float_msg( self_obj, message_str(SCRIPT_GENVAULT, 165), FLOAT_MSG_NORMAL );
-			end
-			add_timer_event(self_obj, game_ticks(3), 3);
+	else if (fixed_param == 2) then begin
+		getting_ration := 1;
+		if (random(0, 1)) then begin
+			float_msg( self_obj, message_str(SCRIPT_GENVAULT, 165), FLOAT_MSG_NORMAL );
 		end
-		else begin
-			if (fixed_param == 3) then begin
-				recipient := 0;
-				self_walk_to_tile( home_tile );
-			end
-		end
+		add_timer_event(self_obj, game_ticks(3), 3);
+	end
+	else if (fixed_param == 3) then begin
+		recipient := 0;
+		self_walk_to_tile( home_tile );
 	end
 end
 
-procedure get_rations
-begin
+procedure get_rations begin
 	sleeping_disabled := 1;
 	if (self_tile != ration_tile) then begin
 		if not(random(0, 9)) then begin
@@ -241,8 +190,7 @@ begin
 	end
 end
 
-procedure set_ration_tile
-begin
+procedure set_ration_tile begin
 	if (self_elevation == 0) then begin
 		ration_tile := tile_num_in_direction(14704, random(0, 5), random(1, 2));
 	end
@@ -276,20 +224,15 @@ begin
 	end
 end
 
-procedure set_sleep_tile
-begin
+procedure set_sleep_tile begin
 	if (self_elevation == 0) then begin
 		sleep_tile := 7000;
 	end
-	else begin
-		if (self_elevation == 1) then begin
-			sleep_tile := home_tile;
-		end
-		else begin
-			if (self_elevation == 2) then begin
-				sleep_tile := 7000;
-			end
-		end
+	else if (self_elevation == 1) then begin
+		sleep_tile := home_tile;
+	end
+   else if (self_elevation == 2) then begin
+		sleep_tile := 7000;
 	end
 end
 
