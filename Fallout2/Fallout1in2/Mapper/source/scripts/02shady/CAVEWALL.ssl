@@ -41,28 +41,25 @@ variable LVar1 := 0;
 
       Create_Cave_In(22345, 0)
 
-      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 3);
-
-      if (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) > 0) then begin
-         //previously had been changed to * 55 + 250
-         EXP_EARNED := (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) * 75) + 75;
-         if (EXP_EARNED < 300) then begin
-            EXP_EARNED := 300;
-         end
-         if (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) > 0) then begin
-            EXP_EARNED := EXP_EARNED + 500;
-         end
-         if (global_var(GVAR_RADSCORPIONS_KILLED) != 1) then begin
-            set_global_var(GVAR_RADSCORPIONS_KILLED, 2);
-
-            display_msg(message_str(SCRIPT_SSRADSCO, 188));
-            display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_EARNED + message_str(SCRIPT_GENCHAT, 104));
-
-            inc_shady_rep(REP_BONUS_RADSCORPIONS_GONE);
-            give_exp_points(EXP_EARNED);
-            set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 3);
-         end
+      EXP_EARNED := (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) * 75) + 75;
+      if (EXP_EARNED < 300) then begin
+         EXP_EARNED := 300;
       end
+      if (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) > 0) then begin
+         EXP_EARNED := EXP_EARNED + 500;
+      end
+
+      set_global_var(GVAR_RADSCORPIONS_KILLED, 2);
+
+      // Only show the "sealed"-message if there are still alive scorpions
+      if (global_var(GVAR_SHADYSANDS_RADSCORPS_LEFT) > 0) then
+         display_msg(message_str(SCRIPT_SSRADSCO, 188));
+
+      display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_EARNED + message_str(SCRIPT_GENCHAT, 104));
+
+      give_exp_points(EXP_EARNED);
+      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 3);
+      inc_shady_rep(REP_BONUS_RADSCORPIONS_GONE);
 
       if not(radscorp_quest_completed) then begin
          set_radscorp_quest_completed;
