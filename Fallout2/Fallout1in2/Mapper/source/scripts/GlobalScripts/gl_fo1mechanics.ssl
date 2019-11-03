@@ -18,19 +18,22 @@ procedure start;
 
 procedure ondeath_handler;
 procedure general;
-procedure mode_change;
+procedure mode_change_handler;
 procedure scene_master_destroyed;
 procedure scene_vats_destroyed;
 procedure night_person;
-procedure item_description;
-procedure item_damage;
+procedure item_description_handler;
+procedure afterhitroll_handler;
+
+#define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
+                               else slot := INVEN_TYPE_RIGHT_HAND
 
 procedure start begin
    if (game_loaded) then begin
       set_global_script_type(0);
-      register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
-      register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description);
-      register_hook_proc(HOOK_ITEMDAMAGE, item_damage);
+      register_hook_proc(HOOK_GAMEMODECHANGE, mode_change_handler);
+      register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description_handler);
+      register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
    end
 
    call general;
@@ -47,7 +50,7 @@ procedure general begin
    VOODOO_rest_till0600;
 end
 
-procedure mode_change begin
+procedure mode_change_handler begin
    call scene_master_destroyed;
    call scene_vats_destroyed;
    call night_person;
@@ -140,7 +143,7 @@ procedure night_person begin
    end
 end
 
-procedure item_description begin
+procedure item_description_handler begin
    variable item := obj_pid(get_sfall_arg);
    variable description;
 
@@ -152,30 +155,31 @@ procedure item_description begin
    end
 end
 
-procedure item_damage begin
-variable
-   dmgMin := get_sfall_arg,
-   dmgMax := get_sfall_arg,
-   weapon := get_sfall_arg,
-   attacker := get_sfall_arg,
-   attackType := get_sfall_arg,
-   isMelee := get_sfall_arg,
-   weaponPid,
-   damageType;
+procedure afterhitroll_handler begin
+   variable
+      willHit := get_sfall_arg,
+      attacker := get_sfall_arg,
+      target := get_sfall_arg,
+      slot, item;
 
-   if (weapon) then begin
-      weaponPid := obj_pid(weapon);
-      damageType := get_proto_data(weaponPid, 48);
+   if (attacker) then begin
+      if (attacker == dude_obj) then begin
+         get_active_hand(slot);
+         item := critter_inven_obj(attacker, slot);
+      end else begin
+         item := critter_inven_obj(attacker, INVEN_TYPE_RIGHT_HAND);
+      end
 
-      // Remove knockback for incendiary weapons.
-      // Turn Molotov Cocktail into a fire damage weapon.
-      if ((weaponPid == PID_MOLOTOV_COCKTAIL) and get_proto_data(weaponPid, 48) == DMG_fire) then begin
-      	debug("fire!");
-      	set_weapon_knockback(weapon, 0, 0);
-      	set_attack_is_explosion_fire;
+      if (item > 0) then begin
+         if (obj_pid(item) == PID_MOLOTOV_COCKTAIL) then begin
+            if (obj_type(target) == OBJ_TYPE_SCENERY and willHit > 1) then begin
+               set_proto_data(PID_MOLOTOV_COCKTAIL, PROTO_WP_DMG_TYPE, DMG_explosion);
+            end else begin
+               set_proto_data(PID_MOLOTOV_COCKTAIL, PROTO_WP_DMG_TYPE, DMG_fire);
+               set_attack_explosion_radius(2); // grenade radius
+               set_attack_is_explosion_fire;
+            end
+         end
       end
    end
-
-   set_sfall_return(dmgMin);
-   set_sfall_return(dmgMax);
 end
