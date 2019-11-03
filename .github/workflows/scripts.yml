@@ -15,6 +15,7 @@ on:
 jobs:
 
  Compile:
+  if: github.actor != 'antalaskaya'
   runs-on: windows-latest
   steps:
 
@@ -69,4 +70,31 @@ jobs:
 
   - name:  Compile
     run:   .github/workflows/scripts.compile.sh
+    shell: bash
+
+ ###
+
+ Update:
+  needs: [Compile, ReDefine]
+  runs-on: windows-latest
+  steps
+
+  - name: Clone
+    uses: actions/checkout@master
+     with:
+     token: ${{ secrets.ANTALASKAYA_TOKEN }}
+#    fetch-depth: 1
+
+  - name: ReDefine
+    run:  Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts Fallout2/Fallout1in2/Mapper/source/scripts/ --headers Fallout2/Fallout1in2/Mapper/source/scripts/headers/ >/dev/null
+
+  - name:  Compile
+    run:   .github/workflows/scripts.compile.sh --bytecode --optimization=1
+    shell: bash
+
+  - name: Git pull
+    run:  git pull
+
+  - name:  Git push
+    run:   git diff --quiet && git diff --cached --quiet || (git commit --all --message="Scripts update" && git push)
     shell: bash
