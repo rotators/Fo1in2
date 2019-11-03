@@ -28,7 +28,6 @@ jobs:
   - name:  sfall-dev
     run:   |
            :
-           set -euxo pipefail
            SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
            curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.dev.dll
            SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dev.dll).VersionInfo.ProductVersion")
@@ -39,7 +38,6 @@ jobs:
   - name:  ReDefine
     run:   |
            :
-           set -euxo pipefail
            Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $MOD_DIR/Mapper/source/scripts/ --headers $MOD_DIR/Mapper/source/scripts/headers/ >/dev/null
            grep "^Changed " ReDefine.log || true
            rm ReDefine*.log
@@ -49,7 +47,6 @@ jobs:
   - name:  Compile
     run:   |
            :
-           set -exo pipefail
            ok=1
            .github/workflows/scripts.compile.sh --bytecode --optimization=1 || ok=0
            if [ $ok -eq 1 ]; then
@@ -59,11 +56,11 @@ jobs:
               git diff --quiet || (git add --update && echo "- Scripts compilation" >> $HOME/gha.commit)
            else
               if [ "$GHA_REDEFINE" == "true" ]; then
-                 echo "ReDefine excluded"
+                 echo "[WARNING] ReDefine excluded"
                  git reset HEAD  $MOD_DIR/Mapper/source/scripts/
                  git checkout -- $MOD_DIR/Mapper/source/scripts/
               fi
-              echo "Compile excluded"
+              echo "[WARNING] Compile excluded"
               git checkout -- $MOD_DIR/mods/fo1_base/scripts
            fi
     shell: bash
@@ -71,13 +68,12 @@ jobs:
   - name:  Check
     run:   |
            :
-           set -euxo pipefail
            echo ::group::git status
-           git status
+           git status 2>&1
            echo ::endgroup::
 
            if [ -f "$HOME/gha.commit" ]; then
-              sed -i '1s!^!Maintenance\n!' $HOME/gha.commit
+              sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
               dos2unix $HOME/gha.commit
               echo ::set-env name=GHA_COMMIT::true
               cat $HOME/gha.commit
@@ -90,10 +86,22 @@ jobs:
     if:    env.GHA_COMMIT == 'true'
     run:   |
            :
+           echo ::group::git commit
            git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
            git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
-           git commit --all --file="$HOME/gha.commit"
-           git log -p -n 1 | cat -v
-#          git push
+           git commit --all --file="$HOME/gha.commit" 2>&1
+           echo ::endgroup::
+
+           echo ::group::git log
+           git log -p -n 1 2>&1
+           echo ::endgroup::
+
+           if [ "${{ github.event_name }}" == "schedule" ]; then
+              echo ::group::git push
+              git push 2>&1
+              echo ::endgroup::
+           else
+              echo "[WARNING] Push disabled for '${{ github.event_name }}' event"
+           fi
     shell: bash
     continue-on-error: true

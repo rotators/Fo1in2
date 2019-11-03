@@ -41,27 +41,44 @@ jobs:
 #    fetch-depth: 1
 
   - name:  ReDefine
-    run:   Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts Fallout2/Fallout1in2/Mapper/source/scripts/ --headers Fallout2/Fallout1in2/Mapper/source/scripts/headers/ >/dev/null
+    run:   |
+           :
+           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts Fallout2/Fallout1in2/Mapper/source/scripts/ --headers Fallout2/Fallout1in2/Mapper/source/scripts/headers/ >/dev/null
+
+           echo ::group::Result steps config
+           if [ -f "ReDefine.log" ] && grep --quiet --max-count=1 "^@@" ReDefine.log; then
+              echo ::set-env name=REDEFINE_CHANGES::true
+           fi
+           if [ -f "ReDefine.log" ] && grep --quiet --max-count=1 "^%%" ReDefine.log; then
+              echo ::set-env name=REDEFINE_USER_LOG::true
+           fi
+           if [ -f "ReDefine.WARNING.log" ]; then
+              echo ::set-env name=REDEFINE_WARNING::true
+           fi
+           if [ -f "ReDefine.DEBUG.log" ]; then
+              echo ::set-env name=REDEFINE_DEBUG::true
+           fi
+           echo ::endgroup::
     shell: bash
 
   - name:  Changes
-    run:   cat ReDefine.log | egrep -v '^(Added |Process .+ define)'
+    if:    env.REDEFINE_CHANGES == 'true'
+    run:   grep --after-context=2 "^@@" ReDefine.log
+    shell: bash
+
+  - name:  UserLog
+    if:    env.REDEFINE_USER_LOG == 'true'
+    run:   grep --after-context=1 "^%%" ReDefine.log
     shell: bash
 
   - name:  Warnings
-    run:   |
-           :
-           if [ -f ReDefine.WARNING.log ]; then
-              cat ReDefine.WARNING.log
-           fi
+    if:    env.REDEFINE_WARNING == 'true'
+    run:   cat ReDefine.WARNING.log
     shell: bash
 
   - name:  Debug
-    run:   |
-           :
-           if [ -f ReDefine.DEBUG.log ]; then
-              cat ReDefine.DEBUG.log
-           fi
+    if:    env.REDEFINE_DEBUG == 'true'
+    run:   cat ReDefine.DEBUG.log
     shell: bash
 
   - name:  Cleanup
