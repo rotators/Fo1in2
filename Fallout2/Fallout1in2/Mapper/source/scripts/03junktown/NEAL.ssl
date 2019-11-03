@@ -40,6 +40,7 @@ procedure Neal10;
 procedure Neal11;
 procedure NealEnd;
 
+procedure NealKickOut;
 procedure NealCola;
 procedure NealBeer;
 procedure NealBooze;
@@ -67,6 +68,7 @@ variable sleeping_disabled;
 variable flag149;
 variable change_team;
 variable sleep_float;
+variable sleep_return_float;
 variable kick_out;
 
 #define LVAR_Herebefore                   (4)
@@ -76,6 +78,7 @@ variable kick_out;
 #define EVENT_TARGET_DEAD              (10)
 #define EVENT_SLEEP                    (11)
 #define EVENT_KICKED_OUT               (12)
+#define EVENT_RETURN_SLEEP             (13)
 
 #define kicked_out_hex                 (22483)
 
@@ -116,6 +119,10 @@ procedure critter_p_proc begin
    end
 
    if ((game_time_hour > wake_time) or (game_time_hour < sleep_time) and (moving_disabled == 0)) then begin
+      if (map_var(MVAR_SkumPitt_Noisy) > 0) then
+         set_map_var(MVAR_SkumPitt_Noisy,0);
+         sleep_return_float := 0;
+
       if (self_tile != home_tile) then begin
          self_walk_to_tile(home_tile);
       end
@@ -166,8 +173,7 @@ procedure critter_p_proc begin
          end
       end
    end
-
-   if (messing_with_SkumDoor == 3) then begin
+   else if (messing_with_SkumDoor == 3) then begin
       messing_with_SkumDoor := 0;
       sleeping_disabled := 0;
       moving_disabled := 0;
@@ -196,7 +202,7 @@ procedure critter_p_proc begin
       end
    end
 
-   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin
       if (self_can_see_dude) then begin
          attack(dude_obj);
       end
@@ -207,9 +213,25 @@ procedure critter_p_proc begin
       flag149 := 1;
    end
 
+   // Sleep floaters ZZZZ:
    if (self_tile == sleep_tile and sleep_float == 0) then begin
       sleep_float := 1;
-      add_timer_event(self_obj, game_ticks(random(5, 15)), EVENT_SLEEP);
+      add_timer_event(self_obj, game_ticks(random(5,15)), EVENT_SLEEP);
+   end
+
+   // Player made too much noise in the Skum Pitt at night:
+   if (map_var(MVAR_SkumPitt_Noisy) == 1) then begin
+      if (self_tile != sleep_tile) then begin
+         if (self_can_see_dude or (tile_distance_objs(self_obj, dude_obj) < 7)) then begin
+            set_map_var(MVAR_SkumPitt_Noisy,2);
+            reg_anim_clear(self_obj);
+            call NealKickOut;
+         end
+         else if ((self_tile == check_noise_hex) and (sleep_return_float == 0)) then begin
+            sleep_return_float := 1;
+            add_timer_event(self_obj, game_ticks(10), EVENT_RETURN_SLEEP);
+         end
+      end
    end
 end
 
@@ -264,15 +286,7 @@ procedure talk_p_proc begin
          else begin
             if ((game_time_hour >= 410) and (game_time_hour <= 1300)) then begin
                //float_msg(self_obj, mstr(105), FLOAT_MSG_NORMAL);
-               if (kick_out == 0) then begin
-                  kick_out := 1;
-                  float_msg(self_obj, mstr(200), FLOAT_MSG_RED);
-                  add_timer_event(self_obj, game_ticks(1), EVENT_KICKED_OUT);
-               end
-               else if (kick_out == 2) then begin
-                  float_msg(self_obj, mstr(149), FLOAT_MSG_RED);
-                  tmp_hostile := 1;
-               end
+               call NealKickOut;
             end
             else begin
                start_dialog_at_node(Neal01);
@@ -299,18 +313,31 @@ end
 procedure timed_event_p_proc begin
 variable Sound2;
 
-   if (fixed_param == EVENT_KICKED_OUT) then begin
+   if (fixed_param == EVENT_RETURN_SLEEP) and (self_tile == check_noise_hex) then begin
+      float_msg(self_obj, mstr(203), FLOAT_MSG_NORMAL);
+      animate_move_obj_to_tile(self_obj,sleep_tile,ANIMATE_WALK);
+      set_map_var(MVAR_SkumPitt_Noisy,0);
+   end
+   else if (fixed_param == EVENT_KICKED_OUT) then begin
       gfade_out(ONE_GAME_SECOND);
+         move_to(self_obj, sleep_tile, 0);
+         reg_anim_clear(self_obj);
+
          move_to(dude_obj, kicked_out_hex, 0);
          attempt_place_party(kicked_out_hex, 0)
          dude_rotate(2);
-         obj_close(SkumDoor_ptr);
-         obj_lock(SkumDoor_ptr);
+
+         if (SkumDoor_ptr != 0) then begin
+            obj_close(SkumDoor_ptr);
+            obj_lock(SkumDoor_ptr);
+         end
       gfade_in(ONE_GAME_SECOND);
       kick_out := 2;
+      sleep_return_float := 0;
+      set_map_var(MVAR_SkumPitt_Noisy,0);
    end
    else if (fixed_param == EVENT_SLEEP and kick_out == 0) then begin
-      if (self_tile == sleep_tile) then begin
+      if ((self_tile == sleep_tile) and (map_var(MVAR_SkumPitt_Noisy) == 0)) then begin
          float_msg(self_obj, mstr(105), FLOAT_MSG_NORMAL);
          sleep_float := 0;
       end
@@ -407,6 +434,19 @@ procedure use_obj_on_p_proc begin
       rm_obj_from_inven(source_obj, obj_being_used_with);
       add_obj_to_inven(self_obj, obj_being_used_with);
       dialogue_system_enter;
+   end
+end
+
+procedure NealKickOut begin
+   self_look_at_dude;
+   if (kick_out == 0) then begin
+      kick_out := 1;
+      float_msg(self_obj, mstr(200), FLOAT_MSG_RED);
+      add_timer_event(self_obj, game_ticks(1), EVENT_KICKED_OUT);
+   end
+   else if (kick_out == 2) then begin
+      float_msg(self_obj, mstr(149), FLOAT_MSG_RED);
+      tmp_hostile := 1;
    end
 end
 

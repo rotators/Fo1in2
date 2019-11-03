@@ -86,7 +86,7 @@
 #define SCRIPT_ECGECKO   (79)  // ECGecko.int      ; Random Encounter Gecko
 #define SCRIPT_LARRY     (80)  //  Larry.int       ; Larry the Super Mutant
 #define SCRIPT_LEADER    (81)  //  Leader.int      ; The ghoul leader in Necropolis (Ganger?)
-#define SCRIPT_DEPRECATED_13 (82) //SCRIPT_MANAGER   (82)  //  Manager.int     ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_SPSKUMPT  (82)  //  SPSKUMPT.int    ; Junktown - Skum Pitt spatial script
 #define SCRIPT_MANGLED   (83)  //  Mangled.int     ; Some mangled bodies in Necropolis.
 #define SCRIPT_MEANDER   (84)  //  Meander.int     ; Some meandering ghouls
 #define SCRIPT_DEPRECATED_14 (85) //SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; scripts.lst - DONOTUSE wtf??????
