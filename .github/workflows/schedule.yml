@@ -25,6 +25,7 @@ jobs:
     run:  |
           :
           curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.dev.dll
+          echo ::set-env name=SFALL_COMMIT::$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
           git diff --quiet || echo ::set-env name=GHA_COMMIT::true
 
   - name: Push ddraw.dev.dll
@@ -33,4 +34,4 @@ jobs:
           :
           git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
           git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
-          git commit --all --message="sfall-dev" && git push
+          git commit --all --message="sfall-dev (phobos2077/sfall@${{ SFALL_COMMIT }})" && git push
