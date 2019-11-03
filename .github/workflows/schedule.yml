@@ -28,6 +28,7 @@ jobs:
   - name:  sfall-dev
     run:   |
            :
+           set -euxo pipefail
            SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
            curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.dev.dll
            SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dev.dll).VersionInfo.ProductVersion")
@@ -40,7 +41,7 @@ jobs:
            :
            set -euxo pipefail
            Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $MOD_DIR/Mapper/source/scripts/ --headers $MOD_DIR/Mapper/source/scripts/headers/ >/dev/null
-           grep "^Changed " ReDefine.log
+           grep "^Changed " ReDefine.log || true
            rm ReDefine*.log
            git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
     shell: bash
@@ -48,6 +49,7 @@ jobs:
   - name:  Compile
     run:   |
            :
+           set -euxo pipefail
            ok=1
            .github/workflows/scripts.compile.sh --bytecode --optimization=1 || ok=0
            if [ $ok -eq 1 ]; then
@@ -61,6 +63,7 @@ jobs:
   - name:  Check
     run:   |
            :
+           set -euxo pipefail
            echo ::group::git status
            git status
            echo ::endgroup::
@@ -79,6 +82,7 @@ jobs:
     if:    env.GHA_COMMIT == 'true'
     run:   |
            :
+           set -euxo pipefail
            git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
            git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
            git commit --all --file="$HOME/gha.commit"
