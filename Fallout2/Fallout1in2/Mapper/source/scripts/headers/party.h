@@ -72,7 +72,7 @@ variable How_Many_Party_Members_Armed;
                                                 if (Is_Injured(Tandi_ptr)) then                 \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (MrHandyC_In_Party) then                         \
-                                                if (Is_Injured(MrHandyC_Ptr)) then              \
+                                                if (Is_Injured(Handy_ptr)) then              \
                                                     How_Many_Party_Members_Are_Injured+=1;      \
                                             if (How_Many_Party_Members_Are_Injured > 0)
 
@@ -96,7 +96,7 @@ variable How_Many_Party_Members_Armed;
                                                 if (Is_Injured(Tandi_ptr)) then                 \
                                                     How_Many_Party_Members_Armed+=1;            \
                                             if (MrHandyC_In_Party) then                         \
-                                                if (Is_Injured(MrHandyC_Ptr)) then              \
+                                                if (Is_Injured(Handy_ptr)) then              \
                                                     How_Many_Party_Members_Armed+=1;            \
                                             if (How_Many_Party_Members_Armed > 0)
 
@@ -117,7 +117,7 @@ variable How_Many_Party_Members_Armed;
         attempt_place_party_member(Tycho_ptr, the_tile, the_elev)         \
         attempt_place_party_member(Katja_ptr, the_tile, the_elev)         \
         attempt_place_party_member(Tandi_ptr, the_tile, the_elev)         \
-        attempt_place_party_member(MrHandyC_Ptr, the_tile, the_elev)
+        attempt_place_party_member(Handy_ptr, the_tile, the_elev)
 
 
 //#define Party_Childkiller                   (global_var(GVAR_PARTY_CHILDKILLER) BWAND Party_Childkiller_Mask)
@@ -126,7 +126,7 @@ variable How_Many_Party_Members_Armed;
 #define Childkiller_Tycho                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_6) and (Tycho_ptr != 0))
 #define Childkiller_Katja                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_8) and (Katja_ptr != 0))
 #define Childkiller_Tandi                   ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_10) and (Tandi_ptr != 0))
-#define Childkiller_MrHandyC                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_12) and (MrHandyC_Ptr != 0))
+#define Childkiller_MrHandyC                ((global_var(GVAR_PARTY_CHILDKILLER) BWAND bit_12) and (Handy_ptr != 0))
 
 #define Party_Childkiller                   (Childkiller_Ian or Childkiller_Dog or Childkiller_Tycho or Childkiller_Katja or Childkiller_Tandi or Childkiller_MrhandyC
 
@@ -268,7 +268,7 @@ variable PartyHealingItem;
             else get_p_hidden_flag_obj(x, Tycho_ptr, hidden_tycho_bit, hidden)                              \
             else get_p_hidden_flag_obj(x, Katja_ptr, hidden_katja_bit, hidden)                              \
             else get_p_hidden_flag_obj(x, Tandi_ptr, hidden_tandi_bit, hidden)                              \
-            else get_p_hidden_flag_obj(x, MrHandyC_Ptr, hidden_mrhandyc_bit, hidden)
+            else get_p_hidden_flag_obj(x, Handy_ptr, hidden_mrhandyc_bit, hidden)
 
 #define party_member_hidden(x, result)                                           \
    if (x) then begin                                                             \
