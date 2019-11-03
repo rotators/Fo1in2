@@ -1,15 +1,18 @@
 name: Schedule
 
 on:
+ push:
+  paths:
+  - '.github/workflows/schedule.yml'
  schedule:
- - cron: 30 * * * *
+ - cron: 0 5 * * *
 
 jobs:
 
- sfall-dev:
-  runs-on: ubuntu-latest
+ Maintenance:
+  runs-on: windows-latest
   env:
-   MOD_DIR:            "Fallout2/Fallout1in2"
+   MOD_DIR: "Fallout2/Fallout1in2"
   steps:
 
   - name: Clone
@@ -20,18 +23,65 @@ jobs:
 
   - name:  ReAttach HEAD
     run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
+    shell: bash
 
-  - name: Download ddraw.dev.dll
-    run:  |
-          :
-          curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.dev.dll
-          echo ::set-env name=SFALL_COMMIT::$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
-          git diff --quiet || echo ::set-env name=GHA_COMMIT::true
+  - name:  sfall-dev
+    run:   |
+           :
+           SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
+           curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.dev.dll
+           SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dev.dll).VersionInfo.ProductVersion")
+           echo "sfall v${SFALL_VERSION} (${SFALL_COMMIT})"
+           git diff --quiet || (git add --update && echo "- sfall-dev (phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
+    shell: bash
 
-  - name: Push ddraw.dev.dll
-    if:   env.GHA_COMMIT == 'true'
-    run:  |
-          :
-          git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
-          git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
-          git commit --all --message="sfall-dev (phobos2077/sfall@${{ SFALL_COMMIT }})" && git push
+  - name:  ReDefine
+    run:   |
+           :
+           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $MOD_DIR/Mapper/source/scripts/ --headers $MOD_DIR/Mapper/source/scripts/headers/ >/dev/null
+           grep "^Changed " ReDefine.log
+           rm ReDefine*.log
+           git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
+    shell: bash
+
+  - name:  Compile
+    run:   |
+           :
+           ok=1
+           .github/workflows/scripts.compile.sh --bytecode --optimization=1 || ok=0
+           if [ $ok -eq 1 ]; then
+              git diff --quiet || (git add --update && echo "- Scripts compilation" >> $HOME/gha.commit)
+           else
+              echo "Bytecode excluded"
+              git checkout -- $MOD_DIR/mods/fo1_base/scripts
+           fi
+    shell: bash
+
+  - name:  Check
+    run:   |
+           :
+           echo ::group::git status
+           git status
+           echo ::endgroup::
+
+           if [ -f "$HOME/gha.commit" ]; then
+              sed -i '1s!^!Maintenance\n! $HOME/gha.commit
+              dos2unix $HOME/gha.commit
+              echo ::set-env name=GHA_COMMIT::true
+              cat $HOME/gha.commit
+           else
+              echo ::set-env name=GHA_COMMIT::false
+           fi
+    shell: bash
+
+  - name:  Push
+    if:    env.GHA_COMMIT == 'true'
+    run:   |
+           :
+           git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
+           git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
+           git commit --all --file="$HOME/gha.commit"
+           git log -p -n 1 | cat -v
+#          git push
+    shell: bash
+    continue-on-error: true
