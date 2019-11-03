@@ -23,12 +23,14 @@ procedure scene_master_destroyed;
 procedure scene_vats_destroyed;
 procedure night_person;
 procedure item_description;
+procedure item_damage;
 
 procedure start begin
    if (game_loaded) then begin
       set_global_script_type(0);
       register_hook_proc(HOOK_GAMEMODECHANGE, mode_change);
       register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description);
+      register_hook_proc(HOOK_ITEMDAMAGE, item_damage);
    end
 
    call general;
@@ -148,4 +150,32 @@ procedure item_description begin
          set_sfall_return(description);
       //end
    end
+end
+
+procedure item_damage begin
+variable
+   dmgMin := get_sfall_arg,
+   dmgMax := get_sfall_arg,
+   weapon := get_sfall_arg,
+   attacker := get_sfall_arg,
+   attackType := get_sfall_arg,
+   isMelee := get_sfall_arg,
+   weaponPid,
+   damageType;
+
+   if (weapon) then begin
+      weaponPid := obj_pid(weapon);
+      damageType := get_proto_data(weaponPid, 48);
+
+      // Remove knockback for incendiary weapons.
+      // Turn Molotov Cocktail into a fire damage weapon.
+      if ((weaponPid == PID_MOLOTOV_COCKTAIL) and get_proto_data(weaponPid, 48) == DMG_fire) then begin
+      	debug("fire!");
+      	set_weapon_knockback(weapon, 0, 0);
+      	set_attack_is_explosion_fire;
+      end
+   end
+
+   set_sfall_return(dmgMin);
+   set_sfall_return(dmgMax);
 end
