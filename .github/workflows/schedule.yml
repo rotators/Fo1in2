@@ -27,6 +27,10 @@ jobs:
     run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
     shell: bash
 
+### Major tasks
+### always generates commit (if needed)
+
+  # updates develop version of sfall
   - name:  sfall-dev
     run:   |
            :
@@ -37,7 +41,8 @@ jobs:
            git diff --quiet || (git add --update && echo "- sfall-dev (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
-  - name:  ReDefine
+  # updates scripts sources to Rotators standards
+  - name:  ReDefine run
     run:   |
            :
            Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $MOD_DIR/Mapper/source/scripts/ --headers $MOD_DIR/Mapper/source/scripts/headers/ >/dev/null
@@ -46,7 +51,9 @@ jobs:
            git diff --quiet || (git add --update && echo ::set-env name=GHA_REDEFINE::true)
     shell: bash
 
-  - name:  Compile
+  # updates scripts bytecode
+  # excludes 'ReDefine run' step results (if any) when scripts cannot be compiled
+  - name:  Scripts recompilation
     run:   |
            :
            ok=1
@@ -55,19 +62,23 @@ jobs:
               if [ "$GHA_REDEFINE" == "true" ]; then
                  echo "- ReDefine run" >> $HOME/gha.commit
               fi
-              git diff --quiet || (git add --update && echo "- Scripts compilation" >> $HOME/gha.commit)
+              git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
            else
               if [ "$GHA_REDEFINE" == "true" ]; then
-                 echo "[WARNING] ReDefine excluded"
+                 echo "[WARNING] Excluded: ReDefine run"
                  git reset HEAD  $MOD_DIR/Mapper/source/scripts/
                  git checkout -- $MOD_DIR/Mapper/source/scripts/
               fi
-              echo "[WARNING] Compile excluded"
+              echo "[WARNING] Excluded: Scripts recompilation"
               git checkout -- $MOD_DIR/mods/fo1_base/scripts
            fi
     shell: bash
 
-  - name:  Check
+### Validation
+### checks if any of major tasks wants to generate commit
+### prepares commit message
+
+  - name:  Validation
     run:   |
            :
            echo ::group::git status
@@ -84,22 +95,32 @@ jobs:
            fi
     shell: bash
 
-  - name:  Update configuration
+### Minor tasks
+### runs only if at least one of major task wants to generate commit
+
+  # update ddraw.ini comment with ddraw.dll version
+  # update ddraw.ini setting with mod version
+  # update all configuration to use DOS line endings
+  - name:  Configuration refresh
     if:    env.GHA_COMMIT == 'true'
     run:   |
            :
-           set -euxo pipefail
-           commits=$(git rev-list HEAD --count)
-           commits=$((commits+1))
-           sfall=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dll).VersionInfo.ProductVersion")
+           REPO_COMMITS=$(git rev-list HEAD --count)
+           REPO_COMMITS=$((REPO_COMMITS+1))
+           SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dll).VersionInfo.ProductVersion")
            dos2unix $MOD_DIR/ddraw.ini
-           sed -ri "s!^;v[0-9\.]+.*!;v$sfall!" $MOD_DIR/ddraw.ini
-           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION_MAJOR.$commits!" $MOD_DIR/ddraw.ini
+           sed -ri "s!^;v[0-9\.]+.*!;v$SFALL_VERSION!" $MOD_DIR/ddraw.ini
+           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION_MAJOR.$REPO_COMMITS!" $MOD_DIR/ddraw.ini
            grep "^;v" $MOD_DIR/ddraw.ini
            grep "^VersionString=" $MOD_DIR/ddraw.ini
            unix2dos $MOD_DIR/*.ini $MOD_DIR/*.cfg $MOD_DIR/config/*
-           git diff --quiet || (git add --update && echo "- Update configuration" >> $HOME/gha.commit)
+           git diff --quiet || (git add --update && echo "- Configuration refresh" >> $HOME/gha.commit)
     shell: bash
+
+### Push
+### generates and displays commit
+### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
+### - schedule
 
   - name:  Push
     if:    env.GHA_COMMIT == 'true'
@@ -121,7 +142,7 @@ jobs:
               git push 2>&1
               echo ::endgroup::
            else
-              echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to push"
+              echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify repository"
            fi
     shell: bash
     continue-on-error: true
