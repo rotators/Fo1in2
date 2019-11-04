@@ -12,7 +12,9 @@ jobs:
  Maintenance:
   runs-on: windows-latest
   env:
-   MOD_DIR: "Fallout2/Fallout1in2"
+   MOD_DIR:            "Fallout2/Fallout1in2"
+   MOD_VERSION_STRING: "FALLOUT ET TU"
+   MOD_VERSION_MAJOR:  0
   steps:
 
   - name: Clone
@@ -82,11 +84,29 @@ jobs:
            fi
     shell: bash
 
+  - name:  Update configuration
+    if:    env.GHA_COMMIT == 'true'
+    run:   |
+           :
+           set -euxo pipefail
+           commits=$(git rev-list HEAD --count)
+           commits=$((commits+1))
+           sfall=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dll).VersionInfo.ProductVersion")
+           dos2unix $MOD_DIR/ddraw.ini
+           sed -ri "s!^;v[0-9\.]+.*!;v$sfall!" $MOD_DIR/ddraw.ini
+           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION_MAJOR.$commits!" $MOD_DIR/ddraw.ini
+           grep "^;v" $MOD_DIR/ddraw.ini
+           grep "^VersionString=" $MOD_DIR/ddraw.ini
+           unix2dos $MOD_DIR/*.ini $MOD_DIR/*.cfg $MOD_DIR/config/*
+           git diff --quiet || (git add --update && echo "- Update configuration" >> $HOME/gha.commit)
+    shell: bash
+
   - name:  Push
     if:    env.GHA_COMMIT == 'true'
     run:   |
            :
            echo ::group::git commit
+           dos2unix $HOME/gha.commit
            git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
            git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
            git commit --all --file="$HOME/gha.commit" 2>&1
@@ -101,7 +121,7 @@ jobs:
               git push 2>&1
               echo ::endgroup::
            else
-              echo "[WARNING] Push disabled for '${{ github.event_name }}' event"
+              echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to push"
            fi
     shell: bash
     continue-on-error: true
