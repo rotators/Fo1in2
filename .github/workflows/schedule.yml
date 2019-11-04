@@ -37,7 +37,7 @@ jobs:
            SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
            curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.dev.dll
            SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dev.dll).VersionInfo.ProductVersion")
-           echo "sfall v${SFALL_VERSION} (${SFALL_COMMIT})"
+           echo "sfall-dev (v${SFALL_VERSION}, ${SFALL_COMMIT})"
            git diff --quiet || (git add --update && echo "- sfall-dev (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
@@ -70,7 +70,7 @@ jobs:
                  git checkout -- $MOD_DIR/Mapper/source/scripts/
               fi
               echo "[WARNING] Excluded: Scripts recompilation"
-              git checkout -- $MOD_DIR/mods/fo1_base/scripts
+              git checkout -- $MOD_DIR/mods/fo1_base/scripts/
            fi
     shell: bash
 
@@ -96,7 +96,7 @@ jobs:
     shell: bash
 
 ### Minor tasks
-### runs only if at least one of major task wants to generate commit
+### runs only if at least one of major tasks wants to generate commit
 
   # update ddraw.ini comment with ddraw.dll version
   # update ddraw.ini setting with mod version
@@ -130,7 +130,7 @@ jobs:
            dos2unix $HOME/gha.commit
            git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
            git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
-           git commit --all --file="$HOME/gha.commit" 2>&1
+           git commit --file="$HOME/gha.commit" 2>&1
            echo ::endgroup::
 
            echo ::group::git log
