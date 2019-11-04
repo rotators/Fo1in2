@@ -162,8 +162,11 @@ begin
    end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
+   if (v13_invaded) then begin
+      invasion_kill_critter;
+   end
+
    WtrThief_ptr := self_obj;
    set_self_team(TEAM_87);
    set_self_ai(AI_BERZERKER);
@@ -181,8 +184,7 @@ begin
    end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
    if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 0) then begin
       if not(is_loading_game) then begin    set_self_invisible;    end
    end
@@ -195,25 +197,20 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if (scared) then begin
       self_run_to_tile(16912);
       set_local_var(4, 16912);
    end
    else begin
-      start_gdialog(461, self_obj, 4, -1, -1);
-      gsay_start;
       set_local_var(5, 1);
-      call WtrThief01;
-      gsay_end;
-      end_dialogue;
+      start_dialog_at_node(WtrThief01);
+
       if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
          gfade_out(1);
          move_to(self_obj, 7000, 2);
@@ -235,8 +232,7 @@ begin
    end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    set_local_var(7, 1);
    if (fixed_param == 1) then begin
       if (self_can_see_dude) then begin
@@ -246,26 +242,18 @@ begin
          set_local_var(4, 20706);
       end
    end
-   else begin
-      if (fixed_param == 2) then begin
-         set_local_var(4, 16912);
-      end
+   else if (fixed_param == 2) then begin
+      set_local_var(4, 16912);
    end
 end
 
-procedure WtrThief01
-begin
-   variable LVar0 := 0;
-   LVar0 := mstr(107);
-   LVar0 := LVar0 + dude_name;
-   LVar0 := LVar0 + mstr(108);
-   Reply(LVar0);
+procedure WtrThief01 begin
+   Reply(mstr(107) + dude_name + mstr(108));
    NOption(109, WtrThief02, 4);
    NLowOption(110, WtrThiefEnd);
 end
 
-procedure WtrThief02
-begin
+procedure WtrThief02 begin
    Reply(111);
    NOption(112, WtrThiefBye, 4);
    NOption(113, WtrThief03, 4);
@@ -274,21 +262,18 @@ begin
    end
 end
 
-procedure WtrThief03
-begin
+procedure WtrThief03 begin
    Reply(115);
    NOption(116, WtrThief04, 4);
    BOption(117, WtrThief05, 4);
 end
 
-procedure WtrThief04
-begin
+procedure WtrThief04 begin
    Reply(118);
    NOption(119, WtrThiefBye, 4);
 end
 
-procedure WtrThief05
-begin
+procedure WtrThief05 begin
    if (got_water) then begin
       call WtrThief08;
    end
@@ -297,26 +282,22 @@ begin
    end
 end
 
-procedure WtrThief06
-begin
+procedure WtrThief06 begin
    Reply(120);
    NOption(121, WtrThief07, 4);
 end
 
-procedure WtrThief07
-begin
+procedure WtrThief07 begin
    searched := 1;
 end
 
-procedure WtrThief08
-begin
+procedure WtrThief08 begin
    Reply(122);
    NOption(123, WtrThiefEnd, 4);
    BOption(124, WtrThief09, 4);
 end
 
-procedure WtrThief09
-begin
+procedure WtrThief09 begin
    if (has_rep_berserker) then begin
       call WtrThief10;
    end
@@ -325,20 +306,17 @@ begin
    end
 end
 
-procedure WtrThief10
-begin
+procedure WtrThief10 begin
    Reply(125);
    NOption(126, finish_quest, 4);
 end
 
-procedure WtrThief11
-begin
+procedure WtrThief11 begin
    Reply(127);
    NOption(121, WtrThief11a, 4);
 end
 
-procedure WtrThief11a
-begin
+procedure WtrThief11a begin
    if (is_success(do_check(dude_obj, STAT_ch, 0))) then begin
       call finish_quest;
    end
@@ -347,22 +325,18 @@ begin
    end
 end
 
-procedure WtrThiefCombat
-begin
+procedure WtrThiefCombat begin
    tmp_hostile := 1;
 end
 
-procedure finish_quest
-begin
+procedure finish_quest begin
    set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 2);
 end
 
-procedure WtrThiefBye
-begin
+procedure WtrThiefBye begin
    Reply(128);
    NOption(129, WtrThiefEnd, 4);
 end
 
-procedure WtrThiefEnd
-begin
+procedure WtrThiefEnd begin
 end

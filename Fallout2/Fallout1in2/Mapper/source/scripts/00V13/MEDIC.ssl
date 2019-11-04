@@ -14,6 +14,7 @@
 #include "..\headers\modreact.h"
 
 procedure start;
+procedure map_enter_p_proc;
 procedure critter_p_proc;
 procedure damage_p_proc;
 procedure destroy_p_proc;
@@ -74,44 +75,21 @@ variable PoisAmt := 0;
 variable rounded := 0;
 variable IfRounded := 0;
 variable home_tile := 13084;// was 13881
-variable initial := 0;
 
-procedure PickDeadBodyType;
-variable DeathType := 57;
+variable Only_Once := 0;
 
 #define LVAR_Had_Toe_Removed   (11)
 
 procedure start begin
-   if (v13_invaded) then begin
-      if CUR_AREA_VAULT_13 then begin
-         if (local_var(9) != 1) then begin
-            set_local_var(9, 1);
-            if not(is_loading_game) then begin
-               set_self_visible;
-            end
-            call PickDeadBodyType;
-            debug_msg("Vault 13 invasion, killing MEDIC.SSL with DeathType " + DeathType + ".  ");
-            kill_critter(self_obj, DeathType);
-         end
-      end
+   if (Only_Once == 0) then begin
+      Only_Once := 1;
+      set_self_team(TEAM_VAULT13);
    end
-   else begin
+end
 
-      if not(initial) then begin
-         variable Locker;
-         variable item;
-         initial := 1;
-         Locker := create_object(PID_WALL_LOCKER_CLEAN_RIGHT, 13278, 0);
-         item := create_object(PID_FIRST_AID_KIT, 0, 0);//First Aid Kit
-         add_mult_objs_to_inven(Locker, item, 1);
-         item := create_object(PID_STIMPAK, 0, 0);//Stimpak
-         add_mult_objs_to_inven(Locker, item, 4 - difficulty_level);
-         item := create_object(PID_FLARE, 0, 0);//Flare
-         add_mult_objs_to_inven(Locker, item, 4 - difficulty_level);
-         set_self_team(TEAM_VAULT13);
-         initial := 1;
-      end
-
+procedure map_enter_p_proc begin
+   if (v13_invaded) then begin
+      invasion_kill_critter;
    end
 end
 
@@ -601,10 +579,6 @@ procedure pushdrugs begin
 end
 
 procedure medicend begin
-end
-
-procedure PickDeadBodyType begin
-	fixt_PickDeadBodyType;
 end
 
 procedure Node2000 begin

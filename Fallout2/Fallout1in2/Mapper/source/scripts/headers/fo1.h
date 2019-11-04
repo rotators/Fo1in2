@@ -236,28 +236,28 @@ variable merch_slot_armor_flags;
 #define pick_dead_body_type             variable LVar0 := 0;                                            \
                                         LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));          \
                                         if (LVar0 <= 5) then begin/*// 31.5%*/                          \
-                                            DeathType := 57;/*//        burnt, face down  [FLAMER]*/    \
+                                            DeathType := ANIM_burned_to_nothing_sf;                     \
                                         end                                                             \
                                         else if (LVar0 <= 10) then begin/*// 26%*/                      \
-                                            DeathType := 56;/*//        cut in half  [LASER RIFLE, GATLING LASER]*/ \
+                                            DeathType := ANIM_sliced_in_half_sf;                        \
                                         end                                                             \
                                         else if (LVar0 <= 14) then begin/*// 21%*/                      \
-                                            DeathType := 53;/*//        head & arm gone - full auto  [MINIGUN]*/ \
+                                            DeathType := ANIM_chunks_of_flesh_sf;                       \
                                         end                                                             \
                                         else if (LVar0 <= 16) then begin/*// 10.5%*/                    \
-                                            DeathType := 63;/*//        face down, blood pool  (generic death, no weapon associated)*/ \
+                                            DeathType := ANIM_fall_front_blood_sf;                      \
                                         end                                                             \
                                         else begin/*// <--------------------    16%*/                   \
                                             variable LVar1 := 0;                                        \
                                             LVar1 := random(0, 2);                                      \
                                             if (LVar1 == 0) then begin                                  \
-                                                DeathType := 54;/*// bullet holes - full auto partial hit*/ \
+                                                DeathType := ANIM_dancing_autofire_sf;                  \
                                             end                                                         \
                                             else if (LVar1 == 1) then begin                             \
-                                                DeathType := 59;/*// exploded  [ROCKET LAUNCHER]*/      \
+                                                DeathType := ANIM_exploded_to_nothing_sf;               \
                                             end                                                         \
                                             else if (LVar1 == 2) then begin                             \
-                                                DeathType := 60;/*// melted pile  [PLASMA RIFLE]*/      \
+                                                DeathType := ANIM_melted_to_nothing_sf;                 \
                                             end                                                         \
                                         end
 

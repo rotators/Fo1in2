@@ -43,9 +43,6 @@ variable sleeping_disabled;
 import variable recipient;
 import variable WtrGrd_ptr;
 
-procedure PickDeadBodyType;
-variable DeathType := 57;
-
 #define LVAR_Sleeping                     (5)
 #define LVAR_Hostile                      (6)
 
@@ -56,19 +53,6 @@ variable sleep_time;
 variable wake_time;
 
 procedure start begin
-   if (v13_invaded) then begin
-      if CUR_AREA_VAULT_13 then begin
-         if (local_var(9) != 1) then begin
-            set_local_var(9, 1);//     <-- only once
-            if not(is_loading_game) then begin
-               set_self_visible;
-            end
-            call PickDeadBodyType;
-            debug_msg("Vault 13 invasion, killing CINDY.SSL with DeathType " + DeathType + ".  ");
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
 end
 
 procedure critter_p_proc begin
@@ -134,6 +118,10 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   if (v13_invaded) then begin
+      invasion_kill_critter;
+   end
+
    set_self_team(TEAM_VAULT13);
    sleep_tile := 24683;
    home_tile := 24687;
@@ -235,10 +223,6 @@ procedure get_rations begin
          sleeping_disabled := 0;
       end
    end
-end
-
-procedure PickDeadBodyType begin
-	fixt_PickDeadBodyType;
 end
 
 procedure do_sleep begin
