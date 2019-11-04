@@ -848,41 +848,6 @@ FLOAT_MSG_BLUE
 
 #define status_is_alive(status_var)                   (not (status_is_killed(status_var) or status_is_assassinated(status_var) or status_is_dead(status_var)))
 
-
-/******************************************************************
- General commands STOMACH(ha stomach, ha ha ha) info
-******************************************************************/
-// these are the different amounts food fills the stomach
-#define starting_stomach_full          (75)
-#define drink_meal                     (5)
-#define snack_meal                     (10)
-#define light_meal                     (25)
-#define medium_meal                    (50)
-#define large_meal                     (75)
-#define huge_meal                      (90)
-// these are macros for dealing with the stomach
-#define max_stomach_size               (100 + (2 * (dude_endurance - 10)))
-#define dude_stomach_amt               (global_var(GVAR_DUDE_STOMACH))
-#define dude_can_eat_food(amt)         ((dude_stomach_amt + amt) <= max_stomach_size)
-#define dude_eat_food(amt)             inc_global_var(GVAR_DUDE_STOMACH, amt);                             \
-                                       if (global_var(GVAR_DUDE_STOMACH) < 0) then                         \
-                                          set_global_var(GVAR_DUDE_STOMACH,0);                             \
-                                       else if (global_var(GVAR_DUDE_STOMACH) > max_stomach_size) then     \
-                                          set_global_var(GVAR_DUDE_STOMACH,max_stomach_size)
-#define dude_stomach_percent_full      ((100 * dude_stomach_amt) / max_stomach_size)
-#define dude_stomach_full              (dude_stomach_percent_full >= 95)
-#define dude_stomach_hungry            (dude_stomach_percent_full <= 5)
-#define dude_can_eat(x)                ((dude_stomach_amt + x) <= max_stomach_size)
-// these are so that a pid can be compared to see which food class it is
-#define pid_is_drink_pid(x)            ((x==PID_NUKA_COLA) or (x==PID_BEER) or (x==PID_BOOZE) or (x==PID_WATER_FLASK))
-#define pid_is_snack_pid(x)            ((x==PID_IGUANA_ON_A_STICK) or (x==PID_MEAT_ON_A_STICK))
-#define pid_is_light_meal_pid(x)       ((x==PID_BOX_OF_NOODLES) or (x==PID_FROZEN_DINNER))
-#define pid_is_medium_meal(x)          false    // this is because we don't have any generic items that qualify
-#define pid_is_large_meal(x)           false    // this is because we don't have any generic items that qualify
-#define pid_is_huge_meal(x)            false    // this is because we don't have any generic items that qualify
-#define dude_has_fast_metabolism       (has_trait(TRAIT_OBJECT,dude_obj,TRAIT_fast_metabolism))
-#define amt_food_digested_in_time(x)   (((1 + dude_has_fast_metabolism) * (game_time - x)) / (ONE_GAME_MINUTE * 3))
-
 /******************************************************************
  General commands restocking inventory
  note: this is generally placed in the "box" of a merchant to refil it every so once in a while

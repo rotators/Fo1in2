@@ -23,7 +23,7 @@ procedure do_off;
 procedure do_down;
 procedure do_up;
 
-procedure OpenMenu;
+procedure OpenInput;
 
 procedure KeyPressHandler;
 procedure show_note;
@@ -80,17 +80,17 @@ procedure but_del begin
 end
 
 procedure do_on begin
-   debug("do_on!");
+   //debug("do_on!");
    MousonBut := 1;
 end
 
 procedure do_off begin
-   debug("do_off!");
+   //debug("do_off!");
    MousonBut := 0;
 end
 
 procedure do_down begin
-   debug("do_down!");
+   //debug("do_down!");
    if (ButPres == 0) then begin
       ButPres := 1;
       play_sfx(SoundP);
@@ -98,7 +98,7 @@ procedure do_down begin
 end
 
 procedure do_up begin
-   debug("do_up!");
+   //debug("do_up!");
 
    //set_sfall_global("openbutt", 2);
    //set_sfall_global("openfixi", 1);
@@ -106,35 +106,62 @@ procedure do_up begin
    play_sfx(SoundR);
 
    tellme_button := 0;
-   call OpenMenu;
+   call OpenInput;
 end
 
 procedure delete_button begin
 
 end
 
-procedure OpenMenu begin
+procedure OpenInput begin
    set_sfall_global("open_tellme", 1);
+   debug("open input box");
 
+   /*
 
-   SetFont(5);
-   SetTextColor(0.0, 1.0, 0.0);
-   SetHighlightColor(1.0, 1.0, 0.64);
+      The problem is that opening the input box mode can't print Reply();
+      - with gSay_Start, etc. we can print a message into the current dialog window.
+      - problem is that this message also switches players dialog options.
+      - it also breaks the current dialog, because there is no exit node.
+      - even if we add a "end_dialogue;" at the end (just for testing),
+        the dialog option window won't close and we are stuck in the dialog.
 
-   SayReplyWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
-   SayOptionWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
+      Possible solution:
+      - Grab the last player dialog options and store them somewhere?
+      - Then, when we print Reply(), we also recreate the dialog options from before?
+        First tests with qiQ_Option didn't work out well, though, because the dialog interface still bugged ot.
 
-   SayBorder(5, 5);
+      Anyways... the input box should stay open at all times anyway, thus blocking all player dialog options.
+      Only after the player has closed the input box, the player dialog options appear again.
 
-   Reply("test");
+      I'm guessing in Fo1 the SayOptionWindow gets replaced with some sort of "SayInputWindow" (made-up term).
+      Then after the window is deleted and SayOptionWindow becomes visible again, we are back to our dialog options.
 
-   CreateWin("win_tellme", ((Scr_Width/2)-214), ((Scr_Heigh/2)-66), 430, 250);
-   SelectWin("win_tellme");
+   */
+
+   gSay_Start;
+      gSay_Reply(SCRIPT_OBJ_DUDE,"test");
+      //giQ_Option(1,SCRIPT_OBJ_DUDE,"test answer",delete_button,NEUTRAL_REACTION);
+   gSay_End;
+   //end_dialogue;
+
+   //SetFont(5);
+   //SetTextColor(0.0, 1.0, 0.0);
+   //SetHighlightColor(1.0, 1.0, 0.64);
+
+   //SayReplyWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
+   //SayOptionWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
+
+   //SayBorder(5, 5);
+   //Reply("test");
+
+   //CreateWin("win_tellme", ((Scr_Width/2)-214), ((Scr_Heigh/2)-66), 430, 250);
+   //SelectWin("win_tellme");
 
    //draw_image(117440550,0,0,0,1);
-   Display("PCX/tellmeabout.pcx");
+   //Display("PCX/tellmeabout.pcx");
 
-   ShowWin;
-   SelectWin("win_tellme");
+   //ShowWin;
+   //SelectWin("win_tellme");
 
 end
