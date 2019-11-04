@@ -1,6 +1,7 @@
 /*
 
    ?
+   likely unused
 
 */
 
@@ -8,7 +9,7 @@
 #include "..\headers\define.h"
 //#include "..\headers\necropolis.h"
 
-#define NAME                    SCRIPT_BECA
+#define NAME                    SCRIPT_ALLNONE
 //#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
@@ -43,36 +44,28 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
    call Get_Stuff;
-   start_gdialog(782, self_obj, 4, -1, -1);
-   gsay_start;
-   call Merchant00;
-   gsay_end;
-   end_dialogue;
+   start_dialog_at_node(Merchant00);
    call Put_Stuff;
 end
 
@@ -80,51 +73,43 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   display_msg(message_str(SCRIPT_ALLNONE, 110));
+   display_msg(message_str(NAME, 110));
 end
 
-procedure Merchant00
-begin
-   gsay_reply(SCRIPT_ALLNONE, 101);
-   giq_option(4, SCRIPT_ALLNONE, 102, Merchant01, NEUTRAL_REACTION);
-   giq_option(4, SCRIPT_ALLNONE, 103, Merchant02, NEUTRAL_REACTION);
-   giq_option(4, SCRIPT_ALLNONE, 104, Merchant03, NEUTRAL_REACTION);
-   giq_option(-3, SCRIPT_ALLNONE, 105, Merchant04, NEUTRAL_REACTION);
+procedure Merchant00 begin
+   gsay_reply(NAME, 101);
+   giq_option(4, NAME, 102, Merchant01, NEUTRAL_REACTION);
+   giq_option(4, NAME, 103, Merchant02, NEUTRAL_REACTION);
+   giq_option(4, NAME, 104, Merchant03, NEUTRAL_REACTION);
+   giq_option(-3, NAME, 105, Merchant04, NEUTRAL_REACTION);
 end
 
-procedure Merchant01
-begin
-   gsay_message(SCRIPT_ALLNONE, 106, NEUTRAL_REACTION);
+procedure Merchant01 begin
+   gsay_message(NAME, 106, NEUTRAL_REACTION);
    gdialog_mod_barter(-10);
    call Merchant05;
 end
 
-procedure Merchant02
-begin
-   gsay_message(SCRIPT_ALLNONE, 107, NEUTRAL_REACTION);
+procedure Merchant02 begin
+   gsay_message(NAME, 107, NEUTRAL_REACTION);
    gdialog_mod_barter(-10);
    call Merchant05;
 end
 
-procedure Merchant03
-begin
+procedure Merchant03 begin
 end
 
-procedure Merchant04
-begin
-   gsay_message(SCRIPT_ALLNONE, 108, NEUTRAL_REACTION);
+procedure Merchant04 begin
+   gsay_message(NAME, 108, NEUTRAL_REACTION);
 end
 
-procedure Merchant05
-begin
-   gsay_message(SCRIPT_ALLNONE, 109, NEUTRAL_REACTION);
+procedure Merchant05 begin
+   gsay_message(NAME, 109, NEUTRAL_REACTION);
 end
 
-procedure Get_Stuff
-begin
+procedure Get_Stuff begin
    variable LVar0 := 0;
    LVar0 := create_object(PID_FLAMETHROWER_FUEL, 0, 0);
    add_mult_objs_to_inven(self_obj, LVar0, 5);
@@ -148,8 +133,7 @@ begin
    add_mult_objs_to_inven(self_obj, LVar0, 1);
 end
 
-procedure Put_Stuff
-begin
+procedure Put_Stuff begin
    variable LVar0 := 0;
    variable LVar1 := 0;
    LVar0 := self_item(PID_FLAMETHROWER_FUEL);

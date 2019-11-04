@@ -233,8 +233,7 @@ variable merch_slot_armor_flags;
 /*********************************************************
     Pick dead body type:
 *********************************************************/
-#define pick_dead_body_type             variable LVar0 := 0;                                            \
-                                        LVar0 := (random(0, 6) + random(0, 6) + random(0, 6));          \
+#define pick_dead_body_type             variable LVar0 := random(0, 18);                                \
                                         if (LVar0 <= 5) then begin/*// 31.5%*/                          \
                                             DeathType := ANIM_burned_to_nothing_sf;                     \
                                         end                                                             \

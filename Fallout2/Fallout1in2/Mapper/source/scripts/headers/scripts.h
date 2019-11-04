@@ -115,7 +115,7 @@
 #define SCRIPT_JCHIDMEM  (108)  //  JChidMem.int    ; Junktown Children of the Cathedral Member                                   
 #define SCRIPT_LOOKOUT   (109)  //  Lookout.int     ; Necropolis Undergrounder Lookout
 #define SCRIPT_MACHIV    (110)  //  MachIV.int      ; Mach IV computer in Buried Vaul that is broken
-#define SCRIPT_BLKROOM   (111)  //  BlkRoom.int     ; Spacial to say the room is blocked in the Buried Vault
+#define SCRIPT_BLKROOM   (111)  //  BlkRoom.int     ; Spacial to say the room is blocked in the Buried Vault // UNUSED!!!
 #define SCRIPT_RNDDESRT  (112)  //  RndDesrt.int    ; Random Encounter Desert Map                                                 
 #define SCRIPT_TGUARD    (113)  //  TGuard.int      ; Tower Guard for Shady Sands
 #define SCRIPT_COOK      (114)  //  cook.int        ; A cook from Shady Sands kitchen
@@ -193,7 +193,7 @@
 #define SCRIPT_JUNKCAS   (186)  //  JunkCas.int     ; Map Script for Casino area in Junktown
 #define SCRIPT_JUNKKILL  (187)  //  JunkKill.int    ; Map Script for Killian's area in Junktown                                   
 #define SCRIPT_JUNKENT   (188)  //  JunkEnt.int     ; Map Script for Entrance to Junktown
-#define SCRIPT_BLKROM    (189)  //  BLKROM.int       ; blocked room in the buried vault
+#define SCRIPT_BLKROM    (189)  //  BLKROM.int       ; blocked room in the buried vault // UNUSED!!!
 #define SCRIPT_BVAIR     (190)  //  BVAIR.int       ; buried vault air lock
 #define SCRIPT_BVCACHE   (191)  //  BVCache.int       ; cache of medical suppies in the buried vault
 #define SCRIPT_BVENT     (192)  //  BVEnt.int       ; Buried Vault ENtrance
@@ -461,7 +461,7 @@
 #define SCRIPT_CHID2TWR  (454)  //  Chid2Twr.int    ; go from the main floor to tower of the Children                             
 #define SCRIPT_TOW2CHID  (455)  //  Tow2Chid.int    ; go from the tower to main floor of the Children                             
 #define SCRIPT_COCDOOR   (456)  //  COCDoor.int     ; Transport from outside to inside of Children
-#define SCRIPT_CAVE2V13  (457)  //  Cave2v13.int    ; Vault 13 caves to Vault 13                                                  
+#define SCRIPT_CAVE2V13  (457)  //  Cave2v13.int    ; Vault 13 caves to Vault 13 // UNUSED!!!                                                  
 #define SCRIPT_V132CAVE  (458)  //  V132Cave.int    ; Vault 13 to Vault13 caves                                                   
 #define SCRIPT_SECDOOR   (459)  //  SecDoor.int     ; door to vault 13 armory
 #define SCRIPT_SPOTLITE  (460)  //  SpotLite.int    ; affect the light level of the light scenery                       
@@ -508,9 +508,9 @@
 #define SCRIPT_STUDENT   (501)  //  Student.int     ; student who is learning combat in the brotherhood
 #define SCRIPT_CATH2MV   (502)  //  Cath2MV.int     ; spacial to take you from the Cathedral to the Master's Lair
 #define SCRIPT_GLO4SUPL  (503)  //  Glo4Supl.int    ; level 4 of the Glow, Supply Room                                            
-#define SCRIPT_HALL2MTL  (504)  //  Hall2Mtl.int    ; spatial script to take you from the Hall of the Dead to Motel sewers        
-#define SCRIPT_HALL2SHD  (505)  //  Hall2Shd.int    ; spatial to take you from the Hall to the Watershed                          
-#define SCRIPT_MOTEL2HL  (506)  //  Motel2Hl.int    ; spatial from the Motel to the Hall                                          
+#define SCRIPT_HALL2MTL  (504)  //  Hall2Mtl.int    ; spatial script to take you from the Hall of the Dead to Motel sewers   // UNUSED!!!     
+#define SCRIPT_HALL2SHD  (505)  //  Hall2Shd.int    ; spatial to take you from the Hall to the Watershed	// UNUSED!!!     
+#define SCRIPT_MOTEL2HL  (506)  //  Motel2Hl.int    ; spatial from the Motel to the Hall  // UNUSED!!!                        
 #define SCRIPT_LYLE      (507)  //  Lyle.int        ; man who actually had some water rations stolen
 #define SCRIPT_NEAL      (508)  //  Neal.int        ; the bartender for the Skum Pitt.
 #define SCRIPT_TRAPFLOR  (509)  //  TrapFlor.int    ; there is a trap on the floor in the glow                                    
@@ -526,7 +526,7 @@
 #define SCRIPT_ELEV6_M1  (519)  //  elev6_m1.int    ; Glow Elevator 1 (really *6*, but vault13 is in place there)                 
 #define SCRIPT_ELEV7     (520)  //  elev7.int       ; Glow Elevator 2
 #define SCRIPT_ELEV9     (521)  //  elev9.int       ; Necropolis Elevator
-#define SCRIPT_ELEV10    (522)  //  elev10.int      ; Extra Milb Elevator
+#define SCRIPT_ELEV10    (522)  //  elev10.int      ; Extra Milb Elevator // UNUSED!!!
 #define SCRIPT_ELEV11    (523)  //  elev11.int      ; Extra Glow Elevator
 #define SCRIPT_GENMUTAN  (524)  //  GenMutan.int    ; Generic mutant in the master's vault                                        
 #define SCRIPT_GENSARG   (525)  //  GenSarg.int     ; Generic sargent mutant in the master's vault
