@@ -346,4 +346,6 @@
 #define PID_GOLDEN_GECKO                (16777552)
 #define PID_FIRE_GECKO                  (16777553)
 
+// fake
+#define PID_MARCUS (-0xF02)
 #endif // CRITPID_H
