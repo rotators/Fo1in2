@@ -2,6 +2,26 @@
 
    Adds Fallout 1 "tell me about" screen
 
+   NOTE:
+      This is just experimental code.
+
+   As of now, the final mechanic will probably look something like this:
+   - The player talks to a critter.
+   - Once the critter dialog screen opens, the current script (number) will be saved in a GVAR_ (done by critter script).
+   - gl_tellmeabout will create a button on the dialog screen.
+   - If GVAR_ is > 0, pressing the created button will open the input box interface (otherwise nothing happens, like in Fo1).
+   - The player types in anything and hits enter / ok.
+   - gl_tellmeabout will run through conditions to determine the Reply() that will be printed.
+   - If the player hits ESC or close, the input box interface closes and the dialog is back to normal.
+   - The GVAR_ is reset to 0 when the critter dialog closes.
+
+
+   How to determine the critter reply to print:
+   - If input text is critter name (string in SCRNAME.MSG based on script number saved in GVAR_), print a name-reply.
+   - If script from GVAR_ is a special critter (e.g. The Master, etc.) look up the critter .msg file and print a special-reply (always starts at string 1000).
+   - If critter is not special, look up OBJ_DUDE.msg file and print a reply based on current map.
+   - If the input text can't be found in either, print a "I don't know"-reply.
+
 */
 
 /* Include Files */
@@ -37,8 +57,6 @@ variable tellme_button;
 
 #define SoundP          get_ini_string("config\\tellme_button.ini|Button2|Butin")
 #define SoundR          get_ini_string("config\\tellme_button.ini|Button2|Butou")
-
-#define Empty 433
 
 variable MousonBut;
 variable ButPres;
