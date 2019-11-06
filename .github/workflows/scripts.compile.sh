@@ -23,7 +23,7 @@ for option in "$@"; do
     # path to compiler executable
     [[ "$option" =~ ^--compiler=([A-Za-z0-9_\.\/]+)$ ]] && option_compiler=${BASH_REMATCH[1]}
 
-    # enable logging aruments passed to compiler without running it
+    # enable logging arguments passed to compiler without running it
     [[ "$option" == "--dry" ]] && option_dry=1
 
     # optimization level used by compiler

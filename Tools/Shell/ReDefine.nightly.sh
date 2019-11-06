@@ -2,6 +2,8 @@
 
 set -e
 
+REDEFINE_DIR="$(git rev-parse --show-toplevel)/Tools/ReDefine"
+
 zip="/tmp/ReDefine.zip"
 exe="ReDefine.exe"
 
@@ -10,3 +12,5 @@ curl -L "https://ci.appveyor.com/api/projects/rotators/ReDefine/artifacts/ReDefi
 chmod a+x $exe
 rm -f $zip
 file $exe
+
+mv $exe "$REDEFINE_DIR"

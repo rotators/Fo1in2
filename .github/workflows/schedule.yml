@@ -17,13 +17,41 @@ jobs:
    MOD_VERSION_MAJOR:  0
   steps:
 
+### Activity
+### checks if there was any commits (excluding automated ones) in last week;
+### if there was none, all steps are skipped and commit won't be generated
+
+  - name:  Activity
+    run:   |
+           :
+           days=$(( ( $(date --utc +%s) - $(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1) ) / 86400 ))
+
+           if [ $days -gt 2 ]; then
+                echo "[WARNING] Repository activity : $days days ago"
+           fi
+
+           if [ $days -lt 8 ]; then
+              echo ::group::Repository active
+              echo ::set-env name=GHA_REPO_ALIVE::true
+              echo ::set-env name=GHA_REPO_ACTIVITY::$days
+              echo ::endgroup::
+           else
+              echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
+           fi
+    shell: bash
+
+### Repository preparations
+### clones and prepares repository for commit
+
   - name: Clone
+    if:   env.GHA_REPO_ALIVE == 'true'
     uses: actions/checkout@master
     with:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
 #    fetch-depth: 1
 
   - name:  ReAttach HEAD
+    if:    env.GHA_REPO_ALIVE == 'true'
     run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
     shell: bash
 
@@ -32,6 +60,7 @@ jobs:
 
   # updates pre-release version of sfall (develop branch, ReleaseXP configuration)
   - name:  sfall-develop
+    if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
            SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
@@ -43,6 +72,7 @@ jobs:
 
   # updates scripts sources to Rotators standards
   - name:  ReDefine run
+    if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
            Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $MOD_DIR/Mapper/source/scripts/ --headers $MOD_DIR/Mapper/source/scripts/headers/ >/dev/null
@@ -54,6 +84,7 @@ jobs:
   # updates scripts bytecode
   # excludes 'ReDefine run' step results (if any) when scripts cannot be compiled
   - name:  Scripts recompilation
+    if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
            ok=1
@@ -79,6 +110,7 @@ jobs:
 ### prepares commit message
 
   - name:  Validation
+    if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
            echo ::group::git status
@@ -100,7 +132,7 @@ jobs:
   # update ddraw.ini setting with mod version
   # update all configuration to use DOS line endings
   - name:  Configuration refresh
-    if:    env.GHA_COMMIT == 'true'
+    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
     run:   |
            :
            REPO_COMMITS=$(git rev-list HEAD --count)
@@ -121,7 +153,7 @@ jobs:
 ### - schedule
 
   - name:  Push
-    if:    env.GHA_COMMIT == 'true'
+    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
     run:   |
            :
            echo ::group::git commit
