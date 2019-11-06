@@ -1,17 +1,43 @@
 #!/bin/bash
 
-windows_pwd="$(pwd | sed -re 's!^/([A-Za-z])/!\U\1:/!g')/"
-compile_exe="$(pwd)/Tools/sFall_ScriptEditor/resources/compile.exe"
-scripts_dir="$(pwd)/Fallout2/Fallout1in2/Mapper/source/scripts"
-bytecode_dir="$(pwd)/Fallout2/Fallout1in2/mods/fo1_base/scripts"
+# set -e ... don't! it will stop this script on first .ssl error;
+#            we want a full list of all errors to fix everything at once,
+#            instead of 'commit -> report -> fix -> commit...' loop
 
+# default options
 option_bytecode=0
+option_bytecode_dir="Fallout2/Fallout1in2/mods/fo1_base/scripts"
+option_compiler="Tools/sFall_ScriptEditor/resources/compile.exe"
+option_dry=0
 option_optimization=2
+option_scripts_dir="Fallout2/Fallout1in2/Mapper/source/scripts"
 
+# parse options
 for option in "$@"; do
+    # enable updating .int files
     [[ "$option" == "--bytecode" ]] && option_bytecode=1
+
+    # path to .int files directory
+    [[ "$option" =~ ^--bytecode-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_bytecode_dir=${BASH_REMATCH[1]}
+
+    # path to compiler executable
+    [[ "$option" =~ ^--compiler=([A-Za-z0-9_\.\/]+)$ ]] && option_compiler=${BASH_REMATCH[1]}
+
+    # enable logging aruments passed to compiler without running it
+    [[ "$option" == "--dry" ]] && option_dry=1
+
+    # optimization level used by compiler
     [[ "$option" =~ ^--optimization=([0-9]+)$ ]] && option_optimization=${BASH_REMATCH[1]}
+
+    # path to .ssl files directory
+    [[ "$option" =~ ^--scripts-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_scripts_dir=${BASH_REMATCH[1]}
 done
+
+# constants
+readonly windows_pwd="$(pwd | sed -re 's!^/([A-Za-z])/!\U\1:/!g')/"
+readonly compile_exe="$(pwd)/$option_compiler"
+readonly scripts_dir="$(pwd)/$option_scripts_dir"
+readonly bytecode_dir="$(pwd)/$option_bytecode_dir"
 
 # output grouping, for GitHub Actions
 # regular echo when running on local
@@ -38,7 +64,7 @@ if   [ ! -f "$compile_exe" ]; then
      echo "[ERROR] Cannot find compiler : $compile_exe"
      exit 1
 elif [ ! -x "$compile_exe" ]; then
-     echo "[ERROR] Cannot run compiler"
+     echo "[ERROR] Cannot run compiler : $compile_exe"
      exit 1
 elif [ ! -d "$scripts_dir" ]; then
      echo "[ERROR] Cannot find scripts directory : $scripts_dir"
@@ -70,7 +96,13 @@ for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
 
     # ssl compiler is too dumb to understand paths and always checks current directory
     cd "$ssl_dir"
-    $compile_exe -q -l -p -s -O${option_optimization} "$ssl_file" -o "$int_file" > "$log_file"
+
+    if [ $option_dry -eq 0 ]; then
+       $compile_exe -q -l -p -s -O${option_optimization} "$ssl_file" -o "$int_file" > "$log_file"
+    else
+       echo "[$(dirname $ssl_show)] $compile_exe -q -l -p -s -O${option_optimization} $ssl_file -o $int_file > $log_file"
+       continue
+    fi
 
     # remove unwanted lines from log
     sed -i '/^$/d' $log_file
