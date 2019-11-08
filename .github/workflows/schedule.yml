@@ -58,6 +58,11 @@ jobs:
     run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
     shell: bash
 
+  - name:  Clone sfall
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   git clone --branch=develop --depth=1 https://github.com/phobos2077/sfall.git $HOME/sfall
+    shell: bash
+
 ### Major tasks
 ### always generates commit (if needed)
 
@@ -73,6 +78,20 @@ jobs:
            echo "sfall-develop (v${SFALL_VERSION}, ${SFALL_COMMIT})"
 
            git diff --quiet || (git add --update && echo "- sfall-develop (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
+    shell: bash
+
+  - name:  ModdersPack update
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   |
+           :
+           rm -f Tools/ModdersPack
+           cp -r $HOME/sfall/artifacts Tools/ModdersPack
+
+           if [[ -n $(git status --short --untracked-files=all) ]]; then
+              git add Tools/ModdersPack
+              SFALL_COMMIT=$(git -C $HOME/sfall rev-parse HEAD)
+              echo "- ModdersPack update (phobos2077/sfall@{SFALL_COMMIT})" >> $HOME/gha.commit
+           fi
     shell: bash
 
   # updates scripts sources to Rotators standards
