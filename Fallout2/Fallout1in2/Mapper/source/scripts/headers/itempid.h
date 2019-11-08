@@ -113,7 +113,7 @@
 #define PID_223_PISTOL                      (241)
 #define PID_COMBAT_SHOTGUN                  (242)
 #define PID_JONNY_BB_GUN                    (261)
-#define PID_HK_CAWS                         (268)
+#define PID_HK_CAWS                         (268) // Assault Shotgun
 #define PID_ROBO_ROCKET_LAUNCHER            (270)
 #define PID_SHARP_SPEAR                     (280)
 #define PID_SCOPED_HUNTING_RIFLE            (287)
@@ -137,7 +137,7 @@
 #define PID_FN_FAL                          (351)
 #define PID_HK_G11                          (352)
 #define PID_INDEPENDENT                     (353)
-#define PID_PANCOR_JACKHAMMER               (354)
+#define PID_PANCOR_JACKHAMMER               (354) // Riot Shotgun
 #define PID_SHIV                            (383)
 #define PID_WRENCH                          (384)
 #define PID_LOUISVILLE_SLUGGER              (386)

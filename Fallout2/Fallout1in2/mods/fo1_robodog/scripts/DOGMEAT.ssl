@@ -2,6 +2,9 @@
 
    Dogmeat - Party Member, Junktown
 
+      Turned into Robodog!
+         Arr-Woof <bzzzt> \o/
+
 */
 
 #include "..\headers\define.h"
@@ -33,22 +36,36 @@ procedure dog_join_party;
 procedure dog_end;
 procedure dog00;
 
+procedure dog_distance;
+procedure Node1004;
+procedure Node1005;
+procedure Node1006;
+procedure Node1007;
+
+procedure Heal_Robo(variable bonus);
+
 procedure Node998;
 procedure Node999;
 
 variable tmp_hostile;
+
 variable IdenOnce;
 
 #define LVAR_Herebefore                   (4)
 #define LVAR_WAITING                      (10)
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
+#define LVAR_Heal_Count                   (13)
+#define LVAR_Heal_Dec_Time                (14)
+
+#define MULTI_TOOL 10
+#define SUPER_TOOL 30
 
 #define dog_mstr(x)             			   message_str(SCRIPT_ALLDOGS,x)
 #define dog_float(x)                      float_msg(self_obj, dog_mstr(x), FLOAT_MSG_NORMAL)
 
-#define dogmeat_joins_party               party_add_self;                                                   \
-                                          add_timer_event(self_obj, game_ticks(1), 2);                        \
+#define dogmeat_joins_party               party_add_self;                              \
+                                          add_timer_event(self_obj, game_ticks(1), 2); \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_dogmeat    ((dude_at_max_party_size == false) and (Dog_In_Party == false) or unlimited_party_members)
 #define EVENT_FLOAT_JOIN                  (2)
@@ -89,27 +106,7 @@ procedure critter_p_proc begin
    end
 
    if Dog_In_Party then begin
-      // Dogmeat has a custom following routine (always stay close, no matter what)
-      if (tile_distance_objs(self_obj, dude_obj) >= 3) then begin
-         if (anim_busy(self_obj) == 0) then begin
-            dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 1), random(0, 5), random(0, 2));
-            self_run_to_tile_force(dest_tile);
-         end
-      end
-      else begin
-         variable LVar0 := 0;
-         LVar0 := random(1, 500);
-         if (LVar0 == 100) then begin
-            if (anim_busy(self_obj) == 0) then begin
-               self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 2));
-            end
-         end
-         if (LVar0 == 400) then begin
-            if (anim_busy(self_obj) == 0) then begin
-               self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 1));
-            end
-         end
-      end
+      party_member_follow_dude
    end
    else if (local_var(LVAR_Herebefore) == 0) then begin
       if (CUR_MAP_JUNKCSNO) then begin
@@ -124,7 +121,6 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    set_global_var(GVAR_DOGMEAT_HIRELING_STATUS, 0);
 
    if obj_in_party(source_obj) then begin
@@ -158,6 +154,9 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   if (self_fid != FID_MACYBR) then
+      art_change_fid_num(self_obj, FID_MACYBR);
+
    if Dog_In_Party then begin
       set_self_team(TEAM_PLAYER);
    end
@@ -193,7 +192,7 @@ procedure timed_event_p_proc begin
       dog_float(random(122, 123));
    end
    else begin
-      float_msg(self_obj, dog_mstr(103), FLOAT_MSG_NORMAL);
+      float_msg(self_obj, mstr(103), FLOAT_MSG_NORMAL);
       if (CUR_MAP_JUNKCSNO) then begin
          set_map_var(MVAR_growling, 1);
          set_map_var(MVAR_smartass_2, 1);
@@ -205,7 +204,16 @@ procedure use_obj_on_p_proc begin
    variable item;
    item := obj_pid(obj_being_used_with);
 
-   if ((item == PID_MEAT_ON_A_STICK) or (item == PID_IGUANA_ON_A_STICK)) then begin
+   if Dog_In_Party then begin
+      if (item == PID_MULTI_TOOL) then begin
+         script_overrides;
+         call Heal_Robo(MULTI_TOOL);
+      end else if (item == PID_SUPER_TOOL_KIT) then begin
+         script_overrides;
+         call Heal_Robo(SUPER_TOOL);
+      end
+   end
+   else if ((item == PID_MEAT_ON_A_STICK) or (item == PID_IGUANA_ON_A_STICK)) then begin
       if (not(global_var(GVAR_DOGMEAT_HIRELING_STATUS)) and (local_var(LVAR_Herebefore) == 0)) then begin
          set_local_var(LVAR_Herebefore, 1);
          display_msg(dog_mstr(104));
@@ -251,7 +259,7 @@ procedure dog_join_party begin
 end
 
 procedure dog_end begin
-   //float_msg(self_obj, dog_mstr(102), FLOAT_MSG_GREEN);
+   //float_msg(self_obj, mstr(random(117,120)), FLOAT_MSG_NORMAL);
 end
 
 procedure dog00 begin
@@ -263,9 +271,44 @@ procedure dog00 begin
    else begin
       NOption(dog_mstr(119), dog_remove_party, 004);
       NLowOption(dog_mstr(301), dog_remove_party);
+      NOption(200, dog_distance, 004);
    end
    GOption(dog_mstr(120), dog_end, 004);
    GLowOption(dog_mstr(304), dog_end);
+end
+
+procedure dog_distance begin
+   Reply(120);
+   NOption(def_close_msg, Node1004, 004);
+   NOption(def_med_msg, Node1005, 004);
+   NOption(def_far_msg, Node1006, 004);
+   GOption(201, dog_end, 004);
+end
+
+procedure Node1004 begin // follow close
+   set_follow_close;
+   call Node1007;
+end
+
+procedure Node1005 begin// follow medium
+   set_follow_medium;
+   call Node1007;
+end
+
+procedure Node1006 begin // follow far
+   set_follow_far;
+   call Node1007;
+end
+
+procedure Node1007 begin
+   if (local_var(LVAR_FOLLOW_DISTANCE) == FOLLOW_DISTANCE_CLOSE) then begin
+      NMessage(121);
+   end else if (local_var(LVAR_FOLLOW_DISTANCE) == FOLLOW_DISTANCE_MEDIUM) then begin
+      NMessage(121);
+   end else if (local_var(LVAR_FOLLOW_DISTANCE) == FOLLOW_DISTANCE_FAR) then begin
+      NMessage(121);
+   end
+   call dog00;
 end
 
 procedure use_skill_on_p_proc begin
@@ -273,5 +316,27 @@ procedure use_skill_on_p_proc begin
       script_overrides;
       display_msg(message_str(SCRIPT_GENCHAT, 211));
       script_overrides;
+   end
+
+   else if (action_being_used == SKILL_REPAIR and Dog_In_Party) then begin
+      script_overrides;
+      call Heal_Robo(0);
+   end
+end
+
+procedure Heal_Robo(variable bonus) begin
+   if (local_var(LVAR_Heal_Count) < has_skill(source_obj, SKILL_SPEECH)) then begin
+      if (skill_success(source_obj, SKILL_REPAIR, bonus)) then begin
+         critter_heal(self_obj, Random(10, 40));
+         set_local_var(LVAR_Heal_Count, local_var(LVAR_Heal_Count) + 50);
+      end
+
+      if (self_cur_hp != self_max_hp) then begin
+         display_mstr(901);
+      end else begin
+         display_mstr(902);
+      end
+   end else begin
+      display_mstr(900);
    end
 end

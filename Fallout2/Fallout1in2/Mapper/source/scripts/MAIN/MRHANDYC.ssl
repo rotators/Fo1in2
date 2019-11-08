@@ -62,6 +62,7 @@ procedure Node1010;
 procedure Node1100;
 
 procedure GetDate;
+procedure Heal_Robo(variable bonus);
 
 variable initial := 0;
 variable tmp_hostile := 0;
@@ -77,6 +78,8 @@ variable tmp_hostile := 0;
 #define LVAR_WAITING                      (10)
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
+#define LVAR_Heal_Count                   (13)
+#define LVAR_Heal_Dec_Time                (14)
 
 #define float_handy(x)                    float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
 #define handy_joins_party                 party_add_self;                                                   \
@@ -87,6 +90,9 @@ variable tmp_hostile := 0;
 #define EVENT_CALIBRATE                   (3)
 
 #define handy_is_fixed                    ((local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 1))
+
+#define MULTI_TOOL 10
+#define SUPER_TOOL 30
 
 #undef  set_default_party_follow
 #define set_default_party_follow             set_follow_medium
@@ -140,15 +146,6 @@ procedure map_enter_p_proc begin
          set_local_var(LVAR_ALREADY_DESTROYED_ITEMS, 0);
          set_local_var(LVAR_DECLINED_REPROGRAMMING, 0);
       end
-
-      /*if (global_var(GVAR_MR_HANDYC_HIRELING) == 1) and (global_var(GVAR_MR_HANDYC_HIRELING_STATUS) == 1) then begin
-         set_self_team(TEAM_PLAYER);
-         //set_self_ai( AI_ROBOTS );
-      end
-      else begin
-         set_self_team(TEAM_NECROPOLIS_MUTANT);
-         //set_self_ai( AI_ROBOTS );
-      end*/
    end
 end
 
@@ -327,72 +324,38 @@ procedure use_skill_on_p_proc begin
          display_msg(message_str(SCRIPT_GENCHAT, 211));
       end
    end
-   else begin
-
-      if (action_being_used == SKILL_SCIENCE) then begin
-
-         if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin// still need physical fix
-            script_overrides;
-            display_msg(mstr(103));//{103}{}{You cannot access the robot's functions, as it is disabled.}
-         end
-         else if (local_var(LVAR_IS_COMPUTER_FIXED) == 0) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not already software fixed
-            script_overrides;
-            game_time_advance(game_ticks(300));
-
-            if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0)) then begin
-               display_msg(mstr(105));//{105}{}{You reboot the onboard computer, and successfully restart the robot. You notice that the robot's radio is broken.}
-               set_local_var(LVAR_IS_COMPUTER_FIXED, 1);
-            end
-            else begin
-               display_msg(mstr(106));//{106}{}{You spend some time working on the robot's computer, but cannot get it restarted.}
-            end
-
-         end
-         else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
-            script_overrides;
-            display_msg(mstr(123));//{123}{}{The robot's radio is broken.}
-         end
-
+   else if (action_being_used == SKILL_SCIENCE) then begin
+      if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin// still need physical fix
+         script_overrides;
+         display_msg(mstr(103));//{103}{}{You cannot access the robot's functions, as it is disabled.}
       end
-      else if (action_being_used == SKILL_REPAIR) then begin
-         if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
-            script_overrides;
-            game_time_advance(game_ticks(12000));
+      else if (local_var(LVAR_IS_COMPUTER_FIXED) == 0) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not already software fixed
+         script_overrides;
+         game_time_advance(game_ticks(300));
 
-            if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
-               display_msg(mstr(101));//{101}{}{The robot is now powered on, but is still not functional.}
-               set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 1);
-            end
-            else begin
-               display_msg(mstr(104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
-            end
+         if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0)) then begin
+            display_msg(mstr(105));//{105}{}{You reboot the onboard computer, and successfully restart the robot. You notice that the robot's radio is broken.}
+            set_local_var(LVAR_IS_COMPUTER_FIXED, 1);
          end
          else begin
-            if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
-               script_overrides;
-               game_time_advance(game_ticks(6000));
-
-               if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
-                  display_msg(mstr(120));//{120}{}{You jury-rig the robot's radio system; it should be usable now.}
-                  set_local_var(LVAR_IS_RADIO_FIXED, 1);
-               end
-               else begin
-                  display_msg(mstr(104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
-               end
-            end
+            display_msg(mstr(106));//{106}{}{You spend some time working on the robot's computer, but cannot get it restarted.}
          end
       end
-
+      else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+         script_overrides;
+         display_msg(mstr(123));//{123}{}{The robot's radio is broken.}
+      end
    end
-end
-
-procedure use_obj_on_p_proc begin
-   if (obj_pid(obj_being_used_with) == PID_MULTI_TOOL) then begin
-      if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
+   else if (action_being_used == SKILL_REPAIR) then begin
+      if MrHandyC_In_Party then begin
+         script_overrides;
+         call Heal_Robo(0);
+      end
+      else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
          script_overrides;
          game_time_advance(game_ticks(12000));
 
-         if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
+         if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
             display_msg(mstr(101));//{101}{}{The robot is now powered on, but is still not functional.}
             set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 1);
          end
@@ -400,32 +363,80 @@ procedure use_obj_on_p_proc begin
             display_msg(mstr(104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
          end
       end
-      else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1)  and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+      else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
          script_overrides;
          game_time_advance(game_ticks(6000));
 
-         if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
+         if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0)) then begin
             display_msg(mstr(120));//{120}{}{You jury-rig the robot's radio system; it should be usable now.}
             set_local_var(LVAR_IS_RADIO_FIXED, 1);
          end
          else begin
             display_msg(mstr(104));//{104}{}{You tinker with the malfunctioning components, but need more time to make the fix.}
          end
-
       end
    end
-   else if (obj_pid(obj_being_used_with) == PID_RADIO) then begin
-      if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+end
+
+procedure use_obj_on_p_proc begin
+   variable tool;
+
+   tool := obj_pid(obj_being_used_with);
+
+   if MrHandyC_In_Party then begin
+      if (tool == PID_MULTI_TOOL) then begin
          script_overrides;
-
-         game_time_advance(game_ticks(3000));
-
-         rm_obj_from_inven(source_obj, obj_being_used_with);
-         destroy_object(obj_being_used_with);
-
-         display_msg(mstr(121));//{121}{}{You successfully replace the robot's radio .}
-         set_local_var(LVAR_IS_RADIO_FIXED, 1);
+         call Heal_Robo(MULTI_TOOL);
+      end else if (tool == PID_SUPER_TOOL_KIT) then begin
+         script_overrides;
+         call Heal_Robo(SUPER_TOOL);
       end
+   end
+   else begin
+
+      if (tool == PID_MULTI_TOOL) then begin
+         if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
+            script_overrides;
+            game_time_advance(game_ticks(12000));
+
+            // power on, but still not functional
+            if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
+               display_msg(mstr(101));
+               set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 1);
+            end
+            else begin
+               display_msg(mstr(104));
+            end
+         end
+         else if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1)  and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+            script_overrides;
+            game_time_advance(game_ticks(6000));
+
+            // power on, and functional
+            if is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 20)) then begin
+               display_msg(mstr(120));
+               set_local_var(LVAR_IS_RADIO_FIXED, 1);
+            end
+            else begin
+               display_msg(mstr(104));
+            end
+
+         end
+      end
+      else if (tool == PID_RADIO) then begin
+         if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 0) then begin// not fixed radio
+            script_overrides;
+
+            game_time_advance(game_ticks(3000));
+
+            rm_obj_from_inven(source_obj, obj_being_used_with);
+            destroy_object(obj_being_used_with);
+
+            display_msg(mstr(121));//{121}{}{You successfully replace the robot's radio .}
+            set_local_var(LVAR_IS_RADIO_FIXED, 1);
+         end
+      end
+
    end
 end
 
@@ -694,5 +705,22 @@ procedure Node1100 begin
       end_party_waiting;
       Reply(2001);
       party_member_default_options;
+   end
+end
+
+procedure Heal_Robo(variable bonus) begin
+   if (local_var(LVAR_Heal_Count) < has_skill(source_obj, SKILL_SPEECH)) then begin
+      if (skill_success(source_obj, SKILL_REPAIR, bonus)) then begin
+         critter_heal(self_obj, Random(10, 40));
+         set_local_var(LVAR_Heal_Count, local_var(LVAR_Heal_Count) + 50);
+      end
+
+      if (self_cur_hp != self_max_hp) then begin
+         display_mstr(901);
+      end else begin
+         display_mstr(902);
+      end
+   end else begin
+      display_mstr(900);
    end
 end
