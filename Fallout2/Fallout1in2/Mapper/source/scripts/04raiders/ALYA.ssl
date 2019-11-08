@@ -42,25 +42,18 @@ variable tmp_hostile;
 variable initial := 0;
 variable rndz;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 procedure start begin
-   if shady_invaded then begin
-      if (CUR_MAP_RAIDERS) then begin //  RAIDERS - KHANS
-         if (local_var(6) != 1) then begin
-            set_local_var(6, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_RAIDERS);
       set_self_ai(AI_RAIDER_GUARD);
       debug_msg("ALYA init.");
+   end
+end
+
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_MAP_RAIDERS then begin
+      invasion_kill_critter;
    end
 end
 
@@ -74,8 +67,7 @@ procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure alya00
-begin
+procedure alya00 begin
    Reply(101);
    if (tandi_quest_active and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
       NOption(102, alya01, 4);
@@ -88,70 +80,59 @@ begin
    NLowOption(106, alya05);
 end
 
-procedure alya01
-begin
+procedure alya01 begin
    NMessage(107);
 end
 
-procedure alya02
-begin
+procedure alya02 begin
    NMessage(108);
    call combat;
 end
 
-procedure alya03
-begin
+procedure alya03 begin
    Reply(109);
    NOption(110, alya04, 4);
    NOption(111, alya09, 4);
    NOption(112, alyaend, 4);
 end
 
-procedure alya04
-begin
+procedure alya04 begin
    Reply(113);
    NOption(114, alya06, 4);
    NOption(115, alya08, 4);
    NOption(116, alyaend, 4);
 end
 
-procedure alya05
-begin
+procedure alya05 begin
    NMessage(117);
 end
 
-procedure alya06
-begin
+procedure alya06 begin
    Reply(118);
    NOption(119, alya07, 4);
    NOption(120, combat, 4);
    NOption(121, alyaend, 4);
 end
 
-procedure alya07
-begin
+procedure alya07 begin
    NMessage(122);
    call combat;
 end
 
-procedure alya08
-begin
+procedure alya08 begin
    NMessage(123);
    add_timer_event(self_obj, game_ticks(15), 1);
 end
 
-procedure alya09
-begin
+procedure alya09 begin
    NMessage(124);
 end
 
-procedure alya10
-begin
+procedure alya10 begin
    NMessage(125);
 end
 
-procedure alyaend
-begin
+procedure alyaend begin
 end
 
 procedure talk_p_proc begin
@@ -184,8 +165,7 @@ procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 // variable LVar0 := 0;
 // rndz := random(0, 500);
 // set_local_var(10, game_time);
@@ -244,8 +224,6 @@ procedure damage_p_proc begin
    end
 end
 
-
-
 procedure destroy_p_proc begin
    set_global_var(GVAR_TOTAL_RAIDERS, (get_raiders_alive - 1));// Number of raiders left
    //if (source_obj == dude_obj) then begin
@@ -259,8 +237,7 @@ procedure destroy_p_proc begin
    inc_inv_evil_crit
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    if not(local_var(7)) then begin
       script_overrides;
       display_msg(mstr(200));
@@ -268,8 +245,7 @@ begin
    set_local_var(7, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    if not(local_var(7)) then begin
       display_msg(mstr(100));
@@ -277,9 +253,4 @@ begin
    else begin
       display_msg(mstr(200));
    end
-end
-
-procedure PickDeadBodyType
-begin
-   pick_dead_body_type
 end

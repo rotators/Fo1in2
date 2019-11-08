@@ -40,23 +40,11 @@ procedure Jarvisend;
 variable use_skill;
 variable tmp_hostile;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 #define LVAR_Here_Before      (4)
 #define LVAR_PoisonHealed     (5)
 #define LVAR_Invasion         (6)
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(LVAR_Invasion) != 1) then begin
-            set_local_var(LVAR_Invasion, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
 end
 
 procedure look_at_p_proc begin
@@ -70,6 +58,10 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   if shady_invaded then begin
+      invasion_kill_critter;
+   end
+
    if (local_var(LVAR_PoisonHealed) == 0) then begin
       anim(self_obj, ANIM_fall_back_sf, 0);
       add_timer_event(self_obj, game_ticks(3600), 1);
@@ -236,8 +228,4 @@ end
 
 procedure map_exit_p_proc begin
    rm_timer_event(self_obj);
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

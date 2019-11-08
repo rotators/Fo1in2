@@ -43,7 +43,6 @@ procedure guard13;
 procedure guard14;
 procedure guard15;
 procedure combat;
-procedure PickDeadBodyType;
 
 procedure do_flee_dude;
 
@@ -52,20 +51,9 @@ variable initial := 0;
 variable rndz;
 variable Weapons;
 
-variable DeathType := 56;
 variable LastTime;
 
 procedure start begin
-   if shady_invaded then begin
-      if (CUR_MAP_RAIDERS) then begin //  RAIDERS - KHANS
-         if (local_var(6) != 1) then begin
-            set_local_var(6, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_RAIDERS);
@@ -75,6 +63,10 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
+   if shady_invaded and CUR_MAP_RAIDERS then begin
+      invasion_kill_critter;
+   end
+
    if map_first_run then
       self_caps_adjust(random(1, dude_luck * 2));
 end
@@ -364,8 +356,4 @@ procedure destroy_p_proc begin
    //end
    rm_timer_event(self_obj);
    inc_inv_evil_crit
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

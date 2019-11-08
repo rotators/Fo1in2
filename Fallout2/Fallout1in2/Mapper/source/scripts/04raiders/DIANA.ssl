@@ -39,21 +39,7 @@ variable tmp_hostile;
 variable Only_Once := 1;
 variable rndz;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
-
 procedure start begin
-   if shady_invaded then begin
-      if (CUR_MAP_RAIDERS) then begin //  RAIDERS - KHANS
-         if (local_var(6) != 1) then begin
-            set_local_var(6, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_RAIDERS);
@@ -62,12 +48,17 @@ procedure start begin
    end
 end
 
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_MAP_RAIDERS then begin
+      invasion_kill_critter;
+   end
+end
+
 procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure Diana00
-begin
+procedure Diana00 begin
    Reply(101);
    if (tandi_quest_active and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
       NOption(102, Diana01, 4);
@@ -83,25 +74,21 @@ begin
    NLowOption(107, Diana10);
 end
 
-procedure Diana01
-begin
+procedure Diana01 begin
    Reply(108);
    NOption(109, Dianaend, 4);
    NOption(110, Diana03, 4);
 end
 
-procedure Diana02
-begin
+procedure Diana02 begin
    NMessage(111);
 end
 
-procedure Diana03
-begin
+procedure Diana03 begin
    NMessage(112);
 end
 
-procedure Diana04
-begin
+procedure Diana04 begin
    Reply(113);
    NOption(114, Diana03, 4);
    if (local_var(5) == 0) then begin
@@ -109,8 +96,7 @@ begin
    end
 end
 
-procedure Diana05
-begin
+procedure Diana05 begin
    Reply(116);
    set_local_var(5, 1);
    if (tandi_quest_active and (global_var(GVAR_TANDI_TALKED_ABOUT) == 1)) then begin
@@ -119,38 +105,32 @@ begin
    NOption(118, Diana03, 4);
 end
 
-procedure Diana10
-begin
+procedure Diana10 begin
    NMessage(119);
 end
 
-procedure Diana11
-begin
+procedure Diana11 begin
    Reply(120);
    NOption(104, Diana10, 4);
    NOption(118, Diana12, 4);
    NLowOption(107, Diana10);
 end
 
-procedure Diana12
-begin
+procedure Diana12 begin
    NMessage(121);
 end
 
-procedure Dianaend
-begin
+procedure Dianaend begin
 end
 
-procedure combat
-begin
+procedure combat begin
    if (global_var(GVAR_MISTAKEN_ID) == 1) then begin//Raiders think you are Garl's father
 set_self_team(TEAM_87);
    end
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if (global_var(GVAR_MISTAKEN_ID) == 1) then begin//Raiders think you are Garl's father
       float_msg(self_obj, message_str(SCRIPT_GENRAIDR, random(102, 106)), FLOAT_MSG_YELLOW);
@@ -178,8 +158,7 @@ begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    variable LVar0 := 0;
    rndz := random(0, 500);
 // set_local_var(10, game_time);
@@ -253,8 +232,7 @@ procedure description_p_proc begin
    set_local_var(7, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    if not(local_var(7)) then begin
       display_msg(mstr(100));
@@ -262,11 +240,4 @@ begin
    else begin
       display_msg(mstr(200));
    end
-end
-
-
-
-procedure PickDeadBodyType
-begin
-   pick_dead_body_type
 end

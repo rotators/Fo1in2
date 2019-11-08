@@ -39,29 +39,21 @@ variable round_counter;
 variable DisplayMessage := 100;
 variable PsstTime;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 procedure push_p_proc begin
 end
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
-         if (local_var(6) != 1) then begin
-            set_local_var(6, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
+   if not(initial) then begin
+      initial := 1;
+      set_self_team(TEAM_SHADY_SANDS);
+      set_self_ai(AI_PEASANT);
+      add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
    end
-   else begin
-      if not(initial) then begin
-         initial := 1;
-         set_self_team(TEAM_SHADY_SANDS);
-         set_self_ai(AI_PEASANT);
-         add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-      end
+end
+
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
    end
 end
 
@@ -175,8 +167,4 @@ procedure Citizen04 begin
 end
 
 procedure CitizenEnd begin
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

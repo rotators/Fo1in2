@@ -15,12 +15,9 @@ procedure destroy_p_proc;
 procedure critter_p_proc;
 procedure push_p_proc;
 
-procedure PickDeadBodyType;
-
 variable critter_tile;
 variable initial := 0;
 variable temp_hostile := 0;
-variable DeathType := 56;
 
 #define EVENT_WALK            (1)
 #define EVENT_FLOAT           (2)
@@ -41,25 +38,18 @@ variable DeathType := 56;
 ////////////////////////////////////////
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(4) != 1) then begin
-            set_local_var(4, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-   else begin
-      if not(initial) then begin
-         initial := 1;
-         set_self_ai(AI_COW);
-         set_self_team(TEAM_4);
-      end
+   if not(initial) then begin
+      initial := 1;
+      set_self_ai(AI_COW);
+      set_self_team(TEAM_4);
    end
 end
 
 procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
+   end
+
    flush_add_timer_event_sec(self_obj, random(15, 90), EVENT_WALK);
    flush_add_timer_event_sec(self_obj, random(5, 15), EVENT_FLOAT);
    flush_add_timer_event_sec(self_obj, random(0, 300), EVENT_POOP);
@@ -195,8 +185,4 @@ procedure destroy_p_proc begin
       end
    end
    rm_timer_event(self_obj);
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

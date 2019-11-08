@@ -62,24 +62,12 @@ variable tmp_hostile;
 variable initial := 0;
 variable round_counter;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 #define LVAR_Here_Before                  (4)
 #define LVAR_Sleeping                     (5)
 #define LVAR_Welcome                      (6)
 #define LVAR_Invasion                     (10)
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(LVAR_Invasion) != 1) then begin
-            set_local_var(LVAR_Invasion, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
 end
 
 procedure description_p_proc begin
@@ -112,6 +100,12 @@ procedure combat_p_proc begin
          set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
          set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
       end
+   end
+end
+
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
    end
 end
 
@@ -440,8 +434,4 @@ procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

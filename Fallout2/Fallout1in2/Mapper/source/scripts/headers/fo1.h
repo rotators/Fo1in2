@@ -233,7 +233,8 @@ variable merch_slot_armor_flags;
 /*********************************************************
     Pick dead body type:
 *********************************************************/
-#define pick_dead_body_type             variable LVar0 := random(0, 18);                                \
+#define invasion_kill_critter           variable DeathType := 56;                                       \
+                                        variable LVar0 := random(0, 18);                                \
                                         if (LVar0 <= 5) then begin/*// 31.5%*/                          \
                                             DeathType := ANIM_burned_to_nothing_sf;                     \
                                         end                                                             \
@@ -258,7 +259,8 @@ variable merch_slot_armor_flags;
                                             else if (LVar1 == 2) then begin                             \
                                                 DeathType := ANIM_melted_to_nothing_sf;                 \
                                             end                                                         \
-                                        end
+                                        end                                                             \
+                                        kill_critter(self_obj, DeathType)
 
 /*********************************************************
     Game time Limits

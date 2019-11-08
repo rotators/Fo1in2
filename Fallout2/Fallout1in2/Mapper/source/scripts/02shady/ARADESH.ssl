@@ -142,9 +142,6 @@ variable pickup_attempt;
 
 variable isGoodGuy := 1;// Fallout Fixt
 
-procedure PickDeadBodyType;// Fallout Fixt
-variable DeathType := 56;
-
 #define LVAR_Invasion         (6)
 
 procedure start begin
@@ -156,15 +153,6 @@ procedure start begin
          rm_obj_from_inven(self_obj, LVar0);
          destroy_object(LVar0);
          LVar0 := 0;
-      end
-   end
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(LVAR_Invasion) != 1) then begin
-            set_local_var(LVAR_Invasion, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
       end
    end
 end
@@ -208,6 +196,10 @@ procedure talk_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
+   end
+
    if (map_first_run) then begin
       set_self_team(TEAM_SHADY_SANDS);
       set_self_ai(AI_PEASANT);
@@ -1059,9 +1051,4 @@ procedure damage_p_proc begin
       set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
       tmp_hostile := 1;
    end
-end
-
-procedure PickDeadBodyType
-begin
-   pick_dead_body_type
 end

@@ -63,12 +63,7 @@ variable Yourself;
 variable Vault;
 variable Vaulted;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
-
-procedure start
-begin
+procedure start begin
    if (map_first_run) and (local_var(7) != 1) then begin
       variable LVar0;
       set_local_var(7, 1);
@@ -85,73 +80,31 @@ begin
          LVar0 := 0;
       end
    end
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin //  SHADY SANDS - EAST OR WEST
-         if (local_var(8) != 1) then begin
-            set_local_var(8, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-   else begin
 
-
-      if (Only_Once == 1) then begin
-         Only_Once := 0;
-         set_self_team(TEAM_SHADY_SANDS);
-         set_self_ai(AI_PEASANT);
-      end
-      if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-         call talk_p_proc;
-      end
-      else begin
-         if (script_action == look_at_proc) then begin
-            call look_at_p_proc;
-         end
-         else begin
-            if (script_action == description_proc) then begin
-               call description_p_proc;
-            end
-            else begin
-               if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-                  call pickup_p_proc;
-               end
-               else begin
-                  if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-                     call destroy_p_proc;
-                  end
-                  else begin
-                     if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-                        call critter_p_proc;
-                     end
-                     else begin
-                        if (script_action == damage_proc) then begin
-                           call damage_p_proc;
-                        end
-                     end
-                  end
-               end
-            end
-         end
-      end
+   if (Only_Once == 1) then begin
+      Only_Once := 0;
+      set_self_team(TEAM_SHADY_SANDS);
+      set_self_ai(AI_PEASANT);
    end
 end
 
-procedure look_at_p_proc
-begin
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
+   end
+end
+
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
@@ -186,8 +139,7 @@ begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (self_can_see_dude) then begin
       if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
          attack(dude_obj);
@@ -195,8 +147,7 @@ begin
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
    end
@@ -209,8 +160,7 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (local_var(6) == 0) then begin
       float_msg(self_obj, mstr(151), FLOAT_MSG_RED);
       set_local_var(6, 1);
@@ -220,8 +170,7 @@ begin
    end
 end
 
-procedure DialogWeapon
-begin
+procedure DialogWeapon begin
    Reply(101);
    NLowOption(102, DialogWeapon1);
    NOption(103, DialogWeapon2, 4);
@@ -425,9 +374,4 @@ procedure DialogSpecial4
 begin
    Reply(146);
    NOption(147, DialogExit, 4);
-end
-
-procedure PickDeadBodyType
-begin
-   pick_dead_body_type
 end

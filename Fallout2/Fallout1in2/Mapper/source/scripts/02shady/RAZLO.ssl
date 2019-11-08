@@ -109,9 +109,6 @@ variable HITS;
 variable initial := 0;
 variable tail;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 #define LVAR_Here_Before         (4)
 #define LVAR_Talk_TandiRescued   (5)
 #define LVAR_Invasion            (6)
@@ -119,15 +116,6 @@ variable DeathType := 56;
 #define LVAR_Sleeping            (9)
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(LVAR_Invasion) != 1) then begin
-            set_local_var(LVAR_Invasion, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
 end
 
 procedure combat_p_proc begin
@@ -139,6 +127,12 @@ procedure combat_p_proc begin
          set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
          set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
       end
+   end
+end
+
+procedure map_enter_p_proc begin
+   if shady_invaded then begin
+      invasion_kill_critter;
    end
 end
 
@@ -751,8 +745,4 @@ procedure razlo00n_a begin
    else begin
       call razlo00;
    end
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

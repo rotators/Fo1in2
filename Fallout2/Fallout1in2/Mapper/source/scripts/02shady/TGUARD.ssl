@@ -58,24 +58,11 @@ variable initial := 0;
 variable round_counter;
 variable Warned_Tile;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 #define LVAR_Invasion                     (6)
 #define LVAR_Sleeping                     (9)
 #define LVAR_Home_Tile                    (10)
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(LVAR_Invasion) != 1) then begin
-            set_local_var(LVAR_Invasion, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_SHADY_SANDS);
@@ -84,6 +71,12 @@ procedure start begin
          set_local_var(LVAR_Home_Tile, self_tile);
       end
       home_tile := local_var(LVAR_Home_Tile);
+   end
+end
+
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
    end
 end
 
@@ -318,8 +311,4 @@ procedure set_sleep_tile begin
    end
    wake_time := random(610, 650);
    sleep_time := random(2110, 2150);
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

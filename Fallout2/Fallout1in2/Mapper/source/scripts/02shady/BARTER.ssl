@@ -52,26 +52,18 @@ variable Only_Once := 1;
 variable Caught_Stealing;
 variable Here_To_Shop;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(6) != 1) then begin
-            set_local_var(6, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
+   if Only_Once then begin
+      Only_Once := 0;
+      set_self_team(TEAM_SHADY_SANDS);
+      set_self_ai(AI_MERCHANT);
+      exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
    end
-   else begin
-      if Only_Once then begin
-         Only_Once := 0;
-         set_self_team(TEAM_SHADY_SANDS);
-         set_self_ai(AI_MERCHANT);
-         exit_line := message_str(SCRIPT_MODREACT, random(100, 105));
-      end
+end
+
+procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+      invasion_kill_critter;
    end
 end
 
@@ -233,8 +225,4 @@ end
 procedure barter04 begin
    no_deal := 1;
    NMessage(107);
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

@@ -17,23 +17,10 @@ variable critter_tile;
 variable Only_Once := 1;
 variable tmp_hostile := 0;
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 procedure push_p_proc begin
 end
 
 procedure start begin
-   if shady_invaded then begin
-      if CUR_AREA_SHADY_SANDS  or (CUR_MAP_RAIDERS) then begin //  SHADY SANDS EAST OR SHADY SANDS WEST OR RAIDERS KHANS
-         if (local_var(6) != 1) then begin
-            set_local_var(6, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-
    if Only_Once then begin
       Only_Once := 0;
       set_self_ai(AI_DOG);
@@ -48,6 +35,13 @@ procedure start begin
       end
    end
 end
+
+procedure map_enter_p_proc begin
+   if shady_invaded and (CUR_AREA_SHADY_SANDS or CUR_MAP_RAIDERS) then begin
+      invasion_kill_critter;
+   end
+end
+
 
 procedure talk_p_proc begin
    /*dude_look_at_self;
@@ -93,8 +87,4 @@ procedure use_skill_on_p_proc begin
       display_msg(message_str(SCRIPT_GENCHAT, 211));
       script_overrides;
    end
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end

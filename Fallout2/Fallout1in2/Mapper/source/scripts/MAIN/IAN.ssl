@@ -116,9 +116,6 @@ variable AskAgain := 0;
 #define LVAR_FOLLOW_DISTANCE              (11)
 #define LVAR_TEAM                         (12)
 
-procedure PickDeadBodyType;
-variable DeathType := 56;
-
 #define float_ian(x)                      float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
 #define ian_joins_party                   party_add_self;                                                      \
                                           add_timer_event(self_obj, game_ticks(1), EVENT_FLOAT_JOIN);          \
@@ -201,18 +198,13 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   if shady_invaded and CUR_AREA_SHADY_SANDS and not(Ian_In_Party) then begin
+      invasion_kill_critter;
+   end
+
    if CUR_MAP_SHADYW then begin
       if (map_first_run) then begin
          set_self_team(TEAM_SHADY_SANDS);
-      end
-   end
-   if shady_invaded and not(Ian_In_Party) then begin
-      if CUR_AREA_SHADY_SANDS then begin
-         if (local_var(7) != 1) then begin
-            set_local_var(7, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
       end
    end
 end
@@ -722,10 +714,6 @@ procedure IanFreeCombat begin
    GMessage(2100);
    //set_self_ai( AI_IAN );
    call IanCombatTactics;
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end
 
 // party stuff

@@ -97,7 +97,6 @@ procedure honorcbt;
 procedure honorarea;
 procedure garlbarter;
 procedure return_to_map;
-procedure PickDeadBodyType;
 
 procedure generate_party_IDs;
 
@@ -116,19 +115,8 @@ variable TYCHO := PID_TYCHO;
 variable Tycho_flag;
 variable KATJA := PID_KATJA;
 variable Katja_flag;
-variable DeathType := 56;
 
 procedure start begin
-   if shady_invaded then begin
-      if (CUR_MAP_RAIDERS) then begin //  RAIDERS - KHANS
-         if (local_var(4) != 1) then begin
-            set_local_var(4, 1);
-            call PickDeadBodyType;
-            kill_critter(self_obj, DeathType);
-         end
-      end
-   end
-
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_RAIDERS);
@@ -138,6 +126,10 @@ end
 
 procedure map_enter_p_proc begin
 variable Item;
+
+   if shady_invaded and CUR_MAP_RAIDERS then begin
+      invasion_kill_critter;
+   end
 
    // Remove Garl's armor if the armor destroy mod is enabled:
    if not(fo1in2_destroy_armor_disabled) then begin
@@ -844,8 +836,4 @@ end
 procedure garlbarter begin
    gdialog_mod_barter(0);
    NMessage("");
-end
-
-procedure PickDeadBodyType begin
-   pick_dead_body_type
 end
