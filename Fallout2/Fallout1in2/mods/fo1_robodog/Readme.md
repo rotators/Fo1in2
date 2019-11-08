@@ -1,4 +1,4 @@
-<p align="center"><img src="fo1_robodog.png" alt="Fallout 1 Robodog" height="200px"></p>
+<p align="center"><img src="fo1_robodog.png" alt="Fallout 1 Robodog" height="150px"></p>
 
 # Fallout 1 Robodog
 
