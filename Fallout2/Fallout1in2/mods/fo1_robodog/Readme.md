@@ -1,3 +1,5 @@
+<p align="center"><img src="fo1_robodog.png" alt="Fallout 1 Robodog" height="200px"></p>
+
 # Fallout 1 Robodog
 
 This is a small just-for-fun mod that turns Dogmeat into a Robodog.
