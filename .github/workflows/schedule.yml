@@ -17,22 +17,26 @@ jobs:
    MOD_VERSION_MAJOR:  0
   steps:
 
-### Activity
-### checks if there was any commits (excluding automated ones) in last week;
-### if there was none, all steps are skipped and commit won't be generated
+### Activity check
+### uses GitHub API to check last non-automagic commit in repository
+### if it's older than a week, all other steps are skipped
 
-  - name: Clone
-    uses: actions/checkout@master
-    with:
-     token: ${{ secrets.ANTALASKAYA_TOKEN }}
-#    fetch-depth: 1
-
-  - name:  Activity
+  - name:  Activity check
     run:   |
            :
-           timestamp_api=$(date -d "$(curl -s https://api.github.com/repos/$GITHUB_REPOSITORY/commits | jq -r '[.[] | select(.author.login != "antalaskaya")][0] | .commit.author.date')" +%s)
-           timestamp_repo=$(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1)
-           days=$(( ( $(date --utc +%s) - $timestamp_repo ) / 86400 ))
+           # old check, requires already cloned repository; left for reference
+           # timestamp=$(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1)
+
+           curl -sL https://api.github.com/repos/$GITHUB_REPOSITORY/commits | jq -r '[.[] | select(.author.login != "antalaskaya")][0]' > $HOME/commit.json
+
+           date="$(jq -r '.commit.author.date' $HOME/commit.json)"
+           timestamp=$(date --utc -d "$date" +%s)
+           author="$(jq -r '.commit.author.name' $HOME/commit.json)"
+           url="$(jq -r '.html_url' $HOME/commit.json)"
+           days=$(( ( $(date --utc +%s) - $timestamp ) / 86400 ))
+           rm -f $HOME/commit.json
+
+           echo "Repository activity : $timestamp $author $url"
 
            if [ $days -gt 2 ]; then
                 echo "[WARNING] Repository activity : $days days ago"
@@ -40,8 +44,6 @@ jobs:
 
            if [ $days -lt 8 ]; then
               echo ::group::Repository active
-              echo "API  $timestamp_api"
-              echo "Repo $timestamp_repo"
               echo ::set-env name=GHA_REPO_ALIVE::true
               echo ::set-env name=GHA_REPO_ACTIVITY::$days
               echo ::endgroup::
@@ -50,24 +52,32 @@ jobs:
            fi
     shell: bash
 
-### ReAttach HEAD
-### prepares repository for commit
+### Preparations
+### clones all interesting repositories used by tasks
+
+  - name:  Clone sfall-develop
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   git clone --branch=develop https://github.com/phobos2077/sfall.git $HOME/sfall
+    shell: bash
+
+  - name: Clone FO1@2
+    if:   env.GHA_REPO_ALIVE == 'true'
+    uses: actions/checkout@master
+    with:
+     token: ${{ secrets.ANTALASKAYA_TOKEN }}
+#    fetch-depth: 1
 
   - name:  ReAttach HEAD
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
     shell: bash
 
-  - name:  Clone sfall
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   git clone --branch=develop https://github.com/phobos2077/sfall.git $HOME/sfall
-    shell: bash
-
 ### Major tasks
 ### always generates commit (if needed)
 
   # updates pre-release version of sfall (develop branch, ReleaseXP configuration)
-  - name:  sfall-develop
+  # TODO compile sfall without AppVeyor
+  - name:  sfall-develop update
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
@@ -77,9 +87,10 @@ jobs:
            SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.develop.dll).VersionInfo.ProductVersion")
            echo "sfall-develop (v${SFALL_VERSION}, ${SFALL_COMMIT})"
 
-           git diff --quiet || (git add --update && echo "- sfall-develop (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
+           git diff --quiet || (git add --update && echo "- sfall-develop update (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
+  # updates sfall artifacts
   - name:  ModdersPack update
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
@@ -102,7 +113,7 @@ jobs:
            scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
            headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
 
-           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts/ --headers $headers/ >/dev/null
+           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts --headers $headers >/dev/null
 
            grep "^Changed " ReDefine.log || true
            rm ReDefine*.log
@@ -159,7 +170,6 @@ jobs:
 
   # update ddraw.ini comment with ddraw.dll version
   # update ddraw.ini setting with mod version
-  # update all configuration to use DOS line endings
   - name:  Configuration refresh
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
     run:   |
