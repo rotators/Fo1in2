@@ -30,7 +30,9 @@ jobs:
   - name:  Activity
     run:   |
            :
-           days=$(( ( $(date --utc +%s) - $(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1) ) / 86400 ))
+           timestamp_api=$(date -d "$(curl -s https://api.github.com/repos/$GITHUB_REPO/commits | jq -r '[.[] | select(.author.login != "antalaskaya")][0] | .commit.author.date')" +%s)
+           timestamp_repo=$(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1)
+           days=$(( ( $(date --utc +%s) - $timestamp_repo ) / 86400 ))
 
            if [ $days -gt 2 ]; then
                 echo "[WARNING] Repository activity : $days days ago"
@@ -38,6 +40,8 @@ jobs:
 
            if [ $days -lt 8 ]; then
               echo ::group::Repository active
+              echo "API  $timestamp_api"
+              echo "Repo $timestamp_repo"
               echo ::set-env name=GHA_REPO_ALIVE::true
               echo ::set-env name=GHA_REPO_ACTIVITY::$days
               echo ::endgroup::
@@ -64,8 +68,10 @@ jobs:
            :
            SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
            curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.develop.dll
+
            SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.develop.dll).VersionInfo.ProductVersion")
            echo "sfall-develop (v${SFALL_VERSION}, ${SFALL_COMMIT})"
+
            git diff --quiet || (git add --update && echo "- sfall-develop (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
@@ -74,7 +80,11 @@ jobs:
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
-           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $MOD_DIR/Mapper/source/scripts/ --headers $MOD_DIR/Mapper/source/scripts/headers/ >/dev/null
+           scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+           headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+
+           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts/ --headers $headers/ >/dev/null
+
            grep "^Changed " ReDefine.log || true
            rm ReDefine*.log
            git diff --quiet || (git add --update && echo ::set-env name=GHA_REDEFINE::true)
@@ -92,6 +102,7 @@ jobs:
               if [ "$GHA_REDEFINE" == "true" ]; then
                  echo "- ReDefine run" >> $HOME/gha.commit
               fi
+
               git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
            else
               if [ "$GHA_REDEFINE" == "true" ]; then
@@ -137,11 +148,15 @@ jobs:
            REPO_COMMITS=$(git rev-list HEAD --count)
            REPO_COMMITS=$((REPO_COMMITS+1))
            SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dll).VersionInfo.ProductVersion")
+
            dos2unix $MOD_DIR/ddraw.ini
+
            sed -ri "s!^;v[0-9\.]+.*!;v$SFALL_VERSION!" $MOD_DIR/ddraw.ini
            sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION_MAJOR.$REPO_COMMITS!" $MOD_DIR/ddraw.ini
+
            grep "^;v" $MOD_DIR/ddraw.ini
            grep "^VersionString=" $MOD_DIR/ddraw.ini
+
            unix2dos $MOD_DIR/ddraw.ini
            git diff --quiet || (git add --update && echo "- Configuration refresh" >> $HOME/gha.commit)
     shell: bash
