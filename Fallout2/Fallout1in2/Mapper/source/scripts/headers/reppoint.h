@@ -74,7 +74,7 @@
 #define inc_childkiller         if (source_obj == dude_obj) then begin                                                               \
                                     remove_champion;                                                                                 \
                                     set_global_var(GVAR_CHILDKILLER_REPUTATION, (global_var(GVAR_CHILDKILLER_REPUTATION) +1));       \
-                                    dec_general_rep(REP_BONUS_KILLED_CHILD);                                                         \
+                                    inc_general_rep(REP_BONUS_KILLED_CHILD);                                                         \
                                 end
 #endif
 
