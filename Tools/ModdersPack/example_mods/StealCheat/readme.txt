@@ -1,5 +1,5 @@
-Master Theif cheat for fallout 2 by phobos2077
-----------------------------------------
+Master Thief cheat for fallout 2 by phobos2077
+----------------------------------------------
 
 - forces all steal attempts to succeed
 

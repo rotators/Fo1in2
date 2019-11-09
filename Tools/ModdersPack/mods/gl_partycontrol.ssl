@@ -21,11 +21,10 @@
 variable
    controlMode,
    noCheckArray,
-   pidList,
+   pidList, perksList,
    lightInt, lightDist, npcControl,
    displayName, displayNameColor, isShowTag,
-   inControl := false,
-   hasGeckoSkinning := false;
+   inControl := false;
 
 
 procedure AllowControl(variable pid) begin
@@ -37,10 +36,9 @@ procedure combatturn_handler begin
    variable
       status := get_sfall_arg,
       critter := get_sfall_arg,
-      //arg3 := get_sfall_arg,
-      pid;
+      pid, perkID, level;
 
-   //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + ", arg3: " + arg3);
+   //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg);
    if npcControl then begin
       if lightInt then lightInt := round((lightInt / 65536.0) * 100); // calc percent of intensity
       obj_set_light_level(npcControl, lightInt, lightDist);           // restore light for prev. controlled NPC
@@ -49,20 +47,29 @@ procedure combatturn_handler begin
    pid := obj_pid(critter);
    if (status == 1 and (AllowControl(pid) or controlMode == 1)) then begin
       set_dude_obj(critter);
+      //display_msg("Take control of: " + obj_name(critter));
       if (critter != real_dude_obj) then begin
          if not(npcControl) then obj_set_light_level(real_dude_obj, 0, 0); // dude off light
          npcControl := critter;
+         // set perks (only work with 4.1.8+)
+         foreach (perkID in perksList) begin
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            if (level) then begin
+               critter_add_trait(critter, TRAIT_PERK, perkID, level);
+            end
+         end
+         intface_redraw;
          lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
          lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
          obj_set_light_level(critter, 100, 4);
-
-         if hasGeckoSkinning then critter_add_trait(critter, TRAIT_PERK, PERK_gecko_skinning_perk, 1);
          inControl := true;
       end else if npcControl then begin
          obj_set_light_level(dude_obj, 100, 4); // set dude default light
          npcControl := 0; // dude control
       end
       if inControl then begin
+         // check preference setting _combat_highlight
+         if (read_byte(0x56D38C)) then set_outline(critter, OUTLINE_GREY);
          // center the screen on the controlled critter/dude and remove roof tiles
          move_to(dude_obj, dude_tile, dude_elevation);
          if (displayName and critter != real_dude_obj) then begin
@@ -72,6 +79,15 @@ procedure combatturn_handler begin
          end
       end
    end else if inControl then begin
+      // remove perks before switching control (only work with 4.1.8+)
+      if (dude_obj != real_dude_obj) then begin
+         foreach (perkID in perksList) begin
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            if (level) then begin
+               critter_rm_trait(critter, TRAIT_PERK, perkID, level);
+            end
+         end
+      end
       if isShowTag then begin
          hide_iface_tag(displayName);
          isShowTag := false;
@@ -87,7 +103,6 @@ procedure combatturn_handler begin
 end
 
 procedure gamemodechange_handler begin
-   if not(hasGeckoSkinning) then hasGeckoSkinning := has_trait(TRAIT_PERK, real_dude_obj, PERK_gecko_skinning_perk);
    if (inControl and not(get_game_mode BWAND COMBAT)) then begin
       inControl := false;
       npcControl := 0;
@@ -145,6 +160,9 @@ procedure start begin
          pidList := GetConfigListInt("CombatControl", "PIDList");
          fix_array(pidList);
          noCheckArray := (len_array(pidList) == 0);
+
+         perksList := GetConfigListInt("CombatControl", "PerksList");
+         fix_array(perksList);
 
          register_hook_proc(HOOK_COMBATTURN, combatturn_handler);
          register_hook_proc(HOOK_GAMEMODECHANGE, gamemodechange_handler);

@@ -1,0 +1,54 @@
+/*
+
+UI Hotkeys mod for Fallout 2 by NovaRain
+----------------------------------------
+
+- closes some game interfaces by pressing their hotkeys again:
+  * 'I' key for Inventory
+  * 'S' key for Skilldex
+  * 'Z' key for Pip-Boy
+
+- extends the functionality of the 'Space' key (Caps Lock must be off):
+  * takes all items in the loot screen
+  * makes the offer in the barter screen
+
+Requires sfall 3.5 or higher
+
+*/
+
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\dik.h"
+
+procedure start;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook(HOOK_KEYPRESS);
+   end else begin
+      variable
+         event := get_sfall_arg,
+         keyDX := get_sfall_arg,
+         mode;
+
+      if (event) then begin
+         mode := get_game_mode;
+         if (mode bwand COUNTERWIN) then return; // new mode from sfall 4.2/3.8.20
+         if (keyDX == DIK_I and (mode bwand INVENTORY)) then begin
+            tap_key(DIK_ESCAPE);
+         end else if (keyDX == DIK_S and (mode bwand SKILLDEX)) then begin
+            tap_key(DIK_ESCAPE);
+         end else if (keyDX == DIK_Z and (mode bwand PIPBOY)) then begin
+            tap_key(DIK_ESCAPE);
+         end else if (keyDX == DIK_SPACE) then begin
+            if (mode bwand INTFACELOOT) then begin
+               tap_key(DIK_CAPITAL);
+               tap_key(DIK_A);
+               tap_key(DIK_CAPITAL);
+            end else if (mode bwand BARTER) then begin
+               play_sfx("IB2P1XX1");
+               tap_key(DIK_M);
+            end
+         end
+      end
+   end
+end

@@ -1,0 +1,206 @@
+/*
+   Example algorithm of how the game engine calculates combat damage
+*/
+
+#include "..\headers\define.h"
+#include "..\headers\command.h"
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\define_extra.h"
+
+procedure start;
+procedure compute_damage_F2;
+procedure item_w_damage_hook;
+procedure item_w_subtype(variable weapon, variable hit_mode);
+procedure get_ammo_value(variable weapon, variable param);
+
+variable item_w_damage;
+
+procedure start begin
+   if game_loaded then begin
+      register_hook_proc(HOOK_COMBATDAMAGE, compute_damage_F2);
+      register_hook_proc(HOOK_ITEMDAMAGE, item_w_damage_hook);
+   end
+end
+
+procedure compute_damage_F2 begin
+   variable dmg_type, weapon_perk, dmg_thresh, dmg_resist, weapon_subtype, bonus_ranged, difficulty, i, dmg_mult, dmg_div, damage;
+   variable target, flags, knockback, amount;
+
+   variable
+      ctdTarget        := get_sfall_arg,
+      ctdSource        := get_sfall_arg,
+      amountTarget     := get_sfall_arg,
+      amountSource     := get_sfall_arg,
+      flagsTarget      := get_sfall_arg,
+      flagsSource      := get_sfall_arg,
+      weapon           := get_sfall_arg,
+      bodypart         := get_sfall_arg,
+      damageMultiplier := get_sfall_arg,
+      rounds           := get_sfall_arg,
+      amountKnockback  := get_sfall_arg,
+      hit_mode         := get_sfall_arg;
+
+   if (flagsSource bwand DAM_HIT) then begin
+      target := ctdTarget;
+      flags := flagsTarget;
+      knockback := 1;
+   end else begin
+      target := ctdSource;
+      flags := flagsSource;
+      knockback := 0;
+   end
+
+   //amount := 0;
+   if target and (obj_type(target) == OBJ_TYPE_CRITTER) then begin
+      if weapon then begin
+         dmg_type := weapon_dmg_type(weapon);
+         weapon_perk := get_proto_data(obj_pid(weapon), PROTO_WP_PERK);
+      end else begin
+         dmg_type := DMG_normal_dam;
+         weapon_perk := -1;
+      end
+
+      dmg_thresh := get_critter_stat(target, STAT_dmg_thresh + dmg_type);
+      dmg_resist := get_critter_stat(target, STAT_dmg_resist + dmg_type);
+
+      if (flags bwand DAM_BYPASS) and (dmg_type != DMG_emp) then begin
+         dmg_thresh := dmg_thresh * 20 / 100;
+         dmg_resist := dmg_resist * 20 / 100;
+      end else begin
+         if (weapon_perk == PERK_weapon_penetrate)
+            or (hit_mode == ATKTYPE_PALMSTRIKE or hit_mode == ATKTYPE_PIERCINGSTRIKE
+            or hit_mode == ATKTYPE_HOOKKICK or hit_mode == ATKTYPE_PIERCINGKICK) then
+            dmg_thresh := dmg_thresh * 20 / 100;
+
+         if ctdSource == dude_obj and has_trait(TRAIT_TRAIT, ctdSource, TRAIT_finesse) then
+            dmg_resist += 30;
+      end
+
+      weapon_subtype := item_w_subtype(weapon, hit_mode); // item_w_subtype_
+      if (ctdSource != dude_obj) or (weapon_subtype != WEAPON_TYPE_GUNS) then
+         bonus_ranged := 0;
+      else
+         bonus_ranged := has_trait(TRAIT_PERK, ctdSource, PERK_bonus_ranged_damage) * 2;
+
+      difficulty := 100;
+      if (has_trait(TRAIT_OBJECT, ctdSource, OBJECT_TEAM_NUM) != has_trait(TRAIT_OBJECT, dude_obj, OBJECT_TEAM_NUM)) then begin
+         if (combat_difficulty == 0) then
+            difficulty := 75;
+         else if (combat_difficulty == 2) then
+            difficulty := 125;
+      end
+
+      // F2 default start
+      // Damage = (1 - (DR_armor + DR_ammo_adjust) * (((raw_damage * (dmg_mult * damageMultiplier)) / dmg_div) - dmg_thresh)
+      dmg_resist += get_ammo_value(weapon, PROTO_AM_DR_MOD); // item_w_dr_adjust_ (DR Adjust %)
+      if (dmg_resist < 100) then begin
+         if (dmg_resist < 0) then dmg_resist := 0;
+
+         dmg_mult := damageMultiplier * get_ammo_value(weapon, PROTO_AM_DMG_MULT); // item_w_dam_mult_ (Dmg mod A)
+         dmg_div := get_ammo_value(weapon, PROTO_AM_DMG_DIV); // item_w_dam_div_ (Dmg mod B)
+
+         for (i := 1; i <= rounds; i++) begin
+            damage := (item_w_damage + bonus_ranged) * dmg_mult; // item_w_damage_ (raw_damage)
+            if dmg_div then damage /= dmg_div;
+
+            damage := (((damage / 2) * difficulty) / 100) - dmg_thresh;
+            if (damage > 0) then begin
+               damage := damage - ((damage * dmg_resist) / 100); // reduce damage by the percentage of DR_armor + DR_Ammo
+               if (damage > 0) then amount += damage;
+            end
+         end
+      end
+      // F2 default end
+
+      if (ctdSource == dude_obj) then begin
+         if has_trait(TRAIT_PERK, ctdSource, PERK_living_anatomy_perk) and (critter_kill_type(ctdTarget) != KILL_TYPE_robot_kills)
+            and (critter_kill_type(ctdTarget) != KILL_TYPE_alien_kills) then
+            amount += 5;
+         if has_trait(TRAIT_PERK, ctdSource, PERK_pyromaniac_perk) and (dmg_type == DMG_fire) then
+            amount += 5;
+      end
+
+      if knockback and ((get_flags(target) bwand FLAG_MULTIHEX) == 0)
+         and (dmg_type == DMG_explosion or weapon == 0 or weapon_subtype == WEAPON_TYPE_MELEE)
+         and ((get_proto_data(obj_pid(target), PROTO_CR_FLAGS) bwand CFLG_NOKNOCKDOWN) == 0) then begin // critter_flag_check_
+         damage := 0;
+         if (target == dude_obj) and has_trait(TRAIT_PERK, target, PERK_stonewall_perk) then begin
+            damage := 1;
+            if (random(0, 100) < 50) then knockback := 0;
+         end
+         if knockback then begin
+            if (weapon_perk == PERK_weapon_knockback) then
+               amountKnockback := amount / 5;
+            else
+               amountKnockback := amount / 10;
+
+            if damage then amountKnockback /= 2;
+         end
+      end
+   end
+
+   if (flagsSource bwand DAM_HIT) then begin
+      display_msg("amountTarget = " + amountTarget+ ", amount = " + amount);
+      amountTarget := amount;
+      flagsTarget := flags;
+   end else begin
+      display_msg("amountSource = " + amountSource+ ", amount = " + amount);
+      amountSource := amount;
+      flagsSource := flags;
+   end
+
+   set_sfall_return(amountTarget);
+   set_sfall_return(amountSource);
+   set_sfall_return(flagsTarget);
+   set_sfall_return(flagsSource);
+   set_sfall_return(amountKnockback);
+end
+
+procedure item_w_damage_hook begin
+   variable
+      item_w_damage_min := get_sfall_arg,
+      item_w_damage_max := get_sfall_arg;
+      //weapon := get_sfall_arg,
+      //source := get_sfall_arg,
+      //hit_mode := get_sfall_arg,
+      //isMelee := get_sfall_arg;
+
+   item_w_damage := (item_w_damage_min + (item_w_damage_max - item_w_damage_min) / 2);
+   display_msg("item_w_damage_ = " + item_w_damage);
+
+   set_sfall_return(item_w_damage);
+end
+
+procedure item_w_subtype(variable weapon, variable hit_mode) begin
+   variable attack_mode, type := WEAPON_TYPE_UNARMED;
+
+   if weapon and (hit_mode <= ATKTYPE_RWEP2) then begin
+      attack_mode := (get_proto_data(obj_pid(weapon), PROTO_IT_FLAGS));
+
+      if (hit_mode == ATKTYPE_LWEP2) or (hit_mode == ATKTYPE_RWEP2) then
+         attack_mode := (attack_mode bwand 0xF0) / 16; // shift 4 bits to the right
+      else
+         attack_mode := (attack_mode bwand 0x0F);
+
+      if (attack_mode > ATKMODE_PRI_THROW) then
+         type := WEAPON_TYPE_GUNS;
+      else if (attack_mode == ATKMODE_PRI_THROW) then
+         type := WEAPON_TYPE_THROWN;
+      else if (attack_mode > ATKMODE_PRI_KICK) then
+         type := WEAPON_TYPE_MELEE;
+   end
+
+   return type;
+end
+
+procedure get_ammo_value(variable weapon, variable param) begin
+   variable pid := -1, value := 0; // default DR value
+
+   if weapon then begin
+      pid := get_weapon_ammo_pid(weapon);
+      if (pid > -1) then value := get_proto_data(pid, param);
+   end
+   if (pid == -1 and param != PROTO_AM_DR_MOD) then value := 1; // default value for Mult/Div
+
+   return value;
+end
