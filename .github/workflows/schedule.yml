@@ -9,7 +9,10 @@ on:
 
 jobs:
 
+ # forked repositories should use own copy if they want automagic commits
+ # feel free to open issue in main repository if you need help/advice tweaking this workflow in your fork
  Maintenance:
+  if: github.repository == 'rotators/Fo1in2'
   runs-on: windows-latest
   env:
    MOD_DIR:            "Fallout2/Fallout1in2"
@@ -27,7 +30,7 @@ jobs:
            # old check, requires already cloned repository; left for reference
            # timestamp=$(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1)
 
-           curl -sL https://api.github.com/repos/$GITHUB_REPOSITORY/commits | jq -r '[.[] | select(.author.login != "antalaskaya")][0]' > $HOME/commit.json
+           curl -sL https://api.github.com/repos/$GITHUB_REPOSITORY/commits | jq -r '[.[] | select(.author.login != "${{ secrets.ANTALASKAYA_LOGIN")][0]' > $HOME/commit.json
 
            date="$(jq -r '.commit.author.date' $HOME/commit.json)"
            timestamp=$(date --utc -d "$date" +%s)
@@ -97,25 +100,44 @@ jobs:
     shell: bash
 
   - name: Cache (DirectX)
-    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_TASK_SFALL_BINARY == 'true'
+    if:   env.GHA_TASK_SFALL_BINARY == 'true'
     id:   cache-dx
     uses: actions/cache@v1
     with:
      path: ~/cache-dx
-     key:  cache-dx
+     key:  cache-dx-test1
 
   - name:  Cache create (DirectX)
-    if:    env.GHA_REPO_ALIVE == 'true' && (env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true')
+    if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
     run:   |
            :
-           rm -f $HOME/cache-dx
-           git clone https://github.com/foesmm/DirectX.git $HOME/cache-dx
+           mkdir $HOME/cache-dx
+
+           # DX2010
+           curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
+           7z x _DX2010_.exe -o_DX2010_
+           ls -Ra _DX2010_
+           cp -r _DX2010_/DXSDK/Include $HOME/cache-dx/Include
+           cp -r _DX2010_/DXSDK/Lib $HOME/cache-dx/Lib
+
+           # DX2007
            curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
            7z x _DX2007_.exe -o_DX2007_
            7z x _DX2007_/DXSDK_Aug2007.exe -o_DX2007_
            cp _DX2007_/Lib/x86/dinput.lib $HOME/cache-dx/Lib/x86
-           rm -fR $HOME/cache-dx/.git $HOME/cache-dx/Lib/x64 $HOME/cache-dx/*.md $HOME/cache-dx/*.txt $HOME/cache-dx/*.rtf _DX2007_ _DX2007_.exe
+
+           # clean & check
+           rm -fR $HOME/cache-dx/Lib/x64 _DX*_ _DX*_.exe
            git status
+    shell: bash
+
+  - name:  Cache check (DirectX)
+    if:    env.GHA_TASK_SFALL_BINARY == 'true'
+    run:   |
+           :
+           echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
+           ls -Ra $HOME/cache-dx
+           du -hd0 $HOME/cache-dx
     shell: bash
 
 ### Major tasks
@@ -137,19 +159,20 @@ jobs:
 
   # TODO compile sfall without AppVeyor
   - name:  (TODO) sfall-develop update
-#   if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_TASK_SFALL_BINARY == 'true'
+#   if:    env.GHA_TASK_SFALL_BINARY == 'true'
     run:   |
            :
            echo "@echo off" > $HOME/sfall/sfall/PostBuild.cmd
            curl -sL https://github.com/microsoft/vswhere/releases/latest/download/vswhere.exe -o $HOME/vswhere.exe
            "$($HOME/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32
+           file "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" || true
            # cp "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.develop.dll
     shell: bash
     continue-on-error: true
 
   # updates sfall artifacts
   - name:  ModdersPack update
-    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_TASK_SFALL_ARTIFACTS == 'true'
+    if:    env.GHA_TASK_SFALL_ARTIFACTS == 'true'
     run:   |
            :
            rm -fR Tools/ModdersPack
