@@ -105,25 +105,23 @@ jobs:
     uses: actions/cache@v1
     with:
      path: ~/cache-dx
-     key:  cache-dx-test1
+     key:  cache-dx-test2
 
   - name:  Cache create (DirectX)
     if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
     run:   |
            :
-           mkdir $HOME/cache-dx
-
            # DX2010
            curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
-           7z x _DX2010_.exe -o_DX2010_
+           7z x _DX2010_.exe DXSDK/Include -o_DX2010_
+           7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
            ls -Ra _DX2010_
-           cp -r _DX2010_/DXSDK/Include $HOME/cache-dx/Include
-           cp -r _DX2010_/DXSDK/Lib $HOME/cache-dx/Lib
+           mv _DX2010_/DXSDK $HOME/cache-dx
 
            # DX2007
            curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
            7z x _DX2007_.exe -o_DX2007_
-           7z x _DX2007_/DXSDK_Aug2007.exe -o_DX2007_
+           7z x _DX2007_/DXSDK_Aug2007.exe Lib/x86 -o_DX2007_
            cp _DX2007_/Lib/x86/dinput.lib $HOME/cache-dx/Lib/x86
 
            # clean & check
