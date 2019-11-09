@@ -54,6 +54,7 @@ jobs:
 
 ### Preparations
 ### clones all interesting repositories used by tasks
+### restores/creates cache used by tasks
 
   - name:  Clone sfall-develop
     if:    env.GHA_REPO_ALIVE == 'true'
@@ -72,11 +73,58 @@ jobs:
     run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
     shell: bash
 
+  - name:  Preparations
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   |
+           :
+           old_sfall=$(git log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" | grep sfall-develop | awk -F @ '{print $2}' | tr -d ')')
+           old_artifacts=$(git log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" | grep ModdersPack | awk -F @ '{print $2}' | tr -d ')')
+
+           new_sfall=$(git -C $HOME/sfall log --pretty=format:%H -1 sfall)
+           new_artifacts=$(git -C $HOME/sfall log --pretty=format:%H -1 artifacts)
+
+           if [ "$old_sfall" != "$new_sfall" ]; then
+              echo "::group::sfall-develop $old_sfall -> $new_sfall"
+              echo ::set-env name=GHA_TASK_SFALL_BINARY::true
+              echo ::endgroup::
+           fi
+
+           if [ "$old_artifacts" != "$new_artifacts" ]; then
+              echo "::group::sfall-artifacts $old_artifacts -> $new_artifacts"
+              echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
+              echo ::endgroup::"
+           fi
+    shell: bash
+
+  - name: Cache (DirectX)
+#   if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_TASK_SFALL_BINARY == 'true'
+    id:   cache-dx
+    uses: actions/cache@v1
+    with:
+     path: ~/cache-dx
+     key:  cache-dx
+
+  - name:  Cache create (DirectX)
+#   if:    GHA_REPO_ALIVE == 'true' && (env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true')
+    run:   |
+           :
+           rm -f $HOME/cache-dx
+           git clone https://github.com/foesmm/DirectX.git $HOME/cache-dx
+           curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
+           7z x _DX2007_.exe -o_DX2007_
+           7z x _DX2007_/DXSDK_Aug2007.exe -o_DX2007_
+           cp _DX2007_/Lib/x86/dinput.lib $HOME/cache-dx/Lib/x86
+           rm -fR $HOME/cache-dx.git $HOME/cache-dx/Lib/x64 $HOME/cache-dx/*.txt $HOME/cache-dx/*.rtf _DX2007_ _DX2007_.exe
+           ls -Ra $HOME/cache-dx
+           du -hd0 $HOME/cache-dx
+           echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
+           git status
+    shell: bash
+
 ### Major tasks
 ### always generates commit (if needed)
 
   # updates pre-release version of sfall (develop branch, ReleaseXP configuration)
-  # TODO compile sfall without AppVeyor
   - name:  sfall-develop update
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
@@ -90,9 +138,21 @@ jobs:
            git diff --quiet || (git add --update && echo "- sfall-develop update (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
+  # TODO compile sfall without AppVeyor
+  - name:  (TODO) sfall-develop update
+#   if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_TASK_SFALL_BINARY == 'true'
+    run:   |
+           :
+           echo "@echo off" > $HOME/sfall/sfall/PostBuild.cmd
+           curl -sL https://github.com/microsoft/vswhere/releases/latest/download/vswhere.exe -o $HOME/vswhere.exe
+           "$($HOME/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32
+           # cp "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.develop.dll
+    shell: bash
+    continue-on-error: true
+
   # updates sfall artifacts
   - name:  ModdersPack update
-    if:    env.GHA_REPO_ALIVE == 'true'
+    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_TASK_SFALL_ARTIFACTS == 'true'
     run:   |
            :
            rm -fR Tools/ModdersPack
