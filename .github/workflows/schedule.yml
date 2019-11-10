@@ -71,29 +71,28 @@ jobs:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
 #    fetch-depth: 1
 
-  - name:  ReAttach HEAD
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
-    shell: bash
-
   - name:  Preparations
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
-           old_sfall=$(git log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" | grep sfall-develop | awk -F @ '{print $2}' | tr -d ')')
-           old_artifacts=$(git log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" | grep ModdersPack | awk -F @ '{print $2}' | tr -d ')')
+           echo ::group::ReAttach HEAD
+           git checkout $(echo "$GITHUB_REF" | awk -F / '{print $3}')
+           echo ::endgroup::
 
-           new_sfall=$(git -C $HOME/sfall log --pretty=format:%H -1 sfall)
-           new_artifacts=$(git -C $HOME/sfall log --pretty=format:%H -1 artifacts)
+           OLD_SFALL=$(git log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" | grep sfall-develop | awk -F @ '{print $2}' | tr -d ')')
+           OLD_ARTIFACTS=$(git log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" | grep ModdersPack | awk -F @ '{print $2}' | tr -d ')')
 
-           if [ "$old_sfall" != "$new_sfall" ]; then
-              echo "::group::sfall-develop $old_sfall -> $new_sfall"
+           NEW_SFALL=$(git -C $HOME/sfall log --pretty=format:%H -1 sfall)
+           NEW_ARTIFACTS=$(git -C $HOME/sfall log --pretty=format:%H -1 artifacts)
+
+           if [ "$OLD_SFALL" != "$NEW_SFALL" ]; then
+              echo "::group::sfall-develop $OLD_SFALL -> $NEW_SFALL"
               echo ::set-env name=GHA_TASK_SFALL_BINARY::true
               echo ::endgroup::
            fi
 
-           if [ "$old_artifacts" != "$new_artifacts" ]; then
-              echo "::group::sfall-artifacts $old_artifacts -> $new_artifacts"
+           if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
+              echo "::group::ModdersPack $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
               echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
               echo ::endgroup::
            fi
@@ -111,21 +110,22 @@ jobs:
     if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
     run:   |
            :
-           # DX2010
+           echo ::group::DX2010
            curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
            7z x _DX2010_.exe DXSDK/Include -o_DX2010_
            7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
-           ls -Ra _DX2010_
            mv _DX2010_/DXSDK $HOME/cache-dx
+           echo ::endgroup::
 
-           # DX2007
+           echo ::group::DX2007
            curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
            7z x _DX2007_.exe -o_DX2007_
            7z x _DX2007_/DXSDK_Aug2007.exe Lib/x86 -o_DX2007_
            cp _DX2007_/Lib/x86/dinput.lib $HOME/cache-dx/Lib/x86
+           echo ::endgroup::
 
            # clean & check
-           rm -fR $HOME/cache-dx/Lib/x64 _DX*_ _DX*_.exe
+           rm -fR _DX*_ _DX*_.exe
            git status
     shell: bash
 
@@ -225,7 +225,7 @@ jobs:
 
 ### Validation
 ### checks if any of major tasks wants to generate commit
-### prepares commit message
+### prepares commit message header
 
   - name:  Validation
     if:    env.GHA_REPO_ALIVE == 'true'
@@ -246,7 +246,7 @@ jobs:
 ### Minor tasks
 ### runs only if at least one of major tasks wants to generate commit
 
-  # update ddraw.ini comment with ddraw.dll version
+  # update ddraw.ini comment with sfall version
   # update ddraw.ini setting with mod version
   - name:  Configuration refresh
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
