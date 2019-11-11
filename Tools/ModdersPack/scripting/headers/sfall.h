@@ -249,6 +249,7 @@
 
 // sfall_funcX macros
 #define add_extra_msg_file(name)                        sfall_func1("add_extra_msg_file", name)
+#define add_global_timer_event(time, param)             sfall_func2("add_g_timer_event", time, param)
 #define add_iface_tag                                   sfall_func0("add_iface_tag")
 #define add_trait(traitId)                              sfall_func1("add_trait", traitId)
 #define art_cache_clear                                 sfall_func0("art_cache_clear")
@@ -293,6 +294,8 @@
 #define obj_under_cursor(crSwitch, inclDude)            sfall_func2("obj_under_cursor", crSwitch, inclDude)
 #define outlined_object                                 sfall_func0("outlined_object")
 #define real_dude_obj                                   sfall_func0("real_dude_obj")
+#define remove_all_timer_events                         sfall_func0("remove_timer_event")
+#define remove_timer_event(param)                       sfall_func1("remove_timer_event", param)
 #define set_can_rest_on_map(map, elev, value)           sfall_func3("set_can_rest_on_map", map, elev, value)
 #define set_car_intface_art(artIndex)                   sfall_func1("set_car_intface_art", artIndex)
 #define set_cursor_mode(mode)                           sfall_func1("set_cursor_mode", mode)
