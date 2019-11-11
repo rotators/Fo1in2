@@ -21,8 +21,8 @@ variable HEREBEFORE := 0;
 procedure DisplayInvadedMSG;
 procedure PickMutant;
 
-#define tandi_timer              days_since_visited > 10 // vanilla: 1
-#define tandi_gets_kidnapped     (tandi_timer and                                                  \
+#define tandi_gets_kidnapped     (map_var(MVAR_TANDI_KIDNAPPING) > 0) and                          \
+                                 (days_since_visited > 1 and                                       \
                                  (map_var(MVAR_Map_one_Time) == 0) and                             \
                                  (global_var(GVAR_TANDI_HIRELING_STATUS) != 2) and                 \
                                  tandi_not_kidnapped and                                           \
@@ -35,6 +35,11 @@ end
 
 procedure map_enter_p_proc begin
 variable temp_ptr;
+
+   // Tandi can only get kidnapped if the player has returned at least once
+   // to Shady Sands after dealing with the Rad Scorpions.
+   if radscorp_quest_completed and (map_var(MVAR_TANDI_KIDNAPPING) == 0) then
+      set_map_var(MVAR_TANDI_KIDNAPPING, 1);
 
    set_global_var(GVAR_MARK_SHADY_1, 1);
    Lighting;

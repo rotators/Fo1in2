@@ -18,6 +18,7 @@
 #define MVAR_Map_Only_once        (3)
 #define MVAR_Map_one_Time         (4)
 #define MVAR_Invasion             (5)
+#define MVAR_TANDI_KIDNAPPING     (6)
 
 #endif // SHADYW_H
 
