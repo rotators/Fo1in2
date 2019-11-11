@@ -31,10 +31,10 @@
 #define tandi_quest_active             (global_var(GVAR_TANDI_RESCUE) == 1)
 #define tandi_quest_completed          (global_var(GVAR_TANDI_RESCUE) == 2)
 
-#define set_tandi_quest_active         set_global_var(GVAR_TANDI_RESCUE, 1);             \
+#define set_tandi_quest_active         set_global_var(GVAR_TANDI_RESCUE, 1); \
                                        set_global_var(GVAR_TANDI_QUEST_PIPBOY_ENTRY, 1)
-									   
-#define set_tandi_quest_completed      set_global_var(GVAR_TANDI_RESCUE, 2);             \
+
+#define set_tandi_quest_completed      set_global_var(GVAR_TANDI_RESCUE, 2); \
                                        set_global_var(GVAR_TANDI_QUEST_PIPBOY_ENTRY, 2)
 
 #endif // SHADYSANDS_H
