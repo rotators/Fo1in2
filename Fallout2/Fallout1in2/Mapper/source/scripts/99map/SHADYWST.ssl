@@ -21,9 +21,13 @@ variable HEREBEFORE := 0;
 procedure DisplayInvadedMSG;
 procedure PickMutant;
 
-#define tandi_gets_kidnapped     ((days_since_visited > 1) and (map_var(MVAR_Map_one_Time) == 0) and (global_var(GVAR_TANDI_HIRELING_STATUS) != 2) and   \
-                                 tandi_not_kidnapped and (global_var(GVAR_TANDI_HIRELING_STATUS) != 3) and        \
-                                 radscorp_quest_completed and (get_raiders_alive > 0) and                         \
+#define tandi_timer              days_since_visited > 10 // vanilla: 1
+#define tandi_gets_kidnapped     (tandi_timer and                                                  \
+                                 (map_var(MVAR_Map_one_Time) == 0) and                             \
+                                 (global_var(GVAR_TANDI_HIRELING_STATUS) != 2) and                 \
+                                 tandi_not_kidnapped and                                           \
+                                 (global_var(GVAR_TANDI_HIRELING_STATUS) != 3) and                 \
+                                 radscorp_quest_completed and (get_raiders_alive > 0) and          \
                                  (global_var(GVAR_TANDI_HIRELING_STATUS) != 5) and is_garl_alive)
 
 procedure start begin
@@ -36,7 +40,7 @@ variable temp_ptr;
    Lighting;
    if (map_first_run) then begin
       HEREBEFORE := 1;
-      if (shady_invaded != 1) then begin//GLOBAL_VAR_12 = Shady Sands invaded
+      if (shady_invaded != 1) then begin
          display_msg(message_str(SCRIPT_SHADYWST, 101));
       end
       else begin
@@ -59,7 +63,7 @@ variable temp_ptr;
       critter_attempt_placement(invaderPtr, 20536, 0);
 
       // Any player party member was waiting in the map before?
-      check_invasion_party_waiting
+      check_invasion_party_waiting;
    end
 
    if tandi_gets_kidnapped then begin
