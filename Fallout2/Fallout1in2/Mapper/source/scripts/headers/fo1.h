@@ -230,6 +230,9 @@ variable merch_slot_armor_flags;
 #define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
 #define fo1in2_unlimited_hpa_disabled   (global_var(GVAR_ENABLE_UNLIMITED_HPA) == 0)
 
+#define fixt_enabled 					(global_var(GVAR_FIXT_ENABLED) == 1)
+#define fixt_disabled 					not(fixt_enabled)
+
 /*********************************************************
     Pick dead body type:
 *********************************************************/

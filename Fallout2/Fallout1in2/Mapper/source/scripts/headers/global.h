@@ -136,7 +136,7 @@
 #define GVAR_TOASTER_SLOTMACHINES               (756)
 
 // Fallout 1 and Fallout Fixt
-#define GVAR_FIXT_BUGFIXES_ONLY                 (1000)
+#define GVAR_FIXT_ENABLED                       (1000)
 #define GVAR_AGATHA_IS_ENABLED                  (1001)
 #define GVAR_SHADYSANDS_RADSCORPS_LEFT          (1002)
 #define GVAR_BOS_LORRI_CHA_ENABLED              (1003)
@@ -432,13 +432,13 @@
 #define GVAR_NECRO_30_DAYS_GVAR225              (1293)
 #define GVAR_CHILD_RUNS_HOW_OFTEN               (1294)
 #define GVAR_RANDOM_ENC_SOMETHING               (1295)
-#define GVAR_CHEAT_DEBUG_MENU_ENABLED           (1296)
+#define GVAR_ENABLE_DEBUG_MENU                  (1296)
 #define GVAR_IS_PATRICK_DEAD                    (1297)
 #define GVAR_MBASE_DECRYPTION_CODES             (1298)
 #define GVAR_ENDGAME_MOD_STUFF                  (1299)
 #define GVAR_TYCHO_REFRESH_GFX_FLAG             (1300)
 #define GVAR_KATJA_REFRESH_GFX_FLAG             (1301)
-#define GVAR_CHEAT_START_ITEMS_ENABLED          (1302) // unused
+#define GVAR_TANDI_QUEST_PIPBOY_ENTRY           (1302)
 #define GVAR_MICHAEL_SOPHIA_GRENADES            (1303)
 #define GVAR_BROTHER_BUILD_POWER_ARMOR          (1304)
 #define GVAR_GRETCH_PRIMECUTS                   (1305)
@@ -461,7 +461,7 @@
 #define GVAR_IAN_REFRESH_GFX_FLAG               (1322)
 #define GVAR_MALE_PLAYER_SMOKES                 (1323) // can be overwritten!
 #define GVAR_JEREMIAH_CHILDREN_TALKED           (1324)
-#define GVAR_DEBUG_MODE_MESSAGES_ON             (1325)
+#define GVAR_ENABLE_DEBUG_MESSAGES             (1325)
 #define GVAR_RANDOM_ENC_IGNORE_LUCK             (1326)
 #define GVAR_RANDOM_ENC_DIFF_BASED              (1327)
 #define GVAR_RANDOM_ENC_LEVEL_BASED             (1328)

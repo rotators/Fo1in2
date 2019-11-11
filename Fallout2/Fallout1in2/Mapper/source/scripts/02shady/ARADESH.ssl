@@ -142,7 +142,9 @@ variable pickup_attempt;
 
 variable isGoodGuy := 1;// Fallout Fixt
 
-#define LVAR_Invasion         (6)
+#define LVAR_Herebefore              (4)
+#define LVAR_Invasion                (6)
+#define LVAR_Caught_Stealing         (9)
 
 procedure start begin
    if (local_var(11) != 1) then begin
@@ -178,7 +180,7 @@ procedure critter_p_proc begin
 end
 
 procedure talk_p_proc begin
-   if (local_var(9) > 2) then begin
+   if (local_var(LVAR_Caught_Stealing) > 2) then begin
       display_msg(message_str(SCRIPT_GENCHAT, 170));
       tmp_hostile := 1;
    end
@@ -220,72 +222,50 @@ procedure do_dialogue begin
    if (pickup_attempt) then begin
       pickup_attempt := 0;
       LVar0 := random(1, 2);
-      if (LVar0 == 1) then begin
+      if (LVar0 == 1) then
          call aradesh45;
-      end
-      else begin
+      else
          call aradesh46;
-      end
    end
    else begin
       start_gdialog(NAME, self_obj, 4, HEAD_ARADESH, BACKGROUND_SHADY);
       gsay_start;
       if tandi_is_kidnapped then begin
-         set_local_var(4, 1);
-         if tandi_quest_inactive then begin
+         set_local_var(LVAR_Herebefore, 1);
+         if tandi_quest_inactive then
             call aradesh39;
+         else
+            call aradesh37;
+      end
+      else if (local_var(LVAR_Herebefore) == 1) then begin
+         if (local_var(5) == 1) then begin
+            call aradesh46;
+         end
+         else if (get_tandi_returned and (local_var(8) == 0)) then begin
+            call aradesh43;
+         end
+         else if (radscorp_quest_completed and (local_var(10) == 0)) then begin
+            set_local_var(10, 1);
+            call aradesh31;
+         end
+         else if (get_tandi_returned and not(radscorp_quest_completed)) then begin
+            call aradesh30a;
+         end
+         else if get_tandi_returned then begin
+            call aradesh35;
          end
          else begin
-            call aradesh37;
+            if (local_var(LVAR_reaction_level) < 3) then begin
+               call aradesh18;
+            end
+            else begin
+               call aradesh17;
+            end
          end
       end
       else begin
-         if (local_var(4) == 1) then begin
-            if (local_var(5) == 1) then begin
-               call aradesh46;
-            end
-            else begin
-               if (get_tandi_returned and (local_var(8) == 0)) then begin
-                  call aradesh43;
-               end
-               else begin
-                  if (radscorp_quest_completed and (local_var(10) == 0)) then begin
-                     set_local_var(10, 1);
-                     call aradesh31;
-                  end
-                  else begin
-                     if tandi_is_kidnapped then begin
-                        if tandi_quest_inactive then begin
-                           call aradesh39;
-                        end
-                        else begin
-                           call aradesh37;
-                        end
-                     end
-                     else begin
-                        if (get_tandi_returned and not(radscorp_quest_completed)) then begin
-                           call aradesh30a;
-                        end
-                        else if get_tandi_returned then begin
-                           call aradesh35;
-                        end
-                        else begin
-                           if (local_var(1) < 3) then begin
-                              call aradesh18;
-                           end
-                           else begin
-                              call aradesh17;
-                           end
-                        end
-                     end
-                  end
-               end
-            end
-         end
-         else begin
-            set_local_var(4, 1);
-            call aradesh01;
-         end
+         set_local_var(LVAR_Herebefore, 1);
+         call aradesh01;
       end
       gsay_end;
       end_dialogue;
@@ -304,8 +284,8 @@ procedure aradeshcbt begin
 end
 
 procedure aradesh01 begin
-   if (local_var(1) >= 2) then begin
-      if (local_var(1) >= 3) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
+      if (local_var(LVAR_reaction_level) >= 3) then begin
          Reply(101);
       end
       else begin
@@ -325,9 +305,9 @@ procedure aradesh01 begin
 end
 
 procedure aradesh01_2 begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       call aradesh05;
    end
    else begin
@@ -336,7 +316,7 @@ procedure aradesh01_2 begin
 end
 
 procedure aradesh01_3 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       call aradesh13;
    end
    else begin
@@ -353,7 +333,7 @@ procedure aradesh02 begin
 end
 
 procedure aradesh02_2 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       call aradesh03;
    end
    else begin
@@ -362,7 +342,7 @@ procedure aradesh02_2 begin
 end
 
 procedure aradesh02_4 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       call aradesh09;
    end
    else begin
@@ -371,7 +351,7 @@ procedure aradesh02_4 begin
 end
 
 procedure aradesh02_5 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       call aradesh04;
    end
    else begin
@@ -400,13 +380,13 @@ procedure aradesh05 begin
 end
 
 procedure aradesh06 begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    BMessage(126);
    call aradeshx1;
 end
 
 procedure aradesh07 begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    BMessage(127);
    call aradeshx2;
 end
@@ -418,15 +398,15 @@ procedure aradesh08 begin
 end
 
 procedure aradesh08a begin
-   if (local_var(9) > 0) then begin
-      set_local_var(9, local_var(9) - 1);
+   if (local_var(LVAR_Caught_Stealing) > 0) then begin
+      set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) - 1);
    end
    UpReact
    call aradesh04;
 end
 
 procedure aradesh08b begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    call aradesh06;
 end
@@ -463,7 +443,7 @@ procedure aradesh11a begin
 end
 
 procedure aradesh11b begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    call aradesh14;
 end
@@ -495,21 +475,16 @@ procedure aradesh15 begin
 end
 
 procedure aradesh16 begin
-   if radscorp_quest_inactive then begin
+   if radscorp_quest_inactive then
       call aradesh28;
-   end
-   else if radscorp_quest_active then begin
+   else if radscorp_quest_active then
       call aradesh30a;
-   end
-   else if (radscorp_quest_completed and not(get_tandi_returned)) then begin
+   else if (radscorp_quest_completed and not(get_tandi_returned)) then
       call aradesh31;
-   end
-   else if get_tandi_returned then begin
+   else if get_tandi_returned then
       call aradesh35;
-   end
-   else begin
+   else
       call aradesh26;
-   end
 end
 
 procedure aradesh17 begin
@@ -521,23 +496,21 @@ procedure aradesh17 begin
 end
 
 procedure aradesh17_2 begin
-   if get_tandi_returned then begin
+   if get_tandi_returned then
       call aradesh44;
-   end
-   else begin
+   else
       call aradesh20;
-   end
 end
 
 procedure aradesh17_3 begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    if get_tandi_returned then begin
       call aradesh27;
    end
    else begin
-      if (local_var(1) >= 2) then begin
-         if (local_var(1) >= 3) then begin
+      if (local_var(LVAR_reaction_level) >= 2) then begin
+         if (local_var(LVAR_reaction_level) >= 3) then begin
             call aradesh27;
          end
          else begin
@@ -551,7 +524,7 @@ procedure aradesh17_3 begin
 end
 
 procedure aradesh18 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       Reply(157);
    end
    else begin
@@ -564,7 +537,7 @@ procedure aradesh18 begin
 end
 
 procedure aradesh19 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       Reply(163);
    end
    else begin
@@ -576,16 +549,14 @@ procedure aradesh19 begin
 end
 
 procedure aradesh20 begin
-   if (local_var(1) >= 3) then begin
+   if (local_var(LVAR_reaction_level) >= 3) then begin
       NMessage(168);
    end
+   else if (local_var(LVAR_reaction_level) >= 2) then begin
+      NMessage(169);
+   end
    else begin
-      if (local_var(1) >= 2) then begin
-         NMessage(169);
-      end
-      else begin
-         NMessage(170);
-      end
+      NMessage(170);
    end
    call aradeshx;
 end
@@ -601,7 +572,7 @@ procedure aradesh22 begin
 end
 
 procedure aradesh23 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       Reply(173);
    end
    else begin
@@ -613,7 +584,7 @@ procedure aradesh23 begin
 end
 
 procedure aradesh23_2 begin
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= 2) then begin
       call aradesh24;
    end
    else begin
@@ -647,7 +618,7 @@ procedure aradesh24c begin
 end
 
 procedure aradesh25 begin
-   if (local_var(0) < 2) then begin
+   if (local_var(LVAR_reaction) < 2) then begin
       Reply(185);
    end
    else begin
@@ -683,13 +654,13 @@ procedure aradesh28a begin
 end
 
 procedure aradesh28b begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    call aradesh30;
 end
 
 procedure aradesh28c begin
-   set_local_var(9, local_var(9) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    call aradesh19;
 end
@@ -712,8 +683,8 @@ procedure aradesh30a begin
 end
 
 procedure aradesh30b begin
-   if (local_var(9) > 0) then begin
-      set_local_var(9, local_var(9) - 1);
+   if (local_var(LVAR_Caught_Stealing) > 0) then begin
+      set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) - 1);
    end
    UpReact
    call aradesh29;
@@ -735,7 +706,7 @@ end
 
 procedure aradesh33 begin
    NMessage(213);
-   set_global_var(GVAR_TANDI_RESCUE, 1);
+   set_tandi_quest_active;
    call aradeshx;
 end
 
@@ -790,17 +761,16 @@ procedure aradesh39a begin
 end
 
 procedure aradesh39b begin
-   if (local_var(9) > 0) then begin
-      set_local_var(9, local_var(9) - 1);
+   if (local_var(LVAR_Caught_Stealing) > 0) then begin
+      set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) - 1);
    end
    UpReact
-   set_global_var(GVAR_TANDI_RESCUE, 1);
+   set_tandi_quest_active;
    call aradesh40;
 end
 
-procedure aradesh39c
-begin
-   set_local_var(9, local_var(9) + 1);
+procedure aradesh39c begin
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    call aradesh42;
 end
@@ -809,7 +779,7 @@ procedure aradesh40 begin
 variable item;
 
    Reply(235);
-   set_global_var(GVAR_TANDI_RESCUE, 1);
+   set_tandi_quest_active;
    item := create_object(PID_SPEAR, 0, 0);
    add_obj_to_inven(dude_obj, item);
    NOption(236, aradesh40a, 4);
@@ -826,8 +796,7 @@ procedure aradesh41 begin
    NOption(240, aradesh42, 4);
 end
 
-procedure aradesh42
-begin
+procedure aradesh42 begin
    NMessage(241);
    call aradeshx3;
 end
@@ -837,55 +806,49 @@ procedure aradesh43 begin
       set_local_var(8, 1);
       dude_caps_adjust(500);
    end
-   if (local_var(9) != 0) then begin
-      set_local_var(9, 0);
+   if (local_var(LVAR_Caught_Stealing) != 0) then begin
+      set_local_var(LVAR_Caught_Stealing, 0);
    end
    TopReact
-   set_global_var(GVAR_TANDI_RESCUE, 2);
+   set_tandi_quest_completed;
    Reply(242);
    NOption(243, aradesh19, 4);
    NOption(244, aradesh44, 4);
 end
 
-procedure aradesh44
-begin
+procedure aradesh44 begin
    NMessage(245);
    call aradeshx;
 end
 
-procedure aradesh45
-begin
-   set_local_var(9, local_var(9) + 2);
+procedure aradesh45 begin
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 2);
    BigDownReact
    float_msg(self_obj, mstr(246), FLOAT_MSG_LIGHT_RED);
    call aradeshx;
 end
 
-procedure aradesh46
-begin
-   set_local_var(9, local_var(9) + 2);
+procedure aradesh46 begin
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 2);
    BigDownReact
    float_msg(self_obj, mstr(247), FLOAT_MSG_LIGHT_RED);
    call aradeshx;
 end
 
-procedure aradesh47
-begin
-   set_local_var(9, local_var(9) + 1);
+procedure aradesh47 begin
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    NMessage(248);
    call aradeshx;
 end
 
-procedure aradesh48
-begin
-   set_local_var(9, local_var(9) + 1);
+procedure aradesh48 begin
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    NMessage(249);
 end
 
-procedure aradeshx
-begin
+procedure aradeshx begin
 end
 
 procedure aradeshx1 begin
@@ -898,142 +861,114 @@ procedure aradeshx2 begin
    world_map;
 end
 
-procedure aradeshx3
-begin
+procedure aradeshx3 begin
 end
 
-procedure aradeshx5
-begin
+procedure aradeshx5 begin
    set_local_var(7, 1);
 end
 
-procedure aradesh49
-begin
+procedure aradesh49 begin
    NMessage(250);
 end
 
-procedure aradesh49a
-begin
+procedure aradesh49a begin
    NMessage(251);
 end
 
-procedure aradesh50
-begin
+procedure aradesh50 begin
    NMessage(252);
 end
 
-procedure aradesh51
-begin
+procedure aradesh51 begin
    NMessage(253);
 end
 
-procedure aradesh52
-begin
+procedure aradesh52 begin
    NMessage(254);
 end
 
-procedure aradesh53
-begin
+procedure aradesh53 begin
    NMessage(255);
 end
 
-procedure aradesh54
-begin
+procedure aradesh54 begin
    NMessage(256);
 end
 
-procedure aradesh55
-begin
+procedure aradesh55 begin
    NMessage(257);
 end
 
-procedure aradesh56
-begin
+procedure aradesh56 begin
    NMessage(258);
 end
 
-procedure aradesh57
-begin
+procedure aradesh57 begin
    NMessage(259);
 end
 
-procedure aradesh58
-begin
+procedure aradesh58 begin
    NMessage(260);
 end
 
-procedure aradesh59
-begin
+procedure aradesh59 begin
    NMessage(261);// This message doesn't exist. TODO
 end
 
-procedure aradesh60
-begin
+procedure aradesh60 begin
    NMessage(262);
 end
 
-procedure aradesh61
-begin
+procedure aradesh61 begin
    NMessage(263);
 end
 
-procedure aradesh62
-begin
+procedure aradesh62 begin
    NMessage(264);
 end
 
-procedure aradesh63
-begin
+procedure aradesh63 begin
    NMessage(265);
 end
 
-procedure aradesh64
-begin
+procedure aradesh64 begin
    NMessage(266);
 end
 
-procedure aradesh65
-begin
+procedure aradesh65 begin
    NMessage(267);
 end
 
-procedure aradesh66
-begin
+procedure aradesh66 begin
    NMessage(268);
 end
 
-procedure aradesh67
-begin
+procedure aradesh67 begin
    NMessage(269);
 end
 
-procedure aradesh68
-begin
+procedure aradesh68 begin
    NMessage(270);
 end
 
-procedure aradesh69
-begin
+procedure aradesh69 begin
    NMessage(271);
 end
 
-procedure aradesh70
-begin
+procedure aradesh70 begin
    NMessage(272);
 end
 
-procedure aradesh71
-begin
+procedure aradesh71 begin
    NMessage(273);
 end
 
-procedure aradesh72
-begin
+procedure aradesh72 begin
    NMessage(274);
 end
 
-procedure aradesh73
-begin
+procedure aradesh73 begin
    NMessage(275);
 end
 
