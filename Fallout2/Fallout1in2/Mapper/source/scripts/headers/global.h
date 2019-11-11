@@ -552,7 +552,7 @@
 #define GVAR_GIFTED_MINUS_10_PERLEVEL           (1422) // unused
 #define GVAR_ENTERED_GUARDIAN                   (1423)
 #define GVAR_SPECIAL_TEMPLE                     (1424)
-#define GVAR_WILD_WASTELAND                     (1425)
+#define GVAR_WILD_WASTELAND                     (1425) // unused
 #define GVAR_DEHYDRATION_STRNG_DROP             (1426)
 #define GVAR_DEHYDRATION_ENDUR_DROP             (1427)
 #define GVAR_COW_ANNIHILATOR_COUNT              (1428)
