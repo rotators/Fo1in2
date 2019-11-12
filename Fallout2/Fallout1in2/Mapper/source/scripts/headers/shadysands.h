@@ -25,6 +25,7 @@
 #define set_radscorp_quest_completed   set_global_var(GVAR_RADSCORPION_SEED, 2)
 
 // Tandi quest
+#define set_tandi_kidnapped            set_global_var(GVAR_TANDI_HIRELING_STATUS, 1)
 #define get_tandi_returned             (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
 
 #define tandi_quest_inactive           (global_var(GVAR_TANDI_RESCUE) == 0)
