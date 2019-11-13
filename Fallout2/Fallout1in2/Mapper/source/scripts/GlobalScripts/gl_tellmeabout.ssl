@@ -5,22 +5,13 @@
    NOTE:
       This is just experimental code.
 
-   As of now, the final mechanic will probably look something like this:
-   - The player talks to a critter.
-   - Once the critter dialog screen opens, the current script (number) will be saved in a GVAR_ (done by critter script).
-   - gl_tellmeabout will create a button on the dialog screen.
-   - If GVAR_ is > 0, pressing the created button will open the input box interface (otherwise nothing happens, like in Fo1).
-   - The player types in anything and hits enter / ok.
-   - gl_tellmeabout will run through conditions to determine the Reply() that will be printed.
-   - If the player hits ESC or close, the input box interface closes and the dialog is back to normal.
-   - The GVAR_ is reset to 0 when the critter dialog closes.
-
-
-   How to determine the critter reply to print:
-   - If input text is critter name (string in SCRNAME.MSG based on script number saved in GVAR_), print a name-reply.
-   - If script from GVAR_ is a special critter (e.g. The Master, etc.) look up the critter .msg file and print a special-reply (always starts at string 1000).
-   - If critter is not special, look up OBJ_DUDE.msg file and print a reply based on current map.
-   - If the input text can't be found in either, print a "I don't know"-reply.
+      As of now, the final mechanic looks something like this:
+      - The player talks to a critter.
+      - Once the critter dialog screen opens gl_tellmeabout will create a button on the dialog screen.
+      - If the critter is "valid", pressing the created button will open the input box interface (otherwise nothing happens, like in Fo1).
+      - The player types in anything and hits enter / ok.
+      - gl_tellmeabout will run through conditions to determine the Reply() that will be printed.
+      - If the player hits ESC or close, the input box interface closes and the dialog is back to normal.
 
 */
 
@@ -30,13 +21,11 @@
 #include "..\headers\sfall\sfall.h"
 #include "..\headers\sfall\dik.h"
 
-#define NAME                    SCRIPT_IAN
-
 /* Standard Script Procedures */
 procedure start;
 
-procedure but_sta;
-procedure but_del;
+procedure create_button;
+procedure delete_button;
 procedure do_on;
 procedure do_on;
 procedure do_off;
@@ -45,24 +34,16 @@ procedure do_up;
 
 procedure OpenInput;
 
-procedure KeyPressHandler;
-procedure show_note;
-procedure show_days;
-procedure delete_all;
-
 variable tellme_button;
 
 #define Scr_Width       get_ini_setting("f2_res.ini|MAIN|SCR_WIDTH")
 #define Scr_Heigh       get_ini_setting("f2_res.ini|MAIN|SCR_HEIGHT")
-
 #define SoundP          get_ini_string("config\\tellme_button.ini|Button2|Butin")
 #define SoundR          get_ini_string("config\\tellme_button.ini|Button2|Butou")
 
 variable MousonBut;
 variable ButPres;
 variable HiRes;
-
-#define gen_mstr        message_str(SCRIPT_OBJ_DUDE, x)
 
 procedure start begin
    if (game_loaded) then begin
@@ -71,12 +52,12 @@ procedure start begin
    end
 
    if (get_game_mode == DIALOG) and tellme_button == 0 then
-      call but_sta;
+      call create_button;
    else if (get_game_mode != DIALOG) and tellme_button == 1 then
-      call but_del;
+      call delete_button;
 end
 
-procedure but_sta begin
+procedure create_button begin
    tellme_button := 1;
    create_win_flag("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14, 0x20);
    //CreateWin("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14);
@@ -87,7 +68,7 @@ procedure but_sta begin
    ShowWin;
 end
 
-procedure but_del begin
+procedure delete_button begin
    tellme_button := 0;
    SelectWin("tellme_but");
    DeleteButton("but2");
@@ -129,81 +110,243 @@ procedure do_up begin
    call OpenInput;
 end
 
-procedure delete_button begin
+// msg string source
+#define critter_msg           (get_script(critter) + 1)
+#define generic_msg           (1)
 
+#define special_mstr(x)       message_str((get_script(critter) + 1), x)
+
+// special critters
+#define special_critter(x)    (critter_msg == x)
+#define Aradesh               (33)
+#define Butch                 (39)
+#define Cabbot                (40)
+#define Decker                (42)
+#define Gizmo                 (44)
+#define Harold                (45)
+#define Jain                  (46)
+#define Killian               (47)
+#define Laura                 (48)
+#define Loxley                (49)
+#define Lou                   (50)
+#define TheMaster             (51)
+#define Maxson                (52)
+#define Morpheus              (53)
+#define Nicole                (54)
+#define Overseer              (55)
+#define Rhombus               (56)
+#define Tandi                 (57)
+#define Vree                  (58)
+
+// others
+#define Ian                   (235)
+#define Tycho                 (389)
+#define Katja                 (623)
+
+#define set_reply             print_reply := get_reply(input, critter, reply_source, reply_name, reply_known, reply_unknown, msg_offset)
+
+// TODO: Create array that holds all "valid" critters where TMA is allowed? (to filter out computer terminals, etc)
+// Alternatively, make a list of "invalid" critters where TMA isn't allowed... if that list is shorter.
+
+procedure get_reply(variable input, variable critter, variable reply_source, variable reply_name, variable reply_known, variable reply_unknown, variable msg_offset) begin
+   variable i;
+   variable input_check;
+   variable reply_final;
+
+   if (input == obj_name(critter) and reply_name > 0) then begin
+      reply_final := message_str(reply_source, reply_name);
+   end
+   else begin
+      for (i := 999; (i < 1100); i++) begin
+         input_check := message_str(reply_source, i + msg_offset);
+
+         if ((input_check != "Error" and input_check != "")) then
+            debug("input_check: " + input_check + " (" + (i + msg_offset) + ")");
+         if (input == input_check) then begin
+            debug("*** REPLY FOUND! *** " + input_check);
+            reply_final := message_str(reply_source, (i + msg_offset) + reply_known);
+         end
+
+      end
+   end
+
+   // No valid reply found
+   if reply_final <= 0 then
+      reply_final := message_str(reply_source, reply_unknown);
+
+   return reply_final;
 end
 
 procedure OpenInput begin
    variable
-      input,
       critter := dialog_obj,
-      name := obj_name(critter);
-
+      input,
+      reply_source,
+      reply_name,
+      reply_known,
+      reply_unknown,
+      msg_offset,
+      print_reply;
 
    // This is for testing.
-   // Type in what the player would type in:
-   input := name;
+   // Write what the player would type into the input box:
+   input := "Water Merchants";
 
-   // Print critter reply
-   if (input == name) then begin
-      dialog_message("That's me!");
+   /*****************************
+      SPECIAL CRITTER REPLY
+   *****************************/
+   reply_name := -1; // not used for special critters
+   reply_known := 100; // is the same for every special critter
+   reply_unknown := random(980,982); // is the same for every special critter
+   msg_offset := 0;
+
+   // Talking Heads
+   if special_critter(TheMaster) then begin
+      print_reply := special_mstr(random(1100,1101)); // The Master answers to no-one
    end
+
+   // TODO: Turn into array or something, I dunno
+   else if special_critter(Aradesh) or
+           special_critter(Butch) or
+           special_critter(Cabbot) or
+           special_critter(Harold) or
+           special_critter(Loxley) or
+           special_critter(Lou) or
+           special_critter(Maxson) or
+           special_critter(Morpheus) or
+           special_critter(Nicole) or
+           special_critter(Rhombus) or
+           special_critter(Tandi)
+   then begin
+      reply_source := critter_msg;
+      set_reply;
+   end
+   else if special_critter(Decker) then begin
+      reply_source := critter_msg;
+      reply_unknown := random(980,981);
+      set_reply;
+   end
+   else if special_critter(Gizmo) then begin
+      reply_source := critter_msg;
+      reply_unknown := random(980,981);
+      set_reply;
+   end
+   else if special_critter(Jain) then begin
+      reply_source := critter_msg;
+      reply_unknown := 188;
+      set_reply;
+   end
+   else if special_critter(Killian) then begin
+      reply_source := critter_msg;
+      reply_unknown := random(980,983);
+      set_reply;
+   end
+   else if special_critter(Laura) then begin
+      reply_source := critter_msg;
+      reply_unknown := 345;
+      set_reply;
+   end
+   else if special_critter(Overseer) then begin
+      reply_source := critter_msg;
+      reply_unknown := 980;
+      set_reply;
+   end
+   else if special_critter(Vree) then begin
+      reply_source := critter_msg;
+      reply_unknown := 980;
+      set_reply;
+   end
+
+   // Party Members
+   else if special_critter(Ian) then begin
+      reply_source := critter_msg;
+      reply_unknown := 1109; // TODO: Make new strings
+      set_reply;
+   end
+   else if special_critter(Tycho) then begin
+      reply_source := critter_msg;
+      reply_unknown := 1105; // TODO: Make new strings
+      set_reply;
+   end
+   else if special_critter(Katja) then begin
+      reply_source := critter_msg;
+      set_reply;
+   end
+
+   /*****************************
+      GENERIC CRITTER REPLY
+   *****************************/
    else begin
-      //dialog_message(gen_mstr(random(980,983)));
+      reply_source := generic_msg;
+      reply_name := random(970,972);
+
+      if CUR_MAP_HALLDED then
+         msg_offset := 1800;
+      else if CUR_MAP_HOTEL then
+         msg_offset :=  2400;
+      else if CUR_MAP_WATRSHD then
+         msg_offset :=  3000;
+      else if CUR_MAP_VAULT13 then
+         msg_offset :=  3600;
+      else if CUR_MAP_JUNKENT then
+         msg_offset :=  6000;
+      else if CUR_MAP_JUNKCSNO then
+         msg_offset :=  6600;
+      else if CUR_MAP_JUNKKILL then
+         msg_offset :=  7200;
+      else if CUR_MAP_BROHDENT then
+         msg_offset :=  7800;
+      else if CUR_MAP_BROHD12 then
+         msg_offset :=  8400;
+      else if CUR_MAP_BROHD34 then
+         msg_offset :=  9000;
+      else if CUR_MAP_CHILDRN1 then
+         msg_offset :=  10200;
+      else if CUR_MAP_CHILDRN2 then
+         msg_offset :=  10800;
+      else if CUR_MAP_RAIDERS then
+         msg_offset :=  14400;
+      else if CUR_MAP_SHADYE then
+         msg_offset :=  15000;
+      else if CUR_MAP_SHADYW then
+         msg_offset :=  15600;
+      else if CUR_MAP_MBENT then
+         msg_offset :=  18000;
+      else if CUR_MAP_MBSTRG12 then
+         msg_offset :=  18600;
+      else if CUR_MAP_MBVATS12 then
+         msg_offset :=  19200;
+      else if CUR_MAP_MSTRLR12 then
+         msg_offset :=  19800;
+      else if CUR_MAP_MSTRLR34 then
+         msg_offset :=  20400;
+      else if CUR_MAP_HUBENT then
+         msg_offset :=  21600;
+      else if CUR_MAP_HUBDWNTN then
+         msg_offset :=  22800;
+      else if CUR_MAP_HUBHEIGT then
+         msg_offset :=  23400;
+      else if CUR_MAP_HUBOLDTN then
+         msg_offset :=  24000;
+      else if CUR_MAP_HUBWATER then
+         msg_offset :=  24600;
+      else if CUR_MAP_LAADYTUM then
+         msg_offset :=  17000;
+      else if CUR_MAP_LABLADES then
+         msg_offset :=  26600;
+      else if CUR_MAP_LAFOLLWR then
+         msg_offset :=  17600;
+      else if CUR_MAP_LAGUNRUN then
+         msg_offset :=  27800;
+
+      // Adytum has different "knowledge levels"
+      // Info Level 1 [People who know nothing]
+      // Info level 2 [People who know something]
+      // Info level 3 [People who know more than something but less than everything]
+      // Same with Followers, Blades, and Gun Runners... need to test if this is even used by the game.
+
+      set_reply;
    end
 
-
-
-
-   // OLD SHIT:
-
-   //set_sfall_global("open_tellme", 1);
-   //debug("open input box");
-   /*
-
-      The problem is that opening the input box mode can't print Reply();
-      - with gSay_Start, etc. we can print a message into the current dialog window.
-      - problem is that this message also switches players dialog options.
-      - it also breaks the current dialog, because there is no exit node.
-      - even if we add a "end_dialogue;" at the end (just for testing),
-        the dialog option window won't close and we are stuck in the dialog.
-
-      Possible solution:
-      - Grab the last player dialog options and store them somewhere?
-      - Then, when we print Reply(), we also recreate the dialog options from before?
-        First tests with qiQ_Option didn't work out well, though, because the dialog interface still bugged ot.
-
-      Anyways... the input box should stay open at all times anyway, thus blocking all player dialog options.
-      Only after the player has closed the input box, the player dialog options appear again.
-
-      I'm guessing in Fo1 the SayOptionWindow gets replaced with some sort of "SayInputWindow" (made-up term).
-      Then after the window is deleted and SayOptionWindow becomes visible again, we are back to our dialog options.
-
-   */
-
-   //gSay_Start;
-   //   gSay_Reply(SCRIPT_OBJ_DUDE, "test");
-      //giQ_Option(1,SCRIPT_OBJ_DUDE,"test answer",delete_button,NEUTRAL_REACTION);
-   //gSay_End;
-   //end_dialogue;
-
-   //SetFont(5);
-   //SetTextColor(0.0, 1.0, 0.0);
-   //SetHighlightColor(1.0, 1.0, 0.64);
-
-   //SayReplyWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
-   //SayOptionWindow(((Scr_Width/2)-125), ((Scr_Heigh/2)-170), 260, 280, "PCX/w_blank.pcx");
-
-   //SayBorder(5, 5);
-   //Reply("test");
-
-   //CreateWin("win_tellme", ((Scr_Width/2)-214), ((Scr_Heigh/2)-66), 430, 250);
-   //SelectWin("win_tellme");
-
-   //draw_image(117440550,0,0,0,1);
-   //Display("PCX/tellmeabout.pcx");
-
-   //ShowWin;
-   //SelectWin("win_tellme");
-
+   dialog_message(print_reply);
 end
