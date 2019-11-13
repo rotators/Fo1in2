@@ -24,9 +24,12 @@ procedure scene_vats_destroyed;
 procedure night_person;
 procedure item_description_handler;
 procedure afterhitroll_handler;
+procedure useskillon_handler;
 
 #define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
                                else slot := INVEN_TYPE_RIGHT_HAND
+
+import variable Neal_urn_ptr;
 
 procedure start begin
    if (game_loaded) then begin
@@ -34,6 +37,7 @@ procedure start begin
       register_hook_proc(HOOK_GAMEMODECHANGE, mode_change_handler);
       register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description_handler);
       register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
+      //register_hook_proc(HOOK_USESKILLON, useskillon_handler);
    end
 
    call general;
@@ -48,6 +52,9 @@ procedure general begin
 
    // Changes the PipBoy rest timer from 08:00 to 06:00
    VOODOO_rest_till0600;
+
+   // Disable the "You encounter: ..." message
+   VOODOO_disable_YouEncounter_message;
 end
 
 procedure mode_change_handler begin
@@ -144,8 +151,9 @@ procedure night_person begin
 end
 
 procedure item_description_handler begin
-   variable item := obj_pid(get_sfall_arg);
-   variable description;
+   variable
+      item := obj_pid(get_sfall_arg),
+      description;
 
    if (item == PID_FARM_PARTS) and get_quest_farm_active then begin
       //if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
@@ -179,6 +187,30 @@ procedure afterhitroll_handler begin
                set_attack_explosion_radius(2); // grenade radius
                set_attack_is_explosion_fire;
             end
+         end
+      end
+   end
+end
+
+procedure useskillon_handler begin
+ variable
+         critter := get_sfall_arg,
+         target := get_sfall_arg,
+         skill := get_sfall_arg;
+
+   if (skill == SKILL_STEAL) then begin
+      if (obj_type(target)  == OBJ_TYPE_SCENERY and obj_pid(target) == PID_TROPHY) then begin
+         set_cursor_mode(0);
+         reg_anim_begin();
+         if (tile_distance_objs(critter, target) < 5) then
+            reg_anim_obj_move_to_obj(critter, target, 0);
+         else
+            reg_anim_obj_run_to_obj(critter, target, 0);
+         reg_anim_animate(critter, ANIM_magic_hands_middle, 0);
+         reg_anim_end();
+
+         if (Neal_urn_ptr != 0) then begin
+            add_timer_event(Neal_urn_ptr, game_ticks(0), 1);
          end
       end
    end
