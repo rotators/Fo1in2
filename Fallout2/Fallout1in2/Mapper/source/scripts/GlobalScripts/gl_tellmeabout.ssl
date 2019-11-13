@@ -7,7 +7,7 @@
 
       As of now, the final mechanic looks something like this:
       - The player talks to a critter.
-      - Once the critter dialog screen opens gl_tellmeabout will create a button on the dialog screen.
+      - Once the critter dialog screen opens, gl_tellmeabout will create a button on the dialog screen (better to do this via hookscript).
       - If the critter is "valid", pressing the created button will open the input box interface (otherwise nothing happens, like in Fo1).
       - The player types in anything and hits enter / ok.
       - gl_tellmeabout will run through conditions to determine the Reply() that will be printed.
@@ -114,8 +114,6 @@ end
 #define critter_msg           (get_script(critter) + 1)
 #define generic_msg           (1)
 
-#define special_mstr(x)       message_str((get_script(critter) + 1), x)
-
 // special critters
 #define special_critter(x)    (critter_msg == x)
 #define Aradesh               (33)
@@ -195,13 +193,14 @@ procedure OpenInput begin
    /*****************************
       SPECIAL CRITTER REPLY
    *****************************/
+   reply_source := critter_msg; // use the critter script msg to find the strings
    reply_name := -1; // not used for special critters
-   reply_unknown := random(980,982); // is the same for every special critter
+   reply_unknown := random(980,982); // is the same for most special critter
    msg_offset := 1000; // TMAs start at line 1000 for special critters
 
    // Talking Heads
    if special_critter(TheMaster) then begin
-      print_reply := special_mstr(random(1100,1101)); // The Master answers to no-one
+      reply_unknown := random(1100,1101); // The Master answers to no-one
    end
 
    // TODO: Turn into array or something, I dunno
@@ -217,59 +216,39 @@ procedure OpenInput begin
            special_critter(Rhombus) or
            special_critter(Tandi)
    then begin
-      reply_source := critter_msg;
-      set_reply;
+      // Empty :o
    end
    else if special_critter(Decker) then begin
-      reply_source := critter_msg;
       reply_unknown := random(980,981);
-      set_reply;
    end
    else if special_critter(Gizmo) then begin
-      reply_source := critter_msg;
       reply_unknown := random(980,981);
-      set_reply;
    end
    else if special_critter(Jain) then begin
-      reply_source := critter_msg;
       reply_unknown := 188;
-      set_reply;
    end
    else if special_critter(Killian) then begin
-      reply_source := critter_msg;
       reply_unknown := random(980,983);
-      set_reply;
-   end
+    end
    else if special_critter(Laura) then begin
-      reply_source := critter_msg;
       reply_unknown := 345;
-      set_reply;
    end
    else if special_critter(Overseer) then begin
-      reply_source := critter_msg;
       reply_unknown := 980;
-      set_reply;
    end
    else if special_critter(Vree) then begin
-      reply_source := critter_msg;
       reply_unknown := 980;
-      set_reply;
    end
 
    // Party Members
    else if special_critter(Ian) then begin
-      reply_source := critter_msg;
       reply_unknown := 1109; // TODO: Make new strings
-      set_reply;
    end
    else if special_critter(Tycho) then begin
-      reply_source := critter_msg;
       reply_unknown := 1105; // TODO: Make new strings
-      set_reply;
    end
    else if special_critter(Katja) then begin
-      reply_source := critter_msg;
-      set_reply;
+      // Empty :o
    end
 
    /*****************************
@@ -343,9 +322,8 @@ procedure OpenInput begin
       // Info level 2 [People who know something]
       // Info level 3 [People who know more than something but less than everything]
       // Same with Followers, Blades, and Gun Runners... need to test if this is even used by the game.
-
-      set_reply;
    end
 
+   set_reply;
    dialog_message(print_reply);
 end
