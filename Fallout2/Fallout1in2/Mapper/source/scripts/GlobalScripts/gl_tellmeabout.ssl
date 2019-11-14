@@ -51,8 +51,10 @@ procedure start begin
       set_global_script_type(1);
    end
 
-   if (get_game_mode == DIALOG) and tellme_button == 0 then
-      call create_button;
+   if (get_game_mode == DIALOG) and tellme_button == 0 then begin
+      if not(obj_in_party(dialog_obj)) then
+         call create_button;
+   end
    else if (get_game_mode != DIALOG) and tellme_button == 1 then
       call delete_button;
 end
@@ -114,8 +116,9 @@ end
 #define critter_msg           (get_script(critter) + 1)
 #define generic_msg           (1)
 
-// special critters
 #define special_critter(x)    (critter_msg == x)
+
+// talking heads
 #define Aradesh               (33)
 #define Butch                 (39)
 #define Cabbot                (40)
@@ -136,12 +139,15 @@ end
 #define Tandi                 (57)
 #define Vree                  (58)
 
-// others
+// party members
 #define Ian                   (235)
 #define Tycho                 (389)
 #define Katja                 (623)
 
-#define set_reply             print_reply := get_reply(input, critter, reply_source, reply_name, reply_unknown, msg_offset)
+// other
+//#define ...
+
+#define critter_reply         get_reply(input, critter, reply_source, reply_name, reply_unknown, msg_offset)
 
 // TODO: Create array that holds all "valid" critters where TMA is allowed? (to filter out computer terminals, etc)
 // Alternatively, make a list of "invalid" critters where TMA isn't allowed... if that list is shorter.
@@ -161,6 +167,7 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
 
          if ((input_check != "Error" and input_check != "")) then
             debug("input_check: " + input_check + " (" + (i + msg_offset) + ")");
+
          if (input == input_check) then begin
             debug("*** REPLY FOUND! *** " + input_check);
             reply_final := message_str(reply_source, (i + msg_offset) + 100);
@@ -214,9 +221,11 @@ procedure OpenInput begin
            special_critter(Morpheus) or
            special_critter(Nicole) or
            special_critter(Rhombus) or
-           special_critter(Tandi)
+           special_critter(Tandi) or
+           special_critter(Katja)
    then begin
       // Empty :o
+      // The critters use default values.
    end
    else if special_critter(Decker) then begin
       reply_unknown := random(980, 981);
@@ -239,16 +248,11 @@ procedure OpenInput begin
    else if special_critter(Vree) then begin
       reply_unknown := 980;
    end
-
-   // Party Members
    else if special_critter(Ian) then begin
       reply_unknown := 1109; // TODO : Make new strings
    end
    else if special_critter(Tycho) then begin
       reply_unknown := 1105; // TODO : Make new strings
-   end
-   else if special_critter(Katja) then begin
-      // Empty :o
    end
 
    /*****************************
@@ -324,6 +328,5 @@ procedure OpenInput begin
       // Same with Followers, Blades, and Gun Runners... need to test if this is even used by the game.
    end
 
-   set_reply;
-   dialog_message(print_reply);
+   dialog_message(critter_reply);
 end

@@ -26,6 +26,8 @@ procedure item_description_handler;
 procedure afterhitroll_handler;
 procedure useskillon_handler;
 
+procedure steal_urn;
+
 #define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
                                else slot := INVEN_TYPE_RIGHT_HAND
 
@@ -37,7 +39,7 @@ procedure start begin
       register_hook_proc(HOOK_GAMEMODECHANGE, mode_change_handler);
       register_hook_proc(HOOK_DESCRIPTIONOBJ, item_description_handler);
       register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
-      //register_hook_proc(HOOK_USESKILLON, useskillon_handler);
+      register_hook_proc(HOOK_USESKILLON, useskillon_handler);
    end
 
    call general;
@@ -207,11 +209,14 @@ procedure useskillon_handler begin
          else
             reg_anim_obj_run_to_obj(critter, target, 0);
          reg_anim_animate(critter, ANIM_magic_hands_middle, 0);
+         reg_anim_callback(steal_urn);
          reg_anim_end();
-
-         if (Neal_urn_ptr != 0) then begin
-            add_timer_event(Neal_urn_ptr, game_ticks(0), 1);
-         end
       end
+   end
+end
+
+procedure steal_urn begin
+   if (Neal_urn_ptr != 0) then begin
+      add_timer_event(Neal_urn_ptr, game_ticks(0), 1);
    end
 end
