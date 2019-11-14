@@ -31,9 +31,12 @@ procedure do_on;
 procedure do_off;
 procedure do_down;
 procedure do_up;
+procedure do_up_cancel;
+procedure do_up_ok;
 
 procedure gamemodechange_handler;
 procedure keypress_handler;
+//procedure mouseclick_handler;
 
 procedure OpenInput;
 procedure CloseInput;
@@ -56,6 +59,7 @@ procedure start begin
    if (game_loaded) then begin
       register_hook_proc(HOOK_GAMEMODECHANGE, gamemodechange_handler);
       register_hook_proc(HOOK_KEYPRESS, keypress_handler);
+      //register_hook_proc(HOOK_MOUSECLICK, mouseclick_handler);
    end
 end
 
@@ -76,8 +80,7 @@ procedure keypress_handler begin
       alphabet;
 
    // This is for testing.
-   // Write what the player would type into the input box:
-   //input := "Water Merchants";
+   // A "real" input box window is prefered (for multiple reasons)
 
    if (fetch_input == 1 and key_state > 0) then begin
       if (key_dik == DIK_ESCAPE) then begin
@@ -105,11 +108,43 @@ procedure keypress_handler begin
       end
    end
 end
+/*
+procedure mouseclick_handler begin
+   variable key_state := get_sfall_arg;
 
+   // KEEP THE FUCKING BUTTONS ONTOP OF THE WINDOW ....
+
+   if (get_game_mode == DIALOG and tellme_button == 1 and key_state == 1) then begin
+      // CANCEL button
+      SelectWin("cancel_button");
+      DeleteButton("but3");
+      DeleteWin("cancel_button");
+
+      create_win("cancel_button", ((Scr_Width/2)+14), ((Scr_Heigh/2)+124), 15, 16);
+      SelectWin("cancel_button");
+      AddButton("but3", 0, 0, 15, 16);
+      AddButtonGFX("but3", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+      AddButtonProc("but3", do_on, do_off, do_down, do_up_cancel);
+      ShowWin;
+
+      // OK button
+      SelectWin("ok_button");
+      DeleteButton("but4");
+      DeleteWin("ok_button");
+
+      create_win("ok_button", ((Scr_Width/2)-114), ((Scr_Heigh/2)+124), 15, 16);
+      SelectWin("ok_button");
+      AddButton("but4", 0, 0, 15, 16);
+      AddButtonGFX("but4", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+      AddButtonProc("but4", do_on, do_off, do_down, do_up_ok);
+      ShowWin;
+   end
+end
+*/
 procedure create_button begin
    tellme_button := 1;
-   create_win_flag("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14, 0x20);
-   //CreateWin("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14);
+
+   create_win("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14);
    SelectWin("tellme_but");
    AddButton("but2", 0, 0, 14, 14);
    AddButtonGFX("but2", "PCX/DI_RDBT1.pcx", "PCX/DI_RDBT_BLANK.pcx", "PCX/DI_RDBT2.pcx");
@@ -124,11 +159,6 @@ procedure delete_button begin
    SelectWin("tellme_but");
    DeleteButton("but2");
    DeleteWin("tellme_but");
-
-   //if (get_sfall_global_int("open_tellme") == 1)  then begin
-   // set_sfall_global("open_tellme", 0);
-      DeleteWin("win_tellme");
-   //end
 end
 
 procedure do_on begin
@@ -152,16 +182,26 @@ end
 procedure do_up begin
    //debug("do_up!");
 
-   //set_sfall_global("openbutt", 2);
-   //set_sfall_global("openfixi", 1);
    ButPres := 0;
    play_sfx(SoundR);
-
-   tellme_button := 0;
 
    // TODO: If (critter is valid) then call OpenInput;
    if (fetch_input == 0) then
       call OpenInput;
+end
+
+procedure do_up_cancel begin
+   ButPres := 0;
+   play_sfx(SoundR);
+
+   call CloseInput;
+end
+
+procedure do_up_ok begin
+   ButPres := 0;
+   play_sfx(SoundR);
+
+   call generate_reply;
 end
 
 procedure OpenInput begin
@@ -169,18 +209,26 @@ procedure OpenInput begin
    input := "";
    debug("TMA input enabled!");
    // TODO: create input interface
-
-   /*
-   //CreateWin("win_tellme", ((Scr_Width/2)-214), ((Scr_Heigh/2)-66), 430, 250);
-   //SelectWin("win_tellme");
-
-   //draw_image(117440550,0,0,0,1);
-   //Display("PCX/tellmeabout.pcx");
-   */
-
-   create_win("tellme_interface", ((Scr_Width/2)-215), ((Scr_Heigh/2)+24), 430, 160);
+   create_win("tellme_interface", ((Scr_Width/2)-256), ((Scr_Heigh/2)+24), 512, 160);
+   //create_win_flag("tellme_interface", ((Scr_Width/2)-256), ((Scr_Heigh/2)+24), 512, 160, ugh);
    SelectWin("tellme_interface");
-   draw_image("PCX/tellmeabout.frm", 0, 1, 0, 0);
+   draw_image("PCX/tellmeabout.frm", 0, 0, 0, 0);
+   ShowWin;
+
+   // CANCEL button
+   create_win("cancel_button", ((Scr_Width/2)+14), ((Scr_Heigh/2)+124), 15, 16);
+   SelectWin("cancel_button");
+   AddButton("but3", 0, 0, 15, 16);
+   AddButtonGFX("but3", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+   AddButtonProc("but3", do_on, do_off, do_down, do_up_cancel);
+   ShowWin;
+
+   // OK button
+   create_win("ok_button", ((Scr_Width/2)-114), ((Scr_Heigh/2)+124), 15, 16);
+   SelectWin("ok_button");
+   AddButton("but4", 0, 0, 15, 16);
+   AddButtonGFX("but4", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+   AddButtonProc("but4", do_on, do_off, do_down, do_up_ok);
    ShowWin;
 end
 
@@ -190,6 +238,14 @@ procedure CloseInput begin
 
    SelectWin("tellme_interface");
    DeleteWin("tellme_interface");
+
+   SelectWin("cancel_button");
+   DeleteButton("but3");
+   DeleteWin("cancel_button");
+
+   SelectWin("ok_button");
+   DeleteButton("but4");
+   DeleteWin("ok_button");
 end
 
 // msg string source
@@ -253,7 +309,6 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
             reply_final := message_str(reply_source, (i + msg_offset) + 100);
             i := 100;
          end
-
       end
    end
 
