@@ -32,14 +32,21 @@ procedure do_off;
 procedure do_down;
 procedure do_up;
 
+procedure gamemodechange_handler;
+procedure keypress_handler;
+
 procedure OpenInput;
+procedure CloseInput;
+procedure generate_reply;
 
 variable tellme_button;
+variable fetch_input;
+variable input;
 
-#define Scr_Width       get_ini_setting("f2_res.ini|MAIN|SCR_WIDTH")
-#define Scr_Heigh       get_ini_setting("f2_res.ini|MAIN|SCR_HEIGHT")
-#define SoundP          get_ini_string("config\\tellme_button.ini|Button2|Butin")
-#define SoundR          get_ini_string("config\\tellme_button.ini|Button2|Butou")
+#define Scr_Width          get_screen_width
+#define Scr_Heigh          get_screen_height
+#define SoundP             get_ini_string("config\\tellme_button.ini|Button2|Butin")
+#define SoundR             get_ini_string("config\\tellme_button.ini|Button2|Butou")
 
 variable MousonBut;
 variable ButPres;
@@ -47,16 +54,56 @@ variable HiRes;
 
 procedure start begin
    if (game_loaded) then begin
-      set_global_script_repeat(5);
-      set_global_script_type(1);
+      register_hook_proc(HOOK_GAMEMODECHANGE, gamemodechange_handler);
+      register_hook_proc(HOOK_KEYPRESS, keypress_handler);
    end
+end
 
+procedure gamemodechange_handler begin
    if (get_game_mode == DIALOG) and tellme_button == 0 then begin
       if not(obj_in_party(dialog_obj)) then
          call create_button;
    end
    else if (get_game_mode != DIALOG) and tellme_button == 1 then
       call delete_button;
+end
+
+procedure keypress_handler begin
+   variable
+      i, key, char,
+      key_state := get_sfall_arg,
+      key_dik := get_sfall_arg,
+      alphabet;
+
+   // This is for testing.
+   // Write what the player would type into the input box:
+   //input := "Water Merchants";
+
+   if (fetch_input == 1 and key_state > 0) then begin
+      if (key_dik == DIK_ESCAPE) then begin
+         call CloseInput;
+      end
+      else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER) then begin
+         call generate_reply;
+      end
+      else begin
+         // TODO: Replace with something better
+         alphabet := {16:"Q", 17:"W", 18:"E", 19:"R",
+                      20:"T", 21:"Y", 22:"U", 23:"I",
+                      24:"O", 25:"P", 30:"A", 31:"S",
+                      32:"D", 33:"F", 34:"G", 35:"H",
+                      36:"J", 37:"K", 38:"L", 44:"Z",
+                      45:"X", 46:"C", 47:"V", 48:"B",
+                      49:"N", 50:"M", 57: " "};
+
+         foreach (key: char in alphabet) begin
+            if (key == key_dik) then input := input + char;
+         end
+         debug("input: " + input);
+
+         return 1;
+      end
+   end
 end
 
 procedure create_button begin
@@ -71,7 +118,9 @@ procedure create_button begin
 end
 
 procedure delete_button begin
+   fetch_input := 0;
    tellme_button := 0;
+
    SelectWin("tellme_but");
    DeleteButton("but2");
    DeleteWin("tellme_but");
@@ -109,9 +158,38 @@ procedure do_up begin
    play_sfx(SoundR);
 
    tellme_button := 0;
-   
+
    // TODO: If (critter is valid) then call OpenInput;
-   call OpenInput;
+   if (fetch_input == 0) then
+      call OpenInput;
+end
+
+procedure OpenInput begin
+   fetch_input := 1;
+   input := "";
+   debug("TMA input enabled!");
+   // TODO: create input interface
+
+   /*
+   //CreateWin("win_tellme", ((Scr_Width/2)-214), ((Scr_Heigh/2)-66), 430, 250);
+   //SelectWin("win_tellme");
+
+   //draw_image(117440550,0,0,0,1);
+   //Display("PCX/tellmeabout.pcx");
+   */
+
+   create_win("tellme_interface", ((Scr_Width/2)-215), ((Scr_Heigh/2)+24), 430, 160);
+   SelectWin("tellme_interface");
+   draw_image("PCX/tellmeabout.frm", 0, 1, 0, 0);
+   ShowWin;
+end
+
+procedure CloseInput begin
+   fetch_input := 0;
+   debug("TMA input disabled!");
+
+   SelectWin("tellme_interface");
+   DeleteWin("tellme_interface");
 end
 
 // msg string source
@@ -186,19 +264,14 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
    return reply_final;
 end
 
-procedure OpenInput begin
+procedure generate_reply begin
    variable
       critter := dialog_obj,
-      input,
       reply_source,
       reply_name,
       reply_unknown,
       msg_offset,
       print_reply;
-
-   // This is for testing.
-   // Write what the player would type into the input box:
-   input := "Water Merchants";
 
    /*****************************
       SPECIAL CRITTER REPLY
@@ -331,5 +404,8 @@ procedure OpenInput begin
       // Same with Followers, Blades, and Gun Runners... need to test if this is even used by the game.
    end
 
+   debug("Print critter reply!");
    dialog_message(critter_reply);
+
+   input := ""; // Reset input
 end
