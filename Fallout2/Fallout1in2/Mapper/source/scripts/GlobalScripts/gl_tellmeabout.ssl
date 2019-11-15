@@ -27,9 +27,10 @@ procedure start;
 procedure create_button;
 procedure delete_button;
 procedure do_on;
-procedure do_on;
 procedure do_off;
+procedure do_off_small;
 procedure do_down;
+procedure do_down_small;
 procedure do_up;
 procedure do_up_cancel;
 procedure do_up_ok;
@@ -62,23 +63,22 @@ procedure start begin
 end
 
 procedure gamemodechange_handler begin
-   if (get_game_mode == DIALOG) and tellme_button == 0 then begin
+   if (get_game_mode == DIALOG and tellme_button == 0) then begin
+      // TMA doesn't work with party members (different interface)
       if not(obj_in_party(dialog_obj)) then
          call create_button;
    end
-   else if (get_game_mode != DIALOG) and tellme_button == 1 then
+   else if (get_game_mode != DIALOG and tellme_button == 1) then
       call delete_button;
 end
 
 procedure keypress_handler begin
    variable
-      i, key, char,
       key_state := get_sfall_arg,
       key_dik := get_sfall_arg,
-      alphabet;
+      i, key, char, abc;
 
    // This is for testing.
-   // A "real" input box window is prefered (for multiple reasons)
 
    if (fetch_input == 1 and key_state > 0) then begin
       if (key_dik == DIK_ESCAPE) then begin
@@ -87,40 +87,39 @@ procedure keypress_handler begin
       else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER) then begin
          call generate_reply;
       end
+      else if (key_dik == DIK_BACK and strlen(input) > 0) then begin
+         input := substr(input, 0, -1);
+      end
       else begin
          // TODO: Replace with something better?
-         alphabet := {2:"1", 3:"2", 4:"3", 5:"4", 6:"5", 7:"6", 8:"7", 9:"8", 10:"9", 11:"0",
+         abc := {2:"1", 3:"2", 4:"3", 5:"4", 6:"5", 7:"6", 8:"7", 9:"8", 10:"9", 11:"0",
                       12:"-", 13:"=", 16:"Q", 17:"W", 18:"E", 19:"R", 20:"T", 21:"Y", 22:"U", 23:"I",
                       24:"O", 25:"P", 30:"A", 31:"S", 32:"D", 33:"F", 34:"G", 35:"H", 36:"J", 37:"K",
                       38:"L", 39:";", 44:"Z", 45:"X", 46:"C", 47:"V", 48:"B", 49:"N", 50:"M", 51:",",
                       52:".", 57: " "};
 
-         if (key_dik == DIK_BACK and strlen(input) > 0) then begin
-            input := substr(input, 0, -1);
+         foreach (key : char in abc) begin
+            if (key == key_dik) then input := input + char;
          end
-         else begin
-            foreach (key : char in alphabet) begin
-               if (key == key_dik) then input := input + char;
-            end
-         end
-         debug("input: " + input);
-
-         // Override key with something else, because 1, 2, 3, 4, etc. can still advance through dialog
-         // Allow screenshots, though
-         if (key_dik != DIK_F12) then
-            set_sfall_return(57);
       end
+
+      debug("input: " + input);
+
+      // Override key with something else, because 1, 2, 3, 4, etc. can still advance through dialog
+      // Allow screenshots, though
+      if (key_dik != DIK_F12) then
+         set_sfall_return(DIK_SPACE);
    end
 end
 
 procedure create_button begin
    tellme_button := 1;
 
-   create_win("tellme_but", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14);
-   SelectWin("tellme_but");
-   AddButton("but2", 0, 0, 14, 14);
-   AddButtonGFX("but2", "PCX/DI_RDBT1.pcx", "PCX/DI_RDBT_BLANK.pcx", "PCX/DI_RDBT2.pcx");
-   AddButtonProc("but2", do_on, do_off, do_down, do_up);
+   create_win("win_input", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 14, 14);
+   SelectWin("win_input");
+   AddButton("button_input", 0, 0, 14, 14);
+   AddButtonGFX("button_input", "PCX/DI_RDBT1.pcx", "PCX/DI_RDBT2.pcx", "PCX/DI_RDBT2.pcx");
+   AddButtonProc("button_input", do_on, do_off, do_down, do_up);
 
    //draw_image("PCX/DI_RDBT1.frm", 0, 0, 0, 1);
    ShowWin;
@@ -130,32 +129,46 @@ procedure delete_button begin
    fetch_input := 0;
    tellme_button := 0;
 
-   SelectWin("tellme_but");
-   DeleteButton("but2");
-   DeleteWin("tellme_but");
+   SelectWin("win_input");
+   DeleteButton("button_input");
+   DeleteWin("win_input");
 end
 
 procedure do_on begin
-   //debug("do_on!");
    MousonBut := 1;
 end
 
 procedure do_off begin
-   //debug("do_off!");
+   if (ButPres == 1) then
+   	play_sfx("IB2LU1X1");
+
    MousonBut := 0;
+   ButPres := 0;
+end
+
+procedure do_off_small begin
+   if (ButPres == 1) then
+   	play_sfx("butout4");
+
+   MousonBut := 0;
+   ButPres := 0;
 end
 
 procedure do_down begin
-   //debug("do_down!");
    if (ButPres == 0) then begin
       ButPres := 1;
       play_sfx(SoundP);
    end
 end
 
-procedure do_up begin
-   //debug("do_up!");
+procedure do_down_small begin
+   if (ButPres == 0) then begin
+      ButPres := 1;
+      play_sfx("IB1P1XX1");
+   end
+end
 
+procedure do_up begin
    ButPres := 0;
    play_sfx(SoundR);
 
@@ -167,49 +180,46 @@ end
 procedure do_up_cancel begin
    ButPres := 0;
    play_sfx(SoundR);
-
    call CloseInput;
 end
 
 procedure do_up_ok begin
    ButPres := 0;
    play_sfx(SoundR);
-
    call generate_reply;
 end
 
 procedure OpenInput begin
    fetch_input := 1;
    input := "";
-   debug("TMA input enabled!");
+   //debug("TMA input enabled!");
    // TODO: create input interface
 
+   // Fake input / dialog option overlay
    create_win("tellme_interface", ((Scr_Width/2)-256), ((Scr_Heigh/2)+24), 512, 160);
    SelectWin("tellme_interface");
    draw_image("PCX/tellmeabout.frm", 0, 0, 0, 0);
 
    // CANCEL button
-   //AddButton("but3", ((Scr_Width/2)+14), ((Scr_Heigh/2)+124), 15, 16);
-   AddButton("but3", 271, 100, 15, 16);
-   AddButtonGFX("but3", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
-   AddButtonProc("but3", do_on, do_off, do_down, do_up_cancel);
+   AddButton("button_cancel", 271, 100, 15, 16);
+   AddButtonGFX("button_cancel", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+   AddButtonProc("button_cancel", do_on, do_off_small, do_down_small, do_up_cancel);
 
    // OK button
-   //AddButton("but4", ((Scr_Width/2)-114), ((Scr_Heigh/2)+124), 15, 16);
-   AddButton("but4", 145, 100, 15, 16);
-   AddButtonGFX("but4", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
-   AddButtonProc("but4", do_on, do_off, do_down, do_up_ok);
+   AddButton("button_ok", 145, 100, 15, 16);
+   AddButtonGFX("button_ok", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+   AddButtonProc("button_ok", do_on, do_off_small, do_down_small, do_up_ok);
 
    ShowWin;
 end
 
 procedure CloseInput begin
    fetch_input := 0;
-   debug("TMA input disabled!");
+   //debug("TMA input disabled!");
 
    SelectWin("tellme_interface");
-   DeleteButton("but3");
-   DeleteButton("but4");
+   DeleteButton("button_cancel");
+   DeleteButton("button_ok");
    DeleteWin("tellme_interface");
 end
 
@@ -250,9 +260,6 @@ end
 
 #define critter_reply         get_reply(input, critter, reply_source, reply_name, reply_unknown, msg_offset)
 
-// TODO: Create array that holds all "valid" critters where TMA is allowed? (to filter out computer terminals, etc)
-// Alternatively, make a list of "invalid" critters where TMA isn't allowed... if that list is shorter.
-
 procedure get_reply(variable input, variable critter, variable reply_source, variable reply_name, variable reply_unknown, variable msg_offset) begin
    variable
       i,
@@ -267,7 +274,7 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
          input_check := message_str(reply_source, i + msg_offset);
 
          if ((input_check != "Error" and input_check != "")) then
-            debug("input_check: " + input_check + " (" + (i + msg_offset) + ")");
+            debug("Keyword: " + input_check + " (" + (i + msg_offset) + ")");
 
          if (input == input_check and input != "") then begin
             debug("*** REPLY FOUND! ***");
@@ -306,7 +313,8 @@ procedure generate_reply begin
       reply_unknown := random(1100, 1101); // The Master answers to no-one
    end
 
-   // TODO: Turn into array or something, I dunno
+   // TODO: Move this stuff into critter scripts directly. This gives more flexibility to the system.
+
    else if special_critter(Aradesh) or
            special_critter(Butch) or
            special_critter(Cabbot) or
