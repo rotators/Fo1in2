@@ -23,6 +23,7 @@ procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
@@ -46,6 +47,7 @@ procedure Node1005;
 procedure Node1006;
 procedure Node1007;
 
+procedure flip_light;
 procedure Heal_Robo(variable bonus);
 
 variable tmp_hostile;
@@ -58,6 +60,7 @@ variable IdenOnce;
 #define LVAR_TEAM                         (12)
 #define LVAR_Heal_Count                   (13)
 #define LVAR_Heal_Dec_Time                (14)
+#define LVAR_LightSwitch                  (15)
 
 #define MULTI_TOOL 10
 #define SUPER_TOOL 30
@@ -70,6 +73,16 @@ variable IdenOnce;
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_dogmeat    ((dude_at_max_party_size == false) and (Dog_In_Party == false) or unlimited_party_members)
 #define EVENT_FLOAT_JOIN                  (2)
+
+#define LIGHT_ON           (2)
+#define LIGHT_OFF          (3)
+#define set_light_on       set_local_var(LVAR_LightSwitch, LIGHT_ON); \
+                           obj_set_light_level(self_obj, 100, 8)
+#define set_light_off      set_local_var(LVAR_LightSwitch, LIGHT_OFF); \
+                           obj_set_light_level(self_obj, 0, 0)
+#define get_light_on       (local_var(LVAR_LightSwitch) == LIGHT_ON)
+#define get_light_off      (local_var(LVAR_LightSwitch) == LIGHT_OFF)
+
 
 procedure Node998 begin
 end
@@ -170,6 +183,11 @@ procedure map_enter_p_proc begin
    end
 end
 
+procedure map_update_p_proc begin
+   if get_light_on then
+      obj_set_light_level(self_obj, 100, 8);
+end
+
 procedure pickup_p_proc begin
    script_overrides;
 end
@@ -264,6 +282,8 @@ procedure dog_end begin
 end
 
 procedure dog00 begin
+variable Perception_Roll;
+
    Reply(random(117,120));
    if (global_var(GVAR_DOGMEAT_HIRELING_STATUS) == 0) then begin
       GOption(dog_mstr(118), dog_join_party, 004);
@@ -272,6 +292,27 @@ procedure dog00 begin
    else begin
       NOption(dog_mstr(119), dog_remove_party, 004);
       NLowOption(dog_mstr(301), dog_remove_party);
+
+      // Find light switch function
+      if (local_var(LVAR_LightSwitch) == 0) then begin
+         Perception_Roll := do_check(dude_obj, STAT_pe, 1);
+         if (is_success(Perception_Roll)) then begin
+            set_local_var(LVAR_LightSwitch, 1);
+            NOption(300, flip_light, 004);
+            NLowOption(308, flip_light);
+         end
+      end
+      else if (local_var(LVAR_LightSwitch) == 1) then begin
+         NOption(300, flip_light, 004);
+         NLowOption(308, flip_light);
+      end
+      else if get_light_on then begin
+         NOption(305, flip_light, 001);
+      end
+      else if get_light_off then begin
+         NOption(304, flip_light, 001);
+      end
+
       NOption(200, dog_distance, 004);
    end
    GOption(dog_mstr(120), dog_end, 004);
@@ -322,6 +363,26 @@ procedure use_skill_on_p_proc begin
    else if (action_being_used == SKILL_REPAIR and Dog_In_Party) then begin
       script_overrides;
       call Heal_Robo(0);
+   end
+end
+
+procedure flip_light begin
+   if (local_var(LVAR_LightSwitch) == 1) then begin
+      set_light_on;
+      Reply(mstr(301) + mstr(306));
+      NOption(302, Node999, 004);
+      NOption(303, flip_light, 004);
+
+      NLowOption(309, Node999);
+      NLowOption(310, flip_light);
+   end
+   else if get_light_on then begin
+      set_light_off;
+      NMessage(307);
+   end
+   else if get_light_off then begin
+      set_light_on;
+      NMessage(306);
    end
 end
 
