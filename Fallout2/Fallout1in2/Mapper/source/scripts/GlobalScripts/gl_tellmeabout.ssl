@@ -121,8 +121,6 @@ procedure create_button begin
    AddButton("button_input", 0, 0, 15, 15);
    AddButtonGFX("button_input", "PCX/DI_RDBT1.pcx", "PCX/DI_RDBT2.pcx", "PCX/DI_RDBT2.pcx");
    AddButtonProc("button_input", do_on, do_off, do_down, do_up);
-
-   //draw_image("PCX/DI_RDBT1.frm", 0, 0, 0, 1);
    ShowWin;
 end
 
@@ -169,7 +167,6 @@ end
 procedure do_up begin
    ButPres := 0;
    play_sfx(SoundR);
-   // TODO: If (critter is valid) then call OpenInput;
    if (fetch_input == 0) then
       call OpenInput;
 end
@@ -188,47 +185,57 @@ end
 
 // Create input interface
 procedure OpenInput begin
-   fetch_input := 1;
-   input := "";
-   //debug("TMA input enabled!");
+   variable valid_source;
 
-   // Opening the interface clears the Reply window.
-   // TODO: Closing the interface should restore the Reply. Probably not possible right now.
-   dialog_message("");
+   tma_data_array := load_array("tma_data_array");
+   valid_source := tma_data_array[0];
 
-   // Fake input / dialog option overlay
-   create_win("tellme_interface", ((Scr_Width/2)-256), ((Scr_Heigh/2)+24), 512, 160);
-   SelectWin("tellme_interface");
-   draw_image("PCX/tellmeabout.frm", 0, 0, 0, 0);
+   // Only open interface if valid TMA data has been saved
+   // (computer terminals and some other critters don't have TMAs)
+   if (valid_source > 0) then begin
+      fetch_input := 1;
+      input := "";
+      //debug("TMA input enabled!");
 
-   // CANCEL button
-   AddButton("button_cancel", 271, 100, 15, 16);
-   AddButtonGFX("button_cancel", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
-   AddButtonProc("button_cancel", do_on, do_off_small, do_down_small, do_up_cancel);
+      // Opening the interface clears the Reply window.
+      // TODO: Closing the interface should restore the Reply. Probably not possible right now.
+      dialog_message("");
 
-   // OK button
-   AddButton("button_ok", 145, 100, 15, 16);
-   AddButtonGFX("button_ok", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
-   AddButtonProc("button_ok", do_on, do_off_small, do_down_small, do_up_ok);
+      // Fake input / dialog option overlay
+      create_win("tellme_interface", ((Scr_Width/2)-256), ((Scr_Heigh/2)+24), 512, 160);
+      SelectWin("tellme_interface");
+      draw_image("PCX/tellmeabout.frm", 0, 0, 0, 0);
 
-   ShowWin;
+      // CANCEL button
+      AddButton("button_cancel", 271, 100, 15, 16);
+      AddButtonGFX("button_cancel", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+      AddButtonProc("button_cancel", do_on, do_off_small, do_down_small, do_up_cancel);
 
-   // Delete the input button
-   call delete_button;
+      // OK button
+      AddButton("button_ok", 145, 100, 15, 16);
+      AddButtonGFX("button_ok", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
+      AddButtonProc("button_ok", do_on, do_off_small, do_down_small, do_up_ok);
 
-   // Create windows that will block the barter and dialog history buttons
-   create_win("barter_block", ((Scr_Width/2)+266), ((Scr_Heigh/2)+34), 25, 25);
-   SelectWin("barter_block");
-   draw_image("PCX/block_barter.frm", 0, 0, 0, 0);
-   ShowWin;
+      ShowWin;
 
-   create_win("history_block", ((Scr_Width/2)-310), ((Scr_Heigh/2)+153), 60, 30);
-   SelectWin("history_block");
-   draw_image("PCX/block_history.frm", 0, 0, 0, 0);
-   ShowWin;
+      // Delete the input button
+      call delete_button;
 
-   // TODO: Also have to block the "switch hand"-button on the main interface, because pressing it opens the barter screen.
-   // Maybe the buttons can be disabled via some Sfall hackery instead?
+      // Create windows that will block the barter and dialog history buttons
+      create_win("barter_block", ((Scr_Width/2)+266), ((Scr_Heigh/2)+34), 25, 25);
+      SelectWin("barter_block");
+      draw_image("PCX/block_barter.frm", 0, 0, 0, 0);
+      ShowWin;
+
+      create_win("history_block", ((Scr_Width/2)-310), ((Scr_Heigh/2)+153), 60, 30);
+      SelectWin("history_block");
+      draw_image("PCX/block_history.frm", 0, 0, 0, 0);
+      ShowWin;
+
+      // TODO: Also have to block the "switch hand"-button on the main interface, because pressing it opens the barter screen.
+      // Maybe the buttons can be disabled via some Sfall hackery instead?
+
+   end
 end
 
 procedure CloseInput begin
@@ -248,10 +255,6 @@ procedure CloseInput begin
 
    call create_button;
 end
-
-// msg string source
-#define critter_msg           (get_script(critter) + 1)
-#define generic_msg           (1)
 
 #define special_critter(x)    (critter_msg == x)
 
@@ -284,17 +287,17 @@ end
 // other
 //#define ...
 
-#define critter_reply         get_reply(input, critter, reply_source, reply_name, reply_unknown, msg_offset)
+#define critter_reply         get_reply(input, critter, reply_source, msg_offset, reply_name_start, reply_name_end, reply_unknown_start, reply_unknown_end)
 
-procedure get_reply(variable input, variable critter, variable reply_source, variable reply_name, variable reply_unknown, variable msg_offset) begin
+procedure get_reply(variable input, variable critter, variable reply_source, variable msg_offset, variable reply_name_start, variable reply_name_end, variable reply_unknown_start, variable reply_unknown_end) begin
    variable
       i,
       input_check,
       reply_final,
       split, word, keyword;
 
-   if (input == obj_name(critter) and reply_name != -1) then
-      reply_final := message_str(reply_source, reply_name);
+   if (input == obj_name(critter) and reply_name_start != -1) then
+      reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
       variable found := 0;
 
@@ -317,7 +320,7 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
 
    // No valid reply found
    if reply_final <= 0 then
-      reply_final := message_str(reply_source, reply_unknown);
+      reply_final := message_str(reply_source, random(reply_unknown_start, reply_unknown_end));
 
    return reply_final;
 end
@@ -325,26 +328,29 @@ end
 procedure generate_reply begin
    variable
       critter := dialog_obj,
-      reply_source,
-      reply_name,
-      reply_unknown,
-      msg_offset,
+      reply_source := tma_data_array[0],
+      msg_offset := tma_data_array[1],
+      reply_name_start := tma_data_array[2],
+      reply_name_end := tma_data_array[3],
+      reply_unknown_start := tma_data_array[4],
+      reply_unknown_end := tma_data_array[5],
       print_reply;
+
+   dialog_message(critter_reply);
+   input := ""; // Reset input
 
    /*****************************
       SPECIAL CRITTER REPLY
    *****************************/
-   reply_source := critter_msg; // use the critter script msg to find the strings
-   reply_name := -1; // not used for special critters
-   reply_unknown := random(980, 982); // is the same for most special critter
-   msg_offset := 1000; // TMAs start at line 1000 for special critters
+   //reply_source := critter_msg; // use the critter script msg to find the strings
+   //reply_name := -1; // not used for special critters
+   //reply_unknown := random(980, 982); // is the same for most special critter
+   //msg_offset := 1000; // TMAs start at line 1000 for special critters
 
    // Talking Heads
-   if special_critter(TheMaster) then begin
+   /*if special_critter(TheMaster) then begin
       reply_unknown := random(1100, 1101); // The Master answers to no-one
    end
-
-   // TODO: Move this stuff into critter scripts directly. This gives more flexibility to the system.
 
    else if special_critter(Aradesh) or
            special_critter(Butch) or
@@ -388,83 +394,5 @@ procedure generate_reply begin
    end
    else if special_critter(Tycho) then begin
       reply_unknown := 1105; // TODO : Make new strings
-   end
-
-   /*****************************
-      GENERIC CRITTER REPLY
-   *****************************/
-   else begin
-      reply_source := generic_msg;
-      reply_name := random(970, 972);
-
-      if CUR_MAP_HALLDED then
-         msg_offset := 2800;
-      else if CUR_MAP_HOTEL then
-         msg_offset := 3400;
-      else if CUR_MAP_WATRSHD then
-         msg_offset := 4000;
-      else if CUR_MAP_VAULT13 then
-         msg_offset := 3600;
-      else if CUR_MAP_JUNKENT then
-         msg_offset := 7000;
-      else if CUR_MAP_JUNKCSNO then
-         msg_offset := 7600;
-      else if CUR_MAP_JUNKKILL then
-         msg_offset := 8200;
-      else if CUR_MAP_BROHDENT then
-         msg_offset := 8800;
-      else if CUR_MAP_BROHD12 then
-         msg_offset := 9400;
-      else if CUR_MAP_BROHD34 then
-         msg_offset := 10000;
-      else if CUR_MAP_CHILDRN1 then
-         msg_offset := 11200;
-      else if CUR_MAP_CHILDRN2 then
-         msg_offset := 11800;
-      else if CUR_MAP_RAIDERS then
-         msg_offset := 15400;
-      else if CUR_MAP_SHADYE then
-         msg_offset := 16000;
-      else if CUR_MAP_SHADYW then
-         msg_offset := 16600;
-      else if CUR_MAP_MBENT then
-         msg_offset := 19000;
-      else if CUR_MAP_MBSTRG12 then
-         msg_offset := 19600;
-      else if CUR_MAP_MBVATS12 then
-         msg_offset := 20200;
-      else if CUR_MAP_MSTRLR12 then
-         msg_offset := 20800;
-      else if CUR_MAP_MSTRLR34 then
-         msg_offset := 21400;
-      else if CUR_MAP_HUBENT then
-         msg_offset := 22600;
-      else if CUR_MAP_HUBDWNTN then
-         msg_offset := 23800;
-      else if CUR_MAP_HUBHEIGT then
-         msg_offset := 24400;
-      else if CUR_MAP_HUBOLDTN then
-         msg_offset := 25000;
-      else if CUR_MAP_HUBWATER then
-         msg_offset := 25600;
-      else if CUR_MAP_LAADYTUM then
-         msg_offset := 18000;
-      else if CUR_MAP_LABLADES then
-         msg_offset := 27600;
-      else if CUR_MAP_LAFOLLWR then
-         msg_offset := 18600;
-      else if CUR_MAP_LAGUNRUN then
-         msg_offset := 28800;
-
-      // Adytum has different "knowledge levels"
-      // Info Level 1 [People who know nothing]
-      // Info level 2 [People who know something]
-      // Info level 3 [People who know more than something but less than everything]
-      // Same with Followers, Blades, and Gun Runners... need to test if this is even used by the game.
-   end
-
-   //debug("Print critter reply!");
-   dialog_message(critter_reply);
-
-   input := ""; // Reset input
+   end*/
 end

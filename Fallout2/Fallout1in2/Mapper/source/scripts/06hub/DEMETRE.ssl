@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\hubdwntn.h"
 
 #define NAME                    SCRIPT_DEMETRE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -91,7 +91,7 @@ end
 
 procedure combat begin
    tmp_hostile := 1;
-   set_map_var(24, 1);
+   set_map_var(MVAR_CC_HOSTILE, 1);
 end
 
 procedure critter_p_proc begin
@@ -107,126 +107,81 @@ procedure pickup_p_proc begin
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
-   if (map_var(24) == 1) then begin
+   if (map_var(MVAR_CC_HOSTILE) == 1) then begin
       call Demetre10;
    end
-   else begin
-      if (map_var(25) == 1) then begin
-         if (local_var(5) == 0) then begin
-            start_gdialog(566, self_obj, 4, -1, -1);
-            gsay_start;
-            call Demetre20;
-            gsay_end;
-            end_dialogue;
-         end
-         else begin
-            call Demetre20;
-         end
+   else if (map_var(MVAR_CC_NO_DEAL) == 1) then begin
+      if (local_var(5) == 0) then begin
+         start_dialog_at_node(Demetre20);
       end
       else begin
-         if (global_var(GVAR_CC_JOB) == 5) then begin
-            call Demetre29;
-         end
-         else begin
-            if (global_var(GVAR_CC_JOB) == 3) then begin
-               call Demetre30;
-            end
-            else begin
-               if (local_var(4) == 0) then begin
-                  start_gdialog(566, self_obj, 4, -1, -1);
-                  gsay_start;
-                  call Demetre00;
-                  gsay_end;
-                  end_dialogue;
-               end
-               else begin
-                  if (map_var(26) == 0) then begin
-                     start_gdialog(566, self_obj, 4, -1, -1);
-                     gsay_start;
-                     call Demetre27;
-                     gsay_end;
-                     end_dialogue;
-                  end
-                  else begin
-                     if ((map_var(26) == 1) and (global_var(GVAR_CC_JOB) != 4)) then begin
-                        start_gdialog(566, self_obj, 4, -1, -1);
-                        gsay_start;
-                        call Demetre40;
-                        gsay_end;
-                        end_dialogue;
-                     end
-                     else begin
-                        if ((map_var(26) == 1) and (global_var(GVAR_CC_JOB) == 4)) then begin
-                           start_gdialog(566, self_obj, 4, -1, -1);
-                           gsay_start;
-                           call Demetre28;
-                           gsay_end;
-                           end_dialogue;
-                        end
-                     end
-                  end
-               end
-            end
-         end
+         call Demetre20;
       end
+   end
+   else if (global_var(GVAR_CC_JOB) == 5) then begin
+      call Demetre29;
+   end
+   else if (global_var(GVAR_CC_JOB) == 3) then begin
+      call Demetre30;
+   end
+   else if (local_var(4) == 0) then begin
+      start_dialog_at_node(Demetre00);
+   end
+   else if (map_var(MVAR_CC_WILL_GIVE_JOB) == 0) then begin
+      start_dialog_at_node(Demetre27);
+   end
+   else if ((map_var(MVAR_CC_WILL_GIVE_JOB) == 1) and (global_var(GVAR_CC_JOB) != 4)) then begin
+      start_dialog_at_node(Demetre40);
+   end
+   else if ((map_var(MVAR_CC_WILL_GIVE_JOB) == 1) and (global_var(GVAR_CC_JOB) == 4)) then begin
+      start_dialog_at_node(Demetre28);
    end
    set_local_var(4, 1);
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
-   set_map_var(28, 1);
+   set_map_var(MVAR_CC_HAS_BEEN_KILLED, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_HUB, 1);
    end
 end
 
-procedure Demetre00
-begin
+procedure Demetre00 begin
    variable LVar0 := 0;
    LVar0 := dude_strength;
    if (LVar0 < 4) then begin
       Reply(mstr(101) + " " + mstr(102));
    end
+   else if ((LVar0 >= 4) and (LVar0 < 6)) then begin
+      Reply(mstr(101) + " " + mstr(103));
+   end
+   else if ((LVar0 >= 6) and (LVar0 < 8)) then begin
+      Reply(mstr(101) + " " + mstr(104));
+   end
+   else if ((LVar0 >= 8) and (LVar0 < 10)) then begin
+      Reply(mstr(101) + " " + mstr(105));
+   end
    else begin
-      if ((LVar0 >= 4) and (LVar0 < 6)) then begin
-         Reply(mstr(101) + " " + mstr(103));
-      end
-      else begin
-         if ((LVar0 >= 6) and (LVar0 < 8)) then begin
-            Reply(mstr(101) + " " + mstr(104));
-         end
-         else begin
-            if ((LVar0 >= 8) and (LVar0 < 10)) then begin
-               Reply(mstr(101) + " " + mstr(105));
-            end
-            else begin
-               Reply(mstr(101) + " " + mstr(106));
-            end
-         end
-      end
+      Reply(mstr(101) + " " + mstr(106));
    end
    GOption(107, Demetre01, 4);
    NOption(108, Demetre01, 4);
    NLowOption(109, Demetre01);
 end
 
-procedure Demetre01
-begin
+procedure Demetre01 begin
    Reply(110);
    if (has_rep_berserker) then begin
       NOption(112, Demetre13, 4);
@@ -245,8 +200,7 @@ begin
    NLowOption(117, Demetre21);
 end
 
-procedure Demetre02
-begin
+procedure Demetre02 begin
    Reply(118);
    NOption(119, Demetre03, 4);
    NOption(120, Demetre05, 4);
@@ -254,19 +208,16 @@ begin
    NOption(122, Demetre04, 4);
 end
 
-procedure Demetre03
-begin
-   set_map_var(26, 1);
+procedure Demetre03 begin
+   set_map_var(MVAR_CC_WILL_GIVE_JOB, 1);
    NMessage(123);
 end
 
-procedure Demetre04
-begin
+procedure Demetre04 begin
    NMessage(124);
 end
 
-procedure Demetre05
-begin
+procedure Demetre05 begin
    Reply(125);
    NOption(126, Demetre08, 4);
    NOption(127, Demetre07, 4);
@@ -274,89 +225,76 @@ begin
    NOption(129, Demetre07, 4);
 end
 
-procedure Demetre06
-begin
-   set_map_var(26, 1);
+procedure Demetre06 begin
+   set_map_var(MVAR_CC_WILL_GIVE_JOB, 1);
    NMessage(130);
 end
 
-procedure Demetre07
-begin
-   set_map_var(26, 1);
+procedure Demetre07 begin
+   set_map_var(MVAR_CC_WILL_GIVE_JOB, 1);
    NMessage(131);
 end
 
-procedure Demetre08
-begin
+procedure Demetre08 begin
    NMessage(132);
 end
 
-procedure Demetre09
-begin
+procedure Demetre09 begin
    Reply(133);
    NOption(134, DemetreEnd, 4);
    NOption(135, Demetre11, 4);
 end
 
-procedure Demetre10
-begin
+procedure Demetre10 begin
    float_msg(self_obj, mstr(random(136, 138)), FLOAT_MSG_RED);
 end
 
-procedure Demetre11
-begin
-   set_map_var(26, 1);
+procedure Demetre11 begin
+   set_map_var(MVAR_CC_WILL_GIVE_JOB, 1);
    NMessage(139);
 end
 
-procedure Demetre12
-begin
+procedure Demetre12 begin
    NMessage(140);
 end
 
-procedure Demetre13
-begin
-   set_map_var(26, 1);
+procedure Demetre13 begin
+   set_map_var(MVAR_CC_WILL_GIVE_JOB, 1);
    NMessage(141);
 end
 
-procedure Demetre14
-begin
+procedure Demetre14 begin
    Reply(142);
    NOption(143, Demetre02, 4);
    NOption(144, Demetre12, 4);
 end
 
-procedure Demetre15
-begin
+procedure Demetre15 begin
    Reply(145);
    NOption(146, Demetre16, 5);
-   if ((map_var(4) == 1) and (global_var(GVAR_MISSING_CARAVAN) == 1)) then begin
+   if ((map_var(MVAR_BETH_TALKED_ABOUT_ROUTE) == 1) and (global_var(GVAR_MISSING_CARAVAN) == 1)) then begin
       NOption(147, Demetre17, 4);
    end
    NOption(148, DemetreEnd, 4);
 end
 
-procedure Demetre16
-begin
+procedure Demetre16 begin
    Reply(149);
    NOption(150, Demetre02, 4);
-   if ((map_var(4) == 1) and (global_var(GVAR_MISSING_CARAVAN) == 1)) then begin
+   if ((map_var(MVAR_BETH_TALKED_ABOUT_ROUTE) == 1) and (global_var(GVAR_MISSING_CARAVAN) == 1)) then begin
       NOption(151, Demetre17, 4);
    end
    NOption(152, DemetreEnd, 4);
 end
 
-procedure Demetre17
-begin
+procedure Demetre17 begin
    Reply(153);
    NOption(154, Demetre18, 7);
    NOption(155, Demetre17a, 4);
    BOption(156, Demetre17b, 4);
 end
 
-procedure Demetre17a
-begin
+procedure Demetre17a begin
    if (global_var(GVAR_KILL_DEATHCLAW) == 2) then begin
       call DemetreEnd;
    end
@@ -365,25 +303,21 @@ begin
    end
 end
 
-procedure Demetre17b
-begin
+procedure Demetre17b begin
    BigDownReact
    call DemetreEnd;
 end
 
-procedure Demetre18
-begin
+procedure Demetre18 begin
    Reply(157);
    NOption(158, Demetre17a, 4);
 end
 
-procedure Demetre19
-begin
+procedure Demetre19 begin
    NMessage(159);
 end
 
-procedure Demetre20
-begin
+procedure Demetre20 begin
    if (local_var(5) == 0) then begin
       set_local_var(5, 1);
       Reply(160);
@@ -392,19 +326,16 @@ begin
       BOption(163, Demetre20a, 4);
       BLowOption(164, Demetre22);
    end
+   else if (local_var(5) <= 5) then begin
+      float_msg(self_obj, mstr(164 + local_var(5)), FLOAT_MSG_RED);
+      set_local_var(5, local_var(5) + 1);
+   end
    else begin
-      if (local_var(5) <= 5) then begin
-         float_msg(self_obj, mstr(164 + local_var(5)), FLOAT_MSG_RED);
-         set_local_var(5, local_var(5) + 1);
-      end
-      else begin
-         display_msg(mstr(170));
-      end
+      display_msg(mstr(170));
    end
 end
 
-procedure Demetre20a
-begin
+procedure Demetre20a begin
    if (is_success(do_check(dude_obj, STAT_ch, -5))) then begin
       call Demetre24;
    end
@@ -413,39 +344,32 @@ begin
    end
 end
 
-procedure Demetre21
-begin
+procedure Demetre21 begin
    Reply(171);
    NLowOption(172, DemetreEnd);
    NLowOption(173, DemetreEnd);
 end
 
-procedure Demetre22
-begin
+procedure Demetre22 begin
    BMessage(174);
 end
 
-procedure Demetre23
-begin
+procedure Demetre23 begin
    BMessage(175);
 end
 
-procedure Demetre24
-begin
+procedure Demetre24 begin
    NMessage(176);
 end
 
-procedure Demetre25
-begin
+procedure Demetre25 begin
    BMessage(177);
 end
 
-procedure Demetre26
-begin
+procedure Demetre26 begin
 end
 
-procedure Demetre27
-begin
+procedure Demetre27 begin
    Reply(184);
    if (has_rep_berserker) then begin
       NOption(186, Demetre13, 4);
@@ -464,8 +388,7 @@ begin
    NLowOption(191, Demetre21);
 end
 
-procedure Demetre28
-begin
+procedure Demetre28 begin
    Reply(192);
    NOption(193, Demetre33, 4);
    if (local_var(7) == 0) then begin
@@ -478,20 +401,17 @@ begin
    NOption(197, DemetreEnd, 4);
 end
 
-procedure Demetre29
-begin
+procedure Demetre29 begin
    float_msg(self_obj, mstr(198), FLOAT_MSG_RED);
-   set_map_var(25, 1);
+   set_map_var(MVAR_CC_NO_DEAL, 1);
 end
 
-procedure Demetre30
-begin
+procedure Demetre30 begin
    float_msg(self_obj, mstr(199), FLOAT_MSG_RED);
-   set_map_var(25, 1);
+   set_map_var(MVAR_CC_NO_DEAL, 1);
 end
 
-procedure Demetre31
-begin
+procedure Demetre31 begin
    if (local_var(1) == 1) then begin
       float_msg(self_obj, mstr(201), FLOAT_MSG_RED);
    end
@@ -514,32 +434,27 @@ begin
    end
 end
 
-procedure Demetre31a
-begin
+procedure Demetre31a begin
    set_local_var(7, 1);
    call Demetre14;
 end
 
-procedure Demetre31b
-begin
+procedure Demetre31b begin
    set_local_var(8, 1);
    DownReact
    call Demetre32;
 end
 
-procedure Demetre31c
-begin
-   set_map_var(25, 1);
+procedure Demetre31c begin
+   set_map_var(MVAR_CC_NO_DEAL, 1);
    call DemetreEnd;
 end
 
-procedure Demetre32
-begin
+procedure Demetre32 begin
    BMessage(208);
 end
 
-procedure Demetre33
-begin
+procedure Demetre33 begin
    if (local_var(9) == 0) then begin
       set_local_var(9, 1);
       Reply(209);
@@ -552,61 +467,52 @@ begin
    end
 end
 
-procedure Demetre33a
-begin
-   set_map_var(25, 1);
-   set_map_var(24, 1);
+procedure Demetre33a begin
+   set_map_var(MVAR_CC_NO_DEAL, 1);
+   set_map_var(MVAR_CC_HOSTILE, 1);
    call Demetre35;
 end
 
-procedure Demetre34
-begin
+procedure Demetre34 begin
    Reply(214);
    BOption(215, Demetre37, 4);
    NOption(216, DemetreEnd, 4);
 end
 
-procedure Demetre35
-begin
+procedure Demetre35 begin
    Reply(217);
    BOption(218, Demetre36, 4);
    BOption(219, Demetre35a, 4);
 end
 
-procedure Demetre35a
-begin
-   set_map_var(24, 1);
+procedure Demetre35a begin
+   set_map_var(MVAR_CC_HOSTILE, 1);
    call combat;
 end
 
-procedure Demetre36
-begin
-   set_map_var(25, 1);
+procedure Demetre36 begin
+   set_map_var(MVAR_CC_NO_DEAL, 1);
    BMessage(220);
 end
 
-procedure Demetre37
-begin
+procedure Demetre37 begin
    Reply(221);
    BOption(222, combat, 4);
    NOption(223, Demetre38, 4);
    NOption(224, DemetreEnd, 4);
 end
 
-procedure Demetre38
-begin
+procedure Demetre38 begin
    Reply(225);
    NOption(226, DemetreEnd, 4);
    BOption(227, combat, 4);
 end
 
-procedure Demetre39
-begin
+procedure Demetre39 begin
    NMessage(228);
 end
 
-procedure Demetre40
-begin
+procedure Demetre40 begin
    Reply(229);
    NOption(230, Demetre41, 4);
    NOption(231, Demetre43, 4);
@@ -621,8 +527,7 @@ begin
    NLowOption(236, Demetre42);
 end
 
-procedure Demetre41
-begin
+procedure Demetre41 begin
    variable LVar0 := 0;
    if (local_var(10) == 0) then begin
       LVar0 := create_object(PID_FRAG_GRENADE, 0, 0);
@@ -635,16 +540,13 @@ begin
    end
 end
 
-procedure Demetre42
-begin
+procedure Demetre42 begin
    NMessage(239);
 end
 
-procedure Demetre43
-begin
+procedure Demetre43 begin
    NMessage(240);
 end
 
-procedure DemetreEnd
-begin
+procedure DemetreEnd begin
 end

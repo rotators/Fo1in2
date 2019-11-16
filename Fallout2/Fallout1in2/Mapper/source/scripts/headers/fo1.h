@@ -207,15 +207,12 @@ variable merch_slot_armor_flags;
                                     /* Now give his inventory back and get rid of the temp box */       \
                                     move_obj_inven_to_obj(tmp_merch_box, self_obj);                     \
                                     /* Wield all items as before */                                     \
-                                    if (merch_slot_1 > 0) then begin                                    \
+                                    if (merch_slot_1 > 0) then                                          \
                                         set_flags(merch_slot_1, merch_slot_1_flags);                    \
-                                    end                                                                 \
-                                    if (merch_slot_2 > 0) then begin                                    \
+                                    if (merch_slot_2 > 0) then                                          \
                                         set_flags(merch_slot_2, merch_slot_2_flags);                    \
-                                    end                                                                 \
-                                    if (merch_slot_armor > 0) then begin                                \
+                                    if (merch_slot_armor > 0) then                                      \
                                         set_flags(merch_slot_armor, merch_slot_armor_flags);            \
-                                    end                                                                 \
                                     destroy_object(tmp_merch_box)
 
 /*********************************************************
@@ -230,8 +227,73 @@ variable merch_slot_armor_flags;
 #define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
 #define fo1in2_unlimited_hpa_disabled   (global_var(GVAR_ENABLE_UNLIMITED_HPA) == 0)
 
-#define fixt_enabled 					(global_var(GVAR_FIXT_ENABLED) == 1)
-#define fixt_disabled 					not(fixt_enabled)
+#define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
+#define fixt_disabled                   not(fixt_enabled)
+
+/*********************************************************
+    TMA / Tell Me About
+*********************************************************/
+// msg string source
+#define tma_source_critter      (get_script(critter) + 1)
+#define tma_source_generic      (SCRIPT_OBJ_DUDE)
+
+// generic defines
+#define TMA_MSG_NAME_START      (970)
+#define TMA_MSG_NAME_END        (972)
+
+#define TMA_MSG_DONTKNOW_START  (980)
+#define TMA_MSG_DONTKNOW_END    (982)
+
+// (location) types from OBJ_DUDE.msg
+#define TMA_MSG_HALLDED         (2800)
+#define TMA_MSG_HOTEL           (3400)
+#define TMA_MSG_WATRSHD         (4000)
+#define TMA_MSG_VAULT13         (3600)
+#define TMA_MSG_JUNKENT         (7000)
+#define TMA_MSG_JUNKCSNO        (7600)
+#define TMA_MSG_JUNKKILL        (8200)
+#define TMA_MSG_BROHDENT        (8800)
+#define TMA_MSG_BROHD12         (9400)
+#define TMA_MSG_BROHD34         (10000)
+#define TMA_MSG_CHILDRN1        (11200)
+#define TMA_MSG_CHILDRN2        (11800)
+#define TMA_MSG_RAIDERS         (15400)
+#define TMA_MSG_SHADYE          (16000)
+#define TMA_MSG_SHADYW          (16600)
+#define TMA_MSG_MBENT           (19000)
+#define TMA_MSG_MBSTRG12        (19600)
+#define TMA_MSG_MBVATS12        (20200)
+#define TMA_MSG_MSTRLR12        (20800)
+#define TMA_MSG_MSTRLR34        (21400)
+#define TMA_MSG_HUBENT          (22600)
+#define TMA_MSG_HUBDWNTN        (23800)
+#define TMA_MSG_HUBHEIGT        (24400)
+#define TMA_MSG_HUBOLDTN        (25000)
+#define TMA_MSG_HUBWATER        (25600)
+#define TMA_MSG_ADYTUM_LVL1     (17800) // [People who know nothing]
+#define TMA_MSG_ADYTUM_LVL2     (18000) // [People who know something]
+#define TMA_MSG_ADYTUM_LVL3     (18200) // [People who know more than something but less than everything]
+#define TMA_MSG_FOLLOWER_LVL1   (18400)
+#define TMA_MSG_FOLLOWER_LVL2   (18600)
+#define TMA_MSG_FOLLOWER_LVL3   (18800)
+#define TMA_MSG_BLADES_LVL1     (27400)
+#define TMA_MSG_BLADES_LVL2     (27600)
+#define TMA_MSG_BLADES_LVL3     (27800)
+#define TMA_MSG_GUNRUNNR_LVL1   (28600)
+#define TMA_MSG_GUNRUNNR_LVL2   (28800)
+#define TMA_MSG_GUNRUNNR_LVL3   (29000)
+
+variable tma_data_array;
+#define set_tma_data(source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end)       \
+    if (tma_data_array == 0) then                                                                               \
+        tma_data_array := create_array(6, 0);                                                                   \
+    tma_data_array := [source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end];    \
+    save_array("tma_data_array", tma_data_array)
+
+// Shortcut
+#define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
+
+#define reset_tma_data      set_tma_data(0, 0, 0, 0, 0, 0)
 
 /*********************************************************
     Pick dead body type:
