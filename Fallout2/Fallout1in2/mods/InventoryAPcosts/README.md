@@ -1,4 +1,5 @@
-# Inventory AP Costs
+Inventory AP Costs
+------------------
 
     Features:
       - Reduces inventory opening cost to 0 action points.
@@ -15,4 +16,4 @@ OR you just copy the gl_inven_ap_cost.int file into your "<Fallout2 Dir>\data\sc
 
 
 This script is based on the AP costs mod for fallout 2 by phobos2077:
-https://github.com/phobos2077/sfall/tree/master/artifacts/example_mods/APcosts
+https://github.com/phobos2077/sfall/tree/master/artifacts/example_mods/APcosts/
