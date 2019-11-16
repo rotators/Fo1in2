@@ -293,7 +293,7 @@ variable tma_data_array;
 // Shortcut
 #define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
 
-#define reset_tma_data      set_tma_data(0, 0, 0, 0, 0, 0)
+#define reset_tma_data              set_tma_data(0, 0, 0, 0, 0, 0)
 
 /*********************************************************
     Pick dead body type:

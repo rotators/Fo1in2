@@ -53,7 +53,7 @@ variable input;
 
 variable MousonBut;
 variable ButPres;
-variable HiRes;
+variable TMA_started;
 
 procedure start begin
    if (game_loaded) then begin
@@ -64,12 +64,20 @@ end
 
 procedure gamemodechange_handler begin
    if (get_game_mode == DIALOG and tellme_button == 0) then begin
+      TMA_started := 1;
+
       // TMA doesn't work with party members (different interface)
       if not(obj_in_party(dialog_obj)) then
          call create_button;
    end
    else if (get_game_mode != DIALOG and tellme_button == 1) then begin
       call delete_button;
+   end
+
+   // Reset TMA data when exiting dialog mode
+   if (dialog_obj == 0 and TMA_started == 1) then begin
+      TMA_started := 0;
+      reset_tma_data;
    end
 end
 
@@ -256,37 +264,6 @@ procedure CloseInput begin
    call create_button;
 end
 
-#define special_critter(x)    (critter_msg == x)
-
-// talking heads
-#define Aradesh               (33)
-#define Butch                 (39)
-#define Cabbot                (40)
-#define Decker                (42)
-#define Gizmo                 (44)
-#define Harold                (45)
-#define Jain                  (46)
-#define Killian               (47)
-#define Laura                 (48)
-#define Loxley                (49)
-#define Lou                   (50)
-#define TheMaster             (51)
-#define Maxson                (52)
-#define Morpheus              (53)
-#define Nicole                (54)
-#define Overseer              (55)
-#define Rhombus               (56)
-#define Tandi                 (57)
-#define Vree                  (58)
-
-// party members
-#define Ian                   (235)
-#define Tycho                 (389)
-#define Katja                 (623)
-
-// other
-//#define ...
-
 #define critter_reply         get_reply(input, critter, reply_source, msg_offset, reply_name_start, reply_name_end, reply_unknown_start, reply_unknown_end)
 
 procedure get_reply(variable input, variable critter, variable reply_source, variable msg_offset, variable reply_name_start, variable reply_name_end, variable reply_unknown_start, variable reply_unknown_end) begin
@@ -296,7 +273,9 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
       reply_final,
       split, word, keyword;
 
-   if (input == obj_name(critter) and reply_name_start != -1) then
+   debug("input: <" + input + ">");
+
+   if (input == obj_name(critter) and reply_name_start > 0) then
       reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
       variable found := 0;
@@ -348,11 +327,7 @@ procedure generate_reply begin
    //msg_offset := 1000; // TMAs start at line 1000 for special critters
 
    // Talking Heads
-   /*if special_critter(TheMaster) then begin
-      reply_unknown := random(1100, 1101); // The Master answers to no-one
-   end
-
-   else if special_critter(Aradesh) or
+/*
            special_critter(Butch) or
            special_critter(Cabbot) or
            special_critter(Harold) or
@@ -362,7 +337,6 @@ procedure generate_reply begin
            special_critter(Morpheus) or
            special_critter(Nicole) or
            special_critter(Rhombus) or
-           special_critter(Tandi) or
            special_critter(Katja)
    then begin
       // Empty :o

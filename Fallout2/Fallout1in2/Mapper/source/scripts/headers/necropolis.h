@@ -10,7 +10,6 @@
 /************************************************
     Generic Defines
 ************************************************/
-
 #define check_manhole   if (tile_contains_obj_pid(self_tile,self_elevation,PID_SEWER_COVER)) then begin \
                             cover_state := (obj_is_open(Cover_Ptr));                                    \
                             if cover_state == 0 then begin                                              \
@@ -58,5 +57,18 @@
 #define STATE_SPOTTED            1
 #define STATE_TAKEN_DUDE         2
 #define STATE_TAKEN_GRIFFITH     3
+
+/************************************************
+    "Tell Me About"-Defines
+************************************************/
+#define set_tma_necropolis    if CUR_MAP_HALLDED then begin             \
+                                 set_tma_data_generic(TMA_MSG_HALLDED); \
+                              end                                       \
+                              else if CUR_MAP_WATRSHD then begin        \
+                                 set_tma_data_generic(TMA_MSG_WATRSHD); \
+                              end                                       \
+                              else if CUR_MAP_HOTEL then begin          \
+                                 set_tma_data_generic(TMA_MSG_HOTEL);   \
+                              end
 
 #endif // MAPNECRO_H

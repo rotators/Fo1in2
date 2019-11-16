@@ -1,8 +1,6 @@
 /*
 
-   Shady Sands - Seth in Radscorpion cave?
-
-      UNUSED! - Cut content
+   Shady Sands - Katrina, standing near the entrance
 
 */
 
@@ -105,28 +103,26 @@ procedure description_p_proc begin
 end
 
 procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_SHADYW);
+
    dude_look_at_self;
-   if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
+   if global_var(GVAR_ENEMY_SHADY_SANDS) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
       get_reaction
-      start_gdialog(211, self_obj, -1, -1, -1);
-      gsay_start;
+
       if dude_is_armed then begin
-         call DialogWeapon;
+         start_dialog_at_node(DialogWeapon);
+      end
+      else if (local_var(4) == 0) then begin
+         set_local_var(4, 1);
+         start_dialog_at_node(DialogFirstTime);
       end
       else begin
-         if (local_var(4) == 0) then begin
-            set_local_var(4, 1);
-            call DialogFirstTime;
-         end
-         else begin
-            call DialogSubsequent;
-         end
+         start_dialog_at_node(DialogSubsequent);
       end
-      gsay_end;
-      end_dialogue;
+
       Hurt := 0;
       Equipment := 0;
       Barter := 0;
@@ -141,7 +137,7 @@ end
 
 procedure critter_p_proc begin
    if (self_can_see_dude) then begin
-      if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands hostile to player?
+      if global_var(GVAR_ENEMY_SHADY_SANDS) then begin
          attack(dude_obj);
       end
    end
@@ -194,8 +190,7 @@ procedure DialogFirstTime begin
    NOption(118, DialogExit, 4);
 end
 
-procedure DialogSubsequent
-begin
+procedure DialogSubsequent begin
    variable LVar0 := 0;
    LVar0 := game_time_hour;
    Reply(144);
@@ -218,35 +213,29 @@ begin
    NOption(118, DialogExit, 4);
 end
 
-procedure DialogExit
-begin
+procedure DialogExit begin
 end
 
-procedure DialogWeapon1
-begin
+procedure DialogWeapon1 begin
    NMessage(106);
 end
 
-procedure DialogWeapon2
-begin
+procedure DialogWeapon2 begin
    Reply(107);
    NOption(108, DialogExit, 4);
 end
 
-procedure DialogWeapon3
-begin
+procedure DialogWeapon3 begin
    Reply(109);
    NOption(110, DialogExit, 4);
 end
 
-procedure DialogWeapon4
-begin
+procedure DialogWeapon4 begin
    Reply(109);
    NOption(110, DialogExit, 4);
 end
 
-procedure DialogMain
-begin
+procedure DialogMain begin
    Reply(DisplayMessage);
    if (Hurt == 0) then begin
       NOption(126, DialogMain1, 4);
@@ -281,97 +270,83 @@ begin
    end
 end
 
-procedure DialogMain1
-begin
+procedure DialogMain1 begin
    Hurt := 1;
    DisplayMessage := 132;
    call DialogMain;
 end
 
-procedure DialogMain2
-begin
+procedure DialogMain2 begin
    Equipment := 1;
    DisplayMessage := 133;
    Barter := 1;
    call DialogMain;
 end
 
-procedure DialogMain3
-begin
+procedure DialogMain3 begin
    Place := 1;
    DisplayMessage := 135;
    call DialogMain;
 end
 
-procedure DialogMain4
-begin
+procedure DialogMain4 begin
    World := 1;
    DisplayMessage := 136;
    call DialogMain;
 end
 
-procedure DialogMain5
-begin
+procedure DialogMain5 begin
    Yourself := 1;
    DisplayMessage := 137;
    Vault := 1;
    call DialogMain;
 end
 
-procedure DialogMain6
-begin
+procedure DialogMain6 begin
    Barter := 0;
    DisplayMessage := 139;
    Bartered := 1;
    call DialogMain;
 end
 
-procedure DialogMain7
-begin
+procedure DialogMain7 begin
    Vault := 0;
    DisplayMessage := 140;
    Vaulted := 1;
    call DialogMain;
 end
 
-procedure DialogMain8
-begin
+procedure DialogMain8 begin
    DisplayMessage := 143;
    call DialogMain;
 end
 
-procedure DialogMain9
-begin
+procedure DialogMain9 begin
    DisplayMessage := 141;
    call DialogMain;
 end
 
-procedure DialogMain10
-begin
+procedure DialogMain10 begin
    DisplayMessage := 142;
    call DialogMain;
 end
 
-procedure DialogSpecial1
-begin
+procedure DialogSpecial1 begin
    Reply(119);
    NLowOption(120, DialogSpecial2);
 end
 
-procedure DialogSpecial2
-begin
+procedure DialogSpecial2 begin
    Reply(121);
    NLowOption(122, DialogSpecial3);
 end
 
-procedure DialogSpecial3
-begin
+procedure DialogSpecial3 begin
    Reply(123);
    NLowOption(124, DialogExit);
 end
 
-procedure DialogSpecial4
-begin
+procedure DialogSpecial4 begin
    Reply(146);
    NOption(147, DialogExit, 4);
 end
