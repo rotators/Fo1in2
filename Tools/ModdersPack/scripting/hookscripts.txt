@@ -30,6 +30,7 @@ The hook script equivalent of game_loaded; it returns 2 when the script is first
 
 > mixed get_sfall_arg()
 Gets the next argument from sfall. Each time it's called it returns the next argument, or otherwise it returns 0 if there are no more arguments left.
+You can arbitrarily get the value of any argument using the sfall_func1("get_sfall_arg_at", argNum) function.
 
 > array get_sfall_args()
 Returns all hook arguments as a new temp array.
@@ -37,8 +38,8 @@ Returns all hook arguments as a new temp array.
 > void set_sfall_return(int value)
 Used to return the new values from the script. Each time it's called it sets the next value, or if you've already set all return values it does nothing.
 
-> void set_sfall_arg(int argnum, int value)
-Changes argument value. The argument number (argnum) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see below).
+> void set_sfall_arg(int argNum, int value)
+Changes argument value. The argument number (argNum) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see below).
 
 > void register_hook(int hooktype)
 Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, "start" proc will be executed in a current global script. You can use all above functions like normal.
@@ -285,10 +286,10 @@ int     ret1 - the new AP cost
 -------------------------------------------
 
 (DEPRECATED)
-hs_hexmoveblocking.int
-hs_hexaiblocking.int
-hs_hexshootblocking.int
-hs_hexsightblocking.int
+HOOK_HEXMOVEBLOCKING  (hs_hexmoveblocking.int)
+HOOK_HEXAIBLOCKING    (hs_hexaiblocking.int)
+HOOK_HEXSHOOTBLOCKING (hs_hexshootblocking.int)
+HOOK_HEXSIGHTBLOCKING (hs_hexsightblocking.int)
 
 Runs when checking to see if a hex blocks movement or shooting. (or ai-ing, presumably...)
 
@@ -635,13 +636,14 @@ int     ret2 - overrides the duration time for the current result
 
 -------------------------------------------
 
-HOOK_STDPROCEDURE (hs_stdprocedure.int)
+HOOK_STDPROCEDURE, HOOK_STDPROCEDURE_END (hs_stdprocedure.int)
 
-Runs before Fallout executes a standard procedure (handler) in any script of any object.
+Runs before or after Fallout engine executes a standard procedure (handler) in any script of any object.
 NOTE: this hook will not be executed for "start", critter_p_proc, timed_event_p_proc, and map_update_p_proc procedures.
 
 int     arg1 - the number of the standard script handler (see define.h)
 Obj     arg2 - the object that owns this handler (self_obj)
 Obj     arg3 - the object that called this handler (source_obj, can be 0)
+int     arg4 - 1 after procedure execution (for HOOK_STDPROCEDURE_END), 0 otherwise
 
-int     ret1 - pass -1 to cancel the execution of the handler
+int     ret1 - pass -1 to cancel the execution of the handler (only for HOOK_STDPROCEDURE)

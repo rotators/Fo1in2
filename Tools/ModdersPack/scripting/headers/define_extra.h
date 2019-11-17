@@ -87,7 +87,6 @@
 #define FLAG_SEEN         (0x40000000)
 #define FLAG_SHOOTTHRU    (0x80000000)
 
-
 /* Critter Flags */
 #define CFLG_BARTER             2  // 0x00000002 - Barter (can trade with)
 #define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot steal from)
@@ -100,6 +99,13 @@
 #define CFLG_SPECIAL         4096  // 0x00001000 - Special (there is a special type of death)
 #define CFLG_RANGED          8192  // 0x00002000 - Range (melee attack is possible at a distance)
 #define CFLG_NOKNOCKDOWN    16384  // 0x00004000 - Knock (cannot be knocked down)
+
+/* Window Flags */
+#define WIN_FLAG_MOVEONTOP          (0x4)
+#define WIN_FLAG_HIDDEN             (0x8)
+#define WIN_FLAG_EXCLUSIVE         (0x10)
+#define WIN_FLAG_TRANSPARENT       (0x20)
+
 
 //remove inven obj defines
 #define RMOBJ_CONSUME_DRUG        4666772

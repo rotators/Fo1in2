@@ -517,9 +517,10 @@ Some utility/math functions are available:
 - adds one custom box to the current boxes, and returns the number of the added tag (-1 if the tags limit is exceeded)
 - The maximum number of boxes is limited to 126 tags
 
+> void sfall_func0("inventory_redraw")
 > void sfall_func1("inventory_redraw", int invSide)
 - redraws inventory list in the inventory/use inventory item on/loot/barter screens
-- invSide specifies which side needs to be redrawn: 0 - the player, 1 - target (container/NPC in loot/barter screens)
+- invSide specifies which side needs to be redrawn: 0 - the player, 1 - target (container/NPC in loot/barter screens), -1 - both sides (same as without argument)
 
 > void sfall_func3("item_make_explosive", int pid, int activePid, int damage)
 > void sfall_func4("item_make_explosive", int pid, int activePid, int min, int max)
@@ -558,10 +559,11 @@ Some utility/math functions are available:
 > object sfall_func0("dialog_obj")
 - returns a pointer to the object (critter) the player is having a conversation or bartering with
 
-> object sfall_func2("obj_under_cursor", bool crSwitch, bool inclDude)
+> object sfall_func2("obj_under_cursor", bool onlyCritter, bool includeDude)
 - returns the object under the cursor on the main game screen
-- crSwitch: True - only checks critters and ignores their cover (roof tiles, walls, scenery, etc.), False - checks all objects (can't check critters under objects)
-- passing False to the inclDude argument will ignore dude_obj
+- onlyCritter: True - only checks critters and ignores their cover (roof tiles, walls, scenery, etc.)
+               False - checks all objects (can't check critters under objects)
+- passing False to the includeDude argument will ignore dude_obj
 
 > object sfall_func0("loot_obj")
 - returns a pointer to the target object (container or critter) of the loot screen
@@ -630,22 +632,42 @@ optional argument:
 - can take off player's equipped item when the inventory is opened, or the player is in the barter screen
 - slot: 0 - armor slot, 1 - right slot, 2 - left slot (see INVEN_TYPE_* in define.h)
 
-> void sfall_func1("add_trait", int traitId)
+> void sfall_func1("add_trait", int traitID)
 - adds the specified trait to the player
 
 > int sfall_func0("get_inven_ap_cost")
 - returns the current AP cost to access the inventory in combat
 
-> void sfall_func2("add_g_timer_event", int time, int param)
+> void sfall_func2("add_g_timer_event", int time, int fixedParam)
 - adds a timer event that calls the timed_event_p_proc procedure in the current global script
 - time: the number of ticks after which the event timer is triggered
-- param: the value that is passed to the timed_event_p_proc procedure for the fixed_param function
+- fixedParam: the value that is passed to the timed_event_p_proc procedure for the fixed_param function
 
 > void sfall_func0("remove_timer_event")
 - clears all set timer events for the current global script
 
-> void sfall_func1("remove_timer_event", int param)
-- removes all timer events with the specified 'param' value for the current global script
+> void sfall_func1("remove_timer_event", int fixedParam)
+- removes all timer events with the specified 'fixedParam' value for the current global script
+
+> mixed sfall_func1("get_sfall_arg_at", int argNum)
+- gets the value of hook argument with the specified argument number (argNum, first argument of hook starts from 0)
+
+> void sfall_func0("hide_window")
+> void sfall_func1("hide_window", string winName)
+- hides the specified or currently active (selected) script window
+- winName: the window name, assigned to the window by the CreateWin/create_win function
+
+> void sfall_func0("show_window")
+> void sfall_func1("show_window", string winName)
+- displays the specified hidden script window or the one previously hidden with the sfall_func0("hide_window") function
+- winName: the window name, assigned to the window by the CreateWin/create_win function
+
+> void sfall_func3("set_window_flag", string/int winName/winID, int flag, bool value)
+- changes the specified flag for the created script or game interface window
+- winName: the window name, assigned to the window by the CreateWin/create_win function
+- winID: the ID number of the interface or script window obtained with the get_window_under_mouse function, or 0 for the current game interface
+- flag: the flag to change (see WIN_FLAG_* constants in define_extra.h)
+- value: true - set the flag, false - unset the flag
 
 ------------------------
 ------ MORE INFO -------
