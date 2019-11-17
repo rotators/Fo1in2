@@ -264,9 +264,17 @@ procedure CloseInput begin
    call create_button;
 end
 
-#define critter_reply         get_reply(input, critter, reply_source, msg_offset, reply_name_start, reply_name_end, reply_unknown_start, reply_unknown_end)
+procedure generate_reply begin
+   variable
+      critter := dialog_obj,
+      reply_source := tma_data_array[0],
+      msg_offset := tma_data_array[1],
+      reply_name_start := tma_data_array[2],
+      reply_name_end := tma_data_array[3],
+      reply_unknown_start := tma_data_array[4],
+      reply_unknown_end := tma_data_array[5],
+      print_reply;
 
-procedure get_reply(variable input, variable critter, variable reply_source, variable msg_offset, variable reply_name_start, variable reply_name_end, variable reply_unknown_start, variable reply_unknown_end) begin
    variable
       i,
       input_check,
@@ -283,7 +291,7 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
       for (i := 0; (i < 100 and found == 0); i++) begin
          input_check := message_str(reply_source, i + msg_offset);
          if (input_check != "Error" and input_check != "") then begin
-            debug("input_check: " + input_check);
+            //debug("input_check: " + input_check);
             split := string_split(input_check, "|");
 
             foreach (word : keyword in split) begin
@@ -297,24 +305,13 @@ procedure get_reply(variable input, variable critter, variable reply_source, var
       end
    end
 
+   debug("input: <" + input + ">");
+
    // No valid reply found
    if reply_final <= 0 then
       reply_final := message_str(reply_source, random(reply_unknown_start, reply_unknown_end));
 
-   return reply_final;
-end
-
-procedure generate_reply begin
-   variable
-      critter := dialog_obj,
-      reply_source := tma_data_array[0],
-      msg_offset := tma_data_array[1],
-      reply_name_start := tma_data_array[2],
-      reply_name_end := tma_data_array[3],
-      reply_unknown_start := tma_data_array[4],
-      reply_unknown_end := tma_data_array[5],
-      print_reply;
-
-   dialog_message(critter_reply);
+   // Print reply
+   dialog_message(reply_final);
    input := ""; // Reset input
 end
