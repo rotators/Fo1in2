@@ -7,7 +7,7 @@
 
       As of now, the final mechanic looks something like this:
       - The player talks to a critter.
-      - Once the critter dialog screen opens, gl_tellmeabout will create a button on the dialog screen (better to do this via hookscript).
+      - Once the critter dialog screen opens, gl_tellmeabout will create a button on the dialog screen.
       - If the critter is "valid", pressing the created button will open the input box interface (otherwise nothing happens, like in Fo1).
       - The player types in anything and hits enter / ok.
       - gl_tellmeabout will run through conditions to determine the Reply() that will be printed.
@@ -46,11 +46,11 @@ variable tellme_button;
 variable fetch_input;
 variable input;
 
-#define Scr_Width          get_screen_width
-#define Scr_Heigh          get_screen_height
 #define SoundP             "butin4"
 #define SoundR             "butout4"
 
+variable Scr_Height;
+variable Scr_Width;
 variable MousonBut;
 variable ButPres;
 variable TMA_started;
@@ -122,9 +122,24 @@ procedure keypress_handler begin
 end
 
 procedure create_button begin
+   variable get_ini;
+
    tellme_button := 1;
 
-   create_win("win_input", ((Scr_Width/2)+273), ((Scr_Heigh/2)+116), 15, 15);
+   Scr_Width := (get_screen_width / 2);
+   Scr_Height := (get_screen_height / 2);
+
+   get_ini := get_ini_setting("f2_res.ini|IFACE|IFACE_BAR_MODE");
+   if (get_ini == 1) then
+      Scr_Height := Scr_Height + 50;
+
+   if (get_ini == 0) then begin
+      get_ini := get_ini_setting("f2_res.ini|OTHER_SETTINGS|DIALOG_SCRN_BACKGROUND");
+      if (get_ini == 1) then
+         Scr_Height := Scr_Height + 50;
+   end
+
+   create_win("win_input", (Scr_Width + 273), (Scr_Height + 116), 15, 15);
    SelectWin("win_input");
    AddButton("button_input", 0, 0, 15, 15);
    AddButtonGFX("button_input", "PCX/DI_RDBT1.pcx", "PCX/DI_RDBT2.pcx", "PCX/DI_RDBT2.pcx");
@@ -210,7 +225,7 @@ procedure OpenInput begin
       dialog_message("");
 
       // Fake input / dialog option overlay
-      create_win("tellme_interface", ((Scr_Width/2)-256), ((Scr_Heigh/2)+24), 512, 160);
+      create_win("tellme_interface", (Scr_Width - 256), (Scr_Height + 24), 512, 160);
       SelectWin("tellme_interface");
       draw_image("PCX/tellmeabout.frm", 0, 0, 0, 0);
 
@@ -230,12 +245,12 @@ procedure OpenInput begin
       call delete_button;
 
       // Create windows that will block the barter and dialog history buttons
-      create_win("barter_block", ((Scr_Width/2)+266), ((Scr_Heigh/2)+34), 25, 25);
+      create_win("barter_block", (Scr_Width + 266), (Scr_Height + 34), 25, 25);
       SelectWin("barter_block");
       draw_image("PCX/block_barter.frm", 0, 0, 0, 0);
       ShowWin;
 
-      create_win("history_block", ((Scr_Width/2)-310), ((Scr_Heigh/2)+153), 60, 30);
+      create_win("history_block", (Scr_Width - 310), (Scr_Height + 153), 60, 30);
       SelectWin("history_block");
       draw_image("PCX/block_history.frm", 0, 0, 0, 0);
       ShowWin;
@@ -281,8 +296,6 @@ procedure generate_reply begin
       reply_final,
       split, word, keyword;
 
-   debug("input: <" + input + ">");
-
    if (input == obj_name(critter) and reply_name_start > 0) then
       reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
@@ -302,6 +315,8 @@ procedure generate_reply begin
                end
             end
          end
+         else
+            break;
       end
    end
 
