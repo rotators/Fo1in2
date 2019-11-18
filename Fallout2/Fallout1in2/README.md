@@ -28,10 +28,10 @@ MOD INSTALLATION
     ```
 
 - Start the UNDAT.EXE and select the MASTER.DAT file from your FALLOUT 1 installation directory.
-  - If you are using (pre)release package, UNDAT.EXE can be found in "Fallout1in2" folder.
-  - If you are using development version, UNDAT.EXE can be found in "Tools\Undat UI" folder.
+  - If you are using (pre)release package, UNDAT.EXE can be found in `Fallout1in2` folder.
+  - If you are using development version, UNDAT.EXE can be found in `Tools\Undat UI` folder.
 
-- Select the "Fallout1in2" folder as extraction target.
+- Select the `Fallout1in2` folder as extraction target.
 
 - Extract the files.
 
