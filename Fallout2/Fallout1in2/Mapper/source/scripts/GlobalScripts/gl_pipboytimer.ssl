@@ -9,8 +9,6 @@
 #include "..\headers\command.h"
 #include "..\headers\define.h"
 #include "..\headers\sfall\sfall.h"
-#include "..\headers\sfall\dik.h"
-#include "..\headers\sfall\main.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -27,32 +25,9 @@ procedure show_days;
 procedure delete_all;
 
 variable lastDay;
-variable validate;
-variable OffsetX;
-variable OffsetY;
 
-#define Scr_Width          get_screen_width
-#define Scr_Heigh          get_screen_height
-
-#define NoteOffsetX        get_ini_setting("config\\fo1_settings.ini|Fo1in2|PipBoyNoteOffsetX")
-#define NoteOffsetY        get_ini_setting("config\\fo1_settings.ini|Fo1in2|PipBoyNoteOffsetY")
-#define validate_number(x, y, z)   validate := x;                      \
-                                 if (validate != "") then begin      \
-                                    if (validate != "0") then begin  \
-                                       validate := atoi(x);          \
-                                       if (validate == z) then begin \
-                                          y := z;                    \
-                                       end                           \
-                                    end                              \
-                                    else                             \
-                                       validate := atoi(validate);   \
-                                 end                                 \
-                                 else                                \
-                                    y := z
-#define get_offsets        OffsetX := NoteOffsetX; \
-                           OffsetY := NoteOffsetY; \
-                           validate_number(get_ini_string("config\\fo1_settings.ini|Fo1in2|PipBoyNoteOffsetX"), OffsetX, 0); \
-                           validate_number(get_ini_string("config\\fo1_settings.ini|Fo1in2|PipBoyNoteOffsetY"), OffsetY, 0)
+variable Scr_Width;
+variable Scr_Height;
 
 #define timer_active       ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) < 2) and (global_var(GVAR_VAULT13_WATER_DAYS_LEFT) > 0))
 
@@ -99,7 +74,6 @@ procedure pipboy_note_refresh begin
    if (get_game_mode == PIPBOY) then begin
       if (game_time > get_sfall_global_int("lastchek")) then begin
          set_sfall_global("lastchek", game_time + ONE_GAME_MINUTE * ((ticks_til_hour(0) / 60) / 10));
-         DeleteWin("win_days");
          call show_days;
       end
    end
@@ -157,31 +131,23 @@ procedure check_invasions begin
 end
 
 procedure show_note begin
-   get_offsets;
+variable get_ini;
 
-   create_win("win_note_top", ((Scr_Width/2)-288 + OffsetX), ((Scr_Heigh/2)-207 + OffsetY), 148, 97);
-   SelectWin("win_note_top");
-   Display("PCX/pip2_top.pcx");
-   ShowWin;
+   Scr_Width := (get_screen_width / 2);
+   Scr_Height := (get_screen_height / 2);
 
-   create_win("win_note_bottom", ((Scr_Width/2)-288 + OffsetX), ((Scr_Heigh/2)-91 + OffsetY), 148, 111);
-   SelectWin("win_note_bottom");
-   Display("PCX/pip2_bottom.pcx");
-   ShowWin;
+   get_ini := get_ini_setting("f2_res.ini|IFACE|IFACE_BAR_MODE");
+   if (get_ini == 1) then
+      Scr_Height := Scr_Height + 50;
 
-   create_win("win_note_daysbg", ((Scr_Width/2)-253 + OffsetX), ((Scr_Heigh/2)-110 + OffsetY), 40, 19);
-   SelectWin("win_note_daysbg");
-   Display("PCX/pip2_daysbg.pcx");
-   ShowWin;
+   // If using original resolution for whatever weird reason
+   if (Scr_Height == 240) then begin
+      Scr_Height := Scr_Height + 50;
+   end
 
-   create_win("win_note_left", ((Scr_Width/2)-288 + OffsetX), ((Scr_Heigh/2)-110 + OffsetY), 39, 19);
-   SelectWin("win_note_left");
-   Display("PCX/pip2_left.pcx");
-   ShowWin;
-
-   create_win("win_note_right", ((Scr_Width/2)-213 + OffsetX), ((Scr_Heigh/2)-110 + OffsetY), 73, 19);
-   SelectWin("win_note_right");
-   Display("PCX/pip2_right.pcx");
+   create_win("win_note", (Scr_Width - 288), (Scr_Height - 207), 148, 227);
+   SelectWin("win_note");
+   draw_image("PCX/PIP2.frm", 0, 0, 0, 0);
    ShowWin;
 
    call show_days;
@@ -189,25 +155,18 @@ end
 
 // Initial "days left" when opening the PipBoy:
 procedure show_days begin
-   get_offsets;
-
    // We only have 250 images, so bigger than that can't be shown:
    // YES I KNOW THESE ARE 250 IMAGES, BUT IF YOU WANT IT TO LOOK EXACTLY
    // THE SAME AS IN FALLOUT 1, IT IS A NECESSARY THING TO DO. Sue me.
    // We will rework this shit some day in the future. Promise.
-   if (get_water_days_left <= 250) then begin
-      create_win("win_days", ((Scr_Width/2)-253 + OffsetX), ((Scr_Heigh/2)-110 + OffsetY), 40, 19);
-      SelectWin("win_days");
-      Display("PCX/days/"+ get_water_days_left +".pcx");
-      ShowWin;
-   end
+   SelectWin("win_note");
+   if (get_water_days_left <= 250) then
+      draw_image("PCX/days.frm", (get_water_days_left - 1), 35, 97, 0);
+   else
+      draw_image("PCX/days.frm", 250, 35, 97, 0);
+   ShowWin;
 end
 
 procedure delete_all begin
-   DeleteWin("win_note_top");
-   DeleteWin("win_note_bottom");
-   DeleteWin("win_note_daysbg");
-   DeleteWin("win_note_left");
-   DeleteWin("win_note_right");
-   DeleteWin("win_days");
+   DeleteWin("win_note");
 end

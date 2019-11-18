@@ -45,6 +45,7 @@ procedure generate_reply;
 procedure PrintReply(variable text);
 procedure ClearInputBox;
 
+variable last_reply;
 variable tellme_button;
 variable fetch_input;
 variable input;
@@ -176,6 +177,7 @@ procedure create_button begin
 
    if ((get_ini_setting("f2_res.ini|IFACE|IFACE_BAR_MODE") == 1 or get_ini_setting("f2_res.ini|OTHER_SETTINGS|DIALOG_SCRN_BACKGROUND") == 1)) then begin
       Scr_Height += 50;
+
    end
 
    create_win("win_input", (Scr_Width + 273), (Scr_Height + 116), 15, 15);
@@ -321,7 +323,9 @@ procedure CloseInput begin
    DeleteWin("tellme_reply");
 end
 
-procedure generate_reply begin
+// "critical" keyword
+// "ensure [procedure] works reliably. AFAIK it basically tells the engine "just stop what you're doing and focus on running this procedure first" -NovaRain
+critical procedure generate_reply begin
    variable
       critter             := dialog_obj,
       reply_source        := tma_data_array[0],
@@ -333,6 +337,16 @@ procedure generate_reply begin
 
       i, input_check, reply_final, split, word, keyword;
 
+   // Testcode for the future: Set variable if player hits a specific reply
+   variable
+      tma_var_line, tma_var_gvar, tma_var_state;
+
+   tma_data_gvar := load_array("tma_data_gvar");
+   tma_var_line := tma_data_gvar[0];
+   tma_var_gvar := tma_data_gvar[1];
+   tma_var_state := tma_data_gvar[2];
+
+   // Find reply
    if (input == obj_name(critter) and reply_name_start > 0) then
       reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
@@ -348,6 +362,10 @@ procedure generate_reply begin
                if (keyword == input) then begin
                   reply_final := message_str(reply_source, (i + msg_offset) + 100);
                   found := 1;
+
+                  if ((i + msg_offset) == tma_var_line) then
+                     set_global_var(tma_var_gvar, tma_var_state);
+
                   break;
                end
             end
