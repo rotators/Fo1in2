@@ -303,6 +303,16 @@ critical procedure generate_reply begin
       reply_final,
       split, word, keyword;
 
+   // Testcode for the future: Set variable if player hits a specific reply
+   variable
+      tma_var_line, tma_var_gvar, tma_var_state;
+
+   tma_data_gvar := load_array("tma_data_gvar");
+   tma_var_line := tma_data_gvar[0];
+   tma_var_gvar := tma_data_gvar[1];
+   tma_var_state := tma_data_gvar[2];
+
+   // Find reply
    if (input == obj_name(critter) and reply_name_start > 0) then
       reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
@@ -318,6 +328,10 @@ critical procedure generate_reply begin
                if (keyword == input) then begin
                   reply_final := message_str(reply_source, (i + msg_offset) + 100);
                   found := 1;
+
+                  if ((i + msg_offset) == tma_var_line) then
+                     set_global_var(tma_var_gvar, tma_var_state);
+
                   break;
                end
             end
