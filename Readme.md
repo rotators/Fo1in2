@@ -7,7 +7,7 @@ Generally we do not try to make a 1:1 copy of the first game. So, if you want to
 
 However, if you do not mind the one or the other change in mechanics, then Fallout et tu can be your way to go!
 
-## Features:
+## Features
 - Replicates Fallout 1 in 2 almost 1:1.
 - Comes with the Hero Appearance mod integrated (Bald Dude, Long Hair Dude, Punk Girl).
 - Selected Fallout 2 weapons have been added (sparingly!) to the game world in ways that don't break the game balance.
@@ -23,3 +23,6 @@ However, if you do not mind the one or the other change in mechanics, then Fallo
 Not to forget:
 
 This project is a more accessible modding platform and allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
+
+## Installation
+See [installation instructions](Fallout2/Fallout1in2/README.md#mod-installation).
