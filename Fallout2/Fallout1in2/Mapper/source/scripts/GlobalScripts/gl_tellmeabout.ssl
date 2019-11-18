@@ -35,12 +35,15 @@ procedure do_up;
 procedure do_up_cancel;
 procedure do_up_ok;
 
-procedure gamemodechange_handler;
-procedure keypress_handler;
+procedure GameModeChange_Handler;
+procedure KeyPress_Handler;
+procedure MouseClick_Handler;
 
 procedure OpenInput;
 procedure CloseInput;
 procedure generate_reply;
+procedure PrintReply(variable text);
+procedure ClearInputBox;
 
 variable last_reply;
 variable tellme_button;
@@ -50,93 +53,131 @@ variable input;
 #define SoundP             "butin4"
 #define SoundR             "butout4"
 
+// Button enter barter position
+#define but_posXs          272
+#define but_posXe          287
+#define but_posYs          40
+#define but_posYe          55
+
+#define button_barter       ((posXmouse > (Scr_Width) + but_posXs and posXmouse < (Scr_Width) + but_posXe) and (posYmouse > (Scr_Height) + but_posYs and posYmouse < (Scr_Height) + but_posYe))
+#define button_barter_check ((x_mouse > (Scr_Width) + but_posXs and x_mouse < (Scr_Width) + but_posXe) and (y_mouse > (Scr_Height) + but_posYs and y_mouse < (Scr_Height) + but_posYe))
+
+// Button swap weapon position
+//#define sbut_posXs         150
+//#define sbut_posXe         170
+//#define sbut_posYs         270
+//#define sbut_posYe         290
+
 variable Scr_Height;
 variable Scr_Width;
+variable x_mouse, y_mouse, shift_y;
 variable MousonBut;
 variable ButPres;
 variable TMA_started;
+variable charactersMap := 0;
+variable game_mode;
 
 procedure start begin
    if (game_loaded) then begin
-      register_hook_proc(HOOK_GAMEMODECHANGE, gamemodechange_handler);
-      register_hook_proc(HOOK_KEYPRESS, keypress_handler);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
+      register_hook_proc(HOOK_KEYPRESS, KeyPress_Handler);
+      register_hook_proc(HOOK_MOUSECLICK, MouseClick_Handler);
+
+      // Create an array and writes the array of the ID number in the global variable
+      // access to an array of other scripts
+      tma_data_array := create_array(6, 0);
+      set_sfall_global("TMA_DATA", tma_data_array);
    end
 end
 
-procedure gamemodechange_handler begin
-   if (get_game_mode == DIALOG and tellme_button == 0) then begin
-      TMA_started := 1;
+procedure GameModeChange_Handler begin
+   variable prev_mode := game_mode;
+   game_mode := get_game_mode;
+
+   if (tellme_button == false and game_mode == DIALOG) then begin
+      TMA_started := true;
 
       // TMA doesn't work with party members (different interface)
-      if not(obj_in_party(dialog_obj)) then
-         call create_button;
-   end
-   else if (get_game_mode != DIALOG and tellme_button == 1) then begin
-      call delete_button;
-   end
+      if (obj_in_party(dialog_obj) == false) then begin
+         if (charactersMap == 0) then begin
+            // TODO: Make getting characters from ini config to support multilanguage
+            charactersMap := {
+                2:"1",  3:"2",  4:"3",  5:"4",  6:"5",  7:"6",  8:"7",  9:"8", 10:"9", 11:"0",
+               12:"-", 13:"=", 16:"Q", 17:"W", 18:"E", 19:"R", 20:"T", 21:"Y", 22:"U", 23:"I",
+               24:"O", 25:"P", 30:"A", 31:"S", 32:"D", 33:"F", 34:"G", 35:"H", 36:"J", 37:"K",
+               38:"L", 39:";", 44:"Z", 45:"X", 46:"C", 47:"V", 48:"B", 49:"N", 50:"M", 51:",",
+               52:".", 57: " "
+            };
+            fix_array(charactersMap);
+         end
 
-   // Reset TMA data when exiting dialog mode
-   if (dialog_obj == 0 and TMA_started == 1) then begin
-      TMA_started := 0;
-      reset_tma_data;
+         if (prev_mode bwand BARTER) then
+            call create_button in 1; // delay call
+         else
+            call create_button;
+      end
+   end
+   else if (tellme_button and (game_mode bwand DIALOG) == false) then begin
+      call delete_button;
+      TMA_started := false;
+      tma_data_array[0] := 0; // Unset TMA data when exiting dialog mode
+   end
+   else if (tellme_button and (game_mode bwand BARTER)) then begin
+      call delete_button;
+      if (fetch_input) then call CloseInput;
    end
 end
 
-procedure keypress_handler begin
+procedure KeyPress_Handler begin
    variable
       key_state := get_sfall_arg,
-      key_dik := get_sfall_arg,
-      i, key, char, abc;
+      key_dik   := get_sfall_arg,
+      char;
 
-   // This is for testing.
-
-   if (fetch_input == 1 and key_state > 0) then begin
-      if (key_dik == DIK_ESCAPE) then begin
-         call CloseInput;
-      end
-      else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER) then begin
-         call generate_reply;
-      end
-      else if (key_dik == DIK_BACK and strlen(input) > 0) then begin
-         input := substr(input, 0, -1);
-      end
-      else begin
-         // TODO: Replace with something better?
-         abc := {2:"1", 3:"2", 4:"3", 5:"4", 6:"5", 7:"6", 8:"7", 9:"8", 10:"9", 11:"0",
-                12:"-", 13:"=", 16:"Q", 17:"W", 18:"E", 19:"R", 20:"T", 21:"Y", 22:"U", 23:"I",
-                24:"O", 25:"P", 30:"A", 31:"S", 32:"D", 33:"F", 34:"G", 35:"H", 36:"J", 37:"K",
-                38:"L", 39:";", 44:"Z", 45:"X", 46:"C", 47:"V", 48:"B", 49:"N", 50:"M", 51:",",
-                52:".", 57: " "};
-
-         foreach (key : char in abc) begin
-            if (key == key_dik) then input := input + char;
+   if (key_state) then begin
+      // This is for testing.
+      if (fetch_input) then begin
+         if (key_dik == DIK_ESCAPE) then begin
+            call CloseInput;
          end
+         else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER) then begin
+            call ClearInputBox;
+            call generate_reply;
+         end
+         else if (key_dik == DIK_BACK and input != "") then begin
+            input := substr(input, 0, -1);
+            call ClearInputBox;
+         end
+         else begin
+            if (strlen(input) < 30) then begin // need new function get text width
+               char := charactersMap[key_dik];
+               if (char) then input += char;
+            end
+         end
+
+         SelectWin("tellme_interface");
+         Format(input, 200, 98, 240, 14, justifyleft);
+         ShowWin;
+
+         // Override key with something else, because 1, 2, 3, 4, etc. can still advance through dialog
+         // Allow screenshots, though
+         if (key_dik != DIK_F12) then set_sfall_return(-1);
       end
-
-      debug("input: " + input);
-
-      // Override key with something else, because 1, 2, 3, 4, etc. can still advance through dialog
-      // Allow screenshots, though
-      if (key_dik != DIK_F12) then
-         set_sfall_return(DIK_SPACE);
+      else if (tellme_button and key_dik == DIK_B) then begin
+         call delete_button;
+      end
    end
 end
 
 procedure create_button begin
-   variable get_ini;
+   tellme_button := true;
 
-   tellme_button := 1;
-
-   Scr_Width := (get_screen_width / 2);
+   Scr_Width  := (get_screen_width / 2);
    Scr_Height := (get_screen_height / 2);
 
-   get_ini := get_ini_setting("f2_res.ini|IFACE|IFACE_BAR_MODE");
-   if (get_ini == 1) then
-      Scr_Height := Scr_Height + 50;
-   else if (get_ini == 0) then begin
-      get_ini := get_ini_setting("f2_res.ini|OTHER_SETTINGS|DIALOG_SCRN_BACKGROUND");
-      if (get_ini == 1) then
-         Scr_Height := Scr_Height + 50;
+   if ((get_ini_setting("f2_res.ini|IFACE|IFACE_BAR_MODE") == 1 or get_ini_setting("f2_res.ini|OTHER_SETTINGS|DIALOG_SCRN_BACKGROUND") == 1)) then begin
+      Scr_Height += 50;
+
    end
 
    create_win("win_input", (Scr_Width + 273), (Scr_Height + 116), 15, 15);
@@ -148,160 +189,153 @@ procedure create_button begin
 end
 
 procedure delete_button begin
-   tellme_button := 0;
-
-   SelectWin("win_input");
-   DeleteButton("button_input");
+   tellme_button := false;
    DeleteWin("win_input");
 end
 
 procedure do_on begin
-   MousonBut := 1;
+   MousonBut := true;
 end
 
 procedure do_off begin
-   if (ButPres == 1) then
-   	play_sfx("IB2LU1X1");
-   MousonBut := 0;
-   ButPres := 0;
+   if (ButPres) then play_sfx("IB2LU1X1");
+   MousonBut := false;
+   ButPres := false;
 end
 
 procedure do_off_small begin
-   if (ButPres == 1) then
-   	play_sfx(SoundR);
-   MousonBut := 0;
-   ButPres := 0;
+   if (ButPres) then play_sfx(SoundR);
+   MousonBut := false;
+   ButPres := false;
 end
 
 procedure do_down begin
-   if (ButPres == 0) then begin
-      ButPres := 1;
+   if (ButPres == false) then begin
+      ButPres := true;
       play_sfx(SoundP);
    end
 end
 
 procedure do_down_small begin
-   if (ButPres == 0) then begin
-      ButPres := 1;
+   if (ButPres == false) then begin
+      ButPres := true;
       play_sfx("IB1P1XX1");
    end
 end
 
 procedure do_up begin
-   ButPres := 0;
+   ButPres := false;
    play_sfx(SoundR);
-   if (fetch_input == 0) then
-      call OpenInput;
+   if (fetch_input == false) then call OpenInput;
 end
 
 procedure do_up_cancel begin
-   ButPres := 0;
+   ButPres := false;
    play_sfx(SoundR);
    call CloseInput;
 end
 
 procedure do_up_ok begin
-   ButPres := 0;
+   ButPres := false;
    play_sfx(SoundR);
+   call ClearInputBox;
+   ShowWin; // redraw tellme interface
    call generate_reply;
+end
+
+procedure MouseClick_Handler begin
+variable type, button, posXmouse, posYmouse;
+
+   if (tellme_button == false) then return;
+
+   type      := get_sfall_arg; // event type: 1 - pressed, 0 - released
+   button    := get_sfall_arg; // button number (0 - left, 1 - right, up to 7)
+   posXmouse := get_mouse_x;
+   posYmouse := get_mouse_y;
+
+   if (button == 0) then begin
+      if (type == 1) then begin // pressed
+          x_mouse := get_mouse_x;
+          y_mouse := get_mouse_y;
+      end
+      else if (type == 0 and button_barter and button_barter_check) then begin
+         call delete_button;
+      end
+   end
+   else if (button == 2 and type) then begin // middle button
+      call delete_button;
+      if (fetch_input) then call CloseInput;
+   end
 end
 
 // Create input interface
 procedure OpenInput begin
-   variable valid_source;
-
-   tma_data_array := load_array("tma_data_array");
-   valid_source := tma_data_array[0];
 
    // Only open interface if valid TMA data has been saved
    // (computer terminals and some other critters don't have TMAs)
-   if (valid_source > 0) then begin
-      // TODO: Wait for sfall addition
-      //last_reply := get_last_reply;
-
-      fetch_input := 1;
+   if (tma_data_array[0] > 0) then begin
+      fetch_input := true;
       input := "";
       //debug("TMA input enabled!");
 
-      // Opening the interface clears the Reply window.
-      dialog_message("");
+      // Reply window (clear the Reply window)
+      create_win("tellme_reply", (Scr_Width - 190), (Scr_Height - 64), 390, 64);
+      SelectWin("tellme_reply");
+      Display("PCX/tellmeabout_reply.pcx");
+      SetTextColor(0.0, 1.0, 0.0);
+      Format("What do you want to know?!", 8, 8, 200, 10, 0); // test reply
+      ShowWin;
 
       // Fake input / dialog option overlay
-      create_win("tellme_interface", (Scr_Width - 256), (Scr_Height + 24), 512, 160);
+      create_win("tellme_interface", (Scr_Width - 320), Scr_Height, 641, 190);
       SelectWin("tellme_interface");
-      draw_image("PCX/tellmeabout.frm", 0, 0, 0, 0);
+      FillWin(0.3, 0.3, 0.3);
+      sfall_func1("draw_image", "art\\intrface\\di_talk.frm");
+      draw_image("art\\intrface\\lsgbox.frm", 0, 320, 20, false);
 
       // CANCEL button
-      AddButton("button_cancel", 271, 100, 15, 16);
+      AddButton("button_cancel", 335, 120, 15, 16);
       AddButtonGFX("button_cancel", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
       AddButtonProc("button_cancel", do_on, do_off_small, do_down_small, do_up_cancel);
-
       // OK button
-      AddButton("button_ok", 145, 100, 15, 16);
+      AddButton("button_ok", 210, 120, 15, 16);
       AddButtonGFX("button_ok", "PCX/lilreddn.pcx", "PCX/lilredup.pcx", "PCX/lilredup.pcx");
       AddButtonProc("button_ok", do_on, do_off_small, do_down_small, do_up_ok);
 
+      SetFont(103);
+      SetTextColor(0.52, 0.75, 0.15);
+      // TODO: Make getting text from game MSG-files
+      Format("Ask about what ?", 240, 70, 200, 30, 0);
+      Format("Done", 230, 118, 100, 30, 0);
+      Format("Cancel", 355, 118, 100, 30, 0);
+
+      SetFont(100);
+      SetTextColor(0.0, 1.0, 0.0);
+      Format("$" + dude_caps, 4, 36, 70, 15, justifycenter);
       ShowWin;
-
-      // Delete the input button
-      call delete_button;
-
-      // Create windows that will block the barter and dialog history buttons
-      create_win("barter_block", (Scr_Width + 266), (Scr_Height + 34), 25, 25);
-      SelectWin("barter_block");
-      draw_image("PCX/block_barter.frm", 0, 0, 0, 0);
-      ShowWin;
-
-      create_win("history_block", (Scr_Width - 310), (Scr_Height + 153), 60, 30);
-      SelectWin("history_block");
-      draw_image("PCX/block_history.frm", 0, 0, 0, 0);
-      ShowWin;
-
-      // TODO: Also have to block the "switch hand"-button on the main interface, because pressing it opens the barter screen.
-      // Maybe the buttons can be disabled via some Sfall hackery instead?
-
    end
 end
 
 procedure CloseInput begin
-   fetch_input := 0;
+   fetch_input := false;
    //debug("TMA input disabled!");
-
-   SelectWin("tellme_interface");
-   DeleteButton("button_cancel");
-   DeleteButton("button_ok");
    DeleteWin("tellme_interface");
-
-   SelectWin("barter_block");
-   DeleteWin("barter_block");
-
-   SelectWin("history_block");
-   DeleteWin("history_block");
-
-   // TODO: Wait for sfall addition
-   //dialog_message(last_reply);
-
-   call create_button;
+   DeleteWin("tellme_reply");
 end
 
 // "critical" keyword
 // "ensure [procedure] works reliably. AFAIK it basically tells the engine "just stop what you're doing and focus on running this procedure first" -NovaRain
 critical procedure generate_reply begin
    variable
-      critter := dialog_obj,
-      reply_source := tma_data_array[0],
-      msg_offset := tma_data_array[1],
-      reply_name_start := tma_data_array[2],
-      reply_name_end := tma_data_array[3],
+      critter             := dialog_obj,
+      reply_source        := tma_data_array[0],
+      msg_offset          := tma_data_array[1],
+      reply_name_start    := tma_data_array[2],
+      reply_name_end      := tma_data_array[3],
       reply_unknown_start := tma_data_array[4],
-      reply_unknown_end := tma_data_array[5],
-      print_reply;
+      reply_unknown_end   := tma_data_array[5],
 
-   variable
-      i,
-      input_check,
-      reply_final,
-      split, word, keyword;
+      i, input_check, reply_final, split, word, keyword;
 
    // Testcode for the future: Set variable if player hits a specific reply
    variable
@@ -344,10 +378,22 @@ critical procedure generate_reply begin
    debug("input: <" + input + ">");
 
    // No valid reply found
-   if reply_final <= 0 then
-      reply_final := message_str(reply_source, random(reply_unknown_start, reply_unknown_end));
+   if reply_final <= 0 then reply_final := message_str(reply_source, random(reply_unknown_start, reply_unknown_end));
 
    // Print reply
-   dialog_message(reply_final);
+   call PrintReply(reply_final);
    input := ""; // Reset input
+end
+
+procedure PrintReply(variable text) begin
+   SelectWin("tellme_reply");
+   Display("PCX/tellmeabout_reply.pcx");
+   GotoXY(8, 8);
+   PrintRect(text, 385, 0);
+   ShowWin;
+end
+
+procedure ClearInputBox begin
+   SelectWin("tellme_interface");
+   FillRect(198, 94, 242, 14, 0, 0, 0);
 end

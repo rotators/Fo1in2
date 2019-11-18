@@ -284,10 +284,15 @@ variable merch_slot_armor_flags;
 variable tma_data_array;
 variable tma_data_gvar;
 #define set_tma_data(source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end)       \
-    if (tma_data_array == 0) then                                                                               \
-        tma_data_array := create_array(6, 0);                                                                   \
-    tma_data_array := [source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end];    \
-    save_array("tma_data_array", tma_data_array)
+    if (tma_data_array == 0) then begin                                                                         \
+        tma_data_array := get_sfall_global_int("TMA_DATA");                                                     \
+    end                                                                                                         \
+    tma_data_array[0] := source;                                                                                \
+    tma_data_array[1] := reply_str;                                                                             \
+    tma_data_array[2] := name_str_start;                                                                        \
+    tma_data_array[3] := name_str_end;                                                                          \
+    tma_data_array[4] := unknown_str_start;                                                                     \
+    tma_data_array[5] := unknown_str_end
 
 // Shortcut
 #define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
@@ -303,6 +308,7 @@ variable tma_data_gvar;
         tma_data_gvar := create_array(3, 0);	\
     tma_data_gvar := [line, gvar, val];    		\
     save_array("tma_data_gvar", tma_data_gvar)
+
 
 /*********************************************************
     Pick dead body type:
