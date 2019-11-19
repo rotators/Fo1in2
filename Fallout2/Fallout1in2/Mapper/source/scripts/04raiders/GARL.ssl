@@ -178,6 +178,8 @@ procedure timed_event_p_proc begin
 end
 
 procedure talk_p_proc begin
+   set_tma_data(NAME, 1000, 1001, 1001, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END);
+
    dude_look_at_self;
    if (self_elevation == 1) then begin
       self_look_at_dude;
@@ -207,14 +209,12 @@ procedure talk_p_proc begin
             if (global_var(GVAR_MISTAKEN_ID)) then begin//Raiders think you are Garl's father
                call garl01;
             end
+            else if (local_var(4) < 1) then begin
+               call first;
+               set_local_var(4, 1);
+            end
             else begin
-               if (local_var(4) < 1) then begin
-                  call first;
-                  set_local_var(4, 1);
-               end
-               else begin
-                  call notfirst;
-               end
+               call notfirst;
             end
          end
          gsay_end;
@@ -245,8 +245,7 @@ procedure return_to_map begin
    obj_unlock(Cell_Door_Ptr);
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if get_tandi_returned then begin
       set_global_var(GVAR_ENEMY_RAIDERS, 1);
    end
@@ -254,14 +253,12 @@ begin
       if (global_var(GVAR_MISTAKEN_ID)) then begin//Raiders think you are Garl's father
          set_global_var(GVAR_ENEMY_RAIDERS, 0);
       end
-      else begin
-         if global_var(GVAR_TANDI_ESCAPE) then begin
+      else if global_var(GVAR_TANDI_ESCAPE) then begin
+         set_global_var(GVAR_ENEMY_RAIDERS, 1);
+      end
+      if (self_can_see_dude) then begin
+         if (global_var(GVAR_RAID_LOOTING)) then begin//  "RAID_LOOTING" (are you stealing from them)
             set_global_var(GVAR_ENEMY_RAIDERS, 1);
-         end
-         if (self_can_see_dude) then begin
-            if (global_var(GVAR_RAID_LOOTING)) then begin//  "RAID_LOOTING" (are you stealing from them)
-               set_global_var(GVAR_ENEMY_RAIDERS, 1);
-            end
          end
       end
    end
@@ -311,7 +308,6 @@ procedure destroy_p_proc begin
          set_global_var(GVAR_GARLS_FRIEND, 0);//GARLS_FRIEND
       //end
    end
-   rm_timer_event(self_obj);
    inc_inv_evil_crit
 end
 
@@ -410,13 +406,11 @@ procedure first begin
    if (global_var(GVAR_TANDI_HIRELING_STATUS) > 1) then begin
       call garl43;
    end
+   else if (global_var(GVAR_TANDI_HIRELING_STATUS) > 0) then begin
+      call garl12;
+   end
    else begin
-      if (global_var(GVAR_TANDI_HIRELING_STATUS) > 0) then begin
-         call garl12;
-      end
-      else begin
-         call garl32;
-      end
+      call garl32;
    end
 end
 
@@ -424,13 +418,11 @@ procedure notfirst begin
    if (global_var(GVAR_TANDI_HIRELING_STATUS) > 1) then begin
       call garl43;
    end
+   else if (global_var(GVAR_TANDI_HIRELING_STATUS) > 0) then begin
+      call garl22;
+   end
    else begin
-      if (global_var(GVAR_TANDI_HIRELING_STATUS) > 0) then begin
-         call garl22;
-      end
-      else begin
-         call garl41;
-      end
+      call garl41;
    end
 end
 
@@ -517,8 +509,7 @@ procedure garl06 begin
    NOption(123, garl10, 6);
 end
 
-procedure garl06a
-begin
+procedure garl06a begin
    if (is_success(do_check(dude_obj, STAT_ch, 0)) or is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 10))) then begin
       call garl08;
    end
@@ -527,34 +518,29 @@ begin
    end
 end
 
-procedure garl07
-begin
+procedure garl07 begin
    NMessage(124);
    NOption(125, garl08, 6);
 end
 
-procedure garl08
-begin
+procedure garl08 begin
    NMessage(126);
    set_global_var(GVAR_MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
    call freetandi;
 end
 
-procedure garl09
-begin
+procedure garl09 begin
    NMessage(127);
    call garlcbt;
 end
 
-procedure garl10
-begin
+procedure garl10 begin
    NMessage(128);
    set_global_var(GVAR_MISTAKEN_ID, 0);//Raiders no longer think you are Garl's father
    call garlcbt;
 end
 
-procedure garl11
-begin
+procedure garl11 begin
    if (women_killed > 1) then begin
       women_killed := 0;
       NMessage(129);
@@ -579,8 +565,7 @@ procedure garl12a begin
    NMessage(201);
 end
 
-procedure garl12b
-begin
+procedure garl12b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 10)) or is_success(do_check(dude_obj, STAT_ch, 0))) then begin
       call garl15;
    end
@@ -589,8 +574,7 @@ begin
    end
 end
 
-procedure garl15
-begin
+procedure garl15 begin
    Reply(140);
    if (has_skill(dude_obj, SKILL_SPEECH) >= 45) then begin
       NOption(141, garl15a, 6);
@@ -600,8 +584,7 @@ begin
    NOption(203, garl28, 5);
 end
 
-procedure garl15a
-begin
+procedure garl15a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 10)) or is_success(do_check(dude_obj, STAT_ch, 0))) then begin
       call garl16;
    end
@@ -610,26 +593,22 @@ begin
    end
 end
 
-procedure garl16
-begin
+procedure garl16 begin
    NMessage(145);
    call freetandi;
 end
 
-procedure garl17
-begin
+procedure garl17 begin
    NMessage(146);
    call garlcbt;
 end
 
-procedure garl17a
-begin
+procedure garl17a begin
    NMessage(204);
    call garlcbt;
 end
 
-procedure garl18
-begin
+procedure garl18 begin
    tandi_pid_ptr := create_object(PID_BARTER_TANDI, 0, 0);
    add_obj_to_inven(self_obj, tandi_pid_ptr);
    NMessage(147);

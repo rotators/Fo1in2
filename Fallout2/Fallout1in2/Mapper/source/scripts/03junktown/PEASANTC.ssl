@@ -47,19 +47,23 @@ import variable removal_ptr;
 #define LVAR_Sleeping                     (2)
 
 procedure start begin
+end
 
+procedure look_at_p_proc begin
+end
+
+procedure description_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+   if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin
       if (self_can_see_dude) then begin
          call flee_dude;
       end
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
    end
@@ -68,15 +72,14 @@ end
 procedure destroy_p_proc begin
 
    if (source_obj == dude_obj) then begin
-      set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);// GVAR_ENEMY_JUNK_CITIZEN
+      set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
       set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep - 5);
       inc_good_critter
    end
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
    if (map_var(2) == 1) then begin
       if not(is_loading_game) then set_self_invisible;
       removal_ptr := self_obj;
@@ -107,64 +110,54 @@ procedure map_update_p_proc begin
    sleeping
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    set_local_var(1, 1);
    float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_JUNKENT);
+
    dude_look_at_self;
    if (local_var(2) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
-   else begin
-      if (local_var(1) == 1) then begin
-         float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
+   else if (local_var(1) == 1) then begin
+      float_msg(self_obj, mstr(124), FLOAT_MSG_RED);
+   end
+   else if ((GAME_TIME_IN_DAYS) < 80) then begin
+      set_local_var(0, 1);
+      if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+         float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
       end
       else begin
-         if ((GAME_TIME_IN_DAYS) < 80) then begin
-            set_local_var(0, 1);
-            if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
-               float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
-            end
-            else begin
-               if (check_general_rep < -10) then begin
-                  float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
-               end
-               else begin
-                  if (dude_is_male) then begin
-                     float_msg(self_obj, mstr(random(102, 103)), FLOAT_MSG_GREEN);
-                  end
-                  else begin
-                     float_msg(self_obj, mstr(random(102, 104)), FLOAT_MSG_GREEN);
-                  end
-               end
-            end
+         if (check_general_rep < -10) then begin
+            float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
          end
          else begin
-            set_map_var(2, 1);
-            start_gdialog(438, self_obj, 4, -1, -1);
-            gsay_start;
-            call PeasantC00;
-            gsay_end;
-            end_dialogue;
+            if (dude_is_male) then begin
+               float_msg(self_obj, mstr(random(102, 103)), FLOAT_MSG_GREEN);
+            end
+            else begin
+               float_msg(self_obj, mstr(random(102, 104)), FLOAT_MSG_GREEN);
+            end
          end
       end
    end
+   else begin
+      set_map_var(2, 1);
+      start_dialog_at_node(PeasantC00);
+   end
 end
 
-procedure PeasantC00
-begin
+procedure PeasantC00 begin
    Reply(105);
    NOption(106, PeasantCEnd, 4);
    NOption(107, PeasantC00a, 5);
    NLowOption(108, PeasantC01);
 end
 
-procedure PeasantC00a
-begin
+procedure PeasantC00a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call PeasantC03;
    end
@@ -173,26 +166,22 @@ begin
    end
 end
 
-procedure PeasantC01
-begin
+procedure PeasantC01 begin
    NMessage(109);
 end
 
-procedure PeasantC02
-begin
+procedure PeasantC02 begin
    NMessage(110);
 end
 
-procedure PeasantC03
-begin
+procedure PeasantC03 begin
    Reply(111);
    BOption(112, PeasantC04, 5);
    NOption(113, PeasantC03a, 6);
    NOption(106, PeasantCEnd, 4);
 end
 
-procedure PeasantC03a
-begin
+procedure PeasantC03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
       call PeasantC06;
    end
@@ -201,19 +190,16 @@ begin
    end
 end
 
-procedure PeasantC04
-begin
+procedure PeasantC04 begin
    set_local_var(1, 1);
    BMessage(114);
 end
 
-procedure PeasantC05
-begin
+procedure PeasantC05 begin
    NMessage(115);
 end
 
-procedure PeasantC06
-begin
+procedure PeasantC06 begin
    variable LVar0 := 0;
    LVar0 := mstr(116);
    if not(is_killian_alive) then begin
@@ -237,11 +223,9 @@ begin
    NOption(122, PeasantCEnd, 5);
 end
 
-procedure PeasantC07
-begin
+procedure PeasantC07 begin
    NMessage(123);
 end
 
-procedure PeasantCEnd
-begin
+procedure PeasantCEnd begin
 end

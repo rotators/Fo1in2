@@ -34,7 +34,7 @@
 #define SCRIPT_1MOLRAT1  (27)  //  1molrat1.int   ; Mole Rat in Necropolis (?)                                                   
 #define SCRIPT_1MANHOL1  (28)  //  1manhol1.int   ; Manhole to get to the Sewers in Necropolis (?)                               
 #define SCRIPT_1LADDER1  (29)  //  1ladder1.int   ; Ladder for the Manhole in Necropolis (?)                                     
-#define SCRIPT_GHOUL     (30)  //  ghoul.int      ; Ghoul manager of the Necropolis hotel
+#define SCRIPT_MANAGER   (30)  //  ghoul.int      ; Ghoul manager of the Necropolis hotel
 #define SCRIPT_ALPHHOTL  (31)  //  alphhotl.int   ; Map Script for Pre-Alpha demo                                                
 #define SCRIPT_GENGHOUL  (32)  //  genghoul.int   ; Generic Ghoul from Necropolis
 #define SCRIPT_ARADESH   (33)  //  Aradesh.int    ; Aradesh NPC from Shady Sands

@@ -37,67 +37,51 @@ procedure start begin
          if not(is_loading_game) then set_self_invisible;
       end
    end
-   if (active) then begin
-      if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-         if (necropolis_wpump_fixed) then begin
-            float_msg(self_obj, mstr(102), FLOAT_MSG_YELLOW);
-         end
-         else begin
-            float_msg(self_obj, mstr(101), FLOAT_MSG_YELLOW);
-         end
+end
+
+procedure talk_p_proc begin
+   if (necropolis_wpump_fixed) then begin
+      float_msg(self_obj, mstr(102), FLOAT_MSG_YELLOW);
+   end
+   else begin
+      float_msg(self_obj, mstr(101), FLOAT_MSG_YELLOW);
+   end
+end
+
+procedure critter_p_proc begin
+  if (global_var(GVAR_ENEMY_NECROPOLIS) and self_can_see_dude) then begin
+      tmp_hostile := 1;
+   end
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      set_global_var(GVAR_HUB_FILLER_30, 0);
+      set_global_var(GVAR_ENEMY_NECROPOLIS, 1);
+      attack(dude_obj);
+   end
+   else if not(necropolis_wpump_fixed) then begin
+      if (tile_distance_objs(self_obj, dude_obj) > 7) then begin
+         tmp_hostile := 1;
       end
-      else begin
-         if (script_action == damage_proc) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-            call damage_p_proc;
-         end
-         else begin
-            if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-               if (global_var(GVAR_ENEMY_NECROPOLIS) and self_can_see_dude) then begin
-                  tmp_hostile := 1;
-               end
-               if (tmp_hostile) then begin
-                  tmp_hostile := 0;
-                  set_global_var(GVAR_HUB_FILLER_30, 0);
-                  set_global_var(GVAR_ENEMY_NECROPOLIS, 1);
-                  attack(dude_obj);
-               end
-               else begin
-                  if not(necropolis_wpump_fixed) then begin
-                     if (tile_distance_objs(self_obj, dude_obj) > 7) then begin
-                        tmp_hostile := 1;
-                     end
-                     else begin
-                        if ((tile_distance_objs(self_obj, dude_obj) > 4) and oktoyell) then begin
-                           oktoyell := 0;
-                           float_msg(self_obj, mstr(103), FLOAT_MSG_YELLOW);
-                        end
-                        else begin
-                           if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
-                              oktoyell := 1;
-                           end
-                        end
-                     end
-                  end
-               end
-            end
-            else begin
-               if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-                  tmp_hostile := 1;
-               end
-               else begin
-                  if (script_action == look_at_proc) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-                     script_overrides;
-                     display_msg(mstr(100));
-                  end
-               end
-            end
-         end
+      else if ((tile_distance_objs(self_obj, dude_obj) > 4) and oktoyell) then begin
+         oktoyell := 0;
+         float_msg(self_obj, mstr(103), FLOAT_MSG_YELLOW);
+      end
+      else if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
+         oktoyell := 1;
       end
    end
 end
 
-procedure damage_p_proc
-begin
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure damage_p_proc begin
 tmp_hostile := 1;
 end
 

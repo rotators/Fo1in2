@@ -126,8 +126,7 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (global_var(GVAR_IS_MORBID_TEAM_HOSTILE) == 1) then begin
       if (self_can_see_dude) then begin
          attack(dude_obj);
@@ -175,14 +174,12 @@ begin
    end
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
    if (self_tile == 12498) and (self_elevation == 1) then begin
       move_to(self_obj, 13498, 1);
    end
@@ -197,14 +194,12 @@ begin
       if ((game_time_hour > 1700) and (game_time_hour < 2330)) then begin
          move_to(self_obj, 12702, 1);
       end
+      else if ((game_time_hour >= 2330) or (game_time_hour < 800)) then begin
+         move_to(self_obj, sleep_tile, 1);
+      end
       else begin
-         if ((game_time_hour >= 2330) or (game_time_hour < 800)) then begin
-            move_to(self_obj, sleep_tile, 1);
-         end
-         else begin
-            if ((local_var(9) == 0) or (local_var(9) == 3)) then begin
-               move_to(self_obj, home_tile, 0);
-            end
+         if ((local_var(9) == 0) or (local_var(9) == 3)) then begin
+            move_to(self_obj, home_tile, 0);
          end
       end
    end
@@ -212,33 +207,28 @@ begin
    add_timer_event(self_obj, game_ticks(random(10, 30)), 2);
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
    if (combat_is_initialized == 0) then begin
       if ((game_time_hour > 1700) and (game_time_hour < 2330)) then begin
          move_to(self_obj, 12702, 1);
       end
-      else begin
-         if ((game_time_hour >= 2330) or (game_time_hour < 800)) then begin
-            move_to(self_obj, sleep_tile, 1);
-         end
-         else begin
-            if ((local_var(9) == 0) or (local_var(9) == 3)) then begin
-               rm_timer_event(self_obj);
-               move_to(self_obj, home_tile, 0);
-            end
-         end
+      else if ((game_time_hour >= 2330) or (game_time_hour < 800)) then begin
+         move_to(self_obj, sleep_tile, 1);
+      end
+      else if ((local_var(9) == 0) or (local_var(9) == 3)) then begin
+         rm_timer_event(self_obj);
+         move_to(self_obj, home_tile, 0);
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
+   set_tma_data_generic(TMA_MSG_JUNKENT);
+
    dude_look_at_self;
    if ((game_time_hour >= 800) and (game_time_hour < 1700)) then begin
       set_local_var(6, 0);
@@ -246,73 +236,62 @@ begin
    if (local_var(6) == 1) then begin
       display_msg(mstr(232));
    end
+   else if (local_var(9) != 0) then begin
+      float_msg(self_obj, message_str(SCRIPT_ENEMY, 101), FLOAT_MSG_RED);
+   end
    else begin
-      if (local_var(9) != 0) then begin
-         float_msg(self_obj, message_str(SCRIPT_ENEMY, 101), FLOAT_MSG_RED);
+      get_reaction
+      start_gdialog(104, self_obj, 4, -1, -1);
+      gsay_start;
+      if (got_eye) then begin
+         call Morbid09L;
       end
       else begin
-         get_reaction
-         start_gdialog(104, self_obj, 4, -1, -1);
-         gsay_start;
-         if (got_eye) then begin
-            call Morbid09L;
-         end
-         else begin
-            if (self_elevation == 1) then begin
-               if (not(local_var(5))) then begin
-                  call Morbid00L;
-               end
-               else begin
-                  call Morbid01L;
-               end
+         if (self_elevation == 1) then begin
+            if (not(local_var(5))) then begin
+               call Morbid00L;
             end
             else begin
-               if ((GAME_TIME_IN_DAYS) >= 80) then begin
-                  if (not(local_var(7))) then begin
-                     call Morbid17;
-                  end
-                  else begin
-                     call Morbid21;
-                  end
-               end
-               else begin
-                  if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-                     if (local_var(4)) then begin
-                        call Morbid04N;
-                     end
-                     else begin
-                        call Morbid00N;
-                     end
-                  end
-                  else begin
-                     if (local_var(4)) then begin
-                        if (local_var(1) > 1) then begin
-                           call Morbid13;
-                        end
-                        else begin
-                           call Morbid16;
-                        end
-                     end
-                     else begin
-                        if (local_var(1) > 1) then begin
-                           call Morbid00;
-                        end
-                        else begin
-                           call Morbid15;
-                        end
-                     end
-                  end
-               end
+               call Morbid01L;
             end
          end
-         gsay_end;
-         end_dialogue;
+         else if ((GAME_TIME_IN_DAYS) >= 80) then begin
+            if (not(local_var(7))) then begin
+               call Morbid17;
+            end
+            else begin
+               call Morbid21;
+            end
+         end
+         else if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+            if (local_var(4)) then begin
+               call Morbid04N;
+            end
+            else begin
+               call Morbid00N;
+            end
+         end
+         else if (local_var(4)) then begin
+            if (local_var(1) > 1) then begin
+               call Morbid13;
+            end
+            else begin
+               call Morbid16;
+            end
+         end
+         else if (local_var(1) > 1) then begin
+            call Morbid00;
+         end
+         else begin
+            call Morbid15;
+         end
       end
+      gsay_end;
+      end_dialogue;
    end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       add_timer_event(self_obj, game_ticks(1), 2);
       critter_injure(dude_obj, DAM_BLIND);//    DAM_BLIND         64
@@ -341,8 +320,7 @@ begin
    end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
    if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
       set_local_var(9, 1);
       if (self_elevation == 0) then begin
@@ -353,8 +331,7 @@ begin
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_IS_MORBID_TEAM_HOSTILE, 1);
    end
@@ -369,8 +346,7 @@ procedure destroy_p_proc begin
    end
 end
 
-procedure Morbid00
-begin
+procedure Morbid00 begin
    set_local_var(4, 1);
    Reply(101);
    NOption(102, Morbid03, 4);
@@ -383,19 +359,16 @@ begin
    end
 end
 
-procedure Morbid00a
-begin
+procedure Morbid00a begin
    DownReact
    call Morbid01;
 end
 
-procedure Morbid01
-begin
+procedure Morbid01 begin
    NMessage(107);
 end
 
-procedure Morbid02
-begin
+procedure Morbid02 begin
    Reply(108);
    NOption(109, MorbidEnd, 4);
    BOption(110, MorbidDownReact, 4);
@@ -405,8 +378,7 @@ procedure MorbidDownReact begin
    DownReact
 end
 
-procedure Morbid03
-begin
+procedure Morbid03 begin
    NMessage(111);
    if ((dude_cur_hp == dude_max_hp) and not(dude_poison_stat) and (dude_rads < 31)) then begin
       call Morbid04;
@@ -416,8 +388,7 @@ begin
    end
 end
 
-procedure Morbid04
-begin
+procedure Morbid04 begin
    Reply(112);
    BOption(113, Morbid04a, 4);
    NOption(114, Morbid07, 4);
@@ -425,15 +396,13 @@ begin
    NLowOption(128, Morbid07);
 end
 
-procedure Morbid04a
-begin
+procedure Morbid04a begin
    DownReact
    DownReact
    call Morbid05;
 end
 
-procedure Morbid05
-begin
+procedure Morbid05 begin
    Reply(115);
    NOption(116, Morbid07, 4);
    BOption(117, Morbid05a, 4);
@@ -441,22 +410,19 @@ begin
    BLowOption(129, Morbid05a);
 end
 
-procedure Morbid05a
-begin
+procedure Morbid05a begin
    DownReact
    DownReact
    call Morbid06;
 end
 
-procedure Morbid06
-begin
+procedure Morbid06 begin
    fetch_dude := 1;
    Gretch_call := 1;
    BMessage(118);
 end
 
-procedure Morbid07
-begin
+procedure Morbid07 begin
    if (dude_caps < 10) then begin
       call Morbid08;
    end
@@ -466,8 +432,7 @@ begin
    end
 end
 
-procedure Morbid08
-begin
+procedure Morbid08 begin
    DownReact
    Reply(120);
    BOption(223, FetchEnd, 4);
@@ -475,32 +440,26 @@ begin
    NOption(237, FetchEnd5, 4);
 end
 
-procedure Morbid09
-begin
+procedure Morbid09 begin
    variable LVar0 := 0;
    NMessage(121);
    DIAGNOSIS := mstr(122);
    if (dude_cur_hp == dude_max_hp) then begin
       DIAGNOSIS := DIAGNOSIS + mstr(178);
    end
-   else begin
-      if (dude_cur_hp > (dude_max_hp * 0.70000)) then begin
-         DIAGNOSIS := DIAGNOSIS + mstr(179);
-      end
-      else begin
-         if (dude_cur_hp > (dude_max_hp * 0.50000)) then begin
-            DIAGNOSIS := DIAGNOSIS + mstr(180);
-         end
-         else begin
-            if (dude_cur_hp > (dude_max_hp * 0.30000)) then begin
-               DIAGNOSIS := DIAGNOSIS + mstr(181);
-            end
-            else begin
-               DIAGNOSIS := DIAGNOSIS + mstr(182);
-            end
-         end
-      end
+   else if (dude_cur_hp > (dude_max_hp * 0.70000)) then begin
+      DIAGNOSIS := DIAGNOSIS + mstr(179);
    end
+   else if (dude_cur_hp > (dude_max_hp * 0.50000)) then begin
+      DIAGNOSIS := DIAGNOSIS + mstr(180);
+   end
+   else if (dude_cur_hp > (dude_max_hp * 0.30000)) then begin
+      DIAGNOSIS := DIAGNOSIS + mstr(181);
+   end
+   else begin
+      DIAGNOSIS := DIAGNOSIS + mstr(182);
+   end
+
    DIAGNOSIS := DIAGNOSIS + mstr(random(183, 186));
    if (dude_poison_stat) then begin
       DIAGNOSIS := DIAGNOSIS + mstr(random(187, 190));
@@ -510,18 +469,14 @@ begin
       if (LVar0 < 101) then begin
          DIAGNOSIS := DIAGNOSIS + mstr(191);
       end
+      else if (LVar0 < 201) then begin
+         DIAGNOSIS := DIAGNOSIS + mstr(192);
+      end
+      else if (LVar0 < 401) then begin
+         DIAGNOSIS := DIAGNOSIS + mstr(193);
+      end
       else begin
-         if (LVar0 < 201) then begin
-            DIAGNOSIS := DIAGNOSIS + mstr(192);
-         end
-         else begin
-            if (LVar0 < 401) then begin
-               DIAGNOSIS := DIAGNOSIS + mstr(193);
-            end
-            else begin
-               DIAGNOSIS := DIAGNOSIS + mstr(194);
-            end
-         end
+         DIAGNOSIS := DIAGNOSIS + mstr(194);
       end
    end
    if ((LVar0 > 30) and (LVar0 < 251)) then begin
@@ -547,8 +502,7 @@ begin
    call Morbid09a;
 end
 
-procedure Morbid09a
-begin
+procedure Morbid09a begin
    Reply(mstr(123) + COST + mstr(124));
    NOption(125, Morbid12, 4);
    BOption(126, Morbid10, 4);
@@ -557,19 +511,16 @@ begin
    NLowOption(129, Morbid11);
 end
 
-procedure Morbid10
-begin
+procedure Morbid10 begin
    DownReact
    BMessage(130);
 end
 
-procedure Morbid11
-begin
+procedure Morbid11 begin
    NMessage(131);
 end
 
-procedure Morbid12
-begin
+procedure Morbid12 begin
    UpReact
    NMessage(132);
    gfade_out(1);
@@ -590,8 +541,7 @@ begin
    end
 end
 
-procedure Morbid13
-begin
+procedure Morbid13 begin
    Reply(134);
    NOption(135, Morbid03, 4);
    NOption(136, Morbid14, 4);
@@ -601,13 +551,11 @@ begin
    end
 end
 
-procedure Morbid14
-begin
+procedure Morbid14 begin
    NMessage(138);
 end
 
-procedure Morbid15
-begin
+procedure Morbid15 begin
    Reply(139);
    NOption(140, Morbid03, 4);
    NOption(141, Morbid03, 4);
@@ -615,16 +563,14 @@ begin
    NLowOption(143, Morbid03);
 end
 
-procedure Morbid16
-begin
+procedure Morbid16 begin
    Reply(144);
    NOption(145, Morbid03, 4);
    NOption(146, Morbid14, 4);
    NLowOption(147, Morbid03);
 end
 
-procedure Morbid17
-begin
+procedure Morbid17 begin
    set_local_var(7, 1);
    if (local_var(1) < 2) then begin
       UpReactLevel
@@ -639,21 +585,18 @@ begin
    end
 end
 
-procedure Morbid18
-begin
+procedure Morbid18 begin
    Reply(153);
    NOption(154, Morbid03, 5);
    NOption(155, Morbid20, 5);
    NOption(156, Morbid19, 5);
 end
 
-procedure Morbid19
-begin
+procedure Morbid19 begin
    NMessage(157);
 end
 
-procedure Morbid20
-begin
+procedure Morbid20 begin
    variable LVar0 := 0;
    LVar0 := mstr(158);
    if (not(global_var(GVAR_KILLIAN_DEAD))) then begin
@@ -665,8 +608,7 @@ begin
    NOption(162, Morbid19, 5);
 end
 
-procedure Morbid21
-begin
+procedure Morbid21 begin
    Reply(163);
    NOption(164, Morbid03, 4);
    NOption(165, Morbid19, 4);
@@ -676,52 +618,44 @@ begin
    end
 end
 
-procedure Morbid22
-begin
+procedure Morbid22 begin
    Reply(167);
    NOption(168, Morbid03, 4);
    NOption(169, Morbid03, 5);
    NLowOption(170, Morbid03);
 end
 
-procedure Morbid23
-begin
+procedure Morbid23 begin
    NMessage(171);
 end
 
-procedure Morbid24
-begin
+procedure Morbid24 begin
    NMessage(172);
 end
 
-procedure Morbid25
-begin
+procedure Morbid25 begin
    NMessage(173);
 end
 
-procedure Morbid26
-begin
+procedure Morbid26 begin
    Reply(174);
    NOption(175, Morbid03, 4);
    NOption(176, Morbid03, 5);
    NLowOption(177, Morbid03);
 end
 
-procedure Morbid27
-begin
+procedure Morbid27 begin
    set_local_var(8, 1);
    Reply(234);
    BOption(235, Morbid28, 4);
 end
 
-procedure Morbid28
-begin
+procedure Morbid28 begin
    BottomReact
    BMessage(236);
 end
 
-procedure Morbid00L
-begin
+procedure Morbid00L begin
    Reply(204);
    set_local_var(5, 1);
    BOption(207, MorbidCombat, 4);
@@ -729,8 +663,7 @@ begin
    NLowOption(209, MorbidCombat);
 end
 
-procedure Morbid00La
-begin
+procedure Morbid00La begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Morbid02L;
    end
@@ -739,15 +672,13 @@ begin
    end
 end
 
-procedure Morbid01L
-begin
+procedure Morbid01L begin
    BMessage(210);
    Gretch_call := 1;
    fetch_dude := 1;
 end
 
-procedure Morbid02L
-begin
+procedure Morbid02L begin
    Reply(211);
    NOption(212, Morbid02La, 5);
    if (global_var(GVAR_GRETCH_PRIMECUTS) == 1) then begin
@@ -755,8 +686,7 @@ begin
    end
 end
 
-procedure Morbid02La
-begin
+procedure Morbid02La begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Morbid04L;
    end
@@ -765,8 +695,7 @@ begin
    end
 end
 
-procedure Morbid03L
-begin
+procedure Morbid03L begin
    rndx := dude_gender;
 
    if (rndx == 0) then begin
@@ -779,15 +708,13 @@ begin
    fetch_dude := 1;
 end
 
-procedure Morbid04L
-begin
+procedure Morbid04L begin
    Reply(215);
    NOption(216, Morbid06L, 5);
    NOption(217, Morbid05L, 5);
 end
 
-procedure Morbid05L
-begin
+procedure Morbid05L begin
    variable LVar0 := 0;
    LVar0 := mstr(218);
    LVar0 := LVar0 + mstr(220);
@@ -796,48 +723,41 @@ begin
    NOption(222, Morbid06L, 5);
 end
 
-procedure Morbid06L
-begin
+procedure Morbid06L begin
    BMessage(223);
    Gretch_call := 1;
    fetch_dude := 1;
 end
 
-procedure Morbid07L
-begin
+procedure Morbid07L begin
    Reply(224);
    NOption(225, Morbid08L, 5);
    NOption(226, Morbid06L, 5);
 end
 
-procedure Morbid08L
-begin
+procedure Morbid08L begin
    NMessage(227);
    getting_eye := 1;
 end
 
-procedure Morbid09L
-begin
+procedure Morbid09L begin
    got_eye := 0;
    Reply(229);
    NOption(230, Morbid10L, 5);
 end
 
-procedure Morbid10L
-begin
+procedure Morbid10L begin
    NMessage(231);
 end
 
-procedure Morbid00N
-begin
+procedure Morbid00N begin
    Reply(196);
    NOption(197, Morbid00Na, 4);
    NOption(198, Morbid00Nb, 5);
    NLowOption(199, Morbid03N);
 end
 
-procedure Morbid00Na
-begin
+procedure Morbid00Na begin
    if (dude_cur_hp < (dude_max_hp - 7)) then begin
       call Morbid03;
    end
@@ -846,8 +766,7 @@ begin
    end
 end
 
-procedure Morbid00Nb
-begin
+procedure Morbid00Nb begin
    if (dude_cur_hp < (dude_max_hp - 3)) then begin
       call Morbid03;
    end
@@ -856,32 +775,27 @@ begin
    end
 end
 
-procedure Morbid01N
-begin
+procedure Morbid01N begin
    DownReact
    BMessage(200);
 end
 
-procedure Morbid02N
-begin
+procedure Morbid02N begin
    NMessage(201);
 end
 
-procedure Morbid03N
-begin
+procedure Morbid03N begin
    NMessage(202);
 end
 
-procedure Morbid04N
-begin
+procedure Morbid04N begin
    Reply(203);
    NOption(197, Morbid00Na, 4);
    NOption(198, Morbid00Nb, 5);
    NLowOption(199, Morbid03N);
 end
 
-procedure get_eye
-begin
+procedure get_eye begin
    CurrentHP := dude_cur_hp;
    EyeHPloss := (random(10, 15) - dude_luck);
    if (EyeHPloss < 1) then begin
@@ -905,35 +819,29 @@ begin
    getting_eye := 0;
 end
 
-procedure MorbidCombat
-begin
+procedure MorbidCombat begin
    tmp_hostile := 1;
 end
 
-procedure MorbidEnd
-begin
+procedure MorbidEnd begin
 end
 
-procedure FetchEnd
-begin
+procedure FetchEnd begin
    fetch_dude := 1;
    Gretch_call := 1;
 end
 
-procedure FetchEnd2
-begin
+procedure FetchEnd2 begin
    Reply(115);
    NOption(237, FetchEnd5, 4);
 end
 
-procedure FetchEnd3
-begin
+procedure FetchEnd3 begin
    Reply(224);
    NOption(208, FetchEnd4, 4);
 end
 
-procedure FetchEnd4
-begin
+procedure FetchEnd4 begin
    rm_timer_event(self_obj);
    reg_anim_clear(dude_obj);
    reg_anim_begin();
@@ -943,8 +851,7 @@ begin
    getting_eye := 1;
 end
 
-procedure FetchEnd5
-begin
+procedure FetchEnd5 begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -15)) or is_success(do_check(dude_obj, STAT_ch, -2))) then begin
       call FetchEnd3;
    end

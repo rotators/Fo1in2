@@ -253,8 +253,7 @@ variable merch_slot_armor_flags;
 #define TMA_MSG_JUNKCSNO        (7600)
 #define TMA_MSG_JUNKKILL        (8200)
 #define TMA_MSG_BOS             (8800)
-#define TMA_MSG_CHILDRN1        (11200)
-#define TMA_MSG_CHILDRN2        (11800)
+#define TMA_MSG_COC             (11200)
 #define TMA_MSG_RAIDERS         (15400)
 #define TMA_MSG_SHADYE          (16000)
 #define TMA_MSG_SHADYW          (16600)
@@ -282,7 +281,7 @@ variable merch_slot_armor_flags;
 #define TMA_MSG_GUNRUNNR_LVL3   (29000)
 
 variable tma_data_array;
-variable tma_data_gvar;
+variable tma_gvar_array;
 #define set_tma_data(source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end)       \
     if (tma_data_array == 0) then begin                                                                         \
         tma_data_array := get_sfall_global_int("TMA_DATA");                                                     \
@@ -297,18 +296,16 @@ variable tma_data_gvar;
 // Shortcut
 #define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
 
-#define reset_tma_data              set_tma_data(0, 0, 0, 0, 0, 0); \
-                                    set_tma_gvar(0, 0, 0)
-
 // If reply <line> is triggered, set <GVAR_> to <val>
 // Must be placed in the critter talk_p_proc.
 // TODO: Allow multiple GVARs and condition checks at some point? Not sure how necessary that will be, though.
-#define set_tma_gvar(line,gvar,val)             \
-    if (tma_data_gvar == 0) then                \
-        tma_data_gvar := create_array(3, 0);    \
-    tma_data_gvar := [line, gvar, val];         \
-    save_array("tma_data_gvar", tma_data_gvar)
-
+#define set_tma_gvar(line_num,gvar,val)       				\
+    if (tma_gvar_array == 0) then begin                		\
+        tma_gvar_array := get_sfall_global_int("TMA_GVAR");	\
+    end                                                  	\
+    tma_gvar_array[0] := line_num;							\
+    tma_gvar_array[1] := gvar;								\
+    tma_gvar_array[2] := val
 
 /*********************************************************
     Pick dead body type:

@@ -41,7 +41,7 @@ procedure MouseClick_Handler;
 
 procedure OpenInput;
 procedure CloseInput;
-procedure generate_reply;
+procedure GenerateReply;
 procedure PrintReply(variable text);
 procedure ClearInputBox;
 
@@ -89,6 +89,9 @@ procedure start begin
       // access to an array of other scripts
       tma_data_array := create_array(6, 0);
       set_sfall_global("TMA_DATA", tma_data_array);
+
+      tma_gvar_array := create_array(3, 0);
+      set_sfall_global("TMA_GVAR", tma_gvar_array);
    end
 end
 
@@ -123,6 +126,7 @@ procedure GameModeChange_Handler begin
       call delete_button;
       TMA_started := false;
       tma_data_array[0] := 0; // Unset TMA data when exiting dialog mode
+      tma_gvar_array[0] := 0;
    end
    else if (tellme_button and (game_mode bwand BARTER)) then begin
       call delete_button;
@@ -137,14 +141,13 @@ procedure KeyPress_Handler begin
       char;
 
    if (key_state) then begin
-      // This is for testing.
       if (fetch_input) then begin
          if (key_dik == DIK_ESCAPE) then begin
             call CloseInput;
          end
          else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER) then begin
             call ClearInputBox;
-            call generate_reply;
+            call GenerateReply;
          end
          else if (key_dik == DIK_BACK and input != "") then begin
             input := substr(input, 0, -1);
@@ -157,8 +160,9 @@ procedure KeyPress_Handler begin
             end
          end
 
+         call ClearInputBox;
          SelectWin("tellme_interface");
-         Format(input, 200, 102, 240, 14, justifyleft);
+         Format(input + "_", 200, 102, 240, 14, justifyleft);
          ShowWin;
 
          // Override key with something else, because 1, 2, 3, 4, etc. can still advance through dialog
@@ -241,7 +245,7 @@ procedure do_up_ok begin
    play_sfx(SoundR);
    call ClearInputBox;
    ShowWin; // redraw tellme interface
-   call generate_reply;
+   call GenerateReply;
 end
 
 procedure MouseClick_Handler begin
@@ -271,21 +275,18 @@ end
 
 // Create input interface
 procedure OpenInput begin
-variable test;
-
    // Only open interface if valid TMA data has been saved
    // (computer terminals and some other critters don't have TMAs)
    if (tma_data_array[0] > 0) then begin
       fetch_input := true;
       input := "";
-      //debug("TMA input enabled!");
 
       // Reply window (clear the Reply window)
       create_win("tellme_reply", (Scr_Width - 190), (Scr_Height - 64), 390, 64);
       SelectWin("tellme_reply");
       Display("PCX/tellmeabout_reply.pcx");
       SetTextColor(0.0, 1.0, 0.0);
-      //Format("What do you want to know?!", 13, 9, 190, 10, 0); // test reply
+      //Format("  " + "What do you want to know?!", 3, 9, 190, 10, 0); // test reply
       ShowWin;
 
       // Fake input / dialog option overlay
@@ -294,6 +295,7 @@ variable test;
       FillWin(0, 0, 0);
       sfall_func1("draw_image", "art\\intrface\\di_talk.frm");
       draw_image("art\\intrface\\lsgbox.frm", 0, 320, 24, false);
+      Format("_", 200, 102, 240, 14, justifyleft);
 
       // CANCEL button
       AddButton("button_cancel", 335, 123, 15, 16);
@@ -306,8 +308,6 @@ variable test;
 
       SetFont(103);
       SetTextColor(0.52, 0.75, 0.15);
-      // TODO: Make getting text from game MSG-files
-      //Format("Ask about what?", 240, 74, 200, 30, 0);
 
       Format(mstr_tma(1), 240, 74, 200, 30, 0);
       Format(mstr_tma(2), 230, 122, 100, 30, 0);
@@ -322,14 +322,13 @@ end
 
 procedure CloseInput begin
    fetch_input := false;
-   //debug("TMA input disabled!");
    DeleteWin("tellme_interface");
    DeleteWin("tellme_reply");
 end
 
 // "critical" keyword
 // "ensure [procedure] works reliably. AFAIK it basically tells the engine "just stop what you're doing and focus on running this procedure first" -NovaRain
-critical procedure generate_reply begin
+critical procedure GenerateReply begin
    variable
       critter := dialog_obj,
       reply_source := tma_data_array[0],
@@ -343,12 +342,9 @@ critical procedure generate_reply begin
 
    // Testcode for the future: Set variable if player hits a specific reply
    variable
-      tma_var_line, tma_var_gvar, tma_var_state;
-
-   tma_data_gvar := load_array("tma_data_gvar");
-   tma_var_line := tma_data_gvar[0];
-   tma_var_gvar := tma_data_gvar[1];
-   tma_var_state := tma_data_gvar[2];
+      tma_var_line := tma_gvar_array[0],
+      tma_var_gvar := tma_gvar_array[1],
+      tma_var_state := tma_gvar_array[2];
 
    // Find reply
    if (input == obj_name(critter) and reply_name_start > 0) then
@@ -392,8 +388,8 @@ end
 procedure PrintReply(variable text) begin
    SelectWin("tellme_reply");
    Display("PCX/tellmeabout_reply.pcx");
-   GotoXY(13, 9);
-   PrintRect(text, 375, 0);
+   GotoXY(3, 9);
+   PrintRect("  " + text, 380, 0);
    ShowWin;
 end
 
