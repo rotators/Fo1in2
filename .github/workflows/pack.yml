@@ -13,6 +13,7 @@ jobs:
   runs-on: windows-latest
   env:
    MOD_DIR:            "Fallout2/Fallout1in2"
+   MOD_RELEASE_NAME:   "Fallout1in2"
    MOD_VERSION_STRING: "FALLOUT ET TU"
    MOD_VERSION_MAJOR:  0
    MOD_ZIP:            "Fallout1in2-v"
@@ -29,6 +30,11 @@ jobs:
            commits="$(git rev-list HEAD --count)"
            echo ::set-env name=MOD_VERSION_STRING::${MOD_VERSION_STRING} ${MOD_VERSION_MAJOR}.${commits}
            echo ::set-env name=MOD_ZIP::${MOD_ZIP}${MOD_VERSION_MAJOR}.${commits}.zip
+           echo ::set-env name=MOD_RELEASE_NAME::${MOD_RELEASE_NAME} v${MOD_VERSION_MAJOR}.${commits}
+           echo ::set-env name=MOD_RELEASE_TAG::v${MOD_VERSION_MAJOR}.${commits}
+           echo ::set-env name=MOD_RELEASE_DRAFT::true
+           echo ::set-env name=MOD_RELEASE_PREPRELEASE::true
+           echo ::set-env name=MOD_RELEASE_ZIP:Fallout1in2.zip
     shell: bash
 
   - name:  Cleanup
@@ -57,10 +63,31 @@ jobs:
     shell: bash
 
   - name:  Pack
-    run:   7z a "$GITHUB_WORKSPACE/$MOD_ZIP" Fallout1in2
+    run:   7z a "$GITHUB_WORKSPACE/$MOD_ZIP" -m9=Deflate64 Fallout1in2
     shell: bash
     working-directory: Fallout2
 
   - name:  Pack listing
     run:   7z l $MOD_ZIP
     shell: bash
+
+  - name: Create release
+    id:   release
+    uses: actions/create-release@v1
+    with:
+     tag_name:     ${{ env.MOD_TAG }}
+     release_name: Fallout1in2 ${{ env.MOD_TAG }}
+     draft:        ${{ env.MOD_RELEASE_DRAFT }}
+     prerelease:   ${{ env.MOD_RELEASE_PRERELEASE }}
+    env:
+     GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+
+  - name: Upload release package
+    uses: actions/upload-release-asset@v1.0.1
+    with:
+     upload_url:         ${{ steps.release.outputs.upload_url }}
+     asset_path:         ${{ env.MOD_ZIP }}
+     asset_name:         ${{ env.MOD_RELEASE_ZIP }}
+     asset_content_type: application/zip
+    env:
+     GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
