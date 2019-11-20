@@ -3,13 +3,13 @@
    Recreates the "Tell Me About"-function from Fallout 1 (with improvements).
 
    NOTE:
-   
+
       To use TMA, add "set_tma_data()" to the talk_p_proc procedure of the critter script
       before starting the actual dialog. See Fo1.h for more details on that.
-      
-      If a dialog with critter or scenery (computer terminal) is initialized without running 
+
+      If a dialog with critter or scenery (computer terminal) is initialized without running
       set_tma_data() first, clicking the TMA button will not return anything.
-   
+
 */
 
 /* Include Files */
@@ -42,7 +42,6 @@ procedure GenerateReply;
 procedure PrintReply(variable text);
 procedure ClearInputBox;
 
-variable last_reply;
 variable tellme_button;
 variable fetch_input;
 variable input;
@@ -72,7 +71,6 @@ variable Scr_Width;
 variable x_mouse, y_mouse, shift_y;
 variable MousonBut;
 variable ButPres;
-variable TMA_started;
 variable charactersMap := 0;
 variable game_mode;
 
@@ -97,8 +95,6 @@ procedure GameModeChange_Handler begin
    game_mode := get_game_mode;
 
    if (tellme_button == false and game_mode == DIALOG) then begin
-      TMA_started := true;
-
       // TMA doesn't work with party members (different interface)
       if (obj_in_party(dialog_obj) == false) then begin
          if (charactersMap == 0) then begin
@@ -121,7 +117,10 @@ procedure GameModeChange_Handler begin
    end
    else if (tellme_button and (game_mode bwand DIALOG) == false) then begin
       call delete_button;
-      TMA_started := false;
+      // TODO:
+      // This gets called when using dialog to enter the barter interface.
+      // So after using the barter dialog option, TMAs aren't working anymore
+      // until the player has restarted the dialog.
       tma_data_array[0] := 0; // Unset TMA data when exiting dialog mode
       tma_gvar_array[0] := 0;
    end
