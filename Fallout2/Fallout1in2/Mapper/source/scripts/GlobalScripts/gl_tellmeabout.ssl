@@ -72,6 +72,8 @@ variable x_mouse, y_mouse, shift_y;
 variable MousonBut;
 variable ButPres;
 variable charactersMap := 0;
+variable charactersMapShift := 0;
+variable shiftPressed := 0;
 variable game_mode;
 
 procedure start begin
@@ -99,14 +101,23 @@ procedure GameModeChange_Handler begin
       if (obj_in_party(dialog_obj) == false) then begin
          if (charactersMap == 0) then begin
             // TODO: Make getting characters from ini config to support multilanguage
-            charactersMap := {
+            charactersMapShift := {
                 2:"1",  3:"2",  4:"3",  5:"4",  6:"5",  7:"6",  8:"7",  9:"8", 10:"9", 11:"0",
                12:"-", 13:"=", 16:"Q", 17:"W", 18:"E", 19:"R", 20:"T", 21:"Y", 22:"U", 23:"I",
                24:"O", 25:"P", 30:"A", 31:"S", 32:"D", 33:"F", 34:"G", 35:"H", 36:"J", 37:"K",
                38:"L", 39:";", 44:"Z", 45:"X", 46:"C", 47:"V", 48:"B", 49:"N", 50:"M", 51:",",
                52:".", 57: " "
             };
+            fix_array(charactersMapShift);
+            charactersMap := {
+                2:"1",  3:"2",  4:"3",  5:"4",  6:"5",  7:"6",  8:"7",  9:"8", 10:"9", 11:"0",
+               12:"-", 13:"=", 16:"q", 17:"w", 18:"e", 19:"r", 20:"t", 21:"y", 22:"u", 23:"i",
+               24:"o", 25:"p", 30:"a", 31:"s", 32:"d", 33:"f", 34:"g", 35:"h", 36:"j", 37:"k",
+               38:"l", 39:";", 44:"z", 45:"x", 46:"c", 47:"v", 48:"b", 49:"n", 50:"m", 51:",",
+               52:".", 57: " "
+            };
             fix_array(charactersMap);
+            shiftPressed := 0;
          end
 
          if (prev_mode bwand BARTER) then
@@ -145,14 +156,28 @@ procedure KeyPress_Handler begin
             call ClearInputBox;
             call GenerateReply;
          end
+         else if (key_dik == DIK_LSHIFT) then begin
+            shiftPressed := shiftPressed bwor 0x0001;
+         end
+         else if (key_dik == DIK_RSHIFT) then begin
+            shiftPressed := shiftPressed bwor 0x0002;
+         end
          else if (key_dik == DIK_BACK and input != "") then begin
             input := substr(input, 0, -1);
             call ClearInputBox;
          end
          else begin
-            if (strlen(input) < 30) then begin // need new function get text width
-               char := charactersMap[key_dik];
-               if (char) then input += char;
+            if shiftPressed>0 then begin
+               if (strlen(input) < 30) then begin // need new function get text width
+                  char := charactersMapShift[key_dik];
+                  if (char) then input += char;
+               end
+            end
+            else begin
+               if (strlen(input) < 30) then begin // need new function get text width
+                  char := charactersMap[key_dik];
+                  if (char) then input += char;
+               end
             end
          end
 
@@ -167,6 +192,14 @@ procedure KeyPress_Handler begin
       end
       else if (tellme_button and key_dik == DIK_B) then begin
          call delete_button;
+      end
+   end
+   else begin
+      if (key_dik == DIK_LSHIFT) then begin
+            shiftPressed := shiftPressed bwand 0xFFFE;
+      end
+      else if (key_dik == DIK_RSHIFT) then begin
+            shiftPressed := shiftPressed bwand 0xFFFD;
       end
    end
 end
