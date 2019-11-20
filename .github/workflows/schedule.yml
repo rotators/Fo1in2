@@ -96,16 +96,21 @@ jobs:
               echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
               echo ::endgroup::
            fi
+
+           # prevent getting cache if running from schedule
+           # top minds of GitHub decided to fail whole workflow on unsupported events, instead of sticking to displaying this info as a warning
+           if [ "${{ github.event_name }}" == "push" ]; then
+              echo ::set-env name=GHA_CACHE_GET::true
+           fi
     shell: bash
 
   - name: Cache (DirectX)
-    if:   env.GHA_TASK_SFALL_BINARY == 'true'
+    if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_CACHE_GET == 'true'
     id:   cache-dx
     uses: actions/cache@v1
     with:
      path: ~/cache-dx
      key:  cache-dx-test2
-    continue-on-error: true
 
   - name:  Cache create (DirectX)
     if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
