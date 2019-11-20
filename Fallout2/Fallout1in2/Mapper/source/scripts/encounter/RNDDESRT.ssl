@@ -4327,69 +4327,80 @@ procedure Glow6 begin
 end
 
 procedure Death1 begin
-   display_msg(message_str(SCRIPT_RNDDESRT, 286));
    Outer_ring := (dude_perception / 3) + 8;
    Inner_ring := (dude_perception / 3) + 8;
-   Critter_direction := random(0, 5);
-   Critter_type := PID_DEATHCLAW;// 51  Deathclaw
-   Critter_script := SCRIPT_DETHCLAW;// DethClaw.int
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   display_msg(message_str(SCRIPT_RNDDESRT, 287));
-   Critter_type := PID_RADSCORPION;
-   Critter_script := SCRIPT_RADSCORP;
-   Tot_Critter_A := random(3, 5);
-   while(Tot_Critter_A) do begin
+
+   // Added quest check, so the Deathclaw doesn't appear before missing caravans.
+   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 286));
       Critter_direction := random(0, 5);
+      Critter_type := PID_DEATHCLAW;
+      Critter_script := SCRIPT_DETHCLAW;
       call Place_critter;
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      Tot_Critter_A := Tot_Critter_A - 1;
+   end
+   else begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 287));
+      Critter_type := PID_RADSCORPION;
+      Critter_script := SCRIPT_RADSCORP;
+      Tot_Critter_A := random(3, 5);
+      while(Tot_Critter_A) do begin
+         Critter_direction := random(0, 5);
+         call Place_critter;
+         obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+         Tot_Critter_A := Tot_Critter_A - 1;
+      end
    end
    set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
    call Add_Mysterious_Stranger;
 end
 
 procedure Death2 begin
-   Outer_ring := (dude_perception / 3) + 8;
-   Inner_ring := (dude_perception / 3) + 8;
-   Critter_direction := random(0, 5);
-   Critter_type := PID_DEATHCLAW;//DEATHCLAW
-   Critter_script := SCRIPT_DETHCLAW;
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Outer_ring := (dude_perception / 2) + 6;
-   Inner_ring := (dude_perception / 2) + 2;
-   Tot_Critter_A := random(2, 4);
-   group_angle := random(0, 5);
-   Critter_type := PID_RADSCORPION;//RADSCORPIONS
-   Critter_script := SCRIPT_RADSCORP;
-   while(Tot_Critter_A) do begin
-      Critter_direction := group_angle + (random(0, 4) - 2);
-      while(Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
+   // Added quest check, so the Deathclaw doesn't appear before missing caravans.
+   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin
+      Outer_ring := (dude_perception / 3) + 8;
+      Inner_ring := (dude_perception / 3) + 8;
+      Critter_direction := random(0, 5);
+      Critter_type := PID_DEATHCLAW;
+      Critter_script := SCRIPT_DETHCLAW;
       call Place_critter;
-
-      enc_group_angle(Critter_direction)
-
-      if (random(0, 2) == 0) then begin
-         Critter_direction := Critter_direction + (random(0, 2) - 1);
+      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+   end
+   else begin
+      Outer_ring := (dude_perception / 2) + 6;
+      Inner_ring := (dude_perception / 2) + 2;
+      Tot_Critter_A := random(2, 4);
+      group_angle := random(0, 5);
+      Critter_type := PID_RADSCORPION;
+      Critter_script := SCRIPT_RADSCORP;
+      while(Tot_Critter_A) do begin
+         Critter_direction := group_angle + (random(0, 4) - 2);
          while(Critter_direction < 0) do begin
             Critter_direction := Critter_direction + 6;
          end
          if (Critter_direction > 5) then begin
             Critter_direction := Critter_direction % 6;
          end
+         call Place_critter;
+
+         enc_group_angle(Critter_direction)
+
+         if (random(0, 2) == 0) then begin
+            Critter_direction := Critter_direction + (random(0, 2) - 1);
+            while(Critter_direction < 0) do begin
+               Critter_direction := Critter_direction + 6;
+            end
+            if (Critter_direction > 5) then begin
+               Critter_direction := Critter_direction % 6;
+            end
+         end
+         obj_rotate(Critter, Critter_direction);
+         Tot_Critter_A := Tot_Critter_A - 1;
       end
-      obj_rotate(Critter, Critter_direction);
-      Tot_Critter_A := Tot_Critter_A - 1;
+      set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
+      call Add_Mysterious_Stranger;
+      display_msg(message_str(SCRIPT_RNDDESRT, 299));
    end
-   set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
-   call Add_Mysterious_Stranger;
-   display_msg(message_str(SCRIPT_RNDDESRT, 299));
 end
 
 
@@ -4477,16 +4488,52 @@ variable Skill_roll;
 end
 
 procedure Death4 begin
-   Outer_ring := (dude_perception / 3) + 5;
-   Inner_ring := (dude_perception / 3) + 3;
-   Critter_direction := random(0, 5);
-   Critter_type := PID_DEATHCLAW;// <- 51  Deathclaw   was : 43  Lesser Centaur  16777259
-   Critter_script := SCRIPT_DETHCLAW;// DethClaw.int
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+   // Added quest check, so the Deathclaw doesn't appear before missing caravans.
+   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin
+      Outer_ring := (dude_perception / 3) + 5;
+      Inner_ring := (dude_perception / 3) + 3;
+      Critter_direction := random(0, 5);
+      Critter_type := PID_DEATHCLAW;
+      Critter_script := SCRIPT_DETHCLAW;
+      call Place_critter;
+      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+      display_msg(message_str(SCRIPT_RNDDESRT, 286));
+   end
+   else begin
+      Outer_ring := (dude_perception / 2) + 6;
+      Inner_ring := (dude_perception / 2) + 2;
+      Tot_Critter_A := random(2, 4);
+      group_angle := random(0, 5);
+      Critter_type := PID_RADSCORPION;
+      Critter_script := SCRIPT_RADSCORP;
+      while(Tot_Critter_A) do begin
+         Critter_direction := group_angle + (random(0, 4) - 2);
+         while(Critter_direction < 0) do begin
+            Critter_direction := Critter_direction + 6;
+         end
+         if (Critter_direction > 5) then begin
+            Critter_direction := Critter_direction % 6;
+         end
+         call Place_critter;
+
+         enc_group_angle(Critter_direction)
+
+         if (random(0, 2) == 0) then begin
+            Critter_direction := Critter_direction + (random(0, 2) - 1);
+            while(Critter_direction < 0) do begin
+               Critter_direction := Critter_direction + 6;
+            end
+            if (Critter_direction > 5) then begin
+               Critter_direction := Critter_direction % 6;
+            end
+         end
+         obj_rotate(Critter, Critter_direction);
+         Tot_Critter_A := Tot_Critter_A - 1;
+      end
+      display_msg(message_str(SCRIPT_RNDDESRT, 299));
+   end
    set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
    call Add_Mysterious_Stranger;
-   display_msg(message_str(SCRIPT_RNDDESRT, 286));
 end
 
 procedure Death5 begin//   TRENT - Hub Deathclaw quest!
@@ -4540,10 +4587,10 @@ procedure Death5 begin//   TRENT - Hub Deathclaw quest!
       Inner_ring := (dude_perception / 2) + 4;
       Critter_direction := random(0, 5);
       if (random(0, 3) == 3) then begin
-      Critter_type := PID_GREATER_MOLE_RAT;// GREATER MOLE RAT
+      Critter_type := PID_GREATER_MOLE_RAT;
       end
       else begin
-         Critter_type := PID_LESSER_MOLE_RAT;//Lesser Mole Rat
+         Critter_type := PID_LESSER_MOLE_RAT;
       end
       Critter_script := SCRIPT_WANRATS;
       call Place_critter;
@@ -4557,7 +4604,8 @@ end
 procedure Death6 begin
    Outer_ring := (dude_perception / 2) + 5;
    Inner_ring := (dude_perception / 2) + 2;
-   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin // Added quest check, so the Deathclaw doesn't appear before missing caravans.
+   // Added quest check, so the Deathclaw doesn't appear before missing caravans.
+   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin
       display_msg(message_str(SCRIPT_RNDDESRT, 286));
       Critter_direction := random(0, 5);
       Critter_type := PID_DEATHCLAW;
