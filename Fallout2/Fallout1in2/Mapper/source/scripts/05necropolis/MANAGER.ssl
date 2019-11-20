@@ -12,7 +12,7 @@
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
 
 #include "..\headers\command.h"
-#include "..\headers\modreact.h"
+//#include "..\headers\modreact.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -44,12 +44,9 @@ variable tmp_hostile;
 variable initial := 0;
 variable noevent;
 variable loopcount;
-variable rndRads;
 
-variable rndx;
-
-// local_var(0) HAS_TALKED_TO_PLAYER
-// local_var(1) HAS_BEEN_EXAMINED
+#define LVAR_Herebefore   (4)
+#define LVAR_Examined     (5)
 
 procedure start begin
    if (not(initial)) then begin
@@ -63,21 +60,18 @@ procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    script_overrides;
    display_msg(mstr(200));
-   set_local_var(1, 1);
+   set_local_var(LVAR_Examined, 1);
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (not(local_var(1)) and not(local_var(0))) then begin
+   if (not(local_var(LVAR_Examined)) and not(local_var(LVAR_Herebefore))) then
       display_msg(mstr(100));
-   end
-   else begin
+   else
       display_msg(mstr(201));
-   end
 end
 
 procedure critter_p_proc begin
@@ -86,7 +80,6 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-
       if ((game_time_hour >= 1900) or (game_time_hour < 600) and (self_tile != 22531)) then begin
          self_walk_to_tile(22531);
       end
@@ -110,7 +103,6 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_neutral_critter
 end
 
@@ -118,10 +110,8 @@ procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       tmp_hostile := 1;
    end
-   else begin
-      if (local_var(0) == 0) then begin
-         dialogue_system_enter;
-      end
+   else if (local_var(LVAR_Herebefore) == 0) then begin
+      dialogue_system_enter;
    end
 end
 
@@ -129,11 +119,11 @@ procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_HOTEL);
 
    dude_look_at_self;
-   if (local_var(0)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       call ghoul08;
    end
    else begin
-      set_local_var(0, 1);
+      set_local_var(LVAR_Herebefore, 1);
       start_dialog_at_node(ghoul00);
    end
 end
