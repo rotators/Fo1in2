@@ -1,6 +1,5 @@
 //Recognised modes for set_shader_mode and get_game_mode
 #define WORLDMAP    (0x1)
-#define LOCALMAP    (0x2) //No point hooking this: would always be 1 at any point at which scripts are running
 #define DIALOG      (0x4)
 #define ESCMENU     (0x8)
 #define SAVEGAME    (0x10)
@@ -20,6 +19,7 @@
 #define HEROWIN     (0x40000)
 #define DIALOGVIEW  (0x80000)
 #define COUNTERWIN  (0x100000) // counter window for moving multiple items or setting a timer
+#define SPECIAL     (0x80000000)
 
 //Valid arguments to register_hook
 #define HOOK_TOHIT            (0)
