@@ -115,15 +115,16 @@ jobs:
               echo ::endgroup::
            fi
 
-           # prevent getting cache if running from schedule
-           # top minds of GitHub decided to fail whole workflow on unsupported events, instead of sticking to displaying this info as a warning
-           if [ "${{ github.event_name }}" == "push" ]; then
-              echo ::set-env name=GHA_CACHE_GET::true
+           # simplifies checking/displaying which event triggered workflow (especially dispatches)
+           event="${{ github.event_name }}"
+           if [ "$event" == "respository_dispatch" ]; then
+              event="${event}:${{ github.event.action }}"
            fi
+           echo ::set-env name=GHA_EVENT::$event
     shell: bash
 
   - name: Cache (DirectX)
-    if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_CACHE_GET == 'true'
+    if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_EVENT == 'push'
     id:   cache-dx
     uses: actions/cache@v1
     with:
@@ -296,7 +297,7 @@ jobs:
 ### generates and displays commit
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
 ### - schedule
-### - repository_dispatch: schedule-push
+### - repository_dispatch:schedule-push
 
   - name:  Push
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
@@ -313,19 +314,12 @@ jobs:
            git log -p -n 1 2>&1
            echo ::endgroup::
 
-           push=0
-           if   [ "${{ github.event_name }}" == "schedule" ]; then
-                push=1
-           elif [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.action }}" == "schedule-push" ]; then
-                push=1
-           fi
-
-           if [ $push -eq 1 ]; then
+           if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
               echo ::group::git push
               git push 2>&1
               echo ::endgroup::
            else
-             echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify repository"
+              echo "[WARNING] Repository not updated : event<$GHA_EVENT> not allowed to modify repository"
            fi
     shell: bash
     continue-on-error: true
