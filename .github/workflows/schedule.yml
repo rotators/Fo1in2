@@ -49,17 +49,27 @@ jobs:
 
            echo "Repository activity : $timestamp $author $url"
 
-           if [ $days -gt 2 ]; then
-                echo "[WARNING] Repository activity : $days days ago"
+           alive=0
+
+           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
+              alive=1
+           else
+              if [ $days -gt 2 ]; then
+                 echo "[WARNING] Repository activity : $days days ago"
+              fi
+
+              if [ $days -lt 8 ]; then
+                 echo Repository active : $days days
+                 alive=1
+              else
+                 echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
+              fi
            fi
 
-           if [ $days -lt 8 ]; then
-              echo ::group::Repository active
+           if [ $alive -eq 1 ]; then
               echo ::set-env name=GHA_REPO_ALIVE::true
               echo ::set-env name=GHA_REPO_ACTIVITY::$days
-              echo ::endgroup::
-           else
-              echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
            fi
     shell: bash
 
