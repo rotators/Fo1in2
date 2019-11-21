@@ -12,23 +12,31 @@ option_dry=0
 option_optimization=2
 option_scripts_dir="Fallout2/Fallout1in2/Mapper/source/scripts"
 
-# parse options
+# user options
 for option in "$@"; do
+    # --bytecode
     # enable updating .int files
     [[ "$option" == "--bytecode" ]] && option_bytecode=1
 
+    # --bytecode-dir=some/directory
     # path to .int files directory
     [[ "$option" =~ ^--bytecode-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_bytecode_dir=${BASH_REMATCH[1]}
 
+    # --compiler=some/filename.exe
     # path to compiler executable
     [[ "$option" =~ ^--compiler=([A-Za-z0-9_\.\/]+)$ ]] && option_compiler=${BASH_REMATCH[1]}
 
+    # --dry
     # enable logging arguments passed to compiler without running it
     [[ "$option" == "--dry" ]] && option_dry=1
 
-    # optimization level used by compiler
+    # --optimization=0 (none)
+    # --optimization=1 (standard)
+    # --optimization=2 (full)
+    # optimization level used by compiler; values higher than 2 are not recommended/supported
     [[ "$option" =~ ^--optimization=([0-9]+)$ ]] && option_optimization=${BASH_REMATCH[1]}
 
+    # --scripts-dir=some/directory
     # path to .ssl files directory
     [[ "$option" =~ ^--scripts-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_scripts_dir=${BASH_REMATCH[1]}
 done
@@ -80,11 +88,12 @@ num_warnings=0
 echo Compiling...
 
     # /c/repo/path/to/scripts/sub/dir/script.ssl
-for ssl_full in $scripts_dir/**/*.[Ss][Ss][Ll]; do
+for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     # /c/repo/path/to/scripts/sub/dir
     ssl_dir=$(dirname "$ssl_full")
     # sub/dir/script.ssl
-    ssl_show=$(echo "$ssl_full" | sed -e "s!^$scripts_dir/!!")
+    ssl_show=${ssl_full#$scripts_dir}
+    ssl_show=${ssl_show#/}
     # script.ssl
     ssl_file=$(basename "$ssl_full")
     # script.int
