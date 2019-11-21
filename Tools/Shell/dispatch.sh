@@ -24,7 +24,7 @@ fi
 winpty=
 
 if [ -n "$WINDIR" ]; then
-	winpty=$winpty
+	winpty=winpty
 fi
 
 read -p "Enter host username: " username
