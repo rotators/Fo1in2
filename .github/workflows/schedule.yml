@@ -296,6 +296,7 @@ jobs:
 ### generates and displays commit
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
 ### - schedule
+### - repository_dispatch: schedule-push
 
   - name:  Push
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
@@ -312,7 +313,14 @@ jobs:
            git log -p -n 1 2>&1
            echo ::endgroup::
 
-           if [ "${{ github.event_name }}" == "schedule" ]; then
+           push=0
+           if   [ "${{ github.event_name }}" == "schedule" ]; then
+                push=1
+           elif [ "${{ github.event_name }}" == "repository_dispatch ] && [ "${{ github.event.action }}" == "schedule-push" ]; then
+                push=1
+           fi
+
+           if [ $push -eq 1 ]; then
               echo ::group::git push
               git push 2>&1
               echo ::endgroup::
