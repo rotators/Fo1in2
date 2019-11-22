@@ -1,11 +1,10 @@
 name: Schedule
 
 on:
- push:
-  paths:
-  - '.github/workflows/schedule.yml'
  schedule:
  - cron: 0 4 * * *
+ repository_dispatch:
+  types: [schedule, schedule-push]
 
 jobs:
 
@@ -41,17 +40,27 @@ jobs:
 
            echo "Repository activity : $timestamp $author $url"
 
-           if [ $days -gt 2 ]; then
-                echo "[WARNING] Repository activity : $days days ago"
+           alive=0
+
+           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
+              alive=1
+           else
+              if [ $days -gt 2 ]; then
+                 echo "[WARNING] Repository activity : $days days ago"
+              fi
+
+              if [ $days -lt 8 ]; then
+                 echo Repository active : $days days
+                 alive=1
+              else
+                 echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
+              fi
            fi
 
-           if [ $days -lt 8 ]; then
-              echo ::group::Repository active
+           if [ $alive -eq 1 ]; then
               echo ::set-env name=GHA_REPO_ALIVE::true
               echo ::set-env name=GHA_REPO_ACTIVITY::$days
-              echo ::endgroup::
-           else
-              echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
            fi
     shell: bash
 
@@ -66,10 +75,11 @@ jobs:
 
   - name: Clone FO1@2
     if:   env.GHA_REPO_ALIVE == 'true'
-    uses: actions/checkout@master
+    uses: actions/checkout@v1
     with:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
-#    fetch-depth: 1
+#    uncomment when/if switching to v2
+#    fetch-depth: 0
 
   - name:  Preparations
     if:    env.GHA_REPO_ALIVE == 'true'
@@ -97,15 +107,16 @@ jobs:
               echo ::endgroup::
            fi
 
-           # prevent getting cache if running from schedule
-           # top minds of GitHub decided to fail whole workflow on unsupported events, instead of sticking to displaying this info as a warning
-           if [ "${{ github.event_name }}" == "push" ]; then
-              echo ::set-env name=GHA_CACHE_GET::true
+           # simplifies checking/displaying which event triggered workflow (especially dispatches)
+           event="${{ github.event_name }}"
+           if [ "$event" == "repository_dispatch" ]; then
+              event="${event}:${{ github.event.action }}"
            fi
+           echo ::set-env name=GHA_EVENT::$event
     shell: bash
 
   - name: Cache (DirectX)
-    if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_CACHE_GET == 'true'
+    if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_EVENT == 'push'
     id:   cache-dx
     uses: actions/cache@v1
     with:
@@ -241,6 +252,11 @@ jobs:
            git status 2>&1
            echo ::endgroup::
 
+           # allow full run; forces minor tasks to run even if major tasks does not generate commit
+           if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
+              echo "# Minor tasks forced to run" >> $HOME/gha.commit
+           fi
+
            if [ -f "$HOME/gha.commit" ]; then
               sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
               dos2unix $HOME/gha.commit
@@ -250,7 +266,7 @@ jobs:
     shell: bash
 
 ### Minor tasks
-### runs only if at least one of major tasks wants to generate commit
+### runs only if at least one of major tasks wants to generate commit, or triggered manually with "full" switch enabled
 
   # update ddraw.ini comment with sfall version
   # update ddraw.ini setting with mod version
@@ -278,6 +294,7 @@ jobs:
 ### generates and displays commit
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
 ### - schedule
+### - repository_dispatch:schedule-push
 
   - name:  Push
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
@@ -285,6 +302,7 @@ jobs:
            :
            echo ::group::git commit
            dos2unix $HOME/gha.commit
+           sed -i '/^#/d' $HOME/gha.commit
            git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
            git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
            git commit --file="$HOME/gha.commit" 2>&1
@@ -294,12 +312,12 @@ jobs:
            git log -p -n 1 2>&1
            echo ::endgroup::
 
-           if [ "${{ github.event_name }}" == "schedule" ]; then
+           if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
               echo ::group::git push
               git push 2>&1
               echo ::endgroup::
            else
-             echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify repository"
+              echo "[WARNING] Repository not updated : event<$GHA_EVENT> not allowed to modify repository"
            fi
     shell: bash
     continue-on-error: true
