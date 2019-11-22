@@ -48,6 +48,8 @@ variable input;
 
 #define SoundP             "butin4"
 #define SoundR             "butout4"
+#define SoundOff           "IB2LU1X1"
+#define SoundDown          "IB1P1XX1"
 
 // Button enter barter position
 #define but_posXs          272
@@ -183,7 +185,7 @@ procedure KeyPress_Handler begin
          if (key_dik == DIK_ESCAPE) then begin
             call CloseInput;
          end
-         else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER) then begin
+         else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER and input != "") then begin
             call ClearInputBox;
             call GenerateReply;
          end
@@ -198,17 +200,12 @@ procedure KeyPress_Handler begin
             call ClearInputBox;
          end
          else begin
-            if shiftPressed>0 then begin
-               if (strlen(input) < 30) then begin // need new function get text width
+            if (strlen(input) < 30) then begin // need new function get text width
+               if (shiftPressed > 0) then
                   char := charactersMapShift[key_dik];
-                  if (char) then input += char;
-               end
-            end
-            else begin
-               if (strlen(input) < 30) then begin // need new function get text width
+               else
                   char := charactersMap[key_dik];
-                  if (char) then input += char;
-               end
+               if (char) then input += char;
             end
          end
 
@@ -245,7 +242,7 @@ procedure create_button begin
       Scr_Height += 50;
    end
 
-   create_win("win_input", (Scr_Width + 273), (Scr_Height + 116), 15, 15);
+   create_win("win_input", (Scr_Width + 272), (Scr_Height + 116), 15, 15);
    SelectWin("win_input");
    AddButton("button_input", 0, 0, 15, 15);
    AddButtonGFX("button_input", "PCX\\DI_RDBT1.pcx", "PCX\\DI_RDBT2.pcx", "PCX\\DI_RDBT2.pcx");
@@ -263,7 +260,7 @@ procedure do_on begin
 end
 
 procedure do_off begin
-   if (ButPres) then play_sfx("IB2LU1X1");
+   if (ButPres) then play_sfx(SoundOff);
    MousonBut := false;
    ButPres := false;
 end
@@ -284,7 +281,7 @@ end
 procedure do_down_small begin
    if (ButPres == false) then begin
       ButPres := true;
-      play_sfx("IB1P1XX1");
+      play_sfx(SoundDown);
    end
 end
 
@@ -303,9 +300,11 @@ end
 procedure do_up_ok begin
    ButPres := false;
    play_sfx(SoundR);
-   call ClearInputBox;
-   ShowWin; // redraw tellme interface
-   call GenerateReply;
+   if (input != "") then begin
+      call ClearInputBox;
+      ShowWin; // redraw tellme interface
+      call GenerateReply;
+   end
 end
 
 procedure MouseClick_Handler begin
@@ -342,7 +341,7 @@ procedure OpenInput begin
       input := "";
 
       // Reply window (clear the Reply window)
-      create_win("tellme_reply", (Scr_Width - 190), (Scr_Height - 64), 390, 64);
+      create_win("tellme_reply", (Scr_Width - 188), (Scr_Height - 64), 390, 64);
       SelectWin("tellme_reply");
       Display("PCX\\tellmeabout_reply.pcx");
       SetTextColor(0.0, 1.0, 0.0);
