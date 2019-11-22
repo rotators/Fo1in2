@@ -118,7 +118,7 @@ namespace undat_ui
             {
                 if(!FalloutExists(folderBrowserDialog.SelectedPath))
                 {
-                    if (MessageBox.Show("Fallout2.exe was not found in the selected directory, do you want to select it anyway?", "FO1 data extractor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    if (MessageBox.Show("Fallout2.exe was not found in the selected directory, do you want to select it anyway?", "FO1 DAT extractor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                         return;
                 }
                 txtDestination.Text = folderBrowserDialog.SelectedPath;
