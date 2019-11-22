@@ -5,6 +5,10 @@ set -e
 readonly repo="rotators/Fo1in2"
 
 event="$1"
+known=(schedule schedule-push package-prerelease package-release)
+payload=
+winpty=
+
 if [ -z "$event" ]; then
    echo "Usage:    dispatch.sh [event] (payload1:value1) (payloadN:valueN)"
    echo
@@ -14,22 +18,12 @@ if [ -z "$event" ]; then
    exit 1
 fi
 
-payload=
 for tmpayload in ${@:2}; do
-	if [[ "$tmpayload" =~ : ]]; then
-		key="$(echo "$tmpayload" | awk -F : '{print $1}')"
-		val="$(echo "$tmpayload" | awk -F : '{print $2}')"
+	if [[ "$tmpayload" =~ ^(.+):(.+)$ ]]; then
+		key="${BASH_REMATCH[1]}"
+		val="${BASH_REMATCH[2]}"
 
-		if   [ "$key" == "" ]; then
-			echo "Invalid payload key, you doofus!"
-			exit 1
-		elif [ "$val" == "" ]; then
-			echo "Invalid payload value, you doofus!"
-			exit 1
-		fi
-
-		payload="$payload,\"$key\":\"$val\""
-		payload=${payload#,}
+		payload="$payload, \"$key\": \"$val\" "
 	else
 		echo "Invalid payload, you doofus!"
 		exit 1
@@ -37,23 +31,20 @@ for tmpayload in ${@:2}; do
 done
 
 if [ -n "$payload" ]; then
-	data=$(jq -n --arg event "$event" --argjson payload "{$payload}" '{"event_type": $event, "client_payload": $payload}')
-else
-	data=$(jq -n --arg event "$event" '{"event_type": $event}')
+	payload=${payload#,}
+	payload=", \"client_payload\": {$payload}"
 fi
+
+data="{ \"event_type\": \"$event\"$payload }"
 
 echo "dispatch"
 echo "$data"
 echo
 
-known=(schedule schedule-push)
-
 if [[ ! " ${known[@]} " =~ " ${event} " ]]; then
-	echo "WARNING: unknown event '$event'"
+	echo "[WARNING] unknown event '$event'"
 	echo
 fi
-
-winpty=
 
 if [ -n "$WINDIR" ]; then
 	winpty=winpty
