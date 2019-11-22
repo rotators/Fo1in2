@@ -1,0 +1,100 @@
+name: Package
+
+on:
+ repository_dispatch:
+  types: [package-prerelease, package-release]
+
+jobs:
+
+ # https://fodev.net/pastebin/?u=fo1in2-release-list
+
+ Publish:
+  runs-on: windows-latest
+  env:
+   MOD_DIR:            "Fallout2/Fallout1in2"
+   MOD_RELEASE_NAME:   "Fallout1in2"
+   MOD_VERSION_MAJOR:  0
+  steps:
+
+  - name: Clone
+    uses: actions/checkout@v1
+#   uncomment when/if switching to v2
+#   with:
+#    fetch-depth: 0
+
+  - name:  Preparations
+    run:   |
+           :
+           event="${{ github.event_name }}"
+           if [ "$event" == "repository_dispatch" ]; then
+              event="${event}:${{ github.event.action }}"
+           fi
+
+           pre=
+           if   [ "$event" == "repository_dispatch:package-prerelease" ]; then
+                pre=true
+           elif [ "$event" == "repository_dispatch:package-release" ]; then
+                pre=false
+           else
+                echo "[ERROR] unknown event<$event>"
+                exit 1
+           fi
+
+           commits="$(git rev-list HEAD --count)"
+           echo ::set-env name=MOD_RELEASE_TAG::v${MOD_VERSION_MAJOR}.${commits}
+           echo ::set-env name=MOD_RELEASE_DRAFT::true
+           echo ::set-env name=MOD_RELEASE_PRE::$pre
+    shell: bash
+
+  - name:  Cleanup
+    run:   |
+           :
+           rm -fR $MOD_DIR/Mapper/
+           rm -f  $MOD_DIR/ddraw.develop.*
+           rm -f  $MOD_DIR/ddraw.fo1in2.ini
+           find Fallout2 -name '.gitignore' -delete
+           find Fallout2 -name '.gitattributes' -delete
+    shell: bash
+
+  - name:  Copy UndatUI
+    run:   |
+           :
+           cp "Tools/UndatUI/undat.exe" $MOD_DIR
+           cp "Tools/UndatUI/undat_files.txt" $MOD_DIR
+    shell: bash
+
+  - name:  Pack
+    run:   7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
+    shell: bash
+    working-directory: Fallout2
+
+  - name:  Pack listing
+    run:   7z l "${MOD_RELEASE_NAME}.zip"
+    shell: bash
+
+  - name: Create release
+    id:   release
+    uses: actions/create-release@v1
+    with:
+     release_name: ${{ env.MOD_RELEASE_NAME }} ${{ env.MOD_RELEASE_TAG }}
+     tag_name:     ${{ env.MOD_RELEASE_TAG }}
+     draft:        ${{ env.MOD_RELEASE_DRAFT }}
+     prerelease:   ${{ env.MOD_RELEASE_PRE }}
+    env:
+     GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+
+  - name: Upload main package
+    uses: actions/upload-release-asset@v1.0.1
+    with:
+     upload_url:         ${{ steps.release.outputs.upload_url }}
+     asset_path:         ${{ env.MOD_RELEASE_NAME }}.zip
+     asset_name:         ${{ env.MOD_RELEASE_NAME }}.zip
+     asset_content_type: application/zip
+    env:
+     GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+
+  - name:  Show release
+    run:   |
+           :
+           echo "Link: ${{ steps.release.outputs.html_url }}"
+    shell: bash
