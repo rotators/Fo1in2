@@ -255,6 +255,11 @@ jobs:
            git status 2>&1
            echo ::endgroup::
 
+           # allow full run; forces minor tasks to run even if major tasks does not generate commit
+           if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
+              echo "# Minor tasks forced to run" >> $HOME/gha.commit
+           fi
+
            if [ -f "$HOME/gha.commit" ]; then
               sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
               dos2unix $HOME/gha.commit
@@ -264,7 +269,7 @@ jobs:
     shell: bash
 
 ### Minor tasks
-### runs only if at least one of major tasks wants to generate commit
+### runs only if at least one of major tasks wants to generate commit, or triggered manually with "full" switch enabled
 
   # update ddraw.ini comment with sfall version
   # update ddraw.ini setting with mod version

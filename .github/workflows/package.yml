@@ -1,38 +1,51 @@
-name: Pack
+name: Package
 
 on:
- push:
-  paths:
-  - '.github/workflows/pack.yml'
+ repository_dispatch:
+  types: [package-prerelease, package-release]
 
 jobs:
 
  # https://fodev.net/pastebin/?u=fo1in2-release-list
 
- Test:
+ Publish:
   runs-on: windows-latest
   env:
    MOD_DIR:            "Fallout2/Fallout1in2"
    MOD_RELEASE_NAME:   "Fallout1in2"
-   MOD_VERSION_STRING: "FALLOUT ET TU"
    MOD_VERSION_MAJOR:  0
   steps:
+
+  - name:  Preparations
+    run:   |
+           :
+           event="${{ github.event_name }}"
+           if [ "$event" == "repository_dispatch" ]; then
+              event="${event}:${{ github.event.action }}"
+           fi
+
+           prerelease=
+
+           if   [ "$event" == "repository_dispatch:package-prerelease ]; then
+                prerelease=true
+           elif [ "$event" == "repository_dispatch:package-release" ]; then
+                prerelease=false
+           else
+                echo "[ERROR] unknown event<$event>"
+                exit 1
+           fi
+
+           commits="$(git rev-list HEAD --count)"
+           echo ::set-env name=MOD_RELEASE_TAG::v${MOD_VERSION_MAJOR}.${commits}
+           echo ::set-env name=MOD_RELEASE_DRAFT::true
+           echo ::set-env name=MOD_RELEASE_PREPRELEASE::$prerelease
+    shell: bash
 
   - name: Clone
     uses: actions/checkout@v1
 #   uncomment when/if switching to v2
 #   with:
 #    fetch-depth: 0
-
-  - name:  Environment
-    run:   |
-           :
-           commits="$(git rev-list HEAD --count)"
-           echo ::set-env name=MOD_VERSION_STRING::${MOD_VERSION_STRING} ${MOD_VERSION_MAJOR}.${commits}
-           echo ::set-env name=MOD_RELEASE_TAG::v${MOD_VERSION_MAJOR}.${commits}
-           echo ::set-env name=MOD_RELEASE_DRAFT::true
-           echo ::set-env name=MOD_RELEASE_PREPRELEASE::true
-    shell: bash
 
   - name:  Cleanup
     run:   |
@@ -51,22 +64,14 @@ jobs:
            cp "Tools/UndatUI/undat_files.txt" $MOD_DIR
     shell: bash
 
-  - name:  Update configuration
-    run:   |
-           :
-           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING!" $MOD_DIR/ddraw.ini
-           grep "^VersionString=" $MOD_DIR/ddraw.ini
-           unix2dos $MOD_DIR/*.txt $MOD_DIR/*.ini $MOD_DIR/*.cfg $MOD_DIR/config/*
-    shell: bash
-
   - name:  Pack
     run:   7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
     shell: bash
     working-directory: Fallout2
 
-# - name:  Pack listing
-#   run:   7z l "${MOD_RELEASE_NAME}.zip"
-#   shell: bash
+  - name:  Pack listing
+    run:   7z l "${MOD_RELEASE_NAME}.zip"
+    shell: bash
 
   - name: Create release
     id:   release
@@ -79,7 +84,7 @@ jobs:
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
-  - name: Upload release package
+  - name: Upload main package
     uses: actions/upload-release-asset@v1.0.1
     with:
      upload_url:         ${{ steps.release.outputs.upload_url }}
@@ -88,3 +93,9 @@ jobs:
      asset_content_type: application/zip
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
+
+  - name:  Show release
+    run:   |
+           :
+           echo "Link: ${{ steps.release.outputs.html_url }}"
+    shell: bash
