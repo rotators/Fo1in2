@@ -24,12 +24,11 @@ jobs:
               event="${event}:${{ github.event.action }}"
            fi
 
-           prerelease=
-
+           pre=
            if   [ "$event" == "repository_dispatch:package-prerelease ]; then
-                prerelease=true
+                pre=true
            elif [ "$event" == "repository_dispatch:package-release" ]; then
-                prerelease=false
+                pre=false
            else
                 echo "[ERROR] unknown event<$event>"
                 exit 1
@@ -38,7 +37,7 @@ jobs:
            commits="$(git rev-list HEAD --count)"
            echo ::set-env name=MOD_RELEASE_TAG::v${MOD_VERSION_MAJOR}.${commits}
            echo ::set-env name=MOD_RELEASE_DRAFT::true
-           echo ::set-env name=MOD_RELEASE_PREPRELEASE::$prerelease
+           echo ::set-env name=MOD_RELEASE_PRE::$pre
     shell: bash
 
   - name: Clone
@@ -80,7 +79,7 @@ jobs:
      release_name: ${{ env.MOD_RELEASE_NAME }} ${{ env.MOD_RELEASE_TAG }}
      tag_name:     ${{ env.MOD_RELEASE_TAG }}
      draft:        ${{ env.MOD_RELEASE_DRAFT }}
-     prerelease:   ${{ env.MOD_RELEASE_PRERELEASE }}
+     prerelease:   ${{ env.MOD_RELEASE_PRE }}
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 

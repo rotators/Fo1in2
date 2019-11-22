@@ -132,7 +132,7 @@ namespace undat_ui
 
         private void lnkSource_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/rotators/Fo1in2/tree/master/Tools/Undat%20UI/src");
+            System.Diagnostics.Process.Start("https://github.com/rotators/Fo1in2/tree/master/Tools/UndatUI/src");
         }
 
         private void lnkFodev_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
