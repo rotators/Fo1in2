@@ -1,6 +1,5 @@
 //Recognised modes for set_shader_mode and get_game_mode
 #define WORLDMAP    (0x1)
-#define LOCALMAP    (0x2) //No point hooking this: would always be 1 at any point at which scripts are running
 #define DIALOG      (0x4)
 #define ESCMENU     (0x8)
 #define SAVEGAME    (0x10)
@@ -20,6 +19,7 @@
 #define HEROWIN     (0x40000)
 #define DIALOGVIEW  (0x80000)
 #define COUNTERWIN  (0x100000) // counter window for moving multiple items or setting a timer
+#define SPECIAL     (0x80000000)
 
 //Valid arguments to register_hook
 #define HOOK_TOHIT            (0)
@@ -63,6 +63,7 @@
 #define HOOK_SETLIGHTING      (38)
 #define HOOK_SNEAK            (39)
 #define HOOK_STDPROCEDURE     (40)
+#define HOOK_STDPROCEDURE_END (41)
 
 //Valid arguments to list_begin
 #define LIST_CRITTERS    (0)
@@ -249,9 +250,9 @@
 
 // sfall_funcX macros
 #define add_extra_msg_file(name)                        sfall_func1("add_extra_msg_file", name)
-#define add_global_timer_event(time, param)             sfall_func2("add_g_timer_event", time, param)
+#define add_global_timer_event(time, fixedParam)        sfall_func2("add_g_timer_event", time, fixedParam)
 #define add_iface_tag                                   sfall_func0("add_iface_tag")
-#define add_trait(traitId)                              sfall_func1("add_trait", traitId)
+#define add_trait(traitID)                              sfall_func1("add_trait", traitID)
 #define art_cache_clear                                 sfall_func0("art_cache_clear")
 #define attack_is_aimed                                 sfall_func0("attack_is_aimed")
 #define car_gas_amount                                  sfall_func0("car_gas_amount")
@@ -279,6 +280,7 @@
 #define get_outline(obj)                                sfall_func1("get_outline", obj)
 #define get_sfall_arg_at(argNum)                        sfall_func1("get_sfall_arg_at", argNum)
 #define get_string_pointer(text)                        sfall_func1("get_string_pointer", text)
+#define get_text_width(text)                            sfall_func1("get_text_width", text)
 #define has_fake_perk_npc(npc, perk)                    sfall_func2("has_fake_perk_npc", npc, perk)
 #define has_fake_trait_npc(npc, trait)                  sfall_func2("has_fake_trait_npc", npc, trait)
 #define hide_window(winName)                            sfall_func1("hide_window", winName)
@@ -287,17 +289,17 @@
 #define intface_redraw                                  sfall_func0("intface_redraw")
 #define intface_show                                    sfall_func0("intface_show")
 #define inventory_redraw(invSide)                       sfall_func1("inventory_redraw", invSide)
-#define item_make_explosive(pid, aPid, min, max)        sfall_func4("item_make_explosive", pid, aPid, min, max)
+#define item_make_explosive(pid, activePid, min, max)   sfall_func4("item_make_explosive", pid, activePid, min, max)
 #define item_weight(obj)                                sfall_func1("item_weight", obj)
 #define lock_is_jammed(obj)                             sfall_func1("lock_is_jammed", obj)
 #define loot_obj                                        sfall_func0("loot_obj")
-#define metarule_exist(metarule)                        sfall_func1("metarule_exist", metarule)
+#define metarule_exist(metaruleName)                    sfall_func1("metarule_exist", metaruleName)
 #define npc_engine_level_up(toggle)                     sfall_func1("npc_engine_level_up", toggle)
-#define obj_under_cursor(crSwitch, inclDude)            sfall_func2("obj_under_cursor", crSwitch, inclDude)
+#define obj_under_cursor(onlyCritter, includeDude)      sfall_func2("obj_under_cursor", onlyCritter, includeDude)
 #define outlined_object                                 sfall_func0("outlined_object")
 #define real_dude_obj                                   sfall_func0("real_dude_obj")
 #define remove_all_timer_events                         sfall_func0("remove_timer_event")
-#define remove_timer_event(param)                       sfall_func1("remove_timer_event", param)
+#define remove_timer_event(fixedParam)                  sfall_func1("remove_timer_event", fixedParam)
 #define set_can_rest_on_map(map, elev, value)           sfall_func3("set_can_rest_on_map", map, elev, value)
 #define set_car_intface_art(artIndex)                   sfall_func1("set_car_intface_art", artIndex)
 #define set_cursor_mode(mode)                           sfall_func1("set_cursor_mode", mode)
@@ -312,13 +314,15 @@
 #define set_rest_heal_time(time)                        sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                             sfall_func1("set_rest_mode", mode)
 #define set_unique_id(obj)                              sfall_func1("set_unique_id", obj)
-#define unset_unique_id(obj)                            sfall_func2("set_unique_id", obj, -1)
 #define set_unjam_locks_time(time)                      sfall_func1("set_unjam_locks_time", time)
 #define set_window_flag(winID, flag, value)             sfall_func3("set_window_flag", winID, flag, value)
 #define show_window(winName)                            sfall_func1("show_window", winName)
 #define spatial_radius(obj)                             sfall_func1("spatial_radius", obj)
+#define string_compare(str1, str2)                      sfall_func2("string_compare", str1, str2)
+#define string_compare_locale(str1, str2, codePage)     sfall_func3("string_compare", str1, str2, codePage)
 #define tile_refresh_display                            sfall_func0("tile_refresh_display")
 #define unjam_lock(obj)                                 sfall_func1("unjam_lock", obj)
+#define unset_unique_id(obj)                            sfall_func2("set_unique_id", obj, -1)
 #define unwield_slot(critter, slot)                     sfall_func2("unwield_slot", critter, slot)
 
 #define set_fake_perk_npc(npc, perk, level, image, desc)        sfall_func5("set_fake_perk_npc", npc, perk, level, image, desc)

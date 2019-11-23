@@ -114,8 +114,6 @@ procedure GameModeChange_Handler begin
       // TMA doesn't work with party members (different interface)
       if (obj_in_party(dialog_obj) == false) then begin
          if (charactersMap == 0) then begin
-            // TODO: Make getting characters from ini config to support multilanguage
-
             // English is default language
             language := "english";
             charactersMap := {
@@ -200,7 +198,10 @@ procedure KeyPress_Handler begin
             call ClearInputBox;
          end
          else begin
-            if (strlen(input) < 30) then begin // need new function get text width
+            debug("width: " + get_text_width(input));
+
+            //if (strlen(input) < 30) then begin
+            if (get_text_width(input) < 240) then begin // TODO: Check if this is really correct.
                if (shiftPressed > 0) then
                   char := charactersMapShift[key_dik];
                else
@@ -405,7 +406,7 @@ critical procedure GenerateReply begin
       tma_var_state := tma_gvar_array[2];
 
    // Find reply
-   if (input == obj_name(critter) and reply_name_start > 0) then
+   if (string_compare(input, obj_name(critter))  and reply_name_start > 0) then
       reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
       variable found := 0;
@@ -417,7 +418,7 @@ critical procedure GenerateReply begin
             split := string_split(input_check, "|");
 
             foreach (word : keyword in split) begin
-               if (keyword == input) then begin
+               if string_compare(keyword, input) then begin
                   reply_final := message_str(reply_source, (i + msg_offset) + 100);
                   found := 1;
 
