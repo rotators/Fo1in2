@@ -51,26 +51,12 @@ variable input;
 #define SoundOff           "IB2LU1X1"
 #define SoundDown          "IB1P1XX1"
 
-// Button enter barter position
-#define but_posXs          272
-#define but_posXe          287
-#define but_posYs          40
-#define but_posYe          55
-
-#define button_barter       ((posXmouse > (Scr_Width) + but_posXs and posXmouse < (Scr_Width) + but_posXe) and (posYmouse > (Scr_Height) + but_posYs and posYmouse < (Scr_Height) + but_posYe))
-#define button_barter_check ((x_mouse > (Scr_Width) + but_posXs and x_mouse < (Scr_Width) + but_posXe) and (y_mouse > (Scr_Height) + but_posYs and y_mouse < (Scr_Height) + but_posYe))
-
 #define mstr_tma(x)        message_str(SCRIPT_OBJ_DUDE, x)
-
-// Button swap weapon position
-//#define sbut_posXs         150
-//#define sbut_posXe         170
-//#define sbut_posYs         270
-//#define sbut_posYe         290
+#define Draw_Image(img)    sfall_func1("draw_image", img)
 
 // Shift values
-#define key_lshift_down 0x0001
-#define key_rshift_down 0x0002
+//#define key_lshift_down 0x0001
+//#define key_rshift_down 0x0002
 
 //Default ini paths
 #define key_map_path "config\\keymap.ini"
@@ -78,23 +64,26 @@ variable input;
 
 variable Scr_Height;
 variable Scr_Width;
-variable x_mouse, y_mouse, shift_y;
 variable MousonBut;
 variable ButPres;
 variable charactersMap := 0;
-variable charactersMapShift := 0;
+variable charactersMapUpper := 0;
 variable shiftPressed := 0;
-variable iniStr;
-variable iniVal;
-variable i := 0;
 variable game_mode;
-variable language;
+variable language := "english";
 
 procedure start begin
    if (game_loaded) then begin
+      variable iniVal := get_ini_string(key_map_path + "|main|language"); // get lang from keymap.ini
+      if(iniVal == "" or iniVal == -1) then begin
+         iniVal := get_ini_string(lang_ini_str);
+         if(iniVal != "" and iniVal != -1) then language := iniVal;
+         debug(lang_ini_str + "=" + language);
+      end else
+         language := iniVal;
+
       register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
       register_hook_proc(HOOK_KEYPRESS, KeyPress_Handler);
-      register_hook_proc(HOOK_MOUSECLICK, MouseClick_Handler);
 
       // Create an array and writes the array of the ID number in the global variable
       // access to an array of other scripts
@@ -107,6 +96,7 @@ procedure start begin
 end
 
 procedure GameModeChange_Handler begin
+   variable key, iniVals, iniVal;
    variable prev_mode := game_mode;
    game_mode := get_game_mode;
 
@@ -115,7 +105,6 @@ procedure GameModeChange_Handler begin
       if (obj_in_party(dialog_obj) == false) then begin
          if (charactersMap == 0) then begin
             // English is default language
-            language := "english";
             charactersMap := {
                 2:"1",  3:"2",  4:"3",  5:"4",  6:"5",  7:"6",  8:"7",  9:"8", 10:"9", 11:"0",
                12:"-", 13:"=", 16:"q", 17:"w", 18:"e", 19:"r", 20:"t", 21:"y", 22:"u", 23:"i",
@@ -123,32 +112,24 @@ procedure GameModeChange_Handler begin
                38:"l", 39:";", 44:"z", 45:"x", 46:"c", 47:"v", 48:"b", 49:"n", 50:"m", 51:",",
                52:".", 57: " "
             };
-            charactersMapShift := {
+            charactersMapUpper := {
                 2:"!",  3:"@",  4:"#",  5:"$",  6:"%",  7:"^",  8:"&",  9:"*", 10:"(", 11:")",
                12:"_", 13:"+", 16:"Q", 17:"W", 18:"E", 19:"R", 20:"T", 21:"Y", 22:"U", 23:"I",
                24:"O", 25:"P", 30:"A", 31:"S", 32:"D", 33:"F", 34:"G", 35:"H", 36:"J", 37:"K",
                38:"L", 39:":", 44:"Z", 45:"X", 46:"C", 47:"V", 48:"B", 49:"N", 50:"M", 51:"<",
                52:">", 57: " "
             };
-
-            iniVal := get_ini_string(lang_ini_str);
-            if(strlen(iniVal) > 0) then begin
-               language := iniVal;
-               debug(lang_ini_str+"="+language);
-            end
-
             // Read chars from keymap.ini
-            for (i := 0; (i < 58) ; i++) begin
-               iniStr := key_map_path+"|" +language +"|" + i;
-               iniVal := get_ini_string(iniStr);
-               if (strlen(iniVal)>0) then begin
-                  charactersMapShift[i] := iniVal[1];
-                  charactersMap[i] := iniVal[0];
+            iniVals := get_ini_section(key_map_path, language);
+            foreach (key: iniVal in iniVals) begin
+               if (strlen(iniVal) > 1) then begin
+                  key := atoi(key);
+                  charactersMap[key] := iniVal[0];
+                  charactersMapUpper[key] := iniVal[1];
                end
             end
             fix_array(charactersMap);
-            fix_array(charactersMapShift);
-            shiftPressed := 0;
+            fix_array(charactersMapUpper);
          end
 
          if (prev_mode bwand BARTER) then
@@ -159,14 +140,15 @@ procedure GameModeChange_Handler begin
    end
    else if (tellme_button and (game_mode bwand DIALOG) == false) then begin
       call delete_button;
-      // TODO:
+      // TODO: !!! with that all is well !!!
       // This gets called when using dialog to enter the barter interface.
       // So after using the barter dialog option, TMAs aren't working anymore
       // until the player has restarted the dialog.
       tma_data_array[0] := 0; // Unset TMA data when exiting dialog mode
       tma_gvar_array[0] := 0;
+      debug_msg("Unset TMA data.");
    end
-   else if (tellme_button and (game_mode bwand BARTER or game_mode bwand SPECIAL)) then begin
+   else if (tellme_button and (game_mode bwand SPECIAL or game_mode bwand BARTER)) then begin
       call delete_button;
       if (fetch_input) then call CloseInput;
    end
@@ -182,35 +164,37 @@ procedure KeyPress_Handler begin
       if (fetch_input) then begin
          if (key_dik == DIK_ESCAPE) then begin
             call CloseInput;
+            return;
          end
-         else if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER and input != "") then begin
-            call ClearInputBox;
-            call GenerateReply;
-         end
-         else if (key_dik == DIK_LSHIFT) then begin
-            shiftPressed := shiftPressed bwor key_lshift_down;
-         end
-         else if (key_dik == DIK_RSHIFT) then begin
-            shiftPressed := shiftPressed bwor key_rshift_down;
-         end
-         else if (key_dik == DIK_BACK and input != "") then begin
-            input := substr(input, 0, -1);
-            call ClearInputBox;
-         end
-         else begin
-            //debug("width: " + get_text_width(input));
-
-            //if (strlen(input) < 30) then begin
-            if (get_text_width(input) < 240) then begin // TODO: Check if this is really correct.
-               if (shiftPressed > 0) then
-                  char := charactersMapShift[key_dik];
-               else
-                  char := charactersMap[key_dik];
-               if (char) then input += char;
-            end
+         else if (key_dik == DIK_LSHIFT or key_dik == DIK_RSHIFT) then begin
+            shiftPressed := true;
+            return;
          end
 
          call ClearInputBox;
+
+         if (key_dik == DIK_RETURN or key_dik == DIK_NUMPADENTER and input != "") then begin
+            call GenerateReply;
+         end
+         else if (key_dik == DIK_BACK and input != "") then begin
+            input := substr(input, 0, -1);
+         end
+         else begin
+            //debug("width: " + get_text_width(input));
+            if (shiftPressed > 0) then
+               char := charactersMapUpper[key_dik];
+            else
+               char := charactersMap[key_dik];
+            if (char) then begin
+               char := input + char;
+               if (get_text_width(char) < 234) then
+                  input := char;
+               else
+                  play_sfx("IISXXXX1");
+            end
+            DEBUGMSG("width: " + get_text_width(input) + " " + input)
+         end
+
          SelectWin("tellme_interface");
          Format(input + "_", 200, 102, 240, 14, justifyleft);
          ShowWin;
@@ -219,17 +203,9 @@ procedure KeyPress_Handler begin
          // Allow screenshots, though
          if (key_dik != DIK_F12) then set_sfall_return(-1);
       end
-      else if (tellme_button and key_dik == DIK_B) then begin
-         call delete_button;
-      end
    end
-   else begin
-      if (key_dik == DIK_LSHIFT) then begin
-            shiftPressed := shiftPressed bwand (0xFFFF bwxor key_lshift_down);
-      end
-      else if (key_dik == DIK_RSHIFT) then begin
-            shiftPressed := shiftPressed bwand (0xFFFF bwxor key_rshift_down);
-      end
+   else if (fetch_input) then begin
+      if (key_dik == DIK_LSHIFT or key_dik == DIK_RSHIFT) then shiftPressed := false;
    end
 end
 
@@ -308,36 +284,12 @@ procedure do_up_ok begin
    end
 end
 
-procedure MouseClick_Handler begin
-variable type, button, posXmouse, posYmouse;
-
-   if (tellme_button == false) then return;
-
-   type := get_sfall_arg; // event type: 1 - pressed, 0 - released
-   button := get_sfall_arg; // button number (0 - left, 1 - right, up to 7)
-   posXmouse := get_mouse_x;
-   posYmouse := get_mouse_y;
-
-   if (button == 0) then begin
-      if (type == 1) then begin // pressed
-          x_mouse := get_mouse_x;
-          y_mouse := get_mouse_y;
-      end
-      else if (type == 0 and button_barter and button_barter_check) then begin
-         call delete_button;
-      end
-   end
-   else if (button == 2 and type) then begin // middle button
-      call delete_button;
-      if (fetch_input) then call CloseInput;
-   end
-end
-
 // Create input interface
 procedure OpenInput begin
    // Only open interface if valid TMA data has been saved
    // (computer terminals and some other critters don't have TMAs)
    if (tma_data_array[0] > 0) then begin
+      shiftPressed := false;
       fetch_input := true;
       input := "";
 
@@ -345,17 +297,14 @@ procedure OpenInput begin
       create_win("tellme_reply", (Scr_Width - 188), (Scr_Height - 64), 390, 64);
       SelectWin("tellme_reply");
       Display("PCX\\tellmeabout_reply.pcx");
-      SetTextColor(0.0, 1.0, 0.0);
-      //Format("  " + "What do you want to know?!", 3, 9, 190, 10, 0); // test reply
       ShowWin;
 
       // Fake input / dialog option overlay
       create_win("tellme_interface", (Scr_Width - 320), Scr_Height, 640, 190);
       SelectWin("tellme_interface");
       FillWin(0, 0, 0);
-      sfall_func1("draw_image", "art\\intrface\\di_talk.frm");
+      Draw_Image("art\\intrface\\di_talk.frm");
       draw_image("art\\intrface\\lsgbox.frm", 0, 320, 24, false);
-      Format("_", 200, 102, 240, 14, justifyleft);
 
       // CANCEL button
       AddButton("button_cancel", 335, 124, 15, 16);
@@ -375,6 +324,7 @@ procedure OpenInput begin
 
       SetFont(101);
       SetTextColor(0.0, 1.0, 0.0);
+      Format("_", 200, 102, 240, 14, justifyleft);
       Format("$" + dude_caps, 3, 36, 70, 15, justifycenter);
       ShowWin;
    end
@@ -406,7 +356,7 @@ critical procedure GenerateReply begin
       tma_var_state := tma_gvar_array[2];
 
    // Find reply
-   if (string_compare(input, obj_name(critter))  and reply_name_start > 0) then
+   if (reply_name_start > 0 and string_compare(input, obj_name(critter))) then
       reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
    else begin
       variable found := 0;
@@ -450,7 +400,7 @@ procedure PrintReply(variable text) begin
    SelectWin("tellme_reply");
    Display("PCX\\tellmeabout_reply.pcx");
    GotoXY(3, 9);
-   PrintRect("  " + text, 380, 0);
+   PrintRect("  " + text, 380, justifyleft);
    ShowWin;
 end
 
