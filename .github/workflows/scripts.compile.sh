@@ -7,7 +7,7 @@
 # default options
 option_bytecode=0
 option_bytecode_dir="Fallout2/Fallout1in2/mods/fo1_base/scripts"
-option_compiler="Tools/sFall_ScriptEditor/resources/compile.exe"
+option_compiler="Tools/SFallScriptEditor/resources/compile.exe"
 option_dry=0
 option_optimization=2
 option_scripts_dir="Fallout2/Fallout1in2/Mapper/source/scripts"
