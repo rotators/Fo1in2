@@ -18,12 +18,20 @@ if [ -z "$event" ]; then
    exit 1
 fi
 
+tmpayload_count=0
 for tmpayload in ${@:2}; do
 	if [[ "$tmpayload" =~ ^(.+):(.+)$ ]]; then
 		key="${BASH_REMATCH[1]}"
 		val="${BASH_REMATCH[2]}"
 
 		payload="$payload, \"$key\": \"$val\" "
+
+		# https://github.com/peter-evans/repository-dispatch/commit/aaad5096a7af4f3cf49911784896d512edc3c453
+		tmpayload_count=$((tmpayload_count+1))
+		if [ $tmpayload_count -gt 10 ]; then
+			echo "Too much payload, you doofus!"
+			exit 1
+		fi
 	else
 		echo "Invalid payload, you doofus!"
 		exit 1
@@ -46,6 +54,7 @@ if [[ ! " ${known[@]} " =~ " ${event} " ]]; then
 	echo
 fi
 
+# curl on windows cannot handle input properly, if ran under git-bash
 if [ -n "$WINDIR" ]; then
 	winpty=winpty
 fi
