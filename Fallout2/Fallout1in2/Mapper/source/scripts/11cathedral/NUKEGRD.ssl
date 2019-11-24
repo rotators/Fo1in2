@@ -17,10 +17,11 @@
 /* Standard Script Procedures */
 procedure start;
 procedure damage_p_proc;
-procedure pre_dialogue;
 procedure talk_p_proc;
 procedure critter_p_proc;
 procedure destroy_p_proc;
+
+procedure pre_dialogue;
 
 procedure NukeGuard00;
 procedure NukeGuard01;
@@ -71,29 +72,33 @@ procedure start begin
       set_self_ai(AI_SUPER_MUTANT_AGGRESSIVE);
    end
 
-   if (local_var(6) == 0) then begin
-      variable HasItem := 0;
-      variable item := 0;
-      set_local_var(6, 1);
-      item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);//small energy cell
-      add_mult_objs_to_inven(self_obj, item, 1);
-      item := create_object(PID_MICRO_FUSION_CELL, 0, 0);//microfusion cell
-      add_mult_objs_to_inven(self_obj, item, 1);
-      item := create_object(PID_RADIO, 0, 0);//Radio
-      add_mult_objs_to_inven(self_obj, item, 1);
-      item := create_object(PID_BOTTLE_CAPS, 0, 0);//caps
-      add_mult_objs_to_inven(self_obj, item, (random(1, 6) * (dude_luck - 1)));
-      HasItem := self_item(PID_GATLING_LASER);//gatling laser
-      if (HasItem) then begin
-         item := create_object(PID_POWER_FIST, 0, 0);//powerfist
+   // Was added by Fixt
+   if fixt_enabled then begin
+      if (local_var(6) == 0) then begin
+         variable HasItem := 0;
+         variable item := 0;
+         set_local_var(6, 1);
+         item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
          add_mult_objs_to_inven(self_obj, item, 1);
-      end
-      else begin
-         item := create_object(PID_TURBO_PLASMA_RIFLE, 0, 0);//turbo plasma rifle
+         item := create_object(PID_MICRO_FUSION_CELL, 0, 0);
          add_mult_objs_to_inven(self_obj, item, 1);
-         wield_obj_critter(self_obj, item);
+         item := create_object(PID_RADIO, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 1);
+         item := create_object(PID_BOTTLE_CAPS, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, (random(1, 6) * (dude_luck - 1)));
+         HasItem := self_item(PID_GATLING_LASER);
+
+         if (HasItem) then begin
+            item := create_object(PID_POWER_FIST, 0, 0);
+            add_mult_objs_to_inven(self_obj, item, 1);
+         end
+         else begin
+            item := create_object(PID_TURBO_PLASMA_RIFLE, 0, 0);
+            add_mult_objs_to_inven(self_obj, item, 1);
+            wield_obj_critter(self_obj, item);
+         end
+         set_local_var(6, 1);
       end
-      set_local_var(6, 1);
    end
 end
 
@@ -148,25 +153,24 @@ procedure destroy_p_proc begin
 end
 
 procedure talk_p_proc begin
+   set_tma_data(tma_source_generic, TMA_MSG_MBASE, -1, -1, 997, 999);
+
    call pre_dialogue;
 
    dude_look_at_self;
    set_local_var(3, 1);
    get_reaction
-   start_gdialog(525, self_obj, 4, -1, -1);
-   gsay_start;
+
    if (Weapons == 1) then begin
-      call NukeGuard01;
+      start_dialog_at_node(NukeGuard01);
    end
    else if (local_var(4)) then begin
-      call NukeGuard13;
+      start_dialog_at_node(NukeGuard13);
    end
    else begin
       set_local_var(4, 1);
-      call NukeGuard05;
+      start_dialog_at_node(NukeGuard05);
    end
-   gsay_end;
-   end_dialogue;
 end
 
 procedure pre_dialogue begin
@@ -193,28 +197,23 @@ end
 
 procedure NukeGuard00 begin
    rndx := random(1, 4);
-   if (rndx == 1) then begin
+   if (rndx == 1) then
       float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 100), FLOAT_MSG_RED);
-   end
-   else if (rndx == 2) then begin
+   else if (rndx == 2) then
       float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 101), FLOAT_MSG_RED);
-   end
-   else if (rndx == 3) then begin
+   else if (rndx == 3) then
       float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 102), FLOAT_MSG_RED);
-   end
-   else if (rndx == 4) then begin
+   else if (rndx == 4) then
       float_msg(self_obj, message_str(SCRIPT_GENMUTAN, 103), FLOAT_MSG_RED);
-   end
    call NukeGuardcbt;
 end
 
 procedure NukeGuard01 begin
-   if (dude_is_male) then begin
+   if (dude_is_male) then
       Reply(107);
-   end
-   else begin
+   else
       Reply(108);
-   end
+
    BOption(110, NukeGuard02, 4);
    NOption(111, NukeGuard03, 6);
    NOption(112, NukeGuard04, 9);
@@ -247,12 +246,11 @@ procedure NukeGuard04 begin
 end
 
 procedure NukeGuard05 begin
-   if (dude_is_male) then begin
+   if (dude_is_male) then
       Reply(118);
-   end
-   else begin
+   else
       Reply(119);
-   end
+
    NOption(121, NukeGuard05a, 4);
    NOption(122, NukeGuard05b, 6);
    NOption(201, NukeGuard21, 6);
@@ -381,10 +379,8 @@ procedure NukeGuard15 begin
    if (rndx == 1) then begin
       NMessage(141);
    end
-   else begin
-      if (rndx == 2) then begin
-         NMessage(142);
-      end
+   else if (rndx == 2) then begin
+      NMessage(142);
    end
 end
 

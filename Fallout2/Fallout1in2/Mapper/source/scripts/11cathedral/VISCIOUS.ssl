@@ -61,12 +61,10 @@ procedure start begin
       smoke_tile := 21299;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_SGT);
-
       if (local_var(0) == 1) then begin
          if not(is_loading_game) then set_self_invisible;
          moving := 0;
       end
-
    end
 end
 
@@ -82,28 +80,22 @@ end
 
 procedure critter_p_proc begin
    if (local_var(0) != 1) then begin
-
       if (tmp_hostile) then begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-      else begin
-         if (moving) then begin
-            call moveme;
-         end
+      else if (moving) then begin
+         call moveme;
       end
-
    end
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(3)) then begin
+   if (local_var(3)) then
       display_msg(mstr(302));
-   end
-   else begin
+   else
       display_msg(mstr(200));
-   end
 end
 
 procedure damage_p_proc begin
@@ -114,15 +106,14 @@ end
 
 procedure destroy_p_proc begin
    set_local_var(0, 1);
-   rm_timer_event(self_obj);
    inc_inv_evil_crit
-   rm_timer_event(self_obj);
 end
 
 procedure talk_p_proc begin
+   set_tma_data(tma_source_generic, TMA_MSG_MBASE, -1, -1, 997, 999);
+
    dude_look_at_self;
-   start_gdialog(811, self_obj, 4, -1, -1);
-   gsay_start;
+
    indlog := 1;
    ARMED := 0;
    DISGUISED := 0;
@@ -130,20 +121,19 @@ procedure talk_p_proc begin
    if (dude_is_armed) then begin
       ARMED := 1;
    end
+
    coc_disguise_check
    if ((DISGUISED == 0) or (ARMED == 1)) then begin
-      call goto01;
+      start_dialog_at_node(goto01);
    end
    else if (local_var(2) == 1) then begin
-      call goto08;
+      start_dialog_at_node(goto08);
    end
    else begin
       set_local_var(2, 1);
-      call goto00;
+      start_dialog_at_node(goto00);
    end
    indlog := 0;
-   gsay_end;
-   end_dialogue;
 end
 
 procedure moveme begin
@@ -153,9 +143,9 @@ procedure moveme begin
       if (local_var(5)) then begin
          set_local_var(6, local_var(6) + 1);
       end
-      else begin
+      else
          set_local_var(6, local_var(6) - 1);
-      end
+
       if (local_var(6) > 2) then begin
          set_local_var(3, 1);
          moving := 0;
@@ -163,29 +153,24 @@ procedure moveme begin
          set_local_var(5, 0);
          add_timer_event(self_obj, game_ticks(180), 1);
       end
-      else begin
-         if (local_var(6) < 0) then begin
-            moving := 0;
-            set_local_var(6, 1);
-            set_local_var(5, 1);
-            add_timer_event(self_obj, game_ticks(600), 1);
-         end
+      else if (local_var(6) < 0) then begin
+         moving := 0;
+         set_local_var(6, 1);
+         set_local_var(5, 1);
+         add_timer_event(self_obj, game_ticks(600), 1);
       end
-      if (local_var(6) == 0) then begin
+
+      if (local_var(6) == 0) then
          set_local_var(7, home_tile);
-      end
-      else begin
-         if (local_var(6) == 1) then begin
-            set_local_var(7, 22091);
-         end
-         else if (local_var(6) == 2) then begin
-            set_local_var(7, smoke_tile);
-         end
-      end
+      else if (local_var(6) == 1) then
+         set_local_var(7, 22091);
+      else if (local_var(6) == 2) then
+         set_local_var(7, smoke_tile);
    end
    else begin
       self_walk_to_tile(local_var(7));
    end
+
    if (self_can_see_dude) then begin
       ARMED := 0;
       DISGUISED := 0;
@@ -224,12 +209,10 @@ procedure goto00a begin
 end
 
 procedure goto01 begin
-   if (indlog) then begin
+   if (indlog) then
       BMessage(207);
-   end
-   else begin
+   else
       float_msg(self_obj, mstr(207), FLOAT_MSG_RED);
-   end
    call gotocbt;
 end
 
@@ -285,12 +268,10 @@ procedure goto07a begin
 end
 
 procedure goto08 begin
-   if (indlog) then begin
+   if (indlog) then
       NMessage(222);
-   end
-   else begin
+   else
       float_msg(self_obj, mstr(222), FLOAT_MSG_RED);
-   end
 end
 
 procedure gotoend begin
