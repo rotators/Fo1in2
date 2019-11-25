@@ -54,7 +54,7 @@ if [[ ! " ${known[@]} " =~ " ${event} " ]]; then
 	echo
 fi
 
-# curl on windows cannot handle input properly, if ran under git-bash
+# curl on windows cannot handle input properly, if it's running under git-bash
 if [ -n "$WINDIR" ]; then
 	winpty=winpty
 fi

@@ -72,6 +72,20 @@ jobs:
            unix2dos $MOD_DIR/config/fo1_settings.ini
     shell: bash
 
+  - name:  Format documentation
+    run:   |
+           :
+           for md in $(find $MOD_DIR -type f -name '*.[Mm][Dd]' | sort); do
+               sed -ri 's!\[([A-Za-z\.\/\\\-]+)\]\(\1\)!\1!g' "$md"
+               fold -w 80 -s "$md"
+               txt="$(echo "$md" | sed -e 's!\.[Mm][Dd]$!\.txt!')"
+               mv "$md" "$txt"
+               echo ::group::$md
+               cat "$txt"
+               echo ::endgroup::
+           done
+    shell: bash
+
   - name:  Pack
     run:   7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
     shell: bash
