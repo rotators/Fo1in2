@@ -1,6 +1,6 @@
 # Necropolis motorcycle npc
 
-{100}{}{You see: Griffith}
+{100}{}{You see: Griffith.}
 {101}{}{The ghoul is wearing an old, patched up motorcycle jacket. You see traces of tattoos on his rotten skin.}
 
 {125}{}{You gain }
