@@ -4151,7 +4151,7 @@
 #define GVAR_WORLDMAP_TERRAIN                   (5013)
 
 #define GVAR_DISABLE_FLUFF_ENCOUNTER            (5014)
-#define GVAR_UNLIMITED_PARTY_MEMBERS            (5015)
+#define GVAR_ENABLE_FO2_PARTY_LIMIT             (5015)
 #define GVAR_ALLOW_PARTY_ARMOR_CHANGE           (5016)
 
 #endif // _GLOBAL_H_DEFINED

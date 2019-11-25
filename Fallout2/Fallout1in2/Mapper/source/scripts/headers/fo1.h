@@ -227,6 +227,7 @@ variable merch_slot_armor_flags;
 #define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
 #define fo1in2_unlimited_hpa_disabled   (global_var(GVAR_ENABLE_UNLIMITED_HPA) == 0)
 #define fo1in2_maltese_singer_disabled  (global_var(GVAR_ENABLE_MALTESE_SINGER) == 0)
+#define fo1in2_party_limit_disabled     (global_var(GVAR_ENABLE_FO2_PARTY_LIMIT) == 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -390,7 +391,7 @@ variable tma_gvar_array;
 /*********************************************************
     Party related:
 *********************************************************/
-#define unlimited_party_members             global_var(GVAR_UNLIMITED_PARTY_MEMBERS) == 1
+
 
 
 /*********************************************************
