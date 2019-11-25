@@ -26,7 +26,7 @@ MOD INSTALLATION
 - Install FALLOUT ET TU into your Fallout 2 folder.
   - The folder structure must look like this:
     ```
-    \Fallout2\Fallout1in2\fallout2.exe
+    \Fallout2\Fallout1in2\Fallout2.exe
     ```
 
 - Start the `UNDAT.EXE` and select the `MASTER.DAT` file from your FALLOUT 1 installation directory.
