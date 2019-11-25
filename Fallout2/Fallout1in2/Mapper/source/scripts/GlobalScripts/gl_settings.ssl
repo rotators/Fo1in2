@@ -12,9 +12,13 @@ procedure start;
 
 procedure settings;
 
-#define ini_path                            "config\\fo1_settings.ini"
-//#define ini_settings(gvar, option_name)   set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + option_name))
-#define gvar_settings(gvar)                 set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
+#define ini_path                 "config\\fo1_settings.ini"
+#define gvar_settings(gvar)      set_global_var(gvar, get_ini_setting(ini_path + "|" + section + "|" + #gvar))
+#define gvar_timers(gvar)        ini_val := get_ini_setting(ini_path + "|" + section + "|" + #gvar);  \
+                                 if (ini_val <= 0) then                                               \
+                                    set_global_var(gvar, 999999);                                     \
+                                 else                                                                 \
+                                    set_global_var(gvar, ini_val)
 
 procedure start begin
    if (game_loaded) then begin
@@ -26,6 +30,7 @@ end
 procedure settings begin
    variable section;
    variable warning;
+   variable ini_val;
 
    warning := get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting");
    if (warning <= 0) then begin
@@ -66,14 +71,20 @@ procedure settings begin
       invisible_on_map(AREA_HUB_LAIR)
    end
 
-   // Invasion timer:
-   gvar_settings(GVAR_FOLLOWERS_INVADED_DATE);
-   gvar_settings(GVAR_NECROPOLIS_INVADED_DATE);
-   gvar_settings(GVAR_THE_HUB_INVADED_DATE);
-   gvar_settings(GVAR_BROTHERHOOD_INVADED_DATE);
-   gvar_settings(GVAR_JUNKTOWN_INVADED_DATE);
-   gvar_settings(GVAR_SHADY_SANDS_INVADED_DATE);
-   gvar_settings(GVAR_VAULT_13_INVADED_DATE);
+   // Changing the timers mid-game will fuck shit up
+   if (global_var(GVAR_SET_GAMESTART_TIMERS) == 0) then begin
+      set_global_var(GVAR_SET_GAMESTART_TIMERS,1);
+
+      gvar_timers(GVAR_VAULT13_WATER_DAYS); // Start timer (150 days)
+
+      gvar_timers(GVAR_VAULT_13_INVADED_DATE);
+      gvar_timers(GVAR_NECROPOLIS_INVADED_DATE);
+      gvar_timers(GVAR_FOLLOWERS_INVADED_DATE);
+      gvar_timers(GVAR_THE_HUB_INVADED_DATE);
+      gvar_timers(GVAR_BROTHERHOOD_INVADED_DATE);
+      gvar_timers(GVAR_JUNKTOWN_INVADED_DATE);
+      gvar_timers(GVAR_SHADY_SANDS_INVADED_DATE);
+   end
 
    //===================================================
    //    FIXT

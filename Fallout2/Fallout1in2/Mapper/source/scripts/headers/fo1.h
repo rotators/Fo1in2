@@ -345,7 +345,7 @@ variable tma_gvar_array;
 /*********************************************************
             Water Chip related:
 *********************************************************/
-#define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS_LEFT) - get_days_passed)
+#define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS) - get_days_passed)
 
 #define TIME_LIMIT_1                        (100)
 #define TIME_LIMIT_2                        (50)

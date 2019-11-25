@@ -146,7 +146,7 @@
 #define GVAR_FOLLOWERS_INVADED                  (1007)
 #define GVAR_CAN_REPORT_BITS_BOB                (1008)
 #define GVAR_IS_BITS_BOB_ALIVE                  (1009)
-#define GVAR_VAULT13_WATER_DAYS_LEFT            (1010)
+#define GVAR_VAULT13_WATER_DAYS            (1010)
 #define GVAR_VAULT_13_WAS_INVADED               (1011)
 #define GVAR_SHADY_SANDS_WAS_INVADED            (1012)
 #define GVAR_NECROPOLIS_WAS_INVADED             (1013)
@@ -4112,8 +4112,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4976)
 #define RESERVED_FOR_FALLOUT_FIXT               (4977)
 #define RESERVED_FOR_FALLOUT_FIXT               (4978)
-#define RESERVED_FOR_FALLOUT_FIXT               (4979)
-#define RESERVED_FOR_FALLOUT_FIXT               (4980)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4979)*/
+#define GVAR_SET_GAMESTART_TIMERS               (4980)
 #define GVAR_ENABLE_MALTESE_SINGER              (4981)
 #define GVAR_PALADIN_KILL_COUNT                 (4982)
 #define GVAR_ENABLE_SATELLITE_LOCATIONS         (4983)
