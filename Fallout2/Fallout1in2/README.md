@@ -31,7 +31,7 @@ MOD INSTALLATION
 
 - Start the `UNDAT.EXE` and select the `MASTER.DAT` file from your FALLOUT 1 installation directory.
   - If you are using (pre)release package, `UNDAT.EXE` can be found in `Fallout1in2` folder.
-  - If you are using development version (repository), `UNDAT.EXE` can be found in `Tools\UndatUI` folder.
+  - If you are using repository, `UNDAT.EXE` can be found in `Tools\UndatUI` folder.
 
 - Select the `Fallout1in2` folder as extraction target.
 
@@ -46,7 +46,7 @@ CONFIGURATION
 Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_settings.ini). It is recommended to tweak settings in this file _before_ starting a new game. Changing settings mid-game have a chance to corrupt savegames or introduce undefined behavior.
 
 Other interesting files:
-- [ddraw.ini](ddraw.ini), (sfall configuration)
+- [ddraw.ini](ddraw.ini) (sfall configuration)
 - [sfall-mods.ini](sfall-mods.ini), [config/](config/) directory (sfall modifications configuration)
 - [mods/InventoryFilter/InvenFilter.ini](mods/InventoryFilter/InvenFilter.ini) (InventoryFilter mini-mod configuration)
 
