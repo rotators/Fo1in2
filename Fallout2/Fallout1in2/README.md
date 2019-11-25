@@ -5,8 +5,6 @@ Fallout to Fallout 2 engine conversion
 
 Fallout et tu (also called Fallout 1@2, 1at2, 1in2, ...) is bringing the first Fallout game into the engine of the second one while utilizing features available in Fallout 2 wherever we can (within reason).
 
-It is _not_ an attempt to make a 1:1 copy of the first game. Our priority while working on this project was to make it more accessible modding platform, to allow creation of more complex modifications thanks to ongoing activity within Fallout 2 modding community. If you don't mind some changes in Fallout 1 mechanics (only improvements, in our humble opinion), Fallout et tu can be your way to go!
-
 ---
 
 Discussion: https://nma-fallout.com/threads/218045/ (beta),
@@ -45,18 +43,33 @@ That's it. The game can now be played!
 CONFIGURATION
 -------------
 
-Most of 
+Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_settings.ini). It is recommended to tweak settings in this file _before_ starting a new game. Changing settings mid-game have a chance to corrupt savegames or introduce undefined behavior.
+
+Other interesting files:
+- [ddraw.ini](ddraw.ini), (sfall configuration)
+- [sfall-mods.ini](sfall-mods.ini), [config/](config/) directory (sfall modifications configuration)
+- [mods/InventoryFilter/InvenFilter.ini](mods/InventoryFilter/InvenFilter.ini) (InventoryFilter mini-mod configuration)
 
 
 ADDITIONAL CONTENT
 ------------------
 
-While most of  
+While most of optional content is a part of a mod core, and can be turned on and off by editing [config/fo1_settings.ini](config/fo1_settings.ini), there is a few mini-mods - separated from main codebase - included as well.
 
 ### Classic worldmap ###
 [mods/fo1_classic_worldmap](mods/fo1_classic_worldmap)
 
 Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
+
+### Inventory AP cost ###
+[mods/InventoryAPcosts](mods/InventoryAPcosts)
+
+Tweaks a cost of specific actions while using inventory.
+
+### Inventory Filter ###
+[mods/InventoryFilter](mods/InventoryFilter)
+
+Created by Mr.Stalin, see https://www.nma-fallout.com/threads/214445/
 
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)
