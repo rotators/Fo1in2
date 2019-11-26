@@ -80,4 +80,5 @@ Turns Dogmeat into a Robodog, slightly changing available combat options.
 SPECIAL THANKS
 --------------
 
-We would like to thank NovaRain and Mr.Stalin for their never-ending amounts of patience, scripting advices, sfall tweaks, testing sessions and general support while we was working on the project. We love you guys!
+We would like to thank NovaRain and Mr.Stalin for their never-ending amounts of patience, scripting advices, sfall tweaks, testing sessions and general support while we was working on the project.
+We love you guys!
