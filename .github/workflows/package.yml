@@ -80,8 +80,17 @@ jobs:
 
                dos2unix "$md"
 
+               # replace "[path](path)" (must be exactly the same) with "path"
                sed -ri 's!\[([A-Za-z0-9\.\_\/\\\-]+)\]\(\1\)!\1!g' "$md"
-               sed -ri '/^[\`\t\ ]+$/d' "$md"
+
+               # remove lines with "```" or "```blabla" only
+               sed -ri '/^[\t\ ]*[\`]+[a-z]?[\t\ ]*$/d' "$md"
+
+               # remove lines which looks like html
+               sed -ri '/^<.+>$/d' "$md"
+
+               # remove first line if blank
+               sed -ri '0,/^$/d' "$md"
 
                fold -w 100 -s "$md" > "$txt"
 
