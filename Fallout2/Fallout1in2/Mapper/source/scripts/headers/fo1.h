@@ -18,6 +18,22 @@
 #define TRAIT_TRAIT  (2)
 
 /*********************************************************
+    Settings:
+*********************************************************/
+#define fo1in2_fluff_enc_disabled       ((global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0) or get_car_from_worldmap)
+#define fo1in2_auto_doors_closing       (global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
+#define fo1in2_motorcycle_disabled      (global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
+#define fo1in2_destroy_armor_disabled   (global_var(GVAR_ARMOR_DESTROY_MOD) == 0)
+#define fo1in2_merch_restock_disabled   (global_var(GVAR_ENABLE_FO2_MERCHANT_RESTOCK) == 0)
+#define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
+#define fo1in2_unlimited_hpa_disabled   (global_var(GVAR_ENABLE_UNLIMITED_HPA) == 0)
+#define fo1in2_maltese_singer_disabled  (global_var(GVAR_ENABLE_MALTESE_SINGER) == 0)
+#define fo1in2_party_limit_disabled     (global_var(GVAR_ENABLE_FO2_PARTY_LIMIT) == 0)
+
+#define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
+#define fixt_disabled                   not(fixt_enabled)
+
+/*********************************************************
     Generic:
     Note: If the player decides to continue after finishing the game,
     He will be moved to a new random position on the worldmap.
@@ -84,7 +100,189 @@
 #define tandi_is_rescued                    (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
 
 /*********************************************************
-    Other stuff:
+    TMA / Tell Me About
+*********************************************************/
+// msg string source
+#define tma_source_critter      (get_script(critter) + 1)
+#define tma_source_generic      (SCRIPT_OBJ_DUDE)
+
+// generic defines
+#define TMA_MSG_NAME_START      (970)
+#define TMA_MSG_NAME_END        (972)
+
+#define TMA_MSG_DONTKNOW_START  (980)
+#define TMA_MSG_DONTKNOW_END    (982)
+
+// (location) types from OBJ_DUDE.msg
+#define TMA_MSG_HALLDED         (2800)
+#define TMA_MSG_HOTEL           (3400)
+#define TMA_MSG_WATRSHD         (4000)
+#define TMA_MSG_VAULT13         (3600)
+#define TMA_MSG_JUNKENT         (7000)
+#define TMA_MSG_JUNKCSNO        (7600)
+#define TMA_MSG_JUNKKILL        (8200)
+#define TMA_MSG_BOS             (8800)
+#define TMA_MSG_COC             (11200)
+#define TMA_MSG_RAIDERS         (15400)
+#define TMA_MSG_SHADYE          (16000)
+#define TMA_MSG_SHADYW          (16600)
+#define TMA_MSG_MBASE           (19000)
+#define TMA_MSG_HUBENT          (22600)
+#define TMA_MSG_HUBDWNTN        (23800)
+#define TMA_MSG_HUBHEIGT        (24400)
+#define TMA_MSG_HUBOLDTN        (25000)
+#define TMA_MSG_HUBWATER        (25600)
+#define TMA_MSG_ADYTUM_LVL1     (17800) // [People who know nothing]
+#define TMA_MSG_ADYTUM_LVL2     (18000) // [People who know something]
+#define TMA_MSG_ADYTUM_LVL3     (18200) // [People who know more than something but less than everything]
+#define TMA_MSG_FOLLOWER_LVL1   (18400)
+#define TMA_MSG_FOLLOWER_LVL2   (18600)
+#define TMA_MSG_FOLLOWER_LVL3   (18800)
+#define TMA_MSG_BLADES_LVL1     (27400)
+#define TMA_MSG_BLADES_LVL2     (27600)
+#define TMA_MSG_BLADES_LVL3     (27800)
+#define TMA_MSG_GUNRUNNR_LVL1   (28600)
+#define TMA_MSG_GUNRUNNR_LVL2   (28800)
+#define TMA_MSG_GUNRUNNR_LVL3   (29000)
+
+variable tma_data_array;
+variable tma_gvar_array;
+#define set_tma_data(source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end)       \
+    if (tma_data_array == 0) then begin                                                                         \
+        tma_data_array := get_sfall_global_int("TMA_DATA");                                                     \
+    end                                                                                                         \
+    tma_data_array[0] := source;                                                                                \
+    tma_data_array[1] := reply_str;                                                                             \
+    tma_data_array[2] := name_str_start;                                                                        \
+    tma_data_array[3] := name_str_end;                                                                          \
+    tma_data_array[4] := unknown_str_start;                                                                     \
+    tma_data_array[5] := unknown_str_end
+
+// Shortcut
+#define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
+
+// If reply <line> is triggered, set <GVAR_> to <val>
+// Must be placed in the critter talk_p_proc.
+// TODO: Allow multiple GVARs and condition checks at some point? Not sure how necessary that will be, though.
+#define set_tma_gvar(line_num,gvar,val)       				\
+    if (tma_gvar_array == 0) then begin                		\
+        tma_gvar_array := get_sfall_global_int("TMA_GVAR");	\
+    end                                                  	\
+    tma_gvar_array[0] := line_num;							\
+    tma_gvar_array[1] := gvar;								\
+    tma_gvar_array[2] := val
+
+/*********************************************************
+    Game time Limits
+*********************************************************/
+// GVAR_VAULT13_WATER_DAYS_COUNTER is set in the start procedure of OBJ_DUDE.
+// We need this to keep track of the correct time (start time is advanced randomly by a few hours).
+#define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
+
+/*********************************************************
+            Water Chip related:
+*********************************************************/
+#define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS) - get_days_passed)
+
+#define TIME_LIMIT_1                        (100)
+#define TIME_LIMIT_2                        (50)
+#define TIME_LIMIT_3                        (0)
+
+#define reached_tl_1                        (get_water_days_left <= TIME_LIMIT_1)
+#define reached_tl_2                        (get_water_days_left <= TIME_LIMIT_2)
+#define reached_tl_3                        (get_water_days_left <= TIME_LIMIT_3)
+
+/*********************************************************
+            Invasion related:
+*********************************************************/
+#define v13_invaded                         (global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
+#define hub_invaded                         (global_var(GVAR_THE_HUB_WAS_INVADED) == 1)
+#define bos_invaded                         (global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)
+#define boneyard_invaded                    (global_var(GVAR_FOLLOWERS_INVADED) == 1)
+#define necropolis_invaded                  (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)
+#define shady_invaded                       (global_var(GVAR_SHADY_SANDS_WAS_INVADED) == 1)
+#define junktown_invaded                    (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)
+
+#define get_v13_days_left                   (global_var(GVAR_VAULT_13_INVASION_DAYS) - get_days_passed)
+#define set_v13_days_left(x)                set_global_var(GVAR_VAULT_13_INVASION_DAYS, (get_v13_days_left + x))
+
+#define get_hub_days_left                   (global_var(GVAR_THE_HUB_INVASION_DAYS) - get_days_passed)
+#define get_bos_days_left                   (global_var(GVAR_BROTHERHOOD_INVASION_DAYS) - get_days_passed)
+#define get_boneyard_days_left              (global_var(GVAR_BONEYARD_INVASION_DAYS) - get_days_passed)
+#define get_necropolis_days_left            (global_var(GVAR_NECROPOLIS_INVASION_DAYS) - get_days_passed)
+#define get_shady_days_left                 (global_var(GVAR_SHADY_SANDS_INVASION_DAYS) - get_days_passed)
+#define get_junktown_days_left              (global_var(GVAR_JUNKTOWN_INVASION_DAYS) - get_days_passed)
+
+/*********************************************************
+    Endgame slideshow
+*********************************************************/
+#define set_end_Vats                        set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,1)
+#define set_end_Master                      set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,2)
+
+#define set_end_necropolis_dehydrated       set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,1)
+#define set_end_necropolis_survived         set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,2)
+#define set_end_necropolis_invaded          set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,3)
+
+#define set_end_foa_trained                 set_global_var(GVAR_ENDGAME_MOVIE_BONEYARD,1)
+#define set_end_foa_invaded                 set_global_var(GVAR_ENDGAME_MOVIE_BONEYARD,2)
+
+#define set_end_shady_good                  set_global_var(GVAR_ENDGAME_MOVIE_SHADY,1)
+#define set_end_shady_tandi_dead            set_global_var(GVAR_ENDGAME_MOVIE_SHADY,2)
+#define set_end_shady_aradesh_dead          set_global_var(GVAR_ENDGAME_MOVIE_SHADY,3)
+#define set_end_shady_bad                   set_global_var(GVAR_ENDGAME_MOVIE_SHADY,4)
+#define set_end_shady_invaded               set_global_var(GVAR_ENDGAME_MOVIE_SHADY,5)
+
+#define set_end_junktown_killian            set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,1)
+#define set_end_junktown_gizmo              set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,2)
+#define set_end_junktown_invaded            set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,3)
+
+#define set_end_bos_good                    set_global_var(GVAR_ENDGAME_MOVIE_BOS,1)
+#define set_end_bos_bad                     set_global_var(GVAR_ENDGAME_MOVIE_BOS,2)
+#define set_end_bos_invaded                 set_global_var(GVAR_ENDGAME_MOVIE_BOS,3)
+
+#define set_end_hub_good                    set_global_var(GVAR_ENDGAME_MOVIE_HUB,1)
+#define set_end_hub_bad                     set_global_var(GVAR_ENDGAME_MOVIE_HUB,2)
+
+#define set_end_raiders_dead                set_global_var(GVAR_ENDGAME_MOVIE_KHANS,1)
+#define set_end_raiders_hurt                set_global_var(GVAR_ENDGAME_MOVIE_KHANS,2)
+#define set_end_raiders_alive               set_global_var(GVAR_ENDGAME_MOVIE_KHANS,3)
+
+#define set_end_ending_vd                   set_global_var(GVAR_ENDGAME_MOVIE_VD,1)
+
+/*********************************************************
+    Pick dead body type:
+*********************************************************/
+#define invasion_kill_critter           variable DeathType := 56;                                       \
+                                        variable LVar0 := random(0, 18);                                \
+                                        if (LVar0 <= 5) then begin/*// 31.5%*/                          \
+                                            DeathType := ANIM_burned_to_nothing_sf;                     \
+                                        end                                                             \
+                                        else if (LVar0 <= 10) then begin/*// 26%*/                      \
+                                            DeathType := ANIM_sliced_in_half_sf;                        \
+                                        end                                                             \
+                                        else if (LVar0 <= 14) then begin/*// 21%*/                      \
+                                            DeathType := ANIM_chunks_of_flesh_sf;                       \
+                                        end                                                             \
+                                        else if (LVar0 <= 16) then begin/*// 10.5%*/                    \
+                                            DeathType := ANIM_fall_front_blood_sf;                      \
+                                        end                                                             \
+                                        else begin/*// <--------------------    16%*/                   \
+                                            variable LVar1 := 0;                                        \
+                                            LVar1 := random(0, 2);                                      \
+                                            if (LVar1 == 0) then begin                                  \
+                                                DeathType := ANIM_dancing_autofire_sf;                  \
+                                            end                                                         \
+                                            else if (LVar1 == 1) then begin                             \
+                                                DeathType := ANIM_exploded_to_nothing_sf;               \
+                                            end                                                         \
+                                            else if (LVar1 == 2) then begin                             \
+                                                DeathType := ANIM_melted_to_nothing_sf;                 \
+                                            end                                                         \
+                                        end                                                             \
+                                        kill_critter(self_obj, DeathType)
+
+/*********************************************************
+    Other stuff
 *********************************************************/
 // Send NPCs from "day" to "night" position:
 #define sleeping    /*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
@@ -216,218 +414,7 @@ variable merch_slot_armor_flags;
                                     destroy_object(tmp_merch_box)
 
 /*********************************************************
-    Settings:
+                        THE END
 *********************************************************/
-#define fo1in2_fluff_enc_disabled       ((global_var(GVAR_DISABLE_FLUFF_ENCOUNTER) > 0) or get_car_from_worldmap)
-#define fo1in2_armor_change_disabled    (global_var(GVAR_ALLOW_PARTY_ARMOR_CHANGE) == 0)
-#define fo1in2_auto_doors_closing       (global_var(GVAR_AUTO_DOORS_CLOSING) > 0)
-#define fo1in2_motorcycle_disabled      (global_var(GVAR_ENABLE_MOTORCYCLE) == 0)
-#define fo1in2_destroy_armor_disabled   (global_var(GVAR_ARMOR_DESTROY_MOD) == 0)
-#define fo1in2_merch_restock_disabled   (global_var(GVAR_ENABLE_FO2_MERCHANT_RESTOCK) == 0)
-#define fo1in2_satellite_loc_disabled   (global_var(GVAR_ENABLE_SATELLITE_LOCATIONS) == 0)
-#define fo1in2_unlimited_hpa_disabled   (global_var(GVAR_ENABLE_UNLIMITED_HPA) == 0)
-#define fo1in2_maltese_singer_disabled  (global_var(GVAR_ENABLE_MALTESE_SINGER) == 0)
-#define fo1in2_party_limit_disabled     (global_var(GVAR_ENABLE_FO2_PARTY_LIMIT) == 0)
-
-#define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
-#define fixt_disabled                   not(fixt_enabled)
-
-/*********************************************************
-    TMA / Tell Me About
-*********************************************************/
-// msg string source
-#define tma_source_critter      (get_script(critter) + 1)
-#define tma_source_generic      (SCRIPT_OBJ_DUDE)
-
-// generic defines
-#define TMA_MSG_NAME_START      (970)
-#define TMA_MSG_NAME_END        (972)
-
-#define TMA_MSG_DONTKNOW_START  (980)
-#define TMA_MSG_DONTKNOW_END    (982)
-
-// (location) types from OBJ_DUDE.msg
-#define TMA_MSG_HALLDED         (2800)
-#define TMA_MSG_HOTEL           (3400)
-#define TMA_MSG_WATRSHD         (4000)
-#define TMA_MSG_VAULT13         (3600)
-#define TMA_MSG_JUNKENT         (7000)
-#define TMA_MSG_JUNKCSNO        (7600)
-#define TMA_MSG_JUNKKILL        (8200)
-#define TMA_MSG_BOS             (8800)
-#define TMA_MSG_COC             (11200)
-#define TMA_MSG_RAIDERS         (15400)
-#define TMA_MSG_SHADYE          (16000)
-#define TMA_MSG_SHADYW          (16600)
-#define TMA_MSG_MBASE           (19000)
-#define TMA_MSG_HUBENT          (22600)
-#define TMA_MSG_HUBDWNTN        (23800)
-#define TMA_MSG_HUBHEIGT        (24400)
-#define TMA_MSG_HUBOLDTN        (25000)
-#define TMA_MSG_HUBWATER        (25600)
-#define TMA_MSG_ADYTUM_LVL1     (17800) // [People who know nothing]
-#define TMA_MSG_ADYTUM_LVL2     (18000) // [People who know something]
-#define TMA_MSG_ADYTUM_LVL3     (18200) // [People who know more than something but less than everything]
-#define TMA_MSG_FOLLOWER_LVL1   (18400)
-#define TMA_MSG_FOLLOWER_LVL2   (18600)
-#define TMA_MSG_FOLLOWER_LVL3   (18800)
-#define TMA_MSG_BLADES_LVL1     (27400)
-#define TMA_MSG_BLADES_LVL2     (27600)
-#define TMA_MSG_BLADES_LVL3     (27800)
-#define TMA_MSG_GUNRUNNR_LVL1   (28600)
-#define TMA_MSG_GUNRUNNR_LVL2   (28800)
-#define TMA_MSG_GUNRUNNR_LVL3   (29000)
-
-variable tma_data_array;
-variable tma_gvar_array;
-#define set_tma_data(source, reply_str, name_str_start, name_str_end, unknown_str_start, unknown_str_end)       \
-    if (tma_data_array == 0) then begin                                                                         \
-        tma_data_array := get_sfall_global_int("TMA_DATA");                                                     \
-    end                                                                                                         \
-    tma_data_array[0] := source;                                                                                \
-    tma_data_array[1] := reply_str;                                                                             \
-    tma_data_array[2] := name_str_start;                                                                        \
-    tma_data_array[3] := name_str_end;                                                                          \
-    tma_data_array[4] := unknown_str_start;                                                                     \
-    tma_data_array[5] := unknown_str_end
-
-// Shortcut
-#define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
-
-// If reply <line> is triggered, set <GVAR_> to <val>
-// Must be placed in the critter talk_p_proc.
-// TODO: Allow multiple GVARs and condition checks at some point? Not sure how necessary that will be, though.
-#define set_tma_gvar(line_num,gvar,val)       				\
-    if (tma_gvar_array == 0) then begin                		\
-        tma_gvar_array := get_sfall_global_int("TMA_GVAR");	\
-    end                                                  	\
-    tma_gvar_array[0] := line_num;							\
-    tma_gvar_array[1] := gvar;								\
-    tma_gvar_array[2] := val
-
-/*********************************************************
-    Pick dead body type:
-*********************************************************/
-#define invasion_kill_critter           variable DeathType := 56;                                       \
-                                        variable LVar0 := random(0, 18);                                \
-                                        if (LVar0 <= 5) then begin/*// 31.5%*/                          \
-                                            DeathType := ANIM_burned_to_nothing_sf;                     \
-                                        end                                                             \
-                                        else if (LVar0 <= 10) then begin/*// 26%*/                      \
-                                            DeathType := ANIM_sliced_in_half_sf;                        \
-                                        end                                                             \
-                                        else if (LVar0 <= 14) then begin/*// 21%*/                      \
-                                            DeathType := ANIM_chunks_of_flesh_sf;                       \
-                                        end                                                             \
-                                        else if (LVar0 <= 16) then begin/*// 10.5%*/                    \
-                                            DeathType := ANIM_fall_front_blood_sf;                      \
-                                        end                                                             \
-                                        else begin/*// <--------------------    16%*/                   \
-                                            variable LVar1 := 0;                                        \
-                                            LVar1 := random(0, 2);                                      \
-                                            if (LVar1 == 0) then begin                                  \
-                                                DeathType := ANIM_dancing_autofire_sf;                  \
-                                            end                                                         \
-                                            else if (LVar1 == 1) then begin                             \
-                                                DeathType := ANIM_exploded_to_nothing_sf;               \
-                                            end                                                         \
-                                            else if (LVar1 == 2) then begin                             \
-                                                DeathType := ANIM_melted_to_nothing_sf;                 \
-                                            end                                                         \
-                                        end                                                             \
-                                        kill_critter(self_obj, DeathType)
-
-/*********************************************************
-    Game time Limits
-*********************************************************/
-#define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * 60 * 60 * 24))
-
-/*********************************************************
-            Water Chip related:
-*********************************************************/
-#define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS) - get_days_passed)
-
-#define TIME_LIMIT_1                        (100)
-#define TIME_LIMIT_2                        (50)
-#define TIME_LIMIT_3                        (0)
-
-#define reached_tl_1                        (get_water_days_left <= TIME_LIMIT_1)
-#define reached_tl_2                        (get_water_days_left <= TIME_LIMIT_2)
-#define reached_tl_3                        (get_water_days_left <= TIME_LIMIT_3)
-
-/*********************************************************
-            Invasion related:
-*********************************************************/
-#define v13_invaded                         (global_var(GVAR_VAULT_13_WAS_INVADED) == 1)
-#define hub_invaded                         (global_var(GVAR_THE_HUB_WAS_INVADED) == 1)
-#define bos_invaded                         (global_var(GVAR_BROTHERHOOD_WAS_INVADED) == 1)
-#define boneyard_invaded                    (global_var(GVAR_FOLLOWERS_INVADED) == 1)
-#define necropolis_invaded                  (global_var(GVAR_NECROPOLIS_WAS_INVADED) == 1)
-#define shady_invaded                       (global_var(GVAR_SHADY_SANDS_WAS_INVADED) == 1)
-#define junktown_invaded                    (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)
-
-#define v13_invasion_date                   (get_days_passed + (ONE_GAME_DAY * GVAR_VAULT_13_INVADED_DATE))
-#define get_v13_days_left                   (global_var(GVAR_VAULT_13_INVADED_DATE) - get_days_passed)
-#define set_v13_days_left(x)                set_global_var(GVAR_VAULT_13_INVADED_DATE, (get_v13_days_left + x))
-
-#define hub_invasion_date                   (get_days_passed + (ONE_GAME_DAY * GVAR_THE_HUB_INVADED_DATE))
-#define get_hub_days_left                   (global_var(GVAR_THE_HUB_INVADED_DATE) - get_days_passed)
-
-#define bos_invasion_date                   (get_days_passed + (ONE_GAME_DAY * GVAR_BROTHERHOOD_INVADED_DATE))
-#define get_bos_days_left                   (global_var(GVAR_BROTHERHOOD_INVADED_DATE) - get_days_passed)
-
-#define boneyard_invasion_date              (get_days_passed + (ONE_GAME_DAY * GVAR_FOLLOWERS_INVADED_DATE))
-#define get_boneyard_days_left              (global_var(GVAR_FOLLOWERS_INVADED_DATE) - get_days_passed)
-
-#define necropolis_invasion_date            (get_days_passed + (ONE_GAME_DAY * GVAR_NECROPOLIS_INVADED_DATE))
-#define get_necropolis_days_left            (global_var(GVAR_NECROPOLIS_INVADED_DATE) - get_days_passed)
-
-#define shady_invasion_date                 (get_days_passed + (ONE_GAME_DAY * GVAR_SHADY_SANDS_INVADED_DATE))
-#define get_shady_days_left                 (global_var(GVAR_SHADY_SANDS_INVADED_DATE) - get_days_passed)
-
-#define junktown_invasion_date              (get_days_passed + (ONE_GAME_DAY * GVAR_JUNKTOWN_INVADED_DATE))
-#define get_junktown_days_left              (global_var(GVAR_JUNKTOWN_INVADED_DATE) - get_days_passed)
-
-/*********************************************************
-    Party related:
-*********************************************************/
-
-
-
-/*********************************************************
-    Endgame slideshow
-*********************************************************/
-#define set_end_Vats                        set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,1)
-#define set_end_Master                      set_global_var(GVAR_ENDGAME_MOVIE_MUTANTS,2)
-
-#define set_end_necropolis_dehydrated       set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,1)
-#define set_end_necropolis_survived         set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,2)
-#define set_end_necropolis_invaded          set_global_var(GVAR_ENDGAME_MOVIE_NECROPOLIS,3)
-
-#define set_end_foa_trained                 set_global_var(GVAR_ENDGAME_MOVIE_BONEYARD,1)
-#define set_end_foa_invaded                 set_global_var(GVAR_ENDGAME_MOVIE_BONEYARD,2)
-
-#define set_end_shady_good                  set_global_var(GVAR_ENDGAME_MOVIE_SHADY,1)
-#define set_end_shady_tandi_dead            set_global_var(GVAR_ENDGAME_MOVIE_SHADY,2)
-#define set_end_shady_aradesh_dead          set_global_var(GVAR_ENDGAME_MOVIE_SHADY,3)
-#define set_end_shady_bad                   set_global_var(GVAR_ENDGAME_MOVIE_SHADY,4)
-#define set_end_shady_invaded               set_global_var(GVAR_ENDGAME_MOVIE_SHADY,5)
-
-#define set_end_junktown_killian            set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,1)
-#define set_end_junktown_gizmo              set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,2)
-#define set_end_junktown_invaded            set_global_var(GVAR_ENDGAME_MOVIE_JUNKTOWN,3)
-
-#define set_end_bos_good                    set_global_var(GVAR_ENDGAME_MOVIE_BOS,1)
-#define set_end_bos_bad                     set_global_var(GVAR_ENDGAME_MOVIE_BOS,2)
-#define set_end_bos_invaded                 set_global_var(GVAR_ENDGAME_MOVIE_BOS,3)
-
-#define set_end_hub_good                    set_global_var(GVAR_ENDGAME_MOVIE_HUB,1)
-#define set_end_hub_bad                     set_global_var(GVAR_ENDGAME_MOVIE_HUB,2)
-
-#define set_end_raiders_dead                set_global_var(GVAR_ENDGAME_MOVIE_KHANS,1)
-#define set_end_raiders_hurt                set_global_var(GVAR_ENDGAME_MOVIE_KHANS,2)
-#define set_end_raiders_alive               set_global_var(GVAR_ENDGAME_MOVIE_KHANS,3)
-
-#define set_end_ending_vd                   set_global_var(GVAR_ENDGAME_MOVIE_VD,1)
 
 #endif // FO1_H

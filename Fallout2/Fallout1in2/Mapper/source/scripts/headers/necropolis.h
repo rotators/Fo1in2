@@ -33,7 +33,7 @@
                                             set_global_var(GVAR_NECROP_MUTANTS_KILLED, 2);                                       \
                                             inc_necropolis_rep(REP_BONUS_WATERSHED_MUTANTS_DEAD);                                \
                                             if get_necropolis_days_left > 30 then begin                                          \
-                                                set_global_var(GVAR_NECROPOLIS_INVADED_DATE, ((game_time / ONE_GAME_DAY) + 30)); \
+                                                set_global_var(GVAR_NECROPOLIS_INVASION_DAYS, ((game_time / ONE_GAME_DAY) + 30)); \
                                             end                                                                                  \
                                         end
 
