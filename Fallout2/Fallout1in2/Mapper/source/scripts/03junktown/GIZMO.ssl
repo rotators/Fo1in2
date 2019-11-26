@@ -6,7 +6,8 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-#include "..\headers\necropolis.h"
+#include "..\headers\junktown.h"
+#include "..\headers\maps\junkcsno.h"
 
 #define NAME                    SCRIPT_GIZMO
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -118,7 +119,7 @@ procedure critter_p_proc begin
       end
       else if (global_var(GVAR_GIZMO_TALKED_ONCE) != 1) then begin
          if (tile_distance_objs(self_obj, dude_obj) <= 14) then begin
-            if dude_can_see_self or self_can_see_dude /*or self_can_hear_dude*/ then begin
+            if dude_can_see_self or self_can_see_dude then begin
                set_global_var(GVAR_GIZMO_TALKED_ONCE, 1);
                float_msg(self_obj, mstr(227), FLOAT_MSG_RED);
             end
@@ -134,7 +135,9 @@ procedure description_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   if source_obj == dude_obj then begin
+   set_gizmo_remains_timer;
+
+   if (source_obj == dude_obj) then begin
       inc_junktown_rep(REP_BONUS_KILLED_GIZMO);
       set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);
    end
@@ -153,18 +156,24 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   variable LVar0 := 0;
+   variable remains := 0;
    Gizmo_ptr := self_obj;
-   if (local_var(7) == 0) then begin
+
+   if (local_var(7) == 0) then
       set_local_var(7, 1000);
-   end
-   if (local_var(9) == 1) then begin
+   if (local_var(9) == 1) then
       payment := local_var(7);
-   end
+
    set_self_team(TEAM_JUNKTOWN_GIZMO);
    set_self_ai(AI_GIZMO);
-   if (global_var(GVAR_CAPTURE_GIZMO) == 2) then begin
-      LVar0 := create_object(PID_GIZMO_REMAINS, self_tile, 0);
+
+   if (global_var(GVAR_CAPTURE_GIZMO) == 2) and (map_var(MVAR_GIZMO_REMAINS) == 0) then begin
+      set_map_var(MVAR_GIZMO_REMAINS, 1);
+
+      remains := create_object(PID_GIZMO_REMAINS, self_tile, 0);
+      move_obj_inven_to_obj(self_obj, remains);
+
+      set_global_var(GVAR_GIZMO_DEAD, 1);
       kill_critter(self_obj, ANIM_stand);
    end
 end

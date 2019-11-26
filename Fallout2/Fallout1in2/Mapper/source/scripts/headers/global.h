@@ -4111,8 +4111,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4975)
 #define RESERVED_FOR_FALLOUT_FIXT               (4976)
 #define RESERVED_FOR_FALLOUT_FIXT               (4977)
-#define RESERVED_FOR_FALLOUT_FIXT               (4978)
-#define RESERVED_FOR_FALLOUT_FIXT               (4979)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4978)*/
+#define GVAR_GIZMO_REMAINS_TIMER                (4979)
 #define GVAR_SET_GAMESTART_TIMERS               (4980)
 #define GVAR_ENABLE_MALTESE_SINGER              (4981)
 #define GVAR_PALADIN_KILL_COUNT                 (4982)

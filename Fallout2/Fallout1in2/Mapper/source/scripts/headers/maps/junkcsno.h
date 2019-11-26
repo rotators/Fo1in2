@@ -31,6 +31,7 @@
 #define MVAR_growling               (9)  // TRUE if Dogmeat is growling at Phil.
 #define MVAR_initialized_bar_fight  (10) // TRUE if bar fight is set up.
 #define MVAR_Invasion               (11) // Has this map been invaded by Super Mutants?
-#define MVAR_SkumPitt_Noisy         (12) // Has the player been caught breaking into the Skum Pitt?
+#define MVAR_SKUM_NOISY             (12) // Has the player been caught breaking into the Skum Pitt?
+#define MVAR_GIZMO_REMAINS          (13) // Did Gizmo's remains already spawn?
 
 #endif // MAPJUNKCAS_H
