@@ -63,6 +63,10 @@ procedure VConCompEnd;
 procedure VatsGoBoom_SETVARS;// added by Sduibek
 procedure Update_Invasion;
 
+#define set_days_left(gvar)         days := (global_var(gvar) - (GAME_TIME_IN_DAYS)) / 2; \
+                                    if (days > 0) then set_global_var(gvar, days)
+
+variable days;
 
 procedure start begin
 end
@@ -79,60 +83,42 @@ procedure damage_p_proc begin
    end
 end
 
-procedure VatsGoBoom_SETVARS
-begin
-   add_timer_event(dude_obj, 0, 12);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
-   set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 5);// Reputation plus five (5)
-   set_global_var(GVAR_VATS_BLOWN, 1);//   "VATS_BLOWN"
-   set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 2);//   "DESTROY_MASTER_4"
+procedure VatsGoBoom_SETVARS begin
+   add_timer_event(dude_obj, 0, 12); // tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+   set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 5); // Reputation plus five (5)
+   set_global_var(GVAR_VATS_BLOWN, 1); // "VATS_BLOWN"
+   set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 2); // "DESTROY_MASTER_4"
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    script_overrides;
    display_msg(mstr(200));
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if (global_var(GVAR_VATS_COUNTDOWN) == 0) then begin
-      if (local_var(0) == 1) and not(local_var(2)) then begin
-         start_gdialog(371, self_obj, 4, -1, -1);
-         gsay_start;
-         call VConComp01;
-         gsay_end;
-         end_dialogue;
-      end
-      else begin
-         start_gdialog(371, self_obj, 4, -1, -1);
-         gsay_start;
-         call VConComp00;
-         gsay_end;
-         end_dialogue;
-      end
+      if (local_var(0) == 1) and not(local_var(2)) then
+         start_dialog_at_node(VConComp01);
+      else
+         start_dialog_at_node(VConComp00);
    end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
    script_overrides;
-   if (local_var(0) == 0) then begin
+   if (local_var(0) == 0) then
       display_msg(mstr(177));
-   end
-   else begin
+   else
       dialogue_system_enter;
-   end
 end
 
-procedure use_obj_on_p_proc
-begin
+procedure use_obj_on_p_proc begin
    if (obj_pid(obj_being_used_with) == PID_SECURITY_CARD) then begin
       if (local_var(0) == 0) then begin
          script_overrides;
@@ -143,29 +129,25 @@ begin
    end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_SCIENCE) then begin
       script_overrides;
       if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
          set_local_var(0, 1);
          display_msg(mstr(176));
       end
-      else begin
+      else
          display_msg(mstr(178));
-      end
       game_time_advance(game_ticks(300));
    end
 end
 
-procedure VConComp00
-begin
+procedure VConComp00 begin
    play_sfx("SLDOORSO");
    BMessage(101);
 end
 
-procedure VConComp01
-begin
+procedure VConComp01 begin
    play_sfx("SLDOORSO");
    Reply(102);
    GOption(203, VConComp01a, 1);
@@ -173,8 +155,7 @@ end
 
 /////////////////////////////////////// MAIN MENU //////////////////////////////////////////////
 
-procedure VConComp01a// main menu
-begin
+procedure VConComp01a begin
    Reply(140);
    NOption(103, VConComp02, 4);
    NOption(104, VConComp11, 4);
@@ -194,8 +175,7 @@ end
 
 ///////////////////////////////// ENCRYPTED BOMB CODES /////////////////////////////////////////
 
-procedure VConComp02// encryped bomb codes
-begin
+procedure VConComp02 begin
    if fixt_disabled then begin
       Reply(140);
       NOption(107, VConComp03, 4);// silent, 1 min (SAME AS BELOW)
@@ -223,8 +203,7 @@ end
 
 ////////////////////////////////// HACKED BOMB CODES ///////////////////////////////////////////
 
-procedure VConComp09//  hacked bomb codes
-begin
+procedure VConComp09 begin
    Reply(120);
    if fixt_disabled then begin
       NOption(121, VConComp03, 4);// silent, 1 min
@@ -251,37 +230,32 @@ end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-procedure VConComp32
-begin
+procedure VConComp32 begin
    set_global_var(GVAR_VATS_ALERT, 0);//  disable "VATS_ALARM_ALERT" (disable it)
    NMessage(205);
 end
 
-procedure VConComp33
-begin
+procedure VConComp33 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 300);
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(302);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp34
-begin
+procedure VConComp34 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 600);
    NMessage(305);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp37
-begin
+procedure VConComp37 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 60);
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(188);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp02a
-begin
+procedure VConComp02a begin
    if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -20)) or (global_var(GVAR_MBASE_DECRYPTION_CODES) > 0) then begin// roll was -10
       call VConComp09;
    end
@@ -290,77 +264,65 @@ begin
    end
 end
 
-procedure VConComp03
-begin
+procedure VConComp03 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 60);
    NMessage(114);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp04
-begin
+procedure VConComp04 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 30);
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(115);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp05
-begin
+procedure VConComp05 begin
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(116);
 end
 
-procedure VConComp35
-begin
+procedure VConComp35 begin
    set_local_var(2, 1);//  <-- lock out console
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(206);
 end
 
-procedure VConComp06
-begin
+procedure VConComp06 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 180);
    NMessage(117);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp36
-begin
+procedure VConComp36 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 300);
    NMessage(117);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp07
-begin
+procedure VConComp07 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10) + 180);
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(118);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp08
-begin
+procedure VConComp08 begin
    set_global_var(GVAR_VATS_COUNTDOWN, (game_time / 10));// plus nothing because it's instant boom
    set_global_var(GVAR_VATS_ALERT, 1);//  "VATS_ALARM_ALERT"
    NMessage(119);
    call VatsGoBoom_SETVARS;
 end
 
-procedure VConComp10
-begin
-   if (local_var(1) == 1) then begin
+procedure VConComp10 begin
+   if (local_var(1) == 1) then
       set_global_var(GVAR_VATS_ALERT, 1);
-   end
-   else begin
+   else
       set_local_var(1, 1);
-   end
    BMessage(127);
 end
 
-procedure VConComp11
-begin
+procedure VConComp11 begin
    Reply(128);
    NOption(129, VConComp12, 4);
    NOption(130, VConComp14, 4);
@@ -369,15 +331,13 @@ begin
    NOption(204, VConComp01a, 1);
 end
 
-procedure VConComp12
-begin
+procedure VConComp12 begin
    Reply(133);
    NOption(134, VConComp12a, 4);
    NOption(135, VConComp11, 4);
 end
 
-procedure VConComp12a
-begin
+procedure VConComp12a begin
    if global_var(GVAR_HOLODISK_VATS_GREY) != 1 then begin
       set_global_var(GVAR_HOLODISK_VATS_GREY, 1);
       Reply(202);
@@ -389,15 +349,13 @@ begin
    end
 end
 
-procedure VConComp13
-begin
+procedure VConComp13 begin
    Reply(136);
    NOption(137, VConComp13a, 4);
    NOption(135, VConComp11, 4);
 end
 
-procedure VConComp13a
-begin
+procedure VConComp13a begin
    if global_var(GVAR_HOLODISK_VATS_MAXSON) != 1 then begin
       set_global_var(GVAR_HOLODISK_VATS_MAXSON, 1);
       Reply(202);
@@ -409,34 +367,29 @@ begin
    end
 end
 
-procedure VConComp14
-begin
+procedure VConComp14 begin
    Reply(139);
    NOption(203, VConComp01a, 1);
 end
 
-procedure VConComp15
-begin
+procedure VConComp15 begin
    call VConComp01a;
 end
 
-procedure VConComp16
-begin
+procedure VConComp16 begin
    Reply(141);
    NOption(142, VConComp17, 6);
    NOption(138, VConComp15, 4);
 end
 
-procedure VConComp17
-begin
+procedure VConComp17 begin
    Reply(143);
    giq_option(4, SCRIPT_MODREACT, 104, VConCompEnd, NEUTRAL_REACTION);
    NOption(144, VConComp17a, 6);
    NOption(145, VConComp17b, 6);
 end
 
-procedure VConComp17a
-begin
+procedure VConComp17a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
       call VConComp18;
    end
@@ -445,8 +398,7 @@ begin
    end
 end
 
-procedure VConComp17b
-begin
+procedure VConComp17b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_DOCTOR, 0))) then begin
       call VConComp18;
    end
@@ -455,22 +407,19 @@ begin
    end
 end
 
-procedure VConComp18
-begin
+procedure VConComp18 begin
    Reply(146);
    call VConComp18a;
 end
 
-procedure VConComp18a
-begin
+procedure VConComp18a begin
    NOption(147, VConComp19, 6);
    NOption(148, VConComp19, 6);
    NOption(149, VConComp19, 7);
    NOption(150, VConCompEnd, 1);
 end
 
-procedure VConComp19
-begin
+procedure VConComp19 begin
    Reply(151);
    NOption(152, VConComp20, 6);
    NOption(153, VConComp21, 6);
@@ -478,8 +427,7 @@ begin
    NOption(155, VConComp19a, 7);
 end
 
-procedure VConComp19a
-begin
+procedure VConComp19a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -10))) then begin
       call VConComp21;
    end
@@ -488,22 +436,19 @@ begin
    end
 end
 
-procedure VConComp20
-begin
+procedure VConComp20 begin
    Reply(156);
    call VConComp18a;
 end
 
-procedure VConComp21
-begin
+procedure VConComp21 begin
    Reply(157);
    NOption(158, VConComp27, 6);
    NOption(159, VConComp30, 7);
    NOption(150, VConCompEnd, 4);
 end
 
-procedure VConComp22
-begin
+procedure VConComp22 begin
    Reply(160);
    NOption(161, VConComp23, 4);
    NOption(162, VConComp24, 4);
@@ -511,113 +456,68 @@ begin
    NOption(164, VConComp26, 4);
 end
 
-procedure VConComp23
-begin
+procedure VConComp23 begin
    Reply(165);
    NOption(166, VConComp22, 4);
    NOption(138, VConComp18, 4);
 end
 
-procedure VConComp24
-begin
+procedure VConComp24 begin
    Reply(167);
    NOption(166, VConComp22, 4);
    NOption(138, VConComp18, 4);
 end
 
-procedure VConComp25
-begin
+procedure VConComp25 begin
    Reply(168);
    NOption(166, VConComp22, 4);
    NOption(138, VConComp18, 4);
 end
 
-procedure VConComp26
-begin
+procedure VConComp26 begin
    Reply(169);
    NOption(166, VConComp22, 4);
    NOption(138, VConComp18, 4);
 end
 
-procedure VConComp27
-begin
+procedure VConComp27 begin
    Reply(170);
    NOption(172, VConComp28, 4);
    NOption(173, VConComp29, 4);
 end
 
-procedure VConComp28
-begin
+procedure VConComp28 begin
    Reply(171);
    NOption(138, VConComp01a, 4);
    NOption(150, VConCompEnd, 4);
 end
 
-procedure VConComp29
-begin
+procedure VConComp29 begin
    Reply(146);
    call VConComp18a;
 end
 
-procedure VConComp30
-begin
+procedure VConComp30 begin
    Reply(174);
    NOption(172, VConComp31, 4);
    NOption(173, VConComp29, 4);
 end
 
-procedure VConComp31
-begin
+procedure VConComp31 begin
    Reply(175);
    NOption(138, VConComp01a, 4);
    NOption(150, VConCompEnd, 4);
 end
 
-procedure VConCompEnd
-begin
+procedure VConCompEnd begin
 end
 
 procedure Update_Invasion begin
-// Commenting out. Apparenlty this was disabled anyway with all the 0 values?
-// Maybe activate it again some day
-
-/* variable LVar0 := 0;
-   variable LVar1 := 0;
-   variable LVar2 := 0;
-   variable LVar3 := 0;
-   variable LVar4 := 0;
-   variable LVar5 := 0;
-   variable LVar6 := 0;
-//
-// current DaysLeft value minus current # of days passed (gametime)
-// divide that by 2
-//
-   LVar0 := (global_var(GVAR_THE_HUB_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   LVar1 := (global_var(GVAR_BROTHERHOOD_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   LVar2 := (global_var(GVAR_JUNKTOWN_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   LVar3 := (global_var(GVAR_SHADY_SANDS_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   LVar4 := (global_var(GVAR_VAULT_13_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   LVar5 := (global_var(GVAR_BONEYARD_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   LVar6 := (global_var(GVAR_NECROPOLIS_INVASION_DAYS) - (GAME_TIME_IN_DAYS)) / 2;
-   if (LVar0 > 0) then begin
-      set_global_var(GVAR_THE_HUB_INVASION_DAYS, global_var(GVAR_THE_HUB_INVASION_DAYS) - LVar0);
-   end
-   if (LVar1 > 0) then begin
-      set_global_var(GVAR_BROTHERHOOD_INVASION_DAYS, global_var(GVAR_BROTHERHOOD_INVASION_DAYS) - LVar1);
-   end
-   if (LVar2 > 0) then begin
-      set_global_var(GVAR_JUNKTOWN_INVASION_DAYS, global_var(GVAR_JUNKTOWN_INVASION_DAYS) - LVar2);
-   end
-   if (LVar3 > 0) then begin
-      set_global_var(GVAR_SHADY_SANDS_INVASION_DAYS, global_var(GVAR_SHADY_SANDS_INVASION_DAYS) - LVar3);
-   end
-   if (LVar4 > 0) then begin
-      set_global_var(GVAR_VAULT_13_INVASION_DAYS, global_var(GVAR_VAULT_13_INVASION_DAYS) - LVar4);
-   end
-   if (LVar5 > 0) then begin
-      set_global_var(GVAR_BONEYARD_INVASION_DAYS, global_var(GVAR_BONEYARD_INVASION_DAYS) - LVar5);
-   end
-   if (LVar6 > 0) then begin
-      set_global_var(GVAR_NECROPOLIS_INVASION_DAYS, global_var(GVAR_NECROPOLIS_INVASION_DAYS) - LVar6);
-   end*/
+   set_days_left(GVAR_THE_HUB_INVASION_DAYS);
+   set_days_left(GVAR_BROTHERHOOD_INVASION_DAYS);
+   set_days_left(GVAR_JUNKTOWN_INVASION_DAYS);
+   set_days_left(GVAR_SHADY_SANDS_INVASION_DAYS);
+   set_days_left(GVAR_VAULT_13_INVASION_DAYS);
+   set_days_left(GVAR_BONEYARD_INVASION_DAYS);
+   set_days_left(GVAR_NECROPOLIS_INVASION_DAYS);
 end

@@ -28,13 +28,13 @@
 #define set_waterpump_fixed            set_global_var(GVAR_NECROP_WATER_PUMP_FIXED, 2)
 
 // Player has killed Harry & friends
-#define check_watershed_sm_killed       if (global_var(GVAR_SUPER_MUTANTS_KILLED) >= global_var(GVAR_MAX_MUTANTS)) then begin    \
-                                            set_global_var(GVAR_PLAYER_REPUTATION, global_var(GVAR_PLAYER_REPUTATION) + 3);      \
-                                            set_global_var(GVAR_NECROP_MUTANTS_KILLED, 2);                                       \
-                                            inc_necropolis_rep(REP_BONUS_WATERSHED_MUTANTS_DEAD);                                \
-                                            if get_necropolis_days_left > 30 then begin                                          \
+#define check_watershed_sm_killed       if (global_var(GVAR_SUPER_MUTANTS_KILLED) >= global_var(GVAR_MAX_MUTANTS)) then begin     \
+                                            set_global_var(GVAR_PLAYER_REPUTATION, global_var(GVAR_PLAYER_REPUTATION) + 3);       \
+                                            set_global_var(GVAR_NECROP_MUTANTS_KILLED, 2);                                        \
+                                            inc_necropolis_rep(REP_BONUS_WATERSHED_MUTANTS_DEAD);                                 \
+                                            if get_necropolis_days_left > 30 then begin                                           \
                                                 set_global_var(GVAR_NECROPOLIS_INVASION_DAYS, ((game_time / ONE_GAME_DAY) + 30)); \
-                                            end                                                                                  \
+                                            end                                                                                   \
                                         end
 
 // Car related defines
