@@ -1,6 +1,20 @@
-#include "..\headers\define.h"
-#include "..\headers\command.h"
+/*
 
+   Super Mutant invaders (Necropolis, etc.)
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+//#include "..\headers\necropolis.h"
+
+#define NAME                    SCRIPT_INVADER
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
+
+#include "..\headers\command.h"
+//#include "..\headers\modreact.h"
+
+/* Standard Script Procedures */
 procedure start;
 procedure destroy_p_proc;
 procedure critter_p_proc;
@@ -10,33 +24,31 @@ procedure mutant00;
 procedure combat;
 procedure canseeme;
 
+#define LVAR_Home_Tile            (0)
+#define LVAR_SpawnInitial         (1)
+
 variable tmp_hostile;
-variable initial := 0;
-variable new_tile;
-variable weaponPtr;
-variable WeaponID := 0;// for Fallout Fixt, random weapon gens
-variable AmmoID := 0;// for Fallout Fixt, random weapon gens (ammo)
 
 procedure start begin
-variable LVar5 := 0;
+   variable Item, weaponPtr, WeaponID, AmmoID;
 
-   if not(initial) then begin
-      initial := 1;
+   if (local_var(LVAR_SpawnInitial) == 0) then begin
+      set_local_var(LVAR_SpawnInitial, 1);
 
-      if (local_var(0) == 0) then begin
-         set_local_var(0, self_tile);
+      if (local_var(LVAR_Home_Tile) == 0) then begin
+         set_local_var(LVAR_Home_Tile, self_tile);
       end
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_NECRO);
 
       // Add items:
-      LVar5 := create_object(PID_RADIO, 0, 0);//radio
-      add_mult_objs_to_inven(self_obj, LVar5, 1);
+      Item := create_object(PID_RADIO, 0, 0);
+      add_mult_objs_to_inven(self_obj, Item, 1);
 
-      LVar5 := random(0, 1);
-      if (LVar5 == 1) or (LVar5 == 2) then begin
-         LVar5 := create_object(PID_STIMPAK, 0, 0);
-         add_mult_objs_to_inven(self_obj, LVar5, random(1, 2));
+      Item := random(0, 1);
+      if (Item == 1) or (Item == 2) then begin
+         Item := create_object(PID_STIMPAK, 0, 0);
+         add_mult_objs_to_inven(self_obj, Item, random(1, 2));
       end
 
       WeaponID := (random(1, 20));
@@ -82,7 +94,6 @@ variable LVar5 := 0;
       end
       add_obj_to_inven(self_obj, weaponPtr);
       wield_obj_critter(self_obj, weaponPtr);
-
    end
 end
 
@@ -92,7 +103,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   display_msg(message_str(SCRIPT_INVADER, 100));
+   display_msg(message_str(NAME, 100));
 end
 
 procedure pickup_p_proc begin
@@ -103,7 +114,7 @@ procedure mutant00 begin
    if not(local_var(2)) then begin
       variable LVar0;
       LVar0 := random(101, 107);
-      float_msg(self_obj, message_str(SCRIPT_INVADER, LVar0), FLOAT_MSG_RED);
+      float_msg(self_obj, message_str(NAME, LVar0), FLOAT_MSG_RED);
       call combat;
    end
 end
@@ -131,7 +142,6 @@ end
 
 procedure destroy_p_proc begin
    set_local_var(2, 1);
-   rm_timer_event(self_obj);
    inc_evil_critter
 end
 

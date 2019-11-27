@@ -13,11 +13,9 @@
 
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
-#include "..\headers\sfall\main.h"
 
 /* Standard Script Procedures */
 procedure start;
-
 procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
@@ -117,27 +115,21 @@ procedure talk_p_proc begin
             jumpcode := 1;
             call dialog;
          end
-         else begin
-            if (first == 0) then begin
-               first := 1;
-               jumpcode := 2;
-               call dialog;
-            end
-            else begin
-               if (first == 1) then begin
-                  call airgrd08;
-               end
-            end
-         end
-      end
-      else begin
-         if (Weapons) then begin
-            call airgrd15;
-         end
-         else begin
-            jumpcode := 3;
+         else if (first == 0) then begin
+            first := 1;
+            jumpcode := 2;
             call dialog;
          end
+         else if (first == 1) then begin
+            call airgrd08;
+         end
+      end
+      else if (Weapons) then begin
+         call airgrd15;
+      end
+      else begin
+         jumpcode := 3;
+         call dialog;
       end
    end
 end
@@ -145,34 +137,20 @@ end
 procedure dialog begin
    set_local_var(3, 1);
    get_reaction
-   start_gdialog(673, self_obj, 4, -1, -1);
-   gsay_start;
-   indialog := 1;
-   if (jumpcode < 2) then begin
-      call airgrd01;
-   end
-   else begin
-      if (jumpcode == 2) then begin
-         call airgrd03;
-      end
-      else begin
-         if (jumpcode > 2) then begin
-            call airgrd09;
-         end
-      end
-   end
-   indialog := 0;
-   gsay_end;
-   end_dialogue;
+
+   if (jumpcode < 2) then
+      start_dialog_at_node(airgrd01);
+   else if (jumpcode == 2) then
+      start_dialog_at_node(airgrd03);
+   else if (jumpcode > 2) then
+      start_dialog_at_node(airgrd09);
 end
 
-procedure airgrd00
-begin
+procedure airgrd00 begin
    float_msg(self_obj, message_str(SCRIPT_AIRGRD, random(102, 104)), FLOAT_MSG_RED);
 end
 
-procedure airgrd01
-begin
+procedure airgrd01 begin
    gsay_reply(SCRIPT_AIRGRD, 105);
    BLowOption(106, airgrd02);
    NOption(107, airgrdtim, 4);
@@ -180,14 +158,12 @@ begin
    NOption(109, airgrdtim, 4);
 end
 
-procedure airgrd02
-begin
+procedure airgrd02 begin
    gsay_message(SCRIPT_AIRGRD, 110, BAD_REACTION);
    call combat;
 end
 
-procedure airgrd03
-begin
+procedure airgrd03 begin
    gsay_reply(SCRIPT_AIRGRD, 111);
    BLowOption(112, airgrd02);
    NOption(113, airgrd04, 4);
@@ -195,8 +171,7 @@ begin
    BOption(115, airgrd02, 4);
 end
 
-procedure airgrd03a
-begin
+procedure airgrd03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call airgrd06;
    end
@@ -205,15 +180,13 @@ begin
    end
 end
 
-procedure airgrd04
-begin
+procedure airgrd04 begin
    gsay_reply(SCRIPT_AIRGRD, 116);
    NOption(117, airgrd04a, 4);
    NOption(118, airgrd04b, 6);
 end
 
-procedure airgrd04a
-begin
+procedure airgrd04a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
       call airgrd06;
    end
@@ -222,8 +195,7 @@ begin
    end
 end
 
-procedure airgrd04b
-begin
+procedure airgrd04b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -15))) then begin
       call airgrd06;
    end
@@ -232,28 +204,24 @@ begin
    end
 end
 
-procedure airgrd05
-begin
+procedure airgrd05 begin
    gsay_message(SCRIPT_AIRGRD, 119, BAD_REACTION);
    call combat;
 end
 
-procedure airgrd06
-begin
+procedure airgrd06 begin
    gsay_reply(SCRIPT_AIRGRD, 120);
    NOption(121, bluff_end, 4);
    BOption(122, airgrd07, 4);
    NOption(123, bluff_end, 4);
 end
 
-procedure airgrd07
-begin
+procedure airgrd07 begin
    gsay_message(SCRIPT_AIRGRD, 124, BAD_REACTION);
    call combat;
 end
 
-procedure airgrd08
-begin
+procedure airgrd08 begin
    if (indialog == 1) then begin
       gsay_message(SCRIPT_AIRGRD, random(125, 127), NEUTRAL_REACTION);
    end
@@ -263,8 +231,7 @@ begin
    call bluff_end;
 end
 
-procedure airgrd09
-begin
+procedure airgrd09 begin
    gsay_reply(SCRIPT_AIRGRD, 128);
    BLowOption(129, airgrd10);
    BOption(130, airgrd10, 4);
@@ -272,40 +239,34 @@ begin
    BOption(132, airgrd02, 4);
 end
 
-procedure airgrd10
-begin
+procedure airgrd10 begin
    gsay_message(SCRIPT_AIRGRD, 133, BAD_REACTION);
    call combat;
 end
 
-procedure airgrd11
-begin
+procedure airgrd11 begin
    gsay_reply(SCRIPT_AIRGRD, 134);
    BOption(135, airgrd02, 4);
    BOption(136, airgrd12, 4);
 end
 
-procedure airgrd12
-begin
+procedure airgrd12 begin
    gsay_reply(SCRIPT_AIRGRD, 137);
    BOption(138, airgrd13, 4);
    BOption(139, airgrd14, 6);
 end
 
-procedure airgrd13
-begin
+procedure airgrd13 begin
    gsay_message(SCRIPT_AIRGRD, 140, BAD_REACTION);
    call combat;
 end
 
-procedure airgrd14
-begin
+procedure airgrd14 begin
    gsay_message(SCRIPT_AIRGRD, 141, BAD_REACTION);
    call combat;
 end
 
-procedure airgrd15
-begin
+procedure airgrd15 begin
    if (indialog == 1) then begin
       gsay_message(SCRIPT_AIRGRD, 142, BAD_REACTION);
    end
@@ -315,8 +276,7 @@ begin
    call combat;
 end
 
-procedure bluff_end
-begin
+procedure bluff_end begin
    if (local_var(4) == 0) then begin
       set_local_var(4, 1);
       temp := 750;
@@ -325,30 +285,22 @@ begin
    end
 end
 
-procedure dialog_end
-begin
+procedure dialog_end begin
 end
 
-procedure airgrdtim
-begin
+procedure airgrdtim begin
    add_timer_event(self_obj, game_ticks(10), 1);
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-
-
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_inv_evil_crit
-   rm_timer_event(self_obj);
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (global_var(GVAR_MUTANTS_ENEMY_UNSURE) == 0) then begin
       set_global_var(GVAR_MUTANTS_ENEMY_UNSURE, 1);
    end
