@@ -1,6 +1,6 @@
 /*
 
-   Caravan guy
+   Caravan customers in Junktown, Brotherhood, Necropolis, Boneyard.
 
 */
 
@@ -12,6 +12,7 @@
 //#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "..\headers\command.h"
+#include "..\headers\caravan.h"
 #include "..\headers\modreact.h"
 
 /* Standard Script Procedures */
@@ -19,6 +20,8 @@ procedure start;
 procedure map_enter_p_proc;
 procedure destroy_p_proc;
 procedure timed_event_p_proc;
+
+#define LVAR_CaravanTimer        (0)
 
 variable Only_Once;
 variable Home_Tile;
@@ -32,60 +35,45 @@ procedure map_enter_p_proc begin
    if map_first_run then begin
       Home_Tile := self_tile;
 
-      if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+      if (CUR_MAP_JUNKENT) then begin
          set_self_team(TEAM_JUNKTOWN_GUARD);
          set_self_ai(AI_PEASANT);
       end
-      else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+      else if (CUR_MAP_BROHDENT) then begin
          set_self_team(TEAM_BROTHERHOOD);
          set_self_ai(AI_BROTHERHOOD_KNIGHT);
       end
-      else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+      else if (CUR_MAP_HOTEL) then begin
          set_self_team(TEAM_87);
          set_self_ai(AI_GHOUL_MINDLESS);
       end
-      else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+      else if (CUR_MAP_LAADYTUM) then begin
          set_self_team(TEAM_LA_ADYTOWNER);
          set_self_ai(AI_PEASANT);
       end
    end
 
    add_timer_event(self_obj, game_ticks(random(3, 5)), 1);
-   if not(map_is_caravan_escort) then begin
-      if (local_var(0) == 0) then begin
-         set_local_var(0, GAME_TIME_IN_HOURS);
-      end
-      if (((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) then begin
-         destroy_object(self_obj);
-      end
-   end
+   check_map_enter_timer
 end
 
 procedure talk_p_proc begin
-   if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+   if (CUR_MAP_JUNKENT) then
       float_msg(self_obj, message_str(SCRIPT_CARCUST, random(100, 104)), FLOAT_MSG_NORMAL);
-   end
-   else if (CUR_MAP_BROHDENT) then begin //  BROTHERHOOD - ENTRANCE
+   else if (CUR_MAP_BROHDENT) then
       float_msg(self_obj, message_str(SCRIPT_CARCUST, random(105, 109)), FLOAT_MSG_NORMAL);
-   end
-   else if (CUR_MAP_HOTEL) then begin //  NECROPOLIS - HOTEL
+   else if (CUR_MAP_HOTEL) then
       float_msg(self_obj, message_str(SCRIPT_CARCUST, random(110, 114)), FLOAT_MSG_NORMAL);
-   end
-   else if (CUR_MAP_LAADYTUM) then begin //  L.A. BONEYARD - ADYTUM (ENTRANCE)
+   else if (CUR_MAP_LAADYTUM) then
       float_msg(self_obj, message_str(SCRIPT_CARCUST, random(115, 119)), FLOAT_MSG_NORMAL);
-   end
 end
 
 procedure critter_p_proc begin
-   if ((((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
-      destroy_object(self_obj);
-   end
+   check_critter_timer
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_good_critter
-   rm_timer_event(self_obj);
 end
 
 procedure timed_event_p_proc begin

@@ -117,7 +117,7 @@
 #define TMA_MSG_HALLDED         (2800)
 #define TMA_MSG_HOTEL           (3400)
 #define TMA_MSG_WATRSHD         (4000)
-#define TMA_MSG_VAULT13         (3600)
+#define TMA_MSG_VAULT13         (4600)
 #define TMA_MSG_JUNKENT         (7000)
 #define TMA_MSG_JUNKCSNO        (7600)
 #define TMA_MSG_JUNKKILL        (8200)
@@ -171,7 +171,7 @@ variable tma_gvar_array;
     tma_gvar_array[0] := line_num;                          \
     tma_gvar_array[1] := gvar;                              \
     tma_gvar_array[2] := val
-    
+
 // Reset TMA data (after dialog ended)
 // This is used in party member talk_p_proc to workaround a reset-bug!
 #define reset_tma_data      tma_data_array[0] := 0; \

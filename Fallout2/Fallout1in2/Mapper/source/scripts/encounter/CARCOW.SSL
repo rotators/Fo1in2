@@ -23,7 +23,7 @@ procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
 variable initial := 0;
 
-#define LVAR_Timer      (0)
+#define LVAR_CaravanTimer      (0)
 
 procedure start begin
    call map_enter_p_proc;
@@ -35,17 +35,10 @@ procedure map_enter_p_proc begin
       set_self_ai(AI_COW);
 
       if map_is_caravan_escort then
-          set_self_team(TEAM_PLAYER);
+         set_self_team(TEAM_PLAYER);
    end
 
-   if not(map_is_caravan_escort) then begin
-      if (local_var(0) == 0) then begin
-         set_local_var(0, GAME_TIME_IN_HOURS);
-      end
-      if (((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) then begin
-         destroy_object(self_obj);
-      end
-   end
+   check_map_enter_timer
 end
 
 procedure map_update_p_proc begin
@@ -59,11 +52,7 @@ procedure combat_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if not(map_is_caravan_escort) then begin
-      if ((((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
-         destroy_object(self_obj);
-      end
-   end
+   check_critter_timer
 end
 
 procedure description_p_proc begin
@@ -91,9 +80,9 @@ procedure use_obj_on_p_proc begin
          reg_anim_animate(self_obj, 48, -1);
       reg_anim_end();
 
-      critter_injure(self_obj, DAM_KNOCKED_DOWN);//    DAM_KNOCKED_DOWN       2     <-- DOES NOT WORK!!!
-      critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);//    DAM_CRIP_LEG_LEFT      4
-      critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);//    DAM_CRIP_LEG_RIGHT     8
+      critter_injure(self_obj, DAM_KNOCKED_DOWN);
+      critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
+      critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
    end
 end
 
@@ -102,27 +91,21 @@ procedure use_skill_on_p_proc begin
       script_overrides;
       display_msg(message_str(SCRIPT_BRAHMIN, 101));
    end
-   else begin
-      if (action_being_used == SKILL_STEAL) then begin//-- STEAL
-         script_overrides;
-         display_msg(message_str(SCRIPT_GENCHAT, 211));
-         script_overrides;
-      end
+   else if (action_being_used == SKILL_STEAL) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_GENCHAT, 211));
    end
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
 
-   if CUR_AREA_HUB then begin
+   if CUR_AREA_HUB then
       set_global_var(GVAR_ENEMY_HUB, 1);
-   end
-   else if CUR_AREA_JUNKTOWN then begin
+   else if CUR_AREA_JUNKTOWN then
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
-   end
-   else if CUR_AREA_SHADY_SANDS then begin
+   else if CUR_AREA_SHADY_SANDS then
       set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
-   end
 
    if map_is_caravan_escort then begin
       rm_caravan_brahmin(1);

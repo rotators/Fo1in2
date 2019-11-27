@@ -25,12 +25,12 @@ procedure destroy_p_proc;
 
 procedure initialize_p_proc;
 
-variable Only_Once;
-
-#define LVAR_Timer         (0)
-#define LVAR_Called_Clear  (10)
+#define LVAR_CaravanTimer        (0)
+#define LVAR_Called_Clear        (10)
 
 #define TIMER_ALL_CLEAR 3
+
+variable Only_Once;
 
 procedure start begin
    call map_enter_p_proc;
@@ -76,14 +76,7 @@ procedure map_enter_p_proc begin
       add_obj_to_inven(self_obj, LVar0);
    end
 
-   if not(map_is_caravan_escort) then begin
-      if (local_var(0) == 0) then begin
-         set_local_var(0, GAME_TIME_IN_HOURS);
-      end
-      if (((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) then begin
-         destroy_object(self_obj);
-      end
-   end
+   check_map_enter_timer
 end
 
 procedure map_update_p_proc begin
@@ -107,16 +100,10 @@ procedure talk_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if not(map_is_caravan_escort) then begin
-      if ((((GAME_TIME_IN_HOURS) - local_var(0)) >= 2) and (local_var(0) != 0)) then begin
-         destroy_object(self_obj);
-      end
-   end
+   check_critter_timer
 end
 
 procedure destroy_p_proc begin
-   if map_is_caravan_escort then begin
-      rm_caravan_masters(1);
-   end
+   if map_is_caravan_escort then rm_caravan_masters(1);
    inc_good_critter
 end

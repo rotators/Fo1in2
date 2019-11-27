@@ -24,16 +24,18 @@ end
 
 procedure map_enter_p_proc begin
    if necropolis_wpump_fixed then begin
+      reg_anim_clear(self_obj);
       reg_anim_begin();
-      reg_anim_animate_forever(self_obj, 0);
+      reg_anim_animate_forever(self_obj, ANIM_stand);
       reg_anim_end();
    end
 end
 
 procedure map_update_p_proc begin
-   if necropolis_wpump_fixed and (combat_is_initialized == 0) then begin
+   if necropolis_wpump_fixed then begin
+      reg_anim_clear(self_obj);
       reg_anim_begin();
-      reg_anim_animate_forever(self_obj, 0);
+      reg_anim_animate_forever(self_obj, ANIM_stand);
       reg_anim_end();
    end
    else begin
@@ -74,26 +76,26 @@ procedure use_obj_on_p_proc begin
          set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + REP_BONUS_WATER_PUMP_FIXED);
          give_exp_points(EXP_WATER_PUMP_FIXED);
 
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+         reg_anim_animate_forever(self_obj, ANIM_stand);
+         reg_anim_end();
+
          display_msg(mstr(118));
       end
+      else if (is_critical(test2)) then begin
+         display_msg(mstr(115));
+         game_time_advance(game_ticks(240));
+         rm_obj_from_inven(dude_obj, obj_being_used_with);
+         critter_dmg(dude_obj, 1, 0 bwor 256);
+      end
       else begin
-         if (is_critical(test2)) then begin
-            display_msg(mstr(115));
-
-            game_time_advance(game_ticks(240));
-            rm_obj_from_inven(dude_obj, obj_being_used_with);
-            critter_dmg(dude_obj, 1, 0 bwor 256);
-         end
-         else begin
-            display_msg(mstr(116));
-
-            game_time_advance(game_ticks(180));
-         end
+         display_msg(mstr(116));
+         game_time_advance(game_ticks(180));
       end
    end
-   else begin
+   else
       display_msg(mstr(117));
-   end
 end
 
 procedure search begin
@@ -103,19 +105,14 @@ procedure search begin
       display_msg(mstr(100));
    end
    else begin
-
       if (is_success(test)) then begin
-         if (is_critical(test)) then begin
+         if (is_critical(test)) then
             display_msg(mstr(101));
-         end
-         else begin
+         else
             display_msg(mstr(102));
-         end
       end
-      else begin
+      else
          display_msg(mstr(103));
-      end
-
    end
 end
 
@@ -127,39 +124,24 @@ procedure skills begin
    if (necropolis_wpump_fixed) then begin
       display_msg(mstr(100));
    end
-   else begin
-
-      if (action_being_used == SKILL_REPAIR) then begin
-         if (is_success(test2)) then begin
-            display_msg(mstr(108));
-         end
-         else begin
-            if (is_critical(test2)) then begin
-               display_msg(mstr(107));
-            end
-            else begin
-               display_msg(mstr(109));
-            end
-         end
+   else if (action_being_used == SKILL_REPAIR) then begin
+      if (is_success(test2)) then begin
+         display_msg(mstr(108));
       end
-      else begin
-         if (action_being_used == SKILL_SCIENCE) then begin
-            if (is_success(test3)) then begin
-               display_msg(mstr(111));
-            end
-            else begin
-               if (is_critical(test3)) then begin
-                  display_msg(mstr(110));
-               end
-               else begin
-                  display_msg(mstr(112));
-               end
-            end
-         end
-         else begin
-            display_msg(mstr(113));
-         end
-      end
-
+      else if (is_critical(test2)) then
+         display_msg(mstr(107));
+      else
+         display_msg(mstr(109));
    end
+   else if (action_being_used == SKILL_SCIENCE) then begin
+      if (is_success(test3)) then begin
+         display_msg(mstr(111));
+      end
+      else if (is_critical(test3)) then
+         display_msg(mstr(110));
+      else
+         display_msg(mstr(112));
+   end
+   else
+      display_msg(mstr(113));
 end

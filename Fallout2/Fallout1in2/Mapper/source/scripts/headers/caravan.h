@@ -191,10 +191,10 @@ variable Finding_New_Tile;
 #define HUB_ADY_4_4_y                              (877)
 
 // Travel time in days
-#define TRAVEL_TIME_HUB_ADY            (2*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_NEC            (9*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_ADY               (2*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_NEC               (9*ONE_GAME_DAY)
 #define TRAVEL_TIME_HUB_BOS               (15*ONE_GAME_DAY)
-#define TRAVEL_TIME_HUB_JNK            (7*ONE_GAME_DAY)
+#define TRAVEL_TIME_HUB_JNK               (7*ONE_GAME_DAY)
 
 // Style of the caravan critters
 #define STYLE_NONE         (0)
@@ -202,112 +202,128 @@ variable Finding_New_Tile;
 #define STYLE_FARGO        (2)
 #define STYLE_WATER        (3)
 
-#define set_caravan_style_crimson      set_global_var(GVAR_CARAVAN_LOOK,STYLE_CRIMSON)
-#define set_caravan_style_fargo     set_global_var(GVAR_CARAVAN_LOOK,STYLE_FARGO)
-#define set_caravan_style_water     set_global_var(GVAR_CARAVAN_LOOK,STYLE_WATER)
+#define set_caravan_style_crimson         set_global_var(GVAR_CARAVAN_LOOK,STYLE_CRIMSON)
+#define set_caravan_style_fargo           set_global_var(GVAR_CARAVAN_LOOK,STYLE_FARGO)
+#define set_caravan_style_water           set_global_var(GVAR_CARAVAN_LOOK,STYLE_WATER)
 
-#define caravan_style_crimson          global_var(GVAR_CARAVAN_LOOK) == STYLE_CRIMSON
-#define caravan_style_fargo         global_var(GVAR_CARAVAN_LOOK) == STYLE_FARGO
-#define caravan_style_water         global_var(GVAR_CARAVAN_LOOK) == STYLE_WATER
+#define caravan_style_crimson             global_var(GVAR_CARAVAN_LOOK) == STYLE_CRIMSON
+#define caravan_style_fargo               global_var(GVAR_CARAVAN_LOOK) == STYLE_FARGO
+#define caravan_style_water               global_var(GVAR_CARAVAN_LOOK) == STYLE_WATER
 
 // Caravan States
 // GVAR_CARAVAN_STATUS
-#define CARAVAN_STATUS_NONE                 (0)
-#define CARAVAN_STATUS_WAITING              (1)
-#define CARAVAN_STATUS_ON_JOB               (2)
-#define CARAVAN_STATUS_SUCCESS              (3)
-#define CARAVAN_STATUS_PARTIAL_SUCCESS      (4)
-#define CARAVAN_STATUS_FAILED               (5)
-#define CARAVAN_STATUS_TOTAL_FAILED         (6)
-#define CARAVAN_STATUS_THEFT                (7)
-#define CARAVAN_STATUS_ABANDONED            (8)
+#define CARAVAN_STATUS_NONE                  (0)
+#define CARAVAN_STATUS_WAITING               (1)
+#define CARAVAN_STATUS_ON_JOB                (2)
+#define CARAVAN_STATUS_SUCCESS               (3)
+#define CARAVAN_STATUS_PARTIAL_SUCCESS       (4)
+#define CARAVAN_STATUS_FAILED                (5)
+#define CARAVAN_STATUS_TOTAL_FAILED          (6)
+#define CARAVAN_STATUS_THEFT                 (7)
+#define CARAVAN_STATUS_ABANDONED             (8)
 
 // GVAR_CARAVAN_START
 // GVAR_CARAVAN_END
-#define CARAVAN_NONE                        (0)
+#define CARAVAN_NONE                         (0)
 #define CARAVAN_HUB                          (1)
 #define CARAVAN_JUNKTOWN                     (2)
 #define CARAVAN_NECROPOLIS                   (3)
-#define CARAVAN_BOS                       (4)
+#define CARAVAN_BOS                          (4)
 #define CARAVAN_BONEYARD                     (5)
 
 // Hub Caravans
 #define HUB_CARAVAN_NONE                     (0)
-#define HUB_CARAVAN_AGREED                (1)
+#define HUB_CARAVAN_AGREED                   (1)
 #define HUB_CARAVAN_NOT_READY_YET            (2)
-#define HUB_CARAVAN_ABANDONED             (3)
-#define HUB_CARAVAN_ON_CARAVAN            (4)
-#define HUB_CARAVAN_TOTAL_FAILURE         (5)
-#define HUB_CARAVAN_FAILURE               (6)
-#define HUB_CARAVAN_AVERAGE_SUCCESS       (7)
-#define HUB_CARAVAN_COMPLETE_SUCCESS      (8)
-#define HUB_CARAVAN_THEFT                 (9)
+#define HUB_CARAVAN_ABANDONED                (3)
+#define HUB_CARAVAN_ON_CARAVAN               (4)
+#define HUB_CARAVAN_TOTAL_FAILURE            (5)
+#define HUB_CARAVAN_FAILURE                  (6)
+#define HUB_CARAVAN_AVERAGE_SUCCESS          (7)
+#define HUB_CARAVAN_COMPLETE_SUCCESS         (8)
+#define HUB_CARAVAN_THEFT                    (9)
 
 // Set States for the Caravan
-#define set_caravan_status(x)               set_global_var(GVAR_CARAVAN_STATUS,x)
-#define set_caravan_start(x)                set_global_var(GVAR_CARAVAN_START,x)
-#define set_caravan_end(x)                  set_global_var(GVAR_CARAVAN_END,x)
+#define set_caravan_status(x)                set_global_var(GVAR_CARAVAN_STATUS,x)
+#define set_caravan_start(x)                 set_global_var(GVAR_CARAVAN_START,x)
+#define set_caravan_end(x)                   set_global_var(GVAR_CARAVAN_END,x)
 
-#define set_caravan_masters(x)              set_global_var(GVAR_CARAVAN_MASTERS_TOTAL,x);               \
-                                            set_global_var(GVAR_CARAVAN_MASTERS,x)
-#define set_caravan_drivers(x)              set_global_var(GVAR_CARAVAN_DRIVERS_TOTAL,x);               \
-                                            set_global_var(GVAR_CARAVAN_DRIVERS,x)
-#define set_caravan_guards(x)               set_global_var(GVAR_CARAVAN_GUARDS_TOTAL,x);                \
-                                            set_global_var(GVAR_CARAVAN_GUARDS,x)
-#define set_caravan_brahmin(x)              set_global_var(GVAR_CARAVAN_BRAHMIN_TOTAL,x);               \
-                                            set_global_var(GVAR_CARAVAN_BRAHMIN,x)
-#define set_caravan_carts(x)                set_global_var(GVAR_CARAVAN_CARTS_TOTAL,x);                 \
-                                            set_global_var(GVAR_CARAVAN_CARTS,x)
-#define set_caravan_encounters(x)           set_global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL,x);            \
-                                            set_global_var(GVAR_CARAVAN_ENCOUNTERS,x)
+#define set_caravan_masters(x)               set_global_var(GVAR_CARAVAN_MASTERS_TOTAL,x);      \
+                                             set_global_var(GVAR_CARAVAN_MASTERS,x)
+#define set_caravan_drivers(x)               set_global_var(GVAR_CARAVAN_DRIVERS_TOTAL,x);      \
+                                             set_global_var(GVAR_CARAVAN_DRIVERS,x)
+#define set_caravan_guards(x)                set_global_var(GVAR_CARAVAN_GUARDS_TOTAL,x);       \
+                                             set_global_var(GVAR_CARAVAN_GUARDS,x)
+#define set_caravan_brahmin(x)               set_global_var(GVAR_CARAVAN_BRAHMIN_TOTAL,x);      \
+                                             set_global_var(GVAR_CARAVAN_BRAHMIN,x)
+#define set_caravan_carts(x)                 set_global_var(GVAR_CARAVAN_CARTS_TOTAL,x);        \
+                                             set_global_var(GVAR_CARAVAN_CARTS,x)
+#define set_caravan_encounters(x)            set_global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL,x);   \
+                                             set_global_var(GVAR_CARAVAN_ENCOUNTERS,x)
 
-#define CARAVAN_FALSE                           0    //default value of mvar_caravan
-#define CARAVAN_HOME                            1    //value of mvar_caravan if at home
-#define CARAVAN_GOING_HOME                      2    //value of mvar_caravan if going home
-#define CARAVAN_DEST_REACHED                    3    //value of mvar_caravan if dest reached
+#define CARAVAN_FALSE                        0    // default value of mvar_caravan
+#define CARAVAN_HOME                         1    // value of mvar_caravan if at home
+#define CARAVAN_GOING_HOME                   2    // value of mvar_caravan if going home
+#define CARAVAN_DEST_REACHED                 3    // value of mvar_caravan if dest reached
 
 // Current Counts for the Caravan
-#define caravan_masters_left                global_var(GVAR_CARAVAN_MASTERS)
-#define caravan_drivers_left                global_var(GVAR_CARAVAN_DRIVERS)
-#define caravan_guards_left                 global_var(GVAR_CARAVAN_GUARDS)
-#define caravan_brahmin_left                global_var(GVAR_CARAVAN_BRAHMIN)
-#define caravan_carts_left                  global_var(GVAR_CARAVAN_CARTS)
-#define encounters_left                     global_var(GVAR_CARAVAN_ENCOUNTERS)
-#define caravan_status                      global_var(GVAR_CARAVAN_STATUS)
+#define caravan_masters_left                 global_var(GVAR_CARAVAN_MASTERS)
+#define caravan_drivers_left                 global_var(GVAR_CARAVAN_DRIVERS)
+#define caravan_guards_left                  global_var(GVAR_CARAVAN_GUARDS)
+#define caravan_brahmin_left                 global_var(GVAR_CARAVAN_BRAHMIN)
+#define caravan_carts_left                   global_var(GVAR_CARAVAN_CARTS)
+#define encounters_left                      global_var(GVAR_CARAVAN_ENCOUNTERS)
+#define caravan_status                       global_var(GVAR_CARAVAN_STATUS)
 
-#define caravan_total_masters               global_var(GVAR_CARAVAN_MASTERS_TOTAL)
-#define caravan_total_drivers               global_var(GVAR_CARAVAN_DRIVERS_TOTAL)
-#define caravan_total_guards                global_var(GVAR_CARAVAN_GUARDS_TOTAL)
-#define caravan_total_brahmin               global_var(GVAR_CARAVAN_BRAHMIN_TOTAL)
-#define caravan_total_carts                 global_var(GVAR_CARAVAN_CARTS_TOTAL)
+#define caravan_total_masters                global_var(GVAR_CARAVAN_MASTERS_TOTAL)
+#define caravan_total_drivers                global_var(GVAR_CARAVAN_DRIVERS_TOTAL)
+#define caravan_total_guards                 global_var(GVAR_CARAVAN_GUARDS_TOTAL)
+#define caravan_total_brahmin                global_var(GVAR_CARAVAN_BRAHMIN_TOTAL)
+#define caravan_total_carts                  global_var(GVAR_CARAVAN_CARTS_TOTAL)
 
 // Set Lost/Destroyed States for Caravan
-#define rm_caravan_masters(x)               set_global_var(GVAR_CARAVAN_MASTERS,global_var(GVAR_CARAVAN_MASTERS) - x)
-#define rm_caravan_drivers(x)               set_global_var(GVAR_CARAVAN_DRIVERS,global_var(GVAR_CARAVAN_DRIVERS) - x)
-#define rm_caravan_guards(x)                set_global_var(GVAR_CARAVAN_GUARDS,global_var(GVAR_CARAVAN_GUARDS) - x)
-#define rm_caravan_brahmin(x)               set_global_var(GVAR_CARAVAN_BRAHMIN,global_var(GVAR_CARAVAN_BRAHMIN) - x)
-#define rm_caravan_carts(x)                 set_global_var(GVAR_CARAVAN_CARTS,global_var(GVAR_CARAVAN_CARTS) - x)
+#define rm_caravan_masters(x)                set_global_var(GVAR_CARAVAN_MASTERS,global_var(GVAR_CARAVAN_MASTERS) - x)
+#define rm_caravan_drivers(x)                set_global_var(GVAR_CARAVAN_DRIVERS,global_var(GVAR_CARAVAN_DRIVERS) - x)
+#define rm_caravan_guards(x)                 set_global_var(GVAR_CARAVAN_GUARDS,global_var(GVAR_CARAVAN_GUARDS) - x)
+#define rm_caravan_brahmin(x)                set_global_var(GVAR_CARAVAN_BRAHMIN,global_var(GVAR_CARAVAN_BRAHMIN) - x)
+#define rm_caravan_carts(x)                  set_global_var(GVAR_CARAVAN_CARTS,global_var(GVAR_CARAVAN_CARTS) - x)
 
 // Check Killed/Lost States
-#define caravan_masters_killed              (global_var(GVAR_CARAVAN_MASTERS_TOTAL) - global_var(GVAR_CARAVAN_MASTERS))
-#define caravan_drivers_killed              (global_var(GVAR_CARAVAN_DRIVERS_TOTAL) - global_var(GVAR_CARAVAN_DRIVERS))
-#define caravan_guards_killed               (global_var(GVAR_CARAVAN_GUARDS_TOTAL) - global_var(GVAR_CARAVAN_GUARDS))
-#define caravan_brahmin_killed              (global_var(GVAR_CARAVAN_BRAHMIN_TOTAL) - global_var(GVAR_CARAVAN_BRAHMIN))
-#define caravan_carts_lost                  (global_var(GVAR_CARAVAN_CARTS_TOTAL) - global_var(GVAR_CARAVAN_CARTS))
+#define caravan_masters_killed               (global_var(GVAR_CARAVAN_MASTERS_TOTAL) - global_var(GVAR_CARAVAN_MASTERS))
+#define caravan_drivers_killed               (global_var(GVAR_CARAVAN_DRIVERS_TOTAL) - global_var(GVAR_CARAVAN_DRIVERS))
+#define caravan_guards_killed                (global_var(GVAR_CARAVAN_GUARDS_TOTAL) - global_var(GVAR_CARAVAN_GUARDS))
+#define caravan_brahmin_killed               (global_var(GVAR_CARAVAN_BRAHMIN_TOTAL) - global_var(GVAR_CARAVAN_BRAHMIN))
+#define caravan_carts_lost                   (global_var(GVAR_CARAVAN_CARTS_TOTAL) - global_var(GVAR_CARAVAN_CARTS))
 
 // Encounter Information
-#define made_encounter                      set_global_var(GVAR_CARAVAN_ENCOUNTERS,global_var(GVAR_CARAVAN_ENCOUNTERS) - 1)
-#define total_encounters                    global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL)
-#define caravan_start                       global_var(GVAR_CARAVAN_START)
-#define caravan_end                         global_var(GVAR_CARAVAN_END)
+#define made_encounter                       set_global_var(GVAR_CARAVAN_ENCOUNTERS,global_var(GVAR_CARAVAN_ENCOUNTERS) - 1)
+#define total_encounters                     global_var(GVAR_CARAVAN_ENCOUNTERS_TOTAL)
+#define caravan_start                        global_var(GVAR_CARAVAN_START)
+#define caravan_end                          global_var(GVAR_CARAVAN_END)
 
 // Fo1 doesn't use 2 brahmins per cart
 //#define too_many_carts                      ((caravan_carts_left > ((caravan_brahmin_left/2) + (caravan_brahmin_left % 2))) and (caravan_brahmin_left != 0))
-#define too_many_carts                      (caravan_carts_left > caravan_brahmin_left)
+#define too_many_carts                       (caravan_carts_left > caravan_brahmin_left)
 
-#define give_money(who,amount)              if (dude_fortune_finder) then                               \
-                                                item_caps_adjust(who,2*(amount));                       \
-                                            else                                                        \
+#define give_money(who,amount)               if (dude_fortune_finder) then          \
+                                                item_caps_adjust(who,2*(amount));   \
+                                             else                                   \
                                                 item_caps_adjust(who,(amount))
+
+/*********************************************************
+    Defines for critter scripts
+*********************************************************/
+// Used to delete the critter after x time has passed
+#define check_map_enter_timer                if not(map_is_caravan_escort) then begin                                \
+                                                if (local_var(LVAR_CaravanTimer) == 0) then                          \
+                                                   set_local_var(LVAR_CaravanTimer, GAME_TIME_IN_HOURS);             \
+                                                if (((GAME_TIME_IN_HOURS) - local_var(LVAR_CaravanTimer)) >= 2) then \
+                                                   destroy_object(self_obj);                                         \
+                                             end
+
+#define check_critter_timer                  if not(map_is_caravan_escort) then begin                                                                          \
+                                                if ((((GAME_TIME_IN_HOURS) - local_var(LVAR_CaravanTimer)) >= 2) and (local_var(LVAR_CaravanTimer) != 0)) then \
+                                                   destroy_object(self_obj);                                                                                   \
+                                             end
 
 #endif // CARAVAN_H
