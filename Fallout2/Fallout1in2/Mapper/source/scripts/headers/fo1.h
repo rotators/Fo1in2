@@ -164,13 +164,18 @@ variable tma_gvar_array;
 // If reply <line> is triggered, set <GVAR_> to <val>
 // Must be placed in the critter talk_p_proc.
 // TODO: Allow multiple GVARs and condition checks at some point? Not sure how necessary that will be, though.
-#define set_tma_gvar(line_num,gvar,val)       				\
-    if (tma_gvar_array == 0) then begin                		\
-        tma_gvar_array := get_sfall_global_int("TMA_GVAR");	\
-    end                                                  	\
-    tma_gvar_array[0] := line_num;							\
-    tma_gvar_array[1] := gvar;								\
+#define set_tma_gvar(line_num,gvar,val)                     \
+    if (tma_gvar_array == 0) then begin                     \
+        tma_gvar_array := get_sfall_global_int("TMA_GVAR"); \
+    end                                                     \
+    tma_gvar_array[0] := line_num;                          \
+    tma_gvar_array[1] := gvar;                              \
     tma_gvar_array[2] := val
+    
+// Reset TMA data (after dialog ended)
+// This is used in party member talk_p_proc to workaround a reset-bug!
+#define reset_tma_data      tma_data_array[0] := 0; \
+                            tma_gvar_array[0] := 0
 
 /*********************************************************
     Game time Limits

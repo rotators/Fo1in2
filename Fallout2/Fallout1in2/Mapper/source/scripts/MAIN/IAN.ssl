@@ -222,41 +222,30 @@ procedure talk_p_proc begin
    set_tma_data(NAME, 1000, -1, -1, 1109, 1109);
 
    dude_look_at_self;
-
    get_reaction
 
-   start_gdialog(235, self_obj, 4, -1, -1);
    if (Ian_In_Party or party_is_waiting) then begin
       gdialog_set_barter_mod(255);
    end
 
-   gsay_start;
-
-   if (global_var(GVAR_ENEMY_SHADY_SANDS) and (global_var(GVAR_IAN_HIRELING_STATUS) != 2)) then begin
-      call Ian14;
-   end
-   else if (global_var(GVAR_IAN_HIRELING_STATUS) == 0) then begin
-      call Ian02;
-   end
-   else if ((Ian_In_Party) or (party_is_waiting)) then begin
-      call Node1000;
-      //call Ian15;
-   end
-   else if (global_var(GVAR_IAN_HIRELING_STATUS) == 3) then begin
-      call Ian21;
-   end
-   else begin
-      call Ian12;
-   end
-
-   gsay_end;
-   end_dialogue;
+   if (global_var(GVAR_ENEMY_SHADY_SANDS) and (global_var(GVAR_IAN_HIRELING_STATUS) != 2)) then
+      start_dialog_at_node(Ian14);
+   else if (global_var(GVAR_IAN_HIRELING_STATUS) == 0) then
+      start_dialog_at_node(Ian02);
+   else if ((Ian_In_Party) or (party_is_waiting)) then
+      start_dialog_at_node(Node1000);
+   else if (global_var(GVAR_IAN_HIRELING_STATUS) == 3) then
+      start_dialog_at_node(Ian21);
+   else
+      start_dialog_at_node(Ian12);
 
    if (Ian_In_Party and (global_var(GVAR_IAN_JOINS_GIVE_EXP) == 0)) then begin
       set_global_var(GVAR_IAN_JOINS_GIVE_EXP, 1);
       display_msg(mstr(169));
       give_exp_points(EXP_HIRED_IAN);
    end
+
+   reset_tma_data;
 end
 
 procedure use_obj_on_p_proc begin
@@ -533,7 +522,7 @@ end
 
 procedure map_commentary begin
    if (CUR_MAP_JUNKKILL) then begin
-      if (tile_distance(self_tile, 27883) < 4) and is_killian_alive then begin
+      if is_killian_alive and (tile_distance(self_tile, 27883) < 4)  then begin
          if (not(line151flag)) then begin
             float_msg(self_obj, mstr(151), FLOAT_MSG_NORMAL);
             line151flag := 1;
@@ -541,7 +530,7 @@ procedure map_commentary begin
       end
    end
    else if (CUR_MAP_JUNKCSNO) then begin
-      if (tile_distance(self_tile, 27919) < 4) and is_gizmo_alive then begin
+      if is_gizmo_alive and (tile_distance(self_tile, 27919) < 4) then begin
          if (not(line152flag)) then begin
             float_msg(self_obj, mstr(152), FLOAT_MSG_NORMAL);
             line152flag := 1;

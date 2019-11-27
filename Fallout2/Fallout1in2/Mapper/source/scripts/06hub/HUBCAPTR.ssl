@@ -1,12 +1,13 @@
 /*
 
-   Hub - Captor (related to bos quest?)
+   Hub - Old Town, Kidnappers related to bos quest.
 
 */
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+//#include "..\headers\hub.h"
+#include "..\headers\maps\huboldtn.h"
 
 #define NAME                    SCRIPT_HUBCAPTR
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -24,6 +25,10 @@ procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 
+#define LVAR_Talked                     (4)
+#define LVAR_Home_Tile                  (5)
+#define LVAR_Home_Rotation              (6)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable GunLine;
@@ -36,43 +41,47 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   else begin
+      critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+   end
+end
+
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
+
    if (self_can_see_dude) then begin
       tmp_hostile := 1;
       GunLine := random(105, 108);
       if (GunLine == 108) then begin
-         if (dude_is_female) then begin
-            GunLine := 109;
-         end
+         if (dude_is_female) then GunLine := 109;
       end
       float_msg(self_obj, mstr(GunLine), FLOAT_MSG_YELLOW);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
-   dude_look_at_self;
-   get_reaction
-   set_local_var(4, local_var(4) + 1);
-   if (local_var(4) < 4) then begin
-      float_msg(self_obj, mstr(100 + local_var(4)), FLOAT_MSG_YELLOW);
+procedure talk_p_proc begin
+   set_local_var(LVAR_Talked, local_var(LVAR_Talked) + 1);
+   if (local_var(LVAR_Talked) < 4) then begin
+      float_msg(self_obj, mstr(100 + local_var(LVAR_Talked)), FLOAT_MSG_YELLOW);
    end
    else begin
       float_msg(self_obj, mstr(104), FLOAT_MSG_YELLOW);
@@ -80,15 +89,12 @@ begin
    end
 end
 
-procedure destroy_p_proc
-begin
-
-   set_map_var(0, map_var(0) + 1);
+procedure destroy_p_proc begin
+   set_map_var(MVAR_Total_Captors, map_var(MVAR_Total_Captors) + 1);
    inc_evil_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
