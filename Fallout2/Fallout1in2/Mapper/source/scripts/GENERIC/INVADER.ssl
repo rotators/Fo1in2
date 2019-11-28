@@ -21,7 +21,6 @@ procedure critter_p_proc;
 procedure combat_p_proc;
 
 procedure mutant00;
-procedure combat;
 procedure canseeme;
 
 #define LVAR_Home_Tile            (0)
@@ -32,14 +31,14 @@ variable tmp_hostile;
 procedure start begin
    variable Item, weaponPtr, WeaponID, AmmoID;
 
-   if (local_var(LVAR_SpawnInitial) == 0) then begin
-      set_local_var(LVAR_SpawnInitial, 1);
-
-      if (local_var(LVAR_Home_Tile) == 0) then begin
-         set_local_var(LVAR_Home_Tile, self_tile);
-      end
+   if (local_var(LVAR_Home_Tile) == 0) then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_NECRO);
+   end
+
+   if (local_var(LVAR_SpawnInitial) == 0 and fixt_enabled) then begin
+      set_local_var(LVAR_SpawnInitial, 1);
 
       // Add items:
       Item := create_object(PID_RADIO, 0, 0);
@@ -111,20 +110,12 @@ procedure pickup_p_proc begin
 end
 
 procedure mutant00 begin
-   if not(local_var(2)) then begin
-      variable LVar0;
-      LVar0 := random(101, 107);
-      float_msg(self_obj, mstr(LVar0), FLOAT_MSG_RED);
-      call combat;
-   end
-end
-
-procedure combat begin
+   float_msg(self_obj, mstr(random(101, 107)), FLOAT_MSG_RED);
    tmp_hostile := 1;
 end
 
 procedure critter_p_proc begin
-   if (critter_state(self_obj) != 1) and (critter_state(self_obj) != 2) and not(combat_is_initialized) then begin
+   if (critter_state(self_obj) != CRITTER_IS_PRONE) and not(combat_is_initialized) then begin
       if (tmp_hostile) then begin
          tmp_hostile := 0;
          attack(dude_obj);
@@ -141,7 +132,6 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   set_local_var(2, 1);
    inc_evil_critter
 end
 
@@ -150,7 +140,7 @@ procedure combat_p_proc begin
 end
 
 procedure canseeme begin
-   if (critter_state(self_obj) != 1) and (critter_state(self_obj) != 2) then begin
+   if (critter_state(self_obj) != CRITTER_IS_PRONE) then begin
       if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) <= 12)) or (tile_distance_objs(self_obj, dude_obj) <= 6) and obj_on_screen(self_obj) then begin
          call mutant00;
       end
