@@ -51,6 +51,8 @@ variable DisplayMessage;
 #define LVAR_Restock_Time        (6)
 #define LVAR_Caps_Amount         (7)
 
+#define RESTOCK_TIME             (GAME_TIME_IN_DAYS + (5 * ONE_GAME_DAY))
+
 #define barter_mod_initial       (25)    // vanilla : -10
 #define barter_mod_discount_1    (15)    // vanilla : 5
 #define barter_mod_discount_2    (5)     // vanilla : 15
@@ -91,43 +93,31 @@ procedure talk_p_proc begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
-      BarterMod := barter_mod_initial;
-
-      //move_obj_inven_to_obj(Locker_Ptr, self_obj);
       call Get_Stuff;
 
       if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Time)) >= 1) or (local_var(LVAR_Restock_Time) == 0)) then begin
-         set_local_var(LVAR_Restock_Time, GAME_TIME_IN_DAYS);
+         set_local_var(LVAR_Restock_Time, RESTOCK_TIME);
          set_local_var(LVAR_Caps_Amount, 3000 + random(0, 1000));
       end
       self_caps_adjust(local_var(LVAR_Caps_Amount));
       get_reaction
-      start_gdialog(377, self_obj, -1, -1, -1);
-      gsay_start;
-      if (local_var(LVAR_Discount) == 2) then begin
+
+      if (local_var(LVAR_Discount) == 2) then
          BarterMod := barter_mod_discount_2;
-      end
-      else begin
-         if (local_var(LVAR_Discount) == 1) then begin
-            BarterMod := barter_mod_discount_1;
-         end
-         else begin
-            BarterMod := barter_mod_initial;
-         end
-      end
+      else if (local_var(LVAR_Discount) == 1) then
+         BarterMod := barter_mod_discount_1;
+      else
+         BarterMod := barter_mod_initial;
       gdialog_set_barter_mod(BarterMod);
-      if (local_var(LVAR_Here_Before) == 0) then begin
-         call Zack00;
-      end
-      else begin
-         call Zack01;
-      end
-      gsay_end;
-      end_dialogue;
+
+      if (local_var(LVAR_Here_Before) == 0) then
+         start_dialog_at_node(Zack00);
+      else
+         start_dialog_at_node(Zack01);
+
       set_local_var(LVAR_Caps_Amount, self_caps);
       self_caps_adjust(-1 * local_var(LVAR_Caps_Amount));
 
-      //move_obj_inven_to_obj(self_obj, Locker_Ptr);
       call Put_Stuff;
    end
 end
