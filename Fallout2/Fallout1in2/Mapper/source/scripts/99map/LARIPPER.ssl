@@ -1,45 +1,47 @@
+/*
+
+   Boneyard - Rippers / old Cinema
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 #include "..\headers\maps\laripper.h"
 #include "..\headers\boneyard.h"
+#include "..\headers\sfall\sfall.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure map_exit_p_proc;
 
+procedure map_lightning;
 procedure PlaceCritter;
-
-variable party_elevation;
-variable dude_start_hex;
 
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
-   variable LVar0 := 0;
+   variable rnd;
    set_global_var(GVAR_MARK_LA_5, 1);
 
-   if (dude_elevation == 1) then
-      Darkness;
-   else
-      Lighting;
+   call map_lightning;
 
    if not(is_loading_game) then begin
+      set_rest_mode(0);
       if ((map_var(MVAR_IsMommyDead) == 0) and (((game_time / 10) - global_var(GVAR_WATER_CHIP_13)) > (60 * 60))) then begin
          set_global_var(GVAR_WATER_CHIP_13, game_time / 10);
-
          if (map_var(MVAR_RoamingCount) == 0) then begin
-            LVar0 := random(2, 3);
-            set_map_var(MVAR_RoamingCount, LVar0);
-            set_map_var(MVAR_NewCount, LVar0);
+            rnd := random(2, 3);
+            set_map_var(MVAR_RoamingCount, rnd);
+            set_map_var(MVAR_NewCount, rnd);
             call PlaceCritter;
          end
          else if (map_var(MVAR_RoamingCount) == 1) then begin
-            LVar0 := random(1, 2);
-            set_map_var(MVAR_RoamingCount, LVar0 + 1);
-            set_map_var(MVAR_NewCount, LVar0);
+            rnd := random(1, 2);
+            set_map_var(MVAR_RoamingCount, rnd + 1);
+            set_map_var(MVAR_NewCount, rnd);
             call PlaceCritter;
          end
          else if (map_var(MVAR_RoamingCount) == 2) then begin
@@ -49,8 +51,9 @@ procedure map_enter_p_proc begin
                call PlaceCritter;
             end
          end
-
       end
+      else
+         set_rest_mode(RESTMODE_STRICT); // Can't rest here as long as MOMCLAW is still alive.
    end
 
    override_map_start(96, 121, 0, 0);
@@ -59,51 +62,51 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
+   call map_lightning;
+end
+
+procedure map_exit_p_proc begin
+   if ((map_var(MVAR_IsMommyDead) == 1) and (map_var(MVAR_RoamingCount) == 0) and (map_var(MVAR_EggCount) == 0)) then begin
+      if (global_var(GVAR_WATER_CHIP_8) != 2) then
+         set_all_deathclaws_killed;
+   end
+end
+
+procedure map_lightning begin
    if (dude_elevation == 1) then
       Darkness;
    else
       Lighting;
 end
 
-procedure map_exit_p_proc begin
-   if ((map_var(MVAR_IsMommyDead) == 1) and (map_var(MVAR_RoamingCount) == 0) and (map_var(MVAR_EggCount) == 0)) then begin
-      if (global_var(GVAR_WATER_CHIP_8) != 2) then begin
-         set_all_deathclaws_killed;
-      end
-   end
-end
-
 procedure PlaceCritter begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   variable LVar2 := 0;
-   variable LVar3 := 0;
-   LVar3 := map_var(MVAR_NewCount);
-   while(LVar3 > 0) do begin
-      LVar2 := random(1, 7);
-      if (LVar2 == 1) then begin
-         LVar1 := 16890;
-      end
-      else if (LVar2 == 2) then begin
-         LVar1 := 17269;
-      end
-      else if (LVar2 == 3) then begin
-         LVar1 := 23492;
-      end
-      else if (LVar2 == 4) then begin
-         LVar1 := 15885;
-      end
-      else if (LVar2 == 5) then begin
-         LVar1 := 12287;
-      end
-      else if (LVar2 == 6) then begin
-         LVar1 := 17511;
-      end
-      else if (LVar2 == 7) then begin
-         LVar1 := 15475;
-      end
-      LVar0 := create_object_sid(PID_DEATHCLAW, 0, 0, SCRIPT_ROAMCLAW);
-      critter_attempt_placement(LVar0, LVar1, 0);
-      LVar3 := LVar3 - 1;
+   variable
+      critter := 0,
+      hex := 0,
+      rnd := 0,
+      count := 0;
+
+   count := map_var(MVAR_NewCount);
+   while(count > 0) do begin
+      rnd := random(1, 7);
+
+      if (rnd == 1) then
+         hex := 16890;
+      else if (rnd == 2) then
+         hex := 17269;
+      else if (rnd == 3) then
+         hex := 23492;
+      else if (rnd == 4) then
+         hex := 15885;
+      else if (rnd == 5) then
+         hex := 12287;
+      else if (rnd == 6) then
+         hex := 17511;
+      else if (rnd == 7) then
+         hex := 15475;
+
+      critter := create_object_sid(PID_DEATHCLAW, 0, 0, SCRIPT_ROAMCLAW);
+      critter_attempt_placement(critter, hex, 0);
+      count := count - 1;
    end
 end

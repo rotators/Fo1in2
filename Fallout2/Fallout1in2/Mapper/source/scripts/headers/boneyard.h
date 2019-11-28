@@ -11,7 +11,14 @@
 /************************************************
     Generic Defines
 ************************************************/
-
+// Super Mutant invaders
+#define create_la_invader(hex)   invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);   \
+                                 set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);                               \
+                                 critter_attempt_placement(invaderPtr, hex, 0)
+								 
+#define create_foa_invader(pid, hex, script)	invaderPtr := create_object_sid(pid, 0, 0, script);   \
+												critter_attempt_placement(invaderPtr, hex, elev)
+								 
 //******************** Quest: Blades vs. Regulators conflict
 //--- Gun Runners:
 // PipBoy quest tracker:

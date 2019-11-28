@@ -1,14 +1,22 @@
+/*
+
+   Boneyard - Adytum
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 #include "..\headers\updatmap.h"
+
 #include "..\headers\maps\laadytum.h"
 #include "..\headers\boneyard.h"
-#include "..\headers\command.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure map_exit_p_proc;
 
+procedure map_lightning;
 procedure AddInBlades;
 procedure Invasion;
 
@@ -39,37 +47,25 @@ end
 
 procedure map_enter_p_proc begin
    set_global_var(GVAR_MARK_LA_1, 1);
-   if (dude_elevation == 1) then begin
-      Darkness;
-   end
-   else begin
-      Lighting;
-   end
+   call map_lightning;
 
    if (map_first_run) then begin
       if not(boneyard_invaded) then begin
          display_msg(message_str(SCRIPT_SHADYWST, 115));
       end
       else begin
-         variable LVar0;
-         LVar0 := random(0, 4);
-
-         if not(LVar0) then begin
+         variable rnd;
+         rnd := random(0, 4);
+         if not(rnd) then
             display_msg(message_str(SCRIPT_SHADYWST, 150));
-         end
-         else if LVar0 == 1 then begin
+         else if rnd == 1 then
             display_msg(message_str(SCRIPT_SHADYWST, 151));
-         end
-         else if LVar0 == 2 then begin
+         else if rnd == 2 then
             display_msg(message_str(SCRIPT_SHADYWST, 152));
-         end
-         else if LVar0 == 3 then begin
+         else if rnd == 3 then
             display_msg(message_str(SCRIPT_SHADYWST, 153));
-         end
-         else begin
+         else
             display_msg(message_str(SCRIPT_SHADYWST, 154));
-         end
-
       end
    end
 
@@ -80,12 +76,7 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if (dude_elevation == 1) then begin
-      Darkness;
-   end
-   else begin
-      Lighting;
-   end
+   call map_lightning;
 
    // The attack starts now:
    if (get_blades_attacking and (map_var(MVAR_AddedBlades) == 0) and (global_var(GVAR_BLADES_INVASION_READY) == 1)) then begin
@@ -96,6 +87,7 @@ procedure map_update_p_proc begin
    // Blades are attacking while the player isn't around:
    else if (get_blades_attacking_alone and (map_var(MVAR_AddedBlades) == 0)) then begin
       set_map_var(MVAR_AddedBlades, 1);
+
       kill_critter(JonPtr, ANIM_stand);
       kill_critter_type(PID_TOWNSMAN_METAL, 0);
       kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
@@ -122,7 +114,9 @@ procedure map_update_p_proc begin
       kill_critter_type(PID_THUG_HFMETL, 0);
       kill_critter_type(PID_MALE_GUARD_CA, 0);
       kill_critter_type(PID_GUARD_HFMETL, 0);
+
       critter_attempt_placement(RazorPtr, 12700, 0);
+
       set_global_var(GVAR_BLADES_STATUS, 2);
       set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
       display_msg(message_str(SCRIPT_GENCHAT, 103) + 2000 + message_str(SCRIPT_GENCHAT, 104));
@@ -158,6 +152,13 @@ end
 procedure map_exit_p_proc begin
 end
 
+procedure map_lightning begin
+   if (dude_elevation == 1) then
+      Darkness;
+   else
+      Lighting;
+end
+
 procedure AddInBlades begin
    //start_blades_invasion
    set_map_var(MVAR_AddedBlades, 1);
@@ -177,6 +178,7 @@ end
 procedure Invasion begin
    if (boneyard_invaded and not(is_loading_game) and (map_var(3) == 0)) then begin
       set_map_var(3, 1);
+
       kill_critter_type(PID_TOWNSMAN_METAL, 1);
       kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 1);
       kill_critter_type(PID_DOG, 1);
@@ -210,18 +212,11 @@ procedure Invasion begin
       kill_critter_type(PID_GIRL, 1);
       kill_critter_type(PID_DOC_MORBID, 1);
       kill_critter_type(PID_GUARD_NFMAXX, 1);
-      invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-      set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
-      critter_attempt_placement(invaderPtr, 13493, 0);
-      invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-      set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
-      critter_attempt_placement(invaderPtr, 19101, 0);
-      invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-      set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
-      critter_attempt_placement(invaderPtr, 25916, 0);
-      invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);
-      set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
-      critter_attempt_placement(invaderPtr, 22887, 0);
+
+      create_la_invader(13493);
+      create_la_invader(19101);
+      create_la_invader(25916);
+      create_la_invader(22887);
 
       // Any player party member was waiting in the map before?
       check_invasion_party_waiting;
