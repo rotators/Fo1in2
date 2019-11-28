@@ -1,0 +1,185 @@
+/*
+
+   Boneyard - Super Mutant invaders
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\maps\lafollwr.h"
+
+#define NAME                    SCRIPT_THSUPMUT
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure timed_event_p_proc;
+
+procedure THSupMut0;
+procedure THSupMut1;
+procedure THSupMut2;
+procedure THSupMut3;
+procedure THSupMut4;
+procedure THSupMut5;
+procedure THSupMut6;
+procedure THSupMut7;
+procedure THSupMutend;
+
+procedure combat;
+procedure to_orfeo;
+
+#define LVAR_Here_Before      (0)
+#define LVAR_AssignName       (1)
+
+import variable Orfeo_ptr;
+
+variable rndx;
+variable tmp_hostile;
+variable Only_Once := 1;
+variable in_timed_event;
+variable weaponPtr;
+
+procedure start begin
+
+
+   if Only_Once then begin
+      Only_Once := 0;
+      set_self_team(TEAM_NECROPOLIS_MUTANT);
+      set_self_ai(AI_SUPER_MUTANT_SGT);
+      if (local_var(LVAR_AssignName) == 0) then begin
+         set_local_var(LVAR_AssignName, (100 + map_var(MVAR_COC_THMUT_NAME)));
+         inc_map_var(MVAR_COC_THMUT_NAME);
+
+         weaponPtr := create_object(PID_LASER_RIFLE, 0, 0);
+         add_obj_to_inven(self_obj, weaponPtr);
+         wield_obj_critter(self_obj, weaponPtr);
+         add_obj_to_inven(self_obj, create_object(PID_MICRO_FUSION_CELL, 0, 0));
+      end
+      self_rotate(random(0, 5));
+   end
+end
+
+procedure critter_p_proc begin
+   if (global_var(GVAR_ENEMY_FOLL_INVADERS)) then begin
+      tmp_hostile := 1;
+   end
+   else if (tmp_hostile and self_can_see_dude) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (not(in_timed_event)) then begin
+         in_timed_event := 1;
+         add_timer_event(self_obj, game_ticks(random(6, 10)), random(1, 3));
+      end
+      if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 6)) then begin
+         if (local_var(LVAR_Here_Before) == 0) then begin
+            dialogue_system_enter;
+         end
+      end
+   end
+end
+
+procedure destroy_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_global_var(GVAR_ENEMY_FOLL_INVADERS, 1);
+   end
+   inc_evil_critter
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(message_str(NAME, local_var(LVAR_AssignName)));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
+   script_overrides;
+   dude_look_at_self;
+   if (local_var(LVAR_Here_Before)) then begin
+      start_dialog_at_node(THSupMut7);
+   end
+   else begin
+      start_dialog_at_node(THSupMut0);
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == 1) then begin
+      self_rotate(random(0, 5));
+   end
+   else begin
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 3)));
+   end
+   in_timed_event := 0;
+end
+
+procedure THSupMut0 begin
+   set_local_var(LVAR_Here_Before, 1);
+   gsay_reply(NAME, 110);
+   giq_option(-3, NAME, 111, THSupMut1, NEUTRAL_REACTION);
+   giq_option(4, NAME, 112, to_orfeo, NEUTRAL_REACTION);
+   giq_option(4, NAME, 113, THSupMut2, NEUTRAL_REACTION);
+   giq_option(6, NAME, 114, THSupMut3, NEUTRAL_REACTION);
+end
+
+procedure THSupMut1 begin
+   gsay_message(NAME, 115, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure THSupMut2 begin
+   gsay_message(NAME, 116, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure THSupMut3 begin
+   gsay_reply(NAME, 117);
+   giq_option(6, NAME, 118, THSupMut4, NEUTRAL_REACTION);
+   giq_option(6, NAME, 119, THSupMut6, NEUTRAL_REACTION);
+end
+
+procedure THSupMut4 begin
+   gsay_reply(NAME, 120);
+   giq_option(6, NAME, 121, to_orfeo, NEUTRAL_REACTION);
+   giq_option(6, NAME, 122, combat, NEUTRAL_REACTION);
+   giq_option(8, NAME, 123, THSupMut5, NEUTRAL_REACTION);
+end
+
+procedure THSupMut5 begin
+   gsay_reply(NAME, 124);
+   giq_option(8, NAME, 125, to_orfeo, NEUTRAL_REACTION);
+   giq_option(8, NAME, 126, combat, NEUTRAL_REACTION);
+end
+
+procedure THSupMut6 begin
+   gsay_message(NAME, 127, NEUTRAL_REACTION);
+   call combat;
+end
+
+procedure THSupMut7 begin
+   gsay_message(NAME, 128, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure combat begin
+   tmp_hostile := 1;
+end
+
+procedure THSupMutend begin
+end
+
+procedure to_orfeo begin
+   load_map("lafollwr.map", 11);
+end

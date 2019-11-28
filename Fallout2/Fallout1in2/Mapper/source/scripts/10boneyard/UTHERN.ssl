@@ -1,0 +1,216 @@
+/*
+
+   Boneyard - Super Mutant invaders, Uthern
+
+*/
+
+/* Include Files */
+#include "..\headers\define.h"
+#include "..\headers\maps\lafollwr.h"
+
+#define NAME                    SCRIPT_UTHERN
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+
+#include "..\headers\command.h"
+#include "..\headers\modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+
+procedure uthern0;
+procedure uthern1;
+procedure uthern2;
+procedure uthern3;
+procedure uthern4;
+procedure uthern5;
+procedure uthern6;
+procedure uthern7;
+procedure uthern8;
+procedure uthern9;
+procedure uthern10;
+procedure uthern11;
+procedure uthern12;
+procedure uthern13;
+procedure uthern14;
+procedure uthernend;
+procedure combat;
+procedure to_orfeo;
+
+#define LVAR_Here_Before      (0)
+#define LVAR_Initial          (1)
+
+import variable Uthern_ptr;
+import variable Orfeo_ptr;
+
+variable tmp_hostile;
+variable initial := 0;
+variable weaponPtr;
+
+procedure start begin
+   if (not(initial)) then begin
+      Uthern_ptr := self_obj;
+      set_self_team(TEAM_NECROPOLIS_MUTANT);
+      set_self_ai(AI_SUPER_MUTANT_SGT);
+      self_rotate(2);
+      if (local_var(LVAR_Initial) == 0) then begin
+         set_local_var(LVAR_Initial, 1);
+         weaponPtr := create_object(PID_GATLING_LASER, 0, 0);
+         add_obj_to_inven(self_obj, weaponPtr);
+         wield_obj_critter(self_obj, weaponPtr);
+         add_obj_to_inven(self_obj, create_object(PID_MICRO_FUSION_CELL, 0, 0));
+      end
+      initial := 1;
+   end
+end
+
+procedure critter_p_proc begin
+   if (global_var(GVAR_ENEMY_FOLL_INVADERS)) then begin
+      tmp_hostile := 1;
+   end
+   if (tmp_hostile and self_can_see_dude) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+   else begin
+      if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 6)) then begin
+         if (local_var(LVAR_Here_Before) == 0) then begin
+            dialogue_system_enter;
+         end
+      end
+   end
+end
+
+procedure destroy_p_proc begin
+   Uthern_ptr := 0;
+   if (source_obj == dude_obj) then begin
+      inc_evil_critter
+      set_global_var(GVAR_ENEMY_FOLL_INVADERS, 1);
+   end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(message_str(NAME, 100));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
+   script_overrides;
+   dude_look_at_self;
+   if (local_var(LVAR_Here_Before)) then begin
+      call uthern14;
+   end
+   else begin
+      set_local_var(LVAR_Here_Before, 1);
+      start_dialog_at_node(uthern0);
+   end
+end
+
+procedure uthern0 begin
+   gsay_reply(NAME, 101);
+   giq_option(-3, NAME, 102, uthern1, NEUTRAL_REACTION);
+   giq_option(4, NAME, 103, uthern2, NEUTRAL_REACTION);
+   giq_option(4, NAME, 104, combat, NEUTRAL_REACTION);
+   giq_option(5, NAME, 105, uthern7, NEUTRAL_REACTION);
+   giq_option(8, NAME, 106, uthern13, NEUTRAL_REACTION);
+end
+
+procedure uthern1 begin
+   gsay_message(NAME, 107, NEUTRAL_REACTION);
+   call combat;
+end
+
+procedure uthern2 begin
+   gsay_reply(NAME, 108);
+   giq_option(4, NAME, 109, uthern3, NEUTRAL_REACTION);
+   giq_option(4, NAME, 110, combat, NEUTRAL_REACTION);
+   giq_option(6, NAME, 111, uthern4, NEUTRAL_REACTION);
+end
+
+procedure uthern3 begin
+   gsay_message(NAME, 112, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure uthern4 begin
+   gsay_reply(NAME, 113);
+   giq_option(6, NAME, 114, uthern5, NEUTRAL_REACTION);
+   giq_option(6, NAME, 115, uthern6, NEUTRAL_REACTION);
+   giq_option(6, NAME, 116, combat, NEUTRAL_REACTION);
+end
+
+procedure uthern5 begin
+   gsay_message(NAME, 117, NEUTRAL_REACTION);
+   call combat;
+end
+
+procedure uthern6 begin
+   gsay_message(NAME, 118, NEUTRAL_REACTION);
+   call combat;
+end
+
+procedure uthern7 begin
+   gsay_reply(NAME, 119);
+   giq_option(5, NAME, 120, uthern8, NEUTRAL_REACTION);
+   giq_option(5, NAME, 121, uthern12, NEUTRAL_REACTION);
+   giq_option(5, NAME, 122, combat, NEUTRAL_REACTION);
+end
+
+procedure uthern8 begin
+   gsay_reply(NAME, 123);
+   giq_option(5, NAME, 124, uthern9, NEUTRAL_REACTION);
+   giq_option(5, NAME, 125, uthern10, NEUTRAL_REACTION);
+   giq_option(5, NAME, 126, uthern11, NEUTRAL_REACTION);
+   giq_option(5, NAME, 127, combat, NEUTRAL_REACTION);
+end
+
+procedure uthern9 begin
+   gsay_message(NAME, 128, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure uthern10 begin
+   gsay_message(NAME, 129, NEUTRAL_REACTION);
+   call combat;
+end
+
+procedure uthern11 begin
+   gsay_message(NAME, 130, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure uthern12 begin
+   gsay_reply(NAME, 131);
+   giq_option(5, NAME, 132, combat, NEUTRAL_REACTION);
+   giq_option(5, NAME, 133, combat, NEUTRAL_REACTION);
+   giq_option(5, NAME, 134, combat, NEUTRAL_REACTION);
+end
+
+procedure uthern13 begin
+   gsay_message(NAME, 135, NEUTRAL_REACTION);
+   call to_orfeo;
+end
+
+procedure uthern14 begin
+   float_msg(self_obj, message_str(NAME, 136), FLOAT_MSG_NORMAL);
+   call to_orfeo;
+end
+
+procedure uthernend begin
+end
+
+procedure combat begin
+   tmp_hostile := 1;
+end
+
+procedure to_orfeo begin
+   load_map("lafollwr.map", 11);
+end
