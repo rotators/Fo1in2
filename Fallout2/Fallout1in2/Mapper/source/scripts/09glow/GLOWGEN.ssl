@@ -20,23 +20,29 @@ procedure description_p_proc;
 procedure use_skill_on_p_proc;
 procedure use_obj_on_p_proc;
 
+procedure repair_generator;
+
 #define EVENT_ANIM      (1)
+
+variable bonus;
 
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
    if glow_power_online then begin
+      reg_anim_clear(self_obj);
       reg_anim_begin();
-      reg_anim_animate_forever(self_obj, 0);
+      reg_anim_animate_forever(self_obj, ANIM_stand);
       reg_anim_end();
    end
 end
 
 procedure map_update_p_proc begin
    if glow_power_online and (combat_is_initialized == 0) then begin
+      reg_anim_clear(self_obj);
       reg_anim_begin();
-      reg_anim_animate_forever(self_obj, 0);
+      reg_anim_animate_forever(self_obj, ANIM_stand);
       reg_anim_end();
    end
    else begin
@@ -52,78 +58,62 @@ end
 
 procedure description_p_proc begin
    script_overrides;
-   if glow_quest_power_restored then begin
+   if glow_quest_power_restored then
       display_msg(mstr(101));
-   end
-   else begin
+   else
       display_msg(mstr(102));
-   end
 end
 
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_REPAIR) then begin
       script_overrides;
-
-      if (has_skill(dude_obj, SKILL_REPAIR) > 35) then begin
-         set_local_var(0, 0);
-      end
-
-      if glow_quest_power_restored then begin
-         display_msg(mstr(103));
-      end
-      else if (local_var(0) == 0) then begin
-         if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, -10))) then begin
-            display_msg(mstr(104));
-
-            set_glow_quest_power_restored;
-            give_exp_points(EXP_REPAIR_GENERATOR);
-            display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_REPAIR_GENERATOR + message_str(SCRIPT_GENCHAT, 104));
-         end
-         else begin
-            if (has_skill(dude_obj, SKILL_REPAIR) < 35) then begin
-               set_local_var(0, 1);
-            end
-            display_msg(mstr(105));
-            game_time_advance(game_ticks(1200));
-         end
-      end
-      else if (local_var(0) == 1) then begin
-         display_msg(mstr(106));
-      end
-
+      bonus := -10;
+      call repair_generator;
    end
 end
 
 procedure use_obj_on_p_proc begin
-   if (obj_pid(obj_being_used_with) == PID_MULTI_TOOL) then begin
-      script_overrides;
+variable item := obj_pid(obj_being_used_with);
 
-      if (has_skill(dude_obj, SKILL_REPAIR) > 35) then begin
-         set_local_var(0, 0);
+   script_overrides;
+   if (source_obj == dude_obj) then begin
+		reg_anim_clear(dude_obj);
+		reg_anim_begin();
+		reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1);
+		reg_anim_end();
+	end
+
+   if (item == PID_MULTI_TOOL or item == PID_SUPER_TOOL_KIT) then begin
+      bonus := 10;
+      call repair_generator;
+   end
+end
+
+procedure repair_generator begin
+   if (has_skill(dude_obj, SKILL_REPAIR) > 35) then begin
+      set_local_var(0, 0);
+   end
+
+   if glow_quest_power_restored then begin
+      display_msg(mstr(103));
+   end
+   else if (local_var(0) == 0) then begin
+      if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, bonus))) then begin
+         display_msg(mstr(104));
+
+         set_glow_quest_power_restored;
+         display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_REPAIR_GENERATOR + message_str(SCRIPT_GENCHAT, 104));
+         give_exp_points(EXP_REPAIR_GENERATOR);
       end
-
-      if glow_quest_power_restored then begin
-         display_msg(mstr(103));
-      end
-      else if (local_var(0) == 0) then begin
-         if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 10))) then begin
-            display_msg(mstr(104));
-
-            set_glow_quest_power_restored;
-            display_msg(message_str(SCRIPT_GENCHAT, 103) + EXP_REPAIR_GENERATOR + message_str(SCRIPT_GENCHAT, 104));
-            give_exp_points(EXP_REPAIR_GENERATOR);
+      else begin
+         if (has_skill(dude_obj, SKILL_REPAIR) < 35) then begin
+            set_local_var(0, 1);
          end
-         else begin
-            if (has_skill(dude_obj, SKILL_REPAIR) < 35) then begin
-               set_local_var(0, 1);
-            end
-            display_msg(mstr(105));
-            game_time_advance(game_ticks(1200));
-         end
+         display_msg(mstr(105));
+         game_time_advance(game_ticks(1200));
       end
-      else if (local_var(0) == 1) then begin
-         display_msg(mstr(106));
-      end
-
+   end
+   else if (local_var(0) == 1) then begin
+      display_msg(mstr(106));
    end
 end
