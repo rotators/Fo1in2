@@ -370,6 +370,8 @@ end
                                         end                             \
                                     end
 
+#define self_is_child 				(self_pid == PID_GIRL or self_pid == PID_BOY)
+
 // both blocks below should be moved to command.h at some point
 #define is_visible(cr)              has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
 #define self_visible                is_visible(self_obj)
