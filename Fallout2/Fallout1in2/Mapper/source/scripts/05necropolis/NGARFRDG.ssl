@@ -58,42 +58,35 @@ begin
    end
 end
 
-procedure Initialize_Fridge
-begin
+procedure Initialize_Fridge begin
    Fridge_ptr := self_obj;
 end
 
-procedure Looting_Fridge
-begin
+procedure Looting_Fridge begin
    if (source_obj != Garret_ptr) then begin
       if (local_var(0) == 0) then begin
          script_overrides;
       end
-      else begin
-         if (local_var(1) == 0) then begin
-            script_overrides;
-         end
+      else if (local_var(1) == 0) then begin
+         script_overrides;
       end
    end
 end
 
-procedure Open_Fridge
-begin
+procedure Open_Fridge begin
    last_user := source_obj;
    if (source_obj == Garret_ptr) then begin
       if (local_var(1) == 0) then begin
          set_local_var(0, 1);
          set_local_var(1, 1);
       end
+      else if (last_user == Garret_ptr) then begin
+         set_local_var(1, 0);
+         set_local_var(0, 0);
+      end
       else begin
-         if (last_user == Garret_ptr) then begin
-            set_local_var(1, 0);
-            set_local_var(0, 0);
-         end
-         else begin
-            script_overrides;
-            float_msg(Garret_ptr, mstr(104), FLOAT_MSG_NORMAL);
-         end
+         script_overrides;
+         float_msg(Garret_ptr, mstr(104), FLOAT_MSG_NORMAL);
       end
    end
    else begin
@@ -101,37 +94,30 @@ begin
          script_overrides;
          display_msg(mstr(100));
       end
+      else if (local_var(1)) then begin
+         set_local_var(1, 0);
+      end
       else begin
-         if (local_var(1)) then begin
-            set_local_var(1, 0);
-         end
-         else begin
-            set_local_var(1, 1);
-         end
+         set_local_var(1, 1);
       end
    end
 end
 
-procedure pick_lock
-begin
+procedure pick_lock begin
    script_overrides;
    if (local_var(0)) then begin
       display_msg(mstr(101));
    end
+   else if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0))) then begin
+      display_msg(mstr(102));
+      set_local_var(0, 1);
+      give_xp_msg(EXP_LOCKPICK_NORMAL, g_mstr(11));
+   end
    else begin
-      if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0))) then begin
-         display_msg(mstr(102));
-         set_local_var(0, 1);
-         display_msg(message_str(SCRIPT_GENCHAT, 103) + "25" + message_str(SCRIPT_GENCHAT, 104));
-         give_exp_points(25);
-      end
-      else begin
-         display_msg(mstr(103));
-      end
+      display_msg(mstr(103));
    end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
    Fridge_ptr := self_obj;
 end

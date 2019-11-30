@@ -372,6 +372,7 @@ variable step_tile;
 #define dude_excrement_expediter          dude_perk(PERK_expert_excrement_expediter_perk)
 #define dude_quick_pockets                dude_perk(PERK_quick_pockets)
 #define dude_animal_friend                dude_perk(PERK_animal_friend)
+#define dude_swift_learner                dude_perk(PERK_swift_learner)
 
 #define self_mental_block                 self_perk(PERK_mental_block)
 #define self_presence                     self_perk(PERK_presence)
@@ -720,7 +721,8 @@ FLOAT_MSG_BLUE
 
 #define mstr(x)                     message_str(NAME,x)
 #define display_mstr(x)             display_msg(mstr(x))
-#define g_mstr(x)                   message_str(SCRIPT_GENERIC,x)
+#define gen_mstr(x)                 message_str(SCRIPT_GENCHAT,x) // Fallout 1
+#define g_mstr(x)                   message_str(SCRIPT_GENERIC,x) // Fallout 2
 #define g_grunt                     g_mstr(random(300,303))
 #define g_bye                       g_mstr(random(375,376))
 

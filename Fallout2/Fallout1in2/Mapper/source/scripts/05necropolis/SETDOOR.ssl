@@ -27,40 +27,31 @@ variable Set_Off_Trap;
 procedure start begin
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (is_success(do_check(dude_obj, STAT_pe, 0))) then begin
+   if (is_success(do_check(dude_obj, STAT_pe, 0))) then
       display_msg(mstr(101));
-   end
-   else begin
+   else
       display_msg(mstr(100));
-   end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    script_overrides;
    if ((local_var(1) == 0) and (local_var(0) == 0)) then begin
       call Locked_And_Trapped;
    end
+   else if (local_var(0) == 0) then begin
+      call Door_Trapped;
+   end
+   else if (local_var(1) == 0) then begin
+      call Door_Locked;
+   end
    else begin
-      if (local_var(0) == 0) then begin
-         call Door_Trapped;
-      end
-      else begin
-         if (local_var(1) == 0) then begin
-            call Door_Locked;
-         end
-         else begin
-            display_msg(mstr(102));
-         end
-      end
+      display_msg(mstr(102));
    end
 end
 
-procedure use_p_proc
-begin
+procedure use_p_proc begin
    variable LVar0 := 0;
    LVar0 := roll_vs_skill(source_obj, SKILL_TRAPS, 0);
    if ((local_var(1) == 0) and (local_var(0) == 0)) then begin
@@ -118,10 +109,9 @@ begin
    end
 end
 
-procedure use_skill_on_p_proc
-begin
+procedure use_skill_on_p_proc begin
    variable LVar0 := 0;
-   if ((action_being_used == SKILL_TRAPS) and (local_var(0) == 0)) then begin//-- TRAPS
+   if ((action_being_used == SKILL_TRAPS) and (local_var(0) == 0)) then begin
       script_overrides;
       LVar0 := roll_vs_skill(source_obj, action_being_used, 0);
       if (is_success(LVar0)) then begin
@@ -129,8 +119,7 @@ begin
          if source_obj == dude_obj then begin
             display_msg(mstr(106));
             set_local_var(0, 1);
-            display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
-            give_exp_points(50);
+            give_xp_msg(EXP_TRAPS_NEG_30, g_mstr(11));
          end
          else begin
             display_msg(proto_data(obj_pid(source_obj), 1) + mstr(105));
@@ -155,8 +144,7 @@ begin
             set_local_var(1, 1);
             display_msg(mstr(111));
             obj_unlock(self_obj);
-            display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
-            give_exp_points(50);
+            give_xp_msg(EXP_LOCKPICK_NEG_30, g_mstr(11));
          end
          else begin
             if (is_critical(LVar0)) then begin
@@ -233,8 +221,7 @@ begin
                if (is_success(LVar2)) then begin
                   set_local_var(1, 1);
                   display_msg(mstr(111));
-                  display_msg(message_str(SCRIPT_GENCHAT, 103) + "50" + message_str(SCRIPT_GENCHAT, 104));
-                  give_exp_points(50);
+                  give_xp_msg(EXP_LOCKPICK_NEG_30, g_mstr(11));
                   obj_unlock(self_obj);
                end
                else begin
