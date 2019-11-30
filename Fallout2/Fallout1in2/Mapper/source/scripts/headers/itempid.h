@@ -491,7 +491,6 @@
 #define PID_EVACUATION_HOLODISK             (463)
 #define PID_EXPERIMENT_HOLODISK             (464)
 #define PID_MEDICAL_HOLODISK                (465)
-#define PID_PASSWORD_HOLODISK               (466)
 #define PID_SMITTY_MEAL                     (468)
 #define PID_ROT_GUT                         (469)
 #define PID_BALL_GAG                        (470)
@@ -573,6 +572,7 @@
 #define PID_VAULT_RECORDS_HOLODISK          (230)
 #define PID_MBASE_SEC_CODE                  (231)
 #define PID_REGULATOR_HOLODISK              (238)
+#define PID_PASSWORD_HOLODISK               (466) // Mariposa entrance door
 
 /******************************************************************
 ***************       Active Items                  ***************
