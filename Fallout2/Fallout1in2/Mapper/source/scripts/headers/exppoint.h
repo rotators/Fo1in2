@@ -149,11 +149,11 @@
 // Vault 13
 #define EXP_RETURN_WATERCHIP                    (7500)
 #define EXP_DESTROYED_DOOR_TERMINAL             (50)
-#define EXP_OUTSIDE_KNOWLEDGE 					(350)
-#define EXP_DISBAND_REBELS 						(250)
-#define EXP_CALMING_REBELS 						(750)
-#define EXP_KILLED_WATERTHIEF   				(500)
-#define EXP_CAPTURED_WATERTHIEF   				(1000)
+#define EXP_OUTSIDE_KNOWLEDGE                   (350)
+#define EXP_DISBAND_REBELS                      (250)
+#define EXP_CALMING_REBELS                      (750)
+#define EXP_KILLED_WATERTHIEF                   (500)
+#define EXP_CAPTURED_WATERTHIEF                 (1000)
 
 // Vault 15
 #define EXP_RATS_TUNNEL_DESTROYED               (100)
@@ -161,8 +161,8 @@
 
 // Shady Sands
 #define EXP_HIRED_IAN                           (100)
-#define EXP_GUIDE_BONUS 						(250)
-#define EXP_MAKE_ANTIDOTE 						(250)
+#define EXP_GUIDE_BONUS                         (250)
+#define EXP_MAKE_ANTIDOTE                       (250)
 #define EXP_TANDI_RETURNED                      (400)
 #define EXP_EXPLAINED_CROP_ROTATION             (500)
 #define EXP_KILLED_SS_RADSCORPION               (500)
@@ -180,15 +180,15 @@
 #define EXP_HIRED_TYCHO                         (300)
 #define EXP_SAUL_TRISH_RELATIONSHIP             (250)
 #define EXP_BUSTING_OUT_OF_JAIL                 (250)
-#define EXP_GIZMO_CONFESSION 					(500)
-#define EXP_CRACKED_KILLIAN_SAFE 	    		(500)
-#define EXP_ELIMINATE_SKULZ    	        		(500)
-#define EXP_ELIMINATE_SKULZ_RISKY        		(300)
-#define EXP_DEFEAT_SKULZ_BARFIGHT        		(300)
-#define EXP_STEAL_URN 							(400)
-#define EXP_KILLED_GIZMO 						(600)
-#define EXP_KILLED_NEAL 						(300)
-#define EXP_KILLED_KILLIAN						(600)
+#define EXP_GIZMO_CONFESSION                    (500)
+#define EXP_CRACKED_KILLIAN_SAFE                (500)
+#define EXP_ELIMINATE_SKULZ                     (500)
+#define EXP_ELIMINATE_SKULZ_RISKY               (300)
+#define EXP_DEFEAT_SKULZ_BARFIGHT               (300)
+#define EXP_STEAL_URN                           (400)
+#define EXP_KILLED_GIZMO                        (600)
+#define EXP_KILLED_NEAL                         (300)
+#define EXP_KILLED_KILLIAN                      (600)
 
 // Hub
 #define EXP_BOUGHT_WATER_CARAVAN                (1000)
@@ -196,18 +196,18 @@
 #define EXP_BLACKMAILING_BOB                    (500)
 #define EXP_NECKLACE_STOLEN                     (500)
 #define EXP_IRWINE_FARM_CLEARED                 (500)
-#define EXP_REPORTED_BOB 						(500)
-#define EXP_DECKER_KILLED 						(1400)
-#define EXP_KILLED_JAIN 						(350)
-#define EXP_JOB_KILLED_HIGHTOWER 				(600)
-#define EXP_JOB_KILLED_JAIN 					(700)
-#define EXP_MISSING_CARAVAN_MUTANT_ARMY    		(1000)
+#define EXP_REPORTED_BOB                        (500)
+#define EXP_DECKER_KILLED                       (1400)
+#define EXP_KILLED_JAIN                         (350)
+#define EXP_JOB_KILLED_HIGHTOWER                (600)
+#define EXP_JOB_KILLED_JAIN                     (700)
+#define EXP_MISSING_CARAVAN_MUTANT_ARMY         (1000)
 
 // Boneyard
 #define EXP_QUEST_KILLED_DCLAWS                 (1000)
 #define EXP_UPGRADE_MOTORCYCLE                  (500)
 #define EXP_HIRED_KATJA                         (200)
-#define EXP_LEARN_BRAWLING 						(250)
+#define EXP_LEARN_BRAWLING                      (250)
 
 // Necropolis
 #define EXP_WATER_CHIP_TAKEN                    (2500)
@@ -216,9 +216,9 @@
 #define EXP_GIVEN_ENERGY_CELLS                  (1000)
 #define EXP_STOLEN_CONTROLLER                   (250)
 #define EXP_BOUGHT_BIKE                         (500)
-#define EXP_PLAY_FALLOUT 						(100)
-#define EXP_PLAY_FALLOUT_SMALL					(25)
-#define EXP_SET_SECRET_DOOR 					(100)
+#define EXP_PLAY_FALLOUT                        (100)
+#define EXP_PLAY_FALLOUT_SMALL                  (25)
+#define EXP_SET_SECRET_DOOR                     (100)
 
 // Glow
 #define EXP_DISABLED_TRAPS                      (0)
@@ -227,10 +227,10 @@
 
 // Brotherhood of Steel
 #define EXP_REPAIR_PA                           (500)
-#define EXP_WATCHING_TRAINING 					(500)
+#define EXP_WATCHING_TRAINING                   (500)
 #define EXP_BECOME_INITITAT                     (2000)
-#define EXP_MBASE_SCOUTED       				(1500)
-#define EXP_MBASE_PALADIN_SUPPORT 				(1500)
+#define EXP_MBASE_SCOUTED                       (1500)
+#define EXP_MBASE_PALADIN_SUPPORT               (1500)
 
 // Mariposa
 #define EXP_BONUS_HACKING                       (800)
