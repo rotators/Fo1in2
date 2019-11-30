@@ -1,3 +1,9 @@
+/*
+
+   Generic Nuka Cola vending machine.
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 
@@ -5,7 +11,10 @@ procedure start;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
 
+procedure Coke00;
 procedure Coke01;
+
+#define LVAR_OnlyOnce   (0)
 
 variable caps;
 
@@ -14,31 +23,30 @@ end
 
 procedure use_p_proc begin
    script_overrides;
-   call Coke01;
-end
-
-procedure Coke01 begin
-   set_local_var(0, 1);
-   caps := (random(1, 2) + random(1, 2) + random(1, 2)) + (dude_luck - 3);
-// LCK1 = 1 to 4
-// LCK5 = 5 to 8
-// LCK10 = 10 to 13
-   dude_caps_adjust(caps);
-   display_msg(message_str(SCRIPT_COKE, 101));
+   call Coke00;
 end
 
 procedure use_skill_on_p_proc begin
-   if not(local_var(0)) then begin
-      script_overrides;
-      if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
-         if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) then begin
-            call Coke01;
-         end
-      end
-      else if (action_being_used == SKILL_SCIENCE) then begin
-         if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
-            call Coke01;
-         end
+   script_overrides;
+   if (local_var(LVAR_OnlyOnce) == 0) then begin
+      if (action_being_used == SKILL_REPAIR) or (action_being_used == SKILL_SCIENCE) then begin
+         if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) or (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then call Coke01;
       end
    end
+   else
+      call Coke00;
 end
+
+procedure Coke00 begin
+    display_msg(message_str(SCRIPT_COKE, 100));
+end
+
+procedure Coke01 begin
+   set_local_var(LVAR_OnlyOnce, 1);
+   if (is_success(do_check(dude_obj, STAT_lu, 0))) then begin
+      display_msg(message_str(SCRIPT_COKE, 101));
+      caps := random(1, 18);
+      dude_caps_adjust(caps);
+   end
+end
+

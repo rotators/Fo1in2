@@ -6,7 +6,7 @@
 
 #include "..\headers\define.h"
 #include "..\headers\mbase.h"
-//#include "..\headers\maps\mbstrg12.h"
+#include "..\headers\maps\mbstrg12.h"
 
 #define NAME                    SCRIPT_FIELDGEN
 
@@ -20,55 +20,48 @@ procedure turn_field_off;
 
 import variable field_change;
 
-
 procedure start begin
 end
 
-procedure use_obj_on_p_proc
-begin
-   if (obj_pid(obj_being_used_with) == PID_MULTI_TOOL) then begin
+procedure use_obj_on_p_proc begin
+variable Item := obj_pid(obj_being_used_with);
+
+   if (Item == PID_MULTI_TOOL or Item == PID_SUPER_TOOL_KIT) then begin
       script_overrides;
-      if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) then begin
+
+      reg_anim_clear(dude_obj);
+      reg_anim_begin();
+      reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1);
+      reg_anim_end();
+
+      if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) then
          call turn_field_off;
-      end
-      else begin
+      else
          display_msg(mstr(100));
-      end
    end
 end
 
-procedure use_skill_on_p_proc
-begin
-   if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_REPAIR) then begin
       script_overrides;
-      if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, -20))) then begin
+      if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, -20))) then
          call turn_field_off;
-      end
-      else begin
+      else
          display_msg(mstr(100));
-      end
    end
 end
 
-procedure turn_field_off
-begin
+procedure turn_field_off begin
    field_change := "off";
    display_msg(mstr(101));
-   if (CUR_MAP_MBSTRG12) then begin //  MILITARY BASE - STRONGHOLD (LEVELS 1 AND 2)
+   if (CUR_MAP_MBSTRG12) then begin
       if (self_elevation == 0) then begin
-         if (self_tile == 15581) then begin
-            use_obj(map_var(4));
-         end
-         else begin
-            if (self_tile == 19124) then begin
-               use_obj(map_var(5));
-            end
-            else begin
-               if (self_tile == 25098) then begin
-                  use_obj(map_var(6));
-               end
-            end
-         end
+         if (self_tile == 15581) then
+            use_obj(map_var(MVAR_FieldB1_ptr));
+         else if (self_tile == 19124) then
+            use_obj(map_var(MVAR_FieldB2_ptr));
+         else if (self_tile == 25098) then
+            use_obj(map_var(MVAR_FieldB3_ptr));
       end
    end
 end
