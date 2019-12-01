@@ -28,7 +28,7 @@ procedure map_update_p_proc;
 #define DISABLED     (0)
 #define ENABLED      (1)
 
-#define FEILD_DOWN_TIME         (20) // in seconds
+#define FEILD_DOWN_TIME       (2)
 
 #define LVAR_Timed_Event      (1)
 
@@ -61,8 +61,12 @@ procedure map_update_p_proc begin
       end
    end
    else if get_force_fields_on then begin
-      set_map_var(FField_MVAR, ENABLED);
-      if not(is_loading_game) then set_self_visible;
+
+      if (map_var(FField_MVAR) == DISABLED) and (local_var(LVAR_Timed_Event) == 0) then begin
+         set_local_var(LVAR_Timed_Event, 1);
+         flush_add_timer_event(self_obj, game_ticks(FEILD_DOWN_TIME), 1);
+      end
+
    end
    else if (global_var(GVAR_VATS_ALERT) == 1) then begin
       if not(is_loading_game) then set_self_visible;
