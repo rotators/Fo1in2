@@ -746,7 +746,7 @@ FLOAT_MSG_BLUE
 #define GLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,GOOD_REACTION)
 #define NLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,NEUTRAL_REACTION)
 #define BLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,BAD_REACTION)
-#define RLowOption(x,y              giQ_Option(LOW_IQ,NAME,x,y,RND_REACTION)
+#define RLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,RND_REACTION)
 
 #define display_mstr_rand(x,y)      display_msg(mstr(random(x,y)))
 
