@@ -1,11 +1,11 @@
 Inventory AP Costs
 ------------------
 
-    Features:
-      - Reduces inventory opening cost to 0 action points.
-      - Doing anything in the inventory costs 2 action points.
-      - Limits the Quick Pockets perk to 1 rank.
-      - Works with any other Fallout 2 mod.
+Features:
+- Reduces inventory opening cost to 0 action points.
+- Doing anything in the inventory costs 2 action points.
+- Limits the Quick Pockets perk to 1 rank.
+- Works with any other Fallout 2 mod.
 
 To use this mod, open the ddraw.ini and add "PatchFile1=mods\InventoryAPcosts" under the "PatchFile0"-line!
 The game will now load the additional mod folder.
