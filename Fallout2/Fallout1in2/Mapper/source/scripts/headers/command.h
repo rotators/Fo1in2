@@ -733,6 +733,7 @@ FLOAT_MSG_BLUE
 #define GMessage(x)                 gSay_Message(NAME,x,GOOD_REACTION)
 #define NMessage(x)                 gSay_Message(NAME,x,NEUTRAL_REACTION)
 #define BMessage(x)                 gSay_Message(NAME,x,BAD_REACTION)
+#define RMessage(x)                 gSay_Message(NAME,x,RND_REACTION)
 
 // this converts a number from 0-100 to the text representing the number, ie: 1 -> "one", 40 -> "forty-one"
 #define num_to_num_text(x)          g_mstr(2000+x)
@@ -741,9 +742,11 @@ FLOAT_MSG_BLUE
 #define GOption(x,y,z)              giQ_Option(z,NAME,x,y,GOOD_REACTION)
 #define NOption(x,y,z)              giQ_Option(z,NAME,x,y,NEUTRAL_REACTION)
 #define BOption(x,y,z)              giQ_Option(z,NAME,x,y,BAD_REACTION)
+#define ROption(x,y,z)              giQ_Option(z,NAME,x,y,RND_REACTION)
 #define GLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,GOOD_REACTION)
 #define NLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,NEUTRAL_REACTION)
 #define BLowOption(x,y)             giQ_Option(LOW_IQ,NAME,x,y,BAD_REACTION)
+#define RLowOption(x,y              giQ_Option(LOW_IQ,NAME,x,y,RND_REACTION)
 
 #define display_mstr_rand(x,y)      display_msg(mstr(random(x,y)))
 

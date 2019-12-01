@@ -180,6 +180,7 @@
 #define GOOD_REACTION    (49)
 #define NEUTRAL_REACTION (50)
 #define BAD_REACTION     (51)
+#define RND_REACTION     (GOOD_REACTION + random(0,2))
 
 // Fallout 2 reaction defines are inverted:
 //#define BAD_REACTION     (49)
