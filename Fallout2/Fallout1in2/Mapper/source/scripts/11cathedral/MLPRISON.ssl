@@ -1,6 +1,7 @@
 /*
 
-   Hub - prisoner
+   Cathedral - Generic prisoner
+   (Black / redshirt)
 
 */
 
@@ -9,7 +10,7 @@
 //#include "..\headers\necropolis.h"
 
 #define NAME                    SCRIPT_MLPRISON
-#define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
+//#define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
 
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
@@ -43,8 +44,6 @@ variable Only_Once := 1;
 variable target_hex;
 variable said;
 
-// USED - black man
-
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
@@ -53,13 +52,11 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (self_tile < 25000) then begin
       call explode;
    end
@@ -67,138 +64,119 @@ begin
       if ((map_var(2) == 1) or (map_var(7) == 1)) then begin
          call escape;
       end
-      else begin
-         if (tmp_hostile == 1) then begin
-            attack(dude_obj);
-         end
+      else if (tmp_hostile == 1) then begin
+         attack(dude_obj);
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
+   set_tma_data(tma_source_generic, TMA_MSG_MBASE, -1, -1, 997, 999);
+
    dude_look_at_self;
    get_reaction
-   start_gdialog(682, self_obj, 4, -1, -1);
-   gsay_start;
+
    if dude_wearing_coc_robe then begin
       if (local_var(5) == 1) then begin
-         call goto05;
+         start_dialog_at_node(goto05);
       end
       else begin
-         call goto01;
+         start_dialog_at_node(goto01);
       end
       set_local_var(5, 1);
    end
    else begin
       if (local_var(4) == 1) then begin
-         call goto09;
+         start_dialog_at_node(goto09);
       end
       else begin
-         call goto07;
+         start_dialog_at_node(goto07);
       end
       set_local_var(4, 1);
    end
-   gsay_end;
-   end_dialogue;
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
 end
 
-procedure goto01
-begin
+procedure goto01 begin
    Reply(108);
    BLowOption(109, goto02);
    BOption(110, goto03, 4);
    BOption(111, goto04, 4);
 end
 
-procedure goto02
-begin
+procedure goto02 begin
    BMessage(112);
    call dialog_end;
 end
 
-procedure goto03
-begin
+procedure goto03 begin
    BMessage(113);
    call dialog_end;
 end
 
-procedure goto04
-begin
+procedure goto04 begin
    BMessage(128);
    call dialog_end;
 end
 
-procedure goto05
-begin
+procedure goto05 begin
    Reply(114);
    BLowOption(115, goto02);
    BOption(116, goto06, 4);
    BOption(117, dialog_end, 4);
 end
 
-procedure goto06
-begin
+procedure goto06 begin
    BMessage(118);
    call dialog_end;
 end
 
-procedure goto07
-begin
+procedure goto07 begin
    Reply(119);
    BLowOption(115, goto02);
    BOption(120, goto08, 4);
 end
 
-procedure goto08
-begin
+procedure goto08 begin
    BMessage(122);
    call dialog_end;
 end
 
-procedure goto09
-begin
+procedure goto09 begin
    Reply(123);
    BLowOption(115, goto02);
    BOption(124, goto11, 4);
    BOption(125, dialog_end, 4);
 end
 
-procedure goto10
-begin
+procedure goto10 begin
    BMessage(126);
    call dialog_end;
 end
 
-procedure goto11
-begin
+procedure goto11 begin
    BMessage(127);
    call dialog_end;
 end
 
-procedure explode
-begin
+procedure explode begin
    critter_dmg(self_obj, random(128, 150), DMG_explosion);
 end
 
-procedure escape
-begin
+procedure escape begin
    if (said == 0) then begin
       said := 1;
       float_msg(self_obj, mstr(107), FLOAT_MSG_RED);
@@ -207,6 +185,5 @@ begin
    self_run_to_tile(target_hex);
 end
 
-procedure dialog_end
-begin
+procedure dialog_end begin
 end
