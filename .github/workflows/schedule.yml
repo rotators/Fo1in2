@@ -5,6 +5,9 @@ on:
  - cron: 0 4 * * *
  repository_dispatch:
   types: [schedule, schedule-push]
+ push:
+  paths:
+  - '.github/workflows/schedule.yml'
 
 jobs:
 
@@ -60,7 +63,6 @@ jobs:
 
            if [ $alive -eq 1 ]; then
               echo ::set-env name=GHA_REPO_ALIVE::true
-              echo ::set-env name=GHA_REPO_ACTIVITY::$days
            fi
     shell: bash
 
@@ -105,16 +107,14 @@ jobs:
 
            echo "sfall-develop..."
            if [ "$OLD_SFALL" != "$NEW_SFALL" ]; then
-              echo "::group::sfall-develop $OLD_SFALL -> $NEW_SFALL"
+              echo "sfall-develop... $OLD_SFALL -> $NEW_SFALL"
               echo ::set-env name=GHA_TASK_SFALL_BINARY::true
-              echo ::endgroup::
            fi
 
            echo "ModdersPack..."
            if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
-              echo "::group::ModdersPack $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
+              echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
               echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
-              echo ::endgroup::
            fi
 
            # simplifies checking/displaying which event triggered workflow (especially dispatches)
@@ -123,6 +123,7 @@ jobs:
               event="${event}:${{ github.event.action }}"
            fi
            echo ::set-env name=GHA_EVENT::$event
+           echo "GitHub event... $event"
     shell: bash
 
   - name: Cache (DirectX)
@@ -131,7 +132,7 @@ jobs:
     uses: actions/cache@v1
     with:
      path: ~/cache-dx
-     key:  cache-dx-test2
+     key:  cache-dx
 
   - name:  Cache create (DirectX)
     if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
