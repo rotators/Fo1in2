@@ -725,6 +725,8 @@ FLOAT_MSG_BLUE
 #define g_mstr(x)                   message_str(SCRIPT_GENERIC,x) // Fallout 2
 #define g_grunt                     g_mstr(random(300,303))
 #define g_bye                       g_mstr(random(375,376))
+#define g_more 						message_str(SCRIPT_MODREACT,106)
+#define g_done 						message_str(SCRIPT_MODREACT,108)
 
 #define LOW_IQ                      (-3)
 
