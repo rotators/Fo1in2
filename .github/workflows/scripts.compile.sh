@@ -9,6 +9,7 @@ option_bytecode=0
 option_bytecode_dir="Fallout2/Fallout1in2/mods/fo1_base/scripts"
 option_compiler="Tools/SFallScriptEditor/resources/compile.exe"
 option_dry=0
+option_include_dir=
 option_optimization=2
 option_scripts_dir="Fallout2/Fallout1in2/Mapper/source/scripts"
 
@@ -22,6 +23,10 @@ for option in "$@"; do
     # path to .int files directory
     [[ "$option" =~ ^--bytecode-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_bytecode_dir=${BASH_REMATCH[1]}
 
+    # --bytecode-dir=?
+    # path to .int files directory set to .ssl files directory
+    [[ "$option" == "--bytecode-dir=?" ]] && option_bytecode_dir="?"
+
     # --compiler=some/filename.exe
     # path to compiler executable
     [[ "$option" =~ ^--compiler=([A-Za-z0-9_\.\/]+)$ ]] && option_compiler=${BASH_REMATCH[1]}
@@ -29,6 +34,10 @@ for option in "$@"; do
     # --dry
     # enable logging arguments passed to compiler without running it
     [[ "$option" == "--dry" ]] && option_dry=1
+
+    # --include-dir=some/directory
+    # additional include directory used by compiler (-I switch)
+    [[ "$option" =~ ^--include-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_include_dir=-I$(pwd)/${BASH_REMATCH[1]}
 
     # --optimization=0 (none)
     # --optimization=1 (standard)
@@ -45,7 +54,12 @@ done
 readonly windows_pwd="$(pwd | sed -re 's!^/([A-Za-z])/!\U\1:/!g')/"
 readonly compile_exe="$(pwd)/$option_compiler"
 readonly scripts_dir="$(pwd)/$option_scripts_dir"
-readonly bytecode_dir="$(pwd)/$option_bytecode_dir"
+
+if [ "$option_bytecode_dir" != "?" ]; then
+   readonly bytecode_dir="$(pwd)/$option_bytecode_dir"
+else
+   readonly bytecode_dir="."
+fi
 
 # output grouping, for GitHub Actions
 # regular echo when running on local
@@ -96,6 +110,8 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     ssl_show=${ssl_show#/}
     # script.ssl
     ssl_file=$(basename "$ssl_full")
+    # (random).int
+    int_temp=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1).int
     # script.int
     int_file=$(echo "$ssl_file" | sed -e 's!\.[Ss][Ss][Ll]$!\.int!')
     # script.ssl.log
@@ -106,16 +122,23 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     # ssl compiler is too dumb to understand paths and always checks current directory
     cd "$ssl_dir"
 
-    if [ $option_dry -eq 0 ]; then
-       $compile_exe -q -l -p -s -O${option_optimization} "$ssl_file" -o "$int_file" > "$log_file"
-    else
-       echo "[$(dirname $ssl_show)] $compile_exe -q -l -p -s -O${option_optimization} $ssl_file -o $int_file > $log_file"
+    dry_run=
+    if [ $option_dry -eq 1 ]; then
+       dry_run="echo"
+    fi
+
+    $dry_run $compile_exe -q -l -p -s ${option_include_dir} -O${option_optimization} "$ssl_file" -o "$int_temp" > "$log_file"
+
+    if [ $option_dry -eq 1 ]; then
+       cat "$log_file"
+       rm -f "$log_file"
        continue
     fi
 
     # remove unwanted lines from log
     sed -i '/^$/d' $log_file
     sed -i '/^Compiling /d' $log_file
+    sed -i '/^Set include directory: /d' $log_file
     sed -i '/THERE WERE ERRORS/d' $log_file
 
     # convert absolute paths to relative
@@ -123,14 +146,15 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
 
     # pass #1
     # guess result -- does bytecode exists?
-    if [ ! -f "$int_file" ]; then
+
+    if [ ! -f "$int_temp" ]; then
        ssl_result=ERROR
        num_errors=$((num_errors+1))
     else
        if [ $option_bytecode -eq 1 ]; then
-          mv $int_file $bytecode_dir/$int_file
+          mv $int_temp $bytecode_dir/$int_file
        else
-         rm $int_file
+         rm $int_temp
        fi
        ssl_result=WARNING
     fi

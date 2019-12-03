@@ -8,6 +8,7 @@ on:
   - 'Fallout2/Fallout1in2/Mapper/source/scripts/**/*.[Ss][Ss][Ll]'
   - 'Fallout2/Fallout1in2/Mapper/source/scripts/**/*.[Hh]'
   - 'Fallout2/Fallout1in2/Mapper/source/scripts.misc/**/*.[Ss][Ss][Ll]'
+  - 'Fallout2/Fallout1in2/mods/**/*.[Ss][Ss][Ll]'
   - 'Tools/SFallScriptEditor/resources/compile.exe'
   - 'Tools/ReDefine/ReDefine.exe'
   - 'Tools/ReDefine/ReDefine.cfg'
@@ -26,8 +27,15 @@ jobs:
 #   with:
 #    fetch-depth: 0
 
-  - name:  Compile
+  - name:  Compile (base mod)
     run:   .github/workflows/scripts.compile.sh
+    shell: bash
+
+  - name:  Compile (mini mods)
+    run:   :
+           |
+           headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+           .github/workflows/scripts.compile.sh --scripts-dir=Fallout2/Fallout1in2/mods/ --include-dir=$headers/
     shell: bash
 
   - name:  Compile (misc)

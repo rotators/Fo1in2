@@ -233,7 +233,14 @@ jobs:
     run:   |
            :
            ok=1
+
            .github/workflows/scripts.compile.sh --bytecode --optimization=1 || ok=0
+
+           if [ $ok -eq 1 ]; then
+               headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+              .github/workflows/scripts.compile.sh --scripts-dir=$MOD_DIR/mods/ --include-dir=$headers/ --bytecode --bytecode-dir=? --optimization=1 || ok=0
+           fi
+
            if [ $ok -eq 1 ]; then
               if [ "$GHA_REDEFINE" == "true" ]; then
                  echo "- ReDefine run" >> $HOME/gha.commit
@@ -247,7 +254,7 @@ jobs:
                  git checkout -- $MOD_DIR/Mapper/source/scripts/
               fi
               echo "[WARNING] Excluded: Scripts recompilation"
-              git checkout -- $MOD_DIR/mods/fo1_base/scripts/
+              git checkout -- $MOD_DIR/mods/
            fi
     shell: bash
 
