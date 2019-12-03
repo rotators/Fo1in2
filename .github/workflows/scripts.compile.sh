@@ -54,11 +54,18 @@ done
 readonly windows_pwd="$(pwd | sed -re 's!^/([A-Za-z])/!\U\1:/!g')/"
 readonly compile_exe="$(pwd)/$option_compiler"
 readonly scripts_dir="$(pwd)/$option_scripts_dir"
+readonly random_char='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefhijklmnopqrstuvwxyz0123456789'
 
 if [ "$option_bytecode_dir" != "?" ]; then
    readonly bytecode_dir="$(pwd)/$option_bytecode_dir"
 else
    readonly bytecode_dir="."
+fi
+
+if [ $option_dry -eq 0 ]; then
+   readonly dry=
+else
+   readonly dry=echo
 fi
 
 # output grouping, for GitHub Actions
@@ -98,6 +105,7 @@ fi
 
 num_errors=0
 num_warnings=0
+last_dir=
 
 echo Compiling...
 
@@ -111,27 +119,29 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     # script.ssl
     ssl_file=$(basename "$ssl_full")
     # (random).int
-    int_temp=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1).int
+    int_temp=
+    for c in {1..16}; do
+        int_temp="${int_temp}${random_char:RANDOM % ${#random_char}:1}"
+    done
+    int_temp=${int_temp}.int
     # script.int
     int_file=$(echo "$ssl_file" | sed -e 's!\.[Ss][Ss][Ll]$!\.int!')
-    # script.ssl.log
-    log_file="$ssl_file.log"
+    # (random).log
+    log_file=$(echo "$int_temp" | sed -e 's!\.int$!\.log!')
 
     ssl_result=
 
     # ssl compiler is too dumb to understand paths and always checks current directory
-    cd "$ssl_dir"
-
-    dry_run=
-    if [ $option_dry -eq 1 ]; then
-       dry_run="echo"
+    if [ "$last_dir" != "$ssl_dir" ]; then
+       last_dir="$ssl_dir"
+       $dry cd "$ssl_dir"
     fi
 
-    $dry_run $compile_exe -q -l -p -s ${option_include_dir} -O${option_optimization} "$ssl_file" -o "$int_temp" > "$log_file"
+    $dry $compile_exe -q -l -p -s ${option_include_dir} -O${option_optimization} "$ssl_file" -o "$int_temp" > $log_file
 
     if [ $option_dry -eq 1 ]; then
-       cat "$log_file"
-       rm -f "$log_file"
+       cat $log_file
+       rm -f $log_file
        continue
     fi
 
@@ -161,7 +171,7 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
 
     # pass #2
     # confirm result -- does log exists and is not empty?
-    if [ -s "$log_file" ]; then
+    if [ -s $log_file ]; then
        log_msg="$ssl_result $ssl_show"
 
        if [ "$ssl_result" == "ERROR" ]; then
@@ -177,7 +187,7 @@ for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
        fi
     fi
 
-    rm "$log_file"
+    rm $log_file
 done
 
 str_ok=" OK"
