@@ -258,33 +258,26 @@ variable tma_gvar_array;
     Invasions
 *********************************************************/
 // Pick dead body type:
-#define invasion_kill_critter                          	\
+#define invasion_kill_critter                         \
 	variable DeathType := 56;                        	\
 	variable LVar0 := random(0, 18);                 	\
-	if (LVar0 <= 5) then begin/*// 31.5%*/            	\
+	if (LVar0 <= 5) then /*// 31.5%*/            	   \
 		DeathType := ANIM_burned_to_nothing_sf;       	\
-	end                                                	\
-	else if (LVar0 <= 10) then begin/*// 26%*/       	\
+	else if (LVar0 <= 10) then /*// 26%*/       	      \
 		DeathType := ANIM_sliced_in_half_sf;         	\
-	end                                                	\
-	else if (LVar0 <= 14) then begin/*// 21%*/       	\
+	else if (LVar0 <= 14) then /*// 21%*/       	      \
 		DeathType := ANIM_chunks_of_flesh_sf;          	\
-	end                                               	\
-	else if (LVar0 <= 16) then begin/*// 10.5%*/      	\
+	else if (LVar0 <= 16) then /*// 10.5%*/      	   \
 		DeathType := ANIM_fall_front_blood_sf;         	\
-	end                                               	\
-	else begin/*// <--------------------    16%*/      	\
+	else begin/*// <--------------------    16%*/      \
 		variable LVar1 := 0;                          	\
 		LVar1 := random(0, 2);                         	\
-		if (LVar1 == 0) then begin                    	\
+		if (LVar1 == 0) then                           	\
 			DeathType := ANIM_dancing_autofire_sf;     	\
-		end                                           	\
-		else if (LVar1 == 1) then begin                	\
-			DeathType := ANIM_exploded_to_nothing_sf;	\
-		end                                            	\
-		else if (LVar1 == 2) then begin             	\
+		else if (LVar1 == 1) then                     	\
+			DeathType := ANIM_exploded_to_nothing_sf;	   \
+		else if (LVar1 == 2) then                 	   \
 			DeathType := ANIM_melted_to_nothing_sf;   	\
-		end                                          	\
 	end                                               	\
 	kill_critter(self_obj, DeathType)
 

@@ -75,7 +75,7 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-   if shady_invaded and CUR_AREA_SHADY_SANDS then begin
+   if shady_invaded then begin
       invasion_kill_critter;
    end
 end
@@ -94,14 +94,12 @@ end
 
 procedure critter_p_proc begin
    if (self_can_see_dude) then begin
-      if global_var(GVAR_ENEMY_SHADY_SANDS) then begin//   Is Shady Sands tmp_hostile to player?
+      if global_var(GVAR_ENEMY_SHADY_SANDS) then begin
          tmp_hostile := 1;
       end
-      else begin
-         if (dude_is_armed) then begin
-            if (map_var(MVAR_WARNED) == 0) then begin
-               call guard11;
-            end
+      else if (dude_is_armed) then begin
+         if (map_var(MVAR_WARNED) == 0) then begin
+            call guard11;
          end
       end
    end
@@ -123,12 +121,10 @@ procedure description_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_SHADY_SANDS, 1);
    end
    inc_good_critter
-   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
@@ -187,11 +183,7 @@ procedure talk_p_proc begin
             call guard10;
          end
          else begin
-            start_gdialog(113, self_obj, 4, -1, -1);
-            gsay_start;
-            call guard04;
-            gsay_end;
-            end_dialogue;
+            start_dialog_at_node(guard04);
          end
       end
    end
@@ -307,15 +299,13 @@ procedure guardend begin
 end
 
 procedure set_sleep_tile begin
-   if (home_tile == 15283) then begin
+   if (home_tile == 15283) then
       sleep_tile := 14685;
-   end
-   else if (home_tile == 15886) then begin
+   else if (home_tile == 15886) then
       sleep_tile := 14479;
-   end
-   else if (home_tile == 15881) then begin
+   else if (home_tile == 15881) then
       sleep_tile := 15479;
-   end
+
    wake_time := random(610, 650);
    sleep_time := random(2110, 2150);
 end
