@@ -7,6 +7,7 @@
 /* Include Files */
 #include "..\headers\define.h"
 #include "..\headers\maps\lafollwr.h"
+#include "..\headers\sfall\main.h"
 
 #define NAME                    SCRIPT_THSUPMUT
 //#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
@@ -22,6 +23,7 @@ procedure look_at_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
+procedure combat_p_proc;
 
 procedure THSupMut0;
 procedure THSupMut1;
@@ -36,6 +38,21 @@ procedure THSupMutend;
 procedure combat;
 procedure to_orfeo;
 
+#define SetSelfFlag(x)     set_flags(self_obj, x)
+#define GetSelfFlag        get_flags(self_obj)
+
+#define set_ghost          SetSelfFlag(GetSelfFlag bwor FLAG_TRANSGLASS)
+#define rem_ghost          SetSelfFlag(GetSelfFlag bwand bwnot(FLAG_TRANSGLASS))
+
+#define self_is_nightkin   ((self_pid == PID_NIGHTKIN) or (self_pid == PID_NIGHTKIN_GUARD) or                                          \
+                           (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or                                   \
+                           (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
+
+#define spawn_stealth_boy  if self_is_nightkin and (random(0, 2) == 1) then begin   \
+                              Item := create_object(PID_STEALTH_BOY, 0, 0);         \
+                              add_mult_objs_to_inven(self_obj, Item, 1);            \
+                           end
+
 #define LVAR_Here_Before      (0)
 #define LVAR_AssignName       (1)
 
@@ -46,10 +63,10 @@ variable tmp_hostile;
 variable Only_Once := 1;
 variable in_timed_event;
 variable weaponPtr;
+variable Item;
+variable Use_Stealth_Boy := 0;
 
 procedure start begin
-
-
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
@@ -62,9 +79,16 @@ procedure start begin
          add_obj_to_inven(self_obj, weaponPtr);
          wield_obj_critter(self_obj, weaponPtr);
          add_obj_to_inven(self_obj, create_object(PID_MICRO_FUSION_CELL, 0, 0));
+
+         spawn_stealth_boy
       end
       self_rotate(random(0, 5));
    end
+end
+
+procedure map_enter_p_proc begin
+   if (map_first_run) then
+      spawn_stealth_boy
 end
 
 procedure critter_p_proc begin
@@ -123,6 +147,26 @@ procedure timed_event_p_proc begin
       self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 3)));
    end
    in_timed_event := 0;
+end
+
+procedure combat_p_proc begin
+   if (self_is_nightkin and self_item_count(PID_STEALTH_BOY)) then begin
+      if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+         if (Use_Stealth_Boy == 0) then begin
+            Use_Stealth_Boy := 1;
+
+            //TODO: Add sfx for activation?
+            anim(self_obj, ANIM_magic_hands_middle, -1);
+            set_ghost;
+
+            display_msg(self_name + gen_mstr(190));
+         end
+      end
+
+      //--- Always add transparency when in combat!
+      if (Use_Stealth_Boy == 1) then
+         set_ghost;
+   end
 end
 
 procedure THSupMut0 begin

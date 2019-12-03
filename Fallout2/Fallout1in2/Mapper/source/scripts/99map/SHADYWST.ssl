@@ -18,7 +18,6 @@ variable dude_start_hex;
 variable invaderPtr;
 
 variable HEREBEFORE := 0;
-procedure DisplayInvadedMSG;
 procedure PickMutant;
 
 #define tandi_gets_kidnapped     (map_var(MVAR_TANDI_KIDNAPPING) > 0) and                          \
@@ -49,12 +48,13 @@ variable temp_ptr;
          display_msg(message_str(SCRIPT_SHADYWST, 101));
       end
       else begin
-         call DisplayInvadedMSG;
+         display_msg(message_str(SCRIPT_SHADYWST, random(150, 154)));
       end
    end
+
    if (shady_invaded and not(is_loading_game) and (map_var(MVAR_Invasion) == 0)) then begin
       if not(HEREBEFORE) then begin
-         call DisplayInvadedMSG;
+         display_msg(message_str(SCRIPT_SHADYWST, random(150, 154)));
       end
       set_map_var(MVAR_Invasion, 1);
 
@@ -102,46 +102,46 @@ procedure combat_p_proc begin
 end
 
 procedure Tandi_Move begin
-   variable LVar0 := 0;
+   variable rnd := 0;
 
-   LVar0 := game_time_hour;
-   if ((LVar0 > 2100) or (LVar0 <= 600)) then begin
+   rnd := game_time_hour;
+   if ((rnd > 2100) or (rnd <= 600)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 24678, 0);
    end
-   else if ((LVar0 > 600) and (LVar0 <= 610)) then begin
+   else if ((rnd > 600) and (rnd <= 610)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 18709, 0);
    end
-   else if ((LVar0 > 610) and (LVar0 <= 615)) then begin
+   else if ((rnd > 610) and (rnd <= 615)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 23232, 0);
    end
-   else if (LVar0 == 650) then begin
+   else if (rnd == 650) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 23232, 0);
    end
-   else if ((LVar0 > 650) and (LVar0 <= 1000)) then begin
+   else if ((rnd > 650) and (rnd <= 1000)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 15683, 0);
    end
-   else if ((LVar0 > 1000) and (LVar0 <= 1200)) then begin
+   else if ((rnd > 1000) and (rnd <= 1200)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 18709, 0);
    end
-   else if ((LVar0 > 1200) and (LVar0 <= 1300)) then begin
+   else if ((rnd > 1200) and (rnd <= 1300)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 24678, 0);
    end
-   else if ((LVar0 > 1300) and (LVar0 <= 1305)) then begin
+   else if ((rnd > 1300) and (rnd <= 1305)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 23232, 0);
    end
-   else if (LVar0 == 1905) then begin
+   else if (rnd == 1905) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 23232, 0);
    end
-   else if ((LVar0 > 1905) and (LVar0 <= 2100)) then begin
+   else if ((rnd > 1905) and (rnd <= 2100)) then begin
       //Tandi_ptr := create_object_sid(PID_TANDI, 0, 0, SCRIPT_TANDI);
       move_to(Tandi_ptr, 18709, 0);
    end
@@ -149,16 +149,12 @@ procedure Tandi_Move begin
 end
 
 procedure Where_Is_Tandi begin
-   if tandi_is_kidnapped then begin
-
+   if not(tandi_is_kidnapped) then begin
+      if (global_var(GVAR_TANDI_HIRELING_STATUS) == 0) then
+         call Tandi_Move;
+      else if get_tandi_returned then
+         call Tandi_Move;
    end
-   else if (global_var(GVAR_TANDI_HIRELING_STATUS) == 0) then begin
-      call Tandi_Move;
-   end
-   else if get_tandi_returned then begin
-      call Tandi_Move;
-   end
-
 end
 
 procedure Where_To_Start begin
@@ -177,49 +173,34 @@ procedure Where_To_Start begin
 end
 
 procedure PickMutant begin
-//
-// Ten different possibles (6 green, 4 black leather). LVar1 is the Proto ID of the critter.
-//
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := random(1, 10); LVar0 := random(1, 10); LVar0 := random(1, 10);// Better randomization
-   if (LVar0 == 1) then begin
-      LVar1 := 9; // "Super Mutant" (40hp)
-   end
-   else begin
-      if (LVar0 == 2) then begin
-         LVar1 := 108;  // "Tough Super Mutant"
-      end
-      else begin
-         if (LVar0 >= 3) and (LVar0 <= 6) then begin
-            LVar1 := random(186, 189); // (each stronger than the last!!)
-            /*
-            186 = " Super Mutant Guard
-            187 = " Mean Super Mutant
-            188 = " Mad Super Mutant
-            189 = " Deadly Super Mutant
-            */
-         end
-         else begin
-            if (LVar0 >= 7) then begin
-               LVar1 := random(190, 193); // (each stronger than the last!!)
-               /*
-               190 = " Tough Nightkin
-               191 = " Deadly Nightkin
-               192 = " Super Nightkin
-               193 = " Master Nightkin
-               */
-            end
-         end
-      end
-   end
-   invaderPtr := create_object_sid((16777216 + LVar1), 0, 0, SCRIPT_INVADER);
-   set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
-end
+   variable rnd, Critter;
 
-procedure DisplayInvadedMSG begin
-// Added by Sduibek for Fallout Fixt. Displays a random "this town is dead" msg if map's been invaded.
-//    Code above (script action 15) should call this only once.
-//
-   display_msg(message_str(SCRIPT_SHADYWST, random(150, 154)));
+   // Ten different possibles (6 green, 4 black leather).
+   rnd := random(1, 10);
+   if (rnd == 1) then begin
+      Critter := 9; // "Super Mutant" (40hp)
+   end
+   else if (rnd == 2) then begin
+      Critter := 108;  // "Tough Super Mutant"
+   end
+   else if (rnd >= 3) and (rnd <= 6) then begin
+      Critter := random(186, 189); // (each stronger than the last!!)
+      /*
+      186 = " Super Mutant Guard
+      187 = " Mean Super Mutant
+      188 = " Mad Super Mutant
+      189 = " Deadly Super Mutant
+      */
+   end
+   else if (rnd >= 7) then begin
+      Critter := random(190, 193); // (each stronger than the last!!)
+      /*
+      190 = " Tough Nightkin
+      191 = " Deadly Nightkin
+      192 = " Super Nightkin
+      193 = " Master Nightkin
+      */
+   end
+   invaderPtr := create_object_sid((16777216 + Critter), 0, 0, SCRIPT_INVADER);
+   set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
 end
