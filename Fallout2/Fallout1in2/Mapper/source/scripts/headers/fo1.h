@@ -282,6 +282,43 @@ variable tma_gvar_array;
 	kill_critter(self_obj, DeathType)
 
 /*********************************************************
+    Stealth Boy
+*********************************************************/
+// Needs included sfall.h to work!
+#define SetSelfFlag(x)     set_flags(self_obj, x)
+#define GetSelfFlag        get_flags(self_obj)
+
+#define set_ghost          SetSelfFlag(GetSelfFlag bwor FLAG_TRANSGLASS)
+#define rem_ghost          SetSelfFlag(GetSelfFlag bwand bwnot(FLAG_TRANSGLASS))
+
+#define self_is_nightkin   ((self_pid == PID_NIGHTKIN) or (self_pid == PID_NIGHTKIN_GUARD) or                                          \
+                           (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or                                   \
+                           (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
+
+#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) then begin   \
+                              variable Item;                                        \
+                              Item := create_object(PID_STEALTH_BOY, 0, 0);         \
+                              add_mult_objs_to_inven(self_obj, Item, 1);            \
+                           end
+
+variable Use_Stealth_Boy;
+#define activate_stealth_boy                                               \
+   if (self_is_nightkin and self_item_count(PID_STEALTH_BOY)) then begin   \
+      if (fixed_param == COMBAT_SUBTYPE_TURN) then begin                   \
+         if (Use_Stealth_Boy == 0) then begin                              \
+            Use_Stealth_Boy := 1;                                          \
+            /* TODO: Add sfx for activation? */                            \
+            anim(self_obj, ANIM_magic_hands_middle, -1);                   \
+            set_ghost;                                                     \
+            display_msg(self_name + gen_mstr(190));                        \
+         end                                                               \
+      end                                                                  \
+      /* Always add transparency when in combat! */                        \
+      if (Use_Stealth_Boy == 1) then                                       \
+         set_ghost;                                                        \
+   end
+
+/*********************************************************
     Other stuff
 *********************************************************/
 // Send NPCs from "day" to "night" position:
@@ -355,12 +392,10 @@ end
 
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 #define coc_disguise_check          if dude_wearing_coc_robe then begin \
-                                        if (party_size > 1) then begin  \
+                                        if (party_size > 1) then        \
                                             DISGUISED := 0;             \
-                                        end                             \
-                                        else begin                      \
+                                        else                            \
                                             DISGUISED := 1;             \
-                                        end                             \
                                     end
 
 #define self_is_child 				(self_pid == PID_GIRL or self_pid == PID_BOY)

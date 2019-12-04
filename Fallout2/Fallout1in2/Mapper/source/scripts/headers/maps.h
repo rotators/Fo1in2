@@ -413,6 +413,7 @@ variable get_wm_distance;
 #define advance_time_travel_to_boneyard            advance_time_wm_travel(773,922,MAP_LAADYTUM,1)
 #define advance_time_travel_to_bos                 advance_time_wm_travel(623,472,MAP_BROHDENT,0)
 #define advance_time_travel_to_mbase_vats          advance_time_wm_travel(173,72,MAP_MBVATS12,5)
+#define advance_time_travel_to_master              advance_time_wm_travel(773,1022,MAP_MSTRLR34,12)
 #define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                      \
                                                    get_wm_distance := round(get_wm_distance) / 50;                                              \
                                                    debug("Advancing " + get_wm_distance + " days by wm teleport!");                             \
@@ -425,8 +426,7 @@ variable get_wm_distance;
 /* The following define is to force critter X to face critter Y */
 #define Face_Critter(Y,X)           anim(X,ANIMATE_ROTATION,rotation_to_tile(tile_num(X),tile_num(Y)))
 
-/* The following define will set a rotation arc for placement
-   of critters. */
+/* The following define will set a rotation arc for placement of critters. */
 #define FixRotationArc(X)           while (X < 0) do begin      \
                                         X += 6;                 \
                                     end                         \
@@ -434,8 +434,7 @@ variable get_wm_distance;
                                         X := X%6
 
 
-/* The following define will give you the inverse (Y) of a
-   rotation (X) */
+/* The following define will give you the inverse (Y) of a rotation (X) */
 #define InvertRotation(X,Y)         X+=3;                       \
                                     FixRotationArc(X)
 

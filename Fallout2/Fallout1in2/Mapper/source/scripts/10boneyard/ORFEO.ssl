@@ -30,6 +30,9 @@ procedure Orfeoend;
 procedure combat;
 procedure to_master;
 
+#define LVAR_Herebefore          (0)
+#define LVAR_Initial             (1)
+
 variable initial := 0;
 variable tmp_hostile;
 variable weaponPtr;
@@ -42,9 +45,12 @@ procedure start begin
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_BRAINWASHED_CHILDREN);
       self_rotate(2);
-      if (local_var(1) == 0) then begin
-         set_local_var(1, 1);
-         weaponPtr := create_object(PID_LASER_PISTOL, 0, 0);
+      if (local_var(LVAR_Initial) == 0) then begin
+         set_local_var(LVAR_Initial, 1);
+         // Fo1in2: Changed laser pistol to pulse pistol for more uniqueness.
+         //weaponPtr := create_object(PID_LASER_PISTOL, 0, 0);
+         weaponPtr := create_object(PID_YK32_PULSE_PISTOL, 0, 0);
+
          add_obj_to_inven(self_obj, weaponPtr);
          wield_obj_critter(self_obj, weaponPtr);
          add_obj_to_inven(self_obj, create_object(PID_SMALL_ENERGY_CELL, 0, 0));
@@ -53,8 +59,7 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (global_var(GVAR_ENEMY_FOLL_INVADERS)) then begin
       tmp_hostile := 1;
    end
@@ -64,7 +69,7 @@ begin
    end
    else begin
       if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 6)) then begin
-         if (local_var(0) == 0) then begin
+         if (local_var(LVAR_Herebefore) == 0) then begin
             dialogue_system_enter;
          end
       end
@@ -79,73 +84,61 @@ procedure destroy_p_proc begin
    end
 end
 
-procedure look_at_p_proc
-begin
-   if (local_var(0)) then begin
+procedure look_at_p_proc begin
+   if (local_var(LVAR_Herebefore)) then begin
       script_overrides;
       display_msg(mstr(100));
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
-   script_overrides;
+procedure talk_p_proc begin
+   set_tma_data(tma_source_generic, TMA_MSG_MBASE, -1, -1, 997, 999);
+
    dude_look_at_self;
-   if (local_var(0)) then begin
+   if (local_var(LVAR_Herebefore)) then begin
       call Orfeo3;
    end
    else begin
-      set_local_var(0, 1);
-      start_gdialog(269, self_obj, 4, -1, -1);
-      gsay_start;
-      call Orfeo0;
-      gsay_end;
-      end_dialogue;
+      set_local_var(LVAR_Herebefore, 1);
+      start_dialog_at_node(Orfeo0);
    end
 end
 
-procedure Orfeo0
-begin
+procedure Orfeo0 begin
    Reply(101);
    NLowOption(102, combat);
    NOption(103, Orfeo1, 4);
    NOption(104, Orfeo2, 4);
 end
 
-procedure Orfeo1
-begin
+procedure Orfeo1 begin
    NMessage(105);
    call combat;
 end
 
-procedure Orfeo2
-begin
+procedure Orfeo2 begin
    NMessage(106);
    call to_master;
 end
 
-procedure Orfeo3
-begin
+procedure Orfeo3 begin
    float_msg(self_obj, mstr(107), FLOAT_MSG_NORMAL);
    call combat;
 end
 
-procedure Orfeoend
-begin
+procedure Orfeoend begin
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := tmp_hostile + 1;
 end
 
-procedure to_master
-begin
+procedure to_master begin
    set_global_var(GVAR_PREVENT_REVULSION_DAMAGE, 1);
-   load_map("mstrlr34.map", 12);
+   //load_map("mstrlr34.map", 12);
+   advance_time_travel_to_master;
 end

@@ -38,21 +38,6 @@ procedure THSupMutend;
 procedure combat;
 procedure to_orfeo;
 
-#define SetSelfFlag(x)     set_flags(self_obj, x)
-#define GetSelfFlag        get_flags(self_obj)
-
-#define set_ghost          SetSelfFlag(GetSelfFlag bwor FLAG_TRANSGLASS)
-#define rem_ghost          SetSelfFlag(GetSelfFlag bwand bwnot(FLAG_TRANSGLASS))
-
-#define self_is_nightkin   ((self_pid == PID_NIGHTKIN) or (self_pid == PID_NIGHTKIN_GUARD) or                                          \
-                           (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or                                   \
-                           (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
-
-#define spawn_stealth_boy  if self_is_nightkin and (random(0, 2) == 1) then begin   \
-                              Item := create_object(PID_STEALTH_BOY, 0, 0);         \
-                              add_mult_objs_to_inven(self_obj, Item, 1);            \
-                           end
-
 #define LVAR_Here_Before      (0)
 #define LVAR_AssignName       (1)
 
@@ -63,8 +48,6 @@ variable tmp_hostile;
 variable Only_Once := 1;
 variable in_timed_event;
 variable weaponPtr;
-variable Item;
-variable Use_Stealth_Boy := 0;
 
 procedure start begin
    if Only_Once then begin
@@ -129,7 +112,8 @@ procedure pickup_p_proc begin
 end
 
 procedure talk_p_proc begin
-   script_overrides;
+   set_tma_data(tma_source_generic, TMA_MSG_MBASE, -1, -1, 997, 999);
+
    dude_look_at_self;
    if (local_var(LVAR_Here_Before)) then begin
       start_dialog_at_node(THSupMut7);
@@ -150,23 +134,7 @@ procedure timed_event_p_proc begin
 end
 
 procedure combat_p_proc begin
-   if (self_is_nightkin and self_item_count(PID_STEALTH_BOY)) then begin
-      if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
-         if (Use_Stealth_Boy == 0) then begin
-            Use_Stealth_Boy := 1;
-
-            //TODO: Add sfx for activation?
-            anim(self_obj, ANIM_magic_hands_middle, -1);
-            set_ghost;
-
-            display_msg(self_name + gen_mstr(190));
-         end
-      end
-
-      //--- Always add transparency when in combat!
-      if (Use_Stealth_Boy == 1) then
-         set_ghost;
-   end
+   activate_stealth_boy
 end
 
 procedure THSupMut0 begin
