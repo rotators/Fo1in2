@@ -12,11 +12,16 @@
 #include "..\headers\command.h"
 
 procedure start;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
+procedure use_obj_on_p_proc;
 
-procedure skills;
+procedure arm_bomb;
 procedure armit;
 procedure disarmit;
 procedure reset;
+
+#define EVENT_COUNTDOWN_MASTER         (11)
 
 import variable Key_Used;
 import variable Skill_Used;
@@ -28,7 +33,9 @@ variable test1;
 variable test2;
 variable my_iq;
 variable my_pe;
+variable skill_bonus;
 variable lockmod;
+variable used_skill;
 
 procedure start begin
 end
@@ -53,67 +60,19 @@ end
 procedure use_skill_on_p_proc begin
    set_map_var(MVAR_TOUCHING, 1);
    script_overrides;
-   call skills;
-end
-
-procedure use_obj_on_p_proc begin
-   set_map_var(MVAR_TOUCHING, 1);
-   if (obj_pid(obj_being_used_with) == PID_NUKE_KEY) then begin
-      script_overrides;
-      if (Bomb_Armed == 1) then begin
-         if (Master_Has_Armed == 1) then begin
-            display_msg(mstr(105));
-         end
-         else begin
-            call disarmit;
-         end
-      end
-      else begin
-         call armit;
-      end
-   end
-   else begin
-      if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
-         lockmod := 40;
-      end
-      else begin
-         display_msg(mstr(105));
-      end
-   end
-end
-
-procedure skills begin
    if (Bomb_Armed == 1) then begin
       display_msg(mstr(105));
    end
    else begin
       if (action_being_used == SKILL_SCIENCE) then begin
-         if (has_skill(dude_obj, SKILL_SCIENCE) < 70) then begin
-            display_msg(mstr(112));
-         end
-         else begin
-            test := roll_vs_skill(dude_obj, SKILL_SCIENCE, -40);
-            if (is_success(test)) then begin
-               call armit;
-            end
-            else begin
-               display_msg(mstr(112));
-            end
-         end
+         used_skill := SKILL_SCIENCE;
+         skill_bonus := -40;
+         call arm_bomb;
       end
       else if (action_being_used == SKILL_LOCKPICK) then begin
-         if (has_skill(dude_obj, SKILL_LOCKPICK) < 70) then begin
-            display_msg(mstr(112));
-         end
-         else begin
-            test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, lockmod - 60);
-            if (is_success(test)) then begin
-               call armit;
-            end
-            else begin
-               display_msg(mstr(112));
-            end
-         end
+         used_skill := SKILL_LOCKPICK;
+         skill_bonus := lockmod - 60;
+         call arm_bomb;
       end
       else if (action_being_used == SKILL_TRAPS) then begin
          display_msg(mstr(111));
@@ -127,11 +86,64 @@ procedure skills begin
    end
 end
 
+procedure use_obj_on_p_proc begin
+variable Item := obj_pid(obj_being_used_with);
+
+   script_overrides;
+
+   set_map_var(MVAR_TOUCHING, 1);
+   if (Item == PID_NUKE_KEY) then begin
+      if (Bomb_Armed == 1) then begin
+         if (Master_Has_Armed == 1) then begin
+            display_msg(mstr(105));
+         end
+         else begin
+            call disarmit;
+         end
+      end
+      else begin
+         call armit;
+      end
+   end
+   else if (Item == PID_ELECTRONIC_LOCKPICKS or Item == PID_ELEC_LOCKPICK_MKII) then begin
+      if (Bomb_Armed == 1) then begin
+         if (Master_Has_Armed == 1) then
+            display_msg(mstr(105));
+         else
+            display_msg(mstr(113));
+      end
+      else begin
+         used_skill := SKILL_LOCKPICK;
+         lockmod := 40;
+         call arm_bomb;
+      end
+   end
+   else begin
+      display_msg(mstr(105));
+   end
+end
+
+procedure arm_bomb begin
+   Bomb_Armed := 1;
+   if (has_skill(dude_obj, used_skill) < 70) then begin
+      display_msg(mstr(112));
+   end
+   else begin
+      test := roll_vs_skill(dude_obj, used_skill, skill_bonus);
+      if (is_success(test)) then begin
+         call armit;
+      end
+      else begin
+         display_msg(mstr(112));
+      end
+   end
+end
+
 procedure armit begin
    display_msg(mstr(102));
    if (global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) == 0) then begin
       set_global_var(GVAR_COUNTDOWN_TO_DESTRUCTION, (game_time / 10));
-      add_timer_event(dude_obj, 0, 11);// tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
+      add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER); // tracks to give countdown timer updates every 5 seconds instead of calls to map_update (which is unreliable)
    end
    set_global_var(GVAR_MASTER_BLOWN, 1);
    if (global_var(GVAR_VATS_BLOWN) == 0) then begin
@@ -153,4 +165,5 @@ procedure reset begin
    display_msg(mstr(103));
    set_global_var(GVAR_COUNTDOWN_TO_DESTRUCTION, 0);
    set_global_var(GVAR_MASTER_BLOWN, 0);
+   Bomb_Armed := 0;
 end
