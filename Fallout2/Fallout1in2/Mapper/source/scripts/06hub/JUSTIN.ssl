@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\hubdwntn.h"
 
 #define NAME                    SCRIPT_JUSTIN
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -70,6 +70,18 @@ procedure JustinCombat;
 procedure JustinTravel;
 procedure GoToDecker;
 
+procedure ReportBob;
+procedure BobGuilty;
+procedure BobReportFailed;
+procedure BobReward;
+procedure BobReward2;
+
+#define LVAR_Herebefore          (4)
+#define LVAR_Praised_Police      (5)
+#define LVAR_Attacking_Decker    (6)
+#define LVAR_Killed_Merchant     (7) // Greene knows dude killed the merchant.
+#define LVAR_Bob_Report_Failed   (8)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable travel;
@@ -78,12 +90,6 @@ import variable Kane_Ptr;
 import variable Decker_Ptr;
 import variable Justin_Ptr;
 import variable Fry_Stub_Ptr;
-
-procedure ReportBob;
-procedure BobGuilty;
-procedure BobReward;
-procedure BobReward2;
-
 
 procedure start begin
    if Only_Once then begin
@@ -97,13 +103,11 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -125,174 +129,159 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   if (map_var(53) == 1) then begin
-      set_map_var(53, 0);
+   if (map_var(MVAR_REWARD_FOR_DECKER) == 1) then begin
+      set_map_var(MVAR_REWARD_FOR_DECKER, 0);
       start_dialog_at_node(Justin35);
    end
-   else if (local_var(7) == 1) then begin
+   else if (local_var(LVAR_Killed_Merchant) == 1) then begin
       start_dialog_at_node(Justin29);
    end
    else if (global_var(GVAR_DECKER_STATUS) == 1) then begin
       start_dialog_at_node(Justin27);
    end
-   else if (local_var(6) == 1) then begin
+   else if (local_var(LVAR_Attacking_Decker) == 1) then begin
       start_dialog_at_node(Justin26);
    end
-   else if (local_var(6) == 2) then begin
+   else if (local_var(LVAR_Attacking_Decker) == 2) then begin
       start_dialog_at_node(Justin28);
    end
-   else if (local_var(4) == 0) then begin
-      set_local_var(4, 1);
+   else if (local_var(LVAR_Herebefore) == 0) then begin
+      set_local_var(LVAR_Herebefore, 1);
       start_dialog_at_node(Justin00);
    end
    else begin
-      if has_rep_childkiller then begin
+      if has_rep_childkiller then
          call Justin03;
-      end
-      else if ((local_var(1) == 3) or (local_var(1) == 0)) then begin
+      else if ((local_var(LVAR_reaction_level) == GOOD) or (local_var(LVAR_reaction_level) == NO_REACTION)) then
          start_dialog_at_node(Justin31);
-      end
-      else if (local_var(1) == 2) then begin
+      else if (local_var(LVAR_reaction_level) == NEUTRAL) then
          start_dialog_at_node(Justin32);
-      end
-      else if (local_var(1) == 1) then begin
+      else if (local_var(LVAR_reaction_level) == BAD) then
          start_dialog_at_node(Justin33);
-      end
    end
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
    set_global_var(GVAR_GREENE_DEAD, 1);
-
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure combat_p_proc
-begin
-   if (map_var(54) == 1) then begin
+procedure combat_p_proc begin
+   if (map_var(MVAR_UNDERGROUND_SURRENDERED) == 1) then begin
       script_overrides;
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      if (map_var(52) == 0) then begin
+      if (map_var(MVAR_COPS_IN_HIDEOUT) == 0) then begin
          set_global_var(GVAR_ENEMY_HUB, 1);
       end
    end
 end
 
-procedure Justin00
-begin
+procedure Justin00 begin
    if has_rep_childkiller then begin
       NMessage(101);
    end
    else begin
-      if (dude_is_male) then begin
+      if (dude_is_male) then
          Reply(102);
-      end
-      else begin
+      else
          Reply(103);
-      end
       call Justin30;
    end
 end
 
-procedure Justin01
-begin
+procedure Justin01 begin
    Reply(104);
-   if ((global_var(GVAR_DECKER_STATUS) == 0) and ((map_var(46) > 0) and (map_var(46) != 6))) then begin
+   if ((global_var(GVAR_DECKER_STATUS) == 0) and ((map_var(MVAR_DECKER_JOB_STATUS) > 0) and (map_var(MVAR_DECKER_JOB_STATUS) != 6))) then
       NOption(105, Justin01a, 4);
-   end
-   if ((global_var(GVAR_DECKER_STATUS) == 0) and ((map_var(47) > 0) and (map_var(47) != 7))) then begin
+   if ((global_var(GVAR_DECKER_STATUS) == 0) and ((map_var(MVAR_DECKER_STATUS_JOB2) > 0) and (map_var(MVAR_DECKER_STATUS_JOB2) != 7))) then
       NOption(106, Justin01b, 4);
-   end
-   if (global_var(GVAR_GRETCH_PRIMECUTS) and global_var(GVAR_CAN_REPORT_BITS_BOB) and not(global_var(GVAR_BITS_BOB_REPORTED)) and fixt_enabled) then begin// player knows about Bob's human meat, CAN_REPORT_BITS_BOB == true, haven't already reported him, and BugFixesOnly == false
+   if not(local_var(LVAR_Bob_Report_Failed)) and global_var(GVAR_GRETCH_PRIMECUTS) and global_var(GVAR_CAN_REPORT_BITS_BOB) and not(global_var(GVAR_BITS_BOB_REPORTED)) then
       NOption(180, ReportBob, 4);
-   end
    NOption(107, JustinEnd, 4);
    NOption(108, Justin04, 4);
 end
 
-procedure ReportBob
-begin
+procedure ReportBob begin
    Reply(181);
    NOption(182, BobGuilty, 4);
 end
 
 procedure BobGuilty begin
    gfade_out(1);
-   game_time_advance(10 * 60 * 60 * 2);
+      game_time_advance(ONE_GAME_HOUR * 2);
    gfade_in(1);
-   Reply(183);
+
    set_global_var(GVAR_BITS_BOB_REPORTED, 1);
+   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -15))) and (dude_charisma > 3) then begin
+      give_xp_msg(EXP_REPORTED_BOB, mstr(200));
+      inc_hub_rep(REP_BONUS_BOB_JAILED);
+      set_global_var(GVAR_BITS_BOB_REPORTED, 2);
 
-   give_xp(EXP_REPORTED_BOB);
-
-   NOption(184, BobReward, 4);
+      Reply(183);
+      NOption(184, BobReward, 4);
+   end
+   else begin
+      call BobReportFailed;
+   end
 end
 
-procedure BobReward
-begin
-   set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
+procedure BobReportFailed begin
+   set_local_var(LVAR_Bob_Report_Failed, 1);
+   inc_hub_rep(REP_BONUS_BOB_REPORT_FAILED);
+
+   BMessage(201);
+   BMessage(202);
+end
+
+procedure BobReward begin
+   inc_general_rep(2);
+
    Reply(186);
    NOption(189, Justin22, 4);
    GOption(187, Justin22, 4);
    BOption(188, BobReward2, 4);
 end
 
-procedure BobReward2
-begin
-   Reply(190);
+procedure BobReward2 begin
+   inc_general_rep(-1);
    dude_caps_adjust(250);
+
+   Reply(190);
    BOption(191, Justin22, 4);
    BOption(192, Justin22, 4);
-   set_global_var(GVAR_PLAYER_REPUTATION, (check_general_rep - 1));
 end
 
-procedure Justin01a
-begin
-   if (global_var(GVAR_KILL_MERCHANT) != 2) then begin
+procedure Justin01a begin
+   if (global_var(GVAR_KILL_MERCHANT) != 2) then
       call Justin05a;
-   end
-   else begin
-      if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-         call Justin06;
-      end
-      else begin
-         call Justin07;
-      end
-   end
+   else if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then
+      call Justin06;
+   else
+      call Justin07;
 end
 
-procedure Justin01b
-begin
-   if (global_var(GVAR_KILL_JAIN) != 2) then begin
+procedure Justin01b begin
+   if (global_var(GVAR_KILL_JAIN) != 2) then
       call Justin05a;
-   end
-   else begin
-      if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
-         call Justin06;
-      end
-      else begin
-         call Justin08;
-      end
-   end
+   else if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then
+      call Justin06;
+   else
+      call Justin08;
 end
 
-procedure Justin02
-begin
-   if (local_var(5) == 0) then begin
+procedure Justin02 begin
+   if (local_var(LVAR_Praised_Police) == 0) then begin
       UpReact
-      set_local_var(5, 1);
+      set_local_var(LVAR_Praised_Police, 1);
       GMessage(109);
    end
    else begin
@@ -300,96 +289,85 @@ begin
    end
 end
 
-procedure Justin03
-begin
+procedure Justin03 begin
    float_msg(self_obj, mstr(111), FLOAT_MSG_RED);
 end
 
-procedure Justin04
-begin
+procedure Justin04 begin
    NMessage(112);
 end
 
-procedure Justin05a
-begin
+procedure Justin05a begin
    Reply(170);
    NOption(171, Justin05b, 4);
 end
 
-procedure Justin05b
-begin
+procedure Justin05b begin
    Reply(113);
    call Justin09;
 end
 
-procedure Justin06
-begin
+procedure Justin06 begin
    Reply(114);
    call Justin09;
 end
 
-procedure Justin07
-begin
+procedure Justin07 begin
    Reply(115);
    call Justin15;
 end
 
-procedure Justin08
-begin
+procedure Justin08 begin
    Reply(116);
    call Justin15;
 end
 
-procedure Justin09
-begin
+procedure Justin09 begin
    NOption(117, Justin11, 4);
    NOption(118, Justin10, 4);
    NOption(119, Justin12, 4);
 end
 
-procedure Justin10
-begin
+procedure Justin10 begin
    Reply(120);
    NOption(121, Justin11, 4);
    NOption(122, Justin12, 4);
 end
 
-procedure Justin11
-begin
+procedure Justin11 begin
    variable LVar0 := 0;
-   set_local_var(6, 1);
+   set_local_var(LVAR_Attacking_Decker, 1);
    dude_caps_adjust(300);
+
    NMessage(123);
    Reply(174);
    NOption(124, Justin20, 4);
    NOption(125, JustinEnd, 4);
 end
 
-procedure Justin12
-begin
-   set_local_var(6, 2);
+procedure Justin12 begin
+   set_local_var(LVAR_Attacking_Decker, 2);
+
    Reply(126);
    NOption(127, Justin13, 4);
    NOption(128, Justin14, 4);
    NOption(129, JustinEnd, 4);
 end
 
-procedure Justin13
-begin
+procedure Justin13 begin
    variable LVar0 := 0;
-   set_local_var(6, 1);
+   set_local_var(LVAR_Attacking_Decker, 1);
    dude_caps_adjust(300);
+
    GMessage(130);
    NMessage(175);
 end
 
-procedure Justin14
-begin
+procedure Justin14 begin
    NMessage(131);
 end
 
-procedure Justin15
-begin
+procedure Justin15 begin
    NOption(132, JustinCombat, 4);
    NOption(133, Justin15a, 4);
    NOption(134, Justin15b, 4);
@@ -397,8 +375,7 @@ begin
    NOption(136, Justin15d, 4);
 end
 
-procedure Justin15a
-begin
+procedure Justin15a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 30))) then begin
       call Justin16;
    end
@@ -407,8 +384,7 @@ begin
    end
 end
 
-procedure Justin15b
-begin
+procedure Justin15b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Justin16;
    end
@@ -417,8 +393,7 @@ begin
    end
 end
 
-procedure Justin15c
-begin
+procedure Justin15c begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 15))) then begin
       call Justin16;
    end
@@ -427,8 +402,7 @@ begin
    end
 end
 
-procedure Justin15d
-begin
+procedure Justin15d begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -50))) then begin
       call Justin18;
    end
@@ -437,107 +411,90 @@ begin
    end
 end
 
-procedure Justin16
-begin
+procedure Justin16 begin
    Reply(137);
    call Justin09;
 end
 
-procedure Justin17
-begin
-   set_local_var(7, 1);
+procedure Justin17 begin
+   set_local_var(LVAR_Killed_Merchant, 1);
    BMessage(138);
 end
 
-procedure Justin18
-begin
+procedure Justin18 begin
    Reply(139);
    call Justin09;
 end
 
-procedure Justin19
-begin
-   set_local_var(7, 1);
+procedure Justin19 begin
+   set_local_var(LVAR_Killed_Merchant, 1);
    BMessage(140);
 end
 
-procedure Justin20
-begin
+procedure Justin20 begin
    NMessage(141);
    call JustinTravel;
 end
 
-procedure Justin22
-begin
+procedure Justin22 begin
    NMessage(129);
 end
 
-procedure Justin26
-begin
+procedure Justin26 begin
    Reply(151);
    NOption(152, JustinTravel, 4);
    NOption(153, JustinEnd, 4);
    NLowOption(154, Justin34);
 end
 
-procedure Justin27
-begin
+procedure Justin27 begin
    GMessage(155);
 end
 
-procedure Justin28
-begin
+procedure Justin28 begin
    Reply(156);
    NOption(157, Justin11, 4);
    NOption(158, JustinEnd, 4);
    NLowOption(159, Justin34);
 end
 
-procedure Justin29
-begin
+procedure Justin29 begin
    NMessage(160);
 end
 
-procedure Justin30
-begin
+procedure Justin30 begin
    NOption(161, Justin01, 4);
    NOption(162, Justin02, 4);
    NOption(163, JustinEnd, 4);
    NLowOption(164, Justin34);
 end
 
-procedure Justin31
-begin
-   if (dude_is_male) then begin
+procedure Justin31 begin
+   if (dude_is_male) then
       Reply(165);
-   end
-   else begin
+   else
       Reply(166);
-   end
    call Justin30;
 end
 
-procedure Justin32
-begin
+procedure Justin32 begin
    Reply(167);
    call Justin30;
 end
 
-procedure Justin33
-begin
+procedure Justin33 begin
    Reply(168);
    call Justin30;
 end
 
-procedure Justin34
-begin
+procedure Justin34 begin
    NMessage(169);
 end
 
 procedure Justin35 begin
    dude_caps_adjust(1000);
 
-   set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 4);
+   inc_general_rep(4);
    inc_hub_rep(REP_BONUS_KILLED_DECKER);
 
    give_xp(EXP_DECKER_KILLED);
@@ -546,33 +503,31 @@ procedure Justin35 begin
    GMessage(173);
 end
 
-procedure JustinEnd
-begin
+procedure JustinEnd begin
 end
 
-procedure JustinCombat
-begin
+procedure JustinCombat begin
    call combat;
 end
 
-procedure JustinTravel
-begin
+procedure JustinTravel begin
    travel := 1;
 end
 
-procedure GoToDecker
-begin
-   set_map_var(52, 1);
+procedure GoToDecker begin
+   set_map_var(MVAR_COPS_IN_HIDEOUT, 1);
    gfade_out(1);
-   if not(is_loading_game) then begin  set_obj_visible(Fry_Stub_Ptr);   end
-   move_to(self_obj, 23926, 1);
-   self_rotate(rotation_to_tile(self_tile, tile_num(Decker_Ptr)));
-   set_self_team(TEAM_PLAYER);
-   if (map_var(49) == 0) then begin
-      move_to(Kane_Ptr, 22526, 1);
-      obj_rotate(Kane_Ptr, rotation_to_tile(tile_num(Kane_Ptr), tile_num(Decker_Ptr)));
-   end
-   move_to(dude_obj, 24125, 1);
-   dude_rotate(rotation_to_tile(dude_tile, tile_num(Decker_Ptr)));
+      if not(is_loading_game) then begin  set_obj_visible(Fry_Stub_Ptr);   end
+      move_to(self_obj, 23926, 1);
+      self_rotate(rotation_to_tile(self_tile, tile_num(Decker_Ptr)));
+      set_self_team(TEAM_PLAYER);
+
+      if (map_var(MVAR_KANE_DEAD) == 0) then begin
+         move_to(Kane_Ptr, 22526, 1);
+         obj_rotate(Kane_Ptr, rotation_to_tile(tile_num(Kane_Ptr), tile_num(Decker_Ptr)));
+      end
+
+      move_to(dude_obj, 24125, 1);
+      dude_rotate(rotation_to_tile(dude_tile, tile_num(Decker_Ptr)));
    gfade_in(1);
 end
