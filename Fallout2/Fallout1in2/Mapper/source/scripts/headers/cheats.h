@@ -559,8 +559,7 @@ begin
    giq_option( 1, SCRIPT_CHEATER, 251, Cheater19h, NEUTRAL_REACTION );
 end
 
-procedure Teleport
-begin
+procedure Teleport begin
    gsay_reply(621, 262);
    giq_option( 1, SCRIPT_CHEATER, 269, TARDIS_1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 270, TARDIS_2, NEUTRAL_REACTION );
@@ -573,8 +572,7 @@ begin
    giq_option( 1, SCRIPT_CHEATER, 277, TARDIS_9, NEUTRAL_REACTION );
 end
 
-procedure TARDIS_1
-begin
+procedure TARDIS_1 begin
    gsay_reply(621, 262);
    giq_option( 1, SCRIPT_CHEATER, 303, Nec1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 309, Nec2, NEUTRAL_REACTION );

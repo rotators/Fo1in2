@@ -246,45 +246,43 @@ procedure talk_p_proc begin
       if (got_eye) then begin
          call Morbid09L;
       end
-      else begin
-         if (self_elevation == 1) then begin
-            if (not(local_var(5))) then begin
-               call Morbid00L;
-            end
-            else begin
-               call Morbid01L;
-            end
-         end
-         else if ((GAME_TIME_IN_DAYS) >= 80) then begin
-            if (not(local_var(7))) then begin
-               call Morbid17;
-            end
-            else begin
-               call Morbid21;
-            end
-         end
-         else if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-            if (local_var(4)) then begin
-               call Morbid04N;
-            end
-            else begin
-               call Morbid00N;
-            end
-         end
-         else if (local_var(4)) then begin
-            if (local_var(1) > 1) then begin
-               call Morbid13;
-            end
-            else begin
-               call Morbid16;
-            end
-         end
-         else if (local_var(1) > 1) then begin
-            call Morbid00;
+      else if (self_elevation == 1) then begin
+         if (not(local_var(5))) then begin
+            call Morbid00L;
          end
          else begin
-            call Morbid15;
+            call Morbid01L;
          end
+      end
+      else if ((GAME_TIME_IN_DAYS) >= 80) then begin
+         if (not(local_var(7))) then begin
+            call Morbid17;
+         end
+         else begin
+            call Morbid21;
+         end
+      end
+      else if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+         if (local_var(4)) then begin
+            call Morbid04N;
+         end
+         else begin
+            call Morbid00N;
+         end
+      end
+      else if (local_var(4)) then begin
+         if (local_var(LVAR_reaction_level) > BAD) then begin
+            call Morbid13;
+         end
+         else begin
+            call Morbid16;
+         end
+      end
+      else if (local_var(LVAR_reaction_level) > BAD) then begin
+         call Morbid00;
+      end
+      else begin
+         call Morbid15;
       end
       gsay_end;
       end_dialogue;
@@ -294,29 +292,25 @@ end
 procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       add_timer_event(self_obj, game_ticks(1), 2);
-      critter_injure(dude_obj, DAM_BLIND);//    DAM_BLIND         64
+      critter_injure(dude_obj, DAM_BLIND);
       got_eye := 1;
       dialogue_system_enter;
       game_ui_enable;
    end
-   else begin
-      if (fixed_param == 2) then begin
-         if ((self_elevation == 1) and (game_time_hour > 1700) and (game_time_hour < 2330)) then begin
-            reg_anim_clear(self_obj);
-            reg_anim_begin();
-            reg_anim_animate(self_obj, 11, -1);
-            reg_anim_obj_move_to_tile(self_obj, 12901, -1);
-            reg_anim_animate(self_obj, 10, -1);
-            reg_anim_obj_move_to_tile(self_obj, 12702, -1);
-            reg_anim_end();
-         end
-         add_timer_event(self_obj, game_ticks(random(10, 30)), 2);
+   else if (fixed_param == 2) then begin
+      if ((self_elevation == 1) and (game_time_hour > 1700) and (game_time_hour < 2330)) then begin
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+         reg_anim_animate(self_obj, 11, -1);
+         reg_anim_obj_move_to_tile(self_obj, 12901, -1);
+         reg_anim_animate(self_obj, 10, -1);
+         reg_anim_obj_move_to_tile(self_obj, 12702, -1);
+         reg_anim_end();
       end
-      else begin
-         if (fixed_param == 3) then begin
-            set_local_var(9, 3);
-         end
-      end
+      add_timer_event(self_obj, game_ticks(random(10, 30)), 2);
+   end
+   else if (fixed_param == 3) then begin
+      set_local_var(9, 3);
    end
 end
 
@@ -338,8 +332,6 @@ procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
-
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_IS_MORBID_TEAM_HOSTILE, 1);
       inc_inv_evil_crit
@@ -483,7 +475,7 @@ procedure Morbid09 begin
       DIAGNOSIS := DIAGNOSIS + mstr(195);
    end
    heal := dude_max_hp - dude_cur_hp;
-   if (local_var(1) >= 2) then begin
+   if (local_var(LVAR_reaction_level) >= NEUTRAL) then begin
       COST := 3 * heal;
       if (dude_poison_stat) then begin
          COST := COST + 25;
@@ -572,7 +564,7 @@ end
 
 procedure Morbid17 begin
    set_local_var(7, 1);
-   if (local_var(1) < 2) then begin
+   if (local_var(LVAR_reaction_level) < NEUTRAL) then begin
       UpReactLevel
    end
    Reply(148);
@@ -696,14 +688,10 @@ procedure Morbid02La begin
 end
 
 procedure Morbid03L begin
-   rndx := dude_gender;
-
-   if (rndx == 0) then begin
+   if dude_is_male then
       BMessage(mstr(214) + mstr(205));
-   end
-   else begin
+   else
       BMessage(mstr(214) + mstr(206));
-   end
    Gretch_call := 1;
    fetch_dude := 1;
 end

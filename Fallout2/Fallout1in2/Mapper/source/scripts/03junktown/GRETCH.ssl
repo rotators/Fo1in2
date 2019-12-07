@@ -22,6 +22,7 @@ procedure pickup_p_proc;
 procedure look_at_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
+procedure damage_p_proc;
 
 procedure Gretch00;
 procedure Gretch00a;
@@ -43,14 +44,14 @@ procedure Gretch10;
 procedure GretchEnd;
 procedure GretchCombat;
 
+#define LVAR_Herebefore          (0)
+
 variable tmp_hostile;
 variable initial := 0;
 variable warned_about_messing;
 
 import variable Gretch_call;
 import variable messing_with_Morbid_stuff;
-
-procedure damage_p_proc;
 
 procedure start begin
    if not(initial) then begin
@@ -59,8 +60,7 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -91,48 +91,35 @@ begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_good_critter
-   rm_timer_event(self_obj);
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then
       display_msg(mstr(100));
-   end
-   else begin
+   else
       display_msg(mstr(101));
-   end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
-   start_gdialog(103, self_obj, 4, -1, -1);
-   gsay_start;
-   if (local_var(0) == 1) then begin
-      call Gretch01;
-   end
-   else begin
-      call Gretch00;
-   end
-   gsay_end;
-   end_dialogue;
+   if (local_var(LVAR_Herebefore) == 1) then
+      start_dialog_at_node(Gretch01);
+   else
+      start_dialog_at_node(Gretch00);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
 end
 
-procedure Gretch00
-begin
+procedure Gretch00 begin
+   set_local_var(LVAR_Herebefore, 1);
+
    Reply(102);
    NLowOption(103, Gretch07);
    NOption(104, Gretch00a, 4);
@@ -141,8 +128,7 @@ begin
    NOption(107, GretchEnd, 4);
 end
 
-procedure Gretch00a
-begin
+procedure Gretch00a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Gretch04;
    end
@@ -151,8 +137,7 @@ begin
    end
 end
 
-procedure Gretch00b
-begin
+procedure Gretch00b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Gretch02;
    end
@@ -161,8 +146,7 @@ begin
    end
 end
 
-procedure Gretch01
-begin
+procedure Gretch01 begin
    Reply(108);
    NOption(109, Gretch02, 4);
    NOption(110, Gretch01a, 4);
@@ -170,8 +154,7 @@ begin
    NLowOption(103, Gretch07);
 end
 
-procedure Gretch01a
-begin
+procedure Gretch01a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Gretch05;
    end
@@ -180,16 +163,14 @@ begin
    end
 end
 
-procedure Gretch02
-begin
+procedure Gretch02 begin
    Reply(112);
    NOption(113, Gretch04, 4);
    NOption(114, Gretch03, 4);
    NOption(115, Gretch02a, 4);
 end
 
-procedure Gretch02a
-begin
+procedure Gretch02a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Gretch03;
    end
@@ -198,16 +179,14 @@ begin
    end
 end
 
-procedure Gretch03
-begin
+procedure Gretch03 begin
    Reply(116);
    NOption(117, Gretch04, 4);
    NOption(118, Gretch03a, 4);
    NOption(119, GretchEnd, 4);
 end
 
-procedure Gretch03a
-begin
+procedure Gretch03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Gretch05;
    end
@@ -216,16 +195,14 @@ begin
    end
 end
 
-procedure Gretch04
-begin
+procedure Gretch04 begin
    Reply(120);
    NOption(121, Gretch06, 4);
    NOption(122, Gretch05, 4);
    NOption(123, GretchEnd, 4);
 end
 
-procedure Gretch05
-begin
+procedure Gretch05 begin
    set_global_var(GVAR_GRETCH_PRIMECUTS, 1);
    Reply(124);
    NOption(125, Gretch05a, 4);
@@ -233,8 +210,7 @@ begin
    NOption(127, GretchEnd, 4);
 end
 
-procedure Gretch05a
-begin
+procedure Gretch05a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Gretch09;
    end
@@ -243,8 +219,7 @@ begin
    end
 end
 
-procedure Gretch06
-begin
+procedure Gretch06 begin
    set_global_var(GVAR_GRETCH_PRIMECUTS, 1);
    Reply(128);
    NOption(129, GretchEnd, 4);
@@ -252,8 +227,7 @@ begin
    NOption(131, Gretch07, 4);
 end
 
-procedure Gretch07
-begin
+procedure Gretch07 begin
    Reply(132);
    NOption(133, GretchEnd, 4);
    NOption(134, Gretch04, 4);
@@ -261,33 +235,26 @@ begin
    NLowOption(136, Gretch10);
 end
 
-procedure Gretch08
-begin
+procedure Gretch08 begin
    BMessage(137);
 end
 
-procedure Gretch09
-begin
+procedure Gretch09 begin
    Reply(138);
    NOption(139, GretchEnd, 4);
    BOption(126, GretchCombat, 4);
 end
 
-procedure Gretch10
-begin
+procedure Gretch10 begin
    NMessage(140);
 end
 
-procedure GretchEnd
-begin
+procedure GretchEnd begin
 end
 
-procedure GretchCombat
-begin
+procedure GretchCombat begin
    tmp_hostile := 1;
 end
-
-
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin

@@ -149,20 +149,17 @@ procedure KaneEndRefuses;
 procedure KaneTravel;
 procedure GoToDecker;
 
-variable tmp_hostile;
-variable Only_Once := 1;
-variable travel;
-
-variable SrcObj := 0;
-variable SrcIsParty := 0;
-
-import variable Kane_Ptr;
-import variable Decker_Ptr;
-
 #define LVAR_TALKED_TO_KANE               (4)
 #define LVAR_PERSONAL_ENEMY               (5)
 #define LVAR_ARMED_BEFORE                 (6)
 #define LVAR_PAYMENT_STATUS               (7)
+
+variable tmp_hostile;
+variable Only_Once := 1;
+variable travel;
+
+import variable Kane_Ptr;
+import variable Decker_Ptr;
 
 procedure start begin
    if Only_Once then begin
@@ -185,7 +182,7 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if (map_var(51) == 1) then begin
+   if (map_var(MVAR_PLAYER_TRIED_KANE_DOOR) == 1) then begin
       dialogue_system_enter;
    end
    if (travel == 1) then begin
@@ -206,8 +203,8 @@ procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
 
-   if (map_var(51) == 1) then begin
-      set_map_var(51, 0);
+   if (map_var(MVAR_PLAYER_TRIED_KANE_DOOR) == 1) then begin
+      set_map_var(MVAR_PLAYER_TRIED_KANE_DOOR, 0);
       float_msg(self_obj, mstr(300), FLOAT_MSG_RED);
    end
    else if ((map_var(MVAR_UNDERGROUND_NO_DEAL) == 1) or (map_var(MVAR_UNDERGROUND_HOSTILE) == 1) or (map_var(MVAR_KANE_MEET_DECKER) == 4) or (map_var(MVAR_KANE_MEET_DECKER) == 5) or (map_var(MVAR_DECKER_JOB_STATUS) == 1) or (map_var(MVAR_DECKER_STATUS_JOB2) == 2)) then begin
@@ -360,14 +357,12 @@ procedure Kane00 begin
    NLowOption(106, Kane01);
 end
 
-procedure Kane01
-begin
+procedure Kane01 begin
    NMessage(107);
    call KaneEndRefuses;
 end
 
-procedure Kane02
-begin
+procedure Kane02 begin
    Reply(108);
    NOption(109, Kane03, 4);
    NOption(110, Kane06, 4);
@@ -375,62 +370,52 @@ begin
    NOption(112, Kane08, 4);
 end
 
-procedure Kane03
-begin
+procedure Kane03 begin
    NMessage(113);
    call KaneTravel;
 end
 
-procedure Kane04
-begin
+procedure Kane04 begin
    Reply(114);
    NOption(115, Kane02, 4);
    BOption(116, Kane05, 4);
 end
 
-procedure Kane05
-begin
-   if (dude_is_male) then begin
+procedure Kane05 begin
+   if (dude_is_male) then
       Reply(117);
-   end
-   else begin
+   else
       Reply(118);
-   end
    BOption(119, KaneEndHostile, 4);
    NOption(120, Kane02, 4);
    NOption(121, KaneEndNotAcceptedOrDeclined, 4);
 end
 
-procedure Kane06
-begin
+procedure Kane06 begin
    NMessage(123);
    call KaneEndNotAcceptedOrDeclined;
 end
 
-procedure Kane07
-begin
+procedure Kane07 begin
    NMessage(124);
    call KaneEndNotAcceptedOrDeclined;
 end
 
-procedure Kane08
-begin
+procedure Kane08 begin
    Reply(125);
    NOption(126, Kane03, 4);
    NOption(127, KaneEndDeclined, 4);
    NOption(128, Kane06, 4);
 end
 
-procedure Kane09
-begin
+procedure Kane09 begin
    Reply(129);
    NOption(130, KaneTravel, 4);
    NOption(131, KaneEndDeclined, 4);
    NOption(132, Kane06, 4);
 end
 
-procedure Kane10
-begin
+procedure Kane10 begin
    if (local_var(LVAR_PERSONAL_ENEMY) < 3) then begin
       set_local_var(LVAR_PERSONAL_ENEMY, local_var(LVAR_PERSONAL_ENEMY) + 1);
       float_msg(self_obj, mstr(random(133, 136)), FLOAT_MSG_RED);
@@ -444,14 +429,11 @@ begin
    end
 end
 
-procedure Kane11
-begin
-   if (dude_is_male) then begin
+procedure Kane11 begin
+   if (dude_is_male) then
       Reply(138);
-   end
-   else begin
+   else
       Reply(139);
-   end
    call Kane00;
 end
 
@@ -460,47 +442,40 @@ procedure Kane12 begin
    call Kane00;
 end
 
-procedure Kane13
-begin
+procedure Kane13 begin
    Reply(141);
    call Kane00;
 end
 
 procedure Kane14 begin
-   if (dude_is_male) then begin
+   if (dude_is_male) then
       Reply(143);
-   end
-   else begin
+   else
       Reply(142);
-   end
    call Kane00;
 end
 
-procedure Kane15
-begin
+procedure Kane15 begin
    Reply(144);
    call Kane16;
 end
 
-procedure Kane16
-begin
-   if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) != 2) then begin
+procedure Kane16 begin
+   if (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) != 2) then
       NOption(145, Kane17, 4);
-   end
-   if (global_var(GVAR_DECKER_KNOWN) == 1) then begin
+
+   if (global_var(GVAR_DECKER_KNOWN) == 1) then
       NOption(146, Kane36, 4);
-   end
-   else begin
+   else
       NOption(147, Kane32, 4);
-   end
+
    NOption(151, Kane29, 4);
    NOption(152, KaneEndNotAcceptedOrDeclined, 4);
    NLowOption(154, Kane01);
    NLowOption(155, Kane01);
 end
 
-procedure Kane17
-begin
+procedure Kane17 begin
    Reply(156);
    NOption(157, Kane18, 6);
    NOption(158, Kane19, 4);
@@ -508,74 +483,63 @@ begin
    NOption(160, KaneEndNotAcceptedOrDeclined, 4);
 end
 
-procedure Kane18
-begin
+procedure Kane18 begin
    Reply(161);
    call Kane16;
 end
 
-procedure Kane19
-begin
+procedure Kane19 begin
    Reply(162);
    call Kane16;
 end
 
-procedure Kane29
-begin
+procedure Kane29 begin
    Reply(200);
    NOption(201, Kane59, 4);
    NOption(202, Kane31, 4);
    NOption(203, Kane30, 4);
 end
 
-procedure Kane30
-begin
+procedure Kane30 begin
    Reply(204);
    call Kane16;
 end
 
-procedure Kane31
-begin
+procedure Kane31 begin
    BMessage(205);
    call KaneEndRefuses;
 end
 
-procedure Kane32
-begin
+procedure Kane32 begin
    Reply(206);
    BOption(207, Kane33, 4);
    NOption(208, Kane35, 4);
 end
 
-procedure Kane33
-begin
+procedure Kane33 begin
    Reply(209);
    BOption(210, Kane34, 4);
    NOption(211, Kane35, 4);
 end
 
-procedure Kane34
-begin
+procedure Kane34 begin
    BMessage(212);
    call KaneEndHostile;
 end
 
-procedure Kane35
-begin
+procedure Kane35 begin
    Reply(213);
    call Kane16;
 end
 
-procedure Kane36
-begin
+procedure Kane36 begin
    Reply(214);
    NOption(215, Kane41, 4);
    NOption(216, Kane39, 4);
    NOption(217, Kane36a, 4);
 end
 
-procedure Kane36a
-begin
+procedure Kane36a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -15))) then begin
       call Kane37;
    end
@@ -584,55 +548,44 @@ begin
    end
 end
 
-procedure Kane37
-begin
-   if (dude_is_male) then begin
+procedure Kane37 begin
+   if (dude_is_male) then
       NMessage(218);
-   end
-   else begin
+   else
       NMessage(219);
-   end
    call KaneTravel;
 end
 
-procedure Kane38
-begin
+procedure Kane38 begin
    BMessage(220);
    call KaneEndTakeHike;
 end
 
-procedure Kane39
-begin
+procedure Kane39 begin
    Reply(221);
    NOption(222, Kane41, 4);
    NOption(223, Kane40, 4);
 end
 
-procedure Kane40
-begin
+procedure Kane40 begin
    NMessage(224);
    call KaneEndAnnoyed;
 end
 
-procedure Kane41
-begin
+procedure Kane41 begin
    Reply(225);
-   if (map_var(33) == 1) then begin
+   if (map_var(MVAR_BETH_STATUS) == 1) then
       NOption(226, Kane42, 4);
-   end
-   if (map_var(18) == 1) then begin
+   if (map_var(MVAR_LORENZO_STATUS) == 1) then
       NOption(227, Kane41a, 4);
-   end
-   if (global_var(GVAR_LOXLEY_KNOWN) == 1) then begin
+   if (global_var(GVAR_LOXLEY_KNOWN) == 1) then
       NOption(228, Kane47, 4);
-   end
    NOption(229, Kane45, 4);
    NOption(230, Kane44, 4);
 end
 
-procedure Kane41a
-begin
-   if (map_var(21) == 1) then begin
+procedure Kane41a begin
+   if (map_var(MVAR_LORENZO_INVITE) == 1) then begin
       call Kane57;
    end
    else begin
@@ -645,39 +598,33 @@ begin
    end
 end
 
-procedure Kane42
-begin
+procedure Kane42 begin
    Reply(231);
    NOption(232, Kane43, 4);
    NOption(233, Kane46, 4);
 end
 
-procedure Kane43
-begin
+procedure Kane43 begin
    BMessage(234);
    call KaneEndAnnoyed;
 end
 
-procedure Kane44
-begin
+procedure Kane44 begin
    BMessage(235);
    call KaneEndAnnoyed;
 end
 
-procedure Kane45
-begin
+procedure Kane45 begin
    BMessage(236);
    call KaneEndHostile;
 end
 
-procedure Kane46
-begin
+procedure Kane46 begin
    NMessage(237);
    call KaneEndAnnoyed;
 end
 
-procedure Kane47
-begin
+procedure Kane47 begin
    Reply(238);
    NOption(239, Kane47a, 4);
    NOption(240, Kane49, 4);
@@ -685,8 +632,7 @@ begin
    NOption(242, Kane48, 4);
 end
 
-procedure Kane47a
-begin
+procedure Kane47a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Kane50;
    end
@@ -695,39 +641,33 @@ begin
    end
 end
 
-procedure Kane48
-begin
+procedure Kane48 begin
    BMessage(243);
    call KaneEndRefuses;
 end
 
-procedure Kane49
-begin
+procedure Kane49 begin
    NMessage(244);
    call KaneTravel;
 end
 
-procedure Kane50
-begin
+procedure Kane50 begin
    Reply(245);
    NOption(246, Kane51, 4);
    NOption(247, Kane52, 4);
 end
 
-procedure Kane51
-begin
+procedure Kane51 begin
    BMessage(248);
    call KaneEndRefuses;
 end
 
-procedure Kane52
-begin
+procedure Kane52 begin
    NMessage(249);
    call KaneTravel;
 end
 
-procedure Kane53
-begin
+procedure Kane53 begin
    Reply(250);
    NOption(251, Kane55, 4);
    NOption(252, Kane54, 4);
@@ -735,98 +675,79 @@ begin
    NOption(254, Kane54, 4);
 end
 
-procedure Kane54
-begin
+procedure Kane54 begin
    NMessage(255);
    call KaneEndAnnoyed;
 end
 
-procedure Kane55
-begin
+procedure Kane55 begin
    NMessage(256);
    call KaneEndAnnoyed;
 end
 
-procedure Kane56
-begin
+procedure Kane56 begin
    NMessage(257);
    call KaneTravel;
 end
 
-procedure Kane57
-begin
+procedure Kane57 begin
    NMessage(258);
    call KaneTravel;
 end
 
-procedure Kane58
-begin
+procedure Kane58 begin
    BMessage(259);
    call KaneEndRefuses;
 end
 
-procedure Kane59
-begin
-   if (dude_is_male) then begin
+procedure Kane59 begin
+   if (dude_is_male) then
       GMessage(260);
-   end
-   else begin
+   else
       GMessage(261);
-   end
    call KaneEndNotAcceptedOrDeclined;
 end
 
-procedure Kane60
-begin
+procedure Kane60 begin
    Reply(262);
    call Kane16;
 end
 
-procedure Kane61
-begin
+procedure Kane61 begin
    float_msg(self_obj, mstr(263), FLOAT_MSG_RED);
 end
 
-procedure Kane62
-begin
+procedure Kane62 begin
    float_msg(self_obj, mstr(264), FLOAT_MSG_RED);
 end
 
-procedure Kane63
-begin
+procedure Kane63 begin
    float_msg(self_obj, mstr(265), FLOAT_MSG_RED);
 end
 
-procedure Kane71
-begin
+procedure Kane71 begin
    set_map_var(MVAR_DECKER_JOB_STATUS, 6);
    Reply(278);
    call Kane72;
 end
 
-procedure Kane72
-begin
+procedure Kane72 begin
    BOption(279, Kane73, 4);
    BOption(280, Kane74, 4);
    BOption(281, Kane78, 4);
 end
 
-procedure Kane73
-begin
+procedure Kane73 begin
    BMessage(282);
    call KaneEndHostile;
 end
 
-procedure Kane74
-begin
+procedure Kane74 begin
    BMessage(283);
    call KaneEndHostile;
 end
 
-procedure Kane75
-begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
+procedure Kane75 begin
    set_map_var(MVAR_DECKER_JOB_STATUS, 5);
 
    give_xp(300);
@@ -840,41 +761,33 @@ begin
    BLowOption(288, Kane78);
 end
 
-procedure Kane75a
-begin
+procedure Kane75a begin
    set_map_var(MVAR_DECKER_STATUS_JOB2, 6);
    call KaneEndRefuses;
 end
 
-procedure Kane76
-begin
+procedure Kane76 begin
    NMessage(289);
    call KaneTravel;
 end
 
-procedure Kane77
-begin
+procedure Kane77 begin
    BMessage(290);
    call KaneEndHostile;
 end
 
-procedure Kane78
-begin
+procedure Kane78 begin
    BMessage(291);
    call KaneEndHostile;
 end
 
-procedure Kane79
-begin
+procedure Kane79 begin
    set_map_var(MVAR_DECKER_JOB_STATUS, 6);
    BMessage(292);
    call KaneEndHostile;
 end
 
 procedure Kane80 begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-
    give_xp(EXP_KILLED_JAIN);
 
    set_global_var(GVAR_PLAYER_REPUTATION, (check_general_rep - 1));
@@ -884,39 +797,32 @@ procedure Kane80 begin
    call Kane81;
 end
 
-procedure Kane81
-begin
+procedure Kane81 begin
    BOption(294, Kane82, 4);
    BOption(295, Kane83, 4);
    BLowOption(296, Kane84);
 end
 
-procedure Kane82
-begin
+procedure Kane82 begin
    BMessage(297);
    call KaneEndRefuses;
 end
 
-procedure Kane83
-begin
+procedure Kane83 begin
    BMessage(298);
    call KaneEndRefuses;
 end
 
-procedure Kane84
-begin
+procedure Kane84 begin
    BMessage(299);
    call KaneEndRefuses;
 end
 
-procedure Kane85
-begin
+procedure Kane85 begin
    float_msg(self_obj, mstr(300), FLOAT_MSG_RED);
 end
 
-procedure Kane86
-begin
-   variable LVar0 := 0;
+procedure Kane86 begin
    set_map_var(MVAR_DECKER_JOB_STATUS, 4);
    set_global_var(GVAR_MARK_HUB_4, 1);
    dude_caps_adjust(500);
@@ -924,7 +830,6 @@ begin
 end
 
 procedure Kane87 begin
-   variable LVar0 := 0;
    dude_caps_adjust(2500);
 
    give_xp(EXP_JOB_KILLED_HIGHTOWER);
@@ -936,7 +841,6 @@ procedure Kane87 begin
 end
 
 procedure Kane88 begin
-   variable LVar0 := 0;
    dude_caps_adjust(3500);
 
    give_xp(EXP_JOB_KILLED_HIGHTOWER);
@@ -950,7 +854,6 @@ procedure Kane88 begin
 end
 
 procedure Kane89 begin
-   variable LVar0 := 0;
    dude_caps_adjust(3000);
 
    give_xp(EXP_JOB_KILLED_HIGHTOWER);
@@ -962,7 +865,6 @@ procedure Kane89 begin
 end
 
 procedure Kane90 begin
-   variable LVar0 := 0;
    dude_caps_adjust(5000);
 
    give_exp_points(700);
@@ -977,7 +879,6 @@ procedure Kane90 begin
 end
 
 procedure Kane91 begin
-   variable LVar0 := 0;
    set_global_var(GVAR_MARK_HUB_6, 1);
    dude_caps_adjust(1000);
    set_map_var(MVAR_DECKER_STATUS_JOB2, 5);
@@ -985,7 +886,6 @@ procedure Kane91 begin
 end
 
 procedure Kane92 begin
-   variable LVar0 := 0;
    dude_caps_adjust(4000);
 
    give_xp(EXP_JOB_KILLED_JAIN);
@@ -995,21 +895,20 @@ procedure Kane92 begin
    NMessage(309);
 end
 
-procedure Kane93
-begin
+procedure Kane93 begin
    Reply(310);
    NOption(311, Kane95, 4);
-   if (has_rep_berserker) then begin
+
+   if (has_rep_berserker) then
       BOption(312, Kane148, 4);
-   end
+
    NOption(313, Kane93a, 4);
    BOption(314, Kane149, 4);
    NLowOption(315, Kane94);
    NLowOption(316, Kane94);
 end
 
-procedure Kane93a
-begin
+procedure Kane93a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Kane151;
    end
@@ -1018,50 +917,42 @@ begin
    end
 end
 
-procedure Kane94
-begin
+procedure Kane94 begin
    NMessage(317);
    call KaneEndRefuses;
 end
 
-procedure Kane95
-begin
+procedure Kane95 begin
    Reply(318);
    BOption(319, Kane98, 4);
    BOption(320, Kane99, 4);
    BOption(321, Kane97, 4);
    BOption(322, Kane98, 4);
-   if (map_var(48) == 1) then begin
+   if (map_var(MVAR_BETH_TALKED_ABOUT_FRIEND) == 1) then
       BOption(323, Kane96, 4);
-   end
 end
 
-procedure Kane96
-begin
+procedure Kane96 begin
    BMessage(324);
    call KaneEndHostile;
 end
 
-procedure Kane97
-begin
+procedure Kane97 begin
    BMessage(325);
    call KaneEndRefuses;
 end
 
-procedure Kane98
-begin
+procedure Kane98 begin
    BMessage(326);
    call KaneEndRefuses;
 end
 
-procedure Kane99
-begin
+procedure Kane99 begin
    BMessage(327);
    call KaneEndHostile;
 end
 
-procedure Kane100
-begin
+procedure Kane100 begin
    Reply(328);
    BOption(330, Kane103, 4);
    NOption(331, Kane102, 4);
@@ -1070,164 +961,136 @@ begin
    NOption(334, Kane101, 4);
 end
 
-procedure Kane101
-begin
+procedure Kane101 begin
    NMessage(335);
    call KaneEnd;
 end
 
-procedure Kane102
-begin
+procedure Kane102 begin
    NMessage(336);
    call KaneTravel;
 end
 
-procedure Kane103
-begin
+procedure Kane103 begin
    BMessage(337);
    call KaneEndHostile;
 end
 
-procedure Kane104
-begin
+procedure Kane104 begin
    BMessage(338);
    call KaneEndHostile;
 end
 
-procedure Kane105
-begin
+procedure Kane105 begin
    BMessage(339);
    call KaneEndHostile;
 end
 
-procedure Kane106
-begin
+procedure Kane106 begin
    Reply(340);
-   if (map_var(21) == 1) then begin
+   if (map_var(MVAR_LORENZO_INVITE) == 1) then
       NOption(341, Kane57, 4);
-   end
-   else begin
+   else
       NOption(343, Kane132, 4);
-   end
    NOption(344, KaneEnd, 4);
    NLowOption(345, Kane101);
 end
 
-procedure Kane131
-begin
+procedure Kane131 begin
    NMessage(random(403, 407));
    call KaneTravel;
 end
 
-procedure Kane132
-begin
+procedure Kane132 begin
    NMessage(408);
    call KaneEndTakeHike;
 end
 
-procedure Kane133
-begin
+procedure Kane133 begin
    NOption(409, Kane131, 4);
    NOption(411, KaneEnd, 4);
    NLowOption(412, Kane101);
 end
 
-procedure Kane134
-begin
+procedure Kane134 begin
    Reply(413);
    call Kane133;
 end
 
-procedure Kane135
-begin
+procedure Kane135 begin
    BMessage(415);
 end
 
-procedure Kane136
-begin
+procedure Kane136 begin
    BMessage(417);
 end
 
-procedure Kane137
-begin
+procedure Kane137 begin
    BMessage(418);
 end
 
-procedure Kane138
-begin
+procedure Kane138 begin
    Reply(420);
    NOption(423, Kane139, 4);
    NOption(424, KaneEnd, 4);
    NLowOption(425, KaneEnd);
 end
 
-procedure Kane139
-begin
+procedure Kane139 begin
    Reply(426);
    NOption(427, Kane140, 4);
    NOption(428, KaneEndHostile, 4);
 end
 
-procedure Kane140
-begin
+procedure Kane140 begin
    NMessage(429);
 end
 
-procedure Kane146
-begin
+procedure Kane146 begin
    float_msg(self_obj, mstr(449), FLOAT_MSG_RED);
 end
 
-procedure Kane147
-begin
+procedure Kane147 begin
    float_msg(self_obj, mstr(451), FLOAT_MSG_RED);
 end
 
-procedure Kane148
-begin
+procedure Kane148 begin
    BMessage(453);
    call KaneEndHostile;
 end
 
-procedure Kane149
-begin
+procedure Kane149 begin
    BMessage(454);
    call KaneEndHostile;
 end
 
-procedure Kane150
-begin
+procedure Kane150 begin
    display_msg(mstr(455));
 end
 
-procedure Kane151
-begin
+procedure Kane151 begin
    NMessage(456);
    call KaneTravel;
 end
 
-procedure Kane152
-begin
+procedure Kane152 begin
    NMessage(457);
    call KaneEndRefuses;
 end
 
-procedure Kane153
-begin
+procedure Kane153 begin
    Reply(458);
    NOption(459, Kane154, 4);
    NLowOption(460, Kane154);
 end
 
-procedure Kane154
-begin
+procedure Kane154 begin
    Reply(461);
    NOption(462, Kane155, 4);
    NLowOption(463, Kane155);
 end
 
-procedure Kane155
-begin
+procedure Kane155 begin
    BMessage(464);
    call KaneEndHostile;
 end
@@ -1269,9 +1132,9 @@ end
 procedure GoToDecker begin
    set_map_var(MVAR_KANE_MEET_DECKER, 1);
    gfade_out(1);
-   move_to(self_obj, 22526, 1);
-   self_rotate(rotation_to_tile(self_tile, tile_num(Decker_Ptr)));
-   move_to(dude_obj, 23722, 1);
-   dude_rotate(rotation_to_tile(dude_tile, tile_num(Decker_Ptr)));
+      move_to(self_obj, 22526, 1);
+      self_rotate(rotation_to_tile(self_tile, tile_num(Decker_Ptr)));
+      move_to(dude_obj, 23722, 1);
+      dude_rotate(rotation_to_tile(dude_tile, tile_num(Decker_Ptr)));
    gfade_in(1);
 end
