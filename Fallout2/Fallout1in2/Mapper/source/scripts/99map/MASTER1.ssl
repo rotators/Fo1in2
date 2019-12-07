@@ -1,8 +1,18 @@
+/*
+
+   Cathedral - Master's Lair #1
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
+#include "..\headers\maps\mstrlr12.h"
+
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
 
 export variable patient;
 export variable lets_go;
@@ -11,14 +21,11 @@ export variable J_Door_Ptr;
 export variable Psy_Field_Ptr;
 export variable signal_mutants;
 
-variable party_elevation;
-variable dude_start_hex;
-variable player_elevation;
 variable monstr_ptr;
-variable stuff;
-variable cur_count;
-variable prev_count;
 
+#define spawn_monster(pid,hex)      monstr_ptr := create_object_sid(pid, 0, 0, SCRIPT_MONSTER); \
+                                    critter_attempt_placement(monstr_ptr, hex, 0);              \
+                                    set_team(monstr_ptr, TEAM_NECROPOLIS_MUTANT)
 
 procedure start begin
 end
@@ -26,36 +33,27 @@ end
 procedure map_enter_p_proc begin
    set_global_var(GVAR_WORLDMAPLIST_MASTERS_LAIR, 2);
    Darkness;
-   player_elevation := dude_elevation;
-   if (player_elevation == 0) then begin
+
+   if (dude_elevation == 0) then begin
       if (day and not(is_loading_game)) then begin
-         if (map_var(10) == 0) then begin
-            set_map_var(10, 1);
-            monstr_ptr := create_object_sid(PID_CENTAUR_LESSER, 0, 0, SCRIPT_MONSTER);
-            critter_attempt_placement(monstr_ptr, 24678, 0);
-            set_team(monstr_ptr, TEAM_NECROPOLIS_MUTANT);
-            monstr_ptr := create_object_sid(PID_FLOATER, 0, 0, SCRIPT_MONSTER);
-            critter_attempt_placement(monstr_ptr, 25680, 0);
-            set_team(monstr_ptr, TEAM_NECROPOLIS_MUTANT);
-            monstr_ptr := create_object_sid(PID_FLOATER, 0, 0, SCRIPT_MONSTER);
-            critter_attempt_placement(monstr_ptr, 25276, 0);
-            set_team(monstr_ptr, TEAM_NECROPOLIS_MUTANT);
+         if (map_var(MVAR_INVADED) == 0) then begin
+            set_map_var(MVAR_INVADED, 1);
+
+            spawn_monster(PID_CENTAUR_LESSER, 24678);
+            spawn_monster(PID_FLOATER, 25680);
+            spawn_monster(PID_FLOATER, 25276);
          end
       end
    end
 
-   if (global_var(GVAR_LOAD_MAP_INDEX) == 0) then begin
+   if (global_var(GVAR_LOAD_MAP_INDEX) == 0) then
       override_map_start(136, 107, 0, 3);
-   end
-   else if (global_var(GVAR_LOAD_MAP_INDEX) == 4) then begin
+   else if (global_var(GVAR_LOAD_MAP_INDEX) == 4) then
       override_map_start(98, 60, 0, 3);
-   end
-   else if (global_var(GVAR_LOAD_MAP_INDEX) == 1) then begin
+   else if (global_var(GVAR_LOAD_MAP_INDEX) == 1) then
       override_map_start(94, 98, 1, 3);
-   end
-   else begin
+   else
       override_map_start(136, 107, 0, 3);
-   end
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
@@ -63,9 +61,4 @@ end
 
 procedure map_update_p_proc begin
    Darkness;
-end
-
-procedure map_exit_p_proc begin
-   //    kill_critter_type(16777259, 0);
-   //    kill_critter_type(16777261, 0);
 end

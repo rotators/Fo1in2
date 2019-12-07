@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\junkent.h"
 
 #define NAME                    SCRIPT_PEASANTC
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -36,6 +36,8 @@ procedure PeasantC06;
 procedure PeasantC07;
 procedure PeasantCEnd;
 
+#define LVAR_Sleeping                     (2)
+
 variable night_person;
 variable wake_time;
 variable sleep_time;
@@ -43,8 +45,6 @@ variable home_tile;
 variable sleep_tile;
 
 import variable removal_ptr;
-
-#define LVAR_Sleeping                     (2)
 
 procedure start begin
 end
@@ -70,7 +70,6 @@ procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
-
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN, 1);
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
@@ -80,7 +79,7 @@ procedure destroy_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   if (map_var(2) == 1) then begin
+   if (map_var(MVAR_talked_to_scared_peasant) == 1) then begin
       if not(is_loading_game) then set_self_invisible;
       removal_ptr := self_obj;
    end
@@ -127,25 +126,18 @@ procedure talk_p_proc begin
    end
    else if ((GAME_TIME_IN_DAYS) < 80) then begin
       set_local_var(0, 1);
-      if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then begin//  GVAR_ENEMY_JUNK_CITIZEN == 1
+
+      if (global_var(GVAR_DUDE_ENEMY_JUNK_CITIZEN) == 1) then
          float_msg(self_obj, mstr(100), FLOAT_MSG_RED);
-      end
-      else begin
-         if (check_general_rep < -10) then begin
-            float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
-         end
-         else begin
-            if (dude_is_male) then begin
-               float_msg(self_obj, mstr(random(102, 103)), FLOAT_MSG_GREEN);
-            end
-            else begin
-               float_msg(self_obj, mstr(random(102, 104)), FLOAT_MSG_GREEN);
-            end
-         end
-      end
+      else if (check_general_rep < -10) then
+         float_msg(self_obj, mstr(101), FLOAT_MSG_LIGHT_RED);
+      else if (dude_is_male) then
+         float_msg(self_obj, mstr(random(102, 103)), FLOAT_MSG_GREEN);
+      else
+         float_msg(self_obj, mstr(random(102, 104)), FLOAT_MSG_GREEN);
    end
    else begin
-      set_map_var(2, 1);
+      set_map_var(MVAR_talked_to_scared_peasant, 1);
       start_dialog_at_node(PeasantC00);
    end
 end
@@ -200,23 +192,19 @@ procedure PeasantC05 begin
 end
 
 procedure PeasantC06 begin
-   variable LVar0 := 0;
-   LVar0 := mstr(116);
+   variable LVar0 := mstr(116);
+
    if not(is_killian_alive) then begin
-      if not(is_gizmo_alive) then begin
+      if not(is_gizmo_alive) then
          LVar0 := LVar0 + mstr(120);
-      end
-      else begin
+      else
          LVar0 := LVar0 + mstr(119);
-      end
    end
    else begin
-      if not(is_gizmo_alive) then begin
+      if not(is_gizmo_alive) then
          LVar0 := LVar0 + mstr(118);
-      end
-      else begin
+      else
          LVar0 := LVar0 + mstr(117);
-      end
    end
    Reply(LVar0);
    NOption(121, PeasantC07, 5);

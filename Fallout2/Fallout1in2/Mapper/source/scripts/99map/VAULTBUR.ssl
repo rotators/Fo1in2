@@ -8,6 +8,8 @@ procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
 
+procedure spawn_rats;
+
 variable Critter;
 variable Critter_Tile;
 variable Critter_Type;
@@ -23,7 +25,23 @@ end
 procedure map_enter_p_proc begin
    Darkness;
 
-   // Spawn rats on elevation 2:
+   // Spawn rats on elevation 2
+   call spawn_rats;
+
+   set_global_var(GVAR_LOAD_MAP_INDEX, 0);
+end
+
+procedure map_update_p_proc begin
+   Darkness;
+   if (dude_elevation == 1) then begin
+      if (global_var(GVAR_UNDRBED_STARTED_TIMER) < 3) then begin
+         add_timer_event(dude_obj, 0, 13);
+      end
+   end
+   //debug("MVAR_RoamingCount: " + map_var(MVAR_RoamingCount));
+end
+
+procedure spawn_rats begin
    if not(is_loading_game) and (not(map_first_run)) then begin
       if ((map_var(MVAR_RATHOLE_STATE) != STATE_CLOSED) and (game_time > map_var(MVAR_RespawnTimer))) then begin
          set_map_var(MVAR_RespawnTimer, (game_time + RESPAWN_TIME));
@@ -65,16 +83,4 @@ procedure map_enter_p_proc begin
 
       end
    end
-
-   set_global_var(GVAR_LOAD_MAP_INDEX, 0);
-end
-
-procedure map_update_p_proc begin
-   Darkness;
-   if (dude_elevation == 1) then begin
-      if (global_var(GVAR_UNDRBED_STARTED_TIMER) < 3) then begin
-         add_timer_event(dude_obj, 0, 13);
-      end
-   end
-   //debug("MVAR_RoamingCount: " + map_var(MVAR_RoamingCount));
 end
