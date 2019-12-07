@@ -346,6 +346,8 @@
 #define PID_GOLDEN_GECKO                (16777552)
 #define PID_FIRE_GECKO                  (16777553)
 
-// fake
+// intentionally creates dead code in gl_partycontrol,
+// just to avoid editing it on each sfall update
 #define PID_MARCUS (-0xF02)
+
 #endif // CRITPID_H
