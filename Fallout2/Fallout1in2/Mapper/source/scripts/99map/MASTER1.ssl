@@ -13,6 +13,7 @@
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
+procedure map_exit_p_proc;
 
 export variable patient;
 export variable lets_go;
@@ -23,7 +24,7 @@ export variable signal_mutants;
 
 variable monstr_ptr;
 
-#define spawn_monster(pid, hex)      monstr_ptr := create_object_sid(pid, 0, 0, SCRIPT_MONSTER); \
+#define spawn_monster(pid, hex)     monstr_ptr := create_object_sid(pid, 0, 0, SCRIPT_MONSTER); \
                                     critter_attempt_placement(monstr_ptr, hex, 0);              \
                                     set_team(monstr_ptr, TEAM_NECROPOLIS_MUTANT)
 
@@ -36,8 +37,8 @@ procedure map_enter_p_proc begin
 
    if (dude_elevation == 0) then begin
       if (day and not(is_loading_game)) then begin
-         if (map_var(MVAR_INVADED) == 0) then begin
-            set_map_var(MVAR_INVADED, 1);
+         if (map_var(MVAR_SPAWN_MONSTER) == 0) then begin
+            set_map_var(MVAR_SPAWN_MONSTER, 1);
 
             spawn_monster(PID_CENTAUR_LESSER, 24678);
             spawn_monster(PID_FLOATER, 25680);
@@ -58,7 +59,15 @@ procedure map_enter_p_proc begin
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
 
-
 procedure map_update_p_proc begin
    Darkness;
+end
+
+procedure map_exit_p_proc begin
+   if (map_var(MVAR_SPAWN_MONSTER) == 1) then begin
+      set_map_var(MVAR_SPAWN_MONSTER, 0);
+
+      kill_critter_type(PID_CENTAUR_LESSER, 0);
+      kill_critter_type(PID_FLOATER, 0);
+   end
 end

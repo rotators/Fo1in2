@@ -22,7 +22,7 @@
 #define MVAR_PLACEHOLDER2         (7)
 #define MVAR_PLACEHOLDER3         (8)
 #define MVAR_PLACEHOLDER4         (9)
-#define MVAR_INVADED              (10) // have i placed critters here
+#define MVAR_SPAWN_MUTANTS        (10) // have i placed critters here
 #define MVAR_Fixt_PLACEHOLDER_0   (11) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_1   (12) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_2   (13) //  Adding for ass-covering and future-proofing
