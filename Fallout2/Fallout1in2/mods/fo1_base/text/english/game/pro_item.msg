@@ -1030,3 +1030,5 @@
 {53401}{}{This key belongs to a Chrysalis motorcycle.}
 {53500}{}{Pump Parts}
 {53501}{}{Hydro-pressurization pump, electro-fibrous coil wire, magnetic vacuum seal, power strip, three-pin to three-pin adapters... quite a collection of parts.}
+{53600}{}{Vault Suit}
+{53601}{}{A regular vault suit. The number 13 is printed on the back.}

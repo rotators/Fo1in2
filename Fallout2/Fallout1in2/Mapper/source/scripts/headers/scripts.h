@@ -2,7 +2,13 @@
 #define SCRIPTS_H
 
 /*******************************************************************************
-                               Номера скриптов
+   File Name: Scripts.h
+
+   Purpose: This file contains defines for all of the scripts in
+            scripts.lst. This is an ordered list and needs to
+            conform exactly to scripts list. All defines in here
+            need to be prepended with SCRIPT_ as a naming
+            convention.
 *******************************************************************************/
 
 #define SCRIPT_OBJ_DUDE  (1)  //  obj_dude.int   ; player script -- was cr_dialg.int  ; Testing

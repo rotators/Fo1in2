@@ -66,6 +66,7 @@
 #define PID_LEATHER_ARMOR_MK_II             (379)
 #define PID_METAL_ARMOR_MK_II               (380)
 #define PID_COMBAT_ARMOR_MK_II              (381)
+#define PID_V13_VSUIT                       (536)
 
 /******************************************************************
 ***************       Weapons                       ***************
@@ -259,7 +260,7 @@
 #define PID_WALL_LOCKER_CLEAN_RIGHT         (137)
 #define PID_WALL_LOCKER_RUSTY_LEFT          (138)
 #define PID_WALL_LOCKER_RUSTY_RIGHT         (139)
-#define PID_IGUANA_STAND                   (165)
+#define PID_IGUANA_STAND                    (165)
 #define PID_CONTAINER_WOOD_CRATE            (180)
 #define PID_VAULT_DWELLER_BONES             (211)
 #define PID_SMALL_POT                       (243)

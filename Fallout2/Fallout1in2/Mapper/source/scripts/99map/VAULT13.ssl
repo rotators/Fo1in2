@@ -1,11 +1,21 @@
+/*
+
+   Vault 13 - Yes, the Vault.
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\updatmap.h"
 #include "..\headers\command.h"
+#include "..\headers\maps\vault13.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_exit_p_proc;
 procedure map_update_p_proc;
+
+procedure Make_Critter;
+procedure add_vsuits;
 
 export variable armory_access;
 export variable getting_ration;
@@ -19,11 +29,7 @@ export variable VaultBox_ptr;
 export variable WtrGrd_ptr;
 export variable WtrThief_ptr;
 
-procedure Make_Critter;
-
 variable gear;
-variable party_elevation;
-
 variable kind := 0;
 variable id := 0;
 variable script := 0;
@@ -39,32 +45,31 @@ procedure map_enter_p_proc begin
       set_global_var(GVAR_QUEST_VAULT13_7_LEARN_AT_LIBRARY, 1);
    end
 
-   if (v13_invaded) and (map_var(6) == 0) then begin
-      if CUR_AREA_VAULT_13 then begin
-         set_map_var(6, 1);// <-- invaded flag
-      end
-   end
+   if (v13_invaded) then
+      set_map_var(MVAR_INVADED, 1);
 
-   if (map_first_run) and (map_var(4) == 0) then begin
-      set_map_var(4, 1);
+   if (map_first_run) then begin
+      if not(fo1in2_armor_vsuit_disabled) then
+         call add_vsuits;
 
-      if (dude_is_male) then begin
+      if (dude_is_male) then
          Officer_ptr := create_object_sid(PID_GUARD_1, 22093, 2, SCRIPT_OFFICER);
-      end
-      else begin
+      else
          Officer_ptr := create_object_sid(PID_GUARD_2, 22093, 2, SCRIPT_OFFICER);
-      end
 
-      gear := create_object(PID_10MM_PISTOL, 0, 0);// 10mm Pistol
+      gear := create_object(PID_10MM_PISTOL, 0, 0);
       add_obj_to_inven(Officer_ptr, gear);
       wield_obj_critter(Officer_ptr, gear);
-      gear := create_object(PID_10MM_JHP, 0, 0);// 10mm JHP
+
+      gear := create_object(PID_10MM_JHP, 0, 0);
       add_obj_to_inven(Officer_ptr, gear);
-      gear := create_object(PID_STIMPAK, 0, 0);// Stimpak
+
+      gear := create_object(PID_STIMPAK, 0, 0);
       add_obj_to_inven(Officer_ptr, gear);
       critter_attempt_placement(Officer_ptr, 22093, 2);
       obj_rotate(Officer_ptr, 2);
 
+      // TODO: Ugh, rewrite this.
       if fixt_enabled then begin
          kind := 0;
          call Make_Critter;
@@ -231,11 +236,11 @@ procedure map_enter_p_proc begin
          critter_attempt_placement(Critter, 21860, 2);
          obj_rotate(Critter, 2);
       end
-      set_map_var(4, 1);
    end
-   armory_access := map_var(1);
-   revolting := map_var(2);
-   traitor := map_var(3);
+
+   armory_access := map_var(MVAR_armory_access);
+   revolting := map_var(MVAR_revolting);
+   traitor := map_var(MVAR_traitor);
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
@@ -250,74 +255,73 @@ end
 
 procedure map_exit_p_proc begin
    if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) == 2) then begin
-      if (WtrThief_ptr) then begin
+      if (WtrThief_ptr) then
          destroy_object(WtrThief_ptr);
-      end
    end
-   set_map_var(1, armory_access);
-   set_map_var(2, revolting);
-   set_map_var(3, traitor);
+   set_map_var(MVAR_armory_access, armory_access);
+   set_map_var(MVAR_revolting, revolting);
+   set_map_var(MVAR_traitor, traitor);
 end
 
 procedure Make_Critter begin
    if not(kind) then begin// DWELLERS DWELLERS
       rndx := random(0, 5);
-      if rndx == 0 then begin
-         id := 16777216 + 1;//   white male
-      end
-      else if rndx == 1 then begin
-         id := 16777216 + 6;//   white female
-      end
-      else if rndx == 2 then begin
-         id := 16777216 + 26;//  black male
-      end
-      else if rndx == 3 then begin
-         id := 16777216 + 34;//  white male
-      end
-      else if rndx == 4 then begin
-         id := 16777216 + 35;//  redhead female
-      end
-      else begin
-         id := 16777216 + 206;//   white male
-      end
+      if rndx == 0 then
+         id := 16777217;//   white male
+      else if rndx == 1 then
+         id := 16777222;//   white female
+      else if rndx == 2 then
+         id := 16777242;//  black male
+      else if rndx == 3 then
+         id := 16777250;//  white male
+      else if rndx == 4 then
+         id := 16777251;//  redhead female
+      else
+         id := 16777422;//   white male
    end
    else begin// TECHNICIANS TECHNICIANS
       if kind == 1 then begin
          rndx := random(0, 3);
-         if rndx == 0 then begin
-            id := 16777216 + 53;//  white female
-         end
-         else if rndx == 1 then begin
-            id := 16777216 + 52;//  black male
-         end
-         else if rndx == 2 then begin
-            id := 16777216 + 58;//  redhead female
-         end
-         else begin
-            id := 16777216 + 54;//  white male
-         end
+         if rndx == 0 then
+            id := 16777269;//  white female
+         else if rndx == 1 then
+            id := 16777268;//  black male
+         else if rndx == 2 then
+            id := 16777274;//  redhead female
+         else
+            id := 16777270;//  white male
       end
       else begin// GUARDS GUARDS GUARDS
          rndx := random(0, 3);
-         if rndx == 0 then begin
-            id := 16777216 + 55;//  white female
-         end
-         else if rndx == 1 then begin
-            id := 16777216 + 56;//  white male
-         end
-         else if rndx == 2 then begin
-            id := 16777216 + 57;//  black male
-         end
-         else begin
-            id := 16777216 + 198;// redhead female
-         end
+         if rndx == 0 then
+            id := 16777271;//  white female
+         else if rndx == 1 then
+            id := 16777272;//  white male
+         else if rndx == 2 then
+            id := 16777273;//  black male
+         else
+            id := 16777414;// redhead female
       end
    end
-   if random(0, 1) then begin
-      script := SCRIPT_GENVAULT;//  GENVAULT
-   end
-   else begin
-      script := SCRIPT_VALTCTZN;//  VALTCTZN
-   end
+
+   if random(0, 1) then
+      script := SCRIPT_GENVAULT;
+   else
+      script := SCRIPT_VALTCTZN;
    Critter := create_object_sid(id, 0, 0, script);
+end
+
+procedure add_vsuits begin
+   variable
+      i, Item,
+      locker_a := tile_contains_pid_obj(20499, 2, PID_LOCKER_CLEAN_LEFT),
+      locker_b := tile_contains_pid_obj(20497, 2, PID_LOCKER_CLEAN_LEFT),
+      locker_c := tile_contains_pid_obj(20897, 2, PID_LOCKER_CLEAN_RIGHT),
+      lockers := [locker_a, locker_b, locker_c];
+
+   foreach (i in lockers) begin
+      Item := create_object(PID_V13_VSUIT, 0, 0);
+      if (i != 0) then
+         add_mult_objs_to_inven(i, Item, random(1,5));
+   end
 end

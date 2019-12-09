@@ -129,5 +129,9 @@
 #define FID_NFNICE        (16777334)
 #define FID_NMOLDD        (16777335)
 #define FID_MAROBE        (16777336)
+#define FID_NFPRIM        (16777337)
+#define FID_NFPJMP        (16777338)
+#define FID_NMBJMP        (16777339)
+#define FID_NMLJMP        (16777340)
 
 #endif // ARTFID_H
