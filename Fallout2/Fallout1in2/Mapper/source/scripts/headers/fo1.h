@@ -29,6 +29,7 @@
 #define fo1in2_unlimited_hpa_disabled   (global_var(GVAR_ENABLE_UNLIMITED_HPA) == 0)
 #define fo1in2_maltese_singer_disabled  (global_var(GVAR_ENABLE_MALTESE_SINGER) == 0)
 #define fo1in2_party_limit_disabled     (global_var(GVAR_ENABLE_FO2_PARTY_LIMIT) == 0)
+#define fo1in2_alt_disguise_disabled    (global_var(GVAR_ENABLE_ALTERNATIVE_DISGUISE) == 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -391,12 +392,24 @@ end
                                         (cur_map_index == MAP_MNTCRVN4)
 
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
-#define coc_disguise_check          if dude_wearing_coc_robe then begin \
-                                        if (party_size > 1) then        \
-                                            DISGUISED := 0;             \
-                                        else                            \
-                                            DISGUISED := 1;             \
-                                    end
+
+variable DISGUISED;
+#define coc_disguise_check          if dude_wearing_coc_robe then begin                                                    \
+                                       DISGUISED := 1;                                                                     \
+                                       if fo1in2_alt_disguise_disabled then begin                                          \
+                                          if (party_size > 1) then                                                         \
+                                             DISGUISED := 0;                                                               \
+                                       end                                                                                 \
+                                       else begin                                                                          \
+                                          variable who;                                                                    \
+                                          foreach (who in party_member_list(0)) begin                                      \
+                                             if (obj_pid(critter_inven_obj(who,INVEN_TYPE_WORN)) != PID_PURPLE_ROBE) then  \
+                                                DISGUISED := 0;                                                            \
+                                          end                                                                              \
+                                       end                                                                                 \
+                                    end                                                                                    \
+                                    else                                                                                   \
+                                       DISGUISED := 0
 
 #define self_is_child 				(self_pid == PID_GIRL or self_pid == PID_BOY)
 
