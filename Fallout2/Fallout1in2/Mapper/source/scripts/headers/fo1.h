@@ -394,6 +394,8 @@ end
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 
 variable DISGUISED;
+variable COC_TRESPASSING;
+#define coc_no_badge_worn(cr)       (not(get_item_count(cr,PID_RED_COC_BADGE)) and not(get_item_count(cr,PID_BLACK_COC_BADGE)))
 #define coc_disguise_check          if dude_wearing_coc_robe then begin                                                    \
                                        DISGUISED := 1;                                                                     \
                                        if fo1in2_alt_disguise_disabled then begin                                          \
@@ -410,6 +412,19 @@ variable DISGUISED;
                                     end                                                                                    \
                                     else                                                                                   \
                                        DISGUISED := 0
+                                       
+#define coc_badge_check             COC_TRESPASSING := 0;                                    \
+                                    if fo1in2_alt_disguise_disabled then begin               \
+                                       if (party_size > 1) then                              \
+                                          COC_TRESPASSING := 1;                              \
+                                    end                                                      \
+                                    else begin                                               \
+                                       foreach (who in party_member_list(0)) begin           \
+                                          if coc_no_badge_worn(who) then                     \
+                                             COC_TRESPASSING := 1;                           \
+                                       end                                                   \
+                                    end                                                      \
+                                    if coc_no_badge_worn(dude_obj) then COC_TRESPASSING := 1
 
 #define self_is_child 				(self_pid == PID_GIRL or self_pid == PID_BOY)
 
