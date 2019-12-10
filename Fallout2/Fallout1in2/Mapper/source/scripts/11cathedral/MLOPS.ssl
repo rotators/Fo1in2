@@ -22,14 +22,13 @@ procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
-procedure dialog_end;
+
+#define LVAR_Herebefore          (0)
 
 variable tmp_hostile;
 variable Only_Once := 1;
 
 #define float(x)                    float_msg(self_obj, mstr(x), FLOAT_MSG_RED)
-
-procedure gotonull;
 
 procedure start begin
    if Only_Once then begin
@@ -48,10 +47,13 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
 
-   if (tmp_hostile == 0) and Current_Distance_From_Dude < 15 and (not(dude_wearing_coc_robe) and (self_can_see_dude /*or self_can_hear_dude*/)) then begin
-      self_look_at_dude;
-      float(103);
-      tmp_hostile := 1;
+   coc_disguise_check;
+   if self_can_see_dude then begin
+      if (tmp_hostile == 0) and Current_Distance_From_Dude < 15 and not(DISGUISED) then begin
+         self_look_at_dude;
+         float(103);
+         tmp_hostile := 1;
+      end
    end
 end
 
@@ -64,14 +66,15 @@ end
 procedure talk_p_proc begin
    dude_look_at_self;
 
-   if dude_wearing_coc_robe then begin
-      if (local_var(0) == 1) then begin
+   coc_disguise_check;
+   if (DISGUISED) then begin
+      if (local_var(LVAR_Herebefore) == 1) then begin
          float(102);
       end
       else begin
          float(101);
       end
-      set_local_var(0, 1);
+      set_local_var(LVAR_Herebefore, 1);
    end
    else begin
       float(103);
@@ -87,10 +90,4 @@ end
 procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
-end
-
-procedure dialog_end begin
-end
-
-procedure gotonull begin
 end

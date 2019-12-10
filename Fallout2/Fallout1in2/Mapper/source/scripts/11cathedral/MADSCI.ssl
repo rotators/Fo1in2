@@ -64,35 +64,27 @@ variable Only_Once := 1;
 variable home_tile;
 variable sleep_tile;
 
-procedure madscinull;
-
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_CHILDREN_TRUE);
+
       home_tile := self_tile;
-      if (home_tile == 22093) then begin
+      if (home_tile == 22093) then
          sleep_tile := 21881;
-      end
-      else begin
-         if (home_tile == 22704) then begin
-            sleep_tile := 22281;
-         end
-         else begin
-            sleep_tile := 22083;
-         end
-      end
+      else if (home_tile == 22704) then
+         sleep_tile := 22281;
+      else
+         sleep_tile := 22083;
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
@@ -103,63 +95,57 @@ begin
             set_local_var(6, 0);
             self_walk_to_tile(home_tile);
          end
-         else begin
-            if (self_tile != home_tile) then begin
-               self_walk_to_tile(home_tile);
-            end
+         else if (self_tile != home_tile) then begin
+            self_walk_to_tile(home_tile);
+         end
+      end
+      else if (local_var(6)) then begin
+         if (self_tile != sleep_tile) then begin
+            self_walk_to_tile(sleep_tile);
          end
       end
       else begin
-         if (local_var(6)) then begin
-            if (self_tile != sleep_tile) then begin
-               self_walk_to_tile(sleep_tile);
-            end
-         end
-         else begin
-            set_local_var(6, 1);
-            self_walk_to_tile(sleep_tile);
-         end
+         set_local_var(6, 1);
+         self_walk_to_tile(sleep_tile);
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
+   set_tma_data(tma_source_generic, TMA_MSG_MBASE, -1, -1, 997, 999);
+
    dude_look_at_self;
+
    if (self_tile == sleep_tile) then begin
       float_msg(self_obj, mstr(303), FLOAT_MSG_RED);
    end
    else begin
       get_reaction
-      start_gdialog(679, self_obj, 4, -1, -1);
-      gsay_start;
-      if dude_wearing_coc_robe then begin
+      coc_disguise_check;
+      if DISGUISED then begin
          if (local_var(5) == 1) then begin
-            call madsci01;
+            start_dialog_at_node(madsci01);
          end
          else begin
-            call madsci00;
+            start_dialog_at_node(madsci00);
          end
          set_local_var(5, 1);
       end
       else begin
          if (local_var(4) == 1) then begin
-            call madsci01;
+            start_dialog_at_node(madsci01);
          end
          else begin
-            call madsci12;
+            start_dialog_at_node(madsci12);
          end
          set_local_var(4, 1);
       end
-      gsay_end;
-      end_dialogue;
    end
 end
 
@@ -167,39 +153,30 @@ procedure destroy_p_proc begin
    inc_inv_evil_crit
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (self_tile == sleep_tile) then begin
+   if (self_tile == sleep_tile) then
       display_msg(mstr(300));
-   end
-   else begin
+   else
       display_msg(mstr(100));
-   end
 end
 
-procedure dialog_end
-begin
+procedure dialog_end begin
 end
 
-procedure madsci00
-begin
-   if (dude_is_male) then begin
+procedure madsci00 begin
+   if (dude_is_male) then
       Reply(101);
-   end
-   else begin
+   else
       Reply(102);
-   end
    NOption(103, madsci00a, 7);
    NOption(104, madsci04, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       NOption(105, madsci00b, 4);
-   end
    NLowOption(106, madsci06);
 end
 
-procedure madsci00a
-begin
+procedure madsci00a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci02;
    end
@@ -208,8 +185,7 @@ begin
    end
 end
 
-procedure madsci00b
-begin
+procedure madsci00b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
       call madsci03;
    end
@@ -218,19 +194,16 @@ begin
    end
 end
 
-procedure madsci01
-begin
+procedure madsci01 begin
    Reply(107);
    NOption(108, madsci01a, 4);
    NOption(109, madsci02, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       BOption(110, combat, 4);
-   end
    NLowOption(111, madsci06);
 end
 
-procedure madsci01a
-begin
+procedure madsci01a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
       call madsci03;
    end
@@ -239,8 +212,7 @@ begin
    end
 end
 
-procedure madsci02
-begin
+procedure madsci02 begin
    Reply(112);
    NOption(113, madsci07, 7);
    NOption(114, madsci02a, 4);
@@ -248,8 +220,7 @@ begin
    NOption(116, madsci14, 4);
 end
 
-procedure madsci02a
-begin
+procedure madsci02a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci07;
    end
@@ -258,8 +229,7 @@ begin
    end
 end
 
-procedure madsci02b
-begin
+procedure madsci02b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci04;
    end
@@ -268,23 +238,18 @@ begin
    end
 end
 
-procedure madsci03
-begin
-   if (dude_is_male) then begin
+procedure madsci03 begin
+   if (dude_is_male) then
       Reply(117);
-   end
-   else begin
+   else
       Reply(118);
-   end
    NOption(103, madsci03a, 4);
    NOption(104, madsci04, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       NOption(119, madsci03b, 4);
-   end
 end
 
-procedure madsci03a
-begin
+procedure madsci03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci02;
    end
@@ -293,8 +258,7 @@ begin
    end
 end
 
-procedure madsci03b
-begin
+procedure madsci03b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
       call madsci09;
    end
@@ -303,18 +267,15 @@ begin
    end
 end
 
-procedure madsci04
-begin
+procedure madsci04 begin
    Reply(120);
    NOption(121, madsci04a, 4);
    NOption(122, madsci05, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       BOption(123, combat, 4);
-   end
 end
 
-procedure madsci04a
-begin
+procedure madsci04a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci09;
    end
@@ -323,49 +284,40 @@ begin
    end
 end
 
-procedure madsci05
-begin
+procedure madsci05 begin
    Reply(124);
    NOption(125, dialog_end, 4);
    NOption(126, madsci09, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       BOption(127, combat, 4);
-   end
 end
 
-procedure madsci06
-begin
+procedure madsci06 begin
    NMessage(128);
 end
 
-procedure madsci07
-begin
+procedure madsci07 begin
    Reply(129);
    NOption(130, madsci05, 4);
    NOption(131, dialog_end, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       BOption(132, combat, 4);
-   end
 end
 
-procedure madsci08
-begin
+procedure madsci08 begin
    NMessage(133);
 end
 
-procedure madsci09
-begin
+procedure madsci09 begin
    Reply(134);
    NOption(135, madsci09a, 4);
    BOption(136, madsci09b, 4);
    BOption(137, madsci09c, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       BOption(138, combat, 4);
-   end
 end
 
-procedure madsci09a
-begin
+procedure madsci09a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -5))) then begin
       call madsci06;
    end
@@ -374,8 +326,7 @@ begin
    end
 end
 
-procedure madsci09b
-begin
+procedure madsci09b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
       call madsci10;
    end
@@ -384,8 +335,7 @@ begin
    end
 end
 
-procedure madsci09c
-begin
+procedure madsci09c begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
       call madsci10;
    end
@@ -394,23 +344,18 @@ begin
    end
 end
 
-procedure madsci10
-begin
-   if (dude_is_male) then begin
+procedure madsci10 begin
+   if (dude_is_male) then
       Reply(117);
-   end
-   else begin
+   else
       Reply(118);
-   end
    NOption(139, madsci10a, 4);
    NOption(140, dialog_end, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       NOption(119, madsci10b, 4);
-   end
 end
 
-procedure madsci10a
-begin
+procedure madsci10a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci02;
    end
@@ -419,8 +364,7 @@ begin
    end
 end
 
-procedure madsci10b
-begin
+procedure madsci10b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
       call madsci06;
    end
@@ -429,14 +373,12 @@ begin
    end
 end
 
-procedure madsci11
-begin
+procedure madsci11 begin
    BMessage(141);
    call combat;
 end
 
-procedure madsci12
-begin
+procedure madsci12 begin
    Reply(142);
    NOption(143, madsci12a, 4);
    BOption(144, madsci12b, 4);
@@ -444,8 +386,7 @@ begin
    NOption(146, combat, 4);
 end
 
-procedure madsci12a
-begin
+procedure madsci12a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
       call madsci03;
    end
@@ -454,8 +395,7 @@ begin
    end
 end
 
-procedure madsci12b
-begin
+procedure madsci12b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -25))) then begin
       call madsci10;
    end
@@ -464,8 +404,7 @@ begin
    end
 end
 
-procedure madsci12c
-begin
+procedure madsci12c begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -15))) then begin
       call madsci13;
    end
@@ -474,16 +413,14 @@ begin
    end
 end
 
-procedure madsci13
-begin
+procedure madsci13 begin
    Reply(147);
    NOption(148, madsci02, 4);
    BOption(144, madsci13a, 4);
    NOption(149, madsci13b, 4);
 end
 
-procedure madsci13a
-begin
+procedure madsci13a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -25))) then begin
       call madsci10;
    end
@@ -492,8 +429,7 @@ begin
    end
 end
 
-procedure madsci13b
-begin
+procedure madsci13b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
       call madsci10;
    end
@@ -502,28 +438,19 @@ begin
    end
 end
 
-procedure madsci14
-begin
+procedure madsci14 begin
    Reply(150);
    NOption(151, madsci14a, 4);
    NOption(122, madsci05, 4);
-   if (has_rep_berserker) then begin
+   if (has_rep_berserker) then
       NOption(123, combat, 4);
-   end
 end
 
-procedure madsci14a
-begin
+procedure madsci14a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call madsci09;
    end
    else begin
       call madsci08;
    end
-end
-
-
-
-procedure madscinull
-begin
 end

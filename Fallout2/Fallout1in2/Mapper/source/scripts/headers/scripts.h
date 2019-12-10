@@ -463,7 +463,7 @@
 #define SCRIPT_MVDWN2UP  (450)  //  MVDwn2Up.int    ; go from the lower layers of Master's Vault to the upper                     
 #define SCRIPT_MVUP2DWN  (451)  //  MVUp2Dwn.int    ; go from the upper layers to the lower layers of Master's Vault              
 #define SCRIPT_CHID2MAS  (452)  //  Chid2Mas.int    ; go from the Children of the Cathedral to the Master's Lair                  
-#define SCRIPT_MAS2CHID  (453)  //  Mas2Chid.int    ; go from the Master's Lair to the Children                                   
+#define SCRIPT_MAS2CHID  (453)  //  Mas2Chid.int    ; go from the Master's Lair to the Children   // UNUSED!!                                 
 #define SCRIPT_CHID2TWR  (454)  //  Chid2Twr.int    ; go from the main floor to tower of the Children                             
 #define SCRIPT_TOW2CHID  (455)  //  Tow2Chid.int    ; go from the tower to main floor of the Children                             
 #define SCRIPT_COCDOOR   (456)  //  COCDoor.int     ; Transport from outside to inside of Children

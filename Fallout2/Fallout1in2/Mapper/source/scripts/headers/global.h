@@ -546,8 +546,8 @@
 #define GVAR_SPECIAL_TALKCOW                    (1416)
 #define GVAR_SPECIAL_USEDCAR                    (1417)
 #define GVAR_MRHANDYC_NO_DESTROY_MSG            (1418)
-#define GVAR_MBASE_RED_ONLY_PLAYER              (1419)
-#define GVAR_MBASE_RED_ONLY_PARTY               (1420)
+#define GVAR_MBASE_PAINFIELD_MODE               (1419)
+#define GVAR_MBASE_RED_ONLY_PARTY               (1420) // unused
 #define GVAR_PLAYER_LOOTS_MEAT_BODIES           (1421)
 #define GVAR_GIFTED_MINUS_10_PERLEVEL           (1422) // unused
 #define GVAR_ENTERED_GUARDIAN                   (1423)
