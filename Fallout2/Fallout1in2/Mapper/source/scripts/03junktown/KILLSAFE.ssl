@@ -1,4 +1,5 @@
 #include "..\headers\define.h"
+#include "..\headers\maps\junkkill.h"
 
 #define NAME                    SCRIPT_KILLSAFE
 
@@ -12,25 +13,25 @@ procedure pickup_p_proc;
 procedure use_p_proc;
 procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
+
 procedure safe_bonus;
+
+#define LVAR_Bonus_Items         (0)
 
 variable item;
 variable test;
 
 import variable KillSafe_ptr;
 
-
 procedure start begin
 end
 
 procedure description_p_proc begin
    script_overrides;
-   if (obj_is_locked(self_obj)) then begin
+   if (obj_is_locked(self_obj)) then
       display_msg(mstr(105));
-   end
-   else begin
+   else
       display_msg(mstr(101));
-   end
 end
 
 procedure look_at_p_proc begin
@@ -39,29 +40,20 @@ procedure look_at_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   variable i, item_list;
+
    KillSafe_ptr := self_obj;
    obj_close(self_obj);
    obj_lock(self_obj);
-   if (local_var(0) == 0) then begin
-      if (random(0, 3) == 3) then begin
-         item := create_object(PID_STIMPAK, 0, 0);
-         add_obj_to_inven(self_obj, item);
-      end
-      if (random(0, 3) == 3) then begin
-         item := create_object(PID_44_MAGNUM_JHP, 0, 0);
-         add_obj_to_inven(self_obj, item);
-      end
-      if (random(0, 3) == 3) then begin
-         item := create_object(PID_10MM_AP, 0, 0);
-         add_obj_to_inven(self_obj, item);
-      end
-      if (random(0, 3) == 3) then begin
-         item := create_object(PID_223_FMJ, 0, 0);
-         add_obj_to_inven(self_obj, item);
-      end
-      if (random(0, 3) == 3) then begin
-         item := create_object(PID_KNIFE, 0, 0);
-         add_obj_to_inven(self_obj, item);
+
+   if map_first_run then begin
+      item_list := [PID_STIMPAK, PID_44_MAGNUM_JHP, PID_10MM_AP, PID_223_FMJ, PID_KNIFE];
+      foreach (i in item_list) begin
+         if (random(0, 3) == 3) then begin
+            debug_msg("add bonus item to killian safe!");
+            item := create_object(i, 0, 0);
+            add_obj_to_inven(self_obj, item);
+         end
       end
    end
 end
@@ -76,14 +68,16 @@ procedure use_p_proc begin
    if (obj_is_locked(self_obj)) then begin
       script_overrides;
       display_msg(mstr(105));
-      set_map_var(9, 1);
+      set_map_var(MVAR_dude_messing_with_Killians_home, 1);
    end
 end
 
 procedure use_obj_on_p_proc begin
-   if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+   item := obj_pid(obj_being_used_with);
+
+   if (item == PID_LOCKPICKS or item == PID_ELECTRONIC_LOCKPICKS or item == PID_ELEC_LOCKPICK_MKII) then begin
       script_overrides;
-      set_map_var(9, 1);
+      set_map_var(MVAR_dude_messing_with_Killians_home, 1);
       if (not(obj_is_locked(self_obj))) then begin
          display_msg(mstr(101));
       end
@@ -108,7 +102,7 @@ end
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_LOCKPICK) then begin
       script_overrides;
-      set_map_var(9, 1);
+      set_map_var(MVAR_dude_messing_with_Killians_home, 1);
       if (not(obj_is_locked(self_obj))) then begin
          display_msg(mstr(101));
       end
@@ -131,8 +125,8 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure safe_bonus begin
-   if (local_var(0) == 0) then begin
-      set_local_var(0, 1);
+   if (local_var(LVAR_Bonus_Items) == 0) then begin
+      set_local_var(LVAR_Bonus_Items, 1);
       give_xp_msg(EXP_CRACKED_KILLIAN_SAFE, mstr(106));
    end
 end
