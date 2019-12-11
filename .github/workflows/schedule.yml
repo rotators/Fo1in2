@@ -17,6 +17,7 @@ jobs:
   if: github.repository == 'rotators/Fo1in2'
   runs-on: windows-latest
   env:
+   GHA_SCRIPTS:        ".github/workflows/scripts"
    MOD_DIR:            "Fallout2/Fallout1in2"
    MOD_VERSION_STRING: "FALLOUT ET TU"
    MOD_VERSION_MAJOR:  0
@@ -97,6 +98,7 @@ jobs:
            OLD_ARTIFACTS=$(grep --max-count=1 "ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
            echo "sfall-develop $OLD_SFALL"
            echo "ModdersPack   $OLD_ARTIFACTS"
+           rm -f $HOME/git.log
            echo ::endgroup::
 
            echo "::group::Get new SHA"
@@ -309,6 +311,14 @@ jobs:
            git diff --quiet || (git add --update && echo "- Configuration refresh" >> $HOME/gha.commit)
     shell: bash
 
+  # update news list
+  - name:  News update
+    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    run:   |
+           $GHA_SCRIPTS/news.sh $GITHUB_REPOSITORY NEWS.md [Aa]dded [Cc]hanged [Ff]ixed [Rr]emoved [Tt]weaked
+           git diff --quiet || (git add --update && echo "- News update" >> $HOME/gha.commit)
+    shell: bash
+
 ### Push
 ### generates and displays commit
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
@@ -325,6 +335,7 @@ jobs:
            git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
            git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
            git commit --file="$HOME/gha.commit" 2>&1
+           rm -f $HOME/gha.commit
            echo ::endgroup::
 
            echo ::group::git log
@@ -340,3 +351,10 @@ jobs:
            fi
     shell: bash
     continue-on-error: true
+
+### Cleanup
+
+  - name:  Post Clone sfall-develop
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   rm -fR $HOME/sfall
+    shell: bash
