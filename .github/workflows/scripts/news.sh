@@ -50,16 +50,16 @@ sed -ri 's/^[\ \-]+//' "$news"
 # remove all lines not starting with keywords
 sed -ri "/^(${keywords}):/!d" "$news"
 
-# make keywords bold
-sed -ri 's!^([A-Za-z]+)!**\1**!' "$news"
+# create a list, make keywords bold
+sed -ri 's!^([A-Za-z]+)!- **\1**!' "$news"
 
 sort -o "$news" "$news"
 
 # add header
 if [ -s "$news" ]; then
-   sed -i "1s!^!N${header}\\n\\n!" "$news"
+   sed -i "1s!^!N${header}\\n!" "$news"
 else
    echo "No n$header" > "$news"
 fi
 
-dos2unix -q "$news"
+unix2dos -q "$news"
