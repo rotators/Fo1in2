@@ -1,6 +1,14 @@
+/*
+
+   Brotherhood of Steel - Entrance map script
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
+
+#include "..\headers\brotherhood.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -16,7 +24,9 @@ variable dude_start_hex := 27101;
 variable sentry_start_hex := 25105;
 variable HEREBEFORE;
 variable SentryPtr;//Restoration Project - lone survivor
+
 variable DeadBody;
+variable body_pos;
 
 procedure start begin
 end
@@ -25,7 +35,8 @@ procedure map_enter_p_proc begin
    Lighting;
    set_global_var(GVAR_MARK_BROTHER_1, 1);
 
-   call Invasion;
+   if bos_invaded and (days_since_visited != 0) then
+      call Invasion;
 
    if (map_first_run) then begin
       if not(bos_invaded) then
@@ -34,7 +45,7 @@ procedure map_enter_p_proc begin
          display_msg(message_str(SCRIPT_SHADYWST, 155));
    end
 
-   if (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) == 5) then begin
+   if get_dude_kicked_out then begin
       set_global_var(GVAR_MARK_BROTHER_2, 0);
       set_global_var(GVAR_MARK_BROTHER_3, 0);
       set_global_var(GVAR_MARK_BROTHER_4, 0);
@@ -49,96 +60,74 @@ procedure map_update_p_proc begin
 end
 
 procedure Invasion begin
-   if (bos_invaded and not(is_loading_game)) then begin
-      move_to(dude_obj, dude_start_hex, 0);
-      if (tile_contains_obj_pid(26099, 0, 33554432 + 157) != 0) then begin
-         destroy_object(tile_contains_pid_obj(20302, 0, PID_EW_BOS_DOOR));
-         destroy_object(tile_contains_pid_obj(19500, 0, PID_BOS_ELEVATOR_TOP));
-         destroy_object(tile_contains_pid_obj(26099, 0, PID_BOS_MARKER));
+variable pidArray, pid, hex;
 
-         create_object(PID_33555119, 20302, 0);
-         create_object(PID_33555118, 26099, 0);
+   move_to(dude_obj, dude_start_hex, 0);
+   if (tile_contains_obj_pid(26099, 0, PID_BOS_MARKER) != 0) then begin
 
-         destroy_object(tile_contains_pid_obj(20702, 0, PID_MERCHANT_6));
-         destroy_object(tile_contains_pid_obj(20706, 0, PID_CABBOT));
-         destroy_object(tile_contains_pid_obj(20698, 0, PID_DARRELL));
+      // Create survivor
+      SentryPtr := create_object_sid(PID_JUNIOR_PALADIN, 0, 0, SCRIPT_SENTRY);//Restoration Project - lone survivor
+      critter_attempt_placement(SentryPtr, sentry_start_hex, 0);
 
-         //Create and place survivor:
-         SentryPtr := create_object_sid(PID_JUNIOR_PALADIN, 0, 0, SCRIPT_SENTRY);//Restoration Project - lone survivor
-         critter_attempt_placement(SentryPtr, sentry_start_hex, 0);
-
-         //GENERATE DEAD BODIES HERE, using script MASSACRE.INT: [--Sduibek, Fallout Fixt]
-         DeadBody := create_object_sid(PID_DARRELL, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 21099, 0);
-         DeadBody := create_object_sid(PID_TALUS, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 25713, 0);
-         DeadBody := create_object_sid(PID_MATHIA, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 20489, 0);
-         DeadBody := create_object_sid(PID_VREE, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 21305, 0);
-         DeadBody := create_object_sid(PID_MAXSON, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 25300, 0);
-         DeadBody := create_object_sid(PID_RHOMBUS, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 26698, 0);
-         DeadBody := create_object_sid(PID_CABBOT, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 21105, 0);
-         DeadBody := create_object_sid(PID_SCRIBE, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 28515, 0);
-         DeadBody := create_object_sid(PID_16777480, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 21513, 0);
-         DeadBody := create_object_sid(PID_16777481, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 18292, 0);
-         DeadBody := create_object_sid(PID_16777482, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 22495, 0);
-         DeadBody := create_object_sid(PID_JOURNEYMAN_KNIGHT, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 24909, 0);
-         DeadBody := create_object_sid(PID_INITIATE_KNIGHT_MAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 26505, 0);
-         DeadBody := create_object_sid(PID_KNIGHT_MAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 25886, 0);
-         DeadBody := create_object_sid(PID_SENIOR_KNIGHT_MAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 18515, 0);
-         DeadBody := create_object_sid(PID_INITIATE_KNIGHT_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 21900, 0);
-         DeadBody := create_object_sid(PID_KNIGHT_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 21510, 0);
-         DeadBody := create_object_sid(PID_SENIOR_KNIGHT_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 22905, 0);
-         DeadBody := create_object_sid(PID_JUNIOR_PALADIN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 22711, 0);
-         DeadBody := create_object_sid(PID_GEN_PALAIN_1, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 25492, 0);
-         DeadBody := create_object_sid(PID_GEN_SENIOR_PALADIN_1, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 29509, 0);
-         DeadBody := create_object_sid(PID_GEN_JUNIOR_PALADIN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 26305, 0);
-         DeadBody := create_object_sid(PID_GEN_PALAIN_2, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 19488, 0);
-         DeadBody := create_object_sid(PID_GEN_SENIOR_PALADIN_2, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 22701, 0);
-         DeadBody := create_object_sid(PID_INITIATE_SCRIBE, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 27505, 0);
-         DeadBody := create_object_sid(PID_SCRIBE_MAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 25307, 0);
-         DeadBody := create_object_sid(PID_SENIOR_SCRIBE_MAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 24303, 0);
-         DeadBody := create_object_sid(PID_INITIATE_SCRIBE_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 19090, 0);
-         DeadBody := create_object_sid(PID_SCRIBE_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 20912, 0);
-         DeadBody := create_object_sid(PID_SENIOR_SCRIBE_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 20293, 0);
-         DeadBody := create_object_sid(PID_HIGH_ELDER_MAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 27897, 0);
-         DeadBody := create_object_sid(PID_HIGH_ELDER_WOMAN, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 26508, 0);
-         DeadBody := create_object_sid(PID_16777504, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 26713, 0);
-         DeadBody := create_object_sid(PID_16777505, 0, 0, SCRIPT_MASSACRE);
-         critter_attempt_placement(DeadBody, 25296, 0);
-
-         // Any player party member was waiting in the map before?
-         check_invasion_party_waiting;
+      // Destroy objects
+      pidArray := {
+         PID_EW_BOS_DOOR : 20302,
+         PID_BOS_ELEVATOR_TOP : 19500,
+         PID_BOS_MARKER : 26099,
+         PID_MERCHANT_6 : 20702,
+         PID_CABBOT : 20706,
+         PID_DARRELL : 20698
+      };
+      foreach (pid: hex in pidArray) begin
+         destroy_object(tile_contains_pid_obj(hex, 0, pid));
       end
+
+      create_object(PID_33555119, 20302, 0);
+      create_object(PID_33555118, 26099, 0);
+
+      // Create dead bodies
+      pidArray := {
+         PID_DARRELL : 21099,
+         PID_TALUS : 25713,
+         PID_MATHIA : 20489,
+         PID_VREE : 21305,
+         PID_MAXSON : 25300,
+         PID_RHOMBUS : 26698,
+         PID_CABBOT : 21105,
+         PID_SCRIBE : 28515,
+         PID_16777480 : 21513,
+         PID_16777481 : 18292,
+         PID_16777482 : 22495,
+         PID_JOURNEYMAN_KNIGHT : 24909,
+         PID_INITIATE_KNIGHT_MAN : 26505,
+         PID_KNIGHT_MAN : 25886,
+         PID_SENIOR_KNIGHT_MAN : 18515,
+         PID_INITIATE_KNIGHT_WOMAN : 21900,
+         PID_KNIGHT_WOMAN : 21510,
+         PID_SENIOR_KNIGHT_WOMAN : 22905,
+         PID_JUNIOR_PALADIN : 22711,
+         PID_GEN_PALAIN_1 : 25492,
+         PID_GEN_SENIOR_PALADIN_1 : 29509,
+         PID_GEN_JUNIOR_PALADIN : 26305,
+         PID_GEN_PALAIN_2 : 19488,
+         PID_GEN_SENIOR_PALADIN_2 : 22701,
+         PID_INITIATE_SCRIBE : 27505,
+         PID_SCRIBE_MAN : 25307,
+         PID_SENIOR_SCRIBE_MAN : 24303,
+         PID_INITIATE_SCRIBE_WOMAN : 19090,
+         PID_SCRIBE_WOMAN : 20912,
+         PID_SENIOR_SCRIBE_WOMAN : 20293,
+         PID_HIGH_ELDER_MAN : 27897,
+         PID_HIGH_ELDER_WOMAN : 26508,
+         PID_16777504 : 26713,
+         PID_16777505 : 25296
+      };
+      foreach (pid: hex in pidArray) begin
+         DeadBody := create_object_sid(pid, 0, 0, SCRIPT_MASSACRE);
+         critter_attempt_placement(DeadBody, hex, 0);
+      end
+
+      // Any player party member was waiting in the map before?
+      check_invasion_party_waiting;
    end
 end
