@@ -19,19 +19,19 @@ namespace undat_ui
 
         int completedFiles = 0;
         int curFile = 0;
-        int numFiles = 0;
+        public int numFiles = 0;
 
         FO1Dat dat;
 
+        public Thread thread;
+
         public Extractor(Action<string> error, Action<string, int, int> updater,
-            string masterPath, string outputPath, string[] extractFiles)
+            string masterPath, string outputPath)
         {
             this.updater = updater;
             this.error = error;
             this.masterPath = masterPath;
             this.outputPath = outputPath + "\\data";
-            this.extractFiles = extractFiles;
-            this.numFiles = this.extractFiles.Count();
         }
 
         public void ExtractFiles()
@@ -72,8 +72,39 @@ namespace undat_ui
             return extractFiles[c];
         }
 
+        public string[] ParseExtractFiles()
+        {
+            var undatFilesPath = Directory.GetCurrentDirectory() + "\\undat_files.txt";
+            if (!File.Exists(undatFilesPath))
+            {
+                error("Unable to find " + undatFilesPath);
+                return null;
+            }
+
+            string[] extractFiles = null;
+            try
+            {
+                extractFiles = File.ReadAllLines(undatFilesPath);
+            }
+            catch (IOException ex)
+            {
+                error($"IO exception occured while trying to read {undatFilesPath}: " + ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                error($"Unauthorized to read {undatFilesPath}: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                error($"Exception occured while trying to read {undatFilesPath}: " + ex.Message);
+            }
+            this.numFiles = extractFiles?.Count() ?? 0;
+            return extractFiles;
+        }
+
         public void Begin()
         {
+            this.extractFiles = ParseExtractFiles();
             dat = new FO1Dat();
             var error = dat.Open(masterPath);
 
@@ -95,8 +126,8 @@ namespace undat_ui
                 return;
             }
 
-            var t = new Thread(new ThreadStart(ExtractFiles));
-            t.Start();
+            this.thread = new Thread(new ThreadStart(ExtractFiles));
+            this.thread.Start();
         }
 
     }

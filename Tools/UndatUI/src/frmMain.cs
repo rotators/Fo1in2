@@ -38,29 +38,8 @@ namespace undat_ui
                 return;
             }
 
-            string[] extractFiles=null;
-            try
-            {
-                extractFiles = File.ReadAllLines(undatFilesPath);
-            }
-            catch(IOException ex)
-            {
-                MsgError($"IO exception occured while trying to read {undatFilesPath}: " + ex.Message);
-            }
-            catch(UnauthorizedAccessException ex)
-            {
-                MsgError($"Unauthorized to read {undatFilesPath}: " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                MsgError($"Exception occured while trying to read {undatFilesPath}: " + ex.Message);
-            }
-
-            if (extractFiles == null)
-                return;
-
             this.progressBar.Value = 0;
-            this.progressBar.Maximum = extractFiles.Count();
+            
             this.lblExtracting.Text = "";
             this.btnExtract.Enabled = false;
             var extract = new Extractor((err) =>
@@ -73,6 +52,7 @@ namespace undat_ui
                 this.Invoke((MethodInvoker)delegate
                 {
                     this.progressBar.Value = cur;
+                    this.progressBar.Maximum = max;
                     this.lblExtracting.Text = $"[{cur}/{max}] " + currentFile;
                 });
 
@@ -87,8 +67,8 @@ namespace undat_ui
                 }
             }),
             this.txtMaster.Text,
-            this.txtDestination.Text,
-            extractFiles);
+            this.txtDestination.Text);
+            
             extract.Begin();
         }
        

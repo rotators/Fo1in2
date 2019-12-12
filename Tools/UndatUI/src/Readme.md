@@ -2,6 +2,14 @@ This is a tool to extract needed files from the MASTER.DAT resource file shipped
 
 # Changelog
 
+## 1.04
+* Added the ability to extract files via CLI with progress indicator.
+* Removed reference to System.Net.Http.
+
+## 1.03
+2019-11-22
+* Changed URL.
+
 ## 1.02
 2019-10-26
 * Fixed a bug where the validation of MASTER.DAT failed in such a way that if you selected CRITTER.DAT instead, the application accepted it as a valid MASTER.DAT.
