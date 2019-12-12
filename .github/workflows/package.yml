@@ -6,11 +6,10 @@ on:
 
 jobs:
 
- # https://fodev.net/pastebin/?u=fo1in2-release-list
-
  Publish:
   runs-on: windows-latest
   env:
+   GHA_SCRIPTS:        ".github/workflows/scripts"
    MOD_DIR:            "Fallout2/Fallout1in2"
    MOD_RELEASE_NAME:   "Fallout1in2"
    MOD_VERSION_MAJOR:  0
@@ -46,6 +45,12 @@ jobs:
            echo ::set-env name=MOD_RELEASE_PRE::$pre
     shell: bash
 
+  - name:  Update version info
+    run:   |
+           :
+           $GHA_SCRIPTS set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
+           $GHA_SCRIPTS set-mod-version --ini=$MOD_DIR/ddraw.ini --mod=$MOD_VERSION_MAJOR
+
   - name:  Cleanup
     run:   |
            :
@@ -53,8 +58,8 @@ jobs:
            rm -f  $MOD_DIR/ddraw.develop.*
            rm -f  $MOD_DIR/ddraw.fo1in2.ini
            rm -f  $MOD_DIR/mods/fo1_base/sound/sfx/regsnd.exe
-           find Fallout2 -name '.gitignore' -delete
-           find Fallout2 -name '.gitattributes' -delete
+           find $MOD_DIR -name '.gitignore' -delete
+           find $MOD_DIR -name '.gitattributes' -delete
     shell: bash
 
   - name:  Copy UndatUI

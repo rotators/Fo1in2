@@ -8,6 +8,8 @@ on:
  push:
   paths:
   - '.github/workflows/schedule.yml'
+  - '.github/workflows/scripts/ddraw.sh'
+  - '.github/workflows/scripts/news.sh'
 
 jobs:
 
@@ -178,9 +180,9 @@ jobs:
     run:   |
            :
            SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
-           curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $MOD_DIR/ddraw.develop.dll
+           $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.develop.dll
 
-           SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.develop.dll).VersionInfo.ProductVersion")
+           SFALL_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.develop.dll)
            echo "sfall-develop (v${SFALL_VERSION}, ${SFALL_COMMIT})"
 
            git diff --quiet || (git add --update && echo "- sfall-develop update (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
@@ -291,23 +293,18 @@ jobs:
 
   # update ddraw.ini comment with sfall version
   # update ddraw.ini setting with mod version
+  # update all config files to use dos line endings
   - name:  Configuration refresh
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
     run:   |
            :
-           REPO_COMMITS=$(git rev-list HEAD --count)
-           REPO_COMMITS=$((REPO_COMMITS+1))
-           SFALL_VERSION=$(powershell -command "(Get-Item $MOD_DIR/ddraw.dll).VersionInfo.ProductVersion")
-
-           dos2unix $MOD_DIR/ddraw.ini
-
-           sed -ri "s!^;v[0-9\.]+.*!;v$SFALL_VERSION!" $MOD_DIR/ddraw.ini
-           sed -ri "s!^[\t\ ]*VersionString[\t\ ]*=[\t\ ]*.+!VersionString=$MOD_VERSION_STRING $MOD_VERSION_MAJOR.$REPO_COMMITS!" $MOD_DIR/ddraw.ini
+           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
+           $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod=$MOD_VERSION_MAJOR --bump
 
            grep "^;v" $MOD_DIR/ddraw.ini
            grep "^VersionString=" $MOD_DIR/ddraw.ini
 
-           unix2dos $MOD_DIR/*.cfg $MOD_DIR/*.ini $MOD_DIR/config/*.cfg $MOD_DIR/config/*.ini || true
+           unix2dos -q $MOD_DIR/*.cfg $MOD_DIR/*.ini $MOD_DIR/config/*.cfg $MOD_DIR/config/*.ini || true
            git diff --quiet || (git add --update && echo "- Configuration refresh" >> $HOME/gha.commit)
     shell: bash
 

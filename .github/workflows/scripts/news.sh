@@ -7,9 +7,16 @@ news="$2"
 
 function Usage()
 {
+    error=$1
+
     echo ""
     echo "USAGE:  $(basename $0) [github-repository] [news-file] [keyword...]"
     echo ""
+
+    if [ -n "$error" ]; then
+       echo "ERROR: $error"
+       echo ""
+    fi
 
     exit 1
 }
@@ -19,16 +26,9 @@ for word in ${@:3}; do
 done
 keywords="${keywords#|}"
 
-if   [ -z "$repo" ]; then
-     echo "Missing repository"
-     Usage
-elif [ -z "$news" ]; then
-     echo "Missing news file"
-     Usage
-elif [ -z "$keywords" ]; then
-     echo "Missing keywords"
-     Usage
-fi
+[ -z "$repo" ]     && Usage "Missing repository"
+[ -z "$news" ]     && Usage "Missing news file"
+[ -z "$keywords" ] && Usage "Missing keyword(s)"
 
 #echo "Repository: $repo"
 #echo "Output:     $news"
