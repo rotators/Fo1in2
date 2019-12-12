@@ -33,7 +33,7 @@ namespace undat_ui
 
             if (args.Length != 3)
             {
-                Console.WriteLine("undat.exe [FO1 directory] [mod directory] []");
+                Console.WriteLine("undat.exe [FO1 MASTER.DAT] [mod directory]");
                 return;
             }
 
