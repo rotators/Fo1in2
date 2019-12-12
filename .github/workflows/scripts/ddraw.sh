@@ -48,7 +48,7 @@ function GetDllAppVeyor()
     [ -z "$dll" ] && Usage ".dll filename not set"
     [ ! -w $dll ] && Usage "cannot write '$dll'"
 
-    curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false" -o $dll
+    curl -L 'https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false' -o $dll
 }
 
 function GetDllVersion()
@@ -60,7 +60,7 @@ function GetDllVersion()
 
     # old method, left for reference
     # local version=$(powershell -command "(Get-Item $dll).VersionInfo.ProductVersion")
-    local version=$(7z l $dll | grep ^FileVersion: | awk '{print $2}')
+    local version=$(7z l $dll | grep '^FileVersion:' | awk '{print $2}')
 
     echo "$version"
 }
