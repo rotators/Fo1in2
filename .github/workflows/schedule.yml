@@ -8,8 +8,12 @@ on:
  push:
   paths:
   - '.github/workflows/schedule.yml'
+  - '.github/workflows/scripts/compile-ssl.sh
   - '.github/workflows/scripts/ddraw.sh'
   - '.github/workflows/scripts/news.sh'
+
+env:
+ GHA_SCRIPTS: ".github/workflows/scripts"
 
 jobs:
 
@@ -19,7 +23,6 @@ jobs:
   if: github.repository == 'rotators/Fo1in2'
   runs-on: windows-latest
   env:
-   GHA_SCRIPTS:        ".github/workflows/scripts"
    MOD_DIR:            "Fallout2/Fallout1in2"
    MOD_VERSION_STRING: "FALLOUT ET TU"
    MOD_VERSION_MAJOR:  0
@@ -239,11 +242,11 @@ jobs:
            :
            ok=1
 
-           .github/workflows/scripts.compile.sh --bytecode --optimization=1 || ok=0
+           $GHA_SCRIPTS/compile-ssl.sh --bytecode --optimization=1 || ok=0
 
            if [ $ok -eq 1 ]; then
                headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
-              .github/workflows/scripts.compile.sh --scripts-dir=$MOD_DIR/mods/ --include-dir=$headers/ --bytecode --bytecode-dir=? --optimization=1 || ok=0
+              $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=$MOD_DIR/mods/ --include-dir=$headers/ --bytecode --bytecode-dir=? --optimization=1 || ok=0
            fi
 
            if [ $ok -eq 1 ]; then
@@ -298,8 +301,8 @@ jobs:
     if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
     run:   |
            :
-           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll --debug
-           $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod=$MOD_VERSION_MAJOR --bump --debug
+           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
+           $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod=$MOD_VERSION_MAJOR --bump
 
            grep "^;v" $MOD_DIR/ddraw.ini
            grep "^VersionString=" $MOD_DIR/ddraw.ini

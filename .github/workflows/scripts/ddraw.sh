@@ -62,6 +62,7 @@ function GetDllVersion()
     # local version=$(powershell -command "(Get-Item $dll).VersionInfo.ProductVersion")
 
     # 7zip v19.00 uses slightly different format than v16.00 when reporting version info (two lines match on v19.00, one on v16.00)
+    # use last match found -- without trailing ".0"
     local version=$(7z l $dll | grep '^FileVersion:' | awk '{print $2}' | tail -1)
 
     echo "$version"

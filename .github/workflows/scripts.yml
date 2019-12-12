@@ -4,7 +4,7 @@ on:
  push:
   paths:
   - '.github/workflows/scripts.yml'
-  - '.github/workflows/scripts.compile.sh'
+  - '.github/workflows/scripts/compile-ssl.sh'
   - 'Fallout2/Fallout1in2/Mapper/source/scripts/**/*.[Ss][Ss][Ll]'
   - 'Fallout2/Fallout1in2/Mapper/source/scripts/**/*.[Hh]'
   - 'Fallout2/Fallout1in2/Mapper/source/scripts.misc/**/*.[Ss][Ss][Ll]'
@@ -13,6 +13,9 @@ on:
   - 'Tools/ReDefine/ReDefine.exe'
   - 'Tools/ReDefine/ReDefine.cfg'
  pull_request:
+
+env:
+ GHA_SCRIPTS: ".github/workflows/scripts"
 
 jobs:
 
@@ -28,18 +31,18 @@ jobs:
 #    fetch-depth: 0
 
   - name:  Compile (base mod)
-    run:   .github/workflows/scripts.compile.sh
+    run:   $GHA_SCRIPTS/compile-ssl.sh
     shell: bash
 
   - name:  Compile (mini mods)
     run:   |
            :
            headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
-           .github/workflows/scripts.compile.sh --scripts-dir=Fallout2/Fallout1in2/mods/ --include-dir=$headers/
+           $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=Fallout2/Fallout1in2/mods/ --include-dir=$headers/
     shell: bash
 
   - name:  Compile (misc)
-    run:   .github/workflows/scripts.compile.sh --scripts-dir=Fallout2/Fallout1in2/Mapper/source/scripts.misc/
+    run:   $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=Fallout2/Fallout1in2/Mapper/source/scripts.misc/
     shell: bash
     continue-on-error: true
 
@@ -109,5 +112,5 @@ jobs:
 
   - name:  Compile
     if:    env.REDEFINE_CHANGES == 'true'
-    run:   .github/workflows/scripts.compile.sh
+    run:   $GHA_SCRIPTS/compile-ssl.sh
     shell: bash
