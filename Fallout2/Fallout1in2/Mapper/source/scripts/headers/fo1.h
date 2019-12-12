@@ -42,6 +42,9 @@
 *********************************************************/
 #define set_story_finished          set_world_map_pos(random(780,990),random(130,260));   \
                                     set_global_var(GVAR_GAME_CONTINUES,100);              \
+                                    set_global_var(GVAR_MARK_V13_2, 0);                   \
+                                    set_global_var(GVAR_MARK_V13_3, 0);                   \
+                                    set_global_var(GVAR_MARK_V13_4, 0);                   \
                                     mark_map_entrance_state(MAP_VAULT13,0);               \
                                     mark_map_entrance_elev_state(MAP_VAULT13,0,0);        \
                                     mark_map_entrance_elev_state(MAP_VAULT13,1,0);        \
@@ -413,7 +416,7 @@ variable COC_TRESPASSING;
                                     end                                                                                    \
                                     else                                                                                   \
                                        DISGUISED := 0
-                                       
+
 #define coc_badge_check             COC_TRESPASSING := 0;                                    \
                                     if fo1in2_alt_disguise_disabled then begin               \
                                        if (party_size > 1) then                              \
