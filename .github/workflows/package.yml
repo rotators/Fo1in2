@@ -4,15 +4,17 @@ on:
  repository_dispatch:
   types: [package-prerelease, package-release]
 
+env:
+ GHA_SCRIPTS: ".github/workflows/scripts"
+
 jobs:
 
  Publish:
   runs-on: windows-latest
   env:
-   GHA_SCRIPTS:        ".github/workflows/scripts"
    MOD_DIR:            "Fallout2/Fallout1in2"
    MOD_RELEASE_NAME:   "Fallout1in2"
-   MOD_VERSION_MAJOR:  0
+   MOD_VERSION_STRING: "FALLOUT ET TU v0.@COMMITS@"
   steps:
 
   - name: Clone
@@ -49,7 +51,7 @@ jobs:
     run:   |
            :
            $GHA_SCRIPTS set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
-           $GHA_SCRIPTS set-mod-version --ini=$MOD_DIR/ddraw.ini --mod=$MOD_VERSION_MAJOR
+           $GHA_SCRIPTS set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING"
 
   - name:  Cleanup
     run:   |
@@ -69,13 +71,13 @@ jobs:
            cp "Tools/UndatUI/undat_files.txt" $MOD_DIR
     shell: bash
 
-  - name:  Disable debug messages
+  - name:  Disable debug options
     run:   |
            :
-           dos2unix $MOD_DIR/config/fo1_settings.ini
-           sed -ri "s!^[\t\ ]*GVAR_ENABLE_DEBUG_MENU[\t\ ]*=[\t\ ]*.+!GVAR_ENABLE_DEBUG_MENU=0!" $MOD_DIR/config/fo1_settings.ini
-           sed -ri "s!^[\t\ ]*GVAR_ENABLE_DEBUG_MESSAGES[\t\ ]*=[\t\ ]*.+!GVAR_ENABLE_DEBUG_MESSAGES=0!" $MOD_DIR/config/fo1_settings.ini
-           unix2dos $MOD_DIR/config/fo1_settings.ini
+           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --key=Enable --val=0
+           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --key=DebugMode --val=0
+           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --key=GVAR_ENABLE_DEBUG_MENU --val=0
+           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --key=GVAR_ENABLE_DEBUG_MESSAGES --val=0
     shell: bash
 
   - name:  Format documentation

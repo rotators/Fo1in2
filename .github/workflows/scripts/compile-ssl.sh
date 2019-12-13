@@ -4,6 +4,10 @@
 #            we want a full list of all errors to fix everything at once,
 #            instead of 'commit -> report -> fix -> commit...' loop
 
+for option in $@; do
+    [[ "$option" =~ ^--debug$ ]] && set -x
+done
+
 # default options
 option_bytecode=0
 option_bytecode_dir="Fallout2/Fallout1in2/mods/fo1_base/scripts"
