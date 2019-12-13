@@ -18,3 +18,6 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Fixed**: The bomb disarming code works a bit better now.
 - **Removed**: Fixt-function, lockers getting destroyed by explosions. It was barely used.
 - **Removed**: Fixt-setting for painfields for good.
+- **Removed**: Initial map_enter message for V13 caves.
+- **Removed**: V13 door computer can't be destroyed anymore (just leads to additional problems).
+- **Tweaked**: Some more pixel pushing on the main menu has been done. Fixed some shitty areas and brought back the colors more closer to the original again.

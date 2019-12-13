@@ -64,6 +64,7 @@
 #define HOOK_SNEAK            (39)
 #define HOOK_STDPROCEDURE     (40)
 #define HOOK_STDPROCEDURE_END (41)
+#define HOOK_TARGETOBJECT     (42)
 
 //Valid arguments to list_begin
 #define LIST_CRITTERS    (0)
@@ -296,6 +297,7 @@
 #define metarule_exist(metaruleName)                    sfall_func1("metarule_exist", metaruleName)
 #define npc_engine_level_up(toggle)                     sfall_func1("npc_engine_level_up", toggle)
 #define obj_under_cursor(onlyCritter, includeDude)      sfall_func2("obj_under_cursor", onlyCritter, includeDude)
+#define objects_in_radius(tile, radius, elev, type)     sfall_func4("objects_in_radius", tile, radius, elev, type)
 #define outlined_object                                 sfall_func0("outlined_object")
 #define real_dude_obj                                   sfall_func0("real_dude_obj")
 #define remove_all_timer_events                         sfall_func0("remove_timer_event")
@@ -321,6 +323,7 @@
 #define string_compare(str1, str2)                      sfall_func2("string_compare", str1, str2)
 #define string_compare_locale(str1, str2, codePage)     sfall_func3("string_compare", str1, str2, codePage)
 #define string_format(format, a1, a2)                   sfall_func3("string_format", format, a1, a2)
+#define tile_by_position(x, y)                          sfall_func2("tile_by_position", x, y)
 #define tile_refresh_display                            sfall_func0("tile_refresh_display")
 #define unjam_lock(obj)                                 sfall_func1("unjam_lock", obj)
 #define unset_unique_id(obj)                            sfall_func2("set_unique_id", obj, -1)
