@@ -1,6 +1,7 @@
 Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2/releases/tag/v0.1225))
 - **Added**: Correct disguise-check to the scientists and technicians in the Master's Lair.
 - **Added**: Correct spawn hex when being teleported to the LA Library via invasion super mutant.
+- **Added**: Hi-Res splash screen mod with upscaled and retouched original splashes in resolutions of 1024x768px and 1280x960px.
 - **Added**: It's possible to fail the reporting (speech & charisma check).
 - **Added**: Missing music for the Master's Lair.
 - **Added**: Party members are now included in the guard disguise-check (Optional behavior, see fo1_settings.ini).
@@ -20,4 +21,5 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Removed**: Fixt-setting for painfields for good.
 - **Removed**: Initial map_enter message for V13 caves.
 - **Removed**: V13 door computer can't be destroyed anymore (just leads to additional problems).
+- **Tweaked**: Removed tribal references from the character style text (Character Appearance mod).
 - **Tweaked**: Some more pixel pushing on the main menu has been done. Fixed some shitty areas and brought back the colors more closer to the original again.
