@@ -2,7 +2,15 @@ This is a tool to extract needed files from the MASTER.DAT resource file shipped
 
 # Changelog
 
+## 1.05
+2019-12-14
+* Removed a few versions of the icon that were unnecessary, to reduce size of exe.
+* Icon for application.
+* Launching UI via commandline.
+* Better commandline parsing.
+
 ## 1.04
+2019-12-13
 * Added the ability to extract files via CLI with progress indicator.
 * Removed reference to System.Net.Http.
 

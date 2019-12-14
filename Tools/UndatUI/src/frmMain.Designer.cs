@@ -139,7 +139,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(57, 12);
             this.lblVersion.TabIndex = 9;
-            this.lblVersion.Text = "Version 1.04";
+            this.lblVersion.Text = "Version 1.05";
             // 
             // lnkSource
             // 
@@ -207,7 +207,7 @@
             this.Controls.Add(this.txtMaster);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

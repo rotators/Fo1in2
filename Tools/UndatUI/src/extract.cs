@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace undat_ui
 {
@@ -12,8 +9,10 @@ namespace undat_ui
     {
         Action<string, int, int> updater;
         Action<string> error;
+        Action onSuccess;
 
         string masterPath;
+        string filesPath;
         string outputPath;
         string[] extractFiles;
 
@@ -25,12 +24,14 @@ namespace undat_ui
 
         public Thread thread;
 
-        public Extractor(Action<string> error, Action<string, int, int> updater,
-            string masterPath, string outputPath)
+        public Extractor(Action<string> error, Action<string, int, int> updater, Action onSuccess,
+            string masterPath, string filesPath, string outputPath)
         {
             this.updater = updater;
+            this.onSuccess = onSuccess;
             this.error = error;
             this.masterPath = masterPath;
+            this.filesPath = filesPath;
             this.outputPath = outputPath + "\\data";
         }
 
@@ -62,6 +63,7 @@ namespace undat_ui
             }
 
             this.updater("All files were extracted.", this.numFiles, this.numFiles);
+            this.onSuccess();
         }
 
         public string GetNextFile()
@@ -74,7 +76,7 @@ namespace undat_ui
 
         public string[] ParseExtractFiles()
         {
-            var undatFilesPath = Directory.GetCurrentDirectory() + "\\undat_files.txt";
+            var undatFilesPath = this.filesPath;
             if (!File.Exists(undatFilesPath))
             {
                 error("Unable to find " + undatFilesPath);

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,32 +15,43 @@ namespace undat_ui
 {
     public partial class frmMain : Form
     {
+        [DllImport("user32.dll")]
+        static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr iconName);
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetModuleHandle(string moduleName);
+
         bool isDone = false;
 
-        public frmMain()
+        public frmMain(string fileList, string master, string moddir)
         {
             InitializeComponent();
+
+            // Use same icon as the one used for .exe
+            IntPtr hInstance = GetModuleHandle(null);
+            IntPtr hIcon = LoadIcon(hInstance, new IntPtr(32512));
+            if (hIcon != IntPtr.Zero) this.Icon = Icon.FromHandle(hIcon);
+
+            if (fileList != null)
+            {
+                txtDestination.Text = moddir;
+                txtDestination.Enabled = false;
+                txtMaster.Text = master;
+                txtMaster.Enabled = false;
+                BeginExtract(() => Environment.Exit(0), fileList);
+            }
+
         }
 
         private void MsgError(string error)
             => MessageBox.Show(error, "FO1 DAT extractor", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-        private void BtnExtract_Click(object sender, EventArgs e)
+        private void BeginExtract(Action onSuccess, string filesPath)
         {
+            this.btnBrowseDestination.Enabled = false;
+            this.btnBrowseMaster.Enabled = false;
             this.lblExtracting.Visible = true;
-            
-            if(isDone)
-                Environment.Exit(0);
-
-            var undatFilesPath = Directory.GetCurrentDirectory() + "\\undat_files.txt";
-            if (!File.Exists(undatFilesPath))
-            {
-                MsgError("Unable to find " + undatFilesPath);
-                return;
-            }
-
             this.progressBar.Value = 0;
-            
+
             this.lblExtracting.Text = "";
             this.btnExtract.Enabled = false;
             var extract = new Extractor((err) =>
@@ -49,12 +61,19 @@ namespace undat_ui
             },
             ((currentFile, cur, max) =>
             {
-                this.Invoke((MethodInvoker)delegate
+                try
                 {
-                    this.progressBar.Value = cur;
-                    this.progressBar.Maximum = max;
-                    this.lblExtracting.Text = $"[{cur}/{max}] " + currentFile;
-                });
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.progressBar.Value = cur;
+                        this.progressBar.Maximum = max;
+                        this.lblExtracting.Text = $"[{cur}/{max}] " + currentFile;
+                    });
+                }
+                catch(System.InvalidOperationException)
+                {
+                    Environment.Exit(1);
+                }
 
                 if (cur == max)
                 {
@@ -66,10 +85,27 @@ namespace undat_ui
                     });
                 }
             }),
+            onSuccess,
             this.txtMaster.Text,
+            filesPath,
             this.txtDestination.Text);
-            
+
             extract.Begin();
+        }
+
+        private void BtnExtract_Click(object sender, EventArgs e)
+        {
+            if(isDone)
+                Environment.Exit(0);
+
+            var undatFilesPath = Directory.GetCurrentDirectory() + "\\undat_files.txt";
+            if (!File.Exists(undatFilesPath))
+            {
+                MsgError("Unable to find " + undatFilesPath);
+                return;
+            }
+
+            this.BeginExtract(() => { }, undatFilesPath);
         }
        
         private void BtnBrowseMaster_Click(object sender, EventArgs e)
