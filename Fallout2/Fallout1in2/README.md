@@ -61,6 +61,11 @@ While most of optional content is a part of a mod core, and can be turned on and
 
 Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
 
+### Interface Upscaled ###
+[mods/InterfaceUpscaled](mods/InterfaceUpscaled)
+
+Various static images (splash/death screens, endgame slides, town/world, ...) uses higher resolution.
+
 ### Inventory AP cost ###
 [mods/InventoryAPcosts](mods/InventoryAPcosts)
 
