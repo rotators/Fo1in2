@@ -5,9 +5,9 @@ Interface Upscaled
 
 Features:
 - Higher resolution Town/World graphics for Fallout et Tu and vanilla Fallout 2.
+- Higher resolution endgame slides for Fallout et Tu and vanilla Fallout 2.
 - Higher resolution death screen (the Fallout 2 graphic is in /INTRFACE/Fallout2/ and must be manually moved into the /INTRFACE/ folder of this mod).
 - Higher resolution splash screens (the Fallout 2 graphics are in /SPLASH/Fallout2/ and must be manually moved into the /SPLASH/ folder of this mod).
-- Higher resolution endgame slides (only Fallout et Tu for now).
 - Works with any other Fallout 2 mod (eg. Restoration Project).
 
 NOTE:
