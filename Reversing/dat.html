@@ -1,0 +1,236 @@
+<html>
+<head>
+    <title>DAT file format</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div style="width: 1200px; margin: auto;">
+<h1>DAT file format</h1>
+
+<p>DAT files are archived data files. They contain the bulk of the data for Fallout and Fallout 2, including all game artwork, critters, scripts, message/dialogue files, sounds and speech audio files, and much more. The two DAT files used by the games are master.dat and critter.dat, both of which are located in the root game folder. </p>
+<h3>DAT1 vs DAT2</h3>
+<p>There were two different DAT file formats used for the Fallout games. Both Fallout 1 and Fallout 2 used different formats but used the same file ending: *.dat. To avoid misunderstandings, we'll refer to DAT1 (for the Fallout 1 DAT format) and DAT2 (for the Fallout 2 version) in this document. It's important that DAT2 is not an improved DAT1 version, but more a completely rewritten file type that doesn't have much in common with DAT1. </p>
+<h3>DAT1</h3>
+<p>This specific DAT file type stores data in the <a href="http://en.wikipedia.org/wiki/Endianness">big-endian</a> format.</p>
+<h4>Structure</h4>
+<pre style="background: #222; padding: 10px;">
+int32   4   DirectoryCount
+int32   4   (Unknown1). Usually 0x0A (0x5E for master.dat). Must not be less than 1 or Fallout will crash
+             instantly with a memory read error. Possibly some kind of memory buffer size.
+int32   4   (Unknown2). Always 0.
+int32   4   (Unknown3). Could be some kind of checksum, but Fallout seems to work fine with any value.
+
+// Directory Name Block - for each directory (DirectoryCount times)
+// master.dat starts its listing with a root node, called '.'. This node contains COLOR.PAL and several font files; be careful not to skip it, as it may appear like two extraneous bytes
+byte    1   Length (number of charactes) in DirectoryName
+char    *   DirectoryName
+
+// Directory Content Block - for each directory (DirectoryCount times)
+int32   4   FileCount. Number of files in the directory.
+int32   4   (Unknown4). Similar to (Unknown1), the default value seems to be 0x0A and Fallout works with 
+                most positive non-zero values.
+int32   4   (Unknown5). Seems to always be 0x10.
+int32   4   (Unknown6). See (Unknown3).
+    // File List Block - for each file in directory (FileCount times).
+    byte    1   Name length (number of characters)
+    char    *   Name
+    int32   4   Attributes. 0x20 means plain-text, 0x40 - compressed with LZSS.
+    int32   4   Offset. Position in the file (from the beginning of the DAT file), where the file contets start.
+    int32   4   Size. Original (uncompressed) file size.
+    int32   4   PackedSize. Size of the compressed file in dat. If file is not compressed, PackedSize is 0.
+
+// Data block
+byte    *   File data for all files (use Offset and [Packed]Size to find where a specific file starts and ends).
+</pre>
+
+<h4>Fallout 1 LZSS uncompression algorithm</h4>
+<p>Originally <a href="https://www.nma-fallout.com/threads/fallout-dat-files.160366/">written by Shadowbird</a> on NMA forum.</p>
+<ul>
+<li>This is a <b>decompression algorithm for files compressed with Fallout's LZSS algorithm</b>, not a file extraction algorithm for getting them out of the DAT file! DAT unpackers already incorporate this.</li>
+<li>It's pretty much a generic LZSS decompression algorithm, with a possible difference from other implementations in that it doesn't prevent overwriting dictionary values while they're being output (see the loop in @FLeven).</li>
+</ul>
+<hr/>
+<pre style="background: #222; padding: 10px;">
+DICT_SIZE = 4096; // Dictionary (a.k.a. sliding window / ring / buffer) size
+MIN_MATCH = 3;
+MAX_MATCH = 18;
+
+Int16 N = 0;                      // number of bytes to read
+Int16 DO = 0;                     // Dictionary offset - for reading
+Int16 DI = DICT_SIZE - MAX_MATCH; // Dictionary index - for writing
+Byte L = 0;                       // Match length
+Byte FL = 0;                      // Flags indicating the compression status of up to 8 next characters.
+
+@Start
+* If at the end of file, exit.
+* Read N from input. The absolute value of N is how many bytes of data to read (if N=0, exit).
+* Go to @N<0 or @N>0 accordingly.
+
+@N<0
+* Take the absolute value of N (or multiply N by -1), and write that many bytes directly from input to output (without
+        putting anything in Dictionary).
+* Go to @Start.
+
+@N>0
+* Clear dictionary (fill with spaces — 0x20)
+* DI = DICT_SIZE - MAX_MATCH;
+* Go to @Flag.
+
+@Flag
+* Read FL from input.
+* If N bytes have been read from input, go to @Start, otherwise, go to @Next.
+
+@Next
+* If this is the 9th time here since last @Flag, go to @Flag.
+* Go to @FLeven or @FLodd as appropriate.
+
+@FLodd
+* Read 1 byte from input, write it to output and to Dictionary (at position DI).
+* If N bytes have been read from input, go to @Start.
+* DI = DI + 1, or DI = 0 (if past the end of Dictionary).
+* Goto @FlagNext.
+
+@FLeven
+* Read 1 byte from input to DO.
+* If N bytes have been read from input, go to @Start (in a correctly compressed file this should not ever happen).
+* Read L from input.
+* Prepend the high-nibble (first 4 bits) from L to DO (DO = DO | ((L & 0xF0) << 4)) and remove it from L (L = L & 0x0F).
+* (L + MIN_MATCH) times:
+  * Read a byte from dictionary at offset DO (wrap to the start of dictionary if past the end), and write to the output.
+  * Write the byte to the Dictionary also, at position DI.
+  * DI = DI + 1, or DI = 0 (if past the end of Dictionary).
+  * DO = DO + 1.
+* Go to @FlagNext.
+
+@FlagNext
+* Divide FL by 2, rounding down (FL = FL >> 1).
+</pre>
+<hr/>
+<a href="https://github.com/rotators/Fo1in2/blob/master/Tools/UndatUI/src/dat.cs#L12-L158">C# implementation of the above</a><br/><br/>
+<b>Read more</b><br/>
+<a href="https://web.archive.org/web/20160110174426/https://oku.edu.mie-u.ac.jp/~okumura/compression/history.html">History of Data Compression in Japan</a><br/>
+<a href="https://en.wikipedia.org/wiki/Lempel-Ziv-Storer-Szymanski">LZSS compression</a>
+
+<h3>DAT2 (Little-endian)</h3>
+<p>DAT2 files are divided in 3 parts, Data Block, Directory Tree and Fixed DAT Information block. Data Blocks contains all the files stored in the DAT, some of them needs to be GZipped, others don't. The Directory Tree contains all the information about each file stored in Data Block, as well as the offset where it's located, if it's compressed or not, packed/unpacked sizes, etc. And finally the Fixed DAT Information block that contains the size in bytes of both full DAT and the Directory Tree. Here you can see a small scheme of how DAT's structure:</p>
+<table style="background: #222; margin: 10px;">
+<thead>
+<tr>
+<th style="width: 150px;">Part</th>
+<th style="width: 150px;">Location</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>DataBlock</td>
+		<td>.............X </td>
+		<td>Files stored in the archive</td>
+	</tr>
+	<tr>
+		<td>FilesTotal</td>
+		<td>X+1</td>
+		<td>Number of files in the archive</td>
+	</tr>
+	<tr>
+		<td>DirTree </td>
+		<td>X+5.............Z</td>
+		<td>Number of files in the archive</td>
+	</tr>
+	<tr>
+		<td>TreeSize</td>
+		<td>Z+1</td>
+		<td>Size of DirTree in bytes</td>
+	</tr>
+	<tr>
+		<td>DataSize</td>
+		<td>Z+5</td>
+		<td>Full size of the archive in bytes</td>
+	</tr>
+</tbody>
+</table>
+<ul>
+	<li>FilesTotal + DirTree corresponds to Directory Tree block</li>
+	<li>TreeSize + DataSize corresponds to Fixed DAT Information block</li>
+</ul>
+<h4>The Data Block</h4>
+<p>The Data Block contains just plain files, their technical information is located in the Directory Tree. Data Block starts from the very beginning of a DAT file. They can be compressed or not, (Fallout engine uses zlib stream data compression), if they're compressed the signature 0x78DA appears at the begin of the file, if not, there is no signature, the file starts without signature. The 0x78DA compression signature has an integer (2 bytes/WORD) nature. 0x78DA in ASCII is "xÚ" as char is 120 for 'x' and 218 for 'Ú' Compressed files are "zlib stream data" (RFC-1950(zlib format), RFC-1951(deflate format), RFC-1952(gzip format)). However, if you attach this header 1F 8B 08 08 9F E8 B7 36 02 03 to the file, such file could been easily decompressed with WinZip. </p>
+
+<h4>The Directory Tree</h4>
+<p>Directory Tree contains entries that specifies about a file stored in the Data Block. These entries can be varying depending on the FilenameSize of the file (Path + Filename). Like you saw in the scheme located at the beginning of this document, Directory Tree has been divided into 2 parts, FilesTotal and the DirTree. FilesTotal contains how many files are stored in the DAT, DirTree contains all the information about these files. FilesTotal is declared as a DWORD (4 bytes/Long) type and is read in INTEL L-H format. Format of DirTree entries DirTree has a private structure. The length of this structure can vary depending on the length of the Filename (path + filename). All the entries are DWord types unless it's specified. At the end of this chapter you can find a scheme on the structure and the way it's declared on C and Visual Basic programming languages. All the directories and files are stored in DOS 8.3 format, that is 8 characters for the file name and 3 characters for the file extension. All the entries are sorted alphabetically in a descendent direction. Structure scheme: all Dwords are read in INTEL L-H format.</p>
+
+<table style="background: #222; margin: 10px;">
+<thead>
+<tr>
+  <th style="width: 150px;">Name</th>
+  <th style="width: 125px;">Type</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>FilenameSize</td>
+		<td>Dword</td>
+		<td>Length of the ASCII filename. </td>
+	</tr>
+	<tr>
+		<td>Filename</td>
+		<td>String</td>
+		<td>Path and name of the file, For example, "text\english\game\WORLDMP.MSG". The length of the Filename is <b>FilenameSize</b>.</td>
+	</tr>
+	<tr>
+		<td>Type</td>
+		<td>Byte</td>
+		<td>1 = Compressed 0 = Decompressed</td>
+	</tr>
+	<tr>
+		<td>RealSize </td>
+		<td>Dword</td>
+		<td>Size of the file without compression.</td>
+	</tr>
+	<tr>
+		<td>PackedSize</td>
+		<td>Dword</td>
+		<td>Size of the compressed file.</td>
+	</tr>
+	<tr>
+		<td>Offset</td>
+		<td>Dword</td>
+		<td>Address/Location of the file.</td>
+	</tr>
+</tbody>
+</table>
+<ul>
+<li>Dword stands for 4 bytes/long integers 0xNN NN NN NN </li>
+<li>Word stands for 2 bytes integers 0xNN NN </li>
+<li>Byte stands for 1 byte integer 0xNN  </li>
+<li>String stands for common string bytes "ABCDEF123456!@#$%/][\", etc. </li>
+</ul>
+
+<b>Declaration of a DirEntry</b>
+
+<b>How to find a DirTreeAddr (starting location of Directory Tree)</b>
+
+<h3>Credits</h3>
+<p>DAT1 format reverse engineered by Shadowbird (gmail.com, account "shadowbird.lv").</p>
+<p>DAT2 format reverse engineered by MatuX (matip@fibertel.com.ar).</p>
+
+<h3>Tools</h3>
+<a href="https://fodev.net/files/mirrors/teamx-utils/dat_explorer.rar">Dat Explorer 1.43</a><br/>
+<a href="https://fodev.net/files/mirrors/teamx-utils/!_INDEX_en.html#dat">Various team-x tools</a>
+
+<h3>Source code</h3>
+<a href="https://github.com/rotators/Fo1in2/blob/master/Tools/UndatUI/src/dat.cs">Fallout 1 DAT unpacking - C#</a><br/>
+<a href="https://github.com/ghost2238/2055/tree/master/tools/undat">Fallout 1 DAT-file extractor by Abel - Pascal / ASM</a><br/>
+<a href="https://github.com/rotators/tools/tree/master/DATLib">Fallout 2 DAT reading - C#</a><br/>
+<a href="https://github.com/rotators/Fo1in2/blob/master/Tools/Packrat/src/dat.cs">Fallout 2 DAT creation</a><br/>
+<a href="https://github.com/berenm/game-data-reverse-engineering/tree/master/python">DAT unpacking for both Fallout 1 and 2 DATs - Python</a>
+
+<h1 style="text-align: left;">History</h3>
+<p>
+2019-12-15 - Ported from <a href="https://falloutmods.fandom.com/wiki/DAT_file_format">https://falloutmods.fandom.com/wiki/DAT_file_format</a> by <a href="https://github.com/ghost2238">ghost</a><br/>
+</p>
+
+</div>
+</body>
+</html>
