@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN   
 // Windows Header Files
 #include <windows.h>
+#include <windowsx.h>
 #include <tlhelp32.h>
 #include <cstdio>
 // C RunTime Header Files

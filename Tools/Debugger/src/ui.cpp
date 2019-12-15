@@ -6,6 +6,8 @@ extern AsmLine codeDisplay[150000];
 extern DWORD currentParsedOffset;
 extern int parsedLines;
 
+int selectedLine = -1;
+
 int displayOffset;
 
 #define MAX_LOADSTRING 100
@@ -14,12 +16,15 @@ WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 void Attach(HWND window);
-HANDLE GetProcessByName(const wchar_t* processName);
+HANDLE GetProcessByName(const wchar_t* processName, DWORD& outpid);
 void ReadBytes(HANDLE fo2, HWND window, LPCVOID baseOffset, int bytes);
+void LoadSymbols();
+
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 HWND hWndVScrollBar;
+RECT selectionRect;
 
 int APIENTRY ui_init(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -75,10 +80,18 @@ int APIENTRY ui_init(_In_ HINSTANCE hInstance,
 
 void Attach(HWND window) {
 
-    HANDLE fo2 = GetProcessByName(_T("Fallout2.exe"));
+    DWORD pid;
+    HANDLE fo2 = GetProcessByName(_T("Fallout2.exe"), pid);
+    if (fo2 == 0) {
+        return;
+    }
+    char buf[50];
+
+    sprintf_s(buf, "Attached to Fallout2.exe - PID %d", pid);
+    SetWindowTextA(window, buf);
+
     for (auto i = 0; i < 2000; i++) {
 
-        
         if (parsedLines > 0) {
             // reparse 2 lines to avoid corruption.
             auto last = codeDisplay[parsedLines - 3];
@@ -91,7 +104,12 @@ void Attach(HWND window) {
             ReadBytes(fo2, window, (LPCVOID)editorOffset, 100);
         }
     }
-    displayOffset = 10000;
+    displayOffset = 0;
+    LoadSymbols();
+    for (auto i = 0; i < parsedLines; i++) {
+
+    }
+
     InvalidateRect(window, 0, TRUE);
 
     //sprintf_s(out, "%x %x %x\n", buf[0] & 0xFF, buf[1] & 0xFF, buf[2] & 0xFF);
@@ -110,8 +128,12 @@ void DrawDivider(HDC hdc, int x) {
 
 void ChangeDisplayOffset(HWND window, int amount) {
     displayOffset += amount;
-    if (displayOffset < 0) 
+    if (displayOffset < 0) {
         displayOffset = 0;
+    }
+    else {
+        selectedLine -= amount;
+    }
     InvalidateRect(window, 0, TRUE);
 }
 
@@ -145,6 +167,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SetScrollRange(hWndVScrollBar, SB_CTL, 0, parsedLines / 8, TRUE);
         break;
 
+    case WM_LBUTTONDOWN:
+    {
+        auto xPos = GET_X_LPARAM(lParam);
+        auto yPos = GET_Y_LPARAM(lParam);
+
+        selectedLine = yPos / 11;
+        InvalidateRect(hWnd, 0, TRUE);
+    }
+    break;
     case WM_SIZE:
     {
         RECT Rect;
@@ -185,8 +216,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 //if (!GetScrollInfo(hWnd, SB_VERT, &si))
                 //    return 1; // GetScrollInfo failed
+                
+                // before and after used to calculate
+                // how to adjust selected line.
+                auto before = displayOffset;
+                auto after = pos;
 
                 displayOffset = pos*8;
+
+                if (selectedLine != -1) {
+                    auto diff = after - before;
+                    selectedLine += diff;
+                }
                 
                 SetScrollPos((HWND)lParam, SB_CTL, pos, TRUE);
                 InvalidateRect(hWnd, 0, TRUE);
@@ -226,57 +267,73 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         switch (wParam)
         {
-            //Cases for handling ESCAPE, P, R, W and SPACE inputs
-
-        case VK_UP: ChangeDisplayOffset(hWnd, -1); break;
-        case VK_DOWN: ChangeDisplayOffset(hWnd, 1); break;
-        }//end switch
-
+            case VK_UP: ChangeDisplayOffset(hWnd, -1); break;
+            case VK_DOWN: ChangeDisplayOffset(hWnd, 1); break;
+        } 
     }
     break;
-
-   // case WM_ERASEBKGND:
-    //    return TRUE;
-    //    break;
+    // For doublebuffering
+    case WM_ERASEBKGND:
+        return 1;
 
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         RECT rect;
-        HDC hdc = BeginPaint(hWnd, &ps);
+        GetClientRect(hWnd, &rect);
+        HDC hdc = GetDC(hWnd);
+        int winHeight = rect.bottom - rect.top;
+        int winWidth = rect.right - rect.left;
+
+        // Double buffered drawing
+        auto hdcMem = CreateCompatibleDC(hdc);
+        auto bitmap = CreateCompatibleBitmap(hdc, winWidth, winHeight);
+        SelectObject(hdcMem, bitmap);
+
+        // Background
+        HBRUSH background = CreateSolidBrush(RGB(30, 30, 30));
+        SetRect(&rect, 0, 0, winWidth, winHeight);
+        FillRect(hdcMem, &rect, background);
 
         //windowBackgroundColor = RGB(0xff, 0xff, 0x00);
         //windowBackgroundBrush = CreateSolidBrush(windowBackgroundColor);
         //wcex.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
 
-        GetClientRect(hWnd, &rect);
-        SetTextColor(hdc, RGB(0, 255, 60));
-        SetBkMode(hdc, TRANSPARENT);
+        
+        SetTextColor(hdcMem, RGB(0, 255, 60));
+        SetBkMode(hdcMem, TRANSPARENT);
 
         HFONT hFont = CreateFont(11, 7, 0, 0, 0, FW_DONTCARE,
             false, false, ANSI_CHARSET,
             OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DRAFT_QUALITY, VARIABLE_PITCH,
             TEXT("Lucida Console"));
-        HFONT hOldFont = (HFONT)SelectObject(hdc, hFont);
+        HFONT hOldFont = (HFONT)SelectObject(hdcMem, hFont);
         //DrawTextA(hdc, codeDisplay, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
         auto linesToDisplay = (rect.bottom / 9);
 
-        DrawDivider(hdc, 80);
-        DrawDivider(hdc, 240);
-        DrawDivider(hdc, 520);
 
-        char parsestatus[64];
+
+        char parsestatus[128];
 
         int i = 0;
         int height = 0;
         rect.left = 550;
         rect.top = 20;
-        sprintf_s(parsestatus, 64, "Last parsed 0x%x, parsed %d lines.", currentParsedOffset, parsedLines);
-        DrawTextA(hdc, parsestatus, -1, &rect, DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
+        sprintf_s(parsestatus, 128, "Last parsed 0x%x, parsed %d lines. Selected line: %d", currentParsedOffset, parsedLines, selectedLine);
+        DrawTextA(hdcMem, parsestatus, -1, &rect, DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
         //height = DrawTextA(hdc, "Fallout2.exe:", -1, &rect,
         //    DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
         //OffsetRect(&rect, 0, height);
+
+        HBRUSH hGray = CreateSolidBrush(RGB(66, 66, 66));
+        SetRect(&selectionRect, 0, selectedLine * 11, 520, (selectedLine * 11) + 11);
+        FillRect(hdcMem, &selectionRect, hGray);
+
+        DrawDivider(hdcMem, 80);
+        DrawDivider(hdcMem, 240);
+        DrawDivider(hdcMem, 520);
+
         rect.left = 15;
         rect.top = 0;
         char hexbuf[32];
@@ -284,18 +341,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         for (i = displayOffset; i < max; i++) {
             sprintf_s(hexbuf, "0x%x", codeDisplay[i].offset);
             OffsetRect(&rect, 0, height);
-            height = DrawTextA(hdc, hexbuf, -1, &rect,
+            height = DrawTextA(hdcMem, hexbuf, -1, &rect,
                 DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
         }
-        
-
-
+       
         height = 0;
         rect.left = 90;
         rect.top = 0;
         for (i = displayOffset; i < max; i++) {
             OffsetRect(&rect, 0, height);
-            height = DrawTextA(hdc, codeDisplay[i].instructionhex, -1, &rect,
+            height = DrawTextA(hdcMem, codeDisplay[i].instructionhex, -1, &rect,
                 DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
         }
 
@@ -305,10 +360,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         rect.top = 0;
         for (i = displayOffset; i < max; i++) {
             OffsetRect(&rect, 0, height);
-            height = DrawTextA(hdc, codeDisplay[i].disasm, -1, &rect,
+            height = DrawTextA(hdcMem, codeDisplay[i].disasm, -1, &rect,
                 DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
         }
 
+        BitBlt(hdc, 0, 0, winWidth, winHeight, hdcMem, 0, 0, SRCCOPY);
+        DeleteDC(hdcMem);
+        DeleteObject(bitmap);
+        ReleaseDC(hWnd, hdc);
+
+        // This is needed to draw the scrollbar
+        hdc = BeginPaint(hWnd, &ps);
         EndPaint(hWnd, &ps);
     }
     break;
@@ -321,7 +383,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);

@@ -2,11 +2,10 @@
 #include "..\headers\structs.h"
 #include "..\Lib\diStorm\distorm.h"
 
+Function functions[10000];
 AsmLine codeDisplay[500000];
 int parsedLines;
 DWORD currentParsedOffset;
-
-BOOL InitInstance(HINSTANCE, int);
 
 int APIENTRY ui_init(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine,  _In_ int  nCmdShow);
 
@@ -18,7 +17,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ui_init(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 }
 
-HANDLE GetProcessByName(const wchar_t* processName)
+HANDLE GetProcessByName(const wchar_t* processName, DWORD& outpid)
 {
     DWORD pid = 0;
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -42,10 +41,61 @@ HANDLE GetProcessByName(const wchar_t* processName)
     CloseHandle(snapshot);
     if (pid != 0)
     {
+        outpid = pid;
         return OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
     }
 
     return NULL;
+}
+
+void LoadSymbols() {
+    FILE* fileptr;
+    char* buffer;
+    long filelen;
+
+    fopen_s(&fileptr, "symbols.txt", "r");
+    fseek(fileptr, 0, SEEK_END);
+    filelen = ftell(fileptr);
+    rewind(fileptr);
+    buffer = new char[filelen + 1];
+    fread(buffer, filelen, 1, fileptr); 
+    fclose(fileptr); 
+
+    int offset=0;
+    char buf[64];
+    buf[0] = '\0';
+    int x = 0;
+    int y = 0;
+    for (long i = 0; i < filelen; i++) {
+        if (buffer[i] == ':') {
+            buf[y++] = '\0';
+            sscanf_s(buf, "%x", &offset);
+            if (offset == 0x500000) { // NULL area
+                break;
+            }
+            ZeroMemory(buf, 64);
+            y = 0;
+            continue;
+        }
+        if (buffer[i] == ' ')
+            continue;
+        if (buffer[i] == '\n')
+        {
+            buf[y++] = '\0';
+            memcpy_s(functions[x].name, 64, buf, 64);
+            functions[x].offset = offset;
+            ZeroMemory(buf, 64);
+            offset = 0;
+            y = 0;
+            x++;
+            continue;
+        }
+        buf[y++] = buffer[i];
+    }
+
+    free(buffer);
+
+    return;
 }
 
 void ReadBytes(HANDLE fo2, HWND window, LPCVOID baseOffset, int bytes)

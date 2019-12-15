@@ -6,3 +6,8 @@ struct AsmLine {
     char* disasm;
     char* instructionhex;
 };
+
+struct Function {
+    int offset;
+    char name[64];
+};
