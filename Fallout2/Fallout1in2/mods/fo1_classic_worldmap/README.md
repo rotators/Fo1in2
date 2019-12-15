@@ -1,3 +1,5 @@
+<p align="center"><img src="fo1_classic_worldmap.png" alt="Classic Worldmap"/></p>
+
 Fallout 1 Classic Worldmap
 --------------------------
 
