@@ -1,0 +1,25 @@
+name: Tools
+
+on:
+ push:
+  paths:
+  - '.github/workflows/tools.debugger.yml'
+  - 'Tools/Debugger/**'
+
+jobs:
+
+ Debugger:
+  name:    Debugger (${{ matrix.platform }})
+  runs-on: windows-latest
+  strategy:
+   matrix:
+    platform: [x86, x64]
+
+  steps:
+
+  - name: Clone
+    uses: actions/checkout@v2
+
+  - name:  Build
+    run:   "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" Tools/Debugger/Debugger.sln -p:Configuration=Release -p:Platform=${{ matrix.platform }}
+    shell: bash

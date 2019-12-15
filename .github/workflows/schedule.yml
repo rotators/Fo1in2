@@ -176,6 +176,14 @@ jobs:
 ### Major tasks
 ### always generates commit (if needed)
 
+  # updates vswhere.exe
+  - name:  vswhere update
+    run:   |
+           :
+           curl -L https://github.com/microsoft/vswhere/releases/latest/download/vswhere.exe -o Tools/vswhere.exe
+           git diff --quiet || (git add --update && echo "- vswhere update" >> $HOME/gha.commit)
+    shell: bash
+
   # updates pre-release version of sfall (develop branch, ReleaseXP configuration)
   - name:  sfall-develop update
     if:    env.GHA_REPO_ALIVE == 'true'
@@ -196,8 +204,7 @@ jobs:
     run:   |
            :
            echo "@echo off" > $HOME/sfall/sfall/PostBuild.cmd
-           curl -sL https://github.com/microsoft/vswhere/releases/latest/download/vswhere.exe -o $HOME/vswhere.exe
-           "$($HOME/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32
+           "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32
            file "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" || true
            # cp "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.develop.dll
     shell: bash
