@@ -8,6 +8,8 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Added**: Pulse Pistol to Mariposa, but tweaked the stats to make it not be super overpowered.
 - **Added**: Removed the Fixt-option and made reporting Bob a default feature.
 - **Added**: Solar Scorcher to Guardian of Forever special encounter. Removed the Zip-Pistol and increased level requirement to >10 for game balance reasons.
+- **Added**: Upscaled / tweaked version of the Helpscreen.
+- **Added**: Upscaled graphics for TownWorld, Splash Screens, Death Screen, and Ending Slides.
 - **Added**: Using an electronic lockpick on the terminal now checks the bomb arming right away. No need to follow it up with using the lockpick skill on the terminal.
 - **Added**: V13 vault suit item. Can be found in the V13 storage room and is equippable by party members. (Optional)
 - **Fixed**: Added a short delay to the endgame sequence so that the vault door will open *after* the endgame slides and not before.
@@ -17,6 +19,8 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Fixed**: Killian's safe would keep spawning items on map_enter.
 - **Fixed**: Player spawning on the wrong hex when joining the fight against Gizmo.
 - **Fixed**: The bomb disarming code works a bit better now.
+- **Fixed**: Town/World entry points for Junktown moved to more represent the actual map positions.
+- **Fixed**: Visible "transparent" pixel in the corners of the town/world map graphics.
 - **Removed**: Fixt-function, lockers getting destroyed by explosions. It was barely used.
 - **Removed**: Fixt-setting for painfields for good.
 - **Removed**: Initial map_enter message for V13 caves.
