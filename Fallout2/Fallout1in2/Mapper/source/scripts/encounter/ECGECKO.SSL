@@ -7,14 +7,15 @@
 */
 
 #include "..\headers\define.h"
-//#include "..\headers\mapenc.h"
 #include "..\headers\sfall\main.h"
 
 #define NAME                    SCRIPT_ECGECKO
 
 #include "..\headers\command.h"
+#include "..\headers\mapenc.h"
 
 procedure start;
+procedure combat_p_proc;
 procedure destroy_p_proc;
 procedure critter_p_proc;
 procedure map_enter_p_proc;
@@ -23,6 +24,9 @@ variable starttile := 0;
 
 #define set_lootable(PID)     set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwand bwnot(CFLG_NOSTEAL))
 #define set_unlootable(PID)   set_proto_data(PID, PROTO_CR_FLAGS, get_proto_data(PID, PROTO_CR_FLAGS) bwor CFLG_NOSTEAL)
+
+procedure start begin
+end
 
 procedure map_enter_p_proc begin
    starttile := self_tile;
@@ -33,7 +37,16 @@ procedure map_enter_p_proc begin
    reg_anim_end();
 end
 
-procedure start begin
+
+procedure combat_p_proc begin
+   /*if debug_mode and map_is_caravan_escort then begin
+      if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
+         script_overrides;
+         call destroy_p_proc;
+         //critter_dmg(self_obj, 999, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+         kill_critter(self_obj, 0);
+      end
+   end*/
 end
 
 procedure critter_p_proc begin
@@ -70,5 +83,5 @@ procedure destroy_p_proc begin
    end
 
    if map_is_caravan_escort then
-      set_map_var(0, map_var(0) - 1);
+      dec_map_var(MVAR_Hostile_Total);
 end
