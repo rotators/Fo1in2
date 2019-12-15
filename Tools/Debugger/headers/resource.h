@@ -5,6 +5,7 @@
 #define IDI_DEBUGGER                    107
 #define IDI_SMALL                       108
 #define IDC_DEBUGGER                    109
+#define IDC_SCROLLBAR                   110
 #define IDR_MAINFRAME                   128
 #define ID_FILE_ATTACH                  32771
 #define IDC_STATIC                      -1
