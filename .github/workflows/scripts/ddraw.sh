@@ -214,9 +214,9 @@ function GetDllVersion()
     [ -z "$dll" ] && Usage ".dll filename not set"
     [ ! -r $dll ] && Usage "cannot read '$dll'"
 
-    # 7zip v19.00 uses slightly different format than v16.00 when reporting version info (two lines match on v19.00, one on v16.00)
+    # 7zip v19.x uses slightly different format than v16.x when reporting version info (two lines match on v19.x, one on v16.x)
     # use last match found -- without trailing ".0"
-    local version=$(7z l $dll | grep '^FileVersion:' | awk '{print $2}' | tail -1)
+    local version=$(7z l $dll | egrep '^(FileVersion|Comment = FileVersion):' | sed -e 's!^Comment = !!' | awk '{print $2}' | tail -1)
 
     echo "$version"
 }
