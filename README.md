@@ -1,3 +1,5 @@
+<p align="center"><img src="logo_ettu.png" alt="Fallout et Tu"/></p>
+
 # Fallout et tu
 
 A Fallout to Fallout 2 engine conversion (also called Fallout 1@2, 1at2, or 1in2) brought to you by Rotators (the people who made FOnline: 2238 and stuff).
