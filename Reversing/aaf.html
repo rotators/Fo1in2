@@ -1,0 +1,143 @@
+<html>
+<head>
+    <title>AAF File Format</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div style="width: 1200px; margin: auto;">
+<h1>AAF File Format</h1>
+<p>The AAF Font File Format is used to store fonts in Fallouts 1 & 2. Only the AAF files used in the English versions are discussed here, there may or may not be variations for other languages.</p>
+
+<p>The AAF file stores a separate glyph for each of the 256 position in the ASCII table. The fonts in an AAF file are typically non-fixed size, i.e. each glyph has it's own width and height. A glyph is defined by a rectangular bitmap representing the pixels of the glyph, corresponding to the way that it appears on the screen. Each pixel can have a possible value in the range of 0 to 9.</p>
+
+<ul>
+  <li>0 means that the pixel is transparent.</li>
+  <li>The values 1 to 9 represent the relative brightness of that pixel, with 9 being the brightest. There does not appear to be a linear increase in brightness from values 1 to 9.</li> 
+</ul>
+
+<p>Here is an example of the bitmap of a glyph. This glyph is from the file FONT1.AAF and represents the character 'b' (ASCII 98).</p>
+
+<pre style="background: #222; margin: 10px; width: 80px; padding: 5px;">
+  77    
+  77    
+  777763
+  77  76
+  77  77
+  77  76
+  777763
+</pre>
+
+<p>Pixels with value 0 are not shown as they are transparent. The higher numbers 7 and 6 represent the brighter parts of the glyph, while the 3 would be much duller in colour. This would be expected for the rounder corners of the b.</p>
+
+<table style="background: #222; margin: 10px;">
+<thead>
+<tr>
+<th style="width: 150px;">Offset</th>
+<th style="width: 125px;">Bytes</th>
+<th style="width: 150px;">Data Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>0x000</td>
+		<td>4</td>
+		<td>char[4] = "AAFF"</td>
+		<td>Signature used to identify file type. </td>
+	</tr>
+	<tr>
+		<td>0x004</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>Maximum glyph Height.This is the maximum height of the glyph, including ascenders and descenders.</td>
+	</tr>
+	<tr>
+		<td>0x006</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>Horizontal gap.Gap size (in pixels) between adjacent glyphs.</td>
+	</tr>
+	<tr>
+		<td>0x008</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>Width of space.The width of the space character.</td>
+	</tr>
+	<tr>
+		<td>0x00A</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>Vertical gap.The number of pixels between two lines of glyphs. </td>
+	</tr>
+	<tr>
+		<td>0x00C</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>GLYPH-0-WIDTH : Width of glyph 0.The width (in pixels) of the glyph corresponding to ascii 0.</td>
+	</tr>
+	<tr>
+		<td>0x00E</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>GLYPH-0-HEIGHT : Height of glyph 0.The height (in pixels) of the glyph corresponding to ascii 0.</td>
+	</tr>
+	<tr>
+		<td>0x010</td>
+		<td>4</td>
+		<td>unsigned long</td>
+		<td>Offset of glyph 0.The offset in this AAF file where the data for glyph 0 is stored.You need add 0x080C to this value to getting REAL offset from begin of file. Note: If GLYPH-x-WIDTH * GLYPH-x-HEIGHT = 0 (NULL glyph), then this value is offset of next "REAL" glyph.</td>
+	</tr>
+	<tr>
+		<td>0x014</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>GLYPH-1-WIDTH : Width of glyph 1.</td>
+	</tr>
+	<tr>
+		<td>0x016</td>
+		<td>2</td>
+		<td>unsigned short</td>
+		<td>GLYPH-1-HEIGHT : Height of glyph 1. </td>
+	</tr>
+	<tr>
+		<td>0x018</td>
+		<td>4</td>
+		<td>unsigned long</td>
+		<td>Offset of glyph 1. You need add 0x080C to this value to getting REAL offset from begin of file. </td>
+	</tr>
+	<tr>
+		<td>0x01C</td>
+		<td>(2 + 2 + 2) * (256 - 2) </td>
+		<td></td>
+		<td>Descriptions of glyphs 2 through 255, as described above.</td>
+	</tr>
+	<tr>
+		<td>0x80C</td>
+		<td>GLYPH-0-WIDTH * GLYPH-0-HEIGHT</td>
+		<td>byte = [0..9]</td>
+		<td>Pixel data for glyph 0. Contains the pixel data for the glyph. Each pixel in the glyph is represented by one byte, with possible values in the range 0 to 9. A value of 0 means the pixel is transparent, while values 1 to 9 represent different brightness values of the pixel (1 is dark and 9 is bright). Pixel data is starts at the top left corner of the glyph and increases left to right, then top to bottom. </td>
+	</tr>
+	<tr>
+		<td>0x080C + (GLYPH-0-WIDTH * GLYPH-0-HEIGHT)</td>
+		<td>GLYPH-1-WIDTH * GLYPH-1-HEIGHT</td>
+		<td>byte = [0..9]</td>
+		<td>Pixel data for glyph 1.</td>
+	</tr>
+	<tr>
+		<td>0x080C + (GLYPH-0-WIDTH * GLYPH-0-HEIGHT) + (GLYPH-1-WIDTH * GLYPH-1-HEIGHT)</td>
+		<td>...</td>
+		<td>byte = [0..9]</td>
+		<td>Pixel data for glyphs 2 to 255, as described above. </td>
+	</tr>
+	</tbody>
+</table>
+
+<p>Note: All integers are in <a href="https://en.wikipedia.org/wiki/Endianness#Big-endian">Motorola / big-endian format.</a></p>
+
+<h1 style="text-align: left;">History</h3>
+<p>
+2019-12-16 - Ported from <a href="https://falloutmods.fandom.com/wiki/AAF_File_Format">https://falloutmods.fandom.com/wiki/AAF_File_Format</a> by <a href="https://github.com/ghost2238">ghost</a><br/>
+Patched by Anchorite (anchorite2001@yandex.ru) <br/>
+Created by Noid (noid@888.nu) 
+</p>
+</div>
