@@ -1,4 +1,4 @@
-<p align="center"><img src="logo_ettu.png" alt="Fallout et Tu"/></p>
+<p align="center"><img src="Resources/Gallery/logo_ettu.png" alt="Fallout et Tu"/></p>
 
 # Fallout et tu
 
