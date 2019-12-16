@@ -5,6 +5,7 @@
 Function functions[10000];
 AsmLine codeDisplay[500000];
 int parsedLines;
+int loadedFunctions;
 DWORD currentParsedOffset;
 
 int APIENTRY ui_init(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine,  _In_ int  nCmdShow);
@@ -92,6 +93,7 @@ void LoadSymbols() {
         }
         buf[y++] = buffer[i];
     }
+    loadedFunctions = x;
 
     free(buffer);
 

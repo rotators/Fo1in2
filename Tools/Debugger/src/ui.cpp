@@ -3,8 +3,10 @@
 
 DWORD editorOffset;
 extern AsmLine codeDisplay[150000];
+extern Function functions[10000];
 extern DWORD currentParsedOffset;
 extern int parsedLines;
+extern int loadedFunctions;
 
 int selectedLine = -1;
 
@@ -106,9 +108,33 @@ void Attach(HWND window) {
     }
     displayOffset = 0;
     LoadSymbols();
+    char adr[8];
+    unsigned int scanadr=0;
     for (auto i = 0; i < parsedLines; i++) {
-
+        if (codeDisplay[i].instructionhex[0] == 'e' && codeDisplay[i].instructionhex[1] == '8') {
+            // load relative adress, it's in little endian so bytes are read in reverse order
+            adr[0] = codeDisplay[i].instructionhex[8];
+            adr[1] = codeDisplay[i].instructionhex[9];
+            adr[2] = codeDisplay[i].instructionhex[6];
+            adr[3] = codeDisplay[i].instructionhex[7];
+            adr[4] = codeDisplay[i].instructionhex[4];
+            adr[5] = codeDisplay[i].instructionhex[5];
+            adr[6] = codeDisplay[i].instructionhex[2];
+            adr[7] = codeDisplay[i].instructionhex[3];
+            sscanf_s(adr, "%x", &scanadr);
+            auto calloffset = codeDisplay[i].offset + scanadr + 5;
+            for (auto x = 0; x < loadedFunctions; x++) {
+                if (functions[x].offset == calloffset) {
+                    auto len = strlen(functions[x].name)+6;
+                    char* name = new char[len+1];
+                    memcpy(name, functions[x].name, strlen(functions[x].name));
+                    codeDisplay[i].disasm = new char[len+50];
+                    snprintf(codeDisplay[i].disasm, len, "CALL %s", name);
+                }
+            }
+        }
     }
+
 
     InvalidateRect(window, 0, TRUE);
 
@@ -362,6 +388,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             OffsetRect(&rect, 0, height);
             height = DrawTextA(hdcMem, codeDisplay[i].disasm, -1, &rect,
                 DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
+        }
+
+        // Comment, function definition, args etc
+        height = 0;
+        rect.left = 530;
+        for (i = displayOffset; i < max; i++) {
+            rect.top = height;
+            for (auto x = 0; x < loadedFunctions; x++) {
+                if (functions[x].offset == codeDisplay[i].offset) {
+                    DrawTextA(hdcMem, functions[x].name, -1, &rect,
+                        DT_WORDBREAK | DT_EDITCONTROL | DT_BOTTOM);
+                    break;
+                }
+            }
+            height += 11;
         }
 
         BitBlt(hdc, 0, 0, winWidth, winHeight, hdcMem, 0, 0, SRCCOPY);
