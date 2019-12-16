@@ -1,0 +1,253 @@
+<html>
+<head>
+    <title>ACM File Format</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div style="width: 1200px; margin: auto;">
+<h1>ACM File Format</h1>
+<p>Description of ACM-file format. v1.0, written 2000-06-18 by Abel.</p> 
+
+<p>NOTE1: This is only an attempt to describe the author's current understanding of the format, so the names of all variables and items are pure relative, they can have absolutely different actual meaning. </p>
+<p>NOTE2: I cannot explain the unpacking algorithm at the moment, so I have toappeal to sources of unpacker. </p>
+<p>NOTE3: This description uses the following integer types: </p>
+ 
+ <pre style="background: #222; padding: 10px;">
+  DWORD      32-bit signed integer
+  WORD       16-bit signed integer
+ </pre>
+ 
+ <p>Also C-like declarations and expressions are used. ACM file consists of two main parts: </p>
+ <ul>
+   <li>short header</li>
+   <li>ACM-Stream, containing packed information </li>
+ </ul>
+ 
+ <h3>Header</h3>
+ <p>This table describes the meaning of header's fields:</p>
+ <pre>
+  # of bits |     Value           |  Description
+-----------+---------------------+-----------------
+    24     | 0x97 0x28 0x03      | ACM-signature1
+     8     | 0x01                | ACM-signature2
+    32     | count of samples    | a sample is 16 bit
+    16     | # of channels       | 1-mono, 2-stereo (actually not used)
+    16     | frequency (bitrate) | 22050 in all known ACMs (actually not used)
+     4     | packAttrs           | (see below)
+    12     | packAttrs2          |
+ </pre>
+ <p>Explanation:</p>
+ <p>I. First 4 bytes of every ACM-file contain 0x01032897, this is kind of signature and its exact meaning is opaque. </p>
+ <p>Taking in account that Sig1 and Sig2 are read separately, one can conclude that Sig1 is an actual ACM-signature, while Sig2 is, for example, a version of ACM. </p>
+ <p>II. Number of channels and Bitrate are specified in ACM-file, but they are not used in the games I know (Fallout1, Fallout2 and Planescape). All the known at the moment files are 22050 Hz. The # of channels are 1 or 2, but actual count of channels depends on actual usage of a resulting sound samples. </p>
+ <p>III. The next two values specify the behaviour of unpacking algorithm. The packAttrs denotes the level of recursion in packed-data processing. If this value is zero, no actual data-unpacking is performed. The packAttrs2 is number of sub-blocks in a Packed-Block (see section 2). </p>
+ 
+ <h4>Actions</h4>
+ <p>Based on header values the next variables are defined (the names correspond to the source code): </p>
+ 
+ <p>a) someSize = 1 << packAttrs (size of one sub-block)<br/>
+ b) someSize2 = someSize * packAttrs2 (size of one PackedBlock)<br/>
+ c) decBuff_size = 3*someSize/2 - 2 (size of "memory"-buffer), this values the sum of following geometric progression: <br/>
+ <pre>2 + 4 + 8 +...+ ( 1 << (packAttrs-1) )</pre>
+ <p>plus ( 1 << (packAttrs-1) ) once again. </p>
+ <p>II. The following arrays are created (their names differs from source): </p>
+ <p>a) PackedBlock = DWORD [someSize2] (corresponds to someBuff). It is more convenient to think of this array as of variable-length array DWORD [packAttrs2][someSize] or DWORD [cnt_of_blocks][block_len]. This array is used to process packed data. </p>
+ <p>b) if packAttrs is not zero, then the following array is created and initialized with zero: MemoryBuffer = DWORD [decBuff_size] (corresponds to decompBuff). This array can be thought of as the following structure: </p>
+ <pre>
+  {
+	  WORD  [someSize/2][2],
+	  DWORD [someSize/4][2],
+	  DWORD [someSize/16][2],
+		...
+	  DWORD [1][2]
+  }
+</pre>
+<p>Each item is used at a corresponding recursion level. This buffer is used as a seam, as a glue between two consecutive PackedBlocks during data-unpacking. </p>
+<p>c) AmplitudeBuffer = WORD [0x10000], and Buff_Middle = &amplitudeBuffer[0x8000], the latter is used as an array of WORDs with indices from -0x8000 to 0x7FFF. The buffer is filled with amplitude values used in subsequent unpacking.</p>
+
+<h3>ACM-Stream</h3>
+<p>This is a bit-stream. It is organized as a collection of bit-blocks, each of which can be unpacked into someSize2 samples, i.e. into one PackedBlock. Let's call such a bit-block just a BitBlock. Then an ACM-Stream is just a sequence of BitBlocks (with various length). </p>
+<p>Each BitBlock contains information about amplitudes used in corresponding PackedBlock and the description of how to manage these amplitudes in order to produce sound samples. </p>
+<p>I. The first 20 bits of BitBlock can be considered as its header: </p>
+
+<pre>
+ bits | name
+------+------
+   4  | pwr
+  16  | val´
+ </pre>
+ 
+ <p>Using these values the AmplitudeBuffer is filled as following: </p>
+ <pre>
+ count = 1 << pwr
+ Buff_Middle [+0] = 0
+ Buff_Middle [+1] = val
+ Buff_Middle [+2] = 2*val
+ ...
+ Buff_Middle [+(count-1)] = (count-1)*val
+ Buff_Middle [-1] = -val
+ Buff_Middle [-2] = -2*val
+ ...
+ Buff_Middle [-count] = -count*val
+ </pre>
+ <p>II. PackedBlock is filled with values from AmplitudeBuffer. This is done with help of special filling subroutines (or Fillers).</p>
+ <p>There are 14 different Fillers (their description will be given later): </p>
+ 
+ <pre>
+     Zero, Ret0, Linear, k13, k12, t15, k24,
+     k23, t27, k35, k34, k45, k44 and t37.
+ </pre>
+ <p>Each (well, almost each) Filler is intended to fill only one column of PackedBlock, which is considered as DWORD[packAttrs2][someSize] (n-th column in this case is an array { PB[0][n], PB[1][n], ... , PB[pa2-1][n] }). </p>
+ <p>For each column of PackedBlock one of Fillers is invoked. To select the Filler, 5 bits are read from BitBlock, and this 5-bit value is used as an index in the following array: </p>
+ 
+ <pre>
+      Filler[32] = {Zero, Ret0, Ret0, Linear, Linear, Linear, Linear, Linear,
+        Linear, Linear, Linear, Linear, Linear, Linear, Linear, Linear,
+        Linear, k13, k12, t15, k24, k23, t27, k35,
+        k34, Ret0, k45, k44, Ret0, t37, Ret0, Ret0};
+ </pre>
+ <p>Two parameters are passed to a Filler: its index in the array and the number of a column it is applied to. </p>
+ 
+ <p>Thus the filling of PackedBlock with amplitudes can be outlined with the following C-pseudocode: </p>
+ <pre>
+      for (int i=0; i&lt;someSize&semi i++) {
+        int Ind = get_bits_from_BitBlock (5)&semi;
+        (Fillers [Ind]) (Ind, i)&semi;
+     }
+ </pre>
+ <p>III. Description of Fillers. </p>
+ <p>1) Zero. Fills the column with zero. Does not use any bits from BitBlock. </p>
+ <p>2) Ret0. Breaks the filling of current PackedBlock, discards its contents and starts a new BitBlock. In rather large ACM-files I've tested I have not found this kind of Filler. </p>
+ <p>3) Linear. 'Ind' parameter is the number of bits from BitBlocks which are used as an index of a value in AmplitudeBuffer. In pseudocode: </p>
+ <pre>
+  Linear (int Ind, int column_n) {
+	for (int i=0; i&lt;packAttrs2; i++) {
+	   int val = get_bits_from_BitBlock (Ind);
+	   PackedBlock [i][column_n] = Buff_Middle [val];
+	}
+ }
+ </pre>
+ <p>4) k13. Uses variable count of bits (up to 3) from BitBlock to fill the column: </p>
+ <pre>
+     bit-sequence | action
+     (in order of |
+      appearance) |
+    --------------+-------------
+      0           | PB[i][n] = 0; PB[++i][n] = 0
+      1, 0        | PB[i][n] = 0
+      1, 1, 0     | PB[i][n] = Buff_Middle [-1]
+      1, 1, 1     | PB[i][n] = Buff_Middle [+1]
+ </pre>
+ <p>5) k12. Up to 2 bits: </p>
+ <pre>
+  bit-seq. | value
+----------+-----------
+  0       | 0
+  1, 0    | Buff_Middle [-1]
+  1, 1    | Buff_Middle [+1]
+ </pre>
+ <p>6) k24. Up to 4 bits: </p>
+ <pre>
+  bit-seq. | value(s)
+----------+-----------
+  0       | 0, 0
+  1,0     | 0
+  1,1,0,0 | Buff_Middle [-2]
+  1,1,1,0 | Buff_Middle [-1]
+  1,1,0,1 | Buff_Middle [+1]
+  1,1,1,1 | Buff_Middle [+2]
+ </pre>
+ <p>7) k23. Up to 3 bits: </p>
+ <pre>
+  bit-seq. | value
+----------+-----------
+  0       | 0
+  1,0,0   | Buff_Middle [-2]
+  1,1,0   | Buff_Middle [-1]
+  1,0,1   | Buff_Middle [+1]
+  1,1,1   | Buff_Middle [+2]
+ </pre>
+ <p>8) k35. Up to 5 bits: </p>
+ <pre>
+  bit-seq.     | value(s)            /---->  2bits | B_M index
+--------------+-----------          |      -------+-----------
+ 0            | 0, 0                |        0,0  | -3
+ 1,0          | 0                   |        1,0  | -2
+ 1,1,0,0      | Buff_Middle [-1]    |        0,1  | +2
+ 1,1,0,1      | Buff_Middle [+1]    |        1,1  | +3
+ 1,1,1, 2bits |    (*) -------------/
+ </pre>
+ <p>9) k34. Up to 4 bits: </p>
+ <pre>
+  bit-seq.   | value               /---->  2bits | B_M index
+------------+-----------          |      -------+-----------
+ 0          | 0                   |        0,0  | -3
+ 1,0,0      | Buff_Middle [-1]    |        1,0  | -2
+ 1,0,1      | Buff_Middle [-1]    |        0,1  | +2
+ 1,1, 2bits |    (*) -------------/        1,1  | +3
+ </pre>
+ <p>10) k45. Up to 5 bits: </p>
+ <pre>
+  bit-seq.    | value
+-------------+-----------
+  0          | 0, 0
+  1,0        | 0
+  1,1, 3bits | 3bits->B_M index:  000-> -4, 100-> -3, 010-> -2, 110-> -1
+                                  001-> +1, 101-> +2, 011-> +3, 111-> +4
+ </pre>
+ <p>11) k44. Up to 4 bits: </p>
+ <pre>
+  bit-seq.  | value
+-----------+-----------
+  0        | 0
+  1, 3bits | 3bits->index:  000-> -4, 100-> -3, 010-> -2, 110-> -1
+                            001-> +1, 101-> +2, 011-> +3, 111-> +4
+ </pre>
+ <p>12) t15. Takes 5 bits from BitBlock. This value is considered as a base-3 number with 3 digits. Each digit is used as an index in Buff_Middle. So 3 consecutive items of a column are filled. </p>
+ <p>13) t27. Reads 7 bits and treats obtained value as base-5 number with 3 digits. Each digit is used as an index in Buff_Middle, in this way 3 consecutive items of a column are filled. </p>
+ <p>14) t37. Takes 7 bits and treats their value as base-11 number with 2 digits. Each digit is used as an index in Buff_Middle, in this way two consecutive items of a column are filled. </p>
+ <p>IV. Processing of data in PackedBlock. </p>
+ <p>If packAttrs is zero, we do not have do to anything else, we've got the sound samples in PackedBlock. Otherwise we need to apply unpacking algorithm to values in PackedBlock to gain sound samples. This is done in functions unpackValues, sub_4d3fcc and sub_4d420c (see source). </p>
+ <p>All I can tell about the unpacking is that it is recursive. During the process the PackedBlock is treated as DWORD [cnt_of_blocks][block_len]. At the beginning of the processing </p>
+ <pre>
+  cnt_of_blocks = packAttrs2*2
+  block_len = someSize/2.
+ </pre>
+ <p>From some recursion level to the next level cnt_of_blocks is multiplied by 2 and block_len is divided by 2, so the value cnt_of_blocks*block_len is a constant. </p>
+ <p>Also I can describe the properties of results from this data processing. NOTE: to study these properties, an algorithm was slightly altered: in unpackValues function the for-loop with increment of items of PackedBlock was commented out. This increment just adds a constant value to all the items of resulting array, so it is not a core part of algorithm. </p>
+ <p>Let's call F(PB) the result of applying of functions mentioned above to a PackedBlock PB. And denote by PB{[i]=v} a PackedBlock where all the items are equal zero, except for the i-th one, which is assigned a value of v. That is PB{[1]=5} symbolizes the array {0,5,0,...,0}. </p>
+ <p>The following properties of F can be observed: </p>
+ <p>1) Compact support. </p>
+ <pre>
+      F (PB{[i]=v}) is zero everywhere, except for items from i to i+2*someSize-1.
+ </pre>
+ <p>2) Periodicity with period someSize. </p>
+ <pre>
+     F (PB{[i]=v}) and F (PB{i+someSize}=v) differ only in the way, that the latter one is shifted by someSize.
+ </pre>
+ <p>3) Linearity. </p>
+ <pre>
+     F (PB{[i]=a, [j]=b}) = a*F (PB{[i]=1}) + b*F (PB{[j]=1}).
+ </pre>
+ <p>4) Almost orthogonality (a strange one). </p>
+ <pre>
+      Let's denote f_i = F (PB{[i]=1}), where i=0..someSize-1. w_i =
+  F (PB{ [i]=1, [i+someSize]=1, [i+2*someSize]=1, ... } ), shifted to the left
+  by (2*someSize) items (that is we simply discard first items). And group
+  their indices in the following way:
+     g0 = {0}
+     g1 = {1}
+     g2 = {2, 3}
+     g3 = {4, 5, 6, 7}
+     ...
+     g_packAttrs = { ..., (someSize-1) }
+ </pre>
+ <p>Then any two vectors w_i and f_j are orthogonal (in sense of inner product) if their indices belong to different groups. </p>
+ <p>Moreover, w_i and f_j belonging to the same group are orthogonal if i and j are of different parity (I am not sure of this term; what I mean to say is that one of them is even while the another is odd). May be w_i can be treated as test-functions for presence of f_j in a signal. </p>
+ 
+ <h3>Tools</h3>
+ <a href="https://fodev.net/files/mirrors/teamx-utils/!_INDEX_en.html#sound">TeamX utils</a>
+ 
+ </div>
+ </body>
+ </html>
