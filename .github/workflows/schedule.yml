@@ -100,14 +100,17 @@ jobs:
            git --no-pager log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" > $HOME/git.log
            OLD_SFALL=$(grep --max-count=1 "sfall-develop" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
            OLD_ARTIFACTS=$(grep --max-count=1 "ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
+           OLD_DEBUGGER=$(grep --max-count=1 "Debugger" $HOME/git.log | awk -F \( '${print $2}' | tr -d ')')
            echo "sfall-develop $OLD_SFALL"
            echo "ModdersPack   $OLD_ARTIFACTS"
+           echo "Debugger      $OLD_DEBUGGER"
            rm -f $HOME/git.log
            echo ::endgroup::
 
            echo "::group::Get new SHA"
            NEW_SFALL=$(git -C $HOME/sfall --no-pager log --pretty=format:%H -1 sfall)
            NEW_ARTIFACTS=$(git -C $HOME/sfall --no-pager log --pretty=format:%H -1 artifacts)
+           NEW_DEBUGGER=$(git --no-pager log --pretty=format:%H -1 Tools/Debugger)
            echo "sfall-develop $NEW_SFALL"
            echo "ModdersPack   $NEW_ARTIFACTS"
            echo ::endgroup::
@@ -122,6 +125,12 @@ jobs:
            if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
               echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
               echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
+           fi
+
+           echo "Debugger..."
+           if [ "$OLD_DEBUGGER" != "$NEW_DEBUGGER" ]; then
+              echo "Debugger... $OLD_DEBUGGER -> $NEW_DEBUGGER"
+              echo ::set-env name=GHA_TASK_DEBUGGER::true
            fi
 
            # simplifies checking/displaying which event triggered workflow (especially dispatches)
@@ -224,6 +233,20 @@ jobs:
               echo "- ModdersPack update (phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit
            fi
     shell: bash
+
+  #
+  - name:  Debugger recompilation
+    if:    env.GHA_TASK_DEBUGGER == 'true'
+    run:   |
+           :
+           ok=1
+           "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" Tools/Debugger/Debugger.sln -p:Configuration=Release -p:Platform=x86 || ok=0
+           if [ $ok -eq 1 ] && [ -f Tools/Debugger/Release/Debugger.exe ]; then
+              mv Tools/Debugger/Release/Debugger.exe $MOD_DIR/Debugger.exe
+              chmod +x $MOD_DIR/Debugger.exe
+              DEBUGGER_COMMIT=$(git log --pretty=format:%H -1 Tools/Debugger)
+              git diff --quiet || (git add --update && echo "- Debugger recompilation (${DEBUGGER_COMMIT})" > $HOME/gha.commit)
+           fi
 
   # updates scripts sources to Rotators standards
   - name:  ReDefine run
