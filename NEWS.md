@@ -3,6 +3,7 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Added**: Correct spawn hex when being teleported to the LA Library via invasion super mutant.
 - **Added**: Hi-Res splash screen mod with upscaled and retouched original splashes in resolutions of 1024x768px and 1280x960px.
 - **Added**: It's possible to fail the reporting (speech & charisma check).
+- **Added**: Missing BOS "Invaded" ending slide.
 - **Added**: Missing music for the Master's Lair.
 - **Added**: Party members are now included in the guard disguise-check (Optional behavior, see fo1_settings.ini).
 - **Added**: Pulse Pistol to Mariposa, but tweaked the stats to make it not be super overpowered.
@@ -15,6 +16,7 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Fixed**: Added a short delay to the endgame sequence so that the vault door will open *after* the endgame slides and not before.
 - **Fixed**: Can't arm the bomb over and over again.
 - **Fixed**: Dog barking sfx in the Cathedral tower maps.
+- **Fixed**: Gizmo has precedence over Killian ending slide.
 - **Fixed**: Ian duplicated "decline to join"-dialog.
 - **Fixed**: Killian's safe would keep spawning items on map_enter.
 - **Fixed**: Player spawning on the wrong hex when joining the fight against Gizmo.
