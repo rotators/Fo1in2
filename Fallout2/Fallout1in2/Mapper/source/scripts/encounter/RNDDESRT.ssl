@@ -1072,14 +1072,11 @@ procedure Shady3 begin
 end
 
 procedure Shady4 begin
-   if (global_var(GVAR_IS_DUC_ALIVE) == 0) then begin
+   if (global_var(GVAR_IS_DUC_ALIVE) == 0) then
       display_msg(message_str(SCRIPT_RNDDESRT, 170));
-   end
-   else begin
-      if (global_var(GVAR_IS_DUC_ALIVE) == 1) then begin
+   else if (global_var(GVAR_IS_DUC_ALIVE) == 1) then
          display_msg(message_str(SCRIPT_RNDDESRT, 305));
-      end
-   end
+
    if (global_var(GVAR_IS_DUC_ALIVE) == 0) then begin
       Tot_Critter_B := random(4, 6);
       Outer_ring := (dude_perception / 2) + 7;
@@ -1118,15 +1115,13 @@ procedure Shady4 begin
       item_caps_adjust(Critter, random(25, 100) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
       victim := Critter;
    end
-   else begin
-      if (global_var(GVAR_IS_DUC_ALIVE) == 1) then begin
-         Tot_Critter_B := random(2, 3);
-         Outer_ring := (dude_perception / 2) + 7;
-         Inner_ring := (dude_perception / 2) + 3;
-         group_angle := dude_rot;
-         set_global_var(GVAR_WATER_THIEF_2, 1);
-         set_global_var(GVAR_IS_DUC_ALIVE, (global_var(GVAR_IS_DUC_ALIVE) + 1));
-      end
+   else if (global_var(GVAR_IS_DUC_ALIVE) == 1) then begin
+      Tot_Critter_B := random(2, 3);
+      Outer_ring := (dude_perception / 2) + 7;
+      Inner_ring := (dude_perception / 2) + 3;
+      group_angle := dude_rot;
+      set_global_var(GVAR_WATER_THIEF_2, 1);
+      set_global_var(GVAR_IS_DUC_ALIVE, (global_var(GVAR_IS_DUC_ALIVE) + 1));
    end
 
    Critter_type := PID_TOWNSMAN_LEATHER;
@@ -1178,11 +1173,12 @@ procedure Shady5 begin
    else begin
       display_msg(message_str(SCRIPT_RNDDESRT, 175));
    end
+
    Outer_ring := (dude_perception / 2) + 4;
    Inner_ring := (dude_perception / 2) + 3;
    Critter_direction := dude_rot;
-   Critter_type := PID_TOWNSMAN_LEATHER;//  2- Townsman ; was 50% chance instead 30          Peasant                16777246
-   Critter_script := SCRIPT_LANCE;//was 50% chance instead 749
+   Critter_type := PID_TOWNSMAN_LEATHER;
+   Critter_script := SCRIPT_LANCE;
    call Place_critter;
    obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
    Item := create_object(PID_10MM_PISTOL, 0, 0);
@@ -1199,9 +1195,13 @@ procedure Shady5 begin
    add_obj_to_inven(Critter, Item);
 
    item_caps_adjust(Critter, random(8, 44) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+
+   victim := Critter; // this is to make him appear in combat with the mantis!
+
    if (global_var(GVAR_LANCE_STATUS) != 0) then begin
       kill_critter(Critter, ANIM_fall_back_blood_sf);
    end
+
    Tot_Critter_A := random(4, 6);
    if (day) then begin
       Outer_ring := 6;
@@ -1211,6 +1211,7 @@ procedure Shady5 begin
       Outer_ring := 4;
       Inner_ring := 3;
    end
+
    Critter_type := PID_MANTIS;
    Critter_script := SCRIPT_MANTIS;
    while(Tot_Critter_A) do begin
@@ -1219,6 +1220,9 @@ procedure Shady5 begin
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
       Tot_Critter_A := Tot_Critter_A - 1;
    end
+
+   attack_setup(Critter, victim);
+
    set_global_var(GVAR_MYST_STRANGER_ITEM, 1);
    call Add_Mysterious_Stranger;
 end
@@ -1247,31 +1251,29 @@ procedure Shady6 begin
       critter_attempt_placement(Item, Critter_tile, dude_elevation);
       add_mult_objs_to_inven(Item, money, 6 * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
+   else if (dude_luck > 8) then begin
+      Item := create_object(PID_MUTATED_FRUIT, 0, 0);
+      critter_attempt_placement(Item, Critter_tile, dude_elevation);
+      if (dude_perk(PERK_scrounger)) then begin
+         LVar0 := 4;
+      end
+      while(LVar0) do begin
+         Item := create_object(PID_10MM_JHP, 0, 0);
+         critter_attempt_placement(Item, Critter_tile, dude_elevation);
+         LVar0 := LVar0 - 1;
+      end
+      Item := create_object(PID_BAG, 0, 0);
+      add_mult_objs_to_inven(Item, money, 122 * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      critter_attempt_placement(Item, Critter_tile, dude_elevation);
+      Item := create_object(PID_10MM_PISTOL, 0, 0);
+      critter_attempt_placement(Item, Critter_tile, dude_elevation);
+   end
    else begin
-      if (dude_luck > 8) then begin
-         Item := create_object(PID_MUTATED_FRUIT, 0, 0);
-         critter_attempt_placement(Item, Critter_tile, dude_elevation);
-         if (dude_perk(PERK_scrounger)) then begin
-            LVar0 := 4;
-         end
-         while(LVar0) do begin
-            Item := create_object(PID_10MM_JHP, 0, 0);
-            critter_attempt_placement(Item, Critter_tile, dude_elevation);
-            LVar0 := LVar0 - 1;
-         end
-         Item := create_object(PID_BAG, 0, 0);
-         add_mult_objs_to_inven(Item, money, 122 * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-         critter_attempt_placement(Item, Critter_tile, dude_elevation);
-         Item := create_object(PID_10MM_PISTOL, 0, 0);
-         critter_attempt_placement(Item, Critter_tile, dude_elevation);
-      end
-      else begin
-         Item := create_object(PID_MUTATED_FRUIT, 0, 0);
-         critter_attempt_placement(Item, Critter_tile, dude_elevation);
-         Item := create_object(PID_BAG, 0, 0);
-         add_mult_objs_to_inven(Item, money, 4 * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-         critter_attempt_placement(Item, Critter_tile, dude_elevation);
-      end
+      Item := create_object(PID_MUTATED_FRUIT, 0, 0);
+      critter_attempt_placement(Item, Critter_tile, dude_elevation);
+      Item := create_object(PID_BAG, 0, 0);
+      add_mult_objs_to_inven(Item, money, 4 * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      critter_attempt_placement(Item, Critter_tile, dude_elevation);
    end
 end
 
@@ -1319,12 +1321,10 @@ procedure Raider1 begin
       add_obj_to_inven(Critter, Item);
       if (random(0, 1)) then begin
          if (random(0, 1)) then begin
-            if (Critter_type == PID_TRAVELER_BALD_LEATHER) then begin
+            if (Critter_type == PID_TRAVELER_BALD_LEATHER) then
                Item := create_object(PID_HUNTING_RIFLE, 0, 0);
-            end
-            else begin
+            else
                Item := create_object(PID_10MM_SMG, 0, 0);
-            end
          end
          else begin
             Item := create_object(PID_DESERT_EAGLE, 0, 0);
@@ -1347,12 +1347,11 @@ procedure Raider1 begin
 end
 
 procedure Raider2 begin
-   if random(0, 1) then begin
+   if random(0, 1) then
       display_msg(message_str(SCRIPT_RNDDESRT, 197));
-   end
-   else begin
+   else
       display_msg(message_str(SCRIPT_RNDDESRT, 143));
-   end
+
    Outer_ring := (dude_perception / 3) + 6;
    Inner_ring := (dude_perception / 3) + 3;
    Tot_Critter_A := random(3, 4);
@@ -1395,12 +1394,10 @@ procedure Raider2 begin
       add_obj_to_inven(Critter, Item);
       if (random(0, 1)) then begin
          if (random(0, 1)) then begin
-            if (Critter_type == PID_TRAVELER_BALD_LEATHER) then begin
+            if (Critter_type == PID_TRAVELER_BALD_LEATHER) then
                Item := create_object(PID_HUNTING_RIFLE, 0, 0);
-            end
-            else begin
+            else
                Item := create_object(PID_10MM_SMG, 0, 0);
-            end
          end
          else begin
             Item := create_object(PID_DESERT_EAGLE, 0, 0);
