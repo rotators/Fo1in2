@@ -1,5 +1,12 @@
+/*
+
+   Generic Mantis from encounters
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\command.h"
+#include "..\headers\sfall\sfall.h"
 
 procedure start;
 procedure critter_p_proc;
@@ -11,6 +18,10 @@ procedure damage_p_proc;
 
 variable tmp_hostile;
 variable initial := 0;
+
+variable critArray;
+variable attack_target;
+variable obj;
 
 procedure start begin
    if not(initial) then begin
@@ -25,27 +36,38 @@ procedure start begin
 end
 
 procedure critter_p_proc begin
-   if (tmp_hostile) then begin
+   if (attack_target != 0) then begin
+      attack(attack_target);
+   end
+   else if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   else begin
-      if (self_can_see_dude or self_can_hear_dude) then begin
-         tmp_hostile := 1;
-         attack(dude_obj);
-      end
+   else if (self_can_see_dude or self_can_hear_dude) then begin
+      tmp_hostile := 1;
+      attack(dude_obj);
    end
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_evil_critter
-   rm_timer_event(self_obj);
 end
 
 procedure timed_event_p_proc begin
    self_walk_to_tile(tile_num_in_direction(local_var(0), random(0, 5), random(1, 3)));
    add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
+
+   if not(combat_is_initialized) then begin
+      critArray := list_as_array(LIST_CRITTERS);
+      foreach (obj in critArray) begin
+         if (get_team(obj) != self_team) then begin
+            if obj_can_see_obj(self_obj,obj) then begin
+               attack_target := obj;
+               break;
+            end
+         end
+      end
+   end
 end
 
 procedure use_obj_on_p_proc begin

@@ -104,13 +104,10 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(LVAR_Here_Before) == 1) then begin
+   if (local_var(LVAR_Here_Before) == 1) then
       display_msg(mstr(176));
-   end
-   else begin
+   else
       display_msg(mstr(175));
-   end
-   script_overrides;
 end
 
 procedure description_p_proc begin
@@ -132,46 +129,34 @@ procedure talk_p_proc begin
       if ((local_var(LVAR_Here_Before) == 1) and (dude_iq < 4)) then begin
          float_msg(self_obj, mstr(139), FLOAT_MSG_NORMAL);
       end
+      else if get_zimmermann_at_peace then begin
+         float_msg(self_obj, mstr(random(183, 187)), FLOAT_MSG_NORMAL);
+      end
       else begin
-         if get_zimmermann_at_peace then begin
-            float_msg(self_obj, mstr(random(183, 187)), FLOAT_MSG_NORMAL);
+         get_reaction
+         DisplayMessage := 100;
+         if (local_var(LVAR_Here_Before) == 0) then begin
+            start_dialog_at_node(JonZimmerman00);
+         end
+         else if (global_var(GVAR_ZIMMERMAN_STATUS) == 0) then begin
+            start_dialog_at_node(JonZimmerman01);
+         end
+         else if global_var(GVAR_RECEIVED_HOLODISK_RAZOR) then begin
+            if get_task_kill_razor then
+               start_dialog_at_node(JonZimmerman24);
+            else
+               start_dialog_at_node(JonZimmerman27);
          end
          else begin
-            get_reaction
-            start_gdialog(288, self_obj, -1, -1, -1);
-            gsay_start;
-            DisplayMessage := 100;
-            if (local_var(LVAR_Here_Before) == 0) then begin
-               call JonZimmerman00;
+            if get_zimmermann_insulted then begin
+               start_dialog_at_node(JonZimmerman17);
             end
-            else begin
-               if (global_var(GVAR_ZIMMERMAN_STATUS) == 0) then begin
-                  call JonZimmerman01;
-               end
-               else begin
-                  if global_var(GVAR_RECEIVED_HOLODISK_RAZOR) then begin
-                     if get_task_kill_razor then begin
-                        call JonZimmerman24;
-                     end
-                     else begin
-                        call JonZimmerman27;
-                     end
-                  end
-                  else begin
-                     if get_zimmermann_insulted then begin
-                        call JonZimmerman17;
-                     end
-                     else if get_task_kill_razor then begin
-                        call JonZimmerman19;
-                     end
-                     else if get_razor_killed then begin
-                        call JonZimmerman21;
-                     end
-                  end
-               end
+            else if get_task_kill_razor then begin
+               start_dialog_at_node(JonZimmerman19);
             end
-            gsay_end;
-            end_dialogue;
+            else if get_razor_killed then begin
+               start_dialog_at_node(JonZimmerman21);
+            end
          end
       end
    end
