@@ -19,6 +19,7 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Fixed**: Gizmo has precedence over Killian ending slide.
 - **Fixed**: Ian duplicated "decline to join"-dialog.
 - **Fixed**: Killian's safe would keep spawning items on map_enter.
+- **Fixed**: Mantis in Lance-encounter will be aggressive and not completely ignore him anymore.
 - **Fixed**: Player spawning on the wrong hex when joining the fight against Gizmo.
 - **Fixed**: The bomb disarming code works a bit better now.
 - **Fixed**: Town/World entry points for Junktown moved to more represent the actual map positions.
