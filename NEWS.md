@@ -18,6 +18,7 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Fixed**: Dog barking sfx in the Cathedral tower maps.
 - **Fixed**: Gizmo has precedence over Killian ending slide.
 - **Fixed**: Ian duplicated "decline to join"-dialog.
+- **Fixed**: It was possible to interrupt the Adytum fight between Blades and Regulators who then wouldn't attack each other anymore.
 - **Fixed**: Killian's safe would keep spawning items on map_enter.
 - **Fixed**: Mantis in Lance-encounter will be aggressive and not completely ignore him anymore.
 - **Fixed**: Player spawning on the wrong hex when joining the fight against Gizmo.
