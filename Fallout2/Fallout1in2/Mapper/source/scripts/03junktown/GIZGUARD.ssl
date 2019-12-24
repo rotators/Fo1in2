@@ -37,15 +37,19 @@ procedure GizGuardEnd;
 
 variable tmp_hostile;
 variable sneak_checked;
+variable float_weapon;
+variable float_sneak;
 
 import variable removal_ptr;
 import variable weapon_checked;
 
+#define EVENT_FLOAT_WEAPON    (1)
+#define EVENT_FLOAT_SNEAKING  (2)
+
 procedure start begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       if (self_can_see_dude) then begin
          tmp_hostile := 0;
@@ -55,34 +59,29 @@ begin
    else begin
       if (self_can_see_dude) then begin
          if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-            if dude_is_armed then begin
-               call GizGuard00;//dialogue_system_enter;
+            if dude_is_armed and (float_weapon == 0) then begin
+               call GizGuard00;
             end
-            else begin
-               if (dude_is_sneaking and not(sneak_checked)) then begin
-                  call GizGuard01;//dialogue_system_enter;
-               end
+            else if (dude_is_sneaking and not(sneak_checked) and float_sneak == 0) then begin
+               call GizGuard01;
             end
          end
       end
    end
-   if (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1) then begin// - ENEMY_GIZMOS_GANG
+
+   if (global_var(GVAR_ENEMY_GIZMOS_GANG) == 1) then begin
       tmp_hostile := 1;
    end
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
-
    if (source_obj == dude_obj) then begin
-      set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);// ENEMY_GIZMOS_GANG
+      set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);
    end
    inc_evil_critter
-   rm_timer_event(self_obj);
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
    if (not(is_loading_game) and self_caps == 0) then begin
       self_caps_adjust(random(0, 10));
    end
@@ -94,81 +93,71 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if dude_is_armed then begin
       call GizGuard00;
    end
+   else if (dude_is_sneaking) then begin
+      call GizGuard01;
+   end
+   else if (not(local_var(0))) then begin
+      start_dialog_at_node(GizGuard02);
+   end
    else begin
-      if (dude_is_sneaking) then begin
-         call GizGuard01;
-      end
-      else begin
-         if (not(local_var(0))) then begin
-            start_gdialog(639, self_obj, 4, -1, -1);
-            gsay_start;
-            call GizGuard02;
-            gsay_end;
-            end_dialogue;
-         end
-         else begin
-            call GizGuard07;
-         end
-      end
+      call GizGuard07;
    end
 end
 
-procedure timed_event_p_proc
-begin
-   if (fixed_param == 1) then begin
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_FLOAT_WEAPON) then begin
       if dude_is_armed then begin
          float_msg(self_obj, mstr(random(100, 103)), FLOAT_MSG_RED);
          tmp_hostile := 1;
       end
       else begin
+         float_weapon := 0;
          weapon_checked := 0;
       end
    end
-   else begin
-      if (fixed_param == 2) then begin
-         if (dude_is_sneaking) and self_can_see_dude then begin
-            tmp_hostile := 1;
-         end
-         else begin
-            sneak_checked := 0;
-         end
+   else if (fixed_param == EVENT_FLOAT_SNEAKING) then begin
+      if (dude_is_sneaking) and self_can_see_dude then begin
+         tmp_hostile := 1;
+      end
+      else begin
+         float_sneak := 0;
+         sneak_checked := 0;
       end
    end
 end
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);// ENEMY_GIZMOS_GANG
+      set_global_var(GVAR_ENEMY_GIZMOS_GANG, 1);
    end
 end
 
-procedure GizGuard00
-begin
-   float_msg(self_obj, mstr(random(132, 133)), FLOAT_MSG_RED);//{132}{}{No weapons in here!} OR {133}{}{Hey ! You! Put your piece away!}
+procedure GizGuard00 begin
+   float_weapon := 1;
+
+   float_msg(self_obj, mstr(random(132, 133)), FLOAT_MSG_RED);
    weapon_checked := 1;
-   add_timer_event(self_obj, game_ticks(10), 1);//ticks was 5
+   add_timer_event(self_obj, game_ticks(10), EVENT_FLOAT_WEAPON);
 end
 
-procedure GizGuard01
-begin
-   float_msg(self_obj, mstr(random(104, 106)), FLOAT_MSG_RED);//{104}{}{Quit sneaking around!}, {105}{}{No sneaking around in here!}, {106}{}{Hey, you ! Quit trying to hide, or get out!}
+procedure GizGuard01 begin
+   float_sneak := 1;
+
+   float_msg(self_obj, mstr(random(104, 106)), FLOAT_MSG_RED);
    sneak_checked := 1;
-   add_timer_event(self_obj, game_ticks(10), 2);//ticks was 5
+   add_timer_event(self_obj, game_ticks(10), EVENT_FLOAT_SNEAKING);//ticks was 5
 end
 
-procedure GizGuard02
-begin
+procedure GizGuard02 begin
    set_local_var(0, 1);
    Reply(107);//{107}{}{What?}
    NOption(108, GizGuard03, 4);//{108}{}{Hey, can I ask you a few questions?}
@@ -177,8 +166,7 @@ begin
    BLowOption(111, GizGuard08);//{111}{}{Uuuh?}
 end
 
-procedure GizGuard03
-begin
+procedure GizGuard03 begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       Reply(112);//{112}{}{I'm on duty. Make it quick.}
       NOption(114, GizGuard05, 4);//{114}{}{Can you tell me about your boss?}
@@ -189,26 +177,22 @@ begin
    end
 end
 
-procedure GizGuard04
-begin
+procedure GizGuard04 begin
    NMessage(random(116, 119));//{116}{}{What are you, stupid? Go away.}, {117}{}{No. Go beg somewhere else.}, {118}{}{Buzz off.}, {119}{}{We don't have a use for paupers here.}
 end
 
-procedure GizGuard05
-begin
+procedure GizGuard05 begin
    NMessage(120);//{120}{}{Gizmo's a fair man. Pay's good, work's easy. Don't make trouble and everyone will be happy.}
 end
 
-procedure GizGuard06
-begin
+procedure GizGuard06 begin
    NMessage(random(121, 124));
 //
 //{121}{}{Go catch a few drinks at the Skum Pitt. Good grog. Opens at four. Now leave me alone.}, {122}{}{Why don't you go shopping at Killian's? His store is southeast of here. Now beat it.}
 //{123}{}{Talk to the dealers.}, {124}{}{Hey, if you wanna have a little fun, stop by the Crash House and ask for Sinthia. She's worth it.}
 end
 
-procedure GizGuard07
-begin
+procedure GizGuard07 begin
    float_msg(self_obj, mstr(random(125, 130)), FLOAT_MSG_NORMAL);
 /*
 {125}{}{No cheating.}
@@ -220,11 +204,9 @@ begin
 */
 end
 
-procedure GizGuard08
-begin
+procedure GizGuard08 begin
    NMessage(131);//{131}{}{Get outta here, you moron.}
 end
 
-procedure GizGuardEnd
-begin
+procedure GizGuardEnd begin
 end
