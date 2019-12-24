@@ -16,9 +16,12 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Fixed**: Added a short delay to the endgame sequence so that the vault door will open *after* the endgame slides and not before.
 - **Fixed**: Can't arm the bomb over and over again.
 - **Fixed**: Dog barking sfx in the Cathedral tower maps.
+- **Fixed**: Game is using the correct font for the main menu now.
 - **Fixed**: Gizmo has precedence over Killian ending slide.
 - **Fixed**: Ian duplicated "decline to join"-dialog.
 - **Fixed**: It was possible to interrupt the Adytum fight between Blades and Regulators who then wouldn't attack each other anymore.
+- **Fixed**: Izo will return to his home tile on map_enter now.
+- **Fixed**: Junktown casino guards floating warnings on every game tick.
 - **Fixed**: Killian's safe would keep spawning items on map_enter.
 - **Fixed**: Mantis in Lance-encounter will be aggressive and not completely ignore him anymore.
 - **Fixed**: Player spawning on the wrong hex when joining the fight against Gizmo.
@@ -29,5 +32,6 @@ Notable changes since last release ([v0.1225](https://github.com/rotators/Fo1in2
 - **Removed**: Fixt-setting for painfields for good.
 - **Removed**: Initial map_enter message for V13 caves.
 - **Removed**: V13 door computer can't be destroyed anymore (just leads to additional problems).
+- **Tweaked**: Main Menu button background is baked into the HR_MAINMENU.FRM file now. Also reduced the height to 720px (from 920px), because engine resizing gives bad results. This is experimental - might be reverted back at some point.
 - **Tweaked**: Removed tribal references from the character style text (Character Appearance mod).
 - **Tweaked**: Some more pixel pushing on the main menu has been done. Fixed some shitty areas and brought back the colors more closer to the original again.
