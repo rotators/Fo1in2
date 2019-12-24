@@ -41,13 +41,13 @@ Used to return the new values from the script. Each time it's called it sets the
 > void set_sfall_arg(int argNum, int value)
 Changes argument value. The argument number (argNum) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see below).
 
-> void register_hook(int hooktype)
+> void register_hook(int hookID)
 Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, "start" proc will be executed in a current global script. You can use all above functions like normal.
 
-> void register_hook_proc(int hook, procedure proc)
+> void register_hook_proc(int hookID, procedure proc)
 The same as register_hook, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass procedure the same as how you use dialog option functions. This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script, no conflicts if you don't use "hs_*.int" scripts) and flexibility (you can place all related hook scripts for specific mod in a single script!).
 
-> void register_hook_proc_spec(int hook, procedure proc)
+> void register_hook_proc_spec(int hookID, procedure proc)
 Works very similar to register_hook_proc, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the hs_*.int script). All scripts hooked to a single hook point with this function are executed in exact order of how they were registered, as opposed to the description below, which refers to using register_hook/register_hook_proc functions.
 
 NOTE: you can hook several scripts to a single hook point, for example if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with "set_sfall_return", the next script may override this value if calls "set_sfall_return" again. Sometimes you need to multiply certain value in a chain of hook scripts.
@@ -69,7 +69,7 @@ This basically changes hook argument for the next script. Mod B code:
 So if you combine both mods together, they will run in chain and the end result will be a 75% from original hit chance (hook register order doesn't matter in this case, if you use "set_sfall_arg" in both hooks).
 
 
-The defines to use for the hooktype are in sfall.h.
+The defines to use for the hookID are in sfall.h.
 
 -------------------------------------------
 ----------- HOOK SCRIPT TYPES -------------
@@ -189,9 +189,11 @@ Critter arg1 - The critter that just died
 
 HOOK_FINDTARGET (hs_findtarget.int)
 
-Runs when the ai is trying to pick a target in combat. Fallout first chooses a list of 4 likely suspects, then normally sorts them in order of weakness/distance/etc depending on the ai caps of the attacker. This hook replaces that sorting function, allowing you to sort the targets in some arbitrary way. Use sfall_return to give the 4 targets, in order of preference. If you want to specify less than 4 targets, fill in the extra spaces with 0's. Pass -1 to skip the return value.
+Runs when the ai is trying to pick a target in combat. Fallout first chooses a list of 4 likely suspects, then normally sorts them in order of weakness/distance/etc depending on the ai caps of the attacker.
+This hook replaces that sorting function, allowing you to sort the targets in some arbitrary way.
 
 The return values can include critters that weren't in the list of possible targets, but the additional targets may still be discarded later on in the combat turn if they are out of the attackers perception or the chance of a successful hit is too low. The list of possible targets often includes duplicated entries.
+Use sfall_return to give the 4 targets, in order of preference. If you want to specify less than 4 targets, fill in the extra spaces with 0's or pass -1 to skip the return value.
 
 critter arg1 - The attacker
 critter arg2 - A possible target
@@ -559,8 +561,8 @@ HOOK_USESKILLON (hs_useskillon.int)
 Runs before using any skill on any object. Lets you override the critter that uses the skill.
 NOTE: the user critter can't be overridden when using Steal skill.
 
-Critter arg1 - The user critter (usually dude_obj)
-Obj     arg2 - The target object/critter
+Critter arg1 - the user critter (usually dude_obj)
+Obj     arg2 - the target object/critter
 int     arg3 - skill being used
 
 int     ret1 - a new critter to override the user critter. Pass -1 to cancel the skill use, pass 0 to skip this return value
@@ -574,11 +576,11 @@ Runs when Fallout is checking all the tiles within the explosion radius for targ
 The tile checking will be interrupted when 6 additional targets (critters) are received.
 
 int     arg1 - event type: 1 - when checking objects within the explosion radius without causing damage (e.g. the player drops an active explosive), 0 - otherwise
-Critter arg2 - The attacker
-int     arg3 - The tile on which the explosion occurs
+Critter arg2 - the attacker
+int     arg3 - the tile on which the explosion occurs
 int     arg4 - checked tile within the explosion radius
 Obj     arg5 - first found object on the checked tile as an additional target
-Critter arg6 - The target critter, may be 0 or equal to the attacker
+Critter arg6 - the target critter, may be 0 or equal to the attacker
 int     arg7 - 1 when using throwing weapons (e.g. grenades), 0 otherwise
 
 int     ret1 - overrides the found object on the checked tile, pass 0 to skip the object
@@ -593,20 +595,20 @@ Runs when:
 2) AI decides whether it is safe to use area attack (burst, grenades), if he might hit friendlies.
 Does not run for misses, non-combat damage like dynamite explosions, or if one of the damage formulas is selected in ddraw.ini.
 
-Critter arg1 - The attacker
-Critter arg2 - The target
-Obj     arg3 - The weapon used in the attack
-int     arg4 - Attack Type (see ATKTYPE_* constants)
-int     arg5 - Number of bullets actually hit the target (1 for melee attacks)
-int     arg6 - Target's Damage Resistance (DR) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
-int     arg7 - Target's Damage Threshold (DT) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
-int     arg8 - Bonus ranged damage from the perk
-int     arg9 - Damage Multiplier (this is divided by 2, so a value of 3 does 1.5x damage, and 8 does 4x damage. Usually it's 2; for critical hits, the value is taken from the critical table; with Silent Death perk and the corresponding attack conditions, the value will be doubled)
-int     arg10 - Combat Difficulty multiplier (125 - rough, 100 - normal, 75 - wimpy; for player or party members it's always 100)
-int     arg11 - The calculated amount of damage (usually 0, required when using multiple hook scripts to calculate damage and using the set_sfall_arg function)
-mixed   arg12 - Computed attack results (see C_ATTACK_* for offsets and use get/set_object_data functions to get/set the data)
+Critter arg1 - the attacker
+Critter arg2 - the target
+Obj     arg3 - the weapon used in the attack
+int     arg4 - attack type (see ATKTYPE_* constants)
+int     arg5 - number of bullets actually hit the target (1 for melee attacks)
+int     arg6 - target's Damage Resistance (DR) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
+int     arg7 - target's Damage Threshold (DT) value (affected by critical hit effects, perks, traits, and special unarmed attacks)
+int     arg8 - bonus ranged damage from the perk
+int     arg9 - damage multiplier (this is divided by 2, so a value of 3 does 1.5x damage, and 8 does 4x damage. Usually it's 2; for critical hits, the value is taken from the critical table; with Silent Death perk and the corresponding attack conditions, the value will be doubled)
+int     arg10 - combat difficulty multiplier (125 - rough, 100 - normal, 75 - wimpy; for player or party members it's always 100)
+int     arg11 - the calculated amount of damage (usually 0, required when using multiple hook scripts to calculate damage and using the set_sfall_arg function)
+mixed   arg12 - computed attack results (see C_ATTACK_* for offsets and use get/set_object_data functions to get/set the data)
 
-int     ret1 - The returned amount of damage
+int     ret1 - the returned amount of damage
 
 -------------------------------------------
 
@@ -656,7 +658,7 @@ HOOK_TARGETOBJECT (hs_targetobject.int)
 Runs when the targeting cursor hovers over an object, or when the player tries to attack the target object.
 You can override the target object or prevent the player from attacking the chosen target.
 
-int     arg1 - event type: 0 - when the cursor hovers over the object, 1 - when trying to attack the target object
+int     arg1 - event type: 0 - when the targeting cursor hovers over the object, 1 - when trying to attack the target object
 int     arg2 - 1 when the target object is valid to attack, 0 otherwise
 Obj     arg3 - the target object
 
