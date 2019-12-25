@@ -73,25 +73,24 @@ procedure critter_p_proc begin
             shot_challenger := 1;
          end
       end
-      else begin
-         if (Saul_wins) then begin
-            shot_challenger := 1;
-         end
+      else if (Saul_wins) then begin
+         shot_challenger := 1;
       end
    end
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
-
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_DUDE_ENEMY_JUNK_BOXER, 1);
    end
    inc_neutral_critter
-   rm_timer_event(self_obj);
 end
 
 procedure map_enter_p_proc begin
+   if map_first_run or (days_since_visited >= 7) then begin
+      self_caps_adjust(random(10, 25));
+   end
+
    if junktown_invaded then begin
       kill_critter(self_obj, ANIM_fall_front_sf);
    end
@@ -100,19 +99,14 @@ procedure map_enter_p_proc begin
    end
    home_tile := local_var(0);
    set_self_team(TEAM_15);
-   if (self_caps == 0) then begin
-      self_caps_adjust(random(10, 25));
-   end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    float_msg(self_obj, mstr(random(106, 107)), FLOAT_MSG_NORMAL);
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    Saul_loses := 1;
    shot_challenger := 1;
 end

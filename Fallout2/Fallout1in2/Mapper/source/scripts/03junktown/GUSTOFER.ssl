@@ -132,12 +132,15 @@ procedure map_enter_p_proc begin
    if junktown_invaded then begin
       destroy_object(self_obj);
    end
+
+   if map_first_run or (days_since_visited >= 7) then begin
+      self_caps_adjust(random(1, 10));
+   end
+
    if (local_var(0) == 0) then begin
       set_local_var(0, self_tile);
    end
-   if (not(is_loading_game) and self_caps == 0) then begin
-      self_caps_adjust(random(0, 10));
-   end
+
    set_self_team(TEAM_15);
    sleep_time := 1920;
    wake_time := 530;
@@ -181,55 +184,37 @@ procedure talk_p_proc begin
       start_gdialog(529, self_obj, 4, -1, -1);
       gsay_start;
       if (Saul_wins) then begin
-
-         if (dude_bet == 1) then begin
+         if (dude_bet == 1) then
             call Gustofer16;
-         end
-         else begin
+         else
             call Gustofer07;
-         end
-
       end
       else if (Saul_loses) then begin
-
-         if (dude_bet == 2) then begin
+         if (dude_bet == 2) then
             call Gustofer16;
+         else
+            call Gustofer07;
+      end
+      else if (robbed) then begin
+         call Gustofer13;
+      end
+      else if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
+         if (game_time_hour < 1400) then begin
+            if (dude_bet == 0) then
+               call Gustofer06;
+            else
+               NMessage(152);
+         end
+         else if (challenger_ptr != 0) then begin
+            call Gustofer19;
          end
          else begin
-            call Gustofer07;
+            call Gustofer18;
+            dude_bet := 0;
          end
-
       end
       else begin
-
-         if (robbed) then begin
-            call Gustofer13;
-         end
-         else begin
-            if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
-               if (game_time_hour < 1400) then begin
-                  if (dude_bet == 0) then begin
-                     call Gustofer06;
-                  end
-                  else begin
-                     NMessage(152);
-                  end
-               end
-               else begin
-                  if (challenger_ptr != 0) then begin
-                     call Gustofer19;
-                  end
-                  else begin
-                     call Gustofer18;
-                     dude_bet := 0;
-                  end
-               end
-            end
-            else begin
-               call Gustofer00;
-            end
-         end
-
+         call Gustofer00;
       end
       gsay_end;
       end_dialogue;
@@ -260,17 +245,15 @@ end
 procedure Gustofer02 begin
    Reply(105);
    NOption(107, GustoferEnd, 4);
-   if (global_var(GVAR_SAUL_STATUS) == 0) then begin
+   if (global_var(GVAR_SAUL_STATUS) == 0) then
       NOption(108, Gustofer04, 4);
-   end
 end
 
 procedure Gustofer03 begin
    Reply(106);
    NOption(107, GustoferEnd, 4);
-   if (global_var(GVAR_SAUL_STATUS) == 0) then begin
+   if (global_var(GVAR_SAUL_STATUS) == 0) then
       NOption(108, Gustofer04, 4);
-   end
 end
 
 procedure Gustofer04 begin
@@ -280,12 +263,10 @@ end
 procedure Gustofer05 begin
    variable LVar0 := 0;
    LVar0 := mstr(110);
-   if ((GAME_TIME_IN_DAYS % 3) == 1) then begin
+   if ((GAME_TIME_IN_DAYS % 3) == 1) then
       LVar0 := LVar0 + mstr(112);
-   end
-   else if ((GAME_TIME_IN_DAYS % 3) == 2) then begin
+   else if ((GAME_TIME_IN_DAYS % 3) == 2) then
       LVar0 := LVar0 + mstr(111);
-   end
    float_msg(self_obj, LVar0, FLOAT_MSG_NORMAL);
 end
 
@@ -301,12 +282,10 @@ procedure Gustofer07 begin
    Saul_wins := 0;
    Saul_loses := 0;
    dude_bet := 0;
-   if (dude_is_male) then begin
+   if (dude_is_male) then
       NMessage(150);
-   end
-   else begin
+   else
       NMessage(151);
-   end
 end
 
 procedure Gustofer08 begin
@@ -324,9 +303,8 @@ procedure Gustofer09 begin
       NOption(125, Gustofer11, 4);
       NOption(126, GustoferEnd, 4);
    end
-   else begin
+   else
       NMessage(127);
-   end
 end
 
 procedure Gustofer10 begin
@@ -369,12 +347,10 @@ end
 
 procedure Gustofer16 begin
    dude_bet := 0;
-   if (Saul_wins) then begin
+   if (Saul_wins) then
       dude_caps_adjust(50);
-   end
-   else begin
+   else
       dude_caps_adjust(100);
-   end
    Saul_wins := 0;
    Saul_loses := 0;
    NMessage(142);
@@ -412,9 +388,8 @@ procedure GustoferBet1 begin
       NOption(145, GustoferWait, 4);
       NOption(146, Gustofer17, 4);
    end
-   else begin
+   else
       NMessage(143);
-   end
 end
 
 procedure GustoferBet2 begin
@@ -425,9 +400,8 @@ procedure GustoferBet2 begin
       NOption(145, GustoferWait, 4);
       NOption(146, Gustofer17, 4);
    end
-   else begin
+   else
       NMessage(143);
-   end
 end
 
 procedure destroy_challenger begin
