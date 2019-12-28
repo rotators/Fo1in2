@@ -358,18 +358,22 @@ critical procedure GenerateReply begin
       tma_var_state := tma_gvar_array[2];
 
    // Remove potential excess spaces at the end of input
-   while ((strlen(input) > 1) and ((substr(input, -1, 1) == " ") or (substr(input, -1, 1) == "?"))) do begin
-      input := substr(input, 0, strlen(input) - 1);
+   for (i := strlen(input) - 1; (i > 0); i--) begin
+       If input[i] == "?" then i--;
+       If input[i] != " " then begin
+           input[i + 1] := 0;
+           break;
+       end
    end
 
    // Find reply
-   split_sentence := string_split(input, " ");
-   foreach (word : keyword in split_sentence) begin
-      input := keyword;
+   //split_sentence := string_split(input, " ");
+   //foreach (word : keyword in split_sentence) begin
+   //   input := keyword;
 
       if (reply_name_start > 0 and string_compare(input, obj_name(critter))) then begin
          reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
-         break;
+         //break;
       end
       else begin
          variable found := 0;
@@ -396,7 +400,7 @@ critical procedure GenerateReply begin
          end
       end
 
-   end
+   //end
 
    debug("input: <" + input + ">");
 
