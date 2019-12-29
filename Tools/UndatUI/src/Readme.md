@@ -2,6 +2,11 @@ This is a tool to extract needed files from the MASTER.DAT resource file shipped
 
 # Changelog
 
+## 1.06
+2019-12-29
+* Autodetect destination mod folder if the program is launched from a directory where fallout2.exe exist.
+* Run a GC.Collect() after extraction of a compressed file to clear disposed resources.
+
 ## 1.05
 2019-12-14
 * Removed a few versions of the icon that were unnecessary, to reduce size of exe.

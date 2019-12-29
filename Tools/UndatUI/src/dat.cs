@@ -239,6 +239,8 @@ namespace undat_ui
             s.Dispose();
             r.Dispose();
 
+            GC.Collect();
+
             return bytes;
         }
     }

@@ -31,9 +31,11 @@ namespace undat_ui
             IntPtr hIcon = LoadIcon(hInstance, new IntPtr(32512));
             if (hIcon != IntPtr.Zero) this.Icon = Icon.FromHandle(hIcon);
 
+            if(moddir != null)
+                txtDestination.Text = moddir;
+
             if (fileList != null)
             {
-                txtDestination.Text = moddir;
                 txtDestination.Enabled = false;
                 txtMaster.Text = master;
                 txtMaster.Enabled = false;
@@ -118,21 +120,11 @@ namespace undat_ui
             }
         }
 
-        bool FalloutExists(string path)
-        {
-            foreach(var file in Directory.GetFiles(path))
-            {
-                if (Path.GetFileName(file).ToLower() == "fallout2.exe")
-                    return true;
-            }
-            return false;
-        }
-
         private void BtnBrowseDestination_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                if(!FalloutExists(folderBrowserDialog.SelectedPath))
+                if(!Misc.FalloutExeInFolder(folderBrowserDialog.SelectedPath))
                 {
                     if (MessageBox.Show("Fallout2.exe was not found in the selected directory, do you want to select it anyway?", "FO1 DAT extractor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                         return;

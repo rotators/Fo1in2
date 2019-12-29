@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.label1 = new System.Windows.Forms.Label();
             this.txtMaster = new System.Windows.Forms.TextBox();
             this.btnExtract = new System.Windows.Forms.Button();
@@ -139,7 +138,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(57, 12);
             this.lblVersion.TabIndex = 9;
-            this.lblVersion.Text = "Version 1.05";
+            this.lblVersion.Text = "Version 1.06";
             // 
             // lnkSource
             // 
@@ -207,7 +206,6 @@
             this.Controls.Add(this.txtMaster);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -7,20 +7,21 @@ using System.Windows.Forms;
 
 namespace undat_ui
 {
-    static class Program
+    public static class Misc
     {
-        /*[DllImport("kernel32.dll")]
-        static extern bool AttachConsole(int dwProcessId);
-        private const int ATTACH_PARENT_PROCESS = -1;
+        public static bool FalloutExeInFolder(string folderPath)
+        {
+            foreach (var file in Directory.GetFiles(folderPath))
+            {
+                if (Path.GetFileName(file).ToLower() == "fallout2.exe")
+                    return true;
+            }
+            return false;
+        }
+    }
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern int FreeConsole();*/
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        
-
+    public static class Program
+    {
         static void MsgError(string error)
             => MessageBox.Show(error, "FO1 DAT extractor", MessageBoxButtons.OK, MessageBoxIcon.Error);
         
@@ -92,6 +93,11 @@ namespace undat_ui
                     MsgError("mod directory supplied doesn't exist.");
                     return;
                 }
+            }
+            else
+            {
+                if(Misc.FalloutExeInFolder(Directory.GetCurrentDirectory()))
+                    mod = Directory.GetCurrentDirectory();
             }
 
             Application.EnableVisualStyles();
