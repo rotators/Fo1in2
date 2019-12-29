@@ -1,7 +1,17 @@
+/*
+
+   Junktown - Center / Killian's store, Crash House, etc.
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\junktown.h"
+#include "..\headers\maps\junkkill.h"
+
 #include "..\headers\command.h"
 #include "..\headers\updatmap.h"
 
+/* Standard Script Procedures */
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
@@ -49,8 +59,14 @@ procedure map_enter_p_proc begin
    call Invasion;
 
    override_map_start(99, 113, 0, 0);
-   if (map_var(7) == 1) then begin
-      display_msg(message_str(SCRIPT_SINTHIA, random(139, 140)));
+
+   if not(junktown_invaded) then begin
+      if (map_var(MVAR_hodiction) == 1) then begin
+         display_msg(message_str(SCRIPT_SINTHIA, random(139, 140)));
+      end
+
+      if (not(is_killian_alive) and days_since_visited > 4) then
+         create_north_out_of_business(29295, 0);
    end
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
@@ -58,9 +74,9 @@ end
 
 procedure map_update_p_proc begin
    Lighting;
-   if (award and not(map_var(4)) and (global_var(GVAR_SAVE_SINTHIA) == 2)) then begin
+   if (award and not(map_var(MVAR_Sinthia_award)) and (global_var(GVAR_SAVE_SINTHIA) == 2)) then begin
       give_xp_msg(award, message_str(SCRIPT_SINTHIA, 176));
-      set_map_var(4, 1);
+      set_map_var(MVAR_Sinthia_award, 1);
    end
 
    if (not(is_killian_alive) and (global_var(GVAR_KILLIAN_SOMETHING_1) == 0)) then begin
@@ -76,8 +92,9 @@ procedure map_update_p_proc begin
 end
 
 procedure Invasion begin
-   if (junktown_invaded and not(is_loading_game) and (map_var(10) == 0)) then begin
-      set_map_var(10, 1);
+   if (junktown_invaded and not(is_loading_game) and (map_var(MVAR_Invasion) == 0)) then begin
+      set_map_var(MVAR_Invasion, 1);
+
       kill_critter_type(PID_BRAHMIN, 1);
       kill_critter_type(PID_LOSER, 1);
       kill_critter_type(PID_TOWNSMAN_LEATHER, 1);
@@ -90,12 +107,15 @@ procedure Invasion begin
       kill_critter_type(PID_VINNIE, 0);
       kill_critter_type(PID_THUG, 0);
       kill_critter_type(PID_STRANGER_2, 0);
+
       invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
       set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
       critter_attempt_placement(invaderPtr, 28885, 0);
+
       invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
       set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
       critter_attempt_placement(invaderPtr, 21671, 0);
+
       invaderPtr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
       set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);
       critter_attempt_placement(invaderPtr, 21328, 0);

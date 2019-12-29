@@ -452,8 +452,6 @@ variable step_tile;
 #define dude_age                            (get_critter_stat(dude_obj,STAT_age))
 #define dude_weight                         critter_weight(dude_obj)
 
-#define dude_moron_not_vegetable            (((get_critter_stat(dude_obj,STAT_iq)) > 1) and ((get_critter_stat(dude_obj,STAT_iq)) < 3) )
-
 #define dude_is_armed                       critter_is_armed(dude_obj)
 #define dude_wearing_armor                  critter_wearing_armor(dude_obj)
 
@@ -471,47 +469,32 @@ variable step_tile;
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_RIPPER) or                \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_COMBAT_KNIFE))
 
-#define dude_wearing_power_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR_MK2) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_HARDENED_POWER_ARMOR))
+#define dude_wearing_power_armor            (dude_armor == PID_POWERED_ARMOR) or \
+                                             dude_armor == PID_ADVANCED_POWER_ARMOR) or \
+                                             dude_armor == PID_ADVANCED_POWER_ARMOR_MK2) or \
+                                             dude_armor == PID_HARDENED_POWER_ARMOR))
 
-#define dude_wearing_bos_power_armor        ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_HARDENED_POWER_ARMOR))
+#define dude_wearing_bos_power_armor        (dude_armor == PID_POWERED_ARMOR) or \
+                                             dude_armor == PID_HARDENED_POWER_ARMOR))
 
 #define critter_wearing_power_armor(x)      ((obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) or \
                                              (obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) or \
                                              (obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR_MK2) or \
                                              (obj_pid(critter_inven_obj(x,INVEN_TYPE_WORN)) == PID_HARDENED_POWER_ARMOR))
 
-#define dude_wearing_leather_armor          ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_JACKET) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_ARMOR_MK_II) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_CURED_LEATHER_ARMOR))
+#define dude_wearing_leather_armor          (dude_armor == PID_LEATHER_ARMOR) or \
+                                             dude_armor == PID_LEATHER_JACKET) or \
+                                             dude_armor == PID_LEATHER_ARMOR_MK_II) or \
+                                             dude_armor == PID_CURED_LEATHER_ARMOR))
 
-#define dude_wearing_combat_armor           ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_COMBAT_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_BROTHERHOOD_COMBAT_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_COMBAT_ARMOR_MK_II))
+#define dude_wearing_combat_armor           (dude_armor == PID_COMBAT_ARMOR) or \
+                                             dude_armor == PID_BROTHERHOOD_COMBAT_ARMOR) or \
+                                             dude_armor == PID_COMBAT_ARMOR_MK_II))
 
-#define dude_wearing_metal_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_METAL_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_METAL_ARMOR_MK_II))
+#define dude_wearing_metal_armor            (dude_armor == PID_METAL_ARMOR) or \
+                                             dude_armor == PID_METAL_ARMOR_MK_II))
 
-// original COND019 from CONDITION.H, in all its glory. look at it. just look.
-#define dude_wearing_vault_suit     if ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_LEATHER_ARMOR) and             \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_METAL_ARMOR) and               \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_POWERED_ARMOR) and             \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_COMBAT_ARMOR) and              \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_LEATHER_JACKET) and            \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_PURPLE_ROBE) and               \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_HARDENED_POWER_ARMOR) and      \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_BROTHERHOOD_COMBAT_ARMOR) and  \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_TESLA_ARMOR) and          \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_CURED_LEATHER_ARMOR) and     \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_ADVANCED_POWER_ARMOR) and    \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_ADVANCED_POWER_ARMOR_MK2) and   \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_LEATHER_ARMOR_MK_II) and     \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_METAL_ARMOR_MK_II) and       \
-                                    (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) != PID_COMBAT_ARMOR_MK_II) ) then
+#define dude_wearing_vault_suit             (dude_armor == 0 or dude_armor == PID_V13_VSUIT)
 
 #define dude_has_gambling_skills            ((dude_iq > 3) and (has_skill(dude_obj, SKILL_GAMBLING) >= 25))
 
@@ -529,10 +512,9 @@ variable step_tile;
 
 
 
-#define dude_has_car                   global_var(GVAR_PLAYER_GOT_CAR) != 0
+#define dude_has_car                        global_var(GVAR_PLAYER_GOT_CAR) != 0
 #define dude_is_pornstar                    dude_has_porn_star_rep
 #define dude_is_high                        drug_influence(dude_obj)
-#define dude_found_geck                     global_var(GVAR_VAULT13_FOUND_GECK)
 
 
 #define dude_stat_win(X,Y)                  ((do_check(dude_obj,X,Y)) > (do_check(self_obj,X,0)))

@@ -121,7 +121,7 @@
 #define SCRIPT_JCHIDMEM  (108)  //  JChidMem.int    ; Junktown Children of the Cathedral Member                                   
 #define SCRIPT_LOOKOUT   (109)  //  Lookout.int     ; Necropolis Undergrounder Lookout
 #define SCRIPT_MACHIV    (110)  //  MachIV.int      ; Mach IV computer in Buried Vaul that is broken
-#define SCRIPT_BLKROOM   (111)  //  BlkRoom.int     ; Spacial to say the room is blocked in the Buried Vault // UNUSED!!!
+#define SCRIPT_ZICLOSED  (111)   // ziClosed.int    ; Generic "Out of Business" signs
 #define SCRIPT_RNDDESRT  (112)  //  RndDesrt.int    ; Random Encounter Desert Map                                                 
 #define SCRIPT_TGUARD    (113)  //  TGuard.int      ; Tower Guard for Shady Sands
 #define SCRIPT_COOK      (114)  //  cook.int        ; A cook from Shady Sands kitchen
