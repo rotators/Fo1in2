@@ -1,9 +1,12 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
+- **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
 - **Added**: Missing "/" and "?" to english TMA keymap.
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
+- **Added**: Tycho-critter can now also use SMGs.
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
+- **Fixed**: Missing Vault Suit armor type entry in party_armor.ini file.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
