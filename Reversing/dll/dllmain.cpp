@@ -77,7 +77,7 @@ void clearDots() {
 
 void newDot() {
     ULONGLONG tick = GetTickCount64();
-    if (tick - lastDotTick > 250) {
+    if (tick - lastDotTick >= 150) {
         lastDotTick = tick;
         dots_x[dotIdx] = wmPlayerX;
         dots_y[dotIdx] = wmPlayerY;
@@ -88,7 +88,7 @@ void newDot() {
         if (dotIdx == AMOUNT_OF_DOTS) {
             dotIdx = 0;
         }
-        
+
     }
 }
 
@@ -150,8 +150,11 @@ void __declspec(naked) wmInterfaceRefreshHook() {
     getPlayerPos();
     updateWmInfo();
     newDot();
-    for (i = 0; i < dots; i++) {
-        wmPutRedPixel(dots_x[i], dots_y[i]);
+    if (wmTargetX + wmTargetY > 0) // otherwise it'll draw a red dot under the hotspot icon after entering the wm fr
+    {
+        for (i = 0; i < dots; i++) {
+            wmPutRedPixel(dots_x[i], dots_y[i]);
+        }
     }
     __asm {
         popad;
