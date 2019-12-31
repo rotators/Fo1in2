@@ -67,8 +67,7 @@ procedure start begin
    end
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
    if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
       round_counter := round_counter + 1;
       if (self_cur_hp < 10) then begin
@@ -83,12 +82,10 @@ procedure critter_p_proc begin
          call flee_dude;
       end
    end
-   else begin
-      if (tmp_hostile) then begin
-         tmp_hostile := 0;
-         random_seed_1 := 1;
-         attack(dude_obj);
-      end
+   else if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      random_seed_1 := 1;
+      attack(dude_obj);
    end
 end
 
@@ -110,70 +107,47 @@ end
 procedure talk_p_proc begin
    dude_look_at_self;
    if (known) then begin
-      if (annoyed) then begin
+      if (annoyed) then
          call GenPalB23;
-      end
-      else begin
-         start_gdialog(759, self_obj, 4, -1, -1);
-         gsay_start;
-         call GenPalB24;
-         gsay_end;
-         end_dialogue;
-      end
+      else
+         start_dialog_at_node(GenPalB24);
+   end
+   else if (scared) then begin
+      call GenPalB01;
+   end
+   else if ((random_seed_1 == 1) or (global_var(GVAR_ENEMY_BROTHERHOOD) == 1)) then begin
+      call GenPalB00;
    end
    else begin
-      if (scared) then begin
-         call GenPalB01;
+      if (global_var(GVAR_BROTHERHOOD_SEED) == 2) then begin
+         start_dialog_at_node(GenPalB02);
+      end
+      else if (global_var(GVAR_WORLDMAPLIST_BROTHERHOOD) >= 1) then begin
+         if (check_general_rep >= 20) then
+            start_dialog_at_node(GenPalB03);
+         else
+            start_dialog_at_node(GenPalB04);
       end
       else begin
-         if ((random_seed_1 == 1) or (global_var(GVAR_ENEMY_BROTHERHOOD) == 1)) then begin
-            call GenPalB00;
-         end
-         else begin
-            start_gdialog(759, self_obj, 4, -1, -1);
-            gsay_start;
-            if (global_var(GVAR_BROTHERHOOD_SEED) == 2) then begin
-               call GenPalB02;
-            end
-            else begin
-               if (global_var(GVAR_WORLDMAPLIST_BROTHERHOOD) >= 1) then begin
-                  if (check_general_rep >= 20) then begin
-                     call GenPalB03;
-                  end
-                  else begin
-                     call GenPalB04;
-                  end
-               end
-               else begin
-                  if ((check_general_rep < 20) or (has_rep_berserker) or has_rep_childkiller) then begin
-                     call GenPalB06;
-                  end
-                  else begin
-                     call GenPalB05;
-                  end
-               end
-            end
-            gsay_end;
-            end_dialogue;
-         end
+         if ((check_general_rep < 20) or (has_rep_berserker) or has_rep_childkiller) then
+            start_dialog_at_node(GenPalB06);
+         else
+            start_dialog_at_node(GenPalB05);
       end
    end
 end
 
-procedure GenPalB00
-begin
+procedure GenPalB00 begin
    float_msg(self_obj, message_str(SCRIPT_GENPALB, 100), FLOAT_MSG_RED);
    tmp_hostile := 1;
    set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
 end
 
-procedure GenPalB01
-begin
+procedure GenPalB01 begin
    float_msg(self_obj, message_str(SCRIPT_GENPALB, 101), FLOAT_MSG_RED);
 end
 
-procedure GenPalB02
-begin
+procedure GenPalB02 begin
    known := 1;
    gsay_reply(SCRIPT_GENPALB, 102);
    NOption(103, GenPalB07, 7);
@@ -183,8 +157,7 @@ begin
    NLowOption(107, GenPalB11);
 end
 
-procedure GenPalB03
-begin
+procedure GenPalB03 begin
    known := 1;
    gsay_reply(SCRIPT_GENPALB, 108);
    NOption(109, GenPalB12, 7);
@@ -198,20 +171,17 @@ begin
    NLowOption(114, GenPalB11);
 end
 
-procedure GenPalB04
-begin
+procedure GenPalB04 begin
    known := 1;
    annoyed := 1;
    gsay_message(SCRIPT_GENPALB, 115, BAD_REACTION);
 end
 
-procedure GenPalB05
-begin
+procedure GenPalB05 begin
    known := 1;
    gsay_reply(SCRIPT_GENPALB, 116);
-   if ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) and (dude_item_count(PID_WATER_CHIP) == 0)) then begin
+   if looking_for_waterchip then
       NOption(message_str(SCRIPT_GENPALB, 117) + dude_name + message_str(SCRIPT_GENPALB, 118), GenPalB17, 4);
-   end
    NOption(message_str(SCRIPT_GENPALB, 117) + dude_name + message_str(SCRIPT_GENPALB, 119), GenPalB18, 4);
    NOption(message_str(SCRIPT_GENPALB, 117) + dude_name + message_str(SCRIPT_GENPALB, 120), GenPalB19, 4);
    NOption(message_str(SCRIPT_GENPALB, 117) + dude_name + message_str(SCRIPT_GENPALB, 121), GenPalB21, 4);
@@ -219,25 +189,21 @@ begin
    NLowOption(123, GenPalB22);
 end
 
-procedure GenPalB06
-begin
+procedure GenPalB06 begin
    known := 1;
    annoyed := 1;
    gsay_message(SCRIPT_GENPALB, 124, BAD_REACTION);
 end
 
-procedure GenPalB07
-begin
+procedure GenPalB07 begin
    gsay_message(SCRIPT_GENPALB, 125, NEUTRAL_REACTION);
 end
 
-procedure GenPalB08
-begin
+procedure GenPalB08 begin
    gsay_message(SCRIPT_GENPALB, 126, NEUTRAL_REACTION);
 end
 
-procedure GenPalB09
-begin
+procedure GenPalB09 begin
    gsay_message(SCRIPT_GENPALB, 127, NEUTRAL_REACTION);
 end
 
@@ -246,66 +212,54 @@ procedure GenPalB10 begin
    NOption(g_more, GenPalB10a, 1);
 end
 
-procedure GenPalB10a
-begin
+procedure GenPalB10a begin
    gsay_message(SCRIPT_GENPALB, 129, NEUTRAL_REACTION);
 end
 
-procedure GenPalB11
-begin
+procedure GenPalB11 begin
    gsay_message(SCRIPT_GENPALB, 130, NEUTRAL_REACTION);
 end
 
-procedure GenPalB12
-begin
+procedure GenPalB12 begin
    gsay_reply(SCRIPT_GENPALB, 131);
-   if ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) and (dude_item_count(PID_WATER_CHIP) == 0)) then begin
+   if looking_for_waterchip then
       NOption(132, GenPalB17, 4);
-   end
    NOption(133, GenPalB18, 4);
    NOption(134, GenPalB19, 4);
    NOption(135, GenPalB20, 4);
    NOption(122, GenPalB21, 4);
 end
 
-procedure GenPalB13
-begin
+procedure GenPalB13 begin
    known := 1;
    annoyed := 1;
    gsay_message(SCRIPT_GENPALB, 136, BAD_REACTION);
 end
 
-procedure GenPalB14
-begin
+procedure GenPalB14 begin
    gsay_message(SCRIPT_GENPALB, 137, NEUTRAL_REACTION);
 end
 
-procedure GenPalB15
-begin
+procedure GenPalB15 begin
    gsay_message(SCRIPT_GENPALB, 138, NEUTRAL_REACTION);
 end
 
 procedure GenPalB16 begin
    gsay_message(SCRIPT_GENPALB, 139, NEUTRAL_REACTION);
    gfade_out(1);
-   //game_time_advance(game_ticks(random(86400, 172800)));
-   //load_map(MAP_BROHDENT, 0);
-   advance_time_travel_to_bos;
+      advance_time_travel_to_bos;
    gfade_in(1);
 end
 
-procedure GenPalB17
-begin
+procedure GenPalB17 begin
    gsay_message(SCRIPT_GENPALB, 140, NEUTRAL_REACTION);
 end
 
-procedure GenPalB18
-begin
+procedure GenPalB18 begin
    gsay_message(SCRIPT_GENPALB, 141, NEUTRAL_REACTION);
 end
 
-procedure GenPalB19
-begin
+procedure GenPalB19 begin
    annoyed := 1;
    gsay_message(SCRIPT_GENPALB, 142, BAD_REACTION);
 end
@@ -315,47 +269,38 @@ procedure GenPalB20 begin
    NOption(g_more, GenPalB20a, 1);
 end
 
-procedure GenPalB20a
-begin
+procedure GenPalB20a begin
    gsay_message(SCRIPT_GENPALB, 144, NEUTRAL_REACTION);
 end
 
-procedure GenPalB21
-begin
+procedure GenPalB21 begin
    tmp_hostile := 1;
    set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
-   if (dude_is_male) then begin
+   if (dude_is_male) then
       gsay_message(SCRIPT_GENPALB, 145, BAD_REACTION);
-   end
-   else begin
+   else
       gsay_message(SCRIPT_GENPALB, 146, BAD_REACTION);
-   end
 end
 
-procedure GenPalB22
-begin
+procedure GenPalB22 begin
    gsay_message(SCRIPT_GENPALB, 147, NEUTRAL_REACTION);
 end
 
-procedure GenPalB23
-begin
+procedure GenPalB23 begin
    float_msg(self_obj, message_str(SCRIPT_GENPALB, 148), FLOAT_MSG_RED);
 end
 
-procedure GenPalB24
-begin
+procedure GenPalB24 begin
    gsay_reply(SCRIPT_GENPALB, 149);
-   if ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) and (dude_item_count(PID_WATER_CHIP) == 0)) then begin
+   if looking_for_waterchip then
       NOption(132, GenPalB17, 4);
-   end
    NOption(133, GenPalB18, 4);
    NOption(150, GenPalB25, 4);
    NOption(135, GenPalB20, 4);
    BOption(122, GenPalB21, 4);
 end
 
-procedure GenPalB25
-begin
+procedure GenPalB25 begin
    annoyed := 1;
    gsay_message(SCRIPT_GENPALB, 151, BAD_REACTION);
 end

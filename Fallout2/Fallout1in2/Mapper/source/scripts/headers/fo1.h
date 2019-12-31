@@ -64,6 +64,7 @@
 /*********************************************************
     Quests:
 *********************************************************/
+#define looking_for_waterchip               ((global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) == 0) and (dude_item_count(PID_WATER_CHIP) == 0))
 #define waterchip_returned                  (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
 #define set_waterchip_returned              set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2)
 

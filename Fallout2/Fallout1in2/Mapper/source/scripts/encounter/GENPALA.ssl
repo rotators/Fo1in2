@@ -33,10 +33,10 @@ procedure start begin
       tmp_hostile := global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure);
       initial := 1;
    end
+   art_change_fid_num(self_obj, FID_HAPOWR);
 end
 
-procedure combat_p_proc
-begin
+procedure combat_p_proc begin
    if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
       round_counter := round_counter + 1;
       if (self_cur_hp < 10) then begin
@@ -51,11 +51,9 @@ procedure critter_p_proc begin
          call flee_dude;
       end
    end
-   else begin
-      if (tmp_hostile) then begin
-         tmp_hostile := 0;
-         attack(dude_obj);
-      end
+   else if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
 end
 
@@ -76,31 +74,22 @@ end
 
 procedure talk_p_proc begin
    dude_look_at_self;
-   if (has_rep_berserker) then begin
-      set_global_var(GVAR_BERSERKER_REPUTATION, 1);
-      set_global_var(GVAR_CHAMPION_REPUTATION, 0);
-   end
+
    if (scared) then begin
       float_msg(self_obj, message_str(SCRIPT_GENPALA, 101), FLOAT_MSG_RED);
    end
+   else if ((global_var(GVAR_ENEMY_BROTHERHOOD) == 1) or (random_seed_1 == 1)) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENPALA, 100), FLOAT_MSG_RED);
+      set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
+      tmp_hostile := 1;
+   end
+   else if (global_var(GVAR_BROTHERHOOD_SEED) == 2) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENPALA, 102), FLOAT_MSG_BLUE);
+   end
+   else if ((check_general_rep < -20) or (has_rep_berserker) or has_rep_childkiller) then begin
+      float_msg(self_obj, message_str(SCRIPT_GENPALA, 104), FLOAT_MSG_RED);
+   end
    else begin
-      if ((global_var(GVAR_ENEMY_BROTHERHOOD) == 1) or (random_seed_1 == 1)) then begin
-         float_msg(self_obj, message_str(SCRIPT_GENPALA, 100), FLOAT_MSG_RED);
-         set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
-         tmp_hostile := 1;
-      end
-      else begin
-         if (global_var(GVAR_BROTHERHOOD_SEED) == 2) then begin
-            float_msg(self_obj, message_str(SCRIPT_GENPALA, 102), FLOAT_MSG_BLUE);
-         end
-         else begin
-            if ((check_general_rep < -20) or (has_rep_berserker) or has_rep_childkiller) then begin
-               float_msg(self_obj, message_str(SCRIPT_GENPALA, 104), FLOAT_MSG_RED);
-            end
-            else begin
-               float_msg(self_obj, message_str(SCRIPT_GENPALA, 103), FLOAT_MSG_GREEN);
-            end
-         end
-      end
+      float_msg(self_obj, message_str(SCRIPT_GENPALA, 103), FLOAT_MSG_GREEN);
    end
 end
