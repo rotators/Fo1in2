@@ -70,6 +70,13 @@ short dots = 0;
 short dotIdx = 0;
 ULONGLONG lastDotTick = 0;
 
+void clearDots() {
+    dots = 0;
+    dotIdx = 0;
+    ZeroMemory(dots_x, sizeof(int) * AMOUNT_OF_DOTS);
+    ZeroMemory(dots_y, sizeof(int) * AMOUNT_OF_DOTS);
+}
+
 void newDot() {
     ULONGLONG tick = GetTickCount64();
     if (tick - lastDotTick > 250) {
@@ -94,11 +101,16 @@ void wmPutRedPixel(int wmX, int wmY)
     wmPixelY = wmY;
 
     // calculation code from 0x4c41ec - wmDrawCursorStopped
-    // TODO: remove use frame pointer (ebp)
+    // TODO: remove use of frame pointer (ebp)
     __asm {
         pushad
         mov ecx, [wmPixelY]
         mov ebx, [wmPixelX]
+        mov ebp, dword ptr ds : [0x51DE2C]
+        cmp ebx, ebp
+        jl oob // the pixel is off screen
+        cmp ecx, dword ptr ds : [0x51DE30]
+        jl oob // the pixel is off screen
         mov ebp, [wmOffsetX]
         mov esi, 1 // width
         mov edi, 1 // height
@@ -128,13 +140,17 @@ void wmPutRedPixel(int wmX, int wmY)
         mov eax, dword ptr ds : [bufPtr]
         add ebx, ebp
         add ebx, eax
-        mov byte ptr ds : [ebx], 134 // red pixel in palette 
+        cmp ebx, eax
+        jle oob
+        mov byte ptr ds : [ebx], 133 // red pixel in palette - R=252, G=0, B=0
+    oob: // the pixel is off screen
         popad
     }
 }
 
 const DWORD drawSubTile = 0x004C40E4;
 const DWORD drawCursorStopped = 0x004C41EC;
+const DWORD wmWorldmapReset = 0x004BCEF8;
 int i = 0;
 void __declspec(naked) wmInterfaceRefreshHook() {
     __asm {  pushad  }
@@ -153,23 +169,28 @@ void __declspec(naked) wmInterfaceRefreshHook() {
 
 void __declspec(naked) wmStopHook() {
     __asm {  pushad  }
-
     getPlayerPos();
-    if (wmTargetX == 0 && wmTargetY == 0) {
-        dots = 0;
-        dotIdx = 0;
-        ZeroMemory(dots_x, sizeof(int) * AMOUNT_OF_DOTS);
-        ZeroMemory(dots_y, sizeof(int) * AMOUNT_OF_DOTS);
-    }
+    if (wmTargetX == 0 && wmTargetY == 0)
+        clearDots();
     __asm {
         popad;
         jmp drawCursorStopped;
     }
 }
 
+void __declspec(naked) wmResetHook() {
+    __asm {  pushad  }
+    clearDots();
+    __asm {
+        popad;
+        jmp wmWorldmapReset;
+    }
+}
+
 void Hook() {
     HookCall(0x4C3BE6, wmInterfaceRefreshHook); // when calling wmInterfaceDrawSubTileList
     HookCall(0x4C3C7E, wmStopHook);
+    HookCall(0x442BFD, wmResetHook);
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
