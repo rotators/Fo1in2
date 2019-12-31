@@ -43,26 +43,24 @@ void Log(const char* text, ...)
 
 HANDLE fo2;
 
+#define FO2_MEM(type, val, offset) *(type*)&val = *(type*)((DWORD)(offset))
+
 void getPlayerPos() {
-    SIZE_T bytesRead;
-    ReadProcessMemory(fo2, (LPCVOID*)0x672e0c, &wmPlayerX, 2, &bytesRead);
-    ReadProcessMemory(fo2, (LPCVOID*)0x672e10, &wmPlayerY, 2, &bytesRead);
-    ReadProcessMemory(fo2, (LPCVOID*)0x672e20, &wmTargetX, 2, &bytesRead);
-    ReadProcessMemory(fo2, (LPCVOID*)0x672e24, &wmTargetY, 2, &bytesRead);
+    FO2_MEM(int, wmPlayerX, 0x672e0c);
+    FO2_MEM(int, wmPlayerY, 0x672e10);
+    FO2_MEM(int, wmTargetX, 0x672e20);
+    FO2_MEM(int, wmTargetY, 0x672e24);
 }
 
 void updateWmInfo() {
-    SIZE_T bytesRead;
-    ReadProcessMemory(fo2, (LPCVOID*)0x51de2c, &wmOffsetX, 2, &bytesRead);
-    ReadProcessMemory(fo2, (LPCVOID*)0x51de30, &wmOffsetY, 2, &bytesRead);
-    ReadProcessMemory(fo2, (LPCVOID*)0x51de24, &bufPtr, 4, &bytesRead);
+    FO2_MEM(int, wmOffsetX, 0x51de2c);
+    FO2_MEM(int, wmOffsetY, 0x51de30);
+    FO2_MEM(int, bufPtr, 0x51de24);
 }
 
-
 const DWORD transBuftoBuf = 0x004D3704;
-const unsigned char redPixel[]{ 134 };
 
-#define AMOUNT_OF_DOTS 512
+#define AMOUNT_OF_DOTS 1024
 
 int dots_x[AMOUNT_OF_DOTS];
 int dots_y[AMOUNT_OF_DOTS];
@@ -101,48 +99,42 @@ void wmPutRedPixel(int wmX, int wmY)
     wmPixelY = wmY;
 
     // calculation code from 0x4c41ec - wmDrawCursorStopped
-    // TODO: remove use of frame pointer (ebp)
     __asm {
         pushad
         mov ecx, [wmPixelY]
         mov ebx, [wmPixelX]
-        mov ebp, dword ptr ds : [0x51DE2C]
-        cmp ebx, ebp
+        cmp ebx, edi
         jl oob // the pixel is off screen
         cmp ecx, dword ptr ds : [0x51DE30]
         jl oob // the pixel is off screen
-        mov ebp, [wmOffsetX]
-        mov esi, 1 // width
-        mov edi, 1 // height
-        lea eax, ss: [ebp + 0x2BC]
+        mov edi, [wmOffsetX]
         mov eax, 0x16
-        sub eax, ebp
-        mov ebp, [wmOffsetY]
+        sub eax, edi
+        mov edi, [wmOffsetY]
         add ebx, eax
         mov eax, 0x15
-        mov edx, esi
-        sub eax, ebp
+        mov edx, 1 // width
         sar edx, 0x1F
+        sub eax, edi
         add ecx, eax
-        mov eax, esi
+        mov eax, 1 // width
         sub eax, edx
         sar eax, 1
-        mov ebp, ebx
-        mov edx, edi
-        sub ebp, eax
-        mov eax, edi
+        mov edi, ebx
+        sub edi, eax
+        mov eax, 1 // height
+        mov edx, 1 // height
         sar edx, 0x1F
         sub eax, edx
         sar eax, 1
         sub ecx, eax
-        mov ebx, ecx
-        imul ebx, ebx, 0x37A
+        imul ecx, ecx, 0x37A
         mov eax, dword ptr ds : [bufPtr]
-        add ebx, ebp
-        add ebx, eax
-        cmp ebx, eax
+        add ecx, edi
+        add ecx, eax
+        cmp ecx, eax
         jle oob
-        mov byte ptr ds : [ebx], 133 // red pixel in palette - R=252, G=0, B=0
+        mov byte ptr ds : [ecx], 133 // red pixel in palette - R=252, G=0, B=0
     oob: // the pixel is off screen
         popad
     }
@@ -153,7 +145,7 @@ const DWORD drawCursorStopped = 0x004C41EC;
 const DWORD wmWorldmapReset = 0x004BCEF8;
 int i = 0;
 void __declspec(naked) wmInterfaceRefreshHook() {
-    __asm {  pushad  }
+    __asm { pushad }
 
     getPlayerPos();
     updateWmInfo();
@@ -168,7 +160,7 @@ void __declspec(naked) wmInterfaceRefreshHook() {
 }
 
 void __declspec(naked) wmStopHook() {
-    __asm {  pushad  }
+    __asm { pushad }
     getPlayerPos();
     if (wmTargetX == 0 && wmTargetY == 0)
         clearDots();
@@ -179,7 +171,7 @@ void __declspec(naked) wmStopHook() {
 }
 
 void __declspec(naked) wmResetHook() {
-    __asm {  pushad  }
+    __asm { pushad }
     clearDots();
     __asm {
         popad;
@@ -200,14 +192,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 {
 		switch (ul_reason_for_call)
 		{
-		case DLL_PROCESS_ATTACH:
-            fo2 = GetCurrentProcess();
-           // fopen_s(&f, ".\\test.log", "a+");
-			Hook();
-		case DLL_THREAD_ATTACH:
-		case DLL_THREAD_DETACH:
-		case DLL_PROCESS_DETACH:
-			break;
+		    case DLL_PROCESS_ATTACH:
+                fo2 = GetCurrentProcess();
+               // fopen_s(&f, ".\\test.log", "a+");
+			    Hook();
+		    case DLL_THREAD_ATTACH:
+		    case DLL_THREAD_DETACH:
+		    case DLL_PROCESS_DETACH:
+			    break;
 		}
 		return TRUE;
 }
