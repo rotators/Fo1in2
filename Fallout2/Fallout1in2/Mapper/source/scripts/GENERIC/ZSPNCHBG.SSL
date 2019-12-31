@@ -1,0 +1,84 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+/*
+        Name:
+        Location:
+        Description:
+
+        Log:
+           Please note any changes that have been made to the file in Updated. Then comment
+           the code which you have changed/altered/commented out. Please, do not delete any
+           code which was written.
+
+           Created:
+
+           Updated:
+*/
+
+/* Include Files */
+
+/* Note, the Following Lines need to be in this order so that
+   the script will be compilable. The define Name is referenced
+   in a module from define.h and used in command.h. Please do
+   not change the ordering.
+        -rwh2   11/13/97
+*/
+#include "..\headers\define.h"
+//#include "..\headers\<TownName.h>"
+
+#define NAME                    SCRIPT_ZSPNCHBG
+
+#include "..\headers\command.h"
+
+
+procedure start;
+procedure use_p_proc;
+
+procedure learn_skill;
+
+#define LVAR_Herebefore         (0)
+
+procedure start begin
+end
+
+procedure use_p_proc begin
+   variable
+      training_anim, sound;
+
+	// Source animation:
+	reg_anim_clear(source_obj);
+	reg_anim_begin();
+
+		training_anim := random(0,1);
+		if (training_anim == 0) then
+			training_anim := ANIM_throw_punch;
+		else
+			training_anim := ANIM_kick_leg;
+		sound := sfx_build_char_name(source_obj, training_anim, snd_contact);
+
+	reg_anim_animate(source_obj, training_anim, -1);
+	reg_anim_play_sfx(source_obj, Sound, 0);
+	reg_anim_callback(learn_skill);
+	reg_anim_end();
+
+	// Punchbag animation:
+	reg_anim_clear(self_obj);
+	reg_anim_begin();
+	reg_anim_animate(self_obj, ANIM_stand, -1);
+	reg_anim_animate_reverse(self_obj, ANIM_stand, -1);
+	reg_anim_end();
+end
+
+procedure learn_skill begin
+    if (global_var(GVAR_BONUS_PUNCHING_BAG) == 0) then begin
+      inc_global_var(GVAR_BONUS_PUNCHING_BAG);
+
+      gfade_out(600);
+         critter_mod_skill(dude_obj, SKILL_UNARMED_COMBAT, 5);
+         game_time_advance(ONE_GAME_HOUR);
+         display_msg(g_mstr(950));
+      gfade_in(600);
+   end
+end

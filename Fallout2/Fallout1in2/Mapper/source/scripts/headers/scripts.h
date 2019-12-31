@@ -199,16 +199,16 @@
 #define SCRIPT_JUNKCAS   (186)  //  JunkCas.int     ; Map Script for Casino area in Junktown
 #define SCRIPT_JUNKKILL  (187)  //  JunkKill.int    ; Map Script for Killian's area in Junktown                                   
 #define SCRIPT_JUNKENT   (188)  //  JunkEnt.int     ; Map Script for Entrance to Junktown
-#define SCRIPT_BLKROM    (189)  //  BLKROM.int       ; blocked room in the buried vault // UNUSED!!!
+#define SCRIPT_ZSPNCHBG  (189)  //  ZSPnchBg.int    ; Punching Bag in the Brotherhood bunker
 #define SCRIPT_BVAIR     (190)  //  BVAIR.int       ; buried vault air lock
-#define SCRIPT_BVCACHE   (191)  //  BVCache.int       ; cache of medical suppies in the buried vault
+#define SCRIPT_BVCACHE   (191)  //  BVCache.int     ; cache of medical suppies in the buried vault
 #define SCRIPT_BVENT     (192)  //  BVEnt.int       ; Buried Vault ENtrance
 #define SCRIPT_SHADYET   (193)  //  ShadyEt.int     ; Map Script for Shady Sands East
 #define SCRIPT_SHADYWST  (194)  //  ShadyWst.int    ; Map Script for Shady Sands West                                             
-#define SCRIPT_MEDLAB    (195)  //  MEDLAB.int       ; medlab in front of the buried vault
+#define SCRIPT_MEDLAB    (195)  //  MEDLAB.int      ; medlab in front of the buried vault
 #define SCRIPT_SHACK     (196)  //  Shack.int       ; Shack above the buried vault
 #define SCRIPT_SETH2     (197)  //  Seth2.int       ; Seth from Rad Scorpion Caves to transport to Shady Sands
-#define SCRIPT_SCRIBEA   (198)  //  scribeA.int       ; Scribe from the brotherhood
+#define SCRIPT_SCRIBEA   (198)  //  scribeA.int     ; Scribe from the brotherhood
 #define SCRIPT_VAULT13   (199)  //  Vault13.int     ; Map Script for Vault 13
 #define SCRIPT_BVELV1W   (200)  //  BVElv1W.int     ; Buried Vault Elevator. Level 1 West --> Level 2 East
 #define SCRIPT_BVELV2E   (201)  //  BVElv2E.int     ; Buried Vault Elevator. Level 2 East --> Level 1 West
