@@ -124,7 +124,7 @@ TerrainType getCurrentTerrain() {
             sprintf(currentTerrainStr, "Mountain"); break;
         case CITY: 
             sprintf(currentTerrainStr, "City"); break;
-        case OCEAN: 
+        case OCEAN:
             sprintf(currentTerrainStr, "Ocean"); break;
     }
     return (TerrainType)c;
@@ -148,9 +148,9 @@ void updateWmInfo() {
     setFont(0x65);
     if (hoveringHotspot == 1 && !isMovingOnWM()) {
         //sprintf(displayTerrain, "%s", currentTerrainStr);
-        wmDraw(currentTerrainStr, 215, wmPlayerX-wmOffsetX, (wmPlayerY-wmOffsetY) + 5, 200);
+        wmDraw(currentTerrainStr, 228, wmPlayerX-wmOffsetX, (wmPlayerY-wmOffsetY) + 5, 60); // Shadow
+        wmDraw(currentTerrainStr, 215, wmPlayerX - wmOffsetX - 1, (wmPlayerY - wmOffsetY) + 4, 60);
     }
-
     setFont(curFont);
 }
 
@@ -246,7 +246,7 @@ void __declspec(naked) wmInterfaceRefreshHook() {
     getPlayerPos();
     updateWmInfo();
     newDot();
-    if (isMovingOnWM()) // otherwise it'll draw a red dot under the hotspot icon after entering the wm fr
+    if (isMovingOnWM()) // otherwise it'll draw a red dot under the hotspot icon after entering the wm from map
     {
         for (i = 0; i < dots; i++) {
             wmPutRedPixel(dots_x[i], dots_y[i]);
@@ -276,6 +276,8 @@ void __declspec(naked) wmResetHook() {
         popad;
         jmp wmWorldmapReset;
     }
+
+    updateWmInfo();
 }
 
 int jmpBack = 0x4BFE89;
