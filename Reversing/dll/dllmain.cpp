@@ -14,6 +14,15 @@ void _stdcall SafeWrite32(DWORD addr, DWORD data) {
 	VirtualProtect((void*)addr, 4, oldProtect, &oldProtect);
 }
 
+void _stdcall SafeWriteJmp(DWORD addr, void* func) {
+    DWORD oldProtect;
+    DWORD data = (DWORD)func - (addr + 5);
+    VirtualProtect((void*)addr, 5, PAGE_EXECUTE_READWRITE, &oldProtect);
+    *((BYTE*)addr) = 0xE9;
+    *((DWORD*)(addr + 1)) = data;
+    VirtualProtect((void*)addr, 5, oldProtect, &oldProtect);
+}
+
 void HookCall(DWORD addr, void* func) {
 	SafeWrite32(addr + 1, (DWORD)func - (addr + 5));
 }
@@ -26,7 +35,13 @@ int wmOffsetX = 0;
 int wmOffsetY = 0;
 int wmTargetX = 0;
 int wmTargetY = 0;
-int bufPtr;
+int curFont = 0;
+int wmBuffer;
+
+int curSubtile = 0;
+int curTerrain = 0;
+
+int hoveringHotspot = 0;
 
 void Log(const char* text, ...)
 {
@@ -45,6 +60,37 @@ HANDLE fo2;
 
 #define FO2_MEM(type, val, offset) *(type*)&val = *(type*)((DWORD)(offset))
 
+
+int fmtextToBufFunc = 0x004422B4;
+int setFontFunc = 0x004D58DC;
+void textToBuffer(void* buffer, char* text, BYTE colorIndex, DWORD x, DWORD y, DWORD txtWidth, DWORD bufferWidth)
+{
+    DWORD posOffset = y * bufferWidth + x;
+    __asm {
+        xor eax, eax
+        mov al, colorIndex
+        push eax
+        mov eax, buffer
+        add eax, posOffset
+        mov edx, text
+        mov ebx, txtWidth
+        mov ecx, bufferWidth
+        call fmtextToBufFunc
+    }
+}
+
+void wmDraw(char* text, BYTE colorIndex, DWORD x, DWORD y, DWORD txtWidth) {
+    textToBuffer((void*)wmBuffer, text, colorIndex, x, y, txtWidth, 890); // 890=width of wm buffer
+}
+
+void setFont(int fontId)
+{
+    __asm {
+        mov eax, fontId
+        call setFontFunc
+    }
+}
+
 void getPlayerPos() {
     FO2_MEM(int, wmPlayerX, 0x672e0c);
     FO2_MEM(int, wmPlayerY, 0x672e10);
@@ -52,10 +98,60 @@ void getPlayerPos() {
     FO2_MEM(int, wmTargetY, 0x672e24);
 }
 
+enum TerrainType {
+    DESERT,
+    MOUNTAIN,
+    CITY,
+    OCEAN
+};
+
+char* currentTerrainStr;
+TerrainType getCurrentTerrain() {
+    int c = -1;
+    __asm {
+        mov eax, dword ptr ds : [0x672E14]
+        cmp eax, 0
+        je exit
+        mov edx, dword ptr ds : [eax]
+        mov c, edx
+    exit:
+    }
+    auto t = (TerrainType)c;
+    switch (c) {
+        case DESERT: 
+            sprintf(currentTerrainStr, "Desert"); break;
+        case MOUNTAIN: 
+            sprintf(currentTerrainStr, "Mountain"); break;
+        case CITY: 
+            sprintf(currentTerrainStr, "City"); break;
+        case OCEAN: 
+            sprintf(currentTerrainStr, "Ocean"); break;
+    }
+    return (TerrainType)c;
+}
+
+bool isMovingOnWM() {
+    return wmTargetX + wmTargetY > 0;
+}
+
+//char* displayTerrain;
 void updateWmInfo() {
     FO2_MEM(int, wmOffsetX, 0x51de2c);
     FO2_MEM(int, wmOffsetY, 0x51de30);
-    FO2_MEM(int, bufPtr, 0x51de24);
+    FO2_MEM(int, wmBuffer, 0x51de24);
+    FO2_MEM(int, curFont, 0x51e3B0);
+   // FO2_MEM(int, curSubtile, 0x672E14);
+    //*(int*)&curTerrain = curSubtile;
+    //FO2_MEM(int, curTerrain, curSubtile);
+    
+    getCurrentTerrain();
+    setFont(0x65);
+    if (hoveringHotspot == 1 && !isMovingOnWM()) {
+        //sprintf(displayTerrain, "%s", currentTerrainStr);
+        wmDraw(currentTerrainStr, 215, wmPlayerX-wmOffsetX, (wmPlayerY-wmOffsetY) + 5, 200);
+    }
+
+    setFont(curFont);
 }
 
 const DWORD transBuftoBuf = 0x004D3704;
@@ -103,11 +199,11 @@ void wmPutRedPixel(int wmX, int wmY)
         pushad
         mov ecx, [wmPixelY]
         mov ebx, [wmPixelX]
+        mov edi, [wmOffsetX]
         cmp ebx, edi
         jl oob // the pixel is off screen
         cmp ecx, dword ptr ds : [0x51DE30]
         jl oob // the pixel is off screen
-        mov edi, [wmOffsetX]
         mov eax, 0x16
         sub eax, edi
         mov edi, [wmOffsetY]
@@ -129,7 +225,7 @@ void wmPutRedPixel(int wmX, int wmY)
         sar eax, 1
         sub ecx, eax
         imul ecx, ecx, 0x37A
-        mov eax, dword ptr ds : [bufPtr]
+        mov eax, dword ptr ds : [wmBuffer]
         add ecx, edi
         add ecx, eax
         cmp ecx, eax
@@ -150,7 +246,7 @@ void __declspec(naked) wmInterfaceRefreshHook() {
     getPlayerPos();
     updateWmInfo();
     newDot();
-    if (wmTargetX + wmTargetY > 0) // otherwise it'll draw a red dot under the hotspot icon after entering the wm fr
+    if (isMovingOnWM()) // otherwise it'll draw a red dot under the hotspot icon after entering the wm fr
     {
         for (i = 0; i < dots; i++) {
             wmPutRedPixel(dots_x[i], dots_y[i]);
@@ -165,7 +261,7 @@ void __declspec(naked) wmInterfaceRefreshHook() {
 void __declspec(naked) wmStopHook() {
     __asm { pushad }
     getPlayerPos();
-    if (wmTargetX == 0 && wmTargetY == 0)
+    if (!isMovingOnWM())
         clearDots();
     __asm {
         popad;
@@ -182,10 +278,69 @@ void __declspec(naked) wmResetHook() {
     }
 }
 
+int jmpBack = 0x4BFE89;
+int refreshwm = 0x4C3830;
+void __declspec(naked) wmDetectHotspotHover() {
+    __asm {
+        
+        push edi
+        push ebp
+        push eax
+        push edx
+        push ecx
+        mov ecx, hoveringHotspot // to check if hovering changed
+        mov edi, dword ptr ss : [esp + 28] // [esp + 8], since we pushed some registers
+        mov ebp, dword ptr ds : [0x51DE2C]
+        mov eax, dword ptr ds : [0x51DE30]
+        add edi, ebp // edi = wmMouseX
+        mov ebp, dword ptr ss : [esp + 24] // [esp + 4]
+        add ebp, eax // ebp = wmMouseY
+        sub edi, 20
+        sub ebp, 20
+        // check if the cursor is inside
+        mov eax, dword ptr ds : [0x672E0C]
+        sub eax, edi
+        cdq
+        xor eax, edx
+        sub eax, edx
+        cmp eax, 5
+        jge unset
+        mov eax, dword ptr ds : [0x672E10]
+        sub eax, ebp
+        cdq
+        xor eax, edx
+        sub eax, edx
+        cmp eax, 5
+        jge unset
+        mov hoveringHotspot, 1
+        jmp change_check
+    unset:
+        mov hoveringHotspot, 0
+    change_check:
+        cmp ecx, hoveringHotspot
+        je cleanup
+        call refreshwm // if value has changed, refresh wm
+    cleanup:
+        pop ecx
+        pop edx
+        pop eax
+        pop ebp
+        pop edi
+        mov eax, dword ptr ds : [0x51DE30] // we overwrote it in jmp, so it's here
+        jmp jmpBack
+    }
+}
+
 void Hook() {
     HookCall(0x4C3BE6, wmInterfaceRefreshHook); // when calling wmInterfaceDrawSubTileList
     HookCall(0x4C3C7E, wmStopHook);
     HookCall(0x442BFD, wmResetHook);
+    SafeWriteJmp(0x4BFE84, wmDetectHotspotHover);
+}
+
+void Init() {
+    currentTerrainStr = new char[32];
+    Hook();
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -198,7 +353,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		    case DLL_PROCESS_ATTACH:
                 fo2 = GetCurrentProcess();
                // fopen_s(&f, ".\\test.log", "a+");
-			    Hook();
+                Init();
+			    
 		    case DLL_THREAD_ATTACH:
 		    case DLL_THREAD_DETACH:
 		    case DLL_PROCESS_DETACH:
