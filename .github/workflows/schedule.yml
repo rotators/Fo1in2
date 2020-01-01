@@ -146,6 +146,7 @@ jobs:
 
   - name: Cache (DirectX)
 #   if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_EVENT == 'push'
+    if:   env.GHA_EVENT == 'push'
     id:   cache-dx
     uses: actions/cache@v1
     with:
@@ -153,7 +154,8 @@ jobs:
      key:  cache-sfall-dx
 
   - name:  Cache create (DirectX)
-    if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
+#   if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
+    if:    steps.cache-dx.outputs.cache-hit != 'true'
     run:   |
            :
            echo ::group::DX2010
@@ -173,12 +175,7 @@ jobs:
            # clean & check
            rm -fR _DX*_ _DX*_.exe
            git status
-    shell: bash
 
-  - name:  Cache check (DirectX)
-#   if:    env.GHA_TASK_SFALL_BINARY == 'true'
-    run:   |
-           :
            echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
            #ls -Ra $HOME/cache-dx
            du -hd0 $HOME/cache-dx
