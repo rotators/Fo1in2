@@ -7,11 +7,11 @@
 FILE* f;
 
 void _stdcall SafeWrite32(DWORD addr, DWORD data) {
-	DWORD oldProtect;
+    DWORD oldProtect;
 
-	VirtualProtect((void*)addr, 4, PAGE_EXECUTE_READWRITE, &oldProtect);
-	*((DWORD*)addr) = data;
-	VirtualProtect((void*)addr, 4, oldProtect, &oldProtect);
+    VirtualProtect((void*)addr, 4, PAGE_EXECUTE_READWRITE, &oldProtect);
+    *((DWORD*)addr) = data;
+    VirtualProtect((void*)addr, 4, oldProtect, &oldProtect);
 }
 
 void _stdcall SafeWriteJmp(DWORD addr, void* func) {
@@ -24,8 +24,23 @@ void _stdcall SafeWriteJmp(DWORD addr, void* func) {
 }
 
 void HookCall(DWORD addr, void* func) {
-	SafeWrite32(addr + 1, (DWORD)func - (addr + 5));
+    SafeWrite32(addr + 1, (DWORD)func - (addr + 5));
 }
+
+#pragma pack(1)
+struct MessageNode {
+    long number;
+    long flags;
+    char* audio;
+    char* message;
+
+    MessageNode() {
+        number = 0;
+        flags = 0;
+        audio = nullptr;
+        message = nullptr;
+    }
+};
 
 int wmPlayerX = 0;
 int wmPlayerY = 0;
@@ -43,9 +58,9 @@ int curTerrain = 0;
 
 int hoveringHotspot = 0;
 
-void Log(const char* text, ...)
+/*void Log(const char* text, ...)
 {
-    if (f == NULL) 
+    if (f == NULL)
         return;
     char buffer[4096];
     va_list args;
@@ -54,13 +69,14 @@ void Log(const char* text, ...)
     va_end(args);
     fputs(buffer, f);
     fflush(f);
-}
+}*/
 
 HANDLE fo2;
 
 #define FO2_MEM(type, val, offset) *(type*)&val = *(type*)((DWORD)(offset))
 
 
+int getMsgFunc = 0x48504c;
 int fmtextToBufFunc = 0x004422B4;
 int setFontFunc = 0x004D58DC;
 void textToBuffer(void* buffer, char* text, BYTE colorIndex, DWORD x, DWORD y, DWORD txtWidth, DWORD bufferWidth)
@@ -102,32 +118,34 @@ enum TerrainType {
     DESERT,
     MOUNTAIN,
     CITY,
-    OCEAN
+    OCEAN,
 };
 
+MessageNode* msgNode;
+char* getWorldmapMsg(int msgId) {
+    //memset(msg, 0, 255);
+    __asm {
+        mov ebx, msgId
+        mov edx, msgNode
+        mov eax, 0x672FB0 // worldmap.msg
+        call getMsgFunc
+    }
+    return msgNode->message;
+}
+
 char* currentTerrainStr;
-TerrainType getCurrentTerrain() {
-    int c = -1;
+void getCurrentTerrain() {
+    int terrainId = -1;
     __asm {
         mov eax, dword ptr ds : [0x672E14]
         cmp eax, 0
         je exit
         mov edx, dword ptr ds : [eax]
-        mov c, edx
-    exit:
+        mov terrainId, edx
+        exit:
     }
-    auto t = (TerrainType)c;
-    switch (c) {
-        case DESERT: 
-            sprintf(currentTerrainStr, "Desert"); break;
-        case MOUNTAIN: 
-            sprintf(currentTerrainStr, "Mountain"); break;
-        case CITY: 
-            sprintf(currentTerrainStr, "City"); break;
-        case OCEAN:
-            sprintf(currentTerrainStr, "Ocean"); break;
-    }
-    return (TerrainType)c;
+    currentTerrainStr = getWorldmapMsg(1000 + terrainId);
+    // TODO: Handle special terrain areas
 }
 
 bool isMovingOnWM() {
@@ -140,15 +158,11 @@ void updateWmInfo() {
     FO2_MEM(int, wmOffsetY, 0x51de30);
     FO2_MEM(int, wmBuffer, 0x51de24);
     FO2_MEM(int, curFont, 0x51e3B0);
-   // FO2_MEM(int, curSubtile, 0x672E14);
-    //*(int*)&curTerrain = curSubtile;
-    //FO2_MEM(int, curTerrain, curSubtile);
-    
+
     getCurrentTerrain();
     setFont(0x65);
     if (hoveringHotspot == 1 && !isMovingOnWM()) {
-        //sprintf(displayTerrain, "%s", currentTerrainStr);
-        wmDraw(currentTerrainStr, 228, wmPlayerX-wmOffsetX, (wmPlayerY-wmOffsetY) + 5, 60); // Shadow
+        wmDraw(currentTerrainStr, 228, wmPlayerX - wmOffsetX, (wmPlayerY - wmOffsetY) + 5, 60);  // Shadow
         wmDraw(currentTerrainStr, 215, wmPlayerX - wmOffsetX - 1, (wmPlayerY - wmOffsetY) + 4, 60);
     }
     setFont(curFont);
@@ -276,15 +290,13 @@ void __declspec(naked) wmResetHook() {
         popad;
         jmp wmWorldmapReset;
     }
-
-    updateWmInfo();
 }
 
 int jmpBack = 0x4BFE89;
 int refreshwm = 0x4C3830;
 void __declspec(naked) wmDetectHotspotHover() {
     __asm {
-        
+
         push edi
         push ebp
         push eax
@@ -342,6 +354,7 @@ void Hook() {
 
 void Init() {
     currentTerrainStr = new char[32];
+    msgNode = new MessageNode;
     Hook();
 }
 
