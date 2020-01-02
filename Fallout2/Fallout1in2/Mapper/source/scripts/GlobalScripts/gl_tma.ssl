@@ -366,41 +366,71 @@ critical procedure GenerateReply begin
        end
    end
 
-   // Find reply
-   //split_sentence := string_split(input, " ");
-   //foreach (word : keyword in split_sentence) begin
-   //   input := keyword;
-
-      if (reply_name_start > 0 and string_compare(input, obj_name(critter))) then begin
+   /*******************************************************
+      Find reply
+   *******************************************************/
+   // Experimental: check whole sentence. Works, but is case-sensitive, which is bad.
+   /*
+   if (reply_name_start > 0) then begin
+      if (len_array(string_split(input, obj_name(critter))) > 1) then begin
          reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
-         //break;
+         found := 1;
       end
-      else begin
-         variable found := 0;
-         for (i := 0; (i < 100 and found == 0); i++) begin
-            input_check := message_str(reply_source, i + msg_offset);
-            if (input_check != "Error" and input_check != "") then begin
-               //debug("input_check: " + input_check);
-               split := string_split(input_check, "|");
+   end
 
-               foreach (word : keyword in split) begin
-                  if string_compare(keyword, input) then begin
-                     reply_final := message_str(reply_source, (i + msg_offset) + 100);
-                     found := 1;
+   if (found == 0) then begin
+      for (i := 0; (i < 100 and found == 0); i++) begin
+         input_check := message_str(reply_source, i + msg_offset);
+         if (input_check != "Error" and input_check != "") then begin
+            //debug("input_check: " + input_check);
+            split := string_split(input_check, "|");
 
-                     if ((i + msg_offset) == tma_var_line) then
-                        set_global_var(tma_var_gvar, tma_var_state);
+            foreach (word : keyword in split) begin
+               //debug("keyword: " + keyword);
+               if (len_array(string_split(input, keyword)) > 1) then begin
+                  reply_final := message_str(reply_source, (i + msg_offset) + 100);
+                  found := 1;
 
-                     break;
-                  end
+                  if ((i + msg_offset) == tma_var_line) then
+                     set_global_var(tma_var_gvar, tma_var_state);
+
+                  break;
                end
             end
-            else
-               break;
          end
+         else
+            break;
       end
+   end
+   */
 
-   //end
+   if (reply_name_start > 0 and string_compare(input, obj_name(critter))) then begin
+      reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
+   end
+   else begin
+      variable found := 0;
+      for (i := 0; (i < 100 and found == 0); i++) begin
+         input_check := message_str(reply_source, i + msg_offset);
+         if (input_check != "Error" and input_check != "") then begin
+            //debug("input_check: " + input_check);
+            split := string_split(input_check, "|");
+
+            foreach (word : keyword in split) begin
+               if string_compare(keyword, input) then begin
+                  reply_final := message_str(reply_source, (i + msg_offset) + 100);
+                  found := 1;
+
+                  if ((i + msg_offset) == tma_var_line) then
+                     set_global_var(tma_var_gvar, tma_var_state);
+
+                  break;
+               end
+            end
+         end
+         else
+            break;
+      end
+   end
 
    debug("input: <" + input + ">");
 
