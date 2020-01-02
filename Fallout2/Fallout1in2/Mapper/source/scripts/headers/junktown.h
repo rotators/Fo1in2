@@ -15,8 +15,8 @@
 
 #define set_gizmo_remains_timer     if (global_var(GVAR_GIZMO_REMAINS_TIMER) == 0) then set_global_var(GVAR_GIZMO_REMAINS_TIMER, game_time)
 
-#define gizmo_remains_rotting       (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * 6)))
-#define gizmo_remains_empty_desk    (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * 12)))
+#define gizmo_remains_rotting       (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * corpse_timer)))
+#define gizmo_remains_empty_desk    (game_time > (global_var(GVAR_GIZMO_REMAINS_TIMER) + (ONE_GAME_DAY * (corpse_timer * 2))))
 
 // Skum Pitt:
 #define check_noise_hex    (19274)
