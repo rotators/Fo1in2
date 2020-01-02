@@ -77,7 +77,12 @@ jobs:
 
   - name:  Clone sfall-develop
     if:    env.GHA_REPO_ALIVE == 'true'
-    run:   git clone --branch=develop https://github.com/phobos2077/sfall.git $HOME/sfall
+    run:   git clone --branch=develop https://github.com/phobos2077/sfall.git $HOME/sfall-develop
+    shell: bash
+
+  - name:  Clone sfall-rotators
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   git clone --branch=rotators https://github.com/rotators/sfall.git $HOME/sfall-rotators
     shell: bash
 
   - name: Clone FO1@2
@@ -98,29 +103,48 @@ jobs:
 
            echo "::group::Get old SHA"
            git --no-pager log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" > $HOME/git.log
-           OLD_SFALL=$(grep --max-count=1 "\- sfall-develop" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
-           OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
            set +e
+           OLD_SFALL_DEVELOP=$(grep --max-count=1 "\- sfall-develop" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
+           OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
+           OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
            OLD_DEBUGGER=$(grep --max-count=1 "\- Debugger" $HOME/git.log | awk -F \( '{print $2}' | tr -d ')')
            set -e
-           echo "sfall-develop $OLD_SFALL"
-           echo "ModdersPack   $OLD_ARTIFACTS"
-           echo "Debugger      $OLD_DEBUGGER"
+           echo "sfall-develop  $OLD_SFALL_DEVELOP"
+           echo "sfall-rotators $OLD_SFALL_ROTATORS"
+           echo "ModdersPack    $OLD_ARTIFACTS"
+           echo "Debugger       $OLD_DEBUGGER"
            rm -f $HOME/git.log
            echo ::endgroup::
 
            echo "::group::Get new SHA"
-           NEW_SFALL=$(git -C $HOME/sfall --no-pager log --pretty=format:%H -1 sfall)
+           NEW_SFALL_DEVELOP=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 sfall)
+           NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
            NEW_ARTIFACTS=$(git -C $HOME/sfall --no-pager log --pretty=format:%H -1 artifacts)
            NEW_DEBUGGER=$(git --no-pager log --pretty=format:%H -1 Tools/Debugger)
-           echo "sfall-develop $NEW_SFALL"
-           echo "ModdersPack   $NEW_ARTIFACTS"
+           echo "sfall-develop  $NEW_SFALL_DEVELOP"
+           echo "sfall-rotators $NEW_SFALL_ROTATORS"
+           echo "ModdersPack    $NEW_ARTIFACTS"
+           echo "Debugger       $NEW_DEBUGGER"
            echo ::endgroup::
 
+           set_dxsdk_dir=0
+
            echo "sfall-develop..."
-           if [ "$OLD_SFALL" != "$NEW_SFALL" ]; then
-              echo "sfall-develop... $OLD_SFALL -> $NEW_SFALL"
-              echo ::set-env name=GHA_TASK_SFALL_BINARY::true
+           if [ "$OLD_SFALL_DEVELOP" != "$NEW_SFALL_DEVELOP" ]; then
+              echo "sfall-develop... $OLD_SFALL_DEVELOP -> $NEW_SFALL_DEVELOP"
+              echo ::set-env name=GHA_TASK_SFALL_DEVELOP::true
+              set_dxsdk_dir=1
+           fi
+
+           echo "sfall-rotators..."
+           if [ "$OLD_SFALL_ROTATORS" != "$NEW_SFALL_ROTATORS" ]; then
+              echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
+              echo ::set-env name=GHA_TASK_SFALL_ROTATORS::true
+              set_dxsdk_dir=1
+           fi
+
+           if [ $set_dxsdk_dir -eq 1 ]; then
+              echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
            fi
 
            echo "ModdersPack..."
@@ -145,8 +169,7 @@ jobs:
     shell: bash
 
   - name: Cache (DirectX)
-#   if:   env.GHA_TASK_SFALL_BINARY == 'true' && env.GHA_EVENT == 'push'
-    if:   env.GHA_EVENT == 'push'
+    if:   env.GHA_EVENT == 'push' && (env.GHA_TASK_SFALL_DEVELOP == 'true' || env.GHA_TASK_SFALL_ROTATORS == 'true')
     id:   cache-dx
     uses: actions/cache@v1
     with:
@@ -154,29 +177,27 @@ jobs:
      key:  cache-sfall-dx
 
   - name:  Cache create (DirectX)
-#   if:    env.GHA_TASK_SFALL_BINARY == 'true' && steps.cache-dx.outputs.cache-hit != 'true'
-    if:    steps.cache-dx.outputs.cache-hit != 'true'
+    if:    env.GHA_EVENT != 'push' || (env.GHA_EVENT == 'push' && steps.cache-dx.outputs.cache-hit != 'true')
     run:   |
            :
            echo ::group::DX2010
            curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
            7z x _DX2010_.exe DXSDK/Include -o_DX2010_
            7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
-           mv _DX2010_/DXSDK $HOME/cache-dx
+           mv _DX2010_/DXSDK $DXSDK_DIR
            echo ::endgroup::
 
            echo ::group::DX2007
            curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
            7z x _DX2007_.exe -o_DX2007_
            7z x _DX2007_/DXSDK_Aug2007.exe Lib/x86 -o_DX2007_
-           cp _DX2007_/Lib/x86/dinput.lib $HOME/cache-dx/Lib/x86
+           cp _DX2007_/Lib/x86/dinput.lib $DXSDK_DIR/Lib/x86
            echo ::endgroup::
 
            # clean & check
            rm -fR _DX*_ _DX*_.exe
            git status
 
-           echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
            #ls -Ra $HOME/cache-dx
            du -hd0 $HOME/cache-dx
     shell: bash
@@ -193,30 +214,41 @@ jobs:
     shell: bash
 
   # updates pre-release version of sfall (develop branch, ReleaseXP configuration)
+  # TODO compile sfall without AppVeyor
   - name:  sfall-develop update
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
-           SFALL_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
            $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.develop.dll
+           SFALL_DEVELOP_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
+           SFALL_DEVELOP_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.develop.dll)
+           echo "sfall-develop (v${SFALL_DEVELOP_VERSION}, ${SFALL_DEVELOP_COMMIT})"
 
-           SFALL_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.develop.dll)
-           echo "sfall-develop (v${SFALL_VERSION}, ${SFALL_COMMIT})"
-
-           git diff --quiet || (git add --update && echo "- sfall-develop update (v${SFALL_VERSION}, phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit)
+           git diff --quiet || (git add --update && echo "- sfall-develop update (v${SFALL_DEVELOP_VERSION}, phobos2077/sfall@${SFALL_DEVELOP_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
-  # TODO compile sfall without AppVeyor
-  - name:  (TODO) sfall-develop update
-#   if:    env.GHA_TASK_SFALL_BINARY == 'true'
+  # updates customized version of sfall (rotators branch, ReleaseXP configuration)
+  - name:  sfall-rotators update
+    if:    env.GHA_TASK_SFALL_ROTATORS == 'true'
     run:   |
            :
-           echo "@echo off" > $HOME/sfall/sfall/PostBuild.cmd
-           "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v142
-           file "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" || true
-           # cp "$HOME/sfall/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.develop.dll
+           echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
+           sed -ri 's!<EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>!<EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>!' $HOME/sfall-rotators/sfall/ddraw.vcxproj
+           "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v142
+           file "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll"
+           ldd "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll"
+
+           cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
+           if [ -f $HOME/sfall-rotators/artifacts/ddraw.rotators.ini ]; then
+              # can't simply cp $HOME/sfall-rotators/artifacts/ddraw.rotators.ini $MOD_DIR/ddraw.rotators.ini
+           fi
+
+           SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1)
+           SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
+           echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
+
+           git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
     shell: bash
-    continue-on-error: true
 
   # updates sfall artifacts
   - name:  ModdersPack update
@@ -224,12 +256,12 @@ jobs:
     run:   |
            :
            rm -fR Tools/ModdersPack
-           cp -r $HOME/sfall/artifacts Tools/ModdersPack
+           cp -r $HOME/sfall-develop/artifacts Tools/ModdersPack
 
            if [[ -n $(git status --short --untracked-files=all Tools/ModdersPack) ]]; then
               git add Tools/ModdersPack
-              SFALL_COMMIT=$(git -C $HOME/sfall log --pretty=format:%H -1 artifacts)
-              echo "- ModdersPack update (phobos2077/sfall@${SFALL_COMMIT})" >> $HOME/gha.commit
+              SFALL_ARTIFACTS_COMMIT=$(git -C $HOME/sfall-develop log --pretty=format:%H -1 artifacts)
+              echo "- ModdersPack update (phobos2077/sfall@${SFALL_ARTIFACTS_COMMIT})" >> $HOME/gha.commit
            fi
     shell: bash
 
@@ -385,5 +417,10 @@ jobs:
 
   - name:  Post Clone sfall-develop
     if:    env.GHA_REPO_ALIVE == 'true'
-    run:   rm -fR $HOME/sfall
+    run:   rm -fR $HOME/sfall-develop
+    shell: bash
+
+  - name:  Post Clone sfall-rotators
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   rm -fR $HOME/sfall-rotators
     shell: bash
