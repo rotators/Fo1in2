@@ -21,6 +21,7 @@ namespace undat_ui
         static extern IntPtr GetModuleHandle(string moduleName);
 
         bool isDone = false;
+        bool fromCLI = false;
 
         public frmMain(string fileList, string master, string moddir)
         {
@@ -34,12 +35,14 @@ namespace undat_ui
             if(moddir != null)
                 txtDestination.Text = moddir;
 
-            if (fileList != null)
+            fromCLI = fileList != null;
+
+            if (fromCLI)
             {
                 txtDestination.Enabled = false;
                 txtMaster.Text = master;
                 txtMaster.Enabled = false;
-                BeginExtract(() => Environment.Exit(0), fileList);
+                BeginExtract(() => Environment.Exit(0), () => { txtDestination.Enabled = true; txtMaster.Enabled = true; }, fileList);
             }
 
         }
@@ -47,7 +50,7 @@ namespace undat_ui
         private void MsgError(string error)
             => MessageBox.Show(error, "FO1 DAT extractor", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-        private void BeginExtract(Action onSuccess, string filesPath)
+        private void BeginExtract(Action onSuccess, Action onError, string filesPath)
         {
             this.btnBrowseDestination.Enabled = false;
             this.btnBrowseMaster.Enabled = false;
@@ -88,6 +91,7 @@ namespace undat_ui
                 }
             }),
             onSuccess,
+            onError,
             this.txtMaster.Text,
             filesPath,
             this.txtDestination.Text);
@@ -100,14 +104,14 @@ namespace undat_ui
             if(isDone)
                 Environment.Exit(0);
 
-            var undatFilesPath = Directory.GetCurrentDirectory() + "\\undat_files.txt";
+            var undatFilesPath = Misc.ExeDirectory() + "\\undat_files.txt";
             if (!File.Exists(undatFilesPath))
             {
                 MsgError("Unable to find " + undatFilesPath);
                 return;
             }
 
-            this.BeginExtract(() => { }, undatFilesPath);
+            this.BeginExtract(() => {  }, () => { btnBrowseMaster.Enabled = true; btnBrowseDestination.Enabled = true; }, undatFilesPath);
         }
        
         private void BtnBrowseMaster_Click(object sender, EventArgs e)

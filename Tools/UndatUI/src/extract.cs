@@ -10,6 +10,7 @@ namespace undat_ui
         Action<string, int, int> updater;
         Action<string> error;
         Action onSuccess;
+        Action onError;
 
         string masterPath;
         string filesPath;
@@ -24,11 +25,12 @@ namespace undat_ui
 
         public Thread thread;
 
-        public Extractor(Action<string> error, Action<string, int, int> updater, Action onSuccess,
+        public Extractor(Action<string> error, Action<string, int, int> updater, Action onSuccess, Action onError,
             string masterPath, string filesPath, string outputPath)
         {
             this.updater = updater;
             this.onSuccess = onSuccess;
+            this.onError = onError;
             this.error = error;
             this.masterPath = masterPath;
             this.filesPath = filesPath;
@@ -80,6 +82,7 @@ namespace undat_ui
             if (!File.Exists(undatFilesPath))
             {
                 error("Unable to find " + undatFilesPath);
+                this.onError();
                 return null;
             }
 
@@ -91,14 +94,17 @@ namespace undat_ui
             catch (IOException ex)
             {
                 error($"IO exception occured while trying to read {undatFilesPath}: " + ex.Message);
+                this.onError();
             }
             catch (UnauthorizedAccessException ex)
             {
                 error($"Unauthorized to read {undatFilesPath}: " + ex.Message);
+                this.onError();
             }
             catch (Exception ex)
             {
                 error($"Exception occured while trying to read {undatFilesPath}: " + ex.Message);
+                this.onError();
             }
             this.numFiles = extractFiles?.Count() ?? 0;
             return extractFiles;
@@ -113,18 +119,21 @@ namespace undat_ui
             if (error == ReadError.FileDoesntExist)
             {
                 this.error("The file you've provided as MASTER.DAT doesn't exist.");
+                this.onError();
                 return;
             }
 
             if (error == ReadError.NotValidMasterDat)
             {
                 this.error("The file is not a valid MASTER.DAT from Fallout 1.");
+                this.onError();
                 return;
             }
 
             if (!Directory.Exists(this.outputPath))
             {
                 this.error($"Directory that you've selected as destination: '{this.outputPath}' doesn't exist.");
+                this.onError();
                 return;
             }
 

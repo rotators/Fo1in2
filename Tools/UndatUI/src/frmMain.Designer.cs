@@ -138,7 +138,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(57, 12);
             this.lblVersion.TabIndex = 9;
-            this.lblVersion.Text = "Version 1.06";
+            this.lblVersion.Text = "Version 1.07";
             // 
             // lnkSource
             // 

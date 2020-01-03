@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace undat_ui
@@ -18,6 +17,9 @@ namespace undat_ui
             }
             return false;
         }
+
+        public static string ExeDirectory()
+            => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
     }
 
     public static class Program
@@ -96,8 +98,8 @@ namespace undat_ui
             }
             else
             {
-                if(Misc.FalloutExeInFolder(Directory.GetCurrentDirectory()))
-                    mod = Directory.GetCurrentDirectory();
+                if(Misc.FalloutExeInFolder(Misc.ExeDirectory()))
+                    mod = Misc.ExeDirectory();
             }
 
             Application.EnableVisualStyles();
