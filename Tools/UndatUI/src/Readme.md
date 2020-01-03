@@ -2,6 +2,11 @@ This is a tool to extract needed files from the MASTER.DAT resource file shipped
 
 # Changelog
 
+## 1.07
+2020-01-03
+* Use exe path instead of GetCurrentDirectory.
+* Enable buttons for choosing directory again if the extraction fails.
+
 ## 1.06
 2019-12-29
 * Autodetect destination mod folder if the program is launched from a directory where fallout2.exe exist.
