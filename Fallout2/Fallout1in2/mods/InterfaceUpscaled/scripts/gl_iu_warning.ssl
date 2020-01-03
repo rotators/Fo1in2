@@ -5,14 +5,35 @@
 */
 
 #include "..\headers\define.h"
+#include "..\headers\sfall\sfall.h"
 
 procedure start;
+procedure timed_event_p_proc;
+
+variable ini_val;
 
 procedure start begin
-   variable ini_val;
-
    if (game_loaded) then begin
       set_global_script_type(0);
+
+      if (get_screen_width < 890) or (get_screen_height < 720) then begin
+         //float_msg(dude_obj,"Warning! Screen resolution too low!",FLOAT_MSG_WARNING);
+         display_msg("Warning! Screen resolution too low!");
+         add_global_timer_event(1, 1);
+      end
+      else begin
+         ini_val := get_ini_setting("ddraw.ini|Interface|ExpandWorldMap");
+         if (ini_val <= 0) then begin
+            //float_msg(dude_obj,"Warning! 'ExpandWorldMap' is disabled in ddraw.ini!",FLOAT_MSG_WARNING);
+            display_msg("Warning! 'ExpandWorldMap' is disabled in ddraw.ini!");
+            add_global_timer_event(1, 1);
+         end
+      end
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == 1) then begin
 
       if (get_screen_width < 890) or (get_screen_height < 720) then begin
          float_msg(dude_obj,"Warning! Screen resolution too low!",FLOAT_MSG_WARNING);
@@ -23,5 +44,7 @@ procedure start begin
             float_msg(dude_obj,"Warning! 'ExpandWorldMap' is disabled in ddraw.ini!",FLOAT_MSG_WARNING);
          end
       end
+
+      add_global_timer_event(10, 1);
    end
 end
