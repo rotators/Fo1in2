@@ -59,6 +59,8 @@ procedure razlo27a;
 procedure razlo28;
 procedure razlo29;
 procedure razlo30;
+procedure razlo30a;
+procedure razlo30b;
 procedure razlo31;
 procedure razlo00n;
 procedure razlo00n_a;
@@ -109,11 +111,20 @@ variable HITS;
 variable initial := 0;
 variable tail;
 
+variable how_many_tails;
+
 #define LVAR_Here_Before         (4)
 #define LVAR_Talk_TandiRescued   (5)
 #define LVAR_Invasion            (6)
 #define LVAR_Tail_EXP            (7)
 #define LVAR_Sleeping            (9)
+
+#define craft_antidote_time      (14400)
+
+#define craft_antidote_adv_time  gfade_out(1);                                                           \
+                                    game_time_advance(game_ticks(craft_antidote_time * how_many_tails)); \
+                                 gfade_in(1);                                                            \
+                                 set_local_var(8, 1)
 
 procedure start begin
 end
@@ -466,11 +477,45 @@ procedure razlo29 begin
 end
 
 procedure razlo30 begin
+variable count_tails := dude_item_count(PID_SCORPION_TAIL);
+
+   if (count_tails == 1) then begin
+      how_many_tails := 1;
+
+      NMessage(161);
+      craft_antidote_adv_time;
+      call razlo31;
+   end
+   else if (count_tails > 1) then begin
+      variable num_text := num_to_num_text(count_tails);
+
+      Reply(161);
+      NOption(2000, razlo30a, 1);
+      NOption(mstr(2001) + num_text + mstr(2002), razlo30b, 1);
+      NOption(2003, razloend, 4);
+      NLowOption(g_grunt, razloend);
+   end
+
+   // Original Fo1:
+   /*
    NMessage(161);
    gfade_out(1);
    game_time_advance(game_ticks(14400));
    gfade_in(1);
    set_local_var(8, 1);
+   call razlo31;
+   */
+end
+
+procedure razlo30a begin
+   how_many_tails := 1;
+   craft_antidote_adv_time;
+   call razlo31;
+end
+
+procedure razlo30b begin
+   how_many_tails := dude_item_count(PID_SCORPION_TAIL);
+   craft_antidote_adv_time;
    call razlo31;
 end
 
@@ -479,12 +524,16 @@ procedure razlo31 begin
 
    NMessage(162);
 
-   Item := create_object(PID_ANTIDOTE, 0, 0);
-   add_obj_to_inven(dude_obj, Item);
+   while (how_many_tails > 0) do begin
+      how_many_tails--;
 
-   tail := dude_item(PID_SCORPION_TAIL);
-   rm_obj_from_inven(dude_obj, tail);
-   destroy_object(tail);
+      Item := create_object(PID_ANTIDOTE, 0, 0);
+      add_obj_to_inven(dude_obj, Item);
+
+      tail := dude_item(PID_SCORPION_TAIL);
+      rm_obj_from_inven(dude_obj, tail);
+      destroy_object(tail);
+   end
 
    if (local_var(LVAR_Tail_EXP) == 0) then begin
       set_local_var(LVAR_Tail_EXP, 1);
