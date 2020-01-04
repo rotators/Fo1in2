@@ -1,6 +1,7 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
 - **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
+- **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
 - **Added**: Missing "/" and "?" to english TMA keymap.
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
@@ -18,4 +19,5 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
 - **Tweaked**: Position of the Deathclaw Lair has been moved a tad.
+- **Tweaked**: Slightly reduced "common" encounter chance.
 - **Tweaked**: Slightly reduced encounter chances.
