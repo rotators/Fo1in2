@@ -11,7 +11,7 @@
 
 /* Include Files */
 #include "..\headers\define.h"
-//#include "..\headers\necropolis.h"
+#include "..\headers\maps\mstrlr34.h"
 
 #define NAME                    SCRIPT_MASTER
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_CATHEDRAL)
@@ -27,8 +27,6 @@ procedure destroy_p_proc;
 procedure talk_p_proc;
 procedure damage_p_proc;
 procedure combat_p_proc;
-procedure map_enter_p_proc;
-procedure map_update_p_proc;
 procedure critter_p_proc;
 procedure use_skill_on_p_proc;
 
@@ -97,6 +95,7 @@ procedure mastercbt;
 procedure masterend;
 
 #define LVAR_Herebefore            (4)
+#define LVAR_Remain_Hostile        (5)
 
 #define EVENT_COUNTDOWN_MASTER         (11)
 
@@ -115,7 +114,11 @@ import variable Master_Ptr;
 variable leave;
 
 procedure start begin
-   self_stand;
+   reg_anim_clear(self_obj);
+   reg_anim_begin();
+   reg_anim_animate(self_obj, ANIM_stand, -1);
+   reg_anim_end();
+
    if Only_Once then begin
       Only_Once := 0;
       Master_Ptr := self_obj;
@@ -138,15 +141,13 @@ end
 
 procedure critter_p_proc begin
    if (tmp_hostile) then begin
-      set_local_var(5, 1);
+      set_local_var(LVAR_Remain_Hostile, 1);
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   else begin
-      if (local_var(5)) then begin
-         if (self_can_see_dude) then begin
-            tmp_hostile := 1;
-         end
+   else if (local_var(LVAR_Remain_Hostile)) then begin
+      if (self_can_see_dude) then begin
+         tmp_hostile := 1;
       end
    end
    if (global_var(GVAR_MORPHEUS_DELIVERS_PLAYER) == 2) then begin
@@ -183,7 +184,7 @@ end
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(5, 1);
+      set_local_var(LVAR_Remain_Hostile, 1);
       set_local_var(6, 1);
       tmp_hostile := 1;
       if not(combat_is_initialized) then begin
@@ -200,14 +201,14 @@ procedure combat_p_proc begin
          if (combat_difficulty == 0) then begin
             if (wimpyother == 1) then begin
                wimpyother := 0;
-               set_map_var(4, 1);
+               set_map_var(MVAR_CALLED, 1);
             end
             else begin
                wimpyother := 1;
             end
          end
          else begin
-            set_map_var(4, 1);
+            set_map_var(MVAR_CALLED, 1);
          end
       end
       else begin
@@ -218,14 +219,6 @@ procedure combat_p_proc begin
          add_mult_objs_to_inven(self_obj, Item, 2);
       end
    end
-end
-
-procedure map_enter_p_proc begin
-   self_stand;
-end
-
-procedure map_update_p_proc begin
-   self_stand;
 end
 
 procedure destroy_p_proc begin
@@ -265,7 +258,7 @@ procedure talk_p_proc begin
          start_gdialog(51, self_obj, 4, 6, BACKGROUND_MASTER);
          gsay_start;
          MALE := dude_is_male;
-         if (local_var(5)) then begin
+         if (local_var(LVAR_Remain_Hostile)) then begin
             call master203;
          end
          else begin
