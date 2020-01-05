@@ -133,5 +133,6 @@
 #define FID_NFPJMP        (16777338)
 #define FID_NMBJMP        (16777339)
 #define FID_NMLJMP        (16777340)
+#define FID_NMBGRY        (16777341) // Black guy with dark shirt
 
 #endif // ARTFID_H
