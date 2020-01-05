@@ -334,7 +334,6 @@
 #define ai_area_be_absolutely_sure     (4)
 
 // AI attack who mode values
-#define ai_attack_no_pref              (-1)
 #define ai_attack_whomever_attacking_me (0)
 #define ai_attack_strongest            (1)
 #define ai_attack_weakest              (2)
@@ -351,12 +350,12 @@
 #define ai_run_away_never              (7)
 
 // AI disposition values
-#define ai_disposition_none            (0)
-#define ai_disposition_custom          (1)
-#define ai_disposition_coward          (2)
-#define ai_disposition_defensive       (3)
-#define ai_disposition_aggressive      (4)
-#define ai_disposition_berserk         (5)
+#define ai_disposition_none            (-1)
+#define ai_disposition_custom          (0)
+#define ai_disposition_coward          (1)
+#define ai_disposition_defensive       (2)
+#define ai_disposition_aggressive      (3)
+#define ai_disposition_berserk         (4)
 
 // AI distance values
 #define ai_distance_stay_close         (0)

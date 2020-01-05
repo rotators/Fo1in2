@@ -13,11 +13,13 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Missing Vault Suit armor type entry in party_armor.ini file.
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
+- **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
 - **Tweaked**: Position of the Deathclaw Lair has been moved a tad.
+- **Tweaked**: Reverted proto changes to 10mm AP, 10mm JHP, .44 Magnum JHP, 14mm AP, and .223 FMJ.
 - **Tweaked**: Slightly reduced "common" encounter chance.
 - **Tweaked**: Slightly reduced encounter chances.
