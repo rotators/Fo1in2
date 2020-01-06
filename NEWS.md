@@ -3,7 +3,11 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
+- **Added**: Loser with black shirt animations (Unused for now).
 - **Added**: Missing "/" and "?" to english TMA keymap.
+- **Added**: Missing "exploded to nothing"-animations for rad scorpions.
+- **Added**: Missing running animation for female tribal NPC.
+- **Added**: Resized Super Mutant flameboy death animations by .Pixote. in a new mod folder. Enabled by default.
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
 - **Added**: Tycho-critter can now also use SMGs.
 - **Added**: Using the punching bags will now give a one-time +5% unarmed increase (lifted from Fo2).
@@ -14,6 +18,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
+- **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
