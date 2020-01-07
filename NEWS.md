@@ -21,6 +21,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
+- **Removed**: Item proto files that either haven't been changed or still include old Fo1/Fixt changes.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
