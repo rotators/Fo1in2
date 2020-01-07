@@ -2,7 +2,7 @@
 #define VOODOO_H
 
 /*********************************************************
-   All kinds of memory editing macros
+   All kinds of memory reading/writing macros
    Requires AllowUnsafeScripting=1 in ddraw.ini!
 *********************************************************/
 
@@ -22,5 +22,9 @@
 // This will change the rest timer "wait until 08:00" to 06:00 like in Fallout 1.
 #define VOODOO_rest_till0600 \
                write_int(0x4995F3, 6)
+
+// This returns true only if currently used ddraw.dll comes from Rotators repository
+#define VOODOO_ddraw_rotators \
+               (read_byte(0x410003) == 0xF4) // hlt
 
 #endif // VOODOO_H //

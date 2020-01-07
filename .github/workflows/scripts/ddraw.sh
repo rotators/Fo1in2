@@ -17,38 +17,39 @@ function Usage()
     echo ""
     echo "COMMANDS"
     echo ""
-    echo "  get               prints setting in .ini file"
-    echo "    --ini=[path]    path to .ini file"
-    echo "    --cfg=[name]    section name"
-    echo "    --key=[name]    key name"
-    echo "    --fmt=[format]  (optional) use specific format for output"
+    echo "  get                prints setting in .ini file"
+    echo "    --ini=[path]     path to .ini file"
+    echo "    --cfg=[name]     section name"
+    echo "    --key=[name]     key name"
+    echo "    --fmt=[format]   (optional) use specific format for output"
     echo ""
-    echo "  set               changes setting in .ini file"
-    echo "    --ini=[path]    path to .ini file"
-    echo "    --cfg=[name]    section name"
-    echo "    --key=[name]    key name"
-    echo "    --val=[string]  key value"
-    echo "    --with-space    (optional) adds spaces around '='"
+    echo "  set                changes setting in .ini file"
+    echo "    --ini=[path]     path to .ini file"
+    echo "    --cfg=[name]     section name"
+    echo "    --key=[name]     key name"
+    echo "    --val=[string]   key value"
+    echo "    --with-space     (optional) adds spaces around '='"
     echo ""
-    echo "  list              prints section settings in .ini file"
-    echo "    --ini=[path]    path to .ini file"
-    echo "    --cfg=[name]    section name"
-    echo "    --section-name  (optional) adds section name before output"
+    echo "  list               prints section settings in .ini file"
+    echo "    --ini=[path]     path to .ini file"
+    echo "    --cfg=[name]     section name"
+    echo "    --section-name   (optional) adds section name before output"
     echo ""
-    echo "  get-dll-appveyor  downloads ddraw.dll"
-    echo "    --dll=[path]    output filename"
+    echo "  get-dll-appveyor   downloads ddraw.dll"
+    echo "    --dll=[path]     output filename"
+    echo "    --branch=[name]  branch name"
     echo ""
-    echo "  get-dll-version   prints .dll FileVersion"
-    echo "    --dll=[path]    path to .dll file"
+    echo "  get-dll-version    prints .dll FileVersion"
+    echo "    --dll=[path]     path to .dll file"
     echo ""
-    echo "  set-dll-version   updates comment with sfall version"
-    echo "    --ini=[path]    path to ddraw.ini"
-    echo "    --dll=[path]    path to ddraw.dll"
+    echo "  set-dll-version    updates comment with sfall version"
+    echo "    --ini=[path]     path to ddraw.ini"
+    echo "    --dll=[path]     path to ddraw.dll"
     echo ""
-    echo "  set-mod-version   updates setting 'VersionString'"
-    echo "    --ini=[path]    path to ddraw.ini"
-    echo "    --mod=[string]  mod version string; replacements: @COMMITS@"
-    echo "    --bump          (optional) increases @COMMITS@ value by 1"
+    echo "  set-mod-version    updates setting 'VersionString'"
+    echo "    --ini=[path]     path to ddraw.ini"
+    echo "    --mod=[string]   mod version string; replacements: @COMMITS@"
+    echo "    --bump           (optional) increases @COMMITS@ value by 1"
     echo ""
 
     if [ -n "$error" ]; then
@@ -191,15 +192,19 @@ function List()
     awk -v section="$cfg" "$(IniParse 'in_key[1]" = "in_key[2]' 'in_section != section')" $ini
 }
 
-# download ddraw.dll compiled from 'develop' branch (no changes compared to original sfall repository)
+# download ddraw.dll compiled from specific branch (ReleaseXP configuration)
+# branches 'master' and 'develop' = no changes compared to original sfall repository
 function GetDllAppVeyor()
 {
     local dll=$1
+    local branch=$2
 
     [ -z "$dll" ] && Usage ".dll filename not set"
+    [ -z "$branch" ] && Usage "branch not set"
+
     [ ! -w $dll ] && Usage "cannot write '$dll'"
 
-    curl -L 'https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=develop&pr=false' -o $dll
+    curl -L "https://ci.appveyor.com/api/projects/rotators/sfall/artifacts/ddraw.dll?job=Configuration:%20ReleaseXP&branch=${branch}&pr=false" -o $dll
 }
 
 # extract version info from .dll file
@@ -216,7 +221,7 @@ function GetDllVersion()
 
     # 7zip v19.x uses slightly different format than v16.x when reporting version info (two lines match on v19.x, one on v16.x)
     # use last match found -- without trailing ".0"
-    local version=$(7z l $dll | egrep '^(FileVersion|Comment = FileVersion):' | sed -e 's!^Comment = !!' | awk '{print $2}' | tail -1)
+    local version=$(7z l $dll | egrep '^(FileVersion|Comment = FileVersion):' | sed -e 's!^Comment = !!' | awk '{print $2}' | tail -1) #'
 
     echo "$version"
 }
@@ -300,8 +305,9 @@ elif [ "$command" == "list" ]; then
 elif [ "$command" == "get-dll-appveyor" ]; then
      for option in "${@:2}"; do
          [[ "$option" =~ ^--dll=(.+)$ ]] && option_dll=${BASH_REMATCH[1]}
+         [[ "$option" =~ ^--branch=(.+)$ ]] && option_key=${BASH_REMATCH[1]}
      done
-     GetDllAppVeyor "$option_dll"
+     GetDllAppVeyor "$option_dll" "${option_key}"
 elif [ "$command" == "get-dll-version" ]; then
      for option in "${@:2}"; do
          [[ "$option" =~ ^--dll=(.+)$ ]] && option_dll=${BASH_REMATCH[1]}

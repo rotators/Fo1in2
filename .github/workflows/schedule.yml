@@ -216,36 +216,29 @@ jobs:
   # updates pre-release version of sfall (develop branch, ReleaseXP configuration)
   # TODO compile sfall without AppVeyor
   - name:  sfall-develop update
-    if:    env.GHA_REPO_ALIVE == 'true'
+    if:    env.GHA_TASK_SFALL_DEVELOP == 'true'
     run:   |
            :
-           $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.develop.dll
+           $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.develop.dll --branch=develop
            SFALL_DEVELOP_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/develop 2>/dev/null | jq -r '.build.commitId')
            SFALL_DEVELOP_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.develop.dll)
            echo "sfall-develop (v${SFALL_DEVELOP_VERSION}, ${SFALL_DEVELOP_COMMIT})"
+           ls -sh $MOD_DIR/ddraw.develop.dll
 
            git diff --quiet || (git add --update && echo "- sfall-develop update (v${SFALL_DEVELOP_VERSION}, phobos2077/sfall@${SFALL_DEVELOP_COMMIT})" >> $HOME/gha.commit)
     shell: bash
 
   # updates customized version of sfall (rotators branch, ReleaseXP configuration)
+  # TODO compile sfall without AppVeyor
   - name:  sfall-rotators update
     if:    env.GHA_TASK_SFALL_ROTATORS == 'true'
     run:   |
            :
-           echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
-           sed -ri 's!<EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>!<EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>!' $HOME/sfall-rotators/sfall/ddraw.vcxproj
-           "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v142
-           file "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll"
-           ldd "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll"
-
-           cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
-           #if [ -f $HOME/sfall-rotators/artifacts/ddraw.rotators.ini ]; then
-           #   can't simply cp $HOME/sfall-rotators/artifacts/ddraw.rotators.ini $MOD_DIR/ddraw.rotators.ini
-           #fi
-
-           SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1)
+           $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.rotators.dll --branch=rotators
+           SFALL_ROTATORS_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/rotators 2>/dev/null | jq -r '.build.commitId')
            SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
            echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
+           ls -sh $MOD_DIR/ddraw.rotators.dll
 
            git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
     shell: bash
