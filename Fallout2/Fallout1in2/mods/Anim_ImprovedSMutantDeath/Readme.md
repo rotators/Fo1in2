@@ -3,7 +3,7 @@
 Improved Death Animations - Animation Fix
 -----------------
 
-This mod increases the size of the "flame boy" and "electorcuted" death animation for super mutants (120%) and power armor (larger than normal, but smaller than mutant-size) critters.
+This mod increases the size of the "flame boy" and "electrocuted" death animation for super mutant (120%) and power armor (larger than normal, but smaller than mutant-size) critters to match their normal scale.
 
 Originally made by .Pixote. and Sduibek. The animations have been polished up some more and are now cleaner and less pixelated.
 
