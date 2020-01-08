@@ -61,6 +61,16 @@ While most of optional content is a part of a mod core, and can be turned on and
 
 Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
 
+### Classic worldmap ###
+[mods/fo1_classic_worldmap](mods/fo1_classic_worldmap)
+
+Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
+
+### Improved Death Animations ###
+[mods/Anim_ImprovedSMutantDeath](mods/Anim_ImprovedSMutantDeath)
+
+Replaces Super Mutant and Power Armor fire and electrocuted death animations with resized versions, to match their regular animations.
+
 ### Interface Upscaled ###
 [mods/InterfaceUpscaled](mods/InterfaceUpscaled)
 
