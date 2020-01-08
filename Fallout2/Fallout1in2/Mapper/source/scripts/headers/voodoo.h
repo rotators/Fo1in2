@@ -5,6 +5,8 @@
    All kinds of memory reading/writing macros
    Requires AllowUnsafeScripting=1 in ddraw.ini!
 *********************************************************/
+// Check current ddraw.dll build
+#define sfall_rotators  (read_byte(0x410003) == 0xF4 and sfall_func1("metarule_exist", "rotators"))
 
 // This will disable running the credits after the endgame slides:
 // This is done via Sfall now (F1EngineBehavior=1)
