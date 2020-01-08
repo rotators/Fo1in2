@@ -869,9 +869,8 @@ begin
    load_map(MAP_CAVES, -1);
 end
 
-procedure MB1
-begin
-   load_map(MAP_MBENT, -1);
+procedure MB1 begin
+   load_map(MAP_MBENT, 0);
 end
 
 procedure MB2
