@@ -77,6 +77,11 @@
 #define CUR_AREA_HUB_FARM             (cur_town == AREA_HUB_FARM)
 #define CUR_AREA_HUB_LAIR             (cur_town == AREA_HUB_LAIR)
 
+#define CUR_AREA_RND_DESERT           (cur_town == AREA_RND_DESERT or cur_town == AREA_RND_ENC_DESERT)
+#define CUR_AREA_RND_MOUNTAIN         (cur_town == AREA_RND_MOUNTAIN or cur_town == AREA_RND_ENC_MOUNTAIN)
+#define CUR_AREA_RND_CITY             (cur_town == AREA_RND_CITY or cur_town == AREA_RND_ENC_CITY)
+#define CUR_AREA_RND_COAST            (cur_town == AREA_RND_COAST or cur_town == AREA_RND_ENC_COAST)
+
 #define CUR_AREA_WORLDMAP             (cur_town == AREA_WORLDMAP)
 
 /*******************************************************************************
