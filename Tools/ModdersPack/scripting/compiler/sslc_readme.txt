@@ -82,6 +82,14 @@ old:
         X := value2;
 
 
+> To assign values, you can use the alternative assignment operator from C/Java instead of Pascal syntax.
+
+new:
+  x = 5;
+old:
+  x := 5;
+
+
 > Multiple variable decleration: Multiple variables can be declared on one line, seperated by commas. This is an alterative to the ugly begin/end block, or the bulky single variable per line style.
 
 new:
@@ -102,12 +110,12 @@ old:
 NOTE: if your expression starts with a constant (eg. 2+2), enclose it in parentheses, otherwise compiler will be confused and give you errors.
 
 
-> hexadecimal numerical constants: Simply prefix a number with 0x to create a hexadecimal. The numbers 0 to 9 and a-f are allowed in the number. The number may not have a decimal point.
+> Hexadecimal numerical constants: Simply prefix a number with 0x to create a hexadecimal. The numbers 0 to 9 and a-f are allowed in the number. The number may not have a decimal point.
 
 new:
-  a:=0x1000;
+  a := 0x1000;
 old:
-  a:=4096;
+  a := 4096;
 
 
 > increment/decrement operators: ++ and -- can be used as shorthand for +=1 and -=1 respectively. They are mearly a syntactic shorthand to improve readability, and so their use is only allowed where +=1 would normally be allowed.
@@ -115,7 +123,7 @@ old:
 new:
   a++;
 old:
-  a+=1;
+  a += 1;
 
 
 > "break" & "continue" statements: they work just like in most high-level languages. "break" jumps out of the loop. "continue" jumps right to the beginning of the next iteration (see "for" and "foreach" sections for additional details).
@@ -157,12 +165,12 @@ old:
 
 > "for" loops: Another piece of syntactic shorthand, to shorten while loops in many cases. Parentheses around the loop statements are recommended but not required (when not using parentheses, a semicolon is required after the 3rd loop statement).
 new:
-  for (i:=0; i<5; i++) begin
+  for (i := 0; i < 5; i++) begin
     display_msg("i = "+i);
   end
 old
-  i:=0;
-  while i<5 do begin
+  i := 0;
+  while (i < 5) do begin
     display_msg("i = "+i);
     i++;
   end
@@ -179,7 +187,7 @@ new:
   end
 old:
   variable tmp;
-  tmp:=get_attack_type;
+  tmp := get_attack_type;
   if tmp == ATKTYPE_PUNCH then begin
     display_msg("punch");
   end else if tmp == ATKTYPE_KICK then begin
@@ -219,17 +227,17 @@ new:
 new:
   procedure bingle begin
     variable a[2];
-    a[0]:=5;
-    a[a[0]-4]:=a[0] + 4;
-    display_msg("a[0]="+a[0]+", a[1]="+a[1]);
+    a[0] := 5;
+    a[a[0] - 4] := a[0] + 4;
+    display_msg("a[0]=" + a[0] + ", a[1]=" + a[1]);
   end
 old:
   procedure bingle begin
     variable a;
-    a:=temp_array(2, 4);
+    a := temp_array(2, 4);
     set_array(a, 0, 5);
     set_array(a, get_array(a, 0) - 4, get_array(a, 0) + 4);
-    display_msg("a[0]="+get_array(a, 0)+", a[1]="+get_array(a, 1));
+    display_msg("a[0]=" + get_array(a, 0) + ", a[1]=" + get_array(a, 1));
   end
 
 
@@ -273,12 +281,12 @@ new:
 old:
   procedure bingle begin
     variable begin critter; array; len; count; end
-    array:=list_as_array(LIST_CRITTERS);
-    len:=len_array(array);
-    count:=0;
+    array := list_as_array(LIST_CRITTERS);
+    len := len_array(array);
+    count := 0;
     while count < len do begin
-      critter:=array[count];
-      display_msg(""+critter);
+      critter := array[count];
+      display_msg("" + critter);
     end
   end
 
@@ -334,7 +342,8 @@ There are several changes in this version of sslc which may result in problems f
 
 > sfall 4.2.3
 - fixed compiler giving "assignment operator expected" error when a variable-like macro is not being defined properly
-- added new logical operators 'AndAlso', 'OrElse' for short-circuit evaluation of logical expressions
+- added new logical operators "AndAlso", "OrElse" for short-circuit evaluation of logical expressions
+- added an alternative (C/Java-style) assignment operator "="
 
 > sfall 4.2.2
 - added support for new opcode "reg_anim_callback"

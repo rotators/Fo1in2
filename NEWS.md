@@ -18,6 +18,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
+- **Fixed**: The post-endgame hintbook now correctly sets all skills to 200%, all SPECIAL stats to 10 and hitpoints to 999/999 as it was originally intended.
 - **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
