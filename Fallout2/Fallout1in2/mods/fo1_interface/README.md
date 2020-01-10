@@ -3,10 +3,11 @@
 Fallout 1 Interface
 ------------------
 
-Replaces the FALLOUT 2 interface with the FALLOUT 1 interface.
+Replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
 Highly recommended when playing FALLOUT ET TU!
 
-To use this mod, open the ddraw.ini and add "PatchFile1=mods\fo1_interface" under the "PatchFile0"-line!
+### Installation
+To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\fo1_interface" at the end of the "PatchFile"-list!
 The game will now load the additional mod folder.
 
 If there is more than one additional mod, make sure to correctly number the "PatchFileX" entry (1, 2, 3, ...).
