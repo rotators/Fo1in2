@@ -20,8 +20,7 @@ variable invaderPtr;
 variable HEREBEFORE := 0;
 procedure PickMutant;
 
-#define tandi_gets_kidnapped     (map_var(MVAR_TANDI_KIDNAPPING) > 0) and                          \
-                                 (days_since_visited > 1 and                                       \
+#define tandi_gets_kidnapped     ((map_var(MVAR_TANDI_KIDNAPPING) == 2) and                        \
                                  (map_var(MVAR_Map_one_Time) == 0) and                             \
                                  (global_var(GVAR_TANDI_HIRELING_STATUS) != 2) and                 \
                                  tandi_not_kidnapped and                                           \
@@ -37,8 +36,12 @@ variable temp_ptr;
 
    // Tandi can only get kidnapped if the player has returned at least once
    // to Shady Sands after dealing with the Rad Scorpions.
-   if radscorp_quest_completed and (map_var(MVAR_TANDI_KIDNAPPING) == 0) then
-      set_map_var(MVAR_TANDI_KIDNAPPING, 1);
+   if radscorp_quest_completed then begin
+      if (map_var(MVAR_TANDI_KIDNAPPING) == 0) then
+         set_map_var(MVAR_TANDI_KIDNAPPING, game_time);
+      else if (game_time > (map_var(MVAR_TANDI_KIDNAPPING) * ONE_GAME_DAY)) then
+         set_map_var(MVAR_TANDI_KIDNAPPING, 2);
+   end
 
    set_global_var(GVAR_MARK_SHADY_1, 1);
    Lighting;
@@ -51,6 +54,20 @@ variable temp_ptr;
          display_msg(message_str(SCRIPT_SHADYWST, random(150, 154)));
       end
    end
+
+   if tandi_gets_kidnapped then begin
+      set_tandi_kidnapped;
+      set_map_var(MVAR_Map_one_Time, 1);
+   end
+   else if ((global_var(GVAR_TANDI_HIRELING_STATUS) == 5) and (shady_invaded == 0)) then begin//GLOBAL_VAR_12 = Shady Sands invaded
+      set_global_var(GVAR_TANDI_HIRELING_STATUS, 2);
+      if ((map_var(MVAR_TANDI_EXP) == 0) and (map_var(MVAR_Map_Only_once) == 0)) then begin
+         set_map_var(MVAR_Map_Only_once, 1);
+         set_map_var(MVAR_TANDI_EXP, 1);
+         give_xp_msg(EXP_TANDI_RETURNED, message_str(SCRIPT_SHADYWST, 100));
+      end
+   end
+   call Where_To_Start;
 
    if (shady_invaded and not(is_loading_game) and (map_var(MVAR_Invasion) == 0)) then begin
       if not(HEREBEFORE) then begin
@@ -70,20 +87,6 @@ variable temp_ptr;
       // Any player party member was waiting in the map before?
       check_invasion_party_waiting;
    end
-
-   if tandi_gets_kidnapped then begin
-      set_tandi_kidnapped;
-      set_map_var(MVAR_Map_one_Time, 1);
-   end
-   else if ((global_var(GVAR_TANDI_HIRELING_STATUS) == 5) and (shady_invaded == 0)) then begin//GLOBAL_VAR_12 = Shady Sands invaded
-      set_global_var(GVAR_TANDI_HIRELING_STATUS, 2);
-      if ((map_var(MVAR_TANDI_EXP) == 0) and (map_var(MVAR_Map_Only_once) == 0)) then begin
-         set_map_var(MVAR_Map_Only_once, 1);
-         set_map_var(MVAR_TANDI_EXP, 1);
-         give_xp_msg(EXP_TANDI_RETURNED, message_str(SCRIPT_SHADYWST, 100));
-      end
-   end
-   call Where_To_Start;
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
@@ -158,18 +161,14 @@ procedure Where_Is_Tandi begin
 end
 
 procedure Where_To_Start begin
-   if (global_var(GVAR_LOAD_MAP_INDEX) == 1) then begin
+   if (global_var(GVAR_LOAD_MAP_INDEX) == 1) then
       override_map_start(107, 60, 0, 2);
-   end
-   else if (global_var(GVAR_LOAD_MAP_INDEX) == 2) then begin
+   else if (global_var(GVAR_LOAD_MAP_INDEX) == 2) then
       override_map_start(65, 93, 0, 4);
-   end
-   else if (global_var(GVAR_LOAD_MAP_INDEX) == 3) then begin
+   else if (global_var(GVAR_LOAD_MAP_INDEX) == 3) then
       override_map_start(107, 76, 0, 5);
-   end
-   else begin
+   else
       override_map_start(107, 60, 0, 2);
-   end
 end
 
 procedure PickMutant begin
