@@ -1,6 +1,7 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
 - **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
+- **Added**: Fo1-styled terrain info and red travel marker dots on the worldmap.
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
 - **Added**: Loser with black shirt animations (Unused for now).
@@ -11,22 +12,27 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
 - **Added**: Tycho-critter can now also use SMGs.
 - **Added**: Using the punching bags will now give a one-time +5% unarmed increase (lifted from Fo2).
+- **Fixed**: Broken worldmap mask tiles 18 and 19.
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
 - **Fixed**: Missing Vault Suit armor type entry in party_armor.ini file.
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
+- **Fixed**: Random mountain encounter would spawn pot container instead of gold items.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
 - **Fixed**: The post-endgame hintbook now correctly sets all skills to 200%, all SPECIAL stats to 10 and hitpoints to 999/999 as it was originally intended.
 - **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
+- **Fixed**: Vehicle potentially spawning inside the ocean.
 - **Removed**: Item proto files that either haven't been changed or still include old Fo1/Fixt changes.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
+- **Tweaked**: Encounter city map 2 and 3 slightly modified so the player won't spawn into a wall anymore.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
 - **Tweaked**: Position of the Deathclaw Lair has been moved a tad.
 - **Tweaked**: Reverted proto changes to 10mm AP, 10mm JHP, .44 Magnum JHP, 14mm AP, and .223 FMJ.
+- **Tweaked**: Slightly increased the scroll edges of the Cathedral tower maps.
 - **Tweaked**: Slightly reduced "common" encounter chance.
 - **Tweaked**: Slightly reduced encounter chances.
