@@ -1,6 +1,8 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
 - **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
+- **Added**: Fallout 1 interface mod. Replaces the Fallout 2 interface with the graphics from Fallout 1. This was originally a part of the fo1_base mod, but is now its own thing for easier handling.
+- **Added**: Fallout 2 dialog interface graphic with "Tell Me About"-button.
 - **Added**: Fo1-styled terrain info and red travel marker dots on the worldmap.
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
@@ -20,12 +22,14 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
 - **Fixed**: Random mountain encounter would spawn pot container instead of gold items.
+- **Fixed**: Tandi kidnapping timer for real this time.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
 - **Fixed**: The post-endgame hintbook now correctly sets all skills to 200%, all SPECIAL stats to 10 and hitpoints to 999/999 as it was originally intended.
 - **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
 - **Fixed**: Vehicle potentially spawning inside the ocean.
+- **Fixed**: Wrong dialog node in Lance dialog. He will now offer traveling to Shady Sands with the player.
 - **Removed**: Item proto files that either haven't been changed or still include old Fo1/Fixt changes.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
