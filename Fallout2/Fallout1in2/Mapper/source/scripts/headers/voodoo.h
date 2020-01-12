@@ -6,8 +6,8 @@
    Requires AllowUnsafeScripting=1 in ddraw.ini!
 *********************************************************/
 
-// Check current ddraw.dll build
-#define sfall_rotators  (read_byte(0x410003) == 0xF4 and sfall_func1("metarule_exist", "rotators"))
+// Check current ddraw.dll build (base check, left for reference only; use sfall_rotators macro from sfall.rotators.h in scripts)
+#define VOODOO_marker  (read_byte(0x410003) == 0xF4)
 
 // This will disable running the credits after the endgame slides:
 // This is done via Sfall now (F1EngineBehavior=1)
