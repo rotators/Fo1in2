@@ -3,6 +3,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
 - **Added**: Fallout 1 interface mod. Replaces the Fallout 2 interface with the graphics from Fallout 1. This was originally a part of the fo1_base mod, but is now its own thing for easier handling.
 - **Added**: Fallout 2 dialog interface graphic with "Tell Me About"-button.
+- **Added**: First iteration of a possible german translation. Core-sentences are done.
 - **Added**: Fo1-styled terrain info and red travel marker dots on the worldmap.
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).

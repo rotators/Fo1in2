@@ -9,7 +9,7 @@ Die deutsche Übersetzung von FALLOUT ET TU. Hierbei handelt es sich um eine seh
 Jede Hilfe bei der Übersetzung ist willkommen!
 
 ### Installation
-Um mit dieser Mod spielen zu können, öffne die ddraw.ini, gehe zu [ExtraPatches] und füge "PatchFile[number]=mods\fo1_german" ans Ende der "patchFile"-Liste!
+Um mit dieser Mod spielen zu können, öffne die ddraw.ini, gehe zu [ExtraPatches] und füge "PatchFile[number]=mods\fo1_german" ans Ende der "PatchFile"-Liste!
 Das Spiel wird dann die Mod laden.
 
 Falls mehr als eine Mod geladen wird, muss darauf geachtet werden, dass "PatchFileX" korrekt nummeriert wird (1, 2, 3, ...).
