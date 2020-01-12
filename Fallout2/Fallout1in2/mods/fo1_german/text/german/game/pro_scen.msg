@@ -1719,14 +1719,14 @@
 {91200}{}{Symbol}
 {91300}{}{Symbol}
 {91400}{}{Symbol}
-{91500}{}{Rope}
-{91600}{}{Rope}
-{91700}{}{Rope}
-{91800}{}{Rope}
-{91900}{}{Rope}
-{92000}{}{Rope}
-{92100}{}{Rope}
-{92200}{}{Rope}
+{91500}{}{Seil}
+{91600}{}{Seil}
+{91700}{}{Seil}
+{91800}{}{Seil}
+{91900}{}{Seil}
+{92000}{}{Seil}
+{92100}{}{Seil}
+{92200}{}{Seil}
 {92300}{}{Canyon}
 {92400}{}{Canyon}
 {92500}{}{Canyon}
@@ -1735,152 +1735,152 @@
 {92800}{}{Canyon}
 {92900}{}{Canyon}
 {93000}{}{Canyon}
-{93100}{}{Cave Floor}
-{93200}{}{Impenetrable Door}
-{93201}{}{This door appears to have no opening mechanism.}
-{93300}{}{Destroyed Door}
-{93301}{}{The door has been blown open.}
-{93400}{}{Door}
-{93401}{}{A door with an intricate lock.}
-{93500}{}{Torch}
-{93501}{}{A lit torch in a wall sconce.}
-{93600}{}{Torch}
-{93601}{}{A lit torch in a wall sconce.}
-{93700}{}{Stone Monument}
-{93800}{}{Stone Monument}
-{93900}{}{Stone Monument}
-{94000}{}{Skull Pole}
-{94001}{}{A pole with human skulls attached.}
-{94100}{}{Skull Pole}
-{94101}{}{A pole with human skulls attached.}
-{94200}{}{Skull Pole}
-{94201}{}{A pole with human skulls attached.}
-{94300}{}{Plant}
+{93100}{}{Höhlenboden}
+{93200}{}{Undurchdringliche Tür}
+{93201}{}{Diese Tür scheint keinen Öffnungsmechanismus zu besitzen}
+{93300}{}{Zerstörte Tür}
+{93301}{}{Diese Tür wurde aufgesprengt.}
+{93400}{}{Tür}
+{93401}{}{Eine Tür mit einem komplizierten Schloß.}
+{93500}{}{Fackel}
+{93501}{}{Eine brennende Fackel in einer Wandhalterung.}
+{93600}{}{Fackel}
+{93601}{}{Eine brennende Fackel in einer Wandhalterung.}
+{93700}{}{Steinmonument}
+{93800}{}{Steinmonument}
+{93900}{}{Steinmonument}
+{94000}{}{Schädelstab}
+{94001}{}{Ein Stab, an dem menschliche Schädel befestigt sind.}
+{94100}{}{Schädelstab}
+{94101}{}{Ein Stab, an dem menschliche Schädel befestigt sind.}
+{94200}{}{Schädelstab}
+{94201}{}{Ein Stab, an dem menschliche Schädel befestigt sind.}
+{94300}{}{Pflanze}
 {94301}{}{}
-{94400}{}{Plant}
-{94500}{}{Tree}
-{94600}{}{Tree}
-{94700}{}{Tree}
-{94800}{}{Bed}
-{94900}{}{Bed}
-{95000}{}{Hole}
-{95001}{}{A suspicious hole in the wall.}
-{95100}{}{Raised Stone Plate}
-{95101}{}{A raised stone plate.}
-{95200}{}{Disabled Stone Plate}
-{95201}{}{A disabled stone plate.}
-{95300}{}{Triggered Stone Plate}
-{95301}{}{A triggered stone plate.}
-{95400}{}{Door}
-{95500}{}{Door}
-{95600}{}{Door}
-{95700}{}{Door}
-{95800}{}{Door}
-{95900}{}{Door}
-{96000}{}{Door}
-{96100}{}{Door}
-{96200}{}{Door}
-{96300}{}{Plant}
-{96301}{}{A mutated cornstalk.}
-{96400}{}{Plant}
-{96401}{}{A mutated cornstalk.}
-{96500}{}{Plant}
-{96501}{}{A mutated cornstalk. This one is sick.}
-{96600}{}{Plant}
-{96601}{}{A mutated cornstalk.}
-{96700}{}{Plant}
-{96701}{}{A mutated cornstalk.}
-{96800}{}{Plant}
-{96801}{}{A mutated cornstalk.}
-{96900}{}{Wood Support}
-{97000}{}{Wood Support}
-{97100}{}{Wood Support}
-{97200}{}{Wood Support}
-{97300}{}{Wood Support}
-{97400}{}{Wood Support}
-{97500}{}{Damaged Wood Support}
-{97501}{}{This support looks like it could collapse if stressed.}
-{97600}{}{Collapsed Floor}
-{97601}{}{The stone floor has collapsed here into the lower level.}
-{97700}{}{Ladder Down}
-{97701}{}{A manmade hole with a ladder leading down.}
-{97800}{}{Door}
-{97900}{}{Wall}
-{98000}{}{Reactor 5 Sign}
-{98100}{}{Door}
-{98200}{}{Door}
-{98300}{}{Door}
-{98400}{}{Door}
-{98500}{}{Radioactive Goo}
-{98600}{}{Radioactive Goo}
-{98700}{}{Radioactive Goo}
-{98800}{}{Radioactive Goo}
-{98900}{}{Security Door}
-{99000}{}{Vault Door}
-{99100}{}{Utility Crane}
-{99200}{}{Utility Crane}
-{99300}{}{Well}
-{99400}{}{Well}
-{99500}{}{Outhouse}
-{99600}{}{Hole}
-{99601}{}{You can't see the bottom of this pit.}
-{99700}{}{Floor Plate}
-{99701}{}{You see a floor plate trap.}
-{99800}{}{Disabled Floor Plate}
-{99801}{}{This floor plate trap has been disabled.}
-{99900}{}{Triggered Floor Plate}
-{99901}{}{This floor plate trap has been triggered. Opps!}
-{100000}{}{Still}
-{100001}{}{This looks like a wood-burning alcohol still.}
-{100100}{}{Rad Scorpion Parts}
-{100101}{}{You see a large pile of Radscorpion parts. They've been hollowed out and have straps attached to them.}
-{100200}{}{Powerplant Machinery}
-{100201}{}{This is the Plutonium-Gamma Shield machine for the reactor.}
-{100300}{}{Powerplant Machinery}
-{100301}{}{This is the Jupiter Wave Compiler machine for the reactor.}
-{100400}{}{Powerplant Machinery}
-{100401}{}{This is the Uranium-Rod Driver machine for the reactor.}
-{100500}{}{Powerplant Machinery}
-{100501}{}{This is the Neptunium Impeller machine for the reactor.}
-{100600}{}{Powerplant Machinery}
-{100601}{}{This is the Saturn-Class Capacitor machine for the reactor.}
-{100700}{}{Powerplant Pump Control}
-{100701}{}{This is the coolant pumping machine for the reactor.}
-{100800}{}{Side of Brahmin}
-{100900}{}{Car}
-{101000}{}{Chrysalis Motors Car}
-{101001}{}{This Chrysalis Motors Highwayman looks to be in pretty good shape for its age.}
-{101100}{}{Car}
-{101200}{}{Gravesite}
-{101201}{}{A grave is located here.}
-{101300}{}{Headstone}
-{101301}{}{Headstone}
-{101400}{}{Headstone}
-{101401}{}{Headstone}
-{101500}{}{Headstone}
-{101501}{}{Headstone}
-{101600}{}{Headstone}
-{101601}{}{Headstone}
-{101700}{}{Plow}
-{101701}{}{This plow is designed to be dragged by a Brahmin.}
-{101800}{}{Plow}
-{101801}{}{This plow is designed to be dragged by a Brahmin.}
-{101900}{}{Water}
-{102000}{}{Sign}
-{102001}{}{The entry sign for New Reno.}
-{102100}{}{Sign}
-{102101}{}{The entry sign for New Reno.}
-{102200}{}{Sign}
-{102201}{}{The entry sign for New Reno.}
-{102300}{}{Sign}
-{102301}{}{The entry sign for New Reno.}
-{102400}{}{Sign}
-{102401}{}{The entry sign for New Reno.}
-{102500}{}{Sign}
-{102501}{}{The entry sign for New Reno.}
-{102600}{}{Shadow}
-{102700}{}{Shadow}
-{102800}{}{Shadow}
+{94400}{}{Pflanze}
+{94500}{}{Baum}
+{94600}{}{Baum}
+{94700}{}{Baum}
+{94800}{}{Bett}
+{94900}{}{Bett}
+{95000}{}{Loch}
+{95001}{}{Ein verdächtiges Loch in der Wand.}
+{95100}{}{Angehobene Steinplatte}
+{95101}{}{Eine angehobene Steinplatte.}
+{95200}{}{Unbrauchbare Steinplatte}
+{95201}{}{Eine unbrauchbare Steinplatte.}
+{95300}{}{Ausgelöste Steinplatte}
+{95301}{}{Eine ausgelöste Steinplatte.}
+{95400}{}{Tür}
+{95500}{}{Tür}
+{95600}{}{Tür}
+{95700}{}{Tür}
+{95800}{}{Tür}
+{95900}{}{Tür}
+{96000}{}{Tür}
+{96100}{}{Tür}
+{96200}{}{Tür}
+{96300}{}{Pflanze}
+{96301}{}{Ein mutierter Maisstengel.}
+{96400}{}{Pflanze}
+{96401}{}{Ein mutierter Maisstengel.}
+{96500}{}{Pflanze}
+{96501}{}{Ein mutierter Maisstengel. Er schaut richtig übel aus.}
+{96600}{}{Pflanze}
+{96601}{}{Ein mutierter Maisstengel.}
+{96700}{}{Pflanze}
+{96701}{}{Ein mutierter Maisstengel.}
+{96800}{}{Pflanze}
+{96801}{}{Ein mutierter Maisstengel.}
+{96900}{}{Holzstütze}
+{97000}{}{Holzstütze}
+{97100}{}{Holzstütze}
+{97200}{}{Holzstütze}
+{97300}{}{Holzstütze}
+{97400}{}{Holzstütze}
+{97500}{}{Beschädigte Holzstütze}
+{97501}{}{Diese Stütze sieht so aus, als ob sie bei Belastung zusammenbrechen würde.}
+{97600}{}{Eingebrochener Boden}
+{97601}{}{Der Steinboden ist hier in die untere Ebene eingebrochen.}
+{97700}{}{Leiter abwärts}
+{97701}{}{Ein künstliches Loch, in dem eine Leiter nach unten führt.}
+{97800}{}{Tür}
+{97900}{}{Wand}
+{98000}{}{Reaktor-5-Zeichen}
+{98100}{}{Tür}
+{98200}{}{Tür}
+{98300}{}{Tür}
+{98400}{}{Tür}
+{98500}{}{Radioaktiver Glibber}
+{98600}{}{Radioaktiver Glibber}
+{98700}{}{Radioaktiver Glibber}
+{98800}{}{Radioaktiver Glibber}
+{98900}{}{Sicherheitstür}
+{99000}{}{Bunkertür}
+{99100}{}{Arbeitskran}
+{99200}{}{Arbeitskran}
+{99300}{}{Brunnen}
+{99400}{}{Brunnen}
+{99500}{}{Toilettenhäuschen}
+{99600}{}{Loch}
+{99601}{}{Du kannst den Boden der Grube nicht sehen.}
+{99700}{}{Bodenplatte}
+{99701}{}{Du siehst eine Bodenplattenfalle.}
+{99800}{}{Lahmgelegte Bodenplatte}
+{99801}{}{Diese Bodenplattenfalle ist lahmgelegt.}
+{99900}{}{Ausgelöste Bodenplatte}
+{99901}{}{Diese Bodenplattenfalle wurde ausgelöst. Uups!}
+{100000}{}{Destillator}
+{100001}{}{Dies sieht aus wie ein Alkoholdestillator mit Holzfeuerung}
+{100100}{}{Teile von radioaktiven Skorpionen}
+{100101}{}{Du siehst einen großen Haufen von Teilen von radioaktiven Skorpionen. Sie sind ausgehöhlt und mit Riemen versehen.}
+{100200}{}{Kraftwerksmaschinerie}
+{100201}{}{Dies ist der Plutonium-Gamma-Schild für den Reaktor.}
+{100300}{}{Kraftwerksmaschinerie}
+{100301}{}{Dies ist der Jupiterwellen-Kompilierer für den Reaktor.}
+{100400}{}{Kraftwerksmaschinerie}
+{100401}{}{Dies ist der Uranstabantrieb für den Reaktor.}
+{100500}{}{Kraftwerksmaschinerie}
+{100501}{}{Dies ist der Neptuniumläufer für den Reaktor.}
+{100600}{}{Kraftwerksmaschinerie}
+{100601}{}{Dies ist der Saturnklassen-Kondensator für den Reaktor.}
+{100700}{}{Kraftwerkspumpensteuerung}
+{100701}{}{Dies ist die Kühlmittelpumpe für den Reaktor.}
+{100800}{}{Seite eines Brahmin}
+{100900}{}{Auto}
+{101000}{}{Auto von Chrysalis Motors }
+{101001}{}{Dieser Highwayman von Chrysalis Motors sieht aus, als sei er für sein Alter in ziemlich gutem Zustand.}
+{101100}{}{Auto}
+{101200}{}{Friedhof}
+{101201}{}{Hier liegt ein Grab.}
+{101300}{}{Grabstein}
+{101301}{}{Grabstein}
+{101400}{}{Grabstein}
+{101401}{}{Grabstein}
+{101500}{}{Grabstein}
+{101501}{}{Grabstein}
+{101600}{}{Grabstein}
+{101601}{}{Grabstein}
+{101700}{}{Pflug}
+{101701}{}{Dieser Pflug muß von einem Brahmin gezogen werden.}
+{101800}{}{Pflug}
+{101801}{}{Dieser Pflug muß von einem Brahmin gezogen werden.}
+{101900}{}{Wasser}
+{102000}{}{Schild}
+{102001}{}{Das Ortsschild von New Reno.}
+{102100}{}{Schild}
+{102101}{}{Das Ortsschild von New Reno.}
+{102200}{}{Schild}
+{102201}{}{Das Ortsschild von New Reno.}
+{102300}{}{Schild}
+{102301}{}{Das Ortsschild von New Reno.}
+{102400}{}{Schild}
+{102401}{}{Das Ortsschild von New Reno.}
+{102500}{}{Schild}
+{102501}{}{Das Ortsschild von New Reno.}
+{102600}{}{Schatten}
+{102700}{}{Schatten}
+{102800}{}{Schatten}
 {102900}{}{Graffiti}
 {103000}{}{Graffiti}
 {103100}{}{Graffiti}
@@ -1912,7 +1912,7 @@
 {105700}{}{Graffiti}
 {105800}{}{Graffiti}
 {105900}{}{Graffiti}
-{106000}{}{Sign}
+{106000}{}{Schild}
 {106100}{}{Graffiti}
 {106200}{}{Graffiti}
 {106300}{}{Graffiti}
@@ -1962,486 +1962,486 @@
 {110700}{}{Graffiti}
 {110800}{}{Graffiti}
 {110900}{}{Graffiti}
-{111000}{}{Sign}
-{111100}{}{Sign}
-{111200}{}{Sign}
-{111300}{}{Sign}
-{111400}{}{Sign}
-{111500}{}{Sign}
-{111600}{}{Sign}
-{111700}{}{Sign}
-{111800}{}{Wallpaper}
-{111900}{}{Wallpaper}
-{112000}{}{Wallpaper}
-{112100}{}{Wallpaper}
-{112200}{}{Wallpaper}
-{112300}{}{Wallpaper}
-{112400}{}{Wallpaper}
-{112500}{}{Wallpaper}
-{112600}{}{Wallpaper}
-{112700}{}{Wallpaper}
-{112800}{}{Wallpaper}
-{112900}{}{Wallpaper}
-{113000}{}{Wallpaper}
-{113100}{}{Wallpaper}
-{113200}{}{Wallpaper}
-{113300}{}{Wallpaper}
-{113400}{}{Wallpaper}
-{113500}{}{Wallpaper}
-{113600}{}{Wallpaper}
-{113700}{}{Wallpaper}
-{113800}{}{Wallpaper}
-{113900}{}{Wallpaper}
-{114000}{}{Wallpaper}
-{114100}{}{Movie Camera}
-{114200}{}{Coffin}
-{114300}{}{Coffin}
-{114400}{}{Coffin}
-{114500}{}{Coffin}
-{114600}{}{Steel Bars}
-{114700}{}{Steel Bars}
-{114800}{}{Steel Window Cover}
-{114900}{}{Steel Window Cover}
-{115000}{}{Laser Tripwire}
-{115100}{}{Laser Tripwire}
-{115200}{}{Mining Cart}
-{115300}{}{Mining Cart with Steel Pole}
-{115400}{}{Mining Cart with Dynamite}
-{115500}{}{"Out of Business" Sign}
-{115600}{}{"Out of Business" Sign}
-{115700}{}{Buckner House Sign}
-{115800}{}{Vic's Sign}
-{115900}{}{Wall}
-{116000}{}{Wall}
-{116100}{}{Retinal Scanner}
-{116101}{}{This is a security device that scans a person's retinal pattern.}
-{116200}{}{Control Room Sign}
-{116300}{}{Control Room Sign}
-{116400}{}{Control Room Sign}
-{116500}{}{Construction Zone Sign}
-{116600}{}{Construction Zone Sign}
-{116700}{}{Machine}
-{116701}{}{A non-functional machine.}
-{116800}{}{Machine}
-{116801}{}{A non-functional machine.}
-{116900}{}{Door}
-{117000}{}{Door}
-{117100}{}{Pipes}
-{117101}{}{A set of pipes going into the reactor.}
+{111000}{}{Schild}
+{111100}{}{Schild}
+{111200}{}{Schild}
+{111300}{}{Schild}
+{111400}{}{Schild}
+{111500}{}{Schild}
+{111600}{}{Schild}
+{111700}{}{Schild}
+{111800}{}{Tapete}
+{111900}{}{Tapete}
+{112000}{}{Tapete}
+{112100}{}{Tapete}
+{112200}{}{Tapete}
+{112300}{}{Tapete}
+{112400}{}{Tapete}
+{112500}{}{Tapete}
+{112600}{}{Tapete}
+{112700}{}{Tapete}
+{112800}{}{Tapete}
+{112900}{}{Tapete}
+{113000}{}{Tapete}
+{113100}{}{Tapete}
+{113200}{}{Tapete}
+{113300}{}{Tapete}
+{113400}{}{Tapete}
+{113500}{}{Tapete}
+{113600}{}{Tapete}
+{113700}{}{Tapete}
+{113800}{}{Tapete}
+{113900}{}{Tapete}
+{114000}{}{Tapete}
+{114100}{}{Filmkamera}
+{114200}{}{Sarg}
+{114300}{}{Sarg}
+{114400}{}{Sarg}
+{114500}{}{Sarg}
+{114600}{}{Stahlgitter}
+{114700}{}{Stahlgitter}
+{114800}{}{Stahlfensterladen}
+{114900}{}{Stahlfensterladen}
+{115000}{}{Laserstolperdraht}
+{115100}{}{Laserstolperdraht}
+{115200}{}{Lore}
+{115300}{}{Lore mit Stahlstange}
+{115400}{}{Lore mit Dynamit}
+{115500}{}{Zeichen "Geschäftsaufgabe"}
+{115600}{}{Zeichen "Geschäftsaufgabe"}
+{115700}{}{Schild "Buckner-Haus"}
+{115800}{}{Vics Schild}
+{115900}{}{Wand}
+{116000}{}{Wand}
+{116100}{}{Netzhautscanner}
+{116101}{}{Dies ist ein Sicherheitsgerät, das das Netzhautmuster einer Person abtastet.}
+{116200}{}{Kontrollraumschild}
+{116300}{}{Kontrollraumschild}
+{116400}{}{Kontrollraumschild}
+{116500}{}{Baustellenschild}
+{116600}{}{Baustellenschild}
+{116700}{}{Maschine}
+{116701}{}{Eine nicht funktionierende Maschine.}
+{116800}{}{Maschine}
+{116801}{}{Eine nicht funktionierende Maschine.}
+{116900}{}{Tür}
+{117000}{}{Tür}
+{117100}{}{Rohrleitungen}
+{117101}{}{Ein Rohrbündel, das in den Reaktor führt.}
 {117200}{}{Tank}
 {117300}{}{Tanks}
 {117400}{}{Tanks}
 {117500}{}{Tanks}
-{117600}{}{Vent}
-{117700}{}{Vent}
-{117800}{}{Harp Sign}
-{117900}{}{Sawhorse}
-{118000}{}{Sawhorse}
-{118100}{}{Sawhorse}
-{118200}{}{Vent}
-{118300}{}{Vent}
-{118400}{}{Machine Shop Sign}
-{118500}{}{Manager's Office Sign}
-{118600}{}{Supply Room Sign}
-{118700}{}{Radiation Warning Sign}
-{118800}{}{Steam}
-{118900}{}{Machine}
-{118901}{}{A misc. piece of equipment for the power plant.}
+{117600}{}{Lüftungsschlitz}
+{117700}{}{Lüftungsschlitz}
+{117800}{}{Schild der Kneipe "Die Harfe"}
+{117900}{}{Sägebock}
+{118000}{}{Sägebock}
+{118100}{}{Sägebock}
+{118200}{}{Lüftungsschlitz}
+{118300}{}{Lüftungsschlitz}
+{118400}{}{Maschinensaalschild}
+{118500}{}{Schild "Büro des Geschäftsführers"}
+{118600}{}{Versorgungsraumschild}
+{118700}{}{Strahlungswarnschild}
+{118800}{}{Dampf}
+{118900}{}{Maschine}
+{118901}{}{Ausrüstungsteil für das Atomkraftwerk.}
 {119000}{}{Tank}
-{119100}{}{Fire}
-{119200}{}{Water}
-{119300}{}{Trapper Town Sign}
-{119400}{}{Golden Gecko Sign}
-{119500}{}{Bath House Sign}
-{119600}{}{Cave Art}
-{119700}{}{Cave Art}
-{119800}{}{Cave Art}
-{119900}{}{Cave Art}
-{120000}{}{Firepit}
-{120100}{}{Cave Wall}
-{120200}{}{Cave Wall}
-{120300}{}{Cave Wall}
-{120400}{}{Cave Wall}
-{120500}{}{Cave Wall}
-{120600}{}{Cave Wall}
-{120700}{}{Cave Wall}
-{120800}{}{Cave Wall}
-{120900}{}{Cave Wall}
-{121000}{}{Cave Wall}
-{121100}{}{Cave Wall}
-{121200}{}{Cave Wall}
-{121300}{}{Cave Wall}
-{121400}{}{Cave Wall}
-{121500}{}{Cave Wall}
-{121600}{}{Stake}
-{121601}{}{This stake appears to have a person impaled on the top!}
-{121700}{}{Stake}
-{121701}{}{This stake appears to have a person impaled on the top!}
-{121800}{}{Stake}
-{121801}{}{This stake appears to have a person impaled on the top!}
-{121900}{}{Stake}
-{121901}{}{This stake appears to have a person impaled on the top!}
-{122000}{}{Stake}
-{122001}{}{This stake appears to have a person impaled on the top!}
-{122100}{}{Stake}
-{122101}{}{This stake appears to have a person impaled on the top!}
-{122200}{}{Stake}
-{122201}{}{This stake appears to have a human skull placed on the top.}
-{122300}{}{Stake}
-{122301}{}{This stake appears to have a human skull placed on the top.}
-{122400}{}{Stake}
-{122401}{}{This empty stake looks ready for an unwilling victim.}
-{122500}{}{Stake}
-{122501}{}{This empty stake looks ready for an unwilling victim.}
-{122600}{}{Stake}
-{122601}{}{This empty stake looks ready for an unwilling victim.}
-{122700}{}{Stake}
-{122701}{}{This empty stake looks ready for an unwilling victim.}
-{122800}{}{Wanted Sign}
-{122801}{}{The picture on this sign looks oddly like you!}
-{122900}{}{Floor}
-{123000}{}{Deactivated Robobrain}
-{123001}{}{An incomplete cybernetic body that is missing several parts.}
-{123100}{}{Howitzer}
-{123101}{}{This strange-looking cannon looks like a relic from the pre-War days. You wonder how it ended up here.}
-{123200}{}{Sign}
-{123300}{}{Sign}
-{123400}{}{Sign}
-{123500}{}{Sign}
-{123600}{}{Power Switch}
-{123700}{}{Cross}
-{123800}{}{Cross}
-{123900}{}{Cross}
-{124000}{}{Cross}
-{124100}{}{Cross}
-{124200}{}{Cross}
-{124300}{}{Gas Pump}
-{124400}{}{Gas Pump}
-{124500}{}{Gas Pump}
-{124600}{}{Pep Gas Sign}
-{124700}{}{Sign Shadow}
-{124800}{}{Haybed}
-{124900}{}{Haybed}
-{125000}{}{Haybed}
-{125100}{}{Haybed}
-{125200}{}{Haybed}
-{125300}{}{Haybed}
-{125400}{}{Dusty's Cantina Sign}
-{125500}{}{Son of Bob's Store}
-{125501}{}{A street vendor's stand.}
-{125600}{}{Son of Bob's Store}
-{125601}{}{A street vendor's stand.}
-{125700}{}{Son of Bob's Store}
-{125701}{}{A street vendor's stand.}
-{125800}{}{Son of Bob's Store}
-{125801}{}{A street vendor's stand.}
-{125900}{}{NCR Sign}
-{126000}{}{Hall of Congress Sign}
-{126100}{}{Hall of Congress Sign}
-{126200}{}{NCR Poster}
-{126300}{}{NCR Poster}
-{126400}{}{NCR Poster}
-{126500}{}{NCR Poster}
-{126600}{}{Rawhide Saloon Sign}
-{126700}{}{Casino Sign}
-{126800}{}{Casino Sign}
-{126900}{}{Casino Sign}
-{127000}{}{Casino Sign}
-{127100}{}{Casino Sign}
-{127200}{}{Casino Sign}
-{127300}{}{Pile of Rocks}
-{127301}{}{These rocks appear to be keeping something in.}
-{127400}{}{Beam}
-{127500}{}{Beam}
-{127600}{}{Beam}
-{127700}{}{Beam}
-{127800}{}{Beam}
-{127900}{}{Beam}
-{128000}{}{Beam}
-{128100}{}{Beam}
-{128200}{}{Beam}
-{128300}{}{Beam}
-{128400}{}{Shadow}
-{128500}{}{Shadow}
-{128600}{}{Shadow}
-{128700}{}{Shadow}
-{128800}{}{Shadow}
-{128900}{}{Shadow}
-{129000}{}{Shadow}
-{129100}{}{Shadow}
-{129200}{}{Shadow}
-{129300}{}{Elevator Stub}
-{129400}{}{Gas Pump}
-{129500}{}{Gas Pump}
-{129600}{}{Gas Pump}
-{129700}{}{Rope}
-{129800}{}{Hole}
-{129900}{}{Brahmin Meat}
-{130000}{}{Brahmin Meat}
-{130100}{}{Brahmin Meat}
-{130200}{}{Brahmin Meat}
-{130300}{}{Brahmin Meat}
-{130400}{}{Brahmin Meat}
-{130500}{}{Beam}
-{130600}{}{Beam}
-{130700}{}{Beam}
-{130800}{}{Beam}
-{130900}{}{Beam}
-{131000}{}{Beam}
-{131100}{}{Beam}
-{131200}{}{Beam}
-{131300}{}{Shadow}
-{131400}{}{Shadow}
-{131500}{}{Shadow}
-{131600}{}{Shadow}
-{131700}{}{Shadow}
-{131800}{}{Shadow}
-{131900}{}{Shadow}
-{132000}{}{Shadow}
-{132100}{}{Blood}
-{132200}{}{Blood}
-{132300}{}{Blood}
-{132400}{}{Blood}
-{132500}{}{Blood}
-{132600}{}{Blood}
-{132700}{}{Blood with Bones}
-{132800}{}{Blood with Bones}
-{132900}{}{Blood with Bones}
-{133000}{}{Cave Mouth}
-{133100}{}{Equipment Access}
-{133200}{}{Equipment Access}
-{133300}{}{Equipment Access}
-{133400}{}{Equipment Access}
+{119100}{}{Feuer}
+{119200}{}{Wasser}
+{119300}{}{Schild "Trapperstadt"}
+{119400}{}{Schild "Golden Gecko"}
+{119500}{}{Badehausschild}
+{119600}{}{Höhlenzeichnungen}
+{119700}{}{Höhlenzeichnungen}
+{119800}{}{Höhlenzeichnungen}
+{119900}{}{Höhlenzeichnungen}
+{120000}{}{Feuerstelle}
+{120100}{}{Höhlenwand}
+{120200}{}{Höhlenwand}
+{120300}{}{Höhlenwand}
+{120400}{}{Höhlenwand}
+{120500}{}{Höhlenwand}
+{120600}{}{Höhlenwand}
+{120700}{}{Höhlenwand}
+{120800}{}{Höhlenwand}
+{120900}{}{Höhlenwand}
+{121000}{}{Höhlenwand}
+{121100}{}{Höhlenwand}
+{121200}{}{Höhlenwand}
+{121300}{}{Höhlenwand}
+{121400}{}{Höhlenwand}
+{121500}{}{Höhlenwand}
+{121600}{}{Pfahl}
+{121601}{}{Auf diesem Pfahl scheint ein Menschen gepfählt zu sein.}
+{121700}{}{Pfahl}
+{121701}{}{Auf diesem Pfahl scheint ein Menschen gepfählt zu sein.}
+{121800}{}{Pfahl}
+{121801}{}{Auf diesem Pfahl scheint ein Menschen gepfählt zu sein.}
+{121900}{}{Pfahl}
+{121901}{}{Auf diesem Pfahl scheint ein Menschen gepfählt zu sein.}
+{122000}{}{Pfahl}
+{122001}{}{Auf diesem Pfahl scheint ein Menschen gepfählt zu sein.}
+{122100}{}{Pfahl}
+{122101}{}{Auf diesem Pfahl scheint ein Menschen gepfählt zu sein.}
+{122200}{}{Pfahl}
+{122201}{}{Auf der Spitze dieses Pfahls scheint sich ein Menschenschädel zu befinden.}
+{122300}{}{Pfahl}
+{122301}{}{Auf der Spitze dieses Pfahls scheint sich ein Menschenschädel zu befinden.}
+{122400}{}{Pfahl}
+{122401}{}{Dieser leere Pfahl scheint auf ein williges Opfer zu warten.}
+{122500}{}{Pfahl}
+{122501}{}{Dieser leere Pfahl scheint auf ein williges Opfer zu warten.}
+{122600}{}{Pfahl}
+{122601}{}{Dieser leere Pfahl scheint auf ein williges Opfer zu warten.}
+{122700}{}{Pfahl}
+{122701}{}{Dieser leere Pfahl scheint auf ein williges Opfer zu warten.}
+{122800}{}{Steckbrief}
+{122801}{}{Das Bild auf diesem Steckbrief gleicht dir verblüffend!}
+{122900}{}{Boden}
+{123000}{}{Deaktiviertes Robo-Hirn}
+{123001}{}{Unvollständiger kybernetischer Körper, an dem ein paar Teile fehlen.}
+{123100}{}{Haubitze}
+{123101}{}{Diese seltsame Kanone sieht aus wie ein Überbleibsel aus der Vorkriegszeit. Du fragst dich, wie sie hierher kommt.}
+{123200}{}{Schild}
+{123300}{}{Schild}
+{123400}{}{Schild}
+{123500}{}{Schild}
+{123600}{}{Netzschalter}
+{123700}{}{Kreuz}
+{123800}{}{Kreuz}
+{123900}{}{Kreuz}
+{124000}{}{Kreuz}
+{124100}{}{Kreuz}
+{124200}{}{Kreuz}
+{124300}{}{Zapfsäule}
+{124400}{}{Zapfsäule}
+{124500}{}{Zapfsäule}
+{124600}{}{Tankstellenschild}
+{124700}{}{Schildschatten}
+{124800}{}{Heuballen}
+{124900}{}{Heuballen}
+{125000}{}{Heuballen}
+{125100}{}{Heuballen}
+{125200}{}{Heuballen}
+{125300}{}{Heuballen}
+{125400}{}{Schild für "Dustys Kantine"}
+{125500}{}{Laden von Bobs Sohn}
+{125501}{}{Stand eines fliegenden Händlers.}
+{125600}{}{Laden von Bobs Sohn}
+{125601}{}{Stand eines fliegenden Händlers.}
+{125700}{}{Laden von Bobs Sohn}
+{125701}{}{Stand eines fliegenden Händlers.}
+{125800}{}{Laden von Bobs Sohn}
+{125801}{}{Stand eines fliegenden Händlers.}
+{125900}{}{NCR-Schild}
+{126000}{}{Kongreßhallenschild}
+{126100}{}{Kongreßhallenschild}
+{126200}{}{NCR-Poster}
+{126300}{}{NCR-Poster}
+{126400}{}{NCR-Poster}
+{126500}{}{NCR-Poster}
+{126600}{}{Schild des "Rawhide-Saloons"}
+{126700}{}{Kasinoschild}
+{126800}{}{Kasinoschild}
+{126900}{}{Kasinoschild}
+{127000}{}{Kasinoschild}
+{127100}{}{Kasinoschild}
+{127200}{}{Kasinoschild}
+{127300}{}{Steinhaufen}
+{127301}{}{Diese Steine scheinen etwas gefangen zu halten.}
+{127400}{}{Balken}
+{127500}{}{Balken}
+{127600}{}{Balken}
+{127700}{}{Balken}
+{127800}{}{Balken}
+{127900}{}{Balken}
+{128000}{}{Balken}
+{128100}{}{Balken}
+{128200}{}{Balken}
+{128300}{}{Balken}
+{128400}{}{Schatten}
+{128500}{}{Schatten}
+{128600}{}{Schatten}
+{128700}{}{Schatten}
+{128800}{}{Schatten}
+{128900}{}{Schatten}
+{129000}{}{Schatten}
+{129100}{}{Schatten}
+{129200}{}{Schatten}
+{129300}{}{Überreste eines Aufzugsschachts}
+{129400}{}{Zapfsäule}
+{129500}{}{Zapfsäule}
+{129600}{}{Zapfsäule}
+{129700}{}{Seil}
+{129800}{}{Loch}
+{129900}{}{Brahminfleisch}
+{130000}{}{Brahminfleisch}
+{130100}{}{Brahminfleisch}
+{130200}{}{Brahminfleisch}
+{130300}{}{Brahminfleisch}
+{130400}{}{Brahminfleisch}
+{130500}{}{Balken}
+{130600}{}{Balken}
+{130700}{}{Balken}
+{130800}{}{Balken}
+{130900}{}{Balken}
+{131000}{}{Balken}
+{131100}{}{Balken}
+{131200}{}{Balken}
+{131300}{}{Schatten}
+{131400}{}{Schatten}
+{131500}{}{Schatten}
+{131600}{}{Schatten}
+{131700}{}{Schatten}
+{131800}{}{Schatten}
+{131900}{}{Schatten}
+{132000}{}{Schatten}
+{132100}{}{Blut}
+{132200}{}{Blut}
+{132300}{}{Blut}
+{132400}{}{Blut}
+{132500}{}{Blut}
+{132600}{}{Blut}
+{132700}{}{Blut und Knochen}
+{132800}{}{Blut und Knochen}
+{132900}{}{Blut und Knochen}
+{133000}{}{Höhleneingang}
+{133100}{}{Zugang zur Ausrüstung}
+{133200}{}{Zugang zur Ausrüstung}
+{133300}{}{Zugang zur Ausrüstung}
+{133400}{}{Zugang zur Ausrüstung}
 {133500}{}{Computer}
-{133501}{}{A Vault computer terminal, hooked into the main Vault computer.}
+{133501}{}{Ein Bunker-Computerterminal, das an den Bunker-Hauptcomputer angeschlossen ist.}
 {133600}{}{Computer}
-{133601}{}{A Vault computer terminal, hooked into the main Vault computer.}
-{133700}{}{Vault City Gate}
-{133800}{}{Vault City Gate}
-{133900}{}{Wall}
-{134000}{}{Wall}
-{134100}{}{Wall}
-{134200}{}{Wall}
-{134300}{}{Wall}
-{134400}{}{Wall}
-{134500}{}{Wall}
-{134600}{}{Wall}
-{134700}{}{Door}
-{134800}{}{Blown Open Door}
-{134900}{}{Door Debris}
-{135000}{}{Building}
-{135100}{}{Building}
-{135200}{}{Building}
-{135300}{}{Building}
-{135400}{}{Building}
-{135500}{}{Building}
-{135600}{}{Building}
-{135700}{}{Building}
-{135800}{}{Door}
-{135900}{}{Temple}
-{136000}{}{Temple}
-{136100}{}{Temple}
-{136200}{}{Temple}
-{136300}{}{Temple}
-{136400}{}{Temple}
-{136500}{}{Firepit}
-{136600}{}{Firepit}
-{136700}{}{Howitizer}
-{136701}{}{This strange-looking cannon looks like a relic from the pre-War days. You wonder how it ended up here.}
-{136800}{}{Temple}
-{136900}{}{Temple}
-{137000}{}{Mountain}
-{137100}{}{Cavern}
-{137200}{}{Door Track}
-{137300}{}{Torch}
-{137301}{}{A lit torch in a wall sconce.}
-{137400}{}{Torch}
-{137401}{}{A lit torch in a wall sconce.}
-{137500}{}{Torch}
-{137501}{}{A lit torch in a wall sconce.}
-{137600}{}{Torch}
-{137601}{}{A lit torch in a wall sconce.}
-{137700}{}{Vertibird}
-{137701}{}{NEED LONG DESCRIPTION.}
-{137800}{}{Destroyed Door}
-{137801}{}{The power station door is destroyed.}
-{137900}{}{Destroyed Door}
-{137901}{}{The power station door is destroyed.}
-{138000}{}{Wall}
-{138100}{}{Wall}
-{138200}{}{Wall}
-{138300}{}{Wall}
-{138400}{}{Wall}
-{138500}{}{Wall}
-{138600}{}{Light}
-{138700}{}{Door}
-{138800}{}{Door}
-{138900}{}{Door}
-{139000}{}{Door}
-{139100}{}{Door}
-{139200}{}{Door}
+{133601}{}{Ein Bunker-Computerterminal, das an den Bunker-Hauptcomputer angeschlossen ist.}
+{133700}{}{Tor zur Bunkerstadt}
+{133800}{}{Tor zur Bunkerstadt}
+{133900}{}{Wand}
+{134000}{}{Wand}
+{134100}{}{Wand}
+{134200}{}{Wand}
+{134300}{}{Wand}
+{134400}{}{Wand}
+{134500}{}{Wand}
+{134600}{}{Wand}
+{134700}{}{Tür}
+{134800}{}{Aufgesprengte Tür}
+{134900}{}{Türreste}
+{135000}{}{Gebäude}
+{135100}{}{Gebäude}
+{135200}{}{Gebäude}
+{135300}{}{Gebäude}
+{135400}{}{Gebäude}
+{135500}{}{Gebäude}
+{135600}{}{Gebäude}
+{135700}{}{Gebäude}
+{135800}{}{Tür}
+{135900}{}{Tempel}
+{136000}{}{Tempel}
+{136100}{}{Tempel}
+{136200}{}{Tempel}
+{136300}{}{Tempel}
+{136400}{}{Tempel}
+{136500}{}{Feuerstelle}
+{136600}{}{Feuerstelle}
+{136700}{}{Haubitze}
+{136701}{}{Diese seltsame Kanone sieht aus wie ein Überbleibsel aus der Vorkriegszeit. Du fragst dich, wie sie hierher kommt.}
+{136800}{}{Tempel}
+{136900}{}{Tempel}
+{137000}{}{Berg}
+{137100}{}{Höhle}
+{137200}{}{Türenspur}
+{137300}{}{Fackel}
+{137301}{}{Eine brennende Fackel in einer Wandhalterung.}
+{137400}{}{Fackel}
+{137401}{}{Eine brennende Fackel in einer Wandhalterung.}
+{137500}{}{Fackel}
+{137501}{}{Eine brennende Fackel in einer Wandhalterung.}
+{137600}{}{Fackel}
+{137601}{}{Eine brennende Fackel in einer Wandhalterung.}
+{137700}{}{Verti-Bird}
+{137701}{}{BENÖTIGT LANGE BESCHREIBUNG.}
+{137800}{}{Zerstörte Tür}
+{137801}{}{Die Kraftwerkstür ist zerstört.}
+{137900}{}{Zerstörte Tür}
+{137901}{}{Die Kraftwerkstür ist zerstört.}
+{138000}{}{Wand}
+{138100}{}{Wand}
+{138200}{}{Wand}
+{138300}{}{Wand}
+{138400}{}{Wand}
+{138500}{}{Wand}
+{138600}{}{Leicht}
+{138700}{}{Tür}
+{138800}{}{Tür}
+{138900}{}{Tür}
+{139000}{}{Tür}
+{139100}{}{Tür}
+{139200}{}{Tür}
 {139300}{}{Banner}
-{139400}{}{Post}
-{139500}{}{Post}
+{139400}{}{Pfosten}
+{139500}{}{Pfosten}
 {139600}{}{Banner}
 {139700}{}{Banner}
-{139800}{}{Post}
-{139900}{}{Post}
+{139800}{}{Pfosten}
+{139900}{}{Pfosten}
 {140000}{}{Banner}
-{140100}{}{Shadow}
-{140200}{}{Shadow}
+{140100}{}{Schatten}
+{140200}{}{Schatten}
 {140300}{}{Banner}
 {140400}{}{Banner}
 {140500}{}{Banner}
 {140600}{}{Banner}
-{140700}{}{Cat's Paw Sign}
-{140800}{}{Cat's Paw Sign}
-{140900}{}{Sign}
-{141000}{}{Jungle Gym Sign}
-{141100}{}{Jungle Gym Sign}
-{141200}{}{Jungle Gym Sign}
-{141300}{}{Renesco's Pharmacy Sign}
-{141400}{}{New Reno Arms Sign}
-{141500}{}{Salvatore's Bar Sign}
+{140700}{}{Schild für "Cat's Paw"}
+{140800}{}{Schild für "Cat's Paw"}
+{140900}{}{Schild}
+{141000}{}{Schild für das Fitness-Studio "Dschungel-Gym" }
+{141100}{}{Schild für das Fitness-Studio "Dschungel-Gym" }
+{141200}{}{Schild für das Fitness-Studio "Dschungel-Gym" }
+{141300}{}{Schild für "Renescos Apotheke"}
+{141400}{}{Schild "New-Reno-Waffen"}
+{141500}{}{Schild für "Salvatores Bar"}
 {141600}{}{Statue}
-{141700}{}{Warehouse Door}
-{141800}{}{Warehouse Door}
-{141900}{}{Doc Johnson Sign}
-{142000}{}{Sheriff Sign}
-{142100}{}{Malamute Saloon Sign}
-{142200}{}{Morningstar Mine Sign}
-{142300}{}{Kokowebe Mine Sign}
-{142400}{}{Kokowebe Mine Sign}
-{142500}{}{Kokowebe Mine Sign}
-{142600}{}{Signpost}
-{142601}{}{This wooden sign points towards New Reno and "Hell." You suspect the directions are reversed.}
-{142700}{}{Number 1 Sign}
-{142800}{}{Number 2 Sign}
-{142900}{}{Number 3 Sign}
-{143000}{}{Number 4 Sign}
-{143100}{}{Number 5 Sign}
-{143200}{}{Number 6 Sign}
-{143300}{}{Rope}
-{143301}{}{You can climb over the wall with this rope.}
-{143400}{}{Door}
-{143500}{}{Door}
-{143600}{}{Window}
-{143700}{}{Window}
-{143800}{}{Window}
-{143900}{}{Window}
-{144000}{}{Window}
-{144100}{}{Window}
-{144200}{}{Window}
-{144300}{}{Window}
-{144400}{}{Window}
-{144500}{}{Window}
-{144600}{}{Window}
-{144700}{}{Window}
-{144800}{}{Pool Ladder}
-{144900}{}{Door}
-{145000}{}{Arch}
-{145100}{}{Arch}
-{145200}{}{Arch}
-{145300}{}{Arch}
-{145400}{}{Arch}
-{145500}{}{Arch}
-{145600}{}{Arch}
-{145700}{}{Arch}
-{145800}{}{Shadow}
-{145900}{}{Shadow}
-{146000}{}{Shadow}
-{146100}{}{Arch}
-{146200}{}{Arch}
-{146300}{}{Arch}
-{146400}{}{Shadow}
-{146500}{}{Shadow}
-{146600}{}{Fence Door}
-{146700}{}{Fence Door}
-{146800}{}{Command Seat}
-{146801}{}{This is where the Overseer normally sits.}
-{146900}{}{Chasm}
-{147000}{}{Chasm}
-{147100}{}{Chasm}
-{147200}{}{Chasm}
-{147300}{}{Casino Entrance}
-{147400}{}{Casino Entrance}
-{147500}{}{Carpet}
-{147600}{}{Casino Entrance}
-{147700}{}{Casino Entrance}
-{147800}{}{Casino Entrance}
-{147900}{}{Casino Door}
-{148000}{}{Casino Door}
-{148100}{}{Casino Entrance}
-{148200}{}{Casino Entrance}
-{148300}{}{Casino Entrance}
-{148400}{}{Casino Entrance}
-{148500}{}{Casino Entrance}
-{148600}{}{Casino Entrance}
-{148700}{}{Casino Entrance}
-{148800}{}{Casino Entrance}
-{148900}{}{Casino Entrance}
-{149000}{}{Casino Entrance}
-{149100}{}{Casino Door}
-{149200}{}{Casino Door}
-{149300}{}{Wall Light}
-{149400}{}{Wall Light}
-{149500}{}{Wall Light}
-{149600}{}{Wall Light}
-{149700}{}{Wall Light}
-{149800}{}{Wall}
-{149900}{}{Wall}
-{150000}{}{Fan}
-{150100}{}{Fan}
-{150200}{}{Fire Ext.}
-{150300}{}{Fire Ext.}
-{150400}{}{Pipe}
-{150500}{}{Power Distributor}
-{150600}{}{Power Distributor}
-{150700}{}{Wall}
-{150800}{}{Wall}
-{150900}{}{Wall}
-{151000}{}{Wall}
-{151100}{}{Wall}
-{151200}{}{Wall}
-{151300}{}{Wall}
-{151400}{}{Wall}
-{151500}{}{Wall}
-{151600}{}{Wood Paneling}
-{151700}{}{Wood Paneling}
-{151800}{}{Pipe}
-{151900}{}{Pipe}
-{152000}{}{Pipe}
-{152100}{}{Pipe}
-{152200}{}{Pipe}
-{152300}{}{Pipe}
-{152400}{}{Pipe}
-{152500}{}{Pipe}
-{152600}{}{Pipe}
-{152700}{}{Pipe}
-{152800}{}{Pipe}
-{152900}{}{Air Vent}
-{153000}{}{Air Vent}
-{153100}{}{Door}
-{153200}{}{Door}
-{153300}{}{Door}
-{153400}{}{Door}
-{153500}{}{Door}
-{153600}{}{Door}
-{153700}{}{Shower}
-{153800}{}{Shuttle Wall}
-{153900}{}{Shuttle Wall}
-{154000}{}{Shuttle Wall}
-{154100}{}{Shuttle Wall}
-{154200}{}{Shuttle Wall}
-{154300}{}{Shuttle Wall}
-{154400}{}{Shuttle Wall}
-{154500}{}{Shuttle Wall}
-{154600}{}{Shuttle Wall}
-{154700}{}{Shuttle Wall}
-{154800}{}{Forcefield}
-{154900}{}{Forcefield}
-{155000}{}{Organ Extraction Unit}
-{155001}{}{The latest model in Vault-Tec's "Do It Yourself" surgery series. Removes organs automatically with the press of a button.}
+{141700}{}{Lagerhaustür}
+{141800}{}{Lagerhaustür}
+{141900}{}{Schild für "Doc Johnson"}
+{142000}{}{Sheriffschild}
+{142100}{}{Schild für den "Malamute-Saloon"}
+{142200}{}{Schild für die "Morgenstern-Mine"}
+{142300}{}{Schild für die "Kokowebe-Mine"}
+{142400}{}{Schild für die "Kokowebe-Mine"}
+{142500}{}{Schild für die "Kokowebe-Mine"}
+{142600}{}{Wegweiser}
+{142601}{}{Dieses Holzschild zeigt nach New Reno und "Hölle." Du hast den Eindruck, daß die Richtungen vertauscht wurden.}
+{142700}{}{Schild Nummer 1}
+{142800}{}{Schild Nummer 2}
+{142900}{}{Schild Nummer 3}
+{143000}{}{Schild Nummer 4}
+{143100}{}{Schild Nummer 5}
+{143200}{}{Schild Nummer 6}
+{143300}{}{Seil}
+{143301}{}{Mit dem Seil kannst du über die Mauer klettern.}
+{143400}{}{Tür}
+{143500}{}{Tür}
+{143600}{}{Fenster}
+{143700}{}{Fenster}
+{143800}{}{Fenster}
+{143900}{}{Fenster}
+{144000}{}{Fenster}
+{144100}{}{Fenster}
+{144200}{}{Fenster}
+{144300}{}{Fenster}
+{144400}{}{Fenster}
+{144500}{}{Fenster}
+{144600}{}{Fenster}
+{144700}{}{Fenster}
+{144800}{}{Beckenleiter}
+{144900}{}{Tür}
+{145000}{}{Bogen}
+{145100}{}{Bogen}
+{145200}{}{Bogen}
+{145300}{}{Bogen}
+{145400}{}{Bogen}
+{145500}{}{Bogen}
+{145600}{}{Bogen}
+{145700}{}{Bogen}
+{145800}{}{Schatten}
+{145900}{}{Schatten}
+{146000}{}{Schatten}
+{146100}{}{Bogen}
+{146200}{}{Bogen}
+{146300}{}{Bogen}
+{146400}{}{Schatten}
+{146500}{}{Schatten}
+{146600}{}{Zauntürchen}
+{146700}{}{Zauntürchen}
+{146800}{}{Kommandositz}
+{146801}{}{Hier sitzt normalerweise der Aufseher.}
+{146900}{}{Kluft}
+{147000}{}{Kluft}
+{147100}{}{Kluft}
+{147200}{}{Kluft}
+{147300}{}{Kasinoeingang}
+{147400}{}{Kasinoeingang}
+{147500}{}{Teppich}
+{147600}{}{Kasinoeingang}
+{147700}{}{Kasinoeingang}
+{147800}{}{Kasinoeingang}
+{147900}{}{Kasinotür}
+{148000}{}{Kasinotür}
+{148100}{}{Kasinoeingang}
+{148200}{}{Kasinoeingang}
+{148300}{}{Kasinoeingang}
+{148400}{}{Kasinoeingang}
+{148500}{}{Kasinoeingang}
+{148600}{}{Kasinoeingang}
+{148700}{}{Kasinoeingang}
+{148800}{}{Kasinoeingang}
+{148900}{}{Kasinoeingang}
+{149000}{}{Kasinoeingang}
+{149100}{}{Kasinotür}
+{149200}{}{Kasinotür}
+{149300}{}{Wandlicht}
+{149400}{}{Wandlicht}
+{149500}{}{Wandlicht}
+{149600}{}{Wandlicht}
+{149700}{}{Wandlicht}
+{149800}{}{Wand}
+{149900}{}{Wand}
+{150000}{}{Ventilator}
+{150100}{}{Ventilator}
+{150200}{}{Feuerlöscher}
+{150300}{}{Feuerlöscher}
+{150400}{}{Rohr}
+{150500}{}{Stromverteiler}
+{150600}{}{Stromverteiler}
+{150700}{}{Wand}
+{150800}{}{Wand}
+{150900}{}{Wand}
+{151000}{}{Wand}
+{151100}{}{Wand}
+{151200}{}{Wand}
+{151300}{}{Wand}
+{151400}{}{Wand}
+{151500}{}{Wand}
+{151600}{}{Holzvertäfelung}
+{151700}{}{Holzvertäfelung}
+{151800}{}{Rohr}
+{151900}{}{Rohr}
+{152000}{}{Rohr}
+{152100}{}{Rohr}
+{152200}{}{Rohr}
+{152300}{}{Rohr}
+{152400}{}{Rohr}
+{152500}{}{Rohr}
+{152600}{}{Rohr}
+{152700}{}{Rohr}
+{152800}{}{Rohr}
+{152900}{}{Lüftungsschlitz}
+{153000}{}{Lüftungsschlitz}
+{153100}{}{Tür}
+{153200}{}{Tür}
+{153300}{}{Tür}
+{153400}{}{Tür}
+{153500}{}{Tür}
+{153600}{}{Tür}
+{153700}{}{Dusche}
+{153800}{}{Shuttle-Wand}
+{153900}{}{Shuttle-Wand}
+{154000}{}{Shuttle-Wand}
+{154100}{}{Shuttle-Wand}
+{154200}{}{Shuttle-Wand}
+{154300}{}{Shuttle-Wand}
+{154400}{}{Shuttle-Wand}
+{154500}{}{Shuttle-Wand}
+{154600}{}{Shuttle-Wand}
+{154700}{}{Shuttle-Wand}
+{154800}{}{Kraftfeld}
+{154900}{}{Kraftfeld}
+{155000}{}{Organentnahmegerät}
+{155001}{}{Das neueste Modell aus der "Do It Yourself"-Chirurgieserie von Bunker-Tek. Entfernt auf Knopfdruck automatisch Organe.}
 {155100}{}{Shuttle}
 {155200}{}{Shuttle}
 {155300}{}{Shuttle}
@@ -2457,31 +2457,31 @@
 {156300}{}{Shuttle}
 {156400}{}{Shuttle}
 {156500}{}{Shuttle}
-{156600}{}{Shadow}
-{156700}{}{Shadow}
-{156800}{}{Shadow}
-{156900}{}{Shadow}
-{157000}{}{Shadow}
-{157100}{}{Shadow}
-{157200}{}{Throne}
-{157300}{}{Door}
-{157400}{}{Door}
-{157500}{}{Door}
-{157600}{}{Door}
-{157700}{}{Air Vent}
-{157800}{}{Auto-Doc}
-{157801}{}{This Auto-Doc is designed to heal illnesses and adminster various drugs.}
+{156600}{}{Schatten}
+{156700}{}{Schatten}
+{156800}{}{Schatten}
+{156900}{}{Schatten}
+{157000}{}{Schatten}
+{157100}{}{Schatten}
+{157200}{}{Thron}
+{157300}{}{Tür}
+{157400}{}{Tür}
+{157500}{}{Tür}
+{157600}{}{Tür}
+{157700}{}{Lüftungsschlitz}
+{157800}{}{Autodoc}
+{157801}{}{Dieser Autodoc ist für die Heilung von Krankheiten und Verabreichung verschiedener Medikamente entwickelt worden.}
 {157900}{}{Statue}
-{157901}{}{A small statue of the famous Vault Dweller.}
-{158000}{}{Pile of Rocks}
-{158100}{}{Forcefield}
-{158101}{}{An energy field is blocking your path.}
-{158200}{}{Forcefield}
-{158201}{}{An energy field is blocking your path.}
-{158300}{}{Forcefield}
-{158301}{}{An energy field is blocking your path.}
-{158400}{}{Forcefield}
-{158401}{}{An energy field is blocking your path.}
+{157901}{}{Kleine Statue des berühmten Bunkerbewohners.}
+{158000}{}{Steinhaufen}
+{158100}{}{Kraftfeld}
+{158101}{}{Ein Energiefeld versperrt dir den Weg.}
+{158200}{}{Kraftfeld}
+{158201}{}{Ein Energiefeld versperrt dir den Weg.}
+{158300}{}{Kraftfeld}
+{158301}{}{Ein Energiefeld versperrt dir den Weg.}
+{158400}{}{Kraftfeld}
+{158401}{}{Ein Energiefeld versperrt dir den Weg.}
 {158500}{}{Tanker}
 {158600}{}{Tanker}
 {158700}{}{Tanker}
@@ -2497,272 +2497,272 @@
 {159700}{}{Tanker}
 {159800}{}{Tanker}
 {159900}{}{Tanker}
-{160000}{}{Wall}
-{160100}{}{Wall}
-{160200}{}{Floor Depression}
-{160300}{}{Stone Bench}
-{160400}{}{Stone Bench}
-{160500}{}{Incense Burner}
-{160600}{}{Satellite Dish}
-{160700}{}{Satellite Dish}
-{160800}{}{Shadow}
-{160900}{}{Dock Shadow}
-{161000}{}{Dock Shadow}
-{161100}{}{Dock Shadow}
-{161200}{}{Dock Shadow}
-{161300}{}{Beam}
-{161400}{}{Beam}
-{161500}{}{Dock Shadow}
-{161600}{}{Dock Shadow}
-{161700}{}{Dock Shadow}
-{161800}{}{Dock Shadow}
-{161900}{}{Stairs}
-{162000}{}{Deactivated Cyberdog}
-{162001}{}{You see a deactivated Cyberdog.}
-{162100}{}{Destroyed Power Generator}
-{162101}{}{You see a destroyed power generator.}
-{162200}{}{Track}
-{162300}{}{Track}
-{162400}{}{Track}
-{162500}{}{Mine Cart}
-{162600}{}{Mine Cart with Steel Pole}
-{162700}{}{Mine Cart with Dynamite}
-{162800}{}{Destroyed Mine Cart}
-{162900}{}{Mine Cart}
-{163000}{}{Pool Table}
-{163100}{}{Pool Table}
-{163200}{}{Pool Table}
-{163300}{}{Pool Table}
-{163400}{}{Pool Table}
-{163500}{}{Pool Table}
-{163600}{}{Desk}
-{163700}{}{Flag}
-{163800}{}{Wall}
-{163900}{}{Wall}
-{164000}{}{Wall}
-{164100}{}{Wall}
-{164200}{}{Exhaust Port}
-{164300}{}{Desk}
-{164400}{}{Desk}
-{164500}{}{Stairs Down}
-{164600}{}{Stairs Up}
-{164700}{}{Stairs Up}
-{164800}{}{Stairs Up}
-{164900}{}{Mainframe Computer}
-{165000}{}{Mainframe Computer}
-{165100}{}{Mainframe Computer}
-{165200}{}{Caravan Office Sign}
-{165300}{}{Coffin Table}
-{165400}{}{Coffin Table}
-{165500}{}{Mine Elevator}
-{165600}{}{Mine Elevator}
-{165700}{}{Flagpole}
-{165800}{}{NCR Flag}
-{165900}{}{Poseidon Gasoline Sign}
-{166000}{}{Stairs Down}
-{166100}{}{Clinic Sign}
-{166200}{}{Corrections Center Sign}
-{166300}{}{Customs Sign}
-{166400}{}{Customs Sign}
-{166500}{}{Greeting Office Sign}
-{166600}{}{Happy Harry's Sign}
-{166700}{}{The Hole Sign}
-{166800}{}{Information Center Sign}
-{166900}{}{Information Center Sign}
-{167000}{}{Vault City Logo}
-{167100}{}{Main Council Sign}
-{167200}{}{Main Council Sign}
-{167300}{}{Maintenance Center}
-{167400}{}{Parlor Room Sign}
-{167500}{}{Tap House Sign}
-{167600}{}{Westin Ranch Sign}
-{167700}{}{Amenities Sign}
-{167800}{}{Building A Sign}
-{167900}{}{Building B Sign}
-{168000}{}{Servant Allocation Center}
-{168100}{}{Servant Allocation Center}
-{168200}{}{Amenities Office Sign}
-{168300}{}{Amenities Office Sign}
-{168400}{}{Mine Elevator}
-{168500}{}{Mine Elevator}
-{168600}{}{Mine Elevator}
-{168700}{}{Mine Elevator}
-{168800}{}{Vertibird}
-{168900}{}{Vertibird}
-{169000}{}{Vertibird}
-{169100}{}{Vertibird}
-{169200}{}{Vertibird}
-{169300}{}{Shadow}
-{169400}{}{Shadow}
-{169500}{}{Shadow}
-{169600}{}{Shadow}
-{169700}{}{Crashed Vertibird}
-{169800}{}{Crashed Vertibird}
-{169900}{}{Crashed Vertibird}
-{170000}{}{Crashed Vertibird}
-{170100}{}{Crashed Vertibird}
-{170200}{}{Crashed Vertibird}
-{170300}{}{Shadow}
-{170400}{}{Shadow}
-{170500}{}{Shadow}
-{170600}{}{Destroyed Bridge}
-{170601}{}{You see what's left of the Arroyo bridge. There's no way back to the village now.}
-{170700}{}{Destroyed Bridge}
-{170701}{}{You see what's left of the Arroyo bridge. There's no way back to the village now.}
+{160000}{}{Wand}
+{160100}{}{Wand}
+{160200}{}{Bodenvertiefung}
+{160300}{}{Steinbank}
+{160400}{}{Steinbank}
+{160500}{}{Räucherfaß}
+{160600}{}{Satellitenschüssel}
+{160700}{}{Satellitenschüssel}
+{160800}{}{Schatten}
+{160900}{}{Dockschatten}
+{161000}{}{Dockschatten}
+{161100}{}{Dockschatten}
+{161200}{}{Dockschatten}
+{161300}{}{Balken}
+{161400}{}{Balken}
+{161500}{}{Dockschatten}
+{161600}{}{Dockschatten}
+{161700}{}{Dockschatten}
+{161800}{}{Dockschatten}
+{161900}{}{Treppe}
+{162000}{}{Deaktivierter Cyberhund}
+{162001}{}{Du siehst einen deaktivierten Cyberhund.}
+{162100}{}{Zerstörter Stromgenerator}
+{162101}{}{Du siehst einen zerstörten Stromgenerator.}
+{162200}{}{Schienen}
+{162300}{}{Schienen}
+{162400}{}{Schienen}
+{162500}{}{Lore}
+{162600}{}{Lore mit Stahlstange}
+{162700}{}{Lore mit Dynamit}
+{162800}{}{Zerstörte Lore}
+{162900}{}{Lore}
+{163000}{}{Pool-Billard-Tisch}
+{163100}{}{Pool-Billard-Tisch}
+{163200}{}{Pool-Billard-Tisch}
+{163300}{}{Pool-Billard-Tisch}
+{163400}{}{Pool-Billard-Tisch}
+{163500}{}{Pool-Billard-Tisch}
+{163600}{}{Schreibtisch}
+{163700}{}{Flagge}
+{163800}{}{Wand}
+{163900}{}{Wand}
+{164000}{}{Wand}
+{164100}{}{Wand}
+{164200}{}{Abgasabzug}
+{164300}{}{Schreibtisch}
+{164400}{}{Schreibtisch}
+{164500}{}{Treppe nach unten}
+{164600}{}{Treppe nach oben}
+{164700}{}{Treppe nach oben}
+{164800}{}{Treppe nach oben}
+{164900}{}{Mainframe-Computer}
+{165000}{}{Mainframe-Computer}
+{165100}{}{Mainframe-Computer}
+{165200}{}{Schild "Karawanenbüro"}
+{165300}{}{Sargtisch}
+{165400}{}{Sargtisch}
+{165500}{}{Minenaufzug}
+{165600}{}{Minenaufzug}
+{165700}{}{Fahnenmast}
+{165800}{}{NKR-Flagge}
+{165900}{}{Schild "Poseidon-Benzin"}
+{166000}{}{Treppe nach unten}
+{166100}{}{Klinikschild}
+{166200}{}{Schild "Gefängnis"}
+{166300}{}{Schild "Zoll"}
+{166400}{}{Schild "Zoll"}
+{166500}{}{Schild "Begrüßungsbüro"}
+{166600}{}{Schild "Happy Harry"}
+{166700}{}{Schild "Das Loch"}
+{166800}{}{Schild "Informationszentrum"}
+{166900}{}{Schild "Informationszentrum"}
+{167000}{}{Logo der Bunkerstadt}
+{167100}{}{Schild "Stadtrat"}
+{167200}{}{Schild "Stadtrat"}
+{167300}{}{Wartungszentrum}
+{167400}{}{Schild "Besprechungszimmer"}
+{167500}{}{Schild "Zapfhaus"}
+{167600}{}{Schild "Westin-Ranch"}
+{167700}{}{Schild "Annehmlichkeiten"}
+{167800}{}{Schild "Nebenstelle A"}
+{167900}{}{Schild "Nebenstelle B"}
+{168000}{}{Amt für Dienerzuteilung}
+{168100}{}{Amt für Dienerzuteilung}
+{168200}{}{Schild "Büro der Annehmlichkeiten"}
+{168300}{}{Schild "Büro der Annehmlichkeiten"}
+{168400}{}{Minenaufzug}
+{168500}{}{Minenaufzug}
+{168600}{}{Minenaufzug}
+{168700}{}{Minenaufzug}
+{168800}{}{Verti-Bird}
+{168900}{}{Verti-Bird}
+{169000}{}{Verti-Bird}
+{169100}{}{Verti-Bird}
+{169200}{}{Verti-Bird}
+{169300}{}{Schatten}
+{169400}{}{Schatten}
+{169500}{}{Schatten}
+{169600}{}{Schatten}
+{169700}{}{Abgestürzter Vertibird}
+{169800}{}{Abgestürzter Vertibird}
+{169900}{}{Abgestürzter Vertibird}
+{170000}{}{Abgestürzter Vertibird}
+{170100}{}{Abgestürzter Vertibird}
+{170200}{}{Abgestürzter Vertibird}
+{170300}{}{Schatten}
+{170400}{}{Schatten}
+{170500}{}{Schatten}
+{170600}{}{Zerstörte Brücke}
+{170601}{}{Du siehst die Überreste der Arroyo-Brücke. Jetzt gibt es keinen Weg mehr ins Dorf.}
+{170700}{}{Zerstörte Brücke}
+{170701}{}{Du siehst die Überreste der Arroyo-Brücke. Jetzt gibt es keinen Weg mehr ins Dorf.}
 {170800}{}{Canyon}
-{170900}{}{Door}
-{171000}{}{Door}
-{171100}{}{Wall}
-{171200}{}{Wall}
-{171300}{}{Wall}
-{171400}{}{Wall}
-{171500}{}{Wall}
-{171600}{}{Wall}
-{171700}{}{Wall}
-{171800}{}{Wall}
-{171900}{}{Air Vent}
-{172000}{}{Air Vent}
-{172100}{}{Bullet Proof Glass}
-{172200}{}{Bullet Proof Glass}
-{172300}{}{Bullet Proof Glass}
-{172400}{}{Heavy Laser Turret}
-{172500}{}{Heavy Laser Turret}
-{172600}{}{Rocks}
-{172700}{}{Rocks}
-{172800}{}{Rocks}
-{172900}{}{Rocks}
-{173000}{}{Rocks}
-{173100}{}{Rocks}
-{173200}{}{Rocks}
-{173300}{}{Rocks}
-{173400}{}{Rocks}
-{173500}{}{Rocks}
-{173600}{}{Rocks}
-{173700}{}{Becky's Casino Sign}
-{173800}{}{Becky's Sign}
-{173900}{}{Last Gasp Saloon Sign}
-{174000}{}{Mom's Diner Sign}
-{174100}{}{Slaver's Guild Sign}
-{174200}{}{Survival/Gear Locker Sign}
-{174300}{}{Tubby's Sign}
-{174400}{}{Tubby's Sign}
-{174500}{}{Mine Elevator Gate}
-{174600}{}{Fan}
-{174700}{}{Fan}
-{174800}{}{President's Office Door}
-{174900}{}{Eye Chart}
-{175000}{}{Ruins}
-{175100}{}{Guardian of Forever}
-{175200}{}{Out of Order Sign}
-{175300}{}{Collapsed Floor}
-{175400}{}{Toilet}
-{175500}{}{Cross}
-{175600}{}{Wall}
-{175700}{}{Wall}
-{175800}{}{Wall}
-{175900}{}{Wall}
-{176000}{}{Wall}
-{176100}{}{Wall}
-{176200}{}{Wall}
-{176300}{}{Wall}
-{176400}{}{Building}
-{176500}{}{Building}
-{176600}{}{Building}
-{176700}{}{Building}
-{176800}{}{Building}
-{176900}{}{Building}
-{177000}{}{Steel Supports}
-{177100}{}{Steel Supports}
-{177200}{}{Steel Supports}
-{177300}{}{Water}
-{177400}{}{Water}
-{177500}{}{Water}
-{177600}{}{Water}
-{177700}{}{Water}
-{177800}{}{Water}
-{177900}{}{Waterfall}
-{178000}{}{Road}
-{178100}{}{Road}
-{178200}{}{Road}
-{178300}{}{Road}
-{178400}{}{Road}
-{178500}{}{Road}
-{178600}{}{Road}
-{178700}{}{Bridge Support}
-{178800}{}{Bridge Support}
-{178900}{}{Bridge Support}
-{179000}{}{Fence}
-{179100}{}{Lamp}
-{179200}{}{Lamp}
-{179300}{}{Dead Whale}
-{179301}{}{This whale appeared to have fallen from a great height.}
-{179400}{}{Dead Whale}
-{179401}{}{This whale appeared to have fallen from a great height.}
-{179500}{}{Whale Fin}
-{179501}{}{The fin of a dead whale.}
-{179600}{}{Whale Eye}
-{179601}{}{The eye of a dead whale.}
-{179700}{}{Whale Chunk}
-{179701}{}{A chunk of whale!}
-{179800}{}{Whale Chunk}
-{179801}{}{A chunk of whale!}
-{179900}{}{Whale Chunk}
-{179901}{}{A chunk of whale!}
-{180000}{}{Whale Chunk}
-{180001}{}{A chunk of whale!}
-{180100}{}{Whale Chunk}
-{180101}{}{A chunk of whale!}
-{180200}{}{Boss Legs}
-{180300}{}{Rocks}
-{180400}{}{Rocks}
-{180500}{}{Rocks}
-{180600}{}{Rocks}
-{180700}{}{Tannery Sign}
-{180800}{}{Rose's B&B Sign}
-{180900}{}{Vortis Holding Sign}
-{181000}{}{Vortis Holding Sign}
-{181100}{}{Great Wamamingo Mine Sign}
-{181200}{}{Ascorti's Sign}
-{181300}{}{Crashed Shuttle}
-{181301}{}{A space vehicle of some kind. It looks like it crashed here recently.}
-{181400}{}{Coffin}
-{181500}{}{Stockman's Assoc. Sign}
-{181600}{}{Slaughter-House Sign}
-{181700}{}{Plank}
-{181800}{}{Wood Door}
-{181900}{}{Wood Door}
-{182000}{}{Cola Fridge}
-{182100}{}{Cola Fridge}
-{182200}{}{Stove}
-{182300}{}{Stove}
-{182400}{}{Stove}
-{182500}{}{Stove}
-{182600}{}{Stuff}
-{182700}{}{Stuff}
-{182800}{}{Stuff}
-{182900}{}{Stuff}
-{183000}{}{Stuff}
-{183100}{}{Stuff}
-{183200}{}{Stuff}
-{183300}{}{Stuff}
-{183400}{}{President's Chair}
-{183500}{}{Stairs}
-{183600}{}{World Map}
-{183700}{}{Situation Map}
-{183800}{}{War Room Table}
-{183900}{}{Council Room Table}
-{184000}{}{Council Room Table}
-{184100}{}{War Room Table}
-{184200}{}{Tree}
-{184300}{}{Tree}
-{184400}{}{Ramp}
-{184500}{}{Golden Globes Porn Sign}
-{184600}{}{Ship Wheel}
-{184700}{}{Ship Speed Control}
-{184800}{}{Comm Station}
-{184900}{}{Computer Console}
-{185000}{}{Viewport Shutters}
-{185100}{}{Steam}
+{170900}{}{Tür}
+{171000}{}{Tür}
+{171100}{}{Wand}
+{171200}{}{Wand}
+{171300}{}{Wand}
+{171400}{}{Wand}
+{171500}{}{Wand}
+{171600}{}{Wand}
+{171700}{}{Wand}
+{171800}{}{Wand}
+{171900}{}{Lüftungsschlitz}
+{172000}{}{Lüftungsschlitz}
+{172100}{}{Kugelsicheres Glas}
+{172200}{}{Kugelsicheres Glas}
+{172300}{}{Kugelsicheres Glas}
+{172400}{}{Schwerer Lasergeschützturm}
+{172500}{}{Schwerer Lasergeschützturm}
+{172600}{}{Felsen}
+{172700}{}{Felsen}
+{172800}{}{Felsen}
+{172900}{}{Felsen}
+{173000}{}{Felsen}
+{173100}{}{Felsen}
+{173200}{}{Felsen}
+{173300}{}{Felsen}
+{173400}{}{Felsen}
+{173500}{}{Felsen}
+{173600}{}{Felsen}
+{173700}{}{Schild "Beckys Kasino"}
+{173800}{}{Beckys Schild}
+{173900}{}{Schild "Saloon Letzter Seufzer"}
+{174000}{}{Schild "Mom's Diner"}
+{174100}{}{Schild "Sklavenhändlergilde"}
+{174200}{}{Schild "Überlebens-/Ausrüstungsspind"}
+{174300}{}{Tubbys Schild}
+{174400}{}{Tubbys Schild}
+{174500}{}{Minenaufzugstor}
+{174600}{}{Ventilator}
+{174700}{}{Ventilator}
+{174800}{}{Tür zum Büro des Präsidenten}
+{174900}{}{Augentabelle}
+{175000}{}{Ruinen}
+{175100}{}{Wächter des Ewig}
+{175200}{}{Schild "Außer Betrieb"}
+{175300}{}{Eingebrochener Boden}
+{175400}{}{Toilette}
+{175500}{}{Kreuz}
+{175600}{}{Wand}
+{175700}{}{Wand}
+{175800}{}{Wand}
+{175900}{}{Wand}
+{176000}{}{Wand}
+{176100}{}{Wand}
+{176200}{}{Wand}
+{176300}{}{Wand}
+{176400}{}{Gebäude}
+{176500}{}{Gebäude}
+{176600}{}{Gebäude}
+{176700}{}{Gebäude}
+{176800}{}{Gebäude}
+{176900}{}{Gebäude}
+{177000}{}{Stahlträger}
+{177100}{}{Stahlträger}
+{177200}{}{Stahlträger}
+{177300}{}{Wasser}
+{177400}{}{Wasser}
+{177500}{}{Wasser}
+{177600}{}{Wasser}
+{177700}{}{Wasser}
+{177800}{}{Wasser}
+{177900}{}{Wasserfall}
+{178000}{}{Straße}
+{178100}{}{Straße}
+{178200}{}{Straße}
+{178300}{}{Straße}
+{178400}{}{Straße}
+{178500}{}{Straße}
+{178600}{}{Straße}
+{178700}{}{Brückenträger}
+{178800}{}{Brückenträger}
+{178900}{}{Brückenträger}
+{179000}{}{Zaun}
+{179100}{}{Lampe}
+{179200}{}{Lampe}
+{179300}{}{Toter Wal}
+{179301}{}{Dieser Wal scheint aus großer Höhe herabgefallen zu sein.}
+{179400}{}{Toter Wal}
+{179401}{}{Dieser Wal scheint aus großer Höhe herabgefallen zu sein.}
+{179500}{}{Walflosse}
+{179501}{}{Flosse eines toten Wals.}
+{179600}{}{Walauge}
+{179601}{}{Auge eines toten Wals.}
+{179700}{}{Walstück}
+{179701}{}{Ein Stück Wal!}
+{179800}{}{Walstück}
+{179801}{}{Ein Stück Wal!}
+{179900}{}{Walstück}
+{179901}{}{Ein Stück Wal!}
+{180000}{}{Walstück}
+{180001}{}{Ein Stück Wal!}
+{180100}{}{Walstück}
+{180101}{}{Ein Stück Wal!}
+{180200}{}{Boßbeine}
+{180300}{}{Felsen}
+{180400}{}{Felsen}
+{180500}{}{Felsen}
+{180600}{}{Felsen}
+{180700}{}{Gerbereischild}
+{180800}{}{Schild "Roses Pension"}
+{180900}{}{Schild "Vortis-Holding"}
+{181000}{}{Schild "Vortis-Holding"}
+{181100}{}{Schild "Große Wamamingo-Mine"}
+{181200}{}{Ascortis Schild}
+{181300}{}{Abgestürztes Shuttle}
+{181301}{}{Eine Art Weltraumfahrzeug. Sieht aus, als sei es hier erst vor kurzem abgestürzt.}
+{181400}{}{Sarg}
+{181500}{}{Schild "Viehzüchterverband"}
+{181600}{}{Schild "Schlachthaus"}
+{181700}{}{Planke}
+{181800}{}{Holztür}
+{181900}{}{Holztür}
+{182000}{}{Cola-Kühlschrank}
+{182100}{}{Cola-Kühlschrank}
+{182200}{}{Ofen}
+{182300}{}{Ofen}
+{182400}{}{Ofen}
+{182500}{}{Ofen}
+{182600}{}{Kram}
+{182700}{}{Kram}
+{182800}{}{Kram}
+{182900}{}{Kram}
+{183000}{}{Kram}
+{183100}{}{Kram}
+{183200}{}{Kram}
+{183300}{}{Kram}
+{183400}{}{Präsidentenstuhl}
+{183500}{}{Treppe}
+{183600}{}{Weltkarte}
+{183700}{}{Situationskarte}
+{183800}{}{Tisch im Kriegszimmer}
+{183900}{}{Tisch im Ratszimmer}
+{184000}{}{Tisch im Ratszimmer}
+{184100}{}{Tisch im Kriegszimmer}
+{184200}{}{Baum}
+{184300}{}{Baum}
+{184400}{}{Rampe}
+{184500}{}{Schild "Golden-Globes-Porno"}
+{184600}{}{Schiffsrad}
+{184700}{}{Schiffs-Geschwindigkeitssteuerung}
+{184800}{}{Kommandozentrale}
+{184900}{}{Computerkonsole}
+{185000}{}{Sichtblenden}
+{185100}{}{Dampf}
 {185200}{}{Container}
 {185201}{}{Eine Art Gebäudekomplex. Du bist dir nicht sicher, aber du siehst große Container mit einem grünlichen Schleim, der irgendwie wichtig aussieht.}
 {185300}{}{Container}
@@ -2779,12 +2779,12 @@
 {185801}{}{Eine Art Gebäudekomplex. Du bist dir nicht sicher, aber du siehst große Container mit einem grünlichen Schleim, der irgendwie wichtig aussieht.}
 {185900}{}{Container}
 {185901}{}{Eine Art Gebäudekomplex. Du bist dir nicht sicher, aber du siehst große Container mit einem grünlichen Schleim, der irgendwie wichtig aussieht.}
-{186000}{}{Motorcycle}
-{186001}{}{This Chrysalis Motors Cruiser looks to be in pretty good shape for its age.}
-{186100}{}{Motorcycle}
-{186101}{}{This Chrysalis Motors Cruiser looks to be in pretty good shape for its age.}
-{186200}{}{Sidecar}
-{186201}{}{An old motorcycle sidecar. It appears to be in a good shape.}
+{186000}{}{Motorrad}
+{186001}{}{Dieser Chrysalis Motors Cruiser scheint für sein Alter in ziemlich guter Verfassung zu sein.}
+{186100}{}{Motorrad}
+{186101}{}{Dieser Chrysalis Motors Cruiser scheint für sein Alter in ziemlich guter Verfassung zu sein.}
+{186200}{}{Beiwagen}
+{186201}{}{Ein alter Motorradbeiwagen. Scheint sich in gutem Zustand zu befinden.}
 {186300}{}{Wand}
 {186400}{}{Kasinoschild}
-{186401}{}{Sieht wie eine Werbetafel für Gizmos Kasino aus. Ausgeschaltet.}
+{186401}{}{Sieht wie eine Werbetafel für Gizmos Kasino aus. Es wurde ausgeschaltet.}
