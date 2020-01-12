@@ -3,10 +3,10 @@
 Fallout 1 Language Pack - German / Deutsch
 ------------------
 
-Die deutsche Übersetzung von FALLOUT ET TU. Hierbei handelt es sich um eine sehr frühe Version!
+Die deutsche Übersetzung von FALLOUT ET TU.
 
-
-Jede Hilfe bei der Übersetzung ist willkommen!
+Das Spiel ist im Großen und Ganzen auf Deutsch spielbar, allerdings lassen sich noch die ein oder anderen englischen Sätze finden.
+Jede Hilfe bei der Fertigstellung der Übersetzung ist willkommen!
 
 ### Installation
 Um mit dieser Mod spielen zu können, öffne die ddraw.ini, gehe zu [ExtraPatches] und füge "PatchFile[number]=mods\fo1_german" ans Ende der "PatchFile"-Liste!
