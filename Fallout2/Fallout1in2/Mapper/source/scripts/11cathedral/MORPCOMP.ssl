@@ -14,7 +14,14 @@ procedure start;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
 
+procedure use_terminal;
+procedure hack_terminal;
+procedure morpheus_hostile;
+
 variable Hacked;
+variable Skill := 0;
+
+import variable Morpheus_Ptr;
 
 procedure start begin
 end
@@ -25,7 +32,32 @@ procedure look_at_p_proc begin
 end
 
 procedure use_p_proc begin
-   variable LVar0 := 0;
+   if (Morpheus_Ptr != 0) then begin
+      if (obj_can_see_obj(Morpheus_Ptr,dude_obj)) then begin
+         call morpheus_hostile;
+      end
+      else begin
+         call use_terminal;
+      end
+   end
+   else
+      call use_terminal;
+end
+
+procedure use_skill_on_p_proc begin
+   if (Morpheus_Ptr != 0) then begin
+      if (obj_can_see_obj(Morpheus_Ptr,dude_obj)) then begin
+         call morpheus_hostile;
+      end
+      else begin
+         call hack_terminal;
+      end
+   end
+   else
+      call hack_terminal;
+end
+
+procedure use_terminal begin
    if (Hacked == 0) then begin
       script_overrides;
       display_msg(mstr(105));
@@ -36,12 +68,10 @@ procedure use_p_proc begin
    end
 end
 
-procedure use_skill_on_p_proc begin
-   variable LVar0 := 0;
-
+procedure hack_terminal begin
    if (action_being_used == SKILL_SCIENCE) then begin
-      LVar0 := roll_vs_skill(dude_obj, SKILL_SCIENCE, 0);
-      if (is_success(LVar0)) then begin
+      Skill := roll_vs_skill(dude_obj, SKILL_SCIENCE, 0);
+      if (is_success(Skill)) then begin
          script_overrides;
          display_msg(mstr(107));
          Hacked := 1;
@@ -51,4 +81,9 @@ procedure use_skill_on_p_proc begin
          display_msg(mstr(106));
       end
    end
+end
+
+procedure morpheus_hostile begin
+   float_msg(Morpheus_Ptr, gen_mstr(172), FLOAT_MSG_RED);
+   attack_setup(Morpheus_Ptr, dude_obj);
 end

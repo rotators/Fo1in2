@@ -12,6 +12,8 @@ procedure use_obj_on_p_proc;
 procedure map_update_p_proc;
 procedure damage_p_proc;
 
+#define LVAR_Gave_Locks_XP    (3)
+
 import variable Red_Door_Ptr;
 import variable Laura_Ptr;
 
@@ -34,20 +36,22 @@ procedure use_p_proc begin
    end
 end
 
-procedure use_skill_on_p_proc
-begin
-   variable LVar0 := 0;
+procedure use_skill_on_p_proc begin
+   variable Item := 0;
    if (local_var(0) == 0) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
-         LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -60);
-         if (is_success(LVar0)) then begin
+         Item := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -60);
+         if (is_success(Item)) then begin
             set_local_var(0, 1);
             display_msg(mstr(100));//{100}{}{You unlock the door.}
-            give_xp(EXP_LOCKPICK_NEG_60);
+            if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+               set_local_var(LVAR_Gave_Locks_XP, 1);
+               give_xp(EXP_LOCKPICK_NEG_60);
+            end
          end
          else begin
-            if (is_critical(LVar0)) then begin
+            if (is_critical(Item)) then begin
                jam_lock(self_obj);
                display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
             end
@@ -62,30 +66,32 @@ begin
    end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    if (local_var(0) == 0) then begin
       display_msg(mstr(104));//{104}{}{The door is locked.}
    end
 end
 
-procedure use_obj_on_p_proc
-begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := obj_being_used_with;
-   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
-   if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
+procedure use_obj_on_p_proc begin
+   variable Item := 0;
+   variable Skill := 0;
+   Item := obj_pid(obj_being_used_with);
+   Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
+
+   if (Item == PID_LOCKPICKS) then begin
       script_overrides;
-      if (is_success(LVar1)) then begin
+      if (is_success(Skill)) then begin
          set_local_var(0, 1);
-         display_msg(mstr(100));//{100}{}{You unlock the door.}
-         give_xp(EXP_LOCKPICK_NEG_60);
+         display_msg(mstr(100));
+         if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+            set_local_var(LVAR_Gave_Locks_XP, 1);
+            give_xp(EXP_LOCKPICK_NEG_60);
+         end
       end
       else begin
-         if (is_critical(LVar1)) then begin
-            rm_obj_from_inven(dude_obj, LVar0);
-            destroy_object(LVar0);
+         if (is_critical(Skill)) then begin
+            rm_obj_from_inven(dude_obj, Item);
+            destroy_object(Item);
             jam_lock(self_obj);
             display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
             display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
@@ -95,17 +101,14 @@ begin
          end
       end
    end
-   else begin
-      if ((obj_pid(LVar0) == PID_BLACK_COC_BADGE) or (obj_pid(LVar0) == PID_RED_COC_BADGE)) then begin
-         script_overrides;
-         set_local_var(0, 1);
-         display_msg(mstr(100));//{100}{}{You unlock the door.}
-      end
+   else if ((Item == PID_BLACK_COC_BADGE) or (Item == PID_RED_COC_BADGE)) then begin
+      script_overrides;
+      set_local_var(0, 1);
+      display_msg(mstr(100));//{100}{}{You unlock the door.}
    end
 end
 
-procedure map_update_p_proc
-begin
+procedure map_update_p_proc begin
    Red_Door_Ptr := self_obj;
    if (local_var(0) == 0) then begin
       obj_lock(self_obj);

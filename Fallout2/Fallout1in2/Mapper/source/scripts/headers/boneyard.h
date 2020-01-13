@@ -15,10 +15,14 @@
 #define create_la_invader(hex)   invaderPtr := create_object_sid(PID_TOUGH_NIGHTKIN, 0, 0, SCRIPT_SCSUPMUT);   \
                                  set_ai(invaderPtr, AI_SUPER_MUTANT_AGGRESSIVE);                               \
                                  critter_attempt_placement(invaderPtr, hex, 0)
-								 
+
 #define create_foa_invader(pid, hex, script)	invaderPtr := create_object_sid(pid, 0, 0, script);   \
 												critter_attempt_placement(invaderPtr, hex, elev)
-								 
+
+// Turn Adytum against the Regulators:
+#define set_fight_regulators  if (not(get_blades_attack_finished) and (get_zimmermann_turned or get_blades_attacking)) then \
+                                 set_self_team(TEAM_PLAYER)
+
 //******************** Quest: Blades vs. Regulators conflict
 //--- Gun Runners:
 // PipBoy quest tracker:
@@ -67,6 +71,10 @@
 // Player declines to attack with Blades:
 #define set_blades_attacking_alone      set_global_var(GVAR_BLADES_STATUS, 9104)
 #define get_blades_attacking_alone      (global_var(GVAR_BLADES_STATUS) == 9104)
+
+// The Blades attack on Adytum is done:
+#define set_blades_attack_finished      set_global_var(GVAR_BLADES_STATUS, 2)
+#define get_blades_attack_finished      (global_var(GVAR_BLADES_STATUS) == 2)
 
 //--- Regulators:
 #define get_gangwar_inactive            (global_var(GVAR_QUEST_BONEYARD_7_GANG_WAR) == 0) // this stuff is old and unfinished. Replaced with quest var down below.

@@ -1,6 +1,9 @@
 /*
 
-   Mariposa, door to the armory
+   Mariposa and Cathedral - Metal door
+
+   - Door to the armory on level 2 in Mariposa.
+   - Door to the bomb in Master's Lair.
 
 */
 
@@ -19,7 +22,8 @@ procedure damage_p_proc;
 
 import variable Cur_Door_Ptr;
 
-#define LVAR_DoorState  (2)
+#define LVAR_DoorState        (2)
+#define LVAR_Gave_Locks_XP    (3)
 
 procedure start begin
 end
@@ -38,18 +42,21 @@ procedure use_p_proc begin
 end
 
 procedure use_skill_on_p_proc begin
-   variable LVar0 := 0;
+   variable Item := 0;
    if (local_var(0) == 0) then begin
       if (action_being_used == SKILL_LOCKPICK) then begin
          script_overrides;
-         LVar0 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
-         if (is_success(LVar0)) then begin
+         Item := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
+         if (is_success(Item)) then begin
             set_local_var(0, 1);
-            display_msg(mstr(100));//{100}{}{You unlock the door.}
-            give_xp(EXP_LOCKPICK_NEG_40);
+            display_msg(mstr(100));
+            if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+               set_local_var(LVAR_Gave_Locks_XP, 1);
+               give_xp(EXP_LOCKPICK_NEG_40);
+            end
          end
          else begin
-            if (is_critical(LVar0)) then begin
+            if (is_critical(Item)) then begin
                jam_lock(self_obj);
                display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
             end
@@ -71,21 +78,25 @@ procedure description_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := obj_being_used_with;
-   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
-   if (obj_pid(LVar0) == PID_ELECTRONIC_LOCKPICKS) then begin
+   variable Item := 0;
+   variable Skill := 0;
+   Item := obj_pid(obj_being_used_with);
+   Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
+
+   if (Item == PID_ELECTRONIC_LOCKPICKS or Item == PID_ELEC_LOCKPICK_MKII) then begin
       script_overrides;
-      if (is_success(LVar1)) then begin
+      if (is_success(Skill)) then begin
          set_local_var(0, 1);
          display_msg(mstr(100));//{100}{}{You unlock the door.}
-         give_xp(EXP_LOCKPICK_NEG_40);
+         if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+            set_local_var(LVAR_Gave_Locks_XP, 1);
+            give_xp(EXP_LOCKPICK_NEG_40);
+         end
       end
       else begin
-         if (is_critical(LVar1)) then begin
-            rm_obj_from_inven(dude_obj, LVar0);
-            destroy_object(LVar0);
+         if (is_critical(Skill)) then begin
+            rm_obj_from_inven(dude_obj, Item);
+            destroy_object(Item);
             display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
          end
          else begin

@@ -17,6 +17,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure pickup_p_proc;
@@ -28,6 +29,8 @@ procedure GenMercA02;
 procedure GenMercA03;
 procedure GenMercA04;
 procedure GenMercAEnd;
+
+#define LVAR_Destination   (4)
 
 variable scared;
 variable tmp_hostile;
@@ -42,6 +45,14 @@ procedure start begin
       initial := 1;
       set_self_team(TEAM_SHADY_SANDS);
       set_self_ai(AI_MERCHANT);
+
+      tmp_hostile := 0;
+      set_global_var(GVAR_MERCS_RANDOM_ENC_unsure, global_var(GVAR_MERCS_RANDOM_ENC_unsure) + 1);
+   end
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
       index := random(0, 3);
       if (boneyard_invaded and (index == 0)) then begin
          index := random(1, 3);
@@ -49,11 +60,11 @@ procedure start begin
       if (necropolis_invaded and (index == 3)) then begin
          index := random(1, 2);
       end
-      name_index := 105 + index;
-      job_index := 109 + index;
-      tmp_hostile := 0;
-      set_global_var(GVAR_MERCS_RANDOM_ENC_unsure, global_var(GVAR_MERCS_RANDOM_ENC_unsure) + 1);
+      set_local_var(LVAR_Destination, index);
    end
+
+   name_index := 105 + local_var(LVAR_Destination);
+   job_index := 109 + local_var(LVAR_Destination);
 end
 
 procedure critter_p_proc begin
@@ -91,19 +102,19 @@ procedure talk_p_proc begin
 
    if (move) then begin
       move := 0;
-      if (index == 0) then begin
+      if (local_var(LVAR_Destination) == 0) then begin
          //load_map(MAP_LAADYTUM, 1);
          advance_time_travel_to_boneyard;
       end
-      else if (index == 1) then begin
+      else if (local_var(LVAR_Destination) == 1) then begin
          //load_map(MAP_JUNKENT, 1);
          advance_time_travel_to_junktown;
       end
-      else if (index == 2) then begin
+      else if (local_var(LVAR_Destination) == 2) then begin
          //load_map(MAP_HUBENT, 1);
          advance_time_travel_to_hub;
       end
-      else if (index == 3) then begin
+      else if (local_var(LVAR_Destination) == 3) then begin
          //load_map(MAP_HOTEL, 1);
          advance_time_travel_to_necropolis;
       end
@@ -111,20 +122,19 @@ procedure talk_p_proc begin
 
 end
 
-procedure GenMercA00
-begin
+procedure GenMercA00 begin
    gsay_reply(SCRIPT_GENMERCA, 100);
    giq_option(4, SCRIPT_GENMERCA, 101, GenMercA01, NEUTRAL_REACTION);
    giq_option(4, SCRIPT_GENMERCA, 102, GenMercA02, NEUTRAL_REACTION);
-   if (has_rep_berserker) then begin
+
+   if (has_rep_berserker) then
       giq_option(4, SCRIPT_GENMERCA, 103, GenMercA03, BAD_REACTION);
-   end
+
    giq_option(-3, SCRIPT_GENMERCA, 104, GenMercAEnd, NEUTRAL_REACTION);
    giq_option(4, SCRIPT_MODREACT, 103, GenMercAEnd, NEUTRAL_REACTION);
 end
 
-procedure GenMercA01
-begin
+procedure GenMercA01 begin
    gsay_reply(SCRIPT_GENMERCA, name_index);
    giq_option(4, SCRIPT_GENMERCA, 102, GenMercA02, NEUTRAL_REACTION);
    giq_option(4, SCRIPT_MODREACT, 100, GenMercAEnd, NEUTRAL_REACTION);
@@ -132,19 +142,19 @@ end
 
 procedure GenMercA02 begin
    gsay_reply(SCRIPT_GENMERCA, job_index);
+
    if not(car_in_any_encounter) then
       giq_option(4, SCRIPT_GENMERCA, 114, GenMercA04, NEUTRAL_REACTION);
+
    giq_option(4, SCRIPT_MODREACT, 100, GenMercAEnd, NEUTRAL_REACTION);
 end
 
-procedure GenMercA03
-begin
+procedure GenMercA03 begin
    scared := 1;
    gsay_message(SCRIPT_GENMERCA, 113, BAD_REACTION);
 end
 
-procedure GenMercA04
-begin
+procedure GenMercA04 begin
    if (has_rep_berserker or has_rep_childkiller or (check_general_rep < -20)) then begin
       gsay_message(SCRIPT_GENMERCA, 117, BAD_REACTION);
    end
@@ -159,6 +169,5 @@ begin
    end
 end
 
-procedure GenMercAEnd
-begin
+procedure GenMercAEnd begin
 end

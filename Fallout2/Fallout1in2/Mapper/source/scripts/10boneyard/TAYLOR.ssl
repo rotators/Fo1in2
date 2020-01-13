@@ -1,6 +1,6 @@
 /*
 
-   Boneyard - Tylor
+   Boneyard - Tylor, the merchant in Adytum
 
 */
 
@@ -111,19 +111,23 @@ end
 
 procedure talk_p_proc begin
    variable LVar0 := 0;
+   variable tmp_merch_box;
 
    set_tma_data_generic(TMA_MSG_ADYTUM_LVL2);
 
    dude_look_at_self;
    get_reaction
+
+   // Move personal inventory somewhere else first
+   tmp_merch_box := create_object(PID_CONTAINER_WOOD_CRATE, 0, 0);
+   move_obj_inven_to_obj(self_obj, tmp_merch_box);
+
    LVar0 := random(0, 1);
    if (Tine_barter == 0) then begin
-      if (LVar0 == 1) then begin
+      if (LVar0 == 1) then
          move_obj_inven_to_obj(AdyStor1_ptr, self_obj);
-      end
-      else begin
+      else
          move_obj_inven_to_obj(AdyStor2_ptr, self_obj);
-      end
    end
 
    barter_mod := barter_mod_initial;
@@ -161,6 +165,10 @@ procedure talk_p_proc begin
       move_obj_inven_to_obj(self_obj, AdyStor2_ptr);
 
    Tine_barter := 0;
+
+   // Return personal inventory
+   move_obj_inven_to_obj(tmp_merch_box, self_obj);
+   destroy_object(tmp_merch_box);
 end
 
 procedure Tine01 begin

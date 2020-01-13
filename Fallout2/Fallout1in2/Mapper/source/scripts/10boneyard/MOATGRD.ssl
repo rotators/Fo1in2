@@ -32,6 +32,7 @@ procedure Moat02;
 procedure Moat03;
 procedure Moat04;
 procedure Moat05;
+procedure Moat06;
 procedure MoatEnd;
 
 procedure MoatCombat;
@@ -41,6 +42,11 @@ variable DestTile;
 
 #define LVAR_Home_Tile              (4)
 #define LVAR_Home_Rotation          (7)
+
+#define allow_passage_hex     (26299)
+
+#define EVENT_HOSTILE         (1)
+#define EVENT_ALLOW_PASSAGE   (2)
 
 procedure Start begin
    if Only_Once then begin
@@ -57,12 +63,14 @@ procedure map_enter_p_proc begin
       set_local_var(LVAR_Home_Rotation, self_cur_rot);
    end
    else if (is_loading_game == false) then begin
-      move_to(self_obj, local_var(LVAR_Home_Tile), 0);
+      //move_to(self_obj, local_var(LVAR_Home_Tile), 0);
+      DestTile := local_var(LVAR_Home_Tile);
+      critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
       self_rotate(local_var(LVAR_Home_Rotation));
    end
 
    // Fix for wandering off:
-   if (DestTile == 0) then DestTile := local_var(LVAR_Home_Tile);
+   if (DestTile == 0) then DestTile := allow_passage_hex;
 end
 
 procedure pickup_p_proc begin
@@ -88,7 +96,10 @@ procedure talk_p_proc begin
    end
    else begin
       get_reaction
-      start_dialog_at_node(Moat00);
+      if (self_tile != local_var(LVAR_Home_Tile)) then
+         start_dialog_at_node(Moat06);
+      else
+         start_dialog_at_node(Moat00);
    end
 end
 
@@ -120,11 +131,14 @@ procedure destroy_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if (fixed_param == 1) then begin
+   if (fixed_param == EVENT_HOSTILE) then begin
       if (tile_distance_objs(self_obj, dude_obj) < 5) then begin
          set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
          attack(dude_obj);
       end
+   end
+   else if (fixed_param == EVENT_ALLOW_PASSAGE) then begin
+      self_walk_to_tile(allow_passage_hex);
    end
 end
 
@@ -157,23 +171,28 @@ end
 
 procedure Moat03 begin
    NMessage(116);
-   DestTile := 26299;
+   DestTile := allow_passage_hex;
    set_local_var(5, 1);
 end
 
 procedure Moat04 begin
    NMessage(117);
-   DestTile := 26299;
+   DestTile := allow_passage_hex;
 end
 
 procedure Moat05 begin
    NMessage(113);
-   DestTile := 26299;
+   DestTile := allow_passage_hex;
    set_local_var(5, 1);
 end
 
+// Fo1in2:
+procedure Moat06 begin
+   NMessage(200);
+end
+
 procedure MoatCombat begin
-   add_timer_event(self_obj, game_ticks(10), 1);
+   add_timer_event(self_obj, game_ticks(10), EVENT_HOSTILE);
    BottomReact
 end
 
