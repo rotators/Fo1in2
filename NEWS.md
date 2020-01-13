@@ -15,6 +15,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
 - **Added**: Tycho-critter can now also use SMGs.
 - **Added**: Using the punching bags will now give a one-time +5% unarmed increase (lifted from Fo2).
+- **Added**: Zones around the Glow now read "Rad. Mountains" / "Rad. Desert" (can't show full text length right now).
 - **Fixed**: Broken worldmap mask tiles 18 and 19.
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
