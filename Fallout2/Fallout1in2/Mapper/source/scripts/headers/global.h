@@ -4107,8 +4107,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4971)
 #define RESERVED_FOR_FALLOUT_FIXT               (4972)
 #define RESERVED_FOR_FALLOUT_FIXT               (4973)
-#define RESERVED_FOR_FALLOUT_FIXT               (4974)
-#define RESERVED_FOR_FALLOUT_FIXT               (4975)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4974)*/
+#define GVAR_CATHEDRAL_ALERT                    (4975)
 #define GVAR_BONUS_PUNCHING_BAG                 (4976)
 #define GVAR_ENABLE_ARMOR_VAULT_SUIT            (4977)
 #define GVAR_ENABLE_ALTERNATIVE_DISGUISE        (4978)

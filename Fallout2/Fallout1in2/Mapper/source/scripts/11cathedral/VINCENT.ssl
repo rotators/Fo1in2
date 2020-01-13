@@ -16,6 +16,8 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
+procedure map_exit_p_proc;
 procedure damage_p_proc;
 procedure critter_p_proc;
 procedure pickup_p_proc;
@@ -37,6 +39,9 @@ procedure vincnight;
 procedure combat;
 procedure check_status;
 
+#define LVAR_Home_Tile              (7)
+#define LVAR_Home_Rotation          (8)
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable ARMED;
@@ -44,14 +49,29 @@ variable again;
 variable home_tile;
 variable sleep_tile;
 
+#define alert_tile         (24714)
+
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_NORMAL);
-      home_tile := self_tile;
-      sleep_tile := 22284;
+      //home_tile := self_tile;
+      //sleep_tile := 22284;
    end
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   home_tile := local_var(LVAR_Home_Tile);
+   sleep_tile := 22284;
+end
+
+procedure map_exit_p_proc begin
+   set_global_var(GVAR_CATHEDRAL_ALERT, 0);
 end
 
 procedure timed_event_p_proc begin
@@ -74,30 +94,39 @@ procedure critter_p_proc begin
    end
    else begin
 
-      if (self_can_see_dude) then begin
-         call check_status;
-         if ((ARMED == 1) or not(DISGUISED)) then
-            call vincent02;
-         else if (local_var(5) == 0) then
-            call talk_p_proc;
-      end
-      else if (day) then begin
-         if (local_var(6)) then begin
-            set_local_var(6, 0);
-            self_walk_to_tile(home_tile);
-         end
-         else if (self_tile != home_tile) then begin
-            self_walk_to_tile(home_tile);
-         end
-      end
-      else if (local_var(6)) then begin
-         if (self_tile != sleep_tile) then begin
-            self_walk_to_tile(sleep_tile);
+      if (global_var(GVAR_CATHEDRAL_ALERT) > 0) then begin
+         self_walk_to_tile(alert_tile);
+         if (self_can_see_dude and tmp_hostile == 0) then begin
+            float_msg(self_obj, mstr(202), FLOAT_MSG_RED);
+            tmp_hostile := 1;
          end
       end
       else begin
-         set_local_var(6, 1);
-         self_walk_to_tile(sleep_tile);
+         if (self_can_see_dude) then begin
+            call check_status;
+            if ((ARMED == 1) or not(DISGUISED)) then
+               call vincent02;
+            else if (local_var(5) == 0) then
+               call talk_p_proc;
+         end
+         else if (day) then begin
+            if (local_var(6)) then begin
+               set_local_var(6, 0);
+               self_walk_to_tile(home_tile);
+            end
+            else if (self_tile != home_tile) then begin
+               self_walk_to_tile(home_tile);
+            end
+         end
+         else if (local_var(6)) then begin
+            if (self_tile != sleep_tile) then begin
+               self_walk_to_tile(sleep_tile);
+            end
+         end
+         else begin
+            set_local_var(6, 1);
+            self_walk_to_tile(sleep_tile);
+         end
       end
 
    end
