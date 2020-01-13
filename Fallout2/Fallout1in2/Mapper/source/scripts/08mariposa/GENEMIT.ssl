@@ -26,32 +26,42 @@ procedure start begin
 end
 
 procedure look_at_p_proc begin
-   script_overrides;
-   display_msg(mstr(200));
+   if CUR_AREA_MILITARY_BASE then begin
+      script_overrides;
+      display_msg(mstr(200));
+   end
 end
 
 procedure use_p_proc begin
    script_overrides;
-   display_msg(mstr(201));
+   if CUR_AREA_MILITARY_BASE then
+      display_msg(mstr(201));
+   else
+      display_msg(mstr(104));
 end
 
 procedure use_skill_on_p_proc begin
-   if (action_being_used == SKILL_SCIENCE) then begin
-      script_overrides;
-      display_msg(mstr(203));
+   script_overrides;
+   if CUR_AREA_MILITARY_BASE then begin
+      if (action_being_used == SKILL_SCIENCE) then
+         display_msg(mstr(203));
+      else if (action_being_used == SKILL_REPAIR) then
+         display_msg(mstr(202));
    end
-   else if (action_being_used == SKILL_REPAIR) then begin
-      script_overrides;
-      display_msg(mstr(202));
-   end
+   else
+      display_msg(mstr(104));
 end
 
 procedure description_p_proc begin
    script_overrides;
-   if fixt_disabled then
-      display_msg(mstr(201));
+   if CUR_AREA_MILITARY_BASE then begin
+      if fixt_disabled then
+         display_msg(mstr(201));
+      else
+         display_msg(mstr(204));
+   end
    else
-      display_msg(mstr(204));
+      display_msg(mstr(100));
 end
 
 procedure use_obj_on_p_proc begin
@@ -64,29 +74,39 @@ procedure use_obj_on_p_proc begin
 end
 
 procedure damage_p_proc begin
-variable pain_field_ptr, ff_emitter;
+variable field_pos, pain_field_ptr, force_field_ptr, ff_emitter;
 
    if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin
       set_local_var(LVAR_FF_Status, DESTROYED);
 
+      // Check if there is a red or yellow field active near the emitter
       if (self_pid == PID_EMITTER_MBASE_NS) then begin
-         pain_field_ptr := tile_num_in_direction(self_tile, 2, 2);
-         pain_field_ptr := tile_contains_pid_obj(pain_field_ptr, self_elevation, PID_NS_PAIN_FIELD);
+         field_pos := tile_num_in_direction(self_tile, 2, 2);
+         pain_field_ptr := tile_contains_pid_obj(field_pos, self_elevation, PID_NS_PAIN_FIELD); // Check if there is a red field
+         force_field_ptr := tile_contains_pid_obj(field_pos, self_elevation, PID_NS_FORCE_FIELD); // Check if there is a yellow field
 
          ff_emitter := create_object(PID_EMITTER_DESTROYED_NS, self_tile, self_elevation);
       end
       else if (self_pid == PID_EMITTER_MBASE_EW) then begin
-         pain_field_ptr := tile_num_in_direction(self_tile, 5, 1);
-         pain_field_ptr := tile_num_in_direction(pain_field_ptr, 3, 2);
-         pain_field_ptr := tile_contains_pid_obj(pain_field_ptr, self_elevation, PID_EW_PAIN_FIELD);
+         field_pos := tile_num_in_direction(self_tile, 5, 1);
+         field_pos := tile_num_in_direction(field_pos, 3, 2);
+         pain_field_ptr := tile_contains_pid_obj(field_pos, self_elevation, PID_EW_PAIN_FIELD);
+         force_field_ptr := tile_contains_pid_obj(field_pos, self_elevation, PID_EW_FORCE_FIELD);
 
          ff_emitter := create_object(PID_EMITTER_DESTROYED_EW, self_tile, self_elevation);
       end
+
+      // Destroy red or yellow field
       if (pain_field_ptr != 0) then
          destroy_object(pain_field_ptr);
+      else if (force_field_ptr != 0) then
+         destroy_object(force_field_ptr);
+
+      // If we are in Mariposa, sound the alarm
+      if CUR_AREA_MILITARY_BASE then
+         set_global_var(GVAR_VATS_ALERT, 1);
 
       display_msg(message_str(SCRIPT_EMITER1A, 102));
-      set_global_var(GVAR_VATS_ALERT, 1);
       destroy_object(self_obj);
    end
 end

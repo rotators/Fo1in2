@@ -86,8 +86,8 @@ variable Scenery_Creation_Ptr;
 #define PID_MB_DESTROYED_ROCKS_4            (33556238)
 
 // Force Fields
-#define PID_NS_FORCE_FIELD                  (33554921)
-#define PID_EW_FORCE_FIELD                  (33554922)
+#define PID_EW_FORCE_FIELD                  (33554921)
+#define PID_NS_FORCE_FIELD                  (33554922)
 #define PID_EW_PAIN_FIELD                   (33554923)
 #define PID_NS_PAIN_FIELD                   (33554924)
 #define PID_EW_ANIM_FIELD                   (33555980)
