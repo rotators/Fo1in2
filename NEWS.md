@@ -5,6 +5,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Fallout 2 dialog interface graphic with "Tell Me About"-button.
 - **Added**: First iteration of a possible german translation. Core-sentences are done.
 - **Added**: Fo1-styled terrain info and red travel marker dots on the worldmap.
+- **Added**: Force Fields in the Master's Lair can now be disabled by explosives.
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
 - **Added**: Loser with black shirt animations (Unused for now).
@@ -13,24 +14,36 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Missing running animation for female tribal NPC.
 - **Added**: Resized Super Mutant flameboy death animations by .Pixote. in a new mod folder. Enabled by default.
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
+- **Added**: The Cathedral prisoners will flee once the player has destroyed their force field(s).
 - **Added**: Tycho-critter can now also use SMGs.
 - **Added**: Using the punching bags will now give a one-time +5% unarmed increase (lifted from Fo2).
+- **Added**: Vincent in the Cathedral will react to force fields being destroyed.
 - **Added**: Zones around the Glow now read "Rad. Mountains" / "Rad. Desert" (can't show full text length right now).
+- **Fixed**: Adytowner will only join the player against the Regulators AFTER showing the holodisk to Zimmerman.
 - **Fixed**: Broken worldmap mask tiles 18 and 19.
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
+- **Fixed**: EXP exploit with doors in the Cathedral and Mariposa (locking/unlocking them).
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
+- **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
 - **Fixed**: Missing Vault Suit armor type entry in party_armor.ini file.
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: More Junktown NPCs won't respawn their caps on every map enter.
+- **Fixed**: Morpheus will attack the player if he sees him fiddling with his computer terminal.
+- **Fixed**: Party member "abandon party" debug-spam.
 - **Fixed**: Random mountain encounter would spawn pot container instead of gold items.
+- **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
+- **Fixed**: Regular Nightkins in the Master's Lair will not be deleted anymore together with the variable staff in the quarters when changing shifts.
 - **Fixed**: Tandi kidnapping timer for real this time.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
 - **Fixed**: The post-endgame hintbook now correctly sets all skills to 200%, all SPECIAL stats to 10 and hitpoints to 999/999 as it was originally intended.
+- **Fixed**: Tiny in Adytum won't mix his personal money into the trade inventory anymore.
 - **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
+- **Fixed**: Traveling merchants will now remember their target destination after loading a savegame inside the encounter.
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
 - **Fixed**: Vehicle potentially spawning inside the ocean.
+- **Fixed**: Vincent and the mad scientists in the Cathedral will now correctly go about their daily work/sleep schedule.
 - **Fixed**: Wrong dialog node in Lance dialog. He will now offer traveling to Shady Sands with the player.
 - **Removed**: Item proto files that either haven't been changed or still include old Fo1/Fixt changes.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
@@ -42,3 +55,5 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Tweaked**: Slightly increased the scroll edges of the Cathedral tower maps.
 - **Tweaked**: Slightly reduced "common" encounter chance.
 - **Tweaked**: Slightly reduced encounter chances.
+- **Tweaked**: The Gunrunners moat guard will only return to his home position if the player enters the map.
+- **Tweaked**: Wandering Blades are a lot less antsy now.
