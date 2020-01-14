@@ -20,22 +20,14 @@
 {109}{}{Kill the Overseer.}
 {110}{}{Kill all inhabitants of Vault 13.}
 {120}{}{Find the Water Chip.}
-{130}{}{RESERVED}
-{140}{}{RESERVED}
 #
 # Vault 15 Quests
 #
-{200}{}{Search for clues and information.}
-{201}{}{Search for a Water Chip.}
+{200}{}{Suche nach Hinweisen und Informationen.}
+{201}{}{Suche nach einem Steuerchip.}
 {202}{}{Find a way down the elevator shaft.}
 {203}{}{Find the hidden items.}
 {204}{}{Kill all the rats.}
-{205}{}{RESERVED}
-{206}{}{RESERVED}
-{207}{}{RESERVED}
-{208}{}{RESERVED}
-{209}{}{RESERVED}
-{210}{}{RESERVED}
 
 #
 # Shady Sands Quests
@@ -81,8 +73,8 @@
 #
 {600}{}{Vernichte die Supermutanten an der Wasserstelle.}
 {601}{}{Repariere die Wasserpumpe von Necropolis.}
-{602}{}{Save the prisoner.}
-{603}{}{Retrieve the Water Chip.}
+{602}{}{Befreie den Gefangenen.}
+{603}{}{Hole den Steuerchip.}
 {604}{}{Allow the Super Mutants at the Watershed to leave peacefully.}
 {605}{}{Seduce Harry.}
 {606}{}{Retrieve reward from Set for removing the Super Mutants.}
@@ -95,7 +87,7 @@
 {700}{}{Vernichte die Deathclaw.}			#fo1 vanilla
 {701}{}{Erledige Jain.}							#fo1 vanilla
 {702}{}{Erledige den Händler.}						#fo1 vanilla
-{703}{}{Suche die fehlenden Caravans.}					#fo1 vanilla
+{703}{}{Suche die verschwundenen Karawanen.}					#fo1 vanilla
 {704}{}{Stiehl den Händlern die Halsketten.}			#fo1 vanilla
 {705}{}{Join the Theives' Circle.}
 {706}{}{Dispose of Decker.}
@@ -118,8 +110,8 @@
 {807}{}{Steal the Systolic Motivator.}
 {808}{}{Help Sophia and Michael.}
 {809}{}{Gain access to the Armory.}
-{810}{}{Find the Ruins Of The Ancient Order.}
-{811}{}{Scout the area to the North.}
+{810}{}{Finde die Ruinen des alten Ordens.}
+{811}{}{Erkundet das Gebiet im Norden.}
 {812}{}{Get the Brotherhood to help at the Military Base.}
 {813}{}{RESERVED}
 {814}{}{RESERVED}
@@ -141,7 +133,7 @@
 #
 # The Glow Quests
 #
-{1000}{}{Gain entrance into the Glow.}
+{1000}{}{Betrete den Glow.}
 {1001}{}{Entschärfe die Fallen für die Basis.}		#fo1 vanilla
 {1002}{}{Schalte den Strom für den Glow ein.}			#fo1 vanilla
 
@@ -155,7 +147,7 @@
 {1104}{}{Setze die Hydrofarmen in Adytum wieder instand.}		#fo1 vanilla
 {1105}{}{Rette Jason Zimmerman.}				#fo1 vanilla
 {1106}{}{Halte die Gangs von einem Angriff auf Adytum ab.}	#fo1 vanilla
-{1107}{}{Kill the Mother Deathclaw.}
+{1107}{}{Töte die Mutter-Deathclaw.}
 {1108}{}{Convince the Gun Runners to supply the Blades.}
 {1109}{}{RESERVED}
 {1110}{}{RESERVED}
@@ -173,7 +165,7 @@
 #
 # Caravan Run Quests
 #
-{1300}{}{Help unload the Caravan.}
+{1300}{}{Hilf die Karawanen zu entladen.}
 
 #
 # 

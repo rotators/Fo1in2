@@ -97,7 +97,7 @@
 {702}{}{Dispose of merchant.}						#fo1 vanilla
 {703}{}{Find the missing caravans.}					#fo1 vanilla
 {704}{}{Steal necklace from the Merchants.}			#fo1 vanilla
-{705}{}{Join the Theives' Circle.}
+{705}{}{Join the Thieves' Circle.}
 {706}{}{Dispose of Decker.}
 {707}{}{Send water to Vault 13.}
 {708}{}{Become a guard for the Water Merchants.}
