@@ -4,8 +4,10 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Fallout 1 interface mod. Replaces the Fallout 2 interface with the graphics from Fallout 1. This was originally a part of the fo1_base mod, but is now its own thing for easier handling.
 - **Added**: Fallout 2 dialog interface graphic with "Tell Me About"-button.
 - **Added**: First iteration of a possible german translation. Core-sentences are done.
+- **Added**: Fo1-styled interface graphics for Sfall's "ActionPointsBar"-mode (increases from 10 to 16).
 - **Added**: Fo1-styled terrain info and red travel marker dots on the worldmap.
 - **Added**: Force Fields in the Master's Lair can now be disabled by explosives.
+- **Added**: German translated interface graphics for Sfall's "ActionPointsBar"-mode.
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
 - **Added**: Loser with black shirt animations (Unused for now).
@@ -18,6 +20,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Tycho-critter can now also use SMGs.
 - **Added**: Using the punching bags will now give a one-time +5% unarmed increase (lifted from Fo2).
 - **Added**: Vincent in the Cathedral will react to force fields being destroyed.
+- **Added**: Wanted signs will now show up if the player has been a bad boy.
 - **Added**: Zones around the Glow now read "Rad. Mountains" / "Rad. Desert" (can't show full text length right now).
 - **Fixed**: Adytowner will only join the player against the Regulators AFTER showing the holodisk to Zimmerman.
 - **Fixed**: Broken worldmap mask tiles 18 and 19.
