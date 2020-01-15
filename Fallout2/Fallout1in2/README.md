@@ -76,6 +76,11 @@ Various static images (splash/death screens, endgame slides, town/world, ...) us
 
 Tweaks a cost of specific actions while using inventory.
 
+### Language Pack - German ###
+[mods/fo1_german](mods/fo1_german)
+
+The german translation of FALLOUT ET TU.
+
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)
 
