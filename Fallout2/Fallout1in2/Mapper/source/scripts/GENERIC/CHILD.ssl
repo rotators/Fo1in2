@@ -24,6 +24,15 @@ procedure child05;
 procedure child06;
 procedure childend;
 
+#define LVAR_Sleeping         (0)
+#define LVAR_1                (1) // ??
+#define LVAR_Razlo_Kid        (2)
+#define LVAR_Home_Tile        (3)
+#define LVAR_Home_Rotation    (4)
+
+#define razlo_kid             (local_var(LVAR_Razlo_Kid) != 0)
+#define razlo_kid_home        (tile_in_tile_rect(23735, 23721, 23721, 25321, self_tile)) //top left, top right, bottom left, bottom right
+
 variable Only_Once := 1;
 variable tmp_hostile;
 variable Start_Moving;
@@ -52,6 +61,16 @@ procedure map_enter_p_proc begin
       invasion_kill_critter;
    end
 
+   if map_first_run then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+
+      if CUR_MAP_SHADYW then begin
+         if (self_tile == 24125 or self_tile == 24124) then
+            set_local_var(LVAR_Razlo_Kid, 1);
+      end
+   end
+
    // We make you look like a real girl!
    if (self_pid == PID_GIRL) then begin
       art_change_fid_num(self_obj, FID_NFCHLD);
@@ -66,7 +85,10 @@ procedure child01 begin
 end
 
 procedure child02 begin
-   NMessage(105);
+   if razlo_kid and razlo_kid_home then
+      NMessage(mstr(300) + random(0, 1));
+   else
+      NMessage(105);
 end
 
 procedure child03 begin
@@ -93,25 +115,23 @@ end
 
 procedure critter_p_proc begin
    if ((game_time_hour > 600) and (game_time_hour < 1900)) then begin
-      set_local_var(0, 0);
+      set_local_var(LVAR_Sleeping, 0);
       set_local_var(1, 1);
    end
    else begin
       set_local_var(1, 0);
-      set_local_var(0, 1);
+      set_local_var(LVAR_Sleeping, 1);
    end
-   if (CUR_MAP_SHADYE) then begin //  SHADY SANDS - EAST
-      if (local_var(0) == 1) then begin
+   if (CUR_MAP_SHADYE) then begin
+      if (local_var(LVAR_Sleeping) == 1) then begin
          if (self_tile != 14950) then begin
             self_run_to_tile(14950);
          end
-         else begin
-            if not(is_loading_game) then set_self_invisible;
-         end
+         else if not(is_loading_game) then set_self_invisible;
       end
       else begin
          if not(is_loading_game) then set_self_visible;
-         if (random(0, 9) == 1) then begin//(10 * global_var(GVAR_CHILD_RUNS_HOW_OFTEN))) == 1) then begin
+         if (random(0, 9) == 1) then begin
             if (random(0, 9) == 1) then
                self_walk_to_tile(tile_num_in_direction(local_var(3), random(0, 5), random(2, 4)));
             else
@@ -119,18 +139,22 @@ procedure critter_p_proc begin
          end
       end
    end
-   else if (CUR_MAP_SHADYW) then begin //  SHADY SANDS - WEST
-      if (local_var(0) == 1) then begin
-         if (self_tile != 20437) then begin
-            self_run_to_tile(22443);
+   else if (CUR_MAP_SHADYW) then begin
+      if (local_var(LVAR_Sleeping) == 1) then begin
+         if razlo_kid then begin
+            if (self_tile != local_var(LVAR_Home_Tile)) then
+               self_run_to_tile(local_var(LVAR_Home_Tile));
          end
          else begin
-            if not(is_loading_game) then set_self_invisible;
+            if (self_tile != 22443) then begin // was 20437
+               self_run_to_tile(22443);
+            end
+            else if not(is_loading_game) then set_self_invisible;
          end
       end
       else begin
          if not(is_loading_game) then set_self_visible;
-         if (random(0, 9) == 1) then begin//(10 * global_var(GVAR_CHILD_RUNS_HOW_OFTEN))) == 1) then begin
+         if (random(0, 9) == 1) then begin
             if (random(0, 9) == 1) then begin
                self_walk_to_tile(tile_num_in_direction(local_var(3), random(0, 5), random(2, 4)));
             end

@@ -23,8 +23,6 @@ variable Scenery_Creation_Ptr;
 
 // dummies
 // they should get proper names at some point in future~
-#define PID_33554439 (33554439)
-#define PID_33554471 (33554471)
 #define PID_33554834 (33554834)
 #define PID_33554835 (33554835)
 #define PID_33555090 (33555090)
@@ -41,6 +39,9 @@ variable Scenery_Creation_Ptr;
 #define PID_BUSH_GREEN_2                    (33555376)
 
 #define PID_PUNCHING_BAG                    (33554969)
+
+#define PID_TIRE_STACK                      (33554439)
+#define PID_VAULT_CHAIR                     (33554471)
 
 // BOS Entrance scenery
 #define PID_EW_BOS_DOOR                     (33554585)
