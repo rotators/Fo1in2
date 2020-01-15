@@ -64,17 +64,17 @@ Replaces Fallout 2's green circles, as well as the worldmap tiles with city loca
 ### Fallout 1 Interface ###
 [mods/fo1_interface](mods/fo1_interface)
 
-Enabled by default, this mod replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
+Enabled by default. This mod replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
 
 ### Improved Death Animations ###
 [mods/Anim_ImprovedSMutantDeath](mods/Anim_ImprovedSMutantDeath)
 
-Replaces Super Mutant and Power Armor fire and electrocuted death animations with resized versions, to match their regular animations.
+Enabled by default. Replaces Super Mutant and Power Armor fire and electrocuted death animations with resized versions, to match their regular animations.
 
 ### Interface Upscaled ###
 [mods/InterfaceUpscaled](mods/InterfaceUpscaled)
 
-Various static images (splash/death screens, endgame slides, town/world, ...) uses higher resolution.
+Various static images (splash/death screens, endgame slides, town/world, ...) use a higher resolution.
 
 ### Inventory AP cost ###
 [mods/InventoryAPcosts](mods/InventoryAPcosts)
