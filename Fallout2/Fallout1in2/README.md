@@ -30,8 +30,8 @@ MOD INSTALLATION
     ```
 
 - Start the `UNDAT.EXE` and select the `MASTER.DAT` file from your FALLOUT 1 installation directory.
-  - If you are using (pre)release package, `UNDAT.EXE` can be found in `Fallout1in2` folder.
-  - If you are using repository, `UNDAT.EXE` can be found in `Tools\UndatUI` folder.
+  - If you are using a (pre)release package, `UNDAT.EXE` can be found in the `Fallout1in2` folder.
+  - If you are using the repository, `UNDAT.EXE` can be found in the `Tools\UndatUI` folder.
 
 - Select the `Fallout1in2` folder as extraction target.
 
@@ -54,12 +54,17 @@ Other interesting files:
 ADDITIONAL CONTENT
 ------------------
 
-While most of optional content is a part of a mod core, and can be turned on and off by editing [config/fo1_settings.ini](config/fo1_settings.ini), there is a few mini-mods - separated from main codebase - included as well.
+While most optional content is a part of the mod core, and can be toggled on and off by editing the [config/fo1_settings.ini](config/fo1_settings.ini), there are a few mini-mods - separated from main codebase - included as well.
 
 ### Classic worldmap ###
 [mods/fo1_classic_worldmap](mods/fo1_classic_worldmap)
 
 Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
+
+### Fallout 1 Interface ###
+[mods/fo1_interface](mods/fo1_interface)
+
+Enabled by default, this mod replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
 
 ### Improved Death Animations ###
 [mods/Anim_ImprovedSMutantDeath](mods/Anim_ImprovedSMutantDeath)
@@ -74,7 +79,7 @@ Various static images (splash/death screens, endgame slides, town/world, ...) us
 ### Inventory AP cost ###
 [mods/InventoryAPcosts](mods/InventoryAPcosts)
 
-Tweaks a cost of specific actions while using inventory.
+Tweaks the costs of specific actions while using inventory.
 
 ### Language Pack - German ###
 [mods/fo1_german](mods/fo1_german)
