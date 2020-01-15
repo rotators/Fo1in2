@@ -47,14 +47,12 @@ procedure use_skill_on_p_proc begin
                give_xp(EXP_LOCKPICK_NEG_80);
             end
          end
+         else if (is_critical(Item)) then begin
+            jam_lock(self_obj);
+            display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
+         end
          else begin
-            if (is_critical(Item)) then begin
-               jam_lock(self_obj);
-               display_msg(mstr(110));//{110}{}{The lock is beyond your ability to pick.}
-            end
-            else begin
-               display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
-            end
+            display_msg(mstr(103));//{103}{}{You were not able to pick the lock.}
          end
       end
    end
@@ -72,10 +70,10 @@ end
 procedure use_obj_on_p_proc begin
    variable Item := 0;
    variable Skill := 0;
-   Item := obj_pid(obj_being_used_with);
+   Item := obj_being_used_with;
    Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -60);
 
-   if (Item == PID_LOCKPICKS) then begin
+   if (obj_pid(Item) == PID_LOCKPICKS) then begin
       script_overrides;
       if (is_success(Skill)) then begin
          set_local_var(0, 1);
@@ -98,7 +96,7 @@ procedure use_obj_on_p_proc begin
          end
       end
    end
-   else if (Item == PID_BLACK_COC_BADGE) then begin
+   else if (obj_pid(Item) == PID_BLACK_COC_BADGE) then begin
       script_overrides;
       set_local_var(0, 1);
       display_msg(mstr(100));//{100}{}{You unlock the door.}
