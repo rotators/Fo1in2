@@ -78,11 +78,9 @@ procedure critter_p_proc begin
          if (global_var(GVAR_VATS_ALERT)) then begin
             tmp_hostile := 1;
          end
-         else begin
-            if (not(map_var(4))) then begin
-               if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-                  dialogue_system_enter;
-               end
+         else if (not(map_var(4))) then begin
+            if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+               dialogue_system_enter;
             end
          end
       end
@@ -96,42 +94,33 @@ procedure critter_p_proc begin
             waypoint := 1;
          end
       end
-      else begin
-         if (waypoint == 1) then begin
-            if (self_tile != 26317) then begin
-               self_walk_to_tile(26317);
-            end
-            else begin
-               waypoint := 2;
-            end
+      else if (waypoint == 1) then begin
+         if (self_tile != 26317) then begin
+            self_walk_to_tile(26317);
          end
          else begin
-            if (waypoint == 2) then begin
-               if (self_tile != 31517) then begin
-                  self_walk_to_tile(32319);
-               end
-               else begin
-                  waypoint := 3;
-               end
-            end
-            else begin
-               if (waypoint == 3) then begin
-                  removal_ptr := self_obj;
-               end
-            end
+            waypoint := 2;
          end
+      end
+      else if (waypoint == 2) then begin
+         if (self_tile != 31517) then begin
+            self_walk_to_tile(32319);
+         end
+         else begin
+            waypoint := 3;
+         end
+      end
+      else if (waypoint == 3) then begin
+         removal_ptr := self_obj;
       end
    end
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_inv_evil_crit
-   rm_timer_event(self_obj);
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
@@ -161,8 +150,7 @@ procedure talk_p_proc begin
    end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    if (not(map_var(0))) then begin
       if (self_tile == guard_tile) then begin
          if (not(all_clear)) then begin
@@ -179,14 +167,12 @@ begin
    end
 end
 
-procedure VPLotMut00
-begin
+procedure VPLotMut00 begin
    float_msg(self_obj, mstr(random(101, 103)), FLOAT_MSG_NORMAL);
    tmp_hostile := 1;
 end
 
-procedure VPLotMut03
-begin
+procedure VPLotMut03 begin
    Reply(random(104, 106));
    NLowOption(107, VPLotMut04);
    NOption(108, VPLotMut04, 4);
@@ -197,8 +183,7 @@ begin
    end
 end
 
-procedure VPLotMut03a
-begin
+procedure VPLotMut03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call VPLotMut07;
    end
@@ -207,9 +192,9 @@ begin
    end
 end
 
-procedure VPLotMut03b
-begin
-   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
+procedure VPLotMut03b begin
+   coc_disguise_check;
+   if DISGUISED and (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
       call VPLotMut07;
    end
    else begin
@@ -217,45 +202,38 @@ begin
    end
 end
 
-procedure VPLotMut04
-begin
+procedure VPLotMut04 begin
    tmp_hostile := 1;
    NMessage(random(112, 114));
 end
 
-procedure VPLotMut05
-begin
+procedure VPLotMut05 begin
    Reply(115);
    NOption(116, VPLotMutxx, 5);
    NOption(117, VPLotMutAlert, 5);
 end
 
-procedure VPLotMut06
-begin
+procedure VPLotMut06 begin
    tmp_hostile := 1;
    NMessage(random(118, 120));
 end
 
-procedure VPLotMut07
-begin
+procedure VPLotMut07 begin
    set_map_var(4, 1);
    NMessage(random(121, 123));
 end
 
-procedure VPLotMut08
-begin
+procedure VPLotMut08 begin
    float_msg(self_obj, mstr(random(124, 127)), FLOAT_MSG_NORMAL);
    tmp_hostile := 1;
 end
 
-procedure VPLotMutAlert
-begin
+procedure VPLotMutAlert begin
    set_global_var(GVAR_VATS_ALERT, 1);
    tmp_hostile := 1;
 end
 
-procedure VPLotMutxx
-begin
+procedure VPLotMutxx begin
    set_global_var(GVAR_ENTERING_VATS_HOW, 2);
    load_map(MAP_MBVATS12, 5);
 end

@@ -25,25 +25,24 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
-   if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
    if (global_var(GVAR_DESTROY_VATS_3) != 0) then begin
       if ((critter_state(self_obj) bwand 64) == 0) then begin
-         critter_injure(self_obj, DAM_BLIND);//    DAM_BLIND         64
+         critter_injure(self_obj, DAM_BLIND);
       end
    end
    if (global_var(GVAR_ROBCTRL_MOVEMENT_HOWMUCH) != 0) then begin
       if ((critter_state(self_obj) bwand 4) == 0) then begin
-         critter_injure(self_obj, DAM_CRIP_LEG_LEFT);//    DAM_CRIP_LEG_LEFT      4
+         critter_injure(self_obj, DAM_CRIP_LEG_LEFT);
       end
    end
    if (global_var(GVAR_ROBCTRL_MOVEMENT_HOWMUCH) == 2) then begin
       if ((critter_state(self_obj) bwand 8) == 0) then begin
-         critter_injure(self_obj, DAM_CRIP_LEG_RIGHT);//    DAM_CRIP_LEG_RIGHT     8
+         critter_injure(self_obj, DAM_CRIP_LEG_RIGHT);
       end
    end
    if (global_var(GVAR_VATS_ALERT) == 1) then begin
@@ -53,25 +52,19 @@ begin
                tmp_hostile := 1;
             end
          end
-         else begin
-            if (global_var(GVAR_DESTROY_VATS_1) == 1) then begin
-               if (obj_can_see_obj(self_obj, valid_target)) then begin
-                  attack(valid_target);
-               end
+         else if (global_var(GVAR_DESTROY_VATS_1) == 1) then begin
+            if (obj_can_see_obj(self_obj, valid_target)) then begin
+               attack(valid_target);
             end
-            else begin
-               if (global_var(GVAR_DESTROY_VATS_1) == 2) then begin
-                  if (obj_can_see_obj(self_obj, valid_target)) then begin
-                     attack(valid_target);
-                  end
-               end
-               else begin
-                  if (global_var(GVAR_DESTROY_VATS_1) == 3) then begin
-                     if (self_can_see_dude) then begin
-                        tmp_hostile := 1;
-                     end
-                  end
-               end
+         end
+         else if (global_var(GVAR_DESTROY_VATS_1) == 2) then begin
+            if (obj_can_see_obj(self_obj, valid_target)) then begin
+               attack(valid_target);
+            end
+         end
+         else if (global_var(GVAR_DESTROY_VATS_1) == 3) then begin
+            if (self_can_see_dude) then begin
+               tmp_hostile := 1;
             end
          end
       end
@@ -81,8 +74,7 @@ begin
    end
 end
 
-procedure description_p_proc
-begin
+procedure description_p_proc begin
    script_overrides;
    if (local_var(0)) then begin
       display_msg(message_str(SCRIPT_MRHANDYA, 100));
@@ -92,17 +84,15 @@ begin
    end
 end
 
-procedure use_skill_on_p_proc
-begin
-   if (action_being_used == SKILL_REPAIR) then begin//-- REPAIR
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_REPAIR) then begin
       if (local_var(0) == 0) then begin
          call Repair_Attempt;
       end
    end
 end
 
-procedure Repair_Attempt
-begin
+procedure Repair_Attempt begin
    variable LVar0 := 0;
    game_time_advance(game_ticks(1200));
    LVar0 := roll_vs_skill(dude_obj, SKILL_REPAIR, 0);

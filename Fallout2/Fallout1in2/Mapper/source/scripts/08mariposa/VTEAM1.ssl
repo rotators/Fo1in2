@@ -8,7 +8,7 @@
 #include "..\headers\define.h"
 //#include "..\headers\necropolis.h"
 
-#define NAME                    SCRIPT_VTEAM1
+#define NAME                    SCRIPT_GENSUPR
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
 
 #include "..\headers\command.h"
@@ -59,7 +59,7 @@ procedure combat_p_proc begin
    if (fixed_param == COMBAT_SUBTYPE_HIT_SUCCEEDED) then begin
       if (global_var(GVAR_DESTROY_VATS_4)) then begin
          if (random(0, 3) == 3) then begin
-            critter_injure(dude_obj, DAM_KNOCKED_OUT);//    DAM_KNOCKED_OUT      1    <-- DOES NOT WORK!!!
+            critter_injure(dude_obj, DAM_KNOCKED_OUT);
          end
       end
    end
@@ -75,11 +75,9 @@ procedure critter_p_proc begin
          if (global_var(GVAR_VATS_ALERT)) then begin
             tmp_hostile := 1;
          end
-         else begin
-            if (not(map_var(1))) then begin
-               if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-                  dialogue_system_enter;
-               end
+         else if (not(map_var(1))) then begin
+            if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+               dialogue_system_enter;
             end
          end
       end
@@ -168,7 +166,8 @@ procedure GenSupr03a begin
 end
 
 procedure GenSupr03b begin
-   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
+   coc_disguise_check;
+   if DISGUISED and (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
       call GenSupr07;
    end
    else begin

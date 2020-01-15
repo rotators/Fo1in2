@@ -73,7 +73,8 @@ procedure critter_p_proc begin
             call Flip00;
          end
          else begin
-            if ((obj_pid(dude_armor) != PID_PURPLE_ROBE) and (local_var(4) == 0)) then begin
+            coc_disguise_check;
+            if (not(DISGUISED) and (local_var(4) == 0)) then begin
                dialogue_system_enter;
             end
          end
@@ -88,11 +89,8 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
-
    set_map_var(8, 3);
    inc_inv_evil_crit
-   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
@@ -116,7 +114,9 @@ procedure talk_p_proc begin
    get_reaction
    start_gdialog(367, self_obj, 4, -1, -1);
    gsay_start;
-   if dude_wearing_coc_robe then begin
+
+   coc_disguise_check;
+   if DISGUISED then begin
       call Flip01;
    end
    else begin
@@ -137,10 +137,8 @@ procedure timed_event_p_proc begin
          tmp_hostile := 1;
       end
    end
-   else begin
-      if (fixed_param == 2) then begin
-         call Flip00;
-      end
+   else if (fixed_param == 2) then begin
+      call Flip00;
    end
 end
 

@@ -32,12 +32,7 @@ import variable valid_target;
 variable initial := 0;
 variable tmp_hostile;
 
-
-
-procedure start
-begin
-
-
+procedure start begin
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
@@ -45,8 +40,7 @@ begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (self_can_see_dude) then begin
       if (tmp_hostile) then begin
          tmp_hostile := 0;
@@ -56,11 +50,9 @@ begin
          if (global_var(GVAR_VATS_ALERT)) then begin
             tmp_hostile := 1;
          end
-         else begin
-            if (not(map_var(4)) and not(ignoring_dude)) then begin
-               if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
-                  dialogue_system_enter;
-               end
+         else if (not(map_var(4)) and not(ignoring_dude)) then begin
+            if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
+               dialogue_system_enter;
             end
          end
       end
@@ -70,27 +62,20 @@ begin
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    set_map_var(13, 1);
 end
 
-procedure destroy_p_proc
-begin
+procedure destroy_p_proc begin
    set_map_var(12, 3);
-   rm_timer_event(self_obj);
-
    inc_evil_critter
-   rm_timer_event(self_obj);
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if (global_var(GVAR_LIEUTENANTS_DEAD)) then begin
       call GenSupr08;
@@ -114,19 +99,16 @@ begin
    end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    tmp_hostile := 1;
 end
 
-procedure GenSupr00
-begin
+procedure GenSupr00 begin
    float_msg(self_obj, mstr(random(101, 103)), FLOAT_MSG_RED);
    tmp_hostile := 1;
 end
 
-procedure GenSupr03
-begin
+procedure GenSupr03 begin
    Reply(random(104, 106));
    BLowOption(107, GenSupr04);
    BOption(108, GenSupr04, 4);
@@ -137,8 +119,7 @@ begin
    end
 end
 
-procedure GenSupr03a
-begin
+procedure GenSupr03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call GenSupr07;
    end
@@ -147,9 +128,9 @@ begin
    end
 end
 
-procedure GenSupr03b
-begin
-   if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
+procedure GenSupr03b begin
+   coc_disguise_check;
+   if DISGUISED and (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 25))) then begin
       call GenSupr07;
    end
    else begin
@@ -157,45 +138,38 @@ begin
    end
 end
 
-procedure GenSupr04
-begin
+procedure GenSupr04 begin
    tmp_hostile := 1;
    BMessage(random(112, 114));
 end
 
-procedure GenSupr05
-begin
+procedure GenSupr05 begin
    Reply(115);
    NOption(116, GenSuprxx, 5);
    BOption(117, GenSuprAlert, 5);
 end
 
-procedure GenSupr06
-begin
+procedure GenSupr06 begin
    tmp_hostile := 1;
    BMessage(random(118, 120));
 end
 
-procedure GenSupr07
-begin
+procedure GenSupr07 begin
    set_map_var(4, 1);
    ignoring_dude := 1;
    NMessage(random(121, 123));
 end
 
-procedure GenSupr08
-begin
+procedure GenSupr08 begin
    float_msg(self_obj, mstr(random(124, 127)), FLOAT_MSG_RED);
    tmp_hostile := 1;
 end
 
-procedure GenSuprAlert
-begin
+procedure GenSuprAlert begin
    set_global_var(GVAR_VATS_ALERT, 1);
    use_obj(radio_computer);
    add_timer_event(self_obj, game_ticks(5), 1);
 end
 
-procedure GenSuprxx
-begin
+procedure GenSuprxx begin
 end
