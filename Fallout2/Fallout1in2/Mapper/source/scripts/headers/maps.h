@@ -410,19 +410,20 @@
  Advance the game time when using NPCs from encounter to travel
 ******************************************************************/
 variable get_wm_distance;
-#define advance_time_travel_to_shady               advance_time_wm_travel(1073,72,MAP_SHADYW,1)
-#define advance_time_travel_to_raiders             advance_time_wm_travel(1123,172,MAP_RAIDERS,0)
-#define advance_time_travel_to_junktown            advance_time_wm_travel(873,522,MAP_JUNKENT,1)
-#define advance_time_travel_to_hub                 advance_time_wm_travel(873,722,MAP_HUBENT,1)
-#define advance_time_travel_to_necropolis          advance_time_wm_travel(1123,672,MAP_HOTEL,1)
-#define advance_time_travel_to_boneyard            advance_time_wm_travel(773,922,MAP_LAADYTUM,1)
-#define advance_time_travel_to_bos                 advance_time_wm_travel(623,472,MAP_BROHDENT,0)
-#define advance_time_travel_to_mbase_vats          advance_time_wm_travel(173,72,MAP_MBVATS12,5)
-#define advance_time_travel_to_master              advance_time_wm_travel(773,1022,MAP_MSTRLR34,12)
-#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                      \
-                                                   get_wm_distance := round(get_wm_distance) / 50;                                              \
-                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");                             \
-                                                   game_time_advance((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(-300,300)));  \
+#define advance_time_travel_to_shady               advance_time_wm_travel(1073,  72,   MAP_SHADYW,    1)
+#define advance_time_travel_to_raiders             advance_time_wm_travel(1123,  172,  MAP_RAIDERS,   0)
+#define advance_time_travel_to_junktown            advance_time_wm_travel(873,   522,  MAP_JUNKENT,   1)
+#define advance_time_travel_to_hub                 advance_time_wm_travel(873,   722,  MAP_HUBENT,    1)
+#define advance_time_travel_to_necropolis          advance_time_wm_travel(1123,  672,  MAP_HOTEL,     1)
+#define advance_time_travel_to_boneyard            advance_time_wm_travel(773,   922,  MAP_LAADYTUM,  1)
+#define advance_time_travel_to_bos                 advance_time_wm_travel(623,   472,  MAP_BROHDENT,  0)
+#define advance_time_travel_to_mbase_vats          advance_time_wm_travel(173,   72,   MAP_MBVATS12,  5)
+#define advance_time_travel_to_master              advance_time_wm_travel(773,   1022, MAP_MSTRLR34,  12)
+
+#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                                  \
+                                                   get_wm_distance := round(get_wm_distance) / 50;                                                          \
+                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");                                         \
+                                                   game_time_advance(game_ticks((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(-300,300))));  \
                                                    load_map(map, index)
 
 /******************************************************************

@@ -395,7 +395,7 @@ end
                                         (cur_map_index == MAP_MNTCRVN2) or  \
                                         (cur_map_index == MAP_MNTCRVN3) or  \
                                         (cur_map_index == MAP_MNTCRVN4))
-                                        
+
 #define map_is_ocean                ((cur_map_index == MAP_COAST1) or     \
                                     (cur_map_index == MAP_COAST2) or      \
                                     (cur_map_index == MAP_RNDCOAST))
