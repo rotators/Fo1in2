@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euxo
 
 repo="$1"
 news="$2"
