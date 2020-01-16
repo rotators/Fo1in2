@@ -53,7 +53,8 @@ sed -ri "/^(${keywords}):/!d" "$news"
 # create a list, make keywords bold
 sed -ri 's!^([A-Za-z]+)!- **\1**!' "$news"
 
-sort -o "$news" "$news"
+sort -o "$news.stupid-sort" "$news"
+mv -f "$news.stupid-sort" "$news"
 
 # add header
 if [ -s "$news" ]; then
