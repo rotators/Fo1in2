@@ -247,7 +247,7 @@
 // fake perks/traits add mode flags
 #define ADD_PERK_MODE_TRAIT     (1)  // add to the player's traits
 #define ADD_PERK_MODE_PERK      (2)  // add to the player's perks
-#define ADD_PERK_MODE_REMOVE    (4)  // remove from the list of selectable perks
+#define ADD_PERK_MODE_REMOVE    (4)  // remove from the list of selectable perks (after added to the player)
 
 // sfall_funcX macros
 #define add_extra_msg_file(name)                        sfall_func1("add_extra_msg_file", name)
