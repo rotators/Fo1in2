@@ -12,18 +12,19 @@ It will also write in how to modify the reaction level by a level. */
 #define NEUTRAL                         (2)
 #define GOOD                            (3)
 
-#define TINY_DROP                       (-5)
-#define MINOR_DROP                      (-10)
-#define MODERATE_DROP                   (-20)
-#define MAJOR_DROP                      (-30)
-#define HUGE_DROP                       (-50)
+#define NORMAL_BOOST                    (25)    // Fo1: 10
+#define HUGE_BOOST                      (50)    // Fo1: 25
 
-#define BASE_REACTION                   (50)
-#define LOW_REACTION                    (25)
-#define HIGH_REACTION                   (75)
+#define BASE_REACTION                   (0)     // Fo1: (50)
+#define LOW_REACTION                    (-50)   // Fo1: (25)
+#define HIGH_REACTION                   (50)    // Fo1: (75)
 
-#define MIN_REACTION                    (0)
-#define MAX_REACTION                    (100)
+#define REACTION_BONUS_BERSERKER        (20)
+#define REACTION_BONUS_CHAMPION         (20)
+#define REACTION_BONUS_CHILDKILLER      (30)
+
+#define MIN_REACTION                    (-100)  // Fo1: (0)
+#define MAX_REACTION                    (100)   // Fo1: (100)
 
 variable Static_Reaction:=0;            // This adds in Reputations, Perks, Karma, and such
 variable Evil_Critter:=0;               // 0 == Good Critter, 1 == Bad Critter
@@ -49,8 +50,8 @@ variable reaction_bonus_karma:=0;
 
 
 #define get_reaction    if (local_var(LVAR_got_reaction) == 0) then begin  \
-                     set_local_var(LVAR_reaction, 50);                     \
-                     set_local_var(LVAR_reaction_level, 2);                \
+                     set_local_var(LVAR_reaction, BASE_REACTION);          \
+                     set_local_var(LVAR_reaction_level, NEUTRAL);          \
                      set_local_var(LVAR_got_reaction, 1);                  \
                      set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);          \
                      set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (10 * has_trait(TRAIT_PERK, dude_obj, PERK_presence)));   \
@@ -70,70 +71,73 @@ variable reaction_bonus_karma:=0;
                         set_local_var(LVAR_reaction, local_var(LVAR_reaction) +  global_var( GVAR_PLAYER_REPUTATION ) );               \
                      end                                                                                                               \
                      if ( global_var( GVAR_CHILDKILLER_REPUTATION )  >= 1) then begin                                                  \
-                        set_local_var(LVAR_reaction, local_var(LVAR_reaction) - 30);                                                   \
+                        set_local_var(LVAR_reaction, local_var(LVAR_reaction) - REACTION_BONUS_CHILDKILLER);                           \
                      end                                                                                                               \
                      if ((( global_var( GVAR_BAD_MONSTER )  +  global_var( GVAR_GOOD_MONSTER ) ) >= 25) and (( global_var( GVAR_BAD_MONSTER )  > (3 *  global_var( GVAR_GOOD_MONSTER ) )) or ( global_var( GVAR_CHAMPION_REPUTATION )  == 1))) then begin \
-                        set_local_var(LVAR_reaction, local_var(LVAR_reaction) + 20);   \
+                        set_local_var(LVAR_reaction, local_var(LVAR_reaction) + REACTION_BONUS_CHAMPION);   \
                      end                                                               \
                      if ((( global_var( GVAR_BAD_MONSTER )  +  global_var( GVAR_GOOD_MONSTER ) ) >= 25) and (( global_var( GVAR_GOOD_MONSTER )  > (2 *  global_var( GVAR_BAD_MONSTER ) )) or ( global_var( GVAR_BERSERKER_REPUTATION )  == 1))) then begin \
-                        set_local_var(LVAR_reaction, local_var(LVAR_reaction) - 20);   \
+                        set_local_var(LVAR_reaction, local_var(LVAR_reaction) - REACTION_BONUS_BERSERKER);   \
                      end                                                               \
                      ReactToLevel                                                      \
                   end
 
-#define ReactToLevel    if (local_var(LVAR_reaction) <= 25) then begin        \
-                           set_local_var(LVAR_reaction_level, 1);             \
-                        end                                                   \
-                        else                                                  \
-                        if (local_var(LVAR_reaction) <= 75) then begin        \
-                           set_local_var(LVAR_reaction_level, 2);             \
-                        end                                                   \
-                        else begin                                            \
-                           set_local_var(LVAR_reaction_level, 3);             \
+#define ReactToLevel    if (local_var(LVAR_reaction) <= LOW_REACTION) then begin    \
+                           set_local_var(LVAR_reaction_level, BAD);                 \
+                        end                                                         \
+                        else                                                        \
+                        if (local_var(LVAR_reaction) <= HIGH_REACTION) then begin   \
+                           set_local_var(LVAR_reaction_level, NEUTRAL);             \
+                        end                                                         \
+                        else begin                                                  \
+                           set_local_var(LVAR_reaction_level, GOOD);                \
                         end
 
 
-#define LevelToReact    if (local_var(LVAR_reaction_level) == 1) then begin   \
-                           set_local_var(LVAR_reaction, random(1, 25));       \
-                        end                                                   \
-                        else                                                  \
-                        if (local_var(LVAR_reaction_level) == 2) then begin   \
-                           set_local_var(LVAR_reaction, random(26, 75));      \
-                        end                                                   \
-                        else begin                                            \
-                           set_local_var(LVAR_reaction, random(76, 100));     \
+#define LevelToReact    if (local_var(LVAR_reaction_level) == BAD) then begin       \
+                           /*set_local_var(LVAR_reaction, random(1, 25));*/         \
+                           set_local_var(LVAR_reaction, random(-99, -51));          \
+                        end                                                         \
+                        else                                                        \
+                        if (local_var(LVAR_reaction_level) == NEUTRAL) then begin   \
+                           /*set_local_var(LVAR_reaction, random(26, 75));*/        \
+                           set_local_var(LVAR_reaction, random(-50, 50));           \
+                        end                                                         \
+                        else begin                                                  \
+                           /*set_local_var(LVAR_reaction, random(76, 100));*/       \
+                           set_local_var(LVAR_reaction, random(51, 100));           \
                         end
 
 
-#define UpReact      set_local_var(LVAR_reaction, local_var(LVAR_reaction) + 10); \
+#define UpReact      set_local_var(LVAR_reaction, local_var(LVAR_reaction) + NORMAL_BOOST); \
                      ReactToLevel
 
 
-#define DownReact    set_local_var(LVAR_reaction, local_var(LVAR_reaction) - 10); \
+#define DownReact    set_local_var(LVAR_reaction, local_var(LVAR_reaction) - NORMAL_BOOST); \
                      ReactToLevel
 
 
-#define BottomReact  set_local_var(LVAR_reaction_level, 1); \
-                     set_local_var(LVAR_reaction, 1);
+#define BottomReact  set_local_var(LVAR_reaction_level, BAD); \
+                     set_local_var(LVAR_reaction, MIN_REACTION);
 
-#define TopReact     set_local_var(LVAR_reaction, 100);     \
-                     set_local_var(LVAR_reaction_level, 3);
+#define TopReact     set_local_var(LVAR_reaction, MAX_REACTION);     \
+                     set_local_var(LVAR_reaction_level, GOOD);
 
-#define BigUpReact   set_local_var(LVAR_reaction, local_var(LVAR_reaction) + 25); \
+#define BigUpReact   set_local_var(LVAR_reaction, local_var(LVAR_reaction) + HUGE_BOOST); \
                      ReactToLevel
 
-#define BigDownReact set_local_var(LVAR_reaction, local_var(LVAR_reaction) - 25); \
+#define BigDownReact set_local_var(LVAR_reaction, local_var(LVAR_reaction) - HUGE_BOOST); \
                      ReactToLevel
 
 #define UpReactLevel set_local_var(LVAR_reaction_level, local_var(LVAR_reaction_level) + 1); \
-                     if (local_var(LVAR_reaction_level) > 3) then begin                      \
-                        set_local_var(LVAR_reaction_level, 3);                               \
+                     if (local_var(LVAR_reaction_level) > GOOD) then begin                   \
+                        set_local_var(LVAR_reaction_level, GOOD);                            \
                      end                                                                     \
                      LevelToReact
 
 #define DownReactLevel  set_local_var(LVAR_reaction_level, local_var(LVAR_reaction_level) - 1); \
-                        if (local_var(LVAR_reaction_level) < 1) then begin                      \
-                           set_local_var(LVAR_reaction_level, 1);                               \
+                        if (local_var(LVAR_reaction_level) < BAD) then begin                    \
+                           set_local_var(LVAR_reaction_level, BAD);                             \
                         end                                                                     \
                         LevelToReact
 
