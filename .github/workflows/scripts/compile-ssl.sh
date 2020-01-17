@@ -111,6 +111,8 @@ num_errors=0
 num_warnings=0
 last_dir=
 
+which find
+
 echo Compiling...
 
     # /c/repo/path/to/scripts/sub/dir/script.ssl
