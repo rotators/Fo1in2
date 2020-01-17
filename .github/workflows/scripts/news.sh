@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -ex
-
 repo="$1"
 news="$2"
 
