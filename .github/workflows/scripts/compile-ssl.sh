@@ -111,12 +111,10 @@ num_errors=0
 num_warnings=0
 last_dir=
 
-which find
-
 echo Compiling...
 
     # /c/repo/path/to/scripts/sub/dir/script.ssl
-for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
+for ssl_full in $(/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     # /c/repo/path/to/scripts/sub/dir
     ssl_dir=$(dirname "$ssl_full")
     # sub/dir/script.ssl
