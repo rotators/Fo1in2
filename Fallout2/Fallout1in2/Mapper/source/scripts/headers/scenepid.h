@@ -395,15 +395,17 @@ variable Scenery_Creation_Ptr;
     Caravan carts
 ************************************************/
 // This will make the East-West Caravans
-#define Create_EW_Caravan(Pid,Hex_Num,Elevation)    Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                     \
-                                                    Scenery_Creation_Hex:=Hex_Num;                                              \
-                                                    Blocking_Cycle(1,1,Elevation)                                              \
-                                                    Blocking_Cycle(3,2,Elevation)                                              \
-                                                    Blocking_Cycle(4,2,Elevation)                                              \
-                                                    Blocking_Cycle(5,1,Elevation)                                              \
-                                                    Blocking_Cycle(0,1,Elevation)                                              \
-                                                    Blocking_Cycle(5,1,Elevation)                                              \
-                                                    Blocking_Cycle(1,2,Elevation)
+#define Create_EW_Caravan(Pid,Hex_Num,Elevation)    Scenery_Creation:=create_object(Pid,Hex_Num,Elevation); \
+                                                    Scenery_Creation_Hex:=Hex_Num;                          \
+                                                    Blocking_Cycle(1,1,Elevation)                           \
+                                                    Blocking_Cycle(3,2,Elevation)                           \
+                                                    Blocking_Cycle(4,2,Elevation)                           \
+                                                    Blocking_Cycle(5,1,Elevation)                           \
+                                                    Blocking_Cycle(0,1,Elevation)                           \
+                                                    Blocking_Cycle(5,1,Elevation)                           \
+                                                    Blocking_Cycle(1,2,Elevation)                           \
+                                                    Blocking_Cycle(3,2,Elevation)                           \
+                                                    Blocking_Cycle(1,1,Elevation)
 
 #define Create_EW_Red_Caravan(Hex_Num,Elevation)    Create_EW_Caravan(PID_EW_RED_CARAVAN,Hex_Num,Elevation)
 #define Create_EW_Grey_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_GREY_CARAVAN,Hex_Num,Elevation)
@@ -438,6 +440,8 @@ variable Scenery_Creation_Ptr;
                                                    Dest_Caravan_Cycle(0,1,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(5,1,Elevation)                                                  \
                                                    Dest_Caravan_Cycle(1,2,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(3,2,Elevation)                                                  \
+                                                   Dest_Caravan_Cycle(1,1,Elevation)                                                  \
                                                 end
 
 // This will make North-South Caravans
