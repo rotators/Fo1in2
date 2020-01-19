@@ -315,6 +315,7 @@
 #define set_outline(obj, color)                         sfall_func2("set_outline", obj, color)
 #define set_rest_heal_time(time)                        sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                             sfall_func1("set_rest_mode", mode)
+#define set_terrain_name(x, y, name)                    sfall_func3("set_terrain_name", x, y, name)
 #define set_unique_id(obj)                              sfall_func1("set_unique_id", obj)
 #define set_unjam_locks_time(time)                      sfall_func1("set_unjam_locks_time", time)
 #define set_window_flag(winID, flag, value)             sfall_func3("set_window_flag", winID, flag, value)
