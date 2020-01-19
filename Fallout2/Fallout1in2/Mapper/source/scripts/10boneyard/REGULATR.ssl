@@ -16,6 +16,8 @@
 #include "..\headers\modreact.h"
 #include "..\headers\sfall\sfall.h"
 
+#define MAX_TRAVEL              (25)
+
 /* Standard Script Procedures */
 procedure start;
 procedure map_enter_p_proc;
@@ -27,6 +29,9 @@ procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure pickup_p_proc;
 procedure timed_event_p_proc;
+
+#define LVAR_Home_Tile        (5)
+#define LVAR_Home_Rotation    (6)
 
 variable Only_Once := 1;
 variable PsstTime;
@@ -50,8 +55,16 @@ procedure Start begin
 end
 
 procedure map_enter_p_proc begin
-   if map_first_run then
+   if map_first_run then begin
       self_caps_adjust(random(1, 10));
+
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   else if is_loading_game == false then begin
+      //critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+      //self_rotate(local_var(LVAR_Home_Rotation));
+   end
 end
 
 procedure look_at_p_proc begin
@@ -114,9 +127,14 @@ procedure pickup_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 5)));
+   if (tile_distance(tile_num(self_obj),local_var(LVAR_Home_Tile)) < MAX_TRAVEL) then
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 5)));
+   else
+      self_walk_to_tile(tile_num_in_direction(local_var(LVAR_Home_Tile), random(0, 5), random(1, 5)));
+
    add_timer_event(self_obj, game_ticks(random(1, 3)), 1);
 
+   // If Regulators and Adytum folks are hostile, re-initiate combat if the player manages to get out of it
    if not(combat_is_initialized) and get_blades_attacking and (global_var(GVAR_DUDE_ENEMY_REGULATORS) > 0) then begin
       critArray := list_as_array(LIST_CRITTERS);
       foreach (obj in critArray) begin
