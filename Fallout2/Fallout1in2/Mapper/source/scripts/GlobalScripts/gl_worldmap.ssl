@@ -179,19 +179,49 @@ end
 
 procedure override_terrain_type begin
    // Override zone hotspot text
-   
+
    // Rewrite zone titles around the Glow
    // Traveling on these zones will radiate the player (see gl_worldmap.ssl)
-   r_set_hotspot_title(23, 24, g_mstr(3400));
-   r_set_hotspot_title(24, 24, g_mstr(3400));
-   r_set_hotspot_title(25, 24, g_mstr(3401));
+   set_terrain_name(23, 24, g_mstr(3400));
+   set_terrain_name(24, 24, g_mstr(3400));
+   set_terrain_name(25, 24, g_mstr(3401));
 
-   r_set_hotspot_title(23, 25, g_mstr(3400));
-   r_set_hotspot_title(25, 25, g_mstr(3401));
+   set_terrain_name(23, 25, g_mstr(3400));
+   set_terrain_name(25, 25, g_mstr(3401));
 
-   r_set_hotspot_title(23, 26, g_mstr(3400));
-   r_set_hotspot_title(24, 26, g_mstr(3400));
-   r_set_hotspot_title(25, 26, g_mstr(3400));
+   set_terrain_name(23, 26, g_mstr(3400));
+   set_terrain_name(24, 26, g_mstr(3400));
+   set_terrain_name(25, 26, g_mstr(3400));
+end
+
+procedure encounter_handler begin
+   variable
+      event := get_sfall_arg,
+      mapID := get_sfall_arg;
+
+      // If the player enters a map on the worldmap, we set it depending on the current terrain type.
+      // event 0 is random encounter, 1 is player encounter
+      if (event == 1) then begin
+
+        if (is_terrain_desert) then begin
+            mapID := MAP_RNDDESER;
+         end
+         else if (is_terrain_mountain) then begin
+            mapID := MAP_RNDMOUNT;
+         end
+         else if (is_terrain_city) then begin
+            mapID := MAP_RNDCITY;
+         end
+         else if (is_terrain_ocean) then begin
+            mapID := MAP_RNDCOAST;
+         end
+         else begin
+            mapID := MAP_RNDDESER;
+            debug("!!! COULDN'T DETECT TERRAIN TYPE !!!");
+         end
+
+         set_sfall_return(mapID);
+      end
 end
 
 procedure start begin
@@ -199,15 +229,17 @@ procedure start begin
       set_global_script_repeat(10);
       set_global_script_type(1);
 
+      register_hook_proc(HOOK_ENCOUNTER, encounter_handler);
+
       call ReadWorldmapTxt;
       call SetWorldmapInfo;
-      
+
       call override_terrain_type;
    end
 
    if (get_game_mode == WORLDMAP) then begin
       call SetWorldmapInfo;
-      if in_glow_zone then call SetRadiation;
       call UncoverOceanZones;
+      if in_glow_zone then call SetRadiation;
    end
 end
