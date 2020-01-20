@@ -1,0 +1,279 @@
+/**
+
+   Item Highlight mod.
+
+   Previously was part of sfall itself, now a separate mod.
+   Features:
+   - highlighting items, containers (optional) and lootable corpses (optional) on the ground
+   - configurable hotkey is used to trigger highlight
+   - can run in toggle mode keeping objects highlighted between maps/loads
+   - only objects in direct line-of-sight of player are highlighted (optional)
+   - motion scanner is required to enable highlight (optional)
+   - motion scanner charges are decreased on each use (optional)
+
+   NOTE : this script requires compiler from sfall modderspack with -s option
+   (short circuit evaluation)
+
+   version 1.2r
+
+**/
+
+#include "..\headers\sfall\main.h"
+#undef dude_elevation
+
+#include "..\headers\command.h"
+
+#define NAME "gl_r_highlighting"
+
+#define CRITTER_IS_DEAD    (1)
+#define PID_MOTION_SENSOR  (59)
+#define NO_HIGHLIGHT(obj)  (get_flags(obj) bwand FLAG_NOHIGHLIGHT)
+#define NO_STEAL(obj)      (get_proto_data(obj_pid(obj), PROTO_CR_FLAGS) bwand CFLG_NOSTEAL)
+
+variable configSection := "Highlighting";
+variable config, save;
+
+variable enabled := 0;
+variable debug_highlight := 0;
+
+#define hl_debug(msg) \
+   if(debug_highlight) then \
+      display_msg(msg)
+
+procedure SetHighlightObject(variable obj, variable enable) begin
+   if obj and (not enable or not config["los"] or not obj_blocking_line(dude_obj, tile_num(obj), BLOCKING_TYPE_SHOOT)) then
+   begin
+      if (config["container"] and obj_item_subtype(obj) == item_type_container) or (not NO_HIGHLIGHT(obj)) then
+      begin
+         if (enable) then
+            set_outline(obj, config["color"]);
+         else
+            set_outline(obj, 0);
+      end
+   end
+end
+
+procedure SetHighlightCorpse(variable cr, variable enable, variable refresh := false)
+begin
+   if(not config["corpse"]) then
+      return;
+
+   if(critter_state(cr) == CRITTER_IS_DEAD and not NO_STEAL(cr)) then
+      call SetHighlightObject(cr, enable);
+
+   if(refresh) then
+      tile_refresh_display;
+end
+
+procedure SetHighlight(variable enable) begin
+   variable obj;
+   foreach obj in list_as_array(LIST_GROUNDITEMS) begin
+      if obj != outlined_object then begin
+         call SetHighlightObject(obj, enable);
+      end
+   end
+
+   if (config["corpse"]) then begin
+      foreach obj in list_as_array(LIST_CRITTERS) begin
+         call SetHighlightCorpse(obj, enable);
+      end
+   end
+   tile_refresh_display;
+
+   enabled := enable;
+   save["enabled"] := enabled;
+end
+
+procedure StartScanner(variable start) begin
+   variable scanner, charges;
+
+   if config["scanner"] then
+   begin
+      scanner := dude_item(PID_MOTION_SENSOR);
+      if scanner then
+      begin
+         if config["scanner"] >= 2 then
+         begin
+            charges := get_weapon_ammo_count(scanner);
+            if charges > 0 then
+            begin
+               if(start) then
+               begin
+                  set_weapon_ammo_count(scanner, charges - 1);
+                  intface_redraw;
+               end
+            end
+            else
+            begin
+               display_msg(config["scanner/gone"]);
+               return false;
+            end
+         end
+      end
+      else
+      begin
+         display_msg(config["scanner/missing"]);
+         return false;
+      end
+   end
+
+   if(not start) then
+      hl_debug("[highlight] scanner ok");
+
+   return true;
+end
+
+procedure EnableHighlight(variable reason := 0)
+begin
+   variable msg := "[highlight] enabled", result;
+
+   // check
+   result := StartScanner(false);
+   if(not result) then
+      return;
+
+   if (reason) then
+      msg += " (" + reason + ")";
+   hl_debug(msg);
+
+   // run
+   call StartScanner(true);
+   call SetHighlight(true);
+end
+
+procedure DisableHighlight(variable reason := 0)
+begin
+   variable msg := "[highlight] disabled";
+
+   if (reason) then
+      msg += " (" + reason + ")";
+   hl_debug(msg);
+
+   call SetHighlight(false);
+end
+
+procedure ToggleHighlight
+begin
+   if(enabled) then
+      call DisableHighlight("toggle");
+   else
+      call EnableHighlight("toggle");
+end
+
+//
+
+procedure KeyPressHandler begin
+   variable pressed := get_sfall_arg;
+   variable scanCode := get_sfall_arg;
+
+   if(scancode != config["key"]) then
+      return;
+
+   if not(get_game_mode bwand (INTFACELOOT bwor BARTER)) then
+   begin
+      if pressed then
+      begin
+         if config["toggle"] then
+            call ToggleHighlight;
+         else
+            call EnableHighlight("key");
+      end 
+      else if (not config["toggle"]) then
+            call DisableHighlight("key");
+   end
+end
+
+procedure CombatTurnHandler begin
+   if (enabled and not config["toggle"]) then
+      call DisableHighlight("combat");
+end
+
+procedure DeathHandler
+begin
+   variable cr := get_sfall_arg;
+
+   if(enabled) then
+      call SetHighlightCorpse(cr, true, true);
+end
+
+procedure LootHandler(variable obj) // fake hook, TODO
+begin
+   hl_debug( "[highlight] looting " + obj_name(obj));
+end
+
+procedure GameModeChangeHandler
+begin
+   variable loot := get_game_mode bwand INTFACELOOT;
+   variable barter := get_game_mode bwand BARTER;
+
+   if(not enabled) then
+      return;
+
+   if(not config["toggle"] and (loot or barter)) then
+      call DisableHighlight("interface/barter");
+
+   if(loot) then
+   begin
+      variable obj := loot_obj;
+      call LootHandler(obj);
+   end
+end
+
+procedure InventoryMoveHandler
+begin
+   // remove item outline when player picks up the item
+   if (enabled and get_sfall_arg == 7) then
+      set_outline(get_sfall_arg, 0);
+end
+
+//
+
+procedure start begin
+   if game_loaded and (sfall_ver_major >= 4) then begin
+      call InitConfigs;
+
+      // load configuration
+      config := create_array_map;
+      config["color"] := GetConfig(configSection, "OutlineColor", 16);
+      config["container"] := GetConfig(configSection, "Containers", 0);
+      config["corpse"] := GetConfig(configSection, "Corpses", 0);
+      config["key"] := GetConfig(configSection, "Key", 0);
+      config["los"] := GetConfig(configSection, "CheckLOS", 0);
+      config["toggle"] := GetConfig(configSection, "ToggleMode", 0);
+      config["scanner"] := GetConfig(configSection, "MotionScanner", 0);
+      config["scanner/gone"] := Translate("HighlightFail1", "You aren't carrying a motion sensor.");
+      config["scanner/empty"] := Translate("HighlightFail2", "Your motion sensor is out of charge.");
+
+      // sanity checks
+      if(config["color"] < 1) then
+         config["color"] := 64;
+      if(config["color"] > 64) then
+         config["color"] := 64;
+
+      register_hook_proc(HOOK_KEYPRESS, KeyPressHandler);
+      register_hook_proc(HOOK_COMBATTURN, CombatTurnHandler);
+      register_hook_proc(HOOK_ONDEATH, DeathHandler);
+      register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChangeHandler);
+      register_hook_proc(HOOK_INVENTORYMOVE, InventoryMoveHandler);
+
+      // load saved state
+      save := load_array(NAME);
+      if(not save) then
+      begin
+         save := create_array_map;
+         save["enabled"] := false;
+      end
+      save_array(NAME, save);
+
+      // restore saved state
+      if(save["enabled"]) then
+         call EnableHighlight("new/load game");
+   end
+end
+
+procedure map_enter_p_proc begin
+   if (enabled and config["toggle"]) then
+      call EnableHighlight("enter map + toggle");
+   else
+      call DisableHighlight("enter map");
+end
