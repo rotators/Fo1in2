@@ -5,6 +5,17 @@
   Numbers...
 */
 
+#define above(a, b)        (unsigned_comp(a, b) > 0)
+#define above_equal(a, b)  (unsigned_comp(a, b) >= 0)
+#define below(a, b)        (unsigned_comp(a, b) < 0)
+#define below_equal(a, b)  (unsigned_comp(a, b) <= 0)
+
+procedure unsigned_comp(variable a, variable b) begin
+   if ((a bwxor b) == 0) then return 0; // a == b
+   if (b == 0) then return 1;
+   return 1 if (a / b) else -1;
+end
+
 #define MAX(x, y)    ((x > y) * x + (x <= y) * y)
 #define MIN(x, y)    ((x < y) * x + (x >= y) * y)
 #define in_range(x, from, to)    (x >= from and x <= to)

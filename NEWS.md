@@ -31,6 +31,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
 - **Fixed**: EXP exploit with doors in the Cathedral and Mariposa (locking/unlocking them).
+- **Fixed**: Guards in random encounters have a maximum travel distance now and won't run off into the sunset anymore.
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
 - **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
 - **Fixed**: Mariposa Super Mutants now use the same disguise check as Cathedral Super Mutants.
@@ -40,9 +41,12 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Morpheus will attack the player if he sees him fiddling with his computer terminal.
 - **Fixed**: Painfield on elevation 1 in MBVATS12 map wasn't working.
 - **Fixed**: Party member "abandon party" debug-spam.
+- **Fixed**: Quack-encounter was spawning on hex 0.
 - **Fixed**: Random mountain encounter would spawn pot container instead of gold items.
 - **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
 - **Fixed**: Regular Nightkins in the Master's Lair will not be deleted anymore together with the variable staff in the quarters when changing shifts.
+- **Fixed**: Regulators in Adytum have a maximum travel distance now.
+- **Fixed**: Sometimes critters were spawning inside caravan scenery objects.
 - **Fixed**: Talking to the Super Mutant Vats-Teams would crash the game because of missing / wrong dialog file.
 - **Fixed**: Tandi kidnapping timer for real this time.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
