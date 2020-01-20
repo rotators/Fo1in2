@@ -200,7 +200,14 @@ jobs:
            :
            curl -L https://github.com/microsoft/vswhere/releases/latest/download/vswhere.exe -o Tools/vswhere.exe
            git diff --quiet || (git add --update && echo "- vswhere update" >> $HOME/gha.commit)
+
+           echo "::set-env name=MSBUILD_EXE::$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
     shell: bash
+
+  - name:  Install Microsoft.VisualStudio.Component.WinXP
+    if:    env.GHA_TASK_SFALL_ROTATORS == 'true' && (env.GHA_EVENT == 'schedule' || env.GHA_EVENT == 'repository_dispatch:schedule-push')
+    run:   "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --channelId VisualStudio.16.Release --productId Microsoft.VisualStudio.Product.Enterprise -q --add Microsoft.VisualStudio.Component.WinXP
+    shell: cmd
 
   # updates customized version of sfall (rotators branch, ReleaseXP configuration)
   # TODO compile sfall without AppVeyor
@@ -208,8 +215,19 @@ jobs:
     if:    env.GHA_TASK_SFALL_ROTATORS == 'true'
     run:   |
            :
-           $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.rotators.dll --branch=rotators
-           SFALL_ROTATORS_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/rotators 2>/dev/null | jq -r '.build.commitId')
+           if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
+              echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
+              ok=1
+              "$MSBUILD_EXE" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v140_xp || ok=0
+              if [ $ok -eq 1 ] && [ -f "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" ]; then
+                 cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
+              fi
+              SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1)
+           else
+              $GHA_SCRIPTS/ddraw.sh get-dll-appveyor --dll=$MOD_DIR/ddraw.rotators.dll --branch=rotators
+              SFALL_ROTATORS_COMMIT=$(curl -Ls https://ci.appveyor.com/api/projects/rotators/sfall/branch/rotators 2>/dev/null | jq -r '.build.commitId')
+           fi
+
            SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
            echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
            ls -sh $MOD_DIR/ddraw.rotators.dll
@@ -238,7 +256,7 @@ jobs:
     run:   |
            :
            ok=1
-           "$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" Tools/Debugger/Debugger.sln -p:Configuration=Release -p:Platform=x86 || ok=0
+           "$MSBUILD_EXE" Tools/Debugger/Debugger.sln -p:Configuration=Release -p:Platform=x86 || ok=0
            if [ $ok -eq 1 ] && [ -f Tools/Debugger/Release/Debugger.exe ]; then
               mv Tools/Debugger/Release/Debugger.exe $MOD_DIR/Debugger.exe
               chmod +x $MOD_DIR/Debugger.exe
