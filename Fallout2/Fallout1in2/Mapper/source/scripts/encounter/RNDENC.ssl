@@ -6,6 +6,8 @@
    We are using this workaround to allow different map types based on where the player
    currently is on the worldmap : Desert, Mountain, City, Coast.
 
+   Also this script is used for "player triggered encounters"
+
 */
 
 #include "..\headers\define.h"
@@ -61,27 +63,18 @@ procedure timed_event_p_proc begin
       if (fixed_param == 1) then begin
          set_new_wm_pos;
 
-         // In Desert:
          if (is_terrain_desert) then begin
             load_map(MAP_RNDDESER, 0);
          end
-
-         // In Mountains:
          else if (is_terrain_mountain) then begin
             load_map(MAP_RNDMOUNT, 0);
          end
-
-         // In City:
          else if (is_terrain_city) then begin
             load_map(MAP_RNDCITY, 0);
          end
-
-         // In Coast:
          else if (is_terrain_ocean) then begin
             load_map(MAP_RNDCOAST, 0);
          end
-
-         // Other:
          else begin
             load_map(MAP_RNDDESER, 0);
             debug("!!!BIG BUG!!!");
@@ -94,10 +87,11 @@ procedure timed_event_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   variable map := random(1, 3);
+   variable map; // := random(1, 3);
    variable Critter;
    variable Critter_Tile;
 
+   // Unused, because HOOK_ENCOUNTER in gl_worldmap.ssl ... Keep this anyway for now just in case.
    if (CUR_MAP_DESERT0) then begin
       set_new_wm_pos;
       add_timer_event(self_obj, game_ticks(0), 1);

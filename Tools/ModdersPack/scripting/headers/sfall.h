@@ -65,6 +65,7 @@
 #define HOOK_STDPROCEDURE     (40)
 #define HOOK_STDPROCEDURE_END (41)
 #define HOOK_TARGETOBJECT     (42)
+#define HOOK_ENCOUNTER        (43)
 
 //Valid arguments to list_begin
 #define LIST_CRITTERS    (0)
@@ -79,6 +80,7 @@
 //Valid flags for force_encounter_with_flags
 #define ENCOUNTER_FLAG_NO_CAR   (1)
 #define ENCOUNTER_FLAG_LOCK     (2) // block new forced encounter by the next function call until the current specified encounter occurs
+#define ENCOUNTER_FLAG_SPECIAL  (4) // special blinking icon
 
 //The attack types returned by get_attack_type
 #define ATKTYPE_LWEP1           (0)
@@ -315,6 +317,7 @@
 #define set_outline(obj, color)                         sfall_func2("set_outline", obj, color)
 #define set_rest_heal_time(time)                        sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                             sfall_func1("set_rest_mode", mode)
+#define set_terrain_name(x, y, name)                    sfall_func3("set_terrain_name", x, y, name)
 #define set_unique_id(obj)                              sfall_func1("set_unique_id", obj)
 #define set_unjam_locks_time(time)                      sfall_func1("set_unjam_locks_time", time)
 #define set_window_flag(winID, flag, value)             sfall_func3("set_window_flag", winID, flag, value)

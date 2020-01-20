@@ -12,13 +12,19 @@
 #include "..\headers\command.h"
 #include "..\headers\modreact.h"
 
+#define MAX_TRAVEL              (15)
+
 procedure start;
 procedure critter_p_proc;
 procedure destroy_p_proc;
+procedure map_enter_p_proc;
 procedure map_update_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure timed_event_p_proc;
+
+#define LVAR_Home_Tile        (4)
+#define LVAR_Home_Rotation    (5)
 
 variable tmp_hostile;
 variable initial := 0;
@@ -47,17 +53,19 @@ procedure critter_p_proc begin
    end
 end
 
-procedure destroy_p_proc
-begin
-   rm_timer_event(self_obj);
-
+procedure destroy_p_proc begin
    inc_good_critter
    set_global_var(GVAR_WATER_THIEF_2, 1);
-   rm_timer_event(self_obj);
 end
 
-procedure map_update_p_proc
-begin
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+end
+
+procedure map_update_p_proc begin
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_SHADY_SANDS);
@@ -67,16 +75,14 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (scared == 0) then begin
       tmp_hostile := 1;
       set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 1);
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    if (scared) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
@@ -86,8 +92,11 @@ begin
    end
 end
 
-procedure timed_event_p_proc
-begin
-   self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(3, 5)));
+procedure timed_event_p_proc begin
+   if (tile_distance(self_tile, local_var(LVAR_Home_Tile)) < MAX_TRAVEL) then
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(3, 5)));
+   else
+      self_walk_to_tile(tile_num_in_direction(local_var(LVAR_Home_Tile), random(0, 5), random(3, 5)));
+
    add_timer_event(self_obj, game_ticks(random(0, 3)), 1);
 end

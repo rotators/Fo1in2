@@ -338,7 +338,7 @@
 #define PID_DOGMEAT_STAGE3                (16777544)
 #define PID_DOGMEAT_STAGE4                (16777545)
 #define PID_MYSTERIOUS_STRANGER_FEMALE    (16777546)
-#define PID_ENC_QUACK                     (16777547)
+#define PID_ENC_QUACK                     (16777547) // Vic critter
 #define PID_SMALL_RADSCORPION             (16777548)
 #define PID_SPORE_PLANT                   (16777549)
 #define PID_MISSILE_BOT                   (16777550)

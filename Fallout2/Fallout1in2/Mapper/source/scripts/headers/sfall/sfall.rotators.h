@@ -1,6 +1,10 @@
 #ifndef __SFALL_ROTATORS__
 #define __SFALL_ROTATORS__
 
+#if !defined(metarule_exist)
+#include "sfall.h"
+#endif
+
 // https://stackoverflow.com/a/44291052/11998612 + tweaks
 #define __sfall_prefix(...)                        0,__VA_ARGS__
 #define __sfall_lastof(x,a,b,c,d,e,f,g,h,i,j,...)  j
