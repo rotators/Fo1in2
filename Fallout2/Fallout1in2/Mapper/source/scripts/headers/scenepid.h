@@ -409,7 +409,7 @@ variable Scenery_Creation_Ptr;
 
 #define Create_EW_Red_Caravan(Hex_Num,Elevation)    Create_EW_Caravan(PID_EW_RED_CARAVAN,Hex_Num,Elevation)
 #define Create_EW_Grey_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_GREY_CARAVAN,Hex_Num,Elevation)
-#define Create_EW_Wood_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_WOOD_CARAVAN,Hex_Num,Elevation)
+//#define Create_EW_Wood_Caravan(Hex_Num,Elevation)   Create_EW_Caravan(PID_EW_WOOD_CARAVAN,Hex_Num,Elevation)
 
 #define Dest_Caravan_Cycle(Rot,Count,Elevation)   Scenery_Creation_Count:=0;                                                                             \
                                                 while (Scenery_Creation_Count < Count) do begin                                                          \

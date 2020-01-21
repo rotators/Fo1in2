@@ -49,10 +49,10 @@
                                     mark_map_entrance_elev_state(MAP_VAULT13,0,0);        \
                                     mark_map_entrance_elev_state(MAP_VAULT13,1,0);        \
                                     mark_map_entrance_elev_state(MAP_VAULT13,2,0);        \
-                                    if (dude_is_male) then                                \
-                                       play_gmovie(WALKM_MOVIE);                          \
-                                    else                                                  \
-                                       play_gmovie(WALKW_MOVIE);                          \
+                                    /*if (dude_is_male) then*/                            \
+                                    /*   play_gmovie(WALKM_MOVIE);*/                      \
+                                    /*else*/                                              \
+                                    /*   play_gmovie(WALKW_MOVIE);*/                      \
                                     endgame_movie;                                        \
                                     gfade_out(1);                                         \
                                     party_member_unhide_all                               \
