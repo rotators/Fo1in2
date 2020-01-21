@@ -26,8 +26,5 @@
 #define r_get_ini_string(file, section, key, defaultValue)  sfall_func("r_get_ini_string", file, section, key, defaultValue)
 //      r_message_box(text, [flags, color1, color23)
 #define r_message_box(...)                                  sfall_func("r_message_box", __VA_ARGS__)
-#define r_set_hotspot_title(zoneX, zoneY, msg)              sfall_func("r_set_hotspot_title", zoneX, zoneY, msg)
-#define r_tolower(val)                                      sfall_func("r_tolower", val)
-#define r_toupper(val)                                      sfall_func("r_toupper", val)
 
 #endif // __SFALL_ROTATORS__ //
