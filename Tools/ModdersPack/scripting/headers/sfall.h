@@ -72,7 +72,7 @@
 #define LIST_GROUNDITEMS (1)
 #define LIST_SCENERY     (2)
 #define LIST_WALLS       (3)
-//#define LIST_TILES       (4) //Not listable via sfall list functions
+//#define LIST_TILES     (4) //Not listable via sfall list functions
 #define LIST_MISC        (5)
 #define LIST_SPATIAL     (6)
 #define LIST_ALL         (9)
@@ -82,7 +82,7 @@
 #define ENCOUNTER_FLAG_LOCK     (0x2)  // block new forced encounter by the next function call until the current specified encounter occurs
 #define ENCOUNTER_FLAG_NO_ICON  (0x4)  // disable displaying the flashing icon
 #define ENCOUNTER_FLAG_ICON_SP  (0x8)  // use special encounter icon
-#define ENCOUNTER_FLAG_FADEOUT  (0x10) // use fade out effect on the encounter (Note: you should restore the fade out screen when entering the encounter)
+#define ENCOUNTER_FLAG_FADEOUT  (0x10) // fade out the screen on encounter (Note: you yourself should restore the fade screen when entering the encounter)
 
 //The attack types returned by get_attack_type
 #define ATKTYPE_LWEP1           (0)

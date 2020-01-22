@@ -34,6 +34,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Guards in random encounters have a maximum travel distance now and won't run off into the sunset anymore.
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
 - **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
+- **Fixed**: Main title music now already starts when the outro videos are playing, not after.
 - **Fixed**: Mariposa Super Mutants now use the same disguise check as Cathedral Super Mutants.
 - **Fixed**: Missing encounter table for northern city zones.
 - **Fixed**: Missing Vault Suit armor type entry in party_armor.ini file.
