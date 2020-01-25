@@ -28,20 +28,23 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-   //set_proto_data(obj_pid(self_obj),PROTO_IT_FLAGS,ITEM_ACTION_USE);
 end
 
 procedure description_p_proc begin
    script_overrides;
-   display_msg(message_str(SCRIPT_TROPHY, 100));
+
+   if (global_var(GVAR_URN_STOLEN) == 0) then
+      display_msg(message_str(NAME, 100));
+   else
+      display_msg(message_str(NAME, 200));
 end
 
 procedure use_p_proc begin
    script_overrides;
-   if (global_var(GVAR_DESTROY_VATS_14) == 0) then begin
+   if (global_var(GVAR_URN_STOLEN) == 0) then begin
       if ((game_time_hour >= 410) and (game_time_hour <= 1200)) then begin
          script_overrides;
-         set_global_var(GVAR_DESTROY_VATS_14, 1);
+         set_global_var(GVAR_URN_STOLEN, 1);
 
          item := create_object(PID_URN, 0, 0);
          add_obj_to_inven(source_obj, item);
@@ -58,9 +61,12 @@ end
 procedure use_obj_on_p_proc begin
    if (obj_pid(obj_being_used_with) == PID_URN) then begin
       script_overrides;
-      set_global_var(GVAR_DESTROY_VATS_14, 0);
+
+      set_global_var(GVAR_URN_STOLEN, 0);
       set_map_var(MVAR_caught_stealing_urn, 0);
+
       self_set_frame(0);
+
       rm_obj_from_inven(source_obj, obj_being_used_with);
       destroy_object(obj_being_used_with);
    end
@@ -81,9 +87,9 @@ procedure timed_event_p_proc begin
 end
 
 procedure steal_urn begin
-   if (global_var(GVAR_DESTROY_VATS_14) == 0) then begin
+   if (global_var(GVAR_URN_STOLEN) == 0) then begin
       script_overrides;
-      set_global_var(GVAR_DESTROY_VATS_14, 1);
+      set_global_var(GVAR_URN_STOLEN, 1);
 
       item := create_object(PID_URN, 0, 0);
       add_obj_to_inven(source_obj, item);

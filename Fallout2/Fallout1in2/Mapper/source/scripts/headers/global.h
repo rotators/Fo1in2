@@ -422,7 +422,7 @@
 #define GVAR_DESTROY_VATS_11                    (1283)
 #define GVAR_IS_NEAL_DEAD                       (1284)
 #define GVAR_DESTROY_VATS_13                    (1285)
-#define GVAR_DESTROY_VATS_14                    (1286)
+#define GVAR_URN_STOLEN                         (1286)
 #define GVAR_AMBUSH_SKULLZ                      (1287)
 #define GVAR_MYST_STRANGER_ITEM                 (1288)
 #define GVAR_WATER_THIEF_2                      (1289)

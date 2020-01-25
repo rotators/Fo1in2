@@ -82,6 +82,10 @@ variable kick_out;
 
 #define kicked_out_hex                 (22483)
 
+#define urn_thief_reaction             float_msg(self_obj, mstr(133), FLOAT_MSG_RED);  \
+                                       tmp_hostile := 1;                               \
+                                       set_local_var(10, 1)
+
 procedure start begin
    if not(initial) then begin
       initial := 1;
@@ -130,9 +134,7 @@ procedure critter_p_proc begin
 
    // Dude stealing his urn:
    if ((map_var(MVAR_caught_stealing_urn) == 1) and (local_var(10) == 0) and (local_var(9) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
-      float_msg(self_obj, mstr(133), FLOAT_MSG_RED);
-      tmp_hostile := 1;
-      set_local_var(10, 1);
+      urn_thief_reaction;
    end
 
    if (self_item_count(PID_URN)) then begin
@@ -279,7 +281,7 @@ procedure talk_p_proc begin
          if (self_item_count(PID_URN)) then begin
             float_msg(self_obj, mstr(143), FLOAT_MSG_BLUE);
             set_local_var(11, 1);
-            set_global_var(GVAR_DESTROY_VATS_14, 2);
+            set_global_var(GVAR_URN_STOLEN, 2);
          end
          else begin
             if ((game_time_hour >= 410) and (game_time_hour <= 1300)) then begin
@@ -437,14 +439,20 @@ end
 
 procedure NealKickOut begin
    self_look_at_dude;
-   if (kick_out == 0) then begin
-      kick_out := 1;
-      float_msg(self_obj, mstr(200), FLOAT_MSG_RED);
-      add_timer_event(self_obj, game_ticks(1), EVENT_KICKED_OUT);
+   if (dude_item_count(PID_URN)) then begin
+      set_map_var(MVAR_caught_stealing_urn, 1);
+      urn_thief_reaction;
    end
-   else if (kick_out == 2) then begin
-      float_msg(self_obj, mstr(149), FLOAT_MSG_RED);
-      tmp_hostile := 1;
+   else begin
+      if (kick_out == 0) then begin
+         kick_out := 1;
+         float_msg(self_obj, mstr(200), FLOAT_MSG_RED);
+         add_timer_event(self_obj, game_ticks(1), EVENT_KICKED_OUT);
+      end
+      else if (kick_out == 2) then begin
+         float_msg(self_obj, mstr(149), FLOAT_MSG_RED);
+         tmp_hostile := 1;
+      end
    end
 end
 
@@ -453,11 +461,11 @@ procedure Neal01 begin
    NOption(107, Neal02, 4);
    NOption(108, Neal03, 4);
    NOption(mstr(109) + dude_name + mstr(110), Neal04, 4);
-   if (global_var(GVAR_DESTROY_VATS_14) == 0) then begin
+   if (global_var(GVAR_URN_STOLEN) == 0) then begin
       NOption(125, Neal09, 4);
    end
    else begin
-      if (global_var(GVAR_DESTROY_VATS_14) == 1) then begin
+      if (global_var(GVAR_URN_STOLEN) == 1) then begin
          NOption(142, Neal09, 4);
       end
    end
@@ -530,7 +538,7 @@ procedure Neal08 begin
 end
 
 procedure Neal09 begin
-   if (global_var(GVAR_DESTROY_VATS_14) == 1) then begin
+   if (global_var(GVAR_URN_STOLEN) == 1) then begin
       Reply(145);
    end
    else begin
@@ -549,7 +557,7 @@ end
 procedure Neal11 begin
    GMessage(143);
    set_local_var(11, 1);
-   set_global_var(GVAR_DESTROY_VATS_14, 2);
+   set_global_var(GVAR_URN_STOLEN, 2);
    item := dude_item(PID_URN);
    set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
    rm_obj_from_inven(dude_obj, item);
