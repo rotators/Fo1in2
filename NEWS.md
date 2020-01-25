@@ -73,5 +73,6 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Tweaked**: Slightly increased the scroll edges of the Cathedral tower maps.
 - **Tweaked**: Slightly reduced "common" encounter chance.
 - **Tweaked**: Slightly reduced encounter chances.
+- **Tweaked**: The endgame sequence now starts with a black fade on the worldmap.
 - **Tweaked**: The Gunrunners moat guard will only return to his home position if the player enters the map.
 - **Tweaked**: Wandering Blades are a lot less antsy now.
