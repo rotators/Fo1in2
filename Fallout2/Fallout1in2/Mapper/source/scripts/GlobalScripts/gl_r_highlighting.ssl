@@ -38,7 +38,7 @@ variable debug_highlight := 0;
 
 #define hl_debug(msg) \
    if(debug_highlight) then \
-      display_msg(msg)
+      display_msg("[highlight] " + msg)
 
 procedure SetHighlightObject(variable obj, variable enable) begin
    if obj and (not enable or not config["los"] or not obj_blocking_line(dude_obj, tile_num(obj), BLOCKING_TYPE_SHOOT)) then
@@ -118,32 +118,45 @@ procedure StartScanner(variable start) begin
    end
 
    if(not start) then
-      hl_debug("[highlight] scanner ok");
+      hl_debug("scanner ok");
 
    return true;
 end
 
-procedure EnableHighlight(variable reason := 0)
+procedure EnableHighlight(variable reason := 0, variable subproc := true )
 begin
-   variable msg := "[highlight] enabled", result;
+   variable msg := "enabled";
 
-   // check
-   result := StartScanner(false);
-   if(not result) then
-      return;
+   if(subproc) then
+   begin
+      // run check functions
+      // used to validate if everything is in place before highlight is enabled
+      // functions should not consume items etc. at this stage, but simply return true/false
+      variable result;
+
+      result := StartScanner(false);
+      if(not result) then
+         return;
+   end
 
    if (reason) then
       msg += " (" + reason + ")";
    hl_debug(msg);
 
-   // run
-   call StartScanner(true);
+   if(subproc) then
+   begin
+      // run init functions
+      // once all checks passed, real initialization starts
+      // functions are free to consume items etc. at this stage
+
+      call StartScanner(true);
+   end
    call SetHighlight(true);
 end
 
 procedure DisableHighlight(variable reason := 0)
 begin
-   variable msg := "[highlight] disabled";
+   variable msg := "disabled";
 
    if (reason) then
       msg += " (" + reason + ")";
@@ -198,7 +211,9 @@ end
 
 procedure LootHandler(variable obj) // fake hook, TODO
 begin
-   hl_debug("[highlight] looting " + obj_name(obj));
+   variable count := get_current_inven_size(obj);
+
+   hl_debug( "looting " + obj_name(obj) + " " + obj + ":(" + count +")" );
 end
 
 procedure GameModeChangeHandler
@@ -267,7 +282,7 @@ procedure start begin
 
       // restore saved state
       if(save["enabled"]) then
-         call EnableHighlight("new/load game");
+         call EnableHighlight("new/load game", false);
    end
 end
 
