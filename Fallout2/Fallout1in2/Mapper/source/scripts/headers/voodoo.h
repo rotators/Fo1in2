@@ -31,4 +31,13 @@
 #define VOODOO_dogmeat_pm_dialog \
                write_byte(0x444d10, 0x7a)
 
+#define VOODOO_remove_circle_name            \
+               write_byte(0x4c407a, 0x90);   \
+               write_byte(0x4c4094, 0x90);   \
+               write_byte(0x4c4095, 0x90);   \
+               write_byte(0x4c4096, 0x90);   \
+               write_byte(0x4c4097, 0x90);   \
+               write_byte(0x4c4098, 0x90);   \
+               write_byte(0x4c4099, 0x90)
+
 #endif // VOODOO_H //
