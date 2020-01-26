@@ -77,13 +77,6 @@
 #define LIST_SPATIAL     (6)
 #define LIST_ALL         (9)
 
-//Valid flags for force_encounter_with_flags
-#define ENCOUNTER_FLAG_NO_CAR   (0x1)
-#define ENCOUNTER_FLAG_LOCK     (0x2)  // block new forced encounter by the next function call until the current specified encounter occurs
-#define ENCOUNTER_FLAG_NO_ICON  (0x4)  // disable displaying the flashing icon
-#define ENCOUNTER_FLAG_ICON_SP  (0x8)  // use special encounter icon
-#define ENCOUNTER_FLAG_FADEOUT  (0x10) // fade out the screen on encounter (Note: you yourself should restore the fade screen when entering the encounter)
-
 //Valid window types for get_window_attribute
 #define WINTYPE_INVENTORY    (0) // any inventory window
 #define WINTYPE_DIALOG       (1)
@@ -93,6 +86,13 @@
 #define WINTYPE_CHARACTER    (5)
 #define WINTYPE_SKILLDEX     (6)
 #define WINTYPE_ESCMENU      (7) // escape menu
+
+//Valid flags for force_encounter_with_flags
+#define ENCOUNTER_FLAG_NO_CAR   (0x1)
+#define ENCOUNTER_FLAG_LOCK     (0x2)  // block new forced encounter by the next function call until the current specified encounter occurs
+#define ENCOUNTER_FLAG_NO_ICON  (0x4)  // disable displaying the flashing icon
+#define ENCOUNTER_FLAG_ICON_SP  (0x8)  // use special encounter icon
+#define ENCOUNTER_FLAG_FADEOUT  (0x10) // fade out the screen on encounter (Note: you yourself should restore the fade screen when entering the encounter)
 
 //The attack types returned by get_attack_type
 #define ATKTYPE_LWEP1           (0)
@@ -332,6 +332,7 @@
 #define set_rest_heal_time(time)                        sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                             sfall_func1("set_rest_mode", mode)
 #define set_terrain_name(x, y, name)                    sfall_func3("set_terrain_name", x, y, name)
+#define set_town_title(areaID, title)                   sfall_func2("set_town_title", areaID, title)
 #define set_unique_id(obj)                              sfall_func1("set_unique_id", obj)
 #define set_unjam_locks_time(time)                      sfall_func1("set_unjam_locks_time", time)
 #define set_window_flag(winID, flag, value)             sfall_func3("set_window_flag", winID, flag, value)

@@ -19,6 +19,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Razlo's kids will return correctly to their home after dark. Also tweaked their dialog so they won't say they don't know where their parents are if they are right next to them.
 - **Added**: Resized Super Mutant flameboy death animations by .Pixote. in a new mod folder. Enabled by default.
 - **Added**: Rifle animations for black metal armor dude, because why not.
+- **Added**: SMG and Pistol animations for "Yellow-Pants" metal armor woman.
 - **Added**: The Cathedral prisoners will flee once the player has destroyed their force field(s).
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
 - **Added**: Tycho-critter can now also use SMGs.
@@ -26,9 +27,12 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Vincent in the Cathedral will react to force fields being destroyed.
 - **Added**: Wanted signs will now show up if the player has been a bad boy.
 - **Added**: Zones around the Glow now read "Rad. Mountains" / "Rad. Desert" (can't show full text length right now).
+- **Fixed**: "Yellow-Pants" metal armor woman would spawn with weapons she can't use. Fixed in classic Rotators-style with creating and adding the missing animations instead of a simple script change.
 - **Fixed**: Adytowner will only join the player against the Regulators AFTER showing the holodisk to Zimmerman.
+- **Fixed**: Broken radiation code in the Glow. Radiation distribution is based on timer events now, which is not as fragile as the shitty map_update code.
 - **Fixed**: Broken worldmap mask tiles 18 and 19.
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
+- **Fixed**: Can't use TMA anymore with the Overseer in the endgame sequence.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
 - **Fixed**: EXP exploit with doors in the Cathedral and Mariposa (locking/unlocking them).
 - **Fixed**: Guards in random encounters have a maximum travel distance now and won't run off into the sunset anymore.
@@ -47,6 +51,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
 - **Fixed**: Regular Nightkins in the Master's Lair will not be deleted anymore together with the variable staff in the quarters when changing shifts.
 - **Fixed**: Regulators in Adytum have a maximum travel distance now.
+- **Fixed**: Skum Pitt bar counter description text changes after the player has stolen Neal's urn.
 - **Fixed**: Sometimes critters were spawning inside caravan scenery objects.
 - **Fixed**: Talking to the Super Mutant Vats-Teams would crash the game because of missing / wrong dialog file.
 - **Fixed**: Tandi kidnapping timer for real this time.
@@ -68,6 +73,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
 - **Tweaked**: Encounter city map 2 and 3 slightly modified so the player won't spawn into a wall anymore.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
+- **Tweaked**: Player stops moving when Kalnor denies entry into Junktown because it is night time.
 - **Tweaked**: Position of the Deathclaw Lair has been moved a tad.
 - **Tweaked**: Reverted proto changes to 10mm AP, 10mm JHP, .44 Magnum JHP, 14mm AP, and .223 FMJ.
 - **Tweaked**: Slightly increased the scroll edges of the Cathedral tower maps.
