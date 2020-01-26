@@ -31,6 +31,8 @@
 #define VOODOO_dogmeat_pm_dialog \
                write_byte(0x444d10, 0x7a)
 
+// Removes the text under green circles on the worldmap
+// Used by Classic Worldmap mod
 #define VOODOO_remove_circle_name            \
                write_byte(0x4c407a, 0x90);   \
                write_byte(0x4c4094, 0x90);   \

@@ -44,13 +44,6 @@ variable Tot_Critter_B;
 variable victim;
 
 // for Fallout Fixt: /////////////////
-variable EncounterType := 0;
-
-procedure Outdoorsman00;
-procedure Outdoorsman01;
-procedure Engage;
-procedure Avoid;
-
 export variable signal_mutants;
 //////////////////////////////////////
 
@@ -160,8 +153,7 @@ procedure map_exit_p_proc begin
    set_car_exit_map
 end
 
-procedure Place_critter
-begin
+procedure Place_critter begin
    variable Facing := 0;
    variable Distance := 0;
    variable Ring := 0;
@@ -482,56 +474,7 @@ procedure hunters begin
    call Add_Mysterious_Stranger;
 end
 
-procedure Outdoorsman00 begin
-   variable RollModifier := 0;
-   variable Luck_roll := 0;
-   variable Per_roll := 0;
-
-   Per_roll := random(0, ((dude_perception - 5) * 3));// random min0 to max(-12% to + 15%)
-   Luck_roll := random(0, (dude_luck - 5));// random min0 to max(-4% to + 5%)
-
-   RollModifier := Per_roll + Luck_roll + (dude_perk(PERK_pathfinder) * 25) + (dude_perk(PERK_scout) * 50);
-
-   if is_success(roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, RollModifier)) then begin
-      start_gdialog(112, self_obj, 4, -1, -1);// DESERT = 112,  MOUNT = 246,  COAST = 245,  CITY = 244
-      gsay_start;
-      call Outdoorsman01;
-      gsay_end;
-      end_dialogue;
-   end
-end
-
-procedure Outdoorsman01
-begin
-   gsay_reply(SCRIPT_RNDDESRT, message_str(SCRIPT_RNDDESRT, 177) + message_str(SCRIPT_RNDDESRT, EncounterType) + message_str(SCRIPT_RNDDESRT, 182));// DESERT = 112,  MOUNT = 246,  COAST = 245,  CITY = 244
-   giq_option(1, SCRIPT_RNDDESRT, 178, Engage, NEUTRAL_REACTION);// DESERT = 112,  MOUNT = 246,  COAST = 245,  CITY = 244
-   giq_option(1, SCRIPT_RNDDESRT, 179, Avoid, NEUTRAL_REACTION);// DESERT = 112,  MOUNT = 246,  COAST = 245,  CITY = 244
-end
-
-procedure Engage
-begin
-   set_map_var(0, 1);// Fixt_BEGIN_ENCOUNTER := 1
-end
-
-procedure Avoid
-begin
-   variable XP := 100;
-   set_map_var(0, 0);// Fixt_BEGIN_ENCOUNTER := 0
-
-   if CUR_MAP_COAST1 then begin// COAST1.MAP
-      move_to(dude_obj, 14114, dude_elevation);//  11524, dude_elevation);// top-left hex
-   end
-   else begin
-      if CUR_MAP_COAST2 then begin// COAST2.MAP
-         move_to(dude_obj, 13106, dude_elevation);//  10914, dude_elevation);// top-left hex
-      end
-   end
-   give_xp_msg(XP, message_str(SCRIPT_RNDDESRT, 181));
-end
-
 procedure Coast01 begin
-   EncounterType := 183;
-   //call Outdoorsman00;
    if map_var(0) != 0 then begin
       display_msg(message_str(SCRIPT_RNDCOAST, 100));
       set_global_var(GVAR_MYST_STRANGER_ITEM, 12);
@@ -591,8 +534,6 @@ procedure Coast01 begin
 end
 
 procedure Coast02 begin
-   EncounterType := 184;
-   //call Outdoorsman00;
    if map_var(0) != 0 then begin
       display_msg(message_str(SCRIPT_RNDCOAST, 111));
       set_global_var(GVAR_MYST_STRANGER_ITEM, 12);
@@ -623,8 +564,6 @@ procedure Coast02 begin
 end
 
 procedure Coast03 begin
-   EncounterType := 185;
-   //call Outdoorsman00;
    if map_var(0) != 0 then begin
       display_msg(message_str(SCRIPT_RNDCOAST, 101));
       set_global_var(GVAR_MYST_STRANGER_ITEM, 7);
@@ -661,8 +600,6 @@ procedure Coast03 begin
 end
 
 procedure Coast04 begin
-   EncounterType := 186;
-   //call Outdoorsman00;
    if map_var(0) != 0 then begin
       display_msg(message_str(SCRIPT_RNDCOAST, 102));
       set_global_var(GVAR_MYST_STRANGER_ITEM, 68);
@@ -892,8 +829,6 @@ procedure Coast04 begin
 end
 
 procedure Coast05 begin
-   EncounterType := 184;
-   //call Outdoorsman00;
    if map_var(0) != 0 then begin
       display_msg(message_str(SCRIPT_RNDCOAST, 111));
       set_global_var(GVAR_MYST_STRANGER_ITEM, 12);
