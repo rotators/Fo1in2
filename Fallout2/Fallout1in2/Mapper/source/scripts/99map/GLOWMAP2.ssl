@@ -1,3 +1,9 @@
+/*
+
+   The Glow - Elevation 4, 5, 6
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\maps\glow2.h"
 #include "..\headers\glow.h"
@@ -6,8 +12,13 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure timed_event_p_proc;
 
 procedure Invasion;
+
+#define EVENT_RADS   (1)
 
 variable party_elevation;
 variable dude_start_hex;
@@ -21,7 +32,12 @@ end
 procedure map_enter_p_proc begin
    GlowLighting;
 
-   First_Time := game_time / 10;
+   //First_Time := game_time / 10;
+
+   // New radiation code, because map_update is unreliable
+   if (is_loading_game == false) then begin
+      add_timer_event(self_obj, game_ticks(0), EVENT_RADS);
+   end
 
    set_global_var(GVAR_LOAD_MAP_INDEX, 0);
 end
@@ -29,8 +45,8 @@ end
 procedure map_update_p_proc begin
    GlowLighting;
 
+   /*
    Next_Time := game_time / 10;
-
    if ((Next_Time - First_Time) > 30) then begin
       Rads := (Next_Time - First_Time) / 30;
       radiation_inc(dude_obj, rads);
@@ -40,10 +56,18 @@ procedure map_update_p_proc begin
    else begin
       radiation_inc(dude_obj, 1);
    end
+   */
 
    if ((map_var(MVAR_gave_exp) == 0) and (dude_elevation == 1)) then begin
       display_msg(message_str(SCRIPT_GLOWGEN, 107));
       give_xp(EXP_REPAIR_GENERATOR);
       set_map_var(MVAR_gave_exp, 1);
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_RADS) then begin
+      radiation_inc(dude_obj, 1);
+      add_timer_event(self_obj, game_ticks(random(5,10)), EVENT_RADS);
    end
 end

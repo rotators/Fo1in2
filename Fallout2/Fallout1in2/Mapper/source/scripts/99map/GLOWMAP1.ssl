@@ -1,3 +1,9 @@
+/*
+
+   The Glow - Elevation 1, 2, 3
+
+*/
+
 #include "..\headers\define.h"
 #include "..\headers\glow.h"
 
@@ -5,6 +11,11 @@
 #include "..\headers\updatmap.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure timed_event_p_proc;
+
+#define EVENT_RADS   (1)
 
 variable party_elevation;
 variable dude_start_hex;
@@ -18,7 +29,12 @@ end
 procedure map_enter_p_proc begin
    GlowLighting;
 
-   First_Time := game_time / 10;
+   //First_Time := game_time / 10;
+
+   // New radiation code, because map_update is unreliable
+   if (is_loading_game == false) then begin
+      add_timer_event(self_obj, game_ticks(0), EVENT_RADS);
+   end
 
    set_global_var(GVAR_MARK_GLOW_2, 2); // Abused as quest variable "Gain access to the Glow"
 
@@ -35,8 +51,8 @@ end
 procedure map_update_p_proc begin
    GlowLighting;
 
+   /*
    Next_Time := game_time / 10;
-
    if ((Next_Time - First_Time) > 30) then begin
       Rads := (Next_Time - First_Time) / 30 * 10;
       radiation_inc(dude_obj, rads);
@@ -45,5 +61,13 @@ procedure map_update_p_proc begin
    end
    else begin
       radiation_inc(dude_obj, 10);
+   end
+   */
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_RADS) then begin
+      radiation_inc(dude_obj, 10);
+      add_timer_event(self_obj, game_ticks(random(5,10)), EVENT_RADS);
    end
 end

@@ -1,13 +1,24 @@
+/*
+
+   The Glow - Entrance map script.
+
+*/
+
 #include "..\headers\define.h"
+#include "..\headers\command.h"
 #include "..\headers\glow.h"
+
 #include "..\headers\updatmap.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
+procedure timed_event_p_proc;
 
 //#define default_start_hex     (0)
 #define bike_start_hex        (22129)
+
+#define EVENT_RADS   (1)
 
 variable First_Time;
 variable Next_Time;
@@ -25,6 +36,11 @@ procedure map_enter_p_proc begin
       set_global_var(GVAR_MARK_GLOW_2, 1); // Abused as quest variable "Gain access to the Glow"
       set_glow_power_emergency;
       display_msg(message_str(SCRIPT_SHADYWST, 108));
+   end
+
+   // New radiation code, because map_update is unreliable
+   if (is_loading_game == false) then begin
+      add_timer_event(self_obj, game_ticks(0), EVENT_RADS);
    end
 
    set_global_var(GVAR_MARK_GLOW_1, 1);
@@ -50,9 +66,9 @@ end
 procedure map_update_p_proc begin
    Lighting;
 
-   Next_Time := game_time / 10;
+   /*
    if ((Next_Time - First_Time) > 30) then begin
-      Rads := (Next_Time - First_Time) / 30 * 15;
+      rads := (Next_Time - First_Time) / 30 * 15;
       radiation_inc(dude_obj, rads);
       First_Time := game_time / 10;
       rads := 0;
@@ -60,4 +76,14 @@ procedure map_update_p_proc begin
    else begin
       radiation_inc(dude_obj, 15);
    end
+   */
 end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_RADS) then begin
+      debug("add rads!");
+      radiation_inc(dude_obj, 15);
+      add_timer_event(self_obj, game_ticks(random(5,10)), EVENT_RADS);
+   end
+end
+
