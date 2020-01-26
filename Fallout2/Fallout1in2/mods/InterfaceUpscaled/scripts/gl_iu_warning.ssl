@@ -5,10 +5,12 @@
 */
 
 #include "..\headers\define.h"
-#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\sfall.rotators.h"
 
 procedure start;
-procedure timed_event_p_proc;
+
+procedure warning_resolution;
+procedure warning_interface;
 
 variable ini_val;
 
@@ -17,34 +19,27 @@ procedure start begin
       set_global_script_type(0);
 
       if (get_screen_width < 890) or (get_screen_height < 720) then begin
-         //float_msg(dude_obj,"Warning! Screen resolution too low!",FLOAT_MSG_WARNING);
-         display_msg("Warning! Screen resolution too low! Disable InterfaceUpscaled-mod in the ddraw.ini file!");
-         add_global_timer_event(1, 1);
+         if(sfall_rotators and metarule_exist("r_message_box")) then
+            call warning_resolution in 1;
+         else
+            display_msg("Warning! Screen resolution too low! InterfaceUpscaled-mod will not work correctly!");
       end
       else begin
          ini_val := get_ini_setting("ddraw.ini|Interface|ExpandWorldMap");
          if (ini_val <= 0) then begin
-            //float_msg(dude_obj,"Warning! 'ExpandWorldMap' is disabled in ddraw.ini!",FLOAT_MSG_WARNING);
-            display_msg("Warning! 'ExpandWorldMap' is disabled! Disable InterfaceUpscaled-mod in the ddraw.ini file!");
-            add_global_timer_event(1, 1);
+            if(sfall_rotators and metarule_exist("r_message_box")) then
+               call warning_interface in 1;
+            else
+               display_msg("Warning! 'ExpandWorldMap' is disabled! InterfaceUpscaled-mod will not work correctly!");
          end
       end
    end
 end
 
-procedure timed_event_p_proc begin
-   if (fixed_param == 1) then begin
+procedure warning_resolution begin
+   r_message_box("WARNING:|Screen resolution too low!|'Interface Upscaled'-mod will not work correctly!", 0, 134);
+end
 
-      if (get_screen_width < 890) or (get_screen_height < 720) then begin
-         float_msg(dude_obj,"Warning! Screen resolution too low!",FLOAT_MSG_WARNING);
-      end
-      else begin
-         ini_val := get_ini_setting("ddraw.ini|Interface|ExpandWorldMap");
-         if (ini_val <= 0) then begin
-            float_msg(dude_obj,"Warning! 'ExpandWorldMap' is disabled in ddraw.ini!",FLOAT_MSG_WARNING);
-         end
-      end
-
-      add_global_timer_event(10, 1);
-   end
+procedure warning_interface begin
+   r_message_box("WARNING:|'ExpandWorldMap' in ddraw.ini disabled!|'Interface Upscaled'-mod will not work correctly!", 0, 134);
 end
