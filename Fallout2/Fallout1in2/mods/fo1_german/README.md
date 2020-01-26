@@ -13,4 +13,3 @@ Um mit dieser Mod spielen zu können, öffne die ddraw.ini, gehe zu [ExtraPatche
 Das Spiel wird dann die Mod laden.
 
 Falls mehr als eine Mod geladen wird, muss darauf geachtet werden, dass "PatchFileX" korrekt nummeriert wird (1, 2, 3, ...).
-
