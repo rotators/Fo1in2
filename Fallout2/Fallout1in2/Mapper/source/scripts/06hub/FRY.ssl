@@ -104,8 +104,6 @@ begin
 end
 
 procedure talk_p_proc begin
-   set_tma_data_generic(TMA_MSG_HUBENT);
-   
    dude_look_at_self;
    get_reaction
    call FryDialog;
@@ -116,21 +114,20 @@ procedure destroy_p_proc begin
    set_global_var(GVAR_FRY_DEAD, 1);
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_HUB, 1);
    end
 end
 
-procedure FryDialog
-begin
+procedure FryDialog begin
+   set_tma_data_generic(TMA_MSG_HUBENT);
+
    if (evening or ((game_time_hour >= 1900) or (game_time_hour < 600))) then begin
       float_msg(self_obj, mstr(146), FLOAT_MSG_GREEN);
    end
@@ -144,34 +141,24 @@ begin
          if (global_var(GVAR_GREENE_DEAD) == 1) then begin
             call Fry12;
          end
+         else if (global_var(GVAR_WANTED_THEFT) > 2) then begin
+            call Fry13;
+         end
+         else if (local_var(4) == 0) then begin
+            call Fry00;
+            set_local_var(4, 1);
+         end
+         else if has_rep_childkiller then begin
+            call Fry10;
+         end
+         else if (local_var(1) == 3) then begin
+            call Fry14;
+         end
+         else if (local_var(1) == 2) then begin
+            call Fry15;
+         end
          else begin
-            if (global_var(GVAR_WANTED_THEFT) > 2) then begin
-               call Fry13;
-            end
-            else begin
-               if (local_var(4) == 0) then begin
-                  call Fry00;
-                  set_local_var(4, 1);
-               end
-               else begin
-                  if has_rep_childkiller then begin
-                     call Fry10;
-                  end
-                  else begin
-                     if (local_var(1) == 3) then begin
-                        call Fry14;
-                     end
-                     else begin
-                        if (local_var(1) == 2) then begin
-                           call Fry15;
-                        end
-                        else begin
-                           call Fry16;
-                        end
-                     end
-                  end
-               end
-            end
+            call Fry16;
          end
       end
       gsay_end;
