@@ -26,4 +26,9 @@
 #define VOODOO_rest_till0600 \
                write_int(0x4995F3, 6)
 
+// This will fix Dogmeat generic party dialog strings
+// See https://github.com/rotators/Fo1in2/issues/21
+#define VOODOO_dogmeat_pm_dialog \
+               write_byte(0x444d10, 0x7a)
+
 #endif // VOODOO_H //
