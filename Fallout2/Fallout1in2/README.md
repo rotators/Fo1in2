@@ -59,7 +59,7 @@ While most optional content is a part of the mod core, and can be toggled on and
 ### Classic worldmap ###
 [mods/fo1_classic_worldmap](mods/fo1_classic_worldmap)
 
-Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
+Enabled by default. Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
 
 ### Fallout 1 Interface ###
 [mods/fo1_interface](mods/fo1_interface)
