@@ -13,6 +13,8 @@ procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
 procedure description_p_proc;
 
+#define LVAR_Locked                     (0)
+
 import variable removal_ptr;
 
 variable test;
@@ -31,7 +33,7 @@ procedure damage_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   if not(junktown_invaded) then begin
+   if not(junktown_invaded) and is_killian_alive then begin
       if ((game_time_hour >= 1900) or (game_time_hour < 700)) then begin
          obj_close(self_obj);
          obj_lock(self_obj);
@@ -40,7 +42,7 @@ procedure map_enter_p_proc begin
          obj_unlock(self_obj);
       end
       obj_close(self_obj);
-      set_local_var(0, 0);
+      set_local_var(LVAR_Locked, 0);
    end
    else begin
       obj_unlock(self_obj);
@@ -49,8 +51,8 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if not(junktown_invaded) then begin
-      if ((game_time_hour >= 1900) or (game_time_hour < 700) and (local_var(0) == 0)) then begin
+   if not(junktown_invaded) and is_killian_alive  then begin
+      if ((game_time_hour >= 1900) or (game_time_hour < 700) and (local_var(LVAR_Locked) == 0)) then begin
          obj_close(self_obj);
          obj_lock(self_obj);
       end
@@ -61,15 +63,13 @@ procedure map_update_p_proc begin
 end
 
 procedure use_p_proc begin
-   if not(junktown_invaded) then begin
-      if (obj_is_locked(self_obj)) then begin
-         script_overrides;
-         display_msg(mstr(100));
-      end
-      else begin
-         if ((game_time_hour >= 1900) or (game_time_hour < 700)) then begin
-            set_map_var(8, 1);
-         end
+   if (obj_is_locked(self_obj)) then begin
+      script_overrides;
+      display_msg(mstr(100));
+   end
+   else if not(junktown_invaded) and is_killian_alive then begin
+      if ((game_time_hour >= 1900) or (game_time_hour < 700)) then begin
+         set_map_var(8, 1);
       end
    end
 end
@@ -86,7 +86,7 @@ procedure use_obj_on_p_proc begin
          if (is_success(test)) then begin
             display_msg(mstr(101));
             obj_unlock(self_obj);
-            set_local_var(0, 1);
+            set_local_var(LVAR_Locked, 1);
          end
          else if (is_critical(test)) then begin
             display_msg(mstr(103));
@@ -111,7 +111,7 @@ procedure use_skill_on_p_proc begin
          if (is_success(test)) then begin
             display_msg(mstr(101));
             obj_unlock(self_obj);
-            set_local_var(0, 1);
+            set_local_var(LVAR_Locked, 1);
          end
          else if (is_critical(test)) then begin
             display_msg(mstr(103));
@@ -125,7 +125,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Locked) == 0) then begin
       display_msg(message_str(SCRIPT_DOOR, 104));
    end
 end

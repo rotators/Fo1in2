@@ -22,6 +22,8 @@ procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
 procedure description_p_proc;
 
+#define LVAR_Locked                     (0)
+
 variable test;
 
 import variable Killian_ptr;
@@ -40,7 +42,7 @@ procedure damage_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   if not(junktown_invaded) then begin
+   if not(junktown_invaded) and is_killian_alive then begin
       obj_close(self_obj);
       if ((game_time_hour >= 1910) or (game_time_hour < 650)) then begin
          obj_lock(self_obj);
@@ -48,7 +50,7 @@ procedure map_enter_p_proc begin
       else begin
          obj_unlock(self_obj);
       end
-      set_local_var(0, 0);
+      set_local_var(LVAR_Locked, 0);
    end
    else begin
       obj_unlock(self_obj);
@@ -57,9 +59,9 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if not(junktown_invaded) then begin
+   if not(junktown_invaded) and is_killian_alive then begin
       obj_close(self_obj);
-      if ((game_time_hour >= 1910) or (game_time_hour < 650) and (local_var(0) == 0)) then begin
+      if ((game_time_hour >= 1910) or (game_time_hour < 650) and (local_var(LVAR_Locked) == 0)) then begin
          obj_lock(self_obj);
       end
       else begin
@@ -69,21 +71,17 @@ procedure map_update_p_proc begin
 end
 
 procedure use_p_proc begin
-   if not(junktown_invaded) then begin
-      if (obj_is_locked(self_obj)) then begin
-         script_overrides;
-         display_msg(message_str(SCRIPT_KILDOOR1, 100));
-      end
-      else begin
-         //display_msg("use door!");
-
-         if (day and (obj_can_see_obj(Killian_ptr, dude_obj) or obj_can_hear_obj(Killian_ptr, dude_obj))) then begin
-            script_overrides;
-         end
-
-      end
-      set_map_var(MVAR_dude_messing_with_Killians_home, 1);
+   if (obj_is_locked(self_obj)) then begin
+      script_overrides;
+      display_msg(message_str(SCRIPT_KILDOOR1, 100));
    end
+   else if not(junktown_invaded) and is_killian_alive then begin
+      //display_msg("use door!");
+      if (day and (obj_can_see_obj(Killian_ptr, dude_obj) or obj_can_hear_obj(Killian_ptr, dude_obj))) then begin
+         script_overrides;
+      end
+   end
+   set_map_var(MVAR_dude_messing_with_Killians_home, 1);
 end
 
 procedure use_obj_on_p_proc begin
@@ -98,7 +96,7 @@ procedure use_obj_on_p_proc begin
             if (is_success(test)) then begin
                display_msg(message_str(SCRIPT_KILDOOR1, 101));
                obj_unlock(self_obj);
-               set_local_var(0, 1);
+               set_local_var(LVAR_Locked, 1);
             end
             else if (is_critical(test)) then begin
                display_msg(message_str(SCRIPT_KILDOOR1, 103));
@@ -125,7 +123,7 @@ procedure use_skill_on_p_proc begin
             if (is_success(test)) then begin
                display_msg(message_str(SCRIPT_KILDOOR1, 101));
                obj_unlock(self_obj);
-               set_local_var(0, 1);
+               set_local_var(LVAR_Locked, 1);
             end
             else if (is_critical(test)) then begin
                display_msg(message_str(SCRIPT_KILDOOR1, 103));
@@ -141,7 +139,7 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure description_p_proc begin
-   if (local_var(0) == 0) then begin
+   if (local_var(LVAR_Locked) == 0) then begin
       display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
    end
 end
