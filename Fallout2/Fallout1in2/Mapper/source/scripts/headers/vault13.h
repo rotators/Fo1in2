@@ -12,6 +12,16 @@
     Generic Defines
 ************************************************/
 
+// Use Vault door
+#define toggle_v13_door    if obj_is_open(vault_door_ptr) then begin \
+                              obj_close(vault_door_ptr);             \
+                              obj_lock(vault_door_ptr);              \
+                           end                                       \
+                           else begin                                \
+                              obj_unlock(vault_door_ptr);            \
+                              obj_open(vault_door_ptr);              \
+                           end
+
 // Fixt uses different code in V13. Maybe it can / should be consolidated with fo1.h define.
 #define invasion_kill_critter_V13   variable DeathType;                             \
                                     variable id := random(0, 18);                   \
