@@ -45,6 +45,11 @@ procedure finish_quest;
 procedure WtrThiefBye;
 procedure WtrThiefEnd;
 
+#define LVAR_Move_to       (4)
+
+#define EVENT_MOVE         (1)
+#define EVENT_LEAVE_BOX    (2)
+
 import variable Officer_ptr;
 import variable VaultBox_ptr;
 import variable WtrThief_ptr;
@@ -79,15 +84,15 @@ procedure critter_p_proc begin
             if (not(got_water) and (local_var(7) == 0)) then begin
                if (not(on_the_way)) then begin
                   on_the_way := 1;
-                  set_local_var(4, 22728);
+                  set_local_var(LVAR_Move_to, 22728);
                   move_to(self_obj, 16912, 2);
-                  add_timer_event(self_obj, game_ticks(30), 1);
+                  add_timer_event(self_obj, game_ticks(30), EVENT_MOVE);
                   set_local_var(6, game_time / 10 / 60 / 60);
                end
             end
          end
-         if (self_tile != local_var(4)) then begin
-            self_walk_to_tile(local_var(4));
+         if (self_tile != local_var(LVAR_Move_to)) then begin
+            self_walk_to_tile(local_var(LVAR_Move_to));
          end
       end
       else begin
@@ -102,10 +107,12 @@ procedure critter_p_proc begin
          if (not(got_water)) then begin
             if (anim_busy(self_obj) == 0) then begin
                use_obj(VaultBox_ptr);
+               obj_open(VaultBox_ptr);
+
                got_water := 1;
                LVar0 := create_object(PID_WATER_FLASK, 0, 0);
                add_obj_to_inven(self_obj, LVar0);
-               add_timer_event(self_obj, game_ticks(3), 2);
+               add_timer_event(self_obj, game_ticks(3), EVENT_LEAVE_BOX);
                if (dude_can_see_self) then begin
                   display_msg(mstr(103));
                end
@@ -114,7 +121,7 @@ procedure critter_p_proc begin
       end
       if (local_var(7) and (self_tile == 16912)) then begin
          move_to(self_obj, 7000, 0);
-         set_local_var(4, 7000);
+         set_local_var(LVAR_Move_to, 7000);
       end
       if (((game_time / 10 / 60 / 60) - local_var(6)) >= 7) then begin
          set_local_var(7, 0);
@@ -172,7 +179,7 @@ procedure map_enter_p_proc begin
    else begin
       if not(is_loading_game) then set_self_visible;
    end
-   if (local_var(4) != 7000) then begin
+   if (local_var(LVAR_Move_to) != 7000) then begin
       on_the_way := 1;
    end
    if (self_item_count(PID_WATER_FLASK)) then begin
@@ -189,7 +196,7 @@ procedure map_update_p_proc begin
    end
    if ((game_time_hour > 700) and (self_tile != 7000)) then begin
       move_to(self_obj, 7000, 0);
-      set_local_var(4, 7000);
+      set_local_var(LVAR_Move_to, 7000);
    end
 end
 
@@ -203,7 +210,7 @@ procedure talk_p_proc begin
    dude_look_at_self;
    if (scared) then begin
       self_run_to_tile(16912);
-      set_local_var(4, 16912);
+      set_local_var(LVAR_Move_to, 16912);
    end
    else begin
       set_local_var(5, 1);
@@ -231,16 +238,17 @@ end
 
 procedure timed_event_p_proc begin
    set_local_var(7, 1);
-   if (fixed_param == 1) then begin
+   if (fixed_param == EVENT_MOVE) then begin
       if (self_can_see_dude) then begin
-         set_local_var(4, 16912);
+         set_local_var(LVAR_Move_to, 16912);
       end
       else begin
-         set_local_var(4, 20706);
+         set_local_var(LVAR_Move_to, 20706);
       end
    end
-   else if (fixed_param == 2) then begin
-      set_local_var(4, 16912);
+   else if (fixed_param == EVENT_LEAVE_BOX) then begin
+      obj_close(VaultBox_ptr);
+      set_local_var(LVAR_Move_to, 16912);
    end
 end
 
