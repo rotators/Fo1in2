@@ -78,7 +78,7 @@
 #define LIST_ALL         (9)
 
 //Valid window types for get_window_attribute
-#define WINTYPE_INVENTORY    (0) // any inventory window
+#define WINTYPE_INVENTORY    (0) // any inventory window (player/loot/use/barter)
 #define WINTYPE_DIALOG       (1)
 #define WINTYPE_PIPBOY       (2)
 #define WINTYPE_WORLDMAP     (3)
@@ -274,6 +274,7 @@
 #define create_win(winName, x, y, w, h)                 sfall_func5("create_win", winName, x, y, w, h)
 #define create_win_flag(winName, x, y, w, h, flag)      sfall_func6("create_win", winName, x, y, w, h, flag)
 #define critter_inven_obj2(obj, type)                   sfall_func2("critter_inven_obj2", obj, type)
+#define dialog_box(text)                                sfall_func1("dialog_box", text)
 #define dialog_message(text)                            sfall_func1("dialog_message", text)
 #define dialog_obj                                      sfall_func0("dialog_obj")
 #define display_stats                                   sfall_func0("display_stats")
@@ -287,8 +288,8 @@
 #define get_flags(obj)                                  sfall_func1("get_flags", obj)
 #define get_ini_section(file, sect)                     sfall_func2("get_ini_section", file, sect)
 #define get_ini_sections(file)                          sfall_func1("get_ini_sections", file)
-#define get_interface_x(winType)                        sfall_func2("get_window_attribute", winType, 0)
-#define get_interface_y(winType)                        sfall_func2("get_window_attribute", winType, 1)
+#define get_interface_x(winType)                        sfall_func2("get_window_attribute", winType, 1)
+#define get_interface_y(winType)                        sfall_func2("get_window_attribute", winType, 2)
 #define get_inven_ap_cost                               sfall_func0("get_inven_ap_cost")
 #define get_map_enter_position                          sfall_func0("get_map_enter_position")
 #define get_metarule_table                              sfall_func0("get_metarule_table")
@@ -303,6 +304,7 @@
 #define hide_window(winName)                            sfall_func1("hide_window", winName)
 #define intface_hide                                    sfall_func0("intface_hide")
 #define intface_is_hidden                               sfall_func0("intface_is_hidden")
+#define intface_is_shown(winType)                       sfall_func1("get_window_attribute", winType)
 #define intface_redraw                                  sfall_func0("intface_redraw")
 #define intface_show                                    sfall_func0("intface_show")
 #define inventory_redraw(invSide)                       sfall_func1("inventory_redraw", invSide)

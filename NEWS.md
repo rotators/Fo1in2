@@ -1,5 +1,6 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
 - **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
+- **Added**: A fail-safe to the Vault 13 door, so that it is always closed before the endgame sequence starts.
 - **Added**: Classic Worldmap mod will now show location names the same way as in Fo1 (via Hotspot text). WIP!
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
 - **Added**: Fallout 1 interface mod. Replaces the Fallout 2 interface with the graphics from Fallout 1. This was originally a part of the fo1_base mod, but is now its own thing for easier handling.
@@ -38,6 +39,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Dogmeat party member dialog ("use best weapon" and "use best armor") would print human replies.
 - **Fixed**: EXP exploit with doors in the Cathedral and Mariposa (locking/unlocking them).
 - **Fixed**: Guards in random encounters have a maximum travel distance now and won't run off into the sunset anymore.
+- **Fixed**: If Killian is dead, his doors won't automatically lock themselves anymore.
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
 - **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
 - **Fixed**: Main title music now already starts when the outro videos are playing, not after.
