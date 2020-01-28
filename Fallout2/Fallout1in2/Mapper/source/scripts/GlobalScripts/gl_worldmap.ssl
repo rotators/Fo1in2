@@ -10,6 +10,7 @@
 #include "../headers/sfall/sfall.h"
 #include "../headers/sfall/sfall.rotators.h"
 #include "../headers/sfall/define_lite.h"
+#include "../headers/sfall/lib.math.h"
 
 #include "../headers/gl_worldmap.h"
 
@@ -48,131 +49,126 @@ variable TILE_COUNT_X := 0;
 variable ZONES;
 variable tick;
 
-procedure GetZone(variable zx, variable zy)
-begin
-    return ZONES[zx][zy];
+procedure GetZone(variable zx, variable zy) begin
+   return ZONES[zx][zy];
 end
 
 procedure GetCurrentZone begin
-    return GetZone(worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE);
+   return GetZone(worldmap_xpos / ZONE_SIZE, worldmap_ypos / ZONE_SIZE);
 end
 
 // read [Tile*] sections of WORLDMAP.TXT and save parts of info in ZONES[][]
 // TODO it should be called earlier
-procedure ReadWorldmapTxt
-begin
-    variable forTile, forX, forY;
-    variable counter := get_uptime;
+procedure ReadWorldmapTxt begin
+   variable forTile, forX, forY;
+   variable counter := get_uptime;
 
-    // must be set before using some TILE_/ZONE_ macros
-    TILE_COUNT_X := get_ini_setting("mods\\fo1_base\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles");
+   // must be set before using some TILE_/ZONE_ macros
+   TILE_COUNT_X := get_ini_setting("mods\\fo1_base\\data\\WORLDMAP.TXT|Tile Data|num_horizontal_tiles");
 
-    if(ZONES == 0) then
-    begin
-        // no idea how to create 2d array properly
-        variable x;
-        ZONES := create_array(ZONE_COUNT_X, 0);
-        for( x := 0; x < ZONE_COUNT_Y; x++ )
-        begin
-            ZONES[x] := create_array(ZONE_COUNT_Y, 0);
-        end
-    end
+   if(ZONES == 0) then
+   begin
+      // no idea how to create 2d array properly
+      variable x;
+      ZONES := create_array(ZONE_COUNT_X, 0);
+      for( x := 0; x < ZONE_COUNT_Y; x++ )
+      begin
+         ZONES[x] := create_array(ZONE_COUNT_Y, 0);
+      end
+   end
 
-    for( forTile := 0; forTile < TILE_COUNT; forTile++ )
-    begin
-        for( forX := 0; forX < TILE_ZONES_X; forX++ )
-        begin
-            for( forY := 0; forY < TILE_ZONES_Y; forY++ )
-            begin
-                variable zx := (forTile % TILE_COUNT_X) * TILE_ZONES_X + forX;
-                variable zy := (forTile / TILE_COUNT_X) * TILE_ZONES_Y + forY;
-                variable line, cfg, zone := create_lookup_map;
+   for( forTile := 0; forTile < TILE_COUNT; forTile++ )
+   begin
+      for( forX := 0; forX < TILE_ZONES_X; forX++ )
+      begin
+         for( forY := 0; forY < TILE_ZONES_Y; forY++ )
+         begin
+            variable zx := (forTile % TILE_COUNT_X) * TILE_ZONES_X + forX;
+            variable zy := (forTile / TILE_COUNT_X) * TILE_ZONES_Y + forY;
+            variable line, cfg, zone := create_lookup_map;
 
-                if(sfall_rotators) then
-                begin // TODO cfg := r_get_ini_list(), use db::fastread()
-                   line := r_get_ini_string("mods\\fo1_base\\data\\WORLDMAP.TXT", "Tile " + forTile, "" + forX + "_" + forY, "");
-                   cfg := string_split(line, ",");
-                end
-                else // so slow i'm not sure is it worth keeping
-                begin
-                   line := get_ini_string("mods\\fo1_base\\data\\WORLDMAP.TXT|Tile " + forTile + "|" + forX + "_" + forY);
-                   cfg := string_split(line, ",");
-                end
-
-                zone["zx"] := zx;
-                zone["zy"] := zy;
-                zone["terrain"] := cfg[0];
-                zone["fill"]    := cfg[1];
-                zone["table"]   := cfg[5];
-
-                // debug info
-                zone["tile"]   := forTile;
-                zone["tile_x"] := forX;
-                zone["tile_y"] := forY;
-
-                ZONES[zx][zy] := zone;
-
-                if(debug_mode and zone["table"] != "0" and atoi(zone["table"]) == 0) then
-                    display_msg("BUG BUG BUG : [Tile " + forTile + "]->" + forX + "_" + forY + " : table<" + zone["table"] + "> is not a number");
+            if(sfall_rotators) then
+            begin // TODO cfg := r_get_ini_list(), use db::fastread()
+               line := r_get_ini_string("mods\\fo1_base\\data\\WORLDMAP.TXT", "Tile " + forTile, "" + forX + "_" + forY, "");
+               cfg := string_split(line, ",");
             end
-        end
-    end
-    debug("ReadWorldmapTxt=" + (get_uptime-counter) + "ms");
+            else // so slow i'm not sure is it worth keeping
+            begin
+               line := get_ini_string("mods\\fo1_base\\data\\WORLDMAP.TXT|Tile " + forTile + "|" + forX + "_" + forY);
+               cfg := string_split(line, ",");
+            end
+
+            zone["zx"] := zx;
+            zone["zy"] := zy;
+            zone["terrain"] := cfg[0];
+            zone["fill"]    := cfg[1];
+            zone["table"]   := cfg[5];
+
+            // debug info
+            zone["tile"]   := forTile;
+            zone["tile_x"] := forX;
+            zone["tile_y"] := forY;
+
+            ZONES[zx][zy] := zone;
+
+            if(debug_mode and zone["table"] != "0" and atoi(zone["table"]) == 0) then
+               display_msg("BUG BUG BUG : [Tile " + forTile + "]->" + forX + "_" + forY + " : table<" + zone["table"] + "> is not a number");
+         end
+      end
+   end
+   debug("ReadWorldmapTxt=" + (get_uptime-counter) + "ms");
 end
 
 variable prevTerrain := "";
 variable prevTable := -1;
-procedure SetWorldmapInfo
-begin
-    variable zone := GetCurrentZone();
-    variable terrain := WORLDMAP_TERRAIN_UNKNOWN, table := atoi(zone["table"]); // if table is not a number, we're in trouble
+procedure SetWorldmapInfo begin
+   variable zone := GetCurrentZone();
+   variable terrain := WORLDMAP_TERRAIN_UNKNOWN, table := atoi(zone["table"]); // if table is not a number, we're in trouble
 
-    // get terrain type from string
-    switch(zone["terrain"])
-    begin
-        case "City":     terrain := WORLDMAP_TERRAIN_CITY;
-        case "Desert":   terrain := WORLDMAP_TERRAIN_DESERT;
-        case "Mountain": terrain := WORLDMAP_TERRAIN_MOUNTAIN;
-        case "Ocean":    terrain := WORLDMAP_TERRAIN_OCEAN;
-        default : display_msg("BUG BUG BUG : unknown terrain<" + zone["terrain"] + ">");
-    end
+   // get terrain type from string
+   switch(zone["terrain"]) begin
+      case "City":     terrain := WORLDMAP_TERRAIN_CITY;
+      case "Desert":   terrain := WORLDMAP_TERRAIN_DESERT;
+      case "Mountain": terrain := WORLDMAP_TERRAIN_MOUNTAIN;
+      case "Ocean":    terrain := WORLDMAP_TERRAIN_OCEAN;
+      default : display_msg("BUG BUG BUG : unknown terrain<" + zone["terrain"] + ">");
+   end
+   // spam when changing zone type
+   if(debug_mode and (prevTerrain != terrain or prevTable != table)) then
+   begin
+      if(not (prevTerrain == "" and prevTable == -1)) then
+         debug("exit " + prevTerrain + prevTable);
 
-    // spam when changing zone type
-    if(debug_mode and (prevTerrain != terrain or prevTable != table)) then
-    begin
-        if(not (prevTerrain == "" and prevTable == -1)) then
-            debug("exit " + prevTerrain + prevTable);
+      debug("enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "_" + zone["tile_y"] + ">");
+      prevTerrain := terrain;
+      prevTable := table;
+   end
 
-        debug("enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "_" + zone["tile_y"] + ">");
-        prevTerrain := terrain;
-        prevTable := table;
-    end
-
-    set_global_var(GVAR_WORLDMAP_TABLE, table);
-    set_global_var(GVAR_WORLDMAP_TERRAIN, terrain);
+   set_global_var(GVAR_WORLDMAP_TABLE, table);
+   set_global_var(GVAR_WORLDMAP_TERRAIN, terrain);
 end
 
-procedure UncoverOceanZones
-begin
-    variable xi, yi;
-    // Uncover ocean zones
-    for( yi := ZONE_COUNT_Y; yi >= 0; yi-- )
-    begin
-        for( xi := ZONE_COUNT_X; xi >= 0; xi-- )
-        begin
-           if (ZONES[xi][yi]["fill"]=="Fill_W" and wm_get_subtile_state(xi * ZONE_SIZE, yi * ZONE_SIZE) == VISITEDTILETYPE) then
-           begin
-              for( xi := xi ; xi >= 0; xi-- )
-              begin
-                  mark_world_subtile_visited(xi * ZONE_SIZE, yi * ZONE_SIZE, 0);
-              end
-           end
-        end
-    end
+procedure UncoverOceanZones begin
+   variable xi, yi;
+
+   // Uncover ocean zones
+   for( yi := ZONE_COUNT_Y; yi >= 0; yi-- )
+   begin
+      for( xi := ZONE_COUNT_X; xi >= 0; xi-- )
+      begin
+         if (ZONES[xi][yi]["fill"]=="Fill_W" and wm_get_subtile_state(xi * ZONE_SIZE, yi * ZONE_SIZE) == VISITEDTILETYPE) then
+         begin
+            for( xi := xi ; xi >= 0; xi-- )
+            begin
+               mark_world_subtile_visited(xi * ZONE_SIZE, yi * ZONE_SIZE, 0);
+            end
+         end
+      end
+   end
 end
 
 procedure SetRadiation begin
-   if game_time > tick then begin
+   if above(game_time, tick) then begin
       tick := game_time + ONE_GAME_HOUR;
       radiation_inc(dude_obj, random(1, 20));
       debug("radiation from wm! " + dude_rads + " rads!");
@@ -204,7 +200,7 @@ procedure encounter_handler begin
    // If the player enters a map on the worldmap, we set it depending on the current terrain type.
    // event 0 is random encounter, 1 is player encounter
    if (event == 1 and mapID == 0) then begin
-     if (is_terrain_desert) then begin
+      if (is_terrain_desert) then begin
          mapID := MAP_RNDDESER;
       end
       else if (is_terrain_mountain) then begin
@@ -224,14 +220,6 @@ procedure encounter_handler begin
    end
 end
 
-procedure timed_event_p_proc begin
-   if (fixed_param == EVENT_RADS) and in_glow_zone and (get_game_mode != WORLDMAP) then begin
-      radiation_inc(dude_obj, 5);
-      debug("radiation from zones around Glow! " + dude_rads + " rads!");
-      add_global_timer_event(game_ticks(random(5, 10)), EVENT_RADS);
-   end
-end
-
 procedure start begin
    if (game_loaded) then begin
       set_global_script_repeat(10);
@@ -243,14 +231,21 @@ procedure start begin
       call SetWorldmapInfo;
 
       call override_terrain_type;
-
-      add_global_timer_event(game_ticks(0), EVENT_RADS);
    end
 
    if (get_game_mode == WORLDMAP) then begin
       call SetWorldmapInfo;
       call UncoverOceanZones;
       if in_glow_zone then call SetRadiation;
+   end
+   else begin
+      if in_glow_zone then begin
+         if above(game_time, tick) then begin
+            tick := game_time + (ONE_GAME_MINUTE);
+            radiation_inc(dude_obj, random(5,15));
+            debug("radiation from zones around Glow! " + dude_rads + " rads!");
+         end
+      end
    end
 end
 
