@@ -26,6 +26,8 @@ variable TILE_COUNT_X := 0;
 #define ZONE_COUNT_X       (TILE_COUNT_X * TILE_ZONES_X)
 #define ZONE_COUNT_Y       (TILE_COUNT_Y * TILE_ZONES_Y)
 
+#define EVENT_RADS         (1)
+
 //
 // worldmap zones table
 //
@@ -222,6 +224,14 @@ procedure encounter_handler begin
    end
 end
 
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_RADS) and in_glow_zone and (get_game_mode != WORLDMAP) then begin
+      radiation_inc(dude_obj, 5);
+      debug("radiation from zones around Glow! " + dude_rads + " rads!");
+      add_global_timer_event(game_ticks(random(5, 10)), EVENT_RADS);
+   end
+end
+
 procedure start begin
    if (game_loaded) then begin
       set_global_script_repeat(10);
@@ -233,6 +243,8 @@ procedure start begin
       call SetWorldmapInfo;
 
       call override_terrain_type;
+
+      add_global_timer_event(game_ticks(0), EVENT_RADS);
    end
 
    if (get_game_mode == WORLDMAP) then begin
@@ -241,3 +253,4 @@ procedure start begin
       if in_glow_zone then call SetRadiation;
    end
 end
+
