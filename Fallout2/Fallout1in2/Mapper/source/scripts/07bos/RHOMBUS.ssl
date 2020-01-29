@@ -101,6 +101,8 @@ procedure combat;
 procedure kickout;
 procedure Remove_Player;
 
+#define LVAR_Move_to       (7)
+
 import variable locker_ptr;
 
 variable MAD;
@@ -118,6 +120,10 @@ variable loot;
 variable sense;
 variable denounce;
 variable Test;
+
+#define foreroom_hex    (22123)
+#define store_room_hex  (23928)
+#define bedroom_hex     (23920)
 
 procedure start begin
    if Only_Once then begin
@@ -622,13 +628,13 @@ procedure critter_p_proc begin
 
       end
       else begin
-         if ((local_var(7) == 1) and (self_tile != 22123)) then begin
-            self_walk_to_tile(22123);
+         if ((local_var(LVAR_Move_to) == 1) and (self_tile != foreroom_hex)) then begin
+            self_walk_to_tile(foreroom_hex);
          end
-         else if ((local_var(7) == 2) and (self_tile != 23928)) then begin
-            self_walk_to_tile(23928);
+         else if ((local_var(LVAR_Move_to) == 2) and (self_tile != store_room_hex)) then begin
+            self_walk_to_tile(store_room_hex);
          end
-         else if (local_var(7) == 3) then begin
+         else if (local_var(LVAR_Move_to) == 3) then begin
             if (local_var(5) > 0) then begin
                sense := 0;
             end
@@ -638,25 +644,23 @@ procedure critter_p_proc begin
             if (map_var(MVAR_TOUCHING) > sense) then begin
                float_msg(self_obj, mstr(206), FLOAT_MSG_GREEN);
                set_map_var(MVAR_TOUCHING, 0);
-               set_local_var(7, 2);
+               set_local_var(LVAR_Move_to, 2);
                add_timer_event(self_obj, game_ticks(30), 1);
             end
-            else begin
-               if (self_tile != 23920) then begin
-                  self_walk_to_tile(23920);
-               end
+            else if (self_tile != bedroom_hex) then begin
+               self_walk_to_tile(bedroom_hex);
             end
          end
          else begin
             if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
                if (local_var(8) == 0) then begin
                   set_local_var(8, 1);
-                  set_local_var(7, 3);
+                  set_local_var(LVAR_Move_to, 3);
                end
             end
             else begin
                set_local_var(8, 0);
-               set_local_var(7, 1);
+               set_local_var(LVAR_Move_to, 1);
             end
          end
       end
@@ -708,15 +712,10 @@ procedure talk_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
-
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
    end
-
    inc_good_critter
-   rm_timer_event(self_obj);
-
    set_global_var(GVAR_RHOMBUS_STATUS, 1);
 end
 
@@ -727,8 +726,8 @@ end
 
 procedure timeforwhat begin
    if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-      if (local_var(7) == 2) then begin
-         set_local_var(7, 3);
+      if (local_var(LVAR_Move_to) == 2) then begin
+         set_local_var(LVAR_Move_to, 3);
       end
    end
 end
