@@ -1,7 +1,9 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
 - **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
 - **Added**: A fail-safe to the Vault 13 door, so that it is always closed before the endgame sequence starts.
+- **Added**: After joining, party members will now face the player in dialog.
 - **Added**: Classic Worldmap mod will now show location names the same way as in Fo1 (via Hotspot text). WIP!
+- **Added**: Encounter maps in the zones around the Glow will now also radiate the player a little bit.
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
 - **Added**: Fallout 1 interface mod. Replaces the Fallout 2 interface with the graphics from Fallout 1. This was originally a part of the fo1_base mod, but is now its own thing for easier handling.
 - **Added**: Fallout 2 dialog interface graphic with "Tell Me About"-button.
@@ -23,6 +25,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Rifle animations for black metal armor dude, because why not.
 - **Added**: SMG and Pistol animations for "Yellow-Pants" metal armor woman.
 - **Added**: The Cathedral prisoners will flee once the player has destroyed their force field(s).
+- **Added**: The locker used by the Water Thief in V13 will now open and close on use.
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
 - **Added**: Tycho-critter can now also use SMGs.
 - **Added**: Using the punching bags will now give a one-time +5% unarmed increase (lifted from Fo2).
@@ -33,11 +36,13 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Adytowner will only join the player against the Regulators AFTER showing the holodisk to Zimmerman.
 - **Fixed**: Broken radiation code in the Glow. Radiation distribution is based on timer events now, which is not as fragile as the shitty map_update code.
 - **Fixed**: Broken worldmap mask tiles 18 and 19.
+- **Fixed**: Can't repeat Razors dialog anymore after agreeing to get weapons from the Gunrunners.
 - **Fixed**: Can't trade with gambling games related NPCs anymore.
 - **Fixed**: Can't use TMA anymore with the Overseer in the endgame sequence.
 - **Fixed**: Dice girls won't float text anymore if the table has been closed because of tampering.
 - **Fixed**: Dogmeat party member dialog ("use best weapon" and "use best armor") would print human replies.
 - **Fixed**: EXP exploit with doors in the Cathedral and Mariposa (locking/unlocking them).
+- **Fixed**: Exploit to use the Blue elevator in the Glow without enabling the primary power.
 - **Fixed**: Guards in random encounters have a maximum travel distance now and won't run off into the sunset anymore.
 - **Fixed**: If Killian is dead, his doors won't automatically lock themselves anymore.
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
@@ -55,8 +60,10 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
 - **Fixed**: Regular Nightkins in the Master's Lair will not be deleted anymore together with the variable staff in the quarters when changing shifts.
 - **Fixed**: Regulators in Adytum have a maximum travel distance now.
+- **Fixed**: Sheriff Greene will rotate back to his original direction after teleporting back from Deckers hideout.
 - **Fixed**: Skum Pitt bar counter description text changes after the player has stolen Neal's urn.
 - **Fixed**: Sometimes critters were spawning inside caravan scenery objects.
+- **Fixed**: Taking the Water Chip from Necropolis will not give negative karma if the water pump has been fixed before.
 - **Fixed**: Talking to the Super Mutant Vats-Teams would crash the game because of missing / wrong dialog file.
 - **Fixed**: Tandi kidnapping timer for real this time.
 - **Fixed**: The Master now instantly gets moved to his correct position and the player won't see the "teleport transition" anymore.
