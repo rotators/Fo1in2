@@ -83,6 +83,6 @@
    write_byte(0x41ae2a, 0x04); \
    write_byte(0x41ae2b, 0x61); \
    write_byte(0x41ae2c, 0xC3); \
-   call_offset_r0(0x41ae05)
+   call_offset_v0(0x41ae05)
 
 #endif // VOODOO_H //
