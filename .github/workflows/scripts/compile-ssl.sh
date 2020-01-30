@@ -16,6 +16,7 @@ option_dry=0
 option_include_dir=
 option_optimization=2
 option_scripts_dir="Fallout2/Fallout1in2/Mapper/source/scripts"
+option_headers_dir="Fallout2/Fallout1in2/Mapper/source/scripts/headers"
 
 # user options
 for option in "$@"; do
@@ -39,10 +40,6 @@ for option in "$@"; do
     # enable logging arguments passed to compiler without running it
     [[ "$option" == "--dry" ]] && option_dry=1
 
-    # --include-dir=some/directory
-    # additional include directory used by compiler (-I switch)
-    [[ "$option" =~ ^--include-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_include_dir=-I$(pwd)/${BASH_REMATCH[1]}
-
     # --optimization=0 (none)
     # --optimization=1 (standard)
     # --optimization=2 (full)
@@ -52,12 +49,21 @@ for option in "$@"; do
     # --scripts-dir=some/directory
     # path to .ssl files directory
     [[ "$option" =~ ^--scripts-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_scripts_dir=${BASH_REMATCH[1]}
+
+    # --headers-dir=some/directory
+    # path to .h files directory
+    [[ "$option" =~ ^--headers-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_headers_dir=${BASH_REMATCH[1]}
+
+    # --include-dir=some/directory
+    # additional include directory used by compiler (-I switch)
+    [[ "$option" =~ ^--include-dir=([A-Za-z0-9_\.\/]+)$ ]] && option_include_dir=-I$(pwd)/${BASH_REMATCH[1]}
 done
 
 # constants
 readonly windows_pwd="$(pwd | sed -re 's!^/([A-Za-z])/!\U\1:/!g')/"
 readonly compile_exe="$(pwd)/$option_compiler"
 readonly scripts_dir="$(pwd)/$option_scripts_dir"
+readonly headers_dir="$(pwd)/$option_headers_dir"
 readonly random_char='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefhijklmnopqrstuvwxyz0123456789'
 
 if [ "$option_bytecode_dir" != "?" ]; then
@@ -141,7 +147,7 @@ for ssl_full in $(/usr/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | /u
        $dry cd "$ssl_dir"
     fi
 
-    $dry $compile_exe -q -l -p -s ${option_include_dir} -O${option_optimization} "$ssl_file" -o "$int_temp" > $log_file
+    $dry $compile_exe -q -l -p -s -I${headers_dir} ${option_include_dir} -O${option_optimization} "$ssl_file" -o "$int_temp" > $log_file
 
     if [ $option_dry -eq 1 ]; then
        cat $log_file

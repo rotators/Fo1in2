@@ -66,14 +66,14 @@ function IniParse()
 {
     local ini='\
 # find and save current section                         \
-match( $0, /^[\t\ ]*\[(.+)\]/, re )                     \
+match( $0, /^[\t ]*\[(.+)\]/, re )                      \
 {                                                       \
     in_section=re[1];                                   \
     next;                                               \
 }                                                       \
                                                         \
 # find and print current setting                        \
-match( $0, /^[\t\ ]*(.+)[\t\ ]*=[\t\ ]*(.+)/, in_key )  \
+match( $0, /^[\t ]*(.+)[\t ]*=[\t ]*(.+)/, in_key )     \
 {                                                       \
     # skip comments                                     \
     if( match( in_key[1], /^[#;]/ ))                    \
