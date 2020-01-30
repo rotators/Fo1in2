@@ -23,10 +23,29 @@ if [ ! -d "$scripts_dir" ]; then
    exit 1
 fi
 
+    # /c/repo/path/to/scripts/sub/dir/script.ssl
 for ssl_full in $(/usr/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | /usr/bin/sort); do
+    # /c/repo/path/to/scripts/sub/dir
+    ssl_dir=$(dirname "$ssl_full")
+    # script.ssl
+    ssl_file=$(basename "$ssl_full")
+    # .ssl
+    ssl_ext=${ssl_file##*.}
+    # script
+    ssl_file=${ssl_file%.*}
+    # /c/repo/path/to/scripts/sub/dir/script.ssl (lowercase extension)
+    ssl_full_new="${ssl_dir}/${ssl_file}.${ssl_ext,,}"
+
     sed -ri 's!#include "..[\\/]headers[\\/]!#include "!' "$ssl_full"
     sed -ri 's!#include "maps\\!#include "maps/!' "$ssl_full"
     sed -ri 's!#include "sfall\\!#include "sfall/!' "$ssl_full"
 
-    unix2dos -q "$ssl_full"
+    sed -ri 's!#include "..\\generic\\!#include "../GENERIC/!' "$ssl_full"
+    sed -ri 's!#include "../generic/!#include "../GENERIC/!' "$ssl_full"
+
+    if [ "$ssl_full" != "$ssl_full_new" ]; then
+       git mv "$ssl_full" "$ssl_full_new"
+    fi
+
+    unix2dos -q "$ssl_full_new"
 done
