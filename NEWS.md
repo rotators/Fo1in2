@@ -47,6 +47,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: If Killian is dead, his doors won't automatically lock themselves anymore.
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
 - **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
+- **Fixed**: It was possible to steal from Rhombus' locker without him reacting to it.
 - **Fixed**: Main title music now already starts when the outro videos are playing, not after.
 - **Fixed**: Mariposa Super Mutants now use the same disguise check as Cathedral Super Mutants.
 - **Fixed**: Missing encounter table for northern city zones.
@@ -60,9 +61,11 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
 - **Fixed**: Regular Nightkins in the Master's Lair will not be deleted anymore together with the variable staff in the quarters when changing shifts.
 - **Fixed**: Regulators in Adytum have a maximum travel distance now.
+- **Fixed**: Rhombus day/night schedule wasn't working correctly.
 - **Fixed**: Sheriff Greene will rotate back to his original direction after teleporting back from Deckers hideout.
 - **Fixed**: Skum Pitt bar counter description text changes after the player has stolen Neal's urn.
 - **Fixed**: Sometimes critters were spawning inside caravan scenery objects.
+- **Fixed**: Special Encounters will correctly disappear after leaving the map.
 - **Fixed**: Taking the Water Chip from Necropolis will not give negative karma if the water pump has been fixed before.
 - **Fixed**: Talking to the Super Mutant Vats-Teams would crash the game because of missing / wrong dialog file.
 - **Fixed**: Tandi kidnapping timer for real this time.
