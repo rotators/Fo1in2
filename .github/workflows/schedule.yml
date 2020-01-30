@@ -155,6 +155,8 @@ jobs:
            fi
            echo ::set-env name=GHA_EVENT::$event
            echo "GitHub event... $event"
+           echo "GitHub find.... $(which find)"
+           echo "GitHub sort.... $(which sort)"
     shell: bash
 
   - name: Cache (DirectX)
@@ -278,39 +280,31 @@ jobs:
 
            grep "^Changed " ReDefine.log || true
            rm ReDefine*.log
-           git diff --quiet || (git add --update && echo ::set-env name=GHA_REDEFINE::true)
+           git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
+    shell: bash
+
+  # updates scripts sources to be consistent
+  - name:  Scripts formatting
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   |
+           :
+           $GHA_SCRIPTS/format-ssl.sh
+           $GHA_SCRIPTS/format-ssl.sh --scripts-dir=$MOD_DIR/mods/
+
+           git diff --quiet || (git add --update && echo "- Scripts formatting" >> $HOME/gha.commit)
     shell: bash
 
   # updates scripts bytecode
-  # excludes 'ReDefine run' step results (if any) when scripts cannot be compiled
   - name:  Scripts recompilation
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   |
            :
-           ok=1
+           headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
 
-           $GHA_SCRIPTS/compile-ssl.sh --bytecode --optimization=1 || ok=0
+           $GHA_SCRIPTS/compile-ssl.sh --bytecode --optimization=1
+           $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=$MOD_DIR/mods/ --include-dir=$headers/ --bytecode --bytecode-dir=? --optimization=1
 
-           if [ $ok -eq 1 ]; then
-               headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
-              $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=$MOD_DIR/mods/ --include-dir=$headers/ --bytecode --bytecode-dir=? --optimization=1 || ok=0
-           fi
-
-           if [ $ok -eq 1 ]; then
-              if [ "$GHA_REDEFINE" == "true" ]; then
-                 echo "- ReDefine run" >> $HOME/gha.commit
-              fi
-
-              git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
-           else
-              if [ "$GHA_REDEFINE" == "true" ]; then
-                 echo "[WARNING] Excluded: ReDefine run"
-                 git reset HEAD  $MOD_DIR/Mapper/source/scripts/
-                 git checkout -- $MOD_DIR/Mapper/source/scripts/
-              fi
-              echo "[WARNING] Excluded: Scripts recompilation"
-              git checkout -- $MOD_DIR/mods/
-           fi
+           git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
     shell: bash
 
 ### Validation
