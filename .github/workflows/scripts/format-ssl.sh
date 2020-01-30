@@ -23,7 +23,7 @@ if [ ! -d "$scripts_dir" ]; then
    exit 1
 fi
 
-for ssl_full in $(/usr/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
+for ssl_full in $(/usr/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | /usr/bin/sort); do
     sed -ri 's!#include "..[\\/]headers[\\/]!#include "!' $ssl_full
     sed -ri 's!#include "maps\\!#include "maps/!' $ssl_full
     sed -ri 's!#include "sfall\\!#include "sfall/!' $ssl_full
