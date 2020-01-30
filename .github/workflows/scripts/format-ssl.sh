@@ -24,7 +24,9 @@ if [ ! -d "$scripts_dir" ]; then
 fi
 
 for ssl_full in $(/usr/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | /usr/bin/sort); do
-    sed -ri 's!#include "..[\\/]headers[\\/]!#include "!' $ssl_full
-    sed -ri 's!#include "maps\\!#include "maps/!' $ssl_full
-    sed -ri 's!#include "sfall\\!#include "sfall/!' $ssl_full
+    sed -ri 's!#include "..[\\/]headers[\\/]!#include "!' "$ssl_full"
+    sed -ri 's!#include "maps\\!#include "maps/!' "$ssl_full"
+    sed -ri 's!#include "sfall\\!#include "sfall/!' "$ssl_full"
+
+    unix2dos -q "$ssl_full"
 done
