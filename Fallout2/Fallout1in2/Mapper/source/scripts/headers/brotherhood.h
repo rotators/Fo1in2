@@ -30,4 +30,21 @@
                                         inc_bos_rep(REP_BONUS_KICKED_OUT);                    \
                                         load_map(MAP_BROHDENT, 1)
 
+// Check if Brotherhood Combat Armor option is enabled
+#define check_bos_ca_enabled                          \
+   if (self_fid == FID_HFCMBT or self_fid == FID_HMCMBT or self_fid == FID_HFCMBL or self_fid == FID_HMCMBL) then begin \
+      if fo1in2_armor_bos_ca_disabled then begin      \
+         if self_is_male then                         \
+            art_change_fid_num(self_obj, FID_HMCMBT); \
+         else                                         \
+            art_change_fid_num(self_obj, FID_HFCMBT); \
+      end                                             \
+      else begin                                      \
+         if self_is_male then                         \
+            art_change_fid_num(self_obj, FID_HMCMBL); \
+         else                                         \
+            art_change_fid_num(self_obj, FID_HFCMBL); \
+      end                                             \
+   end
+
 #endif // BROTHERHOOD_H

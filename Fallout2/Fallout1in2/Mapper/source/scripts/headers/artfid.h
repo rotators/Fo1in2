@@ -135,5 +135,7 @@
 #define FID_NMLJMP        (16777340)
 #define FID_NMBGRY        (16777341) // Black guy with dark shirt
 #define FID_NMLGRY        (16777342) // Loser with dark shirt
+#define FID_HFCMBL        (16777343) // Female, Dark ("Black") Combat Armor
+#define FID_HMCMBL        (16777344) // Male, Dark ("Black") Combat Armor
 
 #endif // ARTFID_H

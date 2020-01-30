@@ -31,6 +31,7 @@
 #define fo1in2_party_limit_disabled     (global_var(GVAR_ENABLE_FO2_PARTY_LIMIT) == 0)
 #define fo1in2_alt_disguise_disabled    (global_var(GVAR_ENABLE_ALTERNATIVE_DISGUISE) == 0)
 #define fo1in2_armor_vsuit_disabled     (global_var(GVAR_ENABLE_ARMOR_VAULT_SUIT) == 0)
+#define fo1in2_armor_bos_ca_disabled    (global_var(GVAR_ENABLE_BOS_CA) == 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)

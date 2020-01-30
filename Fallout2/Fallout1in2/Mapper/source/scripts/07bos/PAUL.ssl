@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "brotherhood.h"
 
 #define NAME                    SCRIPT_PAUL
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
@@ -16,6 +16,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure combat;
 procedure critter_p_proc;
 procedure pickup_p_proc;
@@ -51,21 +52,22 @@ procedure start begin
    end
 end
 
-procedure combat
-begin
+procedure map_enter_p_proc begin
+   check_bos_ca_enabled
+end
+
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (tmp_hostile) then begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
@@ -76,31 +78,25 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
    get_reaction
-   start_gdialog(865, self_obj, 4, -1, -1);
-   gsay_start;
    if (local_var(4) == 0) then begin
       set_local_var(4, 1);
-      call Paul01;
+      start_dialog_at_node(Paul01);
    end
    else begin
-      call Paul14;
+      start_dialog_at_node(Paul14);
    end
-   gsay_end;
-   end_dialogue;
 end
 
 procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure Paul01
-begin
+procedure Paul01 begin
    Reply(101);
    NOption(102, Paul02, 4);
    NOption(103, Paul04, 4);
@@ -117,8 +113,7 @@ begin
    NLowOption(107, Paul15);
 end
 
-procedure Paul02
-begin
+procedure Paul02 begin
    Reply(109);
    NOption(110, Paul03, 4);
    if (map_var(0) == 1) then begin
@@ -126,29 +121,25 @@ begin
    end
 end
 
-procedure Paul03
-begin
+procedure Paul03 begin
    Reply(112);
    NOption(113, Paul04, 4);
    NOption(114, PaulEnd, 4);
 end
 
-procedure Paul04
-begin
+procedure Paul04 begin
    Reply(115);
    NOption(116, Paul05, 4);
    NOption(117, PaulEnd, 4);
 end
 
-procedure Paul05
-begin
+procedure Paul05 begin
    Reply(118);
    NOption(119, Paul06, 4);
    NOption(120, PaulEnd, 4);
 end
 
-procedure Paul06
-begin
+procedure Paul06 begin
    Reply(121);
    NOption(122, Paul04, 4);
    if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN) != 1) then begin
@@ -163,56 +154,48 @@ begin
    NOption(126, PaulEnd, 4);
 end
 
-procedure Paul07
-begin
+procedure Paul07 begin
    Reply(127);
    NOption(128, Paul08, 4);
    NOption(129, Paul11, 4);
 end
 
-procedure Paul08
-begin
+procedure Paul08 begin
    Reply(130);
    NOption(131, Paul05, 4);
    NOption(132, PaulEnd, 4);
    NOption(133, Paul06, 4);
 end
 
-procedure Paul09
-begin
+procedure Paul09 begin
    Reply(134);
    NOption(135, Paul10, 4);
 end
 
-procedure Paul10
-begin
+procedure Paul10 begin
    Reply(136);
    NOption(138, Paul06, 4);
    NOption(137, PaulEnd, 4);
 end
 
-procedure Paul11
-begin
+procedure Paul11 begin
    Reply(139);
    NOption(140, Paul08, 4);
 end
 
-procedure Paul12
-begin
+procedure Paul12 begin
    Reply(141);
    NOption(142, Paul13, 4);
    NOption(143, PaulEnd, 4);
 end
 
-procedure Paul13
-begin
+procedure Paul13 begin
    Reply(144);
    NOption(146, Paul06, 4);
    NOption(145, PaulEnd, 4);
 end
 
-procedure Paul14
-begin
+procedure Paul14 begin
    Reply(mstr(147) + dude_name + mstr(148));
    NOption(149, Paul02, 4);
    NOption(150, Paul04, 4);
@@ -229,11 +212,9 @@ begin
    NLowOption(154, Paul15);
 end
 
-procedure Paul15
-begin
+procedure Paul15 begin
    NMessage(156);
 end
 
-procedure PaulEnd
-begin
+procedure PaulEnd begin
 end

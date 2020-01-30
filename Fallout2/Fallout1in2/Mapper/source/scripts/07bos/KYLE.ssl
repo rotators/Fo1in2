@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "brotherhood.h"
 
 #define NAME                    SCRIPT_KYLE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
@@ -16,6 +16,13 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
+procedure combat;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
 
 procedure goto01;
 procedure goto02;
@@ -48,12 +55,7 @@ procedure goto27;
 procedure goto75;
 procedure gotoend;
 procedure gotopart;
-procedure combat;
-procedure critter_p_proc;
-procedure pickup_p_proc;
-procedure talk_p_proc;
-procedure destroy_p_proc;
-procedure look_at_p_proc;
+
 procedure smalltalk;
 
 variable known;
@@ -70,6 +72,10 @@ procedure start begin
       set_self_team(TEAM_BROTHERHOOD);
       set_self_ai(AI_BROTHERHOOD_KNIGHT);
    end
+end
+
+procedure map_enter_p_proc begin
+   check_bos_ca_enabled
 end
 
 procedure talk_p_proc begin
@@ -91,28 +97,20 @@ procedure talk_p_proc begin
             set_local_var(4, 1);
             call goto01;
          end
+         else if (global_var(GVAR_BROTHER_BUILD_POWER_ARMOR) == 2) then begin
+            call goto26;
+         end
+         else if (global_var(GVAR_BROTHER_BUILD_POWER_ARMOR) == 3) then begin
+            call goto26;
+         end
+         else if (dude_item(PID_MOTIVATOR)) then begin
+            call goto23;
+         end
+         else if (global_var(GVAR_BROTHER_BUILD_POWER_ARMOR)) then begin
+            call goto17;
+         end
          else begin
-            if (global_var(GVAR_BROTHER_BUILD_POWER_ARMOR) == 2) then begin
-               call goto26;
-            end
-            else begin
-               if (global_var(GVAR_BROTHER_BUILD_POWER_ARMOR) == 3) then begin
-                  call goto26;
-               end
-               else begin
-                  if (dude_item(PID_MOTIVATOR)) then begin
-                     call goto23;
-                  end
-                  else begin
-                     if (global_var(GVAR_BROTHER_BUILD_POWER_ARMOR)) then begin
-                        call goto17;
-                     end
-                     else begin
-                        call goto27;
-                     end
-                  end
-               end
-            end
+            call goto27;
          end
          gsay_end;
          end_dialogue;
@@ -120,16 +118,14 @@ procedure talk_p_proc begin
    end
 end
 
-procedure goto01
-begin
+procedure goto01 begin
    Reply(102);
    NLowOption(103, goto02);
    NOption(103, goto02, 4);
    NOption(104, goto13, 4);
 end
 
-procedure goto02
-begin
+procedure goto02 begin
    Reply(105);
    NOption(106, goto04, 4);
    NOption(107, goto03, 4);
@@ -137,16 +133,14 @@ begin
    NLowOption(103, gotoend);
 end
 
-procedure goto03
-begin
+procedure goto03 begin
    Reply(109);
    NOption(110, goto04, 4);
    NOption(111, goto06, 4);
    BOption(112, goto09, 4);
 end
 
-procedure goto04
-begin
+procedure goto04 begin
    Reply(113);
    if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN) != 1) then begin
       NOption(114, goto12, 4);
@@ -155,8 +149,7 @@ begin
    NOption(116, gotoend, 4);
 end
 
-procedure goto05
-begin
+procedure goto05 begin
    Reply(117);
    NOption(118, goto06, 4);
    if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN) != 1) then begin
@@ -164,83 +157,71 @@ begin
    end
 end
 
-procedure goto06
-begin
+procedure goto06 begin
    Reply(119);
    NOption(120, goto07, 4);
    NOption(121, gotoend, 4);
 end
 
-procedure goto07
-begin
+procedure goto07 begin
    Reply(122);
    NOption(123, goto08, 4);
    NOption(124, goto10, 4);
 end
 
-procedure goto08
-begin
+procedure goto08 begin
    Reply(125);
    NOption(124, goto10, 4);
    BOption(126, goto09, 4);
 end
 
-procedure goto09
-begin
+procedure goto09 begin
    BottomReact
    BMessage(127);
 end
 
-procedure goto10
-begin
+procedure goto10 begin
    Reply(128);
    NOption(129, goto11, 4);
    NOption(130, gotopart, 4);
 end
 
-procedure goto11
-begin
+procedure goto11 begin
    Reply(131);
    NOption(132, gotopart, 4);
 end
 
-procedure goto12
-begin
+procedure goto12 begin
    Reply(133);
    NOption(134, gotoend, 4);
    BOption(135, goto09, 4);
    NOption(136, goto06, 4);
 end
 
-procedure goto13
-begin
+procedure goto13 begin
    Reply(137);
    NOption(138, goto02, 4);
    BOption(139, goto04, 4);
    NOption(140, gotoend, 4);
 end
 
-procedure goto14
-begin
+procedure goto14 begin
    Reply(141);
    NOption(142, goto15, 4);
 end
 
-procedure goto15
-begin
+procedure goto15 begin
    Reply(143);
    NOption(mstr(144) + dude_name + mstr(145), goto13, 4);
    NOption(146, goto16, 4);
 end
 
-procedure goto16
-begin
+procedure goto16 begin
    Reply(147);
    NOption(148, goto06, 4);
 end
 
-procedure goto17
-begin
+procedure goto17 begin
    Reply(149);
    NOption(150, goto18, 4);
    NOption(151, gotoend, 4);
@@ -248,8 +229,7 @@ begin
    NLowOption(103, gotoend);
 end
 
-procedure goto18
-begin
+procedure goto18 begin
    Reply(153);
    BOption(154, goto09, 4);
    NOption(155, goto19, 4);
@@ -257,29 +237,24 @@ begin
    NOption(157, gotoend, 4);
 end
 
-procedure goto19
-begin
+procedure goto19 begin
    Reply(158);
    NOption(159, gotoend, 4);
    NOption(160, goto11, 4);
 end
 
-procedure goto20
-begin
+procedure goto20 begin
 end
 
-procedure goto21
-begin
+procedure goto21 begin
    float_msg(self_obj, mstr(161), FLOAT_MSG_RED);
 end
 
-procedure goto22
-begin
+procedure goto22 begin
    float_msg(self_obj, mstr(162), FLOAT_MSG_RED);
 end
 
-procedure goto23
-begin
+procedure goto23 begin
    loot := 0;
    Reply(163);
    loot := dude_item(PID_MOTIVATOR);
@@ -290,15 +265,13 @@ begin
    NLowOption(103, gotoend);
 end
 
-procedure goto24
-begin
+procedure goto24 begin
    rm_obj_from_inven(dude_obj, loot);
    Reply(166);
    NOption(300, goto24a, 4);
 end
 
-procedure goto24a
-begin
+procedure goto24a begin
    gfade_out(1);
    stuff := create_object(PID_DEANS_ELECTRONICS, 0, 0);
    add_obj_to_inven(dude_obj, stuff);
@@ -313,46 +286,38 @@ begin
    NMessage(167);
 end
 
-procedure goto25
-begin
+procedure goto25 begin
    NMessage(168);
 end
 
-procedure goto26
-begin
+procedure goto26 begin
    Reply(169);
    NOption(170, gotoend, 4);
    NLowOption(103, gotoend);
 end
 
-procedure goto27
-begin
+procedure goto27 begin
    Reply(171);
    NOption(106, goto04, 4);
    NOption(104, goto13, 4);
    NLowOption(103, gotoend);
 end
 
-procedure goto75
-begin
+procedure goto75 begin
 end
 
-procedure gotoend
-begin
+procedure gotoend begin
 end
 
-procedure gotopart
-begin
+procedure gotopart begin
    set_global_var(GVAR_BROTHER_BUILD_POWER_ARMOR, 1);
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (global_var(GVAR_ENEMY_BROTHERHOOD)) then begin
       tmp_hostile := 1;
    end
@@ -366,8 +331,7 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
@@ -378,34 +342,26 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
-   if (known) then begin
+   if (known) then
       display_msg(mstr(100));
-   end
-   else begin
+   else
       display_msg(mstr(101));
-   end
 end
 
-procedure smalltalk
-begin
+procedure smalltalk begin
    ccount := ccount + 1;
    if (ccount < 6) then begin
       float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 200 + random(0, 2)), FLOAT_MSG_RED);
    end
+   else if (ccount < 9) then begin
+      float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 203 + random(0, 4)), FLOAT_MSG_RED);
+   end
+   else if (ccount < 12) then begin
+      float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 209 + random(0, 3)), FLOAT_MSG_RED);
+   end
    else begin
-      if (ccount < 9) then begin
-         float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 203 + random(0, 4)), FLOAT_MSG_RED);
-      end
-      else begin
-         if (ccount < 12) then begin
-            float_msg(self_obj, message_str(SCRIPT_RD1SCRB1, 209 + random(0, 3)), FLOAT_MSG_RED);
-         end
-         else begin
-            display_msg(message_str(SCRIPT_RD1SCRB1, 213));
-         end
-      end
+      display_msg(message_str(SCRIPT_RD1SCRB1, 213));
    end
 end
