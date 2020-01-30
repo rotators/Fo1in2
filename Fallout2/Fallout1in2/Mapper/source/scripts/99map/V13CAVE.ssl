@@ -29,7 +29,6 @@ variable NumItems := 0;
 
 #define EVENT_END_1        (1)
 #define EVENT_END_2        (2)
-#define EVENT_UNCOVER_V15  (3)
 
 procedure start begin
 end
@@ -51,9 +50,6 @@ variable Item;
       game_time_advance((ONE_GAME_MINUTE * (ticks_til_hour(0) / 60) / 10) + (ONE_GAME_MINUTE * random(180, 420)));
 
       set_global_var(GVAR_QUEST_VAULT13_0_WATERCHIP_TRACKER, 1);
-
-      //--- Activate V13 and V15 on the worldmap:
-      add_timer_event(self_obj, game_ticks(1), EVENT_UNCOVER_V15);
 
       //--- Give initial reputation:
       inc_v13_rep(REP_BONUS_GAME_STARTED);
@@ -100,6 +96,11 @@ procedure map_update_p_proc begin
    call SetLight;
 end
 
+procedure map_exit_p_proc begin
+   // Activate V15 on the worldmap
+   mark_on_map(AREA_VAULT_15)
+end
+
 procedure SetLight begin
    if not(endgame_running) and (global_var(GVAR_OVERSEER_END_SEQ) == 0) and (not(is_story_finished)) then begin
       Darkness;
@@ -110,9 +111,6 @@ procedure SetLight begin
       else
          set_light_level(100);
    end
-end
-
-procedure map_exit_p_proc begin
 end
 
 procedure timed_event_p_proc begin
@@ -147,10 +145,6 @@ variable Critter;
 
       set_global_var(GVAR_OVERSEER_END_SEQ, 1);
       endgame_running := 3;
-   end
-   else if (fixed_param == EVENT_UNCOVER_V15) then begin
-      // Uncovering V15 needs a timer, otherwise it won't be affected by gl_ scripts (runs too early).
-      mark_on_map(AREA_VAULT_15)
    end
 end
 
