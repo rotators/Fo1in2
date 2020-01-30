@@ -43,12 +43,6 @@
 
 // No radius when a location is revealed on the worldmap
 #define VOODOO_location_discover_radius \
-   write_byte(0x444d60, 0xE9); \
-   write_byte(0x444d61, 0xA0); \
-   write_byte(0x444d62, 0x60); \
-   write_byte(0x444d63, 0xFD); \
-   write_byte(0x444d64, 0xFF); \
-   write_byte(0x444d65, 0x90); \
    write_byte(0x41ae05, 0x60); \
    write_byte(0x41ae06, 0x2E); \
    write_byte(0x41ae07, 0xA1); \
@@ -88,16 +82,7 @@
    write_byte(0x41ae29, 0xC4); \
    write_byte(0x41ae2a, 0x04); \
    write_byte(0x41ae2b, 0x61); \
-   write_byte(0x41ae2c, 0x8a); \
-   write_byte(0x41ae2d, 0x25); \
-   write_byte(0x41ae2e, 0x44); \
-   write_byte(0x41ae2f, 0x09); \
-   write_byte(0x41ae30, 0x51); \
-   write_byte(0x41ae31, 0x00); \
-   write_byte(0x41ae32, 0xE9); \
-   write_byte(0x41ae33, 0x2F); \
-   write_byte(0x41ae34, 0x9F); \
-   write_byte(0x41ae35, 0x02); \
-   write_byte(0x41ae36, 0x00)
+   write_byte(0x41ae2c, 0xC3); \
+   call_offset_v0(0x41ae05)
 
 #endif // VOODOO_H //
