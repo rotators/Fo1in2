@@ -85,4 +85,17 @@
    write_byte(0x41ae2c, 0xC3); \
    call_offset_v0(0x41ae05)
 
+// This will make screeenshot without interface and cursor
+// NOTE: Using gmouse_set_cursor_ here, as gmouse_3d_set_mode_ (aka set_cursor_mode) restores movement cursor at slightly shifted position
+#define VOODOO_make_clean_screenshot \
+               begin                                                                  \
+                  variable Vmcs := call_offset_r0(0x44c9e8); /* gmouse_get_cursor_ */ \
+                  intface_hide;                                                       \
+                  call_offset_v1(0x44c840, 0xFF);            /* gmouse_set_cursor_ */ \
+                  call_offset_v0(0x4c8f4c);                  /* dump_screen_ */       \
+                  call_offset_v1(0x44c840, Vmcs);            /* gmouse_set_cursor_ */ \
+                  intface_show;                                                       \
+               end                                                                    \
+               noop
+
 #endif // VOODOO_H //
