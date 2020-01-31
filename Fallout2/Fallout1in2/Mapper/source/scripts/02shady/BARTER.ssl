@@ -14,6 +14,7 @@
 
 #include "command.h"
 #include "modreact.h"
+#include "sfall/main.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -39,6 +40,11 @@ procedure BarterGuy05;
 procedure BarterGuy06;
 procedure BarterGuy07;
 procedure BarterGuyEnd;
+
+procedure Get_Stuff;
+procedure Put_Stuff;
+
+import variable Barter_Box_Ptr;
 
 variable item;
 variable in_combat;
@@ -80,6 +86,7 @@ procedure talk_p_proc begin
    get_reaction
    gdialog_set_barter_mod(barter_mod_initial);
 
+   call Get_Stuff;
    if (Caught_Stealing) then begin
       start_dialog_at_node(BarterGuy00);
    end
@@ -87,10 +94,9 @@ procedure talk_p_proc begin
       start_dialog_at_node(BarterGuy02);
    end
    else begin
-      //call get_stuff_from_safe;
       start_dialog_at_node(BarterGuy01);
    end
-   //call put_stuff_in_safe;
+   call Put_Stuff;
 end
 
 procedure BarterGuy01 begin
@@ -131,8 +137,8 @@ procedure BarterGuy02 begin
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_good_critter
+   move_obj_inven_to_obj(Barter_Box_Ptr, self_obj);
 end
 
 procedure critter_p_proc begin
@@ -219,4 +225,12 @@ end
 procedure barter04 begin
    no_deal := 1;
    NMessage(107);
+end
+
+procedure Get_Stuff begin
+   get_barter_inven(Barter_Box_Ptr);
+end
+
+procedure Put_Stuff begin
+   put_barter_inven(Barter_Box_Ptr);
 end

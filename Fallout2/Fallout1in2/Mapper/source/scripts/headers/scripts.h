@@ -467,7 +467,7 @@
 #define SCRIPT_CHID2TWR  (454)  //  Chid2Twr.int    ; go from the main floor to tower of the Children                             
 #define SCRIPT_TOW2CHID  (455)  //  Tow2Chid.int    ; go from the tower to main floor of the Children                             
 #define SCRIPT_COCDOOR   (456)  //  COCDoor.int     ; Transport from outside to inside of Children
-#define SCRIPT_CAVE2V13  (457)  //  Cave2v13.int    ; Vault 13 caves to Vault 13 // UNUSED!!!                                                  
+#define SCRIPT_BARTRBOX  (457)  //  BARTRBOX.int    ; Shady Sands merchant inventory box                                                
 #define SCRIPT_V132CAVE  (458)  //  V132Cave.int    ; Vault 13 to Vault13 caves                                                   
 #define SCRIPT_SECDOOR   (459)  //  SecDoor.int     ; door to vault 13 armory
 #define SCRIPT_SPOTLITE  (460)  //  SpotLite.int    ; affect the light level of the light scenery                       
