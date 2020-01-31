@@ -1,4 +1,5 @@
 Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2/releases/tag/v0.1372))
+- **Added**: "Black" Combat Armor animations for the Brotherhood Combat Armor. Works for players and party members. The fo1_settings.ini file has a toggle-option for the look of generic critters in the Brotherhood location.
 - **Added**: "Out of Business"-sign will now appear outside of Darkwater's store after Killian has been assassinated.
 - **Added**: A fail-safe to the Vault 13 door, so that it is always closed before the endgame sequence starts.
 - **Added**: After joining, party members will now face the player in dialog.
@@ -48,6 +49,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: If the player is armed, Shady Sands guards need to have sight on him before engaging in combat.
 - **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
 - **Fixed**: It was possible to steal from Rhombus' locker without him reacting to it.
+- **Fixed**: Katja will correctly mark the Cathedral on the worldmap.
 - **Fixed**: Main title music now already starts when the outro videos are playing, not after.
 - **Fixed**: Mariposa Super Mutants now use the same disguise check as Cathedral Super Mutants.
 - **Fixed**: Missing encounter table for northern city zones.
@@ -56,6 +58,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Morpheus will attack the player if he sees him fiddling with his computer terminal.
 - **Fixed**: Painfield on elevation 1 in MBVATS12 map wasn't working.
 - **Fixed**: Party member "abandon party" debug-spam.
+- **Fixed**: Player wasn't looking in the right direction after switching maps.
 - **Fixed**: Quack-encounter was spawning on hex 0.
 - **Fixed**: Random mountain encounter would spawn pot container instead of gold items.
 - **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
@@ -87,6 +90,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
 - **Tweaked**: Encounter city map 2 and 3 slightly modified so the player won't spawn into a wall anymore.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
+- **Tweaked**: Gunrunners are a tad less antsy after the player took the weapons reward for himself.
 - **Tweaked**: Player stops moving when Kalnor denies entry into Junktown because it is night time.
 - **Tweaked**: Position of the Deathclaw Lair has been moved a tad.
 - **Tweaked**: Reverted proto changes to 10mm AP, 10mm JHP, .44 Magnum JHP, 14mm AP, and .223 FMJ.
