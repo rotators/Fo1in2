@@ -514,7 +514,7 @@
 #define SCRIPT_STUDENT   (501)  //  Student.int     ; student who is learning combat in the brotherhood
 #define SCRIPT_CATH2MV   (502)  //  Cath2MV.int     ; spacial to take you from the Cathedral to the Master's Lair
 #define SCRIPT_GLO4SUPL  (503)  //  Glo4Supl.int    ; level 4 of the Glow, Supply Room                                            
-#define SCRIPT_HALL2MTL  (504)  //  Hall2Mtl.int    ; spatial script to take you from the Hall of the Dead to Motel sewers   // UNUSED!!!     
+#define SCRIPT_LORRIBOX  (504)  //  LORRIBOX.int    ; BOS - Locker watched by Lorry  
 #define SCRIPT_HALL2SHD  (505)  //  Hall2Shd.int    ; spatial to take you from the Hall to the Watershed	// UNUSED!!!     
 #define SCRIPT_MOTEL2HL  (506)  //  Motel2Hl.int    ; spatial from the Motel to the Hall  // UNUSED!!!                        
 #define SCRIPT_LYLE      (507)  //  Lyle.int        ; man who actually had some water rations stolen

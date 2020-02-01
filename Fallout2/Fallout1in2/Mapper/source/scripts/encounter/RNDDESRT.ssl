@@ -474,7 +474,7 @@ procedure Raider_table begin
    if (hub_invaded and (Encounter_Num == 3)) then begin
       Encounter_Num := 4;
    end
-   
+
    while (Ranger_rerolls > 0) do begin
       Ranger_rerolls := (Ranger_rerolls - 1);
       if ((Encounter_Num == 1) or (Encounter_Num == 3) or (Encounter_Num == 4) or (Encounter_Num == 7)) then begin
@@ -520,7 +520,7 @@ procedure Junk_table begin
    if (hub_invaded and (Encounter_Num == 5)) then begin
       Encounter_Num := random(1, 4);
    end
-   
+
    while (Ranger_rerolls > 0) do begin
       Ranger_rerolls := (Ranger_rerolls - 1);
       if ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 3) or (Encounter_Num == 4) or (Encounter_Num == 7)) then begin
@@ -658,7 +658,7 @@ procedure Steel_table begin
    if (hub_invaded and (Encounter_Num == 5)) then begin
       Encounter_Num := random(1, 4);
    end
-   
+
    while (Ranger_rerolls > 0) do begin
       Ranger_rerolls := (Ranger_rerolls - 1);
       if ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 7)) then begin
@@ -713,7 +713,7 @@ procedure Vats_table begin
          call roll_encounter;
       end
    end
-   
+
    if (global_var(GVAR_RANDOM_ENC_SOMETHING) > 0) then begin
       debug_msg(" ");  debug_msg("Warning : GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(GVAR_RANDOM_ENC_SOMETHING) + " ");  display_msg("Warning : GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(GVAR_RANDOM_ENC_SOMETHING) + " ");
       Encounter_Num := global_var(GVAR_RANDOM_ENC_SOMETHING);
@@ -839,7 +839,7 @@ procedure Death_table begin
          call roll_encounter;
       end
    end
-   
+
    if (global_var(GVAR_RANDOM_ENC_SOMETHING) > 0) then begin
       debug_msg(" ");  debug_msg("Warning : GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(GVAR_RANDOM_ENC_SOMETHING) + " ");  display_msg("Warning : GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(GVAR_RANDOM_ENC_SOMETHING) + " ");
       Encounter_Num := global_var(GVAR_RANDOM_ENC_SOMETHING);
@@ -4269,53 +4269,17 @@ procedure Death1 begin
 end
 
 procedure Death2 begin
-   // Added quest check, so the Deathclaw doesn't appear before missing caravans.
-   if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin
-      Outer_ring := (dude_perception / 3) + 8;
-      Inner_ring := (dude_perception / 3) + 8;
-      Critter_direction := random(0, 5);
-      Critter_type := PID_DEATHCLAW;
-      Critter_script := SCRIPT_DETHCLAW;
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   end
-   else begin
-      Outer_ring := (dude_perception / 2) + 6;
-      Inner_ring := (dude_perception / 2) + 2;
-      Tot_Critter_A := random(2, 4);
-      group_angle := random(0, 5);
-      Critter_type := PID_RADSCORPION;
-      Critter_script := SCRIPT_RADSCORP;
-      while(Tot_Critter_A) do begin
-         Critter_direction := group_angle + (random(0, 4) - 2);
-         while(Critter_direction < 0) do begin
-            Critter_direction := Critter_direction + 6;
-         end
-         if (Critter_direction > 5) then begin
-            Critter_direction := Critter_direction % 6;
-         end
-         call Place_critter;
+   display_msg(message_str(SCRIPT_RNDDESRT, 288));
+   Outer_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 5;
+   Inner_ring := (get_critter_stat(dude_obj, STAT_pe) / 3) + 3;
+   Critter_direction := random(0, 5);
+   Critter_type := 16777259;
+   call Place_critter;
+   anim(Critter, 1000, rotation_to_tile(tile_num(Critter), tile_num(dude_obj)));
 
-         enc_group_angle(Critter_direction)
-
-         if (random(0, 2) == 0) then begin
-            Critter_direction := Critter_direction + (random(0, 2) - 1);
-            while(Critter_direction < 0) do begin
-               Critter_direction := Critter_direction + 6;
-            end
-            if (Critter_direction > 5) then begin
-               Critter_direction := Critter_direction % 6;
-            end
-         end
-         obj_rotate(Critter, Critter_direction);
-         Tot_Critter_A := Tot_Critter_A - 1;
-      end
-      set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
-      call Add_Mysterious_Stranger;
-      display_msg(message_str(SCRIPT_RNDDESRT, 299));
-   end
+   set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
+   call Add_Mysterious_Stranger;
 end
-
 
 procedure Death3 begin
 variable HasFlask := 0;
@@ -4403,6 +4367,7 @@ end
 procedure Death4 begin
    // Added quest check, so the Deathclaw doesn't appear before missing caravans.
    if (global_var(GVAR_KILL_DEATHCLAW) != 2) and (global_var(GVAR_MISSING_CARAVANS_STATUS) > 0) then begin
+      display_msg(message_str(SCRIPT_RNDDESRT, 286));
       Outer_ring := (dude_perception / 3) + 5;
       Inner_ring := (dude_perception / 3) + 3;
       Critter_direction := random(0, 5);
@@ -4410,7 +4375,6 @@ procedure Death4 begin
       Critter_script := SCRIPT_DETHCLAW;
       call Place_critter;
       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      display_msg(message_str(SCRIPT_RNDDESRT, 286));
    end
    else begin
       Outer_ring := (dude_perception / 2) + 6;
@@ -4557,6 +4521,7 @@ procedure Bone1 begin
    group_angle := random(0, 5);
    Outer_ring := (dude_perception / 2) + 6;
    Inner_ring := (dude_perception / 2) + 4;
+
    Critter_type := PID_MEAN_SUPER_MUTANT;// MEAN SUPER MUTANT
    Critter_script := SCRIPT_MUTAMBSH;
    while(Tot_Critter_A) do begin
@@ -4587,6 +4552,7 @@ procedure Bone1 begin
       end
       Tot_Critter_A := Tot_Critter_A - 1;
    end
+
    if (random(0, 1)) then begin
       Critter_type := PID_NIGHTKIN;
       Critter_script := SCRIPT_SUPAMBSH;
@@ -4605,6 +4571,7 @@ procedure Bone1 begin
          item_caps_adjust(Critter, random(5, 20) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
       end
    end
+
    set_global_var(GVAR_MYST_STRANGER_ITEM, 3);
    call Add_Mysterious_Stranger;
    display_msg(message_str(SCRIPT_RNDDESRT, 307));

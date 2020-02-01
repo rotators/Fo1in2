@@ -122,6 +122,7 @@ procedure hunters begin
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_COMBAT_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
+      wield_obj_critter(Critter, Item);
    end
    item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    Item := create_object(PID_SUPER_STIMPAK, 0, 0);
@@ -157,6 +158,7 @@ procedure hunters begin
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
+      wield_obj_critter(Critter, Item);
    end
    if (random(0, 2) == 0) then begin
       item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
@@ -183,6 +185,7 @@ procedure hunters begin
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
+      wield_obj_critter(Critter, Item);
    end
    Item := create_object(PID_EXPLOSIVE_ROCKET, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
@@ -211,6 +214,7 @@ procedure hunters begin
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
+      wield_obj_critter(Critter, Item);
    end
    if (random(0, 2) == 0) then begin
       item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));

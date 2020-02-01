@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "brotherhood.h"
 
 #define NAME                    SCRIPT_BOSLORRI
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BOS)
@@ -83,6 +83,9 @@ procedure SexAgain;
 procedure SexInterim;
 
 variable INTcost;
+
+import variable Lorri_ptr;
+
 //variable Sex_SoundByte := 0;
 
 // local_var(4) == been told about operations
@@ -101,6 +104,7 @@ variable INTcost;
 
 
 procedure start begin
+   Lorri_ptr := self_obj;
 end
 
 procedure map_enter_p_proc begin
@@ -129,12 +133,10 @@ procedure critter_p_proc begin
    if (global_var(GVAR_ENEMY_BROTHERHOOD)) then begin
       tmp_hostile := 1;
    end
-   else begin
-      if (tmp_hostile) then begin
-         set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
-         tmp_hostile := 0;
-         attack(dude_obj);
-      end
+   else if (tmp_hostile) then begin
+      set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
    if (tile_distance_objs(self_obj, dude_obj) > 12) then begin
       tmp_hostile := 0;
@@ -153,21 +155,16 @@ procedure talk_p_proc begin
    dude_look_at_self;
    Heal_amount := dude_max_hp - dude_cur_hp;
    get_reaction
-   start_gdialog(675, self_obj, 4, -1, -1);
-   gsay_start;
-   call BoS_Lorri00;
-   gsay_end;
-   end_dialogue;
+   start_dialog_at_node(BoS_Lorri00);
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
+   Lorri_ptr := 0;
 
    if  (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
    end
    inc_good_critter
-   rm_timer_event(self_obj);
 end
 
 procedure BoS_Lorri00 begin
