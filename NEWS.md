@@ -26,6 +26,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Rifle animations for black metal armor dude, because why not.
 - **Added**: SMG and Pistol animations for "Yellow-Pants" metal armor woman.
 - **Added**: The Cathedral prisoners will flee once the player has destroyed their force field(s).
+- **Added**: The Fixt-added merchant in Shady Sands now gets his items from an off-screen container. Also changed his inventory a bit to make it less shitty.
 - **Added**: The locker used by the Water Thief in V13 will now open and close on use.
 - **Added**: TMA check now runs through all typed words and returns a reply for the first valid keyword it finds.
 - **Added**: Tycho-critter can now also use SMGs.
@@ -79,6 +80,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Transparent egg issues with certain wall protos in Shady Sands buildings (E/W facing).
 - **Fixed**: Traveling from encounters to towns by NPCs could lock up the game.
 - **Fixed**: Traveling merchants will now remember their target destination after loading a savegame inside the encounter.
+- **Fixed**: Traveling to Shady Sands or Raiders with Lance would end up in a black screen.
 - **Fixed**: Typing "  " etc. in TMA input box would lock up the game.
 - **Fixed**: Using lockpick items on certain doors would crash the game.
 - **Fixed**: Using the stealing-skill on Neal's urn would not check for players skill.
