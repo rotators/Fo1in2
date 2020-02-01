@@ -11,6 +11,7 @@ procedure Cheater00b;
 procedure Cheater00c;
 procedure Cheater00d;
 procedure Cheater00d1;
+procedure Cheater00e;
 procedure Cheater01;
 procedure Cheater02;
 procedure Cheater03;
@@ -336,8 +337,20 @@ procedure Cheater00d1 begin
    set_global_var( GVAR_VATS_COUNTDOWN, (game_time / 10) + 300 );
 end
 
+procedure Cheater00e begin
+   set_waterchip_returned;
+
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then
+      set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 3);
+   if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) != 2) then
+      set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 3);
+
+   call CheaterEnd;
+end
+
 procedure Cheater00b begin
    Reply("Master or Vats?");
+   NOption("Water Chip brought back", Cheater00e, 001);
    NOption("Master", Cheater00C, 001);
    NOption("Vats", Cheater00d, 001);
    NOption("Start Vats destruction timer!", Cheater00d1, 001);

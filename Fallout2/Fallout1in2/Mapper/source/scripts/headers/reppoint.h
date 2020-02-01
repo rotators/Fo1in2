@@ -42,8 +42,8 @@
 #define town_rep_is_hated                          (global_var(TOWN_REP_VAR) <= -15)
 #define town_rep_is_vilified                       (global_var(TOWN_REP_VAR) <= -30)
 
-#define REP_BONUS_KILLED_GOOD_CRITTER       (-1)   // Fo2: -10
-#define REP_BONUS_KILLED_CHILD              (-2)   // Fo2: -15
+#define REP_BONUS_KILLED_GOOD_CRITTER       (-2)   // Fo2: -10
+#define REP_BONUS_KILLED_CHILD              (-4)   // Fo2: -15
 #define REP_BONUS_KILLED_EVIL_CRITTER       (1)    // Fo2: 5
 #define REP_BONUS_KILLED_NEUTRAL_CRITTER    (0)    // Fo2: 0
 
