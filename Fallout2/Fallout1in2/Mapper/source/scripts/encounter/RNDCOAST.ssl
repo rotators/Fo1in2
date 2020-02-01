@@ -9,15 +9,14 @@
 /* Include Files */
 #include "define.h"
 #include "command.h"
-#include "mapenc.h"
 #include "updatmap.h"
+#include "mapenc.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_exit_p_proc;
 
 procedure choose_start;
-procedure hunters;
 procedure Place_critter;
 
 procedure Coast01;
@@ -32,7 +31,6 @@ variable dude_pos;
 variable dude_rot;
 
 variable Encounter_Num;
-variable group_angle;
 
 variable MapX;
 variable MapY;
@@ -51,7 +49,7 @@ procedure start begin
 end
 
 procedure roll_encounter begin
-   Encounter_Num := random(1, 6) + random(1, 6) + random(1, 6);
+   Encounter_Num := random(1,18);
    if (dude_luck > 8) then begin
       Encounter_Num := Encounter_Num + 2;
    end
@@ -102,14 +100,11 @@ procedure map_enter_p_proc begin
          call roll_encounter;
       end
 
-      if (Ranger_rerolls) then begin
+      while (Ranger_rerolls > 0) do begin
+         Ranger_rerolls := (Ranger_rerolls - 1);
          if ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 5) or (Encounter_Num == 7)) then begin
-            while ((Encounter_Num == 1) or (Encounter_Num == 2) or (Encounter_Num == 4) or (Encounter_Num == 5) or (Encounter_Num == 7)) do begin
-               call roll_encounter;
-            end
-            debug(" ");  debug("RANGER PERK rerolls; Encounter_Num == " + Encounter_Num);
+            call roll_encounter;
          end
-         Ranger_rerolls := Ranger_rerolls - 1;
       end
 
       if (global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure) > 0) then begin
@@ -171,307 +166,6 @@ procedure Place_critter begin
       Critter_tile := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
    end
    critter_attempt_placement(Critter, Critter_tile, dude_elevation);
-end
-
-procedure hunters begin
-   variable critID := 0;
-   variable itemroll := 0;
-   Inner_ring := 6;
-   Outer_ring := 1;
-//
-// Christopher
-   group_angle := random(0, 5);
-   Critter_direction := group_angle + random(0, 3 * 2) - 3;
-   while(Critter_direction < 0) do begin
-      Critter_direction := Critter_direction + 6;
-   end
-   if (Critter_direction > 5) then begin
-      Critter_direction := Critter_direction % 6;
-   end
-   Critter_type := PID_AVELLONE;
-   Critter_script := SCRIPT_HUNTER;
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_ASSAULT_RIFLE, 0, 0);//assault rifle
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_5MM_JHP, 0, 0);//ammo JHP
-   add_mult_objs_to_inven(Critter, Item, 4 * (dude_perk(PERK_scrounger) + 1));
-   Item := create_object(PID_COMBAT_ARMOR, 0, 0);//combat armor
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_SUPER_STIMPAK, 0, 0);//super stim
-   add_mult_objs_to_inven(Critter, Item, 4);
-   item_caps_adjust(Critter, random(40, 100) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-   attack_setup(Critter, dude_obj);
-//
-// Redhead with ripper
-   group_angle := random(0, 5);
-   Critter_direction := group_angle + random(0, 3 * 2) - 3;
-   while(Critter_direction < 0) do begin
-      Critter_direction := Critter_direction + 6;
-   end
-   if (Critter_direction > 5) then begin
-      Critter_direction := Critter_direction % 6;
-   end
-   Critter_type := PID_THUG_FEMALE_YELLOW;
-   Critter_script := SCRIPT_THUG;
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_RIPPER, 0, 0);// ripper
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-   add_mult_objs_to_inven(Critter, Item, 3);
-   item_caps_adjust(Critter, random(10, 20) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-//
-// Redhead with ripper
-   group_angle := random(0, 5);
-   Critter_direction := group_angle + random(0, 3 * 2) - 3;
-   while(Critter_direction < 0) do begin
-      Critter_direction := Critter_direction + 6;
-   end
-   if (Critter_direction > 5) then begin
-      Critter_direction := Critter_direction % 6;
-   end
-   Critter_type := PID_THUG_FEMALE_YELLOW;
-   Critter_script := SCRIPT_THUG;
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_RIPPER, 0, 0);// ripper
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-   add_mult_objs_to_inven(Critter, Item, 3);
-   item_caps_adjust(Critter, random(10, 20) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-//
-// Black male with sledge
-   group_angle := random(0, 5);
-   Critter_direction := group_angle + random(0, 3 * 2) - 3;
-   while(Critter_direction < 0) do begin
-      Critter_direction := Critter_direction + 6;
-   end
-   if (Critter_direction > 5) then begin
-      Critter_direction := Critter_direction % 6;
-   end
-   Critter_type := PID_THUG_BLACK_METAL;
-   Critter_script := SCRIPT_THUG;
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_SUPER_SLEDGE, 0, 0);// super sledge
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-   add_mult_objs_to_inven(Critter, Item, 3);
-   item_caps_adjust(Critter, random(15, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-//
-// White male with sniper rifle
-   group_angle := random(0, 5);
-   Critter_direction := group_angle + random(0, 3 * 2) - 3;
-   while(Critter_direction < 0) do begin
-      Critter_direction := Critter_direction + 6;
-   end
-   if (Critter_direction > 5) then begin
-      Critter_direction := Critter_direction % 6;
-   end
-   Critter_type := PID_THUG_MALE_METAL;// WHITE MALE, METAL
-   Critter_script := SCRIPT_THUG;
-   call Place_critter;
-   obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_SNIPER_RIFLE, 0, 0);// sniper rifle
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_223_FMJ, 0, 0);// ammo
-   add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-   Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-   add_obj_to_inven(Critter, Item);
-   wield_obj_critter(Critter, Item);
-   Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-   add_mult_objs_to_inven(Critter, Item, 3);
-   item_caps_adjust(Critter, random(20, 40) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-//
-// Melee extra
-   if random(0, (1 + combat_difficulty + difficulty_level)) >= 2 then begin
-      group_angle := random(0, 5);
-      Critter_direction := group_angle + random(0, 3 * 2) - 3;
-      while(Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
-      critID := random(0, 2);
-      if (critID == 0) then begin
-         Critter_type := PID_THUG_FEMALE_YELLOW;// REDHEAD, METAL
-      end
-      else begin
-         if (critID == 1) then begin
-            Critter_type := PID_THUG_BLACK_METAL;// BLACK MALE, METAL
-         end
-         else begin
-            Critter_type := PID_THUG_MALE_METAL;// WHITE MALE, METAL
-         end
-      end
-      Critter_script := SCRIPT_THUG;
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      itemroll := random(0, 3);
-      if Critter_type == PID_THUG_FEMALE_YELLOW then begin// REDHEAD : allowed Knife
-         if itemroll >= 2 then begin
-            Item := create_object(PID_RIPPER, 0, 0);// ripper
-         end
-         else begin
-            Item := create_object(PID_POWER_FIST, 0, 0);// powerfist
-         end
-      end
-      else begin
-         if Critter_type == PID_THUG_BLACK_METAL then begin// BLACK : allowed Knife, Sledge, Pistol
-            if (itemroll == 0) then begin
-               Item := create_object(PID_RIPPER, 0, 0);// ripper
-            end
-            else begin
-               if (itemroll >= 2) then begin
-                  Item := create_object(PID_SUPER_SLEDGE, 0, 0);// super sledge
-               end
-               else begin
-                  Item := create_object(PID_POWER_FIST, 0, 0);// powerfist
-               end
-            end
-         end
-         else begin// WHITE MALE, METAL
-            if (itemroll >= 1) then begin
-               Item := create_object(PID_CATTLE_PROD, 0, 0);// cattle prod
-            end
-            else begin
-               Item := create_object(PID_SUPER_SLEDGE, 0, 0);// super sledge
-            end
-         end
-      end
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
-      Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
-      Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-      add_mult_objs_to_inven(Critter, Item, 2);
-      item_caps_adjust(Critter, random(1, dude_luck));
-   end
-//
-// Pistol extra
-   if random(0, (1 + combat_difficulty + difficulty_level)) >= 2 then begin
-      group_angle := random(0, 5);
-      Critter_direction := group_angle + random(0, 3 * 2) - 3;
-      while(Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
-      critID := random(0, 1);
-      if (critID == 1) then begin
-         Critter_type := PID_THUG_BLACK_METAL;// BLACK MALE, METAL
-      end
-      else begin
-         Critter_type := PID_THUG_MALE_METAL;// WHITE MALE, METAL
-      end
-      Critter_script := SCRIPT_THUG;
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      itemroll := random(0, 3);
-      if Critter_type == PID_THUG_BLACK_METAL then begin// BLACK : allowed Knife, Sledge, Pistol
-         if (itemroll == 0) then begin
-            Item := create_object(PID_14MM_AP, 0, 0);// ammo
-            add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-            Item := create_object(PID_14MM_PISTOL, 0, 0);// 14mm pistol
-         end
-         else begin
-            if (itemroll >= 2) then begin
-               Item := create_object(PID_223_FMJ, 0, 0);// ammo
-               add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-               Item := create_object(PID_223_PISTOL, 0, 0);// .223 pistol
-            end
-            else begin
-               Item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);// ammo
-               add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-               Item := create_object(PID_PLASMA_PISTOL, 0, 0);// plasma pistol
-            end
-         end
-      end
-      else begin
-         if (itemroll == 0) then begin
-            Item := create_object(PID_223_FMJ, 0, 0);// ammo
-            add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-            Item := create_object(PID_223_PISTOL, 0, 0);// .223 pistol
-         end
-         else begin
-            if (itemroll >= 2) then begin
-               Item := create_object(PID_14MM_AP, 0, 0);// ammo
-               add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-               Item := create_object(PID_14MM_PISTOL, 0, 0);// 14mm pistol
-            end
-            else begin
-               Item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);// ammo
-               add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-               Item := create_object(PID_PLASMA_PISTOL, 0, 0);// plasma pistol
-            end
-         end
-      end
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
-
-      Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
-
-      Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-      add_mult_objs_to_inven(Critter, Item, 1);
-      item_caps_adjust(Critter, random(1, dude_luck));
-   end
-//
-// Longrange extra
-   if random(0, (1 + combat_difficulty + difficulty_level)) >= 2 then begin
-      group_angle := random(0, 5);
-      Critter_direction := group_angle + random(0, 3 * 2) - 3;
-      while(Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
-      Critter_type := PID_THUG_MALE_METAL;// WHITE MALE, METAL
-      Critter_script := SCRIPT_THUG;
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      itemroll := random(0, 3);
-      if (itemroll == 0) then begin
-         Item := create_object(PID_223_FMJ, 0, 0);// ammo
-         add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-         Item := create_object(PID_HUNTING_RIFLE, 0, 0);// hunting rifle
-      end
-      else begin
-         Item := create_object(PID_SHOTGUN_SHELLS, 0, 0);// ammo
-         add_mult_objs_to_inven(Critter, Item, 1 * (dude_perk(PERK_scrounger) + 1));
-         Item := create_object(PID_COMBAT_SHOTGUN, 0, 0);// combat shotgun
-      end
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
-      Item := create_object(PID_METAL_ARMOR, 0, 0);// metal armor
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
-      Item := create_object(PID_STIMPAK, 0, 0);// stimpak
-      add_mult_objs_to_inven(Critter, Item, 1);
-      item_caps_adjust(Critter, random(1, dude_luck));
-   end
-   call Add_Mysterious_Stranger;
 end
 
 procedure Coast01 begin

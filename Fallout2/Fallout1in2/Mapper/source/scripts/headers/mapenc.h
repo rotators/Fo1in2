@@ -114,19 +114,19 @@ procedure hunters begin
    Critter_script := SCRIPT_HUNTER;
    call Place_critter;
    obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+
    Item := create_object(PID_ASSAULT_RIFLE, 0, 0);
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_5MM_AP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 4 * (dude_perk(PERK_scrounger) + 1));
-
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_COMBAT_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
    end
-
    item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    Item := create_object(PID_SUPER_STIMPAK, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2);
+
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
    while(Critter_direction < 0) do begin
       Critter_direction := Critter_direction + 6;
@@ -140,17 +140,28 @@ procedure hunters begin
    Critter_script := SCRIPT_THUG;
    call Place_critter;
    obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   Item := create_object(PID_SPEAR, 0, 0);
-   add_obj_to_inven(Critter, Item);
+
+   if (random(0,1) == 1) then begin
+      Item := create_object(PID_SPEAR, 0, 0);
+      add_obj_to_inven(Critter, Item);
+   end
+   else begin
+      Item := create_object(PID_RIPPER, 0, 0);
+      add_obj_to_inven(Critter, Item);
+   end
+   wield_obj_critter(Critter, Item);
+
+   Item := create_object(PID_STIMPAK, 0, 0);
+   add_mult_objs_to_inven(Critter, Item, 3);
 
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
    end
-
    if (random(0, 2) == 0) then begin
       item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
+
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
    while(Critter_direction < 0) do begin
       Critter_direction := Critter_direction + 6;
@@ -164,21 +175,21 @@ procedure hunters begin
    Critter_script := SCRIPT_THUG;
    call Place_critter;
    obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+
    Item := create_object(PID_SNIPER_RIFLE, 0, 0);
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_223_FMJ, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3 * (dude_perk(PERK_scrounger) + 1));
-
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
    end
-
    Item := create_object(PID_EXPLOSIVE_ROCKET, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
    if (random(0, 2) == 0) then begin
       item_caps_adjust(Critter, random(5, 40) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
+
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
    while(Critter_direction < 0) do begin
       Critter_direction := Critter_direction + 6;
@@ -192,16 +203,15 @@ procedure hunters begin
    Critter_script := SCRIPT_THUG;
    call Place_critter;
    obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+
    Item := create_object(PID_DESERT_EAGLE, 0, 0);
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_44_MAGNUM_JHP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
-
    if not(fo1in2_destroy_armor_disabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
    end
-
    if (random(0, 2) == 0) then begin
       item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
