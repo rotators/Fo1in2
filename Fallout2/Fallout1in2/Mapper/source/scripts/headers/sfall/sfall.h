@@ -78,7 +78,7 @@
 #define LIST_ALL         (9)
 
 //Valid window types for get_window_attribute
-#define WINTYPE_INVENTORY    (0) // any inventory window
+#define WINTYPE_INVENTORY    (0) // any inventory window (player/loot/use/barter)
 #define WINTYPE_DIALOG       (1)
 #define WINTYPE_PIPBOY       (2)
 #define WINTYPE_WORLDMAP     (3)
@@ -287,8 +287,8 @@
 #define get_flags(obj)                                  sfall_func1("get_flags", obj)
 #define get_ini_section(file, sect)                     sfall_func2("get_ini_section", file, sect)
 #define get_ini_sections(file)                          sfall_func1("get_ini_sections", file)
-#define get_interface_x(winType)                        sfall_func2("get_window_attribute", winType, 0)
-#define get_interface_y(winType)                        sfall_func2("get_window_attribute", winType, 1)
+#define get_interface_x(winType)                        sfall_func2("get_window_attribute", winType, 1)
+#define get_interface_y(winType)                        sfall_func2("get_window_attribute", winType, 2)
 #define get_inven_ap_cost                               sfall_func0("get_inven_ap_cost")
 #define get_map_enter_position                          sfall_func0("get_map_enter_position")
 #define get_metarule_table                              sfall_func0("get_metarule_table")
@@ -303,6 +303,7 @@
 #define hide_window(winName)                            sfall_func1("hide_window", winName)
 #define intface_hide                                    sfall_func0("intface_hide")
 #define intface_is_hidden                               sfall_func0("intface_is_hidden")
+#define intface_is_shown(winType)                       sfall_func1("get_window_attribute", winType)
 #define intface_redraw                                  sfall_func0("intface_redraw")
 #define intface_show                                    sfall_func0("intface_show")
 #define inventory_redraw(invSide)                       sfall_func1("inventory_redraw", invSide)
@@ -310,6 +311,7 @@
 #define item_weight(obj)                                sfall_func1("item_weight", obj)
 #define lock_is_jammed(obj)                             sfall_func1("lock_is_jammed", obj)
 #define loot_obj                                        sfall_func0("loot_obj")
+#define message_box(text)                               sfall_func1("message_box", text)
 #define metarule_exist(metaruleName)                    sfall_func1("metarule_exist", metaruleName)
 #define npc_engine_level_up(toggle)                     sfall_func1("npc_engine_level_up", toggle)
 #define obj_under_cursor(onlyCritter, includeDude)      sfall_func2("obj_under_cursor", onlyCritter, includeDude)
