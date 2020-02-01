@@ -35,4 +35,7 @@
 //      r_message_box(text, [flags, color1, color23, callback)
 #define r_message_box(...)                                  sfall_func("r_message_box", __VA_ARGS__)
 
+// TODO: (Re)move at some point?
+#define message_box_warning(text)      sfall_func("message_box", text, 0x01, 134, 145)
+
 #endif // __SFALL_ROTATORS__ //
