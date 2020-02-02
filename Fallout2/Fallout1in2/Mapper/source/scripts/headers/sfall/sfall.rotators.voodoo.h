@@ -1,7 +1,7 @@
 #ifndef __SFALL_ROTATORS_VOODOO__
 #define __SFALL_ROTATORS_VOODOO__
 
-#include "sfall.rotators.h"
+//#include "sfall.rotators.h"
 
 variable r_call_offset_result;
 
