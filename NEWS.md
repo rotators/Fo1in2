@@ -15,6 +15,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: German translated interface graphics for Sfall's "ActionPointsBar"-mode.
 - **Added**: If the player has more than 1 radscorpion tail, Razlo can now craft antidote from all of them at once.
 - **Added**: It is now possible to attack any hex with specific weapons (see sfall-mods.ini/HexAttack for more details).
+- **Added**: Lorri at the Brotherhood of Steel is now watching her locker.
 - **Added**: Loser with black shirt animations (Unused for now).
 - **Added**: Michael at the Brotherhood of Steel now also gives out 7.62mm ammunition.
 - **Added**: Missing "/" and "?" to english TMA keymap.
@@ -36,6 +37,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Zones around the Glow now read "Rad. Mountains" / "Rad. Desert" (can't show full text length right now).
 - **Fixed**: "Yellow-Pants" metal armor woman would spawn with weapons she can't use. Fixed in classic Rotators-style with creating and adding the missing animations instead of a simple script change.
 - **Fixed**: Adytowner will only join the player against the Regulators AFTER showing the holodisk to Zimmerman.
+- **Fixed**: Armor Destroy mod will correctly remove the armors from the Bounty Hunters.
 - **Fixed**: Broken radiation code in the Glow. Radiation distribution is based on timer events now, which is not as fragile as the shitty map_update code.
 - **Fixed**: Broken worldmap mask tiles 18 and 19.
 - **Fixed**: Can't repeat Razors dialog anymore after agreeing to get weapons from the Gunrunners.
@@ -51,6 +53,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: In the Master's Lair, the elevator door leading to the bomb can now be opened with an electronic lockpick.
 - **Fixed**: It was possible to steal from Rhombus' locker without him reacting to it.
 - **Fixed**: Katja will correctly mark the Cathedral on the worldmap.
+- **Fixed**: Killing the Hub Deathclaw on the worldmap would not remove it from its lair.
 - **Fixed**: Main title music now already starts when the outro videos are playing, not after.
 - **Fixed**: Mariposa Super Mutants now use the same disguise check as Cathedral Super Mutants.
 - **Fixed**: Missing encounter table for northern city zones.
@@ -62,6 +65,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Fixed**: Player wasn't looking in the right direction after switching maps.
 - **Fixed**: Quack-encounter was spawning on hex 0.
 - **Fixed**: Random mountain encounter would spawn pot container instead of gold items.
+- **Fixed**: Ranger Perk encounter re-rolling was fucked up and inconsistent and should now work correctly.
 - **Fixed**: Razor will give the task to get weapons from the Gunrunners only once.
 - **Fixed**: Regular Nightkins in the Master's Lair will not be deleted anymore together with the variable staff in the quarters when changing shifts.
 - **Fixed**: Regulators in Adytum have a maximum travel distance now.
@@ -90,6 +94,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Removed**: Item proto files that either haven't been changed or still include old Fo1/Fixt changes.
 - **Tweaked**: Changed behavior of Neal at daytime (reacting to sound and spotting the player).
 - **Tweaked**: City raiders with desert eagles now have a slight chance to spawn with .44 revolver instead.
+- **Tweaked**: Doubled the karma penality for killing "good" critters.
 - **Tweaked**: Encounter city map 2 and 3 slightly modified so the player won't spawn into a wall anymore.
 - **Tweaked**: Gizmo's corpse removal timer is now based on ddraw.ini setting "CorpseDeleteTime".
 - **Tweaked**: Gunrunners are a tad less antsy after the player took the weapons reward for himself.
