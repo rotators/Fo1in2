@@ -223,6 +223,7 @@ variable step_tile;
 #undef  self_elevation
 #define dude_elevation                    elevation(dude_obj)
 #define self_elevation                    elevation(self_obj)
+#define source_elevation                  elevation(source_obj)
 
 #define dude_fid                          obj_art_fid(dude_obj)
 #define self_fid                          obj_art_fid(self_obj)
@@ -246,6 +247,7 @@ variable step_tile;
 #undef  self_tile
 #define dude_tile                         tile_num(dude_obj)
 #define self_tile                         tile_num(self_obj)
+#define source_tile                       tile_num(source_obj)
 
 #define dude_rotation_to_self             rotation_to_tile(dude_tile,self_tile)
 #define self_rotation_to_dude             rotation_to_tile(self_tile,dude_tile)
