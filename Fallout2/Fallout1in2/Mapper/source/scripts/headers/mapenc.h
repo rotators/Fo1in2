@@ -44,6 +44,17 @@
       x := 2;                                \
    end
 
+// Ranger-Perk encounter re-roll
+#define ranger_perk_reroll_enc(a,b,c,d,e) \
+   while (Ranger_rerolls > 0) do begin                                                                                                       \
+      Ranger_rerolls := (Ranger_rerolls - 1);                                                                                                \
+      if ((Encounter_Num == a) or (Encounter_Num == b) or (Encounter_Num == c) or (Encounter_Num == d) or (Encounter_Num == e)) then begin   \
+         debug("Ranger Perk: Re-roll encounter! " + Encounter_Num);                                                                          \
+         call roll_encounter;                                                                                                                \
+      end                                                                                                                                    \
+   end \
+   noop
+
 // Temp variables
 variable group_angle;
 variable Critter;
