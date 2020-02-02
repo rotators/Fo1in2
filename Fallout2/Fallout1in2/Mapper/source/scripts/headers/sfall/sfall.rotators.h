@@ -35,6 +35,13 @@
 //      r_message_box(text, [flags, color1, color23, callback)
 #define r_message_box(...)                                  sfall_func("r_message_box", __VA_ARGS__)
 
+#define r_call_offset_push(val)                             sfall_func("r_call_offset_push", val)
+#define r_call_offset(addr)                                 sfall_func("r_call_offset", addr)
+#define r_write_byte(addr,val)                              sfall_func("r_write", 0, addr, val)
+#define r_write_short(addr,val)                             sfall_func("r_write", 1, addr, val)
+#define r_write_int(addr,val)                               sfall_func("r_write", 2, addr, val)
+#define r_write_string(addr,val)                            sfall_func("r_write", 3, addr, val)
+
 // TODO: (Re)move at some point?
 #define message_box_warning(text)      sfall_func("message_box", text, 0x01, 134, 145)
 
