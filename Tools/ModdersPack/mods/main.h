@@ -1,3 +1,5 @@
+#ifndef MAIN_H
+#define MAIN_H
 
 #include "..\scripting\headers\sfall.h"
 #include "..\scripting\headers\define_lite.h"
@@ -71,3 +73,5 @@ end
 procedure InitConfigs begin
    translationIni := GetIniConfigStr("Main", "TranslationsINI", "Translations.ini", "ddraw.ini");
 end
+
+#endif

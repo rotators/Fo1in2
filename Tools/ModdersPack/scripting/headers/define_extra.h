@@ -112,7 +112,7 @@
 #define MSGBOX_SMALL                (0x2)
 #define MSGBOX_ALIGN_LEFT           (0x4) // text aligned to left
 #define MSGBOX_ALIGN_TOP            (0x8) // text aligned to top
-#define MSGBOX_YESNO               (0x10) // uses YES/NO buttons instead of DONE
+#define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
 #define MSGBOX_CLEAN               (0x20) // no buttons
 
 //remove inven obj defines

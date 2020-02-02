@@ -6,6 +6,7 @@ Notable changes since last release ([v0.1372](https://github.com/rotators/Fo1in2
 - **Added**: Classic Worldmap mod will now show location names the same way as in Fo1 (via Hotspot text). WIP!
 - **Added**: Encounter maps in the zones around the Glow will now also radiate the player a little bit.
 - **Added**: Except for the squad leader, all generic Brotherhood paladins in random encounters will now wear helmets (makes it possible to identify the leader without having to click on everyone).
+- **Added**: Exploded traps in the Glow will leave a visible graphic.
 - **Added**: Fallout 1 interface mod. Replaces the Fallout 2 interface with the graphics from Fallout 1. This was originally a part of the fo1_base mod, but is now its own thing for easier handling.
 - **Added**: Fallout 2 dialog interface graphic with "Tell Me About"-button.
 - **Added**: First iteration of a possible german translation. Core-sentences are done.

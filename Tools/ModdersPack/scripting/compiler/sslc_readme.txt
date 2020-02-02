@@ -344,6 +344,7 @@ There are several changes in this version of sslc which may result in problems f
 - fixed compiler giving "assignment operator expected" error when a variable-like macro is not being defined properly
 - added new logical operators "AndAlso", "OrElse" for short-circuit evaluation of logical expressions
 - added an alternative (C/Java-style) assignment operator "="
+- added support for new "div" operator (unsigned integer division)
 
 > sfall 4.2.2
 - added support for new opcode "reg_anim_callback"
