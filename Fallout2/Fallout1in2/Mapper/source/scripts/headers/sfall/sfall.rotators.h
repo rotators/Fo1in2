@@ -1,9 +1,11 @@
 #ifndef __SFALL_ROTATORS__
 #define __SFALL_ROTATORS__
 
+// sfall.h have no include guards :(
 #if !defined(metarule_exist)
 #include "sfall.h"
 #endif
+#include "sfall.rotators.voodoo.h"
 
 // https://stackoverflow.com/a/44291052/11998612 + tweaks
 #define __sfall_prefix(...)                        0,__VA_ARGS__
