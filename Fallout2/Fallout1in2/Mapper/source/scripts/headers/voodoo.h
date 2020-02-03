@@ -1,6 +1,8 @@
 #ifndef VOODOO_H
 #define VOODOO_H
 
+#include "sfall/sfall.rotators.h"
+
 /*********************************************************
    All kinds of memory reading/writing macros
    Requires AllowUnsafeScripting=1 in ddraw.ini!
@@ -184,11 +186,27 @@
 
 
 // This will make screeenshot without interface and cursor
+// recommended: f2_res.ini->[IFACE]->IFACE_BAR_MODE=1
 #define VOODOO_make_clean_screenshot \
                intface_hide;                                  \
                call_offset_v0(0x44ce34); /* gmouse_3d_off_ */ \
                call_offset_v0(0x4c8f4c); /* dump_screen_   */ \
                call_offset_v0(0x44cd2c); /* gmouse_3d_on_  */ \
                intface_show
+
+// This will make screenshots saved in "screen" directory
+// sfall-rotators required (sfall cannot patch HRP from scripts)
+// ---
+// strings are arguments for sprintf(), results are passed to hrp_fopen() in 0x1001A8e0
+// strings cannot be be longer than 16b (including trailing "\0")
+// directory must exists, HRP does not checks that
+// --
+// hrp_fopen    = 0x1002966A
+// hrp_scrnameR = 0x100397bc used when selecting screenshot name
+// hrp_scrnameW = 0x100397d0 used when creating screenshot file
+
+#define VOODOO_subdirectory_screenshots \
+               r_write_string(0x100397bc, "screen/%.5d.bmp); \
+               r_write_string(0x100397d0, "screen/%.5d.bmp)
 
 #endif // VOODOO_H //
