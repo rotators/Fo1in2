@@ -186,7 +186,8 @@
 
 
 // This will make screeenshot without interface and cursor
-// recommended: f2_res.ini->[IFACE]->IFACE_BAR_MODE=1
+// recommended: f2_res.ini->[IFACE]->IFACE_BAR_MODE=1,
+//              f2_res.ini->[IFACE]->IFACE_BAR_SIDE_ART=0
 #define VOODOO_make_clean_screenshot \
                intface_hide;                                  \
                call_offset_v0(0x44ce34); /* gmouse_3d_off_ */ \
@@ -201,12 +202,12 @@
 // strings cannot be be longer than 16b (including trailing "\0")
 // directory must exists, HRP does not checks that
 // --
-// hrp_fopen    = 0x1002966A
+// hrp_fopen    = 0x1002966a
 // hrp_scrnameR = 0x100397bc used when selecting screenshot name
 // hrp_scrnameW = 0x100397d0 used when creating screenshot file
 
 #define VOODOO_subdirectory_screenshots \
-               r_write_string(0x100397bc, "screen/%.5d.bmp); \
-               r_write_string(0x100397d0, "screen/%.5d.bmp)
+               r_write_string(0x100397bc, "screen/%.5d.bmp"); \
+               r_write_string(0x100397d0, "screen/%.5d.bmp")
 
 #endif // VOODOO_H //
