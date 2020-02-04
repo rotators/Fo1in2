@@ -13,33 +13,33 @@
 {102}{}{Suche den Wasserdieb.}				#fo1 vanilla
 {103}{}{Vernichte den Mutantenanführer.}			#fo1 vanilla
 {104}{}{Zerstöre die Quelle der Mutanten.}	#fo1 vanilla
-{105}{}{Help the medic to synthesize Antidote.}
-{106}{}{Learn about the outside world at the library.}
-{107}{}{Gain entry to the Armory.}
-{108}{}{Gain entry back into the Vault.}
-{109}{}{Kill the Overseer.}
-{110}{}{Kill all inhabitants of Vault 13.}
-{120}{}{Find the Water Chip.}
+{105}{}{Hilf dem Sanitäter ein Gegengift herzustellen.}
+{106}{}{Lerne aus den Vault-Archiven über die Aussenwelt.}
+{107}{}{Erlange Zugang zur Waffenkammer.}
+{108}{}{Finde einen Weg zurück in die Vault.}
+{109}{}{Töte den Aufseher.}
+{110}{}{Töte alle Einwohner von Vault 13.}
+{120}{}{Suche den Steuerchip.}
 #
 # Vault 15 Quests
 #
 {200}{}{Suche nach Hinweisen und Informationen.}
 {201}{}{Suche nach einem Steuerchip.}
-{202}{}{Find a way down the elevator shaft.}
-{203}{}{Find the hidden items.}
-{204}{}{Kill all the rats.}
+{202}{}{Finde einen Weg den Aufzugsschacht hinunter.}
+{203}{}{Finde die versteckten Gegenstände.}
+{204}{}{Töte alle Ratten.}
 
 #
 # Shady Sands Quests
 #
-{300}{}{Talk to Katrina.}
-{301}{}{Hire Ian.}
+{300}{}{Rede mit Katrina.}
+{301}{}{Heuere Ian.}
 {302}{}{Halte die Radscorpions auf.}							#fo1 vanilla
 {303}{}{Hilf Razlo ein Gegengift herzustellen.}	#fo1 vanilla
 {304}{}{Heile Jarvis vom Radscorpion-Gift.}				#fo1 vanilla
 {305}{}{Rette Tandi vor den Raiders.}					#fo1 vanilla
-{306}{}{Help Shady Sands improve their crop yield.}
-{307}{}{Lead Seth and the guards to destroy the Khans.}
+{306}{}{Hilf die Ernte von Shady Sands zu verbessern.}
+{307}{}{Führe Seth und die Wachen an die Khans zu vernichten.}
 
 #
 # Junktown Quests
@@ -50,23 +50,23 @@
 {403}{}{Bring Trish in Sicherheit.}									#fo1 vanilla
 {404}{}{Halte Gizmo auf.}									#fo1 vanilla
 {405}{}{Laß die Skulz-Gang auffliegen.}							#fo1 vanilla
-{406}{}{Join the Skulz.}
-{407}{}{Steal Neal's urn from Skum Pitt.}
+{406}{}{Tritt den Skulz bei.}
+{407}{}{Stiehl Neal's Urn aus dem Skum Pitt.}
 {408}{}{RESERVED}
 
 #
 # Raiders Quests
 #
-{500}{}{Join the Khans.}
-{501}{}{Destroy the Khans.}
-{502}{}{Kill the slaves.}
-{503}{}{Save the slaves.}
-{504}{}{Shame Garl by beating him in hand-to-hand combat.}
-{505}{}{Free the prisoner.}
-{506}{}{Free Tandi.}
-{507}{}{Join the Khans on a raid of Shady Sands.}
-{508}{}{Abuse the slaves.}
-{509}{}{Replace Garl as leader of the Khans.}
+{500}{}{Trete den Khans bei.}
+{501}{}{Vernichte die Khans.}
+{502}{}{Töte die Sklaven.}
+{503}{}{Rette die Sklaven.}
+{504}{}{Besiege Garl in einem fairen unbewaffnetem Kampf.}
+{505}{}{Befreie den Gefangenen.}
+{506}{}{Befreie Tandi.}
+{507}{}{Raide mit den Khans Shady Sands.}
+{508}{}{Missbrauche die Sklaven.}
+{509}{}{Ersetze Garl als Anführer der Khans.}
 
 #
 # Necropolis Quests
@@ -75,11 +75,11 @@
 {601}{}{Repariere die Wasserpumpe von Necropolis.}
 {602}{}{Befreie den Gefangenen.}
 {603}{}{Hole den Steuerchip.}
-{604}{}{Allow the Super Mutants at the Watershed to leave peacefully.}
-{605}{}{Seduce Harry.}
-{606}{}{Retrieve reward from Set for removing the Super Mutants.}
-{607}{}{Sneak into Set's Hall of The Dead.}
-{608}{}{Find an entrance into the Watershed.}
+{604}{}{Lass die Supermutanten friedlich von der Wasserstelle abziehen.}
+{605}{}{Verführe Harry.}
+{606}{}{Erhalte die Belohnung von Set für das vernichten der Supermutanten.}
+{607}{}{Schleiche in Set's Halle der Toten.}
+{608}{}{Finde einen Eingang zur Wasserstelle.}
 
 #
 # The Hub Quests
@@ -87,32 +87,32 @@
 {700}{}{Vernichte die Deathclaw.}			#fo1 vanilla
 {701}{}{Erledige Jain.}							#fo1 vanilla
 {702}{}{Erledige den Händler.}						#fo1 vanilla
-{703}{}{Suche die verschwundenen Karawanen.}					#fo1 vanilla
-{704}{}{Stiehl den Händlern die Halsketten.}			#fo1 vanilla
-{705}{}{Join the Theives' Circle.}
-{706}{}{Dispose of Decker.}
-{707}{}{Send water to Vault 13.}
-{708}{}{Become a guard for the Water Merchants.}
-{709}{}{Become a guard for the Far Go Traders.}
-{710}{}{Become a guard for the Crimson Caravan.}
-{711}{}{Get rid of the raiders at Irwin's Farm.}
+{703}{}{Suche die verschwundenen Caravans.}					#fo1 vanilla
+{704}{}{Stiehl dem Händler die Halskette.}			#fo1 vanilla
+{705}{}{Trete dem Thieves' Circle bei.}
+{706}{}{Erledige Decker.}
+{707}{}{Schicke Wasser nach Vault 13.}
+{708}{}{Heuere als Wache bei den Water Merchants an.}
+{709}{}{Heuere als Wache bei den Far Go Traders an.}
+{710}{}{Heuere als Wache bei den Crimson Caravan an.}
+{711}{}{Werde die Raider auf Irwin's Farm los.}
 
 #
 # Brotherhood of Steel Quests
 #
 {800}{}{Werde ein Neuling.}						#fo1 vanilla
 {801}{}{Rette den Neuling aus dem Hub.}				#fo1 vanilla
-{802}{}{Become a Knight.}
-{803}{}{Learn from the Library Computers.}
-{804}{}{Receive operations from Lori.}
-{805}{}{Seduce Jennifer.}
-{806}{}{Seduce Lorri.}
-{807}{}{Steal the Systolic Motivator.}
-{808}{}{Help Sophia and Michael.}
-{809}{}{Gain access to the Armory.}
+{802}{}{Werde ein Knight.}
+{803}{}{Lerne von den Bibliothekscomputern.}
+{804}{}{Erhalte Operationen ovn Lori.}
+{805}{}{Verführe Jennifer.}
+{806}{}{Verführe Lorri.}
+{807}{}{Stiehl den Systolischen Motivator.}
+{808}{}{Hilf Sophia und Michael.}
+{809}{}{Erlange Zugang zur Waffenkammer.}
 {810}{}{Finde die Ruinen des alten Ordens.}
-{811}{}{Erkundet das Gebiet im Norden.}
-{812}{}{Get the Brotherhood to help at the Military Base.}
+{811}{}{Erkunde das Gebiet im Norden.}
+{812}{}{Überrede die Brotherhood bei der Militärbasis zu helfen.}
 {813}{}{RESERVED}
 {814}{}{RESERVED}
 {815}{}{RESERVED}
@@ -123,12 +123,12 @@
 #
 # Military Base Quests
 #
-{900}{}{Gain entry to the base.}
-{901}{}{Gain entry to the base undetected.}
-{902}{}{Trick the Mutants into leaving their guard posts.}
-{903}{}{Disable the forcefields.}
-{904}{}{Kill the Lieutenant.}
-{905}{}{Destroy the Vats.}
+{900}{}{Erlange Zugang zur Hauptbasis.}
+{901}{}{Infiltriere die Hauptbasis.}
+{902}{}{Bringe die Mutanten dazu ihre Wachposten zu verlassen.}
+{903}{}{Deaktiviere die Kraftfelder.}
+{904}{}{Töte den Leutnant der Mutanten.}
+{905}{}{Zerstöre die FEV-Container.}
 
 #
 # The Glow Quests
@@ -148,7 +148,7 @@
 {1105}{}{Rette Jason Zimmerman.}				#fo1 vanilla
 {1106}{}{Halte die Gangs von einem Angriff auf Adytum ab.}	#fo1 vanilla
 {1107}{}{Töte die Mutter-Deathclaw.}
-{1108}{}{Convince the Gun Runners to supply the Blades.}
+{1108}{}{Überrede die Gun Runner die Blades mit Waffen zu beliefern.}
 {1109}{}{RESERVED}
 {1110}{}{RESERVED}
 {1111}{}{RESERVED}
@@ -156,16 +156,16 @@
 #
 # Cathedral / Master's Vault Quests
 #
-{1200}{}{Gain entry into the Master's Vault.}
-{1201}{}{Convince Rae to join you against the Master.}
-{1202}{}{Kill Morpheus.}
-{1203}{}{Kill the Master.}
-{1204}{}{Set the timer for the bomb.}
+{1200}{}{Erlange Zugang zur Vault des Meisters.}
+{1201}{}{Überrede Rae gegen den Meister zu kämpfen.}
+{1202}{}{Eliminiere Morpheus.}
+{1203}{}{Eliminiere den Meister.}
+{1204}{}{Setzte den Timer der Atombombe.}
 
 #
 # Caravan Run Quests
 #
-{1300}{}{Hilf die Karawanen zu entladen.}
+{1300}{}{Hilf die Caravans zu entladen.}
 
 #
 # 
