@@ -7,7 +7,7 @@ Fallout et tu (also called Fallout 1@2, 1at2, 1in2, ...) is bringing the first F
 
 ---
 
-Discussion: https://nma-fallout.com/threads/218045/ (beta),
+Discussion: https://nma-fallout.com/threads/218045/ (release, beta),
             https://nma-fallout.com/threads/217892/ (alpha),
             https://nma-fallout.com/threads/179809/ (legacy)
 
@@ -48,7 +48,6 @@ Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_sett
 Other interesting files:
 - [ddraw.ini](ddraw.ini) (sfall configuration)
 - [sfall-mods.ini](sfall-mods.ini), [config/](config/) directory (sfall modifications configuration)
-- [mods/InventoryFilter/InvenFilter.ini](mods/InventoryFilter/InvenFilter.ini) (InventoryFilter mini-mod configuration)
 
 
 ADDITIONAL CONTENT
