@@ -14,7 +14,7 @@
 {103}{}{Vernichte den Mutantenanführer.}			#fo1 vanilla
 {104}{}{Zerstöre die Quelle der Mutanten.}	#fo1 vanilla
 {105}{}{Hilf dem Sanitäter ein Gegengift herzustellen.}
-{106}{}{Lerne aus den Vault-Archiven über die Aussenwelt.}
+{106}{}{Lerne aus den Vault-Archiven über die Außenwelt.}
 {107}{}{Erlange Zugang zur Waffenkammer.}
 {108}{}{Finde einen Weg zurück in die Vault.}
 {109}{}{Töte den Aufseher.}
