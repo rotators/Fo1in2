@@ -168,6 +168,21 @@ procedure map_update_p_proc begin
          end
       end//if mutate_stage > 0
    end//if have_mutated = 0
+
+   // Used to make the player use drugs outside of critter scripts
+   // Example: Dehydration encounters.
+   if (global_var(GVAR_OBJ_DUDE_USE_DRUG) != 0) then begin
+      variable Drink := global_var(GVAR_OBJ_DUDE_USE_DRUG);
+      set_global_var(GVAR_OBJ_DUDE_USE_DRUG, 0);
+
+      // Water flask isn't a drug item, Nuka Cola has no effect
+      if (obj_pid(Drink) == PID_WATER_FLASK or obj_pid(DRINK) == PID_NUKA_COLA) then begin
+         rm_obj_from_inven(dude_obj, Drink);
+         destroy_object(Drink);
+      end
+      else
+         use_obj_on_obj(Drink, dude_obj);
+   end
 end
 
 procedure timed_event_p_proc begin

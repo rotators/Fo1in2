@@ -271,25 +271,36 @@ end
 /************************************************
     Dehydration encounters
 ************************************************/
-#define remove_water_item \
-   if (dude_item_count(PID_NUKA_COLA)) then begin        \
-      display_msg(message_str(SCRIPT_RNDDESRT, 1250));   \
-      Item := dude_item(PID_NUKA_COLA);                  \
-   end                                                   \
-   else if (dude_item_count(PID_WATER_FLASK)) then begin \
-      display_msg(message_str(SCRIPT_RNDDESRT, 125));    \
-      Item := dude_item(PID_WATER_FLASK);                \
-   end                                                   \
-   else if (dude_item_count(PID_BEER)) then begin        \
-      display_msg(message_str(SCRIPT_RNDDESRT, 1251));   \
-      Item := dude_item(PID_BEER);                       \
-   end                                                   \
-   else if (dude_item_count(PID_BOOZE)) then begin       \
-      display_msg(message_str(SCRIPT_RNDDESRT, 1252));   \
-      Item := dude_item(PID_BOOZE);                      \
-   end                                                   \
-   rm_obj_from_inven(dude_obj, Item);                    \
-   destroy_object(Item)
+#define mstr_item_supply      (message_str(SCRIPT_RNDDESRT, 1250) + obj_name(Item) + message_str(SCRIPT_RNDDESRT, 1251))
+#define drink_water_item \
+   if (dude_item_count(PID_NUKA_COLA)) then begin                 \
+      Item := dude_item(PID_NUKA_COLA);                           \
+      display_msg(mstr_item_supply);                              \
+   end                                                            \
+   else if (dude_item_count(PID_WATER_FLASK)) then begin          \
+      Item := dude_item(PID_WATER_FLASK);                         \
+      display_msg(message_str(SCRIPT_RNDDESRT, 125));             \
+   end                                                            \
+   else if (dude_item_count(PID_BEER)) then begin                 \
+      Item := dude_item(PID_BEER);                                \
+      display_msg(mstr_item_supply);                              \
+   end                                                            \
+   else if (dude_item_count(PID_BOOZE)) then begin                \
+      Item := dude_item(PID_BOOZE);                               \
+      display_msg(mstr_item_supply);                              \
+   end                                                            \
+   else if (dude_item_count(PID_ROENTGEN_RUM)) then begin         \
+      Item := dude_item(PID_ROENTGEN_RUM);                        \
+      display_msg(mstr_item_supply);                              \
+   end                                                            \
+   else if (dude_item_count(PID_GAMMA_GULP_BEER)) then begin      \
+      Item := dude_item(PID_GAMMA_GULP_BEER);                     \
+      display_msg(mstr_item_supply);                              \
+   end                                                            \
+   set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
+
+   //rm_obj_from_inven(dude_obj, Item);                    \
+   //destroy_object(Item)
 
 // Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
 variable TimeHours := 0;
@@ -297,7 +308,7 @@ variable hpDamage := 0;
 procedure dehydration_a begin
    TimeHours := random(1, 6);
    if (dude_item_count(PID_NUKA_COLA) or dude_item_count(PID_WATER_FLASK) or dude_item_count(PID_BEER) or dude_item_count(PID_BOOZE)) then begin
-      remove_water_item;
+      drink_water_item;
    end
    else begin
       Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk(PERK_survivalist));
@@ -337,7 +348,7 @@ procedure dehydration_a begin
          end
       end
       critter_dmg(dude_obj, hpDamage, DMG_normal_dam);
-      TimeHours := TimeHours * 3600;
+      TimeHours := TimeHours * ONE_GAME_HOUR;
       game_time_advance(game_ticks(TimeHours));
    end
 end
@@ -346,7 +357,7 @@ end
 procedure dehydration_b begin
    TimeHours := random(1, 6) + 2;
    if (dude_item_count(PID_NUKA_COLA) or dude_item_count(PID_WATER_FLASK) or dude_item_count(PID_BEER) or dude_item_count(PID_BOOZE)) then begin
-      remove_water_item;
+      drink_water_item;
    end
    else begin
       Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
@@ -368,7 +379,7 @@ procedure dehydration_b begin
          critter_injure(dude_obj, DAM_KNOCKED_DOWN);
       end
       critter_dmg(dude_obj, hpDamage, DMG_normal_dam);
-      TimeHours := TimeHours * 3600;
+      TimeHours := TimeHours * ONE_GAME_HOUR;
       game_time_advance(game_ticks(TimeHours));
    end
 end
