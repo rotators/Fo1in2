@@ -272,6 +272,14 @@ end
     Dehydration encounters
 ************************************************/
 #define mstr_item_supply      (message_str(SCRIPT_RNDDESRT, 1250) + obj_name(Item) + message_str(SCRIPT_RNDDESRT, 1251))
+
+#define dude_has_water_items  ((dude_item_count(PID_NUKA_COLA) +           \
+                              dude_item_count(PID_WATER_FLASK) +           \
+                              dude_item_count(PID_BEER) +                  \
+                              dude_item_count(PID_BOOZE) +                 \
+                              dude_item_count(PID_ROENTGEN_RUM) +          \
+                              dude_item_count(PID_GAMMA_GULP_BEER)) > 0)
+
 #define drink_water_item \
    if (dude_item_count(PID_NUKA_COLA)) then begin                 \
       Item := dude_item(PID_NUKA_COLA);                           \
@@ -299,15 +307,12 @@ end
    end                                                            \
    set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
 
-   //rm_obj_from_inven(dude_obj, Item);                    \
-   //destroy_object(Item)
-
 // Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
 variable TimeHours := 0;
 variable hpDamage := 0;
 procedure dehydration_a begin
    TimeHours := random(1, 6);
-   if (dude_item_count(PID_NUKA_COLA) or dude_item_count(PID_WATER_FLASK) or dude_item_count(PID_BEER) or dude_item_count(PID_BOOZE)) then begin
+   if dude_has_water_items then begin
       drink_water_item;
    end
    else begin
@@ -356,7 +361,7 @@ end
 // Hub, Glow (Death table)
 procedure dehydration_b begin
    TimeHours := random(1, 6) + 2;
-   if (dude_item_count(PID_NUKA_COLA) or dude_item_count(PID_WATER_FLASK) or dude_item_count(PID_BEER) or dude_item_count(PID_BOOZE)) then begin
+   if dude_has_water_items then begin
       drink_water_item;
    end
    else begin
