@@ -65,6 +65,8 @@ variable Critter_type;
 variable CritterXpos;// ---------------RNDMTN ONLY
 variable CritterYpos;// ---------------RNDMTN ONLY
 
+variable Skill_roll;
+
 variable Inner_ring;
 variable Item;
 variable Outer_ring;
@@ -102,6 +104,38 @@ procedure Add_Mysterious_Stranger begin
        anim(Critter,ANIMATE_ROTATION,dude_cur_rot);
    end
 end
+
+// Fallout 1 mysterious stranger:
+/*
+procedure stranger begin
+   if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
+      Critter_type := PID_MYSTERIOUS_STRANGER;
+      Critter_script := SCRIPT_MYSTSTRN;
+      Critter_direction := random(0, 5);
+      Outer_ring := 7;
+      Inner_ring := 4;
+
+      call Place_critter;
+
+      Critter_direction := dude_cur_rot + (random(0, 2) - 1);
+      while (Critter_direction < 0) do begin
+         Critter_direction := Critter_direction + 6;
+      end
+      if (Critter_direction > 5) then begin
+         Critter_direction := Critter_direction % 6;
+      end
+
+      Item := create_object( PID_PURPLE_ROBE, 0, 0 );
+      add_obj_to_inven(Critter, Item);
+      Item := create_object( PID_SPEAR, 0, 0 );
+      add_obj_to_inven(Critter, Item);
+      Item := create_object( PID_STIMPAK, 0, 0 );
+      add_mult_objs_to_inven(Critter, Item, 2);
+      Item := item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
+      set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
+   end
+end
+*/
 
 /************************************************
     Avellone, the Bounty Hunter + his crew
@@ -234,36 +268,110 @@ procedure hunters begin
    call Add_Mysterious_Stranger;
 end
 
-// Fallout 1 mysterious stranger:
-/*
-procedure stranger begin
-   if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
-      Critter_type := PID_MYSTERIOUS_STRANGER;
-      Critter_script := SCRIPT_MYSTSTRN;
-      Critter_direction := random(0, 5);
-      Outer_ring := 7;
-      Inner_ring := 4;
+/************************************************
+    Dehydration encounters
+************************************************/
+#define remove_water_item \
+   if (dude_item_count(PID_NUKA_COLA)) then begin        \
+      display_msg(message_str(SCRIPT_RNDDESRT, 1250));   \
+      Item := dude_item(PID_NUKA_COLA);                  \
+   end                                                   \
+   else if (dude_item_count(PID_WATER_FLASK)) then begin \
+      display_msg(message_str(SCRIPT_RNDDESRT, 125));    \
+      Item := dude_item(PID_WATER_FLASK);                \
+   end                                                   \
+   else if (dude_item_count(PID_BEER)) then begin        \
+      display_msg(message_str(SCRIPT_RNDDESRT, 1251));   \
+      Item := dude_item(PID_BEER);                       \
+   end                                                   \
+   else if (dude_item_count(PID_BOOZE)) then begin       \
+      display_msg(message_str(SCRIPT_RNDDESRT, 1252));   \
+      Item := dude_item(PID_BOOZE);                      \
+   end                                                   \
+   rm_obj_from_inven(dude_obj, Item);                    \
+   destroy_object(Item)
 
-      call Place_critter;
-
-      Critter_direction := dude_cur_rot + (random(0, 2) - 1);
-      while (Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
+// Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
+variable TimeHours := 0;
+variable hpDamage := 0;
+procedure dehydration_a begin
+   TimeHours := random(1, 6);
+   if (dude_item_count(PID_NUKA_COLA) or dude_item_count(PID_WATER_FLASK) or dude_item_count(PID_BEER) or dude_item_count(PID_BOOZE)) then begin
+      remove_water_item;
+   end
+   else begin
+      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk(PERK_survivalist));
+      if (is_success(Skill_roll)) then begin
+         if (TimeHours == 1) then
+            display_msg(message_str(SCRIPT_RNDDESRT, 109));
+         else
+            display_msg(message_str(SCRIPT_RNDDESRT, 110) + TimeHours + message_str(SCRIPT_RNDDESRT, 111));
       end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
+      else begin
+         if (is_critical(Skill_roll)) then begin
+            hpDamage := random(15, 24); // Fo1: 2 to 4
+            if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
+            if (TimeHours == 1) then
+               display_msg(message_str(SCRIPT_RNDDESRT, 112) + hpDamage + message_str(SCRIPT_RNDDESRT, 113));
+            else
+               display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
+            critter_injure(dude_obj, DAM_KNOCKED_DOWN);
+         end
+         else begin
+            hpDamage := random(6, 12); // Fo1: 1 to 2
+            if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
+            if (TimeHours == 1) then begin
+               if (hpDamage == 1) then
+                  display_msg(message_str(SCRIPT_RNDDESRT, 117));
+               else
+                  display_msg(message_str(SCRIPT_RNDDESRT, 118) + hpDamage + message_str(SCRIPT_RNDDESRT, 119));
+               critter_injure(dude_obj, DAM_KNOCKED_DOWN);
+            end
+            else begin
+               if (hpDamage == 1) then
+                  display_msg(message_str(SCRIPT_RNDDESRT, 120) + TimeHours + message_str(SCRIPT_RNDDESRT, 121));
+               else
+                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + TimeHours + message_str(SCRIPT_RNDDESRT, 123) + hpDamage + message_str(SCRIPT_RNDDESRT, 124));
+               critter_injure(dude_obj, DAM_KNOCKED_DOWN);
+            end
+         end
       end
-
-      Item := create_object( PID_PURPLE_ROBE, 0, 0 );
-      add_obj_to_inven(Critter, Item);
-      Item := create_object( PID_SPEAR, 0, 0 );
-      add_obj_to_inven(Critter, Item);
-      Item := create_object( PID_STIMPAK, 0, 0 );
-      add_mult_objs_to_inven(Critter, Item, 2);
-      Item := item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-      set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
+      critter_dmg(dude_obj, hpDamage, DMG_normal_dam);
+      TimeHours := TimeHours * 3600;
+      game_time_advance(game_ticks(TimeHours));
    end
 end
-*/
+
+// Hub, Glow (Death table)
+procedure dehydration_b begin
+   TimeHours := random(1, 6) + 2;
+   if (dude_item_count(PID_NUKA_COLA) or dude_item_count(PID_WATER_FLASK) or dude_item_count(PID_BEER) or dude_item_count(PID_BOOZE)) then begin
+      remove_water_item;
+   end
+   else begin
+      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
+      if (is_success(Skill_roll)) then begin
+         display_msg(message_str(SCRIPT_RNDDESRT, 110) + TimeHours + message_str(SCRIPT_RNDDESRT, 111));
+      end
+      else begin
+         if (is_critical(Skill_roll)) then begin
+            hpDamage := random(15, 24); // Fo1: 2 to 4
+         end
+         else begin
+            hpDamage := random(6, 12); // Fo1: 2 to 3
+         end
+         if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
+         if (hpDamage == 1) then
+            display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 1160));
+         else
+            display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
+         critter_injure(dude_obj, DAM_KNOCKED_DOWN);
+      end
+      critter_dmg(dude_obj, hpDamage, DMG_normal_dam);
+      TimeHours := TimeHours * 3600;
+      game_time_advance(game_ticks(TimeHours));
+   end
+end
+
 
 #endif // MAPENC_H

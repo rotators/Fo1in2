@@ -120,14 +120,6 @@ procedure Vats4;
 procedure Vats5;
 procedure Vats6;
 
-procedure Vault_MOUNTAIN_table;// Same as Mountain (replace rockfalls with dehydration)
-procedure Vault_MOUNTAIN_1;
-procedure Vault_MOUNTAIN_2;
-procedure Vault_MOUNTAIN_3;
-procedure Vault_MOUNTAIN_4;
-procedure Vault_MOUNTAIN_5;
-procedure Vault_MOUNTAIN_6;
-
 variable rnd_critter;
 
 variable dude_pos;
@@ -895,85 +887,10 @@ procedure Shady1 begin
 end
 
 procedure Shady2 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Shady3;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure Shady3 begin
@@ -1743,84 +1660,10 @@ procedure Junk1 begin
 end
 
 procedure Junk2 begin
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Junk3;
-   end
-   else begin
-      variable HasFlask := 0;
-      variable Hours := 0;
-      variable DamageHP := 0;
-      variable CurrentHP := 0;
-      variable PercentMax95 := 0;
-      variable Skill_roll;
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure Junk3 begin
@@ -1894,7 +1737,7 @@ procedure Junk5 begin
    variable LVar0 := 0;
    display_msg(message_str(SCRIPT_RNDDESRT, 225));
    Tot_Critter_A := random(1, 2);
-   Tot_Critter_B := random(2, 5);// was 2, 12
+   Tot_Critter_B := random(2, 6);// was 2, 12
    Outer_ring := (dude_perception / 2) + 6;
    Inner_ring := (dude_perception / 2) + 2;
    group_angle := random(0, 5);
@@ -1917,6 +1760,7 @@ procedure Junk5 begin
       end
       call Place_critter;
       obj_rotate(Critter, random(0, 5));
+
       item_caps_adjust(Critter, random(50, 150) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
       Item := create_object(PID_10MM_AP, 0, 0);
       add_mult_objs_to_inven(Critter, Item, random(1, 4));
@@ -2029,85 +1873,10 @@ procedure Junk6 begin
 end
 
 procedure Hub1 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Hub2;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_b;
 end
 
 procedure Hub2 begin
@@ -2181,7 +1950,7 @@ procedure Hub3 begin
       Tot_Critter_A := Tot_Critter_A - 1;
    end
 
-   Critter_type := PID_NASTY_RADSCORPION;// - Nasty Radscorpion - ID 166
+   Critter_type := PID_NASTY_RADSCORPION;
    while(Tot_Critter_B) do begin
       Critter_direction := random(0, 4);
       call Place_critter;
@@ -2202,10 +1971,10 @@ procedure Hub4 begin
    while(Tot_Critter_A) do begin
       Critter_direction := random(0, 2);
       if (random(0, 1)) then begin
-         Critter_type := PID_MALE_GUARD_METAL_BLACK;//27          Male Guard
+         Critter_type := PID_MALE_GUARD_METAL_BLACK;
       end
       else begin
-         Critter_type := PID_WOMAN_YELLOW;//37          Woman
+         Critter_type := PID_WOMAN_YELLOW;
       end
       call Place_critter;
       obj_rotate(Critter, random(3, 5));
@@ -2314,7 +2083,7 @@ procedure Hub5 begin
    Outer_ring := (dude_perception / 2) + 5;
    Inner_ring := (dude_perception / 2) + 3;
 
-   Tot_Critter_A := random(4, 5);//was 5, 8
+   Tot_Critter_A := random(4, 6);//was 5, 8
    Critter_script := SCRIPT_GENGRDA;
    while(Tot_Critter_A) do begin
       Critter_direction := random(0, 2);
@@ -2402,7 +2171,6 @@ procedure Hub6 begin
 
    end
    else begin
-
       display_msg(message_str(SCRIPT_RNDDESRT, 137));
       Tot_Critter_A := random(2, 4);
       Outer_ring := (dude_perception / 2) + 6;
@@ -2417,337 +2185,14 @@ procedure Hub6 begin
       Critter_type := PID_PEASANT_5;
       Critter_script := -1; // TODO : Write a script for this guy.
       call Place_critter;
-
    end
 end
 
 procedure Necrop1 begin
-variable Drinks := 1;
-variable Drink := 0;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Necrop2;
-   end
-   else begin
-
-      if difficulty_level != 0 then begin
-         if difficulty_level == 2 then begin
-            Drinks := (Drinks + 1);
-         end
-         if dude_endurance < 4 then begin
-            if not(is_success(do_check(dude_obj, STAT_en, 0))) then begin
-               Drinks := (Drinks + 1);
-            end
-         end
-         if (global_var(GVAR_WORLDMAP_TABLE) == 10) or (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
-            Drinks := (Drinks + 1);
-         end
-      end
-      if dude_item(PID_NUKA_COLA) or dude_item(PID_BEER) or dude_item(PID_BOOZE) or dude_item(PID_WATER_FLASK) then begin
-         Drink := dude_item(PID_WATER_FLASK);// WATER FLASK
-         if Drink then begin
-            variable flasks := 0;
-            while(Drinks and Drink) do begin
-               rm_obj_from_inven(dude_obj, Drink);
-               destroy_object(Drink);
-               flasks := (flasks + 1);
-               Drinks := (Drinks - 1);
-               Drink := dude_item(PID_WATER_FLASK);
-            end
-            // TODO: Fixt addition. There is no "empty flask" in Fo1.
-            //Item := create_object ( PID_???, 0, 0 );//empty flask
-            //add_mult_objs_to_inven(dude_obj, Item, flasks);
-         end
-         if not(Drinks) then begin// FLASKS WAS ENOUGH
-            if flasks == 1 then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 125) + flasks + message_str(SCRIPT_RNDDESRT, 119));
-            end
-            else begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 125) + flasks + message_str(SCRIPT_RNDDESRT, 124));
-            end
-         end
-         else begin// STILL THIRSTY AFTER FLASKS
-            variable Msg := 0;
-            Msg := message_str(SCRIPT_RNDDESRT, 112);
-            if Drinks then begin
-               Drink := dude_item(PID_NUKA_COLA);// NUKA-COLA
-               if Drink then begin
-                  variable colas := 0;
-                  while(Drinks and Drink) do begin
-                     rm_obj_from_inven(dude_obj, Drink);
-                     destroy_object(Drink);
-                     colas := (colas + 1);
-                     Drinks := (Drinks - 1);
-                     Drink := dude_item(PID_NUKA_COLA);
-                  end
-                  dude_caps_adjust(colas);
-               end
-            end
-            if Drinks then begin
-               Drink := dude_item(PID_BEER);// BEER
-               if Drink then begin
-                  variable beers := 0;
-                  while(Drinks and Drink) do begin
-                     rm_obj_from_inven(dude_obj, Drink);
-                     destroy_object(Drink);
-                     beers := (beers + 1);
-                     Drinks := (Drinks - 1);
-                     Drink := dude_item(PID_BEER);
-                  end
-                  dude_caps_adjust(beers);
-               end
-            end
-            if Drinks then begin
-               Drink := dude_item(PID_BOOZE);// BOOZE
-               if Drink then begin
-                  variable booze := 0;
-                  while(Drinks and Drink) do begin
-                     rm_obj_from_inven(dude_obj, Drink);
-                     destroy_object(Drink);
-                     booze := (booze + 1);
-                     Drinks := (Drinks - 1);
-                     Drink := dude_item(PID_BOOZE);
-                  end
-                  dude_caps_adjust(booze);
-               end
-            end
-            if flasks then begin
-               if flasks == 1 then begin
-                  Msg := Msg + flasks + message_str(SCRIPT_RNDDESRT, 116);
-               end
-               else begin
-                  Msg := Msg + flasks + message_str(SCRIPT_RNDDESRT, 117);
-               end
-               if not(colas) and not(beers) and not(booze) then begin
-                  Msg := Msg + ".";
-               end
-               else begin
-                  if (not(colas) and not(beers)) or (not(colas) and not(booze)) or (not(beers) and not(booze)) then begin
-                     Msg := Msg + " and ";
-                  end
-                  else begin
-                     Msg := Msg + ", ";
-                  end
-               end
-            end
-            if colas then begin
-               if colas == 1 then begin
-                  Msg := Msg + colas + message_str(SCRIPT_RNDDESRT, 141);
-               end
-               else begin
-                  Msg := Msg + colas + message_str(SCRIPT_RNDDESRT, 140);
-               end
-               if not(beers) and not(booze) then begin
-                  Msg := Msg + ".";
-               end
-               else begin
-                  if not(beers) or not(booze) then begin
-                     Msg := Msg + " and ";
-                  end
-                  else begin
-                     Msg := Msg + ", ";
-                  end
-               end
-            end
-            if beers then begin
-               if beers == 1 then begin
-                  Msg := Msg + beers + message_str(SCRIPT_RNDDESRT, 142);
-               end
-               else begin
-                  Msg := Msg + beers + message_str(SCRIPT_RNDDESRT, 149);
-               end
-               if not(booze) then begin
-                  Msg := Msg + ".";
-               end
-               else begin
-                  Msg := Msg + " and ";
-               end
-            end
-            if booze then begin
-               if booze == 1 then begin
-                  Msg := Msg + booze + message_str(SCRIPT_RNDDESRT, 150);
-               end
-               else begin
-                  Msg := Msg + booze + message_str(SCRIPT_RNDDESRT, 151);
-               end
-               Msg := Msg + ".";
-            end
-         end// END DRINK CONSUMPTION
-         if not(Drinks) then begin// GOT ENOUGH TO DRINK
-            display_msg(Msg);
-            if booze or (beers > 1) then begin// DRANK ALCOHOL, STATS REDUCED
-               if booze > 1 then begin
-                  if dude_strength > 2 then begin
-                     set_global_var(GVAR_DEHYDRATION_STRNG_DROP, 2);
-                     set_critter_stat(dude_obj, STAT_st, -2);
-                  end
-                  else begin
-                     if dude_endurance > 2 then begin
-                        set_global_var(GVAR_DEHYDRATION_ENDUR_DROP, 2);
-                        set_critter_stat(dude_obj, STAT_en, -2);
-                     end
-                     else if dude_strength > 1 then begin
-                        set_global_var(GVAR_DEHYDRATION_STRNG_DROP, 1);
-                        set_critter_stat(dude_obj, STAT_st, -1);
-                     end
-                     if dude_endurance > 1 then begin
-                        set_global_var(GVAR_DEHYDRATION_ENDUR_DROP, 1);
-                        set_critter_stat(dude_obj, STAT_en, -1);
-                     end
-                  end
-               end
-               else begin
-                  if dude_strength > 1 then begin
-                     set_global_var(GVAR_DEHYDRATION_STRNG_DROP, 1);
-                     set_critter_stat(dude_obj, STAT_st, -1);
-                  end
-                  else if dude_endurance > 1 then begin
-                     set_global_var(GVAR_DEHYDRATION_ENDUR_DROP, 1);
-                     set_critter_stat(dude_obj, STAT_en, -1);
-                  end
-               end
-               if global_var(GVAR_DEHYDRATION_STRNG_DROP) and global_var(GVAR_DEHYDRATION_ENDUR_DROP) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 152) + message_str(SCRIPT_RNDDESRT, 155) + message_str(SCRIPT_RNDDESRT, 158));
-               end
-               else begin
-                  if global_var(GVAR_DEHYDRATION_STRNG_DROP) then begin
-                     if global_var(GVAR_DEHYDRATION_STRNG_DROP) > 1 then begin
-                        display_msg(message_str(SCRIPT_RNDDESRT, 152) + message_str(SCRIPT_RNDDESRT, 153) + message_str(SCRIPT_RNDDESRT, 157));
-                     end
-                     else begin
-                        display_msg(message_str(SCRIPT_RNDDESRT, 152) + message_str(SCRIPT_RNDDESRT, 153) + message_str(SCRIPT_RNDDESRT, 156));
-                     end
-                  end
-                  else begin
-                     if global_var(GVAR_DEHYDRATION_ENDUR_DROP) then begin
-                        if global_var(GVAR_DEHYDRATION_ENDUR_DROP) > 1 then begin
-                           display_msg(message_str(SCRIPT_RNDDESRT, 152) + message_str(SCRIPT_RNDDESRT, 154) + message_str(SCRIPT_RNDDESRT, 157));
-                        end
-                        else begin
-                           display_msg(message_str(SCRIPT_RNDDESRT, 152) + message_str(SCRIPT_RNDDESRT, 154) + message_str(SCRIPT_RNDDESRT, 156));
-                        end
-                     end
-                  end
-               end
-            end// END STAT REDUCTION FROM ALCOHOL
-         end// END "GOT ENOUGH TO DRINK"
-         else begin// STILL THIRSTY
-            variable Hours := 0;
-            variable CurrentHP := 0;
-            variable DamageHP := 0;
-            variable Skill_roll := 0;
-            Msg := 0;
-            if colas or beers or booze then begin
-               Msg := message_str(SCRIPT_RNDDESRT, 161);
-            end
-            else begin
-               Msg := message_str(SCRIPT_RNDDESRT, 114);
-            end
-            Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (dude_perception * 5)));
-            if is_success(Skill_roll) then begin// FOUND WATER
-               Msg := Msg + message_str(SCRIPT_RNDDESRT, 163);
-               if is_critical(Skill_roll) then begin// CRITICAL SUCCESS
-                  variable hp := 0;
-                  hp := dude_max_hp;
-                  Msg := Msg + message_str(SCRIPT_RNDDESRT, 164);
-                  Hours := 1;
-                  if 0 > 1 then begin // dude_item ( PID FOR EMPTY FLASK ) then begin
-                     variable empflask := 0;
-                     empflask := 0; //dude_item ( PID FOR EMPTY FLASK );
-                     Msg := Msg + message_str(SCRIPT_RNDDESRT, 138);
-                     if empflask > 1 then begin
-                        Msg := Msg + message_str(SCRIPT_RNDDESRT, 159);
-                     end
-                     else begin
-                        Msg := Msg + message_str(SCRIPT_RNDDESRT, 118);
-                     end
-                     Msg := Msg + message_str(SCRIPT_RNDDESRT, 160);
-                     while(empflask) do begin
-                        rm_obj_from_inven(dude_obj, empflask);
-                        destroy_object(empflask);
-                        Item := create_object(PID_WATER_FLASK, 0, 0);
-                        add_mult_objs_to_inven(dude_obj, Item, 1);
-                        empflask := 0; // dude_item ( PID FOR EMPTY FLASK );
-                     end
-                  end
-                  display_msg(Msg);
-                  critter_heal(dude_obj, hp);
-                  game_time_advance((10 * 60 * 60 * Hours));
-                  give_xp_msg(50, message_str(SCRIPT_RNDDESRT, 166));
-               end// END CRIT
-               else begin// NORMAL SUCCESS
-                  Hours := random(1, 6);
-                  if (Hours == 1) then begin
-                     display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-                  end
-                  else begin
-                     display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-                  end
-                  Hours := (Hours + 1);
-               end
-            end
-         end
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (dude_perception * 5)));
-         if is_success(Skill_roll) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            if is_critical(Skill_roll) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure Necrop2 begin
@@ -2944,10 +2389,10 @@ procedure Necrop6 begin
    Inner_ring := (dude_perception / 3) + 2;
 
    if (random(0, 1)) then begin
-      Critter_type := PID_MAN_JEANS;   //"Man"
+      Critter_type := PID_MAN_JEANS;
    end
    else begin
-      Critter_type := PID_WOMAN_YELLOW;   //"Woman"
+      Critter_type := PID_WOMAN_YELLOW;
    end
    Critter_script := -1;
    Critter_direction := random(0, 5);
@@ -3155,85 +2600,10 @@ procedure Steel2 begin
 end
 
 procedure Steel3 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Steel4;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure Steel4 begin
@@ -3765,85 +3135,10 @@ procedure Vats4 begin
 end
 
 procedure Vats5 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Vats4;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure Vats6 begin
@@ -4222,86 +3517,10 @@ procedure Death2 begin
 end
 
 procedure Death3 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call Death2;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
-
+   else
+      call dehydration_b;
 end
 
 procedure Death4 begin
@@ -5334,10 +4553,10 @@ procedure North5 begin
       Critter_script := SCRIPT_WANRATS;
       while(Tot_Critter_A) do begin
          if (random(0, 3) == 3) then begin
-            Critter_type := PID_GREATER_MOLE_RAT;// GREATER MOLE RAT
+            Critter_type := PID_GREATER_MOLE_RAT;
          end
          else begin
-            Critter_type := PID_LESSER_MOLE_RAT;// LESSER MOLE RAT
+            Critter_type := PID_LESSER_MOLE_RAT;
          end
          Critter_direction := random(0, 2);
          call Place_critter;
@@ -5351,86 +4570,10 @@ procedure North5 begin
 end
 
 procedure North6 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call North5;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         //display_msg(message_str(SCRIPT_RNDDESRT, 125 + " 1 " + ));
-         display_msg(mstr(110) + " 1 " + mstr(119)); // TODO : IMPROVE!!
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (100 + random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure South1 begin
@@ -5473,85 +4616,10 @@ procedure South2 begin
 end
 
 procedure South3 begin
-variable HasFlask := 0;
-variable Hours := 0;
-variable DamageHP := 0;
-variable CurrentHP := 0;
-variable PercentMax95 := 0;
-variable Skill_roll;
-
-   if fo1in2_fluff_enc_disabled then begin
+   if fo1in2_fluff_enc_disabled then
       call South2;
-   end
-   else begin
-
-      HasFlask := dude_item(PID_WATER_FLASK);
-      if (HasFlask > 0) then begin
-         rm_obj_from_inven(dude_obj, HasFlask);
-         destroy_object(HasFlask);
-         display_msg(message_str(SCRIPT_RNDDESRT, 125));
-      end
-      else begin
-         Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, (0 + (20 * dude_perk(PERK_survivalist))));
-         if (is_success(Skill_roll)) then begin
-            if (is_critical(Skill_roll)) then begin
-               display_msg(message_str(SCRIPT_RNDDESRT, 147));//{147}{}{You manage to avoid dehydration by searching for water. The search takes 1 hour.}
-               Hours := 1;
-            end
-            else begin
-               Hours := random(1, 6);
-               if (Hours == 1) then begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 109));//{109}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional hour.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 110) + Hours + message_str(SCRIPT_RNDDESRT, 111));//{110}{}{You manage to avoid a serious case of dehydration by searching for water. The search takes an additional X hours}
-               end
-               Hours := (Hours + 1);
-            end
-         end
-         else begin
-            PercentMax95 := random(1, 100);
-            if (is_critical(Skill_roll)) or (PercentMax95 > 95) then begin
-               Hours := random(6, 12);
-               DamageHP := (random(5, 8) + random(5, 8) + random(5, 8));// is now 15 to 24, was previously 2 to 4
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 114) + Hours + message_str(SCRIPT_RNDDESRT, 115) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{114}{}{Your water supply runs out, and your search of }{115}{}{ hours fails to locate any water. Severe dehydration sets in, causing you }{116}{}{ points of health damage.}
-               end
-            end
-            else begin
-               Hours := random(4, 8);
-               DamageHP := (random(2, 4) + random(2, 4) + random(2, 4));// is now 6 to 12, was previously 1 to 2
-               CurrentHP := dude_cur_hp;
-               if (DamageHP >= CurrentHP) then begin
-                  DamageHP := (CurrentHP - 1);
-               end
-               if (DamageHP > 0) then begin
-                  critter_heal(dude_obj, -DamageHP);
-               end
-               if (DamageHP <= 1) then begin
-                  DamageHP := 1;
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 148));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained 1 point of health damage.}
-               end
-               else begin
-                  display_msg(message_str(SCRIPT_RNDDESRT, 122) + Hours + message_str(SCRIPT_RNDDESRT, 123) + DamageHP + message_str(SCRIPT_RNDDESRT, 113));//{122}{}{You search for water in the high desert landscape for }{123}{}{ hours, but you do not find enough to fully satisfy your thirst. You have sustained }{124}{}{ points of health damage.}
-               end
-            end
-         end
-         game_time_advance((10 * 60 * 60 * Hours));
-      end
-
-   end
+   else
+      call dehydration_a;
 end
 
 procedure South4 begin
@@ -5630,10 +4698,10 @@ procedure South5 begin
    group_angle := random(0, 5);
    while(Tot_Critter_A) do begin
       if (random(0, 4) == 4) then begin
-         Critter_type := PID_GREATER_MOLE_RAT;// GREATER MOLE RAT
+         Critter_type := PID_GREATER_MOLE_RAT;
       end
       else begin
-         Critter_type := PID_LESSER_MOLE_RAT;// LESSER MOLE RAT
+         Critter_type := PID_LESSER_MOLE_RAT;
       end
       Critter_direction := group_angle + (random(0, 2 * 2) - 2);
       while(Critter_direction < 0) do begin
@@ -5689,195 +4757,5 @@ procedure South6 begin
       end
    end
    set_global_var(GVAR_MYST_STRANGER_ITEM, 2);
-   call Add_Mysterious_Stranger;
-end
-
-procedure Vault_MOUNTAIN_table begin
-   ranger_perk_reroll_enc(1, 3, 5, 6, 7);
-
-   if (global_var(GVAR_RANDOM_ENC_SOMETHING) > 0) then begin
-      debug_msg(" ");  debug_msg("Warning : GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(GVAR_RANDOM_ENC_SOMETHING) + " ");  display_msg("Warning : GLOBALVAR 295 contains a value; Encounter_Num is now GVAR295 which is: " + global_var(GVAR_RANDOM_ENC_SOMETHING) + " ");
-      Encounter_Num := global_var(GVAR_RANDOM_ENC_SOMETHING);
-      set_global_var(GVAR_RANDOM_ENC_SOMETHING, 0);
-   end
-   if (Encounter_Num) then begin
-      debug("Mountain Vault_MOUNTAIN_ loading Encounter_Num == " + Encounter_Num + " ");
-      call choose_start;
-      if (Encounter_Num == 1) then begin
-         call Vault_MOUNTAIN_1;
-      end
-      else if (Encounter_Num == 2) then begin
-         call Vault_MOUNTAIN_2;
-      end
-      else if (Encounter_Num == 3) then begin
-         call Vault_MOUNTAIN_3;
-      end
-      else if (Encounter_Num == 4) then begin
-         call Vault_MOUNTAIN_4;
-      end
-      else if (Encounter_Num == 5) then begin
-         call Vault_MOUNTAIN_5;
-      end
-      else if (Encounter_Num == 6) then begin
-         call Vault_MOUNTAIN_6;
-      end
-      else begin
-         call hunters;
-      end
-   end
-end
-
-procedure Vault_MOUNTAIN_1 begin
-   display_msg(message_str(SCRIPT_RNDMTN, 128));
-   Outer_ring := (dude_perception / 4) + 5;
-   Inner_ring := (dude_perception / 4) + 4;
-   Critter_direction := random(0, 4);
-   Critter_type := PID_RADSCORPION;
-   Critter_script := SCRIPT_RADSCOR2;
-   call Place_critter;
-   obj_rotate(Critter, random(0, 5));
-   call Add_Mysterious_Stranger;
-end
-
-procedure Vault_MOUNTAIN_2 begin
-   display_msg(message_str(SCRIPT_RNDMTN, 135));
-   Critter_type := PID_DEAD_TRAVELER;
-   Critter_script := -1;
-   Outer_ring := 6;
-   Inner_ring := 4;
-   Critter_direction := 1;
-   call Place_critter;
-   obj_rotate(Critter, random(0, 5));
-   kill_critter(Critter, ANIM_fall_back_sf);
-   if (random(0, 1)) then begin
-      Item := create_object(PID_10MM_JHP, 0, 0);
-      critter_attempt_placement(Item, tile_num(Critter), 0);
-   end
-   if (random(0, 1)) then begin
-      Item := create_object(PID_STIMPAK, 0, 0);
-      critter_attempt_placement(Item, tile_num(Critter), 0);
-   end
-end
-
-procedure Vault_MOUNTAIN_3 begin
-   display_msg(message_str(SCRIPT_RNDMTN, 129));
-   Outer_ring := (dude_perception / 3) + 4;
-   Inner_ring := (dude_perception / 3) + 2;
-   Tot_Critter_A := random(2, 3);
-   Critter_script := SCRIPT_WANRATS;
-   while(Tot_Critter_A) do begin
-      if (random(0, 3) == 3) then begin
-         Critter_type := PID_GREATER_MOLE_RAT;
-      end
-      else begin
-         Critter_type := PID_LESSER_MOLE_RAT;
-      end
-      Critter_direction := random(0, 4);
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      Tot_Critter_A := Tot_Critter_A - 1;
-   end
-   call Add_Mysterious_Stranger;
-end
-
-procedure Vault_MOUNTAIN_4 begin
-   display_msg(message_str(SCRIPT_RNDMTN, 130));
-   Outer_ring := (dude_perception / 2) + 3;
-   Inner_ring := (dude_perception / 2) + 1;
-   Tot_Critter_A := random(4, 8);
-   Critter_type := PID_RAT_CAVE;
-   Critter_script := SCRIPT_WANRATS;
-   while(Tot_Critter_A) do begin
-      Critter_direction := random(0, 5);
-      call Place_critter;
-      if (random(0, 1)) then begin
-         obj_rotate(Critter, random(0, 5));
-      end
-      else begin
-         obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-      end
-      Tot_Critter_A := Tot_Critter_A - 1;
-   end
-   call Add_Mysterious_Stranger;
-end
-
-procedure Vault_MOUNTAIN_5 begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   variable LVar2 := 0;
-
-   LVar0 := do_check(dude_obj, STAT_ag, -1);
-   if (not(is_success(LVar0))) then begin
-      LVar2 := random(1, 100);
-      if ((LVar2 >= 95) or is_critical(LVar0)) then begin
-         display_msg(message_str(SCRIPT_RNDMTN, 132));
-         LVar1 := random(5, 15);
-         LVar2 := dude_cur_hp;
-         if (LVar1 >= LVar2) then begin
-            LVar1 := (LVar2 - 1);
-         end
-         reg_anim_clear(dude_obj);
-         reg_anim_begin();
-         reg_anim_animate(dude_obj, 48, -1);
-         reg_anim_animate(dude_obj, 37, -1);
-         reg_anim_end();
-         critter_heal(dude_obj, -LVar1);
-         if (random(0, 1) == 0) then begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);//    DAM_CRIP_LEG_LEFT      4
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
-         end
-         else begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);//    DAM_CRIP_LEG_RIGHT     8
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
-         end
-      end
-      else begin
-         display_msg(message_str(SCRIPT_RNDMTN, 133));
-         LVar1 := 5;
-         LVar2 := dude_cur_hp;
-         if (LVar1 >= LVar2) then begin
-            LVar1 := (LVar2 - 1);
-         end
-         reg_anim_clear(dude_obj);
-         reg_anim_begin();
-         reg_anim_animate(dude_obj, 48, -1);
-         reg_anim_animate(dude_obj, 37, -1);
-         reg_anim_end();
-         critter_heal(dude_obj, -LVar1);
-         display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
-      end
-   end
-   else begin
-      display_msg(message_str(SCRIPT_RNDMTN, 131));
-      display_msg(message_str(SCRIPT_RNDMTN, 101));
-   end
-end
-
-procedure Vault_MOUNTAIN_6 begin
-   display_msg(message_str(SCRIPT_RNDMTN, 134));
-   Outer_ring := 6;
-   Inner_ring := 4;
-   Tot_Critter_A := random(4, 6);
-
-   Critter_type := PID_RAT_CAVE;
-   Critter_script := SCRIPT_WANRAT2;
-   while(Tot_Critter_A) do begin
-      Critter_direction := 1;
-      call Place_critter;
-      obj_rotate(Critter, 4);
-      Tot_Critter_A := Tot_Critter_A - 1;
-   end
-
-   victim := Critter;
-   if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-      Critter_type := PID_RADSCORPION;
-      Critter_script := SCRIPT_RADSCORP;
-      Outer_ring := 10;
-      Inner_ring := 9;
-      Critter_direction := 1;
-      call Place_critter;
-      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-   end
-
    call Add_Mysterious_Stranger;
 end
