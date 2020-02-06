@@ -37,6 +37,10 @@
 //      r_message_box(text, [flags, color1, color23, callback)
 #define r_message_box(...)                                  sfall_func("r_message_box", __VA_ARGS__)
 
+// Rotators unsafe sfall_funcX macros
+// arguments in [square, brackets] are optional
+// AllowUnsafeScripting required
+
 #define r_call_offset_push(val)                             sfall_func("r_call_offset_push", val)
 #define r_call_offset(addr)                                 sfall_func("r_call_offset", addr)
 #define r_call_offset_cdecl(addr)                           sfall_func("r_call_offset_cdecl", addr)
