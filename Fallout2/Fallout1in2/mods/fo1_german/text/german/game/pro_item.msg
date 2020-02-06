@@ -716,7 +716,7 @@
 {36500}{}{Pflanzendorn}
 {36501}{}{Organischer Samendorn, den fleischfressende Pflanzen auf potentielle Nahrung oder Samenträger abfeuern.}
 {36600}{}{G.E.E.K.}
-{36601}{}{Das Garten Eden Erstellungskit. Standardausrüstung aller Bunker-Tek-Bunker. Mit einem GEEK kann die Zivilisation nach Zündung einer Atombombe wiederaufgebaut werden. Einfach Wasser hinzufügen und umrühren.}
+{36601}{}{Das Garten Eden Erstellungskit. Standardausrüstung aller Bunker-Tek Bunker. Mit einem GEEK kann die Zivilisation nach Zündung einer Atombombe wiederaufgebaut werden. Einfach Wasser hinzufügen und umrühren.}
 {36700}{}{Munitionskiste}
 {36800}{}{Munitionskiste}
 {36900}{}{Munitionskiste}
