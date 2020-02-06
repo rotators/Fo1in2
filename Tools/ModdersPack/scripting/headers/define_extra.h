@@ -89,16 +89,16 @@
 
 /* Critter flags */
 #define CFLG_BARTER             2  // 0x00000002 - Barter (can trade with)
-#define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot steal from)
+#define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot be stolen from)
 #define CFLG_NODROP            64  // 0x00000040 - Drop (doesn't drop items)
 #define CFLG_NOLIMBS          128  // 0x00000080 - Limbs (cannot lose limbs)
 #define CFLG_NOAGES           256  // 0x00000100 - Ages (dead body does not disappear)
-#define CFLG_NOHEAL           512  // 0x00000200 - Heal (damage is not cured with time)
+#define CFLG_NOHEAL           512  // 0x00000200 - Heal (damage is not healed with time)
 #define CFLG_INVULN          1024  // 0x00000400 - Invulnerable (cannot be hurt)
 #define CFLG_FLATTN          2048  // 0x00000800 - Flatten (leaves no dead body)
-#define CFLG_SPECIAL         4096  // 0x00001000 - Special (there is a special type of death)
-#define CFLG_RANGED          8192  // 0x00002000 - Range (melee attack is possible at a distance)
-#define CFLG_NOKNOCKDOWN    16384  // 0x00004000 - Knock (cannot be knocked down)
+#define CFLG_SPECIAL         4096  // 0x00001000 - Special (has a special type of death)
+#define CFLG_RANGED          8192  // 0x00002000 - Range (has extra hand-to-hand range)
+#define CFLG_NOKNOCKDOWN    16384  // 0x00004000 - Knock (cannot be knocked back)
 
 /* Window flags */
 #define WIN_FLAG_MOVEONTOP          (0x4)
