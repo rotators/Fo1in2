@@ -207,7 +207,6 @@
                end                                               \
                else                                              \
                   showmouse;                                     \
-               end                                               \
                noop
 
 // This will make screenshots saved in "screen" directory
@@ -224,5 +223,12 @@
 #define VOODOO_subdirectory_screenshots \
                r_write_string(r_hrp_offset(0x100397bc), "screen/%.5d.bmp"); \
                r_write_string(r_hrp_offset(0x100397d0), "screen/%.5d.bmp")
+
+
+// This will make bad things
+
+#define VOODOO_ERROR_READ   r_write_byte(read_byte(-1),0)
+#define VOODOO_ERROR_WRITE  r_write_byte(-1,0)
+#define VOODOO_ERROR_RING0  r_call_offset(0x410003)
 
 #endif // VOODOO_H //
