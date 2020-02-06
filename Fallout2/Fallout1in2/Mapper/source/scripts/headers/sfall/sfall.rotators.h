@@ -39,6 +39,9 @@
 
 #define r_call_offset_push(val)                             sfall_func("r_call_offset_push", val)
 #define r_call_offset(addr)                                 sfall_func("r_call_offset", addr)
+#define r_call_offset_cdecl(addr)                           sfall_func("r_call_offset_cdecl", addr)
+#define r_hrp                                               sfall_func("r_hrp")
+#define r_hrp_offset(addr)                                  sfall_func("r_hrp_offset", addr)
 #define r_write_byte(addr,val)                              sfall_func("r_write", 0, addr, val)
 #define r_write_short(addr,val)                             sfall_func("r_write", 1, addr, val)
 #define r_write_int(addr,val)                               sfall_func("r_write", 2, addr, val)
