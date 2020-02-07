@@ -224,6 +224,9 @@
                r_write_string(r_hrp_offset(0x100397bc), "screen/%.5d.bmp"); \
                r_write_string(r_hrp_offset(0x100397d0), "screen/%.5d.bmp")
 
+// Used to refresh the game window, including HRP black edges
+#define VOODOO_display_win_redraw \
+               call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
 
 // This will make bad things
 
