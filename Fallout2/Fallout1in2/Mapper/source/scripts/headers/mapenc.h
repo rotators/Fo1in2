@@ -12,8 +12,8 @@
 ************************************************/
 
 // All Map Vars need to start w/ MVAR_
-#define MVAR_Hostile_Total                (0)   // Number of monsters created
-#define MVAR_CARVN_LEAD             (1)
+#define MVAR_Hostile_Total             (0)   // Number of monsters created
+#define MVAR_CARVN_LEAD                (1)
 
 //==================================================================
 #define spawn_dead_critter(x,y,z)      \
@@ -281,30 +281,30 @@ end
                               dude_item_count(PID_GAMMA_GULP_BEER)) > 0)
 
 #define drink_water_item \
-   if (dude_item_count(PID_NUKA_COLA)) then begin                 \
-      Item := dude_item(PID_NUKA_COLA);                           \
-      display_msg(mstr_item_supply);                              \
-   end                                                            \
-   else if (dude_item_count(PID_WATER_FLASK)) then begin          \
-      Item := dude_item(PID_WATER_FLASK);                         \
-      display_msg(message_str(SCRIPT_RNDDESRT, 125));             \
-   end                                                            \
-   else if (dude_item_count(PID_BEER)) then begin                 \
-      Item := dude_item(PID_BEER);                                \
-      display_msg(mstr_item_supply);                              \
-   end                                                            \
-   else if (dude_item_count(PID_BOOZE)) then begin                \
-      Item := dude_item(PID_BOOZE);                               \
-      display_msg(mstr_item_supply);                              \
-   end                                                            \
-   else if (dude_item_count(PID_ROENTGEN_RUM)) then begin         \
-      Item := dude_item(PID_ROENTGEN_RUM);                        \
-      display_msg(mstr_item_supply);                              \
-   end                                                            \
-   else if (dude_item_count(PID_GAMMA_GULP_BEER)) then begin      \
-      Item := dude_item(PID_GAMMA_GULP_BEER);                     \
-      display_msg(mstr_item_supply);                              \
-   end                                                            \
+   if (dude_item_count(PID_NUKA_COLA)) then begin              \
+      Item := dude_item(PID_NUKA_COLA);                        \
+      display_msg(mstr_item_supply);                           \
+   end                                                         \
+   else if (dude_item_count(PID_WATER_FLASK)) then begin       \
+      Item := dude_item(PID_WATER_FLASK);                      \
+      display_msg(message_str(SCRIPT_RNDDESRT, 125));          \
+   end                                                         \
+   else if (dude_item_count(PID_BEER)) then begin              \
+      Item := dude_item(PID_BEER);                             \
+      display_msg(mstr_item_supply);                           \
+   end                                                         \
+   else if (dude_item_count(PID_BOOZE)) then begin             \
+      Item := dude_item(PID_BOOZE);                            \
+      display_msg(mstr_item_supply);                           \
+   end                                                         \
+   else if (dude_item_count(PID_ROENTGEN_RUM)) then begin      \
+      Item := dude_item(PID_ROENTGEN_RUM);                     \
+      display_msg(mstr_item_supply);                           \
+   end                                                         \
+   else if (dude_item_count(PID_GAMMA_GULP_BEER)) then begin   \
+      Item := dude_item(PID_GAMMA_GULP_BEER);                  \
+      display_msg(mstr_item_supply);                           \
+   end                                                         \
    set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
 
 // Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
@@ -325,7 +325,7 @@ procedure dehydration_a begin
       end
       else begin
          if (is_critical(Skill_roll)) then begin
-            hpDamage := random(15, 24); // Fo1: 2 to 4
+            hpDamage := random(15, 24 + TimeHours); // Fo1: 2 to 4
             if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
             if (TimeHours == 1) then
                display_msg(message_str(SCRIPT_RNDDESRT, 112) + hpDamage + message_str(SCRIPT_RNDDESRT, 113));
@@ -334,7 +334,7 @@ procedure dehydration_a begin
             critter_injure(dude_obj, DAM_KNOCKED_DOWN);
          end
          else begin
-            hpDamage := random(6, 12); // Fo1: 1 to 2
+            hpDamage := random(6, 12 + TimeHours); // Fo1: 1 to 2
             if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
             if (TimeHours == 1) then begin
                if (hpDamage == 1) then
@@ -351,14 +351,14 @@ procedure dehydration_a begin
                critter_injure(dude_obj, DAM_KNOCKED_DOWN);
             end
          end
+         critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
-      critter_dmg(dude_obj, hpDamage, DMG_normal_dam);
       TimeHours := TimeHours * ONE_GAME_HOUR;
       game_time_advance(game_ticks(TimeHours));
    end
 end
 
-// Hub, Glow (Death table)
+// Hub, Death(claw) table
 procedure dehydration_b begin
    TimeHours := random(1, 6) + 2;
    if dude_has_water_items then begin
@@ -371,10 +371,10 @@ procedure dehydration_b begin
       end
       else begin
          if (is_critical(Skill_roll)) then begin
-            hpDamage := random(15, 24); // Fo1: 2 to 4
+            hpDamage := random(15, 24 + TimeHours); // Fo1: 2 to 4
          end
          else begin
-            hpDamage := random(6, 12); // Fo1: 2 to 3
+            hpDamage := random(6, 12 + TimeHours); // Fo1: 2 to 3
          end
          if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
          if (hpDamage == 1) then
@@ -382,12 +382,11 @@ procedure dehydration_b begin
          else
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
          critter_injure(dude_obj, DAM_KNOCKED_DOWN);
+         critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
-      critter_dmg(dude_obj, hpDamage, DMG_normal_dam);
       TimeHours := TimeHours * ONE_GAME_HOUR;
       game_time_advance(game_ticks(TimeHours));
    end
 end
-
 
 #endif // MAPENC_H
