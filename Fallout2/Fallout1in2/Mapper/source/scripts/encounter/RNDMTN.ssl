@@ -11,6 +11,7 @@
 #include "command.h"
 #include "updatmap.h"
 #include "mapenc.h"
+#include "sfall/sfall.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -112,17 +113,6 @@ variable victim;
 
 export variable signal_mutants;
 
-variable knock_down_sound;
-
-#define dude_knockdown        knock_down_sound := sfx_build_char_name(dude_obj, ANIM_fall_front, snd_knock_down);    \
-                              reg_anim_clear(dude_obj);                                                              \
-                              reg_anim_begin();                                                                      \
-                                 reg_anim_play_sfx(dude_obj, knock_down_sound, 1);                                   \
-                                 reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
-                                 reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                                 \
-                              reg_anim_end();                                                                        \
-                              critter_injure(dude_obj, DAM_KNOCKED_OUT)
-
 procedure start begin
 end
 
@@ -162,43 +152,53 @@ procedure roll_encounter begin
 end
 
 procedure map_enter_p_proc begin
-   Lighting;
-   dude_rot := random(0, 5);
-   set_global_var(GVAR_MERCS_RANDOM_ENC_unsure, 0);
-   if (map_first_run) and not(is_loading_game) then begin
-      if debug_mode then begin
-         debug_msg(" ");  debug_msg(" ");  debug_msg(" ");    display_msg(" --- RANDOM ENCOUNTER, MOUNTAIN --- ");
-         //debug_msg(" ");  display_msg("GLOBALVAR (32) is " + global_var( GVAR_LOAD_MAP_INDEX ) + " ");
+   set_cur_exit;
+
+   if map_has_cavern then begin
+      debug("MAP HAS CAVERN!");
+   end
+
+   // Cavern map
+   if (dude_elevation == 1) then begin
+      Darkness;
+   end
+   // Overworld map
+   else if (dude_elevation == 0) then begin
+      Lighting;
+      dude_rot := random(0, 5);
+      set_global_var(GVAR_MERCS_RANDOM_ENC_unsure, 0);
+      if (map_first_run) and not(is_loading_game) then begin
+         Ranger_rerolls := dude_perk(PERK_ranger);
+         set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 0);
+
+         while (Encounter_Num == 0) do begin
+            call roll_encounter;
+
+            if (global_var(GVAR_WORLDMAP_TABLE) == 2) then begin
+               call North_table;
+            end
+            else if (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin
+               call South_table;
+            end
+            else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+               call Vats_table;
+            end
+            else if (global_var(GVAR_WORLDMAP_TABLE) == 12) then begin
+               call Glow_table;
+            end
+            else begin
+               call Vault_table;
+            end
+         end
       end
-
-      Ranger_rerolls := dude_perk(PERK_ranger);
-      set_global_var(GVAR_AGGRO_FLAG_RND_ENC_unsure, 0);
-
-      while (Encounter_Num == 0) do begin
-         call roll_encounter;
-
-         if (global_var(GVAR_WORLDMAP_TABLE) == 2) then begin
-            call North_table;
-         end
-         else if (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin
-            call South_table;
-         end
-         else if (global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
-            call Vats_table;
-         end
-         else if (global_var(GVAR_WORLDMAP_TABLE) == 12) then begin
-            call Glow_table;
-         end
-         else begin
-            call Vault_table;
-         end
-      end
-
    end
 end
 
 procedure map_update_p_proc begin
-   Lighting;
+   if (dude_elevation == 1) then
+      Darkness;
+   else
+      Lighting;
 end
 
 procedure map_exit_p_proc begin

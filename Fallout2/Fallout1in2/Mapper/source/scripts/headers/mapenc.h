@@ -323,7 +323,6 @@ procedure dehydration_a begin
                display_msg(message_str(SCRIPT_RNDDESRT, 112) + hpDamage + message_str(SCRIPT_RNDDESRT, 113));
             else
                display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
-            critter_injure(dude_obj, DAM_KNOCKED_DOWN);
          end
          else begin
             hpDamage := random(6, 12 + TimeHours); // Fo1: 1 to 2
@@ -333,15 +332,16 @@ procedure dehydration_a begin
                   display_msg(message_str(SCRIPT_RNDDESRT, 117));
                else
                   display_msg(message_str(SCRIPT_RNDDESRT, 118) + hpDamage + message_str(SCRIPT_RNDDESRT, 119));
-               critter_injure(dude_obj, DAM_KNOCKED_DOWN);
             end
             else begin
                if (hpDamage == 1) then
                   display_msg(message_str(SCRIPT_RNDDESRT, 120) + TimeHours + message_str(SCRIPT_RNDDESRT, 121));
                else
                   display_msg(message_str(SCRIPT_RNDDESRT, 122) + TimeHours + message_str(SCRIPT_RNDDESRT, 123) + hpDamage + message_str(SCRIPT_RNDDESRT, 124));
-               critter_injure(dude_obj, DAM_KNOCKED_DOWN);
             end
+         end
+         if (hpDamage >= 20) then begin
+            dude_knockdown_nosfx;
          end
          critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
@@ -373,7 +373,9 @@ procedure dehydration_b begin
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 1160));
          else
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
-         critter_injure(dude_obj, DAM_KNOCKED_DOWN);
+         if (hpDamage >= 20) then begin
+            dude_knockdown_nosfx;
+         end
          critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
       TimeHours := TimeHours * ONE_GAME_HOUR;

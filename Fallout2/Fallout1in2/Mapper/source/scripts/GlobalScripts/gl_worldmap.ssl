@@ -7,10 +7,9 @@
 /* Include Files */
 #include "define.h"
 #include "command.h"
-#include "sfall/sfall.h"
 #include "sfall/sfall.rotators.h"
-#include "sfall/define_lite.h"
 #include "sfall/lib.math.h"
+#include "sfall/lib.arrays.h"
 
 #include "gl_worldmap.h"
 
@@ -180,7 +179,7 @@ procedure encounter_handler begin
 
    // If the player enters a map on the worldmap, we set it depending on the current terrain type.
    // event 0 is random encounter, 1 is player encounter
-   if (event == 1 and mapID == 0) then begin
+   if (event == 1 and mapID == MAP_DESERT0) then begin
       if (is_terrain_desert) then begin
          mapID := MAP_RNDDESER;
       end
@@ -198,6 +197,13 @@ procedure encounter_handler begin
          debug("!!! COULDN'T DETECT TERRAIN TYPE !!!");
       end
       set_sfall_return(mapID);
+   end
+   else if (event == 0 and (mapID == MAP_MOUNTN1 or mapID == MAP_MOUNTN2)) then begin
+      if not(fo1in2_cave_maps_disabled) /*and (random(1,10) == 1)*/ then begin
+         variable Maps_List := [MAP_CAVE0, MAP_CAVE1, MAP_CAVE2, MAP_CAVE3, MAP_CAVE4, MAP_CAVE5];
+         mapID := array_random_value(Maps_List);
+         set_sfall_return(mapID);
+      end
    end
 end
 

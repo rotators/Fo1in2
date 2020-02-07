@@ -165,6 +165,15 @@
 #define MAP_GUARDIAN        (74)
 #define MAP_SCRAPHEAP       (75)
 
+#define MAP_CITY2           (79)
+#define MAP_CITY3           (80)
+#define MAP_CAVE0           (81)
+#define MAP_CAVE1           (82)
+#define MAP_CAVE2           (83)
+#define MAP_CAVE3           (84)
+#define MAP_CAVE4           (85)
+#define MAP_CAVE5           (86)
+
 /*******************************************************************************
  Map Names (Strings)
 *******************************************************************************/

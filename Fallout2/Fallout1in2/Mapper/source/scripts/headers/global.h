@@ -4104,8 +4104,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4968)
 #define RESERVED_FOR_FALLOUT_FIXT               (4969)
 #define RESERVED_FOR_FALLOUT_FIXT               (4970)
-#define RESERVED_FOR_FALLOUT_FIXT               (4971)
-#define RESERVED_FOR_FALLOUT_FIXT               (4972)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4971)*/
+#define GVAR_ENABLE_CAVE_MAPS                   (4972)
 #define GVAR_OBJ_DUDE_USE_DRUG                  (4973)
 #define GVAR_ENABLE_BOS_CA                      (4974)
 #define GVAR_CATHEDRAL_ALERT                    (4975)
