@@ -155,22 +155,27 @@ end
 
 procedure LoadChests begin
    variable
-      obj,
+      container,
+      container_type,
       count,
-      Items_List := [PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_ROPE, PID_FLARE, PID_SPEAR, PID_CATTLE_PROD, PID_POWER_FIST, PID_STIMPAK, PID_LEATHER_ARMOR_MK_II];
+      Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
+                      PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
+                      PID_SPEAR, PID_CATTLE_PROD ];
 
    i := array_random_value(Chest_List); // Only one random chest for now
    //foreach (i in Chest_List) begin
-      obj := create_object(PID_CHEST, i, 1);
+      container_type := [PID_CHEST, PID_BAG, PID_BACKPACK, PID_BROWN_BAG];
+      container_type := array_random_value(container_type);
+      container := create_object(container_type, i, 1);
       count := random(1, 4);
-      if (obj) then begin
+      if (container) then begin
          while count > 0 do begin
             count--;
             Item := array_random_value(Items_List);
-            add_obj_to_inven(obj, create_object(Item, i, 1));
+            add_obj_to_inven(container, create_object(Item, i, 1));
          end
          if (random(0, 1) == 1) then
-            item_caps_adjust(obj, (10 * Random(1, dude_luck)) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+            item_caps_adjust(container, (10 * Random(1, dude_luck) + random(0, 9)) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
       end
    //end
 end
@@ -183,7 +188,7 @@ procedure map_enter_p_proc begin
          display_msg(message_str(SCRIPT_SHADYWST, 200));
          call LoadCritters;
          if (special_theif_encounter) then begin
-            debug("Load cavern chests!");
+            debug("Load cavern container!");
             call LoadChests;
          end
       end
@@ -252,7 +257,6 @@ procedure Place_critter begin
    critter_attempt_placement(Critter, Critter_tile, dude_elevation);
 end
 
-// TODO: FIX SHITTY START POSITION!!!
 procedure choose_start begin
    if (global_var(GVAR_WORLDMAP_TABLE) == 2) then begin
       if (Encounter_Num == 1) then begin

@@ -117,6 +117,7 @@ procedure Choose_Encounter begin
       encounter_sid1 := SCRIPT_WANRATS;
       total_encounter_mobs := Random(3, 5);
    end
+   
    // Raiders
    /*
    else if (val == 8) then begin
