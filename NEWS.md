@@ -1,8 +1,12 @@
 Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1in2/releases/tag/v1.0.1700))
 - **Added**: Additional warning message for the Interface Upscale-mod, in case 'Scaling x2' is enabled and the screen resolution is too low.
 - **Added**: Some generic "I don't know"-lines for Harold when asking keywords he knows nothing about.
+- **Added**: Using Nuka-Cola gives a bottle cap.
+- **Added**: Using up water / alcohol in dehydration encounters now correctly adds the item effects to the player.
 - **Fixed**: Blowing up generic metal doors would print a wrong message log entry.
 - **Fixed**: Broken colors of the death screen when using Sfall mode 4 or 5.
+- **Fixed**: Fo1 videos will now correctly play in Sfall mode 4 and 5 (Fo2 engine bug).
+- **Fixed**: Looking at dead critters with "no stealing"-flag in combat would remove action points if the player is close to them (Fo2 engine bug).
 - **Fixed**: No animation would play when attacking the Overseer and missing. 
 - **Fixed**: Punk Girl critter death / knock down animations would revert to the default woman critter.
 - **Fixed**: Rad. Desert -> Radiated Desert

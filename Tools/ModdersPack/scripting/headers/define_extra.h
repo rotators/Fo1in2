@@ -98,7 +98,8 @@
 #define CFLG_FLATTN          2048  // 0x00000800 - Flatten (leaves no dead body)
 #define CFLG_SPECIAL         4096  // 0x00001000 - Special (has a special type of death)
 #define CFLG_RANGED          8192  // 0x00002000 - Range (has extra hand-to-hand range)
-#define CFLG_NOKNOCKDOWN    16384  // 0x00004000 - Knock (cannot be knocked back)
+#define CFLG_NOKNOCKBACK    16384  // 0x00004000 - Knock (cannot be knocked back)
+#define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // for old scripts
 
 /* Window flags */
 #define WIN_FLAG_MOVEONTOP          (0x4)
