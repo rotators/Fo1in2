@@ -281,30 +281,22 @@ end
                               dude_item_count(PID_GAMMA_GULP_BEER)) > 0)
 
 #define drink_water_item \
-   if (dude_item_count(PID_NUKA_COLA)) then begin              \
-      Item := dude_item(PID_NUKA_COLA);                        \
-      display_msg(mstr_item_supply);                           \
-   end                                                         \
-   else if (dude_item_count(PID_WATER_FLASK)) then begin       \
-      Item := dude_item(PID_WATER_FLASK);                      \
-      display_msg(message_str(SCRIPT_RNDDESRT, 125));          \
-   end                                                         \
-   else if (dude_item_count(PID_BEER)) then begin              \
-      Item := dude_item(PID_BEER);                             \
-      display_msg(mstr_item_supply);                           \
-   end                                                         \
-   else if (dude_item_count(PID_BOOZE)) then begin             \
-      Item := dude_item(PID_BOOZE);                            \
-      display_msg(mstr_item_supply);                           \
-   end                                                         \
-   else if (dude_item_count(PID_ROENTGEN_RUM)) then begin      \
-      Item := dude_item(PID_ROENTGEN_RUM);                     \
-      display_msg(mstr_item_supply);                           \
-   end                                                         \
-   else if (dude_item_count(PID_GAMMA_GULP_BEER)) then begin   \
-      Item := dude_item(PID_GAMMA_GULP_BEER);                  \
-      display_msg(mstr_item_supply);                           \
-   end                                                         \
+   if (dude_item_count(PID_NUKA_COLA)) then              \
+      Item := dude_item(PID_NUKA_COLA);                  \
+   else if (dude_item_count(PID_WATER_FLASK)) then       \
+      Item := dude_item(PID_WATER_FLASK);                \
+   else if (dude_item_count(PID_BEER)) then              \
+      Item := dude_item(PID_BEER);                       \
+   else if (dude_item_count(PID_BOOZE)) then             \
+      Item := dude_item(PID_BOOZE);                      \
+   else if (dude_item_count(PID_ROENTGEN_RUM)) then      \
+      Item := dude_item(PID_ROENTGEN_RUM);               \
+   else if (dude_item_count(PID_GAMMA_GULP_BEER)) then   \
+      Item := dude_item(PID_GAMMA_GULP_BEER);            \
+   if (obj_pid(Item) == PID_WATER_FLASK) then            \
+      display_msg(message_str(SCRIPT_RNDDESRT, 125));    \
+   else                                                  \
+      display_msg(mstr_item_supply);                     \
    set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
 
 // Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
