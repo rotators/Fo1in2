@@ -147,16 +147,6 @@ variable isGoodGuy := 1;// Fallout Fixt
 #define LVAR_Caught_Stealing         (9)
 
 procedure start begin
-   if (local_var(11) != 1) then begin
-      variable LVar0;
-      set_local_var(11, 1);
-      LVar0 := self_item(PID_LEATHER_JACKET);
-      if LVar0 then begin
-         rm_obj_from_inven(self_obj, LVar0);
-         destroy_object(LVar0);
-         LVar0 := 0;
-      end
-   end
 end
 
 procedure look_at_p_proc begin
@@ -182,7 +172,7 @@ end
 procedure talk_p_proc begin
    set_tma_data(NAME, 1000, -1, -1, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END);
 
-   if (local_var(LVAR_Caught_Stealing) > 2) then begin
+   if (local_var(LVAR_Caught_Stealing) >= 3) then begin
       display_msg(gen_mstr(170));
       tmp_hostile := 1;
    end
@@ -211,8 +201,8 @@ procedure map_enter_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   pickup_attempt := 1;
-   dialogue_system_enter;
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
+   dialogue_system_enter; // Need to start dialog this way, otherwise game will crash and burn.
 end
 
 procedure do_dialogue begin
@@ -221,22 +211,18 @@ procedure do_dialogue begin
 
    get_reaction
 
-   if (pickup_attempt) then begin
-      pickup_attempt := 0;
-      LVar0 := random(1, 2);
-      if (LVar0 == 1) then
-         call aradesh45;
-      else
-         call aradesh46;
+   debug("LVAR_reaction_level: " + reaction_level);
+   debug("LVAR_reaction: " + local_var(LVAR_reaction));
+
+   start_gdialog(NAME, self_obj, 4, HEAD_ARADESH, BACKGROUND_SHADY);
+   gsay_start;
+   if (local_var(LVAR_Caught_Stealing) == 1) then begin
+      call aradesh45;
+   end
+   else if (local_var(LVAR_Caught_Stealing) == 2) then begin
+      call aradesh46;
    end
    else begin
-      //debug("LVAR_got_reaction: " + local_var(LVAR_got_reaction));
-      debug("LVAR_reaction_level: " + reaction_level);
-      debug("LVAR_reaction: " + local_var(LVAR_reaction));
-      //debug("LVAR_base_reaction: " + local_var(LVAR_base_reaction));
-
-      start_gdialog(NAME, self_obj, 4, HEAD_ARADESH, BACKGROUND_SHADY);
-      gsay_start;
       if tandi_is_kidnapped then begin
          set_local_var(LVAR_Herebefore, 1);
          if tandi_quest_inactive then
@@ -274,9 +260,10 @@ procedure do_dialogue begin
          set_local_var(LVAR_Herebefore, 1);
          call aradesh01;
       end
-      gsay_end;
-      end_dialogue;
+
    end
+   gsay_end;
+   end_dialogue;
 end
 
 procedure aradeshleave begin
@@ -829,27 +816,29 @@ procedure aradesh44 begin
 end
 
 procedure aradesh45 begin
-   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 2);
+   //set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    BigDownReact
-   float_msg(self_obj, mstr(246), FLOAT_MSG_LIGHT_RED);
-   call aradeshx;
+   BMessage(246);
+   //float_msg(self_obj, mstr(246), FLOAT_MSG_LIGHT_RED);
+   //call aradeshx;
 end
 
 procedure aradesh46 begin
-   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 2);
+   //set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    BigDownReact
-   float_msg(self_obj, mstr(247), FLOAT_MSG_LIGHT_RED);
-   call aradeshx;
+   BMessage(247);
+   //float_msg(self_obj, mstr(247), FLOAT_MSG_LIGHT_RED);
+   //call aradeshx;
 end
 
-procedure aradesh47 begin
+procedure aradesh47 begin // Unused
    set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    NMessage(248);
    call aradeshx;
 end
 
-procedure aradesh48 begin
+procedure aradesh48 begin // Unused
    set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    DownReact
    NMessage(249);

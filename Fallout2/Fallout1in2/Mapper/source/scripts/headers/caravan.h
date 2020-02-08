@@ -316,7 +316,7 @@ variable Finding_New_Tile;
 // Used to delete the critter after x time has passed
 // IMPORTANT:
 //    Can't just delete critters right away, because this can cause nullpointer crashes
-//    if the caravan is still in the map while the combat starts.
+//    if the caravan is still in the map while combat starts.
 //    Example: https://github.com/rotators/Fo1in2/issues/31
 #define check_map_enter_timer                if not(map_is_caravan_escort) then begin                                \
                                                 if not(self_visible) then destroy_object(self_obj);                  \
