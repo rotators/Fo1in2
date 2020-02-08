@@ -39,7 +39,7 @@ procedure Choose_Encounter begin
       rnd_chest := random(1, 100),
       rnd_critter;
 
-   if (rnd_chest > 50 and (stat_success(dude_obj, STAT_lu, 0))) then
+   if (rnd_chest > 40 and (stat_success(dude_obj, STAT_lu, 0))) then
       special_theif_encounter := 1;
    else
       special_theif_encounter := 0;
@@ -51,15 +51,20 @@ procedure Choose_Encounter begin
       if (rnd_critter < 75) then begin
          encounter_pid1 := PID_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
-         total_encounter_mobs := Random(3, 5);
+         if (random(0, 4) == 1) then begin
+            encounter_pid2 := PID_GOLDEN_GECKO;
+            encounter_sid2 := SCRIPT_ECGECKO;
+            active_encounter_pids := 2;
+         end
+         total_encounter_mobs := Random(1, 3);
       end else if (rnd_critter < 90) then begin
          encounter_pid1 := PID_GOLDEN_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
-         total_encounter_mobs := Random(3, 5);
+         total_encounter_mobs := Random(2, 3);
       end else begin
          encounter_pid1 := PID_FIRE_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
-         total_encounter_mobs := Random(3, 5);
+         total_encounter_mobs := Random(2, 4);
       end
    end
    
