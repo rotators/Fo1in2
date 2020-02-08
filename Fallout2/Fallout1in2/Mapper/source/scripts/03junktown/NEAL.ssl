@@ -73,6 +73,7 @@ variable kick_out;
 
 #define LVAR_Herebefore                   (4)
 #define LVAR_Sleeping                     (9)
+#define LVAR_Reward_Drinks                (11)
 
 #define EVENT_SHOOT                    (4)
 #define EVENT_TARGET_DEAD              (10)
@@ -280,7 +281,7 @@ procedure talk_p_proc begin
       else begin
          if (self_item_count(PID_URN)) then begin
             float_msg(self_obj, mstr(143), FLOAT_MSG_BLUE);
-            set_local_var(11, 1);
+            set_local_var(LVAR_Reward_Drinks, 1);
             set_global_var(GVAR_URN_STOLEN, 2);
          end
          else begin
@@ -479,9 +480,18 @@ end
 
 procedure Neal02 begin
    Reply(112);
-   NOption(113, NealCola, 1);
-   NOption(114, NealBeer, 1);
-   NOption(115, NealBooze, 1);
+   
+   if (local_var(LVAR_Reward_Drinks) == 0) then begin
+      NOption(113, NealCola, 1);
+      NOption(114, NealBeer, 1);
+      NOption(115, NealBooze, 1);
+   end
+   else begin
+      NOption(210, NealCola, 1);
+      NOption(211, NealBeer, 1);
+      NOption(212, NealBooze, 1);
+   end
+   
    Goodbyes;
    NOption(exit_line, NealEnd, 1);
 end
@@ -556,7 +566,7 @@ end
 
 procedure Neal11 begin
    GMessage(143);
-   set_local_var(11, 1);
+   set_local_var(LVAR_Reward_Drinks, 1);
    set_global_var(GVAR_URN_STOLEN, 2);
    item := dude_item(PID_URN);
    set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
@@ -568,7 +578,7 @@ procedure NealEnd begin
 end
 
 procedure NealCola begin
-   if (local_var(11) == 0) then begin
+   if (local_var(LVAR_Reward_Drinks) == 0) then begin
       if (dude_caps >= 3) then begin
          dude_caps_adjust(-3);
          item := create_object(PID_NUKA_COLA, 0, 0);
@@ -583,7 +593,7 @@ procedure NealCola begin
 end
 
 procedure NealBeer begin
-   if (local_var(11) == 0) then begin
+   if (local_var(LVAR_Reward_Drinks) == 0) then begin
       if (dude_caps >= 5) then begin
          dude_caps_adjust(-5);
          item := create_object(PID_BEER, 0, 0);
@@ -598,7 +608,7 @@ procedure NealBeer begin
 end
 
 procedure NealBooze begin
-   if (local_var(11) == 0) then begin
+   if (local_var(LVAR_Reward_Drinks) == 0) then begin
       if (dude_caps >= 20) then begin
          dude_caps_adjust(-20);
          item := create_object(PID_BOOZE, 0, 0);
