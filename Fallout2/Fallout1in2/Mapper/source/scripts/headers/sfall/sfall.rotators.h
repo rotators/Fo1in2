@@ -30,7 +30,7 @@
 #define MSGBOX_SMALL       0x02 // uses smaller graphic
 #define MSGBOX_ALIGN_LEFT  0x04 // text moved to left
 #define MSGBOX_ALIGN_TOP   0x08 // text moved to top
-#define MSGBOX_YESNO       0x10 // DONE button replaced with YES/NO -- WIP, don't use when displaying >1 message box at once
+#define MSGBOX_YESNO       0x10 // DONE button replaced with YES/NO
 #define MSGBOX_CLEAN       0x20 // no buttons
 
 #define r_get_ini_string(file, section, key, defaultValue)  sfall_func("r_get_ini_string", file, section, key, defaultValue)
