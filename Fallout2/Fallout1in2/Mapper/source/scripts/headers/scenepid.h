@@ -33,7 +33,6 @@ variable Scenery_Creation_Ptr;
 #define PID_BLOWN_ARROYO_CAVE_DOOR          (33555365)
 #define PID_ARROYO_CAVE_DOOR                (33555366)
 #define PID_TEMPLE_SKULL_POLE               (33555374)
-#define PID_RED_ARMCHAIR                    (33554665)
 
 #define PID_BUSH_GREEN_1                    (33555375)
 #define PID_BUSH_GREEN_2                    (33555376)
@@ -174,16 +173,29 @@ variable Scenery_Creation_Ptr;
 #define PID_CORN_5                          (33555399)
 #define PID_CORN_6                          (33555400)
 
-// small goo
+// Small Goo with desert sand
 #define PID_SMALL_GOO_1                     (33555178)
 #define PID_SMALL_GOO_2                     (33555179)
 #define PID_SMALL_GOO_3                     (33555180)
 
-// radioactive goo
+// Radioactive Goo
 #define PID_RAD_GOO_1                       (33555417)
 #define PID_RAD_GOO_2                       (33555418)
 #define PID_RAD_GOO_3                       (33555419)
 #define PID_RAD_GOO_4                       (33555420)
+
+// Red Armchair
+#define PID_ARMCHAIR_1                      (33554661)
+#define PID_ARMCHAIR_2                      (33554662)
+#define PID_ARMCHAIR_3                      (33554663)
+#define PID_ARMCHAIR_4                      (33554664)
+#define PID_ARMCHAIR_5                      (33554665)
+
+// Old beds on the ground
+#define PID_MATTRESS_1                      (33554638)
+#define PID_MATTRESS_2                      (33554639) 
+#define PID_BED_1                           (33554640)
+#define PID_BED_2                           (33554641)
 
 // Doors
 #define PID_JAIL_DOOR_N_S                   (33555013)
@@ -192,22 +204,30 @@ variable Scenery_Creation_Ptr;
 #define PID_SLAGGED_DOOR_BOTTOM             (33555810)
 #define PID_SLAGGED_DOOR_TOP                (33555811)
 
-// out of business sighns
+// "Out of Business" signs
 #define PID_OUT_OF_BUSINESS_NORTH           (33555587)
 #define PID_OUT_OF_BUSINESS_EAST            (33555588)
 
-// slot machines
+// Slot Machines
 #define PID_SLOT_FACING_2                   (33554898)
 #define PID_SLOT_FACING_3                   (33554897)
 
 // Sewer hole cover / door
 #define PID_SEWER_COVER                     (33554576)
 
+// Barrels:
+#define PID_BURNING_BARREL                  (33554433)
+#define PID_METAL_BARREL_1                  (33554437)
+#define PID_BARREL_TOXIC_EMPTY              (33554983)
+#define PID_BARREL_TOXIC_FULL               (33554984)
+#define PID_BARREL_ALT_1                    (33554828)
+#define PID_BARREL_ALT_2                    (33554829)
+#define PID_BARREL_STACK_2                  (33554830)
+#define PID_BARREL_STACK_3                  (33554831)
+
 // New Fallout 1:
 #define PID_BEAM_1                          (33554999)
 #define PID_BEAM_2                          (33555000)
-#define PID_BED_1                           (33554640)
-#define PID_BED_2                           (33554641)
 #define PID_BONES_1                         (33554514)
 #define PID_BONES_2                         (33554515)
 #define PID_BONES_3                         (33554516)
@@ -217,7 +237,6 @@ variable Scenery_Creation_Ptr;
 #define PID_BOXES_2                         (33554653)
 #define PID_BOXES_3                         (33554654)
 #define PID_BOXES_4                         (33554655)
-#define PID_BURNING_BARREL                  (33554433)
 #define PID_CACTUS_1                        (33554496)
 #define PID_CACTUS_2                        (33554497)
 #define PID_OLD_CHAIR                       (33554667)
@@ -237,7 +256,6 @@ variable Scenery_Creation_Ptr;
 #define PID_ELEVATOR_SHAFT_2                (33555334)
 #define PID_FIRE_PIT                        (33555044)
 #define PID_JUNK                            (33554541)
-#define PID_METAL_BARREL_1                  (33554437)
 #define PID_POT                             (33554804)
 #define PID_ROCKS_1                         (33554522)
 #define PID_ROCKS_2                         (33554523)

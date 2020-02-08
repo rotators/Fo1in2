@@ -14,6 +14,20 @@
 // All Map Vars need to start w/ MVAR_
 #define MVAR_Hostile_Total             (0)   // Number of monsters created
 #define MVAR_CARVN_LEAD                (1)
+#define MVAR_CAVERN_TYPE               (2)
+
+// Cavern Type for random scenery spawn
+#define TOXIC_CAVE         (1)
+#define GOLD_MINE          (2)
+#define HIDEOUT_1          (3)
+
+#define set_gold_mine      set_map_var(MVAR_CAVERN_TYPE, GOLD_MINE)
+#define set_toxic_cave     set_map_var(MVAR_CAVERN_TYPE, TOXIC_CAVE)
+#define set_hideout_1      set_map_var(MVAR_CAVERN_TYPE, HIDEOUT_1)
+
+#define cave_is_gold_mine  (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
+#define cave_is_radiated   (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
+#define cave_is_hideout_1  (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
 
 //==================================================================
 #define spawn_dead_critter(x,y,z)      \

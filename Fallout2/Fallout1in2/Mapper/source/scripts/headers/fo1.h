@@ -33,6 +33,7 @@
 #define fo1in2_armor_vsuit_disabled     (global_var(GVAR_ENABLE_ARMOR_VAULT_SUIT) == 0)
 #define fo1in2_armor_bos_ca_disabled    (global_var(GVAR_ENABLE_BOS_CA) == 0)
 #define fo1in2_cave_maps_disabled       (global_var(GVAR_ENABLE_CAVE_MAPS) == 0)
+#define fo1in2_fo2_critters_disabled    (global_var(GVAR_ENABLE_FO2_CRITTERS) == 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -417,15 +418,16 @@ variable knock_down_sound;
                                         (cur_map_index == MAP_MNTCRVN3) or  \
                                         (cur_map_index == MAP_MNTCRVN4))
 
-#define map_is_ocean                ((cur_map_index == MAP_COAST1) or     \
-                                    (cur_map_index == MAP_COAST2) or      \
+#define map_is_ocean                ((cur_map_index == MAP_COAST1) or   \
+                                    (cur_map_index == MAP_COAST2) or    \
                                     (cur_map_index == MAP_RNDCOAST))
 
-#define map_has_cavern              ((cur_map_index == MAP_CAVE1) or     \
-                                    (cur_map_index == MAP_CAVE2) or      \
-                                    (cur_map_index == MAP_CAVE3) or      \
-                                    (cur_map_index == MAP_CAVE4) or      \
-                                    (cur_map_index == MAP_CAVE5))
+#define map_has_cavern              ((cur_map_index == MAP_CAVE1) or \
+                                    (cur_map_index == MAP_CAVE2) or  \
+                                    (cur_map_index == MAP_CAVE3) or  \
+                                    (cur_map_index == MAP_CAVE4) or  \
+                                    (cur_map_index == MAP_CAVE5) or  \
+                                    (cur_map_index == MAP_MINE1))
 
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 

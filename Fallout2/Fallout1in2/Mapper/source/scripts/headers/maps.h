@@ -173,6 +173,7 @@
 #define MAP_CAVE3           (84)
 #define MAP_CAVE4           (85)
 #define MAP_CAVE5           (86)
+#define MAP_MINE1           (87)
 
 /*******************************************************************************
  Map Names (Strings)
@@ -334,6 +335,7 @@
 #define CUR_MAP_CAVE3       (cur_map_index ==  MAP_CAVE3)
 #define CUR_MAP_CAVE4       (cur_map_index ==  MAP_CAVE4)
 #define CUR_MAP_CAVE5       (cur_map_index ==  MAP_CAVE5)
+#define CUR_MAP_MINE1       (cur_map_index ==  MAP_MINE1)
 
 // Force player position when loading map
 #define override_map_start_hex(x,y,z)   override_map_start(x%200,x/200,y,z)
