@@ -316,8 +316,8 @@
 {15801}{}{Über der Werkbank angebrachter Halter mit verschiedenen Werkzeugen.}
 {15900}{}{Molotow-Cocktail}
 {15901}{}{Selbstgefertigte, leicht entzündbare Granate. Mindeststärke: 3.}
-{16000}{}{Elektrogabel}
-{16001}{}{Elektrogabel vom Typ 'Farmerfreund' der Firma Wattz Electronics. Mindeststärke: 4.}
+{16000}{}{Viehsporn}
+{16001}{}{Viehsporn vom Typ 'Farmerfreund' der Firma Wattz Electronics. Mindeststärke: 4.}
 {16100}{}{Red Ryder}
 {16101}{}{Klassisches Luftgewehr vom Typ Red Ryder. Mindeststärke: 3.}
 {16200}{}{Red Ryder LE}
@@ -716,7 +716,7 @@
 {36500}{}{Pflanzendorn}
 {36501}{}{Organischer Samendorn, den fleischfressende Pflanzen auf potentielle Nahrung oder Samenträger abfeuern.}
 {36600}{}{G.E.E.K.}
-{36601}{}{Das Garten-Eden-Erstellungskit. Standardausrüstung aller Bunker-Tek-Bunker. Mit einem GEEK kann die Zivilisation nach Zündung einer Atombombe wiederaufgebaut werden. Einfach Wasser hinzufügen und umrühren.}
+{36601}{}{Das Garten Eden Erstellungskit. Standardausrüstung aller Bunker-Tek Bunker. Mit einem GEEK kann die Zivilisation nach Zündung einer Atombombe wiederaufgebaut werden. Einfach Wasser hinzufügen und umrühren.}
 {36700}{}{Munitionskiste}
 {36800}{}{Munitionskiste}
 {36900}{}{Munitionskiste}
