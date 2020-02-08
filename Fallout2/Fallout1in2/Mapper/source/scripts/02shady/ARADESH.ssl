@@ -19,10 +19,10 @@
 procedure start;
 procedure damage_p_proc;
 procedure destroy_p_proc;
-procedure do_dialogue;
 procedure map_enter_p_proc;
 procedure critter_p_proc;
 procedure talk_p_proc;
+procedure do_dialogue;
 
 procedure aradeshleave;
 procedure aradeshend;
@@ -132,15 +132,8 @@ procedure aradeshx2;
 procedure aradeshx3;
 procedure aradeshx5;
 
-variable TRESPASS;
-variable ILLEGAL;
-variable ILLEGBEFORE;
 variable tmp_hostile;
-
-variable initial := 0;
 variable pickup_attempt;
-
-variable isGoodGuy := 1;// Fallout Fixt
 
 #define LVAR_Herebefore              (4)
 #define LVAR_Invasion                (6)
@@ -172,9 +165,9 @@ end
 procedure talk_p_proc begin
    set_tma_data(NAME, 1000, -1, -1, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END);
 
-   if (local_var(LVAR_Caught_Stealing) >= 3) then begin
+   // Make Aradesh angry only temporary. Variable will reset itself...
+   if (pickup_attempt == 2) and (local_var(LVAR_Caught_Stealing) == 2) then begin
       display_msg(gen_mstr(170));
-      tmp_hostile := 1;
    end
    else begin
       if (global_var(GVAR_ENEMY_SHADY_SANDS) == 1) then begin
@@ -201,8 +194,11 @@ procedure map_enter_p_proc begin
 end
 
 procedure pickup_p_proc begin
-   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
-   dialogue_system_enter; // Need to start dialog this way, otherwise game will crash and burn.
+   pickup_attempt := 1;
+   if (local_var(LVAR_Caught_Stealing) >= 2) then
+      tmp_hostile := 1;
+   else
+      dialogue_system_enter; // Need to start dialog this way, otherwise game will crash and burn.
 end
 
 procedure do_dialogue begin
@@ -216,11 +212,12 @@ procedure do_dialogue begin
 
    start_gdialog(NAME, self_obj, 4, HEAD_ARADESH, BACKGROUND_SHADY);
    gsay_start;
-   if (local_var(LVAR_Caught_Stealing) == 1) then begin
-      call aradesh45;
-   end
-   else if (local_var(LVAR_Caught_Stealing) == 2) then begin
-      call aradesh46;
+   if (pickup_attempt == 1) then begin
+      pickup_attempt := 0;
+      if (local_var(LVAR_Caught_Stealing) == 0) then
+         call aradesh45;
+      else
+         call aradesh46;
    end
    else begin
       if tandi_is_kidnapped then begin
@@ -816,19 +813,16 @@ procedure aradesh44 begin
 end
 
 procedure aradesh45 begin
-   //set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    BigDownReact
    BMessage(246);
-   //float_msg(self_obj, mstr(246), FLOAT_MSG_LIGHT_RED);
-   //call aradeshx;
 end
 
 procedure aradesh46 begin
-   //set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
+   pickup_attempt := 2;
+   set_local_var(LVAR_Caught_Stealing, local_var(LVAR_Caught_Stealing) + 1);
    BigDownReact
    BMessage(247);
-   //float_msg(self_obj, mstr(247), FLOAT_MSG_LIGHT_RED);
-   //call aradeshx;
 end
 
 procedure aradesh47 begin // Unused
