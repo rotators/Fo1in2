@@ -345,6 +345,10 @@
 #define PID_GECKO                         (16777551)
 #define PID_GOLDEN_GECKO                  (16777552)
 #define PID_FIRE_GECKO                    (16777553)
+#define PID_ANT                           (16777554)
+#define PID_PRIMITIVE_HUNTER_MALE         (16777555)
+#define PID_PRIMITIVE_HUNTER_FEMALE       (16777556)
+#define PID_HOPE                          (16777557)
 
 // intentionally creates dead code in gl_partycontrol,
 // just to avoid editing it on each sfall update

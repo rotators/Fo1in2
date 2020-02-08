@@ -168,6 +168,22 @@ procedure map_update_p_proc begin
          end
       end//if mutate_stage > 0
    end//if have_mutated = 0
+
+   // Used to make the player use drugs outside of critter scripts
+   // Example: Dehydration encounters.
+   if (global_var(GVAR_OBJ_DUDE_USE_DRUG) != 0) then begin
+      variable Drink := global_var(GVAR_OBJ_DUDE_USE_DRUG);
+      set_global_var(GVAR_OBJ_DUDE_USE_DRUG, 0);
+
+      // Water flask isn't a drug item, Nuka Cola has no effect
+      if (obj_pid(Drink) == PID_WATER_FLASK or obj_pid(DRINK) == PID_NUKA_COLA) then begin
+         if (obj_pid(Drink) == PID_NUKA_COLA) then dude_caps_adjust(1);
+         rm_obj_from_inven(dude_obj, Drink);
+         destroy_object(Drink);
+      end
+      else
+         use_obj_on_obj(Drink, dude_obj);
+   end
 end
 
 procedure timed_event_p_proc begin
@@ -207,18 +223,18 @@ procedure timed_event_p_proc begin
          if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
             reg_anim_clear(map_var(0));
             reg_anim_begin();
-            reg_anim_animate(dude_obj, 43, -1);
+            reg_anim_animate(dude_obj, ANIM_point, -1);
 
             GunSoundAnim := sfx_build_weapon_name(1, gun_ptr, 0, map_var(0));
 
             reg_anim_play_sfx(dude_obj, GunSoundAnim, -1);
-            reg_anim_animate(dude_obj, 45, -1);
+            reg_anim_animate(dude_obj, ANIM_fire_single, -1);
 
             GunSoundAnim := sfx_build_char_name(map_var(0), 20, 3);
 
             reg_anim_play_sfx(map_var(0), GunSoundAnim, 0);
-            reg_anim_animate(map_var(0), 20, 0);
-            reg_anim_animate(dude_obj, 44, 0);
+            reg_anim_animate(map_var(0), ANIM_fall_back, 0);
+            reg_anim_animate(dude_obj, ANIM_unpoint, 0);
             reg_anim_end();
 
             add_timer_event(dude_obj, game_ticks(10), 8);

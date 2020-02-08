@@ -39,19 +39,13 @@ end
 
 procedure map_enter_p_proc begin
    if (map_first_run) then begin
-      if (self_pid == PID_LESSER_MOLE_RAT) or (self_pid == PID_GREATER_MOLE_RAT)/* or (obj_pid (self_obj) == 16777614)*/ then begin// MOLE
+      if (self_pid == PID_LESSER_MOLE_RAT) or (self_pid == PID_GREATER_MOLE_RAT) then
          set_self_ai(AI_MOLE_RATS);
-      end
-      else if (self_pid == PID_RAT_CAVE) or (self_pid == PID_TOUGH_RAT) or (self_pid == PID_RADIATED_RAT) or (self_pid == PID_TOUGH_RADIATED_RAT) /*or (obj_pid (self_obj) == 16777615) or (obj_pid (self_obj) == 16777616)*/ then begin// RAT
+      else if (self_pid == PID_RAT_CAVE) or (self_pid == PID_TOUGH_RAT) or (self_pid == PID_RADIATED_RAT) or (self_pid == PID_TOUGH_RADIATED_RAT) then
          set_self_ai(AI_RATS);
-      end
-      else if (self_pid == PID_PIGRAT) or (self_pid == PID_MEAN_PIG_RAT) /*or (obj_pid (self_obj) == 16777613)*/ then begin// PIG
+      else if (self_pid == PID_PIGRAT) or (self_pid == PID_MEAN_PIG_RAT) then
          set_self_ai(AI_PIG_RATS);
-      end
-
       set_self_team(TEAM_RATS);
-
-      debug_msg("WANRATS m" + cur_map_index + " e" + self_elevation + " " + self_tile);
    end
    add_timer_event(self_obj, random(1, 5), 0);
 end
@@ -60,11 +54,8 @@ procedure critter_p_proc begin
    if CUR_AREA_VAULT_13 then begin
       if v13_invaded or map_var(2) then begin
          if (local_var(9) != 1) then begin
-            set_local_var(9, 1);//     <-- only once
-            if not(is_loading_game) then begin
-               set_self_visible;
-            end
-            debug_msg("Vault 13 invasion, killing WANRATS.SSL with DeathType " + 59 + ".  ");
+            set_local_var(9, 1);
+            if not(is_loading_game) then set_self_visible;
             kill_critter(self_obj, ANIM_exploded_to_nothing_sf);
          end
       end
@@ -75,8 +66,8 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-      if (dude_animal_friend == 0) then begin
-         if (self_can_see_dude /*or self_can_hear_dude*/) then begin
+      if not(dude_animal_friend and self_pid != PID_ANT) then begin
+         if (self_can_see_dude) then begin
             tmp_hostile := 1;
             attack(dude_obj);
          end
@@ -85,7 +76,9 @@ procedure critter_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 3)));
+   if not(combat_is_initialized) then
+      self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 3)));
+
    add_timer_event(self_obj, game_ticks(random(1, 5)), 0);
 end
 
@@ -93,7 +86,6 @@ procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_STEAL) then begin
       script_overrides;
       display_msg(gen_mstr(211));
-      script_overrides;
    end
 end
 

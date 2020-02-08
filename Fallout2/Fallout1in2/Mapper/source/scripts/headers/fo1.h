@@ -32,6 +32,8 @@
 #define fo1in2_alt_disguise_disabled    (global_var(GVAR_ENABLE_ALTERNATIVE_DISGUISE) == 0)
 #define fo1in2_armor_vsuit_disabled     (global_var(GVAR_ENABLE_ARMOR_VAULT_SUIT) == 0)
 #define fo1in2_armor_bos_ca_disabled    (global_var(GVAR_ENABLE_BOS_CA) == 0)
+#define fo1in2_cave_maps_disabled       (global_var(GVAR_ENABLE_CAVE_MAPS) == 0)
+#define fo1in2_fo2_critters_disabled    (global_var(GVAR_ENABLE_FO2_CRITTERS) == 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -383,6 +385,25 @@ procedure flee_dude begin
     animate_move_obj_to_tile(self_obj, LVar0, 1);
 end
 
+variable knock_down_sound;
+#define dude_knockdown \
+   knock_down_sound := sfx_build_char_name(dude_obj, ANIM_fall_front, snd_knock_down);    \
+   reg_anim_clear(dude_obj);                                                              \
+   reg_anim_begin();                                                                      \
+      reg_anim_play_sfx(dude_obj, knock_down_sound, 1);                                   \
+      reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
+      reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                              \
+   reg_anim_end();                                                                        \
+   critter_injure(dude_obj, DAM_KNOCKED_OUT)
+
+#define dude_knockdown_nosfx \
+   reg_anim_clear(dude_obj);                                                              \
+   reg_anim_begin();                                                                      \
+      reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
+      reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                              \
+   reg_anim_end();                                                                        \
+   critter_injure(dude_obj, DAM_KNOCKED_OUT)
+
 #define map_is_caravan_escort       ((cur_map_index == MAP_DESCRVN1) or     \
                                     (cur_map_index == MAP_DESCRVN2) or      \
                                     (cur_map_index == MAP_DESCRVN3) or      \
@@ -397,9 +418,16 @@ end
                                         (cur_map_index == MAP_MNTCRVN3) or  \
                                         (cur_map_index == MAP_MNTCRVN4))
 
-#define map_is_ocean                ((cur_map_index == MAP_COAST1) or     \
-                                    (cur_map_index == MAP_COAST2) or      \
+#define map_is_ocean                ((cur_map_index == MAP_COAST1) or   \
+                                    (cur_map_index == MAP_COAST2) or    \
                                     (cur_map_index == MAP_RNDCOAST))
+
+#define map_has_cavern              ((cur_map_index == MAP_CAVE1) or \
+                                    (cur_map_index == MAP_CAVE2) or  \
+                                    (cur_map_index == MAP_CAVE3) or  \
+                                    (cur_map_index == MAP_CAVE4) or  \
+                                    (cur_map_index == MAP_CAVE5) or  \
+                                    (cur_map_index == MAP_MINE1))
 
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 

@@ -30,15 +30,22 @@
 #define MSGBOX_SMALL       0x02 // uses smaller graphic
 #define MSGBOX_ALIGN_LEFT  0x04 // text moved to left
 #define MSGBOX_ALIGN_TOP   0x08 // text moved to top
-#define MSGBOX_YESNO       0x10 // DONE button replaced with YES/NO -- WIP, don't use when displaying >1 message box at once
+#define MSGBOX_YESNO       0x10 // DONE button replaced with YES/NO
 #define MSGBOX_CLEAN       0x20 // no buttons
 
 #define r_get_ini_string(file, section, key, defaultValue)  sfall_func("r_get_ini_string", file, section, key, defaultValue)
 //      r_message_box(text, [flags, color1, color23, callback)
 #define r_message_box(...)                                  sfall_func("r_message_box", __VA_ARGS__)
 
+// Rotators unsafe sfall_funcX macros
+// arguments in [square, brackets] are optional
+// AllowUnsafeScripting required
+
 #define r_call_offset_push(val)                             sfall_func("r_call_offset_push", val)
 #define r_call_offset(addr)                                 sfall_func("r_call_offset", addr)
+#define r_call_offset_cdecl(addr)                           sfall_func("r_call_offset_cdecl", addr)
+#define r_hrp                                               sfall_func("r_hrp")
+#define r_hrp_offset(addr)                                  sfall_func("r_hrp_offset", addr)
 #define r_write_byte(addr,val)                              sfall_func("r_write", 0, addr, val)
 #define r_write_short(addr,val)                             sfall_func("r_write", 1, addr, val)
 #define r_write_int(addr,val)                               sfall_func("r_write", 2, addr, val)

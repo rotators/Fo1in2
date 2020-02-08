@@ -165,6 +165,16 @@
 #define MAP_GUARDIAN        (74)
 #define MAP_SCRAPHEAP       (75)
 
+#define MAP_CITY2           (79)
+#define MAP_CITY3           (80)
+#define MAP_CAVE0           (81)
+#define MAP_CAVE1           (82)
+#define MAP_CAVE2           (83)
+#define MAP_CAVE3           (84)
+#define MAP_CAVE4           (85)
+#define MAP_CAVE5           (86)
+#define MAP_MINE1           (87)
+
 /*******************************************************************************
  Map Names (Strings)
 *******************************************************************************/
@@ -316,6 +326,16 @@
 #define CUR_MAP_ARCAVES     (cur_map_index ==  MAP_ARCAVES)
 #define CUR_MAP_GUARDIAN    (cur_map_index ==  MAP_GUARDIAN)
 #define CUR_MAP_SCRAPHEAP   (cur_map_index ==  MAP_SCRAPHEAP)
+
+#define CUR_MAP_CITY2       (cur_map_index ==  MAP_CITY2)
+#define CUR_MAP_CITY3       (cur_map_index ==  MAP_CITY3)
+#define CUR_MAP_CAVE0       (cur_map_index ==  MAP_CAVE0)
+#define CUR_MAP_CAVE1       (cur_map_index ==  MAP_CAVE1)
+#define CUR_MAP_CAVE2       (cur_map_index ==  MAP_CAVE2)
+#define CUR_MAP_CAVE3       (cur_map_index ==  MAP_CAVE3)
+#define CUR_MAP_CAVE4       (cur_map_index ==  MAP_CAVE4)
+#define CUR_MAP_CAVE5       (cur_map_index ==  MAP_CAVE5)
+#define CUR_MAP_MINE1       (cur_map_index ==  MAP_MINE1)
 
 // Force player position when loading map
 #define override_map_start_hex(x,y,z)   override_map_start(x%200,x/200,y,z)

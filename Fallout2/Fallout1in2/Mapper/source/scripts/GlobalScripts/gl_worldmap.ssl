@@ -7,10 +7,9 @@
 /* Include Files */
 #include "define.h"
 #include "command.h"
-#include "sfall/sfall.h"
 #include "sfall/sfall.rotators.h"
-#include "sfall/define_lite.h"
 #include "sfall/lib.math.h"
+#include "sfall/lib.arrays.h"
 
 #include "gl_worldmap.h"
 
@@ -137,9 +136,9 @@ procedure SetWorldmapInfo begin
    if(debug_mode and (prevTerrain != terrain or prevTable != table)) then
    begin
       if(not (prevTerrain == "" and prevTable == -1)) then
-         debug("exit " + prevTerrain + prevTable);
+         debug_msg("exit " + prevTerrain + prevTable);
 
-      debug("enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "_" + zone["tile_y"] + ">");
+      debug_msg("enter " + zone["terrain"] + table + " (" + terrain + "," + table + ") : " + "zone<" + zone["zx"] + "," + zone["zy"] + "> tile<" + zone["tile"] + ":" + zone["tile_x"] + "_" + zone["tile_y"] + ">");
       prevTerrain := terrain;
       prevTable := table;
    end
@@ -152,7 +151,7 @@ procedure SetRadiation begin
    if above(game_time, tick) then begin
       tick := game_time + ONE_GAME_HOUR;
       radiation_inc(dude_obj, random(1, 20));
-      debug("radiation from wm! " + dude_rads + " rads!");
+      debug_msg("radiation from wm! " + dude_rads + " rads!");
    end
 end
 
@@ -180,7 +179,7 @@ procedure encounter_handler begin
 
    // If the player enters a map on the worldmap, we set it depending on the current terrain type.
    // event 0 is random encounter, 1 is player encounter
-   if (event == 1 and mapID == 0) then begin
+   if (event == 1 and mapID == MAP_DESERT0) then begin
       if (is_terrain_desert) then begin
          mapID := MAP_RNDDESER;
       end
@@ -195,9 +194,32 @@ procedure encounter_handler begin
       end
       else begin
          mapID := MAP_RNDDESER;
-         debug("!!! COULDN'T DETECT TERRAIN TYPE !!!");
+         debug_msg("!!! COULDN'T DETECT TERRAIN TYPE !!!");
       end
       set_sfall_return(mapID);
+   end
+   else if (event == 0) then begin
+      if is_terrain_mountain then begin
+         variable
+            rnd_cave := random(1, 100),
+            Maps_List;
+
+         if ((mapID == MAP_MOUNTN1 or mapID == MAP_MOUNTN2) or (mapID >= MAP_CAVE0 and mapID <= MAP_MINE1)) then begin
+            debug_msg("*** Cavern chance: " + rnd_cave);
+
+            if (not(fo1in2_cave_maps_disabled) and (rnd_cave < 35)) then begin
+               if (random(1, 100) <= (10 + (2 * dude_luck))) then
+                  Maps_List := [MAP_MINE1];
+               else
+                  Maps_List := [MAP_CAVE0, MAP_CAVE1, MAP_CAVE2, MAP_CAVE3, MAP_CAVE4, MAP_CAVE5];
+            end
+            else
+               Maps_List := [MAP_MOUNTN1, MAP_MOUNTN2];
+
+            mapID := array_random_value(Maps_List);
+            set_sfall_return(mapID);
+         end
+      end
    end
 end
 
@@ -223,7 +245,7 @@ procedure start begin
          if above(game_time, tick) then begin
             tick := game_time + (ONE_GAME_MINUTE * 10);
             radiation_inc(dude_obj, random(5, 15));
-            debug("radiation from zones around Glow! " + dude_rads + " rads!");
+            debug_msg("radiation from zones around Glow! " + dude_rads + " rads!");
          end
       end
    end
