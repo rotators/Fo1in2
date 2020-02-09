@@ -354,7 +354,7 @@ procedure LoadChests begin
             add_obj_to_inven(container, create_object(Item, i, 1));
          end
          if (random(0, 1) == 1) then
-            item_caps_adjust(container, (10 * Random(1, dude_luck) + random(0, 9)) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+            item_caps_adjust(container, (10 * Random(1, dude_luck) + random(0, 9)) * (dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
       end
    //end
 end

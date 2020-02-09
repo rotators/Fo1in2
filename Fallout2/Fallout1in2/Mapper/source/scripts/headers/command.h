@@ -366,28 +366,11 @@ variable step_tile;
 #define dude_perk(perk)                   get_perk(dude_obj,perk)
 #define self_perk(perk)                   get_perk(self_obj,perk)
 
-#define dude_mental_block                 dude_perk(PERK_mental_block)
-#define dude_presence                     dude_perk(PERK_presence)
-#define dude_awareness                    dude_perk(PERK_bonus_awareness)
-#define dude_fortune_finder               dude_perk(PERK_fortune_finder)
-#define dude_smooth_talker                dude_perk(PERK_smooth_talker)
-#define dude_excrement_expediter          dude_perk(PERK_expert_excrement_expediter_perk)
-#define dude_quick_pockets                dude_perk(PERK_quick_pockets)
-#define dude_animal_friend                dude_perk(PERK_animal_friend)
-#define dude_swift_learner                dude_perk(PERK_swift_learner)
-
-#define self_mental_block                 self_perk(PERK_mental_block)
-#define self_presence                     self_perk(PERK_presence)
-#define self_awareness                    self_perk(PERK_bonus_awareness)
-#define self_fortune_finder               self_perk(PERK_fortune_finder)
-#define self_smooth_talker                self_perk(PERK_smooth_talker)
-
-
 //
 // traits
 //
 
-#define get_trait(cr,trait)               has_trait(TRAIT_TRAIT,cr,trait)
+#define  get_trait(cr,trait)              has_trait(TRAIT_TRAIT,cr,trait)
 #define dude_trait(trait)                 get_trait(dude_obj,trait)
 #define self_trait(trait)                 get_trait(self_obj,trait)
 

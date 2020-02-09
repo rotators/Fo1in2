@@ -225,6 +225,10 @@ variable Scenery_Creation_Ptr;
 #define PID_BARREL_STACK_2                  (33554830)
 #define PID_BARREL_STACK_3                  (33554831)
 
+// Plates
+#define PID_PLATE_W_MORTEL                  (33554795)
+#define PID_PLATE_SIMPLE                    (33554796)
+
 // New Fallout 1:
 #define PID_BEAM_1                          (33554999)
 #define PID_BEAM_2                          (33555000)

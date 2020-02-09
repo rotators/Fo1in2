@@ -588,7 +588,7 @@
 {29900}{}{Rohrgewehr}
 {29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuß. Mindest-ST: 5.}
 {30000}{}{Zip-Pistole}
-{30001}{}{Eine handgefertigte Pistole für einen Schuß. Mindest-ST: 4.}
+{30001}{}{Eine handgefertigte Laserpistole. Mindest-ST: 3.}
 {30100}{}{Clipboard}
 {30101}{}{Dies ist ein Clipboard mit einem Kühlmittelbericht.}
 {30200}{}{Gecko-Holodisk}

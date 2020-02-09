@@ -1,0 +1,274 @@
+/*
+
+   Encounter - Gecko hunter, the Father
+
+*/
+
+/* Include Files */
+#include "define.h"
+
+#define NAME                    SCRIPT_ECHUNTRA
+
+#include "command.h"
+#include "mapenc.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure talk_p_proc;
+
+procedure Node998;
+procedure Node999;
+
+procedure Node1000;
+procedure Node1100;
+procedure Node1200;
+procedure Node1300;
+procedure Node1400;
+procedure Node1500;
+procedure Node1600;
+procedure Node1700;
+procedure Node1800;
+procedure Node1900;
+
+procedure NodeGeckoSkinning;
+
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+
+#define LVAR_Herebefore                   (4)
+#define LVAR_Hostile                      (5)
+#define LVAR_Personal_Enemy               (6)
+#define LVAR_Son_Killed                   (7)
+#define LVAR_Learn_Skinning               (8)
+
+#define float_father(x)                   float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
+#define float_son(x)                      float_msg(hunter_b_ptr, message_str(SCRIPT_ECHUNTRB, x), FLOAT_MSG_NORMAL)
+
+#define Add_Skinner                       critter_add_trait(dude_obj, TRAIT_PERK, PERK_gecko_skinning_perk, 1); \
+                                          give_xp_msg(EXP_GECKO_SKINNING, mstr(150))
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
+import variable hunter_a_ptr;
+import variable hunter_b_ptr;
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+variable Only_Once := 0;
+variable Float := 0;
+variable last_question;
+
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+procedure start begin
+   hunter_a_ptr := self_obj;
+end
+
+procedure map_enter_p_proc begin
+   if (map_first_run) then begin
+      set_self_team(TEAM_RND_GECKO);
+      set_self_ai(AI_BERZERKER);
+   end
+end
+
+procedure critter_p_proc begin
+   if (((local_var(LVAR_Hostile) == 2)
+      or (local_var(LVAR_Personal_Enemy) == 1))
+      and (self_can_see_dude)) then begin
+         set_local_var(LVAR_Hostile, 1);
+
+         if (Only_Once == 0) then begin
+            Only_Once := 1;
+            attack(dude_obj);
+         end
+   end
+
+   if ghunter_status(HUNTER_SON_DEAD) then begin
+      set_local_var(LVAR_Hostile, 1);
+   end
+end
+
+procedure pickup_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Hostile, 2);
+   end
+end
+
+procedure use_p_proc begin
+end
+
+procedure destroy_p_proc begin
+   hunter_a_ptr := 0;
+
+   inc_neutral_critter
+   set_ghunter_status(HUNTER_FATHER_DEAD);
+
+   if (hunter_b_ptr != 0) then
+      float_son(200);
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if ghunters_pc_knows_names then
+      display_msg(mstr(101));
+   else
+      display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(102));
+end
+
+procedure damage_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Personal_Enemy, 1);
+   end
+end
+
+procedure talk_p_proc begin
+   if (dude_iq < 4) then
+      float_father(201);
+   else begin
+      if (dude_perk(PERK_gecko_skinning_perk) == 1) then
+         float_father(202);
+      else if (local_var(LVAR_Learn_Skinning) == 2) then
+         float_father(203);
+      else begin
+         face_start_dialog_at_node(Node1000);
+      end
+   end
+end
+
+procedure Node998 begin
+   set_local_var(LVAR_Personal_Enemy, 1);
+end
+
+procedure Node999 begin
+end
+
+procedure Node1000 begin
+   if (local_var(LVAR_Herebefore) == 0) then
+      Reply(1000);
+   else
+      Reply(1001);
+
+   if not(ghunters_pc_knows_names) then
+      NOption(1010, Node1100, 4);
+
+   NOption(1020, Node1500, 4);
+   BOption(1030, Node998, 4);
+   NOption(g_bye, Node999, 4);
+
+   set_local_var(LVAR_Herebefore, 1);
+end
+
+procedure Node1100 begin
+   set_ghunter_status(HUNTER_PC_KNOWS_NAMES);
+
+   Reply(1100);
+   NOption(1110, Node1200, 4);
+   GOption(mstr(1120) + dude_name + mstr(1121), Node1300, 4);
+   NOption(g_bye, Node999, 4);
+end
+
+procedure Node1200 begin
+   Reply(1200);
+   NOption(1020, Node1500, 4);
+   BOption(1210, Node998, 4);
+   NOption(g_bye, Node999, 4);
+end
+
+procedure Node1300 begin
+   set_ghunter_status(HUNTER_KNOWS_PC_NAME);
+   GMessage(1300);
+
+   if (local_var(LVAR_Learn_Skinning) == 0) and (dude_perk(PERK_gecko_skinning_perk) == 0) then begin
+      Reply(1301);
+
+      NOption(1310, Node1700, 4);
+      NOption(1320, Node1400, 4);
+   end
+end
+
+procedure Node1400 begin
+   if ghunters_know_pc_name then
+      NMessage(mstr(1400) + dude_name + mstr(1401));
+   else
+      NMessage(1402);
+end
+
+procedure Node1500 begin
+   Reply(1500);
+
+   if (dude_perk(PERK_gecko_skinning_perk) == 0) then begin
+      if (local_var(LVAR_Learn_Skinning) == 0) and ghunters_know_pc_name then
+         NOption(1511, Node1700, 4);
+      else
+         NOption(1510, Node1600, 4);
+   end
+
+   NOption(1520, Node999, 4);
+end
+
+procedure Node1600 begin
+   Reply(1600);
+   NOption(1610, Node999, 4);
+end
+
+procedure Node1700 begin
+   NMessage(1700);
+   call NodeGeckoSkinning;
+end
+
+procedure Node1800 begin
+   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1,6));
+   Add_Skinner;
+
+   Reply(1800);
+   NOption(1810, Node1400, 4);
+end
+
+procedure Node1900 begin
+   set_local_var(LVAR_Learn_Skinning, 2);
+   NMessage(1900);
+   Reply(1901);
+   NOption(1910, Node1400, 4);
+end
+
+procedure NodeGeckoSkinning begin
+   variable Skill_roll;
+
+   set_local_var(LVAR_Learn_Skinning, 1);
+
+   gfade_out(1);
+      game_time_advance(game_ticks(6 * ONE_GAME_HOUR));
+
+      // Add fireplace:
+      Scenery_Creation_Hex := tile_num_in_direction(self_tile, 0, 2);
+      Scenery_Creation := create_object_sid(PID_FIRE_PIT, Scenery_Creation_Hex, 0, -1);
+
+   gfade_in(1);
+
+      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
+      if (is_success(Skill_roll)) then
+         call Node1800;
+      else
+         call Node1900;
+end
+

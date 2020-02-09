@@ -587,7 +587,7 @@
 {29900}{}{Pipe Rifle}
 {29901}{}{This is a hand-made single shot rifle. Min ST: 5.}
 {30000}{}{Zip Gun}
-{30001}{}{A handmade single shot pistol. Min ST: 4.}
+{30001}{}{A handmade laser pistol. Min ST: 3.}
 {30100}{}{Clipboard}
 {30101}{}{This is a clipboard with the coolant report.}
 {30200}{}{Gecko Holodisk}

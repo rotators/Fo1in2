@@ -13,210 +13,183 @@ procedure use_p_proc;
 procedure use_obj_on_p_proc;
 procedure use_skill_on_p_proc;
 
+procedure unlock;
+procedure disarm;
 procedure set_off_trap;
 
 variable test;
+variable Bonus := 0;
 
 #define LVAR_LockStatus       (0)
 #define LVAR_TrapDisarmed     (1)
 #define LVAR_TrapFound        (2)
+
+#define LOCKED       (0)
+#define UNLOCKED     (1)
+
+#define ARMED        (0)
+#define DISARMED     (1)
+
+#define HIDDEN       (0)
+#define FOUND        (1)
 
 procedure start begin
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(LVAR_LockStatus) == 0) then begin
+   if (local_var(LVAR_LockStatus) == LOCKED) then
       display_msg(mstr(100));
-   end
-   else begin
+   else
       display_msg(mstr(101));
-   end
 end
 
 procedure use_p_proc begin
-   if (local_var(LVAR_LockStatus) == 0) then begin
+   if (local_var(LVAR_LockStatus) == LOCKED) then begin
       script_overrides;
       display_msg(mstr(102));
    end
-   else begin
-      if (local_var(LVAR_TrapDisarmed) == 0) then begin
-         script_overrides;
-         if (local_var(LVAR_TrapFound) == 0) then begin
+   else if (local_var(LVAR_TrapDisarmed) == ARMED) then begin
+      script_overrides;
+      if (local_var(LVAR_TrapFound) == HIDDEN) then begin
+         test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
+         if (is_success(test)) then begin
+            reg_anim_clear(source_obj);
             test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
             if (is_success(test)) then begin
-               reg_anim_clear(source_obj);
-               test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
-               if (is_success(test)) then begin
-                  set_local_var(LVAR_TrapFound, 1);
-                  set_local_var(LVAR_TrapDisarmed, 1);
-                  display_msg(mstr(103));
-               end
-               else begin
-                  if (is_critical(test)) then begin
-                     set_local_var(LVAR_TrapFound, 1);
-                     set_local_var(LVAR_TrapDisarmed, 1);
-                     display_msg(mstr(104));
-                     call set_off_trap;
-                  end
-                  else begin
-                     set_local_var(LVAR_TrapFound, 1);
-                     set_local_var(LVAR_TrapDisarmed, 0);
-                     display_msg(mstr(105));
-                  end
-               end
+               set_local_var(LVAR_TrapFound, FOUND);
+               set_local_var(LVAR_TrapDisarmed, DISARMED);
+               display_msg(mstr(103));
             end
             else begin
-               set_local_var(LVAR_TrapDisarmed, 1);
-               call set_off_trap;
+               if (is_critical(test)) then begin
+                  set_local_var(LVAR_TrapFound, FOUND);
+                  set_local_var(LVAR_TrapDisarmed, DISARMED);
+                  display_msg(mstr(104));
+                  call set_off_trap;
+               end
+               else begin
+                  set_local_var(LVAR_TrapFound, FOUND);
+                  set_local_var(LVAR_TrapDisarmed, ARMED);
+                  display_msg(mstr(105));
+               end
             end
          end
          else begin
-            set_local_var(LVAR_TrapDisarmed, 1);
+            set_local_var(LVAR_TrapDisarmed, DISARMED);
             call set_off_trap;
          end
+      end
+      else begin
+         set_local_var(LVAR_TrapDisarmed, DISARMED);
+         call set_off_trap;
       end
    end
 end
 
 procedure use_obj_on_p_proc begin
-   if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
-      if (local_var(LVAR_LockStatus) == 0) then begin
-         script_overrides;
-         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
-         if (is_success(test)) then begin
-            set_local_var(LVAR_LockStatus, 1);
-            display_msg(mstr(107));
-            set_local_var(3, local_var(3) + 1);
-            if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
-               display_msg(mstr(108));
-               set_local_var(LVAR_TrapDisarmed, 1);
-               call set_off_trap;
-            end
-         end
-         else begin
-            if (is_critical(test)) then begin
-               jam_lock(self_obj);
-               display_msg(mstr(109));
-               set_local_var(3, local_var(3) + 1);
-               if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
-                  display_msg(mstr(108));
-                  set_local_var(LVAR_TrapDisarmed, 1);
-                  call set_off_trap;
-               end
-            end
-            else begin
-               display_msg(mstr(110));
-               set_local_var(3, local_var(3) + 1);
-               if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
-                  display_msg(mstr(108));
-                  set_local_var(LVAR_TrapDisarmed, 1);
-                  call set_off_trap;
-               end
-            end
-         end
-      end
-      else begin
-         display_msg(mstr(106));
-      end
+   variable Item := obj_pid(obj_being_used_with);
+   if (Item == PID_LOCKPICKS or Item == PID_ELECTRONIC_LOCKPICKS or Item == PID_ELEC_LOCKPICK_MKII) then begin
+      Bonus := 0;
+      call unlock;
    end
 end
 
 procedure use_skill_on_p_proc begin
    if (action_being_used == SKILL_LOCKPICK) then begin
-      if (local_var(LVAR_LockStatus) == 0) then begin
-         script_overrides;
-         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
-         if (is_success(test)) then begin
-            set_local_var(LVAR_LockStatus, 1);
-            display_msg(mstr(107));
-            give_xp(EXP_LOCKPICK_NORMAL);
+      Bonus := -20;
+      call unlock;
+   end
+   else if (action_being_used == SKILL_TRAPS) then
+      call disarm;
+end
 
+procedure unlock begin
+   script_overrides;
+   if (local_var(LVAR_LockStatus) == LOCKED) then begin
+      test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, Bonus);
+      if (is_success(test)) then begin
+         set_local_var(LVAR_LockStatus, UNLOCKED);
+         display_msg(mstr(107));
+         give_xp(EXP_LOCKPICK_NORMAL);
+
+         set_local_var(3, local_var(3) + 1);
+         if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == ARMED)) then begin
+            display_msg(mstr(108));
+            set_local_var(LVAR_TrapDisarmed, DISARMED);
+            call set_off_trap;
+         end
+      end
+      else begin
+         if (is_critical(test)) then begin
+            jam_lock(self_obj);
+            display_msg(mstr(109));
             set_local_var(3, local_var(3) + 1);
-            if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
+            if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == ARMED)) then begin
                display_msg(mstr(108));
-               set_local_var(LVAR_TrapDisarmed, 1);
+               set_local_var(LVAR_TrapDisarmed, DISARMED);
                call set_off_trap;
             end
          end
          else begin
-            if (is_critical(test)) then begin
-               jam_lock(self_obj);
-               display_msg(mstr(109));
-               set_local_var(3, local_var(3) + 1);
-               if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
-                  display_msg(mstr(108));
-                  set_local_var(LVAR_TrapDisarmed, 1);
-                  call set_off_trap;
-               end
-            end
-            else begin
-               display_msg(mstr(110));
-               set_local_var(3, local_var(3) + 1);
-               if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == 0)) then begin
-                  display_msg(mstr(108));
-                  set_local_var(LVAR_TrapDisarmed, 1);
-                  call set_off_trap;
-               end
+            display_msg(mstr(110));
+            set_local_var(3, local_var(3) + 1);
+            if ((local_var(3) >= 3) and (local_var(LVAR_TrapDisarmed) == ARMED)) then begin
+               display_msg(mstr(108));
+               set_local_var(LVAR_TrapDisarmed, DISARMED);
+               call set_off_trap;
             end
          end
       end
+   end
+   else
+      display_msg(mstr(106));
+end
+
+procedure disarm begin
+   script_overrides;
+   if (local_var(LVAR_TrapFound) == HIDDEN) then begin
+      test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
+      if (is_success(test)) then begin
+         if (is_critical(test)) then begin
+            display_msg(mstr(111));
+            give_xp(EXP_TRAPS_NORMAL);
+
+            set_local_var(LVAR_TrapFound, FOUND);
+            set_local_var(LVAR_TrapDisarmed, DISARMED);
+         end
+         else begin
+            display_msg(mstr(112));
+            set_local_var(LVAR_TrapFound, FOUND);
+         end
+      end
       else begin
-         display_msg(mstr(106));
+         if (is_critical(test)) then begin
+            display_msg(mstr(113));
+            set_local_var(LVAR_TrapDisarmed, DISARMED);
+            call set_off_trap;
+         end
+         else
+            display_msg(mstr(114));
       end
    end
 
-   else if (action_being_used == SKILL_TRAPS) then begin
-      if (local_var(LVAR_TrapFound) == 0) then begin
-         test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
-         if (is_success(test)) then begin
-            if (is_critical(test)) then begin
-               script_overrides;
-               display_msg(mstr(111));
-               give_xp(EXP_TRAPS_NORMAL);
-
-               set_local_var(LVAR_TrapFound, 1);
-               set_local_var(LVAR_TrapDisarmed, 1);
-            end
-            else begin
-               script_overrides;
-               display_msg(mstr(112));
-               set_local_var(LVAR_TrapFound, 1);
-            end
-         end
-         else begin
-            if (is_critical(test)) then begin
-               script_overrides;
-               display_msg(mstr(113));
-               set_local_var(LVAR_TrapDisarmed, 1);
-               call set_off_trap;
-            end
-            else begin
-               script_overrides;
-               display_msg(mstr(114));
-            end
-         end
+   // The trap has been found but not yet disarmed:
+   else if ((local_var(LVAR_TrapFound) == FOUND) and (local_var(LVAR_TrapDisarmed) == ARMED)) then begin
+      test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
+      if (is_success(test) and local_var(LVAR_TrapDisarmed) == ARMED) then begin
+         display_msg(mstr(115));
+         give_xp(EXP_TRAPS_NORMAL);
+         set_local_var(LVAR_TrapDisarmed, DISARMED);
       end
-
-      // The trap has been found:
       else begin
-         script_overrides;
-         test := roll_vs_skill(dude_obj, SKILL_TRAPS, 0);
-         if (is_success(test) and local_var(LVAR_TrapDisarmed) == 0) then begin
-            display_msg(mstr(115));
-            give_xp(EXP_TRAPS_NORMAL);
-            set_local_var(LVAR_TrapDisarmed, 1);
+         if (is_critical(test)) then begin
+            display_msg(mstr(116));
+            set_local_var(LVAR_TrapDisarmed, DISARMED);
+            call set_off_trap;
          end
-         else begin
-            if (is_critical(test)) then begin
-               display_msg(mstr(116));
-               set_local_var(LVAR_TrapDisarmed, 1);
-               call set_off_trap;
-            end
-            else begin
-               display_msg(mstr(117));
-            end
-         end
+         else
+            display_msg(mstr(117));
       end
    end
 end
@@ -224,10 +197,14 @@ end
 procedure set_off_trap begin
    variable Damage := 0;
    Damage := random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + random(2, 7) + (difficulty_level * random(5, 10));
-   play_sfx("WHN1XXX1");
+   //play_sfx("WHN1XXX1");
+
+   explosion(self_tile, self_elevation, 1);
    critter_dmg(dude_obj, Damage, DMG_explosion);
-   set_local_var(LVAR_LockStatus, 1);
-   set_local_var(LVAR_TrapDisarmed, 1);
+
+   set_local_var(LVAR_LockStatus, UNLOCKED);
+   set_local_var(LVAR_TrapDisarmed, DISARMED);
+
    obj_unlock(self_obj);
    obj_open(self_obj);
 end

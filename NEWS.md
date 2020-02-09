@@ -1,19 +1,36 @@
 Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1in2/releases/tag/v1.0.1700))
+- **Added**: A new mining site cavern encounter map with various sets of scenery types.
 - **Added**: Additional warning message for the Interface Upscale-mod, in case 'Scaling x2' is enabled and the screen resolution is too low.
+- **Added**: Blue cave wall variants of Fo2's mine interior walls.
 - **Added**: Blue colored cobweb and "water on cavewall" scenery objects.
 - **Added**: Fo2-styled cavern mountain maps with random enemy and loot spawn (Optional).
+- **Added**: New blue Cave <-> Desert transition tiles.
 - **Added**: Some generic "I don't know"-lines for Harold when asking keywords he knows nothing about.
+- **Added**: The game will end itself after critical warning popups (using Interface Upscaled mod with wrong resolution, etc).
+- **Added**: Toggle options for Fallout 2 critter in encounter maps (Geckos, etc).
 - **Added**: Using Nuka-Cola gives a bottle cap.
 - **Added**: Using up water / alcohol in dehydration encounters now correctly adds the item effects to the player.
+- **Fixed**: "Aradesh is furious" dialog string was something about human armor. Probably another Fixt-remnant.
+- **Fixed**: "You see: x" for party members.
+- **Fixed**: A possible crash when attacking Adytum with the Blades while a caravan is still in town and about to be deleted (issue #31).
+- **Fixed**: After getting the "Free Drinks"-reward from Neal in the Skum Pitt, his dialog options would still show caps, even though the drinks are free.
 - **Fixed**: Ant critters are now unaffected by the Animal Friend perk.
+- **Fixed**: Aradesh will grant the player two strikes for stealing, not just one + whatever was going on.
 - **Fixed**: Blowing up generic metal doors would print a wrong message log entry.
 - **Fixed**: Brahmin in special encounter should behave and float text correctly now.
 - **Fixed**: Breaking all limbs in a random encounter event would show the wrong message string.
 - **Fixed**: Broken colors of the death screen when using Sfall mode 4 or 5.
 - **Fixed**: Fo1 videos will now correctly play in Sfall mode 4 and 5 (Fo2 engine bug).
+- **Fixed**: Hightower's strongbox would explode when using the traps skill, even though the trap has been disarmed before.
+- **Fixed**: Honorable fight with Garl could temporary break Hero Appearance
 - **Fixed**: Looking at dead critters with "no stealing"-flag in combat would remove action points if the player is close to them (Fo2 engine bug).
 - **Fixed**: No animation would play when attacking the Overseer and missing. 
 - **Fixed**: Punk Girl critter death / knock down animations would revert to the default woman critter.
 - **Fixed**: Rad. Desert -> Radiated Desert
 - **Fixed**: Rad. Mountains -> Radiated Mountains
+- **Fixed**: Smitty in Adytum would still join the player team at the wrong time.
+- **Fixed**: Waterfall on cave walls now correctly uses the animfrvr.int script.
+- **Tweaked**: After getting caught stealing by Aradesh, the dialog interface will open instead of a floating text.
 - **Tweaked**: Doubled poison damage of small radscorpions.
+- **Tweaked**: Morpheus' voiced "you were warned"-line will now appear in dialog and not as a float anymore.
+- **Tweaked**: Nuka-Cola gives a tiny health boost.

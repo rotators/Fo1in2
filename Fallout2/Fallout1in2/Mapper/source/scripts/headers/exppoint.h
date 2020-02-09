@@ -253,6 +253,7 @@
 
 #define EXP_SHOVELED_ALL_CRAP                   (150)
 #define EXP_TEMPLE_OF_TRIALS                    (500)
+#define EXP_GECKO_SKINNING                      (150)
 
 /***************************************
  Give the experience points and display
@@ -261,10 +262,10 @@
 ***************************************/
 // Fallout 1 with correct Swift Learner perk bonus applied
 #define give_xp_msg(x, msg2)                    give_exp_points(x);             \
-                                                display_msg(g_mstr(10) + (x + ((x / 100 * 5) * dude_swift_learner)) + msg2)
+                                                display_msg(g_mstr(10) + (x + ((x / 100 * 5) *  dude_perk(PERK_swift_learner))) + msg2)
 
 // Fallout 2
 #define give_xp(x)                              give_exp_points(x);             \
-                                                display_msg(g_mstr(10) + (x + ((x / 100 * 5) * dude_swift_learner)) + g_mstr(11))
+                                                display_msg(g_mstr(10) + (x + ((x / 100 * 5) *  dude_perk(PERK_swift_learner))) + g_mstr(11))
 
 #endif // EXPPOINT_H

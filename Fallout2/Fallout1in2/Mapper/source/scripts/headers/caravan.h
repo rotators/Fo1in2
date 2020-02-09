@@ -305,25 +305,32 @@ variable Finding_New_Tile;
 //#define too_many_carts                      ((caravan_carts_left > ((caravan_brahmin_left/2) + (caravan_brahmin_left % 2))) and (caravan_brahmin_left != 0))
 #define too_many_carts                       (caravan_carts_left > caravan_brahmin_left)
 
-#define give_money(who,amount)               if (dude_fortune_finder) then          \
-                                                item_caps_adjust(who,2*(amount));   \
-                                             else                                   \
+#define give_money(who,amount)               if (dude_perk(PERK_fortune_finder)) then \
+                                                item_caps_adjust(who,2*(amount));     \
+                                             else                                     \
                                                 item_caps_adjust(who,(amount))
 
 /*********************************************************
     Defines for critter scripts
 *********************************************************/
 // Used to delete the critter after x time has passed
+// IMPORTANT:
+//    Can't just delete critters right away, because this can cause nullpointer crashes
+//    if the caravan is still in the map while combat starts.
+//    Example: https://github.com/rotators/Fo1in2/issues/31
 #define check_map_enter_timer                if not(map_is_caravan_escort) then begin                                \
+                                                if not(self_visible) then destroy_object(self_obj);                  \
                                                 if (local_var(LVAR_CaravanTimer) == 0) then                          \
                                                    set_local_var(LVAR_CaravanTimer, GAME_TIME_IN_HOURS);             \
                                                 if (((GAME_TIME_IN_HOURS) - local_var(LVAR_CaravanTimer)) >= 2) then \
-                                                   destroy_object(self_obj);                                         \
+                                                   /*destroy_object(self_obj);*/                                         \
+                                                   set_self_invisible; \
                                              end
 
 #define check_critter_timer                  if not(map_is_caravan_escort) then begin                                                                          \
                                                 if ((((GAME_TIME_IN_HOURS) - local_var(LVAR_CaravanTimer)) >= 2) and (local_var(LVAR_CaravanTimer) != 0)) then \
-                                                   destroy_object(self_obj);                                                                                   \
+                                                   /*destroy_object(self_obj);*/ \
+                                                   set_self_invisible; \
                                              end
 
 #endif // CARAVAN_H
