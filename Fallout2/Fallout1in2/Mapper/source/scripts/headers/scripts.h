@@ -515,8 +515,8 @@
 #define SCRIPT_CATH2MV   (502)  //  Cath2MV.int     ; spacial to take you from the Cathedral to the Master's Lair
 #define SCRIPT_GLO4SUPL  (503)  //  Glo4Supl.int    ; level 4 of the Glow, Supply Room                                            
 #define SCRIPT_LORRIBOX  (504)  //  LORRIBOX.int    ; BOS - Locker watched by Lorry  
-#define SCRIPT_HALL2SHD  (505)  //  Hall2Shd.int    ; spatial to take you from the Hall to the Watershed	// UNUSED!!!     
-#define SCRIPT_MOTEL2HL  (506)  //  Motel2Hl.int    ; spatial from the Motel to the Hall  // UNUSED!!!                        
+#define SCRIPT_ECHUNTRA  (505)  //  ECHUNTRA.int    ; Encounter - Gecko hunter - Father    
+#define SCRIPT_ECHUNTRB  (506)  //  ECHUNTRB.int    ; Encounter - Gecko hunter - Son                    
 #define SCRIPT_LYLE      (507)  //  Lyle.int        ; man who actually had some water rations stolen
 #define SCRIPT_NEAL      (508)  //  Neal.int        ; the bartender for the Skum Pitt.
 #define SCRIPT_TRAPFLOR  (509)  //  TrapFlor.int    ; there is a trap on the floor in the glow                                    
@@ -532,7 +532,7 @@
 #define SCRIPT_ELEV6_M1  (519)  //  elev6_m1.int    ; Glow Elevator 1 (really *6*, but vault13 is in place there)                 
 #define SCRIPT_ELEV7     (520)  //  elev7.int       ; Glow Elevator 2
 #define SCRIPT_ELEV9     (521)  //  elev9.int       ; Necropolis Elevator
-#define SCRIPT_ELEV10    (522)  //  elev10.int      ; Extra Milb Elevator // UNUSED!!!
+#define SCRIPT_ECHUNTRC  (522)  //  ECHUNTRC.int    ; Encounter - Gecko hunter - War Party / Raider  
 #define SCRIPT_ELEV11    (523)  //  elev11.int      ; Extra Glow Elevator
 #define SCRIPT_GENMUTAN  (524)  //  GenMutan.int    ; Generic mutant in the master's vault                                        
 #define SCRIPT_GENSARG   (525)  //  GenSarg.int     ; Generic sargent mutant in the master's vault

@@ -1,0 +1,129 @@
+/*
+
+   Encounter - Gecko hunter, the Son
+
+*/
+
+/* Include Files */
+#include "define.h"
+
+#define NAME                    SCRIPT_ECHUNTRB
+
+#include "command.h"
+#include "mapenc.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure pickup_p_proc;
+procedure critter_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure destroy_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure talk_p_proc;
+
+/*****************************************************************
+   Local Variables which are saved. All Local Variables need to be
+   prepended by LVAR_
+*****************************************************************/
+
+#define LVAR_Herebefore                   (4)
+#define LVAR_Hostile                      (5)
+#define LVAR_Personal_Enemy               (6)
+#define LVAR_Father_Killed                (7)
+
+#define float_father(x)                   float_msg(hunter_a_ptr, message_str(SCRIPT_ECHUNTRA, x), FLOAT_MSG_NORMAL)
+#define float_son(x)                      float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
+
+/*******************************************************************
+   Imported variables from the Map scripts. These should only be
+   pointers and variables that need not be saved. If a variable
+   Needs to be saved, make it a map variable (MVAR_)
+*******************************************************************/
+import variable hunter_a_ptr;
+import variable hunter_b_ptr;
+
+/*******************************************************************
+   Local variables which do not need to be saved between map changes.
+*******************************************************************/
+variable Only_Once := 0;
+variable Float := 0;
+variable last_question;
+
+/*******************************************************************
+*******                         PROCEDURES                   *******
+*******************************************************************/
+
+procedure start begin
+   hunter_b_ptr := self_obj;
+end
+
+procedure map_enter_p_proc begin
+   if (map_first_run) then begin
+      set_self_team(TEAM_RND_GECKO);
+      set_self_ai(AI_CAREFUL);
+   end
+end
+
+procedure critter_p_proc begin
+   if (((local_var(LVAR_Hostile) == 2)
+      or (local_var(LVAR_Personal_Enemy) == 1))
+      and (self_can_see_dude)) then begin
+         set_local_var(LVAR_Hostile, 1);
+
+         if (Only_Once == 0) then begin
+            Only_Once := 1;
+            attack(dude_obj);
+         end
+   end
+
+   if ghunter_status(HUNTER_FATHER_DEAD) then begin
+      set_local_var(LVAR_Hostile, 1);
+
+      if (not(combat_is_initialized) and Float == 0) then begin
+         Float := 1;
+         float_father(204);
+      end
+   end
+end
+
+procedure pickup_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Hostile, 2);
+   end
+end
+
+procedure destroy_p_proc begin
+   hunter_b_ptr := 0;
+
+   inc_good_critter
+   inc_childkiller
+   set_ghunter_status(HUNTER_SON_DEAD);
+
+   //if (hunter_a_ptr != 0) then
+   //   float_father(200);
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if ghunters_pc_knows_names then
+      display_msg(mstr(101));
+   else
+      display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(102));
+end
+
+procedure damage_p_proc begin
+   if (source_obj == dude_obj) then begin
+      set_local_var(LVAR_Personal_Enemy, 1);
+   end
+end
+
+procedure talk_p_proc begin
+   display_msg(mstr(1000));
+end

@@ -29,6 +29,22 @@
 #define cave_is_radiated   (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
 #define cave_is_hideout_1  (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
 
+// Gecko hunter bits
+#define HUNTER_FATHER_DEAD          bit_1
+#define HUNTER_SON_DEAD             bit_2
+#define HUNTER_WAR_PARTY            bit_3
+#define HUNTER_PC_KNOWS_NAMES       bit_4
+#define HUNTER_KNOWS_PC_NAME        bit_5
+
+#define set_ghunter_status(x)       set_gvar_bit_on(GVAR_GECKO_HUNTER_STATUS, x)
+#define ghunter_status(x)           (gvar_bit(GVAR_GECKO_HUNTER_STATUS, x))
+
+#define ghunters_killed             (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_FATHER_DEAD) and gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_SON_DEAD))
+#define ghunters_party_killed       (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_WAR_PARTY))
+#define ghunters_pc_knows_names     (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_PC_KNOWS_NAMES))
+#define ghunters_know_pc_name       (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_KNOWS_PC_NAME))
+
+
 //==================================================================
 #define spawn_dead_critter(x,y,z)      \
    Critter_type := x;                  \
@@ -145,7 +161,7 @@ procedure stranger begin
       add_obj_to_inven(Critter, Item);
       Item := create_object( PID_STIMPAK, 0, 0 );
       add_mult_objs_to_inven(Critter, Item, 2);
-      Item := item_caps_adjust(Critter, random(7, 30) * (dude_fortune_finder * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
+      Item := item_caps_adjust(Critter, random(7, 30) * ( dude_perk(PERK_fortune_finder) * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
       set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
    end
 end
@@ -183,7 +199,7 @@ procedure hunters begin
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
    end
-   item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+   item_caps_adjust(Critter, random(5, 30) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    Item := create_object(PID_SUPER_STIMPAK, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2);
 
@@ -220,7 +236,7 @@ procedure hunters begin
       wield_obj_critter(Critter, Item);
    end
    if (random(0, 2) == 0) then begin
-      item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      item_caps_adjust(Critter, random(5, 30) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
 
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
@@ -249,7 +265,7 @@ procedure hunters begin
    Item := create_object(PID_EXPLOSIVE_ROCKET, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
    if (random(0, 2) == 0) then begin
-      item_caps_adjust(Critter, random(5, 40) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      item_caps_adjust(Critter, random(5, 40) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
 
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
@@ -276,7 +292,7 @@ procedure hunters begin
       wield_obj_critter(Critter, Item);
    end
    if (random(0, 2) == 0) then begin
-      item_caps_adjust(Critter, random(5, 30) * (dude_fortune_finder * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      item_caps_adjust(Critter, random(5, 30) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
    end
 
    call Add_Mysterious_Stranger;
@@ -315,16 +331,16 @@ procedure drink_water begin
    else if (party_has_item(PID_GAMMA_GULP_BEER)) then
       Item := PID_GAMMA_GULP_BEER;
 
-   if (Item == PID_WATER_FLASK) then
-      display_msg(message_str(SCRIPT_RNDDESRT, 125));
-   else
-      display_msg(mstr_item_supply);
-
    if (Item != 0) then begin
       party_remove_item(Item)
 
       Item := create_object_sid(Item, 0, 0, -1);
       add_obj_to_inven(dude_obj, Item);
+      
+      if (obj_pid(Item) == PID_WATER_FLASK) then
+         display_msg(message_str(SCRIPT_RNDDESRT, 125));
+      else
+         display_msg(mstr_item_supply);
 
       set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
    end
