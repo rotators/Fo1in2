@@ -559,6 +559,9 @@
 #define PID_MOTO_KEY                        (253)
 #define PID_FARM_PARTS                      (535)
 
+#define PID_DEHYDRATION_WEAK                (537)
+#define PID_DEHYDRATION_STRONG              (538)
+
 // Fo1 Holodisks
 #define PID_BOS_HOLODISK                    (164) // Artifact disk
 #define PID_FEV_HOLODISK                    (190)

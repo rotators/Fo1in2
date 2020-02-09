@@ -83,6 +83,12 @@ procedure map_enter_p_proc begin
    if (map_first_run) then begin
       set_self_team(TEAM_RND_GECKO);
       set_self_ai(AI_BERZERKER);
+
+      if (is_loading_game == false) then begin
+         // Set the amount of people hunting the player if father / son is killed
+         if not(ghunter_status(HUNTER_SON_DEAD)) then
+            set_tribesman_count;
+      end
    end
 end
 
@@ -145,7 +151,9 @@ procedure talk_p_proc begin
    if (dude_iq < 4) then
       float_father(201);
    else begin
-      if (dude_perk(PERK_gecko_skinning_perk) == 1) then
+      if dude_is_armed then
+         float_father(205);
+      else if (dude_perk(PERK_gecko_skinning_perk) == 1) then
          float_father(202);
       else if (local_var(LVAR_Learn_Skinning) == 2) then
          float_father(203);
@@ -237,7 +245,7 @@ procedure Node1700 begin
 end
 
 procedure Node1800 begin
-   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1,6));
+   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1, 10));
    Add_Skinner;
 
    Reply(1800);
@@ -245,6 +253,7 @@ procedure Node1800 begin
 end
 
 procedure Node1900 begin
+   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1, 2));
    set_local_var(LVAR_Learn_Skinning, 2);
    NMessage(1900);
    Reply(1901);
@@ -261,14 +270,13 @@ procedure NodeGeckoSkinning begin
 
       // Add fireplace:
       Scenery_Creation_Hex := tile_num_in_direction(self_tile, 0, 2);
-      Scenery_Creation := create_object_sid(PID_FIRE_PIT, Scenery_Creation_Hex, 0, -1);
+      Scenery_Creation := create_object(PID_FIRE_PIT, Scenery_Creation_Hex, 0);
 
    gfade_in(1);
 
-      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
+      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk(PERK_survivalist));
       if (is_success(Skill_roll)) then
          call Node1800;
       else
          call Node1900;
 end
-

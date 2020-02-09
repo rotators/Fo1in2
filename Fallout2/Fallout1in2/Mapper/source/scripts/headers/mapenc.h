@@ -44,6 +44,12 @@
 #define ghunters_pc_knows_names     (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_PC_KNOWS_NAMES))
 #define ghunters_know_pc_name       (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_KNOWS_PC_NAME))
 
+// Amount of tribesman hunting the player
+#define GHUNTER_REVENGE_COUNT       (5)
+
+#define set_tribesman_count         if (global_var(GVAR_GECKO_HUNTER_WARPARTY) == 0) then \
+                                       set_global_var(GVAR_GECKO_HUNTER_WARPARTY, GHUNTER_REVENGE_COUNT)
+
 
 //==================================================================
 #define spawn_dead_critter(x,y,z)      \
@@ -307,6 +313,20 @@ variable has_water := 0;
 
 #define mstr_item_supply      (message_str(SCRIPT_RNDDESRT, 1250) + obj_name(Item) + message_str(SCRIPT_RNDDESRT, 1251))
 
+#define set_dehydration(x)    Item := create_object(x, 0, 0);              \
+                              add_obj_to_inven(dude_obj, Item);            \
+                              set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
+
+#define dehydration_knockdown if (hpDamage >= 18) then begin                  \
+                                 if (hpDamage >= 24) then begin               \
+                                    set_dehydration(PID_DEHYDRATION_STRONG);  \
+                                 end else begin                               \
+                                    set_dehydration(PID_DEHYDRATION_WEAK);    \
+                                 end                                          \
+                                 dude_knockdown_nosfx;                        \
+                              end                                             \
+                              noop
+
 procedure check_water_item begin
    has_water := 0;
    if (party_has_item(PID_NUKA_COLA) or
@@ -334,15 +354,15 @@ procedure drink_water begin
    if (Item != 0) then begin
       party_remove_item(Item)
 
-      Item := create_object_sid(Item, 0, 0, -1);
-      add_obj_to_inven(dude_obj, Item);
-      
+      Item := create_object(Item, 0, 0);
+      //add_obj_to_inven(dude_obj, Item);
+
       if (obj_pid(Item) == PID_WATER_FLASK) then
          display_msg(message_str(SCRIPT_RNDDESRT, 125));
       else
          display_msg(mstr_item_supply);
 
-      set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
+      //set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
    end
    else
       debug("ERROR! Can't find item for dehydration encounter event!");
@@ -368,6 +388,7 @@ procedure dehydration_a begin
       else begin
          if (is_critical(Skill_roll)) then begin
             hpDamage := random(15, 24 + TimeHours); // Fo1: 2 to 4
+            dehydration_knockdown;
             if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
             if (TimeHours == 1) then
                display_msg(message_str(SCRIPT_RNDDESRT, 112) + hpDamage + message_str(SCRIPT_RNDDESRT, 113));
@@ -389,9 +410,6 @@ procedure dehydration_a begin
                else
                   display_msg(message_str(SCRIPT_RNDDESRT, 122) + TimeHours + message_str(SCRIPT_RNDDESRT, 123) + hpDamage + message_str(SCRIPT_RNDDESRT, 124));
             end
-         end
-         if (hpDamage >= 20) then begin
-            dude_knockdown_nosfx;
          end
          critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
@@ -417,18 +435,15 @@ procedure dehydration_b begin
       else begin
          if (is_critical(Skill_roll)) then begin
             hpDamage := random(15, 24 + TimeHours); // Fo1: 2 to 4
-         end
-         else begin
+         end else begin
             hpDamage := random(6, 12 + TimeHours); // Fo1: 2 to 3
          end
+         dehydration_knockdown;
          if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
          if (hpDamage == 1) then
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 1160));
          else
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
-         if (hpDamage >= 20) then begin
-            dude_knockdown_nosfx;
-         end
          critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
       TimeHours := TimeHours * ONE_GAME_HOUR;

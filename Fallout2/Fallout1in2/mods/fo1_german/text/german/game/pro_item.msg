@@ -1022,7 +1022,6 @@
 {52900}{}{Minen-Grabungsmaschine}
 {53000}{}{Messer "End Boss" }
 {53100}{}{Plasmagewehr "End Boss"}
-
 {53200}{}{Motorrad Kofferraum}
 {53201}{}{Der Kofferraum ist ideal für die Unterbringung deiner Sachen.}
 {53300}{}{Beiwagen}
@@ -1030,6 +1029,10 @@
 {53400}{}{Motorrad Schlüssel}
 {53401}{}{Dieser Schlüssel gehört zu einem Chrysalis Motorrad.}
 {53500}{}{Pumpenteile}
-{53501}{}{Wasserdruckpumpe, Elektrospule, Magnetvakuumversiegelung, Stromkabel, dreipolige Adapter. . . eine schöne Sammlung.}
+{53501}{}{Wasserdruckpumpe, Elektrospule, Magnetvakuumversiegelung, Stromkabel, dreipolige Adapter... eine schöne Sammlung.}
 {53600}{}{Vaultanzug}
 {53601}{}{Ein gewöhnlicher Vaultanzug. Auf dem Rücken ist die Nummer 13 aufgedruckt.}
+{53700}{}{Dehydration Schwach}
+{53701}{}{DO NOT USE}
+{53800}{}{Dehydration Stark}
+{53801}{}{DO NOT USE}
