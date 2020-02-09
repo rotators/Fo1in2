@@ -320,12 +320,16 @@ procedure drink_water begin
    else
       display_msg(mstr_item_supply);
 
-   party_remove_item(Item)
+   if (Item != 0) then begin
+      party_remove_item(Item)
 
-   Item := create_object_sid(Item, 0, 0, -1);
-   add_obj_to_inven(dude_obj, Item);
+      Item := create_object_sid(Item, 0, 0, -1);
+      add_obj_to_inven(dude_obj, Item);
 
-   set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
+      set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
+   end
+   else
+      debug("ERROR! Can't find item for dehydration encounter event!");
 end
 
 // Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
