@@ -14,7 +14,7 @@
 {161}{}{What the? Where is my ..?!}
 
 {175}{}{I'm out of here.}
-{176}{}{Have fun with the bike.}
+{176}{}{Yeah, whatever.}
 {177}{}{Fuck this place.}
 {178}{}{Sweet baby jesus, something smells around here.}
 {179}{}{You still here?}

@@ -14,7 +14,7 @@
 {161}{}{Was zum? Wo ist mein ..?!}
 
 {175}{}{Ich gehe jetzt.}
-{176}{}{Viel Spaﬂ mit dem Motorrad.}
+{176}{}{Ja was auch immer.}
 {177}{}{Scheiﬂ auf den Ort.}
 {178}{}{Oh man, hier riecht etwas.}
 {179}{}{Immer noch hier?}

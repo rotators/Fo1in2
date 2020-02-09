@@ -285,41 +285,57 @@ end
 /************************************************
     Dehydration encounters
 ************************************************/
-#define mstr_item_supply      (message_str(SCRIPT_RNDDESRT, 1250) + obj_name(Item) + message_str(SCRIPT_RNDDESRT, 1251))
-
-#define dude_has_water_items  ((dude_item_count(PID_NUKA_COLA) +           \
-                              dude_item_count(PID_WATER_FLASK) +           \
-                              dude_item_count(PID_BEER) +                  \
-                              dude_item_count(PID_BOOZE) +                 \
-                              dude_item_count(PID_ROENTGEN_RUM) +          \
-                              dude_item_count(PID_GAMMA_GULP_BEER)) > 0)
-
-#define drink_water_item \
-   if (dude_item_count(PID_NUKA_COLA)) then              \
-      Item := dude_item(PID_NUKA_COLA);                  \
-   else if (dude_item_count(PID_WATER_FLASK)) then       \
-      Item := dude_item(PID_WATER_FLASK);                \
-   else if (dude_item_count(PID_BEER)) then              \
-      Item := dude_item(PID_BEER);                       \
-   else if (dude_item_count(PID_BOOZE)) then             \
-      Item := dude_item(PID_BOOZE);                      \
-   else if (dude_item_count(PID_ROENTGEN_RUM)) then      \
-      Item := dude_item(PID_ROENTGEN_RUM);               \
-   else if (dude_item_count(PID_GAMMA_GULP_BEER)) then   \
-      Item := dude_item(PID_GAMMA_GULP_BEER);            \
-   if (obj_pid(Item) == PID_WATER_FLASK) then            \
-      display_msg(message_str(SCRIPT_RNDDESRT, 125));    \
-   else                                                  \
-      display_msg(mstr_item_supply);                     \
-   set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
-
-// Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
 variable TimeHours := 0;
 variable hpDamage := 0;
+variable has_water := 0;
+
+#define mstr_item_supply      (message_str(SCRIPT_RNDDESRT, 1250) + obj_name(Item) + message_str(SCRIPT_RNDDESRT, 1251))
+
+procedure check_water_item begin
+   has_water := 0;
+   if (party_has_item(PID_NUKA_COLA) or
+      party_has_item(PID_WATER_FLASK) or
+      party_has_item(PID_BEER) or
+      party_has_item(PID_BOOZE) or
+      party_has_item(PID_ROENTGEN_RUM) or
+      party_has_item(PID_GAMMA_GULP_BEER)) then has_water := 1;
+end
+
+procedure drink_water begin
+   if (party_has_item(PID_NUKA_COLA)) then
+      Item := PID_NUKA_COLA;
+   else if (party_has_item(PID_WATER_FLASK)) then
+      Item := PID_WATER_FLASK;
+   else if (party_has_item(PID_BEER)) then
+      Item := PID_BEER;
+   else if (party_has_item(PID_BOOZE)) then
+      Item := PID_BOOZE;
+   else if (party_has_item(PID_ROENTGEN_RUM)) then
+      Item := PID_ROENTGEN_RUM;
+   else if (party_has_item(PID_GAMMA_GULP_BEER)) then
+      Item := PID_GAMMA_GULP_BEER;
+
+   if (Item == PID_WATER_FLASK) then
+      display_msg(message_str(SCRIPT_RNDDESRT, 125));
+   else
+      display_msg(mstr_item_supply);
+
+   party_remove_item(Item)
+
+   Item := create_object_sid(Item, 0, 0, -1);
+   add_obj_to_inven(dude_obj, Item);
+
+   set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
+end
+
+// Necropolis, Junktown, Brotherhood of Steel, North Table, South Table, Shady Sands, Vats Table
 procedure dehydration_a begin
    TimeHours := random(1, 6);
-   if dude_has_water_items then begin
-      drink_water_item;
+
+   call check_water_item;
+
+   if (has_water) then begin
+      call drink_water;
    end
    else begin
       Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk(PERK_survivalist));
@@ -367,8 +383,11 @@ end
 // Hub, Death(claw) table
 procedure dehydration_b begin
    TimeHours := random(1, 6) + 2;
-   if dude_has_water_items then begin
-      drink_water_item;
+
+   call check_water_item;
+
+   if (has_water) then begin
+      call drink_water;
    end
    else begin
       Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
