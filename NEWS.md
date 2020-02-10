@@ -6,6 +6,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Added**: Fo2-styled cavern mountain maps with random enemy and loot spawn (Optional).
 - **Added**: New blue Cave <-> Desert transition tiles.
 - **Added**: Some generic "I don't know"-lines for Harold when asking keywords he knows nothing about.
+- **Added**: The Gecko Skinning perk can now be obtained.
 - **Added**: The game will end itself after critical warning popups (using Interface Upscaled mod with wrong resolution, etc).
 - **Added**: Toggle options for Fallout 2 critter in encounter maps (Geckos, etc).
 - **Added**: Using Nuka-Cola gives a bottle cap.
@@ -24,13 +25,17 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: Hightower's strongbox would explode when using the traps skill, even though the trap has been disarmed before.
 - **Fixed**: Honorable fight with Garl could temporary break Hero Appearance
 - **Fixed**: Looking at dead critters with "no stealing"-flag in combat would remove action points if the player is close to them (Fo2 engine bug).
+- **Fixed**: Mr. Handy companion would spawn inside the combat arena when fighting Garl over Tandi.
 - **Fixed**: No animation would play when attacking the Overseer and missing. 
 - **Fixed**: Punk Girl critter death / knock down animations would revert to the default woman critter.
 - **Fixed**: Rad. Desert -> Radiated Desert
 - **Fixed**: Rad. Mountains -> Radiated Mountains
 - **Fixed**: Smitty in Adytum would still join the player team at the wrong time.
+- **Fixed**: Traveling merchants will now remember if their party is full or not.
+- **Fixed**: Traveling with NPCs was advancing waaaay too much time.
 - **Fixed**: Waterfall on cave walls now correctly uses the animfrvr.int script.
 - **Tweaked**: After getting caught stealing by Aradesh, the dialog interface will open instead of a floating text.
 - **Tweaked**: Doubled poison damage of small radscorpions.
 - **Tweaked**: Morpheus' voiced "you were warned"-line will now appear in dialog and not as a float anymore.
 - **Tweaked**: Nuka-Cola gives a tiny health boost.
+- **Tweaked**: Slightly increased encounter chances again.
