@@ -38,9 +38,9 @@ variable
    Choose_Scenery,
    Scenery_Chance,
    Active_Scenery_List := 1,
-   Scenery1_Range, Scenery1_List,
-   Scenery2_Range, Scenery2_List,
-   Scenery3_Range, Scenery3_List;
+   Scenery1_Range, Scenery1_List, Scenery1_Script := -1,
+   Scenery2_Range, Scenery2_List, Scenery2_Script := -1,
+   Scenery3_Range, Scenery3_List, Scenery3_Script := -1;
 
 procedure Choose_Encounter begin
    variable
@@ -214,19 +214,19 @@ procedure Place_scenery begin
    // TODO: Improve this shit
    if (Active_Scenery_List >= 1) then begin
       Scenery_Creation := array_random_value(Scenery1_List);
-      Scenery_Creation := create_object_sid(Scenery_Creation, 0, 0, -1);
+      Scenery_Creation := create_object_sid(Scenery_Creation, 0, 0, Scenery1_Script);
       Scenery_Creation_Hex := tile_num_in_direction(i, random(0, 5), Scenery1_Range);
       critter_attempt_placement(Scenery_Creation, Scenery_Creation_Hex, 1);
    end
    if (Active_Scenery_List >= 2) then begin
       Scenery_Creation := array_random_value(Scenery2_List);
-      Scenery_Creation := create_object_sid(Scenery_Creation, 0, 0, -1);
+      Scenery_Creation := create_object_sid(Scenery_Creation, 0, 0, Scenery2_Script);
       Scenery_Creation_Hex := tile_num_in_direction(i, random(0, 5), Scenery2_Range);
       critter_attempt_placement(Scenery_Creation, Scenery_Creation_Hex, 1);
    end
    if (Active_Scenery_List >= 3) then begin
       Scenery_Creation := array_random_value(Scenery3_List);
-      Scenery_Creation := create_object_sid(Scenery_Creation, 0, 0, -1);
+      Scenery_Creation := create_object_sid(Scenery_Creation, 0, 0, Scenery3_Script);
       Scenery_Creation_Hex := tile_num_in_direction(i, random(0, 5), Scenery3_Range);
       critter_attempt_placement(Scenery_Creation, Scenery_Creation_Hex, 1);
    end
@@ -243,6 +243,8 @@ procedure Choose_Cave_Type begin
    if (SceneryPos_List > 0) then begin
       Choose_Scenery := random(1, 10);
       Active_Scenery_List := 1;
+
+      //Choose_Scenery := 2; // DEBUG
 
       //--- Gold
       if (Choose_Scenery == 1) then begin
@@ -293,6 +295,7 @@ procedure Choose_Cave_Type begin
                   if (Scenery_Chance > 15) then begin
                      Active_Scenery_List := 2;
                      Scenery2_Range := random(0, 1);
+                     Scenery2_Script := SCRIPT_KTGOO;
                      Scenery2_List := [PID_RAD_GOO_3, PID_RAD_GOO_4];
                   end
                   call Place_scenery;
@@ -319,7 +322,7 @@ procedure Choose_Cave_Type begin
                      Scenery2_Range := random(0, 3);
                      Scenery2_List := [PID_ARMCHAIR_1, PID_ARMCHAIR_2,
                                        PID_METAL_BARREL_1,
-                                       PID_OLD_CHAIR, PID_POT, PID_JUNK, PID_WOODEN_TABLE_1];
+                                       PID_OLD_CHAIR, PID_POT, PID_JUNK, PID_WOODEN_TABLE_1, PID_TRASH_1, PID_TRASH_2, PID_TRASH_3, PID_TRASH_4];
                   end
                   call Place_scenery;
                end

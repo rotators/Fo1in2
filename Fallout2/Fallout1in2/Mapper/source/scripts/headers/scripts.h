@@ -95,7 +95,7 @@
 #define SCRIPT_SPSKUMPT  (82)  //  SPSKUMPT.int    ; Junktown - Skum Pitt spatial script
 #define SCRIPT_MANGLED   (83)  //  Mangled.int     ; Some mangled bodies in Necropolis.
 #define SCRIPT_MEANDER   (84)  //  Meander.int     ; Some meandering ghouls
-#define SCRIPT_DEPRECATED_14 (85) //SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_KTGOO     (85)   // KTGoo.int       ; Fo2 - Toxic Goo in the rat caves (Klamath)
 #define SCRIPT_NH2OCOMP  (86)  //  NH2OComp.int    ; Necropolis Water Computer                                                   
 #define SCRIPT_NH2OPUMP  (87)  //  NH2OPump.int    ; Necropolis Water Pump                                                       
 #define SCRIPT_ODDWALL   (88)  //  OddWall.int     ; There is something odd about this wall in Necropolis
