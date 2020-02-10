@@ -88,11 +88,10 @@ jobs:
 
   - name: Clone FO1@2
     if:   env.GHA_REPO_ALIVE == 'true'
-    uses: actions/checkout@e8bd1dffb6451bb0d84dbcd3ed059daca1371180
+    uses: actions/checkout@v2
     with:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
-#    uncomment when/if switching to v2
-#    fetch-depth: 0
+     fetch-depth: 0
 
   - name:  Preparations
     if:    env.GHA_REPO_ALIVE == 'true'
@@ -149,6 +148,8 @@ jobs:
               echo ::set-env name=GHA_TASK_DEBUGGER::true
            fi
 
+           echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
+
            # simplifies checking/displaying which event triggered workflow (especially dispatches)
            event="${{ github.event_name }}"
            if [ "$event" == "repository_dispatch" ]; then
@@ -196,16 +197,6 @@ jobs:
 
 ### Major tasks
 ### always generates commit (if needed)
-
-  # updates vswhere.exe
-  - name:  vswhere update
-    run:   |
-           :
-           curl -L https://github.com/microsoft/vswhere/releases/latest/download/vswhere.exe -o Tools/vswhere.exe
-           git diff --quiet || (git add --update && echo "- vswhere update" >> $HOME/gha.commit)
-
-           echo "::set-env name=MSBUILD_EXE::$(Tools/vswhere.exe -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
-    shell: bash
 
   - name:  Install Microsoft.VisualStudio.Component.WinXP
     if:    env.GHA_TASK_SFALL_ROTATORS == 'true' && (env.GHA_EVENT == 'schedule' || env.GHA_EVENT == 'repository_dispatch:schedule-push')
