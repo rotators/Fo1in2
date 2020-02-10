@@ -94,7 +94,7 @@ procedure Choose_Encounter begin
          active_encounter_pids := 2;
          encounter_pid1 := PID_SMALL_RADSCORPION;
          encounter_sid1 := SCRIPT_RADSCORP;
-         encounter_pid2 := PID_RADSCORPION;
+         encounter_pid2 := PID_NASTY_RADSCORPION;
          encounter_sid2 := SCRIPT_RADSCORP;
          total_encounter_mobs := Random(3, 5);
       end
