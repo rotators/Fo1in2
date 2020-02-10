@@ -34,7 +34,7 @@ variable
    choose_enc_pid := 0,
    choose_enc_sid := 0,
 
-   Area_List, Chest_List, SceneryPos_List,
+   Area_List, Chest_List, SceneryPos_List, Items_List,
    Choose_Scenery,
    Scenery_Chance,
    Active_Scenery_List := 1,
@@ -48,7 +48,7 @@ procedure Choose_Encounter begin
       rnd_chest := random(1, 100),
       rnd_critter;
 
-   if (rnd_chest > 40 and (stat_success(dude_obj, STAT_lu, 0))) then
+   if (rnd_chest < 60 and (stat_success(dude_obj, STAT_lu, 0))) then
       special_spawn_container := 1;
    else
       special_spawn_container := 0;
@@ -131,22 +131,6 @@ procedure Choose_Encounter begin
       encounter_sid1 := SCRIPT_WANRATS;
       total_encounter_mobs := Random(3, 5);
    end
-
-   // Raiders
-   /*
-   else if (val == 8) then begin
-      if (stat_success(dude_obj, STAT_lu, 0)) then begin
-         special_theif_encounter := 1;
-         active_encounter_pids := 2;
-
-         encounter_pid1 := PID_GEN_TRAVELER;
-         encounter_pid2 := PID_TRAVELER_BALD_LEATHER;
-         encounter_sid1 := SCRIPT_GENRAIDA;
-         encounter_sid2 := SCRIPT_GENRAIDA;
-         total_encounter_mobs := Random(2, 3);
-      end
-   end
-   */
 end
 
 procedure Choose_Pid begin
@@ -210,7 +194,7 @@ procedure placeCritter(variable pid, variable sid, variable baseTile) begin
    end
 end
 
-procedure Place_scenery begin
+procedure placeScenery begin
    // TODO: Improve this shit
    if (Active_Scenery_List >= 1) then begin
       Scenery_Creation := array_random_value(Scenery1_List);
@@ -245,7 +229,7 @@ procedure Choose_Cave_Type begin
       Active_Scenery_List := 1;
 
       // DEBUG:
-      //Choose_Scenery := 6;
+      //Choose_Scenery := 2;
 
       //--- Gold
       if (Choose_Scenery == 1) then begin
@@ -271,7 +255,7 @@ procedure Choose_Cave_Type begin
                      Scenery3_Range := random(0, 4);
                      Scenery3_List := [PID_SHOVEL, PID_FLARE, PID_HUNTING_RIFLE, PID_10MM_PISTOL];
                   end
-                  call Place_scenery;
+                  call placeScenery;
                end
             end
          end
@@ -299,12 +283,23 @@ procedure Choose_Cave_Type begin
                      Scenery2_Script := SCRIPT_KTGOO;
                      Scenery2_List := [PID_RAD_GOO_1, PID_RAD_GOO_3, PID_RAD_GOO_3, PID_RAD_GOO_4, PID_RAD_GOO_4];
                   end
-                  call Place_scenery;
+                  call placeScenery;
                end
             end
+         end
 
+         // Add Mr.Handy
+         Scenery_Chance := random(1, 100);
+         if (Scenery_Chance <= 15) then begin
+            Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
+            Scenery_Creation_Hex := array_random_value(SceneryPos_List);
 
-
+            Critter := create_object(PID_MRHANDY, 0, 0);
+            critter_attempt_placement(Critter, Scenery_Creation_Hex, 1);
+            obj_rotate(Critter, random(0,5));
+            kill_critter(Critter, ANIM_exploded_to_nothing_sf);
+            Item := array_random_value(Items_List);
+            add_obj_to_inven(Critter, create_object(Item, i, 1));
          end
       end // TOXIC BARRELS END
 
@@ -328,7 +323,7 @@ procedure Choose_Cave_Type begin
                                        PID_METAL_BARREL_1, PID_TRASH_1, PID_TRASH_2, PID_TRASH_3, PID_TRASH_4,
                                        PID_POT, PID_JUNK, PID_WOODEN_TABLE_1];
                   end
-                  call Place_scenery;
+                  call placeScenery;
                end
             end
          end
@@ -339,15 +334,18 @@ procedure Choose_Cave_Type begin
          set_dead_bodies;
 
          Critter_spawn_hex := array_random_value(Area_List);
-         i := Critter_spawn_hex; // So we remember the position for Place_scenery()
+         i := Critter_spawn_hex; // Remember the position for placeScenery()
          Outer_ring := 6;
          Inner_ring := 1;
          Critter_script := -1;
          Scenery1_List := [PID_PEASANT_BLACK, PID_PEASANT_BLACK, PID_MERCHANT, PID_PEASANT_YELLOW_FEMALE, PID_LEATHER_ARMOR_MALE, PID_ZOMBIE_GUARD, PID_MERCHANT];
          foreach (Item in Scenery1_List) begin
-            spawn_dead_critter(Item, Critter_script, random(48, 57));
-            move_to(Critter, tile_num(Critter), 1);
-            if (random(0,3) == 1) then item_caps_adjust(Critter, fortune_finder(random(1, 25)));
+            Scenery_Chance := random(1, 100);
+            if (Scenery_Chance <= 95) then begin
+               spawn_dead_critter(Item, Critter_script, random(48, 57));
+               move_to(Critter, tile_num(Critter), 1);
+               if (random(0,3) == 1) then item_caps_adjust(Critter, fortune_finder(random(1, 25)));
+            end
          end
 
          Scenery1_List := [PID_BONES_1, PID_BONES_2,
@@ -359,7 +357,7 @@ procedure Choose_Cave_Type begin
          foreach (Item in Scenery1_List) begin
             Scenery1_Range := random(0, 4);
             Scenery_Chance := random(1, 100);
-            if (Scenery_Chance > 50) then call Place_scenery;
+            if (Scenery_Chance > 50) then call placeScenery;
          end
       end // DEAD BODIES END
    end
@@ -372,10 +370,11 @@ procedure LoadChests begin
    variable
       container,
       container_type,
-      count,
-      Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
-                      PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
-                      PID_SPEAR, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD ];
+      count;
+
+   Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
+                   PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
+                   PID_SPEAR, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD ];
 
    i := array_random_value(Chest_List); // Only one random chest for now
    //foreach (i in Chest_List) begin
@@ -391,6 +390,12 @@ procedure LoadChests begin
          end
          if (random(0, 1) == 1) then
             item_caps_adjust(container, fortune_finder(10 * Random(1, dude_luck) + random(0, 9)));
+      end
+
+      // Rubber Boots
+      if cave_is_toxic then begin
+         if (random(0, 2) == 1) then
+            add_obj_to_inven(container, create_object(PID_RUBBER_BOOTS, 0, 1));
       end
    //end
 end

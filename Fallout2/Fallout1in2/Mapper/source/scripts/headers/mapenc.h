@@ -28,8 +28,9 @@
 #define set_dead_bodies    set_map_var(MVAR_CAVERN_TYPE, DEAD_BODIES)
 
 #define cave_is_gold_mine  (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
-#define cave_is_radiated   (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
+#define cave_is_toxic      (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
 #define cave_is_hideout_1  (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
+#define cave_is_bodies     (map_var(MVAR_CAVERN_TYPE) == DEAD_BODIES)
 
 // Gecko hunter bits
 #define HUNTER_FATHER_DEAD          bit_1
