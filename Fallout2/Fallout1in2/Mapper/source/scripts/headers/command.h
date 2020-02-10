@@ -242,6 +242,7 @@ variable step_tile;
 
 #define dude_caps_adjust(caps)            item_caps_adjust(dude_obj,caps)
 #define self_caps_adjust(caps)            item_caps_adjust(self_obj,caps)
+#define fortune_finder(caps)              (caps * (dude_perk(PERK_fortune_finder) + 1))
 
 #undef  dude_tile
 #undef  self_tile
