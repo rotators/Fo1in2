@@ -21,16 +21,19 @@
 #define GOLD_MINE          (2)
 #define HIDEOUT_1          (3)
 #define DEAD_BODIES        (4)
+#define ROBOT_CLEANER      (5)
 
 #define set_gold_mine      set_map_var(MVAR_CAVERN_TYPE, GOLD_MINE)
 #define set_toxic_cave     set_map_var(MVAR_CAVERN_TYPE, TOXIC_CAVE)
 #define set_hideout_1      set_map_var(MVAR_CAVERN_TYPE, HIDEOUT_1)
 #define set_dead_bodies    set_map_var(MVAR_CAVERN_TYPE, DEAD_BODIES)
+#define set_robot_cleaner  set_map_var(MVAR_CAVERN_TYPE, ROBOT_CLEANER)
 
-#define cave_is_gold_mine  (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
-#define cave_is_toxic      (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
-#define cave_is_hideout_1  (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
-#define cave_is_bodies     (map_var(MVAR_CAVERN_TYPE) == DEAD_BODIES)
+#define cave_is_gold_mine           (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
+#define cave_is_toxic               (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
+#define cave_is_hideout_1           (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
+#define cave_is_bodies              (map_var(MVAR_CAVERN_TYPE) == DEAD_BODIES)
+#define cave_is_robot_cleaner       (map_var(MVAR_CAVERN_TYPE) == ROBOT_CLEANER)
 
 // Gecko hunter bits
 #define HUNTER_FATHER_DEAD          bit_1

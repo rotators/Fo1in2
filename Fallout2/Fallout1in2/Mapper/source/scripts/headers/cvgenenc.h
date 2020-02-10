@@ -229,7 +229,7 @@ procedure Choose_Cave_Type begin
       Active_Scenery_List := 1;
 
       // DEBUG:
-      //Choose_Scenery := 2;
+      //Choose_Scenery := 3;
 
       //--- Gold
       if (Choose_Scenery == 1) then begin
@@ -288,7 +288,7 @@ procedure Choose_Cave_Type begin
             end
          end
 
-         // Add Mr.Handy
+         // Add destroyed Mr.Handy
          Scenery_Chance := random(1, 100);
          if (Scenery_Chance <= 15) then begin
             Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
@@ -299,7 +299,7 @@ procedure Choose_Cave_Type begin
             obj_rotate(Critter, random(0,5));
             kill_critter(Critter, ANIM_exploded_to_nothing_sf);
             Item := array_random_value(Items_List);
-            add_obj_to_inven(Critter, create_object(Item, i, 1));
+            add_obj_to_inven(Critter, create_object(Item, 0, 0));
          end
       end // TOXIC BARRELS END
 
@@ -360,6 +360,37 @@ procedure Choose_Cave_Type begin
             if (Scenery_Chance > 50) then call placeScenery;
          end
       end // DEAD BODIES END
+
+      // Cleaning Robot
+      else if (Choose_Scenery == 7) then begin
+         set_robot_cleaner;
+         special_spawn_critters := 0;
+
+         Outer_ring := 5;
+         Inner_ring := 1;
+         Critter_script := -1;
+         Scenery1_List := [PID_ANT, PID_GECKO, PID_RAT_CAVE];
+         Scenery1_List := array_random_value(Scenery1_List);
+         foreach (i in Area_List) begin
+            Critter_spawn_hex := i;
+            count := random(2, 4);
+            while (count > 0) do begin
+               count--;
+               spawn_dead_critter(Scenery1_List, Critter_script, random(48, 57));
+               move_to(Critter, tile_num(Critter), 1);
+            end
+         end
+
+         Critter_spawn_hex := array_random_value(Area_List);
+         Critter_type := PID_MRHANDY;
+         Critter_script := SCRIPT_ROBOT;
+         call Place_critter;
+         move_to(Critter, tile_num(Critter), 1);
+
+         Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
+         Item := array_random_value(Items_List);
+         add_obj_to_inven(Critter, create_object(Item, Critter_spawn_hex, 1));
+      end // CLEANING ROBOT END
    end
 end
 
