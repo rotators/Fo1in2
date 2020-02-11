@@ -383,6 +383,8 @@ procedure centaur_handler begin
    obj_rotate(Critter, random(0,5));
 
    arm_obj(Critter, PID_POWER_FIST, 1, PID_SMALL_ENERGY_CELL, 1)
+   Item := create_object(PID_MEAT_JERKY, 0, 0);
+   add_mult_objs_to_inven(Critter, Item, random(3,5));
 
    // Spawn Centaurs around Handler
    Outer_ring := 2;
@@ -419,7 +421,7 @@ end
 ****************************************/
 procedure Choose_Cave_Type begin
    if (SceneryPos_List > 0) then begin
-      Choose_Scenery := random(1, 12);
+      Choose_Scenery := random(1, 20);
       Active_Scenery_List := 1;
 
       // DEBUG:
