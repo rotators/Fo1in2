@@ -1,12 +1,11 @@
 /*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+
+    This file contains generic information for the cave random encounters
+
 */
 
 #ifndef CVGENENC_H
 #define CVGENENC_H
-/*
-    This file contains generic information for the cave random encounters
-*/
 
 variable
    i,
@@ -86,9 +85,11 @@ procedure Choose_Encounter begin
          encounter_sid1 := SCRIPT_RADSCORP;
          total_encounter_mobs := Random(3, 5);
       end else if (rnd_critter < 75) then begin
-         active_encounter_pids := 1;
+         active_encounter_pids := 2;
          encounter_pid1 := PID_RADSCORPION;
          encounter_sid1 := SCRIPT_RADSCORP;
+         encounter_pid2 := PID_NASTY_RADSCORPION;
+         encounter_sid2 := SCRIPT_RADSCORP;
          total_encounter_mobs := Random(3, 5);
       end else begin
          active_encounter_pids := 2;
@@ -229,7 +230,7 @@ procedure Choose_Cave_Type begin
       Active_Scenery_List := 1;
 
       // DEBUG:
-      //Choose_Scenery := 3;
+      Choose_Scenery := 8;
 
       //--- Gold
       if (Choose_Scenery == 1) then begin
@@ -391,6 +392,55 @@ procedure Choose_Cave_Type begin
          Item := array_random_value(Items_List);
          add_obj_to_inven(Critter, create_object(Item, Critter_spawn_hex, 1));
       end // CLEANING ROBOT END
+
+      // Centaur Handler
+      else if (Choose_Scenery == 8) then begin
+         set_centaur_handler;
+         special_spawn_critters := 0;
+
+         // Spawn Handler
+         Outer_ring := 2;
+         Inner_ring := 1;
+         Critter_script := SCRIPT_MUTAMBSH;
+         Critter_type := PID_MEAN_SUPER_MUTANT;
+         Critter_spawn_hex := array_random_value(Area_List);
+         call Place_critter;
+         move_to(Critter, tile_num(Critter), 1);
+         obj_rotate(Critter, random(0,5));
+
+         Item := create_object(PID_POWER_FIST, 0, 0);
+         add_obj_to_inven(Critter, Item);
+         wield_obj_critter(Critter, Item);
+
+         // Spawn Centaurs around Handler
+         Outer_ring := 5;
+         Inner_ring := 1;
+         Critter_script := SCRIPT_RADSCORP;
+         Critter_type := PID_GREATER_CENTAUR;
+         count := random(2, 4);
+         while (count > 0) do begin
+            count--;
+            call Place_critter;
+            move_to(Critter, tile_num(Critter), 1);
+         end
+
+         // Fill up the cave
+         foreach (i in Area_List) begin
+            Scenery_Chance := random(1, 100);
+            if (Scenery_Chance <= 85) then begin
+               Critter_spawn_hex := i;
+               Scenery1_List := [PID_CENTAUR_LESSER, PID_GREATER_CENTAUR];
+               Scenery1_List := array_random_value(Scenery1_List);
+               count := random(1, 4);
+               while (count > 0) do begin
+                  count--;
+                  Critter_type := Scenery1_List;
+                  call Place_critter;
+                  move_to(Critter, tile_num(Critter), 1);
+               end
+            end
+         end
+      end // CENTAUR HANDLER END
    end
 end
 
