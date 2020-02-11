@@ -640,8 +640,8 @@ variable forced_node;
                                                       end else call x
 
 #define force_dialog_start(the_node)            debug_msg("force_dialog_start("+forced_node+"): "+self_name);  \
-                                                      forced_node := the_node;                                    \
-                                                      dialogue_system_enter
+                                                forced_node := the_node;                                    \
+                                                dialogue_system_enter
 
 #define check_forced_dialog                           if (forced_node != 0) then begin          \
                                                          debug_msg("calling forced dialog: "+forced_node);\
@@ -650,11 +650,12 @@ variable forced_node;
                                                       end
 
 variable tmp_rotation;
-#define face_start_dialog_at_node(x)         tmp_rotation:=self_cur_rot;         \
-                                    Face_Critter(dude_obj,self_obj);    \
-                                    Face_Critter(self_obj,dude_obj);    \
-                                    start_dialog_at_node(x);         \
-                                    self_rotate(tmp_rotation)
+#define face_start_dialog_at_node(x)   \
+   tmp_rotation:=self_cur_rot;         \
+   Face_Critter(dude_obj,self_obj);    \
+   Face_Critter(self_obj,dude_obj);    \
+   start_dialog_at_node(x);            \
+   self_rotate(tmp_rotation)
 
 /*
 FLOAT_MSG_BLACK
@@ -925,7 +926,6 @@ variable removed_qty;
            stock_pid_qty(who_obj, ammo_pid, ammo_qty)                                        \
         end else begin                                                                       \
            if ((weapon_pid == PID_10MM_PISTOL) or                                            \
-               (weapon_pid == PID_ZIP_GUN) or                                                \
                (weapon_pid == PID_10MM_SMG)) then begin                                      \
               stock_pid_qty(who_obj, PID_10MM_JHP, ammo_qty)                                 \
            end else if ((weapon_pid == PID_HUNTING_RIFLE) or                                 \
@@ -954,6 +954,7 @@ variable removed_qty;
                         (weapon_pid == PID_TURBO_PLASMA_RIFLE)) then begin                   \
               stock_pid_qty(who_obj, PID_MICRO_FUSION_CELL, ammo_qty)                        \
            end else if ((weapon_pid == PID_LASER_PISTOL) or                                  \
+                        (weapon_pid == PID_ZIP_GUN) or                                       \
                         (weapon_pid == PID_POWER_FIST) or                                    \
                         (weapon_pid == PID_MEGA_POWER_FIST) or                               \
                         (weapon_pid == PID_RIPPER) or                                        \
@@ -1012,6 +1013,13 @@ variable removed_qty;
 
 #define arm_obj(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty)                give_obj_weapon(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty, true)
 #define stock_weapon_obj(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty)       give_obj_weapon(who_obj, weapon_pid, weapon_qty, ammo_pid, ammo_qty, false)
+   
+procedure give_item(variable critter, variable pidList) begin
+   variable pid, qty;
+   foreach (pid: qty in pidList) begin
+      give_pid_qty(critter, pid, qty)
+   end
+end
 
 /******************************************************************
  general macros/defines related to having sex
@@ -1063,7 +1071,7 @@ variable removed_qty;
 #define amt_cost_barter(who1, who2, x)                  floor(2 * x * ((160.0 + has_skill(who2,SKILL_BARTER)) / (160.0 + has_skill(who1,SKILL_BARTER))))
 #define pid_cost_barter(who1, who2, x)                  amt_cost_barter(who1, who2, pid_cost(x))
 #define obj_cost_barter(who1, who2, x)                  pid_cost_barter(who1, who2, obj_pid(x))
-#define who_max_carry(x)                               get_critter_stat(x,STAT_carry_amt)
+#define who_max_carry(x)                                get_critter_stat(x,STAT_carry_amt)
 #define who_carry_amount(x)                             has_trait(TRAIT_OBJECT, x, OBJECT_CUR_WEIGHT)
 #define who_inven_free_amt(x)                           (who_max_carry(x) - who_carry_amount(x))
 

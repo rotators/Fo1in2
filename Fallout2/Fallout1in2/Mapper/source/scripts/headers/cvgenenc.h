@@ -8,7 +8,7 @@
 #define CVGENENC_H
 
 variable
-   i,
+   i, count, chance,
 
    encounter_pid1 := 0,
    encounter_pid2 := 0,
@@ -218,229 +218,233 @@ procedure placeScenery begin
 end
 
 /****************************************
-   Define the scenery inside the cavern
+   Scenery Types
 ****************************************/
-procedure Choose_Cave_Type begin
-   variable
-      count,
-      chance;
-
-   if (SceneryPos_List > 0) then begin
-      Choose_Scenery := random(1, 10);
-      Active_Scenery_List := 1;
-
-      // DEBUG:
-      Choose_Scenery := 8;
-
-      //--- Gold
-      if (Choose_Scenery == 1) then begin
-         set_gold_mine;
-
-         foreach (i in SceneryPos_List) begin
-            if (random(0, 2) == 1) then begin
-               count := random(1, 8);
-               while (count > 0) do begin
-                  count--;
-                  Scenery1_Range := random(0, 4);
-                  Scenery1_List := [PID_GOLD_NUGGET];
-
-                  Scenery_Chance := random(1, 100);
-                  if (Scenery_Chance <= 25) then begin
-                     Active_Scenery_List := 2;
-                     Scenery2_Range := random(0, 4);
-                     Scenery2_List := [PID_ROCK];
-                  end
-
-                  if (Scenery_Chance <= 10) then begin
-                     Active_Scenery_List := 3;
-                     Scenery3_Range := random(0, 4);
-                     Scenery3_List := [PID_SHOVEL, PID_FLARE, PID_HUNTING_RIFLE, PID_10MM_PISTOL];
-                  end
-                  call placeScenery;
-               end
-            end
-         end
-      end // GOLD END
-
-      //--- Toxic Barrels
-      else if (Choose_Scenery >= 2 and Choose_Scenery <= 3) then begin
-         set_toxic_cave;
-
-         foreach (i in SceneryPos_List) begin
-            if (random(0, 100) > 15) then begin
-               count := random(3, 6);
-               while (count > 0) do begin
-                  count--;
-                  Scenery1_Range := random(0, 2);
-                  Scenery1_List := [PID_BARREL_TOXIC_EMPTY, PID_BARREL_TOXIC_EMPTY,
-                                    PID_BARREL_TOXIC_FULL, PID_BARREL_TOXIC_FULL, PID_BARREL_TOXIC_FULL, PID_BARREL_TOXIC_FULL,
-                                    PID_BARREL_ALT_1,
-                                    PID_BARREL_STACK_2];
-
-                  Scenery_Chance := random(1, 100);
-                  if (Scenery_Chance <= 85) then begin
-                     Active_Scenery_List := 2;
-                     Scenery2_Range := random(0, 1);
-                     Scenery2_Script := SCRIPT_KTGOO;
-                     Scenery2_List := [PID_RAD_GOO_1, PID_RAD_GOO_3, PID_RAD_GOO_3, PID_RAD_GOO_4, PID_RAD_GOO_4];
-                  end
-                  call placeScenery;
-               end
-            end
-         end
-
-         // Add destroyed Mr.Handy
-         Scenery_Chance := random(1, 100);
-         if (Scenery_Chance <= 15) then begin
-            Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
-            Scenery_Creation_Hex := array_random_value(SceneryPos_List);
-
-            Critter := create_object(PID_MRHANDY, 0, 0);
-            critter_attempt_placement(Critter, Scenery_Creation_Hex, 1);
-            obj_rotate(Critter, random(0,5));
-            kill_critter(Critter, ANIM_exploded_to_nothing_sf);
-            Item := array_random_value(Items_List);
-            add_obj_to_inven(Critter, create_object(Item, 0, 0));
-         end
-      end // TOXIC BARRELS END
-
-      // Abandoned hideout
-      else if (Choose_Scenery >= 4 and Choose_Scenery <= 5) then begin
-         set_hideout_1;
-
-         foreach (i in SceneryPos_List) begin
-            if (random(0, 100) > 10) then begin
-               count := 1;
-               while (count > 0) do begin
-                  count--;
-                  Scenery1_Range := random(0, 2);
-                  Scenery1_List := [PID_MATTRESS_1, PID_MATTRESS_2, PID_BED_1, PID_BED_2];
-
-                  Scenery_Chance := random(1, 100);
-                  if (Scenery_Chance <= 15) then begin
-                     Active_Scenery_List := 2;
-                     Scenery2_Range := random(0, 3);
-                     Scenery2_List := [PID_ARMCHAIR_1, PID_ARMCHAIR_2, PID_OLD_CHAIR,
-                                       PID_METAL_BARREL_1, PID_TRASH_1, PID_TRASH_2, PID_TRASH_3, PID_TRASH_4,
-                                       PID_POT, PID_JUNK, PID_WOODEN_TABLE_1];
-                  end
-                  call placeScenery;
-               end
-            end
-         end
-      end // ABANDONED HIDEOUT END
-
-      // Dead Bodies
-      else if (Choose_Scenery == 6) then begin
-         set_dead_bodies;
-
-         Critter_spawn_hex := array_random_value(Area_List);
-         i := Critter_spawn_hex; // Remember the position for placeScenery()
-         Outer_ring := 6;
-         Inner_ring := 1;
-         Critter_script := -1;
-         Scenery1_List := [PID_PEASANT_BLACK, PID_PEASANT_BLACK, PID_MERCHANT, PID_PEASANT_YELLOW_FEMALE, PID_LEATHER_ARMOR_MALE, PID_ZOMBIE_GUARD, PID_MERCHANT];
-         foreach (Item in Scenery1_List) begin
-            Scenery_Chance := random(1, 100);
-            if (Scenery_Chance <= 95) then begin
-               spawn_dead_critter(Item, Critter_script, random(48, 57));
-               move_to(Critter, tile_num(Critter), 1);
-               if (random(0,3) == 1) then item_caps_adjust(Critter, fortune_finder(random(1, 25)));
-            end
-         end
-
-         Scenery1_List := [PID_BONES_1, PID_BONES_2,
-                           PID_SPEAR, PID_KNIFE, PID_KNIFE, PID_SLEDGEHAMMER, PID_CROWBAR,
-                           PID_44_FMJ_MAGNUM, PID_10MM_AP, PID_SHOTGUN_SHELLS,
-                           PID_DYNAMITE,
-                           PID_BOTTLE_CAPS, PID_BOTTLE_CAPS, PID_BOTTLE_CAPS, PID_BOTTLE_CAPS, PID_BOTTLE_CAPS, PID_BOTTLE_CAPS,
-                           PID_BEER];
-         foreach (Item in Scenery1_List) begin
-            Scenery1_Range := random(0, 4);
-            Scenery_Chance := random(1, 100);
-            if (Scenery_Chance > 50) then call placeScenery;
-         end
-      end // DEAD BODIES END
-
-      // Cleaning Robot
-      else if (Choose_Scenery == 7) then begin
-         set_robot_cleaner;
-         special_spawn_critters := 0;
-
-         Outer_ring := 5;
-         Inner_ring := 1;
-         Critter_script := -1;
-         Scenery1_List := [PID_ANT, PID_GECKO, PID_RAT_CAVE];
-         Scenery1_List := array_random_value(Scenery1_List);
-         foreach (i in Area_List) begin
-            Critter_spawn_hex := i;
-            count := random(2, 4);
-            while (count > 0) do begin
-               count--;
-               spawn_dead_critter(Scenery1_List, Critter_script, random(48, 57));
-               move_to(Critter, tile_num(Critter), 1);
-            end
-         end
-
-         Critter_spawn_hex := array_random_value(Area_List);
-         Critter_type := PID_MRHANDY;
-         Critter_script := SCRIPT_ROBOT;
-         call Place_critter;
-         move_to(Critter, tile_num(Critter), 1);
-
-         Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
-         Item := array_random_value(Items_List);
-         add_obj_to_inven(Critter, create_object(Item, Critter_spawn_hex, 1));
-      end // CLEANING ROBOT END
-
-      // Centaur Handler
-      else if (Choose_Scenery == 8) then begin
-         set_centaur_handler;
-         special_spawn_critters := 0;
-
-         // Spawn Handler
-         Outer_ring := 2;
-         Inner_ring := 1;
-         Critter_script := SCRIPT_MUTAMBSH;
-         Critter_type := PID_MEAN_SUPER_MUTANT;
-         Critter_spawn_hex := array_random_value(Area_List);
-         call Place_critter;
-         move_to(Critter, tile_num(Critter), 1);
-         obj_rotate(Critter, random(0,5));
-
-         Item := create_object(PID_POWER_FIST, 0, 0);
-         add_obj_to_inven(Critter, Item);
-         wield_obj_critter(Critter, Item);
-
-         // Spawn Centaurs around Handler
-         Outer_ring := 5;
-         Inner_ring := 1;
-         Critter_script := SCRIPT_RADSCORP;
-         Critter_type := PID_GREATER_CENTAUR;
-         count := random(2, 4);
+procedure gold_mine begin
+   foreach (i in SceneryPos_List) begin
+      if (random(0, 2) == 1) then begin
+         count := random(1, 8);
          while (count > 0) do begin
             count--;
+            Scenery1_Range := random(0, 4);
+            Scenery1_List := [PID_GOLD_NUGGET];
+
+            Scenery_Chance := random(1, 100);
+            if (Scenery_Chance <= 25) then begin
+               Active_Scenery_List := 2;
+               Scenery2_Range := random(0, 4);
+               Scenery2_List := [PID_ROCK];
+            end
+
+            if (Scenery_Chance <= 10) then begin
+               Active_Scenery_List := 3;
+               Scenery3_Range := random(0, 4);
+               Scenery3_List := [PID_SHOVEL, PID_FLARE, PID_HUNTING_RIFLE, PID_10MM_PISTOL];
+            end
+            call placeScenery;
+         end
+      end
+   end
+end
+
+procedure toxic_cave begin
+   foreach (i in SceneryPos_List) begin
+      if (random(0, 100) > 15) then begin
+         count := random(3, 6);
+         while (count > 0) do begin
+            count--;
+            Scenery1_Range := random(0, 2);
+            Scenery1_List := [PID_BARREL_TOXIC_EMPTY, PID_BARREL_TOXIC_EMPTY,
+                              PID_BARREL_TOXIC_FULL, PID_BARREL_TOXIC_FULL, PID_BARREL_TOXIC_FULL, PID_BARREL_TOXIC_FULL,
+                              PID_BARREL_ALT_1,
+                              PID_BARREL_STACK_2];
+
+            Scenery_Chance := random(1, 100);
+            if (Scenery_Chance <= 85) then begin
+               Active_Scenery_List := 2;
+               Scenery2_Range := random(0, 1);
+               Scenery2_Script := SCRIPT_KTGOO;
+               Scenery2_List := [PID_RAD_GOO_1, PID_RAD_GOO_3, PID_RAD_GOO_3, PID_RAD_GOO_4, PID_RAD_GOO_4];
+            end
+            call placeScenery;
+         end
+      end
+   end
+
+   // Add destroyed Mr.Handy
+   Scenery_Chance := random(1, 100);
+   if (Scenery_Chance <= 15) then begin
+      Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
+      Scenery_Creation_Hex := array_random_value(SceneryPos_List);
+
+      Critter := create_object(PID_MRHANDY, 0, 0);
+      critter_attempt_placement(Critter, Scenery_Creation_Hex, 1);
+      obj_rotate(Critter, random(0,5));
+      kill_critter(Critter, ANIM_exploded_to_nothing_sf);
+      Item := array_random_value(Items_List);
+      add_obj_to_inven(Critter, create_object(Item, 0, 0));
+   end
+end
+
+procedure abandoned_hideout begin
+   foreach (i in SceneryPos_List) begin
+      if (random(0, 100) > 10) then begin
+         count := 1;
+         while (count > 0) do begin
+            count--;
+            Scenery1_Range := random(0, 2);
+            Scenery1_List := [PID_MATTRESS_1, PID_MATTRESS_2, PID_BED_1, PID_BED_2];
+
+            Scenery_Chance := random(1, 100);
+            if (Scenery_Chance <= 15) then begin
+               Active_Scenery_List := 2;
+               Scenery2_Range := random(0, 3);
+               Scenery2_List := [PID_ARMCHAIR_1, PID_ARMCHAIR_2, PID_OLD_CHAIR,
+                                 PID_METAL_BARREL_1, PID_TRASH_1, PID_TRASH_2, PID_TRASH_3, PID_TRASH_4,
+                                 PID_POT, PID_JUNK, PID_WOODEN_TABLE_1];
+            end
+            call placeScenery;
+         end
+      end
+   end
+end
+
+procedure dead_bodies begin
+   Critter_spawn_hex := array_random_value(Area_List);
+   i := Critter_spawn_hex; // Remember the position for placeScenery()
+   Outer_ring := 6;
+   Inner_ring := 1;
+   Critter_script := -1;
+   Scenery1_List := [PID_PEASANT_BLACK, PID_PEASANT_BLACK, PID_MERCHANT, PID_PEASANT_YELLOW_FEMALE, PID_LEATHER_ARMOR_MALE, PID_ZOMBIE_GUARD, PID_MERCHANT];
+   foreach (Item in Scenery1_List) begin
+      Scenery_Chance := random(1, 100);
+      if (Scenery_Chance <= 95) then begin
+         spawn_dead_critter(Item, Critter_script, random(48, 57));
+         move_to(Critter, tile_num(Critter), 1);
+         if (random(0,3) == 1) then item_caps_adjust(Critter, fortune_finder(random(1, 25)));
+      end
+   end
+
+   Items_List := {PID_BONES_1: 75, PID_BONES_2: 75,
+                  PID_SPEAR: 50, PID_KNIFE: 50, PID_KNIFE: 40, PID_SLEDGEHAMMER: 35, PID_CROWBAR: 45, PID_10MM_PISTOL: 15,
+                  PID_44_FMJ_MAGNUM: 60, PID_10MM_AP: 60, PID_SHOTGUN_SHELLS: 50,
+                  PID_DYNAMITE: 10, PID_BEER: 25,
+                  PID_BOTTLE_CAPS: 50, PID_BOTTLE_CAPS: 50, PID_BOTTLE_CAPS: 50, PID_BOTTLE_CAPS: 45, PID_BOTTLE_CAPS: 40, PID_BOTTLE_CAPS: 40};
+   foreach (Item : chance in Items_List) begin
+      Scenery1_Range := random(0, 4);
+      Scenery_Chance := random(1, 100);
+      if (Scenery_Chance <= chance) then begin
+         Scenery1_List := [Item];
+         call placeScenery;
+      end
+   end
+end
+
+procedure cleaning_robot begin
+   special_spawn_critters := 0;
+
+   Outer_ring := 5;
+   Inner_ring := 1;
+   Critter_script := -1;
+   Scenery1_List := [PID_ANT, PID_GECKO, PID_RAT_CAVE];
+   Scenery1_List := array_random_value(Scenery1_List);
+   foreach (i in Area_List) begin
+      Critter_spawn_hex := i;
+      count := random(2, 4);
+      while (count > 0) do begin
+         count--;
+         spawn_dead_critter(Scenery1_List, Critter_script, random(48, 57));
+         move_to(Critter, tile_num(Critter), 1);
+      end
+   end
+
+   Critter_spawn_hex := array_random_value(Area_List);
+   Critter_type := PID_MRHANDY;
+   Critter_script := SCRIPT_ROBOT;
+   call Place_critter;
+   move_to(Critter, tile_num(Critter), 1);
+
+   Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
+   Item := array_random_value(Items_List);
+   add_obj_to_inven(Critter, create_object(Item, Critter_spawn_hex, 1));
+end
+
+procedure centaur_handler begin
+   special_spawn_critters := 0;
+
+   // Spawn Handler
+   Outer_ring := 2;
+   Inner_ring := 1;
+   Critter_script := SCRIPT_ECHANDLR;
+   Critter_type := PID_MEAN_SUPER_MUTANT;
+   Critter_spawn_hex := array_random_value(Area_List);
+   call Place_critter;
+   move_to(Critter, tile_num(Critter), 1);
+   obj_rotate(Critter, random(0,5));
+
+   arm_obj(Critter, PID_POWER_FIST, 1, PID_SMALL_ENERGY_CELL, 1)
+
+   // Spawn Centaurs around Handler
+   Outer_ring := 2;
+   Inner_ring := 1;
+   Critter_script := SCRIPT_ECHCENTR;
+   Critter_type := PID_GREATER_CENTAUR;
+   count := 1;
+   while (count > 0) do begin
+      count--;
+      call Place_critter;
+      move_to(Critter, tile_num(Critter), 1);
+   end
+
+   // Fill up the cave
+   foreach (i in Area_List) begin
+      Scenery_Chance := random(1, 100);
+      if (Scenery_Chance <= 75) then begin
+         Critter_spawn_hex := i;
+         Scenery1_List := [PID_CENTAUR_LESSER, PID_GREATER_CENTAUR];
+         Scenery1_List := array_random_value(Scenery1_List);
+         count := random(1, 3);
+         while (count > 0) do begin
+            count--;
+            Critter_type := Scenery1_List;
             call Place_critter;
             move_to(Critter, tile_num(Critter), 1);
          end
+      end
+   end
+end
 
-         // Fill up the cave
-         foreach (i in Area_List) begin
-            Scenery_Chance := random(1, 100);
-            if (Scenery_Chance <= 85) then begin
-               Critter_spawn_hex := i;
-               Scenery1_List := [PID_CENTAUR_LESSER, PID_GREATER_CENTAUR];
-               Scenery1_List := array_random_value(Scenery1_List);
-               count := random(1, 4);
-               while (count > 0) do begin
-                  count--;
-                  Critter_type := Scenery1_List;
-                  call Place_critter;
-                  move_to(Critter, tile_num(Critter), 1);
-               end
-            end
-         end
-      end // CENTAUR HANDLER END
+/****************************************
+   Select Scenery Type
+****************************************/
+procedure Choose_Cave_Type begin
+   if (SceneryPos_List > 0) then begin
+      Choose_Scenery := random(1, 12);
+      Active_Scenery_List := 1;
+
+      // DEBUG:
+      //Choose_Scenery := 8;
+
+      if (Choose_Scenery == 1) then begin
+         set_gold_mine;
+         call gold_mine;
+      end else if (Choose_Scenery >= 2 and Choose_Scenery <= 3) then begin
+         set_toxic_cave;
+         call toxic_cave;
+      end else if (Choose_Scenery >= 4 and Choose_Scenery <= 5) then begin
+         set_hideout_1;
+         call abandoned_hideout;
+      end else if (Choose_Scenery == 6) then begin
+         set_dead_bodies;
+         call dead_bodies;
+      end else if (Choose_Scenery == 7) then begin
+         set_robot_cleaner;
+         call cleaning_robot;
+      end else if (Choose_Scenery == 8 and global_var(GVAR_WORLDMAP_TABLE) == 11) then begin
+         set_centaur_handler;
+         call centaur_handler;
+         call dead_bodies;
+      end
    end
 end
 

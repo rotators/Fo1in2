@@ -108,8 +108,8 @@
 #define SCRIPT_SETGUARD  (95)  //  SetGuard.int    ; Guards to protect Set from Harm.                                            
 #define SCRIPT_SETSCTDR  (96)  //  SetSctDr.int    ; Set's Secret Door.                                                          
 #define SCRIPT_SMELL     (97)  //  Smell.int       ; It's an odd smell in Necropolis (must be ghouls?)
-#define SCRIPT_DEPRECATED_15 (98) //SCRIPT_STIMPACK  (98)  //  StimPack.int    ; scripts.lst - DONOTUSE wtf??????                                              
-#define SCRIPT_STOREROM  (99)  //  StoreRom.int    ; Spacial script for the Necropolis store room                                
+#define SCRIPT_ECHANDLR  (98)   //  ECHANDLR.int    ; Super Mutant centaur handler
+#define SCRIPT_STOREROM  (99)   //  StoreRom.int    ; Spacial script for the Necropolis store room                                
 #define SCRIPT_SUPER     (100)  //  Super.int       ; Super Mutants from the city Necropolis
 #define SCRIPT_TERRY     (101)  //  Terry.int       ; Terry the Super Mutant (fly away)
 #define SCRIPT_GARRET    (102)  //  Garret.int      ; Set's lacky in Necropolis
@@ -121,7 +121,7 @@
 #define SCRIPT_JCHIDMEM  (108)  //  JChidMem.int    ; Junktown Children of the Cathedral Member                                   
 #define SCRIPT_LOOKOUT   (109)  //  Lookout.int     ; Necropolis Undergrounder Lookout
 #define SCRIPT_MACHIV    (110)  //  MachIV.int      ; Mach IV computer in Buried Vaul that is broken
-#define SCRIPT_ZICLOSED  (111)   // ziClosed.int    ; Generic "Out of Business" signs
+#define SCRIPT_ZICLOSED  (111)  // ziClosed.int     ; Generic "Out of Business" signs
 #define SCRIPT_RNDDESRT  (112)  //  RndDesrt.int    ; Random Encounter Desert Map                                                 
 #define SCRIPT_TGUARD    (113)  //  TGuard.int      ; Tower Guard for Shady Sands
 #define SCRIPT_COOK      (114)  //  cook.int        ; A cook from Shady Sands kitchen
@@ -262,8 +262,8 @@
 #define SCRIPT_MILES     (249)  //  Miles.int       ; The chemist of Adytum
 #define SCRIPT_SMITTY    (250)  //  Smitty.int      ; Adytum's blacksmith
 #define SCRIPT_ADYTOWNR  (251)  //  Adytownr.int    ; Generic script for an Adytowner                                             
-#define SCRIPT_REGULATR  (252)  //  Regulatr.int    ; Generic Regulator, guard of Adytown                               
-#define SCRIPT_DEPRECATED_16 (253) //SCRIPT_LORRI     (253)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_REGULATR  (252)  //  Regulatr.int    ; Generic Regulator, guard of Adytown      
+#define SCRIPT_ECHCENTR  (253)  //  ECHCENTR.int    ; Centaur from Centaur Handler encounter
 #define SCRIPT_SAMMAEL   (254)  //  Sammael.int     ; Scav from Adytum
 #define SCRIPT_CALEB     (255)  //  Caleb.int       ; Head of the Regulators from Adytum
 #define SCRIPT_TAYLOR    (256)  //  Taylor.int      ; Shop keeper/trader from Adytum

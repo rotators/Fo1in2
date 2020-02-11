@@ -44,11 +44,9 @@ procedure NodeGeckoSkinning;
    prepended by LVAR_
 *****************************************************************/
 
-#define LVAR_Herebefore                   (4)
-#define LVAR_Hostile                      (5)
-#define LVAR_Personal_Enemy               (6)
-#define LVAR_Son_Killed                   (7)
-#define LVAR_Learn_Skinning               (8)
+#define LVAR_Flags                        (4)
+#define LVAR_Son_Killed                   (5)
+#define LVAR_Learn_Skinning               (6)
 
 #define float_self(x)                     float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
 #define float_son(x)                      float_msg(hunter_b_ptr, message_str(SCRIPT_ECHUNTRB, x), FLOAT_MSG_NORMAL)
@@ -93,25 +91,23 @@ procedure map_enter_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if (((local_var(LVAR_Hostile) == 2)
-      or (local_var(LVAR_Personal_Enemy) == 1))
-      and (self_can_see_dude)) then begin
-         set_local_var(LVAR_Hostile, 1);
+   if ((hostile or (personal_enemy)) and (self_can_see_dude)) then begin
+      set_hostile;
 
-         if (Only_Once == 0) then begin
-            Only_Once := 1;
-            attack(dude_obj);
-         end
+      if (Only_Once == 0) then begin
+         Only_Once := 1;
+         attack(dude_obj);
+      end
    end
 
    if ghunter_status(HUNTER_SON_DEAD) then begin
-      set_local_var(LVAR_Hostile, 1);
+      set_hostile;
    end
 end
 
 procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(LVAR_Hostile, 2);
+      set_hostile;
    end
 end
 
@@ -143,7 +139,7 @@ end
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(LVAR_Personal_Enemy, 1);
+      set_personal_enemy;
    end
 end
 
@@ -164,14 +160,14 @@ procedure talk_p_proc begin
 end
 
 procedure Node998 begin
-   set_local_var(LVAR_Personal_Enemy, 1);
+   set_personal_enemy;
 end
 
 procedure Node999 begin
 end
 
 procedure Node1000 begin
-   if (local_var(LVAR_Herebefore) == 0) then
+   if not(herebefore) then
       Reply(1000);
    else
       Reply(1001);
@@ -183,7 +179,7 @@ procedure Node1000 begin
    BOption(1030, Node998, 4);
    NOption(g_bye, Node999, 4);
 
-   set_local_var(LVAR_Herebefore, 1);
+   set_herebefore;
 end
 
 procedure Node1100 begin
