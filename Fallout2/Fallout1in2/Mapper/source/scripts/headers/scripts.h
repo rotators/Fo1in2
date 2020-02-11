@@ -331,8 +331,8 @@
 #define SCRIPT_TALUS     (318)  //  Talus.int       ; Talus, Rombus's second in command.
 #define SCRIPT_SOPHIA    (319)  //  Sophia.int      ; Sophia, an instructor for the Brotherhood
 #define SCRIPT_MICHAEL   (320)  //  Michael.int     ; Distributes weapons to initiates.
-#define SCRIPT_GLO4WEAP  (321)  //  Glo4Weap.int    ; Weapon depot on level 4 of the Glow                                         
-#define SCRIPT_DEPRECATED_17 (322) //SCRIPT_SCRIBEA   (322)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_GLO4WEAP  (321)  //  Glo4Weap.int    ; Weapon depot on level 4 of the Glow      
+#define SCRIPT_ECLADDER  (322)  //  ECLADDER.int    ; Cavern encounter ladder
 #define SCRIPT_DEPRECATED_18 (323) //SCRIPT_SCRIBEB   (323)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_SENTRY    (324)  //  Sentry.int      ; Paladin guard after invasion
 #define SCRIPT_PALADINA  (325)  //  PaladinA.int    ; Paladin in the Hall of the Brotherhood.                                     

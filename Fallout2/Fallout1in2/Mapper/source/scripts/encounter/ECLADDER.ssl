@@ -1,0 +1,60 @@
+/*
+
+   Random mountain encounter - Ladder
+
+*/
+
+#include "define.h"
+#include "sfall/lib.arrays.h"
+
+#define NAME                    SCRIPT_ECLADDER
+
+#include "command.h"
+#include "mapenc.h"
+
+procedure start;
+procedure use_p_proc;
+
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   variable
+      ladder_pos_list,
+      ladder_pos;
+
+   if map_first_run then begin
+      if (self_elevation == 1 and map_var(MVAR_CAVERN_LADDER) == 0) then begin
+         if (random(1, 100) <= 90) then destroy_object(self_obj);
+
+         if CUR_MAP_MINE1 then
+            ladder_pos_list := [16298, 17268, 20479, 20102, 13716];
+         else
+            destroy_object(self_obj);
+
+         if (ladder_pos_list > 0) then begin
+            ladder_pos := array_random_value(ladder_pos_list);
+            move_to(self_obj, ladder_pos, 1);
+         end
+
+         if (map_var(MVAR_CAVERN_LADDER) == 0) then
+            set_map_var(MVAR_CAVERN_LADDER, self_tile);
+      end
+   end
+end
+
+procedure use_p_proc begin
+   variable elev1_hex := tile_num_in_direction(map_var(MVAR_CAVERN_LADDER), 2, 2);
+
+   if ((anim_busy(dude_obj) != 0) or (anim_busy(dude_obj) == 0)) then begin
+      script_overrides;
+      if (source_elevation == 1) then begin
+         move_to(source_obj, 21511, 2);
+      end
+      else begin
+         move_to(source_obj, elev1_hex, 1);
+      end
+      dude_rotate(2);
+      anim(source_obj, ANIM_stand, 0);
+   end
+end
