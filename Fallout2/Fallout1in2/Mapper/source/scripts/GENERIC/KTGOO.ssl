@@ -5,10 +5,10 @@
 // Goo.ssl
 // damages critters in the goo
 
-#include "..\headers\define.h"
+#include "define.h"
 
 #define NAME                    SCRIPT_KTGOO
-#include "..\headers\command.h"
+#include "command.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -20,7 +20,7 @@ procedure pain;
 variable my_boots;
 variable worn;
 variable k;
-variable mutate:=0;
+variable mutate := 0;
 
 procedure start begin
 end
@@ -37,15 +37,15 @@ procedure map_enter_p_proc begin
 end
 
 procedure spatial_p_proc begin
-     my_boots:=0;
-     worn:=0;
+     my_boots := 0;
+     worn := 0;
      //dont need to be carrying boots in hand
-     if (obj_carrying_pid_obj(source_obj, PID_RUBBER_BOOTS)) then begin
+     if (get_item(source_obj, PID_RUBBER_BOOTS)) then begin
         //if carrying boots ..do boot damage
        //debug_msg("NPC Code");
-        k := random(1,100);
+        k := random(1, 100);
         if (k < 2) then begin //1% chance to melt
-           my_boots := obj_carrying_pid_obj(source_obj, PID_RUBBER_BOOTS);
+           my_boots := get_item(source_obj, PID_RUBBER_BOOTS);
            rm_obj_from_inven(source_obj, my_boots);
            destroy_object(my_boots);
            if (source_obj == dude_obj) then
@@ -69,7 +69,7 @@ procedure spatial_p_proc begin
 
 procedure meltem begin
    //debug_msg("My Boots Protect Me!");
-   k := random(1,100);
+   k := random(1, 100);
    if (k < 2) then begin //1% chance to melt
       //debug_msg("Melting");
       rm_obj_from_inven(dude_obj, my_boots);
@@ -80,19 +80,19 @@ procedure meltem begin
 end
 
 procedure pain begin
-   if (critter_inven_obj(source_obj,INVEN_TYPE_WORN) != 0) then
-      worn := obj_pid(critter_inven_obj(source_obj,INVEN_TYPE_WORN));
+   if (get_armor(source_obj) != 0) then
+      worn := obj_pid(get_armor(source_obj));
    if ((worn != PID_POWERED_ARMOR) and (worn != PID_HARDENED_POWER_ARMOR) and (worn != PID_ADVANCED_POWER_ARMOR)) then begin
         //if not wearing powered armor then do damage
         //debug_msg("It hurts!");
         if ( (source_obj == dude_obj) and (global_var(GVAR_MUTATE_STAGE) < 1) ) then begin
-           mutate:=global_var(GVAR_MUTATE);
-           mutate:=mutate+2;
-           set_global_var(GVAR_MUTATE,mutate);
+           mutate := global_var(GVAR_MUTATE);
+           mutate := mutate+2;
+           set_global_var(GVAR_MUTATE, mutate);
            if (mutate > 29) then begin
               //set_global_var(GVAR_MUTATE, 1); //set state of character to mutate
               set_global_var(GVAR_MUTATE_WHEN, GAME_TIME_IN_DAYS); //store the time
-              set_global_var(GVAR_MUTATE_STAGE,1);
+              set_global_var(GVAR_MUTATE_STAGE, 1);
               display_msg(mstr(150));
            end
            else if (mutate > 14) then
