@@ -56,7 +56,7 @@ procedure Choose_Encounter begin
    if (val == 1) then begin
       active_encounter_pids := 1;
       rnd_critter := random(1, 100);
-      if (rnd_critter < 65) then begin
+      if (rnd_critter < 65 - dude_level) then begin
          encounter_pid1 := PID_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
          if (random(0, 4) == 1) then begin
@@ -65,7 +65,7 @@ procedure Choose_Encounter begin
             active_encounter_pids := 2;
          end
          total_encounter_mobs := Random(1, 3);
-      end else if (rnd_critter < 80) then begin
+      end else if (rnd_critter < 80 - dude_level) then begin
          encounter_pid1 := PID_GOLDEN_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
          total_encounter_mobs := Random(2, 3);
@@ -106,11 +106,11 @@ procedure Choose_Encounter begin
       active_encounter_pids := 1;
       rnd_critter := random(1, 100);
 
-      if (rnd_critter < 50) then begin
+      if (rnd_critter < 50 - dude_level) then begin
          encounter_pid1 := PID_RAT_CAVE;
          encounter_sid1 := SCRIPT_WANRATS;
          total_encounter_mobs := Random(3, 5);
-      end else if (rnd_critter < 75) then begin
+      end else if (rnd_critter < 75 - dude_level) then begin
          active_encounter_pids := 1;
          encounter_pid1 := PID_PIGRAT;
          encounter_sid1 := SCRIPT_WANRATS;
