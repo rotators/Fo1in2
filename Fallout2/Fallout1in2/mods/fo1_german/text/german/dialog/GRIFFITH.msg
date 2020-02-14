@@ -37,85 +37,85 @@
 {301}{}{Verpiss dich, du hast nicht mal Geld!}
 
 # Dialog:
-{1000}{}{Hey smoothskin, what'cha lookin at? I tell you what: You're looking at an original Chryslus Motors Cruiser, build... Uhm... Actually, I don't know when it was build, but it's pre-war and in top condition!}
-{1001}{}{You're here to talk, smoothskin? }
-{1002}{}{You got the caps now or what?}
-{1003}{}{Don't push my buttons, smoothskin.}
-	{1010}{}{Nice ride. Is the engine still running?}
-	{1020}{}{You know, I have seen plenty pictures of motorcycles in our vault library. }
-	{1030}{}{Please don't talk to me. Bye.}
-	{1040}{}{I got the caps.}
+{1000}{}{He Glatthaut, weiß du was du da siehst? Ich sagst dir: Ein Original Chryslus Motors Cruiser, gebaut... ähh... Eigentlich weiß ich nicht, wann es gebaut wurde, aber es ist außer Zeit vorm Krieg und in Top-Zustand!}
+{1001}{}{Hier zum reden, Glatthaut? }
+{1002}{}{Hast du nun die Deckel, oder was?}
+{1003}{}{Mach mich nich' sauer, Glatthaut.}
+	{1010}{}{Nette Maschine. Läuft der Motor noch?}
+	{1020}{}{Weißt du, ich habe in unserem Bibliothekscomputer viele Bilder von Motorrädern gesehen. }
+	{1030}{}{Bitte rede nicht mit mir. Tschüß.}
+	{1040}{}{Ich habe das Geld.}
 	
-{1100}{}{Of course it runs, dummie! Fill it up with energy cells and it'll come alive and roar like a beast!}
-	{1110}{}{Why are you telling me this?}
-	{1120}{}{I get it, you want to get rid of the bike.}
-	{1130}{}{Great, but there is a water chip I have to fetch. See you later.}
+{1100}{}{Natürlich läuft sie, Dummkopf! Schließ' ne' Energiezelle an und es wird lebendig und brüllt wie ein Tier!}
+	{1110}{}{Warum erzählst du mir das?}
+	{1120}{}{Ich verstehe, du willst das Motorrad loswerden.}
+	{1130}{}{Großartig, aber es gibt einen Wasserchip, den ich holen muss. Bis später.}
 	
-{1200}{}{Why? Easy. Because you look interested. And I feel we're in a bit of a situation here, which requires me to leave this hole as soon as possible.}
-	{1210}{}{Now this place doesn't seem all *that* bad to me.}
-	{1220}{}{Why aren't you leaving then?}
-	{1230}{}{Are you refering to the mutants occupying the watershed?}
+{1200}{}{Warum? Einfach! Weil du interessiert aussiehst. Und ich habe das Gefühl, daß wir uns hier in einer Situation befinden, in der ich dieses Drecksloch so schnell wie möglich verlassen muss.}
+	{1210}{}{Es scheint mir hier nicht so schlimm zu sein.}
+	{1220}{}{Warum gehst du dann nicht einfach?}
+	{1230}{}{Meinst du etwa die Mutanten an der Wasserstelle?}
 	
-{1300}{}{Are you serious? You see'n these green fuckers over there at the watershed? I'd say shit 's about to go down here. Soon. When that happens, I won't be around anymore.}
-	{1310}{}{Why aren't you leaving with the bike then?}
+{1300}{}{Meinst du das ernst? Siehst du nicht diese grünen Wichser da drüben an der Wasserstelle? Ich würde sagen, bald ist hier die Kacke ordentlich am dampfen! Wenn das passiert, bin ich nicht mehr da.}
+	{1310}{}{Warum nimmst du dann nicht einfach den Cruiser?}
 	
-{1400}{}{Because I'm out of ENERGY CELLS, smoothskin! Even if I wanted to - which I do, very much, believe me - I can't. Don't have the caps and even if, sure as shit you won't find 'cells to buy anywhere around here.}
-	{1410}{}{Energy cells, huh? Would these do it for you?}
-	{1420}{}{What's the bike going to cost me?}
-	{1430}{}{That sucks, but I have to go now. See you later.}
+{1400}{}{Weil ich keine ENERGIEZELLEN mehr habe, Glatthaut! Selbst wenn ich wollte - was ich sehr tue, glaub' mir - kann ich nicht. Ich habe keine Deckel mehr. Und selbst wenn ich hätte, sind hier nirgendwo Zellen zu finden, die man kaufen könnte.}
+	{1410}{}{Energiezellen, hm? Würden es die hier tun?}
+	{1420}{}{Was würde mich das Bike kosten?}
+	{1430}{}{Das ist Scheiße, aber ich muss jetzt gehen. Bis später.}
 	
-{1500}{}{Shit! ... Yeah! But ... I can't pay you.}
-	{1510}{}{Just take them and get out my sight before I'll change my mind.}
-	{1520}{}{You're right, that's not a good deal. What do you want for the bike?}
+{1500}{}{Scheiße, ja Mann! Aber... ich kann dich nicht bezahlen.}
+	{1510}{}{Nimm sie einfach und verschwinde aus meinen Augen, bevor ich es mir anders überlege.}
+	{1520}{}{Du hast recht, das wäre kein gutes Geschäft. Was willst du für das Bike haben?}
 	
-{1600}{}{Wait, are you..? Really? ... Thanks man! Time to say goodbye to this death infested hole! Do you think there's something up north for the likes of us? Guess I will find out!}
-	{1610}{}{[Done]}
+{1600}{}{Warte, bist du...? Wirklich? ... Danke Mann! Zeit sich von diesem vom Tod befallenem Scheißhaufen zu verabschieden! Glaubst du, es gibt was im Norden für Leute wie uns? Schätze ich werd's herausfinden!}
+	{1610}{}{[Fertig]}
 	
-{1700}{}{You're from a vault, huh? I've been a vault dweller too once! Now look, it only brought the best out of me! Ha-ha! [He flails his boney arms in front of you] }
-	{1710}{}{[More]}
+{1700}{}{Du bist aus einer Vault, was? Ich war auch mal ein Vault-Bewohner! Un schau an, es hat nur das Beste in mir hervorgebracht! Haha! [Er fuchtelt mit seinen knochigen Armen deiner Nase herum] }
+	{1710}{}{[Mehr]}
 
-{1800}{}{Now, seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
-	{1810}{}{I'm all ears.}
+{1800}{}{Aber im Ernst. Wenn du es zur Wasserstelle geschafft hast, kannst du nicht so inkompetent sein wie die anderen Trottel, die hier herumlungern. Was heißt, daß ich einen Vorschlag für dich habe.}
+	{1810}{}{Ich bin ganz Ohr.}
 
-{1900}{}{I'll give you the bike. For the measly sum of 2000 caps, it's aaaall yours. Get it? It's time for me to leave this shithole behind.}
-	{1910}{}{2000? That's quite some caps.}
-	{1920}{}{I'll give you 1000 caps.}
-	{1930}{}{I'll give you 500 caps.}
-	{1940}{}{Not interested. }
-	{1950}{}{If you want to leave, why not with the bike?}
-	{1960}{}{What will you do with the money?}
-	{1970}{}{Deal.}
+{1900}{}{Ich werde dir das Motorrad verkaufen. Für die schlappe Summe von 2000 Deckeln gehört es komplett dir! Es wird Zeit für mich, dieses Drecksloch hinter mir zu lassen}
+	{1910}{}{2000? Das ist aber ne ganz schöne Stange Geld.}
+	{1920}{}{Ich gebe dir 1000 Deckel.}
+	{1930}{}{Wie hören sich 500 Deckel an?}
+	{1940}{}{Nicht interessiert. }
+	{1950}{}{Wenn du weg willst, warum nicht mit der Maschine?}
+	{1960}{}{Was wirst du mit dem Geld machen?}
+	{1970}{}{Abgemacht.}
 
-{2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
-	{2010}{}{Alright. Here's your 2000 caps.}
-	{2020}{}{That's too steep for me.}
+{2000}{}{Willst du mich verarschen? Es ist ein voll funktionsfähiger Chryslus Motors Cruiser! So sicher wie dein Morgenschiß, wirst du für laaaange Zeit keinen anderen in diesem Zustand finden!}
+	{2010}{}{In Ordung. Hier sind deine 2000 Deckel.}
+	{2020}{}{Das ist mir zu teuer.}
 
-{2100}{}{Deal! ... Now wait here. I'll go and get the fuel cell controller.}
-	{2110}{}{The fuel cell controller?}
-{2101}{}{You really trying to shit me here, are you? No way you have 2000 caps!}
-	{2120}{}{Oh ...}
+{2100}{}{Deal! ... Warte hier. Ich werde den Brennstoffzellencontroller holen.}
+	{2110}{}{Den Brennstoffzellencontroller?}
+{2101}{}{Du versuchst wirklich mich zu verarschen, oder? Nie im Leben hast du 2000 Deckel!}
+	{2120}{}{Oh...}
 
-{2200}{}{What? You think I'll keep the bike standing here on the open road just like that? You think I'm stupid? Without the fuel cell controller you can't start the bike, even with the keys. Now wait here, I'll go and get it.}
+{2200}{}{Was? Glaubst du etwa, ich laß' die Maschine einfach so mitten auf der Straße mit einem funktionierendem Brennstoffzellencontroller  rumstehen? Denkst du ich bin bescheuert? Ohne den Controller kannst du den Cruiser nichtmal starten, selbst mit den Schlüsseln. Jetzt warte hier, ich werde ihn holen. }
 	{2210}{}{[Warte]}
-{2300}{}{[You wait for Griffith to return.]}
+{2300}{}{[Du wartest auf Griffith's Rückkehr.]}
 	{2310}{}{[Warte]}
-{2400}{}{[That really takes a while.]}
+{2400}{}{[Das dauert wirklich eine Weile.]}
 	{2410}{}{[Warte]}
-{2500}{}{[Did he just scam you?]}
+{2500}{}{[Hat er dich grad reingelegt?]}
 	{2510}{}{[Warte]}
 
-{2600}{}{Phew. Sure as shit, my lungs aren't the best anymore ... You're still here? Great! Got the controller. Here, take it. I'll make my way to the next caravan out of this shithole.}
+{2600}{}{Puh. Klar, meine Lungen sind definitiv nicht mehr die besten ... Du bist immer noch hier? Gut! Habe den Controller, hier, nimm ihn. Ich mache mich auf den Weg zur nächsten Karawane aus diesem Scheißloch.}
 	{2610}{}{Pass auf dich auf.}
 
-{2700}{}{Not much, actually. Just the measly sum of 2000 caps. That's all.}
-{2701}{}{Aren't you listening? It's 2000 caps!}
-{2800}{}{If you say so. Get back to me if you change your mind.}
+{2700}{}{Och, garnicht so viel. Nur die dürftige Summe von 2000 Deckel, mehr nicht.}
+{2701}{}{Hast du nicht zugehört? Ich sagte 2000 Deckel!}
+{2800}{}{Wenn du meinst. Melde dich, wenn du es dir anders überlegen solltest.}
 
-{3100}{}{I'll hit up the next caravan. Maybe up north? Anywhere is better than here.}
+{3100}{}{Ich schnapp' mir den nächsten Caravan. Vielleicht im Norden? Überall ist besser als hier.}
 
-{3200}{}{Look! You're actually smarter than everyone else around here! ... They are just the vanguard. There's more to come, I bet on that.}
-	{3210}{}{Alright, I'll buy your bike.}
-	{3220}{}{I better keep going then. See you later.}
+{3200}{}{Na schau, du bist tatsächlich schlauer als alle anderen hier! Ich bin sicher sie sind nur die Vorhut, und wette darauf, daß noch viel mehr kommen werden.}
+	{3210}{}{In Ordnung, ich werde dein Motorrad kaufen.}
+	{3220}{}{Dann mache ich besser weiter. Bis später.}
 
 
 # Dumb dude
