@@ -12,22 +12,32 @@
 ************************************************/
 
 // All Map Vars need to start w/ MVAR_
-#define MVAR_Hostile_Total             (0)   // Number of monsters created
-#define MVAR_CARVN_LEAD                (1)
-#define MVAR_CAVERN_TYPE               (2)
+#define MVAR_Hostile_Total             (0) // Number of monsters created
+#define MVAR_CARVN_LEAD                (1) // Used in caravan encounter
+#define MVAR_CAVERN_TYPE               (2) // Will special scenery spawn in this location?
+#define MVAR_CAVERN_LADDER             (3) // Used to remember the position of the randomly placed ladder
 
 // Cavern Type for random scenery spawn
 #define TOXIC_CAVE         (1)
 #define GOLD_MINE          (2)
 #define HIDEOUT_1          (3)
+#define DEAD_BODIES        (4)
+#define ROBOT_CLEANER      (5)
+#define CENTAUR_HANDLER    (6)
 
-#define set_gold_mine      set_map_var(MVAR_CAVERN_TYPE, GOLD_MINE)
-#define set_toxic_cave     set_map_var(MVAR_CAVERN_TYPE, TOXIC_CAVE)
-#define set_hideout_1      set_map_var(MVAR_CAVERN_TYPE, HIDEOUT_1)
+#define set_gold_mine         set_map_var(MVAR_CAVERN_TYPE, GOLD_MINE)
+#define set_toxic_cave        set_map_var(MVAR_CAVERN_TYPE, TOXIC_CAVE)
+#define set_hideout_1         set_map_var(MVAR_CAVERN_TYPE, HIDEOUT_1)
+#define set_dead_bodies       set_map_var(MVAR_CAVERN_TYPE, DEAD_BODIES)
+#define set_robot_cleaner     set_map_var(MVAR_CAVERN_TYPE, ROBOT_CLEANER)
+#define set_centaur_handler   set_map_var(MVAR_CAVERN_TYPE, CENTAUR_HANDLER)
 
-#define cave_is_gold_mine  (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
-#define cave_is_radiated   (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
-#define cave_is_hideout_1  (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
+#define cave_is_gold_mine           (map_var(MVAR_CAVERN_TYPE) == GOLD_MINE)
+#define cave_is_toxic               (map_var(MVAR_CAVERN_TYPE) == TOXIC_CAVE)
+#define cave_is_hideout_1           (map_var(MVAR_CAVERN_TYPE) == HIDEOUT_1)
+#define cave_is_bodies              (map_var(MVAR_CAVERN_TYPE) == DEAD_BODIES)
+#define cave_is_robot_cleaner       (map_var(MVAR_CAVERN_TYPE) == ROBOT_CLEANER)
+#define cave_is_centaur_handler     (map_var(MVAR_CAVERN_TYPE) == CENTAUR_HANDLER)
 
 // Gecko hunter bits
 #define HUNTER_FATHER_DEAD          bit_1
@@ -43,6 +53,12 @@
 #define ghunters_party_killed       (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_WAR_PARTY))
 #define ghunters_pc_knows_names     (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_PC_KNOWS_NAMES))
 #define ghunters_know_pc_name       (gvar_bit(GVAR_GECKO_HUNTER_STATUS, HUNTER_KNOWS_PC_NAME))
+
+// Amount of tribesman hunting the player
+#define GHUNTER_REVENGE_COUNT       (5)
+
+#define set_tribesman_count         if (global_var(GVAR_GECKO_HUNTER_WARPARTY) == 0) then \
+                                       set_global_var(GVAR_GECKO_HUNTER_WARPARTY, GHUNTER_REVENGE_COUNT)
 
 
 //==================================================================
@@ -86,14 +102,24 @@
    noop
 
 // Temp variables
+variable dude_pos;
+variable dude_rot;
+variable Critter_spawn_hex;
+variable Encounter_Num;
+variable Ranger_rerolls;
+
+variable Tot_Critter_A;
+variable Tot_Critter_B;
+variable victim;
+
 variable group_angle;
 variable Critter;
 variable Critter_direction;
 variable Critter_script := -1;
 variable Critter_tile;
 variable Critter_type;
-variable CritterXpos;// ---------------RNDMTN ONLY
-variable CritterYpos;// ---------------RNDMTN ONLY
+variable CritterXpos;
+variable CritterYpos;
 
 variable Skill_roll;
 
@@ -135,38 +161,6 @@ procedure Add_Mysterious_Stranger begin
    end
 end
 
-// Fallout 1 mysterious stranger:
-/*
-procedure stranger begin
-   if (dude_perk( PERK_mysterious_stranger ) and (global_var( GVAR_MYST_STRANGER_DEAD ) == 0) and random(0, 1)) then begin
-      Critter_type := PID_MYSTERIOUS_STRANGER;
-      Critter_script := SCRIPT_MYSTSTRN;
-      Critter_direction := random(0, 5);
-      Outer_ring := 7;
-      Inner_ring := 4;
-
-      call Place_critter;
-
-      Critter_direction := dude_cur_rot + (random(0, 2) - 1);
-      while (Critter_direction < 0) do begin
-         Critter_direction := Critter_direction + 6;
-      end
-      if (Critter_direction > 5) then begin
-         Critter_direction := Critter_direction % 6;
-      end
-
-      Item := create_object( PID_PURPLE_ROBE, 0, 0 );
-      add_obj_to_inven(Critter, Item);
-      Item := create_object( PID_SPEAR, 0, 0 );
-      add_obj_to_inven(Critter, Item);
-      Item := create_object( PID_STIMPAK, 0, 0 );
-      add_mult_objs_to_inven(Critter, Item, 2);
-      Item := item_caps_adjust(Critter, random(7, 30) * ( dude_perk(PERK_fortune_finder) * global_var( GVAR_FORTUNE_FINDER_HOW_MUCH )));
-      set_global_var( GVAR_MYST_STRANGER_ITEM, 10 );
-   end
-end
-*/
-
 /************************************************
     Avellone, the Bounty Hunter + his crew
 ************************************************/
@@ -194,12 +188,12 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_5MM_AP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 4 * (dude_perk(PERK_scrounger) + 1));
-   if not(fo1in2_destroy_armor_disabled) then begin
+   if fo1in2_destroy_armor_enabled then begin
       Item := create_object(PID_COMBAT_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
    end
-   item_caps_adjust(Critter, random(5, 30) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+   item_caps_adjust(Critter, fortune_finder(random(5, 30)));
    Item := create_object(PID_SUPER_STIMPAK, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2);
 
@@ -230,13 +224,13 @@ procedure hunters begin
    Item := create_object(PID_STIMPAK, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3);
 
-   if not(fo1in2_destroy_armor_disabled) then begin
+   if fo1in2_destroy_armor_enabled then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
    end
    if (random(0, 2) == 0) then begin
-      item_caps_adjust(Critter, random(5, 30) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      item_caps_adjust(Critter, fortune_finder(random(5, 30)));
    end
 
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
@@ -257,7 +251,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_223_FMJ, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3 * (dude_perk(PERK_scrounger) + 1));
-   if not(fo1in2_destroy_armor_disabled) then begin
+   if fo1in2_destroy_armor_enabled then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -265,7 +259,7 @@ procedure hunters begin
    Item := create_object(PID_EXPLOSIVE_ROCKET, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
    if (random(0, 2) == 0) then begin
-      item_caps_adjust(Critter, random(5, 40) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      item_caps_adjust(Critter, fortune_finder(random(5, 40)));
    end
 
    Critter_direction := group_angle + random(0, 3 * 2) - 3;
@@ -286,13 +280,13 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_44_MAGNUM_JHP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
-   if not(fo1in2_destroy_armor_disabled) then begin
+   if fo1in2_destroy_armor_enabled then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
    end
    if (random(0, 2) == 0) then begin
-      item_caps_adjust(Critter, random(5, 30) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+      item_caps_adjust(Critter, fortune_finder(random(5, 30)));
    end
 
    call Add_Mysterious_Stranger;
@@ -306,6 +300,20 @@ variable hpDamage := 0;
 variable has_water := 0;
 
 #define mstr_item_supply      (message_str(SCRIPT_RNDDESRT, 1250) + obj_name(Item) + message_str(SCRIPT_RNDDESRT, 1251))
+
+#define set_dehydration(x)    Item := create_object(x, 0, 0);              \
+                              add_obj_to_inven(dude_obj, Item);            \
+                              set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item)
+
+#define dehydration_knockdown if (hpDamage >= 18) then begin                  \
+                                 if (hpDamage >= 24) then begin               \
+                                    set_dehydration(PID_DEHYDRATION_STRONG);  \
+                                 end else begin                               \
+                                    set_dehydration(PID_DEHYDRATION_WEAK);    \
+                                 end                                          \
+                                 dude_knockdown_nosfx;                        \
+                              end                                             \
+                              noop
 
 procedure check_water_item begin
    has_water := 0;
@@ -334,15 +342,15 @@ procedure drink_water begin
    if (Item != 0) then begin
       party_remove_item(Item)
 
-      Item := create_object_sid(Item, 0, 0, -1);
-      add_obj_to_inven(dude_obj, Item);
-      
+      Item := create_object(Item, 0, 0);
+      //add_obj_to_inven(dude_obj, Item);
+
       if (obj_pid(Item) == PID_WATER_FLASK) then
          display_msg(message_str(SCRIPT_RNDDESRT, 125));
       else
          display_msg(mstr_item_supply);
 
-      set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
+      //set_global_var(GVAR_OBJ_DUDE_USE_DRUG, Item);
    end
    else
       debug("ERROR! Can't find item for dehydration encounter event!");
@@ -368,6 +376,7 @@ procedure dehydration_a begin
       else begin
          if (is_critical(Skill_roll)) then begin
             hpDamage := random(15, 24 + TimeHours); // Fo1: 2 to 4
+            dehydration_knockdown;
             if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
             if (TimeHours == 1) then
                display_msg(message_str(SCRIPT_RNDDESRT, 112) + hpDamage + message_str(SCRIPT_RNDDESRT, 113));
@@ -389,9 +398,6 @@ procedure dehydration_a begin
                else
                   display_msg(message_str(SCRIPT_RNDDESRT, 122) + TimeHours + message_str(SCRIPT_RNDDESRT, 123) + hpDamage + message_str(SCRIPT_RNDDESRT, 124));
             end
-         end
-         if (hpDamage >= 20) then begin
-            dude_knockdown_nosfx;
          end
          critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
@@ -417,18 +423,15 @@ procedure dehydration_b begin
       else begin
          if (is_critical(Skill_roll)) then begin
             hpDamage := random(15, 24 + TimeHours); // Fo1: 2 to 4
-         end
-         else begin
+         end else begin
             hpDamage := random(6, 12 + TimeHours); // Fo1: 2 to 3
          end
+         dehydration_knockdown;
          if (hpDamage >= dude_cur_hp) then hpDamage := dude_cur_hp - 1;
          if (hpDamage == 1) then
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 1160));
          else
             display_msg(message_str(SCRIPT_RNDDESRT, 114) + TimeHours + message_str(SCRIPT_RNDDESRT, 115) + hpDamage + message_str(SCRIPT_RNDDESRT, 116));
-         if (hpDamage >= 20) then begin
-            dude_knockdown_nosfx;
-         end
          critter_heal(dude_obj, -hpDamage); // This will not show another message log entry
       end
       TimeHours := TimeHours * ONE_GAME_HOUR;

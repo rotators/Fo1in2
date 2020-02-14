@@ -8,18 +8,20 @@
 
 /* Include Files */
 #include "voodoo.h"
-#include "sfall/sfall.h"
 #include "sfall/lib.arrays.h"
 
 #include "define.h"
 #include "command.h"
+
 #include "updatmap.h"
 #include "mapenc.h"
 #include "cvgenenc.h"
 
 procedure start;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure map_exit_p_proc;
+procedure timed_event_p_proc;
 
 #define EVENT_RADS   (1)
 
@@ -74,18 +76,6 @@ export variable signal_mutants;
 
 variable rnd_critter;
 
-variable dude_pos;
-variable dude_rot;
-variable dude_start_hex;// ---------------RNDMTN ONLY
-variable Dude_tile;
-variable Encounter_Num;
-variable party_elevation;
-variable Ranger_rerolls;
-
-variable Tot_Critter_A;
-variable Tot_Critter_B;//FROM RNDDESRT
-variable victim;
-
 procedure start begin
 end
 
@@ -122,50 +112,44 @@ end
       count -= 1;                                             \
    end
 
-procedure LoadCritterPos begin
-   variable tile, count, obj;
-
+procedure SpecialMapPos begin
    if CUR_MAP_CAVE1 then begin
       Area_List := [12666, 16067, 20266, 21888, 28901, 24506, 20326, 14300];
       Chest_List := [19929, 29304, 19863];
+      SceneryPos_List := -1;
    end else if CUR_MAP_CAVE2 then begin
       Area_List := [24065, 26067, 18890, 18112, 19710, 25497];
       Chest_List := [18089, 17314, 27067];
+      SceneryPos_List := [18913, 19510, 18490, 25268, 24275];
    end else if CUR_MAP_CAVE3 then begin
       Area_List := [19108, 19492, 20689];
       Chest_List := [21675, 18092, 17908];
+      SceneryPos_List := -1;
    end else if CUR_MAP_CAVE4 then begin
       Area_List := [20896, 23902, 21320];
       Chest_List := [21491, 24301, 19697];
+      SceneryPos_List := [21497, 24304, 24509, 22322, 22117, 21305, 21100];
    end else if CUR_MAP_CAVE5 then begin
       Area_List := [12666, 16067, 20265, 21888, 28901, 24506, 20326, 14899];
       Chest_List := [19929, 29304, 19863];
+      SceneryPos_List := -1;
    end
    else if CUR_MAP_MINE1 then begin
       Area_List := [14514, 17899, 20707, 19889, 18271];
       Chest_List := [16498, 17268, 18887];
+      SceneryPos_List := [14311, 14315, 14718, 17116, 16698, 17100, 17899, 20308, 20088, 20291, 20690, 18075, 17872, 18068, 18065, 18868, 21279, 20503];
    end
+end
 
+procedure LoadCritterPos begin
+   variable tile, count, obj;
    foreach i in Area_List begin
       AREABLK(i)
    end
 end
 
-procedure LoadSceneryPos begin
-   if CUR_MAP_MINE1 then begin
-      SceneryPos_List := [14311, 14315, 14718, 17116, 16698, 17100, 17899, 20308, 20088, 20291, 20690, 18075, 17872, 18068, 18065, 18868, 21279, 20503];
-   end
-   else if CUR_MAP_CAVE4 then begin
-      SceneryPos_List := [21497, 24304, 24509, 22322, 22117, 21305, 21100];
-   end
-   else
-      SceneryPos_List := -1;
-end
-
 procedure LoadScenery begin
-   call LoadSceneryPos;
    call Choose_Cave_Type;
-   debug("Cavern Type: " + map_var(MVAR_CAVERN_TYPE));
 end
 
 procedure LoadCritters begin
@@ -179,15 +163,13 @@ procedure map_enter_p_proc begin
    if map_has_cavern then begin
       if (map_first_run and not(is_loading_game)) then begin
          display_msg(message_str(SCRIPT_SHADYWST, 200));
+         call SpecialMapPos;
          call LoadScenery;
-         call LoadCritters;
-         if (special_theif_encounter) then begin
-            debug("Load cavern container!");
-            call LoadChests;
-         end
+         if special_spawn_critters then call LoadCritters;
+         if special_spawn_container then call LoadChests;
 
-         if cave_is_radiated then
-            add_timer_event(self_obj, game_ticks(random(10, 20)), EVENT_RADS);
+         if cave_is_toxic then
+            add_timer_event(self_obj, game_ticks(random(5, 10)), EVENT_RADS);
       end
    end
 
@@ -252,9 +234,9 @@ procedure Place_critter begin
    Critter := create_object_sid(Critter_type, 0, 0, Critter_script);
    Ring := random(Inner_ring, Outer_ring);
    Facing := random(0, 5);
-   Critter_tile := tile_num_in_direction(Dude_tile, Critter_direction, Ring);
+   Critter_tile := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Ring);
    Distance := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
-   if ((tile_distance(Dude_tile, Distance) <= Outer_ring) and (tile_distance(Dude_tile, Distance) >= Inner_ring)) then begin
+   if ((tile_distance(Critter_spawn_hex, Distance) <= Outer_ring) and (tile_distance(Critter_spawn_hex, Distance) >= Inner_ring)) then begin
       Critter_tile := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
    end
    critter_attempt_placement(Critter, Critter_tile, dude_elevation);
@@ -297,7 +279,7 @@ procedure choose_start begin
          override_map_start(88, 93, 0, dude_rot);
       end
    end
-   Dude_tile := dude_tile;
+   Critter_spawn_hex := dude_tile;
 end
 
 procedure Patrick begin
@@ -306,10 +288,10 @@ procedure Patrick begin
    display_msg(message_str(SCRIPT_RNDMTN, 121));
 
    Patrick := create_object_sid(PID_LEATHER_ARMOR_MALE, 0, 0, SCRIPT_PATRICK);
-   critter_attempt_placement(Patrick, Dude_tile - 4, 0);
+   critter_attempt_placement(Patrick, Critter_spawn_hex - 4, 0);
    obj_rotate(Patrick, rotation_to_tile(tile_num(Patrick), dude_tile));
-   CritterXpos := (Dude_tile % 200) - 4;
-   CritterYpos := Dude_tile / 200;
+   CritterXpos := (Critter_spawn_hex % 200) - 4;
+   CritterYpos := Critter_spawn_hex / 200;
    Critter := create_object(PID_RUG_3, 0, 0);
    critter_attempt_placement(Critter, (CritterYpos * 200) + (CritterXpos - 3), 0);
    Critter := create_object(PID_CART, 0, 0);
@@ -318,7 +300,7 @@ procedure Patrick begin
    critter_attempt_placement(Critter, ((CritterYpos + 1) * 200) + (CritterXpos - 3), 0);
    Critter := create_object(PID_CONTAINER_WOOD_CRATE, 0, 0);
    critter_attempt_placement(Critter, (CritterYpos * 200) + (CritterXpos - 2), 0);
-   item_caps_adjust(Critter, random(2, 6) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+   item_caps_adjust(Critter, fortune_finder(random(2, 6)));
    if (random(0, 1)) then begin
       Item := create_object(PID_IGUANA_ON_A_STICK, 0, 0);
       add_obj_to_inven(Critter, Item);
@@ -372,22 +354,8 @@ procedure Patrick begin
    add_obj_to_inven(Patrick, Item);
    wield_obj_critter(Patrick, Item);
 
-   item_caps_adjust(Patrick, random(25, 50) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
-
-   Item := create_object(PID_KNIFE, 0, 0);
-   add_obj_to_inven(Patrick, Item);
-   Item := create_object(PID_CROWBAR, 0, 0);
-   add_obj_to_inven(Critter, Item);
-   Item := create_object(PID_THROWING_KNIFE, 0, 0);
-   add_mult_objs_to_inven(Patrick, Item, 2);
-   Item := create_object(PID_BAG, 0, 0);
-   add_obj_to_inven(Critter, Item);
-   Item := create_object(PID_FLARE, 0, 0);
-   add_mult_objs_to_inven(Critter, Item, 2);
-   Item := create_object(PID_MULTI_TOOL, 0, 0);
-   add_obj_to_inven(Critter, Item);
-   Item := create_object(PID_SUPER_STIMPAK, 0, 0);
-   add_mult_objs_to_inven(Patrick, Item, 2);
+   item_caps_adjust(Patrick, fortune_finder(random(25, 50)));
+   call give_item(Patrick, {PID_KNIFE: 1, PID_CROWBAR: 1, PID_THROWING_KNIFE: 1, PID_BAG: 1, PID_FLARE: 1, PID_MULTI_TOOL: 1, PID_SUPER_STIMPAK: 1});
 end
 
 procedure NORTH_table begin
@@ -588,7 +556,7 @@ procedure Vats2 begin
    debug("vats2");
 
    // Fo1in2 - Fire Geckos:
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 1) then begin
       display_msg(message_str(SCRIPT_RNDDESRT, 291));
       Tot_Critter_A := random(2, 5);
       Outer_ring := (dude_perception / 3) + 4;
@@ -638,7 +606,7 @@ procedure Vats3 begin
    display_msg(message_str(SCRIPT_RNDDESRT, 306));
 
    // Fo1in2 - Golden Geckos:
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 1) then begin
       display_msg(message_str(SCRIPT_RNDDESRT, 401));
       Tot_Critter_A := random(3, 6);
       Outer_ring := (dude_perception / 3) + 4;
@@ -795,7 +763,7 @@ procedure Vats5 begin
    debug("vats5");
 
    // Fo1in2 - Fire Geckos:
-   if not(fo1in2_fo2_critters_disabled) and ((random(0, 1) == 1) or military_base_destoryed) then begin
+   if fo1in2_fo2_critters_enabled and ((random(0, 1) == 1) or military_base_destoryed) then begin
       display_msg(message_str(SCRIPT_RNDDESRT, 291));
       Tot_Critter_A := random(2, 4);
       Outer_ring := (dude_perception / 3) + 4;
@@ -924,8 +892,8 @@ procedure Vats6 begin
    add_obj_to_inven(Critter, Item);
    Outer_ring := (dude_perception / 3) + 4;
    Inner_ring := (dude_perception / 3) + 2;
-   Critter_type := PID_FLOATER;// FLOATER
-   Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+   Critter_type := PID_FLOATER;
+   Critter_script := SCRIPT_FLOATER;
    Tot_Critter_A := 2;
 
    enc_group_angle(group_angle)
@@ -1031,7 +999,7 @@ procedure Glow3 begin
    radiation_inc(dude_obj, random(30, 60));
 
    // Fo1in2 - Fire Geckos:
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 1) then begin
       display_msg(message_str(SCRIPT_RNDDESRT, 289));
       Tot_Critter_A := random(2, 5);
       Outer_ring := (dude_perception / 2) + 4;
@@ -1045,9 +1013,7 @@ procedure Glow3 begin
          obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
          Tot_Critter_A := Tot_Critter_A - 1;
       end
-      Item := create_object(PID_FIRE_GECKO_FLAME_WEAPON, 0, 0);
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
+      arm_obj(Critter, PID_FIRE_GECKO_FLAME_WEAPON, 1, 0, 0)
    end
 
    // Vanilla:
@@ -1158,7 +1124,7 @@ procedure Glow6 begin
    radiation_inc(dude_obj, random(30, 60));
 
    // Fo1in2 - Fire Geckos:
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 1) then begin
       display_msg(message_str(SCRIPT_RNDDESRT, 289));
       radiation_inc(dude_obj, random(30, 60));
       Tot_Critter_A := random(2, 4);
@@ -1173,9 +1139,7 @@ procedure Glow6 begin
          obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
          Tot_Critter_A := Tot_Critter_A - 1;
       end
-      Item := create_object(PID_FIRE_GECKO_FLAME_WEAPON, 0, 0);
-      add_obj_to_inven(Critter, Item);
-      wield_obj_critter(Critter, Item);
+      arm_obj(Critter, PID_FIRE_GECKO_FLAME_WEAPON, 1, 0, 0)
    end
 
    // Vanilla:
@@ -1310,7 +1274,7 @@ end
 
 procedure NORTH2 begin
    // Fo1in2, Gecko encounter
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 2) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 2) then begin
       display_msg(message_str(SCRIPT_RNDMTN, 200));
       Tot_Critter_A := random(2, 4);
       Outer_ring := 8;
@@ -1382,7 +1346,7 @@ procedure NORTH4 begin
    variable bush_pid := 0;
 
    // Fo1in2, Spore plants encounter
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 4) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 5) == 1) then begin
       display_msg(message_str(SCRIPT_RNDMTN, 203));
       Tot_Critter_A := random(3, 7);
       Outer_ring := 5;
@@ -1437,7 +1401,7 @@ procedure NORTH5 begin
    variable LVar0 := 1;
 
    // Fo1in2, Gecko encounter
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 2) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 2) then begin
       display_msg(message_str(SCRIPT_RNDMTN, 200));
       Tot_Critter_A := random(2, 6);
       Outer_ring := 8;
@@ -1557,7 +1521,7 @@ procedure NORTH6 begin
             Inner_ring := 10;
             Critter_direction := 2;
             call Place_critter;
-            item_caps_adjust(Critter, random(10, 60) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+            item_caps_adjust(Critter, fortune_finder(random(10, 60)));
             if (random(1, 4) == 4) then begin
                Item := create_object(PID_STIMPAK, 0, 0);
                add_obj_to_inven(Critter, Item);
@@ -1583,7 +1547,7 @@ procedure NORTH6 begin
          end
          else begin
             display_msg(message_str(SCRIPT_RNDMTN, 111));
-            Tot_Critter_A := random(2, 5);
+            Tot_Critter_A := random(1, 4);
             while(Tot_Critter_A) do begin
                Item := create_object(PID_GOLD_NUGGET, tile_num_in_direction(dude_tile + (random(0, 4) * ((2 * random(0, 1)) - 1)), random(0, 5), random(1, 6)), 0);
                Tot_Critter_A := Tot_Critter_A - 1;
@@ -1676,7 +1640,7 @@ procedure VAULT3 begin
    variable bush_pid := 0;
 
    // Fo1in2, Spore plants encounter
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 4) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 5) == 1) then begin
       display_msg(message_str(SCRIPT_RNDMTN, 203));
       Tot_Critter_A := random(3, 7);
       Outer_ring := 5;
@@ -1729,7 +1693,7 @@ end
 
 procedure VAULT4 begin
   // Fo1in2, Geckos:
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 2) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 2) == 1) then begin
       Tot_Critter_A := random(2, 6);
       if (Tot_Critter_A <= 4) then
          display_msg(message_str(SCRIPT_RNDMTN, 202));
@@ -1943,7 +1907,7 @@ end
 
 procedure South3 begin
    // Fo1in2, Geckos:
-   if not(fo1in2_fo2_critters_disabled) and (random(0, 1) == 1) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 1) == 1) then begin
       display_msg(message_str(SCRIPT_RNDMTN, 202));
       Tot_Critter_A := random(2, 6);
       Outer_ring := 7;
@@ -2153,7 +2117,8 @@ procedure South6 begin
             Inner_ring := 10;
             Critter_direction := 2;
             call Place_critter;
-            item_caps_adjust(Critter, random(10, 60) * ( dude_perk(PERK_fortune_finder) * global_var(GVAR_FORTUNE_FINDER_HOW_MUCH)));
+            item_caps_adjust(Critter, fortune_finder(random(10, 60)));
+
             if (random(1, 4) == 4) then begin
                Item := create_object(PID_STIMPAK, 0, 0);
                add_obj_to_inven(Critter, Item);

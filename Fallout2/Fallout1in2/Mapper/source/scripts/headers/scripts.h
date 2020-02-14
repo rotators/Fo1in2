@@ -95,7 +95,7 @@
 #define SCRIPT_SPSKUMPT  (82)  //  SPSKUMPT.int    ; Junktown - Skum Pitt spatial script
 #define SCRIPT_MANGLED   (83)  //  Mangled.int     ; Some mangled bodies in Necropolis.
 #define SCRIPT_MEANDER   (84)  //  Meander.int     ; Some meandering ghouls
-#define SCRIPT_DEPRECATED_14 (85) //SCRIPT_MUTANT2   (85)  //  Mutant2.int     ; scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_KTGOO     (85)   // KTGoo.int       ; Fo2 - Toxic Goo in the rat caves (Klamath)
 #define SCRIPT_NH2OCOMP  (86)  //  NH2OComp.int    ; Necropolis Water Computer                                                   
 #define SCRIPT_NH2OPUMP  (87)  //  NH2OPump.int    ; Necropolis Water Pump                                                       
 #define SCRIPT_ODDWALL   (88)  //  OddWall.int     ; There is something odd about this wall in Necropolis
@@ -108,8 +108,8 @@
 #define SCRIPT_SETGUARD  (95)  //  SetGuard.int    ; Guards to protect Set from Harm.                                            
 #define SCRIPT_SETSCTDR  (96)  //  SetSctDr.int    ; Set's Secret Door.                                                          
 #define SCRIPT_SMELL     (97)  //  Smell.int       ; It's an odd smell in Necropolis (must be ghouls?)
-#define SCRIPT_DEPRECATED_15 (98) //SCRIPT_STIMPACK  (98)  //  StimPack.int    ; scripts.lst - DONOTUSE wtf??????                                              
-#define SCRIPT_STOREROM  (99)  //  StoreRom.int    ; Spacial script for the Necropolis store room                                
+#define SCRIPT_ECHANDLR  (98)   //  ECHANDLR.int    ; Super Mutant centaur handler
+#define SCRIPT_STOREROM  (99)   //  StoreRom.int    ; Spacial script for the Necropolis store room                                
 #define SCRIPT_SUPER     (100)  //  Super.int       ; Super Mutants from the city Necropolis
 #define SCRIPT_TERRY     (101)  //  Terry.int       ; Terry the Super Mutant (fly away)
 #define SCRIPT_GARRET    (102)  //  Garret.int      ; Set's lacky in Necropolis
@@ -121,7 +121,7 @@
 #define SCRIPT_JCHIDMEM  (108)  //  JChidMem.int    ; Junktown Children of the Cathedral Member                                   
 #define SCRIPT_LOOKOUT   (109)  //  Lookout.int     ; Necropolis Undergrounder Lookout
 #define SCRIPT_MACHIV    (110)  //  MachIV.int      ; Mach IV computer in Buried Vaul that is broken
-#define SCRIPT_ZICLOSED  (111)   // ziClosed.int    ; Generic "Out of Business" signs
+#define SCRIPT_ZICLOSED  (111)  // ziClosed.int     ; Generic "Out of Business" signs
 #define SCRIPT_RNDDESRT  (112)  //  RndDesrt.int    ; Random Encounter Desert Map                                                 
 #define SCRIPT_TGUARD    (113)  //  TGuard.int      ; Tower Guard for Shady Sands
 #define SCRIPT_COOK      (114)  //  cook.int        ; A cook from Shady Sands kitchen
@@ -262,8 +262,8 @@
 #define SCRIPT_MILES     (249)  //  Miles.int       ; The chemist of Adytum
 #define SCRIPT_SMITTY    (250)  //  Smitty.int      ; Adytum's blacksmith
 #define SCRIPT_ADYTOWNR  (251)  //  Adytownr.int    ; Generic script for an Adytowner                                             
-#define SCRIPT_REGULATR  (252)  //  Regulatr.int    ; Generic Regulator, guard of Adytown                               
-#define SCRIPT_DEPRECATED_16 (253) //SCRIPT_LORRI     (253)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_REGULATR  (252)  //  Regulatr.int    ; Generic Regulator, guard of Adytown      
+#define SCRIPT_ECHCENTR  (253)  //  ECHCENTR.int    ; Centaur from Centaur Handler encounter
 #define SCRIPT_SAMMAEL   (254)  //  Sammael.int     ; Scav from Adytum
 #define SCRIPT_CALEB     (255)  //  Caleb.int       ; Head of the Regulators from Adytum
 #define SCRIPT_TAYLOR    (256)  //  Taylor.int      ; Shop keeper/trader from Adytum
@@ -331,8 +331,8 @@
 #define SCRIPT_TALUS     (318)  //  Talus.int       ; Talus, Rombus's second in command.
 #define SCRIPT_SOPHIA    (319)  //  Sophia.int      ; Sophia, an instructor for the Brotherhood
 #define SCRIPT_MICHAEL   (320)  //  Michael.int     ; Distributes weapons to initiates.
-#define SCRIPT_GLO4WEAP  (321)  //  Glo4Weap.int    ; Weapon depot on level 4 of the Glow                                         
-#define SCRIPT_DEPRECATED_17 (322) //SCRIPT_SCRIBEA   (322)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_GLO4WEAP  (321)  //  Glo4Weap.int    ; Weapon depot on level 4 of the Glow      
+#define SCRIPT_ECLADDER  (322)  //  ECLADDER.int    ; Cavern encounter ladder
 #define SCRIPT_DEPRECATED_18 (323) //SCRIPT_SCRIBEB   (323)  //  scripts.lst - DONOTUSE wtf??????
 #define SCRIPT_SENTRY    (324)  //  Sentry.int      ; Paladin guard after invasion
 #define SCRIPT_PALADINA  (325)  //  PaladinA.int    ; Paladin in the Hall of the Brotherhood.                                     

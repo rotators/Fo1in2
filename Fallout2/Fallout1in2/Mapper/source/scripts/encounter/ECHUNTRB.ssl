@@ -28,10 +28,8 @@ procedure talk_p_proc;
    prepended by LVAR_
 *****************************************************************/
 
-#define LVAR_Herebefore                   (4)
-#define LVAR_Hostile                      (5)
-#define LVAR_Personal_Enemy               (6)
-#define LVAR_Father_Killed                (7)
+#define LVAR_Flags                        (4)
+#define LVAR_Father_Killed                (5)
 
 #define float_father(x)                   float_msg(hunter_a_ptr, message_str(SCRIPT_ECHUNTRA, x), FLOAT_MSG_NORMAL)
 #define float_son(x)                      float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
@@ -67,20 +65,16 @@ procedure map_enter_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if (((local_var(LVAR_Hostile) == 2)
-      or (local_var(LVAR_Personal_Enemy) == 1))
-      and (self_can_see_dude)) then begin
-         set_local_var(LVAR_Hostile, 1);
-
-         if (Only_Once == 0) then begin
-            Only_Once := 1;
-            attack(dude_obj);
-         end
+   if ((hostile or (personal_enemy)) and (self_can_see_dude)) then begin
+      set_hostile;
+      if (Only_Once == 0) then begin
+         Only_Once := 1;
+         attack(dude_obj);
+      end
    end
 
    if ghunter_status(HUNTER_FATHER_DEAD) then begin
-      set_local_var(LVAR_Hostile, 1);
-
+      set_hostile;
       if (not(combat_is_initialized) and Float == 0) then begin
          Float := 1;
          float_father(204);
@@ -90,7 +84,7 @@ end
 
 procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(LVAR_Hostile, 2);
+      set_hostile;
    end
 end
 
@@ -120,7 +114,7 @@ end
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(LVAR_Personal_Enemy, 1);
+      set_personal_enemy;
    end
 end
 

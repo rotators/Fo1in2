@@ -440,10 +440,10 @@ variable get_wm_distance;
 #define advance_time_travel_to_mbase_vats          advance_time_wm_travel(173,   72,   MAP_MBVATS12,  5)
 #define advance_time_travel_to_master              advance_time_wm_travel(773,   1022, MAP_MSTRLR34,  12)
 
-#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2);                                  \
-                                                   get_wm_distance := round(get_wm_distance) / 50;                                                          \
-                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");                                         \
-                                                   game_time_advance(game_ticks((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(-300,300))));  \
+#define advance_time_wm_travel(x,y,map,index)      get_wm_distance := sqrt((x - worldmap_xpos)^2 + (y - worldmap_ypos)^2); \
+                                                   get_wm_distance := round(get_wm_distance) / 50;                         \
+                                                   debug("Advancing " + get_wm_distance + " days by wm teleport!");        \
+                                                   game_time_advance((game_ticks((ONE_GAME_DAY * get_wm_distance) + (ONE_GAME_MINUTE * random(-300,300)))) / GAME_TIME_SUBSECOND_RESOLUTION); \
                                                    load_map(map, index)
 
 /******************************************************************

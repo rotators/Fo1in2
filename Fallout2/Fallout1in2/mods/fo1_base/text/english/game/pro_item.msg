@@ -1032,3 +1032,7 @@
 {53501}{}{Hydro-pressurization pump, electro-fibrous coil wire, magnetic vacuum seal, power strip, three-pin to three-pin adapters... quite a collection of parts.}
 {53600}{}{Vault Suit}
 {53601}{}{A regular vault suit. The number 13 is printed on the back.}
+{53700}{}{Dehydration Weak}
+{53701}{}{DO NOT USE}
+{53800}{}{Dehydration Strong}
+{53801}{}{DO NOT USE}

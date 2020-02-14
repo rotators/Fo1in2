@@ -183,6 +183,12 @@
    write_byte(0x41ae84, 0x0A); \
    write_byte(0x41ae85, 0x00)
 
+// Used to refresh the game window, including HRP black edges
+#define VOODOO_display_win_redraw \
+               call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
+
+
+////////////////////////////////////////////////////// TEST ZONE //////////////////////////////////////////////////////
 
 
 // This will make screeenshot without interface and cursor
@@ -192,21 +198,21 @@
 // hidemouse/showmouse only ... DON'T! hidemouse doesn't work until cursor is over interface or player is on worldmap
 // tap_key(DIK_F12) ... DON'T! doesn't work with compact keyboards (Fn + other key required to "press" F12)
 #define VOODOO_clean_screenshot \
-               if(not get_game_mode bwand 0x1) then              \
+               if(get_game_mode bwand 0x1) then                  \
+                  hidemouse;                                     \
+               else                                              \
                begin                                             \
                   intface_hide;                                  \
                   call_offset_v0(0x44ce34); /* gmouse_3d_off_ */ \
                end                                               \
-               else                                              \
-                  hidemouse;                                     \
                call_offset_v0(0x4c8f4c);      /* dump_screen_ */ \
-               if(not get_game_mode bwand 0x1) then              \
+               if(get_game_mode bwand 0x1) then                  \
+                  showmouse;                                     \
+               else                                              \
                begin                                             \
                   call_offset_v0(0x44cd2c);  /* gmouse_3d_on_ */ \
                   intface_show;                                  \
                end                                               \
-               else                                              \
-                  showmouse;                                     \
                noop
 
 // This will make screenshots saved in "screen" directory
@@ -224,11 +230,9 @@
                r_write_string(r_hrp_offset(0x100397bc), "screen/%.5d.bmp"); \
                r_write_string(r_hrp_offset(0x100397d0), "screen/%.5d.bmp")
 
-// Used to refresh the game window, including HRP black edges
-#define VOODOO_display_win_redraw \
-               call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
 
-// This will make bad things
+////////////////////////////////////////////////////// DANGER ZONE //////////////////////////////////////////////////////
+
 
 #define VOODOO_ERROR_READ   r_write_byte(read_byte(-1),0)
 #define VOODOO_ERROR_WRITE  r_write_byte(-1,0)

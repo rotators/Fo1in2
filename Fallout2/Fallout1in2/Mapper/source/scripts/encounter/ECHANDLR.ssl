@@ -1,0 +1,159 @@
+/*
+
+   Cave Encounter - Super Mutant Centaur Handler
+
+*/
+
+/* Include Files */
+#include "define.h"
+
+#define NAME                    SCRIPT_ECHANDLR
+
+#include "command.h"
+#include "sfall/sfall.h"
+#include "sfall/lib.arrays.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure critter_p_proc;
+procedure timed_event_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+
+procedure self_can_see_critter;
+
+#define float(x)                 float_msg(self_obj, mstr(x), FLOAT_MSG_RED)
+#define can_see_centaur          (Centaur_ptr != 0)
+
+variable tmp_hostile;
+variable Centaur_ptr;
+variable throw := 0;
+
+#define EVENT_MOVE         (1)
+#define EVENT_FLOAT        (2)
+#define EVENT_THROW        (3)
+#define EVENT_CATCH        (4)
+
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      set_self_team(TEAM_RND_MASTERS_ARMY);
+      set_self_ai(AI_SUPER_MUTANT);
+
+      add_timer_event(self_obj, game_ticks(random(3, 12)), EVENT_MOVE);
+      add_timer_event(self_obj, game_ticks(random(15, 25)), EVENT_FLOAT);
+      add_timer_event(self_obj, game_ticks(random(20, 25)), EVENT_THROW);
+   end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(101));
+end
+
+procedure critter_p_proc begin
+   if (self_can_see_dude) then begin
+      if (tmp_hostile) then begin
+         tmp_hostile := 0;
+         float(240);
+         attack(dude_obj);
+      end
+   end
+
+   coc_disguise_check;
+   if not(DISGUISED) then
+      tmp_hostile := 1;
+end
+
+procedure talk_p_proc begin
+   if DISGUISED then
+      floater_rand(230, 233);
+   else
+      tmp_hostile := 1;
+end
+
+procedure self_can_see_critter begin
+   variable Critter;
+   foreach Critter in list_as_array(LIST_CRITTERS) begin
+      if obj_can_see_obj(self_obj, Critter) then begin
+         if (obj_pid(Critter) == PID_CENTAUR_LESSER or obj_pid(Critter) == PID_GREATER_CENTAUR) then begin
+            if (tile_distance(self_tile, tile_num(Critter)) <= 15) then begin
+               Centaur_ptr := Critter;
+               break;
+            end
+         end
+         else
+            Centaur_ptr := 0;
+      end
+   end
+   //debug("Centaur_ptr: " + Centaur_ptr);
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_MOVE) then begin
+      if (not(combat_is_initialized) and throw == 0) then
+         self_walk_to_tile(tile_num_in_direction(self_tile, random(0, 5), random(1, 6)));
+      add_timer_event(self_obj, game_ticks(random(3, 12)), EVENT_MOVE);
+   end
+   else if (fixed_param == EVENT_FLOAT) then begin
+      if (not(combat_is_initialized) and throw == 0) then begin
+         call self_can_see_critter;
+         if can_see_centaur then begin
+            reg_anim_clear(self_obj);
+            Face_Critter(Centaur_ptr, self_obj);
+            floater(random(210, 213));
+         end
+         else
+            floater(random(220, 224));
+      end
+      add_timer_event(self_obj, game_ticks(random(15, 25)), EVENT_FLOAT);
+   end
+   else if (fixed_param == EVENT_THROW) then begin
+      if not(combat_is_initialized) then begin
+         call self_can_see_critter;
+         if can_see_centaur then begin
+            throw := 1;
+
+            floater(200);
+            Face_Critter(Centaur_ptr, self_obj);
+
+            reg_anim_clear(self_obj);
+            reg_anim_begin();
+               reg_anim_animate(self_obj, ANIM_throw_anim, -1);
+            reg_anim_end();
+
+            if (tile_distance(self_tile, tile_num(Centaur_ptr)) <= 6) then
+               add_timer_event(self_obj, game_ticks(0), EVENT_CATCH);
+            else
+               add_timer_event(self_obj, game_ticks(1), EVENT_CATCH);
+         end
+      end
+      add_timer_event(self_obj, game_ticks(random(20, 25)), EVENT_THROW);
+   end
+
+   if (fixed_param == EVENT_CATCH) then begin
+      if can_see_centaur then begin
+         Face_Critter(self_obj, Centaur_ptr);
+
+         reg_anim_clear(Centaur_ptr);
+         reg_anim_begin();
+            reg_anim_animate(Centaur_ptr, ANIM_throw_punch, -1);
+         reg_anim_end();
+
+         throw := 0;
+      end
+   end
+end
+
+procedure destroy_p_proc begin
+   inc_evil_critter
+end

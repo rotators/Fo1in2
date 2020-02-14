@@ -44,13 +44,11 @@ procedure NodeGeckoSkinning;
    prepended by LVAR_
 *****************************************************************/
 
-#define LVAR_Herebefore                   (4)
-#define LVAR_Hostile                      (5)
-#define LVAR_Personal_Enemy               (6)
-#define LVAR_Son_Killed                   (7)
-#define LVAR_Learn_Skinning               (8)
+#define LVAR_Flags                        (4)
+#define LVAR_Son_Killed                   (5)
+#define LVAR_Learn_Skinning               (6)
 
-#define float_father(x)                   float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
+#define float_self(x)                     float_msg(self_obj, mstr(x), FLOAT_MSG_NORMAL)
 #define float_son(x)                      float_msg(hunter_b_ptr, message_str(SCRIPT_ECHUNTRB, x), FLOAT_MSG_NORMAL)
 
 #define Add_Skinner                       critter_add_trait(dude_obj, TRAIT_PERK, PERK_gecko_skinning_perk, 1); \
@@ -83,29 +81,33 @@ procedure map_enter_p_proc begin
    if (map_first_run) then begin
       set_self_team(TEAM_RND_GECKO);
       set_self_ai(AI_BERZERKER);
+
+      if (is_loading_game == false) then begin
+         // Set the amount of people hunting the player if father / son is killed
+         if not(ghunter_status(HUNTER_SON_DEAD)) then
+            set_tribesman_count;
+      end
    end
 end
 
 procedure critter_p_proc begin
-   if (((local_var(LVAR_Hostile) == 2)
-      or (local_var(LVAR_Personal_Enemy) == 1))
-      and (self_can_see_dude)) then begin
-         set_local_var(LVAR_Hostile, 1);
+   if ((hostile or (personal_enemy)) and (self_can_see_dude)) then begin
+      set_hostile;
 
-         if (Only_Once == 0) then begin
-            Only_Once := 1;
-            attack(dude_obj);
-         end
+      if (Only_Once == 0) then begin
+         Only_Once := 1;
+         attack(dude_obj);
+      end
    end
 
    if ghunter_status(HUNTER_SON_DEAD) then begin
-      set_local_var(LVAR_Hostile, 1);
+      set_hostile;
    end
 end
 
 procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(LVAR_Hostile, 2);
+      set_hostile;
    end
 end
 
@@ -137,18 +139,20 @@ end
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_local_var(LVAR_Personal_Enemy, 1);
+      set_personal_enemy;
    end
 end
 
 procedure talk_p_proc begin
    if (dude_iq < 4) then
-      float_father(201);
+      float_self(201);
    else begin
-      if (dude_perk(PERK_gecko_skinning_perk) == 1) then
-         float_father(202);
+      if dude_is_armed then
+         float_self(205);
+      else if (dude_perk(PERK_gecko_skinning_perk) == 1) then
+         float_self(202);
       else if (local_var(LVAR_Learn_Skinning) == 2) then
-         float_father(203);
+         float_self(203);
       else begin
          face_start_dialog_at_node(Node1000);
       end
@@ -156,14 +160,14 @@ procedure talk_p_proc begin
 end
 
 procedure Node998 begin
-   set_local_var(LVAR_Personal_Enemy, 1);
+   set_personal_enemy;
 end
 
 procedure Node999 begin
 end
 
 procedure Node1000 begin
-   if (local_var(LVAR_Herebefore) == 0) then
+   if not(herebefore) then
       Reply(1000);
    else
       Reply(1001);
@@ -175,7 +179,7 @@ procedure Node1000 begin
    BOption(1030, Node998, 4);
    NOption(g_bye, Node999, 4);
 
-   set_local_var(LVAR_Herebefore, 1);
+   set_herebefore;
 end
 
 procedure Node1100 begin
@@ -237,7 +241,7 @@ procedure Node1700 begin
 end
 
 procedure Node1800 begin
-   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1,6));
+   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1, 10));
    Add_Skinner;
 
    Reply(1800);
@@ -245,6 +249,7 @@ procedure Node1800 begin
 end
 
 procedure Node1900 begin
+   critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, random(1, 2));
    set_local_var(LVAR_Learn_Skinning, 2);
    NMessage(1900);
    Reply(1901);
@@ -261,14 +266,13 @@ procedure NodeGeckoSkinning begin
 
       // Add fireplace:
       Scenery_Creation_Hex := tile_num_in_direction(self_tile, 0, 2);
-      Scenery_Creation := create_object_sid(PID_FIRE_PIT, Scenery_Creation_Hex, 0, -1);
+      Scenery_Creation := create_object(PID_FIRE_PIT, Scenery_Creation_Hex, 0);
 
    gfade_in(1);
 
-      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * has_trait(TRAIT_PERK, dude_obj, PERK_survivalist));
+      Skill_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, 20 * dude_perk(PERK_survivalist));
       if (is_success(Skill_roll)) then
          call Node1800;
       else
          call Node1900;
 end
-
