@@ -111,7 +111,7 @@
 {2701}{}{Hast du nicht zugehört? Ich sagte 2000 Deckel!}
 {2800}{}{Wenn du meinst. Melde dich, wenn du es dir anders überlegen solltest.}
 
-{3100}{}{Ich schnapp' mir den nächsten Caravan. Vielleicht im Norden? Überall ist besser als hier.}
+{3100}{}{Ich schnapp' mir den nächsten Caravan. Vielleicht nach Norden? Überall ist's besser als hier.}
 
 {3200}{}{Na schau, du bist tatsächlich schlauer als alle anderen hier! Ich bin sicher sie sind nur die Vorhut, und wette darauf, daß noch viel mehr kommen werden.}
 	{3210}{}{In Ordnung, ich werde dein Motorrad kaufen.}
