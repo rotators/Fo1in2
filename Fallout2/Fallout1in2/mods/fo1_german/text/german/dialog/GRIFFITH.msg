@@ -104,7 +104,7 @@
 {2500}{}{[Hat er dich grad reingelegt?]}
 	{2510}{}{[Warte]}
 
-{2600}{}{Puh. Klar, meine Lungen sind definitiv nicht mehr die besten ... Du bist immer noch hier? Gut! Habe den Controller, hier, nimm ihn. Ich mache mich auf den Weg zur nächsten Karawane aus diesem Scheißloch.}
+{2600}{}{Puh. Meine Lungen sind definitiv nicht mehr die besten ... Du bist immer noch hier? Gut! Habe den Controller, hier, nimm ihn. Ich mache mich auf den Weg zur nächsten Karawane aus diesem Scheißloch.}
 	{2610}{}{Pass auf dich auf.}
 
 {2700}{}{Och, garnicht so viel. Nur die dürftige Summe von 2000 Deckel, mehr nicht.}
