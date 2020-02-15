@@ -3,19 +3,12 @@
 
 #include "sfall/sfall.rotators.h"
 
-/*********************************************************
-   All kinds of memory reading/writing macros
-   Requires AllowUnsafeScripting=1 in ddraw.ini!
-*********************************************************/
-
-// Check current ddraw.dll build (base check, left for reference only; use sfall_rotators macro from sfall.rotators.h in scripts)
-#define VOODOO_marker  (read_byte(0x410003) == 0xF4)
-
-// This will disable running the credits after the endgame slides:
-// This is done via Sfall now (F1EngineBehavior=1)
-#define VOODOO_mode_fo1_ending                   \
-               write_int( 0x4A4343, 0x90909090); \
-               write_byte(0x4A4347, 0x90)
+/**************************************************
+ *                                                *
+ *       All kinds of unsafe scripting macros     *
+ *  Requires AllowUnsafeScripting=1 in ddraw.ini  *
+ *                                                *
+ **************************************************/
 
 // This will disable the "You encounter: ..." message:
 #define VOODOO_disable_YouEncounter_message      \
