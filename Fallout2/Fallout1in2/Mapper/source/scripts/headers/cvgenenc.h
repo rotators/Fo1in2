@@ -52,6 +52,9 @@ procedure Choose_Encounter begin
    else
       special_spawn_container := 0;
 
+   // DEBUG
+   //val := 0;
+
    // Geckos
    if (val == 1) then begin
       active_encounter_pids := 1;
@@ -462,6 +465,7 @@ procedure LoadExitScenery begin
    end
 
    // Spawn Scenery
+   call Scenes(2);
    chance := random(1, 100);
    if (chance <= 15) or (map_is_mine and chance <= 80) then begin
       Create_Boxes_2(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
@@ -487,7 +491,7 @@ procedure LoadExitScenery begin
       Critter_type := PID_DEAD_TRAVELER;
       Critter_script := -1;
       call Place_critter;
-      critter_attempt_placement(Critter, tile_num(Critter), 21);
+      critter_attempt_placement(Critter, tile_num(Critter), 2);
       item_caps_adjust(Critter, fortune_finder(random(0, 60)));
       if (random(1, 4) == 4) then begin
          Item := create_object(PID_STIMPAK, 0, 0);
