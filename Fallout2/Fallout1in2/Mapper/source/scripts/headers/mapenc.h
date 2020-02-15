@@ -15,7 +15,8 @@
 #define MVAR_Hostile_Total             (0) // Number of monsters created
 #define MVAR_CARVN_LEAD                (1) // Used in caravan encounter
 #define MVAR_CAVERN_TYPE               (2) // Will special scenery spawn in this location?
-#define MVAR_CAVERN_LADDER             (3) // Used to remember the position of the randomly placed ladder
+#define MVAR_CAVERN_LADDER_ELEV1       (3) // Used to remember the position of the randomly placed ladder
+#define MVAR_CAVERN_LADDER_ELEV2       (4) // Ladder pos on elev2
 
 // Cavern Type for random scenery spawn
 #define TOXIC_CAVE         (1)
