@@ -29,7 +29,7 @@
 {510}{}{Du lädst das Motorrad mit mehr Energie.}
 {511}{}{Das Motorrad ist schon voll aufgeladen.}
 {512}{}{Das Motorrad hat einen Energiestand von }
-{513}{}{%.}
+{513}{}{%}
 
 {520}{}{Der Brennstoffzellenregulator fehlt.}
 
