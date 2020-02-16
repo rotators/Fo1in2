@@ -1,4 +1,4 @@
-<p align="center"><img src="fo1_classic_worldmap.png" alt="Classic Barter Formula"/></p>
+<p align="center"><img src="fo1_barter_formula.png" alt="Classic Barter Formula"/></p>
 
 Fallout 1 Barter Formula
 --------------------------
