@@ -142,7 +142,7 @@ procedure Choose_Encounter begin
       active_encounter_pids := 1;
       encounter_pid1 := PID_MANTIS;
       encounter_sid1 := SCRIPT_MANTIS;
-      total_encounter_mobs := Random(2, 4);
+      total_encounter_mobs := Random(1, 3);
    end
 end
 
@@ -433,7 +433,7 @@ end
 ****************************************/
 procedure LoadScenery begin
    if (SceneryPos_List > 0) then begin
-      Choose_Scenery := random(1, 20);
+      Choose_Scenery := random(1, 25);
       Active_Scenery_List := 1;
 
       // DEBUG:
@@ -522,15 +522,31 @@ procedure LoadExitScenery begin
       kill_critter(Critter, ANIM_fall_back_sf);
    end
 
-   // Spawn Items
-   // - Alcohol
-   // - Bag of caps
-   // - rnd weapon
-   // - rnd ammo
+   // Spawn Alcohol
+   chance := random(1, 100);
+   if (chance <= 25) then begin
+      Items_List := [PID_BEER, PID_BOOZE, PID_GAMMA_GULP_BEER, PID_ROENTGEN_RUM];
+      Critter_type := array_random_value(Items_List);
+      count := random(1, 6);
+      while (count > 0) do begin
+         count--;
+         call Place_critter;
+         critter_attempt_placement(Critter, tile_num(Critter), 2);
+      end
+   end
+
+   // Bag of caps
+   chance := random(1, 100);
+   if (chance <= 25) then begin
+      Critter_type := PID_BAG;
+      call Place_critter;
+      critter_attempt_placement(Critter, tile_num(Critter), 2);
+      item_caps_adjust(Critter, fortune_finder(random(1, 60)));
+   end
 
    // Spawn Mobs
    chance := random(1, 100);
-   if (chance <= 85) then begin
+   if (chance <= 75) then begin
       call Choose_Encounter;
       Outer_ring := 12;
       Inner_ring := 6;
@@ -556,10 +572,10 @@ procedure LoadExitScenery begin
       end
    end
 
-   // - rnd campfire with sleeping bag at Critter_tile
-   // TODO: Rewrite this
+   // Spawn camp fire with sleeping bag
    chance := random(1, 100);
    if (chance <= 50) then begin
+      // TODO: Rewrite this
       CritterXpos := (Critter_tile % 200) - 4;
       CritterYpos := Critter_tile / 200;
       Item := create_object(PID_FIRE_PIT, 0, 0);
