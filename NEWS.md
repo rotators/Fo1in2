@@ -14,6 +14,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: "Aradesh is furious" dialog string was something about human armor. Probably another Fixt-remnant.
 - **Fixed**: "You see: x" for party members.
 - **Fixed**: A possible crash when attacking Adytum with the Blades while a caravan is still in town and about to be deleted (issue #31).
+- **Fixed**: After defeating the Khans Raiders and returning to their location, the player would get negative Karma.
 - **Fixed**: After getting the "Free Drinks"-reward from Neal in the Skum Pitt, his dialog options would still show caps, even though the drinks are free.
 - **Fixed**: Ant critters are now unaffected by the Animal Friend perk.
 - **Fixed**: Aradesh will grant the player two strikes for stealing, not just one + whatever was going on.
