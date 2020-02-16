@@ -169,6 +169,7 @@ variable tma_gvar_array;
 
 // Shortcut
 #define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
+#define set_tma_data_default        set_tma_data(NAME, 1000, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
 
 // If reply <line> is triggered, set <GVAR_> to <val>
 // Must be placed in the critter talk_p_proc.
