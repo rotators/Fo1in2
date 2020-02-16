@@ -102,6 +102,15 @@
    end \
    noop
 
+// Spawn cavern critters
+#define AREABLK(area)                                          \
+   count := total_encounter_mobs;                              \
+   while (count > 0) do begin                                  \
+      call Choose_Pid;                                         \
+      call placeCritter(choose_enc_pid, choose_enc_sid, area); \
+      count -= 1;                                              \
+   end
+
 // Temp variables
 variable
    scenery_elevation := 0,
@@ -144,6 +153,9 @@ procedure Scenes(variable scenery_elevation) begin
    variable LVar3 := 0;
    variable LVar4 := 0;
    variable Place_Holder;
+
+   if (Critter_spawn_hex == 0) then Critter_spawn_hex := dude_tile;
+
    Tot_Critter_A := random(3, 14);
    LVar4 := -1;
    while(Tot_Critter_A) do begin
