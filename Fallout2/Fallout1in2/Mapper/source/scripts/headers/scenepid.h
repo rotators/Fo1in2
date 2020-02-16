@@ -313,11 +313,11 @@ variable Scenery_Creation_Ptr;
 #define PID_GIZMO_SIGN_OFF                  (33556296)
 #define PID_TROPHY                          (33555332) // Junktown urn
 
-#define PID_JUNK_TIRE_BARREL                (33554538)
-#define PID_JUNK_TIRE_TOILET                (33554539)
-#define PID_JUNK_TIRE_DIRT_1                (33554540)
-#define PID_JUNK_TIRE_TIRE                  (33554541)
-#define PID_JUNK_TIRE_DIRT_2                (33554542)
+#define PID_JUNK_BARREL                     (33554538)
+#define PID_JUNK_TOILET                     (33554539)
+#define PID_JUNK_DIRT_1                     (33554540)
+#define PID_JUNK_TIRE                       (33554541)
+#define PID_JUNK_DIRT_2                     (33554542)
 
 // Ladder
 #define PID_LADDER                          (33554571)
@@ -369,25 +369,25 @@ variable Scenery_Creation_Ptr;
                                              Blocking_Cycle(2,1,Elevation)                                     \
                                              Blocking_Cycle(3,1,Elevation)
 
-#define Create_Junk_Barrel(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_TIRE_BARREL,Hex_Num,Elevation);  \
+#define Create_Junk_Barrel(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_BARREL,Hex_Num,Elevation);  \
                                                 Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,0,1);            \
                                                 Blocking_Cycle(4,1,Elevation)                                        \
                                                 Blocking_Cycle(3,2,Elevation)                                        \
                                                 Blocking_Cycle(1,1,Elevation)
 
-#define Create_Junk_Toilet(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_TIRE_TOILET,Hex_Num,Elevation);  \
+#define Create_Junk_Toilet(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_TOILET,Hex_Num,Elevation);  \
                                                 Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
                                                 Blocking_Cycle(3,2,Elevation)
                                                 
-#define Create_Junk_Dirt_1(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_TIRE_DIRT_1,Hex_Num,Elevation);  \
+#define Create_Junk_Dirt_1(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_DIRT_1,Hex_Num,Elevation);  \
                                                 Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
                                                 Blocking_Cycle(3,2,Elevation)
 
-#define Create_Junk_Dirt_2(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_TIRE_DIRT_2,Hex_Num,Elevation);  \
+#define Create_Junk_Dirt_2(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_DIRT_2,Hex_Num,Elevation);  \
                                                 Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
                                                 Blocking_Cycle(3,2,Elevation)
 
-#define Create_Junk_Tire(Hex_Num,Elevation)     Scenery_Creation:=create_object(PID_JUNK_TIRE_TIRE,Hex_Num,Elevation);    \
+#define Create_Junk_Tire(Hex_Num,Elevation)     Scenery_Creation:=create_object(PID_JUNK_TIRE,Hex_Num,Elevation);    \
                                                 Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
                                                 Blocking_Cycle(3,2,Elevation)
 
