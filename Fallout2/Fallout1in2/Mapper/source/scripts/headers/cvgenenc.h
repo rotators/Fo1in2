@@ -312,7 +312,7 @@ procedure abandoned_hideout begin
                Scenery2_Range := random(0, 3);
                Scenery2_List := [PID_ARMCHAIR_1, PID_ARMCHAIR_2, PID_OLD_CHAIR,
                                  PID_METAL_BARREL_1, PID_TRASH_1, PID_TRASH_2, PID_TRASH_3, PID_TRASH_4,
-                                 PID_POT, PID_JUNK, PID_WOODEN_TABLE_1];
+                                 PID_POT, PID_JUNK_TIRE, PID_WOODEN_TABLE_1];
             end
             call placeScenery;
          end

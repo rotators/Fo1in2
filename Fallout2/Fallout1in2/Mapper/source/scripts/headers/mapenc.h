@@ -270,10 +270,10 @@ procedure Scenes(variable scenery_elevation) begin
       else if (LVar2 == 6) then begin
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_JUNK, 0, scenery_elevation);
+            Item := create_object(PID_JUNK_TIRE, 0, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_ROCKS_5, 0, scenery_elevation);
+            Item := create_object(PID_JUNK_TIRE_DIRT_2, 0, scenery_elevation);
          end
          else begin
             Item := create_object(PID_WEEDS, 0, scenery_elevation);
