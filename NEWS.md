@@ -3,6 +3,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Added**: Additional warning message for the Interface Upscale-mod, in case 'Scaling x2' is enabled and the screen resolution is too low.
 - **Added**: Blue cave wall variants of Fo2's mine interior walls.
 - **Added**: Blue colored cobweb and "water on cavewall" scenery objects.
+- **Added**: Fallout 1 barter formula mod. If you don't want to play with et Tu's modified barter formula, then this mod will revert it back to the mostly broken Fo1 version.
 - **Added**: Fo2-styled cavern mountain maps with random enemy and loot spawn (Optional).
 - **Added**: New blue Cave <-> Desert transition tiles.
 - **Added**: Some generic "I don't know"-lines for Harold when asking keywords he knows nothing about.
@@ -28,12 +29,15 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: Hightower's strongbox would explode when using the traps skill, even though the trap has been disarmed before.
 - **Fixed**: Honorable fight with Garl could temporary break Hero Appearance
 - **Fixed**: Looking at dead critters with "no stealing"-flag in combat would remove action points if the player is close to them (Fo2 engine bug).
+- **Fixed**: Money display bug in dialog screen after leaving the barter interface (Fo2 engine bug).
 - **Fixed**: Mr. Handy companion would spawn inside the combat arena when fighting Garl over Tandi.
 - **Fixed**: No animation would play when attacking the Overseer and missing. 
 - **Fixed**: Punk Girl critter death / knock down animations would revert to the default woman critter.
 - **Fixed**: Rad. Desert -> Radiated Desert
 - **Fixed**: Rad. Mountains -> Radiated Mountains
+- **Fixed**: Re-Enabled the TMA lines for Avellone, the bounty hunter.
 - **Fixed**: Smitty in Adytum would still join the player team at the wrong time.
+- **Fixed**: The well in Adytum was misaligned.
 - **Fixed**: Traveling merchants will now remember if their party is full or not.
 - **Fixed**: Traveling with NPCs was advancing waaaay too much time.
 - **Fixed**: Waterfall on cave walls now correctly uses the animfrvr.int script.
