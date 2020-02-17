@@ -19,6 +19,7 @@ procedure look_at_p_proc;
 procedure description_p_proc;
 procedure use_skill_on_p_proc;
 procedure use_obj_on_p_proc;
+procedure timed_event_p_proc;
 
 procedure repair_generator;
 
@@ -36,6 +37,7 @@ procedure map_enter_p_proc begin
       reg_anim_animate_forever(self_obj, ANIM_stand);
       reg_anim_end();
    end
+   flush_add_timer_event(self_obj, 1, EVENT_ANIM);
 end
 
 procedure map_update_p_proc begin
@@ -114,5 +116,18 @@ procedure repair_generator begin
    end
    else if (local_var(0) == 1) then begin
       display_msg(mstr(106));
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_ANIM) then begin
+      if ((anim_busy(self_obj) == false) and not(combat_is_initialized)) then begin
+         if glow_power_online then begin
+            reg_anim_begin();
+            reg_anim_animate_forever(self_obj, ANIM_stand);
+            reg_anim_end();
+         end
+      end
+      add_timer_event(self_obj, 1, EVENT_ANIM);
    end
 end
