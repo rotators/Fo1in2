@@ -18,19 +18,18 @@ procedure ondeath_handler;
 procedure start begin
    if (game_loaded) then begin
       if fo1in2_destroy_armor_enabled then
-         register_hook_proc(HOOK_DEATHANIM2, ondeath_handler); // Changed to deathanim2, because exploding critters would drop armors!
+         register_hook_proc(HOOK_ONDEATH, ondeath_handler);
    end
 end
 
 procedure ondeath_handler begin
-   variable weapon := get_sfall_arg;
-   variable attacker := get_sfall_arg;
-   variable target := get_sfall_arg;
-   variable Item;
+   variable item, critter := get_sfall_arg;
 
-   if critter_wearing_armor(target) and (target != dude_obj) and not(obj_in_party(target)) then begin
-      Item := get_armor(target);
-      rm_obj_from_inven(target, Item);
-      debug_msg("destroying critter armor!");
+   if (critter == dude_obj orElse (obj_in_party(critter))) then return;
+
+   item = get_armor(critter);
+   if (item andAlso obj_item_subtype(item) == item_type_armor) then begin
+      rm_obj_from_inven(critter, item);
+      debug_msg("Destroying critter armor!");
    end
 end
