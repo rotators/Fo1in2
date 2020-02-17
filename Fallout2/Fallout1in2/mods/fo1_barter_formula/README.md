@@ -3,7 +3,7 @@
 Fallout 1 Barter Formula
 --------------------------
 
-This mod replaces the barter formula with the one from Fallout 1. However, keep in mind that most of the time it's unbalanced and broken ...
+This mod reverts the barter formula and prices on merchants to the ones from Fallout 1.
 
 ### Installation
 To use this mod, open the ddraw.ini, go to [ExtraPatches] and add "PatchFile[number]=mods\fo1_barter_formula" at the end of the "PatchFile"-list!
