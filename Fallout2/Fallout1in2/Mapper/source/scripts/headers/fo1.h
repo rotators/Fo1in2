@@ -169,6 +169,7 @@ variable tma_gvar_array;
 
 // Shortcut
 #define set_tma_data_generic(x)     set_tma_data(tma_source_generic, x, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
+#define set_tma_data_default        set_tma_data(NAME, 1000, TMA_MSG_NAME_START, TMA_MSG_NAME_END, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END)
 
 // If reply <line> is triggered, set <GVAR_> to <val>
 // Must be placed in the critter talk_p_proc.
@@ -427,7 +428,13 @@ variable knock_down_sound;
                                     (cur_map_index == MAP_CAVE3) or  \
                                     (cur_map_index == MAP_CAVE4) or  \
                                     (cur_map_index == MAP_CAVE5) or  \
-                                    (cur_map_index == MAP_MINE1))
+                                    (cur_map_index == MAP_MINE1) or  \
+                                    (cur_map_index == MAP_MINE2) or  \
+                                    (cur_map_index == MAP_MINE3))
+                                    
+#define map_is_mine                 ((cur_map_index == MAP_MINE1) or \
+                                    (cur_map_index == MAP_MINE2) or  \
+                                    (cur_map_index == MAP_MINE3))
 
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 

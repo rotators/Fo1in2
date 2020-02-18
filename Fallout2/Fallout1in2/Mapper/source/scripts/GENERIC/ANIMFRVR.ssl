@@ -10,28 +10,38 @@
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
-procedure combat_p_proc;
+procedure timed_event_p_proc;
+
+#define EVENT_ANIM      (1)
 
 procedure start begin
    call map_update_p_proc;
 end
 
 procedure map_enter_p_proc begin
-   //reg_anim_combat_check(1);
-   reg_anim_clear(self_obj);
    reg_anim_begin();
    reg_anim_animate_forever(self_obj, ANIM_stand);
    reg_anim_end();
+
+   flush_add_timer_event(self_obj, 1, EVENT_ANIM);
 end
 
 procedure map_update_p_proc begin
-   //reg_anim_combat_check(1);
-   reg_anim_clear(self_obj);
-   reg_anim_begin();
-   reg_anim_animate_forever(self_obj, ANIM_stand);
-   reg_anim_end();
+   if not(combat_is_initialized) then begin
+      reg_anim_begin();
+      reg_anim_animate_forever(self_obj, ANIM_stand);
+      reg_anim_end();
+   end
 end
 
-procedure combat_p_proc begin
-   //call map_update_p_proc;
+procedure timed_event_p_proc begin
+   if (fixed_param == 1) then begin
+      if ((anim_busy(self_obj) == false) and not(combat_is_initialized)) then begin
+         reg_anim_begin();
+         reg_anim_animate_forever(self_obj, ANIM_stand);
+         reg_anim_end();
+      end
+      add_timer_event(self_obj, 1, EVENT_ANIM);
+   end
 end
+
