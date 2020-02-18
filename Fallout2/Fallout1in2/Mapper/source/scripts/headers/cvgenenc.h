@@ -48,7 +48,7 @@ procedure Choose_Encounter begin
       rnd_chest := random(1, 100),
       rnd_critter;
 
-   if (rnd_chest < 60 and (stat_success(dude_obj, STAT_lu, 0))) then
+   if (rnd_chest < 50 and (stat_success(dude_obj, STAT_lu, 0))) then
       special_spawn_container := 1;
    else
       special_spawn_container := 0;
