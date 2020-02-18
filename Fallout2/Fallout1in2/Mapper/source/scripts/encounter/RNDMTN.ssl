@@ -23,14 +23,12 @@ procedure map_update_p_proc;
 procedure map_exit_p_proc;
 procedure timed_event_p_proc;
 
-#define EVENT_RADS   (1)
-
 export variable random_seed_1;//FROM RNDDESRT
 export variable random_seed_2;//FROM RNDDESRT
 export variable random_seed_3;//FROM RNDDESRT
 
 procedure choose_start;
-procedure Patrick;// ---------------RNDMTN ONLY
+procedure Patrick;
 
 procedure Glow_table;//FROM RNDDESRT
 procedure Glow1;//FROM RNDDESRT
@@ -72,6 +70,8 @@ procedure VAULT4;// ---------------RNDMTN ONLY
 procedure VAULT5;// ---------------RNDMTN ONLY
 procedure VAULT6;// ---------------RNDMTN ONLY
 
+#define EVENT_RADS   (1)
+
 export variable signal_mutants;
 
 variable rnd_critter;
@@ -104,19 +104,10 @@ procedure roll_encounter begin
       Encounter_Num := 6;
 end
 
-#define AREABLK(area)                                         \
-   count := total_encounter_mobs;                             \
-   while (count > 0) do begin                                 \
-      call Choose_Pid;                                        \
-      call placeCritter(choose_enc_pid, choose_enc_sid, area);\
-      count -= 1;                                             \
-   end
-
 procedure SpecialMapPos begin
    if CUR_MAP_CAVE1 then begin
       Area_List := [12666, 16067, 20266, 21888, 28901, 24506, 20326, 14300];
       Chest_List := [19929, 29304, 19863];
-      SceneryPos_List := -1;
    end else if CUR_MAP_CAVE2 then begin
       Area_List := [24065, 26067, 18890, 18112, 19710, 25497];
       Chest_List := [18089, 17314, 27067];
@@ -124,37 +115,42 @@ procedure SpecialMapPos begin
    end else if CUR_MAP_CAVE3 then begin
       Area_List := [19108, 19492, 20689];
       Chest_List := [21675, 18092, 17908];
-      SceneryPos_List := -1;
    end else if CUR_MAP_CAVE4 then begin
       Area_List := [20896, 23902, 21320];
       Chest_List := [21491, 24301, 19697];
       SceneryPos_List := [21497, 24304, 24509, 22322, 22117, 21305, 21100];
    end else if CUR_MAP_CAVE5 then begin
       Area_List := [12666, 16067, 20265, 21888, 28901, 24506, 20326, 14899];
+      Exit_List := [25318, 25306, 25896];
       Chest_List := [19929, 29304, 19863];
-      SceneryPos_List := -1;
    end
    else if CUR_MAP_MINE1 then begin
       Area_List := [14514, 17899, 20707, 19889, 18271];
+      Exit_List := [22527, 17112, 25309, 19888];
       Chest_List := [16498, 17268, 18887];
-      SceneryPos_List := [14311, 14315, 14718, 17116, 16698, 17100, 17899, 20308, 20088, 20291, 20690, 18075, 17872, 18068, 18065, 18868, 21279, 20503];
+      SceneryPos_List := [14311, 14315, 14718, 17116, 17100, 17899, 20308, 20088, 20291, 20690, 18075, 17872, 18065, 18868, 20503];
    end
-end
-
-procedure LoadCritterPos begin
-   variable tile, count, obj;
-   foreach i in Area_List begin
-      AREABLK(i)
+   else if CUR_MAP_MINE2 then begin
+      Area_List := [22322, 22505, 18694, 17702, 15105, 21284, 19873, 17682, 14282];
+      Exit_List := [11906, 20934, 24495, 16465, 14288, 16718, 21910, 20480];
+      Chest_List := [13906, 19477, 12880];
+      SceneryPos_List := [14505, 17502, 18494, 20102, 22322, 19882, 21484, 19671, 20477, 17482, 13882];
    end
-end
-
-procedure LoadScenery begin
-   call Choose_Cave_Type;
+   else if CUR_MAP_MINE3 then begin
+      Area_List := [21474, 18895, 21111, 15505, 16881, 14691];
+      Exit_List := [11906, 20934, 24495, 16465, 14288, 16718, 21910, 20480];
+      Chest_List := [19682, 14708, 17122];
+      SceneryPos_List := [15307, 17502, 17898, 18895, 19702, 22122, 17482, 19871, 21473, 22678];
+   end
 end
 
 procedure LoadCritters begin
+   variable tile, count, obj;
+   baseElevation := 1;
    call Choose_Encounter;
-   call LoadCritterPos;
+   foreach i in Area_List begin
+      AREABLK(i)
+   end
 end
 
 procedure map_enter_p_proc begin
@@ -162,9 +158,13 @@ procedure map_enter_p_proc begin
 
    if map_has_cavern then begin
       if (map_first_run and not(is_loading_game)) then begin
-         display_msg(message_str(SCRIPT_SHADYWST, 200));
+         if map_is_mine then
+            display_msg(message_str(SCRIPT_SHADYWST, 202));
+         else
+            display_msg(message_str(SCRIPT_SHADYWST, 200));
          call SpecialMapPos;
          call LoadScenery;
+         if Exit_List > 0 then call LoadExitScenery;
          if special_spawn_critters then call LoadCritters;
          if special_spawn_container then call LoadChests;
 
@@ -748,8 +748,8 @@ procedure Vats4 begin
       Outer_ring := (dude_perception / 3) + 4;
       Inner_ring := (dude_perception / 3) + 2;
 
-      Critter_type := PID_FLOATER;// FLOATER
-      Critter_script := SCRIPT_FLOATER;//   FLOATER.SSL
+      Critter_type := PID_FLOATER;
+      Critter_script := SCRIPT_FLOATER;
       Critter_direction := random(0, 2);
       call Place_critter;
       obj_rotate(Critter, random(3, 4));

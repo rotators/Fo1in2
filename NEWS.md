@@ -3,6 +3,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Added**: Additional warning message for the Interface Upscale-mod, in case 'Scaling x2' is enabled and the screen resolution is too low.
 - **Added**: Blue cave wall variants of Fo2's mine interior walls.
 - **Added**: Blue colored cobweb and "water on cavewall" scenery objects.
+- **Added**: Fallout 1 barter formula mod. If you don't want to play with et Tu's modified barter formula, then this mod will revert it back to the mostly broken Fo1 version.
 - **Added**: Fo2-styled cavern mountain maps with random enemy and loot spawn (Optional).
 - **Added**: New blue Cave <-> Desert transition tiles.
 - **Added**: Some generic "I don't know"-lines for Harold when asking keywords he knows nothing about.
@@ -14,6 +15,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: "Aradesh is furious" dialog string was something about human armor. Probably another Fixt-remnant.
 - **Fixed**: "You see: x" for party members.
 - **Fixed**: A possible crash when attacking Adytum with the Blades while a caravan is still in town and about to be deleted (issue #31).
+- **Fixed**: After defeating the Khans Raiders and returning to their location, the player would get negative Karma.
 - **Fixed**: After getting the "Free Drinks"-reward from Neal in the Skum Pitt, his dialog options would still show caps, even though the drinks are free.
 - **Fixed**: Ant critters are now unaffected by the Animal Friend perk.
 - **Fixed**: Aradesh will grant the player two strikes for stealing, not just one + whatever was going on.
@@ -27,14 +29,18 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: Hightower's strongbox would explode when using the traps skill, even though the trap has been disarmed before.
 - **Fixed**: Honorable fight with Garl could temporary break Hero Appearance
 - **Fixed**: Looking at dead critters with "no stealing"-flag in combat would remove action points if the player is close to them (Fo2 engine bug).
+- **Fixed**: Money display bug in dialog screen after leaving the barter interface (Fo2 engine bug).
 - **Fixed**: Mr. Handy companion would spawn inside the combat arena when fighting Garl over Tandi.
 - **Fixed**: No animation would play when attacking the Overseer and missing. 
 - **Fixed**: Punk Girl critter death / knock down animations would revert to the default woman critter.
 - **Fixed**: Rad. Desert -> Radiated Desert
 - **Fixed**: Rad. Mountains -> Radiated Mountains
+- **Fixed**: Re-Enabled the TMA lines for Avellone, the bounty hunter.
 - **Fixed**: Smitty in Adytum would still join the player team at the wrong time.
+- **Fixed**: The well in Adytum was misaligned.
 - **Fixed**: Traveling merchants will now remember if their party is full or not.
 - **Fixed**: Traveling with NPCs was advancing waaaay too much time.
+- **Fixed**: Vault 13 door terminal description was showing the wrong text. #40
 - **Fixed**: Waterfall on cave walls now correctly uses the animfrvr.int script.
 - **Tweaked**: After getting caught stealing by Aradesh, the dialog interface will open instead of a floating text.
 - **Tweaked**: Doubled poison damage of small radscorpions.

@@ -3,19 +3,12 @@
 
 #include "sfall/sfall.rotators.h"
 
-/*********************************************************
-   All kinds of memory reading/writing macros
-   Requires AllowUnsafeScripting=1 in ddraw.ini!
-*********************************************************/
-
-// Check current ddraw.dll build (base check, left for reference only; use sfall_rotators macro from sfall.rotators.h in scripts)
-#define VOODOO_marker  (read_byte(0x410003) == 0xF4)
-
-// This will disable running the credits after the endgame slides:
-// This is done via Sfall now (F1EngineBehavior=1)
-#define VOODOO_mode_fo1_ending                   \
-               write_int( 0x4A4343, 0x90909090); \
-               write_byte(0x4A4347, 0x90)
+/**************************************************
+ *                                                *
+ *       All kinds of unsafe scripting macros     *
+ *  Requires AllowUnsafeScripting=1 in ddraw.ini  *
+ *                                                *
+ **************************************************/
 
 // This will disable the "You encounter: ..." message:
 #define VOODOO_disable_YouEncounter_message      \
@@ -127,6 +120,19 @@
    write_int  (0x41ae81, 0x0a88b4e9); /* jmp fallout2.4C373A */ \
    write_byte (0x41ae85, 0x00)
 
+// Fixes the bug where money is not displayed after exiting barter. https://github.com/rotators/Fo1in2/issues/26
+#define VOODOO_dialog_money_fix \
+   /* gdialog_bk+0x75 */                                                    \
+   write_int (0x447acd, 0xfd33b4e9); /* jmp fallout2.41AE86 */              \
+   write_byte(0x447ad1, 0xff);                                              \
+   write_byte(0x41ae86, 0x60);       /* pushad */                           \
+   write_int (0x41ae87, 0x02bea4e8); /* call <fallout2.gdProcessUpdate_> */ \
+   write_byte(0x41ae8b, 0x00);                                              \
+   write_byte(0x41ae8c, 0x61);       /* popad */                            \
+   write_int (0x41ae8d, 0x0bbf1ae8); /* call <fallout2.win_show_> */        \
+   write_byte(0x41ae91, 0x00);                                              \
+   write_int (0x41ae92, 0x02cc3be9); /* jmp fallout2.447AD2 */              \
+   write_byte(0x41ae96, 0x00)
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \

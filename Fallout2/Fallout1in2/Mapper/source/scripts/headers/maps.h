@@ -174,6 +174,8 @@
 #define MAP_CAVE4           (85)
 #define MAP_CAVE5           (86)
 #define MAP_MINE1           (87)
+#define MAP_MINE2           (88)
+#define MAP_MINE3           (89)
 
 /*******************************************************************************
  Map Names (Strings)
@@ -336,6 +338,8 @@
 #define CUR_MAP_CAVE4       (cur_map_index ==  MAP_CAVE4)
 #define CUR_MAP_CAVE5       (cur_map_index ==  MAP_CAVE5)
 #define CUR_MAP_MINE1       (cur_map_index ==  MAP_MINE1)
+#define CUR_MAP_MINE2       (cur_map_index ==  MAP_MINE2)
+#define CUR_MAP_MINE3       (cur_map_index ==  MAP_MINE3)
 
 // Force player position when loading map
 #define override_map_start_hex(x,y,z)   override_map_start(x%200,x/200,y,z)
@@ -373,9 +377,9 @@
 #define boneyard_visit                      (town_known(AREA_BONEYARD) == MARK_STATE_VISITED)
 #define cathedral_visit                     (town_known(AREA_CATHEDRAL) == MARK_STATE_VISITED)
 
-#define shady_caves_visit                 (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
-#define hub_farm_visit                    (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
-#define hub_lair_visit                    (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
+#define shady_caves_visit                   (town_known(AREA_SHADY_CAVES) != MARK_STATE_UNKNOWN)
+#define hub_farm_visit                      (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
+#define hub_lair_visit                      (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
 
 #define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin          \
                                                debug_msg("  mark_on_map("+x+")");                        \

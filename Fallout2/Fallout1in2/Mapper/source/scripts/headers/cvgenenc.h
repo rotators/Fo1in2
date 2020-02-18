@@ -26,6 +26,7 @@ variable
 
    active_encounter_pids := 0,
    total_encounter_mobs := 0, //Per area in map
+   baseElevation := 0,
 
    special_spawn_critters := 1,
    special_spawn_container := 0,
@@ -33,7 +34,7 @@ variable
    choose_enc_pid := 0,
    choose_enc_sid := 0,
 
-   Area_List, Chest_List, SceneryPos_List, Items_List,
+   Area_List, Exit_List := -1, Chest_List, SceneryPos_List := -1, Items_List,
    Choose_Scenery,
    Scenery_Chance,
    Active_Scenery_List := 1,
@@ -43,7 +44,7 @@ variable
 
 procedure Choose_Encounter begin
    variable
-      val := Random(1, 4),
+      val := Random(1, 5),
       rnd_chest := random(1, 100),
       rnd_critter;
 
@@ -51,6 +52,9 @@ procedure Choose_Encounter begin
       special_spawn_container := 1;
    else
       special_spawn_container := 0;
+
+   // DEBUG
+   //val := 0;
 
    // Geckos
    if (val == 1) then begin
@@ -132,6 +136,14 @@ procedure Choose_Encounter begin
       encounter_sid1 := SCRIPT_WANRATS;
       total_encounter_mobs := Random(3, 5);
    end
+
+   // Mantis
+   else if (val == 5) then begin
+      active_encounter_pids := 1;
+      encounter_pid1 := PID_MANTIS;
+      encounter_sid1 := SCRIPT_MANTIS;
+      total_encounter_mobs := Random(1, 3);
+   end
 end
 
 procedure Choose_Pid begin
@@ -165,28 +177,27 @@ end
 
 procedure placeCritter(variable pid, variable sid, variable baseTile) begin
    variable tile;
-   variable obj;
    variable i;
 
    if (pid >= 1) then begin
       tile := tile_num_in_direction(baseTile, Random(0, 5), Random(1, 3));
 
-      obj := create_object_sid(pid, 0, 0, sid);
-      critter_attempt_placement(obj, tile, 1);
-      obj_rotate(obj, random(0, 5));
+      Critter := create_object_sid(pid, 0, 0, sid);
+      critter_attempt_placement(Critter, tile, baseElevation);
+      obj_rotate(Critter, random(0, 5));
 
-      while ((tile_distance(tile_num(obj),baseTile) > 5) and (i < 4)) do begin
+      while ((tile_distance(tile_num(Critter),baseTile) > 5) and (i < 4)) do begin
          tile := tile_num_in_direction(baseTile, Random(0, 5), Random(1, 2));
          debug_msg("tile_num == "+tile);
          i+=1;
       end
 
       if ((i >= 4) and (tile > 0)) then begin
-         critter_attempt_placement(obj,baseTile,1);
+         critter_attempt_placement(Critter, baseTile, baseElevation);
       end
 
-      if (tile_distance(tile_num(obj),baseTile) > 5) then begin
-         destroy_object(obj);
+      if (tile_distance(tile_num(Critter), baseTile) > 5) then begin
+         destroy_object(Critter);
          debug_msg("Couldn't find Safe spot. Destroying Ptr.");
       end
    end
@@ -275,7 +286,7 @@ procedure toxic_cave begin
    Scenery_Chance := random(1, 100);
    if (Scenery_Chance <= 15) then begin
       Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
-      Scenery_Creation_Hex := array_random_value(SceneryPos_List);
+      Scenery_Creation_Hex := array_random_value(Chest_List);
 
       Critter := create_object(PID_MRHANDY, 0, 0);
       critter_attempt_placement(Critter, Scenery_Creation_Hex, 1);
@@ -301,7 +312,7 @@ procedure abandoned_hideout begin
                Scenery2_Range := random(0, 3);
                Scenery2_List := [PID_ARMCHAIR_1, PID_ARMCHAIR_2, PID_OLD_CHAIR,
                                  PID_METAL_BARREL_1, PID_TRASH_1, PID_TRASH_2, PID_TRASH_3, PID_TRASH_4,
-                                 PID_POT, PID_JUNK, PID_WOODEN_TABLE_1];
+                                 PID_POT, PID_JUNK_TIRE, PID_WOODEN_TABLE_1];
             end
             call placeScenery;
          end
@@ -320,7 +331,7 @@ procedure dead_bodies begin
       Scenery_Chance := random(1, 100);
       if (Scenery_Chance <= 95) then begin
          spawn_dead_critter(Item, Critter_script, random(48, 57));
-         move_to(Critter, tile_num(Critter), 1);
+         critter_attempt_placement(Critter, tile_num(Critter), 1);
          if (random(0,3) == 1) then item_caps_adjust(Critter, fortune_finder(random(1, 25)));
       end
    end
@@ -342,6 +353,7 @@ end
 
 procedure cleaning_robot begin
    special_spawn_critters := 0;
+   debug("Spawn Cleaning Robot!");
 
    Outer_ring := 5;
    Inner_ring := 1;
@@ -354,7 +366,7 @@ procedure cleaning_robot begin
       while (count > 0) do begin
          count--;
          spawn_dead_critter(Scenery1_List, Critter_script, random(48, 57));
-         move_to(Critter, tile_num(Critter), 1);
+         critter_attempt_placement(Critter, tile_num(Critter), 1);
       end
    end
 
@@ -362,7 +374,7 @@ procedure cleaning_robot begin
    Critter_type := PID_MRHANDY;
    Critter_script := SCRIPT_ROBOT;
    call Place_critter;
-   move_to(Critter, tile_num(Critter), 1);
+   critter_attempt_placement(Critter, tile_num(Critter), 1);
 
    Items_List := [PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_FLAMETHROWER_FUEL];
    Item := array_random_value(Items_List);
@@ -379,7 +391,7 @@ procedure centaur_handler begin
    Critter_type := PID_MEAN_SUPER_MUTANT;
    Critter_spawn_hex := array_random_value(Area_List);
    call Place_critter;
-   move_to(Critter, tile_num(Critter), 1);
+   critter_attempt_placement(Critter, tile_num(Critter), 1);
    obj_rotate(Critter, random(0,5));
 
    arm_obj(Critter, PID_POWER_FIST, 1, PID_SMALL_ENERGY_CELL, 1)
@@ -395,7 +407,7 @@ procedure centaur_handler begin
    while (count > 0) do begin
       count--;
       call Place_critter;
-      move_to(Critter, tile_num(Critter), 1);
+      critter_attempt_placement(Critter, tile_num(Critter), 1);
    end
 
    // Fill up the cave
@@ -410,7 +422,7 @@ procedure centaur_handler begin
             count--;
             Critter_type := Scenery1_List;
             call Place_critter;
-            move_to(Critter, tile_num(Critter), 1);
+            critter_attempt_placement(Critter, tile_num(Critter), 1);
          end
       end
    end
@@ -419,9 +431,9 @@ end
 /****************************************
    Select Scenery Type
 ****************************************/
-procedure Choose_Cave_Type begin
+procedure LoadScenery begin
    if (SceneryPos_List > 0) then begin
-      Choose_Scenery := random(1, 20);
+      Choose_Scenery := random(1, 25);
       Active_Scenery_List := 1;
 
       // DEBUG:
@@ -447,6 +459,131 @@ procedure Choose_Cave_Type begin
          call centaur_handler;
          call dead_bodies;
       end
+   end
+end
+
+procedure LoadExitScenery begin
+   Outer_ring := 8;
+   Inner_ring := 3;
+   Critter_spawn_hex := array_random_value(Exit_List);
+
+   // Spawn Ladder
+   if (CUR_MAP_MINE2 or CUR_MAP_MINE3) then begin
+      Item := create_object_sid(PID_LADDER_HOLE, Critter_spawn_hex, 2, SCRIPT_ECLADDER);
+      Item := create_object(PID_BLOCKING_HEX, Critter_spawn_hex, 2);
+      set_map_var(MVAR_CAVERN_LADDER_ELEV2, tile_num_in_direction(Critter_spawn_hex, 2, 2));
+   end
+
+   // Spawn Scenery
+   call Scenes(2);
+   chance := random(1, 100);
+   if (chance <= 15) or (map_is_mine and chance <= 80) then begin
+      Create_Boxes_2(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+      Create_Boxes_3(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+      Create_Boxes_4(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+
+      if map_is_mine then begin
+         Item := create_object(PID_TRASH_CAN, tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2);
+         Item := create_object(PID_CHAIR, tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2);
+      end
+
+      Create_Junk_Barrel(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+      Create_Junk_Dirt_1(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+      Create_Junk_Dirt_2(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+      Create_Junk_Tire(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
+   end
+
+   // Dead Traveler
+   chance := random(1, 100);
+   if (chance <= 35) then begin
+      Critter_type := PID_DEAD_TRAVELER;
+      Critter_script := -1;
+      call Place_critter;
+      critter_attempt_placement(Critter, tile_num(Critter), 2);
+      item_caps_adjust(Critter, fortune_finder(random(0, 60)));
+      if (random(1, 4) == 4) then begin
+         Item := create_object(PID_STIMPAK, 0, 0);
+         add_obj_to_inven(Critter, Item);
+      end
+      if (random(1, 4) == 4) then begin
+         Items_List := [PID_10MM_PISTOL, PID_GREASE_GUN, PID_SHOTGUN, PID_SPEAR, PID_SHARP_SPEAR];
+         Item := create_object(array_random_value(Items_List), 0, 0);
+         add_obj_to_inven(Critter, Item);
+      end
+      if (random(1, 4) == 4) then begin
+         Items_List := [PID_10MM_JHP, PID_9MM_AMMO, PID_7_62MM_AMMO, PID_SHOTGUN_SHELLS, PID_5MM_JHP];
+         Item := create_object(array_random_value(Items_List), 0, 0);
+         add_mult_objs_to_inven(Critter, Item, 1 + dude_perk(PERK_scrounger));
+      end
+      if (random(1, 6) == 4) then begin
+         Item := create_object(PID_BACKPACK, 0, 0);
+         add_obj_to_inven(Critter, Item);
+      end
+      kill_critter(Critter, ANIM_fall_back_sf);
+   end
+
+   // Spawn Alcohol
+   chance := random(1, 100);
+   if (chance <= 25) then begin
+      Items_List := [PID_BEER, PID_BOOZE, PID_GAMMA_GULP_BEER, PID_ROENTGEN_RUM];
+      Critter_type := array_random_value(Items_List);
+      count := random(1, 6);
+      while (count > 0) do begin
+         count--;
+         call Place_critter;
+         critter_attempt_placement(Critter, tile_num(Critter), 2);
+      end
+   end
+
+   // Bag of caps
+   chance := random(1, 100);
+   if (chance <= 25) then begin
+      Critter_type := PID_BAG;
+      call Place_critter;
+      critter_attempt_placement(Critter, tile_num(Critter), 2);
+      item_caps_adjust(Critter, fortune_finder(random(1, 60)));
+   end
+
+   // Spawn Mobs
+   chance := random(1, 100);
+   if (chance <= 75) then begin
+      call Choose_Encounter;
+      Outer_ring := 12;
+      Inner_ring := 6;
+      baseElevation := 2;
+      count := total_encounter_mobs;
+      while (count > 0) do begin
+         variable Facing := 0;
+         variable Distance := 0;
+         variable Ring := 0;
+
+         call Choose_Pid;
+         call placeCritter(choose_enc_pid, choose_enc_sid, Critter_spawn_hex);
+         count -= 1;
+
+         Ring := random(Inner_ring, Outer_ring);
+         Facing := random(0, 5);
+         Critter_tile := tile_num_in_direction(Critter_spawn_hex, random(0, 5), Ring);
+         Distance := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
+         if ((tile_distance(Critter_spawn_hex, Distance) <= Outer_ring) and (tile_distance(Critter_spawn_hex, Distance) >= Inner_ring)) then begin
+            Critter_tile := tile_num_in_direction(Critter_tile, Facing, (Ring / 2));
+         end
+         critter_attempt_placement(Critter, Critter_tile, 2);
+      end
+   end
+
+   // Spawn camp fire with sleeping bag
+   chance := random(1, 100);
+   if (chance <= 50) then begin
+      // TODO: Rewrite this
+      CritterXpos := (Critter_tile % 200) - 4;
+      CritterYpos := Critter_tile / 200;
+      Item := create_object(PID_FIRE_PIT, 0, 0);
+      critter_attempt_placement(Item, ((CritterYpos + 4) * 200) + (CritterXpos - 2), 0);
+      Item := create_object(PID_BED_1, 0, 0);
+      critter_attempt_placement(Item, ((CritterYpos + 4) * 200) + (CritterXpos - 4), 0);
+      Item := create_object(PID_BEER, 0, 0);
+      critter_attempt_placement(Item, ((CritterYpos + 5) * 200) + (CritterXpos - 1), 0);
    end
 end
 
