@@ -16,6 +16,9 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure timed_event_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
 
@@ -77,99 +80,55 @@ procedure start begin
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_CHILDREN_TRUE);
    end
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      call talk_p_proc;
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
-   else begin
-      if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-         call destroy_p_proc;
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == 1) then begin
+      if ((healing == 1) or (healing == 3)) then
+         float_msg(dude_obj, mstr(138), FLOAT_MSG_RED);
+      else if (healing == 2) then
+         float_msg(dude_obj, mstr(152), FLOAT_MSG_RED);
+      else  if (healing == 4) then
+         float_msg(dude_obj, mstr(175), FLOAT_MSG_RED);
+      else if (healing == 5) then
+         float_msg(self_obj, mstr(150), FLOAT_MSG_YELLOW);
+      else if (healing == 6) then
+         float_msg(self_obj, mstr(178), FLOAT_MSG_YELLOW);
+      add_timer_event(self_obj, game_ticks(3), 2);
+   end
+   else if (fixed_param == 2) then begin
+      if (healing < 4) then
+         float_msg(self_obj, mstr(139), FLOAT_MSG_YELLOW);
+      else if (healing == 4) then
+         float_msg(self_obj, mstr(176), FLOAT_MSG_YELLOW);
+      add_timer_event(self_obj, game_ticks(3), 3);
+   end
+   else if (fixed_param == 3) then begin
+      if (healing == 1) then begin
+         if (dude_is_male) then
+            float_msg(self_obj, mstr(140), FLOAT_MSG_YELLOW);
+         else
+            float_msg(self_obj, mstr(141), FLOAT_MSG_YELLOW);
       end
-      else begin
-         if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-            if (tmp_hostile) then begin
-               tmp_hostile := 0;
-               attack(dude_obj);
-            end
-         end
-         else begin
-            if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-            end
-            else begin
-               if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-                  tmp_hostile := 1;
-               end
-               else begin
-                  if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-                     if (fixed_param == 1) then begin
-                        if ((healing == 1) or (healing == 3)) then begin
-                           float_msg(dude_obj, mstr(138), FLOAT_MSG_RED);
-                        end
-                        else begin
-                           if (healing == 2) then begin
-                              float_msg(dude_obj, mstr(152), FLOAT_MSG_RED);
-                           end
-                           else begin
-                              if (healing == 4) then begin
-                                 float_msg(dude_obj, mstr(175), FLOAT_MSG_RED);
-                              end
-                              else begin
-                                 if (healing == 5) then begin
-                                    float_msg(self_obj, mstr(150), FLOAT_MSG_YELLOW);
-                                 end
-                                 else begin
-                                    if (healing == 6) then begin
-                                       float_msg(self_obj, mstr(178), FLOAT_MSG_YELLOW);
-                                    end
-                                 end
-                              end
-                           end
-                        end
-                        add_timer_event(self_obj, game_ticks(3), 2);
-                     end
-                     else begin
-                        if (fixed_param == 2) then begin
-                           if (healing < 4) then begin
-                              float_msg(self_obj, mstr(139), FLOAT_MSG_YELLOW);
-                           end
-                           else begin
-                              if (healing == 4) then begin
-                                 float_msg(self_obj, mstr(176), FLOAT_MSG_YELLOW);
-                              end
-                           end
-                           add_timer_event(self_obj, game_ticks(3), 3);
-                        end
-                        else begin
-                           if (fixed_param == 3) then begin
-                              if (healing == 1) then begin
-                                 if (dude_is_male) then begin
-                                    float_msg(self_obj, mstr(140), FLOAT_MSG_YELLOW);
-                                 end
-                                 else begin
-                                    float_msg(self_obj, mstr(141), FLOAT_MSG_YELLOW);
-                                 end
-                              end
-                              else begin
-                                 if (healing == 2) then begin
-                                    float_msg(self_obj, mstr(153), FLOAT_MSG_YELLOW);
-                                 end
-                                 else begin
-                                    if (healing == 3) then begin
-                                       if (dude_is_male) then begin
-                                          float_msg(self_obj, mstr(167), FLOAT_MSG_YELLOW);
-                                       end
-                                       else begin
-                                          float_msg(self_obj, mstr(168), FLOAT_MSG_YELLOW);
-                                       end
-                                    end
-                                 end
-                              end
-                           end
-                        end
-                     end
-                  end
-               end
-            end
-         end
+      else if (healing == 2) then begin
+         float_msg(self_obj, mstr(153), FLOAT_MSG_YELLOW);
+      end
+      else if (healing == 3) then begin
+         if (dude_is_male) then
+            float_msg(self_obj, mstr(167), FLOAT_MSG_YELLOW);
+         else
+            float_msg(self_obj, mstr(168), FLOAT_MSG_YELLOW);
       end
    end
 end
@@ -180,41 +139,36 @@ procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
 
-   start_gdialog(400, self_obj, 4, -1, -1);
-   gsay_start;
    healing := 0;
    if (local_var(5) == 1) then begin
-      call DocWu00;
+      start_dialog_at_node(DocWu00);
+   end
+   else if (local_var(6) == 1) then begin
+      start_dialog_at_node(DocWu01);
+   end
+   else if (local_var(7) == 1) then begin
+      start_dialog_at_node(DocWu02);
    end
    else begin
-      if (local_var(6) == 1) then begin
-         call DocWu01;
-      end
-      else begin
-         if (local_var(7) == 1) then begin
-            call DocWu02;
-         end
-         else begin
-            call DocWu03;
-         end
-      end
+      start_dialog_at_node(DocWu03);
    end
-   gsay_end;
-   end_dialogue;
+
    if (healing) then begin
       use_obj(dude_obj);
       add_timer_event(self_obj, game_ticks(2), 1);
    end
 end
 
-procedure social_skills
-begin
+procedure destroy_p_proc begin
+   inc_inv_evil_crit
+end
+
+procedure social_skills begin
    get_reaction
    dialogue_system_enter;
 end
 
-procedure DocWu00
-begin
+procedure DocWu00 begin
    variable LVar0 := 0;
    set_local_var(4, 1);
    set_local_var(5, 1);
@@ -232,8 +186,7 @@ begin
    call DocWuOpts3;
 end
 
-procedure DocWu01
-begin
+procedure DocWu01 begin
    set_local_var(6, 1);
    Reply(113);
    NOption(114, DocWu11, 7);
@@ -244,8 +197,7 @@ begin
    call DocWuOpts3;
 end
 
-procedure DocWu02
-begin
+procedure DocWu02 begin
    set_local_var(7, 1);
    Reply(117);
    NOption(118, DocWu13, 7);
@@ -256,8 +208,7 @@ begin
    call DocWuOpts3;
 end
 
-procedure DocWu03
-begin
+procedure DocWu03 begin
    set_local_var(5, 0);
    set_local_var(6, 0);
    set_local_var(7, 0);
@@ -270,139 +221,117 @@ begin
    call DocWuOpts3;
 end
 
-procedure DocWu04
-begin
+procedure DocWu04 begin
    Reply(125);
    NOption(126, DocWu16, 7);
    call DocWuOpts4;
 end
 
-procedure DocWu05
-begin
+procedure DocWu05 begin
    Reply(130);
    NOption(101, DocWuEnd, 1);
 end
 
-procedure DocWu06
-begin
+procedure DocWu06 begin
    Reply(131);
    NOption(100, DocWu06a, 1);
 end
 
-procedure DocWu06a
-begin
+procedure DocWu06a begin
    healing := 1;
 end
 
-procedure DocWu07
-begin
+procedure DocWu07 begin
    Reply(142);
    call DocWuOpts4;
 end
 
-procedure DocWu08
-begin
+procedure DocWu08 begin
    Reply(143);
    NOption(101, DocWuEnd, 1);
 end
 
-procedure DocWu09
-begin
+procedure DocWu09 begin
    Reply(144);
    NOption(145, DocWu06, 4);
    NOption(146, DocWu23, 4);
    NOption(147, DocWu24, 4);
 end
 
-procedure DocWu10
-begin
+procedure DocWu10 begin
    Reply(148);
    NOption(100, DocWu10a, 1);
 end
 
-procedure DocWu10a
-begin
+procedure DocWu10a begin
    Reply(151);
    NOption(100, DocWu10c, 1);
 end
 
-procedure DocWu10b
-begin
+procedure DocWu10b begin
    healing := 5;
 end
 
-procedure DocWu10c
-begin
+procedure DocWu10c begin
    healing := 2;
 end
 
-procedure DocWu11
-begin
+procedure DocWu11 begin
    Reply(154);
    call DocWuOpts4;
 end
 
-procedure DocWu12
-begin
+procedure DocWu12 begin
    Reply(155);
    call DocWuOpts4;
 end
 
-procedure DocWu13
-begin
+procedure DocWu13 begin
    Reply(156);
    call DocWuOpts4;
 end
 
-procedure DocWu14
-begin
+procedure DocWu14 begin
    Reply(157);
    NOption(158, DocWu06, 4);
    NOption(159, DocWu23, 4);
    NOption(160, DocWu24, 4);
 end
 
-procedure DocWu15
-begin
+procedure DocWu15 begin
    Reply(161);
    NOption(162, DocWu06, 4);
    NOption(163, DocWu23, 4);
    NOption(160, DocWu24, 4);
 end
 
-procedure DocWu16
-begin
+procedure DocWu16 begin
    Reply(164);
    NOption(162, DocWu06, 4);
    NOption(163, DocWu23, 4);
    NOption(160, DocWu24, 4);
 end
 
-procedure DocWu17
-begin
+procedure DocWu17 begin
    Reply(165);
    NOption(100, DocWu17a, 1);
 end
 
-procedure DocWu17a
-begin
+procedure DocWu17a begin
    Reply(166);
    NOption(100, DocWu17b, 1);
 end
 
-procedure DocWu17b
-begin
+procedure DocWu17b begin
    healing := 3;
 end
 
-procedure DocWu18
-begin
+procedure DocWu18 begin
    Reply(169);
    NOption(101, DocWuEnd, 1);
 end
 
-procedure DocWu19
-begin
+procedure DocWu19 begin
    variable LVar0 := 0;
    variable LVar1 := 0;
    LVar1 := dude_max_hp;
@@ -421,62 +350,52 @@ begin
    end
 end
 
-procedure DocWu19a
-begin
+procedure DocWu19a begin
    Reply(171);
    NOption(127, DocWu06, 4);
    NOption(173, DocWu23, 4);
 end
 
-procedure DocWu19b
-begin
+procedure DocWu19b begin
    Reply(171);
    NOption(127, DocWu06, 4);
    NOption(173, DocWu18, 4);
 end
 
-procedure DocWu20
-begin
+procedure DocWu20 begin
    Reply(174);
    NOption(100, DocWu20a, 1);
 end
 
-procedure DocWu20a
-begin
+procedure DocWu20a begin
    Reply(137);
    NOption(100, DocWu20b, 1);
 end
 
-procedure DocWu20b
-begin
+procedure DocWu20b begin
    healing := 4;
 end
 
-procedure DocWu21
-begin
+procedure DocWu21 begin
    Reply(177);
    NOption(100, DocWu21a, 1);
 end
 
-procedure DocWu21a
-begin
+procedure DocWu21a begin
    healing := 6;
 end
 
-procedure DocWu22
-begin
+procedure DocWu22 begin
    Reply(179);
    NOption(101, DocWuEnd, 1);
 end
 
-procedure DocWu23
-begin
+procedure DocWu23 begin
    Reply(180);
    NOption(101, DocWuEnd, 1);
 end
 
-procedure DocWu24
-begin
+procedure DocWu24 begin
    variable LVar0 := 0;
    variable LVar1 := 0;
    LVar1 := dude_max_hp;
@@ -495,46 +414,39 @@ begin
    end
 end
 
-procedure DocWu24a
-begin
+procedure DocWu24a begin
    Reply(181);
    NOption(127, DocWu17, 4);
    NOption(173, DocWu23, 4);
 end
 
-procedure DocWu24b
-begin
+procedure DocWu24b begin
    Reply(182);
    NOption(183, DocWu06, 4);
    NOption(173, DocWu23, 4);
 end
 
-procedure DocWuOpts1
-begin
+procedure DocWuOpts1 begin
    NOption(107, DocWu05, 4);
    NOption(108, DocWu06, 4);
 end
 
-procedure DocWuOpts2
-begin
+procedure DocWuOpts2 begin
    NOption(110, DocWu08, 4);
 end
 
-procedure DocWuOpts3
-begin
+procedure DocWuOpts3 begin
    NLowOption(112, DocWu10);
    NLowOption(184, DocWuEnd);
 end
 
-procedure DocWuOpts4
-begin
+procedure DocWuOpts4 begin
    NOption(127, DocWu17, 4);
    NOption(128, DocWu18, 4);
    NOption(129, DocWu19, 4);
 end
 
-procedure DocWuOpts5
-begin
+procedure DocWuOpts5 begin
    Reply(132);
    NOption(133, DocWuOpts5a, 7);
    NOption(134, DocWu21, 4);
@@ -542,8 +454,7 @@ begin
    NOption(136, DocWuOpts5a, 4);
 end
 
-procedure DocWuOpts5a
-begin
+procedure DocWuOpts5a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call DocWu20;
    end
@@ -552,14 +463,6 @@ begin
    end
 end
 
-procedure DocWuEnd
-begin
+procedure DocWuEnd begin
 end
 
-
-
-procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
-   inc_inv_evil_crit
-   rm_timer_event(self_obj);
-end
