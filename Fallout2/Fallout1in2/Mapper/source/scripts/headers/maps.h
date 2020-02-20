@@ -48,6 +48,8 @@
 #define AREA_HUB_FARM             (62)
 #define AREA_HUB_LAIR             (63)
 
+#define AREA_RND_ENC_CAVERN       (64)
+
 /*******************************************************************************
  Current City Index
 *******************************************************************************/
@@ -78,7 +80,7 @@
 #define CUR_AREA_HUB_LAIR             (cur_town == AREA_HUB_LAIR)
 
 #define CUR_AREA_RND_DESERT           (cur_town == AREA_RND_DESERT or cur_town == AREA_RND_ENC_DESERT)
-#define CUR_AREA_RND_MOUNTAIN         (cur_town == AREA_RND_MOUNTAIN or cur_town == AREA_RND_ENC_MOUNTAIN)
+#define CUR_AREA_RND_MOUNTAIN         (cur_town == AREA_RND_MOUNTAIN or cur_town == AREA_RND_ENC_MOUNTAIN or or cur_town == AREA_RND_ENC_CAVERN)
 #define CUR_AREA_RND_CITY             (cur_town == AREA_RND_CITY or cur_town == AREA_RND_ENC_CITY)
 #define CUR_AREA_RND_COAST            (cur_town == AREA_RND_COAST or cur_town == AREA_RND_ENC_COAST)
 

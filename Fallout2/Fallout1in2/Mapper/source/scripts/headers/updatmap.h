@@ -130,7 +130,8 @@
 
 
 
-#define set_cur_exit                   wm_area_set_pos(AREA_RND_ENC_MOUNTAIN,worldmap_xpos,worldmap_ypos)
+#define set_cur_exit                   wm_area_set_pos(AREA_RND_ENC_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
+                                       wm_area_set_pos(AREA_RND_ENC_CAVERN, worldmap_xpos, worldmap_ypos)
 
 // Car Information
 #define trunk_size_small               (40)
