@@ -53,111 +53,134 @@ end
 // Removes the text under green circles on the worldmap
 // Used by Classic Worldmap mod
 #define VOODOO_remove_circle_name \
-   /* fallout2.wmInterfaceDrawCircleOverlay+0xD2 */            \
-   write_byte (0x4c407a, 0x90);       /* nop */                \
-   /* fallout2.wmInterfaceDrawCircleOverlay+0xEC */            \
-   write_int  (0x4c4094, 0x90909090); /* nop; nop; nop; nop */ \
-   write_short(0x4c4098, 0x9090)      /* nop; nop */           \
+               /* fallout2.wmInterfaceDrawCircleOverlay+0xD2 */            \
+               write_byte (0x4c407a, 0x90);       /* nop */                \
+               /* fallout2.wmInterfaceDrawCircleOverlay+0xEC */            \
+               write_int  (0x4c4094, 0x90909090); /* nop; nop; nop; nop */ \
+               write_short(0x4c4098, 0x9090)      /* nop; nop */           \
 
 // No radius when a location is revealed on the worldmap
+// Modifies sfall code
 #define VOODOO_location_discover_radius \
-   /* _defam */                                                           \
-   write_byte (0x41ae05, 0x60);       /* pushad */                        \
-   write_int  (0x41ae06, 0x4670a12e); /* mov eax,cs:[4C4670] */           \
-   write_short(0x41ae0a, 0x004c);                                         \
-   /* Calculate where ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is */ \
-   write_int  (0x41ae0c, 0x4c46c5ba); /* mov edx,fallout2.4C46C5 */       \
-   write_byte (0x41ae10, 0x00);                                           \
-   write_short(0x41ae11, 0xd001);     /* add eax,edx */                   \
-   write_short(0x41ae13, 0xc689);     /* mov esi,eax */                   \
-   /* esi is now the address where the radius byte is */                  \
-   /* since the memory of the code address is memory protected, */        \
-   /* we need to use VirtualProtect to change this */                     \
-   write_short(0x41ae15, 0xec83);     /* sub esp,4 */                     \
-   write_byte (0x41ae17, 0x04);                                           \
-   write_byte (0x41ae18, 0x54);       /* push esp */                      \
-   write_short(0x41ae19, 0x406a);     /* push 40 */                       \
-   write_short(0x41ae1b, 0x016a);     /* push 1 */                        \
-   write_byte (0x41ae1d, 0x50);       /* push eax */                      \
-   /* Requires r_fall */                                                  \
-   write_int  (0x41ae1e, 0x0415ff2e); /* call cs:[<&VirtualProtect>] */   \
-   write_short(0x41ae22, 0x4100);                                         \
-   write_byte (0x41ae24, 0x00);                                           \
-   write_short(0x41ae25, 0x06c6);     /* mov ds:[esi],0 */                \
-   write_byte (0x41ae27, 0x00);                                           \
-   write_short(0x41ae28, 0xc483);     /* add esp,4 */                     \
-   write_byte (0x41ae2a, 0x04);                                           \
-   write_byte (0x41ae2b, 0x61);       /* popad */                         \
-   write_byte (0x41ae2c, 0xc3);       /* ret */                           \
-   call_offset_v0(0x41ae05)
+              begin                                                                          \
+               write_byte (0x480ee4, 0x60);       /* pushad */                               \
+               write_int  (0x480ee5, 0x4670a12e); /* mov eax,cs:[4C4670] */                  \
+               write_short(0x480ee9, 0x004c);                                                \
+               /* Calculate where ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is */        \
+               write_int  (0x480eeb, 0x4c46c5ba); /* mov edx,fallout2.4C46C5 */              \
+               write_byte (0x480eef, 0x00);                                                  \
+               write_short(0x480ef0, 0xd001);     /* add eax,edx */                          \
+               write_short(0x480ef2, 0xc689);     /* mov esi,eax */                          \
+               /* esi is now the address where the radius byte is */                         \
+               /* since the memory of the code address is memory protected, */               \
+               /* we need to use VirtualProtect to change this */                            \
+               write_short(0x480ef4, 0xec83);     /* sub esp,4 */                            \
+               write_byte (0x480ef6, 0x04);                                                  \
+               write_byte (0x480ef7, 0x54);       /* push esp */                             \
+               write_short(0x480ef8, 0x406a);     /* push 40 */                              \
+               write_short(0x480efa, 0x016a);     /* push 1 */                               \
+               write_byte (0x480efc, 0x50);       /* push eax */                             \
+               write_int  (0x480efd, 0x1815ff2e); /* call cs:[<&fallout2.VirtualProtect>] */ \
+               write_short(0x480f01, 0x6c02);                                                \
+               write_byte (0x480f03, 0x00);                                                  \
+               write_short(0x480f04, 0x06c6);     /* mov ds:[esi],0 */                       \
+               write_byte (0x480f06, 0x00);                                                  \
+               write_short(0x480f07, 0xc483);     /* add esp,4 */                            \
+               write_byte (0x480f09, 0x04);                                                  \
+               write_byte (0x480f0a, 0x61);       /* popad */                                \
+               write_byte (0x480f0b, 0xc3);       /* ret */                                  \
+               call_offset_v0(0x480ee4);                                                     \
+              end                                                                            \
+              noop
+
 
 
 // Fill_W that works like in Fallout 1
+// https://github.com/rotators/Fo1in2/issues/16
 #define VOODOO_fill_w \
-   /* wmMarkSubTileRadiusVisited_ */                            \
-   write_int  (0x4c3735, 0xf576f5e9); /* jmp fallout2.41AE2F */ \
-   write_byte (0x4c3739, 0xff);                                 \
-   /* _defam ? */                                               \
-   write_short(0x41ae2f, 0x4d75);     /* jne fallout2.41AE7E */ \
-   write_short(0x41ae31, 0xec83);     /* sub esp,4 */           \
-   write_byte (0x41ae33, 0x04);                                 \
-   write_int  (0x41ae34, 0x002404c6); /* mov ss:[esp+4],0 */    \
-   write_int  (0x41ae38, 0x0c244c8b); /* mov ecx,ss:[esp+C] */  \
-   write_byte (0x41ae3c, 0x49);       /* dec ecx */             \
-   write_short(0x41ae3d, 0xf983);     /* cmp ecx,3 */           \
-   write_byte (0x41ae3f, 0x03);                                 \
-   write_short(0x41ae40, 0x3974);     /* je 0x41AE7E */         \
-   write_short(0x41ae42, 0xf983);     /* cmp ecx,7 */           \
-   write_byte (0x41ae44, 0x07);                                 \
-   write_short(0x41ae45, 0x3474);     /* je 0x41AE7E */         \
-   write_short(0x41ae47, 0xf983);     /* cmp ecx,B */           \
-   write_byte (0x41ae49, 0x0b);                                 \
-   write_short(0x41ae4a, 0x2f74);     /* je 0x41AE7E */         \
-   write_short(0x41ae4c, 0xf983);     /* cmp ecx,F */           \
-   write_byte (0x41ae4e, 0x0f);                                 \
-   write_short(0x41ae4f, 0x2a74);     /* je 0x41AE7E */         \
-   write_short(0x41ae51, 0xed31);     /* xor ebp,ebp */         \
-   write_int  (0x41ae53, 0x0c244c89); /* mov ss:[esp+C],ecx */  \
-   write_short(0x41ae57, 0x026a);     /* push 2 */              \
-   write_int  (0x41ae59, 0x1024448b); /* mov eax,ss:[esp+10] */ \
-   write_short(0x41ae5d, 0xf189);     /* mov ecx,esi */         \
-   write_short(0x41ae5f, 0xfb89);     /* mov ebx,edi */         \
-   write_byte (0x41ae61, 0x56);       /* push esi */            \
-   write_short(0x41ae62, 0xea89);     /* mov edx,ebp */         \
-   write_byte (0x41ae64, 0x45);       /* inc ebp */             \
-   write_int  (0x41ae65, 0x0a85cae8); /* call 0x4c3434 */       \
-   write_byte (0x41ae69, 0x00);                                 \
-   write_short(0x41ae6a, 0xfd83);     /* cmp ebp,7 */           \
-   write_byte (0x41ae6c, 0x07);                                 \
-   write_short(0x41ae6d, 0xe87c);     /* jl 41AE58 */           \
-   write_short(0x41ae6f, 0x048b);     /* mov eax,ss:[esp+4] */  \
-   write_byte (0x41ae71, 0x24);                                 \
-   write_byte (0x41ae72, 0x40);       /* inc eax */             \
-   write_short(0x41ae73, 0xf883);     /* cmp eax,2 */           \
-   write_byte (0x41ae75, 0x02);                                 \
-   write_short(0x41ae76, 0x0489);     /* mov ss:[esp+4],eax */  \
-   write_byte (0x41ae78, 0x24);                                 \
-   write_short(0x41ae79, 0xbd7c);     /* jl 41AE39 */           \
-   write_short(0x41ae7b, 0xc483);     /* add esp,4 */           \
-   write_byte (0x41ae7d, 0x04);                                 \
-   write_short(0x41ae7e, 0xc483);     /* add esp,C */           \
-   write_byte (0x41ae80, 0x0c);                                 \
-   write_int  (0x41ae81, 0x0a88b4e9); /* jmp fallout2.4C373A */ \
-   write_byte (0x41ae85, 0x00)
+              begin                                                                         \
+               /* wmMarkSubTileRadiusVisited_ */                                            \
+               write_int  (0x4c3735, 0xfbd7d2e9); /* jmp [patch] */                         \
+               write_byte (0x4c3739, 0xff);                                                 \
+               /* fill_w implementation */                                                  \
+               write_short(0x480f0c, 0x4d75);     /* jne _ret */                            \
+               write_short(0x480f0e, 0xec83);     /* sub esp,4 */                           \
+               write_byte (0x480f10, 0x04);                                                 \
+               write_int  (0x480f11, 0x002404c6); /* mov ss:[esp+4],0 */                    \
+               /* _loop_begin */                                                            \
+               write_int  (0x480f15, 0x0c244c8b); /* mov ecx,ss:[esp+C] */                  \
+               /* move to the next tile to the left */                                      \
+               write_byte (0x480f19, 0x49);       /* dec ecx */                             \
+               /* the comparison checks are to see if the tile we are currently on is */    \
+               /* one of the tiles on the right side of the wm (3, 7, 11 or 15) */          \
+               /* if it is, it means we've wrapped around */                                \
+               write_short(0x480f1a, 0xf983);     /* cmp ecx,3 */                           \
+               write_byte (0x480f1c, 0x03);                                                 \
+               write_short(0x480f1d, 0x3974);     /* je _end */                             \
+               write_short(0x480f1f, 0xf983);     /* cmp ecx,7 */                           \
+               write_byte (0x480f21, 0x07);                                                 \
+               write_short(0x480f22, 0x3474);     /* je _end */                             \
+               write_short(0x480f24, 0xf983);     /* cmp ecx,B */                           \
+               write_byte (0x480f26, 0x0b);                                                 \
+               write_short(0x480f27, 0x2f74);     /* je _end */                             \
+               write_short(0x480f29, 0xf983);     /* cmp ecx,F */                           \
+               write_byte (0x480f2b, 0x0f);                                                 \
+               write_short(0x480f2c, 0x2a74);     /* je _end */                             \
+               write_short(0x480f2e, 0xed31);     /* xor ebp,ebp */                         \
+               write_int  (0x480f30, 0x0c244c89); /* mov ss:[esp+C],ecx */                  \
+               /* _reveal_subtile */                                                        \
+               write_short(0x480f34, 0x026a);     /* push 2 */                              \
+               write_int  (0x480f36, 0x1024448b); /* mov eax,ss:[esp+10] */                 \
+               write_short(0x480f3a, 0xf189);     /* mov ecx,esi */                         \
+               write_short(0x480f3c, 0xfb89);     /* mov ebx,edi */                         \
+               write_byte (0x480f3e, 0x56);       /* push esi */                            \
+               write_short(0x480f3f, 0xea89);     /* mov edx,ebp */                         \
+               write_byte (0x480f41, 0x45);       /* inc ebp */                             \
+               write_int  (0x480f42, 0x0424ede8); /* call wmMarkSubTileOffsetVisitedFunc */ \
+               write_byte (0x480f46, 0x00);                                                 \
+               /* did we uncover all the subtiles in the tile? */                           \
+               /* if not, go to _reveal_subtile and uncover another one */                  \
+               write_short(0x480f47, 0xfd83);     /* cmp ebp,7 */                           \
+               write_byte (0x480f49, 0x07);                                                 \
+               write_short(0x480f4a, 0xe87c);     /* jl _reveal_subtile */                  \
+               write_short(0x480f4c, 0x048b);     /* mov eax,ss:[esp+4] */                  \
+               write_byte (0x480f4e, 0x24);                                                 \
+               write_byte (0x480f4f, 0x40);       /* inc eax */                             \
+               write_short(0x480f50, 0xf883);     /* cmp eax,2 */                           \
+               write_byte (0x480f52, 0x02);                                                 \
+               write_short(0x480f53, 0x0489);     /* mov ss:[esp+4],eax */                  \
+               write_byte (0x480f55, 0x24);                                                 \
+               write_short(0x480f56, 0xbd7c);     /* jl _loop_begin */                      \
+               /* _end */                                                                   \
+               write_short(0x480f58, 0xc483);     /* add esp,4 */                           \
+               write_byte (0x480f5a, 0x04);                                                 \
+               /* _ret */                                                                   \
+               write_short(0x480f5b, 0xc483);     /* add esp,C */                           \
+               write_byte (0x480f5d, 0x0c);                                                 \
+               write_int  (0x480f5e, 0x0427d7e9); /* jmp fallout2.4C373A */                 \
+               write_byte (0x480f62, 0x00);                                                 \
+              end                                                                           \
+              noop
+
+
 
 // Fixes the bug where money is not displayed after exiting barter. https://github.com/rotators/Fo1in2/issues/26
 #define VOODOO_dialog_money_fix \
-   /* gdialog_bk+0x75 */                                                    \
-   write_int (0x447acd, 0xfd33b4e9); /* jmp fallout2.41AE86 */              \
-   write_byte(0x447ad1, 0xff);                                              \
-   write_byte(0x41ae86, 0x60);       /* pushad */                           \
-   write_int (0x41ae87, 0x02bea4e8); /* call <fallout2.gdProcessUpdate_> */ \
-   write_byte(0x41ae8b, 0x00);                                              \
-   write_byte(0x41ae8c, 0x61);       /* popad */                            \
-   write_int (0x41ae8d, 0x0bbf1ae8); /* call <fallout2.win_show_> */        \
-   write_byte(0x41ae91, 0x00);                                              \
-   write_int (0x41ae92, 0x02cc3be9); /* jmp fallout2.447AD2 */              \
-   write_byte(0x41ae96, 0x00)
+              begin                                                                     \
+               /* gdialog_bk+0x75 */                                                    \
+               write_int (0x447acd, 0x039491e9); /* jmp [patch] */                      \
+               write_byte(0x447ad1, 0x00);                                              \
+               write_byte(0x480f63, 0x60);       /* pushad */                           \
+               write_int (0x480f64, 0xfc5dc7e8); /* call <fallout2.gdProcessUpdate_> */ \
+               write_byte(0x480f68, 0xff);                                              \
+               write_byte(0x480f69, 0x61);       /* popad */                            \
+               write_int (0x480f6a, 0x055e3de8); /* call <fallout2.win_show_> */        \
+               write_byte(0x480f6e, 0x00);                                              \
+               write_int (0x480f6f, 0xfc6b5ee9); /* jmp fallout2.447AD2 */              \
+               write_byte(0x480f73, 0xff);                                              \
+              end                                                                       \
+              noop
+
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
@@ -171,6 +194,9 @@ end
                write_short(0x480c90, 0x6666); /* nop */                                 \
                write_byte (0x480c92, 0x90);                                             \
                write_short(0x480c93, 0xff33); /* xor edi,edi */                         \
+               /* ignore main_selfrun_exit_ call on game exit */                        \
+               write_int  (0x480ca2, 0x66666666); /* nop */                             \
+               write_byte (0x480ca6, 0x90);                                             \
                /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
                call VOODOO_CAVE(0x480ee4, 438);                                         \
               end                                                                       \
