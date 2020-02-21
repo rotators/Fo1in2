@@ -37,10 +37,11 @@ procedure map_enter_p_proc begin
    variable critter, item;
 
    if fo1in2_destroy_armor_enabled then begin
-      if (cur_map_index > 0 and not is_loading_game and map_first_run) then begin
+      if (cur_map_index > MAP_DESERT0 and not is_loading_game and map_first_run) then begin
          foreach (critter in list_as_array(LIST_CRITTERS)) begin
             if critter_wearing_armor(critter) and (critter != dude_obj) and not(obj_in_party(critter)) and not_possible_partymember then begin
                Item := get_armor(critter);
+               set_flags(item, get_flags(item) bwand bwnot(FLAG_WORN));
                rm_obj_from_inven(critter, item);
                debug_msg("destroying critter armor!");
             end
@@ -52,7 +53,7 @@ end
 /*
 procedure combatdamage_handler begin
    variable target := get_sfall_arg;
-   worn_armor := critter_inven_obj(target, INVEN_TYPE_WORN);
+   worn_armor := get_armor(target);
 end
 
 procedure deathanim_handler begin
@@ -60,7 +61,7 @@ procedure deathanim_handler begin
 
    if (critter == dude_obj orElse obj_in_party(critter)) then return;
 
-   item := critter_inven_obj(critter, INVEN_TYPE_WORN);
+   item := get_armor(critter);
    if (item andAlso obj_item_subtype(item) == item_type_armor) then begin
       rm_obj_from_inven(critter, worn_armor);
       worn_armor = 0;

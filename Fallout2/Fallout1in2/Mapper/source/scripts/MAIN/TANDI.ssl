@@ -177,15 +177,13 @@ procedure talk_p_proc begin
    set_tma_data(NAME, 1000, -1, -1, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END);
 
    dude_look_at_self;
+   get_reaction
 
    if CUR_MAP_RAIDERS then begin
       if (global_var(GVAR_TANDI_HIRELING_STATUS) == 5) then begin
          float_msg(self_obj, mstr(208), FLOAT_MSG_RED);
       end
       else begin
-
-         get_reaction
-
          start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_RAIDERS);
          gsay_start;
          if (global_var(GVAR_TANDI_HEREBEFORE_RAIDERS) == 1) then begin
@@ -201,7 +199,6 @@ procedure talk_p_proc begin
       end
    end
    else if CUR_AREA_SHADY_SANDS then begin
-      get_reaction
       start_gdialog(NAME, self_obj, 4, HEAD_TANDI, BACKGROUND_SHADY);
       gsay_start;
       if (global_var(GVAR_TANDI_HEREBEFORE_RAIDERS) == 1) then begin
@@ -226,7 +223,6 @@ procedure talk_p_proc begin
       end_dialogue;
    end
    else begin
-      get_reaction
       float_msg(self_obj, mstr(random(300, 305)), FLOAT_COLOR_NORMAL);
    end
 
@@ -670,28 +666,25 @@ procedure map_enter_p_proc begin
       invasion_kill_critter;
    end
 
-   if (map_first_run) then begin
-      if CUR_AREA_SHADY_SANDS then begin
+   if CUR_MAP_SHADYW then begin
+      if (map_first_run) then begin
+         set_self_ai(AI_TANDI);
+      end
+
+      if not(Tandi_In_Party) then
          set_self_team(TEAM_SHADY_SANDS);
-      end
-      else begin
-         set_self_team(TEAM_PLAYER);
-      end
-      set_self_ai(AI_TANDI);
-   end
 
-   // Tandi is back home:
-   if ((CUR_MAP_SHADYW) and (global_var(GVAR_TANDI_HIRELING_STATUS) > 1)) then begin
-      if ((global_var(GVAR_LOAD_MAP_INDEX) == 2) and (global_var(GVAR_TANDI_LOCATION_TRACKER) == 3)) then begin
-         set_self_abandon_party;
-         inc_shady_rep(REP_BONUS_TANDI_RESCUED);
+      // Tandi is back home:
+      if (global_var(GVAR_TANDI_HIRELING_STATUS) > 1) then begin
+         if ((global_var(GVAR_LOAD_MAP_INDEX) == 2) and (global_var(GVAR_TANDI_LOCATION_TRACKER) == 3)) then begin
+            set_self_abandon_party;
+            inc_shady_rep(REP_BONUS_TANDI_RESCUED);
 
-         if not(is_loading_game) then set_self_visible;
-         critter_attempt_placement(self_obj, 22086, 0);
-         set_global_var(GVAR_TANDI_LOCATION_TRACKER, 4);
-      end
-      else begin
-         if (global_var(GVAR_TANDI_LOCATION_TRACKER) >= 300) then begin
+            if not(is_loading_game) then set_self_visible;
+            critter_attempt_placement(self_obj, 22086, 0);
+            set_global_var(GVAR_TANDI_LOCATION_TRACKER, 4);
+         end
+         else if (global_var(GVAR_TANDI_LOCATION_TRACKER) >= 300) then begin
             critter_attempt_placement(self_obj, 22086, 0);
             set_global_var(GVAR_TANDI_LOCATION_TRACKER, 4);
          end
@@ -770,13 +763,13 @@ procedure critter_p_proc begin
             self_run_to_tile(23698);
          end
          else if ((global_var(GVAR_TANDI_LOCATION_TRACKER) == 302) and (tile_distance(self_tile, 23698) < 2)) then begin
-         set_global_var(GVAR_TANDI_LOCATION_TRACKER, 303);
+            set_global_var(GVAR_TANDI_LOCATION_TRACKER, 303);
          end
          else if ((global_var(GVAR_TANDI_LOCATION_TRACKER) == 303) and (tile_distance(self_tile, 22086) >= 2)) then begin
-         self_run_to_tile(22086);
+            self_run_to_tile(22086);
          end
          else if ((global_var(GVAR_TANDI_LOCATION_TRACKER) == 303) and (tile_distance(self_tile, 22086) < 2)) then begin
-         set_global_var(GVAR_TANDI_LOCATION_TRACKER, 4);
+            set_global_var(GVAR_TANDI_LOCATION_TRACKER, 4);
          end
 
          if (self_can_see_dude and (party_member_obj(TANDI_SELF_ID) == 0) and tmp_hostile) then begin

@@ -10,6 +10,31 @@
  *                                                *
  **************************************************/
 
+// Should be replaced with something like write_byte(address, value, length) when/if sfall adds support for it
+procedure VOODOO_CAVE(variable address, variable length)
+begin
+    // CAH cannot for(; length >= N; length -= N, addr += N) :(
+
+    for(length := length; length >= 4; length -= 4)
+    begin
+        write_int(address, 0x90909090);
+        address += 4;
+    end
+
+    for(length := length; length >= 2; length -= 2)
+    begin
+        write_short(address, 0x9090);
+        address += 2;
+    end
+
+    for(length := length; length >= 1; length -= 1)
+    begin
+        // CAH cannot write(addr++, 0x90) :(
+        write_byte(address, 0x90);
+        address++;
+    end
+end
+
 // This will disable the "You encounter: ..." message:
 #define VOODOO_disable_YouEncounter_message      \
                write_int( 0x4C1011, 0x90909090); \
@@ -137,6 +162,19 @@
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
+
+// This will create codecave out of few selfrun functions related to .vcr recording
+// As creation and hotkey blocking is done by scripts, recording is available *only* before first start/load game
+#define VOODOO_codecave_selfrun \
+              begin                                                                     \
+               /* ignore CTRL+R on main screen */                                       \
+               write_short(0x480c90, 0x6666); /* nop */                                 \
+               write_byte (0x480c92, 0x90);                                             \
+               write_short(0x480c93, 0xff33); /* xor edi,edi */                         \
+               /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
+               call VOODOO_CAVE(0x480ee4, 438);                                         \
+              end                                                                       \
+              noop
 
 
 ////////////////////////////////////////////////////// TEST ZONE //////////////////////////////////////////////////////
