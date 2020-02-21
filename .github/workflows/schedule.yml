@@ -233,21 +233,6 @@ jobs:
            fi
     shell: bash
 
-  #
-  - name:  Debugger recompilation
-    if:    env.GHA_TASK_DEBUGGER == 'true'
-    run:   |
-           :
-           ok=1
-           "$MSBUILD_EXE" Tools/Debugger/Debugger.sln -p:Configuration=Release -p:Platform=x86 || ok=0
-           if [ $ok -eq 1 ] && [ -f Tools/Debugger/Release/Debugger.exe ]; then
-              mv Tools/Debugger/Release/Debugger.exe $MOD_DIR/Debugger.exe
-              chmod +x $MOD_DIR/Debugger.exe
-              DEBUGGER_COMMIT=$(git log --pretty=format:%H -1 Tools/Debugger)
-              git diff --quiet || (git add --update && echo "- Debugger recompilation (${DEBUGGER_COMMIT})" >> $HOME/gha.commit)
-           fi
-    shell: bash
-
   # updates scripts sources to Rotators standards
   - name:  ReDefine run
     if:    env.GHA_REPO_ALIVE == 'true'
