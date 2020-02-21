@@ -4,6 +4,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Added**: Blue cave wall variants of Fo2's mine interior walls.
 - **Added**: Blue colored cobweb and "water on cavewall" scenery objects.
 - **Added**: Fallout 1 barter formula mod. If you don't want to play with et Tu's modified barter formula, then this mod will revert it back to the mostly broken Fo1 version.
+- **Added**: Fo2 Deathclaw Spawn critter (used in random cavern encounter).
 - **Added**: Fo2-styled cavern mountain maps with random enemy and loot spawn (Optional).
 - **Added**: Healing at doctors now also heals crippled limbs.
 - **Added**: New blue Cave <-> Desert transition tiles.
@@ -24,6 +25,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: Brahmin in special encounter should behave and float text correctly now.
 - **Fixed**: Breaking all limbs in a random encounter event would show the wrong message string.
 - **Fixed**: Broken colors of the death screen when using Sfall mode 4 or 5.
+- **Fixed**: Caleb had a couple dialog lines mixed up.
 - **Fixed**: Disabling the Fo2 group restriction didn't work after telling party members to wait.
 - **Fixed**: Fo1 videos will now correctly play in Sfall mode 4 and 5 (Fo2 engine bug).
 - **Fixed**: Fortune Finder perk was broken in so many places. It's now reverted to vanilla Fo1 behavior + removed the Fixt setting.
@@ -38,6 +40,8 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: Rad. Mountains -> Radiated Mountains
 - **Fixed**: Re-Enabled the TMA lines for Avellone, the bounty hunter.
 - **Fixed**: Smitty in Adytum would still join the player team at the wrong time.
+- **Fixed**: TMA "up" button effect would play the wrong sound file.
+- **Fixed**: Tandi will remain correctly in team Shady Sands when the player first enters the town, and also switches back correctly once returned home from the Khans.
 - **Fixed**: The well in Adytum was misaligned.
 - **Fixed**: Traveling merchants will now remember if their party is full or not.
 - **Fixed**: Traveling with NPCs was advancing waaaay too much time.
