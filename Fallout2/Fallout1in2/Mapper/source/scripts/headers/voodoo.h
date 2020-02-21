@@ -194,6 +194,9 @@ end
                write_short(0x480c90, 0x6666); /* nop */                                 \
                write_byte (0x480c92, 0x90);                                             \
                write_short(0x480c93, 0xff33); /* xor edi,edi */                         \
+               /* ignore main_selfrun_exit_ call on game exit */                        \
+               write_int  (0x480ca2, 0x66666666); /* nop */                             \
+               write_byte (0x480ca6, 0x90);                                             \
                /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
                call VOODOO_CAVE(0x480ee4, 438);                                         \
               end                                                                       \
