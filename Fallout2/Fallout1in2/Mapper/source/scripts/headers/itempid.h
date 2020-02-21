@@ -285,6 +285,15 @@
 #define PID_LF_GRAVESITE_2                  (375)
 #define PID_LF_GRAVESITE_3                  (376)
 
+#define PID_CRATE_BRWN_STACK3               (197)
+#define PID_CRATE_BRWN_STACK2               (198)
+#define PID_CRATE_BRWN_1                    (199)
+#define PID_CRATE_BRWN_2                    (200)
+#define PID_CRATE_BLUE_STACK3               (201)
+#define PID_CRATE_BLUE_STACK2               (202)
+#define PID_CRATE_BLUE_1                    (203)
+#define PID_CRATE_BLUE_2                    (204)
+
 #define PID_HIDDEN_CONTAINER                (467)  // Code item  JLR
 
 /******************************************************************

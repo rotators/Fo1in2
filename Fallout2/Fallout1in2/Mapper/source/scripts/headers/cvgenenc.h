@@ -30,6 +30,7 @@ variable
 
    special_spawn_critters := 1,
    special_spawn_container := 0,
+   special_spawn_container_weapons := 0,
 
    choose_enc_pid := 0,
    choose_enc_sid := 0,
@@ -63,12 +64,12 @@ procedure Choose_Encounter begin
       if (rnd_critter < 65 - dude_level) then begin
          encounter_pid1 := PID_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
-         if (random(0, 4) == 1) then begin
+         if (random(0, 4) == 1) or (global_var(GVAR_WORLDMAP_TABLE) == 3) then begin // 3 == South Table
             encounter_pid2 := PID_GOLDEN_GECKO;
             encounter_sid2 := SCRIPT_ECGECKO;
             active_encounter_pids := 2;
          end
-         total_encounter_mobs := Random(1, 3);
+         total_encounter_mobs := Random(1, 4);
       end else if (rnd_critter < 80 - dude_level) then begin
          encounter_pid1 := PID_GOLDEN_GECKO;
          encounter_sid1 := SCRIPT_ECGECKO;
@@ -90,14 +91,14 @@ procedure Choose_Encounter begin
          total_encounter_mobs := Random(3, 5);
       end else if (rnd_critter < 75) then begin
          active_encounter_pids := 2;
-         encounter_pid1 := PID_RADSCORPION;
+         encounter_pid1 := PID_SMALL_RADSCORPION;
          encounter_sid1 := SCRIPT_RADSCORP;
          encounter_pid2 := PID_NASTY_RADSCORPION;
          encounter_sid2 := SCRIPT_RADSCORP;
          total_encounter_mobs := Random(3, 5);
       end else begin
          active_encounter_pids := 2;
-         encounter_pid1 := PID_SMALL_RADSCORPION;
+         encounter_pid1 := PID_RADSCORPION;
          encounter_sid1 := SCRIPT_RADSCORP;
          encounter_pid2 := PID_NASTY_RADSCORPION;
          encounter_sid2 := SCRIPT_RADSCORP;
@@ -309,6 +310,8 @@ procedure toxic_cave begin
 end
 
 procedure abandoned_hideout begin
+   special_spawn_container_weapons := 1;
+
    foreach (i in SceneryPos_List) begin
       if (random(0, 100) > 10) then begin
          count := 1;
@@ -364,6 +367,7 @@ end
 
 procedure cleaning_robot begin
    special_spawn_critters := 0;
+   special_spawn_container_weapons := 1;
    debug("Spawn Cleaning Robot!");
 
    Outer_ring := 5;
@@ -395,6 +399,7 @@ end
 
 procedure centaur_handler begin
    special_spawn_critters := 0;
+   special_spawn_container_weapons := 1;
 
    // Spawn Handler
    Outer_ring := 2;
@@ -613,21 +618,99 @@ procedure LoadChests begin
       container_type,
       count;
 
-   Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
-                   PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
-                   PID_SPEAR, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD ];
+   // Spawn fancy weapons container
+   chance := random(1, 100);
+   if (chance <= 50 and map_is_mine and special_spawn_container_weapons == 1) then begin
+      Scenery_Creation_Hex := array_random_value(Chest_List);
 
-   i := array_random_value(Chest_List); // Only one random chest for now
-   //foreach (i in Chest_List) begin
+      // Container #1
+      Scenery_Creation := create_object(PID_BLOCKING_HEX, Scenery_Creation_Hex, 1);
+      Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+      Scenery_Creation := create_object(PID_BLOCKING_HEX, Scenery_Creation_Hex, 1);
+      container := create_object(PID_CRATE_BRWN_STACK2, Scenery_Creation_Hex, 1);
+
+      // Add a weapon
+      Items_List := [PID_SUPER_SLEDGE, PID_POWER_FIST, PID_BOZAR, PID_ASSAULT_RIFLE_EXT_MAG, PID_MINIGUN,
+                     PID_LASER_PISTOL, PID_PLASMA_PISTOL, PID_14MM_PISTOL, PID_GATLING_LASER, PID_RIPPER,
+                     PID_LASER_RIFLE_EXT_CAP, PID_SNIPER_RIFLE, PID_COMBAT_SHOTGUN, PID_HK_CAWS, PID_SCOPED_HUNTING_RIFLE,
+                     PID_HK_P90C, PID_GREASE_GUN, PID_LIGHT_SUPPORT_WEAPON, PID_FN_FAL, PID_PANCOR_JACKHAMMER, PID_SAWED_OFF_SHOTGUN,
+                     PID_44_MAGNUM_SPEEDLOADER, PID_IMPROVED_FLAMETHROWER, PID_MAGNETO_LASER_PISTOL, PID_DESERT_EAGLE_EXT_MAG, PID_MEGA_POWER_FIST];
+      if (container) then begin
+         Item := array_random_value(Items_List);
+         add_obj_to_inven(container, create_object(Item, 0, 0));
+
+         chance := random(1, 100);
+         if (chance <= 30) then begin
+            Item := array_random_value(Items_List);
+            add_obj_to_inven(container, create_object(Item, 0, 0));
+         end
+      end
+
+      // Container #2
+      Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 1, 1);
+      Scenery_Creation := create_object(PID_BLOCKING_HEX, Scenery_Creation_Hex, 1);
+      Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+      Scenery_Creation := create_object(PID_BLOCKING_HEX, Scenery_Creation_Hex, 1);
+      container := create_object(random(PID_CRATE_BRWN_1, PID_CRATE_BRWN_2), Scenery_Creation_Hex, 1);
+
+      // Add ammo
+      Items_List := [PID_EXPLOSIVE_ROCKET, PID_ROCKET_AP, PID_10MM_JHP, PID_10MM_AP, PID_44_MAGNUM_JHP,
+                     PID_FLAMETHROWER_FUEL,PID_14MM_AP, PID_223_FMJ, PID_5MM_JHP, PID_5MM_AP,
+                     PID_SMALL_ENERGY_CELL, PID_MICRO_FUSION_CELL, PID_SHOTGUN_SHELLS, PID_44_FMJ_MAGNUM,
+                     PID_45_CALIBER_AMMO, PID_7_62MM_AMMO];
+      if (container) then begin
+         count := random(1, 3);
+         while (count > 0) do begin
+            count--;
+            Item := array_random_value(Items_List);
+            add_obj_to_inven(container, create_object(Item, 0, 0));
+         end
+
+         // 2nd ammo batch
+         chance := random(1, 100);
+         if (chance <= 30) then begin
+            count := random(1, 3);
+            while (count > 0) do begin
+               count--;
+               Item := array_random_value(Items_List);
+               add_obj_to_inven(container, create_object(Item, 0, 0));
+            end
+         end
+      end
+
+      // Container #3
+      Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 4, 2);
+      Scenery_Creation := create_object(PID_BLOCKING_HEX, Scenery_Creation_Hex, 1);
+      Scenery_Creation_Hex := tile_num_in_direction(Scenery_Creation_Hex, 2, 1);
+      Scenery_Creation := create_object(PID_BLOCKING_HEX, Scenery_Creation_Hex, 1);
+      container := create_object(random(PID_CRATE_BRWN_1, PID_CRATE_BRWN_2), Scenery_Creation_Hex, 1);
+
+      // Add Meds
+      Items_List := [PID_STIMPAK, PID_STIMPAK, PID_STIMPAK, PID_STIMPAK, PID_STIMPAK, PID_SUPER_STIMPAK, PID_FIRST_AID_BOOK, PID_FIRST_AID_KIT, PID_DOCTORS_BAG];
+      count := random(0, 4);
+      if (container) then begin
+         while (count > 0) do begin
+            count--;
+            Item := array_random_value(Items_List);
+            add_obj_to_inven(container, create_object(Item, 0, 0));
+         end
+      end
+   end
+   else begin
+      Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
+                      PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
+                      PID_SPEAR, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD ];
+
+      Scenery_Creation_Hex := array_random_value(Chest_List);
       container_type := [PID_CHEST, PID_BAG, PID_BACKPACK, PID_BROWN_BAG];
       container_type := array_random_value(container_type);
-      container := create_object(container_type, i, 1);
+      container := create_object(container_type, Scenery_Creation_Hex, 1);
       count := random(1, 4);
       if (container) then begin
          while (count > 0) do begin
             count--;
             Item := array_random_value(Items_List);
-            add_obj_to_inven(container, create_object(Item, i, 1));
+            add_obj_to_inven(container, create_object(Item, 0, 0));
          end
          if (random(0, 1) == 1) then
             item_caps_adjust(container, fortune_finder(10 * Random(1, dude_luck) + random(0, 9)));
@@ -638,7 +721,7 @@ procedure LoadChests begin
          if (random(0, 2) == 1) then
             add_obj_to_inven(container, create_object(PID_RUBBER_BOOTS, 0, 1));
       end
-   //end
+   end
 end
 
 
