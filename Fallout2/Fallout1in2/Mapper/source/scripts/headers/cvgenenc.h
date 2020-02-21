@@ -30,7 +30,7 @@ variable
 
    special_spawn_critters := 1,
    special_spawn_container := 0,
-   special_spawn_container_weapons := 0,
+   special_spawn_container_weapons := 1,
 
    choose_enc_pid := 0,
    choose_enc_sid := 0,
@@ -450,7 +450,7 @@ end
 ****************************************/
 procedure LoadScenery begin
    if (SceneryPos_List > 0) then begin
-      Choose_Scenery := random(1, 25);
+      Choose_Scenery := random(1, 20);
       Active_Scenery_List := 1;
 
       // DEBUG:
@@ -496,7 +496,7 @@ procedure LoadExitScenery begin
       call Scenes(2);
 
    chance := random(1, 100);
-   if (chance <= 5) or (map_is_mine and chance <= 80) then begin
+   if (chance <= 8) or (map_is_mine and chance <= 80) then begin
       Create_Boxes_2(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
       Create_Boxes_3(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
       Create_Boxes_4(tile_num_in_direction(Critter_spawn_hex + random(0, 8) - 4, random(0, 5), random(5, 9)), 2)
@@ -559,11 +559,11 @@ procedure LoadExitScenery begin
 
    // Bag of caps
    chance := random(1, 100);
-   if (chance <= 25) then begin
+   if (chance <= 15) then begin
       Critter_type := PID_BAG;
       call Place_critter;
       critter_attempt_placement(Critter, tile_num(Critter), 2);
-      item_caps_adjust(Critter, fortune_finder(random(1, 60)));
+      item_caps_adjust(Critter, fortune_finder(random(20, 70)));
    end
 
    // Spawn Mobs
@@ -620,7 +620,7 @@ procedure LoadChests begin
 
    // Spawn fancy weapons container
    chance := random(1, 100);
-   if (chance <= 50 and map_is_mine and special_spawn_container_weapons == 1) then begin
+   if (chance <= 60 and map_is_mine and special_spawn_container_weapons == 1) then begin
       Scenery_Creation_Hex := array_random_value(Chest_List);
 
       // Container #1
@@ -640,7 +640,7 @@ procedure LoadChests begin
          add_obj_to_inven(container, create_object(Item, 0, 0));
 
          chance := random(1, 100);
-         if (chance <= 30) then begin
+         if (chance < 50) then begin
             Item := array_random_value(Items_List);
             add_obj_to_inven(container, create_object(Item, 0, 0));
          end
@@ -668,7 +668,7 @@ procedure LoadChests begin
 
          // 2nd ammo batch
          chance := random(1, 100);
-         if (chance <= 30) then begin
+         if (chance < 50) then begin
             count := random(1, 3);
             while (count > 0) do begin
                count--;
