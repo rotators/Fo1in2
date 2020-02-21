@@ -106,21 +106,17 @@ jobs:
            set +e
            OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
            OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
-           OLD_DEBUGGER=$(grep --max-count=1 "\- Debugger" $HOME/git.log | awk -F \( '{print $2}' | tr -d ')')
            set -e
            echo "sfall-rotators $OLD_SFALL_ROTATORS"
            echo "ModdersPack    $OLD_ARTIFACTS"
-           echo "Debugger       $OLD_DEBUGGER"
            rm -f $HOME/git.log
            echo ::endgroup::
 
            echo "::group::Get new SHA"
            NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
            NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
-           NEW_DEBUGGER=$(git --no-pager log --pretty=format:%H -1 Tools/Debugger)
            echo "sfall-rotators $NEW_SFALL_ROTATORS"
            echo "ModdersPack    $NEW_ARTIFACTS"
-           echo "Debugger       $NEW_DEBUGGER"
            echo ::endgroup::
 
            set_dxsdk_dir=0
@@ -140,12 +136,6 @@ jobs:
            if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
               echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
               echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
-           fi
-
-           echo "Debugger..."
-           if [ "$OLD_DEBUGGER" != "$NEW_DEBUGGER" ]; then
-              echo "Debugger... $OLD_DEBUGGER -> $NEW_DEBUGGER"
-              echo ::set-env name=GHA_TASK_DEBUGGER::true
            fi
 
            echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
