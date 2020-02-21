@@ -41,8 +41,7 @@ procedure start begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (global_var(GVAR_QUEST_BONEYARD_3_BOMBFOLL) == 2) then begin
       kill_critter(self_obj, ANIM_exploded_to_nothing_sf);
    end
@@ -52,8 +51,7 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    if (local_var(0)) then begin
       if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
@@ -73,19 +71,13 @@ begin
    end
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
-   start_gdialog(270, self_obj, 4, -1, -1);
-   gsay_start;
    set_local_var(0, 1);
-   call Marney00;
-   gsay_end;
-   end_dialogue;
+   start_dialog_at_node(Marney00);
 end
 
-procedure Marney00
-begin
+procedure Marney00 begin
    variable LVar0 := 0;
    LVar0 := dude_max_hp - dude_cur_hp;
    Reply(104);
@@ -99,8 +91,7 @@ begin
    end
 end
 
-procedure Marney01
-begin
+procedure Marney01 begin
    Reply(108);
    NLowOption(109, Marney02);
    NLowOption(110, Marney05);
@@ -108,30 +99,30 @@ begin
    NOption(112, Marney05, 4);
 end
 
-procedure Marney02
-begin
+procedure Marney02 begin
    variable LVar0 := 0;
    gfade_out(1);
-   LVar0 := dude_max_hp - dude_cur_hp;
-   game_time_advance(game_ticks(60 * 20 * LVar0));
-   critter_heal(dude_obj, LVar0);
-   NMessage(113);
-   if (not(local_var(1))) then begin
-      NOption(114, Marney03, 4);
-   end
-   NOption(115, MarneyEnd, 4);
+      LVar0 := dude_max_hp - dude_cur_hp;
+      game_time_advance(game_ticks(60 * 20 * LVar0));
+
+      critter_heal(dude_obj, LVar0);
+      critter_uninjure(dude_obj, (DAM_CRIP_LEG_LEFT bwor DAM_CRIP_LEG_RIGHT bwor DAM_CRIP_ARM_LEFT bwor DAM_CRIP_ARM_RIGHT));
+
+      NMessage(113);
+      if (not(local_var(1))) then begin
+         NOption(114, Marney03, 4);
+      end
+      NOption(115, MarneyEnd, 4);
    gfade_in(1);
 end
 
-procedure Marney03
-begin
+procedure Marney03 begin
    Reply(116);
    NOption(117, Marney04, 4);
    NOption(118, Marney05, 4);
 end
 
-procedure Marney04
-begin
+procedure Marney04 begin
    gfade_out(1);
    game_time_advance(game_ticks(18000));
    critter_mod_skill(dude_obj, SKILL_FIRST_AID, 15);
@@ -141,29 +132,25 @@ begin
    display_msg(gen_mstr(116) + 15 + gen_mstr(141));
 end
 
-procedure Marney05
-begin
+procedure Marney05 begin
    NMessage(120);
 end
 
-procedure Marney06
-begin
+procedure Marney06 begin
    Reply(121);
    NOption(122, Marney07, 5);
    NOption(123, Marney05, 5);
 end
 
-procedure Marney07
-begin
+procedure Marney07 begin
    gfade_out(1);
-   game_time_advance(game_ticks(25200));
-   critter_mod_skill(dude_obj, SKILL_DOCTOR, 15);
-   set_local_var(2, 1);
-   NMessage(124);
+      game_time_advance(game_ticks(25200));
+      critter_mod_skill(dude_obj, SKILL_DOCTOR, 15);
+      set_local_var(2, 1);
+      NMessage(124);
    gfade_in(1);
    display_msg(gen_mstr(116) + 15 + gen_mstr(142));
 end
 
-procedure MarneyEnd
-begin
+procedure MarneyEnd begin
 end
