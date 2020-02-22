@@ -145,26 +145,6 @@ end
               end                                                                           \
               noop
 
-
-
-// Fixes the bug where money is not displayed after exiting barter. https://github.com/rotators/Fo1in2/issues/26
-#define VOODOO_dialog_money_fix \
-              begin                                                                     \
-               /* gdialog_bk+0x75 */                                                    \
-               write_int (0x447acd, 0x039491e9); /* jmp [patch] */                      \
-               write_byte(0x447ad1, 0x00);                                              \
-               write_byte(0x480f63, 0x60);       /* pushad */                           \
-               write_int (0x480f64, 0xfc5dc7e8); /* call <fallout2.gdProcessUpdate_> */ \
-               write_byte(0x480f68, 0xff);                                              \
-               write_byte(0x480f69, 0x61);       /* popad */                            \
-               write_int (0x480f6a, 0x055e3de8); /* call <fallout2.win_show_> */        \
-               write_byte(0x480f6e, 0x00);                                              \
-               write_int (0x480f6f, 0xfc6b5ee9); /* jmp fallout2.447AD2 */              \
-               write_byte(0x480f73, 0xff);                                              \
-              end                                                                       \
-              noop
-
-
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
