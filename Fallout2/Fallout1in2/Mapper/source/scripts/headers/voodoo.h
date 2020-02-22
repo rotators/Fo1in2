@@ -11,28 +11,11 @@
  **************************************************/
 
 // Should be replaced with something like write_byte(address, value, length) when/if sfall adds support for it
+// Which is very unlikely to ever happen. https://github.com/phobos2077/sfall/issues/285
 procedure VOODOO_CAVE(variable address, variable length)
 begin
-    // CAH cannot for(; length >= N; length -= N, addr += N) :(
-
-    for(length := length; length >= 4; length -= 4)
-    begin
-        write_int(address, 0x90909090);
-        address += 4;
-    end
-
-    for(length := length; length >= 2; length -= 2)
-    begin
-        write_short(address, 0x9090);
-        address += 2;
-    end
-
-    for(length := length; length >= 1; length -= 1)
-    begin
-        // CAH cannot write(addr++, 0x90) :(
-        write_byte(address, 0x90);
-        address++;
-    end
+    // Assumes that SafeMemSet8 is written before to 0x480f75
+    call_offset_v3(0x480f75, address, 0x90, length);
 end
 
 // This will disable the "You encounter: ..." message:
@@ -185,6 +168,35 @@ end
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
+
+#define VOODOO_SafeMemSet8 \
+              begin                                                                            \
+               write_byte (0x480f75, 0x52);       /* push edx   - int num (bytes) */           \
+               write_byte (0x480f76, 0x53);       /* push ebx   - uint8 value */               \
+               write_byte (0x480f77, 0x50);       /* push eax   - void* ptr */                 \
+               write_byte (0x480f78, 0x57);       /* push edi */                               \
+               write_short(0x480f79, 0xec83);     /* sub esp,4  - DWORD oldProtect; */         \
+               write_byte (0x480f7b, 0x04);                                                    \
+               write_byte (0x480f7c, 0x54);       /* push esp   - &oldProtect */               \
+               write_short(0x480f7d, 0x406a);     /* push 40    - PAGE_EXECUTE_READWRITE */    \
+               write_byte (0x480f7f, 0x53);       /* push ebx   - int num (bytes) */           \
+               write_byte (0x480f80, 0x50);       /* push eax   - void* ptr */                 \
+               write_int  (0x480f81, 0x1815ff2e); /* call cs:[<&fallout2.VirtualProtect>] */   \
+               write_short(0x480f85, 0x6c02);                                                  \
+               write_byte (0x480f87, 0x00);                                                    \
+               write_short(0x480f88, 0xc483);     /* add esp,4 */                              \
+               write_byte (0x480f8a, 0x04);                                                    \
+               write_int  (0x480f8b, 0x08244c8b); /* mov ecx,ss:[esp+0x8] - int num (bytes) */ \
+               write_int  (0x480f8f, 0x0c24448a); /* mov al, ss:[esp+0xC] - uint8 value */     \
+               write_int  (0x480f93, 0x04247c8b); /* mov edi,ss:[esp+0x4] - void* ptr */       \
+               write_short(0x480f97, 0xaaf3);     /* rep stosb */                              \
+               write_byte (0x480f99, 0x5f);       /* pop edi */                                \
+               write_byte (0x480f9a, 0x58);       /* pop eax */                                \
+               write_byte (0x480f9b, 0x5b);       /* pop ebx */                                \
+               write_byte (0x480f9c, 0x5a);       /* pop edx */                                \
+               write_byte (0x480f9d, 0xc3);       /* ret */                                    \
+              end                                                                              \
+              noop
 
 // This will create codecave out of few selfrun functions related to .vcr recording
 // As creation and hotkey blocking is done by scripts, recording is available *only* before first start/load game
