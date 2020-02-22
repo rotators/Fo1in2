@@ -458,7 +458,7 @@ procedure LoadScenery begin
       // DEBUG:
       //Choose_Scenery := 8;
 
-      if (Choose_Scenery == 1) then begin
+      if (Choose_Scenery == 1 and map_is_mine) then begin
          set_gold_mine;
          call gold_mine;
       end else if (Choose_Scenery >= 2 and Choose_Scenery <= 3) then begin
