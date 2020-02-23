@@ -265,12 +265,22 @@ jobs:
            echo "// Generated automagically -- DO NOT EDIT //" >> $HEADER
            echo "" >> $HEADER
 
+           ok=1
+
+           set -x
            $SFASM_EXE --memory-args=patch=0x480ee4 \
                       $SFASM/lib/memset.asm \
-           >> $HEADER
+           >> $HEADER || ok=0
+           set +x
 
            echo "" >> $HEADER
            echo "#endif // VOODOO_MAGICK_H //" >> $HEADER
+
+           # crappy workaround
+           if [ $ok -eq 0 ]; then
+              cat $HEADER
+              exit 1
+           fi
 
            git diff --quiet || (git add --update && echo "- Voodoo regeneration" >> $HOME/gha.commit)
     shell: bash
