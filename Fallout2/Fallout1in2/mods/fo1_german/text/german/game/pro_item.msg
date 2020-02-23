@@ -112,8 +112,8 @@
 {5601}{}{Verschiedene Erkennungsmarken. Außer dem Namen 'Darkwater' ist darauf nicht viel zu erkennen.}
 {5700}{}{Wanze}
 {5701}{}{Minimikrofon und Übertragungsgerät.}
-{5800}{}{CD}
-{5801}{}{Holo-CD der Firma Wattz Electronics. Offensichtlich in sehr schlechtem Zustand.}
+{5800}{}{Holodisk}
+{5801}{}{Holodisk der Firma Wattz Electronics. Offensichtlich in sehr schlechtem Zustand.}
 {5900}{}{Scanner}
 {5901}{}{Scanner der Firma Wattz Electronics vom Typ C-U. Erkennt Bewegungen von biologischem Material auf eine Entfernung von mehreren Metern mittels eines justierten Radargeräts.}
 {6000}{}{Regal}
@@ -211,9 +211,9 @@
 {10600}{}{Nuka Cola}
 {10601}{}{Flasche Nuka Cola. Erfrischungsgetränk der postnuklearen Welt. Warm und abgestanden.}
 {10700}{}{Knochen}
-{10701}{}{Sammlung seltener Knochen.}
+{10701}{}{Eine Sammlung seltsamer Knochen.}
 {10800}{}{Knochen}
-{10801}{}{Sammlung seltener Knochen.}
+{10801}{}{Eine Sammlung seltsamer Knochen.}
 {10900}{}{Rad-X}
 {10901}{}{Antistrahlenmittel zum Einnehmen vor Strahlungsaussetzung. Nebenwirkungen sind nicht bekannt.}
 {11000}{}{Psycho}
@@ -324,8 +324,8 @@
 {16201}{}{Sonderausführung des Red Ryder-Luftgewehrs. Ein wahrer Klassiker. Mindeststärke: 3.}
 {16300}{}{BBs}
 {16301}{}{Packung mit Luftgewehrkugeln aus der Zeit vor dem Krieg. In hervorragendem Zustand. Aus Edelstahl.}
-{16400}{}{BoS-CD}
-{16401}{}{Holo-CD mit Aufzeichnungen von der Brotherhood of Steel.}
+{16400}{}{BoS-Disk}
+{16401}{}{Holodisk mit Aufzeichnungen von der Brotherhood of Steel.}
 {16500}{}{Leguan-Stand}
 {16501}{}{Zuhause von 'Bobs Iguana Bits'. Gibt es an frisch gebratenem Leguan irgend etwas auszusetzen?}
 {16600}{}{Tisch}
@@ -376,20 +376,20 @@
 {18801}{}{Einfacher Spind.}
 {18900}{}{Spind}
 {18901}{}{Einfacher Spind.}
-{19000}{}{FEV Experiment-CD}
-{19001}{}{Holo-CD mit medizinischen Daten. Kann in den PIPBoy geladen werden.}
+{19000}{}{FEV Experiment-Disk}
+{19001}{}{Holodisk mit medizinischen Daten. Kann in den PIPBoy geladen werden.}
 {19100}{}{Sicherheitsprotokoll}
-{19101}{}{Laut Etikett befindet sich auf dieser Holo-CD ein Sicherheitsprotokoll. Kann in den PIPBoy geladen werden.}
-{19200}{}{Alpha Experiment-CD}
-{19201}{}{Laut Etikett befindet sich auf dieser Holo-CD das Protokoll zum Alpha-Experiment.}
-{19300}{}{Delta Experiment-CD}
-{19301}{}{Laut Etikett befindet sich auf dieser Holo-CD das Protokoll zum Delta-Experiment.}
-{19400}{}{Vrees Experiment-CD}
-{19401}{}{Diese Holo-CD enthält aktualisierte medizinische Daten von Vree von der BoS. Kann in den PIPBoy geladen werden.}
+{19101}{}{Laut Etikett befindet sich auf dieser Holodisk ein Sicherheitsprotokoll. Kann in den PIPBoy geladen werden.}
+{19200}{}{Alpha Experiment-Disk}
+{19201}{}{Laut Etikett befindet sich auf dieser Holodisk das Protokoll zum Alpha-Experiment.}
+{19300}{}{Delta Experiment-Disk}
+{19301}{}{Laut Etikett befindet sich auf dieser Holodisk das Protokoll zum Delta-Experiment.}
+{19400}{}{Vrees Experiment-Disk}
+{19401}{}{Diese Holodisk enthält aktualisierte medizinische Daten von Vree von der BoS. Kann in den PIPBoy geladen werden.}
 {19500}{}{BoS-Ehrenkodex}
-{19501}{}{Holo-CD mit eingraviertem Symbol der Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
+{19501}{}{Holodisk mit eingraviertem Symbol der Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
 {19600}{}{Mutantenübertragung}
-{19601}{}{Auf dieser Holo-CD scheinen Funkübertragungen gespeichert zu sein. Kann in den PIPBoy geladen werden.}
+{19601}{}{Auf dieser Holodisk scheinen Funkübertragungen gespeichert zu sein. Kann in den PIPBoy geladen werden.}
 {19700}{}{Kiste}
 {19800}{}{Kiste}
 {19900}{}{Kiste}
@@ -418,10 +418,10 @@
 {21301}{}{Gizmo, der ehemalige Verbrecherboß von Junktown, ist tot. Und stinkt ganz schön!}
 {21400}{}{Schreibtisch}
 {21401}{}{Einfacher Schreibtisch. Nach genauerer Betrachtung kommst du zu dem Schluß, daß es immer noch ein Schreibtisch ist.}
-{21500}{}{Sophias CD}
-{21501}{}{Holo-CD mit Informationen zur Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
-{21600}{}{Maxsons CD}
-{21700}{}{Militärbasis-CD}
+{21500}{}{Sophias Disk}
+{21501}{}{Holodisk mit Informationen zur Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
+{21600}{}{Maxsons Disk}
+{21700}{}{Militärbasis-Disk}
 {21800}{}{Leichte Heilung}
 {21801}{}{Handle um diese Option, wenn du eine leichte Heilung wünschst.}
 {21900}{}{Mittlere Heilung}
@@ -446,8 +446,8 @@
 {22801}{}{Handbuch zur Reparatur der T 51b-Powerrüstung.}
 {22900}{}{Kleines Gerät}
 {22901}{}{Du siehst einen systolischen Motivator. Dieses ungewöhnliche Gerät ist sehr klein.}
-{23000}{}{Vaultstandorte-CD}
-{23001}{}{Diese CD enthält wichtige Aufzeichnungen eines Vaultcomputers. Unter Umständen beschädigt.}
+{23000}{}{Vaultstandorte-Disk}
+{23001}{}{Diese Disk enthält wichtige Aufzeichnungen eines Vaultcomputers. Unter Umständen beschädigt.}
 {23100}{}{Militärbasiscode}
 {23101}{}{ }
 {23200}{}{Super-Powerrüstung}
@@ -463,7 +463,7 @@
 {23700}{}{Chemiezeitschriften}
 {23701}{}{Verschiedene Zeitschriften zum Bereich Chemie. Die Artikel über Molekularchemie sind besonders interessant.}
 {23800}{}{Regulatorübertragung}
-{23801}{}{Auf dieser Holo-CD sind Funkübertragungen gespeichert.}
+{23801}{}{Auf dieser Holodisk sind Funkübertragungen gespeichert.}
 {23900}{}{BoS-Rüstung}
 {23901}{}{Neustes Kampfrüstungsmodell. Die Brotherhood of Steel hat die Standardausführung enorm verbessert.}
 {24000}{}{Tesla-Rüstung}
@@ -680,7 +680,7 @@
 {34600}{}{Friedhof}
 {34700}{}{Friedhof}
 {34800}{}{Fortschrittliche Powerrüstung}
-{34801}{}{Diese Powerrüstung besteht aus Leichtmetallegierungen, die an wichtigen Stellen mit Keramikguß verstärkt ist. Die Servomotoren zur Bewegungsunterstützung sind offensichtlich auch von bester Qualität.}
+{34801}{}{Diese Powerrüstung besteht aus Leichtmetallegierungen, die an wichtigen Stellen mit Keramikguß verstärkt ist. Die Servomotoren zur Bewegungsunter- stützung sind offensichtlich auch von bester Qualität.}
 {34900}{}{Fortsch. Powerrüstung MKII}
 {34901}{}{Diese Powerrüstung scheint vollständig aus Leichtkkeramikteilen anstelle der üblichen Kombination aus Metall und Keramikverstärkungen zu bestehen. Sie sieht aus, als schütze sie noch besser als die standardmäßige fortschrittliche Powerrüstung.}
 {35000}{}{Bozar}
