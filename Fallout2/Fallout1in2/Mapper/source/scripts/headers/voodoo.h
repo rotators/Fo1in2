@@ -12,7 +12,7 @@
  **************************************************/
 
 // Assumes that VOODOO_SafeMemSet is written at main_selfrun_init_ address
-#define VOODOO_CAVE(address, length)
+#define VOODOO_CAVE(address, length) \
     call_offset_v3(0x480ee4, address, 0x90, length)
 
 // This will disable the "You encounter: ..." message:
@@ -38,7 +38,7 @@
                write_int  (0x480ca2, 0x66666666); /* nop */                             \
                write_byte (0x480ca6, 0x90);                                             \
                /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
-               call VOODOO_CAVE(0x480ee4, 438);                                         \
+               /*VOODOO_CAVE(0x480ee4, 438);*/                                          \
               end                                                                       \
               noop
 
