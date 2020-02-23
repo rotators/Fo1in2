@@ -30,9 +30,17 @@ begin
   call VOODOO_WriteRelAddress(address, func);
 end
 
-procedure VOODOO_BlockCall(variable address)
+procedure VOODOO_BlockCall(variable address, variable length:=5)
 begin
-  // operand-size override prefix bytes
-  write_int(address, 0x66666666);
-  write_byte(address+4, 0x90);
+  variable i;
+  // an x86 instruction can't be longer than 15 bytes.
+  if(length > 15) then begin
+     length := 15;
+  end
+
+  // operand-size override prefix bytes.
+  for(i := 0; i < length-1; i++) begin
+   write_byte(address+i, 0x66);
+  end
+  write_byte(address+length-1, 0x90);
 end
