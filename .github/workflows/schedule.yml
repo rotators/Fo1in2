@@ -256,7 +256,7 @@ jobs:
            HEADER="$MOD_HEADERS_DIR/voodoo_magick.h"
 
            echo ::group::Build
-           "$MSBUILD_EXE" $SFASM/sfall-asm.sln -p:Configuration=Release
+           "$MSBUILD_EXE" $SFASM/sfall-asm.sln -p:Configuration=Release 2>&1
            echo ::endgroup::
 
            echo "#ifndef VOODOO_MAGICK_H" >  $HEADER
@@ -269,19 +269,25 @@ jobs:
 
            set -x
            $SFASM_EXE --memory-args=patch=0x480ee4 \
-                      $SFASM/lib/memset.asm \
+                      $SFASM/lib/memset.asm                 \
+                      $SFASM/patches/no_location_radius.asm \
+                      $SFASM/patches/fill_w.asm             \
            >> $HEADER || ok=0
            set +x
 
            echo "" >> $HEADER
            echo "#endif // VOODOO_MAGICK_H //" >> $HEADER
 
+           echo ::group::Header
+           cat $HEADER
+           echo ::endgroup::
+
            # crappy workaround
            if [ $ok -eq 0 ]; then
-              cat $HEADER
               exit 1
            fi
 
+           unix2dos -q $HEADER
            git diff --quiet || (git add --update && echo "- Voodoo regeneration" >> $HOME/gha.commit)
     shell: bash
 
