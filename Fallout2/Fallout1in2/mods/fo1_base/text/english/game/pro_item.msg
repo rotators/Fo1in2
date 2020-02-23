@@ -683,7 +683,7 @@
 {34900}{}{Adv. Power Armor MKII}
 {34901}{}{This powered armor appears to be composed of entirely of lightweight ceramic composites rather than the usual combination of metal and ceramic plates. It seems as though it should give even more protection than the standard Advanced Power Armor.}
 {35000}{}{Bozar}
-{35001}{}{A Texan's dream, the DKS-802 is the ultimate refinement of the sniper's art. Although, somewhat finicky and prone to jamming if not kept scrupulously clean, the big weapon's accuracy more than makes up for its extra maintenance requirements. Min ST: 8.}
+{35001}{}{A Texan's dream, the DKS-802 is the ultimate refinement of the sniper's art. Although, somewhat finicky and prone to jamming, the big weapon's accuracy more than makes up for its extra maintenance requirements. Min ST: 8.}
 {35100}{}{Advanced Assault Rifle}
 {35101}{}{The successor to the AK-112, the AK-198 is a modern military model that was imported in limited quantities for use by US Army Special Forces. Capable of single and full-auto shooting mode. Min ST: 5.}
 {35200}{}{EC Assault Rifle}

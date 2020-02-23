@@ -86,6 +86,11 @@ jobs:
     run:   git clone --branch=rotators https://github.com/rotators/sfall.git $HOME/sfall-rotators
     shell: bash
 
+  - name:  Clone sfall-asm
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   git clone --branch=master https://github.com/ghost2238/sfall-asm.git $HOME/sfall-asm
+    shell: bash
+
   - name: Clone FO1@2
     if:   env.GHA_REPO_ALIVE == 'true'
     uses: actions/checkout@v2
@@ -106,21 +111,17 @@ jobs:
            set +e
            OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
            OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
-           OLD_DEBUGGER=$(grep --max-count=1 "\- Debugger" $HOME/git.log | awk -F \( '{print $2}' | tr -d ')')
            set -e
            echo "sfall-rotators $OLD_SFALL_ROTATORS"
            echo "ModdersPack    $OLD_ARTIFACTS"
-           echo "Debugger       $OLD_DEBUGGER"
            rm -f $HOME/git.log
            echo ::endgroup::
 
            echo "::group::Get new SHA"
            NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
            NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
-           NEW_DEBUGGER=$(git --no-pager log --pretty=format:%H -1 Tools/Debugger)
            echo "sfall-rotators $NEW_SFALL_ROTATORS"
            echo "ModdersPack    $NEW_ARTIFACTS"
-           echo "Debugger       $NEW_DEBUGGER"
            echo ::endgroup::
 
            set_dxsdk_dir=0
@@ -140,12 +141,6 @@ jobs:
            if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
               echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
               echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
-           fi
-
-           echo "Debugger..."
-           if [ "$OLD_DEBUGGER" != "$NEW_DEBUGGER" ]; then
-              echo "Debugger... $OLD_DEBUGGER -> $NEW_DEBUGGER"
-              echo ::set-env name=GHA_TASK_DEBUGGER::true
            fi
 
            echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
@@ -233,21 +228,6 @@ jobs:
            fi
     shell: bash
 
-  #
-  - name:  Debugger recompilation
-    if:    env.GHA_TASK_DEBUGGER == 'true'
-    run:   |
-           :
-           ok=1
-           "$MSBUILD_EXE" Tools/Debugger/Debugger.sln -p:Configuration=Release -p:Platform=x86 || ok=0
-           if [ $ok -eq 1 ] && [ -f Tools/Debugger/Release/Debugger.exe ]; then
-              mv Tools/Debugger/Release/Debugger.exe $MOD_DIR/Debugger.exe
-              chmod +x $MOD_DIR/Debugger.exe
-              DEBUGGER_COMMIT=$(git log --pretty=format:%H -1 Tools/Debugger)
-              git diff --quiet || (git add --update && echo "- Debugger recompilation (${DEBUGGER_COMMIT})" >> $HOME/gha.commit)
-           fi
-    shell: bash
-
   # updates scripts sources to Rotators standards
   - name:  ReDefine run
     if:    env.GHA_REPO_ALIVE == 'true'
@@ -261,6 +241,54 @@ jobs:
            grep "^Changed " ReDefine.log || true
            rm ReDefine*.log
            git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
+
+           echo "::set-env name=MOD_SCRIPTS_DIR::$scripts"
+           echo "::set-env name=MOD_HEADERS_DIR::$headers"
+    shell: bash
+
+  # updates unsafe scripting header
+  - name:  Voodoo regeneration
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   |
+           :
+           SFASM=$HOME/sfall-asm
+           SFASM_EXE=$SFASM/bin/Release/sfall-asm.exe
+           HEADER="$MOD_HEADERS_DIR/voodoo_magick.h"
+
+           echo ::group::Build
+           "$MSBUILD_EXE" $SFASM/sfall-asm.sln -p:Configuration=Release 2>&1
+           echo ::endgroup::
+
+           echo "#ifndef VOODOO_MAGICK_H" >  $HEADER
+           echo "#define VOODOO_MAGICK_H" >> $HEADER
+           echo "" >> $HEADER
+           echo "// Generated automagically -- DO NOT EDIT //" >> $HEADER
+           echo "" >> $HEADER
+
+           ok=1
+
+           set -x
+           $SFASM_EXE --memory-args=patch=0x480ee4 \
+                      $SFASM/lib/memset.asm                 \
+                      $SFASM/patches/no_location_radius.asm \
+                      $SFASM/patches/fill_w.asm             \
+           >> $HEADER || ok=0
+           set +x
+
+           echo "" >> $HEADER
+           echo "#endif // VOODOO_MAGICK_H //" >> $HEADER
+
+           echo ::group::Header
+           cat $HEADER
+           echo ::endgroup::
+
+           # crappy workaround
+           if [ $ok -eq 0 ]; then
+              exit 1
+           fi
+
+           unix2dos -q $HEADER
+           git diff --quiet || (git add --update && echo "- Voodoo regeneration" >> $HOME/gha.commit)
     shell: bash
 
   # updates scripts sources to be consistent
@@ -381,4 +409,9 @@ jobs:
   - name:  Post Clone sfall-rotators
     if:    env.GHA_REPO_ALIVE == 'true'
     run:   rm -fR $HOME/sfall-rotators
+    shell: bash
+
+  - name:  Post Clone sfall-asm
+    if:    env.GHA_REPO_ALIVE == 'true'
+    run:   rm -fR $HOME/sfall-asm
     shell: bash
