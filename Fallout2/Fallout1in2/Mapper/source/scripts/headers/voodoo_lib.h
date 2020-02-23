@@ -29,3 +29,10 @@ begin
   write_byte(address, 0xE9);
   call VOODOO_WriteRelAddress(address, func);
 end
+
+procedure VOODOO_BlockCall(variable address)
+begin
+  // operand-size override prefix bytes
+  write_int(address, 0x66666666);
+  write_byte(address+4, 0x90);
+end
