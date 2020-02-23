@@ -193,7 +193,7 @@ variable Scenery_Creation_Ptr;
 
 // Old beds on the ground
 #define PID_MATTRESS_1                      (33554638)
-#define PID_MATTRESS_2                      (33554639) 
+#define PID_MATTRESS_2                      (33554639)
 #define PID_BED_1                           (33554640)
 #define PID_BED_2                           (33554641)
 
@@ -319,6 +319,15 @@ variable Scenery_Creation_Ptr;
 #define PID_JUNK_TIRE                       (33554541)
 #define PID_JUNK_DIRT_2                     (33554542)
 
+#define PID_DIRT_CORNER_1                   (33554543)
+#define PID_DIRT_CORNER_2                   (33554544)
+#define PID_DIRT_CORNER_3                   (33554545)
+#define PID_DIRT_CORNER_4                   (33554546)
+#define PID_DIRT_CORNER_5                   (33554547)
+#define PID_DIRT_CORNER_6                   (33554548)
+#define PID_DIRT_CORNER_7                   (33554549)
+#define PID_DIRT_CORNER_8                   (33554550)
+
 // Ladder
 #define PID_LADDER                          (33554571)
 #define PID_LADDER_HOLE                     (33554629)
@@ -343,99 +352,103 @@ variable Scenery_Creation_Ptr;
 /************************************************
    Spawn Scenery with blocker
 ************************************************/
-#define Create_Boxes_1(Hex_Num,Elevation)    Scenery_Creation:=create_object(PID_BOXES_1,Hex_Num,Elevation);   \
+#define Create_Boxes_1(Hex_Num,Elev_Num)     Scenery_Creation:=create_object(PID_BOXES_1,Hex_Num,Elev_Num);    \
                                              Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,3,1);         \
-                                             Blocking_Cycle(1,1,Elevation)                                     \
-                                             Blocking_Cycle(2,1,Elevation)                                     \
-                                             Blocking_Cycle(0,1,Elevation)                                     \
-                                             Blocking_Cycle(5,2,Elevation)
-                                             
-#define Create_Boxes_2(Hex_Num,Elevation)    Scenery_Creation:=create_object(PID_BOXES_2,Hex_Num,Elevation);   \
+                                             Blocking_Cycle(1,1,Elev_Num)                                      \
+                                             Blocking_Cycle(2,1,Elev_Num)                                      \
+                                             Blocking_Cycle(0,1,Elev_Num)                                      \
+                                             Blocking_Cycle(5,2,Elev_Num)
+
+#define Create_Boxes_2(Hex_Num,Elev_Num)     Scenery_Creation:=create_object(PID_BOXES_2,Hex_Num,Elev_Num);    \
                                              Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,1,1);         \
-                                             Blocking_Cycle(5,1,Elevation)                                     \
-                                             Blocking_Cycle(4,1,Elevation)                                     \
-                                             Blocking_Cycle(3,1,Elevation)                                     \
-                                             Blocking_Cycle(2,1,Elevation)
-                                             
-#define Create_Boxes_3(Hex_Num,Elevation)    Scenery_Creation:=create_object(PID_BOXES_3,Hex_Num,Elevation);   \
+                                             Blocking_Cycle(5,1,Elev_Num)                                      \
+                                             Blocking_Cycle(4,1,Elev_Num)                                      \
+                                             Blocking_Cycle(3,1,Elev_Num)                                      \
+                                             Blocking_Cycle(2,1,Elev_Num)
+
+#define Create_Boxes_3(Hex_Num,Elev_Num)     Scenery_Creation:=create_object(PID_BOXES_3,Hex_Num,Elev_Num);    \
                                              Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);         \
-                                             Blocking_Cycle(3,1,Elevation)                                     \
-                                             Blocking_Cycle(2,1,Elevation)                                     \
-                                             Blocking_Cycle(1,1,Elevation)                                     \
-                                             Blocking_Cycle(0,1,Elevation)
-                                             
-#define Create_Boxes_4(Hex_Num,Elevation)    Scenery_Creation:=create_object(PID_BOXES_4,Hex_Num,Elevation);   \
+                                             Blocking_Cycle(3,1,Elev_Num)                                      \
+                                             Blocking_Cycle(2,1,Elev_Num)                                      \
+                                             Blocking_Cycle(1,1,Elev_Num)                                      \
+                                             Blocking_Cycle(0,1,Elev_Num)
+
+#define Create_Boxes_4(Hex_Num,Elev_Num)     Scenery_Creation:=create_object(PID_BOXES_4,Hex_Num,Elev_Num);    \
                                              Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,0,1);         \
-                                             Blocking_Cycle(2,1,Elevation)                                     \
-                                             Blocking_Cycle(3,1,Elevation)
+                                             Blocking_Cycle(2,1,Elev_Num)                                      \
+                                             Blocking_Cycle(3,1,Elev_Num)
 
-#define Create_Junk_Barrel(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_BARREL,Hex_Num,Elevation);  \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,0,1);            \
-                                                Blocking_Cycle(4,1,Elevation)                                        \
-                                                Blocking_Cycle(3,2,Elevation)                                        \
-                                                Blocking_Cycle(1,1,Elevation)
+#define Create_Junk_Barrel(Hex_Num,Elev_Num)    Scenery_Creation:=create_object(PID_JUNK_BARREL,Hex_Num,Elev_Num); \
+                                                Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,0,1);          \
+                                                Blocking_Cycle(4,1,Elev_Num)                                       \
+                                                Blocking_Cycle(3,2,Elev_Num)                                       \
+                                                Blocking_Cycle(1,1,Elev_Num)
 
-#define Create_Junk_Toilet(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_TOILET,Hex_Num,Elevation);  \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
-                                                Blocking_Cycle(3,2,Elevation)
-                                                
-#define Create_Junk_Dirt_1(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_DIRT_1,Hex_Num,Elevation);  \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
-                                                Blocking_Cycle(3,2,Elevation)
+#define Create_Junk_Toilet(Hex_Num,Elev_Num)    Scenery_Creation:=create_object(PID_JUNK_TOILET,Hex_Num,Elev_Num);                  \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Hex_Num,Elev_Num);               \
+                                                Scenery_Creation_Hex := tile_num_in_direction(Hex_Num, 4, 1);                       \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elev_Num);
 
-#define Create_Junk_Dirt_2(Hex_Num,Elevation)   Scenery_Creation:=create_object(PID_JUNK_DIRT_2,Hex_Num,Elevation);  \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
-                                                Blocking_Cycle(3,2,Elevation)
+#define Create_Junk_Dirt_1(Hex_Num,Elev_Num)    Scenery_Creation:=create_object(PID_JUNK_DIRT_1,Hex_Num,Elev_Num);                  \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Hex_Num,Elev_Num);               \
+                                                Scenery_Creation_Hex := tile_num_in_direction(Hex_Num, 4, 1);                       \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elev_Num);
 
-#define Create_Junk_Tire(Hex_Num,Elevation)     Scenery_Creation:=create_object(PID_JUNK_TIRE,Hex_Num,Elevation);    \
-                                                Scenery_Creation_Hex:=tile_num_in_direction(Hex_Num,5,1);            \
-                                                Blocking_Cycle(3,2,Elevation)
+#define Create_Junk_Dirt_2(Hex_Num,Elev_Num)    Scenery_Creation:=create_object(PID_JUNK_DIRT_2,Hex_Num,Elev_Num);                  \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Hex_Num,Elev_Num);               \
+                                                Scenery_Creation_Hex := tile_num_in_direction(Hex_Num, 4, 1);                       \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elev_Num);
+
+#define Create_Junk_Tire(Hex_Num,Elev_Num)      Scenery_Creation:=create_object(PID_JUNK_TIRE,Hex_Num,Elev_Num);                    \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Hex_Num,Elev_Num);               \
+                                                Scenery_Creation_Hex := tile_num_in_direction(Hex_Num, 4, 1);                       \
+                                                Scenery_Creation := create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elev_Num);
 
 /************************************************
    Motorcycle
 ************************************************/
-#define Create_Moto1(Hex_Num,Elevation)   if ((not(is_loading_game)) /*and (global_var(GVAR_PLAYER_GOT_CAR) != 0)*/) then begin               \
-                                            Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO1,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
-                                            Scenery_Creation_Hex:=Hex_Num;                                                                \
-                                            Blocking_Cycle(5,1,Elevation)                                                                 \
-                                            Blocking_Cycle(3,1,Elevation)                                                                 \
-                                            Blocking_Cycle(1,2,Elevation)                                                                 \
-                                            if (Trunk_Ptr != 0) then begin                                                                \
-                                                move_to(Trunk_Ptr,Scenery_Creation_Hex,Elevation);                                        \
-                                                debug_msg("Moving the Car Trunk");                                                        \
-                                            end                                                                                           \
-                                            else begin                                                                                    \
-                                                create_object_sid(PID_MOTO1_TRUNK,Scenery_Creation_Hex,Elevation,SCRIPT_MOTRTRNK);        \
-                                                debug_msg("Making new Trunk.");                                                           \
-                                            end                                                                                           \
-                                 Blocking_Cycle(2,1,Elevation)                                                                 \
-                                 Blocking_Cycle(4,1,Elevation)                                                                 \
-                                 /*debug("create motorcycle");*/ \
+#define Create_Moto1(Hex_Num,Elevation)   if ((not(is_loading_game)) /*and (global_var(GVAR_PLAYER_GOT_CAR) != 0)*/) then begin            \
+                                             Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO1,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
+                                             Scenery_Creation_Hex:=Hex_Num;                                                                \
+                                             Blocking_Cycle(5,1,Elevation)                                                                 \
+                                             Blocking_Cycle(3,1,Elevation)                                                                 \
+                                             Blocking_Cycle(1,2,Elevation)                                                                 \
+                                             if (Trunk_Ptr != 0) then begin                                                                \
+                                                move_to(Trunk_Ptr,Scenery_Creation_Hex,Elevation);                                         \
+                                                debug_msg("Moving the Car Trunk");                                                         \
+                                             end                                                                                           \
+                                             else begin                                                                                    \
+                                                create_object_sid(PID_MOTO1_TRUNK,Scenery_Creation_Hex,Elevation,SCRIPT_MOTRTRNK);         \
+                                                debug_msg("Making new Trunk.");                                                            \
+                                             end                                                                                           \
+                                             Blocking_Cycle(2,1,Elevation)                                                                 \
+                                             Blocking_Cycle(4,1,Elevation)                                                                 \
+                                             /*debug("create motorcycle");*/ \
                                           end
 
-#define Create_Moto2(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                  \
-                                            Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO2,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
-                                            Scenery_Creation_Hex:=Hex_Num;                                                                \
-                                            Blocking_Cycle(2,2,Elevation)                                                                 \
-                                            Blocking_Cycle(4,2,Elevation)                                                                 \
-                                 Blocking_Cycle(5,1,Elevation)                                                                 \
-                                            if (Trunk_Ptr != 0) then begin                                                                \
-                                                move_to(Trunk_Ptr,Scenery_Creation_Hex,Elevation);                                        \
-                                                debug_msg("Moving the Car Trunk");                                                        \
-                                            end                                                                                           \
-                                            else begin                                                                                    \
-                                                create_object_sid(PID_MOTO1_TRUNK,Scenery_Creation_Hex,Elevation,SCRIPT_MOTRTRNK);        \
-                                                debug_msg("Making new Trunk.");                                                           \
-                                            end                                                                                           \
-                                 Blocking_Cycle(5,0,Elevation)                                                                 \
-                                 Blocking_Cycle(0,1,Elevation)                                                                 \
-                                 Blocking_Cycle(1,1,Elevation)                                                                 \
-                                 /*debug("create motorcycle 2");*/ \
+#define Create_Moto2(Hex_Num,Elevation)   if (not(is_loading_game)) then begin                                                             \
+                                             Scenery_Creation:=create_object_sid(PID_DRIVABLE_MOTO2,Hex_Num,Elevation, SCRIPT_MOTRCYCL);   \
+                                             Scenery_Creation_Hex:=Hex_Num;                                                                \
+                                             Blocking_Cycle(2,2,Elevation)                                                                 \
+                                             Blocking_Cycle(4,2,Elevation)                                                                 \
+                                             Blocking_Cycle(5,1,Elevation)                                                                 \
+                                             if (Trunk_Ptr != 0) then begin                                                                \
+                                                move_to(Trunk_Ptr,Scenery_Creation_Hex,Elevation);                                         \
+                                                debug_msg("Moving the Car Trunk");                                                         \
+                                             end                                                                                           \
+                                             else begin                                                                                    \
+                                                create_object_sid(PID_MOTO1_TRUNK,Scenery_Creation_Hex,Elevation,SCRIPT_MOTRTRNK);         \
+                                                debug_msg("Making new Trunk.");                                                            \
+                                             end                                                                                           \
+                                             Blocking_Cycle(5,0,Elevation)                                                                 \
+                                             Blocking_Cycle(0,1,Elevation)                                                                 \
+                                             Blocking_Cycle(1,1,Elevation)                                                                 \
+                                             /*debug("create motorcycle 2");*/ \
                                           end
 
 #define Dest_Moto(Hex_Num,Elevation)      if (not(is_loading_game)) then begin                                                     \
-                                            Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_DRIVABLE_MOTO1);       \
-                                            if (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO1)) then begin              \
+                                             Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_DRIVABLE_MOTO1);    \
+                                             if (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO1)) then begin           \
                                                 destroy_object(Scenery_Creation_Ptr);                                              \
                                                 Scenery_Creation_Hex:=Hex_Num;                                                     \
                                                 Dest_Block_Cycle(5,1,Elevation)                                                    \
@@ -443,17 +456,17 @@ variable Scenery_Creation_Ptr;
                                                 Dest_Block_Cycle(1,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(2,1,Elevation)                                                    \
                                                 Dest_Block_Cycle(4,1,Elevation)                                                    \
-                                            end                                                                                    \
-                                            Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_DRIVABLE_MOTO2);     \
-                                            if (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO2)) then begin            \
+                                             end                                                                                   \
+                                             Scenery_Creation_Ptr:=tile_contains_pid_obj(Hex_Num,Elevation,PID_DRIVABLE_MOTO2);    \
+                                             if (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO2)) then begin           \
                                                 destroy_object(Scenery_Creation_Ptr);                                              \
                                                 Scenery_Creation_Hex:=Hex_Num;                                                     \
                                                 Dest_Block_Cycle(2,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(4,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(5,2,Elevation)                                                    \
                                                 Dest_Block_Cycle(0,1,Elevation)                                                    \
-                                                Dest_Block_Cycle(1,1,Elevation)                                                     \
-                                            end                                                                                     \
+                                                Dest_Block_Cycle(1,1,Elevation)                                                    \
+                                             end                                                                                   \
                                           end
 
 // This will make the car that the player drives along the world map
@@ -465,10 +478,11 @@ variable Scenery_Creation_Ptr;
                                           end
 
 #define Dest_Car(Hex_Num,Elevation)     Dest_Moto(Hex_Num,Elevation)
-#define Upgrade_Car(Hex_Num,Elevation)  if (global_var(GVAR_PLAYER_GOT_CAR)== 2) and (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO1)) then begin \
-                                 Dest_Moto(Hex_Num,Elevation)  \
-                                 Create_Moto2(Hex_Num,Elevation) \
-                              end
+#define Upgrade_Car(Hex_Num,Elevation) \
+   if (global_var(GVAR_PLAYER_GOT_CAR)== 2) and (tile_contains_obj_pid(Hex_Num,Elevation,PID_DRIVABLE_MOTO1)) then begin   \
+      Dest_Moto(Hex_Num,Elevation)                                                                                         \
+      Create_Moto2(Hex_Num,Elevation)                                                                                      \
+   end
 
 
 /************************************************
@@ -590,25 +604,25 @@ variable Scenery_Creation_Ptr;
 
 // Blocking Hex Cycle
 #define create_blocking_hex(the_tile, the_elev) move_to(create_object(PID_BLOCKING_HEX, the_tile, the_elev), the_tile, the_elev)
-#define Blocking_Cycle(Rot,Count,Elevation)     Scenery_Creation_Count:=0;                                                              \
+#define Blocking_Cycle(Rot,Count,Elev_Num)      Scenery_Creation_Count:=0;                                                              \
                                                 while (Scenery_Creation_Count < Count) do begin                                         \
                                                     Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,Rot,1);            \
-                                                    Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elevation);   \
+                                                    Scenery_Creation:=create_object(PID_BLOCKING_HEX,Scenery_Creation_Hex,Elev_Num);    \
                                                     Scenery_Creation_Count+=1;                                                          \
                                                 end
 
 #define remove_blocking_hex(the_tile, the_elev) destroy_object(tile_contains_pid_obj(the_tile,the_elev,PID_BLOCKING_HEX))
-#define Dest_Block_Cycle(Rot,Count,Elevation)   Scenery_Creation_Count:=0;                                                              \
+#define Dest_Block_Cycle(Rot,Count,Elev_Num)    Scenery_Creation_Count:=0;                                                              \
                                                 while (Scenery_Creation_Count < Count) do begin                                         \
                                                     Scenery_Creation_Hex:=tile_num_in_direction(Scenery_Creation_Hex,Rot,1);            \
-                                                    Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elevation,PID_BLOCKING_HEX);   \
+                                                    Scenery_Creation_Ptr:=tile_contains_pid_obj(Scenery_Creation_Hex,Elev_Num,PID_BLOCKING_HEX);   \
                                                     destroy_object(Scenery_Creation_Ptr);                                               \
                                                     Scenery_Creation_Count+=1;                                                          \
                                                 end
 
 // This will make the broken vault door
-#define Create_Broken_VDoor(Pid,Hex_Num,Elevation)  Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                     \
-                                                    Scenery_Creation_Hex:=Hex_Num;                                              \
+#define Create_Broken_VDoor(Pid,Hex_Num,Elevation)  Scenery_Creation:=create_object(Pid,Hex_Num,Elevation);                    \
+                                                    Scenery_Creation_Hex:=Hex_Num;                                             \
                                                     Blocking_Cycle(1,1,Elevation)                                              \
                                                     Blocking_Cycle(2,2,Elevation)                                              \
                                                     Blocking_Cycle(3,2,Elevation)                                              \
