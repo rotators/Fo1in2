@@ -2,6 +2,7 @@
 #define VOODOO_H
 
 #include "sfall/sfall.rotators.h"
+#include "voodoo_lib.h"
 #include "voodoo_magick.h"
 
 /**************************************************
