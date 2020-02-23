@@ -384,8 +384,8 @@
 {19201}{}{Laut Etikett befindet sich auf dieser Holodisk das Protokoll zum Alpha-Experiment.}
 {19300}{}{Delta Experiment-Disk}
 {19301}{}{Laut Etikett befindet sich auf dieser Holodisk das Protokoll zum Delta-Experiment.}
-{19400}{}{Vrees Experiment-Disk}
-{19401}{}{Diese Holodisk enthält aktualisierte medizinische Daten von Vree von der BoS. Kann in den PIPBoy geladen werden.}
+{19400}{}{Vrees Autopsiebericht}
+{19401}{}{Diese Holodisk enthält aktualisierte medizinische Daten von Vree, Scribe der BoS. Kann in den PIPBoy geladen werden.}
 {19500}{}{BoS-Ehrenkodex}
 {19501}{}{Holodisk mit eingraviertem Symbol der Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
 {19600}{}{Mutantenübertragung}
@@ -684,7 +684,7 @@
 {34900}{}{Fortsch. Powerrüstung MKII}
 {34901}{}{Diese Powerrüstung scheint vollständig aus Leichtkkeramikteilen anstelle der üblichen Kombination aus Metall und Keramikverstärkungen zu bestehen. Sie sieht aus, als schütze sie noch besser als die standardmäßige fortschrittliche Powerrüstung.}
 {35000}{}{Bozar}
-{35001}{}{Schmuckstück in der Waffensammlung jedes Scharfschützen. Trotz ihrer Empfindlichkeit und häufiger Ladehemmung bei der kleinsten Verschmutzung kompensiert die Treffgenauigkeit dieser großen Waffe die besonderen Anforderungen an die Wartung leicht. Mindest-ST: 6.}
+{35001}{}{Das DKS-802 ist ein Traum für Texaner und die ultimative Verfeinerung der Scharfschützenkunst. Obwohl sehr temperamentvoll und störanfällig, macht die hohe Genauigkeit die zusätzliche Anforderung an die Wartung mehr als wett. Min ST: 8.}
 {35100}{}{FN FAL}
 {35101}{}{Dieses Gewehr wurde im Lauf der Geschichte häufiger von bewaffneten Streitkräften eingesetzt als jedes andere. Zuverlässige Kampfwaffe, unabhängig von Terrain oder taktischer Situation. Mindest-ST: 5.}
 {35200}{}{H&K G11}
