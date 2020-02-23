@@ -1,4 +1,5 @@
 // Base library for voodoo magick.
+#include "sfall/lib.math.h"
 
 procedure VOODOO_CalculateRel32(variable from, variable to) begin
   return (to - from - 5);
@@ -30,17 +31,19 @@ begin
   call VOODOO_WriteRelAddress(address, func);
 end
 
-procedure VOODOO_BlockCall(variable address, variable length:=5)
+procedure VOODOO_WriteNop(variable address, variable length:=1)
 begin
   variable i;
-  // an x86 instruction can't be longer than 15 bytes.
-  if(length > 15) then begin
-     length := 15;
-  end
-
-  // operand-size override prefix bytes.
+  // x86 instructions can't be longer than 15 bytes.
+  length := cap_number(length, 1, 15);
   for(i := 0; i < length-1; i++) begin
    write_byte(address+i, 0x66);
   end
   write_byte(address+length-1, 0x90);
+end
+
+// Could also be called BlockJump.
+procedure VOODOO_BlockCall(variable address, variable length:=5)
+begin
+   call VOODOO_WriteNop(address, cap_number(length, 5, 15));
 end
