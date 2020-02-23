@@ -38,7 +38,7 @@
                write_int  (0x480ca2, 0x66666666); /* nop */                             \
                write_byte (0x480ca6, 0x90);                                             \
                /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
-               /*VOODOO_CAVE(0x480ee4, 438);*/                                          \
+               VOODOO_CAVE(0x480f0d, 397);                                              \
               end                                                                       \
               noop
 
