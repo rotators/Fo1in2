@@ -9,19 +9,13 @@
  *       All kinds of unsafe scripting macros     *
  *  Requires AllowUnsafeScripting=1 in ddraw.ini  *
  *                                                *
+ *       Remember to wear protective goggles      *
+ *                                                *
  **************************************************/
 
 // Assumes that VOODOO_SafeMemSet is written at main_selfrun_init_ address
 #define VOODOO_CAVE(address, length) \
                call_offset_v3(0x480ee4, address, 0x90, length)
-
-// This will disable the "You encounter: ..." message:
-#define VOODOO_disable_YouEncounter_message \
-              begin                             \
-               call VOODOO_BlockCall(0x4c1011); \
-               call VOODOO_BlockCall(0x4c1042); \
-              end                               \
-              noop
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
