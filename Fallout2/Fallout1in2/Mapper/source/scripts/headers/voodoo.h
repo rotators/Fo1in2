@@ -75,9 +75,9 @@
               end                                                                       \
               noop
 
-// SafeWrite8
 #define VOODOO_SafeWrite \
               begin                                                                          \
+               /* SafeWrite8 */                                                              \
                write_byte (0x480f0d, 0x52);       /* push edx   - int8 value */              \
                write_byte (0x480f0e, 0x50);       /* push eax   - void* ptr */               \
                write_short(0x480f0f, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
@@ -223,10 +223,21 @@
 // No radius when a location is revealed on the worldmap
 // Modifies sfall code
 #define VOODOO_location_discover_radius \
+              begin                                                                                   \
                debug("Applying location_discover_radius");                                            \
                /* Calculate where ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 and write 0 to it. */ \
                call VOODOO_SafeWrite8(VOODOO_GetHookFuncOffset(0x4C4670, 0x51), 0x0);                 \
-               debug("Done.")
+               debug("Done.");                                                                        \
+              end                                                                                     \
+              noop
+
+// This will disable the "You encounter: ..." message
+#define VOODOO_disable_YouEncounter_message \
+              begin                             \
+               call VOODOO_BlockCall(0x4c1011); \
+               call VOODOO_BlockCall(0x4c1042); \
+              end                               \
+              noop
 
 // This will replace RoboDog PID with Dogmeat PID in hardcoded list of dogs PIDs; required for woofs and arfs in combat control
 #define VOODOO_dogmeat_pm_dialog \
@@ -235,16 +246,15 @@
 // Removes the text under green circles on the worldmap
 // Used by Classic Worldmap mod
 #define VOODOO_remove_circle_name \
-              begin                                                        \
-               /* fallout2.wmInterfaceDrawCircleOverlay+0xD2 */            \
-               write_byte (0x4c407a, 0x90);       /* nop */                \
-               /* fallout2.wmInterfaceDrawCircleOverlay+0xEC */            \
-               write_int  (0x4c4094, 0x90909090); /* nop; nop; nop; nop */ \
-               write_short(0x4c4098, 0x9090);     /* nop; nop */           \
-              end                                                          \
+              begin                                             \
+               /* fallout2.wmInterfaceDrawCircleOverlay+0xD2 */ \
+               call VOODOO_WriteNop(0x4c407a);                  \
+               /* fallout2.wmInterfaceDrawCircleOverlay+0xEC */ \
+               call VOODOO_BlockCall(0x4c4094,6);               \
+              end                                               \
               noop
 
-// This will change the rest timer "wait until 08:00" to 06:00 like in Fallout 1.
+// This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
 
