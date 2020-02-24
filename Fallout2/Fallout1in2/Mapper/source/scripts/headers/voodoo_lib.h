@@ -1,3 +1,6 @@
+#ifndef VOODOO_LIB_H
+#define VOODOO_LIB_H
+
 // Base library for voodoo magick.
 #include "sfall/lib.math.h"
 
@@ -47,3 +50,5 @@ procedure VOODOO_BlockCall(variable address, variable length:=5)
 begin
    call VOODOO_WriteNop(address, cap_number(length, 5, 15));
 end
+
+#endif // VOODOO_LIB_H //

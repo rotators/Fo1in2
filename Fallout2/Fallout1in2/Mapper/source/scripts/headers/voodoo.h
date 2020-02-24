@@ -3,7 +3,6 @@
 
 #include "sfall/sfall.rotators.h"
 #include "voodoo_lib.h"
-#include "voodoo_magick.h"
 
 /**************************************************
  *                                                *
@@ -14,34 +13,19 @@
 
 // Assumes that VOODOO_SafeMemSet is written at main_selfrun_init_ address
 #define VOODOO_CAVE(address, length) \
-    call_offset_v3(0x480ee4, address, 0x90, length)
+               call_offset_v3(0x480ee4, address, 0x90, length)
 
 // This will disable the "You encounter: ..." message:
-#define VOODOO_disable_YouEncounter_message      \
-               write_int( 0x4C1011, 0x90909090); \
-               write_byte(0x4C1015, 0x90);       \
-               write_int( 0x4C1042, 0x90909090); \
-               write_byte(0x4C1046, 0x90)
+#define VOODOO_disable_YouEncounter_message \
+              begin                             \
+               call VOODOO_BlockCall(0x4c1011); \
+               call VOODOO_BlockCall(0x4c1042); \
+              end                               \
+              noop
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
-
-// This will create codecave out of few selfrun functions related to .vcr recording
-// As creation and hotkey blocking is done by scripts, recording is available *only* before first start/load game
-#define VOODOO_codecave_selfrun \
-              begin                                                                     \
-               /* ignore CTRL+R on main screen */                                       \
-               write_short(0x480c90, 0x6666); /* nop */                                 \
-               write_byte (0x480c92, 0x90);                                             \
-               write_short(0x480c93, 0xff33); /* xor edi,edi */                         \
-               /* ignore main_selfrun_exit_ call on game exit */                        \
-               write_int  (0x480ca2, 0x66666666); /* nop */                             \
-               write_byte (0x480ca6, 0x90);                                             \
-               /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
-               VOODOO_CAVE(0x480f0d, 397);                                              \
-              end                                                                       \
-              noop
 
 
 ////////////////////////////////////////////////////// AUTO ZONE //////////////////////////////////////////////////////
