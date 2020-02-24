@@ -51,4 +51,27 @@ begin
    call VOODOO_WriteNop(address, cap_number(length, 5, 15));
 end
 
+// Because of https://github.com/phobos2077/sfall/issues/288
+procedure VOODOO_call_offset_r0(variable address)
+begin
+   call VOODOO_MakeJump(0x00410004, address);
+   return call_offset_r0(0x00410004);
+end
+
+// Because of https://github.com/phobos2077/sfall/issues/288
+procedure VOODOO_SafeWrite8(variable address, variable value)
+begin
+   call_offset_v2(0x480f0d, address, (value bwand 0xFF));
+end
+
+procedure VOODOO_SafeWrite16(variable address, variable value)
+begin
+   call_offset_v2(0x480f2f, address, (value bwand 0xFFFF));
+end
+
+procedure VOODOO_SafeWrite32(variable address, variable value)
+begin
+   call_offset_v2(0x480f52, address, value);
+end
+
 #endif // VOODOO_LIB_H //
