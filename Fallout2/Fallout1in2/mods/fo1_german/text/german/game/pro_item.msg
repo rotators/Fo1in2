@@ -421,6 +421,7 @@
 {21500}{}{Sophias Disk}
 {21501}{}{Holodisk mit Informationen zur Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
 {21600}{}{Maxsons Disk}
+{21601}{}{Die Holodisk die Maxson dir gegeben hat. Kann in den PIPBoy geladen werden.}
 {21700}{}{Militärbasis-Disk}
 {21800}{}{Leichte Heilung}
 {21801}{}{Handle um diese Option, wenn du eine leichte Heilung wünschst.}
@@ -907,8 +908,8 @@
 {46401}{}{Auf dem Etikett steht: Forschungsprotokoll.}
 {46500}{}{Medizinische Holo-Disk}
 {46501}{}{Auf dem Etikett steht: Medizinisches Protokoll.}
-{46600}{}{Kennwortpapier}
-{46601}{}{Ein gefaltetes Blatt Papier, auf dem das Wort "TSCHAIKOWSKY" steht.}
+{46600}{}{Alte Holodisk}
+{46601}{}{Dieses Band ist zwar kaputt, aber du kannst auf dem verkratzten Plastik folgende Zeichen erkennen: CODE 010597}
 {46700}{}{Jesses Container}
 {46800}{}{Smittys Essen}
 {46801}{}{Eine Art Salat und ein Sandwich mit etwas, das wie Brahminfleisch aussieht und mit einer dicken dunkelgelben Sauce bedeckt ist. Als Beilage gibt es auch noch ein seltsam aussehendes, eingemachtes Gemüse.}
