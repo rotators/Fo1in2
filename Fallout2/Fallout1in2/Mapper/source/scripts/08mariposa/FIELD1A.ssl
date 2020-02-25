@@ -30,8 +30,10 @@ procedure map_update_p_proc;
 
 #define FIELD_DOWN_TIME       (2)
 
-#define EVENT_ENABLE_FIELD    (1)
+#define EVENT_CHECK_STATUS    (1)
+#define EVENT_ENABLE_FIELD    (2)
 
+#define LVAR_Initial          (0)
 #define LVAR_Timed_Event      (1)
 
 import variable FField_Ptr;
@@ -41,7 +43,7 @@ end
 
 procedure map_enter_p_proc begin
    FField_Ptr := self_obj;
-   if (global_var(GVAR_VATS_ALERT) == 1) then begin
+   if mbase_full_alert then begin
       if not(is_loading_game) then set_self_visible;
       set_force_fields_on;
       set_map_var(FField_MVAR, ENABLED);
@@ -49,39 +51,49 @@ procedure map_enter_p_proc begin
    if (get_force_fields_off or (map_var(FField_MVAR) == 0)) then begin
       if not(is_loading_game) then set_self_invisible;
    end
+   add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
 end
 
 procedure map_update_p_proc begin
    FField_Ptr := self_obj;
    if get_force_fields_off then begin
-      if ((map_var(FField_MVAR) == DISABLED) and (global_var(GVAR_VATS_ALERT) == 1)) then begin
-         if not(is_loading_game) then set_self_invisible;
-         set_map_var(FField_MVAR, ENABLED);
+      // We have to jumpstart the force fields the first time, otherwise they will
+      // be visible only after changing the current map.
+      if mbase_full_alert and (local_var(LVAR_Initial) == 0) and not(CUR_MAP_MBSTRG12) then begin
+         set_local_var(LVAR_Initial, 1);
+         set_force_fields_on;
       end
       else begin
-         if not(is_loading_game) then set_self_invisible;
+         if ((map_var(FField_MVAR) == DISABLED) and mbase_full_alert) then begin
+            if not(is_loading_game) then set_self_invisible;
+            set_map_var(FField_MVAR, ENABLED);
+         end
+         else begin
+            if not(is_loading_game) then set_self_invisible;
+         end
       end
    end
    else if get_force_fields_on then begin
-
+      if (local_var(LVAR_Initial) == 0) and (map_var(FField_MVAR) == ENABLED) then begin
+         set_local_var(LVAR_Initial, 1);
+         if not(is_loading_game) then set_self_visible;
+      end
       if (map_var(FField_MVAR) == DISABLED) and (local_var(LVAR_Timed_Event) == 0) then begin
          set_local_var(LVAR_Timed_Event, 1);
          flush_add_timer_event(self_obj, game_ticks(FIELD_DOWN_TIME), EVENT_ENABLE_FIELD);
       end
-
-   end
-   else if (global_var(GVAR_VATS_ALERT) == 1) then begin
-      if not(is_loading_game) then set_self_visible;
-      set_force_fields_on;
-      set_map_var(FField_MVAR, ENABLED);
    end
 end
 
 procedure timed_event_p_proc begin
-   if (fixed_param == EVENT_ENABLE_FIELD) then begin
+   if (fixed_param == EVENT_CHECK_STATUS) then begin
+      call map_update_p_proc;
+   end
+   else if (fixed_param == EVENT_ENABLE_FIELD) then begin
       set_local_var(LVAR_Timed_Event, 0);
       set_map_var(FField_MVAR, ENABLED);
       if not(is_loading_game) then set_self_visible;
    end
+   add_timer_event(self_obj, 1, EVENT_CHECK_STATUS);
 end
 
