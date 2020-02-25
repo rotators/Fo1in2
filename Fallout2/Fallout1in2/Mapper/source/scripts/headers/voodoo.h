@@ -25,6 +25,11 @@
 ////////////////////////////////////////////////////// AUTO ZONE //////////////////////////////////////////////////////
 // sfall-asm-begin //
 
+#define VOODOO_SafeMemSet__patch  0x480ee4
+#define VOODOO_SafeWrite__patch   0x480f0d
+#define VOODOO_CalcHook__patch    0x480f74
+#define VOODOO_fill_w__patch      0x480f7f
+
 #define VOODOO_SafeMemSet \
               begin                                                                            \
                write_byte (0x480ee4, 0x52);       /* push edx   - int num (bytes) */           \
