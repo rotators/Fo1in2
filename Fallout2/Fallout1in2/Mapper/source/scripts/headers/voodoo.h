@@ -1,34 +1,38 @@
 #ifndef VOODOO_H
 #define VOODOO_H
 
-#include "sfall/sfall.rotators.h"
-#include "voodoo_lib.h"
-
 /**************************************************
  *                                                *
- *       All kinds of unsafe scripting macros     *
+ *      All kinds of unsafe scripting macros      *
  *  Requires AllowUnsafeScripting=1 in ddraw.ini  *
  *                                                *
- *       Remember to wear protective goggles      *
+ *      Remember to wear protective goggles       *
  *                                                *
  **************************************************/
 
-// Assumes that VOODOO_SafeMemSet is written at main_selfrun_init_ address
+// sfall-asm:defines-begin //
+
+#define VOODOO_SafeMemSet__patch  0x480ee4
+#define VOODOO_SafeWrite__patch   0x480f0d
+#define VOODOO_CalcHook__patch    0x480f74
+#define VOODOO_fill_w__patch      0x480f7f
+
+// sfall-asm:defines-end //
+
+#include "sfall/sfall.rotators.h"
+#include "voodoo_lib.h"
+
+// Clears memory area at given address by filling it with NOP instructions
 #define VOODOO_CAVE(address, length) \
-               call_offset_v3(0x480ee4, address, 0x90, length)
+               call_offset_v3(VOODOO_SafeMemSet__patch, address, 0x90, length)
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
 
 
-////////////////////////////////////////////////////// AUTO ZONE //////////////////////////////////////////////////////
-// sfall-asm-begin //
-
-#define VOODOO_SafeMemSet__patch  0x480ee4
-#define VOODOO_SafeWrite__patch   0x480f0d
-#define VOODOO_CalcHook__patch    0x480f74
-#define VOODOO_fill_w__patch      0x480f7f
+/////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
+// sfall-asm:code-begin //
 
 #define VOODOO_SafeMemSet \
               begin                                                                            \
@@ -257,7 +261,7 @@
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
 
-// sfall-asm-end //
+// sfall-asm:code-end //
 
 
 ////////////////////////////////////////////////////// TEST ZONE //////////////////////////////////////////////////////
