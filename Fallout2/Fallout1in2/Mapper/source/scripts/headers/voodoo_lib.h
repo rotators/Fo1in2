@@ -1,23 +1,33 @@
 #ifndef VOODOO_LIB_H
 #define VOODOO_LIB_H
 
-// Base library for voodoo magick.
+/********************************************************
+ *   _    __                __            __    _ __    *
+ *  | |  / /___  ____  ____/ /___  ____  / /   (_) /_   *
+ *  | | / / __ \/ __ \/ __  / __ \/ __ \/ /   / / __ \  *
+ *  | |/ / /_/ / /_/ / /_/ / /_/ / /_/ / /___/ / /_/ /  *
+ *  |___/\____/\____/\__,_/\____/\____/_____/_/_.___/   *
+ *                                                      *
+ *            Base library for voodoo magick            *
+ *                                                      *
+ ********************************************************/
+
 #include "sfall/lib.math.h"
 
 // Because of https://github.com/phobos2077/sfall/issues/288
 procedure VOODOO_SafeWrite8(variable address, variable value)
 begin
-   call_offset_v2(0x480f0d, address, (value bwand 0xFF));
+   call_offset_v2(VOODOO_SafeWrite8___patch, address, (value bwand 0xFF));
 end
 
 procedure VOODOO_SafeWrite16(variable address, variable value)
 begin
-   call_offset_v2(0x480f2f, address, (value bwand 0xFFFF));
+   call_offset_v2(VOODOO_SafeWrite16___patch, address, (value bwand 0xFFFF));
 end
 
 procedure VOODOO_SafeWrite32(variable address, variable value)
 begin
-   call_offset_v2(0x480f52, address, value);
+   call_offset_v2(VOODOO_SafeWrite32___patch, address, value);
 end
 
 procedure VOODOO_CalculateRel32(variable from, variable to) begin
@@ -50,13 +60,15 @@ begin
   call VOODOO_WriteRelAddress(address, func);
 end
 
-procedure VOODOO_WriteNop(variable address, variable length:=1)
+procedure VOODOO_WriteNop(variable address, variable length:=1, variable goBackTo90s:=false)
 begin
-  variable i;
+  variable i, n := 0x66;
+  if(goBackTo90s) then
+   n := 0x90;
   // x86 instructions can't be longer than 15 bytes.
   length := cap_number(length, 1, 15);
   for(i := 0; i < length-1; i++) begin
-   write_byte(address+i, 0x66);
+   write_byte(address+i, n);
   end
   write_byte(address+length-1, 0x90);
 end

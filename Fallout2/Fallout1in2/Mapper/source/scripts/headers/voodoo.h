@@ -2,6 +2,11 @@
 #define VOODOO_H
 
 /**************************************************
+ *       _    __                __                *
+ *      | |  / /___  ____  ____/ /___  ____       *
+ *      | | / / __ \/ __ \/ __  / __ \/ __ \      *
+ *      | |/ / /_/ / /_/ / /_/ / /_/ / /_/ /      *
+ *      |___/\____/\____/\__,_/\____/\____/       *
  *                                                *
  *      All kinds of unsafe scripting macros      *
  *  Requires AllowUnsafeScripting=1 in ddraw.ini  *
@@ -24,6 +29,7 @@ variable addr;
 // sfall-asm:defines-end //
 
 #include "sfall/sfall.rotators.h"
+#include "debug.h"
 #include "voodoo_lib.h"
 
 // Clears memory area at given address by filling it with NOP instructions
