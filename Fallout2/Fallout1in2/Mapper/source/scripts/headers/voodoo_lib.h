@@ -4,6 +4,22 @@
 // Base library for voodoo magick.
 #include "sfall/lib.math.h"
 
+// Because of https://github.com/phobos2077/sfall/issues/288
+procedure VOODOO_SafeWrite8(variable address, variable value)
+begin
+   call_offset_v2(0x480f0d, address, (value bwand 0xFF));
+end
+
+procedure VOODOO_SafeWrite16(variable address, variable value)
+begin
+   call_offset_v2(0x480f2f, address, (value bwand 0xFFFF));
+end
+
+procedure VOODOO_SafeWrite32(variable address, variable value)
+begin
+   call_offset_v2(0x480f52, address, value);
+end
+
 procedure VOODOO_CalculateRel32(variable from, variable to) begin
   return (to - from - 5);
 end
@@ -16,21 +32,21 @@ begin
   byte3 := (addr bwand 0x00FF0000) / 0x10000;
   byte2 := (addr bwand 0x0000FF00) / 0x100;
   byte1 := (addr bwand 0x000000FF);
-  write_byte(at+1, byte1);
-  write_byte(at+2, byte2);
-  write_byte(at+3, byte3);
-  write_byte(at+4, byte4);
+  call VOODOO_SafeWrite8(at+1, byte1);
+  call VOODOO_SafeWrite8(at+2, byte2);
+  call VOODOO_SafeWrite8(at+3, byte3);
+  call VOODOO_SafeWrite8(at+4, byte4);
 end
 
 procedure VOODOO_MakeCall(variable address, variable func)
 begin
-  write_byte(address, 0xE8);
+  call VOODOO_SafeWrite8(address, 0xE8);
   call VOODOO_WriteRelAddress(address, func);
 end
 
 procedure VOODOO_MakeJump(variable address, variable func)
 begin
-  write_byte(address, 0xE9);
+  call VOODOO_SafeWrite8(address, 0xE9);
   call VOODOO_WriteRelAddress(address, func);
 end
 
@@ -58,27 +74,18 @@ begin
    return call_offset_r0(0x00410004);
 end
 
-// Because of https://github.com/phobos2077/sfall/issues/288
-procedure VOODOO_SafeWrite8(variable address, variable value)
-begin
-   call_offset_v2(0x480f0d, address, (value bwand 0xFF));
-end
 
-procedure VOODOO_SafeWrite16(variable address, variable value)
-begin
-   call_offset_v2(0x480f2f, address, (value bwand 0xFFFF));
-end
-
-procedure VOODOO_SafeWrite32(variable address, variable value)
-begin
-   call_offset_v2(0x480f52, address, value);
-end
 
 // ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated
 // with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
 procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
 begin
    return call_offset_r2(VOODOO_CalcHook__patch, address, offset);
+end
+
+procedure VOODOO_nmalloc(variable bytes)
+begin
+   return call_offset_r1(0x4ef1c5, bytes); // fallout2.nmalloc
 end
 
 #endif // VOODOO_LIB_H //
