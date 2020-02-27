@@ -14,6 +14,11 @@
 
 #include "sfall/lib.math.h"
 
+//
+// 0x410003 (1b)  used by rfall
+// 0x410004 (4b)  used by VOODOO_call_offset_*()
+//
+
 // Because of https://github.com/phobos2077/sfall/issues/288
 procedure VOODOO_SafeWrite8(variable address, variable value)
 begin
@@ -30,7 +35,8 @@ begin
    call_offset_v2(VOODOO_SafeWrite32___patch, address, value);
 end
 
-procedure VOODOO_CalculateRel32(variable from, variable to) begin
+procedure VOODOO_CalculateRel32(variable from, variable to)
+begin
   return (to - from - 5);
 end
 
@@ -86,7 +92,36 @@ begin
    return call_offset_r0(0x00410004);
 end
 
+procedure VOODOO_GetOpcodeAddress(variable opcode)
+begin
+    return read_int(read_int(0x46ce34) + opcode * 4);
+end
 
+procedure VOODOO_GetSfallWriteLimit(variable name, variable opcode, variable offset := 0)
+begin
+    variable address = VOODOO_GetOpcodeAddress(opcode);
+    variable from    = read_int(address + 0x33 + offset);
+    variable to      = read_int(address + 0x3a + offset);
+
+    display_msg(name + " @ 0x" + sprintf("%x", address) + " = 0x" + sprintf("%x", from) + " - 0x" + sprintf("%x", to));
+end
+
+// https://github.com/phobos2077/sfall/issues/288
+procedure VOODOO_SetSfallWriteLimit(variable opcode, variable from, variable to, variable offset := 0, variable native := true)
+begin
+    variable address := VOODOO_GetOpcodeAddress(opcode);
+
+    if(native) then
+    begin
+        write_int(address + 0x33 + offset, from);
+        write_int(address + 0x3a + offset, to);
+    end
+    else
+    begin
+        call VOODOO_SafeWrite32(address + 0x33 + offset, from);
+        call VOODOO_SafeWrite32(address + 0x3a + offset, to);
+    end
+end
 
 // ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated
 // with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
@@ -97,7 +132,9 @@ end
 
 procedure VOODOO_nmalloc(variable bytes)
 begin
-   return call_offset_r1(0x4ef1c5, bytes); // fallout2.nmalloc
+   variable address := call_offset_r1(0x4ef1c5, bytes); // fallout2.nmalloc
+   // TODO store address and cleanup on game reset
+   return address;
 end
 
 #endif // VOODOO_LIB_H //

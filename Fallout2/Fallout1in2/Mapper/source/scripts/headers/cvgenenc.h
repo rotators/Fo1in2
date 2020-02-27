@@ -30,7 +30,7 @@ variable
 
    special_spawn_critters := 1,
    special_spawn_container := 0,
-   special_spawn_container_weapons := 1,
+   special_spawn_container_weapons := 0,
 
    choose_enc_pid := 0,
    choose_enc_sid := 0,

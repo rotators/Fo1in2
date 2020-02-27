@@ -160,6 +160,7 @@
                                        (car_current_town == AREA_RND_COAST) or            \
                                        (car_current_town == AREA_RND_ENC_DESERT) or       \
                                        (car_current_town == AREA_RND_ENC_MOUNTAIN) or     \
+                                       (car_current_town == AREA_RND_ENC_CAVERN) or       \
                                        (car_current_town == AREA_RND_ENC_CITY) or         \
                                        (car_current_town == AREA_RND_ENC_COAST) or        \
                                        (car_current_town == AREA_SPECIAL_RND_FOOT) or     \
@@ -237,6 +238,8 @@
 #define CAR_RND_MOUNTAIN4_HEX                (19099)
 #define CAR_RND_MOUNTAIN5_HEX                (20678)
 #define CAR_RND_MOUNTAIN6_HEX                (20073)
+
+#define CAR_RND_MINE_HEX                     (19308)
 
 #define CAR_RND_CAVE1_HEX                    (26508)
 #define CAR_RND_CAVE2_HEX                    (24706)
