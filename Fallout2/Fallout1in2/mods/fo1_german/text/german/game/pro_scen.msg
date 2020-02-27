@@ -2652,7 +2652,7 @@
 {174800}{}{Tür zum Büro des Präsidenten}
 {174900}{}{Augentabelle}
 {175000}{}{Ruinen}
-{175100}{}{Wächter des Ewig}
+{175100}{}{Wächter der Ewigkeit}
 {175200}{}{Schild "Außer Betrieb"}
 {175300}{}{Eingebrochener Boden}
 {175400}{}{Toilette}
