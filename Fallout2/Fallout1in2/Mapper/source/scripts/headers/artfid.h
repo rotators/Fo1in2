@@ -75,8 +75,8 @@
 #define FID_NMWARR        (16777280)
 #define FID_MAPLNT        (16777281)
 #define FID_MAROBT        (16777282)
-#define FID_MAGKO2        (16777283)
-#define FID_MAGCKO        (16777284)
+#define FID_MAGKO2        (16777283) // Silver Gecko
+#define FID_MAGCKO        (16777284) // Golden Gecko
 #define FID_HMTYCM        (16777285)
 #define FID_HMTYCC        (16777286)
 #define FID_HMTYCP        (16777287)
@@ -89,7 +89,7 @@
 #define FID_NMBRSR        (16777294)
 #define FID_NAVGUL        (16777295)
 #define FID_MALIEN        (16777296)
-#define FID_MAFIRE        (16777297)
+#define FID_MAFIRE        (16777297) // Fire Gecko
 #define FID_NMASIA        (16777298)
 #define FID_MADOGM        (16777299)
 #define FID_HMBROH        (16777300)
