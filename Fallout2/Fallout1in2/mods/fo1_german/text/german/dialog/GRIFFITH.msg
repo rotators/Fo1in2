@@ -71,7 +71,7 @@
 {1600}{}{Warte, bist du...? Wirklich? ... Danke Mann! Zeit sich von diesem vom Tod befallenem Scheißhaufen zu verabschieden! Glaubst du, es gibt was im Norden für Leute wie uns? Schätze ich werd's herausfinden!}
 	{1610}{}{[Fertig]}
 	
-{1700}{}{Du bist aus einer Vault, was? Ich war auch mal ein Vault-Bewohner! Un schau an, es hat nur das Beste in mir hervorgebracht! Haha! [Er fuchtelt mit seinen knochigen Armen deiner Nase herum] }
+{1700}{}{Du bist aus einer Vault, was? Ich war auch mal ein Vault-Bewohner! Und schau an, es hat nur das Beste in mir hervorgebracht! Haha! [Er fuchtelt mit seinen knochigen Armen deiner Nase herum] }
 	{1710}{}{[Mehr]}
 
 {1800}{}{Aber im Ernst. Wenn du es zur Wasserstelle geschafft hast, kannst du nicht so inkompetent sein wie die anderen Trottel, die hier herumlungern. Was heißt, daß ich einen Vorschlag für dich habe.}
@@ -95,7 +95,7 @@
 {2101}{}{Du versuchst wirklich mich zu verarschen, oder? Nie im Leben hast du 2000 Deckel!}
 	{2120}{}{Oh...}
 
-{2200}{}{Was? Glaubst du etwa, ich laß' die Maschine einfach so mitten auf der Straße mit einem funktionierendem Brennstoffzellencontroller  rumstehen? Denkst du ich bin bescheuert? Ohne den Controller kannst du den Cruiser nichtmal starten, selbst mit den Schlüsseln. Jetzt warte hier, ich werde ihn holen. }
+{2200}{}{Was? Glaubst du etwa, ich laß' die Maschine einfach so mitten auf der Straße mit einem funktionierendem Brennstoffzellencontroller rumstehen? Denkst du ich bin bescheuert? Ohne den Controller kannst du den Cruiser nichtmal starten, selbst mit den Schlüsseln. Jetzt warte hier, ich werde ihn holen. }
 	{2210}{}{[Warte]}
 {2300}{}{[Du wartest auf Griffith's Rückkehr.]}
 	{2310}{}{[Warte]}
