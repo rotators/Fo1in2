@@ -1,35 +1,50 @@
 #ifndef VOODOO_H
 #define VOODOO_H
 
-#include "sfall/sfall.rotators.h"
-#include "voodoo_lib.h"
-
 /**************************************************
+ *       _    __                __                *
+ *      | |  / /___  ____  ____/ /___  ____       *
+ *      | | / / __ \/ __ \/ __  / __ \/ __ \      *
+ *      | |/ / /_/ / /_/ / /_/ / /_/ / /_/ /      *
+ *      |___/\____/\____/\__,_/\____/\____/       *
  *                                                *
- *       All kinds of unsafe scripting macros     *
+ *      All kinds of unsafe scripting macros      *
  *  Requires AllowUnsafeScripting=1 in ddraw.ini  *
  *                                                *
- *       Remember to wear protective goggles      *
+ *      Remember to wear protective goggles       *
  *                                                *
  **************************************************/
 
-// Assumes that VOODOO_SafeMemSet is written at main_selfrun_init_ address
+// used with auto generated VOODOO_nmalloc code
+variable addr;
+
+// sfall-asm:defines-begin //
+
+#define VOODOO_SafeMemSet__patch    0x480ee4
+#define VOODOO_SafeWrite8___patch   0x480f0d
+#define VOODOO_SafeWrite16___patch  0x480f2f
+#define VOODOO_SafeWrite32___patch  0x480f52
+#define VOODOO_CalcHook__patch      0x480f74
+
+// sfall-asm:defines-end //
+
+#include "sfall/sfall.rotators.h"
+#include "debug.h"
+#include "voodoo_lib.h"
+
+// Clears memory area at given address by filling it with NOP instructions
 #define VOODOO_CAVE(address, length) \
-               call_offset_v3(0x480ee4, address, 0x90, length)
+               call_offset_v3(VOODOO_SafeMemSet__patch, address, 0x90, length)
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
 
 
-////////////////////////////////////////////////////// AUTO ZONE //////////////////////////////////////////////////////
-// sfall-asm-begin //
+/////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
+// sfall-asm:code-begin //
 
-#define VOODOO_SafeMemSet__patch  0x480ee4
-#define VOODOO_SafeWrite__patch   0x480f0d
-#define VOODOO_CalcHook__patch    0x480f74
-#define VOODOO_fill_w__patch      0x480f7f
-
+// https://github.com/phobos2077/sfall/issues/285
 #define VOODOO_SafeMemSet \
               begin                                                                            \
                write_byte (0x480ee4, 0x52);       /* push edx   - int num (bytes) */           \
@@ -74,9 +89,9 @@
               end                                                                       \
               noop
 
-#define VOODOO_SafeWrite \
+// https://github.com/phobos2077/sfall/issues/288
+#define VOODOO_SafeWrite8_ \
               begin                                                                          \
-               /* SafeWrite8 */                                                              \
                write_byte (0x480f0d, 0x52);       /* push edx   - int8 value */              \
                write_byte (0x480f0e, 0x50);       /* push eax   - void* ptr */               \
                write_short(0x480f0f, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
@@ -96,7 +111,12 @@
                write_byte (0x480f2c, 0x58);       /* pop eax */                              \
                write_byte (0x480f2d, 0x5a);       /* pop edx */                              \
                write_byte (0x480f2e, 0xc3);       /* ret */                                  \
-               /* SafeWrite16 */                                                             \
+              end                                                                            \
+              noop
+
+// https://github.com/phobos2077/sfall/issues/288
+#define VOODOO_SafeWrite16_ \
+              begin                                                                          \
                write_byte (0x480f2f, 0x52);       /* push edx   - int16 value */             \
                write_byte (0x480f30, 0x50);       /* push eax   - void* ptr */               \
                write_short(0x480f31, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
@@ -117,7 +137,12 @@
                write_byte (0x480f4f, 0x58);       /* pop eax */                              \
                write_byte (0x480f50, 0x5a);       /* pop edx */                              \
                write_byte (0x480f51, 0xc3);       /* ret */                                  \
-               /* SafeWrite32 */                                                             \
+              end                                                                            \
+              noop
+
+// https://github.com/phobos2077/sfall/issues/288
+#define VOODOO_SafeWrite32_ \
+              begin                                                                          \
                write_byte (0x480f52, 0x52);       /* push edx   - int32 value */             \
                write_byte (0x480f53, 0x50);       /* push eax   - void* ptr */               \
                write_short(0x480f54, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
@@ -154,73 +179,76 @@
 
 // Fill_W that works like in Fallout 1
 // https://github.com/rotators/Fo1in2/issues/16
+// https://github.com/phobos2077/sfall/issues/287
 #define VOODOO_fill_w \
-              begin                                                                         \
-               /* wmMarkSubTileRadiusVisited_ */                                            \
-               write_int  (0x4c3735, 0xfbd845e9); /* jmp [patch] */                         \
-               write_byte (0x4c3739, 0xff);                                                 \
-               /* fill_w implementation */                                                  \
-               write_short(0x480f7f, 0x4d75);     /* jne _ret */                            \
-               write_short(0x480f81, 0xec83);     /* sub esp,4 */                           \
-               write_byte (0x480f83, 0x04);                                                 \
-               write_int  (0x480f84, 0x002404c6); /* mov ss:[esp+4],0 */                    \
-               /* _loop_begin */                                                            \
-               write_int  (0x480f88, 0x0c244c8b); /* mov ecx,ss:[esp+C] */                  \
-               /* move to the next tile to the left */                                      \
-               write_byte (0x480f8c, 0x49);       /* dec ecx */                             \
-               /* the comparison checks are to see if the tile we are currently on is */    \
-               /* one of the tiles on the right side of the wm (3, 7, 11 or 15) */          \
-               /* if it is, it means we've wrapped around */                                \
-               write_short(0x480f8d, 0xf983);     /* cmp ecx,3 */                           \
-               write_byte (0x480f8f, 0x03);                                                 \
-               write_short(0x480f90, 0x3974);     /* je _end */                             \
-               write_short(0x480f92, 0xf983);     /* cmp ecx,7 */                           \
-               write_byte (0x480f94, 0x07);                                                 \
-               write_short(0x480f95, 0x3474);     /* je _end */                             \
-               write_short(0x480f97, 0xf983);     /* cmp ecx,B */                           \
-               write_byte (0x480f99, 0x0b);                                                 \
-               write_short(0x480f9a, 0x2f74);     /* je _end */                             \
-               write_short(0x480f9c, 0xf983);     /* cmp ecx,F */                           \
-               write_byte (0x480f9e, 0x0f);                                                 \
-               write_short(0x480f9f, 0x2a74);     /* je _end */                             \
-               write_short(0x480fa1, 0xed31);     /* xor ebp,ebp */                         \
-               write_int  (0x480fa3, 0x0c244c89); /* mov ss:[esp+C],ecx */                  \
-               /* _reveal_subtile */                                                        \
-               write_short(0x480fa7, 0x026a);     /* push 2 */                              \
-               write_int  (0x480fa9, 0x1024448b); /* mov eax,ss:[esp+10] */                 \
-               write_short(0x480fad, 0xf189);     /* mov ecx,esi */                         \
-               write_short(0x480faf, 0xfb89);     /* mov ebx,edi */                         \
-               write_byte (0x480fb1, 0x56);       /* push esi */                            \
-               write_short(0x480fb2, 0xea89);     /* mov edx,ebp */                         \
-               write_byte (0x480fb4, 0x45);       /* inc ebp */                             \
-               write_int  (0x480fb5, 0x04247ae8); /* call wmMarkSubTileOffsetVisitedFunc */ \
-               write_byte (0x480fb9, 0x00);                                                 \
-               /* did we uncover all the subtiles in the tile? */                           \
-               /* if not, go to _reveal_subtile and uncover another one */                  \
-               write_short(0x480fba, 0xfd83);     /* cmp ebp,7 */                           \
-               write_byte (0x480fbc, 0x07);                                                 \
-               write_short(0x480fbd, 0xe87c);     /* jl _reveal_subtile */                  \
-               write_short(0x480fbf, 0x048b);     /* mov eax,ss:[esp+4] */                  \
-               write_byte (0x480fc1, 0x24);                                                 \
-               write_byte (0x480fc2, 0x40);       /* inc eax */                             \
-               write_short(0x480fc3, 0xf883);     /* cmp eax,2 */                           \
-               write_byte (0x480fc5, 0x02);                                                 \
-               write_short(0x480fc6, 0x0489);     /* mov ss:[esp+4],eax */                  \
-               write_byte (0x480fc8, 0x24);                                                 \
-               write_short(0x480fc9, 0xbd7c);     /* jl _loop_begin */                      \
-               /* _end */                                                                   \
-               write_short(0x480fcb, 0xc483);     /* add esp,4 */                           \
-               write_byte (0x480fcd, 0x04);                                                 \
-               /* _ret */                                                                   \
-               write_short(0x480fce, 0xc483);     /* add esp,C */                           \
-               write_byte (0x480fd0, 0x0c);                                                 \
-               write_int  (0x480fd1, 0x042764e9); /* jmp fallout2.4C373A */                 \
-               write_byte (0x480fd5, 0x00);                                                 \
-              end                                                                           \
+              begin                                                                      \
+               /* fill_w implementation */                                               \
+               /* malloc(patch) - this code can be used with --malloc */                 \
+               addr := VOODOO_nmalloc(87);                                               \
+               debug("Allocated 87 bytes @ "+ addr);                                     \
+               call VOODOO_SafeWrite16(addr+0, 0x4d75);       /* jne _ret */             \
+               call VOODOO_SafeWrite16(addr+2, 0xec83);       /* sub esp,4 */            \
+               call VOODOO_SafeWrite8 (addr+4, 0x04);                                    \
+               call VOODOO_SafeWrite32(addr+5, 0x002404c6);   /* mov ss:[esp+4],0 */     \
+               /* _loop_begin */                                                         \
+               call VOODOO_SafeWrite32(addr+9, 0x0c244c8b);   /* mov ecx,ss:[esp+C] */   \
+               /* move to the next tile to the left */                                   \
+               call VOODOO_SafeWrite8 (addr+13, 0x49);        /* dec ecx */              \
+               /* the comparison checks are to see if the tile we are currently on is */ \
+               /* one of the tiles on the right side of the wm (3, 7, 11 or 15) */       \
+               /* if it is, it means we've wrapped around */                             \
+               call VOODOO_SafeWrite16(addr+14, 0xf983);      /* cmp ecx,3 */            \
+               call VOODOO_SafeWrite8 (addr+16, 0x03);                                   \
+               call VOODOO_SafeWrite16(addr+17, 0x3974);      /* je _end */              \
+               call VOODOO_SafeWrite16(addr+19, 0xf983);      /* cmp ecx,7 */            \
+               call VOODOO_SafeWrite8 (addr+21, 0x07);                                   \
+               call VOODOO_SafeWrite16(addr+22, 0x3474);      /* je _end */              \
+               call VOODOO_SafeWrite16(addr+24, 0xf983);      /* cmp ecx,B */            \
+               call VOODOO_SafeWrite8 (addr+26, 0x0b);                                   \
+               call VOODOO_SafeWrite16(addr+27, 0x2f74);      /* je _end */              \
+               call VOODOO_SafeWrite16(addr+29, 0xf983);      /* cmp ecx,F */            \
+               call VOODOO_SafeWrite8 (addr+31, 0x0f);                                   \
+               call VOODOO_SafeWrite16(addr+32, 0x2a74);      /* je _end */              \
+               call VOODOO_SafeWrite16(addr+34, 0xed31);      /* xor ebp,ebp */          \
+               call VOODOO_SafeWrite32(addr+36, 0x0c244c89);  /* mov ss:[esp+C],ecx */   \
+               /* _reveal_subtile */                                                     \
+               call VOODOO_SafeWrite16(addr+40, 0x026a);      /* push 2 */               \
+               call VOODOO_SafeWrite32(addr+42, 0x1024448b);  /* mov eax,ss:[esp+10] */  \
+               call VOODOO_SafeWrite16(addr+46, 0xf189);      /* mov ecx,esi */          \
+               call VOODOO_SafeWrite16(addr+48, 0xfb89);      /* mov ebx,edi */          \
+               call VOODOO_SafeWrite8 (addr+50, 0x56);        /* push esi */             \
+               call VOODOO_SafeWrite16(addr+51, 0xea89);      /* mov edx,ebp */          \
+               call VOODOO_SafeWrite8 (addr+53, 0x45);        /* inc ebp */              \
+               call VOODOO_MakeCall(addr+54, 0x4c3434);                                  \
+               /* did we uncover all the subtiles in the tile? */                        \
+               /* if not, go to _reveal_subtile and uncover another one */               \
+               call VOODOO_SafeWrite16(addr+59, 0xfd83);      /* cmp ebp,7 */            \
+               call VOODOO_SafeWrite8 (addr+61, 0x07);                                   \
+               call VOODOO_SafeWrite16(addr+62, 0xe87c);      /* jl _reveal_subtile */   \
+               call VOODOO_SafeWrite16(addr+64, 0x048b);      /* mov eax,ss:[esp+4] */   \
+               call VOODOO_SafeWrite8 (addr+66, 0x24);                                   \
+               call VOODOO_SafeWrite8 (addr+67, 0x40);        /* inc eax */              \
+               call VOODOO_SafeWrite16(addr+68, 0xf883);      /* cmp eax,2 */            \
+               call VOODOO_SafeWrite8 (addr+70, 0x02);                                   \
+               call VOODOO_SafeWrite16(addr+71, 0x0489);      /* mov ss:[esp+4],eax */   \
+               call VOODOO_SafeWrite8 (addr+73, 0x24);                                   \
+               call VOODOO_SafeWrite16(addr+74, 0xbd7c);      /* jl _loop_begin */       \
+               /* _end */                                                                \
+               call VOODOO_SafeWrite16(addr+76, 0xc483);      /* add esp,4 */            \
+               call VOODOO_SafeWrite8 (addr+78, 0x04);                                   \
+               /* _ret */                                                                \
+               call VOODOO_SafeWrite16(addr+79, 0xc483);      /* add esp,C */            \
+               call VOODOO_SafeWrite8 (addr+81, 0x0c);                                   \
+               call VOODOO_MakeJump(addr+82, 0x4c373a);                                  \
+               /* END */                                                                 \
+               /* Hook in wmMarkSubTileRadiusVisited_ */                                 \
+               call VOODOO_MakeJump(0x004C3735, addr);                                   \
+              end                                                                        \
               noop
 
 // No radius when a location is revealed on the worldmap
 // Modifies sfall code
+// https://github.com/phobos2077/sfall/issues/255
 #define VOODOO_location_discover_radius \
               begin                                                                                   \
                debug("Applying location_discover_radius");                                            \
@@ -233,8 +261,8 @@
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
               begin                             \
-               call VOODOO_BlockCall(0x4c1011); \
-               call VOODOO_BlockCall(0x4c1042); \
+               call VOODOO_BlockCall(0x4c1011);   \
+               call VOODOO_BlockCall(0x4c1042);   \
               end                               \
               noop
 
@@ -257,7 +285,7 @@
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
 
-// sfall-asm-end //
+// sfall-asm:code-end //
 
 
 ////////////////////////////////////////////////////// TEST ZONE //////////////////////////////////////////////////////
