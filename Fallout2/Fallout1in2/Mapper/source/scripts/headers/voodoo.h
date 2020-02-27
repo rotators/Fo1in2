@@ -44,6 +44,7 @@ variable addr;
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 // sfall-asm:code-begin //
 
+// https://github.com/phobos2077/sfall/issues/285
 #define VOODOO_SafeMemSet \
               begin                                                                            \
                write_byte (0x480ee4, 0x52);       /* push edx   - int num (bytes) */           \
@@ -88,6 +89,7 @@ variable addr;
               end                                                                       \
               noop
 
+// https://github.com/phobos2077/sfall/issues/288
 #define VOODOO_SafeWrite8_ \
               begin                                                                          \
                write_byte (0x480f0d, 0x52);       /* push edx   - int8 value */              \
@@ -112,6 +114,7 @@ variable addr;
               end                                                                            \
               noop
 
+// https://github.com/phobos2077/sfall/issues/288
 #define VOODOO_SafeWrite16_ \
               begin                                                                          \
                write_byte (0x480f2f, 0x52);       /* push edx   - int16 value */             \
@@ -137,6 +140,7 @@ variable addr;
               end                                                                            \
               noop
 
+// https://github.com/phobos2077/sfall/issues/288
 #define VOODOO_SafeWrite32_ \
               begin                                                                          \
                write_byte (0x480f52, 0x52);       /* push edx   - int32 value */             \
@@ -175,6 +179,7 @@ variable addr;
 
 // Fill_W that works like in Fallout 1
 // https://github.com/rotators/Fo1in2/issues/16
+// https://github.com/phobos2077/sfall/issues/287
 #define VOODOO_fill_w \
               begin                                                                      \
                /* fill_w implementation */                                               \
@@ -243,6 +248,7 @@ variable addr;
 
 // No radius when a location is revealed on the worldmap
 // Modifies sfall code
+// https://github.com/phobos2077/sfall/issues/255
 #define VOODOO_location_discover_radius \
               begin                                                                                   \
                debug("Applying location_discover_radius");                                            \
