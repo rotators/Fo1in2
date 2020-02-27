@@ -95,7 +95,7 @@
 {2101}{}{Du versuchst wirklich mich zu verarschen, oder? Nie im Leben hast du 2000 Deckel!}
 	{2120}{}{Oh...}
 
-{2200}{}{Was? Glaubst du etwa, ich laß' die Maschine einfach so mitten auf der Straße mit einem funktionierendem Brennstoffzellencontroller  rumstehen? Denkst du ich bin bescheuert? Ohne den Controller kannst du den Cruiser nichtmal starten, selbst mit den Schlüsseln. Jetzt warte hier, ich werde ihn holen. }
+{2200}{}{Was? Glaubst du etwa, ich laß' die Maschine einfach so mitten auf der Straße mit einem funktionierendem Brennstoffzellencontroller rumstehen? Denkst du ich bin bescheuert? Ohne den Controller kannst du den Cruiser nichtmal starten, selbst mit den Schlüsseln. Jetzt warte hier, ich werde ihn holen. }
 	{2210}{}{[Warte]}
 {2300}{}{[Du wartest auf Griffith's Rückkehr.]}
 	{2310}{}{[Warte]}
