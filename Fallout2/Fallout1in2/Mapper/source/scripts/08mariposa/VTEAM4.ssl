@@ -23,6 +23,7 @@ procedure destroy_p_proc;
 procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure map_enter_p_proc;
+procedure timed_event_p_proc;
 
 procedure GenSupr00;
 procedure GenSupr03;
@@ -38,6 +39,14 @@ procedure GenSuprxx;
 
 procedure set_alert_tile;
 
+#define elevator_hex          (14520)
+#define ElevDoor_hex          (14720)
+
+#define FF1_hex               (21068)
+#define FF2_hex               (15520)
+
+#define EVENT_CLOSE_DOOR      (1)
+
 import variable radio_room_attacked;
 
 variable tmp_hostile;
@@ -45,6 +54,8 @@ variable round_counter;
 variable home_tile;
 variable alert_tile;
 variable night_tile;
+
+variable ElevDoor_ptr;
 
 procedure start begin
 end
@@ -87,11 +98,12 @@ procedure critter_p_proc begin
       else begin
          if (global_var(GVAR_VATS_ALERT)) then begin
             if (self_elevation == 0) then begin
-               if (self_tile != 14520) then begin
-                  self_walk_to_tile(14520);
+               if (self_tile != elevator_hex) then begin
+                  self_walk_to_tile(elevator_hex);
                end
                else begin
-                  move_to(self_obj, 14520, 1);
+                  //move_to(self_obj, elevator_hex, 1);
+                  add_timer_event(self_obj, game_ticks(1), EVENT_CLOSE_DOOR);
                end
             end
             else begin
@@ -103,11 +115,11 @@ procedure critter_p_proc begin
          else begin
             if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
                if (self_elevation == 0) then begin
-                  if (self_tile != 14520) then begin
-                     self_walk_to_tile(14520);
+                  if (self_tile != elevator_hex) then begin
+                     self_walk_to_tile(elevator_hex);
                   end
                   else begin
-                     move_to(self_obj, 14520, 1);
+                     move_to(self_obj, elevator_hex, 1);
                   end
                end
                else begin
@@ -117,11 +129,11 @@ procedure critter_p_proc begin
                end
             end
             else if (self_elevation == 1) then begin
-               if (self_tile != 14520) then begin
-                  self_walk_to_tile(14520);
+               if (self_tile != elevator_hex) then begin
+                  self_walk_to_tile(elevator_hex);
                end
                else begin
-                  move_to(self_obj, 14520, 0);
+                  move_to(self_obj, elevator_hex, 0);
                end
             end
             else if (self_tile != local_var(4)) then begin
@@ -188,6 +200,21 @@ procedure map_enter_p_proc begin
             else begin
                move_to(self_obj, local_var(4), 0);
             end
+         end
+      end
+   end
+
+   if (ElevDoor_ptr == 0) then begin
+      ElevDoor_ptr := tile_contains_pid_obj(ElevDoor_hex, 0, PID_DOOR_METAL_ELEV);
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_CLOSE_DOOR) then begin
+      if (ElevDoor_ptr != 0) then begin
+         if obj_is_open(ElevDoor_ptr) then begin
+            obj_close(ElevDoor_ptr);
+            move_to(self_obj, elevator_hex, 1);
          end
       end
    end

@@ -641,11 +641,13 @@ procedure LoadChests begin
          container := create_object(PID_CRATE_BRWN_STACK2, Scenery_Creation_Hex, 1);
 
          // Add a weapon
-         Items_List := [PID_SUPER_SLEDGE, PID_POWER_FIST, PID_BOZAR, PID_ASSAULT_RIFLE_EXT_MAG, PID_MINIGUN, PID_TOMMY_GUN, PID_ASSAULT_RIFLE, PID_HUNTING_RIFLE,
-                        PID_YK32_PULSE_PISTOL, PID_LASER_PISTOL, PID_PLASMA_PISTOL, PID_14MM_PISTOL, PID_GATLING_LASER, PID_RIPPER, PID_10MM_SMG,
-                        PID_LASER_RIFLE_EXT_CAP, PID_SNIPER_RIFLE, PID_COMBAT_SHOTGUN, PID_HK_CAWS, PID_SCOPED_HUNTING_RIFLE,
-                        PID_HK_P90C, PID_GREASE_GUN, PID_LIGHT_SUPPORT_WEAPON, PID_FN_FAL, PID_PANCOR_JACKHAMMER, PID_SAWED_OFF_SHOTGUN,
-                        PID_44_MAGNUM_SPEEDLOADER, PID_IMPROVED_FLAMETHROWER, PID_MAGNETO_LASER_PISTOL, PID_DESERT_EAGLE_EXT_MAG, PID_MEGA_POWER_FIST];
+         Items_List := [PID_HUNTING_RIFLE, PID_SCOPED_HUNTING_RIFLE, PID_ASSAULT_RIFLE, PID_ASSAULT_RIFLE_EXT_MAG, PID_FN_FAL, PID_SNIPER_RIFLE, PID_TOMMY_GUN,
+                        PID_COMBAT_SHOTGUN, PID_HK_CAWS, PID_PANCOR_JACKHAMMER, PID_SAWED_OFF_SHOTGUN,
+                        PID_MINIGUN, PID_LIGHT_SUPPORT_WEAPON, PID_BOZAR, PID_GATLING_LASER, PID_IMPROVED_FLAMETHROWER,
+                        PID_SUPER_SLEDGE, PID_POWER_FIST, PID_MEGA_POWER_FIST, PID_RIPPER,
+                        PID_LASER_RIFLE_EXT_CAP, PID_YK32_PULSE_PISTOL, PID_LASER_PISTOL, PID_PLASMA_PISTOL, PID_MAGNETO_LASER_PISTOL,
+                        PID_10MM_PISTOL, PID_10MM_SMG, PID_14MM_PISTOL, PID_HK_P90C, PID_GREASE_GUN,
+                        PID_DESERT_EAGLE, PID_DESERT_EAGLE_EXT_MAG, PID_44_MAGNUM_REVOLVER, PID_44_MAGNUM_SPEEDLOADER];
          if (container) then begin
             Item := array_random_value(Items_List);
             add_obj_to_inven(container, create_object(Item, 0, 0));
@@ -683,7 +685,7 @@ procedure LoadChests begin
             // 2nd ammo batch
             chance := random(1, 100);
             if (chance < 50) then begin
-               count := random(1, 3);
+               count := random(1, 5);
                while (count > 0) do begin
                   count--;
                   Item := array_random_value(Items_List);

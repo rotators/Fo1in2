@@ -308,6 +308,8 @@ variable Scenery_Creation_Ptr;
 #define PID_VDOOR_V13_METAL_EW              (33554454)
 #define PID_VDOOR_V13_METAL_NS              (33554455)
 
+#define PID_DOOR_METAL_ELEV                 (33554853)
+
 // Fo1in2:
 #define PID_RATHOLE                         (33556295)
 #define PID_GIZMO_SIGN_OFF                  (33556296)

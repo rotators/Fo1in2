@@ -1,31 +1,64 @@
+/*
+
+   Military Base - Klaxon lights
+
+*/
+
 #include "define.h"
 #include "command.h"
+#include "mbase.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
 procedure map_update_p_proc;
 
+procedure check_lights;
+
+#define LVAR_LIGHT_STATUS     (0)
+
+#define LIGHT_OFF             (0)
+#define LIGHT_ON              (1)
+
+#define FID_EW_ON             (33555350)
+#define FID_NS_ON             (33555351)
+
+#define FID_EW_OFF            (33555269)
+#define FID_NS_OFF            (33555270)
+
+#define EVENT_ALARM           (1)
 
 procedure start begin
 end
 
-procedure map_update_p_proc begin
-   variable LVar0 := 0;
-   if (global_var(GVAR_VATS_ALERT) and (local_var(0) == 0)) then begin
-      set_local_var(0, 1);
-      if (self_pid == PID_NS_LIGHT) then begin// or 59
-         LVar0 := create_object(PID_NS_FLASHING_LIGHT, self_tile, self_elevation);
-      end
-      else begin
-         LVar0 := create_object(PID_EW_FLASHING_LIGHT, self_tile, self_elevation);
-      end
+procedure map_enter_p_proc begin
+   flush_add_timer_event(self_obj, game_ticks(1), EVENT_ALARM);
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_ALARM) then begin
+      call check_lights;
    end
-   else if (local_var(0) and (global_var(GVAR_VATS_ALERT) == 0)) then begin
-      set_local_var(0, 0);
-      if (self_pid == PID_NS_FLASHING_LIGHT) then begin
-         LVar0 := create_object(PID_NS_LIGHT, self_tile, self_elevation);
-      end
-      else begin
-         LVar0 := create_object(PID_EW_LIGHT, self_tile, self_elevation);
-      end
+   add_timer_event(self_obj, game_ticks(1), EVENT_ALARM);
+end
+
+procedure map_update_p_proc begin
+   call check_lights;
+end
+
+procedure check_lights begin
+   if mbase_full_alert and (local_var(LVAR_LIGHT_STATUS) == LIGHT_OFF) then begin
+      set_local_var(LVAR_LIGHT_STATUS, LIGHT_ON);
+      if (self_fid == FID_EW_OFF) then
+         art_change_fid_num(self_obj, FID_EW_ON);
+      else
+         art_change_fid_num(self_obj, FID_NS_ON);
+   end
+   else if not(mbase_full_alert) and (local_var(LVAR_LIGHT_STATUS) == LIGHT_ON) then begin
+      if (self_fid == FID_EW_ON) then
+         art_change_fid_num(self_obj, FID_EW_OFF);
+      else
+         art_change_fid_num(self_obj, FID_NS_OFF);
    end
 end
+
