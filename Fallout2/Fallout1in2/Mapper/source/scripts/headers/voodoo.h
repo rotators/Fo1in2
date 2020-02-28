@@ -298,21 +298,22 @@ variable addr;
 // hidemouse/showmouse only ... DON'T! hidemouse doesn't work until cursor is over interface or player is on worldmap
 // tap_key(DIK_F12) ... DON'T! doesn't work with compact keyboards (Fn + other key required to "press" F12)
 #define VOODOO_clean_screenshot \
-               if(get_game_mode bwand 0x1) then                  \
-                  hidemouse;                                     \
-               else                                              \
-               begin                                             \
-                  intface_hide;                                  \
-                  call_offset_v0(0x44ce34); /* gmouse_3d_off_ */ \
-               end                                               \
-               call_offset_v0(0x4c8f4c);      /* dump_screen_ */ \
-               if(get_game_mode bwand 0x1) then                  \
-                  showmouse;                                     \
-               else                                              \
-               begin                                             \
-                  call_offset_v0(0x44cd2c);  /* gmouse_3d_on_ */ \
-                  intface_show;                                  \
-               end                                               \
+               if(get_game_mode bwand 0x1) then                          \
+                  hidemouse;                                             \
+               else                                                      \
+               begin                                                     \
+                  intface_hide;                                          \
+                  call_offset_v0(0x44ce34);      /* gmouse_3d_off_ */    \
+               end                                                       \
+               call_offset_v0(0x4dc65c);         /* win_debug_delete_ */ \
+               call_offset_v0(0x4c8f4c);         /* dump_screen_ */      \
+               if(get_game_mode bwand 0x1) then                          \
+                  showmouse;                                             \
+               else                                                      \
+               begin                                                     \
+                  call_offset_v0(0x44cd2c);      /* gmouse_3d_on_ */     \
+                  intface_show;                                          \
+               end                                                       \
                noop
 
 // This will make screenshots saved in "screen" directory
