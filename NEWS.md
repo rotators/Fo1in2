@@ -4,6 +4,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Added**: Blue cave wall variants of Fo2's mine interior walls.
 - **Added**: Blue colored cobweb and "water on cavewall" scenery objects.
 - **Added**: Fallout 1 barter formula mod. If you don't want to play with et Tu's modified barter formula, then this mod will revert it back to the mostly broken Fo1 version.
+- **Added**: Fo1-styled German party member control settings interface graphic.
 - **Added**: Fo2 Deathclaw Spawn critter (used in random cavern encounter).
 - **Added**: Fo2-styled cavern mountain maps with random enemy and loot spawn (Optional).
 - **Added**: Healing at doctors now also heals crippled limbs.
