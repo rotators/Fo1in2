@@ -90,22 +90,6 @@ The german translation of FALLOUT ET TU.
 
 Turns Dogmeat into a Robodog, slightly changing available combat options.
 
-### Extras ###
-[Extras](Extras)
-
-Includes a few customited .ini files for other AddOns:
-
-[extras/party_orders.ini]
-
-Incorporated Fallout Et Tu's Companions to the [Party Orders](https://github.com/BGforgeNet/Fallout2_Party_Orders) Lists, AddOn itself not included
-
-[extras/party_orders.ger]
-
-Optional Translation for [Party Orders](https://github.com/BGforgeNet/Fallout2_Party_Orders) in German, AddOn itself not included (Just put besides the Addon and rename to party_orders.ini)
-
-[extras/InvenFilter.ger]
-
-Optional Translation for [Inventory Filter](https://www.nma-fallout.com/resources/inventory-filter.78/) in German, AddOn itself not included (Just put besides the Addon and rename to InvenFilter.ini)
 
 SPECIAL THANKS
 --------------
