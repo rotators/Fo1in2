@@ -188,26 +188,26 @@ variable addr;
                debug("Allocated 87 bytes @ "+ addr);                                     \
                call VOODOO_SafeWrite16(addr+0, 0x4d75);       /* jne _ret */             \
                call VOODOO_SafeWrite16(addr+2, 0xec83);       /* sub esp,4 */            \
-               call VOODOO_SafeWrite8 (addr+4, 0x04);                                    \
+               call VOODOO_SafeWrite8(addr+4, 0x04);                                     \
                call VOODOO_SafeWrite32(addr+5, 0x002404c6);   /* mov ss:[esp+4],0 */     \
                /* _loop_begin */                                                         \
                call VOODOO_SafeWrite32(addr+9, 0x0c244c8b);   /* mov ecx,ss:[esp+C] */   \
                /* move to the next tile to the left */                                   \
-               call VOODOO_SafeWrite8 (addr+13, 0x49);        /* dec ecx */              \
+               call VOODOO_SafeWrite8(addr+13, 0x49);         /* dec ecx */              \
                /* the comparison checks are to see if the tile we are currently on is */ \
                /* one of the tiles on the right side of the wm (3, 7, 11 or 15) */       \
                /* if it is, it means we've wrapped around */                             \
                call VOODOO_SafeWrite16(addr+14, 0xf983);      /* cmp ecx,3 */            \
-               call VOODOO_SafeWrite8 (addr+16, 0x03);                                   \
+               call VOODOO_SafeWrite8(addr+16, 0x03);                                    \
                call VOODOO_SafeWrite16(addr+17, 0x3974);      /* je _end */              \
                call VOODOO_SafeWrite16(addr+19, 0xf983);      /* cmp ecx,7 */            \
-               call VOODOO_SafeWrite8 (addr+21, 0x07);                                   \
+               call VOODOO_SafeWrite8(addr+21, 0x07);                                    \
                call VOODOO_SafeWrite16(addr+22, 0x3474);      /* je _end */              \
                call VOODOO_SafeWrite16(addr+24, 0xf983);      /* cmp ecx,B */            \
-               call VOODOO_SafeWrite8 (addr+26, 0x0b);                                   \
+               call VOODOO_SafeWrite8(addr+26, 0x0b);                                    \
                call VOODOO_SafeWrite16(addr+27, 0x2f74);      /* je _end */              \
                call VOODOO_SafeWrite16(addr+29, 0xf983);      /* cmp ecx,F */            \
-               call VOODOO_SafeWrite8 (addr+31, 0x0f);                                   \
+               call VOODOO_SafeWrite8(addr+31, 0x0f);                                    \
                call VOODOO_SafeWrite16(addr+32, 0x2a74);      /* je _end */              \
                call VOODOO_SafeWrite16(addr+34, 0xed31);      /* xor ebp,ebp */          \
                call VOODOO_SafeWrite32(addr+36, 0x0c244c89);  /* mov ss:[esp+C],ecx */   \
@@ -216,30 +216,30 @@ variable addr;
                call VOODOO_SafeWrite32(addr+42, 0x1024448b);  /* mov eax,ss:[esp+10] */  \
                call VOODOO_SafeWrite16(addr+46, 0xf189);      /* mov ecx,esi */          \
                call VOODOO_SafeWrite16(addr+48, 0xfb89);      /* mov ebx,edi */          \
-               call VOODOO_SafeWrite8 (addr+50, 0x56);        /* push esi */             \
+               call VOODOO_SafeWrite8(addr+50, 0x56);         /* push esi */             \
                call VOODOO_SafeWrite16(addr+51, 0xea89);      /* mov edx,ebp */          \
-               call VOODOO_SafeWrite8 (addr+53, 0x45);        /* inc ebp */              \
-               call VOODOO_MakeCall(addr+54, 0x4c3434);                                  \
+               call VOODOO_SafeWrite8(addr+53, 0x45);         /* inc ebp */              \
+               call VOODOO_MakeCall(addr+54,  0x4c3434);                                 \
                /* did we uncover all the subtiles in the tile? */                        \
                /* if not, go to _reveal_subtile and uncover another one */               \
                call VOODOO_SafeWrite16(addr+59, 0xfd83);      /* cmp ebp,7 */            \
-               call VOODOO_SafeWrite8 (addr+61, 0x07);                                   \
+               call VOODOO_SafeWrite8(addr+61, 0x07);                                    \
                call VOODOO_SafeWrite16(addr+62, 0xe87c);      /* jl _reveal_subtile */   \
                call VOODOO_SafeWrite16(addr+64, 0x048b);      /* mov eax,ss:[esp+4] */   \
-               call VOODOO_SafeWrite8 (addr+66, 0x24);                                   \
-               call VOODOO_SafeWrite8 (addr+67, 0x40);        /* inc eax */              \
+               call VOODOO_SafeWrite8(addr+66, 0x24);                                    \
+               call VOODOO_SafeWrite8(addr+67, 0x40);         /* inc eax */              \
                call VOODOO_SafeWrite16(addr+68, 0xf883);      /* cmp eax,2 */            \
-               call VOODOO_SafeWrite8 (addr+70, 0x02);                                   \
+               call VOODOO_SafeWrite8(addr+70, 0x02);                                    \
                call VOODOO_SafeWrite16(addr+71, 0x0489);      /* mov ss:[esp+4],eax */   \
-               call VOODOO_SafeWrite8 (addr+73, 0x24);                                   \
+               call VOODOO_SafeWrite8(addr+73, 0x24);                                    \
                call VOODOO_SafeWrite16(addr+74, 0xbd7c);      /* jl _loop_begin */       \
                /* _end */                                                                \
                call VOODOO_SafeWrite16(addr+76, 0xc483);      /* add esp,4 */            \
-               call VOODOO_SafeWrite8 (addr+78, 0x04);                                   \
+               call VOODOO_SafeWrite8(addr+78, 0x04);                                    \
                /* _ret */                                                                \
                call VOODOO_SafeWrite16(addr+79, 0xc483);      /* add esp,C */            \
-               call VOODOO_SafeWrite8 (addr+81, 0x0c);                                   \
-               call VOODOO_MakeJump(addr+82, 0x4c373a);                                  \
+               call VOODOO_SafeWrite8(addr+81, 0x0c);                                    \
+               call VOODOO_MakeJump(addr+82,  0x4c373a);                                 \
                /* END */                                                                 \
                /* Hook in wmMarkSubTileRadiusVisited_ */                                 \
                call VOODOO_MakeJump(0x004C3735, addr);                                   \

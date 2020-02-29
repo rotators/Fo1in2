@@ -383,9 +383,12 @@
 #define hub_farm_visit                      (town_known(AREA_HUB_FARM) != MARK_STATE_UNKNOWN)
 #define hub_lair_visit                      (town_known(AREA_HUB_LAIR) != MARK_STATE_UNKNOWN)
 
-#define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin          \
-                                               debug_msg("  mark_on_map("+x+")");                        \
-                                               mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN);     \
+#define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin             \
+                                               debug_msg("  mark_on_map("+x+")");                           \
+                                               if fo1in2_classic_wm_enabled then                            \
+                                                  mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN_FO1); \
+                                               else                                                         \
+                                                  mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN);     \
                                             end
 
 #define unmark_on_map(x)                    if (town_known(x) != MARK_STATE_UNKNOWN) then begin          \
