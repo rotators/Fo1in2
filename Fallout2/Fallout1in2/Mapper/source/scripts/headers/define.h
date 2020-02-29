@@ -741,9 +741,10 @@
 #define MARK_TYPE_TOWN  (0)
 #define MARK_TYPE_MAP   (1)
 // wmAreaVisitStateInfo;
-#define MARK_STATE_UNKNOWN (0)
-#define MARK_STATE_KNOWN   (1)
-#define MARK_STATE_VISITED (2)
+#define MARK_STATE_UNKNOWN   (0)
+#define MARK_STATE_KNOWN     (1)
+#define MARK_STATE_VISITED   (2)
+#define MARK_STATE_KNOWN_FO1 (3)
 #define MARK_STATE_INVISIBLE (-66)
 
 
