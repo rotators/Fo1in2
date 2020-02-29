@@ -19,6 +19,17 @@
 // 0x410004 (4b)  used by VOODOO_call_offset_*()
 //
 
+// Should probably be a macro
+procedure VOODOO_AssertByte(variable func, variable address, variable expected)
+begin
+     variable byte := read_byte(address);
+     if(byte != expected) then begin
+         display_msg("Byte mismatch at "+func+ " ("+address+"), expected " + sprintf("%x", expected) + " but got " + sprintf("%x", byte));
+         return false;
+     end
+     return true;
+end
+
 // Because of https://github.com/phobos2077/sfall/issues/288
 procedure VOODOO_SafeWrite8(variable address, variable value)
 begin
