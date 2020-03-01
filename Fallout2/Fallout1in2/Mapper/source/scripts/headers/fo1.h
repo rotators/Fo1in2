@@ -72,12 +72,12 @@
 #define waterchip_returned                  (global_var(GVAR_QUEST_VAULT13_4_WATERCHIP) >= 2)
 #define set_waterchip_returned              set_global_var(GVAR_QUEST_VAULT13_4_WATERCHIP, 2)
 
-#define get_quest_vats_active               ((global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) > 0) and not(military_base_destoryed))
+#define get_quest_vats_active               ((global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) > 0) and not(military_base_destroyed))
 #define get_quest_master_active             ((global_var(GVAR_QUEST_VAULT13_2_MASTER) > 0) and not(cathedral_destroyed))
 
-#define military_base_destoryed             (global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) > 0)
+#define military_base_destroyed             (global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) > 0)
 #define cathedral_destroyed                 (global_var(GVAR_MASTER_BLOWN_CUTSCENE) > 0)
-#define set_military_base_destoryed         set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1); \
+#define set_military_base_destroyed         set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1); \
                                             set_end_Vats
 #define set_cathedral_destroyed             set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1); \
                                             set_end_Master
