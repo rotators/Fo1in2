@@ -16,7 +16,7 @@
  **************************************************/
 
 // used with auto generated VOODOO_nmalloc code
-variable addr;
+variable $addr;
 
 // sfall-asm:defines-begin //
 
