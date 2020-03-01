@@ -81,6 +81,14 @@
                                             set_end_Vats
 #define set_cathedral_destroyed             set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1); \
                                             set_end_Master
+                                            
+#define master_killed                       (global_var(GVAR_MASTER_BLOWN) == 1)
+#define set_master_killed                   set_global_var(GVAR_MASTER_BLOWN, 1)
+#define unset_master_killed                 set_global_var(GVAR_MASTER_BLOWN, 0)
+
+#define vats_destruction_started            (global_var(GVAR_VATS_BLOWN) == 1)
+#define set_vats_destruction                set_global_var(GVAR_VATS_BLOWN, 1)
+#define unset_vats_destruction              set_global_var(GVAR_VATS_BLOWN, 0)
 
 #define necropolis_wpump_fixed              (global_var(GVAR_NECROP_WATER_PUMP_FIXED) == 2)
 
