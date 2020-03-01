@@ -67,9 +67,12 @@ procedure critter_p_proc begin
       tmp_hostile := 0;
       attack(dude_obj);
    end
-   if ((local_var(LVAR_Herebefore) == 0) and (tile_distance_objs(self_obj, dude_obj) <= 5)) then begin
+   if ((local_var(LVAR_Herebefore) == 0) and ((tile_distance_objs(self_obj, dude_obj) <= 5) or self_can_see_dude)) then begin
       set_local_var(LVAR_Herebefore, 1);
-      dialogue_system_enter;
+      if (cathedral_destroyed and military_base_destoryed) then
+         tmp_hostile := 1;
+      else
+         dialogue_system_enter;
    end
    if (local_var(LVAR_Herebefore) == 0) then begin
       self_walk_to_tile(tile_num_in_direction(dude_tile, random(0, 5), 1));
@@ -123,7 +126,12 @@ procedure Troy02 begin
    set_global_var(GVAR_ENTERING_VATS_HOW, 1);
    //game_time_advance(game_ticks(60 * 60 * 24 * 14));
    //load_map(MAP_MBVATS12, 5);
-   advance_time_travel_to_mbase_vats;
+   if not(military_base_destoryed) then begin
+      advance_time_travel_to_mbase_vats;
+   end
+   else begin
+      advance_time_travel_to_master;
+   end
 end
 
 procedure Troy03 begin
