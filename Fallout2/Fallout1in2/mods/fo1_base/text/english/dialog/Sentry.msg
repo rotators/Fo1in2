@@ -14,7 +14,7 @@
 {107}{}{Be careful, }
 {108}{}{, you may hurt yourself. An army of bad mutants came to this place and made a big boom. See?}
 {109}{}{Uh-huh.}
-{110}{}{See. So, you better find anoter place to go. It isn't safe here.}
+{110}{}{See. So, you better find another place to go. It isn't safe here.}
 {111}{}{Me go.}
 
 {112}{}{Mutants. It was a really big army. They came, killed everyone, took everything they could and blew this place up.}
