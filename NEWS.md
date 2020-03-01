@@ -41,6 +41,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: Rad. Mountains -> Radiated Mountains
 - **Fixed**: Re-Enabled the TMA lines for Avellone, the bounty hunter.
 - **Fixed**: Smitty in Adytum would still join the player team at the wrong time.
+- **Fixed**: Super Mutant invaders will not teleport the player to Mariposa / The Master if the locations have been destroyed before.
 - **Fixed**: TMA "up" button effect would play the wrong sound file.
 - **Fixed**: Tandi will remain correctly in team Shady Sands when the player first enters the town, and also switches back correctly once returned home from the Khans.
 - **Fixed**: The well in Adytum was misaligned.
