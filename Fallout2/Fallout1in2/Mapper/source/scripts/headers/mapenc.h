@@ -578,6 +578,7 @@ procedure dehydration_a begin
    call check_water_item;
 
    if (has_water) then begin
+      debug("dehydration enc: drink water!");
       call drink_water;
    end
    else begin

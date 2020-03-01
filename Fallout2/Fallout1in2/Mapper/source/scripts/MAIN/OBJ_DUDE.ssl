@@ -54,7 +54,7 @@ variable SecondsCombat;
 
    if (fixed_param == COMBAT_SUBTYPE_TURN) then begin
       if CUR_AREA_MILITARY_BASE then begin// For military base explosion countdown, displaying nice 5-second increment updates of "time left" amount:
-         if ((global_var(GVAR_VATS_BLOWN) == 1) and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
+         if (vats_destruction_started and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin//   (each combat round in Fallout is treated as exactly 5 in-game seconds, which is 50 ticks)
             if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
                SecondsCombat := (global_var(GVAR_VATS_COUNTDOWN) - (game_time / 10));
                if (SecondsCombat <= 0) then begin
@@ -70,7 +70,7 @@ variable SecondsCombat;
       end
       else if CUR_AREA_CATHEDRAL then begin
          if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
-            if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(GVAR_MASTER_BLOWN) == 1)) then begin
+            if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and master_killed) then begin
                SecondsCombat := 240 - ((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION));
                if (((game_time / 10) - global_var(GVAR_COUNTDOWN_TO_DESTRUCTION)) >= 240) then begin
                   set_global_var(GVAR_MASTER_BLOWN_CUTSCENE, 1);
@@ -122,14 +122,14 @@ procedure map_update_p_proc begin
    variable days_since_exposed;
 
    if CUR_AREA_MILITARY_BASE then begin
-      if ((global_var(GVAR_VATS_BLOWN) == 1) and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
+      if (vats_destruction_started and (global_var(GVAR_QUEST_VAULT13_3_KILL_VATS) == 2)) then begin
          if global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) != 1 then begin
             add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_VATS);
          end
       end
    end
    else if CUR_AREA_CATHEDRAL then begin
-      if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and (global_var(GVAR_MASTER_BLOWN) == 1)) then begin
+      if ((global_var(GVAR_COUNTDOWN_TO_DESTRUCTION) != 0) and master_killed) then begin
          if not(global_var(GVAR_MASTER_BLOWN_CUTSCENE)) then begin
             add_timer_event(dude_obj, 0, EVENT_COUNTDOWN_MASTER);
          end
