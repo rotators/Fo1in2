@@ -47,6 +47,7 @@ Notable changes since last release ([v1.0.1700](https://github.com/rotators/Fo1i
 - **Fixed**: The well in Adytum was misaligned.
 - **Fixed**: Traveling merchants will now remember if their party is full or not.
 - **Fixed**: Traveling with NPCs was advancing waaaay too much time.
+- **Fixed**: Uthern and Thinker Super Mutants wouldn't correctly teleport the player to Orfeo.
 - **Fixed**: Vault 13 door terminal description was showing the wrong text. #40
 - **Fixed**: Waterfall on cave walls now correctly uses the animfrvr.int script.
 - **Tweaked**: After getting caught stealing by Aradesh, the dialog interface will open instead of a floating text.
