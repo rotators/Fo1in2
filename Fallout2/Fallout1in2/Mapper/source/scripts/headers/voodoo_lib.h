@@ -143,12 +143,12 @@ begin
   write_byte(address+length-1, 0x90);
 end
 
-inline procedure VOODOO_BlockCall(variable address, variable length:=5)
+procedure VOODOO_BlockCall(variable address, variable length:=5)
 begin
    call VOODOO_WriteNop(address, cap_number(length, 5, 15));
 end
 
-inline procedure VOODOO_BlockJump(variable address, variable length:=5)
+procedure VOODOO_BlockJump(variable address, variable length:=5)
 begin
    call VOODOO_WriteNop(address, cap_number(length, 5, 15));
 end
