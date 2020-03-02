@@ -142,7 +142,7 @@ procedure Choose_Encounter begin
 
    // Mantis
    else if (val == 5) then begin
-      if ((dude_level <= 10) and (random(1, 100) <= 75)) then begin
+      if ((dude_level <= 10) or (random(1, 100) <= 75)) then begin
          active_encounter_pids := 1;
          encounter_pid1 := PID_MANTIS;
          encounter_sid1 := SCRIPT_MANTIS;
@@ -628,7 +628,7 @@ procedure LoadChests begin
 
    // Spawn fancy weapons container
    chance := random(1, 100);
-   if (chance <= (80 + dude_luck) and (map_is_mine or special_spawn_container_weapons == 1)) then begin
+   if (chance <= (70 + dude_luck) and (map_is_mine or special_spawn_container_weapons == 1)) then begin
       Scenery_Creation_Hex := array_random_value(Chest_List);
       debug("SPAWN FANCY WEAPON CONTAINER!");
 
