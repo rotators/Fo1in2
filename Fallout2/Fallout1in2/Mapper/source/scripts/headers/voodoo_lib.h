@@ -217,19 +217,21 @@ end
 
 procedure VOODOO_DumpAddressOf
 begin
-   variable a, aMax, idx := -1;
+   variable idx := 0, a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
 
-   aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE;
    for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += 8)
    begin
-      variable id := read_int(a), addr;
+      variable id := read_int(a), address;
+
       if(id == 0) then
          break;
 
-      idx++;
       id := read_int(a + 0);
-      addr := read_int(a + 4);
-      display_msg("VOODOO AddressOf[" + idx + "] " + id + " = 0x" + sprintf("%x", addr));
+      address := read_int(a + 4);
+
+      display_msg("VOODOO AddressOf[" + idx + "] " + id + " = 0x" + sprintf("%x", address));
+
+      idx++;
    end
 end
 
@@ -237,7 +239,7 @@ procedure VOODOO_Init()
 begin
    variable address;
 
-   if(true) then //if(VOODOO_LIB_LOOKUP == VOODOO_LIB_LOOKUP_UNSET) then
+   if(VOODOO_LIB_LOOKUP == VOODOO_LIB_LOOKUP_UNSET) then
    begin
       variable o, write_min_value := 0x410000, write_max_value := 0x6b403f, write_min_wanted := 0x410000, write_max_wanted := 0xFF00DD00;
 
@@ -311,6 +313,8 @@ begin
       call VOODOO_memzero(address, VOODOO_LIB_LOOKUP_SIZE);
       write_int(VOODOO_LIB_LOOKUP_ADDRESS, address);
 
+      // init internals
+
       address := VOODOO_nmalloc(VOODOO_LIB_LOOKUP_ARGS_SIZE);
       call VOODOO_memzero(address, VOODOO_LIB_LOOKUP_ARGS_SIZE);
       call VOODOO_SetAddressOf(VOODOO_ID_call_args, address);
@@ -321,9 +325,12 @@ begin
 
       debug("VOODOO lookup = 0x" + sprintf("%x", read_int(VOODOO_LIB_LOOKUP_ADDRESS)));
       call VOODOO_DumpAddressOf();
+
+      return 1;
    end
-   else
-      debug("VOODOO lookup (cached) = 0x" + sprintf("%x", read_int(VOODOO_LIB_LOOKUP_ADDRESS)));
+
+   debug("VOODOO lookup (cached) = 0x" + sprintf("%x", read_int(VOODOO_LIB_LOOKUP_ADDRESS)));
+   return 0;
 end
 
 // https://github.com/phobos2077/sfall/issues/288
