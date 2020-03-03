@@ -164,13 +164,6 @@ begin
    return 0;
 end
 
-// ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated
-// with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
-procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
-begin
-   return call_offset_r2(VOODOO_GetAddressOf(VOODOO_ID_CalcHook_patch), address, offset);
-end
-
 procedure VOODOO_GetAddressOf(variable id)
 begin
    variable a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
@@ -331,6 +324,13 @@ begin
 
    debug("VOODOO lookup (cached) = 0x" + sprintf("%x", read_int(VOODOO_LIB_LOOKUP_ADDRESS)));
    return 0;
+end
+
+// ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated
+// with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
+procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
+begin
+   return call_offset_r2(VOODOO_GetAddressOf(VOODOO_ID_CalcHook_patch), address, offset);
 end
 
 // https://github.com/phobos2077/sfall/issues/288
