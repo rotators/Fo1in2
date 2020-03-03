@@ -17,7 +17,7 @@
 
 //
 // 0x410003 (1b)   used by rfall
-// 0x410004 (4b)   used for lookup table, permament
+// 0x410004 (4b)   used for lookup table, permanent
 // 0x41ade0 (34b)  used for unlocking write functions, temporary
 //
 
@@ -68,11 +68,6 @@ begin
    call_offset_v3(0x4f0080, address, 0, size); // fallout2.memset_
 end
 
-//
-//
-//
-
-// Should probably be a macro
 procedure VOODOO_AssertByte(variable func, variable address, variable expected)
 begin
      variable byte := read_byte(address);
@@ -81,22 +76,6 @@ begin
          return false;
      end
      return true;
-end
-
-// Because of https://github.com/phobos2077/sfall/issues/288
-procedure VOODOO_SafeWrite8(variable address, variable value)
-begin
-   call_offset_v2(VOODOO_SafeWrite8___patch, address, (value bwand 0xFF));
-end
-
-procedure VOODOO_SafeWrite16(variable address, variable value)
-begin
-   call_offset_v2(VOODOO_SafeWrite16___patch, address, (value bwand 0xFFFF));
-end
-
-procedure VOODOO_SafeWrite32(variable address, variable value)
-begin
-   call_offset_v2(VOODOO_SafeWrite32___patch, address, value);
 end
 
 procedure VOODOO_CalculateRel32(variable from, variable to)
@@ -112,21 +91,21 @@ begin
   byte3 := (addr bwand 0x00FF0000) / 0x10000;
   byte2 := (addr bwand 0x0000FF00) / 0x100;
   byte1 := (addr bwand 0x000000FF);
-  call VOODOO_SafeWrite8(at+1, byte1);
-  call VOODOO_SafeWrite8(at+2, byte2);
-  call VOODOO_SafeWrite8(at+3, byte3);
-  call VOODOO_SafeWrite8(at+4, byte4);
+  write_byte(at+1, byte1);
+  write_byte(at+2, byte2);
+  write_byte(at+3, byte3);
+  write_byte(at+4, byte4);
 end
 
 procedure VOODOO_MakeCall(variable address, variable func)
 begin
-  call VOODOO_SafeWrite8(address, 0xE8);
+  write_byte(address, 0xE8);
   call VOODOO_WriteRelAddress(address, func);
 end
 
 procedure VOODOO_MakeJump(variable address, variable func)
 begin
-  call VOODOO_SafeWrite8(address, 0xE9);
+  write_byte(address, 0xE9);
   call VOODOO_WriteRelAddress(address, func);
 end
 
