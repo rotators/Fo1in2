@@ -143,10 +143,20 @@ procedure Choose_Encounter begin
    // Mantis
    else if (val == 5) then begin
       if ((dude_level <= 10) or (random(1, 100) <= 75)) then begin
-         active_encounter_pids := 1;
-         encounter_pid1 := PID_MANTIS;
-         encounter_sid1 := SCRIPT_MANTIS;
-         total_encounter_mobs := Random(1, 3);
+         if (random(1, 100) <= 15) then begin
+            active_encounter_pids := 2;
+            encounter_pid1 := PID_MANTIS;
+            encounter_sid1 := SCRIPT_MANTIS;
+            encounter_pid2 := PID_SPORE_PLANT;
+            encounter_sid2 := SCRIPT_ECPLANT;
+            total_encounter_mobs := Random(3, 6);
+         end
+         else begin
+            active_encounter_pids := 1;
+            encounter_pid1 := PID_MANTIS;
+            encounter_sid1 := SCRIPT_MANTIS;
+            total_encounter_mobs := Random(1, 3);
+         end
       end
       else begin
          active_encounter_pids := 2;
