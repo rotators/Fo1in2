@@ -25,17 +25,13 @@
 #define VOODOO_LIB_LOOKUP_ADDRESS (0x410004)                           // address of lookup table pointer
 #define VOODOO_LIB_LOOKUP         read_int(VOODOO_LIB_LOOKUP_ADDRESS)  // address of lookup table
 #define VOODOO_LIB_LOOKUP_UNSET   (0x909090)                           // value returned by VOODOO_LIB_LOOKUP before it's initialized
-#define VOODOO_LIB_LOOKUP_SIZE    (2048)                               // total size in byte
+#define VOODOO_LIB_LOOKUP_SIZE    (2048)                               // total size in bytes
 
-// lookup table : id
-#define VOODOO_LIB_LOOKUP_ID_ADDRESS  (VOODOO_LIB_LOOKUP)
-#define VOODOO_LIB_LOOKUP_ID_COUNT    (100)                             // maximum number of entries
-#define VOODOO_LIB_LOOKUP_ID_SIZE     (VOODOO_LIB_LOOKUP_ID_COUNT * 8)  // total size in bytes
-
-// lookup table : call arguments
-#define VOODOO_LIB_LOOKUP_ARGS_ADDRESS  (VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE)
-#define VOODOO_LIB_LOOKUP_ARGS_COUNT    (16)                                // maximum arguments allowed
-#define VOODOO_LIB_LOOKUP_ARGS_SIZE     (VOODOO_LIB_LOOKUP_ARGS_COUNT * 4)  // total size in bytes
+// lookup table : id, address, size
+#define VOODOO_LIB_LOOKUP_ID_ADDRESS   (VOODOO_LIB_LOOKUP)
+#define VOODOO_LIB_LOOKUP_ID_COUNT     (100)                                                         // maximum number of entries
+#define VOODOO_LIB_LOOKUP_ID_SIZE_ONE  (12)                                                          // entry size in bytes
+#define VOODOO_LIB_LOOKUP_ID_SIZE      (VOODOO_LIB_LOOKUP_ID_COUNT * VOODOO_LIB_LOOKUP_ID_SIZE_ONE)  // total size in bytes
 
 // internal lookup IDs
 #define VOODOO_ID_INTERNAL     (1000)
@@ -49,13 +45,12 @@
 
 procedure VOODOO_nmalloc(variable bytes)
 begin
-   variable address := call_offset_r1(0x4ef1c5, bytes); // fallout2.nmalloc_
+   return call_offset_r1(0x4ef1c5, bytes); // fallout2.nmalloc_
+end
 
-   #ifdef VOODOO_LIB_DEBUG_NMALLOC
-   debug("VOODOO nmalloc(" + bytes + ") = 0x" + sprintf("%x", address));
-   #endif
-
-   return address;
+inline procedure VOODOO_nfree(variable address)
+begin
+   call_offset_v1(0x4ef2b4, address); // fallout2.nfree_
 end
 
 inline procedure VOODOO_memset(variable address, variable value, variable size)
@@ -68,11 +63,15 @@ begin
    call_offset_v3(0x4f0080, address, 0, size); // fallout2.memset_
 end
 
+//
+// helpers
+//
+
 procedure VOODOO_AssertByte(variable func, variable address, variable expected)
 begin
      variable byte := read_byte(address);
      if(byte != expected) then begin
-         display_msg("Byte mismatch at "+func+ " ("+address+"), expected " + sprintf("%x", expected) + " but got " + sprintf("%x", byte));
+         display_msg("Byte mismatch at "+func+ " (0x"+sprintf("%x",address)+"), expected " + sprintf("%x", expected) + " but got " + sprintf("%x", byte));
          return false;
      end
      return true;
@@ -132,6 +131,9 @@ begin
    call VOODOO_WriteNop(address, cap_number(length, 5, 15));
 end
 
+//
+// opcodes
+//
 
 procedure VOODOO_GetOpcodeAddress(variable opcode)
 begin
@@ -164,7 +166,11 @@ begin
    return 0;
 end
 
-procedure VOODOO_GetAddressOf(variable id)
+//
+// lookup table
+//
+
+procedure VOODOO_GetLookupData(variable id, variable idx)
 begin
    variable a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
 
@@ -174,18 +180,28 @@ begin
       return;
    end
 
-   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += 8)
+   if(typeof(idx) != VALTYPE_INT or idx <= 0) then
    begin
-      if(read_int(a) == id) then
+      // TODO warning
+      return 0;
+   end
+
+   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += VOODOO_LIB_LOOKUP_ID_SIZE_ONE)
+   begin
+      variable curr := read_int(a);
+
+      if(curr == 0) then
+         break;
+      else if(curr == id) then
       begin
-         return read_int(a + 4);
+         return read_int(a + idx * 4);
       end
    end
 
    return 0;
 end
 
-procedure VOODOO_SetAddressOf(variable id, variable address)
+procedure VOODOO_SetLookupData(variable id, variable address, variable size := 0)
 begin
    variable a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
 
@@ -195,12 +211,15 @@ begin
       return;
    end
 
-   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += 8)
+   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += VOODOO_LIB_LOOKUP_ID_SIZE_ONE)
    begin
-      if(read_int(a) == 0) then
+      variable curr := read_int(a);
+
+      if(curr == id or curr == 0) then
       begin
          write_int(a + 0, id);
          write_int(a + 4, address);
+         write_int(a + 8, size);
          return;
       end
    end
@@ -208,25 +227,72 @@ begin
    // TODO warning
 end
 
-procedure VOODOO_DumpAddressOf
+procedure VOODOO_ClearLookupData
+begin
+   variable a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
+
+   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += VOODOO_LIB_LOOKUP_ID_SIZE_ONE)
+   begin
+      variable curr := read_int(a), address;
+
+      if(curr == 0) then
+         break;
+
+      address := read_int(a + 4);
+      if(address > 0) then
+         call VOODOO_nfree(address);
+
+      call VOODOO_memzero(a, VOODOO_LIB_LOOKUP_ID_SIZE_ONE);
+   end
+end
+
+procedure VOODOO_LookupAddress(variable id)
+begin
+   return VOODOO_GetLookupData(id, 1);
+end
+
+procedure VOODOO_LookupSize(variable id)
+begin
+   return VOODOO_GetLookupData(id, 2);
+end
+
+// backward compatibility, until sfall-asm is updated
+procedure VOODOO_SetAddressOf(variable id, variable address)
+begin
+   call VOODOO_SetLookupData(id, address);
+end
+
+procedure VOODOO_DumpLookupData
 begin
    variable idx := 0, a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
 
-   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += 8)
+   for(a := VOODOO_LIB_LOOKUP_ID_ADDRESS; a < aMax; a += VOODOO_LIB_LOOKUP_ID_SIZE_ONE)
    begin
-      variable id := read_int(a), address;
+      variable id := read_int(a), address, size, msg;
 
       if(id == 0) then
          break;
 
-      id := read_int(a + 0);
       address := read_int(a + 4);
+      size    := read_int(a + 8);
 
-      display_msg("VOODOO AddressOf[" + idx + "] " + id + " = 0x" + sprintf("%x", address));
+      if(size == 0) then
+         size := "???";
+
+      msg := "VOODOO Lookup[" + idx + "] " + id + " = 0x" + sprintf("%x ", address) + size + "b";
+
+      if(debug_mode) then
+         debug(msg);
+      else
+         debug_msg(msg);
 
       idx++;
    end
 end
+
+//
+// init/finish
+//
 
 procedure VOODOO_Init()
 begin
@@ -238,6 +304,8 @@ begin
 
       variable unlock_opcodes := temp_array(4, 0);
       unlock_opcodes := [0x1d1, 0x1d0, 0x1cf, 0x21b]; // must be right after temp_array(); opcodes order is important
+
+      debug("VOODOO init");
 
       for(o := 0; o<len_array(unlock_opcodes); o++)
       begin
@@ -254,7 +322,7 @@ begin
          if(read_int(opcode_min_address) == write_min_wanted and read_int(opcode_max_address) == write_max_wanted) then
             continue;
 
-         //display_msg("VOODOO unlocking opcode 0x" + sprintf("%x", opcode) + " @ 0x" + sprintf("%x", opcode_address));
+         //debug("VOODOO unlocking opcode 0x" + sprintf("%x", opcode) + " @ 0x" + sprintf("%x", opcode_address));
 
          if(opcode == 0x1d1) then
          begin
@@ -271,7 +339,7 @@ begin
             unlock := array_push(unlock, read_int(unlock_address + 0x1c));
             unlock := array_push(unlock, read_int(unlock_address + 0x20));
 
-            // You're a hero...
+            // SafeWrite32... You're a hero...
             write_int  (unlock_address + 0x00, 0xec835052);
             write_int  (unlock_address + 0x04, 0x406a5404);
             write_int  (unlock_address + 0x08, 0x2e50046a);
@@ -297,7 +365,7 @@ begin
             write_int(opcode_max_address, write_max_wanted);
          end
 
-         //display_msg("VOODOO unlocked opcode 0x" + sprintf("%x", opcode) + " @ 0x" + sprintf("%x", opcode_address));
+         //debug("VOODOO unlocked opcode 0x" + sprintf("%x", opcode) + " @ 0x" + sprintf("%x", opcode_address));
       end
 
       // init lookup table
@@ -308,35 +376,48 @@ begin
 
       // init internals
 
-      address := VOODOO_nmalloc(VOODOO_LIB_LOOKUP_ARGS_SIZE);
-      call VOODOO_memzero(address, VOODOO_LIB_LOOKUP_ARGS_SIZE);
-      call VOODOO_SetAddressOf(VOODOO_ID_call_args, address);
-
       address := VOODOO_nmalloc(10);
       call VOODOO_memset(address, 0x90, 10);
-      call VOODOO_SetAddressOf(VOODOO_ID_call_offset, address);
+      call VOODOO_SetLookupData(VOODOO_ID_call_offset, address, 10);
 
-      debug("VOODOO lookup = 0x" + sprintf("%x", read_int(VOODOO_LIB_LOOKUP_ADDRESS)));
-      call VOODOO_DumpAddressOf();
+      debug("VOODOO lookup = 0x" + sprintf("%x", VOODOO_LIB_LOOKUP));
+      call VOODOO_DumpLookupData();
 
       return 1;
    end
 
-   debug("VOODOO lookup (cached) = 0x" + sprintf("%x", read_int(VOODOO_LIB_LOOKUP_ADDRESS)));
+   debug("VOODOO lookup (cached) = 0x" + sprintf("%x", VOODOO_LIB_LOOKUP));
    return 0;
 end
+
+procedure VOODOO_Finish()
+begin
+   if(VOODOO_LIB_LOOKUP == VOODOO_LIB_LOOKUP_UNSET) then
+      return;
+
+   call VOODOO_ClearLookupData();
+   call VOODOO_DumpLookupData();
+
+   call VOODOO_nfree(VOODOO_LIB_LOOKUP);
+   write_int(VOODOO_LIB_LOOKUP_ADDRESS, VOODOO_LIB_LOOKUP_UNSET);
+   debug("VOODOO finish");
+end
+
+//
+// misc
+//
 
 // ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated
 // with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
 procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
 begin
-   return call_offset_r2(VOODOO_GetAddressOf(VOODOO_ID_CalcHook_patch), address, offset);
+   return call_offset_r2(VOODOO_LookupAddress(VOODOO_ID_CalcHook_patch), address, offset);
 end
 
 // https://github.com/phobos2077/sfall/issues/288
 procedure VOODOO_call_offset_r0(variable address)
 begin
-   variable jmpaddress := VOODOO_GetAddressOf(VOODOO_ID_call_offset);
+   variable jmpaddress := VOODOO_LookupAddress(VOODOO_ID_call_offset);
 
    call VOODOO_MakeJump(jmpaddress, address);
    return call_offset_r0(jmpaddress);
@@ -345,7 +426,7 @@ end
 // https://github.com/phobos2077/sfall/issues/288
 procedure VOODOO_call_offset_r4(variable address, variable arg1, variable arg2, variable arg3, variable arg4)
 begin
-   variable jmpaddress := VOODOO_GetAddressOf(VOODOO_ID_call_offset);
+   variable jmpaddress := VOODOO_LookupAddress(VOODOO_ID_call_offset);
 
    call VOODOO_MakeJump(jmpaddress, address);
    return call_offset_r4(jmpaddress, arg1, arg2, arg3, arg4);
