@@ -168,7 +168,7 @@ end
 // with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
 procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
 begin
-   return call_offset_r2(VOODOO_CalcHook__patch, address, offset);
+   return call_offset_r2(VOODOO_GetAddressOf(VOODOO_ID_CalcHook_patch), address, offset);
 end
 
 procedure VOODOO_GetAddressOf(variable id)

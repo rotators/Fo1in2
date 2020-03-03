@@ -32,10 +32,6 @@ variable $addr;
 #include "debug.h"
 #include "voodoo_lib.h"
 
-// Clears memory area at given address by filling it with NOP instructions
-#define VOODOO_CAVE(address, length) \
-               call_offset_v3(VOODOO_SafeMemSet__patch, address, 0x90, length)
-
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
