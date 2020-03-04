@@ -421,7 +421,7 @@ end
 // with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
 procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
 begin
-   return call_offset_r2(VOODOO_LookupAddress(VOODOO_ID_CalcHook_patch), address, offset);
+   return call_offset_r2(VOODOO_LookupAddress(VOODOO_ID_CalcHook_code), address, offset);
 end
 
 // https://github.com/phobos2077/sfall/issues/288
