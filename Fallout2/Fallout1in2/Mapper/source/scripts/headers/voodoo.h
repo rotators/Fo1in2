@@ -20,7 +20,7 @@ variable $addr;
 
 // sfall-asm:defines-begin //
 
-#define VOODOO_ID_CalcHook_patch  1
+#define VOODOO_ID_CalcHook_code  1
 
 // sfall-asm:defines-end //
 
@@ -37,26 +37,24 @@ variable $addr;
 // sfall-asm:code-begin //
 
 #define VOODOO_CalcHook \
-              begin                                                       \
-               $addr := VOODOO_nmalloc(11);                                 \
-               call VOODOO_SetAddressOf(VOODOO_ID_CalcHook_patch, $addr);   \
-               debug("Allocated 11 bytes @ 0x"+ sprintf("%x", $addr));      \
-               write_short($addr+0, 0x8b2e);                               /* mov esi,cs:[eax] */ \
-               write_byte($addr+2, 0x30);                                   \
-               write_short($addr+3, 0xd001);                               /* add eax,edx */ \
-               write_short($addr+5, 0xf001);                               /* add eax,esi */ \
-               write_short($addr+7, 0xc083);                               /* add eax,4 */ \
-               write_byte($addr+9, 0x04);                                   \
-               write_byte($addr+10, 0xc3);                                 /* ret */ \
-              end                                                         \
+              begin                                                  \
+               $addr := VOODOO_Alloc(VOODOO_ID_CalcHook_code, 11);   \
+               write_short($addr,    0x8b2e); /* mov esi,cs:[eax] */ \
+               write_byte ($addr+2,  0x30);                          \
+               write_short($addr+3,  0xd001); /* add eax,edx */      \
+               write_short($addr+5,  0xf001); /* add eax,esi */      \
+               write_short($addr+7,  0xc083); /* add eax,4 */        \
+               write_byte ($addr+9,  0x04);                          \
+               write_byte ($addr+10, 0xc3);   /* ret */              \
+              end                                                    \
               noop
 
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
-              begin                             \
+              begin                               \
                call VOODOO_BlockCall(0x4c1011);   \
                call VOODOO_BlockCall(0x4c1042);   \
-              end                               \
+              end                                 \
               noop
 
 // This will replace RoboDog PID with Dogmeat PID in hardcoded list of dogs PIDs; required for woofs and arfs in combat control
