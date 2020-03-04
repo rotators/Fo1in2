@@ -290,6 +290,18 @@ begin
    end
 end
 
+procedure VOODOO_Alloc(variable id, variable size, variable clear := -1)
+begin
+   variable address := VOODOO_nmalloc(size);
+
+   call VOODOO_SetLookupData(id, address, size);
+
+   if(clear >= 0) then
+      call VOODOO_memset(address, clear, size);
+
+   return address;
+end
+
 //
 // init/finish
 //
@@ -376,9 +388,7 @@ begin
 
       // init internals
 
-      address := VOODOO_nmalloc(10);
-      call VOODOO_memset(address, 0x90, 10);
-      call VOODOO_SetLookupData(VOODOO_ID_call_offset, address, 10);
+      address := VOODOO_Alloc(VOODOO_ID_call_offset, 10, 0x90);
 
       debug("VOODOO lookup = 0x" + sprintf("%x", VOODOO_LIB_LOOKUP));
       call VOODOO_DumpLookupData();
