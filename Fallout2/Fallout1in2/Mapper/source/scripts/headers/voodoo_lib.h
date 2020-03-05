@@ -16,9 +16,9 @@
 #include "sfall/lib.math.h"
 
 //
-// 0x410003 (1b)   used by rfall
-// 0x410004 (4b)   used for lookup table, permanent
-// 0x41ade0 (34b)  used for unlocking write functions, temporary
+// 0x410003 (1b)    used by rfall
+// 0x410004 (4b)    used for lookup table pointer
+// 0x4b1554 (148b)  used for temporary code
 //
 
 // lookup table : general
@@ -36,7 +36,6 @@
 // internal lookup IDs
 #define VOODOO_ID_INTERNAL     (1000)
 #define VOODOO_ID_call_args    (VOODOO_ID_INTERNAL + 0) // WIP
-#define VOODOO_ID_call_offset  (VOODOO_ID_INTERNAL + 1) // used by VOODOO_call_offset*()
 
 //
 // Native functions
@@ -67,6 +66,21 @@ end
 // helpers
 //
 
+procedure VOODOO_TempClear(variable slow := false)
+begin
+   variable a, address := 0x4b1554; // fallout2.refresh_mapper_
+
+   for(a := address; a < 0x4b15e8; a += 4) // 
+   begin
+      if(slow == false and read_int(a) == 0xcccccccc) then
+         break;
+
+      write_int(a, 0xcccccccc);
+   end
+
+   return address + 1;
+end
+
 procedure VOODOO_AssertByte(variable func, variable address, variable expected)
 begin
      variable byte := read_byte(address);
@@ -75,6 +89,12 @@ begin
          return false;
      end
      return true;
+end
+
+// ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated with VOODOO_CalculateHookFuncOffset(0x4C4670, 0x51);
+procedure VOODOO_CalculateHookFuncOffset(variable address, variable offset)
+begin
+   return read_int(address) + address + offset + 4;
 end
 
 procedure VOODOO_CalculateRel32(variable from, variable to)
@@ -173,16 +193,17 @@ end
 procedure VOODOO_GetLookupData(variable id, variable idx)
 begin
    variable a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
+   variable warn; warn := "VOODOO GetLookupData(" + id + ", " + idx + ") ";
 
    if(typeof(id) != VALTYPE_INT or id <= 0) then
    begin
-      // TODO warning
+      debug(warn + "invalid id");
       return;
    end
 
    if(typeof(idx) != VALTYPE_INT or idx <= 0) then
    begin
-      // TODO warning
+      debug(warn + "invalid idx");
       return 0;
    end
 
@@ -193,21 +214,21 @@ begin
       if(curr == 0) then
          break;
       else if(curr == id) then
-      begin
          return read_int(a + idx * 4);
-      end
    end
 
+   debug(warn + "unknown id");
    return 0;
 end
 
 procedure VOODOO_SetLookupData(variable id, variable address, variable size := 0)
 begin
    variable a, aMax := VOODOO_LIB_LOOKUP_ID_ADDRESS + VOODOO_LIB_LOOKUP_ID_SIZE; // CAH cannot into for(x:=0, y:=1; x < y; x++)
+   variable warn; warn := "VOODOO SetLookupData(" + id + ", 0x" + sprintf("%x, ", address) + size + ") ";
 
    if(typeof(id) != VALTYPE_INT or id <= 0) then
    begin
-      // TODO warning
+      debug(warn + "invalid id");
       return;
    end
 
@@ -224,7 +245,7 @@ begin
       end
    end
 
-   // TODO warning
+   debug(warn + "lookup table is full");
 end
 
 procedure VOODOO_ClearLookupData
@@ -244,22 +265,6 @@ begin
 
       call VOODOO_memzero(a, VOODOO_LIB_LOOKUP_ID_SIZE_ONE);
    end
-end
-
-procedure VOODOO_LookupAddress(variable id)
-begin
-   return VOODOO_GetLookupData(id, 1);
-end
-
-procedure VOODOO_LookupSize(variable id)
-begin
-   return VOODOO_GetLookupData(id, 2);
-end
-
-// backward compatibility, until sfall-asm is updated
-procedure VOODOO_SetAddressOf(variable id, variable address)
-begin
-   call VOODOO_SetLookupData(id, address);
 end
 
 procedure VOODOO_DumpLookupData
@@ -290,6 +295,7 @@ begin
    end
 end
 
+// used by sfall-asm --malloc
 procedure VOODOO_Alloc(variable id, variable size, variable clear := -1)
 begin
    variable address := VOODOO_nmalloc(size);
@@ -300,6 +306,16 @@ begin
       call VOODOO_memset(address, clear, size);
 
    return address;
+end
+
+procedure VOODOO_LookupAddress(variable id)
+begin
+   return VOODOO_GetLookupData(id, 1);
+end
+
+procedure VOODOO_LookupSize(variable id)
+begin
+   return VOODOO_GetLookupData(id, 2);
 end
 
 //
@@ -338,20 +354,9 @@ begin
 
          if(opcode == 0x1d1) then
          begin
-            variable u, unlock_address := 0x41ade0; // hello _defam my old friend... i've come to overwrite you again...
-            variable unlock := temp_array(0, 0);
+            variable unlock_address := VOODOO_TempClear();
 
-            unlock := array_push(unlock, read_int(unlock_address + 0x00));
-            unlock := array_push(unlock, read_int(unlock_address + 0x04));
-            unlock := array_push(unlock, read_int(unlock_address + 0x08));
-            unlock := array_push(unlock, read_int(unlock_address + 0x0c));
-            unlock := array_push(unlock, read_int(unlock_address + 0x10));
-            unlock := array_push(unlock, read_int(unlock_address + 0x14));
-            unlock := array_push(unlock, read_int(unlock_address + 0x18));
-            unlock := array_push(unlock, read_int(unlock_address + 0x1c));
-            unlock := array_push(unlock, read_int(unlock_address + 0x20));
-
-            // SafeWrite32... You're a hero...
+            // SafeWrite32
             write_int  (unlock_address + 0x00, 0xec835052);
             write_int  (unlock_address + 0x04, 0x406a5404);
             write_int  (unlock_address + 0x08, 0x2e50046a);
@@ -364,12 +369,6 @@ begin
 
             call_offset_v2(unlock_address, opcode_min_address, write_min_wanted);
             call_offset_v2(unlock_address, opcode_max_address, write_max_wanted);
-
-            // ...and you have to leave.
-            for(u:=0; u<len_array(unlock); u++)
-            begin
-               write_int(unlock_address + u * 4, unlock[u]);
-            end
          end
          else
          begin
@@ -388,7 +387,7 @@ begin
 
       // init internals
 
-      address := VOODOO_Alloc(VOODOO_ID_call_offset, 10, 0x90);
+      call VOODOO_TempClear(true);
 
       debug("VOODOO lookup = 0x" + sprintf("%x", VOODOO_LIB_LOOKUP));
       call VOODOO_DumpLookupData();
@@ -405,41 +404,39 @@ begin
    if(VOODOO_LIB_LOOKUP == VOODOO_LIB_LOOKUP_UNSET) then
       return;
 
+   debug("VOODOO finish");
+
    call VOODOO_ClearLookupData();
-   call VOODOO_DumpLookupData();
+   call VOODOO_DumpLookupData(); // (in)sanity check, remove once lookup stuff 
+
+   call VOODOO_TempClear(true);
 
    call VOODOO_nfree(VOODOO_LIB_LOOKUP);
    write_int(VOODOO_LIB_LOOKUP_ADDRESS, VOODOO_LIB_LOOKUP_UNSET);
-   debug("VOODOO finish");
 end
 
 //
 // misc
 //
 
-// ddraw.sfall::wmAreaMarkVisitedState_hack+0x51 is calculated
-// with VOODOO_GetHookFuncOffset(0x4C4670, 0x51);
-procedure VOODOO_GetHookFuncOffset(variable address, variable offset)
-begin
-   return call_offset_r2(VOODOO_LookupAddress(VOODOO_ID_CalcHook_code), address, offset);
-end
-
 // https://github.com/phobos2077/sfall/issues/288
-procedure VOODOO_call_offset_r0(variable address)
+procedure VOODOO_call_offset_r(variable num, variable address, variable arg1 := 0, variable arg2 := 0, variable arg3 := 0, variable arg4 := 0)
 begin
-   variable jmpaddress := VOODOO_LookupAddress(VOODOO_ID_call_offset);
-
+   variable jmpaddress := VOODOO_TempClear();
    call VOODOO_MakeJump(jmpaddress, address);
-   return call_offset_r0(jmpaddress);
-end
 
-// https://github.com/phobos2077/sfall/issues/288
-procedure VOODOO_call_offset_r4(variable address, variable arg1, variable arg2, variable arg3, variable arg4)
-begin
-   variable jmpaddress := VOODOO_LookupAddress(VOODOO_ID_call_offset);
+   if(num == 0) then
+      return call_offset_r0(jmpaddress);
+   else if(num == 1) then
+      return call_offset_r1(jmpaddress, arg1);
+   else if(num == 2) then
+      return call_offset_r2(jmpaddress, arg1, arg2);
+   else if(num == 3) then
+      return call_offset_r3(jmpaddress, arg1, arg2, arg3);
+   else if(num == 4) then
+      return call_offset_r4(jmpaddress, arg1, arg2, arg3, arg4);
 
-   call VOODOO_MakeJump(jmpaddress, address);
-   return call_offset_r4(jmpaddress, arg1, arg2, arg3, arg4);
+   display_msg("VOODOO call_offset_r invalid num<" + num + ">");
 end
 
 #endif // VOODOO_LIB_H //
