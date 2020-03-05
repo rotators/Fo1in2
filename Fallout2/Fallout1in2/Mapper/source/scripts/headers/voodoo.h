@@ -19,9 +19,6 @@
 variable $addr;
 
 // sfall-asm:defines-begin //
-
-#define VOODOO_ID_CalcHook_code  1
-
 // sfall-asm:defines-end //
 
 #include "sfall/sfall.rotators.h"
@@ -35,19 +32,6 @@ variable $addr;
 
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 // sfall-asm:code-begin //
-
-#define VOODOO_CalcHook \
-              begin                                                  \
-               $addr := VOODOO_Alloc(VOODOO_ID_CalcHook_code, 11);   \
-               write_short($addr,    0x8b2e); /* mov esi,cs:[eax] */ \
-               write_byte ($addr+2,  0x30);                          \
-               write_short($addr+3,  0xd001); /* add eax,edx */      \
-               write_short($addr+5,  0xf001); /* add eax,esi */      \
-               write_short($addr+7,  0xc083); /* add eax,4 */        \
-               write_byte ($addr+9,  0x04);                          \
-               write_byte ($addr+10, 0xc3);   /* ret */              \
-              end                                                    \
-              noop
 
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
