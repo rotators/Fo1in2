@@ -77,11 +77,13 @@
 
 #define military_base_destroyed             (global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE) > 0)
 #define cathedral_destroyed                 (global_var(GVAR_MASTER_BLOWN_CUTSCENE) > 0)
-#define set_military_base_destroyed         set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1); \
+#define set_military_base_destroyed         set_global_var(GVAR_QUEST_VAULT13_3_KILL_VATS, 2);  \
+                                            set_global_var(GVAR_VATS_BLOWN_CUTSCENE_DONE, 1);   \
                                             set_end_Vats
-#define set_cathedral_destroyed             set_global_var( GVAR_MASTER_BLOWN_CUTSCENE, 1); \
+#define set_cathedral_destroyed             set_global_var(GVAR_QUEST_VAULT13_2_MASTER, 2);     \
+                                            set_global_var(GVAR_MASTER_BLOWN_CUTSCENE, 1);      \
                                             set_end_Master
-                                            
+
 #define master_killed                       (global_var(GVAR_MASTER_BLOWN) == 1)
 #define set_master_killed                   set_global_var(GVAR_MASTER_BLOWN, 1)
 #define unset_master_killed                 set_global_var(GVAR_MASTER_BLOWN, 0)
@@ -440,7 +442,7 @@ variable knock_down_sound;
                                     (cur_map_index == MAP_MINE1) or  \
                                     (cur_map_index == MAP_MINE2) or  \
                                     (cur_map_index == MAP_MINE3))
-                                    
+
 #define map_is_mine                 ((cur_map_index == MAP_MINE1) or \
                                     (cur_map_index == MAP_MINE2) or  \
                                     (cur_map_index == MAP_MINE3))
