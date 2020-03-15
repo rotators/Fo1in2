@@ -35,6 +35,7 @@
 #define fo1in2_cave_maps_enabled        (global_var(GVAR_ENABLE_CAVE_MAPS) > 0)
 #define fo1in2_fo2_critters_enabled     (global_var(GVAR_ENABLE_FO2_CRITTERS) > 0)
 #define fo1in2_classic_wm_enabled       (global_var(GVAR_ENABLE_CLASSIC_WM) > 0)
+#define fo1in2_alt_bos_reward_enabled   (global_var(GVAR_ENABLE_ALTERNATIVE_BOS_REWARD) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
