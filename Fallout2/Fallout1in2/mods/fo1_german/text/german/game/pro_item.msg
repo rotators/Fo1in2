@@ -781,7 +781,7 @@
 {40001}{}{Ein Flammenwerfer Modell Flambe 450, Varmiter-Ausführung. Feuert eine kurze Salve äußerst heißer, brennbarer Flüssigkeit ab. Spezieller Treibstoff erforderlich. Dieses Modell feuert eine noch heißere Mischung ab, wodurch die Flammenbildung begünstigt wird. Mindest-ST: 6.}
 {40100}{}{Lasergewehr (Ext. Cap.)}
 {40101}{}{Bei dem Lasergewehr Wattz 2000 wurde das Ladesystem aufgerüstet sowie ein spezieller Recyclingchip installiert. Dadurch kann die Abnutzung der Mikrofusionszelle um 50% vermindert werden. Mindest-ST: 6.}
-{40200}{}{Magneto-Laser-Pistole}
+{40200}{}{Magneto-Laserpistole}
 {40201}{}{Die Laserpistole Wattz 1000 ist mit einem Zielsuchsystem über ein magnetisches Feld aufgerüstet worden. Dadurch wird der Laserstrahl gebündelt, so daß die Waffe zusätzliche Durchschlagkraft erhält. Mindest-ST: 3.}
 {40300}{}{FN FAL (Nachtsicht)}
 {40301}{}{Dieses Gewehr ist häufiger von bewaffneten Streitkräften eingesetzt worden als jedes andere in der Geschichte. Zuverlässige Waffe unabhängig von Terrain oder taktischer Situation. Diese Waffe wurde zusätzlich mit einem Nachtsichtgerät ausgestattet, um die Zielgenauigkeit bei Nacht zu erhöhen. Mindest-ST: 5.}

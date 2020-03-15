@@ -6,24 +6,36 @@
 
 #include "define.h"
 #include "maps/mstrlr12.h"
+#include "command.h"
 
 procedure start;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
+procedure timed_event_p_proc;
+
+procedure check_field;
+
+#define EVENT_REFRESH      (1)
 
 procedure start begin
 end
 
 procedure map_enter_p_proc begin
-   if (map_var(MVAR_Pris_Field_Status) == 0) then begin
-      if not(is_loading_game) then set_self_visible;
-   end
-   else begin
-      if not(is_loading_game) then set_self_invisible;
-   end
+   flush_add_timer_event(self_obj, game_ticks(1), EVENT_REFRESH);
 end
 
 procedure map_update_p_proc begin
+   call check_field;
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_REFRESH) then begin
+      call check_field;
+   end
+   add_timer_event(self_obj, game_ticks(1), EVENT_REFRESH);
+end
+
+procedure check_field begin
    if (map_var(MVAR_Pris_Field_Status) == 0) then begin
       if not(is_loading_game) then set_self_visible;
    end

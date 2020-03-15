@@ -4099,8 +4099,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4963)
 #define RESERVED_FOR_FALLOUT_FIXT               (4964)
 #define RESERVED_FOR_FALLOUT_FIXT               (4965)
-#define RESERVED_FOR_FALLOUT_FIXT               (4966)
-#define RESERVED_FOR_FALLOUT_FIXT               (4967)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4966)*/
+#define GVAR_ENABLE_ALTERNATIVE_BOS_REWARD      (4967)
 #define GVAR_ENABLE_CLASSIC_WM                  (4968)
 #define GVAR_GECKO_HUNTER_WARPARTY              (4969)
 #define GVAR_GECKO_HUNTER_STATUS                (4970)

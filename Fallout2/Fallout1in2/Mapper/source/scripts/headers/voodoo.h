@@ -19,22 +19,11 @@
 variable $addr;
 
 // sfall-asm:defines-begin //
-
-#define VOODOO_SafeMemSet__patch    0x480ee4
-#define VOODOO_SafeWrite8___patch   0x480f0d
-#define VOODOO_SafeWrite16___patch  0x480f2f
-#define VOODOO_SafeWrite32___patch  0x480f52
-#define VOODOO_CalcHook__patch      0x480f74
-
 // sfall-asm:defines-end //
 
 #include "sfall/sfall.rotators.h"
 #include "debug.h"
 #include "voodoo_lib.h"
-
-// Clears memory area at given address by filling it with NOP instructions
-#define VOODOO_CAVE(address, length) \
-               call_offset_v3(VOODOO_SafeMemSet__patch, address, 0x90, length)
 
 // Used to refresh the game window, including HRP black edges
 #define VOODOO_display_win_redraw \
@@ -44,145 +33,12 @@ variable $addr;
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
 // sfall-asm:code-begin //
 
-// https://github.com/phobos2077/sfall/issues/285
-#define VOODOO_SafeMemSet \
-              begin                                                                            \
-               write_byte (0x480ee4, 0x52);       /* push edx   - int num (bytes) */           \
-               write_byte (0x480ee5, 0x53);       /* push ebx   - uint8 value */               \
-               write_byte (0x480ee6, 0x50);       /* push eax   - void* ptr */                 \
-               write_byte (0x480ee7, 0x57);       /* push edi */                               \
-               write_short(0x480ee8, 0xec83);     /* sub esp,4  - DWORD oldProtect; */         \
-               write_byte (0x480eea, 0x04);                                                    \
-               write_byte (0x480eeb, 0x54);       /* push esp   - &oldProtect */               \
-               write_short(0x480eec, 0x406a);     /* push 40    - PAGE_EXECUTE_READWRITE */    \
-               write_byte (0x480eee, 0x53);       /* push ebx   - int num (bytes) */           \
-               write_byte (0x480eef, 0x50);       /* push eax   - void* ptr */                 \
-               write_int  (0x480ef0, 0x1815ff2e); /* call cs:[<&fallout2.VirtualProtect>] */   \
-               write_short(0x480ef4, 0x6c02);                                                  \
-               write_byte (0x480ef6, 0x00);                                                    \
-               write_short(0x480ef7, 0xc483);     /* add esp,4 */                              \
-               write_byte (0x480ef9, 0x04);                                                    \
-               write_int  (0x480efa, 0x08244c8b); /* mov ecx,ss:[esp+0x8] - int num (bytes) */ \
-               write_int  (0x480efe, 0x0c24448a); /* mov al, ss:[esp+0xC] - uint8 value */     \
-               write_int  (0x480f02, 0x04247c8b); /* mov edi,ss:[esp+0x4] - void* ptr */       \
-               write_short(0x480f06, 0xaaf3);     /* rep stosb */                              \
-               write_byte (0x480f08, 0x5f);       /* pop edi */                                \
-               write_byte (0x480f09, 0x58);       /* pop eax */                                \
-               write_byte (0x480f0a, 0x5b);       /* pop ebx */                                \
-               write_byte (0x480f0b, 0x5a);       /* pop edx */                                \
-               write_byte (0x480f0c, 0xc3);       /* ret */                                    \
-              end                                                                              \
-              noop
-
-#define VOODOO_codecave_selfrun \
-              begin                                                                     \
-               /* ignore CTRL+R on main screen */                                       \
-               write_short(0x480c90, 0x6666);     /* nop */                             \
-               write_byte (0x480c92, 0x90);                                             \
-               write_short(0x480c93, 0xff33);     /* xor edi,edi */                     \
-               /* ignore main_selfrun_exit_ on closing game */                          \
-               write_int  (0x480ca2, 0x66666666); /* nop */                             \
-               write_byte (0x480ca6, 0x90);                                             \
-               /* clear main_selfrun_init_, main_selfrun_exit_, main_selfrun_record_ */ \
-               /* skips area occupied by SafeMemSet */                                  \
-               VOODOO_CAVE(0x480f0d, 397);                                              \
-              end                                                                       \
-              noop
-
-// https://github.com/phobos2077/sfall/issues/288
-#define VOODOO_SafeWrite8_ \
-              begin                                                                          \
-               write_byte (0x480f0d, 0x52);       /* push edx   - int8 value */              \
-               write_byte (0x480f0e, 0x50);       /* push eax   - void* ptr */               \
-               write_short(0x480f0f, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
-               write_byte (0x480f11, 0x04);                                                  \
-               write_byte (0x480f12, 0x54);       /* push esp   - &oldProtect */             \
-               write_short(0x480f13, 0x406a);     /* push 40    - PAGE_EXECUTE_READWRITE */  \
-               write_short(0x480f15, 0x016a);     /* push 1     - byte */                    \
-               write_byte (0x480f17, 0x50);       /* push eax   - void* ptr */               \
-               write_int  (0x480f18, 0x1815ff2e); /* call cs:[<&fallout2.VirtualProtect>] */ \
-               write_short(0x480f1c, 0x6c02);                                                \
-               write_byte (0x480f1e, 0x00);                                                  \
-               write_short(0x480f1f, 0xc483);     /* add esp,4 */                            \
-               write_byte (0x480f21, 0x04);                                                  \
-               write_int  (0x480f22, 0x0424448b); /* mov eax,ss:[esp+4] */                   \
-               write_int  (0x480f26, 0x0024548b); /* mov edx,ss:[esp] */                     \
-               write_short(0x480f2a, 0x0288);     /* mov ds:[edx],al */                      \
-               write_byte (0x480f2c, 0x58);       /* pop eax */                              \
-               write_byte (0x480f2d, 0x5a);       /* pop edx */                              \
-               write_byte (0x480f2e, 0xc3);       /* ret */                                  \
-              end                                                                            \
-              noop
-
-// https://github.com/phobos2077/sfall/issues/288
-#define VOODOO_SafeWrite16_ \
-              begin                                                                          \
-               write_byte (0x480f2f, 0x52);       /* push edx   - int16 value */             \
-               write_byte (0x480f30, 0x50);       /* push eax   - void* ptr */               \
-               write_short(0x480f31, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
-               write_byte (0x480f33, 0x04);                                                  \
-               write_byte (0x480f34, 0x54);       /* push esp   - &oldProtect */             \
-               write_short(0x480f35, 0x406a);     /* push 40    - PAGE_EXECUTE_READWRITE */  \
-               write_short(0x480f37, 0x026a);     /* push 2     - 2 bytes */                 \
-               write_byte (0x480f39, 0x50);       /* push eax   - void* ptr */               \
-               write_int  (0x480f3a, 0x1815ff2e); /* call cs:[<&fallout2.VirtualProtect>] */ \
-               write_short(0x480f3e, 0x6c02);                                                \
-               write_byte (0x480f40, 0x00);                                                  \
-               write_short(0x480f41, 0xc483);     /* add esp,4 */                            \
-               write_byte (0x480f43, 0x04);                                                  \
-               write_int  (0x480f44, 0x0424448b); /* mov eax,ss:[esp+4] */                   \
-               write_int  (0x480f48, 0x0024548b); /* mov edx,ss:[esp] */                     \
-               write_short(0x480f4c, 0x8966);     /* mov ds:[edx],ax */                      \
-               write_byte (0x480f4e, 0x02);                                                  \
-               write_byte (0x480f4f, 0x58);       /* pop eax */                              \
-               write_byte (0x480f50, 0x5a);       /* pop edx */                              \
-               write_byte (0x480f51, 0xc3);       /* ret */                                  \
-              end                                                                            \
-              noop
-
-// https://github.com/phobos2077/sfall/issues/288
-#define VOODOO_SafeWrite32_ \
-              begin                                                                          \
-               write_byte (0x480f52, 0x52);       /* push edx   - int32 value */             \
-               write_byte (0x480f53, 0x50);       /* push eax   - void* ptr */               \
-               write_short(0x480f54, 0xec83);     /* sub esp,4  - DWORD oldProtect; */       \
-               write_byte (0x480f56, 0x04);                                                  \
-               write_byte (0x480f57, 0x54);       /* push esp   - &oldProtect */             \
-               write_short(0x480f58, 0x406a);     /* push 40    - PAGE_EXECUTE_READWRITE */  \
-               write_short(0x480f5a, 0x046a);     /* push 4     - 4 bytes */                 \
-               write_byte (0x480f5c, 0x50);       /* push eax   - void* ptr */               \
-               write_int  (0x480f5d, 0x1815ff2e); /* call cs:[<&fallout2.VirtualProtect>] */ \
-               write_short(0x480f61, 0x6c02);                                                \
-               write_byte (0x480f63, 0x00);                                                  \
-               write_short(0x480f64, 0xc483);     /* add esp,4 */                            \
-               write_byte (0x480f66, 0x04);                                                  \
-               write_int  (0x480f67, 0x0424448b); /* mov eax,ss:[esp+4] */                   \
-               write_int  (0x480f6b, 0x0024548b); /* mov edx,ss:[esp] */                     \
-               write_short(0x480f6f, 0x0289);     /* mov ds:[edx],eax */                     \
-               write_byte (0x480f71, 0x58);       /* pop eax */                              \
-               write_byte (0x480f72, 0x5a);       /* pop edx */                              \
-               write_byte (0x480f73, 0xc3);       /* ret */                                  \
-              end                                                                            \
-              noop
-
-#define VOODOO_CalcHook \
-              begin                                                  \
-               write_short(0x480f74, 0x8b2e); /* mov esi,cs:[eax] */ \
-               write_byte (0x480f76, 0x30);                          \
-               write_short(0x480f77, 0xd001); /* add eax,edx */      \
-               write_short(0x480f79, 0xf001); /* add eax,esi */      \
-               write_short(0x480f7b, 0xc083); /* add eax,4 */        \
-               write_byte (0x480f7d, 0x04);                          \
-               write_byte (0x480f7e, 0xc3);   /* ret */              \
-              end                                                    \
-              noop
-
 // This will disable the "You encounter: ..." message
 #define VOODOO_disable_YouEncounter_message \
-              begin                             \
+              begin                               \
                call VOODOO_BlockCall(0x4c1011);   \
                call VOODOO_BlockCall(0x4c1042);   \
-              end                               \
+              end                                 \
               noop
 
 // This will replace RoboDog PID with Dogmeat PID in hardcoded list of dogs PIDs; required for woofs and arfs in combat control
