@@ -1,10 +1,7 @@
 #ifndef __SFALL_ROTATORS__
 #define __SFALL_ROTATORS__
 
-// sfall.h have no include guards :(
-#if !defined(metarule_exist)
 #include "sfall.h"
-#endif
 #include "sfall.rotators.voodoo.h"
 
 // https://stackoverflow.com/a/44291052/11998612 + tweaks
@@ -25,14 +22,6 @@
 // Rotators sfall_funcX macros
 // arguments in [square, brackets] are optional
 
-// flags for r_message_box; if not set, engine uses MSGBOX_NORMAL or MSGBOX_SMALL (depends on text size)
-#define MSGBOX_NORMAL      0x01 // uses regular graphic
-#define MSGBOX_SMALL       0x02 // uses smaller graphic
-#define MSGBOX_ALIGN_LEFT  0x04 // text moved to left
-#define MSGBOX_ALIGN_TOP   0x08 // text moved to top
-#define MSGBOX_YESNO       0x10 // DONE button replaced with YES/NO
-#define MSGBOX_CLEAN       0x20 // no buttons
-
 #define r_get_ini_string(file, section, key, defaultValue)  sfall_func("r_get_ini_string", file, section, key, defaultValue)
 //      r_message_box(text, [flags, color1, color23, callback)
 #define r_message_box(...)                                  sfall_func("r_message_box", __VA_ARGS__)
@@ -51,7 +40,7 @@
 #define r_write_int(addr,val)                               sfall_func("r_write", 2, addr, val)
 #define r_write_string(addr,val)                            sfall_func("r_write", 3, addr, val)
 
-// TODO: (Re)move at some point?
+// TODO: (Re)move
 #define message_box_warning(text)      sfall_func("message_box", text, 0x01, 134, 145)
 
 #endif // __SFALL_ROTATORS__ //

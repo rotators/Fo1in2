@@ -87,19 +87,34 @@
 #define FLAG_SEEN         (0x40000000)
 #define FLAG_SHOOTTHRU    (0x80000000)
 
-
-/* Critter Flags */
+/* Critter flags */
 #define CFLG_BARTER             2  // 0x00000002 - Barter (can trade with)
-#define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot steal from)
+#define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot be stolen from)
 #define CFLG_NODROP            64  // 0x00000040 - Drop (doesn't drop items)
 #define CFLG_NOLIMBS          128  // 0x00000080 - Limbs (cannot lose limbs)
 #define CFLG_NOAGES           256  // 0x00000100 - Ages (dead body does not disappear)
-#define CFLG_NOHEAL           512  // 0x00000200 - Heal (damage is not cured with time)
+#define CFLG_NOHEAL           512  // 0x00000200 - Heal (damage is not healed with time)
 #define CFLG_INVULN          1024  // 0x00000400 - Invulnerable (cannot be hurt)
 #define CFLG_FLATTN          2048  // 0x00000800 - Flatten (leaves no dead body)
-#define CFLG_SPECIAL         4096  // 0x00001000 - Special (there is a special type of death)
-#define CFLG_RANGED          8192  // 0x00002000 - Range (melee attack is possible at a distance)
-#define CFLG_NOKNOCKDOWN    16384  // 0x00004000 - Knock (cannot be knocked down)
+#define CFLG_SPECIAL         4096  // 0x00001000 - Special (has a special type of death)
+#define CFLG_RANGED          8192  // 0x00002000 - Range (has extra hand-to-hand range)
+#define CFLG_NOKNOCKBACK    16384  // 0x00004000 - Knock (cannot be knocked back)
+#define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
+
+/* Window flags */
+#define WIN_FLAG_MOVEONTOP          (0x4)
+#define WIN_FLAG_HIDDEN             (0x8)
+#define WIN_FLAG_EXCLUSIVE         (0x10)
+#define WIN_FLAG_TRANSPARENT       (0x20)
+
+/* Message window flags */
+#define MSGBOX_AUTOSIZE             (0x0)
+#define MSGBOX_NORMAL               (0x1)
+#define MSGBOX_SMALL                (0x2)
+#define MSGBOX_ALIGN_LEFT           (0x4) // text aligned to left
+#define MSGBOX_ALIGN_TOP            (0x8) // text aligned to top
+#define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
+#define MSGBOX_CLEAN               (0x20) // no buttons
 
 //remove inven obj defines
 #define RMOBJ_CONSUME_DRUG        4666772
@@ -120,7 +135,7 @@
 #define RMOBJ_RM_MULT_OBJS        4563866
 #define RMOBJ_REPLACE_WEAPON      4658526
 #define RMOBJ_THROW               4266040
-#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from a container inside of an inventory
+#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
@@ -328,7 +343,6 @@
 #define ai_area_be_absolutely_sure     (4)
 
 // AI attack who mode values
-#define ai_attack_no_pref              (-1)
 #define ai_attack_whomever_attacking_me (0)
 #define ai_attack_strongest            (1)
 #define ai_attack_weakest              (2)
@@ -345,12 +359,12 @@
 #define ai_run_away_never              (7)
 
 // AI disposition values
-#define ai_disposition_none            (0)
-#define ai_disposition_custom          (1)
-#define ai_disposition_coward          (2)
-#define ai_disposition_defensive       (3)
-#define ai_disposition_aggressive      (4)
-#define ai_disposition_berserk         (5)
+#define ai_disposition_none            (-1)
+#define ai_disposition_custom          (0)
+#define ai_disposition_coward          (1)
+#define ai_disposition_defensive       (2)
+#define ai_disposition_aggressive      (3)
+#define ai_disposition_berserk         (4)
 
 // AI distance values
 #define ai_distance_stay_close         (0)
@@ -385,15 +399,16 @@
 #define OBJ_DATA_FID                (0x20)
 #define OBJ_DATA_ELEVATION          (0x28)
 #define OBJ_DATA_PID                (0x64)
-#define OBJ_DATA_CID                (0x68) // combat id, used for savegame
-#define OBJ_DATA_SID                (0x78)
+#define OBJ_DATA_CID                (0x68) // combat ID, used for savegame
+#define OBJ_DATA_SID                (0x78) // script ID
+#define OBJ_DATA_SCRIPT_INDEX       (0x80) // script index number in scripts.lst
 // items
-#define OBJ_DATA_CUR_CHARGES        (0x3C)
+#define OBJ_DATA_CUR_CHARGES        (0x3C) // for key items it's the key code
 // critters
 #define OBJ_DATA_COMBAT_STATE       (0x3C) // flags: 1 - combat, 2 - target is out of range, 4 - flee
 #define OBJ_DATA_CUR_ACTION_POINT   (0x40)
 #define OBJ_DATA_DAMAGE_LAST_TURN   (0x48)
-#define OBJ_DATA_WHO_HIT_ME         (0x54)
+#define OBJ_DATA_WHO_HIT_ME         (0x54) // current target of the critter
 
 // compute attack result data offsets
 #define C_ATTACK_SOURCE             (0x00)
