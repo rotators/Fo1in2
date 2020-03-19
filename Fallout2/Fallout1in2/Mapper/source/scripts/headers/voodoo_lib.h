@@ -328,56 +328,7 @@ begin
 
    if(VOODOO_LIB_LOOKUP == VOODOO_LIB_LOOKUP_UNSET) then
    begin
-      variable o, write_min_value := 0x410000, write_max_value := 0x6b403f, write_min_wanted := 0x410000, write_max_wanted := 0xFF00DD00;
-
-      variable unlock_opcodes := temp_array(4, 0);
-      unlock_opcodes := [0x1d1, 0x1d0, 0x1cf, 0x21b]; // must be right after temp_array(); opcodes order is important
-
       debug("VOODOO init");
-
-      for(o := 0; o<len_array(unlock_opcodes); o++)
-      begin
-         variable opcode := unlock_opcodes[o];
-         variable opcode_address := VOODOO_GetOpcodeAddress(opcode);
-         variable opcode_min_offset := VOODOO_GetWriteLimitOffset(opcode, write_min_value);
-         variable opcode_max_offset := VOODOO_GetWriteLimitOffset(opcode, write_max_value);
-         variable opcode_min_address := opcode_address + opcode_min_offset;
-         variable opcode_max_address := opcode_address + opcode_max_offset;
-
-         if(opcode_min_offset == 0 or opcode_max_offset == 0) then
-            continue;
-
-         if(read_int(opcode_min_address) == write_min_wanted and read_int(opcode_max_address) == write_max_wanted) then
-            continue;
-
-         //debug("VOODOO unlocking opcode 0x" + sprintf("%x", opcode) + " @ 0x" + sprintf("%x", opcode_address));
-
-         if(opcode == 0x1d1) then
-         begin
-            variable unlock_address := VOODOO_TempClear();
-
-            // SafeWrite32
-            write_int  (unlock_address + 0x00, 0xec835052);
-            write_int  (unlock_address + 0x04, 0x406a5404);
-            write_int  (unlock_address + 0x08, 0x2e50046a);
-            write_int  (unlock_address + 0x0c, 0x021815ff);
-            write_int  (unlock_address + 0x10, 0xc483006c);
-            write_int  (unlock_address + 0x14, 0x24448b04);
-            write_int  (unlock_address + 0x18, 0x24548b04);
-            write_int  (unlock_address + 0x1c, 0x58028900);
-            write_short(unlock_address + 0x20, 0xc35a);
-
-            call_offset_v2(unlock_address, opcode_min_address, write_min_wanted);
-            call_offset_v2(unlock_address, opcode_max_address, write_max_wanted);
-         end
-         else
-         begin
-            write_int(opcode_min_address, write_min_wanted);
-            write_int(opcode_max_address, write_max_wanted);
-         end
-
-         //debug("VOODOO unlocked opcode 0x" + sprintf("%x", opcode) + " @ 0x" + sprintf("%x", opcode_address));
-      end
 
       // init lookup table
 

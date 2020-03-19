@@ -7,12 +7,27 @@
 #include "debug.h"
 #include "voodoo.h"
 #include "voodoo_lib.h"
+#include "sfall/define_lite.h"
+#include "sfall/sfall.rotators.h"
+
+procedure error_unsafe_scripting begin
+   message_box_warning("ERROR\n\nInvalid 'AllowUnsafeScripting' value\nFallout et Tu will not work correctly!");
+   //create_message_window("Warning:\n'AllowUnsafeScripting' disabled in ddraw.ini\nFallout et Tu will not work correctly!");
+   debug_msg("Fo1in2 SETTINGS - 'AllowUnsafeScripting' != 2 in ddraw.ini!");
+   signal_end_game;
+end
 
 procedure start
 begin
-   variable init := VOODOO_Init(); // must be called before any other voodoo magick
+   variable init;
 
-   //if(init) then 
+   if(get_ini_setting("ddraw.ini|Debugging|AllowUnsafeScripting") != 2) then begin
+      call error_unsafe_scripting in 1;
+   end
+
+   init := VOODOO_Init(); // must be called before any other voodoo magick
+
+   //if(init) then
    //begin
       // everything in this block will run only once per session
    //end

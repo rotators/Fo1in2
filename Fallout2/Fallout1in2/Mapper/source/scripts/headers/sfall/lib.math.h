@@ -10,10 +10,10 @@
 #define below(a, b)        (unsigned_comp(a, b) < 0)
 #define below_equal(a, b)  (unsigned_comp(a, b) <= 0)
 
-procedure unsigned_comp(variable a, variable b) begin
+// for sfall 4.2.3/3.8.23
+pure procedure unsigned_comp(variable a, variable b) begin
    if ((a bwxor b) == 0) then return 0; // a == b
-   if (b == 0) then return 1;
-   return 1 if (a / b) else -1;
+   return 1 if ((b == 0) orElse a div b) else -1;
 end
 
 #define MAX(x, y)    ((x > y) * x + (x <= y) * y)
