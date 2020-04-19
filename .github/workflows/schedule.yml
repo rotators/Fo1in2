@@ -13,6 +13,10 @@ on:
   - '.github/workflows/scripts/format-ssl.sh'
   - '.github/workflows/scripts/news.sh'
 
+defaults:
+ run:
+  shell: bash
+
 env:
  GHA_SCRIPTS: ".github/workflows/scripts"
 
@@ -32,64 +36,60 @@ jobs:
 ### uses GitHub API to check last non-automagic commit in repository
 ### if it's older than a week, all other steps are skipped
 
-  - name:  Activity check
-    run:   |
-           :
-           # old check, requires already cloned repository; left for reference
-           # timestamp=$(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1)
+  - name: Activity check
+    run:  |
+          :
+          # old check, requires already cloned repository; left for reference
+          # timestamp=$(git log --all --invert-grep --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" --date=unix --format=%ad -1)
 
-           curl -sL https://api.github.com/repos/$GITHUB_REPOSITORY/commits | jq -r '[.[] | select(.author.login != "${{ secrets.ANTALASKAYA_LOGIN }}")][0]' > $HOME/commit.json
+          curl -sL https://api.github.com/repos/$GITHUB_REPOSITORY/commits | jq -r '[.[] | select(.author.login != "${{ secrets.ANTALASKAYA_LOGIN }}")][0]' > $HOME/commit.json
 
-           date="$(jq -r '.commit.author.date' $HOME/commit.json)"
-           timestamp=$(date --utc -d "$date" +%s)
-           author="$(jq -r '.commit.author.name' $HOME/commit.json)"
-           url="$(jq -r '.html_url' $HOME/commit.json)"
-           days=$(( ( $(date --utc +%s) - $timestamp ) / 86400 ))
-           rm -f $HOME/commit.json
+          date="$(jq -r '.commit.author.date' $HOME/commit.json)"
+          timestamp=$(date --utc -d "$date" +%s)
+          author="$(jq -r '.commit.author.name' $HOME/commit.json)"
+          url="$(jq -r '.html_url' $HOME/commit.json)"
+          days=$(( ( $(date --utc +%s) - $timestamp ) / 86400 ))
+          rm -f $HOME/commit.json
 
-           echo "Repository activity : $timestamp $author $url"
+          echo "Repository activity : $timestamp $author $url"
 
-           alive=0
+          alive=0
 
-           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
-              alive=1
-           else
-              if [ $days -gt 2 ]; then
-                 echo "[WARNING] Repository activity : $days days ago"
-              fi
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+             echo "[WARNING] Ignoring activity limits : workflow triggered manually"
+             alive=1
+          else
+             if [ $days -gt 2 ]; then
+                echo "[WARNING] Repository activity : $days days ago"
+             fi
 
-              if [ $days -lt 8 ]; then
-                 echo Repository active : $days days
-                 alive=1
-              else
-                 echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
-              fi
-           fi
+             if [ $days -lt 8 ]; then
+                echo Repository active : $days days
+                alive=1
+             else
+                echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
+             fi
+          fi
 
-           if [ $alive -eq 1 ]; then
-              echo ::set-env name=GHA_REPO_ALIVE::true
-           fi
-    shell: bash
+          if [ $alive -eq 1 ]; then
+             echo ::set-env name=GHA_REPO_ALIVE::true
+          fi
 
 ### Preparations
 ### clones all interesting repositories used by tasks
 ### restores/creates cache used by tasks
 
-  - name:  Clone sfall-develop
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   git clone --branch=develop https://github.com/phobos2077/sfall.git $HOME/sfall-develop
-    shell: bash
+  - name: Clone sfall-develop
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  git clone --branch=develop https://github.com/phobos2077/sfall.git $HOME/sfall-develop
 
-  - name:  Clone sfall-rotators
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   git clone --branch=rotators https://github.com/rotators/sfall.git $HOME/sfall-rotators
-    shell: bash
+  - name: Clone sfall-rotators
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  git clone --branch=rotators https://github.com/rotators/sfall.git $HOME/sfall-rotators
 
-  - name:  Clone sfall-asm
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   git clone --branch=master https://github.com/ghost2238/sfall-asm.git $HOME/sfall-asm
-    shell: bash
+  - name: Clone sfall-asm
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  git clone --branch=master https://github.com/ghost2238/sfall-asm.git $HOME/sfall-asm
 
   - name: Clone FO1@2
     if:   env.GHA_REPO_ALIVE == 'true'
@@ -98,63 +98,62 @@ jobs:
      token: ${{ secrets.ANTALASKAYA_TOKEN }}
      fetch-depth: 0
 
-  - name:  Preparations
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   |
-           :
-           echo "::group::Get tags"
-           git fetch origin +refs/tags/*:refs/tags/*
-           echo ::endgroup::
+  - name: Preparations
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          echo "::group::Get tags"
+          git fetch origin +refs/tags/*:refs/tags/*
+          echo ::endgroup::
 
-           echo "::group::Get old SHA"
-           git --no-pager log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" > $HOME/git.log
-           set +e
-           OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
-           OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
-           set -e
-           echo "sfall-rotators $OLD_SFALL_ROTATORS"
-           echo "ModdersPack    $OLD_ARTIFACTS"
-           rm -f $HOME/git.log
-           echo ::endgroup::
+          echo "::group::Get old SHA"
+          git --no-pager log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" > $HOME/git.log
+          set +e
+          OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
+          OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
+          set -e
+          echo "sfall-rotators $OLD_SFALL_ROTATORS"
+          echo "ModdersPack    $OLD_ARTIFACTS"
+          rm -f $HOME/git.log
+          echo ::endgroup::
 
-           echo "::group::Get new SHA"
-           NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
-           NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
-           echo "sfall-rotators $NEW_SFALL_ROTATORS"
-           echo "ModdersPack    $NEW_ARTIFACTS"
-           echo ::endgroup::
+          echo "::group::Get new SHA"
+          NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
+          NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
+          echo "sfall-rotators $NEW_SFALL_ROTATORS"
+          echo "ModdersPack    $NEW_ARTIFACTS"
+          echo ::endgroup::
 
-           set_dxsdk_dir=0
+          set_dxsdk_dir=0
 
-           echo "sfall-rotators..."
-           if [ "$OLD_SFALL_ROTATORS" != "$NEW_SFALL_ROTATORS" ]; then
-              echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
-              echo ::set-env name=GHA_TASK_SFALL_ROTATORS::true
-              set_dxsdk_dir=1
-           fi
+          echo "sfall-rotators..."
+          if [ "$OLD_SFALL_ROTATORS" != "$NEW_SFALL_ROTATORS" ]; then
+             echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
+             echo ::set-env name=GHA_TASK_SFALL_ROTATORS::true
+             set_dxsdk_dir=1
+          fi
 
-           if [ $set_dxsdk_dir -eq 1 ]; then
-              echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
-           fi
+          if [ $set_dxsdk_dir -eq 1 ]; then
+             echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
+          fi
 
-           echo "ModdersPack..."
-           if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
-              echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
-              echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
-           fi
+          echo "ModdersPack..."
+          if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
+             echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
+             echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
+          fi
 
-           echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
+          echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
 
-           # simplifies checking/displaying which event triggered workflow (especially dispatches)
-           event="${{ github.event_name }}"
-           if [ "$event" == "repository_dispatch" ]; then
-              event="${event}:${{ github.event.action }}"
-           fi
-           echo ::set-env name=GHA_EVENT::$event
-           echo "GitHub event... $event"
-           echo "GitHub find.... $(which find)"
-           echo "GitHub sort.... $(which sort)"
-    shell: bash
+          # simplifies checking/displaying which event triggered workflow (especially dispatches)
+          event="${{ github.event_name }}"
+          if [ "$event" == "repository_dispatch" ]; then
+             event="${event}:${{ github.event.action }}"
+          fi
+          echo ::set-env name=GHA_EVENT::$event
+          echo "GitHub event... $event"
+          echo "GitHub find.... $(which find)"
+          echo "GitHub sort.... $(which sort)"
 
   - name: Cache (DirectX)
     if:   env.DXSDK_DIR != ''
@@ -164,157 +163,149 @@ jobs:
      path: ~/cache-dx
      key:  cache-sfall-dx
 
-  - name:  Cache create (DirectX)
-    if:    env.DXSDK_DIR != '' && steps.cache-dx.outputs.cache-hit != 'true'
-    run:   |
-           :
-           echo ::group::DX2010
-           curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
-           7z x _DX2010_.exe DXSDK/Include -o_DX2010_
-           7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
-           mv _DX2010_/DXSDK $DXSDK_DIR
-           echo ::endgroup::
+  - name: Cache create (DirectX)
+    if:   env.DXSDK_DIR != '' && steps.cache-dx.outputs.cache-hit != 'true'
+    run:  |
+          :
+          echo ::group::DX2010
+          curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
+          7z x _DX2010_.exe DXSDK/Include -o_DX2010_
+          7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
+          mv _DX2010_/DXSDK $DXSDK_DIR
+          echo ::endgroup::
 
-           echo ::group::DX2007
-           curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
-           7z x _DX2007_.exe -o_DX2007_
-           7z x _DX2007_/DXSDK_Aug2007.exe Lib/x86 -o_DX2007_
-           cp _DX2007_/Lib/x86/dinput.lib $DXSDK_DIR/Lib/x86
-           echo ::endgroup::
+          echo ::group::DX2007
+          curl -L https://download.microsoft.com/download/3/3/f/33f1af6e-c61b-4f14-a0de-3e9096ed4b3a/DXSDK_Aug2007.exe -o _DX2007_.exe
+          7z x _DX2007_.exe -o_DX2007_
+          7z x _DX2007_/DXSDK_Aug2007.exe Lib/x86 -o_DX2007_
+          cp _DX2007_/Lib/x86/dinput.lib $DXSDK_DIR/Lib/x86
+          echo ::endgroup::
 
-           # clean & check
-           rm -fR _DX*_ _DX*_.exe
-           git status
+          # clean & check
+          rm -fR _DX*_ _DX*_.exe
+          git status
 
-           #ls -Ra $HOME/cache-dx
-           du -hd0 $HOME/cache-dx
-    shell: bash
+          #ls -Ra $HOME/cache-dx
+          du -hd0 $HOME/cache-dx
 
 ### Major tasks
 ### always generates commit (if needed)
 
   # updates customized version of sfall (rotators branch, ReleaseXP configuration)
-  - name:  sfall-rotators update
-    if:    env.GHA_TASK_SFALL_ROTATORS == 'true'
-    run:   |
-           :
-           echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
-           sed -ri 's!(0x[0]*501|_WIN32_WINNT_WINXP)!0x0600!' $HOME/sfall-rotators/sfall/stdafx.h
-           ok=1
-           "$MSBUILD_EXE" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v140_xp || ok=0
-           if [ $ok -eq 1 ] && [ -f "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" ]; then
-              cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
-           fi
-           SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1 sfall)
-           SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
-           echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
-           ls -sh $MOD_DIR/ddraw.rotators.dll
+  - name: sfall-rotators update
+    if:   env.GHA_TASK_SFALL_ROTATORS == 'true'
+    run:  |
+          :
+          echo "@echo off" > $HOME/sfall-rotators/sfall/PostBuild.cmd
+          sed -ri 's!(0x[0]*501|_WIN32_WINNT_WINXP)!0x0600!' $HOME/sfall-rotators/sfall/stdafx.h
+          ok=1
+          "$MSBUILD_EXE" $HOME/sfall-rotators/sfall/ddraw.sln -p:Configuration=ReleaseXP -p:Platform=Win32 -p:PlatformToolset=v140_xp || ok=0
+          if [ $ok -eq 1 ] && [ -f "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" ]; then
+             cp "$HOME/sfall-rotators/sfall/ReleaseXP/ddraw.dll" $MOD_DIR/ddraw.rotators.dll
+          fi
+          SFALL_ROTATORS_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1 sfall)
+          SFALL_ROTATORS_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=$MOD_DIR/ddraw.rotators.dll)
+          echo "sfall-rotators (v${SFALL_ROTATORS_VERSION}, ${SFALL_ROTATORS_COMMIT})"
+          ls -sh $MOD_DIR/ddraw.rotators.dll
 
-           git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
-    shell: bash
+          git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
 
   # updates sfall artifacts
-  - name:  ModdersPack update
-    if:    env.GHA_TASK_SFALL_ARTIFACTS == 'true'
-    run:   |
-           :
-           rm -fR Tools/ModdersPack
-           cp -r $HOME/sfall-develop/artifacts Tools/ModdersPack
+  - name: ModdersPack update
+    if:   env.GHA_TASK_SFALL_ARTIFACTS == 'true'
+    run:  |
+          :
+          rm -fR Tools/ModdersPack
+          cp -r $HOME/sfall-develop/artifacts Tools/ModdersPack
 
-           if [[ -n $(git status --short --untracked-files=all Tools/ModdersPack) ]]; then
-              git add Tools/ModdersPack
-              SFALL_ARTIFACTS_COMMIT=$(git -C $HOME/sfall-develop log --pretty=format:%H -1 artifacts)
-              echo "- ModdersPack update (phobos2077/sfall@${SFALL_ARTIFACTS_COMMIT})" >> $HOME/gha.commit
-           fi
-    shell: bash
+          if [[ -n $(git status --short --untracked-files=all Tools/ModdersPack) ]]; then
+             git add Tools/ModdersPack
+             SFALL_ARTIFACTS_COMMIT=$(git -C $HOME/sfall-develop log --pretty=format:%H -1 artifacts)
+             echo "- ModdersPack update (phobos2077/sfall@${SFALL_ARTIFACTS_COMMIT})" >> $HOME/gha.commit
+          fi
 
   # updates scripts sources to Rotators standards
-  - name:  ReDefine run
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   |
-           :
-           scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
-           headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+  - name: ReDefine run
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+          headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
 
-           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts --headers $headers >/dev/null
+          Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts --headers $headers >/dev/null
 
-           grep "^Changed " ReDefine.log || true
-           rm ReDefine*.log
-           git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
+          grep "^Changed " ReDefine.log || true
+          rm ReDefine*.log
+          git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
 
-           echo "::set-env name=MOD_SCRIPTS_DIR::$scripts"
-           echo "::set-env name=MOD_HEADERS_DIR::$headers"
-    shell: bash
+          echo "::set-env name=MOD_SCRIPTS_DIR::$scripts"
+          echo "::set-env name=MOD_HEADERS_DIR::$headers"
 
   # updates unsafe scripting header
-  - name:  Voodoo regeneration
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   |
-           :
-           SFASM=$HOME/sfall-asm
-           SFASM_EXE=$SFASM/bin/Release/sfall-asm.exe
-           HEADER="$MOD_HEADERS_DIR/voodoo.h"
+  - name: Voodoo regeneration
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          SFASM=$HOME/sfall-asm
+          SFASM_EXE=$SFASM/bin/Release/sfall-asm.exe
+          HEADER="$MOD_HEADERS_DIR/voodoo.h"
 
-           echo ::group::sfall-asm
-           "$MSBUILD_EXE" $SFASM/sfall-asm.sln -p:Configuration=Release 2>&1
-           echo ::endgroup::
+          echo ::group::sfall-asm
+          "$MSBUILD_EXE" $SFASM/sfall-asm.sln -p:Configuration=Release 2>&1
+          echo ::endgroup::
 
-           $SFASM_EXE $SFASM/patches/fo1in2/ --malloc --update-file=$HEADER -strict
+          $SFASM_EXE $SFASM/patches/fo1in2/ --malloc --update-file=$HEADER -strict
 
-           echo ::group::voodoo.h
-           cat $HEADER
-           echo ::endgroup::
+          echo ::group::voodoo.h
+          cat $HEADER
+          echo ::endgroup::
 
-           unix2dos -q $HEADER
-           git diff --quiet || (git add --update && echo "- Voodoo regeneration" >> $HOME/gha.commit)
-    shell: bash
+          unix2dos -q $HEADER
+          git diff --quiet || (git add --update && echo "- Voodoo regeneration" >> $HOME/gha.commit)
 
   # updates scripts sources to be consistent
-  - name:  Scripts formatting
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   |
-           :
-           $GHA_SCRIPTS/format-ssl.sh
-           $GHA_SCRIPTS/format-ssl.sh --scripts-dir=$MOD_DIR/mods/
+  - name: Scripts formatting
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          $GHA_SCRIPTS/format-ssl.sh
+          $GHA_SCRIPTS/format-ssl.sh --scripts-dir=$MOD_DIR/mods/
 
-           git diff --quiet || (git add --update && echo "- Scripts formatting" >> $HOME/gha.commit)
-    shell: bash
+          git diff --quiet || (git add --update && echo "- Scripts formatting" >> $HOME/gha.commit)
 
   # updates scripts bytecode
-  - name:  Scripts recompilation
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   |
-           :
-           $GHA_SCRIPTS/compile-ssl.sh --bytecode --optimization=1
-           $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=$MOD_DIR/mods/ --bytecode --bytecode-dir=? --optimization=1
+  - name: Scripts recompilation
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          $GHA_SCRIPTS/compile-ssl.sh --bytecode --optimization=1
+          $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=$MOD_DIR/mods/ --bytecode --bytecode-dir=? --optimization=1
 
-           git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
-    shell: bash
+          git diff --quiet || (git add --update && echo "- Scripts recompilation" >> $HOME/gha.commit)
 
 ### Validation
 ### checks if any of major tasks wants to generate commit
 ### prepares commit message header
 
-  - name:  Validation
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   |
-           :
-           echo ::group::git status
-           git status 2>&1
-           echo ::endgroup::
+  - name: Validation
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  |
+          :
+          echo ::group::git status
+          git status 2>&1
+          echo ::endgroup::
 
-           # allow full run; forces minor tasks to run even if major tasks does not generate commit
-           if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
-              echo "# Minor tasks forced to run" >> $HOME/gha.commit
-           fi
+          # allow full run; forces minor tasks to run even if major tasks does not generate commit
+          if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
+             echo "# Minor tasks forced to run" >> $HOME/gha.commit
+          fi
 
-           if [ -f "$HOME/gha.commit" ]; then
-              sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
-              dos2unix $HOME/gha.commit
-              echo ::set-env name=GHA_COMMIT::true
-              cat $HOME/gha.commit
-           fi
-    shell: bash
+          if [ -f "$HOME/gha.commit" ]; then
+             sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
+             dos2unix $HOME/gha.commit
+             echo ::set-env name=GHA_COMMIT::true
+             cat $HOME/gha.commit
+          fi
 
 ### Minor tasks
 ### runs only if at least one of major tasks wants to generate commit, or triggered manually with "full" switch enabled
@@ -322,27 +313,25 @@ jobs:
   # update ddraw.ini comment with sfall version
   # update ddraw.ini setting with mod version
   # update all config files to use dos line endings
-  - name:  Configuration refresh
-    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
-    run:   |
-           :
-           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
-           $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING" --bump
+  - name: Configuration refresh
+    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    run:  |
+          :
+          $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
+          $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING" --bump
 
-           grep "^;v" $MOD_DIR/ddraw.ini
-           $GHA_SCRIPTS/ddraw.sh get --ini=$MOD_DIR/ddraw.ini --cfg=Misc --key=VersionString --fmt='"["in_section"]\\n"in_key[1]" = "in_key[2]'
+          grep "^;v" $MOD_DIR/ddraw.ini
+          $GHA_SCRIPTS/ddraw.sh get --ini=$MOD_DIR/ddraw.ini --cfg=Misc --key=VersionString --fmt='"["in_section"]\\n"in_key[1]" = "in_key[2]'
 
-           unix2dos -q $MOD_DIR/*.cfg $MOD_DIR/*.ini $MOD_DIR/config/*.cfg $MOD_DIR/config/*.ini || true
-           git diff --quiet || (git add --update && echo "- Configuration refresh" >> $HOME/gha.commit)
-    shell: bash
+          unix2dos -q $MOD_DIR/*.cfg $MOD_DIR/*.ini $MOD_DIR/config/*.cfg $MOD_DIR/config/*.ini || true
+          git diff --quiet || (git add --update && echo "- Configuration refresh" >> $HOME/gha.commit)
 
   # update news list
-  - name:  News update
-    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
-    run:   |
-           $GHA_SCRIPTS/news.sh $GITHUB_REPOSITORY NEWS.md [Aa]dded [Cc]hanged [Ff]ixed [Rr]emoved [Tt]weaked
-           git diff --quiet || (git add --update && echo "- News update" >> $HOME/gha.commit)
-    shell: bash
+  - name: News update
+    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    run:  |
+          $GHA_SCRIPTS/news.sh $GITHUB_REPOSITORY NEWS.md [Aa]dded [Cc]hanged [Ff]ixed [Rr]emoved [Tt]weaked
+          git diff --quiet || (git add --update && echo "- News update" >> $HOME/gha.commit)
 
 ### Push
 ### generates and displays commit
@@ -350,46 +339,42 @@ jobs:
 ### - schedule
 ### - repository_dispatch:schedule-push
 
-  - name:  Push
-    if:    env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
-    run:   |
-           :
-           echo ::group::git commit
-           dos2unix $HOME/gha.commit
-           sed -i '/^#/d' $HOME/gha.commit
-           git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
-           git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
-           git commit --file="$HOME/gha.commit" 2>&1
-           rm -f $HOME/gha.commit
-           echo ::endgroup::
+  - name: Push
+    if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
+    run:  |
+          :
+          echo ::group::git commit
+          dos2unix $HOME/gha.commit
+          sed -i '/^#/d' $HOME/gha.commit
+          git config --global user.name  "${{ secrets.ANTALASKAYA_NAME }}"
+          git config --global user.email "${{ secrets.ANTALASKAYA_EMAIL }}"
+          git commit --file="$HOME/gha.commit" 2>&1
+          rm -f $HOME/gha.commit
+          echo ::endgroup::
 
-           echo ::group::git log
-           git log -p -n 1 2>&1
-           echo ::endgroup::
+          echo ::group::git log
+          git log -p -n 1 2>&1
+          echo ::endgroup::
 
-           if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
-              echo ::group::git push
-              git push 2>&1
-              echo ::endgroup::
-           else
-              echo "[WARNING] Repository not updated : event<$GHA_EVENT> not allowed to modify repository"
-           fi
-    shell: bash
+          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
+             echo ::group::git push
+             git push 2>&1
+             echo ::endgroup::
+          else
+             echo "[WARNING] Repository not updated : event<$GHA_EVENT> not allowed to modify repository"
+          fi
     continue-on-error: true
 
 ### Cleanup
 
-  - name:  Post Clone sfall-develop
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   rm -fR $HOME/sfall-develop
-    shell: bash
+  - name: Post Clone sfall-develop
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  rm -fR $HOME/sfall-develop
 
-  - name:  Post Clone sfall-rotators
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   rm -fR $HOME/sfall-rotators
-    shell: bash
+  - name: Post Clone sfall-rotators
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  rm -fR $HOME/sfall-rotators
 
-  - name:  Post Clone sfall-asm
-    if:    env.GHA_REPO_ALIVE == 'true'
-    run:   rm -fR $HOME/sfall-asm
-    shell: bash
+  - name: Post Clone sfall-asm
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  rm -fR $HOME/sfall-asm

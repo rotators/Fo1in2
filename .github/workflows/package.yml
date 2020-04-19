@@ -4,6 +4,10 @@ on:
  repository_dispatch:
   types: [package-prerelease, package-release]
 
+defaults:
+ run:
+  shell: bash
+
 env:
  GHA_SCRIPTS: ".github/workflows/scripts"
 
@@ -23,115 +27,107 @@ jobs:
      # required for commits counter
      fetch-depth: 0
 
-  - name:  Preparations
-    run:   |
-           :
-           event="${{ github.event_name }}"
-           if [ "$event" == "repository_dispatch" ]; then
-              event="${event}:${{ github.event.action }}"
-           fi
+  - name: Preparations
+    run:  |
+          :
+          event="${{ github.event_name }}"
+          if [ "$event" == "repository_dispatch" ]; then
+             event="${event}:${{ github.event.action }}"
+          fi
 
-           pre=
-           if   [ "$event" == "repository_dispatch:package-prerelease" ]; then
-                pre=true
-           elif [ "$event" == "repository_dispatch:package-release" ]; then
-                pre=false
-           else
-                echo "[ERROR] unknown event<$event>"
-                exit 1
-           fi
+          pre=
+          if   [ "$event" == "repository_dispatch:package-prerelease" ]; then
+               pre=true
+          elif [ "$event" == "repository_dispatch:package-release" ]; then
+               pre=false
+          else
+               echo "[ERROR] unknown event<$event>"
+               exit 1
+          fi
 
-           commits="$(git rev-list HEAD --count)"
-           echo ::set-env name=MOD_RELEASE_TAG::v1.1.${commits}
-           echo ::set-env name=MOD_RELEASE_DRAFT::true
-           echo ::set-env name=MOD_RELEASE_PRE::$pre
-           echo ::set-env name=MOD_RELEASE_BODY::$(cat NEWS.md)
-    shell: bash
+          commits="$(git rev-list HEAD --count)"
+          echo ::set-env name=MOD_RELEASE_TAG::v1.1.${commits}
+          echo ::set-env name=MOD_RELEASE_DRAFT::true
+          echo ::set-env name=MOD_RELEASE_PRE::$pre
+          echo ::set-env name=MOD_RELEASE_BODY::$(cat NEWS.md)
 
-  - name:  Update version info
-    run:   |
-           :
-           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
-           $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING"
-    shell: bash
+  - name: Update version info
+    run:  |
+          :
+          $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
+          $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING"
 
-  - name:  Cleanup
-    run:   |
-           :
-           rm -fR $MOD_DIR/Debugger* $MOD_DIR/symbols.txt
-           rm -fR $MOD_DIR/Mapper/
-           rm -f  $MOD_DIR/ddraw.*.dll
-           rm -f  $MOD_DIR/ddraw.*.ini
-           rm -f  $MOD_DIR/mods/fo1_base/sound/sfx/regsnd.exe
-           /bin/find $MOD_DIR -name '.gitignore' -delete
-           /bin/find $MOD_DIR -name '.gitattributes' -delete
-    shell: bash
+  - name: Cleanup
+    run:  |
+          :
+          rm -fR $MOD_DIR/Debugger* $MOD_DIR/symbols.txt
+          rm -fR $MOD_DIR/Mapper/
+          rm -f  $MOD_DIR/ddraw.*.dll
+          rm -f  $MOD_DIR/ddraw.*.ini
+          rm -f  $MOD_DIR/mods/fo1_base/sound/sfx/regsnd.exe
+          /bin/find $MOD_DIR -name '.gitignore' -delete
+          /bin/find $MOD_DIR -name '.gitattributes' -delete
 
-  - name:  Copy UndatUI
-    run:   |
-           :
-           cp "Tools/UndatUI/undat.exe" $MOD_DIR
-           cp "Tools/UndatUI/undat_files.txt" $MOD_DIR
-    shell: bash
+  - name: Copy UndatUI
+    run:  |
+          :
+          cp "Tools/UndatUI/undat.exe" $MOD_DIR
+          cp "Tools/UndatUI/undat_files.txt" $MOD_DIR
 
-  - name:  Copy UndatCLI
-    run:   |
-           :
-           cp "Tools/UndatCLI/undat.sh" $MOD_DIR
-           cp "Tools/Fallout2_ProtoManager/dat2.exe" $MOD_DIR
-           # what's going on here
-           dos2unix "$MOD_DIR/undat.sh"
-    shell: bash
+  - name: Copy UndatCLI
+    run:  |
+          :
+          cp "Tools/UndatCLI/undat.sh" $MOD_DIR
+          cp "Tools/Fallout2_ProtoManager/dat2.exe" $MOD_DIR
+          # what's going on here
+          dos2unix "$MOD_DIR/undat.sh"
 
-  - name:  Disable debug options
-    run:   |
-           :
-           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --key=Enable --val=0
-           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --key=DebugMode --val=0
-           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --key=GVAR_ENABLE_DEBUG_MENU --val=0
-           $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --key=GVAR_ENABLE_DEBUG_MESSAGES --val=0
+  - name: Disable debug options
+    run:  |
+          :
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --key=Enable --val=0
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --key=DebugMode --val=0
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --key=GVAR_ENABLE_DEBUG_MENU --val=0
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --key=GVAR_ENABLE_DEBUG_MESSAGES --val=0
 
-           $GHA_SCRIPTS/ddraw.sh list --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --section-name
-           $GHA_SCRIPTS/ddraw.sh list --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --section-name
-    shell: bash
+          $GHA_SCRIPTS/ddraw.sh list --ini=$MOD_DIR/ddraw.ini --cfg=Debugging --section-name
+          $GHA_SCRIPTS/ddraw.sh list --ini=$MOD_DIR/config/fo1_settings.ini --cfg=DEBUG --section-name
 
-  - name:  Format documentation
-    run:   |
-           :
-           for md in $(/bin/find $MOD_DIR -type f -name '*.[Mm][Dd]' | /bin/sort); do
-               txt="$(echo "$md" | sed -e 's!\.[Mm][Dd]$!\.txt!')"
+  - name: Format documentation
+    run:  |
+          :
+          for md in $(/bin/find $MOD_DIR -type f -name '*.[Mm][Dd]' | /bin/sort); do
+              txt="$(echo "$md" | sed -e 's!\.[Mm][Dd]$!\.txt!')"
 
-               dos2unix "$md"
+              dos2unix "$md"
 
-               # replace "[path](path)" (must be exactly the same) with "path"
-               sed -ri 's!\[([A-Za-z0-9\.\_\/\\\-]+)\]\(\1\)!\1!g' "$md"
+              # replace "[path](path)" (must be exactly the same) with "path"
+              sed -ri 's!\[([A-Za-z0-9\.\_\/\\\-]+)\]\(\1\)!\1!g' "$md"
 
-               # remove lines with "```" or "```blabla" only
-               sed -ri '/^[\t\ ]*[\`]+[a-z]?[\t\ ]*$/d' "$md"
+              # remove lines with "```" or "```blabla" only
+              sed -ri '/^[\t\ ]*[\`]+[a-z]?[\t\ ]*$/d' "$md"
 
-               # remove lines which looks like html
-               sed -ri '/^<.+>$/d' "$md"
+              # remove lines which looks like html
+              sed -ri '/^<.+>$/d' "$md"
 
-               # remove first line if blank
-               sed -ri '1{/^$/d}' "$md"
+              # remove first line if blank
+              sed -ri '1{/^$/d}' "$md"
 
-               fold -w 100 -s "$md" > "$txt"
+              fold -w 100 -s "$md" > "$txt"
 
-               unix2dos "$md" "$txt"
-               echo ::group::$md
-               git diff "$md" || true
-               echo ::endgroup::
-               rm "$md"
+              unix2dos "$md" "$txt"
+              echo ::group::$md
+              git diff "$md" || true
+              echo ::endgroup::
+              rm "$md"
 
-               echo ::group::$txt
-               cat "$txt" 2>&1
-               echo ::endgroup::
-           done
-    shell: bash
+              echo ::group::$txt
+              cat "$txt" 2>&1
+              echo ::endgroup::
+          done
 
-  - name:  Pack
-    run:   7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
-    shell: bash
+  - name: Pack
+    run:  7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
     working-directory: Fallout2
 
   - name: Create release
@@ -156,8 +152,5 @@ jobs:
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
-  - name:  Show release
-    run:   |
-           :
-           echo "Link: ${{ steps.release.outputs.html_url }}"
-    shell: bash
+  - name: Show release
+    run:  echo "${{ steps.release.outputs.html_url }}"

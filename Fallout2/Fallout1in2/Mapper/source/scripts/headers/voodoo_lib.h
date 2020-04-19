@@ -66,6 +66,7 @@ end
 // helpers
 //
 
+/*
 procedure VOODOO_TempClear(variable slow := false)
 begin
    variable a, address := 0x4b1554; // fallout2.refresh_mapper_
@@ -80,6 +81,7 @@ begin
 
    return address + 1;
 end
+*/
 
 procedure VOODOO_AssertByte(variable func, variable address, variable expected)
 begin
@@ -338,8 +340,6 @@ begin
 
       // init internals
 
-      call VOODOO_TempClear(true);
-
       debug("VOODOO lookup = 0x" + sprintf("%x", VOODOO_LIB_LOOKUP));
       call VOODOO_DumpLookupData();
 
@@ -358,9 +358,7 @@ begin
    debug("VOODOO finish");
 
    call VOODOO_ClearLookupData();
-   call VOODOO_DumpLookupData(); // (in)sanity check, remove once lookup stuff 
-
-   call VOODOO_TempClear(true);
+   call VOODOO_DumpLookupData(); // (in)sanity check, remove once lookup stuff is stable
 
    call VOODOO_nfree(VOODOO_LIB_LOOKUP);
    write_int(VOODOO_LIB_LOOKUP_ADDRESS, VOODOO_LIB_LOOKUP_UNSET);
@@ -373,19 +371,16 @@ end
 // https://github.com/phobos2077/sfall/issues/288
 procedure VOODOO_call_offset_r(variable num, variable address, variable arg1 := 0, variable arg2 := 0, variable arg3 := 0, variable arg4 := 0)
 begin
-   variable jmpaddress := VOODOO_TempClear();
-   call VOODOO_MakeJump(jmpaddress, address);
-
    if(num == 0) then
-      return call_offset_r0(jmpaddress);
+      return call_offset_r0(address);
    else if(num == 1) then
-      return call_offset_r1(jmpaddress, arg1);
+      return call_offset_r1(address, arg1);
    else if(num == 2) then
-      return call_offset_r2(jmpaddress, arg1, arg2);
+      return call_offset_r2(address, arg1, arg2);
    else if(num == 3) then
-      return call_offset_r3(jmpaddress, arg1, arg2, arg3);
+      return call_offset_r3(address, arg1, arg2, arg3);
    else if(num == 4) then
-      return call_offset_r4(jmpaddress, arg1, arg2, arg3, arg4);
+      return call_offset_r4(address, arg1, arg2, arg3, arg4);
 
    display_msg("VOODOO call_offset_r invalid num<" + num + ">");
 end
