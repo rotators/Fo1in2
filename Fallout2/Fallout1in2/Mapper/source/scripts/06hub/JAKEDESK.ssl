@@ -12,6 +12,7 @@
 #include "command.h"
 
 #define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
 
 procedure start;
 procedure map_enter_p_proc;
@@ -28,6 +29,13 @@ procedure map_enter_p_proc begin
 
    // Fo2-style merchant inventory:
    if fo1in2_merch_restock_enabled then begin
+      if (local_var(LVAR_INIT_INVEN) == 0) then begin
+         set_local_var(LVAR_INIT_INVEN, 1);
+
+         // We are adding 1 Sniper Rifle by default
+         give_pid_qty(self_obj, PID_SNIPER_RIFLE, 1)
+      end
+
       if (is_loading_game == false) then begin
          if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
             //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
@@ -64,7 +72,7 @@ procedure map_enter_p_proc begin
             check_restock_item(PID_14MM_PISTOL, 1, 2, 50)
             check_restock_item(PID_DESERT_EAGLE, 0, 2, 100)
             check_restock_item(PID_COMBAT_SHOTGUN, 1, 1, 70)
-            
+
             check_restock_item(PID_ZIP_GUN, 1, 1, 50)
 
             set_local_var(LVAR_RESTOCK_TIME, (random(1, 3) * ONE_GAME_DAY) + game_time);

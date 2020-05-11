@@ -301,6 +301,8 @@ variable Scenery_Creation_Ptr;
 #define PID_WOODEN_TABLE_1                  (33554435)
 
 // Door types:
+#define PID_DOOR_METAL_VAULT_NS             (33554450)
+#define PID_DOOR_METAL_VAULT_EW             (33554451)
 #define PID_DOOR_METAL_EW                   (33554913)
 #define PID_DOOR_METAL_NS                   (33554914)
 #define PID_VDOOR_OLD_METAL_NS              (33554574)
