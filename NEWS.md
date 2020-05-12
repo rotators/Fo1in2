@@ -3,8 +3,14 @@ Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1i
 - **Added**: Flares now respawn on the Shady Sands merchant.
 - **Added**: Using the science skill on the prisoner terminal in the Master's Lair will now also toggle the force fields on / off.
 - **Added**: Zip-Gun (low-tier energy pistol) is now available at Jacob in the Hub and the merchant in Shady Sands.
+- **Fixed**: Cost calculations of the CoC doctor in Junktown wasn't rounding the result.
 - **Fixed**: Destroying the Cathedral / Military Base will now always correctly strike out the quest entries in the PipBoy.
 - **Fixed**: Dogmeat will now correctly start with 50hp.
 - **Fixed**: Fire Geckos now get their flame breath from critter script instead of the map script on critter creation. (Issue #53) 
+- **Fixed**: Jacob in the Hub will start out with a Sniper Rifle in his merchant inventory by default. 
 - **Fixed**: Marcelle won't spawn a new shotgun on ever map enter.
+- **Fixed**: Some doors in the Brotherhood bunker were using the wrong script (door.int -> metldoor.int).
+- **Fixed**: The trapis behind Set in Necropolis should spawn a fireball again when exploding.
+- **Fixed**: Wu in the Children's Cathedral won't sell his emblem anymore.
+- **Tweaked**: Added Vault doors as "metal"-type to generic door scripts.
 - **Tweaked**: Spore plant encounters now have a chance to additionally spawn a group of mantis.
