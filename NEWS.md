@@ -1,4 +1,5 @@
 Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1in2/releases/tag/v1.1.1946))
+- **Added**: A new option to the fo1_settings.ini file to toggle the Shady Sands merchant on/off.
 - **Added**: Alternative item rewards from Talus and Mathia can now be toggled in fo1_settings.ini file (enabled by default).
 - **Added**: Flares now respawn on the Shady Sands merchant.
 - **Added**: Using the science skill on the prisoner terminal in the Master's Lair will now also toggle the force fields on / off.
@@ -6,6 +7,7 @@ Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1i
 - **Fixed**: Cost calculations of the CoC doctor in Junktown wasn't rounding the result.
 - **Fixed**: Destroying the Cathedral / Military Base will now always correctly strike out the quest entries in the PipBoy.
 - **Fixed**: Dogmeat will now correctly start with 50hp.
+- **Fixed**: Duplicated beginning/end frame of male leather jacket critter. (Issue #62)
 - **Fixed**: Fire Geckos now get their flame breath from critter script instead of the map script on critter creation. (Issue #53) 
 - **Fixed**: Jacob in the Hub will start out with a Sniper Rifle in his merchant inventory by default. 
 - **Fixed**: Marcelle won't spawn a new shotgun on ever map enter.
