@@ -12,7 +12,7 @@ It will also write in how to modify the reaction level by a level. */
 #define NEUTRAL                         (2)
 #define GOOD                            (3)
 
-// Fo1 was 0 to 100, in Fo2 it is -100 to 100, so we are trying to do both
+// Fo1 was 0 to 100, in Fo2 it is -100 to 100, so we are trying to adapt
 #define LOW_REACTION                    (-50)   // Fo1: (25)
 #define BASE_REACTION                   (0)     // Fo1: (50)
 #define HIGH_REACTION                   (50)    // Fo1: (75)
@@ -20,12 +20,12 @@ It will also write in how to modify the reaction level by a level. */
 #define MIN_REACTION                    (-100)  // Fo1: (0)
 #define MAX_REACTION                    (100)   // Fo1: (100)
 
-#define NORMAL_BOOST                    (20)    // Fo1: 10
-#define HUGE_BOOST                      (50)    // Fo1: 25
+#define NORMAL_BOOST                    (20)    // Fo1: (10)
+#define HUGE_BOOST                      (50)    // Fo1: (25)
 
-#define REACTION_BONUS_BERSERKER        (20)
-#define REACTION_BONUS_CHAMPION         (20)
-#define REACTION_BONUS_CHILDKILLER      (30)
+#define REACTION_BONUS_BERSERKER        (40)    // Fo1: (20)
+#define REACTION_BONUS_CHAMPION         (40)    // Fo1: (20)
+#define REACTION_BONUS_CHILDKILLER      (60)    // Fo1: (30)
 
 variable Static_Reaction:=0;            // This adds in Reputations, Perks, Karma, and such
 variable Evil_Critter:=0;               // 0 == Good Critter, 1 == Bad Critter
@@ -52,36 +52,36 @@ variable reaction_bonus_karma:=0;
 
 
 #define get_reaction    if (local_var(LVAR_got_reaction) == 0) then begin  \
-                           set_local_var(LVAR_reaction, BASE_REACTION);          \
-                           set_local_var(LVAR_reaction_level, NEUTRAL);          \
-                           set_local_var(LVAR_got_reaction, 1);                  \
-                           set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (5 * get_critter_stat(dude_obj, STAT_ch)) - 25);          \
-                           set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (10 * has_trait(TRAIT_PERK, dude_obj, PERK_presence)));   \
-                           if (has_trait(TRAIT_PERK, dude_obj, PERK_cult_of_personality)) then begin                                         \
-                              if ( global_var( GVAR_PLAYER_REPUTATION )  > 0) then begin                                                     \
-                                 set_local_var(LVAR_reaction, local_var(LVAR_reaction) + global_var( GVAR_PLAYER_REPUTATION));               \
-                              end                                                                                                            \
-                              else begin                                                                                                     \
-                                 set_local_var(LVAR_reaction, local_var(LVAR_reaction) - global_var( GVAR_PLAYER_REPUTATION));               \
-                              end                                                                                                            \
-                           end                                                                                                               \
-                           else                                                                                                              \
-                           if (local_var(LVAR_base_reaction) == 1) then begin                                                                \
-                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) - global_var(GVAR_PLAYER_REPUTATION));                   \
-                           end                                                                                                               \
-                           else begin                                                                                                        \
-                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) + global_var(GVAR_PLAYER_REPUTATION));                   \
-                           end                                                                                                               \
-                           if (global_var(GVAR_CHILDKILLER_REPUTATION)  >= 1) then begin                                                     \
-                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) - REACTION_BONUS_CHILDKILLER);                           \
-                           end                                                                                                               \
-                           if (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and ((global_var(GVAR_BAD_MONSTER) > (3 * global_var(GVAR_GOOD_MONSTER))) or (global_var(GVAR_CHAMPION_REPUTATION)  == 1))) then begin \
-                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) + REACTION_BONUS_CHAMPION);   \
-                           end                                                                                    \
-                           if (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and ((global_var(GVAR_GOOD_MONSTER) > (2 * global_var(GVAR_BAD_MONSTER))) or (global_var(GVAR_BERSERKER_REPUTATION)  == 1))) then begin \
-                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) - REACTION_BONUS_BERSERKER);  \
-                           end                                                                                    \
-                           ReactToLevel                                                                           \
+                           set_local_var(LVAR_reaction, BASE_REACTION);    \
+                           set_local_var(LVAR_reaction_level, NEUTRAL);    \
+                           set_local_var(LVAR_got_reaction, 1);            \
+                                                  /* We double the reaction check because -100 to 100 instead of 0 to 100! */       \
+                           set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * ((5 * dude_charisma) - 25)));               \
+                           set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * (10 * dude_perk(PERK_presence))));          \
+                           if dude_perk(PERK_cult_of_personality) then begin                                                        \
+                              if (global_var(GVAR_PLAYER_REPUTATION) > 0) then begin                                                \
+                                 set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * global_var(GVAR_PLAYER_REPUTATION))); \
+                              end                                                                                                   \
+                              else begin                                                                                            \
+                                 set_local_var(LVAR_reaction, local_var(LVAR_reaction) - (2 * global_var(GVAR_PLAYER_REPUTATION))); \
+                              end                                                                                                   \
+                           end                                                                                                      \
+                           else if (local_var(LVAR_base_reaction) == 1) then begin                                                  \
+                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) - (2 * global_var(GVAR_PLAYER_REPUTATION)));    \
+                           end                                                                                                      \
+                           else begin                                                                                               \
+                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) + (2 * global_var(GVAR_PLAYER_REPUTATION)));    \
+                           end                                                                                                      \
+                           if has_rep_childkiller then begin                                                         \
+                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) - REACTION_BONUS_CHILDKILLER);   \
+                           end                                                                                       \
+                           if has_rep_champion then begin                                                            \
+                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) + REACTION_BONUS_CHAMPION);      \
+                           end                                                                                       \
+                           if has_rep_berserker then begin                                                           \
+                              set_local_var(LVAR_reaction, local_var(LVAR_reaction) - REACTION_BONUS_BERSERKER);     \
+                           end                                                                                       \
+                           ReactToLevel                                                                              \
                         end
 
 #define ReactToLevel    if (local_var(LVAR_reaction) <= LOW_REACTION) then begin    \
