@@ -9,18 +9,18 @@
 #define BRIGHT_LIGHT                    (100)
 #define CAVERN_LIGHT                    (50)
 #define DUSK_LIGHT                      (40)
-#define ENCLAVE_LIGHT                   (60)
 #define INDOOR_LIGHT                    (60)
 #define BASEMENT_LIGHT                  (50)
 #define MILITARY_BASE_LIGHTING          (75)
+#define ENCLAVE_LIGHT                   (60)
 
 #define Darkness                        set_light_level(DUSK_LIGHT)
 #define Cavern_Lighting                 set_light_level(CAVERN_LIGHT)
 #define Full_Light                      set_light_level(BRIGHT_LIGHT)
-#define Enclave_Lighting                set_light_level(ENCLAVE_LIGHT)
 #define Indoor_Lighting                 set_light_level(INDOOR_LIGHT)
 #define Basement_Lighting               set_light_level(BASEMENT_LIGHT)
 #define Military_Base_Lighting          set_light_level(MILITARY_BASE_LIGHTING)
+#define Enclave_Lighting                set_light_level(ENCLAVE_LIGHT)
 #define LightOff                        set_light_level(0)
 
 // Fo2 defines:
@@ -74,6 +74,7 @@
                                         else                                                                    \
                                             set_light_level(DUSK_LIGHT)
 
+// Fo1 and 2 lighting combined:
 #define Lighting \
    if fo1in2_env_lighting_enabled then begin                                     \
       if ((get_month >= 3) and (get_month < 5)) then                             \
