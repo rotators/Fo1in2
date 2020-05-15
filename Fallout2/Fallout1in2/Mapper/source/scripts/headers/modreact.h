@@ -20,7 +20,7 @@ It will also write in how to modify the reaction level by a level. */
 #define MIN_REACTION                    (-100)  // Fo1: (0)
 #define MAX_REACTION                    (100)   // Fo1: (100)
 
-#define NORMAL_BOOST                    (25)    // Fo1: 10
+#define NORMAL_BOOST                    (20)    // Fo1: 10
 #define HUGE_BOOST                      (50)    // Fo1: 25
 
 #define REACTION_BONUS_BERSERKER        (20)
