@@ -123,7 +123,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(0)) then begin
+   if (local_var(LVAR_reaction)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -163,10 +163,10 @@ procedure talk_p_proc begin
       if (global_var(GVAR_DESTROY_VATS_13) == 1) then begin
          call Vinnie24;
       end
-      else if (local_var(2) == 1) then begin
+      else if (local_var(LVAR_got_reaction) == BAD) then begin
          call Vinnie19;
       end
-      else if (local_var(0) == 1) then begin
+      else if (local_var(LVAR_reaction) == BAD) then begin
          call Vinnie10;
       end
       else begin
@@ -176,10 +176,10 @@ procedure talk_p_proc begin
       end_dialogue;
    end
 
-   if (local_var(1) == 1) then begin
+   if (local_var(LVAR_reaction_level) == BAD) then begin
       give_xp_msg(EXP_STEAL_URN, mstr(163));
       set_global_var(GVAR_PLAYER_REPUTATION, (check_general_rep - 1));
-      set_local_var(1, 2);
+      set_local_var(LVAR_reaction_level, NEUTRAL);
       if (global_var(GVAR_IS_NEAL_DEAD) == 0) then begin
          set_global_var(GVAR_DESTROY_VATS_11, (GAME_TIME_IN_DAYS) + 2);
       end
@@ -196,7 +196,7 @@ procedure talk_p_proc begin
 end
 
 procedure Vinnie01 begin
-   set_local_var(0, 1);
+   set_local_var(LVAR_reaction, 1);
    Reply(103);
    NOption(104, Vinnie02, 4);
    NOption(105, Vinnie03, 4);
@@ -322,7 +322,7 @@ procedure Vinnie16 begin
 end
 
 procedure Vinnie17 begin
-   set_local_var(2, 1);
+   set_local_var(LVAR_got_reaction, BAD);
    GMessage(146);
 end
 
@@ -344,9 +344,9 @@ procedure Vinnie19 begin
 end
 
 procedure Vinnie20 begin
-   set_local_var(2, 0);
-   if (local_var(1) == 0) then begin
-      set_local_var(1, 1);
+   set_local_var(LVAR_got_reaction, NO_REACTION);
+   if (local_var(LVAR_reaction_level) == NO_REACTION) then begin
+      set_local_var(LVAR_reaction_level, BAD);
    end
    if (global_var(GVAR_IS_NEAL_DEAD) == 1) then begin
       call Vinnie22;
@@ -368,7 +368,7 @@ end
 procedure Vinnie22 begin
    set_quest_join_skullz_completed;
 
-   set_local_var(2, 0);
+   set_local_var(LVAR_got_reaction, NO_REACTION);
    set_global_var(GVAR_DESTROY_VATS_13, 2);
    GMessage(157);
 end
@@ -403,16 +403,16 @@ procedure VinnieKillNeal begin
 end
 
 procedure set_sleep_time begin
-   if (CUR_MAP_JUNKKILL) then begin //  JUNKTOWN - KILLIAN, CRASH HOUSE
+   if (CUR_MAP_JUNKKILL) then begin
       sleep_time := random(2200, 2215);
       wake_time := random(800, 815);
    end
-   else if (CUR_MAP_JUNKCSNO) then begin //  JUNKTOWN - CASINO, GIZMO, SKUM PITT, BOXING, DOGMEAT
+   else if (CUR_MAP_JUNKCSNO) then begin
       sleep_time := 300;
       wake_time := 1600;
       night_person := 1;
    end
-   else if (CUR_MAP_JUNKENT) then begin //  JUNKTOWN - ENTRANCE, MORBID, LARS
+   else if (CUR_MAP_JUNKENT) then begin
       sleep_time := 2200;
       wake_time := 1000;
    end
