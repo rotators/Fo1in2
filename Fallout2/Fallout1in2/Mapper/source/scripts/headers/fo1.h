@@ -37,6 +37,7 @@
 #define fo1in2_classic_wm_enabled       (global_var(GVAR_ENABLE_CLASSIC_WM) > 0)
 #define fo1in2_alt_bos_reward_enabled   (global_var(GVAR_ENABLE_ALTERNATIVE_BOS_REWARD) > 0)
 #define fo1in2_shady_merchant_enabled   (global_var(GVAR_ENABLE_SHADY_SANDS_MERCHANT) > 0)
+#define fo1in2_env_lighting_enabled     (global_var(GVAR_ENABLE_FO2_SEASONAL_LIGHTING) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -55,10 +56,6 @@
                                     mark_map_entrance_elev_state(MAP_VAULT13,0,0);        \
                                     mark_map_entrance_elev_state(MAP_VAULT13,1,0);        \
                                     mark_map_entrance_elev_state(MAP_VAULT13,2,0);        \
-                                    /*if (dude_is_male) then*/                            \
-                                    /*   play_gmovie(WALKM_MOVIE);*/                      \
-                                    /*else*/                                              \
-                                    /*   play_gmovie(WALKW_MOVIE);*/                      \
                                     endgame_movie;                                        \
                                     gfade_out(1);                                         \
                                     party_member_unhide_all                               \
@@ -342,113 +339,8 @@ variable Use_Stealth_Boy;
    end
 
 /*********************************************************
-    Other stuff
+    Disguise Mechanics
 *********************************************************/
-// Send NPCs from "day" to "night" position:
-#define sleeping    /*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
-                    if (local_var(LVAR_Sleeping) == 1) then begin \
-                        if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin \
-                            if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin \
-                                if (tile_num(self_obj) != home_tile) then begin \
-                                    animate_move_obj_to_tile(self_obj, home_tile, 0); \
-                                end \
-                                else begin \
-                                    set_local_var(LVAR_Sleeping, 0); \
-                                end \
-                            end \
-                            else begin \
-                                move_to(self_obj, home_tile, elevation(self_obj)); \
-                                if (tile_num(self_obj) == home_tile) then begin \
-                                    set_local_var(LVAR_Sleeping, 0); \
-                                end \
-                            end \
-                        end \
-                    end \
-                    else begin \
-                        if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin \
-                            if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin \
-                                if (tile_num(self_obj) != sleep_tile) then begin \
-                                    animate_move_obj_to_tile(self_obj, self_obj, 0); \
-                                end \
-                                else begin \
-                                    set_local_var(LVAR_Sleeping, 1); \
-                                end \
-                            end \
-                            else begin \
-                                if (tile_num(self_obj) != sleep_tile) then begin \
-                                    move_to(self_obj, sleep_tile, elevation(self_obj)); \
-                                end \
-                                else begin \
-                                    set_local_var(LVAR_Sleeping, 1); \
-                                end \
-                            end \
-                        end \
-                    end
-
-procedure flee_dude begin
-    variable LVar0 := 0;
-    variable LVar1 := 0;
-    variable LVar2 := 0;
-    while(LVar1 < 5) do begin
-        if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
-            LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
-            LVar2 := tile_distance(tile_num(dude_obj), LVar0);
-        end
-        LVar1 := LVar1 + 1;
-    end
-    animate_move_obj_to_tile(self_obj, LVar0, 1);
-end
-
-variable knock_down_sound;
-#define dude_knockdown \
-   knock_down_sound := sfx_build_char_name(dude_obj, ANIM_fall_front, snd_knock_down);    \
-   reg_anim_clear(dude_obj);                                                              \
-   reg_anim_begin();                                                                      \
-      reg_anim_play_sfx(dude_obj, knock_down_sound, 1);                                   \
-      reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
-      reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                              \
-   reg_anim_end();                                                                        \
-   critter_injure(dude_obj, DAM_KNOCKED_OUT)
-
-#define dude_knockdown_nosfx \
-   reg_anim_clear(dude_obj);                                                              \
-   reg_anim_begin();                                                                      \
-      reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
-      reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                              \
-   reg_anim_end();                                                                        \
-   critter_injure(dude_obj, DAM_KNOCKED_OUT)
-
-#define map_is_caravan_escort       ((cur_map_index == MAP_DESCRVN1) or     \
-                                    (cur_map_index == MAP_DESCRVN2) or      \
-                                    (cur_map_index == MAP_DESCRVN3) or      \
-                                    (cur_map_index == MAP_DESCRVN4) or      \
-                                    (cur_map_index == MAP_MNTCRVN1) or      \
-                                    (cur_map_index == MAP_MNTCRVN2) or      \
-                                    (cur_map_index == MAP_MNTCRVN3) or      \
-                                    (cur_map_index == MAP_MNTCRVN4))
-
-#define map_is_mountain_caravan_escort  ((cur_map_index == MAP_MNTCRVN1) or \
-                                        (cur_map_index == MAP_MNTCRVN2) or  \
-                                        (cur_map_index == MAP_MNTCRVN3) or  \
-                                        (cur_map_index == MAP_MNTCRVN4))
-
-#define map_is_ocean                ((cur_map_index == MAP_COAST1) or   \
-                                    (cur_map_index == MAP_COAST2) or    \
-                                    (cur_map_index == MAP_RNDCOAST))
-
-#define map_has_cavern              ((cur_map_index == MAP_CAVE1) or \
-                                    (cur_map_index == MAP_CAVE2) or  \
-                                    (cur_map_index == MAP_CAVE3) or  \
-                                    (cur_map_index == MAP_CAVE4) or  \
-                                    (cur_map_index == MAP_CAVE5) or  \
-                                    (cur_map_index == MAP_MINE1) or  \
-                                    (cur_map_index == MAP_MINE2) or  \
-                                    (cur_map_index == MAP_MINE3))
-
-#define map_is_mine                 ((cur_map_index == MAP_MINE1) or \
-                                    (cur_map_index == MAP_MINE2) or  \
-                                    (cur_map_index == MAP_MINE3))
-
 #define dude_wearing_coc_robe       (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_PURPLE_ROBE)
 
 variable DISGUISED;
@@ -484,16 +376,77 @@ variable COC_TRESPASSING;
                                     end                                                      \
                                     if not(coc_badge_worn(dude_obj)) then COC_TRESPASSING := 1
 
-#define self_is_child 				(self_pid == PID_GIRL or self_pid == PID_BOY)
+/*********************************************************
+    Other stuff
+*********************************************************/
+// Send NPCs from "day" to "night" position:
+#define sleeping \
+   /*debug("sleeping tile: " + sleep_tile + " and home tile: " + home_tile);*/ \
+   if (local_var(LVAR_Sleeping) == 1) then begin \
+      if (not(night_person) and (game_time_hour >= wake_time) and (game_time_hour < sleep_time) or (night_person and ((game_time_hour >= wake_time) or (game_time_hour < sleep_time)))) then begin \
+          if (((game_time_hour - wake_time) < 10) and ((game_time_hour - wake_time) > 0)) then begin \
+              if (tile_num(self_obj) != home_tile) then              \
+                  animate_move_obj_to_tile(self_obj, home_tile, 0);  \
+              else                                                   \
+                  set_local_var(LVAR_Sleeping, 0);                   \
+          end           \
+          else begin    \
+              move_to(self_obj, home_tile, elevation(self_obj));                          \
+              if (tile_num(self_obj) == home_tile) then set_local_var(LVAR_Sleeping, 0);  \
+          end                                                                             \
+      end               \
+   end                  \
+   else begin           \
+      if (night_person and (game_time_hour >= sleep_time) and (game_time_hour < wake_time) or (not(night_person) and ((game_time_hour >= sleep_time) or (game_time_hour < wake_time)))) then begin \
+          if (((game_time_hour - sleep_time) < 10) and ((game_time_hour - sleep_time) > 0)) then begin \
+              if (tile_num(self_obj) != sleep_tile) then                \
+                  animate_move_obj_to_tile(self_obj, self_obj, 0);      \
+              else                                                      \
+                  set_local_var(LVAR_Sleeping, 1);                      \
+          end                                                           \
+          else begin                                                    \
+              if (tile_num(self_obj) != sleep_tile) then                \
+                  move_to(self_obj, sleep_tile, elevation(self_obj));   \
+              else                                                      \
+                  set_local_var(LVAR_Sleeping, 1);                      \
+          end \
+      end \
+   end
 
-// both blocks below should be moved to command.h at some point
-#define is_visible(cr)              has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
-#define self_visible                is_visible(self_obj)
+procedure flee_dude begin
+    variable LVar0 := 0;
+    variable LVar1 := 0;
+    variable LVar2 := 0;
+    while(LVar1 < 5) do begin
+        if (tile_distance(tile_num(dude_obj), tile_num_in_direction(tile_num(self_obj), LVar1, 3)) > LVar2) then begin
+            LVar0 := tile_num_in_direction(tile_num(self_obj), LVar1, 3);
+            LVar2 := tile_distance(tile_num(dude_obj), LVar0);
+        end
+        LVar1 := LVar1 + 1;
+    end
+    animate_move_obj_to_tile(self_obj, LVar0, 1);
+end
 
-#define set_obj_invisible(cr)       set_obj_visibility(cr,1)
-#define set_obj_visible(cr)         set_obj_visibility(cr,0)
-#define set_self_invisible          set_obj_invisible(self_obj)
-#define set_self_visible            set_obj_visible(self_obj)
+variable knock_down_sound;
+#define dude_knockdown \
+   knock_down_sound := sfx_build_char_name(dude_obj, ANIM_fall_front, snd_knock_down);    \
+   reg_anim_clear(dude_obj);                                                              \
+   reg_anim_begin();                                                                      \
+      reg_anim_play_sfx(dude_obj, knock_down_sound, 1);                                   \
+      reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
+      reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                              \
+   reg_anim_end();                                                                        \
+   critter_injure(dude_obj, DAM_KNOCKED_OUT)
+
+#define dude_knockdown_nosfx \
+   reg_anim_clear(dude_obj);                                                              \
+   reg_anim_begin();                                                                      \
+      reg_anim_animate(dude_obj, ANIM_fall_back_sf, 5);                                   \
+      reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);                              \
+   reg_anim_end();                                                                        \
+   critter_injure(dude_obj, DAM_KNOCKED_OUT)
+
+#define self_is_child 				   (self_pid == PID_GIRL or self_pid == PID_BOY)
 
 // Merchant stuff
 #define set_disable_barter          set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_BARTER))

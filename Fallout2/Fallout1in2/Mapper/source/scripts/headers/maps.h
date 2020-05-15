@@ -473,5 +473,39 @@ variable get_wm_distance;
 #define InvertRotation(X,Y)         X+=3;                       \
                                     FixRotationArc(X)
 
+/******************************************************************
+ Map Types
+******************************************************************/
+#define map_is_caravan_escort       ((cur_map_index == MAP_DESCRVN1) or     \
+                                    (cur_map_index == MAP_DESCRVN2) or      \
+                                    (cur_map_index == MAP_DESCRVN3) or      \
+                                    (cur_map_index == MAP_DESCRVN4) or      \
+                                    (cur_map_index == MAP_MNTCRVN1) or      \
+                                    (cur_map_index == MAP_MNTCRVN2) or      \
+                                    (cur_map_index == MAP_MNTCRVN3) or      \
+                                    (cur_map_index == MAP_MNTCRVN4))
+
+#define map_is_mountain_caravan_escort  ((cur_map_index == MAP_MNTCRVN1) or \
+                                        (cur_map_index == MAP_MNTCRVN2) or  \
+                                        (cur_map_index == MAP_MNTCRVN3) or  \
+                                        (cur_map_index == MAP_MNTCRVN4))
+
+#define map_is_ocean                ((cur_map_index == MAP_COAST1) or   \
+                                    (cur_map_index == MAP_COAST2) or    \
+                                    (cur_map_index == MAP_RNDCOAST))
+
+#define map_has_cavern              ((cur_map_index == MAP_CAVE1) or \
+                                    (cur_map_index == MAP_CAVE2) or  \
+                                    (cur_map_index == MAP_CAVE3) or  \
+                                    (cur_map_index == MAP_CAVE4) or  \
+                                    (cur_map_index == MAP_CAVE5) or  \
+                                    (cur_map_index == MAP_MINE1) or  \
+                                    (cur_map_index == MAP_MINE2) or  \
+                                    (cur_map_index == MAP_MINE3))
+
+#define map_is_mine                 ((cur_map_index == MAP_MINE1) or \
+                                    (cur_map_index == MAP_MINE2) or  \
+                                    (cur_map_index == MAP_MINE3))
+
 
 #endif // MAPS_H

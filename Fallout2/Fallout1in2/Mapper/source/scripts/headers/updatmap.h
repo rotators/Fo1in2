@@ -5,46 +5,6 @@
 #ifndef UPDATMAP_H
 #define UPDATMAP_H
 
-// Fallout 1 lighting:
-// Lighting Information
-#define BRIGHT_LIGHT                    (100)
-#define CAVERN_LIGHT                    (50)
-#define DUSK_LIGHT                      (40)
-#define INDOOR_LIGHT                    (60)
-#define BASEMENT_LIGHT                  (50)
-#define MILITARY_BASE_LIGHTING          (75)
-
-#define Lighting                if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin          \
-                                    set_light_level(game_time_hour - 600 + DUSK_LIGHT);                     \
-                                end                                                                         \
-                                else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin    \
-                                    set_light_level(BRIGHT_LIGHT);                                          \
-                                end                                                                         \
-                                else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin   \
-                                    set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));                \
-                                end                                                                         \
-                                else                                                                        \
-                                    set_light_level(DUSK_LIGHT)
-
-#define GlowLighting            if glow_power_online then begin         \
-                                    Full_Light;                         \
-                                end                                     \
-                                else if glow_power_emergency then begin \
-                                    Darkness;                           \
-                                end                                     \
-                                else                                    \
-                                    LightOff                            \
-
-#define Darkness                set_light_level(DUSK_LIGHT)
-#define Cavern_Lighting         set_light_level(CAVERN_LIGHT)
-#define Full_Light              set_light_level(BRIGHT_LIGHT)
-#define Indoor_Lighting         set_light_level(INDOOR_LIGHT)
-#define Basement_Lighting       set_light_level(BASEMENT_LIGHT)
-#define Military_Base_Lighting  set_light_level(MILITARY_BASE_LIGHTING)
-#define LightOff                set_light_level(0)
-
-// Fallout 2 lighting:
-/*
 // Lighting Information
 #define BRIGHT_LIGHT                    (100)
 #define CAVERN_LIGHT                    (50)
@@ -54,6 +14,16 @@
 #define BASEMENT_LIGHT                  (50)
 #define MILITARY_BASE_LIGHTING          (75)
 
+#define Darkness                        set_light_level(DUSK_LIGHT)
+#define Cavern_Lighting                 set_light_level(CAVERN_LIGHT)
+#define Full_Light                      set_light_level(BRIGHT_LIGHT)
+#define Enclave_Lighting                set_light_level(ENCLAVE_LIGHT)
+#define Indoor_Lighting                 set_light_level(INDOOR_LIGHT)
+#define Basement_Lighting               set_light_level(BASEMENT_LIGHT)
+#define Military_Base_Lighting          set_light_level(MILITARY_BASE_LIGHTING)
+#define LightOff                        set_light_level(0)
+
+// Fo2 defines:
 #define WINTER_MORNING                  (700)
 #define SPRING_MORNING                  (600)
 #define SUMMER_MORNING                  (500)
@@ -104,30 +74,55 @@
                                         else                                                                    \
                                             set_light_level(DUSK_LIGHT)
 
-#define Lighting                        if ((get_month >= 3) and (get_month < 5)) then                          \
-                                            Spring_Lighting;                                                    \
-                                        else if ((get_month >= 5) and (get_month < 9)) then                     \
-                                            Summer_Lighting;                                                    \
-                                        else if ((get_month >= 9) and (get_month < 11)) then                    \
-                                            Fall_Lighting;                                                      \
-                                        else                                                                    \
-                                            Winter_Lighting
-
-#define Darkness                        set_light_level(DUSK_LIGHT)
-
-#define Cavern_Lighting                 set_light_level(CAVERN_LIGHT)
-
-#define Full_Light                      set_light_level(BRIGHT_LIGHT)
-
-#define Enclave_Lighting                set_light_level(ENCLAVE_LIGHT)
-
-#define Indoor_Lighting                 set_light_level(INDOOR_LIGHT)
-
-#define Basement_Lighting               set_light_level(BASEMENT_LIGHT)
-
-#define Military_Base_Lighting          set_light_level(MILITARY_BASE_LIGHTING)
+#define Lighting \
+   if fo1in2_env_lighting_enabled then begin                                     \
+      if ((get_month >= 3) and (get_month < 5)) then                             \
+         Spring_Lighting;                                                        \
+      else if ((get_month >= 5) and (get_month < 9)) then                        \
+         Summer_Lighting;                                                        \
+      else if ((get_month >= 9) and (get_month < 11)) then                       \
+         Fall_Lighting;                                                          \
+      else                                                                       \
+         Winter_Lighting;                                                        \
+   end                                                                           \
+   else begin                                                                    \
+      if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin         \
+         set_light_level(game_time_hour - 600 + DUSK_LIGHT);                     \
+      end                                                                        \
+      else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin   \
+         set_light_level(BRIGHT_LIGHT);                                          \
+      end                                                                        \
+      else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin  \
+         set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));                \
+      end                                                                        \
+      else                                                                       \
+         set_light_level(DUSK_LIGHT);                                            \
+   end                                                                           \
+   noop
+   
+// Original Fo1 lighting:
+/*
+#define Lighting                if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin          \
+                                    set_light_level(game_time_hour - 600 + DUSK_LIGHT);                     \
+                                end                                                                         \
+                                else if ((game_time_hour >= 700) and (game_time_hour < 1800)) then begin    \
+                                    set_light_level(BRIGHT_LIGHT);                                          \
+                                end                                                                         \
+                                else if ((game_time_hour >= 1800) and (game_time_hour < 1900)) then begin   \
+                                    set_light_level(BRIGHT_LIGHT - (game_time_hour - 1800));                \
+                                end                                                                         \
+                                else                                                                        \
+                                    set_light_level(DUSK_LIGHT)
 */
 
+#define GlowLighting            if glow_power_online then begin         \
+                                    Full_Light;                         \
+                                end                                     \
+                                else if glow_power_emergency then begin \
+                                    Darkness;                           \
+                                end                                     \
+                                else                                    \
+                                    LightOff                            \
 
 
 #define set_cur_exit                   wm_area_set_pos(AREA_RND_ENC_MOUNTAIN, worldmap_xpos, worldmap_ypos); \
