@@ -1,107 +1,93 @@
+/*
+
+        Hub, Mrs. Stapleton - Merchant inventory container
+
+        NOTE:
+            In vanilla Fo1, Mrs. Stapleton always restocks instantly after initializing the dialog.
+            However#1, for simplicity we will only restock after each map enter.
+            However#2, money is the exception and follows Fo2 merchant restocking rules.
+
+*/
+
+/* Include Files */
 #include "define.h"
+
+#define NAME                    SCRIPT_STAPBOX
+
 #include "command.h"
+
+#define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
 
 procedure start;
 procedure map_enter_p_proc;
-procedure map_update_p_proc;
-procedure Defines;
-procedure Restock;
 
-import variable Staple_Box_Ptr;    //Footlocker that's holding her Barter stuff
+import variable Staple_Box_Ptr;
 
-variable BigBookOfScience;
-variable DeansElectronics;
-variable FirstAidBook;
-variable ScoutHandbook;
-variable GunsAndBullets;
-variable ChemistryJournals;
-
-variable NumBooks;
-variable Min;
-variable Max;
-
-variable OnlyOnce := 0;
-
-// STAPLE_INIT_NUM_BOOKS := global_var(STAPLE_INIT_NUM_BOOKS);    // (46)  // ! Fallout Fixt: CHOSEN BY PLAYER - How many of each book does Mrs Stapleton start with? (vanilla = 5)
-// STAPLE_BOOKS_RESPAWN_MIN := global_var(STAPLE_BOOKS_RESPAWN_MIN); // (47)  // ! Fallout Fixt: CHOSEN BY PLAYER - Seed for what's the minimum number of books she respawns every gvar549 weeks? (vanilla = 5)
-// STAPLE_BOOKS_RESPAWN_MAX := global_var(STAPLE_BOOKS_RESPAWN_MAX); // (48)  // ! Fallout Fixt: CHOSEN BY PLAYER - Seed for maximum number of books she respawns every gvar549 weeks? (vanilla = 5)
-// STAPLE_DIFFICULTY_BASED := global_var(STAPLE_DIFFICULTY_BASED);  // (49)  // ! Fallout Fixt: CHOSEN BY PLAYER - Does the number of books spawned for Mrs Stapleton vary based on difficulty played?
-// STAPLE_RESTOCK_WEEKS := global_var(STAPLE_RESTOCK_WEEKS);    //  549  // ! Fallout Fixt: CHOSEN BY PLAYER - How many weeks between Mrs Stapleton books-&-caps restocks? (1 to 6 maybe?)
+variable Items_List;
+variable Item;
 
 procedure start begin
    Staple_Box_Ptr := self_obj;
-   if ((map_first_run) and (OnlyOnce == 0) and not(is_loading_game)) then begin    // Generate initial inventory, and initial value for next spawn time
-      OnlyOnce := 1;
-      set_global_var(GVAR_STAPLE_RESTOCK_GAMETIME, game_time);
-      call Defines;
-      self_caps_adjust(500);
-      add_mult_objs_to_inven(self_obj, BigBookOfScience, global_var(GVAR_STAPLE_INIT_NUM_BOOKS));
-      add_mult_objs_to_inven(self_obj, DeansElectronics, global_var(GVAR_STAPLE_INIT_NUM_BOOKS));
-      add_mult_objs_to_inven(self_obj, FirstAidBook, global_var(GVAR_STAPLE_INIT_NUM_BOOKS));
-      add_mult_objs_to_inven(self_obj, ScoutHandbook, global_var(GVAR_STAPLE_INIT_NUM_BOOKS));
-      add_mult_objs_to_inven(self_obj, GunsAndBullets, global_var(GVAR_STAPLE_INIT_NUM_BOOKS));
-   end
 end
 
 procedure map_enter_p_proc begin
-// variable LVar0;
-// variable LVar1;
-// variable LVar2;
-// LVar0 := game_time;
-// LVar1 := global_var(STAPLE_RESTOCK_GAMETIME);
-// LVar2 := (global_var(STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10);
-// display_msg("CURRENT TIME: " + LVar0 + " ");
-// display_msg("GVAR636 TIME: " + LVar1 + " ");
-// display_msg("CURRENT - GVAR636: " + (LVar0 - LVar1) + " ");
-// display_msg("RESTOCK EVERY: " + LVar2 + " ");
-//
    Staple_Box_Ptr := self_obj;
-   if ((game_time - global_var(GVAR_STAPLE_RESTOCK_GAMETIME)) > (global_var(GVAR_STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10)) and not(is_loading_game) and not(map_first_run) then begin//    <--Time for new stuff!
-      call Defines;
-      call Restock;
-      set_global_var(GVAR_STAPLE_RESTOCK_GAMETIME, game_time);//  Reset "time until next spawn" counter
-   end
-end
 
-procedure map_update_p_proc begin
-   if ((game_time - global_var(GVAR_STAPLE_RESTOCK_GAMETIME)) > (global_var(GVAR_STAPLE_RESTOCK_WEEKS) * 7 * 24 * 60 * 60 * 10)) and not(is_loading_game) and not(map_first_run) then begin//    <--Time for new stuff!
-      call Defines;
-      call Restock;
-      set_global_var(GVAR_STAPLE_RESTOCK_GAMETIME, game_time);//  Reset "time until next spawn" counter
-   end
-end
+   if (is_loading_game == false) then begin
+      // Restock books:
+      Items_List := [ PID_BIG_BOOK_OF_SCIENCE, PID_DEANS_ELECTRONICS, PID_FIRST_AID_BOOK, PID_SCOUT_HANDBOOK, PID_GUNS_AND_BULLETS ];
+      foreach (Item in Items_List) begin
+         while (self_item_count(Item) < 5) do begin
+            add_obj_to_inven(Staple_Box_Ptr, create_object(Item, 0, 0));
+         end
+      end
 
-procedure Defines begin
-   BigBookOfScience := create_object(PID_BIG_BOOK_OF_SCIENCE, 0, 0);
-   DeansElectronics := create_object(PID_DEANS_ELECTRONICS, 0, 0);
-   FirstAidBook := create_object(PID_FIRST_AID_BOOK, 0, 0);
-   ScoutHandbook := create_object(PID_SCOUT_HANDBOOK, 0, 0);
-   GunsAndBullets := create_object(PID_GUNS_AND_BULLETS, 0, 0);
-   ChemistryJournals := create_object(PID_CHEMISTRY_MANUAL, 0, 0);
-//
-   Min := (global_var(GVAR_STAPLE_BOOKS_RESPAWN_MIN) - (global_var(GVAR_STAPLE_DIFFICULTY_BASED) * difficulty_level));
-   if (Min < 0) then begin
-      Min := 0;
+      // Restock money:
+      if fo1in2_merch_restock_enabled then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+            item_caps_adjust(self_obj, random(250, 500) - self_caps);
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 3) * ONE_GAME_DAY) + game_time);
+         end
+      end
+      else begin
+         item_caps_adjust(self_obj, 500 - self_caps);
+      end
    end
-   Max := (global_var(GVAR_STAPLE_BOOKS_RESPAWN_MAX) - (global_var(GVAR_STAPLE_DIFFICULTY_BASED) * difficulty_level));
-   if (Max < 1) then begin
-      Max := 1;
-   end
-   if (Max < Min) then begin
-      Max := Min;
-   end
-end
 
-procedure Restock begin
-   self_caps_adjust((500 + ((random(1, 6) * dude_luck) - 30)));//    Stat = LUCK
-   NumBooks := random(Min, Max);
-   add_mult_objs_to_inven(self_obj, BigBookOfScience, NumBooks);
-   NumBooks := random(Min, Max);
-   add_mult_objs_to_inven(self_obj, DeansElectronics, NumBooks);
-   NumBooks := random(Min, Max);
-   add_mult_objs_to_inven(self_obj, FirstAidBook, NumBooks);
-   NumBooks := random(Min, Max);
-   add_mult_objs_to_inven(self_obj, ScoutHandbook, NumBooks);
-   NumBooks := random(Min, Max);
-   add_mult_objs_to_inven(self_obj, GunsAndBullets, NumBooks);
+
+   /*
+   // Fo2-style merchant inventory:
+   if fo1in2_merch_restock_enabled then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+            item_caps_adjust(self_obj, random(250, 500) - self_caps);
+
+            check_restock_item(PID_BIG_BOOK_OF_SCIENCE, 1, 5, 100)
+            check_restock_item(PID_DEANS_ELECTRONICS, 1, 5, 100)
+            check_restock_item(PID_FIRST_AID_BOOK, 1, 5, 100)
+            check_restock_item(PID_SCOUT_HANDBOOK, 1, 5, 100)
+            check_restock_item(PID_GUNS_AND_BULLETS, 1, 5, 100)
+            //check_restock_item(PID_CHEMISTRY_MANUAL, 1, 5, 100)
+
+            set_local_var(LVAR_RESTOCK_TIME, (random(1, 3) * ONE_GAME_DAY) + game_time);
+         end
+      end
+   end
+
+   // Fo1-style merchant inventory:
+   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
+      set_local_var(LVAR_RESTOCK_TIME, 1);
+
+      if self_caps < 500 then
+         item_caps_adjust(self_obj, 500 - self_caps);
+
+      give_pid_qty(self_obj, PID_BIG_BOOK_OF_SCIENCE, 5)
+      give_pid_qty(self_obj, PID_DEANS_ELECTRONICS, 5)
+      give_pid_qty(self_obj, PID_FIRST_AID_BOOK, 5)
+      give_pid_qty(self_obj, PID_SCOUT_HANDBOOK, 5)
+      give_pid_qty(self_obj, PID_GUNS_AND_BULLETS, 5)
+      //give_pid_qty(self_obj, PID_CHEMISTRY_MANUAL, 5)
+   end
+   */
 end
