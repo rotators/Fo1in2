@@ -94,7 +94,7 @@
 #define WALKW_MOVIE                 11 // walkw.mve
 #define BOIL1_MOVIE                 12 // boil1.mve     // in-engine
 #define BOIL2_MOVIE                 13 // boil2.mve     // in-engine
-#define BOIL3_MOVIE                 14 // boil3.mve     // obj_dude script
+#define BOIL3_MOVIE                 14 // boil3.mve     // in-engine
 
 // float_msg defines //
 #define FLOAT_MSG_WARNING    (-2)
@@ -129,7 +129,6 @@
 //#define bad_phonemes       (11)
 
 // Head defines //
-// Fallout 1
 #define HEAD_OVERSEER     (1)
 #define HEAD_MORPHEUS     (2)
 #define HEAD_LAURA        (3)
@@ -152,10 +151,7 @@
 #define HEAD_RHOMBUS      (20)
 #define HEAD_GIZMO        (21)
 
-/*
-#define HEAD_OVERSEER    (1)  //ovrsr  -- vault
-*/
-// Head defines //
+// Background defines //
 #define BACKGROUND1           (2)   // rstymetl
 #define BACKGROUND_HUB        (3)   //hub.frm
 #define BACKGROUND_NECROPOLIS (4)   //necro.frm
@@ -168,7 +164,8 @@
 #define BACKGROUND_MASTER    (11)   //master.frm
 #define BACKGROUND_FOLLOWER  (12)   //follow.frm
 #define BACKGROUND_RAIDERS   (13)   //raider.frm
-   // Start of Fallout 2: Backgrounds
+
+// Fallout 2 Backgrounds //
 #define BACKGROUND_CAVE      (14)   //cave0001.frm
 #define BACKGROUND_ENCLAVE   (15)   //enclave.frm
 #define BACKGROUND_WASTELAND (16)   //wastelnd.frm
@@ -176,6 +173,7 @@
 #define BACKGROUND_PRESIDENT (18)   // pres.frm
 #define BACKGROUND_TENT      (19)   // tent.frm
 #define BACKGROUND_ADOBE     (20)   // Adobe.frm
+
 // Mood defines //
 #define GOOD_REACTION    (49)
 #define NEUTRAL_REACTION (50)
@@ -217,7 +215,7 @@
 #define PERK_sniper              (24)
 #define PERK_silent_death        (25)
 #define PERK_action_boy          (26)
-#define PERK_mental_block        (27)  //-- Disabled FO2
+#define PERK_mental_block        (27) //-- Disabled in FO2, enabled in Fo1in2 via Perks.ini
 #define PERK_lifegiver           (28)
 #define PERK_dodger              (29)
 #define PERK_snakeater           (30)
@@ -226,15 +224,15 @@
 #define PERK_master_thief        (33)
 #define PERK_speaker             (34)
 #define PERK_heave_ho            (35)
-//#define PERK_friendly_foe        (36)  -- Disabled FO2
+//#define PERK_friendly_foe        (36) // -- Disabled in FO2
 #define PERK_pickpocket          (37)
 #define PERK_ghost               (38)
 #define PERK_cult_of_personality (39)
-#define PERK_scrounger           (40)  //-- Disabled FO2
+#define PERK_scrounger           (40) // -- Disabled in FO2, enabled in Fo1in2 via Perks.ini
 #define PERK_explorer            (41)
-#define PERK_flower_child        (42) // -- Disabled FO2
+#define PERK_flower_child        (42) // -- Disabled in FO2, enabled in Fo1in2 via Perks.ini
 #define PERK_pathfinder          (43)
-#define PERK_animal_friend       (44) // -- Disabled FO2
+#define PERK_animal_friend       (44) // -- Disabled in FO2, enabled in Fo1in2 via Perks.ini
 #define PERK_scout               (45)
 #define PERK_mysterious_stranger (46)
 #define PERK_ranger              (47)
