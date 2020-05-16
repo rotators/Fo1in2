@@ -41,7 +41,7 @@
 #define Spring_Lighting                 if (season_morning(SPRING_MORNING)) then                                \
                                             set_light_level((game_time_hour - SPRING_MORNING) + DUSK_LIGHT);    \
                                         else if (season_day(SPRING_MORNING,SPRING_EVENING)) then                \
-                                            set_light_level(100);                                               \
+                                            set_light_level(BRIGHT_LIGHT);                                      \
                                         else if (season_evening(SPRING_EVENING)) then                           \
                                             set_light_level(BRIGHT_LIGHT - (game_time_hour - SPRING_EVENING));  \
                                         else                                                                    \
@@ -50,7 +50,7 @@
 #define Summer_Lighting                 if (season_morning(SUMMER_MORNING)) then                                \
                                             set_light_level((game_time_hour - SUMMER_MORNING) + DUSK_LIGHT);    \
                                         else if (season_day(SUMMER_MORNING,SUMMER_EVENING)) then                \
-                                            set_light_level(100);                                               \
+                                            set_light_level(BRIGHT_LIGHT);                                      \
                                         else if (season_evening(SUMMER_EVENING)) then                           \
                                             set_light_level(BRIGHT_LIGHT - (game_time_hour - SUMMER_EVENING));  \
                                         else                                                                    \
@@ -59,7 +59,7 @@
 #define Fall_Lighting                   if (season_morning(FALL_MORNING)) then                                  \
                                             set_light_level((game_time_hour - FALL_MORNING) + DUSK_LIGHT);      \
                                         else if (season_day(FALL_MORNING,FALL_EVENING)) then                    \
-                                            set_light_level(100);                                               \
+                                            set_light_level(BRIGHT_LIGHT);                                      \
                                         else if (season_evening(FALL_EVENING)) then                             \
                                             set_light_level(BRIGHT_LIGHT - (game_time_hour - FALL_EVENING));    \
                                         else                                                                    \
@@ -68,7 +68,7 @@
 #define Winter_Lighting                 if (season_morning(WINTER_MORNING)) then                                \
                                             set_light_level((game_time_hour - WINTER_MORNING) + DUSK_LIGHT);    \
                                         else if (season_day(WINTER_MORNING,WINTER_EVENING)) then                \
-                                            set_light_level(100);                                               \
+                                            set_light_level(BRIGHT_LIGHT);                                      \
                                         else if (season_evening(WINTER_EVENING)) then                           \
                                             set_light_level(BRIGHT_LIGHT - (game_time_hour - WINTER_EVENING));  \
                                         else                                                                    \
@@ -100,7 +100,7 @@
          set_light_level(DUSK_LIGHT);                                            \
    end                                                                           \
    noop
-   
+
 // Original Fo1 lighting:
 /*
 #define Lighting                if ((game_time_hour >= 600) and (game_time_hour < 700)) then begin          \
