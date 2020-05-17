@@ -20,4 +20,5 @@ Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1i
 - **Fixed**: The trapis behind Set in Necropolis should spawn a fireball again when exploding.
 - **Fixed**: Wu in the Children's Cathedral won't sell his emblem anymore.
 - **Tweaked**: Added Vault doors as "metal"-type to generic door scripts.
+- **Tweaked**: Removed the Fixt settings for Mrs. Staple in the Hub and reverted the respawn mechanics to vanilla Fo1 for simplicity. With the Fo2 merchant restocking mode enabled, her money amount will follow the new restocking rules.
 - **Tweaked**: Spore plant encounters now have a chance to additionally spawn a group of mantis.
