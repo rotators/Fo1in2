@@ -340,9 +340,9 @@ end
 procedure Cheater00e begin
    set_waterchip_returned;
 
-   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) != 2) then
+   if (global_var(GVAR_QUEST_VAULT13_1_REBELS) > 0) then
       set_global_var(GVAR_QUEST_VAULT13_1_REBELS, 3);
-   if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) != 2) then
+   if (global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF) > 0) then
       set_global_var(GVAR_QUEST_VAULT13_5_WTR_THIEF, 3);
 
    call CheaterEnd;
