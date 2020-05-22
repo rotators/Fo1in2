@@ -5,6 +5,7 @@ Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1i
 - **Added**: It is now possible to enable Fo2-style environmental lighting (winter days are shorter, summer days are longer, etc) in the fo1_settings.ini file.
 - **Added**: Using the science skill on the prisoner terminal in the Master's Lair will now also toggle the force fields on / off.
 - **Added**: Zip-Gun (low-tier energy pistol) is now available at Jacob in the Hub and the merchant in Shady Sands.
+- **Fixed**: After returning the water chip, "Calm the Rebels" and "Find the Water Thief" quests will only show as completed if the player actually started them.
 - **Fixed**: Cabbot at the Brotherhood had wrong mood / reaction values set.
 - **Fixed**: Cost calculations of the CoC doctor in Junktown wasn't rounding the result.
 - **Fixed**: Destroying the Cathedral / Military Base will now always correctly strike out the quest entries in the PipBoy.
