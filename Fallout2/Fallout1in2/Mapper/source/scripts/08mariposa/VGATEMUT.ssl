@@ -1,12 +1,14 @@
 /*
 
-   Mariposa - Gate Mutant
+   Mariposa - Outside Guard Mutant
+               FENCE ENTRANCE
 
 */
 
 /* Include Files */
 #include "define.h"
 #include "mbase.h"
+#include "maps/mbent.h"
 
 #define NAME                    SCRIPT_GENSUPR
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -16,6 +18,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure combat_p_proc;
 procedure critter_p_proc;
 procedure destroy_p_proc;
@@ -52,12 +55,18 @@ procedure start begin
       initial := 1;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_SUPER_MUTANT_SGT);
-      if (map_var(0)) then begin
+      if (map_var(MVAR_radio_trick)) then begin
          move_to(self_obj, home_tile, 0);
       end
       else begin
          add_timer_event(self_obj, game_ticks(30), 1);
       end
+   end
+end
+
+procedure map_enter_p_proc begin
+   if (map_var(MVAR_radio_trick)) then begin
+      destroy_object(self_obj);
    end
 end
 
@@ -87,7 +96,7 @@ procedure critter_p_proc begin
          end
       end
    end
-   if (map_var(0)) then begin
+   if (map_var(MVAR_radio_trick)) then begin
       if (not(waypoint)) then begin
          if (self_tile != 22312) then begin
             self_walk_to_tile(22312);
@@ -153,7 +162,7 @@ procedure talk_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if (not(map_var(0))) then begin
+   if (not(map_var(MVAR_radio_trick))) then begin
       if (self_tile == guard_tile) then begin
          self_walk_to_tile(gate_tile);
       end
@@ -204,21 +213,18 @@ procedure VGateMut04 begin
    BMessage(random(112, 114));
 end
 
-procedure VGateMut05
-begin
+procedure VGateMut05 begin
    Reply(115);
    NOption(116, VGateMutxx, 5);
    BOption(117, VGateMutAlert, 5);
 end
 
-procedure VGateMut06
-begin
+procedure VGateMut06 begin
    tmp_hostile := 1;
    BMessage(random(118, 120));
 end
 
-procedure VGateMut07
-begin
+procedure VGateMut07 begin
    set_map_var(4, 1);
    NMessage(random(121, 123));
 end
