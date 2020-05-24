@@ -15,6 +15,7 @@ Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1i
 - **Fixed**: Jacob in the Hub will start out with a Sniper Rifle in his merchant inventory by default. 
 - **Fixed**: Lorraine in Adytum was showing odd dialog when the player talked to her again. 
 - **Fixed**: Marcelle won't spawn a new shotgun on ever map enter.
+- **Fixed**: Mutants would not be removed correctly from the entrance map when applying the "radio trick" and leaving the map early.
 - **Fixed**: Saul in Junktown had wrong mood / reaction values set.
 - **Fixed**: Some doors in the Brotherhood bunker were using the wrong script (door.int -> metldoor.int).
 - **Fixed**: Super Mutant Lieutenant proto didn't have the "special death"-flag set.
