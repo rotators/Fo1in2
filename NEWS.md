@@ -1,9 +1,11 @@
 Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1in2/releases/tag/v1.1.1946))
 - **Added**: A new option to the fo1_settings.ini file to toggle the Shady Sands merchant on/off.
 - **Added**: Alternative item rewards from Talus and Mathia can now be toggled in fo1_settings.ini file (enabled by default).
+- **Added**: Cathedral merchant is now also affects by the "Fo2-style merchant restocking" option.
 - **Added**: Flares now respawn on the Shady Sands merchant.
 - **Added**: It is now possible to enable Fo2-style environmental lighting (winter days are shorter, summer days are longer, etc) in the fo1_settings.ini file.
 - **Added**: Using the science skill on the prisoner terminal in the Master's Lair will now also toggle the force fields on / off.
+- **Added**: Wild Dogs now have a chance to spawn as hostile mobs inside caves.
 - **Added**: Zip-Gun (low-tier energy pistol) is now available at Jacob in the Hub and the merchant in Shady Sands.
 - **Fixed**: After returning the water chip, "Calm the Rebels" and "Find the Water Thief" quests will only show as completed if the player actually started them.
 - **Fixed**: Cabbot at the Brotherhood had wrong mood / reaction values set.
@@ -22,5 +24,6 @@ Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1i
 - **Fixed**: The trapis behind Set in Necropolis should spawn a fireball again when exploding.
 - **Fixed**: Wu in the Children's Cathedral won't sell his emblem anymore.
 - **Tweaked**: Added Vault doors as "metal"-type to generic door scripts.
+- **Tweaked**: Changed the way the "Fo2-style merchant restocking"-mechanic works: The default Fo1 inventory will always load first, later the restocking is applied. 
 - **Tweaked**: Removed the Fixt settings for Mrs. Staple in the Hub and reverted the respawn mechanics to vanilla Fo1 for simplicity. With the Fo2 merchant restocking mode enabled, her money amount will follow the new restocking rules.
 - **Tweaked**: Spore plant encounters now have a chance to additionally spawn a group of mantis.
