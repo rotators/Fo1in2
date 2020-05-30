@@ -350,6 +350,7 @@
 #define PID_PRIMITIVE_HUNTER_FEMALE       (16777556)
 #define PID_HOPE                          (16777557)
 #define PID_DEATHCLAW_SMALL               (16777558)
+#define PID_WILD_DOG                      (16777559)
 
 // intentionally creates dead code in gl_partycontrol,
 // just to avoid editing it on each sfall update

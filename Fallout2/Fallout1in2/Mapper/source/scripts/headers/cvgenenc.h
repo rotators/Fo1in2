@@ -45,7 +45,7 @@ variable
 
 procedure Choose_Encounter begin
    variable
-      val := Random(1, 5),
+      val := Random(1, 6),
       rnd_chest := random(1, 100),
       rnd_critter;
 
@@ -143,7 +143,7 @@ procedure Choose_Encounter begin
    // Mantis
    else if (val == 5) then begin
       if ((dude_level <= 10) or (random(1, 100) <= 75)) then begin
-         if (random(1, 100) <= 15) then begin
+         if (random(1, 100) <= 40) then begin
             active_encounter_pids := 2;
             encounter_pid1 := PID_MANTIS;
             encounter_sid1 := SCRIPT_MANTIS;
@@ -166,6 +166,14 @@ procedure Choose_Encounter begin
          encounter_sid2 := SCRIPT_WANRATS;
          total_encounter_mobs := Random(1, 3);
       end
+   end
+
+   // Wild Dogs
+   else if (val == 6) then begin
+      active_encounter_pids := 1;
+      encounter_pid1 := PID_WILD_DOG;
+      encounter_sid1 := SCRIPT_ECWLDDOG;
+      total_encounter_mobs := Random(3, 4);
    end
 end
 
@@ -498,7 +506,7 @@ procedure LoadExitScenery begin
 
    // Spawn Ladder
    if (CUR_MAP_MINE2 or CUR_MAP_MINE3) then begin
-      Item := create_object_sid(PID_LADDER_HOLE, Critter_spawn_hex, 2, SCRIPT_ECLADDER);
+      Item := create_object_sid(PID_LADDER_HOLE, Critter_spawn_hex, 2, SCRIPT_ESLADDER);
       Item := create_object(PID_BLOCKING_HEX, Critter_spawn_hex, 2);
       set_map_var(MVAR_CAVERN_LADDER_ELEV2, tile_num_in_direction(Critter_spawn_hex, 2, 2));
 
@@ -727,7 +735,7 @@ procedure LoadChests begin
          end
       end
    end
-   else begin
+   else if (special_spawn_container == 1) then begin
       Items_List := [ PID_ROCK, PID_ROPE, PID_FLARE, PID_STIMPAK,
                       PID_10MM_JHP, PID_10MM_AP, PID_223_FMJ, PID_44_MAGNUM_JHP, PID_MICRO_FUSION_CELL, PID_SMALL_ENERGY_CELL,
                       PID_SPEAR, PID_KNIFE, PID_THROWING_KNIFE, PID_CATTLE_PROD ];
