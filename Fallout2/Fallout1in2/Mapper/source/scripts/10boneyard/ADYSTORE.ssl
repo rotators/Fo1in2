@@ -14,6 +14,9 @@
 #include "command.h"
 
 #define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
+
+#define set_restock_time      set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time)
 
 procedure start;
 procedure map_update_p_proc;
@@ -35,10 +38,10 @@ procedure start begin
 end
 
 procedure map_update_p_proc begin
-   if (self_tile == table_upper_hex) then begin // Upper table
+   if (self_tile == table_upper_hex) then begin
       AdyStor1_ptr := self_obj;
    end
-   else if (self_tile == table_lower_hex) then begin // Lower table
+   else if (self_tile == table_lower_hex) then begin
       AdyStor2_ptr := self_obj;
    end
 end
@@ -73,8 +76,25 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure inv_table_1 begin
+   // Initial inventory:
+   if (local_var(LVAR_INIT_INVEN) == 0) then begin
+      set_local_var(LVAR_INIT_INVEN, 1);
+
+      give_pid_qty(self_obj, PID_BOTTLE_CAPS, 70)
+
+      give_pid_qty(self_obj, PID_BEER, 4)
+      give_pid_qty(self_obj, PID_BOOZE, 3)
+
+      give_pid_qty(self_obj, PID_STIMPAK, 5)
+      give_pid_qty(self_obj, PID_DYNAMITE, 2)
+      give_pid_qty(self_obj, PID_FLARE, 4)
+      give_pid_qty(self_obj, PID_PLASTIC_EXPLOSIVES, 3)
+
+      set_restock_time;
+   end
+
    // Fo2-style merchant inventory:
-   if fo1in2_merch_restock_enabled then begin
+   else if fo1in2_merch_restock_enabled then begin
       if (is_loading_game == false) then begin
          if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
             self_caps_adjust(random(50, 300) - self_caps);
@@ -87,30 +107,29 @@ procedure inv_table_1 begin
             check_restock_item(PID_BEER, 1, 4, 60)
             check_restock_item(PID_BOOZE, 1, 2, 60)
 
-            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+            set_restock_time;
          end
       end
-   end
-
-   // Fo1-style merchant inventory:
-   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
-      set_local_var(LVAR_RESTOCK_TIME, 1);
-
-      give_pid_qty(self_obj, PID_BOTTLE_CAPS, 70)
-
-      give_pid_qty(self_obj, PID_BEER, 4)
-      give_pid_qty(self_obj, PID_BOOZE, 3)
-
-      give_pid_qty(self_obj, PID_STIMPAK, 5)
-      give_pid_qty(self_obj, PID_DYNAMITE, 2)
-      give_pid_qty(self_obj, PID_FLARE, 4)
-      give_pid_qty(self_obj, PID_PLASTIC_EXPLOSIVES, 3)
    end
 end
 
 procedure inv_table_2 begin
+   // Initial inventory:
+   if (local_var(LVAR_INIT_INVEN) == 0) then begin
+      set_local_var(LVAR_INIT_INVEN, 1);
+
+      give_pid_qty(self_obj, PID_223_FMJ, 3)
+      give_pid_qty(self_obj, PID_45_CALIBER_AMMO, 6)
+      give_pid_qty(self_obj, PID_7_62MM_AMMO, 3)
+      give_pid_qty(self_obj, PID_FLAMETHROWER_FUEL, 3)
+      give_pid_qty(self_obj, PID_PLASMA_GRENADE, 3)
+      give_pid_qty(self_obj, PID_NUKA_COLA, 5)
+
+      set_restock_time;
+   end
+
    // Fo2-style merchant inventory:
-   if fo1in2_merch_restock_enabled then begin
+   else if fo1in2_merch_restock_enabled then begin
       if (is_loading_game == false) then begin
          if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
 
@@ -124,20 +143,8 @@ procedure inv_table_2 begin
             if get_blades_attack_finished then
                check_restock_item(PID_GREASE_GUN, 1, 1, 50)
 
-            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+            set_restock_time;
          end
       end
-   end
-
-   // Fo1-style merchant inventory:
-   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
-      set_local_var(LVAR_RESTOCK_TIME, 1);
-
-      give_pid_qty(self_obj, PID_223_FMJ, 3)
-      give_pid_qty(self_obj, PID_45_CALIBER_AMMO, 6)
-      give_pid_qty(self_obj, PID_7_62MM_AMMO, 3)
-      give_pid_qty(self_obj, PID_FLAMETHROWER_FUEL, 3)
-      give_pid_qty(self_obj, PID_PLASMA_GRENADE, 3)
-      give_pid_qty(self_obj, PID_NUKA_COLA, 5)
    end
 end

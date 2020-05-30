@@ -12,6 +12,9 @@
 #include "command.h"
 
 #define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
+
+#define set_restock_time      set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time)
 
 procedure start;
 procedure map_enter_p_proc;
@@ -26,9 +29,27 @@ procedure map_enter_p_proc begin
 /* Set up the door state when the player first enters the map */
    Vance_Box_Ptr := self_obj;
 
-   // Fo2-style merchant inventory:
-   if fo1in2_merch_restock_enabled then begin
-      if (is_loading_game == false) then begin
+   if (is_loading_game == false) then begin
+
+      // Initial inventory:
+      if (local_var(LVAR_INIT_INVEN) == 0) then begin
+         set_local_var(LVAR_INIT_INVEN, 1);
+
+         give_pid_qty(self_obj, PID_STIMPAK, 10)
+         give_pid_qty(self_obj, PID_FIRST_AID_KIT, 3)
+         give_pid_qty(self_obj, PID_RADAWAY, 18)
+         give_pid_qty(self_obj, PID_ANTIDOTE, 6)
+         give_pid_qty(self_obj, PID_MENTATS, 9)
+         give_pid_qty(self_obj, PID_BUFFOUT, 7)
+         give_pid_qty(self_obj, PID_RAD_X, 26)
+         give_pid_qty(self_obj, PID_PSYCHO, 9)
+         give_pid_qty(self_obj, PID_SUPER_STIMPAK, 8)
+
+         set_restock_time;
+      end
+
+      // Fo2-style merchant inventory:
+      else if fo1in2_merch_restock_enabled then begin
          if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
             //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
 
@@ -42,23 +63,9 @@ procedure map_enter_p_proc begin
             check_restock_item(PID_PSYCHO, 1, 9, 100)
             check_restock_item(PID_SUPER_STIMPAK, 2, 8, 100)
 
-            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+            set_restock_time;
          end
       end
-   end
 
-   // Fo1-style merchant inventory:
-   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
-      set_local_var(LVAR_RESTOCK_TIME, 1);
-
-      give_pid_qty(self_obj, PID_STIMPAK, 10)
-      give_pid_qty(self_obj, PID_FIRST_AID_KIT, 3)
-      give_pid_qty(self_obj, PID_RADAWAY, 18)
-      give_pid_qty(self_obj, PID_ANTIDOTE, 6)
-      give_pid_qty(self_obj, PID_MENTATS, 9)
-      give_pid_qty(self_obj, PID_BUFFOUT, 7)
-      give_pid_qty(self_obj, PID_RAD_X, 26)
-      give_pid_qty(self_obj, PID_PSYCHO, 9)
-      give_pid_qty(self_obj, PID_SUPER_STIMPAK, 8)
    end
 end
