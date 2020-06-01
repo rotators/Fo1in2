@@ -1,29 +1,6 @@
-Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1in2/releases/tag/v1.1.1946))
-- **Added**: A new option to the fo1_settings.ini file to toggle the Shady Sands merchant on/off.
-- **Added**: Alternative item rewards from Talus and Mathia can now be toggled in fo1_settings.ini file (enabled by default).
-- **Added**: Cathedral merchant is now also affects by the "Fo2-style merchant restocking" option.
-- **Added**: Flares now respawn on the Shady Sands merchant.
-- **Added**: It is now possible to enable Fo2-style environmental lighting (winter days are shorter, summer days are longer, etc) in the fo1_settings.ini file.
-- **Added**: Using the science skill on the prisoner terminal in the Master's Lair will now also toggle the force fields on / off.
-- **Added**: Wild Dogs now have a chance to spawn as hostile mobs inside caves.
-- **Added**: Zip-Gun (low-tier energy pistol) is now available at Jacob in the Hub and the merchant in Shady Sands.
-- **Fixed**: After returning the water chip, "Calm the Rebels" and "Find the Water Thief" quests will only show as completed if the player actually started them.
-- **Fixed**: Cabbot at the Brotherhood had wrong mood / reaction values set.
-- **Fixed**: Cost calculations of the CoC doctor in Junktown wasn't rounding the result.
-- **Fixed**: Destroying the Cathedral / Military Base will now always correctly strike out the quest entries in the PipBoy.
-- **Fixed**: Dogmeat will now correctly start with 50hp.
-- **Fixed**: Duplicated beginning/end frame of male leather jacket critter. (Issue #62)
-- **Fixed**: Fire Geckos now get their flame breath from critter script instead of the map script on critter creation. (Issue #53) 
-- **Fixed**: Jacob in the Hub will start out with a Sniper Rifle in his merchant inventory by default. 
-- **Fixed**: Lorraine in Adytum was showing odd dialog when the player talked to her again. 
-- **Fixed**: Marcelle won't spawn a new shotgun on ever map enter.
-- **Fixed**: Mutants would not be removed correctly from the entrance map when applying the "radio trick" and leaving the map early.
-- **Fixed**: Saul in Junktown had wrong mood / reaction values set.
-- **Fixed**: Some doors in the Brotherhood bunker were using the wrong script (door.int -> metldoor.int).
-- **Fixed**: Super Mutant Lieutenant proto didn't have the "special death"-flag set.
-- **Fixed**: The trapis behind Set in Necropolis should spawn a fireball again when exploding.
-- **Fixed**: Wu in the Children's Cathedral won't sell his emblem anymore.
-- **Tweaked**: Added Vault doors as "metal"-type to generic door scripts.
-- **Tweaked**: Changed the way the "Fo2-style merchant restocking"-mechanic works: The default Fo1 inventory will always load first, later the restocking is applied. 
-- **Tweaked**: Removed the Fixt settings for Mrs. Staple in the Hub and reverted the respawn mechanics to vanilla Fo1 for simplicity. With the Fo2 merchant restocking mode enabled, her money amount will follow the new restocking rules.
-- **Tweaked**: Spore plant encounters now have a chance to additionally spawn a group of mantis.
+Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1in2/releases/tag/v1.2.2035))
+- **Fixed**: The Necropolis invasion would still happen after killing Harry and his friends, even though it was disabled (set to 0) in the fo1_settings.ini file.
+- **Tweaked**: Katja will now gain a few % of lockpick skill per level up.
+- **Tweaked**: Lowered the requirements a bit to turn in Iguana Bob to the Sheriff.
+- **Tweaked**: The Shady Sands merchant is now disabled by default.
+- **Tweaked**: Wu in the Cathedral is selling his emblem again (alternative path to get the key).
