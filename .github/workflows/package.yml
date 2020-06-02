@@ -17,8 +17,7 @@ jobs:
   runs-on: windows-latest
   env:
    MOD_DIR:            "Fallout2/Fallout1in2"
-   MOD_RELEASE_NAME:   "Fallout1in2"
-   MOD_VERSION_STRING: "FALLOUT ET TU v1.2.@COMMITS@"
+   MOD_RELEASE_ZIP:    "Fallout1in2.zip"
   steps:
 
   - name: Clone
@@ -46,7 +45,8 @@ jobs:
           fi
 
           commits="$(git rev-list HEAD --count)"
-          echo ::set-env name=MOD_RELEASE_TAG::v1.2.${commits}
+          echo ::set-env name=MOD_RELEASE_NAME::$($GHA_SCRIPTS/version.sh release)
+          echo ::set-env name=MOD_RELEASE_TAG::$($GHA_SCRIPTS/version.sh tag)
           echo ::set-env name=MOD_RELEASE_DRAFT::true
           echo ::set-env name=MOD_RELEASE_PRE::$pre
           echo ::set-env name=MOD_RELEASE_BODY::$(cat NEWS.md)
@@ -55,7 +55,7 @@ jobs:
     run:  |
           :
           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
-          $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING"
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Misc --key=VersionString --val="$($GHA_SCRIPTS/version.sh game)"
 
   - name: Cleanup
     run:  |
@@ -127,18 +127,19 @@ jobs:
           done
 
   - name: Pack
-    run:  7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
+    run:  7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_ZIP}" -m5=Deflate Fallout1in2
     working-directory: Fallout2
 
   - name: Create release
     id:   release
     uses: actions/create-release@v1
     with:
-     release_name: ${{ env.MOD_RELEASE_NAME }} ${{ env.MOD_RELEASE_TAG }}
+     release_name: ${{ env.MOD_RELEASE_NAME }}
      tag_name:     ${{ env.MOD_RELEASE_TAG }}
      draft:        ${{ env.MOD_RELEASE_DRAFT }}
      prerelease:   ${{ env.MOD_RELEASE_PRE }}
-     body:         ${{ env.MOD_RELEASE_BODY }}
+     body:         |
+                   ${{ env.MOD_RELEASE_BODY }}
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
@@ -146,8 +147,8 @@ jobs:
     uses: actions/upload-release-asset@v1.0.1
     with:
      upload_url:         ${{ steps.release.outputs.upload_url }}
-     asset_path:         ${{ env.MOD_RELEASE_NAME }}.zip
-     asset_name:         ${{ env.MOD_RELEASE_NAME }}.zip
+     asset_path:         ${{ env.MOD_RELEASE_ZIP }}
+     asset_name:         ${{ env.MOD_RELEASE_ZIP }}
      asset_content_type: application/zip
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
