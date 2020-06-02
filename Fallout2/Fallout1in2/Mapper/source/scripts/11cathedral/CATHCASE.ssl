@@ -1,4 +1,20 @@
+/*
+
+        Cathedral - Merchant inventory container
+
+*/
+
+/* Include Files */
 #include "define.h"
+
+#define NAME                    SCRIPT_CATHCASE
+
+#include "command.h"
+
+#define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
+
+#define set_restock_time      set_local_var(LVAR_RESTOCK_TIME, (random(1, 3) * ONE_GAME_DAY) + game_time)
 
 procedure start;
 procedure map_enter_p_proc;
@@ -12,39 +28,92 @@ variable Free_To_Steal;
 import variable Shop_Ptr;
 import variable Shopkeeper_Ptr;
 
-
 procedure start begin
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
+   Shop_Ptr := self_obj;
+
+   // Initial inventory:
+   if (local_var(LVAR_INIT_INVEN) == 0) then begin
+      set_local_var(LVAR_INIT_INVEN, 1);
+
+      give_pid_qty(self_obj, PID_RADAWAY, 1)
+      give_pid_qty(self_obj, PID_FLOWER, 11)
+      give_pid_qty(self_obj, PID_NUKA_COLA, 6)
+      give_pid_qty(self_obj, PID_RAD_X, 2)
+      give_pid_qty(self_obj, PID_PSYCHO, 3)
+      give_pid_qty(self_obj, PID_MUTATED_FRUIT, 3)
+      give_pid_qty(self_obj, PID_MULTI_TOOL, 1)
+      give_pid_qty(self_obj, PID_MOTION_SENSOR, 1)
+      give_pid_qty(self_obj, PID_GEIGER_COUNTER, 1)
+      give_pid_qty(self_obj, PID_MENTATS, 1)
+      give_pid_qty(self_obj, PID_ANTIDOTE, 1)
+      give_pid_qty(self_obj, PID_RADAWAY, 1)
+      give_pid_qty(self_obj, PID_FIRST_AID_KIT, 1)
+      give_pid_qty(self_obj, PID_STIMPAK, 4)
+      give_pid_qty(self_obj, PID_BOTTLE_CAPS, 313)
+      give_pid_qty(self_obj, PID_LOCKPICKS, 1)
+      give_pid_qty(self_obj, PID_BEER, 2)
+      give_pid_qty(self_obj, PID_ROPE, 3)
+      give_pid_qty(self_obj, PID_BACKPACK, 1)
+      give_pid_qty(self_obj, PID_SCOUT_HANDBOOK, 1)
+
+      set_restock_time;
+   end
+
+   // Fo2-style merchant inventory:
+   else if fo1in2_merch_restock_enabled then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+            self_caps_adjust(400 - self_caps);
+
+            check_restock_item(PID_SCOUT_HANDBOOK, 1, 1, 50)
+            check_restock_item(PID_BACKPACK, 1, 1, 75)
+            check_restock_item(PID_ROPE, 1, 3, 85)
+            check_restock_item(PID_BEER, 1, 2, 90)
+            check_restock_item(PID_LOCKPICKS, 1, 1, 50)
+            check_restock_item(PID_STIMPAK, 1, 4, 80)
+            check_restock_item(PID_FIRST_AID_KIT, 1, 1, 80)
+            check_restock_item(PID_RADAWAY, 1, 1, 90)
+            check_restock_item(PID_ANTIDOTE, 1, 1, 75)
+            check_restock_item(PID_MENTATS, 1, 1, 80)
+            check_restock_item(PID_GEIGER_COUNTER, 1, 1, 25)
+            check_restock_item(PID_MOTION_SENSOR, 1, 1, 25)
+            check_restock_item(PID_MULTI_TOOL, 1, 1, 35)
+            check_restock_item(PID_MUTATED_FRUIT, 1, 3, 75)
+            check_restock_item(PID_PSYCHO, 1, 3, 40)
+            check_restock_item(PID_RAD_X, 1, 2, 35)
+            check_restock_item(PID_NUKA_COLA, 1, 6, 60)
+            check_restock_item(PID_FLOWER, 1, 11, 100)
+            check_restock_item(PID_RADAWAY, 1, 1, 75)
+
+            set_restock_time;
+         end
+      end
+   end
+end
+
+procedure map_update_p_proc begin
    Shop_Ptr := self_obj;
 end
 
-procedure map_update_p_proc
-begin
-   Shop_Ptr := self_obj;
-end
-
-procedure use_p_proc
-begin
+procedure use_p_proc begin
    if (Shopkeeper_Ptr != 0) then begin
       script_overrides;
       add_timer_event(Shopkeeper_Ptr, 1, 1);
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    if ((Shopkeeper_Ptr != 0) and (Free_To_Steal == 0)) then begin
       script_overrides;
       add_timer_event(Shopkeeper_Ptr, 1, 1);
    end
 end
 
-procedure use_skill_on_p_proc
-begin
-   if ((action_being_used == SKILL_STEAL) and (Shopkeeper_Ptr != 0)) then begin//-- STEAL
+procedure use_skill_on_p_proc begin
+   if ((action_being_used == SKILL_STEAL) and (Shopkeeper_Ptr != 0)) then begin
       if (is_success(roll_vs_skill(dude_obj, SKILL_STEAL, -10))) then begin
          Free_To_Steal := 1;
       end

@@ -1,8 +1,6 @@
-Notable changes since last release ([v1.1.1946](https://github.com/rotators/Fo1in2/releases/tag/v1.1.1946))
-- **Added**: Alternative item rewards from Talus and Mathia can now be toggled in fo1_settings.ini file (enabled by default).
-- **Added**: Using the science skill on the prisoner terminal in the Master's Lair will now also toggle the force fields on / off.
-- **Fixed**: Destroying the Cathedral / Military Base will now always correctly strike out the quest entries in the PipBoy.
-- **Fixed**: Dogmeat will now correctly start with 50hp.
-- **Fixed**: Fire Geckos now get their flame breath from critter script instead of the map script on critter creation. (Issue #53) 
-- **Fixed**: Marcelle won't spawn a new shotgun on ever map enter.
-- **Tweaked**: Spore plant encounters now have a chance to additionally spawn a group of mantis.
+Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1in2/releases/tag/v1.2.2035))
+- **Fixed**: The Necropolis invasion would still happen after killing Harry and his friends, even though it was disabled (set to 0) in the fo1_settings.ini file.
+- **Tweaked**: Katja will now gain a few % of lockpick skill per level up.
+- **Tweaked**: Lowered the requirements a bit to turn in Iguana Bob to the Sheriff.
+- **Tweaked**: The Shady Sands merchant is now disabled by default.
+- **Tweaked**: Wu in the Cathedral is selling his emblem again (alternative path to get the key).

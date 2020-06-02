@@ -12,6 +12,9 @@
 #include "command.h"
 
 #define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
+
+#define set_restock_time      set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time)
 
 procedure start;
 procedure map_enter_p_proc;
@@ -28,8 +31,34 @@ procedure map_enter_p_proc begin
 /* Set up the door state when the player first enters the map */
    Beth_Box_Ptr := self_obj;
 
+   // Initial inventory:
+   if (local_var(LVAR_INIT_INVEN) == 0) then begin
+      set_local_var(LVAR_INIT_INVEN, 1);
+
+      give_pid_qty(self_obj, PID_LEATHER_ARMOR, 3)
+      give_pid_qty(self_obj, PID_CURED_LEATHER_ARMOR, 2)
+      give_pid_qty(self_obj, PID_METAL_ARMOR, 2)
+      give_pid_qty(self_obj, PID_CLUB, 5)
+      give_pid_qty(self_obj, PID_SPEAR, 3)
+      give_pid_qty(self_obj, PID_SLEDGEHAMMER, 1)
+      give_pid_qty(self_obj, PID_KNIFE, 5)
+      give_pid_qty(self_obj, PID_10MM_PISTOL, 2)
+      give_pid_qty(self_obj, PID_CROWBAR, 3)
+      give_pid_qty(self_obj, PID_BRASS_KNUCKLES, 4)
+      give_pid_qty(self_obj, PID_FRAG_GRENADE, 7)
+      give_pid_qty(self_obj, PID_THROWING_KNIFE, 4)
+      give_pid_qty(self_obj, PID_10MM_SMG, 1)
+      give_pid_qty(self_obj, PID_223_FMJ, 6)
+      give_pid_qty(self_obj, PID_SHOTGUN, 1)
+      give_pid_qty(self_obj, PID_SHOTGUN_SHELLS, 10)
+      give_pid_qty(self_obj, PID_BBS, 5)
+      give_pid_qty(self_obj, PID_COMBAT_KNIFE, 1)
+
+      set_restock_time;
+   end
+
    // Fo2-style merchant inventory:
-   if fo1in2_merch_restock_enabled then begin
+   else if fo1in2_merch_restock_enabled then begin
       if (is_loading_game == false) then begin
          if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
             //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
@@ -55,32 +84,8 @@ procedure map_enter_p_proc begin
             check_restock_item(PID_BBS, 0, 5, 100)
             check_restock_item(PID_COMBAT_KNIFE, 0, 1, 100)
 
-            set_local_var(LVAR_RESTOCK_TIME, (random(1, 2) * ONE_GAME_DAY) + game_time);
+            set_restock_time;
          end
       end
-   end
-
-   // Fo1-style merchant inventory:
-   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
-      set_local_var(LVAR_RESTOCK_TIME, 1);
-
-      give_pid_qty(self_obj, PID_LEATHER_ARMOR, 3)
-      give_pid_qty(self_obj, PID_CURED_LEATHER_ARMOR, 2)
-      give_pid_qty(self_obj, PID_METAL_ARMOR, 2)
-      give_pid_qty(self_obj, PID_CLUB, 5)
-      give_pid_qty(self_obj, PID_SPEAR, 3)
-      give_pid_qty(self_obj, PID_SLEDGEHAMMER, 1)
-      give_pid_qty(self_obj, PID_KNIFE, 5)
-      give_pid_qty(self_obj, PID_10MM_PISTOL, 2)
-      give_pid_qty(self_obj, PID_CROWBAR, 3)
-      give_pid_qty(self_obj, PID_BRASS_KNUCKLES, 4)
-      give_pid_qty(self_obj, PID_FRAG_GRENADE, 7)
-      give_pid_qty(self_obj, PID_THROWING_KNIFE, 4)
-      give_pid_qty(self_obj, PID_10MM_SMG, 1)
-      give_pid_qty(self_obj, PID_223_FMJ, 6)
-      give_pid_qty(self_obj, PID_SHOTGUN, 1)
-      give_pid_qty(self_obj, PID_SHOTGUN_SHELLS, 10)
-      give_pid_qty(self_obj, PID_BBS, 5)
-      give_pid_qty(self_obj, PID_COMBAT_KNIFE, 1)
    end
 end

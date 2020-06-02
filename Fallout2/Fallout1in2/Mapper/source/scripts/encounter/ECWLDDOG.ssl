@@ -1,0 +1,50 @@
+/*
+	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
+*/
+
+/* Random Encounter scripts. These will be filled in more once they
+   have been designed.
+*/
+
+procedure start;
+
+#include "define.h"
+#include "sfall/main.h"
+
+#define NAME                    SCRIPT_ECWLDDOG
+
+#include "command.h"
+#include "mapenc.h"
+
+procedure start;
+procedure map_enter_p_proc;
+procedure destroy_p_proc;
+procedure critter_p_proc;
+
+variable starttile := 0;
+
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   starttile := self_tile;
+   set_self_team(TEAM_RND_WILD_DOG);
+   self_rotate(Random(0, 5));
+end
+
+procedure critter_p_proc begin
+   if (self_can_see_dude) then
+       attack(dude_obj);
+
+   if (not anim_busy(self_obj)) then begin
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      self_walk_to_tile(tile_num_in_direction(starttile, Random(0, 5), Random(3, 10)));
+      reg_anim_end();
+   end
+end
+
+procedure destroy_p_proc begin
+   if map_is_caravan_escort then
+      dec_map_var(MVAR_Hostile_Total);
+end

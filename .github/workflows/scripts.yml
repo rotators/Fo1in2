@@ -14,6 +14,10 @@ on:
   - 'Tools/ReDefine/ReDefine.cfg'
  pull_request:
 
+defaults:
+ run:
+  shell: bash
+
 env:
  GHA_SCRIPTS: ".github/workflows/scripts"
 
@@ -27,17 +31,14 @@ jobs:
   - name: Clone
     uses: actions/checkout@v2
 
-  - name:  Compile (base mod)
-    run:   $GHA_SCRIPTS/compile-ssl.sh
-    shell: bash
+  - name: Compile (base mod)
+    run:  $GHA_SCRIPTS/compile-ssl.sh
 
-  - name:  Compile (mini mods)
-    run:   $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=Fallout2/Fallout1in2/mods/
-    shell: bash
+  - name: Compile (mini mods)
+    run:  $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=Fallout2/Fallout1in2/mods/
 
-  - name:  Compile (misc)
-    run:   $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=Fallout2/Fallout1in2/Mapper/source/scripts.misc/
-    shell: bash
+  - name: Compile (misc)
+    run:  $GHA_SCRIPTS/compile-ssl.sh --scripts-dir=Fallout2/Fallout1in2/Mapper/source/scripts.misc/
     continue-on-error: true
 
  ###
@@ -50,58 +51,51 @@ jobs:
   - name: Clone
     uses: actions/checkout@v2
 
-  - name:  ReDefine
-    run:   |
-           :
-           scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
-           headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+  - name: ReDefine
+    run:  |
+          :
+          scripts=$(grep "^ScriptsDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
+          headers=$(grep "^HeadersDir" Tools/ReDefine/ReDefine.cfg | awk '{print $3}' | sed -re 's!^[\.\/]+!!')
 
-           Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts/ --headers $headers/ --debug-changes 1 >/dev/null
+          Tools/ReDefine/ReDefine.exe --config Tools/ReDefine/ReDefine.cfg --scripts $scripts/ --headers $headers/ --debug-changes 1 >/dev/null
 
-           echo ::group::Run results
-           if [ -f "ReDefine.log" ] && grep --quiet --max-count=1 "^@@" ReDefine.log; then
-              echo ::set-env name=REDEFINE_CHANGES::true
-           fi
-           if [ -f "ReDefine.log" ] && grep --quiet --max-count=1 "^%%" ReDefine.log; then
-              echo ::set-env name=REDEFINE_USERLOG::true
-           fi
-           if [ -f "ReDefine.WARNING.log" ]; then
-              echo ::set-env name=REDEFINE_WARNING::true
-           fi
-           if [ -f "ReDefine.DEBUG.log" ]; then
-              echo ::set-env name=REDEFINE_DEBUG::true
-              sed -ri 's!^DEBUG script code !\nDEBUG script code !g' ReDefine.DEBUG.log
-              sed -ri '1{/^$/d}' ReDefine.DEBUG.log
-              sed -ri 's!^DEBUG !!g' ReDefine.DEBUG.log
-           fi
-           echo ::endgroup::
-    shell: bash
+          echo ::group::Run results
+          if [ -f "ReDefine.log" ] && grep --quiet --max-count=1 "^@@" ReDefine.log; then
+             echo ::set-env name=REDEFINE_CHANGES::true
+          fi
+          if [ -f "ReDefine.log" ] && grep --quiet --max-count=1 "^%%" ReDefine.log; then
+             echo ::set-env name=REDEFINE_USERLOG::true
+          fi
+          if [ -f "ReDefine.WARNING.log" ]; then
+             echo ::set-env name=REDEFINE_WARNING::true
+          fi
+          if [ -f "ReDefine.DEBUG.log" ]; then
+             echo ::set-env name=REDEFINE_DEBUG::true
+             sed -ri 's!^DEBUG script code !\nDEBUG script code !g' ReDefine.DEBUG.log
+             sed -ri '1{/^$/d}' ReDefine.DEBUG.log
+             sed -ri 's!^DEBUG !!g' ReDefine.DEBUG.log
+          fi
+          echo ::endgroup::
 
-  - name:  Changes
-    if:    env.REDEFINE_CHANGES == 'true'
-    run:   grep --after-context=2 "^@@" ReDefine.log
-    shell: bash
+  - name: Changes
+    if:   env.REDEFINE_CHANGES == 'true'
+    run:  grep --after-context=2 "^@@" ReDefine.log
 
-  - name:  UserLog
-    if:    env.REDEFINE_USERLOG == 'true'
-    run:   grep --after-context=1 "^%%" ReDefine.log
-    shell: bash
+  - name: UserLog
+    if:   env.REDEFINE_USERLOG == 'true'
+    run:  grep --after-context=1 "^%%" ReDefine.log
 
-  - name:  Warnings
-    if:    env.REDEFINE_WARNING == 'true'
-    run:   cat ReDefine.WARNING.log
-    shell: bash
+  - name: Warnings
+    if:   env.REDEFINE_WARNING == 'true'
+    run:  cat ReDefine.WARNING.log
 
-  - name:  Debug
-    if:    env.REDEFINE_DEBUG == 'true'
-    run:   cat ReDefine.DEBUG.log
-    shell: bash
+  - name: Debug
+    if:   env.REDEFINE_DEBUG == 'true'
+    run:  cat ReDefine.DEBUG.log
 
-  - name:  Cleanup
-    run:   rm ReDefine*.log && git status
-    shell: bash
+  - name: Cleanup
+    run:  rm ReDefine*.log && git status
 
-  - name:  Compile
-    if:    env.REDEFINE_CHANGES == 'true'
-    run:   $GHA_SCRIPTS/compile-ssl.sh
-    shell: bash
+  - name: Compile
+    if:   env.REDEFINE_CHANGES == 'true'
+    run:  $GHA_SCRIPTS/compile-ssl.sh

@@ -450,7 +450,7 @@
 {23000}{}{Vaultstandorte-Disk}
 {23001}{}{Diese Disk enthält wichtige Aufzeichnungen eines Vaultcomputers. Unter Umständen beschädigt.}
 {23100}{}{Militärbasiscode}
-{23101}{}{ }
+{23101}{}{Holodisk der Firma Wattz Electronics. Offensichtlich in sehr schlechtem Zustand.}
 {23200}{}{Super-Powerrüstung}
 {23201}{}{Sondermodell der T 51b-Powerrüstung. Die Verteidigungsfunktionen dieser High-Tech-Rüstung wurden durch das Härteverfahren weiter verbessert.}
 {23300}{}{Turbo-Plasmagewehr}

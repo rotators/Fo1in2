@@ -449,7 +449,7 @@
 {23000}{}{Vault Records}
 {23001}{}{A compendium of events and important recordings from a Vault computer system. Possibly damaged.}
 {23100}{}{Military Base Security Code}
-{23101}{}{ }
+{23101}{}{A Wattz Electronics Holodisc tape. This particular tape looks to be into very poor condition.}
 {23200}{}{Hardened Power Armor}
 {23201}{}{A suit of T-51b Power Armor. The hardening process has improved the defensive capability of this high-tech armor system.}
 {23300}{}{Turbo Plasma Rifle}

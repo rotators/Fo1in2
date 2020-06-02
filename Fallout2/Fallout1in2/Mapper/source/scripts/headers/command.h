@@ -563,6 +563,14 @@ variable step_tile;
 #define self_distance_from_dude             tile_distance(self_tile, dude_tile)
 #define self_is_high                        drug_influence(self_obj)
 
+#define is_visible(cr)                      has_trait(TRAIT_OBJECT,cr,OBJECT_VISIBILITY) // aka obj_is_visible_flag(x)
+#define self_visible                        is_visible(self_obj)
+
+#define set_obj_invisible(cr)               set_obj_visibility(cr,1)
+#define set_obj_visible(cr)                 set_obj_visibility(cr,0)
+#define set_self_invisible                  set_obj_invisible(self_obj)
+#define set_self_visible                    set_obj_visible(self_obj)
+
 // some timer event macros
 #define check_set_obj_visiblility(the_obj, x)       if (obj_is_visible_flag(the_obj) == x) then set_obj_visibility(the_obj, x)
 

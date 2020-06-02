@@ -1,12 +1,13 @@
 /*
 
-   Mariposa - ???
+   Mariposa - Outside Guard mutant
+               NORTH FENCE
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "maps/mbent.h"
 
 #define NAME                    SCRIPT_GENSUPR
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_MBASE)
@@ -16,6 +17,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure combat_p_proc;
 procedure critter_p_proc;
 procedure destroy_p_proc;
@@ -50,12 +52,18 @@ procedure start begin
    if not(initial) then begin
       initial := 1;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
-      if (map_var(0)) then begin
+      if (map_var(MVAR_radio_trick)) then begin
          move_to(self_obj, home_tile, 0);
       end
       else begin
          add_timer_event(self_obj, game_ticks(45), 1);
       end
+   end
+end
+
+procedure map_enter_p_proc begin
+   if (map_var(MVAR_radio_trick)) then begin
+      destroy_object(self_obj);
    end
 end
 
@@ -85,7 +93,7 @@ procedure critter_p_proc begin
          end
       end
    end
-   if (map_var(0)) then begin
+   if (map_var(MVAR_radio_trick)) then begin
       if (not(waypoint)) then begin
          if (self_tile != 22312) then begin
             self_walk_to_tile(22312);
@@ -151,7 +159,7 @@ procedure talk_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if (not(map_var(0))) then begin
+   if (not(map_var(MVAR_radio_trick))) then begin
       if (self_tile == guard_tile) then begin
          if (not(all_clear)) then begin
             float_msg(self_obj, mstr(100), FLOAT_MSG_NORMAL);

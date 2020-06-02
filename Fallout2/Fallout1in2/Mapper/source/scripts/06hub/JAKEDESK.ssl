@@ -12,6 +12,9 @@
 #include "command.h"
 
 #define LVAR_RESTOCK_TIME                       (0)
+#define LVAR_INIT_INVEN                         (1)
+
+#define set_restock_time      set_local_var(LVAR_RESTOCK_TIME, (random(1, 3) * ONE_GAME_DAY) + game_time)
 
 procedure start;
 procedure map_enter_p_proc;
@@ -26,53 +29,9 @@ procedure map_enter_p_proc begin
 /* Set up the door state when the player first enters the map */
    Jake_Desk_Ptr := self_obj;
 
-   // Fo2-style merchant inventory:
-   if fo1in2_merch_restock_enabled then begin
-      if (is_loading_game == false) then begin
-         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
-            //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
-
-            check_restock_item(PID_MINIGUN, 0, 1, 15) // Special!
-            check_restock_item(PID_PANCOR_JACKHAMMER, 0, 1, 8) // Special!
-
-            check_restock_item(PID_EXPLOSIVE_ROCKET, 1, 5, 100)
-            check_restock_item(PID_FLAMER, 1, 2, 50)
-            check_restock_item(PID_HUNTING_RIFLE, 1, 2, 50)
-            check_restock_item(PID_10MM_SMG, 0, 2, 100)
-            check_restock_item(PID_FRAG_GRENADE, 2, 6, 100)
-            check_restock_item(PID_PULSE_GRENADE, 1, 6, 100)
-            check_restock_item(PID_ROCKET_LAUNCHER, 1, 1, 55)
-            check_restock_item(PID_ASSAULT_RIFLE, 1, 3, 100)
-            check_restock_item(PID_METAL_ARMOR, 1, 1, 60)
-            check_restock_item(PID_LEATHER_ARMOR, 1, 1, 55)
-            check_restock_item(PID_COMBAT_ARMOR, 1, 1, 60)
-            check_restock_item(PID_FLAMETHROWER_FUEL, 1, 5, 100)
-            check_restock_item(PID_SNIPER_RIFLE, 1, 2, 50)
-            check_restock_item(PID_GEIGER_COUNTER, 1, 1, 50)
-            check_restock_item(PID_10MM_JHP, 3, 6, 100)
-            check_restock_item(PID_10MM_AP, 2, 6, 100)
-            check_restock_item(PID_44_MAGNUM_JHP, 1, 7, 100)
-            check_restock_item(PID_5MM_JHP, 2, 7, 100)
-            check_restock_item(PID_223_FMJ, 3, 16, 100)
-            check_restock_item(PID_14MM_AP, 2, 9, 100)
-            check_restock_item(PID_5MM_AP, 2, 10, 100)
-            check_restock_item(PID_SMALL_ENERGY_CELL, 1, 4, 65)
-            check_restock_item(PID_ROCKET_AP, 1, 10, 100)
-            check_restock_item(PID_SHOTGUN, 1, 1, 60)
-            check_restock_item(PID_COMBAT_KNIFE, 1, 2, 40)
-            check_restock_item(PID_SHOTGUN_SHELLS, 4, 14, 100)
-            check_restock_item(PID_14MM_PISTOL, 1, 2, 50)
-            check_restock_item(PID_DESERT_EAGLE, 0, 2, 100)
-            check_restock_item(PID_COMBAT_SHOTGUN, 1, 1, 70)
-
-            set_local_var(LVAR_RESTOCK_TIME, (random(1, 3) * ONE_GAME_DAY) + game_time);
-         end
-      end
-   end
-
-   // Fo1-style merchant inventory:
-   else if (local_var(LVAR_RESTOCK_TIME) == 0) then begin
-      set_local_var(LVAR_RESTOCK_TIME, 1);
+   // Initial inventory:
+   if (local_var(LVAR_INIT_INVEN) == 0) then begin
+      set_local_var(LVAR_INIT_INVEN, 1);
 
       give_pid_qty(self_obj, PID_EXPLOSIVE_ROCKET, 5)
       give_pid_qty(self_obj, PID_FLAMER, 2)
@@ -103,5 +62,53 @@ procedure map_enter_p_proc begin
       give_pid_qty(self_obj, PID_14MM_PISTOL, 2)
       give_pid_qty(self_obj, PID_DESERT_EAGLE, 2)
       give_pid_qty(self_obj, PID_COMBAT_SHOTGUN, 1)
+
+      set_restock_time;
+   end
+
+   // Fo2-style merchant inventory:
+   else if fo1in2_merch_restock_enabled then begin
+      if (is_loading_game == false) then begin
+         if (local_var(LVAR_RESTOCK_TIME) < game_time) then begin
+            //item_caps_adjust(self_obj, random(151, 161) - self_caps); // Caps still adjusted via main trader script
+
+            check_restock_item(PID_MINIGUN, 0, 1, 15) // Special!
+            check_restock_item(PID_PANCOR_JACKHAMMER, 0, 1, 8) // Special!
+
+            check_restock_item(PID_EXPLOSIVE_ROCKET, 1, 5, 90)
+            check_restock_item(PID_FLAMER, 1, 2, 50)
+            check_restock_item(PID_HUNTING_RIFLE, 1, 2, 50)
+            check_restock_item(PID_10MM_SMG, 1, 2, 75)
+            check_restock_item(PID_FRAG_GRENADE, 2, 6, 100)
+            check_restock_item(PID_PULSE_GRENADE, 1, 6, 100)
+            check_restock_item(PID_ROCKET_LAUNCHER, 1, 1, 55)
+            check_restock_item(PID_ASSAULT_RIFLE, 1, 3, 100)
+            check_restock_item(PID_METAL_ARMOR, 1, 1, 60)
+            check_restock_item(PID_LEATHER_ARMOR, 1, 1, 55)
+            check_restock_item(PID_COMBAT_ARMOR, 1, 1, 60)
+            check_restock_item(PID_FLAMETHROWER_FUEL, 1, 5, 100)
+            check_restock_item(PID_SNIPER_RIFLE, 1, 2, 50)
+            check_restock_item(PID_GEIGER_COUNTER, 1, 1, 50)
+            check_restock_item(PID_10MM_JHP, 3, 6, 100)
+            check_restock_item(PID_10MM_AP, 2, 6, 100)
+            check_restock_item(PID_44_MAGNUM_JHP, 1, 7, 100)
+            check_restock_item(PID_5MM_JHP, 2, 7, 100)
+            check_restock_item(PID_223_FMJ, 3, 16, 100)
+            check_restock_item(PID_14MM_AP, 2, 9, 100)
+            check_restock_item(PID_5MM_AP, 2, 10, 100)
+            check_restock_item(PID_SMALL_ENERGY_CELL, 1, 4, 65)
+            check_restock_item(PID_ROCKET_AP, 1, 10, 100)
+            check_restock_item(PID_SHOTGUN, 1, 1, 60)
+            check_restock_item(PID_COMBAT_KNIFE, 1, 2, 40)
+            check_restock_item(PID_SHOTGUN_SHELLS, 4, 14, 100)
+            check_restock_item(PID_14MM_PISTOL, 1, 2, 50)
+            check_restock_item(PID_DESERT_EAGLE, 1, 2, 75)
+            check_restock_item(PID_COMBAT_SHOTGUN, 1, 1, 70)
+
+            check_restock_item(PID_ZIP_GUN, 1, 1, 50)
+
+            set_restock_time;
+         end
+      end
    end
 end

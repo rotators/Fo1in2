@@ -58,9 +58,10 @@ variable initial := 0;
 variable round_counter;
 variable Warned_Tile;
 
-#define LVAR_Invasion                     (6)
-#define LVAR_Sleeping                     (9)
-#define LVAR_Home_Tile                    (10)
+#define LVAR_Here_Before         (4)
+#define LVAR_Invasion            (6)
+#define LVAR_Sleeping            (9)
+#define LVAR_Home_Tile           (10)
 
 procedure start begin
    if not(initial) then begin
@@ -144,33 +145,29 @@ procedure talk_p_proc begin
       set_tma_data_generic(TMA_MSG_SHADYE);
    end
 
-   if (has_rep_berserker) then begin
-      set_global_var(GVAR_BERSERKER_REPUTATION, 1);
-      set_global_var(GVAR_CHAMPION_REPUTATION, 0);
-   end
    get_reaction
    if (local_var(9) == 1) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
    else begin
       if global_var(GVAR_ENEMY_SHADY_SANDS) then begin
-         set_local_var(4, 1);
+         set_local_var(LVAR_Here_Before, 1);
          call guard00;
       end
       else if tandi_is_kidnapped then begin
-         set_local_var(4, 1);
+         set_local_var(LVAR_Here_Before, 1);
          call guard01;
       end
       else if (get_tandi_returned and (local_var(8) == 0)) then begin
-         set_local_var(4, 1);
+         set_local_var(LVAR_Here_Before, 1);
          call guard02;
       end
       else if not(is_tandi_alive) then begin
-         set_local_var(4, 1);
+         set_local_var(LVAR_Here_Before, 1);
          call guard03;
       end
-      else if (local_var(4) == 1) then begin
-         if (local_var(1) < 2) then begin
+      else if (local_var(LVAR_Here_Before) == 1) then begin
+         if bad_critter_reaction then begin
             call guard13;
          end
          else begin
@@ -178,8 +175,8 @@ procedure talk_p_proc begin
          end
       end
       else begin
-         set_local_var(4, 1);
-         if (local_var(1) < 2) then begin
+         set_local_var(LVAR_Here_Before, 1);
+         if bad_critter_reaction then begin
             call guard10;
          end
          else begin

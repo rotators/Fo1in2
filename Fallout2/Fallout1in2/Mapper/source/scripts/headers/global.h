@@ -182,10 +182,10 @@
 #define GVAR_RADSCORPION_SEED                   (1043)
 #define GVAR_DEATHCLAW_SEED                     (1044)
 #define GVAR_BROTHERHOOD_SEED                   (1045)
-#define GVAR_STAPLE_INIT_NUM_BOOKS              (1046)
-#define GVAR_STAPLE_BOOKS_RESPAWN_MIN           (1047)
-#define GVAR_STAPLE_BOOKS_RESPAWN_MAX           (1048)
-#define GVAR_STAPLE_DIFFICULTY_BASED            (1049)
+#define GVAR_STAPLE_INIT_NUM_BOOKS              (1046) // UNUSED
+#define GVAR_STAPLE_BOOKS_RESPAWN_MIN           (1047) // UNUSED
+#define GVAR_STAPLE_BOOKS_RESPAWN_MAX           (1048) // UNUSED
+#define GVAR_STAPLE_DIFFICULTY_BASED            (1049) // UNUSED
 #define GVAR_CATHEDRAL_STATUS                   (1050)
 #define GVAR_VATS_STATUS                        (1051)
 #define GVAR_COC_STATUS                         (1052)
@@ -676,7 +676,7 @@
 #define GVAR_CHILDKILLER_FROM_HOMIES            (1546) // unused
 #define GVAR_FADE_TIMES_INCREASED               (1547) // unused
 #define GVAR_LONG_FADES_INCREASED               (1548) // unused
-#define GVAR_STAPLE_RESTOCK_WEEKS               (1549)
+#define GVAR_STAPLE_RESTOCK_WEEKS               (1549) // unused
 #define GVAR_DISARM_TRAPS_3                     (1550)
 #define GVAR_MAX_MUTANTS                        (1551)
 #define GVAR_TIME_CHIP_GONE                     (1552)
@@ -4097,9 +4097,9 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4961)
 #define RESERVED_FOR_FALLOUT_FIXT               (4962)
 #define RESERVED_FOR_FALLOUT_FIXT               (4963)
-#define RESERVED_FOR_FALLOUT_FIXT               (4964)
-#define RESERVED_FOR_FALLOUT_FIXT               (4965)
-#define RESERVED_FOR_FALLOUT_FIXT               (4966)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4964)*/
+#define GVAR_ENABLE_FO2_SEASONAL_LIGHTING       (4965)
+#define GVAR_ENABLE_SHADY_SANDS_MERCHANT        (4966)
 #define GVAR_ENABLE_ALTERNATIVE_BOS_REWARD      (4967)
 #define GVAR_ENABLE_CLASSIC_WM                  (4968)
 #define GVAR_GECKO_HUNTER_WARPARTY              (4969)

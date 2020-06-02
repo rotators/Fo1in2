@@ -72,5 +72,6 @@
 #define TEAM_RND_SPORE_PLANT        (91)
 #define TEAM_RND_GECKO              (92)
 #define TEAM_RND_MASTERS_ARMY       (93)
+#define TEAM_RND_WILD_DOG           (94)
 
 #endif // TEAMS_H

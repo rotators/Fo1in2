@@ -583,9 +583,8 @@
 #define PID_BOS_HISTORY_HOLODISK            (215)
 #define PID_MAXON_HISTORY_HOLODISK          (216)
 #define PID_VAULT_RECORDS_HOLODISK          (230)
-#define PID_MBASE_SEC_CODE                  (231)
+#define PID_MBASE_SEC_CODE                  (231) // Mariposa entrance door
 #define PID_REGULATOR_HOLODISK              (238)
-#define PID_PASSWORD_HOLODISK               (466) // Mariposa entrance door
 
 /******************************************************************
 ***************       Active Items                  ***************
