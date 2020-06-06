@@ -49,7 +49,12 @@ jobs:
           echo ::set-env name=MOD_RELEASE_TAG::$($GHA_SCRIPTS/version.sh tag)
           echo ::set-env name=MOD_RELEASE_DRAFT::true
           echo ::set-env name=MOD_RELEASE_PRE::$pre
-          echo ::set-env name=MOD_RELEASE_BODY::$(cat NEWS.md)
+
+          body=$(cat NEWS.md)
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-env name=MOD_RELEASE_BODY::$body"
 
   - name: Update version info
     run:  |
@@ -138,8 +143,7 @@ jobs:
      tag_name:     ${{ env.MOD_RELEASE_TAG }}
      draft:        ${{ env.MOD_RELEASE_DRAFT }}
      prerelease:   ${{ env.MOD_RELEASE_PRE }}
-     body:         |
-                   ${{ env.MOD_RELEASE_BODY }}
+     body:         ${{ env.MOD_RELEASE_BODY }}
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
