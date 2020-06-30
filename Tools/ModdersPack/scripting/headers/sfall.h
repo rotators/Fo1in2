@@ -272,6 +272,11 @@
                                                         use_obj_on_obj(item, dude_obj); \
                                                         set_self(0)
 
+// returns the corrected tile distance between two objects to the distance variable (return value >= 9996 is an error when getting the distance)
+#define distance_objs(distance, obj1, obj2)             distance := tile_distance_objs(obj1, obj2) - 1;      \
+                                                        if (get_flags(obj1) bwand FLAG_MULTIHEX) distance--; \
+                                                        if (get_flags(obj2) bwand FLAG_MULTIHEX) distance--
+
 // sfall_funcX macros
 #define add_extra_msg_file(name)                        sfall_func1("add_extra_msg_file", name)
 #define add_global_timer_event(time, fixedParam)        sfall_func2("add_g_timer_event", time, fixedParam)
@@ -304,6 +309,10 @@
 #define get_object_ai_data(obj, aiParam)                sfall_func2("get_object_ai_data", obj, aiParam)
 #define get_object_data(obj, offset)                    sfall_func2("get_object_data", obj, offset)
 #define get_outline(obj)                                sfall_func1("get_outline", obj)
+#define get_pc_stat_max(stat)                           sfall_func1("get_stat_max", stat)
+#define get_pc_stat_min(stat)                           sfall_func1("get_stat_min", stat)
+#define get_npc_stat_max(stat)                          sfall_func2("get_stat_max", stat, 1)
+#define get_npc_stat_min(stat)                          sfall_func2("get_stat_mix", stat, 1)
 #define get_sfall_arg_at(argNum)                        sfall_func1("get_sfall_arg_at", argNum)
 #define get_string_pointer(text)                        sfall_func1("get_string_pointer", text)
 #define get_text_width(text)                            sfall_func1("get_text_width", text)
