@@ -1,4 +1,5 @@
 Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1in2/releases/tag/v1.2.2035))
+- **Fixed**: "Knocking out" the raider in Marcelle's Crash House won't trigger the "you killed him"-dialog anymore.
 - **Fixed**: The Necropolis invasion would still happen after killing Harry and his friends, even though it was disabled (set to 0) in the fo1_settings.ini file.
 - **Tweaked**: Katja will now gain a few % of lockpick skill per level up.
 - **Tweaked**: Lowered the requirements a bit to turn in Iguana Bob to the Sheriff.
