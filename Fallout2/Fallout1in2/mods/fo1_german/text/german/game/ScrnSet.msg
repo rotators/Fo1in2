@@ -12,7 +12,7 @@
 {53}{}{Höhe}
 {54}{}{Fertig}
 {55}{}{Abbruch}
-{56}{}{Fallout muß für das Anwenden der Einstellungen neu gestartet werden.}
+{56}{}{Fallout muss für das Anwenden der Einstellungen neu gestartet werden.}
 {57}{}{Möchtest du Fallout jetzt neu starten?}
 {58}{}{An}
 {59}{}{Aus}
@@ -87,12 +87,12 @@
 {504}{}{Breite des Vollbilds anpassen, in Eingabefeld klicken zum eintippen.}
 {505}{}{Höhe des Vollbilds anpassen, in Eingabefeld klicken zum eintippen.}
 {506}{}{Fenstermodus aktivieren oder deaktivieren.}
-{507}{}{Taste für den Fenstermodus, die gedückt gehalten werden muß, um mit der Maus im Spielfenster zu scrollen.}
+{507}{}{Taste für den Fenstermodus, die gedückt gehalten werden muss, um mit der Maus im Spielfenster zu scrollen.}
 {508}{}{Auf rotes Bedienfeld klicken um eine andere Taste zuzuweisen, oder Eingabefeld für Windows Virtual Keycode.}
 {509}{}{Der Name der aktuell ausgewählten Taste.}
 {510}{}{Aktiviert doppelte Skalierung. Minimale Auflösung ist 1280x960. Fenstermodus benötigt mehr Platz für den Rahmen.}
 {511}{}{Kriegsnebel an/aus schalten. Sollte am Besten aktiviert sein, bevor eine Karte das erste mal betreten wird.}
-{512}{}{Paßt Sichtbarkeit der Szenerie unter dem Nebel, sowie die "Betrachten"- Funktion der Maus an.}
+{512}{}{Passt Sichtbarkeit der Szenerie unter dem Nebel, sowie die "Betrachten"- Funktion der Maus an.}
 {513}{}{Szenerie ist immer sichtbar und das "Betrachten" mit der Maus funktioniert normal.}
 {514}{}{Szenerie wird abgedunkelt und reagiert nicht mehr auf "Betrachten" bis es aufgedeckt wurde.}
 {515}{}{Wenn aktiviert kann unbegrenzt vom der Spielfigur weg gescrollt werden. Funktioniert gut mit Kriegsnebel.}

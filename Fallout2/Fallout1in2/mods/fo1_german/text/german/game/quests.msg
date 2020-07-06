@@ -8,11 +8,11 @@
 #
 # Vault 13 Quests
 #
-{100}{}{Suche den Steuerchip.} 				#fo1 vanilla
-{101}{}{Beruhige die Rebellengruppe.}			#fo1 vanilla
-{102}{}{Suche den Wasserdieb.}				#fo1 vanilla
-{103}{}{Vernichte den Mutantenanführer.}			#fo1 vanilla
-{104}{}{Zerstöre die Quelle der Mutanten.}	#fo1 vanilla
+{100}{}{Suche den Steuerchip.}              #fo1 vanilla
+{101}{}{Beruhige die Rebellengruppe.}           #fo1 vanilla
+{102}{}{Suche den Wasserdieb.}              #fo1 vanilla
+{103}{}{Vernichte den Mutantenanführer.}            #fo1 vanilla
+{104}{}{Zerstöre die Quelle der Mutanten.}  #fo1 vanilla
 {105}{}{Hilf dem Sanitäter ein Gegengift herzustellen.}
 {106}{}{Lerne aus den Vault-Archiven über die Außenwelt.}
 {107}{}{Erlange Zugang zur Waffenkammer.}
@@ -34,22 +34,22 @@
 #
 {300}{}{Rede mit Katrina.}
 {301}{}{Heuere Ian.}
-{302}{}{Halte die Radscorpions auf.}							#fo1 vanilla
-{303}{}{Hilf Razlo ein Gegengift herzustellen.}	#fo1 vanilla
-{304}{}{Heile Jarvis vom Radscorpion-Gift.}				#fo1 vanilla
-{305}{}{Rette Tandi vor den Raiders.}					#fo1 vanilla
+{302}{}{Halte die Radscorpions auf.}                            #fo1 vanilla
+{303}{}{Hilf Razlo ein Gegengift herzustellen.} #fo1 vanilla
+{304}{}{Heile Jarvis vom Radscorpion-Gift.}             #fo1 vanilla
+{305}{}{Rette Tandi vor den Raiders.}                   #fo1 vanilla
 {306}{}{Hilf die Ernte von Shady Sands zu verbessern.}
 {307}{}{Führe Seth und die Wachen an die Khans zu vernichten.}
 
 #
 # Junktown Quests
 #
-{400}{}{Hilf Saul.}										#fo1 vanilla
-{401}{}{Töte Killian.}									#fo1 vanilla
-{402}{}{Rette Sinthia.}								#fo1 vanilla
-{403}{}{Bring Trish in Sicherheit.}									#fo1 vanilla
-{404}{}{Halte Gizmo auf.}									#fo1 vanilla
-{405}{}{Laß die Skulz-Gang auffliegen.}							#fo1 vanilla
+{400}{}{Hilf Saul.}                                     #fo1 vanilla
+{401}{}{Töte Killian.}                                  #fo1 vanilla
+{402}{}{Rette Sinthia.}                             #fo1 vanilla
+{403}{}{Bring Trish in Sicherheit.}                                 #fo1 vanilla
+{404}{}{Halte Gizmo auf.}                                   #fo1 vanilla
+{405}{}{Lass die Skulz-Gang auffliegen.}                            #fo1 vanilla
 {406}{}{Tritt den Skulz bei.}
 {407}{}{Stiehl Neal's Urn aus dem Skum Pitt.}
 {408}{}{RESERVED}
@@ -84,11 +84,11 @@
 #
 # The Hub Quests
 #
-{700}{}{Vernichte die Deathclaw.}			#fo1 vanilla
-{701}{}{Erledige Jain.}							#fo1 vanilla
-{702}{}{Erledige den Händler.}						#fo1 vanilla
-{703}{}{Suche die verschwundenen Caravans.}					#fo1 vanilla
-{704}{}{Stiehl dem Händler die Halskette.}			#fo1 vanilla
+{700}{}{Vernichte die Deathclaw.}           #fo1 vanilla
+{701}{}{Erledige Jain.}                         #fo1 vanilla
+{702}{}{Erledige den Händler.}                      #fo1 vanilla
+{703}{}{Suche die verschwundenen Caravans.}                 #fo1 vanilla
+{704}{}{Stiehl dem Händler die Halskette.}          #fo1 vanilla
 {705}{}{Trete dem Thieves' Circle bei.}
 {706}{}{Erledige Decker.}
 {707}{}{Schicke Wasser nach Vault 13.}
@@ -100,8 +100,8 @@
 #
 # Brotherhood of Steel Quests
 #
-{800}{}{Werde ein Neuling.}						#fo1 vanilla
-{801}{}{Rette den Neuling aus dem Hub.}				#fo1 vanilla
+{800}{}{Werde ein Neuling.}                     #fo1 vanilla
+{801}{}{Rette den Neuling aus dem Hub.}             #fo1 vanilla
 {802}{}{Werde ein Knight.}
 {803}{}{Lerne von den Bibliothekscomputern.}
 {804}{}{Erhalte Operationen ovn Lori.}
@@ -134,19 +134,19 @@
 # The Glow Quests
 #
 {1000}{}{Betrete den Glow.}
-{1001}{}{Entschärfe die Fallen für die Basis.}		#fo1 vanilla
-{1002}{}{Schalte den Strom für den Glow ein.}			#fo1 vanilla
+{1001}{}{Entschärfe die Fallen für die Basis.}      #fo1 vanilla
+{1002}{}{Schalte den Strom für den Glow ein.}           #fo1 vanilla
 
 #
 # L.A. Boneyard / Adytum Quests
 #
-{1100}{}{Werde ein Blades-Gangmitglied.}						#fo1 vanilla
-{1101}{}{Gib ein Medaillon für Romero ab.}			#fo1 vanilla
-{1102}{}{Gib ein Paket von den Gunrunners ab.}	#fo1 vanilla
-{1103}{}{Suche den Children-Spion bei den Followers.}	#fo1 vanilla
-{1104}{}{Setze die Hydrofarmen in Adytum wieder instand.}		#fo1 vanilla
-{1105}{}{Rette Jason Zimmerman.}				#fo1 vanilla
-{1106}{}{Halte die Gangs von einem Angriff auf Adytum ab.}	#fo1 vanilla
+{1100}{}{Werde ein Blades-Gangmitglied.}                        #fo1 vanilla
+{1101}{}{Gib ein Medaillon für Romero ab.}          #fo1 vanilla
+{1102}{}{Gib ein Paket von den Gunrunners ab.}  #fo1 vanilla
+{1103}{}{Suche den Children-Spion bei den Followers.}   #fo1 vanilla
+{1104}{}{Setze die Hydrofarmen in Adytum wieder instand.}       #fo1 vanilla
+{1105}{}{Rette Jason Zimmerman.}                #fo1 vanilla
+{1106}{}{Halte die Gangs von einem Angriff auf Adytum ab.}  #fo1 vanilla
 {1107}{}{Töte die Mutter-Deathclaw.}
 {1108}{}{Überrede die Gun Runner die Blades mit Waffen zu beliefern.}
 {1109}{}{RESERVED}
@@ -168,7 +168,7 @@
 {1300}{}{Hilf die Caravans zu entladen.}
 
 #
-# 
+#
 #
 {1400}{}{RESERVED}
 {1401}{}{RESERVED}
@@ -176,7 +176,7 @@
 {1403}{}{RESERVED}
 
 #
-# 
+#
 #
 {1500}{}{RESERVED}
 {1501}{}{RESERVED}
@@ -197,59 +197,59 @@
 {1516}{}{RESERVED}
 
 #
-# 
+#
 #
 {1600}{}{RESERVED}
 {1601}{}{RESERVED}
 {1602}{}{RESERVED}
 
 #
-# 
+#
 #
 {1700}{}{RESERVED}
 
 #
-# 
+#
 #
 {1800}{}{RESERVED}
 
 #
-# 
+#
 #
 {1900}{}{RESERVED}
 
 #
-# 
+#
 #
 {2000}{}{RESERVED}
 
 #
-# 
+#
 #
 {2100}{}{RESERVED}
 
 #
-# 
+#
 #
 {2200}{}{RESERVED}
 
 #
-# 
+#
 #
 {2300}{}{RESERVED}
 
 #
-# 
+#
 #
 {2400}{}{RESERVED}
 
 #
-# 
+#
 #
 {2500}{}{RESERVED}
 
 #
-# 
+#
 #
 {2600}{}{RESERVED}
 
@@ -274,12 +274,12 @@
 {3000}{}{RESERVED}
 
 #
-# 
+#
 #
 {3100}{}{RESERVED}
 
 #
-# 
+#
 #
 {3200}{}{RESERVED}
 {3201}{}{RESERVED}

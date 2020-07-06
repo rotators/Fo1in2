@@ -1,19 +1,19 @@
-{100}{}{Brennendes Metallfaß}
-{101}{}{Dieses Faß enthält brennendes Papier oder anderen brennenden Müll.}
+{100}{}{Brennendes Metallfass}
+{101}{}{Dieses Fass enthält brennendes Papier oder anderen brennenden Müll.}
 {200}{}{Holztür}
 {201}{}{Eine Tür aus Holz.}
 {300}{}{Holztisch}
 {301}{}{Ein Tisch aus Holz.}
 {400}{}{Holztisch}
 {401}{}{Ein Tisch aus Holz.}
-{500}{}{Metallfaß}
-{501}{}{Ein altes Faß aus Stahl.}
-{600}{}{Metallfaß}
-{601}{}{Ein altes Faß aus Stahl.}
+{500}{}{Metallfass}
+{501}{}{Ein altes Fass aus Stahl.}
+{600}{}{Metallfass}
+{601}{}{Ein altes Fass aus Stahl.}
 {700}{}{Stapel Reifen}
 {701}{}{Ein Stapel alter Gummireifen. Sie sind porös und hart geworden, wahrscheinlich wegen der Hitze.}
 {800}{}{Sicherheitstür}
-{801}{}{Diese Tür läßt sich fest verriegeln. Sie bietet Schutz vor Elementen der Außenwelt und gefährlichen Kreaturen.}
+{801}{}{Diese Tür lässt sich fest verriegeln. Sie bietet Schutz vor Elementen der Außenwelt und gefährlichen Kreaturen.}
 {900}{}{Computer}
 {901}{}{Ein Vaultcomputerterminal, das mit dem Hauptcomputer der Vault verbunden ist.}
 {1000}{}{Säule}
@@ -75,13 +75,13 @@
 {3800}{}{Vaultaufzug}
 {3801}{}{Ein Aufzug. Er fährt zwischen den verschiedenen Ebenen des Vaultkomplexes hin und her.}
 {3900}{}{Stuhl}
-{3901}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{3901}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {4000}{}{Stuhl}
-{4001}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{4001}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {4100}{}{Stuhl}
-{4101}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{4101}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {4200}{}{Stuhl}
-{4201}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{4201}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {4300}{}{Monitor}
 {4301}{}{Ein Computermonitor, der verschiedene Daten anzeigt.}
 {4400}{}{Monitor}
@@ -99,13 +99,13 @@
 {5000}{}{Luftaufbereitungsanlage}
 {5001}{}{Eine LAA bereitet die alte Luft auf und versorgt den Komplex mit frischer Luft. Diese hier ist defekt.}
 {5100}{}{Stuhl}
-{5101}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{5101}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {5200}{}{Stuhl}
-{5201}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{5201}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {5300}{}{Stuhl}
-{5301}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{5301}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {5400}{}{Stuhl}
-{5401}{}{Ein Stuhl. Schade, daß du keine Zeit hast, dich hinzusetzen und auszuruhen.}
+{5401}{}{Ein Stuhl. Schade, dass du keine Zeit hast, dich hinzusetzen und auszuruhen.}
 {5500}{}{VA}
 {5501}{}{Zu dieser Videoanzeige gehören mehrere Computermonitore und andere Bildschirme. Hier scheint sehr, sehr viel abzulaufen.}
 {5600}{}{VA}
@@ -119,7 +119,7 @@
 {6000}{}{Stuhl}
 {6001}{}{Ein Stuhl. Sieht verdammt bequem aus.}
 {6100}{}{Tisch}
-{6101}{}{Ein Tisch. Bevor es Tische gab, mußten die Menschen ihre Sachen auf den Boden legen.}
+{6101}{}{Ein Tisch. Bevor es Tische gab, mussten die Menschen ihre Sachen auf den Boden legen.}
 {6200}{}{Tisch}
 {6201}{}{Dies ist mit Sicherheit ein Tisch.}
 {6300}{}{Steppenläufer}
@@ -139,7 +139,7 @@
 {7000}{}{Stalagmit}
 {7001}{}{Eine natürliche Erweiterung des Steinbodens.}
 {7100}{}{Blutfleck}
-{7101}{}{An diesem Blutfleck gibt es nichts Ungewöhnliches, außer daß hier jemand oder etwas gestorben ist.}
+{7101}{}{An diesem Blutfleck gibt es nichts Ungewöhnliches, außer dass hier jemand oder etwas gestorben ist.}
 {7200}{}{Steinsäule}
 {7201}{}{Diese dicke Steinsäule reicht vom Boden bis zur Decke.}
 {7300}{}{Steinsäule}
@@ -147,7 +147,7 @@
 {7400}{}{Steine}
 {7401}{}{Du betrachtest die Steine einen Augenblick lang, aber sie bewegen sich nicht.}
 {7500}{}{Steine}
-{7501}{}{Du behältst diese Steine für den Fall im Auge, daß sie sich bewegen und angreifen.}
+{7501}{}{Du behältst diese Steine für den Fall im Auge, dass sie sich bewegen und angreifen.}
 {7600}{}{Autoboden}
 {7601}{}{ENTFERNT}
 {7700}{}{Autodach}
@@ -161,13 +161,13 @@
 {8100}{}{Steine}
 {8101}{}{Ein großer Haufen Steine.}
 {8200}{}{Knochen}
-{8201}{}{Ein großer Haufen ausgebleichter Tierknochen. Zumindest glaubst du, daß es sich um Tierknochen handelt ...}
+{8201}{}{Ein großer Haufen ausgebleichter Tierknochen. Zumindest glaubst du, dass es sich um Tierknochen handelt ...}
 {8300}{}{Knochen}
-{8301}{}{Ein großer Haufen ausgebleichter Tierknochen. Zumindest glaubst du, daß es sich um Tierknochen handelt ...}
+{8301}{}{Ein großer Haufen ausgebleichter Tierknochen. Zumindest glaubst du, dass es sich um Tierknochen handelt ...}
 {8400}{}{Knochen}
 {8401}{}{Ein sehr großer Haufen ausgebleichter Knochen. Du kannst nicht feststellen, von was für einer Kreatur sie stammen.}
 {8500}{}{Knochen}
-{8501}{}{Du glaubst, daß es sich um die Knochen gehörnter Känguruhs handelt, bist dir aber nicht ganz sicher. Die Knochen sind einfach zu verwittert, um sie genau bestimmen zu können.}
+{8501}{}{Du glaubst, dass es sich um die Knochen gehörnter Känguruhs handelt, bist dir aber nicht ganz sicher. Die Knochen sind einfach zu verwittert, um sie genau bestimmen zu können.}
 {8600}{}{Knochen}
 {8601}{}{Die Knochen einer großen zweiköpfigen Kuh.}
 {8700}{}{Tor}
@@ -209,7 +209,7 @@
 {10500}{}{Gestrüpp}
 {10501}{}{Irgendein Wüstenunkraut.}
 {10600}{}{Schrott}
-{10601}{}{Eine verrostete Autotür, die an einem verrosteten Metallfaß lehnt. Hier ist alles ziemlich rostig.}
+{10601}{}{Eine verrostete Autotür, die an einem verrosteten Metallfass lehnt. Hier ist alles ziemlich rostig.}
 {10700}{}{Schrott}
 {10701}{}{Eine kaputte Kloschüssel, die halb im Sand vergraben ist. Das Leben ist Scheiße, und dann stirbst du.}
 {10800}{}{Unkraut}
@@ -217,7 +217,7 @@
 {10900}{}{Schrott}
 {10901}{}{Ein Autoreifen, der im Sand vergraben ist. Um ihn herum liegen ein paar Holzstücke.}
 {11000}{}{Steine}
-{11001}{}{Nach genauerer Betrachtung glaubst du, daß es sich um versteinertes Holz handelt.}
+{11001}{}{Nach genauerer Betrachtung glaubst du, dass es sich um versteinertes Holz handelt.}
 {11100}{}{Erde}
 {11101}{}{Ein kleiner Haufen Erde, aus dem ein vergetrocknetes Unkraut hervorragt.}
 {11200}{}{Erde}
@@ -260,7 +260,7 @@
 {13300}{}{Wand}
 {13400}{}{Wand}
 {13500}{}{Abfluß}
-{13501}{}{Aus diesem Abfluß dringt ein übler, ekelerregender Geruch. Nach einiger Zeit läßt der Gestank etwas nach.}
+{13501}{}{Aus diesem Abfluß dringt ein übler, ekelerregender Geruch. Nach einiger Zeit lässt der Gestank etwas nach.}
 {13600}{}{Abfluß}
 {13601}{}{Du nimmst die Bewegung hinter diesem Abflußgitter kaum wahr. Kleine, rote Augen starren dich an. Rattenaugen.}
 {13700}{}{Abfluß}
@@ -331,7 +331,7 @@
 {17000}{}{Säule}
 {17001}{}{Eine Stützsäule.}
 {17100}{}{Türsteuerungscomputer}
-{17101}{}{Dieser Computer steuert die große Vaulttür. Du mußt einen bestimmten Zugangscode eingeben, damit sich die Tür öffnet.}
+{17101}{}{Dieser Computer steuert die große Vaulttür. Du musst einen bestimmten Zugangscode eingeben, damit sich die Tür öffnet.}
 {17200}{}{Kasinoschild}
 {17201}{}{Sieht wie eine Werbetafel für Gizmos Kasino aus.}
 {17300}{}{Vault 13-Außentür}
@@ -356,19 +356,19 @@
 {18500}{}{Symbol}
 {18501}{}{Das Symbol der Brotherhood. Die Zahnräder stehen für ihr Wissen über die Technik, das Schwert für ihre Verteidigungsbereitschaft und die Flügel für die Hoffnung, die sie stärkt.}
 {18600}{}{Schild 'Ebene 1'}
-{18601}{}{Du glaubst, daß du dich auf der ersten Ebene der Brotherhood befindest.}
+{18601}{}{Du glaubst, dass du dich auf der ersten Ebene der Brotherhood befindest.}
 {18700}{}{Schild 'Ebene 2'}
 {18701}{}{Du befindest dich auf der zweiten Ebene der Brotherhood.}
 {18800}{}{Schild 'Ebene 3'}
-{18801}{}{Das muß bedeuten, daß du dich auf der dritten Ebene der Brotherhood befindest.}
+{18801}{}{Das muss bedeuten, dass du dich auf der dritten Ebene der Brotherhood befindest.}
 {18900}{}{Schild 'Ebene 4'}
-{18901}{}{Du mußt auf der vierten Ebene der Brotherhood sein.}
+{18901}{}{Du musst auf der vierten Ebene der Brotherhood sein.}
 {19000}{}{Etagenbett}
-{19001}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, daß man darauf eine Münze hüpfen lassen könnte.}
+{19001}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, dass man darauf eine Münze hüpfen lassen könnte.}
 {19100}{}{Etagenbett}
-{19101}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, daß man darauf eine Münze hüpfen lassen könnte.}
+{19101}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, dass man darauf eine Münze hüpfen lassen könnte.}
 {19200}{}{Etagenbett}
-{19201}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, daß man darauf eine Münze hüpfen lassen könnte.}
+{19201}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, dass man darauf eine Münze hüpfen lassen könnte.}
 {19300}{}{Kiste}
 {19400}{}{Nuka Cola-Automat}
 {19401}{}{An der Seite des Automats befindet sich eine Werbung für das beliebte Erfrischungsgetränk.}
@@ -404,11 +404,11 @@
 {21000}{}{Bett}
 {21001}{}{Dieses Bett hat schon bessere Tage gesehen. Und Nächte wohl auch!}
 {21100}{}{Bett}
-{21101}{}{Nach genauerer Betrachtung kommst du zu dem Schluß, daß die Laken schon sehr, sehr lange nicht mehr gewechselt wurden.}
+{21101}{}{Nach genauerer Betrachtung kommst du zu dem Schluss, dass die Laken schon sehr, sehr lange nicht mehr gewechselt wurden.}
 {21200}{}{Bett}
 {21201}{}{Auf diesem heruntergekommenen Bett befinden sich ein paar Flecken ungewissen Ursprungs.}
 {21300}{}{Bett}
-{21301}{}{Dieses Bett ist ziemlich heruntergekommen. Irgend etwas muß in die Matratzenritzen gekrochen und dort verendet sein.}
+{21301}{}{Dieses Bett ist ziemlich heruntergekommen. Irgend etwas muss in die Matratzenritzen gekrochen und dort verendet sein.}
 {21400}{}{Regal}
 {21500}{}{Regal}
 {21600}{}{Regal}
@@ -416,21 +416,21 @@
 {21800}{}{Regal}
 {21900}{}{Regal}
 {22000}{}{Kisten}
-{22001}{}{Diese Holzkisten sind so verwittert, daß sie auseinanderfallen.}
+{22001}{}{Diese Holzkisten sind so verwittert, dass sie auseinanderfallen.}
 {22100}{}{Kisten}
 {22101}{}{An diesen Holzkisten gibt es nichts Nennenswertes.}
 {22200}{}{Kisten}
 {22201}{}{Du hast sehr viel Zeit, dir diesen verrotteten Müll genau anzusehen.}
 {22300}{}{Kisten}
-{22301}{}{Diese Holzkisten sind so verwittert, daß sie auseinanderfallen.}
+{22301}{}{Diese Holzkisten sind so verwittert, dass sie auseinanderfallen.}
 {22400}{}{Auto}
-{22401}{}{Dieses Auto befindet sich in fürchterlichem Zustand. Du kannst dir nicht vorstellen, daß es noch zu reparieren ist.}
+{22401}{}{Dieses Auto befindet sich in fürchterlichem Zustand. Du kannst dir nicht vorstellen, dass es noch zu reparieren ist.}
 {22500}{}{Auto}
-{22501}{}{Aus diesem verrosteten Schrotthaufen läßt sich nichts mehr machen.}
+{22501}{}{Aus diesem verrosteten Schrotthaufen lässt sich nichts mehr machen.}
 {22600}{}{Auto}
-{22601}{}{Du kommst zu dem Schluß, daß dieses Fahrzeug bestimmt nicht mehr in Gang zu setzen ist.}
+{22601}{}{Du kommst zu dem Schluss, dass dieses Fahrzeug bestimmt nicht mehr in Gang zu setzen ist.}
 {22700}{}{Auto}
-{22701}{}{Es ist ausgeschlossen, daß dieser Schrotthaufen jemals wieder fahren wird.}
+{22701}{}{Es ist ausgeschlossen, dass dieser Schrotthaufen jemals wieder fahren wird.}
 {22800}{}{Auto}
 {22801}{}{Selbst wenn der Automechaniker des Jahres plötzlich neben dir auftauchen würde, könntet ihr beide diesen Rosthaufen nicht flottmachen.}
 {22900}{}{Sessel}
@@ -457,7 +457,7 @@
 {24100}{}{Kommode}
 {24200}{}{Kommode}
 {24300}{}{Wasserhydrant}
-{24301}{}{Ein Wasserhydrant. Ohne die Vaultsprenkleranlage müßte man damit Feuer löschen.}
+{24301}{}{Ein Wasserhydrant. Ohne die Vaultsprenkleranlage müsste man damit Feuer löschen.}
 {24400}{}{Laterne}
 {24401}{}{Diese Laterne scheint noch zu funktionieren. Man stelle sich vor, hier funktioniert noch was!}
 {24500}{}{Laterne}
@@ -465,15 +465,15 @@
 {24600}{}{Laterne}
 {24601}{}{Eine funktionierende Laterne. Nachts wirft sie ein zartes, bleiches Licht, das dich an rein gar nichts erinnert.}
 {24700}{}{Laterne}
-{24701}{}{Eine kaputte Laterne. Sie läßt sich nicht mehr reparieren.}
+{24701}{}{Eine kaputte Laterne. Sie lässt sich nicht mehr reparieren.}
 {24800}{}{Laterne}
 {24801}{}{Diese Beleuchtung funktioniert noch.}
 {24900}{}{Laterne}
-{24901}{}{Die Lampe ist so kaputt, daß sie sich nicht mehr reparieren läßt.}
+{24901}{}{Die Lampe ist so kaputt, dass sie sich nicht mehr reparieren lässt.}
 {25000}{}{Laterne}
 {25001}{}{Eine funktionierende Laterne.}
 {25100}{}{Tor}
-{25101}{}{Das Schloß an diesem Tor klemmt, und die Stäbe sehen sehr stabil aus.}
+{25101}{}{Das Schloss an diesem Tor klemmt, und die Stäbe sehen sehr stabil aus.}
 {25200}{}{Schrott}
 {25201}{}{Mit Sicherheit nutzloser Schrott. Kein Zweifel!}
 {25300}{}{Schrott}
@@ -485,7 +485,7 @@
 {25600}{}{Schrott}
 {25601}{}{Mit Sicherheit nutzloser Schrott. Kein Zweifel!}
 {25700}{}{Briefkasten}
-{25701}{}{Der Briefkasten ist leer. Du hast das Gefühl, daß er schon seit einer ganzen Weile leer ist.}
+{25701}{}{Der Briefkasten ist leer. Du hast das Gefühl, dass er schon seit einer ganzen Weile leer ist.}
 {25800}{}{Tür}
 {25801}{}{Eine kunstvoll gefertigte Holztür in gutem Zustand.}
 {25900}{}{Tür}
@@ -521,7 +521,7 @@
 {27400}{}{Müll}
 {27401}{}{Ein Haufen Holz, in dem einige nutzlose rostige Nägel vergraben sind.}
 {27500}{}{Kartons}
-{27501}{}{Ein Haufen alter Pappkartons. Du kannst kaum fassen, daß sie hier so lange überlebt haben.}
+{27501}{}{Ein Haufen alter Pappkartons. Du kannst kaum fassen, dass sie hier so lange überlebt haben.}
 {27600}{}{Kartons}
 {27601}{}{Ein Haufen alter Pappkartons.}
 {27700}{}{Müll}
@@ -530,7 +530,7 @@
 {27900}{}{Steine}
 {28000}{}{Steine}
 {28100}{}{Schutt}
-{28101}{}{Ein kleiner Haufen Schutt und Steine. Paß auf, wo du hintrittst!}
+{28101}{}{Ein kleiner Haufen Schutt und Steine. Pass auf, wo du hintrittst!}
 {28200}{}{Becken}
 {28201}{}{Ein Becken aus Porzellan, das schon lange kaputt ist.}
 {28300}{}{Becken}
@@ -616,7 +616,7 @@
 {32500}{}{Badewanne}
 {32501}{}{Diese Badewanne ist kaputt und hat Sprünge.}
 {32600}{}{Badewanne}
-{32601}{}{Nach genauerer Betrachtung kommst du zu dem Schluß, daß du in dieser Wanne doch kein Bad nehmen willst.}
+{32601}{}{Nach genauerer Betrachtung kommst du zu dem Schluss, dass du in dieser Wanne doch kein Bad nehmen willst.}
 {32700}{}{Pissoir}
 {32701}{}{Nur ein Pissoir.}
 {32800}{}{Pissoir}
@@ -626,7 +626,7 @@
 {33000}{}{Pissoir}
 {33001}{}{Nur ein Pissoir. Nichts Besonderes daran.}
 {33100}{}{Wassertank}
-{33101}{}{Ein großer Tank für Flüssigkeiten. In diesem Fall glaubst du, daß er für Wasser benutzt wurde.}
+{33101}{}{Ein großer Tank für Flüssigkeiten. In diesem Fall glaubst du, dass er für Wasser benutzt wurde.}
 {33200}{}{Tür}
 {33201}{}{Eine Holztür. Nichts besonderes Interessantes daran.}
 {33300}{}{Tür}
@@ -634,23 +634,23 @@
 {33400}{}{Wandleuchte}
 {33401}{}{Diese Leuchte scheint noch zu funktionieren.}
 {33500}{}{Wandleuchte}
-{33501}{}{Eine kaputte Leuchte. Es überrascht nicht, daß sie nicht mehr funktioniert.}
+{33501}{}{Eine kaputte Leuchte. Es überrascht nicht, dass sie nicht mehr funktioniert.}
 {33600}{}{Wandleuchte}
 {33601}{}{Diese Leuchte scheint noch zu funktionieren.}
 {33700}{}{Wandleuchte}
-{33701}{}{Eine kaputte Leuchte. Es überrascht nicht, daß sie nicht mehr funktioniert.}
+{33701}{}{Eine kaputte Leuchte. Es überrascht nicht, dass sie nicht mehr funktioniert.}
 {33800}{}{Wandleuchte}
 {33801}{}{Diese Leuchte scheint noch zu funktionieren.}
 {33900}{}{Wandleuchte}
-{33901}{}{Eine kaputte Leuchte. Es überrascht nicht, daß sie nicht mehr funktioniert.}
+{33901}{}{Eine kaputte Leuchte. Es überrascht nicht, dass sie nicht mehr funktioniert.}
 {34000}{}{Wandleuchte}
 {34001}{}{Diese Leuchte scheint noch zu funktionieren.}
 {34100}{}{Wandleuchte}
-{34101}{}{Eine kaputte Leuchte. Es überrascht nicht, daß sie nicht mehr funktioniert.}
+{34101}{}{Eine kaputte Leuchte. Es überrascht nicht, dass sie nicht mehr funktioniert.}
 {34200}{}{Vorfahrtsschild}
 {34201}{}{Dieses Schild wurde zur Regelung des Verkehrs eingesetzt.}
 {34300}{}{Vorfahrtsschild}
-{34301}{}{Dieses Schild ist verblichen, aber du kannst noch erkennen, daß es sich um ein Vorfahrtsschild handelt.}
+{34301}{}{Dieses Schild ist verblichen, aber du kannst noch erkennen, dass es sich um ein Vorfahrtsschild handelt.}
 {34400}{}{Block Hex Auto Inviso}
 {34401}{}{Wenn du diesen Text siehst, hat der technische Designer gepennt!}
 {34500}{}{Boden}
@@ -754,16 +754,16 @@
 {39401}{}{Diese Stütze verstärkt die Verteidigungsmauer.}
 {39500}{}{Stütze}
 {39501}{}{Diese Stütze verstärkt die Verteidigungsmauer.}
-{39600}{}{Metallfaß}
-{39601}{}{Ein leeres, rostiges Metallfaß.}
-{39700}{}{Metallfaß}
-{39701}{}{Dem hohlen Klang nach zu schließen, ist dieses Faß wohl leer.}
+{39600}{}{Metallfass}
+{39601}{}{Ein leeres, rostiges Metallfass.}
+{39700}{}{Metallfass}
+{39701}{}{Dem hohlen Klang nach zu schließen, ist dieses Fass wohl leer.}
 {39800}{}{Metallfässer}
 {39801}{}{Dem hohlen Klang nach zu schließen, sind diese Fässer wohl leer.}
 {39900}{}{Metallfässer}
 {39901}{}{Dem hohlen Klang nach zu schließen, sind diese Fässer wohl leer.}
 {40000}{}{Kuppel}
-{40001}{}{Auf einem kleinen Etikett kannst du entziffern, daß dies das Eigentum der Area-51 ist, das beim Eigentümer abzugeben ist.}
+{40001}{}{Auf einem kleinen Etikett kannst du entziffern, dass dies das Eigentum der Area-51 ist, das beim Eigentümer abzugeben ist.}
 {40100}{}{Kiste}
 {40101}{}{Eine Holzkiste. Gar nicht mal in so schlechtem Zustand.}
 {40200}{}{Kiste}
@@ -779,11 +779,11 @@
 {40700}{}{Schutt}
 {40701}{}{Ein großer Haufen Steine, die sich nur schwer beseitigen lassen.}
 {40800}{}{Auto}
-{40801}{}{Dieses versunkene Auto läßt sich nicht mehr reparieren.}
+{40801}{}{Dieses versunkene Auto lässt sich nicht mehr reparieren.}
 {40900}{}{Auto}
-{40901}{}{Dieses Auto ist etwas feucht und läßt sich nicht mehr reparieren.}
+{40901}{}{Dieses Auto ist etwas feucht und lässt sich nicht mehr reparieren.}
 {41000}{}{Auto}
-{41001}{}{Dieses Auto wurde schlecht geparkt. Leider läßt es sich nicht mehr reparieren.}
+{41001}{}{Dieses Auto wurde schlecht geparkt. Leider lässt es sich nicht mehr reparieren.}
 {41100}{}{Schrott}
 {41101}{}{Dieser Schrott ist von dem verseuchten Meerwasser zerfressen.}
 {41200}{}{Schrott}
@@ -805,7 +805,7 @@
 {42000}{}{Aufzugschacht}
 {42001}{}{Ein Aufzugschacht, der tief in die Erde reicht. Er ist beschädigt.}
 {42100}{}{Aufzugtür}
-{42101}{}{Diese Tür führt zur Aufzugkabine. Wenn du den Aufzug benutzen willst, mußt du zuerst diese Tür öffnen.}
+{42101}{}{Diese Tür führt zur Aufzugkabine. Wenn du den Aufzug benutzen willst, musst du zuerst diese Tür öffnen.}
 {42200}{}{Rohr}
 {42201}{}{Ein Metallrohr. Weitere Einzelheiten sind unwichtig.}
 {42300}{}{Erde}
@@ -903,13 +903,13 @@
 {47600}{}{Tür}
 {47601}{}{Diese große Metallschiebetür wurde von innen verriegelt.}
 {47700}{}{Tür}
-{47701}{}{Diese große Metallschiebetür wurde von innen verriegelt. Du liest darauf, daß hier ausschließlich Be- und Entladebereich ist.}
+{47701}{}{Diese große Metallschiebetür wurde von innen verriegelt. Du liest darauf, dass hier ausschließlich Be- und Entladebereich ist.}
 {47800}{}{Tür}
 {47801}{}{Diese große Metallschiebetür wurde von innen verriegelt.}
 {47900}{}{Tür}
 {47901}{}{Diese große Metallschiebetür wurde von innen verriegelt.}
 {48000}{}{Tür}
-{48001}{}{Diese große Metallschiebetür wurde von innen verriegelt. Du liest darauf, daß hier ausschließlich Be- und Entladebereich ist.}
+{48001}{}{Diese große Metallschiebetür wurde von innen verriegelt. Du liest darauf, dass hier ausschließlich Be- und Entladebereich ist.}
 {48100}{}{Tür}
 {48101}{}{Diese Tür sieht verdächtig nach der Tür eines Lagerhauses aus.}
 {48200}{}{Tür}
@@ -919,10 +919,10 @@
 {48400}{}{Altar}
 {48401}{}{Ein einfacher Altar aus lackiertem Holz.}
 {48500}{}{Podium}
-{48501}{}{Dieses Podium sieht ganz normal aus, mit der Ausnahme, daß das Symbol der Children of the Cathedral auf der Vorderseite eingraviert ist.}
+{48501}{}{Dieses Podium sieht ganz normal aus, mit der Ausnahme, dass das Symbol der Children of the Cathedral auf der Vorderseite eingraviert ist.}
 {48600}{}{Altar}
 {48700}{}{Bildschirm}
-{48701}{}{Ein großer Schwarz-Weiß-Bildschirm, leider keine Farbe. Recht guter Empfang dafür, daß er drinnen steht und keine Antenne hat.}
+{48701}{}{Ein großer Schwarz-Weiß-Bildschirm, leider keine Farbe. Recht guter Empfang dafür, dass er drinnen steht und keine Antenne hat.}
 {48800}{}{Bildschirm}
 {48801}{}{Ein großer Schwarz-Weiß-Bildschirm, leider keine Farbe. Die Person mit der Robe rezitiert religiöse Dogmen in fieberhafter Geschwindigkeit.}
 {48900}{}{Kraftfeld}
@@ -1036,10 +1036,10 @@
 {54901}{}{Ein Tisch, an dem man spielen kann.}
 {55000}{}{Roulette-Tisch}
 {55001}{}{Ein Tisch, an dem man spielen kann.}
-{55100}{}{Faß}
+{55100}{}{Fass}
 {55101}{}{Auf der Seite dieses leeren Metallfasses befindet sich ein hellgelber Aufkleber mit dem Atomsymbol.}
-{55200}{}{Faß}
-{55201}{}{Dieses Faß enthält einen grün leuchtenden Schleim. Das Atomsymbol läßt auf die Art der darin enthaltenen Substanz schließen.}
+{55200}{}{Fass}
+{55201}{}{Dieses Fass enthält einen grün leuchtenden Schleim. Das Atomsymbol lässt auf die Art der darin enthaltenen Substanz schließen.}
 {55300}{}{Computer}
 {55301}{}{Ein sehr modern aussehender Computer.}
 {55400}{}{Computer}
@@ -1047,7 +1047,7 @@
 {55500}{}{Tauchbehälter}
 {55501}{}{Irgendein Medizin- oder Versuchsbehälter. Der Größe nach könnte sich darin ein menschlicher oder ähnlich großer Körper befinden.}
 {55600}{}{Kaputter Tauchbehälter}
-{55601}{}{Eine kaputter Behälter, der sich nicht mehr reparieren läßt.}
+{55601}{}{Eine kaputter Behälter, der sich nicht mehr reparieren lässt.}
 {55700}{}{Großrechner}
 {55701}{}{Ein großer Supercomputer. Wahrscheinlich der schnellste Computer, den du je gesehen hast.}
 {55800}{}{Unterbau}
@@ -1055,11 +1055,11 @@
 {55900}{}{Nicht benutzen}
 {56000}{}{Nicht benutzen}
 {56100}{}{Bett}
-{56101}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, daß man darauf eine Münze hüpfen lassen könnte.}
+{56101}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, dass man darauf eine Münze hüpfen lassen könnte.}
 {56200}{}{Bett}
-{56201}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, daß man darauf eine Münze hüpfen lassen könnte.}
+{56201}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, dass man darauf eine Münze hüpfen lassen könnte.}
 {56300}{}{Bett}
-{56301}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, daß man darauf eine Münze hüpfen lassen könnte.}
+{56301}{}{Ein Etagenbett wie beim Militär. Sieht äußerst unbequem aus. Das Bettuch ist so straff gespannt, dass man darauf eine Münze hüpfen lassen könnte.}
 {56400}{}{Kabel}
 {56401}{}{Sieht wie irgendein serielles Kabel aus.}
 {56500}{}{Kabel}
@@ -1097,7 +1097,7 @@
 {58100}{}{Tür}
 {58101}{}{Eine Tür, die perfekt zu einer Zelle passen würde.}
 {58200}{}{Schild}
-{58201}{}{Auf diesem Schild steht, daß dieser Laden 'Darkwater's' heißt.}
+{58201}{}{Auf diesem Schild steht, dass dieser Laden 'Darkwater's' heißt.}
 {58300}{}{Leiter}
 {58301}{}{Diese Leiter führt in die Dunkelheit nach unten.}
 {58400}{}{Leiter}
@@ -1454,7 +1454,7 @@
 {76400}{}{Monitore}
 {76401}{}{Die Anzeige ist nicht lesbar, weil die Bildschirme mit Schleim vollgespritzt sind.}
 {76500}{}{Boden}
-{76501}{}{Du könntest schwören, daß sich auf dem Boden etwas bewegt.}
+{76501}{}{Du könntest schwören, dass sich auf dem Boden etwas bewegt.}
 {76600}{}{Podest}
 {76601}{}{Dieses Podest scheint langsam ein- und auszuatmen.}
 {76700}{}{Boden}
@@ -1515,7 +1515,7 @@
 {79500}{}{Lüftungsschlitz}
 {79501}{}{Aus diesem Lüftungsschlitz kommt nur ganz wenig Frischluft.}
 {79600}{}{Tisch}
-{79601}{}{An diesem Tisch gibt es nichts Ungewöhnliches, bis auf die Tatsache, daß er fast kaputt ist.}
+{79601}{}{An diesem Tisch gibt es nichts Ungewöhnliches, bis auf die Tatsache, dass er fast kaputt ist.}
 {79700}{}{Tisch}
 {79701}{}{Dieser Tisch wurde schwer beschädigt.}
 {79800}{}{Tisch}
@@ -1547,7 +1547,7 @@
 {81100}{}{Lüftungsschlitz}
 {81101}{}{Dieser Lüftungsschlitz ist komplett zerstört.}
 {81200}{}{Lüftungsschlitz}
-{81201}{}{Dieser Lüftungsschlitz ist zerstört und läßt sich nicht mehr reparieren.}
+{81201}{}{Dieser Lüftungsschlitz ist zerstört und lässt sich nicht mehr reparieren.}
 {81300}{}{Lüftungsschlitz}
 {81301}{}{Dieser Lüftungsschlitz funktioniert überhaupt nicht mehr.}
 {81400}{}{Computer}
@@ -1635,7 +1635,7 @@
 {86700}{}{Graffiti}
 {86800}{}{Graffiti}
 {86900}{}{Schild}
-{86901}{}{Dieses Schild läßt darauf schließen, daß es hier vielleicht Waffen gibt.}
+{86901}{}{Dieses Schild lässt darauf schließen, dass es hier vielleicht Waffen gibt.}
 {87000}{}{Schild}
 {87001}{}{Das Schild der Polizeiwache.}
 {87100}{}{Schild}
@@ -1696,7 +1696,7 @@
 {89900}{}{Poster}
 {89901}{}{Ein Kinoposter für einen Horrorfilm aus der Vorkriegszeit.}
 {90000}{}{Theke}
-{90001}{}{Auf dieser Theke steht eine Urne. Sie sieht zwar ein bißchen mitgenommen aus, könnte aber durchaus etwas wert sein.}
+{90001}{}{Auf dieser Theke steht eine Urne. Sie sieht zwar ein bisschen mitgenommen aus, könnte aber durchaus etwas wert sein.}
 {90100}{}{Aufzugschacht}
 {90101}{}{Im Schacht hängt ein Seil herab.}
 {90200}{}{Aufzugschacht}
@@ -1741,7 +1741,7 @@
 {93300}{}{Zerstörte Tür}
 {93301}{}{Diese Tür wurde aufgesprengt.}
 {93400}{}{Tür}
-{93401}{}{Eine Tür mit einem komplizierten Schloß.}
+{93401}{}{Eine Tür mit einem komplizierten Schloss.}
 {93500}{}{Fackel}
 {93501}{}{Eine brennende Fackel in einer Wandhalterung.}
 {93600}{}{Fackel}
@@ -1862,9 +1862,9 @@
 {101600}{}{Grabstein}
 {101601}{}{Grabstein}
 {101700}{}{Pflug}
-{101701}{}{Dieser Pflug muß von einem Brahmin gezogen werden.}
+{101701}{}{Dieser Pflug muss von einem Brahmin gezogen werden.}
 {101800}{}{Pflug}
-{101801}{}{Dieser Pflug muß von einem Brahmin gezogen werden.}
+{101801}{}{Dieser Pflug muss von einem Brahmin gezogen werden.}
 {101900}{}{Wasser}
 {102000}{}{Schild}
 {102001}{}{Das Ortsschild von New Reno.}
@@ -2314,7 +2314,7 @@
 {142400}{}{Schild für die "Kokowebe-Mine"}
 {142500}{}{Schild für die "Kokowebe-Mine"}
 {142600}{}{Wegweiser}
-{142601}{}{Dieses Holzschild zeigt nach New Reno und "Hölle." Du hast den Eindruck, daß die Richtungen vertauscht wurden.}
+{142601}{}{Dieses Holzschild zeigt nach New Reno und "Hölle." Du hast den Eindruck, dass die Richtungen vertauscht wurden.}
 {142700}{}{Schild Nummer 1}
 {142800}{}{Schild Nummer 2}
 {142900}{}{Schild Nummer 3}
@@ -2502,7 +2502,7 @@
 {160200}{}{Bodenvertiefung}
 {160300}{}{Steinbank}
 {160400}{}{Steinbank}
-{160500}{}{Räucherfaß}
+{160500}{}{Räucherfass}
 {160600}{}{Satellitenschüssel}
 {160700}{}{Satellitenschüssel}
 {160800}{}{Schatten}
@@ -2712,7 +2712,7 @@
 {180001}{}{Ein Stück Wal!}
 {180100}{}{Walstück}
 {180101}{}{Ein Stück Wal!}
-{180200}{}{Boßbeine}
+{180200}{}{Bossbeine}
 {180300}{}{Felsen}
 {180400}{}{Felsen}
 {180500}{}{Felsen}
