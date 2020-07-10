@@ -7,11 +7,13 @@ Fallout et tu (also called Fallout 1@2, 1at2, 1in2, ...) is bringing the first F
 
 ---
 
-Discussion: https://nma-fallout.com/threads/218045/ (release, beta),
-            https://nma-fallout.com/threads/217892/ (alpha),
-            https://nma-fallout.com/threads/179809/ (legacy)
+Discussion
+- https://nma-fallout.com/threads/218045/ (release, beta)
+- https://nma-fallout.com/threads/217892/ (alpha)
+- https://nma-fallout.com/threads/179809/ (legacy)
 
-Repository: https://github.com/rotators/Fo1in2/
+Repository
+- https://github.com/rotators/Fo1in2/
 
 
 MOD INSTALLATION
@@ -38,6 +40,11 @@ MOD INSTALLATION
 - Extract the files.
 
 That's it. The game can now be played!
+
+### Missing music ###
+Some digital releases of Fallout 2 use a non-default location for the music tracks; if you notice missing music during gameplay, you have two options:
+- Check where `music/` in your Fallout 2 installation folder is and change `Fallout1in2/Fallout2.cfg` setting `[sound]->music_path2` accordingly.
+- Copy all the Fallout 2 music files into the `Fallout1in2/data/sound/music/` folder.
 
 
 CONFIGURATION
@@ -83,7 +90,7 @@ Tweaks the costs of specific actions while using inventory.
 ### Language Pack - German ###
 [mods/fo1_german](mods/fo1_german)
 
-The german translation of FALLOUT ET TU.
+The german translation of FALLOUT ET TU. It's highly recommended to check README in language pack directory.
 
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)
