@@ -57,9 +57,6 @@ FAQ
 Check where `/music/` in your Fallout 2 installation folder is. Then open the `fallout2.cfg` file of `Fallout1in2` and change the path under 
 `music_path2` accordingly. Or copy all the Fallout 2 music files into the `/Fallout2/Fallout1in2/sounds/music/` folder. That will work as well.
 
-#### I'm playing in 640x480px resolution and my buttons are all messed up! ####
-Uncomment `PipBoyNoteOffset` in the `fo1_settings.ini` file. Otherwise the PipBoy water timer note will be misaligned.
-
 #### The game crashes while showing the splash screen! ####
 If you use non-english game versions for the installation of this mod, you must set `fallout2.cfg` to the corresponding
 language. For example, when using the german versions of Fallout 1 and 2, set `language=german` in `/Fallout2/Fallout1in2/fallout2.cfg`.
