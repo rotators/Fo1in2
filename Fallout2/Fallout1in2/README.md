@@ -39,6 +39,10 @@ MOD INSTALLATION
 
 That's it. The game can now be played!
 
+***Note:*** Some digital releases of Fallout 2 use a non-default location for the music tracks. If you notice missing music during gameplay, do the following:
+Check where `/music/` in your Fallout 2 installation folder is. Then open the `fallout2.cfg` file of `Fallout1in2` and change the path under 
+`music_path2` accordingly. Or copy all the Fallout 2 music files into the `/Fallout2/Fallout1in2/sounds/music/` folder. That will work as well.
+
 
 CONFIGURATION
 -------------
@@ -48,19 +52,6 @@ Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_sett
 Other interesting files:
 - [ddraw.ini](ddraw.ini) (sfall configuration)
 - [sfall-mods.ini](sfall-mods.ini), [config/](config/) directory (sfall modifications configuration)
-
-
-FAQ
--------------
-
-#### Some of the music tracks aren't playing! ####
-Check where `/music/` in your Fallout 2 installation folder is. Then open the `fallout2.cfg` file of `Fallout1in2` and change the path under 
-`music_path2` accordingly. Or copy all the Fallout 2 music files into the `/Fallout2/Fallout1in2/sounds/music/` folder. That will work as well.
-
-#### The game crashes while showing the splash screen! ####
-If you use non-english game versions for the installation of this mod, you must set `fallout2.cfg` to the corresponding
-language. For example, when using the german versions of Fallout 1 and 2, set `language=german` in `/Fallout2/Fallout1in2/fallout2.cfg`.
-
 
 ADDITIONAL CONTENT
 ------------------
