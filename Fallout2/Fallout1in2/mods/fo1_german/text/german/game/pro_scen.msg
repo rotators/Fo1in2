@@ -259,14 +259,14 @@
 {13200}{}{Wand}
 {13300}{}{Wand}
 {13400}{}{Wand}
-{13500}{}{Abfluß}
-{13501}{}{Aus diesem Abfluß dringt ein übler, ekelerregender Geruch. Nach einiger Zeit lässt der Gestank etwas nach.}
-{13600}{}{Abfluß}
-{13601}{}{Du nimmst die Bewegung hinter diesem Abflußgitter kaum wahr. Kleine, rote Augen starren dich an. Rattenaugen.}
-{13700}{}{Abfluß}
-{13701}{}{Aus diesem Abfluß dringen gurgelnde Wassergeräusche. Und ein echt übler Gestank.}
-{13800}{}{Abfluß}
-{13801}{}{Aus diesem Abfluß dringen gurgelnde Wassergeräusche. Und ein echt übler Gestank.}
+{13500}{}{Abfluss}
+{13501}{}{Aus diesem Abfluss dringt ein übler, ekelerregender Geruch. Nach einiger Zeit lässt der Gestank etwas nach.}
+{13600}{}{Abfluss}
+{13601}{}{Du nimmst die Bewegung hinter diesem Abflussgitter kaum wahr. Kleine, rote Augen starren dich an. Rattenaugen.}
+{13700}{}{Abfluss}
+{13701}{}{Aus diesem Abfluss dringen gurgelnde Wassergeräusche. Und ein echt übler Gestank.}
+{13800}{}{Abfluss}
+{13801}{}{Aus diesem Abfluss dringen gurgelnde Wassergeräusche. Und ein echt übler Gestank.}
 {13900}{}{Leiter}
 {13901}{}{Eine alte, ziemlich wackelige Leiter. Sie sieht nicht so aus, als ob sie dein Gewicht tragen könnte.}
 {14000}{}{Kanaleinstieg}
@@ -542,7 +542,7 @@
 {28600}{}{Stoppschild}
 {28601}{}{Ein rotes Schild, auf dem das Wort STOP in großen Blockbuchstaben steht.}
 {28700}{}{Stoppschild}
-{28701}{}{Ein rotes Schild, auf dem das Wort STOP in großen Blockbuchstaben steht. Das große Einschußloch ist erst später entstanden.}
+{28701}{}{Ein rotes Schild, auf dem das Wort STOP in großen Blockbuchstaben steht. Das große Einschussloch ist erst später entstanden.}
 {28800}{}{Ampel}
 {28801}{}{Ein altes Gerät zur Regelung des Autoverkehrs.}
 {28900}{}{Ampel}
@@ -1115,9 +1115,9 @@
 {59000}{}{Maschinen}
 {59001}{}{Sieht wie eine alte Druckerpresse oder sonstein Gerät aus.}
 {59100}{}{Tisch}
-{59101}{}{Dieser Metalltisch ist in gutem Zustand. In seiner Mitte befindet sich ein Abfluß.}
+{59101}{}{Dieser Metalltisch ist in gutem Zustand. In seiner Mitte befindet sich ein Abfluss.}
 {59200}{}{Tisch}
-{59201}{}{Dieser Metalltisch ist in gutem Zustand. In seiner Mitte befindet sich ein Abfluß.}
+{59201}{}{Dieser Metalltisch ist in gutem Zustand. In seiner Mitte befindet sich ein Abfluss.}
 {59300}{}{Tisch}
 {59301}{}{Auf diesem Metalltisch befindet sich eine Art Biomasse.}
 {59400}{}{Tisch}
@@ -1230,7 +1230,7 @@
 {64901}{}{Der Gabelstapler funktioniert nicht mehr.}
 {65000}{}{Geräte}
 {65100}{}{Untersuchungstisch}
-{65101}{}{Dieser Tisch ist sehr rostig. Der Abfluß in seiner Mitte ist verstopft.}
+{65101}{}{Dieser Tisch ist sehr rostig. Der Abfluss in seiner Mitte ist verstopft.}
 {65200}{}{Untersuchungstisch}
 {65201}{}{Dieser Tisch ist sehr rostig.}
 {65300}{}{Tor}

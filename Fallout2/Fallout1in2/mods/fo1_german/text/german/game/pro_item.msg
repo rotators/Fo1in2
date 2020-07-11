@@ -13,15 +13,15 @@
 {700}{}{Speer}
 {701}{}{Stab mit einer messerscharfen Spitze. Der Stab ist aus Holz und die Spitze aus bearbeitetem Stahl. Mindeststärke: 4.}
 {800}{}{10mm-Pistole}
-{801}{}{Selbstlader vom Typ Colt 6520, 10mm. Bei jedem Abzug lädt sich die Waffe automatisch, bis das Magazin leer ist. Nur Einzelschuß. Mindeststärke: 3.}
+{801}{}{Selbstlader vom Typ Colt 6520, 10mm. Bei jedem Abzug lädt sich die Waffe automatisch, bis das Magazin leer ist. Nur Einzelschuss. Mindeststärke: 3.}
 {900}{}{10mm-Klein-MG}
-{901}{}{H&K MP9-Maschinengewehr, 10mm. Maschinengewehr mittlerer Größe für Einzelschuß oder Dauerfeuer. Mindeststärke: 4.}
+{901}{}{H&K MP9-Maschinengewehr, 10mm. Maschinengewehr mittlerer Größe für Einzelschuss oder Dauerfeuer. Mindeststärke: 4.}
 {1000}{}{Jagdgewehr}
-{1001}{}{Halbautomatikgewehr vom Typ Colt Rangemaster, Kaliber .223. Nur Einzelschuß. Mindeststärke: 5.}
+{1001}{}{Halbautomatikgewehr vom Typ Colt Rangemaster, Kaliber .223. Nur Einzelschuss. Mindeststärke: 5.}
 {1100}{}{Flammenwerfer}
 {1101}{}{Flammenwerfer vom Modell Flambe 450, Varmiter-Modell. Feuert einen Strahl extrem heißer, brennbarer Flüssigkeit ab. Mindeststärke: 6.}
 {1200}{}{Kleingeschütz}
-{1201}{}{Kleingeschütz vom Typ Rockwell CZ53. Maschinengewehr mit mehreren Läufen. Feuert über 60.000 Schuß pro Minute ab. Mindeststärke: 7.}
+{1201}{}{Kleingeschütz vom Typ Rockwell CZ53. Maschinengewehr mit mehreren Läufen. Feuert über 60.000 Schuss pro Minute ab. Mindeststärke: 7.}
 {1300}{}{Raketenwerfer}
 {1301}{}{Raketenwerfer vom Typ Rockwell BigBazooka. Mit schwerem Deluxe-Abzug. Mindeststärke: 6.}
 {1400}{}{Sprengrakete}
@@ -41,9 +41,9 @@
 {2100}{}{Schlagring}
 {2101}{}{Schlagring aus gehärtetem Stahl. Schützt die eigene Hand und kann im unbewaffneten Kampf großen Schaden anrichten. Mindeststärke: 1.}
 {2200}{}{14mm-Pistole}
-{2201}{}{14mm-Selbstlader vom Typ Sig-Sauer. Große Handfeuerwaffe mit Einzelschuß. Hervorragende Verarbeitung. Mindeststärke: 4.}
+{2201}{}{14mm-Selbstlader vom Typ Sig-Sauer. Große Handfeuerwaffe mit Einzelschuss. Hervorragende Verarbeitung. Mindeststärke: 4.}
 {2300}{}{Sturmgewehr}
-{2301}{}{Sturmgewehr vom Typ AK-112, 5mm. Ein älteres Militärmodell, das seit der Kriegszeit nicht mehr eingesetzt wurde. Einzelschuß oder Dauerfeuer. Mindeststärke: 5.}
+{2301}{}{Sturmgewehr vom Typ AK-112, 5mm. Ein älteres Militärmodell, das seit der Kriegszeit nicht mehr eingesetzt wurde. Einzelschuss oder Dauerfeuer. Mindeststärke: 5.}
 {2400}{}{Plasmapistole}
 {2401}{}{Plasmapistole vom Typ Glock 86, hergestellt von Gaston Glock AI. Feuert einen kleinen Strahl hocherhitzten Plasmas ab. Mindeststärke: 4.}
 {2500}{}{Splittergranate}
@@ -415,7 +415,7 @@
 {21200}{}{Tandi}
 {21201}{}{Du handelst die Freilassung von Tandi aus.}
 {21300}{}{Gizmos Überreste}
-{21301}{}{Gizmo, der ehemalige Verbrecherboß von Junktown, ist tot. Und stinkt ganz schön!}
+{21301}{}{Gizmo, der ehemalige Verbrecherboss von Junktown, ist tot. Und stinkt ganz schön!}
 {21400}{}{Schreibtisch}
 {21401}{}{Einfacher Schreibtisch. Nach genauerer Betrachtung kommst du zu dem Schluss, dass es immer noch ein Schreibtisch ist.}
 {21500}{}{Sophias Disk}
@@ -555,7 +555,7 @@
 {28200}{}{Cliftons Auge}
 {28201}{}{Ein kleines Glas, in dem ein menschliches Auge in einer Flüssigkeit schwimmt. Auf dem Etikett steht General Clifton.}
 {28300}{}{Tommy-Gewehr}
-{28301}{}{Dieses Klein-MG Thompson M1928 ist eine finster wirkende Waffe; wenn du sie hältst, verspürst du den Drang, einen Schlapphut aufzusetzen und mit den Fingern zu knacken. Das Thompson wird von einem Trommelmagazin mit 50 Schuß versorgt. Mindest-ST: 6.}
+{28301}{}{Dieses Klein-MG Thompson M1928 ist eine finster wirkende Waffe; wenn du sie hältst, verspürst du den Drang, einen Schlapphut aufzusetzen und mit den Fingern zu knacken. Das Thompson wird von einem Trommelmagazin mit 50 Schuss versorgt. Mindest-ST: 6.}
 {28400}{}{Schnetzelfleisch}
 {28401}{}{Diese geräucherten und getrockneten Fleischstücke bleiben auch nach vielen Jahren noch ein echt nahrhaftes Kauerlebnis.}
 {28500}{}{Teile der radioaktiven Skorpione}
@@ -563,7 +563,7 @@
 {28600}{}{Feuerholz}
 {28601}{}{Ein Haufen Feuerholz und Zunder.}
 {28700}{}{Jagdgewehr mit Zielfernrohr}
-{28701}{}{Es gibt nichts Schöneres als das überraschte Gesicht deines Ziels. Das Guckloch des Zielfernrohrs mit 20facher Vergrößerung an diesem Jagdgewehr macht alles viel leichter. Zielgenau vom ersten bis zum letzten Schuß, egal, auf welche Art von Ziel du schießt. Mindest-ST: 5.}
+{28701}{}{Es gibt nichts Schöneres als das überraschte Gesicht deines Ziels. Das Guckloch des Zielfernrohrs mit 20facher Vergrößerung an diesem Jagdgewehr macht alles viel leichter. Zielgenau vom ersten bis zum letzten Schuss, egal, auf welche Art von Ziel du schießt. Mindest-ST: 5.}
 {28800}{}{Brennstoffzelle für das Auto}
 {28801}{}{Eine Brennstoffzelle für das Auto.}
 {28900}{}{Schaufel}
@@ -581,13 +581,13 @@
 {29500}{}{Käse-Chips}
 {29501}{}{Eine Schachtel Chips mit Käsegeschmack. Außerordentlich lecker.}
 {29600}{}{HK P90c}
-{29601}{}{Die Heckler & Koch P90c kam erst zu Kriegsbeginn auf. Durch das Bullpup-Layout sowie das kompakte Design der Waffe ist sie leicht zu handhaben. Die belastbare P90c wird oft wegen ihrer Zuverlässigkeit sowie die große Schußkraft in der robust-kompakten Ausführung gelobt. Mindest-ST: 4.}
+{29601}{}{Die Heckler & Koch P90c kam erst zu Kriegsbeginn auf. Durch das Bullpup-Layout sowie das kompakte Design der Waffe ist sie leicht zu handhaben. Die belastbare P90c wird oft wegen ihrer Zuverlässigkeit sowie die große Schusskraft in der robust-kompakten Ausführung gelobt. Mindest-ST: 4.}
 {29700}{}{Metallstab}
 {29701}{}{Das ist ein langer Metallstab. Was hattest du denn gedacht?}
 {29800}{}{Schlüssel zur Trapperstadt}
 {29801}{}{Ein gewöhnlicher Schlüssel.}
 {29900}{}{Rohrgewehr}
-{29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuß. Mindest-ST: 5.}
+{29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuss. Mindest-ST: 5.}
 {30000}{}{Zip-Pistole}
 {30001}{}{Eine handgefertigte Laserpistole. Mindest-ST: 3.}
 {30100}{}{Clipboard}
@@ -752,7 +752,7 @@
 {38600}{}{Louisville Slugger}
 {38601}{}{Dieser typisch amerikanische Baseballschläger aus Hartholz schlägt nicht nur den Ball weit übers Feld hinaus. Mindest-ST: 4.}
 {38700}{}{M60}
-{38701}{}{Dieses recht leichte Maschinengewehr wird von Militärs weltweit für seine große Schußkraft gelobt. Das verlässliche, kampferprobte Design wurde auf Fahrzeugen montiert und zum Feuerschutz für Schwadronen verwendet. Mindest-ST: 7.}
+{38701}{}{Dieses recht leichte Maschinengewehr wird von Militärs weltweit für seine große Schusskraft gelobt. Das verlässliche, kampferprobte Design wurde auf Fahrzeugen montiert und zum Feuerschutz für Schwadronen verwendet. Mindest-ST: 7.}
 {38800}{}{Nadelpistole}
 {38801}{}{Du vermutest, dass diese Bringham-Nadelpistole einst für wissenschaftliche Feldstudien eingesetzt wurde. Ihre Munition besteht aus kleinen Pfeilen aus hartem Kunststoff. Mindest-ST: 3.}
 {38900}{}{Kleingeschütz Avenger}
