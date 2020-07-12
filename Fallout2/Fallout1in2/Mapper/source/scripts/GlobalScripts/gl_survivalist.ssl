@@ -3,10 +3,6 @@
    This script changes the survivalist perk to give +20% to outdoorsman on every rank (3).
    In Fo2, the perk would only give +25% _once_ (1 rank only).
 
-   TODO:
-      Script needs improvements ... First rank works good, but everything after requires
-      the character screen to be closed / opened again to see the % change.
-
 */
 
 /* Include Files */
@@ -20,35 +16,18 @@ procedure survivalist_perk;
 
 procedure start begin
    if (game_loaded) then begin
-      set_global_script_repeat(1);
+      set_global_script_repeat(30);
       set_global_script_type(1);
    end
 
-   //if (get_game_mode == CHARSCREEN) then
+   if (get_game_mode == CHARSCREEN) then
       call survivalist_perk;
 end
 
 procedure survivalist_perk begin
-   /*
-   // This works more reliable, but is also shit code.
-   if (dude_perk(PERK_survivalist) == 1 and get_sfall_global_int("survperk") == 0) then begin
-      set_sfall_global("survperk", 1);
-      critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, 20);
-   end
-   else if (dude_perk(PERK_survivalist) == 2 and get_sfall_global_int("survperk") == 1) then begin
-      set_sfall_global("survperk", 2);
-      critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, 20);
-   end
-   else if (dude_perk(PERK_survivalist) == 3 and get_sfall_global_int("survperk") == 2) then begin
-      set_sfall_global("survperk", 3);
-      critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, 20);
-   end
-   */
-
-   // This code can fuck-up if we do a CHARSCREEN get_game_mode check and save&load before the % bonus was applied.
    if (dude_perk(PERK_survivalist) > get_sfall_global_int("survperk")) then begin
       set_sfall_global("survperk", get_sfall_global_int("survperk") + 1);
       critter_mod_skill(dude_obj, SKILL_OUTDOORSMAN, 20);
+      display_stats; // We have to refresh the interface
    end
-
 end
