@@ -60,6 +60,11 @@ variable $addr;
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
 
+// This will change the skill bonus from survivalist perk to 0.
+// The bonus for all perk ranks is applied via gl_survivalist.ssl script.
+#define VOODOO_survivalist_bonus \
+               write_byte(0x496FAB, 0)
+               
 // sfall-asm:code-end //
 
 
