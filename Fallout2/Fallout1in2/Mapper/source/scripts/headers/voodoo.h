@@ -66,7 +66,7 @@ variable $addr;
 // This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
-               
+
 // sfall-asm:code-end //
 //
 // ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
