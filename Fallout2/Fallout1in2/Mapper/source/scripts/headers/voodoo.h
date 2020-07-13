@@ -29,8 +29,15 @@ variable $addr;
 #define VOODOO_display_win_redraw \
                call_offset_v1(0x4d6f5c,read_int(0x631e4c)) // win_draw_(_display_win)
 
+// This will change the skill bonus from survivalist perk to 0.
+// The bonus for all perk ranks is applied via gl_survivalist.ssl script.
+#define VOODOO_survivalist_bonus \
+               write_byte(0x496FAB, 0)
 
 /////////////////////////////////////////////////// AUTOMAGICK ZONE ///////////////////////////////////////////////////
+//
+// ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
+//
 // sfall-asm:code-begin //
 
 // This will disable the "You encounter: ..." message
@@ -59,15 +66,11 @@ variable $addr;
 // This will change the rest timer from "wait until 08:00" to "wait until 06:00" like in Fallout 1.
 #define VOODOO_rest_till_0600 \
                write_byte(0x4995f3, 0x06)
-
-// This will change the skill bonus from survivalist perk to 0.
-// The bonus for all perk ranks is applied via gl_survivalist.ssl script.
-#define VOODOO_survivalist_bonus \
-               write_byte(0x496FAB, 0)
                
 // sfall-asm:code-end //
-
-
+//
+// ALL MANUAL EDITS BETWEEN "sfall-asm:code-begin" AND "sfall-asm:code-end" COMMENTS WILL BE LOST
+//
 ////////////////////////////////////////////////////// TEST ZONE //////////////////////////////////////////////////////
 
 
