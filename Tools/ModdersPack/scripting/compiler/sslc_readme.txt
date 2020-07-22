@@ -340,6 +340,9 @@ There are several changes in this version of sslc which may result in problems f
 === Changelog ===
 =================
 
+> sfall 4.2.7
+- added ability to declare local variables anywhere in the procedure body
+
 > sfall 4.2.3
 - fixed compiler giving "assignment operator expected" error when a variable-like macro is not being defined properly
 - added new logical operators "AndAlso", "OrElse" for short-circuit evaluation of logical expressions
