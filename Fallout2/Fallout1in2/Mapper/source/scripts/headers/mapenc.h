@@ -403,7 +403,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_5MM_AP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 4 * (dude_perk(PERK_scrounger) + 1));
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_COMBAT_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -439,7 +439,7 @@ procedure hunters begin
    Item := create_object(PID_STIMPAK, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3);
 
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -466,7 +466,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_223_FMJ, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3 * (dude_perk(PERK_scrounger) + 1));
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -495,7 +495,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_44_MAGNUM_JHP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);

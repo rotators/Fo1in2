@@ -403,7 +403,7 @@
 #define GVAR_TANDI_LOCATION_TRACKER             (1264)
 #define GVAR_WATER_CHIP_8                       (1265)
 #define GVAR_BLADES_INVASION_READY              (1266)
-#define GVAR_WATER_CHIP_10                      (1267)
+#define GVAR_BLADES_COUNTER                     (1267)
 #define GVAR_WATER_CHIP_11                      (1268)
 #define GVAR_RAIDERS_LEFT_IRWIN                 (1269)
 #define GVAR_WATER_CHIP_13                      (1270)

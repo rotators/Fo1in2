@@ -30,8 +30,6 @@ procedure pickup_p_proc;
 variable Only_Once := 1;
 variable PsstTime;
 
-variable whichblade;
-
 import variable InBladePtr1;
 import variable InBladePtr2;
 import variable InBladePtr3;
@@ -50,55 +48,14 @@ procedure push_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   if map_first_run then
+   if map_first_run then begin
       self_caps_adjust(random(10, 100));
-
-   if Only_Once then begin
-      variable whichblade := 0;
-
-      // TODO: Rewrite this part of the script to remove redundance
-      // Seems the game sometimes forgets who is who and thus the
-      // temp variables will be "0" and the placement in LAADYTUM.ssl fails.
-      if (get_blades_attacking or get_blades_attacking_wait) and (whichblade < 8) then begin
-         set_self_team(TEAM_PLAYER);
-         whichblade := global_var(GVAR_WATER_CHIP_10);
-         if (whichblade == 0) then begin
-            InBladePtr1 := self_obj;
-         end
-         else if (whichblade == 1) then begin
-            InBladePtr2 := self_obj;
-         end
-         else if (whichblade == 2) then begin
-            InBladePtr3 := self_obj;
-         end
-         else if (whichblade == 3) then begin
-            InBladePtr4 := self_obj;
-         end
-         else if (whichblade == 4) then begin
-            InBladePtr5 := self_obj;
-         end
-         else if (whichblade == 5) then begin
-            InBladePtr6 := self_obj;
-         end
-         else if (whichblade == 6) then begin
-            InBladePtr7 := self_obj;
-         end
-         else if (whichblade == 7) then begin
-            InBladePtr8 := self_obj;
-            set_global_var(GVAR_BLADES_INVASION_READY, 1);
-         end
-         whichblade := whichblade + 1;
-         set_global_var(GVAR_WATER_CHIP_10, whichblade);
-      end
-      else begin
-         set_self_team(TEAM_LA_BLADES);
-      end
-
-      Only_Once := 0;
    end
 
-   // Refresh variables if they get cleared for whatever reason:
+   // Assign identifier to the attacking Blades
    if (get_blades_attacking or get_blades_attacking_wait) then begin
+      set_self_team(TEAM_PLAYER);
+
       if (InBladePtr1 == 0) then
          InBladePtr1 := self_obj;
       else if (InBladePtr2 == 0) then
@@ -115,10 +72,15 @@ procedure map_enter_p_proc begin
          InBladePtr7 := self_obj;
       else if (InBladePtr8 == 0) then
          InBladePtr8 := self_obj;
-   end
 
-   //if (global_var(GVAR_WATER_CHIP_10) >= 8) then
-   // debug("blades ready to rock! Ready? " + global_var(GVAR_BLADES_INVASION_READY));
+      inc_global_var(GVAR_BLADES_COUNTER);
+      if (global_var(GVAR_BLADES_COUNTER) >= 8) then begin
+         set_global_var(GVAR_BLADES_INVASION_READY, 1);
+      end
+   end
+   else begin
+      set_self_team(TEAM_LA_BLADES);
+   end
 end
 
 procedure map_update_p_proc begin
