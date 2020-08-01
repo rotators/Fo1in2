@@ -1,6 +1,7 @@
 Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1in2/releases/tag/v1.2.2035))
 - **Added**: Fallout 2's Metal Armor Mk2 has a small chance to spawn at the Gunrunners now, because why not.
 - **Fixed**: "Knocking out" the raider in Marcelle's Crash House won't trigger the "you killed him"-dialog anymore.
+- **Fixed**: Armor destroy mod had wrong conditions set ...
 - **Fixed**: Killian in Junktown would restock his money on every map_enter if he doesn't have any in his inventory.
 - **Fixed**: Survivalist perk now correctly gives +20% Outdoorsman skill on each of its 3 ranks.
 - **Fixed**: The Necropolis invasion would still happen after killing Harry and his friends, even though it was disabled (set to 0) in the fo1_settings.ini file.
