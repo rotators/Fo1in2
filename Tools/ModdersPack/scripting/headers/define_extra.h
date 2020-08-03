@@ -2,6 +2,9 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+/* Combat Flags */
+#define DAM_PRESERVE_FLAGS  0x80000000 // keep the existing result flags when setting new flags in attack_complex (for sfall)
+
 #define BODY_HIT_HEAD       (0)
 #define BODY_HIT_LEFT_ARM   (1)
 #define BODY_HIT_RIGHT_ARM  (2)
