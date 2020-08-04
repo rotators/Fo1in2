@@ -3,9 +3,12 @@ Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1i
 - **Fixed**: "Knocking out" the raider in Marcelle's Crash House won't trigger the "you killed him"-dialog anymore.
 - **Fixed**: Armor destroy mod had wrong conditions set ...
 - **Fixed**: Killian in Junktown would restock his money on every map_enter if he doesn't have any in his inventory.
+- **Fixed**: Lorenzo in the Hub had a typo in his move order, which would send him outside (vanilla Fo1 bug).
 - **Fixed**: Survivalist perk now correctly gives +20% Outdoorsman skill on each of its 3 ranks.
 - **Fixed**: The Necropolis invasion would still happen after killing Harry and his friends, even though it was disabled (set to 0) in the fo1_settings.ini file.
 - **Tweaked**: Katja will now gain a few % of lockpick skill per level up.
+- **Tweaked**: Killing Vance in the Hub now gives "neutral" reputation instead of "bad".
+- **Tweaked**: Lorenzo in the Hub has a more lenient loan timeout now (4 hours instead of 24).
 - **Tweaked**: Lowered the requirements a bit to turn in Iguana Bob to the Sheriff.
 - **Tweaked**: Reduced Mauser ammo on Gizmo back to 20 bullets (reverted Fixt change).
 - **Tweaked**: Removed Stimpaks from Gizmo (reverted Fixt change).
