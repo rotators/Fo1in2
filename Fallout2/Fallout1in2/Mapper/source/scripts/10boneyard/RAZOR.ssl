@@ -82,10 +82,14 @@ procedure RazorEnd;
 procedure RemoveBlades;
 procedure fix00;
 
+procedure Gunrunners00;
+
 import variable RazorPtr;
 
 variable Only_Once := 1;
 variable DisplayMessage := 100;
+
+#define LVAR_TalkToZimmerman     (7)
 
 procedure Start begin
    if Only_Once then begin
@@ -96,6 +100,7 @@ procedure Start begin
       end
       Only_Once := 0;
    end
+   RazorPtr := self_obj;
 end
 
 procedure look_at_p_proc begin
@@ -371,16 +376,17 @@ procedure Razor19 begin
 end
 
 procedure Razor20 begin
-   Reply(162);
-
    // TODO: Experimental. Don't repeat the whole dialog if the player already went through it.
    // Taking "arm the Blades"-questline as a base for now, because anything else likely requires new dialog.
    if not(get_arming_blades) then begin
+      Reply(162);
       NOption(163, Razor21, 4);
       NOption(164, RazorEnd, 4);
    end
    else begin
-      NOption(103, RazorEnd, 4);
+      Reply(300);
+      NOption(301, Gunrunners00, 4);
+      NOption(302, RazorEnd, 4);
       NLowOption(g_grunt, RazorEnd);
    end
 
@@ -465,36 +471,46 @@ procedure Razor32 begin
 end
 
 procedure Razor33 begin
-   Reply(197);
-   NOption(198, Razor34, 4);
-   NOption(199, Razor35, 4);
+   if (local_var(LVAR_TalkToZimmerman) == 0) then begin
+      Reply(197);
+      NOption(198, Razor34, 4);
+      NOption(199, Razor35, 4);
 
-   if (global_var(GVAR_ZIMMERMAN_STATUS) != 9003) then
-      NOption(201, Razor36, 4);
+      if (global_var(GVAR_ZIMMERMAN_STATUS) != 9003) then
+         NOption(201, Razor36, 4);
+   end
+   else begin
+      Reply(400);
+      NOption(401, Razor34, 4);
+      NOption(402, Razor35, 4);
 
+      if (global_var(GVAR_ZIMMERMAN_STATUS) != 9003) then
+         NOption(403, Razor36, 4);
+   end
    NLowOption(200, Razor41);
 end
 
 procedure Razor34 begin
    gfade_out(1);
-   game_time_advance(game_ticks(10 * 60 * 60 * 8));
-   set_blades_attacking_alone;
-   TopReact
+      game_time_advance(game_ticks(10 * 60 * 60 * 8));
+      set_blades_attacking_alone;
+      TopReact
    gfade_in(1);
    NMessage(202);
 end
 
 procedure Razor35 begin
    gfade_out(1);
-   game_time_advance(game_ticks(ONE_GAME_DAY));
-   set_blades_attacking;
-   TopReact
+      game_time_advance(game_ticks(ONE_GAME_DAY));
+      set_blades_attacking;
+      TopReact
    gfade_in(1);
    NMessage(203);
    load_map("laadytum.map", 1);
 end
 
 procedure Razor36 begin
+   set_local_var(LVAR_TalkToZimmerman, 1);
    NMessage(204);
    set_blades_attacking_wait;
 end
@@ -591,4 +607,8 @@ end
 
 procedure fix00 begin
    NMessage(222);
+end
+
+procedure Gunrunners00 begin
+   NMessage(187);
 end
