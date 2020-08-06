@@ -44,7 +44,7 @@
 #define TEAM_HUB_THIEVES_CIRCLE     (39)
 #define TEAM_HUB_POLICE             (40)
 #define TEAM_HUB_SKAG               (41)
-#define TEAM_42                     (42)
+#define TEAM_HUB_HEIGHTS            (42)
 #define TEAM_43                     (43)
 #define TEAM_BROTHERHOOD            (44)
 #define TEAM_45                     (45)
