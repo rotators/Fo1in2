@@ -686,6 +686,7 @@
 #define KILL_TYPE_gecko_kills         15
 #define KILL_TYPE_alien_kills         16
 #define KILL_TYPE_giant_ant_kills     17
+#define KILL_TYPE_big_boss            18
 #define DEFINE_METARULE_SET_CAR_CARRY_AMOUNT 52
 #define set_car_carry_amount(VALUE)   metarule(DEFINE_METARULE_SET_CAR_CARRY_AMOUNT, VALUE)
 #define DEFINE_METARULE_GET_CAR_CARRY_AMOUNT 53
