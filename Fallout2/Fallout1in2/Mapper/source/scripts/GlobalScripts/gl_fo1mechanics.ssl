@@ -43,7 +43,7 @@ procedure start begin
       register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
       register_hook_proc(HOOK_USESKILLON, useskillon_handler);
       register_hook_proc(HOOK_USEOBJON, useobjon_handler);
-      //register_hook_proc(HOOK_USEANIMOBJ, useanimobj_handler);
+      register_hook_proc(HOOK_USEANIMOBJ, useanimobj_handler);
    end
 
    call general;
@@ -208,19 +208,28 @@ procedure useanimobj_handler begin
    variable
       critter := get_sfall_arg,
       target := get_sfall_arg,
-      use_anim := get_sfall_arg;
+      use_anim := get_sfall_arg,
+      sound,
+      training_anim;
 
    /*if (obj_pid(target) == PID_GIZMO_REMAINS) then begin
       obj_close(target);
    end*/
 
-   /*
    if (obj_pid(target) == PID_PUNCHING_BAG) then begin
       if (get_script(target) == SCRIPT_ZSPNCHBG) then begin
-         set_sfall_return(-1); // TODO: The animation started in SCRIPT_ZSPNCHBG will only run once if this is set to -1.
+         training_anim := random(0, 1);
+         if (training_anim == 0) then
+            training_anim := ANIM_throw_punch;
+         else
+            training_anim := ANIM_kick_leg;
+         sound := sfx_build_char_name(critter, training_anim, snd_contact);
+         reg_anim_play_sfx(critter, sound, 0);
+         set_sfall_return(training_anim);
+
+         //set_sfall_return(-1); // TODO: The animation started in SCRIPT_ZSPNCHBG will only run once if this is set to -1.
       end
    end
-   */
 end
 
 procedure useskillon_handler begin
