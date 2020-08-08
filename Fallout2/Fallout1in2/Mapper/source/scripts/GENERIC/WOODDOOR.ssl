@@ -1,5 +1,17 @@
+/*
+
+   Generic wood and metal door, used almost everywhere in the game.
+   Has either a broken, or no lock at all!
+
+      TODO: Move all Necropolis related stuff into a new sub-script.
+
+*/
+
 #include "define.h"
 #include "command.h"
+#ifdef EXTRA_HEADER
+   #include EXTRA_HEADER
+#endif
 
 #define NAME                     SCRIPT_DOOR
 
@@ -10,8 +22,8 @@
 /* Timer id's */
 #define TIMER_CLOSE                     (1)
 
-#define is_metal_door                  (self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW)
-#define is_wood_door                   not(is_metal_door)
+#define is_metal_door                   (self_pid == PID_DOOR_METAL_EW or self_pid == PID_DOOR_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_NS or self_pid == PID_VDOOR_OLD_METAL_EW)
+#define is_wood_door                    not(is_metal_door)
 
 /* Penalties for forcing the door open using strength */
 #define Crowbar_Bonus                   (0)
@@ -29,31 +41,103 @@ procedure use_p_proc;
 procedure use_skill_on_p_proc;
 procedure description_p_proc;
 procedure use_obj_on_p_proc;
-procedure map_update_p_proc;
 procedure map_enter_p_proc;
-
-procedure Pry_Door;
+procedure map_update_p_proc;
+procedure map_exit_p_proc;
 
 /*****************************************************************
    Local Variables which are saved. All Local Variables need to be
    prepended by LVAR_
 *****************************************************************/
+#define LVAR_Flags                  (0)
+#define LVAR_Explosion_Attempts     (1)
 
-//local_var(LVAR_HALLDED_Door) == HALLDED | self is Hallded locked door
-//local_var(5) == HALLDED | Hallded lock was picked?
-//local_var(6) == HALLDED | has init Hallded door?
-//local_var(7) == GotExpForPicking (NOT USED)
-
-#define LVAR_HALLDED_Door           (4)
-#define LVAR_Explosion_Attempts     (8)
+#define gave_warning_bit                     bit_11
 
 /*******************************************************************
    Imported variables from the Map scripts. These should only be
    pointers and variables that need not be saved. If a variable
    Needs to be saved, make it a map variable (MVAR_)
 *******************************************************************/
-import variable GhDorGrd_Ptr;
+#ifdef WATCHER_OBJ
+   import variable WATCHER_OBJ;
+#endif
 
+#ifndef WATCHER_OBJ
+   #define WATCHER_OBJ                       (0)               // object of script watching locker
+#endif
+#ifndef DO_CHECK_TAMPER_CONDITION
+   #define DO_CHECK_TAMPER_CONDITION         (true)            // setting this to true will always check no matter what
+#endif
+
+#ifndef SKIP_WARNING
+   #define SKIP_WARNING                      (false)
+#endif
+#define gave_warning                         ((lvar_bit(LVAR_Flags, gave_warning_bit)) or (SKIP_WARNING))
+#ifndef do_warning_action
+   #define do_warning_action                 float_msg(WATCHER_OBJ, g_mstr(5400), FLOAT_COLOR_NORMAL);
+#endif
+#ifndef do_attack_action
+   #define do_attack_action                  attack_setup(WATCHER_OBJ, user_obj);
+#endif
+#define set_gave_warning                     if (gave_warning) then begin        \
+                                                do_attack_action                 \
+                                             end else begin                      \
+                                                do_warning_action                \
+                                             end                                 \
+                                             set_lvar_bit_on(LVAR_Flags, gave_warning_bit)
+
+// exporting self_obj
+#ifdef EXPORT_VAR
+import variable EXPORT_VAR;
+   #define export_self_var                   EXPORT_VAR := self_obj;
+#else
+   #define export_self_var
+#endif
+
+#ifndef look_at_action
+   #define look_at_action
+#endif
+#ifndef description_action
+   #define description_action                if (obj_is_locked(self_obj)) then display_msg(message_str(SCRIPT_DOOR, 104));
+#endif
+
+// general a generic way to deal with each response as one
+#ifndef genereral_caught_action
+   #define genereral_caught_action           if (caught_tamper) then begin          \
+                                                script_overrides;                   \
+                                                set_gave_warning;                   \
+                                             end
+#endif
+
+#ifndef watch_box_conditions
+   #define watch_box_conditions              (obj_can_see_obj(WATCHER_OBJ, user_obj))
+#endif
+// what to do when source is caught using locker
+#define caught_use_action                    genereral_caught_action
+// what to do when source is caught using an object on the locker
+#define caught_use_obj_action                genereral_caught_action
+// what to do when source is caught using a skill on the locker
+#define caught_use_skill_action              genereral_caught_action
+// what to do when locker is damaged
+#define damage_action                        genereral_caught_action
+#define check_tamper                         if (caught_tamper == false) then begin                                                          \
+                                                if (DO_CHECK_TAMPER_CONDITION) then begin                                                    \
+                                                   if (WATCHER_OBJ != 0) then begin                                                          \
+                                                      if ((is_visible(WATCHER_OBJ)) and (is_critter_dead(WATCHER_OBJ) == false)) then begin  \
+                                                         if (watch_box_conditions) then begin                                                \
+                                                            caught_tamper := true;                                                           \
+                                                         end                                                                                 \
+                                                      end                                                                                    \
+                                                   end                                                                                       \
+                                                end                                                                                          \
+                                             end
+#ifndef map_enter_action
+   #define map_enter_action
+#endif
+#ifndef map_update_action
+   #define map_update_action
+#endif
 
 /*******************************************************************
    Local variables which do not need to be saved between map changes.
@@ -62,6 +146,9 @@ import variable GhDorGrd_Ptr;
 variable Locks_Roll;
 variable Traps_Roll;
 variable last_source_obj;
+
+variable caught_tamper;
+variable user_obj;
 
 
 /*******************************************************************
@@ -75,14 +162,14 @@ variable last_source_obj;
 *******************************************************************/
 
 procedure start begin
-   if (self_tile == 17128) and (CUR_MAP_HALLDED) then begin
-      set_local_var(LVAR_HALLDED_Door, 1);//  HALLDED | self is Hallded locked door
-      if (local_var(6) != 1) and (map_first_run) then begin
-         set_local_var(5, 0);
-         set_map_var(11, 1);
-         set_local_var(6, 1);
-      end
-   end
+end
+
+procedure look_at_p_proc begin
+   look_at_action
+end
+
+procedure description_p_proc begin
+   description_action
 end
 
 procedure timed_event_p_proc begin
@@ -103,85 +190,28 @@ procedure timed_event_p_proc begin
 end
 
 procedure map_enter_p_proc begin
-   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-      if necropolis_invaded then begin
-         destroy_object(self_obj);
-      end
-
-      if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-         if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
-            obj_unlock(self_obj);
-         end
-      end
-      else if (local_var(5) == 1) then begin
-         obj_unlock(self_obj);
-      end
-      else if (local_var(5) == 0) and (map_var(12) != 1) then begin
-         obj_close(self_obj);
-         obj_lock(self_obj);
-      end
-   end
+   map_enter_action
+   export_self_var
 end
 
 procedure map_update_p_proc begin
-   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-      if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-         if ((map_var(11) == 0) or (local_var(5) == 1) or (map_var(12) == 1)) then begin
-            obj_unlock(self_obj);
-         end
-      end
-      else if (local_var(5) == 1) then begin
-         obj_unlock(self_obj);
-      end
-      else if (local_var(5) == 0) and (map_var(12) != 1) then begin
-         obj_close(self_obj);
-         obj_lock(self_obj);
-      end
-   end
+   map_update_action
+   export_self_var
+end
+
+procedure map_exit_p_proc begin
+   set_lvar_bit_off(LVAR_Flags, gave_warning_bit);
 end
 
 procedure use_p_proc begin
-   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-//    if (map_var(11) == 1) then begin
-//       obj_lock(self_obj);
-//    end
-//    else begin
-//       if (map_var(11) == 0) then begin
-//          obj_unlock(self_obj);
-//       end
-//    end
-      if ((map_var(11) == 1) and (source_obj == dude_obj)) then begin
-         if (local_var(5) == 0) then begin
-            if (GhDorGrd_Ptr != 0) and not(combat_is_initialized) then begin
-               float_msg(GhDorGrd_Ptr, message_str(SCRIPT_GHDORGRD, 101), FLOAT_MSG_NORMAL);
-               obj_lock(self_obj);
-               script_overrides;
-               display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-            end
-            else begin
-               obj_lock(self_obj);
-               script_overrides;
-               display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
-            end
-         end
-         else begin
-            if (local_var(5) == 1) then begin
-               if (GhDorGrd_Ptr != 0) then begin
-                  if not(dude_is_sneaking) and (source_obj == dude_obj) then begin
-                     script_overrides;
-                     set_global_var(GVAR_SET_DOOR_GUARD_WARNING, 1);
-                  end
-                  else begin
-                     if dude_is_sneaking and is_success(roll_vs_skill(dude_obj, SKILL_SNEAK, 0)) and (source_obj == dude_obj) then begin
-                        obj_unlock(self_obj);
-                     end
-                  end
-               end
-               else begin
-                  obj_unlock(self_obj);
-               end
-            end
-         end
+   caught_tamper := false;
+   //debug("using object");
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      //debug("about to run check_tamper");
+      check_tamper
+      if (caught_tamper) then begin
+         caught_use_action
       end
    end
 
@@ -195,36 +225,12 @@ end
 procedure use_skill_on_p_proc begin
 variable Skills_Roll;
 
-   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-      if (map_var(11) == 1) and (local_var(5) == 0) then begin
-         if (action_being_used == SKILL_LOCKPICK) then begin
-            script_overrides;
-            Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
-
-            // Unlock the door:
-            if (is_success(Skills_Roll)) then begin
-               obj_unlock(self_obj);
-               set_local_var(5, 1);
-               display_msg(mstr(100));
-               give_xp(EXP_LOCKPICK_NORMAL);
-            end
-            else begin
-               // beyond capabilities to open:
-               if (is_critical(Skills_Roll)) then begin
-                  jam_lock(self_obj);
-                  display_msg(mstr(110));
-               end
-               // unable to pick the lock:
-               else begin
-                  display_msg(mstr(103));
-               end
-            end
-         end
-      end
-
-      // Door is already open:
-      else begin
-         display_msg(mstr(109));
+   caught_tamper := false;
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      check_tamper
+      if (caught_tamper) then begin
+         caught_use_skill_action
       end
    end
 end
@@ -234,57 +240,25 @@ procedure use_obj_on_p_proc begin
    variable Skills_Roll;
    Tool := obj_pid(obj_being_used_with);
 
-   if local_var(LVAR_HALLDED_Door) then begin//  HALLDED | self is Hallded locked door
-      Skills_Roll := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-
-      if ((Tool == PID_LOCKPICKS) and (map_var(11) == 1)) then begin
-         if (local_var(5) == 0) then begin
-            script_overrides;
-
-            // Door unlocked:
-            if (is_success(Skills_Roll)) then begin
-               obj_unlock(self_obj);
-               set_local_var(5, 1);
-               display_msg(mstr(100));
-               give_xp(EXP_LOCKPICK_NORMAL);
-            end
-            else begin
-               // Lockpicks broken:
-               if (is_critical(Skills_Roll)) then begin
-                  rm_obj_from_inven(dude_obj, Tool);
-                  destroy_object(Tool);
-                  display_msg(mstr(101));
-               end
-               // Not able to open the door:
-               else begin
-                  display_msg(mstr(103));
-               end
-            end
-         end
-         // Door is already open:
-         else begin
-            display_msg(mstr(109));
-         end
-      end
-
-      else if ((Tool == PID_CROWBAR) and (map_var(11) == 1)) then begin
-         script_overrides;
-         call Pry_Door;
+   caught_tamper := false;
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      check_tamper
+      if (caught_tamper) then begin
+         caught_use_obj_action
       end
    end
-
 end
 
 procedure damage_p_proc begin
-  /************ Wood Door ****************/
    if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      /************ Wood Door ****************/
       if is_wood_door then begin
          obj_unlock(self_obj);
          destroy_object(self_obj);
       end
 
-     /************ Metal Door ****************/
-
+      /************ Metal Door ****************/
       else if is_metal_door then begin
           set_local_var(LVAR_Explosion_Attempts, local_var(LVAR_Explosion_Attempts)+1);
           if (local_var(LVAR_Explosion_Attempts) > DOOR_STRENGTH) then begin
@@ -296,72 +270,10 @@ procedure damage_p_proc begin
    else begin
        display_msg(mstr(193));
    end
-end
 
-procedure description_p_proc begin
-   if (obj_is_locked(self_obj)) then begin
-      display_msg(message_str(SCRIPT_DOOR, 104));//{104}{}{The door is locked.}
+   user_obj := source_obj;
+   if (user_obj != 0) then begin
+      damage_action
    end
 end
 
-procedure Pry_Door begin
-   variable Stat_Roll;
-   script_overrides;
-
-   Stat_Roll := do_check(source_obj, STAT_st, Crowbar_Bonus);
-
-   if (is_success(Stat_Roll)) then begin
-       obj_unlock(self_obj);
-
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(176));
-       end
-
-       else begin
-           display_msg(mstr(181));
-       end
-   end
-
-   else if (is_critical(Stat_Roll)) then begin
-       critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
-
-       if (source_obj == dude_obj) then begin
-           if (Crowbar_Strain == 1) then begin
-               display_msg(mstr(177));
-           end
-           else begin
-               display_msg(mstr(178)+Crowbar_Strain + mstr(179));
-           end
-       end
-
-       else begin
-           if (get_is_male(source_obj)) then begin
-               if (Crowbar_Strain == 1) then begin
-                   display_msg(mstr(182));
-               end
-               else begin
-                   display_msg(mstr(183)+Crowbar_Strain + mstr(184));
-               end
-           end
-
-           else begin
-               if (Crowbar_Strain == 1) then begin
-                   display_msg(mstr(186));
-               end
-               else begin
-                   display_msg(mstr(187)+Crowbar_Strain + mstr(188));
-               end
-           end
-       end
-   end
-
-   else begin
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(180));
-       end
-
-       else begin
-           display_msg(mstr(185));
-       end
-   end
-end
