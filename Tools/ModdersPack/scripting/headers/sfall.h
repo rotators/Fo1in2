@@ -273,9 +273,9 @@
                                                         set_self(0)
 
 // returns the corrected tile distance between two objects to the distance variable (return value >= 9996 is an error when getting the distance)
-#define distance_objs(distance, obj1, obj2)             distance := tile_distance_objs(obj1, obj2) - 1;      \
-                                                        if (get_flags(obj1) bwand FLAG_MULTIHEX) distance--; \
-                                                        if (get_flags(obj2) bwand FLAG_MULTIHEX) distance--
+#define distance_objs(distance, obj1, obj2)             distance := tile_distance_objs(obj1, obj2) - 1;           \
+                                                        if (get_flags(obj1) bwand FLAG_MULTIHEX) then distance--; \
+                                                        if (get_flags(obj2) bwand FLAG_MULTIHEX) then distance--
 
 
 /* sfall metalure3 function macros */
