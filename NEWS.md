@@ -8,10 +8,12 @@ Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1i
 - **Fixed**: Lorenzo in the Hub had a typo in his move order, which would send him outside (vanilla Fo1 bug).
 - **Fixed**: Miles in Adytum would GIVE the player 1.000 caps when making a hardened power armor, not TAKE it from the player.
 - **Fixed**: Miles in Adytum would spend +6 hours (reading the science books) when hardening every power armor, not just the first.
+- **Fixed**: Mitch in the Hub was still using the "old way" of the Fo2-style merchant inventory spawning mechanic.
 - **Fixed**: Razor would not move to the Adytum entrance after the Blades attacked without the help of the player.
 - **Fixed**: Seth in Shady Sands still had a dialog option to teleport the player to the radscorpion caves, even with the satellite locations feature enabled.
 - **Fixed**: Survivalist perk now correctly gives +20% Outdoorsman skill on each of its 3 ranks.
 - **Fixed**: The Master now uses his correct critical hit tables.
+- **Fixed**: The Necropolis Hall of the Dead door guard will only float text if he actually sees the player using the door.
 - **Fixed**: The Necropolis invasion would still happen after killing Harry and his friends, even though it was disabled (set to 0) in the fo1_settings.ini file.
 - **Tweaked**: Changed the conditions for the "good" Hub ending slide to be more in line with the information on the Wiki (complete "find the missing caravans", don't finish any of Decker's quests, be friendly with Harold). Skipped Iguana Bob, though, because it's too random right now. Also Jain is a bit of an exception - she can be killed as long as the player didn't get the job from Decker.
 - **Tweaked**: Katja will now gain a few % of lockpick skill per level up.
