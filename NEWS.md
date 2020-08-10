@@ -2,13 +2,17 @@ Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1i
 - **Added**: Fallout 2's Metal Armor Mk2 has a small chance to spawn at the Gunrunners now, because why not.
 - **Added**: New text to Razor in the Boneyard, to remove some of the really shitty repeating dialog states.
 - **Fixed**: "Knocking out" the raider in Marcelle's Crash House won't trigger the "you killed him"-dialog anymore.
+- **Fixed**: After the Blades attacked Adytum without the player, Zimmerman would remain as a "dead ghost" in frozen animation and not disappear correctly.
 - **Fixed**: Armor destroy mod had wrong conditions set ...
 - **Fixed**: Blades would not join the attack on Adytum if the player attacks the Regulators on his own after telling Razor "let me speak with Zimmerman first" (example: due to player not having the Holodisk to show Zimmerman).
+- **Fixed**: Changing map elevations could result in visual glitches outside the map area if the screen resolution was set too high (HRP bug).
+- **Fixed**: Floating text will correctly disappear now on map elevation change (vanilla Fo1/2 bug).
 - **Fixed**: Killian in Junktown would restock his money on every map_enter if he doesn't have any in his inventory.
 - **Fixed**: Lorenzo in the Hub had a typo in his move order, which would send him outside (vanilla Fo1 bug).
 - **Fixed**: Miles in Adytum would GIVE the player 1.000 caps when making a hardened power armor, not TAKE it from the player.
 - **Fixed**: Miles in Adytum would spend +6 hours (reading the science books) when hardening every power armor, not just the first.
 - **Fixed**: Mitch in the Hub was still using the "old way" of the Fo2-style merchant inventory spawning mechanic.
+- **Fixed**: Neal killing the Skullz ganger in Junktown could leave behind a "dead ghost" in frozen animation.
 - **Fixed**: Razor would not move to the Adytum entrance after the Blades attacked without the help of the player.
 - **Fixed**: Seth in Shady Sands still had a dialog option to teleport the player to the radscorpion caves, even with the satellite locations feature enabled.
 - **Fixed**: Survivalist perk now correctly gives +20% Outdoorsman skill on each of its 3 ranks.
