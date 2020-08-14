@@ -278,11 +278,11 @@
                                                         if (get_flags(obj2) bwand FLAG_MULTIHEX) then distance--
 
 
-/* sfall metalure3 function macros */
-#define SET_HORRIGAN_ENCOUNTER                          (200)
-
+/* sfall metarule3 function macros */
 // sets the number of days (range 1...127) for the Frank Horrigan encounter, or disable the encounter if days is set to 0
-#define set_horrigan_days(day)                          metarule3(SET_HORRIGAN_ENCOUNTER, day, 0, 0)
+#define set_horrigan_days(day)                          metarule3(200, day, 0, 0)
+// clears the keyboard input buffer, use it in the HOOK_KEYPRESS hook to clear keyboard events before calling script functions that accept key input
+#define clear_keyboard_buffer                           metarule3(201, 0, 0, 0)
 
 
 /* sfall_funcX macros */
