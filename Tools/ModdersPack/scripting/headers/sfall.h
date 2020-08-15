@@ -281,7 +281,7 @@
 /* sfall metarule3 function macros */
 // sets the number of days (range 1...127) for the Frank Horrigan encounter, or disable the encounter if days is set to 0
 #define set_horrigan_days(day)                          metarule3(200, day, 0, 0)
-// clears the keyboard input buffer, use it in the HOOK_KEYPRESS hook to clear keyboard events before calling script functions that accept key input
+// clears the keyboard input buffer, use it in the HOOK_KEYPRESS hook to clear keyboard events before calling functions that are waiting for keyboard input
 #define clear_keyboard_buffer                           metarule3(201, 0, 0, 0)
 
 
