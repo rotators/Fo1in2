@@ -10,6 +10,7 @@ defaults:
 
 env:
  GHA_SCRIPTS: ".github/workflows/scripts"
+ RELEASE_PICS: "Resources/Gallery/releases"
 
 jobs:
 
@@ -49,6 +50,10 @@ jobs:
           echo ::set-env name=MOD_RELEASE_TAG::$($GHA_SCRIPTS/version.sh tag)
           echo ::set-env name=MOD_RELEASE_DRAFT::true
           echo ::set-env name=MOD_RELEASE_PRE::$pre
+
+          if [ -f "$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png" ]; then
+             sed -ri "s!^Notable changes .+!<p align=\"center\"><img src=\"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png\" alt=\"$($GHA_SCRIPTS/version.sh tag)\"/></p>" NEWS.md
+          fi
 
           body=$(cat NEWS.md)
           body="${body//'%'/'%25'}"
