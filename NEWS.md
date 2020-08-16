@@ -27,5 +27,6 @@ Notable changes since last release ([v1.2.2035](https://github.com/rotators/Fo1i
 - **Tweaked**: Re-enabled attack animations when using punching bag scenery objects (overrides the "use" animation).
 - **Tweaked**: Reduced Mauser ammo on Gizmo back to 20 bullets (reverted Fixt change).
 - **Tweaked**: Removed Stimpaks from Gizmo (reverted Fixt change).
+- **Tweaked**: Removed one more repeating dialog loop from Gabriel in the Boneyard.
 - **Tweaked**: The Shady Sands merchant is now disabled by default.
 - **Tweaked**: Wu in the Cathedral is selling his emblem again (alternative path to get the key).
