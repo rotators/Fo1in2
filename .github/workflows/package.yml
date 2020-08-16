@@ -3,6 +3,12 @@ name: Package
 on:
  repository_dispatch:
   types: [package-prerelease, package-release]
+ workflow_dispatch:
+  inputs:
+   release:
+    description: 'Release [true/false]'
+    default:     'false'
+    required:    true
 
 defaults:
  run:
@@ -31,8 +37,12 @@ jobs:
     run:  |
           :
           event="${{ github.event_name }}"
-          if [ "$event" == "repository_dispatch" ]; then
-             event="${event}:${{ github.event.action }}"
+          if   [ "$event" == "repository_dispatch" ]; then
+               event="${event}:${{ github.event.action }}"
+          elif [ "$event" == "workflow_dispatch" ]; then
+               if [ "${{ github.event.inputs.release }}" == "true" ]; then
+                  event="${event}:release"
+               fi
           fi
 
           pre=
@@ -40,12 +50,15 @@ jobs:
                pre=true
           elif [ "$event" == "repository_dispatch:package-release" ]; then
                pre=false
+          elif [ "$event" == "workflow_dispatch" ]; then
+               pre=true
+          elif [ "$event" == "workflow_dispatch:release" ]; then
+               pre=false
           else
                echo "[ERROR] unknown event<$event>"
                exit 1
           fi
 
-          commits="$(git rev-list HEAD --count)"
           echo ::set-env name=MOD_RELEASE_NAME::$($GHA_SCRIPTS/version.sh release)
           echo ::set-env name=MOD_RELEASE_TAG::$($GHA_SCRIPTS/version.sh tag)
           echo ::set-env name=MOD_RELEASE_DRAFT::true
