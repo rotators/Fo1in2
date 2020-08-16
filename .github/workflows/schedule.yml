@@ -3,8 +3,6 @@ name: Schedule
 on:
  schedule:
  - cron: 0 4 * * *
- repository_dispatch:
-  types: [schedule, schedule-push]
  push:
   paths:
   - '.github/workflows/schedule.yml'
@@ -12,6 +10,14 @@ on:
   - '.github/workflows/scripts/ddraw.sh'
   - '.github/workflows/scripts/format-ssl.sh'
   - '.github/workflows/scripts/news.sh'
+ repository_dispatch:
+  types: [schedule, schedule-push]
+ workflow_dispatch:
+  inputs:
+   push:
+    description: 'Push results [true/false]'
+    default:     'false'
+    required:    true
 
 defaults:
  run:
@@ -22,7 +28,7 @@ env:
 
 jobs:
 
- # forked repositories should use own copy if they want automagic commits
+ # forked/cloned repositories should use own copy if they want automagic commits
  # feel free to open issue in main repository if you need help/advice tweaking this workflow in your fork
  Maintenance:
   if: github.repository == 'rotators/Fo1in2'
@@ -54,7 +60,7 @@ jobs:
 
           alive=0
 
-          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+          if [ "${{ github.event_name }}" == "repository_dispatch" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
              alive=1
           else
@@ -146,8 +152,12 @@ jobs:
 
           # simplifies checking/displaying which event triggered workflow (especially dispatches)
           event="${{ github.event_name }}"
-          if [ "$event" == "repository_dispatch" ]; then
-             event="${event}:${{ github.event.action }}"
+          if   [ "$event" == "repository_dispatch" ]; then
+               event="${event}:${{ github.event.action }}"
+          elif [ "$event" == "workflow_dispatch" ]; then
+               if [ "${{ github.event.inputs.push" }}" == "true" ]; then
+                  event="${event}:push"
+               fi
           fi
           echo ::set-env name=GHA_EVENT::$event
           echo "GitHub event... $event"
@@ -355,7 +365,7 @@ jobs:
           git log -p -n 1 2>&1
           echo ::endgroup::
 
-          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
+          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ] || [ "$GHA_EVENT" == "workflow_dispatch:push" ]; then
              echo ::group::git push
              git push 2>&1
              echo ::endgroup::
