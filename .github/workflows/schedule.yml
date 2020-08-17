@@ -18,6 +18,10 @@ on:
     description: 'Push results [true/false]'
     default:     'false'
     required:    true
+   full:
+    description: 'Force running minor tasks [true/false]'
+    default:     'false'
+    required:    true
 
 defaults:
  run:
@@ -307,6 +311,8 @@ jobs:
           # allow full run; forces minor tasks to run even if major tasks does not generate commit
           if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
              echo "# Minor tasks forced to run" >> $HOME/gha.commit
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.full }}" == "true" ]; then
+             echo "# Minor tasks forced to run" >> $HOME/gha.commit
           fi
 
           if [ -f "$HOME/gha.commit" ]; then
@@ -347,6 +353,7 @@ jobs:
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
 ### - schedule
 ### - repository_dispatch:schedule-push
+### - workflow_dispatch:push
 
   - name: Push
     if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
