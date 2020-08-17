@@ -493,7 +493,7 @@ procedure Junk_table begin
          call Junk3;
       end
       else if (Encounter_Num == 4) then begin
-         if not(junktown_invaded) then // if Junktown not invaded
+         if not(junktown_invaded) then
             call Junk4;
          else
             call Vats4;//Nightkin, Mean Super Mutant, Floater
@@ -520,8 +520,10 @@ procedure Hub_table begin
       set_global_var(GVAR_RANDOM_ENC_SOMETHING, 0);
    end
 
+   Encounter_Num := 6;
+
    if (Encounter_Num) then begin
-      debug("Desert HUB loading Encounter_Num == " + Encounter_Num + " ");
+      debug("Desert HUB loading Encounter_Num == " + Encounter_Num);
       call choose_start;
       if (Encounter_Num == 1) then begin
          call Hub1;
@@ -535,7 +537,7 @@ procedure Hub_table begin
       else if (Encounter_Num == 4) then begin
          if not(hub_invaded) then
             call Hub4;
-         else // if The Hub invaded
+         else
             call Vats4;//Nightkin, Mean Super Mutant, Floater
       end
       else if (Encounter_Num == 5) then begin
@@ -2144,15 +2146,19 @@ end
 
 procedure Hub6 begin
    // "Quack" encounter - added by Fo1in2
-   if (random(0, 3) == 1) and day and (global_var(GVAR_ENC_QUACK_DEAD) == 0) then begin
+   if fo1in2_fo2_critters_enabled and (random(0, 3) == 1) and (global_var(GVAR_ENC_QUACK_DEAD) == 0) then begin
+      debug("quack");
       Tot_Critter_A := random(2, 4);
       Outer_ring := (dude_perception / 2) + 5;
       Inner_ring := (dude_perception / 2) + 3;
 
       Critter_type := PID_ENC_QUACK;
       Critter_script := SCRIPT_ENCQUACK;
-      call Place_critter;
+      //call Place_critter;
 
+      Critter := create_object_sid(Critter_type, 0, 0, Critter_script);
+      Critter_tile := tile_num_in_direction(dude_tile, 1, 5);
+      critter_attempt_placement(Critter, Critter_tile, dude_elevation);
    end
    else begin
       display_msg(message_str(SCRIPT_RNDDESRT, 137));

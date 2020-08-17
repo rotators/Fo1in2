@@ -20,8 +20,6 @@ procedure damage_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
 
-procedure pre_dialogue;
-
 procedure childend;
 procedure childcbt;
 procedure child_heal;
@@ -58,118 +56,91 @@ variable pois_cost;
 variable cheat;
 variable RADCOUNT := 0;
 
-procedure start
-begin
-
-
+procedure start begin
    if (not(init_teams)) then begin
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_BRAINWASHED_CHILDREN);
       init_teams := 1;
    end
-   else begin
-      if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-         if (local_var(5) == 0) then begin
-            call pre_dialogue;
-         end
-         else begin
-            call childend;
-         end
-      end
-      else begin
-         if (script_action == damage_proc) then begin//<-- damage_p_proc - has this Critter or Object been shot, hit with TNT, punched, etc.
-            call damage_p_proc;
-         end
-         else begin
-            if (script_action == look_at_proc) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-               script_overrides;
-               display_msg(mstr(100));
-            end
-            else begin
-               if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-                  tmp_hostile := 1;
-               end
-               else begin
-                  if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-                     if (tmp_hostile) then begin
-                        tmp_hostile := 0;
-                        attack(dude_obj);
-                     end
-                  end
-               end
-            end
-         end
-      end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
 end
 
 procedure talk_p_proc begin
-   set_tma_data(NAME, 1000, -1, -1, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END);
-
-   dude_look_at_self;
-   max_hp := dude_max_hp;
-   current_hp := dude_cur_hp;
-   RADCOUNT := dude_rads;
-   get_reaction
-
-   start_dialog_at_node(child00);
-end
-
-procedure pre_dialogue
-begin
-   max_hp := dude_max_hp;
-   current_hp := dude_cur_hp;
-   RADCOUNT := dude_rads;
-   if (local_var(4)) then begin
-      call child16;
-   end
-   else begin
-      if (global_var(GVAR_SUPER_MUTANTS_KILLED) > 0) then begin
-         call child15;
+   if (local_var(5) == 0) then begin
+      max_hp := dude_max_hp;
+      current_hp := dude_cur_hp;
+      RADCOUNT := dude_rads;
+      if (local_var(4)) then begin
+         call child16;
       end
       else begin
-         call talk_p_proc;
+         if (global_var(GVAR_SUPER_MUTANTS_KILLED) > 0) then begin
+            call child15;
+         end
+         else begin
+            set_tma_data(NAME, 1000, -1, -1, TMA_MSG_DONTKNOW_START, TMA_MSG_DONTKNOW_END);
+
+            dude_look_at_self;
+            get_reaction
+
+            start_dialog_at_node(child00);
+         end
       end
+   end
+   else begin
+      call childend;
    end
 end
 
-procedure childend
-begin
+procedure childend begin
 end
 
-procedure childcbt
-begin
+procedure childcbt begin
    tmp_hostile := 1;
 end
 
 ////////////////////////////////////////////////////////////////////////////////
 
 procedure child_heal begin
-   game_time_advance(game_ticks(600 * hp_injured));
+   game_time_advance(game_ticks(ONE_GAME_MINUTE * hp_injured));
    critter_heal(dude_obj, hp_injured);
    critter_uninjure(dude_obj, (DAM_CRIP_LEG_LEFT bwor DAM_CRIP_LEG_RIGHT bwor DAM_CRIP_ARM_LEFT bwor DAM_CRIP_ARM_RIGHT));
    set_v13_days_left(-1);
 end
 
 procedure child_pois begin
-   game_time_advance(game_ticks(1800));
-   cur_pois := dude_poison_stat;
-   poison(dude_obj, -cur_pois);
+   if (dude_poison_stat != 0) then begin
+      game_time_advance(game_ticks(ONE_GAME_HOUR * 3));
+   end
+   poison(dude_obj, -dude_poison_stat);
    set_v13_days_left(-1);
 end
 
 ////////////////////////////////////////////////////////////////////////////////
 
-procedure child00
-begin
+procedure child00 begin
    Reply(101);
    NOption(102, child04, 4);
    NOption(103, child11, 5);
    NLowOption(104, child01);
 end
 
-procedure child01
-begin
+procedure child01 begin
    NMessage(105);
    if (current_hp < max_hp) then begin
       hp_injured := max_hp - current_hp;
@@ -181,20 +152,17 @@ begin
    end
 end
 
-procedure child02
-begin
+procedure child02 begin
    NMessage(106);
    call childend;
 end
 
-procedure child03
-begin
+procedure child03 begin
    NMessage(107);
    call childend;
 end
 
-procedure child04
-begin
+procedure child04 begin
    variable LVar0 := 0;
    if (local_var(1) >= 3) then begin
       LVar0 := 5;
@@ -234,8 +202,7 @@ begin
    end
 end
 
-procedure child04a
-begin
+procedure child04a begin
    if (cost > dude_caps) then begin
       call child08;
    end
@@ -244,21 +211,18 @@ begin
    end
 end
 
-procedure child05
-begin
+procedure child05 begin
    Reply(120);
    NOption(121, child04a, 3);
    NOption(122, child05a, 3);
 end
 
-procedure child05a
-begin
+procedure child05a begin
    set_local_var(5, 1);
    call childend;
 end
 
-procedure child06
-begin
+procedure child06 begin
    if (dude_is_male) then begin
       NMessage(123);
    end
@@ -277,14 +241,12 @@ begin
    call child07;
 end
 
-procedure child07
-begin
+procedure child07 begin
    NMessage(125);
    call childend;
 end
 
-procedure child08
-begin
+procedure child08 begin
    if (cost > dude_caps) then begin
       cost := dude_caps;
    end
@@ -295,8 +257,7 @@ begin
    NOption(128, childend, 3);
 end
 
-procedure child09
-begin
+procedure child09 begin
    Reply(129);
    if (dude_caps > 0) then begin
       NOption(130, child09a, 3);
@@ -304,8 +265,7 @@ begin
    NOption(131, childend, 3);
 end
 
-procedure child09a
-begin
+procedure child09a begin
    if (dude_caps >= cost) then begin
       call child10;
    end
@@ -315,46 +275,39 @@ begin
    end
 end
 
-procedure child10
-begin
+procedure child10 begin
    NMessage(132);
    call child06;
 end
 
-procedure child11
-begin
+procedure child11 begin
    Reply(133);
    NOption(134, childend, 3);
    NOption(135, child12, 3);
 end
 
-procedure child12
-begin
+procedure child12 begin
    Reply(136);
    NOption(137, child14, 3);
    NOption(138, child13, 3);
 end
 
-procedure child13
-begin
+procedure child13 begin
    NMessage(139);
    call childend;
 end
 
-procedure child14
-begin
+procedure child14 begin
    Reply(140);
    NOption(141, childend, 3);
 end
 
-procedure child15
-begin
+procedure child15 begin
    float_msg(self_obj, mstr(142), FLOAT_MSG_LIGHT_RED);//    {142}{}{We have no time to talk. We are leaving. This place is dangerous for us.}
    call childend;
 end
 
-procedure child16
-begin
+procedure child16 begin
    float_msg(self_obj, mstr(143), FLOAT_MSG_LIGHT_RED);//    {143}{}{Why are you doing this? We will do you no harm!}
    call childcbt;
 end
