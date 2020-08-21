@@ -27,6 +27,7 @@ procedure afterhitroll_handler;
 procedure useanimobj_handler;
 procedure useskillon_handler;
 procedure useobjon_handler;
+procedure calcapcost_handler;
 
 procedure steal_urn;
 
@@ -46,6 +47,7 @@ procedure start begin
       register_hook_proc(HOOK_USESKILLON, useskillon_handler);
       register_hook_proc(HOOK_USEOBJON, useobjon_handler);
       register_hook_proc(HOOK_USEANIMOBJ, useanimobj_handler);
+      register_hook_proc(HOOK_CALCAPCOST, calcapcost_handler);
    end
 
    call general;
@@ -270,4 +272,28 @@ procedure useobjon_handler begin
    // Give 1 bottle cap when drinking a Nuka Cola :>
    if (obj_pid(item) == PID_NUKA_COLA) then
       item_caps_adjust(source, 1);
+end
+
+procedure calcapcost_handler begin
+   variable
+      critter := get_sfall_arg,
+      attack_type := get_sfall_arg,
+      is_aimed := get_sfall_arg,
+      ap_cost := get_sfall_arg;
+
+   /*
+      In Fo1 vanilla, unarmed punch attacks could never go below 2AP/attack. The Fast Shot perk just gave the -1AP a bit faster,
+      but then later when picking the Bonus HTH attack perk, it didn't change shit, it was still 2ap/attack.
+      In Sfall's fix, the player get's fast shot fix's -1AP/attack for HTH and *also* can get -1AP/attack for HTH from 'bonus HTH attacks'
+      rendering total number of AP player has equal the number of attacks per turn.
+
+      tl;dr - melee and unarmed attacks should never go < 2 AP. However, it makes little sense to apply this logic only to melee and unarmed
+      builds, so now no weapon will go below 2 AP (not sure if that was even achievable in Fo1 or now in Fo2... but just in case).
+   */
+
+   if (critter == dude_obj) then begin
+      if (ap_cost < 2) then begin
+         set_sfall_return(2);
+      end
+   end
 end
