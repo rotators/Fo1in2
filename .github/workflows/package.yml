@@ -1,8 +1,6 @@
 name: Package
 
 on:
- repository_dispatch:
-  types: [package-prerelease, package-release]
  workflow_dispatch:
   inputs:
    release:
@@ -37,20 +35,14 @@ jobs:
     run:  |
           :
           event="${{ github.event_name }}"
-          if   [ "$event" == "repository_dispatch" ]; then
-               event="${event}:${{ github.event.action }}"
-          elif [ "$event" == "workflow_dispatch" ]; then
-               if [ "${{ github.event.inputs.release }}" == "true" ]; then
-                  event="${event}:release"
-               fi
+          if [ "$event" == "workflow_dispatch" ]; then
+             if [ "${{ github.event.inputs.release }}" == "true" ]; then
+                event="${event}:release"
+             fi
           fi
 
           pre=
-          if   [ "$event" == "repository_dispatch:package-prerelease" ]; then
-               pre=true
-          elif [ "$event" == "repository_dispatch:package-release" ]; then
-               pre=false
-          elif [ "$event" == "workflow_dispatch" ]; then
+          if   [ "$event" == "workflow_dispatch" ]; then
                pre=true
           elif [ "$event" == "workflow_dispatch:release" ]; then
                pre=false
