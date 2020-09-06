@@ -10,8 +10,6 @@ on:
   - '.github/workflows/scripts/ddraw.sh'
   - '.github/workflows/scripts/format-ssl.sh'
   - '.github/workflows/scripts/news.sh'
- repository_dispatch:
-  types: [schedule, schedule-push]
  workflow_dispatch:
   inputs:
    push:
@@ -64,7 +62,7 @@ jobs:
 
           alive=0
 
-          if [ "${{ github.event_name }}" == "repository_dispatch" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
              alive=1
           else
@@ -156,9 +154,7 @@ jobs:
 
           # simplifies checking/displaying which event triggered workflow (especially dispatches)
           event="${{ github.event_name }}"
-          if   [ "$event" == "repository_dispatch" ]; then
-               event="${event}:${{ github.event.action }}"
-          elif [ "$event" == "workflow_dispatch" ]; then
+          if [ "$event" == "workflow_dispatch" ]; then
                if [ "${{ github.event.inputs.push }}" == "true" ]; then
                   event="${event}:push"
                fi
@@ -309,9 +305,7 @@ jobs:
           echo ::endgroup::
 
           # allow full run; forces minor tasks to run even if major tasks does not generate commit
-          if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
-             echo "# Minor tasks forced to run" >> $HOME/gha.commit
-          elif [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.full }}" == "true" ]; then
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.full }}" == "true" ]; then
              echo "# Minor tasks forced to run" >> $HOME/gha.commit
           fi
 
@@ -352,7 +346,6 @@ jobs:
 ### generates and displays commit
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
 ### - schedule
-### - repository_dispatch:schedule-push
 ### - workflow_dispatch:push
 
   - name: Push
@@ -372,7 +365,7 @@ jobs:
           git log -p -n 1 2>&1
           echo ::endgroup::
 
-          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ] || [ "$GHA_EVENT" == "workflow_dispatch:push" ]; then
+          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "workflow_dispatch:push" ]; then
              echo ::group::git push
              git push 2>&1
              echo ::endgroup::
