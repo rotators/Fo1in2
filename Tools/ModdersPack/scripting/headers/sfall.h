@@ -320,7 +320,7 @@
 #define get_pc_stat_max(stat)                           sfall_func1("get_stat_max", stat)
 #define get_pc_stat_min(stat)                           sfall_func1("get_stat_min", stat)
 #define get_npc_stat_max(stat)                          sfall_func2("get_stat_max", stat, 1)
-#define get_npc_stat_min(stat)                          sfall_func2("get_stat_mix", stat, 1)
+#define get_npc_stat_min(stat)                          sfall_func2("get_stat_min", stat, 1)
 #define get_sfall_arg_at(argNum)                        sfall_func1("get_sfall_arg_at", argNum)
 #define get_string_pointer(text)                        sfall_func1("get_string_pointer", text)
 #define get_text_width(text)                            sfall_func1("get_text_width", text)

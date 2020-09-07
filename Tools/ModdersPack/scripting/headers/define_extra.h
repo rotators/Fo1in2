@@ -467,7 +467,8 @@
 #define Stereo16bit     (soundstereo bwor sound16bit)
 #define Stereo16bitLoop (soundstereo bwor sound16bit bwor soundloop)
 
-// Adjust/reduce volume: 0x0000XXXX - max volume, 0x7FFFXXXX - mute
+// Adjust (reduce) volume for soundplay and play_sfall_sound
+// range: 0x0000XXXX (max volume) - 0x7FFFXXXX (mute)
 #define SoundVolume25   (0x20000000)
 #define SoundVolumeHalf (0x40000000)
 #define SoundVolume75   (0x60000000)
