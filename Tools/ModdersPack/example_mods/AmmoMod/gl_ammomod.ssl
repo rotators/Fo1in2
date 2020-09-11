@@ -12,52 +12,58 @@ Requires sfall 3.5 or higher
 
 */
 
-#include "..\headers\define_extra.h"
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\define_extra.h"
 
-procedure set_ammo_mod;
 procedure start;
 procedure map_enter_p_proc;
 
 variable ammoIni;
+variable ammoData;
 variable enabled;
 
-procedure set_ammo_mod begin
-   variable pid, dmg_mod, i := 1;
-
-   while (i > 0) do begin
-      pid := get_ini_setting(ammoIni + "|" + i + "|pid");
-      if (pid < 1) then break;
-      set_proto_data(pid, PROTO_AM_AC_MOD, get_ini_setting(ammoIni + "|" + i + "|ac_adjust"));
-      set_proto_data(pid, PROTO_AM_DR_MOD, get_ini_setting(ammoIni + "|" + i + "|dr_adjust"));
-
-      // dam_mult and dam_div must be positive integers
-      dmg_mod := get_ini_setting(ammoIni + "|" + i + "|dam_mult");
-      if (dmg_mod < 1) then dmg_mod := 1;
-      set_proto_data(pid, PROTO_AM_DMG_MULT, dmg_mod);
-      dmg_mod := get_ini_setting(ammoIni + "|" + i + "|dam_div");
-      if (dmg_mod < 1) then dmg_mod := 1;
-      set_proto_data(pid, PROTO_AM_DMG_DIV, dmg_mod);
-
-      i++;
-   end
-   //debug_msg("AmmoMod: " + ammoIni + " - set " + (i - 1) + " ammo protos.");
-end
-
 procedure start begin
+   variable i := 1, ammo, ammoPid, dmgMod;
    if game_loaded then begin
-      ammoIni := get_ini_setting("ddraw.ini|Misc|DamageFormula");
-      if (ammoIni == 1 or ammoIni == 2) then
+      enabled := get_ini_setting("ddraw.ini|Misc|DamageFormula");
+      if (enabled == 1 or enabled == 2) then
          ammoIni := "AmmoGlovz.ini";
-      else if (ammoIni == 5) then
+      else if (enabled == 5) then
          ammoIni := "AmmoYAAM.ini";
       else
          ammoIni := "AmmoMod.ini";
 
       enabled := get_ini_setting(ammoIni + "|1|pid");
-      if (enabled > 0) then call set_ammo_mod;
+      if (enabled <= 0) then return;
+
+      ammoData := create_array_map;
+      ammoPid := enabled; // pid from the first section
+      while (ammoPid > 0) do begin
+         ammo := create_array_map; // create permanent arrays
+         ammo.ac_adjust := get_ini_setting(ammoIni + "|" + i + "|ac_adjust");
+         ammo.dr_adjust := get_ini_setting(ammoIni + "|" + i + "|dr_adjust");
+         // dam_mult and dam_div must be positive integers
+         dmgMod := get_ini_setting(ammoIni + "|" + i + "|dam_mult");
+         ammo.dam_mult := dmgMod if (dmgMod > 0) else 1;
+         dmgMod := get_ini_setting(ammoIni + "|" + i + "|dam_div");
+         ammo.dam_div := dmgMod if (dmgMod > 0) else 1;
+         ammoData[ammoPid] := ammo;
+         i++;
+         ammoPid := get_ini_setting(ammoIni + "|" + i + "|pid");
+      end
+      call map_enter_p_proc;
+      debug_msg("Ammo INI Loader mod: " + ammoIni + " - set " + (i - 1) + " ammo protos.");
    end
 end
 
 procedure map_enter_p_proc begin
-   if (enabled > 0) then call set_ammo_mod;
+   variable pid, values;
+   if (enabled > 0) then begin
+      foreach (pid: values in ammoData) begin
+         set_proto_data(pid, PROTO_AM_AC_MOD, values.ac_adjust);
+         set_proto_data(pid, PROTO_AM_DR_MOD, values.dr_adjust);
+         set_proto_data(pid, PROTO_AM_DMG_MULT, values.dam_mult);
+         set_proto_data(pid, PROTO_AM_DMG_DIV, values.dam_div);
+      end
+   end
 end
