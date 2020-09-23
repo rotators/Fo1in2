@@ -80,13 +80,14 @@ HOOK_TOHIT (hs_tohit.int)
 Runs when Fallout is calculating the chances of an attack striking a target
 Runs after the hit chance is fully calculated normally, including applying the 95% cap
 
-int     arg1 - The unmodified hit chance
+int     arg1 - The hit chance (capped)
 critter arg2 - The attacker
 critter arg3 - The target of the attack
 int     arg4 - The targeted bodypart
 int     arg5 - Source tile (may differ from attacker's tile, when AI is considering potential fire position)
 int     arg6 - Attack Type (one of ATKTYPE_*)
-int     arg7 - Ranged flag (0 or 1, actually passed 1 even for unarmed attacks, may be a vanilla bug)
+int     arg7 - Ranged flag. 1 means the hit chance is calculated by taking into account the bonuses/penalties of the distance to the target
+int     arg8 - The raw hit chance before applying the cap
 
 int     ret1 - the new hit chance
 
@@ -192,7 +193,7 @@ Critter arg1 - The critter that just died
 
 HOOK_FINDTARGET (hs_findtarget.int)
 
-Runs when the ai is trying to pick a target in combat. Fallout first chooses a list of 4 likely suspects, then normally sorts them in order of weakness/distance/etc depending on the ai caps of the attacker.
+Runs when the AI is trying to pick a target in combat. Fallout first chooses a list of 4 likely suspects, then normally sorts them in order of weakness/distance/etc depending on the AI caps of the attacker.
 This hook replaces that sorting function, allowing you to sort the targets in some arbitrary way.
 
 The return values can include critters that weren't in the list of possible targets, but the additional targets may still be discarded later on in the combat turn if they are out of the attackers perception or the chance of a successful hit is too low. The list of possible targets often includes duplicated entries, but this is fixed in sfall 4.2.3/3.8.23.
@@ -417,8 +418,11 @@ This is fired after the default calculation is made.
 Critter arg1 - Watcher object
 Obj     arg2 - Target object
 int     arg3 - Result of vanilla function: 1 - within perception range, 0 - otherwise
-int     arg4 - Type of hook: 1 - when being called from obj_can_see_obj script function, 2 when being called from obj_can_hear_obj script function (need to set ObjCanHearObjFix=1 in ddraw.ini), 0 for all other cases
-
+int     arg4 - Type of hook:
+               1 - when being called from obj_can_see_obj script function
+               2 - when being called from obj_can_hear_obj script function (need to set ObjCanHearObjFix=1 in ddraw.ini)
+               3 - when AI determines whether it sees a potential target when selecting attack targets
+               0 - all other cases
 int     ret1 - overrides the returned result of the function: 0 - not in range (can't see), 1 - in range (will see if not blocked), 2 - forced detection (will see regardless, only used in obj_can_see_obj scripting function which is called by every critter in the game)
 
 -------------------------------------------
