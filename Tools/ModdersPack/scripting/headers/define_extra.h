@@ -105,10 +105,11 @@
 #define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
 
 /* Window flags */
-#define WIN_FLAG_MOVEONTOP          (0x4)
-#define WIN_FLAG_HIDDEN             (0x8)
+#define WIN_FLAG_DONTMOVE           (0x2) // does not move the window to the foreground when clicking on the window
+#define WIN_FLAG_MOVEONTOP          (0x4) // places the window on top of other windows
+#define WIN_FLAG_HIDDEN             (0x8) // hidden window
 #define WIN_FLAG_EXCLUSIVE         (0x10)
-#define WIN_FLAG_TRANSPARENT       (0x20)
+#define WIN_FLAG_TRANSPARENT       (0x20) // transparent window flag, the window color with index 0 will be transparent
 
 /* Message window flags */
 #define MSGBOX_AUTOSIZE             (0x0)
