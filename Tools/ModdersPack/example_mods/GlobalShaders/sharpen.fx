@@ -1,3 +1,6 @@
+// Shader from Media Player Classic - Home Cinema
+// Adapted to sfall by Mr.Stalin
+
 ///////////////////////////////////////////////////////////////////////////////
 // Sharpen filter setting
 //
@@ -6,24 +9,14 @@
 // max: Sharpen 1.75, EdgeSharpen -0.5  (1.5, -0.25)
 ///////////////////////////////////////////////////////////////////////////////
 #define Sharpen      0.5
-#define EdgeSharpen  1.5
+#define EdgeSharpen  1.1
 
-
-texture sharpenTex;
 sampler s0;
-
-sampler SharpenSampler : samplerstate
-{
-	Texture = sharpenTex;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
 
 // Variables that set the width and height of the current game resolution from sfall
 float w;
 float h;
+float2 rcpres; // pixel size
 
 static const float CoefBlur = (Sharpen * 0.5);
 static const float CoefOrig = (1 + CoefBlur);
@@ -34,8 +27,8 @@ static const float sharpenVal0 = (Sharpen * (1.5 + EdgeSharpen));
 static const float sharpenVal1 = ((sharpenVal0 - 1) / 8.0);
 
 // pixel "width"
-static const float px = (1.0 / w);
-static const float py = (1.0 / h);
+static const float px = rcpres.x;
+static const float py = rcpres.y;
 
 // for the blur filter
 #define mean 1.0
