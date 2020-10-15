@@ -36,7 +36,7 @@ int w;
 int h;
 
 // the pixel size is computed as: 1.0f / resolution
-float2 rcpRes;
+float2 rcpres;
 
 // system ticks (received from sfall)
 //int tickcount;
@@ -65,7 +65,7 @@ float4 BlurDeltaPassPS(float2 uv : TEXCOORD0, uniform float2 delta) : COLOR0
 	float3 sumColor = (tex2D(s0, uv).rgb);
 	float brightness = Brightness(sumColor);
 
-	delta *= rcpRes;
+	delta *= rcpres;
 	float totalWeight = 1;
 
 	float2 pointUV = uv + delta;
@@ -77,8 +77,8 @@ float4 BlurDeltaPassPS(float2 uv : TEXCOORD0, uniform float2 delta) : COLOR0
 	return float4((sumColor / totalWeight), 1);
 }
 
-static const float2 wDelta = float2(1, 0) * rcpRes;
-static const float2 hDelta = float2(0, 1) * rcpRes;
+static const float2 wDelta = float2(1, 0) * rcpres;
+static const float2 hDelta = float2(0, 1) * rcpres;
 
 float4 BlurPS(float4 color : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
@@ -171,8 +171,8 @@ static const float sharpenVal0 = (Sharpen * (1.5 + EdgeSharpen));
 static const float sharpenVal1 = ((sharpenVal0 - 1) / 8.0);
 
 // pixel "width"
-static const float px = rcpRes.x;
-static const float py = rcpRes.y;
+static const float px = rcpres.x;
+static const float py = rcpres.y;
 
 // for the blur filter
 #define mean 1.0
