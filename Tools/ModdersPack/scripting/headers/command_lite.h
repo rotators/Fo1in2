@@ -1,13 +1,9 @@
-/*
-	Copyright 1998-2003 Interplay Entertainment Corp.  All rights reserved.
-*/
-
 #ifndef COMMAND_H
 #define COMMAND_H
 
-
-#define critter_is_armed(x)                 (((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon) or \
+#define critter_is_armed(x)                 (((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon) orElse \
                                              ((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_LEFT_HAND))) == item_type_weapon))
+
 #define critter_weight(x)                   (100 + ((get_critter_stat(x,STAT_gender) == GENDER_MALE) * 50) + (get_critter_stat(x,STAT_st) * 5) - ((get_critter_stat(x,STAT_ag) + get_critter_stat(x,STAT_en))/3))
 #define critter_wearing_armor(x)            (obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_WORN)) == item_type_armor)
 
@@ -21,13 +17,13 @@
 #define dude_iq                             (get_critter_stat(dude_obj,STAT_iq))
 #define dude_agility                        (get_critter_stat(dude_obj,STAT_ag))
 #define dude_luck                           (get_critter_stat(dude_obj,STAT_lu))
-#ifndef dude_level
 #define dude_level                          (get_pc_stat(PCSTAT_level))
-#endif
 #define dude_age                            (get_critter_stat(dude_obj,STAT_age))
 #define dude_weight                         critter_weight(dude_obj)
+#define dude_cur_carry                      who_carry_amount(dude_obj)
+#define dude_max_carry                      who_max_carry(dude_obj)
 
-#define dude_moron_not_vegetable            (((get_critter_stat(dude_obj,STAT_iq)) > 1) and ((get_critter_stat(dude_obj,STAT_iq)) < 3) )
+#define dude_moron_not_vegetable            (((get_critter_stat(dude_obj,STAT_iq)) > 1) andAlso ((get_critter_stat(dude_obj,STAT_iq)) < 3) )
 
 #define dude_is_male                        (dude_gender == GENDER_MALE)
 #define dude_is_female                      (dude_gender == GENDER_FEMALE)
@@ -39,43 +35,50 @@
                                               (obj_is_carrying_obj_pid(dude_obj, PID_ADVANCED_POWER_ARMOR_MK2)) + \
                                               (obj_is_carrying_obj_pid(dude_obj, PID_HARDENED_POWER_ARMOR))) > 0)
 
-#define dude_wielding_knife                 ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_KNIFE) or                \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_THROWING_KNIFE) or       \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_RIPPER) or               \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_COMBAT_KNIFE) or         \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_KNIFE) or                 \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_THROWING_KNIFE) or        \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_RIPPER) or                \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_COMBAT_KNIFE))
+#define dude_wielding_knife                 ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_KNIFE) orElse                \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_THROWING_KNIFE) orElse       \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_RIPPER) orElse               \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_COMBAT_KNIFE) orElse         \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_SWITCHBLADE) orElse          \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_SHIV) orElse                 \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_LIL_JESUS_WEAPON) orElse     \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_RIGHT_HAND)) == PID_WAKIZASHI_BLADE) orElse      \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_KNIFE) orElse                 \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_THROWING_KNIFE) orElse        \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_RIPPER) orElse                \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_COMBAT_KNIFE) orElse          \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_SWITCHBLADE) orElse           \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_SHIV) orElse                  \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_LIL_JESUS_WEAPON) orElse      \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_LEFT_HAND)) == PID_WAKIZASHI_BLADE))
 
-#define dude_wearing_power_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR_MK2) or \
+#define dude_wearing_power_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_POWERED_ARMOR) orElse \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR) orElse \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_ADVANCED_POWER_ARMOR_MK2) orElse \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_HARDENED_POWER_ARMOR))
 
-#define dude_wearing_leather_armor          ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_JACKET) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_ARMOR_MK_II) or \
+#define dude_wearing_leather_armor          ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_ARMOR) orElse \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_JACKET) orElse \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_LEATHER_ARMOR_MK_II) orElse \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_CURED_LEATHER_ARMOR))
 
-#define dude_wearing_combat_armor           ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_COMBAT_ARMOR) or \
-                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_BROTHERHOOD_COMBAT_ARMOR) or \
+#define dude_wearing_combat_armor           ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_COMBAT_ARMOR) orElse \
+                                             (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_BROTHERHOOD_COMBAT_ARMOR) orElse \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_COMBAT_ARMOR_MK_II))
 
-#define dude_wearing_metal_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_METAL_ARMOR) or \
+#define dude_wearing_metal_armor            ((obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_METAL_ARMOR) orElse \
                                              (obj_pid(critter_inven_obj(dude_obj,INVEN_TYPE_WORN)) == PID_METAL_ARMOR_MK_II))
 
-#define dude_wearing_vault_suit             COND019(1)
-#define dude_has_gambling_skills            ((dude_iq > 3) and (has_skill(dude_obj, SKILL_GAMBLING) >= 25))
+#define dude_has_gambling_skills            ((dude_iq > 3) andAlso (has_skill(dude_obj, SKILL_GAMBLING) >= 25))
 
 #define dude_is_sneaking                    (using_skill(dude_obj,SKILL_SNEAK))
 #define dude_is_walking                     (art_anim(obj_art_fid(dude_obj)) == ANIM_walk)
 #define dude_is_running                     (art_anim(obj_art_fid(dude_obj)) == ANIM_running)
 #define dude_is_poisoned                    (get_poison(dude_obj))
 #define dude_is_irradiated                  (get_critter_stat(dude_obj, STAT_current_rad))
-#define dude_is_crippled                    ((critter_state(dude_obj) bwand DAM_CRIP_LEG_LEFT)  or \
-                                             (critter_state(dude_obj) bwand DAM_CRIP_LEG_RIGHT) or \
-                                             (critter_state(dude_obj) bwand DAM_CRIP_ARM_LEFT)  or \
+#define dude_is_crippled                    ((critter_state(dude_obj) bwand DAM_CRIP_LEG_LEFT)  orElse \
+                                             (critter_state(dude_obj) bwand DAM_CRIP_LEG_RIGHT) orElse \
+                                             (critter_state(dude_obj) bwand DAM_CRIP_ARM_LEFT)  orElse \
                                              (critter_state(dude_obj) bwand DAM_CRIP_ARM_RIGHT))
 
 #define dude_cur_rot                        (has_trait(TRAIT_OBJECT,dude_obj,OBJECT_CUR_ROT))
@@ -99,8 +102,6 @@
 #define dude_has_car                        (global_var(GVAR_PLAYER_GOT_CAR))
 #define dude_is_pornstar                    dude_has_porn_star_rep
 #define dude_is_high                        drug_influence(dude_obj)
-#define dude_found_geck                     global_var(GVAR_VAULT13_FOUND_GECK)
-
 
 #define dude_stat_win(X,Y)                  ((do_check(dude_obj,X,Y)) > (do_check(self_obj,X,0)))
 #define dude_stat_lose(X,Y)                 ((do_check(dude_obj,X,Y)) < (do_check(self_obj,X,0)))
@@ -111,7 +112,6 @@
 #define dude_item_count(x)                  obj_is_carrying_obj_pid(dude_obj, x)
 
 #define dude_is_addict                      (has_trait(TRAIT_TRAIT, dude_obj, TRAIT_drug_addict))
-
 
 #define self_name                           (obj_name(self_obj))
 #define self_gender                         (get_critter_stat(self_obj,STAT_gender))
@@ -128,7 +128,7 @@
 #define self_is_armed                       critter_is_armed(self_obj)
 #define self_wearing_armor                  critter_wearing_armor(self_obj)
 
-#define self_carrying_laser_pistol          ((obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND)) == PID_LASER_PISTOL) or \
+#define self_carrying_laser_pistol          ((obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND)) == PID_LASER_PISTOL) orElse \
                                              (obj_pid(critter_inven_obj(self_obj,INVEN_TYPE_RIGHT_HAND)) == PID_LASER_PISTOL))
 
 #define self_is_sneaking                    (using_skill(self_obj,SKILL_SNEAK))
@@ -169,23 +169,24 @@
 
 
 // some timer event macros
-#define check_set_obj_visiblility(the_obj, x)       if (obj_is_visible_flag(the_obj) == x) then set_obj_visibility(the_obj, x)
+#define check_set_obj_visiblility(the_obj, x)      if (obj_is_visible_flag(the_obj) == x) then set_obj_visibility(the_obj, x)
 
 #define flush_add_timer_event(obj, time, param)    rm_fixed_timer_event(obj, param);               \
                                                    add_timer_event(obj, time, param)
+
 #define flush_add_timer_event_sec(obj, sec, param) flush_add_timer_event(obj, game_ticks(sec), param)
 
 /******************************************************************
  General commands getting information about time
 ******************************************************************/
 
-#define morning                             ((game_time_hour >= 600) and  (game_time_hour < 700))
+#define morning                             ((game_time_hour >= 600) andAlso  (game_time_hour < 700))
 #ifndef day
-#define day                                 ((game_time_hour >= 700) and  (game_time_hour < 1800))
+#define day                                 ((game_time_hour >= 700) andAlso  (game_time_hour < 1800))
 #endif
-#define evening                             ((game_time_hour >= 1800) and (game_time_hour < 1900))
+#define evening                             ((game_time_hour >= 1800) andAlso (game_time_hour < 1900))
 #ifndef night
-#define night                               ((game_time_hour >= 1900) or  (game_time_hour < 600))
+#define night                               ((game_time_hour >= 1900) orElse  (game_time_hour < 600))
 #endif
 
 #define GAME_TIME_SUBSECOND_RESOLUTION  (10)
@@ -199,7 +200,6 @@
 #define GAME_TIME_IN_HOURS   (game_time / (GAME_TIME_SUBSECOND_RESOLUTION * SECONDS_PER_MINUTE * MINUTES_PER_HOUR))
 #define GAME_TIME_IN_MINUTES (game_time / (GAME_TIME_SUBSECOND_RESOLUTION * SECONDS_PER_MINUTE))
 #define GAME_TIME_IN_SECONDS (game_time / GAME_TIME_SUBSECOND_RESOLUTION)
-
 
 #define ticks_til_hour(x)                 ((ONE_GAME_DAY * (game_time_hour > (x))) + ((((x)/100) - (game_time_hour/100)) * ONE_GAME_HOUR) + ((((x)%100) - (game_time_hour%100)) * ONE_GAME_MINUTE))
 #define game_time_advance_hour(x)         game_time_advance(ticks_til_hour(x))
@@ -219,16 +219,13 @@
 /***************************************************************
 ****************  Dialogue Information   ***********************
 ***************************************************************/
-#ifndef floater
-   #define floater(x)           float_msg(self_obj, message_str(NAME,x), FLOAT_COLOR_NORMAL)
-#endif
+#define floater(x)              float_msg(self_obj, message_str(NAME,x), FLOAT_COLOR_NORMAL)
 #define floater_rand(x,y)       floater(random(x,y))
 
 #define dude_floater(x)         float_msg(dude_obj, message_str(NAME,x), FLOAT_COLOR_NORMAL)
 #define dude_floater_rand(x,y)  dude_floater(random(x,y))
 #define dude_floater_bad(x)     float_msg(dude_obj, message_str(NAME,x), FLOAT_COLOR_BAD)
 #define dude_floater_sick(x)    float_msg(dude_obj, message_str(NAME,x), FLOAT_COLOR_SICK)
-
 
 #define FLOAT_COLOR_NORMAL          FLOAT_MSG_YELLOW
 #define FLOAT_COLOR_SICK            FLOAT_MSG_GREEN
@@ -335,9 +332,7 @@
 ******************************************************************/
 #define critter_is_male         (get_critter_stat(self_obj,STAT_gender) == GENDER_MALE)
 #define critter_is_female       (get_critter_stat(self_obj,STAT_gender) == GENDER_FEMALE)
-/*#define critter_is_armed        (((obj_item_subtype(critter_inven_obj(self_obj,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon)  \
-                                or ((obj_item_subtype(critter_inven_obj(self_obj,INVEN_TYPE_LEFT_HAND))) == item_type_weapon))
-*/
+
 /******************************************************************
  General commands setting and getting the map exit
 ******************************************************************/
@@ -385,59 +380,12 @@
 #define status_is_warned(status_var)                  (status_is(status_var, PERSON_WARNED))
 #define status_is_sex(status_var)                     (status_is(status_var, PERSON_SEX))
 
-#define status_is_alive(status_var)                   (not (status_is_killed(status_var) or status_is_assassinated(status_var) or status_is_dead(status_var)))
+#define status_is_alive(status_var)                   (not (status_is_killed(status_var) orElse status_is_assassinated(status_var) orElse status_is_dead(status_var)))
 
 
 /******************************************************************
  General commands getting information about cities
 ******************************************************************/
-#define abbey_visible_on_map                (town_known(AREA_ABBEY) != MARK_STATE_UNKNOWN)
-#define arroyo_visible_on_map               (town_known(AREA_ARROYO) != MARK_STATE_UNKNOWN)
-#define broken_hills_visible_on_map         (town_known(AREA_BROKEN_HILLS) != MARK_STATE_UNKNOWN)
-#define colusa_visible_on_map               (town_known(AREA_NAVARRO) != MARK_STATE_UNKNOWN)
-#define den_visible_on_map                  (town_known(AREA_DEN) != MARK_STATE_UNKNOWN)
-#define enclave_visible_on_map              (town_known(AREA_THE_ENCLAVE) != MARK_STATE_UNKNOWN)
-#define EPA_visible_on_map                  (town_known(AREA_EPA) != MARK_STATE_UNKNOWN)
-#define gecko_visible_on_map                (town_known(AREA_GECKO) != MARK_STATE_UNKNOWN)
-#define klamath_visible_on_map              (town_known(AREA_KLAMATH) != MARK_STATE_UNKNOWN)
-#define military_base_visible_on_map        (town_known(AREA_MILITARY_BASE) != MARK_STATE_UNKNOWN)
-#define modoc_visible_on_map                (town_known(AREA_MODOC) != MARK_STATE_UNKNOWN)
-#define new_CA_republic_visible_on_map      (town_known(AREA_NCR) != MARK_STATE_UNKNOWN)
-#define primitive_tribe_visible_on_map      (town_known(AREA_PRIMITIVE_TRIBE) != MARK_STATE_UNKNOWN)
-#define redding_visible_on_map              (town_known(AREA_REDDING) != MARK_STATE_UNKNOWN)
-#define new_reno_visible_on_map             (town_known(AREA_NEW_RENO) != MARK_STATE_UNKNOWN)
-#define san_francisco_visible_on_map        (town_known(AREA_SAN_FRANCISCO) != MARK_STATE_UNKNOWN)
-#define sierra_army_base_visible_on_map     (town_known(AREA_SIERRA_ARMY_BASE) != MARK_STATE_UNKNOWN)
-#define vault_13_visible_on_map             (town_known(AREA_VAULT_13) != MARK_STATE_UNKNOWN)
-#define vault_15_visible_on_map             (town_known(AREA_VAULT_15) != MARK_STATE_UNKNOWN)
-#define vault_city_visible_on_map           (town_known(AREA_VAULT_CITY) != MARK_STATE_UNKNOWN)
-#define vault_fake_13A_visible_on_map       (town_known(AREA_FAKE_VAULT_13A) != MARK_STATE_UNKNOWN)
-#define vault_fake_13B_visible_on_map       (town_known(AREA_FAKE_VAULT_13B) != MARK_STATE_UNKNOWN)
-
-#define abbey_visit                         (town_known(AREA_ABBEY) == MARK_STATE_VISITED)
-#define arroyo_visit                        (town_known(AREA_ARROYO) == MARK_STATE_VISITED)
-#define broken_hills_visit                  (town_known(AREA_BROKEN_HILLS) == MARK_STATE_VISITED)
-#define colusa_visit                        (town_known(AREA_NAVARRO) == MARK_STATE_VISITED)
-#define den_visit                           (town_known(AREA_DEN) == MARK_STATE_VISITED)
-#define enclave_visit                       (town_known(AREA_THE_ENCLAVE) == MARK_STATE_VISITED)
-#define EPA_visit                           (town_known(AREA_EPA) == MARK_STATE_VISITED)
-#define gecko_visit                         (town_known(AREA_GECKO) == MARK_STATE_VISITED)
-#define klamath_visit                       (town_known(AREA_KLAMATH) == MARK_STATE_VISITED)
-#define military_base_visit                 (town_known(AREA_MILITARY_BASE) == MARK_STATE_VISITED)
-#define modoc_visit                         (town_known(AREA_MODOC) == MARK_STATE_VISITED)
-#define new_CA_republic_visit               (town_known(AREA_NCR) == MARK_STATE_VISITED)
-#define primitive_tribe_visit               (town_known(AREA_PRIMITIVE_TRIBE) == MARK_STATE_VISITED)
-#define redding_visit                       (town_known(AREA_REDDING) == MARK_STATE_VISITED)
-#define new_reno_visit                      (town_known(AREA_NEW_RENO) == MARK_STATE_VISITED)
-#define san_francisco_visit                 (town_known(AREA_SAN_FRANCISCO) == MARK_STATE_VISITED)
-#define sierra_army_base_visit              (town_known(AREA_SIERRA_ARMY_BASE) == MARK_STATE_VISITED)
-#define vault_13_visit                      (town_known(AREA_VAULT_13) == MARK_STATE_VISITED)
-#define vault_15_visit                      (town_known(AREA_VAULT_15) == MARK_STATE_VISITED)
-#define vault_city_visit                    (town_known(AREA_VAULT_CITY) == MARK_STATE_VISITED)
-#define arroyo_destroyed_visit              (town_known(AREA_ARROYO_DESTROYED) == MARK_STATE_VISITED)
-#define vault_fake_13A_visit                (town_known(AREA_FAKE_VAULT_13A) == MARK_STATE_VISITED)
-#define vault_fake_13B_visit                (town_known(AREA_FAKE_VAULT_13B) == MARK_STATE_VISITED)
-
 #define mark_on_map(x)                      if (town_known(x) == MARK_STATE_UNKNOWN) then begin          \
                                                debug_msg("  mark_on_map("+x+")");                        \
                                                mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_KNOWN);     \
@@ -448,63 +396,11 @@
                                                mark_area_known(MARK_TYPE_TOWN, x, MARK_STATE_UNKNOWN);   \
                                             end
 
-#define mark_abbey_on_map                   mark_on_map(AREA_ABBEY)
-#define mark_arroyo_on_map                  mark_on_map(AREA_ARROYO)
-#define mark_broken_hills_on_map            mark_on_map(AREA_BROKEN_HILLS)
-#define mark_colusa_on_map                  mark_on_map(AREA_NAVARRO)
-#define mark_navarro_on_map                 mark_on_map(AREA_NAVARRO)
-#define mark_den_on_map                     mark_on_map(AREA_DEN)
-#define mark_enclave_on_map                 mark_on_map(AREA_THE_ENCLAVE)
-#define mark_EPA_on_map                     mark_on_map(AREA_EPA)
-#define mark_gecko_on_map                   mark_on_map(AREA_GECKO)
-#define mark_klamath_on_map                 mark_on_map(AREA_KLAMATH)
-#define mark_military_base_on_map           mark_on_map(AREA_MILITARY_BASE)
-#define mark_modoc_on_map                   mark_on_map(AREA_MODOC)
-#define mark_new_CA_republic_on_map         mark_on_map(AREA_NCR)
-#define mark_primitive_tribe_on_map         mark_on_map(AREA_PRIMITIVE_TRIBE)
-#define mark_redding_on_map                 mark_on_map(AREA_REDDING)
-#define mark_new_reno_on_map                mark_on_map(AREA_NEW_RENO)
-#define mark_san_francisco_on_map           mark_on_map(AREA_SAN_FRANCISCO)
-#define mark_sierra_army_base_on_map        mark_on_map(AREA_SIERRA_ARMY_BASE)
-#define mark_vault_13_on_map                mark_on_map(AREA_VAULT_13)
-#define mark_vault_15_on_map                mark_on_map(AREA_VAULT_15)
-#define mark_vault_city_on_map              mark_on_map(AREA_VAULT_CITY)
-#define mark_vault_fake_13A_on_map          mark_on_map(AREA_FAKE_VAULT_13A)
-#define mark_vault_fake_13B_on_map          mark_on_map(AREA_FAKE_VAULT_13B)
-
-#define unmark_vault_fake_13A_on_map        unmark_on_map(AREA_FAKE_VAULT_13A)
-
-
-
 /*******************************************************************************************************************
 ********** These represent the players acomplishments through the game *********************************************
 ********** Note: these reflect the Fallout2 variable designers put in the scripts assuming we were *****************
 ********** going to have a magic variable to keep track of the player stats throught the game **********************
 *******************************************************************************************************************/
-#define f2_state_v13_looking                          (0)
-#define f2_state_v13_known                            (1)   // set -Chris H
-#define f2_state_v13_found                            (2)   // set -Chris H
-#define f2_state_v13_entered                          (3)   // set -Chris H
-#define f2_state_tribe_kidnapped                      (4)   // ### state not set
-#define f2_state_fix_tanker                           (5)   // didn't need to exist
-#define f2_state_tanker_fix_known                     (6)   // set -Chris H
-#define f2_state_tanker_fixed                         (7)   // set -Chris H
-#define f2_state_enclave_destroyed                    (8)   // ### state not set
-
-#define set_f2(x)                                     if (global_var(GVAR_FALLOUT_2) < x) then set_global_var(GVAR_FALLOUT_2, x)
-#define force_f2(x)                                   set_global_var(GVAR_FALLOUT_2, x)
-#define get_f2(x)                                     (global_var(GVAR_FALLOUT_2) == x)
-#define f2_flag_any                                   (global_var(GVAR_FALLOUT_2))
-
-#define Fallout2_vault13_looking                      get_f2(f2_state_v13_looking)
-#define Fallout2_vault13_location_known               get_f2(f2_state_v13_known)
-#define Fallout2_vault13_found                        get_f2(f2_state_v13_found)
-#define Fallout2_vault13_entered                      get_f2(f2_state_v13_entered)
-#define Fallout2_tribe_kidnapped                      get_f2(f2_state_tribe_kidnapped)
-#define Fallout2_fix_tanker                           get_f2(f2_state_fix_tanker)
-#define Fallout2_tanker_known                         get_f2(f2_state_tanker_fix_known)
-#define Fallout2_tanker_fixed                         get_f2(f2_state_tanker_fixed)
-#define Fallout2_enclave_destroyed                    get_f2(f2_state_enclave_destroyed)
 
 // Info relating to carry weight, how much something costs, and weights
 #define pid_weight(x)                                   proto_data(x,it_weight)

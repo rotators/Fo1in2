@@ -294,6 +294,7 @@
 #define art_cache_clear                                         sfall_func0("art_cache_clear")
 #define attack_is_aimed                                         sfall_func0("attack_is_aimed")
 #define car_gas_amount                                          sfall_func0("car_gas_amount")
+#define clear_window                                            sfall_func0("win_fill_color")
 #define combat_data                                             sfall_func0("combat_data")
 #define create_win(winName, x, y, w, h)                         sfall_func5("create_win", winName, x, y, w, h)
 #define create_win_flag(winName, x, y, w, h, flag)              sfall_func6("create_win", winName, x, y, w, h, flag)
@@ -384,6 +385,7 @@
 #define unjam_lock(obj)                                         sfall_func1("unjam_lock", obj)
 #define unset_unique_id(obj)                                    sfall_func2("set_unique_id", obj, -1)
 #define unwield_slot(critter, slot)                             sfall_func2("unwield_slot", critter, slot)
+#define win_fill_color(x, y, width, height, color)              sfall_func5("win_fill_color", x, y, width, height, color)
 
 #define set_fake_perk_npc(npc, perk, level, image, desc)        sfall_func5("set_fake_perk_npc", npc, perk, level, image, desc)
 #define set_fake_trait_npc(npc, trait, active, image, desc)     sfall_func5("set_fake_trait_npc", npc, trait, active, image, desc)

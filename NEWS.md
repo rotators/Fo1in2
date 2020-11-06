@@ -4,5 +4,6 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Fixed**: Killian wouldn't mark Necropolis on the players map after asking for locations outside. 
 - **Fixed**: The "You gain x experience points for freeing Tandi"-message will only show if the amount of experience is > 0.
 - **Tweaked**: Added back in the "Decker must be killed"-condition to the Hub good ending.
+- **Tweaked**: Removed excess items (stimpaks, psycho, caps, etc) from Garl (was a Fixt addition that changed game balance).
 - **Tweaked**: Sfall graphics mode 4 (Dx9 fullscreen) is now the new default.
 - **Tweaked**: With Traits and Perks and the enabled "Fast Shot Fix", it was possible to get 1 AP melee and unarmed attacks. This is now fixed - the minimum APs required for any attack are now set to 2.
