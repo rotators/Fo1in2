@@ -391,32 +391,30 @@ procedure Build_Caravan_Team begin
    while (Master_Counter < caravan_masters_left) do begin
       Master_Counter += 1;
 
-      // Crimson Caravan master:
-      if caravan_style_crimson then begin
-         Critter := create_object_sid(PID_MERCENARY_HMLTHR, 0, dude_elevation, SCRIPT_CRVNDRVR);
-         add_obj_to_inven(Critter, create_object(PID_SHOTGUN, 0, 0));
-         give_pid_qty(Critter, PID_SHOTGUN_SHELLS, 1)
-      end
-      // Far-Go Traders master:
-      else if caravan_style_fargo then begin
-         Critter := create_object_sid(PID_MERCENARY_NMLTHR, 0, dude_elevation, SCRIPT_CRVNDRVR);
-         add_obj_to_inven(Critter, create_object(PID_SHOTGUN, 0, 0));
-         give_pid_qty(Critter, PID_SHOTGUN_SHELLS, 1)
-      end
-      // Water Merchants master:
-      else if caravan_style_water then begin
-         Critter := create_object_sid(PID_MERC_MALE_LEATHER, 0, dude_elevation, SCRIPT_CRVNDRVR);
-         add_obj_to_inven(Critter, create_object(PID_SHOTGUN, 0, 0));
-         give_pid_qty(Critter, PID_SHOTGUN_SHELLS, 1)
-      end
 
-       val := set_team(Critter, TEAM_PLAYER);
-       Critter_Rotation:=(dude_facing + 3) % 6;
-       Critter_Tile := tile_num_in_direction(dude_start_hex, Critter_Rotation, random(5, 7));
-       critter_attempt_placement(Critter, Critter_Tile, dude_elevation);
-       give_money(Critter, random(10, 30));
-       obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
-       debug("created caravan master on elevation " + elevation(Critter) + " and hex " + tile_num(Critter));
+      if caravan_style_crimson then begin // Crimson Caravan master
+         Critter := create_object_sid(PID_MERCENARY_HMLTHR, 0, dude_elevation, SCRIPT_CRVNDRVR);
+      end
+      else if caravan_style_fargo then begin // Far-Go Traders master
+         Critter := create_object_sid(PID_MERCENARY_NMLTHR, 0, dude_elevation, SCRIPT_CRVNDRVR);
+      end
+      else if caravan_style_water then begin // Water Merchants master
+         Critter := create_object_sid(PID_MERC_MALE_LEATHER, 0, dude_elevation, SCRIPT_CRVNDRVR);
+      end
+      item := create_object(PID_SHOTGUN, 0, 0);
+      give_pid_qty(Critter, PID_SHOTGUN_SHELLS, 1)
+      give_pid_qty(Critter, PID_STIMPAK, 1)
+
+      add_obj_to_inven(Critter, item);
+      wield_obj_critter(Critter, item);
+
+      val := set_team(Critter, TEAM_PLAYER);
+      Critter_Rotation:=(dude_facing + 3) % 6;
+      Critter_Tile := tile_num_in_direction(dude_start_hex, Critter_Rotation, random(5, 7));
+      critter_attempt_placement(Critter, Critter_Tile, dude_elevation);
+      give_money(Critter, random(10, 30));
+      obj_rotate(Critter, rotation_to_tile(tile_num(Critter), dude_tile));
+      debug("created caravan master on elevation " + elevation(Critter) + " and hex " + tile_num(Critter));
    end
 
    // Place the Caravan, Driver and Brahmin
@@ -534,16 +532,16 @@ procedure Build_Caravan_Team begin
 
       if caravan_style_crimson then begin // Crimson Caravan guard
          Critter := create_object_sid(PID_MERCHENARY, 0, 0, SCRIPT_CRVNTEAM);
-         item := create_object(PID_DESERT_EAGLE, 0, 0);
       end
       else if caravan_style_fargo then begin // Far Go Traders guard
          Critter := create_object_sid(PID_MERCENARY_HMLTHR, 0, 0, SCRIPT_CRVNTEAM);
-         item := create_object(PID_DESERT_EAGLE, 0, 0);
       end
       else if caravan_style_water then begin // Water Merchants guard
          Critter := create_object_sid(PID_MERC_MALE_METAL, 0, 0, SCRIPT_CRVNTEAM);
-         item := create_object(PID_DESERT_EAGLE, 0, 0);
       end
+      item := create_object(PID_DESERT_EAGLE, 0, 0);
+      give_pid_qty(Critter, PID_44_FMJ_MAGNUM, 1)
+      give_pid_qty(Critter, PID_44_MAGNUM_JHP, 1)
 
       Critter_Tile := tile_num_in_direction(Critter_Tile, random(0, 5), random(2, 4));
       critter_attempt_placement(Critter, Critter_Tile, dude_elevation);
