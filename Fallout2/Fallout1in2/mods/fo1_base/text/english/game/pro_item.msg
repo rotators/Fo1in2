@@ -89,7 +89,7 @@
 {4500}{}{Throwing Knife}
 {4501}{}{A knife, balanced specifically for throwing. Made of titanium, and laser sharpened. Min ST: 3.}
 {4600}{}{Bag}
-{4601}{}{An average sized bag. Made from weaved brahmin hairs.}
+{4601}{}{A small sized bag. Made from weaved brahmin hairs.}
 {4700}{}{First Aid Kit}
 {4701}{}{A small kit containing basic medical equipment. Bandages, wraps, antiseptic spray, and more.}
 {4800}{}{RadAway}
@@ -183,7 +183,7 @@
 {9200}{}{Scorpion Tail}
 {9201}{}{The severed tail of a radscorpion.}
 {9300}{}{Bag}
-{9301}{}{An average sized bag. Made from weaved Brahmin hairs.}
+{9301}{}{An average sized bag. Made from weaved brahmin hairs.}
 {9400}{}{Shotgun}
 {9401}{}{A Winchester Widowmaker double-barreled 12-gauge shotgun. Short barrel, with mahogany grip. Min ST: 4.}
 {9500}{}{12 ga. Shotgun Shells}
