@@ -1,8 +1,10 @@
 Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1in2/releases/tag/v1.3.2128))
 - **Added**: All classic music tracks are now distributed with the mod, because it seems lots of folks have issues with setting it up correctly.
+- **Fixed**: For some reason the brown bag used the normal bag graphics. Also tweaked the item stats to slightly differentiate it from the normal bag.
 - **Fixed**: Hero Appearance mod long hair dude pipboy image wasn't shown correctly.
 - **Fixed**: Killian wouldn't mark Necropolis on the players map after asking for locations outside. 
 - **Fixed**: The "You gain x experience points for freeing Tandi"-message will only show if the amount of experience is > 0.
+- **Fixed**: When doing caravan jobs, the Caravan Driver and Caravan Guards would spawn new items on every game tick.
 - **Tweaked**: Added back in the "Decker must be killed"-condition to the Hub good ending.
 - **Tweaked**: Removed excess items (stimpaks, psycho, caps, etc) from Garl (was a Fixt addition that changed game balance).
 - **Tweaked**: Sfall graphics mode 4 (Dx9 fullscreen) is now the new default.
