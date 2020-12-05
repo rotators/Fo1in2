@@ -147,8 +147,6 @@ procedure Place_critter;
     Generate Scenery for Desert maps
 ************************************************/
 critical procedure Scenes(variable scenery_elevation) begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
    variable LVar2 := 0;
    variable LVar3 := 0;
    variable LVar4 := 0;

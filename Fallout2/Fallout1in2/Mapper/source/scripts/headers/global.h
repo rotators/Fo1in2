@@ -4094,9 +4094,9 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4958)
 #define RESERVED_FOR_FALLOUT_FIXT               (4959)
 #define RESERVED_FOR_FALLOUT_FIXT               (4960)
-#define RESERVED_FOR_FALLOUT_FIXT               (4961)
-#define RESERVED_FOR_FALLOUT_FIXT               (4962)
-#define RESERVED_FOR_FALLOUT_FIXT               (4963)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4961)*/
+#define GVAR_ENTER_MBVATS_ELEV_0                (4962)
+#define GVAR_ENTER_MBVATS_ELEV_1                (4963)
 #define GVAR_SLIDE_KILLED_JAIN_JOB              (4964)
 #define GVAR_ENABLE_FO2_SEASONAL_LIGHTING       (4965)
 #define GVAR_ENABLE_SHADY_SANDS_MERCHANT        (4966)
