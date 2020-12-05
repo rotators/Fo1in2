@@ -79,7 +79,7 @@ jobs:
           fi
 
           if [ $alive -eq 1 ]; then
-             echo ::set-env name=GHA_REPO_ALIVE::true
+             echo GHA_REPO_ALIVE=true >> $GITHUB_ENV
           fi
 
 ### Preparations
@@ -136,21 +136,21 @@ jobs:
           echo "sfall-rotators..."
           if [ "$OLD_SFALL_ROTATORS" != "$NEW_SFALL_ROTATORS" ]; then
              echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
-             echo ::set-env name=GHA_TASK_SFALL_ROTATORS::true
+             echo GHA_TASK_SFALL_ROTATORS=true >> $GITHUB_ENV
              set_dxsdk_dir=1
           fi
 
           if [ $set_dxsdk_dir -eq 1 ]; then
-             echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
+             echo DXSDK_DIR=$HOME/cache-dx/ >> $GITHUB_ENV
           fi
 
           echo "ModdersPack..."
           if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
              echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
-             echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
+             echo GHA_TASK_SFALL_ARTIFACTS=true >> $GITHUB_ENV
           fi
 
-          echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
+          echo MSBUILD_EXE="$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" >> $GITHUB_ENV
 
           # simplifies checking/displaying which event triggered workflow (especially dispatches)
           event="${{ github.event_name }}"
@@ -159,7 +159,7 @@ jobs:
                   event="${event}:push"
                fi
           fi
-          echo ::set-env name=GHA_EVENT::$event
+          echo GHA_EVENT=$event >> $GITHUB_ENV
           echo "GitHub event... $event"
           echo "GitHub find.... $(which find)"
           echo "GitHub sort.... $(which sort)"
@@ -247,8 +247,8 @@ jobs:
           rm ReDefine*.log
           git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
 
-          echo "::set-env name=MOD_SCRIPTS_DIR::$scripts"
-          echo "::set-env name=MOD_HEADERS_DIR::$headers"
+          echo "MOD_SCRIPTS_DIR=$scripts" >> $GITHUB_ENV
+          echo "MOD_HEADERS_DIR=$headers" >> $GITHUB_ENV
 
   # updates unsafe scripting header
   - name: Voodoo regeneration
@@ -312,7 +312,7 @@ jobs:
           if [ -f "$HOME/gha.commit" ]; then
              sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
              dos2unix $HOME/gha.commit
-             echo ::set-env name=GHA_COMMIT::true
+             echo GHA_COMMIT=true >> $GITHUB_ENV
              cat $HOME/gha.commit
           fi
 
