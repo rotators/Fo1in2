@@ -1,5 +1,9 @@
 Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1in2/releases/tag/v1.3.2128))
 - **Added**: All classic music tracks are now distributed with the mod, because it seems lots of folks have issues with setting it up correctly.
+- **Fixed**: A critical bug in the encounter system that would crash the game.
+- **Fixed**: Added missing "Combat Armor"-perk to Combat Armor and Brotherhood Armor.
+- **Fixed**: After being brought to Mariposa by Super Mutants, party members would not be moved correctly into the prison cell.
+- **Fixed**: Empty encounters should (hopefully) not happen anymore now. 
 - **Fixed**: For some reason the brown bag used the normal bag graphics. Also tweaked the item stats to slightly differentiate it from the normal bag.
 - **Fixed**: Hero Appearance mod long hair dude pipboy image wasn't shown correctly.
 - **Fixed**: Killian wouldn't mark Necropolis on the players map after asking for locations outside. 
