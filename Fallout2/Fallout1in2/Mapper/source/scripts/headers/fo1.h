@@ -232,7 +232,8 @@ variable tma_gvar_array;
 #define junktown_invaded                    (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)
 
 #define get_v13_days_left                   (global_var(GVAR_VAULT_13_INVASION_DAYS) - get_days_passed)
-#define set_v13_days_left(x)                set_global_var(GVAR_VAULT_13_INVASION_DAYS, (get_v13_days_left + x))
+#define inc_v13_days_left(x)                set_global_var(GVAR_VAULT_13_INVASION_DAYS, (get_v13_days_left + x))
+#define dec_v13_days_left(x)                inc_v13_days_left(-x)
 
 #define get_hub_days_left                   (global_var(GVAR_THE_HUB_INVASION_DAYS) - get_days_passed)
 #define get_bos_days_left                   (global_var(GVAR_BROTHERHOOD_INVASION_DAYS) - get_days_passed)
