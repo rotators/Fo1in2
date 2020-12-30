@@ -340,6 +340,10 @@ There are several changes in this version of sslc which may result in problems f
 === Changelog ===
 =================
 
+> sfall 4.2.9
+- added support for additional universal opcodes sfall_func7 and sfall_func8
+- fixed a compilation error when the script has a UTF-8 BOM
+
 > sfall 4.2.7
 - added ability to declare local variables anywhere in the procedure body
 
