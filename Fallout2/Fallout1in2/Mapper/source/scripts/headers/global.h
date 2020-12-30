@@ -4093,8 +4093,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4957)
 #define RESERVED_FOR_FALLOUT_FIXT               (4958)
 #define RESERVED_FOR_FALLOUT_FIXT               (4959)
-#define RESERVED_FOR_FALLOUT_FIXT               (4960)
-#define RESERVED_FOR_FALLOUT_FIXT               (4961)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4960)*/
+#define GVAR_ENABLE_TOUGH_MUTANTS               (4961)
 #define GVAR_ENTER_MBVATS_ELEV_0                (4962)
 #define GVAR_ENTER_MBVATS_ELEV_1                (4963)
 #define GVAR_SLIDE_KILLED_JAIN_JOB              (4964)

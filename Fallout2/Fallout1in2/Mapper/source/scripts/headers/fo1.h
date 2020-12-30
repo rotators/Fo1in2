@@ -38,6 +38,7 @@
 #define fo1in2_alt_bos_reward_enabled   (global_var(GVAR_ENABLE_ALTERNATIVE_BOS_REWARD) > 0)
 #define fo1in2_shady_merchant_enabled   (global_var(GVAR_ENABLE_SHADY_SANDS_MERCHANT) > 0)
 #define fo1in2_env_lighting_enabled     (global_var(GVAR_ENABLE_FO2_SEASONAL_LIGHTING) > 0)
+#define fo1in2_tough_mutants_enabled    (global_var(GVAR_ENABLE_TOUGH_MUTANTS) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
