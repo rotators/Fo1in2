@@ -3,6 +3,7 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Fixed**: A critical bug in the encounter system that would crash the game.
 - **Fixed**: Added missing "Combat Armor"-perk to Combat Armor and Brotherhood Armor.
 - **Fixed**: After being brought to Mariposa by Super Mutants, party members would not be moved correctly into the prison cell.
+- **Fixed**: Dogmeat will now start out correctly with 50hp.
 - **Fixed**: Empty encounters should (hopefully) not happen anymore now. 
 - **Fixed**: For some reason the brown bag used the normal bag graphics. Also tweaked the item stats to slightly differentiate it from the normal bag.
 - **Fixed**: Hero Appearance mod long hair dude pipboy image wasn't shown correctly.
@@ -11,5 +12,6 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Fixed**: When doing caravan jobs, the Caravan Driver and Caravan Guards would spawn new items on every game tick.
 - **Tweaked**: Added back in the "Decker must be killed"-condition to the Hub good ending.
 - **Tweaked**: Removed excess items (stimpaks, psycho, caps, etc) from Garl (was a Fixt addition that changed game balance).
+- **Tweaked**: Removed weapons from Bob the pre-owned cars salesman (old Fixt addition).
 - **Tweaked**: Sfall graphics mode 4 (Dx9 fullscreen) is now the new default.
 - **Tweaked**: With Traits and Perks and the enabled "Fast Shot Fix", it was possible to get 1 AP melee and unarmed attacks. This is now fixed - the minimum APs required for any attack are now set to 2.
