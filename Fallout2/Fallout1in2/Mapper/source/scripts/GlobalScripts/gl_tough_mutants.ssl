@@ -13,6 +13,7 @@
 /* Standard Script Procedures */
 procedure start;
 procedure map_enter_p_proc;
+procedure adjust_hp;
 
 #define crit_pid     obj_pid(critter)
 #define crit_max_hp  get_max_hp(critter)
@@ -21,13 +22,17 @@ procedure map_enter_p_proc;
                      if map_first_run then critter_heal(critter, crit_max_hp)
 
 procedure start begin
+   call adjust_hp;
 end
 
 procedure map_enter_p_proc begin
-   variable critter;
+   call adjust_hp;
+end
 
+procedure adjust_hp begin
+   variable critter;
    if fo1in2_tough_mutants_enabled then begin
-      if (cur_map_index > MAP_DESERT0 and not(is_loading_game)) then begin
+      if (cur_map_index > MAP_DESERT0) then begin
          foreach (critter in list_as_array(LIST_CRITTERS)) begin
             if (crit_pid == PID_LOU) then begin
                inc_hp(305); // base is 45, orig hp is 250, new hp is 350
