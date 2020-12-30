@@ -73,5 +73,6 @@
 #define TEAM_RND_GECKO              (92)
 #define TEAM_RND_MASTERS_ARMY       (93)
 #define TEAM_RND_WILD_DOG           (94)
+#define TEAM_RND_MANTIS             (95)
 
 #endif // TEAMS_H
