@@ -1,5 +1,8 @@
 Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1in2/releases/tag/v1.3.2128))
+- **Added**: A new setting to enable tougher Super Mutants for a more challenging endgame.
 - **Added**: All classic music tracks are now distributed with the mod, because it seems lots of folks have issues with setting it up correctly.
+- **Added**: Garret in Necropolis will now open/close the "reward fridge" when using it. Also added the missing "locked container" sfx.
+- **Added**: The HK P90 ("10mm Carbine") has a small chance to appear at the Gun Runners now.
 - **Fixed**: A critical bug in the encounter system that would crash the game.
 - **Fixed**: Added missing "Combat Armor"-perk to Combat Armor and Brotherhood Armor.
 - **Fixed**: After being brought to Mariposa by Super Mutants, party members would not be moved correctly into the prison cell.
@@ -8,10 +11,13 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Fixed**: For some reason the brown bag used the normal bag graphics. Also tweaked the item stats to slightly differentiate it from the normal bag.
 - **Fixed**: Hero Appearance mod long hair dude pipboy image wasn't shown correctly.
 - **Fixed**: Killian wouldn't mark Necropolis on the players map after asking for locations outside. 
+- **Fixed**: Mantis would fight Spore Plants in encounter maps.
 - **Fixed**: The "You gain x experience points for freeing Tandi"-message will only show if the amount of experience is > 0.
 - **Fixed**: When doing caravan jobs, the Caravan Driver and Caravan Guards would spawn new items on every game tick.
 - **Tweaked**: Added back in the "Decker must be killed"-condition to the Hub good ending.
+- **Tweaked**: Increased the chance for cave and mine encounters a bit.
 - **Tweaked**: Removed excess items (stimpaks, psycho, caps, etc) from Garl (was a Fixt addition that changed game balance).
 - **Tweaked**: Removed weapons from Bob the pre-owned cars salesman (old Fixt addition).
 - **Tweaked**: Sfall graphics mode 4 (Dx9 fullscreen) is now the new default.
+- **Tweaked**: Super Mutants at the Mariposa entrance will return to their home position if the player left for longer than a day.
 - **Tweaked**: With Traits and Perks and the enabled "Fast Shot Fix", it was possible to get 1 AP melee and unarmed attacks. This is now fixed - the minimum APs required for any attack are now set to 2.
