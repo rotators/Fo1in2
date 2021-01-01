@@ -18,6 +18,9 @@
 #define MVAR_CAVERN_LADDER_ELEV1       (3) // Used to remember the position of the randomly placed ladder
 #define MVAR_CAVERN_LADDER_ELEV2       (4) // Ladder pos on elev2
 
+// Fo2 perk doesn't work in Fo1 encounter system, so we build our own functionality
+#define dude_enc_perception            (dude_perception + (3 * dude_perk(PERK_cautious_nature_perk)))
+
 // Cavern Type for random scenery spawn
 #define TOXIC_CAVE         (1)
 #define GOLD_MINE          (2)
