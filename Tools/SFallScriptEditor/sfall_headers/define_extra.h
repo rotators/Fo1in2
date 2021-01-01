@@ -2,6 +2,9 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+/* Combat Flags */
+#define DAM_PRESERVE_FLAGS	0x80000000 // keeping the existing result flags when sets new flags in the attack_complex function (for sfall)
+
 #define BODY_HIT_HEAD       (0)
 #define BODY_HIT_LEFT_ARM   (1)
 #define BODY_HIT_RIGHT_ARM  (2)
@@ -87,19 +90,35 @@
 #define FLAG_SEEN         (0x40000000)
 #define FLAG_SHOOTTHRU    (0x80000000)
 
-
-/* Critter Flags */
+/* Critter flags */
 #define CFLG_BARTER             2  // 0x00000002 - Barter (can trade with)
-#define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot steal from)
+#define CFLG_NOSTEAL           32  // 0x00000020 - Steal (cannot be stolen from)
 #define CFLG_NODROP            64  // 0x00000040 - Drop (doesn't drop items)
 #define CFLG_NOLIMBS          128  // 0x00000080 - Limbs (cannot lose limbs)
 #define CFLG_NOAGES           256  // 0x00000100 - Ages (dead body does not disappear)
-#define CFLG_NOHEAL           512  // 0x00000200 - Heal (damage is not cured with time)
+#define CFLG_NOHEAL           512  // 0x00000200 - Heal (damage is not healed with time)
 #define CFLG_INVULN          1024  // 0x00000400 - Invulnerable (cannot be hurt)
 #define CFLG_FLATTN          2048  // 0x00000800 - Flatten (leaves no dead body)
-#define CFLG_SPECIAL         4096  // 0x00001000 - Special (there is a special type of death)
-#define CFLG_RANGED          8192  // 0x00002000 - Range (melee attack is possible at a distance)
-#define CFLG_NOKNOCKDOWN    16384  // 0x00004000 - Knock (cannot be knocked down)
+#define CFLG_SPECIAL         4096  // 0x00001000 - Special (has a special type of death)
+#define CFLG_RANGED          8192  // 0x00002000 - Range (has extra hand-to-hand range)
+#define CFLG_NOKNOCKBACK    16384  // 0x00004000 - Knock (cannot be knocked back)
+#define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
+
+/* Window flags */
+#define WIN_FLAG_DONTMOVE           (0x2) // does not move the window to the foreground when clicking on the window
+#define WIN_FLAG_MOVEONTOP          (0x4) // places a window on top of other windows
+#define WIN_FLAG_HIDDEN             (0x8) // hidden window 
+#define WIN_FLAG_EXCLUSIVE         (0x10)
+#define WIN_FLAG_TRANSPARENT       (0x20) // transparent window flag, the window color with index 0 will be transparent
+
+/* Message window flags */
+#define MSGBOX_AUTOSIZE             (0x0)
+#define MSGBOX_NORMAL               (0x1)
+#define MSGBOX_SMALL                (0x2)
+#define MSGBOX_ALIGN_LEFT           (0x4) // text aligned to left
+#define MSGBOX_ALIGN_TOP            (0x8) // text aligned to top
+#define MSGBOX_YESNO               (0x10) // use YES/NO buttons instead of DONE
+#define MSGBOX_CLEAN               (0x20) // no buttons
 
 //remove inven obj defines
 #define RMOBJ_CONSUME_DRUG        4666772
@@ -120,7 +139,7 @@
 #define RMOBJ_RM_MULT_OBJS        4563866
 #define RMOBJ_REPLACE_WEAPON      4658526
 #define RMOBJ_THROW               4266040
-#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from the nested containers in the inventory
+#define RMOBJ_SUB_CONTAINER       4683191  // search and remove the item from nested containers in the inventory
 
 // common prototype offsets for get/set_proto_data
 #define PROTO_PID             (1)
@@ -314,7 +333,7 @@
 #define AI_CAP_MAX_DISTANCE            (7)
 #define AI_CAP_MIN_HP                  (8)
 #define AI_CAP_MIN_TO_HIT              (9)
-#define AI_CAP_HURT_TOO_MUCH          (10) // flags DAM_BLIND/DAM_CRIP_*
+#define AI_CAP_HURT_TOO_MUCH          (10) // DAM_BLIND/DAM_CRIP_* flags
 #define AI_CAP_RUN_AWAY_MODE          (11)
 #define AI_CAP_SECONDARY_FREQ         (12)
 #define AI_CAP_CALLED_FREQ            (13)
@@ -328,7 +347,6 @@
 #define ai_area_be_absolutely_sure     (4)
 
 // AI attack who mode values
-#define ai_attack_no_pref              (-1)
 #define ai_attack_whomever_attacking_me (0)
 #define ai_attack_strongest            (1)
 #define ai_attack_weakest              (2)
@@ -345,12 +363,12 @@
 #define ai_run_away_never              (7)
 
 // AI disposition values
-#define ai_disposition_none            (0)
-#define ai_disposition_custom          (1)
-#define ai_disposition_coward          (2)
-#define ai_disposition_defensive       (3)
-#define ai_disposition_aggressive      (4)
-#define ai_disposition_berserk         (5)
+#define ai_disposition_none            (-1)
+#define ai_disposition_custom          (0)
+#define ai_disposition_coward          (1)
+#define ai_disposition_defensive       (2)
+#define ai_disposition_aggressive      (3)
+#define ai_disposition_berserk         (4)
 
 // AI distance values
 #define ai_distance_stay_close         (0)
@@ -371,8 +389,8 @@
 
 // AI chem use mode values
 #define ai_chem_clean                  (0)
-#define ai_chem_stims_when_hurt_little (1) // use only stimpack
-#define ai_chem_stims_when_hurt_lots   (2) // use only stimpack
+#define ai_chem_stims_when_hurt_little (1) // use only stimpak/super stimpak/healing powder
+#define ai_chem_stims_when_hurt_lots   (2) // use only stimpak/super stimpak/healing powder
 #define ai_chem_sometimes              (3)
 #define ai_chem_anytime                (4)
 #define ai_chem_always                 (5)
@@ -385,27 +403,30 @@
 #define OBJ_DATA_FID                (0x20)
 #define OBJ_DATA_ELEVATION          (0x28)
 #define OBJ_DATA_PID                (0x64)
-#define OBJ_DATA_CID                (0x68) // combat id, used for savegame
-#define OBJ_DATA_SID                (0x78)
+#define OBJ_DATA_CID                (0x68) // combat ID, used for savegame
+#define OBJ_DATA_SID                (0x78) // script ID
+#define OBJ_DATA_SCRIPT_INDEX       (0x80) // script index number in scripts.lst
 // items
-#define OBJ_DATA_CUR_CHARGES        (0x3C)
+#define OBJ_DATA_CUR_CHARGES        (0x3C) // for key items it's the key code
 // critters
-#define OBJ_DATA_COMBAT_STATE       (0x3C) // flags:  1 - combat, 2 - target out of range, 4 - flee
+#define OBJ_DATA_COMBAT_STATE       (0x3C) // flags: 1 - combat, 2 - target is out of range, 4 - flee
 #define OBJ_DATA_CUR_ACTION_POINT   (0x40)
 #define OBJ_DATA_DAMAGE_LAST_TURN   (0x48)
-#define OBJ_DATA_WHO_HIT_ME         (0x54)
+#define OBJ_DATA_WHO_HIT_ME         (0x54) // current target of the critter
 
-// compute attack result data offset
+// compute attack result data offsets
 #define C_ATTACK_SOURCE             (0x00)
 #define C_ATTACK_HIT_MODE           (0x04)
 #define C_ATTACK_WEAPON             (0x08)
+#define C_ATTACK_UNUSED             (0x0C)
 #define C_ATTACK_DAMAGE_SOURCE      (0x10) // Amount
 #define C_ATTACK_FLAGS_SOURCE       (0x14) // see DAM_* values in define.h
 #define C_ATTACK_ROUNDS             (0x18)
+#define C_ATTACK_MESSAGE            (0x1C) // message number set from the critical table
 #define C_ATTACK_TARGET             (0x20)
 #define C_ATTACK_BODY_PART          (0x28)
 #define C_ATTACK_DAMAGE_TARGET      (0x2C) // Amount
-#define C_ATTACK_FLAGS_TARGET       (0x30) // See DAM_*
+#define C_ATTACK_FLAGS_TARGET       (0x30) // see DAM_*
 #define C_ATTACK_KNOCKBACK_VALUE    (0x34)
 #define C_ATTACK_MAIN_TARGET        (0x38)
 #define C_ATTACK_AROUND_NUMBER      (0x3C) // The number of critters around the target
@@ -427,7 +448,7 @@
 #define C_ATTACK_DAMAGE_TARGET4     (0x7C)
 #define C_ATTACK_DAMAGE_TARGET5     (0x80)
 #define C_ATTACK_DAMAGE_TARGET6     (0x84)
-#define C_ATTACK_FLAGS_TARGET1      (0x88) // See DAM_*
+#define C_ATTACK_FLAGS_TARGET1      (0x88) // see DAM_*
 #define C_ATTACK_FLAGS_TARGET2      (0x8C)
 #define C_ATTACK_FLAGS_TARGET3      (0x90)
 #define C_ATTACK_FLAGS_TARGET4      (0x94)
@@ -439,5 +460,20 @@
 #define C_ATTACK_KNOCKBACK_VALUE4   (0xAC)
 #define C_ATTACK_KNOCKBACK_VALUE5   (0xB0)
 #define C_ATTACK_KNOCKBACK_VALUE6   (0xB4)
+
+/* Playback mode defines for the soundplay function */
+#define soundraw        (0x80000000) // sfall flag
+#define Stereo8bit      (soundstereo)
+#define Stereo8bitLoop  (soundstereo bwor soundloop)
+#define Mono16bit       (sound16bit)
+#define Mono16bitLoop   (sound16bit bwor soundloop)
+#define Stereo16bit     (soundstereo bwor sound16bit)
+#define Stereo16bitLoop (soundstereo bwor sound16bit bwor soundloop)
+
+// Adjust (reduce) volume for soundplay and play_sfall_sound
+// range: 0x0000XXXX (max volume) - 0x7FFFXXXX (mute)
+#define SoundVolume25   (0x20000000)
+#define SoundVolumeHalf (0x40000000)
+#define SoundVolume75   (0x60000000)
 
 #endif // DEFINE_EXTRA_H
