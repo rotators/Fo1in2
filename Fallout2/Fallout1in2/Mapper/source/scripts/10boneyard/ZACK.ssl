@@ -37,6 +37,12 @@ procedure ZackNo;
 procedure ZackBarter;
 procedure ZackEnd;
 
+procedure Node1000;
+procedure Node1100;
+procedure Node1200;
+procedure Node1300;
+procedure Node1400;
+
 procedure Get_Stuff;
 procedure Put_Stuff;
 
@@ -50,6 +56,7 @@ variable DisplayMessage;
 #define LVAR_Discount            (5)
 #define LVAR_Restock_Time        (6)
 #define LVAR_Caps_Amount         (7)
+#define LVAR_SpecialPayment      (8)
 
 #define RESTOCK_TIME             (GAME_TIME_IN_DAYS + (5 * ONE_GAME_DAY))
 
@@ -154,43 +161,53 @@ procedure pickup_p_proc begin
 end
 
 procedure Zack00 begin
+   set_local_var(LVAR_Here_Before, 1);
+
    Reply(102);
-   NOption(104, ZackBarter, 1);
-   NOption(103, Zack02, 1);
+   NOption(104, ZackBarter, 4);
+   NOption(103, Zack02, 4);
    if (local_var(LVAR_Discount) == 0) then begin
       DisplayMessage := 117;
-      NOption(105, Zack04, 1);
+      NOption(105, Zack04, 4);
    end
    else if (local_var(LVAR_Discount) == 1) then begin
       DisplayMessage := 123;
-      NOption(122, Zack05, 1);
+      NOption(122, Zack05, 4);
    end
-   NOption(107, ZackEnd, 1);
+   NOption(107, ZackEnd, 4);
 end
 
 procedure Zack01 begin
    Reply(106);
-   NOption(104, ZackBarter, 1);
-   NOption(103, Zack02, 1);
+   NOption(104, ZackBarter, 4);
+   NOption(103, Zack02, 4);
    if (local_var(LVAR_Discount) == 0) then begin
       DisplayMessage := 117;
-      NOption(105, Zack04, 1);
+      NOption(105, Zack04, 4);
    end
    else if (local_var(LVAR_Discount) == 1) then begin
       DisplayMessage := 123;
-      NOption(122, Zack05, 1);
+      NOption(122, Zack05, 4);
    end
-   NOption(107, ZackEnd, 1);
+
+   if fo1in2_merch_restock_enabled and get_all_deathclaws_killed and (global_var(GVAR_GUN_RUNNERS_BONUS) == 0) then begin
+      if (local_var(LVAR_SpecialPayment) == 0) then
+         NOption(998, Node1000, 4);
+      else
+         NOption(999, Node1100, 4);
+   end
+
+   NOption(107, ZackEnd, 4);
 end
 
 procedure Zack02 begin
    Reply(114);
-   NOption(115, Zack03, 1);
+   NOption(115, Zack03, 4);
 end
 
 procedure Zack03 begin
    Reply(111);
-   NOption(113, ZackBarter, 1);
+   NOption(113, ZackBarter, 4);
 end
 
 procedure Zack04 begin
@@ -223,14 +240,14 @@ end
 
 procedure ZackYes begin
    Reply(116);
-   NOption(120, ZackBarter, 1);
-   NOption(121, ZackEnd, 1);
+   NOption(120, ZackBarter, 4);
+   NOption(121, ZackEnd, 4);
 end
 
 procedure ZackNo begin
    Reply(DisplayMessage);
-   NOption(119, ZackBarter, 1);
-   NOption(107, ZackEnd, 1);
+   NOption(119, ZackBarter, 4);
+   NOption(107, ZackEnd, 4);
 end
 
 procedure ZackBarter begin
@@ -247,4 +264,32 @@ end
 
 procedure Put_Stuff begin
    put_barter_inven(Locker_Ptr);
+end
+
+procedure Node1000 begin
+   set_local_var(LVAR_SpecialPayment, 1);
+   Reply(1001);
+   NOption(1010, Node1100, 4);
+end
+
+procedure Node1100 begin
+   Reply(1100);
+   BOption(1110, Node1200, 4);
+   if (dude_caps >= 10000) then
+      GOption(1120, Node1300, 4);
+   NOption(1130, Node1400, 4);
+end
+
+procedure Node1200 begin
+   NMessage(1200);
+end
+
+procedure Node1300 begin
+   dude_caps_adjust(-10000);
+   set_global_var(GVAR_GUN_RUNNERS_BONUS, 1);
+   NMessage(1300);
+end
+
+procedure Node1400 begin
+   NMessage(1400);
 end

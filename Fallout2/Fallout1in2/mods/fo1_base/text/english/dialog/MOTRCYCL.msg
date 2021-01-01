@@ -1,4 +1,5 @@
-{100}{}{This motorcycle doesn't appear to be functional. Still, it looks to be in better shape than the other motorcycle in the area. Maybe this one can be fixed.}
+{100}{}{This motorcycle doesn't appear to be functional. Still, it looks to be in better shape than the other motorcycle
+ in the area. Maybe this one can be fixed.}
 {101}{}{Currently, this motorcycle doesn't appear to be functional. It needs a fuel cell controller.}
 
 {200}{}{You successfully repair the motorcycle with the fuel cell controller.}
@@ -9,11 +10,12 @@
 
 {250}{}{The motorcycle is out of fuel. Refuel the vehicle to get it started again.}
 
-{300}{}{You fail to repair the vehicle. Maybe with the fuel cell controller that Smitty was talking about it could be repaired.}
+{300}{}{You fail to repair the vehicle. Maybe with the fuel cell controller that Smitty was talking
+ about it could be repaired.}
 
 {400}{}{It would be too noisy to pop open the hood and work on the car.}
 
-# SD3:
+# Fo1in2:
 {450}{}{The motorcycle isn't operational.}
 {451}{}{The motorcycle doesn't require any repairs.}
 {452}{}{The key fits!}
