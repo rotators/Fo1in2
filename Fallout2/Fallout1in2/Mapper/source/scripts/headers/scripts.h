@@ -611,7 +611,7 @@
 #define SCRIPT_MSTMERCH  (598)  //  mstmerch.int    ; Master Merchant from the hub                                                
 #define SCRIPT_RICHIE    (599)  //  richie.int      ; Richie, guards a safe in the Hub
 #define SCRIPT_RUFUS     (600)  //  rufus.int       ; Rufus, cyber hack in the Hub
-#define SCRIPT_DEPRECATED_20 (601) //SCRIPT_RUTGER    (601)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_NKINGRAT  (601)  //  nkingrat.int    ; Necropolis Sewer King albino mole rat
 #define SCRIPT_SID       (602)  //  sid.int         ; Sid, annoying little twit who helps Beth
 #define SCRIPT_THORNDYK  (603)  //  thorndyk.int    ; Thorndyke, Dr. in the Children in the Hub                                   
 #define SCRIPT_TROY      (604)  //  troy.int        ; Troy, a super mutant in the Hub
@@ -955,7 +955,7 @@
 #define SCRIPT_HIGHELD   (942)  //  HighEld.int     ; Elders for the Brotherhood
 #define SCRIPT_MOLERAT2  (943)  //  MoleRat2.int    ; Another stupid molerat                                                      
 #define SCRIPT_BROELD    (944)  //  BroEld.int      ; Brotherhood elder (generic)
-#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int   ; Fuel Cell Controller stash                                     
+#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int    ; Fuel Cell Controller stash !!! DEPRECATED !!!                       
 #define SCRIPT_ICECHEST  (946)  //  IceChest.int    ; box where Garl can place player's stuff                           
 #define SCRIPT_LTCODES   (947)  //  LtCodes.int     ; Codes the Lt is holding
 #define SCRIPT_PRISFELD  (948)  //  PrisFeld.int    ; prisoner force field in the master's lair                         

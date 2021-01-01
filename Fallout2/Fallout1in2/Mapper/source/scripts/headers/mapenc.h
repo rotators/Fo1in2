@@ -157,9 +157,7 @@ critical procedure Scenes(variable scenery_elevation) begin
 
    Tot_Critter_A := random(3, 14);
    LVar4 := -1;
-   debug("Tot_Critter_A is " + Tot_Critter_A);
    while(Tot_Critter_A) do begin
-      //debug("current Tot_Critter_A is " + Tot_Critter_A);
       Critter_direction := random(0, 5);
       Range := random(4, 28);
       Place_Holder := Range;
@@ -174,11 +172,9 @@ critical procedure Scenes(variable scenery_elevation) begin
       spawn_hex := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
       LVar2 := random(0, 9);
       while(LVar4 == LVar2) do begin
-         debug("LVar4 == LVar2");
          LVar2 := random(0, 9);
       end
       if (LVar2 == 0) then begin
-         debug("LVar2 == 0");
          LVar3 := random(1, 6);
          if (LVar3 == 1) then begin
             Item := create_object(PID_BONES_4, spawn_hex, scenery_elevation);
@@ -208,7 +204,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 1) then begin
-         debug("LVar2 == 1");
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
             Item := create_object(PID_ROCKS_8, spawn_hex, scenery_elevation);
@@ -221,7 +216,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 2) then begin
-         debug("LVar2 == 2");
          LVar3 := random(1, 5);
          if (LVar3 == 1) then begin
             Item := create_object(PID_BONES_1, spawn_hex, scenery_elevation);
@@ -240,11 +234,9 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 3) then begin
-         debug("LVar2 == 3");
          Item := create_object(PID_TIRE, spawn_hex, scenery_elevation);
       end
       else if (LVar2 == 4) then begin
-         debug("LVar2 == 4");
          LVar3 := random(1, 4);
          if (LVar3 == 1) then begin
             Item := create_object(PID_ROCKS_3, spawn_hex, scenery_elevation);
@@ -260,7 +252,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 5) then begin
-         debug("LVar2 == 5");
          LVar3 := random(1, 4);
          if (LVar3 == 1) then begin
             Item := create_object(PID_SCRUB_1, spawn_hex, scenery_elevation);
@@ -276,7 +267,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 6) then begin
-         debug("LVar2 == 6");
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
             //Item := create_object(PID_JUNK_TIRE, spawn_hex, scenery_elevation);
@@ -292,7 +282,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 7) then begin
-         debug("LVar2 == 7");
          LVar3 := random(1, 4);
          if (LVar3 == 1) then begin
             Item := create_object(PID_DIRT_5, spawn_hex, scenery_elevation);
@@ -308,7 +297,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else if (LVar2 == 8) then begin
-         debug("LVar2 == 8");
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
             Item := create_object(PID_ROCKS_8, spawn_hex, scenery_elevation);
@@ -321,7 +309,6 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       else begin
-         debug("else begin");
          LVar3 := random(1, 6);
          if (LVar3 == 1) then begin
             Item := create_object(PID_BONES_4, spawn_hex, scenery_elevation);
@@ -351,7 +338,7 @@ critical procedure Scenes(variable scenery_elevation) begin
          end
       end
       LVar4 := LVar2;
-      debug("try to move item " + Item + " which is " + obj_pid(Item));
+      //debug("try to move item " + Item + " which is " + obj_pid(Item));
       // This can cause empty encounters
       // Don't ask me why, I have no idea. Item is always valid in my tests, and the spawn_hex is ok too.
       // If we just skip this step and directly create the objects on their final position, then this

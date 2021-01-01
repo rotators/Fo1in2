@@ -384,81 +384,46 @@ critical procedure GenerateReply begin
       end
    end
 
-   //if sfall_rotators then begin
-      /*******************************************************
-         Find reply - Check whole sentence
-      *******************************************************/
-      input := " " + input + " "; // We do this to check for words like "Shady" and not "xShadyx"
-      convert_to_lower(input);
+   /*******************************************************
+      Find reply - Check the whole sentence
+   *******************************************************/
+   input := " " + input + " "; // We do this to check for words like "Shady" and not "xShadyx"
+   convert_to_lower(input);
 
-      if (reply_name_start > 0) then begin
-         variable crit_name := obj_name(critter);
-         convert_to_lower(crit_name);
-         if (len_array(string_split(input, crit_name)) > 1) then begin
-            reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
-            found := 1;
-         end
-      end
-
-      if (found == 0) then begin
-         for (i := 0; (i < 100 and found == 0); i++) begin
-            input_check := message_str(reply_source, i + msg_offset);
-            if (input_check != "Error" and input_check != "") then begin
-               //debug("input_check: " + input_check);
-               split := string_split(input_check, "|");
-
-               foreach (word : keyword in split) begin
-                  //debug("keyword: " + keyword);
-                  keyword := " " + keyword + " "; // If keyword with spaces is in the sentence, we know it won't be "xShadyx"
-                  convert_to_lower(keyword);
-
-                  if (len_array(string_split(input, keyword)) > 1) then begin
-                     reply_final := message_str(reply_source, (i + msg_offset) + 100);
-                     found := 1;
-
-                     if ((i + msg_offset) == tma_var_line) then
-                        set_global_var(tma_var_gvar, tma_var_state);
-
-                     break;
-                  end
-               end
-            end
-            else
-               break;
-         end
-      end
-   //end
-   //else begin
-      /*******************************************************
-         Find reply - Check for explicit keyword
-      *******************************************************/
-   /*   if (reply_name_start > 0 and string_compare(input, obj_name(critter))) then begin
+   if (reply_name_start > 0) then begin
+      variable crit_name := obj_name(critter);
+      convert_to_lower(crit_name);
+      if (len_array(string_split(input, crit_name)) > 1) then begin
          reply_final := message_str(reply_source, random(reply_name_start, reply_name_end));
+         found := 1;
       end
-      else begin
-         for (i := 0; (i < 100 and found == 0); i++) begin
-            input_check := message_str(reply_source, i + msg_offset);
-            if (input_check != "Error" and input_check != "") then begin
-               //debug("input_check: " + input_check);
-               split := string_split(input_check, "|");
+   end
 
-               foreach (word : keyword in split) begin
-                  if string_compare(keyword, input) then begin
-                     reply_final := message_str(reply_source, (i + msg_offset) + 100);
-                     found := 1;
+   for (i := 0; (i < 100 and found == 0); i++) begin
+      input_check := message_str(reply_source, i + msg_offset);
+      if (input_check != "Error" and input_check != "") then begin
+         //debug("input_check: " + input_check);
+         split := string_split(input_check, "|");
 
-                     if ((i + msg_offset) == tma_var_line) then
-                        set_global_var(tma_var_gvar, tma_var_state);
+         foreach (word : keyword in split) begin
+            //debug("keyword: " + keyword);
+            keyword := " " + keyword + " "; // If keyword with spaces is in the sentence, we know it won't be "xShadyx"
+            convert_to_lower(keyword);
 
-                     break;
-                  end
-               end
-            end
-            else
+            if (len_array(string_split(input, keyword)) > 1) then begin
+               reply_final := message_str(reply_source, (i + msg_offset) + 100);
+               found := 1;
+
+               if ((i + msg_offset) == tma_var_line) then
+                  set_global_var(tma_var_gvar, tma_var_state);
+
                break;
+            end
          end
       end
-   end*/
+      else
+         break;
+   end
 
    debug_msg("input: <" + input + ">");
 
