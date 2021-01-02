@@ -665,4 +665,89 @@ procedure dehydration_b begin
    end
 end
 
+// Mountain encounter
+procedure breaking_legs(variable hp_dmg) begin
+   if (party_has_item(PID_ROPE)) then begin
+      party_remove_item(PID_ROPE)
+      display_msg(message_str(SCRIPT_RNDMTN, 204));
+   end
+   else begin
+      if (random(0, 1) == 0) then begin
+         critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 139));
+      end
+      else begin
+         critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 140));
+      end
+   end
+end
+
+procedure falling_from_cliff begin
+   variable main_roll := 0;
+   variable hp_dmg := 0;
+   variable hp_cur := 0;
+
+   display_msg(message_str(SCRIPT_RNDMTN, 114));
+   main_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (5 * dude_perception) ));
+   if (not(is_success(main_roll))) then begin
+      if ((random(1, 100) >= 95) or is_critical(main_roll)) then begin
+         display_msg(message_str(SCRIPT_RNDMTN, 118));
+         hp_dmg := (random(7, 20) + 3);
+         hp_cur := dude_cur_hp;
+         if (hp_dmg >= hp_cur) then begin
+            hp_dmg := (hp_cur - 1);
+         end
+
+         reg_anim_clear(dude_obj);
+         reg_anim_begin();
+            reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
+            reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
+         reg_anim_end();
+
+         critter_heal(dude_obj, -hp_dmg);
+         if (party_has_item(PID_ROPE)) then begin
+            party_remove_item(PID_ROPE)
+            display_msg(message_str(SCRIPT_RNDMTN, 204));
+         end
+         else begin
+            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
+            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
+            critter_injure(dude_obj, DAM_CRIP_ARM_LEFT);
+            critter_injure(dude_obj, DAM_CRIP_ARM_RIGHT);
+            display_msg(message_str(SCRIPT_RNDMTN, 147));
+         end
+      end
+      else begin
+         display_msg(message_str(SCRIPT_RNDMTN, 117));
+         hp_dmg := random(4, 16);
+         hp_cur := dude_cur_hp;
+         if (hp_dmg >= hp_cur) then begin
+            hp_dmg := (hp_cur - 1);
+         end
+
+         reg_anim_clear(dude_obj);
+         reg_anim_begin();
+            reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
+            reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
+         reg_anim_end();
+
+         critter_heal(dude_obj, -hp_dmg);
+         if (random(0,3) == 1) then begin
+            display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 141));
+         end
+         else begin
+            call breaking_legs(hp_dmg);
+         end
+      end
+   end
+   else begin
+      display_msg(message_str(SCRIPT_RNDMTN, 115));
+      if (is_critical(main_roll)) then begin
+         display_msg(message_str(SCRIPT_RNDMTN, 116));
+         critter_heal(dude_obj, random(5, 15));
+      end
+   end
+end
+
 #endif // MAPENC_H

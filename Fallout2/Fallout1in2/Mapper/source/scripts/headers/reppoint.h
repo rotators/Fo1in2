@@ -516,7 +516,7 @@
 #define REP_BONUS_REGULATORS_DEAD               (20)
 #define inc_boneyard_rep(x)                     inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
-// Necropolis0
+// Necropolis
 #define REP_BONUS_WATERCHIP_TAKEN               (-25)
 #define REP_BONUS_WATER_PUMP_FIXED              (25)
 #define REP_BONUS_WATERSHED_MUTANTS_DEAD        (10)

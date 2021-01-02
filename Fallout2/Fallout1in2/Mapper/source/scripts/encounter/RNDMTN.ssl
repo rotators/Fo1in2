@@ -1192,69 +1192,7 @@ procedure NORTH1 begin
       call NORTH2;
    end
    else begin
-      variable LVar0 := 0;//mainroll
-      variable LVar1 := 0;//dmghp
-      variable LVar2 := 0;//
-
-      display_msg(message_str(SCRIPT_RNDMTN, 114));
-      LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (5 * dude_perception) ));
-      if (not(is_success(LVar0))) then begin
-         if ((random(1, 100) >= 95) or is_critical(LVar0)) then begin
-            display_msg(message_str(SCRIPT_RNDMTN, 118));
-            LVar1 := (random(7, 20) + 3);
-            LVar2 := dude_cur_hp;
-            if (LVar1 >= LVar2) then begin
-               LVar1 := (LVar2 - 1);
-            end
-
-            reg_anim_clear(dude_obj);
-            reg_anim_begin();
-               reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
-               reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
-            reg_anim_end();
-
-            critter_heal(dude_obj, -LVar1);
-            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-            critter_injure(dude_obj, DAM_CRIP_ARM_LEFT);
-            critter_injure(dude_obj, DAM_CRIP_ARM_RIGHT);
-            //display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
-            display_msg(message_str(SCRIPT_RNDMTN, 147));
-         end
-         else begin
-            display_msg(message_str(SCRIPT_RNDMTN, 117));
-            LVar1 := random(4, 16);
-            LVar2 := dude_cur_hp;
-            if (LVar1 >= LVar2) then begin
-               LVar1 := (LVar2 - 1);
-            end
-
-            reg_anim_clear(dude_obj);
-            reg_anim_begin();
-               reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
-               reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
-            reg_anim_end();
-
-            critter_heal(dude_obj, -LVar1);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
-            if (random(0, 3) == 0) then begin
-               critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-               display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
-            end
-            else begin
-               critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-               display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
-            end
-         end
-      end
-      else begin
-         display_msg(message_str(SCRIPT_RNDMTN, 115));
-         if (is_critical(LVar0)) then begin
-            display_msg(message_str(SCRIPT_RNDMTN, 116));
-            critter_heal(dude_obj, random(5, 15));
-         end
-      end
-
+      call falling_from_cliff;
    end
 end
 
@@ -1465,7 +1403,7 @@ end
 procedure NORTH6 begin
    variable LVar0 := 0;
    variable LVar1 := 0;
-   variable LVar2 := 0;
+   variable hp_dmg := 0;
 
    display_msg(message_str(SCRIPT_RNDMTN, 100));
    Tot_Critter_A := 8;
@@ -1567,40 +1505,33 @@ procedure NORTH6 begin
       LVar1 := random(1, 100);
       if (is_critical(LVar0) or (LVar1 >= 95)) then begin
          display_msg(message_str(SCRIPT_RNDMTN, 103));
-         LVar2 := (random(5, 15) + 2);
+         hp_dmg := (random(5, 15) + 2);
          LVar0 := dude_cur_hp;
-         if (LVar2 >= LVar0) then begin
-            LVar2 := (LVar0 - 1);
+         if (hp_dmg >= LVar0) then begin
+            hp_dmg := (LVar0 - 1);
          end
          reg_anim_clear(dude_obj);
          reg_anim_begin();
             reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
             reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
-         critter_heal(dude_obj, -LVar2);
-         if random(0, 1) == 0 then begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar2 + message_str(SCRIPT_RNDMTN, 139));
-         end
-         else begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar2 + message_str(SCRIPT_RNDMTN, 140));
-         end
+         critter_heal(dude_obj, -hp_dmg);
+         call breaking_legs(hp_dmg);
       end
       else begin
          display_msg(message_str(SCRIPT_RNDMTN, 104));
-         LVar2 := (random(1, 4) + random(1, 4));
+         hp_dmg := (random(1, 4) + random(1, 4));
          LVar0 := dude_cur_hp;
-         if (LVar2 >= LVar0) then begin
-            LVar2 := (LVar0 - 1);
+         if (hp_dmg >= LVar0) then begin
+            hp_dmg := (LVar0 - 1);
          end
          reg_anim_clear(dude_obj);
          reg_anim_begin();
             reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
             reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
-         critter_heal(dude_obj, -LVar2);
-         display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar2 + message_str(SCRIPT_RNDMTN, 141));
+         critter_heal(dude_obj, -hp_dmg);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 141));
       end
    end
 end
@@ -1767,7 +1698,7 @@ end
 
 procedure VAULT5 begin
    variable LVar0 := 0;
-   variable LVar1 := 0;
+   variable hp_dmg := 0;
    variable LVar2 := 0;
 
    LVar0 := do_check(dude_obj, STAT_ag, -1);
@@ -1775,40 +1706,33 @@ procedure VAULT5 begin
       LVar2 := random(1, 100);
       if ((LVar2 >= 95) or is_critical(LVar0)) then begin
          display_msg(message_str(SCRIPT_RNDMTN, 132));
-         LVar1 := random(5, 15);
+         hp_dmg := random(5, 15);
          LVar2 := dude_cur_hp;
-         if (LVar1 >= LVar2) then begin
-            LVar1 := (LVar2 - 1);
+         if (hp_dmg >= LVar2) then begin
+            hp_dmg := (LVar2 - 1);
          end
          reg_anim_clear(dude_obj);
          reg_anim_begin();
             reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
             reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
-         critter_heal(dude_obj, -LVar1);
-         if (random(0, 1) == 0) then begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
-         end
-         else begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
-         end
+         critter_heal(dude_obj, -hp_dmg);
+         call breaking_legs(hp_dmg);
       end
       else begin
          display_msg(message_str(SCRIPT_RNDMTN, 133));
-         LVar1 := 5;
+         hp_dmg := 5;
          LVar2 := dude_cur_hp;
-         if (LVar1 >= LVar2) then begin
-            LVar1 := (LVar2 - 1);
+         if (hp_dmg >= LVar2) then begin
+            hp_dmg := (LVar2 - 1);
          end
          reg_anim_clear(dude_obj);
          reg_anim_begin();
             reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
             reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
-         critter_heal(dude_obj, -LVar1);
-         display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
+         critter_heal(dude_obj, -hp_dmg);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 141));
       end
    end
    else begin
@@ -1851,69 +1775,7 @@ procedure South1 begin
       call NORTH2;
    end
    else begin
-      variable LVar0 := 0;
-      variable LVar1 := 0;
-      variable LVar2 := 0;
-
-      display_msg(message_str(SCRIPT_RNDMTN, 114));
-      LVar0 := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (5 * dude_perception) ));
-      if (not(is_success(LVar0))) then begin
-         if ((random(1, 100) >= 95) or is_critical(LVar0)) then begin
-            display_msg(message_str(SCRIPT_RNDMTN, 118));
-            LVar1 := (random(7, 20) + 3);
-            LVar2 := dude_cur_hp;
-            if (LVar1 >= LVar2) then begin
-               LVar1 := (LVar2 - 1);
-            end
-
-            reg_anim_clear(dude_obj);
-            reg_anim_begin();
-               reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
-               reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
-            reg_anim_end();
-
-            critter_heal(dude_obj, -LVar1);
-            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-            critter_injure(dude_obj, DAM_CRIP_ARM_LEFT);
-            critter_injure(dude_obj, DAM_CRIP_ARM_RIGHT);
-            //display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
-            display_msg(message_str(SCRIPT_RNDMTN, 147));
-         end
-         else begin
-            display_msg(message_str(SCRIPT_RNDMTN, 117));
-            LVar1 := random(4, 16);
-            LVar2 := dude_cur_hp;
-            if (LVar1 >= LVar2) then begin
-               LVar1 := (LVar2 - 1);
-            end
-
-            reg_anim_clear(dude_obj);
-            reg_anim_begin();
-               reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
-               reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
-            reg_anim_end();
-
-            critter_heal(dude_obj, -LVar1);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 141));
-            if (random(0, 3) == 0) then begin
-               critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-               display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 139));
-            end
-            else begin
-               critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-               display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar1 + message_str(SCRIPT_RNDMTN, 140));
-            end
-         end
-      end
-      else begin
-         display_msg(message_str(SCRIPT_RNDMTN, 115));
-         if (is_critical(LVar0)) then begin
-            display_msg(message_str(SCRIPT_RNDMTN, 116));
-            critter_heal(dude_obj, random(5, 15));
-         end
-      end
-
+      call falling_from_cliff;
    end
 end
 
@@ -2079,7 +1941,7 @@ end
 procedure South6 begin
    variable LVar0 := 0;
    variable LVar1 := 0;
-   variable LVar2 := 0;
+   variable hp_dmg := 0;
 
    display_msg(message_str(SCRIPT_RNDMTN, 100));
 
@@ -2186,40 +2048,33 @@ procedure South6 begin
       LVar1 := random(1, 100);
       if (is_critical(LVar0) or (LVar1 >= 95)) then begin
          display_msg(message_str(SCRIPT_RNDMTN, 103));
-         LVar2 := (random(5, 15) + 2);
+         hp_dmg := (random(5, 15) + 2);
          LVar0 := dude_cur_hp;
-         if (LVar2 >= LVar0) then begin
-            LVar2 := (LVar0 - 1);
+         if (hp_dmg >= LVar0) then begin
+            hp_dmg := (LVar0 - 1);
          end
          reg_anim_clear(dude_obj);
          reg_anim_begin();
-         reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
-         reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
+            reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
+            reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
-         critter_heal(dude_obj, -LVar2);
-         if random(0, 1) == 0 then begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar2 + message_str(SCRIPT_RNDMTN, 139));
-         end
-         else begin
-            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
-            display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar2 + message_str(SCRIPT_RNDMTN, 140));
-         end
+         critter_heal(dude_obj, -hp_dmg);
+         call breaking_legs(hp_dmg);
       end
       else begin
          display_msg(message_str(SCRIPT_RNDMTN, 104));
-         LVar2 := (random(1, 4) + random(1, 4));
+         hp_dmg := (random(1, 4) + random(1, 4));
          LVar0 := dude_cur_hp;
-         if (LVar2 >= LVar0) then begin
-            LVar2 := (LVar0 - 1);
+         if (hp_dmg >= LVar0) then begin
+            hp_dmg := (LVar0 - 1);
          end
          reg_anim_clear(dude_obj);
          reg_anim_begin();
-         reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
-         reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
+            reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
+            reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
          reg_anim_end();
-         critter_heal(dude_obj, -LVar2);
-         display_msg(message_str(SCRIPT_RNDMTN, 138) + LVar2 + message_str(SCRIPT_RNDMTN, 141));
+         critter_heal(dude_obj, -hp_dmg);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 141));
       end
    end
 end
