@@ -1,5 +1,6 @@
 Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1in2/releases/tag/v1.3.2128))
 - **Added**: A new setting to enable tougher Super Mutants for a more challenging endgame.
+- **Added**: After killing the Deathclaws in the Boneyard, the player can now pay Zack to increase the chance of spawning special weapons (only works if Fo2-style merchant inventory restocking is enabled).
 - **Added**: All classic music tracks are now distributed with the mod, because it seems lots of folks have issues with setting it up correctly.
 - **Added**: Garret in Necropolis will now open/close the "reward fridge" when using it. Also added the missing "locked container" sfx.
 - **Added**: The HK P90 ("10mm Carbine") has a small chance to appear at the Gun Runners now.
@@ -12,10 +13,16 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Fixed**: Hero Appearance mod long hair dude pipboy image wasn't shown correctly.
 - **Fixed**: Killian wouldn't mark Necropolis on the players map after asking for locations outside. 
 - **Fixed**: Mantis would fight Spore Plants in encounter maps.
+- **Fixed**: The "Vault 13 invasion timer bug" is no more.
 - **Fixed**: The "You gain x experience points for freeing Tandi"-message will only show if the amount of experience is > 0.
+- **Fixed**: The Cautious Nature perk wasn't working with the Fo1 encounter system.
 - **Fixed**: When doing caravan jobs, the Caravan Driver and Caravan Guards would spawn new items on every game tick.
 - **Tweaked**: Added back in the "Decker must be killed"-condition to the Hub good ending.
+- **Tweaked**: All caravan jobs will only have one possible encounter now to circumvent an annoying bug that can't be fixed right now.
+- **Tweaked**: Complete quest and dialog overhaul for getting the motorcycle. It's now more streamlined and relies less on meta-knowledge.
 - **Tweaked**: Increased the chance for cave and mine encounters a bit.
+- **Tweaked**: Killing a Mantis now gives neutral karma (animals aren't "evil").
+- **Tweaked**: Necropolis invasion mutants won't be influenced by the new "Tough Mutants" setting to keep early game balance intact.
 - **Tweaked**: Removed excess items (stimpaks, psycho, caps, etc) from Garl (was a Fixt addition that changed game balance).
 - **Tweaked**: Removed weapons from Bob the pre-owned cars salesman (old Fixt addition).
 - **Tweaked**: Sfall graphics mode 4 (Dx9 fullscreen) is now the new default.
