@@ -4090,8 +4090,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4954)
 #define RESERVED_FOR_FALLOUT_FIXT               (4955)
 #define RESERVED_FOR_FALLOUT_FIXT               (4956)
-#define RESERVED_FOR_FALLOUT_FIXT               (4957)
-#define RESERVED_FOR_FALLOUT_FIXT               (4958)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4957)*/
+#define GVAR_ENEMY_GUN_RUNNERS                  (4958)
 #define GVAR_GUN_RUNNERS_BONUS                  (4959)
 #define GVAR_SEWER_KING_POS                     (4960)
 #define GVAR_ENABLE_TOUGH_MUTANTS               (4961)

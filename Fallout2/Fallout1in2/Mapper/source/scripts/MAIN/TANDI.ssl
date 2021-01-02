@@ -678,8 +678,6 @@ procedure map_enter_p_proc begin
       if (global_var(GVAR_TANDI_HIRELING_STATUS) > 1) then begin
          if ((global_var(GVAR_LOAD_MAP_INDEX) == 2) and (global_var(GVAR_TANDI_LOCATION_TRACKER) == 3)) then begin
             set_self_abandon_party;
-            inc_shady_rep(REP_BONUS_TANDI_RESCUED);
-
             if not(is_loading_game) then set_self_visible;
             critter_attempt_placement(self_obj, 22086, 0);
             set_global_var(GVAR_TANDI_LOCATION_TRACKER, 4);
@@ -726,7 +724,8 @@ procedure critter_p_proc begin
          TANDI IN SHADY SANDS
       **************************************/
       else if CUR_AREA_SHADY_SANDS then begin
-         if (global_var(GVAR_TANDI_HIRELING_STATUS) > 1) then begin
+         // I guess this is so Tandi will unequipp her weapons after returning to Shady
+         if (global_var(GVAR_TANDI_HIRELING_STATUS) > 1) and Tandi_In_Party then begin
             variable Temp_ptr := 0;
             Temp_ptr := create_object(PID_DEAD_TRAVELER, 0, 0);
             move_to(Temp_ptr, 0, 0);
@@ -746,6 +745,9 @@ procedure critter_p_proc begin
             if not(is_loading_game) then set_self_visible;
             self_run_to_tile(16710);
             set_global_var(GVAR_TANDI_LOCATION_TRACKER, 300);
+
+            // Reputation bonus for returning Tandi
+            inc_shady_rep(REP_BONUS_TANDI_RESCUED);
          end
          else if ((global_var(GVAR_TANDI_LOCATION_TRACKER) == 300) and (tile_distance(self_tile, 16710) >= 2)) then begin
             self_run_to_tile(16710);
