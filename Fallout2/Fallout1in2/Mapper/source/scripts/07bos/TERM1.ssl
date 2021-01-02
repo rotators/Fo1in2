@@ -4,8 +4,11 @@
 procedure start;
 procedure map_update_p_proc;
 procedure map_enter_p_proc;
-procedure use_term;
+procedure use_p_proc;
+procedure use_skill_on_p_proc;
 procedure look_at_p_proc;
+
+procedure use_term;
 
 import variable term1_ptr;
 import variable Vree_ptr;
@@ -25,6 +28,18 @@ procedure use_p_proc begin
    call use_term;
 end
 
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_REPAIR) then begin
+      script_overrides;
+      call use_term;
+   end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(message_str(SCRIPT_TERM, 100));
+end
+
 procedure use_term begin
    if ((source_obj == Vree_ptr) and (local_var(0) == 0)) then begin
       set_local_var(0, 1);
@@ -39,9 +54,9 @@ procedure use_term begin
          end
          else if (local_var(0) == 1) then begin
             gfade_out(1);
-            critter_mod_skill(dude_obj, SKILL_SCIENCE, 15);
-            set_local_var(0, 2);
-            game_time_advance(game_ticks(6 * 60 * 60 * 10));
+               critter_mod_skill(dude_obj, SKILL_SCIENCE, 15);
+               set_local_var(0, 2);
+               game_time_advance(game_ticks(6 * 60 * 60 * 10));
             gfade_in(1);
             display_msg(gen_mstr(116) + 15 + gen_mstr(129));
             display_msg(message_str(SCRIPT_TERM, 102));
@@ -53,7 +68,3 @@ procedure use_term begin
    end
 end
 
-procedure look_at_p_proc begin
-   script_overrides;
-   display_msg(message_str(SCRIPT_TERM, 100));
-end

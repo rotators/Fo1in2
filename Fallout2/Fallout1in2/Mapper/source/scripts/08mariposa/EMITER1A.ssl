@@ -106,14 +106,17 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure damage_p_proc begin
-   if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin
-      set_global_var(GVAR_VATS_ALERT, 1);
-      display_msg(message_str(SCRIPT_EMITER1A, 102));
-      set_emitter_destroyed
-   end
-   else begin
-      set_map_var(FField_MVAR, DISABLED);
-      if not(is_loading_game) then begin  set_obj_invisible(FField_Ptr);  end
-      display_msg(message_str(SCRIPT_EMITER1A, 101));
+   // Check if damage is to the emitter and not the terminal nearby
+   if (self_pid == PID_EMITTER_MBASE_NS or self_pid == PID_EMITTER_MBASE_EW) then begin
+      if (is_success(roll_vs_skill(dude_obj, SKILL_TRAPS, 0))) then begin
+         set_global_var(GVAR_VATS_ALERT, 1);
+         display_msg(message_str(SCRIPT_EMITER1A, 102));
+         set_emitter_destroyed
+      end
+      else begin
+         set_map_var(FField_MVAR, DISABLED);
+         if not(is_loading_game) then begin  set_obj_invisible(FField_Ptr);  end
+         display_msg(message_str(SCRIPT_EMITER1A, 101));
+      end
    end
 end
