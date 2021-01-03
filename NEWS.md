@@ -2,14 +2,19 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Added**: A new setting to enable tougher Super Mutants for a more challenging endgame.
 - **Added**: After killing the Deathclaws in the Boneyard, the player can now pay Zack to increase the chance of spawning special weapons (only works if Fo2-style merchant inventory restocking is enabled).
 - **Added**: All classic music tracks are now distributed with the mod, because it seems lots of folks have issues with setting it up correctly.
+- **Added**: Carrying a rope will now prevent the player from breaking his bones in "cliff" encounters (item will be consumed).
 - **Added**: Garret in Necropolis will now open/close the "reward fridge" when using it. Also added the missing "locked container" sfx.
+- **Added**: Lots of invisible blockers around edges in cavern map to try to prevent the game from spawning mobs outside the walls.
 - **Added**: The HK P90 ("10mm Carbine") has a small chance to appear at the Gun Runners now.
 - **Fixed**: A critical bug in the encounter system that would crash the game.
 - **Fixed**: Added missing "Combat Armor"-perk to Combat Armor and Brotherhood Armor.
 - **Fixed**: After being brought to Mariposa by Super Mutants, party members would not be moved correctly into the prison cell.
+- **Fixed**: Caps restocking was broken on some merchants.
 - **Fixed**: Dogmeat will now start out correctly with 50hp.
 - **Fixed**: Empty encounters should (hopefully) not happen anymore now. 
+- **Fixed**: Encounter Super Mutants with Laser Rifles will now spawn with MFCs instead of SECs (vanilla Fo1 bug).
 - **Fixed**: For some reason the brown bag used the normal bag graphics. Also tweaked the item stats to slightly differentiate it from the normal bag.
+- **Fixed**: Force field emitter and terminals used the same damage code which could lead to odd behavior.
 - **Fixed**: Hero Appearance mod long hair dude pipboy image wasn't shown correctly.
 - **Fixed**: Killian wouldn't mark Necropolis on the players map after asking for locations outside. 
 - **Fixed**: Mantis would fight Spore Plants in encounter maps.
@@ -20,6 +25,7 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Tweaked**: Added back in the "Decker must be killed"-condition to the Hub good ending.
 - **Tweaked**: All caravan jobs will only have one possible encounter now to circumvent an annoying bug that can't be fixed right now.
 - **Tweaked**: Complete quest and dialog overhaul for getting the motorcycle. It's now more streamlined and relies less on meta-knowledge.
+- **Tweaked**: Fixed up some more town reputation changes. Just statistics - has no real influence on the game itself.
 - **Tweaked**: Increased the chance for cave and mine encounters a bit.
 - **Tweaked**: Killing a Mantis now gives neutral karma (animals aren't "evil").
 - **Tweaked**: Necropolis invasion mutants won't be influenced by the new "Tough Mutants" setting to keep early game balance intact.
