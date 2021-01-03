@@ -62,9 +62,13 @@ procedure OfficerCombat;
 procedure OfficerEnd;
 
 variable tmp_hostile;
+
 import variable SecDoor_ptr;
 import variable armory_access;
 import variable Officer_ptr;
+
+#define LVAR_Home_Tile                  (5)
+#define LVAR_Home_Rotation              (6)
 
 procedure start begin
 end
@@ -114,6 +118,15 @@ procedure destroy_p_proc begin
 end
 
 procedure map_enter_p_proc begin
+   if (local_var(LVAR_Home_Tile) == 0) then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   else begin
+      critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+      self_rotate(local_var(LVAR_Home_Rotation));
+   end
+
    if (v13_invaded) then begin
       invasion_kill_critter_V13;
    end
