@@ -9,6 +9,7 @@ Notable changes since last release ([v1.3.2128](https://github.com/rotators/Fo1i
 - **Fixed**: A critical bug in the encounter system that would crash the game.
 - **Fixed**: Added missing "Combat Armor"-perk to Combat Armor and Brotherhood Armor.
 - **Fixed**: After being brought to Mariposa by Super Mutants, party members would not be moved correctly into the prison cell.
+- **Fixed**: After opening the armory, the guard will return correctly to his home position and rotation.
 - **Fixed**: Caps restocking was broken on some merchants.
 - **Fixed**: Dogmeat will now start out correctly with 50hp.
 - **Fixed**: Empty encounters should (hopefully) not happen anymore now. 
