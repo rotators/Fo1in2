@@ -85,7 +85,7 @@ Tweaks the costs of specific actions while using inventory.
 ### Language Pack - German ###
 [mods/fo1_german](mods/fo1_german)
 
-The german translation of FALLOUT ET TU. It's highly recommended to check README in language pack directory.
+The german translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
 
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)
