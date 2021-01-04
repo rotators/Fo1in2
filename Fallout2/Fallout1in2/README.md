@@ -41,11 +41,6 @@ MOD INSTALLATION
 
 That's it. The game can now be played!
 
-### Missing music ###
-Some digital releases of Fallout 2 use a non-default location for the music tracks; if you notice missing music during gameplay, you have two options:
-- Check where `music/` in your Fallout 2 installation folder is and change `Fallout1in2/Fallout2.cfg` setting `[sound]->music_path2` accordingly.
-- Copy all the Fallout 2 music files into the `Fallout1in2/data/sound/music/` folder.
-
 
 CONFIGURATION
 -------------
