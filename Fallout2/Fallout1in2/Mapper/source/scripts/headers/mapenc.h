@@ -19,8 +19,8 @@
 #define MVAR_CAVERN_LADDER_ELEV2       (4) // Ladder pos on elev2
 
 // The Fo2 perk "Cautious Nature" doesn't work in the Fo1 encounter system, so we build our own functionality
-// NOTE: We "secretly" double the PE bonus from 3 to 6, otherwise the effect is impossible to notice in the Fo1 encounter spawn system.
-#define dude_enc_perception            (dude_perception + (6 * dude_perk(PERK_cautious_nature_perk)))
+// NOTE: We "secretly" tripple the PE bonus from 3 to 12, otherwise the effect is impossible to notice in the Fo1 encounter spawn system.
+#define dude_enc_perception            (dude_perception + (9 * dude_perk(PERK_cautious_nature_perk)))
 
 // Cavern Type for random scenery spawn
 #define TOXIC_CAVE         (1)
