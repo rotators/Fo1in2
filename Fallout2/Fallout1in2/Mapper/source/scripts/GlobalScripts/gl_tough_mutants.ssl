@@ -15,11 +15,13 @@ procedure start;
 procedure map_enter_p_proc;
 procedure adjust_hp;
 
-#define crit_pid     obj_pid(critter)
-#define crit_max_hp  get_max_hp(critter)
+#define crit_pid           obj_pid(critter)
+#define crit_max_hp        get_max_hp(critter)
 
-#define inc_hp(x)    set_proto_data(crit_pid, PROTO_CR_BONUS_HP, x); \
-                     if map_first_run then critter_heal(critter, crit_max_hp)
+#define hp_overkill        global_var(GVAR_ENABLE_TOUGH_MUTANTS)
+
+#define inc_hp(x)          set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (x * hp_overkill)); \
+                           if map_first_run then critter_heal(critter, crit_max_hp)
 
 procedure start begin
    call adjust_hp;
@@ -34,17 +36,22 @@ procedure adjust_hp begin
    if fo1in2_tough_mutants_enabled then begin
       if (cur_map_index > MAP_DESERT0) then begin
          foreach (critter in list_as_array(LIST_CRITTERS)) begin
+            // No change to the Master, he is strong enough.
+            if (crit_pid == PID_MASTER) then begin
+               inc_hp(455); // base is 455, orig hp is 500, new hp is 500
+            end
+
             // No change to the Lou, he is strong enough with his guards.
-            //if (crit_pid == PID_LOU) then begin
-            //   inc_hp(305); // base is 205, orig hp is 250, new hp is 350
-            //end
+            else if (crit_pid == PID_LOU) then begin
+               inc_hp(205); // base is 205, orig hp is 250, new hp is 250
+            end
 
             // No change to Harry for early game balance
-            //else if (crit_pid == PID_HARRY) then begin
-            //   inc_hp(100); // base is 80, orig hp is 120, new hp is 140
-            //end
+            else if (crit_pid == PID_HARRY) then begin
+               inc_hp(80); // base is 80, orig hp is 120, new hp is 120
+            end
 
-            if (crit_pid == PID_NIGHTKIN) then begin
+            else if (crit_pid == PID_NIGHTKIN) then begin
                inc_hp(60); // base is 10, orig hp is 50, new hp is 100
             end
             else if (crit_pid == PID_NIGHTKIN_GUARD) then begin
