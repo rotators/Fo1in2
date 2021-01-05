@@ -55,16 +55,11 @@ jobs:
           echo MOD_RELEASE_TAG=$($GHA_SCRIPTS/version.sh tag) >> $GITHUB_ENV
           echo MOD_RELEASE_DRAFT=true >> $GITHUB_ENV
           echo MOD_RELEASE_PRE=$pre >> $GITHUB_ENV
+          echo MOD_RELEASE_BODY=NEWS.md >> $GITHUB_ENV
 
           if [ -f "$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png" ]; then
              sed -ri "s!^Notable changes .+!<p align=\"center\"><img src=\"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png\" alt=\"$($GHA_SCRIPTS/version.sh tag)\"/></p>!" NEWS.md
           fi
-
-          body=$(cat NEWS.md)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "MOD_RELEASE_BODY=$body" >> $GITHUB_ENV
 
   - name: Update version info
     run:  |
@@ -153,7 +148,7 @@ jobs:
      tag_name:     ${{ env.MOD_RELEASE_TAG }}
      draft:        ${{ env.MOD_RELEASE_DRAFT }}
      prerelease:   ${{ env.MOD_RELEASE_PRE }}
-     body:         ${{ env.MOD_RELEASE_BODY }}
+     body_path:    ${{ env.MOD_RELEASE_BODY }}
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
@@ -168,4 +163,6 @@ jobs:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
   - name: Show release
-    run:  echo "${{ steps.release.outputs.html_url }}"
+    run:  |
+          :
+          echo "${{ steps.release.outputs.html_url }}"
