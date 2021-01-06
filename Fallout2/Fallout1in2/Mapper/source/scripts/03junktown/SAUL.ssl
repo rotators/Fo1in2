@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "junktown.h"
 
 #define NAME                    SCRIPT_SAUL
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -77,6 +77,13 @@ variable whose_turn;
 
 #define LVAR_Sleeping                     (4)
 
+#define fighting_hex          (15094)
+#define outside_hex           (16892)
+
+#define EVENT_FIGHT           (1)
+#define EVENT_WON             (2)
+#define EVENT_LOST            (3)
+
 procedure start begin
 
 end
@@ -113,7 +120,7 @@ procedure critter_p_proc begin
             else begin
                call create_challenger;
             end
-            add_timer_event(self_obj, game_ticks(1), 1);
+            add_timer_event(self_obj, game_ticks(1), EVENT_FIGHT);
          end
       end
       if (sleeping_disabled == 0) then begin
@@ -136,7 +143,7 @@ procedure description_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   set_global_var(GVAR_SAUL_STATUS, 3);
+   set_saul_is_dead;
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
       set_global_var(GVAR_DUDE_ENEMY_JUNK_BOXER, 1);
@@ -170,10 +177,10 @@ procedure map_enter_p_proc begin
    if (CUR_MAP_JUNKCSNO) then begin
       sleep_tile := 7000;
       if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
-         home_tile := 15094;
+         home_tile := fighting_hex;
       end
       else begin
-         home_tile := 16892;
+         home_tile := outside_hex;
       end
    end
 
@@ -189,10 +196,10 @@ procedure map_update_p_proc begin
    if (not(combat_is_initialized)) then begin
 
       if ((GAME_TIME_IN_DAYS % 3) == 0) then begin
-         home_tile := 15094;
+         home_tile := fighting_hex;
       end
       else begin
-         home_tile := 16892;
+         home_tile := outside_hex;
       end
 
       move_to(self_obj, home_tile, 0);
@@ -233,18 +240,13 @@ procedure talk_p_proc begin
          end
       end
    end
-
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 32) and (global_var(GVAR_TRISH_STATUS) bwand 8) and (global_var(GVAR_TRISH_STATUS) bwand 16)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 32);
-      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
-      give_xp_msg(EXP_TRISH_SAUL_RELATIONSHIP, message_str(SCRIPT_TRISH, 173));
-   end
+   check_relationship_saved;
 end
 
 procedure timed_event_p_proc begin
    if (challenger_ptr != 0) then begin
 
-      if (fixed_param == 1) then begin
+      if (fixed_param == EVENT_FIGHT) then begin
          if (obj_pid(challenger_ptr) == PID_RADSCORPION) then begin
             if (random(0, 4) == 0) then begin
                whose_turn := 1;
@@ -263,12 +265,10 @@ procedure timed_event_p_proc begin
          end
          call SaulBoxing;
       end
-
-      else if (fixed_param == 2) then begin
+      else if (fixed_param == EVENT_WON) then begin
          Saul_wins := 1;
       end
-
-      else if (fixed_param == 3) then begin
+      else if (fixed_param == EVENT_LOST) then begin
          Saul_loses := 1;
          set_local_var(8, 1);
       end
@@ -436,10 +436,10 @@ procedure Saul16 begin
 end
 
 procedure Saul17 begin
-   set_global_var(GVAR_SAUL_STATUS, 2);
+   set_saul_mentioned_trish;
    Reply(157);
    NOption(158, Saul18, 4);
-   if ((global_var(GVAR_TRISH_STATUS) bwand 1) or (global_var(GVAR_TRISH_STATUS) bwand 4) and not(global_var(GVAR_TRISH_STATUS) bwand 64)) then begin
+   if (get_trish_state(DUDE_KNOWS_TRISH) or get_trish_state(DUDE_TALKED_WITH_TRISH)) and not(get_trish_state(TRISH_IS_DEAD)) then begin
       NOption(159, Saul20, 5);
    end
    Goodbyes;
@@ -482,20 +482,26 @@ procedure Saul19 begin
 end
 
 procedure Saul20 begin
-   set_global_var(GVAR_SAUL_STATUS, 2);
+   set_saul_mentioned_trish;
    if (local_var(LVAR_reaction_level) == BAD) then begin
       Reply(169);
    end
    else begin
-      if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
+      if get_trish_state(SAUL_CARES) and get_trish_state(TRISH_CONCERNED) then begin
+         Reply(mstr(160));
+         if (dude_iq >= 6) then
+            GOption(172, Saul21, 6);
+         else
+            NOption(173, Saul22, 4);
+      end
+      else if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0)))  then begin
+         set_trish_state(SAUL_CARES);
          Reply(mstr(170) + mstr(171));
-         if ((global_var(GVAR_TRISH_STATUS) bwand 2) or (global_var(GVAR_TRISH_STATUS) bwand 8)) then begin
-            if (dude_iq >= 6) then begin
+         if get_trish_state(TRISH_CONCERNED) then begin
+            if (dude_iq >= 6) then
                GOption(172, Saul21, 6);
-            end
-            else begin
+            else
                NOption(173, Saul22, 4);
-            end
          end
       end
       else begin
@@ -508,9 +514,7 @@ end
 
 procedure Saul21 begin
    UpReact
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 16)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 16);
-   end
+   set_trish_state(SAUL_UNDERSTANDS_TRISH);
    GMessage(176);
 end
 
@@ -533,8 +537,13 @@ procedure Saul23 begin
       Reply(181);
    end
    BOption(182, Saul08a, 4);
-   if ((global_var(GVAR_TRISH_STATUS) bwand 1) or (global_var(GVAR_TRISH_STATUS) bwand 4) and ((global_var(GVAR_TRISH_STATUS) bwand 2) or (global_var(GVAR_TRISH_STATUS) bwand 8)) and not(global_var(GVAR_TRISH_STATUS) bwand 16) and not(global_var(GVAR_TRISH_STATUS) bwand 64)) then begin
-      NOption(183, Saul20, 4);
+   if not(get_trish_state(RELATIONSHIP_SAVED)) then begin
+      /*if get_trish_state(DUDE_TALKED_WITH_TRISH) and not(saul_mentioned_trish) then begin
+         NOption(200, Saul20, 4);
+      end
+      else*/ if get_trish_state(DUDE_TALKED_WITH_TRISH) and get_trish_state(TRISH_CONCERNED) and get_trish_state(TRISH_UNDERSTANDS_SAUL) and not(get_trish_state(TRISH_IS_DEAD)) then begin
+         NOption(183, Saul20, 4);
+      end
    end
    if (not(local_var(5))) then begin
       NOption(184, Saul13, 4);
@@ -560,17 +569,17 @@ procedure SaulBoxing begin
          if (challenger_hits >= (get_endurance(challenger_ptr) * 2)) then begin
             reg_anim_animate(challenger_ptr, ANIM_fall_back, 4);
             reg_anim_animate(challenger_ptr, ANIM_fall_back_sf, -1);
-            add_timer_event(self_obj, game_ticks(2), 2);
+            add_timer_event(self_obj, game_ticks(2), EVENT_WON);
          end
          else begin
             reg_anim_animate(challenger_ptr, ANIM_hit_from_front, 4);
             challenger_hits := challenger_hits + 1;
-            add_timer_event(self_obj, game_ticks(random(1, 2)), 1);
+            add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
          end
       end
       else begin
          reg_anim_animate(challenger_ptr, ANIM_dodge_anim, 4);
-         add_timer_event(self_obj, game_ticks(random(1, 2)), 1);
+         add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
       end
       reg_anim_end();
    end
@@ -582,17 +591,17 @@ procedure SaulBoxing begin
          if (Saul_hits >= (self_endurance * 2)) then begin
             reg_anim_animate(self_obj, ANIM_fall_back, 4);
             reg_anim_animate(self_obj, ANIM_fall_back_sf, -1);
-            add_timer_event(self_obj, game_ticks(2), 3);
+            add_timer_event(self_obj, game_ticks(2), EVENT_LOST);
          end
          else begin
             reg_anim_animate(self_obj, ANIM_hit_from_front, 4);
             Saul_hits := Saul_hits + 1;
-            add_timer_event(self_obj, game_ticks(random(1, 2)), 1);
+            add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
          end
       end
       else begin
          reg_anim_animate(self_obj, ANIM_dodge_anim, 4);
-         add_timer_event(self_obj, game_ticks(random(1, 2)), 1);
+         add_timer_event(self_obj, game_ticks(random(1, 2)), EVENT_FIGHT);
       end
       reg_anim_end();
    end
@@ -607,6 +616,6 @@ procedure SaulEnd begin
 end
 
 procedure Saul_UpReact begin
-   set_local_var(LVAR_reaction, local_var(LVAR_reaction) + NORMAL_BOOST);
+   UpReact
    ReactToLevel
 end
