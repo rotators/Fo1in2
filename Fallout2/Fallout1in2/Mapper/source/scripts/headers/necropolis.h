@@ -36,7 +36,25 @@
                                             if (get_necropolis_days_left > 30 and get_necropolis_days_left < 10000) then begin    \
                                                 set_global_var(GVAR_NECROPOLIS_INVASION_DAYS, ((game_time / ONE_GAME_DAY) + 30)); \
                                             end                                                                                   \
-                                        end
+                                        end                                                                                       \
+                                        noop
+
+// Super Mutants are leaving after the Vats are destroyed
+#define sm_wp_1         (13128)
+#define sm_wp_2         (10162)
+
+#define sm_leave_watershed \
+   if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile != sm_wp_1)) then               \
+      self_walk_to_tile(sm_wp_1);                                                                     \
+   else if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile == sm_wp_1)) then          \
+      set_global_var(GVAR_WATERSHED_MUTANTS_LEAVE, 2);                                                \
+   else if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 2) and (self_tile != sm_wp_2)) then          \
+      self_walk_to_tile(sm_wp_2);                                                                     \
+   else if ((self_tile == sm_wp_2) and (global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 2)) then begin    \
+      if not(is_loading_game) then set_self_invisible;                                                \
+   end                                                                                                \
+   noop
+
 
 // Car related defines
 #define set_car_used_first_time         if (global_var(GVAR_QUEST_MOTORCYCLE) < 20) then \
@@ -52,12 +70,6 @@
                                         end
 #define set_trunk_visible               if get_car_used then set_obj_visibility(Trunk_Ptr,0)
 #define set_trunk_invisible             if get_car_used then set_obj_visibility(Trunk_Ptr,1)
-
-// Find the fuel cell controler without Griffith:
-#define STATE_HIDDEN             0
-#define STATE_SPOTTED            1
-#define STATE_TAKEN_DUDE         2
-#define STATE_TAKEN_GRIFFITH     3
 
 /************************************************
     "Tell Me About"-Defines
