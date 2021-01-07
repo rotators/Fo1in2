@@ -131,7 +131,9 @@ procedure TandiEndSDU;
                                           add_timer_event(self_obj, game_ticks(1), 2);                        \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_tandi      ((dude_at_max_party_size == false) and (Tandi_In_Party == false))
+
 #define EVENT_FLOAT_JOIN   (2)
+#define EVENT_FLOAT_INJURED               (3)
 
 procedure Node998 begin
 end
@@ -147,6 +149,18 @@ end
 procedure timed_event_p_proc begin
    if (fixed_param == EVENT_FLOAT_JOIN) then begin
       debug("Tandi is joining!");
+   end if (fixed_param == EVENT_FLOAT_INJURED) then begin
+      if not(combat_is_initialized) and self_visible then begin
+         if (Tandi_ptr != 0) then begin
+            if (Is_Crippled(self_obj)) then
+               floater(3500);
+            /*else if (self_rads) then
+               floater(3501);*/
+            else if (get_poison(self_obj)) then
+               floater(3502);
+         end
+      end
+      add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
    end
 end
 
@@ -688,6 +702,7 @@ procedure map_enter_p_proc begin
          end
       end
    end
+   add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
 end
 
 procedure critter_p_proc begin

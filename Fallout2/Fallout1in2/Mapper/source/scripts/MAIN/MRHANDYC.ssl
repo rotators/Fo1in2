@@ -12,6 +12,7 @@
 #include "modreact.h"
 
 procedure start;
+procedure push_p_proc;
 procedure combat_p_proc;
 procedure critter_p_proc;
 procedure description_p_proc;
@@ -20,7 +21,6 @@ procedure use_skill_on_p_proc;
 procedure use_obj_on_p_proc;
 procedure destroy_p_proc;
 procedure damage_p_proc;
-procedure push_p_proc;
 
 import variable field_change;
 
@@ -86,8 +86,10 @@ variable tmp_hostile := 0;
                                           add_timer_event(self_obj, game_ticks(1), 2);                        \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_handy      fo1in2_party_limit_disabled or ((dude_at_max_party_size == false) and (MrHandyC_In_Party == false))
+
 #define EVENT_FLOAT_JOIN                  (2)
 #define EVENT_CALIBRATE                   (3)
+#define EVENT_FLOAT_INJURED               (4)
 
 #define handy_is_fixed                    ((local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 1))
 
@@ -109,6 +111,9 @@ end
 procedure Node999 begin
 end
 
+procedure start begin
+end
+
 procedure push_p_proc begin
    if (MrHandyC_In_Party == false) then begin
       script_overrides;
@@ -125,12 +130,15 @@ procedure timed_event_p_proc begin
    else if (fixed_param == EVENT_CALIBRATE) then begin
       if (random(0, 1) == 1) then
          float_handy(random(1004, 1006));
+   end if (fixed_param == EVENT_FLOAT_INJURED) then begin
+      if not(combat_is_initialized) and self_visible then begin
+         if (Handy_ptr != 0) then begin
+            if (Is_Crippled(self_obj)) then
+               floater(3500);
+         end
+      end
+      add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
    end
-end
-
-
-procedure start begin
-
 end
 
 procedure map_enter_p_proc begin
@@ -147,6 +155,7 @@ procedure map_enter_p_proc begin
          set_local_var(LVAR_DECLINED_REPROGRAMMING, 0);
       end
    end
+   add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
 end
 
 procedure damage_p_proc begin
