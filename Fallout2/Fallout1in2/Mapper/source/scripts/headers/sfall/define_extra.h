@@ -2,6 +2,9 @@
 #ifndef DEFINE_EXTRA_H
 #define DEFINE_EXTRA_H
 
+/* Combat Flags */
+#define DAM_PRESERVE_FLAGS  0x80000000 // keep the existing result flags when setting new flags in attack_complex (for sfall)
+
 #define BODY_HIT_HEAD       (0)
 #define BODY_HIT_LEFT_ARM   (1)
 #define BODY_HIT_RIGHT_ARM  (2)
@@ -102,10 +105,11 @@
 #define CFLG_NOKNOCKDOWN    CFLG_NOKNOCKBACK  // obsolete
 
 /* Window flags */
-#define WIN_FLAG_MOVEONTOP          (0x4)
-#define WIN_FLAG_HIDDEN             (0x8)
+#define WIN_FLAG_DONTMOVE           (0x2) // does not move the window to the foreground when clicking on the window
+#define WIN_FLAG_MOVEONTOP          (0x4) // places the window on top of other windows
+#define WIN_FLAG_HIDDEN             (0x8) // hidden window
 #define WIN_FLAG_EXCLUSIVE         (0x10)
-#define WIN_FLAG_TRANSPARENT       (0x20)
+#define WIN_FLAG_TRANSPARENT       (0x20) // transparent window flag, the window color with index 0 will be transparent
 
 /* Message window flags */
 #define MSGBOX_AUTOSIZE             (0x0)
@@ -414,9 +418,11 @@
 #define C_ATTACK_SOURCE             (0x00)
 #define C_ATTACK_HIT_MODE           (0x04)
 #define C_ATTACK_WEAPON             (0x08)
+#define C_ATTACK_UNUSED             (0x0C)
 #define C_ATTACK_DAMAGE_SOURCE      (0x10) // Amount
 #define C_ATTACK_FLAGS_SOURCE       (0x14) // see DAM_* values in define.h
 #define C_ATTACK_ROUNDS             (0x18)
+#define C_ATTACK_MESSAGE            (0x1C) // message number set from the critical table
 #define C_ATTACK_TARGET             (0x20)
 #define C_ATTACK_BODY_PART          (0x28)
 #define C_ATTACK_DAMAGE_TARGET      (0x2C) // Amount
@@ -454,5 +460,20 @@
 #define C_ATTACK_KNOCKBACK_VALUE4   (0xAC)
 #define C_ATTACK_KNOCKBACK_VALUE5   (0xB0)
 #define C_ATTACK_KNOCKBACK_VALUE6   (0xB4)
+
+/* Playback mode defines for the soundplay function */
+#define soundraw        (0x80000000) // sfall flag
+#define Stereo8bit      (soundstereo)
+#define Stereo8bitLoop  (soundstereo bwor soundloop)
+#define Mono16bit       (sound16bit)
+#define Mono16bitLoop   (sound16bit bwor soundloop)
+#define Stereo16bit     (soundstereo bwor sound16bit)
+#define Stereo16bitLoop (soundstereo bwor sound16bit bwor soundloop)
+
+// Adjust (reduce) volume for soundplay and play_sfall_sound
+// range: 0x0000XXXX (max volume) - 0x7FFFXXXX (mute)
+#define SoundVolume25   (0x20000000)
+#define SoundVolumeHalf (0x40000000)
+#define SoundVolume75   (0x60000000)
 
 #endif // DEFINE_EXTRA_H
