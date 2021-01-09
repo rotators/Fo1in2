@@ -45,13 +45,14 @@ variable
 
 procedure Choose_Encounter begin
    variable
-      val := Random(1, 6),
+      val := Random(1, 7),
       rnd_chest := random(1, 100),
       rnd_critter;
 
+   // val is +1 to get the chance of spawning nothing in a cave
    // Do not spawn wild dogs in toxic cave!
-   if (val == 6 and cave_is_toxic) then begin
-      val := Random(1, 5);
+   while (val == 6 and cave_is_toxic) do begin
+      val := Random(1, 7);
    end
 
    if (rnd_chest < 50 and (stat_success(dude_obj, STAT_lu, 0))) then
