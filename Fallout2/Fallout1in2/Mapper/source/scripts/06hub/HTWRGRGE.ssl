@@ -6,7 +6,7 @@
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "maps/hubheigt.h"
 
 #define NAME                    SCRIPT_HTWRGRGE
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_HUB)
@@ -37,6 +37,8 @@ procedure George07;
 procedure George08;
 procedure GeorgeEnd;
 
+import variable George_ptr;
+
 variable tmp_hostile;
 variable Only_Once := 1;
 variable lastTraverse;
@@ -44,27 +46,33 @@ variable currentLocation;
 variable hereBefore;
 variable visible := 1;
 
+#define LVAR_Investigate            (4)
+
+#define door_hex           (22529)
+#define step_away_hex      (19516)
+#define investigate_hex    (24916)
+
 procedure start begin
+   George_ptr := self_obj;
+
    if Only_Once then begin
       Only_Once := 0;
-      set_map_var(3, 0);
+      set_map_var(MVAR_Let_Player_Through, 0);
       if (global_var(GVAR_KILL_MERCHANT) == 5) then begin
          if not(is_loading_game) then set_self_invisible;
          visible := 0;
-         set_map_var(3, 1);
+         set_map_var(MVAR_Let_Player_Through, 1);
       end
       set_self_team(TEAM_HUB_HEIGHTS);
       set_self_ai(AI_GUARD_SADISTIC);
    end
 end
 
-procedure combat
-begin
+procedure combat begin
    tmp_hostile := 1;
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (visible == 0) then begin
       script_overrides;
    end
@@ -73,52 +81,64 @@ begin
          tmp_hostile := 0;
          attack(dude_obj);
       end
-      if (map_var(5) == 1) then begin
+      if (map_var(MVAR_Hightower_Hostile) == 1) then begin
          if (/*(self_can_hear_dude) or*/ (self_can_see_dude)) then begin
             call combat;
          end
       end
       else begin
-         if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
-            if (/*(self_can_hear_dude) or*/ (self_can_see_dude)) then begin
-               dialogue_system_enter;
-            end
-            else begin
-               if ((global_var(GVAR_KILL_MERCHANT) == 1) or (global_var(GVAR_STEAL_NECKLACE) == 1)) then begin
-                  set_map_var(3, 1);
-                  if (((game_time / 10) - lastTraverse) >= 20) then begin
-                     lastTraverse := game_time / 10;
-                     if (currentLocation == 0) then begin
-                        currentLocation := 1;
-                        self_walk_to_tile(19516);
-                     end
-                     else begin
-                        currentLocation := 0;
-                        self_walk_to_tile(22529);
-                     end
-                  end
-               end
-               else begin
-                  if (self_tile != 22529) then begin
-                     self_walk_to_tile(22529);
-                  end
-               end
+         if (local_var(LVAR_Investigate) == 1) then begin
+            self_run_to_tile(investigate_hex);
+            if (self_tile == investigate_hex) then begin
+               set_local_var(LVAR_Investigate, 0);
             end
          end
          else begin
-            if (self_tile != 22529) then begin
-               self_walk_to_tile(22529);
+            if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
+               if (/*(self_can_hear_dude) or*/ (self_can_see_dude)) then begin
+                  dialogue_system_enter;
+               end
+               else begin
+                  if ((global_var(GVAR_KILL_MERCHANT) == 1) or (global_var(GVAR_STEAL_NECKLACE) == 1)) then begin
+                     set_map_var(MVAR_Let_Player_Through, 1);
+                     if (((game_time / 10) - lastTraverse) >= 20) then begin
+                        lastTraverse := game_time / 10;
+                        if (currentLocation == 0) then begin
+                           currentLocation := 1;
+                           self_walk_to_tile(step_away_hex);
+                        end
+                        else begin
+                           currentLocation := 0;
+                           self_walk_to_tile(door_hex);
+                        end
+                     end
+                  end
+                  else begin
+                     if (self_tile != door_hex) then begin
+                        self_walk_to_tile(door_hex);
+                     end
+                  end
+               end
             end
-            if (map_var(2) == 1) then begin
-               dialogue_system_enter;
+            else begin
+               if (self_tile != door_hex) then begin
+                  self_walk_to_tile(door_hex);
+               end
+               if (map_var(MVAR_Player_Tried_Door) == 1) then begin
+                  dialogue_system_enter;
+               end
             end
+
          end
       end
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure timed_event_p_proc begin
+   set_local_var(LVAR_Investigate, 1);
+end
+
+procedure pickup_p_proc begin
    if (source_obj == dude_obj) then begin
       tmp_hostile := 1;
    end
@@ -126,7 +146,7 @@ end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_HUBHEIGT);
-   
+
    dude_look_at_self;
    get_reaction
    if ((game_time_hour >= 1900) or (game_time_hour < 600)) then begin
@@ -138,42 +158,37 @@ procedure talk_p_proc begin
          float_msg(self_obj, mstr(120), FLOAT_MSG_RED);
          call combat;
       end
+      else if (map_var(MVAR_Player_Tried_Door) == 1) then begin
+         set_map_var(MVAR_Player_Tried_Door, 0);
+         call George08;
+      end
       else begin
-         if (map_var(2) == 1) then begin
-            set_map_var(2, 0);
-            call George08;
+         if (hereBefore == 0) then begin
+            hereBefore := 1;
+            start_dialog_at_node(George01);
          end
          else begin
-            if (hereBefore == 0) then begin
-               hereBefore := 1;
-               start_dialog_at_node(George01);
-            end
-            else begin
-               call George07;
-            end
+            call George07;
          end
       end
    end
 end
 
 procedure destroy_p_proc begin
-   set_map_var(4, 1);
+   set_map_var(MVAR_George_Dead, 1);
    inc_good_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure damage_p_proc
-begin
-   set_map_var(5, 1);
+procedure damage_p_proc begin
+   set_map_var(MVAR_Hightower_Hostile, 1);
 end
 
-procedure George01
-begin
+procedure George01 begin
    Reply(101);
    NOption(103, George01a, 4);
    NOption(104, George01b, 4);
@@ -181,8 +196,7 @@ begin
    NLowOption(102, George06);
 end
 
-procedure George01a
-begin
+procedure George01a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -10))) then begin
       call George03;
    end
@@ -191,8 +205,7 @@ begin
    end
 end
 
-procedure George01b
-begin
+procedure George01b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 10))) then begin
       call George05;
    end
@@ -201,8 +214,7 @@ begin
    end
 end
 
-procedure George02
-begin
+procedure George02 begin
    Reply(106);
    NOption(107, George02a, 4);
    NOption(108, George06, 4);
@@ -210,8 +222,7 @@ begin
    NOption(110, GeorgeEnd, 4);
 end
 
-procedure George02a
-begin
+procedure George02a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call George03;
    end
@@ -220,38 +231,31 @@ begin
    end
 end
 
-procedure George03
-begin
-   set_map_var(3, 1);
+procedure George03 begin
+   set_map_var(MVAR_Let_Player_Through, 1);
    NMessage(111);
 end
 
-procedure George04
-begin
+procedure George04 begin
    BMessage(112);
 end
 
-procedure George05
-begin
-   set_map_var(3, 1);
+procedure George05 begin
+   set_map_var(MVAR_Let_Player_Through, 1);
    NMessage(113);
 end
 
-procedure George06
-begin
+procedure George06 begin
    BMessage(114);
 end
 
-procedure George07
-begin
+procedure George07 begin
    float_msg(self_obj, mstr(random(114, 117)), FLOAT_MSG_RED);
 end
 
-procedure George08
-begin
+procedure George08 begin
    float_msg(self_obj, mstr(119), FLOAT_MSG_RED);
 end
 
-procedure GeorgeEnd
-begin
+procedure GeorgeEnd begin
 end
