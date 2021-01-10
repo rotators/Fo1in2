@@ -4,8 +4,8 @@
 
 */
 
-#ifndef LAADYTUM_H
-#define LAADYTUM_H
+#ifndef MAP_GLOW2_H
+#define MAP_GLOW2_H
 
 /************************************************
     Generic Defines
@@ -19,6 +19,6 @@
 #define MVAR_Fixt_PLACEHOLDER_3  (4) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4  (5) //  Adding for ass-covering and future-proofing
 
-#endif // LAADYTUM_H
+#endif // MAP_GLOW2_H
 
 

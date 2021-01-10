@@ -4,8 +4,8 @@
 
 */
 
-#ifndef LAADYTUM_H
-#define LAADYTUM_H
+#ifndef VAULTENT_h
+#define VAULTENT_h
 
 /************************************************
     Generic Defines
@@ -20,6 +20,6 @@
 #define MVAR_Fixt_PLACEHOLDER_3   (5) //  Adding for ass-covering and future-proofing
 #define MVAR_Fixt_PLACEHOLDER_4   (6) //  Adding for ass-covering and future-proofing
 
-#endif // LAADYTUM_H
+#endif // VAULTENT_h
 
 
