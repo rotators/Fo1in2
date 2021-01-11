@@ -111,10 +111,10 @@ procedure BethEnd;
 procedure Get_Stuff;
 procedure Put_Stuff;
 
-#define LVAR_Restock_Timer (16)
-#define LVAR_Caps_Amount     (17)
+#define LVAR_Restock_Timer    (16)
+#define LVAR_Caps_Amount      (17)
 
-#define RESTOCK_TIME             (GAME_TIME_IN_DAYS + 5)
+#define RESTOCK_TIME                (GAME_TIME_IN_DAYS + 5)
 
 #ifndef barter_mod_initial
    #define barter_mod_initial       (25)    // vanilla : -10
@@ -122,6 +122,8 @@ procedure Put_Stuff;
 #ifndef barter_mod_discount
    #define barter_mod_discount      (15)    // vanilla : 5
 #endif
+
+#define caps_amount                 floor((1000 + random(0, 1000)) * caps_modifier)
 
 import variable Sid_Ptr;
 import variable Beth_Ptr;
@@ -162,14 +164,8 @@ procedure talk_p_proc begin
    dude_look_at_self;
    call Get_Stuff;
    get_reaction
-   if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Timer)) >= 1) or (local_var(LVAR_Restock_Timer) == 0)) then begin
-      set_local_var(LVAR_Restock_Timer, RESTOCK_TIME);
-      set_local_var(LVAR_Caps_Amount, 1000 + random(0, 1000));
-      self_caps_adjust(local_var(LVAR_Caps_Amount));
-   end
-   else begin
-      self_caps_adjust(local_var(LVAR_Caps_Amount));
-   end
+   fo1_caps_restock;
+
    if (map_var(MVAR_FGT_DISCOUNT) == 1) then begin
       gdialog_set_barter_mod(barter_mod_discount);
    end

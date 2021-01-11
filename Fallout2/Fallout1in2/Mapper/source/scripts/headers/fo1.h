@@ -494,6 +494,16 @@ variable merch_slot_armor_flags;
                                         set_flags(merch_slot_armor, merch_slot_armor_flags);            \
                                     destroy_object(tmp_merch_box)
 
+// Used to reduce the amount of caps a merchant spawns
+#define caps_modifier               (0.5)
+
+#define fo1_caps_restock \
+   if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Timer)) >= 1) or (local_var(LVAR_Restock_Timer) == 0)) then begin \
+      set_local_var(LVAR_Restock_Timer, RESTOCK_TIME);   \
+      set_local_var(LVAR_Caps_Amount, caps_amount);      \
+   end                                                   \
+   self_caps_adjust(local_var(LVAR_Caps_Amount))
+
 /*********************************************************
                         THE END
 *********************************************************/

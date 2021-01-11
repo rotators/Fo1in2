@@ -39,14 +39,16 @@ variable Only_Once := 1;
 
 import variable Mitch_Box_Ptr;
 
-#define LVAR_Restock_Timer (4)
-#define LVAR_Caps_Amount     (5)
+#define LVAR_Restock_Timer    (4)
+#define LVAR_Caps_Amount      (5)
 
 #define RESTOCK_TIME             (GAME_TIME_IN_DAYS + 5)
 
 #ifndef barter_mod_initial
-   #define barter_mod_initial       (25)    // vanilla : 0
+   #define barter_mod_initial    (25)    // vanilla : 0
 #endif
+
+#define caps_amount              floor((1000 + random(0, 500)) * caps_modifier)
 
 procedure start begin
    if Only_Once then begin
@@ -80,15 +82,7 @@ procedure talk_p_proc begin
    gdialog_set_barter_mod(barter_mod_initial);
    call Get_Stuff;
    get_reaction
-
-   if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Timer)) >= 1) or (local_var(LVAR_Restock_Timer) == 0)) then begin
-      set_local_var(LVAR_Restock_Timer, RESTOCK_TIME);
-      set_local_var(LVAR_Caps_Amount, 1000 + random(0, 500));
-      self_caps_adjust(local_var(LVAR_Caps_Amount));
-   end
-   else begin
-      self_caps_adjust(local_var(LVAR_Caps_Amount));
-   end
+   fo1_caps_restock;
 
    start_dialog_at_node(Merchant00);
 

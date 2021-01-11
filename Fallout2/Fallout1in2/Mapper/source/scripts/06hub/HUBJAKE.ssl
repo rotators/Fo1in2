@@ -56,7 +56,7 @@ import variable Jake_Desk_Ptr;
 
 #define LVAR_Here_Before      (4)
 #define LVAR_Hostile          (5)
-#define LVAR_Restock_Time     (6)
+#define LVAR_Restock_Timer    (6)
 #define LVAR_Caps_Amount      (7)
 #define LVAR_CheckedSelection (8)
 #define LVAR_GeigerCounter    (9)
@@ -64,8 +64,10 @@ import variable Jake_Desk_Ptr;
 #define RESTOCK_TIME             (GAME_TIME_IN_DAYS + 5)
 
 #ifndef barter_mod_initial
-   #define barter_mod_initial       (30)    // vanilla : -15
+   #define barter_mod_initial    (30)    // vanilla : -15
 #endif
+
+#define caps_amount              floor((2000 + random(0, 1000)) * caps_modifier)
 
 procedure start begin
    if Only_Once then begin
@@ -102,15 +104,7 @@ procedure talk_p_proc begin
    gdialog_set_barter_mod(barter_mod_initial);
    call Get_Stuff;
    get_reaction
-
-   if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Time)) >= 1) or (local_var(LVAR_Restock_Time) == 0)) then begin
-      set_local_var(LVAR_Restock_Time, RESTOCK_TIME);
-      set_local_var(LVAR_Caps_Amount, 2000 + random(0, 1000));
-      self_caps_adjust(local_var(LVAR_Caps_Amount));
-   end
-   else begin
-      self_caps_adjust(local_var(LVAR_Caps_Amount));
-   end
+   fo1_caps_restock;
 
    if (local_var(LVAR_Hostile) == 1) then begin
       call combat;
