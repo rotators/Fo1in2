@@ -1,8 +1,12 @@
 name: Package
 
 on:
- repository_dispatch:
-  types: [package-prerelease, package-release]
+ workflow_dispatch:
+  inputs:
+   release:
+    description: 'Release [true/false]'
+    default:     'false'
+    required:    true
 
 defaults:
  run:
@@ -10,6 +14,7 @@ defaults:
 
 env:
  GHA_SCRIPTS: ".github/workflows/scripts"
+ RELEASE_PICS: "Resources/Gallery/releases"
 
 jobs:
 
@@ -17,8 +22,7 @@ jobs:
   runs-on: windows-latest
   env:
    MOD_DIR:            "Fallout2/Fallout1in2"
-   MOD_RELEASE_NAME:   "Fallout1in2"
-   MOD_VERSION_STRING: "FALLOUT ET TU v1.2.@COMMITS@"
+   MOD_RELEASE_ZIP:    "Fallout1in2.zip"
   steps:
 
   - name: Clone
@@ -31,31 +35,37 @@ jobs:
     run:  |
           :
           event="${{ github.event_name }}"
-          if [ "$event" == "repository_dispatch" ]; then
-             event="${event}:${{ github.event.action }}"
+          if [ "$event" == "workflow_dispatch" ]; then
+             if [ "${{ github.event.inputs.release }}" == "true" ]; then
+                event="${event}:release"
+             fi
           fi
 
           pre=
-          if   [ "$event" == "repository_dispatch:package-prerelease" ]; then
+          if   [ "$event" == "workflow_dispatch" ]; then
                pre=true
-          elif [ "$event" == "repository_dispatch:package-release" ]; then
+          elif [ "$event" == "workflow_dispatch:release" ]; then
                pre=false
           else
                echo "[ERROR] unknown event<$event>"
                exit 1
           fi
 
-          commits="$(git rev-list HEAD --count)"
-          echo ::set-env name=MOD_RELEASE_TAG::v1.2.${commits}
-          echo ::set-env name=MOD_RELEASE_DRAFT::true
-          echo ::set-env name=MOD_RELEASE_PRE::$pre
-          echo ::set-env name=MOD_RELEASE_BODY::$(cat NEWS.md)
+          echo MOD_RELEASE_NAME=$($GHA_SCRIPTS/version.sh release) >> $GITHUB_ENV
+          echo MOD_RELEASE_TAG=$($GHA_SCRIPTS/version.sh tag) >> $GITHUB_ENV
+          echo MOD_RELEASE_DRAFT=true >> $GITHUB_ENV
+          echo MOD_RELEASE_PRE=$pre >> $GITHUB_ENV
+          echo MOD_RELEASE_BODY=NEWS.md >> $GITHUB_ENV
+
+          if [ -f "$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png" ]; then
+             sed -ri "s!^Notable changes .+!<p align=\"center\"><img src=\"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$(echo "$GITHUB_REF" | awk -F / '{print $3}')/$RELEASE_PICS/release_v$($GHA_SCRIPTS/version.sh raw).png\" alt=\"$($GHA_SCRIPTS/version.sh tag)\"/></p>\\n!" NEWS.md
+          fi
 
   - name: Update version info
     run:  |
           :
           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
-          $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING"
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Misc --key=VersionString --val="$($GHA_SCRIPTS/version.sh game)"
 
   - name: Cleanup
     run:  |
@@ -65,8 +75,8 @@ jobs:
           rm -f  $MOD_DIR/ddraw.*.dll
           rm -f  $MOD_DIR/ddraw.*.ini
           rm -f  $MOD_DIR/mods/fo1_base/sound/sfx/regsnd.exe
-          /bin/find $MOD_DIR -name '.gitignore' -delete
-          /bin/find $MOD_DIR -name '.gitattributes' -delete
+          find $MOD_DIR -name '.gitignore' -delete
+          find $MOD_DIR -name '.gitattributes' -delete
 
   - name: Copy UndatUI
     run:  |
@@ -96,7 +106,7 @@ jobs:
   - name: Format documentation
     run:  |
           :
-          for md in $(/bin/find $MOD_DIR -type f -name '*.[Mm][Dd]' | /bin/sort); do
+          for md in $(find $MOD_DIR -type f -name '*.[Mm][Dd]' | sort); do
               txt="$(echo "$md" | sed -e 's!\.[Mm][Dd]$!\.txt!')"
 
               dos2unix "$md"
@@ -113,6 +123,7 @@ jobs:
               # remove first line if blank
               sed -ri '1{/^$/d}' "$md"
 
+              # wrap long lines to fit into default notepad.exe window size
               fold -w 100 -s "$md" > "$txt"
 
               unix2dos "$md" "$txt"
@@ -127,30 +138,32 @@ jobs:
           done
 
   - name: Pack
-    run:  7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_NAME}.zip" -m5=Deflate Fallout1in2
+    run:  7z a "${GITHUB_WORKSPACE}/${MOD_RELEASE_ZIP}" -m5=Deflate Fallout1in2
     working-directory: Fallout2
 
   - name: Create release
     id:   release
     uses: actions/create-release@v1
     with:
-     release_name: ${{ env.MOD_RELEASE_NAME }} ${{ env.MOD_RELEASE_TAG }}
+     release_name: ${{ env.MOD_RELEASE_NAME }}
      tag_name:     ${{ env.MOD_RELEASE_TAG }}
      draft:        ${{ env.MOD_RELEASE_DRAFT }}
      prerelease:   ${{ env.MOD_RELEASE_PRE }}
-     body:         ${{ env.MOD_RELEASE_BODY }}
+     body_path:    ${{ env.MOD_RELEASE_BODY }}
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
   - name: Upload main package
-    uses: actions/upload-release-asset@v1.0.1
+    uses: actions/upload-release-asset@v1.0.2
     with:
      upload_url:         ${{ steps.release.outputs.upload_url }}
-     asset_path:         ${{ env.MOD_RELEASE_NAME }}.zip
-     asset_name:         ${{ env.MOD_RELEASE_NAME }}.zip
+     asset_path:         ${{ env.MOD_RELEASE_ZIP }}
+     asset_name:         ${{ env.MOD_RELEASE_ZIP }}
      asset_content_type: application/zip
     env:
      GITHUB_TOKEN: ${{ secrets.ANTALASKAYA_TOKEN }}
 
   - name: Show release
-    run:  echo "${{ steps.release.outputs.html_url }}"
+    run:  |
+          :
+          echo "${{ steps.release.outputs.html_url }}"

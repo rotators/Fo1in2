@@ -46,11 +46,11 @@ function Usage()
     echo "    --ini=[path]     path to ddraw.ini"
     echo "    --dll=[path]     path to ddraw.dll"
     echo ""
-    echo "  set-mod-version    updates setting 'VersionString'"
-    echo "    --ini=[path]     path to ddraw.ini"
-    echo "    --mod=[string]   mod version string; replacements: @COMMITS@"
-    echo "    --bump           (optional) increases @COMMITS@ value by 1"
-    echo ""
+#   echo "  set-mod-version    updates setting 'VersionString'"
+#   echo "    --ini=[path]     path to ddraw.ini"
+#   echo "    --mod=[string]   mod version string; replacements: @COMMITS@"
+#   echo "    --bump           (optional) increases @COMMITS@ value by 1"
+#   echo ""
 
     if [ -n "$error" ]; then
        echo "ERROR: $error"
@@ -246,25 +246,25 @@ function SetDllVersion()
 }
 
 # update setting with mod version string
-function SetModVersion()
-{
-    local ini=$1
-    local mod=$2
-    local int=$3
-
-    [ -z "$ini" ] && Usage ".ini filename not set"
-    [ -z "$mod" ] && Usage "mod version not set"
-
-    local commits=$(git rev-list HEAD --count)
-
-    if [ -n "$int" ] && [ $int -eq 1 ]; then
-       local commits=$((commits+1))
-    fi
-
-    local mod=$(echo "$mod" | sed -e "s!@COMMITS@!$commits!g")
-
-    Set "$ini" "Misc" "VersionString" "$mod"
-}
+#function SetModVersion()
+#{
+#   local ini=$1
+#   local mod=$2
+#   local int=$3
+#
+#   [ -z "$ini" ] && Usage ".ini filename not set"
+#   [ -z "$mod" ] && Usage "mod version not set"
+#
+#   local commits=$(git rev-list HEAD --count)
+#
+#   if [ -n "$int" ] && [ $int -eq 1 ]; then
+#      local commits=$((commits+1))
+#   fi
+#
+#   local mod=$(echo "$mod" | sed -e "s!@COMMITS@!$commits!g")
+#
+#   Set "$ini" "Misc" "VersionString" "$mod"
+#}
 
 option_cfg=
 option_dll=
@@ -319,13 +319,13 @@ elif [ "$command" == "set-dll-version" ]; then
          [[ "$option" =~ ^--dll=(.+)$ ]] && option_dll=${BASH_REMATCH[1]}
      done
      SetDllVersion "$option_ini" "$option_dll"
-elif [ "$command" == "set-mod-version" ]; then
-     for option in "${@:2}"; do
-         [[ "$option" =~ ^--ini=(.+)$ ]] && option_ini=${BASH_REMATCH[1]}
-         [[ "$option" =~ ^--mod=(.+)$ ]] && option_mod=${BASH_REMATCH[1]}
-         [[ "$option" =~ ^--bump$ ]] && option_int=1
-     done
-     SetModVersion "$option_ini" "$option_mod" "$option_int"
+#elif [ "$command" == "set-mod-version" ]; then
+#    for option in "${@:2}"; do
+#        [[ "$option" =~ ^--ini=(.+)$ ]] && option_ini=${BASH_REMATCH[1]}
+#        [[ "$option" =~ ^--mod=(.+)$ ]] && option_mod=${BASH_REMATCH[1]}
+#        [[ "$option" =~ ^--bump$ ]] && option_int=1
+#    done
+#    SetModVersion "$option_ini" "$option_mod" "$option_int"
 else
      Usage "unknown command '$command'"
 fi

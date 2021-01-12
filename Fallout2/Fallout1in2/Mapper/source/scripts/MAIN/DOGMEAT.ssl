@@ -7,6 +7,8 @@
 #include "define.h"
 #include "maps/junkcsno.h"
 
+#include "sfall/main.h"
+
 #define NAME                                 SCRIPT_DOGMEAT
 
 #include "command.h"
@@ -51,7 +53,9 @@ variable IdenOnce;
                                           add_timer_event(self_obj, game_ticks(1), 2); \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_dogmeat    fo1in2_party_limit_disabled or ((dude_at_max_party_size == false) and (Dog_In_Party == false))
+
 #define EVENT_FLOAT_JOIN                  (2)
+#define EVENT_FLOAT_INJURED               (3)
 
 procedure Node998 begin
 end
@@ -67,6 +71,9 @@ procedure push_p_proc begin
    end
    else begin
       script_overrides;
+      if not(global_var(GVAR_DOGMEAT_HIRELING_STATUS)) then begin
+         float_msg(self_obj, dog_mstr(103), FLOAT_MSG_NORMAL);
+      end
    end
 end
 
@@ -164,6 +171,7 @@ procedure map_enter_p_proc begin
    if ((CUR_MAP_JUNKCSNO) and (global_var(GVAR_DOGMEAT_HIRELING_STATUS) == 0) and (local_var(LVAR_Herebefore) == 0)) then begin
       set_map_var(MVAR_dog_is_angry, 1);
    end
+   add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
 end
 
 procedure pickup_p_proc begin
@@ -189,6 +197,18 @@ end
 procedure timed_event_p_proc begin
    if (fixed_param == EVENT_FLOAT_JOIN) then begin
       dog_float(random(122, 123));
+   end if (fixed_param == EVENT_FLOAT_INJURED) then begin
+      if not(combat_is_initialized) and self_visible then begin
+         if (Dog_ptr != 0) then begin
+            if (Is_Crippled(self_obj)) then
+               dog_float(random(3500, 3501));
+            /*else if (self_rads) then
+               dog_float(random(3500, 3501));
+            else if (get_poison(self_obj)) then
+               dog_float(random(3500, 3501));*/
+         end
+      end
+      add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
    end
    else begin
       float_msg(self_obj, dog_mstr(103), FLOAT_MSG_NORMAL);

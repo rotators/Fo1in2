@@ -12,6 +12,7 @@
 #include "define.h"
 #include "necropolis.h"
 #include "maps/watrshd.h"
+#include "sfall/lib.arrays.h"
 
 #define NAME                    SCRIPT_GRIFFITH
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_NECROPOLIS)
@@ -20,10 +21,10 @@
 #include "modreact.h"
 #include "updatmap.h"
 
-
 /* Standard Script Procedures */
 procedure start;
 procedure map_enter_p_proc;
+procedure map_update_p_proc;
 procedure critter_p_proc;
 procedure timed_event_p_proc;
 procedure description_p_proc;
@@ -34,18 +35,19 @@ procedure destroy_p_proc;
 procedure use_skill_on_p_proc;
 procedure damage_p_proc;
 
+procedure NodeUsedBike;
+procedure NodeGenQuestions;
+
 procedure Node998;
 procedure Node999;
 
 procedure Node1000;
-procedure Node1000a;
 procedure Node1100;
 procedure Node1200;
 procedure Node1300;
 procedure Node1400;
 procedure Node1500;
 procedure Node1600;
-procedure Node1600a;
 procedure Node1700;
 procedure Node1800;
 procedure Node1900;
@@ -54,44 +56,28 @@ procedure Node2100;
 procedure Node2200;
 procedure Node2300;
 procedure Node2400;
-procedure Node2500;
-procedure Node2600;
-procedure Node2700;
-procedure Node2800;
-procedure Node2900;
+
 procedure Node3000;
 procedure Node3100;
 procedure Node3200;
-
-procedure Node5000;
-procedure Node5100;
-procedure Node5200;
-procedure Node5300;
-procedure Node5400;
-
-procedure MoneyTalk;
-
-procedure leave_map;
-procedure leave_with_bike;
 
 /* Defines */
 #define float(x)                    float_msg(self_obj, mstr(x), FLOAT_MSG_BLUE)
 #define float_angry(x)              float_msg(self_obj, mstr(x), FLOAT_MSG_RED)
 
-#define EVENT_FLOAT_MOTORCYCLE      (1)
-#define EVENT_GET_CONTROLLER        (2)
-#define EVENT_FOLLOW_DUDE           (3)
-
-#define wp_exit_1          (21707)
-#define wp_exit_2          (25304)
-#define wp_exit_3          (27681)
-
-#define wp_getpart_bike    (18703)
-#define wp_getpart_1       (19288)
-#define wp_getpart_2       (17883)
-
 #define set_griffith_dead           set_global_var(GVAR_GRIFFITH_STATE, 1)
 #define is_griffith_alive           (global_var(GVAR_GRIFFITH_STATE) == 0)
+
+#define EVENT_WAIT                  (0)
+#define EVENT_STOP                  (1)
+
+#define KNOWS_NAME                  bit_1
+#define DECLINED_JOB                bit_2
+#define ASKED_ABOUT_BIKE            bit_3
+#define KNOWS_BIKE_TYPE             bit_4
+
+#define set_state_bit(x)            set_lvar_bit_on(LVAR_States, x)
+#define get_state_bit(x)            (lvar_bit(LVAR_States, x))
 
 /*****************************************************************
    Local Variables which are saved.
@@ -99,22 +85,11 @@ procedure leave_with_bike;
 *****************************************************************/
 #define LVAR_Hostile                (4)
 #define LVAR_Here_Before            (5)
-#define LVAR_Home_Rotation          (6)
-#define LVAR_EnergyCells            (7)
-#define LVAR_StartMoving            (8)
-#define LVAR_MoveTo                 (9)
-#define LVAR_MoveCycle              (10)
+#define LVAR_Home_Tile              (6)
+#define LVAR_Home_Rotation          (7)
+#define LVAR_States                 (8)
 
 variable Only_Once := 0;
-variable In_Timed_Event := 0;
-variable Item;
-variable my_hex;
-variable angry := 0;
-variable knows_price := 0;
-variable asked_money := 0;
-variable knows_fuel := 0;
-variable asked_1000 := 0;
-variable asked_500 := 0;
 
 import variable Griffith_Ptr;
 
@@ -127,182 +102,62 @@ end
 
 procedure map_enter_p_proc begin
    if (map_first_run) then begin
-      //set_local_var(LVAR_Home_Tile,tile_num(self_obj));
+      set_local_var(LVAR_Home_Tile, self_tile);
       set_local_var(LVAR_Home_Rotation, self_cur_rot);
 
       set_self_team(TEAM_NECROPOLIS_GANGER);
       set_self_ai(AI_GHOUL);
    end
 
-   angry := 0;
-
-   // Player gave energy cells to Griffith. He walks to pick up the controller - if player changes map, he is already gone.
-   if ((local_var(LVAR_EnergyCells) >= 9) and not(dude_has_car) and tile_contains_obj_pid(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV, PID_DRIVABLE_MOTO1)) then begin
-      if is_griffith_alive and (map_var(MVAR_FUEL_CELL_STASH) != STATE_TAKEN_DUDE) then begin
-         Dest_Car(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV)
-         destroy_object(self_obj);
-      end
-   end
-
    // Player has disabled the vehicle feature in the fo1_settings.ini
-   if not(fo1in2_motorcycle_enabled) or ((map_var(MVAR_FUEL_CELL_STASH) != STATE_TAKEN_DUDE) and ((local_var(LVAR_EnergyCells) == 10) or (local_var(LVAR_StartMoving) > 0))) then
+   if (not(fo1in2_motorcycle_enabled) or not(self_visible)) then
       destroy_object(self_obj);
 end
 
+procedure map_update_p_proc begin
+end
+
 procedure critter_p_proc begin
-   if self_can_see_dude and ((local_var(LVAR_Hostile) != 0) or angry > 3) then begin
+   if self_can_see_dude and (local_var(LVAR_Hostile) != 0) then begin
       self_attack_dude;
    end
 
    if not(combat_is_initialized) then begin
       // Player "used" the bike for the first time
-      if (global_var(GVAR_QUEST_MOTORCYCLE) == 1) then
-         start_dialog_at_node(Node1000);
-      else if (global_var(GVAR_QUEST_MOTORCYCLE) == 3) then
-         add_timer_event(self_obj, game_ticks(0), EVENT_FLOAT_MOTORCYCLE);
-
-      // Always look at the player
-      if (In_Timed_Event == 0 and Current_Distance_From_Dude < 25) and (local_var(LVAR_MoveTo) == 0) then begin
-         In_Timed_Event := 1;
-         add_timer_event(self_obj, game_ticks(1), EVENT_FOLLOW_DUDE);
+      if (global_var(GVAR_QUEST_MOTORCYCLE) == 1) then begin
+         start_dialog_at_node(NodeUsedBike);
       end
-
-      // Player has stolen the controller and Griffith notices it
-      if (self_can_see_dude and local_var(LVAR_Hostile) == 0) and ((dude_item_count(PID_MOTO_KEY)) and (global_var(GVAR_QUEST_MOTORCYCLE) < 10))  then begin
-         if not(is_success(roll_vs_skill(dude_obj, SKILL_SNEAK, -10))) then begin
-            float_angry(160);
-            set_local_var(LVAR_Hostile, 1);
-         end
-      end
-
-      // Player gave fuel to Griffith, he drives away.
-      if (local_var(LVAR_EnergyCells) == 9) then
-         call leave_with_bike;
-
-      // Player bought the bike.
-      if (local_var(LVAR_StartMoving) == 1) then
-         call leave_map;
-   end
-end
-
-procedure leave_map begin
-   my_hex := self_tile;
-   if (my_hex == local_var(LVAR_MoveTo)) then begin
-      set_local_var(LVAR_MoveCycle, local_var(LVAR_MoveCycle) + 1);
-      if (local_var(LVAR_MoveCycle) > 3) then begin
-         set_local_var(LVAR_MoveCycle, 10);
-
-         if not(is_loading_game) then begin
-            set_self_invisible;
-         end
-
-         move_to(self_obj, 0, 0);
-      end
-      else begin
-
-         if (local_var(LVAR_MoveCycle) == 1) then begin
-            set_local_var(LVAR_MoveTo, wp_exit_1);
-         end
-         else if (local_var(LVAR_MoveCycle) == 2) then begin
-            set_local_var(LVAR_MoveTo, wp_exit_2);
-         end
-         else if (local_var(LVAR_MoveCycle) == 3) then begin
-            set_local_var(LVAR_MoveTo, wp_exit_3);
-         end
-         self_walk_to_tile(local_var(LVAR_MoveTo));
-
+      else if (global_var(GVAR_QUEST_MOTORCYCLE) == 3) then begin
+         float_angry(501);
+         set_local_var(LVAR_Hostile, 1);
       end
    end
-   self_walk_to_tile(local_var(LVAR_MoveTo));
-end
-
-procedure leave_with_bike begin
-   set_local_var(LVAR_EnergyCells, 10);
-   add_timer_event(self_obj, game_ticks(3), EVENT_GET_CONTROLLER);
 end
 
 procedure timed_event_p_proc begin
-   if not(combat_is_initialized) then begin
-
-      // Move out to get the fuel cell controller
-      if (fixed_param == EVENT_GET_CONTROLLER) then begin
-         if (local_var(LVAR_MoveTo) == 0) and (self_tile == wp_getpart_1) then begin
-            set_local_var(LVAR_MoveTo, 1);
-         end
-         else if (local_var(LVAR_MoveTo) == 1) and (self_tile == wp_getpart_2) then begin
-            self_rotate(5);
-            reg_anim_clear(self_obj);
-            reg_anim_begin();
-               reg_anim_animate(self_obj, ANIM_magic_hands_ground, -1);
-            reg_anim_end();
-
-            if (map_var(MVAR_FUEL_CELL_STASH) != STATE_TAKEN_DUDE) then begin
-               Item := create_object(PID_MOTO_KEY, 0, 0);
-               add_mult_objs_to_inven(self_obj, Item, 1);
-
-               set_map_var(MVAR_FUEL_CELL_STASH, STATE_TAKEN_GRIFFITH);
-               set_global_var(GVAR_QUEST_MOTORCYCLE, 6);
-               set_local_var(LVAR_MoveTo, 2);
-            end
-            else begin
-               float_angry(161);
-               set_global_var(GVAR_QUEST_MOTORCYCLE, 6);
-               set_local_var(LVAR_MoveTo, 2);
-            end
-         end
-         else if (local_var(LVAR_MoveTo) == 2) and (self_tile == wp_getpart_1) then begin
-            set_local_var(LVAR_MoveTo, 3);
-            self_walk_to_tile(wp_getpart_bike);
-         end
-         else if (local_var(LVAR_MoveTo) == 3) and (self_tile == wp_getpart_bike) then begin
-            if (self_item_count(PID_MOTO_KEY)) then begin // only disappear if you still have the controller in your inventory
-               set_local_var(LVAR_EnergyCells, 10);
-               set_local_var(LVAR_MoveTo, 4);
-
-               gfade_out(1);
-                  Dest_Car(CAR_UNCLAIMED_HEX, 1)
-                  destroy_object(tile_contains_pid_obj(18903, 1, PID_MOTO1_TRUNK));
-                  set_self_invisible;
-
-                  //if (Current_Distance_From_Dude < 35) then
-                     play_sfx("engineon");
-
-                  give_xp_msg(EXP_GIVEN_ENERGY_CELLS, mstr(126));
-               gfade_in(1);
-            end
-            else begin
-               // Start furiously rotating around if the controller item has been stolen
-               self_rotate(random(0, 5));
-            end
-         end
-         else if (local_var(LVAR_MoveTo) == 0) then begin
-            self_walk_to_tile(wp_getpart_1);
-         end
-         else if (local_var(LVAR_MoveTo) == 1) then begin
-            self_walk_to_tile(wp_getpart_2);
-         end
-         else if (local_var(LVAR_MoveTo) == 2) then begin
-            self_walk_to_tile(wp_getpart_1);
-         end
-         add_timer_event(self_obj, game_ticks(1), EVENT_GET_CONTROLLER);
-      end
-
-      // Normal behaviour
-      else begin
-         // Player looks at motorcycle
-         if (fixed_param == EVENT_FLOAT_MOTORCYCLE) and (local_var(LVAR_EnergyCells) < 9) and (local_var(LVAR_StartMoving) == 0) then begin
-            set_global_var(GVAR_QUEST_MOTORCYCLE, 2);
-            self_look_at_dude;
-            float(150);
-         end
-
-         // Griffith follows the player with his eyes
-         else if (fixed_param == EVENT_FOLLOW_DUDE) and (local_var(LVAR_EnergyCells) < 9) and (local_var(LVAR_StartMoving) == 0) then begin
-            if self_can_see_dude then self_look_at_dude;
-         end
-      end
+   if (fixed_param == EVENT_WAIT) then begin
+      game_ui_disable;
+      gfade_out(1);
+         set_self_invisible;
+         set_griffith_dead;
+      gfade_in(1);
+      add_timer_event(self_obj, game_ticks(1), EVENT_STOP);
    end
-   In_Timed_Event := 0;
+   else if (fixed_param == EVENT_STOP) then begin
+      gfade_out(1);
+         game_time_advance(ONE_GAME_HOUR * random(2, 4));
+         critter_attempt_placement(dude_obj, local_var(LVAR_Home_Tile), dude_elevation);
+         dude_rotate(local_var(LVAR_Home_Rotation));
+         display_msg(mstr(200));
+      gfade_in(1);
+      game_ui_enable;
+      if dude_is_stupid then
+         float_msg(dude_obj, mstr(202), FLOAT_MSG_NORMAL);
+      else
+         float_msg(dude_obj, mstr(201), FLOAT_MSG_NORMAL);
+
+      destroy_object(self_obj);
+   end
 end
 
 procedure look_at_p_proc begin
@@ -330,29 +185,12 @@ procedure talk_p_proc begin
    dude_look_at_self;
 
    // Player has the controller and Griffith sees it:
-   if ((dude_item_count(PID_MOTO_KEY)) and (global_var(GVAR_QUEST_MOTORCYCLE) < 10))  then begin
+   if (dude_item_count(PID_MOTO_KEY)) then begin
       float_angry(160);
       set_local_var(LVAR_Hostile, 1);
    end
 
-   // Player took the controller, but Griffith doesn't know:
-   else if (map_var(MVAR_FUEL_CELL_STASH) == STATE_TAKEN_DUDE) and (global_var(GVAR_QUEST_MOTORCYCLE) >= 6) then begin
-      float_angry(random(181, 185));
-   end
-
-   // Griffith is leaving:
-   else if (local_var(LVAR_StartMoving) > 0) or (local_var(LVAR_EnergyCells) >= 9) then begin
-      float(random(175, 180));
-   end
-   else if (local_var(LVAR_Here_Before) == 2) then begin
-      start_dialog_at_node(Node1000a);
-   end
-   else if (global_var(GVAR_QUEST_MOTORCYCLE) == 0) then begin
-      display_msg(mstr(200));
-   end
-   else begin
-      start_dialog_at_node(Node1000);
-   end
+   start_dialog_at_node(Node1000);
 end
 
 procedure use_skill_on_p_proc begin
@@ -365,15 +203,32 @@ procedure damage_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   //if (local_var(LVAR_StartMoving) == 0) then
-      set_griffith_dead;
-
+   set_griffith_dead;
    inc_good_critter
+end
 
-   if (local_var(LVAR_EnergyCells) == 9) then begin
-      inc_general_rep(-20);
-      inc_necropolis_rep(REP_BONUS_BACKSTABBED_GRIFFITH);
-   end
+procedure NodeUsedBike begin
+   set_global_var(GVAR_QUEST_MOTORCYCLE, 2);
+
+   Reply(500);
+   BOption(510, Node998, 004);
+   NOption(520, Node999, 004);
+
+   call NodeGenQuestions;
+end
+
+procedure NodeGenQuestions begin
+   NLowOption(1050, Node3000);
+
+   if not(get_state_bit(KNOWS_NAME)) then
+      NOption(1010, Node1100, 004);
+
+   NOption(1020, Node1200, 004);
+
+   if get_state_bit(ASKED_ABOUT_BIKE) then
+      NOption(1031, Node2000, 004);
+   else
+      NOption(1030, Node1900, 004);
 end
 
 procedure Node998 begin
@@ -384,75 +239,39 @@ procedure Node999 begin
 end
 
 procedure Node1000 begin
-   if (local_var(LVAR_Here_Before) == 0) then begin
-      set_local_var(LVAR_Here_Before, 1);
-      Reply(1000);
+   if get_state_bit(DECLINED_JOB) then begin
+      Reply(1002);
+      NOption(1040, Node1700, 004);
+      if get_state_bit(ASKED_ABOUT_BIKE) then
+         NOption(1031, Node2000, 004);
+      else
+         NOption(1030, Node1900, 004);
    end
    else begin
-      if (dude_is_stupid) then begin
-         Reply(5001);
-         NLowOption(5030, Node5100);
+      if (local_var(LVAR_Here_Before) == 0) then begin
+         set_local_var(LVAR_Here_Before, 1);
+         Reply(1000);
       end
       else begin
-         if (angry > 2) then
-            Reply(1003);
-         else
-            Reply(1001);
+         Reply(1001);
       end
+
+      call NodeGenQuestions;
    end
-
-   if (local_var(LVAR_EnergyCells) > 0) then
-      GOption(1410, Node1500, 004);
-   else
-      GOption(1010, Node1100, 004);
-
-   NOption(1020, Node1700, 004);
-   BOption(1030, Node999, 004);
-
-   NLowOption(4999, Node5000);
-   NLowOption(5030, Node999);
-
-   if debug_mode then
-      NOption("*** CHEAT *** Just give me the damn keys already!", Node2600, 004);
-
-   set_global_var(GVAR_QUEST_MOTORCYCLE, 2);
-end
-
-procedure Node1000a begin
-   if (angry > 2) then
-      Reply(1003);
-   else
-      Reply(1002);
-
-   GOption(1040, Node2100, 004); // 2000 caps
-   if (asked_1000 == 0) then
-      BOption(1920, Node3000, 004); // 1000 caps
-   if (asked_500 == 0) then
-      BOption(1930, Node2900, 004); // 500 caps
-   BOption(1910, Node2000, 004);
-   NOption(g_bye, Node999, 004);
+   NOption(g_bye, Node999, 001);
 end
 
 procedure Node1100 begin
+   set_state_bit(KNOWS_NAME);
+
    Reply(1100);
    NOption(1110, Node1200, 004);
-   GOption(1120, Node1800, 005);
-
-   if (global_var(GVAR_NECROP_WATER_CHIP_TAKEN) != 1) then
-      BOption(1130, Node999, 004);
-   else
-      NOption(g_bye, Node999, 004);
-
+   NOption(1120, Node999, 004);
 end
 
 procedure Node1200 begin
    Reply(1200);
-   BOption(1210, Node1300, 004);
-
-   if (knows_fuel == 0) then
-      NOption(1220, Node1400, 004);
-
-   GOption(1230, Node3200, 006);
+   NOption(1210, Node1300, 004);
 end
 
 procedure Node1300 begin
@@ -460,245 +279,108 @@ procedure Node1300 begin
    NOption(1310, Node1400, 004);
 end
 
-// I'm out of energy cells
 procedure Node1400 begin
-   set_local_var(LVAR_EnergyCells, 1);
-   knows_fuel := 1;
-
    Reply(1400);
-
-   if ((dude_item_count(PID_MICRO_FUSION_CELL)) or (dude_item_count(PID_SMALL_ENERGY_CELL))) then
-      GOption(1410, Node1500, 004);
-
-   GOption(1420, Node2700, 004);
-   BOption(1430, Node999, 004);
+   NOption(1410, Node1500, 005);
+   NOption(1420, Node1800, 004);
 end
 
 procedure Node1500 begin
-   Reply(1500);
-   GOption(1510, Node1600, 004);
-   BOption(1520, Node2700, 004);
+   NMessage(1500);
+   Reply(1501);
+   NOption(1510, Node1600, 004);
+   GOption(1520, Node1700, 004);
 end
 
-// Give energy cells to Griffith
 procedure Node1600 begin
-   set_local_var(LVAR_EnergyCells, 9);
-   inc_general_rep(5);
-
-   if (dude_item_count(PID_MICRO_FUSION_CELL)) then begin
-      remove_pid_qty(dude_obj, PID_MICRO_FUSION_CELL, 1)
-      car_give_gas(400);
-   end
-   else begin
-      remove_pid_qty(dude_obj, PID_SMALL_ENERGY_CELL, 1)
-      car_give_gas(200);
-   end
+   set_state_bit(DECLINED_JOB);
 
    Reply(1600);
-   NOption(1610, Node1600a, 004);
+   GOption(1610, Node1700, 004);
+   BOption(1620, Node2200, 004);
 end
 
-procedure Node1600a begin
-   float(250);
-end
-
-// From a vault too!
 procedure Node1700 begin
-   Reply(1700);
-   NOption(1710, Node1800, 004);
+variable PosList;
+
+   PosList := [SEWER_POS_WATRSHED, SEWER_POS_HOTEL,SEWER_POS_HALLDED];
+   set_global_var(GVAR_SEWER_KING_POS, array_random_value(PosList));
+   debug("sewer king pos: " + global_var(GVAR_SEWER_KING_POS));
+
+   if (global_var(GVAR_SEWER_KING_POS) == SEWER_POS_WATRSHED) then
+      call spawn_sewer_king;
+
+   if dude_is_stupid then
+      Reply(3300);
+   else
+      Reply(1700);
+
+   NOption(1710, Node999, 004);
+   NLowOption(3310, Node999);
+
+   add_timer_event(self_obj, game_ticks(0), EVENT_WAIT);
 end
 
 procedure Node1800 begin
    Reply(1800);
-   GOption(1810, Node1900, 004);
-   // add more options here
+   NOption(1810, Node1500, 005);
+   NOption(1820, Node1500, 004);
 end
 
 procedure Node1900 begin
-   set_local_var(LVAR_Here_Before, 2);
-   knows_price := 1;
-
-   Reply(1900);
-
-   if (knows_fuel == 0) then
-      NOption(1950, Node1400, 004);
-
-   NOption(1960, Node3100, 004);
-   BOption(1910, Node2000, 004);
-   //call MoneyTalk;
+   if get_state_bit(ASKED_ABOUT_BIKE) then begin
+      call Node2000;
+   end
+   else begin
+      Reply(1900);
+      NOption(1910, Node2000, 004);
+      NOption(1920, Node2300, 007);
+   end
 end
 
 procedure Node2000 begin
-   Reply(2000);
-   GOption(2010, Node2100, 004);
-   call MoneyTalk;
-end
-
-procedure MoneyTalk begin
-   if (asked_1000 == 0) then
-      BOption(1920, Node3000, 004); // 1000 caps
-
-   if (asked_500 == 0) then
-      BOption(1930, Node2900, 004); // 500 caps
-   NOption(2020, Node2800, 004);
-   BOption(mstr(1940) + g_bye, Node999, 004);
+   set_state_bit(ASKED_ABOUT_BIKE);
+   if get_state_bit(KNOWS_BIKE_TYPE) then begin
+      call Node2400;
+   end
+   else begin
+      Reply(2000);
+      NOption(2010, Node2100, 004);
+   end
 end
 
 procedure Node2100 begin
-   if (dude_caps < 2000) then begin
-      set_local_var(LVAR_Here_Before, 2);
-
-      Reply(2101);
-      BOption(2120, Node999, 004);
-   end
-   else begin
-      dude_caps_adjust(-2000);
-
-      Reply(2100);
-      NOption(2110, Node2200, 004);
-   end
+   NMessage(2100);
 end
 
 procedure Node2200 begin
-   Reply(2200);
-   NOption(2210, Node2600, 004);
+   BMessage(2200);
 end
 
-// Waiting
-/*procedure Node2300 begin
-   gfade_out(1);
-      game_time_advance(ONE_GAME_MINUTE * random(10, 30));
-   gfade_in(1);
-   Reply(2400);
-   NOption(2410, Node2400, 004);
+procedure Node2300 begin
+   set_state_bit(KNOWS_BIKE_TYPE);
+   Reply(2300);
+   call NodeGenQuestions;
 end
 
-// Waiting
 procedure Node2400 begin
-   gfade_out(1);
-      game_time_advance(ONE_GAME_MINUTE * random(10, 30));
-   gfade_in(1);
    Reply(2400);
-   NOption(2410, Node2500, 004);
-end
-
-// Waiting
-procedure Node2500 begin
-   gfade_out(1);
-      game_time_advance(ONE_GAME_MINUTE * random(10, 30));
-   gfade_in(1);
-   Reply(2500);
-   NOption(2510, Node2600, 004);
-end*/
-
-// Give the motorcycle
-procedure Node2600 begin
-   set_local_var(LVAR_MoveTo, wp_exit_1);
-   set_local_var(LVAR_MoveCycle, 0);
-   set_local_var(LVAR_StartMoving, 1);
-   set_global_var(GVAR_QUEST_MOTORCYCLE, 10);
-
-   Item := create_object(PID_MOTO_KEY, 0, 0);
-   add_mult_objs_to_inven(dude_obj, Item, 1);
-
-   gfade_out(1);
-      game_time_advance(ONE_GAME_MINUTE * random(10, 30));
-      move_to(self_obj, self_tile, 1);
-   gfade_in(1);
-
-   Reply(2600);
-   NOption(2610, Node999, 004);
-end
-
-procedure Node2700 begin
-   if (knows_price == 0) then
-      Reply(2700);
-   else
-      Reply(2701);
-   BOption(1910, Node2000, 004);
-   call MoneyTalk;
-end
-
-procedure Node2800 begin
-   Reply(2800);
-end
-
-procedure Node2900 begin
-   float_angry(300);
-   angry := angry + 1;
-   asked_500 := 1;
+   call NodeGenQuestions;
 end
 
 procedure Node3000 begin
-   if (dude_caps < 1000) then begin
-      float_angry(301);
-      angry := angry + 1;
-      asked_1000 := 1;
-   end
-   else if (is_success(roll_vs_skill(dude_obj, SKILL_BARTER, -35))) then begin
-      dude_caps_adjust(-1000);
-      Reply(2100);
-      NOption(2110, Node2200, 004);
-   end
-   else begin
-      call Node2900;
-   end
+   Reply(3000);
+   NLowOption(3010, Node3100);
 end
 
 procedure Node3100 begin
-   asked_money := 1;
    Reply(3100);
-
-   call MoneyTalk;
+   NLowOption(3110, Node1700);
+   BLowOption(3120, Node3200);
 end
 
 procedure Node3200 begin
    Reply(3200);
-   GOption(3210, Node1900, 004);
-   NOption(3220, Node2800, 004);
-end
-
-procedure Node5000 begin
-   Reply(5000);
-   NLowOption(5010, Node5100);
-   NLowOption(5020, Node999);
-end
-
-procedure Node5100 begin
-   Reply(5100);
-   NOption(5110, Node5200, 001);
-end
-
-procedure Node5200 begin
-   if ((dude_item_count(PID_MICRO_FUSION_CELL)) or (dude_item_count(PID_SMALL_ENERGY_CELL))) then begin
-      Reply(5201);
-      GLowOption(5220, Node5400);
-      NLowOption(5230, Node5300);
-   end
-   else begin
-      Reply(5200);
-      NLowOption(5210, Node999);
-   end
-end
-
-procedure Node5300 begin
-   Reply(5300);
-   GLowOption(5310, Node5400);
-   BLowOption(5320, Node999);
-end
-
-procedure Node5400 begin
-   set_local_var(LVAR_EnergyCells, 9);
-   inc_general_rep(5);
-
-   if (dude_item_count(PID_MICRO_FUSION_CELL)) then begin
-      remove_pid_qty(dude_obj, PID_MICRO_FUSION_CELL, 1)
-      car_give_gas(400);
-   end
-   else begin
-      remove_pid_qty(dude_obj, PID_SMALL_ENERGY_CELL, 1)
-      car_give_gas(200);
-   end
-
-   float(251);
+   BLowOption(3210, Node2200);
+   NLowOption(3220, Node1700);
 end

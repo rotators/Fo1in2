@@ -571,14 +571,14 @@
 #define SCRIPT_BOBSIGN   (558)  //  bobsign.int     ; Sign outside Bob's Iguana Bits
 #define SCRIPT_CALLY     (559)  //  cally.int       ; Another bodyguard for Lorenzo
 #define SCRIPT_CLEO      (560)  //  cleo.int        ; Guard for Lorenzo in the Hub
-#define SCRIPT_CRVNDRVR  (561)  //  crvndrvr.int   ; Caravan driver for the random encounters           
+#define SCRIPT_CRVNDRVR  (561)  //  crvndrvr.int    ; Caravan driver for the random encounters           
 #define SCRIPT_DAN       (562)  //  dan.int         ; Dan 'the Brahmin Man'. sells Brahmin
 #define SCRIPT_DANWIFE   (563)  //  danwife.int     ; Dan's Wife
 #define SCRIPT_DEADGUY   (564)  //  deadguy.int     ; Someone who was stupid enough to mess w/ Decker
 #define SCRIPT_DECKGRD   (565)  //  deckgrd.int     ; One of Decker's Guards
 #define SCRIPT_DEMETRE   (566)  //  demetre.int     ; Demetre, head of the Crimson Caravans
 #define SCRIPT_FRY       (567)  //  fry.int         ; Deputy Fry of the Hub Police
-#define SCRIPT_DEPRECATED_19 (568) //SCRIPT_DOGMEAT   (568)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_JONDOOR   (568)  //  jondoor.int     ; Adytum - Door to Jon Zimmerman's room
 #define SCRIPT_ELECDOOR  (569)  //  elecdoor.int    ; Electronic lock on a door in the Hub                                        
 #define SCRIPT_ELECTRAP  (570)  //  electrap.int    ; Electronic Trap in the Thieves' Circle                                      
 #define SCRIPT_FEMFARMR  (571)  //  femfarmr.int    ; Female Farmer for the Hub                                                   
@@ -611,7 +611,7 @@
 #define SCRIPT_MSTMERCH  (598)  //  mstmerch.int    ; Master Merchant from the hub                                                
 #define SCRIPT_RICHIE    (599)  //  richie.int      ; Richie, guards a safe in the Hub
 #define SCRIPT_RUFUS     (600)  //  rufus.int       ; Rufus, cyber hack in the Hub
-#define SCRIPT_DEPRECATED_20 (601) //SCRIPT_RUTGER    (601)  //  scripts.lst - DONOTUSE wtf??????
+#define SCRIPT_NKINGRAT  (601)  //  nkingrat.int    ; Necropolis Sewer King albino mole rat
 #define SCRIPT_SID       (602)  //  sid.int         ; Sid, annoying little twit who helps Beth
 #define SCRIPT_THORNDYK  (603)  //  thorndyk.int    ; Thorndyke, Dr. in the Children in the Hub                                   
 #define SCRIPT_TROY      (604)  //  troy.int        ; Troy, a super mutant in the Hub
@@ -955,7 +955,7 @@
 #define SCRIPT_HIGHELD   (942)  //  HighEld.int     ; Elders for the Brotherhood
 #define SCRIPT_MOLERAT2  (943)  //  MoleRat2.int    ; Another stupid molerat                                                      
 #define SCRIPT_BROELD    (944)  //  BroEld.int      ; Brotherhood elder (generic)
-#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int   ; Fuel Cell Controller stash                                     
+#define SCRIPT_GRIFFBED  (945)  //  GRIFFBED.int    ; Fuel Cell Controller stash !!! DEPRECATED !!!                       
 #define SCRIPT_ICECHEST  (946)  //  IceChest.int    ; box where Garl can place player's stuff                           
 #define SCRIPT_LTCODES   (947)  //  LtCodes.int     ; Codes the Lt is holding
 #define SCRIPT_PRISFELD  (948)  //  PrisFeld.int    ; prisoner force field in the master's lair                         
@@ -1032,5 +1032,7 @@
 #define SCRIPT_ZIWEAKLK         (1012)  // ziWeakLk.int    ; Generic Weak Lock Watch Script
 #define SCRIPT_ZIMEDMLK         (1013)  // ziMedmLk.int    ; Generic Medium Lock Watch Script
 #define SCRIPT_ZIHARDLK         (1014)  // ziHardLk.int    ; Generic Hard Lock Watch Script
+
+#define SCRIPT_HALLDOOR         (1015)  // halldoor.int    ; Necropolis - Entrance to Hall of the Dead
 
 #endif // SCRIPTS_H

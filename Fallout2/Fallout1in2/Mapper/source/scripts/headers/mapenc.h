@@ -18,6 +18,10 @@
 #define MVAR_CAVERN_LADDER_ELEV1       (3) // Used to remember the position of the randomly placed ladder
 #define MVAR_CAVERN_LADDER_ELEV2       (4) // Ladder pos on elev2
 
+// The Fo2 perk "Cautious Nature" doesn't work in the Fo1 encounter system, so we build our own functionality
+// NOTE: We "secretly" tripple the PE bonus from 3 to 12, otherwise the effect is impossible to notice in the Fo1 encounter spawn system.
+#define dude_enc_perception            (dude_perception + (9 * dude_perk(PERK_cautious_nature_perk)))
+
 // Cavern Type for random scenery spawn
 #define TOXIC_CAVE         (1)
 #define GOLD_MINE          (2)
@@ -146,13 +150,12 @@ procedure Place_critter;
 /************************************************
     Generate Scenery for Desert maps
 ************************************************/
-procedure Scenes(variable scenery_elevation) begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
+critical procedure Scenes(variable scenery_elevation) begin
    variable LVar2 := 0;
    variable LVar3 := 0;
    variable LVar4 := 0;
    variable Place_Holder;
+   variable spawn_hex;
 
    if (Critter_spawn_hex == 0) then Critter_spawn_hex := dude_tile;
 
@@ -162,15 +165,15 @@ procedure Scenes(variable scenery_elevation) begin
       Critter_direction := random(0, 5);
       Range := random(4, 28);
       Place_Holder := Range;
-      LVar0 := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
+      spawn_hex := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
       Critter_direction := random(0, 5);
-      LVar0 := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
-      LVar0 := LVar0 + (random(0, 2) - 1);
+      spawn_hex := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
+      spawn_hex := spawn_hex + (random(0, 2) - 1);
       Critter_direction := random(0, 5);
-      LVar0 := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
-      LVar0 := LVar0 + (random(0, 2) - 1);
+      spawn_hex := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
+      spawn_hex := spawn_hex + (random(0, 2) - 1);
       Critter_direction := random(0, 5);
-      LVar0 := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
+      spawn_hex := tile_num_in_direction(Critter_spawn_hex, Critter_direction, Place_Holder);
       LVar2 := random(0, 9);
       while(LVar4 == LVar2) do begin
          LVar2 := random(0, 9);
@@ -178,170 +181,177 @@ procedure Scenes(variable scenery_elevation) begin
       if (LVar2 == 0) then begin
          LVar3 := random(1, 6);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_BONES_4, 0, scenery_elevation);
+            Item := create_object(PID_BONES_4, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
             if (random(1, 4) == 1) then begin
-               Item := create_object(PID_TREE_2, 0, scenery_elevation);
+               Item := create_object(PID_TREE_2, spawn_hex, scenery_elevation);
             end
             else begin
-               Item := create_object(PID_CACTUS_1, 0, scenery_elevation);
+               Item := create_object(PID_CACTUS_1,spawn_hex, scenery_elevation);
             end
          end
          else if (LVar3 == 3) then begin
-            Item := create_object(PID_DIRT_5, 0, scenery_elevation);
+            Item := create_object(PID_DIRT_5, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 4) then begin
-            Item := create_object(PID_CACTUS_1, 0, scenery_elevation);
+            Item := create_object(PID_CACTUS_1, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 5) then begin
-            Item := create_object(PID_CACTUS_2, 0, scenery_elevation);
+            Item := create_object(PID_CACTUS_2, spawn_hex, scenery_elevation);
          end
          else if (random(1, 3) == 1) then begin
-            Item := create_object(PID_TREE_OLD, 0, scenery_elevation);
+            Item := create_object(PID_TREE_OLD, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_TRASH_2, 0, scenery_elevation);
+            Item := create_object(PID_TRASH_2, spawn_hex, scenery_elevation);
          end
       end
       else if (LVar2 == 1) then begin
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_ROCKS_8, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_8, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_ROCKS_7, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_7, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_ROCKS_6, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_6, spawn_hex, scenery_elevation);
          end
       end
       else if (LVar2 == 2) then begin
          LVar3 := random(1, 5);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_BONES_1, 0, scenery_elevation);
+            Item := create_object(PID_BONES_1, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_BONES_2, 0, scenery_elevation);
+            Item := create_object(PID_BONES_2, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 3) then begin
-            Item := create_object(PID_BONES_3, 0, scenery_elevation);
+            Item := create_object(PID_BONES_3, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 4) then begin
-            Item := create_object(PID_BONES_4, 0, scenery_elevation);
+            Item := create_object(PID_BONES_4, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_BONES_5, 0, scenery_elevation);
+            Item := create_object(PID_BONES_5, spawn_hex, scenery_elevation);
          end
       end
       else if (LVar2 == 3) then begin
-         Item := create_object(PID_TIRE, 0, scenery_elevation);
+         Item := create_object(PID_TIRE, spawn_hex, scenery_elevation);
       end
       else if (LVar2 == 4) then begin
          LVar3 := random(1, 4);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_ROCKS_3, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_3, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_ROCKS_4, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_4, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 3) then begin
-            Item := create_object(PID_ROCKS_3, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_3, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_ROCKS_4, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_4, spawn_hex, scenery_elevation);
          end
       end
       else if (LVar2 == 5) then begin
          LVar3 := random(1, 4);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_SCRUB_1, 0, scenery_elevation);
+            Item := create_object(PID_SCRUB_1, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_SCRUB_2, 0, scenery_elevation);
+            Item := create_object(PID_SCRUB_2, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 3) then begin
-            Item := create_object(PID_SCRUB_3, 0, scenery_elevation);
+            Item := create_object(PID_SCRUB_3, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_SCRUB_1, 0, scenery_elevation);
+            Item := create_object(PID_SCRUB_1, spawn_hex, scenery_elevation);
          end
       end
       else if (LVar2 == 6) then begin
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
-            //Item := create_object(PID_JUNK_TIRE, 0, scenery_elevation);
-            Create_Junk_Tire(0, scenery_elevation)
+            //Item := create_object(PID_JUNK_TIRE, spawn_hex, scenery_elevation);
+            Create_Junk_Tire(spawn_hex, scenery_elevation)
          end
          else if (LVar3 == 2) then begin
-            //Item := create_object(PID_JUNK_DIRT_2, 0, scenery_elevation);
-            Create_Junk_Dirt_2(0, scenery_elevation)
+            //Item := create_object(PID_JUNK_DIRT_2, spawn_hex, scenery_elevation);
+            Create_Junk_Dirt_2(spawn_hex, scenery_elevation)
          end
          else begin
-            //Item := create_object(PID_JUNK_DIRT_1, 0, scenery_elevation);
-            Create_Junk_Dirt_1(0, scenery_elevation)
+            //Item := create_object(PID_JUNK_DIRT_1, spawn_hex, scenery_elevation);
+            Create_Junk_Dirt_1(spawn_hex, scenery_elevation)
          end
       end
       else if (LVar2 == 7) then begin
          LVar3 := random(1, 4);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_DIRT_5, 0, scenery_elevation);
+            Item := create_object(PID_DIRT_5, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_DIRT_3, 0, scenery_elevation);
+            Item := create_object(PID_DIRT_3, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 3) then begin
-            Item := create_object(PID_DIRT_6, 0, scenery_elevation);
+            Item := create_object(PID_DIRT_6, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_DIRT_4, 0, scenery_elevation);
+            Item := create_object(PID_DIRT_4, spawn_hex, scenery_elevation);
          end
       end
       else if (LVar2 == 8) then begin
          LVar3 := random(1, 3);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_ROCKS_8, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_8, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
-            Item := create_object(PID_ROCKS_7, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_7, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(PID_ROCKS_6, 0, scenery_elevation);
+            Item := create_object(PID_ROCKS_6, spawn_hex, scenery_elevation);
          end
       end
       else begin
          LVar3 := random(1, 6);
          if (LVar3 == 1) then begin
-            Item := create_object(PID_BONES_4, 0, scenery_elevation);
+            Item := create_object(PID_BONES_4, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 2) then begin
             if (random(1, 3) == 1) then begin
-               Item := create_object(PID_TREE_2, 0, scenery_elevation);
+               Item := create_object(PID_TREE_2, spawn_hex, scenery_elevation);
             end
             else begin
-               Item := create_object(PID_CACTUS_1, 0, scenery_elevation);
+               Item := create_object(PID_CACTUS_1, spawn_hex, scenery_elevation);
             end
          end
          else if (LVar3 == 3) then begin
-            Item := create_object(PID_DIRT_5, 0, scenery_elevation);
+            Item := create_object(PID_DIRT_5, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 4) then begin
-            Item := create_object(PID_CACTUS_1, 0, scenery_elevation);
+            Item := create_object(PID_CACTUS_1, spawn_hex, scenery_elevation);
          end
          else if (LVar3 == 5) then begin
-            Item := create_object(PID_CACTUS_2, 0, scenery_elevation);
+            Item := create_object(PID_CACTUS_2, spawn_hex, scenery_elevation);
          end
          else if (random(1, 3) == 1) then begin
-            Item := create_object(PID_TREE_OLD, 0, scenery_elevation);
+            Item := create_object(PID_TREE_OLD, spawn_hex, scenery_elevation);
          end
          else begin
-            Item := create_object(random(0, 2) + 33554710, 0, scenery_elevation);
+            Item := create_object(random(0, 2) + 33554710, spawn_hex, scenery_elevation);
          end
       end
       LVar4 := LVar2;
-      critter_attempt_placement(Item, LVar0, scenery_elevation);
+      //debug("try to move item " + Item + " which is " + obj_pid(Item));
+      // This can cause empty encounters
+      // Don't ask me why, I have no idea. Item is always valid in my tests, and the spawn_hex is ok too.
+      // If we just skip this step and directly create the objects on their final position, then this
+      // can be circumvented. Not sure yet if this is good or bad, but for now it seems to be a workaround.
+      //critter_attempt_placement(Item, spawn_hex, scenery_elevation);
+      //debug("finished moving item!");
       Tot_Critter_A := Tot_Critter_A - 1;
    end
+   debug("Tot_Critter_A is completed!");
 end
 
 /************************************************
@@ -403,7 +413,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_5MM_AP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 4 * (dude_perk(PERK_scrounger) + 1));
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_COMBAT_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -439,7 +449,7 @@ procedure hunters begin
    Item := create_object(PID_STIMPAK, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3);
 
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -466,7 +476,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_223_FMJ, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 3 * (dude_perk(PERK_scrounger) + 1));
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -495,7 +505,7 @@ procedure hunters begin
    add_obj_to_inven(Critter, Item);
    Item := create_object(PID_44_MAGNUM_JHP, 0, 0);
    add_mult_objs_to_inven(Critter, Item, 2 * (dude_perk(PERK_scrounger) + 1));
-   if fo1in2_destroy_armor_enabled then begin
+   if not(fo1in2_destroy_armor_enabled) then begin
       Item := create_object(PID_METAL_ARMOR, 0, 0);
       add_obj_to_inven(Critter, Item);
       wield_obj_critter(Critter, Item);
@@ -652,6 +662,91 @@ procedure dehydration_b begin
       end
       TimeHours := TimeHours * ONE_GAME_HOUR;
       game_time_advance(game_ticks(TimeHours));
+   end
+end
+
+// Mountain encounter
+procedure breaking_legs(variable hp_dmg) begin
+   if (party_has_item(PID_ROPE)) then begin
+      party_remove_item(PID_ROPE)
+      display_msg(message_str(SCRIPT_RNDMTN, 204));
+   end
+   else begin
+      if (random(0, 1) == 0) then begin
+         critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 139));
+      end
+      else begin
+         critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
+         display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 140));
+      end
+   end
+end
+
+procedure falling_from_cliff begin
+   variable main_roll := 0;
+   variable hp_dmg := 0;
+   variable hp_cur := 0;
+
+   display_msg(message_str(SCRIPT_RNDMTN, 114));
+   main_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (5 * dude_perception) ));
+   if (not(is_success(main_roll))) then begin
+      if ((random(1, 100) >= 95) or is_critical(main_roll)) then begin
+         display_msg(message_str(SCRIPT_RNDMTN, 118));
+         hp_dmg := (random(7, 20) + 3);
+         hp_cur := dude_cur_hp;
+         if (hp_dmg >= hp_cur) then begin
+            hp_dmg := (hp_cur - 1);
+         end
+
+         reg_anim_clear(dude_obj);
+         reg_anim_begin();
+            reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
+            reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
+         reg_anim_end();
+
+         critter_heal(dude_obj, -hp_dmg);
+         if (party_has_item(PID_ROPE)) then begin
+            party_remove_item(PID_ROPE)
+            display_msg(message_str(SCRIPT_RNDMTN, 204));
+         end
+         else begin
+            critter_injure(dude_obj, DAM_CRIP_LEG_LEFT);
+            critter_injure(dude_obj, DAM_CRIP_LEG_RIGHT);
+            critter_injure(dude_obj, DAM_CRIP_ARM_LEFT);
+            critter_injure(dude_obj, DAM_CRIP_ARM_RIGHT);
+            display_msg(message_str(SCRIPT_RNDMTN, 147));
+         end
+      end
+      else begin
+         display_msg(message_str(SCRIPT_RNDMTN, 117));
+         hp_dmg := random(4, 16);
+         hp_cur := dude_cur_hp;
+         if (hp_dmg >= hp_cur) then begin
+            hp_dmg := (hp_cur - 1);
+         end
+
+         reg_anim_clear(dude_obj);
+         reg_anim_begin();
+            reg_anim_animate(dude_obj, ANIM_fall_back_sf, -1);
+            reg_anim_animate(dude_obj, ANIM_back_to_standing, -1);
+         reg_anim_end();
+
+         critter_heal(dude_obj, -hp_dmg);
+         if (random(0,3) == 1) then begin
+            display_msg(message_str(SCRIPT_RNDMTN, 138) + hp_dmg + message_str(SCRIPT_RNDMTN, 141));
+         end
+         else begin
+            call breaking_legs(hp_dmg);
+         end
+      end
+   end
+   else begin
+      display_msg(message_str(SCRIPT_RNDMTN, 115));
+      if (is_critical(main_roll)) then begin
+         display_msg(message_str(SCRIPT_RNDMTN, 116));
+         critter_heal(dude_obj, random(5, 15));
+      end
    end
 end
 

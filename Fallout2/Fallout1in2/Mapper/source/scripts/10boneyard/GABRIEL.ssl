@@ -90,7 +90,7 @@ procedure talk_p_proc begin
 
    dude_look_at_self;
 
-   if ((global_var(GVAR_DUDE_ENEMY_BLADES) == 1) or (dude_iq < 4)) then begin
+   if ((global_var(GVAR_ENEMY_GUN_RUNNERS) == 1) or (dude_iq < 4)) then begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
@@ -137,30 +137,32 @@ end
 
 procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+      set_global_var(GVAR_ENEMY_GUN_RUNNERS, 1);
    end
 end
 
 procedure destroy_p_proc begin
    if (source_obj == dude_obj) then begin
-      set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+      set_global_var(GVAR_ENEMY_GUN_RUNNERS, 1);
       inc_good_critter
+      inc_boneyard_rep(REP_BONUS_GABRIEL_DEAD);
    end
 end
 
 procedure critter_p_proc begin
    if (self_can_see_dude) then begin
-      if (global_var(GVAR_DUDE_ENEMY_BLADES) == 1) then begin
+      if (global_var(GVAR_ENEMY_GUN_RUNNERS) == 1) then begin
          attack(dude_obj);
       end
    end
 end
 
 procedure pickup_p_proc begin
-   set_global_var(GVAR_DUDE_ENEMY_BLADES, 1);
+   set_global_var(GVAR_ENEMY_GUN_RUNNERS, 1);
 end
 
 procedure Gab01 begin
+   set_local_var(LVAR_Here_Before, 1); // Moved here from Gab02
    Reply(102);
    NOption(103, Gab02, 1);
    NOption(104, Gab04, 1);
@@ -250,7 +252,9 @@ procedure Gab13 begin
       Reply(173);
    end
    NOption(132, Gab15, 1);
-   NOption(133, Gab14, 1);
+
+   if not(get_gunrunners_armed_blades) and not(get_gunrunners_armed_dude) then
+      NOption(133, Gab14, 1);
 
    if debug_mode then
       NOption("***CHEAT *** The deathclaw are kill!", Gab20, 001);
@@ -262,7 +266,10 @@ procedure Gab14 begin
 end
 
 procedure Gab15 begin
-   Reply(136);
+   if not(get_gunrunners_armed_blades) and not(get_gunrunners_armed_dude) then
+      Reply(136);
+   else
+      Reply(300);
    NOption(137, GabEnd, 1);
 end
 

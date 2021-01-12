@@ -288,24 +288,19 @@ procedure use_skill_on_p_proc begin
        else begin
            call Set_Lock;
        end
-   end                                                          // End of Skill_Lockpick
-
+   end
    else if (Skill_Used == SKILL_TRAPS) then begin
        script_overrides; //added by killap
        if (local_var(LVAR_Trapped) == STATE_ACTIVE) then begin
            call Skill_Disarm_Traps;
        end
        else begin
-           if (source_obj == dude_obj) then begin
+           if (source_obj == dude_obj) then
                display_msg(mstr(195));
-           end
-
-           else begin
+           else
                display_msg(obj_name(source_obj)+mstr(2000));
-           end
        end
-   end                                                          // End of Skill_Traps
-
+   end
 end
 
 
@@ -342,34 +337,34 @@ procedure use_obj_on_p_proc begin
    end
 
    else if (LOCK_STATUS == STATE_ELECTRIC_LOCK) then begin
-       if (Tool == PID_ELECTRONIC_LOCKPICKS) then begin
-           script_overrides; //added by killap
-           if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
-               call Lockpick_Lock;
-           end
-           else begin
-               call Set_Lockpick_Lock;
-           end
-       end
-       else if (Tool == PID_ELEC_LOCKPICK_MKII) then begin
-           script_overrides; //added by killap
-           if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
-               call Super_Lockpick_Lock;
-           end
-           else begin
-               call Super_Set_Lockpick_Lock;
-           end
-       end
+      if (Tool == PID_ELECTRONIC_LOCKPICKS) then begin
+         script_overrides; //added by killap
+         if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
+            call Lockpick_Lock;
+         end
+         else begin
+            call Set_Lockpick_Lock;
+         end
+      end
+      else if (Tool == PID_ELEC_LOCKPICK_MKII) then begin
+         script_overrides; //added by killap
+         if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
+            call Super_Lockpick_Lock;
+         end
+         else begin
+            call Super_Set_Lockpick_Lock;
+         end
+      end
    end
 
    else if (Tool == PID_CROWBAR) then begin
-       script_overrides; //added by killap
-       call Pry_Door;
+      script_overrides; //added by killap
+      call Pry_Door;
    end
 
    else if ((Tool == PID_DYNAMITE) or (Tool == PID_PLASTIC_EXPLOSIVES)) then begin
-       script_overrides; //added by killap
-       call Set_Trap;
+      script_overrides; //added by killap
+      call Set_Trap;
    end
 
 end
@@ -384,44 +379,38 @@ end
 procedure damage_p_proc begin
    variable Trap_Damage;
 
-  /************ Wood Door ****************/
+   if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
+      /************ Wood Door ****************/
+      if is_wood_door then begin
+         if (local_var(LVAR_Trapped) == STATE_ACTIVE) then begin
+            set_local_var(LVAR_Trapped, STATE_INACTIVE);
+            set_local_var(LVAR_Locked, STATE_INACTIVE);
+            Trap_Damage := random(MIN_DAMAGE, MAX_DAMAGE);
+            explosion(self_tile, self_elevation, Trap_Damage);
+            destroy_object(self_obj);
+         end
+         else begin
+            set_local_var(LVAR_Trapped, STATE_INACTIVE);
+            set_local_var(LVAR_Locked, STATE_INACTIVE);
+            destroy_object(self_obj);
+         end
+      end
 
- if (weapon_dmg_type(target_obj) == DMG_explosion) then begin
-   if is_wood_door then begin
-       if (local_var(LVAR_Trapped) == STATE_ACTIVE) then begin
-           set_local_var(LVAR_Trapped, STATE_INACTIVE);
-           set_local_var(LVAR_Locked, STATE_INACTIVE);
-           Trap_Damage := random(MIN_DAMAGE, MAX_DAMAGE);
-           explosion(self_tile, self_elevation, Trap_Damage);
-           destroy_object(self_obj);
-       end
-
-       else begin
-           set_local_var(LVAR_Trapped, STATE_INACTIVE);
-           set_local_var(LVAR_Locked, STATE_INACTIVE);
-           destroy_object(self_obj);
-       end
+      /************ Metal Door ****************/
+      else if is_metal_door then begin
+         set_local_var(LVAR_Explosion_Attempts, local_var(LVAR_Explosion_Attempts)+1);
+         if (local_var(LVAR_Trapped) == STATE_ACTIVE) then begin
+            set_local_var(LVAR_Locked, STATE_INACTIVE);
+            Trap_Damage := random(MIN_DAMAGE, MAX_DAMAGE);
+            explosion(self_tile, self_elevation, Trap_Damage);
+         end
+         else if (local_var(LVAR_Explosion_Attempts) > DOOR_STRENGTH) then begin
+            set_local_var(LVAR_Trapped, STATE_INACTIVE);
+            set_local_var(LVAR_Locked, STATE_INACTIVE);
+            destroy_object(self_obj);
+         end
+      end
    end
-
-  /************ Metal Door ****************/
-
-   else if is_metal_door then begin
-       set_local_var(LVAR_Explosion_Attempts, local_var(LVAR_Explosion_Attempts)+1);
-       if (local_var(LVAR_Trapped) == STATE_ACTIVE) then begin
-           set_local_var(LVAR_Locked, STATE_INACTIVE);
-           Trap_Damage := random(MIN_DAMAGE, MAX_DAMAGE);
-           explosion(self_tile, self_elevation, Trap_Damage);
-       end
-
-       else if (local_var(LVAR_Explosion_Attempts) > DOOR_STRENGTH) then begin
-           set_local_var(LVAR_Trapped, STATE_INACTIVE);
-           set_local_var(LVAR_Locked, STATE_INACTIVE);
-           destroy_object(self_obj);
-       end
-   end
-
-end
-
    else begin
        display_msg(mstr(193));
    end
@@ -436,7 +425,6 @@ end
 ***************************************************************************************/
 
 procedure map_enter_p_proc begin
-
 /* Set up the door state when the player first enters the map */
    if (local_var(LVAR_Set_Door_Status) == 0) then begin
        set_local_var(LVAR_Set_Door_Status, 1);
@@ -447,7 +435,6 @@ procedure map_enter_p_proc begin
    if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
        obj_lock(self_obj);
    end
-
    else begin
        obj_unlock(self_obj);
    end
@@ -465,7 +452,6 @@ procedure map_update_p_proc begin
    if (local_var(LVAR_Locked) == STATE_ACTIVE) then begin
        obj_lock(self_obj);
    end
-
    else begin
        obj_unlock(self_obj);
    end
@@ -1172,52 +1158,39 @@ end
 
 procedure Disarm_Traps begin
    if (is_success(Traps_Roll)) then begin
-       if (local_var(LVAR_Found_Trap) == 0) then begin
-           set_local_var(LVAR_Found_Trap, 1);
-           if (source_obj == dude_obj) then begin
-               display_msg(mstr(194));
-           end
+      if (local_var(LVAR_Found_Trap) == 0) then begin
+         set_local_var(LVAR_Found_Trap, 1);
+         if (source_obj == dude_obj) then
+            display_msg(mstr(194));
+         else
+            display_msg(mstr(199));
 
-           else begin
-               display_msg(mstr(199));
-           end
-
-           if (local_var(LVAR_Gave_Traps_XP) == 0) then begin
-               set_local_var(LVAR_Gave_Traps_XP, 1);
-               give_xp(Traps_Exp);
-           end
-       end
-
-       else begin
-           set_local_var(LVAR_Trapped, STATE_INACTIVE);
-           if (source_obj == dude_obj) then begin
-               display_msg(mstr(196));
-           end
-
-           else begin
-               display_msg(obj_name(source_obj)+mstr(2010));
-           end
-       end
+         if (local_var(LVAR_Gave_Traps_XP) == 0) then begin
+            set_local_var(LVAR_Gave_Traps_XP, 1);
+            give_xp(Traps_Exp);
+         end
+      end
+      else begin
+         set_local_var(LVAR_Trapped, STATE_INACTIVE);
+         if (source_obj == dude_obj) then
+            display_msg(mstr(196));
+         else
+            display_msg(obj_name(source_obj)+mstr(2010));
+      end
    end
-
    else if (is_critical(Traps_Roll)) then begin
        call Damage_Critter;
    end
-
    else begin
-       if (local_var(LVAR_Found_Trap) == 0) then begin
-           if (source_obj == dude_obj) then begin
-               display_msg(mstr(195));
-           end
-
-           else begin
-               display_msg(obj_name(source_obj)+mstr(2000));
-           end
-       end
-
-       else begin
-           display_msg(obj_name(source_obj)+mstr(2020));
-       end
+      if (local_var(LVAR_Found_Trap) == 0) then begin
+         if (source_obj == dude_obj) then
+            display_msg(mstr(195));
+         else
+            display_msg(obj_name(source_obj)+mstr(2000));
+      end
+      else begin
+         display_msg(obj_name(source_obj)+mstr(2020));
+      end
    end
 end
 
@@ -1267,43 +1240,31 @@ end
 
 procedure Lockpick_Door begin
    if (is_success(Locks_Roll)) then begin
-       set_local_var(LVAR_Locked, STATE_INACTIVE);              // Door is unlocked
-       obj_unlock(self_obj);                                    // engine unlock door
+      set_local_var(LVAR_Locked, STATE_INACTIVE);              // Door is unlocked
+      obj_unlock(self_obj);                                    // engine unlock door
 
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(170));
-       end
+      if (source_obj == dude_obj) then
+         display_msg(mstr(170));
+      else
+         display_msg(obj_name(source_obj)+mstr(173));
 
-       else begin
-           display_msg(obj_name(source_obj)+mstr(173));
-       end
-
-       if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
-           set_local_var(LVAR_Gave_Locks_XP, 1);
-           give_xp(Lockpick_Exp);
-       end
+      if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+         set_local_var(LVAR_Gave_Locks_XP, 1);
+         give_xp(Lockpick_Exp);
+      end
    end
-
    else if (is_critical(Locks_Roll)) then begin
-       jam_lock(self_obj);
-
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(171));
-       end
-
-       else begin
-           display_msg(obj_name(source_obj)+mstr(174));
-       end
+      jam_lock(self_obj);
+      if (source_obj == dude_obj) then
+         display_msg(mstr(171));
+      else
+         display_msg(obj_name(source_obj)+mstr(174));
    end
-
    else begin
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(172));
-       end
-
-       else begin
-           display_msg(obj_name(source_obj)+mstr(175));
-       end
+      if (source_obj == dude_obj) then
+         display_msg(mstr(172));
+      else
+         display_msg(obj_name(source_obj)+mstr(175));
    end
 end
 
@@ -1353,31 +1314,24 @@ end
 
 procedure Lock_Door begin
    if (is_success(Locks_Roll)) then begin
-       set_local_var(LVAR_Locked, STATE_ACTIVE);                // Door is unlocked
-       obj_lock(self_obj);                                      // engine unlock door
+      set_local_var(LVAR_Locked, STATE_ACTIVE);                // Door is unlocked
+      obj_lock(self_obj);                                      // engine unlock door
 
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(189));
-       end
+      if (source_obj == dude_obj) then
+         display_msg(mstr(189));
+      else
+         display_msg(obj_name(source_obj)+mstr(191));
 
-       else begin
-           display_msg(obj_name(source_obj)+mstr(191));
-       end
-
-       if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
-           set_local_var(LVAR_Gave_Locks_XP, 1);
-           give_xp(Lockpick_Exp);
-       end
+      if (local_var(LVAR_Gave_Locks_XP) == 0) then begin
+         set_local_var(LVAR_Gave_Locks_XP, 1);
+         give_xp(Lockpick_Exp);
+      end
    end
-
    else begin
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(190));
-       end
-
-       else begin
-           display_msg(obj_name(source_obj)+mstr(192));
-       end
+      if (source_obj == dude_obj) then
+         display_msg(mstr(190));
+      else
+         display_msg(obj_name(source_obj)+mstr(192));
    end
 end
 
@@ -1393,59 +1347,42 @@ procedure Pry_Door begin
    Stat_Roll := do_check(source_obj, STAT_st, Crowbar_Bonus);
 
    if (is_success(Stat_Roll)) then begin
-       set_local_var(LVAR_Locked, STATE_INACTIVE);
-       obj_unlock(self_obj);
+      set_local_var(LVAR_Locked, STATE_INACTIVE);
+      obj_unlock(self_obj);
 
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(176));
-       end
-
-       else begin
-           display_msg(mstr(181));
-       end
+      if (source_obj == dude_obj) then
+         display_msg(mstr(176));
+      else
+         display_msg(mstr(181));
    end
-
    else if (is_critical(Stat_Roll)) then begin
-       critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
-
-       if (source_obj == dude_obj) then begin
-           if (Crowbar_Strain == 1) then begin
-               display_msg(mstr(177));
-           end
-           else begin
-               display_msg(mstr(178)+Crowbar_Strain + mstr(179));
-           end
-       end
-
-       else begin
-           if (get_is_male(source_obj)) then begin
-               if (Crowbar_Strain == 1) then begin
-                   display_msg(mstr(182));
-               end
-               else begin
-                   display_msg(mstr(183)+Crowbar_Strain + mstr(184));
-               end
-           end
-
-           else begin
-               if (Crowbar_Strain == 1) then begin
-                   display_msg(mstr(186));
-               end
-               else begin
-                   display_msg(mstr(187)+Crowbar_Strain + mstr(188));
-               end
-           end
-       end
+      critter_dmg(source_obj, Crowbar_Strain, (DMG_normal_dam BWOR DMG_BYPASS_ARMOR));
+      if (source_obj == dude_obj) then begin
+         if (Crowbar_Strain == 1) then
+            display_msg(mstr(177));
+         else
+            display_msg(mstr(178)+Crowbar_Strain + mstr(179));
+      end
+      else begin
+         if (get_is_male(source_obj)) then begin
+            if (Crowbar_Strain == 1) then
+               display_msg(mstr(182));
+            else
+               display_msg(mstr(183)+Crowbar_Strain + mstr(184));
+         end
+         else begin
+            if (Crowbar_Strain == 1) then
+               display_msg(mstr(186));
+            else
+               display_msg(mstr(187)+Crowbar_Strain + mstr(188));
+         end
+      end
    end
-
    else begin
-       if (source_obj == dude_obj) then begin
-           display_msg(mstr(180));
-       end
-
-       else begin
-           display_msg(mstr(185));
-       end
+      if (source_obj == dude_obj) then
+         display_msg(mstr(180));
+      else
+         display_msg(mstr(185));
    end
 end
 
@@ -1462,17 +1399,16 @@ procedure Damage_Critter begin
    Trap_Damage := random(MIN_DAMAGE, MAX_DAMAGE);
 
    if (source_obj == dude_obj) then begin
-       critter_dmg(dude_obj, Trap_Damage, (DMG_explosion BWOR DMG_BYPASS_ARMOR));
-/* display_msg("You set off the trap and were hit for "+Trap_Damage+" points of damage.");                */
-       display_msg(mstr(166)+Trap_Damage + mstr(167));
+      critter_dmg(dude_obj, Trap_Damage, (DMG_explosion BWOR DMG_BYPASS_ARMOR));
+      /* display_msg("You set off the trap and were hit for "+Trap_Damage+" points of damage.");                */
+      display_msg(mstr(166)+Trap_Damage + mstr(167));
    end
-
    else begin
-       critter_dmg(source_obj, Trap_Damage, (DMG_explosion BWOR DMG_BYPASS_ARMOR));
-/* display_msg(Critter_Name+" set off the trap was hit for "+Trap_Damage+" points of damage");        */
-       display_msg(obj_name(source_obj)+mstr(168)+Trap_Damage + mstr(169));
+      critter_dmg(source_obj, Trap_Damage, (DMG_explosion BWOR DMG_BYPASS_ARMOR));
+      /* display_msg(Critter_Name+" set off the trap was hit for "+Trap_Damage+" points of damage");        */
+      display_msg(obj_name(source_obj)+mstr(168)+Trap_Damage + mstr(169));
    end
 
-/* The trap is now disarmed and should never go off again.                           */
+   /* The trap is now disarmed and should never go off again.                           */
    set_local_var(LVAR_Trapped, STATE_INACTIVE);
 end

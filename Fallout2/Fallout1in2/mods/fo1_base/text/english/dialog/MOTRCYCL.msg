@@ -15,11 +15,12 @@
 
 {400}{}{It would be too noisy to pop open the hood and work on the car.}
 
-# SD3:
+# Fo1in2:
 {450}{}{The motorcycle isn't operational.}
 {451}{}{The motorcycle doesn't require any repairs.}
 {452}{}{The key fits!}
 {453}{}{Looks like the fuel cell controller was removed as a precaution. Maybe it's still around somewhere here?}
+{454}{}{Looks like you need a key to start the motorcycle.}
 
 {500}{}{The motorcycle isn't big enough for your party!}
 {501}{}{Not all of us will fit on the bike.}

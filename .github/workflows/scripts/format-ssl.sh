@@ -24,7 +24,7 @@ if [ ! -d "$scripts_dir" ]; then
 fi
 
     # /c/repo/path/to/scripts/sub/dir/script.ssl
-for ssl_full in $(/usr/bin/find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | /usr/bin/sort); do
+for ssl_full in $(find $scripts_dir -type f -name '*.[Ss][Ss][Ll]' | sort); do
     # /c/repo/path/to/scripts/sub/dir
     ssl_dir=$(dirname "$ssl_full")
     # script.ssl

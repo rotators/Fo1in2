@@ -56,7 +56,7 @@ mv -f "$news.stupid-sort" "$news"
 
 # add header
 if [ -s "$news" ]; then
-   sed -i "1s!^!N${header}\\n!" "$news"
+   sed -i "1s!^!N${header}\\n\\n!" "$news"
 else
    echo "No n$header" > "$news"
 fi

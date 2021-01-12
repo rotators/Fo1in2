@@ -1,0 +1,101 @@
+/*
+
+   Makes the super mutants a lot tougher with overriding their base hp value.
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "command.h"
+
+#include "sfall/main.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure map_enter_p_proc;
+procedure adjust_hp;
+
+#define crit_pid           obj_pid(critter)
+#define crit_max_hp        get_max_hp(critter)
+
+#define hp_overkill        global_var(GVAR_ENABLE_TOUGH_MUTANTS)
+
+#define inc_hp(x)          set_proto_data(crit_pid, PROTO_CR_BONUS_HP, (x * hp_overkill)); \
+                           if map_first_run then critter_heal(critter, crit_max_hp)
+
+#define inc_plasma_res(x)  set_proto_data(crit_pid, PROTO_AR_DR_PLASMA, x)
+
+procedure start begin
+   call adjust_hp;
+end
+
+procedure map_enter_p_proc begin
+   call adjust_hp;
+end
+
+procedure adjust_hp begin
+   variable critter;
+   if fo1in2_tough_mutants_enabled then begin
+      if (cur_map_index > MAP_DESERT0) then begin
+         foreach (critter in list_as_array(LIST_CRITTERS)) begin
+            // No change to the Master, he is strong enough.
+            if (crit_pid == PID_MASTER) then begin
+               inc_hp(455); // base is 455, orig hp is 500, new hp is 500
+            end
+
+            // No change to the Lou, he is strong enough with his guards.
+            else if (crit_pid == PID_LOU) then begin
+               inc_hp(205); // base is 205, orig hp is 250, new hp is 250
+            end
+
+            // No change to Harry for early game balance
+            else if (crit_pid == PID_HARRY) then begin
+               inc_hp(80); // base is 80, orig hp is 120, new hp is 120
+            end
+
+            else if (crit_pid == PID_NIGHTKIN) then begin
+               inc_hp(60); // base is 10, orig hp is 50, new hp is 100
+               //debug("plasma: " + get_proto_data(crit_pid, PROTO_AR_DR_PLASMA));
+            end
+            else if (crit_pid == PID_NIGHTKIN_GUARD) then begin
+               inc_hp(85); // base is 20, orig hp is 60, new hp is 125
+            end
+
+            // Don't change the Watershed mutants, for early game balance
+            else if (crit_pid == PID_SUPER_MUTANT and not(CUR_MAP_WATRSHD)) then begin
+               inc_hp(43); // base is 37, orig hp is 40, new hp is 80
+            end
+            else if (crit_pid == PID_TOUGH_SUPER_MUTANT) then begin
+               inc_hp(75); // base is 35, orig hp is 75, new hp is 115
+            end
+
+            else if (crit_pid == PID_SUPER_MUTANT_GUARD) then begin
+               inc_hp(51); // base is 11, orig hp is 50, new hp is 90
+            end
+            else if (crit_pid == PID_MEAN_SUPER_MUTANT) then begin
+               inc_hp(62); // base is 22, orig hp is 60, new hp is 100
+            end
+            // Don't change the Necropolis invasion mutants, for early game balance
+            else if ((crit_pid == PID_MAD_SUPER_MUTANT) and not(CUR_AREA_NECROPOLIS)) then begin
+               inc_hp(110); // base is 60, orig hp is 100, new hp is 150
+            end
+            else if (crit_pid == PID_DEADLY_SUPER_MUTANT) then begin
+               inc_hp(130); // base is 80, orig hp is 125, new hp is 175
+            end
+
+            else if (crit_pid == PID_TOUGH_NIGHTKIN) then begin
+               inc_hp(100); // base is 30, orig hp is 70, new hp is 140
+            end
+            else if (crit_pid == PID_DEADLY_NIGHTKIN) then begin
+               inc_hp(118); // base is 48, orig hp is 90, new hp is 160
+            end
+            else if (crit_pid == PID_SUPER_NIGHTKIN) then begin
+               inc_hp(135); // base is 65, orig hp is 110, new hp is 180
+            end
+            else if (crit_pid == PID_MASTER_NIGHTKIN) then begin
+               inc_hp(155); // base is 95, orig hp is 140, new hp is 200
+            end
+         end
+      end
+   end
+end

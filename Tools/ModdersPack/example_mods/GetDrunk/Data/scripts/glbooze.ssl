@@ -1,85 +1,104 @@
 procedure start;
+procedure GetBoozes;
 procedure update_shader;
 
-variable perception;
-variable boozes;
-variable shader1;
-variable shader2;
-variable shader3;
-variable shader4;
-variable drunk_level;
-variable next_reduction;
+variable begin
+	perception;
+	boozes;
+	shader1;
+	shader2;
+	shader3;
+	shader4;
+	drunk_level;
+	next_reduction;
+	booze_pids;
+end
 
 procedure start begin
-	variable new_pe;
-	variable new_booze;
-	variable drunk_count;
-	if (metarule(22,0)) then return;
+	variable new_pe, new_booze, drunk_count;
+
+	if (metarule(22, 0)) then return; //is_loading_game
 	if (game_loaded) then begin
-		if(not graphics_funcs_available) then begin
+		if (not graphics_funcs_available) then begin
 			display_msg("ERROR: You must set sfall to use graphics mode 4 or 5 to use this mod");
 			return;
 		end else begin
-			//new_pe:=create_object_sid(125, 0, 0, -1);
+			// pid list of the items for the mod to apply the effect
+			booze_pids := [/*124,*/ 125];
+
+			fix_array(booze_pids);
+			//new_pe := create_object_sid(125, 0, 0, -1);
 			//add_mult_objs_to_inven(dude_obj, new_pe, 10);
-			perception:=get_pc_extra_stat(1);
-			boozes:=obj_is_carrying_obj_pid(dude_obj, 125);
-			set_global_script_repeat(25);
-			set_global_script_repeat(-1);
-			shader1:=load_shader("booze1.fx");
-			shader2:=load_shader("booze2.fx");
-			shader3:=load_shader("booze3.fx");
-			shader4:=load_shader("booze4.fx");
-			drunk_level:=0;
-			next_reduction:=0;
+			perception := get_pc_extra_stat(1);
+			boozes := GetBoozes;
+
+			set_global_script_repeat(50);
+			set_global_script_type(1);
+
+			shader1 := load_shader("booze1.fx");
+			shader2 := load_shader("booze2.fx");
+			shader3 := load_shader("booze3.fx");
+			shader4 := load_shader("booze4.fx");
 			//display_msg("Init: " + perception + ", " + boozes);
 		end
 	end else begin
-		new_pe:=get_pc_extra_stat(1);
-		new_booze:=obj_is_carrying_obj_pid(dude_obj, 125);
-		if( (perception != new_pe) or (boozes != new_booze) ) then begin
+		new_pe := get_pc_extra_stat(1);
+		new_booze := GetBoozes;
+		if ((perception != new_pe) orElse (boozes != new_booze)) then begin
 			//display_msg("var change: " + perception + ", " + boozes + " -> " + new_pe + ", " + new_booze);
-			if ( (perception > new_pe) and (boozes > new_booze) ) then begin
-				if ( (perception - new_pe) < (boozes - new_booze) ) then begin
-					drunk_count:=perception - new_pe;
+			if ((perception > new_pe) andAlso (boozes > new_booze)) then begin
+				variable pe_diff := perception - new_pe;
+				variable booze_diff := boozes - new_booze;
+				if (pe_diff < booze_diff) then begin
+					drunk_count := pe_diff;
 				end else begin
-					drunk_count:=boozes - new_booze;
+					drunk_count := booze_diff;
 				end
-				drunk_level:=drunk_level + (drunk_count*10);
+				drunk_level += (drunk_count * 10);
 				//display_msg("Increasing booze count: " + drunk_level);
 				call update_shader;
-				next_reduction:=game_time + game_ticks(6);
+				next_reduction := game_time + game_ticks(6);
 			end
-			perception:=new_pe;
-			boozes:=new_booze;
+			perception := new_pe;
+			boozes := new_booze;
 		end
-		if( (next_reduction != 0 ) and (game_time >= next_reduction) ) then begin
-			drunk_level:=drunk_level - 1;
-			if(drunk_level == 0) then next_reduction:=0;
-			else next_reduction:=next_reduction + game_ticks(6);
+		if ((next_reduction != 0) andAlso (game_time >= next_reduction)) then begin
+			drunk_level -= 1;
+			if (drunk_level == 0) then
+				next_reduction := 0;
+			else
+				next_reduction += game_ticks(6);
 			call update_shader;
 			//display_msg("Decreasing booze count: " + drunk_level);
 		end
 	end
 end
 
+procedure GetBoozes begin
+	variable pid, count_booze := 0;
+	foreach (pid in booze_pids) begin
+		count_booze += obj_is_carrying_obj_pid(dude_obj, pid);
+	end
+	return count_booze;
+end
+
 procedure update_shader begin
-	if(drunk_level >= 100) then begin
+	if (drunk_level >= 100) then begin
 		deactivate_shader(shader1);
 		deactivate_shader(shader2);
 		deactivate_shader(shader3);
 		activate_shader(shader4);
-	end else if(drunk_level >= 50) then begin
+	end else if (drunk_level >= 50) then begin
 		deactivate_shader(shader1);
 		deactivate_shader(shader2);
 		activate_shader(shader3);
 		deactivate_shader(shader4);
-	end else if(drunk_level >= 25) then begin
+	end else if (drunk_level >= 25) then begin
 		deactivate_shader(shader1);
 		activate_shader(shader2);
 		deactivate_shader(shader3);
 		deactivate_shader(shader4);
-	end else if(drunk_level > 0) then begin
+	end else if (drunk_level > 0) then begin
 		activate_shader(shader1);
 		deactivate_shader(shader2);
 		deactivate_shader(shader3);

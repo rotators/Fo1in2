@@ -1,6 +1,6 @@
 /*
 
-   Cathedral - Some kid?
+   Cathedral - The Flower Child standing right at the cathedral doorsteps.
 
 */
 
@@ -76,50 +76,38 @@ procedure weapon_check;
 
 variable tmp_hostile;
 variable armed;
-variable GENDER;
 variable LASHERKNOWN;
 variable LASHERABUSEKNOWN;
 variable Only_Once := 1;
 
-procedure start
-begin
-
-
+procedure start begin
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_CHILDREN_TRUE);
    end
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      call talk_p_proc;
-   end
-   else begin
-      if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-         script_overrides;
-         display_msg(mstr(100));
-      end
-      else begin
-         if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-            call destroy_p_proc;
-         end
-         else begin
-            if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-               tmp_hostile := 1;
-            end
-            else begin
-               if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-                  if (tmp_hostile) then begin
-                     tmp_hostile := 0;
-                     attack(dude_obj);
-                  end
-               end
-            end
-         end
-      end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
 end
 
-
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_COC);
@@ -138,25 +126,25 @@ procedure talk_p_proc begin
       end
    end
    else begin
-      if has_rep_childkiller then begin
+      if (cathedral_destroyed or CUR_MAP_CHILDEAD) then begin
          call calder00;
       end
+      else if has_rep_childkiller then begin
+         call calder01;
+      end
+      else if (local_var(4) == 1) then begin
+         call calder28;
+      end
       else begin
-         if (local_var(4) == 1) then begin
-            call calder28;
-         end
-         else begin
-            set_local_var(4, 1);
-            call calder29;
-         end
+         set_local_var(4, 1);
+         call calder29;
       end
    end
    gsay_end;
    end_dialogue;
 end
 
-procedure calder00
-begin
+procedure calder00 begin
    Reply(101);
    NOption(102, calder02, 4);
    NOption(103, calder03, 4);
@@ -167,8 +155,7 @@ begin
    end
 end
 
-procedure calder01
-begin
+procedure calder01 begin
    Reply(107);
    NOption(108, calder01a, 4);
    NOption(109, calder03, 4);
@@ -176,8 +163,7 @@ begin
    NLowOption(111, calder03);
 end
 
-procedure calder01a
-begin
+procedure calder01a begin
    if (dude_charisma > 6) then begin
       call calder04;
    end
@@ -186,8 +172,7 @@ begin
    end
 end
 
-procedure calder01b
-begin
+procedure calder01b begin
    if (dude_charisma > 6) then begin
       call calder02;
    end
@@ -196,25 +181,21 @@ begin
    end
 end
 
-procedure calder02
-begin
+procedure calder02 begin
    BMessage(112);
 end
 
-procedure calder03
-begin
+procedure calder03 begin
    BMessage(113);
    call caldercombat;
 end
 
-procedure calder04
-begin
+procedure calder04 begin
    BMessage(114);
 end
 
-procedure calder05
-begin
-   if (GENDER == 0) then begin
+procedure calder05 begin
+   if (dude_is_male) then begin
       Reply(115);
    end
    else begin
@@ -229,8 +210,7 @@ begin
    end
 end
 
-procedure calder05a
-begin
+procedure calder05a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder06;
    end
@@ -239,8 +219,7 @@ begin
    end
 end
 
-procedure calder06
-begin
+procedure calder06 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(122);
    NOption(123, calder06a, 7);
@@ -252,8 +231,7 @@ begin
    end
 end
 
-procedure calder06a
-begin
+procedure calder06a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder12;
    end
@@ -262,8 +240,7 @@ begin
    end
 end
 
-procedure calder07
-begin
+procedure calder07 begin
    LASHERKNOWN := 1;
    LASHERABUSEKNOWN := 1;
    Reply(128);
@@ -275,8 +252,7 @@ begin
    end
 end
 
-procedure calder07a
-begin
+procedure calder07a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder06;
    end
@@ -285,8 +261,7 @@ begin
    end
 end
 
-procedure calder07b
-begin
+procedure calder07b begin
    if (dude_charisma > 6) then begin
       call calder14;
    end
@@ -295,16 +270,14 @@ begin
    end
 end
 
-procedure calder08
-begin
+procedure calder08 begin
    variable LVar0 := 0;
    LVar0 := create_object(PID_FLOWER, 0, 0);
    add_obj_to_inven(dude_obj, LVar0);
    GMessage(133);
 end
 
-procedure calder09
-begin
+procedure calder09 begin
    Reply(134);
    NOption(135, calder15, 7);
    NOption(136, calder16, 4);
@@ -314,8 +287,7 @@ begin
    end
 end
 
-procedure calder09a
-begin
+procedure calder09a begin
    if (dude_charisma > 6) then begin
       call calder02;
    end
@@ -324,32 +296,28 @@ begin
    end
 end
 
-procedure calder10
-begin
+procedure calder10 begin
    NMessage(139);
 end
 
-procedure calder11
-begin
+procedure calder11 begin
    NMessage(140);
 end
 
-procedure calder12
-begin
+procedure calder12 begin
    Reply(141);
    NOption(142, calder12a, 7);
    NOption(143, calder08, 4);
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       NOption(144, calder19, 4);
    end
-   if (GENDER == 0) then begin
+   if (dude_is_male) then begin
       NOption(145, calder19, 4);
    end
    NLowOption(146, calder15);
 end
 
-procedure calder12a
-begin
+procedure calder12a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -3))) then begin
       call calder18;
    end
@@ -358,13 +326,11 @@ begin
    end
 end
 
-procedure calder13
-begin
+procedure calder13 begin
    NMessage(147);
 end
 
-procedure calder14
-begin
+procedure calder14 begin
    Reply(148);
    NOption(149, calder20, 7);
    NOption(150, calder21, 4);
@@ -375,33 +341,27 @@ begin
    end
 end
 
-procedure calder15
-begin
+procedure calder15 begin
    BMessage(154);
 end
 
-procedure calder16
-begin
+procedure calder16 begin
    NMessage(155);
 end
 
-procedure calder17
-begin
+procedure calder17 begin
    NMessage(156);
 end
 
-procedure calder18
-begin
+procedure calder18 begin
    BMessage(157);
 end
 
-procedure calder19
-begin
+procedure calder19 begin
    NMessage(158);
 end
 
-procedure calder20
-begin
+procedure calder20 begin
    Reply(159);
    NOption(160, calder23, 7);
    NOption(161, calder24, 4);
@@ -412,28 +372,23 @@ begin
    end
 end
 
-procedure calder21
-begin
+procedure calder21 begin
    BMessage(165);
 end
 
-procedure calder22
-begin
+procedure calder22 begin
    BMessage(166);
 end
 
-procedure calder23
-begin
+procedure calder23 begin
    BMessage(167);
 end
 
-procedure calder24
-begin
+procedure calder24 begin
    NMessage(168);
 end
 
-procedure calder25
-begin
+procedure calder25 begin
    LASHERKNOWN := 1;
    LASHERABUSEKNOWN := 1;
    Reply(169);
@@ -443,8 +398,7 @@ begin
    NLowOption(174, calder15);
 end
 
-procedure calder25a
-begin
+procedure calder25a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder26;
    end
@@ -453,8 +407,7 @@ begin
    end
 end
 
-procedure calder26
-begin
+procedure calder26 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(175);
    NOption(176, calder13, 4);
@@ -462,13 +415,11 @@ begin
    NLowOption(178, calder16);
 end
 
-procedure calder27
-begin
+procedure calder27 begin
    BMessage(179);
 end
 
-procedure calder28
-begin
+procedure calder28 begin
    Reply(180);
    NOption(181, calder27, 7);
    NOption(182, calder27, 4);
@@ -479,8 +430,7 @@ begin
    end
 end
 
-procedure calder29
-begin
+procedure calder29 begin
    Reply(186);
    NOption(187, calder29a, 7);
    NOption(188, calder29b, 4);
@@ -491,8 +441,7 @@ begin
    NLowOption(191, calder15);
 end
 
-procedure calder29a
-begin
+procedure calder29a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder30;
    end
@@ -501,8 +450,7 @@ begin
    end
 end
 
-procedure calder29b
-begin
+procedure calder29b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder31;
    end
@@ -511,8 +459,7 @@ begin
    end
 end
 
-procedure calder29c
-begin
+procedure calder29c begin
    if (dude_charisma > 6) then begin
       call calder33;
    end
@@ -521,8 +468,7 @@ begin
    end
 end
 
-procedure calder30
-begin
+procedure calder30 begin
    Reply(192);
    NOption(193, calder30a, 4);
    NOption(194, calder30b, 4);
@@ -532,8 +478,7 @@ begin
    end
 end
 
-procedure calder30a
-begin
+procedure calder30a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call calder13;
    end
@@ -542,8 +487,7 @@ begin
    end
 end
 
-procedure calder30b
-begin
+procedure calder30b begin
    if (dude_charisma > 6) then begin
       call calder31;
    end
@@ -552,8 +496,7 @@ begin
    end
 end
 
-procedure calder31
-begin
+procedure calder31 begin
    Reply(197);
    NOption(198, calder13, 7);
    NOption(199, calder08, 4);
@@ -563,15 +506,13 @@ begin
    end
 end
 
-procedure calder32
-begin
+procedure calder32 begin
    LASHERKNOWN := 1;
    LASHERABUSEKNOWN := 1;
    NMessage(202);
 end
 
-procedure calder33
-begin
+procedure calder33 begin
    LASHERKNOWN := 1;
    LASHERABUSEKNOWN := 1;
    Reply(203);
@@ -583,28 +524,23 @@ begin
    end
 end
 
-procedure calder34
-begin
+procedure calder34 begin
    BMessage(208);
 end
 
-procedure calderdone
-begin
+procedure calderdone begin
    NOption(209, calderend, 1);
 end
 
-procedure calderend
-begin
+procedure calderend begin
 end
 
-procedure caldercombat
-begin
+procedure caldercombat begin
    set_global_var(GVAR_CATHEDRAL_ENEMY, 1);
    tmp_hostile := 1;
 end
 
-procedure weapon_check
-begin
+procedure weapon_check begin
    if (dude_is_armed) then begin
       armed := 1;
    end
@@ -612,8 +548,6 @@ begin
       armed := 0;
    end
 end
-
-
 
 procedure destroy_p_proc begin
    inc_good_critter

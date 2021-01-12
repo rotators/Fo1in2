@@ -1,14 +1,13 @@
 /*
 
-Auto Doors mod v1.1 for Fallout 2 by Mr.Stalin
+Auto Doors mod v1.2 for Fallout 2 by Mr.Stalin
 ----------------------------------------------
 
 - allows the player to automatically open/walk through unlocked doors when not in combat
 
 Requires sfall 3.7b or higher
 
-NOTE: this script requires compiler from sfall modderspack with -s option
-(short circuit evaluation)
+NOTE: this script requires compiler from sfall modderspack with -s option (short circuit evaluation)
 
 */
 
@@ -30,8 +29,8 @@ procedure combatturn_handler;
 #define PORTAL      (0)
 #define DOOR_FLAGS  (0x24)
 
-variable only_once := 0;
-variable arrayPid;
+variable onlyOnce := 0;
+variable pidDoors;
 
 procedure start begin
    if game_loaded then begin
@@ -41,11 +40,11 @@ procedure start begin
          set_global_script_repeat(40); // for sfall 3.x
       call map_enter_p_proc;
    end else begin
-      if (only_once == 1 and combat_is_initialized) then begin
-         only_once := 2;
+      if (onlyOnce == 1 and combat_is_initialized) then begin
+         onlyOnce := 2;
          call set_door_flag(0); // reset flag when entering combat mode
-      end else if (only_once == 2 and not(combat_is_initialized)) then begin
-         only_once := 1;
+      end else if (onlyOnce == 2 and not(combat_is_initialized)) then begin
+         onlyOnce := 1;
          if (sfall_ver_major >= 4) then set_global_script_repeat(0);
          call set_door_flag(FLAG_WALKTHRU); // set flag after combat mode ends
       end
@@ -53,34 +52,35 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
-   if (arrayPid) then begin
-      // when changing maps, delete the current array to create a new one
-      free_array(arrayPid);
-      arrayPid := 0;
+   if (pidDoors) then begin
+      // when changing the map, delete the current array to create a new one
+      free_array(pidDoors);
+      pidDoors := 0;
    end
-   only_once := 1;
+   onlyOnce := 1;
    call set_door_flag(FLAG_WALKTHRU); // set flag when entering the map
 end
 
 procedure set_door_flag(variable state) begin
    variable objectMap, obj, objPid, i;
 
-   if (arrayPid) then begin
+   if (pidDoors) then begin
       call set_door_flag_array(state);
       return;
    end
 
    objectMap := list_as_array(LIST_SCENERY);
-   arrayPid  := create_array(0, 0);
+   pidDoors  := create_array(0, 0);
 
    foreach (obj in objectMap) begin
       objPid := obj_pid(obj);
 
-      if (proto_data(objPid, sc_type) != PORTAL) or is_in_array(objPid, arrayPid) then
+      if (proto_data(objPid, sc_type) != PORTAL or get_proto_data(objPid, DOOR_FLAGS) or is_in_array(objPid, pidDoors)) then begin
          continue; // next object
+      end
 
-      resize_array(arrayPid, i + 1);
-      arrayPid[i] := objPid;
+      resize_array(pidDoors, i + 1);
+      pidDoors[i] := objPid; // add pid to array
       i++;
       set_proto_data(objPid, DOOR_FLAGS, state);
    end
@@ -88,14 +88,14 @@ end
 
 procedure set_door_flag_array(variable state) begin
    variable objPid;
-   foreach (objPid in arrayPid) begin
+   foreach (objPid in pidDoors) begin
       set_proto_data(objPid, DOOR_FLAGS, state);
    end
 end
 
 procedure combatturn_handler begin
-   if (only_once == 1) then begin
-      only_once := 2;
+   if (onlyOnce == 1) then begin
+      onlyOnce := 2;
       call set_door_flag_array(0);
       set_global_script_repeat(60);
    end

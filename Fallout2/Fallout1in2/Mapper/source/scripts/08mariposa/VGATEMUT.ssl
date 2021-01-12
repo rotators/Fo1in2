@@ -50,6 +50,9 @@ variable guard_tile := 20902;
 variable home_tile := 7000;
 variable waypoint;
 
+#define LVAR_Home_Tile                  (5)
+#define LVAR_Home_Rotation              (6)
+
 procedure start begin
    if not(initial) then begin
       initial := 1;
@@ -65,6 +68,17 @@ procedure start begin
 end
 
 procedure map_enter_p_proc begin
+   if (local_var(LVAR_Home_Tile) == 0) then begin
+      set_local_var(LVAR_Home_Tile, self_tile);
+      set_local_var(LVAR_Home_Rotation, self_cur_rot);
+   end
+   if not(is_loading_game) then begin
+      if (days_since_visited > 0) then begin
+         critter_attempt_placement(self_obj, local_var(LVAR_Home_Tile), self_elevation);
+         self_rotate(local_var(LVAR_Home_Rotation));
+      end
+   end
+
    if (map_var(MVAR_radio_trick)) then begin
       destroy_object(self_obj);
    end

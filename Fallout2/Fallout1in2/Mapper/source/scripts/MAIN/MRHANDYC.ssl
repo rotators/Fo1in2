@@ -12,6 +12,9 @@
 #include "modreact.h"
 
 procedure start;
+procedure push_p_proc;
+procedure timed_event_p_proc;
+procedure map_enter_p_proc;
 procedure combat_p_proc;
 procedure critter_p_proc;
 procedure description_p_proc;
@@ -20,7 +23,6 @@ procedure use_skill_on_p_proc;
 procedure use_obj_on_p_proc;
 procedure destroy_p_proc;
 procedure damage_p_proc;
-procedure push_p_proc;
 
 import variable field_change;
 
@@ -86,8 +88,10 @@ variable tmp_hostile := 0;
                                           add_timer_event(self_obj, game_ticks(1), 2);                        \
                                           set_self_team(TEAM_PLAYER)
 #define dude_has_free_slot_for_handy      fo1in2_party_limit_disabled or ((dude_at_max_party_size == false) and (MrHandyC_In_Party == false))
+
 #define EVENT_FLOAT_JOIN                  (2)
 #define EVENT_CALIBRATE                   (3)
+#define EVENT_FLOAT_INJURED               (4)
 
 #define handy_is_fixed                    ((local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 1) and (local_var(LVAR_IS_COMPUTER_FIXED) == 1) and (local_var(LVAR_IS_RADIO_FIXED) == 1))
 
@@ -109,6 +113,9 @@ end
 procedure Node999 begin
 end
 
+procedure start begin
+end
+
 procedure push_p_proc begin
    if (MrHandyC_In_Party == false) then begin
       script_overrides;
@@ -125,28 +132,19 @@ procedure timed_event_p_proc begin
    else if (fixed_param == EVENT_CALIBRATE) then begin
       if (random(0, 1) == 1) then
          float_handy(random(1004, 1006));
+   end if (fixed_param == EVENT_FLOAT_INJURED) then begin
+      if not(combat_is_initialized) and self_visible then begin
+         if (Handy_ptr != 0) then begin
+            if (Is_Crippled(self_obj)) then
+               float_handy(3500);
+         end
+      end
+      add_timer_event(self_obj, random(50, 80), EVENT_FLOAT_INJURED);
    end
-end
-
-
-procedure start begin
-
 end
 
 procedure map_enter_p_proc begin
-   if map_first_run then begin
-      if global_var(GVAR_MR_HANDYC_HIRELING_INIT) != 1 then begin// init reset lvars
-         set_global_var(GVAR_MR_HANDYC_HIRELING_INIT, 1);
-         set_local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED, 0);
-         set_local_var(LVAR_IS_COMPUTER_FIXED, 0);
-         set_local_var(LVAR_ALREADY_TALKED, 0);
-         set_local_var(LVAR_CLEANUP_BEGINS, 0);
-         set_local_var(LVAR_IS_RADIO_FIXED, 0);
-         set_local_var(LVAR_ALREADY_STOOD_UP, 0);
-         set_local_var(LVAR_ALREADY_DESTROYED_ITEMS, 0);
-         set_local_var(LVAR_DECLINED_REPROGRAMMING, 0);
-      end
-   end
+   add_timer_event(self_obj, random(25, 40), EVENT_FLOAT_INJURED);
 end
 
 procedure damage_p_proc begin
@@ -208,7 +206,7 @@ procedure critter_p_proc begin
          if local_var(LVAR_ALREADY_DESTROYED_ITEMS) == 0 then begin
             variable KillBox_ptr := 0;
             set_local_var(LVAR_ALREADY_DESTROYED_ITEMS, 1);
-            KillBox_ptr := create_object(PID_DEAD_TRAVELER, 0, 0);// <-- Dead Traveler (Ghoul)  Was : create_object(PID_IGUANA_STAND, 0, 0);// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
+            KillBox_ptr := create_object(PID_DEAD_TRAVELER, 0, 0);
             move_to(KillBox_ptr, 0, 0);
             //inven_unwield;
             move_obj_inven_to_obj(self_obj, KillBox_ptr);
@@ -219,6 +217,8 @@ procedure critter_p_proc begin
                self_walk_to_tile(20530);
             end
             else begin
+               variable emitter_ptr;
+
                set_local_var(LVAR_CLEANUP_BEGINS, 2);
                set_global_var(GVAR_MRHANDYC_NO_DESTROY_MSG, 1);
                set_global_var(GVAR_MR_HANDYC_HIRELING_STATUS, 3);
@@ -232,6 +232,12 @@ procedure critter_p_proc begin
 
                give_xp_msg(EXP_HANDYC_CLEANUP, mstr(117));
 
+               emitter_ptr := create_object(PID_EMITTER_DESTROYED_EW, 20330, self_elevation);
+               emitter_ptr := tile_contains_pid_obj(20330, self_elevation, PID_EMITTER_MBASE_EW);
+               if (emitter_ptr != 0) then destroy_object(emitter_ptr);
+               emitter_ptr := tile_contains_pid_obj(20332, self_elevation, PID_EW_FORCE_FIELD);
+               if (emitter_ptr != 0) then destroy_object(emitter_ptr);
+
                critter_dmg(self_obj, random(256, 384), DMG_explosion);
             end
          end
@@ -242,9 +248,6 @@ end
 
 procedure description_p_proc begin
    script_overrides;
-// if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) and (local_var(LVAR_IS_COMPUTER_FIXED) == 0) then begin// neither fixed
-//    script_overrides;
-//
    if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin// still need physical fix
       script_overrides;
       display_msg(mstr(100));//{100}{}{This robot is non-functional. The layer of dust on it suggests that it hasn't been active in a while.}
@@ -276,7 +279,6 @@ procedure description_p_proc begin
          end
       end
    end
-   script_overrides;
 end
 
 procedure talk_p_proc begin
@@ -291,7 +293,6 @@ procedure talk_p_proc begin
       start_dialog_at_node(Node002);
    end
    else begin
-
       if (local_var(LVAR_CLEANUP_BEGINS) > 0) then begin
          script_overrides;
          display_msg(mstr(150));
@@ -303,19 +304,17 @@ procedure talk_p_proc begin
       else begin
          if (local_var(LVAR_IS_PHYSICAL_DAMAGE_FIXED) == 0) then begin
             script_overrides;
-            display_msg(mstr(103));//{103}{}{You cannot access the robot's functions, as it is disabled.}
+            display_msg(mstr(103));
          end
          else if handy_is_fixed then begin
             start_dialog_at_node(MrHandyC00);
          end
          else begin
             script_overrides;
-            display_msg(mstr(122));//{122}{}{The interface systems are not responding to your input.}
+            display_msg(mstr(122));
          end
       end
-
    end
-
    reset_tma_data;
 end
 

@@ -18,6 +18,7 @@
 {451}{}{Das Motorrad braucht keine reparaturen.}
 {452}{}{Der Schlüssel passt!}
 {453}{}{Es sieht so aus, als ob der Brennstoffzellencontroller vorsorglich entfernt wurde. Vielleicht ist er hier noch irgendwo?}
+{454}{}{Es sieht aus aus als bräuchtest du dafür einen Schlüssel.}
 
 {500}{}{Das Motorrad ist nicht groß genug für deine Gruppe!}
 {501}{}{Nicht alle von uns werden auf die Maschine passen.}

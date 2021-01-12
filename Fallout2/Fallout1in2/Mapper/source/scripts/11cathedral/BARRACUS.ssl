@@ -16,6 +16,10 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure critter_p_proc;
+procedure pickup_p_proc;
 procedure talk_p_proc;
 procedure social_skills;
 procedure weapon_check;
@@ -89,50 +93,37 @@ variable tmp_hostile;
 variable armed;
 variable Only_Once := 1;
 
-procedure start
-begin
-
-
+procedure start begin
    if Only_Once then begin
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_CHILDREN_TRUE);
       Only_Once := 0;
    end
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      call talk_p_proc;
-   end
-   else begin
-      if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-         script_overrides;
-         if (local_var(4) == 1) then begin
-            display_msg(mstr(100));
-         end
-         else begin
-            display_msg(mstr(101));
-         end
-      end
-      else begin
-         if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-            call destroy_p_proc;
-         end
-         else begin
-            if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-               tmp_hostile := 1;
-            end
-            else begin
-               if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-                  if (tmp_hostile) then begin
-                     tmp_hostile := 0;
-                     attack(dude_obj);
-                  end
-               end
-            end
-         end
-      end
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if (local_var(4) == 1) then
+      display_msg(mstr(100));
+   else
+      display_msg(mstr(101));
+end
+
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(101));
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
    end
 end
 
-
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_COC);
@@ -149,18 +140,14 @@ procedure talk_p_proc begin
       if (local_var(4) == 1) then begin
          call Barracus03;
       end
+      else if (dude_is_male) then begin
+         call Barracus06;
+      end
+      else if (dude_charisma > 6) then begin
+         call Barracus07;
+      end
       else begin
-         if (dude_is_male) then begin
-            call Barracus06;
-         end
-         else begin
-            if (dude_charisma > 6) then begin
-               call Barracus07;
-            end
-            else begin
-               call Barracus06;
-            end
-         end
+         call Barracus06;
       end
    end
    gsay_end;
@@ -168,14 +155,12 @@ procedure talk_p_proc begin
    set_local_var(4, 1);
 end
 
-procedure social_skills
-begin
+procedure social_skills begin
    get_reaction
    dialogue_system_enter;
 end
 
-procedure weapon_check
-begin
+procedure weapon_check begin
    if (dude_is_armed) then begin
       armed := 1;
    end
@@ -184,8 +169,7 @@ begin
    end
 end
 
-procedure Barracus00
-begin
+procedure Barracus00 begin
    variable LVar0 := 0;
    if (dude_is_male) then begin
       Reply(mstr(106));

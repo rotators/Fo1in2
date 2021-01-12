@@ -99,7 +99,7 @@
 #define has_rep_champion        (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and \
                                 ((global_var(GVAR_BAD_MONSTER) > (3 * global_var(GVAR_GOOD_MONSTER))) or    \
                                 (global_var(GVAR_CHAMPION_REPUTATION) == 1))) // Childkiller-check was added in Fo2. Removed it for now.
-                                
+
 #define has_rep_berserker       (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and \
                                 ((global_var(GVAR_GOOD_MONSTER) > (2 * global_var(GVAR_BAD_MONSTER))) or    \
                                 (global_var(GVAR_BERSERKER_REPUTATION) == 1)))
@@ -479,7 +479,7 @@
 #define REP_BONUS_INSULTED_ARADESH              (-20)
 #define REP_BONUS_HELPING_JARVIS                (3)
 #define REP_BONUS_RADSCORPIONS_GONE             (15)
-#define REP_BONUS_TANDI_RESCUED                 (50)
+#define REP_BONUS_TANDI_RESCUED                 (30)
 #define inc_shady_rep(x)                        inc_global_var_amt(GVAR_TOWN_REP_SHADYSANDS, x)
 
 // Raiders
@@ -496,23 +496,30 @@
 #define inc_junktown_rep(x)                     inc_global_var_amt(GVAR_TOWN_REP_JUNKTOWN, x)
 
 // Hub
+#define REP_BONUS_MISSING_CARAVANS              (5)
 #define REP_BONUS_BOB_JAILED                    (5)
 #define REP_BONUS_BOB_REPORT_FAILED             (-2)
-#define REP_BONUS_KILLED_DECKER                 (10)
+#define REP_BONUS_KILLED_DECKER                 (15)
 #define REP_BONUS_KILLED_HIGHTOWER              (-10)
 #define REP_BONUS_NECKLACE_STOLEN               (-3)
 #define REP_BONUS_KIND_TO_HAROLD                (1)
 #define inc_hub_rep(x)                          inc_global_var_amt(GVAR_TOWN_REP_HUB, x)
 
 // Boneyard
-
+#define REP_BONUS_FARM_REPAIRED                 (3)
+#define REP_BONUS_RAZOR_DEAD                    (-2)
+#define REP_BONUS_GABRIEL_DEAD                  (-1)
+#define REP_BONUS_ZIMMERMAN_DEAD                (2)
+#define REP_BONUS_BLADES_DEAD                   (-10)
+#define REP_BONUS_GUNRNR_DEAD                   (-5)
+#define REP_BONUS_DEATHCLAWS_DEAD               (5)
+#define REP_BONUS_REGULATORS_DEAD               (20)
 #define inc_boneyard_rep(x)                     inc_global_var_amt(GVAR_TOWN_REP_BONEYARD, x)
 
 // Necropolis
-#define REP_BONUS_WATERCHIP_TAKEN               (-10)
+#define REP_BONUS_WATERCHIP_TAKEN               (-25)
 #define REP_BONUS_WATER_PUMP_FIXED              (25)
 #define REP_BONUS_WATERSHED_MUTANTS_DEAD        (10)
-#define REP_BONUS_BACKSTABBED_GRIFFITH          (-3)
 #define inc_necropolis_rep(x)                   inc_global_var_amt(GVAR_TOWN_REP_NECROPOLIS, x)
 
 // Glow

@@ -1,3 +1,11 @@
+/*
+
+   Necropolis - Fridge in the Hall of the Dead
+
+   TODO: Cleanup the locked state variables. Just lazily added obj_(un)lock from Fo2 for now.
+
+*/
+
 #include "define.h"
 
 #define NAME                    SCRIPT_NGARFRDG
@@ -5,56 +13,66 @@
 #include "command.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure pickup_p_proc;
+procedure use_p_proc;
+procedure timed_event_p_proc;
+procedure use_obj_on_p_proc;
+
 procedure Initialize_Fridge;
 procedure Looting_Fridge;
 procedure Open_Fridge;
 procedure pick_lock;
-procedure map_update_p_proc;
+
+#define LOCKED    0
+#define UNLOCKED  1
+
+#define CLOSED    0
+#define OPEN      1
+
+#define LVAR_Fridge_Lock     (0)
+#define LVAR_Fridge_State    (1)
 
 import variable Garret_ptr;
 import variable Fridge_ptr;
 
 variable last_user;
 
+procedure start begin
+end
 
-procedure start
-begin
-   if (script_action == map_enter_proc) then begin//map_enter_p_proc (or "map_init") called when entering from World Map, on green "exit" grids, SOME ladders, doesn't appear to call on elevators or manholes
-      call Initialize_Fridge;
+procedure map_enter_p_proc begin
+   call Initialize_Fridge;
+
+   if (local_var(LVAR_Fridge_Lock) == LOCKED) then obj_lock(self_obj);
+end
+
+procedure map_update_p_proc begin
+   Fridge_ptr := self_obj;
+end
+
+procedure pickup_p_proc begin
+   call Looting_Fridge;
+end
+
+procedure use_p_proc begin
+   call Open_Fridge;
+end
+
+procedure timed_event_p_proc begin
+   float_msg(Garret_ptr, mstr(105), FLOAT_MSG_NORMAL);
+end
+
+procedure use_obj_on_p_proc begin
+   if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+      call pick_lock;
    end
-   else begin
-      if (script_action == map_update_proc) then begin//map_update_p_proc -- called every dozen seconds or so, & additionally on certain events (exit dialog, end combat, load map, etc)
-         call map_update_p_proc;
-      end
-      else begin
-         if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-            call Looting_Fridge;
-         end
-         else begin
-            if (script_action == use_proc) then begin//use_p_proc - Use, Activate, or Manipulate the Object or Item
-               call Open_Fridge;
-            end
-            else begin
-               if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-                  float_msg(Garret_ptr, mstr(105), FLOAT_MSG_NORMAL);
-               end
-               else begin
-                  if (script_action == use_obj_on_proc) then begin//<-- use_obj_on_p_proc
-                     if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
-                        call pick_lock;
-                     end
-                  end
-                  else begin
-                     if (script_action == use_skill_on_proc) then begin//<-- use_skill_on_p_proc
-                        if (action_being_used == SKILL_LOCKPICK) then begin
-                           call pick_lock;
-                        end
-                     end
-                  end
-               end
-            end
-         end
-      end
+end
+
+procedure use_skill_on_p_proc begin
+   if (action_being_used == SKILL_LOCKPICK) then begin
+      call pick_lock;
    end
 end
 
@@ -64,10 +82,10 @@ end
 
 procedure Looting_Fridge begin
    if (source_obj != Garret_ptr) then begin
-      if (local_var(0) == 0) then begin
+      if (local_var(LVAR_Fridge_Lock) == LOCKED) then begin
          script_overrides;
       end
-      else if (local_var(1) == 0) then begin
+      else if (local_var(LVAR_Fridge_State) == CLOSED) then begin
          script_overrides;
       end
    end
@@ -76,13 +94,17 @@ end
 procedure Open_Fridge begin
    last_user := source_obj;
    if (source_obj == Garret_ptr) then begin
-      if (local_var(1) == 0) then begin
-         set_local_var(0, 1);
-         set_local_var(1, 1);
+      if (local_var(LVAR_Fridge_State) == CLOSED) then begin
+         obj_unlock(self_obj);
+         //obj_open(self_obj); // is done in GARRET.ssl
+         set_local_var(LVAR_Fridge_Lock, UNLOCKED);
+         set_local_var(LVAR_Fridge_State, OPEN);
       end
       else if (last_user == Garret_ptr) then begin
-         set_local_var(1, 0);
-         set_local_var(0, 0);
+         //obj_close(self_obj); // is done in GARRET.ssl
+         obj_lock(self_obj);
+         set_local_var(LVAR_Fridge_State, CLOSED);
+         set_local_var(LVAR_Fridge_Lock, LOCKED);
       end
       else begin
          script_overrides;
@@ -90,27 +112,28 @@ procedure Open_Fridge begin
       end
    end
    else begin
-      if (local_var(0) == 0) then begin
-         script_overrides;
+      if (local_var(LVAR_Fridge_Lock) == LOCKED) then begin
+         //script_overrides;
          display_msg(mstr(100));
       end
-      else if (local_var(1)) then begin
-         set_local_var(1, 0);
+      else if (local_var(LVAR_Fridge_State)) then begin
+         set_local_var(LVAR_Fridge_State, CLOSED);
       end
       else begin
-         set_local_var(1, 1);
+         set_local_var(LVAR_Fridge_State, OPEN);
       end
    end
 end
 
 procedure pick_lock begin
    script_overrides;
-   if (local_var(0)) then begin
+   if (local_var(LVAR_Fridge_Lock) == UNLOCKED) then begin
       display_msg(mstr(101));
    end
    else if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0))) then begin
       display_msg(mstr(102));
-      set_local_var(0, 1);
+      obj_unlock(self_obj);
+      set_local_var(LVAR_Fridge_Lock, UNLOCKED);
       give_xp(EXP_LOCKPICK_NORMAL);
    end
    else begin
@@ -118,6 +141,3 @@ procedure pick_lock begin
    end
 end
 
-procedure map_update_p_proc begin
-   Fridge_ptr := self_obj;
-end

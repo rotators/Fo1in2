@@ -9,146 +9,87 @@
 {128}{}{ experience for obtaining the motorcycle.}
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
-{150}{}{An original Chryslus Motors Cruiser!}
 {160}{}{You are a god damn THIEF!}
 {161}{}{What the? Where is my ..?!}
 
-{175}{}{I'm out of here.}
-{176}{}{Yeah, whatever.}
-{177}{}{Fuck this place.}
-{178}{}{Sweet baby jesus, something smells around here.}
-{179}{}{You still here?}
-{180}{}{Better get going now.}
-
-{181}{}{Fuck this place.}
-{182}{}{Get out of my sight.}
-{183}{}{What?}
-{184}{}{Go away.}
-{185}{}{Someone stole my fuel controller!}
-
-{200}{}{The ghoul just stares at you.}
-
-# Float when getting the fuel cell controller
-{250}{}{Just have to pick something up quickly, then I'm gone for good ...}
-{251}{}{He-he, what an idiot! Just have to grab my shit now and then bye, bye!}
-
-# Angry float
-{300}{}{Fuck off.}
-{301}{}{Just fuck off, you don't even have the money!}
+{200}{}{Griffith doesn't seem to come back. Maybe you should try to find him?}
+{201}{}{He sure takes his time ...}
+{202}{}{Ugh ... booo-ring.}
 
 # Dialog:
-{1000}{}{Hey smoothskin, what'cha lookin at? I tell you what: You're looking at an original Chryslus Motors Cruiser, build... Uhm... Actually, I don't know when it was build, but it's pre-war and in top condition!}
-{1001}{}{You're here to talk, smoothskin? }
-{1002}{}{You got the caps now or what?}
-{1003}{}{Don't push my buttons, smoothskin.}
-	{1010}{}{Nice ride. Is the engine still running?}
-	{1020}{}{You know, I have seen plenty pictures of motorcycles in our vault library. }
-	{1030}{}{Please don't talk to me. Bye.}
-	{1040}{}{I got the caps.}
-	
-{1100}{}{Of course it runs, dummie! Fill it up with energy cells and it'll come alive and roar like a beast!}
-	{1110}{}{Why are you telling me this?}
-	{1120}{}{I get it, you want to get rid of the bike.}
-	{1130}{}{Great, but there is a water chip I have to fetch. See you later.}
-	
-{1200}{}{Why? Easy. Because you look interested. And I feel we're in a bit of a situation here, which requires me to leave this hole as soon as possible.}
-	{1210}{}{Now this place doesn't seem all *that* bad to me.}
-	{1220}{}{Why aren't you leaving then?}
-	{1230}{}{Are you refering to the mutants occupying the watershed?}
-	
-{1300}{}{Are you serious? You see'n these green fuckers over there at the watershed? I'd say shit 's about to go down here. Soon. When that happens, I won't be around anymore.}
-	{1310}{}{Why aren't you leaving with the bike then?}
-	
-{1400}{}{Because I'm out of ENERGY CELLS, smoothskin! Even if I wanted to - which I do, very much, believe me - I can't. Don't have the caps and even if, sure as shit you won't find 'cells to buy anywhere around here.}
-	{1410}{}{Energy cells, huh? Would these do it for you?}
-	{1420}{}{What's the bike going to cost me?}
-	{1430}{}{That sucks, but I have to go now. See you later.}
-	
-{1500}{}{Shit! ... Yeah! But ... I can't pay you.}
-	{1510}{}{Just take them and get out my sight before I'll change my mind.}
-	{1520}{}{You're right, that's not a good deal. What do you want for the bike?}
-	
-{1600}{}{Wait, are you..? Really? ... Thanks man! Time to say goodbye to this death infested hole! Do you think there's something up north for the likes of us? Guess I will find out!}
-	{1610}{}{[Done]}
-	
-{1700}{}{You're from a vault, huh? I've been a vault dweller too once! Now look, it only brought the best out of me! Ha-ha! [He flails his boney arms in front of you] }
-	{1710}{}{[More]}
+{500}{}{Get your hands off of my ride, smoothskin!}
+{501}{}{I told you to stay away!}
+   {510}{}{Make me!}
+   {520}{}{Oh, Ok.}
 
-{1800}{}{Now, seriously. Seeing as you made it all the way to the watershed, you can't be as incompetent as all the other fools 'round here. That means, I have a proposal for you.}
-	{1810}{}{I'm all ears.}
+{1000}{}{Hey smoothskin, what'cha lookin at?}
+{1001}{}{You're still around, smoothskin?}
+{1002}{}{Did you change your mind, smoothskin?}
+   {1010}{}{Who are you?}
+   {1020}{}{What are you doing here?}
+   {1030}{}{Is that your bike?}
+   {1031}{}{Can you tell me about your bike again?}
+   {1040}{}{Alright, I'll watch your bike.}
+   {1050}{}{Uhh... Who you?}
 
-{1900}{}{I'll give you the bike. For the measly sum of 2000 caps, it's aaaall yours. Get it? It's time for me to leave this shithole behind.}
-	{1910}{}{2000? That's quite some caps.}
-	{1920}{}{I'll give you 1000 caps.}
-	{1930}{}{I'll give you 500 caps.}
-	{1940}{}{Not interested. }
-	{1950}{}{If you want to leave, why not with the bike?}
-	{1960}{}{What will you do with the money?}
-	{1970}{}{Deal.}
+{1100}{}{They call me Griffith.}
+   {1110}{}{What are you doing here, Griffith?}
+   {1120}{}{Great. See you later, Griffith!}
+   
+{1200}{}{What does it look like I'm doing?}
+   {1210}{}{I don't know. You're waiting for someone?}
+   
+{1300}{}{Exactly! And know what? Looks like I found who I was waiting for!}
+   {1310}{}{Is that so?}
+   
+{1400}{}{There's something I need to do. It'll take me a few hours, and I can't keep my bike here unattended.}
+   {1410}{}{You want me to watch your bike?}
+   {1420}{}{So what do you want me to do?}
+   
+{1500}{}{The other ghouls 'round here, they don't give a shit and I can't trust tem.}
+{1501}{}{You on the other hand, I can tell you *would* give a shit! Besides, I'll pay you if everything is still in place once I'm back.}
+   {1510}{}{What's the pay?}
+   {1520}{}{Guess I could do that.}
 
-{2000}{}{Are you shitting me? It's a fully working Chryslus Motors Cruiser! Sure as shit won't find any other in that condition for a loooong time!}
-	{2010}{}{Alright. Here's your 2000 caps.}
-	{2020}{}{That's too steep for me.}
+{1600}{}{A bag of caps? It's not like it's a hard job. Just takes some time, that's all.}
+   {1610}{}{Guess I could do that.}
+   {1620}{}{Sorry, but I don't have time for that. See you later.}
+   
+{1700}{}{Great! I'll be back in a few hours.}
+   {1710}{}{[You watch the ghoul disappear into the sewers]}
+   
+{1800}{}{Smoothskin, are you stupid? I need someone to watch my bike!}
+   {1810}{}{Hey, don't call me stupid!}
+   {1820}{}{Oh.}
 
-{2100}{}{Deal! ... Now wait here. I'll go and get the fuel cell controller.}
-	{2110}{}{The fuel cell controller?}
-{2101}{}{You really trying to shit me here, are you? No way you have 2000 caps!}
-	{2120}{}{Oh ...}
+{1900}{}{It's my bike, alright.}
+   {1910}{}{Can you tell me more about it?}
+   {1920}{}{It looks like an original Chryslus Motors Cruiser. I have seen them on old holo movies!}
+   
+{2000}{}{You're looking at an original Chryslus Motors Cruiser, build... Uhm... Actually, I don't know when it was build, but it's pre-war! Great tech. Keeping it up and running for years already.}
+   {2010}{}{Do you sell it?}
+   
+{2100}{}{Do I ... what? Are you fucking kidding me, smoothskin? I would never sell my ride!}
 
-{2200}{}{What? You think I'll keep the bike standing here on the open road just like that? You think I'm stupid? Without the fuel cell controller you can't start the bike, even with the keys. Now wait here, I'll go and get it.}
-	{2210}{}{[Wait]}
+{2200}{}{Well, shit. You're as useless as everyone else 'round here.}
 
-{2300}{}{[You wait for Griffith to return.]}
-	{2310}{}{[Wait]}
+{2300}{}{Damn straight, smoothskin! One of mankinds best machines ever made!}
 
-{2400}{}{[That really takes a while.]}
-	{2410}{}{[Wait]}
-
-{2500}{}{[Did he just scam you?]}
-	{2510}{}{[Wait]}
-
-{2600}{}{Phew. Sure as shit, my lungs aren't the best anymore ... You're still here? Great! Got the controller. Here, take it. I'll make my way to the next caravan out of this shithole.}
-	{2610}{}{Take care.}
-
-{2700}{}{Not much, actually. Just the measly sum of 2000 caps. That's all.}
-{2701}{}{Aren't you listening? It's 2000 caps!}
-{2800}{}{If you say so. Get back to me if you change your mind.}
-
-{3100}{}{I'll hit up the next caravan. Maybe up north? Anywhere is better than here.}
-
-{3200}{}{Look! You're actually smarter than everyone else around here! ... They are just the vanguard. There's more to come, I bet on that.}
-	{3210}{}{Alright, I'll buy your bike.}
-	{3220}{}{I better keep going then. See you later.}
+{2400}{}{Seems you know more about these pre-war bikes than I do.}
 
 
-# Dumb dude
-	{4999}{}{Huh?}
-{5000}{}{Are you shitting me? You're even more stupid than you look like! Now what the hell managed to bring you here?}
-{5001}{}{You're back! What now, dummie?}
-	{5010}{}{Uuuhhh ...}
-	{5020}{}{Uh. Go.}
-	{5030}{}{Uhm....}
+# Dumb dialog:
+{3000}{}{Holy brahmin, you're as dumb as it gets, aren't you?}
+	{3010}{}{Uh...}
 
-{5100}{}{Alright, alright, you don't have to answer. Lost your way, huh? I get it, Necropolis can be like that to some. With the stinky sewers and all of that ...}
-	{5110}{}{[More]}
-{5200}{}{Now please go play somewhere else. Maybe over there at the watershed? They should have about your level of smarts. Now go. Shush!}
-{5201}{}{... Hey, wait a moment! Are those energy cells I'm seeing in your pack? Do you mind giving them to me? I ... uh ... want to look at them.}
-	{5210}{}{Oh!}
-	{5220}{}{YES!}
-	{5230}{}{NO!}
+{3100}{}{Tell you what, smoothskin... There is something I need to do. Hey! Do you listen?}
+{3101}{}{If you do as I say, I'll give you nice bling bling, you understand me? Look, lot's of bottle caps! You like bottle caps, do you?}
+	{3110}{}{Me like!}
+	{3120}{}{Nah.}
 
-{5300}{}{Please?}
-	{5310}{}{Ok.}
-	{5320}{}{NO, NO, NO!}
+{3200}{}{You what? You don't like bottle caps, smoothkin? Damn, you must be on the real slow side.}
+	{3210}{}{Me go.}
+	{3220}{}{Uh, me like caps!}
 
-
-
-
-
-
-
-
-
-
-
-
+{3300}{}{Great, great! Now listen. I have to go away for a bit. You understand? *I* go. *You* stay here. Make nobody touch my bike, yes? Good. It won't take too long, just wait here.}
+   {3310}{}{[You watch the ghoul disappear into the sewers]}

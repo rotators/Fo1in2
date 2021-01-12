@@ -7,11 +7,13 @@ Fallout et tu (also called Fallout 1@2, 1at2, 1in2, ...) is bringing the first F
 
 ---
 
-Discussion: https://nma-fallout.com/threads/218045/ (release, beta),
-            https://nma-fallout.com/threads/217892/ (alpha),
-            https://nma-fallout.com/threads/179809/ (legacy)
+Discussion
+- https://nma-fallout.com/threads/218045/ (release, beta)
+- https://nma-fallout.com/threads/217892/ (alpha)
+- https://nma-fallout.com/threads/179809/ (legacy)
 
-Repository: https://github.com/rotators/Fo1in2/
+Repository
+- https://github.com/rotators/Fo1in2/
 
 
 MOD INSTALLATION
@@ -83,7 +85,7 @@ Tweaks the costs of specific actions while using inventory.
 ### Language Pack - German ###
 [mods/fo1_german](mods/fo1_german)
 
-The german translation of FALLOUT ET TU.
+The german translation of FALLOUT ET TU. It's highly recommended to check the README in language pack directory.
 
 ### Robodog ###
 [mods/fo1_robodog](mods/fo1_robodog)

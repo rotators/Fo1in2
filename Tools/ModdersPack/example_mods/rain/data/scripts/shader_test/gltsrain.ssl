@@ -1,0 +1,264 @@
+procedure start;
+
+variable rainshaderdef;
+variable snowshaderdef;
+variable sandshaderdef;
+variable rainshaderesc;
+variable snowshaderesc;
+variable sandshaderesc;
+variable rainshaderinv;
+variable snowshaderinv;
+variable sandshaderinv;
+variable rainshadermap;
+variable snowshadermap;
+variable sandshadermap;
+variable rainshaderskd;
+variable snowshaderskd;
+variable sandshaderskd;
+
+variable cshader;
+variable active;
+
+procedure update_shader(variable shader) begin
+	if (shader == cshader) then begin
+		return;
+	end
+	if (cshader == 1) then begin
+		deactivate_shader(rainshaderdef);
+		deactivate_shader(rainshaderesc);
+		deactivate_shader(rainshaderinv);
+		deactivate_shader(rainshadermap);
+		deactivate_shader(rainshaderskd);
+	end else if (cshader == 2) then begin
+		deactivate_shader(snowshaderdef);
+		deactivate_shader(snowshaderesc);
+		deactivate_shader(snowshaderinv);
+		deactivate_shader(snowshadermap);
+		deactivate_shader(snowshaderskd);
+	end else if (cshader == 3) then begin
+		deactivate_shader(sandshaderdef);
+		deactivate_shader(sandshaderesc);
+		deactivate_shader(sandshaderinv);
+		deactivate_shader(sandshadermap);
+		deactivate_shader(sandshaderskd);
+	end
+	if (shader == 1) then begin
+		activate_shader(rainshaderdef);
+		activate_shader(rainshaderesc);
+		activate_shader(rainshaderinv);
+		activate_shader(rainshadermap);
+		activate_shader(rainshaderskd);
+	end else if (shader == 2) then begin
+		activate_shader(snowshaderdef);
+		activate_shader(snowshaderesc);
+		activate_shader(snowshaderinv);
+		activate_shader(snowshadermap);
+		activate_shader(snowshaderskd);
+	end else if (shader == 3) then begin
+		activate_shader(sandshaderdef);
+		activate_shader(sandshaderesc);
+		activate_shader(sandshaderinv);
+		activate_shader(sandshadermap);
+		activate_shader(sandshaderskd);
+	end
+
+	cshader := shader;
+
+	if (shader == 0) then begin
+		force_graphics_refresh(0);
+	end else begin
+		force_graphics_refresh(1);
+	end
+end
+
+procedure on_game_load begin
+	variable tmp;
+	if (graphics_funcs_available) then begin
+		display_msg("Weather mod: Shader functions available");
+	end else return;
+
+	rainshaderdef := load_shader("weather\\rain-def.fx");
+	snowshaderdef := load_shader("weather\\snow-def.fx");
+	sandshaderdef := load_shader("weather\\sand-def.fx");
+	rainshaderesc := load_shader("weather\\rain-esc.fx");
+	snowshaderesc := load_shader("weather\\snow-esc.fx");
+	sandshaderesc := load_shader("weather\\sand-esc.fx");
+	rainshaderinv := load_shader("weather\\rain-inv.fx");
+	snowshaderinv := load_shader("weather\\snow-inv.fx");
+	sandshaderinv := load_shader("weather\\sand-inv.fx");
+	rainshadermap := load_shader("weather\\rain-map.fx");
+	snowshadermap := load_shader("weather\\snow-map.fx");
+	sandshadermap := load_shader("weather\\sand-map.fx");
+	rainshaderskd := load_shader("weather\\rain-skd.fx");
+	snowshaderskd := load_shader("weather\\snow-skd.fx");
+	sandshaderskd := load_shader("weather\\sand-skd.fx");
+
+	if (rainshaderdef == -1 or snowshaderdef == -1 or sandshaderdef == -1) then begin
+		display_msg("Weather mod error: Could not load default shaders");
+		return;
+	end
+	if (rainshaderesc == -1 or snowshaderesc == -1 or sandshaderesc == -1) then begin
+		display_msg("Weather mod error: Could not load escape shaders");
+		return;
+	end
+	if (rainshaderinv == -1 or snowshaderinv == -1 or sandshaderinv == -1) then begin
+		display_msg("Weather mod error: Could not load inventory shaders");
+		return;
+	end
+	if (rainshadermap == -1 or snowshadermap == -1 or sandshadermap == -1) then begin
+		display_msg("Weather mod error: Could not load automap shaders");
+		return;
+	end
+	if (rainshaderskd == -1 or snowshaderskd == -1 or sandshaderskd == -1) then begin
+		display_msg("Weather mod error: Could not load skilldex shaders");
+		return;
+	end
+
+	tmp := get_shader_texture(rainshaderdef, 2);
+	set_shader_texture(rainshaderesc, "tex2", tmp);
+	set_shader_texture(rainshaderinv, "tex2", tmp);
+	set_shader_texture(rainshadermap, "tex2", tmp);
+	set_shader_texture(rainshaderskd, "tex2", tmp);
+
+	tmp := get_shader_texture(snowshaderdef, 2);
+	set_shader_texture(snowshaderesc, "tex2", tmp);
+	set_shader_texture(snowshaderinv, "tex2", tmp);
+	set_shader_texture(snowshadermap, "tex2", tmp);
+	set_shader_texture(snowshaderskd, "tex2", tmp);
+
+	tmp := get_shader_texture(sandshaderdef, 2);
+	set_shader_texture(sandshaderesc, "tex2", tmp);
+	set_shader_texture(sandshaderinv, "tex2", tmp);
+	set_shader_texture(sandshadermap, "tex2", tmp);
+	set_shader_texture(sandshaderskd, "tex2", tmp);
+
+	tmp := get_shader_texture(rainshaderdef, 1);
+	set_shader_texture(snowshaderdef, "tex1", tmp);
+	set_shader_texture(sandshaderdef, "tex1", tmp);
+
+	tmp := get_shader_texture(rainshaderesc, 1);
+	set_shader_texture(snowshaderesc, "tex1", tmp);
+	set_shader_texture(sandshaderesc, "tex1", tmp);
+
+	tmp := get_shader_texture(rainshaderinv, 1);
+	set_shader_texture(snowshaderinv, "tex1", tmp);
+	set_shader_texture(sandshaderinv, "tex1", tmp);
+
+	tmp := get_shader_texture(rainshadermap, 1);
+	set_shader_texture(snowshadermap, "tex1", tmp);
+	set_shader_texture(sandshadermap, "tex1", tmp);
+
+	tmp := get_shader_texture(rainshaderskd, 1);
+	set_shader_texture(snowshaderskd, "tex1", tmp);
+	set_shader_texture(sandshaderskd, "tex1", tmp);
+
+	set_shader_mode(rainshaderdef, 30653); // 0x77bd
+	set_shader_mode(snowshaderdef, 30653);
+	set_shader_mode(sandshaderdef, 30653);
+	set_shader_mode(rainshaderesc, 30645); // 0x77b5
+	set_shader_mode(snowshaderesc, 30645);
+	set_shader_mode(sandshaderesc, 30645);
+	set_shader_mode(rainshaderinv, 26557); // 0x67bd
+	set_shader_mode(snowshaderinv, 26557);
+	set_shader_mode(sandshaderinv, 26557);
+	set_shader_mode(rainshadermap, 22461); // 0x57bd
+	set_shader_mode(snowshadermap, 22461);
+	set_shader_mode(sandshadermap, 22461);
+	set_shader_mode(rainshaderskd, 14269); // 0x37bd
+	set_shader_mode(snowshaderskd, 14269);
+	set_shader_mode(sandshaderskd, 14269);
+
+	set_shader_mode(rainshaderesc, 2147483656); // 0x80000008
+	set_shader_mode(snowshaderesc, 2147483656);
+	set_shader_mode(sandshaderesc, 2147483656);
+	set_shader_mode(rainshaderinv, 2147487744); // 0x80001000
+	set_shader_mode(snowshaderinv, 2147487744);
+	set_shader_mode(sandshaderinv, 2147487744);
+	set_shader_mode(rainshadermap, 2147491840); // 0x80002000
+	set_shader_mode(snowshadermap, 2147491840);
+	set_shader_mode(sandshadermap, 2147491840);
+	set_shader_mode(rainshaderskd, 2147500032); // 0x80004000
+	set_shader_mode(snowshaderskd, 2147500032);
+	set_shader_mode(sandshaderskd, 2147500032);
+
+	//set_global_script_repeat(50);
+end
+
+procedure update_region begin
+	variable tmp;
+	variable rain := 50;
+	variable snow := 25;
+	variable sand := 25;
+
+	snow += rain;
+	sand += snow;
+
+	tmp := random(1,100);
+	if (tmp <= rain) then begin
+		display_msg("It's raining");
+		active := 1;
+	end else if (tmp <= snow) then begin
+		display_msg("It's snowing");
+		active := 2;
+	end else if (tmp <= sand) then begin
+		display_msg("It's sandstorming");
+		active := 3;
+	end else begin
+		display_msg("No weather");
+		active := 0;
+	end
+
+	//call update_shader(active);
+end
+
+procedure update_weather begin
+	variable tmp = random(10, 90) / 100.0;
+
+	call update_shader(active);
+
+	if (active == 1) then begin
+		set_shader_float(rainshaderdef, "speed", 500 - (tmp * 300));
+		set_shader_float(rainshaderdef, "multi", 1.5 + tmp * 6.5);
+		set_shader_float(rainshaderesc, "speed", 500 - (tmp * 300));
+		set_shader_float(rainshaderesc, "multi", 1.5 + tmp * 6.5);
+		set_shader_float(rainshaderinv, "speed", 500 - (tmp * 300));
+		set_shader_float(rainshaderinv, "multi", 1.5 + tmp * 6.5);
+		set_shader_float(rainshadermap, "speed", 500 - (tmp * 300));
+		set_shader_float(rainshadermap, "multi", 1.5 + tmp * 6.5);
+		set_shader_float(rainshaderskd, "speed", 500 - (tmp * 300));
+		set_shader_float(rainshaderskd, "multi", 1.5 + tmp * 6.5);
+	end else if (active == 2) then begin
+		set_shader_float(snowshaderdef, "speed", 800 - (tmp * 200));
+		set_shader_float(snowshaderdef, "multi", 0.5 + tmp * 0.5);
+		set_shader_float(snowshaderesc, "speed", 800 - (tmp * 200));
+		set_shader_float(snowshaderesc, "multi", 0.5 + tmp * 0.5);
+		set_shader_float(snowshaderinv, "speed", 800 - (tmp * 200));
+		set_shader_float(snowshaderinv, "multi", 0.5 + tmp * 0.5);
+		set_shader_float(snowshadermap, "speed", 800 - (tmp * 200));
+		set_shader_float(snowshadermap, "multi", 0.5 + tmp * 0.5);
+		set_shader_float(snowshaderskd, "speed", 800 - (tmp * 200));
+		set_shader_float(snowshaderskd, "multi", 0.5 + tmp * 0.5);
+	end else begin
+		set_shader_float(sandshaderdef, "speed", 400 - (tmp * 200));
+		set_shader_float(sandshaderdef, "multi", tmp);
+		set_shader_float(sandshaderesc, "speed", 400 - (tmp * 200));
+		set_shader_float(sandshaderesc, "multi", tmp);
+		set_shader_float(sandshaderinv, "speed", 400 - (tmp * 200));
+		set_shader_float(sandshaderinv, "multi", tmp);
+		set_shader_float(sandshadermap, "speed", 400 - (tmp * 200));
+		set_shader_float(sandshadermap, "multi", tmp);
+		set_shader_float(sandshaderskd, "speed", 400 - (tmp * 200));
+		set_shader_float(sandshaderskd, "multi", tmp);
+	end
+	
+	//display_msg("Shader active: "+tmp);
+end
+
+procedure start begin
+	variable tmp;
+	if (game_loaded) then begin
+		call on_game_load;
+		call update_region;
+		call update_weather;
+	end
+end

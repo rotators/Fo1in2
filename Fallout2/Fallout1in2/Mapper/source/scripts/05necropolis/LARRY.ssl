@@ -16,6 +16,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
 procedure look_at_p_proc;
 procedure pickup_p_proc;
 procedure critter_p_proc;
@@ -40,6 +41,12 @@ procedure start begin
       set_self_ai(AI_SUPER_MUTANT_NECRO);
       set_local_var(1, 0);
       init_teams := 1;
+   end
+end
+
+procedure map_enter_p_proc begin
+   if (global_var(GVAR_WATERSHED_MUTANTS_LEAVE) > 0) then begin
+      if not(is_loading_game) then set_self_invisible;
    end
 end
 
@@ -91,28 +98,13 @@ procedure critter_p_proc begin
       attack(dude_obj);
    end
    else begin
-
-      if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile != 15507)) then begin
-         self_walk_to_tile(15507);
-      end
-      else if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile == 15507)) then begin
-         set_global_var(GVAR_WATERSHED_MUTANTS_LEAVE, 2);
-      end
-      else if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 2) and (self_tile != 12536)) then begin
-         self_walk_to_tile(12536);
-      end
-      else if ((self_tile == 12536) and (global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 2)) then begin
-         if not(is_loading_game) then begin
-            set_self_invisible;
-         end
-      end
-
+      sm_leave_watershed;
    end
 end
 
 procedure destroy_p_proc begin
    set_global_var(GVAR_SUPER_MUTANTS_KILLED, global_var(GVAR_SUPER_MUTANTS_KILLED) + 1);
 
-   check_watershed_sm_killed
+   check_watershed_sm_killed;
    inc_evil_critter
 end

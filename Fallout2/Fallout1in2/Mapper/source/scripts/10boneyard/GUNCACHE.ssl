@@ -6,6 +6,7 @@
 
 /* Include Files */
 #include "define.h"
+#include "boneyard.h"
 
 #define NAME                    SCRIPT_GUNCACHE
 
@@ -16,10 +17,14 @@
 
 #define set_restock_time      set_local_var(LVAR_RESTOCK_TIME, (random(1, 4) * ONE_GAME_DAY) + game_time)
 
+#define bonus_chance          (25 * global_var(GVAR_GUN_RUNNERS_BONUS))
+
 procedure start;
 procedure map_enter_p_proc;
 
 import variable Locker_Ptr;
+
+variable bonus := 0;
 
 procedure start begin
    Locker_Ptr := self_obj;
@@ -28,6 +33,10 @@ end
 procedure map_enter_p_proc begin
 /* Set up the door state when the player first enters the map */
    Locker_Ptr := self_obj;
+
+   //if get_all_deathclaws_killed then
+   //   bonus := 5 + bonus_chance;
+   bonus := bonus_chance;
 
    // Initial inventory:
    if (local_var(LVAR_INIT_INVEN) == 0) then begin
@@ -102,18 +111,20 @@ procedure map_enter_p_proc begin
             // SUPER SPECIAL!!!
             // Increased chance after the story has been completed.
             if is_story_finished then begin
-               check_restock_item(PID_BOZAR, 0, 1, 50)
-               check_restock_item(PID_ASSAULT_RIFLE_EXT_MAG, 0, 1, 50)
-               check_restock_item(PID_FN_FAL, 0, 1, 50)
-               check_restock_item(PID_HK_CAWS, 0, 1, 50)
-               check_restock_item(PID_PANCOR_JACKHAMMER, 0, 1, 50)
+               check_restock_item(PID_BOZAR, 0, 1, 40 + bonus)
+               check_restock_item(PID_ASSAULT_RIFLE_EXT_MAG, 0, 1, 50 + bonus)
+               check_restock_item(PID_FN_FAL, 0, 1, 40 + bonus)
+               check_restock_item(PID_HK_CAWS, 0, 1, 40 + bonus)
+               check_restock_item(PID_PANCOR_JACKHAMMER, 0, 1, 40 + bonus)
+               check_restock_item(PID_HK_P90C, 0, 1, 40 + bonus)
             end
             else begin
-               check_restock_item(PID_BOZAR, 0, 1, 10)
-               check_restock_item(PID_ASSAULT_RIFLE_EXT_MAG, 0, 1, 25)
-               check_restock_item(PID_FN_FAL, 0, 1, 30)
-               check_restock_item(PID_HK_CAWS, 0, 1, 10)
-               check_restock_item(PID_PANCOR_JACKHAMMER, 0, 1, 20)
+               check_restock_item(PID_BOZAR, 0, 1, 10 + bonus)
+               check_restock_item(PID_ASSAULT_RIFLE_EXT_MAG, 0, 1, 20 + bonus)
+               check_restock_item(PID_FN_FAL, 0, 1, 25 + bonus)
+               check_restock_item(PID_HK_CAWS, 0, 1, 10 + bonus)
+               check_restock_item(PID_PANCOR_JACKHAMMER, 0, 1, 15 + bonus)
+               check_restock_item(PID_HK_P90C, 0, 1, 25 + bonus)
             end
 
             check_restock_item(PID_SHOTGUN_SHELLS, 8, 18, 100)
@@ -126,6 +137,8 @@ procedure map_enter_p_proc begin
             check_restock_item(PID_10MM_SMG, 1, 4, 100)
             check_restock_item(PID_FLAMETHROWER_FUEL, 1, 4, 100)
             check_restock_item(PID_COMBAT_ARMOR, 1, 1, 65)
+            check_restock_item(PID_COMBAT_ARMOR_MK_II, 1, 1, 30 + bonus)
+            check_restock_item(PID_METAL_ARMOR_MK_II, 1, 2, 45 + bonus)
             check_restock_item(PID_44_MAGNUM_JHP, 2, 7, 100)
             check_restock_item(PID_44_FMJ_MAGNUM, 3, 8, 100)
             check_restock_item(PID_RIPPER, 1, 1, 50)

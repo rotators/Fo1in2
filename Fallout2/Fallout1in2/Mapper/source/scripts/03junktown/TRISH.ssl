@@ -1,11 +1,12 @@
 /*
 
-   Junktown - Trish
+   Junktown - Trish, the Scum Pitt waitress
 
 */
 
 /* Include Files */
 #include "define.h"
+#include "junktown.h"
 #include "maps/junkcsno.h"
 
 #define NAME                    SCRIPT_TRISH
@@ -55,6 +56,9 @@ procedure Trish26;
 procedure Trish27;
 procedure Trish28;
 procedure Trish29;
+
+procedure TrishSaul1;
+
 procedure TrishEnd;
 procedure TrishCola;
 procedure TrishBeer;
@@ -73,6 +77,7 @@ import variable Trish_ptr;
 variable item;
 
 #define LVAR_Sleeping                     (4)
+#define LVAR_Asked_WhoIsSaul              (13)
 
 procedure start begin
 end
@@ -82,7 +87,7 @@ procedure timed_event_p_proc begin
 end
 
 procedure critter_p_proc begin
-   if (global_var(GVAR_TRISH_STATUS) bwand 64) then begin
+   if get_trish_state(TRISH_IS_DEAD) then begin
       destroy_object(self_obj);
    end
    else begin
@@ -126,12 +131,12 @@ procedure destroy_p_proc begin
       set_global_var(GVAR_ENEMY_JUNKTOWN, 1);
    end
    inc_good_critter
-   set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 64);
+   set_trish_state(TRISH_IS_DEAD);
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if ((global_var(GVAR_TRISH_STATUS) bwand 1) or (global_var(GVAR_TRISH_STATUS) bwand 4)) then begin
+   if (get_trish_state(DUDE_KNOWS_TRISH) or get_trish_state(DUDE_TALKED_WITH_TRISH)) then begin
       display_msg(mstr(100));
    end
    else begin
@@ -146,9 +151,11 @@ procedure map_enter_p_proc begin
       home_tile := 20083;
       sleep_time := 330;
       wake_time := 1300;
-      if (self_tile != home_tile) then begin
-         critter_attempt_placement(self_obj, home_tile, self_elevation);
-         self_rotate(2);
+      if not(is_loading_game) then begin
+         if (self_tile != home_tile) then begin
+            critter_attempt_placement(self_obj, home_tile, self_elevation);
+            self_rotate(2);
+         end
       end
    end
    else begin
@@ -159,7 +166,7 @@ procedure map_enter_p_proc begin
 end
 
 procedure map_update_p_proc begin
-   if (global_var(GVAR_TRISH_STATUS) bwand 64) then begin
+   if get_trish_state(TRISH_IS_DEAD) then begin
       destroy_object(self_obj);
    end
 end
@@ -174,19 +181,19 @@ procedure talk_p_proc begin
    end
    else begin
       if (CUR_MAP_JUNKKILL) then begin
-         if ((global_var(GVAR_SAUL_STATUS) == 3) and not(local_var(7))) then begin
+         if (saul_is_dead and not(local_var(7))) then begin
             call Trish17;
          end
-         else if ((global_var(GVAR_SAUL_STATUS) == 2) and not(local_var(5)) and not(global_var(GVAR_TRISH_STATUS) bwand 8)) then begin
+         else if (saul_mentioned_trish and not(local_var(5)) and not(get_trish_state(TRISH_UNDERSTANDS_SAUL))) then begin
             call Trish3;
          end
-         else if ((global_var(GVAR_TRISH_STATUS) bwand 32) and not(local_var(6))) then begin
+         else if ((get_trish_state(RELATIONSHIP_SAVED)) and not(local_var(6))) then begin
             call Trish16;
          end
-         else if (not((global_var(GVAR_TRISH_STATUS) bwand 1) or (global_var(GVAR_TRISH_STATUS) bwand 4))) then begin
+         else if (not(get_trish_state(DUDE_KNOWS_TRISH) or get_trish_state(DUDE_TALKED_WITH_TRISH))) then begin
             call Trish0;
          end
-         else if ((global_var(GVAR_TRISH_STATUS) bwand 4) and not(global_var(GVAR_TRISH_STATUS) bwand 1)) then begin
+         else if (get_trish_state(DUDE_TALKED_WITH_TRISH) and not(get_trish_state(DUDE_KNOWS_TRISH))) then begin
             call Trish11;
          end
          else begin
@@ -202,19 +209,13 @@ procedure talk_p_proc begin
          end
       end
    end
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 32) and (global_var(GVAR_TRISH_STATUS) bwand 8) and (global_var(GVAR_TRISH_STATUS) bwand 16)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 32);
-      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);
-      give_xp_msg(EXP_TRISH_SAUL_RELATIONSHIP, mstr(173));
-   end
+   check_relationship_saved;
 end
 
 procedure Trish0 begin
    start_gdialog(342, self_obj, 4, -1, -1);
    gsay_start;
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 1)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 1);
-   end
+   set_trish_state(DUDE_KNOWS_TRISH);
    Reply(101);
    NLowOption(102, Trish1);
    NOption(103, Trish2, 4);
@@ -234,14 +235,17 @@ end
 procedure Trish3 begin
    start_gdialog(342, self_obj, 4, -1, -1);
    gsay_start;
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 1)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 1);
-   end
+   set_trish_state(DUDE_KNOWS_TRISH);
    set_local_var(5, 1);
    Reply(107);
    NLowOption(108, Trish1);
    NOption(109, Trish2, 4);
-   NOption(110, Trish4, 5);
+   if (saul_mentioned_trish and not(local_var(5)) and not(get_trish_state(TRISH_UNDERSTANDS_SAUL))) then begin
+      if get_trish_state(TRISH_TALKED_ABOUT_SAUL) then
+         NOption(200, Trish4, 5);
+      else
+         NOption(110, Trish4, 5);
+   end
    gsay_end;
    end_dialogue;
 end
@@ -250,8 +254,19 @@ procedure Trish4 begin
    if (local_var(5) == 0) then begin
       set_local_var(5, 1);
    end
-   Reply(111);
-   NOption(112, Trish5, 5);
+
+   if get_trish_state(TRISH_TALKED_ABOUT_SAUL) then begin
+      Reply(201);
+   end
+   else begin
+      Reply(111);
+      NOption(115, Trish9, 5);
+   end
+
+   if get_trish_state(SAUL_CARES) then begin
+      NOption(202, TrishSaul1, 5);
+      NOption(112, Trish5, 7);
+   end
    NOption(113, Trish6, 5);
 end
 
@@ -284,15 +299,14 @@ procedure Trish8 begin
       LVar0 := LVar0 + " " + mstr(168);
    end
    GMessage(LVar0);
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 8)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 8);
-   end
+   set_trish_state(TRISH_CONCERNED);
+   set_trish_state(TRISH_UNDERSTANDS_SAUL);
 end
 
 procedure Trish9 begin
    Reply(122);
    NOption(123, Trish8, 5);
-   NOption(124, Trish7, 5);
+   NOption(124, Trish7, 4);
 end
 
 procedure Trish10 begin
@@ -301,9 +315,7 @@ procedure Trish10 begin
 end
 
 procedure Trish11 begin
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 1)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 1);
-   end
+   set_trish_state(DUDE_KNOWS_TRISH);
    start_gdialog(342, self_obj, 4, -1, -1);
    gsay_start;
    Reply(127);
@@ -333,17 +345,13 @@ procedure Trish15 begin
 end
 
 procedure Trish16 begin
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 1)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 1);
-   end
+   set_trish_state(DUDE_KNOWS_TRISH);
    set_local_var(6, 1);
    float_msg(self_obj, mstr(138), FLOAT_MSG_NORMAL);
 end
 
 procedure Trish17 begin
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 1)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 1);
-   end
+   set_trish_state(DUDE_KNOWS_TRISH);
    set_local_var(7, 1);
    float_msg(self_obj, mstr(139), FLOAT_MSG_NORMAL);
 end
@@ -362,7 +370,7 @@ procedure Trish19 begin
    if (not(global_var(GVAR_GIZMO_STATUS) == 3)) then begin
       NOption(146, Trish21, 6);
    end
-   if ((local_var(13) == 0) and (global_var(GVAR_TRISH_STATUS) bwand 2) and not(global_var(GVAR_TRISH_STATUS) bwand 32) and (global_var(GVAR_SAUL_STATUS) != 3)) then begin
+   if ((local_var(LVAR_Asked_WhoIsSaul) == 0) and get_trish_state(TRISH_SCREAMED_SAUL) and not(get_trish_state(RELATIONSHIP_SAVED)) and not(saul_is_dead)) then begin
       NOption(147, Trish22, 6);
    end
    NOption(148, TrishEnd, 6);
@@ -386,7 +394,8 @@ procedure Trish21 begin
 end
 
 procedure Trish22 begin
-   set_local_var(13, 1);
+   set_local_var(LVAR_Asked_WhoIsSaul, 1);
+   set_trish_state(TRISH_TALKED_ABOUT_SAUL);
    Reply(158);
    call Trish24;
 end
@@ -410,7 +419,7 @@ procedure Trish24 begin
          NOption(146, Trish21, 6);
       end
    end
-   if ((local_var(13) == 0) and (global_var(GVAR_TRISH_STATUS) bwand 2) and not(global_var(GVAR_TRISH_STATUS) bwand 32) and (global_var(GVAR_SAUL_STATUS) != 3)) then begin
+   if ((local_var(LVAR_Asked_WhoIsSaul) == 0) and get_trish_state(TRISH_SCREAMED_SAUL) and not(get_trish_state(RELATIONSHIP_SAVED)) and not(saul_is_dead)) then begin
       NOption(147, Trish22, 6);
    end
    NOption(148, TrishEnd, 6);
@@ -419,14 +428,15 @@ end
 procedure Trish25 begin
    start_gdialog(342, self_obj, 4, -1, -1);
    gsay_start;
-   if (not(global_var(GVAR_TRISH_STATUS) bwand 4)) then begin
-      set_global_var(GVAR_TRISH_STATUS, global_var(GVAR_TRISH_STATUS) + 4);
-   end
+   set_trish_state(DUDE_TALKED_WITH_TRISH);
    Reply(156);
    NOption(157, Trish26, 4);
    NOption(159, Trish27, 6);
-   if ((global_var(GVAR_SAUL_STATUS) == 2) and not(local_var(5)) and not(global_var(GVAR_TRISH_STATUS) bwand 8)) then begin
-      NOption(110, Trish4, 5);
+   if (saul_mentioned_trish and not(local_var(5)) and not(get_trish_state(TRISH_UNDERSTANDS_SAUL))) then begin
+      if get_trish_state(TRISH_TALKED_ABOUT_SAUL) then
+         NOption(200, Trish4, 5);
+      else
+         NOption(110, Trish4, 5);
    end
    NOption(153, TrishEnd, 4);
    NLowOption(170, Trish28);
@@ -462,6 +472,19 @@ procedure Trish29 begin
    BigUpReact
    set_map_var(MVAR_guards_left, 0);
    set_map_var(MVAR_Skulz_left, 0);
+end
+
+procedure TrishSaul1 begin
+   set_trish_state(TRISH_CONCERNED);
+
+   Reply(203);
+
+   if get_trish_state(SAUL_CARES) then
+      NOption(112, Trish5, 5);
+
+   NOption(126, Trish8, 6);
+   NOption(113, Trish6, 5);
+   //call Trish24;
 end
 
 procedure TrishEnd begin

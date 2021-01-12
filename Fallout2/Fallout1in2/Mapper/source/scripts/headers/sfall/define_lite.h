@@ -7,7 +7,7 @@
 
 //   This file holds all of the things that should be preprocessed.
 
-// script.h: Script Procedure Types //
+// Script Procedure Types //
 #define no_proc           (0)
 #define start_proc        (1)
 #define spatial_proc      (2)
@@ -41,7 +41,7 @@
 #define METARULE_IS_LOADGAME      22
 #define is_loading_game metarule(METARULE_IS_LOADGAME, 0)
 
-// script.h: Script Combat Procedure SubTypes //
+// Script Combat Procedure SubTypes //
 #define COMBAT_SUBTYPE_WEAPON_USED    (1)
 #define COMBAT_SUBTYPE_HIT_SUCCEEDED  (2)
 #define COMBAT_SUBTYPE_SEQUENCING     (3)
@@ -102,19 +102,16 @@
 
 // dialogue defines //
 #define start_dialogue(X,Y)   start_gdialog(-1,X,Y,-1,-1)
+
 // head_anim enums
-//#define very_good_reaction  (0)
 #define good_fidget         (1)
-//#define good_to_neutral     (2)
-//#define neutral_to_good     (3)
 #define neutral_fidget      (4)
-//#define neutral_to_bad      (5)
-//#define bad_to_neutral      (6)
 #define bad_fidget          (7)
-//#define very_bad_reaction   (8)
-//#define good_phonemes       (9)
-//#define neutral_phonemes   (10)
-//#define bad_phonemes       (11)
+
+// Mood defines //
+#define GOOD_REACTION    (49)
+#define NEUTRAL_REACTION (50)
+#define BAD_REACTION     (51)
 
 // Head defines //
 #define HEAD_MARCUS         (1)     //marcus -- Party Member (found in Broken Hills)
@@ -129,9 +126,7 @@
 #define HEAD_HAKUNIN        (10)    // Hakunin -- Found in Arroyo
 #define HEAD_BOSS           (11)
 #define HEAD_DYING_HAKUNIN  (12)
-/*
-#define HEAD_OVERSEER    (1)  //ovrsr  -- vault
-*/
+
 // Head defines //
 #define BACKGROUND1           (2)    // rstymetl
 #define BACKGROUND_HUB        (3) //hub.frm
@@ -145,7 +140,8 @@
 #define BACKGROUND_MASTER    (11) //master.frm
 #define BACKGROUND_FOLLOWER  (12) //follow.frm
 #define BACKGROUND_RAIDERS   (13) //raider.frm
-   // Start of Fallout 2: Backgrounds
+
+// Start of Fallout 2: Backgrounds
 #define BACKGROUND_CAVE      (14) //cave0001.frm
 #define BACKGROUND_ENCLAVE   (15) //enclave.frm
 #define BACKGROUND_WASTELAND (16) //wastelnd.frm
@@ -153,14 +149,6 @@
 #define BACKGROUND_PRESIDENT (18)       // pres.frm
 #define BACKGROUND_TENT      (19)       // tent.frm
 #define BACKGROUND_ADOBE     (20)       // Adobe.frm
-// Mood defines //
-#define GOOD_REACTION    (49)
-#define NEUTRAL_REACTION (50)
-#define BAD_REACTION     (51)
-//#define BAD_REACTION     (49)
-//#define NEUTRAL_REACTION (50)
-//#define GOOD_REACTION    (51)
-
 
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
@@ -174,11 +162,11 @@
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 
-
 // Trait defines //
-#define TRAIT_PERK  (0)
+#define TRAIT_PERK   (0)
 #define TRAIT_OBJECT (1)
 #define TRAIT_TRAIT  (2)
+
 // Perk Trait Types
 #define PERK_bonus_awareness      (0)
 #define PERK_bonus_hth_attacks    (1)
@@ -207,7 +195,7 @@
 #define PERK_sniper              (24)
 #define PERK_silent_death        (25)
 #define PERK_action_boy          (26)
-///#define PERK_mental_block        (27)  -- Disabled FO2
+#define PERK_mental_block        (27)  //-- Disabled FO2
 #define PERK_lifegiver           (28)
 #define PERK_dodger              (29)
 #define PERK_snakeater           (30)
@@ -216,15 +204,15 @@
 #define PERK_master_thief        (33)
 #define PERK_speaker             (34)
 #define PERK_heave_ho            (35)
-///#define PERK_friendly_foe        (36)  -- Disabled FO2
+#define PERK_friendly_foe        (36)  //-- Disabled FO2
 #define PERK_pickpocket          (37)
 #define PERK_ghost               (38)
 #define PERK_cult_of_personality (39)
-///#define PERK_scrounger           (40)  -- Disabled FO2
+#define PERK_scrounger           (40)  //-- Disabled FO2
 #define PERK_explorer            (41)
-///#define PERK_flower_child        (42)  -- Disabled FO2
+#define PERK_flower_child        (42)  //-- Disabled FO2
 #define PERK_pathfinder          (43)
-///#define PERK_animal_friend       (44)  -- Disabled FO2
+#define PERK_animal_friend       (44)  //-- Disabled FO2
 #define PERK_scout               (45)
 #define PERK_mysterious_stranger (46)
 #define PERK_ranger              (47)
@@ -233,27 +221,27 @@
 #define PERK_swift_learner       (50)
 #define PERK_tag                 (51)
 #define PERK_mutate              (52)
-//#define PERK_add_nuka            // Do NOT USE!  Engine ONLY!
-//#define PERK_add_buffout         // Do NOT USE!  Engine ONLY!
-//#define PERK_add_mentats         // Do NOT USE!  Engine ONLY!
-//#define PERK_add_psycho          // Do NOT USE!  Engine ONLY!
-//#define PERK_add_radaway         // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_long_range   // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_accurate     // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_penetrate    // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_knockback    // Do NOT USE!  Engine ONLY!
-//#define PERK_armor_powered       // Do NOT USE!  Engine ONLY!
-//#define PERK_armor_combat        // Do NOT USE!  Engine ONLY!
-// Note: Fallout 2: New Perks      // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_scope_range  // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_fast_reload  // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_night_sight  // Do NOT USE!  Engine ONLY!
-//#define PERK_weapon_flameboy     // Do NOT USE!  Engine ONLY!
-//#define PERK_armor_advanced_1    // Do NOT USE!  Engine ONLY!
-//#define PERK_armor_advanced_2    // Do NOT USE!  Engine ONLY!
-//#define PERK_add_jet             // Do NOT USE!  Engine ONLY!
-//#define PERK_add_tragic          // Do NOT USE!  Engine ONLY!
-//#define PERK_armor_charisma      // Do NOT USE!  Engine ONLY!
+#define PERK_add_nuka            (53) // Do NOT USE!  Engine ONLY!
+#define PERK_add_buffout         (54) // Do NOT USE!  Engine ONLY!
+#define PERK_add_mentats         (55) // Do NOT USE!  Engine ONLY!
+#define PERK_add_psycho          (56) // Do NOT USE!  Engine ONLY!
+#define PERK_add_radaway         (57) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_long_range   (58) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_accurate     (59) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_penetrate    (60) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_knockback    (61) // Do NOT USE!  Engine ONLY!
+#define PERK_armor_powered       (62) // Do NOT USE!  Engine ONLY!
+#define PERK_armor_combat        (63) // Do NOT USE!  Engine ONLY!
+// Note: Fallout 2: New Perks
+#define PERK_weapon_scope_range  (64) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_fast_reload  (65) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_night_sight  (66) // Do NOT USE!  Engine ONLY!
+#define PERK_weapon_flameboy     (67) // Do NOT USE!  Engine ONLY!
+#define PERK_armor_advanced_1    (68) // Do NOT USE!  Engine ONLY!
+#define PERK_armor_advanced_2    (69) // Do NOT USE!  Engine ONLY!
+#define PERK_add_jet             (70) // Do NOT USE!  Engine ONLY!
+#define PERK_add_tragic          (71) // Do NOT USE!  Engine ONLY!
+#define PERK_armor_charisma      (72) // Do NOT USE!  Engine ONLY!
 #define PERK_gecko_skinning_perk            (73)
 #define PERK_dermal_armor_perk              (74)
 #define PERK_dermal_enhancement_perk        (75)
@@ -307,7 +295,9 @@
 #define OBJECT_CUR_ROT    (10)
 #define OBJECT_VISIBILITY (666)
 #define OBJECT_CUR_WEIGHT (669)
+
 #define obj_is_visible_flag(WHO)  has_trait(TRAIT_OBJECT,WHO,OBJECT_VISIBILITY)
+
 // Trait Types
 #define TRAIT_fast_metabolism  (0)
 #define TRAIT_bruiser          (1)
@@ -329,8 +319,7 @@
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 
-// proto.h: stats //
-// SPECIAL System stats
+// SPECIAL System stats: strength, perception, endurance, charisma, intelligence, agility, luck
 #define STAT_st              (0)
 #define STAT_pe              (1)
 #define STAT_en              (2)
@@ -339,24 +328,22 @@
 #define STAT_ag              (5)
 #define STAT_lu              (6)
 #define STAT_max_hp          (7)
-///  strength, perception, endurance, charisma, intelligence, agility,
-///  luck,   // luck MUST be the last basic stat
+// luck MUST be the last basic stat
 // derived stats
-#define STAT_max_hit_points     (7)
-#define STAT_max_move_points    (8)
-#define STAT_ac                 (9)
-///#define STAT_unarmed_dmg        (10)
-#define STAT_unused             (10)
-#define STAT_melee_dmg          (11)
-#define STAT_carry_amt          (12)
-#define STAT_sequence           (13)
-#define STAT_heal_rate          (14)
-#define STAT_crit_chance        (15)
-#define STAT_better_crit        (16)
-#define STAT_dmg_thresh         (17)
-#define STAT_dmg_thresh_laser   (18)
-#define STAT_dmg_thresh_fire    (19)
-#define STAT_dmg_thresh_plasma  (20)
+#define STAT_max_hit_points        (7)
+#define STAT_max_move_points       (8)
+#define STAT_ac                    (9)
+#define STAT_unused                (10) // used in sfall for critter inventory size (see CritterInvSizeLimitMode)
+#define STAT_melee_dmg             (11)
+#define STAT_carry_amt             (12)
+#define STAT_sequence              (13)
+#define STAT_heal_rate             (14)
+#define STAT_crit_chance           (15)
+#define STAT_better_crit           (16)
+#define STAT_dmg_thresh            (17)
+#define STAT_dmg_thresh_laser      (18)
+#define STAT_dmg_thresh_fire       (19)
+#define STAT_dmg_thresh_plasma     (20)
 #define STAT_dmg_thresh_electrical (21)
 #define STAT_dmg_thresh_emp        (22)
 #define STAT_dmg_thresh_explosion  (23)
@@ -379,7 +366,7 @@
 #define STAT_current_rad           (37)
 #define STAT_real_max_stat         (38)
 // extra stat-like values that are treated specially
-#define STAT_max_stat  STAT_current_hp
+#define STAT_max_stat              STAT_current_hp
 
 #define PCSTAT_unspent_skill_points (0)
 #define PCSTAT_level                (1)
@@ -391,7 +378,7 @@
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 
-// skill.h: Skill Equates //
+// Skill Equates //
 // the following are skills for the SPECIAL system
 #define SKILL_SMALL_GUNS                    (0)
 #define SKILL_BIG_GUNS                      (1)
@@ -418,7 +405,7 @@
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 
-// reaction.h: Reaction Levels //
+// Reaction Levels //
 #define rl_disastrous (0)
 #define rl_very_bad   (1)
 #define rl_bad        (2)
@@ -428,14 +415,10 @@
 #define rl_very_good  (6)
 #define rl_excellent  (7)
 
-
-// proto.h //
 //#define LOAD_MAP_INDEX (32)
 
-// proto.h //
 #define GENDER_MALE   (0)
 #define GENDER_FEMALE (1)
-
 
 // critter_state States //
 #define CRITTER_IS_NORMAL (0)
@@ -445,7 +428,6 @@
 #define is_critter_dead(who)    (critter_state(who) bwand CRITTER_IS_DEAD)
 #define is_critter_prone(who)   (critter_state(who) bwand CRITTER_IS_PRONE)
 
-
 // inventory Equates //
 #define INVEN_TYPE_WORN        (0)
 #define INVEN_TYPE_RIGHT_HAND  (1)
@@ -453,7 +435,6 @@
 
 #define INVEN_TYPE_INV_COUNT   (-2)
 #define inven_count(WHO)       critter_inven_obj(WHO, INVEN_TYPE_INV_COUNT)
-
 
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
@@ -468,7 +449,6 @@
 #define item_type_ammo         (4)
 #define item_type_misc_item    (5)
 #define item_type_key_item     (6)
-
 
 /*   Item data_members   */
 #define it_pid              (0)
@@ -508,7 +488,6 @@
 #define CR_BODY_QUADRUPED  1
 #define CR_BODY_ROBOTIC    2
 
-
 /*   Scenery data_members   */
 #define sc_pid              (0)
 #define sc_name             (1)
@@ -536,7 +515,6 @@
 #define wa_material         (9)
 
 /*   Tile data_members   */
-  // NONE
 
 /*   Misc data_members   */
 #define mi_pid              (0)
@@ -548,75 +526,37 @@
 #define mi_flags            (6)
 #define mi_flags_ext        (7)
 
-
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
 
 /* Combat Flags */
-
-// WIP! These are old and incorrect now, look below!  6/18/97 JLR
-
-/*
-#define DAM_KNOCKED_OUT                       (1) // 0x00000001  // valid flags for damage_results
-#define DAM_STUNNED                           (2) // 0x00000002
-#define DAM_KNOCKED_DOWN                      (4) // 0x00000004
-#define DAM_DODGED                            (8) // 0x00000008
-#define DAM_CRIP_LEG_LEFT                    (16) // 0x00000010
-#define DAM_CRIP_LEG_RIGHT                   (32) // 0x00000020
-#define DAM_CRIP_FOOT_LEFT                   (64) // 0x00000040
-#define DAM_CRIP_FOOT_RIGHT                 (128) // 0x00000080
-#define DAM_CRIP_ARM_LEFT                   (256) // 0x00000100
-#define DAM_CRIP_ARM_RIGHT                  (512) // 0x00000200
-#define DAM_CRIP_HAND_LEFT                 (1024) // 0x00000400
-#define DAM_CRIP_HAND_RIGHT                (2048) // 0x00000800
-#define DAM_BLIND_EYE_LEFT                 (4096) // 0x00001000
-#define DAM_BLIND_EYE_RIGHT                (8192) // 0x00002000
-#define DAM_DECAPITATED                   (16384) // 0x00004000
-#define DAM_SURPRISED                     (32768) // 0x00008000
-#define DAM_DEATH_1                       (65536) // 0x00010000
-#define DAM_DEATH_2                      (131072) // 0x00020000
-#define DAM_DEATH_3                      (262144) // 0x00040000
-#define DAM_HIT                          (524288) // 0x00080000  // true if hit or critical hit
-#define DAM_UNBALANCED                  (1048576) // 0x00100000
-#define DAM_DEAF                        (2097152) // 0x00200000
-#define DAM_DROP_WEAPON                 (4194304) // 0x00400000
-#define DAM_BREAK_WEAPON                (8388608) // 0x00800000
-#define DAM_UNREADY_WEAPON_LEFT        (16777216) // 0x01000000
-#define DAM_UNREADY_WEAPON_RIGHT       (33554432) // 0x02000000
-#define DAM_EXPLODE_WEAPON             (67108864) // 0x04000000
-#define DAM_DUD_SHOT                  (134217728) // 0x08000000
-#define DAM_IGNORE_DR                 (268435456) // 0x10000000
-#define DAM_CRITICAL                  (536870912) // 0x20000000  // could be a critical hit or critical miss
-#define DAM_ON_FIRE                  (1073741824) // 0x40000000
-*/
-
-#define DAM_KNOCKED_OUT        1
-#define DAM_KNOCKED_DOWN       2
-#define DAM_CRIP_LEG_LEFT      4
-#define DAM_CRIP_LEG_RIGHT     8
-#define DAM_CRIP_ARM_LEFT     16
-#define DAM_CRIP_ARM_RIGHT    32
-#define DAM_BLIND             64
-#define DAM_DEAD             128
-#define DAM_HIT              256
-#define DAM_CRITICAL         512  // could be a critical hit or critical miss
-#define DAM_ON_FIRE         1024
-#define DAM_BYPASS          2048
-#define DAM_EXPLODE         4096
-#define DAM_DESTROY         8192
-#define DAM_DROP           16384
-#define DAM_LOSE_TURN      32768
-#define DAM_HIT_SELF       65536
-#define DAM_LOSE_AMMO     131072
-#define DAM_DUD           262144
-#define DAM_HURT_SELF     524288
-#define DAM_RANDOM_HIT   1048576
-#define DAM_CRIP_RANDOM  2097152
-#define DAM_BACKWASH     4194304
-
+// valid flags for damage_results
+#define DAM_KNOCKED_OUT           0x1
+#define DAM_KNOCKED_DOWN          0x2
+#define DAM_CRIP_LEG_LEFT         0x4
+#define DAM_CRIP_LEG_RIGHT        0x8
+#define DAM_CRIP_ARM_LEFT        0x10
+#define DAM_CRIP_ARM_RIGHT       0x20
+#define DAM_BLIND                0x40
+#define DAM_DEAD                 0x80
+#define DAM_HIT                 0x100  // hit or critical hit
+#define DAM_CRITICAL            0x200  // could be a critical hit or critical miss
+#define DAM_ON_FIRE             0x400
+#define DAM_BYPASS              0x800
+#define DAM_EXPLODE            0x1000
+#define DAM_DESTROY            0x2000
+#define DAM_DROP               0x4000
+#define DAM_LOSE_TURN          0x8000
+#define DAM_HIT_SELF          0x10000
+#define DAM_LOSE_AMMO         0x20000
+#define DAM_DUD               0x40000
+#define DAM_HURT_SELF         0x80000
+#define DAM_RANDOM_HIT       0x100000
+#define DAM_CRIP_RANDOM      0x200000
+#define DAM_BACKWASH         0x400000
 // Fallout 2:
-#define DAM_PERFORM_REVERSE  8388608
-#define critter_uninjure(WHO, FLAGS)  critter_injure(WHO, (FLAGS BWOR DAM_PERFORM_REVERSE))
+#define DAM_PERFORM_REVERSE  0x800000
+#define critter_uninjure(WHO, FLAGS)  critter_injure(WHO, (FLAGS bwor DAM_PERFORM_REVERSE))
 
 #define DMG_normal_dam   0
 #define DMG_laser        1
@@ -744,11 +684,9 @@
 #define wm_get_subtile_state(XPOS,YPOS)        metarule3(METARULE3_WM_SUBTILE_STATE,XPOS,YPOS,0)
 
 // Begin <objptr> tile_get_next_critter(tile, elevation, lastCritter)
-//CMH
 //Note these defines are really messey.
 #define METARULE3_TILE_GET_NEXT_CRITTER     (106)
 #define tile_get_next_critter(tile, elevation, lastCritter) metarule3(METARULE3_TILE_GET_NEXT_CRITTER, tile, elevation, lastCritter)
-//CMH
 // End
 
 #define METARULE3_ART_SET_BASE_FID_NUM      (107)
@@ -780,6 +718,8 @@
 #define INVEN_CMD_INDEX_PTR  (13)
 #define inven_ptr(WHO,WHERE)     inven_cmds(WHO,INVEN_CMD_INDEX_PTR,WHERE)
 
+
+/* Extra */
 /* GSound Values */
 // gsound_character_types
 #define snd_human    (0)
@@ -820,76 +760,51 @@
 #define hit_left_weapon_reload     (6)
 #define hit_right_weapon_reload    (7)
 
-/* Extra */
-
-#define fadeout(X) gfade_out(X)
-#define fadein(X)  gfade_in(X)
-
+#define fade_out                   gfade_out(1)
+#define fade_in                    gfade_in(1)
 
 /* Time Information  (in Ticks) */
-
 #define ONE_GAME_SECOND             (10)
-#define ONE_GAME_MINUTE             (60*ONE_GAME_SECOND)
-#define ONE_GAME_HOUR               (60*ONE_GAME_MINUTE)
-#define ONE_GAME_DAY                (24*ONE_GAME_HOUR)
-#define ONE_GAME_WEEK               (7*ONE_GAME_DAY)
-#define ONE_GAME_MONTH              (30*ONE_GAME_DAY)
+#define ONE_GAME_MINUTE             (60 * ONE_GAME_SECOND)
+#define ONE_GAME_HOUR               (60 * ONE_GAME_MINUTE)
+#define ONE_GAME_DAY                (24 * ONE_GAME_HOUR)
+#define ONE_GAME_WEEK               (7 * ONE_GAME_DAY)
+#define ONE_GAME_MONTH              (30 * ONE_GAME_DAY)
 
 /* bits */
 #define bit_1                       (1)
 #define bit_2                       (2)
 #define bit_3                       (4)
 #define bit_4                       (8)
-#define bit_5                       (16)
-#define bit_6                       (32)
-#define bit_7                       (64)
-#define bit_8                       (128)
-#define bit_9                       (256)
-#define bit_10                      (512)
-#define bit_11                      (1024)
-#define bit_12                      (2048)
-#define bit_13                      (4096)
-#define bit_14                      (8192)
-#define bit_15                      (16384)
-#define bit_16                      (32768)
-#define bit_17                      (65536)
-#define bit_18                      (131072)
-#define bit_19                      (262144)
-#define bit_20                      (524288)
-#define bit_21                      (1048576)
-#define bit_22                      (2097152)
-#define bit_23                      (4194304)
-#define bit_24                      (8388608)
-#define bit_25                      (16777216)
-#define bit_26                      (33554432)
-#define bit_27                      (67108864)
-#define bit_28                      (134217728)
-#define bit_29                      (268435456)
-#define bit_30                      (536870912)
-#define bit_31                      (1073741824)
-#define bit_32                      (-2147483648)
-#define bit_ALL                     (-1)
-
-/* macros for pickup_p_proc responses. */
-#define REACTION_TG   1
-#define REACTION_G    2
-#define REACTION_TC   3
-#define REACTION_C    4
-
-#define R_CALL_THROUGH     1
-#define R_NOCALL_THROUGH  -1
-
-#ifndef PICKUP_THRESH
-#define PICKUP_THRESH      1
-#endif
-
-#ifndef CALL_PICKUP
-#define CALL_PICKUP        R_NOCALL_THROUGH
-#endif
-
-#ifndef NPC_REACTION_VAR
-#define NPC_REACTION_VAR          (-1)
-#endif
+#define bit_5                       (0x10)
+#define bit_6                       (0x20)
+#define bit_7                       (0x40)
+#define bit_8                       (0x80)
+#define bit_9                       (0x100)
+#define bit_10                      (0x200)
+#define bit_11                      (0x400)
+#define bit_12                      (0x800)
+#define bit_13                      (0x1000)
+#define bit_14                      (0x2000)
+#define bit_15                      (0x4000)
+#define bit_16                      (0x8000)
+#define bit_17                      (0x10000)
+#define bit_18                      (0x20000)
+#define bit_19                      (0x40000)
+#define bit_20                      (0x80000)
+#define bit_21                      (0x100000)
+#define bit_22                      (0x200000)
+#define bit_23                      (0x400000)
+#define bit_24                      (0x800000)
+#define bit_25                      (0x1000000)
+#define bit_26                      (0x2000000)
+#define bit_27                      (0x4000000)
+#define bit_28                      (0x8000000)
+#define bit_29                      (0x10000000)
+#define bit_30                      (0x20000000)
+#define bit_31                      (0x40000000)
+#define bit_32                      (0x80000000)
+#define bit_ALL                     (0xFFFFFFFF)
 
 
 

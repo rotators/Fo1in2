@@ -41,9 +41,14 @@ variable car_was_used_to_exit;
                                     else begin                                                                                                     \
                                        give_xp_msg(EXP_BOUGHT_BIKE, message_str(SCRIPT_GRIFFITH, 128));                                            \
                                     end                                                                                                            \
-                                    display_mstr(220)
+                                    display_mstr(452)
 
 #define bike_is_unclaimed           tile_contains_obj_pid(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV, PID_DRIVABLE_MOTO1)
+
+#define check_griffith_dialog       if (global_var(GVAR_QUEST_MOTORCYCLE) == 0) then      \
+                                       set_global_var(GVAR_QUEST_MOTORCYCLE, 1);          \
+                                    else if (global_var(GVAR_QUEST_MOTORCYCLE) == 2) then \
+                                       set_global_var(GVAR_QUEST_MOTORCYCLE, 3)
 
 procedure start begin
 end
@@ -91,16 +96,13 @@ procedure use_p_proc begin
    if not(dude_has_car) then begin
       stop_car_use := true;
 
-      if global_var(GVAR_GRIFFITH_STATE) == 0 then
-         display_mstr(450);
-      else
-         display_mstr(453);
+      //if global_var(GVAR_GRIFFITH_STATE) == 0 then
+      //   display_mstr(450);
+      //else
+         display_mstr(454);
 
       // Start dialog with Griffith, the owner
-      if (global_var(GVAR_QUEST_MOTORCYCLE) == 0) then
-         set_global_var(GVAR_QUEST_MOTORCYCLE, 1);
-      else if (global_var(GVAR_QUEST_MOTORCYCLE) == 2) then
-         set_global_var(GVAR_QUEST_MOTORCYCLE, 3);
+      check_griffith_dialog;
    end
 
    // Check party members. Everyone fits on the bike?
@@ -135,21 +137,18 @@ end
 procedure use_obj_on_p_proc begin
 variable Item := obj_pid(obj_being_used_with);
 
+   script_overrides;
    if (Item == PID_MOTO_KEY) then begin
-      script_overrides;
-
       set_global_var(GVAR_PLAYER_GOT_CAR, 1);
       remove_pid_qty(dude_obj, PID_MOTO_KEY, 1)
       give_bike_exp;
    end
-   else if (global_var(GVAR_PLAYER_GOT_CAR) != 0) then begin
-      script_overrides;
-      call refuel_car;
-   end
    else begin
-      if (Item == PID_MICRO_FUSION_CELL or Item == PID_SMALL_ENERGY_CELL) then begin
-         script_overrides;
-         display_msg(mstr(520));
+      if (global_var(GVAR_PLAYER_GOT_CAR) != 0) or (global_var(GVAR_GRIFFITH_STATE) > 0) then begin
+         call refuel_car;
+      end
+      else begin
+         check_griffith_dialog;
       end
    end
 end

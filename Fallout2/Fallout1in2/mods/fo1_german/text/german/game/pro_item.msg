@@ -13,15 +13,15 @@
 {700}{}{Speer}
 {701}{}{Stab mit einer messerscharfen Spitze. Der Stab ist aus Holz und die Spitze aus bearbeitetem Stahl. Mindeststärke: 4.}
 {800}{}{10mm-Pistole}
-{801}{}{Selbstlader vom Typ Colt 6520, 10mm. Bei jedem Abzug lädt sich die Waffe automatisch, bis das Magazin leer ist. Nur Einzelschuß. Mindeststärke: 3.}
+{801}{}{Selbstlader vom Typ Colt 6520, 10mm. Bei jedem Abzug lädt sich die Waffe automatisch, bis das Magazin leer ist. Nur Einzelschuss. Mindeststärke: 3.}
 {900}{}{10mm-Klein-MG}
-{901}{}{H&K MP9-Maschinengewehr, 10mm. Maschinengewehr mittlerer Größe für Einzelschuß oder Dauerfeuer. Mindeststärke: 4.}
+{901}{}{H&K MP9-Maschinengewehr, 10mm. Maschinengewehr mittlerer Größe für Einzelschuss oder Dauerfeuer. Mindeststärke: 4.}
 {1000}{}{Jagdgewehr}
-{1001}{}{Halbautomatikgewehr vom Typ Colt Rangemaster, Kaliber .223. Nur Einzelschuß. Mindeststärke: 5.}
+{1001}{}{Halbautomatikgewehr vom Typ Colt Rangemaster, Kaliber .223. Nur Einzelschuss. Mindeststärke: 5.}
 {1100}{}{Flammenwerfer}
 {1101}{}{Flammenwerfer vom Modell Flambe 450, Varmiter-Modell. Feuert einen Strahl extrem heißer, brennbarer Flüssigkeit ab. Mindeststärke: 6.}
 {1200}{}{Kleingeschütz}
-{1201}{}{Kleingeschütz vom Typ Rockwell CZ53. Maschinengewehr mit mehreren Läufen. Feuert über 60.000 Schuß pro Minute ab. Mindeststärke: 7.}
+{1201}{}{Kleingeschütz vom Typ Rockwell CZ53. Maschinengewehr mit mehreren Läufen. Feuert über 60.000 Schuss pro Minute ab. Mindeststärke: 7.}
 {1300}{}{Raketenwerfer}
 {1301}{}{Raketenwerfer vom Typ Rockwell BigBazooka. Mit schwerem Deluxe-Abzug. Mindeststärke: 6.}
 {1400}{}{Sprengrakete}
@@ -41,9 +41,9 @@
 {2100}{}{Schlagring}
 {2101}{}{Schlagring aus gehärtetem Stahl. Schützt die eigene Hand und kann im unbewaffneten Kampf großen Schaden anrichten. Mindeststärke: 1.}
 {2200}{}{14mm-Pistole}
-{2201}{}{14mm-Selbstlader vom Typ Sig-Sauer. Große Handfeuerwaffe mit Einzelschuß. Hervorragende Verarbeitung. Mindeststärke: 4.}
+{2201}{}{14mm-Selbstlader vom Typ Sig-Sauer. Große Handfeuerwaffe mit Einzelschuss. Hervorragende Verarbeitung. Mindeststärke: 4.}
 {2300}{}{Sturmgewehr}
-{2301}{}{Sturmgewehr vom Typ AK-112, 5mm. Ein älteres Militärmodell, das seit der Kriegszeit nicht mehr eingesetzt wurde. Einzelschuß oder Dauerfeuer. Mindeststärke: 5.}
+{2301}{}{Sturmgewehr vom Typ AK-112, 5mm. Ein älteres Militärmodell, das seit der Kriegszeit nicht mehr eingesetzt wurde. Einzelschuss oder Dauerfeuer. Mindeststärke: 5.}
 {2400}{}{Plasmapistole}
 {2401}{}{Plasmapistole vom Typ Glock 86, hergestellt von Gaston Glock AI. Feuert einen kleinen Strahl hocherhitzten Plasmas ab. Mindeststärke: 4.}
 {2500}{}{Splittergranate}
@@ -141,7 +141,7 @@
 {7100}{}{Obst}
 {7101}{}{Seltsames Obststück. Ohne Konservierungsstoffe und zusätzliche Farbstoffe.}
 {7200}{}{Aktenkoffer}
-{7201}{}{Lederner Aktenkoffer, dem Etikett nach in den USA hergestellt. In gutem Zustand, aber das Kombinationsschloß ist kaputt.}
+{7201}{}{Lederner Aktenkoffer, dem Etikett nach in den USA hergestellt. In gutem Zustand, aber das Kombinationsschloss ist kaputt.}
 {7300}{}{Fachlexika}
 {7301}{}{Verschiedene Bücher mit Informationen zu unterschiedlichen Bereichen der Wissenschaft.}
 {7400}{}{Lederjacke}
@@ -149,13 +149,13 @@
 {7500}{}{Werkzeug}
 {7501}{}{Verschiedene hervorragende Werkzeuge, darunter sehr nützliche Dinge.}
 {7600}{}{Deans Electronics}
-{7601}{}{Elektroniklehrbuch. Auf dem Einband steht, daß sich das Buch an den 'angehenden jungen Elektrotechniker in jedem von uns' wendet.}
+{7601}{}{Elektroniklehrbuch. Auf dem Einband steht, dass sich das Buch an den 'angehenden jungen Elektrotechniker in jedem von uns' wendet.}
 {7700}{}{Elektronischer Dietrich}
 {7701}{}{Elektronischer Dietrich vom Typ Micromanipulator FingerStuff der Firma Wattz Electronics. Zum Öffnen von elektronischen Schlössern und Sicherheitssystemen.}
 {7800}{}{Gemälde}
 {7801}{}{Auf diesem wohl sehr alten Gemälde ist recht undeutlich ein Sänger zu erkennen. Das Gemälde hat eine Filzbeschichtung, die noch in gutem Zustand ist.}
 {7900}{}{Leuchtrakete}
-{7901}{}{Erzeugt für einen kurzen Augenblick Licht. Das Etikett ist schon ein bißchen verschlissen. Insgesamt aber noch in gutem Zustand. Zur Aktivierung oben drehen.}
+{7901}{}{Erzeugt für einen kurzen Augenblick Licht. Das Etikett ist schon ein bisschen verschlissen. Insgesamt aber noch in gutem Zustand. Zur Aktivierung oben drehen.}
 {8000}{}{Erste-Hilfe-Buch}
 {8001}{}{Lehrbuch zur praktischen Erste Hilfe.}
 {8100}{}{Leguan am Spieß}
@@ -165,7 +165,7 @@
 {8300}{}{Schlüsselbund}
 {8301}{}{Ring mit verschiedenen Schlüsseln.}
 {8400}{}{Dietriche}
-{8401}{}{Verschiedene Schlosserwerkzeuge. Umfaßt alle Dietriche und Schraubenschlüssel, die man zum Öffnen herkömmlicher Schlösser braucht.}
+{8401}{}{Verschiedene Schlosserwerkzeuge. Umfasst alle Dietriche und Schraubenschlüssel, die man zum Öffnen herkömmlicher Schlösser braucht.}
 {8500}{}{Plastiksprengstoff}
 {8501}{}{Cordex, ein Plastiksprengstoff für Militärzwecke. Hohe Stabilität, hohe Zerstörungskraft. Mit Zeitzünder.}
 {8600}{}{Pfadfinderbuch}
@@ -197,7 +197,7 @@
 {9900}{}{Goldmedaillon}
 {9901}{}{Wertvolles Goldmedaillon.}
 {10000}{}{Funkgerät}
-{10001}{}{Funkgerät vom Modell 2043B von Wattz Electronics. Verläßlich, robust und unauffällig. Mit optionaler RS 121-Schnittstelle.}
+{10001}{}{Funkgerät vom Modell 2043B von Wattz Electronics. Verlässlich, robust und unauffällig. Mit optionaler RS 121-Schnittstelle.}
 {10100}{}{Feuerzeug}
 {10101}{}{Silbernes Butanfeuerzeug in gutem Zustand.}
 {10200}{}{'Gewehre und Kugeln'}
@@ -399,7 +399,7 @@
 {20300}{}{Kiste}
 {20400}{}{Kiste}
 {20500}{}{Leuchtrakete}
-{20501}{}{Erzeugt für einen kurzen Augenblick Licht. Das Etikett ist schon ein bißchen verschlissen. Insgesamt aber noch in gutem Zustand. Aktiviert.}
+{20501}{}{Erzeugt für einen kurzen Augenblick Licht. Das Etikett ist schon ein bisschen verschlissen. Insgesamt aber noch in gutem Zustand. Aktiviert.}
 {20600}{}{Dynamit}
 {20601}{}{Hochexplosiver Sprengstoff aus Nitroglyzerin, gemischt mit der absorbierenden Substanz Kieselguhr. Mit tickendem Zeitzünder.}
 {20700}{}{Geigerzähler}
@@ -415,9 +415,9 @@
 {21200}{}{Tandi}
 {21201}{}{Du handelst die Freilassung von Tandi aus.}
 {21300}{}{Gizmos Überreste}
-{21301}{}{Gizmo, der ehemalige Verbrecherboß von Junktown, ist tot. Und stinkt ganz schön!}
+{21301}{}{Gizmo, der ehemalige Verbrecherboss von Junktown, ist tot. Und stinkt ganz schön!}
 {21400}{}{Schreibtisch}
-{21401}{}{Einfacher Schreibtisch. Nach genauerer Betrachtung kommst du zu dem Schluß, daß es immer noch ein Schreibtisch ist.}
+{21401}{}{Einfacher Schreibtisch. Nach genauerer Betrachtung kommst du zu dem Schluss, dass es immer noch ein Schreibtisch ist.}
 {21500}{}{Sophias Disk}
 {21501}{}{Holodisk mit Informationen zur Brotherhood of Steel. Kann in den PIPBoy geladen werden.}
 {21600}{}{Maxsons Disk}
@@ -436,7 +436,7 @@
 {22300}{}{Gelber Schlüssel}
 {22301}{}{Gelber elektronischer Sicherheitsschlüssel.}
 {22400}{}{Kleine Statue}
-{22401}{}{Du vermutest, daß der PIPBoy dieses Werk geschaffen hat, bist dir aber nicht ganz sicher.}
+{22401}{}{Du vermutest, dass der PIPBoy dieses Werk geschaffen hat, bist dir aber nicht ganz sicher.}
 {22500}{}{Keine Ahnung}
 {22501}{}{Auch nach genauerer Betrachtung hast du noch immer keine Ahnung, was das sein könnte.}
 {22600}{}{Packung Nudeln}
@@ -497,11 +497,11 @@
 {25300}{}{Brennstoffzellensteuerung}
 {25301}{}{Dieser Chip steuert den Fluß des Kraftstoffs in den Elektromotor eines Autos. Bei vielen Fahrern ist der Chip schnell durchgebrannt, weil sie zu oft zu schnell beschleunigen. Kann dennoch ganz nützlich sein - wenn man nur ein Auto hätte, in das man den Chip einbauen könnte.}
 {25400}{}{Brennstoffzellenregler}
-{25401}{}{Einige Autobesitzer haben diesen Regulator eingebaut, mit dem sich die Kilometerleistung bis zum nächsten Laden verdoppeln läßt. Den meisten Autobesitzern ist es aber egal, wieviel ihr Wagen verbraucht, da Strom nicht teuer und reichlich vorhanden ist, also was soll's.}
+{25401}{}{Einige Autobesitzer haben diesen Regulator eingebaut, mit dem sich die Kilometerleistung bis zum nächsten Laden verdoppeln lässt. Den meisten Autobesitzern ist es aber egal, wieviel ihr Wagen verbraucht, da Strom nicht teuer und reichlich vorhanden ist, also was soll's.}
 {25500}{}{Tagesausweis}
 {25501}{}{Dieses leicht zerknitterte Stück Papier gewährt dir Zugang zu allen Gebieten von Bunkerstadt mit Ausnahme des Bunkers selbst. Nur während der Tagesstunden gültig.}
 {25600}{}{Falsche Bürgerschaftspapiere}
-{25601}{}{Gefälschte Bürgerschaftspapiere. Sie sehen ziemlich echt aus, aber du bezweifelst, daß sie eine sorgfältige Kontrolle überstehen würden.}
+{25601}{}{Gefälschte Bürgerschaftspapiere. Sie sehen ziemlich echt aus, aber du bezweifelst, dass sie eine sorgfältige Kontrolle überstehen würden.}
 {25700}{}{Cornelius' goldene Uhr}
 {25701}{}{Altertümlicher Zeitmesser, auch als Taschenuhr bekannt. Für dieses gute Stück ist die Zeit schon lange stehengeblieben.}
 {25800}{}{Hydroelektrisches Teil}
@@ -555,7 +555,7 @@
 {28200}{}{Cliftons Auge}
 {28201}{}{Ein kleines Glas, in dem ein menschliches Auge in einer Flüssigkeit schwimmt. Auf dem Etikett steht General Clifton.}
 {28300}{}{Tommy-Gewehr}
-{28301}{}{Dieses Klein-MG Thompson M1928 ist eine finster wirkende Waffe; wenn du sie hältst, verspürst du den Drang, einen Schlapphut aufzusetzen und mit den Fingern zu knacken. Das Thompson wird von einem Trommelmagazin mit 50 Schuß versorgt. Mindest-ST: 6.}
+{28301}{}{Dieses Klein-MG Thompson M1928 ist eine finster wirkende Waffe; wenn du sie hältst, verspürst du den Drang, einen Schlapphut aufzusetzen und mit den Fingern zu knacken. Das Thompson wird von einem Trommelmagazin mit 50 Schuss versorgt. Mindest-ST: 6.}
 {28400}{}{Schnetzelfleisch}
 {28401}{}{Diese geräucherten und getrockneten Fleischstücke bleiben auch nach vielen Jahren noch ein echt nahrhaftes Kauerlebnis.}
 {28500}{}{Teile der radioaktiven Skorpione}
@@ -563,7 +563,7 @@
 {28600}{}{Feuerholz}
 {28601}{}{Ein Haufen Feuerholz und Zunder.}
 {28700}{}{Jagdgewehr mit Zielfernrohr}
-{28701}{}{Es gibt nichts Schöneres als das überraschte Gesicht deines Ziels. Das Guckloch des Zielfernrohrs mit 20facher Vergrößerung an diesem Jagdgewehr macht alles viel leichter. Zielgenau vom ersten bis zum letzten Schuß, egal, auf welche Art von Ziel du schießt. Mindest-ST: 5.}
+{28701}{}{Es gibt nichts Schöneres als das überraschte Gesicht deines Ziels. Das Guckloch des Zielfernrohrs mit 20facher Vergrößerung an diesem Jagdgewehr macht alles viel leichter. Zielgenau vom ersten bis zum letzten Schuss, egal, auf welche Art von Ziel du schießt. Mindest-ST: 5.}
 {28800}{}{Brennstoffzelle für das Auto}
 {28801}{}{Eine Brennstoffzelle für das Auto.}
 {28900}{}{Schaufel}
@@ -581,13 +581,13 @@
 {29500}{}{Käse-Chips}
 {29501}{}{Eine Schachtel Chips mit Käsegeschmack. Außerordentlich lecker.}
 {29600}{}{HK P90c}
-{29601}{}{Die Heckler & Koch P90c kam erst zu Kriegsbeginn auf. Durch das Bullpup-Layout sowie das kompakte Design der Waffe ist sie leicht zu handhaben. Die belastbare P90c wird oft wegen ihrer Zuverlässigkeit sowie die große Schußkraft in der robust-kompakten Ausführung gelobt. Mindest-ST: 4.}
+{29601}{}{Die Heckler & Koch P90c kam erst zu Kriegsbeginn auf. Durch das Bullpup-Layout sowie das kompakte Design der Waffe ist sie leicht zu handhaben. Die belastbare P90c wird oft wegen ihrer Zuverlässigkeit sowie die große Schusskraft in der robust-kompakten Ausführung gelobt. Mindest-ST: 4.}
 {29700}{}{Metallstab}
 {29701}{}{Das ist ein langer Metallstab. Was hattest du denn gedacht?}
 {29800}{}{Schlüssel zur Trapperstadt}
 {29801}{}{Ein gewöhnlicher Schlüssel.}
 {29900}{}{Rohrgewehr}
-{29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuß. Mindest-ST: 5.}
+{29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuss. Mindest-ST: 5.}
 {30000}{}{Zip-Pistole}
 {30001}{}{Eine handgefertigte Laserpistole. Mindest-ST: 3.}
 {30100}{}{Clipboard}
@@ -615,7 +615,7 @@
 {31200}{}{Ersatzteilantrag}
 {31201}{}{Dies ist ein Ersatzteilantrag.}
 {31300}{}{44er Magnum-Revolver}
-{31301}{}{Im Hinblick darauf, daß dies die stärkste Handfeuerwaffe der Welt ist, die deinen Kopf einfach wegblasen kann, solltest du dich fragen, ob du Glück gehabt hast. Also, was ist? Mindest-ST: 5.}
+{31301}{}{Im Hinblick darauf, dass dies die stärkste Handfeuerwaffe der Welt ist, die deinen Kopf einfach wegblasen kann, solltest du dich fragen, ob du Glück gehabt hast. Also, was ist? Mindest-ST: 5.}
 {31400}{}{Kondom (Blaue Packung)}
 {31401}{}{Ein echtes Jimmy Hats, sehr zuverlässig. Dieses ist zur Erhöhung ihres Vergnügens gerippt.}
 {31500}{}{Kondom (grüne Verpackung)}
@@ -647,7 +647,7 @@
 {32800}{}{Magische 8er-Kugel}
 {32801}{}{Diese schwarze Kugel ist ein seltsames Vorhersagegerät... Ein Fensterchen an der Oberseite scheint die Zukunft vorhersagen zu können. Die Menschen vor dem Krieg müssen wahre Genies gewesen sein!}
 {32900}{}{Mutationsserum}
-{32901}{}{Seltsam aussehendes organisches Gebräu, daß vermutlich den Mutationsfaktor in Menschen umkehren könnte.}
+{32901}{}{Seltsam aussehendes organisches Gebräu, dass vermutlich den Mutationsfaktor in Menschen umkehren könnte.}
 {33000}{}{Verti-Bird-Wrack}
 {33001}{}{Wrack eines Verti-Birds. Scheint vor Monaten hier abgestürzt zu sein.}
 {33100}{}{Cat's Paw Nummer 5}
@@ -752,9 +752,9 @@
 {38600}{}{Louisville Slugger}
 {38601}{}{Dieser typisch amerikanische Baseballschläger aus Hartholz schlägt nicht nur den Ball weit übers Feld hinaus. Mindest-ST: 4.}
 {38700}{}{M60}
-{38701}{}{Dieses recht leichte Maschinengewehr wird von Militärs weltweit für seine große Schußkraft gelobt. Das verläßliche, kampferprobte Design wurde auf Fahrzeugen montiert und zum Feuerschutz für Schwadronen verwendet. Mindest-ST: 7.}
+{38701}{}{Dieses recht leichte Maschinengewehr wird von Militärs weltweit für seine große Schusskraft gelobt. Das verlässliche, kampferprobte Design wurde auf Fahrzeugen montiert und zum Feuerschutz für Schwadronen verwendet. Mindest-ST: 7.}
 {38800}{}{Nadelpistole}
-{38801}{}{Du vermutest, daß diese Bringham-Nadelpistole einst für wissenschaftliche Feldstudien eingesetzt wurde. Ihre Munition besteht aus kleinen Pfeilen aus hartem Kunststoff. Mindest-ST: 3.}
+{38801}{}{Du vermutest, dass diese Bringham-Nadelpistole einst für wissenschaftliche Feldstudien eingesetzt wurde. Ihre Munition besteht aus kleinen Pfeilen aus hartem Kunststoff. Mindest-ST: 3.}
 {38900}{}{Kleingeschütz Avenger}
 {38901}{}{Rockwell baute den Avenger als Ersatz für das allmählich aus der Mode kommende Kleingeschütz CZ53. Zu den Verbesserungen am Design des Avengers zählen gekühlte und mit Chrom ausgelegte Läufe. Hierdurch werden Reichweite und tödliche Wirkung noch gesteigert. Mindest-ST: 7.}
 {39000}{}{Solar-Versenger}
@@ -782,7 +782,7 @@
 {40100}{}{Lasergewehr (Ext. Cap.)}
 {40101}{}{Bei dem Lasergewehr Wattz 2000 wurde das Ladesystem aufgerüstet sowie ein spezieller Recyclingchip installiert. Dadurch kann die Abnutzung der Mikrofusionszelle um 50% vermindert werden. Mindest-ST: 6.}
 {40200}{}{Magneto-Laserpistole}
-{40201}{}{Die Laserpistole Wattz 1000 ist mit einem Zielsuchsystem über ein magnetisches Feld aufgerüstet worden. Dadurch wird der Laserstrahl gebündelt, so daß die Waffe zusätzliche Durchschlagkraft erhält. Mindest-ST: 3.}
+{40201}{}{Die Laserpistole Wattz 1000 ist mit einem Zielsuchsystem über ein magnetisches Feld aufgerüstet worden. Dadurch wird der Laserstrahl gebündelt, so dass die Waffe zusätzliche Durchschlagkraft erhält. Mindest-ST: 3.}
 {40300}{}{FN FAL (Nachtsicht)}
 {40301}{}{Dieses Gewehr ist häufiger von bewaffneten Streitkräften eingesetzt worden als jedes andere in der Geschichte. Zuverlässige Waffe unabhängig von Terrain oder taktischer Situation. Diese Waffe wurde zusätzlich mit einem Nachtsichtgerät ausgestattet, um die Zielgenauigkeit bei Nacht zu erhöhen. Mindest-ST: 5.}
 {40400}{}{Desert Eagle (Exp. Mag.)}
@@ -790,7 +790,7 @@
 {40500}{}{Sturmgewehr (Exp. Mag.)}
 {40501}{}{Dieses Sturmgewehr hat einen erweiterten, militärtauglichen Munitionsclip. Durch die erweiterte Magazinkapazität hat man im Kampf Spaß wie nie zuvor. Mindest-ST: 5.}
 {40600}{}{Plasmapistole (Ext. Cap.)}
-{40601}{}{Bei der Plasmapistole Glock 86 wurde die Magnetkammer neu ausgerichtet, um die Abnutzung der Energiezelle zu minimieren. Die Effizienz wird dadurch verdoppelt, so daß mit einer Batterieladung mehr Schüsse abgegeben werden können. Mindest-ST: 4.}
+{40601}{}{Bei der Plasmapistole Glock 86 wurde die Magnetkammer neu ausgerichtet, um die Abnutzung der Energiezelle zu minimieren. Die Effizienz wird dadurch verdoppelt, so dass mit einer Batterieladung mehr schüsse abgegeben werden können. Mindest-ST: 4.}
 {40700}{}{Superpower-Faust}
 {40701}{}{Die Powerfaust "Big Frigger" von BeatCo. Von vielen als ultimatives Hilfsmittel im unbewaffneten Kampf angesehen. Dieses Exemplar hat aufgerüstete Power-Servos, die die Schlagkraft noch erhöhen. Wird mit kleinen Energiezellen betrieben. Mindest-ST: 1.}
 {40800}{}{Erste-Hilfe-Kasten für Feldärzte}
@@ -804,7 +804,7 @@
 {41200}{}{Ölkanister}
 {41201}{}{Du siehst einen Kanister Armor-Go. Ein polymerisiertes Schmiermittel des Raumfahrtzeitalters für Powerrüstungen.}
 {41300}{}{Stall-Kennmarke}
-{41301}{}{Temporärer Ausweis mit rotem Streifen, der vermutlich angibt, daß du ein "Forscher der Ställe" bist. }
+{41301}{}{Temporärer Ausweis mit rotem Streifen, der vermutlich angibt, dass du ein "Forscher der Ställe" bist. }
 {41400}{}{Barackenschlüssel für Bunker 15}
 {41401}{}{Ein gewöhnlicher Schlüssel.}
 {41500}{}{Brille}
@@ -816,7 +816,7 @@
 {41800}{}{Gifttank}
 {41801}{}{Dieser Tank ähnelt auf verdächtige Weise einem Sauerstofftank, doch auf der Unterseite ist ein Totenkopf eingraviert. Hättest du ihn nicht genau untersucht, hättest du das Symbol nicht gesehen.}
 {41900}{}{Minenteile}
-{41901}{}{Du siehst einen Haufen Teile mit der deutlichen Beschriftung "GX-9-Luftreiniger". Mit deiner unvergleichlichen Kombinationsgabe entscheidest du, daß es sich vermutlich um Ersatzteile für einen kaputten Luftreiniger handelt.}
+{41901}{}{Du siehst einen Haufen Teile mit der deutlichen Beschriftung "GX-9-Luftreiniger". Mit deiner unvergleichlichen Kombinationsgabe entscheidest du, dass es sich vermutlich um Ersatzteile für einen kaputten Luftreiniger handelt.}
 {42000}{}{Morningstar-Schuldschein}
 {42001}{}{Vermutlich zur Bezahlung der Minenarbeiter der Morningstar-Mine verwendet.}
 {42100}{}{Heilige Handgranate}
@@ -826,7 +826,7 @@
 {42300}{}{Goldnugget}
 {42301}{}{Ein Goldklumpen.}
 {42400}{}{Monumentsplitter}
-{42401}{}{Ein Stück des schlecht gelaunten Steinmonuments, das du draußen in der Wüste gefunden hast. Viele aus deinem Dorf würden es sicher als heilige Reliquie ansehen, aber irgendwie hast du das Gefühl, daß du reingelegt wurdest.}
+{42401}{}{Ein Stück des schlecht gelaunten Steinmonuments, das du draußen in der Wüste gefunden hast. Viele aus deinem Dorf würden es sicher als heilige Reliquie ansehen, aber irgendwie hast du das Gefühl, dass du reingelegt wurdest.}
 {42500}{}{Steinkopf}
 {42501}{}{Riesiges Steinmonument.}
 {42600}{}{Uranerz}
@@ -889,7 +889,7 @@
 {45500}{}{Kofferraum}
 {45501}{}{Der Kofferraum ist ideal für die Unterbringung deiner Sachen.}
 {45600}{}{Zellenschlüssel }
-{45601}{}{Dieser Schlüssel paßt auf die Zellentür in Broken Hills.}
+{45601}{}{Dieser Schlüssel passt auf die Zellentür in Broken Hills.}
 {45700}{}{Feldbericht der Hubologin}
 {45701}{}{Feldbericht für die Mitglieder des wahren Glaubens.}
 {45800}{}{M.B.-Holo-Disk 5}
@@ -914,9 +914,9 @@
 {46800}{}{Smittys Essen}
 {46801}{}{Eine Art Salat und ein Sandwich mit etwas, das wie Brahminfleisch aussieht und mit einer dicken dunkelgelben Sauce bedeckt ist. Als Beilage gibt es auch noch ein seltsam aussehendes, eingemachtes Gemüse.}
 {46900}{}{Rachenputzer}
-{46901}{}{Du beschließt, daß es sich um ein sehr starkes alkoholisches Getränk oder ein Reinigungsmittel handeln muß.}
+{46901}{}{Du beschließt, dass es sich um ein sehr starkes alkoholisches Getränk oder ein Reinigungsmittel handeln muss.}
 {47000}{}{Ballknebel}
-{47001}{}{Fragwürdiges Hilfsmittel für Sexspielchen. Wenn du nach dem Zweck fragen mußt, willst du die Antwort gar nicht wissen.}
+{47001}{}{Fragwürdiges Hilfsmittel für Sexspielchen. Wenn du nach dem Zweck fragen musst, willst du die Antwort gar nicht wissen.}
 {47100}{}{"Die Lavendelblüte"}
 {47101}{}{Sieht nach einem Liebesroman von Dorothy Rixon aus. Auf dem Titelbild liegt eine Frau umgeben von Hunderten von Blüten auf einem Bett.}
 {47200}{}{Hubologen-Holo-Disk}
@@ -934,20 +934,20 @@
 {47800}{}{Sierra-Missions-Holo-Disk}
 {47801}{}{Auf dem Etikett steht: "Missionsbericht."}
 {47900}{}{NavCom-Teile}
-{47901}{}{Computerteile, die aussehen, als gehörten sie ins Innere eines Computers. Weil "Poseidon-Öl" und "Navigationscomputer" darauf steht, denkst du dir, daß sie in einen Poseidon-Öl-Navigationscomputer passen könnten.}
+{47901}{}{Computerteile, die aussehen, als gehörten sie ins Innere eines Computers. Weil "Poseidon-Öl" und "Navigationscomputer" darauf steht, denkst du dir, dass sie in einen Poseidon-Öl-Navigationscomputer passen könnten.}
 {48000}{}{Bonus +1 Beweglichkeit}
 {48100}{}{Bonus +1 Intelligenz}
 {48200}{}{Bonus +1 Stärke}
 {48300}{}{Buch mit Tips zu Fallout 2 }
 {48301}{}{Tja, wenn du DAS mal zu Anfang des verdammten Spiels gehabt hättest, was?}
 {48400}{}{Ohr des Spielers}
-{48401}{}{Das ist dein Ohr. Der Beißer hat es während des Kampfes abgebissen und auf deinen bewußtlosen Körper gespuckt. Wenn du dies liest, lädst du wahrscheinlich bald neu. Vielleicht hat dieses Objekt ja auch einen besonderen Wert für dich.}
+{48401}{}{Das ist dein Ohr. Der Beißer hat es während des Kampfes abgebissen und auf deinen bewusstlosen Körper gespuckt. Wenn du dies liest, lädst du wahrscheinlich bald neu. Vielleicht hat dieses Objekt ja auch einen besonderen Wert für dich.}
 {48500}{}{Ohr des Beißers}
-{48501}{}{Dies ist das Ohr des Beißers. Du hast es abgebissen, nachdem du ihn bewußtlos geprügelt hast. Herzlichen Glückwunsch, daß du ihn besiegt hast. Er ist einer der zähesten unter den inaktiven Figuren im Spiel, besonders dann, wenn du keine Waffen oder Rüstung hast.}
+{48501}{}{Dies ist das Ohr des Beißers. Du hast es abgebissen, nachdem du ihn bewusstlos geprügelt hast. Herzlichen Glückwunsch, dass du ihn besiegt hast. Er ist einer der zähesten unter den inaktiven Figuren im Spiel, besonders dann, wenn du keine Waffen oder Rüstung hast.}
 {48600}{}{Veredeltes Uranerz}
 {48601}{}{Ein Stück Uranerz. Dieses Erz scheint irgendwie bearbeitet worden zu sein. Es kommt dir so schwer vor.}
 {48700}{}{Zettel von Francis}
-{48701}{}{"Zaius, Marcus tut nichts gegen diesen Mutanten-Hasser Jacob und seine verdammten Verschwörer. Erst machen sie den Luftreiniger kaputt...und was kommt als nächstes? Ich hab die geheimen Tunnel entdeckt, die sie als Treffpunkt verwenden. Wenn man da unten ein oder zwei Leichen plaziert, könnte man das Jacob anhängen. Laß mich wissen, wenn du mitmachen willst. Und verbrenn um Gottes Willen diesmal den Zettel!" - Unterschrift, Francis}
+{48701}{}{"Zaius, Marcus tut nichts gegen diesen Mutanten-Hasser Jacob und seine verdammten Verschwörer. Erst machen sie den Luftreiniger kaputt...und was kommt als nächstes? Ich hab die geheimen Tunnel entdeckt, die sie als Treffpunkt verwenden. Wenn man da unten ein oder zwei Leichen plaziert, könnte man das Jacob anhängen. Lass mich wissen, wenn du mitmachen willst. Und verbrenn um Gottes Willen diesmal den Zettel!" - Unterschrift, Francis}
 {48800}{}{K-9-Motivator}
 {48801}{}{Antriebsmechanismus für einen Roboter der Serie K-9.}
 {48900}{}{Spezielle Boxerwaffe}
@@ -970,7 +970,7 @@
 {49800}{}{Duale Plasmakanone}
 {49801}{}{Nur für Verwendung in  Geschützturm.}
 {49900}{}{PIPBoy-Powerfunktion "Sprache" }
-{49901}{}{Die PIPBoy-Powerfunktion "Sprache" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch ins Gedächtnis des Benutzers, so daß dessen Ausdrucksfähigkeit dauerhaft verbessert wird.}
+{49901}{}{Die PIPBoy-Powerfunktion "Sprache" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch ins Gedächtnis des Benutzers, so dass dessen Ausdrucksfähigkeit dauerhaft verbessert wird.}
 {50000}{}{FN FAL HPFA}
 {50100}{}{Wandsafe}
 {50200}{}{Bodensafe}
@@ -995,13 +995,13 @@
 {51400}{}{Pool-Billard-Tisch}
 {51500}{}{Pool-Billard-Tisch}
 {51600}{}{PIPBoy-Powerfunktion "Medizin"}
-{51601}{}{Die PIPBoy-Powerfunktion "Medizin" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch von Arztfähigkeiten und medizinischen Kenntnissen in das Gedächtnis des Benutzers, so daß seine Fähigkeiten als Arzt dauerhaft verbessert werden.}
+{51601}{}{Die PIPBoy-Powerfunktion "Medizin" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch von Arztfähigkeiten und medizinischen Kenntnissen in das Gedächtnis des Benutzers, so dass seine Fähigkeiten als Arzt dauerhaft verbessert werden.}
 {51700}{}{"Little Jesus"}
 {51701}{}{Diese bösartig aussehende Klinge gehörte einmal Lil' Jesus Mordino. Auf der Oberfläche sind zahlreiche Kratzer und Dellen, aber die Klinge ist scharf wie ein Rasiermesser. In den Griff ist "Little Jesus" eingeritzt.}
 {51800}{}{Duales Kleingewehr}
 {51801}{}{Nur für Verwendung in automatischer Kanone.}
 {51900}{}{Kronkorken}
-{51901}{}{Dies sind wertlose Kronkorken. Du hast gehört, daß sie früher als Zahlungsmittel verwendet wurden, aber du hältst das eher für ein Märchen.}
+{51901}{}{Dies sind wertlose Kronkorken. Du hast gehört, dass sie früher als Zahlungsmittel verwendet wurden, aber du hältst das eher für ein Märchen.}
 {52000}{}{Schweres duales Kleingewehr }
 {52001}{}{Nur für Verwendung in automatischer Kanone.}
 {52100}{}{Sammelbüchse }

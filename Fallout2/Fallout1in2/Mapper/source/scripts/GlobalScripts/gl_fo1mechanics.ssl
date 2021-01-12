@@ -27,8 +27,12 @@ procedure afterhitroll_handler;
 procedure useanimobj_handler;
 procedure useskillon_handler;
 procedure useobjon_handler;
+procedure calcapcost_handler;
 
 procedure steal_urn;
+
+variable iniVal;
+variable dude_elev := 0;
 
 #define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
                                else slot := INVEN_TYPE_RIGHT_HAND
@@ -43,7 +47,11 @@ procedure start begin
       register_hook_proc(HOOK_AFTERHITROLL, afterhitroll_handler);
       register_hook_proc(HOOK_USESKILLON, useskillon_handler);
       register_hook_proc(HOOK_USEOBJON, useobjon_handler);
-      //register_hook_proc(HOOK_USEANIMOBJ, useanimobj_handler);
+      register_hook_proc(HOOK_USEANIMOBJ, useanimobj_handler);
+      //register_hook_proc(HOOK_CALCAPCOST, calcapcost_handler);
+
+      iniVal := get_ini_string("ddraw.ini|misc|FastShotFix");
+      intface_redraw;
    end
 
    call general;
@@ -64,11 +72,17 @@ procedure general begin
 
    // Fix dogmeat party member dialog
    VOODOO_dogmeat_pm_dialog;
+
+   // Change the skill bonus from survivalist perk to 0.
+   // The bonus for all perk ranks is applied via gl_survivalist.ssl script.
+   VOODOO_survivalist_bonus;
 end
 
 procedure mode_change_handler begin
-   call scene_master_destroyed;
-   call scene_vats_destroyed;
+   if (get_game_mode == WORLDMAP) then begin
+      call scene_master_destroyed;
+      call scene_vats_destroyed;
+   end
    call night_person;
 
    // Activate special radiation death if > 1000 rem. See data/enddeath.txt
@@ -76,49 +90,45 @@ procedure mode_change_handler begin
 end
 
 procedure scene_master_destroyed begin
-   if (get_game_mode == WORLDMAP) then begin
-      if master_killed and not(cathedral_destroyed) then begin
-         set_cathedral_destroyed;
+   if master_killed and not(cathedral_destroyed) then begin
+      set_cathedral_destroyed;
 
-         inc_cathedral_rep(REP_BONUS_BLOWN_UP_MASTER);
+      inc_cathedral_rep(REP_BONUS_BLOWN_UP_MASTER);
 
-         give_xp_msg(EXP_MASTER_DESTROYED, gen_mstr(702));
+      give_xp_msg(EXP_MASTER_DESTROYED, gen_mstr(702));
 
-         mark_map_entrance_state(MAP_CHILDRN1, 0);
-         mark_map_entrance_state(MAP_CHILDRN2, 0);
-         mark_map_entrance_state(MAP_MSTRLR12, 0);
-         mark_map_entrance_state(MAP_MSTRLR34, 0);
-         mark_map_entrance_elev_state(MAP_CHILDRN1, 1, 0); // We need this additionally, otherwise the stupid entry point won't disable itself.
-         mark_map_entrance_state(MAP_CHILDEAD, 1);
+      mark_map_entrance_state(MAP_CHILDRN1, 0);
+      mark_map_entrance_state(MAP_CHILDRN2, 0);
+      mark_map_entrance_state(MAP_MSTRLR12, 0);
+      mark_map_entrance_state(MAP_MSTRLR34, 0);
+      mark_map_entrance_elev_state(MAP_CHILDRN1, 1, 0); // We need this additionally, otherwise the stupid entry point won't disable itself.
+      mark_map_entrance_state(MAP_CHILDEAD, 1);
 
-         play_gmovie(CATHEXPLODE_MOVIE);
+      play_gmovie(CATHEXPLODE_MOVIE);
 
-         if vats_destruction_started and waterchip_returned then begin
-            force_encounter_with_flags(MAP_V13ENT, ENCOUNTER_FLAG_FADEOUT);
-         end
+      if vats_destruction_started and waterchip_returned then begin
+         force_encounter_with_flags(MAP_V13ENT, ENCOUNTER_FLAG_FADEOUT);
       end
    end
 end
 
 procedure scene_vats_destroyed begin
-   if (get_game_mode == WORLDMAP) then begin
-      if vats_destruction_started and not(military_base_destroyed) then begin
-         set_military_base_destroyed;
+   if vats_destruction_started and not(military_base_destroyed) then begin
+      set_military_base_destroyed;
 
-         inc_mbase_rep(REP_BONUS_BLOWN_UP_VATS);
+      inc_mbase_rep(REP_BONUS_BLOWN_UP_VATS);
 
-         give_xp_msg(EXP_VATS_DESTROYED, gen_mstr(701));
+      give_xp_msg(EXP_VATS_DESTROYED, gen_mstr(701));
 
-         mark_map_entrance_state(MAP_MBENT, 0);
-         mark_map_entrance_state(MAP_MBSTRG12, 0);
-         mark_map_entrance_state(MAP_MBVATS12, 0);
-         mark_map_entrance_state(MAP_MBDEAD, 1);
+      mark_map_entrance_state(MAP_MBENT, 0);
+      mark_map_entrance_state(MAP_MBSTRG12, 0);
+      mark_map_entrance_state(MAP_MBVATS12, 0);
+      mark_map_entrance_state(MAP_MBDEAD, 1);
 
-         play_gmovie(VATSEXPLODE_MOVIE);
+      play_gmovie(VATSEXPLODE_MOVIE);
 
-         if master_killed and waterchip_returned then begin
-            force_encounter_with_flags(MAP_V13ENT, ENCOUNTER_FLAG_FADEOUT);
-         end
+      if master_killed and waterchip_returned then begin
+         force_encounter_with_flags(MAP_V13ENT, ENCOUNTER_FLAG_FADEOUT);
       end
    end
 end
@@ -128,21 +138,22 @@ procedure night_person begin
    As a night-time person, you are more awake when the sun goes down.
    Your Intelligence and Perception are improved at night, but dulled during the day. */
    if (dude_trait(TRAIT_night_person)) then begin
-      if (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 0) then
+      if (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 0) then begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
          mod_skill_points_per_level(2);
+      end
 
       if night and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 1) then begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 2);
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) + 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) + 2);
-         debug("Night person trait is active!");
+         debug_msg("Night person trait is active!");
       end
       else if not(night) and (global_var(GVAR_NIGHT_PERSON_ACTIVE) == 2) then begin
          set_global_var(GVAR_NIGHT_PERSON_ACTIVE, 1);
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) - 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) - 2);
-         debug("Night person trait is not active!");
+         debug_msg("Night person trait is not active!");
       end
    end
    // If used Mutate!-perk to remove Night Person, reset everything to default:
@@ -153,7 +164,7 @@ procedure night_person begin
          set_critter_extra_stat(dude_obj, STAT_pe, get_critter_extra_stat(dude_obj, STAT_pe) - 2);
          set_critter_extra_stat(dude_obj, STAT_iq, get_critter_extra_stat(dude_obj, STAT_iq) - 2);
       end
-      debug("Night person trait is disabled!");
+      debug_msg("Night person trait is disabled!");
    end
 end
 
@@ -203,19 +214,28 @@ procedure useanimobj_handler begin
    variable
       critter := get_sfall_arg,
       target := get_sfall_arg,
-      use_anim := get_sfall_arg;
+      use_anim := get_sfall_arg,
+      sound,
+      training_anim;
 
    /*if (obj_pid(target) == PID_GIZMO_REMAINS) then begin
       obj_close(target);
    end*/
 
-   /*
    if (obj_pid(target) == PID_PUNCHING_BAG) then begin
       if (get_script(target) == SCRIPT_ZSPNCHBG) then begin
-         set_sfall_return(-1); // TODO: The animation started in SCRIPT_ZSPNCHBG will only run once if this is set to -1.
+         training_anim := random(0, 1);
+         if (training_anim == 0) then
+            training_anim := ANIM_throw_punch;
+         else
+            training_anim := ANIM_kick_leg;
+         sound := sfx_build_char_name(critter, training_anim, snd_contact);
+         reg_anim_play_sfx(critter, sound, 0);
+         set_sfall_return(training_anim);
+
+         //set_sfall_return(-1); // TODO: The animation started in SCRIPT_ZSPNCHBG will only run once if this is set to -1.
       end
    end
-   */
 end
 
 procedure useskillon_handler begin
@@ -254,4 +274,24 @@ procedure useobjon_handler begin
    // Give 1 bottle cap when drinking a Nuka Cola :>
    if (obj_pid(item) == PID_NUKA_COLA) then
       item_caps_adjust(source, 1);
+end
+
+procedure calcapcost_handler begin
+   // This is done by latest Sfall now.
+   /*variable
+      critter := get_sfall_arg,
+      atkType := get_sfall_arg,
+      isAimed := get_sfall_arg,
+      apCost := get_sfall_arg,
+      slot, item;
+
+   // Replicates Fo1 behavior of the Fast Shot Trait (Unarmed attacks are unaffected, but also can't be aimed)
+   // This is needed because the Sfall FastShotFix effect is wrong.
+   if dude_trait(TRAIT_fast_shot) and (iniVal == 2) then begin
+      get_active_hand(slot);
+      item := critter_inven_obj(dude_obj, slot);
+      if (item == 0) then begin
+         set_sfall_return(apCost + 1);
+      end
+   end*/
 end

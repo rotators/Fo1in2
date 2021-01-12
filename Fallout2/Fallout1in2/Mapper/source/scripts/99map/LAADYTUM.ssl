@@ -10,6 +10,7 @@
 
 #include "maps/laadytum.h"
 #include "boneyard.h"
+#include "sfall/main.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -42,6 +43,17 @@ export variable RegGuard2;
 
 variable invaderPtr;
 
+#define blade_laser_1Ptr   (InBladePtr3)
+#define blade_laser_2Ptr   (InBladePtr6)
+#define blade_laser_3Ptr   (InBladePtr7)
+
+#define blade_arifle_1Ptr  (InBladePtr1)
+#define blade_arifle_2Ptr  (InBladePtr2)
+#define blade_arifle_3Ptr  (InBladePtr4)
+#define blade_arifle_4Ptr  (InBladePtr5)
+
+#define blade_plasmaPtr    (InBladePtr8)
+
 procedure start begin
 end
 
@@ -66,9 +78,15 @@ end
 procedure map_update_p_proc begin
    call map_lightning;
 
-   // The attack starts now:
+   // The player talked to Zimmerman and triggers the Blades attack via dialog:
    if (get_blades_attacking and (map_var(MVAR_AddedBlades) == 0) and (global_var(GVAR_BLADES_INVASION_READY) == 1)) then begin
-      set_global_var(GVAR_WATER_CHIP_10, 0);
+      set_global_var(GVAR_BLADES_COUNTER, 0);
+      call AddInBlades;
+   end
+   // The player wanted to talk to Zimmerman first, but then attacked Regulators instead:
+   else if (get_blades_attacking_wait and global_var(GVAR_DUDE_ENEMY_REGULATORS)) then begin
+      gfade_out(1);
+      set_global_var(GVAR_BLADES_COUNTER, 0);
       call AddInBlades;
    end
 
@@ -76,7 +94,8 @@ procedure map_update_p_proc begin
    else if (get_blades_attacking_alone and (map_var(MVAR_AddedBlades) == 0)) then begin
       set_map_var(MVAR_AddedBlades, 1);
 
-      kill_critter(JonPtr, ANIM_stand);
+      set_obj_invisible(JonPtr);
+      kill_critter(JonPtr, ANIM_fall_front_sf);
       kill_critter_type(PID_TOWNSMAN_METAL, 0);
       kill_critter_type(PID_MALE_GUARD_METAL_BLACK, 0);
       kill_critter_type(PID_DOG, 0);
@@ -114,7 +133,7 @@ procedure map_update_p_proc begin
    // The attack is done: (Also check if Razor is a valid target already)
    else if ((map_var(MVAR_RegulatorCount) == 0) and get_blades_attacking) and RazorPtr != 0 then begin
       gfade_out(1);
-      kill_critter_type(PID_INITIATE_KNIGHT_MAN, 0); //TODO: What??
+      kill_critter_type(PID_INITIATE_KNIGHT_MAN, 0); // "Senior Knights" are the attacking Blade critter
       critter_attempt_placement(RazorPtr, 12700, 0);
 
       set_blades_attack_finished;
@@ -147,18 +166,20 @@ procedure map_lightning begin
 end
 
 procedure AddInBlades begin
-   //start_blades_invasion
+   variable critter, critterList, hex;
+
    set_map_var(MVAR_AddedBlades, 1);
 
-   debug("oi we Blades go!");
-   critter_attempt_placement(InBladePtr1, 9702, 0);
-   critter_attempt_placement(InBladePtr2, 9700, 0);
-   critter_attempt_placement(InBladePtr3, 9698, 0);
-   critter_attempt_placement(InBladePtr4, 9895, 0);
-   critter_attempt_placement(InBladePtr5, 9696, 0);
-   critter_attempt_placement(InBladePtr6, 26717, 0);
-   critter_attempt_placement(InBladePtr7, 26711, 0);
-   critter_attempt_placement(InBladePtr8, 24492, 0);
+   critterList := {blade_laser_1Ptr: 9702, blade_laser_2Ptr: 9696, blade_laser_3Ptr: 24492,
+                  blade_arifle_1Ptr: 9700, blade_arifle_2Ptr: 9895, blade_arifle_3Ptr: 26717, blade_arifle_4Ptr: 26711,
+                  blade_plasmaPtr: 9698};
+   forEach (critter : hex in critterList) begin
+      critter_attempt_placement(critter, hex, 0);
+      set_obj_visible(critter);
+      obj_rotate(critter, 2);
+   end
+
+   set_blades_attacking;
    gfade_in(1);
 end
 

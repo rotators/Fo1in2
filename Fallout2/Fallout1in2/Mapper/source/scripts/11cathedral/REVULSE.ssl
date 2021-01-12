@@ -1,4 +1,11 @@
+/*
+
+   Master's Lair - "Revulse corridor"
+
+*/
+
 #include "define.h"
+#include "maps/mstrlr34.h"
 
 #define NAME                    SCRIPT_REVULSE
 
@@ -26,90 +33,112 @@ variable Tycho_flag;
 variable KATJA := PID_KATJA;
 variable Katja_flag;
 
+#define blast_party_dmg(obj) \
+   if (obj != 0) then begin                                 \
+      if (mult < 4) then begin                              \
+         per := get_perception(obj);                        \
+         ego_blast := random(1, per);                       \
+         if (mult > 1) then begin                           \
+            ego_blast := ego_blast + random(1, per);        \
+         end                                                \
+         if (mult > 2) then begin                           \
+            ego_blast := ego_blast + random(1, per);        \
+         end                                                \
+      end                                                   \
+      critter_dmg(obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR); \
+   end \
+   noop
+
 procedure start begin
 end
 
 procedure spatial_p_proc begin
-   if source_obj == dude_obj then begin
+   if (source_obj == dude_obj) then begin
 
       if global_var(GVAR_PREVENT_REVULSION_DAMAGE) != 2 then begin
          per := dude_perception;
-         if (local_var(0) <= map_var(2)) then begin
-            set_local_var(0, map_var(2) + 1);
-            test := per + map_var(0);
+         if (local_var(0) <= map_var(MVAR_RESET)) then begin
+            set_local_var(0, map_var(MVAR_RESET) + 1);
+            test := per + map_var(MVAR_STAGE);
 
             if (random(1, 10) < test) then begin
-               PICK := map_var(0);
+               PICK := map_var(MVAR_STAGE);
 
                if (dude_item(PID_PSYCHIC_NULLIFIER)) then begin
-                  if (map_var(1)) then begin
-                     set_map_var(1, 0);
+                  if (map_var(MVAR_FELT_REVULSION)) then begin
+                     set_map_var(MVAR_FELT_REVULSION, 0);
                      display_msg(mstr(107));
                   end
                end
 
                else if (PICK == 0) then begin
                   display_msg(mstr(100));
-                  set_map_var(1, 1);
-                  set_map_var(0, map_var(0) + 1);
+                  set_map_var(MVAR_FELT_REVULSION, 1);
+                  set_map_var(MVAR_STAGE, map_var(MVAR_STAGE) + 1);
                end
                else if (PICK == 1) then begin
+                  mult := 1;
+                  call blast_party;
                   if (dude_perk(PERK_mental_block)) then begin
                      ego_blast := 0;
                   end
                   else begin
                      display_msg(mstr(101));
                      ego_blast := random(1, per);
-                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);//    DMG_BYPASS_ARMOR  (256)
+                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);
                   end
-                  set_map_var(0, map_var(0) + 1);
-                  mult := 1;
-                  call blast_party;
+                  set_map_var(MVAR_STAGE, map_var(MVAR_STAGE) + 1);
+                  // blast_party was originally after setting the MVAR.
+                  // We moved it to the beginning so that party damage won't spam the message log.
+                  //mult := 1;
+                  //call blast_party;
                end
                else if (PICK == 2) then begin
+                  mult := 2;
+                  call blast_party;
                   if (dude_perk(PERK_mental_block)) then begin
                      ego_blast := 0;
                   end
                   else begin
                      display_msg(mstr(102));
-                     ego_blast := random(1, per) + random(1, per);
-                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);//    DMG_BYPASS_ARMOR  (256)
+                     ego_blast := random(2, (2*per));
+                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);
                   end
-                  set_map_var(0, map_var(0) + 1);
-                  mult := 2;
-                  call blast_party;
+                  set_map_var(MVAR_STAGE, map_var(MVAR_STAGE) + 1);
                end
                else if (PICK == 3) then begin
+                  mult := 3;
+                  call blast_party;
                   if (dude_perk(PERK_mental_block)) then begin
                      ego_blast := 0;
                   end
                   else begin
                      display_msg(mstr(103));
-                     ego_blast := random(1, per) + random(1, per) + random(1, per);
-                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);//    DMG_BYPASS_ARMOR  (256)
+                     ego_blast := random(3, (3*per));
+                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);
                   end
-                  set_map_var(0, map_var(0) + 1);
-                  mult := 3;
-                  call blast_party;
+                  set_map_var(MVAR_STAGE, map_var(MVAR_STAGE) + 1);
                end
                else if (PICK == 4) then begin
+                  mult := 3;
+                  call blast_party;
                   if (dude_perk(PERK_mental_block)) then begin
                      ego_blast := 0;
                   end
                   else begin
                      display_msg(mstr(104));
-                     ego_blast := random(1, per) + random(1, per) + random(1, per);
-                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);//    DMG_BYPASS_ARMOR  (256)
-                     critter_injure(dude_obj, DAM_BLIND);//    DAM_BLIND         64
+                     ego_blast := random(3, (3*per));
+                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);
+                     critter_injure(dude_obj, DAM_BLIND);
                      temp := dude_perception;
                      set_critter_stat(dude_obj, STAT_pe, -1);
                      display_msg(mstr(250));
                   end
-                  set_map_var(0, map_var(0) + 1);
-                  mult := 3;
-                  call blast_party;
+                  set_map_var(MVAR_STAGE, map_var(MVAR_STAGE) + 1);
                end
                else if (PICK == 5) then begin
+                  mult := 4;
+                  call blast_party;
                   if (dude_perk(PERK_mental_block)) then begin
                      ego_blast := 0;
                   end
@@ -122,14 +151,12 @@ procedure spatial_p_proc begin
                      if has_rep_childkiller then begin
                         ego_blast := ego_blast + 20;
                      end
-                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);//    DMG_BYPASS_ARMOR  (256)
+                     critter_dmg(dude_obj, ego_blast, 0 bwor DMG_BYPASS_ARMOR);
                      temp := dude_iq;
                      set_critter_stat(dude_obj, STAT_iq, -1);
                      display_msg(mstr(251));
                   end
-                  set_map_var(0, map_var(0) + 1);
-                  mult := 4;
-                  call blast_party;
+                  set_map_var(MVAR_STAGE, map_var(MVAR_STAGE) + 1);
                end
                else if (PICK == 6) then begin
                   if (dude_perk(PERK_mental_block)) then begin
@@ -153,7 +180,7 @@ procedure spatial_p_proc begin
 end
 
 procedure blast_party begin
-   call generate_party_IDs;
+   //call generate_party_IDs;
    ego_blast := 1;
    if (has_rep_berserker) then begin
       ego_blast := ego_blast + 7;
@@ -161,64 +188,13 @@ procedure blast_party begin
    if has_rep_childkiller then begin
       ego_blast := ego_blast + 10;
    end
-
-   if Ian_In_Party then begin
-      if (mult < 4) then begin
-         per := get_perception(party_member_obj(IAN));
-         ego_blast := random(1, per);
-         if (mult > 1) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-         if (mult > 2) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-      end
-      critter_dmg(party_member_obj(IAN), ego_blast, 0 bwor DMG_BYPASS_ARMOR);
-   end
-
-   if Tycho_In_Party then begin
-      if (mult < 4) then begin
-         per := get_perception(party_member_obj(TYCHO));
-         ego_blast := random(1, per);
-         if (mult > 1) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-         if (mult > 2) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-      end
-      critter_dmg(party_member_obj(TYCHO), ego_blast, 0 bwor DMG_BYPASS_ARMOR);
-   end
-
-   if Katja_In_Party then begin
-      if (mult < 4) then begin
-         per := get_perception(party_member_obj(KATJA));
-         ego_blast := random(1, per);
-         if (mult > 1) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-         if (mult > 2) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-      end
-      critter_dmg(party_member_obj(KATJA), ego_blast, 0 bwor DMG_BYPASS_ARMOR);
-   end
-
-   if Tandi_In_Party then begin
-      if (mult < 4) then begin
-         per := get_perception(party_member_obj(TANDI));
-         ego_blast := random(1, per);
-         if (mult > 1) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-         if (mult > 2) then begin
-            ego_blast := ego_blast + random(1, per);
-         end
-      end
-      critter_dmg(party_member_obj(TANDI), ego_blast, 0 bwor DMG_BYPASS_ARMOR);
-   end
+   blast_party_dmg(Ian_ptr);
+   blast_party_dmg(Tycho_ptr);
+   blast_party_dmg(Katja_ptr);
+   blast_party_dmg(Tandi_ptr);
 end
 
+// Unused in Fo1in2 - we just use Fo2's party member pointer!
 procedure generate_party_IDs begin
    if (party_member_obj(IAN) == 0) and Ian_In_Party then begin
       counter := 16777529;

@@ -38,6 +38,7 @@
 #define fo1in2_alt_bos_reward_enabled   (global_var(GVAR_ENABLE_ALTERNATIVE_BOS_REWARD) > 0)
 #define fo1in2_shady_merchant_enabled   (global_var(GVAR_ENABLE_SHADY_SANDS_MERCHANT) > 0)
 #define fo1in2_env_lighting_enabled     (global_var(GVAR_ENABLE_FO2_SEASONAL_LIGHTING) > 0)
+#define fo1in2_tough_mutants_enabled    (global_var(GVAR_ENABLE_TOUGH_MUTANTS) >= 1) // we don't want 0.5, etc. values here
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -202,12 +203,15 @@ variable tma_gvar_array;
 *********************************************************/
 // GVAR_VAULT13_WATER_DAYS_COUNTER is set in the start procedure of OBJ_DUDE.
 // We need this to keep track of the correct time (start time is advanced randomly by a few hours).
+// Example: If we don't do this, the water time on the PipBoy note will not change at midnight, but in the morning.
 #define get_days_passed                     (GAME_TIME_IN_DAYS - global_var(GVAR_VAULT13_WATER_DAYS_COUNTER) / (GAME_TIME_SUBSECOND_RESOLUTION * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY))
 
 /*********************************************************
             Water Chip related:
 *********************************************************/
 #define get_water_days_left                 (global_var(GVAR_VAULT13_WATER_DAYS) - get_days_passed)
+#define inc_water_days(x)                   set_global_var(GVAR_VAULT13_WATER_DAYS, global_var(GVAR_VAULT13_WATER_DAYS) + x)
+#define dec_water_days(x)                   inc_water_days(-x)
 
 #define TIME_LIMIT_1                        (100)
 #define TIME_LIMIT_2                        (50)
@@ -229,7 +233,8 @@ variable tma_gvar_array;
 #define junktown_invaded                    (global_var(GVAR_JUNKTOWN_WAS_INVADED) == 1)
 
 #define get_v13_days_left                   (global_var(GVAR_VAULT_13_INVASION_DAYS) - get_days_passed)
-#define set_v13_days_left(x)                set_global_var(GVAR_VAULT_13_INVASION_DAYS, (get_v13_days_left + x))
+#define inc_v13_days_left(x)                set_global_var(GVAR_VAULT_13_INVASION_DAYS, global_var(GVAR_VAULT_13_INVASION_DAYS) + x)
+#define dec_v13_days_left(x)                inc_v13_days_left(-x)
 
 #define get_hub_days_left                   (global_var(GVAR_THE_HUB_INVASION_DAYS) - get_days_passed)
 #define get_bos_days_left                   (global_var(GVAR_BROTHERHOOD_INVASION_DAYS) - get_days_passed)
@@ -315,7 +320,7 @@ variable tma_gvar_array;
                            (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or                                   \
                            (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
 
-#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) then begin   \
+#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) and not(self_item_count(PID_STEALTH_BOY)) then begin   \
                               variable Item;                                        \
                               Item := create_object(PID_STEALTH_BOY, 0, 0);         \
                               add_mult_objs_to_inven(self_obj, Item, 1);            \
@@ -488,6 +493,16 @@ variable merch_slot_armor_flags;
                                     if (merch_slot_armor > 0) then                                      \
                                         set_flags(merch_slot_armor, merch_slot_armor_flags);            \
                                     destroy_object(tmp_merch_box)
+
+// Used to reduce the amount of caps a merchant spawns
+#define caps_modifier               (0.5)
+
+#define fo1_caps_restock \
+   if ((((GAME_TIME_IN_DAYS) - local_var(LVAR_Restock_Timer)) >= 1) or (local_var(LVAR_Restock_Timer) == 0)) then begin \
+      set_local_var(LVAR_Restock_Timer, RESTOCK_TIME);   \
+      set_local_var(LVAR_Caps_Amount, caps_amount);      \
+   end                                                   \
+   self_caps_adjust(local_var(LVAR_Caps_Amount))
 
 /*********************************************************
                         THE END

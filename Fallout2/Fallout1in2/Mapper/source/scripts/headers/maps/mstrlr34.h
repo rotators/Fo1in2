@@ -4,8 +4,8 @@
 
 */
 
-#ifndef LAADYTUM_H
-#define LAADYTUM_H
+#ifndef MAPMSTRLR34_H
+#define MAPMSTRLR34_H
 
 /************************************************
     Generic Defines

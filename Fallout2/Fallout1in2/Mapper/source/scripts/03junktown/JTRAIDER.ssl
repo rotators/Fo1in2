@@ -1,12 +1,12 @@
 /*
 
-   Junktown - Raider
+   Junktown - Raider (Takes Sinthia as hostage in Marcelle's Crash House)
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "maps/junkkill.h"
 
 #define NAME                    SCRIPT_JTRAIDER
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -90,10 +90,7 @@ variable will_negotiate;//from old version of script
 variable initial := 0;
 variable line184flag;//from old version of script
 
-procedure start
-begin
-
-
+procedure start begin
    if (initial == 0) then begin
       initial := 1;
       JTRaider_ptr := self_obj;
@@ -103,14 +100,13 @@ begin
    end
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if ((tile_distance_objs(self_obj, dude_obj) < 8) and (local_var(8) == 0) and (has_skill(dude_obj, SKILL_SNEAK) >= 50)) then begin
       set_local_var(8, 1);
       display_msg(mstr(184));
    end
    else begin
-      if (map_var(1) == 0) then begin
+      if (map_var(MVAR_raider_status) == 0) then begin
          if ((local_var(5) == 2) and self_can_see_dude) then begin
             set_local_var(5, 1);
             set_local_var(6, 1);
@@ -130,7 +126,7 @@ begin
          end
       end
       else begin
-         if (map_var(1) == 1) then begin
+         if (map_var(MVAR_raider_status) == 1) then begin
             if (local_var(9) == 0) then begin
                rm_timer_event(Sinthia_ptr);
                add_timer_event(Sinthia_ptr, game_ticks(2), 2);
@@ -145,18 +141,24 @@ begin
          end
       end
    end
+
+   if not(combat_is_initialized) then begin
+      if ((map_var(MVAR_raider_status) == 0) and (critter_state(self_obj) bwand DAM_KNOCKED_OUT)) then begin
+         set_map_var(MVAR_raider_status, 1);
+         add_timer_event(self_obj, game_ticks(10), 0);
+      end
+   end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
-      if (dude_is_sneaking and (map_var(1) == 0) and (local_var(9) == 0)) then begin
+      if (dude_is_sneaking and (map_var(MVAR_raider_status) == 0) and (local_var(9) == 0)) then begin
          if (is_success(roll_vs_skill(dude_obj, SKILL_SNEAK, 0))) then begin
             script_overrides;
             display_msg(mstr(183));
-            critter_injure(self_obj, DAM_KNOCKED_DOWN);//    DAM_KNOCKED_DOWN       2     <-- DOES NOT WORK!!!
-            critter_injure(self_obj, DAM_KNOCKED_OUT);//    DAM_KNOCKED_OUT      1    <-- DOES NOT WORK!!!
-            set_map_var(1, 1);
+            critter_injure(self_obj, DAM_KNOCKED_DOWN);
+            critter_injure(self_obj, DAM_KNOCKED_OUT);
+            set_map_var(MVAR_raider_status, 1);
             add_timer_event(self_obj, game_ticks(10), 3);
             terminate_combat;
          end
@@ -171,9 +173,12 @@ begin
 end
 
 procedure destroy_p_proc begin
-   if ((source_obj == dude_obj) or (source_obj == party_member_obj(obj_pid(source_obj)))) then begin
-      set_map_var(1, 2);
+   if (map_var(MVAR_raider_status) != 1) then begin
+      if ((source_obj == dude_obj) or (source_obj == party_member_obj(obj_pid(source_obj)))) then begin
+         set_map_var(MVAR_raider_status, 2);
+      end
    end
+
    set_global_var(GVAR_SAVE_SINTHIA, 2);
    set_map_var(3, 3);
    if (map_var(0) != 2) then begin
@@ -182,14 +187,12 @@ procedure destroy_p_proc begin
    inc_evil_critter
 end
 
-procedure look_at_p_proc
-begin
+procedure look_at_p_proc begin
    script_overrides;
    display_msg(mstr(100));
 end
 
-procedure map_enter_p_proc
-begin
+procedure map_enter_p_proc begin
    JTRaider_ptr := self_obj;
    if (not(is_loading_game)) then begin
       if (global_var(GVAR_SAVE_SINTHIA) == 2) then begin
@@ -197,8 +200,8 @@ begin
          destroy_object(self_obj);
       end
       else begin
-         if (map_var(1) == 1) then begin
-            set_map_var(1, 0);
+         if (map_var(MVAR_raider_status) == 1) then begin
+            set_map_var(MVAR_raider_status, 0);
             set_local_var(5, 2);
             set_local_var(6, 1);
             set_local_var(7, 0);
@@ -213,22 +216,20 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    set_local_var(5, 2);
    set_local_var(6, 1);
    set_local_var(7, 0);
 end
 
-procedure talk_p_proc
-begin
+procedure talk_p_proc begin
    dude_look_at_self;
    get_reaction
    if (local_var(5) != 0) then begin
       call Raider34;
    end
    else begin
-      if ((global_var(GVAR_SAVE_SINTHIA) == 1) and (map_var(1) == 0)) then begin
+      if ((global_var(GVAR_SAVE_SINTHIA) == 1) and (map_var(MVAR_raider_status) == 0)) then begin
          start_gdialog(337, self_obj, 4, -1, -1);
          gsay_start;
          if (local_var(4) == 0) then begin
@@ -284,44 +285,37 @@ begin
    end
 end
 
-procedure timed_event_p_proc
-begin
+procedure timed_event_p_proc begin
    if (fixed_param == 1) then begin
       game_ui_enable;
       set_local_var(5, 2);
    end
-   else begin
-      if (fixed_param == 2) then begin
-         critter_dmg(Sinthia_ptr, 75, DMG_normal_dam);
-         add_timer_event(self_obj, game_ticks(5), 1);
-      end
-      else begin
-         if (fixed_param == 3) then begin
-            set_map_var(1, 0);
-            set_local_var(5, 2);
-            set_local_var(6, 1);
-            set_local_var(7, 0);
-            if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
-               reg_anim_clear(self_obj);
-               reg_anim_begin();
-               reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
-               reg_anim_end();
-            end
-         end
+   else if (fixed_param == 2) then begin
+      critter_dmg(Sinthia_ptr, 75, DMG_normal_dam);
+      add_timer_event(self_obj, game_ticks(5), 1);
+   end
+   else if (fixed_param == 3) then begin
+      set_map_var(MVAR_raider_status, 0);
+      set_local_var(5, 2);
+      set_local_var(6, 1);
+      set_local_var(7, 0);
+      if (critter_state(self_obj) == CRITTER_IS_PRONE) then begin
+         reg_anim_clear(self_obj);
+         reg_anim_begin();
+         reg_anim_animate(self_obj, ANIM_back_to_standing, -1);
+         reg_anim_end();
       end
    end
 end
 
-procedure combat_p_proc
-begin
-   if ((map_var(1) == 1) and (map_var(3) > 0) and (map_var(3) < 3) and (tile_distance_objs(self_obj, dude_obj) < 4)) then begin
+procedure combat_p_proc begin
+   if ((map_var(MVAR_raider_status) == 1) and (map_var(3) > 0) and (map_var(3) < 3) and (tile_distance_objs(self_obj, dude_obj) < 4)) then begin
       script_overrides;
       terminate_combat;
    end
 end
 
-procedure Raider0
-begin
+procedure Raider0 begin
    set_local_var(4, 1);
    Reply(101);
    NLowOption(102, Raider1);
@@ -330,53 +324,45 @@ begin
    NOption(105, Raider4, 7);
 end
 
-procedure Raider1
-begin
+procedure Raider1 begin
    NMessage(106);
    call RaiderSnap;
 end
 
-procedure Raider2
-begin
+procedure Raider2 begin
    Reply(107);
    NOption(108, Raider3, 4);
 end
 
-procedure Raider3
-begin
+procedure Raider3 begin
    DownReact
    BMessage(109);
    set_local_var(6, 1);
 end
 
-procedure Raider4
-begin
+procedure Raider4 begin
    Reply(110);
    NOption(111, Raider5, 7);
    NOption(112, Raider7, 7);
 end
 
-procedure Raider5
-begin
+procedure Raider5 begin
    Reply(113);
    GOption(114, Raider6, 7);
 end
 
-procedure Raider6
-begin
+procedure Raider6 begin
    UpReact
    set_local_var(6, 1);
    GMessage(115);
 end
 
-procedure Raider7
-begin
+procedure Raider7 begin
    BMessage(116);
    set_local_var(6, 1);
 end
 
-procedure Raider8
-begin
+procedure Raider8 begin
    if (dude_is_male) then begin
       BMessage(119);
    end
@@ -386,22 +372,19 @@ begin
    call RaiderSnap;
 end
 
-procedure Raider9
-begin
+procedure Raider9 begin
    Reply(121);
    NOption(122, Raider10, 4);
    NOption(123, Raider14, 7);
 end
 
-procedure Raider10
-begin
+procedure Raider10 begin
    Reply(124);
    NOption(125, Raider11, 4);
    NOption(126, Raider10a, 4);
 end
 
-procedure Raider10a
-begin
+procedure Raider10a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       set_local_var(7, 1);
       call Raider12;
@@ -411,30 +394,25 @@ begin
    end
 end
 
-procedure Raider11
-begin
+procedure Raider11 begin
    Reply(127);
    BOption(128, RaiderCombat, 4);
 end
 
-procedure Raider12
-begin
+procedure Raider12 begin
    NMessage(129);
 end
 
-procedure Raider13
-begin
+procedure Raider13 begin
    NMessage(130);
 end
 
-procedure Raider14
-begin
+procedure Raider14 begin
    Reply(131);
    NOption(132, Raider14a, 7);
 end
 
-procedure Raider14a
-begin
+procedure Raider14a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
       set_local_var(7, 1);
       call Raider16;
@@ -444,13 +422,11 @@ begin
    end
 end
 
-procedure Raider15
-begin
+procedure Raider15 begin
    NMessage(133);
 end
 
-procedure Raider16
-begin
+procedure Raider16 begin
    if (dude_is_male) then begin
       NMessage(136);
    end
@@ -459,21 +435,18 @@ begin
    end
 end
 
-procedure Raider17
-begin
+procedure Raider17 begin
    Reply(138);
    NOption(139, Raider17a, 4);
    NOption(140, Raider18, 6);
    NOption(141, Raider17b, 8);
 end
 
-procedure Raider17a
-begin
+procedure Raider17a begin
    set_local_var(7, 0);
 end
 
-procedure Raider17b
-begin
+procedure Raider17b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       set_local_var(7, 1);
       call Raider20;
@@ -483,32 +456,27 @@ begin
    end
 end
 
-procedure Raider18
-begin
+procedure Raider18 begin
    BMessage(142);
    call RaiderSnap;
 end
 
-procedure Raider19
-begin
+procedure Raider19 begin
    BMessage(143);
    set_local_var(7, 0);
 end
 
-procedure Raider20
-begin
+procedure Raider20 begin
    UpReact
    GMessage(144);
 end
 
-procedure Raider21
-begin
+procedure Raider21 begin
    Reply(145);
    NOption(146, Raider22, 4);
 end
 
-procedure Raider22
-begin
+procedure Raider22 begin
    Reply(147);
    NOption(148, Raider23, 4);
    NOption(149, Raider24, 4);
@@ -516,8 +484,7 @@ begin
    NOption(151, Raider27, 6);
 end
 
-procedure Raider22a
-begin
+procedure Raider22a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Raider26;
    end
@@ -526,21 +493,18 @@ begin
    end
 end
 
-procedure Raider23
-begin
+procedure Raider23 begin
    BMessage(152);
    call RaiderSnap;
 end
 
-procedure Raider24
-begin
+procedure Raider24 begin
    Reply(153);
    NOption(154, Raider24a, 4);
    NOption(155, Raider25, 4);
 end
 
-procedure Raider24a
-begin
+procedure Raider24a begin
    if (dude_caps >= 100) then begin
       dude_caps_adjust(-100);
       call safe;
@@ -550,27 +514,23 @@ begin
    end
 end
 
-procedure Raider25
-begin
+procedure Raider25 begin
    BMessage(156);
    call RaiderSnap;
 end
 
-procedure Raider26
-begin
+procedure Raider26 begin
    GMessage(157);
    call safe;
 end
 
-procedure Raider27
-begin
+procedure Raider27 begin
    Reply(158);
    NOption(159, Raider28, 5);
    NOption(160, Raider27a, 5);
 end
 
-procedure Raider27a
-begin
+procedure Raider27a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Raider29;
    end
@@ -579,21 +539,18 @@ begin
    end
 end
 
-procedure Raider28
-begin
+procedure Raider28 begin
    BMessage(161);
    call RaiderSnap;
 end
 
-procedure Raider29
-begin
+procedure Raider29 begin
    Reply(162);
    NOption(163, Raider29a, 5);
    NOption(164, Raider30, 5);
 end
 
-procedure Raider29a
-begin
+procedure Raider29a begin
    if (dude_caps >= 100) then begin
       dude_caps_adjust(-100);
       call safe;
@@ -603,15 +560,13 @@ begin
    end
 end
 
-procedure Raider30
-begin
+procedure Raider30 begin
    Reply(165);
    NOption(166, Raider23, 5);
    NOption(167, Raider30a, 5);
 end
 
-procedure Raider30a
-begin
+procedure Raider30a begin
    if (dude_caps >= 200) then begin
       dude_caps_adjust(-200);
       call safe;
@@ -621,8 +576,7 @@ begin
    end
 end
 
-procedure Raider31
-begin
+procedure Raider31 begin
    Reply(168);
    NOption(169, Raider32, 4);
    if (dude_is_male) then begin
@@ -633,40 +587,33 @@ begin
    end
 end
 
-procedure Raider32
-begin
+procedure Raider32 begin
    BMessage(174);
    call RaiderSnap;
 end
 
-procedure Raider33
-begin
+procedure Raider33 begin
    BMessage(175);
    call RaiderCombat;
 end
 
-procedure Raider34
-begin
+procedure Raider34 begin
    float_msg(self_obj, mstr(176), FLOAT_MSG_RED);
    call RaiderSnap;
 end
 
-procedure Raiderend
-begin
+procedure Raiderend begin
 end
 
-procedure RaiderCombat
-begin
+procedure RaiderCombat begin
    set_local_var(5, 2);
 end
 
-procedure RaiderSnap
-begin
+procedure RaiderSnap begin
    shoot_Sinthia := 1;
 end
 
-procedure safe
-begin
+procedure safe begin
    award := 1000;
    set_local_var(6, 0);
    Sinthia_is_safe := 1;

@@ -1,7 +1,5 @@
 /*
    Example implementation of the algorithm of how the game engine checks if one critter sees another critter.
-
-   NOTE: the AllowUnsafeScripting option must be enabled.
 */
 
 #include "..\headers\define.h"
@@ -9,10 +7,8 @@
 #include "..\headers\sfall\sfall.h"
 #include "..\headers\sfall\define_extra.h"
 
-#define can_see_(source, target)    call_offset_r2(0x412BEC, source, target)
-#define obj_dist_(target, source)   call_offset_r2(0x48BBD4, target, source)
-
 procedure start;
+procedure can_see(variable obj1, variable obj2);
 
 procedure start begin
    if game_loaded then begin
@@ -21,40 +17,50 @@ procedure start begin
       variable
          source := get_sfall_arg,
          target := get_sfall_arg,
-         original := get_sfall_arg,
-         hookType := get_sfall_arg, /* new arg */
+         engine := get_sfall_arg,
+         type   := get_sfall_arg, /* new arg */
          result := 0,
-         distance;
+         distance, seeDistance, seeText;
 
       if target then begin
-         distance := get_critter_stat(source, STAT_pe);
+         seeDistance := get_critter_stat(source, STAT_pe);
 
-         if can_see_(source, target) then begin
-            distance *= 5;
-            if (get_flags(target) bwand FLAG_TRANSGLASS) then distance /= 2;
+         if can_see(source, target) then begin
+            seeDistance *= 5;
+            if (get_flags(target) bwand FLAG_TRANSGLASS) then seeDistance /= 2;
          end else if combat_is_initialized then begin
-            distance *= 2;
+            seeDistance *= 2;
          end
 
          if (target == dude_obj) then begin
             if sneak_success then begin
-               distance /= 4;
-               if has_skill(target, SKILL_SNEAK) > 120 then distance -= 1;
+               seeDistance /= 4;
+               if has_skill(target, SKILL_SNEAK) > 120 then seeDistance -= 1;
             end else if dude_is_sneaking then begin
-               distance := distance * 2 / 3;
+               seeDistance := (seeDistance * 2) / 3;  // distance div 1.5
             end
          end
 
-         if obj_dist_(target, source) <= distance then result := 1;
+         distance := tile_distance_objs(source, target);
+         if (get_flags(source) bwand FLAG_MULTIHEX) then distance--;
+         if (get_flags(target) bwand FLAG_MULTIHEX) then distance--;
 
-         // example
-         if (result) then begin
-            display_msg("hs_withinperception: " + obj_name(source) + " sees " + obj_name(target) + " [original: " + original + " script: " + result + "]");
-         end else begin
-            display_msg("hs_withinperception: " + obj_name(source) + " does not see " + obj_name(target) + " [original: " + original + " script: " + result + "]");
-         end
+         if (distance <= seeDistance) then result := 1;
+
+         seeText = " does not see > ";
+         if (result) then seeText = " sees > ";
+
+         // Example
+         display_msg("hs_withinperception: " + obj_name(source) + seeText + obj_name(target) + " [engine: " + engine + ", script: " + result + "]");
+
+         /* override engine result */
+         //set_sfall_return(result);
       end
-
-      //set_sfall_return(result);
    end
+end
+
+procedure can_see(variable obj1, variable obj2) begin
+   variable dir = obj_get_rot(obj1) - rotation_to_tile(tile_num(obj1), tile_num(obj2));
+   if (dir < 0) then dir = -dir;
+   return (dir <= 1) or (dir == 5);
 end

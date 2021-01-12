@@ -36,7 +36,25 @@
                                             if (get_necropolis_days_left > 30 and get_necropolis_days_left < 10000) then begin    \
                                                 set_global_var(GVAR_NECROPOLIS_INVASION_DAYS, ((game_time / ONE_GAME_DAY) + 30)); \
                                             end                                                                                   \
-                                        end
+                                        end                                                                                       \
+                                        noop
+
+// Super Mutants are leaving after the Vats are destroyed
+#define sm_wp_1         (13128)
+#define sm_wp_2         (10162)
+
+#define sm_leave_watershed \
+   if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile != sm_wp_1)) then               \
+      self_walk_to_tile(sm_wp_1);                                                                     \
+   else if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 1) and (self_tile == sm_wp_1)) then          \
+      set_global_var(GVAR_WATERSHED_MUTANTS_LEAVE, 2);                                                \
+   else if ((global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 2) and (self_tile != sm_wp_2)) then          \
+      self_walk_to_tile(sm_wp_2);                                                                     \
+   else if ((self_tile == sm_wp_2) and (global_var(GVAR_WATERSHED_MUTANTS_LEAVE) == 2)) then begin    \
+      if not(is_loading_game) then set_self_invisible;                                                \
+   end                                                                                                \
+   noop
+
 
 // Car related defines
 #define set_car_used_first_time         if (global_var(GVAR_QUEST_MOTORCYCLE) < 20) then \
@@ -53,12 +71,6 @@
 #define set_trunk_visible               if get_car_used then set_obj_visibility(Trunk_Ptr,0)
 #define set_trunk_invisible             if get_car_used then set_obj_visibility(Trunk_Ptr,1)
 
-// Find the fuel cell controler without Griffith:
-#define STATE_HIDDEN             0
-#define STATE_SPOTTED            1
-#define STATE_TAKEN_DUDE         2
-#define STATE_TAKEN_GRIFFITH     3
-
 /************************************************
     "Tell Me About"-Defines
 ************************************************/
@@ -71,5 +83,46 @@
                               else if CUR_MAP_HOTEL then begin          \
                                  set_tma_data_generic(TMA_MSG_HOTEL);   \
                               end
+
+/************************************************
+    Sewer King / Motorcycle quest
+************************************************/
+#define SEWER_POS_WATRSHED    (20321)
+#define SEWER_POS_HOTEL       (19943)
+#define SEWER_POS_HALLDED     (18666)
+
+procedure spawn_sewer_king begin
+variable Critter,
+         Critter_spawn_hex := global_var(GVAR_SEWER_KING_POS),
+         Critter_tile,
+         rats := 4,
+         Item;
+
+   Critter := create_object_sid(PID_ZOMBIE_GUARD, 0, 0, SCRIPT_GRIFFITH);
+   critter_attempt_placement(Critter, Critter_spawn_hex, 0);
+   anim(Critter, ANIMATE_ROTATION, random(0, 5));
+   Item := create_object(PID_WAKIZASHI_BLADE, 0, 0);
+   add_obj_to_inven(Critter, Item);
+   Item := create_object(PID_MOTO_KEY, 0, 0);
+   add_obj_to_inven(Critter, Item);
+   Item := create_object(PID_SMALL_ENERGY_CELL, 0, 0);
+   add_obj_to_inven(Critter, Item);
+   item_caps_adjust(Critter, random(10, 40));
+   kill_critter(Critter, ANIM_chunks_of_flesh_sf);
+
+   Critter := create_object_sid(PID_SEWER_KING, 0, 0, SCRIPT_NKINGRAT);
+   critter_attempt_placement(Critter, Critter_spawn_hex, 0);
+   anim(Critter, ANIMATE_ROTATION, random(0, 5));
+
+   while(rats) do begin
+      Critter_tile := tile_num_in_direction(Critter_spawn_hex, random(0, 5), random(2,5));
+      Critter := create_object_sid(PID_TOUGH_RADIATED_RAT, 0, 0, SCRIPT_NKINGRAT);
+      critter_attempt_placement(Critter, Critter_spawn_hex, 0);
+      anim(Critter, ANIMATE_ROTATION, random(0, 5));
+      rats := rats - 1;
+   end
+
+   set_global_var(GVAR_SEWER_KING_POS, -1);
+end
 
 #endif // MAPNECRO_H

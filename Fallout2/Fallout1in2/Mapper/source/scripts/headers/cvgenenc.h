@@ -45,9 +45,15 @@ variable
 
 procedure Choose_Encounter begin
    variable
-      val := Random(1, 6),
+      val := Random(1, 7),
       rnd_chest := random(1, 100),
       rnd_critter;
+
+   // val is +1 to get the chance of spawning nothing in a cave
+   // Do not spawn wild dogs in toxic cave!
+   while (val == 6 and cave_is_toxic) do begin
+      val := Random(1, 7);
+   end
 
    if (rnd_chest < 50 and (stat_success(dude_obj, STAT_lu, 0))) then
       special_spawn_container := 1;
@@ -56,6 +62,7 @@ procedure Choose_Encounter begin
 
    // DEBUG
    //val := 0;
+   debug("select cave critter: " + val);
 
    // Geckos
    if (val == 1) then begin
@@ -155,7 +162,7 @@ procedure Choose_Encounter begin
             active_encounter_pids := 1;
             encounter_pid1 := PID_MANTIS;
             encounter_sid1 := SCRIPT_MANTIS;
-            total_encounter_mobs := Random(1, 3);
+            total_encounter_mobs := Random(1, 4);
          end
       end
       else begin

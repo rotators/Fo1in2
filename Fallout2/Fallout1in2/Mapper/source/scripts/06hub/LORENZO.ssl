@@ -87,25 +87,14 @@ variable VaultCount;
 
 #define LVAR_LoanTakenDate          (10)
 
+#define LOAN_TIMEOUT (4) // in hours
+
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
-      item := 0;
       LastMove := 23309;
       set_self_team(TEAM_HUB_FLC);
       set_self_ai(AI_HUB_UNDERGROUND);
-      if (map_first_run) then begin
-         item := create_object(PID_STIMPAK, 0, 0);
-         add_mult_objs_to_inven(self_obj, item, 5);
-         item := create_object(PID_10MM_JHP, 0, 0);
-         add_mult_objs_to_inven(self_obj, item, 5);
-         item := create_object(PID_10MM_AP, 0, 0);
-         add_mult_objs_to_inven(self_obj, item, 5);
-         item := create_object(PID_BUFFOUT, 0, 0);
-         add_mult_objs_to_inven(self_obj, item, 1);
-         item := create_object(PID_MENTATS, 0, 0);
-         add_mult_objs_to_inven(self_obj, item, 1);
-      end
    end
 end
 
@@ -161,6 +150,21 @@ procedure map_enter_p_proc begin
    if not(is_loading_game) then begin
       set_local_var(8, 0);
    end
+
+   if (map_first_run) then begin
+      if fixt_enabled then begin
+         item := create_object(PID_STIMPAK, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 5);
+         item := create_object(PID_10MM_JHP, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 5);
+         item := create_object(PID_10MM_AP, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 5);
+         item := create_object(PID_BUFFOUT, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 1);
+         item := create_object(PID_MENTATS, 0, 0);
+         add_mult_objs_to_inven(self_obj, item, 1);
+      end
+   end
 end
 
 procedure talk_p_proc begin
@@ -173,13 +177,13 @@ procedure talk_p_proc begin
       set_local_var(8, 1);
       if (self_caps < 1000) then begin
          if (dude_caps < 1000) then begin
-            self_caps_adjust((3000 + random(1, 4) + random(1, 6) + random(1, 8) + random(1, 10) + random(1, 12) + random(1, 20) + random(1, 34) + random(1, 69)));
+            self_caps_adjust(3000);
          end
          else if (dude_caps < 2000) then begin
-            self_caps_adjust((2000 + random(1, 4) + random(1, 6) + random(1, 8) + random(1, 10) + random(1, 12) + random(1, 20) + random(1, 34) + random(1, 69)));
+            self_caps_adjust(2000);
          end
          else begin
-            self_caps_adjust((1000 + random(1, 4) + random(1, 6) + random(1, 8) + random(1, 10) + random(1, 12) + random(1, 20) + random(1, 34) + random(1, 69)));
+            self_caps_adjust(1000);
          end
       end
    end
@@ -201,14 +205,11 @@ procedure talk_p_proc begin
          call Lorenzo05;
       end
    end
-// item_caps_adjust(self_obj, -item_caps_total(self_obj));
-   self_caps_adjust(69);
+   self_caps_adjust(-self_caps);
 end
 
 procedure destroy_p_proc begin
-   rm_timer_event(self_obj);
    inc_evil_critter
-   rm_timer_event(self_obj);
 end
 
 procedure look_at_p_proc begin
@@ -239,7 +240,7 @@ procedure SendInsideHouse begin
          Destination := 23106;
       end
       else if (Destination == 5) then begin
-         Destination := 24104;
+         Destination := 24106;
       end
       if (Destination == LastMove) then begin
          Destination := 0;
@@ -696,7 +697,7 @@ end
 procedure Lorenzo29 begin
    variable LVar0 := 0;
 
-   set_local_var(LVAR_LoanTakenDate, game_time + ONE_GAME_DAY);
+   set_local_var(LVAR_LoanTakenDate, game_time + (ONE_GAME_HOUR * LOAN_TIMEOUT));
 
    set_local_var(6, 1000);
    set_local_var(5, GAME_TIME_IN_DAYS);
@@ -710,7 +711,7 @@ end
 procedure Lorenzo30 begin
    variable LVar0 := 0;
 
-   set_local_var(LVAR_LoanTakenDate, game_time + ONE_GAME_DAY);
+   set_local_var(LVAR_LoanTakenDate, game_time + (ONE_GAME_HOUR * LOAN_TIMEOUT));
 
    set_local_var(6, 800);
    set_local_var(5, GAME_TIME_IN_DAYS);
@@ -724,7 +725,7 @@ end
 procedure Lorenzo31 begin
    variable LVar0 := 0;
 
-   set_local_var(LVAR_LoanTakenDate, game_time + ONE_GAME_DAY);
+   set_local_var(LVAR_LoanTakenDate, game_time + (ONE_GAME_HOUR * LOAN_TIMEOUT));
 
    set_local_var(6, 600);
    set_local_var(5, GAME_TIME_IN_DAYS);
@@ -738,7 +739,7 @@ end
 procedure Lorenzo32 begin
    variable LVar0 := 0;
 
-   set_local_var(LVAR_LoanTakenDate, game_time + ONE_GAME_DAY);
+   set_local_var(LVAR_LoanTakenDate, game_time + (ONE_GAME_HOUR * LOAN_TIMEOUT));
 
    set_local_var(6, 400);
    set_local_var(5, GAME_TIME_IN_DAYS);
@@ -752,7 +753,7 @@ end
 procedure Lorenzo33 begin
    variable LVar0 := 0;
 
-   set_local_var(LVAR_LoanTakenDate, game_time + ONE_GAME_DAY);
+   set_local_var(LVAR_LoanTakenDate, game_time + (ONE_GAME_HOUR * LOAN_TIMEOUT));
 
    set_local_var(6, 200);
    set_local_var(5, GAME_TIME_IN_DAYS);

@@ -45,18 +45,20 @@ procedure skills begin
       if is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, -50)) then begin
          display_msg(mstr(203));
 
-         if global_var(GVAR_WORLDMAPLIST_MILITARYBASE) == 0 then begin
-            XP := EXP_FOUND_MILITARY_BASE;
-            set_global_var(GVAR_WORLDMAPLIST_MILITARYBASE, 1);
-            mark_on_map(AREA_MILITARY_BASE)
+         if military_base_visit then begin
+            XP := EXP_WENT_TO_MILITARY_BASE;
          end
-         else if (global_var(GVAR_WORLDMAPLIST_MILITARYBASE) == 1) then begin
+         else if military_base_visible_on_map then begin
             XP := EXP_KNEW_ABOUT_MILITARY_BASE;
             set_global_var(GVAR_WORLDMAPLIST_MILITARYBASE, 1); // Was 2 before !! Causes weird dialog, because the player wasn't actually there yet.
          end
          else begin
-            XP := EXP_WENT_TO_MILITARY_BASE;
+            XP := EXP_FOUND_MILITARY_BASE;
+            set_global_var(GVAR_WORLDMAPLIST_MILITARYBASE, 1);
          end
+
+         if not(military_base_destroyed) then
+            mark_on_map(AREA_MILITARY_BASE)
 
          if (map_var(MVAR_TERMINAL_EXP) == 0) then begin
             set_map_var(MVAR_TERMINAL_EXP, 1);

@@ -3,8 +3,6 @@ name: Schedule
 on:
  schedule:
  - cron: 0 4 * * *
- repository_dispatch:
-  types: [schedule, schedule-push]
  push:
   paths:
   - '.github/workflows/schedule.yml'
@@ -12,6 +10,16 @@ on:
   - '.github/workflows/scripts/ddraw.sh'
   - '.github/workflows/scripts/format-ssl.sh'
   - '.github/workflows/scripts/news.sh'
+ workflow_dispatch:
+  inputs:
+   push:
+    description: 'Push results [true/false]'
+    default:     'false'
+    required:    true
+   full:
+    description: 'Force running minor tasks [true/false]'
+    default:     'false'
+    required:    true
 
 defaults:
  run:
@@ -22,14 +30,13 @@ env:
 
 jobs:
 
- # forked repositories should use own copy if they want automagic commits
+ # forked/cloned repositories should use own copy if they want automagic commits
  # feel free to open issue in main repository if you need help/advice tweaking this workflow in your fork
  Maintenance:
   if: github.repository == 'rotators/Fo1in2'
   runs-on: windows-latest
   env:
    MOD_DIR:            "Fallout2/Fallout1in2"
-   MOD_VERSION_STRING: "FALLOUT ET TU v1.2.@COMMITS@"
   steps:
 
 ### Activity check
@@ -55,16 +62,16 @@ jobs:
 
           alive=0
 
-          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
              echo "[WARNING] Ignoring activity limits : workflow triggered manually"
              alive=1
           else
-             if [ $days -gt 2 ]; then
-                echo "[WARNING] Repository activity : $days days ago"
-             fi
+             #if [ $days -gt 2 ]; then
+             #   echo "[WARNING] Repository activity : ${days}d ago"
+             #fi
 
-             if [ $days -lt 8 ]; then
-                echo Repository active : $days days
+             if [ $days -lt 2 ]; then
+                echo Repository active : ${days}d
                 alive=1
              else
                 echo "[WARNING] Repository not updated : event<${{ github.event_name }}> not allowed to modify stale repository"
@@ -72,7 +79,7 @@ jobs:
           fi
 
           if [ $alive -eq 1 ]; then
-             echo ::set-env name=GHA_REPO_ALIVE::true
+             echo GHA_REPO_ALIVE=true >> $GITHUB_ENV
           fi
 
 ### Preparations
@@ -129,36 +136,36 @@ jobs:
           echo "sfall-rotators..."
           if [ "$OLD_SFALL_ROTATORS" != "$NEW_SFALL_ROTATORS" ]; then
              echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
-             echo ::set-env name=GHA_TASK_SFALL_ROTATORS::true
+             echo GHA_TASK_SFALL_ROTATORS=true >> $GITHUB_ENV
              set_dxsdk_dir=1
           fi
 
           if [ $set_dxsdk_dir -eq 1 ]; then
-             echo ::set-env name=DXSDK_DIR::$HOME/cache-dx/
+             echo DXSDK_DIR=$HOME/cache-dx/ >> $GITHUB_ENV
           fi
 
           echo "ModdersPack..."
           if [ "$OLD_ARTIFACTS" != "$NEW_ARTIFACTS" ]; then
              echo "ModdersPack... $OLD_ARTIFACTS -> $NEW_ARTIFACTS"
-             echo ::set-env name=GHA_TASK_SFALL_ARTIFACTS::true
+             echo GHA_TASK_SFALL_ARTIFACTS=true >> $GITHUB_ENV
           fi
 
-          echo ::set-env name=MSBUILD_EXE::"$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)"
+          echo MSBUILD_EXE="$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild/**/Bin/MSBuild.exe)" >> $GITHUB_ENV
 
           # simplifies checking/displaying which event triggered workflow (especially dispatches)
           event="${{ github.event_name }}"
-          if [ "$event" == "repository_dispatch" ]; then
-             event="${event}:${{ github.event.action }}"
+          if [ "$event" == "workflow_dispatch" ]; then
+               if [ "${{ github.event.inputs.push }}" == "true" ]; then
+                  event="${event}:push"
+               fi
           fi
-          echo ::set-env name=GHA_EVENT::$event
+          echo GHA_EVENT=$event >> $GITHUB_ENV
           echo "GitHub event... $event"
-          echo "GitHub find.... $(which find)"
-          echo "GitHub sort.... $(which sort)"
 
   - name: Cache (DirectX)
     if:   env.DXSDK_DIR != ''
     id:   cache-dx
-    uses: actions/cache@v1
+    uses: actions/cache@v2
     with:
      path: ~/cache-dx
      key:  cache-sfall-dx
@@ -238,8 +245,8 @@ jobs:
           rm ReDefine*.log
           git diff --quiet || (git add --update && echo "- ReDefine run" >> $HOME/gha.commit)
 
-          echo "::set-env name=MOD_SCRIPTS_DIR::$scripts"
-          echo "::set-env name=MOD_HEADERS_DIR::$headers"
+          echo "MOD_SCRIPTS_DIR=$scripts" >> $GITHUB_ENV
+          echo "MOD_HEADERS_DIR=$headers" >> $GITHUB_ENV
 
   # updates unsafe scripting header
   - name: Voodoo regeneration
@@ -296,14 +303,14 @@ jobs:
           echo ::endgroup::
 
           # allow full run; forces minor tasks to run even if major tasks does not generate commit
-          if [ "${{ github.event_name }}" == "repository_dispatch" ] && [ "${{ github.event.client_payload.full }}" == "true" ]; then
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.full }}" == "true" ]; then
              echo "# Minor tasks forced to run" >> $HOME/gha.commit
           fi
 
           if [ -f "$HOME/gha.commit" ]; then
              sed -i '1s!^!Progress every day\n!' $HOME/gha.commit
              dos2unix $HOME/gha.commit
-             echo ::set-env name=GHA_COMMIT::true
+             echo GHA_COMMIT=true >> $GITHUB_ENV
              cat $HOME/gha.commit
           fi
 
@@ -318,7 +325,7 @@ jobs:
     run:  |
           :
           $GHA_SCRIPTS/ddraw.sh set-dll-version --ini=$MOD_DIR/ddraw.ini --dll=$MOD_DIR/ddraw.dll
-          $GHA_SCRIPTS/ddraw.sh set-mod-version --ini=$MOD_DIR/ddraw.ini --mod="$MOD_VERSION_STRING" --bump
+          $GHA_SCRIPTS/ddraw.sh set --ini=$MOD_DIR/ddraw.ini --cfg=Misc --key=VersionString --val="$($GHA_SCRIPTS/version.sh game --bump)"
 
           grep "^;v" $MOD_DIR/ddraw.ini
           $GHA_SCRIPTS/ddraw.sh get --ini=$MOD_DIR/ddraw.ini --cfg=Misc --key=VersionString --fmt='"["in_section"]\\n"in_key[1]" = "in_key[2]'
@@ -337,7 +344,7 @@ jobs:
 ### generates and displays commit
 ### pushes generated commit to repository; available only for following events (any other triggers are for testing purposes):
 ### - schedule
-### - repository_dispatch:schedule-push
+### - workflow_dispatch:push
 
   - name: Push
     if:   env.GHA_REPO_ALIVE == 'true' && env.GHA_COMMIT == 'true'
@@ -356,7 +363,7 @@ jobs:
           git log -p -n 1 2>&1
           echo ::endgroup::
 
-          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "repository_dispatch:schedule-push" ]; then
+          if [ "$GHA_EVENT" == "schedule" ] || [ "$GHA_EVENT" == "workflow_dispatch:push" ]; then
              echo ::group::git push
              git push 2>&1
              echo ::endgroup::
