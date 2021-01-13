@@ -540,6 +540,43 @@ variable PartyHealingItem;
                                             if not(MrHandyC_In_Party) then              \
                                                 kill_critter_type(PID_MRHANDYC, 1)
 
+
+/***************************************************************************************
+   Mariposa prisoner state
+****************************************************************************************/
+#define prisoner_ian_bit                     bit_1
+#define prisoner_dog_bit                     bit_2
+#define prisoner_tycho_bit                   bit_3
+#define prisoner_katja_bit                   bit_4
+#define prisoner_tandi_bit                   bit_5
+#define prisoner_mrhandy_bit                 bit_6
+
+#define set_p_prisoner_bit(bit, state)       if (state) then begin                                    \
+                                                set_gvar_bit_on(GVAR_PARTY_MEMBERS_PRISONER, bit);    \
+                                             end else begin                                           \
+                                                set_gvar_bit_off(GVAR_PARTY_MEMBERS_PRISONER, bit);   \
+                                             end
+#define set_ian_prisoner(state)              set_p_prisoner_bit(prisoner_ian_bit, state)     \
+                                             party_remove(Ian_ptr)
+#define set_dog_prisoner(state)              set_p_prisoner_bit(prisoner_dog_bit, state)     \
+                                             party_remove(Dog_ptr)
+#define set_tycho_prisoner(state)            set_p_prisoner_bit(prisoner_tycho_bit, state)   \
+                                             party_remove(Tycho_ptr)
+#define set_katja_prisoner(state)            set_p_prisoner_bit(prisoner_katja_bit, state)   \
+                                             party_remove(Katja_ptr)
+#define set_tandi_prisoner(state)            set_p_prisoner_bit(prisoner_tandi_bit, state)   \
+                                             party_remove(Tandi_ptr)
+#define set_mrhandy_prisoner(state)          set_p_prisoner_bit(prisoner_mrhandy_bit, state) \
+                                             party_remove(Handy_ptr)
+
+#define party_bit_prisoner(x)                (gvar_bit(GVAR_PARTY_MEMBERS_PRISONER, x))
+#define ian_is_prisoner                      party_bit_prisoner(prisoner_ian_bit)
+#define dog_is_prisoner                      party_bit_prisoner(prisoner_dog_bit)
+#define tycho_is_prisoner                    party_bit_prisoner(prisoner_tycho_bit)
+#define katja_is_prisoner                    party_bit_prisoner(prisoner_katja_bit)
+#define tandi_is_prisoner                    party_bit_prisoner(prisoner_tandi_bit)
+#define mrhandy_is_prisoner                  party_bit_prisoner(prisoner_mrhandy_bit)
+
 /***************************************************************************************
    If item is given to an NPC, check party inventory and remove it
 ****************************************************************************************/
