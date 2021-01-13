@@ -7,14 +7,22 @@ Notable changes since last release ([v1.4.2228](https://github.com/rotators/Fo1i
 - **Added**: The Mariposa force field emitter will now be correctly destroyed (visually) if the Mr. Handy robot crashes into it.
 - **Added**: There is now a low chance for cavern encounters to not spawn any mobs at all.
 - **Added**: Trying to destroy a force field emitter but failing to do so will now show up accordingly in the message log.
+- **Fixed**: Brotherhood Paladins in encounter maps would not recognize the player as an Initiate.
+- **Fixed**: Darrel at the Brotherhood now correctly shows his secondary "look at"-description text.
 - **Fixed**: Dialog with the guard to the Master's Lair could crash the game.
 - **Fixed**: Hightower's strongbox was missing a blocking hex.
 - **Fixed**: If the player takes the Gun Runner guns as reward, Razor would not react to it accordingly.
+- **Fixed**: If the player used the dynamite-exploit to kill Killian, the Junktown guards wouldn't react to it.
+- **Fixed**: In a city encounter map it was possible for random encounter mobs to spawn inside objects.
+- **Fixed**: Main door in the Raiders map had a blocker missing (could still walk through a closed door).
+- **Fixed**: Radio proto didn't have the radio-script attached, thus only very few (map placed) radios in the game could be used at Mariposa.
 - **Fixed**: Talking to Calder at the Cathedral entrance while having the Childkiller-reputation would show the wrong dialog node.
 - **Fixed**: The 2nd guard to the Master's Lair was spawning an "ERROR" dialog.
+- **Fixed**: The Broterhood lower levels would not correctly disable after mutants invaded the location (it was possible to enter the maps via Town/World button).
 - **Fixed**: The Light Step perk wasn't working on mines.
 - **Fixed**: The Master's Lair terminal that would mark Mariposa on the worldmap would sometimes not mark the location on the worldmap.
 - **Fixed**: The Skum Pitt and V13 armory door would reset when loading a savegame.
 - **Fixed**: The Watershed mutants would not leave the map on the correct path. Also added a check to remove them from the map if the player leaves before they walked off-screen.
+- **Fixed**: The dynamite-exploit won't work on crucial NPCs anymore (Beth, Jacob, Zack, Razor, ...).
 - **Fixed**: The relationship dialog between Trish and Saul has been fixed up and somewhat polished (old restored cut content). Required new dialog lines to be added.
 - **Tweaked**: When walking through the "revulse tunnel" in the Master's Lair, the party member damage information will now run before the players to not spam the message log so much.

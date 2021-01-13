@@ -806,7 +806,10 @@
 #define bit_32                      (0x80000000)
 #define bit_ALL                     (0xFFFFFFFF)
 
-
+#define ROLL_CRITICAL_FAILURE       0
+#define ROLL_FAILURE                1
+#define ROLL_SUCCESS                2
+#define ROLL_CRITICAL_SUCCESS       3
 
 //Misc commands
 #define obj_get_rot(obj)  (has_trait(TRAIT_OBJECT, obj, OBJECT_CUR_ROT))
