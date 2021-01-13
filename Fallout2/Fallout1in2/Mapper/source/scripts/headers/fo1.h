@@ -323,7 +323,7 @@ variable tma_gvar_array;
                            (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or                                   \
                            (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
 
-#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) and not(self_item_count(PID_STEALTH_BOY)) then begin   \
+#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) then begin   \
                               variable Item;                                        \
                               Item := create_object(PID_STEALTH_BOY, 0, 0);         \
                               add_mult_objs_to_inven(self_obj, Item, 1);            \

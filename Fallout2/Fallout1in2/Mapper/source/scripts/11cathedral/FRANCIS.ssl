@@ -16,6 +16,9 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure look_at_p_proc;
+procedure pickup_p_proc;
+procedure critter_p_proc;
 procedure destroy_p_proc;
 procedure talk_p_proc;
 
@@ -55,7 +58,6 @@ variable tmp_hostile;
 variable Only_Once := 1;
 
 
-
 procedure start begin
    if Only_Once then begin
       set_self_team(TEAM_CATHEDRAL);
@@ -82,44 +84,38 @@ end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_COC);
+   dude_look_at_self;
 
    script_overrides;
    if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
       float_msg(self_obj, mstr(101), FLOAT_MSG_NORMAL);
    end
+   else if (local_var(0) == 1) then begin
+      float_msg(self_obj, mstr(102), FLOAT_MSG_NORMAL);
+   end
+   else if (dude_is_armed) then begin
+      float_msg(self_obj, mstr(103), FLOAT_MSG_NORMAL);
+   end
+   else if (not(dude_wearing_coc_robe) and (has_rep_berserker or has_rep_childkiller)) then begin
+      float_msg(self_obj, mstr(104), FLOAT_MSG_NORMAL);
+   end
    else begin
-      if (local_var(0) == 1) then begin
-         float_msg(self_obj, mstr(102), FLOAT_MSG_NORMAL);
+      start_gdialog(399, self_obj, 4, -1, -1);
+      gsay_start;
+      if (not(dude_wearing_coc_robe)) then begin
+         call Francis04;
       end
       else begin
-
-         if (dude_is_armed) then begin
-            float_msg(self_obj, mstr(103), FLOAT_MSG_NORMAL);
+         if dude_wearing_coc_robe then begin
+            call Francis05;
          end
          else begin
-            if (not(dude_wearing_coc_robe) and (has_rep_berserker or has_rep_childkiller)) then begin
-               float_msg(self_obj, mstr(104), FLOAT_MSG_NORMAL);
-            end
-            else begin
-               start_gdialog(399, self_obj, 4, -1, -1);
-               gsay_start;
-               if (not(dude_wearing_coc_robe)) then begin
-                  call Francis04;
-               end
-               else begin
-                  if dude_wearing_coc_robe then begin
-                     call Francis05;
-                  end
-                  else begin
-                     call Francis06;
-                  end
-               end
-               gsay_end;
-               end_dialogue;
-               set_local_var(0, 1);
-            end
+            call Francis06;
          end
       end
+      gsay_end;
+      end_dialogue;
+      set_local_var(0, 1);
    end
 end
 
@@ -127,8 +123,7 @@ procedure destroy_p_proc begin
    inc_inv_evil_crit
 end
 
-procedure Francis04
-begin
+procedure Francis04 begin
    Reply(105);
    NOption(106, Francis07_1, 7);
    NOption(107, Francis08_1, 7);
@@ -143,8 +138,7 @@ begin
    NLowOption(112, Francis13);
 end
 
-procedure Francis05
-begin
+procedure Francis05 begin
    if (dude_is_male) then begin
       Reply(113);
    end
@@ -164,8 +158,7 @@ begin
    NLowOption(121, Francis20);
 end
 
-procedure Francis06
-begin
+procedure Francis06 begin
    if (dude_is_male) then begin
       Reply(160);
    end
@@ -185,68 +178,54 @@ begin
    NLowOption(128, Francis13);
 end
 
-procedure Francis07_1
-begin
+procedure Francis07_1 begin
    NMessage(mstr(129) + mstr(130));
 end
 
-procedure Francis07_2
-begin
+procedure Francis07_2 begin
 end
 
-procedure Francis08_1
-begin
+procedure Francis08_1 begin
    NMessage(mstr(131) + mstr(132));
 end
 
-procedure Francis08_2
-begin
+procedure Francis08_2 begin
 end
 
-procedure Francis09_1
-begin
+procedure Francis09_1 begin
    NMessage(mstr(133) + mstr(134));
 end
 
-procedure Francis09_2
-begin
+procedure Francis09_2 begin
    NMessage(mstr(134));
 end
 
-procedure Francis10_1
-begin
+procedure Francis10_1 begin
    NMessage(mstr(135) + mstr(136));
 end
 
-procedure Francis10_2
-begin
+procedure Francis10_2 begin
 end
 
-procedure Francis11_1
-begin
+procedure Francis11_1 begin
    NMessage(mstr(137) + mstr(138));
 end
 
-procedure Francis11_2
-begin
+procedure Francis11_2 begin
 end
 
-procedure Francis12_1
-begin
+procedure Francis12_1 begin
    NMessage(mstr(139) + mstr(140));
 end
 
-procedure Francis12_2
-begin
+procedure Francis12_2 begin
 end
 
-procedure Francis13
-begin
+procedure Francis13 begin
    NMessage(mstr(141));
 end
 
-procedure Francis14
-begin
+procedure Francis14 begin
    if (dude_is_male) then begin
       NMessage(142);
    end
@@ -255,35 +234,28 @@ begin
    end
 end
 
-procedure Francis15_1
-begin
+procedure Francis15_1 begin
    NMessage(mstr(144) + mstr(145) + mstr(146));
 end
 
-procedure Francis15_2
-begin
+procedure Francis15_2 begin
 end
 
-procedure Francis15_3
-begin
+procedure Francis15_3 begin
 end
 
-procedure Francis16
-begin
+procedure Francis16 begin
    NMessage(147);
 end
 
-procedure Francis17_1
-begin
+procedure Francis17_1 begin
    NMessage(mstr(148) + mstr(149));
 end
 
-procedure Francis17_2
-begin
+procedure Francis17_2 begin
 end
 
-procedure Francis18
-begin
+procedure Francis18 begin
    if (dude_is_male) then begin
       NMessage(150);
    end
@@ -292,13 +264,11 @@ begin
    end
 end
 
-procedure Francis19
-begin
+procedure Francis19 begin
    NMessage(152);
 end
 
-procedure Francis20
-begin
+procedure Francis20 begin
    if (dude_is_male) then begin
       NMessage(153);
    end
@@ -307,25 +277,20 @@ begin
    end
 end
 
-procedure Francis21_1
-begin
+procedure Francis21_1 begin
    NMessage(mstr(155) + mstr(156));
 end
 
-procedure Francis21_2
-begin
+procedure Francis21_2 begin
 end
 
-procedure Francis22
-begin
+procedure Francis22 begin
    NMessage(157);
 end
 
-procedure FrancisEnd
-begin
+procedure FrancisEnd begin
 end
 
-procedure Combat
-begin
+procedure Combat begin
    tmp_hostile := 1;
 end
