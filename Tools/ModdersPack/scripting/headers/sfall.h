@@ -71,6 +71,7 @@
 #define HOOK_ENCOUNTER        (43)
 #define HOOK_ADJUSTPOISON     (44)
 #define HOOK_ADJUSTRADS       (45)
+#define HOOK_ROLLCHECK        (46)
 
 //Valid arguments to list_begin
 #define LIST_CRITTERS    (0)

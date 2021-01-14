@@ -563,10 +563,11 @@ int     ret1 - overrides the result of engine calculation: 0/1 - failure, 2/3 - 
 
 HOOK_DESCRIPTIONOBJ (hs_descriptionobj.int)
 
-Runs when using the examine action icon to display item description. You can override the description of the item.
+Runs when using the examine action icon to display the description of an object. You can override the description text.
 An example usage would be to add an additional description to the item based on player's stats/skills.
+Does not run if the script of the object overrides the description.
 
-Obj     arg0 - the item
+Obj     arg0 - the object
 
 int     ret0 - a pointer to the new text received by using "get_string_pointer" function
 
@@ -718,3 +719,26 @@ Critter arg0 - the critter (usually dude_obj)
 int     arg1 - the amount of radiation being added/removed
 
 int     ret0 - the new amount of radiation being added/removed
+
+-------------------------------------------
+
+HOOK_ROLLCHECK (hs_rollcheck.int)
+
+Runs when a game event performs a random roll to check the chance of success or failure.
+
+int     arg0 - event type:
+               1 - checks the chance of an attack hitting the target
+               2 - checks the chance of a bullet from a burst hitting the target (for burst attacks)
+               3 - checks the chance when using skills (not listed below)
+               4 - check the chance of using Repair skill
+               5 - check the chance of using Doctor skill
+               6 - check the chance of using Steal skill for the thief (usually the player)
+               7 - the second Steal skill chance check for the target to catch the thief, in which the target's failure is the thief's success result
+int     arg1 - the value of roll result (see ROLL_* constants), which is calculated as:
+               for ROLL_CRITICAL_SUCCESS: random(1, 100) <= (random_chance / 10) + bonus
+               for ROLL_CRITICAL_FAILURE: random(1, 100) <= -random_chance / 10
+int     arg2 - the chance value
+int     arg3 - the bonus value, used when checking critical success
+int     arg4 - random chance (calculated as: chance - random(1, 100)), where a negative value is a failure check (ROLL_FAILURE)
+
+int     ret0 - overrides the roll result
