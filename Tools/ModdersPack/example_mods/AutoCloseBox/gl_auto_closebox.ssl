@@ -1,0 +1,33 @@
+/*
+
+Auto-Close Containers mod for Fallout 2 by Mr.Stalin
+----------------------------------------------------
+
+- automatically closes the container after looting
+
+Requires sfall 4.2.2/3.8.29 or higher
+
+*/
+
+#include "..\headers\sfall\sfall.h"
+#include "..\headers\sfall\define_extra.h"
+
+procedure start;
+
+variable lootObject;
+
+procedure start begin
+   if (game_loaded) then begin
+      register_hook_proc_spec(HOOK_GAMEMODECHANGE, start);
+   end else begin
+      variable mode := get_game_mode;
+      if (mode andAlso mode != INTFACELOOT) then return;
+      if (mode == INTFACELOOT) then begin
+         lootObject := loot_obj;
+         if (obj_type(lootObject) != OBJ_TYPE_ITEM) then lootObject = 0;
+      end else if (lootObject andAlso get_sfall_arg_at(1) == INTFACELOOT) then begin
+         obj_close(lootObject);
+         lootObject = 0;
+      end
+   end
+end

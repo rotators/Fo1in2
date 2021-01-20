@@ -26,5 +26,6 @@ Notable changes since last release ([v1.4.2228](https://github.com/rotators/Fo1i
 - **Fixed**: The Watershed mutants would not leave the map on the correct path. Also added a check to remove them from the map if the player leaves before they walked off-screen.
 - **Fixed**: The dynamite-exploit won't work on crucial NPCs anymore (Beth, Jacob, Zack, Razor, ...).
 - **Fixed**: The relationship dialog between Trish and Saul has been fixed up and somewhat polished (old restored cut content). Required new dialog lines to be added.
+- **Tweaked**: Ian, Tycho, and Dogmeat are more likely to try called shots now (closer to vanilla Fo1).
 - **Tweaked**: When captured by mutants and brought to Mariposa, party members will now temporarily get removed from the players party and moved into their own cell.
 - **Tweaked**: When walking through the "revulse tunnel" in the Master's Lair, the party member damage information will now run before the players to not spam the message log so much.
