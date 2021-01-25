@@ -39,6 +39,7 @@
 #define fo1in2_shady_merchant_enabled   (global_var(GVAR_ENABLE_SHADY_SANDS_MERCHANT) > 0)
 #define fo1in2_env_lighting_enabled     (global_var(GVAR_ENABLE_FO2_SEASONAL_LIGHTING) > 0)
 #define fo1in2_tough_mutants_enabled    (global_var(GVAR_ENABLE_TOUGH_MUTANTS) >= 1) // we don't want 0.5, etc. values here
+#define fo1in2_red_dogmeat_enabled      (global_var(GVAR_ENABLE_RED_DOGMEAT) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -456,6 +457,7 @@ variable knock_down_sound;
 
 #define self_is_child 				   (self_pid == PID_GIRL or self_pid == PID_BOY)
 
+
 // Merchant stuff
 #define set_disable_barter          set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_BARTER))
 #define set_enable_barter           set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_BARTER)
@@ -506,6 +508,17 @@ variable merch_slot_armor_flags;
       set_local_var(LVAR_Caps_Amount, caps_amount);      \
    end                                                   \
    self_caps_adjust(local_var(LVAR_Caps_Amount))
+
+
+// Use objects
+#define dude_anim_magic_hands \
+   if (source_obj == dude_obj) then begin                      \
+      reg_anim_clear(dude_obj);                                \
+      reg_anim_begin();                                        \
+      reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1); \
+      reg_anim_end();                                          \
+   end                                                         \
+   noop
 
 /*********************************************************
                         THE END

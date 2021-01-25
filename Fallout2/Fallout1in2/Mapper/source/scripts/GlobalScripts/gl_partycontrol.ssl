@@ -4,12 +4,14 @@
 
    Allows to take control of your party member or other NPCs during combat
 
-   NOTE : this script requires compiler from sfall modderspack with -s option
+   NOTE: this script requires compiler from sfall modderspack with -s option
    (short circuit evaluation)
 
-   version 1.1
+   version 1.2
 
 */
+
+#define SFALL_SC_EVALUATION   (true) // ScriptEditor 4.0: Automatic script compilation with -s option
 
 #include "define.h"
 #include "command.h"
@@ -17,53 +19,70 @@
 
 #define OBJ_DATA_LIGHT_DISTANCE     (0x6C)
 #define OBJ_DATA_LIGHT_INTENSITY    (0x70)
+#define PID_PLAYER                  (16777216)
+
+procedure start;
+procedure AllowControl(variable pid);
+procedure CombaTurn_Handler;
+procedure InventoryMove_Handler;
+procedure GameModeChange_Handler;
+procedure KeyPress_Handler;
+procedure InvenWield_Handler;
+procedure SetGlobalVar_Handler;
 
 variable
    controlMode,
+   toggleControlKey, toggleControl := true,
    noCheckArray,
    pidList, perksList,
    lightInt, lightDist, npcControl,
-   displayName, displayNameColor, isShowTag,
+   displayName, displayNameColor, isShowTag, //isOutline := false,
    inControl := false;
 
 
 procedure AllowControl(variable pid) begin
-   if (noCheckArray or is_in_array(pid bwand 0xFFFFFF, pidList)) and (party_member_obj(pid)) then return true;
+   if (noCheckArray or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)) then return true;
    return false;
 end
 
-procedure combatturn_handler begin
+procedure CombaTurn_Handler begin
    variable
       status := get_sfall_arg,
       critter := get_sfall_arg,
       pid, perkID, level;
 
-   //display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg);
-   if npcControl then begin
-      if lightInt then lightInt := round((lightInt / 65536.0) * 100); // calc percent of intensity
-      obj_set_light_level(npcControl, lightInt, lightDist);           // restore light for prev. controlled NPC
+   if (not(toggleControl)) then return;
+
+   #if DEBUG
+      display_msg("Combat Turn: " + status + ", by "  + obj_name(critter)+ "/" + critter + ", arg3: " + get_sfall_arg);
+   #endif
+
+   if (npcControl) then begin
+      if (lightInt) then lightInt := round((lightInt / 65536.0) * 100); // calc percent of intensity
+      obj_set_light_level(npcControl, lightInt, lightDist);             // restore light for prev. controlled npc
    end
 
    pid := obj_pid(critter);
    if (status == 1 and (AllowControl(pid) or controlMode == 1)) then begin
       set_dude_obj(critter);
-      //display_msg("Take control of: " + obj_name(critter));
+      #if DEBUG
+         display_msg("Set control to: " + obj_name(critter));
+      #endif
       if (critter != real_dude_obj) then begin
          if not(npcControl) then obj_set_light_level(real_dude_obj, 0, 0); // dude off light
          npcControl := critter;
-         // set perks (only work with 4.1.8+)
+         // set perks (worked on 4.1.8)
          foreach (perkID in perksList) begin
-            level := get_perk(real_dude_obj, perkID);
-            if (level) then begin
-               critter_add_trait(critter, TRAIT_PERK, perkID, level);
-            end
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
          intface_redraw;
          lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
-         lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
+         lightInt  := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
          obj_set_light_level(critter, 100, 4);
          inControl := true;
-      end else if npcControl then begin
+      end
+      else if (npcControl) then begin
          obj_set_light_level(dude_obj, 100, 4); // set dude default light
          npcControl := 0; // dude control
       end
@@ -78,17 +97,16 @@ procedure combatturn_handler begin
             isShowTag := true;
          end
       end
-   end else if inControl then begin
+   end
+   else if (inControl) then begin
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
          foreach (perkID in perksList) begin
-            level := get_perk(real_dude_obj, perkID);
-            if (level) then begin
-               critter_rm_trait(critter, TRAIT_PERK, perkID, level);
-            end
+            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
       end
-      if isShowTag then begin
+      if (isShowTag) then begin
          hide_iface_tag(displayName);
          isShowTag := false;
       end
@@ -100,9 +118,10 @@ procedure combatturn_handler begin
          end
       end
    end
+
 end
 
-procedure gamemodechange_handler begin
+procedure GameModeChange_Handler begin
    if (inControl and not(get_game_mode BWAND COMBAT)) then begin
       inControl := false;
       npcControl := 0;
@@ -110,7 +129,14 @@ procedure gamemodechange_handler begin
    end
 end
 
-procedure inventorymove_handler begin
+procedure InventoryMove_Handler begin
+/*
+   int     arg1 - Target slot (0 - main backpack, 1 - left hand, 2 - right hand, 3 - armor slot, 4 - weapon, when reloading it by dropping ammo, 5 - container, like bag/backpack, 6 - dropping on the ground)
+   Item    arg2 - Item being moved
+   Item    arg3 - Item being replaced, weapon being reloaded, or container being filled (can be 0)
+
+   int     ret1 - Override setting (-1 - use engine handler, any other value - prevent relocation of item/reloading weapon)
+*/
    if (npcControl and get_sfall_arg == 3) then begin // armor slot
       if (obj_pid(dude_obj) == PID_MARCUS or proto_data(obj_pid(dude_obj), cr_body_type) != CR_BODY_BIPED) then begin
          display_msg(message_str_game(GAME_MSG_PROTO, 675));
@@ -119,43 +145,37 @@ procedure inventorymove_handler begin
    end
 end
 
-procedure invenwield_handler begin
-   variable critter := get_sfall_arg,
-      item := get_sfall_arg,
-      slot := get_sfall_arg,
-      event := get_sfall_arg;
-
-   // Fix weapon duplication when equipping in combat
-   if (event and slot == INVEN_TYPE_RIGHT_HAND and AllowControl(obj_pid(critter))) then begin
-      set_flags(item, get_flags(item) bwand bwnot(FLAG_LEFT_HAND));
-   end
-end
-
 procedure start begin
-   if (game_loaded and sfall_ver_major >= 4) then begin
+   if game_loaded and (sfall_ver_major >= 4) then begin
+
       variable configSection := "CombatControl";
-
-      set_perk_ranks(PERK_gecko_skinning_perk, 1);
-      set_perk_level(PERK_gecko_skinning_perk, 999); // prevent it from appearing in the perk selection window
-
       controlMode := GetConfig("CombatControl", "Mode", 0);
-      if (controlMode > 2) then controlMode := 0;
+      if (controlMode >= 3) then begin
+         if (controlMode == 3) then metarule3(999, 0, 0, 0); // enables feature: Order to attack a specified target for party members
+         controlMode := 0;
+      end
+      else if (controlMode == 1 and GetIniConfig("Debugging", "Enable", 0, "ddraw.ini") == 0) then begin
+         controlMode := 2;
+      end
+
       if (controlMode > 0) then begin
+         toggleControlKey := GetConfig("CombatControl", "Key", 0);
          displayName := GetConfig("CombatControl", "DisplayName", 0);
 
-         if displayName then begin
+         if (displayName) then begin
             variable nameTag := add_iface_tag;
             debug_msg("NPC control - added new box: " + nameTag);
-            if (nameTag <= 0) then begin // box added?
+            if (nameTag <= 0) then begin // box added ?
                variable maxBoxCount := get_ini_setting("ddraw.ini|Misc|BoxBarCount");
-               if (maxBoxCount < 0) then maxBoxCount := 9;
-               else maxBoxCount += 4;
+               if (maxBoxCount < 0) then maxBoxCount := 9; else maxBoxCount += 4;
                if (displayName < 5 or displayName > maxBoxCount) then displayName := 0;
-            end else begin
-               displayName := nameTag;
             end
+            else displayName := nameTag;
             displayNameColor := GetConfig("CombatControl", "DisplayNameColor", 0);
          end
+
+         set_perk_ranks(PERK_gecko_skinning_perk, 1);
+         set_perk_level(PERK_gecko_skinning_perk, 999); // prevent it from appearing in the perk selection window
 
          pidList := GetConfigListInt("CombatControl", "PIDList");
          fix_array(pidList);
@@ -164,10 +184,53 @@ procedure start begin
          perksList := GetConfigListInt("CombatControl", "PerksList");
          fix_array(perksList);
 
-         register_hook_proc(HOOK_COMBATTURN, combatturn_handler);
-         register_hook_proc(HOOK_GAMEMODECHANGE, gamemodechange_handler);
-         register_hook_proc(HOOK_INVENTORYMOVE, inventorymove_handler);
-         register_hook_proc(HOOK_INVENWIELD, invenwield_handler);
+         register_hook_proc(HOOK_KEYPRESS, KeyPress_Handler);
+         register_hook_proc(HOOK_COMBATTURN, CombaTurn_Handler);
+         register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
+         register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_Handler);
+         register_hook_proc(HOOK_INVENWIELD, InvenWield_Handler);
+
+         if (GetConfig("CombatControl", "GainReputation", 0) == 0) then begin
+             register_hook_proc(HOOK_SETGLOBALVAR, SetGlobalVar_Handler);
+         end
       end
    end
 end
+
+procedure KeyPress_Handler begin
+   if (get_sfall_arg == 0 and get_sfall_arg == toggleControlKey) then begin
+      if (combat_is_initialized and real_dude_obj != dude_obj) then begin
+         display_msg(GetConfigStr("CombatControl", "MsgControl", "Error"));
+         return;
+      end
+      toggleControl := not(toggleControl);
+      if (toggleControl) then begin
+         display_msg(GetConfigStr("CombatControl", "MsgControlOn", "Error"));
+      end
+      else begin
+         display_msg(GetConfigStr("CombatControl", "MsgControlOff", "Error"));
+      end
+   end
+end
+
+procedure InvenWield_Handler begin
+   variable critter := get_sfall_arg,
+            item  := get_sfall_arg,
+            slot  := get_sfall_arg,
+            event := get_sfall_arg;
+   // Fix of duplicate weapons when equipment
+   if (event and slot == INVEN_TYPE_RIGHT_HAND and AllowControl(obj_pid(critter))) then begin
+      set_flags(item, get_flags(item) bwand bwnot(FLAG_LEFT_HAND));
+   end
+end
+
+procedure SetGlobalVar_Handler begin
+   if (npcControl and get_sfall_arg == GVAR_PLAYER_REPUTATION and obj_pid(dude_obj) != PID_PLAYER) then begin
+      variable value := global_var(GVAR_PLAYER_REPUTATION);
+      if (get_sfall_arg > value) then begin
+         set_sfall_arg(1, value);
+         set_sfall_return(value);
+      end
+   end
+end
+

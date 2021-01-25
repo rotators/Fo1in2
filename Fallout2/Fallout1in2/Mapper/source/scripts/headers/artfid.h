@@ -137,5 +137,6 @@
 #define FID_NMLGRY        (16777342) // Loser with dark shirt
 #define FID_HFCMBL        (16777343) // Female, Dark ("Black") Combat Armor
 #define FID_HMCMBL        (16777344) // Male, Dark ("Black") Combat Armor
+#define FID_MARDOG        (16777345) // Red colored dog
 
 #endif // ARTFID_H
