@@ -1,6 +1,7 @@
 Notable changes since last release ([v1.4.2228](https://github.com/rotators/Fo1in2/releases/tag/v1.4.2228))
 
 - **Added**: A new caps modifier to reduce the amount of currency on the merchants a bit.
+- **Added**: Dogmeat can now be turned into a red dog (new setting in the fo1_settings.ini file).
 - **Added**: Party members will float random text if they have a crippled limb or are posioned (inspired by Fo2 Unofficial Patch / Restoration Project).
 - **Added**: Setting off the trap on Hightower's strongbox will now trigger his guard to investigate.
 - **Added**: The "Tougher Mutants"-setting works as a multiplier now. 1 is the prefered setting, 2 is still okay, but everything above slowly moves into some serious OVERKILL-territory.
@@ -22,10 +23,12 @@ Notable changes since last release ([v1.4.2228](https://github.com/rotators/Fo1i
 - **Fixed**: The Broterhood lower levels would not correctly disable after mutants invaded the location (it was possible to enter the maps via Town/World button).
 - **Fixed**: The Light Step perk wasn't working on mines.
 - **Fixed**: The Master's Lair terminal that would mark Mariposa on the worldmap would sometimes not mark the location on the worldmap.
+- **Fixed**: The Skilled trait will now correctly give +10% to every skill and no additional skill points per levelup.
 - **Fixed**: The Skum Pitt and V13 armory door would reset when loading a savegame.
 - **Fixed**: The Watershed mutants would not leave the map on the correct path. Also added a check to remove them from the map if the player leaves before they walked off-screen.
 - **Fixed**: The dynamite-exploit won't work on crucial NPCs anymore (Beth, Jacob, Zack, Razor, ...).
 - **Fixed**: The relationship dialog between Trish and Saul has been fixed up and somewhat polished (old restored cut content). Required new dialog lines to be added.
 - **Tweaked**: Ian, Tycho, and Dogmeat are more likely to try called shots now (closer to vanilla Fo1).
+- **Tweaked**: Reduced the amount of radiation in the Glow zones on the worldmap.
 - **Tweaked**: When captured by mutants and brought to Mariposa, party members will now temporarily get removed from the players party and moved into their own cell.
 - **Tweaked**: When walking through the "revulse tunnel" in the Master's Lair, the party member damage information will now run before the players to not spam the message log so much.

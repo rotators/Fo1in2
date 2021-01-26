@@ -12,11 +12,18 @@
 */
 
 #include "..\headers\define.h"
-#include "..\headers\command.h"
+//#include "..\headers\command.h"
 #include "main.h"
 
 #define OBJ_DATA_LIGHT_DISTANCE     (0x6C)
 #define OBJ_DATA_LIGHT_INTENSITY    (0x70)
+
+procedure start;
+procedure AllowControl(variable pid);
+procedure CombatTurn_Handler;
+procedure GameModeChange_Handler;
+procedure InventoryMove_Handler;
+procedure InvenWield_Handler;
 
 variable
    controlMode,
@@ -32,7 +39,7 @@ procedure AllowControl(variable pid) begin
    return false;
 end
 
-procedure combatturn_handler begin
+procedure CombatTurn_Handler begin
    variable
       status := get_sfall_arg,
       critter := get_sfall_arg,
@@ -98,7 +105,7 @@ procedure combatturn_handler begin
    end
 end
 
-procedure gamemodechange_handler begin
+procedure GameModeChange_Handler begin
    if (inControl and not(get_game_mode BWAND COMBAT)) then begin
       inControl := false;
       npcControl := 0;
@@ -106,7 +113,7 @@ procedure gamemodechange_handler begin
    end
 end
 
-procedure inventorymove_handler begin
+procedure InventoryMove_Handler begin
    if (npcControl and get_sfall_arg == 3) then begin // armor slot
       if (obj_pid(dude_obj) == PID_MARCUS or proto_data(obj_pid(dude_obj), cr_body_type) != CR_BODY_BIPED) then begin
          display_msg(message_str_game(GAME_MSG_PROTO, 675));
@@ -115,8 +122,9 @@ procedure inventorymove_handler begin
    end
 end
 
-procedure invenwield_handler begin
-   variable critter := get_sfall_arg,
+procedure InvenWield_Handler begin
+   variable
+      critter := get_sfall_arg,
       item  := get_sfall_arg,
       slot  := get_sfall_arg,
       event := get_sfall_arg;
@@ -135,7 +143,10 @@ procedure start begin
       set_perk_level(PERK_gecko_skinning_perk, 999); // prevent it from appearing in the perk selection window
 
       controlMode := GetConfig("CombatControl", "Mode", 0);
-      if (controlMode > 2) then controlMode := 0;
+      if (controlMode >= 3) then begin
+         if (controlMode == 3) then metarule3(999, 0, 0, 0); // enable feature: order party members to attack a specified target
+         controlMode := 0;
+      end
       if (controlMode > 0) then begin
          displayName := GetConfig("CombatControl", "DisplayName", 0);
 
@@ -160,10 +171,10 @@ procedure start begin
          perksList := GetConfigListInt("CombatControl", "PerksList");
          fix_array(perksList);
 
-         register_hook_proc(HOOK_COMBATTURN, combatturn_handler);
-         register_hook_proc(HOOK_GAMEMODECHANGE, gamemodechange_handler);
-         register_hook_proc(HOOK_INVENTORYMOVE, inventorymove_handler);
-         register_hook_proc(HOOK_INVENWIELD, invenwield_handler);
+         register_hook_proc(HOOK_COMBATTURN, CombatTurn_Handler);
+         register_hook_proc(HOOK_GAMEMODECHANGE, GameModeChange_Handler);
+         register_hook_proc(HOOK_INVENTORYMOVE, InventoryMove_Handler);
+         register_hook_proc(HOOK_INVENWIELD, InvenWield_Handler);
       end
    end
 end

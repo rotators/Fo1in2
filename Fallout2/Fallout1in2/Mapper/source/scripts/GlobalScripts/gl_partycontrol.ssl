@@ -41,7 +41,7 @@ variable
 
 
 procedure AllowControl(variable pid) begin
-   if (noCheckArray or scan_array(pidList, pid bwand 0xFFFFFF) != -1) and (party_member_obj(pid)) then return true;
+   if (noCheckArray or is_in_array(pid bwand 0xFFFFFF, pidList)) and (party_member_obj(pid)) then return true;
    return false;
 end
 
@@ -54,7 +54,7 @@ procedure CombaTurn_Handler begin
    if (not(toggleControl)) then return;
 
    #if DEBUG
-      display_msg("Combat Turn: " + status + ", by "  + obj_name(critter)+ "/" + critter + ", arg3: " + get_sfall_arg);
+      display_msg("Combat Turn: " + status + ", by "  + obj_name(critter) + "/" + critter + ", arg3: " + get_sfall_arg);
    #endif
 
    if (npcControl) then begin
@@ -73,12 +73,12 @@ procedure CombaTurn_Handler begin
          npcControl := critter;
          // set perks (worked on 4.1.8)
          foreach (perkID in perksList) begin
-            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            level := get_perk(real_dude_obj, perkID);
             if (level) then critter_add_trait(critter, TRAIT_PERK, perkID, level);
          end
          intface_redraw;
          lightDist := get_object_data(critter, OBJ_DATA_LIGHT_DISTANCE);
-         lightInt  := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
+         lightInt := get_object_data(critter, OBJ_DATA_LIGHT_INTENSITY);
          obj_set_light_level(critter, 100, 4);
          inControl := true;
       end
@@ -102,7 +102,7 @@ procedure CombaTurn_Handler begin
       // remove perks before switching control (only work with 4.1.8+)
       if (dude_obj != real_dude_obj) then begin
          foreach (perkID in perksList) begin
-            level := has_trait(TRAIT_PERK, real_dude_obj, perkID);
+            level := get_perk(real_dude_obj, perkID);
             if (level) then critter_rm_trait(critter, TRAIT_PERK, perkID, level);
          end
       end
@@ -215,8 +215,8 @@ end
 
 procedure InvenWield_Handler begin
    variable critter := get_sfall_arg,
-            item  := get_sfall_arg,
-            slot  := get_sfall_arg,
+            item := get_sfall_arg,
+            slot := get_sfall_arg,
             event := get_sfall_arg;
    // Fix of duplicate weapons when equipment
    if (event and slot == INVEN_TYPE_RIGHT_HAND and AllowControl(obj_pid(critter))) then begin
@@ -233,4 +233,3 @@ procedure SetGlobalVar_Handler begin
       end
    end
 end
-
