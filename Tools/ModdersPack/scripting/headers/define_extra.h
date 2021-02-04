@@ -289,6 +289,7 @@
 #define CALIBER_7_62MM              (18)
 
 // hidden perks
+#ifndef DEFINE_LITE_H
 #define PERK_add_nuka               (53)
 #define PERK_add_buffout            (54)
 #define PERK_add_mentats            (55)
@@ -309,6 +310,7 @@
 #define PERK_add_jet                (70)
 #define PERK_add_tragic             (71)
 #define PERK_armor_charisma         (72)
+#endif
 
 #define WPN_ANIM_NONE               (0x00) // (A)
 #define WPN_ANIM_KNIFE              (0x01) // (D)

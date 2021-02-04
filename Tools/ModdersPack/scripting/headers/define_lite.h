@@ -4,6 +4,7 @@
 
 #ifndef DEFINE_H
 #define DEFINE_H
+#define DEFINE_LITE_H
 
 //   This file holds all of the things that should be preprocessed.
 

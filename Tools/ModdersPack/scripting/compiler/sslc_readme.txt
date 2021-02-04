@@ -197,7 +197,7 @@ old:
   end
 
 
-> empty statements in blocks are allowed: This is just a convenience to save scripters a bit of memory. Some of the macros in the fallout headers include their own semicolons while others do not. With the original compiler you had to remember which was which, and if you got it wrong the script would not compile. Now it's always safe to include your own semicolon, even if the macro already had its own. For example, this would not compile with the original sslc, but will with the sfall edition:
+> **Does not work currently** empty statements in blocks are allowed: This is just a convenience to save scripters a bit of memory. Some of the macros in the fallout headers include their own semicolons while others do not. With the original compiler you had to remember which was which, and if you got it wrong the script would not compile. Now it's always safe to include your own semicolon, even if the macro already had its own. For example, this would not compile with the original sslc, but will with the sfall edition:
 
 #define my_macro diplay_msg("foo");
 
@@ -219,7 +219,6 @@ old:
 new:
     callbackVar := @Node000;
     callbackVar();
-
 
 
 > *arrays: In vanilla fallout arrays had to be constructed by reserving a block of global/map variables. Since sfall 2.7, specific array targeted functions have been available, but they are fairly messy and long winded to use. The compiler provides additional syntactic shorthand for accessing and setting array variables, as well as for array creation. When declaring an array variable, put a constant integer in []'s to give the number of elements in the array. (before sfall 3.4 you had to specify size in bytes for array elements, now it's not required, see "arrays.txt" for more information)
