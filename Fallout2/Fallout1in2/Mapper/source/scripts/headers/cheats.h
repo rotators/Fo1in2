@@ -137,7 +137,18 @@ procedure PoliceBox;
 procedure TalkCow;
 procedure UsedCar;
 
+procedure CheaterTimers;
+procedure CheaterTimersV13Invasion;
+procedure CheaterTimersV13Water;
+procedure CheaterTimersUp;
+procedure CheaterTimersDown;
+
 variable TimeFlag;
+
+#define timerUPandDown \
+   giq_option(1, SCRIPT_CHEATER, 1020, CheaterTimersUp, NEUTRAL_REACTION);    \
+   giq_option(1, SCRIPT_CHEATER, 1030, CheaterTimersDown, NEUTRAL_REACTION);  \
+   NOption(g_bye, CheaterEnd, 001)
 
 procedure CheaterEnd begin
 end
@@ -218,12 +229,12 @@ end
 procedure FixesOnly
 begin
    if (global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-      gsay_reply(621, 208);
+      gsay_reply(SCRIPT_CHEATER, 208);
       giq_option( 1, SCRIPT_CHEATER, 209, FixesOFF, NEUTRAL_REACTION );
       giq_option( 1, SCRIPT_CHEATER, 210, Cheater00a, NEUTRAL_REACTION );
    end
    else begin
-      gsay_reply(621, 211);
+      gsay_reply(SCRIPT_CHEATER, 211);
       giq_option( 1, SCRIPT_CHEATER, 212, FixesON, NEUTRAL_REACTION );
       giq_option( 1, SCRIPT_CHEATER, 210, Cheater00a, NEUTRAL_REACTION );
    end
@@ -294,31 +305,31 @@ end
 procedure Cheater06a
 begin
    critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06b
 begin
    critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06c
 begin
    critter_injure(dude_obj, 16);//    DAM_CRIP_ARM_LEFT     16
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06d
 begin
    critter_injure(dude_obj, 32);//    DAM_CRIP_ARM_RIGHT    32
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06e
 begin
    critter_injure(dude_obj, 64);//    DAM_BLIND             64
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater00c begin
@@ -368,42 +379,42 @@ end
 procedure Cheater01
 begin
    give_exp_points(500);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater02
 begin
    give_exp_points(1000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater03
 begin
    give_exp_points(5000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater04
 begin
    give_exp_points(10000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater05
 begin
    give_exp_points(50000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater05b
 begin
    give_exp_points(210000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
 // call Cheater00;
 end
 
@@ -412,7 +423,7 @@ begin
 // variable LVar0;
 // pc_stat(1) := 10;
    give_exp_points(-5000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
@@ -421,7 +432,7 @@ begin
    display_msg(message_str(SCRIPT_CHEATER, 213) + dude_poison_stat + " ");
    poison(dude_obj, 100);
    display_msg(message_str(SCRIPT_CHEATER, 214)  + dude_poison_stat + " ");
-// gsay_message(621, 215, 50);
+// gsay_message(SCRIPT_CHEATER, 215, 50);
    call Cheater06;
 end
 
@@ -430,7 +441,7 @@ begin
    display_msg(message_str(SCRIPT_CHEATER, 213) + dude_rads + " ");
    radiation_inc(dude_obj, 50);
    display_msg(message_str(SCRIPT_CHEATER, 214)  + dude_rads + " ");
-// gsay_message(621, 216, 50);
+// gsay_message(SCRIPT_CHEATER, 216, 50);
    call Cheater06;
 end
 
@@ -532,7 +543,7 @@ end
 
 procedure Cheater00// GIVE EXPERIENCE
 begin
-   gsay_reply(621, 241);
+   gsay_reply(SCRIPT_CHEATER, 241);
    giq_option( 1, SCRIPT_CHEATER, 232, Cheater01, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 233, Cheater02, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 234, Cheater03, NEUTRAL_REACTION );
@@ -546,7 +557,7 @@ end
 
 procedure Cheater06
 begin
-   gsay_reply(621, 222);
+   gsay_reply(SCRIPT_CHEATER, 222);
    giq_option( 1, SCRIPT_CHEATER, 223, Cheater06a, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 224, Cheater06b, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 225, Cheater06c, NEUTRAL_REACTION );
@@ -560,7 +571,7 @@ end
 
 procedure Cheater19
 begin
-   gsay_reply(621, 243);
+   gsay_reply(SCRIPT_CHEATER, 243);
    giq_option( 1, SCRIPT_CHEATER, 244, Cheater19a, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 245, Cheater19b, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 246, Cheater19c, NEUTRAL_REACTION );
@@ -573,7 +584,7 @@ begin
 end
 
 procedure Teleport begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 269, TARDIS_1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 270, TARDIS_2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 271, TARDIS_3, NEUTRAL_REACTION );
@@ -586,7 +597,7 @@ procedure Teleport begin
 end
 
 procedure TARDIS_1 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 303, Nec1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 309, Nec2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 304, Nec3, NEUTRAL_REACTION );
@@ -640,7 +651,7 @@ end
 
 procedure TARDIS_2
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 310, Junk1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 311, Junk2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 312, Junk3, NEUTRAL_REACTION );
@@ -694,7 +705,7 @@ end
 
 procedure TARDIS_3
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 317, Child1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 318, Child2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 333, Master1, NEUTRAL_REACTION );
@@ -748,7 +759,7 @@ end
 
 procedure TARDIS_4
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 336, Hub1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 338, Hub2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 339, Hub3, NEUTRAL_REACTION );
@@ -802,7 +813,7 @@ end
 
 procedure TARDIS_5
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 328, Ady1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 329, Ady2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 344, Ady3, NEUTRAL_REACTION );
@@ -856,7 +867,7 @@ end
 
 procedure TARDIS_6
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 325, Shad1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 326, Shad2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 316, Shad3, NEUTRAL_REACTION );
@@ -903,7 +914,7 @@ end
 
 procedure TARDIS_7
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 327, Glow1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 342, Glow2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 343, Glow3, NEUTRAL_REACTION );
@@ -945,7 +956,7 @@ end
 
 procedure TARDIS_8
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 356, DesCrv1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 357, DesCrv2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 361, DesCrv3, NEUTRAL_REACTION );
@@ -998,7 +1009,7 @@ begin
 end
 
 procedure TARDIS_9 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 322, ColaTruk, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 323, Ufo, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 351, BigFoot, NEUTRAL_REACTION );
@@ -1167,14 +1178,15 @@ end
 
 procedure GiveItems
 begin
-   gsay_reply(621, 267);
+   gsay_reply(SCRIPT_CHEATER, 267);
    giq_option( 1, SCRIPT_CHEATER, 265, GiveItemsConfirm, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 268, Cheater00a, NEUTRAL_REACTION );
 end
 
 procedure ChangeTheClock
 begin
-   gsay_reply(621, 266);
+   gsay_reply(SCRIPT_CHEATER, 266);
+   giq_option( 1, SCRIPT_CHEATER, 1000, CheaterTimers, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 101, RollBack, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 111, SpringForward, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 125, Cheater00a, NEUTRAL_REACTION );
@@ -1182,7 +1194,7 @@ end
 
 procedure IDKFA
 begin
-   gsay_reply(621, 122);
+   gsay_reply(SCRIPT_CHEATER, 122);
    giq_option( 1, SCRIPT_CHEATER, 123, Cheater16, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 124, Cheater17, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 125, Cheater00a, NEUTRAL_REACTION );
@@ -1191,7 +1203,7 @@ end
 procedure RollBack
 begin
    TimeFlag := 1;
-   gsay_reply(621, 102);
+   gsay_reply(SCRIPT_CHEATER, 102);
    giq_option( 1, SCRIPT_CHEATER, 103, Cheater09, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 104, Cheater10, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 105, Cheater11, NEUTRAL_REACTION );
@@ -1206,7 +1218,7 @@ end
 procedure SpringForward
 begin
    TimeFlag := 0;
-   gsay_reply(621, 112);
+   gsay_reply(SCRIPT_CHEATER, 112);
    giq_option( 1, SCRIPT_CHEATER, 113, Cheater09, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 114, Cheater10, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 115, Cheater11, NEUTRAL_REACTION );
@@ -1240,8 +1252,8 @@ begin
    //display_msg("how_much :: "+LVar1+"");
    //display_msg("do_check(dude_obj, 14, 0) :: "+LVar2+"");
    //display_msg("how_much :: "+LVar3+"");
-   //gsay_reply(621, "Roll result: " + LVar0 + "          " + "How much: " + LVar1 + "          " + "Is success?  " + LVar2 + " ");
-   gsay_reply(621, 231);
+   //gsay_reply(SCRIPT_CHEATER, "Roll result: " + LVar0 + "          " + "How much: " + LVar1 + "          " + "Is success?  " + LVar2 + " ");
+   gsay_reply(SCRIPT_CHEATER, 231);
    giq_option( 1, SCRIPT_CHEATER, 229, TestRolls, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 230, CheaterEnd, NEUTRAL_REACTION );
 end
@@ -1250,7 +1262,7 @@ procedure Cheater00a//  MAIN MENU    MAIN MENU     MAIN MENU      MAIN MENU
 begin
 // set_global_var(VATS_BLOWN, 1);
 //
-   gsay_reply(621, 200);
+   gsay_reply(SCRIPT_CHEATER, 200);
    //giq_option(1, 621, 229), TestRolls, 50);
    giq_option( 1, SCRIPT_CHEATER, 201, Cheater00, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 202, Cheater06, NEUTRAL_REACTION );
@@ -1262,7 +1274,52 @@ begin
    giq_option( 1, SCRIPT_CHEATER, 280, Slideshow, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 252, Teleport, NEUTRAL_REACTION );
    NOption("Kill Master or Vats", Cheater00b, 001);
-   NOption(g_bye, CheaterEnd, 004);
+   NOption(g_bye, CheaterEnd, 001);
+end
+
+procedure CheaterTimers begin
+   gsay_reply(SCRIPT_CHEATER, 1000);
+   giq_option(1, SCRIPT_CHEATER, 1011, CheaterTimersV13Water, NEUTRAL_REACTION);
+   giq_option(1, SCRIPT_CHEATER, 1010, CheaterTimersV13Invasion, NEUTRAL_REACTION);
+   NOption(g_bye, CheaterEnd, 001);
+end
+
+procedure CheaterTimersV13Invasion begin
+   TimeFlag := "V13Invasion";
+   gsay_reply(SCRIPT_CHEATER, 1010);
+   timerUPandDown;
+end
+
+procedure CheaterTimersV13Water begin
+   TimeFlag := "V13Water";
+   gsay_reply(SCRIPT_CHEATER, 1011);
+   timerUPandDown;
+end
+
+procedure CheaterTimersUp begin
+   gsay_reply(SCRIPT_CHEATER, 1020);
+
+   if (TimeFlag == "V13Invasion") then begin
+      inc_v13_days_left(100);
+   end
+   else if (TimeFlag == "V13Water") then begin
+      inc_water_days(100);
+   end
+
+   timerUPandDown;
+end
+
+procedure CheaterTimersDown begin
+   gsay_reply(SCRIPT_CHEATER, 1030);
+
+   if (TimeFlag == "V13Invasion") then begin
+      dec_v13_days_left(100);
+   end
+   else if (TimeFlag == "V13Water") then begin
+      dec_water_days(100);
+   end
+
+   timerUPandDown;
 end
 
 #endif // CHEATS_H
