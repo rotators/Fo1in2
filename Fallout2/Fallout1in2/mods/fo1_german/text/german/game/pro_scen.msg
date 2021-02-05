@@ -2788,3 +2788,4 @@
 {186300}{}{Wand}
 {186400}{}{Kasinoschild}
 {186401}{}{Sieht wie eine Werbetafel für Gizmos Kasino aus. Es wurde ausgeschaltet.}
+{186500}{}{Fliegen}

@@ -315,6 +315,7 @@ variable Scenery_Creation_Ptr;
 // Fo1in2:
 #define PID_RATHOLE                         (33556295)
 #define PID_GIZMO_SIGN_OFF                  (33556296)
+#define PID_GIZMO_FLIES                     (33556297)
 #define PID_TROPHY                          (33555332) // Junktown urn
 
 #define PID_JUNK_BARREL                     (33554538)

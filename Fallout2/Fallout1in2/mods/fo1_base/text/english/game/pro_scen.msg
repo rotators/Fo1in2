@@ -2788,3 +2788,4 @@
 {186300}{}{Cave Wall}
 {186400}{}{Casino Sign}
 {186401}{}{The advertisement for Gizmo's Casino. It has been turned off.}
+{186500}{}{Flies}

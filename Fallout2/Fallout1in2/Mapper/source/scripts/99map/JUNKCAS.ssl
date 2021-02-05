@@ -116,6 +116,11 @@ variable corpse_timer;
       if gizmo_remains_empty_desk and (map_var(MVAR_GIZMO_REMAINS) < 2) then begin
          set_map_var(MVAR_GIZMO_REMAINS, 2);
 
+         // Remove flies
+         Object := tile_contains_pid_obj(gizmo_hex, 0, PID_GIZMO_FLIES);
+         if (Object != 0) then destroy_object(Object);
+
+         // Add empty desk and delete corpse if the object is there
          Object := tile_contains_pid_obj(gizmo_hex, 0, PID_GIZMO_REMAINS);
          Scenery_Creation := create_object(PID_GIZMO_EMPTY_DESK, gizmo_hex, 0);
          if (Object != 0) then begin
@@ -134,12 +139,16 @@ variable corpse_timer;
       end
       else if gizmo_remains_rotting and (map_var(MVAR_GIZMO_REMAINS) == 0) then begin
          set_map_var(MVAR_GIZMO_REMAINS, 1);
+
          Object := tile_contains_pid_obj(gizmo_hex, 0, PID_GIZMO);
          Scenery_Creation := create_object(PID_GIZMO_REMAINS, gizmo_hex, 0);
          if (Object != 0) then begin
             move_obj_inven_to_obj(Object, Scenery_Creation);
             destroy_object(Object);
          end
+
+         // Add flies
+         Scenery_Creation := create_object(PID_GIZMO_FLIES, gizmo_hex, 0);
       end
    end
 
