@@ -1,3 +1,5 @@
+# by niky_kg#8534
+
 BEGIN {
 	isinsection = ""
 	header = ""
