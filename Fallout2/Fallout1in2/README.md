@@ -55,10 +55,10 @@ Other interesting files:
 STEAM
 -----------------
 
-The mod can be started relatively easy with the Steam client, replacing vanilla Fallout 1. Note that the method described below does not allow to use various Steam features (such as overlay, screenshot hotkey, tracking play time, etc.); The Steam client will launch the mod, but will not "see" it running.
+The mod can be started relatively easy with the Steam client, replacing vanilla Fallout 1. Note that the method described below does not allow to use various Steam features (such as overlay, screenshot hotkey, etc.) except tracking play time.
 
 - Create a Fo1in2.bat file in the Fallout 1 directory:
-  - `start /d "C:\Path\To\Fo1in2\Fallout2\Fallout1in2\" Fallout2.exe`
+  - `@start /wait /d "C:\Path\To\Fo1in2\Fallout2\Fallout1in2\" Fallout2.exe`
 - In the Steam client, set game launch options (right click on Fallout, "Properties"):
   - `"C:\Path\To\Fallout\Fo1in2.bat" %command%`
 - Start the game as usual ("Play" button) and select the default launch option ("Play Fallout")
