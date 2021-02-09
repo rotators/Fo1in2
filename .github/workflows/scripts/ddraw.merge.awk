@@ -1,192 +1,242 @@
-# by niky_kg#8534
+# mergeini.awk: print into stdout the merge of an override and base .ini files
+
+# MIT License
+#
+# Copyright (c) 2021 jalt
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# awk -v override_file=override.ini -f mergeini.awk base.ini
 
 BEGIN {
-	isinsection = ""
-	header = ""
-	newheader = ""
-}
-
-function findoverrideinglobal(origlineg)
-{
-	o_regexpg="^[[:space:]]*" origlineg "[[:space:]]*="
-	retg=""
-	while ((getline overlineg < (overridefile)) > 0)
-	{
-		# Is this line a header?
-		if (overlineg ~ /^[[:space:]]*\[.+\][[:space:]]*$/)
-		{
-			# Not found
-			break
-		}
-		
-		# Is this line a match?
-		if (overlineg ~ o_regexpg)
-		{
-			# Found!
-			retg=overlineg
-			break
-		}
+	# The override file name must be passed in the command line arguments with -v
+	if (! override_file) {
+		print ""
+		print "mergeini.awk: print into stdout the merge of an override and base .ini files"
+		print "Copyright (C) 2021 jalt"
+		print "Usage: awk -v override_file=<override.ini> -f mergeini.awk <base.ini>"
+		print ""
+		exit 1
 	}
-	close(overridefile)
-	return retg
+
+	# Global variables
+	split("", override_array)	# empty array
+	# Current base file section
+	base_section_name = ""	# empty (global)
+
+	# Parse the whole override file into an array
+	parse_override_file(override_array)
 }
 
-function findoverrideinsection(origline, origsection)
+function parse_override_file(array,			section_name, line, start, end, name, sep, raw_value, value)
 {
-	o_regexp="^[[:space:]]*" origline "[[:space:]]*="
-	o_regexph="^[[:space:]]*\\[" origsection "\\][[:space:]]*$"
-	ret=""
-	foundh=""
-	while ((getline overline < (overridefile)) > 0)
+	# Current section name
+	section_name = ""	# empty (global)
+
+	# Read override file
+	while ((getline line < (override_file)) > 0)
 	{
-		if (! foundh)
+		# Is this line different from a comment or whitespace?
+		if (! (line ~ /^[[:space:]]*[;].*$/ || line ~ /^[[:space:]]*$/))
 		{
-			# Is this line the right header?
-			if (overline ~ o_regexph)
-			{
-				# Header found
-				foundh="true"
-			}
-		}
-		else
-		{
+			# Yes, keep processing it
 			# Is this line a header?
-			if (overline ~ /^[[:space:]]*\[.+\][[:space:]]*$/)
+			if (line ~ /^[[:space:]]*\[.+\][[:space:]]*(([;].*$)|$)/)
 			{
-				# Not found
-				break
+				# Yes, it's a header
+				# Get new section name
+				start = match(line, /\[/)
+				end = match(line, /\]/)
+				section_name = substr(line, start+1, (end-(start+1)))
+				# Subsequent lines belong to this section
 			}
-		
-			# Is this line a match?
-			if (overline ~ o_regexp)
+			else
 			{
-				# Found!
-				ret=overline
-				break
+				# No, it's a normal line
+				# Get field name
+				start = match(line, /^[^[:space:]]/)
+				end = match(line, /[[:space:]]*=/)
+				name = substr(line, start, (end-start))
+				# Get field value
+				sep = match(line, /=/)
+				raw_value = substr(line, sep+1)
+				start = match(raw_value, /^[^[:space:]]/)
+				end = match(raw_value, /[[:space:]]*(([;].*$)|$)/)
+				value = substr(raw_value, start, (end-start))
+				# Store everything in the array
+				# "" is a valid array index in awk (global)
+				array[section_name, name, "value"] = value
+				array[section_name, name, "line"] = line
 			}
 		}
 	}
-	close(overridefile)
-	return ret
+	close(override_file)
 }
 
+# Main (the empty pattern matches every input record)
+{
+	main_loop()
+}
 
-function inglobal(oglineg)
+function main_loop(			new_header, start, end)
+{
+	# Is this line a header?
+	if ($0 ~ /^[[:space:]]*\[.+\][[:space:]]*(([;].*$)|$)/)
+	{
+		# Yes, it's a header
+		new_header = $0
+		# Flush section
+		flush_section(override_array, base_section_name)
+		# Print new header
+		print new_header
+		# Get new section name
+		start = match(new_header, /\[/)
+		end = match(new_header, /\]/)
+		base_section_name = substr(new_header, start+1, (end-(start+1)))
+		# Subsequent lines belong to this section
+	}
+	else
+	{
+		# No, it's a normal line, comment or whitespace
+		process_base_line($0, base_section_name)
+	}
+}
+
+function flush_section(array, section_name,			i, combined, separate, temp, end, trimmed_override_line, deletions)
+{
+	i = 0	# numeric
+	# Loop in the array
+	for (combined in array) {
+		# Recover indexes
+		split(combined, separate, SUBSEP)
+		# Is this entry relevant?
+		if (separate[1] == section_name && separate[3] == "line")
+		{
+			# Trim override line trailing whitespace
+			temp = array[section_name, separate[2], "line"]
+			end = match(temp, /[[:space:]]*$/)
+			trimmed_override_line = substr(temp, 1, (end-1))
+			# Print the override
+			print trimmed_override_line " ;ADDED"
+			# Mark entries for deletion
+			deletions[++i] = section_name SUBSEP separate[2] SUBSEP "line"
+			deletions[++i] = section_name SUBSEP separate[2] SUBSEP "value"
+		}
+	}
+	
+	i = "" # empty
+	# Remove entries from array
+	for (i in deletions)
+	{
+		delete array[deletions[i]];
+	}
+}
+
+function process_base_line(base_line, section_name,			start, end, base_name, override_line, trimmed_base_line, sep, raw_value, base_value, override_value)
 {
 	# Is this line a comment or whitespace?
-	if (oglineg ~ /^[[:space:]]*[;].*$/ || oglineg ~ /^[[:space:]]*$/)
+	if (base_line ~ /^[[:space:]]*[;].*$/ || base_line ~ /^[[:space:]]*$/)
 	{
 		# Yes, print it through
-		print oglineg
+		print base_line
 	}
 	else
 	{
 		# No, it's a normal line
-		# Trim initial whitespace
-		begg = match(oglineg, /^[^[:space:]]/)
-		tempg = substr(oglineg, begg)
 		# Get field name
-		split(tempg, farrayg, "=")
-		fnameg = farrayg[1]
-		overg=findoverrideinglobal(fnameg)
-		if (overg == "")
+		start = match(base_line, /^[^[:space:]]/)
+		end = match(base_line, /[[:space:]]*=/)
+		base_name = substr(base_line, start, (end-start))
+		# Find override
+		if ((section_name, base_name, "value") in override_array)
 		{
-			# There is no override, keep the original
-			print oglineg
+			# There is an override
+			# Trim base line trailing whitespace
+			end = match(base_line, /[[:space:]]*$/)
+			trimmed_base_line = substr(base_line, 1, (end-1))
+
+			# Get base value
+			sep = match(base_line, /=/)
+			raw_value = substr(base_line, sep+1)
+			start = match(raw_value, /^[^[:space:]]/)
+			end = match(raw_value, /[[:space:]]*(([;].*$)|$)/)
+			base_value = substr(raw_value, start, (end-start))
+
+			# Get override
+			override_value = override_array[section_name, base_name, "value"]
+			override_line = override_array[section_name, base_name, "line"]
+			delete override_array[section_name, base_name, "value"]
+			delete override_array[section_name, base_name, "line"]
+
+			# Is the override the same as the base?
+			if (base_value == override_value)
+			{
+				# Yes, same value
+				# Keep the base line
+				print trimmed_base_line " ;FORCED"
+			}
+			else
+			{
+				# No, different value
+				# Comment the base line
+				print ";" trimmed_base_line " ;OVERRIDEN"
+				# Print the override
+				print override_line
+			}
 		}
 		else
 		{
-			# Print the override
-			print "vvv OVERRIDEN by Fo1in2 vvv"
-			print ";" oglineg
-			print overg
-			print "^^^ OVERRIDEN by Fo1in2 ^^^"
+			# There is no override, keep the base line
+			print base_line
 		}
 	}
 }
 
-function insection(ogline, ogsection)
-{
-	# Is this line a comment or whitespace?
-	if (ogline ~ /^[[:space:]]*[;].*$/ || ogline ~ /^[[:space:]]*$/)
-	{
-		# Yes, print it through
-		print ogline
-	}
-	else
-	{
-		# No, it's a normal line
-		# Trim initial whitespace
-		beg = match(ogline, /^[^[:space:]]/)
-		temp = substr(ogline, beg)
-		# Get field name
-		split(temp, farray, "=")
-		fname = farray[1]
-		over=findoverrideinsection(fname, ogsection)
-		if (over == "")
-		{
-			# There is no override, keep the original
-			print ogline
-		}
-		else
-		{
-			# Print the override
-			print "vvv OVERRIDEN by Fo1in2 vvv"
-			print ";" ogline
-			print over
-			print "^^^ OVERRIDEN by Fo1in2 ^^^"
-		}
-	}
+END {
+	# Flush new sections
+	flush_array()
 }
 
+function flush_array(			section_name, n, sorted_idxs, i, separate)
 {
-	# Is this line in any section?
-	if (! isinsection)
+	section_name = ""	# empty (global)
+	# Sort the array by indexes
+	n = asorti(override_array, sorted_idxs, "@ind_str_asc")
+
+	# Loop in the sorted array
+	for (i = 1; i <= n; i++)
 	{
-		# No, it's global
-		# Is this line a header?
-		if ($0 ~ /^[[:space:]]*\[.+\][[:space:]]*$/)
+		# Recover indexes
+		split(sorted_idxs[i], separate, SUBSEP)
+		# Is it a new section?
+		if (separate[1] != section_name)
 		{
-			# Yes, it's a header
-			newheader = $0
-			# Flush global section
-			#flushglobal()
-			header = newheader
-			# Print header
-			print header
-			# Next lines belong to this section
-			isinsection = "true"
+			# Yes, new section
+			section_name = separate[1]
+			# Print it
+			print "[" section_name "] ; ADDED"
 		}
-		else
+		# Is it a line?
+		if (separate[3] == "line")
 		{
-			# No, it's a normal global line
-			inglobal($0)
-		}
-	}
-	else
-	{
-		# Yes, it's inside section $header
-		# Is this line a new header?
-		if ($0 ~ /^[[:space:]]*\[.+\][[:space:]]*$/)
-		{
-			# Yes, it's a header
-			newheader = $0
-			# Flush section
-			#flushsection($header)
-			header = newheader
-			# Print header
-			print header
-			# Next lines belong to this section
-			isinsection = "true"
-		}
-		else
-		{
-			# No, it's a normal line
-			# Trim initial whitespace
-			begm = match(header, /\[/)
-			endm = match(header, /\]/)
-			tempm = substr(header, begm+1, (endm-(begm+1)))
-			insection($0, tempm)
+			# Yes it is
+			print override_array[section_name, separate[2], "line"]
 		}
 	}
 }
