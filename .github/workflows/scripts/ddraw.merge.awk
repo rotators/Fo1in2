@@ -22,112 +22,84 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# awk -v override_file=override.ini -f mergeini.awk base.ini
+# awk -v override_file=override.ini -v adornments=inline -f mergeini.awk base.ini
 
 BEGIN {
 	# The override file name must be passed in the command line arguments with -v
-	if (! override_file) {
+	if (! override_file)
+	{
 		print ""
 		print "mergeini.awk: print into stdout the merge of an override and base .ini files"
 		print "Copyright (C) 2021 jalt"
-		print "Usage: awk -v override_file=<override.ini> -f mergeini.awk <base.ini>"
+		print "Usage: awk -v override_file=<override.ini> [-v adornments=<none|inline|around>] -f mergeini.awk <base.ini>"
 		print ""
 		exit 1
+	}
+	if (adornments != "inline" && adornments != "around")
+	{
+		adornments = ""
 	}
 
 	# Global variables
 	error = ""	# false
 	split("", override_array)	# empty array
 	split("", override_array_insertion_order)	# empty array
-	# Current base file section
 	base_section_name = ""	# empty (global)
-	# Pre-header (line immediately preceding a header)
 	preheader = "" # empty
 
-	# Parse the whole override file into an array
 	parse_override_file(override_array, override_array_insertion_order)
 }
 
-function parse_override_file(array,	array_i_o,		section_name, cnt, line, commented, prepend, start, end, name, sep, raw_value, value, trimmed_line)
+# Read and parse the whole override file into an array
+function parse_override_file(array,	array_i_o,		section_name, prepend, j, line, class, res)
 {
-	# Current section name
 	section_name = ""	# empty (global)
-
-	cnt = 0	# numeric
-	commented = ""	# false
-	prepend = "" # empty
+	prepend = ""	# empty
+	j = 0	# numeric
 
 	# Read override file
 	while ((getline line < (override_file)) > 0)
 	{
-		# Is this line a commented out normal line (;name=value)?
-		if (line ~ /^[[:space:]]*[;][[:space:]]*[^[:space:];=]+[[:space:]]*[=]/)
+		class = classify(line);
+		if (class == "header")
 		{
-			commented = "true"
-		}
-		else
-		{
-			commented = ""	# false
+			# New section name (subsequent lines belong to this section)
+			parse(line, res, class)
+			section_name = res["section"]
+			# Clear pending lines
+			prepend = ""	# empty
+			continue
 		}
 
-		# Is this line different from an ordinary comment or whitespace?
-		if (! ((line ~ /^[[:space:]]*[;].*$/ && ! commented) || line ~ /^[[:space:]]*$/))
+		if (class == "disabled" || class == "normal")
 		{
-			# Yes, keep processing it
-			# Is this line a header?
-			if (line ~ /^[[:space:]]*\[[^\];]+\][[:space:]]*(([;].*$)|$)/)
-			{
-				# Yes, it's a header
-				# Get new section name
-				start = match(line, /\[/)
-				end = match(line, /\]/)
-				section_name = substr(line, start+1, (end-(start+1)))
-				# Subsequent lines belong to this section
-				prepend = ""	# empty
-			}
-			else
-			{
-				# No, it's a normal line (possibly commented out)
-				# Get field name
-				start = match(line, /[^[:space:];]/)
-				end = match(line, /[[:space:]]*=/)
-				name = substr(line, start, (end-start))
-				# Get field value
-				sep = match(line, /=/)
-				raw_value = substr(line, sep+1)
-				start = match(raw_value, /^[^[:space:]]/)
-				end = match(raw_value, /[[:space:]]*(([;].*$)|$)/)
-				value = substr(raw_value, start, (end-start))
-				# Store everything in the array
-				# "" is a valid array index in awk (global)
-				array[section_name, name, "value"] = value
-				if (prepend == "")
-				{
-					array[section_name, name, "line"] = line
-				}
-				else
-				{
-					array[section_name, name, "line"] = prepend line
-				}
-				array_i_o[++cnt] = section_name SUBSEP name SUBSEP "value"
-				array_i_o[++cnt] = section_name SUBSEP name SUBSEP "line"
-				prepend = ""	# empty
-			}
+			# Store everything in the array
+			# "" is a valid array index in awk (global)
+			parse(line, res, class)
+			array[section_name, res["key"], "value"] = res["value"]
+			array[section_name, res["key"], "line"] = prepend line
+			array_i_o[++j] = section_name SUBSEP res["key"] SUBSEP "value"
+			array_i_o[++j] = section_name SUBSEP res["key"] SUBSEP "line"
+			# Clear pending lines
+			prepend = ""	# empty
+			continue
 		}
-		else
+
+		if (class == "whitespace")
 		{
-			# No, ignore it
-			if (line ~ /^[[:space:]]*$/)
-			{
-				prepend = "\n"
-			}
+			# Tentatively prepend an empty line to the next line
+			prepend = "\n"
+			continue
+		}
+
+		if (class == "comment" || class == "preheader")
+		{
+			# Tentatively prepend this to the next line
+			if (adornments == "inline")
+				prepend = prepend trim_trailing_whitespace(line) " ;ADDED\n"
 			else
-			{
-				# Trim line trailing whitespace
-				end = match(line, /[[:space:]]*$/)
-				trimmed_line = substr(line, 1, (end-1))
-				prepend = "\n" trimmed_line " ;ADDED\n"
-			}
+				prepend = prepend line
+			continue
 		}
 	}
 	close(override_file)
@@ -138,348 +110,400 @@ function parse_override_file(array,	array_i_o,		section_name, cnt, line, comment
 	main_loop()
 }
 
-function main_loop(			new_header, start, end, temp)
+# Do for every line in the base file
+function main_loop(			class, new_header, res)
 {
-	# Is this line a header?
-	if ($0 ~ /^[[:space:]]*\[[^\];]+\][[:space:]]*(([;].*$)|$)/)
+	class = classify($0);
+	if (class == "header")
 	{
-		# Yes, it's a header
+		# New section name (subsequent lines belong to this section)
 		new_header = $0
-		# Flush section
+		# Flush current section
 		flush_section(override_array, override_array_insertion_order, base_section_name)
-
 		# Print preheader, if available
-		if (preheader)
+		if (preheader != "")
 		{
 			print preheader
-			preheader=""
+			preheader = ""
 		}
 		# Print new header
 		print new_header
 		# Get new section name
-		start = match(new_header, /\[/)
-		end = match(new_header, /\]/)
-		base_section_name = substr(new_header, start+1, (end-(start+1)))
-		# Subsequent lines belong to this section
+		parse(new_header, res, class)
+		base_section_name = res["section"]
 	}
 	else
 	{
-		# No, it's a normal line, comment or whitespace
 		# Is there a pending preheader that was not consumed?
-		if (preheader)
+		if (preheader != "")
 		{
-			# Process it as a normal comment
-			process_base_line(preheader, base_section_name)
-			preheader=""
+			# Consider it a normal comment
+			print preheader
+			preheader = ""
 		}
-		# Is the current line a preheader?
-		if ($0 ~ /^[[:space:]]*[;][[:space:]]*[Xx]{3,}[[:space:]]*$/)
+
+		if (class == "preheader")
 		{
-			# Yes, it is, so hold on processing
+			# Hold on processing
 			preheader = $0
 		}
 		else
 		{
-			# No, resume processing
+			# Resume processing
 			preheader = ""	# empty
-			process_base_line($0, base_section_name)
+			if (class == "comment" || class == "whitespace")
+				print $0
+			else
+			{
+				if (class == "normal" || class == "disabled")
+					process_base_line($0, base_section_name, class)
+				else
+				{
+					# Invalid line found, proceed to END after signaling the fatal error
+					print "ERROR: Invalid line " NR " in file " FILENAME ". Aborting."
+					error = "true"
+					exit 1
+				}
+			}
 		}
 	}
 }
 
-function flush_section(array, array_i_o, section_name,			i, n, sorted_idxs, j, combined, separate, printonce, temp, end, trimmed_override_line, deletions, deletions_i_o)
+# Flush remaining lines in the array that belong to this section
+function flush_section(array, array_i_o, section_name,			j, n, sorted_idxs, i, separate, override_line, deletions, deletions_i_o)
 {
-	i = 0	# numeric
-	printonce = "true"
-	# (Re-)Sort the insertion order array by indexes
+	j = 0	# numeric
+	# Re-sort the insertion order array by indexes
 	n = asorti(array_i_o, sorted_idxs, "@ind_num_asc")
 	# Loop in the sorted array
-	for (j = 1; j <= n; j++)
+	for (i = 1; i <= n; i++)
 	{
-		combined = array_i_o[sorted_idxs[j]]
 		# Recover indexes
-		split(combined, separate, SUBSEP)
-		# Is this entry relevant?
+		split(array_i_o[sorted_idxs[i]], separate, SUBSEP)
 		if (separate[1] == section_name)
 		{
-			if (separate[3] == "value")
+			# This entry is in the desired section
+			if (adornments == "around")
 			{
-				# Mark entries for deletion
-				deletions[++i] = section_name SUBSEP separate[2] SUBSEP "value"
-				deletions_i_o[i] = sorted_idxs[j]
+				if (j == 0)
+					print ";v>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>v"
 			}
-			
+
 			if (separate[3] == "line")
 			{
-				if (printonce)
-				{
-					printonce = ""	# false
-				}
-				# Trim override line trailing whitespace
-				temp = array[section_name, separate[2], "line"]
-				end = match(temp, /[[:space:]]*$/)
-				trimmed_override_line = substr(temp, 1, (end-1))
-
-
 				# Print the override
-				print trimmed_override_line " ;ADDED"
-				# Mark entries for deletion
-				deletions[++i] = section_name SUBSEP separate[2] SUBSEP "line"
-				deletions_i_o[i] = sorted_idxs[j]
+				override_line = array[section_name, separate[2], "line"]
+				if (adornments == "inline")
+					print trim_trailing_whitespace(override_line) " ;ADDED"
+				else
+				{
+					print override_line
+				}
 			}
+			# Mark entry for deletion
+			++j
+			deletions[j] = section_name SUBSEP separate[2] SUBSEP separate[3]
+			deletions_i_o[j] = sorted_idxs[i]
 		}
 	}
-	
-	# Was anything printed?
-	if (printonce == "")
-	{
-		# Yes, so print a new line
+
+	# If anything was printed, print an empty line
+	if (j > 0) {
+		if (adornments == "around")
+			print ";^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>^"
 		print ""
 	}
 
-	# Remove entries from arrays	
-	i = "" # empty
+	# Remove entries from arrays
 	for (i in deletions)
-	{
 		delete array[deletions[i]];
-	}
-	i = "" # empty
 	for (i in deletions_i_o)
-	{
 		delete array_i_o[deletions_i_o[i]];
-	}
 }
 
-function process_base_line(base_line, section_name,			commented, start, end, base_name, override_line, trimmed_base_line, sep, raw_value, base_value, override_value, n, tmp_array, is_override_commented, i, m, deletions_i_o, trimmed_override_line)
+function process_base_line(base_line, section_name, base_class,			base_res, override_value, override_line, j, k, deletions_i_o, override_line_count, tmp_array, trimmed_base_line, trimmed_override_line)
 {
-	commented = ""	# false
-
-	# Is this line whitespace?
-	if (base_line ~ /^[[:space:]]*$/)
+	parse(base_line, base_res, base_class)
+	# Find override
+	if ((section_name, base_res["key"], "value") in override_array)
 	{
-		# Yes, print it through
-		print base_line
-		return 1	# an expression is required following the return statement
-	}
-
-	# Is this line a commented out normal line (;name=value)?
-	if (base_line ~ /^[[:space:]]*[;][[:space:]]*[^[:space:];=]+[[:space:]]*[=]/)
-	{
-		commented = "true"
-	}
-	else
-	{
-		# Is this line an ordinary comment?
-		if (base_line ~ /^[[:space:]]*[;].*$/)
+		override_value = override_array[section_name, base_res["key"], "value"]
+		override_line = override_array[section_name, base_res["key"], "line"]
+		# Clean up arrays
+		delete override_array[section_name, base_res["key"], "value"]
+		delete override_array[section_name, base_res["key"], "line"]
+		j = 0	# numeric
+		for (k in override_array_insertion_order)
 		{
-			# Yes, print it through
-			print base_line
-			return 1	# an expression is required following the return statement
-		}
-	}
-
-	# Is this line a (possibly commented out) normal line (name=value)?
-	if (base_line ~ /^[[:space:]]*[^[:space:];=]+[[:space:]]*[=]/ || commented)
-	{
-		# This is a normal line (though possibly commented out)
-		# Get field name
-		start = match(base_line, /[^[:space:];]/)
-		end = match(base_line, /[[:space:]]*=/)
-		base_name = substr(base_line, start, (end-start))
-		# Find override
-		if ((section_name, base_name, "value") in override_array)
-		{
-			# There is an override
-			# Trim base line trailing whitespace
-			end = match(base_line, /[[:space:]]*$/)
-			trimmed_base_line = substr(base_line, 1, (end-1))
-
-			# Get base value
-			sep = match(base_line, /=/)
-			raw_value = substr(base_line, sep+1)
-			start = match(raw_value, /^[^[:space:]]/)
-			end = match(raw_value, /[[:space:]]*(([;].*$)|$)/)
-			base_value = substr(raw_value, start, (end-start))
-
-			# Get override
-			override_value = override_array[section_name, base_name, "value"]
-			override_line = override_array[section_name, base_name, "line"]
-
-			n = split(override_line, tmp_array, "\n")
-			# Is the override commented out?
-			if (tmp_array[n] ~ /^[[:space:]]*[;].*$/)
+			if ((override_array_insertion_order[k] == section_name SUBSEP base_res["key"] SUBSEP "value") || (override_array_insertion_order[k] == section_name SUBSEP base_res["key"] SUBSEP "line"))
 			{
-				is_override_commented = "true"
+				deletions_i_o[++j] = k
 			}
+		}
+		for (j in deletions_i_o)
+			delete override_array_insertion_order[deletions_i_o[j]];
+
+		# The override may have prepended comments or an empty line
+		override_line_count = split(override_line, tmp_array, "\n")
+		# Classify the override
+		override_class = classify(tmp_array[override_line_count]);
+
+		# Trim trailing whitespace
+		trimmed_base_line = trim_trailing_whitespace(base_line)
+		trimmed_override_line = trim_leading_newline(override_line)
+
+		# Is the override the same as the base?
+		if (base_res["value"] == override_value)
+		{
+			if (override_class == "disabled")
+				print base_line
 			else
 			{
-				is_override_commented = ""
-			}
-			# Clean up arrays
-			delete override_array[section_name, base_name, "value"]
-			delete override_array[section_name, base_name, "line"]
-
-			i = 0	# numeric
-			for (m in override_array_insertion_order)
-			{
-				if (override_array_insertion_order[m] == section_name SUBSEP base_name SUBSEP "value")
+				if (base_class == "normal")
 				{
-					deletions_i_o[++i] = m
-				}
-				if (override_array_insertion_order[m] == section_name SUBSEP base_name SUBSEP "line")
-				{
-					deletions_i_o[++i] = m
-				}
-			}
-			i = "" # empty
-			for (i in deletions_i_o)
-			{
-				delete override_array_insertion_order[deletions_i_o[i]];
-			}
-
-			# Is the override the same as the base?
-			if (base_value == override_value)
-			{
-				# Yes, same value
-				# Keep the base line
-				if (! commented)
-				{
-					if (is_override_commented)
-					{
-						print base_line
-					}
+					if (adornments == "inline")
+						print trimmed_base_line " ;FORCED"
 					else
 					{
-						print trimmed_base_line " ;FORCED"
+						if (adornments == "around")
+						{
+							print ";v================================================v"
+							print base_line
+							print ";^================================================^"
+						}
+						else
+							print base_line
 					}
 				}
 				else
 				{
-					if (is_override_commented)
-					{
-						print base_line
-					}
-					else
+					if (adornments == "inline")
 					{
 						# Remove ; in-place
 						sub(/;/, "", trimmed_base_line)
-						# Print the enabled base line
 						print trimmed_base_line " ;ENABLED"
 					}
-				}
-			}
-			else
-			{
-				# No, different value
-				if (! commented)
-				{
-					if (is_override_commented)
-					{
-						print base_line
-					}
 					else
 					{
-						# Comment the base line
-						print ";" trimmed_base_line " ;OVERRIDDEN"
-						# Trim override line leading NL, if present
-						start = match(override_line, /[^\n]/)
-						trimmed_override_line = substr(override_line, start)
-						# Print the override
-						print trimmed_override_line
-					}
-				}
-				else
-				{
-					if (is_override_commented)
-					{
-						# Keep commented out base line
-						print base_line
-						# Trim override line trailing whitespace and leading NL, if present
-						start = match(override_line, /[^\n]/)
-						end = match(override_line, /[[:space:]]*$/)
-						trimmed_override_line = substr(override_line, start, (end-start))
-						# Print the override
-						print trimmed_override_line " ;ADDED"
-					}
-					else
-					{
-						# Keep commented out base line
-						print base_line
-						# Trim override line trailing whitespace and leading NL, if present
-						start = match(override_line, /[^\n]/)
-						end = match(override_line, /[[:space:]]*$/)
-						trimmed_override_line = substr(override_line, start, (end-start))
-						# Print the override
-						print trimmed_override_line " ;ADDED"
+						if (adornments == "around")
+						{
+							print ";vEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv"
+							sub(/;/, "", base_line)
+							print base_line
+							print ";^EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE^"
+						}
+						else
+						{
+							# Remove ; in-place
+							sub(/;/, "", base_line)
+							print base_line
+						}
 					}
 				}
 			}
 		}
 		else
 		{
-			# There is no override, keep the base line
-			print base_line
+			if (base_class == "normal")
+			{
+				if (override_class == "disabled")
+					print base_line
+				else
+				{
+					if (adornments == "inline")
+					{
+						# Comment the base line
+						print ";" trimmed_base_line " ;OVERRIDDEN"
+						# Print the override
+						print trimmed_override_line
+					}
+					else
+					{
+						if (adornments == "around")
+						{
+							print ";v<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<v"
+							# Comment the base line
+							print ";" base_line
+							print trimmed_override_line
+							print ";^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>^"
+						}
+						else
+						{
+							# Comment the base line
+							print ";" base_line
+							# Print the override
+							print trimmed_override_line
+						}
+					}
+				}
+			}
+			else
+			{
+				if (adornments == "inline")
+				{
+					# Keep commented out base line
+					print base_line
+					# Print the override
+					print trim_trailing_whitespace(trimmed_override_line) " ;ADDED"
+				}
+				else
+				{
+					if (adornments == "around")
+					{
+						print ";v================================================v"
+						# Keep commented out base line
+						print base_line
+						# Print the override
+						print trimmed_override_line
+						print ";^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>^"
+					}
+					else
+					{
+						# Keep commented out base line
+						print base_line
+						# Print the override
+						print trimmed_override_line
+					}
+				}
+			}
 		}
 	}
 	else
 	{
-		# Invalid line
-		print "ERROR: Invalid line " NR ". Aborting."
-		error = "true"
-		exit 1
+		# There is no override, keep the base line
+		print base_line
 	}
 }
 
 END {
-	# Was there an error?
+	# Flush any remaining array entries, unless there was an error
 	if (error)
-	{
-		# Yes, exit immediately
 		exit 1
-	}
 	else
-	{
-		# No, all is fine
-		# Flush new sections
 		flush_array()
-	}
 }
 
-function flush_array(			section_name, n, sorted_idxs, i, separate)
+# Flush remaining lines in the array
+function flush_array(			section_name, n, sorted_idxs, i, ran_once, separate)
 {
-	# Flush last section
+	# Flush current (last) section
 	flush_section(override_array, override_array_insertion_order, base_section_name)
+
 	# Is there a pending preheader that was not consumed?
-	if (preheader)
+	if (preheader != "")
 	{
-		# Process it as a normal comment
-		process_base_line(preheader, base_section_name)
+		# Process it as an ordinary comment
+		print preheader
+		preheader = ""
+		# Print an empty line
 		print ""
-		preheader=""
 	}
 
+	ran_once = ""	# false
 	section_name = ""	# empty (global)
-	# (Re-)Sort the insertion order array by indexes
+	# Re-sort the insertion order array by indexes
 	n = asorti(override_array_insertion_order, sorted_idxs, "@ind_num_asc")
 	# Loop in the sorted array
 	for (i = 1; i <= n; i++)
 	{
 		# Recover indexes
 		split(override_array_insertion_order[sorted_idxs[i]], separate, SUBSEP)
-		# Is it a new section?
 		if (separate[1] != section_name)
 		{
-			# Yes, new section
+			if (adornments == "around" && ! ran_once)
+			{
+				print ";v>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>v"
+				ran_once = "true"
+			}
+			# New section name (subsequent lines belong to this section)
 			section_name = separate[1]
-			# Print it
 			print ";XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-			print "[" section_name "] ; ADDED"
+			if (adornments == "inline")
+				print "[" section_name "] ; ADDED"
+			else
+				print "[" section_name "]"
 		}
-		# Is it a line?
 		if (separate[3] == "line")
 		{
-			# Yes it is
+			# Print override
 			print override_array[section_name, separate[2], "line"]
 		}
 	}
+	if (adornments == "around" && ran_once)
+	{
+		print ";^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>^"
+	}
+}
+
+# Classify a line
+function classify(line)
+{
+	if (line ~ /^[[:space:]]*$/)
+		return "whitespace"	
+
+	if (line ~ /^[[:space:]]*[;][[:space:]]*[^[:space:];=]+[[:space:]]*[=]/)
+		return "disabled"
+
+	if (line ~ /^[[:space:]]*[;][[:space:]]*[Xx]{3,}[[:space:]]*$/)
+		return "preheader"
+
+	if (line ~ /^[[:space:]]*[;].*$/)
+		return "comment"
+
+	if (line ~ /^[[:space:]]*\[[^\];]+\][[:space:]]*(([;].*$)|$)/)
+		return "header"
+
+	if (line ~ /^[[:space:]]*[^[:space:];=]+[[:space:]]*[=]/)
+		return "normal"
+
+	return "invalid"
+}
+
+# Parse a "normal", "disabled", or "header" line into a result array
+function parse(line, result, opt_classification,			start, end, sep, raw_value)
+{
+	# Clear result array
+	split("", result)	# empty array
+
+	# If unclassified, classify
+	if (opt_classification == "")
+		opt_classification = classify(line)
+
+	if (opt_classification == "header")
+	{
+		# Get section name
+		start = match(line, /\[/)
+		end = match(line, /\]/)
+		result["section"] = substr(line, start+1, (end-(start+1)))
+	}
+	else
+	{
+		if (opt_classification == "normal" || opt_classification == "disabled")
+		{
+			# Get key
+			start = match(line, /[^[:space:];]/)
+			end = match(line, /[[:space:]]*=/)
+			result["key"] = substr(line, start, (end-start))
+			# Get value
+			sep = match(line, /=/)
+			raw_value = substr(line, sep+1)
+			start = match(raw_value, /[^[:space:]]/)
+			end = match(raw_value, /[[:space:]]*(([;].*$)|$)/)
+			result["value"] = substr(raw_value, start, (end-start))
+		}
+	}
+}
+
+# Trim trailing whitespace
+function trim_trailing_whitespace(line,			end)
+{
+	end = match(line, /[[:space:]]*$/)
+	return substr(line, 1, (end-1))
+}
+
+# Trim leading newline
+function trim_leading_newline(line,			start)
+{
+	start = match(line, /[^\n]/)
+	return substr(line, start)
 }
