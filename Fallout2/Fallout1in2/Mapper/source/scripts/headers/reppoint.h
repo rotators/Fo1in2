@@ -96,9 +96,9 @@
 /* Reputation Checks */
 #define has_rep_childkiller     (global_var(GVAR_CHILDKILLER_REPUTATION) >= 2)
 
-#define has_rep_champion        (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and \
-                                ((global_var(GVAR_BAD_MONSTER) > (3 * global_var(GVAR_GOOD_MONSTER))) or    \
-                                (global_var(GVAR_CHAMPION_REPUTATION) == 1))) // Childkiller-check was added in Fo2. Removed it for now.
+#define has_rep_champion        (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and                          \
+                                ((global_var(GVAR_BAD_MONSTER) > (3 * global_var(GVAR_GOOD_MONSTER))) or                             \
+                                (global_var(GVAR_CHAMPION_REPUTATION) == 1)) and (global_var(GVAR_CHILDKILLER_REPUTATION) == 0))
 
 #define has_rep_berserker       (((global_var(GVAR_BAD_MONSTER) + global_var(GVAR_GOOD_MONSTER)) >= 25) and \
                                 ((global_var(GVAR_GOOD_MONSTER) > (2 * global_var(GVAR_BAD_MONSTER))) or    \
