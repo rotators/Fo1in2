@@ -31,11 +31,11 @@ BEGIN {
 		print ""
 		print "mergeini.awk: print into stdout the merge of an override and base .ini files"
 		print "Copyright (C) 2021 jalt"
-		print "Usage: awk -v override_file=<override.ini> [-v adornments=<none|inline|around>] -f mergeini.awk <base.ini>"
+		print "Usage: awk -v override_file=<override.ini> [-v adornments=<none|minimal|inline|around>] -f mergeini.awk <base.ini>"
 		print ""
 		exit 1
 	}
-	if (adornments != "inline" && adornments != "around")
+	if (adornments != "minimal" && adornments != "inline" && adornments != "around")
 	{
 		adornments = ""
 	}
@@ -44,14 +44,18 @@ BEGIN {
 	error = ""	# false
 	split("", override_array)	# empty array
 	split("", override_array_insertion_order)	# empty array
+	split("", override_array_status)	# empty array
 	base_section_name = ""	# empty (global)
 	preheader = "" # empty
-
-	parse_override_file(override_array, override_array_insertion_order)
+	example_preheader[0] = ""
+	example_preheader[1] = ";XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	example_preheader[2] = ";##################################################################################################################"
+	last_seen_preheader = 0
+	parse_override_file(override_array, override_array_insertion_order, override_array_status)
 }
 
 # Read and parse the whole override file into an array
-function parse_override_file(array,	array_i_o,		section_name, prepend, j, line, class, res)
+function parse_override_file(array,	array_i_o, array_status,		section_name, prepend, j, line, class, res)
 {
 	section_name = ""	# empty (global)
 	prepend = ""	# empty
@@ -80,6 +84,7 @@ function parse_override_file(array,	array_i_o,		section_name, prepend, j, line, 
 			array[section_name, res["key"], "line"] = prepend line
 			array_i_o[++j] = section_name SUBSEP res["key"] SUBSEP "value"
 			array_i_o[++j] = section_name SUBSEP res["key"] SUBSEP "line"
+			array_status[section_name, res["key"]] = "new"
 			# Clear pending lines
 			prepend = ""	# empty
 			continue
@@ -224,6 +229,68 @@ function flush_section(array, array_i_o, section_name,			j, n, sorted_idxs, i, s
 function process_base_line(base_line, section_name, base_class,			base_res, override_value, override_line, j, k, deletions_i_o, override_line_count, tmp_array, trimmed_base_line, trimmed_override_line)
 {
 	parse(base_line, base_res, base_class)
+
+	# Check status
+	if ((section_name, base_res["key"]) in override_array_status)
+	{
+		if (override_array_status[section_name, base_res["key"]] == "new")
+		{
+			# This new entry is now seen
+			override_array_status[section_name, base_res["key"]] = "seen"
+		}
+		else
+		{
+			# This entry had been seen (and thus processed) before
+			if (base_class == "disabled")
+			{
+				if (adornments == "inline")
+				{
+					# Keep commented out base line
+					print trim_trailing_whitespace(base_line) " ;KEPT"
+				}
+				else
+				{
+					if (adornments == "around")
+					{
+						print ";v================================================v"
+						# Keep commented out base line
+						print base_line
+						print ";^================================================^"
+					}
+					else
+					{
+						# Keep commented out base line
+						print base_line
+					}
+				}
+			}
+			else
+			{
+				if (adornments == "inline")
+				{
+					# Comment out base line
+					print ";" trim_trailing_whitespace(base_line) " ;IGNORED"
+				}
+				else
+				{
+					if (adornments == "around")
+					{
+						print ";vIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIv"
+						# Comment out base line
+						print ";" base_line
+						print ";^IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII^"
+					}
+					else
+					{
+						# Comment out base line
+						print ";" base_line
+					}
+				}
+			}
+			return 1	# POSIX requires an expression, or the return value will be undefined
+		}
+	}
+
 	# Find override
 	if ((section_name, base_res["key"], "value") in override_array)
 	{
@@ -248,7 +315,7 @@ function process_base_line(base_line, section_name, base_class,			base_res, over
 		# Classify the override
 		override_class = classify(tmp_array[override_line_count]);
 
-		# Trim trailing whitespace
+		# Trim whitespace
 		trimmed_base_line = trim_trailing_whitespace(base_line)
 		trimmed_override_line = trim_leading_newline(override_line)
 
@@ -329,8 +396,11 @@ function process_base_line(base_line, section_name, base_class,			base_res, over
 						}
 						else
 						{
-							# Comment the base line
-							print ";" base_line
+							if (adornments == "minimal")
+							{
+								# Comment the base line
+								print ";" base_line
+							}
 							# Print the override
 							print trimmed_override_line
 						}
@@ -359,8 +429,11 @@ function process_base_line(base_line, section_name, base_class,			base_res, over
 					}
 					else
 					{
-						# Keep commented out base line
-						print base_line
+						if (adornments == "minimal")
+						{
+							# Keep commented out base line
+							print base_line
+						}
 						# Print the override
 						print trimmed_override_line
 					}
@@ -417,7 +490,7 @@ function flush_array(			section_name, n, sorted_idxs, i, ran_once, separate)
 			}
 			# New section name (subsequent lines belong to this section)
 			section_name = separate[1]
-			print ";XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+			print example_preheader[last_seen_preheader]
 			if (adornments == "inline")
 				print "[" section_name "] ; ADDED"
 			else
@@ -445,7 +518,16 @@ function classify(line)
 		return "disabled"
 
 	if (line ~ /^[[:space:]]*[;][[:space:]]*[Xx]{3,}[[:space:]]*$/)
+	{
+		last_seen_preheader = 1
 		return "preheader"
+	}
+
+	if (line ~ /^[[:space:]]*[;][[:space:]]*[\043]{3,}[[:space:]]*$/)
+	{
+		last_seen_preheader = 2
+		return "preheader"
+	}
 
 	if (line ~ /^[[:space:]]*[;].*$/)
 		return "comment"
