@@ -369,7 +369,7 @@
 #define GVAR_TORCH_TIME_LEFT                    (1230)
 #define GVAR_MASTER_FILLER_4                    (1231)
 #define GVAR_MASTER_FILLER_5                    (1232)
-#define GVAR_MASTER_FILLER_6                    (1233)
+#define GVAR_JEREMIAH_STATUS                    (1233)
 #define GVAR_HOLODISK_VATS_GREY                 (1234)
 #define GVAR_HOLODISK_VATS_MAXSON               (1235)
 #define GVAR_VANCE_KNOWS_PLAYER                 (1236)
