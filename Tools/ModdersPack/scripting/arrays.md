@@ -16,7 +16,7 @@ list[5] := "Value";
 ```
 
 There are 2 different types of arrays currently available:
-* Lists - a set of values with specific size (number of elements), where all elements have numeric indexes starting from zero (0) up to array length minus one.
+* **Lists** - a set of values with specific size (number of elements), where all elements have numeric indexes starting from zero (0) up to array length minus one.
 
   For example:
   ```js
@@ -29,7 +29,7 @@ There are 2 different types of arrays currently available:
   - to assign value to a specific index, you must first resize array to contain this index
   (for example, if list is of size 3 (indexes from 0 to 2), you can't assign value to index 4 unless you change list size to 5 first).
 
-* Maps (or associative arrays) - a set of key=>value pairs, where all elements (values) are accessed by corresponding keys.
+* **Maps** (or associative arrays) - a set of key=>value pairs, where all elements (values) are accessed by corresponding keys.
 
   Differences from list:
   - maps don't have specific size (to assign values, you don't need to resize array first);
@@ -156,15 +156,14 @@ end
 ___
 ### ARRAY OPERATORS REFERENCE
 
-**mixed means any type*
+_*mixed means any type_
 
 **`int create_array(int size, int flags)`**
 - creates permanent array (but not "saved")
 - if `size >= 0`, creates list with given size
 - if `size == -1`, creates map (associative array)
-- if `size == -1` and `flags == 2`, creates a "lookup" map (associative array) in which the values of existing keys are read-only and can't be updated.
-This type of array allows you to store a zero (0) key value
-- NOTE: in earlier versions (up to 4.1.3/3.8.13) the second argument is not used, just use 0
+- if `size == -1` and `flags == 2`, creates a "lookup" map (associative array) in which the values of existing keys are read-only and can't be updated. This type of array allows you to store a zero (0) key value
+  * NOTE: in earlier versions (up to 4.1.3/3.8.13) the second argument is not used, just use 0
 - returns array ID (valid until array is deleted)
 
 **`int temp_array(int size, int flags)`**
@@ -178,7 +177,7 @@ This type of array allows you to store a zero (0) key value
 - if used on list, "key" must be numeric and within valid index range (0..size-1)
 - if used on map, key can be of any type
 - to "unset" a value from map, just set it to zero (0)
-- NOTE: to add a value of 0 for the key, use the float value of 0.0
+  * NOTE: to add a value of 0 for the key, use the float value of 0.0
 - this works exactly like statement: `arrayID[key] := value;`
 
 **`mixed get_array(int arrayID, mixed key)`**
