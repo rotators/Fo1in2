@@ -26,5 +26,8 @@ Not to forget:
 
 This project is a more accessible modding platform and allows the creation of complex modifications, which wouldn't be possible with the engine of the first game!
 
+## Download
+[Latest version](https://github.com/rotators/Fo1in2/releases/latest/download/Fallout1in2.zip)
+
 ## Installation
 See [installation instructions](Fallout2/Fallout1in2/README.md#mod-installation).
