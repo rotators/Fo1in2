@@ -10,6 +10,7 @@ procedure use_stuff;
 procedure pick_lock;
 
 variable unlocked;
+variable bonus;
 
 procedure start begin
 end
@@ -29,7 +30,14 @@ procedure use_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-   if (obj_pid(obj_being_used_with) == PID_ELECTRONIC_LOCKPICKS) then begin
+   variable Item := obj_pid(obj_being_used_with);
+
+   if (Item == PID_ELECTRONIC_LOCKPICKS) then begin
+      bonus := -20;
+      call pick_lock;
+   end
+   else if (Item == PID_ELEC_LOCKPICK_MKII) then begin
+      bonus := -10;
       call pick_lock;
    end
 end
@@ -51,7 +59,7 @@ procedure pick_lock begin
       display_msg(mstr(102));
    end
    else begin
-      if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20))) then begin
+      if (is_success(roll_vs_skill(dude_obj, SKILL_LOCKPICK, bonus))) then begin
          display_msg(mstr(103));
          unlocked := 1;
       end

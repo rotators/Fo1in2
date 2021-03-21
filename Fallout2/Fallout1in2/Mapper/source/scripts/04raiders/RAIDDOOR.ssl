@@ -70,20 +70,27 @@ procedure description_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
+   variable item := obj_pid(obj_being_used_with);
    variable LVar0 := 0;
-   variable LVar1 := 0;
+   variable test := 0;
    LVar0 := obj_being_used_with;
-   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-   if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
+   
+   if (item == PID_LOCKPICKS or item == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
-      if (is_success(LVar1)) then begin
+      
+      if (item == PID_EXP_LOCKPICK_SET) then
+         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
+      else
+         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+         
+      if (is_success(test)) then begin
          set_local_var(0, 1);
          display_msg(mstr(100));//{100}{}{You unlock the door.}
 
          give_xp(EXP_LOCKPICK_NORMAL);
       end
       else begin
-         if (is_critical(LVar1)) then begin
+         if (is_critical(test)) then begin
             rm_obj_from_inven(dude_obj, LVar0);
             destroy_object(LVar0);
             display_msg(mstr(101));//{101}{}{You broke your lockpicks!}

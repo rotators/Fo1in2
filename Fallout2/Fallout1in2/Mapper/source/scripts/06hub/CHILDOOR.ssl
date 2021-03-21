@@ -77,42 +77,47 @@ end
 
 procedure use_obj_on_p_proc begin
    variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := obj_being_used_with;
-   if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
+   variable test := 0;
+   variable item := obj_being_used_with;
+   
+   if (obj_pid(item) == PID_LOCKPICKS or obj_pid(item) == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
       if (map_var(5) == 0) then begin
          if (dude_is_sneaking != 1) then begin
             set_map_var(4, 1);
          end
          else begin
-            LVar1 := roll_vs_skill(dude_obj, SKILL_SNEAK, 0);
-            if (is_success(LVar1) != 1) then begin
+            test := roll_vs_skill(dude_obj, SKILL_SNEAK, 0);
+            if (is_success(test) != 1) then begin
                set_map_var(4, 1);
             end
             else begin
-               LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-               if (is_success(LVar1)) then begin
+               if (obj_pid(item) == PID_EXP_LOCKPICK_SET) then 
+                  test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 25);
+               else
+                  test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+                  
+               if (is_success(test)) then begin
                   set_local_var(0, 1);
                   display_msg(mstr(100));//{100}{}{You unlock the door.}
                end
-               else if (is_critical(LVar1)) then begin
-                  rm_obj_from_inven(dude_obj, LVar0);
-                  destroy_object(LVar0);
+               else if (is_critical(test)) then begin
+                  rm_obj_from_inven(dude_obj, item);
+                  destroy_object(item);
                   display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
                end
             end
          end
       end
       else begin
-         LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
-         if (is_success(LVar1)) then begin
+         test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 20);
+         if (is_success(test)) then begin
             set_local_var(0, 1);
             display_msg(mstr(100));//{100}{}{You unlock the door.}
          end
-         else if (is_critical(LVar1)) then begin
-            rm_obj_from_inven(dude_obj, LVar0);
-            destroy_object(LVar0);
+         else if (is_critical(test)) then begin
+            rm_obj_from_inven(dude_obj, item);
+            destroy_object(item);
             display_msg(mstr(101));//{101}{}{You broke your lockpicks!}
          end
       end
