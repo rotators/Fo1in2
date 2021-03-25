@@ -377,6 +377,7 @@
 #define set_map_enter_position(tile, elev, rot)                 sfall_func3("set_map_enter_position", tile, elev, rot)
 #define set_object_data(obj, offset, value)                     sfall_func3("set_object_data", obj, offset, value)
 #define set_outline(obj, color)                                 sfall_func2("set_outline", obj, color)
+#define set_quest_failure_value(gvar, threshold)                sfall_func2("set_quest_failure_value", gvar, threshold)
 #define set_rest_heal_time(time)                                sfall_func1("set_rest_heal_time", time)
 #define set_rest_mode(mode)                                     sfall_func1("set_rest_mode", mode)
 #define set_terrain_name(x, y, name)                            sfall_func3("set_terrain_name", x, y, name)
