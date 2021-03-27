@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 //#include "maps/junkcsno.h"
+#include "maps/junkkill.h"
 
 #define NAME                    SCRIPT_JTGENGRD
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_JUNKTOWN)
@@ -58,11 +59,17 @@ variable initial := 0;
 variable sneaking;
 variable warned_about_picking;
 variable waypoint;
+variable Shopguard_ptr;
 
 #define LVAR_Home_Tile                  (5)
 #define LVAR_Home_Rotation              (6)
 
+#define shopguard_hex (24874)
+
 procedure start begin
+   if (self_tile == shopguard_hex) then begin
+      Shopguard_ptr := self_obj;
+   end
 end
 
 procedure critter_p_proc begin
@@ -77,6 +84,12 @@ procedure critter_p_proc begin
          end
          else if (self_cur_rot != local_var(LVAR_Home_Rotation)) then begin
             self_rotate(local_var(LVAR_Home_Rotation));
+         end
+
+         // Player spotted inside Darkwater's shop at night
+         if (not(day) and (tmp_hostile != 1) and Shopguard_ptr == self_obj and self_can_see_dude) then begin
+            float_msg(self_obj, mstr(138), FLOAT_MSG_RED);
+            tmp_hostile := 1;
          end
 
          if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12)) then begin
@@ -98,8 +111,8 @@ procedure critter_p_proc begin
                dialogue_system_enter;
             end
             else if (CUR_MAP_JUNKKILL) then begin
-               if ((map_var(8) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
-                  set_map_var(8, 0);
+               if ((map_var(MVAR_dude_messing_with_Killians_door) == 1) and (tile_distance_objs(self_obj, dude_obj) < 8)) then begin
+                  set_map_var(MVAR_dude_messing_with_Killians_door, 0);
                   float_msg(self_obj, mstr(136), FLOAT_MSG_RED);
                   if (warned_about_picking) then begin
                      tmp_hostile := 1;

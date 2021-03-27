@@ -19,6 +19,7 @@
 /* Standard Script Procedures */
 procedure start;
 procedure critter_p_proc;
+procedure timed_event_p_proc;
 procedure destroy_p_proc;
 procedure look_at_p_proc;
 procedure map_enter_p_proc;
@@ -173,6 +174,8 @@ variable remove_dude;
 #define LVAR_Sleeping         (7)
 #define LVAR_Money            (10)
 
+#define EVENT_TRESPASS     (1)
+
 variable barter_mod := 0;
 #ifndef barter_mod_initial
    #define barter_mod_initial       (25)    // vanilla : 0
@@ -193,31 +196,17 @@ procedure critter_p_proc begin
          attack(dude_obj);
       end
       else begin
-         if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and (tile_distance_objs(self_obj, dude_obj) < 12) and self_can_see_dude and (CUR_MAP_JUNKKILL)) then begin
+         if ((game_time_hour >= sleep_time) or (game_time_hour < 700) and self_can_see_dude and (CUR_MAP_JUNKKILL)) then begin
             ILLEGAL := 1;
             TRESPASS := 1;
             dialogue_system_enter;
-         end
-         if (map_var(MVAR_dude_messing_with_Killians_home) == 1) then begin
-            if ((CUR_MAP_JUNKKILL) and (local_var(7) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12) and (self_can_see_dude or self_can_hear_dude)) then begin
-               set_map_var(MVAR_dude_messing_with_Killians_home, 0);
-               ILLEGAL := 1;
-               TRESPASS := 1;
-               dialogue_system_enter;
-            end
-            else begin
-               ILLEGAL := 0;
-               TRESPASS := 0;
-               set_map_var(MVAR_dude_messing_with_Killians_home, 0);
-            end
          end
          if (self_can_see_dude and (tile_distance_objs(self_obj, dude_obj) < 12) and map_var(MVAR_helped_Killian) and (CUR_MAP_JUNKKILL)) then begin
             dialogue_system_enter;
          end
 
          sleeping
-
-         if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(7) == 0)) then begin
+         if ((game_time_hour >= wake_time) and (game_time_hour < sleep_time) and (local_var(LVAR_Sleeping) == 0)) then begin
             if (self_tile != home_tile) then begin
                self_walk_to_tile(home_tile);
             end
@@ -228,7 +217,7 @@ procedure critter_p_proc begin
             end
          end
          if (Killian_barter_var != 0) then begin
-            if ((local_var(7) == 0) and (CUR_MAP_JUNKKILL)) then begin
+            if ((local_var(LVAR_Sleeping) == 0) and (CUR_MAP_JUNKKILL)) then begin
                if (tile_distance_objs(self_obj, dude_obj) < 12) then begin
                   dialogue_system_enter;
                end
@@ -240,6 +229,18 @@ procedure critter_p_proc begin
                Killian_barter_var := 0;
             end
          end
+      end
+   end
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_TRESPASS) then begin
+      ILLEGAL := 0;
+      TRESPASS := 0;
+      if ((local_var(LVAR_Sleeping) == 0) and (tile_distance_objs(self_obj, dude_obj) < 12) and (self_can_see_dude or self_can_hear_dude)) then begin
+         ILLEGAL := 1;
+         TRESPASS := 1;
+         dialogue_system_enter;
       end
    end
 end
@@ -342,7 +343,7 @@ procedure talk_p_proc begin
    LVar2 := self_item(PID_KNIFE);
    rm_obj_from_inven(self_obj, LVar2);
 
-   if ((local_var(7) == 1) and (TRESPASS == 0) and not(Killian_barter_var == -1)) then begin
+   if ((local_var(LVAR_Sleeping) == 1) and (TRESPASS == 0) and not(Killian_barter_var == -1)) then begin
       float_msg(self_obj, message_str(SCRIPT_GENVAULT, 166), FLOAT_MSG_NORMAL);
    end
    else begin
@@ -428,7 +429,7 @@ procedure talk_p_proc begin
    end
 
    // Spawn Kenji
-   if ((map_var(MVAR_assassin_seed) == 1) and (local_var(7) == 0) and (global_var(GVAR_HIRED_BY_GIZMO) == 0)) then begin
+   if ((map_var(MVAR_assassin_seed) == 1) and (local_var(LVAR_Sleeping) == 0) and (global_var(GVAR_HIRED_BY_GIZMO) == 0)) then begin
       LVar1 := create_object_sid(PID_KENJI, 0, 0, SCRIPT_KENJI);
       item := create_object(PID_HUNTING_RIFLE, 0, 0);
       add_obj_to_inven(LVar1, item);
