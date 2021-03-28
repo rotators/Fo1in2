@@ -9,3 +9,4 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
 - **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
 - **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
+- **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.
