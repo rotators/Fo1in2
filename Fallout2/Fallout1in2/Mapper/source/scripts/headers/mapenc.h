@@ -689,7 +689,7 @@ procedure falling_from_cliff begin
    variable hp_cur := 0;
 
    display_msg(message_str(SCRIPT_RNDMTN, 114));
-   main_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (5 * dude_perception) ));
+   main_roll := roll_vs_skill(dude_obj, SKILL_OUTDOORSMAN, ((20 * dude_perk(PERK_survivalist)) - (5 * dude_perception)));
    if (not(is_success(main_roll))) then begin
       if ((random(1, 100) >= 95) or is_critical(main_roll)) then begin
          display_msg(message_str(SCRIPT_RNDMTN, 118));
