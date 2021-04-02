@@ -9,6 +9,12 @@ Arrays can be extremely useful for some more advanced scripting, in conjunction 
 ***
 ### ARRAYS CONCEPT
 
+Arrays are created and manipulated with the array functions. An array must first be created with `create_array` or `temp_array`, specifying how many data elements the array can hold. You can store any of ints, floats and strings in an array, and can mix all 3 in a single array. The ID returned by `create/temp_array` can then be used with the other array functions. Arrays are shared between all scripts (i.e. you can call `create_array` from one script, and then use the returned ID from another script). They are also saved across savegames.
+
+*You must remember to free any arrays you create with `create_array` when you are done with them, or you will leak memory.*
+
+Arrays created with `temp_array` will be automatically freed at the end of the frame. These functions are safe, in that supplying a bad ID or trying to access out of range elements will not crash the script. `create_array` is the only function that returns a permanent array, all other functions which return arrays (`string_split`, `list_as_array`, etc,) all return temporary arrays. You can use `fix_array` to make a temporary array permanent.
+
 Array elements are accessed by index or key. For example:
 ```js
 // this code puts some string in array "list" at index 5:
@@ -16,6 +22,7 @@ list[5] := "Value";
 ```
 
 There are 2 different types of arrays currently available:
+
 * **Lists** - a set of values with specific size (number of elements), where all elements have numeric indexes starting from zero (0) up to array length minus one.
 
   For example:
