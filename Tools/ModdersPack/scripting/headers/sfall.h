@@ -72,6 +72,7 @@
 #define HOOK_ADJUSTPOISON     (44)
 #define HOOK_ADJUSTRADS       (45)
 #define HOOK_ROLLCHECK        (46)
+#define HOOK_BESTWEAPON       (47)
 
 //Valid arguments to list_begin
 #define LIST_CRITTERS    (0)
