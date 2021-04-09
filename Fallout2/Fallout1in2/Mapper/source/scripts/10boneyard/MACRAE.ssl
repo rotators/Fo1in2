@@ -42,6 +42,9 @@ procedure MacRae15;
 procedure MacRae16;
 procedure MacRaeEnd;
 
+#define LVAR_Herebefore              (4)
+#define LVAR_TeachSome               (5)
+
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
@@ -55,7 +58,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       display_msg(mstr(101));
    end
    else begin
@@ -65,7 +68,7 @@ end
 
 procedure description_p_proc begin
    script_overrides;
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       display_msg(mstr(101));
    end
    else begin
@@ -81,7 +84,7 @@ procedure talk_p_proc begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
-      if (local_var(5) == 2) then begin
+      if (local_var(LVAR_TeachSome) == 2) then begin
          float_msg(self_obj, mstr(141), FLOAT_MSG_NORMAL);
       end
       else begin
@@ -92,7 +95,7 @@ procedure talk_p_proc begin
             call MacRae12;
          end
          else begin
-            if (local_var(4) == 0) then begin
+            if (local_var(LVAR_Herebefore) == 0) then begin
                if (dude_is_male) then begin
                   DisplayMessage := 102;
                end
@@ -112,8 +115,7 @@ procedure talk_p_proc begin
    end
 end
 
-procedure damage_p_proc
-begin
+procedure damage_p_proc begin
    if (source_obj == dude_obj) then begin
       set_global_var(GVAR_ENEMY_BLADES, 1);
    end
@@ -126,8 +128,7 @@ procedure destroy_p_proc begin
    inc_good_critter
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
    if (self_can_see_dude) then begin
       if (global_var(GVAR_ENEMY_BLADES) == 1) then begin
          attack(dude_obj);
@@ -135,30 +136,29 @@ begin
    end
 end
 
-procedure pickup_p_proc
-begin
+procedure pickup_p_proc begin
    set_global_var(GVAR_ENEMY_BLADES, 1);
 end
 
-procedure MacRae01
-begin
+procedure MacRae01 begin
    DisplayMessage := 104;
    call MacRae02;
 end
 
-procedure MacRae02
-begin
+procedure MacRae02 begin
    Reply(DisplayMessage);
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
       NOption(105, MacRae03, 4);
    end
    NOption(106, MacRae11, 4);
    NOption(107, MacRaeEnd, 4);
    NLowOption(141, MacRaeEnd);
+
+   if debug_mode then
+      NOption("Yo, teach me your bonus stuff.", MacRae15, 1);
 end
 
-procedure MacRae03
-begin
+procedure MacRae03 begin
    Reply(108);
    NOption(109, MacRae04, 1);
    NOption(110, MacRae08, 1);
@@ -166,16 +166,14 @@ begin
    NOption(112, MacRae01, 1);
 end
 
-procedure MacRae04
-begin
+procedure MacRae04 begin
    Reply(113);
    NOption(114, MacRae05, 1);
    NOption(115, MacRae06, 1);
    NOption(116, MacRae01, 1);
 end
 
-procedure MacRae05
-begin
+procedure MacRae05 begin
    NMessage(117);
    DownReactLevel
 end
@@ -185,7 +183,7 @@ procedure MacRae06 begin
       DisplayMessage := 118;
    else
       DisplayMessage := 1180;
-   set_local_var(5, 1);
+   set_local_var(LVAR_TeachSome, 1);
    call MacRae07;
 end
 
@@ -195,39 +193,34 @@ procedure MacRae07 begin
    NOption(120, MacRaeEnd, 1);
 end
 
-procedure MacRae08
-begin
+procedure MacRae08 begin
    DisplayMessage := 121;
    call MacRae07;
 end
 
-procedure MacRae09
-begin
+procedure MacRae09 begin
    Reply(122);
    NOption(123, MacRae10, 1);
    NOption(124, MacRae01, 1);
    NOption(125, MacRaeEnd, 1);
 end
 
-procedure MacRae10
-begin
+procedure MacRae10 begin
    DisplayMessage := 126;
    call MacRae07;
 end
 
-procedure MacRae11
-begin
+procedure MacRae11 begin
    DisplayMessage := 127;
    call MacRae07;
 end
 
-procedure MacRae12
-begin
+procedure MacRae12 begin
    Reply(128);
-   if (local_var(5 == 1)) then begin
+   if (local_var(LVAR_TeachSome == 1)) then begin
       NOption(129, MacRae15, 1);
    end
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       NOption(130, MacRae13, 1);
    end
    else begin
@@ -236,55 +229,36 @@ begin
    NOption(132, MacRaeEnd, 1);
 end
 
-procedure MacRae13
-begin
+procedure MacRae13 begin
    Reply(133);
    NOption(134, MacRae14, 1);
    NOption(135, MacRaeEnd, 1);
 end
 
-procedure MacRae14
-begin
+procedure MacRae14 begin
    Reply(113);
    NOption(136, MacRae15, 1);
    NOption(137, MacRaeEnd, 1);
 end
 
-procedure MacRae15
-begin
-//
-// Adds five points into Unarmed and Melee.
-// originally added to Melee Damage but the game engine cannot support that.
-// Five points should give double if one of those skills is tagged, but need to test this.
-// --Sduibek
-//
-   variable LVar0 := 5;// Skill points to add
-   variable LVar1 := 5;// Skill points to add
-   variable LVar2 := 24;// Hours it takes to learn
+procedure MacRae15 begin
    NMessage(138);
-   gfade_out(1);
-// if (get_critter_stat(dude_obj, 4) >= 8) or has_trait(dude_obj, 0, #) or has_trait(dude_obj, 0, #) then begin
-   game_time_advance(game_ticks(60 * 60 * LVar2));
-// if get_critter_stat(dude_obj, 4) <=
-   gfade_in(1);
-   critter_mod_skill(dude_obj, SKILL_UNARMED_COMBAT, LVar0);
-   critter_mod_skill(dude_obj, SKILL_MELEE, LVar1);
-   display_msg(gen_mstr(116) + LVar0 + gen_mstr(120));
-   display_msg(gen_mstr(116) + LVar1 + gen_mstr(121));
+   set_critter_extra_stat(dude_obj, STAT_dmg_resist, get_critter_extra_stat(dude_obj, STAT_dmg_resist) + 5);
+   set_critter_extra_stat(dude_obj, STAT_melee_dmg, get_critter_extra_stat(dude_obj, STAT_melee_dmg) + 1);
 
-   give_xp_msg(EXP_LEARN_BRAWLING, mstr(200));
+   gfade_out(600);
+      game_time_advance(ONE_GAME_DAY);
+   gfade_in(600);
 
-   set_local_var(5, 2);
+   set_local_var(LVAR_TeachSome, 2);
    NMessage(139);
 end
 
-procedure MacRae16
-begin
+procedure MacRae16 begin
    Reply(140);
    NOption(109, MacRae15, 1);
    NOption(137, MacRaeEnd, 1);
 end
 
-procedure MacRaeEnd
-begin
+procedure MacRaeEnd begin
 end
