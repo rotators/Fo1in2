@@ -1,4 +1,12 @@
+/*
+
+   Boneyard - Blade in the building (entrance)
+
+*/
+
+/* Include Files */
 #include "define.h"
+#include "maps/lablades.h"
 #include "boneyard.h"
 
 #define NAME                    SCRIPT_BYMIKE
@@ -24,6 +32,9 @@ procedure BYMike07;
 procedure BYMike08;
 procedure BYMikeEnd;
 
+#define LVAR_Herebefore              (4)
+#define LVAR_RewardGiven             (5)
+
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 
@@ -42,7 +53,7 @@ end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       display_msg(mstr(101));
    end
    else begin
@@ -52,7 +63,7 @@ end
 
 procedure description_p_proc begin
    script_overrides;
-   if (local_var(4) == 1) then begin
+   if (local_var(LVAR_Herebefore) == 1) then begin
       display_msg(mstr(101));
    end
    else begin
@@ -68,7 +79,7 @@ procedure talk_p_proc begin
       float_msg(self_obj, message_str(SCRIPT_ENEMY, random(100, 105)), FLOAT_MSG_RED);
    end
    else begin
-      if ((local_var(5) == 2) or (map_var(0) == 1)) then begin
+      if ((local_var(LVAR_RewardGiven) == 2) or (map_var(MVAR_Already_Give_Mike_Caps) == 1)) then begin
          float_msg(self_obj, mstr(116), FLOAT_MSG_NORMAL);
       end
       else begin
@@ -79,7 +90,7 @@ procedure talk_p_proc begin
             call BYMike06;
          end
          else begin
-            if (local_var(4) == 0) then begin
+            if (local_var(LVAR_Herebefore) == 0) then begin
                DisplayMessage := 102;
                call BYMike02;
             end
@@ -121,7 +132,7 @@ end
 
 procedure BYMike02 begin
    Reply(DisplayMessage);
-   if (local_var(4) == 0) then begin
+   if (local_var(LVAR_Herebefore) == 0) then begin
       NOption(105, BYMike04, 1);
    end
    NOption(104, BYMike03, 1);
@@ -129,50 +140,43 @@ procedure BYMike02 begin
    NOption(107, BYMikeEnd, 1);
 end
 
-procedure BYMike03
-begin
+procedure BYMike03 begin
    DisplayMessage := 108;
    call BYMike02;
 end
 
-procedure BYMike04
-begin
+procedure BYMike04 begin
    DisplayMessage := 109;
-   set_local_var(4, 1);
+   set_local_var(LVAR_Herebefore, 1);
    call BYMike02;
 end
 
-procedure BYMike05
-begin
+procedure BYMike05 begin
    DisplayMessage := 110;
    call BYMike02;
 end
 
-procedure BYMike06
-begin
+procedure BYMike06 begin
    Reply(111);
    NOption(112, BYMike08, 1);
    NOption(113, BYMike07, 1);
 end
 
-procedure BYMike07
-begin
+procedure BYMike07 begin
    NMessage(115);
-   set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 1);
+   inc_general_rep(1);
    call BYMike08;
 end
 
-procedure BYMike08
-begin
+procedure BYMike08 begin
    variable LVar0 := 0;
    NMessage(115);
-   set_local_var(5, 1);
+   set_local_var(LVAR_RewardGiven, 1);
    LVar0 := create_object(PID_STIMPAK, 0, 0);
    add_mult_objs_to_inven(dude_obj, LVar0, 4);
    dude_caps_adjust(random(10, 100));
-   set_map_var(0, 1);
+   set_map_var(MVAR_Already_Give_Mike_Caps, 1);
 end
 
-procedure BYMikeEnd
-begin
+procedure BYMikeEnd begin
 end
