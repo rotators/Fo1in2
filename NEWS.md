@@ -7,6 +7,7 @@ Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1i
 - **Fixed**: A potential procedure loop in the (generic) super mutant sergeant script when talking to them in disguise.
 - **Fixed**: Cathedral technicians would blast the disguise-check code on every game tick, no matter if they see thep player or not. This can cause the game to crash on certain hardware.
 - **Fixed**: Gizmo's dead remains (with flies animation) can now be looted correctly.
+- **Fixed**: MacRae in the Boneyard now correctly gives the player +5% Damage Resistance, and + 1% Melee Damage (vanilla Fo1 bug + removed the old Fixt workaround which gave skill points instead).
 - **Fixed**: Maxon at the Brotherhood was showing the wrong dialog text after asking about the missing caravans.
 - **Fixed**: Mines / Traps spatial scripts had no range assigned to them.
 - **Fixed**: Mines in the thief circle map didn't want to explode.
