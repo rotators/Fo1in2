@@ -20,6 +20,9 @@
 #define GVAR_BAD_MONSTER                        (4) // was 160 (1160) in Fallout 1
 #define GVAR_GOOD_MONSTER                       (5) // was 159 (1159) in Fallout 1
 
+#define GVAR_REPUTATION_SLAVER                  (11)
+#define GVAR_REPUTATION_SLAVE_OWNER             (12)
+
 // Karma Titles Fo2
 #define GVAR_KARMA_HOLY_WARRIOR                 (37)
 #define GVAR_KARMA_GUARDIAN_OF_THE_WASTES       (38)
@@ -61,6 +64,7 @@
 #define GVAR_MUTATE_STAGE                       (193)
 #define GVAR_PLAYER_SEX_LEVEL                   (194)
 #define GVAR_NEW_RENO_MADE_MAN                  (230)
+#define GVAR_GRAVES_UNEARTHED                   (319)
 #define GVAR_SEX_COUNTER                        (358)
 #define GVAR_SEXPERT                            (588)
 #define GVAR_GIGALO                             (589)
@@ -87,6 +91,7 @@
 #define GVAR_ADDICT_TRAGIC                      (295)   // maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET                         (296)   // maybe hard-coded, maybe not?
 
+#define GVAR_GRAVES_UNEARTHED                   (319)
 #define GVAR_MYSTERIOUS_STRANGER                (352)
 #define GVAR_MYSTERIOUS_STRANGER_LEVEL          (353)
 
@@ -461,7 +466,7 @@
 #define GVAR_IAN_REFRESH_GFX_FLAG               (1322)
 #define GVAR_MALE_PLAYER_SMOKES                 (1323) // can be overwritten!
 #define GVAR_JEREMIAH_CHILDREN_TALKED           (1324)
-#define GVAR_ENABLE_DEBUG_MESSAGES             (1325)
+#define GVAR_ENABLE_DEBUG_MESSAGES              (1325)
 #define GVAR_RANDOM_ENC_IGNORE_LUCK             (1326)
 #define GVAR_RANDOM_ENC_DIFF_BASED              (1327)
 #define GVAR_RANDOM_ENC_LEVEL_BASED             (1328)
