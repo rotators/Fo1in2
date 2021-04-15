@@ -53,7 +53,8 @@
 #define check_relationship_saved \
    if (not(get_trish_state(RELATIONSHIP_SAVED)) and get_trish_state(TRISH_UNDERSTANDS_SAUL) and get_trish_state(SAUL_UNDERSTANDS_TRISH)) then begin \
       set_trish_state(RELATIONSHIP_SAVED);                                       \
-      set_global_var(GVAR_PLAYER_REPUTATION, check_general_rep + 2);             \
+      inc_general_rep(2);                                                        \
+      inc_junktown_rep(REP_BONUS_HELPED_TRISH_AND_SAUL);                         \
       give_xp_msg(EXP_TRISH_SAUL_RELATIONSHIP, message_str(SCRIPT_TRISH, 204));  \
    end                                                                           \
    noop
