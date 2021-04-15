@@ -1,5 +1,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
+#define COMMAND_LITE_H
 
 #define critter_is_armed(x)                 (((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_RIGHT_HAND))) == item_type_weapon) orElse \
                                              ((obj_item_subtype(critter_inven_obj(x,INVEN_TYPE_LEFT_HAND))) == item_type_weapon))

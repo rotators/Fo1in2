@@ -1,0 +1,1893 @@
+# Important notes on format:
+#
+# 1. The file must be valid YAML. (Use VScode with YAML extension to check).
+#
+# 2. General structure:
+# - name: Category name           # REQUIRED, must be UNIQUE
+#   parent: Parent category name  # OPTIONAL. If set, will generate a subcategory page on the site. Parent category must exist.
+#   doc: Category doc             # OPTIONAL. Must be RELEVANT for ALL functions in the category. Will be displayed in IDE for EACH function under this category, in addition to function's individual doc.
+#   items:
+#   - name: function_name                                     # REQUIRED
+#     detail: void function_name(ObjectPtr obj, string text)  # REQUIRED. Invocation details. SINGLE line. Will be displayed in IDE.
+#     doc: fuction documentation in markdown format           # OPTIONAL. Will be displayed in IDE.
+#     opcode: function opcode                                 # OPTIONAL
+#     unsafe: true/false                                      # OPTIONAL. Whether it requires AllowUnsafeScripting.
+#     macro: header file name                                 # OPTIONAL. What to include to use this.
+
+- name: Direct memory access # just parent page
+
+- name: read_xxx
+  parent: Direct memory access
+  doc: These functions take a memory address as the parameter and can read arbitrary pieces of Fallout's address space.
+  items:
+  - name: read_byte
+    detail: int read_byte(int address)
+    opcode: 0x8156
+  - name: read_short
+    detail: int read_short(int address)
+    opcode: 0x8157
+  - name: read_int
+    detail: int read_int(int address)
+    opcode: 0x8158
+  - name: read_string
+    detail: int read_string(int address)
+    opcode: 0x8159
+
+- name: write_xxx
+  parent: Direct memory access
+  doc: These functions take a memory address as the parameter and can write to arbitrary pieces of Fallout's address _None of these functions will work unless_ `AllowUnsafeScripting` _is enabled in_ `ddraw.ini`.
+  items:
+  - name: write_byte
+    detail: void write_byte(int address, int value)
+    opcode: 0x81cf
+    unsafe: true
+  - name: write_short
+    detail: void write_short(int address, int value)
+    opcode: 0x81d0
+    unsafe: true
+  - name: write_int
+    detail: void write_int(int address, int value)
+    opcode: 0x81d1
+    unsafe: true
+  - name: write_string
+    detail: void write_string(int address, string value)
+    opcode: 0x821b
+    unsafe: true
+
+- name: call_offset_vX
+  parent: Direct memory access
+  doc: Can be used to call arbitrary functions inside Fallout. Different versions are used to call functions with different numbers of arguments. _None of these functions will work unless_ `AllowUnsafeScripting` _is enabled in_ `ddraw.ini`.
+  items:
+  - name: call_offset_v0
+    detail: void call_offset_v0(int address)
+    opcode: 0x81d2
+    unsafe: true
+  - name: call_offset_v1
+    detail: void call_offset_v1(int address, int arg1)
+    opcode: 0x81d3
+    unsafe: true
+  - name: call_offset_v2
+    detail: void call_offset_v2(int address, int arg1, int arg2)
+    opcode: 0x81d4
+    unsafe: true
+  - name: call_offset_v3
+    detail: void call_offset_v3(int address, int arg1, int arg2, int arg3)
+    opcode: 0x81d5
+    unsafe: true
+  - name: call_offset_v4
+    detail: void call_offset_v4(int address, int arg1, int arg2, int arg3, int arg4)
+    opcode: 0x81d6
+    unsafe: true
+  - name: call_offset_r0
+    detail: int call_offset_r0(int address)
+    opcode: 0x81d7
+    unsafe: true
+  - name: call_offset_r1
+    detail: int call_offset_r1(int address, int arg1)
+    opcode: 0x81d8
+    unsafe: true
+  - name: call_offset_r2
+    detail: int call_offset_r2(int address, int arg1, int arg2)
+    opcode: 0x81d9
+    unsafe: true
+  - name: call_offset_r3
+    detail: int call_offset_r3(int address, int arg1, int arg2, int arg3)
+    opcode: 0x81da
+    unsafe: true
+  - name: call_offset_r4
+    detail: int call_offset_r4(int address, int arg1, int arg2, int arg3, int arg4)
+    opcode: 0x81db
+    unsafe: true
+
+- name: Stats
+  doc: The `get/set_pc_base/extra_stat` functions are equivalent to calling `get/set_critter_base/extra_stat` with `dude_obj` as the critter pointer. None of these stat functions take perks into account, and neither do they do range clamping to make sure the stats are valid. Use the normal `get_critter_stat` function to get a correctly perk adjusted and range clamped value for a stat.
+  items:
+  - name: set_pc_base_stat
+    detail: void set_pc_base_stat(int StatID, int value)
+    opcode: 0x815a
+  - name: set_pc_extra_stat
+    detail: void set_pc_extra_stat(int StatID, int value)
+    opcode: 0x815b
+  - name: get_pc_base_stat
+    detail: int get_pc_base_stat(int StatID)
+    opcode: 0x815c
+  - name: get_pc_extra_stat
+    detail: int get_pc_extra_stat(int StatID)
+    opcode: 0x815d
+  - name: set_critter_base_stat
+    detail: void set_critter_base_stat(CritterPtr, int StatID, int value)
+    opcode: 0x815e
+  - name: set_critter_extra_stat
+    detail: void set_critter_extra_stat(CritterPtr, int StatID, int value)
+    opcode: 0x815f
+  - name: get_critter_base_stat
+    detail: int get_critter_base_stat(CritterPtr, int StatID)
+    opcode: 0x8160
+  - name: get_critter_extra_stat
+    detail: int get_critter_extra_stat(CritterPtr, int StatID)
+    opcode: 0x8161
+  - name: get_stat_min
+    detail: get_stat_min(int stat, bool who = False)
+    doc: |
+      - Returns the minimum set value of the specified stat (see `set_stat_min` functions)
+      - who: 0 (`false`) or omitting the argument - returns the value of the player, 1 (true) - returns the value set for other critters
+  - name: get_stat_max
+    detail: get_stat_max(int stat, bool who = False)
+    doc: |
+      - Returns the maximum set value of the specified stat (see `set_stat_max` functions)
+      - who: 0 (`false`) or omitting the argument - returns the value of the player, 1 (true) - returns the value set for other critters
+
+- name: Alter min/max
+  doc: The `set_stat_max/min` functions can be used to set the valid ranges on stats. Values returned by `get_current_stat` will be clamped to this range. The `set_pc_` function only affects the player, the `set_npc_` functions only affects other critters, and the `set_` functions affects both.
+  parent: Stats
+  items:
+  - name: set_stat_max
+    detail: void set_stat_max(int stat, int value)
+    opcode: 0x81b4
+  - name: set_stat_min
+    detail: void set_stat_min(int stat, int value)
+    opcode: 0x81b5
+  - name: set_pc_stat_max
+    detail: void set_pc_stat_max(int stat, int value)
+    opcode: 0x81b7
+  - name: set_pc_stat_min
+    detail: void set_pc_stat_min(int stat, int value)
+    opcode: 0x81b8
+  - name: set_npc_stat_max
+    detail: void set_npc_stat_max(int stat, int value)
+    opcode: 0x81b9
+  - name: set_npc_stat_min
+    detail: void set_npc_stat_min(int stat, int value)
+    opcode: 0x81ba
+
+- name: Skills
+  items:
+  - name: set_critter_skill_points
+    detail: void set_critter_skill_points(int critter, int skill, int value)
+    opcode: 0x8242
+    doc: Will set the number of additional points a critter has in a skill, on top of whatever they have from their stats and other bonuses. Note that skill points are part of the proto, so calling it on a critter will affect all critters that share the same proto.
+  - name: get_critter_skill_points
+    detail: int get_critter_skill_points(int critter, int skill)
+    opcode: 0x8243
+    doc: Will get the number of additional points a critter has in a skill, on top of whatever they have from their stats and other bonuses
+  - name: set_available_skill_points
+    detail: void set_available_skill_points(int value)
+    opcode: 0x8244
+  - name: get_available_skill_points
+    detail: int get_available_skill_points()
+    opcode: 0x8245
+
+  - name: set_skill_max
+    detail: void set_skill_max(int value)
+    opcode: 0x81a2
+    doc: Can't be used to increase the skill cap above 300.
+  - name: set_critter_skill_mod
+    detail: void set_critter_skill_mod(CritterPtr, int max)
+    opcode: 0x81c7
+  - name: set_base_skill_mod
+    detail: void set_base_skill_mod(int max)
+    opcode: 0x81c8
+  - name: mod_skill_points_per_level
+    detail: void mod_skill_points_per_level(int value)
+    doc: Accepts a value of between -100 and 100, and modifies the number of skill points the player recieves when they level up. This is a modification of what would otherwise happen, rather than a replacement. The value is not saved into the save game, so should be reset in the `game_loaded` section of a script.
+    opcode: 0x8246
+
+- name: Graphics
+  doc: The graphics functions are only available if the user is using graphics mode 4 or 5. Use `graphics_funcs_available` to check; it returns 1 if you can use them or 0 if you can't. Calling graphics functions when `graphics_funcs_available` returns 0 will do nothing.
+  items:
+  - name: graphics_funcs_available
+    detail: bool graphics_funcs_available
+    opcode: 0x8165
+  - name: load_shader
+    detail: int load_shader(string path)
+    doc: Takes a path relative to the `<GameRoot>\<master_patches>\shaders\` directory as an argument and returns a shader ID. That ID should be passed as the first argument to all other shader functions, and is valid until `free_shader` is called on the ID, the player loads a saved game or the player quits to the main menu.
+    opcode: 0x8166
+  - name: free_shader
+    detail: void free_shader(int ID)
+    opcode: 0x8167
+  - name: activate_shader
+    detail: void activate_shader(int ID)
+    opcode: 0x8168
+  - name: deactivate_shader
+    detail: void deactivate_shader(int ID)
+    opcode: 0x8169
+  - name: set_shader_int
+    detail: void set_shader_int(int ID, string param, int value)
+    opcode: 0x816d
+  - name: set_shader_float
+    detail: void set_shader_float(int ID, string param, float value)
+    opcode: 0x816e
+  - name: set_shader_vector
+    detail: void set_shader_vector(int ID, string param, float f1, float f2, float f3, float f4)
+    opcode: 0x816f
+  - name: get_shader_version
+    detail: int get_shader_version
+    doc: Gives you the highest shader version supported by the player's graphics cards. Possible return values are 11, 12, 13, 14, 20, 21 and 30.
+    opcode: 0x81ad
+  - name: set_shader_mode
+    detail: void set_shader_mode(int mode)
+    opcode: 0x81ae
+    doc: Tells sfall when to use a shader. The parameter is a set of 32 flags which specify the screens on which the shader will be disabled, unless bit 32 is set, in which case the shader will only be active on those screens. Remember that screens are displayed on top of each other; if the player opens the character menu which in combat, the game still considers the player to be in combat. See `sfall.h` for a list of defines.
+  - name: force_graphics_refresh
+    detail: void force_graphics_refresh(bool enabled)
+    opcode: 0x81b0
+    doc: Forces the screen to redraw at times when it normally wouldn't. If you're using animated shader, turning this option on is recommended.
+  - name: get_shader_texture
+    detail: int get_shader_texture(int ID, int texture)
+    opcode: 0x81b1
+  - name: set_shader_texture
+    detail: void set_shader_texture(int ID, string param, int texID)
+    opcode: 0x81b2
+  - name: get_screen_width
+    detail: int get_screen_width()
+    opcode: 0x8220
+  - name: get_screen_height
+    detail: int get_screen_height()
+    opcode: 0x8221
+  - name: set_palette
+    detail: void set_palette(string path)
+    opcode: 0x81f2
+- name: Perks and traits
+  items:
+  - name: set_perk_image
+    detail: void set_perk_image(int perkID, int value)
+    opcode: 0x8178
+  - name: set_perk_ranks
+    detail: void set_perk_ranks(int perkID, int value)
+    opcode: 0x8179
+  - name: set_perk_level
+    detail: void set_perk_level(int perkID, int value)
+    opcode: 0x817a
+  - name: set_perk_stat
+    detail: void set_perk_stat(int perkID, int value)
+    opcode: 0x817b
+  - name: set_perk_stat_mag
+    detail: void set_perk_stat_mag(int perkID, int value)
+    opcode: 0x817c
+  - name: set_perk_skill1
+    detail: void set_perk_skill1(int perkID, int value)
+    opcode: 0x817d
+  - name: set_perk_skill1_mag
+    detail: void set_perk_skill1_mag(int perkID, int value)
+    opcode: 0x817e
+  - name: set_perk_type
+    detail: void set_perk_type(int perkID, int value)
+    opcode: 0x817f
+  - name: set_perk_skill2
+    detail: void set_perk_skill2(int perkID, int value)
+    opcode: 0x8180
+  - name: set_perk_skill2_mag
+    detail: void set_perk_skill2_mag(int perkID, int value)
+    opcode: 0x8181
+  - name: set_perk_str
+    detail: void set_perk_str(int perkID, int value)
+    opcode: 0x8182
+  - name: set_perk_per
+    detail: void set_perk_per(int perkID, int value)
+    opcode: 0x8183
+  - name: set_perk_end
+    detail: void set_perk_end(int perkID, int value)
+    opcode: 0x8184
+  - name: set_perk_chr
+    detail: void set_perk_chr(int perkID, int value)
+    opcode: 0x8185
+  - name: set_perk_int
+    detail: void set_perk_int(int perkID, int value)
+    opcode: 0x8196
+  - name: set_perk_agl
+    detail: void set_perk_agl(int perkID, int value)
+    opcode: 0x8187
+  - name: set_perk_lck
+    detail: void set_perk_lck(int perkID, int value)
+    opcode: 0x8188
+  - name: set_perk_name
+    detail: void set_perk_name(int perkID, string value)
+    opcode: 0x8189
+  - name: set_perk_desc
+    detail: void set_perk_desc(int perkID, string value)
+    opcode: 0x818a
+  - name: set_perk_freq
+    detail: void set_perk_freq(int value)
+    opcode: 0x8247
+    doc: Sets the number of levels between each perk. Setting to 0 will reset it back to the default. This overrides the effects of the skilled trait. Not saved into the save game, so needs to be called once per reload. Be careful not to let the player obtain a perk when no perks are available to pick, or the game may crash.
+  - name: get_perk_owed
+    detail: int get_perk_owed
+    opcode: 0x818e
+  - name: set_perk_owed
+    detail: void set_perk_owed(int value)
+    opcode: 0x818f
+  - name: get_perk_available
+    detail: int get_perk_available(int perk)
+    opcode: 0x8190
+  - name: set_perk_level_mod
+    detail: void set_perk_level_mod(int levels)
+    opcode: 0x81ab
+    doc: Sets a modifier between +25 and -25 that is added/subtracted from the player's level for the purposes of deciding which perks can be chosen.
+  - name: set_pyromaniac_mod
+    detail: void set_pyromaniac_mod(int bonus)
+    opcode: 0x81cb
+  - name: apply_heaveho_fix
+    detail: void apply_heaveho_fix
+    opcode: 0x81cc
+  - name: set_swiftlearner_mod
+    detail: void set_swiftlearner_mod(int bonus)
+    opcode: 0x81cd
+
+
+  - name: set_fake_perk
+    detail: void set_fake_perk(string name, int level, int image, string desc)
+    opcode: 0x81bb
+    doc: Used to add additional traits and perks to the character screen. They will be saved correctly when the player saves and reloads games, but by themselves they will have no further effect on the character. For perks, the allowed range for levels is between 0 and 100; setting the level to 0 removes that perk. For traits, the level must be 0 or 1. The image is a numeric id that corresponds to an entry in `skilldex.lst`. The name is limited to 63 characters and the description to 255 characters by sfall, but internal Fallout limits may be lower.
+  - name: set_fake_trait
+    detail: void set_fake_trait(string name, int active, int image, string desc)
+    opcode: 0x81bc
+    doc: Used to add additional traits and perks to the character screen. They will be saved correctly when the player saves and reloads games, but by themselves they will have no further effect on the character. For perks, the allowed range for levels is between 0 and 100; setting the level to 0 removes that perk. For traits, the level must be 0 or 1. The image is a numeric id that corresponds to an entry in `skilldex.lst`. The name is limited to 63 characters and the description to 255 characters by sfall, but internal Fallout limits may be lower.
+
+  - name: set_selectable_perk
+    detail: void set_selectable_perk(string name, int active, int image, string desc)
+    opcode: 0x81bd
+    doc: Used to add additional items to "select a perk" box by setting the 'active' parameter to 1, and to remove them again by setting it to 0.
+  - name: set_perkbox_title
+    detail: void set_perkbox_title(string title)
+    opcode: 0x81be
+    doc: Used to change the title of the "select a perk" box, or by using "" it will be set back to the default.
+  - name: hide_real_perks
+    detail: void hide_real_perks()
+    opcode: 0x81bf
+    doc: Prevent the "select a perk" box from displaying any of the original 119 perks.
+  - name: show_real_perks
+    detail: void show_real_perks()
+    opcode: 0x81c0
+    doc: Reverts the effect os `hide_real_perks`.
+  - name: perk_add_mode
+    detail: void perk_add_mode(int type)
+    opcode: 0x81c3
+    doc: Modifies what happens when a fake perk is selected from the perks dialog. It is treated as a set of flags - if bit 1 is set then it is added to the player's traits, if bit 2 is set it is added to the player's perks, and if bit 3 is set it is removed from the list of selectable perks. The default is 0x2.
+  - name: clear_selectable_perks
+    detail: void clear_selectable_perks()
+    opcode: 0x81c4
+    doc: Restores the "select a perk" box to its default state.
+
+  - name: has_fake_perk
+    detail: int has_fake_perk(string name)
+    opcode: 0x81c1
+    doc: Returns the number of levels the player has of the perks with the given name or ID of extra perk.
+  - name: has_fake_trait
+    detail: int has_fake_trait(string name)
+    opcode: 0x81c2
+    doc: Returns the number of levels the player has of the traits with the given name or ID of extra trait.
+  - name: remove_trait
+    detail: void remove_trait(int traitID)
+    opcode: 0x8225
+  - name: seq_perk_freq
+    detail: void seq_perk_freq(int value)
+    doc: Sets the number of levels between each perk.
+
+- name: Virtual file system
+  doc: The `fs_*` functions are used to manipulate a virtual file system. Files saved here should have paths relative to the data folder, and use backslashes as the directory separator. They will take precedence over files stored in the normal data folder. They will also be saved into save games if you set a flag for them using `fs_resize(fileId, -1)`, so be avoid creating large files. Using `fs_copy` followed by `fs_read_xxx`, you can read the contents of existing files.
+  items:
+  - name: fs_create
+    detail: int fs_create(string path, int size)
+    opcode: 0x81f7
+  - name: fs_copy
+    detail: int fs_copy(string path, string source)
+    opcode: 0x81f8
+  - name: fs_find
+    detail: int fs_find(string path)
+    opcode: 0x81f9
+  - name: fs_write_byte
+    detail: void fs_write_byte(int id, int data)
+    opcode: 0x81fa
+  - name: fs_write_short
+    detail: void fs_write_short(int id, int data)
+    opcode: 0x81fb
+  - name: fs_write_int
+    detail: void fs_write_int(int id, int data)
+    opcode: 0x81fc
+  - name: fs_write_float
+    detail: void fs_write_float(int id, int data)
+    opcode: 0x81fd
+  - name: fs_write_string
+    detail: void fs_write_string(int id, string data)
+    opcode: 0x81fe
+  - name: fs_write_bstring
+    detail: void fs_write_bstring(int id, string data)
+    opcode: 0x8208
+  - name: fs_read_byte
+    detail: int fs_read_byte(int id)
+    opcode: 0x8209
+  - name: fs_read_short
+    detail: int fs_read_short(int id)
+    opcode: 0x820a
+  - name: fs_read_int
+    detail: int fs_read_int(int id)
+    opcode: 0x820b
+  - name: fs_read_float
+    detail: float fs_read_float(int id)
+    opcode: 0x820c
+  - name: fs_delete
+    detail: void fs_delete(int id)
+    opcode: 0x81ff
+  - name: fs_size
+    detail: int fs_size(int id)
+    opcode: 0x8200
+  - name: fs_pos
+    detail: int fs_pos(int id)
+    opcode: 0x8201
+  - name: fs_seek
+    detail: void fs_seek(int id, int pos)
+    opcode: 0x8202
+  - name: fs_resize
+    detail: void fs_resize(int id, int size)
+    opcode: 0x8203
+
+- name: Knockback
+  parent: Combat
+  doc: The `type` value in the weapon knockback functions can be 0 or 1. If 0, the value becomes an absolute distance that targets will be knocked back. If 1, the value is multiplied by the distance they would normally have been knocked back. Weapon knockback modifiers are applied in the order weapon -> attacker -> target, so a x2 weapon wielded by an abs 6 attacker hitting a /2 target will knock the target back 3 squares. The knockback functions will not override the stonewall perk or knockdowns resulting from criticals. knockback values set on weapons or critters are not saved, and must be reset each time the player reloads.
+  items:
+  - name: set_weapon_knockback
+    detail: void set_weapon_knockback(WeaponPtr, int type, float value)
+    opcode: 0x8195
+  - name: set_target_knockback
+    detail: void set_target_knockback(CritterPtr, int type, float value)
+    opcode: 0x8196
+  - name: set_attacker_knockback
+    detail: void set_attacker_knockback(CritterPtr, int type, float value)
+    opcode: 0x8197
+  - name: remove_weapon_knockback
+    detail: void remove_weapon_knockback(WeaponPtr)
+    opcode: 0x8198
+  - name: remove_target_knockback
+    detail: void remove_target_knockback(CritterPtr)
+    opcode: 0x8199
+  - name: remove_attacker_knockback
+    detail: void remove_attacker_knockback(CritterPtr)
+    opcode: 0x819a
+
+- name: Maps and encounters
+  items:
+  - name: in_world_map
+    detail: bool in_world_map
+    opcode: 0x8170
+    doc: Returns 1 if the player is looking at the world map, or 0 at any other time. Obviously this is only useful in global scripts, since normal scripts will never get the chance to run on the world map.
+  - name: force_encounter
+    detail: void force_encounter(int map)
+    opcode: 0x8171
+    doc: Can be called either from a global script while traveling on the world map, or from a normal script while on a local map. In either case the encounter occurs shortly after the next time the player moves on the world map. The player will not get an outdoorsman skill check.
+  - name: force_encounter_with_flags
+    detail: void force_encounter_with_flags(int map, int flags)
+    opcode: 0x8229
+    doc: |
+      Does the same thing as force_encounter, but allows the specification of some extra options (see `sfall.h` for available flags).
+      Forcing a random encounter on a map that is not normally used for random encounters may cause the player to lose the car, if they have it. In this case use `force_encounter_with_flags` with the `ENCOUNTER_FLAG_NO_CAR` flag set.
+  - name: set_map_time_multi
+    detail: void set_map_time_multi(float multi)
+    opcode: 0x822a
+    doc: Adjusts how fast time passes while you're on the world map. It takes a single float as an argument, where 1 is the normal speed. This function works in addition to the `WorldMapTimeMod` setting in `ddraw.ini` and the Pathfinder perk, rather than overriding it, so calling `set_map_time_multi(0.5)` when the player has 2 levels of Pathfinder would result in time passing at 25% the normal speed on the world map.
+  - name: set_map_enter_position
+    detail: void set_map_enter_position(int tile, int elevation, int rotation)
+    doc: Overrides the players entry position when entering the map through exit grids. Setting the tile to 0 will put the player on the start hex (default tile and elevation) of the map. Works only in `map_enter_p_proc` procedure.
+  - name: get_map_enter_position
+    detail: array get_map_enter_position()
+    doc: "Returns an array of the player's position data (index: 0 - tile, 1 - elevation, 2 - rotation) when entering the map through exit grids. If entering from the world map, the tile value will be -1. Should be called in `map_enter_p_proc` procedure to get the correct position data."
+  - name: exec_map_update_scripts
+    detail: void exec_map_update_scripts()
+    doc: Executes `map_update_p_proc` for all objects on map and global/hook scripts as well.
+    macro: sfall.h
+  - name: set_terrain_name
+    detail: void sfall_func3("set_terrain_name", int x, int y, string name)
+    doc: Overrides the terrain type name for the sub-tile on the world map by the specified coordinates.
+  - name: set_town_title
+    detail: void sfall_func2("set_town_title", int areaID, string title)
+    doc: |
+      Sets a floating text for a town on the world map when hovering the cursor over the player's marker.
+      ```
+      - areaID: the ID number of the town from city.txt
+      ```
+
+- name: Rest
+  parent: Maps and encounters
+  items:
+  - name: set_can_rest_on_map
+    detail: void set_can_rest_on_map(int mapNum, int elev, bool value)
+    doc: |
+      Allows/disallows to rest on the map for the specified level, overrides the `can_rest_here` values in `maps.txt`.
+      - `mapNum` is the map index from `maps.txt`
+      - passing -1 to the elev argument will set the rest value for all map elevations
+      - the set rest value will be stored in `sfalldb.sav` file (in savegame)
+    macro: sfall.h
+  - name: get_can_rest_on_map
+    detail: get_can_rest_on_map(int mapNum, int elev)
+    doc: |
+      - returns the set rest value of the map after using the `set_can_rest_on_map` function
+      - Returns -1 if the rest value of the map was not previously set (i.e. no data for the map in `sfalldb.sav`)
+      - the `can_rest_here values` from `maps.txt` are ignored.
+    macro: sfall.h
+
+- name: Worldmap
+  parent: Maps and encounters
+  doc: The mapper manual lists the functions `world_map_x_pos` and `world_map_y_pos`, which supposedly return the player's x and y positions on the world map. `get_world_map_x/y_pos` are included here anyway, because I was unable to get those original functions to work, or even to find any evidence that they existed in game.
+  items:
+  - name: get_world_map_x_pos
+    detail: int get_world_map_x_pos()
+    opcode: 0x8173
+  - name: get_world_map_y_pos
+    detail: int get_world_map_y_pos()
+    opcode: 0x8174
+  - name: set_world_map_pos
+    detail: void set_world_map_pos(int x, int y)
+    opcode: 0x8172
+
+
+- name: Audio
+  items:
+  - name: eax_available
+    detail: int eax_available
+    opcode: 0x81a3
+  - name: set_eax_environment
+    detail: void set_eax_environment(int environment)
+    opcode: 0x81a4
+
+  - name: play_sfall_sound
+    detail: int play_sfall_sound(string file, int mode)
+    opcode: 0x822b
+    doc: |
+      Used to play `mp3/wav/wma` files. The path given is relative to the Fallout folder. Specify mode as 1 to loop the file continuously, 2 to replace the current background game music with playing the specified file in loop mode, or 0 to play the file once. If you don't wish to loop, `play_sfall_sound` returns 0. If you do loop, it returns an id which can be passed back to `stop_sfall_sound` when you want to stop the effect. All sounds effects will be stopped on game reload, looping or not. Does not require `AllowDShowSound` to be set to 1 in `ddraw.ini`.
+
+      Starting from sfall 4.2.8/3.8.28, you can pass a value in the `mode` argument for a reduced sound volume. To set the volume, You need to convert the number to hexadecimal and use the argument format `0xZZZZ000Y`, where `ZZZZ` is the volume reduction value in range from 0 to 32767 (the value 32767 is mute), and `Y` is the playback mode.
+  - name: stop_sfall_sound
+    detail: void stop_sfall_sound(int soundID)
+    opcode: 0x822c
+    doc: Stops looping `mp3/wav/wma` files previously launched by `play_sfall_sound`. All sounds effects will be stopped on game reload, looping or not. Does not require `AllowDShowSound` to be set to 1 in `ddraw.ini`.
+
+- name: Weapons and ammo
+  parent: Combat
+  items:
+  - name: get_weapon_ammo_pid
+    detail: int get_weapon_ammo_pid(ObjectPtr weapon)
+    opcode: 0x8217
+  - name: set_weapon_ammo_pid
+    detail: void set_weapon_ammo_pid(ObjectPtr weapon, int pid)
+    opcode: 0x8218
+  - name: get_weapon_ammo_count
+    detail: int get_weapon_ammo_count(ObjectPtr weapon)
+    opcode: 0x8219
+    doc: This also allows to get current charges of a misc item (Geiger counter, etc).
+  - name: set_weapon_ammo_count
+    detail: void set_weapon_ammo_count(ObjectPtr weapon, int count)
+    opcode: 0x821a
+    doc: This also allows to set current charges of a misc item (Geiger counter, etc).
+
+- name: Version
+  parent: Sfall
+  items:
+  - name: sfall_ver_major
+    detail: int sfall_ver_major()
+    opcode: 0x8210
+  - name: sfall_ver_minor
+    detail: int sfall_ver_minor()
+    opcode: 0x8211
+  - name: sfall_ver_build
+    detail: int sfall_ver_build()
+    opcode: 0x8212
+
+- name: Math
+  parent: Variables
+  items:
+  - name: log
+    detail: float log(float x)
+    doc: Natural logarithm of x.
+    opcode: 0x8264
+  - name: exponent
+    detail: float exponent(float x)
+    doc: E^X
+    opcode: 0x8265
+  - name: round
+    detail: int round(float x)
+    doc: Round x to the nearest integer.
+    opcode: 0x8267
+  - name: sqrt
+    detail: float sqrt(float x)
+    doc: Square root of x.
+    opcode: 0x81ec
+  - name: abs
+    detail: int/float abs(int/float x)
+    doc: Absolute (positive) value of x.
+    opcode: 0x81ed
+  - name: sin
+    detail: float sin(float x)
+    doc: Sine of x
+    opcode: 0x81ee
+  - name: cos
+    detail: float cos(float x)
+    doc: Cosine of x
+    opcode: 0x81ef
+  - name: tan
+    detail: float tan(float x)
+    doc: Tangent of x
+    opcode: 0x81f0
+  - name: arctan
+    detail: float arctan(float x, float y)
+    doc: Arctangent of x. Pass 1 as y (don't ask...).
+    opcode: 0x81f1
+  - name: ceil
+    detail: int ceil(float)
+    opcode: 0x8266
+    doc: Round x to the nearest integer that is not less than x.
+  - name: ^
+    detail: x^y
+    doc: |
+      Exponentiation. Use as any other arithmetic operator, like `5^(1/3)`.
+      If exponent is an integer, you can use a negative base, otherwise you will get "NaN" with a negative base.
+      If both arguments are integers, the result will be an integer.
+  - name: floor2
+    detail: int floor2(int/float value)
+    doc: Works just like vanilla floor function, but returns correct integers for negative values (vanilla floor function works exactly the same as `ceil` for negative values, much like `trunc` in C/C++).
+    macro: sfall.h
+  - name: div
+    detail: div(x, y)
+    doc: |
+      Unsigned integer division. Use as a division operator, like `3 + (20 div 5)`.
+      If both dividend and divisor are integers, they will be treated as unsigned integers.
+      If one of them is a float, div will perform the signed division just like vanilla division operator.
+    opcode: 0x827f
+
+- name: Keyboard and mouse
+  items:
+  - name: key_pressed
+    detail: int key_pressed(int dxScancode)
+    opcode: 0x816c
+  - name: tap_key
+    detail: void tap_key(int dxScancode)
+    opcode: 0x8162
+  - name: get_mouse_x
+    detail: int get_mouse_x()
+    opcode: 0x821c
+  - name: get_mouse_y
+    detail: int get_mouse_y()
+    opcode: 0x821d
+  - name: get_mouse_buttons
+    detail: int get_mouse_buttons()
+    doc: Returns the number of the mouse button that is currently pressed (1 - left, 2 - right, 3 - left+right, 4 - middle, 0 otherwise).
+    opcode: 0x821e
+
+- name: Lists
+  parent: Arrays
+  doc: The `list_xxx` functions can be used to loop over all items on a map. `list_begin` takes an argument telling sfall what you want to list. (Defined in `sfall.h`) It returns a list pointer, which you iterate through with `list_next`. Finally, when you've finished with the list use `list_end` on it. Not calling `list_end` will result in a memory leak. Alternatively, use `list_as_array` to get the whole list at once as a temp array variable, which can be looped over using `len_array` and which you don't need to remember to free afterwards.
+  items:
+  - name: list_begin
+    detail: int list_begin(int type)
+    opcode: 0x820d
+  - name: list_next
+    detail: int list_next(int listid)
+    opcode: 0x820e
+  - name: list_end
+    detail: void list_end(int listid)
+    opcode: 0x820f
+  - name: list_as_array
+    detail: array list_as_array(int type)
+    opcode: 0x8236
+  - name: party_member_list
+    detail: array party_member_list(int includeHidden)
+    doc: Returns an array of all current party members (0 - only critter-type, alive and visible will be returned, 1 - all object, including Trunk, etc.)
+    opcode: 0x8271
+
+- name: Explosions
+  items:
+  - name: metarule2_explosions
+    detail: int metarule2_explosions(int arg1, int arg2)
+    doc: Was made as a dirty easy hack to allow dynamically change some explosion parameters (ranged attack). All changed parameters are reset to vanilla state automatically after each attack action.
+    opcode: 0x8261
+
+  - name: set_attack_explosion_pattern
+    detail: void set_attack_explosion_pattern(x, y)
+    doc: 'Currently Y is not used and X means: 1 - reduced explosion pattern (3 effects are spawned instead of 7), 0 - full pattern.'
+    macro: sfall.h
+
+  - name: set_attack_explosion_art
+    detail: void set_attack_explosion_art(x, y)
+    doc: Y not used and X is a misc frame ID (last 3 bytes, without object type) to use for the next explosion.
+    macro: sfall.h
+
+  - name: set_attack_explosion_radius
+    detail: void set_attack_explosion_radius(x)
+    doc: Changes radius at which explosion will hit secondary targets for the next attack (from the experiments it is limited to something around 8 by the engine).
+    macro: sfall.h
+
+  - name: set_attack_is_explosion_fire
+    detail: void set_attack_is_explosion_fire
+    doc: If you call this right before using a weapon with fire damage type (e.g. in `HOOK_AFTERHITROLL`), it will produce explosion effects (and radius damage) just like "explosion" type, but all targets will still receive fire damage.
+    macro: sfall.h
+
+  - name: set_explosion_radius
+    detail: void set_explosion_radius(grenade, rocket)
+    doc: Sets a permanent radius of the explosion for grenades and/or rockets. Passing 0 means not changing the corresponding radius. Changed radius will be reset each time the player reloads the game.
+    macro: sfall.h
+
+  - name: set_dynamite_damage
+    detail: void set_dynamite_damage(minDmg, maxDmg)
+    doc: Sets the minimum and maximum damage for Dynamite. Changed damage will be reset each time the player reloads the game.
+    macro: sfall.h
+
+  - name: set_plastic_damage
+    detail: void set_plastic_damage(minDmg, maxDmg)
+    doc: Sets the minimum and maximum damage for Plastic Explosives. Changed damage will be reset each time the player reloads the game.
+    macro: sfall.h
+
+  - name: get_explosion_damage
+    detail: array get_explosion_damage(itemPid)
+    doc: Returns an array of the minimum and maximum damage of the explosive item.
+    macro: sfall.h
+
+  - name: set_explosion_max_targets
+    detail: void set_explosion_max_targets(x)
+    doc: "Sets the maximum number of additional targets for an explosion, valid range: 1..6 (default is 6)."
+    macro: sfall.h
+
+  - name: item_make_explosive
+    detail: void item_make_explosive(int pid, int activePid, int minDamage, int maxDamage)
+    doc: |
+      - makes the specified item (pid) an explosive item like Dynamite or Plastic Explosives
+      - `maxDamage` is optional
+      - `activePid` is for an item with an active timer, can be the same as the `pid` argument
+      - the item proto must be "Misc Item" type and have "Use" action flag
+      - minDamage/maxDamage are the minimum and maximum explosion damage
+      - using the function on an item that is already set as an explosive will override its previous settings
+      - NOTE: this function does not work for pids of Dynamite and Plastic Explosives
+    macro: sfall.h
+
+- name: Animations
+  items:
+  - name: reg_anim_combat_check
+    detail: void reg_anim_combat_check(int enable)
+    doc: Allows to enable all `reg_anim_*` functions in combat (including vanilla functions) if set to 0. It is automatically reset at the end of each frame, so you need to call it before `reg_anim_begin` - `reg_anim_end` block.
+    opcode: 0x825c
+  - name: reg_anim_destroy
+    detail: void reg_anim_destroy(ObjectPtr)
+    doc: Given object is destroyed at the end of current animation set.
+    opcode: 0x825a
+  - name: reg_anim_animate_and_hide
+    detail: void reg_anim_animate_and_hide(ObjectPtr, int animID, int delay)
+    doc: Exactly like `reg_anim_animate` but the object will automatically disappear after the last animation frame (but not destroyed).
+    opcode: 0x825b
+  - name: reg_anim_light
+    detail: void reg_anim_light(ObjectPtr, int light, int delay)
+    doc: 'Change light of any object. Light argument is a light radius (0-8), but you can use highest 2 bytes to pass light intensity as well (example: 0xFFFF0008 - intensity 65535 and radius 8). If highest 2 bytes are 0, intensity will not be changed. Intensity range is from 0 to 65535 (0xFFFF)'
+    opcode: 0x825d
+  - name: reg_anim_change_fid
+    detail: void reg_anim_change_fid(ObjectPtr, int FID, int delay)
+    doc: Should work like `art_change_fid_num` but in `reg_anim` sequence.
+    opcode: 0x825e
+  - name: reg_anim_take_out
+    detail: void reg_anim_take_out(ObjectPtr, holdFrameID, delay)
+    doc: Plays "take out weapon" animation for given `holdFrameID`. It is not required to have such weapon in critter's inventory.
+    opcode: 0x825f
+  - name: reg_anim_turn_towards
+    detail: void reg_anim_turn_towards(ObjectPtr, int tile/target, delay)
+    doc: Makes object change its direction to face given tile num or target object.
+    opcode: 0x8260
+  - name: reg_anim_callback
+    detail: void reg_anim_callback(procedure proc)
+    doc: Adds the given procedure to an animation sequence-list and executes it in the registered sequence.
+    opcode: 0x827e
+
+- name: Art and appearance
+  items:
+  - name: art_exists
+    detail: int art_exists(int artFID)
+    doc: 'checks if given artFID exists in the game. Useful when you want to check if critter can use specific weapon: `art_exists((artFid bwand 0xffff0fff) bwor (weaponAnim * 0x1000))`.'
+    opcode: 0x8274
+  - name: refresh_pc_art
+    detail: void refresh_pc_art
+    opcode: 0x8227
+  - name: art_cache_clear
+    detail: void art_cache_clear()
+    doc: Clears the cache of FRM image files loaded into memory.
+    macro: sfall.h
+
+  - name: set_hero_race
+    detail: void set_hero_race(int style)
+    opcode: 0x8214
+  - name: set_hero_style
+    detail: void set_hero_style(int style)
+    opcode: 0x8215
+
+
+- name: Tiles and paths
+  items:
+  - name: get_tile_fid
+    detail: int get_tile_fid(int tile)
+    opcode: 0x823a
+  - name: tile_under_cursor
+    detail: int tile_under_cursor
+    opcode: 0x824b
+  - name: tile_light
+    detail: int tile_light(int elevation, int tileNum)
+    doc: Returns light intensity at the given tile in range from 0 to 65535.
+    opcode: 0x826d
+  - name: tile_get_objs
+    detail: array tile_get_objs(int tileNum, int elevation)
+    doc: Returns an array of all objects at given tile. It will include any hidden, dead or system objects (like cursor), so make sure to check properly when iterating.
+    opcode: 0x8270
+  - name: tile_refresh_display
+    detail: void tile_refresh_display()
+    doc: Redraws the game scene (tiles, walls, objects, etc.).
+  - name: obj_blocking_tile
+    detail: ObjectPtr obj_blocking_tile(int tileNum, int elevation, int blockingType)
+    doc: Returns first object blocking given tile using given blocking function or 0 if tile is clear.
+    opcode: 0x826f
+
+  - name: tile_by_position
+    detail: int tile_by_position(int x, int y)
+    doc: |
+      - returns the tile number at the x, y position relative to the top-left corner of the screen
+      - if the position is outside of the range of tiles, it will return -1
+    macro: sfall.h
+
+  - name: obj_blocking_line
+    detail: ObjectPtr obj_blocking_line(ObjectPtr objFrom, int tileTo, int blockingType)
+    doc: Returns first object which blocks direct linear path from `objFrom` to `tileTo` using selected blocking function (see `BLOCKING_TYPE_*` constants in `sfall.h`). If path is clear (no blocker was encountered by selected function) - returns 0. `objFrom` is always excluded from calculations, but is required to be a valid object.
+    opcode: 0x826e
+  - name: path_find_to
+    detail: array path_find_to(ObjectPtr objFrom, int tileTo, int blockingType)
+    doc: Returns the shortest path to a given tile using given blocking function as an array of tile directions (0..5) to move on each step. Array length equals to a number of steps. Empty array means that specified target cannot be reached.
+    opcode: 0x8272
+
+- name: Other
+  items:
+  - name: input_funcs_available
+    detail: int input_funcs_available()
+    opcode: 0x816b
+    doc: The input functions are only available if the user has the input hook turned on in `ddraw.ini`. Use `input_funcs_available` to check.
+  - name: get_year
+    detail: int get_year
+    opcode: 0x8163
+  - name: set_dm_model
+    detail: void set_dm_model(string name)
+    opcode: 0x8175
+  - name: set_df_model
+    detail: void set_df_model(string name)
+    opcode: 0x8176
+  - name: set_movie_path
+    detail: void set_movie_path(string filename, int movieid)
+    opcode: 0x8177
+  - name: set_pipboy_available
+    detail: void set_pipboy_available(int available)
+    doc: Will only accept 0 or 1 as an argument. Using any other value will cause the function to have no effect. Use 0 to disable the pipboy, and 1 to enable it.
+    opcode: 0x818b
+  - name: get_kill_counter
+    detail: int get_kill_counter(int critterType)
+    opcode: 0x818c
+  - name: mod_kill_counter
+    detail: void mod_kill_counter(int critterType, int amount)
+    opcode: 0x818d
+  - name: active_hand
+    detail: int active_hand
+    opcode: 0x8193
+  - name: toggle_active_hand
+    detail: void toggle_active_hand
+    opcode: 0x8194
+  - name: set_pickpocket_max
+    detail: void set_pickpocket_max(int percentage)
+    opcode: 0x81a0
+    doc: Effects all critters rather than just the player and can set the maximum in range from 0 to 999.
+  - name: set_hit_chance_max
+    detail: void set_hit_chance_max(int percentage)
+    opcode: 0x81a1
+    doc: Effects all critters rather than just the player and can set the maximum in range from 0 to 999.
+  - name: set_xp_mod
+    detail: void set_xp_mod(int percentage)
+    opcode: 0x81aa
+  - name: set_critter_hit_chance_mod
+    detail: void set_critter_hit_chance_mod(CritterPtr, int max, int mod)
+    opcode: 0x81c5
+  - name: set_base_hit_chance_mod
+    detail: void set_base_hit_chance_mod(int max, int mod)
+    opcode: 0x81c6
+  - name: inc_npc_level
+    detail: void inc_npc_level(int party_member_pid)
+    opcode: 0x81a5
+    doc: Takes a party member PID or an NPC name (deprecated, for compatibility with sfall 4.1.5/3.8.15 or earlier) as an argument. The NPC must be in your party. This function ignores player level requirements and the minimum 3 player level delay between NPC level gains. It also ignores the random element, regardless of sfall's `NPCAutoLevel` setting.
+  - name: get_npc_level
+    detail: int get_npc_level(string npc)
+    opcode: 0x8241
+  - name: get_viewport_x
+    detail: int get_viewport_x()
+    opcode: 0x81a6
+  - name: get_viewport_y
+    detail: int get_viewport_y()
+    opcode: 0x81a7
+  - name: set_viewport_x
+    detail: void set_viewport_x(int view_x)
+    opcode: 0x81a8
+  - name: set_viewport_y
+    detail: void set_viewport_y(int view_y)
+    opcode: 0x81a9
+  - name: set_hp_per_level_mod
+    detail: void set_hp_per_level_mod(int mod)
+    opcode: 0x81ce
+
+
+  - name: set_unspent_ap_bonus
+    detail: void set_unspent_ap_bonus(int multiplier)
+    opcode: 0x81e6
+    doc: Alters the AC bonus you receive per unused action point at the end of your turn in combat. To allow for fractional values, the value given if divided by 4. (Hence the default value is 4 and not 1.)
+  - name: get_unspent_ap_bonus
+    detail: int get_unspent_ap_bonus()
+    doc: Gets the AC bonus you receive per unused action point at the end of your turn in combat. To allow for fractional values, the value given if divided by 4. (Hence the default value is 4 and not 1.)
+    opcode: 0x81e7
+  - name: set_unspent_ap_perk_bonus
+    detail: void set_unspent_ap_perk_bonus(int multiplier)
+    opcode: 0x81e8
+    doc: Similar to `set_unspent_ap_bonus`, but effects the extra AC granted by the H2H Evade perk. (The default value of this is also 4, equivalent to doubling the original bonus.
+  - name: get_unspent_ap_perk_bonus
+    detail: int get_unspent_ap_perk_bonus()
+    opcode: 0x81e9
+    doc: Similar to `get_unspent_ap_bonus`, but accounts for the extra AC granted by the H2H Evade perk. (The default value of this is also 4, equivalent to doubling the original bonus.
+
+  - name: nb_create_char
+    detail: int nb_create_char()
+    opcode: 0x81f6
+    doc: "`nb_*` functions are reserved for the brotherhood tactical training mod, and should be avoided."
+
+  - name: get_proto_data
+    detail: int get_proto_data(int pid, int offset)
+    opcode: 0x8204
+    doc: Used to read the in-memory copies of the .pro files Fallout makes when they are loaded. The offset refers to the offset in memory from the start of the proto to the element you are reading.
+  - name: set_proto_data
+    detail: void set_proto_data(int pid, int offset, int value)
+    opcode: 0x8205
+    doc: Used to alter the in-memory copies of the .pro files Fallout makes when they are loaded. The offset refers to the offset in memory from the start of the proto to the element you are reading. Changes are not stored on disc, and are not permanent. If you modify the protos, and then Fallout subsequently reloads the file your changes will be lost.
+
+  - name: hero_select_win
+    detail: void hero_select_win(int)
+    opcode: 0x8213
+  - name: stop_game
+    detail: void stop_game()
+    opcode: 0x8222
+  - name: resume_game
+    detail: void resume_game()
+    opcode: 0x8223
+  - name: create_message_window
+    detail: void create_message_window(string message)
+    opcode: 0x8224
+  - name: get_light_level
+    detail: int get_light_level()
+    opcode: 0x8226
+    doc: Returns ambient light level in range 0..65536. The value returned by get_light_level may not exactly match that set by `set_light_level`, as `set_light_level` applies modifiers from the Night Vision perk.
+
+  - name: mark_movie_played
+    detail: void mark_movie_played(int id)
+    opcode: 0x8240
+  - name: gdialog_get_barter_mod
+    detail: int gdialog_get_barter_mod
+    opcode: 0x824c
+  - name: set_inven_ap_cost
+    detail: void set_inven_ap_cost
+    opcode: 0x824d
+  - name: game_loaded
+    detail: int game_loaded()
+    doc: Returns 1 the first time it is called after a new game or game load, and 0 any time after. It works on an individual basis for each script, so one script wont interfere with others. Its primary use is for global scripts, so that they know when to call `set_global_script_repeat`, but it can be called from normal scripts too.
+    opcode: 0x8164
+
+  - name: get_game_mode
+    detail: int get_game_mode()
+    doc: A more flexible version of in_world_map. It will return a set of flags indicating which mode the game is currently in. These flags are the same as those used in the `set_shader_mode function`.
+    opcode: 0x81af
+  - name: get_uptime
+    detail: int get_uptime()
+    doc: Just a wrapper around the windows GetTickCount() function. It's useful for making time fade effects in shaders, since they already have access to the current tick count.
+    opcode: 0x81b3
+
+  - name: set_base_pickpocket_mod
+    detail: void set_base_pickpocket_mod(int max, int mod)
+    doc: Changes maximum chance of success and chance mod for each steal attempt. `max` will replace 95% success chance cap (so you can set 100% maximum chance, for instance). `mod` will add this much percent to each success chance. for example if your chance is 50% and `mod` is 20, you will get 70% actual success rate
+    opcode: 0x81ca
+  - name: set_critter_pickpocket_mod
+    detail: void set_critter_pickpocket_mod(CritterPtr, int max, int mod)
+    doc: The same as `set_base_pickpocket`, but applies only to specific critter.
+    opcode: 0x81c9
+
+  - name: message_str_game
+    detail: string message_str_game(int fileId, int messageId)
+    doc: |
+      Works exactly the same as message_str, except you get messages from files in `text/english/game` folder. Use `GAME_MSG_*` defines or `mstr_*` macros from `sfall.h` to use specific msg file
+      - Additional game msg files added by `ExtraGameMsgFileList` setting will have consecutive fileIds assigned beginning from 0x2000 to 0x2FFF. (e.g. if you set `ExtraGameMsgFileList=foo,bar` in `ddraw.ini`, `foo.msg` will be associated with 0x2000 and `bar.msg` with 0x2001.).
+      - If a file has a specific number assigned in `ExtraGameMsgFileList`, its fileId will be (0x2000 + assigned number). (e.g. with `ExtraGameMsgFileList=foo,bar:2,foobar` in `ddraw.ini`, `bar.msg` will be associated with 0x2002 and `foobar.msg` with 0x2003.)
+    opcode: 0x826b
+
+  - name: sneak_success
+    detail: int sneak_success
+    doc: Returns 1 if last sneak attempt (roll against skill) was successful, 0 otherwise. This calls an internal engine function which is used to determine the perception range of critters (which you can override using `HOOK_WITHINPERCEPTION`).
+    opcode: 0x826c
+
+  - name: create_spatial
+    detail: ObjectPtr create_spatial(int scriptID, int tile, int elevation, int radius)
+    doc: Creates new spatial script with given SID, at given tile, and radius.
+    opcode: 0x8273
+
+  - name: unwield_slot
+    detail: void sfall_func2("unwield_slot", object critter, int slot)
+    doc: |
+      unequips an item from the specified slot for a critter or the player
+      can take off player's equipped item when the inventory is opened, or the player is in the barter screen
+      slot: 0 - armor slot, 1 - right slot, 2 - left slot (see `INVEN_TYPE_*` in `define.h`)
+
+
+  - name: add_trait
+    detail: void add_trait(int traitID)
+    doc: adds the specified trait to the player
+    macro: sfall.h
+  - name: get_inven_ap_cost
+    detail: int get_inven_ap_cost
+    doc: Returns the current AP cost to access the inventory in combat
+  - name: add_g_timer_event
+    detail: void add_g_timer_event(int time, int fixedParam)
+    doc: |
+      Adds a timer event that calls the `timed_event_p_proc` procedure in the current global script
+      `time`: the number of ticks after which the event timer is triggered
+      `fixedParam`: the value that is passed to the `timed_event_p_proc` procedure for the `fixed_param` function
+    macro: sfall.h
+
+- name: Variables
+  items:
+  - name: sprintf
+    detail: string sprintf(string format, any value)
+    doc: Formats given value using standart syntax of C printf function (google "printf" for format details). However it is limited to formatting only 1 value. Can be used to get character by ASCII code ("%c").
+    opcode: 0x8250
+  - name: typeof
+    detail: int typeof(any value)
+    doc: 'Returns type of the given value: VALTYPE_INT, VALTYPE_FLOAT or VALTYPE_STR.'
+    opcode: 0x8253
+  - name: atoi
+    detail: int atoi(string text)
+    opcode: 0x8237
+  - name: atof
+    detail: float atof(string text)
+    opcode: 0x8238
+
+- name: Strings
+  parent: Variables
+  items:
+  - name: string_split
+    detail: array string_split(string, split)
+    doc: "Takes a string and a seperator, searches the string for all instances of the seperator, and returns a temp array filled with the pieces of the string split at each instance. If you give an empty string as the seperator, the string is split into individual characters. You can use this to search for a substring in a string like this: `strlen(get_array(string_split(haystack, needle), 0))`"
+    opcode: 0x8235
+  - name: substr
+    detail: string substr(string, start, length)
+    doc: |
+      Cuts a substring from a string starting at "start" up to "length" characters. The first character position is 0 (zero).
+      - If start is negative - it indicates starting position from the end of the string (for example `substr("test", -2, 2)` will return last 2 charactes: "st").
+      - If length is negative - it means so many characters will be omitted from the end of string (example: `substr("test", 0, -2)` will return string without last 2 characters: "te").
+      - If length is zero - it will return a string from the starting position to the end of the string **New behavior** for sfall 4.2.2/3.8.22
+    opcode: 0x824e
+  - name: strlen
+    detail: int strlen(string text)
+    doc: Returns string length.
+    opcode: 0x824f
+  - name: charcode
+    detail: int charcode(string text)
+    doc: Returns ASCII code for the first character in given string.
+    opcode: 0x8251
+  - name: get_string_pointer
+    detail: int get_string_pointer(string text)
+    doc: Returns a pointer to a string variable or to a text.
+    macro: sfall.h
+  - name: string_format
+    detail: string string_format(string format, any val1, any val2, ...)
+    doc: |
+      Formats given value using standard syntax of C printf function (google "printf" for format details). However it is limited to formatting up to 4 values.
+      - formatting is only supported for %s and %d, and the format string is limited to 1024 characters
+    macro: sfall.h
+  - name: string_to_case
+    detail: string sfall_func2("string_to_case", string text, int toCase)
+    doc: |
+      Converts all letters in the given string to the specified case.
+      ```
+      toCase: 0 - lowercase, 1 - uppercase
+      ```
+      NOTE: this function works only for English letters of A-Z/a-z.
+
+- name: Interface
+
+- name: Tags
+  parent: Interface
+  doc: show_iface_tag, hide_iface_tag and is_iface_tag_active relate to the boxes that appear above the interface such as SNEAK and LEVEL. You can use 3 for LEVEL and 4 for ADDICT, or the range from 5 to (4 + the value of BoxBarCount in `ddraw.ini`) for custom boxes. Remember to add your messages to `intrface.msg` and set up the font colours in `ddraw.ini` if you're going to use custom boxes. Starting from sfall 4.1/3.8.12, is_iface_tag_active can also be used to check 0 for SNEAK, 1 for POISONED, and 2 for RADIATED.
+  items:
+  - name: show_iface_tag
+    detail: void show_iface_tag(int tag)
+    opcode: 0x81dc
+  - name: hide_iface_tag
+    detail: void hide_iface_tag(int tag)
+    opcode: 0x81dd
+  - name: is_iface_tag_active
+    detail: int is_iface_tag_active(int tag)
+    opcode: 0x81de
+    doc: Starting from sfall 4.1, can also be used to check 0 for SNEAK, 1 for POISONED, and 2 for RADIATED.
+  - name: set_iface_tag_text
+    detail: void set_iface_tag_text(int tag, string text, int color)
+    doc: Sets the text messages and colors for custom notification boxes to the interface without the need to add messages to `intrface.msg` and set up the font colors in `ddraw.ini`. Tag value is the same as used in `show_iface_tag`, `hide_iface_tag`, and `is_iface_tag_active`. The valid range is from 5 to (4 + the value of `BoxBarCount` in `ddraw.ini`) or the number of the last custom box added using the `add_iface_tag` function. The text is limited to 19 characters.
+    macro: sfall.h
+  - name: add_iface_tag
+    detail: void add_iface_tag()
+    doc: Adds one custom box to the current boxes, and returns the number of the added tag (-1 if the tags limit is exceeded. The maximum number of boxes is limited to 126 tags.
+    macro: sfall.h
+
+- name: Global variables
+  doc: These functions require an __EXACTLY 8 characters long__, case sensitive string for the variable name. The variables behave the same as normal Fallout globals, except that they don't have to be declared beforehand in `vault13.gam`. Trying to get a variable which hasn't been set will always return 0. The functions are intended for use when a patch to a mod requires the addition of a new global variable, a case which would otherwise require the player to start a new game.
+  items:
+  - name: set_sfall_global
+    detail: void set_sfall_global(string/int varname, int/float value)
+    opcode: 0x819d
+  - name: get_sfall_global_int
+    detail: int get_sfall_global_int(string/int varname)
+    opcode: 0x819e
+  - name: get_sfall_global_float
+    detail: float get_sfall_global_float(string/int varname)
+    opcode: 0x819f
+
+- name: Hook functions
+  parent: Hooks # normal page
+  items:
+  - name: init_hook
+    detail: int init_hook()
+    doc: The hook script equivalent of game_loaded; it returns 2 when the script is first loaded, 1 when the player reloads and 0 otherwise.
+    opcode: 0x81ea
+  - name: get_sfall_arg
+    detail: mixed get_sfall_arg()
+    doc: Gets the next argument from sfall. Each time it's called it returns the next argument, or otherwise it returns 0 if there are no more arguments left. You can arbitrarily get the value of any argument using the `sfall_func1("get_sfall_arg_at", argNum)` function.
+    opcode: 0x81e4
+  - name: get_sfall_args
+    detail: int get_sfall_args()
+    doc: Returns all hook arguments as a new temp array.
+    opcode: 0x823c
+  - name: get_sfall_arg_at
+    detail: mixed get_sfall_arg_at(int argNum)
+    doc: Gets the value of hook argument with the specified argument number (first argument of hook starts from 0)
+    macro: sfall.h
+  - name: set_sfall_return
+    detail: void set_sfall_return(int value)
+    doc: Used to return the new values from the script. Each time it's called it sets the next value, or if you've already set all return values it does nothing.
+    opcode: 0x81e5
+  - name: set_sfall_arg
+    detail: void set_sfall_arg(int argNum, int value)
+    doc: Changes argument value. The argument number (argNum) is 0-indexed. This is useful if you have several hook scripts attached to one hook point (see `register_hook_proc`).
+    opcode: 0x823d
+  - name: register_hook
+    detail: void register_hook(int hookID)
+    doc: Used from a normal global script if you want to run it at the same point a full hook script would normally run. In case of this function, `start` proc will be executed in current global script. You can use all above functions like normal.
+    opcode: 0x8207
+  - name: register_hook_proc
+    detail: void register_hook_proc(int hookID, proc procedure)
+    doc: |
+      The same as `register_hook`, except that you specifically define which procedure in the current script should be called as a hook (instead of "start" by default). Pass procedure the same as how you use dialog option functions. This IS the recommended way to use hook scripts, as it gives both modularity (each mod logic in a separate global script, no conflicts if you don't use "hs_*.int" scripts) and flexibility (you can place all related hook scripts for specific mod in a single script!).
+
+      Use zero (0) as second argument to unregister hook script from current global script.
+
+      __NOTE:__ you can hook several scripts to a single hook point, for example if it's different mods from different authors or just some different aspects of one larger mod. In this case scripts are executed in reverse order of how they were registered. When one of the scripts in a chain returns value with `set_sfall_return`, the next script may override this value if calls `set_sfall_return` again. Sometimes you need to multiply certain value in a chain of hook scripts.
+
+      Example: let's say we have a Mod A which reduces all "to hit" chances by 50%. The code might look like this:
+
+      ```js
+      original_chance = get_sfall_arg;
+      set_sfall_return(original_chance / 2);
+      ```
+
+      Mod B also want to affect hit chances globally, by increasing them by 50%. Now in order for both mods to work well together, we need to add this line to Mod A hook script:
+      ```js
+      set_sfall_arg(0, (original_chance / 2));
+      ```
+
+      This basically changes hook argument for the next script. Mod B code:
+      ```js
+      original_chance = get_sfall_arg;
+      set_sfall_return(original_chance * 1.5);
+      set_sfall_arg(0, (original_chance * 1.5));
+      ```
+
+      So if you combine both mods together, they will run in chain and the end result will be a 75% from original hit chance (hook register order doesn't matter in this case, if you use `set_sfall_arg` in both hooks).
+
+      The defines to use for the `hookID` are in `sfall.h`.
+    opcode: 0x8262
+  - name: register_hook_proc_spec
+    detail: void register_hook_proc_spec(int hookID, procedure proc)
+    doc: Works very similar to `register_hook_proc`, except that it registers the current script at the end of the hook script execution chain (i.e. the script will be executed after all previously registered scripts for the same hook, including the `hs_*.int` script). All scripts hooked to a single hook point with this function are executed in exact order of how they were registered, as opposed to the description below, which refers to using `register_hook/register_hook_proc` functions.
+
+- name: Array functions
+  parent: Arrays # not in this files, normal page
+  items:
+  - name: create_array
+    detail: int create_array(int size, int nothing)
+    doc: Creates permanent array (but not "saved").
+    opcode: 0x822d
+  - name: temp_array
+    detail: int temp_array(int size, int nothing)
+    doc: Works exactly like "create_array", only created array becomes "temporary."
+    opcode: 0x8233
+  - name: fix_array
+    detail: void fix_array(int arrayID)
+    doc: Changes "temporary" array into "permanent" ("permanent" arrays are not automatically saved into savegames).
+    opcode: 0x8234
+  - name: set_array
+    detail: void set_array(int arrayID, mixed key, mixed value)
+    doc: 'Sets array value (shorthand: arrayID[key] := value).'
+    opcode: 0x822e
+  - name: get_array
+    detail: mixed get_array(int arrayID, mixed key)
+    doc: 'Returns array value by key or index (shorthand: arrayID[key]).'
+    opcode: 0x822f
+  - name: resize_array
+    detail: void resize_array(int arrayID, int size)
+    doc: Changes array size.
+    opcode: 0x8232
+  - name: free_array
+    detail: void free_array(int arrayID)
+    doc: Deletes any array.
+    opcode: 0x8230
+  - name: scan_array
+    detail: mixed scan_array(int arrayID, mixed value)
+    doc: Searches for a first occurence of given value inside given array.
+    opcode: 0x8239
+  - name: len_array
+    detail: int len_array(int arrayID)
+    doc: Returns number of elements or key=>value pairs in a given array.
+    opcode: 0x8231
+  - name: array_key
+    detail: mixed array_key(int arrayID, int index)
+    doc: Don't use it directly; it is generated by the compiler in foreach loops.
+    opcode: 0x8256
+  - name: arrayexpr
+    detail: int arrayexpr(mixed key, mixed value)
+    doc: Don't use it directly; it is used by compiler to create array expressions.
+    opcode: 0x8257
+  - name: save_array
+    detail: void save_array(mixed key, int arrayID)
+    doc: Array is saved (arrayID is associated with given "key").
+    opcode: 0x8254
+  - name: load_array
+    detail: int load_array(mixed key)
+    doc: Load array from savegame data by the same key provided in "save_array".
+    opcode: 0x8255
+
+- name: Sfall # just parent page
+
+- name: funcX
+  parent: Sfall
+  items:
+  - name: sfall_func0
+    detail: any sfall_func0(char* funcName)
+    doc: Calls scripting function with given name and no arguments.
+    opcode: 0x8276
+  - name: sfall_func1
+    detail: any sfall_func1(char* funcName, arg1)
+    doc: Calls scripting function with given name and 1 argument.
+    opcode: 0x8277
+  - name: sfall_func2
+    detail: any sfall_func2(char* funcName, arg1, arg2)
+    doc: Calls scripting function with given name and 2 arguments.
+    opcode: 0x8278
+  - name: sfall_func3
+    detail: any sfall_func3(char* funcName, arg1, arg2, arg3)
+    doc: Calls scripting function with given name and 3 arguments.
+    opcode: 0x8279
+  - name: sfall_func4
+    detail: any sfall_func4(char* funcName, arg1, arg2, arg3, arg4)
+    doc: Calls scripting function with given name and 4 arguments.
+    opcode: 0x827a
+  - name: sfall_func5
+    detail: any sfall_func5(char* funcName, arg1, arg2, arg3, arg4, arg5)
+    doc: Calls scripting function with given name and 5 arguments.
+    opcode: 0x827b
+  - name: sfall_func6
+    detail: any sfall_func6(char* funcName, arg1, arg2, arg3, arg4, arg5, arg6)
+    doc: Calls scripting function with given name and 6 arguments
+    opcode: 0x827c
+  - name: sfall_func7
+    detail: any sfall_func7(string funcName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+    doc: Calls scripting function with given name and 7 arguments
+    opcode: 0x8280
+  - name: sfall_func8
+    detail: any sfall_func8(string funcName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
+    doc: Calls scripting function with given name and 8 arguments
+    opcode: 0x8281
+
+- name: Sfall funcX macros
+  items:
+  - name: critter_inven_obj2
+    detail: ObjectPtr critter_inven_obj2(ObjectPtr obj, int type)
+    doc: Works just like vanilla `critter_inven_obj`, but correctly reports item in player's inactive hand slot.
+    macro: sfall.h
+  - name: item_weight
+    detail: int item_weight(ObjectPtr obj)
+    doc: Gets the current weight of an object.
+    macro: sfall.h
+
+  - name: spatial_radius
+    detail: int spatial_radius(ObjectPtr obj)
+    doc: Returns radius of spatial script, associated with given dummy-object (returned by `create_spatial`).
+    macro: sfall.h
+  - name: set_rest_heal_time
+    detail: void set_rest_heal_time(int time)
+    doc: 'Sets the time interval in minutes for healing during resting. The default is 180. Note: The interval will be reset each time the player reloads the game.'
+    macro: sfall.h
+  - name: set_rest_mode
+    detail: void set_rest_mode(int flags)
+    doc: 'Sets the bit flags for the rest mode (see `RESTMODE_*` constants in `sfall.h`). Passing 0 will reset the rest mode. It will also be reset each time the player reloads the game.'
+    macro: sfall.h
+
+  - name: get_metarule_table
+    detail: array get_metarule_table
+    doc: Returns names of all currently available scripting functions.
+    macro: sfall.h
+
+  - name: dialog_message
+    detail: void dialog_message(string text)
+    doc: Displays a message in the NPC response window in dialog or barter screen.
+    macro: sfall.h
+
+  - name: get_current_inven_size
+    detail: get_current_inven_size(ObjectPtr object)
+    doc: Returns the current inventory size of the container or the critter.
+    macro: sfall.h
+
+  - name: get_object_ai_data
+    detail: int get_object_ai_data(ObjectPtr object, int aiParam)
+    doc: Returns the setting value from the AI packet of an object (critter). Use `AI_CAP_*` constants from `define_extra.h` for the `aiParam` argument to get AI value.
+    macro: sfall.h
+
+  - name: npc_engine_level_up
+    detail: void npc_engine_level_up(bool toggle)
+    doc: Enables/disables the engine function that increases the level of party members in the player leveling process. If the engine function is disabled, the process of leveling up party members should be performed by script functions.
+    macro: sfall.h
+
+  - name: set_drugs_data
+    detail: void set_drugs_data(int type, int pid, int value) 
+    doc: "Overrides the parameters of drugs set in the configuration file (`DrugsFile` setting in `ddraw.ini`). Type: 0 - changes the value of `NumEffects` for the drug (see `Drugs.ini` for the description of `NumEffects`), 1 - changes the duration of the addiction effect for the drug (a value of 1 = one game minute)."
+    macro: sfall.h
+
+  - name: metarule_exist
+    detail: bool metarule_exist(string metaruleName)
+    doc: Returns True if the specified name of metarule (sfall_funcX) function exists in the current version of sfall.
+    macro: sfall.h
+
+  - name: add_extra_msg_file
+    detail: int add_extra_msg_file(string fileName)
+    doc: |
+      Loads the custom message file, and returns the file ID number assigned to it in range from 0x3000 to 0x3FFF for the `message_str_game` function to get messages from the file.
+      - `fileName`: the name of the custom message file (including the .msg extension) in `text\<language>\game\` directory.
+
+      Alternative form: `int add_extra_msg_file(string fileName, int fileNumber)`
+      - `fileNumber`: the file ID number for the `message_str_game` function. The available range is from 0x2000 to 0x2FFF (see `ExtraGameMsgFileList` setting in `ddraw.ini`)
+      Use `fileNumber` only if you want to add a message file without editing `ddraw.ini` or existing scripts to support the old way.
+    macro: sfall.h
+
+  - name: void sfall_func0("remove_timer_event")
+    detail: void sfall_func0("remove_timer_event")
+    doc: Clears all set timer events for the current global script.
+    macro: sfall.h
+  - name: sfall_func1("remove_timer_event", int fixedParam)
+    detail: void sfall_func1("remove_timer_event", int fixedParam) 
+    doc: Removes all timer events with the specified `fixedParam` value for the current global script.
+    macro: sfall.h
+
+  - name: sfall_func0("hide_window")
+    detail: void sfall_func0("hide_window")
+    doc: Hides currently active (selected) script window.
+    macro: sfall.h
+  - name: sfall_func1("hide_window", string winName)
+    detail: void sfall_func0("hide_window")
+    doc: |
+      Hides the specified script window.
+      - winName: the window name, assigned to the window by the `CreateWin/create_win` function
+    macro: sfall.h
+  - name: sfall_func0("show_window")
+    detail: void sfall_func0("show_window")
+    doc: Displays the script window previously hidden with the `sfall_func0("hide_window")` function.
+    macro: sfall.h
+  - name: sfall_func1("show_window", string winName)
+    detail: void sfall_func1("show_window", string winName)
+    doc: |
+      Displays the specified hidden script window.
+      `winName`: the window name, assigned to the window by the `CreateWin/create_win` function
+    macro: sfall.h
+
+  - name: get_text_width
+    detail: int get_text_width(string text)
+    doc: Returns the text width in pixels for the currently set font.
+    macro: sfall.h
+
+  - name: sfall_func2("string_compare", string str1, string str2)
+    detail: bool sfall_func2("string_compare", string str1, string str2)
+    doc: Compares two strings case-insensitive, and returns `True` if the two strings are matched.
+    macro: sfall.h
+  - name: sfall_func3("string_compare", string str1, string str2, int codePage)
+    detail: bool sfall_func3("string_compare", string str1, string str2, int codePage)
+    doc: |
+      Compares two strings case-insensitive, and returns `True` if the two strings are matched
+      - `codePage`: code page number to properly compare national characters in the range 128-255 of the ASCII code table
+      available encodings: 1250-1252, 866
+    macro: sfall.h
+
+  - name: objects_in_radius
+    detail: objects_in_radius", int tile, int radius, int elevation, int type)
+    doc: |
+      - returns an array of objects of a type (see `OBJ_TYPE_*` constants in `define_extra.h`) within the specified radius from the given tile
+      - passing -1 to the `type` argument or _not specifying it_ will return all objects within the radius
+      - the radius is limited to 50 hexes
+    macro: sfall.h
+
+- name: NPC perks
+  parent: Perks and traits
+  doc: These functions are similar to `has_fake_*/set_fake_*/set_selectable_perk` functions, but apply to the specified party member NPC (including `dude_obj`)
+  items:
+  - name: set_fake_perk_npc
+    detail: void set_fake_perk_npc(object npc, string namePerk, int level, int image, string desc)
+    macro: sfall.h
+  - name: set_fake_trait_npc
+    detail: void set_fake_trait_npc(object npc, string nameTrait, int active, int image, string desc)
+    macro: sfall.h
+  - name: set_selectable_perk_npc
+    detail: void set_selectable_perk_npc(object npc, string namePerk, int active, int image, string desc)
+    macro: sfall.h
+  - name: has_fake_perk_npc
+    detail: int has_fake_perk_npc(object npc, string namePerk)
+    macro: sfall.h
+  - name: has_fake_trait_npc
+    detail: int has_fake_trait_npc(object npc, string nameTrait)
+    macro: sfall.h
+
+- name: Global script functions
+  parent: Global scripts
+  items:
+  - name: set_global_script_repeat
+    detail: void set_global_script_repeat(int frames)
+    opcode: 0x816a
+    doc: Only has an effect on the script it is called from. Every global script needs its own `game_loaded` block to correctly set up repeat rate. Will have no effect if called on a non-global script.
+  - name: set_global_script_type
+    detail: void set_global_script_type(int type)
+    opcode: 0x819b
+    doc: Only has an effect on the script it is called from. Every global script needs its own `game_loaded` block to correctly set up the script type.
+  - name: available_global_script_types
+    detail: int available_global_script_types
+    opcode: 0x819c
+
+- name: Combat
+  items:
+  - name: attack_is_aimed
+    detail: bool attack_is_aimed()
+    doc: Returns 1 if the aimed attack mode is selected, 0 otherwise.
+    macro: sfall.h
+
+  - name: block_combat
+    detail: void block_combat(bool value)
+    doc: Deny the player to enter combat mode.
+    opcode: 0x824a
+
+  - name: force_aimed_shots
+    detail: void force_aimed_shots(int pid)
+    opcode: 0x823e
+    doc: Allows overriding the normal rules regarding which weapons are allowed to make aimed attacks. (e.g. weapons that cause explosive damage normally cannot normally make aimed shots.) Will allow a weapon to make aimed shots even if it normally couldn't. Affects player and NPCs alike. Does not override the effects of the fast shot trait. The list of edited weapons is not saved over game loads, so you need to call the function once at each reload. Use a pid of 0 to represent unarmed.
+  - name: disable_aimed_shots
+    detail: void disable_aimed_shots(int pid)
+    opcode: 0x823f
+    doc: Allows overriding the normal rules regarding which weapons are allowed to make aimed attacks. (e.g. weapons that cause explosive damage normally cannot normally make aimed shots.) stops a weapon from making aimed shots even if it normally coulld. Affects player and NPCs alike. The list of edited weapons is not saved over game loads, so you need to call the function once at each reload. Use a pid of 0 to represent unarmed.
+  - name: get_attack_type
+    detail: int get_attack_type
+    opcode: 0x8228
+  - name: get_bodypart_hit_modifier
+    detail: int get_bodypart_hit_modifier(int bodypart)
+    opcode: 0x81df
+    doc: Gets the hit percentage modifiers for aiming at specific bodyparts. Valid bodypart id's are from 0 to 8.
+  - name: combat_data
+    detail: mixed combat_data
+    doc: |
+      - returns a pointer to the `C_ATTACK_*` data for the current combat attack process (see defined constants in `define_extra.h`)
+      - can be used in conjunction with the `get_object_data` and `set_object_data` functions
+        example: `sfall_func3("set_object_data", sfall_func0("combat_data"), C_ATTACK_UNUSED, 255);`
+  - name: set_bodypart_hit_modifier
+    detail: void set_bodypart_hit_modifier(int bodypart, int value)
+    opcode: 0x81e0
+    doc: Alters the hit percentage modifiers for aiming at specific bodyparts. Valid bodypart id's are from 0 to 8. Changes are not saved, and will reset to the defaults (or to the values specified in ddraw.ini if they exist) at each reload.
+
+  - name: set_critical_table
+    detail: void set_critical_table(int crittertype, int bodypart, int level, int valuetype, int value)
+    opcode: 0x81e1
+    doc: Used for modifying the critical table. For details see [critical hit tables](http://falloutmods.wikia.com/wiki/Critical_hit_tables). Changes are not saved, and will reset to the defaults, (or to the contents of `CriticalOverrides.ini`, if it exists) at each game reload. Requires `OverrideCriticalTable` to be set to 1 in `ddraw.ini`. (Disabled by default, because it noticably increases loading times.)
+  - name: get_critical_table
+    detail: int get_critical_table(int crittertype, int bodypart, int level, int valuetype)
+    opcode: 0x81e2
+    doc: Gets current critical table. For details see [critical hit tables](http://falloutmods.wikia.com/wiki/Critical_hit_tables). Requires `OverrideCriticalTable` to be set to 1 in `ddraw.ini`. (Disabled by default, because it noticably increases loading times.)
+  - name: reset_critical_table
+    detail: void reset_critical_table(int crittertype, int bodypart, int level, int valuetype)
+    opcode: 0x81e3
+    doc: Resets the critical table to default (or to the contents of `CriticalOverrides.ini`, if it exists). For details see 'http://falloutmods.wikia.com/wiki/Critical_hit_tables'. Requires `OverrideCriticalTable` to be set to 1 in `ddraw.ini`. (Disabled by default, because it noticably increases loading times.)
+
+  - name: get_last_target
+    detail: ObjectPtr get_last_target(ObjectPtr critter)
+    doc: Will return the last critter to be deliberately attacked. Outside of combat always returns 0.
+    opcode: 0x8248
+  - name: get_last_attacker
+    detail: ObjectPtr get_last_attacker(ObjectPtr critter)
+    doc: Will return the last critter to deliberately launch an attack against the argument critter. If a critter has not launched/received an attack, it will return 0. Outside of combat always returns 0.
+    opcode: 0x8249
+
+  - name: set_critter_burst_disable
+    detail: void set_critter_burst_disable(int critter, int disable)
+    opcode: 0x8216
+
+  - name: get_critter_current_ap
+    detail: int get_critter_current_ap(CritterPtr)
+    opcode: 0x8191
+    doc: Should only be used during the target critters turn while in combat. Calling it outside of combat typically returns the critters max ap, but don't rely on that behaviour. (Specifically, if the critter has never before entered combat, it will probably return the critters base ap ignoring any extra bonuses from perks etc.)
+  - name: set_critter_current_ap
+    detail: void set_critter_current_ap(CritterPtr, int ap)
+    opcode: 0x8192
+    doc: Should only be used during the target critters turn while in combat.
+
+- name: Car
+  items:
+  - name: set_car_current_town
+    detail: void set_car_current_town(int town)
+    opcode: 0x81b6
+    doc: Changes the current town index for the player's car.
+  - name: car_gas_amount
+    detail: int car_gas_amount()
+    doc: |
+      Returns the current amount of fuel in player's car (between 0 and 80000).
+      To change fuel amount, use vanilla function: `metarule(METARULE_GIVE_CAR_GAS, amount)` - `amount` can be positive or negative.
+    macro: sfall.h
+  - name: set_car_intface_art
+    detail: void set_car_intface_art(int artIndex)
+    doc: |
+      - Changes the interface art (index in `intrface.lst`) for the car image on the world map interface
+      - Should be called before going to the world map
+      - Vanilla art index is 433
+    macro: sfall.h
+
+- name: Windows and images
+  parent: Interface
+  items:
+    - name: interface_art_draw
+      detail: int sfall_func4("interface_art_draw", int winType, string artFile/int artID, int x, int y)
+      doc: |
+        ```c++
+        int sfall_func4("interface_art_draw", int winType, string artFile/int artID, int x, int y)
+        int sfall_func5("interface_art_draw", int winType, string artFile/int artID, int x, int y, int frame)
+        int sfall_func6("interface_art_draw", int winType, string artFile/int artID, int x, int y, int frame, array param)
+        ```
+        - draws the specified PCX or FRM image in the game interface window, returns -1 on any error
+        - `winType`: the type number of the interface window (see `WINTYPE_*` constants in `sfall.h`)
+          this also takes the value of the flag (0x1000000) to prevent immediate redrawing of the interface window
+        - `artFile/artId`: path to the PCX/FRM file (e.g. `art\\inven\\5mmap.frm`), or its FRM ID number (e.g. `0x7000026`, see specification of the FID format)
+        - `x/y`: offset relative to the top-left corner of the window
+
+        optional arguments:
+        - `frame`: frame number, the first frame starts from zero
+        - `param`: an array which specifies additional parameters, where:
+          index 0 - sprite direction for multi-directional FRM
+          index 1/index 2 - the new width/height to scale the image to. Pass -1 to use the original width/height
+
+    - name: interface_print
+      detail: int sfall_func5("interface_print", string text, int winType, int x, int y, int color)
+      doc: |
+        ```c++
+        int sfall_func5("interface_print", string text, int winType, int x, int y, int color)
+        int sfall_func6("interface_print", string text, int winType, int x, int y, int color, int width)
+        ```
+        - displays the text in the specified interface window with the current font. Use vanilla `SetFont` function to set the font
+        - returns the count of lines printed, or -1 on any error
+        - `text`: the text to be printed. Use the `\n` control character to move text to a new line (example: "Hello\nWorld!")
+        - `winType`: the type number of the interface window (see `WINTYPE_*` constants in sfall.h)
+        - `x/y`: offset relative to the top-left corner of the window
+        - `color`: the color index in the game palette. Pass 0 if the text color was previously set by vanilla `SetTextColor` function
+          It can also take additional flags (via `bwor`) for displaying text:
+          - `0x0010000` - adds a shadow to the text, the 'textshadow' compiler constant
+          - `0x1000000` - prevents immediate redrawing of the interface window, the `textdirect` compiler constant (works the other way around)
+          - `0x2000000` - fills the background of the text with black color, the `textnofill` compiler constant (works the other way around)
+        - `width` (optional): the maximum width of the text. The text will be wrapped to fit within the specified width
+
+    - name: draw_image
+      detail: void draw_image(string/int artFile/artId, int frame, int x, int y, bool noTransparent)
+      doc: |
+        - displays the specified PCX or FRM image in the active window created by vanilla `CreateWin` or sfall's `create_win` script function
+        - artFile/artId: path to the PCX/FRM file (e.g. `art\\inven\\5mmap.frm`), or its FRM ID number (e.g. `0x7000026`, see specification of the FID format)
+        optional arguments:
+        - `frame`: frame number, the first frame starts from zero
+        - `x/y`: offset relative to the top-left corner of the window
+        - `noTransparent`: pass True to display an image without transparent background
+        - NOTE: to omit optional arguments starting from the right, call the functions with different `sfall_funcX` (e.g. `sfall_func4("draw_image", pathFile, frame, x, y))`
+      macro: sfall.h
+
+    - name: draw_image_scaled
+      detail: void draw_image_scaled(string/int artFile/artId, int frame, int x, int y, int width, int height)
+      doc: |
+        - displays the specified PCX or FRM image in the active window created by vanilla `CreateWin` or sfall's `create_win` script function
+        - artFile/artId: path to the PCX/FRM file (e.g. `art\\inven\\5mmap.frm`), or its FRM ID number (e.g. `0x7000026`, see specification of the FID format)
+        optional arguments:
+        - `frame`: frame number, the first frame starts from zero
+        - `x/y`: offset relative to the top-left corner of the window
+        - `width/height`: the new width/height to scale the image to. Pass -1 to either width or height to keep the aspect ratio when scaling
+        - NOTE: to omit optional arguments starting from the right, call the functions with different `sfall_funcX` (e.g. `sfall_func4("draw_image", pathFile, frame, x, y))`
+        - if called without `x/y/width/height` arguments, the image will be scaled to fit the window without transparent background
+      macro: sfall.h
+
+    - name: get_window_under_mouse
+      detail: int get_window_under_mouse()
+      opcode: 0x821f
+    - name: create_win
+      detail: void create_win(string winName, int x, int y, int width, int height, int flags)
+      doc: "`flags` argument is optional. Works just like vanilla `CreateWin` function, but creates a window with `MoveOnTop` flag if the flags argument is not specified, and allows to set additional flags for the created window. `MoveOnTop` flag allows the created window to be placed on top of the game interface."
+      macro: sfall.h
+
+    - name: get_window_attribute
+      detail: int sfall_func1("get_window_attribute", int winType)
+      doc: |
+        Alternative form: `int sfall_func2("get_window_attribute", int winType, int attrType)`
+        Returns the attribute of the specified interface window by the `attrType` argument.
+        - `winType`: the type number of the interface window (see `WINTYPE_*` constants in `sfall.h`)
+        - `attrType`: `0` - checks and returns a value of 1 if the specified interface window is created by the game (same as without the argument)
+                      `1` - X position, `2` - Y position (relative to the top-left corner of the game screen)
+                      `3` - interface width size, `4` - interface height size
+                      `-1` - returns an associative array of keys (left, top, right, bottom) and values that define the position of the window rectangle
+                      (use standard syntax to access array values, e.g. `winRect.top`, `winRect.bottom`)
+        - returns -1 if the specified attribute cannot be obtained
+    - name: message_box
+      detail: int sfall_func4("message_box", string message, int flags, int color1, int color2)
+      doc: |
+        Creates a dialog box with text and returns the result of pressing the button: 0 - No (Escape), 1 - Yes/Done (Enter). Returns -1 if for some reason the dialog box cannot be created.
+        ```
+        - message: the text in the dialog box. Use the `\n` control character to move text to a new line (example: "Hello\nWorld!")
+        optional arguments:
+        - flags: mode flags (see `MSGBOX_*` constants in define_extra.h). Pass -1 to skip setting the flags (default flags are NORMAL and YESNO)
+        - color1/color2: the color index in the game palette. `color1` sets the text color for the first line, and `color2` for all subsequent lines of text (default color is 145)
+        ```
+    - name: set_window_flag
+      detail: void set_window_flag(string winName/int winID, int flag, bool value)
+      doc: |
+        Changes the specified flag for the created script or game interface window.
+        - winName: the window name, assigned to the window by the `CreateWin/create_win` function
+        - winID: the ID number of the interface or script window obtained with the `get_window_under_mouse` function, or 0 for the current game interface
+        - flag: the flag to change (see `WIN_FLAG_*` constants in `define_extra.h`)
+        - value: `true` - set the flag, `false` - unset the flag
+      macro: sfall.h
+
+    - name: win_fill_color
+      detail: int win_fill_color(int x, int y, int width, int height, int color)
+      doc: |
+        Fills the rectangle area of the currently selected script window with the specified color, or clears the window with transparent (index 0) color (call the function without arguments).
+        - `color`: the color index in the game palette (from 0 to 255)
+    - name: nterface_overlay
+      detail: sfall_func2("interface_overlay", int winType, int mode)
+      doc: |
+        Alternative form: `int sfall_func6("interface_overlay", int winType, 2, int x, int y, int width, int height)`.
+
+        Creates an additional drawing surface above the graphic layer of the specified interface window. All subsequent calls of `interface_art_draw` and `interface_print` functions will draw on it.
+        - `winType`: the type number of the interface window (see `WINTYPE_*` constants in `sfall.h`)
+        - `mode`: 1 - creates a new overlay surface
+                  2 - clears the overlay area or the specified rectangle defined by the `x`, `y`, `width`, `height` arguments
+                  0 - destroys the created overlay surface (frees up the memory allocated to the surface)
+
+- name: Outline
+  parent: Interface
+  items:
+  - name: outlined_object
+    detail: ObjectPtr outlined_object()
+    doc: Returns an object that is currently highlighted by hovering the mouse above it.
+    macro: sfall.h
+  - name: get_outline
+    detail: int get_outline(ObjectPtr obj)
+    doc: Gets the current outline color for an object.
+    macro: sfall.h
+  - name: set_outline
+    detail: void set_outline(ObjectPtr obj, int color)
+    doc: |
+      - sets the outline color of an object (see `OUTLINE_*` constants in `sfall.h`)
+      - can also set a custom color from the game palette by shifting the color index value left by 8 bits: `0xCC00` where `CC` is the palette index (available since sfall 4.2.7/3.8.27)
+      - passing 0 will disable the outline
+    macro: sfall.h
+
+- name: Main interface
+  parent: Interface
+  items:
+  - name: intface_is_hidden
+    detail: bool intface_is_hidden()
+    macro: sfall.h
+    doc: Returns 1 if interface is currently hidden, 0 otherwise.
+  - name: intface_redraw
+    detail: void intface_redraw(bool winType)
+    macro: sfall.h
+    doc: |
+      Redraws main game interface. Useful after direct changes to current player weapons or stats to reflect changes.
+      - redraws main game interface, useful to reflect changes after directly changing current player weapons or stats
+      - `winType`: the type number of the interface window (see `WINTYPE_*` constants in `sfall.h`). Pass `-1` to redraw all interface windows.
+  - name: intface_hide
+    detail: void intface_hide()
+    doc: Hides main interface.
+    macro: sfall.h
+  - name: intface_show
+    detail: void intface_show()
+    doc: Shows main interface.
+    macro: sfall.h
+
+- name: Inventory
+  parent: Interface
+  items:
+  - name: display_stats
+    detail: void display_stats()
+    doc: |
+      - Updates player's stats in the inventory display window or on the character screen.
+      - NOTE: works only when the interface window is opened
+    macro: sfall.h
+  - name: inventory_redraw
+    detail: void inventory_redraw(invSide)
+    doc: 'Redraws inventory items list in the inventory/loot/barter screens. Argument invSide specifies which side needs to be redrawn: 0 - the player, 1 - target (container/NPC in loot/barter screens), -1 - both sides (same as without argument).'
+    macro: sfall.h
+
+- name: Cursor
+  parent: Interface
+  items:
+  - name: get_cursor_mode
+    detail: int get_cursor_mode()
+    doc: 'Returns the current cursor mode. Values: 0 - movement cursor, 1 - command cursor, 2 - targeting cursor, 4 to 10 are Skilldex skills (yellow targeting cursor).'
+    macro: sfall.h
+  - name: set_cursor_mode
+    detail: void set_cursor_mode(int mode)
+    doc: Sets the current cursor mode.
+    macro: sfall.h
+
+- name: Locks
+  items:
+  - name: lock_is_jammed
+    detail: bool lock_is_jammed(ObjectPtr obj)
+    doc: Returns 1 if the lock (container or scenery) is currently jammed, 0 otherwise.
+    macro: sfall.h
+  - name: unjam_lock
+    detail: void unjam_lock(ObjectPtr obj)
+    doc: Unjams a lock immediately without having to wait until the next day, or leave the map and then return after 24 hours. __Does not work__ in `use_skill_on_p_proc` procedure.
+    macro: sfall.h
+  - name: set_unjam_locks_time
+    detail: void set_unjam_locks_time(int time)
+    doc: Sets after how many hours (up to 127 hours) jammed locks will be unjammed if the player leaves the map. Also disables the auto unjam that occurs at midnight when the player is on the map. Passing 0 will disable the auto unjam mechanism completely. The auto unjam mechanism will be reset each time the player reloads the game.
+    macro: sfall.h
+
+- name: INI settings
+  items:
+  - name: modified_ini
+    detail: int modified_ini
+    opcode: 0x823b
+    doc: Returns the value of ModifiedIni setting in [Main] section of the INI.
+  - name: get_ini_setting
+    detail: int get_ini_setting(string setting)
+    doc: |
+      - Reads an integer value from an ini file in the fallout directory.
+      - It only takes a single argument; seperate the file name, section and key with a "\|" character; e.g. `myvar:=get_ini_setting("myini.ini|mysec|var1")` If the file or key cannot be found, -1 is returned.
+      - The file name is limited to 63 chars, including the extension.
+      - The section name is limited to 32 characters.
+      - It can also be used to get sfall's settings, by using `ddraw.ini` as the file name.
+    opcode: 0x81ac
+  - name: get_ini_string
+    detail: string get_ini_string(string setting)
+    doc: Reads a string value from an ini file in the fallout directory.
+    opcode: 0x81eb
+  - name: get_ini_section
+    detail: array get_ini_section(string file, string sect)
+    doc: 'Returns an associative array of keys and values for a given INI file and section. NOTE: all keys and their values will be of String type.'
+    macro: sfall.h
+  - name: get_ini_sections
+    detail: array get_ini_sections(string file)
+    doc: Returns an array of names of all sections in a given INI file.
+    macro: sfall.h
+  - name: set_ini_setting
+    detail: void set_ini_setting(string setting, int/string value)
+    doc: 'Writes an integer or a string value to an ini file in the Fallout directory. If the ini file does not exist, it will be created The setting argument works in the same way as in `get_ini_setting`, seperate the file name, section and key with a "|" character. __Note:__ the file name is limited to 63 chars (including the extension), the section name is limited to 32 characters.'
+    macro: sfall.h
+
+- name: Objects and scripts
+  items:
+  - name: set_self
+    detail: void set_self(ObjectPtr)
+    doc: |
+      Overrides the script's `self_obj` for the next function call.
+      - It is primarily used to allow the calling of functions which take an implicit `self_obj` parameter (e.g. `drop_obj`) from global scripts, but it can also be used from normal scripts.
+      - Will revert back to its original value after the next function call.
+      - Calling `self_obj(0)` will also revert `self_obj` to original value. It is recommended to call this after each use of `set_self` in normal scripts in order to avoid unforeseen side effects.
+      - `source_obj`, `target_obj`, and similar functions will not work if preceded by `set_self`.
+      - __NOTE:__ for `use_obj`, `use_obj_on_obj` vanilla functions to work correctly, it is required to call `set_self` twice.
+    opcode: 0x8206
+  - name: set_dude_obj
+    detail: void set_dude_obj(ObjectPtr critter)
+    doc: Take control of a given critter. Passing value 0 will reset control back to "real" dude.
+    macro: sfall.h
+  - name: real_dude_obj
+    detail: ObjectPtr real_dude_obj()
+    doc: Returns the initial `dude_obj` after `set_dude_obj` was used.
+    macro: sfall.h
+
+  - name: remove_script
+    detail: void remove_script(ObjectPtr)
+    opcode: 0x81f3
+    doc: Accepts a pointer to an object and will remove the script from that object.
+  - name: set_script
+    detail: void set_script(ObjectPtr, int scriptid)
+    opcode: 0x81f4
+    doc: Accepts a pointer to an object and scriptID, and applies the given script to an object (scriptID accept the same values as `create_object_sid `from sfall 3.6). If used on an object that is already scripted, it will remove the existing script first; you cannot have multiple scripts attached to a single object. Calling `set_script` on `self_obj` will have all sorts of wacky side effects, and should be avoided. If you add 0x80000000 to the sid when calling `set_script`, `map_enter_p_proc` will be SKIPPED. The `start` proc will always be run.
+  - name: get_script
+    detail: int get_script(ObjectPtr)
+    opcode: 0x81f5
+    doc: |
+      - accepts a pointer to an object and returns its scriptID (line number in `scripts.lst`), or 0 if the object is unscripted.
+      - returns -1 on argument error.
+
+  - name: obj_is_carrying_obj
+    detail: int (ObjectPtr invenObj, ObjectPtr itemObj)
+    doc: Returns number of `itemObj` inside invenObj's inventory, note that both arguments are object pointers. useful when dealing with different stacks of same item (`obj_is_carrying_obj_pid` just returns total for all stacks of the same PID.)
+    opcode: 0x8275
+
+  - name: loot_obj
+    detail: ObjectPtr loot_obj()
+    doc: Returns a pointer to the target object (container or critter) of the loot screen.
+    macro: sfall.h
+  - name: dialog_obj
+    detail: ObjectPtr dialog_obj()
+    doc: Returns a pointer to the object (critter) the player is having a conversation or bartering with.
+    macro: sfall.h
+
+  - name: obj_under_cursor
+    detail: ObjectPtr obj_under_cursor(bool onlyCritter, bool includeDude)
+    doc: |
+      Returns the object under the cursor on the main game screen.
+      - onlyCritter:
+        - True - only checks critters and ignores their cover (roof tiles, walls, scenery, etc.)
+        - False - checks all objects (can't check critters under objects)
+      - passing False to the includeDude argument will ignore dude_obj
+      **NOTE:** the function will always return 0 if the cursor is in movement mode (hexagon cursor).
+    macro: sfall.h
+
+  - name: get_object_data
+    detail: get_object_data(ObjectPtr object, int offset)
+    doc: Returns the data at the specified offset of an object (see `OBJ_DATA_*` constants in `define_extra.h` for offsets).
+    macro: sfall.h
+  - name: set_object_data
+    detail: set_object_data(ObjectPtr object, int offset, int data)
+    doc: Sets the data at the specified offset of an object.
+    macro: sfall.h
+
+  - name: get_flags
+    detail: int get_flags(ObjectPtr obj)
+    doc: Gets the current value of object flags (see `define_extra.h` for available flags).
+    macro: sfall.h
+  - name: set_flags
+    detail: void set_flags(ObjectPtr obj, int flags)
+    doc: Sets the current flags of an object. All flags are rewritten with given integer, so first get current flags with `get_flags` and use `bwor/bwand` to set/remove specific flag.
+    macro: sfall.h
+
+  - name: set_unique_id
+    detail: int set_unique_id(ObjectPtr object, int flag)
+    doc: |
+      Assigns a unique ID number to the object and returns it. If a unique ID number has already been assigned to an object, then ID number is returned without reassignment. `flag` is optional.
+      - items with unique IDs will not stack with other items of the same type in the inventory
+      - to just get the current ID number of an object, use `get_object_data(object, OBJ_DATA_ID)`
+      - unique ID numbers are saved in your savegame, and have a range from 0x10000000 to 0x7FFFFFFF
+      - there is also a unique ID number range for the player and party members from 18000 to 83535
+      - to assign a new ID number generated by the engine to the object (i.e. unassign a unique ID), call the function with two arguments and pass -1 for the flag argument
+    macro: sfall.h

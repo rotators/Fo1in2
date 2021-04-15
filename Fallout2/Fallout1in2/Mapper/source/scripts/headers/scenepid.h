@@ -47,9 +47,6 @@ variable Scenery_Creation_Ptr;
 #define PID_BOS_ELEVATOR_TOP                (33554613)
 #define PID_BOS_MARKER                      (33554589)
 
-// Navarro Door
-#define PID_NS_NAVARRO_BUNKER_DOOR          (33554450)
-
 // Sierra Base Entrance Door
 #define PID_SIERRA_ENTRANCE_DOOR            (33555779)
 #define PID_SIERRA_ENTRANCE_DOOR_EXP        (33555780)
@@ -315,6 +312,7 @@ variable Scenery_Creation_Ptr;
 // Fo1in2:
 #define PID_RATHOLE                         (33556295)
 #define PID_GIZMO_SIGN_OFF                  (33556296)
+#define PID_GIZMO_FLIES                     (33556297)
 #define PID_TROPHY                          (33555332) // Junktown urn
 
 #define PID_JUNK_BARREL                     (33554538)

@@ -34,8 +34,6 @@ procedure Cheater12;
 procedure Cheater13;
 procedure Cheater14;
 procedure Cheater15;
-procedure Cheater16;
-procedure Cheater17;
 procedure Cheater18;
 procedure Cheater19;
 procedure Cheater19a;
@@ -48,16 +46,9 @@ procedure Cheater19g;
 procedure Cheater19h;
 procedure CheaterEnd;
 
-procedure FixesOFF;// disable "Bug Fixes Only" mode
-procedure FixesON;// enable "Bug Fixes Only" mode
-procedure FixesOnly;// toggle "Bug Fixes Only" mode
-procedure HardReset;// delete all items from inventory, including equipped
-procedure IDKFA;// give all keys in the game
 procedure ChangeTheClock;//used for the two procs below this one
 procedure RollBack;// subtract amount from game_time (time-travel to the past!!)
 procedure SpringForward;// add to game_time (back to the future!!)
-procedure GiveItems;//Give same items as cheat_mode proc in V13CAVE.SSL?
-procedure GiveItemsConfirm;//Yes to "give items?" query
 procedure Teleport;// to move around to different maps
 
 procedure TARDIS_1;
@@ -137,119 +128,21 @@ procedure PoliceBox;
 procedure TalkCow;
 procedure UsedCar;
 
+procedure CheaterTimers;
+procedure CheaterTimersV13Invasion;
+procedure CheaterTimersV13Water;
+procedure CheaterTimersUp;
+procedure CheaterTimersDown;
+
 variable TimeFlag;
+
+#define timerUPandDown \
+   giq_option(1, SCRIPT_CHEATER, 1020, CheaterTimersUp, NEUTRAL_REACTION);    \
+   giq_option(1, SCRIPT_CHEATER, 1030, CheaterTimersDown, NEUTRAL_REACTION);  \
+   NOption(g_bye, CheaterEnd, 001)
 
 procedure CheaterEnd begin
 end
-
-procedure Cheater16// in backpack
-begin
-   variable bag_ptr := 0;
-   variable item := 0;
-   bag_ptr := create_object( PID_BACKPACK, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, bag_ptr, 1);
-   item := create_object( PID_KEY, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_KEYS, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_RED_PASS_KEY, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_BLUE_PASS_KEY, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_NUKE_KEY, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_ACCESS_CARD, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_BLACK_COC_BADGE, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_RED_COC_BADGE, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_SECURITY_CARD, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_TOGGLE_SWITCH, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_YELLOW_PASS_KEY, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-   item := create_object( PID_MBASE_SEC_CODE, 0, 0 );
-   add_mult_objs_to_inven(bag_ptr, item, 1);
-end
-
-procedure Cheater17// to inventory
-begin
-   variable item := 0;
-   item := create_object( PID_KEY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_KEYS, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_RED_PASS_KEY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BLUE_PASS_KEY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_NUKE_KEY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_ACCESS_CARD, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BLACK_COC_BADGE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_RED_COC_BADGE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_SECURITY_CARD, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_TOGGLE_SWITCH, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_YELLOW_PASS_KEY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_MBASE_SEC_CODE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-end
-/*
-procedure FixesON
-begin
-   set_global_var( GVAR_FIXT_BUGFIXES_ONLY, 1 );
-   call FixesOnly;
-end
-
-procedure FixesOFF
-begin
-   set_global_var( GVAR_FIXT_BUGFIXES_ONLY, 0 );
-   call FixesOnly;
-end
-
-procedure FixesOnly
-begin
-   if (global_var( GVAR_FIXT_BUGFIXES_ONLY )) then begin
-      gsay_reply(621, 208);
-      giq_option( 1, SCRIPT_CHEATER, 209, FixesOFF, NEUTRAL_REACTION );
-      giq_option( 1, SCRIPT_CHEATER, 210, Cheater00a, NEUTRAL_REACTION );
-   end
-   else begin
-      gsay_reply(621, 211);
-      giq_option( 1, SCRIPT_CHEATER, 212, FixesON, NEUTRAL_REACTION );
-      giq_option( 1, SCRIPT_CHEATER, 210, Cheater00a, NEUTRAL_REACTION );
-   end
-end
-*/
-
-procedure HardReset
-begin
-   variable KillBox_ptr := 0;
-// variable KillBox_IAN_ptr := 0;
-//me
-   KillBox_ptr := create_object( PID_DEAD_TRAVELER, 0, 0 );// <-- Dead Traveler (Ghoul)  Was:  create_object( PID_IGUANA_STAND, 0, 0 );// <-- Bob's Iguana Stand. MAX_SIZE = 1000, biggest of all containers. -1 = NO SCRIPT ATTACHED.
-   move_to(KillBox_ptr, 0, 0);
-   //inven_unwield;
-   //inven_unwield;
-   move_obj_inven_to_obj(dude_obj, KillBox_ptr);
-   destroy_object(KillBox_ptr);
-   inven_unwield;
-//ian
-// KillBox_IAN_ptr := create_object_sid(16777527, 0, 0, -1);
-// move_to(KillBox_IAN_ptr, 0, 0);
-// move_obj_inven_to_obj(Ian_ptr, KillBox_IAN_ptr);
-// move_obj_inven_to_obj(Ian_ptr, KillBox_IAN_ptr);
-// destroy_object(KillBox_IAN_ptr);
-end
-
 
 procedure Cheater19a
 begin
@@ -294,31 +187,31 @@ end
 procedure Cheater06a
 begin
    critter_injure(dude_obj, 4);//    DAM_CRIP_LEG_LEFT      4
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06b
 begin
    critter_injure(dude_obj, 8);//    DAM_CRIP_LEG_RIGHT     8
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06c
 begin
    critter_injure(dude_obj, 16);//    DAM_CRIP_ARM_LEFT     16
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06d
 begin
    critter_injure(dude_obj, 32);//    DAM_CRIP_ARM_RIGHT    32
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater06e
 begin
    critter_injure(dude_obj, 64);//    DAM_BLIND             64
-   gsay_message(621, 221, 50);
+   gsay_message(SCRIPT_CHEATER, 221, 50);
 end
 
 procedure Cheater00c begin
@@ -368,42 +261,42 @@ end
 procedure Cheater01
 begin
    give_exp_points(500);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater02
 begin
    give_exp_points(1000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater03
 begin
    give_exp_points(5000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater04
 begin
    give_exp_points(10000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater05
 begin
    give_exp_points(50000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
 procedure Cheater05b
 begin
    give_exp_points(210000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
 // call Cheater00;
 end
 
@@ -412,7 +305,7 @@ begin
 // variable LVar0;
 // pc_stat(1) := 10;
    give_exp_points(-5000);
-// gsay_message(621, 240, 50);
+// gsay_message(SCRIPT_CHEATER, 240, 50);
    call Cheater00;
 end
 
@@ -421,7 +314,7 @@ begin
    display_msg(message_str(SCRIPT_CHEATER, 213) + dude_poison_stat + " ");
    poison(dude_obj, 100);
    display_msg(message_str(SCRIPT_CHEATER, 214)  + dude_poison_stat + " ");
-// gsay_message(621, 215, 50);
+// gsay_message(SCRIPT_CHEATER, 215, 50);
    call Cheater06;
 end
 
@@ -430,7 +323,7 @@ begin
    display_msg(message_str(SCRIPT_CHEATER, 213) + dude_rads + " ");
    radiation_inc(dude_obj, 50);
    display_msg(message_str(SCRIPT_CHEATER, 214)  + dude_rads + " ");
-// gsay_message(621, 216, 50);
+// gsay_message(SCRIPT_CHEATER, 216, 50);
    call Cheater06;
 end
 
@@ -532,7 +425,7 @@ end
 
 procedure Cheater00// GIVE EXPERIENCE
 begin
-   gsay_reply(621, 241);
+   gsay_reply(SCRIPT_CHEATER, 241);
    giq_option( 1, SCRIPT_CHEATER, 232, Cheater01, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 233, Cheater02, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 234, Cheater03, NEUTRAL_REACTION );
@@ -546,7 +439,7 @@ end
 
 procedure Cheater06
 begin
-   gsay_reply(621, 222);
+   gsay_reply(SCRIPT_CHEATER, 222);
    giq_option( 1, SCRIPT_CHEATER, 223, Cheater06a, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 224, Cheater06b, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 225, Cheater06c, NEUTRAL_REACTION );
@@ -560,7 +453,7 @@ end
 
 procedure Cheater19
 begin
-   gsay_reply(621, 243);
+   gsay_reply(SCRIPT_CHEATER, 243);
    giq_option( 1, SCRIPT_CHEATER, 244, Cheater19a, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 245, Cheater19b, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 246, Cheater19c, NEUTRAL_REACTION );
@@ -573,7 +466,7 @@ begin
 end
 
 procedure Teleport begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 269, TARDIS_1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 270, TARDIS_2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 271, TARDIS_3, NEUTRAL_REACTION );
@@ -586,7 +479,7 @@ procedure Teleport begin
 end
 
 procedure TARDIS_1 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 303, Nec1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 309, Nec2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 304, Nec3, NEUTRAL_REACTION );
@@ -640,7 +533,7 @@ end
 
 procedure TARDIS_2
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 310, Junk1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 311, Junk2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 312, Junk3, NEUTRAL_REACTION );
@@ -694,7 +587,7 @@ end
 
 procedure TARDIS_3
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 317, Child1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 318, Child2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 333, Master1, NEUTRAL_REACTION );
@@ -748,7 +641,7 @@ end
 
 procedure TARDIS_4
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 336, Hub1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 338, Hub2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 339, Hub3, NEUTRAL_REACTION );
@@ -802,7 +695,7 @@ end
 
 procedure TARDIS_5
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 328, Ady1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 329, Ady2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 344, Ady3, NEUTRAL_REACTION );
@@ -856,7 +749,7 @@ end
 
 procedure TARDIS_6
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 325, Shad1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 326, Shad2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 316, Shad3, NEUTRAL_REACTION );
@@ -903,7 +796,7 @@ end
 
 procedure TARDIS_7
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 327, Glow1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 342, Glow2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 343, Glow3, NEUTRAL_REACTION );
@@ -945,7 +838,7 @@ end
 
 procedure TARDIS_8
 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 356, DesCrv1, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 357, DesCrv2, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 361, DesCrv3, NEUTRAL_REACTION );
@@ -998,7 +891,7 @@ begin
 end
 
 procedure TARDIS_9 begin
-   gsay_reply(621, 262);
+   gsay_reply(SCRIPT_CHEATER, 262);
    giq_option( 1, SCRIPT_CHEATER, 322, ColaTruk, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 323, Ufo, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 351, BigFoot, NEUTRAL_REACTION );
@@ -1038,160 +931,19 @@ begin
    load_map(MAP_USEDCAR, -1);
 end
 
-procedure DebugEnterMsgs begin
-   debug_msg("PLAYER HAS -ENTERED- MAP:  " + cur_map_index + "  AT ELEVATION  " + dude_elevation + "  AND TILE NUMBER  " + dude_tile + ".     ");
-end
-
-procedure GiveItemsConfirm
-begin
-   variable item := 0;
-   item := create_object( PID_MOTION_SENSOR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BAG, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BACKPACK, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BROWN_BAG, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_HARDENED_POWER_ARMOR, 0, 0 );// Hardened power armor
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_CHEST, 0, 0 );// Alien Blaster with 100 range and 999 damage.
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_FLARE, 0, 0 );// Flare
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_14MM_PISTOL, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_223_PISTOL, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BEER, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_BOOZE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_MOLOTOV_COCKTAIL, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_RADAWAY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_NUKA_COLA, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_FRAG_GRENADE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 25);
-   item := create_object( PID_PLASMA_GRENADE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 25);
-   item := create_object( PID_PULSE_GRENADE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 25);
-   item := create_object( PID_STIMPAK, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 100);
-   item := create_object( PID_SPEAR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 15);
-   item := create_object( PID_EXPLOSIVE_ROCKET, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 25);
-   item := create_object( PID_MENTATS, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_BUFFOUT, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_PSYCHO, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 20);
-   item := create_object( PID_LEATHER_ARMOR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_METAL_ARMOR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_COMBAT_ARMOR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_LEATHER_JACKET, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_PURPLE_ROBE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BROTHERHOOD_COMBAT_ARMOR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_TESLA_ARMOR, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_FLOWER, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_HUNTING_RIFLE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_FLAMETHROWER_FUEL, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_10MM_SMG, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_5MM_AP, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 3);
-   item := create_object( PID_SMALL_ENERGY_CELL, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_RAD_X, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_ELECTRONIC_LOCKPICKS, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_LOCKPICKS, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_RED_RYDER_LE_BB_GUN, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_BBS, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_BUFFOUT, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_RIPPER, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_DYNAMITE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 5);
-   item := create_object( PID_BOTTLE_CAPS, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 99999);
-   item := create_object( PID_ROCKET_LAUNCHER, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_MINIGUN, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_5MM_AP, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 3);
-   item := create_object( PID_STEALTH_BOY, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_10MM_AP, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_FLAMER, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 1);
-   item := create_object( PID_ROPE, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 5);
-   item := create_object( PID_10MM_JHP, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 10);
-   item := create_object( PID_PLASTIC_EXPLOSIVES, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 5);
-   item := create_object( PID_10MM_AP, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 10);
-   item := create_object( PID_MICRO_FUSION_CELL, 0, 0 );// MFC ammo
-   add_mult_objs_to_inven(dude_obj, item, 4);
-   item := create_object( PID_GATLING_LASER, 0, 0 );// Gatling Laser
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_LASER_PISTOL, 0, 0 );
-   add_mult_objs_to_inven(dude_obj, item, 2);
-   item := create_object( PID_GEIGER_COUNTER, 0, 0 );// Geiger counter
-   add_mult_objs_to_inven(dude_obj, item, 1);
-end
-
-procedure GiveItems
-begin
-   gsay_reply(621, 267);
-   giq_option( 1, SCRIPT_CHEATER, 265, GiveItemsConfirm, NEUTRAL_REACTION );
-   giq_option( 1, SCRIPT_CHEATER, 268, Cheater00a, NEUTRAL_REACTION );
-end
-
 procedure ChangeTheClock
 begin
-   gsay_reply(621, 266);
+   gsay_reply(SCRIPT_CHEATER, 266);
+   giq_option( 1, SCRIPT_CHEATER, 1000, CheaterTimers, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 101, RollBack, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 111, SpringForward, NEUTRAL_REACTION );
-   giq_option( 1, SCRIPT_CHEATER, 125, Cheater00a, NEUTRAL_REACTION );
-end
-
-procedure IDKFA
-begin
-   gsay_reply(621, 122);
-   giq_option( 1, SCRIPT_CHEATER, 123, Cheater16, NEUTRAL_REACTION );
-   giq_option( 1, SCRIPT_CHEATER, 124, Cheater17, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 125, Cheater00a, NEUTRAL_REACTION );
 end
 
 procedure RollBack
 begin
    TimeFlag := 1;
-   gsay_reply(621, 102);
+   gsay_reply(SCRIPT_CHEATER, 102);
    giq_option( 1, SCRIPT_CHEATER, 103, Cheater09, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 104, Cheater10, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 105, Cheater11, NEUTRAL_REACTION );
@@ -1206,7 +958,7 @@ end
 procedure SpringForward
 begin
    TimeFlag := 0;
-   gsay_reply(621, 112);
+   gsay_reply(SCRIPT_CHEATER, 112);
    giq_option( 1, SCRIPT_CHEATER, 113, Cheater09, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 114, Cheater10, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 115, Cheater11, NEUTRAL_REACTION );
@@ -1218,51 +970,64 @@ begin
    giq_option( 1, SCRIPT_CHEATER, 120, Cheater00a, NEUTRAL_REACTION );
 end
 
-procedure TestRolls
-begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   variable LVar2 := 0;
-   variable LVar3 := 0;
-   //LVar0 := roll_vs_skill(dude_obj, SKILL_SPEECH, 0);
-   LVar0 := do_check(dude_obj, STAT_iq, -9);
-   LVar2 := is_success(LVar0);
-   /*LVar1 := how_much;
-   if LVar2 then begin
-      debug_msg("ROLL OK");
-      debug_msg("Amount above/below:  " + LVar1 + "          ");
-   end
-   else begin
-      debug_msg("ROLL UNSUCCESSFUL");
-      debug_msg("Amount above/below:  " + LVar1 + "          ");
-   end*/
-   //display_msg("roll_vs_skill(dude_obj, SKILL_SPEECH, 0) :: "+LVar0+"");
-   //display_msg("how_much :: "+LVar1+"");
-   //display_msg("do_check(dude_obj, 14, 0) :: "+LVar2+"");
-   //display_msg("how_much :: "+LVar3+"");
-   //gsay_reply(621, "Roll result: " + LVar0 + "          " + "How much: " + LVar1 + "          " + "Is success?  " + LVar2 + " ");
-   gsay_reply(621, 231);
-   giq_option( 1, SCRIPT_CHEATER, 229, TestRolls, NEUTRAL_REACTION );
-   giq_option( 1, SCRIPT_CHEATER, 230, CheaterEnd, NEUTRAL_REACTION );
-end
-
 procedure Cheater00a//  MAIN MENU    MAIN MENU     MAIN MENU      MAIN MENU
 begin
 // set_global_var(VATS_BLOWN, 1);
 //
-   gsay_reply(621, 200);
-   //giq_option(1, 621, 229), TestRolls, 50);
+   gsay_reply(SCRIPT_CHEATER, 200);
    giq_option( 1, SCRIPT_CHEATER, 201, Cheater00, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 202, Cheater06, NEUTRAL_REACTION );
-   //giq_option(1, 621, 205, HardReset, 50);
-   //giq_option(1, 621, 206, FixesOnly, 50);
    giq_option( 1, SCRIPT_CHEATER, 263, ChangeTheClock, NEUTRAL_REACTION );
-   //giq_option(1, 621, 264, GiveItems, 50);
-   giq_option( 1, SCRIPT_CHEATER, 121, IDKFA, NEUTRAL_REACTION );
+   //giq_option( 1, SCRIPT_CHEATER, 121, IDKFA, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 280, Slideshow, NEUTRAL_REACTION );
    giq_option( 1, SCRIPT_CHEATER, 252, Teleport, NEUTRAL_REACTION );
    NOption("Kill Master or Vats", Cheater00b, 001);
-   NOption(g_bye, CheaterEnd, 004);
+   NOption(g_bye, CheaterEnd, 001);
+end
+
+procedure CheaterTimers begin
+   gsay_reply(SCRIPT_CHEATER, 1000);
+   giq_option(1, SCRIPT_CHEATER, 1011, CheaterTimersV13Water, NEUTRAL_REACTION);
+   giq_option(1, SCRIPT_CHEATER, 1010, CheaterTimersV13Invasion, NEUTRAL_REACTION);
+   NOption(g_bye, CheaterEnd, 001);
+end
+
+procedure CheaterTimersV13Invasion begin
+   TimeFlag := "V13Invasion";
+   gsay_reply(SCRIPT_CHEATER, 1010);
+   timerUPandDown;
+end
+
+procedure CheaterTimersV13Water begin
+   TimeFlag := "V13Water";
+   gsay_reply(SCRIPT_CHEATER, 1011);
+   timerUPandDown;
+end
+
+procedure CheaterTimersUp begin
+   gsay_reply(SCRIPT_CHEATER, 1020);
+
+   if (TimeFlag == "V13Invasion") then begin
+      inc_v13_days_left(100);
+   end
+   else if (TimeFlag == "V13Water") then begin
+      inc_water_days(100);
+   end
+
+   timerUPandDown;
+end
+
+procedure CheaterTimersDown begin
+   gsay_reply(SCRIPT_CHEATER, 1030);
+
+   if (TimeFlag == "V13Invasion") then begin
+      dec_v13_days_left(100);
+   end
+   else if (TimeFlag == "V13Water") then begin
+      dec_water_days(100);
+   end
+
+   timerUPandDown;
 end
 
 #endif // CHEATS_H

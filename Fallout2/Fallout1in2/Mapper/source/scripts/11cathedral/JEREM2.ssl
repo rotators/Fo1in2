@@ -1,6 +1,6 @@
 /*
 
-   ???
+   Cathedral - Jerem, starts in the Cathedral level 3 elevator.
 
 */
 
@@ -44,53 +44,34 @@ procedure start begin
       home_tile := 16912;
       set_self_team(TEAM_NECROPOLIS_MUTANT);
       set_self_ai(AI_CHILDREN_TRUE);
-      if (global_var(GVAR_MASTER_FILLER_6) == 1) then begin
+      if (global_var(GVAR_JEREMIAH_STATUS) == 1) then begin
          if not(is_loading_game) then set_self_invisible;
          moving := 0;
       end
-      else begin
-         if (global_var(GVAR_MASTER_FILLER_5) == 0) then begin
-            if not(is_loading_game) then set_self_invisible;
-            moving := 0;
-            add_timer_event(self_obj, game_ticks(300), 1);
-         end
-      end
-   end
-   if (script_action == look_at_proc) then begin//MOUSE-OVER DESCRIPTION -- look_at_p_proc - (usually brief length. hovered mouse over object, haven't clicked on it.)
-      script_overrides;
-      if (global_var(GVAR_JEREMIAH_CHILDREN_TALKED) == 1) then begin
-         script_overrides;
-         display_msg(mstr(100));
-         script_overrides;
-      end
-      else begin
-         script_overrides;
-         display_msg(mstr(101));
-         script_overrides;
-      end
-      script_overrides;
-   end
-   else begin
-      if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-         set_global_var(GVAR_JEREMIAH_CHILDREN_TALKED, 1);
-         call talk_p_proc;
-         set_global_var(GVAR_JEREMIAH_CHILDREN_TALKED, 1);
-      end
-      else begin
-         if (script_action == timed_event_proc) then begin//<-- timed_event_p_proc -- called by ADD_TIMER_EVENT commands. "fixed_param==#" in this procedure is the number of the event in question (i.e. Add_Timer_Event dude,5,1 would be fixed_param 1) -- can also be "timeforwhat"
-            call timed_event_p_proc;
-         end
-         else begin
-            if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-               tmp_hostile := 1;
-            end
-         end
+      else if (global_var(GVAR_MASTER_FILLER_5) == 0) then begin
+         if not(is_loading_game) then set_self_invisible;
+         moving := 0;
+         add_timer_event(self_obj, game_ticks(300), 1);
       end
    end
 end
 
+procedure look_at_p_proc begin
+   script_overrides;
+   if (global_var(GVAR_JEREMIAH_CHILDREN_TALKED) == 1) then
+      display_msg(mstr(100));
+   else
+      display_msg(mstr(101));
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
 procedure talk_p_proc begin
-   coc_disguise_check;
+   set_global_var(GVAR_JEREMIAH_CHILDREN_TALKED, 1);
+
+   //coc_disguise_check;
    if (global_var(GVAR_MASTER_FILLER_4) == 1) then begin
       float_msg(self_obj, mstr(187), FLOAT_MSG_RED);
    end
@@ -186,8 +167,6 @@ procedure critter_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   set_global_var(GVAR_MASTER_FILLER_6, 1);
-   rm_timer_event(self_obj);
+   set_global_var(GVAR_JEREMIAH_STATUS, 1);
    inc_inv_evil_crit
-   rm_timer_event(self_obj);
 end

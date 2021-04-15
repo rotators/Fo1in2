@@ -1,6 +1,6 @@
 /*
 
-   Junktown - Killians door
+   Junktown - Killians door (inside)
 
 */
 
@@ -14,6 +14,7 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure spatial_p_proc;
 procedure damage_p_proc;
 procedure map_enter_p_proc;
 procedure map_update_p_proc;
@@ -24,11 +25,19 @@ procedure description_p_proc;
 
 #define LVAR_Locked                     (0)
 
+#define EVENT_TRESPASS     (1)
+
 variable test;
 
 import variable Killian_ptr;
 
 procedure start begin
+end
+
+procedure spatial_p_proc begin
+   /*if (source_obj == dude_obj) then begin
+      add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
+   end*/
 end
 
 procedure damage_p_proc begin
@@ -76,16 +85,17 @@ procedure use_p_proc begin
       display_msg(message_str(SCRIPT_KILDOOR1, 100));
    end
    else if not(junktown_invaded) and is_killian_alive then begin
-      //display_msg("use door!");
       if (day and (obj_can_see_obj(Killian_ptr, dude_obj) or obj_can_hear_obj(Killian_ptr, dude_obj))) then begin
          script_overrides;
       end
    end
-   set_map_var(MVAR_dude_messing_with_Killians_home, 1);
+   add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
 end
 
 procedure use_obj_on_p_proc begin
-   if (obj_pid(obj_being_used_with) == PID_LOCKPICKS) then begin
+   variable item := obj_pid(obj_being_used_with);
+
+   if (item == PID_LOCKPICKS or item == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
       if (not(day) and not(obj_can_see_obj(Killian_ptr, dude_obj)) and not(obj_can_hear_obj(Killian_ptr, dude_obj))) then begin
          if (not(obj_is_locked(self_obj))) then begin
@@ -107,7 +117,10 @@ procedure use_obj_on_p_proc begin
             end
          end
       end
-      set_map_var(MVAR_dude_messing_with_Killians_home, 1);
+      else if (not(obj_is_locked(self_obj))) then begin
+         display_msg(message_str(SCRIPT_KILDOOR1, 104));
+      end
+      add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
    end
 end
 
@@ -134,7 +147,10 @@ procedure use_skill_on_p_proc begin
             end
          end
       end
-      set_map_var(MVAR_dude_messing_with_Killians_home, 1);
+      else if (not(obj_is_locked(self_obj))) then begin
+         display_msg(message_str(SCRIPT_KILDOOR1, 104));
+      end
+      add_timer_event(Killian_ptr, 0, EVENT_TRESPASS);
    end
 end
 

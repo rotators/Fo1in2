@@ -42,7 +42,13 @@ procedure Mathia08h;
 procedure Mathia09;
 procedure Mathia10;
 procedure Mathia11;
+
+procedure MathiaPA01;
+procedure MathiaPA02;
+
 procedure MathiaEnd;
+
+#define LVAR_AskedPA       (7)
 
 variable tmp_hostile;
 variable Only_Once := 1;
@@ -178,6 +184,14 @@ procedure Mathia08 begin
       NOption(136, Mathia08f, 4);
       NOption(137, Mathia08g, 4);
       NOption(138, Mathia08h, 4);
+
+      // Only allow another power armor if the player already has at least one and isn't solo.
+      if ((local_var(LVAR_AskedPA) == 0) and (true_party_size > 0)) then begin
+         if party_has_item(PID_POWERED_ARMOR) then
+            NOption(141, MathiaPA02, 4);
+         else
+            NOption(139, MathiaPA01, 4);
+      end
    end
    else begin
       NOption(128, Mathia08c, 4);
@@ -264,6 +278,21 @@ end
 
 procedure Mathia11 begin
    set_dude_kicked_out;
+end
+
+procedure MathiaPA01 begin
+   set_local_var(LVAR_AskedPA, 1);
+   NMessage(140);
+   call Mathia08;
+end
+
+procedure MathiaPA02 begin
+   variable LVar0 := 0;
+   set_local_var(5, 1);
+   LVar0 := create_object(PID_POWERED_ARMOR, 0, 0);
+   add_obj_to_inven(dude_obj, LVar0);
+   NMessage(142);
+   NMessage(131);
 end
 
 procedure MathiaEnd begin

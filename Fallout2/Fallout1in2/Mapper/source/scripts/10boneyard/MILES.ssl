@@ -13,7 +13,9 @@
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
 
 #include "command.h"
+#include "upgweap.h"
 #include "modreact.h"
+#include "sfall/sfall.h"
 
 /* Standard Script Procedures */
 procedure start;
@@ -58,10 +60,17 @@ procedure Miles28a;
 procedure Miles29;
 procedure MilesEnd;
 
+procedure MilesUpgrade;
 procedure NodeMoreHPA1;
 procedure NodeMoreHPA2;
 procedure NodeMoreHPA2a;
 procedure NodeMoreHPA3;
+procedure NodeUpgradeFuel1;
+procedure NodeUpgradeFuel1a;
+procedure NodeUpgradeFuel2;
+procedure NodeUpgradeFuel3;
+procedure NodeUpgradeFuel4;
+procedure NodeUpgradeFuel5;
 
 #define LVAR_Here_Before            (4)
 #define LVAR_Miles_Status           (5)
@@ -71,6 +80,11 @@ procedure NodeMoreHPA3;
 variable Only_Once := 1;
 variable DisplayMessage := 100;
 variable Item;
+variable FuelBatch := 0;
+variable count_fuel;
+
+#define upgrade_cost(base)          ((base * (25000/(160 + has_skill(dude_obj, SKILL_BARTER))))/100)
+#define FUELCOST                    upgrade_cost(100)
 
 procedure Start begin
    if Only_Once then begin
@@ -131,8 +145,8 @@ procedure talk_p_proc begin
       float_msg(self_obj, mstr(152), FLOAT_MSG_NORMAL);
    end
    else if (local_var(LVAR_Miles_Status) == 2) then begin
-      if (fo1in2_unlimited_hpa_enabled and dude_item_count(PID_POWERED_ARMOR)) then
-         start_dialog_at_node(NodeMoreHPA1);
+      if ((fo1in2_weapon_upgrades_enabled and dude_item_count(PID_FLAMETHROWER_FUEL)) or (fo1in2_unlimited_hpa_enabled and dude_item_count(PID_POWERED_ARMOR))) then
+         start_dialog_at_node(MilesUpgrade);
       else
          float_msg(self_obj, mstr(152), FLOAT_MSG_NORMAL);
    end
@@ -431,7 +445,26 @@ end
 procedure MilesEnd begin
 end
 
-procedure NodeMoreHPA1 begin
+procedure MilesUpgrade begin
+   if fo1in2_unlimited_hpa_enabled and dude_item_count(PID_POWERED_ARMOR) then begin
+      Reply(2000);
+      NOption(2030, MilesEnd, 004);
+      if (dude_caps >= 1000) then
+         NOption(2010, NodeMoreHPA2, 004);
+      else
+         NOption(2020, NodeMoreHPA3, 004);
+   end
+   else begin
+      Reply(118);
+   end
+
+   if (fo1in2_weapon_upgrades_enabled and dude_item_count(PID_FLAMETHROWER_FUEL)) then
+      NOption(155, NodeUpgradeFuel1, 004);
+
+   NOption(g_bye, MilesEnd, 004);
+end
+
+procedure NodeMoreHPA1 begin // Currently deprecated
    Reply(2000);
    if (dude_caps >= 1000) then
       NOption(2010, NodeMoreHPA2, 004);
@@ -453,4 +486,62 @@ end
 
 procedure NodeMoreHPA3 begin
    NMessage(2200);
+end
+
+procedure NodeUpgradeFuel1 begin
+   Reply(mstr(3000) + FUELCOST + mstr(3001));
+   if (dude_caps < FUELCOST) then begin
+      NOption(3030, MilesEnd, 004);
+   end
+   else
+      call NodeUpgradeFuel1a;
+   NOption(3040, MilesEnd, 004);
+end
+
+procedure NodeUpgradeFuel1a begin
+variable tmp_mstr;
+   count_fuel := dude_item_count(PID_FLAMETHROWER_FUEL);
+
+   if (dude_caps >= FUELCOST) then begin
+      NOption(mstr(3010 + FuelBatch) + FUELCOST + mstr(3023), NodeUpgradeFuel2, 004); // 1
+   end
+   if (count_fuel > 1 and dude_caps >= (FUELCOST * count_fuel)) then begin
+      variable num_text := num_to_num_text(count_fuel);
+      NOption(mstr(3020 + FuelBatch) + num_text + mstr(3022) + (FUELCOST * count_fuel) + mstr(3023), NodeUpgradeFuel3, 004); // All
+   end
+
+   FuelBatch := 1;
+end
+
+procedure NodeUpgradeFuel2 begin
+   count_fuel := 1;
+   call NodeUpgradeFuel4;
+end
+
+procedure NodeUpgradeFuel3 begin
+   call NodeUpgradeFuel4;
+end
+
+procedure NodeUpgradeFuel4 begin
+variable i;
+
+   dude_caps_adjust(-(FUELCOST * count_fuel));
+   for (i := 0; (i < count_fuel) ; i++) begin
+      call upgrade_weapon(PID_FLAMETHROWER_FUEL, PID_FLAMETHROWER_FUEL_MK_II);
+   end
+
+   NMessage(4000);
+
+   gfade_out(1);
+   game_time_advance((ONE_GAME_HOUR * 4) * count_fuel);
+   gfade_in(1);
+
+   Reply(4001);
+   if dude_item_count(PID_FLAMETHROWER_FUEL) then
+      call NodeUpgradeFuel1a;
+   NOption(4010, MilesEnd, 004);
+end
+
+procedure NodeUpgradeFuel5 begin
+   NMessage(4100);
 end

@@ -1,20 +1,18 @@
-Notable changes since last release ([v1.4.2228](https://github.com/rotators/Fo1in2/releases/tag/v1.4.2228))
+Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1in2/releases/tag/v1.5.2288))
 
-- **Added**: A new caps modifier to reduce the amount of currency on the merchants a bit.
-- **Added**: Party members will float random text if they have a crippled limb or are posioned (inspired by Fo2 Unofficial Patch / Restoration Project).
-- **Added**: Setting off the trap on Hightower's strongbox will now trigger his guard to investigate.
-- **Added**: The "Tougher Mutants"-setting works as a multiplier now. 1 is the prefered setting, 2 is still okay, but everything above slowly moves into some serious OVERKILL-territory.
-- **Added**: The Mariposa force field emitter will now be correctly destroyed (visually) if the Mr. Handy robot crashes into it.
-- **Added**: There is now a low chance for cavern encounters to not spawn any mobs at all.
-- **Added**: Trying to destroy a force field emitter but failing to do so will now show up accordingly in the message log.
-- **Fixed**: Dialog with the guard to the Master's Lair could crash the game.
-- **Fixed**: Hightower's strongbox was missing a blocking hex.
-- **Fixed**: If the player takes the Gun Runner guns as reward, Razor would not react to it accordingly.
-- **Fixed**: Talking to Calder at the Cathedral entrance while having the Childkiller-reputation would show the wrong dialog node.
-- **Fixed**: The 2nd guard to the Master's Lair was spawning an "ERROR" dialog.
-- **Fixed**: The Light Step perk wasn't working on mines.
-- **Fixed**: The Master's Lair terminal that would mark Mariposa on the worldmap would sometimes not mark the location on the worldmap.
-- **Fixed**: The Skum Pitt and V13 armory door would reset when loading a savegame.
-- **Fixed**: The Watershed mutants would not leave the map on the correct path. Also added a check to remove them from the map if the player leaves before they walked off-screen.
-- **Fixed**: The relationship dialog between Trish and Saul has been fixed up and somewhat polished (old restored cut content). Required new dialog lines to be added.
-- **Tweaked**: When walking through the "revulse tunnel" in the Master's Lair, the party member damage information will now run before the players to not spam the message log so much.
+- **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
+- **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
+- **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
+- **Fixed**: 49/50hp mutants on Mariposa level 1.
+- **Fixed**: A potential procedure loop in the (generic) super mutant sergeant script when talking to them in disguise.
+- **Fixed**: Cathedral technicians would blast the disguise-check code on every game tick, no matter if they see thep player or not. This can cause the game to crash on certain hardware.
+- **Fixed**: Gizmo's dead remains (with flies animation) can now be looted correctly.
+- **Fixed**: MacRae in the Boneyard now correctly gives the player +5% Damage Resistance, and + 1% Melee Damage (vanilla Fo1 bug + removed the old Fixt workaround which gave skill points instead).
+- **Fixed**: Maxon at the Brotherhood was showing the wrong dialog text after asking about the missing caravans.
+- **Fixed**: Mines / Traps spatial scripts had no range assigned to them.
+- **Fixed**: Mines in the thief circle map didn't want to explode.
+- **Fixed**: Player can enter V13 already after waiting 1 day and not 2.
+- **Fixed**: Player can't get the Champion reputation state anymore if he is a childkiller.
+- **Fixed**: The Mariposa entrance mutant was showing 60/50 hp for some reason.
+- **Tweaked**: Reverted the MFC -> SEC item change in super mutant encounters, because they seem to drop SECs on purpose and not by bug. 
+- **Tweaked**: Rewrote the interaction between Killian and his shopdoor. Also, the inside shopguard will react to the player now if he is found inside the building at night time.

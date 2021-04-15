@@ -1,0 +1,49 @@
+/*
+
+   Made by NovaRain
+
+*/
+
+#include "define.h"
+#include "sfall/sfall.h"
+
+procedure start;
+procedure Initial_Inven;
+
+procedure start begin
+   if game_loaded then begin
+      if (get_pc_stat(PCSTAT_experience) == 0 /*and cur_map_index == MAP_ARROYO_TEMPLE*/) then begin
+         call Initial_Inven;
+      end
+   end
+end
+
+procedure Initial_Inven begin
+   variable item, count, type, itemMap, i;
+
+   // remove default weapons/ammo/armors/drugs
+   count := inven_count(dude_obj);
+   while (count > 0) do begin
+      item := inven_ptr(dude_obj, count - 1);
+      type := obj_item_subtype(item);
+      if (type <= item_type_ammo and type != item_type_container) then begin
+         item := destroy_mult_objs(item, 99999);
+      end
+      count--;
+   end
+
+   // special handling for some misc items
+   if (item_caps_total(dude_obj) < 1000) then begin
+      item := create_object(PID_BOTTLE_CAPS, 0, 0);
+      add_mult_objs_to_inven(dude_obj, item, 1000 - item_caps_total(dude_obj));
+   end
+   if not(obj_is_carrying_obj_pid(dude_obj, PID_MULTI_TOOL)) then begin
+      item := create_object(PID_MULTI_TOOL, 0, 0);
+      add_mult_objs_to_inven(dude_obj, item, 1);
+   end
+   if not(obj_is_carrying_obj_pid(dude_obj, PID_LOCKPICKS)) then begin
+      item := create_object(PID_LOCKPICKS, 0, 0);
+      add_mult_objs_to_inven(dude_obj, item, 1);
+   end
+   give_exp_points(1);
+end

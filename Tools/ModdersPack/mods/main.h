@@ -4,6 +4,7 @@
 #include "..\scripting\headers\sfall.h"
 #include "..\scripting\headers\define_lite.h"
 #include "..\scripting\headers\define_extra.h"
+#include "..\scripting\headers\command_lite.h"
 #include "..\scripting\headers\dik.h"
 /*
 #include "..\scripting\headers\lib.arrays.h"

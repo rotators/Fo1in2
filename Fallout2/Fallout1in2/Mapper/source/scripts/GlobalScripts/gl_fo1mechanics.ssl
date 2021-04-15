@@ -21,7 +21,10 @@ procedure general;
 procedure mode_change_handler;
 procedure scene_master_destroyed;
 procedure scene_vats_destroyed;
+
 procedure night_person;
+procedure skilled;
+
 procedure item_description_handler;
 procedure afterhitroll_handler;
 procedure useanimobj_handler;
@@ -33,6 +36,8 @@ procedure steal_urn;
 
 variable iniVal;
 variable dude_elev := 0;
+
+variable move_item;
 
 #define get_active_hand(slot)  if (active_hand == 0) then slot := INVEN_TYPE_LEFT_HAND; \
                                else slot := INVEN_TYPE_RIGHT_HAND
@@ -84,6 +89,7 @@ procedure mode_change_handler begin
       call scene_vats_destroyed;
    end
    call night_person;
+   call skilled;
 
    // Activate special radiation death if > 1000 rem. See data/enddeath.txt
    set_global_var(GVAR_SPECIAL_RADIATION_DEATH, dude_rads);
@@ -166,6 +172,12 @@ procedure night_person begin
       end
       debug_msg("Night person trait is disabled!");
    end
+end
+
+procedure skilled begin
+   // We have to manually do this, because we are overwriting the hardcoded effect in the perks.ini file.
+   if dude_trait(TRAIT_skilled) then
+      set_perk_freq(4);
 end
 
 procedure item_description_handler begin

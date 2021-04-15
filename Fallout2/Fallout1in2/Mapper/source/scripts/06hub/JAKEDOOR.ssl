@@ -39,19 +39,23 @@ procedure look_at_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := obj_being_used_with;
-   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
-   if (obj_pid(LVar0) == PID_LOCKPICKS) then begin
+   variable Item := 0;
+   variable Test := 0;
+   Item := obj_being_used_with;
+   Test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -20);
+   if (obj_pid(Item) == PID_LOCKPICKS or obj_pid(Item) == PID_EXP_LOCKPICK_SET) then begin
       script_overrides;
-      if (is_success(LVar1)) then begin
+      
+      if (obj_pid(Item) == PID_EXP_LOCKPICK_SET) then
+         Test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -15);
+      
+      if (is_success(Test)) then begin
          set_local_var(LVAR_DoorStatus, 1);
          display_msg(message_str(SCRIPT_HUBJAKE, 204));
       end
-      else if (is_critical(LVar1)) then begin
-         rm_obj_from_inven(dude_obj, LVar0);
-         destroy_object(LVar0);
+      else if (is_critical(Test)) then begin
+         rm_obj_from_inven(dude_obj, Item);
+         destroy_object(Item);
          display_msg(message_str(SCRIPT_HUBJAKE, 207));
       end
       else begin

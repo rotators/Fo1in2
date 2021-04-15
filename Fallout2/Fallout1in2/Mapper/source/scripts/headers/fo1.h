@@ -39,6 +39,8 @@
 #define fo1in2_shady_merchant_enabled   (global_var(GVAR_ENABLE_SHADY_SANDS_MERCHANT) > 0)
 #define fo1in2_env_lighting_enabled     (global_var(GVAR_ENABLE_FO2_SEASONAL_LIGHTING) > 0)
 #define fo1in2_tough_mutants_enabled    (global_var(GVAR_ENABLE_TOUGH_MUTANTS) >= 1) // we don't want 0.5, etc. values here
+#define fo1in2_red_dogmeat_enabled      (global_var(GVAR_ENABLE_RED_DOGMEAT) > 0)
+#define fo1in2_weapon_upgrades_enabled  (global_var(GVAR_ENABLE_WEAPON_UPGRADES) > 0)
 
 #define fixt_enabled                    (global_var(GVAR_FIXT_ENABLED) == 1)
 #define fixt_disabled                   not(fixt_enabled)
@@ -106,18 +108,21 @@
 #define is_garl_alive                       (global_var(GVAR_GARL_DEAD) == 0)
 #define is_nicole_alive                     (global_var(GVAR_NICOLE_DEAD) == 0)
 
-#define is_laura_alive                      (global_var(GVAR_IS_LAURA_ALIVE) != 1)
-#define set_laura_escaping                  set_global_var(GVAR_IS_LAURA_ALIVE,2)
-#define is_laura_escaping                   (global_var(GVAR_IS_LAURA_ALIVE) == 2)
-#define set_laura_escaped                   set_global_var(GVAR_IS_LAURA_ALIVE,3)
-#define is_laura_escaped                    (global_var(GVAR_IS_LAURA_ALIVE) == 3)
+#define is_laura_alive                       (global_var(GVAR_IS_LAURA_ALIVE) != 1)
+#define set_laura_escaping                   set_global_var(GVAR_IS_LAURA_ALIVE,2)
+#define is_laura_escaping                    (global_var(GVAR_IS_LAURA_ALIVE) == 2)
+#define set_laura_escaped                    set_global_var(GVAR_IS_LAURA_ALIVE,3)
+#define is_laura_escaped                     (global_var(GVAR_IS_LAURA_ALIVE) == 3)
 
-#define set_hunter_killed                   set_global_var(GVAR_HUNTER_STATUS,3)
-#define bounty_hunter_killed                (global_var(GVAR_HUNTER_STATUS) == 3)
+#define set_hunter_killed                    set_global_var(GVAR_HUNTER_STATUS,3)
+#define bounty_hunter_killed                 (global_var(GVAR_HUNTER_STATUS) == 3)
 
-#define tandi_is_kidnapped                  (global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
-#define tandi_not_kidnapped                 not(tandi_is_kidnapped)
-#define tandi_is_rescued                    (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
+#define tandi_is_kidnapped                   (global_var(GVAR_TANDI_HIRELING_STATUS) == 1)
+#define tandi_not_kidnapped                  not(tandi_is_kidnapped)
+#define tandi_is_rescued                     (global_var(GVAR_TANDI_HIRELING_STATUS) == 2)
+
+#define joined_bos                           (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) == 2)
+#define set_joined_bos                       set_global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM, 2)
 
 /*********************************************************
     TMA / Tell Me About
@@ -320,7 +325,7 @@ variable tma_gvar_array;
                            (self_pid == PID_NIGHTKIN_GUARD_2) or (self_pid == PID_TOUGH_NIGHTKIN) or                                   \
                            (self_pid == PID_DEADLY_NIGHTKIN) or (self_pid == PID_SUPER_NIGHTKIN) or (self_pid == PID_MASTER_NIGHTKIN))
 
-#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) and not(self_item_count(PID_STEALTH_BOY)) then begin   \
+#define spawn_stealth_boy  if self_is_nightkin and (random(0, 4) == 1) then begin   \
                               variable Item;                                        \
                               Item := create_object(PID_STEALTH_BOY, 0, 0);         \
                               add_mult_objs_to_inven(self_obj, Item, 1);            \
@@ -453,6 +458,7 @@ variable knock_down_sound;
 
 #define self_is_child 				   (self_pid == PID_GIRL or self_pid == PID_BOY)
 
+
 // Merchant stuff
 #define set_disable_barter          set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwand bwnot(CFLG_BARTER))
 #define set_enable_barter           set_proto_data(self_pid, PROTO_CR_FLAGS, get_proto_data(self_pid, PROTO_CR_FLAGS) bwor CFLG_BARTER)
@@ -503,6 +509,17 @@ variable merch_slot_armor_flags;
       set_local_var(LVAR_Caps_Amount, caps_amount);      \
    end                                                   \
    self_caps_adjust(local_var(LVAR_Caps_Amount))
+
+
+// Use objects
+#define dude_anim_magic_hands \
+   if (source_obj == dude_obj) then begin                      \
+      reg_anim_clear(dude_obj);                                \
+      reg_anim_begin();                                        \
+      reg_anim_animate(dude_obj, ANIM_magic_hands_middle, -1); \
+      reg_anim_end();                                          \
+   end                                                         \
+   noop
 
 /*********************************************************
                         THE END

@@ -27,8 +27,8 @@
 #define MVAR_assassin_seed                    (5)  // Tracks status of Kenji's hit on Killian for Gizmo.
 #define MVAR_got_Gizmo                        (6)  // Tells if dude got a confession from Gimzo to Killian.
 #define MVAR_hodiction                        (7)  // TRUE if the dude is addicted to Sinthia.
-#define MVAR_dude_messing_with_Killians_door  (8)  // TRUE if dude picks Killian's door.
-#define MVAR_dude_messing_with_Killians_home  (9)  // TRUE if dude picks Killian's home door.
+#define MVAR_dude_messing_with_Killians_door  (8)  // TRUE if dude picks Killian's door. // Replaced with timer event
+#define MVAR_dude_messing_with_Killians_home  (9)  // TRUE if dude picks Killian's home door. // Used in KILLSAFE.ssl
 #define MVAR_Invasion                         (10) // Has the town been invaded?
 
 #endif // MAPJUNKKILL_H

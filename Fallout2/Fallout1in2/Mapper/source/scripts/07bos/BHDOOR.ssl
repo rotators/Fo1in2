@@ -60,7 +60,7 @@ procedure map_update_p_proc begin
 end
 
 procedure look_at_p_proc begin
-   if ((global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) == 2) and (local_var(0) == 0)) then begin
+   if (joined_bos and (local_var(0) == 0)) then begin
       display_msg(mstr_bosdr(102));
    end
    else begin
@@ -79,16 +79,22 @@ procedure use_p_proc begin
 end
 
 procedure use_obj_on_p_proc begin
-   variable LVar0 := 0;
-   variable LVar1 := 0;
-   LVar0 := obj_being_used_with;
-   LVar1 := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
+   variable Tool := 0;
+   variable Skill := 0;
+   Tool := obj_being_used_with;
+   Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -50);
+
    if (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
       set_map_var(0, map_var(0) + 1);
    end
-   if (obj_pid(LVar0) == PID_ELECTRONIC_LOCKPICKS) then begin
+
+   if (obj_pid(Tool) == PID_ELECTRONIC_LOCKPICKS or obj_pid(Tool) == PID_ELEC_LOCKPICK_MKII) then begin
       script_overrides;
-      if (is_success(LVar1)) then begin
+
+      if (Tool == PID_ELEC_LOCKPICK_MKII) then
+         Skill := roll_vs_skill(dude_obj, SKILL_LOCKPICK, -40);
+
+      if (is_success(Skill)) then begin
          if (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) != 2) then begin
             set_map_var(0, map_var(0) + 2);
             set_global_var(GVAR_ENEMY_BROTHERHOOD, 1);
@@ -98,9 +104,9 @@ procedure use_obj_on_p_proc begin
          give_xp(EXP_LOCKPICK_NEG_50);
       end
       else begin
-         if (is_critical(LVar1)) then begin
-            rm_obj_from_inven(dude_obj, LVar0);
-            destroy_object(LVar0);
+         if (is_critical(Skill)) then begin
+            rm_obj_from_inven(dude_obj, Tool);
+            destroy_object(Tool);
             jam_lock(self_obj);
             display_msg(mstr(101)); // lockpicks broken
          end

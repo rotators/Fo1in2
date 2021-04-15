@@ -98,15 +98,14 @@ end
 
 procedure use_obj_on_p_proc begin
    variable Item := 0;
-   variable LVar1 := 0;
-   variable LVar2 := 0;
+   variable Skill := 0;
 
    Item := obj_pid(obj_being_used_with);
-   if (Item == PID_ELECTRONIC_LOCKPICKS) then begin
+   if (Item == PID_ELECTRONIC_LOCKPICKS or Item == PID_ELEC_LOCKPICK_MKII) then begin
       script_overrides;
       if (local_var(LVAR_Trap_Detected) == 0) then begin
-         LVar1 := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
-         if (is_success(LVar1)) then begin
+         Skill := roll_vs_skill(source_obj, SKILL_TRAPS, -20);
+         if (is_success(Skill)) then begin
             display_msg(204);
             reg_anim_clear(source_obj);
          end
@@ -116,15 +115,19 @@ procedure use_obj_on_p_proc begin
          end
       end
       if (obj_is_locked(self_obj)) then begin
-         LVar2 := roll_vs_skill(source_obj, SKILL_LOCKPICK, -10);
-         if (is_success(LVar2)) then begin
+         if (item == PID_ELEC_LOCKPICK_MKII) then
+            Skill := roll_vs_skill(source_obj, SKILL_LOCKPICK, 0);
+         else
+            Skill := roll_vs_skill(source_obj, SKILL_LOCKPICK, -10);
+
+         if (is_success(Skill)) then begin
             obj_unlock(self_obj);
             set_local_var(LVAR_Door_Status, UNLOCKED);
             display_msg(message_str(SCRIPT_GLORDDOR, 109));
             give_xp(EXP_LOCKPICK_NEG_20);
          end
          else begin
-            if (is_critical(LVar2)) then begin
+            if (is_critical(Skill)) then begin
                display_msg(message_str(SCRIPT_GLORDDOR, 121));
                jam_lock(self_obj);
                display_msg(message_str(SCRIPT_GLORDDOR, 110));

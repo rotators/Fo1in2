@@ -20,6 +20,9 @@
 #define GVAR_BAD_MONSTER                        (4) // was 160 (1160) in Fallout 1
 #define GVAR_GOOD_MONSTER                       (5) // was 159 (1159) in Fallout 1
 
+#define GVAR_REPUTATION_SLAVER                  (11)
+#define GVAR_REPUTATION_SLAVE_OWNER             (12)
+
 // Karma Titles Fo2
 #define GVAR_KARMA_HOLY_WARRIOR                 (37)
 #define GVAR_KARMA_GUARDIAN_OF_THE_WASTES       (38)
@@ -61,6 +64,7 @@
 #define GVAR_MUTATE_STAGE                       (193)
 #define GVAR_PLAYER_SEX_LEVEL                   (194)
 #define GVAR_NEW_RENO_MADE_MAN                  (230)
+#define GVAR_GRAVES_UNEARTHED                   (319)
 #define GVAR_SEX_COUNTER                        (358)
 #define GVAR_SEXPERT                            (588)
 #define GVAR_GIGALO                             (589)
@@ -363,13 +367,13 @@
 #define GVAR_GLOW_POWER                         (1224)
 #define GVAR_NECRO_MUTANTS_TIME_LEFT            (1225)
 #define GVAR_MISSING_CARAVANS_STATUS            (1226)
-#define GVAR_HUB_FILLER_30                      (1227)
+#define GVAR_NECROP_WATER_PUMP_GUARD            (1227)
 #define GVAR_TORCH_LEFT_HAND                    (1228)
 #define GVAR_TORCH_RIGHT_HAND                   (1229)
 #define GVAR_TORCH_TIME_LEFT                    (1230)
 #define GVAR_MASTER_FILLER_4                    (1231)
 #define GVAR_MASTER_FILLER_5                    (1232)
-#define GVAR_MASTER_FILLER_6                    (1233)
+#define GVAR_JEREMIAH_STATUS                    (1233)
 #define GVAR_HOLODISK_VATS_GREY                 (1234)
 #define GVAR_HOLODISK_VATS_MAXSON               (1235)
 #define GVAR_VANCE_KNOWS_PLAYER                 (1236)
@@ -461,7 +465,7 @@
 #define GVAR_IAN_REFRESH_GFX_FLAG               (1322)
 #define GVAR_MALE_PLAYER_SMOKES                 (1323) // can be overwritten!
 #define GVAR_JEREMIAH_CHILDREN_TALKED           (1324)
-#define GVAR_ENABLE_DEBUG_MESSAGES             (1325)
+#define GVAR_ENABLE_DEBUG_MESSAGES              (1325)
 #define GVAR_RANDOM_ENC_IGNORE_LUCK             (1326)
 #define GVAR_RANDOM_ENC_DIFF_BASED              (1327)
 #define GVAR_RANDOM_ENC_LEVEL_BASED             (1328)
@@ -4087,10 +4091,10 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4951)
 #define RESERVED_FOR_FALLOUT_FIXT               (4952)
 #define RESERVED_FOR_FALLOUT_FIXT               (4953)
-#define RESERVED_FOR_FALLOUT_FIXT               (4954)
-#define RESERVED_FOR_FALLOUT_FIXT               (4955)
-#define RESERVED_FOR_FALLOUT_FIXT               (4956)
-#define RESERVED_FOR_FALLOUT_FIXT               (4957)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4954)*/
+#define GVAR_ENABLE_WEAPON_UPGRADES             (4955)
+#define GVAR_ENABLE_RED_DOGMEAT                 (4956)
+#define GVAR_PARTY_MEMBERS_PRISONER             (4957)
 #define GVAR_ENEMY_GUN_RUNNERS                  (4958)
 #define GVAR_GUN_RUNNERS_BONUS                  (4959)
 #define GVAR_SEWER_KING_POS                     (4960)
