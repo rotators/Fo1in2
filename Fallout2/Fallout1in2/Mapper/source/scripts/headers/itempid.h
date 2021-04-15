@@ -327,6 +327,7 @@
 #define PID_PLASTIC_EXPLOSIVES              (85)
 #define PID_ROPE                            (127)
 
+#define PID_SUPER_TOOL_KIT                  (308)
 #define PID_EXP_LOCKPICK_SET                (410)
 #define PID_ELEC_LOCKPICK_MKII              (411)
 
@@ -419,7 +420,6 @@
 #define PID_YELLOW_REACTOR_KEYCARD          (305)
 #define PID_RED_REACTOR_KEYCARD             (306)
 #define PID_PLASMA_TRANSFORMER              (307)
-#define PID_SUPER_TOOL_KIT                  (308)
 #define PID_TALISMAN                        (309)
 #define PID_GAMMA_GULP_BEER                 (310)
 #define PID_ROENTGEN_RUM                    (311)

@@ -3,6 +3,7 @@
 #include "command.h"
 #include "updatmap.h"
 #include "necropolis.h"
+#include "maps/watrshd.h"
 
 procedure start;
 procedure map_enter_p_proc;
@@ -52,7 +53,8 @@ procedure map_enter_p_proc begin
       end
    end
 
-   if (global_var(GVAR_HUB_FILLER_30)) then begin
+   // If Set sends the player to fix the water pump, Garret will be with him and block his exit.
+   if (global_var(GVAR_NECROP_WATER_PUMP_GUARD)) then begin
       override_map_start(57, 62, 1, 0);
    end
    else begin
@@ -68,7 +70,7 @@ procedure map_enter_p_proc begin
       override_map_start_hex(9334, 1, 2);
    end
 
-   if (map_var(7) == 2) then begin
+   if (map_var(MVAR_MUTANTS_HOSTILE) == 2) then begin
       kill_critter_type(PID_SUPER_MUTANT, 0);
       kill_critter_type(PID_HARRY, 0);
    end
@@ -111,15 +113,15 @@ end
 procedure Invasion begin
 variable Item;
 
-   if (necropolis_invaded and not(is_loading_game) and (map_var(10) == 0)) then begin
-      set_map_var(10, 1);
+   if (necropolis_invaded and not(is_loading_game) and (map_var(MVAR_INVADED) == 0)) then begin
+      set_map_var(MVAR_INVADED, 1);
 
       kill_critter_type(PID_GARRET, 0);
       kill_critter_type(PID_MINDLESS_GHOUL, 1);
       kill_critter_type(PID_GHOUL, 1);
       kill_critter_type(PID_ZOMBIE_GUARD, 1);
       kill_critter_type(PID_GLOWING_ONE, 1);
-      
+
       fugee_ptr := create_object_sid(PID_MAD_SUPER_MUTANT, 0, 0, SCRIPT_INVADER);
       set_ai(fugee_ptr, AI_SUPER_MUTANT_AGGRESSIVE);
       fugee_hex := 16501;

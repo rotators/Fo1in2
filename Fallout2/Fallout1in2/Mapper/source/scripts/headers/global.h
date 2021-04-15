@@ -368,7 +368,7 @@
 #define GVAR_GLOW_POWER                         (1224)
 #define GVAR_NECRO_MUTANTS_TIME_LEFT            (1225)
 #define GVAR_MISSING_CARAVANS_STATUS            (1226)
-#define GVAR_HUB_FILLER_30                      (1227)
+#define GVAR_NECROP_WATER_PUMP_GUARD            (1227)
 #define GVAR_TORCH_LEFT_HAND                    (1228)
 #define GVAR_TORCH_RIGHT_HAND                   (1229)
 #define GVAR_TORCH_TIME_LEFT                    (1230)
@@ -4092,8 +4092,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4951)
 #define RESERVED_FOR_FALLOUT_FIXT               (4952)
 #define RESERVED_FOR_FALLOUT_FIXT               (4953)
-#define RESERVED_FOR_FALLOUT_FIXT               (4954)
-#define RESERVED_FOR_FALLOUT_FIXT               (4955)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4954)*/
+#define GVAR_ENABLE_WEAPON_UPGRADES             (4955)
 #define GVAR_ENABLE_RED_DOGMEAT                 (4956)
 #define GVAR_PARTY_MEMBERS_PRISONER             (4957)
 #define GVAR_ENEMY_GUN_RUNNERS                  (4958)
