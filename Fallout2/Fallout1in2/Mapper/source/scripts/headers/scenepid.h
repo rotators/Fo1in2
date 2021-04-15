@@ -47,9 +47,6 @@ variable Scenery_Creation_Ptr;
 #define PID_BOS_ELEVATOR_TOP                (33554613)
 #define PID_BOS_MARKER                      (33554589)
 
-// Navarro Door
-#define PID_NS_NAVARRO_BUNKER_DOOR          (33554450)
-
 // Sierra Base Entrance Door
 #define PID_SIERRA_ENTRANCE_DOOR            (33555779)
 #define PID_SIERRA_ENTRANCE_DOOR_EXP        (33555780)

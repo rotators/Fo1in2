@@ -91,7 +91,6 @@
 #define GVAR_ADDICT_TRAGIC                      (295)   // maybe hard-coded, maybe not?
 #define GVAR_ADDICT_JET                         (296)   // maybe hard-coded, maybe not?
 
-#define GVAR_GRAVES_UNEARTHED                   (319)
 #define GVAR_MYSTERIOUS_STRANGER                (352)
 #define GVAR_MYSTERIOUS_STRANGER_LEVEL          (353)
 
