@@ -12,9 +12,9 @@
 {601}{}{Großer Hammer mit großem Griff. Sehr beliebt bei Muskelmännern. Mindeststärke: 6.}
 {700}{}{Speer}
 {701}{}{Stab mit einer messerscharfen Spitze. Der Stab ist aus Holz und die Spitze aus bearbeitetem Stahl. Mindeststärke: 4.}
-{800}{}{10mm-Pistole}
+{800}{}{10mm Pistole}
 {801}{}{Selbstlader vom Typ Colt 6520, 10mm. Bei jedem Abzug lädt sich die Waffe automatisch, bis das Magazin leer ist. Nur Einzelschuss. Mindeststärke: 3.}
-{900}{}{10mm-Klein-MG}
+{900}{}{10mm Klein-MG}
 {901}{}{H&K MP9-Maschinenpistole, 10mm Variante. 'Klein-MG' mittlerer Größe für Einzelschuss oder Dauerfeuer. Mindeststärke: 4.}
 {1000}{}{Jagdgewehr}
 {1001}{}{Halbautomatikgewehr vom Typ Colt Rangemaster, Kaliber .223. Nur Einzelschuss. Mindeststärke: 5.}
@@ -40,7 +40,7 @@
 {2001}{}{Stabiles, schweres Eisenteil, das als Hebel oder Waffe im Nahkampf eingesetzt werden kann. Mindeststärke: 5.}
 {2100}{}{Schlagring}
 {2101}{}{Schlagring aus gehärtetem Stahl. Schützt die eigene Hand und kann im unbewaffneten Kampf großen Schaden anrichten. Mindeststärke: 1.}
-{2200}{}{14mm-Pistole}
+{2200}{}{14mm Pistole}
 {2201}{}{14mm-Selbstlader vom Typ Sig-Sauer. Große Handfeuerwaffe mit Einzelschuss. Hervorragende Verarbeitung. Mindeststärke: 4.}
 {2300}{}{Sturmgewehr}
 {2301}{}{Sturmgewehr vom Typ AK-112, 5mm. Ein älteres Militärmodell, das seit der Kriegszeit nicht mehr eingesetzt wurde. Einzelschuss oder Dauerfeuer. Mindeststärke: 5.}
@@ -238,9 +238,9 @@
 {11901}{}{Teuer aussehende Halskette aus Silber, Gold und Diamanten.}
 {12000}{}{Alien Blaster}
 {12001}{}{Seltsame Pistole, die offensichtlich von Außerirdischen stammt. Scheint allerdings Energiezellen nutzen zu können. Mindeststärke: 2.}
-{12100}{}{9mm-Kugeln}
+{12100}{}{9mm Kugeln}
 {12101}{}{Sammlung alter 9x19mm-Kugeln. Standardkugeln. Müssen mit viel Schmiere vor Umwelteinflüssen geschützt werden.}
-{12200}{}{9mm-Mauser}
+{12200}{}{9mm Mauser}
 {12201}{}{Mauser M/96, in 9x19mm-Parabellum. In hervorragendem Zustand. Extrem genau. Mindeststärke: 3.}
 {12300}{}{Annullierer}
 {12301}{}{Eigenartiges Gerät, hergestellt mit einer seltenen Technologie.}
@@ -554,7 +554,7 @@
 {28200}{}{Cliftons Auge}
 {28201}{}{Ein kleines Glas, in dem ein menschliches Auge in einer Flüssigkeit schwimmt. Auf dem Etikett steht General Clifton.}
 {28300}{}{Tommygun}
-{28301}{}{Diese uralt aussehende Waffe scheint ein Klein-MG zu sein, das nach dem Aussehen der Thompson M1928 hergestellt wurde, die Waffe der Wahl der Gangster des frühen 20. Jahrhunderts. Du fragst dich warum. Mindeststärke: 6.}
+{28301}{}{Diese uralt aussehende Waffe ist ein Klein-MG, das nach dem Aussehen der Thompson M1928 hergestellt wurde, die Waffe der Wahl der Gangster des frühen 20. Jahrhunderts. Du fragst dich warum. Mindeststärke: 6.}
 {28400}{}{Schnetzelfleisch}
 {28401}{}{Diese geräucherten und getrockneten Fleischstücke bleiben auch nach vielen Jahren noch ein echt nahrhaftes Kauerlebnis.}
 {28500}{}{Teile der radioaktiven Skorpione}
@@ -651,7 +651,7 @@
 {33001}{}{Wrack eines Verti-Birds. Scheint vor Monaten hier abgestürzt zu sein.}
 {33100}{}{Cat's Paw Nummer 5}
 {33101}{}{Das ist die viel gesuchte Nummer 5 der Zeitschrift Cat's Paw. Abgesehen von den Bildern gibt es einen wunderbaren Bericht über Energiewaffen.}
-{33200}{}{.45 MP}
+{33200}{}{.45 Klein-MG}
 {33201}{}{Diese einfache MAC-27 Maschinenpistole wurde für die Nachhut der Armee und Polizeieinheiten im besetzten Canada entwickelt. Robust und zuverlässig. Mindeststärke: 4.}
 {33300}{}{Herztabletten}
 {33301}{}{Diese Tabletten werden von Menschen mit Herzproblemen eingenommen.}
@@ -686,7 +686,7 @@
 {35000}{}{Bozar}
 {35001}{}{Das DKS-802 ist ein Traum für Texaner und die ultimative Verfeinerung der Scharfschützenkunst. Obwohl sehr temperamentvoll und störanfällig, macht die hohe Genauigkeit die zusätzliche Anforderung an die Wartung mehr als wett. Mindeststärke: 8.}
 {35100}{}{Fortschrittliches Sturmgewehr}
-{35101}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Mindeststärke: 5.}
+{35101}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Einzel- / Dauerfeuer. Mindeststärke: 5.}
 {35200}{}{EC Sturmgewehr}
 {35201}{}{Das G66, ein altes europäisches Sturmgewehr, wurde nach der Auflösung des Europäischen Commonwealth in begrenzter Anzahl von Überlebenskünstlern und Milizen importiert. Mindeststärke: 5.}
 {35300}{}{XL70E3}
@@ -759,7 +759,7 @@
 {39000}{}{Solar-Versenger}
 {39001}{}{Ohne aufladende Sonnenstrahlen kann man mit diesem Gewehr nicht mal ein Streichholz anzünden. Bei Tageslicht wandeln die experimentellen photoelektrischen Zellen, mit denen der Versenger betrieben wird, jedoch fast alles in einen knusprigen Braten um. Mindeststärke: 3.}
 {39100}{}{EC Sturmgewehr MKII}
-{39101}{}{Als fortschrittliche Version des G66 wurde dieses importierte europäische Gewehr von Streitkräften eingesetzt, die gegen innerstaatliche Bedrohungen kämpften. Das kompakte, kraftvolles Design wurde als zu riskant für die chinesische Front angesehen. Mindeststärke: 6.}
+{39101}{}{Diese fortschrittliche Version des G66 wurde von Streitkräften eingesetzt, die gegen innerstaatliche Bedrohungen kämpften. Das kompakte, kraftvolles Design wurde als zu riskant für die chinesische Front angesehen. Mindeststärke: 6.}
 {39200}{}{Gewehr M72 Gauss}
 {39201}{}{Das Gewehr M72 wurde in Deutschland entwickelt. Mit Hilfe eines elektromagnetischen Felds werden Patronen mit unglaublicher Geschwindigkeit geschossen... und fast jedes Ziel durchschlagen. Reichweite, Zielgenauigkeit und Durchschlagkraft sind nahezu unerreicht. Mindeststärke: 6.}
 {39300}{}{Phazer}
@@ -777,13 +777,13 @@
 {39900}{}{Super-Elektroschocker}
 {39901}{}{Elektroschocker Modell "Farmers bester Freund" der Firma Wattz Electronics. Dieses Modell wurde zur Erhöhung der elektrischen Abgabeladung aufgerüstet. Mindeststärke: 4.}
 {40000}{}{Verbesserter Flammenwerfer}
-{40001}{}{Ein Flammenwerfer Modell Flambe 450, Varmiter-Ausführung. Feuert eine kurze Salve äußerst heißer, brennbarer Flüssigkeit ab. Spezieller Treibstoff erforderlich. Dieses Modell feuert eine noch heißere Mischung ab, wodurch die Flammenbildung begünstigt wird. Mindeststärke: 6.}
+{40001}{}{Ein Flammenwerfer Modell Flambe 450, Varmiter Ausführung. Feuert eine kurze Salve äußerst heißer, brennbarer Flüssigkeit ab. Dieses Modell feuert eine noch heißere Mischung ab, wodurch die Flammenbildung begünstigt wird. Mindeststärke: 6.}
 {40100}{}{Lasergewehr (Erw. Kap.)}
 {40101}{}{Bei dem Lasergewehr Wattz 2000 wurde das Ladesystem aufgerüstet sowie ein spezieller Recyclingchip installiert. Dadurch kann die Abnutzung der Mikrofusionszelle um 50% vermindert werden. Mindeststärke: 6.}
 {40200}{}{Magneto-Laserpistole}
 {40201}{}{Die Laserpistole Wattz 1000 ist mit einem Zielsuchsystem über ein magnetisches Feld aufgerüstet worden. Dadurch wird der Laserstrahl gebündelt, so dass die Waffe zusätzliche Durchschlagkraft erhält. Mindeststärke: 3.}
 {40300}{}{Fortsch. Sturmgewehr (NZG)}
-{40301}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Es wurde zusätzlich mit einem Nachtsichtgerät ausgestattet, um die Zielgenauigkeit bei Nacht zu erhöhen. Mindeststärke: 5.}
+{40301}{}{Aufgewertete Version des AK-198. Einzel- / Dauerfeuer. Es wurde zusätzlich mit einem Nachtsichtgerät ausgestattet, um die Zielgenauigkeit bei Nacht zu erhöhen. Mindeststärke: 5.}
 {40400}{}{Desert Eagle (Erw. Mag.)}
 {40401}{}{Veraltetes Modell der Desert Eagle in 44er-Magnumausführung. Einsatz in Filmen des 20. Jhdts. machte die Waffe zum beliebtesten Gewehr aller Zeiten. Diese Waffe wurde mit einem längeren Magazin ausgestattet, damit der Spaß noch länger dauern kann! Mindeststärke: 4.}
 {40500}{}{Sturmgewehr (Erw. Mag.)}
@@ -791,7 +791,7 @@
 {40600}{}{Plasmapistole (Erw. Kap.)}
 {40601}{}{Bei der Plasmapistole Glock 86 wurde die Magnetkammer neu ausgerichtet, um die Abnutzung der Energiezelle zu minimieren. Die Effizienz wird dadurch verdoppelt, so dass mit einer Batterieladung mehr schüsse abgegeben werden können. Mindeststärke: 4.}
 {40700}{}{Super-Powerfaust}
-{40701}{}{Die Powerfaust "Big Frigger" von BeatCo. Von vielen als ultimatives Hilfsmittel im unbewaffneten Kampf angesehen. Dieses Exemplar hat aufgerüstete Power-Servos, die die Schlagkraft noch erhöhen. Wird mit kleinen Energiezellen betrieben. Mindeststärke: 1.}
+{40701}{}{Powerfaust von BeatCo. Von vielen als die beste Waffe für den unbewaffneten Kampf angesehen. Dieses Exemplar hat aufgerüstete Power-Servos, die die Schlagkraft erhöhen. Wird mit Energiezellen betrieben. Mindeststärke: 1.}
 {40800}{}{Erste-Hilfe-Kasten für Feldärzte}
 {40801}{}{Kleiner Kasten, der grundlegende medizinische Ausrüstung enthält. Bandagen, Verbände, Desinfektionsspray usw.}
 {40900}{}{Sanitätertasche}
@@ -971,7 +971,7 @@
 {49900}{}{PIPBoy-Powerfunktion "Sprache" }
 {49901}{}{Die PIPBoy-Powerfunktion "Sprache" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch ins Gedächtnis des Benutzers, so dass dessen Ausdrucksfähigkeit dauerhaft verbessert wird.}
 {50000}{}{Fortsch. Sturmgewehr (HPFA)}
-{50001}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Diese Variante ist 'High Power Full Automatic', bei der das Feuer ein ganzes Magazin verbraucht. Mindeststärke: 5.}
+{50001}{}{Variante des AK-198 als Unterstützungswaffe. Einzel- / Dauerfeuer. Diese Version ist auf 'High Power Full Automatic' modifiziert, bei der ein Feuerstoss ein ganzes Magazin verbraucht. Mindeststärke: 5.}
 {50100}{}{Wandsafe}
 {50200}{}{Bodensafe}
 {50300}{}{Blaues Speichermodul}
