@@ -10,86 +10,86 @@
 
 # Float: (When using the bike without owning it and having talked to Griffith at least once.)
 {160}{}{Du bist ein verdammter DIEB!}
-{161}{}{Was zum? Wo ist mein ..?!}
+{161}{}{Was zum? Wo ist mein... ?!}
 
 {200}{}{Griffith scheint nicht wieder zurück zu kommen. Vielleicht solltest du nach ihm suchen?}
-{201}{}{Er braucht echt lange ...}
-{202}{}{Ugh ... Laaaang-weilig.}
+{201}{}{Er braucht echt lange... }
+{202}{}{Ugh... Laaaang-weilig.}
 
 # Dialog:
-{500}{}{Get your hands off of my ride, smoothskin!}
-{501}{}{I told you to stay away!}
-   {510}{}{Make me!}
+{500}{}{Finger weg von meinem Schlitten, Glatthaut!}
+{501}{}{Ich sagte Finger weg!}
+   {510}{}{Versuch' mich davon abzuhalten!}
    {520}{}{Oh, Ok.}
 
-{1000}{}{Hey smoothskin, what'cha lookin at?}
-{1001}{}{You're still around, smoothskin?}
-{1002}{}{Did you change your mind, smoothskin?}
-   {1010}{}{Who are you?}
-   {1020}{}{What are you doing here?}
-   {1030}{}{Is that your bike?}
-   {1031}{}{Can you tell me about your bike again?}
-   {1040}{}{Alright, I'll watch your bike.}
-   {1050}{}{Uhh... Who you?}
+{1000}{}{Hey Glatthaut, was gibts' zu glotzen?}
+{1001}{}{Biste immer noch da, Glatthaut?}
+{1002}{}{Hast' deine Meinung geändert, Glatthaut?}
+   {1010}{}{Wer bist du?}
+   {1020}{}{Was machst du hier so?}
+   {1030}{}{Ist das dein Motorrad?}
+   {1031}{}{Kannst du mir nochmal über das Bike erzählen?}
+   {1040}{}{Okay, ich passe auf deinen Schlitten auf.}
+   {1050}{}{Uhh... Wer du?}
 
-{1100}{}{They call me Griffith.}
-   {1110}{}{What are you doing here, Griffith?}
-   {1120}{}{Great. See you later, Griffith!}
+{1100}{}{Sie nenn' mich Griffith.}
+   {1110}{}{Was machst du hier, Griffith?}
+   {1120}{}{Gut. Mann sieht sich, Griffith!}
    
-{1200}{}{What does it look like I'm doing?}
-   {1210}{}{I don't know. You're waiting for someone?}
+{1200}{}{Wie schauts' aus was ich hier mache?}
+   {1210}{}{Kein Plan. Wartest du auf jemanden?}
    
-{1300}{}{Exactly! And know what? Looks like I found who I was waiting for!}
-   {1310}{}{Is that so?}
+{1300}{}{Genau! Und weisste' was? Ich glaub ich hab genau den richtigen gefunden!}
+   {1310}{}{Wie das?}
    
-{1400}{}{There's something I need to do. It'll take me a few hours, and I can't keep my bike here unattended.}
-   {1410}{}{You want me to watch your bike?}
-   {1420}{}{So what do you want me to do?}
+{1400}{}{Da is' etwas was ich besorgen muss. Dauert aber 'nen paar Stunden, und ich brauch jemanden der auf meinen Cruiser hier aufpasst.}
+   {1410}{}{Du willst das ich auf dein Motorrad aufpasse?}
+   {1420}{}{Und? Was soll ich tun?}
    
-{1500}{}{The other ghouls 'round here, they don't give a shit and I can't trust tem.}
-{1501}{}{You on the other hand, I can tell you *would* give a shit! Besides, I'll pay you if everything is still in place once I'm back.}
-   {1510}{}{What's the pay?}
-   {1520}{}{Guess I could do that.}
+{1500}{}{Die anderen Ghouls hier geben nen' Scheiss auf meine Mühle, und ich kann ihnen nicht vertrauen darauf aufzupassen.}
+{1501}{}{Du siehst mir andererseits verlässlich aus! Und s'is nich so als dass ich dich nicht bezahlen würde wenn ich wieder zurück bin und alles in Ordnung is'.}
+   {1510}{}{Was zahlst du denn?}
+   {1520}{}{Hm, ich denke das könnte ich machen.}
 
-{1600}{}{A bag of caps? It's not like it's a hard job. Just takes some time, that's all.}
-   {1610}{}{Guess I could do that.}
-   {1620}{}{Sorry, but I don't have time for that. See you later.}
+{1600}{}{Ein Beutel mit Deckel? Is' nich als wenn's nen harter Job wär'. Dauert halt nur etwas, das is' alles.}
+   {1610}{}{Denke das könnte ich hinbekommen.}
+   {1620}{}{Sorry, aber ich habe leider keine Zeit für sowas. Später vielleicht.}
    
-{1700}{}{Great! I'll be back in a few hours.}
-   {1710}{}{[You watch the ghoul disappear into the sewers]}
+{1700}{}{Super! Ich bin in ein paar Stunden zurück, pass' mir gut auf mein Baby auf!}
+   {1710}{}{[Du beobachtest wie der Ghoul in die Kanalisation schlurft]}
    
-{1800}{}{Smoothskin, are you stupid? I need someone to watch my bike!}
-   {1810}{}{Hey, don't call me stupid!}
+{1800}{}{Sach' mal bist du dumm Glatthaut? Ich brauch jemanden der auf meine Maschine aufpasst natürlich.!}
+   {1810}{}{Hey, wenn nennst du hier dumm?}
    {1820}{}{Oh.}
 
-{1900}{}{It's my bike, alright.}
-   {1910}{}{Can you tell me more about it?}
-   {1920}{}{It looks like an original Chryslus Motors Cruiser. I have seen them on old holo movies!}
+{1900}{}{Es ist meine Maschine, okay?}
+   {1910}{}{Kannst du mir mehr darüber erzählen?}
+   {1920}{}{Sieht nach einem originalem Chryslus Motors Cruiser aus. Ich hab welche in alten Holo-Filmen gesehn!}
    
-{2000}{}{You're looking at an original Chryslus Motors Cruiser, build... Uhm... Actually, I don't know when it was build, but it's pre-war! Great tech. Keeping it up and running for years already.}
-   {2010}{}{Do you sell it?}
+{2000}{}{Du schaust auf einen originalen Chryslus Motors Cruiser, gebaut... Ähh... weiß' nichtmal wann die genau gebaut wurden, aber is' definitiv Vorkriegs-Tech! Echte Spitzentechnologie! Sie hält schon seit Jahren mit nur wenig Mucken durch.}
+   {2010}{}{Verkaufst du es?}
    
-{2100}{}{Do I ... what? Are you fucking kidding me, smoothskin? I would never sell my ride!}
+{2100}{}{Ob ich es... verarscht du mich Glatthaut? Nie im Leben würde ich so ein Spitzenschlitten einfach verkaufen!}
 
-{2200}{}{Well, shit. You're as useless as everyone else 'round here.}
+{2200}{}{Oh scheisse, du bist ja so nutzlos wie alle hier.}
 
-{2300}{}{Damn straight, smoothskin! One of mankinds best machines ever made!}
+{2300}{}{Verdammt richtig, Glatthaut! Eine der feinsten Maschinen die jemals von Menschenhand erbaut wurde!}
 
-{2400}{}{Seems you know more about these pre-war bikes than I do.}
+{2400}{}{Scheint du weißt mehr über Vorkriegs-Motorräder als ich.}
 
 
 # Dumb dialog:
-{3000}{}{Holy brahmin, you're as dumb as it gets, aren't you?}
+{3000}{}{Heillige Kuhscheisse, du bist so doof wie Brot, eh?}
 	{3010}{}{Uh...}
 
-{3100}{}{Tell you what, smoothskin... There is something I need to do. Hey! Do you listen?}
-{3101}{}{If you do as I say, I'll give you nice bling bling, you understand me? Look, lot's of bottle caps! You like bottle caps, do you?}
-	{3110}{}{Me like!}
-	{3120}{}{Nah.}
+{3100}{}{Ich sag dir was Glatthaut... Ich muss etwas erledigen... Hey, hörst du mir zu?}
+{3101}{}{Wenn du machst was ich dir sage, geb' ich dir nettes glänzendes Zeug, kapiert? [Zeigt eine Tasche voller Deckel] Siehste? Nen Beutel voller Deckel. Du magst Deckel, eh?}
+	{3110}{}{Ich mögen!}
+	{3120}{}{Bäh.}
 
-{3200}{}{You what? You don't like bottle caps, smoothkin? Damn, you must be on the real slow side.}
-	{3210}{}{Me go.}
-	{3220}{}{Uh, me like caps!}
+{3200}{}{Was? Du magst keine Deckel, Glatthaut? Dammt' du musste einer von der wirklich langsamen Sorte sein...}
+	{3210}{}{Ich gehn.}
+	{3220}{}{Oh, ich mögen Deckel!}
 
-{3300}{}{Great, great! Now listen. I have to go away for a bit. You understand? *I* go. *You* stay here. Make nobody touch my bike, yes? Good. It won't take too long, just wait here.}
-   {3310}{}{[You watch the ghoul disappear into the sewers]}
+{3300}{}{Okay, gut! Nun hör zu. Ich muss eine Zeit weg gehen. Verstehst du? *ICH* gehen [zeigt auf sich und macht gehende Bewegung mit zwei Fingern] *DU* hier bleiben [zeigt auf dich und den Boden neben dem Motorrad] *DU* aufpassen auf mein Motorrad! [zeigt auf das Motorrad und macht eine Fratze] Ja? Verstanden? Niemand fasst meine Maschine an! Gut, wird nicht lange dauern, warte hier}
+   {3310}{}{[Du beobachtest wie der Ghoul in die Kanalisation schlurft]}
