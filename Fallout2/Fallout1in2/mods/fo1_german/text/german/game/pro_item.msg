@@ -694,7 +694,7 @@
 {35400}{}{Polizeischrotgewehr}
 {35401}{}{Der City-Sweeper ist eine Weiterentwicklung des ursprünglichen City-Killers und wurde speziell zur Unterdrückung von Unruhen und Laborexperimenten entwickelt. Akzeptiert Standard 12 Gauge Schrotpatronen. Mindeststärke: 5.}
 {35500}{}{Leichtes Maschinengewehr}
-{35501}{}{Eine alte automatische Trupp-Unterstützungswaffe, die nach der Einführung tragbarer Kleingeschütze und überlegener Designs obsolet wurde, und an Einheiten der Nationalgarde abgetreten wurde. Mindeststärke: 6.}
+{35501}{}{Alte Automatische Unterstützungswaffe, wurde durch überlegene Designs und tragbare Kleingeschütze obsolet, und an Einheiten der Nationalgarde gegeben. Mindeststärke: 6.}
 {35600}{}{Computer-Sprachmodul}
 {35601}{}{Leiterplatte mit mehreren nicht näher zu identifizierenden Teilen, einem Mikrophon und der Aufschrift "Bunker-Tek-Spracherkennungsmodul."}
 {35700}{}{Kaliber 45 }
@@ -751,7 +751,7 @@
 {38600}{}{Louisville Slugger}
 {38601}{}{Dieser typisch amerikanische Baseballschläger aus Hartholz schlägt nicht nur den Ball weit übers Feld hinaus. Mindeststärke: 4.}
 {38700}{}{Schweres Maschinengewehr}
-{38701}{}{Diese Waffe ist ein altes Design für eine automatische Trupp-Unterstützungswaffe und wurde nie in Massenproduktion und im regulären Dienst eingesetzt. Mindeststärke: 7.}
+{38701}{}{Diese Waffe ist ein altes Design einer automatischen Infanterie- Unterstützungswaffe und wurde nie in Massen produziert oder im regulären Dienst eingesetzt. Mindeststärke: 7.}
 {38800}{}{Nadelpistole}
 {38801}{}{Du vermutest, dass diese Bringham-Nadelpistole einst für wissenschaftliche Feldstudien eingesetzt wurde. Ihre Munition besteht aus kleinen Pfeilen aus hartem Kunststoff. Mindeststärke: 3.}
 {38900}{}{Kleingeschütz Avenger}
@@ -937,7 +937,7 @@
 {48000}{}{Bonus +1 Beweglichkeit}
 {48100}{}{Bonus +1 Intelligenz}
 {48200}{}{Bonus +1 Stärke}
-{48300}{}{Buch mit Tips zu Fallout 2 }
+{48300}{}{Buch mit Tips zu Fallout}
 {48301}{}{Tja, wenn du DAS mal zu Anfang des verdammten Spiels gehabt hättest, was?}
 {48400}{}{Ohr des Spielers}
 {48401}{}{Das ist dein Ohr. Der Beißer hat es während des Kampfes abgebissen und auf deinen bewusstlosen Körper gespuckt. Wenn du dies liest, lädst du wahrscheinlich bald neu. Vielleicht hat dieses Objekt ja auch einen besonderen Wert für dich.}
