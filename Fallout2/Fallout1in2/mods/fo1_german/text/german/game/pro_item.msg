@@ -15,17 +15,17 @@
 {800}{}{10mm-Pistole}
 {801}{}{Selbstlader vom Typ Colt 6520, 10mm. Bei jedem Abzug lädt sich die Waffe automatisch, bis das Magazin leer ist. Nur Einzelschuss. Mindeststärke: 3.}
 {900}{}{10mm-Klein-MG}
-{901}{}{H&K MP9-Maschinengewehr, 10mm. Maschinengewehr mittlerer Größe für Einzelschuss oder Dauerfeuer. Mindeststärke: 4.}
+{901}{}{H&K MP9-Maschinenpistole, 10mm Variante. 'Klein-MG' mittlerer Größe für Einzelschuss oder Dauerfeuer. Mindeststärke: 4.}
 {1000}{}{Jagdgewehr}
 {1001}{}{Halbautomatikgewehr vom Typ Colt Rangemaster, Kaliber .223. Nur Einzelschuss. Mindeststärke: 5.}
 {1100}{}{Flammenwerfer}
 {1101}{}{Flammenwerfer vom Modell Flambe 450, Varmiter-Modell. Feuert einen Strahl extrem heißer, brennbarer Flüssigkeit ab. Mindeststärke: 6.}
 {1200}{}{Kleingeschütz}
-{1201}{}{Kleingeschütz vom Typ Rockwell CZ53. Maschinengewehr mit mehreren Läufen. Feuert über 60.000 Schuss pro Minute ab. Mindeststärke: 7.}
+{1201}{}{Tragbares Gatlinggeschütz vom Typ Rockwell CZ53. 'Kleingeschütz' mit mehreren Läufen. Feuert über 60.000 Schuss pro Minute ab. Mindeststärke: 7.}
 {1300}{}{Raketenwerfer}
 {1301}{}{Raketenwerfer vom Typ Rockwell BigBazooka. Mit schwerem Deluxe-Abzug. Mindeststärke: 6.}
-{1400}{}{Sprengrakete}
-{1401}{}{Rakete mit einem großen Sprengkopf.}
+{1400}{}{HE Rakete}
+{1401}{}{Hochexplosive Rakete mit einem großen Sprengkopf.}
 {1500}{}{Plasmagewehr}
 {1501}{}{Plasmagewehr vom Typ Winchester P94. Energiewaffe, die durch einen superleitenden Gewehrlauf hocherhitztes Plasma abfeuert. Mindeststärke: 6.}
 {1600}{}{Laserpistole}
@@ -70,8 +70,8 @@
 {3501}{}{Kleine, leichte Munition. Kaliber: 5mm, Hohlmantelgeschoß.}
 {3600}{}{5mm-AP}
 {3601}{}{Kleinkalibrige Munition. Kaliber: 5mm, Stahlkerngeschoß.}
-{3700}{}{Raketen-AP}
-{3701}{}{Raketenhülle mit kleinem Sprengkopf und großer Durchschlagskraft.}
+{3700}{}{AP Rakete}
+{3701}{}{Panzerbrechende Rakete mit kleinem Sprengkopf und großer Durchschlagskraft.}
 {3800}{}{Energiezelle}
 {3801}{}{Kleine in sich geschlossene Energiespeichereinheit.}
 {3900}{}{Fusionszelle}
@@ -139,7 +139,7 @@
 {7000}{}{Kommode}
 {7001}{}{Kommode aus Holz.}
 {7100}{}{Obst}
-{7101}{}{Seltsames Obststück. Ohne Konservierungsstoffe und zusätzliche Farbstoffe.}
+{7101}{}{Seltsames Stück Obst. Ohne Konservierungsstoffe und zusätzliche Farbstoffe.}
 {7200}{}{Aktenkoffer}
 {7201}{}{Lederner Aktenkoffer, dem Etikett nach in den USA hergestellt. In gutem Zustand, aber das Kombinationsschloss ist kaputt.}
 {7300}{}{Fachlexika}
@@ -154,7 +154,7 @@
 {7701}{}{Elektronischer Dietrich vom Typ Micromanipulator FingerStuff der Firma Wattz Electronics. Zum Öffnen von elektronischen Schlössern und Sicherheitssystemen.}
 {7800}{}{Gemälde}
 {7801}{}{Auf diesem wohl sehr alten Gemälde ist recht undeutlich ein Sänger zu erkennen. Das Gemälde hat eine Filzbeschichtung, die noch in gutem Zustand ist.}
-{7900}{}{Leuchtrakete}
+{7900}{}{Leuchtfackel}
 {7901}{}{Erzeugt für einen kurzen Augenblick Licht. Das Etikett ist schon ein bisschen verschlissen. Insgesamt aber noch in gutem Zustand. Zur Aktivierung oben drehen.}
 {8000}{}{Erste-Hilfe-Buch}
 {8001}{}{Lehrbuch zur praktischen Erste Hilfe.}
@@ -184,10 +184,10 @@
 {9201}{}{Abgetrennter Schwanz eines Radscorpion.}
 {9300}{}{Tasche}
 {9301}{}{Tasche mittlerer Größe aus gewebten Brahmin-Haaren.}
-{9400}{}{Gewehr}
-{9401}{}{Gewehr vom Typ Winchester Widowmaker, Kaliber 12, mit zwei kurzen Läufen und Mahagonigriff. Mindeststärke: 4.}
-{9500}{}{Gewehrkugeln}
-{9501}{}{Gewehrmunition. Diese Munition trägt den Vermerk '12 Kaliber-Geschosse'.}
+{9400}{}{Schrotgewehr}
+{9401}{}{Gewehr vom Typ Winchester Widowmaker, mit zwei kurzen Läufen und Mahagonigriff in 12 Gauge. Mindeststärke: 4.}
+{9500}{}{Schrotpatronen}
+{9501}{}{Schrotmunition. Trägt den Vermerk '12 Gauge-Munition, nicht für kleine Kinder geeignet.'}
 {9600}{}{Roter Schlüssel}
 {9601}{}{Roter elektronischer Sicherheitsschlüssel.}
 {9700}{}{Blauer Schlüssel}
@@ -237,7 +237,7 @@
 {11900}{}{Halskette}
 {11901}{}{Teuer aussehende Halskette aus Silber, Gold und Diamanten.}
 {12000}{}{Alien Blaster}
-{12001}{}{Seltsames Gewehr, das offensichtlich von Außerirdischen stammt. Mindeststärke: 2.}
+{12001}{}{Seltsame Pistole, die offensichtlich von Außerirdischen stammt. Scheint allerdings Energiezellen nutzen zu können. Mindeststärke: 2.}
 {12100}{}{9mm-Kugeln}
 {12101}{}{Sammlung alter 9x19mm-Kugeln. Standardkugeln. Müssen mit viel Schmiere vor Umwelteinflüssen geschützt werden.}
 {12200}{}{9mm-Mauser}
@@ -251,7 +251,7 @@
 {12600}{}{Wasserflasche}
 {12601}{}{Behälter für Wasser oder andere Getränke.}
 {12700}{}{Seil}
-{12701}{}{Starke, dicke Leine. Ca. 45 Fuß lang.}
+{12701}{}{Starke, dicke Leine. Circa gut 12 Meter lang.}
 {12800}{}{Kasten}
 {12801}{}{Einfacher Kasten zum Aufbewahren verschiedener Dinge. Befindet sich am Bettende. Abschließbar.}
 {12900}{}{Kasten}
@@ -316,7 +316,7 @@
 {15801}{}{Über der Werkbank angebrachter Halter mit verschiedenen Werkzeugen.}
 {15900}{}{Molotow-Cocktail}
 {15901}{}{Selbstgefertigte, leicht entzündbare Granate. Mindeststärke: 3.}
-{16000}{}{Viehsporn}
+{16000}{}{Elektroschocker}
 {16001}{}{Viehsporn vom Typ 'Farmerfreund' der Firma Wattz Electronics. Mindeststärke: 4.}
 {16100}{}{Red Ryder}
 {16101}{}{Klassisches Luftgewehr vom Typ Red Ryder. Mindeststärke: 3.}
@@ -398,7 +398,7 @@
 {20200}{}{Kiste}
 {20300}{}{Kiste}
 {20400}{}{Kiste}
-{20500}{}{Leuchtrakete}
+{20500}{}{Leuchtfackel}
 {20501}{}{Erzeugt für einen kurzen Augenblick Licht. Das Etikett ist schon ein bisschen verschlissen. Insgesamt aber noch in gutem Zustand. Aktiviert.}
 {20600}{}{Dynamit}
 {20601}{}{Hochexplosiver Sprengstoff aus Nitroglyzerin, gemischt mit der absorbierenden Substanz Kieselguhr. Mit tickendem Zeitzünder.}
@@ -436,7 +436,7 @@
 {22300}{}{Gelber Schlüssel}
 {22301}{}{Gelber elektronischer Sicherheitsschlüssel.}
 {22400}{}{Kleine Statue}
-{22401}{}{Du vermutest, dass der PIPBoy dieses Werk geschaffen hat, bist dir aber nicht ganz sicher.}
+{22401}{}{Du vermutest, dass dieses geschnitze Stück Holz den 'Pip Boy' darstellen soll, bist dir aber nicht ganz sicher.}
 {22500}{}{Keine Ahnung}
 {22501}{}{Auch nach genauerer Betrachtung hast du noch immer keine Ahnung, was das sein könnte.}
 {22600}{}{Packung Nudeln}
@@ -472,7 +472,7 @@
 {24100}{}{.223-Pistole}
 {24101}{}{.223-Gewehr, das zu einer Pistole umgerüstet und verkleinert wurde. Eine einmalige Feuerwaffe, die mit viel Liebe und großem Können angefertigt wurde. Mindeststärke: 5.}
 {24200}{}{Kampfgewehr}
-{24201}{}{Kampfgewehr vom Typ Winchester City-Killer, Kaliber 12, Bullpup-Modell. In hervorragendem Zustand. Mit optionaler Umrüstung für einen Krieg in der Wüste noch zuverlässiger. Mindeststärke: 5.}
+{24201}{}{Kampfgewehr vom Typ Winchester City-Killer in 12 Gauge, Bullpup-Modell. In hervorragendem Zustand. Mit der optionalen Umrüstung für einen Krieg in der Wüste noch zuverlässiger. Mindeststärke: 5.}
 
 {24300}{}{Topf}
 {24301}{}{Ein schön gefertigter Tontopf.}
@@ -511,7 +511,7 @@
 {26000}{}{Gegengift für Jet}
 {26001}{}{Dieses Gegenmittel kuriert die Suchtwirkung von Jet.}
 {26100}{}{Jonnys Luftgewehr}
-{26101}{}{Ein Luftgewehr der Marke Red Ryder, in dessen Lauf der Name 'Jonny' geritzt ist. Mindest-ST: 3.}
+{26101}{}{Ein Luftgewehr der Marke Red Ryder, in dessen Schaft der Name 'Jonny' geritzt ist. Mindeststärke: 3.}
 {26200}{}{Gummistiefel}
 {26201}{}{Ein altes Paar robuster Arbeitsgummistiefel. Sie sehen aus, als würden sie dir den Matsch wenigstens eine Zeitlang vom Leibe halten.}
 {26300}{}{Nachricht der Olme}
@@ -524,8 +524,8 @@
 {26601}{}{Dieses Kofferradio funktioniert nicht, sieht aber aus, als sei es noch in ganz gutem Zustand. Ein paar Teile könnten wohl für den Einbau in andere Radios weiterverwendet werden.}
 {26700}{}{Vics Wasserflasche}
 {26701}{}{Dieses Relikt aus dem Bunker enthielt früher vermutlich ein heiliges Sakrament. Die heilige Zahl 13 ist auf die Seite dieses wertvollen Verbindungsstücks zur Vergangenheit deines Volks und hoffentlich auch seiner Zukunft eingeritzt.}
-{26800}{}{H&K CAWS}
-{26801}{}{Das Gewehr CAWS (Close Assault Weapons System) ist im Nahkampf eine nützliche Waffe. Durch das Bullpup-Layout hat die Waffe ein leicht zu handhabendes, kurzes Format, besitzt aber gleichzeitig noch genügend Lauflänge für die Hochgeschwindigkeitspatronen. Mindest-ST: 6.}
+{26800}{}{Sturmschrotgewehr}
+{26801}{}{Militärisches Schrotgewehr von H&K, eine der vielen importierten Waffen auf US-amerikanischem Boden. War weltweit eine beliebte Waffe militärischer Befriedungseinheiten, obwohl es aufgrund seiner Kosten niemals die Eigenentwürfe der US-Armee verdrängte. Mindeststärke: 6. }
 {26900}{}{Roboterteile}
 {26901}{}{Ein Haufen beschädigter Roboterteile.}
 {27000}{}{Robo-Raketenwerfer}
@@ -549,13 +549,13 @@
 {27900}{}{Neurale Schnittstelle}
 {27901}{}{Scheinbar ein Satz Elektroden in einer Kopfeinheit, die mit einem genormten Schnittstellenstecker versehen ist.}
 {28000}{}{Geschärfter Speer}
-{28001}{}{Stab mit rasiermesserscharfer Spitze. Der Schaft ist aus Holz, die Spitze aus geschärftem Stahl. Mindest-ST: 4.}
+{28001}{}{Stab mit rasiermesserscharfer Spitze. Der Schaft ist aus Holz, die Spitze aus geschärftem Stahl. Mindeststärke: 4.}
 {28100}{}{Dixons Auge}
 {28101}{}{Ein kleines Glas, in dem ein menschliches Auge in einer Flüssigkeit schwimmt. Auf dem Etikett steht Obergefreiter Dixon.}
 {28200}{}{Cliftons Auge}
 {28201}{}{Ein kleines Glas, in dem ein menschliches Auge in einer Flüssigkeit schwimmt. Auf dem Etikett steht General Clifton.}
-{28300}{}{Tommy-Gewehr}
-{28301}{}{Dieses Klein-MG Thompson M1928 ist eine finster wirkende Waffe; wenn du sie hältst, verspürst du den Drang, einen Schlapphut aufzusetzen und mit den Fingern zu knacken. Das Thompson wird von einem Trommelmagazin mit 50 Schuss versorgt. Mindest-ST: 6.}
+{28300}{}{Tommygun}
+{28301}{}{Diese uralt aussehende Waffe scheint ein Klein-MG zu sein, das nach dem Aussehen der Thompson M1928 hergestellt wurde, die Waffe der Wahl der Gangster des frühen 20. Jahrhunderts. Du fragst dich warum. Mindeststärke: 6.}
 {28400}{}{Schnetzelfleisch}
 {28401}{}{Diese geräucherten und getrockneten Fleischstücke bleiben auch nach vielen Jahren noch ein echt nahrhaftes Kauerlebnis.}
 {28500}{}{Teile der radioaktiven Skorpione}
@@ -563,7 +563,7 @@
 {28600}{}{Feuerholz}
 {28601}{}{Ein Haufen Feuerholz und Zunder.}
 {28700}{}{Jagdgewehr mit Zielfernrohr}
-{28701}{}{Es gibt nichts Schöneres als das überraschte Gesicht deines Ziels. Das Guckloch des Zielfernrohrs mit 20facher Vergrößerung an diesem Jagdgewehr macht alles viel leichter. Zielgenau vom ersten bis zum letzten Schuss, egal, auf welche Art von Ziel du schießt. Mindest-ST: 5.}
+{28701}{}{Es gibt nichts Schöneres als das überraschte Gesicht deines Ziels. Das Guckloch des Zielfernrohrs mit 20facher Vergrößerung an diesem Jagdgewehr macht alles viel leichter. Zielgenau vom ersten bis zum letzten Schuss, egal, auf welche Art von Ziel du schießt. Mindeststärke: 5.}
 {28800}{}{Brennstoffzelle für das Auto}
 {28801}{}{Eine Brennstoffzelle für das Auto.}
 {28900}{}{Schaufel}
@@ -580,16 +580,16 @@
 {29401}{}{Eine Holo-Disk, auf der angeblich der Standort von Bunker 13 verzeichnet ist.}
 {29500}{}{Käse-Chips}
 {29501}{}{Eine Schachtel Chips mit Käsegeschmack. Außerordentlich lecker.}
-{29600}{}{HK P90c}
-{29601}{}{Die Heckler & Koch P90c kam erst zu Kriegsbeginn auf. Durch das Bullpup-Layout sowie das kompakte Design der Waffe ist sie leicht zu handhaben. Die belastbare P90c wird oft wegen ihrer Zuverlässigkeit sowie die große Schusskraft in der robust-kompakten Ausführung gelobt. Mindest-ST: 4.}
+{29600}{}{10mm Karabiner}
+{29601}{}{Die Heckler & Koch MP10 wurde wegen der Erfahrungen im Ressourcenkrieg als Ersatz für die veraltete MP9 und speziell für die feindlichen Umgebungen der arabischen Wüste entwickelt. Mindeststärke: 4.}
 {29700}{}{Metallstab}
 {29701}{}{Das ist ein langer Metallstab. Was hattest du denn gedacht?}
 {29800}{}{Schlüssel zur Trapperstadt}
 {29801}{}{Ein gewöhnlicher Schlüssel.}
 {29900}{}{Rohrgewehr}
-{29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuss. Mindest-ST: 5.}
+{29901}{}{Dies ist ein handgefertigtes Gewehr für einen Schuss. Mindeststärke: 5.}
 {30000}{}{Zip-Pistole}
-{30001}{}{Eine handgefertigte Laserpistole. Mindest-ST: 3.}
+{30001}{}{Eine handgefertigte Laserpistole. Mindeststärke: 3.}
 {30100}{}{Clipboard}
 {30101}{}{Dies ist ein Clipboard mit einem Kühlmittelbericht.}
 {30200}{}{Gecko-Holodisk}
@@ -615,7 +615,7 @@
 {31200}{}{Ersatzteilantrag}
 {31201}{}{Dies ist ein Ersatzteilantrag.}
 {31300}{}{44er Magnum-Revolver}
-{31301}{}{Im Hinblick darauf, dass dies die stärkste Handfeuerwaffe der Welt ist, die deinen Kopf einfach wegblasen kann, solltest du dich fragen, ob du Glück gehabt hast. Also, was ist? Mindest-ST: 5.}
+{31301}{}{Im Hinblick darauf, dass dies die stärkste Handfeuerwaffe der Welt ist, die deinen Kopf einfach wegblasen kann, solltest du dich fragen, ob du Glück gehabt hast. Also, was ist? Mindeststärke: 5.}
 {31400}{}{Kondom (Blaue Packung)}
 {31401}{}{Ein echtes Jimmy Hats, sehr zuverlässig. Dieses ist zur Erhöhung ihres Vergnügens gerippt.}
 {31500}{}{Kondom (grüne Verpackung)}
@@ -627,9 +627,9 @@
 {31800}{}{Leere Spritze}
 {31801}{}{Dies ist eine leere Spritze.}
 {31900}{}{Springmesser}
-{31901}{}{Die Klinge dieses kleinen Messers wird von einer Feder gehalten. Wenn ein Knopf am Griff gedrückt wird, springt die Klinge mit einem befriedigenden "Sscchhk" heraus. Mindest-ST: 1.}
+{31901}{}{Die Klinge dieses kleinen Messers wird von einer Feder gehalten. Wenn ein Knopf am Griff gedrückt wird, springt die Klinge mit einem befriedigenden "Sscchhk" heraus. Mindeststärke: 1.}
 {32000}{}{Spitzer Stock}
-{32001}{}{Ein Holzstock, der an einem Ende zugespitzt wurde. Mindest-ST: 4.}
+{32001}{}{Ein Holzstock, der an einem Ende zugespitzt wurde. Mindeststärke: 4.}
 {32100}{}{Kybernetisches Gehirn}
 {32101}{}{Menschliches Gehirn, das durch den Einbau elektronischer und robotischer Zusätze verbessert wurde.}
 {32200}{}{Menschliches Gehirn}
@@ -652,8 +652,8 @@
 {33001}{}{Wrack eines Verti-Birds. Scheint vor Monaten hier abgestürzt zu sein.}
 {33100}{}{Cat's Paw Nummer 5}
 {33101}{}{Das ist die viel gesuchte Nummer 5 der Zeitschrift Cat's Paw. Abgesehen von den Bildern gibt es einen wunderbaren Bericht über Energiewaffen.}
-{33200}{}{Klein-MG M3A1 "Grease Gun" }
-{33201}{}{Dieses Klein-MG füllte die Waffenlager der Nationalgarde, nachdem die Armee sie durch neuere Waffen ersetzte. Da die "Grease Gun" jedoch einfach und kostengünstig in der Herstellung war, sind immer noch einige davon in Gebrauch. Mindest-ST: 4.}
+{33200}{}{.45 MP}
+{33201}{}{Diese einfache MAC-27 Maschinenpistole wurde für die Nachhut der Armee und Polizeieinheiten im besetzten Canada entwickelt. Robust und zuverlässig. Mindeststärke: 4.}
 {33300}{}{Herztabletten}
 {33301}{}{Diese Tabletten werden von Menschen mit Herzproblemen eingenommen.}
 {33400}{}{Gift}
@@ -685,17 +685,17 @@
 {34900}{}{Fortsch. Powerrüstung MKII}
 {34901}{}{Diese Powerrüstung scheint vollständig aus Leichtkkeramikteilen anstelle der üblichen Kombination aus Metall und Keramikverstärkungen zu bestehen. Sie sieht aus, als schütze sie noch besser als die standardmäßige fortschrittliche Powerrüstung.}
 {35000}{}{Bozar}
-{35001}{}{Das DKS-802 ist ein Traum für Texaner und die ultimative Verfeinerung der Scharfschützenkunst. Obwohl sehr temperamentvoll und störanfällig, macht die hohe Genauigkeit die zusätzliche Anforderung an die Wartung mehr als wett. Min ST: 8.}
-{35100}{}{FN FAL}
-{35101}{}{Dieses Gewehr wurde im Lauf der Geschichte häufiger von bewaffneten Streitkräften eingesetzt als jedes andere. Zuverlässige Kampfwaffe, unabhängig von Terrain oder taktischer Situation. Mindest-ST: 5.}
-{35200}{}{H&K G11}
-{35201}{}{Dieses Gewehr hat die Entwicklung von Kampfwaffen revolutioniert. Die Waffe feuert eine hüllenlose Patrone bestehend aus einer Treibladung mit innenliegender Kugel ab. Aufgrund der resultierenden Gewichts- und Raumeinsparungen hat das Gewehr eine sehr hohe Magazinkapazität. Mindest-ST: 5.}
+{35001}{}{Das DKS-802 ist ein Traum für Texaner und die ultimative Verfeinerung der Scharfschützenkunst. Obwohl sehr temperamentvoll und störanfällig, macht die hohe Genauigkeit die zusätzliche Anforderung an die Wartung mehr als wett. Mindeststärke: 8.}
+{35100}{}{Fortschrittliches Sturmgewehr}
+{35101}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Mindeststärke: 5.}
+{35200}{}{EC Sturmgewehr}
+{35201}{}{Das G66, ein altes europäisches Sturmgewehr, wurde nach der Auflösung des Europäischen Commonwealth in begrenzter Anzahl von Überlebenskünstlern und Milizen importiert. Mindeststärke: 5.}
 {35300}{}{XL70E3}
-{35301}{}{Zu Zeiten des Kriegs war dies eine experimentelle Waffe. Sie ist aufgrund des verwendeten Materials (hochstabile Polymere) praktisch unzerstörbar. Sie ist leicht, feuert schnell hintereinander, ist zielgenau und kann ohne Werkzeuge zerlegt werden. Mindest-ST: 5.}
-{35400}{}{Pancor-Bohrhammer}
-{35401}{}{Trotz seines Namens ist der Bohrhammer auch bei vollautomatischem Gebrauch ein leicht zu handhabendes Gewehr. Durch das beliebte Bullpup-Design, bei dem sich das Magazin hinter dem Auslöser befindet, ist die Waffe gut ausbalanciert und einfach in der Handhabung. Mindest-ST: 5.}
-{35500}{}{Leichte Hilfswaffen}
-{35501}{}{Diese militärische Hilfswaffe hat das beliebte Bullpup-Design. Dadurch wird die Handhabung der Waffe im Liegen erschwert. Aus diesem Grund wurde sie nur von Einheiten der Nationalgarde verwendet. Die Waffe gilt dennoch als zuverlässig und vielseitig für ihre Größe. Mindest-ST: 6.}
+{35301}{}{Zu Zeiten des Kriegs war dies eine experimentelle Waffe. Sie ist aufgrund des verwendeten Materials (hochstabile Polymere) praktisch unzerstörbar. Es ist leicht, feuert schnell hintereinander, ist zielgenau und kann ohne Werkzeuge zerlegt werden. Mindeststärke: 5.}
+{35400}{}{Polizeischrotgewehr}
+{35401}{}{Der City-Sweeper ist eine Weiterentwicklung des ursprünglichen City-Killers und wurde speziell zur Unterdrückung von Unruhen und Laborexperimenten entwickelt. Akzeptiert Standard 12 Gauge Schrotpatronen. Mindeststärke: 5.}
+{35500}{}{Leichtes Maschinengewehr}
+{35501}{}{Eine alte automatische Trupp-Unterstützungswaffe, die nach der Einführung tragbarer Kleingeschütze und überlegener Designs obsolet wurde, und an Einheiten der Nationalgarde abgetreten wurde. Mindeststärke: 6.}
 {35600}{}{Computer-Sprachmodul}
 {35601}{}{Leiterplatte mit mehreren nicht näher zu identifizierenden Teilen, einem Mikrophon und der Aufschrift "Bunker-Tek-Spracherkennungsmodul."}
 {35700}{}{Kaliber 45 }
@@ -708,7 +708,7 @@
 {36001}{}{Munition. Kaliber: 9 mm.}
 {36100}{}{HN-Nadelpatrone}
 {36101}{}{Munition. Diese Patrone scheint Munition für die HN Nadelpistole zu sein. Jede "Kugel" ist eine kleine Spritze, die beim Auftreffen ihren Inhalt in das Zielobjekt injiziert.}
-{36200}{}{HN-SKG-Nadelpatrone}
+{36200}{}{HN-AP-Nadelpatrone}
 {36201}{}{Munition. Diese Patrone scheint eine rüstungsdurchdringende Munition für die HN Nadelpistole zu sein. Die Spritzennadeln sind aus einer seltsamen Legierung und unglaublich scharf.}
 {36300}{}{7,62 mm}
 {36301}{}{Munition. Kaliber: 7,62 mm.}
@@ -744,55 +744,55 @@
 {38200}{}{Flammenwerferbrennstoff MKII}
 {38201}{}{In diesem Flammenwerferbrennstoff wird eine verbesserte, superbrennbare Mischung eingesetzt.}
 {38300}{}{Stecheisen}
-{38301}{}{Dieses selbstgemachte Messer ist extrem gefährlich und leicht zu verbergen. Andere können es nicht erkennen. Mindest-ST: 1.}
+{38301}{}{Dieses selbstgemachte Messer ist extrem gefährlich und leicht zu verbergen. Andere können es nicht erkennen. Mindeststärke: 1.}
 {38400}{}{Schraubenschlüssel}
-{38401}{}{Typischer Schraubenschlüssel für Mechaniker. Mindest-ST: 3.}
+{38401}{}{Typischer Schraubenschlüssel für Mechaniker. Mindeststärke: 3.}
 {38500}{}{Abgesägte Schrotflinte}
-{38501}{}{Jemand hat sich die Zeit genommen, die letzten paar Zentimeter vom Lauf dieser Schrotflinte abzusägen. Dank der weiten Streuung der Patronen eignet sich diese Handfeuerwaffe jetzt hervorragend für den Nahkampfeinsatz und die Befeuerung von Gruppen. Mindest-ST: 4.}
+{38501}{}{Jemand hat sich die Zeit genommen, die letzten paar Zentimeter vom Lauf dieser Schrotflinte abzusägen. Dank der weiten Streuung der Patronen eignet sich diese Handfeuerwaffe jetzt hervorragend für den Nahkampfeinsatz und die Befeuerung von Gruppen. Mindeststärke: 4.}
 {38600}{}{Louisville Slugger}
-{38601}{}{Dieser typisch amerikanische Baseballschläger aus Hartholz schlägt nicht nur den Ball weit übers Feld hinaus. Mindest-ST: 4.}
-{38700}{}{M60}
-{38701}{}{Dieses recht leichte Maschinengewehr wird von Militärs weltweit für seine große Schusskraft gelobt. Das verlässliche, kampferprobte Design wurde auf Fahrzeugen montiert und zum Feuerschutz für Schwadronen verwendet. Mindest-ST: 7.}
+{38601}{}{Dieser typisch amerikanische Baseballschläger aus Hartholz schlägt nicht nur den Ball weit übers Feld hinaus. Mindeststärke: 4.}
+{38700}{}{Schweres Maschinengewehr}
+{38701}{}{Diese Waffe ist ein altes Design für eine automatische Trupp-Unterstützungswaffe und wurde nie in Massenproduktion und im regulären Dienst eingesetzt. Mindeststärke: 7.}
 {38800}{}{Nadelpistole}
-{38801}{}{Du vermutest, dass diese Bringham-Nadelpistole einst für wissenschaftliche Feldstudien eingesetzt wurde. Ihre Munition besteht aus kleinen Pfeilen aus hartem Kunststoff. Mindest-ST: 3.}
+{38801}{}{Du vermutest, dass diese Bringham-Nadelpistole einst für wissenschaftliche Feldstudien eingesetzt wurde. Ihre Munition besteht aus kleinen Pfeilen aus hartem Kunststoff. Mindeststärke: 3.}
 {38900}{}{Kleingeschütz Avenger}
-{38901}{}{Rockwell baute den Avenger als Ersatz für das allmählich aus der Mode kommende Kleingeschütz CZ53. Zu den Verbesserungen am Design des Avengers zählen gekühlte und mit Chrom ausgelegte Läufe. Hierdurch werden Reichweite und tödliche Wirkung noch gesteigert. Mindest-ST: 7.}
+{38901}{}{Rockwell baute den Avenger als Ersatz für das allmählich aus der Mode kommende Kleingeschütz CZ53. Zu den Verbesserungen am Design des Avengers zählen gekühlte und mit Chrom ausgelegte Läufe. Hierdurch werden Reichweite und tödliche Wirkung noch gesteigert. Mindeststärke: 7.}
 {39000}{}{Solar-Versenger}
-{39001}{}{Ohne aufladende Sonnenstrahlen kann man mit diesem Gewehr nicht mal ein Streichholz anzünden. Bei Tageslicht wandeln die experimentellen photoelektrischen Zellen, mit denen der Versenger betrieben wird, jedoch fast alles in einen knusprigen Braten um. Mindest-ST: 3.}
-{39100}{}{H&K G11E}
-{39101}{}{Dieses Gewehr hat die Entwicklung von Kampfwaffen für den Feuerschutz revolutioniert. Die Waffe feuert eine hüllenlose Patrone bestehend aus einer Treibladung mit innenliegender Kugel ab. Aufgrund der resultierenden Gewichts- und Raumeinsparungen hat das Gewehr eine sehr hohe Magazinkapazität. Mindest-ST: 6.}
+{39001}{}{Ohne aufladende Sonnenstrahlen kann man mit diesem Gewehr nicht mal ein Streichholz anzünden. Bei Tageslicht wandeln die experimentellen photoelektrischen Zellen, mit denen der Versenger betrieben wird, jedoch fast alles in einen knusprigen Braten um. Mindeststärke: 3.}
+{39100}{}{EC Sturmgewehr MKII}
+{39101}{}{Als fortschrittliche Version des G66 wurde dieses importierte europäische Gewehr von Streitkräften eingesetzt, die gegen innerstaatliche Bedrohungen kämpften. Das kompakte, kraftvolles Design wurde als zu riskant für die chinesische Front angesehen. Mindeststärke: 6.}
 {39200}{}{Gewehr M72 Gauss}
-{39201}{}{Das Gewehr M72 wurde in Deutschland entwickelt. Mit Hilfe eines elektromagnetischen Felds werden Patronen mit unglaublicher Geschwindigkeit geschossen... und fast jedes Ziel durchschlagen. Reichweite, Zielgenauigkeit und Durchschlagkraft sind nahezu unerreicht. Mindest-ST: 6.}
+{39201}{}{Das Gewehr M72 wurde in Deutschland entwickelt. Mit Hilfe eines elektromagnetischen Felds werden Patronen mit unglaublicher Geschwindigkeit geschossen... und fast jedes Ziel durchschlagen. Reichweite, Zielgenauigkeit und Durchschlagkraft sind nahezu unerreicht. Mindeststärke: 6.}
 {39300}{}{Phazer}
-{39301}{}{BENÖTIGT LANGE BESCHREIBUNG. Mindest-ST: 3.}
+{39301}{}{BENÖTIGT LANGE BESCHREIBUNG. Mindeststärke: 3.}
 {39400}{}{Pistole PPK12 Gauss }
-{39401}{}{Die für Reichweite und Durchschlagkraft vielgerühmte Pistole PPK12 Gauss wurde in Deutschland entwickelt. Mit Hilfe eines elektromagnetischen Felds werden Patronen mit unglaublicher Geschwindigkeit geschossen, die fast jede Rüstung durchschlagen. Mindest-ST: 4.}
+{39401}{}{Die für Reichweite und Durchschlagkraft vielgerühmte Pistole PPK12 Gauss wurde in Deutschland entwickelt. Mit Hilfe eines elektromagnetischen Felds werden Patronen mit unglaublicher Geschwindigkeit geschossen, die fast jede Rüstung durchschlagen. Mindeststärke: 4.}
 {39500}{}{Kleingeschütz Vindicator}
-{39501}{}{Die deutsche Firma Rheinmetall AG hat mit dem Vindicator das ultimative Kleingeschütz entwickelt. Der Vindicator schießt über 90.000 hüllenlose Patronen pro Minute durch seine sechs Karbon-Polymer-Läufe. Ultimative Handfeuerwaffe und zugleich Krönung der teutonischen Ingenieursarbeit. Mindest-ST: 7.}
-{39600}{}{Pulspistole YK32 }
-{39601}{}{Die YK32 ist eine elektrische Pulspistole, die vom Energiekonsortium Yuma Flats entwickelt wurde. Trotz ihrer Schlagkraft galt die YK32 aufgrund ihrer ineffizienten Energienutzung und der unhandlichen Ausführung nie als praktische Waffe. Mindest-ST: 3.}
-{39700}{}{Pulsgewehr YK42B }
-{39701}{}{Die YK42B ist eine elektrische Pulspistole, die vom Energiekonsortium Yuma Flats entwickelt wurde. Gilt aufgrund der größeren Ladekapazität und Reichweite als weitaus bessere Waffe als die Pistole YK32. Mindest-ST: 3.}
+{39501}{}{Die deutsche Firma Rheinmetall AG hat mit dem Vindicator das ultimative Kleingeschütz entwickelt. Der Vindicator schießt über 90.000 hüllenlose Patronen pro Minute durch seine sechs Karbon-Polymer-Läufe. Ultimative Handfeuerwaffe und zugleich Krönung der teutonischen Ingenieursarbeit. Mindeststärke: 7.}
+{39600}{}{Pulspistole YK32}
+{39601}{}{Die YK32 ist eine elektrische Pulspistole, die vom Energiekonsortium Yuma Flats entwickelt wurde. Trotz ihrer Schlagkraft galt die YK32 aufgrund ihrer ineffizienten Energienutzung und der unhandlichen Ausführung nie als praktische Waffe. Mindeststärke: 3.}
+{39700}{}{Pulsgewehr YK42B}
+{39701}{}{Die YK42B ist eine elektrische Pulspistole, die vom Energiekonsortium Yuma Flats entwickelt wurde. Gilt aufgrund der größeren Ladekapazität und Reichweite als weitaus bessere Waffe als die Pistole YK32. Mindeststärke: 3.}
 {39800}{}{44er Magnum (Schnelladung)}
-{39801}{}{44er Magnum-Revolver mit Schnelladung. Mindest-ST: 5.}
-{39900}{}{Super-Viehdorn}
-{39901}{}{Viehdorn Modell "Farmers bester Freund" der Firma Wattz Electronics. Dieses Modell wurde zur Erhöhung der elektrischen Abgabeladung aufgerüstet. Mindest-ST: 4.}
+{39801}{}{44er Magnum-Revolver mit Schnelladung. Mindeststärke: 5.}
+{39900}{}{Super-Elektroschocker}
+{39901}{}{Elektroschocker Modell "Farmers bester Freund" der Firma Wattz Electronics. Dieses Modell wurde zur Erhöhung der elektrischen Abgabeladung aufgerüstet. Mindeststärke: 4.}
 {40000}{}{Verbesserter Flammenwerfer}
-{40001}{}{Ein Flammenwerfer Modell Flambe 450, Varmiter-Ausführung. Feuert eine kurze Salve äußerst heißer, brennbarer Flüssigkeit ab. Spezieller Treibstoff erforderlich. Dieses Modell feuert eine noch heißere Mischung ab, wodurch die Flammenbildung begünstigt wird. Mindest-ST: 6.}
-{40100}{}{Lasergewehr (Ext. Cap.)}
-{40101}{}{Bei dem Lasergewehr Wattz 2000 wurde das Ladesystem aufgerüstet sowie ein spezieller Recyclingchip installiert. Dadurch kann die Abnutzung der Mikrofusionszelle um 50% vermindert werden. Mindest-ST: 6.}
+{40001}{}{Ein Flammenwerfer Modell Flambe 450, Varmiter-Ausführung. Feuert eine kurze Salve äußerst heißer, brennbarer Flüssigkeit ab. Spezieller Treibstoff erforderlich. Dieses Modell feuert eine noch heißere Mischung ab, wodurch die Flammenbildung begünstigt wird. Mindeststärke: 6.}
+{40100}{}{Lasergewehr (Erw. Kap.)}
+{40101}{}{Bei dem Lasergewehr Wattz 2000 wurde das Ladesystem aufgerüstet sowie ein spezieller Recyclingchip installiert. Dadurch kann die Abnutzung der Mikrofusionszelle um 50% vermindert werden. Mindeststärke: 6.}
 {40200}{}{Magneto-Laserpistole}
-{40201}{}{Die Laserpistole Wattz 1000 ist mit einem Zielsuchsystem über ein magnetisches Feld aufgerüstet worden. Dadurch wird der Laserstrahl gebündelt, so dass die Waffe zusätzliche Durchschlagkraft erhält. Mindest-ST: 3.}
-{40300}{}{FN FAL (Nachtsicht)}
-{40301}{}{Dieses Gewehr ist häufiger von bewaffneten Streitkräften eingesetzt worden als jedes andere in der Geschichte. Zuverlässige Waffe unabhängig von Terrain oder taktischer Situation. Diese Waffe wurde zusätzlich mit einem Nachtsichtgerät ausgestattet, um die Zielgenauigkeit bei Nacht zu erhöhen. Mindest-ST: 5.}
-{40400}{}{Desert Eagle (Exp. Mag.)}
-{40401}{}{Veraltetes Modell der Desert Eagle in 44er-Magnumausführung. Einsatz in Filmen des 20. Jhdts. machte die Waffe zum beliebtesten Gewehr aller Zeiten. Diese Waffe wurde mit einem längeren Magazin ausgestattet, damit der Spaß noch länger dauern kann! Mindest-ST: 4.}
-{40500}{}{Sturmgewehr (Exp. Mag.)}
-{40501}{}{Dieses Sturmgewehr hat einen erweiterten, militärtauglichen Munitionsclip. Durch die erweiterte Magazinkapazität hat man im Kampf Spaß wie nie zuvor. Mindest-ST: 5.}
-{40600}{}{Plasmapistole (Ext. Cap.)}
-{40601}{}{Bei der Plasmapistole Glock 86 wurde die Magnetkammer neu ausgerichtet, um die Abnutzung der Energiezelle zu minimieren. Die Effizienz wird dadurch verdoppelt, so dass mit einer Batterieladung mehr schüsse abgegeben werden können. Mindest-ST: 4.}
-{40700}{}{Superpower-Faust}
-{40701}{}{Die Powerfaust "Big Frigger" von BeatCo. Von vielen als ultimatives Hilfsmittel im unbewaffneten Kampf angesehen. Dieses Exemplar hat aufgerüstete Power-Servos, die die Schlagkraft noch erhöhen. Wird mit kleinen Energiezellen betrieben. Mindest-ST: 1.}
+{40201}{}{Die Laserpistole Wattz 1000 ist mit einem Zielsuchsystem über ein magnetisches Feld aufgerüstet worden. Dadurch wird der Laserstrahl gebündelt, so dass die Waffe zusätzliche Durchschlagkraft erhält. Mindeststärke: 3.}
+{40300}{}{Fortsch. Sturmgewehr (NZG)}
+{40301}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Es wurde zusätzlich mit einem Nachtsichtgerät ausgestattet, um die Zielgenauigkeit bei Nacht zu erhöhen. Mindeststärke: 5.}
+{40400}{}{Desert Eagle (Erw. Mag.)}
+{40401}{}{Veraltetes Modell der Desert Eagle in 44er-Magnumausführung. Einsatz in Filmen des 20. Jhdts. machte die Waffe zum beliebtesten Gewehr aller Zeiten. Diese Waffe wurde mit einem längeren Magazin ausgestattet, damit der Spaß noch länger dauern kann! Mindeststärke: 4.}
+{40500}{}{Sturmgewehr (Erw. Mag.)}
+{40501}{}{Dieses Sturmgewehr hat einen erweiterten, militärtauglichen Munitionsclip. Durch die erweiterte Magazinkapazität hat man im Kampf Spaß wie nie zuvor. Mindeststärke: 5.}
+{40600}{}{Plasmapistole (Erw. Kap.)}
+{40601}{}{Bei der Plasmapistole Glock 86 wurde die Magnetkammer neu ausgerichtet, um die Abnutzung der Energiezelle zu minimieren. Die Effizienz wird dadurch verdoppelt, so dass mit einer Batterieladung mehr schüsse abgegeben werden können. Mindeststärke: 4.}
+{40700}{}{Super-Powerfaust}
+{40701}{}{Die Powerfaust "Big Frigger" von BeatCo. Von vielen als ultimatives Hilfsmittel im unbewaffneten Kampf angesehen. Dieses Exemplar hat aufgerüstete Power-Servos, die die Schlagkraft noch erhöhen. Wird mit kleinen Energiezellen betrieben. Mindeststärke: 1.}
 {40800}{}{Erste-Hilfe-Kasten für Feldärzte}
 {40801}{}{Kleiner Kasten, der grundlegende medizinische Ausrüstung enthält. Bandagen, Verbände, Desinfektionsspray usw.}
 {40900}{}{Sanitätertasche}
@@ -971,7 +971,8 @@
 {49801}{}{Nur für Verwendung in  Geschützturm.}
 {49900}{}{PIPBoy-Powerfunktion "Sprache" }
 {49901}{}{Die PIPBoy-Powerfunktion "Sprache" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch ins Gedächtnis des Benutzers, so dass dessen Ausdrucksfähigkeit dauerhaft verbessert wird.}
-{50000}{}{FN FAL HPFA}
+{50000}{}{Fortsch. Sturmgewehr (HPFA)}
+[50001}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Diese Variante ist 'High Power Full Automatic', bei der das Feuer ein ganzes Magazin verbraucht. Mindeststärke: 5.}
 {50100}{}{Wandsafe}
 {50200}{}{Bodensafe}
 {50300}{}{Blaues Speichermodul}
