@@ -472,7 +472,7 @@
 {24100}{}{.223-Pistole}
 {24101}{}{.223-Gewehr, das zu einer Pistole umgerüstet und verkleinert wurde. Eine einmalige Feuerwaffe, die mit viel Liebe und großem Können angefertigt wurde. Mindeststärke: 5.}
 {24200}{}{Kampfgewehr}
-{24201}{}{Kampfgewehr vom Typ Winchester City-Killer in 12 Gauge, Bullpup-Modell. In hervorragendem Zustand. Mit der optionalen Umrüstung für einen Krieg in der Wüste noch zuverlässiger. Mindeststärke: 5.}
+{24201}{}{Kampfgewehr vom Typ Winchester City-Killer in 12 Gauge, Bullpup-Modell. In hervorragendem Zustand. Mit der optionalen Umrüstung für einen Krieg in der Wüste ist es noch zuverlässiger. Mindeststärke: 5.}
 
 {24300}{}{Topf}
 {24301}{}{Ein schön gefertigter Tontopf.}
