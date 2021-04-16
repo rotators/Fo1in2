@@ -1,5 +1,6 @@
 Notable changes since last release ([v1.5.2288](https://github.com/rotators/Fo1in2/releases/tag/v1.5.2288))
 
+- **Added**: A new option to enable Fo2-style weapon upgrades. Zack at the Gunrunners will upgrade weapons, and Miles in Adytum can produce Flamer Fuel MK2.
 - **Added**: All Fo2 lockpick items are now supported in scripts (Lockpicks, Expanded Lockpick set, Electronic Lockpick, Electronic Lockpick MK2).
 - **Added**: The Junktown guard in Killian's shop will now move closer to the good tables at night.
 - **Added**: With the alternative items reward option for Mathia, it is now possible to get another power armor (player needs to have at least one power armor and one companion).
