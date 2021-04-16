@@ -473,7 +473,6 @@
 {24101}{}{.223-Gewehr, das zu einer Pistole umgerüstet und verkleinert wurde. Eine einmalige Feuerwaffe, die mit viel Liebe und großem Können angefertigt wurde. Mindeststärke: 5.}
 {24200}{}{Kampfgewehr}
 {24201}{}{Kampfgewehr vom Typ Winchester City-Killer in 12 Gauge, Bullpup-Modell. In hervorragendem Zustand. Mit der optionalen Umrüstung für einen Krieg in der Wüste ist es noch zuverlässiger. Mindeststärke: 5.}
-
 {24300}{}{Topf}
 {24301}{}{Ein schön gefertigter Tontopf.}
 {24400}{}{Topf}
@@ -972,7 +971,7 @@
 {49900}{}{PIPBoy-Powerfunktion "Sprache" }
 {49901}{}{Die PIPBoy-Powerfunktion "Sprache" besteht aus einer Speicher-Holo-Disk, einem Mikrofaserkabel, Kopfhörern sowie einem optischen Sensor, mit dem das rechte Auge des Benutzers abgedeckt wird. Bei Aktivierung überträgt ein optischer Blitz ein gesamtes Wörterbuch ins Gedächtnis des Benutzers, so dass dessen Ausdrucksfähigkeit dauerhaft verbessert wird.}
 {50000}{}{Fortsch. Sturmgewehr (HPFA)}
-[50001}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Diese Variante ist 'High Power Full Automatic', bei der das Feuer ein ganzes Magazin verbraucht. Mindeststärke: 5.}
+{50001}{}{Der Nachfolger des AK-112, das AK-198, ist ein modernes Militärmodell, das in begrenzten Mengen zur Verwendung durch Spezialeinheiten der US-Armee importiert wurde. Kann Einzel- und Dauerfeuer abgeben. Diese Variante ist 'High Power Full Automatic', bei der das Feuer ein ganzes Magazin verbraucht. Mindeststärke: 5.}
 {50100}{}{Wandsafe}
 {50200}{}{Bodensafe}
 {50300}{}{Blaues Speichermodul}
