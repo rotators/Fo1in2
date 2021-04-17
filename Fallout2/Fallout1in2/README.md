@@ -25,7 +25,7 @@ MOD INSTALLATION
 - Install FALLOUT 2 anywhere.
   - The game is **REQUIRED** to play the Fallout 1 in 2 engine conversion!
 
-- Install FALLOUT ET TU into your Fallout 2 folder.
+- Unpack FALLOUT ET TU into your Fallout 2 folder.
   - The folder structure must look like this:
     ```
     \Fallout2\Fallout1in2\Fallout2.exe
@@ -34,6 +34,7 @@ MOD INSTALLATION
 - Start the `UNDAT.EXE` and select the `MASTER.DAT` file from your FALLOUT 1 installation directory.
   - If you are using a (pre)release package, `UNDAT.EXE` can be found in the `Fallout1in2` folder.
   - If you are using the repository, `UNDAT.EXE` can be found in the `Tools\UndatUI` folder.
+  - If you are using Linux, `UNDAT.SH` can be used instead (requires `WINE` installed)
 
 - Select the `Fallout1in2` folder as extraction target.
 
@@ -45,10 +46,11 @@ That's it. The game can now be played!
 CONFIGURATION
 -------------
 
-Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_settings.ini). It is recommended to tweak settings in this file _before_ starting a new game. Changing settings mid-game have a chance to corrupt savegames or introduce undefined behavior.
+Main mod configuration can be found in [config/fo1_settings.ini](config/fo1_settings.ini). It is recommended to check and/or tweak settings in this file _before_ starting a new game. Changing settings mid-game have a chance to corrupt savegames or introduce undefined behavior.
 
 Other interesting files:
 - [ddraw.ini](ddraw.ini) (sfall configuration)
+- [f2_res.ini](f2_res.ini) (high resolution patch configuration)
 - [sfall-mods.ini](sfall-mods.ini), [config/](config/) directory (sfall modifications configuration)
 
 
@@ -57,7 +59,7 @@ STEAM
 
 The mod can be started relatively easy with the Steam client, replacing vanilla Fallout 1. Note that the method described below does not allow to use various Steam features (such as overlay, screenshot hotkey, etc.) except tracking play time.
 
-- Create a Fo1in2.bat file in the Fallout 1 directory:
+- Create a `Fo1in2.bat` file in the Fallout 1 directory:
   - `@start /wait /d "C:\Path\To\Fo1in2\Fallout2\Fallout1in2\" Fallout2.exe`
 - In the Steam client, set game launch options (right click on Fallout, "Properties"):
   - `"C:\Path\To\Fallout\Fo1in2.bat" %command%`
@@ -75,17 +77,20 @@ While most optional content is a part of the mod core, and can be toggled on and
 ### Classic worldmap ###
 [mods/fo1_classic_worldmap](mods/fo1_classic_worldmap)
 
-Enabled by default. Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
+Enabled by default.
+Replaces Fallout 2's green circles, as well as the worldmap tiles with city locations to bring the game's look more in line with the original Fallout 1.
 
 ### Fallout 1 Interface ###
 [mods/fo1_interface](mods/fo1_interface)
 
-Enabled by default. This mod replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
+Enabled by default.
+This mod replaces the FALLOUT 2 interface with the graphics from FALLOUT 1.
 
 ### Improved Death Animations ###
 [mods/Anim_ImprovedSMutantDeath](mods/Anim_ImprovedSMutantDeath)
 
-Enabled by default. Replaces Super Mutant and Power Armor fire and electrocuted death animations with resized versions, to match their regular animations.
+Enabled by default.
+Replaces Super Mutant and Power Armor fire and electrocuted death animations with resized versions, to match their regular animations.
 
 ### Interface Upscaled ###
 [mods/InterfaceUpscaled](mods/InterfaceUpscaled)
