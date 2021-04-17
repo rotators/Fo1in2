@@ -57,19 +57,22 @@
 
 
 // Car related defines
-#define set_car_used_first_time         if (global_var(GVAR_QUEST_MOTORCYCLE) < 20) then \
-                                        set_global_var(GVAR_QUEST_MOTORCYCLE,20)
-#define get_car_used                    (global_var(GVAR_QUEST_MOTORCYCLE) >= 20)
-#define Place_Trunk(Hex,Elevation)      if get_car_used then begin                                          \
-                                            if (global_var(GVAR_PLAYER_GOT_CAR) == 1) then begin            \
-                                                tile:=tile_num_in_direction(Hex,1,1);                       \
-                                            end else if (global_var(GVAR_PLAYER_GOT_CAR) == 2) then begin   \
-                                                tile:=Hex+2;                                                \
-                                            end                                                             \
-                                            move_to(Trunk_Ptr,tile,Elevation);                              \
-                                        end
-#define set_trunk_visible               if get_car_used then set_obj_visibility(Trunk_Ptr,0)
-#define set_trunk_invisible             if get_car_used then set_obj_visibility(Trunk_Ptr,1)
+#define set_car_used_first_time        if (global_var(GVAR_QUEST_MOTORCYCLE) < 20) then \
+                                       set_global_var(GVAR_QUEST_MOTORCYCLE,20)
+#define get_car_used                   (global_var(GVAR_QUEST_MOTORCYCLE) >= 20)
+#define bike_unclaimed                 tile_contains_obj_pid(CAR_UNCLAIMED_HEX, CAR_UNCLAIMED_ELEV, PID_DRIVABLE_MOTO1)
+
+#define Place_Trunk(Hex,Elevation)     if get_car_used then begin                                          \
+                                          if (global_var(GVAR_PLAYER_GOT_CAR) == 1) then begin            \
+                                             tile:=tile_num_in_direction(Hex,1,1);                       \
+                                          end else if (global_var(GVAR_PLAYER_GOT_CAR) == 2) then begin   \
+                                             tile:=Hex+2;                                                \
+                                          end                                                             \
+                                          move_to(Trunk_Ptr,tile,Elevation);                              \
+                                       end
+
+#define set_trunk_visible              if get_car_used then set_obj_visibility(Trunk_Ptr,0)
+#define set_trunk_invisible            if get_car_used then set_obj_visibility(Trunk_Ptr,1)
 
 /************************************************
     "Tell Me About"-Defines
