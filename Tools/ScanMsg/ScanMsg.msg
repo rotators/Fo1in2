@@ -14,5 +14,27 @@ multierror2.1}
 {22}}{}{multiline2.2
 {multierror2.2}
 
-{30}{}{multiline3
+{31}{}{multiline3
 multierror3}}
+
+a{41}{}{before1}
+# {41}{}{before2}
+
+{51}text{}{between1}
+{52}{}text{between2}
+{53}{} # {between3}
+
+{55}{}{} # between5
+
+{61}{}{after}text
+{62}{}{after} # text
+{63}{}{} # between4
+
+{100}{}{duplicated}
+{100}{}{entry}
+
+[1000}{}{bracket typo}
+
+{invalid}{}{id}
+{-1}{}{invalid id}
+{-1000000}{}{invald id}
