@@ -99,6 +99,10 @@ jobs:
     if:   env.GHA_REPO_ALIVE == 'true'
     run:  git clone --branch=master https://github.com/ghost2238/sfall-asm.git $HOME/sfall-asm
 
+  - name: Clone ScanMsg
+    if:   env.GHA_REPO_ALIVE == 'true'
+    run:  git clone --branch=master https://github.com/wipe2238/ScanMsg.git $HOME/ScanMsg
+
   - name: Clone FO1@2
     if:   env.GHA_REPO_ALIVE == 'true'
     uses: actions/checkout@v2
@@ -118,17 +122,21 @@ jobs:
           git --no-pager log --author="<${{ secrets.ANTALASKAYA_EMAIL }}>" > $HOME/git.log
           set +e
           OLD_SFALL_ROTATORS=$(grep --max-count=1 "\- sfall-rotators" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
+          OLD_SCANMSG=$(grep --max-count=1 "\- ScanMsg $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
           OLD_ARTIFACTS=$(grep --max-count=1 "\- ModdersPack" $HOME/git.log | awk -F @ '{print $2}' | tr -d ')')
           set -e
           echo "sfall-rotators $OLD_SFALL_ROTATORS"
+          echo "ScanMsg        $OLD_SCANMSG"
           echo "ModdersPack    $OLD_ARTIFACTS"
           rm -f $HOME/git.log
           echo ::endgroup::
 
           echo "::group::Get new SHA"
           NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
+          NEW_SCANMSG=$(git -C $HOME/ScanMsg --no-pager log --pretty-format:%H -1 .)
           NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
           echo "sfall-rotators $NEW_SFALL_ROTATORS"
+          echo "ScanMsg        $NEW_SCANMSG"
           echo "ModdersPack    $NEW_ARTIFACTS"
           echo ::endgroup::
 
@@ -139,6 +147,11 @@ jobs:
              echo "sfall-rotators... $OLD_SFALL_ROTATORS -> $NEW_SFALL_ROTATORS"
              echo GHA_TASK_SFALL_ROTATORS=true >> $GITHUB_ENV
              set_dxsdk_dir=1
+          fi
+
+          if [ "$OLD_SCANMSG" != "$NEW_SCANMSG" ]; then
+             echo "ScanMsg... $OLD_SCANMSG -> $NEW_SCANMSG"
+             echo GHA_TASK_SCANMSG=true >> $GITHUB_ENV
           fi
 
           if [ $set_dxsdk_dir -eq 1 ]; then
@@ -217,6 +230,23 @@ jobs:
           ls -sh $MOD_DIR/ddraw.rotators.dll
 
           git diff --quiet || (git add --update && echo "- sfall-rotators update (v${SFALL_ROTATORS_VERSION}, rotators/sfall@${SFALL_ROTATORS_COMMIT})" >> $HOME/gha.commit)
+
+  # updates .msg files scanner
+  - name: ScanMsg update
+    if:   env.GHA_TASK_SCANMSG == 'true'
+    run:  |
+          ok=1
+          "$MSBUILD_EXE" $HOME/ScanMsg/ScanMsg.sln -p:Configuration=Release -p:Platform="Any CPU" || ok=0
+          if [ $ok -eq  1 ] && [ -f "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.exe" ]; then
+             cp "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.exe" Tools/ScanMsg/ScanMsg.exe
+             cp "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.msg" Tools/ScanMsg/ScanMsg.msg
+          fi
+          SCANMSG_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1)
+          SCANMSG_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=Tools/ScanMsg/ScanMsg.exe)
+          echo "ScanMsg (v${SCANMSG_VERSION}, ${SCANMSG_COMMIT})"
+          ls -sh Tools/ScanMsg/ScanMsg.exe
+
+          git diff --quiet || (git add --update && echo "- ScanMsg update (v${SCANMSG_VERSION}, wipe2238/ScanMsg@${SCANMSG_COMMIT})" >> $HOME/gha.commit)
 
   # updates sfall artifacts
   - name: ModdersPack update
