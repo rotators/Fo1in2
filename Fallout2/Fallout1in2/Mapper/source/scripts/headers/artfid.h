@@ -27,12 +27,12 @@
 #define FID_MADDOG        (16777232)
 #define FID_MAHAND        (16777233)
 #define FID_MALIEU        (16777234)
-#define FID_MAMRAT        (16777235)
+#define FID_MAMRAT        (16777235) // Mole Rat
 #define FID_MAMTN2        (16777236)
 #define FID_MAMTNT        (16777237)
 #define FID_MASCRP        (16777238)
 #define FID_MASPHN        (16777239)
-#define FID_MASRAT        (16777240)
+#define FID_MASRAT        (16777240) // Giant Rat
 #define FID_MATHNG        (16777241)
 #define FID_NABLUE        (16777242)
 #define FID_NACHLD        (16777243)
@@ -63,7 +63,7 @@
 #define FID_MAMANT        (16777268)
 #define FID_MAROBO        (16777269)
 #define FID_MAFEYE        (16777270)
-#define FID_MAMURT        (16777271)
+#define FID_MAMURT        (16777271) // Pig Rat
 #define FID_NABRWN        (16777272)
 #define FID_NMDOCC        (16777273)
 #define FID_MADEGG        (16777274)
@@ -107,7 +107,7 @@
 #define FID_NMNICE        (16777312)
 #define FID_MAANTT        (16777313)
 #define FID_NFVALT        (16777314)
-#define FID_MABRAN        (16777315)
+#define FID_MABRAN        (16777315) // Giant Rat (The Brain)
 #define FID_MADETH        (16777316)
 #define FID_MAGUNN        (16777317)
 #define FID_MABOS2        (16777318)
