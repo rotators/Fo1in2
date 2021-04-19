@@ -235,13 +235,14 @@ jobs:
   - name: ScanMsg update
     if:   env.GHA_TASK_SCANMSG == 'true'
     run:  |
+          :
           ok=1
           "$MSBUILD_EXE" $HOME/ScanMsg/ScanMsg.sln -p:Configuration=Release -p:Platform="Any CPU" || ok=0
           if [ $ok -eq  1 ] && [ -f "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.exe" ]; then
              cp "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.exe" Tools/ScanMsg/ScanMsg.exe
              cp "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.msg" Tools/ScanMsg/ScanMsg.msg
           fi
-          SCANMSG_COMMIT=$(git -C $HOME/sfall-rotators log --pretty=format:%H -1)
+          SCANMSG_COMMIT=$(git -C $HOME/ScanMsg log --pretty=format:%H -1)
           SCANMSG_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=Tools/ScanMsg/ScanMsg.exe)
           echo "ScanMsg (v${SCANMSG_VERSION}, ${SCANMSG_COMMIT})"
           ls -sh Tools/ScanMsg/ScanMsg.exe
