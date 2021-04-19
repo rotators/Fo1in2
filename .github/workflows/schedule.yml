@@ -28,6 +28,7 @@ defaults:
 
 env:
  GHA_SCRIPTS: ".github/workflows/scripts"
+ DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
 
@@ -133,7 +134,7 @@ jobs:
 
           echo "::group::Get new SHA"
           NEW_SFALL_ROTATORS=$(git -C $HOME/sfall-rotators --no-pager log --pretty=format:%H -1 sfall)
-          NEW_SCANMSG=$(git -C $HOME/ScanMsg --no-pager log --pretty=format:%H -1 *.cs *.csproj *.sln)
+          NEW_SCANMSG=$(git -C $HOME/ScanMsg --no-pager log --pretty=format:%H -1 ScanMsg README.md LICENSE.md)
           NEW_ARTIFACTS=$(git -C $HOME/sfall-develop --no-pager log --pretty=format:%H -1 artifacts)
           echo "sfall-rotators $NEW_SFALL_ROTATORS"
           echo "ScanMsg        $NEW_SCANMSG"
@@ -241,8 +242,10 @@ jobs:
           if [ $ok -eq  1 ] && [ -f "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.exe" ]; then
              cp "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.exe" Tools/ScanMsg/ScanMsg.exe
              cp "$HOME/ScanMsg/ScanMsg/Build/Release/ScanMsg.msg" Tools/ScanMsg/ScanMsg.msg
+             cp "$HOME/ScanMsg/README.md" Tools/ScanMsg/README.md
+             cp "$HOME/ScanMsg/LICENSE.md" Tools/ScanMsg/LICENSE.md
           fi
-          SCANMSG_COMMIT=$(git -C $HOME/ScanMsg log --pretty=format:%H -1)
+          SCANMSG_COMMIT=$(git -C $HOME/ScanMsg log --pretty=format:%H -1 ScanMsg README.md LICENSE.md)
           SCANMSG_VERSION=$($GHA_SCRIPTS/ddraw.sh get-dll-version --dll=Tools/ScanMsg/ScanMsg.exe)
           echo "ScanMsg (v${SCANMSG_VERSION}, ${SCANMSG_COMMIT})"
           ls -sh Tools/ScanMsg/ScanMsg.exe
