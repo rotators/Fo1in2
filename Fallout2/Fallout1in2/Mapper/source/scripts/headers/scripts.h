@@ -700,7 +700,7 @@
 #define SCRIPT_PSYCON    (687)  //  PsyCon.int      ; Psychic control comupter.
 #define SCRIPT_RAE       (688)  //  Rae.int         ; Confused mutant in the Master's Vault
 #define SCRIPT_BHDOOR    (689)  //  BHDoor.int      ; main door to the brotherhood of steel
-#define SCRIPT_BOSASIS   (690)  //  BOSAsIs.int     ; Brotherhood Dr. Assistant
+#define SCRIPT_BOSASIST  (690)  //  BOSAsIs.int     ; Brotherhood Dr. Assistant
 #define SCRIPT_RD1INIT   (691)  //  RD1Init.int     ; Roommate in the Brotherhood
 #define SCRIPT_GENINIT   (692)  //  GenInit.int     ; Generic Initiate in the Brotherhood
 #define SCRIPT_COYOTE    (693)  //  Coyote.int      ; random dog in the wild
@@ -866,7 +866,7 @@
 #define SCRIPT_SKUMDOOR  (853)  //  SkumDoor.int    ; Skum Pit door                                                     
 #define SCRIPT_SUPAMBSH  (854)  //  SupAmbsh.int    ; Super Mutant Ambush for random encounters                                   
 #define SCRIPT_MOATCHEK  (855)  //  MoatChek.int    ; dex check for the moat                                                      
-//#define SCRIPT_MYSTSTRN  (856)  //  MystStrn.int    ; Mysterious Stranger Script                                                  
+#define SCRIPT_STRANGER  (856)  //  Stranger.int    ; Mysterious Stranger Script                                                  
 #define SCRIPT_SUPGRD    (857)  //  SupGrd.int      ; Supply guards for the Brotherhood
 #define SCRIPT_SUPDOOR   (858)  //  SupDoor.int     ; Supply door in the Brotherhood
 #define SCRIPT_VWEPLOKR  (859)  //  VWepLokr.int    ; Vats Weapon Locker                                                
