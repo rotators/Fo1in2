@@ -1,1 +1,123 @@
-procedure start begin end
+/*
+
+   Scrapheap - Fridge
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+
+#define NAME                    SCRIPT_DEMODOOR
+
+#include "command.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+procedure do_stuff;
+procedure do_use_stuff;
+procedure do_skill;
+procedure see_stuff;
+procedure examine;
+
+variable unlocked;
+variable open;
+variable test;
+
+import variable Use_Fridge;
+
+procedure start begin
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	call examine;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	call see_stuff;
+end
+
+procedure use_p_proc begin
+   call do_use_stuff;
+end
+
+procedure pickup_p_proc begin
+   call do_stuff;
+end
+
+procedure use_skill_on_p_proc begin
+	if (action_being_used == SKILL_LOCKPICK) then begin
+		script_overrides;
+		call do_skill;
+	end
+	else begin
+		display_msg(message_str(NAME, 106));
+	end
+end
+
+procedure timed_event_p_proc begin
+   Use_Fridge := 0;
+end
+
+procedure do_stuff begin
+	Use_Fridge := 1;
+	if (unlocked == 0) then begin
+		script_overrides;
+	end
+	add_timer_event(self_obj, 5, 1);
+end
+
+procedure do_use_stuff begin
+	if (unlocked != 0) then begin
+		if (open) then begin
+			open := 0;
+		end
+		else begin
+			Use_Fridge := Use_Fridge + 1;
+			open := 1;
+		end
+	end
+	else begin
+		script_overrides;
+		display_msg(message_str(NAME, 105));
+	end
+end
+
+procedure do_skill begin
+	Use_Fridge := Use_Fridge + 1;
+	if (unlocked == 0) then begin
+		test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
+		if (is_success(test)) then begin
+			display_msg(message_str(NAME, 100));
+			unlocked := 1;
+		end
+		else begin
+			display_msg(message_str(NAME, 101));
+		end
+	end
+	else begin
+		display_msg(message_str(NAME, 107));
+	end
+end
+
+procedure see_stuff begin
+	display_msg(message_str(NAME, 108));
+end
+
+procedure examine begin
+	if (not(unlocked)) then begin
+		display_msg(message_str(NAME, 102));
+	end
+	else begin
+		if (open) then begin
+			display_msg(message_str(NAME, 103));
+		end
+		else begin
+			display_msg(message_str(NAME, 104));
+		end
+	end
+end
+

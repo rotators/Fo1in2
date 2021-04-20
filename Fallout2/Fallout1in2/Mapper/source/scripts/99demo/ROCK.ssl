@@ -1,1 +1,330 @@
-procedure start begin end
+/*
+
+   Scrapheap - Rock, at the entrance
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+
+#define NAME                    SCRIPT_ROCK
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+procedure critter_p_proc;
+
+procedure rock00;
+procedure rock01;
+procedure rock02;
+procedure rock03;
+procedure rock04;
+procedure rock05;
+procedure rock06;
+procedure rock07;
+procedure rock08;
+procedure rock09;
+procedure rock10;
+procedure rock11;
+
+procedure rockcombat;
+procedure weapon_check;
+procedure rockend;
+procedure Start_War;
+
+import variable Fool_Counter;
+import variable Crypt_Counter;
+import variable is_crypt;
+import variable is_fool;
+import variable broken_gen;
+import variable Fool_Pointer;
+import variable Crypt_Pointer;
+import variable Phrax_Pointer;
+import variable Rock_Pointer;
+import variable Know_Crypts;
+import variable rock_invite;
+import variable Fool_Taunt;
+import variable Crypt_Taunt;
+
+variable HEREBEFORE;
+variable tmp_hostile;
+
+variable known;
+variable one_time;
+variable init_teams := 0;
+variable I_Am_A_Crypt;
+variable I_Am_A_Fool;
+variable badguy;
+variable This_Once;
+
+procedure start begin
+	if (is_crypt) then begin
+		set_self_team(TEAM_PLAYER);
+	end
+	else begin
+		set_self_team(TEAM_VAULT13);
+	end
+	if (not(init_teams)) then begin
+		init_teams := 1;
+		Rock_Pointer := self_obj;
+		I_Am_A_Crypt := 1;
+	end
+	if (one_time == 0) then begin
+		if (self_can_see_dude) then begin
+			float_msg(self_obj, message_str(NAME, 106), 2);
+			one_time := 1;
+		end
+	end
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if (known == 1) then begin
+		display_msg(message_str(NAME, 100));
+	end
+	else begin
+		display_msg(message_str(NAME, 101));
+	end
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	if (known == 1) then begin
+		display_msg(message_str(NAME, 100));
+	end
+	else begin
+		display_msg(message_str(NAME, 101));
+	end
+end
+
+procedure timed_event_p_proc begin
+   call Start_War;
+end
+
+procedure destroy_p_proc begin
+   Crypt_Counter := Crypt_Counter - 1;
+end
+
+procedure talk_p_proc begin
+	dude_look_at_self;
+	start_gdialog(410, self_obj, 4, -1, -1);
+	gsay_start;
+	if (dude_is_armed) then begin
+		call rock00;
+	end
+	else begin
+		if (is_crypt == 1) then begin
+			call rock06;
+		end
+		else if (is_fool == 1) then begin
+			call rock07;
+		end
+		else if (HEREBEFORE == 0) then begin
+			call rock08;
+		end
+		else begin
+			call rock11;
+		end
+	end
+	gsay_end;
+	end_dialogue;
+end
+
+procedure rock00 begin
+	gsay_reply(410, 102);
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 103, rock01, NEUTRAL_REACTION );
+	end
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 104, rock01, NEUTRAL_REACTION );
+	end
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 105, rock02, NEUTRAL_REACTION );
+	end
+end
+
+procedure rock01 begin
+	known := 1;
+	gsay_reply(410, 108);
+	giq_option( 4, NAME, 109, rockend, NEUTRAL_REACTION );
+end
+
+procedure rock02 begin
+	Know_Crypts := 1;
+	gsay_reply(410, 110);
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 111, rock03, NEUTRAL_REACTION );
+	end
+end
+
+procedure rock03 begin
+	gsay_reply(410, 112);
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 113, rock04, NEUTRAL_REACTION );
+	end
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 114, rock05, NEUTRAL_REACTION );
+	end
+end
+
+procedure rock04
+begin
+	gsay_reply(410, 115);
+	giq_option( 4, NAME, 116, rockend, NEUTRAL_REACTION );
+
+end
+
+procedure rock05 begin
+	known := 1;
+	rock_invite := 1;
+	gsay_reply(410, 117);
+	giq_option( 4, NAME, 118, rockend, NEUTRAL_REACTION );
+end
+
+procedure rock06 begin
+	gsay_reply(410, 119);
+	giq_option( 4, NAME, 120, rockend, NEUTRAL_REACTION );
+
+end
+
+procedure rock07 begin
+	gsay_reply(410, 121);
+	giq_option( 4, NAME, 131, rockend, NEUTRAL_REACTION );
+end
+
+procedure rock08 begin
+	HEREBEFORE := 1;
+	gsay_reply(410, 122);
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 123, rock09, NEUTRAL_REACTION );
+	end
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 124, rock10, NEUTRAL_REACTION );
+	end
+end
+
+procedure rock09 begin
+	gsay_reply(410, 125);
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 126, rockend, NEUTRAL_REACTION );
+	end
+end
+
+procedure rock10 begin
+	Know_Crypts := 1;
+	gsay_reply(410, 127);
+	if (dude_iq >= 4) then begin
+		giq_option( 4, NAME, 128, rockend, NEUTRAL_REACTION );
+	end
+end
+
+procedure rock11 begin
+	gsay_reply(410, 129);
+	giq_option( 4, NAME, 130, rockend, NEUTRAL_REACTION );
+end
+
+procedure rockcombat begin
+	tmp_hostile := 1;
+end
+
+procedure rockend begin
+end
+
+procedure critter_p_proc begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+	if (I_Am_A_Fool and Crypt_Taunt) then begin
+		Crypt_Taunt := 0;
+		if (random(1, 5) == 1) then begin
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), -1);
+		end
+	end
+	else begin
+		if (I_Am_A_Crypt and Fool_Taunt) then begin
+			Fool_Taunt := 0;
+			if (random(1, 5) == 1) then begin
+				float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), -1);
+			end
+		end
+		else begin
+			if ((global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 1) and (self_tile != 20725)) then begin
+				self_walk_to_tile( 20725 );
+			end
+			else begin
+				if (self_tile == 20725) then begin
+					add_timer_event(self_obj, game_ticks(2), 1);
+				end
+				else begin
+					if (broken_gen and (self_tile != 27504)) then begin
+						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+							This_Once := 1;
+							float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), 2);
+						end
+						set_global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR, 2 );
+						self_walk_to_tile( 27504 );
+					end
+					else begin
+						if ((self_tile == 27504) and (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 2)) then begin
+							if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
+							if (I_Am_A_Fool) then begin
+								Fool_Counter := Fool_Counter - 1;
+							end
+							else begin
+								Crypt_Counter := Crypt_Counter - 1;
+							end
+						end
+						else begin
+							if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+								tmp_hostile := 0;
+								attack(dude_obj);
+							end
+							else begin
+								if (not(LVar0)) then begin
+									if (random(0, 21) == 1) then begin
+										LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+										self_walk_to_tile( LVar1 );
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure Start_War begin
+	if (fixed_param == 1) then begin
+		set_global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR, 0 );
+		if (I_Am_A_Fool) then begin
+			Fool_Taunt := 1;
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 115)), -1);
+		end
+		else begin
+			Crypt_Taunt := 1;
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), -1);
+		end
+		add_timer_event(self_obj, 4, 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if (I_Am_A_Fool) then begin
+				attack( Crypt_Pointer );
+			end
+			else begin
+				attack( Fool_Pointer );
+			end
+		end
+	end
+end

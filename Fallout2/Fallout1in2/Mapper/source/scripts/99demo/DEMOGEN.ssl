@@ -1,1 +1,150 @@
-procedure start begin end
+/*
+
+   Scrapheap - Generator
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+
+#define NAME                    SCRIPT_DEMOGEN
+
+#include "command.h"
+
+/* Standard Script Procedures */
+procedure start;
+
+variable Science_Check;
+variable Repair_Check;
+
+import variable Use_Generator;
+import variable Broken_Gen;
+
+
+procedure start begin
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if (Broken_Gen) then begin
+		display_msg(message_str(NAME, 100));
+	end
+	else begin
+		display_msg(message_str(NAME, 101));
+	end
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	if (Broken_Gen) then begin
+		display_msg(message_str(NAME, 100));
+	end
+	else begin
+		display_msg(message_str(NAME, 101));
+	end
+end
+
+procedure use_obj_on_p_proc begin
+	script_overrides;
+	if ((obj_pid(obj_being_used_with) == PID_MULTI_TOOL) and not(Broken_Gen)) then begin
+		Broken_Gen := 1;
+		give_exp_points(250);
+		display_msg(message_str(NAME, 102));
+	end
+	else begin
+		if (obj_being_used_with == 75) then begin
+			display_msg(message_str(NAME, 103));
+		end
+		else begin
+			display_msg(message_str(NAME, 104));
+		end
+	end
+end
+
+procedure use_skill_on_p_proc begin
+	script_overrides;
+	if (action_being_used == SKILL_SCIENCE) then begin
+   	if not(Broken_Gen) then begin
+   		if (Science_Check) then begin
+   			display_msg(message_str(NAME, 105));
+   		end
+   		else begin
+   			if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 30))) then begin
+   				set_global_var( GVAR_ARADESH_NICER_ROBES_GFX, 1 );
+   				display_msg(message_str(NAME, 106));
+   			end
+   			else begin
+   				display_msg(message_str(NAME, 107));
+   			end
+   		end
+   		Science_Check := 1;
+   		Use_Generator := Use_Generator + 1;
+   	end
+   	else begin
+   		if (Science_Check) then begin
+   			display_msg(message_str(NAME, 108));
+   		end
+   		else begin
+   			if (is_success(roll_vs_skill(dude_obj, SKILL_SCIENCE, 0))) then begin
+   				display_msg(message_str(NAME, 109));
+   			end
+   			else begin
+   				display_msg(message_str(NAME, 110));
+   			end
+   		end
+   		Science_Check := 1;
+   		Use_Generator := Use_Generator + 1;
+   	end
+	end
+	else if (action_being_used == SKILL_REPAIR) then begin
+   	if not(Broken_Gen) then begin
+   		if (Repair_Check) then begin
+   			display_msg(message_str(NAME, 111));
+   		end
+   		if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) then begin
+   			display_msg(message_str(NAME, 112));
+   		end
+   		else begin
+   			display_msg(message_str(NAME, 113));
+   		end
+   		Science_Check := 1;
+   		Use_Generator := Use_Generator + 1;
+   	end
+   	else begin
+   		if (Repair_Check) then begin
+   			display_msg(message_str(NAME, 114));
+   		end
+   		else begin
+   			if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) then begin
+   				display_msg(message_str(NAME, 115));
+   			end
+   			else begin
+   				display_msg(message_str(NAME, 116));
+   			end
+   		end
+   		add_timer_event(self_obj, game_ticks(5), 1);
+   		Science_Check := 1;
+   		Use_Generator := Use_Generator + 1;
+   	end
+	end
+   else begin
+		display_msg(message_str(NAME, 117));
+		Use_Generator := Use_Generator + 1;
+	end
+end
+
+procedure timed_event_p_proc begin
+   signal_end_game;
+end
+
+procedure use_p_proc begin
+	if (not(Broken_Gen)) then begin
+		display_msg(message_str(NAME, 118));
+	end
+	else begin
+		display_msg(message_str(NAME, 119));
+	end
+	Use_Generator := Use_Generator + 1;
+end
+

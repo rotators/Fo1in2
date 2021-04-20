@@ -1,18 +1,76 @@
-# Alchemist: long phrases should be split and require some smooyhing.
-
-{100}{}{You see: Lex, head of the Vipers raider clan.}
-{101}{}{A huge chap with a bad attitude, glaring at you.}
-{102}{}{[...You steadily wake up and take a look around. You see an unfamiliar place, three tents and several people near them. Looks like you managed to regain consciousness before they could clean your pockets. Your eyes focus on the man standing next to you] Oh, our unfortunate buyer has awaken.}
-{103}{}{[More]}
-{104}{}{What will it be? You can give us all your caps and we'll let you go. Or we could play fearless cowboys.}
-{105}{}{And what guarantees I leave this place alive if you get the money?}
-{106}{}{I've always loved westerns.}
-{107}{}{Cowboys.}
-{108}{}{The word of the raider!}
-{109}{}{I think I can trust you. Here, take it. [You give him your savings]}
-{110}{}{Those words mean nothing for me.}
-{111}{}{So, a stubborn one? I rather like it. I think the guys will have some fun with you then.}
-{112}{}{If you don't trust the words, you should trust our guns! A wimp like you is not a match for the whole gang!}
-{113}{}{Then again, I'd rather kill you. To be sure that nobody'll chatter too much around. Farewell.}
-{114}{}{Nice guy. A wise decision that. You are free to go now.}
-
+{100}{}{You see Lex.}
+{101}{}{You see a loser.}
+{102}{}{[more]} 
+{103}{}{[done]}
+{104}{}{[Lex whispers.] Best be careful. Rock doesn't always tell the truth.}
+{105}{}{Why do you say that?}
+{106}{}{Why should I trust you?}
+{107}{}{Rock is a member of the Crypts, a gang. He tries to get strangers, like
+ yourself, into trouble. If you listen to him, you could find yourself dead
+ and buried.}
+{108}{}{Who are you?}
+{109}{}{Thanks for the info. Have a good day.}
+{110}{}{I'm Lex. Scrapheap is my home, and I guess I speak for her people.}
+{111}{}{Anyone else I should know about?}
+{112}{}{Well, there are also the Fools. They would control Scrapheap, if the
+ Crypts were gone. The two gangs fight over who controls this place.
+ Currently, the Crypts are on top. Now that you are here, things could change.}
+{113}{}{What makes you say that?}
+{114}{}{If you could get rid of the gangs, we would be grateful. We don't have
+ the numbers or the strength to drive them off, and few people care about
+ this place. If you care, then we might be able to help you.}
+{115}{}{What do you mean?}
+{116}{}{I've heard of you. You want to find the lost city of Necropolis.
+ A grateful people could provide information on where to go.}
+{117}{}{I'll consider it.}
+{118}{}{We could ask for nothing more.}
+{119}{}{Bye.}
+{120}{}{I have some questions.}
+{121}{}{Why should you not? I have the best interests of my people at heart,
+ and I would like to see you come to no harm.}
+{122}{}{What do you mean?}
+{123}{}{There are forces at work here in Scrapheap that would like to use you,
+ and if that is not possible, to see you dead and buried. Choose your friends
+ wisely, and your enemies with even more care. Good day.}
+{124}{}{Yeah, good day.}
+{125}{}{We thank you for getting rid of the Crypts and the Fools. Without the
+ power generator, my people will have a poor life. Do you think you could fix it?}
+{126}{}{Of course.}
+{127}{}{Fix it yourself. I want my reward.}
+{128}{}{Thank you.}
+{129}{}{Very well, you shall have it. You have cast my people into a cold night,
+ and then abandoned us to the wolves - but I understand that your quest is
+ more important.}
+{130}{}{The violence you have started may lead straight back to my people. Please
+ finish it.}
+{131}{}{Just like you cowards to lay the task for death on the shoulders of others.}
+{132}{}{Working on it.}
+{133}{}{If you need help, I will provide it, but don't ask my people. They are
+ too tired of death and pain. I will join you, if that is what you wish.}
+{134}{}{Yes, follow me, and attack when I do.}
+{135}{}{No. I'm just making a social comment.}
+{136}{}{Just as I suspected, you don't care about anything except your own needs.
+ Join our enemies, bring fear to my people, and betray your own background.}
+{137}{}{I'm going to kill you for saying that.}
+{138}{}{It's a plan. I'm infiltrating this gang.}
+{139}{}{Shut up.}
+{140}{}{I thought you would, you worm.}
+{141}{}{Perhaps, but actions speak louder than words.}
+{142}{}{You'll see.}
+{143}{}{What can I help you with?}
+{144}{}{Tell me about the power generator.}
+{145}{}{Tell me about the Crypts.}
+{146}{}{Tell me about the Fools.}
+{147}{}{Tell me about Scrapheap.}
+{148}{}{Nothing else, thanks.}
+{149}{}{Scrapheap is our town. It was our home. And it will be again, hopefully.}
+{150}{}{The power generator supplies all the electicity in town. Without it,
+ we would surely die. It is the most important thing in town. Whoever controls
+ it, controls Scrapheap.}
+{151}{}{The Crypts are a gang run by Rayze. He's an animal and has one
+ of the largest guns I've ever seen. He lets Lenny live, cuz he takes care
+ of the Brahmin, which provide fuel for the generator. The Crypts are in the
+ big house.}
+{152}{}{Baka leads the Fools. If she had any more men, she'd surely attack
+ the Crypts and try to take back the power generator.  You can tell the
+ Crypts from the Fools by their armor. Fools wear metal, Crypts leather.}

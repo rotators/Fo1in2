@@ -1,15 +1,15 @@
 /*
 
-   Lenny?
+   Scrapheap - Lenny, at the brahmin stable
 
 */
 
 /* Include Files */
 #include "define.h"
-//#include "necropolis.h"
+#include "scrapheap.h"
 
 #define NAME                    SCRIPT_LENNY
-//#define TOWN_REP_VAR            (GVAR_TOWN_REP_BONEYARD)
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
 
 #include "command.h"
 #include "modreact.h"
@@ -17,6 +17,7 @@
 /* Standard Script Procedures */
 procedure start;
 procedure talk_p_proc;
+
 procedure Lenny00;
 procedure Lenny01;
 procedure Lenny02;
@@ -51,48 +52,47 @@ import variable know_fools;
 import variable know_crypts;
 import variable know_power;
 
-variable reactionamt := 50;
 variable tmp_reaction_level := 2;
-variable got_reaction;
-variable badguy;
-
 
 procedure start begin
    if Only_Once then begin
       Only_Once := 0;
       set_self_team(TEAM_4);
    end
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      call talk_p_proc;
+end
+
+procedure look_at_p_proc begin
+   script_overrides;
+   if (known) then begin
+      display_msg(message_str(NAME, 100));
    end
    else begin
-      if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-         script_overrides;
-         if (known) then begin
-            display_msg(message_str(SCRIPT_LENNY, 100));
-         end
-         else begin
-            display_msg(message_str(SCRIPT_LENNY, 101));
-         end
-      end
-      else begin
-         if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-            attack(dude_obj);
-         end
-         else begin
-            if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-               if (tmp_hostile) then begin
-                  tmp_hostile := 0;
-                  attack(dude_obj);
-               end
-            end
-         end
-      end
+      display_msg(message_str(NAME, 101));
    end
 end
 
-procedure talk_p_proc
-begin
+procedure description_p_proc begin
+   script_overrides;
+   if (known) then begin
+      display_msg(message_str(NAME, 100));
+   end
+   else begin
+      display_msg(message_str(NAME, 101));
+   end
+end
+
+procedure pickup_p_proc begin
+   attack(dude_obj);
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+end
+
+procedure talk_p_proc begin
    dude_look_at_self;
    start_gdialog(406, self_obj, 4, -1, -1);
    gsay_start;
@@ -111,65 +111,59 @@ begin
    end_dialogue;
 end
 
-procedure Lenny00
-begin
+procedure Lenny00 begin
    known := 1;
-   sayReply(0, message_str(SCRIPT_LENNY, 104));
+   sayReply(0, message_str(NAME, 104));
    if (dude_iq >= 0) then begin
-      sayOption(message_str(SCRIPT_LENNY, 103), LennyCombat);
+      sayOption(message_str(NAME, 103), LennyCombat);
    end
 end
 
-procedure Lenny01
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 105));
+procedure Lenny01 begin
+   sayReply(0, message_str(NAME, 105));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 106), Lenny15);
+      sayOption(message_str(NAME, 106), Lenny15);
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 107), Lenny03);
+      sayOption(message_str(NAME, 107), Lenny03);
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 108), Lenny02);
+      sayOption(message_str(NAME, 108), Lenny02);
    end
 end
 
-procedure Lenny02
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 109));
+procedure Lenny02 begin
+   sayReply(0, message_str(NAME, 109));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 107), Lenny03);
+      sayOption(message_str(NAME, 107), Lenny03);
    end
    sayOption("", Lenny03);
 end
 
-procedure Lenny03
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 110));
+procedure Lenny03 begin
+   sayReply(0, message_str(NAME, 110));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 111), Lenny08);
+      sayOption(message_str(NAME, 111), Lenny08);
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 112), Lenny04);
-   end
-end
-
-procedure Lenny04
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 113));
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 114), Lenny04a);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 115), Lenny04b);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 116), Lenny06);
+      sayOption(message_str(NAME, 112), Lenny04);
    end
 end
 
-procedure Lenny04a
-begin
+procedure Lenny04 begin
+   sayReply(0, message_str(NAME, 113));
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 114), Lenny04a);
+   end
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 115), Lenny04b);
+   end
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 116), Lenny06);
+   end
+end
+
+procedure Lenny04a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call Lenny05;
    end
@@ -178,8 +172,7 @@ begin
    end
 end
 
-procedure Lenny04b
-begin
+procedure Lenny04b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
       call Lenny07;
    end
@@ -188,160 +181,149 @@ begin
    end
 end
 
-procedure Lenny05
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 117));
+procedure Lenny05 begin
+   sayReply(0, message_str(NAME, 117));
    if (dude_iq >= 0) then begin
-      sayOption(message_str(SCRIPT_LENNY, 118), LennyEnd);
+      sayOption(message_str(NAME, 118), LennyEnd);
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny06
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 119));
+procedure Lenny06 begin
+   sayReply(0, message_str(NAME, 119));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 120), Lenny06a);
+      sayOption(message_str(NAME, 120), Lenny06a);
    end
    sayOption("", Lenny06a);
 end
 
-procedure Lenny06a
-begin
+procedure Lenny06a begin
    tmp_reaction_level := 1;
    LevelToReact
 end
 
-procedure Lenny07
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 121));
+procedure Lenny07 begin
+   sayReply(0, message_str(NAME, 121));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 122), LennyEnd);
+      sayOption(message_str(NAME, 122), LennyEnd);
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny08
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 123));
+procedure Lenny08 begin
+   sayReply(0, message_str(NAME, 123));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 122), LennyEnd);
+      sayOption(message_str(NAME, 122), LennyEnd);
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny09
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 124));
+procedure Lenny09 begin
+   sayReply(0, message_str(NAME, 124));
    if (know_fools) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 125), Lenny10);
+         sayOption(message_str(NAME, 125), Lenny10);
       end
    end
    if (know_crypts) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 126), Lenny11);
+         sayOption(message_str(NAME, 126), Lenny11);
       end
    end
    if (know_power) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 127), Lenny12);
+         sayOption(message_str(NAME, 127), Lenny12);
       end
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 128), LennyEnd);
+      sayOption(message_str(NAME, 128), LennyEnd);
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny10
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 129));
+procedure Lenny10 begin
+   sayReply(0, message_str(NAME, 129));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 130), LennyEnd);
+      sayOption(message_str(NAME, 130), LennyEnd);
    end
    if (know_crypts) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 126), Lenny11);
+         sayOption(message_str(NAME, 126), Lenny11);
       end
    end
    if (know_power) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 127), Lenny12);
+         sayOption(message_str(NAME, 127), Lenny12);
       end
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny11
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 131));
+procedure Lenny11 begin
+   sayReply(0, message_str(NAME, 131));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 130), LennyEnd);
+      sayOption(message_str(NAME, 130), LennyEnd);
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 132), Lenny13);
+      sayOption(message_str(NAME, 132), Lenny13);
    end
    if (know_fools) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 125), Lenny10);
+         sayOption(message_str(NAME, 125), Lenny10);
       end
    end
    if (know_power) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 127), Lenny12);
+         sayOption(message_str(NAME, 127), Lenny12);
       end
    end
 end
 
-procedure Lenny12
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 133));
+procedure Lenny12 begin
+   sayReply(0, message_str(NAME, 133));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 130), LennyEnd);
+      sayOption(message_str(NAME, 130), LennyEnd);
    end
    if (know_fools) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 125), Lenny10);
+         sayOption(message_str(NAME, 125), Lenny10);
       end
    end
    if (know_crypts) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 126), Lenny11);
+         sayOption(message_str(NAME, 126), Lenny11);
       end
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny13
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 134));
+procedure Lenny13 begin
+   sayReply(0, message_str(NAME, 134));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 130), LennyEnd);
+      sayOption(message_str(NAME, 130), LennyEnd);
    end
    if (know_fools) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 125), Lenny10);
+         sayOption(message_str(NAME, 125), Lenny10);
       end
    end
    if (know_crypts) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 126), Lenny11);
+         sayOption(message_str(NAME, 126), Lenny11);
       end
    end
    if (know_power) then begin
       if (dude_iq >= 4) then begin
-         sayOption(message_str(SCRIPT_LENNY, 127), Lenny12);
+         sayOption(message_str(NAME, 127), Lenny12);
       end
    end
    sayOption("", LennyEnd);
 end
 
-procedure Lenny14
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 135));
+procedure Lenny14 begin
+   sayReply(0, message_str(NAME, 135));
    if (dude_iq >= 0) then begin
-      sayOption(message_str(SCRIPT_LENNY, 103), LennyEnd);
+      sayOption(message_str(NAME, 103), LennyEnd);
    end
    if (dude_iq >= 0) then begin
       sayOption("", LennyEnd);
@@ -349,64 +331,57 @@ begin
    sayOption("", LennyEnd);
 end
 
-procedure Lenny15
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 136));
+procedure Lenny15 begin
+   sayReply(0, message_str(NAME, 136));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 137), Lenny16);
+      sayOption(message_str(NAME, 137), Lenny16);
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 138), Lenny17);
-   end
-end
-
-procedure Lenny16
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 139));
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 140), Lenny03);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 141), Lenny18);
+      sayOption(message_str(NAME, 138), Lenny17);
    end
 end
 
-procedure Lenny17
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 142));
+procedure Lenny16 begin
+   sayReply(0, message_str(NAME, 139));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 130), LennyEnd);
+      sayOption(message_str(NAME, 140), Lenny03);
    end
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 143), Lenny03);
-   end
-end
-
-procedure Lenny18
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 144));
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 145), Lenny03);
-   end
-   if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 146), Lenny19);
+      sayOption(message_str(NAME, 141), Lenny18);
    end
 end
 
-procedure Lenny19
-begin
-   sayReply(0, message_str(SCRIPT_LENNY, 147));
+procedure Lenny17 begin
+   sayReply(0, message_str(NAME, 142));
    if (dude_iq >= 4) then begin
-      sayOption(message_str(SCRIPT_LENNY, 103), LennyCombat);
+      sayOption(message_str(NAME, 130), LennyEnd);
+   end
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 143), Lenny03);
+   end
+end
+
+procedure Lenny18 begin
+   sayReply(0, message_str(NAME, 144));
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 145), Lenny03);
+   end
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 146), Lenny19);
+   end
+end
+
+procedure Lenny19 begin
+   sayReply(0, message_str(NAME, 147));
+   if (dude_iq >= 4) then begin
+      sayOption(message_str(NAME, 103), LennyCombat);
    end
    sayOption("", LennyCombat);
 end
 
-procedure LennyEnd
-begin
+procedure LennyEnd begin
 end
 
-procedure LennyCombat
-begin
+procedure LennyCombat begin
    tmp_hostile := 1;
 end

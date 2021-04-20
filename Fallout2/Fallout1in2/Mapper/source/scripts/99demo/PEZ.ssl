@@ -1,1 +1,291 @@
-procedure start begin end
+/*
+
+   Scrapheap - Generic peasant
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+
+#define NAME                    SCRIPT_PEZ
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure talk_p_proc;
+
+procedure pez00;
+procedure pez01;
+procedure pez02;
+procedure pez03;
+procedure pez04;
+procedure pez05;
+procedure pezdone;
+procedure pezend;
+procedure timeforwhat;
+
+variable my_tile;
+variable knowstart;
+variable prev_tile;
+variable new_tile;
+variable loopcount;
+variable noevent;
+variable rndx;
+variable rndy;
+variable rndz;
+variable dist;
+variable critter_tile;
+variable HEREBEFORE;
+variable PICK;
+variable init_teams := 0;
+
+import variable is_crypt;
+import variable is_fool;
+import variable broken_gen;
+
+procedure start begin
+	if (init_teams == 0) then begin
+      set_self_team( TEAM_4 );
+		init_teams := 1;
+	end
+
+	if (knowstart == 0) then begin
+		my_tile := self_tile;
+		knowstart := 1;
+	end
+end
+
+procedure timed_event_p_proc begin
+   call timeforwhat;
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	display_msg(message_str(NAME, 100));
+end
+
+procedure description_p_proc begin
+	script_overrides;
+	display_msg(message_str(NAME, 100));
+end
+
+
+procedure pickup_p_proc begin
+   attack(dude_obj);
+end
+
+procedure critter_p_proc begin
+	loopcount := loopcount + 1;
+	if (loopcount > 40) then begin
+		loopcount := 0;
+		if (noevent == 0) then begin
+			noevent := 1;
+			rndx := 5 + random(1, 10);
+			add_timer_event(self_obj, game_ticks(rndx), 0);
+		end
+	end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_self;
+	if (broken_gen == 1) then begin
+		call pez00;
+	end
+	else begin
+		if (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR )) then begin
+			call pez01;
+		end
+		else begin
+			if (is_crypt == 1) then begin
+				call pez02;
+			end
+			else begin
+				if (is_fool == 1) then begin
+					call pez03;
+				end
+				else begin
+					call pez04;
+				end
+			end
+		end
+	end
+end
+
+procedure pez00 begin
+	PICK := random(1, 4);
+	if (PICK == 1) then begin
+		set_global_var( GVAR_ANIMAL_FRIEND_RADSCORPS, 1 );
+	end
+	if (PICK == 1) then begin
+		float_msg(self_obj, message_str(NAME, 101), 4);
+	end
+	else begin
+		if (PICK == 2) then begin
+			float_msg(self_obj, message_str(NAME, 102), 4);
+		end
+		else begin
+			if (PICK == 3) then begin
+				float_msg(self_obj, message_str(NAME, 103), 4);
+			end
+			else begin
+				if (PICK == 4) then begin
+					float_msg(self_obj, message_str(NAME, 104), 4);
+				end
+			end
+		end
+	end
+end
+
+procedure pez01 begin
+	PICK := random(1, 5);
+	if (PICK == 1) then begin
+		set_global_var( GVAR_GANG_1_GVAR, 1 );
+	end
+	if (PICK == 1) then begin
+		float_msg(self_obj, message_str(NAME, 105), 4);
+	end
+	else begin
+		if (PICK == 2) then begin
+			float_msg(self_obj, message_str(NAME, 106), 4);
+		end
+		else begin
+			if (PICK == 3) then begin
+				float_msg(self_obj, message_str(NAME, 107), 4);
+			end
+			else begin
+				if (PICK == 4) then begin
+					float_msg(self_obj, message_str(NAME, 108), 4);
+				end
+				else begin
+					if (PICK == 5) then begin
+						float_msg(self_obj, message_str(NAME, 109), 4);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure pez02 begin
+	PICK := random(1, 4);
+	if (PICK == 1) then begin
+		float_msg(self_obj, message_str(NAME, 110), 4);
+	end
+	else begin
+		if (PICK == 2) then begin
+			float_msg(self_obj, message_str(NAME, 111), 4);
+		end
+		else begin
+			if (PICK == 3) then begin
+				float_msg(self_obj, message_str(NAME, 112), 4);
+			end
+			else begin
+				if (PICK == 4) then begin
+					float_msg(self_obj, message_str(NAME, 113), 4);
+				end
+			end
+		end
+	end
+end
+
+procedure pez03 begin
+	PICK := random(1, 5);
+	if (PICK == 1) then begin
+		float_msg(self_obj, message_str(NAME, 114), 4);
+	end
+	else begin
+		if (PICK == 2) then begin
+			float_msg(self_obj, message_str(NAME, 115), 4);
+		end
+		else begin
+			if (PICK == 3) then begin
+				float_msg(self_obj, message_str(NAME, 116), 4);
+			end
+			else begin
+				if (PICK == 4) then begin
+					float_msg(self_obj, message_str(NAME, 117), 4);
+				end
+				else begin
+					if (PICK == 5) then begin
+						float_msg(self_obj, message_str(NAME, 118), 4);
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure pez04 begin
+	PICK := random(1, 7);
+	if (PICK == 3) then begin
+		set_global_var( GVAR_DOGMEAT_SOMETHING_0, 1 );
+	end
+	if (PICK == 1) then begin
+		float_msg(self_obj, message_str(NAME, 119), 4);
+	end
+	else begin
+		if (PICK == 2) then begin
+			float_msg(self_obj, message_str(NAME, 120), 4);
+		end
+		else begin
+			if (PICK == 3) then begin
+				float_msg(self_obj, message_str(NAME, 121), 4);
+			end
+			else begin
+				if (PICK == 4) then begin
+					float_msg(self_obj, message_str(NAME, 122), 4);
+				end
+				else begin
+					if (PICK == 5) then begin
+						float_msg(self_obj, message_str(NAME, 123), 4);
+					end
+					else begin
+						if (PICK == 6) then begin
+							call pez05;
+						end
+						else if (PICK == 7) then begin
+							float_msg(self_obj, message_str(NAME, 124), 4);
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure pez05 begin
+	PICK := random(1, 10);
+	if (PICK < 3) then begin
+		float_msg(self_obj, message_str(NAME, 125), 4);
+	end
+	else begin
+		float_msg(self_obj, message_str(NAME, 126), 4);
+	end
+end
+
+procedure pezdone begin
+	sayOption(message_str(NAME, 127), pezend);
+	sayOption("", pezend);
+end
+
+procedure pezend begin
+end
+
+procedure timeforwhat begin
+	noevent := 0;
+	rndy := random(1, 6);
+	if (rndy > 1) then begin
+		dist := 2;
+	end
+	if (rndy > 5) then begin
+		dist := 3;
+	end
+	rndz := random(0, 5);
+	prev_tile := self_tile;
+	new_tile := tile_num_in_direction(prev_tile, rndz, dist);
+	self_walk_to_tile( new_tile );
+end

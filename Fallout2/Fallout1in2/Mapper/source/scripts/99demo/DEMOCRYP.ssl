@@ -1,1 +1,253 @@
-procedure start begin end
+/*
+
+   Scrapheap - Crypt gang member
+
+*/
+
+/* Include Files */
+#include "define.h"
+#include "scrapheap.h"
+
+#define NAME                    SCRIPT_DEMOCRYPT
+#define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
+
+#include "command.h"
+#include "modreact.h"
+
+/* Standard Script Procedures */
+procedure start;
+procedure destroy_p_proc;
+procedure talk_p_proc;
+procedure critter_p_proc;
+
+procedure DemoCryp00;
+procedure DemoCryp02;
+
+procedure timeforwhat;
+procedure Start_War;
+
+import variable Fool_Counter;
+import variable Crypt_Counter;
+import variable is_crypt;
+import variable is_fool;
+import variable Know_Crypts;
+import variable broken_gen;
+import variable Crypt_Pointer;
+import variable Fool_Pointer;
+
+variable I_Am_A_Crypt;
+variable I_AM_A_FOOL;
+
+import variable Phrax_Pointer;
+import variable Fool_Taunt;
+import variable Crypt_Taunt;
+import variable Rock_Pointer;
+
+variable line;
+variable tmp_hostile;
+variable my_tile;
+variable initial :=  0;
+variable prev_tile;
+variable new_tile;
+variable loopcount;
+variable noevent;
+variable rndx;
+variable rndy;
+variable rndz;
+variable dist;
+variable MAXLEASH := 9;
+
+variable badguy;
+variable This_Once;
+
+procedure start begin
+	if (is_crypt) then begin
+		set_self_team(TEAM_PLAYER );
+	end
+	else begin
+		set_self_team(TEAM_VAULT13 );
+	end
+	if not(initial) then begin
+		initial :=  1;
+		I_Am_A_Crypt := 1;
+	end
+end
+
+procedure look_at_p_proc begin
+	script_overrides;
+	if (Know_Crypts) then begin
+		display_msg(message_str(SCRIPT_DEMOCRYP, 100));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_DEMOCRYP, 101));
+	end
+end
+
+procedure description_p_proc begin
+   script_overrides;
+	if (Know_Crypts) then begin
+		display_msg(message_str(SCRIPT_DEMOCRYP, 100));
+	end
+	else begin
+		display_msg(message_str(SCRIPT_DEMOCRYP, 101));
+	end
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure timed_event_p_proc begin
+   call Start_War;
+end
+
+procedure DemoCryp00 begin
+	line := random(102, 108);
+	if (obj_pid(dude_armor) != PID_LEATHER_ARMOR) then begin
+		if (line == 108) then begin
+			line := random(102, 107);
+		end
+		else begin
+			line := 108;
+		end
+	end
+end
+
+procedure DemoCryp02 begin
+	line := random(113, 118);
+	if (obj_pid(dude_armor) == PID_LEATHER_ARMOR) then begin
+		if (line == 118) then begin
+			line := random(113, 117);
+		end
+		else begin
+			line := 118;
+		end
+	end
+end
+
+procedure talk_p_proc begin
+	dude_look_at_self;
+	if (is_fool) then begin
+		line := random(109, 112);
+	end
+	else begin
+		if (is_crypt) then begin
+			call DemoCryp00;
+		end
+		else begin
+			call DemoCryp02;
+		end
+	end
+	float_msg(self_obj, message_str(SCRIPT_DEMOCRYP, line), 0);
+end
+
+procedure timeforwhat begin
+	noevent := 0;
+	rndy := random(1, 6);
+	if (rndy > 1) then begin
+		dist := 2;
+	end
+	if (rndy > 5) then begin
+		dist := 3;
+	end
+	rndz := random(0, 5);
+	prev_tile := self_tile;
+	new_tile := tile_num_in_direction(prev_tile, rndz, dist);
+	if (tile_distance(my_tile, new_tile) < MAXLEASH) then begin
+		self_walk_to_tile( new_tile );
+	end
+end
+
+procedure Start_War begin
+	if (fixed_param == 1) then begin
+		set_global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR, 0 );
+		if (I_AM_A_FOOL) then begin
+			Fool_Taunt := 1;
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 115)), -1);
+		end
+		else begin
+			Crypt_Taunt := 1;
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), -1);
+		end
+		add_timer_event(self_obj, 4, 2);
+	end
+	else begin
+		if (fixed_param == 2) then begin
+			if (I_AM_A_FOOL) then begin
+				attack( Crypt_Pointer );
+			end
+			else begin
+				attack( Fool_Pointer );
+			end
+		end
+	end
+end
+
+procedure critter_p_proc begin
+	variable LVar0 := 0;
+	variable LVar1 := 0;
+	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+	if (I_AM_A_FOOL and Crypt_Taunt) then begin
+		Crypt_Taunt := 0;
+		if (random(1, 5) == 1) then begin
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), -1);
+		end
+	end
+	else begin
+		if (I_Am_A_Crypt and Fool_Taunt) then begin
+			Fool_Taunt := 0;
+			if (random(1, 5) == 1) then begin
+				float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), -1);
+			end
+		end
+		else begin
+			if ((global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 1) and (self_tile != 20725)) then begin
+				self_walk_to_tile( 20725 );
+			end
+			else begin
+				if (self_tile == 20725) then begin
+					add_timer_event(self_obj, game_ticks(2), 1);
+				end
+				else begin
+					if (broken_gen and (self_tile != 27504)) then begin
+						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+							This_Once := 1;
+							float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), 2);
+						end
+						set_global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR, 2 );
+						self_walk_to_tile( 27504 );
+					end
+					else begin
+						if ((self_tile == 27504) and (global_var( GVAR_QUEST_BONEYARD_7_GANG_WAR ) == 2)) then begin
+							if not(is_loading_game) then begin    set_self_invisible;    end//  MAKE INVISIBLE
+							if (I_AM_A_FOOL) then begin
+								Fool_Counter := Fool_Counter - 1;
+							end
+							else begin
+								Crypt_Counter := Crypt_Counter - 1;
+							end
+						end
+						else begin
+							if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+								tmp_hostile := 0;
+								attack(dude_obj);
+							end
+							else begin
+								if (not(LVar0)) then begin
+									if (random(0, 21) == 1) then begin
+										LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+										self_walk_to_tile( LVar1 );
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+procedure destroy_p_proc begin
+   Crypt_Counter := Crypt_Counter - 1;
+end
