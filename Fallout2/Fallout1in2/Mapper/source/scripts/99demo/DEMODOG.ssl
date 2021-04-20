@@ -34,11 +34,11 @@ import variable smartass;
 import variable smartass2;
 
 procedure start begin
-	if not(initial) then begin
+   if not(initial) then begin
       set_self_team(TEAM_RAIDERS);
-		initial := 1;
+      initial := 1;
       set_map_var(MVAR_Dog_Is_Angry, 1);
-	end
+   end
 end
 
 procedure pickup_p_proc begin
@@ -46,90 +46,90 @@ procedure pickup_p_proc begin
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	if (global_var(GVAR_DEMODOG_HIRELING_STATUS)) then begin
-		display_msg(message_str(SCRIPT_DEMODOG, 100));
-	end
-	else begin
-		display_msg(message_str(SCRIPT_DEMODOG, 101));
-	end
+   script_overrides;
+   if (global_var(GVAR_DEMODOG_HIRELING_STATUS)) then begin
+      display_msg(message_str(SCRIPT_DEMODOG, 100));
+   end
+   else begin
+      display_msg(message_str(SCRIPT_DEMODOG, 101));
+   end
 end
 
 procedure description_p_proc begin
-	script_overrides;
-	if (global_var(GVAR_DEMODOG_HIRELING_STATUS)) then begin
-		display_msg(message_str(SCRIPT_DEMODOG, 100));
-	end
-	else begin
-		display_msg(message_str(SCRIPT_DEMODOG, 101));
-	end
+   script_overrides;
+   if (global_var(GVAR_DEMODOG_HIRELING_STATUS)) then begin
+      display_msg(message_str(SCRIPT_DEMODOG, 100));
+   end
+   else begin
+      display_msg(message_str(SCRIPT_DEMODOG, 101));
+   end
 end
 
 procedure critter_p_proc begin
-	if (global_var(GVAR_DEMODOG_HIRELING_STATUS) == 1) then begin
-		if (tile_distance_objs(self_obj, dude_obj) >= 3) then begin
-			dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 4), random(0, 5), random(0, 2));
-			self_run_to_tile_force(dest_tile);
-		end
-		else begin
-			dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 4), random(0, 5), random(0, 2));
-			self_run_to_tile_force(dest_tile);
-		end
-	end
-	else begin
-		if (Phil_approaches) then begin
-			if (map_var(MVAR_Dog_Is_Angry)) then begin
-				add_timer_event(self_obj, game_ticks(4), 1);
-			end
-			Phil_approaches := 0;
-		end
-	end
+   if (global_var(GVAR_DEMODOG_HIRELING_STATUS) == 1) then begin
+      if (tile_distance_objs(self_obj, dude_obj) >= 3) then begin
+         dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 4), random(0, 5), random(0, 2));
+         self_run_to_tile_force(dest_tile);
+      end
+      else begin
+         dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 4), random(0, 5), random(0, 2));
+         self_run_to_tile_force(dest_tile);
+      end
+   end
+   else begin
+      if (Phil_approaches) then begin
+         if (map_var(MVAR_Dog_Is_Angry)) then begin
+            add_timer_event(self_obj, game_ticks(4), 1);
+         end
+         Phil_approaches := 0;
+      end
+   end
 end
 
 procedure timed_event_p_proc begin
-	if (fixed_param == 1) then begin
-		call growl;
-	end
-	else if (fixed_param == 2) then begin
+   if (fixed_param == 1) then begin
+      call growl;
+   end
+   else if (fixed_param == 2) then begin
       call follow_player;
-	end
+   end
 end
 
 procedure use_obj_on_p_proc begin
-	if (obj_pid(obj_being_used_with) == PID_MEAT_ON_A_STICK) then begin
-		display_msg(message_str(SCRIPT_DEMODOG, 104));
-		display_msg(message_str(SCRIPT_DEMODOG, 108));
-		give_exp_points(200);
-		set_global_var(GVAR_DEMODOG_HIRELING_STATUS, 1);
-		//set_global_var(GVAR_DOGMEAT_SOMETHING_1, 2);
-		//set_global_var(GVAR_DOGMEAT_SOMETHING_0, 2);
+   if (obj_pid(obj_being_used_with) == PID_MEAT_ON_A_STICK) then begin
+      display_msg(message_str(SCRIPT_DEMODOG, 104));
+      display_msg(message_str(SCRIPT_DEMODOG, 108));
+      give_exp_points(200);
+      set_global_var(GVAR_DEMODOG_HIRELING_STATUS, 1);
+      //set_global_var(GVAR_DOGMEAT_SOMETHING_1, 2);
+      //set_global_var(GVAR_DOGMEAT_SOMETHING_0, 2);
       set_self_team(TEAM_PLAYER);
       set_map_var(MVAR_Dog_Is_Angry, 0);
-		add_timer_event(self_obj, game_ticks(1), 2);
-	end
+      add_timer_event(self_obj, game_ticks(1), 2);
+   end
 end
 
 procedure growl begin
-	float_msg(self_obj, message_str(SCRIPT_DEMODOG, 103), FLOAT_MSG_NORMAL);
-	growling := 1;
-	smartass2 := 1;
+   float_msg(self_obj, message_str(SCRIPT_DEMODOG, 103), FLOAT_MSG_NORMAL);
+   growling := 1;
+   smartass2 := 1;
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	float_msg(self_obj, message_str(SCRIPT_DEMODOG, 102), FLOAT_MSG_NORMAL);
+   dude_look_at_self;
+   float_msg(self_obj, message_str(SCRIPT_DEMODOG, 102), FLOAT_MSG_NORMAL);
 end
 
 procedure follow_player begin
-	variable LVar0 := 0;
-	LVar0 := tile_num_in_direction(dude_tile, random(0, 5), 1);
-	if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
-		self_walk_to_tile_force(LVar0);
-	end
-	else begin
-		self_run_to_tile_force(LVar0);
-	end
-	add_timer_event(self_obj, game_ticks(2), 2);
+   variable LVar0 := 0;
+   LVar0 := tile_num_in_direction(dude_tile, random(0, 5), 1);
+   if (tile_distance_objs(self_obj, dude_obj) < 8) then begin
+      self_walk_to_tile_force(LVar0);
+   end
+   else begin
+      self_run_to_tile_force(LVar0);
+   end
+   add_timer_event(self_obj, game_ticks(2), 2);
 end
 
 procedure destroy_p_proc begin

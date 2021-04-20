@@ -45,37 +45,37 @@ variable MAXLEASH := 9;
 variable This_Once;
 
 procedure start begin
-	if DUDE_IS_FOOL then begin
-		set_self_team(TEAM_PLAYER);
-	end
-	else begin
-		set_self_team(TEAM_DEMO_FOOLS);
-	end
-	if (knowstart == 0) then begin
-		my_tile := self_tile;
-		knowstart := 1;
-		I_Am_A_Fool := 1;
-	end
+   if DUDE_IS_FOOL then begin
+      set_self_team(TEAM_PLAYER);
+   end
+   else begin
+      set_self_team(TEAM_DEMO_FOOLS);
+   end
+   if (knowstart == 0) then begin
+      my_tile := self_tile;
+      knowstart := 1;
+      I_Am_A_Fool := 1;
+   end
 end
 
 procedure look_at_p_proc begin
-	script_overrides;
-	if (Known) then begin
-		display_msg(mstr(100));
-	end
-	else begin
-		display_msg(mstr(101));
-	end
+   script_overrides;
+   if (Known) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
 end
 
 procedure description_p_proc begin
 script_overrides;
-	if (Known) then begin
-		display_msg(mstr(100));
-	end
-	else begin
-		display_msg(mstr(101));
-	end
+   if (Known) then begin
+      display_msg(mstr(100));
+   end
+   else begin
+      display_msg(mstr(101));
+   end
 end
 
 procedure pickup_p_proc begin
@@ -87,101 +87,101 @@ procedure timed_event_p_proc begin
 end
 
 procedure talk_p_proc begin
-	dude_look_at_self;
-	if DUDE_IS_FOOL then begin
-		line := mstr(random(107, 111));
-	end
-	else begin
-		if DUDE_IS_CRYPT then begin
-			line := mstr(random(102, 106));
-		end
-		else begin
-			line := mstr(random(112, 116));
-		end
-	end
-	float_msg(self_obj, line, FLOAT_MSG_NORMAL);
+   dude_look_at_self;
+   if DUDE_IS_FOOL then begin
+      line := mstr(random(107, 111));
+   end
+   else begin
+      if DUDE_IS_CRYPT then begin
+         line := mstr(random(102, 106));
+      end
+      else begin
+         line := mstr(random(112, 116));
+      end
+   end
+   float_msg(self_obj, line, FLOAT_MSG_NORMAL);
 end
 
 procedure timeforwhat begin
-	noevent := 0;
-	rndy := random(1, 6);
-	if (rndy > 1) then begin
-		dist := 2;
-	end
-	if (rndy > 5) then begin
-		dist := 3;
-	end
-	rndz := random(0, 5);
-	prev_tile := self_tile;
-	new_tile := tile_num_in_direction(prev_tile, rndz, dist);
-	if (tile_distance(my_tile, new_tile) < MAXLEASH) then begin
-		self_walk_to_tile(new_tile);
-	end
+   noevent := 0;
+   rndy := random(1, 6);
+   if (rndy > 1) then begin
+      dist := 2;
+   end
+   if (rndy > 5) then begin
+      dist := 3;
+   end
+   rndz := random(0, 5);
+   prev_tile := self_tile;
+   new_tile := tile_num_in_direction(prev_tile, rndz, dist);
+   if (tile_distance(my_tile, new_tile) < MAXLEASH) then begin
+      self_walk_to_tile(new_tile);
+   end
 end
 
 procedure critter_p_proc begin
-	variable LVar0 := 0;
-	variable LVar1 := 0;
-	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
-	if (I_Am_A_Fool and Crypt_Taunt) then begin
-		Crypt_Taunt := 0;
-		if (random(1, 5) == 1) then begin
-			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
-		end
-	end
-	else begin
-		if (I_Am_A_Crypt and Fool_Taunt) then begin
-			Fool_Taunt := 0;
-			if (random(1, 5) == 1) then begin
-				float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
-			end
-		end
-		else begin
-			if (get_demo_gangwar_active and (self_tile != 20725)) then begin
-				self_walk_to_tile(20725);
-			end
-			else begin
-				if (self_tile == 20725) then begin
-					add_timer_event(self_obj, game_ticks(2), 1);
-				end
-				else begin
-					if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
-						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
-							This_Once := 1;
-							float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_RED);
-						end
-						set_demo_gangwar_completed;
-						self_walk_to_tile(27504);
-					end
-					else begin
-						if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
-							if not(is_loading_game) then set_self_invisible;
-							if (I_Am_A_Fool) then begin
-								dec_fools_counter;
-							end
-							else begin
-								dec_crypt_counter;
-							end
-						end
-						else begin
-							if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-								tmp_hostile := 0;
-								attack(dude_obj);
-							end
-							else begin
-								if (not(LVar0)) then begin
-									if (random(0, 21) == 1) then begin
-										LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
-										self_walk_to_tile(LVar1);
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+   variable LVar0 := 0;
+   variable LVar1 := 0;
+   LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+   if (I_Am_A_Fool and Crypt_Taunt) then begin
+      Crypt_Taunt := 0;
+      if (random(1, 5) == 1) then begin
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
+      end
+   end
+   else begin
+      if (I_Am_A_Crypt and Fool_Taunt) then begin
+         Fool_Taunt := 0;
+         if (random(1, 5) == 1) then begin
+            float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
+         end
+      end
+      else begin
+         if (get_demo_gangwar_active and (self_tile != 20725)) then begin
+            self_walk_to_tile(20725);
+         end
+         else begin
+            if (self_tile == 20725) then begin
+               add_timer_event(self_obj, game_ticks(2), 1);
+            end
+            else begin
+               if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
+                  if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+                     This_Once := 1;
+                     float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_RED);
+                  end
+                  set_demo_gangwar_completed;
+                  self_walk_to_tile(27504);
+               end
+               else begin
+                  if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
+                     if not(is_loading_game) then set_self_invisible;
+                     if (I_Am_A_Fool) then begin
+                        dec_fools_counter;
+                     end
+                     else begin
+                        dec_crypt_counter;
+                     end
+                  end
+                  else begin
+                     if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+                        tmp_hostile := 0;
+                        attack(dude_obj);
+                     end
+                     else begin
+                        if (not(LVar0)) then begin
+                           if (random(0, 21) == 1) then begin
+                              LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+                              self_walk_to_tile(LVar1);
+                           end
+                        end
+                     end
+                  end
+               end
+            end
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin
