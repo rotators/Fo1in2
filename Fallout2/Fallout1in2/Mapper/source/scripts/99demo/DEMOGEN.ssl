@@ -15,18 +15,49 @@
 
 /* Standard Script Procedures */
 procedure start;
+procedure map_enter_p_proc;
+procedure map_update_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_obj_on_p_proc;
+procedure use_skill_on_p_proc;
+procedure timed_event_p_proc;
+procedure use_p_proc;
 
-variable Science_Check;
-variable Repair_Check;
+#define LVAR_Science_Check       (0)
+#define LVAR_Repair_Check        (1)
 
-import variable Broken_Gen;
+#define EVENT_ANIM      (1)
 
 procedure start begin
 end
 
+procedure map_enter_p_proc begin
+   if not(map_var(MVAR_Broken_Gen)) then begin
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_animate_forever(self_obj, ANIM_stand);
+      reg_anim_end();
+   end
+   flush_add_timer_event(self_obj, 1, EVENT_ANIM);
+end
+
+procedure map_update_p_proc begin
+   if not(map_var(MVAR_Broken_Gen)) then begin
+      reg_anim_clear(self_obj);
+      reg_anim_begin();
+      reg_anim_animate_forever(self_obj, ANIM_stand);
+      reg_anim_end();
+   end
+   else begin
+      self_set_frame(0);
+      reg_anim_clear(self_obj);
+   end
+end
+
 procedure look_at_p_proc begin
 	script_overrides;
-	if (Broken_Gen) then begin
+	if (map_var(MVAR_Broken_Gen)) then begin
 		display_msg(mstr(100));
 	end
 	else begin
@@ -36,7 +67,7 @@ end
 
 procedure description_p_proc begin
 	script_overrides;
-	if (Broken_Gen) then begin
+	if (map_var(MVAR_Broken_Gen)) then begin
 		display_msg(mstr(100));
 	end
 	else begin
@@ -46,8 +77,8 @@ end
 
 procedure use_obj_on_p_proc begin
 	script_overrides;
-	if ((obj_pid(obj_being_used_with) == PID_MULTI_TOOL) and not(Broken_Gen)) then begin
-		Broken_Gen := 1;
+	if ((obj_pid(obj_being_used_with) == PID_MULTI_TOOL) and not(map_var(MVAR_Broken_Gen))) then begin
+      set_map_var(MVAR_Broken_Gen, 1);
 		give_exp_points(250);
 		display_msg(mstr(102));
 	end
@@ -64,8 +95,8 @@ end
 procedure use_skill_on_p_proc begin
 	script_overrides;
 	if (action_being_used == SKILL_SCIENCE) then begin
-   	if not(Broken_Gen) then begin
-   		if (Science_Check) then begin
+   	if not(map_var(MVAR_Broken_Gen)) then begin
+   		if (local_var(LVAR_Science_Check)) then begin
    			display_msg(mstr(105));
    		end
    		else begin
@@ -77,11 +108,11 @@ procedure use_skill_on_p_proc begin
    				display_msg(mstr(107));
    			end
    		end
-   		Science_Check := 1;
+   		set_local_var(LVAR_Science_Check, 1);
    		set_map_var(MVAR_Use_Generator, map_var(MVAR_Use_Generator) + 1);
    	end
    	else begin
-   		if (Science_Check) then begin
+   		if (local_var(LVAR_Science_Check)) then begin
    			display_msg(mstr(108));
    		end
    		else begin
@@ -92,13 +123,13 @@ procedure use_skill_on_p_proc begin
    				display_msg(mstr(110));
    			end
    		end
-   		Science_Check := 1;
+   		set_local_var(LVAR_Science_Check, 1);
    		set_map_var(MVAR_Use_Generator, map_var(MVAR_Use_Generator) + 1);
    	end
 	end
 	else if (action_being_used == SKILL_REPAIR) then begin
-   	if not(Broken_Gen) then begin
-   		if (Repair_Check) then begin
+   	if not(map_var(MVAR_Broken_Gen)) then begin
+   		if (local_var(LVAR_Repair_Check)) then begin
    			display_msg(mstr(111));
    		end
    		if (is_success(roll_vs_skill(dude_obj, SKILL_REPAIR, 0))) then begin
@@ -107,11 +138,11 @@ procedure use_skill_on_p_proc begin
    		else begin
    			display_msg(mstr(113));
    		end
-   		Science_Check := 1;
+   		set_local_var(LVAR_Repair_Check, 1);
    		set_map_var(MVAR_Use_Generator, map_var(MVAR_Use_Generator) + 1);
    	end
    	else begin
-   		if (Repair_Check) then begin
+   		if (local_var(LVAR_Repair_Check)) then begin
    			display_msg(mstr(114));
    		end
    		else begin
@@ -123,7 +154,7 @@ procedure use_skill_on_p_proc begin
    			end
    		end
    		add_timer_event(self_obj, game_ticks(5), 1);
-   		Science_Check := 1;
+   		set_local_var(LVAR_Repair_Check, 1);
    		set_map_var(MVAR_Use_Generator, map_var(MVAR_Use_Generator) + 1);
    	end
 	end
@@ -134,15 +165,24 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   signal_end_game;
+	//signal_end_game;
+	debug("signal_end_game");
+   if (fixed_param == 1) then begin
+      if ((anim_busy(self_obj) == false) and not(combat_is_initialized)) then begin
+         if not(map_var(MVAR_Broken_Gen)) then begin
+            reg_anim_begin();
+            reg_anim_animate_forever(self_obj, ANIM_stand);
+            reg_anim_end();
+         end
+      end
+      add_timer_event(self_obj, 1, EVENT_ANIM);
+   end
 end
 
 procedure use_p_proc begin
-	if (not(Broken_Gen)) then begin
+	if not(map_var(MVAR_Broken_Gen)) then
 		display_msg(mstr(118));
-	end
-	else begin
+	else
 		display_msg(mstr(119));
-	end
 	set_map_var(MVAR_Use_Generator, map_var(MVAR_Use_Generator) + 1);
 end

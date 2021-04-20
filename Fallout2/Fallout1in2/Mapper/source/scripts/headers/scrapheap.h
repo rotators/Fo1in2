@@ -26,15 +26,13 @@
 #define set_dude_is_fool      set_map_var(MVAR_Is_Fool, 1); \
                               set_map_var(MVAR_Is_Crypt, 0)
 #define set_dude_is_crypt     set_map_var(MVAR_Is_Crypt, 1); \
-                              set_map_var(MVAR_Is_Fool, 0);
+                              set_map_var(MVAR_Is_Fool, 0)
 
 #define dec_fools_counter     set_map_var(MVAR_Fool_Counter, map_var(MVAR_Fool_Counter) - 1)
 #define dec_crypt_counter     set_map_var(MVAR_Crypt_Counter, map_var(MVAR_Crypt_Counter) - 1)
 
 #define FOOLS_COUNTER         map_var(MVAR_Fool_Counter)
 #define CRYPT_COUNTER         map_var(MVAR_Crypt_Counter)
-
-
 
 // Gang War
 #define get_demo_gangwar_inactive   (global_var(GVAR_QUEST_DEMO_GANG_WAR) == 0)
