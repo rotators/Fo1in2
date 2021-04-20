@@ -156,7 +156,7 @@
 #define MAP_MNTCRVN4        (63)
 #define MAP_DESERT1         (64)
 #define MAP_HUBMIS0         (65)
-#define MAP_HUBMIS1         (66)
+#define MAP_HUBMIS1         (66) // UNSUED!
 #define MAP_RNDDESER        (67)
 #define MAP_RNDMOUNT        (68)
 #define MAP_RNDCITY         (69)

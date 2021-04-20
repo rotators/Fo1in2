@@ -962,7 +962,7 @@
 #define SCRIPT_PSYFIELD  (949)  //  PsyField.int    ; psycker's force field in the master's lair                        
 #define SCRIPT_KENNY     (950)  //  Kenny.int       ; They killed Kenny!
 #define SCRIPT_SUPLYGRD  (951)  //  SuplyGrd.int    ; supply guards for 1st level brotherhood                                     
-#define SCRIPT_HUBMIS1   (952)  //  HubMis1.int     ; map script for HubMis1.map
+#define SCRIPT_HUBMIS0   (952)  //  HubMis0.int     ; map script for HubMis0.map
 #define SCRIPT_GRIFFITH  (953)  //  griffith.int    ; Necropolis ghoul related to motorcycle
 #define SCRIPT_GENLOCK   (954)  //  GenLock.int     ; generic foot locker which is locked
 #define SCRIPT_REGDISK   (955)  //  RegDisk.int     ; Rugulator holodisk
