@@ -109,10 +109,8 @@ procedure slummer67;
 procedure slummerdone;
 procedure slummerend;
 procedure slummercombat;
-procedure weapon_check;
 
 variable tmp_hostile;
-variable armed;
 variable LASHERKNOWN;
 variable Only_Once := 1;
 
@@ -122,48 +120,44 @@ procedure start begin
       set_self_team(TEAM_CATHEDRAL);
       set_self_ai(AI_CHILDREN_TRUE);
    end
-   if (script_action == talk_proc) then begin//<--- talk_p_proc (Face icon), can also call "do_dialogue" or "do_dialog"
-      call talk_p_proc;
-   end
-   else begin
-      if ((script_action == look_at_proc) or (script_action == description_proc)) then begin// 21 is look_at, 3 is description (Binoculars)   //NEED TO FIX THIS, DUPLICATE DESCRIPTIONS IS BULLSHIT. --Sduibek
-         script_overrides;
-         display_msg(mstr(100));
-      end
-      else begin
-         if (script_action == destroy_proc) then begin//destroy_p_proc - Object or Critter has been killed or otherwise eradicated. Fall down go boom.
-            inc_inv_evil_crit
-         end
-         else begin
-            if (script_action == pickup_proc) then begin//<---caught stealing! (pickup_p_proc)
-               tmp_hostile := 1;
-            end
-            else begin
-               if (script_action == critter_proc) then begin//<-- critter_p_proc - (can also be "Critter_Action") - do they see you, should they wander, should they attack you, etc..
-                  if (tmp_hostile) then begin
-                     tmp_hostile := 0;
-                     attack(dude_obj);
-                  end
-               end
-            end
-         end
-      end
-   end
 end
 
+procedure look_at_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
 
+procedure description_p_proc begin
+   script_overrides;
+   display_msg(mstr(100));
+end
+
+procedure destroy_p_proc begin
+   inc_inv_evil_crit
+end
+
+procedure pickup_p_proc begin
+   tmp_hostile := 1;
+end
+
+procedure critter_p_proc begin
+   if (tmp_hostile) then begin
+      tmp_hostile := 0;
+      attack(dude_obj);
+   end
+end
 
 procedure talk_p_proc begin
    set_tma_data_generic(TMA_MSG_COC);
 
    dude_look_at_self;
    get_reaction
-   call weapon_check;
+
    start_dialog(self_obj, 4);
    gsay_start;
    if dude_wearing_coc_robe then begin
       if (local_var(4) == 0) then begin
-         if (armed == 1) then begin
+         if (dude_is_armed) then begin
             call slummer02;
          end
          else begin
@@ -180,58 +174,48 @@ procedure talk_p_proc begin
       if (global_var(GVAR_CATHEDRAL_ENEMY) == 1) then begin
          call slummer00;
       end
-      else begin
-         if (armed == 1) then begin
-            if (has_rep_champion) then begin
-               call slummer04;
-            end
-            else begin
-               if (has_rep_childkiller or (has_rep_berserker)) then begin
-                  call slummer06;
-               end
-               else begin
-                  call slummer05;
-               end
-            end
+      else if (dude_is_armed) then begin
+         if (has_rep_champion) then begin
+            call slummer04;
          end
          else begin
-            if (has_rep_champion) then begin
-               call slummer07;
+            if (has_rep_childkiller or (has_rep_berserker)) then begin
+               call slummer06;
             end
             else begin
-               if (has_rep_childkiller or (has_rep_berserker)) then begin
-                  call slummer09;
-               end
-               else begin
-                  call slummer08;
-               end
+               call slummer05;
             end
          end
+      end
+      else if (has_rep_champion) then begin
+         call slummer07;
+      end
+      else if (has_rep_childkiller or (has_rep_berserker)) then begin
+         call slummer09;
+      end
+      else begin
+         call slummer08;
       end
    end
    gsay_end;
    end_dialogue;
 end
 
-procedure social_skills
-begin
+procedure social_skills begin
    script_overrides;
    get_reaction
    call talk_p_proc;
 end
 
-procedure slummer00
-begin
+procedure slummer00 begin
    NMessage(101);
 end
 
-procedure slummer01
-begin
+procedure slummer01 begin
    NMessage(102);
 end
 
-procedure slummer02
-begin
+procedure slummer02 begin
    Reply(103);
    NOption(104, slummer10, 7);
    NOption(105, slummer11, 7);
@@ -246,8 +230,7 @@ begin
    NLowOption(110, slummer14);
 end
 
-procedure slummer03
-begin
+procedure slummer03 begin
    Reply(111);
    NOption(112, slummer03a, 7);
    NOption(113, slummer20, 7);
@@ -262,8 +245,7 @@ begin
    NLowOption(118, slummer23);
 end
 
-procedure slummer03a
-begin
+procedure slummer03a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer19;
    end
@@ -272,8 +254,7 @@ begin
    end
 end
 
-procedure slummer04
-begin
+procedure slummer04 begin
    Reply(119);
    NOption(120, slummer04a, 7);
    NOption(121, slummer20, 7);
@@ -286,8 +267,7 @@ begin
    NLowOption(126, slummer28);
 end
 
-procedure slummer04a
-begin
+procedure slummer04a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 20))) then begin
       call slummer25;
    end
@@ -296,8 +276,7 @@ begin
    end
 end
 
-procedure slummer05
-begin
+procedure slummer05 begin
    Reply(127);
    NOption(128, slummer29, 7);
    NOption(129, slummer30, 4);
@@ -308,8 +287,7 @@ begin
    NLowOption(132, slummer28);
 end
 
-procedure slummer06
-begin
+procedure slummer06 begin
    Reply(133);
    NOption(134, slummer29, 7);
    NOption(135, slummer32, 4);
@@ -324,8 +302,7 @@ begin
    NLowOption(140, slummer28);
 end
 
-procedure slummer07
-begin
+procedure slummer07 begin
    Reply(141);
    NOption(142, slummer07a, 7);
    NOption(143, slummer20, 7);
@@ -337,8 +314,7 @@ begin
    NLowOption(147, slummer35);
 end
 
-procedure slummer07a
-begin
+procedure slummer07a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer29;
    end
@@ -347,8 +323,7 @@ begin
    end
 end
 
-procedure slummer08
-begin
+procedure slummer08 begin
    Reply(148);
    NOption(149, slummer07a, 7);
    NOption(150, slummer20, 7);
@@ -361,13 +336,11 @@ begin
    NLowOption(155, slummer35);
 end
 
-procedure slummer09
-begin
+procedure slummer09 begin
    NMessage(156);
 end
 
-procedure slummer10
-begin
+procedure slummer10 begin
    Reply(157);
    NOption(158, slummer10a, 7);
    NOption(159, slummer20, 7);
@@ -378,8 +351,7 @@ begin
    end
 end
 
-procedure slummer10a
-begin
+procedure slummer10a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer38;
    end
@@ -388,18 +360,15 @@ begin
    end
 end
 
-procedure slummer11
-begin
+procedure slummer11 begin
    LASHERKNOWN := 1;
    NMessage(163);
 end
 
-procedure slummer12
-begin
+procedure slummer12 begin
 end
 
-procedure slummer13
-begin
+procedure slummer13 begin
    Reply(165);
    NOption(166, slummer13a, 7);
    NOption(167, slummer13b, 7);
@@ -410,8 +379,7 @@ begin
    end
 end
 
-procedure slummer13a
-begin
+procedure slummer13a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
       call slummer42;
    end
@@ -420,8 +388,7 @@ begin
    end
 end
 
-procedure slummer13b
-begin
+procedure slummer13b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -20))) then begin
       call slummer39;
    end
@@ -430,8 +397,7 @@ begin
    end
 end
 
-procedure slummer13c
-begin
+procedure slummer13c begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer14;
    end
@@ -440,18 +406,15 @@ begin
    end
 end
 
-procedure slummer14
-begin
+procedure slummer14 begin
    NMessage(171);
 end
 
-procedure slummer15
-begin
+procedure slummer15 begin
    NMessage(172);
 end
 
-procedure slummer16
-begin
+procedure slummer16 begin
    Reply(173);
    NOption(174, slummer44, 7);
    NOption(175, slummer45, 4);
@@ -460,16 +423,14 @@ begin
    end
 end
 
-procedure slummer17
-begin
+procedure slummer17 begin
    Reply(177);
    NOption(178, slummer17a, 7);
    NOption(179, slummerend, 4);
    NOption(180, slummercombat, 4);
 end
 
-procedure slummer17a
-begin
+procedure slummer17a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, -30))) then begin
       call slummer46;
    end
@@ -478,13 +439,11 @@ begin
    end
 end
 
-procedure slummer18
-begin
+procedure slummer18 begin
    NMessage(181);
 end
 
-procedure slummer19
-begin
+procedure slummer19 begin
    Reply(182);
    NOption(183, slummer19a, 7);
    NOption(184, slummer47, 7);
@@ -494,13 +453,11 @@ begin
    end
 end
 
-procedure slummer19a
-begin
+procedure slummer19a begin
    call slummer49;
 end
 
-procedure slummer20
-begin
+procedure slummer20 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(187);
    NOption(188, slummer47, 7);
@@ -510,8 +467,7 @@ begin
    end
 end
 
-procedure slummer21
-begin
+procedure slummer21 begin
    Reply(191);
    NOption(192, slummer21a, 7);
    NOption(193, slummer11, 7);
@@ -525,8 +481,7 @@ begin
    end
 end
 
-procedure slummer21a
-begin
+procedure slummer21a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer25;
    end
@@ -535,8 +490,7 @@ begin
    end
 end
 
-procedure slummer22
-begin
+procedure slummer22 begin
    LASHERKNOWN := 1;
    Reply(198);
    NOption(199, slummer50, 7);
@@ -551,19 +505,16 @@ begin
    end
 end
 
-procedure slummer23
-begin
+procedure slummer23 begin
    NMessage(205);
 end
 
-procedure slummer24
-begin
+procedure slummer24 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    NMessage(206);
 end
 
-procedure slummer25
-begin
+procedure slummer25 begin
    Reply(207);
    NOption(208, slummer25a, 7);
    NOption(209, slummer52, 7);
@@ -577,8 +528,7 @@ begin
    end
 end
 
-procedure slummer25a
-begin
+procedure slummer25a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer51;
    end
@@ -587,8 +537,7 @@ begin
    end
 end
 
-procedure slummer26
-begin
+procedure slummer26 begin
    Reply(214);
    NOption(215, slummer26a, 7);
    NOption(216, slummer33, 7);
@@ -599,8 +548,7 @@ begin
    end
 end
 
-procedure slummer26a
-begin
+procedure slummer26a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer51;
    end
@@ -609,8 +557,7 @@ begin
    end
 end
 
-procedure slummer27
-begin
+procedure slummer27 begin
    Reply(220);
    NOption(221, slummer56, 7);
    NOption(222, slummer44, 4);
@@ -621,15 +568,13 @@ begin
    end
 end
 
-procedure slummer28
-begin
+procedure slummer28 begin
    Reply(226);
    NLowOption(227, slummer44);
    NLowOption(228, slummer49);
 end
 
-procedure slummer29
-begin
+procedure slummer29 begin
    Reply(229);
    NOption(230, slummer58, 7);
 
@@ -643,13 +588,11 @@ begin
    end
 end
 
-procedure slummer30
-begin
+procedure slummer30 begin
    NMessage(235);
 end
 
-procedure slummer31
-begin
+procedure slummer31 begin
    Reply(236);
    NOption(237, slummer52, 7);
    NOption(238, slummer44, 7);
@@ -660,15 +603,13 @@ begin
    end
 end
 
-procedure slummer32
-begin
+procedure slummer32 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    LASHERKNOWN := 1;
    NMessage(242);
 end
 
-procedure slummer33
-begin
+procedure slummer33 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    Reply(243);
    NOption(244, slummer47, 7);
@@ -676,8 +617,7 @@ begin
    NOption(246, slummer45, 4);
 end
 
-procedure slummer34
-begin
+procedure slummer34 begin
    Reply(247);
    NOption(248, slummer43, 7);
    NOption(249, slummer60, 4);
@@ -685,13 +625,11 @@ begin
    NOption(251, slummercombat, 4);
 end
 
-procedure slummer35
-begin
+procedure slummer35 begin
    NMessage(252);
 end
 
-procedure slummer36
-begin
+procedure slummer36 begin
    Reply(253);
    NOption(254, slummer18, 4);
    if dude_wearing_coc_robe then begin
@@ -707,8 +645,7 @@ begin
    end
 end
 
-procedure slummer36a
-begin
+procedure slummer36a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer29;
    end
@@ -717,8 +654,7 @@ begin
    end
 end
 
-procedure slummer36b
-begin
+procedure slummer36b begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer26;
    end
@@ -727,13 +663,11 @@ begin
    end
 end
 
-procedure slummer37
-begin
+procedure slummer37 begin
    NMessage(260);
 end
 
-procedure slummer38a
-begin
+procedure slummer38a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer52;
    end
@@ -742,8 +676,7 @@ begin
    end
 end
 
-procedure slummer38
-begin
+procedure slummer38 begin
    Reply(261);
    NOption(262, slummer38a, 7);
    NOption(263, slummer01, 4);
@@ -758,19 +691,16 @@ begin
    NMessage(266);
 end
 
-procedure slummer40
-begin
+procedure slummer40 begin
    NMessage(267);
 end
 
-procedure slummer41
-begin
+procedure slummer41 begin
    set_global_var(GVAR_MORPHEUS_KNOWN, 1);
    NMessage(268);
 end
 
-procedure slummer42
-begin
+procedure slummer42 begin
    Reply(269);
    NOption(270, slummer44, 4);
    NOption(271, slummer50, 4);
@@ -780,24 +710,20 @@ begin
    NLowOption(273, slummer48);
 end
 
-procedure slummer43
-begin
+procedure slummer43 begin
    BMessage(274);
    call slummercombat;
 end
 
-procedure slummer44
-begin
+procedure slummer44 begin
    NMessage(275);
 end
 
-procedure slummer45
-begin
+procedure slummer45 begin
    NMessage(276);
 end
 
-procedure slummer46
-begin
+procedure slummer46 begin
    Reply(277);
    NOption(278, slummer61, 7);
    NOption(279, slummer41, 4);
@@ -808,28 +734,23 @@ begin
    end
 end
 
-procedure slummer47
-begin
+procedure slummer47 begin
    NMessage(283);
 end
 
-procedure slummer48
-begin
+procedure slummer48 begin
    NMessage(284);
 end
 
-procedure slummer49
-begin
+procedure slummer49 begin
    NMessage(285);
 end
 
-procedure slummer50
-begin
+procedure slummer50 begin
    NMessage(286);
 end
 
-procedure slummer51
-begin
+procedure slummer51 begin
    Reply(287);
    NOption(288, slummer51a, 7);
    NOption(289, slummer63, 7);
@@ -840,8 +761,7 @@ begin
    end
 end
 
-procedure slummer51a
-begin
+procedure slummer51a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer62;
    end
@@ -850,8 +770,7 @@ begin
    end
 end
 
-procedure slummer52
-begin
+procedure slummer52 begin
    Reply(293);
    NOption(294, slummer52a, 7);
    NOption(295, slummer53, 7);
@@ -862,8 +781,7 @@ begin
    end
 end
 
-procedure slummer52a
-begin
+procedure slummer52a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer65;
    end
@@ -878,8 +796,7 @@ begin
    NMessage(299);
 end
 
-procedure slummer54
-begin
+procedure slummer54 begin
    Reply(300);
    NOption(301, slummer54a, 7);
    NOption(302, slummer44, 4);
@@ -892,8 +809,7 @@ begin
    end
 end
 
-procedure slummer54a
-begin
+procedure slummer54a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer51;
    end
@@ -902,8 +818,7 @@ begin
    end
 end
 
-procedure slummer55
-begin
+procedure slummer55 begin
    Reply(306);
    NOption(307, slummer66, 7);
    NOption(308, slummer66, 7);
@@ -917,8 +832,7 @@ begin
    end
 end
 
-procedure slummer56
-begin
+procedure slummer56 begin
    Reply(313);
    NOption(314, slummer33, 7);
    NOption(315, slummer54, 7);
@@ -932,23 +846,19 @@ begin
    end
 end
 
-procedure slummer57
-begin
+procedure slummer57 begin
    NMessage(320);
 end
 
-procedure slummer58
-begin
+procedure slummer58 begin
    NMessage(321);
 end
 
-procedure slummer59
-begin
+procedure slummer59 begin
    NMessage(322);
 end
 
-procedure slummer60
-begin
+procedure slummer60 begin
    Reply(323);
    NOption(324, slummerdone, 4);
    NOption(325, slummer40, 4);
@@ -960,8 +870,7 @@ begin
    NMessage(327);
 end
 
-procedure slummer62
-begin
+procedure slummer62 begin
    Reply(328);
    NOption(329, slummer58, 7);
    NOption(330, slummer59, 7);
@@ -972,8 +881,7 @@ begin
    end
 end
 
-procedure slummer63
-begin
+procedure slummer63 begin
    Reply(334);
    NOption(335, slummer67, 7);
    NOption(336, slummer41, 4);
@@ -986,13 +894,11 @@ begin
    end
 end
 
-procedure slummer64
-begin
+procedure slummer64 begin
    NMessage(340);
 end
 
-procedure slummer65
-begin
+procedure slummer65 begin
    Reply(341);
    NOption(342, slummer65a, 7);
    NOption(343, slummer41, 4);
@@ -1005,8 +911,7 @@ begin
    end
 end
 
-procedure slummer65a
-begin
+procedure slummer65a begin
    if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
       call slummer49;
    end
@@ -1015,38 +920,22 @@ begin
    end
 end
 
-procedure slummer66
-begin
+procedure slummer66 begin
    NMessage(347);
 end
 
-procedure slummer67
-begin
+procedure slummer67 begin
    NMessage(348);
 end
 
-procedure slummerdone
-begin
+procedure slummerdone begin
    NOption(349, slummerend, 1);
 end
 
-procedure slummerend
-begin
+procedure slummerend begin
 end
 
-procedure slummercombat
-begin
+procedure slummercombat begin
    set_global_var(GVAR_CATHEDRAL_ENEMY, 1);
    tmp_hostile := 1;
-end
-
-procedure weapon_check
-begin
-
-   if (dude_is_armed) then begin
-      armed := 1;
-   end
-   else begin
-      armed := 0;
-   end
 end

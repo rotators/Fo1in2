@@ -542,6 +542,10 @@
 #define REP_BONUS_BLOWN_UP_MASTER               (-100)
 #define inc_cathedral_rep(x)                    inc_global_var_amt(GVAR_TOWN_REP_CATHEDRAL, x)
 
+// Scrapheap
+#define REP_BONUS_GENERATOR_BROKEN              (-30)
+#define REP_BONUS_DEFEATED_GANGS                (30)
+#define inc_scrapheap_rep(x)                    inc_global_var_amt(GVAR_TOWN_REP_SCRAPHEAP, x)
 
 /**************************************************************************
  Fallout 2 reputation values to compare to
