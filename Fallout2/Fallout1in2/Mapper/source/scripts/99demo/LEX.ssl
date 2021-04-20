@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 #include "scrapheap.h"
+#include "maps/junkdemo.h"
 
 #define NAME                    SCRIPT_LEX
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
@@ -50,17 +51,12 @@ variable tmp_hostile;
 variable following;
 variable initial := 0;
 
-import variable know_crypts;
-import variable know_fools;
-import variable know_power;
-import variable is_crypt;
-import variable is_fool;
 import variable broken_gen;
 
 procedure start begin
 	if not(initial) then begin
 		initial := 1;
-      set_self_team(TEAM_4);
+      set_self_team(TEAM_DEMO_PEASANT);
 	end
 end
 
@@ -105,23 +101,19 @@ procedure talk_p_proc begin
 	if (not(known)) then begin
 		call Lex00;
 	end
+	else if (broken_gen) then begin
+		call Lex09;
+	end
+	else if get_demo_gangwar_active then begin
+		call Lex12;
+	end
 	else begin
-		/*if (broken_gen) then begin
-			call Lex09;
+		if (DUDE_IS_FOOL or DUDE_IS_CRYPT) then begin
+			call Lex14;
 		end
 		else begin
-			if get_demo_gangwar_active then begin
-				call Lex12;
-			end
-			else begin
-				if (is_fool or is_crypt) then begin
-					call Lex14;
-				end
-				else begin
-					call Lex17;
-				end
-			end
-		end*/
+			call Lex17;
+		end
 	end
 	gsay_end;
 	end_dialogue;
@@ -135,263 +127,154 @@ procedure Lex00 begin
 end
 
 procedure Lex01 begin
-	know_crypts := 1;
+	set_knows_crypts;
 	Reply(107);
-	if (dude_iq >= 4) then begin
-		NOption(108, Lex02, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(109, LexEnd, 4);
-	end
+	NOption(108, Lex02, 4);
+	NOption(109, LexEnd, 4);
 end
 
 procedure Lex02 begin
 	Reply(110);
-	if (dude_iq >= 4) then begin
-		NOption(111, Lex03, 4);
-	end
-	NOption("", Lex03, 4);
+	NOption(111, Lex03, 4);
 end
 
 procedure Lex03 begin
-	set_global_var(GVAR_GANG_2_GVAR, 1);
-	know_fools := 1;
+   // GVAR not used anywhere else
+	//set_global_var(GVAR_GANG_2_GVAR, 1);
+	set_knows_fools;
 	Reply(112);
-	if (dude_iq >= 4) then begin
-		NOption(113, Lex04, 4);
-	end
-	NOption("", Lex04, 4);
+	NOption(113, Lex04, 4);
 end
 
 procedure Lex04 begin
 	Reply(114);
-	if (dude_iq >= 4) then begin
-		NOption(115, Lex05, 4);
-	end
-	NOption("", Lex05, 4);
+	NOption(115, Lex05, 4);
 end
 
 procedure Lex05 begin
 	Reply(116);
-	if (dude_iq >= 4) then begin
-		NOption(117, Lex06, 4);
-	end
-	NOption("", Lex06, 4);
+	NOption(117, Lex06, 4);
 end
 
 procedure Lex06 begin
 	Reply(118);
-	if (dude_iq >= 4) then begin
-		NOption(119, LexEnd, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(120, Lex17, 4);
-	end
+	NOption(119, LexEnd, 4);
+	NOption(120, Lex17, 4);
 end
 
 procedure Lex07 begin
 	Reply(121);
-	if (dude_iq >= 4) then begin
-		NOption(122, Lex08, 4);
-	end
-	NOption("", Lex08, 4);
+	NOption(122, Lex08, 4);
 end
 
 procedure Lex08 begin
 	Reply(123);
-	if (dude_iq >= 4) then begin
-		NOption(124, LexEnd, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(120, Lex17, 4);
-	end
+	NOption(124, LexEnd, 4);
+	NOption(120, Lex17, 4);
 end
 
 procedure Lex09 begin
-	set_global_var(GVAR_ANIMAL_FRIEND_RADSCORPS, 1);
+	set_global_var(GVAR_QUEST_DEMO_FIX_POWER, 1);
 	Reply(125);
-	if (dude_iq >= 4) then begin
-		NOption(126, Lex10, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(127, Lex11, 4);
-	end
+	NOption(126, Lex10, 4);
+	NOption(127, Lex11, 4);
 end
 
 procedure Lex10 begin
 	Reply(128);
-	if (dude_iq >= 0) then begin
-		NOption(103, LexEnd, 4);
-	end
-	NOption("", LexEnd, 4);
+	NOption(103, LexEnd, 1);
 end
 
 procedure Lex11 begin
 	Reply(129);
-	if (dude_iq >= 0) then begin
-		NOption(103, LexEnd, 4);
-	end
-	NOption("", LexEnd, 4);
+	NOption(103, LexEnd, 1);
 end
 
 procedure Lex12 begin
 	Reply(130);
-	if (dude_iq >= 4) then begin
-		NOption(131, Lex13, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(132, LexEnd, 4);
-	end
+	NOption(131, Lex13, 4);
+	NOption(132, LexEnd, 4);
 end
 
 procedure Lex13 begin
 	Reply(133);
-	if (dude_iq >= 4) then begin
-		NOption(134, LexJoins, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(135, LexEnd, 4);
-	end
+	NOption(134, LexJoins, 4);
+	NOption(135, LexEnd, 4);
 end
 
 procedure Lex14 begin
 	Reply(136);
-	if (dude_iq >= 4) then begin
-		NOption(137, Lex15, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(138, Lex16, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(139, LexEnd, 4);
-	end
+	NOption(137, Lex15, 4);
+	NOption(138, Lex16, 4);
+	NOption(139, LexEnd, 4);
 end
 
 procedure Lex15 begin
-	Reply(140);
-	NOption("", LexEnd, 4);
-	NOption(" ", LexEnd, 4);
+	NMessage(140);
 	call LexCombat;
 end
 
 procedure Lex16 begin
 	Reply(141);
-	if (dude_iq >= 4) then begin
-		NOption(142, LexEnd, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(120, Lex17, 4);
-	end
+	NOption(142, LexEnd, 4);
+	NOption(120, Lex17, 4);
 end
 
 procedure Lex17 begin
 	Reply(143);
-	if (know_power) then begin
-		if (dude_iq >= 4) then begin
-			NOption(144, Lex19, 4);
-		end
-	end
-	if (know_crypts) then begin
-		if (dude_iq >= 4) then begin
-			NOption(145, Lex20, 4);
-		end
-	end
-	if (know_fools) then begin
-		if (dude_iq >= 4) then begin
-			NOption(146, Lex21, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(147, Lex18, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(148, LexEnd, 4);
-	end
+	if KNOWS_POWER then
+      NOption(144, Lex19, 4);
+	if KNOWS_CRYPTS then
+      NOption(145, Lex20, 4);
+	if KNOWS_FOOLS then
+      NOption(146, Lex21, 4);
+	NOption(147, Lex18, 4);
+	NOption(148, LexEnd, 4);
 end
 
 procedure Lex18 begin
 	Reply(149);
-	if (know_power) then begin
-		if (dude_iq >= 4) then begin
-			NOption(144, Lex19, 4);
-		end
-	end
-	if (know_crypts) then begin
-		if (dude_iq >= 4) then begin
-			NOption(145, Lex20, 4);
-		end
-	end
-	if (know_fools) then begin
-		if (dude_iq >= 4) then begin
-			NOption(146, Lex21, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(148, LexEnd, 4);
-	end
+	if KNOWS_POWER then
+		NOption(144, Lex19, 4);
+	if KNOWS_CRYPTS then
+		NOption(145, Lex20, 4);
+	if KNOWS_FOOLS then
+		NOption(146, Lex21, 4);
+	NOption(148, LexEnd, 4);
 end
 
 procedure Lex19 begin
-	set_global_var(GVAR_KILLIAN_WARES_MERGED, 1);
-	set_global_var(GVAR_GANG_2_GVAR, 1);
+   // GVARs that are nowhere else used
+	//set_global_var(GVAR_KILLIAN_WARES_MERGED, 1);
+	//set_global_var(GVAR_GANG_2_GVAR, 1);
 	Reply(150);
-	if (know_crypts) then begin
-		if (dude_iq >= 4) then begin
-			NOption(145, Lex20, 4);
-		end
-	end
-	if (know_fools) then begin
-		if (dude_iq >= 4) then begin
-			NOption(146, Lex21, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(147, Lex18, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(148, LexEnd, 4);
-	end
+	if KNOWS_CRYPTS then
+		NOption(145, Lex20, 4);
+	if KNOWS_FOOLS then
+		NOption(146, Lex21, 4);
+	NOption(147, Lex18, 4);
+	NOption(148, LexEnd, 4);
 end
 
 procedure Lex20 begin
 	Reply(151);
-	if (know_power) then begin
-		if (dude_iq >= 4) then begin
-			NOption(144, Lex19, 4);
-		end
-	end
-	if (know_fools) then begin
-		if (dude_iq >= 4) then begin
-			NOption(146, Lex21, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(147, Lex18, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(148, LexEnd, 4);
-	end
+	if KNOWS_POWER then
+		NOption(144, Lex19, 4);
+	if KNOWS_FOOLS then
+		NOption(146, Lex21, 4);
+	NOption(147, Lex18, 4);
+	NOption(148, LexEnd, 4);
 end
 
 procedure Lex21 begin
-	know_power := 1;
+	set_knows_power;
 	Reply(152);
-	if (know_power) then begin
-		if (dude_iq >= 4) then begin
-			NOption(144, Lex19, 4);
-		end
-	end
-	if (know_crypts) then begin
-		if (dude_iq >= 4) then begin
-			NOption(145, Lex20, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(147, Lex18, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(148, LexEnd, 4);
-	end
+	if KNOWS_POWER then
+		NOption(144, Lex19, 4);
+	if KNOWS_CRYPTS then
+		NOption(145, Lex20, 4);
+	NOption(147, Lex18, 4);
+	NOption(148, LexEnd, 4);
 end
 
 procedure LexEnd begin

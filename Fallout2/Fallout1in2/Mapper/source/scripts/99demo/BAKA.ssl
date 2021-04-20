@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 #include "scrapheap.h"
+#include "maps/junkdemo.h"
 
 #define NAME                    SCRIPT_BAKA
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
@@ -64,7 +65,6 @@ procedure baka26a;
 procedure bakacombat;
 procedure bakadone;
 procedure bakaend;
-procedure Start_War;
 
 variable HEREBEFORE;
 variable Only_Once := 1;
@@ -72,34 +72,19 @@ variable visit;
 variable tmp_hostile;
 
 import variable Scouted_Crypts;
-import variable is_crypt;
-import variable is_fool;
 import variable broken_gen;
 import variable skippy_talk;
-import variable know_power;
-import variable know_fools;
-import variable know_crypts;
-import variable Crypt_Pointer;
-import variable Fool_Pointer;
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
-
-variable I_Am_A_Fool;
-variable I_Am_A_Crypt;
-
-import variable Fool_Taunt;
-import variable Crypt_Taunt;
-import variable Fool_Counter;
-import variable Crypt_Counter;
 
 variable This_Once;
 
 procedure start begin
-	if (is_fool) then begin
+	if DUDE_IS_FOOL then begin
       set_self_team(TEAM_PLAYER);
 	end
 	else begin
-      set_self_team(TEAM_SHADY_SANDS);
+      set_self_team(TEAM_DEMO_FOOLS);
 	end
 	if Only_Once then begin
 		Only_Once := 0;
@@ -110,22 +95,18 @@ end
 
 procedure look_at_p_proc begin
 	script_overrides;
-	if (know_fools == 1) then begin
+	if KNOWS_FOOLS then
 		display_msg(mstr(100));
-	end
-	else begin
+	else
 		display_msg(mstr(101));
-	end
 end
 
 procedure description_p_proc begin
 	script_overrides;
-	if (know_fools == 1) then begin
+	if KNOWS_FOOLS then
 		display_msg(mstr(100));
-	end
-	else begin
+	else
 		display_msg(mstr(101));
-	end
 end
 
 procedure pickup_p_proc begin
@@ -136,15 +117,13 @@ procedure timed_event_p_proc begin
 	if (fixed_param == 1) then begin
 		call Start_War;
 	end
-	else begin
-		if (self_can_see_dude) then begin
-			tmp_hostile := 1;
-		end
+	else if (self_can_see_dude) then begin
+		tmp_hostile := 1;
 	end
 end
 
 procedure talk_p_proc begin
-	if (Crypt_Counter == 0) then begin
+	if (CRYPT_COUNTER == 0) then begin
 		float_msg(self_obj, mstr(172), FLOAT_MSG_NORMAL);
 		signal_end_game;
 	end
@@ -152,11 +131,11 @@ procedure talk_p_proc begin
    	dude_look_at_self;
    	start_gdialog(414, self_obj, 4, -1, -1);
    	gsay_start;
-   	if (is_crypt == 1) then begin
+   	if DUDE_IS_CRYPT then begin
    		call baka00;
    	end
    	else begin
-   		if (is_fool == 1) then begin
+   		if DUDE_IS_FOOL then begin
    			if (visit == 0) then begin
    				call baka22;
    			end
@@ -178,22 +157,14 @@ procedure talk_p_proc begin
    end
 end
 
-procedure baka00
-begin
+procedure baka00 begin
 	Reply(102);
-	if (dude_iq >= 4) then begin
-		NOption(103, baka00a, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(104, baka03, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(105, baka00b, 4);
-	end
+	NOption(103, baka00a, 4);
+	NOption(104, baka03, 4);
+	NOption(105, baka00b, 4);
 end
 
-procedure baka00a
-begin
+procedure baka00a begin
 	if (is_success(roll_vs_skill(dude_obj, SKILL_SPEECH, 0))) then begin
 		call baka02;
 	end
@@ -202,357 +173,229 @@ begin
 	end
 end
 
-procedure baka00b
-begin
+procedure baka00b begin
 	add_timer_event(self_obj, game_ticks(20), 2);
 end
 
-procedure baka01
-begin
+procedure baka01 begin
 	Reply(106);
 	NOption(164, baka01_1, 4);
-	NOption("", bakadone, 4);
 end
 
-procedure baka01_1
-begin
-	sayMessage(0, mstr(174));
-	NOption("", bakadone, 4);
+procedure baka01_1 begin
+   NMessage(174);
 	call bakacombat;
 end
 
-procedure baka02
-begin
+procedure baka02 begin
 	Reply(107);
 	NOption(164, baka02a, 4);
-	NOption("", bakadone, 4);
 end
 
-procedure baka02a
-begin
+procedure baka02a begin
 	Reply(172);
-	is_fool := 1;
-	is_crypt := 0;
+	set_dude_is_fool;
 	call bakadone;
-	NOption("", bakadone, 4);
 end
 
-procedure baka03
-begin
+procedure baka03 begin
 	Reply(108);
-	if (dude_iq >= 4) then begin
-		NOption(109, bakacombat, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(110, baka05, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(111, baka04, 4);
-	end
-	if (dude_iq >= 0) then begin
-		NOption("", bakaend, 4);
-	end
+	NOption(109, bakacombat, 4);
+	NOption(110, baka05, 4);
+	NOption(111, baka04, 4);
 end
 
-procedure baka04
-begin
+procedure baka04 begin
 	Reply(112);
-	if (dude_iq >= 0) then begin
-		NOption(163, bakacombat, 4);
-	end
-	if (dude_iq >= 0) then begin
-		NOption("", bakacombat, 4);
-	end
+	NOption(163, bakacombat, 1);
 end
 
-procedure baka05
-begin
+procedure baka05 begin
 	Reply(113);
-	if (dude_iq >= 0) then begin
-		NOption(163, bakacombat, 4);
-	end
-	if (dude_iq >= 0) then begin
-		NOption("", bakacombat, 4);
-	end
+	NOption(163, bakacombat, 1);
 end
 
-procedure baka06
-begin
-	know_fools := 1;
+procedure baka06 begin
+	set_knows_fools;
 	Reply(114);
-	if (dude_iq >= 4) then begin
-		NOption(115, baka07, 4);
-	end
-	if (know_crypts == 1) then begin
-		if (dude_iq >= 4) then begin
-			NOption(116, baka08, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(117, baka09, 4);
-	end
+	NOption(115, baka07, 4);
+   if KNOWS_CRYPTS then
+		NOption(116, baka08, 4);
+	NOption(117, baka09, 4);
 end
 
-procedure baka07
-begin
+procedure baka07 begin
 	Reply(118);
 	NOption(164, baka07a, 4);
 	NOption(171, bakaend, 4);
-	NOption("", baka07a, 4);
 end
 
-procedure baka07a
-begin
+procedure baka07a begin
 	Reply(172);
-	if (dude_iq >= 4) then begin
-		NOption(119, baka08, 4);
-	end
+	NOption(119, baka08, 4);
 	NOption(171, bakaend, 4);
 end
 
-procedure baka08
-begin
+procedure baka08 begin
 	Reply(120);
 	NOption(164, baka08_1, 4);
-	NOption("", bakadone, 4);
 end
 
-procedure baka08_1
-begin
+procedure baka08_1 begin
 	Reply(175);
-	is_fool := 1;
+	set_dude_is_fool;
 	call bakadone;
-	NOption("", bakadone, 4);
 end
 
-procedure baka09
-begin
+procedure baka09 begin
 	Reply(121);
-	if (dude_iq >= 4) then begin
-		NOption(122, baka10, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(123, baka11, 4);
-	end
+	NOption(122, baka10, 4);
+	NOption(123, baka11, 4);
 end
 
-procedure baka10
-begin
+procedure baka10 begin
 	Reply(124);
 	call bakadone;
 	call bakacombat;
 end
 
-procedure baka11
-begin
+procedure baka11 begin
 	Reply(125);
 	call bakadone;
 end
 
-procedure baka12
-begin
+procedure baka12 begin
 	Reply(126);
-	if (dude_iq >= 4) then begin
-		NOption(127, baka13, 4);
-	end
-	if (know_power == 1) then begin
-		if (dude_iq >= 4) then begin
-			NOption(128, baka17, 4);
-		end
-	end
-	if (dude_iq >= 4) then begin
-		NOption(168, bakaend, 4);
-	end
-	NOption("", bakaend, 4);
+	NOption(127, baka13, 4);
+	if KNOWS_POWER then
+		NOption(128, baka17, 4);
+	NOption(168, bakaend, 4);
 end
 
-procedure baka13
-begin
+procedure baka13 begin
 	Reply(129);
-	if (dude_iq >= 4) then begin
-		NOption(130, baka14, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(131, baka15, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(132, baka16, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(170, bakaend, 4);
-	end
+	NOption(130, baka14, 4);
+	NOption(131, baka15, 4);
+	NOption(132, baka16, 4);
+	NOption(170, bakaend, 4);
 end
 
-procedure baka14
-begin
+procedure baka14 begin
 	Reply(133);
-	is_fool := 1;
+	set_dude_is_fool;
 	call bakadone;
 end
 
-procedure baka15
-begin
-	sayMessage(0, mstr(134));
+procedure baka15 begin
+	NMessage(134);
 	call bakacombat;
 end
 
-procedure baka16
-begin
+procedure baka16 begin
 	Reply(135);
 	skippy_talk := 1;
 	call bakadone;
 end
 
-procedure baka17
-begin
+procedure baka17 begin
 	Reply(136);
 	NOption(164, baka17a, 4);
-	NOption("", baka17a, 4);
 end
 
-procedure baka17a
-begin
+procedure baka17a begin
 	Reply(176);
-	if (dude_iq >= 4) then begin
-		NOption(137, baka18, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(138, bakaend, 4);
-	end
+	NOption(137, baka18, 4);
+	NOption(138, bakaend, 4);
 end
 
-procedure baka18
-begin
+procedure baka18 begin
 	Reply(139);
-	if (dude_iq >= 4) then begin
-		NOption(140, baka19, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(141, bakaend, 4);
-	end
+	NOption(140, baka19, 4);
+	NOption(141, bakaend, 4);
 end
 
-procedure baka19
-begin
+procedure baka19 begin
 	Reply(142);
-	if (dude_iq >= 4) then begin
-		NOption(143, baka20, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(144, baka21, 4);
-	end
+	NOption(143, baka20, 4);
+	NOption(144, baka21, 4);
 end
 
-procedure baka20
-begin
+procedure baka20 begin
 	Reply(145);
-	is_fool := 1;
+	set_dude_is_fool;
 	call bakadone;
 end
 
-procedure baka21
-begin
+procedure baka21 begin
 	Reply(146);
 	call bakadone;
 	call bakacombat;
 end
 
-procedure baka22
-begin
+procedure baka22 begin
 	visit := 1;
 	Reply(147);
-	if (dude_iq >= 4) then begin
-		NOption(148, baka23, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(149, baka24, 4);
-	end
+	NOption(148, baka23, 4);
+	NOption(149, baka24, 4);
 	if (obj_pid(dude_armor) == PID_METAL_ARMOR) then begin
-		if (dude_iq >= 4) then begin
-			NOption(150, baka29, 4);
-		end
+		NOption(150, baka29, 4);
 	end
 end
 
-procedure baka23
-begin
+procedure baka23 begin
 	Reply(151);
-	if (dude_iq >= 4) then begin
-		NOption(152, baka24, 4);
-	end
-	NOption("", bakaend, 4);
+	NOption(152, baka24, 4);
 end
 
-procedure baka24
-begin
-	know_power := 1;
+procedure baka24 begin
+	set_knows_power;
 	Reply(153);
-	if (dude_iq >= 4) then begin
-		NOption(154, baka25, 4);
-	end
-	NOption("", bakaend, 4);
+	NOption(154, baka25, 4);
 end
 
-procedure baka25
-begin
+procedure baka25 begin
 	Reply(155);
 	NOption(164, baka25_1, 4);
-	NOption("", baka25_1, 4);
 end
 
-procedure baka25_1
-begin
+procedure baka25_1 begin
 	Reply(177);
-	if (dude_iq >= 4) then begin
-		NOption(156, baka25a, 4);
-	end
-	NOption("", baka25a, 4);
+	NOption(156, baka25a, 4);
 end
 
-procedure baka25a
-begin
+procedure baka25a begin
 	Scouted_Crypts := 1;
 	set_global_var(GVAR_CSCOUT_1, 1);
 end
 
-procedure baka26
-begin
+procedure baka26 begin
 	Reply(157);
-	if (dude_iq >= 4) then begin
-		NOption(158, baka26a, 4);
-	end
-	if (dude_iq >= 4) then begin
-		NOption(159, baka27, 4);
-	end
+	NOption(158, baka26a, 4);
+	NOption(159, baka27, 4);
 end
 
-procedure baka27
-begin
+procedure baka27 begin
 	Reply(160);
 	call bakadone;
 end
 
-procedure baka28
-begin
+procedure baka28 begin
 	Reply(161);
 	set_demo_gangwar_active;
 	call bakadone;
 end
 
-procedure baka29
-begin
+procedure baka29 begin
 	Reply(162);
 	call bakadone;
 end
 
-procedure baka30
-begin
+procedure baka30 begin
 	Reply(169);
 	call bakadone;
 end
 
-procedure baka26a
-begin
+procedure baka26a begin
 	if (Scouted_Crypts == 2) then begin
 		call baka28;
 	end
@@ -561,23 +404,18 @@ begin
 	end
 end
 
-procedure bakacombat
-begin
+procedure bakacombat begin
 	tmp_hostile := 1;
 end
 
-procedure bakadone
-begin
+procedure bakadone begin
 	NOption(163, bakaend, 4);
-	NOption("", bakaend, 4);
 end
 
-procedure bakaend
-begin
+procedure bakaend begin
 end
 
-procedure critter_p_proc
-begin
+procedure critter_p_proc begin
 	variable LVar0 := 0;
 	variable LVar1 := 0;
 	LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
@@ -587,85 +425,48 @@ begin
 			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
 		end
 	end
-	else begin
-		if (I_Am_A_Crypt and Fool_Taunt) then begin
-			Fool_Taunt := 0;
-			if (random(1, 5) == 1) then begin
-				float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
-			end
-		end
-		else begin
-			if (get_demo_gangwar_active and (self_tile != 20725)) then begin
-				self_walk_to_tile(20725);
-			end
-			else begin
-				if (self_tile == 20725) then begin
-					add_timer_event(self_obj, game_ticks(2), 1);
-				end
-				else begin
-					if (broken_gen and (self_tile != 27504)) then begin
-						if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
-							This_Once := 1;
-							float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_DARK_GREY);
-						end
-						set_demo_gangwar_completed;
-						self_walk_to_tile(27504);
-					end
-					else begin
-						if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
-							if not(is_loading_game) then set_self_invisible;
-							if (I_Am_A_Fool) then begin
-								Fool_Counter := Fool_Counter - 1;
-							end
-							else begin
-								Crypt_Counter := Crypt_Counter - 1;
-							end
-						end
-						else begin
-							if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-								attack(dude_obj);
-							end
-							else begin
-								if (not(LVar0)) then begin
-									if (random(0, 21) == 1) then begin
-										LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
-										self_walk_to_tile(LVar1);
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-procedure Start_War begin
-	if (fixed_param == 1) then begin
-		set_demo_gangwar_inactive;
-		if (I_Am_A_Fool) then begin
-			Fool_Taunt := 1;
-			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 115)), FLOAT_MSG_SEQUENTIAL);
-		end
-		else begin
-			Crypt_Taunt := 1;
+	else if (I_Am_A_Crypt and Fool_Taunt) then begin
+		Fool_Taunt := 0;
+		if (random(1, 5) == 1) then begin
 			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
 		end
-		add_timer_event(self_obj, 4, 2);
+	end
+	else if (get_demo_gangwar_active and (self_tile != 20725)) then begin
+		self_walk_to_tile(20725);
+	end
+	else if (self_tile == 20725) then begin
+		add_timer_event(self_obj, game_ticks(2), 1);
+	end
+	else if (broken_gen and (self_tile != 27504)) then begin
+		if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+			This_Once := 1;
+			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_DARK_GREY);
+		end
+		set_demo_gangwar_completed;
+		self_walk_to_tile(27504);
+	end
+	else if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
+		if not(is_loading_game) then set_self_invisible;
+		if (I_Am_A_Fool) then begin
+			dec_fools_counter;
+		end
+		else begin
+			dec_crypt_counter;
+		end
 	end
 	else begin
-		if (fixed_param == 2) then begin
-			if (I_Am_A_Fool) then begin
-				attack(Crypt_Pointer);
-			end
-			else begin
-				attack(Fool_Pointer);
+		if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+			attack(dude_obj);
+		end
+		else if (not(LVar0)) then begin
+			if (random(0, 21) == 1) then begin
+				LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+				self_walk_to_tile(LVar1);
 			end
 		end
 	end
 end
 
 procedure destroy_p_proc begin
-   Fool_Counter := Fool_Counter - 1;
+   dec_fools_counter;
 end

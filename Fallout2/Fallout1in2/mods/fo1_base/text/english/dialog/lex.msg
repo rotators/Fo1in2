@@ -1,6 +1,6 @@
 {100}{}{You see Lex.}
 {101}{}{You see a loser.}
-{102}{}{[more]} 
+{102}{}{[more]}
 {103}{}{[done]}
 {104}{}{[Lex whispers.] Best be careful. Rock doesn't always tell the truth.}
 {105}{}{Why do you say that?}

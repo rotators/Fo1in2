@@ -7,6 +7,7 @@
 /* Include Files */
 #include "define.h"
 #include "scrapheap.h"
+#include "maps/junkdemo.h"
 
 #define NAME                    SCRIPT_ROCK
 #define TOWN_REP_VAR            (GVAR_TOWN_REP_SCRAPHEAP)
@@ -35,21 +36,11 @@ procedure rock11;
 procedure rockcombat;
 procedure weapon_check;
 procedure rockend;
-procedure Start_War;
 
-import variable Fool_Counter;
-import variable Crypt_Counter;
-import variable is_crypt;
-import variable is_fool;
 import variable broken_gen;
-import variable Fool_Pointer;
-import variable Crypt_Pointer;
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
-import variable Know_Crypts;
 import variable rock_invite;
-import variable Fool_Taunt;
-import variable Crypt_Taunt;
 
 variable HEREBEFORE;
 variable tmp_hostile;
@@ -57,17 +48,15 @@ variable tmp_hostile;
 variable known;
 variable one_time;
 variable init_teams := 0;
-variable I_Am_A_Crypt;
-variable I_Am_A_Fool;
 variable badguy;
 variable This_Once;
 
 procedure start begin
-	if (is_crypt) then begin
+	if DUDE_IS_CRYPT then begin
 		set_self_team(TEAM_PLAYER);
 	end
 	else begin
-		set_self_team(TEAM_VAULT13);
+		set_self_team(TEAM_DEMO_CRYPTS);
 	end
 	if (not(init_teams)) then begin
 		init_teams := 1;
@@ -111,7 +100,7 @@ procedure timed_event_p_proc begin
 end
 
 procedure destroy_p_proc begin
-   Crypt_Counter := Crypt_Counter - 1;
+   dec_crypt_counter;
 end
 
 procedure talk_p_proc begin
@@ -122,10 +111,10 @@ procedure talk_p_proc begin
 		call rock00;
 	end
 	else begin
-		if (is_crypt == 1) then begin
+		if DUDE_IS_CRYPT then begin
 			call rock06;
 		end
-		else if (is_fool == 1) then begin
+		else if DUDE_IS_FOOL then begin
 			call rock07;
 		end
 		else if (HEREBEFORE == 0) then begin
@@ -159,7 +148,7 @@ procedure rock01 begin
 end
 
 procedure rock02 begin
-	Know_Crypts := 1;
+	set_knows_crypts;
 	gsay_reply(SCRIPT_ROCK, 110);
 	if (dude_iq >= 4) then begin
 		NOption(111, rock03, 4);
@@ -220,7 +209,7 @@ procedure rock09 begin
 end
 
 procedure rock10 begin
-	Know_Crypts := 1;
+	set_knows_crypts;
 	gsay_reply(SCRIPT_ROCK, 127);
 	if (dude_iq >= 4) then begin
 		NOption(128, rockend, 4);
@@ -277,10 +266,10 @@ procedure critter_p_proc begin
 						if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
 							if not(is_loading_game) then set_self_invisible;
 							if (I_Am_A_Fool) then begin
-								Fool_Counter := Fool_Counter - 1;
+								dec_fools_counter;
 							end
 							else begin
-								Crypt_Counter := Crypt_Counter - 1;
+								dec_crypt_counter;
 							end
 						end
 						else begin
@@ -299,31 +288,6 @@ procedure critter_p_proc begin
 						end
 					end
 				end
-			end
-		end
-	end
-end
-
-procedure Start_War begin
-	if (fixed_param == 1) then begin
-		set_demo_gangwar_inactive;
-		if (I_Am_A_Fool) then begin
-			Fool_Taunt := 1;
-			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 115)), FLOAT_MSG_SEQUENTIAL);
-		end
-		else begin
-			Crypt_Taunt := 1;
-			float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
-		end
-		add_timer_event(self_obj, 4, 2);
-	end
-	else begin
-		if (fixed_param == 2) then begin
-			if (I_Am_A_Fool) then begin
-				attack(Crypt_Pointer);
-			end
-			else begin
-				attack(Fool_Pointer);
 			end
 		end
 	end

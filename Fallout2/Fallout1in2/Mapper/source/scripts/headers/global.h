@@ -4088,8 +4088,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4948)
 #define RESERVED_FOR_FALLOUT_FIXT               (4949)
 #define RESERVED_FOR_FALLOUT_FIXT               (4950)
-#define RESERVED_FOR_FALLOUT_FIXT               (4951)
-#define RESERVED_FOR_FALLOUT_FIXT               (4952)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4951)*/
+#define GVAR_QUEST_DEMO_FIX_POWER               (4952)
 #define GVAR_QUEST_DEMO_GANG_WAR                (4953)
 #define GVAR_ENABLE_SCRAPHEAP                   (4954)
 #define GVAR_ENABLE_WEAPON_UPGRADES             (4955)

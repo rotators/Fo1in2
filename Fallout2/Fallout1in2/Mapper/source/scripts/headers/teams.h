@@ -74,5 +74,8 @@
 #define TEAM_RND_MASTERS_ARMY       (93)
 #define TEAM_RND_WILD_DOG           (94)
 #define TEAM_RND_MANTIS             (95)
+#define TEAM_DEMO_FOOLS             (96)
+#define TEAM_DEMO_CRYPTS            (97)
+#define TEAM_DEMO_PEASANT           (98)
 
 #endif // TEAMS_H
