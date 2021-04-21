@@ -36,12 +36,13 @@ procedure rock11;
 procedure rockcombat;
 procedure rockend;
 
-#define LVAR_Known      (4)
+#define LVAR_Known         (4)
+#define LVAR_Float         (5)
+#define LVAR_Herebefore    (6)
 
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
 
-variable HEREBEFORE;
 variable tmp_hostile;
 
 variable one_time;
@@ -60,12 +61,7 @@ procedure start begin
       Rock_Pointer := self_obj;
       I_Am_A_Crypt := 1;
    end
-   if (one_time == 0) then begin
-      if (self_can_see_dude) then begin
-         float_msg(self_obj, mstr(106), FLOAT_MSG_RED);
-         one_time := 1;
-      end
-   end
+
 end
 
 procedure pickup_p_proc begin
@@ -114,7 +110,7 @@ procedure talk_p_proc begin
       else if DUDE_IS_FOOL then begin
          call rock07;
       end
-      else if (HEREBEFORE == 0) then begin
+      else if (local_var(LVAR_Herebefore) == 0) then begin
          call rock08;
       end
       else begin
@@ -126,95 +122,72 @@ procedure talk_p_proc begin
 end
 
 procedure rock00 begin
-   gsay_reply(SCRIPT_ROCK, 102);
-   if (dude_iq >= 4) then begin
-      NOption(103, rock01, 4);
-   end
-   if (dude_iq >= 4) then begin
-      NOption(104, rock01, 4);
-   end
-   if (dude_iq >= 4) then begin
-      NOption(105, rock02, 4);
-   end
+   Reply(102);
+   NOption(103, rock01, 4);
+   NOption(104, rock01, 4);
+   NOption(105, rock02, 4);
 end
 
 procedure rock01 begin
    set_local_var(LVAR_Known, 1);
-   gsay_reply(SCRIPT_ROCK, 108);
+   Reply(108);
    NOption(109, rockend, 4);
 end
 
 procedure rock02 begin
    set_knows_crypts;
-   gsay_reply(SCRIPT_ROCK, 110);
-   if (dude_iq >= 4) then begin
-      NOption(111, rock03, 4);
-   end
+   Reply(110);
+   NOption(111, rock03, 4);
 end
 
 procedure rock03 begin
-   gsay_reply(SCRIPT_ROCK, 112);
-   if (dude_iq >= 4) then begin
-      NOption(113, rock04, 4);
-   end
-   if (dude_iq >= 4) then begin
-      NOption(114, rock05, 4);
-   end
+   Reply(112);
+   NOption(113, rock04, 4);
+   NOption(114, rock05, 4);
 end
 
-procedure rock04
-begin
-   gsay_reply(SCRIPT_ROCK, 115);
+procedure rock04 begin
+   Reply(115);
    NOption(116, rockend, 4);
-
 end
 
 procedure rock05 begin
    set_local_var(LVAR_Known, 1);
    set_map_var(MVAR_Rock_Invite, 1);
-   gsay_reply(SCRIPT_ROCK, 117);
+   Reply(117);
    NOption(118, rockend, 4);
 end
 
 procedure rock06 begin
-   gsay_reply(SCRIPT_ROCK, 119);
+   Reply(119);
    NOption(120, rockend, 4);
-
 end
 
 procedure rock07 begin
-   gsay_reply(SCRIPT_ROCK, 121);
+   Reply(121);
    NOption(131, rockend, 4);
 end
 
 procedure rock08 begin
-   HEREBEFORE := 1;
-   gsay_reply(SCRIPT_ROCK, 122);
-   if (dude_iq >= 4) then begin
-      NOption(123, rock09, 4);
-   end
-   if (dude_iq >= 4) then begin
-      NOption(124, rock10, 4);
-   end
+   set_local_var(LVAR_Herebefore, 1);
+   Reply(122);
+   NOption(123, rock09, 4);
+   NOption(124, rock10, 4);
 end
 
 procedure rock09 begin
-   gsay_reply(SCRIPT_ROCK, 125);
-   if (dude_iq >= 4) then begin
-      NOption(126, rockend, 4);
-   end
+   Reply(125);
+   NOption(126, rockend, 4);
 end
 
 procedure rock10 begin
    set_knows_crypts;
-   gsay_reply(SCRIPT_ROCK, 127);
-   if (dude_iq >= 4) then begin
-      NOption(128, rockend, 4);
-   end
+   Reply(127);
+   NOption(128, rockend, 4);
 end
 
 procedure rock11 begin
-   gsay_reply(SCRIPT_ROCK, 129);
+   Reply(129);
    NOption(130, rockend, 4);
 end
 
@@ -226,65 +199,60 @@ procedure rockend begin
 end
 
 procedure critter_p_proc begin
-   variable LVar0 := 0;
+   variable LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
    variable LVar1 := 0;
-   LVar0 := (self_obj == Fool_Pointer) or (self_obj == Crypt_Pointer) or (self_obj == Phrax_Pointer) or (self_obj == Rock_Pointer);
+
+   if (local_var(LVAR_Float) == 0) then begin
+      if (self_can_see_dude) then begin
+         float_msg(self_obj, mstr(106), FLOAT_MSG_RED);
+         set_local_var(LVAR_Float, 1);
+      end
+   end
+
    if (I_Am_A_Fool and Crypt_Taunt) then begin
       Crypt_Taunt := 0;
       if (random(1, 5) == 1) then begin
          float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(100, 113)), FLOAT_MSG_SEQUENTIAL);
       end
    end
-   else begin
-      if (I_Am_A_Crypt and Fool_Taunt) then begin
-         Fool_Taunt := 0;
-         if (random(1, 5) == 1) then begin
-            float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
-         end
+   else if (I_Am_A_Crypt and Fool_Taunt) then begin
+      Fool_Taunt := 0;
+      if (random(1, 5) == 1) then begin
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, random(200, 218)), FLOAT_MSG_SEQUENTIAL);
+      end
+   end
+   else if (get_demo_gangwar_active and (self_tile != 20725)) then begin
+      self_walk_to_tile(20725);
+   end
+   else if (self_tile == 20725) then begin
+      add_timer_event(self_obj, game_ticks(2), 1);
+   end
+   else if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
+      if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
+         This_Once := 1;
+         float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_RED);
+      end
+      set_demo_gangwar_completed;
+      self_walk_to_tile(27504);
+   end
+   else if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
+      if not(is_loading_game) then set_self_invisible;
+      if (I_Am_A_Fool) then begin
+         dec_fools_counter;
       end
       else begin
-         if (get_demo_gangwar_active and (self_tile != 20725)) then begin
-            self_walk_to_tile(20725);
-         end
-         else begin
-            if (self_tile == 20725) then begin
-               add_timer_event(self_obj, game_ticks(2), 1);
-            end
-            else begin
-               if (map_var(MVAR_Broken_Gen) and (self_tile != 27504)) then begin
-                  if ((self_obj == Phrax_Pointer) and (This_Once == 0)) then begin
-                     This_Once := 1;
-                     float_msg(self_obj, message_str(SCRIPT_JUNKDEMO, 300), FLOAT_MSG_RED);
-                  end
-                  set_demo_gangwar_completed;
-                  self_walk_to_tile(27504);
-               end
-               else begin
-                  if ((self_tile == 27504) and get_demo_gangwar_completed) then begin
-                     if not(is_loading_game) then set_self_invisible;
-                     if (I_Am_A_Fool) then begin
-                        dec_fools_counter;
-                     end
-                     else begin
-                        dec_crypt_counter;
-                     end
-                  end
-                  else begin
-                     if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
-                        tmp_hostile := 0;
-                        attack(dude_obj);
-                     end
-                     else begin
-                        if (not(LVar0)) then begin
-                           if (random(0, 21) == 1) then begin
-                              LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
-                              self_walk_to_tile(LVar1);
-                           end
-                        end
-                     end
-                  end
-               end
-            end
+         dec_crypt_counter;
+      end
+   end
+   else begin
+      if (tmp_hostile) then begin// This must come FIRST as an if/then/else before "attack dude" type code, otherwise it runs too soon and can override other attack calls
+         tmp_hostile := 0;
+         attack(dude_obj);
+      end
+      else if (not(LVar0)) then begin
+         if (random(0, 21) == 1) then begin
+            LVar1 := tile_num_in_direction(self_tile, random(0, 5), 2);
+            self_walk_to_tile(LVar1);
          end
       end
    end

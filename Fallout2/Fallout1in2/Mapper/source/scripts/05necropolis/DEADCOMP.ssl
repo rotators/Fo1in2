@@ -5,6 +5,8 @@
 #include "command.h"
 
 procedure start;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
 procedure use_p_proc;
 procedure use_skill_on_p_proc;
 
@@ -18,8 +20,10 @@ procedure PlayGame;
 procedure PlayDemo;
 procedure CLS;
 
+#define EVENT_FLOAT     (1)
+
 variable Damage;
-variable DisplayLine;
+variable DisplayLine := 0;
 
 // local_var(4) == Comp_Fixed
 // local_var(5) == EXP_Earned
@@ -38,9 +42,34 @@ variable DisplayLine;
 procedure start begin
 end
 
+procedure map_enter_p_proc begin
+   add_timer_event(self_obj, game_ticks(6), EVENT_FLOAT);
+end
+
+procedure timed_event_p_proc begin
+   if (fixed_param == EVENT_FLOAT and fo1in2_scrapheap_enabled) then begin
+      if not(fo1_demo_completed) then begin
+         if (dude_perception >= 5) then begin
+            floater(1000 + DisplayLine);
+            DisplayLine := DisplayLine + 1;
+            if (DisplayLine > 3) then DisplayLine := 0;
+         end
+         flush_add_timer_event( self_obj, game_ticks(10), EVENT_FLOAT);
+      end
+   end
+end
+
 procedure use_p_proc begin
    script_overrides;
-   if fixt_enabled and (local_var(4) == 1) then begin
+   if (fo1in2_scrapheap_enabled) then begin
+      if fo1_demo_completed then begin
+         display_msg(mstr(100));
+      end
+      else begin
+         load_map(MAP_SCRAPHEAP, 0);
+      end
+   end
+   else if fixt_enabled and (local_var(4) == 1) then begin
       start_gdialog(62, self_obj, 4, -1, -1);
       gsay_start;
       call NecroDemoCompEgg00;

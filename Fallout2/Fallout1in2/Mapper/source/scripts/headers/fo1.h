@@ -125,6 +125,9 @@
 #define joined_bos                           (global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM) == 2)
 #define set_joined_bos                       set_global_var(GVAR_QUEST_BROHOOD_1_JOIN_THEM, 2)
 
+#define set_fo1_demo_completed   set_global_var(GVAR_QUEST_DEMO_GANG_WAR, 69)
+#define fo1_demo_completed       (global_var(GVAR_QUEST_DEMO_GANG_WAR) == 69)
+
 /*********************************************************
     TMA / Tell Me About
 *********************************************************/
