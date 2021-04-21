@@ -32,6 +32,11 @@ procedure combat;
 
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
+import variable Fridge_ptr;
+
+#define EVENT_WAR          (1)
+#define EVENT_FRIDGE       (2)
+#define EVENT_GENERATOR    (3)
 
 variable tmp_hostile;
 variable Herebefore;
@@ -76,55 +81,30 @@ procedure talk_p_proc begin
    if DUDE_IS_FOOL then begin
       call phrax06;
    end
+   else if DUDE_IS_CRYPT then begin
+      call phrax05;
+   end
+   else if (map_var(MVAR_Use_Generator)) then begin
+      call phrax04;
+   end
+   else if (map_var(MVAR_Use_Fridge) and Can_See) then begin
+      Can_See := 1;
+      start_gdialog(402, self_obj, 4, -1, -1);
+      gsay_start;
+      call phrax00;
+      gsay_end;
+      end_dialogue;
+   end
    else begin
-      if DUDE_IS_CRYPT then begin
-         call phrax05;
-      end
-      else begin
-         if (map_var(MVAR_Use_Generator)) then begin
-            call phrax04;
-         end
-         else begin
-            if (map_var(MVAR_Use_Fridge) and Can_See) then begin
-               Can_See := 1;
-               start_gdialog(402, self_obj, 4, -1, -1);
-               gsay_start;
-               call phrax00;
-               gsay_end;
-               end_dialogue;
-            end
-            else begin
-               call phrax07;
-            end
-         end
-      end
+      call phrax07;
    end
 end
 
 procedure critter_p_proc begin
    if (self_can_see_dude and not(global_var(GVAR_QUEST_DEMO_GANG_WAR))) then begin
-      if (map_var(MVAR_Use_Fridge) and (Once_Fridge == 0)) then begin
-         if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
-            Can_See := 1;
-            Once_Fridge := 1;
-            dialogue_system_enter;
-         end
-      end
-      else if (map_var(MVAR_Use_Generator) and (Once_Generator == 0)) then begin
-         if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
-            Can_See := 1;
-            Once_Generator := 1;
-            dialogue_system_enter;
-         end
-      end
-      else if (DUDE_IS_FOOL and (Once_Fool == 0)) then begin
+      if (DUDE_IS_FOOL and (Once_Fool == 0)) then begin
          Once_Fool := 1;
          dialogue_system_enter;
-      end
-      else if (map_var(MVAR_Use_Fridge > 1) or (map_var(MVAR_Use_Generator) > 1)) then begin
-         if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
-            attack(dude_obj);
-         end
       end
    end
    else begin
@@ -183,7 +163,45 @@ procedure critter_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   call Start_War;
+   if (fixed_param == EVENT_WAR) then begin
+      call Start_War;
+   end
+
+   if (/*self_can_see_dude and*/ not(global_var(GVAR_QUEST_DEMO_GANG_WAR))) then begin
+      if (fixed_param == EVENT_FRIDGE) then begin
+         if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
+            if (Once_Fridge == 0) then begin
+               if (Fridge_ptr != 0) then begin
+                  if not(obj_is_locked(Fridge_ptr)) then obj_lock(Fridge_ptr);
+               end
+               Can_See := 1;
+               Once_Fridge := 1;
+               dialogue_system_enter;
+            end
+            else if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
+               attack(dude_obj);
+            end
+         end
+         else begin
+            set_map_var(MVAR_Use_Fridge, 0);
+         end
+      end
+      else if (fixed_param == EVENT_GENERATOR) then begin
+         if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
+            if (Once_Generator == 0) then begin
+               Can_See := 1;
+               Once_Generator := 1;
+               dialogue_system_enter;
+            end
+            else if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
+               attack(dude_obj);
+            end
+         end
+         else begin
+            set_map_var(MVAR_Use_Generator, 0);
+         end
+      end
+   end
 end
 
 procedure destroy_p_proc begin

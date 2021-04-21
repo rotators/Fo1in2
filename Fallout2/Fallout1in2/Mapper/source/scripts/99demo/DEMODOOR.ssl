@@ -22,11 +22,24 @@ procedure do_skill;
 procedure see_stuff;
 procedure examine;
 
+import variable Phrax_Pointer;
+import variable Fridge_ptr;
+
+#define EVENT_RESET        (1)
+#define EVENT_FRIDGE       (2)
+
 variable unlocked;
 variable open;
 variable test;
 
 procedure start begin
+   Fridge_ptr := self_obj;
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      obj_lock(self_obj);
+   end
 end
 
 procedure description_p_proc begin
@@ -58,40 +71,35 @@ procedure use_skill_on_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   set_map_var(MVAR_Use_Fridge, 0);
+   if (fixed_param == EVENT_RESET) then begin
+      set_map_var(MVAR_Use_Fridge, 0);
+   end
 end
 
 procedure do_stuff begin
+   add_timer_event(Phrax_Pointer, 0, EVENT_FRIDGE);
    set_map_var(MVAR_Use_Fridge, 1);
-   if (unlocked == 0) then begin
+   if (obj_is_locked(self_obj)) then begin
       script_overrides;
    end
-   add_timer_event(self_obj, 5, 1);
+   add_timer_event(self_obj, 5, EVENT_RESET);
 end
 
 procedure do_use_stuff begin
-   if (unlocked != 0) then begin
-      if (open) then begin
-         open := 0;
-      end
-      else begin
-         set_map_var(MVAR_Use_Fridge, map_var(MVAR_Use_Fridge) + 1);
-         open := 1;
-      end
-   end
-   else begin
+   if obj_is_locked(self_obj) then begin
       script_overrides;
       display_msg(mstr(105));
    end
+   add_timer_event(Phrax_Pointer, 0, EVENT_FRIDGE);
+   set_map_var(MVAR_Use_Fridge, map_var(MVAR_Use_Fridge) + 1);
 end
 
 procedure do_skill begin
-   set_map_var(MVAR_Use_Fridge, map_var(MVAR_Use_Fridge) + 1);
-   if (unlocked == 0) then begin
+   if (obj_is_locked(self_obj)) then begin
       test := roll_vs_skill(dude_obj, SKILL_LOCKPICK, 0);
       if (is_success(test)) then begin
          display_msg(mstr(100));
-         unlocked := 1;
+         obj_unlock(self_obj);
       end
       else begin
          display_msg(mstr(101));
@@ -100,6 +108,8 @@ procedure do_skill begin
    else begin
       display_msg(mstr(107));
    end
+   set_map_var(MVAR_Use_Fridge, map_var(MVAR_Use_Fridge) + 1);
+   add_timer_event(Phrax_Pointer, 0, EVENT_FRIDGE);
 end
 
 procedure see_stuff begin
@@ -107,15 +117,13 @@ procedure see_stuff begin
 end
 
 procedure examine begin
-   if (not(unlocked)) then begin
+   if (obj_is_locked(self_obj)) then begin
       display_msg(mstr(102));
    end
+   else if (obj_is_open(self_obj)) then begin
+      display_msg(mstr(103));
+   end
    else begin
-      if (open) then begin
-         display_msg(mstr(103));
-      end
-      else begin
-         display_msg(mstr(104));
-      end
+      display_msg(mstr(104));
    end
 end

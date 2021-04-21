@@ -28,6 +28,9 @@ variable tmp_hostile;
 variable initial := 0;
 variable waiting_to_follow;
 
+#define EVENT_GROWL        (1)
+#define EVENT_FOLLOW       (2)
+
 import variable Phil_approaches;
 import variable growling;
 import variable smartass;
@@ -38,6 +41,12 @@ procedure start begin
       set_self_team(TEAM_RAIDERS);
       initial := 1;
       set_map_var(MVAR_Dog_Is_Angry, 1);
+   end
+end
+
+procedure push_p_proc begin
+   if (global_var(GVAR_DEMODOG_HIRELING_STATUS) != 1) then begin
+      script_overrides;
    end
 end
 
@@ -67,14 +76,15 @@ end
 
 procedure critter_p_proc begin
    if (global_var(GVAR_DEMODOG_HIRELING_STATUS) == 1) then begin
-      if (tile_distance_objs(self_obj, dude_obj) >= 3) then begin
+      // Unnecessary. Dealt with via timer event.
+      /*if (tile_distance_objs(self_obj, dude_obj) >= 3) then begin
          dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 4), random(0, 5), random(0, 2));
          self_run_to_tile_force(dest_tile);
       end
       else begin
          dest_tile := tile_num_in_direction(tile_num_in_direction(dude_tile, dude_rotation_to_self, 4), random(0, 5), random(0, 2));
          self_run_to_tile_force(dest_tile);
-      end
+      end*/
    end
    else begin
       if (Phil_approaches) then begin
@@ -87,10 +97,10 @@ procedure critter_p_proc begin
 end
 
 procedure timed_event_p_proc begin
-   if (fixed_param == 1) then begin
+   if (fixed_param == EVENT_GROWL) then begin
       call growl;
    end
-   else if (fixed_param == 2) then begin
+   else if (fixed_param == EVENT_FOLLOW) then begin
       call follow_player;
    end
 end
@@ -105,7 +115,7 @@ procedure use_obj_on_p_proc begin
       //set_global_var(GVAR_DOGMEAT_SOMETHING_0, 2);
       set_self_team(TEAM_PLAYER);
       set_map_var(MVAR_Dog_Is_Angry, 0);
-      add_timer_event(self_obj, game_ticks(1), 2);
+      add_timer_event(self_obj, game_ticks(1), EVENT_FOLLOW);
    end
 end
 
@@ -129,7 +139,7 @@ procedure follow_player begin
    else begin
       self_run_to_tile_force(LVar0);
    end
-   add_timer_event(self_obj, game_ticks(2), 2);
+   add_timer_event(self_obj, game_ticks(2), EVENT_FOLLOW);
 end
 
 procedure destroy_p_proc begin
