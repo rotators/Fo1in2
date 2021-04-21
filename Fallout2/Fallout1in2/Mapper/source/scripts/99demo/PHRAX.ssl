@@ -30,6 +30,10 @@ procedure phrax07;
 procedure phraxend;
 procedure combat;
 
+#define LVAR_Once_Fool        (4)
+#define LVAR_Once_Fridge      (5)
+#define LVAR_Once_Generator   (6)
+
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
 import variable Fridge_ptr;
@@ -39,12 +43,8 @@ import variable Fridge_ptr;
 #define EVENT_GENERATOR    (3)
 
 variable tmp_hostile;
-variable Herebefore;
 variable Can_See;
 variable Only_Once := 1;
-variable Once_Fridge;
-variable Once_Fool;
-variable Once_Generator;
 variable Do_Once := 1;
 variable This_Once;
 
@@ -102,8 +102,8 @@ end
 
 procedure critter_p_proc begin
    if (self_can_see_dude and not(global_var(GVAR_QUEST_DEMO_GANG_WAR))) then begin
-      if (DUDE_IS_FOOL and (Once_Fool == 0)) then begin
-         Once_Fool := 1;
+      if (DUDE_IS_FOOL and (local_var(LVAR_Once_Fool) == 0)) then begin
+         set_local_var(LVAR_Once_Fool, 1);
          dialogue_system_enter;
       end
    end
@@ -170,12 +170,12 @@ procedure timed_event_p_proc begin
    if (/*self_can_see_dude and*/ not(global_var(GVAR_QUEST_DEMO_GANG_WAR))) then begin
       if (fixed_param == EVENT_FRIDGE) then begin
          if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
-            if (Once_Fridge == 0) then begin
+            if (local_var(LVAR_Once_Fridge) == 0) then begin
                if (Fridge_ptr != 0) then begin
                   if not(obj_is_locked(Fridge_ptr)) then obj_lock(Fridge_ptr);
                end
                Can_See := 1;
-               Once_Fridge := 1;
+               set_local_var(LVAR_Once_Fridge, 1);
                dialogue_system_enter;
             end
             else if (is_success(do_check(self_obj, STAT_pe, 3))) then begin
@@ -188,9 +188,9 @@ procedure timed_event_p_proc begin
       end
       else if (fixed_param == EVENT_GENERATOR) then begin
          if (is_success(do_check(self_obj, STAT_pe, 0))) then begin
-            if (Once_Generator == 0) then begin
+            if (local_var(LVAR_Once_Generator) == 0) then begin
                Can_See := 1;
-               Once_Generator := 1;
+               set_local_var(LVAR_Once_Generator, 1);
                dialogue_system_enter;
             end
             else if (is_success(do_check(self_obj, STAT_pe, 3))) then begin

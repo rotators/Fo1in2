@@ -38,27 +38,20 @@ procedure SkippyEnd;
 procedure SkippyCombat;
 procedure get_cutters;
 
-import variable known;
-variable initial := 0;
-import variable Skippy_cutters;
-import variable Only_Once;
-
 import variable Skippy_talk;
 
 import variable Phrax_Pointer;
 import variable Rock_Pointer;
 
-variable GVar0;
+#define LVAR_Known   (4)
+
+variable initial := 0;
 variable GVar1;
-variable GVar2;
-variable GVar3;
-variable GVar4;
+variable Item;
 variable GVar5 := 1;
 variable GVar6;
 variable GVar7 := 50;
 variable GVar8 := 2;
-variable GVar9;
-variable GVar10;
 variable GVar11;
 variable GVar12;
 
@@ -69,36 +62,38 @@ procedure start begin
    else begin
       set_self_team(TEAM_DEMO_FOOLS);
    end
-   if (not(GVar2)) then begin
-      GVar3 := create_object(PID_MULTI_TOOL, 0, 0);
-      add_obj_to_inven(self_obj, GVar3);
-      GVar2 := 1;
-   end
    I_Am_A_Fool := 1;
+end
+
+procedure map_enter_p_proc begin
+   if map_first_run then begin
+      Item := create_object(PID_MULTI_TOOL, 0, 0);
+      add_obj_to_inven(self_obj, Item);
+   end
 end
 
 procedure look_at_p_proc begin
    script_overrides;
-   if (GVar0) then begin
+   if (local_var(LVAR_Known)) then begin
       display_msg(mstr(100));
    end
    else begin
       display_msg(mstr(101));
    end
-   if (self_item_count(obj_pid(GVar3))) then begin
+   if (self_item_count(obj_pid(Item))) then begin
       display_msg(mstr(102));
    end
 end
 
 procedure description_p_proc begin
    script_overrides;
-   if (GVar0) then begin
+   if (local_var(LVAR_Known)) then begin
       display_msg(mstr(100));
    end
    else begin
       display_msg(mstr(101));
    end
-   if (self_item_count(obj_pid(GVar3))) then begin
+   if (self_item_count(obj_pid(Item))) then begin
       display_msg(mstr(102));
    end
 end
@@ -122,24 +117,21 @@ procedure talk_p_proc begin
    if DUDE_IS_CRYPT then begin
       call Skippy07;
    end
+   else if DUDE_IS_FOOL then begin
+      call Skippy08;
+   end
+   else if (self_item_count(obj_pid(Item))) then begin
+      call Skippy00;
+   end
    else begin
-      if DUDE_IS_FOOL then begin
-         call Skippy08;
-      end
-      else begin
-         if (self_item_count(obj_pid(GVar3))) then begin
-            call Skippy00;
-         end
-         else begin
-            call Skippy09;
-         end
-      end
+      call Skippy09;
    end
    gsay_end;
    end_dialogue;
 end
 
 procedure Skippy00 begin
+   set_local_var(LVAR_Known, 1);
    Reply(105);
    NOption(106, Skippy01, 4);
    NOption(107, Skippy06, 4);
@@ -271,6 +263,6 @@ procedure SkippyCombat begin
 end
 
 procedure get_cutters begin
-   rm_obj_from_inven(self_obj, GVar3);
-   add_obj_to_inven(dude_obj, GVar3);
+   rm_obj_from_inven(self_obj, Item);
+   add_obj_to_inven(dude_obj, Item);
 end
