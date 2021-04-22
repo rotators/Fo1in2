@@ -474,9 +474,9 @@ variable merch_slot_2;
 variable merch_slot_2_flags;
 variable merch_slot_armor;
 variable merch_slot_armor_flags;
-#define get_barter_inven(x)         merch_slot_1 := critter_inven_obj(self_obj, INVEN_TYPE_LEFT_HAND);  \
-                                    merch_slot_2 := critter_inven_obj(self_obj, INVEN_TYPE_RIGHT_HAND); \
-                                    merch_slot_armor := critter_inven_obj(self_obj,INVEN_TYPE_WORN);    \
+#define get_barter_inven(x)         merch_slot_1 := self_left_hand;                                     \
+                                    merch_slot_2 := self_right_hand;                                    \
+                                    merch_slot_armor := self_armor;                                     \
                                     if (merch_slot_1 > 0) then                                          \
                                         merch_slot_1_flags := get_flags(merch_slot_1);                  \
                                     if (merch_slot_2 > 0) then                                          \

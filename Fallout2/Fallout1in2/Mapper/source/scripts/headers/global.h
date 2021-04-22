@@ -4086,8 +4086,8 @@
 #define RESERVED_FOR_FALLOUT_FIXT               (4946)
 #define RESERVED_FOR_FALLOUT_FIXT               (4947)
 #define RESERVED_FOR_FALLOUT_FIXT               (4948)
-#define RESERVED_FOR_FALLOUT_FIXT               (4949)
-#define RESERVED_FOR_FALLOUT_FIXT               (4950)*/
+#define RESERVED_FOR_FALLOUT_FIXT               (4949)*/
+#define GVAR_DEMO_EXIT                          (4950)
 #define GVAR_DEMODOG_HIRELING_STATUS            (4951)
 #define GVAR_QUEST_DEMO_FIX_POWER               (4952)
 #define GVAR_QUEST_DEMO_GANG_WAR                (4953)
