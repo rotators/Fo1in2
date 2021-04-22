@@ -83,6 +83,9 @@ procedure map_enter_p_proc begin
       inven_unwield(dude_obj);
       move_obj_inven_to_obj(dude_obj, Temp_ptr);
 
+      set_map_var(MVAR_CurHP, dude_cur_hp);
+      critter_heal(dude_obj, dude_max_hp);
+
       // Create new inventory
       Item := create_object(PID_10MM_SMG, 0, 0);
       add_obj_to_inven(dude_obj, Item);
@@ -114,7 +117,12 @@ procedure map_update_p_proc begin
 end
 
 procedure map_exit_p_proc begin
+variable hp_diff := dude_cur_hp - map_var(MVAR_CurHP);
    set_global_var(GVAR_DEMO_EXIT, 1);
+
+   if (hp_diff > 0) then begin
+      critter_heal(dude_obj, (map_var(MVAR_CurHP) - dude_cur_hp));
+   end
 
    obj_drop_everything(dude_obj);
    Temp_ptr := tile_contains_pid_obj(0, 0, PID_DEAD_TRAVELER);
@@ -134,7 +142,8 @@ procedure map_exit_p_proc begin
       // TODO: Need to refresh FID
       //art_change_fid_num(dude_obj, dude_fid);
    end
-
+   refresh_pc_art;
+   intface_redraw;
 end
 
 procedure timed_event_p_proc begin
@@ -156,7 +165,7 @@ procedure timed_event_p_proc begin
       set_fo1_demo_completed;
       add_timer_event(self_obj, game_ticks(5), EVENT_SLIDESHOW);
       if (Slide == 0) then begin
-         variable music := play_sfall_sound("data\\sound\\music\\08VATS.acm",2);
+         variable music := play_sfall_sound("data\\sound\\music\\empty.acm",2);
          Slide := 1;
          create_win("win_slide", 0, 0, get_screen_width, get_screen_height);
          SelectWin("win_slide");

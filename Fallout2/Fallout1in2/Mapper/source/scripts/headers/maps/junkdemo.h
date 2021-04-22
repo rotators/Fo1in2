@@ -30,5 +30,6 @@
 #define MVAR_Slot1_flags                (15)
 #define MVAR_Slot2_flags                (16)
 #define MVAR_SlotArmor_flags            (17)
+#define MVAR_CurHP                      (18)
 
 #endif // JUNKDEMO_H
