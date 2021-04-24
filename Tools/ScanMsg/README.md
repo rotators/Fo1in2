@@ -11,5 +11,3 @@ Application checks all .msg files in current directory and subdirectories, and r
 as well as weird syntax which might lead to problems.
 
 In case application wasn't started from command line, log file is created.
-
-Originally created for Shattered Destiny 3 by Lexx
